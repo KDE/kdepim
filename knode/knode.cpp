@@ -183,6 +183,9 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
 
 KNMainWindow::~KNMainWindow()
 {
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("mainWindow_options");
+  saveMainWindowSettings(conf);
   delete a_ccel;
 }
 

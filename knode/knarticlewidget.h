@@ -60,6 +60,11 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void showBlankPage();
     void showErrorMessage(const QString &s);
 
+    bool showFullHdrs()               { return f_ullHdrs; }
+    void setShowFullHdrs(bool b=true) { f_ullHdrs=b;
+                                        a_ctToggleFullHdrs->setChecked(b);
+                                        updateContents(); }
+
     void updateContents();
 
     KNArticle* article()              { return a_rticle; }

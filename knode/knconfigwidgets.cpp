@@ -813,10 +813,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   b_rowser=new QComboBox(bgb);
   b_rowser->insertItem("Konqueror");
   b_rowser->insertItem("Netscape");
-  s_howThrCB=new QCheckBox(i18n("thread articles by default"), vgb);
   e_xpThrCB=new QCheckBox(i18n("show whole thread on expanding"), vgb);
-  connect(s_howThrCB, SIGNAL(toggled(bool)), e_xpThrCB, SLOT(setEnabled(bool)));
-  f_ullHdrsCB=new QCheckBox(i18n("show all headers by default"), vgb);
   s_igCB=new QCheckBox(i18n("show signature"), vgb);
   i_nlineCB=new QCheckBox(i18n("show attachments inline if possible"), agb);
   o_penAttCB=new QCheckBox(i18n("open attachments on click"), agb);
@@ -840,9 +837,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   mgbL->addWidget(m_arkSecs, 3,1);
   mgbL->setColStretch(0,1);
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
-  vgbL->addWidget(s_howThrCB);
   vgbL->addWidget(e_xpThrCB);
-  vgbL->addWidget(f_ullHdrsCB);
   vgbL->addWidget(s_igCB);
   agbL->addSpacing(fontMetrics().lineSpacing()-4);
   agbL->addWidget(i_nlineCB);
@@ -860,9 +855,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   i_nlineCB->setChecked(d->i_nlineAtt);
   o_penAttCB->setChecked(d->o_penAtt);
   a_ltAttCB->setChecked(d->s_howAlts);
-  f_ullHdrsCB->setChecked(d->s_howFullHdrs);
   s_igCB->setChecked(d->s_howSig);
-  s_howThrCB->setChecked(d->s_howThreads);
   e_xpThrCB->setChecked(d->t_otalExpand);
   m_axFetch->setValue(d->m_axFetch);
   m_arkSecs->setValue(d->m_arkSecs);
@@ -882,9 +875,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
     return;
 
   d_ata->a_utoCheck=a_utoCB->isChecked();
-  d_ata->s_howFullHdrs=f_ullHdrsCB->isChecked();
   d_ata->s_howSig=s_igCB->isChecked();
-  d_ata->s_howThreads=s_howThrCB->isChecked();
   d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->m_axFetch=m_axFetch->value();
   d_ata->a_utoMark=m_arkCB->isChecked();

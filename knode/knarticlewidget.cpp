@@ -116,7 +116,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   connect(t_imer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
 
   //config
-  f_ullHdrs=knGlobals.cfgManager->readNewsGeneral()->showFullHeaders();
+  f_ullHdrs=false;
   a_ctToggleFullHdrs->setChecked(f_ullHdrs);
   applyConfig();
 }

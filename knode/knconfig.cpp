@@ -390,9 +390,7 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
 
   a_utoCheck=conf->readBoolEntry("autoCheck", true);
   a_utoMark=conf->readBoolEntry("autoMark", true);
-  s_howThreads=conf->readBoolEntry("showThreads", true);
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
-  s_howFullHdrs=conf->readBoolEntry("fullHdrs", false);
   s_howSig=conf->readBoolEntry("showSig", true);
   i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
@@ -417,9 +415,7 @@ void KNConfig::ReadNewsGeneral::save()
 
   conf->writeEntry("autoCheck", a_utoCheck);
   conf->writeEntry("autoMark", a_utoMark);
-  conf->writeEntry("showThreads", s_howThreads);
   conf->writeEntry("totalExpand", t_otalExpand);
-  conf->writeEntry("fullHdrs", s_howFullHdrs);
   conf->writeEntry("showSig", s_howSig);
   conf->writeEntry("inlineAtt", i_nlineAtt);
   conf->writeEntry("openAtt", o_penAtt);
@@ -431,7 +427,7 @@ void KNConfig::ReadNewsGeneral::save()
 }
 
 
-
+//==============================================================================================================
 
 
 KNConfig::DisplayedHeaders::DisplayedHeaders()

@@ -125,9 +125,6 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   //actions
   initActions();
 
-  //apply saved options
-  readOptions();
-
   //-------------------------------- </GUI> ------------------------------------
 
 
@@ -165,6 +162,8 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
   //-------------------------------- </CORE> -----------------------------------
 
+  //apply saved options
+  readOptions();
 
   //apply configuration
   configChanged();
@@ -179,6 +178,8 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
 KNodeView::~KNodeView()
 {
+  saveOptions();
+
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
 
   delete n_etAccess;
@@ -258,6 +259,10 @@ void KNodeView::readOptions()
   sortAsc = conf->readBoolEntry("account_sortAscending", true);
   c_olView->setColAsc(sortCol, sortAsc);
   c_olView->setSorting(sortCol, sortAsc);
+
+  a_rtManager->setShowThreads( conf->readBoolEntry("showThreads", true) );
+  a_ctArtToggleShowThreads->setChecked( a_rtManager->showThreads() );
+  a_rtView->setShowFullHdrs( conf->readBoolEntry("fullHdrs", false) );
 }
 
 
@@ -289,6 +294,9 @@ void KNodeView::saveOptions()
   conf->writeEntry("sortAscending", h_drView->ascending());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
   conf->writeEntry("account_sortAscending", c_olView->ascending());
+
+  conf->writeEntry("showThreads", a_rtManager->showThreads());
+  conf->writeEntry("fullHdrs", a_rtView->showFullHdrs());
 }
 
 
@@ -373,12 +381,6 @@ void KNodeView::configChanged()
   p.setColor(QColorGroup::Base, app->backgroundColor());
   c_olView->setPalette(p);
   h_drView->setPalette(p);
-
-  if(a_ctArtToggleShowThreads->isChecked() != rng->showThreads()) {
-    a_ctArtToggleShowThreads->setChecked(rng->showThreads());
-    if(s_electedGroup)
-      a_rtManager->showHdrs(true);
-  }
 
 }
 
@@ -465,8 +467,7 @@ void KNodeView::initActions()
 	                            SLOT(slotArtToggleThread()), a_ctions, "thread_toggle");
 	a_ctArtToggleShowThreads	= new KToggleAction(i18n("Show T&hreads"), 0 , this,
 	                            SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");			
-	a_ctArtToggleShowThreads->setChecked(c_fgManager->readNewsGeneral()->showThreads());
-	                            	
+		                            	
 	//header-view - remote articles
 	a_ctArtSetArtRead         = new KAction(i18n("M&ark as read"), Key_D , this,
 	                            SLOT(slotArtSetArtRead()), a_ctions, "article_read");

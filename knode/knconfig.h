@@ -414,9 +414,7 @@ class ReadNewsGeneral : public Base {
     bool autoMark()                  { return a_utoMark; }
     int autoMarkSeconds()            { return m_arkSecs; }
 
-    bool showThreads()               { return s_howThreads; }
     bool totalExpandThreads()        { return t_otalExpand; }
-    bool showFullHeaders()           { return s_howFullHdrs; }
     bool showSignature()             { return s_howSig; }
 
     bool showAttachmentsInline()     { return i_nlineAtt; }
@@ -429,9 +427,7 @@ class ReadNewsGeneral : public Base {
   protected:
     bool  a_utoCheck,
           a_utoMark,
-          s_howThreads,
           t_otalExpand,
-          s_howFullHdrs,
           s_howSig,
           i_nlineAtt,
           o_penAtt,
@@ -456,11 +452,9 @@ class ReadNewsGeneralWidget : public BaseWidget {
   protected:
     QCheckBox   *a_utoCB,
                 *m_arkCB,
-                *f_ullHdrsCB,
                 *s_igCB,
                 *i_nlineCB,
                 *o_penAttCB,
-                *s_howThrCB,
                 *e_xpThrCB,
                 *a_ltAttCB;
     KIntSpinBox *m_arkSecs,

@@ -85,7 +85,9 @@ class KNArticleManager : public QObject {
     void showHdrs(bool clear=true);
     void updateViewForCollection(KNArticleCollection *c);
     void setAllThreadsOpen(bool b=true);
-    void toggleShowThreads()        { s_howThreads=!s_howThreads; showHdrs(true); }
+    bool showThreads()                { return s_howThreads; }
+    void toggleShowThreads()          { s_howThreads=!s_howThreads; showHdrs(true); }
+    void setShowThreads(bool b=true)  { s_howThreads=b; showHdrs(true); }
     void setViewFont();
 
     //filter
@@ -109,7 +111,6 @@ class KNArticleManager : public QObject {
 
   protected:  
     void createHdrItem(KNRemoteArticle *a);
-    //void createHdrItem(KNLocalArticle *a);
     void createThread(KNRemoteArticle *a);
     void updateStatusString();
 

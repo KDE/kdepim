@@ -119,7 +119,7 @@ KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(
   f_ilter=f->currentFilter();
   f_ilterMgr=f;
   s_earchDlg=0;
-  s_howThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
+  s_howThreads=true;
 
 	connect(v, SIGNAL(expanded(QListViewItem*)), this,
 		SLOT(slotItemExpanded(QListViewItem*)));
@@ -610,7 +610,7 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
 
       if(art->idRef()==topId) {
         art->setListItem(new KNHdrViewItem(hdrItem));
-        art->setThreadMode(rng->showThreads());
+        art->setThreadMode(s_howThreads);
         art->initListItem();
       }
       else if(rng->totalExpandThreads()) { //totalExpand
