@@ -45,7 +45,7 @@
       <Action name="view_refresh"/>
     </Menu>
 
-    <Menu name="tools" noMerge="1"><text>Tools</text>
+    <Menu name="tools" noMerge="1"><text>&amp;Tools</text>
       <Action name="ldap_lookup"/>
     </Menu>
 
