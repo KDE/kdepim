@@ -2,7 +2,7 @@
 <title>Using &kpilot; Application Interface and Data Viewers</title>
 
 <para>
-This chapter describes the usage of &kpilot's main window; as a viewer
+This chapter describes the usage of &kpilot;'s main window; as a viewer
 application for data on the &handheld;, and  its menu structure.
 The main window of &kpilot; also contains
 the &HotSync;-log, which can be useful when
