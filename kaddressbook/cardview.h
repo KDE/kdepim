@@ -167,10 +167,6 @@ class CardView : public QScrollView
     */
     void ensureItemVisible(const CardViewItem *item);
     
-    /** Repaints the given item.
-    */
-    void repaintItem(const CardViewItem *item);
-    
     enum SelectionMode { Single, Multi, Extended, NoSelection };
     
     /** Sets the selection mode.
@@ -286,10 +282,10 @@ class CardView : public QScrollView
     void doubleClicked(CardViewItem *);
     
   protected:
-    /** Determines which cards intersect that region and tells them to paint
-    * themselves.
-    */
-    void drawContents(QPainter *p, int clipx, int clipy, int clipw, int cliph);
+    /**
+     * Repaints the whole viewport. We use a double buffer to avoid flickering.
+     */
+    virtual void viewportPaintEvent( QPaintEvent * );
     
     /** Sets the layout to dirty and repaints.
     */

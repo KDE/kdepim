@@ -24,6 +24,7 @@
 #include "cardview.h"
 
 #include <qpainter.h>
+#include <qpixmap.h>
 
 #include <kdebug.h>
 #include <kglobalsettings.h>
@@ -349,7 +350,7 @@ CardViewItem *CardViewItem::nextItem()
 void CardViewItem::repaintCard()
 {
   if (mView)
-    mView->repaintItem(this);
+    mView->viewport()->repaint();
 }
 
 void CardViewItem::setCaption(const QString &caption)
@@ -357,7 +358,7 @@ void CardViewItem::setCaption(const QString &caption)
   d->mCaption = caption;
   
   if (mView)
-    mView->repaintItem(this);
+    mView->viewport()->repaint();
 }
 
 QString CardViewItem::fieldValue(const QString &label)
@@ -393,7 +394,7 @@ CardView::CardView(QWidget *parent, const char *name)
   
   viewport()->setFocusProxy(this);
   viewport()->setFocusPolicy(WheelFocus);
-  viewport()->setBackgroundMode(PaletteBase);
+  viewport()->setBackgroundMode(NoBackground);
   setBackgroundMode(PaletteBackground, PaletteBase);
 }
 
@@ -452,11 +453,6 @@ void CardView::ensureItemVisible(const CardViewItem *item)
   
   ensureVisible(cardRect.x(), cardRect.y(), 
                 cardRect.width(), cardRect.height());
-}
-
-void CardView::repaintItem(const CardViewItem *item)
-{
-  repaintContents(item->d->mRect);
 }
 
 void CardView::setSelectionMode(CardView::SelectionMode mode)
@@ -603,63 +599,51 @@ CardViewItem *CardView::findItem(const QString &text, const QString &label,
   return 0;
 }
 
-void CardView::drawContents(QPainter *p, int clipx, int clipy, 
-                            int clipw, int cliph)
+void CardView::viewportPaintEvent( QPaintEvent * )
 {
-  QScrollView::drawContents(p, clipx, clipy, clipw, cliph);
+  QPixmap pm( viewport()->width(), viewport()->height() );
+  QPainter p;
+
+  p.begin( &pm, viewport() );
+
+  if (d->mLayoutDirty)
+    calcLayout();
  
- if (d->mLayoutDirty)
-   calcLayout();
- 
-  //kdDebug() << "CardView::drawContents: " << clipx << ", " << clipy
-  //          << ", " << clipw << ", " << cliph << endl;
-  
   QColorGroup cg = palette().active();
+  pm.fill( cg.color( QColorGroup::Base ) );
   
-  QRect clipRect(clipx, clipy, clipw, cliph);
-  QRect cardRect;
-  QRect sepRect;
   CardViewItem *item;
   CardViewSeparator *sep;
   
-  // make sure the viewport is a pure background
-  viewport()->erase(clipRect);
-  
-  // Now tell the cards to draw, if they are in the clip region
+  // Now tell the cards to draw
   QPtrListIterator<CardViewItem> iter(d->mItemList);
   for (iter.toFirst(); iter.current(); ++iter)
   {
     item = *iter;
-    cardRect = item->d->mRect;
+    QRect cardRect = item->d->mRect;
                     
-    if (clipRect.intersects(cardRect) || clipRect.contains(cardRect))
-    {
-      //kdDebug() << "\trepainting card at: " << cardRect.x() << ", " 
-      //          << cardRect.y() << endl;
-      
-      // Tell the card to paint
-      p->save();
-      p->translate(cardRect.x(), cardRect.y());
-      item->paintCard(p, cg);
-      p->restore();
-    }
+    // Tell the card to paint
+    p.save();
+    p.translate( cardRect.x() - contentsX(), cardRect.y() - contentsY() );
+    item->paintCard( &p, cg );
+    p.restore();
   }
   
-  // Followed by the separators if they are in the clip region
+  // Followed by the separators
   QPtrListIterator<CardViewSeparator> sepIter(d->mSeparatorList);
   for (sepIter.toFirst(); sepIter.current(); ++sepIter)
   {
     sep = *sepIter;
-    sepRect = sep->mRect;
+    QRect sepRect = sep->mRect;
     
-    if (clipRect.intersects(sepRect) || clipRect.contains(sepRect))
-    {
-      p->save();
-      p->translate(sepRect.x(), sepRect.y());
-      sep->paintSeparator(p, cg);
-      p->restore();
-    }
+    p.save();
+    p.translate(sepRect.x() - contentsX(), sepRect.y() - contentsY() );
+    sep->paintSeparator(&p, cg);
+    p.restore();
   }
+
+	p.end();
+	bitBlt( viewport(), 0, 0, &pm );
 }
 
 void CardView::resizeEvent(QResizeEvent *e)

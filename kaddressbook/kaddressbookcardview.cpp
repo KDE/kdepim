@@ -67,7 +67,7 @@ class AddresseeCardViewItem : public CardViewItem
           clearFields();
           
           // We might want to make this the first field. hmm... -mpilone
-          setCaption(mAddressee.formattedName());
+          setCaption( mAddressee.realName() );
           
           // Try all the selected fields until we find one with text.
           // This will limit the number of unlabeled icons in the view
@@ -197,6 +197,7 @@ void KAddressBookCardView::refresh(QString uid)
     if (uid == QString::null)
     {
         // Rebuild the view
+        mCardView->viewport()->setUpdatesEnabled( false );
         mCardView->clear();
         
         KABC::Addressee::List addresseeList = addressees();
@@ -206,10 +207,11 @@ void KAddressBookCardView::refresh(QString uid)
             aItem = new AddresseeCardViewItem(fields(), mShowEmptyFields,
                                               addressBook(), *iter, mCardView);
         }
+        mCardView->viewport()->setUpdatesEnabled( true );
+        mCardView->viewport()->update();
         
         // by default nothing is selected
         emit selected(QString::null);
-        
     }
     else
     {
