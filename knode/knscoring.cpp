@@ -91,7 +91,7 @@ KNScorableGroup::~KNScorableGroup()
 
 //----------------------------------------------------------------------------
 
-KNScoringManager::KNScoringManager()
+KNScoringManager::KNScoringManager() : KScoringManager("knode")
 {
 }
 

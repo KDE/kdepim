@@ -975,7 +975,7 @@ void KNMainWidget::prepareShutdown()
   f_olManager->syncFolders();
   f_ilManager->prepareShutdown();
   a_ccManager->prepareShutdown();
-  s_coreManager->save();
+  s_coreManager->save("knode");
 }
 
 

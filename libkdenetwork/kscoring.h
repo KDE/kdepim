@@ -293,7 +293,7 @@ class KScoringManager : public QObject
   //* this is the container for all rules
   typedef QPtrList<KScoringRule> ScoringRuleList;
 
-  KScoringManager();
+  KScoringManager(const QString& appName = QString::null);
   virtual ~KScoringManager();
 
   //* returns a list of all available groups, must be overridden
@@ -346,8 +346,8 @@ class KScoringManager : public QObject
   bool isCacheValid() { return cacheValid; }
   void initCache(const QString& group/*, const QString& server*/);
 
-  void load();
-  void save();
+  void load(const QString& appName = QString::null);
+  void save(const QString& appName = QString::null);
 
   //--------------- Properties
   virtual bool canScores() { return true; }
