@@ -1773,14 +1773,10 @@ void KNLocalArticle::clear()
 
 KNHeaders::Base* KNLocalArticle::getHeaderByType(const char *type)
 {
-  if(strcasecmp("Newsgroups", type)==0) {
-    if(!doPost() || n_ewsgroups.isEmpty()) return 0;
-    else return &n_ewsgroups;
-  }
-  else if(strcasecmp("To", type)==0) {
-    if(!doMail() || t_o.isEmpty()) return 0;
-    else return &t_o;
-  }
+  if(strcasecmp("Newsgroups", type)==0)
+    return newsgroups(false);
+  else if(strcasecmp("To", type)==0)
+    return to(false);
   else
     return KNArticle::getHeaderByType(type);
 }
