@@ -453,14 +453,18 @@ bool KNComposer::hasValidData()
         return false;
   } else {
     if (notQuoted==0) {
-      KMessageBox::sorry(this, i18n("You can't post an article consisting\nentirely of quoted text!"));
+      KMessageBox::sorry(this, i18n("You can't post an article consisting\n"
+			      "entirely of quoted text!"));
       return false;
     }
   }
 
   if ( longLine && ( (v_iew->e_dit->wordWrap() == QMultiLineEdit::NoWrap) ) )
-    if (!(KMessageBox::warningYesNo( this, i18n("Your article contains lines longer than 80 characters.\nDo you want to re-edit the article or send it anyway?"),
-                                     QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+    if (!(KMessageBox::warningYesNo( this, 
+          i18n("Your article contains lines longer than 80 characters.\n"
+	       "Do you want to re-edit the article or send it anyway?"),
+          QString::null, i18n("&Send"),
+	  i18n("edit article","&Edit")) == KMessageBox::Yes))
       return false;
 
   if (sigLength>8) {
