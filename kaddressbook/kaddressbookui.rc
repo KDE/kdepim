@@ -4,7 +4,6 @@
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
       <Action name="file_mail_vcard" append="mail_merge"/>
-
       <Action name="file_new_contact"/>
       <Action name="file_properties"/>
       <Separator/>
@@ -20,6 +19,7 @@
     <Menu name="edit"><text>&amp;Edit</text>
       <Action name="edit_delete" append="edit_paste_merge"/>
       <Action name="edit_set_categories"/>
+      <Action name="edit_set_personal"/>
     </Menu>
 
     <Menu name="view"><text>&amp;View</text>
@@ -29,8 +29,10 @@
       <Action name="view_delete"/>
       <Separator/>
       <Action name="view_refresh"/>
-      <Separator/>
-      <Action name="select_filter"/>
+    </Menu>
+
+    <Menu name="tools">
+      <Action name="ldap_lookup"/>
     </Menu>
 
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
@@ -62,9 +64,8 @@
     <Action name="file_mail"/>
     <Separator/>
     <Action name="ldap_lookup"/>
-    <Action name="set_personal"/>
   </ToolBar>
-  
+
   <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
     <Action name="edit_undo"/>
     <Action name="edit_redo"/> 
@@ -75,15 +76,13 @@
     <Separator/>
     <Action name="edit_delete"/>
   </ToolBar>
-  
+
   <ToolBar name="viewToolBar" noMerge="1"><text>View Toolbar</text>
     <Action name="view_add"/>
     <Action name="view_modify"/>
     <Action name="view_delete"/>
     <Separator/>
     <Action name="view_refresh"/>
-    <Separator/>
-    <Action name="options_show_features"/>
   </ToolBar>
 
 </kpartgui>
