@@ -89,14 +89,11 @@ void ResourceGroupwise::init()
 
 void ResourceGroupwise::initGroupwise()
 {
-  QString url;
-  url =  "http://" + mPrefs->host() +":";
-  url += QString::number(mPrefs->port()) + "/soap/";
-  mServer = new GroupwiseServer( url, mPrefs->user(),
+  mServer = new GroupwiseServer( mPrefs->serverUrl(), mPrefs->user(),
                                  mPrefs->password(), this );
 
   connect( mServer, SIGNAL( readCalendarFinished() ),
-           this, SLOT( loadFinished() ) );
+           SLOT( loadFinished() ) );
 }
 
 GroupwisePrefs *ResourceGroupwise::prefs()
