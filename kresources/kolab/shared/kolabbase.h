@@ -52,6 +52,12 @@ namespace Kolab {
 
 class KolabBase {
 public:
+  struct Email {
+  public:
+    QString displayName;
+    QString smtpAddress;
+  };
+
   enum Sensitivity { Public = 0, Private = 1, Confidential = 2 };
 
   KolabBase();
@@ -117,6 +123,10 @@ protected:
 
   // This just makes the initial dom tree with version and doctype
   static QDomDocument domTree();
+
+  bool loadEmailAttribute( QDomElement& element, Email& email );
+
+  void saveEmailAttribute( QDomElement& element, const Email& email ) const;
 
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );

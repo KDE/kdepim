@@ -35,6 +35,7 @@
 
 #include <kabc/addressee.h>
 #include <libkcal/journal.h>
+#include <kdebug.h>
 #include <qfile.h>
 
 using namespace Kolab;
@@ -176,6 +177,38 @@ void KolabBase::setSensitivity( Sensitivity sensitivity )
 KolabBase::Sensitivity KolabBase::sensitivity() const
 {
   return mSensitivity;
+}
+
+bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
+{
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "display-name" )
+        email.displayName = e.text();
+      else if ( tagName == "smtp-address" )
+        email.smtpAddress = e.text();
+      else
+        // TODO: Unhandled tag - save for later storage
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+    } else
+      kdDebug() << "Node is not a comment or an element???" << endl;
+  }
+
+  return true;
+}
+
+void KolabBase::saveEmailAttribute( QDomElement& element,
+                                    const Email& email ) const
+{
+  QDomElement e = element.ownerDocument().createElement( "email" );
+  element.appendChild( e );
+  writeString( e, "display-name", email.displayName );
+  writeString( e, "smtp-address", email.smtpAddress );
 }
 
 bool KolabBase::loadAttribute( QDomElement& element )

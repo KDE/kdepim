@@ -51,12 +51,6 @@ public:
     QString number;
   };
 
-  struct Email {
-  public:
-    QString displayName;
-    QString smtpAddress;
-  };
-
   struct Address {
   public:
     QString type;
@@ -194,7 +188,6 @@ private:
   bool loadPhoneAttribute( QDomElement& element );
   void savePhoneAttributes( QDomElement& element ) const;
 
-  bool loadEmailAttribute( QDomElement& element );
   void saveEmailAttributes( QDomElement& element ) const;
 
   bool loadAddressAttribute( QDomElement& element );

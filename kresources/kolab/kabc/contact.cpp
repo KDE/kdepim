@@ -460,42 +460,11 @@ void Contact::savePhoneAttributes( QDomElement& element ) const
   }
 }
 
-bool Contact::loadEmailAttribute( QDomElement& element )
-{
-  Email email;
-
-  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    if ( n.isComment() )
-      continue;
-    if ( n.isElement() ) {
-      QDomElement e = n.toElement();
-      QString tagName = e.tagName();
-
-      if ( tagName == "display-name" )
-        email.displayName = e.text();
-      else if ( tagName == "smtp-address" )
-        email.smtpAddress = e.text();
-      else
-        // TODO: Unhandled tag - save for later storage
-        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
-    } else
-      kdDebug() << "Node is not a comment or an element???" << endl;
-  }
-
-  addEmail( email );
-  return true;
-}
-
 void Contact::saveEmailAttributes( QDomElement& element ) const
 {
   QValueList<Email>::ConstIterator it = mEmails.begin();
-  for ( ; it != mEmails.end(); ++it ) {
-    QDomElement e = element.ownerDocument().createElement( "email" );
-    element.appendChild( e );
-    const Email& email = *it;
-    writeString( e, "display-name", email.displayName );
-    writeString( e, "smtp-address", email.smtpAddress );
-  }
+  for ( ; it != mEmails.end(); ++it )
+    saveEmailAttribute( element, *it );
 }
 
 bool Contact::loadAddressAttribute( QDomElement& element )
@@ -594,9 +563,14 @@ bool Contact::loadAttribute( QDomElement& element )
     setLanguage( element.text() );
   else if ( tagName == "phone-number" )
     return loadPhoneAttribute( element );
-  else if ( tagName == "email" )
-    return loadEmailAttribute( element );
-  else if ( tagName == "address" )
+  else if ( tagName == "email" ) {
+    Email email;
+    if ( loadEmailAttribute( element, email ) ) {
+      addEmail( email );
+      return true;
+    } else
+      return false;
+  } else if ( tagName == "address" )
     return loadAddressAttribute( element );
   else if ( tagName == "preferred-address" )
     setPreferredAddress( element.text() );
