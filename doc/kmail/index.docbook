@@ -33,7 +33,7 @@
 
 </authorgroup>
 
-<date>2001-07-14</date>
+<date>2001-07-15</date>
 <releaseinfo>1.03.00</releaseinfo>
 
 <copyright>
@@ -86,7 +86,9 @@ previous/next message, but when you hold down &Ctrl;, you can use
 <keycap>Left Arrow</keycap>/<keycap>Right Arrow</keycap> to navigate in
 the Folders pane and <keycap>up arrow</keycap>/<keycap>down
 arrow</keycap> to navigate in the Headers pane. Use
-<keycap>Space</keycap> to select the folder you navigated to.</para>
+<keycombo
+action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to select the folder
+you navigated to.</para>
 </listitem>
 <listitem>
 <para>In the <guilabel>Composer</guilabel> you can select text and
@@ -1727,8 +1729,7 @@ is enabled.</para>
 <varlistentry>
 <term><guilabel>Keep trash size below...</guilabel></term>
 <listitem>
-<para>Delete old messages if the trash folder becomes bigger than this limit.
-<!-- fixme: *when* does this happen?? really only old ones? --></para> 
+<para>On exit, delete old messages if the trash folder becomes bigger than this limit.</para> 
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -3386,7 +3387,9 @@ reply.</para></answer>
 <qandaentry>
 <question><para>&kmail; disappears/crashes while fetching mail.</para></question>
 <answer><para>Make sure you have enough free disk space. &kmail; currently
-cannot handle the situation of a full disk gracefully and just quits.</para></answer>
+does not handle the situation of a full disk gracefully and quits. Note: &kmail;
+does protect your data, mail that could not be saved to disk is left on the 
+server.</para></answer>
 </qandaentry>
 
 <qandaentry>
