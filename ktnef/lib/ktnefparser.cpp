@@ -353,7 +353,7 @@ bool KTNEFParser::parseDevice()
 				if (!decodeAttachment()) goto end;
 				break;
 			   default:
-				kdDebug().form( "Unknown Level: %x, at offset %d\n", c, d->device_->at() );
+				kdDebug() << "Unknown Level: " << c << ", at offset " << d->device_->at() << endl;
 				goto end;
 			}
 		}
