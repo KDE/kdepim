@@ -2438,7 +2438,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
 {
   if (aBox.isEmpty()) return false;
 
-  imapCommand *cmd = NULL;
+  imapCommand *cmd = 0;
 
   if (aBox != getCurrentBox () || (!getSelected().readWrite() && !readonly))
   {
@@ -2463,10 +2463,16 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
         }
       }
       completeQueue.removeRef (cmd);
-      if (found)
-        error(ERR_SLAVE_DEFINED, i18n("Unable to open folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
-      else
+      if (found) {
+        if (cmdInfo.find("permission", 0, false) != -1) {
+          // not allowed to enter this folder
+          error(ERR_ACCESS_DENIED, cmdInfo);
+        } else {
+          error(ERR_SLAVE_DEFINED, i18n("Unable to open folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
+        }
+      } else {
         error(KIO::ERR_DOES_NOT_EXIST, aBox);
+      }
       return false;
     }
   }
