@@ -226,7 +226,8 @@ KPilotLink::initPilotSocket(const QString& devicePath)
 
 	if (fPilotPath.isEmpty())
 	{
-		kdWarning() << __FUNCTION__ << ": No point in trying empty device."
+		kdWarning() << __FUNCTION__ 
+			<< ": No point in trying empty device."
 			<< endl;
 
 		msg=i18n("The Pilot device is not configured yet.");
@@ -712,8 +713,6 @@ KPilotLink::doFullRestore()
 {
 	FUNCTIONSETUP;
 
-  DIR * dir = NULL;
-  struct dirent * dirent;
   struct DBInfo info;
   struct db * db[256];
   int dbcount = 0;
@@ -721,63 +720,93 @@ KPilotLink::doFullRestore()
   struct pi_file * f;
   char message[256];
 
-  i=KMessageBox::questionYesNo(
-			       fOwningWidget,
-			       i18n("Replace all data on pilot with local data?"),
-			       i18n("Full Restore"));
-  if (i != KMessageBox::Yes) return false;
+	i=KMessageBox::questionYesNo(
+		fOwningWidget,
+		i18n("Replace all data on Pilot with local data?"),
+		i18n("Full Restore"));
+	if (i != KMessageBox::Yes) return false;
 
-  QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/DBBackup/")
-						  + getPilotUser().getUserName() + "/");
+	// User said yes, so do it.
+	//
+	//
+	QString dirname = KGlobal::dirs()->saveLocation("data", 
+		QString("kpilot/DBBackup/") + 
+		getPilotUser().getUserName() + "/");
+	QStringList dbList;
 
-  // FIXME: This should be done with a QDirectory-thingee
-  dir = opendir(dirname.latin1());
-    
-  while( (dirent = readdir(dir)) )
-    {
-      char name[256];
-
-      if (dirent->d_name[0] == '.')
-	continue;
-	
-	
-      db[dbcount] = (struct db*)malloc(sizeof(struct db));
-	
-      sprintf(db[dbcount]->name, "%s/%s", (const char *)dirname.latin1(), dirent->d_name);
-	
-      f = pi_file_open(db[dbcount]->name);
-      if (f==0) 
+	// Block for local vars.
+	//
 	{
-	  printf("Unable to open '%s'!\n", name);
-	  break;
+		QDir dir(dirname);
+		if (! dir.exists())
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Save directory "
+				<< dirname
+				<< " doesn't exist."
+				<< endl;
+			return false;
+		}
+		dbList = dir.entryList();
 	}
-  	
-      pi_file_get_info(f, &info);
-  	
-      db[dbcount]->creator = info.creator;
-      db[dbcount]->type = info.type;
-      db[dbcount]->flags = info.flags;
-      db[dbcount]->maxblock = 0;
-  	
-      pi_file_get_entries(f, &max);
-  	
-      for (i=0;i<max;i++) 
+
+
+	QStringList::ConstIterator it;
+
+	for (it=dbList.begin(); it!=dbList.end(); ++it)
 	{
-	  if (info.flags & dlpDBFlagResource)
-	    pi_file_read_resource(f, i, 0, &size, 0, 0);
-	  else
-	    pi_file_read_record(f, i, 0, &size, 0, 0,0 );
-  	    
-	  if (size > db[dbcount]->maxblock)
-	    db[dbcount]->maxblock = size;
-	}
+		DEBUGKPILOT << fname
+			<< ": Trying database "
+			<< *it
+			<< endl;
+
+		db[dbcount] = (struct db*)malloc(sizeof(struct db));
+		sprintf(db[dbcount]->name,
+			QFile::encodeName(*it));
+	
+		f = pi_file_open(db[dbcount]->name);
+		if (f==0) 
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Unable to open "
+				<< *it
+				<< endl;
+			continue;
+		}
   	
-      pi_file_close(f);
-      dbcount++;
-    }
+		pi_file_get_info(f, &info);
+  	
+		db[dbcount]->creator = info.creator;
+		db[dbcount]->type = info.type;
+		db[dbcount]->flags = info.flags;
+		db[dbcount]->maxblock = 0;
+
+		pi_file_get_entries(f, &max);
+
+		for (int dbi=0; dbi<max; dbi++) 
+		{
+			if (info.flags & dlpDBFlagResource)
+			{
+				pi_file_read_resource(f, dbi, 0, &size, 0, 0);
+			}
+			else
+			{
+				pi_file_read_record(f, dbi, 0, &size, 0, 0,0 );
+			}
+
+			if (size > db[dbcount]->maxblock)
+			{
+				db[dbcount]->maxblock = size;
+			}
+		}
+
+		pi_file_close(f);
+		dbcount++;
+	}
     
-  closedir(dir);
-    
+  // Sort databases
+  //
+  //
   for (i=0;i<dbcount;i++)
     for (j=i+1;j<dbcount;j++)
       if (compare(db[i],db[j])>0) {
@@ -891,49 +920,80 @@ KPilotLink::createLocalDatabase(DBInfo* info)
 void
 KPilotLink::doFullBackup()
 {
-  int i = 0;
-  char message[256];
+	FUNCTIONSETUP;
+	int i = 0;
 
-  setSlowSyncRequired(true);
-  fMessageDialog->setMessage("Starting Sync.");
-  fMessageDialog->show();
-  showMessage(i18n("Backing up Palm Pilot... Slow sync required."));
-  addSyncLogEntry("Backing up all data...");
-  for(;;)
-    {
-      struct DBInfo info;
+	setSlowSyncRequired(true);
 
-      if (dlp_OpenConduit(getCurrentPilotSocket())<0) 
+	fMessageDialog->setMessage(i18n("Starting HotSync."));
+	fMessageDialog->show();
+	showMessage(i18n("Backing up Pilot..."));
+	addSyncLogEntry("Backing up all data...");
+
+	for(;;)
 	{
-	  KMessageBox::error(fOwningWidget,
-			     i18n("Exiting on cancel.\n"
-				  "<B>Not</B> all the data was backed up."),
-			     i18n("Backup"));
-	  addSyncLogEntry("FAILED.\n");
-	  return;
-	}
-	
-      if( dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, i, &info) < 0)
-	break;
-      i = info.index + 1;
+		struct DBInfo info;
 
-      strcpy(message, "Backing Up: ");
-      strcat(message, info.name);
-      fMessageDialog->setMessage(message);
-  	
-      if(createLocalDatabase(&info) == false)
-	{
-	  KMessageBox::error(fOwningWidget,
-			     i18n("Could not backup data!"),
-			     i18n("Backup failed"));
+		if (dlp_OpenConduit(getCurrentPilotSocket())<0) 
+		{
+			// The text suggests that the user
+			// has chosen to cancel the backup,
+			// which is why I've made this a warning,
+			// but why is this warning based on the return
+			// value of OpenConduit??
+			//
+			//
+			kdWarning() << __FUNCTION__ 
+				<< ": dlp_OpenConduit failed -- means cancel?"
+				<< endl;
+
+			KMessageBox::sorry(fOwningWidget,
+				i18n("Exiting on cancel.\n"
+				     "<B>Not</B> all the data was backed up."),
+				i18n("Backup"));
+			addSyncLogEntry("FAILED.\n");
+			return;
+		}
+
+		// Is parameter i important here???
+		//
+		//
+		if( dlp_ReadDBList(getCurrentPilotSocket(), 
+			0, 0x80, i, &info) < 0)
+		{
+			DEBUGKPILOT << fname
+				<< ": Last database encountered."
+				<< endl;
+			break;
+		}
+		i = info.index + 1;
+
+		{
+		QString logmsg(i18n("Backing Up: "));
+		logmsg.append(info.name);
+		fMessageDialog->setMessage(logmsg);
+		}
+
+		if(createLocalDatabase(&info) == false)
+		{
+			kdError() << __FUNCTION__
+				<< ": Couldn't create local database for "
+				<< info.name
+				<< endl;
+
+			KMessageBox::error(fOwningWidget,
+				i18n("Could not backup data!"),
+				i18n("Backup failed"));
+		}
 	}
-    }
-  addSyncLogEntry("OK.\n");
-  // Set up so the conduits can run through the DB's and backup.  doConduitBackup()
-  // will emit the databaseSyncComplete when done.
-  fNextDBIndex = 0;
-  doConduitBackup();
-  return;
+	addSyncLogEntry(i18n("OK.\n").local8Bit());
+	// Set up so the conduits can run through the DB's and backup.  
+	// doConduitBackup() will emit the databaseSyncComplete when done.
+	//
+	//
+	fNextDBIndex = 0;
+	doConduitBackup();
+	return;
 }
 
 void 
@@ -1647,6 +1707,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.26  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
 // Revision 1.25  2000/12/21 00:42:50  adridg
 // Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
 //
