@@ -32,6 +32,7 @@
 
 // Local includes
 #include <rmm/Message.h>
+#include "EmpathURL.h"
 
 class KAction;
 class KInstance;
@@ -50,7 +51,21 @@ class EmpathMessageViewWidget : public QWidget
         EmpathMessageViewWidget(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathMessageViewWidget();
 
-        void setMessage(RMM::Message &);
+        void setMessage(const EmpathURL &);
+
+#if 0
+        void reply();
+        void replyAll();
+        void forward();
+        void bounce();
+        void remove();
+        void save();
+        void copy();
+        void move();
+        void print();
+        void filter();
+#endif
+
 
     private:
         
@@ -92,17 +107,10 @@ class EmpathMessageViewPart : public KParts::ReadOnlyPart
 
     protected slots:
 
-        void s_setMessage(RMM::Message &);
-
-    signals:
-
-        void compose();
-        void reply();
-        void replyAll();
-        void forward();
-
+        void s_changeView(const EmpathURL &);
     protected:
 
+        virtual bool event(QEvent *);
         virtual bool openFile();
 
         void enableAllActions(bool);
@@ -110,14 +118,20 @@ class EmpathMessageViewPart : public KParts::ReadOnlyPart
     private:
 
         EmpathMessageViewWidget * w;
-        
+
         EmpathMessageViewBrowserExtension * extension_;
 
         KAction
-            * messageCompose_,
             * messageReply_,
             * messageReplyAll_,
-            * messageForward_;
+            * messageForward_,
+            * messageBounce_,
+            * messageRemove_,
+            * messageSave_,
+            * messageCopy_,
+            * messageMove_,
+            * messagePrint_,
+            * messageFilter_;
 };
 
 

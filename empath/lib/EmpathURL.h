@@ -153,6 +153,8 @@ class EmpathURL
         bool isValid_;
 };
 
+typedef QValueList<EmpathURL> EmpathURLList;
+
 #endif // EMPATHURL_H
 
 // vim:ts=4:sw=4:tw=78

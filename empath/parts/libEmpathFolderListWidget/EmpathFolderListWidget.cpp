@@ -156,8 +156,8 @@ EmpathFolderListWidget::EmpathFolderListWidget(QWidget * parent)
             const QPoint &, int, Area)));
     
     QObject::connect(
-        this, SIGNAL(linkChanged(QListViewItem *)),
-        this, SLOT(s_linkChanged(QListViewItem *)));
+        this, SIGNAL(currentChanged(QListViewItem *)),
+        this, SLOT(s_currentChanged(QListViewItem *)));
 
     QObject::connect(
         empath, SIGNAL(updateFolderLists()), this, SLOT(s_update()));
@@ -165,9 +165,11 @@ EmpathFolderListWidget::EmpathFolderListWidget(QWidget * parent)
     QObject::connect(autoOpenTimer, SIGNAL(timeout()),
             this, SLOT(s_openCurrent()));
 
+#if 0
     QObject::connect(
         this, SIGNAL(startDrag(const QList<QListViewItem> &)),
         this, SLOT(s_startDrag(const QList<QListViewItem> &)));
+#endif
 
     ////////
     
@@ -278,23 +280,24 @@ EmpathFolderListWidget::_addChildren(
 }
 
     void
-EmpathFolderListWidget::s_linkChanged(QListViewItem * item)
+EmpathFolderListWidget::s_currentChanged(QListViewItem * item)
 {
-    empathDebug("linkchanged");
+    empathDebug("");
+
     EmpathFolderListItem * i = static_cast<EmpathFolderListItem *>(item);
-    
+
     if (!i->url().isFolder()) {
         empathDebug("!folder");
         return;
     }
-    
+
     EmpathFolder * f = empath->folder(i->url());
-   
+
     if (f == 0) {
         empathDebug("Cannot find folder");
         return;
     }
-    
+
     if (f->isContainer()) {
         empathDebug("Folder is container");
         return;
@@ -436,12 +439,21 @@ EmpathFolderListWidget::s_openChanged()
     c->writeEntry("FolderListItemsOpen", l);
 }
 
-    void 
+    void
 EmpathFolderListWidget::s_openCurrent()
 {
     setOpen(currentItem(), true);
 }
 
+    void
+EmpathFolderListWidget::s_setActiveFolder(const EmpathURL &)
+{
+    // TODO
+    // Set the folder given in url to be current but don't emit signal.
+    empathDebug("STUB");
+}
+
+#if 0
     void
 EmpathFolderListWidget::s_startDrag(const QList<QListViewItem> & items)
 {
@@ -502,7 +514,7 @@ EmpathFolderListWidget::contentsDragMoveEvent(QDragMoveEvent * e)
         visibleWidth()  - autoscrollMargin * 2,
         visibleHeight() - autoscrollMargin * 2);
   
-    QListViewItem * i = itemAt(vp);
+    QListViewItem * i = QListView::itemAt(vp);
     
     if (!i) {
         e->ignore();
@@ -549,7 +561,6 @@ EmpathFolderListWidget::contentsDragLeaveEvent(QDragLeaveEvent *)
     empathDebug("");
     autoOpenTimer->stop();
     stopAutoScroll();
-    setCurrentItem(linkItem());
     dropItem = 0;
 }
 
@@ -563,7 +574,7 @@ EmpathFolderListWidget::contentsDropEvent(QDropEvent * e)
     autoOpenTimer->stop();
     stopAutoScroll();
     
-    QListViewItem * item = itemAt(contentsToViewport(e->pos()));
+    QListViewItem * item = QListView::itemAt(contentsToViewport(e->pos()));
     
     if (!item) {
         e->ignore();
@@ -620,8 +631,6 @@ EmpathFolderListWidget::contentsDropEvent(QDropEvent * e)
     }
     
     e->accept();
-
-    setCurrentItem(linkItem());
 }
 
     void
@@ -635,5 +644,6 @@ EmpathFolderListWidget::stopAutoScroll()
 {
     // STUB
 }
+#endif
 
 // vim:ts=4:sw=4:tw=78

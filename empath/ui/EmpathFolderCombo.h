@@ -20,39 +20,33 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathListView.h"
-#endif
-
-#ifndef EMPATHLISTVIEW_H
-#define EMPATHLISTVIEW_H
+#ifndef EMPATH_FOLDER_COMBO_H
+#define EMPATH_FOLDER_COMBO_H
 
 // Qt includes
-#include <qlistview.h>
-#include <qlist.h>
+#include <qcombobox.h>
 
-/**
- * @short Base class for list views in Empath. Allows some funky stuff.
- * 
- * @author Wilco Greven
- */
-class EmpathListView : public QListView
+// Local includes
+#include "EmpathURL.h"
+
+class EmpathFolderCombo : public QComboBox
 {
     Q_OBJECT
 
     public:
 
-        EmpathListView(QWidget * parent = 0, const char * name = 0);
-        virtual ~EmpathListView();
+        EmpathFolderCombo(QWidget * parent);
+        virtual ~EmpathFolderCombo();
 
-        enum Area { Item, OpenClose, Void };
+    protected slots:
 
-        QListViewItem * itemAt(const QPoint &, Area &) const;
+        void s_update();
+        void s_activated(const QString &);
 
-        QList<QListViewItem> thread(QListViewItem *);
-        QList<QListViewItem> subThread(QListViewItem *);
+    signals:
+
+        void folderSelected(const EmpathURL &);
 };
 
 #endif
-
 // vim:ts=4:sw=4:tw=78

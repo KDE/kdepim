@@ -44,54 +44,13 @@ class EmpathBrowser : public QWidget
     Q_OBJECT
 
     public:
-        
+
         EmpathBrowser(QWidget * parent);
         ~EmpathBrowser();
-        
-        KParts::ReadWritePart * folderListWidget()
-        { return folderListWidget_; }
-        KParts::ReadWritePart * messageListWidget()
-        { return messageListWidget_; }
-        KParts::ReadOnlyPart  * messageViewWidget()
-        { return messageViewWidget_ ; }
 
-        bool event(QEvent *);
-
-    protected slots:
-
-        void s_showFolder(const EmpathURL &);
-        void s_changeView(const QString &);
-        void s_reply(const QString &);
-        void s_replyAll(const QString &);
-        void s_forward(const QString &);
-        void s_bounce(const QString &);
-        void s_remove(const QStringList &);
-        void s_save(const QString &);
-        void s_copy(const QStringList &);
-        void s_move(const QStringList &);
-        void s_print(const QStringList &);
-        void s_filter(const QStringList &);
-        void s_view(const QString &);
-
-        void s_toggleHideRead();
-        void s_toggleThread();
-
-    signals:
-
-        void changeView(RMM::Message &);
-        void setIndex(const EmpathURL &);
-        void toggleHideRead();
-        void toggleThread();
-
-    private:
-
-        void _connectUp();
-
-        EmpathURL currentFolder_;
-
-        KParts::ReadWritePart * folderListWidget_;
-        KParts::ReadWritePart * messageListWidget_;
-        KParts::ReadOnlyPart  * messageViewWidget_;
+        KParts::ReadWritePart * folderListPart_;
+        KParts::ReadWritePart * messageListPart_;
+        KParts::ReadOnlyPart  * messageViewPart_;
 };
 
 class EmpathBrowserPartFactory : public KLibFactory
@@ -121,21 +80,22 @@ class EmpathBrowserPart : public KParts::ReadWritePart
     Q_OBJECT
 
     public:
-        
+
         EmpathBrowserPart(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathBrowserPart();
-        void _initActions();
 
     protected slots:
 
+        void s_showFolder(const EmpathURL &);
+
     signals:
- 
+
+        void showFolder(const EmpathURL &);
+
     protected:
 
         virtual bool openFile() { return false; }
         virtual bool saveFile() { return false; }
-
-        void enableAllActions(bool);
 
     private:
 

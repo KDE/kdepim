@@ -98,8 +98,8 @@ EmpathMessageListPart::EmpathMessageListPart(
     setWidget(widget_);
 
     QObject::connect(
-        widget_,    SIGNAL(messageActivated(const QString &)),
-        this,       SIGNAL(messageActivated(const QString &)));
+        widget_,    SIGNAL(messageActivated(const EmpathURL &)),
+        this,       SIGNAL(messageActivated(const EmpathURL &)));
 
     setXMLFile("EmpathMessageListWidget.rc");
 
@@ -124,7 +124,7 @@ EmpathMessageListPart::_initActions()
 {
 #define CA(visibleName, name, key, slot) \
     new KAction(visibleName, name, key, \
-        this, slot, actionCollection(), name);
+        widget_, slot, actionCollection(), name);
 
 CA(i18n("&View"),       "messageView", CTRL+Key_Return, SLOT(s_messageView()));
 CA(i18n("&Compose"),    "messageCompose",   Key_M,  SLOT(s_messageCompose()));
@@ -224,8 +224,8 @@ EmpathMessageListWidget::_init()
 EmpathMessageListWidget::_connectUp()
 {
     QObject::connect(
-        this, SIGNAL(linkChanged(QListViewItem *)),
-        this, SLOT(s_linkChanged(QListViewItem *)));
+        this, SIGNAL(currentChanged(QListViewItem *)),
+        this, SLOT(s_currentChanged(QListViewItem *)));
 
     QObject::connect(
         this, SIGNAL(startDrag(const QList<QListViewItem> &)),
@@ -238,7 +238,7 @@ EmpathMessageListWidget::_connectUp()
     // Connect return press to view.
     QObject::connect(
         this, SIGNAL(returnPressed(QListViewItem *)),
-        this, SLOT(s_linkChanged(QListViewItem *)));
+        this, SLOT(s_currentChanged(QListViewItem *)));
     
     // Connect right button up so we can produce the popup context menu.
     QObject::connect(
@@ -307,13 +307,15 @@ EmpathMessageListWidget::_threadItem(const EmpathIndexRecord & rec)
     return _createListItem(rec, parentItem);
 }
 
-    QString
+    EmpathURL
 EmpathMessageListWidget::firstSelected()
 {
     if (currentItem() == 0)
-        return QString::null;
+        return EmpathURL();
     
-    return static_cast<EmpathMessageListItem *>(currentItem())->id();
+    EmpathURL url(folder_);
+    url.setMessageID(static_cast<EmpathMessageListItem *>(currentItem())->id());
+    return url;
 }
 
     void
@@ -348,7 +350,6 @@ EmpathMessageListWidget::s_goPrevious()
     else if (i->itemAbove())
         i = i->itemAbove();
     
-    setDelayedLink(true);
     clearSelection();
 
     if (0 != i) { // There might be no items
@@ -368,7 +369,6 @@ EmpathMessageListWidget::s_goNext()
     else if (i->itemBelow())
         i = i->itemBelow();
         
-    setDelayedLink(true);
     clearSelection();
 
     if (0 != i) { // There might be no items
@@ -394,7 +394,6 @@ EmpathMessageListWidget::s_goNextUnread()
             static_cast<EmpathMessageListItem *>(it.current());
 
         if (!(i->status() & EmpathIndexRecord::Read)) {
-            setDelayedLink(true);
             clearSelection();
             setCurrentItem(i);
             setSelected(i, true);
@@ -414,7 +413,6 @@ EmpathMessageListWidget::s_goNextUnread()
             static_cast<EmpathMessageListItem *>(it.current());
 
         if (!(i->status() & EmpathIndexRecord::Read)) {
-            setDelayedLink(true);
             clearSelection();
             setCurrentItem(i);
             setSelected(i, true);
@@ -442,7 +440,6 @@ EmpathMessageListWidget::s_rightButtonPressed(QListViewItem *,
     void
 EmpathMessageListWidget::s_updateActions(QListViewItem * item)
 {
-#if 0
     QStringList affectedActions;
 
     affectedActions
@@ -473,7 +470,6 @@ EmpathMessageListWidget::s_updateActions(QListViewItem * item)
             i->status() & EmpathIndexRecord::Marked ?
             i18n("Untag") : i18n("Tag"));
     }
-#endif
 }
 
     void
@@ -481,13 +477,12 @@ EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 { emit(messageActivated(firstSelected())); }
 
     void
-EmpathMessageListWidget::s_linkChanged(QListViewItem * item)
+EmpathMessageListWidget::s_currentChanged(QListViewItem * item)
 {
-    qDebug("linkChanged");
-
     if (0 == item)
         return;
 
+#if 0
     // Make sure we highlight the current item.
     setUpdatesEnabled(false);
     viewport()->setUpdatesEnabled(false);
@@ -500,8 +495,9 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem * item)
     viewport()->setUpdatesEnabled(true);
 
     triggerUpdate();
+#endif
 
-    qDebug("emitting messageActivated()");
+//    qDebug("emitting messageActivated()");
     emit(messageActivated(firstSelected()));
 }
 
@@ -964,7 +960,7 @@ EmpathMessageListWidget::event(QEvent * e)
             break;
     }
 
-    return KListView::event(e);
+    return QListView::event(e);
 }
 
     void
@@ -980,58 +976,59 @@ EmpathMessageListWidget::s_messageMarkReplied()
 { _markOne(EmpathIndexRecord::Replied); }
 
     void
-EmpathMessageListPart::s_messageCompose()
-{ emit(compose()); }
+EmpathMessageListWidget::s_forward()
+{
+    empathDebug("STUB");
+//    empath->forward(widget_->selection());
+}
 
     void
-EmpathMessageListPart::s_messageReply()
-{ emit(reply(widget_->firstSelected())); }
+EmpathMessageListWidget::s_bounce()
+{
+    empathDebug("STUB");
+//    empath->bounce(widget_->selection());
+}
 
     void
-EmpathMessageListPart::s_messageReplyAll()
-{ emit(replyAll(widget_->firstSelected())); }
+EmpathMessageListWidget::s_remove()
+{
+    empathDebug("STUB");
+//    empath->remove(widget_->selection());
+}
 
     void
-EmpathMessageListPart::s_messageForward()
-{ emit(forward(widget_->firstSelected())); }
+EmpathMessageListWidget::s_copyTo()
+{
+    empathDebug("STUB");
+//    empath->copy(widget_->selection());
+}
 
     void
-EmpathMessageListPart::s_messageBounce()
-{ emit(bounce(widget_->firstSelected())); }
+EmpathMessageListWidget::s_moveTo()
+{
+    empathDebug("STUB");
+//    empath->move(widget_->selection());
+}
 
     void
-EmpathMessageListPart::s_messageDelete()
-{ emit(remove(widget_->selection())); }
+EmpathMessageListWidget::s_print()
+{
+    empathDebug("STUB");
+//    empath->print(widget_->selection());
+}
 
     void
-EmpathMessageListPart::s_messageSaveAs()
-{ emit(save(widget_->firstSelected())); }
+EmpathMessageListWidget::s_filter()
+{
+    empathDebug("STUB");
+//    empath->filter(widget_->selection());
+}
 
-    void
-EmpathMessageListPart::s_messageCopyTo()
-{ emit(copy(widget_->selection())); }
-
-    void
-EmpathMessageListPart::s_messageMoveTo()
-{ emit(move(widget_->selection())); }
-
-    void
-EmpathMessageListPart::s_messagePrint()
-{ emit(print(widget_->selection())); }
-
-    void
-EmpathMessageListPart::s_messageFilter()
-{ emit(filter(widget_->selection())); }
-
-    void
-EmpathMessageListPart::s_messageView()
-{ emit(view(widget_->firstSelected())); }
-
-    QStringList
+    EmpathURLList
 EmpathMessageListWidget::selection()
 {
-    qDebug("STUB");
-    QStringList l;
+    empathDebug("STUB");
+    QValueList<EmpathURL> l;
     return l;
 }
 

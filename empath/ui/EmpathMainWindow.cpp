@@ -23,6 +23,7 @@
 // Qt includes
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qlcdnumber.h>
 #include <qpopupmenu.h>
 #include <qwidgetstack.h>
 
@@ -40,7 +41,24 @@
 #include "EmpathSettingsDialog.h"
 #include "EmpathMainWindow.h"
 #include "EmpathTask.h"
+#include "EmpathFolderCombo.h"
 #include "Empath.h"
+
+class EmpathProgressStack : public QWidgetStack
+{
+    public:
+
+        EmpathProgressStack(QStatusBar * parent)
+            :   QWidgetStack(parent)
+        {
+        }
+
+        QSize sizeHint() const
+        { return QSize(QWidgetStack::sizeHint().width(), 16); }
+
+        QSize minimumSizeHint() const { return sizeHint(); }
+};
+
 
 EmpathMainWindow::EmpathMainWindow()
     :   KParts::MainWindow("EmpathMainWindow")
@@ -56,11 +74,9 @@ EmpathMainWindow::EmpathMainWindow()
 
     resize(x, y);
     
-    progressStack_ = new QWidgetStack(statusBar());
-    statusBar()->addWidget(progressStack_, width());
+    progressStack_ = new EmpathProgressStack(statusBar());
+    statusBar()->addWidget(progressStack_, 0, true);
     statusBar()->show();
-
-    progressStack_->hide();
 
     QObject::connect(
         empath, SIGNAL(newTask(EmpathTask *)),
@@ -93,6 +109,12 @@ EmpathMainWindow::EmpathMainWindow()
 
     setCentralWidget(browser_->widget());
     createGUI(browser_);
+
+    EmpathFolderCombo * fc = new EmpathFolderCombo(toolBar());
+    toolBar()->insertWidget(0, 200, fc);
+
+    connect(fc,         SIGNAL(folderSelected(const EmpathURL &)),
+            browser_,   SLOT(s_showFolder(const EmpathURL &)));
 
     show();
 }

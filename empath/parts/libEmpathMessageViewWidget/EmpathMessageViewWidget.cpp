@@ -34,6 +34,7 @@
 #include <kiconloader.h>
 
 // Local includes
+#include "EmpathCustomEvents.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageTextViewWidget.h"
 #include "EmpathMessageHeaderViewWidget.h"
@@ -98,17 +99,6 @@ EmpathMessageViewPart::EmpathMessageViewPart(
     w = new EmpathMessageViewWidget(parent);
     w->setFocusPolicy(QWidget::StrongFocus);
     setWidget(w);
-
-    messageCompose_ =
-        new KAction(
-            i18n("Compose"),
-            QIconSet(BarIcon("messageCompose",
-                    EmpathMessageViewPartFactory::instance())),
-            0,
-            w,
-            SLOT(compose()),
-            actionCollection(),
-            "messageCompose");
 
     messageReply_ =
         new KAction(
@@ -178,12 +168,10 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
 }
 
     void
-EmpathMessageViewWidget::setMessage(RMM::Message & m)
+EmpathMessageViewWidget::setMessage(const EmpathURL & /* url */)
 {
-    if (!m) {
-      qDebug("Message is null");
-      return;
-    }
+    // FIXME: Go get message !
+    RMM::Message message;
 
     KSimpleConfig * config = new KSimpleConfig("empathrc", true);
 
@@ -194,8 +182,6 @@ EmpathMessageViewWidget::setMessage(RMM::Message & m)
 
     delete config;
     config = 0;
-
-    RMM::BodyPart message(m);
 
     headerView_->useEnvelope(message.envelope());
 
@@ -308,18 +294,43 @@ EmpathMessageViewPart::openFile()
     f.open(IO_ReadOnly);
     QCString s = QCString(f.readAll());
 
-    RMM::Message m(s);
-    w->setMessage(m);
+    // TODO
+//    RMM::Message m(s);
+//    w->setMessage(m);
 
     enableAllActions(true);
     return true;
 }
 
     void
-EmpathMessageViewPart::s_setMessage(RMM::Message & m)
+EmpathMessageViewPart::s_changeView(const EmpathURL & url)
 {
-    w->setMessage(m);
-    enableAllActions(true);
+    w->setMessage(url);
+}
+
+    bool
+EmpathMessageViewPart::event(QEvent * e)
+{
+    switch (e->type()) {
+
+        case EmpathMessageRetrievedEventT:
+            {
+                EmpathMessageRetrievedEvent * ev =
+                    static_cast<EmpathMessageRetrievedEvent *>(e);
+
+                if (ev->success()) {
+                    RMM::Message m = ev->message();
+// TODO: view the message !                    emit(changeView(m));
+                }
+            }
+            return true;
+            break;
+
+        default:
+            break;
+    }
+
+    return KParts::ReadOnlyPart::event(e);
 }
 
 // -------------------------------------------------------------------------

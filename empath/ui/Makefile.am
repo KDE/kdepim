@@ -24,5 +24,6 @@ libempathui_la_LIBADD = \
 METASOURCES = AUTO
 
 libempathui_la_SOURCES = \
+EmpathFolderCombo.cpp \
 EmpathMainWindow.cpp \
 EmpathUI.cpp

@@ -3,21 +3,17 @@
 <MenuBar>
     <Menu name="message"><text>&amp;Message</text>
         <Action name="messageView"/>
-        <Action name="messageCompose"/>
-        <Separator/>
         <Action name="messageReply"/>
         <Action name="messageReplyAll"/>
         <Action name="messageForward"/>
         <Separator/>
-        <Action name="messageDelete"/>
-        <Action name="messageSaveAs"/>
         <Action name="messagePrint"/>
-        <Separator/>
         <Action name="messageCopyTo"/>
-        <Action name="messageMoveTo"/>
         <Separator/>
-        <Action name="messageBounce"/>
         <Action name="messageFilter"/>
+        <Action name="messageMoveTo"/>
+        <Action name="messageBounce"/>
+        <Action name="messageDelete"/>
     </Menu>
     <Menu name="thread"><text>&amp;Thread</text>
         <Action name="threadExpand"/>
@@ -31,4 +27,27 @@
     </Menu>
     <Merge />
 </MenuBar>
+<ToolBar name="mainToolBar" fullWidth="false">
+    <Action name="messageView"/>
+    <Action name="messageReply"/>
+    <Action name="messageReplyAll"/>
+    <Action name="messageForward"/>
+    <Separator/>
+    <Action name="messagePrint"/>
+    <Action name="messageCopyTo"/>
+    <Separator/>
+    <Action name="messageFilter"/>
+    <Action name="messageMoveTo"/>
+    <Action name="messageBounce"/>
+    <Action name="messageDelete"/>
+    <Separator/>
+    <Action name="threadExpand"/>
+    <Action name="threadCollapse"/>
+    <Separator/>
+    <Action name="goPrevious"/>
+    <Action name="goNext"/>
+    <Action name="goNextUnread"/>
+</MenuBar>
+
+
 </kpartgui>

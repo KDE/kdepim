@@ -63,8 +63,8 @@ class EmpathMessageListWidget : public EmpathListView
 
         virtual ~EmpathMessageListWidget();
         
-        QString     firstSelected();
-        QStringList selection();
+        EmpathURL       firstSelected();
+        EmpathURLList   selection();
         
         void setIndex(const EmpathURL &);
 
@@ -78,6 +78,14 @@ class EmpathMessageListWidget : public EmpathListView
         virtual bool event(QEvent *);
 
     public slots:
+
+        void s_forward();
+        void s_bounce();
+        void s_remove();
+        void s_copyTo();
+        void s_moveTo();
+        void s_print();
+        void s_filter();
 
         void s_toggleHideRead();
         void s_toggleThread();
@@ -106,7 +114,7 @@ class EmpathMessageListWidget : public EmpathListView
 
         void s_rightButtonPressed   (QListViewItem *, const QPoint &, int, Area);
         void s_doubleClicked        (QListViewItem *);
-        void s_linkChanged          (QListViewItem *);
+        void s_currentChanged       (QListViewItem *);
         void s_startDrag            (const QList<QListViewItem> &);
         
         void s_headerClicked        (int);
@@ -115,7 +123,7 @@ class EmpathMessageListWidget : public EmpathListView
 
     signals:
 
-        void messageActivated(const QString &);
+        void messageActivated(const EmpathURL &);
 
     private:
        
@@ -208,6 +216,7 @@ class EmpathMessageListWidget : public EmpathListView
         // End order dependency
 
         EmpathURL waitingForIndex_;
+        EmpathURL folder_;
 };
 
 class EmpathMessageListPartFactory : public KLibFactory
@@ -240,41 +249,11 @@ class EmpathMessageListPart : public KParts::ReadOnlyPart
         
         EmpathMessageListPart(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathMessageListPart();
-        void _initActions();
 
     protected slots:
 
         void s_setIndex(const EmpathURL &);
 
-        void s_messageCompose();
-        void s_messageView();
-        void s_messageReply();
-        void s_messageReplyAll();
-        void s_messageForward();
-        void s_messageBounce();
-        void s_messageSaveAs();
-        void s_messageCopyTo();
-        void s_messageMoveTo();
-        void s_messagePrint();
-        void s_messageFilter();
-        void s_messageDelete();
-
-    signals:
-
-        void messageActivated(const QString &);
-        void compose();
-        void reply(const QString &);
-        void replyAll(const QString &);
-        void forward(const QString &);
-        void bounce(const QString &);
-        void remove(const QStringList &);
-        void save(const QString &);
-        void copy(const QStringList &);
-        void move(const QStringList &);
-        void print(const QStringList &);
-        void filter(const QStringList &);
-        void view(const QString &);
- 
     protected:
 
         virtual bool openFile() { return false; }
@@ -283,30 +262,28 @@ class EmpathMessageListPart : public KParts::ReadOnlyPart
 
     private:
 
+        void _initActions();
+
         EmpathMessageListWidget * widget_;
 
         // Navigation actions
         KAction * ac_goPrevious_;
         KAction * ac_goNext_;
         KAction * ac_goNextUnread_;
-        
+
         // Message related actions
         KToggleAction * ac_messageTag_;
         KToggleAction * ac_messageMarkRead_;
         KToggleAction * ac_messageMarkReplied_;
-        
+
         KToggleAction * ac_hideRead_;
         KToggleAction * ac_thread_;
 
         KAction * ac_messageMarkMany_;
-        
-        KAction * ac_messageView_;
-        KAction	* ac_messageReply_;
-        KAction	* ac_messageReplyAll_;
+
         KAction	* ac_messageForward_;
         KAction	* ac_messageBounce_;
         KAction	* ac_messageDelete_;
-        KAction	* ac_messageSaveAs_;
         KAction	* ac_messageCopyTo_;
         KAction	* ac_messageMoveTo_;
         KAction	* ac_messagePrint_;

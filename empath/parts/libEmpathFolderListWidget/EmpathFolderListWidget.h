@@ -67,22 +67,12 @@ class EmpathFolderListWidget : public EmpathListView
         void s_setUpAccounts();
         void s_openChanged();
         void s_openCurrent();
-        void s_linkChanged(QListViewItem *);
-        void s_startDrag(const QList<QListViewItem> &);
-        
-        void s_jobFinished(EmpathRemoveFolderJob) { s_update(); }
-        void s_jobFinished(EmpathCreateFolderJob) { s_update(); }
+        void s_currentChanged(QListViewItem *);
+        void s_setActiveFolder(const EmpathURL &);
 
     signals:
 
         void showFolder(const EmpathURL & url);
-
-    protected:
-
-        void contentsDragMoveEvent      (QDragMoveEvent *);
-        void contentsDragEnterEvent     (QDragEnterEvent *);
-        void contentsDragLeaveEvent     (QDragLeaveEvent *);
-        void contentsDropEvent          (QDropEvent *);
 
     private:
 
