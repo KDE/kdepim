@@ -153,11 +153,15 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
   for ( CertificateWizardImpl::AttrPairList::const_iterator it = list.begin() ;
 	it != list.end() ; ++it ) {
-    QLineEdit * le = (*it).second;
+    const QLineEdit * le = (*it).second;
     if ( !le )
       continue;
     const QString key = (*it).first;
+#ifndef NDEBUG
     kdbgstream s = kdDebug();
+#else
+    kndbgstream s = kdDebug():
+#endif
     s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\": ";
     if ( key.endsWith("!") && le->text().stripWhiteSpace().isEmpty() ) {
       s << "required field is empty!" << endl;
