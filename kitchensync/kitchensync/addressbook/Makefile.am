@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector/  $(all_includes)
+INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector2/  $(all_includes)
 
 kde_module_LTLIBRARIES = libaddressbookpart.la
 libaddressbookpart_la_LDFLAGS = $(all_libraries) $(LIB_KPARTS) $(KDE_PLUGIN)

@@ -47,7 +47,7 @@ class KonnectorPlugin : public QObject
 Q_OBJECT
 public:
     KonnectorPlugin(QObject *obj, const char *name, const QStringList &args=QStringList() );
-    virtual ~KonnectorPlugin() = 0;
+    virtual ~KonnectorPlugin() ;
     virtual void setUDI(const QString & ) ;
     virtual QString udi()const ;
     virtual Kapabilities capabilities( )  = 0 ;

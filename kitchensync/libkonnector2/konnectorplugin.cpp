@@ -10,6 +10,9 @@ KonnectorPlugin::KonnectorPlugin( QObject* obj, const char* name, const QStringL
     : QObject( obj,  name ) {
 
 }
+KonnectorPlugin::~KonnectorPlugin() {
+
+}
 void KonnectorPlugin::setUDI( const QString& udi) {
     m_udi = udi;
 }
