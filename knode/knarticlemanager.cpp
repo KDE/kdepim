@@ -19,7 +19,6 @@
 
 #include <qheader.h>
 
-#include <mimelib/string.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <krun.h>

@@ -66,8 +66,14 @@ class KNMimeBase {
     static QCString CRLFtoLF(const char *s);
     static QCString LFtoCRLF(const QCString &s);
     static void stripCRLF(char *str);
+    // removes quote characters and decodes "quoted-pairs"
     static void removeQuots(QCString &str);
     static void removeQuots(QString &str);
+    // converts the given string into a quoted-string if
+    // the string contains any special characters.
+    // str: us-ascii string
+    // forceQuotes: always add quote characters
+    static void addQuotes(QCString &str, bool forceQuotes);
 
     /* Helper-class: splits a multipart-message into single
        parts as described in RFC 2046 */

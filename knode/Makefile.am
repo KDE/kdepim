@@ -138,7 +138,7 @@ noinst_HEADERS =  knconfigmanager.h \
 
 
 knode_LDFLAGS = -L../libkdenetwork $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = -lkdeprint -lkdenetwork -lkspell -lmimelib $(LIB_KAB) $(LIB_KFILE) $(LIBPTHREAD) $(LIBRESOLV) 
+knode_LDADD   = -lkdeprint -lkdenetwork -lkspell $(LIB_KAB) $(LIB_KFILE) $(LIBPTHREAD) $(LIBRESOLV)
 knode_METASOURCES = AUTO
 
 appsdir = $(kde_appsdir)/Internet

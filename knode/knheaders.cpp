@@ -16,17 +16,17 @@
 
 #include <qtextcodec.h>
 #include <qstringlist.h>
-#include <mimelib/datetime.h>
 
 #include <kglobal.h>
 #include <kcharsets.h>
+#include <krfcdate.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knheaders.h"
 #include "knmime.h"
 #include "knstringsplitter.h"
-
+#include "utilities.h"
 
 
 //-----<Base>----------------------------------
@@ -312,7 +312,13 @@ QCString KNHeaders::AddressField::as7BitString(bool incType)
   if(n_ame.isEmpty())
     ret+=e_mail;
   else {
-    ret+=KNMimeBase::encodeRFC2047String(n_ame, e_ncCS, true);
+    if (KNHelper::isUsAscii(n_ame)) {
+      QCString tmp(n_ame.latin1());
+      KNMimeBase::addQuotes(tmp, false);
+      ret+=tmp;
+    } else {
+      ret+=KNMimeBase::encodeRFC2047String(n_ame, e_ncCS, true);
+    }
     if (!e_mail.isEmpty())
       ret += " <"+e_mail+">";
   }
@@ -471,23 +477,16 @@ QString KNHeaders::Organization::asUnicodeString()
 
 void KNHeaders::Date::from7BitString(const QCString &s)
 {
-  DwDateTime dt;
-  dt.FromString(s.data());
-  dt.Parse();
-  t_ime=dt.AsUnixTime();
+  t_ime=KRFCDate::parseDate(s);
 }
 
 
 QCString KNHeaders::Date::as7BitString(bool incType)
 {
-  DwDateTime dt;
-  dt.FromUnixTime(t_ime);
-  dt.Assemble();
-
   if(incType)
-    return ( typeIntro()+dt.AsString().c_str() );
+    return ( typeIntro()+KRFCDate::rfc2822DateString(t_ime) );
   else
-    return QCString(dt.AsString().c_str());
+    return QCString(KRFCDate::rfc2822DateString(t_ime));
 }
 
 
@@ -1077,7 +1076,15 @@ QString KNHeaders::ContentType::name()
 void KNHeaders::ContentType::setName(const QString &s, const QCString &cs)
 {
   e_ncCS=cs;
-  setParameter("name", KNMimeBase::encodeRFC2047String(s, cs), true);
+
+  if (KNHelper::isUsAscii(s)) {
+    QCString tmp(s.latin1());
+    KNMimeBase::addQuotes(tmp, true);
+    setParameter("name", tmp, false);
+  } else {
+    // FIXME: encoded words can't be enclosed in quotes!!
+    setParameter("name", KNMimeBase::encodeRFC2047String(s, cs), true);
+  }
 }
 
 
@@ -1251,8 +1258,16 @@ QCString KNHeaders::CDisposition::as7BitString(bool incType)
   else
     ret="inline";
 
-  if(!f_ilename.isEmpty())
-    ret+="; filename=\""+KNMimeBase::encodeRFC2047String(f_ilename, e_ncCS)+"\"";
+  if(!f_ilename.isEmpty()) {
+    if (KNHelper::isUsAscii(f_ilename)) {
+      QCString tmp(f_ilename.latin1());
+      KNMimeBase::addQuotes(tmp, true);
+      ret+="; filename="+tmp;
+    } else {
+      // FIXME: encoded words can't be enclosed in quotes!!
+      ret+="; filename=\""+KNMimeBase::encodeRFC2047String(f_ilename, e_ncCS)+"\"";
+    }
+  }
 
   if(incType)
     return ( typeIntro()+ret );

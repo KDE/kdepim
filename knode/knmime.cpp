@@ -15,9 +15,6 @@
 */
 
 #include <ctype.h>
-#include <mimelib/string.h>
-#include <mimelib/utility.h>
-#include <mimelib/uuencode.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -44,7 +41,6 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
 {
   QCString result, str;
   QCString declaredCS;
-  DwString dwsrc, dwdest;
   char *pos, *dest, *beg, *end, *mid, *endOfLastEncWord=0;
   char encoding, ch;
   bool valid, onlySpacesSinceLastWord=false;
@@ -109,16 +105,11 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
           // decode quoted printable text
           for (i=str.length()-1; i>=0; i--)
             if (str[i]=='_') str[i]=' ';
-          dwsrc=str.data();
-          DwDecodeQuotedPrintable(dwsrc, dwdest);
-          str = dwdest.c_str();
+          str = KCodecs::quotedPrintableDecode(str);
         }
         else
         {
-          // decode base64 text
-          dwsrc=str.data();
-          DwDecodeBase64(dwsrc, dwdest);
-          str = dwdest.c_str();
+          str = KCodecs::base64Decode(str);
         }
         *pos = ch;
         for (i=0; str[i]; i++)
@@ -193,7 +184,7 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
 
     // encode escape character, for japanese encodings...
     if ((encoded8Bit[i]<0) || (encoded8Bit[i] == '\033') ||
-        (addressHeader && (strchr("\"()<>@,;:\\[]=",encoded8Bit[i])!=0))) {
+        (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[i])!=0))) {
       end = start;   // non us-ascii char found, now we determine where to stop encoding
       nonAscii=true;
       break;
@@ -206,7 +197,7 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
 
     for (unsigned int x=end;x<encoded8Bit.length();x++)
       if ((encoded8Bit[x]<0) || (encoded8Bit[x] == '\033') ||
-          (addressHeader && (strchr("\"()<>@,;:\\[]=",encoded8Bit[x])!=0))) {
+          (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[x])!=0))) {
         end = encoded8Bit.length();     // we found another non-ascii word
 
       while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
@@ -377,25 +368,55 @@ void KNMimeBase::stripCRLF(char *str)
 
 void KNMimeBase::removeQuots(QCString &str)
 {
-  int pos1=0, pos2=0;
+  bool inQuote=false;
 
-  if((pos1=str.find('"'))!=-1)
-    if((pos2=str.findRev('"'))!=-1)
-      if(pos1<pos2)
-        str=str.mid(pos1+1, pos2-pos1-1);
+  for (int i=0; i < (int)str.length(); i++) {
+    if (str[i] == '"') {
+      str.remove(i,1);
+      i--;
+      inQuote = !inQuote;
+    } else {
+      if (inQuote && (str[i] == '\\'))
+        str.remove(i,1);
+    }
+  }
 }
 
 
 void KNMimeBase::removeQuots(QString &str)
 {
-  int pos1=0, pos2=0;
+  bool inQuote=false;
 
-  if((pos1=str.find('"'))!=-1)
-    if((pos2=str.findRev('"'))!=-1)
-      if(pos1<pos2)
-        str=str.mid(pos1+1, pos2-pos1-1);
+  for (int i=0; i < (int)str.length(); i++) {
+    if (str[i] == '"') {
+      str.remove(i,1);
+      i--;
+      inQuote = !inQuote;
+    } else {
+      if (inQuote && (str[i] == '\\'))
+        str.remove(i,1);
+    }
+  }
 }
 
+
+void KNMimeBase::addQuotes(QCString &str, bool forceQuotes)
+{
+  bool needsQuotes=false;
+  for (unsigned int i=0; i < str.length(); i++) {
+    if (strchr("()<>@,.;:[]=\\\"",str[i])!=0)
+      needsQuotes = true;
+    if (str[i]=='\\' || str[i]=='\"') {
+      str.insert(i, '\\');
+      i++;
+    }
+  }
+
+  if (needsQuotes || forceQuotes) {
+    str.insert(0,'\"');
+    str.append("\"");
+  }
+}
 
 //============================================================================================
 
@@ -553,7 +574,7 @@ bool KNMimeBase::UUParser::parse()
       else
         fileName = "";
       f_ilenames.append(fileName);
-      b_ins.append(s_rc.mid(beginPos, endPos-beginPos+1)); //everything beetween "begin" and "end" is uuencoded
+      b_ins.append(s_rc.mid(uuStart, endPos-uuStart+1)); //everything beetween "begin" and "end" is uuencoded
 
       //try to guess the mimetype from the file-extension
       if(!fileName.isEmpty()) {
@@ -869,20 +890,15 @@ QCString KNMimeContent::encodedContent(bool useCrLf)
     for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next()) {
       if (c->contentTransferEncoding(true)->cte()==KNHeaders::CEuuenc) {
         convertFromUunec=true;
-        DwUuencode dwuu;
-        DwString dwsrc, dwdest;
+        QCString data;
 
         if(c->contentTransferEncoding(true)->decoded())
-          dwsrc=c->b_ody.data();
-        else {
-          dwsrc=c->b_ody.data();
-          dwuu.SetAsciiChars(dwsrc);
-          dwuu.Decode();
-          dwsrc=dwuu.BinaryChars();
-        }
+          data=c->b_ody;
+        else
+          KCodecs::uudecode(c->b_ody, data);
 
-        DwEncodeBase64(dwsrc, dwdest);
-        c->b_ody=dwdest.c_str();
+        KCodecs::base64Encode(data, c->b_ody, true);
+        c->b_ody.append("\n");
         c->contentTransferEncoding(true)->setCte(KNHeaders::CEbase64);
         c->contentTransferEncoding(true)->setDecoded(false);
         c->removeHeader("Content-Description");
@@ -910,14 +926,12 @@ QCString KNMimeContent::encodedContent(bool useCrLf)
     KNHeaders::CTEncoding *enc=contentTransferEncoding();
 
     if(enc->needToEncode()) {
-      DwString dwsrc, dwdest;
-      dwsrc=b_ody.data();
       if(enc->cte()==KNHeaders::CEquPr)
-        DwEncodeQuotedPrintable(dwsrc, dwdest);
-      else
-        DwEncodeBase64(dwsrc, dwdest);
-
-      e+=dwdest.c_str();
+        e+=KCodecs::quotedPrintableEncode(b_ody, false);
+      else {
+        e+=KCodecs::base64Encode(b_ody, true);
+        e+="\n";
+      }
     }
     else
       e+=b_ody;
@@ -949,25 +963,19 @@ QByteArray KNMimeContent::decodedContent()
   if(ec->decoded())
     ret=b_ody;
   else {
-    DwString dwsrc, dwdest;
-    dwsrc=b_ody.data();
-    DwUuencode dwuu;
     switch(ec->cte()) {
       case KNHeaders::CEbase64 :
-        DwDecodeBase64(dwsrc, dwdest);
+        KCodecs::base64Decode(b_ody, ret);
       break;
       case KNHeaders::CEquPr :
-        DwDecodeQuotedPrintable(dwsrc, dwdest);
+        ret = KCodecs::quotedPrintableDecode(b_ody);
       break;
       case KNHeaders::CEuuenc :
-        dwuu.SetAsciiChars(dwsrc);
-        dwuu.Decode();
-        dwdest=dwuu.BinaryChars();
+        KCodecs::uudecode(b_ody, ret);
       break;
       default :
-        dwdest=dwsrc;
+        ret=b_ody;
     }
-    ret.duplicate(dwdest.data(), dwdest.size());
   }
 
   return ret;
@@ -1203,11 +1211,8 @@ void KNMimeContent::changeEncoding(KNHeaders::contentEncoding e)
     }
 
     if(enc->cte()!=e) { // ok, we reencode the content using base64
-      DwString dwsrc, dwdest;
-      QByteArray d=decodedContent(); //decode content
-      dwsrc.assign(d.data(), d.size());
-      DwEncodeBase64(dwsrc, dwdest); //encode as base64
-      b_ody=dwdest.c_str(); //set body
+      KCodecs::base64Encode(decodedContent(), b_ody, true);
+      b_ody.append("\n");
       enc->setCte(e); //set encoding
       enc->setDecoded(false);
     }
@@ -1366,23 +1371,18 @@ QCString KNMimeContent::rawHeader(const char *name)
 bool KNMimeContent::decodeText()
 {
   KNHeaders::CTEncoding *enc=contentTransferEncoding();
+
   if(enc->decoded())
     return true; //nothing to do
   if(!contentType()->isText())
     return false; //non textual data cannot be decoded here => use decodedContent() instead
 
-  DwString dwsrc=b_ody.data(), dwdest;
-
   if(enc->cte()==KNHeaders::CEquPr)
-    DwDecodeQuotedPrintable(dwsrc, dwdest);
+    b_ody=KCodecs::quotedPrintableDecode(b_ody);
   else {
     if (enc->cte()==KNHeaders::CEbase64)
-      DwDecodeBase64(dwsrc, dwdest);
-    else
-      dwdest = dwsrc;           // something has gone wrong...
+      b_ody=KCodecs::base64Decode(b_ody);
   }
-
-  b_ody=dwdest.c_str();
 
   enc->setDecoded(true);
   return true;
@@ -2097,10 +2097,8 @@ void KNAttachment::attach(KNMimeContent *c)
 
   if(e_ncoding.cte()==KNHeaders::CEbase64 || !type->isText()) { //encode base64
 
-    char *buff=new char[5710];
+    QByteArray buff(5710);
     int readBytes=0;
-    DwString dest;
-    DwString src;
     QCString data( (f_ile->size()*4/3)+10 );
     data.at(0)='\0';
 
@@ -2108,7 +2106,8 @@ void KNAttachment::attach(KNMimeContent *c)
       // read 5700 bytes at once :
       // 76 chars per line * 6 bit per char / 8 bit per byte => 57 bytes per line
       // we append 100 lines in a row => encode 5700 bytes
-      readBytes=f_ile->readBlock(buff, 5700);
+      buff.resize(5710);
+      readBytes=f_ile->readBlock(buff.data(), 5700);
       if(readBytes<5700 && f_ile->status()!=IO_Ok) {
         KNHelper::displayExternalFileError();
         delete c_ontent;
@@ -2116,12 +2115,10 @@ void KNAttachment::attach(KNMimeContent *c)
         break;
       }
 
-      src.assign(buff, readBytes);
-      DwEncodeBase64(src, dest);
-      data+=dest.c_str();
+      buff.resize(readBytes);
+      data+=KCodecs::base64Encode(buff, true);
+      data+="\n";
     }
-
-    delete[] buff;
 
     c_ontent->b_ody=data;
     e->setCte(KNHeaders::CEbase64);

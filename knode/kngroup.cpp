@@ -16,7 +16,6 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
-#include <mimelib/datetime.h>
 
 #include <ksimpleconfig.h>
 #include <klocale.h>
