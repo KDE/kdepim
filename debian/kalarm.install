@@ -1,7 +1,5 @@
 debian/tmp/usr/bin/kalarm
 debian/tmp/usr/bin/kalarmd
-debian/tmp/usr/lib/libkalarmd.so.0
-debian/tmp/usr/lib/libkalarmd.so.0.0.0
 debian/tmp/usr/share/applications/kde/kalarm.desktop
 debian/tmp/usr/share/applnk/.hidden/kalarmd.desktop
 debian/tmp/usr/share/applnk/Applications/kalarm.desktop
@@ -9,7 +7,6 @@ debian/tmp/usr/share/apps/kalarm
 debian/tmp/usr/share/autostart/kalarm.tray.desktop
 debian/tmp/usr/share/autostart/kalarmd.autostart.desktop
 debian/tmp/usr/share/doc/kde/HTML/en/kalarm
-debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd
 debian/tmp/usr/share/icons/crystalsvg/16x16/actions/kalarm.png
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kalarm.png
 debian/tmp/usr/share/icons/crystalsvg/22x22/actions/kalarm.png
