@@ -1,16 +1,20 @@
 [Desktop Entry]
 Name=TNEF File Viewer
+Name[da]=TNEF Fil-fremviser
 Name[es]=Vista de árbol TNEF
 Name[hu]=TNEF fájlnézegető
+Name[sk]=Prehliadač súborov TNEF
 Name[sv]=TNEF-filvisning
 Exec=ktnef %i %m -caption "%c"
 Icon=ktnef
 Type=Application
 DocPath=ktnef/ktnef.html
 Comment=A viewer/extractor for TNEF files
+Comment[da]=En fremviser/udtrækker for TNEF-filer
 Comment[es]=A visor/extractor para archivos TNEF
 Comment[hu]=Nézegetőprogram TNEF fájlokhoz
+Comment[sk]=Prehliadač/extraktor pre TNEF súbory
 Comment[sv]=Visning och uppackning av TNEF-filer
 Terminal=0
 MimeType=application/ms-tnef;
-Categories=Qt;KDE;Utility
+Categories=Qt;KDE;Utility;X-KDE-More
