@@ -146,6 +146,16 @@ const QValueList<Incidence::Attendee>& Incidence::attendees() const
   return mAttendees;
 }
 
+void Incidence::setSchedulingID( const QString& sid )
+{
+  mSchedulingID = sid;
+}
+
+QString Incidence::schedulingID() const
+{
+  return mSchedulingID;
+}
+
 bool Incidence::loadAttendeeAttribute( QDomElement& element,
                                        Attendee& attendee )
 {
@@ -305,6 +315,8 @@ bool Incidence::loadAttribute( QDomElement& element )
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
+  else if ( tagName == "scheduling-id" )
+    setSchedulingID( element.text() );
   else if ( tagName == "x-custom" )
     loadCustomAttributes( element );
   else {
@@ -344,6 +356,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
     int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", QString::number( alarmTime ) );
   }
+  writeString( element, "scheduling-id", schedulingID() );
   saveCustomAttributes( element );
   return true;
 }
@@ -606,6 +619,13 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     mRecurrence.exclusions = incidence->exDates();
   }
 
+  // Handle the scheduling ID
+  if ( incidence->schedulingID() == incidence->uid() )
+    // There is no scheduling ID
+    setSchedulingID( QString::null );
+  else
+    setSchedulingID( incidence->schedulingID() );
+
   // Unhandled tags and other custom properties (see libkcal/customproperties.h)
   const QMap<QCString, QString> map = incidence->customProperties();
   QMap<QCString, QString>::ConstIterator cit = map.begin();
@@ -727,6 +747,8 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 
     incidence->setExDates( mRecurrence.exclusions );
   }
+
+  incidence->setSchedulingID( schedulingID() );
 
   for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );

@@ -101,6 +101,9 @@ public:
   QValueList<Attendee>& attendees();
   const QValueList<Attendee>& attendees() const;
 
+  virtual void setSchedulingID( const QString& sid );
+  virtual QString schedulingID() const;
+
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
 
@@ -136,6 +139,7 @@ protected:
   Recurrence mRecurrence;
   QValueList<Attendee> mAttendees;
   QValueList<KCal::Attachment*> mAttachments;
+  QString mSchedulingID;
 
   struct Custom {
     QCString key;
