@@ -24,6 +24,7 @@
 
 class KLineEdit;
 class QCheckBox;
+class QSpinBox;
 
 class GroupwiseWizard : public KConfigWizard
 {
@@ -36,7 +37,7 @@ class GroupwiseWizard : public KConfigWizard
 
   private:
     KLineEdit *mServerEdit;
-    KLineEdit *mPortEdit;
+    QSpinBox *mPortEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;

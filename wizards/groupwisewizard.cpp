@@ -31,10 +31,10 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <qlayout.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
-
+#include <qlayout.h>
+#include <qspinbox.h>
 
 class CreateGroupwiseKcalResource : public KConfigPropagator::Change
 {
@@ -237,7 +237,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   label = new QLabel( i18n("Port:"), page );
   topLayout->addWidget( label, 1, 0 );
-  mPortEdit = new KLineEdit( page, "0123456789" );
+  mPortEdit = new QSpinBox( 1, 65536, 1, page );
   topLayout->addWidget( mPortEdit, 1, 1 );
 
   label = new QLabel( i18n("User name:"), page );
@@ -273,7 +273,7 @@ GroupwiseWizard::~GroupwiseWizard()
 void GroupwiseWizard::usrReadConfig()
 {
   mServerEdit->setText( GroupwiseConfig::self()->host() );
-  mPortEdit->setText( QString::number(GroupwiseConfig::self()->port()) );
+  mPortEdit->setValue( GroupwiseConfig::self()->port() );
   mUserEdit->setText( GroupwiseConfig::self()->user() );
   mPasswordEdit->setText( GroupwiseConfig::self()->password() );
   mSavePasswordCheck->setChecked( GroupwiseConfig::self()->savePassword() );
@@ -283,7 +283,7 @@ void GroupwiseWizard::usrReadConfig()
 void GroupwiseWizard::usrWriteConfig()
 {
   GroupwiseConfig::self()->setHost( mServerEdit->text() );
-  GroupwiseConfig::self()->setPort( mPortEdit->text().toUInt() );
+  GroupwiseConfig::self()->setPort( mPortEdit->value() );
   GroupwiseConfig::self()->setUser( mUserEdit->text() );
   GroupwiseConfig::self()->setPassword( mPasswordEdit->text() );
   GroupwiseConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
