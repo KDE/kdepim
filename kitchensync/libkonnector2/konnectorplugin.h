@@ -137,13 +137,13 @@ class Konnector : public QObject
     /**
       Write data contained in list of Syncee object back to device.
     */
-    virtual void write(Syncee::PtrList ) = 0;
+    virtual void write( Syncee::PtrList ) = 0;
 
   signals:
     /**
       This signal is emitted to provide the results to a startSync() call.
     */
-    void sync( Konnector *,  Syncee::PtrList );
+    void sync( Konnector *, Syncee::PtrList );
 
     void sig_progress( Konnector *, const Progress & );
     void sig_error( Konnector *, const Error & );

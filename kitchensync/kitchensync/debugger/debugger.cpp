@@ -38,6 +38,7 @@
 #include <qpushbutton.h>
 #include <qtextview.h>
 #include <qlayout.h>
+#include <qdatetime.h>
 
 typedef KParts::GenericFactory< KSync::Debugger> DebuggerFactory;
 K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
@@ -130,6 +131,8 @@ QWidget *Debugger::widget()
 
     mLogView = new QTextView( m_widget );
     topLayout->addWidget( mLogView );    
+
+    logMessage( i18n("Ready.") );
   }
   return m_widget;
 }
@@ -173,6 +176,14 @@ Konnector *Debugger::currentKonnector()
   }
 
   return (*it).konnector();
+}
+
+void Debugger::logMessage( const QString &message )
+{
+  QString text = "<b>" + QTime::currentTime().toString() + "</b>: ";
+  text += message;
+
+  mLogView->append( text );
 }
 
 #include "debugger.moc"

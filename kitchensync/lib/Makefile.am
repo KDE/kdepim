@@ -12,7 +12,8 @@ libksync2_la_SOURCES = \
   syncalgorithm.cpp standardsync.cpp \
   addressbooksyncee.cpp unknownsyncee.cpp \
   opiedesktopsyncee.cpp  todosyncee.cpp \
-  eventsyncee.cpp 
+  eventsyncee.cpp \
+  calendarsyncee.cpp
  
 
 METASOURCES = AUTO

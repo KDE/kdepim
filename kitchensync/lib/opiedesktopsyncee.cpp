@@ -102,7 +102,6 @@ bool OpieDesktopSyncEntry::equals( SyncEntry* entry )
         return true;
     else
         return false;
-
 }
 
 SyncEntry* OpieDesktopSyncEntry::clone()

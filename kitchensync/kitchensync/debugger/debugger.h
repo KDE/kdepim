@@ -50,7 +50,9 @@ class Debugger : public ManipulatorPart
     bool partIsVisible() const;
     QPixmap *pixmap();
     QString iconName() const;
-    QWidget* widget();
+    QWidget *widget();
+
+    void logMessage( const QString & );
 
   protected:
     Konnector *currentKonnector();
