@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Name=KPilot KNotes Conduit
+Name[fr]=Conduite pour KNotes de KPilot
+Name[nl]=KPilot Kanaal voor KNotes
+Implemented=file
+ServiceTypes=KPilotConduit
+Exec=conduitKNotes
