@@ -23,6 +23,7 @@
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
+#include <qregexp.h>
 
 #include <kglobal.h>
 #include <klocale.h>
