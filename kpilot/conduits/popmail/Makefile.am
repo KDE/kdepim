@@ -3,7 +3,7 @@
 ### The conduits are copyrighted by all kinds of people, see
 ### the individual files.
 
-INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/lib
+INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)

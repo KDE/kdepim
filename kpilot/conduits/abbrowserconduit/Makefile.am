@@ -2,7 +2,7 @@
 ###
 ### The abbrowser conduit is Copyright (C) 2001 by Greg Stern
 
-INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/lib 
+INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
