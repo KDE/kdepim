@@ -408,7 +408,7 @@ void TodoWidget::slotCreateNewRecord()
 			<< dbPath()
 			<< "/ToDoDB"
 			<< " and got pointer @"
-			<< (int) myDB
+			<< (void *) myDB
 			<< " with status "
 			<< ( myDB ? myDB->isDBOpen() : false )
 			<< endl;
