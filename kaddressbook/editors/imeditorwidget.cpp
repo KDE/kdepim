@@ -82,7 +82,7 @@ void IMAddressLVI::setAddress( const QString &address )
 		setText( 1, address );
 	else {
 		QString nickname = address.section(QChar(0xE120),0,0);
-		setText( 1, i18n("%1 on %2").arg(nickname).arg(serverOrGroup) );
+		setText( 1, i18n("<nickname> on <server>","%1 on %2").arg(nickname).arg(serverOrGroup) );
 	}
 	mAddress = address;
 }
