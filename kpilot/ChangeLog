@@ -1,11 +1,15 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-05-20  Adriaan de Groot
+* Tested new tarballs for 4.4.3, and they seem ok. Put their md5s up on the
+  website. Note that the memos-not-deleted-on-palm bug still exists, as
+  do 60 others by last count.
+
 2004-05-16  Adriaan de Groot
 * Put up the new KPilot.org website.
 * Updated docs about net: syncing, thanks to Miles Sabin.
 * Patch from Joern probably closes 4 bugs at once.
-
 
 2004-05-11  Reinhold Kainhofer
 * Deprecated the JPilotProxy and expenses conduits, moved to nonbeta.
