@@ -268,10 +268,12 @@ void LDAPOptionsWidget::initGUI()
   /*QLabel *label =*/ new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
 
   QHBox* hBox = new QHBox( groupBox );
+  hBox->setSpacing( 6 );
   // Contents of the hbox: listview and up/down buttons on the right (vbox)
   mHostListView = new KListView( hBox );
 
   QVBox* upDownBox = new QVBox( hBox );
+  upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox, "mUpButton" );
   mUpButton->setPixmap( BarIcon( "up", KIcon::SizeSmall ) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
