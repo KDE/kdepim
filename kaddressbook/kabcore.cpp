@@ -128,8 +128,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( setModified() ) );
 
   connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
-           SLOT( incrementalSearch( const QString& ) ) );
-  connect( mIncSearchWidget, SIGNAL( fieldChanged() ),
+           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
+  connect( mViewManager, SIGNAL( sortFieldChanged() ),
            mJumpButtonBar, SLOT( updateButtons() ) );
 
   connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
@@ -213,6 +213,11 @@ KActionCollection *KABCore::actionCollection() const
 KABC::Field *KABCore::currentSearchField() const
 {
   return mIncSearchWidget->currentField();
+}
+
+KABC::Field *KABCore::currentSortField() const
+{
+  return mViewManager->currentSortField();
 }
 
 QStringList KABCore::selectedUIDs() const
@@ -473,12 +478,23 @@ void KABCore::setSearchFields( const KABC::Field::List &fields )
   mIncSearchWidget->setFields( fields );
 }
 
-void KABCore::incrementalSearch( const QString& text )
+void KABCore::incrementalTextSearch( const QString& text )
+{
+  incrementalSearch( text, true );
+}
+
+void KABCore::incrementalJumpButtonSearch( const QString& text )
+{
+  incrementalSearch( text, false );
+}
+
+void KABCore::incrementalSearch( const QString& text, bool search )
 {
   mViewManager->setSelected( QString::null, false );
 
   if ( !text.isEmpty() ) {
-    KABC::Field *field = mIncSearchWidget->currentField();
+    KABC::Field *field = ( search ? mIncSearchWidget->currentField() : 
+                                    mViewManager->currentSortField() );
 
 #if KDE_VERSION >= 319
     KABC::AddresseeList list( mAddressBook->allAddressees() );
@@ -857,13 +873,13 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
-  topLayout->setSpacing( KDialogBase::spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( mWidget, KDialog::marginHint(),
+                                            KDialog::spacingHint() );
   QHBoxLayout *hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
 
   mIncSearchWidget = new IncSearchWidget( mWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
-           SLOT( incrementalSearch( const QString& ) ) );
+           SLOT( incrementalTextSearch( const QString& ) ) );
 
   mFilterSelectionWidget = new FilterSelectionWidget( mWidget );
   hbox->addWidget( mIncSearchWidget );
@@ -877,11 +893,17 @@ void KABCore::initGUI()
   mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
   mExtensionBarSplitter->setOrientation( Qt::Vertical );
 
-  mDetailsPage = new QWidget( mDetailsSplitter );
-  QVBoxLayout *detailsLayout = new QVBoxLayout( mDetailsPage, KDialog::marginHint(),
+  QWidget *detailsWidget = new QWidget( mDetailsSplitter );
+  QHBoxLayout *detailsLayout = new QHBoxLayout( detailsWidget );
+
+  mDetailsPage = new QWidget( detailsWidget );
+  detailsLayout->addWidget( mDetailsPage );
+
+  QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage,
+                                                    KDialog::marginHint(),
                                                 KDialog::spacingHint() );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
-  detailsLayout->addWidget( mDetails );
+  detailsPageLayout->addWidget( mDetails );
 
   mViewManager = new ViewManager( this, mExtensionBarSplitter );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
@@ -891,10 +913,9 @@ void KABCore::initGUI()
 
   mExtensionManager = new ExtensionManager( this, mExtensionBarSplitter );
 
-  mJumpButtonBar = new JumpButtonBar( this, mWidget );
-
-  hbox->addWidget( mJumpButtonBar );
-  hbox->setStretchFactor( mJumpButtonBar, 1 );
+  mJumpButtonBar = new JumpButtonBar( this, detailsWidget );
+  detailsLayout->addWidget( mJumpButtonBar );
+  detailsLayout->setStretchFactor( mJumpButtonBar, 1 );
 
   topLayout->setStretchFactor( hbox, 1 );
 

@@ -100,11 +100,8 @@ class AddresseeIconViewItem : public KIconViewItem
     AddresseeIconViewItem(const KABC::Field::List &fields,
                           KABC::AddressBook *doc, const KABC::Addressee &a, 
                           QIconView *parent)
-      : KIconViewItem(parent), mFields( fields ), mDocument(doc), mAddressee(a)
+      : KIconViewItem(parent), mDocument(doc), mAddressee(a)
       {
-          if ( mFields.isEmpty() ) {
-            mFields = KABC::Field::defaultFields();
-          }
           refresh();
       }
       
@@ -137,7 +134,6 @@ class AddresseeIconViewItem : public KIconViewItem
     }
     
   private:
-    KABC::Field::List mFields;
     KABC::AddressBook *mDocument;
     KABC::Addressee mAddressee;
 };
@@ -170,6 +166,12 @@ KAddressBookIconView::KAddressBookIconView( KAB::Core *core,
 
 KAddressBookIconView::~KAddressBookIconView()
 {
+}
+
+KABC::Field *KAddressBookIconView::sortField() const
+{
+  // we have hardcoded sorting, so we have to return a hardcoded field :(
+  return KABC::Field::allFields()[ 2 ];
 }
 
 void KAddressBookIconView::readConfig(KConfig *config)

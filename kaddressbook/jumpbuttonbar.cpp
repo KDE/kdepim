@@ -31,6 +31,7 @@
 #include <kabc/addressbook.h>
 #include <kabc/field.h>
 #include <kdebug.h>
+#include <kdialog.h>
 #include <klocale.h>
 
 #include "core.h"
@@ -77,7 +78,7 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
 {
   setMinimumSize( 1, 1 );
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
+  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), 0 );
   layout->setAlignment( Qt::AlignTop );
   layout->setAutoAdd( true );
   layout->setResizeMode( QLayout::FreeResize );
@@ -107,7 +108,7 @@ void JumpButtonBar::updateButtons()
   QPushButton *btn = new QPushButton( "", this );
   btn->hide();
   QSize buttonSize = style().sizeFromContents( QStyle::CT_PushButton, btn,
-                     fm.size( ShowPrefix, "X") ).
+                     fm.size( ShowPrefix, "X - X") ).
                      expandedTo( QApplication::globalStrut() );
   delete btn;
 
@@ -118,7 +119,7 @@ void JumpButtonBar::updateButtons()
   KABC::AddressBook::Iterator it;
   for ( it = ab->begin(); it != ab->end(); ++it ) {
     KABC::Field *field = 0;
-    field = mCore->currentSearchField();
+    field = mCore->currentSortField();
     if ( field ) {
       setEnabled( true );
       if ( !field->value( *it ).isEmpty() )
@@ -194,30 +195,43 @@ void JumpButtonBar::resizeEvent( QResizeEvent* )
   updateButtons();
 }
 
+class SortContainer
+{
+  public:
+    SortContainer() {}
+    SortContainer( const QString &string )
+      : mString( string )
+    {
+    }
+
+    bool operator< ( const SortContainer &cnt )
+    {
+      return ( QString::localeAwareCompare( mString, cnt.mString ) < 0 );
+    }
+
+    QString data() const
+    {
+      return mString;
+  }
+
+  private:
+    QString mString;
+};
+
 void JumpButtonBar::sortListLocaleAware( QStringList &list )
 {
-  QStringList::Iterator beginIt = list.begin();
-  QStringList::Iterator endIt = list.end();
+  QValueList<SortContainer> sortList;
 
-  --endIt;
-  if ( beginIt == endIt ) // don't need sorting
-    return;
+  QStringList::ConstIterator it;
+  for ( it = list.begin(); it != list.end(); ++it )
+    sortList.append( SortContainer( *it ) );
 
-  QStringList::Iterator walkBackIt = endIt;
-  while ( beginIt != endIt ) {
-    QStringList::Iterator j1 = list.begin();
-    QStringList::Iterator j2 = j1;
-    ++j2;
-    while ( j1 != walkBackIt ) {
-      if ( QString::localeAwareCompare( *j2, *j1 ) < 0 )
-        qSwap( *j1, *j2 );
+  qHeapSort( sortList );
+  list.clear();
 
-      ++j1;
-      ++j2;
-    }
-    ++beginIt;
-    --walkBackIt;
-  }
+  QValueList<SortContainer>::Iterator sortIt;
+  for ( sortIt = sortList.begin(); sortIt != sortList.end(); ++sortIt )
+    list.append( (*sortIt).data() );
 }
 
 #include "jumpbuttonbar.moc"

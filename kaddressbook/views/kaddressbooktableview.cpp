@@ -1,6 +1,7 @@
 // $Id$
 
 #include <qlayout.h>
+#include <qheader.h>
 #include <qvbox.h>
 #include <qlistbox.h>
 #include <qwidget.h>
@@ -113,6 +114,8 @@ void KAddressBookTableView::reconstructListView()
           SIGNAL(dropped(QDropEvent*)));
   connect( mListView, SIGNAL( contextMenu( KListView*, QListViewItem*, const QPoint& ) ),
            this, SLOT( rmbClicked( KListView*, QListViewItem*, const QPoint& ) ) );
+  connect( mListView->header(), SIGNAL( clicked(int) ),
+           SIGNAL( sortFieldChanged() ) );
 
   if (KABPrefs::instance()->mHonorSingleClick)
     connect(mListView, SIGNAL(executed(QListViewItem*)),
@@ -127,6 +130,12 @@ void KAddressBookTableView::reconstructListView()
   mainLayout->addWidget( mListView );
   mainLayout->activate();
   mListView->show();
+}
+
+KABC::Field *KAddressBookTableView::sortField() const
+{
+  // we have hardcoded sorting, so we have to return a hardcoded field :(
+  return ( mListView->sortColumn() == -1 ? fields()[ 0 ] : fields()[ mListView->sortColumn() ] );
 }
 
 void KAddressBookTableView::writeConfig(KConfig *config)

@@ -183,6 +183,12 @@ KAddressBookCardView::~KAddressBookCardView()
 {
 }
 
+KABC::Field *KAddressBookCardView::sortField() const
+{
+  // we have hardcoded sorting, so we have to return a hardcoded field :(
+  return KABC::Field::allFields()[ 0 ];
+}
+
 void KAddressBookCardView::readConfig(KConfig *config)
 {
   KAddressBookView::readConfig(config);

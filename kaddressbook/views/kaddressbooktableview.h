@@ -48,6 +48,8 @@ friend class ContactListView;
     virtual void refresh(QString uid = QString::null);
     virtual QStringList selectedUids();
     virtual void setSelected(QString uid = QString::null, bool selected = false);
+    virtual KABC::Field *sortField() const;
+
     virtual void readConfig(KConfig *config);
     virtual void writeConfig(KConfig *config);
     virtual QString type() const { return "Table"; }

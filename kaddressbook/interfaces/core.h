@@ -76,6 +76,11 @@ class Core : public QObject
     virtual KABC::Field *currentSearchField() const = 0;
 
     /**
+      Returns the current sort field.
+     */
+    virtual KABC::Field *currentSortField() const = 0;
+
+    /**
       Returns the uid list of the currently selected contacts.
      */
     virtual QStringList selectedUIDs() const = 0;

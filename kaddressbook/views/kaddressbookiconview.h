@@ -50,6 +50,7 @@ class KAddressBookIconView : public KAddressBookView
     
     virtual QStringList selectedUids();
     virtual QString type() const { return "Icon"; }
+    virtual KABC::Field *sortField() const;
     
     virtual void readConfig(KConfig *config);
     

@@ -111,6 +111,11 @@ class KABCore : public KAB::Core
     KABC::Field *currentSearchField() const;
 
     /**
+      Returns the current sort field of the view.
+     */
+    KABC::Field *currentSortField() const;
+
+    /**
       Returns the uid list of the currently selected contacts.
      */
     QStringList selectedUIDs() const;
@@ -220,7 +225,9 @@ class KABCore : public KAB::Core
       Search with the current search field for a contact, that matches
       the given text, and selects it in the view.
      */
-    void incrementalSearch( const QString& text );
+    void incrementalTextSearch( const QString& text );
+
+    void incrementalJumpButtonSearch( const QString& text );
 
     /**
       Marks the address book as modified.
@@ -337,6 +344,8 @@ class KABCore : public KAB::Core
   private:
     void initGUI();
     void initActions();
+
+    void incrementalSearch( const QString&, bool );
 
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );

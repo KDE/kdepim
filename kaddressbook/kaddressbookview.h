@@ -146,6 +146,11 @@ class KAddressBookView : public QWidget
      */
     KAB::Core *core() const;
 
+    /**
+      @return The current sort field.
+     */
+    virtual KABC::Field *sortField() const = 0;
+
   public slots:
     /**
       Must be overloaded in subclasses to refresh the view.
@@ -214,6 +219,11 @@ class KAddressBookView : public QWidget
       droppable (ie: if it is a vcard).
      */
     void dropped( QDropEvent* );
+
+    /**
+      This signal is emitted whenever the sort field changed.
+     */
+    void sortFieldChanged();
 
   protected:
     /**

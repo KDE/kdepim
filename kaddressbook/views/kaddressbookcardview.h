@@ -51,6 +51,7 @@ class KAddressBookCardView : public KAddressBookView
     
     virtual QStringList selectedUids();
     virtual QString type() const { return "Card"; }
+    virtual KABC::Field *sortField() const;
     
     virtual void readConfig(KConfig *config);
     virtual void writeConfig(KConfig *);

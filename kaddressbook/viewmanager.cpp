@@ -143,6 +143,14 @@ void ViewManager::setFilterSelectionWidget( FilterSelectionWidget *wdg )
   mFilterSelectionWidget = wdg;
 }
 
+KABC::Field *ViewManager::currentSortField() const
+{
+  if ( mActiveView )
+    return mActiveView->sortField();
+  else
+    return 0;
+}
+
 void ViewManager::setSelected( const QString &uid, bool selected )
 {
   if ( mActiveView )
@@ -197,6 +205,7 @@ void ViewManager::setActiveView( const QString &name )
       connect( view, SIGNAL( dropped( QDropEvent* ) ),
                SLOT( dropped( QDropEvent* ) ) );
       connect( view, SIGNAL( startDrag() ), SLOT( startDrag() ) );
+      connect( view, SIGNAL( sortFieldChanged() ), SIGNAL( sortFieldChanged() ) );
     }
   }
 

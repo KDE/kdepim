@@ -66,6 +66,8 @@ class ViewManager : public QWidget
 
     void setFilterSelectionWidget( FilterSelectionWidget *wdg );
 
+    KABC::Field *currentSortField() const;
+
   public slots:
     void setSelected( const QString &uid = QString::null, bool selected = true );
 
@@ -109,6 +111,11 @@ class ViewManager : public QWidget
       Emitted whenever a url is dragged on a view.
      */
     void urlDropped( const KURL& );
+
+    /**
+      Emitted whenever the sort field of a view has changed.
+     */
+    void sortFieldChanged();
 
   private slots:
     void setActiveView( const QString &name );
