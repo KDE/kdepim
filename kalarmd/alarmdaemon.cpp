@@ -43,6 +43,7 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
 
+#include "alarmguiiface.h"
 #include "alarmguiiface_stub.h"
 #include "alarmapp.h"
 
@@ -237,12 +238,14 @@ void AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
 {
   kdDebug(5900) << "AlarmDaemon::registerApp_(" << appName << ", " << appTitle << ", "
                 <<  dcopObject << ", " << notificationType << ", " << reregister << ")" << endl;
-  bool result = true;
+  AlarmGuiIface::RegResult result = AlarmGuiIface::SUCCESS;
   if (appName.isEmpty())
-    result = false;
-  else if (KStandardDirs::findExe(appName).isNull()) {
-      kdError() << "AlarmDaemon::registerApp(): app not found\n";
-    result = false;
+    result = AlarmGuiIface::FAILURE;
+  else if ((notificationType == ClientInfo::DCOP_START_NOTIFY
+              ||  notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
+       &&  KStandardDirs::findExe(appName).isNull()) {
+    kdError() << "AlarmDaemon::registerApp(): app not found\n";
+    result = AlarmGuiIface::NOT_FOUND;
   }
   else {
       ClientInfo c = getClientInfo(appName);
@@ -500,8 +503,8 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
     {
       // The client application is not running, or is not yet ready
       // to receive notifications.
-      if (client.notificationType == ClientInfo::NO_START_NOTIFY
-      ||  client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
+      if (client.notificationType == ClientInfo::DCOP_NOTIFY
+      ||  client.notificationType == ClientInfo::DCOP_COPY_NOTIFY) {
         if (registered)
           kdDebug(5900) << "AlarmDaemon::notifyEvent(): client not ready\n";
         else
@@ -527,14 +530,15 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         return true;
       }
 
-      // Notification type = DCOP_NOTIFY: start client and then use DCOP
+      // Notification type = DCOP_START_NOTIFY: start client and then use DCOP
       p.start(KProcess::Block);
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): started " << cmd << endl;
         return false;
-      }
+    }
 
-    if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
+    if (client.notificationType == ClientInfo::DCOP_COPY_NOTIFY)
     {
+      // Notify the client by sending a copy of the incidence
       Incidence *incidence = calendar->event( eventID );
       if (!incidence) {
         incidence = calendar->todo( eventID );
@@ -560,6 +564,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
     }
     else
     {
+      // Notify the client by telling it the calendar URL and event ID
       AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
       stub.handleEvent( calendar->urlString(), eventID );
       if ( !stub.ok() ) {

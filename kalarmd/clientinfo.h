@@ -41,12 +41,12 @@ class ADCalendar;     // this class must be derived from ADCalendarBase
 // Alarm Daemon client which receives calendar events
 struct ClientInfo
 {
-    enum NotificationType       // how to notify client about events if client isn't running
+    enum NotificationType       // how to notify client about events, and how to start client if not running
     {
-      NO_START_NOTIFY     = 0,  // don't start client if it isn't running
-      DCOP_NOTIFY         = 1,  // start client and use DCOP to notify about events
-      COMMAND_LINE_NOTIFY = 2,  // start client and use command line arguments to notify about events
-      DCOP_SIMPLE_NOTIFY  = 3   // Use simple DCOP call to notify about events
+      DCOP_NOTIFY         = 0,  // don't start client; send event ID via DCOP
+      DCOP_START_NOTIFY   = 1,  // start client; send event ID via DCOP
+      COMMAND_LINE_NOTIFY = 2,  // start client and use command line arguments; else send event ID via DCOP
+      DCOP_COPY_NOTIFY    = 3   // don't start client; send copy of event via DCOP
     };
     ClientInfo() : mValid( false ) { }
     ClientInfo(const QCString &appName, const QString &title,

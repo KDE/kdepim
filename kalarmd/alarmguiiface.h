@@ -45,8 +45,18 @@ class AlarmGuiIface : virtual public DCOPObject
     virtual ASYNC handleEvent(const QString& calendarURL,
                               const QString& eventID) = 0;
     virtual ASYNC handleEvent( const QString &iCalendarString ) = 0;
-    /** Called to indicate success/failure of (re)register() call */
-    virtual ASYNC registered( bool reregister, bool success ) = 0;
+    /** Called to indicate success/failure of (re)register() call.
+        @param result success/failure code. Value is of type AlarmGuiRegResult.
+     */
+    virtual ASYNC registered( bool reregister, int result ) = 0;
+
+  public:
+    enum RegResult   // result code of registerApp() DCOP call
+    {
+      FAILURE   = 0,
+      SUCCESS   = 1,
+      NOT_FOUND = 2    // notification type requires client start, but client executable not found
+    };
 };
 
 #endif
