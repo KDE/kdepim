@@ -116,7 +116,8 @@ bool Event::saveAttributes( QDomElement& element ) const
     writeString( element, "show-time-as", "free" );
   else
     writeString( element, "show-time-as", "busy" );
-  writeString( element, "end-date", dateTimeToString( endDate() ) );
+  if ( mHasEndDate )
+    writeString( element, "end-date", dateTimeToString( endDate() ) );
 
   return true;
 }
