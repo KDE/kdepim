@@ -1303,7 +1303,7 @@ file picker.
 <warning><para>
 You can use the address book conduit with any application that accepts a file in
 the vCard format as a resource. However, some applications may not handle
-gracefully the synchronization while they are open. As a rule of thumb,
+the synchronization gracefully while they are open. As a rule of thumb,
 quit these applications before synchronizing, otherwise you may lose data.
 There is no need to take these precautions when syncing with the  &kde; address
 book.
