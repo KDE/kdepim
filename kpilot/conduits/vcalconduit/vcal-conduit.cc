@@ -308,7 +308,11 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // END TIME //
   vo = isAPropertyOf(vevent, VCDTendProp);
   
-  bool multiDay = (dateEntry.getRepeatType() == repeatDaily);
+  // Patch by Heiko
+  //
+  //
+  bool multiDay = ( (dateEntry.getRepeatType() == repeatDaily) &&
+		dateEntry.getEvent() );
 
   if (multiDay) {
   }
@@ -423,11 +427,14 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   vo = isAPropertyOf(vevent, VCRRuleProp);
   // pilot entries that repeat daily are not what we consider daily
   // repeating events in vCalendar/KOrganizer.  It is actually a multi-day
-  // appointment.  We need to conver it to this sort of thing (done above).
+  // appointment.  We need to convert it to multi-day (done above).
   if (dateEntry.getRepeatType() != repeatNone &&
-      dateEntry.getRepeatType() != repeatDaily) {
+		!multiDay) {
     tmpStr = "";
     switch(dateEntry.getRepeatType()) {
+	case repeatDaily:
+		tmpStr.sprintf("D%i ", dateEntry.getRepeatFrequency());
+		break;
     case repeatWeekly:
       tmpStr.sprintf("W%i ", dateEntry.getRepeatFrequency());
       if (dateEntry.getRepeatDays()[0])
@@ -495,11 +502,18 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
 
   // EXCEPTION(S) //
+	if (multiDay && dateEntry.getExceptionCount())
+	{
+		kdDebug() << fname
+			<< ": WARNING Exceptions ignored for multi-day event "
+			<< dateEntry.getDescription()
+			<< endl ;
+	}
   vo = isAPropertyOf(vevent, VCExDateProp);
-  tmpStr = "";
+  tmpStr = QString::null ;
   if (dateEntry.getExceptionCount()) {
     for (int i = 0; i < dateEntry.getExceptionCount(); i++) {
-      tmpStr = TmToISO(dateEntry.getExceptions()[i]);
+      tmpStr += TmToISO(dateEntry.getExceptions()[i]);
       tmpStr += ";";
     }
     tmpStr.truncate(tmpStr.length()-1);
@@ -840,11 +854,27 @@ void VCalConduit::doLocalSync()
 				 dateEntry->getEventEnd().tm_min,
 				 dateEntry->getEventEnd().tm_sec));
 
-	if (tmpDtStart.daysTo(tmpDtEnd)) {
+	if (tmpDtStart.daysTo(tmpDtEnd) &&
+		dateEntry->getEventStart().tm_hour == 0 &&
+		dateEntry->getEventStart().tm_min == 0 &&
+		dateEntry->getEventStart().tm_sec == 0)
+	{
 	  // multi day event
 	  dateEntry->setRepeatType(repeatDaily);
 	  dateEntry->setRepeatFrequency(1);
 	  dateEntry->setRepeatEnd(dateEntry->getEventEnd());
+		if (isAPropertyOf(vevent, VCExDateProp) != 0L) 
+		{
+			char *s=0L;
+			vo = isAPropertyOf(vevent, VCSummaryProp);
+			if (vo) s = fakeCString(vObjectUStringZValue(vo)) ;
+
+			kdDebug() << fname
+				<< ": WARNING: exceptions ignored "
+				   "for multi-day event "
+				<< s
+				<< endl ;
+		}
 	  struct tm thing = dateEntry->getEventEnd();
 	}
 
