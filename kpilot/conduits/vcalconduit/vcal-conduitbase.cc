@@ -326,9 +326,8 @@ error:
 			fCalendar->setLocalTime();*/
 			if ( !fCalendar)
 			{
-#ifdef DEBUG
-				DEBUGCONDUIT << "Cannot initialize calendar object for file "<<fCalendarFile<<endl;
-#endif
+				kdWarning() << k_funcinfo << 
+				    "Cannot initialize calendar object for file "<<fCalendarFile<<endl;
 				return false;
 			}
 #ifdef DEBUG
@@ -354,9 +353,8 @@ error:
 			fCalendar = new KCal::CalendarResources(tz);
 			if ( !fCalendar)
 			{
-#ifdef DEBUG
-				DEBUGCONDUIT << "Cannot initialize calendar object for ResourceCalendar"<<endl;
-#endif
+				kdWarning() << k_funcinfo << "Cannot initialize calendar "<<
+					"object for ResourceCalendar"<<endl;
 				return false;
 			}
 			break;
