@@ -1604,6 +1604,7 @@ use the same database.</para>
 
 </sect2>
 
+<!--
 <sect2 id="appearance-tab-messages-scoring">
 <title>Messages Scoring</title>
 
@@ -1623,10 +1624,12 @@ messages have a high score and you can then use the
 <para>The <guilabel>display message</guilabel> action will display
 a dialog when you enter a folder with a matching message.</para>
 
+</sect2>
+-->
+
 <!-- fixme?: date + less than/greater than broken in kmail -->
 <!-- fixme?: "group" wording in program -->
 
-</sect2>
 
 </sect1>
 
