@@ -17,8 +17,7 @@ testalarmdlg_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testalarmdlg_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
 testalarmdlg_SOURCES = testalarmdlg.cpp alarmdialog.cpp koeventviewer.cpp
 
-bin_PROGRAMS = kalarmd korgac
-#bin_PROGRAMS = kalarmd kalarmdgui korgac
+bin_PROGRAMS = kalarmd korgac simplekalarmd
 
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
@@ -27,15 +26,6 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
         adconfigdatarw.cpp \
         alarmdaemoniface.skel
 
-#kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-#kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
-#kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp 
-#	dockwindow.cpp 
-#	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp 
-#        clientinfo.cpp 
-#        adcalendarbase.cpp adcalendar_gui.cpp 
-#        alarmguiiface.skel
-
 korgac_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 korgac_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
@@ -43,23 +33,26 @@ korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
 	koeventviewer.cpp koalarmclient.cpp \
         alarmguiiface.skel
 
+simplekalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+simplekalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
+simplekalarmd_SOURCES = simplekalarmd.cpp alarmdialog.cpp koeventviewer.cpp
+
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h \
         adcalendarbase.h adcalendar.h adcalendar_gui.h \
-	adconfigdatabase.h adconfigdatarw.h clientinfo.h compat.h
+	adconfigdatabase.h adconfigdatarw.h clientinfo.h compat.h \
+        simplekalarmd.h
 
 METASOURCES = AUTO
 
 SUBDIRS = pixmaps
  
-autostart_DATA = kalarmd.autostart.desktop korgac.desktop # kalarmdgui.desktop
+autostart_DATA = kalarmd.autostart.desktop korgac.desktop
 autostartdir = $(prefix)/share/autostart
 
 app_DATA = kalarmd.desktop
 appdir = $(kde_appsdir)/.hidden
-
-#datadir = $(kde_bindir)
 
 KDE_ICON = AUTO
 
