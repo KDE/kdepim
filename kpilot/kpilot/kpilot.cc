@@ -1001,7 +1001,7 @@ static KCmdLineOptions kpilotoptions[] = {
 		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
 		0L},
 	{"c", 0, 0},
-	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead."), 0L},
+	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead"), 0L},
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif

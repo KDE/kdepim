@@ -28,7 +28,7 @@ static const char description[] =
 
 static KCmdLineOptions options[] =
 {
-  { "+[file]", I18N_NOOP("An optional argument 'file'."), 0 },
+  { "+[file]", I18N_NOOP("An optional argument 'file'"), 0 },
   KCmdLineLastOption
   // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
