@@ -179,23 +179,28 @@ SysInfoConduit::~SysInfoConduit()
 
 void SysInfoConduit::readConfig()
 {
-	FUNCTIONSETUP;
-	
-#ifdef DEBUG
-	DEBUGCONDUIT<<"Output file="<<SysinfoSettings::outputFile()<<" with type "<<
-		SysinfoSettings::outputFormat()<<" (Template:"<<SysinfoSettings::templateFile()<<")"<<endl;
-	DEBUGCONDUIT<<"HW:"<<SysinfoSettings::hardwareInfo()<<",User:"<<SysinfoSettings::userInfo()<<
-		",Mem:"<<SysinfoSettings::memoryInfo()<<",Sto:"<<SysinfoSettings::storageInfo()<<endl;
-	DEBUGCONDUIT<<"DBL:"<<SysinfoSettings::databaseList()<<",Rec:"<<SysinfoSettings::recordNumbers()<<
-		",KDE:"<<SysinfoSettings::kDEVersion()<<",PalmOS:"<<SysinfoSettings::palmOSVersion()<<endl;
-#endif
+	fOutputFile = SysinfoSettings::outputFile();
+	fOutputType = (eOutputTypeEnum) SysinfoSettings::outputFormat();
+	fTemplateFile = SysinfoSettings::templateFile();
+	fHardwareInfo = SysinfoSettings::hardwareInfo();
+	fUserInfo = SysinfoSettings::userInfo();
+	fMemoryInfo = SysinfoSettings::memoryInfo();
+	fStorageInfo = SysinfoSettings::storageInfo();
+	fDBList = SysinfoSettings::databaseList();
+	fRecordNumber = SysinfoSettings::recordNumbers();
+	fSyncInfo = SysinfoSettings::syncInfo();
+	fKDEVersion = SysinfoSettings::kDEVersion();
+	fPalmOSVersion = SysinfoSettings::palmOSVersion();
+	fDebugInfo = SysinfoSettings::debugInformation();
 }
 
 
 /* virtual */ bool SysInfoConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<id_conduit_sysinfo<<endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << id_conduit_sysinfo<<endl;
+#endif
 
 	readConfig();
 
@@ -572,6 +577,9 @@ void SysInfoConduit::writeFile()
 
 	// Write out the result
 	QFile outfile(fOutputFile);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Writing file <" << fOutputFile << ">" << endl;
+#endif
 	if (fOutputFile.isEmpty() || (!outfile.open(IO_WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
 		fOutputFile=fi.absFilePath();
