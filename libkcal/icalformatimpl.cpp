@@ -48,39 +48,16 @@ using namespace KCal;
 namespace KCal {
 
 /**
- * Sigh. icaltime_compare() does not handle ical_null_time()s, so we must
- * make our own.
- */
-static int compareDateTimes(icaltimetype a, icaltimetype b)
-{
-// TODO: Get rid of macro
-#define COMPARE_PAIR(field) \
-if (a.field < b.field) \
-  return -1; \
-if (a.field > b.field) \
-  return +1;
-  
-  COMPARE_PAIR(year)
-  COMPARE_PAIR(month)
-  COMPARE_PAIR(day)
-  COMPARE_PAIR(hour)
-  COMPARE_PAIR(minute)
-  COMPARE_PAIR(second)
-  return 0;
-#undef COMPARE_PAIR
-}
-
-/**
  * A TimezonePhase represents a setting within a timezone, e.g. standard or
  * daylight savings.
  */
 typedef struct icaltimezonephase icaltimezonephase;
-class TimezonePhase : public icaltimezonephase {
+class TimezonePhase : private icaltimezonephase {
   public:
     /**
      * Contructor for a timezone phase.
      */
-    TimezonePhase(icalcomponent *c)
+    TimezonePhase(ICalFormatImpl *parent, icalcomponent *c)
     {
       tzname = (const char *)0;
       is_stdandard = 1;
@@ -92,7 +69,7 @@ class TimezonePhase : public icaltimezonephase {
       rdate.time = icaltime_null_time();
       rdate.period = icalperiodtype_null_period();
       rrule = (const char *)0;
-      memset(&mRrule, sizeof(mRrule), 0);
+      mRrule = new Recurrence((Incidence *)0);
 
       // Now do the ical reading.  
       icalproperty *p = icalcomponent_get_first_property(c,ICAL_ANY_PROPERTY);  
@@ -125,7 +102,11 @@ class TimezonePhase : public icaltimezonephase {
             break;
     
           case ICAL_RRULE_PROPERTY:  
-            mRrule = icalproperty_get_rrule(p);
+            {
+              struct icalrecurrencetype r = icalproperty_get_rrule(p);
+
+              parent->readRecurrence(r,mRrule);
+            }
             break;
     
           default:
@@ -142,61 +123,55 @@ class TimezonePhase : public icaltimezonephase {
      */
     ~TimezonePhase()
     {
+      delete mRrule;
     }
 
     /**
      * Find the nearest start time of this phase just before a given time.
      */
-    icaltimetype nearestStart(const icaltimetype *t)
-    {
-      icaltimetype previous = icaltime_null_time();
-      
+    QDateTime nearestStart(const QDateTime &t) const
+    {      
+      QDateTime tmp(QDate(dtstart.year,dtstart.month,dtstart.day), QTime(dtstart.hour,dtstart.minute,dtstart.second));     
       // If this phase was not valid at the given time, give up.
-      if (compareDateTimes(dtstart,*t) > 0) {
+      if (tmp > t) {
         kdDebug(5800) << "TimezonePhase::nearestStart(): Phase not valid" << endl;
-        return previous;
+        return QDateTime();
       }
       
-      icalrecur_iterator* ritr;
-      ritr = icalrecur_iterator_new(mRrule,dtstart);
-      struct icaltimetype next;
-      
-      // Main loop. Find the recurrance with the latest start date before t.
-      while (next = icalrecur_iterator_next(ritr), !icaltime_is_null_time(next)) {
-        switch (compareDateTimes(next,*t)) {
-        case -1:
-          // The new result is the better one.
-          previous = next;
-          break;
-        case 0:
-          // We found a phase that starts exactly when our event starts. This 
-          // must be the best possible match.
-          return next;
-        case +1:
-          // The previous recurrance was a better match. Go with that one.
-          return previous;
-        }
-      }
+      // The Recurrance class's getPreviousDateTime() logic was not designed for 
+      // start times which are not aligned with a reference time, but a little 
+      // magic is sufficient to work around that...
+      QDateTime previous = mRrule->getPreviousDateTime(tmp);
+      if (mRrule->getNextDateTime(previous) < tmp)
+        previous = mRrule->getNextDateTime(previous);
       return previous;
+    }
+
+    /**
+     * Offset of this phase in seconds.
+     */    
+    int offset() const
+    {
+      return offsetto;
     }
     
     // Hide the missnamed "is_stdandard" variable in the base class.
     int mIsStandard;
   
     // Supplement the "rrule" in the base class.
-    icalrecurrencetype mRrule;
+    Recurrence *mRrule;
 };
 
 /**
  * A Timezone.
  */
 typedef struct icaltimezonetype icaltimezonetype;
-class Timezone : public icaltimezonetype {
+class Timezone : private icaltimezonetype {
   public:
     /**
      * Contructor for a timezone.
      */
-    Timezone(icalcomponent *vtimezone)
+    Timezone(ICalFormatImpl *parent, icalcomponent *vtimezone)
     {
       tzid = (const char *)0;
       last_mod = icaltime_null_time();
@@ -249,14 +224,14 @@ class Timezone : public icaltimezonetype {
     
           case ICAL_XSTANDARD_COMPONENT:  
             kdDebug(5800) << "---standard phase: found" << endl;
-            phase = new TimezonePhase(c);
+            phase = new TimezonePhase(parent,c);
             phase->mIsStandard = 1;
             mPhases.append(phase);
             break;
     
           case ICAL_XDAYLIGHT_COMPONENT:  
             kdDebug(5800) << "---daylight phase: found" << endl;
-            phase = new TimezonePhase(c);
+            phase = new TimezonePhase(parent,c);
             phase->mIsStandard = 0;
             mPhases.append(phase);
             break;
@@ -279,30 +254,33 @@ class Timezone : public icaltimezonetype {
     }
   
     /**
+     * The string id of this timezone. Make sure we always have quotes!
+     */
+    QString id() const
+    {            
+      if (tzid[0] != '"') {
+        return QString("\"") + tzid + '"';
+      } else {
+        return tzid;
+      }
+    }
+    
+    /**
      * Find the nearest timezone phase just before a given time.
      */
-    const TimezonePhase *nearestStart(const icaltimetype *t)
+    const TimezonePhase *nearestStart(const QDateTime &t)
     {
       unsigned i;
       unsigned result = 0;
-      icaltimetype previous = icaltime_null_time();
-      icaltimetype next;
+      QDateTime previous;
+      QDateTime next;
       
       // Main loop. Find the phase with the latest start date before t.
       for (i = 0; i < mPhases.count(); i++) {
         next = mPhases.at(i)->nearestStart(t);
-        switch (compareDateTimes(previous,next)) {
-        case -1:
-          // The new result is the better one.
+        if (previous.isNull() || previous < next) {
           previous = next;
           result = i;
-          break;
-        case 0:
-          // Two phases with the same start date. Just carry on looking.
-          break;
-        case +1:
-          // The result we already have is the better one.
-          break;
         }
       }  
       return mPhases.at(result);
@@ -311,24 +289,16 @@ class Timezone : public icaltimezonetype {
     /**
      * Convert the given time to UTC.
      */
-    void toUtc(icaltimetype *t)
+    int offset(icaltimetype t)
     { 
-      // Play safe.
-      if (t->is_utc)
-        return;
-          
-      const TimezonePhase *phase = nearestStart(t);
+      QDateTime tmp(QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second));     
+      const TimezonePhase *phase = nearestStart(tmp);
       
       if (phase) {
-        // Apply the offset, and mark the structure as UTC!
-        t->second -= phase->offsetto;
-        *t = icaltime_normalize(*t);
-        t->is_utc = 1;
-        //free((void *)t->zone);
-        //t->zone = (char *)0;
+        return phase->offset();
       } else {
-        kdError(5800) << "Timezone::toUtc() cannot find phase " 
-            << t->zone << endl;
+        kdError(5800) << "Timezone::offset() cannot find phase for " << tmp << endl;
+        return 0;
       }
     }
     
@@ -1081,14 +1051,9 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 // because we always store in UTC.
 void ICalFormatImpl::readTimezone(icalcomponent *vtimezone)
 {
-  Timezone *timezone = new Timezone(vtimezone);
-             
-  // Add to the dictionary. Make sure we always have quotes!
-  if (timezone->tzid[0] != '"') {
-    mTimezones.insert(QString("\"") + timezone->tzid + '"', timezone);
-  } else {
-    mTimezones.insert(timezone->tzid, timezone);
-  }
+  Timezone *timezone = new Timezone(this, vtimezone);
+  
+  mTimezones.insert(timezone->id(), timezone);
 }
 
 Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
@@ -2029,7 +1994,10 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
       timezone = mTimezones.find(t.zone);
     }
     if (timezone) {
-      timezone->toUtc(&t);
+      // Apply the offset, and mark the structure as UTC!
+      t.second -= timezone->offset(t);
+      t = icaltime_normalize(t);
+      t.is_utc = 1;
     } else {
       kdError(5800) << "ICalFormatImpl::readICalDateTime() cannot find timezone " 
             << t.zone << endl;
@@ -2478,7 +2446,8 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 }
 
 // This function reads any TZID setting for an icaltime. TBD: incorporate
-// this into icalproperty_get_dtend()/icalproperty_get_dtend()?
+// this into icalproperty_get_datetime() so it is picked up everywhere as
+// needed?
 void ICalFormatImpl::readTzidParameter( icalcomponent *p,
                                         icaltimetype &icaltime )
 {
