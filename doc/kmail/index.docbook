@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>19/11/2000</date>
+<date>03/12/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -624,7 +624,8 @@ your account settings. See the <link linkend="secgettingstarted">Getting started
 information on the settings in the <guilabel>Network</guilabel> tab.</para>
 
 <para>To check mail from a particular account, use the <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail in...</guimenuitem></menuchoice>
-submenu to select the account to use to check your mail.</para>
+submenu to select the account to use to check your mail. You can also press the mouse button
+on the Check Mail icon for some time to get a list of accounts.</para>
 </sect1>
 
 <sect1 id="secpgp">
