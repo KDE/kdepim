@@ -7,6 +7,7 @@ INCLUDES = -I$(top_srcdir)/kmail \
            -I$(top_srcdir)/mimelib \
            -I$(top_srcdir)/libemailfunctions \
            -I$(top_srcdir) \
+           -I$(top_builddir)/libkdepim \
            $(all_includes)
 
 kde_module_LTLIBRARIES = libkmail_bodypartformatter_text_vcard.la \
