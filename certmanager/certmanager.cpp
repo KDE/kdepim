@@ -986,7 +986,7 @@ void CertManager::slotDeleteCertificate() {
 						  "certificates are issuers (CA certificates) "
 						  "for other, non-selected certificates.\n"
 						  "Deleting a CA certificate will also delete "
-						  "all certificates issued by it.\n"),
+						  "all certificates issued by it."),
 					     i18n("Deleting CA Certificates") )
 	 != KMessageBox::Continue )
       return;
