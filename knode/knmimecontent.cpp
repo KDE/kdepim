@@ -1035,9 +1035,7 @@ void KNContentCodec::setCharset(const QString &chset)
 
   KCharsets *c=KGlobal::charsets();
 
-  c_sAvailable = ((c->nameToID(c_harset)!=QFont::AnyCharSet) && c->isAvailable(c_harset));
-
-  if(!c_sAvailable)
+  if(!(c_sAvailable=c->isAvailable(c_harset)))
     c_odec=0;
   else
     c_odec=c->codecForName(c_harset);
