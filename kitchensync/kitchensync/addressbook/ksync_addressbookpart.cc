@@ -233,6 +233,7 @@ void AddressBookPart::doMeta( Syncee* syncee, const QString& path ) {
 void AddressBookPart::writeMeta( KABC::AddressBook* book, const QString& path ) {
     /* no meta info to save */
     if (path.isEmpty() ) return;
+
     kdDebug() << "WriteMeta AddressBookPart " << endl;
     QString str = QDir::homeDirPath();
     str += "/.kitchensync/meta/konnector-" + path;
@@ -263,34 +264,35 @@ void AddressBookPart::writeMeta( KABC::AddressBook* book, const QString& path ) 
     }
 }
 void AddressBookPart::save( AddressBookSyncee* sync, const QString& path,  const QString& meta) {
+    bool pIsDefault = false;
     AddressBookSyncEntry* entry;
-    kdDebug() << "save" << endl;
     KABC::AddressBook* book;
-    if ( pathIsDefault( path ) ) { // save to the std. addressbook
-        book = KABC::StdAddressBook::self();
 
+    pIsDefault = pathIsDefault( path );
+
+    // save to the std. addressbook
+    if ( pIsDefault ) {
+        book = KABC::StdAddressBook::self();
     }else {
-        kdDebug() << "non default save" << endl;
         book = new KABC::AddressBook() ;
         /* resource get's deleted for us */
         KABC::ResourceFile *file = new KABC::ResourceFile(book, path );
         book->addResource(file );
     }
+    /* clear the old book first */
     book->clear();
+
     for ( entry = (AddressBookSyncEntry*)sync->firstEntry();
           entry;
           entry= (AddressBookSyncEntry*) sync->nextEntry() ) {
-        kdDebug() << "Writing addresse " << endl;
         if( entry->state() != SyncEntry::Removed )
             book->insertAddressee( entry->addressee() );
     }
-    kdDebug() << "dumping abook " << endl;
-    book->dump();
-    book->saveAll();
+    saveAll( book );
     kdDebug() << "dumped abook " << endl;
     writeMeta( book, meta );
 
-    if (!pathIsDefault( path ) )
+    if (!pIsDefault )
         delete book;
     else
         KABC::StdAddressBook::close();
@@ -312,5 +314,17 @@ AddressBookSyncee* AddressBookPart::book2syncee( KABC::AddressBook* book) {
         syncee->addEntry( entry );
     }
     return syncee;
+}
+void AddressBookPart::saveAll( KABC::AddressBook* ab) {
+    KABC::Resource *res = 0l;
+    QPtrList<KABC::Resource> list = ab->resources();
+    for (uint i = 0; i < list.count(); ++i ) {
+        res = list.at( i );
+        if (!res->readOnly() ) {
+            KABC::Ticket* ticket = ab->requestSaveTicket( res );
+            if (ticket)
+                ab->save( ticket );
+        }
+    }
 }
 #include "ksync_addressbookpart.moc"

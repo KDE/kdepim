@@ -42,7 +42,7 @@ class SyncEntry
      * Every SyncEntry should have a parent Syncee
      * where it belongs to.
      */
-    SyncEntry(Syncee* parent =0);
+    SyncEntry(Syncee* parent = 0);
     SyncEntry( const SyncEntry& );
     virtual ~SyncEntry();
 
@@ -134,11 +134,12 @@ class SyncEntry
 
     /**
      * Creates an exact copy of the this SyncEntry
+     * deleting the original is save
      */
     virtual SyncEntry* clone() = 0;
 
     /**
-       Set the @ref KSyncee data set, the entry belongs to.
+       Set the @ref Syncee data set, the entry belongs to.
     */
     void setSyncee(Syncee *);
 
@@ -157,7 +158,7 @@ class SyncEntry
 
 /**
   @short A data set to be synced.
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher, zecke
   @see SyncEntry, Syncer
 
   This class represents a data set of SyncEntries. During a syncing process,
@@ -256,6 +257,7 @@ class Syncee
       @return true, if reading is successfull, otherwise false.
     */
     virtual bool read() = 0;
+
     /**
       Write the data set to disk to the file with the name @ref filename().
       This function has to be reimplemented by concrete subclasses to provide
@@ -311,6 +313,7 @@ class Syncee
      * can be made by Syncee itself or by what the developer wants
      * The following three methods are convience functions to make things
      * more smooth later
+     * FIXME the internal way is not reimplemented again!
      */
 
     /**
@@ -387,7 +390,7 @@ class Syncee
 
 /**
   @short This class provides syncing of sets of data entries.
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher, zecke
   @see SyncEntry, Syncee, SyncUi
 
   The Syncer class provides the top level framework for syncing. It implements

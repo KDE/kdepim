@@ -45,6 +45,8 @@ namespace KSync {
         void writeMeta( KABC::AddressBook*, const QString& path );
         void save( AddressBookSyncee*, const QString& path, const QString& metapath );
         bool pathIsDefault( const QString& path );
+        void saveAll( KABC::AddressBook* );
+
         AddressBookSyncee* book2syncee( KABC::AddressBook* );
         QPixmap m_pixmap;
         AddressBookConfigBase* m_widget;

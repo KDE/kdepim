@@ -17,12 +17,30 @@ namespace KSync {
     class KonnectorUIDHelper {
     public:
         // the full path to the dir where the file is stored
+        /**
+         * c'tor
+         * @param dir The directory name where the relations
+         *            between KDE and the Konnector UIDs
+         *            are saved
+         */
         KonnectorUIDHelper( const QString &dir );
         ~KonnectorUIDHelper();
+
+        /**
+         * @param appName The Application Name. For example 'datebook'
+         * @param kdeId the UID assigned to in the KDE world
+         * @param defaultId in case of failure what should be returned
+         *
+         * @return returns a to the Konnector known uid
+         */
         QString konnectorId( const QString &appName,
                              const QString &kdeId,
                              const QString &defaultId = QString::null );
 
+        /**
+         * fetches a KDE UID for an appName
+         * and a konnectorUID
+         */
         QString kdeId( const QString &appName,
                        const QString &konnectorId,
                        const QString &defaultId = QString::null );
