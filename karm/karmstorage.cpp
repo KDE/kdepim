@@ -495,9 +495,7 @@ KCal::Event* KarmStorage::baseEvent(const Task * task)
   KCal::Todo* todo;
   
   e = new KCal::Event;
-  e->setSummary(QString(QString::fromLatin1("%1: %2"))
-      .arg(QString::fromLatin1("KArm"))
-      .arg(task->name()));
+  e->setSummary(task->name());
 
   // Can't use setRelatedToUid()--no error, but no RelatedTo written to disk
   todo = _calendar.todo(task->uid());
