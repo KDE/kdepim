@@ -149,6 +149,8 @@ void ExtensionManager::createExtensionWidgets()
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
              SIGNAL( modified( const KABC::Addressee::List& ) ) );
+    connect( wdg, SIGNAL( deleted( const QStringList& ) ),
+             SIGNAL( deleted( const QStringList& ) ) );
 
     ExtensionData data;
     data.identifier = wdg->identifier();

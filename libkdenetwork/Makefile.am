@@ -48,7 +48,7 @@ libkdenetwork_la_SOURCES = kscoring.cpp \
 			  kaccount.cpp \
 			  spellingfilter.cpp \
 			  linklocator.cpp \
-			  recentaddresses.cpp kaddrbook.cpp
+			  recentaddresses.cpp
 
 libkdenetwork_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 4:0:2
 noinst_HEADERS = kpgpbase.h

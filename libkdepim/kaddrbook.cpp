@@ -6,17 +6,18 @@
 #include <config.h>
 #include <unistd.h>
 
-#include "kaddrbook.h"
+// proko2-branch-only hack. kaddrbook.cpp was moved to libkdepim for proko2-distr-list support
+#include "../libkdenetwork/kaddrbook.h"
 
 #include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kabc/stdaddressbook.h>
-#include <kabc/distributionlist.h>
+#include "distributionlist.h"
 #include <kabc/vcardconverter.h>
 #include <dcopref.h>
-#include <dcopclient.h> 
+#include <dcopclient.h>
 
 #include <qregexp.h>
 
@@ -33,7 +34,7 @@ void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QW
   }
   else
     kapp->startServiceByDesktopName( "kaddressbook" );
-    
+
   DCOPRef call( "kaddressbook", "KAddressBookIface" );
   if( !addresseeList.isEmpty() ) {
     call.send( "showContactEditor(QString)", addresseeList.first().uid() );
@@ -143,16 +144,9 @@ QString KAddrBookExternal::expandDistributionList( const QString& listName )
 
   const QString lowerListName = listName.lower();
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
-  KABC::DistributionListManager manager( addressBook );
-  manager.load();
-  const QStringList listNames = manager.listNames();
-
-  for ( QStringList::ConstIterator it = listNames.begin();
-        it != listNames.end(); ++it) {
-    if ( (*it).lower() == lowerListName ) {
-      const QStringList addressList = manager.list( *it )->emails();
-      return addressList.join( ", " );
-    }
+  KPIM::DistributionList distrList = KPIM::DistributionList::findByName( addressBook, lowerListName, false );
+  if ( !distrList.isEmpty() ) {
+    return distrList.emails( addressBook ).join( ", " );
   }
   return QString::null;
 }

@@ -27,6 +27,7 @@
 #include <qobject.h>
 
 #include <kabc/stdaddressbook.h>
+#include <libkdepim/distributionlist.h>
 
 namespace KAB {
 
@@ -46,8 +47,8 @@ class SearchManager : public QObject
                    QObject *parent, const char *name = 0 );
 
     /**
-      This method takes a pattern and searches for a match of the specified 
-      field of all available contacts. The result is propagated via 
+      This method takes a pattern and searches for a match of the specified
+      field of all available contacts. The result is propagated via
       contactsUpdated().
 
       @param pattern The search string.
@@ -58,13 +59,23 @@ class SearchManager : public QObject
 
 
     void setJumpButtonFilter( const QStringList &patterns, KABC::Field *field );
-    
+
     void reconfigure();
 
     /**
       Returns the contacts which matched the last search query.
      */
     KABC::Addressee::List contacts() const;
+
+    /**
+      Returns all the distribution lists.
+     */
+    KPIM::DistributionList::List distributionLists() const;
+
+    /**
+      Returns the name of all the distribution lists.
+     */
+    QStringList distributionListNames() const;
 
   signals:
     /**
@@ -77,8 +88,11 @@ class SearchManager : public QObject
 
   private:
     void doSearch( const QString&, KABC::Field*, Type, const KABC::Addressee::List& );
+    static void sortOutDistributionLists( KABC::Addressee::List& addrlist,
+                                          KPIM::DistributionList::List& distrlists );
 
     KABC::Addressee::List mContacts;
+    KPIM::DistributionList::List mDistributionLists;
     KABC::AddressBook *mAddressBook;
 
     QString mLastPattern;
@@ -87,7 +101,7 @@ class SearchManager : public QObject
 
     QStringList mJumpButtonPatterns;
     KABC::Field *mJumpButtonField;
-    
+
     bool mLimitContactDisplay;
 };
 

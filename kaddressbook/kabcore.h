@@ -134,6 +134,16 @@ class KABCore : public KAB::Core
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
+    /**
+      Returns all the distribution lists.
+     */
+    virtual KPIM::DistributionList::List distributionLists() const;
+
+    /**
+      Returns the name of all the distribution lists.
+     */
+    virtual QStringList distributionListNames() const;
+
   public slots:
     /**
       Is called whenever a contact is selected in the view.
@@ -339,6 +349,7 @@ class KABCore : public KAB::Core
     void setDetailsVisible( bool visible );
 
     void extensionModified( const KABC::Addressee::List &list );
+    void extensionDeleted( const QStringList &uidList );
     void clipboardDataChanged();
     void updateActionMenu();
 

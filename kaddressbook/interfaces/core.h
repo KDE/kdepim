@@ -28,6 +28,7 @@
 
 #include <kabc/field.h>
 #include <kxmlguiclient.h>
+#include <libkdepim/distributionlist.h>
 
 namespace KABC {
 class AddressBook;
@@ -101,6 +102,18 @@ class Core : public QObject
      */
     virtual void deleteContacts( const QStringList &uids ) = 0;
 
+    /**
+      Returns all the distribution lists.
+     */
+    virtual KPIM::DistributionList::List distributionLists() const = 0;
+
+    /**
+      Returns the name of all the distribution lists.
+     */
+    virtual QStringList distributionListNames() const = 0;
+
+
+    ////// This class isn't part of interfaces, so this method being here isn't really useful
     virtual SearchManager *searchManager() const = 0;
 
   public slots:
@@ -130,7 +143,7 @@ class Core : public QObject
     virtual void newContact() = 0;
 
     /**
-      DCOP METHOD: Returns the name of the contact, that matches the given 
+      DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
     virtual QString getNameByPhone( const QString& phone ) = 0;
@@ -139,6 +152,13 @@ class Core : public QObject
       Shows an edit dialog for the given uid.
      */
     virtual void editContact( const QString &uid = QString::null ) = 0;
+
+  signals:
+    /**
+      Forwarded by SearchManager
+      Means distributionListNames might result something different.
+     */
+    void contactsUpdated();
 
   private:
     KXMLGUIClient *mGUIClient;

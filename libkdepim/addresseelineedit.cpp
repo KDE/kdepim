@@ -50,6 +50,7 @@
 #include <qdragobject.h>
 #include <qclipboard.h>
 #include "resourceabc.h"
+#include "distributionlist.h"
 
 using namespace KPIM;
 
@@ -474,6 +475,7 @@ void AddresseeLineEdit::loadContacts()
     }
   }
 
+#if 0 // now done as part of the normal contacts
   int weight = config.readNumEntry( "DistributionLists", 60 );
   KABC::DistributionListManager manager( addressBook );
   manager.load();
@@ -482,6 +484,7 @@ void AddresseeLineEdit::loadContacts()
   for ( listIt = distLists.begin(); listIt != distLists.end(); ++listIt ) {
     s_completion->addItem( (*listIt).simplifyWhiteSpace(), weight );
   }
+#endif
 
   QApplication::restoreOverrideCursor();
 
@@ -493,6 +496,10 @@ void AddresseeLineEdit::loadContacts()
 
 void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
 {
+  if ( KPIM::DistributionList::isDistributionList( addr ) ) {
+    s_completion->addItem( addr.formattedName(), weight );
+    return;
+  }
   //m_contactMap.insert( addr.realName(), addr );
   const QStringList emails = addr.emails();
   QStringList::ConstIterator it;
@@ -501,7 +508,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
     if( '\0' == (*it)[len-1] )
       --len;
     const QString tmp = (*it).left( len );
-    QString fullEmail = addr.fullEmail( tmp );
+    const QString fullEmail = addr.fullEmail( tmp );
     //kdDebug(5300) << "AddresseeLineEdit::addContact() \"" << fullEmail << "\" weight=" << weight << endl;
     s_completion->addItem( fullEmail.simplifyWhiteSpace(), weight );
     // Try to guess the last name: if found, we add an extra

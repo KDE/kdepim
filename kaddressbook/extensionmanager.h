@@ -79,6 +79,7 @@ class ExtensionManager : public QHBox
 
   signals:
     void modified( const KABC::Addressee::List& );
+    void deleted( const QStringList& );
 
   private slots:
     void setActiveExtension( int id );

@@ -624,7 +624,7 @@ AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, AddresseeV
     defaultParent->setOpen( true );
   }
 
-  d->ui->mSaveAs->setEnabled(true);
+  d->ui->mSaveAs->setEnabled(false /*true*/); // TODO, see saveAs
 }
 
 void
@@ -637,7 +637,7 @@ AddressesDialog::addAddresseesToSelected( AddresseeViewItem *parent,
 
   if (itr.current())
   {
-    d->ui->mSaveAs->setEnabled(true);
+    d->ui->mSaveAs->setEnabled(false /*true*/); // TODO, see saveAs
   }
 
   while ( itr.current() ) {
@@ -816,12 +816,14 @@ AddressesDialog::removeEntry()
     delete d->bccItem;
     d->bccItem = 0;
   }
-  d->ui->mSaveAs->setEnabled(d->ui->mSelectedView->firstChild() != 0);
+  d->ui->mSaveAs->setEnabled(false); // TODO, see saveAs
+  //d->ui->mSaveAs->setEnabled(d->ui->mSelectedView->firstChild() != 0);
 }
 
 void
 AddressesDialog::saveAs()
 {
+#if 0 // TODO implement - needs porting to KPIM::DistributionList
   KABC::DistributionListManager manager( KABC::StdAddressBook::self( true ) );
   manager.load();
 
@@ -857,6 +859,7 @@ AddressesDialog::saveAs()
   }
 
   manager.save();
+#endif
 }
 
 void

@@ -47,6 +47,7 @@ void SearchManager::search( const QString &pattern, KABC::Field *field, Type typ
 
   KABC::Addressee::List allContacts;
   mContacts.clear();
+  mDistributionLists.clear();
 
 #if KDE_VERSION >= 319
   KABC::AddresseeList list( mAddressBook->allAddressees() );
@@ -60,6 +61,8 @@ void SearchManager::search( const QString &pattern, KABC::Field *field, Type typ
     allContacts.append( *abIt );
 #endif
 
+  sortOutDistributionLists( allContacts, mDistributionLists );
+
   QStringList::ConstIterator it;
   for ( it = mJumpButtonPatterns.begin(); it != mJumpButtonPatterns.end(); ++it )
     doSearch( *it, mJumpButtonField, StartsWith, allContacts );
@@ -68,6 +71,11 @@ void SearchManager::search( const QString &pattern, KABC::Field *field, Type typ
   mContacts.clear();
 
   doSearch( mLastPattern, mLastField, mLastType, allContacts );
+
+  // Remove distr. lists from the search results
+  KPIM::DistributionList::List dummy;
+  sortOutDistributionLists( mContacts, dummy );
+
   emit contactsUpdated();
 }
 
@@ -152,6 +160,36 @@ KABC::Addressee::List SearchManager::contacts() const
 void SearchManager::reload()
 {
   search( mLastPattern, mLastField, mLastType );
+}
+
+void SearchManager::sortOutDistributionLists( KABC::Addressee::List& list,
+                                              KPIM::DistributionList::List& distrlists )
+{
+  KABC::Addressee::List::Iterator it = list.begin();
+  while ( it != list.end() ) {
+    //kdDebug() << (*it).formattedName() << "   distrlist=" << KPIM::DistributionList::isDistributionList( *it ) << endl;
+    if ( KPIM::DistributionList::isDistributionList( *it ) ) {
+      distrlists.append( static_cast<KPIM::DistributionList>( *it ) );
+      it = list.remove( it );
+    } else
+      ++it;
+  }
+}
+
+
+KPIM::DistributionList::List KAB::SearchManager::distributionLists() const
+{
+  return mDistributionLists;
+}
+
+QStringList KAB::SearchManager::distributionListNames() const
+{
+  QStringList lst;
+  KPIM::DistributionList::List::ConstIterator it;
+  for ( it = mDistributionLists.begin(); it != mDistributionLists.end(); ++it ) {
+    lst.append( (*it).formattedName() );
+  }
+  return lst;
 }
 
 #include "searchmanager.moc"

@@ -120,10 +120,14 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mSearchManager = new KAB::SearchManager( mAddressBook, parent );
 
+  connect( mSearchManager, SIGNAL( contactsUpdated() ),
+           this, SIGNAL( contactsUpdated() ) );
+
   initGUI();
 
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
            SLOT( addressBookChanged() ) );
+  // For each resource that loads, display the contents (more progressive than waiting for addressBookChanged)
   connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
            SLOT( addressBookChanged() ) );
 
@@ -139,6 +143,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            mXXPortManager, SLOT( importVCard( const KURL& ) ) );
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
+  connect( mExtensionManager, SIGNAL( deleted( const QStringList& ) ),
+           this, SLOT( extensionDeleted( const QStringList& ) ) );
 
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
@@ -564,15 +570,13 @@ bool KABCore::modified() const
 void KABCore::contactModified( const KABC::Addressee &addr )
 {
   Command *command = 0;
-  QString uid;
 
   // check if it exists already
   KABC::Addressee origAddr = mAddressBook->findByUid( addr.uid() );
-  if ( origAddr.isEmpty() )
+  if ( origAddr.isEmpty() ) {
     command = new PwNewCommand( mAddressBook, addr );
-  else {
+  } else {
     command = new PwEditCommand( mAddressBook, origAddr, addr );
-    uid = addr.uid();
   }
 
   UndoStack::instance()->push( command );
@@ -586,22 +590,7 @@ void KABCore::newContact()
 {
   AddresseeEditorDialog *dialog = 0;
 
-  QPtrList<KABC::Resource> kabcResources = mAddressBook->resources();
-
-  QPtrList<KRES::Resource> kresResources;
-  QPtrListIterator<KABC::Resource> it( kabcResources );
-  KABC::Resource *resource;
-  while ( ( resource = it.current() ) != 0 ) {
-    ++it;
-    if ( !resource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
-      if ( res )
-        kresResources.append( res );
-    }
-  }
-
-  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, mWidget );
-  resource = static_cast<KABC::Resource*>( res );
+  KABC::Resource* resource = requestResource( mWidget );
 
   if ( resource ) {
     KABC::Addressee addr;
@@ -814,6 +803,18 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
     mViewManager->refreshView();
   else
     mViewManager->refreshView( list[ 0 ].uid() );
+}
+
+void KABCore::extensionDeleted( const QStringList &uidList )
+{
+  PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uidList );
+  UndoStack::instance()->push( command );
+  RedoStack::instance()->clear();
+
+  // now if we deleted anything, refresh
+  setContactSelected( QString::null );
+  setModified( true );
+  mViewManager->refreshView();
 }
 
 QString KABCore::getNameByPhone( const QString &phone )
@@ -1070,7 +1071,7 @@ void KABCore::initActions()
                                actionCollection(), "edit_delete" );
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
-  
+
   mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact in..." ), "", 0,
                                       this, SLOT( storeContactIn() ),
                                       actionCollection(), "edit_store_in" );
@@ -1381,6 +1382,16 @@ bool KABCore::handleCommandLine( KAddressBookIface* iface )
     doneSomething = true;
   }
   return doneSomething;
+}
+
+KPIM::DistributionList::List KABCore::distributionLists() const
+{
+  return mSearchManager->distributionLists();
+}
+
+QStringList KABCore::distributionListNames() const
+{
+  return mSearchManager->distributionListNames();
 }
 
 #include "kabcore.moc"
