@@ -34,6 +34,8 @@
 #include <ui/dnattributeorderconfigwidget.h>
 #include <kleo/dn.h>
 
+#include <kdemacros.h>
+
 #include <qlayout.h>
 
 DNOrderConfigPage::DNOrderConfigPage( QWidget * parent, const char * name )
