@@ -28,18 +28,22 @@ CalFilter::CalFilter()
 {
   mEnabled = true;
   mCriteria = 0;
+  mCompletedTimeSpan = 0;
 }
 
 CalFilter::CalFilter(const QString &name)
 {
   mName = name;
+  mEnabled = true;
+  mCriteria = 0;
+  mCompletedTimeSpan = 0;
 }
 
 CalFilter::~CalFilter()
 {
 }
 
-void CalFilter::apply( Event::List *eventlist )
+void CalFilter::apply( Event::List *eventlist ) const
 {
   if ( !mEnabled ) return;
 
@@ -58,7 +62,7 @@ void CalFilter::apply( Event::List *eventlist )
 }
 
 // TODO: avoid duplicating apply() code
-void CalFilter::apply( Todo::List *todolist )
+void CalFilter::apply( Todo::List *todolist ) const
 {
   if ( !mEnabled ) return;
 
@@ -76,7 +80,7 @@ void CalFilter::apply( Todo::List *todolist )
 //  kdDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
-void CalFilter::apply( Journal::List *journallist )
+void CalFilter::apply( Journal::List *journallist ) const 
 {
   if ( !mEnabled ) return;
 
@@ -90,7 +94,7 @@ void CalFilter::apply( Journal::List *journallist )
   }
 }
 
-bool CalFilter::filterIncidence(Incidence *incidence)
+bool CalFilter::filterIncidence(Incidence *incidence) const
 {
 //  kdDebug(5800) << "CalFilter::filterIncidence(): " << incidence->summary() << endl;
 
@@ -98,8 +102,13 @@ bool CalFilter::filterIncidence(Incidence *incidence)
 
   Todo *todo = dynamic_cast<Todo *>(incidence);
   if( todo ) {
-    if ( (mCriteria & HideCompleted) && todo->isCompleted() )
-      return false;
+    if ( (mCriteria & HideCompleted) && todo->isCompleted() ) {
+      // Check if completion date is suffently long ago:
+      if ( todo->completed().addDays( mCompletedTimeSpan ) < 
+           QDateTime::currentDateTime() ) {
+        return false;
+      }
+    }
 
     if( ( mCriteria & HideInactiveTodos ) &&
         ( todo->hasStartDate() &&
@@ -114,11 +123,11 @@ bool CalFilter::filterIncidence(Incidence *incidence)
   }
 
   if (mCriteria & ShowCategories) {
-    for (QStringList::Iterator it = mCategoryList.begin();
-         it != mCategoryList.end(); ++it ) {
+    for (QStringList::ConstIterator it = mCategoryList.constBegin();
+         it != mCategoryList.constEnd(); ++it ) {
       QStringList incidenceCategories = incidence->categories();
-      for (QStringList::Iterator it2 = incidenceCategories.begin();
-           it2 != incidenceCategories.end(); ++it2 ) {
+      for (QStringList::ConstIterator it2 = incidenceCategories.constBegin();
+           it2 != incidenceCategories.constEnd(); ++it2 ) {
         if ((*it) == (*it2)) {
           return true;
         }
@@ -126,11 +135,11 @@ bool CalFilter::filterIncidence(Incidence *incidence)
     }
     return false;
   } else {
-    for (QStringList::Iterator it = mCategoryList.begin();
-         it != mCategoryList.end(); ++it ) {
+    for (QStringList::ConstIterator it = mCategoryList.constBegin();
+         it != mCategoryList.constEnd(); ++it ) {
       QStringList incidenceCategories = incidence->categories();
-      for (QStringList::Iterator it2 = incidenceCategories.begin();
-           it2 != incidenceCategories.end(); ++it2 ) {
+      for (QStringList::ConstIterator it2 = incidenceCategories.constBegin();
+           it2 != incidenceCategories.constEnd(); ++it2 ) {
         if ((*it) == (*it2)) {
           return false;
         }
@@ -149,7 +158,7 @@ void CalFilter::setEnabled(bool enabled)
   mEnabled = enabled;
 }
 
-bool CalFilter::isEnabled()
+bool CalFilter::isEnabled() const
 {
   return mEnabled;
 }
@@ -159,7 +168,7 @@ void CalFilter::setCriteria(int criteria)
   mCriteria = criteria;
 }
 
-int CalFilter::criteria()
+int CalFilter::criteria() const
 {
   return mCriteria;
 }
@@ -169,7 +178,17 @@ void CalFilter::setCategoryList(const QStringList &categoryList)
   mCategoryList = categoryList;
 }
 
-QStringList CalFilter::categoryList()
+QStringList CalFilter::categoryList() const
 {
   return mCategoryList;
+}
+
+void CalFilter::setCompletedTimeSpan( int timespan )
+{
+  mCompletedTimeSpan = timespan;
+}
+
+int CalFilter::completedTimeSpan() const 
+{
+  return mCompletedTimeSpan;
 }

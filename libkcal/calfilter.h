@@ -56,25 +56,25 @@ class CalFilter
       Apply filter to eventlist, all events not matching filter criterias are
       removed from the list.
     */
-    void apply( Event::List *eventlist );
+    void apply( Event::List *eventlist ) const;
 
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply( Todo::List *todolist );
+    void apply( Todo::List *todolist ) const;
 
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply( Journal::List *journallist);
+    void apply( Journal::List *journallist) const;
 
     /**
       Apply filter criteria on the specified incidence. Return true, if event passes
       criteria, otherwise return false.
     */
-    bool filterIncidence( Incidence * );
+    bool filterIncidence( Incidence * ) const;
 
     /**
       Enable or disable filter.
@@ -83,7 +83,7 @@ class CalFilter
     /**
       Return wheter the filter is enabled or not.
     */
-    bool isEnabled();
+    bool isEnabled() const;
 
 
     /**
@@ -96,7 +96,7 @@ class CalFilter
       Return category list, used for showing/hiding categories of events.
       See related functions.
     */
-    QStringList categoryList();
+    QStringList categoryList() const;
 
     enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4,
            HideInactiveTodos = 8 };
@@ -108,7 +108,19 @@ class CalFilter
     /**
       Get inclusive filter criteria.
     */
-    int criteria();
+    int criteria() const;
+
+    /**
+      Set the number of days for "Hide completed todos", after which todos are
+      not shown any more. If nothing is set explicitly, all finished todos will
+      be hidden if the "hide completed todos" option is selected.
+     */
+    void setCompletedTimeSpan( int timespan );
+    /**
+      Return the number of days for "Hide completed todos", after which todos are
+      not shown any more.
+     */
+    int completedTimeSpan() const;
 
   private:
     QString mName;
@@ -118,6 +130,7 @@ class CalFilter
     bool mEnabled;
 
     QStringList mCategoryList;
+    int mCompletedTimeSpan;
 
     class Private;
     Private *d;
