@@ -453,6 +453,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     setException(new ErrorFormat(ErrorFormat::Restriction,
                                    Scheduler::translatedMethodName(method) + ": " +
                                    mImpl->extractErrorProperty(c)));
+    delete incidence;
     return 0;
   }
 
