@@ -2,12 +2,13 @@ Source: kdepim
 Section: x11
 Priority: optional
 Maintainer: Christopher L Cheney <ccheney@debian.org>
-Build-Depends: debhelper (>> 4.0.0), automake1.7, bison, byacc, flex, gawk, gettext, kdelibs4-dev, libpisock-dev, libqt3-mt-dev, libtiff3g-dev, texinfo, xlibs-dev, zlib1g-dev, libreadline4-dev
-Standards-Version: 3.5.6.0
+Build-Depends: automake1.7, bison, byacc, debhelper (>> 4.0.18), flex, gawk, gettext, kdelibs4-dev, libgtk1.2-dev, libpisock-dev, libreadline4-dev, texinfo
+Build-Depends-Indep: doxygen, qt3-doc
+Standards-Version: 3.5.8.0
 
 Package: kdepim
 Architecture: all
-Depends: kalarm (>= ${Source-Version}), kalarmd (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), knotes (>= ${Source-Version}), korganizer (>= ${Source-Version}), kaddressbook (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version})
+Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-libs (>= ${Source-Version}), knotes (>= ${Source-Version}), korganizer (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version})
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for
  the K Desktop Enviromnent (KDE).
@@ -15,14 +16,25 @@ Description: KDE Personal Information Management metapackage
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
+Depends: kalarm (= ${Source-Version}), kdepim-libs (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version})
+Conflicts: kdepim-libs (<< 4:3.0.0), knotes (<< 4:3.0.0)
+Replaces: kdepim-libs (<< 4:3.0.0), knotes (<< 4:3.0.0)
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
+
+Package: kdepim-doc
+Section: doc
+Architecture: all
+Description: KDE Personal Information Management documentation
+ KDE core library documentation.
+ You need this documentation to develop KDE PIM applications.
 
 Package: kaddressbook
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
+Conflicts: kdebase (<< 4:3.0.0), kdebase-doc (<< 4:3.0.0)
+Replaces: kdebase (<< 4:3.0.0), kdebase-doc (<< 4:3.0.0)
 Description: KDE NG addressbook application
  KDE next generation addressbook application.
 
@@ -32,13 +44,6 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE alarm message scheduler
  KDE alarm message scheduler.
-
-Package: kalarmd
-Section: utils
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: KDE alarm message scheduler daemon
- KDE alarm message scheduler daemon.
 
 Package: kandy
 Section: utils
@@ -111,6 +116,8 @@ Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: knotes, korganizer
+Conflicts: korganizer (<< 4:3.0.0)
+Replaces: korganizer (<< 4:3.0.0)
 Description: KDE Palm Pilot hot-sync tool
  KDE Palm Pilot hot-sync tool.
 
@@ -123,17 +130,3 @@ Description: KDE Sync
  and syncing files, which contain data of the types, for which implementations of
  the libksync interfaces exist. It is able to sync data across networks by using
  the KDE ioslaves.
-
-Package: libkcal2
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: iCalendar and vCalendar library
- iCalendar and vCalendar library
-
-Package: libkgantt0
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: library to display and manage Gantt diagrams
- library to display and manage Gantt diagrams
