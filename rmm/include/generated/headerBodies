@@ -1,0 +1,20 @@
+RAddress
+RAddressList
+RBodyPart
+RContentType
+RCte
+RDateTime
+RDispositionType
+REnvelope
+RGroup
+RHeader
+RHeaderBody v
+RMailbox
+RMailboxList
+RMechanism
+RMessage
+RMessageID
+RMimeType
+RParameter
+RParameterList
+RText
