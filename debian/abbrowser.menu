@@ -2,6 +2,7 @@
 	needs=x11\
 	section=Apps/Tools\
 	hints="KDE"\
+	kderemove="y"\
 	title="abbrowser"\
 	command=abbrowser
 
