@@ -18,6 +18,7 @@
 
 #include <idhelper.h>
 
+#include "extramap.h"
 #include "device.h"
 #include "categoryedit.h"
 #include "opiecategories.h"
@@ -84,6 +85,7 @@ public:
     OpieHelper::CategoryEdit* edit;
     KonnectorUIDHelper* helper;
     OpieHelper::Device* device;
+    OpieHelper::ExtraMap extras;
 };
 namespace {
     void parseTZ( const QString& fileName,  QString& tz );
@@ -374,7 +376,7 @@ void QtopiaSocket::writeCategory() {
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
     emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
     OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta, d->device );
-    KTempFile* file = abDB.fromKDE( syncee );
+    KTempFile* file = abDB.fromKDE( syncee, d->extras );
     KURL uri = url( AddressBook );
 
     KIO::NetAccess::upload( file->name(), uri );
@@ -390,7 +392,7 @@ void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
 }
 void QtopiaSocket::writeDatebook( EventSyncee* syncee) {
     OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta, d->device );
-    KTempFile* file = dbDB.fromKDE( syncee );
+    KTempFile* file = dbDB.fromKDE( syncee, d->extras );
     KURL uri = url( DateBook );
 
     KIO::NetAccess::upload( file->name(), uri );
@@ -406,7 +408,7 @@ void QtopiaSocket::writeDatebook( EventSyncee* syncee) {
 }
 void QtopiaSocket::writeTodoList( TodoSyncee* syncee) {
     OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta, d->device );
-    KTempFile* file = toDB.fromKDE( syncee );
+    KTempFile* file = toDB.fromKDE( syncee, d->extras );
     KURL uri = url( TodoList );
 
     KIO::NetAccess::upload( file->name(), uri );
@@ -435,7 +437,7 @@ void QtopiaSocket::readAddressbook() {
 
     if (!syncee) {
         OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta, d->device );
-        syncee = abDB.toKDE( tempfile );
+        syncee = abDB.toKDE( tempfile, d->extras );
     }
 
     if (!syncee ) {
@@ -478,7 +480,7 @@ void QtopiaSocket::readDatebook() {
      */
     if (!syncee ) {
         OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
-        syncee = dateDB.toKDE( tempfile );
+        syncee = dateDB.toKDE( tempfile, d->extras );
     }
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
@@ -517,7 +519,7 @@ void QtopiaSocket::readTodoList() {
 
     if (!syncee ) {
         OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta, d->device );
-        syncee = toDB.toKDE( tempfile );
+        syncee = toDB.toKDE( tempfile, d->extras );
     }
 
     if (!syncee ) {
@@ -654,7 +656,7 @@ void QtopiaSocket::flush( const QString& _line )  {
             appName = i18n( "addressbook" );
             m_flushedApps++;
         }
-        emit prog( Progress( i18n( "Flushed" ) + appName ) );
+        emit prog( Progress( i18n( "Flushed " ) + appName ) );
     }
 
     /* all apps have been flushed or have not been running */
@@ -681,8 +683,6 @@ void QtopiaSocket::handshake( const QString& line) {
     QTextStream stream( d->socket );
     QStringList list = QStringList::split( QString::fromLatin1(" "), line );
     d->path = list[3];
-//    kdDebug(5225) << "D->PATH is " << d->path << endl;
-//    kdDebug(5225) << "D Line Was " << line << endl;
     if (!d->path.isEmpty() ) {
         d->getMode = d->Desktops;
         stream << "call QPE/System startSync(QString) KitchenSync" << endl;
@@ -700,6 +700,8 @@ void QtopiaSocket::download() {
     d->m_sync.clear();
 }
 void QtopiaSocket::initSync( const QString& ) {
+    /* clear the extra map for the next round */
+    d->extras.clear();
     emit prog( StdProgress::downloading("Categories.xml") );
     QString tmpFileName;
     downloadFile( "/Settings/Categories.xml", tmpFileName );

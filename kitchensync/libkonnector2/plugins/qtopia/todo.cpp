@@ -27,19 +27,22 @@ ToDo::ToDo( CategoryEdit* edit,
 }
 ToDo::~ToDo(){
 }
-KCal::Todo* ToDo::dom2todo( QDomElement e ) {
+KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& lst ) {
     QString dummy;
     int Int;
     KCal::Todo* todo = new KCal::Todo();
     QStringList list = QStringList::split(";",  e.attribute("Categories") );
     QStringList categories;
 
+    QString cat;
     for ( uint i = 0; i < list.count(); i++ ) {
         kdDebug(5227)<< list[i]
                      << " Category "
                      << m_edit->categoryById( list[i],  "Todo List")
                      << endl;
-        categories.append(m_edit->categoryById(list[i], "Todo List") );
+        cat = m_edit->categoryById( list[i], "Todo List");
+        if (!cat.isEmpty() )
+            categories.append(cat );
     }
     if (!categories.isEmpty() ) {
         kdDebug(5226) << "List " << list.join(";") << endl;
@@ -49,8 +52,8 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
 
     todo->setDescription(e.attribute("Description" ) );
     todo->setSummary( e.attribute("Summary") ); //opie only
-    if ( device() && device()->distribution() == Device::Zaurus )
-        todo->setSummary( e.attribute("Description").stripWhiteSpace().left(20) );
+    if ( ( device() && device()->distribution() == Device::Zaurus ) || todo->summary().isEmpty() )
+        todo->setSummary( e.attribute("Description").stripWhiteSpace().left(20).simplifyWhiteSpace() );
 
     setUid(todo,  e.attribute("Uid")  );
 
@@ -111,9 +114,13 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
     }else{
         todo->setHasDueDate( false );
     }
+
+    // time to add extra attributes
+    extra.add("todo", e.attribute("Uid"),  e.attributes(), lst );
+
     return todo;
 }
-KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
+KSync::TodoSyncee* ToDo::toKDE( const QString &fileName, ExtraMap& map )
 {
     KSync::TodoSyncee* syncee = new KSync::TodoSyncee();
     syncee->setSource( "Opie");
@@ -129,7 +136,7 @@ KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
         delete syncee;
         return 0;
     }
-
+    QStringList attr = attributes();
     QDomElement docElem = doc.documentElement();
     KCal::Todo *todo;
     QDomNode n = docElem.firstChild();
@@ -137,7 +144,7 @@ KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
         QDomElement e = n.toElement();
         if (!e.isNull() ) {
             if ( e.tagName() == "Task" ) {
-                todo = dom2todo( e );
+                todo = dom2todo( e, map,attr );
                 KSync::TodoSyncEntry* entry;
                 entry = new KSync::TodoSyncEntry( todo );
                 syncee->addEntry( entry );
@@ -147,7 +154,7 @@ KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
     } // n.isNull
     return syncee;
 }
-KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee )
+KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee, ExtraMap& map )
 {
     // KDE ID clear bit first
     m_kde2opie.clear();
@@ -170,7 +177,7 @@ KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee )
         {
             if ( entry->state() == KSync::SyncEntry::Removed )
                 continue;
-            *stream << todo2String( entry->todo() ) << endl;
+            *stream << todo2String( entry->todo(), map ) << endl;
         }
         *stream << "</Tasks>" << endl;
     }
@@ -186,7 +193,7 @@ void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
     todo->setUid( kdeId( "TodoSyncEntry",  uid ) );
 }
 
-QString ToDo::todo2String( KCal::Todo* todo )
+QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
 {
     QString text;
     text.append("<Task ");
@@ -211,9 +218,29 @@ QString ToDo::todo2String( KCal::Todo* todo )
     // id hacking We don't want to have the ids growing and growing
     // when an id is used again it will be put to the used list and after done
     // with syncing we will replace the former
-    text.append("Uid=\"" +konnectorId("TodoSyncEntry", todo->uid() )+ "\" "  );
+    QString uid = konnectorId("TodoSyncEntry", todo->uid() );
+    text.append("Uid=\"" +uid + "\" "  );
+
+    /* add custom entries */
+    text.append( map.toString("todo", uid ) );
 
     text.append(" />");
     return text;
 }
 
+QStringList ToDo::attributes()const {
+    QStringList lst;
+    lst << "Categories";
+    lst << "Completed";
+    lst << "Progress";
+    lst << "Summary";
+    lst << "HasDate";
+    lst << "DateDay";
+    lst << "DateMonth";
+    lst << "DateYear";
+    lst << "Priority";
+    lst << "Description";
+    lst << "Uid";
+
+    return lst;
+}

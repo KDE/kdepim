@@ -30,7 +30,8 @@ libqtopiakonnector_la_SOURCES = konnector.cpp socket.cpp addressbook.cpp \
 				opiecategories.cpp todo.cpp desktop.cpp \
 				md5map.cpp metaaddressbook.cpp \
 				metadatebook.cpp metatodo.cpp \
-				qtopiaconfig.cpp device.cpp
+				qtopiaconfig.cpp device.cpp \
+				extramap.cpp
 
 qtopiadatadir = $(kde_datadir)/kitchensync
 qtopiadata_DATA = qtopia.desktop

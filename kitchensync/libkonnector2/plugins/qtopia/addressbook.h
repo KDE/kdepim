@@ -9,7 +9,6 @@
 
 #include "helper.h"
 
-
 namespace OpieHelper {
 
     class AddressBook : public Base {
@@ -19,10 +18,10 @@ namespace OpieHelper {
                      const QString &tz = QString::null,
                      bool metaSyncing = FALSE , Device *dev = 0);
         ~AddressBook();
-        KSync::AddressBookSyncee * toKDE( const QString &fileName );
-        /* it must be deleted but not by this one here */
-        KTempFile* fromKDE(KSync::AddressBookSyncee* syncee );
+        KSync::AddressBookSyncee * toKDE( const QString &fileName, ExtraMap& );
+        KTempFile* fromKDE(KSync::AddressBookSyncee* syncee, ExtraMap& );
     private:
+        QStringList attributes()const;
         QDate fromString( const QString& );
     private:
         enum Fields {

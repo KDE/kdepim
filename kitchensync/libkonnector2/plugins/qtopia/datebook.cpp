@@ -44,19 +44,21 @@ DateBook::~DateBook(){
 /**
  * Converts an Opie Event to a KDE one
  */
-KCal::Event* DateBook::toEvent( QDomElement e) {
-//    kdDebug(522) << "inside event" << endl;
+KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QStringList& lst) {
     KCal::Event* event = new KCal::Event();
     QStringList list = QStringList::split(";",  e.attribute("categories") );
     QStringList categories;
+
+    QString cat;
     for ( uint i = 0; i < list.count(); i++ ) {
-//        kdDebug(5229) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
-        categories.append(m_edit->categoryById(list[i], "Calendar") );
+        cat = m_edit->categoryById(list[i], "Calendar");
+        if (!cat.isEmpty() )
+            categories.append(cat );
     }
     if (!categories.isEmpty() ) {
         event->setCategories( categories );
     }
-    //event->setDescription(e.attribute("Description") );
+
     event->setSummary( e.attribute("description") );
     event->setUid( kdeId( "EventSyncEntry",  e.attribute("uid") ) );
     event->setDescription( e.attribute("note") );
@@ -64,11 +66,9 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     // time
 
     QString start = e.attribute("start");
-//    kdDebug(5229) << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
     event->setDtStart( fromUTC( (time_t) start.toLong() ) );
 
     QString end = e.attribute("end");
-//    kdDebug(5229) << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
     event->setDtEnd( fromUTC( (time_t) end.toLong() ) );
 
     // type
@@ -78,19 +78,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
         event->setFloats( false );
     }
 
-    // alarm
-    QString alarm = e.attribute("alarm");
-
-    /* there is an alarm */
-    if (!alarm.isEmpty() ) {
-        KCal::Alarm *al = new KCal::Alarm( event );
-        al->setStartOffset( alarm.toInt() * -60 );
-        al->setAudioAlarm( e.attribute("sound") );
-        event->addAlarm( al );
-
-        kdDebug(5229) << "Alarm offset " << al->startOffset().asSeconds() << endl;
-        kdDebug(5229) << "Alarm " << e.attribute("alarm") << " " << e.attribute("sound") << endl;
-    }
+    // FIXME alarm
 
 
     // Recurrence damn I feared to do that
@@ -180,10 +168,14 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
         }
         rec->addYearlyNum( event->dtStart().date().dayOfYear() );
     }
+
+    // now save the attributes for later use
+    extraMap.add("datebook", e.attribute("uid"), e.attributes(), lst );
+
     return event;
 }
 
-KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
+KSync::EventSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap )
 {
 //    kdDebug(5229) << "To KDE " << endl;
     KSync::EventSyncee* syncee = new KSync::EventSyncee();
@@ -204,6 +196,7 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
     QString dummy;
+    QStringList attr = attributes();
     while (!n.isNull() ) {
         QDomElement el = n.toElement();
         if (!el.isNull() ) {
@@ -216,7 +209,7 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
 
                     if (!e.isNull() ) {
                         if (e.tagName() == "event") {
-                            KCal::Event* event = toEvent( e );
+                            KCal::Event* event = toEvent( e, extraMap, attr );
                             if (event != 0 ) {
                                 KSync::EventSyncEntry* entry;
                                 entry = new KSync::EventSyncEntry( event );
@@ -233,7 +226,7 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
     return syncee;
 }
 
-KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee )
+KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee, ExtraMap& extraMap )
 {
     m_kde2opie.clear();
     Kontainer::ValueList newIds = syncee->ids( "EventSyncEntry");
@@ -257,7 +250,7 @@ KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee )
             if (entry->state() == KSync::SyncEntry::Removed )
                 continue;
             event = entry->incidence();
-            *stream << event2string( event ) << endl;
+            *stream << event2string( event, extraMap ) << endl;
         }
         *stream << "</events>" << endl;
         *stream << "</DATEBOOK>" << endl;
@@ -269,15 +262,16 @@ KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee )
     tempFile->close();
     return tempFile;
 }
-QString DateBook::event2string( KCal::Event *event )
+QString DateBook::event2string( KCal::Event *event, ExtraMap& map )
 {
+    QString uid = konnectorId("EventSyncEntry", event->uid() );
     bool doesFloat = event->doesFloat();
     QString str;
     str.append( "<event ");
     str.append( "description=\"" +escape( event->summary() ) + "\" ");
     str.append( "location=\"" + escape( event->location() ) + "\" ");
     str.append( "categories=\"" +  categoriesToNumber( event->categories() ) + "\" ");
-    str.append( "uid=\"" +  konnectorId("EventSyncEntry", event->uid() ) + "\" ");
+    str.append( "uid=\"" + uid  + "\" ");
     str.append( "start=\"" +startDate( event->dtStart(), doesFloat ) + "\" ");
     str.append( "end=\"" +  endDate( event->dtEnd(), doesFloat) + "\" ");
     str.append( "note=\"" + escape( event->description() ) + "\" "); //use escapeString copied from TT
@@ -370,25 +364,36 @@ QString DateBook::event2string( KCal::Event *event )
             str.append( "created=\"" + QString::number( toUTC(rec->recurStart() ) ) + "\" ");
         }
     }
-    // alarm
-    KCal::Alarm *al = event->alarms().first();
-    if ( al != 0 ) {
-        int sec = al->startOffset().asSeconds();
-        sec = sec > 0 ? sec % 60 : sec % -60; // as minutes now
-	if( sec != 0 ){
-            str.append( "alarm=\"" +QString::number( sec )  + "\" ");
-	    QString sound = al->audioFile();
-    	    if ( sound != "loud" && sound != "silent" ) {
-        	if ( sound.isEmpty() )
-                	sound = QString::fromLatin1("silent");
-	        else
-    	            sound = QString::fromLatin1("loud");
-    	    }
-    	    str.append( "sound=\"" +  sound + "\" ");
-	}
-    }
+    // FIXME alarm
+    str += map.toString( "datebook", uid );
     str.append( " />" );
     return str;
+}
+/*
+ * A list of attributes we handle
+ */
+QStringList DateBook::attributes()const{
+    QStringList lst;
+    lst << "description";
+    lst << "location";
+    lst << "categories";
+    lst << "uid";
+    lst << "start";
+    lst << "end";
+    lst << "note";
+    lst << "type";
+    lst << "rweekdays";
+    lst << "rposition";
+    lst << "rtype";
+    lst << "rfreq";
+    lst << "rhasenddate";
+    lst << "enddt";
+    lst << "created";
+    /*
+     * we need to handle Recurrence Exceptions
+     * alarms, timezones later
+     */
+    return lst;
 }
 /*
  * Qtopia etwartet AllDay events in einer Zeitspanne von 00:00:00

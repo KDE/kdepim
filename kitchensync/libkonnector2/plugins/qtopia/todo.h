@@ -29,12 +29,13 @@ namespace OpieHelper {
               bool meta = FALSE, Device* dev = 0);
         ~ToDo();
 
-        KSync::TodoSyncee* toKDE( const QString &fileName );
-        KTempFile* fromKDE( KSync::TodoSyncee* entry  );
+        KSync::TodoSyncee* toKDE( const QString &fileName, ExtraMap& map );
+        KTempFile* fromKDE( KSync::TodoSyncee* entry, ExtraMap& map  );
     private:
+        QStringList attributes()const;
         void setUid( KCal::Todo*,  const QString &uid );
-        KCal::Todo* dom2todo( QDomElement );
-        QString todo2String( KCal::Todo*  );
+        KCal::Todo* dom2todo( QDomElement, ExtraMap&, const QStringList& );
+        QString todo2String( KCal::Todo*, ExtraMap&  );
     };
 };
 

@@ -116,47 +116,38 @@ KTempFile* Base::file() {
 QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 {
     kdDebug(5226) << "categoriesToNumber " << list.join(";") << endl;
+ startover:
     QString dummy;
     QValueList<OpieCategories>::ConstIterator catIt;
     QValueList<OpieCategories> categories = m_edit->categories();
     bool found = false;
     for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
+        /* skip empty category name */
+        if ( (*listIt).isEmpty() ) continue;
+
         found  = false;
         for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-            if ( (*catIt).name() == (*listIt) ) { // the same name
+            if ( (*catIt).name() == (*listIt)  ) { // the same name
 	        kdDebug(5226) << "Found " << (*listIt) << endl;
                 found= true;
                 dummy.append( (*catIt).id() + ";");
             }
         }
-        if ( !found ){
-	 kdDebug(5226) << "Not Found category " << (*listIt) << endl;
-         dummy.append( QString::number(m_edit->addCategory( app, (*listIt) ) ) + ";" );  // generate a new category
+        /* if not found and the category is not empty
+         *
+         * generate a new category and start over again
+         * ugly goto to reiterate
+         */
+
+        if ( !found && !(*listIt).isEmpty() ){
+            kdDebug(5226) << "Not Found category " << (*listIt) << endl;
+            m_edit->addCategory( app, (*listIt) );  // generate a new category
+            goto startover;
 	}
     }
     if ( !dummy.isEmpty() )
         dummy.remove(dummy.length() -1,  1 ); //remove the last ;
 
-    return dummy;
-}
-QStringList Base::categoriesToNumberList( const QStringList &list, const QString &app )
-{
-    QStringList dummy;
-    QValueList<OpieCategories>::ConstIterator catIt;
-    QValueList<OpieCategories> categories = m_edit->categories();
-    bool found = false;
-
-    for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
-        for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-            if ( (*catIt).name() == (*listIt) ) { // the same name
-                found= true;
-                dummy <<  (*catIt).id();
-            }
-        }
-        if ( !found ) {
-            dummy << QString::number( m_edit->addCategory(app, (*listIt) ) );
-        }
-    }
     return dummy;
 }
 QString Base::konnectorId( const QString &appName,  const QString &uid )

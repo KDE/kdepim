@@ -79,35 +79,30 @@ int CategoryEdit::addCategory( const QString &appName,  const QString &name,  in
 void CategoryEdit::parse( const QString &tempFile )
 {
     clear();
-//    kdDebug(5226) << "parsing the categories" << endl;
+
     QDomDocument doc( "mydocument" );
     QFile f( tempFile );
     if ( !f.open( IO_ReadOnly ) ){
-//	kdDebug(5226) << "can not open " <<tempFile << endl;
 	return;
     }
     if ( !doc.setContent( &f ) ) {
-//	kdDebug(5226) << "can not setContent" << endl;
 	f.close();
 	return;
     }
     f.close();
+
     // print out the element names of all elements that are a direct child
     // of the outermost element.
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
-//    kdDebug(5226) << "NodeName: " << docElem.nodeName() << endl;
     if( docElem.nodeName() == QString::fromLatin1("Categories") ){
-	//kdDebug(5226) << "Category" << endl;
 	while( !n.isNull() ) {
 	    QDomElement e = n.toElement(); // try to convert the node to an element.
 	    if( !e.isNull() ) { // the node was really an element.
-		//kdDebug(5226) << "tag name" << e.tagName() << endl;
 		QString id = e.attribute("id" );
 		QString app = e.attribute("app" );
 		QString name = e.attribute("name");
 		OpieCategories category( id, name, app );
-		//kdDebug(5226) << "Cat " << id << " " << app << " " << name << endl;
 		m_categories.append( category ); // cheater
 	    }
 	    n = n.nextSibling();
@@ -127,17 +122,14 @@ QString CategoryEdit::categoryById( const QString &id,  const QString &app )cons
     QString category;
     QString fallback;
     for( it = m_categories.begin(); it != m_categories.end(); ++it ){
-        kdDebug(5226) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
 	if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
 	    if( app == (*it).app() ){
-                kdDebug(5226) << "found category" << endl;
                 category = (*it).name();
                 break;
             }else{
                 fallback = (*it).name();
             }
         }
-    kdDebug(5226) << "CategoryById: " << category << endl;
     }
     return category.isEmpty() ? fallback : category;
 }

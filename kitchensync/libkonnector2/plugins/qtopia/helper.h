@@ -18,7 +18,7 @@
 
 #include <idhelper.h>
 
-
+#include "extramap.h"
 #include "categoryedit.h"
 
 namespace OpieHelper {
@@ -50,8 +50,6 @@ namespace OpieHelper {
         QString categoriesToNumber( const QStringList &categories,
                                     const QString &app= QString::null );
         // convience method
-        QStringList categoriesToNumberList( const QStringList &categories,
-                                            const QString &app = QString::null );
         QString konnectorId( const QString &appName,  const QString &uid );
         QString kdeId( const QString &appName, const QString &uid );
 

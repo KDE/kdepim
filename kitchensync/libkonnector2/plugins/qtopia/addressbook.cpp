@@ -27,7 +27,7 @@ AddressBook::AddressBook( CategoryEdit *edit,
 }
 AddressBook::~AddressBook(){
 }
-KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
+KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap& map )
 {
     KSync::AddressBookSyncee *syncee = new KSync::AddressBookSyncee();
     syncee->setSource( "Opie");
@@ -50,6 +50,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 
     QDomElement docElem = doc.documentElement( );
     QDomNode n =  docElem.firstChild();
+    QStringList attr = attributes();
     while(!n.isNull() ){
 	QDomElement e = n.toElement();
 	if(!e.isNull() ){
@@ -127,8 +128,11 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 			adr.setNote( el.attribute("Notes") );
 
 			QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
+                        QString cat;
 			for(uint i=0; i < categories.count(); i++ ){
-			  adr.insertCategory(m_edit->categoryById(categories[i], "Contacts"  ) );
+                            cat = m_edit->categoryById(categories[i], "Contacts"  );
+                            if (!cat.isEmpty() )
+                                adr.insertCategory( cat );
 			}
                         adr.insertCustom("KADDRESSBOOK", "X-Department",  el.attribute("Department") );
 			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
@@ -143,6 +147,9 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
                         adr.setRevision( QDateTime::currentDateTime() );
                         KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr );
 			syncee->addEntry ( entry );
+
+                        // now on to the extra stuff
+                        map.add( "addressbook", el.attribute("Uid"), el.attributes(), attr );
 		    }
 		    no = no.nextSibling();
 		}
@@ -152,7 +159,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
     }
     return syncee;
 }
-KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
+KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map )
 {
     kdDebug(5228 ) << "From KDE " << endl;
     //  ok lets write back the changes from the Konnector
@@ -246,7 +253,10 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             *stream << "Children=\"" << escape( ab.custom("opie", "Children" ) ) << "\" ";
             *stream << "Notes=\"" << escape( ab.note() ) << "\" ";
             *stream << "Categories=\"" << categoriesToNumber( ab.categories(),  "Contacts") << "\" ";
-            *stream << "Uid=\"" << konnectorId( "AddressBookSyncEntry", ab.uid() ) << "\" ";
+
+            QString uid = konnectorId( "AddressBookSyncEntry", ab.uid() );
+            *stream << "Uid=\"" <<  uid << "\" ";
+            *stream << map.toString( "addressbook", uid );
             *stream << " />" << endl;
         } // off for
         *stream << "</Contacts>" << endl;
@@ -258,6 +268,52 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
     tempFile->close();
 
     return tempFile;
+}
+
+QStringList AddressBook::attributes()const {
+    QStringList lst;
+    lst << "FirstName";
+    lst << "MiddleName";
+    lst << "LastName";
+    lst << "Suffix";
+    lst << "FileAs";
+    lst << "JobTitle";
+    lst << "Department";
+    lst << "Company";
+    lst << "BusinessPhone";
+    lst << "BusinessFax";
+    lst << "BusinessMobile";
+    lst << "DefaultEmail";
+    lst << "Emails";
+    lst << "HomePhone";
+    lst << "HomeFax";
+    lst << "HomeMobile";
+    lst << "BusinessStreet";
+    lst << "BusinessCity";
+    lst << "BusinessZip";
+    lst << "BusinessCountry";
+    lst << "BusinessState";
+    lst << "Office";
+    lst << "Profession";
+    lst << "Assistant";
+    lst << "Manager";
+    lst << "HomeStreet";
+    lst << "HomeCity";
+    lst << "HomeState";
+    lst << "HomeZip";
+    lst << "HomeCountry";
+    lst << "HomeWebPage";
+    lst << "Spouse";
+    lst << "Gender";
+    lst << "Anniversary";
+    lst << "Nickname";
+    lst << "Children";
+    lst << "Notes";
+    lst << "Categories";
+    lst << "Uid";
+    lst << "Birthday";
+
+    return lst;
 }
 
 // FROM TT timeconversion.cpp GPLed

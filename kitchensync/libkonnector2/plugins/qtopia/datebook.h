@@ -27,13 +27,14 @@ namespace OpieHelper {
                   const QString &tz = QString::null,
                   bool meta = FALSE, Device* dev = 0);
         ~DateBook();
-        KSync::EventSyncee* toKDE( const QString & fileName );
-        KTempFile* fromKDE( KSync::EventSyncee* syncee );
+        KSync::EventSyncee* toKDE( const QString & fileName, ExtraMap& map );
+        KTempFile* fromKDE( KSync::EventSyncee* syncee, ExtraMap& map );
     private:
+        QStringList attributes()const;
         QString endDate( const QDateTime& time, bool allDay );
         QString startDate( const QDateTime& time, bool allDay );
-        QString event2string( KCal::Event *event );
-        KCal::Event* toEvent( QDomElement );
+        QString event2string( KCal::Event *event, ExtraMap& );
+        KCal::Event* toEvent( QDomElement, ExtraMap&, const  QStringList& lst );
     };
 };
 #endif
