@@ -80,7 +80,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   setFolderIcon(list, BarIcon("mail_forward"));
 
   // Identity
-  QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"), UserIcon("smile"));
+  QFrame *frame = addHBoxPage(i18n("Identity"),i18n("Personal Information"), BarIcon("identity", KIcon::SizeMedium ));
   w_idgets.append(new KNConfig::IdentityWidget(m->identity(), frame));
 
   // Accounts / News
@@ -92,11 +92,11 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Accounts / Mail
   list.clear();
   list << QString(" ")+i18n("Accounts") << i18n(" Mail");
-  frame = addHBoxPage(list, i18n("Mail Server"), BarIcon("mail_send"));
+  frame = addHBoxPage(list, i18n("Mail Server (SMTP)"), BarIcon("mail_send"));
   w_idgets.append(new KNConfig::SmtpAccountWidget(frame));
 
   // Appearance
-  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("blend"));
+  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("appearance"));
   w_idgets.append(new KNConfig::AppearanceWidget(m->appearance(), frame));
 
   // Read News / General

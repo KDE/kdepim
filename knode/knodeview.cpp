@@ -518,7 +518,7 @@ void KNodeView::initPopups(KNMainWindow *w)
   if (!f_olderPopup) f_olderPopup = new QPopupMenu();
 
   r_emotePopup = static_cast<QPopupMenu *>(w->factory()->container("remote_popup", w));
-  if (!l_ocalPopup) r_emotePopup = new QPopupMenu();
+  if (!r_emotePopup) r_emotePopup = new QPopupMenu();
 
   l_ocalPopup = static_cast<QPopupMenu *>(w->factory()->container("local_popup", w));
   if (!l_ocalPopup) l_ocalPopup = new QPopupMenu();

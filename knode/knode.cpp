@@ -310,6 +310,7 @@ bool KNMainWindow::firstStart()
   emailConf.setGroup("ServerInfo");
   KNServerInfo *smtp=knGlobals.accManager->smtp();
   smtp->setServer(emailConf.readEntry("Outgoing").latin1());
+  smtp->setPort(25);
   conf->setGroup("MAILSERVER");
   smtp->saveConf(conf);
 

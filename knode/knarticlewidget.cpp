@@ -757,7 +757,7 @@ void KNArticleWidget::createHtmlPage()
 						if(ct->isHTMLText())
 							html+=tmp;
 						else
-              html+="<pre>"+tmp+"</pre>";
+              html+="<pre>"+toHtmlString(tmp,true,false)+"</pre>";
           }
           html+="</td></tr>";
         }
