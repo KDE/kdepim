@@ -47,6 +47,10 @@
 #include "kpilotConfig.h"
 #endif
 
+#ifndef _KDEBUG_H_
+#include <kdebug.h>
+#endif
+
 #ifndef _VCAL_VCALBASE_H
 #include "vcalBase.h"
 #endif
@@ -239,6 +243,9 @@ int VCalBaseConduit::getTimeZone() const
 {
 	FUNCTIONSETUP;
 
+	if (fCalendar == 0)
+	  kdFatal() << __FUNCTION__ << ": fCalendar == 0" << endl;
+
 	VObject *vo = isAPropertyOf(fCalendar, VCTimeZoneProp);
 
 	if (!vo)
@@ -306,9 +313,13 @@ int VCalBaseConduit::getTimeZone() const
  * Given an pilot id, search the vCalendar for a matching vobject, and return
  * the pointer to that object.  If not found, return NULL.
  */
-VObject* VCalBaseConduit::findEntryInCalendar(unsigned int id)
+VObject* VCalBaseConduit::findEntryInCalendar(unsigned int id, const
+					      char *entryType)
 {
 	FUNCTIONSETUP;
+
+	if (fCalendar == 0)
+	  kdFatal() << __FUNCTION__ << ": fCalendar == 0" << endl;
 
 	VObjectIterator i;
 	VObject* entry = 0L;
@@ -331,7 +342,7 @@ VObject* VCalBaseConduit::findEntryInCalendar(unsigned int id)
 		objectID = isAPropertyOf(entry, KPilotIdProp);
 
 		if (objectID &&
-			(strcmp(vObjectName(entry), VCEventProp) == 0))
+			(strcmp(vObjectName(entry), entryType) == 0))
 		{
 			const char *s = fakeCString(
 				vObjectUStringZValue(objectID));
@@ -558,11 +569,11 @@ int VCalBaseConduit::numFromDay(const QString &day)
  * The pilot record specified was deleted on the pilot.  Remove
  * the corresponding vobject from the vCalendar.
  */
-void VCalBaseConduit::deleteVObject(PilotRecord *rec)
+void VCalBaseConduit::deleteVObject(PilotRecord *rec, const char *type)
 {
   VObject *delvo;
 
-  delvo = findEntryInCalendar(rec->getID());
+  delvo = findEntryInCalendar(rec->getID(), type);
   // if the entry was found, it is still in the vCalendar.  We need to
   // set the Status flag to Deleted, so that KOrganizer will not load
   // it next time the vCalendar is read in.  If it is not found, the
@@ -576,6 +587,9 @@ void VCalBaseConduit::deleteVObject(PilotRecord *rec)
 }
 
 // $Log$
+// Revision 1.5  2001/04/18 21:20:29  adridg
+// Response to bug #24291
+//
 // Revision 1.4  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

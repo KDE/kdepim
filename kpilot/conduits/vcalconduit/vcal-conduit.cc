@@ -172,7 +172,7 @@ void VCalConduit::doBackup()
 	{
 		if (rec->isDeleted())
 		{
-			deleteVObject(rec);
+			deleteVObject(rec, VCEventProp);
 		}
 		else
 		{
@@ -209,7 +209,7 @@ void VCalConduit::doSync()
 		recordcount++;
 		if (rec->isDeleted())
 		{
-			deleteVObject(rec);
+			deleteVObject(rec, VCEventProp);
 		} 
 		else 
 		{
@@ -339,7 +339,7 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   QString numStr;
   PilotDateEntry dateEntry(rec);
   
-  vevent = findEntryInCalendar(rec->getID());
+  vevent = findEntryInCalendar(rec->getID(), VCEventProp);
   if (!vevent) {
     // no event was found, so we need to add one with some initial info
     vevent = addProp(calendar(), VCEventProp);
@@ -1299,7 +1299,7 @@ void VCalConduit::doLocalSync()
 		continue;
 	}
 
-    vevent = findEntryInCalendar(rec->getID());
+    vevent = findEntryInCalendar(rec->getID(), VCEventProp);
     if (vevent == 0L) 
     {
 		DEBUGCONDUIT << fname
@@ -1454,6 +1454,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.37  2001/04/18 21:20:29  adridg
+// Response to bug #24291
+//
 // Revision 1.36  2001/04/18 07:46:37  adridg
 // Fix for part of bug #23385 by Philipp Hullman
 //

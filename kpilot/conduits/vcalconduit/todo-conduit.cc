@@ -32,7 +32,9 @@
 // I have noticed that this is full of memory leaks, but since it is
 // short lived, it shouldn't matter so much. -- PGB
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <sys/types.h>
 #include <signal.h>
@@ -153,14 +155,17 @@ void TodoConduit::doBackup()
    PilotRecord* rec;
    int index = 0;
 
-	getCalendar(TodoSetup::TodoGroup);
+   if (!getCalendar(TodoSetup::TodoGroup)) {
+     noCalendarError(i18n("ToDo Conduit"));
+     exit(ConduitMisconfigured);
+   }
 
    rec = readRecordByIndex(index++);
 
   // Get ALL entries from Pilot
    while(rec) {
      if(rec->getAttrib() & dlpRecAttrDeleted) { // tagged for deletion
-       deleteVObject(rec);
+       deleteVObject(rec, VCTodoProp);
      } else {
        updateVObject(rec);
      }    
@@ -176,7 +181,11 @@ void TodoConduit::doSync()
 	FUNCTIONSETUP;
    PilotRecord* rec;
 
-	getCalendar(TodoSetup::TodoGroup);
+   if (!getCalendar(TodoSetup::TodoGroup)) {
+     noCalendarError(i18n("ToDo Conduit"));
+     exit(ConduitMisconfigured);
+   }
+
    rec = readNextModifiedRecord();
 
    // get only MODIFIED entries from Pilot, compared with the above (doBackup),
@@ -184,7 +193,7 @@ void TodoConduit::doSync()
    while (rec) {
      if(rec->getAttrib() & dlpRecAttrDeleted)
        //	 recordDeleted(rec);
-       deleteVObject(rec);
+       deleteVObject(rec, VCTodoProp);
      else {
        bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
        if (pilotRecModified)
@@ -227,24 +236,22 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
   QString tmpStr;
-  QString numStr;
   PilotTodoEntry todoEntry(rec);
   
-  vtodo=findEntryInCalendar(rec->getID());
+  vtodo=findEntryInCalendar(rec->getID(), VCTodoProp);
   if (!vtodo) {
     // no event was found, so we need to add one with some initial info
+    QString numStr;
     vtodo = addProp(calendar(), VCTodoProp);
-
-	addDateProperty(vtodo, VCDCreatedProp, todaysDate);
-
-    numStr.sprintf("KPilot - %d",rec->getID());
+    addDateProperty(vtodo, VCDCreatedProp, todaysDate);
+    numStr.sprintf("KPilot - %ld",rec->getID());
     addPropValue(vtodo, VCUniqueStringProp, numStr.latin1());
     addPropValue(vtodo, VCSequenceProp, "1");
-	addDateProperty(vtodo, VCLastModifiedProp, todaysDate);
+    addDateProperty(vtodo, VCLastModifiedProp, todaysDate);
     addPropValue(vtodo, VCPriorityProp, "0");
-    addPropValue(vtodo, KPilotIdProp, numStr.setNum(todoEntry.getID()).latin1());
+    addPropValue(vtodo, KPilotIdProp,
+		 numStr.setNum(todoEntry.getID()).latin1()); 
     addPropValue(vtodo, KPilotStatusProp, "0");
-
   }
 
   // determine whether the vobject has been modified since the last sync
@@ -264,29 +271,21 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   
   // END TIME //
   vo = isAPropertyOf(vtodo, VCDTendProp);
-	if (todoEntry.getIndefinite()) 
-	{ // there is no end date
-		if (vo)
-		{
-		      addProp(vo, KPilotSkipProp);
-		}
-
-		DEBUGCONDUIT << fname
-			<< ": Todo-item with no end date."
-			<< endl;
-	}
-	else 
-	{
-		if (vo)
-		{
-			setDateProperty(vo,todoEntry.getDueDate_p());
-		}
-		else
-		{
-			addDateProperty(vtodo, VCDTendProp,
-				todoEntry.getDueDate_p());
-		}
-	}
+  if (todoEntry.getIndefinite()) { 
+    // there is no end date
+    if (vo)
+      addProp(vo, KPilotSkipProp);
+    
+    DEBUGCONDUIT << fname
+		 << ": Todo-item with no end date."
+		 << endl;
+  } else {
+    if (vo)
+      setDateProperty(vo, todoEntry.getDueDate_p());
+    else
+      addDateProperty(vtodo, VCDTendProp,
+		      todoEntry.getDueDate_p());
+  }
   
   // PRIORITY //
   vo = isAPropertyOf(vtodo, VCPriorityProp);
@@ -301,17 +300,13 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   vo = isAPropertyOf(vtodo, VCStatusProp);
   tmpStr = (todoEntry.getComplete() ? "COMPLETED" : "X-ACTION");
   if (vo)
-	{
     setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-	}
   else
-	{
     addPropValue(vtodo, VCStatusProp, tmpStr.latin1());
-	}
 
-	setSummary(vtodo,todoEntry.getDescription());
-	setNote(vtodo,todoEntry.getNote());
-	setStatus(vtodo,0);
+  setSummary(vtodo, todoEntry.getDescription());
+  setNote(vtodo, todoEntry.getNote());
+  setStatus(vtodo, 0);
 }
 
 /*****************************************************************************/
@@ -322,13 +317,6 @@ void TodoConduit::doLocalSync()
 	FUNCTIONSETUP;
 
   VObjectIterator i;
-  VObject *vtodo = 0L;
-  VObject *vo;
-  char *s;
-  int status;
-  recordid_t id;
-  PilotRecord *pRec;
-  PilotTodoEntry *todoEntry;
   fTimeZone = getTimeZone();
   
   initPropIterator(&i, calendar());
@@ -338,12 +326,16 @@ void TodoConduit::doLocalSync()
   // we only take events that have KPilotStatusProp as a property.  If
   // this property isn't present, ignore the event.
   while (moreIteration(&i)) {
-    vtodo = nextVObject(&i);
-    vo = isAPropertyOf(vtodo, KPilotStatusProp);
+    recordid_t id;
+    PilotTodoEntry *todoEntry;
+    PilotRecord *pRec;
+
+    VObject *vtodo = nextVObject(&i);
+    VObject *vo = isAPropertyOf(vtodo, KPilotStatusProp);
     
     if (vo && (strcmp(vObjectName(vtodo), VCTodoProp) == 0)) {
-      status = 0;
-      status = atoi(s = fakeCString(vObjectUStringZValue(vo)));
+      char *s = fakeCString(vObjectUStringZValue(vo));
+      int status = atoi(s);
       deleteStr(s);
       
       if (status == 1) {
@@ -363,9 +355,15 @@ void TodoConduit::doLocalSync()
 	  pRec = readRecordById(id);
 	  // if this fails, somehow the record got deleted from the pilot
 	  // but we were never informed! bad pilot. naughty pilot.
-	  ASSERT(pRec);
-	  
-	  todoEntry = new PilotTodoEntry(pRec);
+	  // Just crashing ain't right, though. The Right Thing is to
+	  // re-create the record.
+
+	  if (pRec)
+	    todoEntry = new PilotTodoEntry(pRec);
+	  else {
+	    todoEntry = new PilotTodoEntry();
+	    id = 0;
+	  }
 	} else {
 	  todoEntry = new PilotTodoEntry();
 	}
@@ -408,22 +406,24 @@ void TodoConduit::doLocalSync()
 	}
 
 	// SUMMARY //
-	char *s2=0, *s3=0;
 	// what we call summary pilot calls description.
 	if ((vo = isAPropertyOf(vtodo, VCSummaryProp)) != 0L) {
-	  s2 = fakeCString(vObjectUStringZValue(vo));
+	  char *s2 = fakeCString(vObjectUStringZValue(vo));
 	  todoEntry->setDescription(s2);
+	  deleteStr(s2);
 	} else {
-	  s2 = (char *) malloc(2);
+	  char *s2 = (char *) malloc(2);
 	  s2[0] = 0;
 	  todoEntry->setDescription(s2);
+	  deleteStr(s2);
 	}
 	
 	// DESCRIPTION //
 	// what we call description pilot puts as a separate note
 	if ((vo = isAPropertyOf(vtodo, VCDescriptionProp)) != 0L) {
-	  s3 = fakeCString(vObjectUStringZValue(vo));
+	  char *s3 = fakeCString(vObjectUStringZValue(vo));
 	  todoEntry->setNote(s3);
+	  deleteStr(s3);
 	} 
 
 	// put the pilotRec in the database...
@@ -432,9 +432,6 @@ void TodoConduit::doLocalSync()
 	id = writeRecord(pRec);
 	delete(todoEntry);
 	delete(pRec);
-	deleteStr(s2);
-	if (s3)
-	  deleteStr(s3);
 
 	// write the id we got from writeRecord back to the vObject
 	if (id > 0) {
@@ -453,6 +450,7 @@ void TodoConduit::doLocalSync()
 	}
        }
      }
+	setNumProperty(vtodo, KPilotStatusProp, 0);
    }
    // anything that is left on the pilot but that is not found in the
    // todo list has to be deleted.  We know this because we have added
@@ -470,20 +468,24 @@ void TodoConduit::doLocalSync()
    rec = readRecordByIndex(index++);
    //  Get all entries from Pilot
    while (rec) {
-     todoEntry = new PilotTodoEntry(rec); // convert to date structure
-     vtodo = findEntryInCalendar(rec->getID());
-     
+     int id = rec->getID();
+     VObject *vtodo = findEntryInCalendar(id, VCTodoProp);
+
+     DEBUGCONDUIT << "rec: " << (unsigned long) rec <<  ", RecId: " << id
+		  << ", vtodo: " << (unsigned long) vtodo << endl;
+
      if (vtodo == 0L) {
        if (first == FALSE) {
-	 deletedList.append(new int(rec->getID()));
+	 deletedList.append(new int(id));
        } else { 
 	 if (insertall == 0) {
+	   PilotTodoEntry tE(rec); // convert to date structure
 	   QString text;
 	   text = "This is the first time than you have done a HotSync\n"
 	     "with the To Do conduit. There is an To Do entry\n"
 	     "in the PalmPilot which is not in the vCalendar (KOrganizer).\n\n";
 	   text += "To Do: ";
-	   text += todoEntry->getDescription();
+	   text += tE.getDescription();
 	   text += "\n\nWhat must be done with this appointment?";
 
 	   response = QMessageBox::information(0, "KPilot Todo List Conduit",
@@ -520,8 +522,8 @@ void TodoConduit::doLocalSync()
    }
    deletedList.clear();
 
-	KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-	setFirstTime(config,false);
+   KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
+   setFirstTime(config,false);
 }
 
 
@@ -532,6 +534,9 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.1  2001/04/16 13:36:20  adridg
+// Moved todoconduit
+//
 // Revision 1.18  2001/04/01 17:32:05  adridg
 // Fiddling around with date properties
 //

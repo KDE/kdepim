@@ -121,8 +121,9 @@ public:
 	
 protected:
 	PilotRecord *findEntryInDB(unsigned int id);
-	VObject *findEntryInCalendar(unsigned int id);
-	void deleteVObject(PilotRecord *rec);
+	VObject *findEntryInCalendar(unsigned int id, 
+				     const char *entryType);
+	void deleteVObject(PilotRecord *rec, const char *type);
 	void saveVCal();
 	
 	bool getCalendar(const QString& group);
