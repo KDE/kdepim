@@ -114,21 +114,33 @@ RAddress::_parse()
 		// phrase_ lasts from 0 to start
 		// the address tokens comes at start+ till
 		// the end.  We need to remove the semicolon too
-		int start=strRep_.find(':');
-		phrase_ = strRep_.left(start);
+  
+		int start = strRep_.find(':');
+
+        if (-1 != start)
+            phrase_ = strRep_.left(start);
+
+        else {
+            rmmDebug("This group is invalid. No ':'");
+            return;
+        }
 				
 		// ok. Got the group name.  Lets get the address.
 		QCString address(strRep_.mid(start+1, strRep_.length()-1));
 		
 		QStrList list;
 		RTokenise(address, ",", list, true, false); //Tokenise?  What a brit :)
-		mailboxList_+=list;
+		
+        mailboxList_.clear();
         
+	    for (QStrListIterator it(list); it.current(); ++it)
+		    mailboxList_.append(RMailbox(*it.current()));
+
     } else {
 
         RMailbox m(strRep_);
-        // XXX Is this necessary ?
-        // m.parse();
+
+        mailboxList_.clear();
         mailboxList_.append(m);
     }
 }
@@ -138,11 +150,25 @@ RAddress::_assemble()
 {
     if (type() == RAddress::Group)
     {
-         strRep_ = phrase_;
-         strRep_ += ": ";
-         for (QValueList<RMailbox>::Iterator it=mailboxList_.begin(); it!= mailboxList_.end(); ++it)
-              strRep_ += (*it).asString(), strRep_+= ", ";
-         strRep_[strRep_.length()-1]=';';
+        strRep_ = phrase_;
+
+        strRep_ += ": ";
+
+        QValueList<RMailbox>::Iterator it = mailboxList_.begin();
+
+        bool firstTime = true;
+
+        for (; it != mailboxList_.end(); ++it) {
+
+            if (!firstTime)
+               strRep_ +=  + ", ";
+
+            firstTime = false;
+
+            strRep_ += (*it).asString();
+        }
+
+        strRep_ += " ;";
 
 
     } else {

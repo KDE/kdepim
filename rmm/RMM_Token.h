@@ -14,8 +14,6 @@ namespace RMM {
         bool skipComments = true,
         bool quotedTokens = true);
 
-    QValueList<RMailbox>& operator += (QValueList<RMailbox> &vlist, QStrList &strlist);
-
 }
 
 #endif

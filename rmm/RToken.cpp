@@ -156,14 +156,6 @@ RTokenise(
     return l.count();
 }
 
-QValueList<RMailbox>& operator += (QValueList<RMailbox> &vlist, QStrList &strlist)
-{
-	for (char *iter=strlist.first(); iter!=0; iter=strlist.next())
-		vlist.append(RMailbox(iter));
-	return vlist;
-}
-
-
 } // namespace
 
 
