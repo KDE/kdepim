@@ -204,9 +204,11 @@ void KCalResourceSlox::requestEvents()
 
   kdDebug() << "REQUEST CALENDAR: \n" << doc.toString( 2 ) << endl;
 
-  mLoadEventsJob = KIO::davPropFind( url, doc, "0" );
+  mLoadEventsJob = KIO::davPropFind( url, doc, "0", false );
   connect( mLoadEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadEventsResult( KIO::Job * ) ) );
+  connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
 
   mLastEventSync = QDateTime::currentDateTime();
 }
@@ -231,9 +233,11 @@ void KCalResourceSlox::requestTodos()
 
   kdDebug() << "REQUEST TASKS: \n" << doc.toString( 2 ) << endl;
 
-  mLoadTodosJob = KIO::davPropFind( url, doc, "0" );
+  mLoadTodosJob = KIO::davPropFind( url, doc, "0", false );
   connect( mLoadTodosJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadTodosResult( KIO::Job * ) ) );
+  connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
 
   mLastTodoSync = QDateTime::currentDateTime();
 }
@@ -411,6 +415,8 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
   mLoadTodosJob = 0;
 
+  emitEndProgress();
+
   emit resourceLoaded( this );
 }
 
@@ -471,7 +477,22 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
   mLoadEventsJob = 0;
 
+  emitEndProgress();
+
   emit resourceLoaded( this );
+}
+
+void KCalResourceSlox::emitEndProgress()
+{
+  if ( !mLoadEventsJob && !mLoadTodosJob ) {
+    emit progress( this, "sloxkcal", 100 );
+  }
+}
+
+void KCalResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
+{
+  kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
+  emit progress( this, "sloxkcal", -1 );
 }
 
 bool KCalResourceSlox::save()

@@ -94,6 +94,8 @@ class KCalResourceSlox : public KCal::ResourceCached
     void slotLoadEventsResult( KIO::Job * );
     void slotLoadTodosResult( KIO::Job * );
     void slotSaveJobResult( KIO::Job * );
+    
+    void slotProgress( KIO::Job *job, unsigned long percent );
 
   protected:
     bool doOpen();
@@ -115,6 +117,8 @@ class KCalResourceSlox : public KCal::ResourceCached
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
     void parseEventAttribute( const QDomElement &e, KCal::Event *event );
+
+    void emitEndProgress();
  
   private:
     void init();
