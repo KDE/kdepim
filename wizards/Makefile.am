@@ -81,7 +81,7 @@ groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 groupwisewizard_SOURCES = groupwisemain.cpp
 
 # Exchange
-libexchangewizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libexchangewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libexchangewizard_la_SOURCES = exchangewizard.cpp
 libexchangewizard_la_LIBADD = $(top_builddir)/kresources/newexchange/libkcal_newexchange.la \
                               $(top_builddir)/kresources/newexchange/libkabc_newexchange.la \
