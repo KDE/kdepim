@@ -8,7 +8,8 @@ sub create_value_kind_map {
   
   foreach $enum (@{$params{'VALUE'}->{'enums'}}){
     next if $enum eq 'NO' or $enum eq 'ERROR';
-    print "    {ICAL_VALUE_${enum},ICAL_${enum}_VALUE},\n";
+    $uc = join("",map {uc(lc($_));}  split(/-/,$enum));    
+    print "    {ICAL_VALUE_${uc},ICAL_${uc}_VALUE},\n";
   }
   
   print "    {ICAL_VALUE_X,ICAL_X_VALUE},\n";
