@@ -125,7 +125,7 @@ features.</para>
 
 <sect1 id="timers"><title>The Timers</title>
 
-<para>&karm; maintains two different counters for each task: the session time
+<para>&karm; maintains two different timers for each task: the session time
 and the total time.  For example, to track hours logged this week and this
 month, reset the session time at the beginning of the work week and reset all
 times at the beginning of each month.</para>
