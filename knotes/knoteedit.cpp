@@ -24,6 +24,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kaction.h>
+#include <kurldrag.h>
 #include <kstdaction.h>
 #include <kcolordialog.h>
 #include <kxmlguiclient.h>
@@ -137,13 +138,13 @@ KNoteEdit::~KNoteEdit()
 {
 }
 
-void KNoteEdit::readFile( QString& filename )
+void KNoteEdit::readFile( const QString& filename )
 {
     QFile infile( filename );
     if( infile.open( IO_ReadOnly ) )
     {
         QTextStream input( &infile );
-	input.setEncoding(QTextStream::UnicodeUTF8);
+        input.setEncoding(QTextStream::UnicodeUTF8);
         setText( input.read() );
         infile.close();
     } else
@@ -152,7 +153,7 @@ void KNoteEdit::readFile( QString& filename )
     setModified( false );
 }
 
-void KNoteEdit::dumpToFile( QString& filename ) const
+void KNoteEdit::dumpToFile( const QString& filename ) const
 {
     QFile outfile( filename );
     if( outfile.open( IO_WriteOnly ) )
@@ -165,33 +166,17 @@ void KNoteEdit::dumpToFile( QString& filename ) const
         kdDebug(5500) << "could not open file to write to" << endl;
 }
 
-void KNoteEdit::setTextFont( QFont& font )
+void KNoteEdit::setTextFont( const QFont& font )
 {
     if ( textFormat() == PlainText )
-    {
-        setSelectionAttributes( 1, colorGroup().background(), false );
-        setSelection( 0, 0, length(), paragraphLength( length() ), 1 );
-        setCurrentFont( font );
-        removeSelection( 1 );
-    }
+        setFont( font );
     else
-    {
-        setFamily( font.family() );
-        setPointSize( font.pointSize() );
-    }
+        setCurrentFont( font );
 }
 
-void KNoteEdit::setTextColor( QColor& color )
+void KNoteEdit::setTextColor( const QColor& color )
 {
-    if ( textFormat() == PlainText )
-    {
-        setSelectionAttributes( 1, colorGroup().background(), false );
-        setSelection( 0, 0, length(), paragraphLength( length() ), 1 );
-        setColor( color );
-        removeSelection( 1 );
-    }
-    else
-        setColor( color );
+    setColor( color );
 
     QPixmap pix( 16, 16 );
     pix.fill( color );
@@ -285,27 +270,37 @@ void KNoteEdit::textDecreaseIndent()
 
 /** protected methods **/
 
-void KNoteEdit::dragEnterEvent( QDragEnterEvent* event )
+void KNoteEdit::contentsDragEnterEvent( QDragEnterEvent* event )
 {
-    event->accept( QUriDrag::canDecode(event) || QTextDrag::canDecode(event) );
-}
-
-void KNoteEdit::dragMoveEvent( QDragMoveEvent* event )
-{
-    if ( QUriDrag::canDecode(event) )
+    if ( KURLDrag::canDecode( event ) )
         event->accept();
-    else if ( QTextDrag::canDecode(event) )
-        QTextEdit::dragMoveEvent(event);
+    else
+        QTextEdit::contentsDragEnterEvent( event );
 }
 
-void KNoteEdit::dropEvent( QDropEvent* event )
+void KNoteEdit::contentsDragMoveEvent( QDragMoveEvent* event )
 {
-    QStringList list;
+    if ( KURLDrag::canDecode( event ) )
+        event->accept();
+    else
+        QTextEdit::contentsDragMoveEvent( event );
+}
 
-    if ( QUriDrag::decodeToUnicodeUris( event, list ) )
-        emit gotUrlDrop( list.first() );
-    else if ( QTextDrag::canDecode( event ) )
-        QTextEdit::dropEvent( event );
+void KNoteEdit::contentsDropEvent( QDropEvent* event )
+{
+    KURL::List list;
+
+    if ( KURLDrag::decode( event, list ) )
+    {
+        QString text;
+        for ( KURL::List::Iterator it = list.begin(); it != list.end(); ++it )
+            text += (*it).prettyURL() + ", ";
+
+        text.remove( text.length() - 2, 2 );
+        insert( text );
+    }
+    else
+        QTextEdit::contentsDropEvent( event );
 }
 
 /** private slots **/

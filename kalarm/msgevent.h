@@ -146,6 +146,7 @@ class KAlarmEvent
 #else
 		void             dumpDebug() const;
 #endif
+		static void      convertKCalEvents();
 		static const int REPEAT_AT_LOGIN_OFFSET;
 	private:
 

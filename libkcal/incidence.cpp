@@ -68,6 +68,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 
     ++it;
   }
+  mAlarms.setAutoDelete(true);
 
 //  Recurrence *mRecurrence;      Recurrence *mRecurrence;
   mRecurrence = new Recurrence(this);
@@ -167,6 +168,7 @@ void Incidence::setCategories(const QStringList &categories)
 void Incidence::setCategories(const QString &catStr)
 {
   if (mReadOnly) return;
+  mCategories.clear();
 
   if (catStr.isEmpty()) return;
 

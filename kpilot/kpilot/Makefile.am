@@ -18,7 +18,7 @@ bin_PROGRAMS = kpilot kpilotDaemon
 
 METASOURCES = AUTO
 
-INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
+INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 
 ###
 ### On some platforms, such as stock RH 7.1, the KDE libraries are built without
@@ -26,8 +26,8 @@ INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### you want any debugging at all.
 ###
 ### KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
-KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR 
- 
+KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR
+
 ###
 ### Non-automake variables
 ###
@@ -69,15 +69,15 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD		= $(LIB_KFILE) $(LIBPISOCK) ../lib/libkpilot.la
-kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK) ../lib/libkpilot.la
-kpilotTest_LDADD	= $(LIB_KFILE) $(LIBPISOCK) ../lib/libkpilot.la
-kpilotConfig_LDADD      = $(LIB_KFILE) ../lib/libkpilot.la
+kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)
 apps_DATA = kpilot.desktop  kpilotdaemon.desktop
-servicetype_DATA = kpilotconduit.desktop 
+servicetype_DATA = kpilotconduit.desktop
 
 rcdir = $(kde_datadir)/kpilot
 rc_DATA = kpilotui.rc

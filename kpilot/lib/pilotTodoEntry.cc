@@ -43,20 +43,24 @@ static const char *pilotTodoEntry_id =
 
 PilotTodoEntry::PilotTodoEntry(void):PilotAppCategory()
 {
+	FUNCTIONSETUP;
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 }
 
 
 PilotTodoEntry::PilotTodoEntry(PilotRecord * rec):PilotAppCategory(rec)
 {
-	unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
-		rec->getLen());
+	FUNCTIONSETUP;
+	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
+	if (rec)
+		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(), rec->getLen());
 	(void) pilotTodoEntry_id;
 }
 
 
 PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e)
 {
+	FUNCTIONSETUP;
 	::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
 	// See PilotDateEntry::operator = for details
 	fTodoInfo.description = 0L;
@@ -151,6 +155,9 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.2  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.1  2001/12/27 23:08:30  adridg
 // Restored some deleted wrapper files
 //
