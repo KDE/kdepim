@@ -92,7 +92,7 @@ int main( int argc, char** argv )
   }
 #endif
   KWatchGnuPGApplication app;
-  QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+  //QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 
   return app.exec();
 }
