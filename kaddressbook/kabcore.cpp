@@ -82,7 +82,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mWidget = new QWidget( parent, name );
 
   mAddressBook = KABC::StdAddressBook::self( true );
-  mAddressBook->setErrorHandler( new KABC::GUIErrorHandler );
+  mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
 
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
            SLOT( addressBookChanged() ) );

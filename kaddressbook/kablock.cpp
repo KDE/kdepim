@@ -53,7 +53,6 @@ bool KABLock::lock( KABC::Resource *resource )
   if ( mLocks.find( resource ) == mLocks.end() ) { // not locked yet
     KABC::Ticket *ticket = mAddressBook->requestSaveTicket( resource );
     if ( !ticket ) {
-      KMessageBox::error( 0, i18n( "Address book is locked by other process!" ) );
       return false;
     } else {
       LockEntry entry;
