@@ -383,13 +383,13 @@ bool DOCConverter::convertTXTtoPDB() {
 	
 	QString text = readText();
 
-	if (fBmkTypes && eBmkEndtags) {
+	if (fBmkTypes & eBmkEndtags) {
 		findBmkEndtags(text, fBookmarks);
 	}	// end: EndTag Bookmarks
 
-	
+
 	// Search for all tags <* Bookmark text *> in the text. We have to delete them immediately, otherwise the later bookmarks will be off.
-	if (fBmkTypes && eBmkInline) {
+	if (fBmkTypes & eBmkInline) {
 		findBmkInline(text, fBookmarks);
 	}	 // end: Inline Bookmarks
 
@@ -408,7 +408,7 @@ bool DOCConverter::convertTXTtoPDB() {
 	{
 		bmk->findMatches(text, pdbBookmarks);
 	}
-	
+
 	switch (eSortBookmarks)
 	{
 		case eSortName:
@@ -541,14 +541,14 @@ bool DOCConverter::convertPDBtoTXT()
 		KPILOT_DELETE(docdb);
 		return false;
 	}
-	QTextStream docstream(&docfile);
+	QString doctext;
 	for (int i=1; i<header.numRecords+1; i++)
 	{
 		PilotRecord*rec=docdb->readRecordByIndex(i);
 		if (rec)
 		{
 			PilotDOCEntry recText(rec, header.version==DOC_COMPRESSED);
-			docstream<<recText.getText();
+			doctext.append(recText.getText());
 			DEBUGCONDUIT<<"Record "<<i<<endl;
 			KPILOT_DELETE(rec);
 		} else {
@@ -559,37 +559,65 @@ bool DOCConverter::convertPDBtoTXT()
 	// After the document records possibly come a few bookmark records, so read them in and put them in a separate bookmark file.
 	// for the ztxt conduit there might be annotations after the bookmarks, so the upper bound needs to be adapted.
 	int upperBmkRec=docdb->recordCount();
-	QString bmkfilename = docfile.name();
-	if (bmkfilename.endsWith(CSL1(".txt"))){
-		bmkfilename.remove(bmkfilename.length()-4, 4);
-	}
-	bmkfilename+=CSL1(PDBBMK_SUFFIX);
-	QFile bmkfile(bmkfilename);
-	if (!bmkfile.open(IO_WriteOnly))
+	bmkSortedList bmks;
+	bmks.setAutoDelete(TRUE);
+	for (int i=header.numRecords+1; i<upperBmkRec; i++)
 	{
-		emit logError(i18n("Unable to open output file %1 for the bookmarks of %2.").arg(bmkfilename).arg(docdb ->dbPathName()));
-	}
-	else
-	{
-		DEBUGCONDUIT<<"Writing "<<upperBmkRec-header.numRecords<<"("<<upperBmkRec<<") bookmarks to file "<<bmkfilename<<endl;
-		QTextStream bmkstream(&bmkfile);
-		for (int i=header.numRecords+1; i<upperBmkRec; i++)
+		PilotRecord*rec=docdb->readRecordByIndex(i);
+		if (rec)
 		{
-			PilotRecord*rec=docdb->readRecordByIndex(i);
-			if (rec)
-			{
-				PilotDOCBookmark bmk(rec);
-				bmkstream<<bmk.pos<<", "<<bmk.bookmarkName<<endl;
-				KPILOT_DELETE(rec);
-			} else {
-				emit logMessage(i18n("Could not read bookmark record #%1 from Database %2").arg(i).arg(docdb->dbPathName()));
-			}
+			PilotDOCBookmark bookie(rec);
+			docBookmark*bmk=new docBookmark(bookie.bookmarkName, bookie.pos);
+			bmks.append(bmk);
+			KPILOT_DELETE(rec);
+		} else {
+			emit logMessage(i18n("Could not read bookmark record #%1 from Database %2").arg(i).arg(docdb->dbPathName()));
 		}
-//		bmkstream.close();
-		bmkfile.close();
+	}
+	// TODO: Sort the list of bookmarks according to their position
+	docBookmark::compare_pos=true;
+	bmks.sort();
+
+	if ((fBmkTypes & eBmkFile) && (bmks.count()>0))
+	{
+		QString bmkfilename = docfile.name();
+		if (bmkfilename.endsWith(CSL1(".txt"))){
+			bmkfilename.remove(bmkfilename.length()-4, 4);
+		}
+		bmkfilename+=CSL1(PDBBMK_SUFFIX);
+		QFile bmkfile(bmkfilename);
+		if (!bmkfile.open(IO_WriteOnly))
+		{
+			emit logError(i18n("Unable to open file %1 for the bookmarks of %2.")
+				.arg(bmkfilename).arg(docdb ->dbPathName()));
+		}
+		else
+		{
+			DEBUGCONDUIT<<"Writing "<<upperBmkRec-header.numRecords<<
+				"("<<upperBmkRec<<") bookmarks to file "<<bmkfilename<<endl;
+			QTextStream bmkstream(&bmkfile);
+			for (docBookmark*bmk=bmks.first(); bmk; bmk=bmks.next())
+			{
+				bmkstream<<bmk->position<<", "<<bmk->bmkName<<endl;
+			}
+			//bmkstream.close();
+			bmkfile.close();
+		}
+	}
+	if (fBmkTypes & eBmkInline)
+	{
+		for (docBookmark*bmk=bmks.last(); bmk; bmk=bmks.prev())
+		{
+			doctext.insert(bmk->position, QString(CSL1("<*") +
+				bmk->bmkName +
+				CSL1("*>")));
+		}
 	}
 
-//	docstream.close();
+	// Finally, write the actual text out to the file.
+	QTextStream docstream(&docfile);
+	docstream<<doctext;
+	//docstream.close();
 	docfile.close();
 	docdb->cleanup();
 	// reset all records to unchanged. I don't know if this is really such a wise idea?

@@ -121,25 +121,28 @@ void DOCConduit::readConfig()
 	eConflictResolution =
 		(enum eSyncDirectionEnum) (fConfig->
 		readNumEntry(DOCConduitFactory::fConflictResolution, 0));
-	fBookmarks = DOCConverter::eBmkNone;
+	fTXTBookmarks = DOCConverter::eBmkNone;
 	if (fConfig->readBoolEntry(DOCConduitFactory::fConvertBookmarks, true))
 	{
 		if (fConfig->readBoolEntry(DOCConduitFactory::fBookmarksBmk, true))
-			fBookmarks |= DOCConverter::eBmkFile;
+			fTXTBookmarks |= DOCConverter::eBmkFile;
 		if (fConfig->readBoolEntry(DOCConduitFactory::fBookmarksInline, true))
-			fBookmarks |= DOCConverter::eBmkInline;
+			fTXTBookmarks |= DOCConverter::eBmkInline;
 		if (fConfig->readBoolEntry(DOCConduitFactory::fBookmarksEndtags, true))
-			fBookmarks |= DOCConverter::eBmkEndtags;
+			fTXTBookmarks |= DOCConverter::eBmkEndtags;
 	}
+	fPDBBookmarks = fConfig->readNumEntry(DOCConduitFactory::fPCBookmarks, DOCConverter::eBmkNone);
+
+
 	fCompress = fConfig->readBoolEntry(DOCConduitFactory::fCompress, true);
 	eSyncDirection =
 		(enum eSyncDirectionEnum) (fConfig->
 		readNumEntry(DOCConduitFactory::fSyncDirection, 1));
-		
+
 	fIgnoreBmkChangesOnly = fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false);
 	fLocalSync = fConfig->readBoolEntry(DOCConduitFactory::fLocalSync, false);
 	fAlwaysUseResolution = fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false);
-	
+
 	fDBListSynced=fConfig->readListEntry(DOCConduitFactory::fDOCList);
 
 #ifdef DEBUG
@@ -149,7 +152,8 @@ void DOCConduit::readConfig()
 		<< " fPDBDir=" << fPDBDir
 		<< " fkeepPDBLocally=" << fKeepPDBLocally
 		<< " eConflictResolution=" << eConflictResolution
-		<< " fBookmarks=" << fBookmarks
+		<< " fTXTBookmarks=" << fTXTBookmarks
+		<< " fPDBBookmarks=" << fPDBBookmarks
 		<< " fCompress=" << fCompress
 		<< " eSyncDirection=" << eSyncDirection << endl;
 #endif
@@ -160,12 +164,12 @@ void DOCConduit::readConfig()
 bool DOCConduit::pcTextChanged(QString txtfn)
 {
 	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
-	
+
 	// How do I find out if a text file has changed shince we last synced it??
 	// Use KMD5 for now. If I realize it is too slow, then I have to go back to comparing modification times
 	// if there is no config setting yet, assume the file has been changed. the md5 sum will be written to the config file after the sync.
 	QString oldDigest=fConfig->readEntry(txtfn);
-	if (oldDigest.length()<=0) 
+	if (oldDigest.length()<=0)
 	{
 		return true;
 	}
@@ -358,14 +362,15 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 
 		docconverter.setTXTpath(fTXTDir, sinfo.txtfilename);
 		docconverter.setPDB(database);
-		docconverter.setBookmarkTypes(fBookmarks);
 		docconverter.setCompress(fCompress);
 
 		switch (sinfo.direction) {
 			case eSyncPDAToPC:
+				docconverter.setBookmarkTypes(fPDBBookmarks);
 				res = docconverter.convertPDBtoTXT();
 				break;
 			case eSyncPCToPDA:
+				docconverter.setBookmarkTypes(fTXTBookmarks);
 				res = docconverter.convertTXTtoPDB();
 				break;
 			default:

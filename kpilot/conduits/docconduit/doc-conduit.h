@@ -72,7 +72,7 @@ protected:
 	virtual const unsigned long dbcreator();
 
 public slots:
-/** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC. 
+/** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC.
  * syncNextDB and syncNextDOC fist build the list of all PalmDoc texts, and then the method syncDatabases does the actual sync. */
 	void syncNextDB();
 	void syncNextTXT();
@@ -121,7 +121,7 @@ public slots:
 	QString fTXTDir, fPDBDir;
 	bool fKeepPDBLocally;
 	eSyncDirectionEnum  eConflictResolution;
-	int fBookmarks;
+	int fTXTBookmarks, fPDBBookmarks;
 	bool fCompress, fIgnoreBmkChangesOnly, fLocalSync, fAlwaysUseResolution;
 	QStringList fDBListSynced;
 	QStringList fDBNames;
@@ -133,16 +133,16 @@ public slots:
 	QStringList::Iterator dociterator;
 };
 
-class docSyncInfo 
+class docSyncInfo
 {
 public:
 	docSyncInfo(QString hhDB=QString(), QString txtfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
 	{
-		handheldDB=hhDB; 
-		txtfilename=txtfn; 
-		pdbfilename=pdbfn; 
-		direction=dir; 
-		fPCStatus=eStatNone; 
+		handheldDB=hhDB;
+		txtfilename=txtfn;
+		pdbfilename=pdbfn;
+		direction=dir;
+		fPCStatus=eStatNone;
 		fPalmStatus=eStatNone;
 	};
 	~docSyncInfo(){};
