@@ -371,7 +371,7 @@ IMAP4Protocol::listDir (const KURL & _url)
       listStr += "*";
     }
     cmd =
-      doCommand (imapCommand::clientList ("", listStr, 
+      doCommand (imapCommand::clientList ("", listStr,
             (myLType == "LSUB" || myLType == "LSUBNOCHECK")));
     if (cmd->result () == "OK")
     {
@@ -540,6 +540,10 @@ IMAP4Protocol::listDir (const KURL & _url)
         listEntry (entry, true);
       }
     }
+  }
+  if ( !selectInfo.alert().isNull() ) {
+    warning( selectInfo.alert() );
+    selectInfo.setAlert( 0 );
   }
 
   kdDebug(7116) << "IMAP4Protcol::listDir - Finishing listDir" << endl;
@@ -1709,7 +1713,7 @@ IMAP4Protocol::getMimeType (enum IMAP_TYPE aType)
     return "message/rfc822";
     break;
 
-  // this should be handled by parseRelay  
+  // this should be handled by parseRelay
   case ITYPE_ATTACH:
     return "application/octet-stream";
     break;
@@ -1811,9 +1815,9 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
       mailboxName = mailboxName.right(mailboxName.length () - hdLen);
     if (mailboxName.right(hdLen) == item.hierarchyDelimiter())
       mailboxName.truncate(mailboxName.length () - hdLen);
-    
+
     atom.m_uds = UDS_NAME;
-    if (!item.hierarchyDelimiter().isEmpty() && 
+    if (!item.hierarchyDelimiter().isEmpty() &&
         mailboxName.find(item.hierarchyDelimiter()) != -1)
       atom.m_str = mailboxName.section(item.hierarchyDelimiter(), -1);
     else
@@ -1922,7 +1926,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
 
     if (makeLogin ())
     {
-      if (getCurrentBox () != _box || 
+      if (getCurrentBox () != _box ||
           _type == "LIST" || _type == "LSUB" || _type == "LSUBNOCHECK")
       {
         QString myNamespace = QString::null; // until namespace is supported

@@ -359,6 +359,10 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
     case 'A':                  // ALERT
       if (option == "ALERT")
       {
+        rest.pos = rest.data.find(']', rest.pos) + 1;
+        // The alert text is after [ALERT].
+        // Is this correct or do we need to care about litterals?
+        selectInfo.setAlert( rest.cstr() );
       }
       break;
 

@@ -111,6 +111,11 @@ public:
     readWrite_ = b;
   }
 
+  void setAlert( const char* cstr )
+  {
+    alert_ = cstr;
+  }
+
   ulong count () const
   {
     return count_;
@@ -191,9 +196,16 @@ public:
     return readWriteAvailable_;
   }
 
+  QCString alert() const
+  {
+    return alert_;
+  }
+
 private:
 
-    ulong count_;
+  QCString alert_;
+
+  ulong count_;
   ulong recent_;
   ulong unseen_;
   ulong uidValidity_;
