@@ -37,7 +37,6 @@
 #include <kabc/addressbook.h>
 
 #include "locationwidget.h"
-#include "locationwidget.moc"
 
 LocationWidget::LocationWidget( ViewManager *vm, QWidget *parent )
   : FeatureBarWidget( vm, parent )
@@ -125,3 +124,5 @@ QString LocationWidget::createUrl( const KABC::Address &addr )
                        replace( "%z", addr.postalCode() ).
                        replace( "%c", addr.countryToISO( addr.street() ) );
 }
+
+#include "locationwidget.moc"

@@ -22,7 +22,6 @@
 */
 
 #include "featurebarwidget.h"
-#include "featurebarwidget.moc"
 
 FeatureBarWidget::FeatureBarWidget( ViewManager *vm, QWidget *parent,
                                     const char *name )
@@ -75,3 +74,5 @@ QString FeatureBarWidget::identifier() const
 {
   return "empty_widget";
 }
+
+#include "featurebarwidget.moc"

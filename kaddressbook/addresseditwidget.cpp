@@ -237,8 +237,8 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   QPushButton *addButton = new QPushButton( i18n( "&Add..." ), buttonBox );
   connect( addButton, SIGNAL( clicked() ), SLOT( addAddress() ) );
 
-  removeButton = new QPushButton( i18n( "&Remove" ), buttonBox );
-  connect( removeButton, SIGNAL( clicked() ), SLOT( removeAddress() ) );
+  mRemoveButton = new QPushButton( i18n( "&Remove" ), buttonBox );
+  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( removeAddress() ) );
 
   mTypeCombo->updateTypes();
   mTypeCombo->setCurrentItem( selected );
@@ -254,12 +254,12 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   connect( mPostalCodeEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mCountryCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mPreferredCheckBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( removeButton, SIGNAL( clicked() ), SLOT( modified() ) );
+  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( modified() ) );
 
   KAcceleratorManager::manage( this );
 
   mChanged = false;
-  removeButton->setEnabled( mAddressList.count() > 1 );
+  mRemoveButton->setEnabled( mAddressList.count() > 0 );
 }
 
 AddressEditDialog::~AddressEditDialog()
@@ -322,19 +322,20 @@ void AddressEditDialog::addAddress()
     updateAddressEdits();
 
     modified();
+
+    mRemoveButton->setEnabled( true );
   }
-  removeButton->setEnabled( true );
 }
 
 void AddressEditDialog::removeAddress()
 {
-    if ( mAddressList.count()>1 )
-    {
+    if ( mAddressList.count() > 0 ) {
         mAddressList.remove( mTypeCombo->selectedElement() );
         mTypeCombo->updateTypes();
         updateAddressEdits();
     }
-    removeButton->setEnabled( mAddressList.count()>1 );
+
+    mRemoveButton->setEnabled( mAddressList.count() > 0 );
 }
 
 void AddressEditDialog::fillCountryCombo(KComboBox *combo)

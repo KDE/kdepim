@@ -45,8 +45,10 @@ class AddHostDialog : public KDialogBase
     QString host() const;
     int port() const;
     QString baseDN() const;
-private slots:
-    void slotHostEditChanged( const QString & );
+
+  private slots:
+    void slotHostEditChanged( const QString& );
+
   private:
     QLineEdit* mHostEdit;
     QSpinBox* mPortSpinBox;

@@ -42,7 +42,9 @@ AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
 
   mHostEdit = new QLineEdit( page );
   layout->addMultiCellWidget( mHostEdit, 0, 0, 1, 2 );
-  connect(mHostEdit, SIGNAL( textChanged ( const QString & )), this, SLOT(slotHostEditChanged( const QString & )));
+  connect( mHostEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotHostEditChanged( const QString& ) ) );
+
   QLabel *label = new QLabel( i18n( "&Host:" ), page );
   label->setBuddy( mHostEdit );
   layout->addWidget( label, 0, 0 );
@@ -75,7 +77,7 @@ AddHostDialog::~AddHostDialog()
 
 void AddHostDialog::slotHostEditChanged( const QString &text )
 {
-    enableButtonOK( !text.isEmpty());
+  enableButtonOK( !text.isEmpty() );
 }
 
 void AddHostDialog::setHost( const QString &host )

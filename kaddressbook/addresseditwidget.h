@@ -120,7 +120,8 @@ class AddressEditDialog : public KDialogBase
     KLineEdit *mLocalityEdit;
     KLineEdit *mPostalCodeEdit;
     KLineEdit *mPOBoxEdit;
-    QPushButton *removeButton;
+
+    QPushButton *mRemoveButton;
     bool mChanged;
 };
 
