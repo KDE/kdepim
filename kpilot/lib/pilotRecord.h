@@ -40,6 +40,9 @@ struct pi_buffer_t;
 
 #include <pi-file.h>
 
+#include <qvaluelist.h>
+
+typedef QValueList<recordid_t> RecordIDList;
 
 class KDE_EXPORT PilotRecord
 {
@@ -52,10 +55,10 @@ public:
 		fData((char *)buf->data),fLen(buf->used),fAttrib(attrib),
 		fCat(cat),fID(uid),fBuffer(buf)
 	{ fAllocated++; }
-	~PilotRecord() 
-	{ 
-		if (fBuffer) { pi_buffer_free(fBuffer); } 
-		else { delete [] fData; } fDeleted++; 
+	~PilotRecord()
+	{
+		if (fBuffer) { pi_buffer_free(fBuffer); }
+		else { delete [] fData; } fDeleted++;
 	}
 #else
 	~PilotRecord() { delete [] fData; fDeleted++; }
