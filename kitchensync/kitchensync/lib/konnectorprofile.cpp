@@ -165,7 +165,7 @@ void KonnectorProfile::saveToConfig( KConfig* config ) const
     config->writeEntry("Vendor", m_dev.vendor() );
     config->writeEntry("DevName", m_dev.name() );
     config->writeEntry("Lib", m_dev.library() );
-#if fixsaveconfig
+#ifdef fixsaveconfig
     config->writeEntry("UDI", udi() );
 #endif
 
