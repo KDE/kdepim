@@ -68,7 +68,6 @@ Architecture: any
 Section: libs
 Replaces: korganizer (<< 4:2.2)
 Depends: ${shlibs:Depends}
-Conflicts: korganizer (<< 4:2.2)
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
  provided by the kdepim package.  These includes interfaces to imap and ical
