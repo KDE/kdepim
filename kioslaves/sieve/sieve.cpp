@@ -35,6 +35,7 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kio/kdesasl.h>
+#include <kglobal.h>
 
 #include <qcstring.h>
 
@@ -624,25 +625,41 @@ void kio_sieveProtocol::get(const KURL& url)
 
 	if (receiveData() && r.getType() == kio_sieveResponse::QUANTITY) {
 		// determine script size
-		ssize_t bufLen = r.getQuantity();
-		totalSize( bufLen );
+		ssize_t total_len = r.getQuantity();
+		totalSize( total_len );
 
-		QByteArray dat( bufLen );
-		ssize_t readLen = read( dat.data(), dat.size() );
-		
-		if (readLen != bufLen) {
-			error(ERR_COULD_NOT_READ, i18n("Network error."));
-			disconnect(true);
-			return;
-		}
+		int recv_len = 0;
+		do {
+		  // wait for data...
+		  if ( !waitForResponse( 600 ) ) {
+		    error( KIO::ERR_SERVER_TIMEOUT, m_sServer );
+		    disconnect( true );
+		    return;
+		  }
 
-		inplace_crlf2lf( dat );
-		// send data to slaveinterface
-		data(dat);
-		processedSize(readLen);
-		data(QByteArray());
+		  // ...read data...
+		  // Only read as much as we need, otherwise we slurp in the OK that
+		  // operationSuccessful() is expecting below.
+		  QByteArray dat( kMin( total_len - recv_len, 64 * 1024 ) );
+		  ssize_t this_recv_len = read( dat.data(), dat.size() );
+
+		  if ( this_recv_len < 1 && !isConnectionValid() ) {
+		    error( KIO::ERR_CONNECTION_BROKEN, m_sServer );
+		    disconnect( true );
+		    return;
+		  }
+
+		  dat.resize( this_recv_len );
+		  inplace_crlf2lf( dat );
+		  // send data to slaveinterface
+		  data( dat );
+
+		  recv_len += this_recv_len;
+		  processedSize( recv_len );
+		} while ( recv_len < total_len );
 
 		infoMessage(i18n("Finishing up...") );
+		data(QByteArray());
 
 		if (operationSuccessful())
 			ksDebug() << "Script retrieval complete." << endl;
