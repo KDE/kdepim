@@ -812,7 +812,7 @@ Synchronizes the Todo list application with &korganizer;.
 <term><guilabel>MAL (AvantGo) Conduit</guilabel></term>
 <listitem><para>
 Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
-offers general content (news, guides, stock quotes, etc...) in a format that is
+offers general content (news, guides, stock quotes, &etc;) in a format that is
 suitable for a &handheld;. To use this conduit, you need to register, subscribe
 the channels you select and install the &AvantGo; software on your &handheld;.
 </para></listitem>
