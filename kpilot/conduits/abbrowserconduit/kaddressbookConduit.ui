@@ -61,6 +61,63 @@
                             </size>
                         </property>
                     </spacer>
+                    <widget class="QButtonGroup" row="0" column="0">
+                        <property name="name">
+                            <cstring>fSyncDestination</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Sync Destination</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>fSyncStdAbook</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Standard addressbook</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fSyncFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="text">
+                                    <string>VCard &amp;file:</string>
+                                </property>
+                            </widget>
+                            <widget class="KURLRequester" row="1" column="1">
+                                <property name="name">
+                                    <cstring>fAbookFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>3</hsizetype>
+                                        <vsizetype>5</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
                     <widget class="QCheckBox" row="2" column="0">
                         <property name="name">
                             <cstring>fArchive</cstring>
@@ -135,6 +192,9 @@
                                 <property name="text">
                                     <string>Do &amp;nothing</string>
                                 </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
@@ -142,6 +202,9 @@
                                 </property>
                                 <property name="text">
                                     <string>&amp;Handheld overrides</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="3" column="0">
@@ -151,6 +214,9 @@
                                 <property name="text">
                                     <string>&amp;KAddressbook overrides</string>
                                 </property>
+                                <property name="buttonGroupId">
+                                    <number>3</number>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="4" column="0">
                                 <property name="name">
@@ -159,6 +225,9 @@
                                 <property name="text">
                                     <string>&amp;Revert to last sync</string>
                                 </property>
+                                <property name="buttonGroupId">
+                                    <number>4</number>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="5" column="0">
                                 <property name="name">
@@ -166,6 +235,9 @@
                                 </property>
                                 <property name="text">
                                     <string>Use &amp;both entries</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>5</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="0" column="0">
@@ -177,6 +249,9 @@
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
                                 </property>
                             </widget>
                         </grid>
@@ -678,6 +753,12 @@
     </grid>
 </widget>
 <connections>
+    <connection>
+        <sender>fSyncFile</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fAbookFile</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>fArchive</tabstop>
@@ -687,4 +768,9 @@
     <tabstop>fFax</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
 </UI>

@@ -69,6 +69,11 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
 	// General page
+	fConfig->writeEntry(AbbrowserConduitFactory::fAbookType,
+		fConfigWidget->fSyncDestination->id(
+			fConfigWidget->fSyncDestination->selected()));
+	fConfig->writeEntry(AbbrowserConduitFactory::fAbookFile,
+		fConfigWidget->fAbookFile->url());
 	fConfig->writeEntry(AbbrowserConduitFactory::fSyncMode,
 		fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected()));
 	fConfig->writeEntry(AbbrowserConduitFactory::fArchive,
@@ -110,6 +115,12 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
 	// General page
+	fConfigWidget->fSyncDestination->setButton(
+		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
+cout<<"abookType="<<fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0)<<endl;
+	fConfigWidget->fAbookFile->setURL(
+		fConfig->readEntry(AbbrowserConduitFactory::fAbookFile));
+cout<<"ABookFile="<<fConfig->readEntry(AbbrowserConduitFactory::fAbookFile)<<endl;
 	fConfigWidget->fSyncMode->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fSyncMode, 0));
 	fConfigWidget->fArchive->setChecked(

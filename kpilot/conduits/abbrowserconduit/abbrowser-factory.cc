@@ -55,6 +55,8 @@ void *init_libaddressconduit()
 KAboutData *AbbrowserConduitFactory::fAbout = 0L;
 const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
 
+const char *AbbrowserConduitFactory::fAbookType = "Addressbook type";
+const char *AbbrowserConduitFactory::fAbookFile = "FileName";
 const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
 const char *AbbrowserConduitFactory::fArchive = "ArchiveDeleted";
 const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";

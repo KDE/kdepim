@@ -201,7 +201,7 @@ private:
 	EConflictResolution fConflictResolution, fEntryResolution;
 	static bool fPilotStreetHome, fPilotFaxHome;
 	bool fFullSync, fFirstTime, fArchive;
-   static enum  ePilotOtherEnum
+	static enum  ePilotOtherEnum
 	{
 		eOtherPhone,
 		eAssistant,
@@ -222,6 +222,14 @@ private:
 	QValueList <recordid_t> syncedIds;
 	KABC::AddressBook* aBook;
 	KABC::AddressBook::Iterator abiter;
+	// for a local file, we need to obtain a saveTicket when opening the abook
+	Ticket*ticket;
+
+	QString fAbookFile;
+	enum eAbookTypeEnum {
+		eAbookResource=0,
+		eAbookLocal
+	} fAbookType;
 
 	static enum eCustomEnum {
 		eCustomField,

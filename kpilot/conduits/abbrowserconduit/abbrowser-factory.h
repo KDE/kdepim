@@ -44,7 +44,7 @@ public:
 
 public:
 	// KConfig entry keys.
-	static const char
+	static const char *fAbookType, *fAbookFile,
 		*fSyncMode, *fArchive,
 		*fResolution, *fSmartMerge, *fFirstSync,
 		*fOtherField, *fStreetType, *fFaxType,

@@ -45,6 +45,9 @@
 #include <kconfig.h>
 #include <kabc/addressbook.h>
 #include <kabc/stdaddressbook.h>
+#include <kabc/resource.h>
+//#include <kabc/resourcefile.h>
+#include <kresources/resourcefactory.h>
 
 #include <pilotUser.h>
 #include <pilotSerialDatabase.h>
@@ -84,11 +87,12 @@ enum AbbrowserConduit::eCustomEnum AbbrowserConduit::eCustom[4] = {
 
 
 AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QStringList & a):
-    ConduitAction(o, n, a),
-    addresseeMap(),
-    syncedIds(),
-    aBook(0L),
-    abiter()
+		ConduitAction(o, n, a),
+		addresseeMap(),
+		syncedIds(),
+		aBook(0L),
+		abiter(),
+		ticket(0L)
 {
   FUNCTIONSETUP;
 #ifdef DEBUG
@@ -162,6 +166,10 @@ void AbbrowserConduit::readConfig()
 	KConfigGroupSaver g(fConfig, AbbrowserConduitFactory::group());
 
 	// General page
+	fAbookType = (eAbookTypeEnum)fConfig->readNumEntry(
+		AbbrowserConduitFactory::fAbookType, 0);
+	fAbookFile = fConfig->readEntry(
+		AbbrowserConduitFactory::fAbookFile);
 	syncAction=fConfig->readNumEntry(
 		AbbrowserConduitFactory::fSyncMode, SYNC_FAST);
 	fArchive=fConfig->readBoolEntry(
@@ -215,7 +223,55 @@ void AbbrowserConduit::readConfig()
 bool AbbrowserConduit::_loadAddressBook()
 {
 	FUNCTIONSETUP;
-	aBook = KABC::StdAddressBook::self();
+	KConfigGroupSaver g(fConfig, AbbrowserConduitFactory::group());
+	switch (fAbookType)
+	{
+		case eAbookResource:
+			aBook = KABC::StdAddressBook::self();
+			break;
+		case eAbookLocal: { // initialize the abook with the given file
+			aBook = new KABC::AddressBook();
+			KRES::ResourceFactory*resfact=KRES::ResourceFactory::self("contact");
+			if (aBook && resfact)
+			{
+				// just give the config object of the conduit, because the filename
+				// is stored there under the key "FileName", just as the ResourceFile
+				// class expects it to be (I'd like it much more if I could just give
+				// the filename instead of having to use a config file)
+				KRES::Resource*rawres=resfact->resource("file", fConfig);
+				KABC::Resource*abookres=dynamic_cast<KABC::Resource*>(rawres);
+				if (abookres)
+				{
+					abookres->setAddressBook(aBook);
+					aBook->addResource(abookres);
+//					aBook->setStandardResource(abookres);
+					ticket=abookres->requestSaveTicket();
+				}
+				if (!abookres || !ticket)
+				{
+					kdWarning()<<k_funcinfo<<": Unable to lock addressbook resource "
+						<<"for file "<<fAbookFile<<endl;
+					aBook->cleanUp();
+					KPILOT_DELETE(rawres);
+					KPILOT_DELETE(aBook);
+//					KPILOT_DELETE(ticket);
+					return false;
+				}
+			}
+			break;}
+		default: break;
+	}
+	if (!aBook )
+	{
+		// Something went wrong, so tell the user and return false to exit the conduit
+		kdWarning()<<k_funcinfo<<": Unable to initialize the addressbook for the sync."<<endl;
+		if (aBook) aBook->cleanUp();
+		KPILOT_DELETE(aBook);
+		return false;
+	}
+	// TODO: find out if this can fail for reasons other than a non-existent
+	// vcf file. If so, how can I determine if the missing file was the problem
+	// or something more serious:
 	aBook->load();
 	abChanged = false;
 	// get the addresseMap which maps Pilot unique record(address) id's to
@@ -238,7 +294,27 @@ bool AbbrowserConduit::_saveAddressBook()
 	FUNCTIONSETUP;
 
 	if(!abChanged) return true;
-	return StdAddressBook::save();
+	switch (fAbookType)
+	{
+		case eAbookResource:
+			return StdAddressBook::save();
+			break;
+		case eAbookLocal: // initialize the abook with the given file
+			if (ticket)
+			{
+				return aBook->save(ticket);
+			}
+			else
+			{
+				kdWarning()<<k_funcinfo<<": No ticket available to save the "
+					<<"addressbook."<<endl;
+				return false;
+			}
+			break;
+		default:
+			break;
+	}
+	return false;
 }
 
 
@@ -780,6 +856,8 @@ void AbbrowserConduit::cleanup()
 	KPILOT_DELETE(fLocalDatabase);
 	_saveAddressBook();
 	// TODO: Do I need to free the addressbook?????
+	aBook->cleanUp();
+	KPILOT_DELETE(aBook);
 	emit syncDone(this);
 }
 
