@@ -159,13 +159,6 @@ QPtrList<Todo> ExchangeCalendar::todos( const QDate &date )
   return mCache->todos( date );
 }
 
-int ExchangeCalendar::numEvents(const QDate &qd)
-{
-   kdDebug() << "ExchangeCalendar::numEvents" << endl;
-  return mCache->numEvents( qd );
-}
-
-
 Alarm::List ExchangeCalendar::alarmsTo( const QDateTime &to )
 {
   return mCache->alarmsTo( to );

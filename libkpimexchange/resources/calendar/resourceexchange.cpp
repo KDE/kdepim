@@ -319,14 +319,6 @@ QPtrList<Todo> ResourceExchange::todos( const QDate &date )
   return mCache->todos( date );
 }
 
-int ResourceExchange::numEvents(const QDate &qd)
-{
-   kdDebug() << "ResourceExchange::numEvents" << endl;
-  // FIXME: look in server for number of events
-  return mCache->numEvents( qd );
-}
-
-
 Alarm::List ResourceExchange::alarmsTo( const QDateTime &to )
 {
   return mCache->alarmsTo( to );

@@ -112,9 +112,6 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     */
     QString getHolidayForDate(const QDate &qd);
     
-    /** returns the number of events that are present on the specified date. */
-    int numEvents(const QDate &qd);
-  
     virtual void subscribeEvents( const QDate& start, const QDate& end );
 
     /**
