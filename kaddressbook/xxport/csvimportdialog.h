@@ -64,9 +64,6 @@ class CSVImportDialog : public KDialogBase
     void setFile( const QString& );
     void urlChanged( const QString& );
 
-    void applyTemplate();
-    void saveTemplate();
-
   private:
     enum { Undefined, FormattedName, FamilyName, GivenName, AdditionalName,
            Prefix, Suffix, NickName, Birthday,
