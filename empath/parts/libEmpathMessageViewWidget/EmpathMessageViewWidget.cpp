@@ -26,7 +26,7 @@
 
 // KDE includes
 #include <kglobal.h>
-#include <kconfig.h>
+#include <ksimpleconfig.h>
 #include <klocale.h>
 #include <krun.h>
 #include <kaction.h>
@@ -185,15 +185,15 @@ EmpathMessageViewWidget::setMessage(RMM::Message & m)
       return;
     }
 
-    KConfig * config(KGlobal::config());
+    KSimpleConfig * config = new KSimpleConfig("empathrc", true);
 
-    config->setGroup("EmpathMessageViewWidget");
-    
-//    QColor defaultQuoteColour1 = Qt::darkBlue;
-//    QColor defaultQuoteColour2 = Qt::darkCyan;
+    config->setGroup("Display");
 
-    QColor quote1 = Qt::darkBlue; // FIXME (config->readColorEntry(UI_QUOTE_ONE, &defaultQuoteColour1));
-    QColor quote2 = Qt::darkCyan; // FIXME (config->readColorEntry(UI_QUOTE_TWO, &defaultQuoteColour2));
+    QColor quote1 = config->readColorEntry("QuoteColorOne", &Qt::darkBlue);
+    QColor quote2 = config->readColorEntry("QuoteColorTwo", &Qt::darkCyan);
+
+    delete config;
+    config = 0;
 
     RMM::BodyPart message(m);
 
@@ -206,6 +206,7 @@ EmpathMessageViewWidget::setMessage(RMM::Message & m)
         attachmentView_->hide();
         s = QString::fromUtf8(message.asXML(quote1, quote2));
         textView_->setXML(s);
+        qDebug(message.asXML(quote1, quote2));
         return;
     }
     
@@ -214,6 +215,7 @@ EmpathMessageViewWidget::setMessage(RMM::Message & m)
         attachmentView_->hide();
         s = QString::fromUtf8(message.body().at(0)->asXML(quote1, quote2));
         textView_->setXML(s);
+        qDebug(message.asXML(quote1, quote2));
         return;
     }
     

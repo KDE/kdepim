@@ -110,6 +110,10 @@ EmpathMaildir::message(const QString & id)
     RMM::Message retval;
 
     QCString s = _messageData(id);
+    qDebug("Message data:");
+    qDebug("-----------------------------------------------------------------------------");
+    qDebug(s);
+    qDebug("-----------------------------------------------------------------------------");
 
     if (s.isEmpty()) {
         empathDebug("Cannot load data for \"" + id + "\"");
@@ -246,7 +250,8 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
         return "";
     }
 
-    QCString messageBuffer(f.readAll());
+    QByteArray a(f.readAll());
+    QCString messageBuffer(a.data(), a.size());
 
     f.close();
 
