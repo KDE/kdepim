@@ -6,7 +6,7 @@
 <bookinfo>
 <title>The KMail Handbook</title>
 
-<!-- note from dnaber@mini.gt.owl.de, 2000-05-21: I'm working on this
+<!-- note from dnaber@mini.gt.owl.de, 2000-07-18: I'm working on this
 "by hand" (using nedit) so please don't mix up the formatting too much. -->
 
 <authorgroup>
@@ -20,8 +20,8 @@
 </author>
 </authorgroup>
 
-<date>15/07/2000</date>
-<releaseinfo>1.01.60</releaseinfo>
+<date>18/07/2000</date>
+<releaseinfo>1.01.61</releaseinfo>
 
 <abstract>
 	
@@ -97,11 +97,11 @@ working with it right away. For more in-depth information see the
 
 <para>Invoking KMail for the first time creates a directory called "Mail" containing the initial
 files (inbox, outbox, sent-mail and trash) in your home directory.  Use
-<emphasis remap="bf">File | Settings...</emphasis> to enter some initial information so KMail will 
+<emphasis remap="bf">Settings | Configuration...</emphasis> to enter some initial information so KMail will 
 be able to properly retrieve and send your messages. <!-- fixme: does it pop up
 automatically? --></para>
 
-<para>The Settings window consists of seven sections: 
+<para>The Configure window consists of seven sections: 
 <emphasis remap="bf">Identity</emphasis>, <emphasis remap="bf">Network</emphasis>, 
 <emphasis remap="bf">Appearance</emphasis>,  <emphasis remap="bf">Composer</emphasis>, 
 <emphasis remap="bf">Mime Headers</emphasis>,
@@ -234,7 +234,7 @@ In the lower right corner of the main window, a progress bar will indicate how m
 downloaded. If you receive the message you just sent, then congratulations!
 If, however, you receive any error messages while testing your setup, make sure that your
 network connection is working and recheck your settings by selecting
-<emphasis remap="bf">File | Settings...</emphasis></para>
+<emphasis remap="bf">Settings | Configuration...</emphasis></para>
 </sect1>
 </chapter>
 
@@ -347,7 +347,7 @@ document icon on the <emphasis remap="bf">Mail Reader</emphasis> window button b
 If you have not set the location of your signature
 file and you have <emphasis remap="bf">Use a signature from file</emphasis> checked
 in the <emphasis remap="bf">Composer</emphasis> tab of the
-<emphasis remap="bf">Settings</emphasis> dialog, you will be prompted for the location of your
+<emphasis remap="bf">Configure</emphasis> dialog, you will be prompted for the location of your
 signature file before the <emphasis remap="bf">Composer</emphasis> window opens.</para>
 
 <sect2 id="composingamessage">
@@ -456,7 +456,7 @@ moved by dragging them from the Headers pane into the Folders pane.</para>
 <para>You may find that your folders are taking up a lot of disk space after they have been used for a while 
 even though they may not have very many messages in them.  To fix this problem, select the folder and 
 choose <emphasis remap="bf">Folder | Compact</emphasis>. Note that you can also select
-<emphasis remap="bf">Compact all folders on exit</emphasis> in the <emphasis remap="bf">Settings</emphasis> 
+<emphasis remap="bf">Compact all folders on exit</emphasis> in the <emphasis remap="bf">Configure</emphasis> 
 dialog.</para>
 
 <para>If you want to clear all of the messages out of a folder choose <emphasis remap="bf">Folder | Empty</emphasis>. 
@@ -513,7 +513,7 @@ of my KDE User List messages is that they always contain "kde-user@kde.org" in t
 
 </listitem>
 <listitem>
-<para>Select <emphasis remap="bf">Filter...</emphasis> from the File menu.</para>
+<para>Select <emphasis remap="bf">Settings | Filter Rules...</emphasis>.</para>
 </listitem>
 <listitem>
 <para>Press the <emphasis remap="bf">New</emphasis> button to create an empty filter. It will appear as <emphasis remap="bf">Unnamed</emphasis>.</para>
@@ -568,7 +568,7 @@ sections.</para>
 <title>Multiple Accounts</title>
 
 <para>Multiple accounts are used to check mail from more than one email address and/or mail server. Select 
-<emphasis remap="bf">File | Settings...</emphasis> and click on the <emphasis remap="bf">Network</emphasis>
+<emphasis remap="bf">Settings | Configuration...</emphasis> and click on the <emphasis remap="bf">Network</emphasis>
 tab to add or change 
 your account settings. See the <link linkend="secgettingstarted">Getting started</link> section for more 
 information on the settings in the <emphasis remap="bf">Network</emphasis> tab.</para>
@@ -616,7 +616,7 @@ the co-operation between KMail and pgp.</para>
 <sect2 id="secpgpsettings">
 <title>KMail Settings</title>
 
-<para>Open the KMail settings dialog and go to the <emphasis remap="bf">Security</emphasis>
+<para>Open the KMail <emphasis remap="bf">Configure</emphasis> dialog and go to the <emphasis remap="bf">Security</emphasis>
 settings page. Type your identity into the <emphasis remap="bf">PGP user identity</emphasis>
 entry field. There are also two options:</para>
 
@@ -723,7 +723,7 @@ KMail might also inform you about errors throughout the encryption process.</par
 
 <para>As mentioned above, you won't be able to read encrypted sent mails if you
 don't check <emphasis remap="bf">Always encrypt to self</emphasis> in the
-<emphasis remap="bf">Settings</emphasis> security tab.</para>
+setting's <emphasis remap="bf">Security</emphasis> tab.</para>
 
 </sect2>
 
@@ -1018,23 +1018,9 @@ according to how you have moved and deleted them in KMail.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Settings...</term>
+<term>Send Queued</term>
 <listitem>
-<para>Opens the <link linkend="secGettingStarted">Settings</link> window.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Addressbook...</term>
-<listitem>
-<para>Opens up the <link linkend="theaddressbook">Addressbook</link>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Filter...</term>
-<listitem>
-<para>Opens the <link linkend="filters">Filter Rules</link> window.</para>
+<para>Sends the messages that are in your outbox.</para>
 </listitem>
 </varlistentry>
 
@@ -1072,7 +1058,7 @@ in the trash.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Copy (Ctrl+C)</term>
+<term>Copy text(Ctrl+C)</term>
 <listitem>
 <para>Copies selected text to the clipboard.</para>
 </listitem>
@@ -1104,9 +1090,34 @@ the resulting messages and it will appear in the <emphasis remap="bf">Message Pa
 </varlistentry>
 
 <varlistentry>
-<term>Mark all messages (K)</term>
+<term>Select all messages (K)</term>
 <listitem>
 <para>Selects all messages in the current folder.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</para>
+</sect2>
+
+
+<sect2 id="viewmenu">
+<title>View Menu</title>
+
+<para><variablelist>
+
+<varlistentry>
+<term>Brief, Fancy, Standard, Long, and All Headers</term>
+<listitem>
+<para>Changes the number of headers that are displayed and the formatting of the headers in 
+the <emphasis remap="bf">Message pane</emphasis>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Iconic, Smart, and Inlined Attachments</term>
+<listitem>
+<para>Changes the way that attachments appear in the <emphasis remap="bf">Message pane</emphasis>.</para>
 </listitem>
 </varlistentry>
 
@@ -1339,28 +1350,48 @@ folder can be edited.</para>
 </sect2>
 
 
-<sect2 id="viewmenu">
-<title>View Menu</title>
+<sect2 id="settingsmenu">
+<title>Settings Menu</title>
 
 <para><variablelist>
 
 <varlistentry>
-<term>Brief, Fancy, Standard, Long, and All Headers</term>
+<term>Configuration...</term>
 <listitem>
-<para>Changes the number of headers that are displayed and the formatting of the headers in 
-the <emphasis remap="bf">Message pane</emphasis>.</para>
+<para>Opens the <link linkend="secGettingStarted">Configure</link> window.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Iconic, Smart, and Inlined Attachments</term>
+<term>Filter Rules...</term>
 <listitem>
-<para>Changes the way that attachments appear in the <emphasis remap="bf">Message pane</emphasis>.</para>
+<para>Opens the <link linkend="filters">Filter Rules</link> window.</para>
 </listitem>
 </varlistentry>
 
-</variablelist>
-</para>
+<varlistentry>
+<term>AddressBook...</term>
+<listitem>
+<para>Opens up the <link linkend="theaddressbook">Addressbook</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Configure Toolbars...</term>
+<listitem>
+<para>Opens a window that lets you choose which icons are visible in the toolbar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Use KAB</term>
+<listitem>
+<para>Activate this to use a slightly advanced address book instead of a very simple one.</para>
+</listitem>
+</varlistentry>
+
+</variablelist></para>
+
 </sect2>
 
 
@@ -1387,9 +1418,9 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>About kmail...</term>
+<term>About KMail...</term>
 <listitem>
-<para>Displays information about KMail.</para>
+<para>Displays information about KMail (version, authors).</para>
 </listitem>
 </varlistentry>
 
@@ -1685,7 +1716,7 @@ if you think something is missing here.</para>
 <title>My folders keep growing even when I delete messages.</title>
 
 <para>To really remove deleted messages from disk, you have to compact your folders. To do so
-automatically, open up the <emphasis remap="bf">File | Settings</emphasis> window,
+automatically, open up the <emphasis remap="bf">Settings | Configuration...</emphasis> window,
 select the Miscellaneous tab and select <emphasis remap="bf">Compact all folders
 on exit</emphasis>. Maybe you want to select <emphasis remap="bf">Empty trash on exit</emphasis>,
 too. This will remove all the messages in the trash folder whenever you exit KMail.</para>
@@ -1739,7 +1770,7 @@ mails have already been sent through the Internet.
 <sect2 id="howdoileavemailontheserverfromthekdefaq">
 <title>How do I leave mail on the server?</title>
 
-<para>Open up the <emphasis remap="bf">File | Settings</emphasis> window. Click
+<para>Open up the <emphasis remap="bf">Settings | Configuration...</emphasis> window. Click
 on the <emphasis remap="bf">Network</emphasis> tab. Select your account
 from the account list and click the <emphasis remap="bf">Modify</emphasis> button. This
 dialog contains the <emphasis remap="bf">Delete mail from server</emphasis> setting which
@@ -1751,7 +1782,7 @@ you must not select. </para>
 <title>How do I automatically insert a text footer within my mails?</title>
 
 <para>The text footer is called a signature file. Select 
-<emphasis remap="bf">File | Settings...</emphasis>
+<emphasis remap="bf">Settings | Configuration...</emphasis>
 Look in the <emphasis remap="bf">Identity</emphasis> tab for the
 <emphasis remap="bf">Specify signature below</emphasis> field.
 Select the radio button and type your signature below.</para>
@@ -1763,7 +1794,7 @@ Select the radio button and type your signature below.</para>
 
 <para>KMail will ask you the location of your signature file if you have checked the
 option <emphasis remap="bf">Use a signature from file</emphasis> in the <emphasis remap="bf">Composer</emphasis> tab of
-the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a signature file in the
+the <emphasis remap="bf">Configure</emphasis> dialog, but have not specified a signature file in the
 <emphasis remap="bf">Identity</emphasis> tab. You should either specify a signature file or deselect
 <emphasis remap="bf">Use a signature from file</emphasis>.</para>
 </sect2>
@@ -1773,7 +1804,7 @@ the <emphasis remap="bf">Settings</emphasis> dialog, but have not specified a si
 <title>Why doesn't word wrap work in the Composer window?</title>
 
 <para>The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
-<emphasis remap="bf">Composer</emphasis> tab of the <emphasis remap="bf">Settings</emphasis> dialog box.</para>
+<emphasis remap="bf">Composer</emphasis> tab of the <emphasis remap="bf">Configure</emphasis> dialog.</para>
 </sect2>
 
 
