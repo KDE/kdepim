@@ -1,4 +1,4 @@
-KPilot Developer's notes for november 13th 2000
+KPilot Developer's notes for november 14th 2000
 ===============================================
 
 Lots of things have changed in the class hierarchy.
@@ -9,6 +9,8 @@ Lots of things have changed in the class hierarchy.
   other convenience functions there for the category combo box.
 
 * The getConfig() change was very poorly done, sorry about that.
+  Added some (semi-) bizarre debugging functions into options.{h,cc}
+  that are #ifdeffed out.
 
 * Ditched all the #ifdef KDE2 stuff and dropped the KDE1 backport.
 
@@ -18,6 +20,34 @@ Lots of things have changed in the class hierarchy.
 * Added Qt2 layout code to the address and memo widgets so that they 
   become easier to i18n() (ie. they display properly when the string
   lengths change).
+
+* Adopted some of Heiko's patches:
+	- New feature ForceFirst causes every conduit to behave 
+	  as if FirstTime=true every time (this is off by default,
+	  which matches previous behavior)
+	- New feature SyncLastPC causes a slow sync if the Pilot
+	  is synced with a different PC than the last time it
+	  was synced (this is on by default, matching old behavior)
+	- "fixed" font in address and memo editor replaced by the
+	  user's system preference
+	- In some cases the title (first name+last name or something
+	  similar) in an address was empty. This now gives the title 
+	  [unknown]
+	- Similar for memos
+
+Let's sum up the current wishlist:
+
+* KNotes conduit
+* Dealing with the rest of Heiko's patches
+	- Proper multi-day appointments in the vcal conduit
+	- Some phone number magic I don't understand yet
+	- Some changes in the address import function
+	- Fast-sync capability (this is different from SyncLast)
+	- getShowPhone() -- don't understand that yet either
+  These patches are quite useful but it takes a lot of work to
+  unsnarl them, which is why they're taking so long.
+
+
 
 Developer's notes for november 9th 2000
 =======================================
