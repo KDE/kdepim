@@ -42,9 +42,9 @@
 #include <gpgmepp/key.h>
 #include <gpgmepp/keylistresult.h>
 
-#include <qstringlist.h>
-
 #include <gpgme.h>
+
+#include <qtimer.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -260,25 +260,23 @@ gpgme_key_t KpgpKey2gpgme_key( const Kpgp::Key * kKey )
   return key;
 }
 
-
 GpgME::Error Kleo::KpgpKeyListJob::start( const QStringList & patterns,
                                           bool secretOnly ) {
-  Kpgp::KeyList kKeys;
-  if ( secretOnly )
-    kKeys = mPgpBase->secretKeys( patterns );
-  else
-    kKeys = mPgpBase->publicKeys( patterns );
+  mPatterns = patterns;
+  mSecretOnly = secretOnly;
+  QTimer::singleShot( 0, this, SLOT( slotDoIt() ) );
+  return GpgME::Error( 0 );
+}
 
-  for ( Kpgp::KeyListIterator it( kKeys ); it.current(); ++it )
-    emit( GpgME::Key( KpgpKey2gpgme_key(*it), true ) );
-
-  _gpgme_op_keylist_result res;
-  res.truncated = 0; // key list is not truncated
-  res._unused = 0;
-  GpgME::Error err( 0 );
-  emit result( GpgME::KeyListResult( err, res ) );
-
-  return err;
+void Kleo::KpgpKeyListJob::slotDoIt() {
+  std::vector<GpgME::Key> keys;
+  GpgME::KeyListResult res = exec( mPatterns, mSecretOnly, keys );
+  for ( std::vector<GpgME::Key>::const_iterator it = keys.begin();
+        it != keys.end(); ++it )
+    emit nextKey( *it );
+  emit done();
+  emit result( res );
+  deleteLater();
 }
 
 GpgME::KeyListResult Kleo::KpgpKeyListJob::exec( const QStringList & patterns,

@@ -35,7 +35,7 @@
 
 #include <kleo/keylistjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include <qstringlist.h>
 
 namespace GpgME {
   class Error;
@@ -62,8 +62,13 @@ namespace Kleo {
     GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
                                std::vector<GpgME::Key> & keys );
 
+  private slots:
+    void slotDoIt();
+
   private:
     Kpgp::Base * mPgpBase;
+    QStringList mPatterns;
+    bool mSecretOnly;
   };
 
 }
