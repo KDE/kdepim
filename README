@@ -1,4 +1,10 @@
 
+******************** READ THIS **********************
+
+You must first compile and install in rmm/ and kab2/
+
+*****************************************************
+
 What you'll find in here:
 
 Anything relating to the KDE-PIM project.
@@ -21,6 +27,7 @@ things.
 
 Read 'README' in each individual directory for information pertaining to, er,
 that.
+
 
 Rik <rik@kde.org>
 
