@@ -1,0 +1,7 @@
+Alpha version of the new KMime message handling class.
+*Do not use.* Will be made into it's own library when it's finished.
+Maintainers: Marc Mutz <mutz@kde.org>
+             Christian Gebauer
+             Christian Thurner
+License: GPL v2 / GPL
+
