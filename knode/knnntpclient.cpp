@@ -444,7 +444,7 @@ void KNNntpClient::doFetchArticle()
   QCString cmd;
 
   sendSignal(TSdownloadArticle);
-  errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
+  errorPrefix = i18n("Article could not be retrieved.\nThe following error occured:\n");
 
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
@@ -534,7 +534,7 @@ void KNNntpClient::doFetchSource()
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
 
   sendSignal(TSdownloadArticle);
-  errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
+  errorPrefix = i18n("Article could not be retrieved.\nThe following error occured:\n");
 
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
