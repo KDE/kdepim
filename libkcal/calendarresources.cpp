@@ -174,7 +174,7 @@ bool CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
     resource->addEvent( anEvent );
     mResourceMap[anEvent] = resource;
   } else {
-    addEvent( anEvent );
+    return false;
   }
 
   return true;
@@ -244,7 +244,7 @@ bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
     resource->addTodo( todo );
     mResourceMap[todo] = resource;
   } else {
-    addTodo( todo );
+    return false;
   }
 
   return true;
@@ -486,8 +486,10 @@ bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
     resource->addJournal( journal );
     mResourceMap[journal] = resource;
   } else {
-    addJournal( journal );
+    return false;
   }
+
+  return true;
 }
 
 Journal *CalendarResources::journal(const QDate &date)
