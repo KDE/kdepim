@@ -296,6 +296,11 @@ void CertManager::createActions() {
 			actionCollection(), "view_dump_crls" );
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
+  action = new KAction( i18n("GnuPG Log Viewer..."), "pgp-keys", 0, this,
+                        SLOT(slotStartWatchGnuPG()), actionCollection(), "tools_start_kwatchgnupg");
+  // disable action if no kwatchgnupg binary is around
+  if (KStandardDirs::findExe("kwatchgnupg").isEmpty()) action->setEnabled(false);
+
   // Toolbar
   KToolBar * _toolbar = toolBar( "searchToolBar" );
 
@@ -1132,6 +1137,17 @@ void CertManager::importNextURLOrRedisplay()
       return;
     startKeyListing( false, true, mPreviouslySelectedFingerprints );
   }
+}
+
+void CertManager::slotStartWatchGnuPG()
+{
+  KProcess certManagerProc;
+  certManagerProc << "kwatchgnupg";
+
+  if( !certManagerProc.start( KProcess::DontCare ) )
+    KMessageBox::error( this, i18n( "Could not start GnuPG LogViewer (kwatchgnupg). "
+                                    "Please check your installation!" ),
+                                    i18n( "Kleopatra Error" ) );
 }
 
 #include "certmanager.moc"

@@ -124,6 +124,7 @@ private slots:
     void slotViewDetails( Kleo::KeyListViewItem * item );
     void slotSelectionChanged();
     void slotDownloadCertificate();
+    void slotStartWatchGnuPG();
 
     void slotEditKeybindings();
     void slotShowConfigurationDialog();

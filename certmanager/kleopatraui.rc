@@ -1,4 +1,4 @@
-<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="13" >
+<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="14" >
 <MenuBar>
 	<Menu name="file">
 		<text>File</text>
@@ -27,6 +27,10 @@
 -->
 		<Action name="edit_delete_certificate"/>
 		<Action name="download_certificate"/>
+	</Menu>
+	<Menu name="tools">
+		<text>&amp;Tools</text>
+		<Action name="tools_start_kwatchgnupg"/>
 	</Menu>
 </MenuBar>
 
