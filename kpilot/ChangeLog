@@ -1,15 +1,54 @@
-KPilot Developer's notes for december 26th 2000
+KPilot Developer's notes for january 9th 2001
 ===============================================
 
-Ho ho ho. Merry Christmas. The week started out with Thomas Zander
-reporting that he *still* has the totally bizzarre and inexplicable
-crash in KPilot that he's had ever since KPilot was ported to KDE2.
-That pretty much colors this week's work. The rest of the week was
-used for the KNotes conduit. After a pleasant exchange of ideas
-with Wynn Wilkes (of KNotes) we got a DCOP interface working and
+Happy Millennium. I ([ade]) am off on a two-week vacation to
+Calgary, so no KPilot news from me till february. Done this week:
+
+* Built POSE, the Palm Emulator, so this may help in testing
+  stuff for the OS versions that I don't actually have.
+* Replaced the addressEditor widget with something less stone-age.
+* Added a nifty feature so that you can edit one address in two
+  windows and they keep semi-in-sync. abbrowser doesn't have this
+  (which means abbrowser has a bug :( ).
+* #&$%#$ conduitApp doesn't turn the GUI on by default, so recent
+  vcal crashes can be blamed on trying to create a KMessageBox without
+  a GUI :( Changed the default values.
+* Tried fixing some ugly icons. I'm no artist though.
+* Teeny-tiny layout change in Address page of setup dialog.
+* More cleanups in the debugging code. There's still a weird mix of
+  code controlled by --debug and kdebugdialog style stuff. Functions
+  kdWarning() and kdError() should be given __FUNCTION__ as their
+  << argument, while kdDebug() should get fname as first argument.
+  This will make all the debugs optimize away painlessly while keeping
+  the warnings and error messages. Since messages may change status some
+  time there's now a #define TEST_DEBUG that makes fname a weird object
+  that can only be passed to kndbgstreams. So sensible combinations are:
+
+  	production:	NDEBUG defined, DEBUG undefined, TEST_DEBUG undefined
+  	test nodebug:	NDEBUG defined, DEBUG undefined, TEST_DEBUG defined
+  	testing:	NDEBUG undefined, DEBUG defined, TEST_DEBUG defined
+  
+
+Other stuff:
+
+* It's a HotSync and a Pilot. I'll change strings in the source as
+  I come across them. As for conjugations: I HotSynced, it HotSyncs.
+
+
+KPilot Developer's notes for december 30th 2000
+===============================================
+
+Ho ho ho. Merry Christmas. Happy new year. Last week started out 
+with Thomas Zander reporting that he *still* has the totally bizzarre 
+and inexplicable crash in KPilot that he's had ever since KPilot was 
+ported to KDE2 (+).  That pretty much colors this week's work. The rest 
+of the week was used for the KNotes conduit. After a pleasant exchange 
+of ideas with Wynn Wilkes (of KNotes) we got a DCOP interface working and
 this make the KNotes conduit more useful. Talked to Greg about the
 kab conduit and he's enthusiastic about the possibilities there,
 we hope to have a framework in CVS soon.
+
+Done:
 
 * Claimed some debug areas (5510,5511,5512).
 * KNotes rereads the notes dir after a sync, so new notes (which
@@ -17,13 +56,40 @@ we hope to have a framework in CVS soon.
 * KNotes conduit --test now displays all the notes (on screen) that
   knotes shares with the pilot. This is a test (!) of the DCOP stuff,
   mostly.
+* KNotes conduit now has a checksum function (md5) to reduce the
+  number of notes that has to be copied between KNotes and the
+  Pilot.
+* Applied Dag Nygren's vcal patches so that repeating events now
+  show up in KOrganizer properly.
+* Fixed the button-enabling in the address app
+* Added more debugging output for Thomas.
+* Added more debugging output for Nick.
 
 Todo:
 
-* KNotes conduit needs  a checksum function to reduce the
-  number of notes that has to be copied between KNotes and the
-  Pilot.
-* Last week's todo-list still applies as well.
+* More vcal work
+* Clean up more of the butt-ugly parts of the code base
+* Tell the KOrganizer docs people about KPilot
+* KPilot is an i18n nightmare
+  - The const char *s in the pilot databases can be addressed most
+    easily, I think.
+  - KPilotLink::doFullBackup should cause i18n people to run away
+  - get rid of most of the strcpy, strcat, etc. But not all!
+    We're stuck with pilot-link, after all.
+* The messages need validation - Pilot vs pilot, HotSync vs whatever
+* The password dialog in the popmail conduit is probably a very bad idea
+
++ Thomas' crash produces the following (partial) backtrace:
+
+#4  0x408960b7 in read_png_image () from /usr/kde2/source/qt-copy/lib/libqt.so.2
+#5  0x40838dd9 in QImageIO::read () from /usr/kde2/source/qt-copy/lib/libqt.so.2
+#6  0x40836cf1 in QImage::load () from /usr/kde2/source/qt-copy/lib/libqt.so.2
+#7  0x408305b2 in QImage::QImage () from /usr/kde2/source/qt-copy/lib/libqt.so.2
+#8  0x40483fcf in KIconLoader::loadIcon () from /usr/kde2/lib/libkdecore.so.3
+#9  0x805a166 in KPilotInstaller::initIcons ()
+
+  which is weird since the only possible png image being read is the 
+  quit icon, which is standard in KDE2. Maybe some weird combo of options?
 
 KPilot Developer's notes for december 18th 2000
 ===============================================

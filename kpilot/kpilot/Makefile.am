@@ -10,7 +10,8 @@ INCLUDES= $(all_includes)
 kpilot_SOURCES	= kpilot.cc kpilotlink.cc fileInstallWidget.cc pilotMemo.cc memoWidget.cc pilotComponent.cc \
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
 	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc pilotAddress.cc \
-	addressWidget.cc strToken.cc addressEditor.cpp addressEditorData.cpp pilotDateEntry.cc \
+	addressWidget.cc addressEditor.cc \
+	strToken.cc pilotDateEntry.cc \
 	conduitSetup.cc listCat.cc pilotTodoEntry.cc \
 	options.cc 
 
