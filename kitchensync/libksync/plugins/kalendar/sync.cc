@@ -558,7 +558,7 @@ void SyncKalendar::syncAdded( const QPtrList<KCal::Todo> &added,  const QPtrList
             m_entry->insertId("todo",  dummy->uid(),  id );
             clone->setUid( id );
         }
-        blackIds2 << clone->uid();
+        blackIds2 << dummy->uid();
         m_entry->calendar()->addTodo( clone );
     }
 }
