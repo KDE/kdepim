@@ -6,11 +6,11 @@
 #include "kandyview_base.h"
 
 class QPainter;
-class QMultiLineEdit;
 class QTextStream;
 class QDataStream;
 class QDomDocument;
 class QDomElement;
+class QTextEdit;
 
 class KURL;
 
@@ -21,17 +21,12 @@ class CommandScheduler;
 class CmdPropertiesDialog;
 
 /**
- * This is the main view class for Kandy.  Most of the non-menu,
- * non-toolbar, and non-statusbar (e.g., non frame) GUI code should go
- * here.
- *
- * This kandy uses an HTML component as an example.
- *
- * @short Main view
- * @author Cornelius Schumacher <schumacher@kde.org>
- * @version 0.1
- */
-class KandyView : public KandyView_base
+  This is the main view class for Kandy.
+ 
+  @short Main view
+  @author Cornelius Schumacher <schumacher@kde.org>
+*/
+class KandyView : public QWidget
 {
     Q_OBJECT
   public:
@@ -96,6 +91,12 @@ class KandyView : public KandyView_base
     CommandScheduler *mScheduler;
 
     bool mModified;
+
+    QListView *mCommandList;
+
+    QTextEdit *mInput;
+    QTextEdit *mOutput;
+    QTextEdit *mResultView;
 };
 
 #endif // KANDYVIEW_H

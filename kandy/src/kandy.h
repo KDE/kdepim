@@ -49,6 +49,8 @@ class Kandy : public KMainWindow
 
     void modemConnect();
 
+    void showErrorMessage( const QString & );
+
   signals:
     void showMobileWin();
     void connectStateChanged(bool);

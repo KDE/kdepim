@@ -59,7 +59,7 @@ void CommandScheduler::sendCommand(const QString &command)
     return;
   }
 
-//  kdDebug() << "CommandScheduler:sendCommand(): " << command.latin1() << endl;
+  kdDebug() << "CommandScheduler:sendCommand(): " << command << endl;
 
   mModem->writeLine(command.latin1());
 }

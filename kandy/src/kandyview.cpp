@@ -5,13 +5,16 @@
 #include <qpainter.h>
 #include <qlayout.h>
 #include <qhbox.h>
-#include <qmultilineedit.h>
+#include <qvbox.h>
+#include <qtextedit.h>
 #include <qlistview.h>
 #include <qdom.h>
 #include <qtextstream.h>
 #include <qfile.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
+#include <qlabel.h>
+#include <qpushbutton.h>
 
 #include <kurl.h>
 #include <kmessagebox.h>
@@ -20,6 +23,7 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <klineeditdlg.h>
+#include <kdialog.h>
 
 #include "modem.h"
 #include "cmdpropertiesdialog.h"
@@ -32,11 +36,80 @@
 #include "kandyview.moc"
 
 KandyView::KandyView(CommandScheduler *scheduler,QWidget *parent)
-    : KandyView_base(parent)
+    : QWidget(parent)
 {
   mModified = false;
   mScheduler = scheduler;
 
+  QBoxLayout *topLayout = new QVBoxLayout( this );
+
+  QSplitter *mainSplitter = new QSplitter( Horizontal, this );
+  topLayout->addWidget( mainSplitter );
+
+  QWidget *commandBox = new QWidget( mainSplitter );
+
+  QBoxLayout *commandLayout = new QVBoxLayout( commandBox );
+  commandLayout->setMargin( KDialog::marginHint() );
+  commandLayout->setSpacing( KDialog::spacingHint() );
+
+  mCommandList = new QListView( commandBox );
+  mCommandList->addColumn( i18n( "Name" ) );
+  mCommandList->addColumn( i18n( "Command" ) );
+  mCommandList->addColumn( i18n( "Hex" ) );
+  commandLayout->addWidget( mCommandList );
+
+  connect( mCommandList, SIGNAL( doubleClicked(QListViewItem*) ),
+           SLOT( executeCommand() ) );
+
+  QPushButton *buttonAdd = new QPushButton( i18n("Add..."), commandBox );
+  commandLayout->addWidget( buttonAdd );
+  connect( buttonAdd, SIGNAL( clicked() ), SLOT( addCommand() ) );
+
+  QPushButton *buttonEdit = new QPushButton( i18n("Edit..."), commandBox );
+  commandLayout->addWidget( buttonEdit );
+  connect( buttonEdit, SIGNAL( clicked() ), SLOT( editCommand() ) );
+
+  QPushButton *buttonDelete = new QPushButton( i18n("Delete"), commandBox );
+  commandLayout->addWidget( buttonDelete );
+  connect( buttonDelete, SIGNAL( clicked() ), SLOT( deleteCommand() ) );
+
+  QPushButton *buttonExecute = new QPushButton( i18n("Execute"), commandBox );
+  commandLayout->addWidget( buttonExecute );
+  connect( buttonExecute, SIGNAL( clicked() ), SLOT( executeCommand() ) );
+
+  QSplitter *ioSplitter = new QSplitter( Vertical, mainSplitter );
+
+  QWidget *inBox = new QWidget( ioSplitter );
+  
+  QBoxLayout *inLayout = new QVBoxLayout( inBox );
+
+  QLabel *inLabel = new QLabel( i18n("Input:"), inBox );
+  inLabel->setMargin( 2 );
+  inLayout->addWidget( inLabel );
+
+  mInput = new QTextEdit( inBox );
+  inLayout->addWidget( mInput );
+  
+  QWidget *outBox = new QWidget( ioSplitter );
+
+  QBoxLayout *outLayout = new QVBoxLayout( outBox );
+
+  QLabel *outLabel = new QLabel( i18n( "Output:"), outBox );
+  outLabel->setMargin( 2 );
+  outLayout->addWidget( outLabel );
+
+  mOutput = new QTextEdit( outBox );
+  mOutput->setReadOnly( true );
+  outLayout->addWidget( mOutput );
+
+  QVBox *resultBox = new QVBox( mainSplitter );
+
+  QLabel *resultLabel = new QLabel( i18n("Result:"), resultBox );
+  resultLabel->setMargin( 2 );
+    
+  mResultView = new QTextEdit( resultBox );
+  mResultView->setReadOnly( true );
+  
   connect (mInput,SIGNAL(returnPressed()),SLOT(processLastLine()));
 
   connect(mScheduler->modem(),SIGNAL(gotLine(const char *)),
@@ -75,12 +148,15 @@ void KandyView::slotSetTitle(const QString& title)
 
 void KandyView::processLastLine()
 {
-  int line = 0;
+  int para = 0;
   int row = 0;
-  mInput->getCursorPosition(&line,&row);
+  mInput->getCursorPosition( &para, &row );
   
-  if (line > 0) {
-    mLastInput = mInput->textLine(line-1);
+  if ( para > 0 ) {
+    mLastInput = mInput->text( para - 1 );
+
+    kdDebug() << "processLastLine(): " << mLastInput << endl;
+
     mScheduler->execute(mLastInput);
   }
 }
@@ -89,7 +165,7 @@ void KandyView::appendOutput(const char *line)
 {
 //  kdDebug() << "OUT: " << line << endl;
   mOutput->append(line);
-  mOutput->setCursorPosition(mOutput->numLines()-1,0);
+  mOutput->setCursorPosition(mOutput->paragraphs()-1,0);
 }
 
 void KandyView::setResult(ATCommand *command)

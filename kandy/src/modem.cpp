@@ -42,6 +42,9 @@
 
 #include <qglobal.h>
 
+#include <klocale.h>
+#include <kdebug.h>
+
 #include "modem.h"
 
 
@@ -200,26 +203,21 @@ bool Modem::open()
 	close();
 
 	if (!lockDevice()) {
-#ifdef MODEM_DEBUG
-		fprintf(stderr, "Modem: open(): Cannot lock device.\n");
-#endif
-		return false;
+          return false;
 	}
 
 	if ((fd = ::open(fdev, O_RDWR | O_NOCTTY | O_NONBLOCK)) == -1) {
-#ifdef MODEM_DEBUG
-		fprintf(stderr, "Modem: open(): Cannot open device.\n");
-#endif
-		return false;
+          emit errorMessage( i18n("Unable to open device '%1'. "
+                                  "Please check that you have sufficient permissions.")
+                             .arg( fdev ) );
+          return false;
 	}
 	tcflush(fd, TCIOFLUSH);
 	if (tcgetattr(fd, &init_tty) == -1) {
-#ifdef MODEM_DEBUG
-		fprintf(stderr, "Modem: open(): tcgetattr() failed.\n");
-#endif
-		::close(fd);
-		fd = 0;
-		return false;
+          emit errorMessage( i18n("tcgetattr() failed.") );
+          ::close(fd);
+          fd = 0;
+          return false;
 	}
 	memset(&tty, 0, sizeof(tty));
 	tty.c_iflag = IGNBRK | IGNPAR;
@@ -230,12 +228,10 @@ bool Modem::open()
 	cfsetispeed(&tty, cspeed);
 	tcdrain(fd);
 	if (tcsetattr(fd, TCSANOW, &tty) == -1) {
-#ifdef MODEM_DEBUG
-		fprintf(stderr, "Modem: open(): tcsetattr() failed.\n");
-#endif
-		::close(fd);
-		fd = 0;
-		return false;
+          emit errorMessage( i18n("tcsetattr() failed.") );
+          ::close(fd);
+          fd = 0;
+          return false;
 	}
 
 	sn = new QSocketNotifier(fd, QSocketNotifier::Read, this, "modemsocketnotifier");
@@ -300,51 +296,45 @@ bool Modem::lockDevice()
 	sprintf(fname, "%s/LCK..%s", LOCK_PATH, p);
 	if (!access(fname, F_OK)) {
 		if ((lfd = ::open(fname, O_RDONLY)) < 0) {
-#ifdef MODEM_DEBUG
-			fprintf(stderr, "Modem: lockDevice(): Cannot open existing lock file.\n");
-#endif
-			return false;
+                  emit errorMessage( i18n("Unable to open lock file '%1'.")
+                                     .arg( fname ) );
+                  return false;
 		}
 
 		count = read(lfd, content, 79);
 		if (count < 0) {
-#ifdef MODEM_DEBUG
-			fprintf(stderr, "Modem: lockDevice(): Cannot read existing lock file.\n");
-#endif
-			::close(lfd);
-			return false;
+                  emit errorMessage( i18n("Unable to read lock file '%1'.")
+                                     .arg( fname ) );
+                  ::close(lfd);
+                  return false;
 		}
 		content[count] = 0;
 		::close(lfd);
 
 		count = sscanf(content, "%d", &pid);
 		if ((count != 1) || (pid <= 0)) {
-#ifdef MODEM_DEBUG
-			fprintf(stderr, "Modem: lockDevice(): Cannot get PID out of existing lock file.\n");
-#endif
-			return false;
+                  emit errorMessage( i18n("Unable to get PID from file '%1'.")
+                                     .arg( fname ) );
+                  return false;
 		}
 
 		if (!kill((pid_t)pid, 0)) {
-#ifdef MODEM_DEBUG
-			fprintf(stderr, "Modem: lockDevice(): Process of existing lock file is still running.\n");
-#endif
-			return false;
+                  emit errorMessage( i18n("Process with pid %1 locking the device is still running.")
+                                     .arg( pid ) );
+                  return false;
 		}
 
 		if (errno != ESRCH) {
-#ifdef MODEM_DEBUG
-			fprintf(stderr, "Modem: lockDevice(): Cannot emit signal to PID of existing lock file.\n");
-#endif
-			return false;
+                  emit errorMessage( i18n("Unable to emit signal to PID of existing lock file.") );
+                  return false;
 		}
 	}
 	
 	if ((lfd = creat(fname, 0644)) == -1) {
-#ifdef MODEM_DEBUG
-		fprintf(stderr, "Modem: lockDevice(): Cannot create lock file.\n");
-#endif
-		return false;
+          emit errorMessage( i18n("Unable to create lock file '%1'. "
+                                  "Please check that you have sufficient permissions.")
+                             .arg( fname ) );
+          return false;
 	}
 
 	pid = (int)getpid();
@@ -429,6 +419,8 @@ void Modem::writeChar(const char c)
 
 void Modem::writeLine(const char *line)
 {
+  kdDebug() << "Modem::writeLine(): " << line << endl;
+
 	write(fd, (const void *)line, strlen(line));
 	writeChar('\r');
 }

@@ -114,6 +114,8 @@ signals:
 	void gotXBlock(const uchar *, int);
 	void xmodemDone(bool);
 	void timeout();
+
+    void errorMessage( const QString & );
 };
 
 

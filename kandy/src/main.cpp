@@ -77,7 +77,6 @@ int main(int argc, char **argv)
   app.dcopClient()->registerAs(app.name(),false);
 
   Modem *modem = new Modem;
-  initModem(modem);
   CommandScheduler *scheduler = new CommandScheduler(modem);
   
   // see if we are starting with session management
@@ -118,6 +117,11 @@ int main(int argc, char **argv)
     QObject::connect(m,SIGNAL(modemDisconnect()),k,SLOT(modemDisconnect()));
     QObject::connect(k,SIGNAL(connectStateChanged(bool)),
                      m,SLOT(setConnected(bool)));
+
+    QObject::connect( modem, SIGNAL( errorMessage( const QString & ) ),
+                      k, SLOT( showErrorMessage( const QString & ) ) );
+
+    initModem(modem);
 
     if (KandyPrefs::instance()->mStartupModem) k->modemConnect();
   }

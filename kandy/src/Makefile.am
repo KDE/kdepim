@@ -8,7 +8,7 @@ kandy_SOURCES =	main.cpp kandy.cpp \
                 cmdpropertiesdialog_base.ui cmdpropertiesdialog.cpp \
                 kandyview.cpp \
 		kandyiface.skel \
-                modem.cpp kandyview_base.ui \
+                modem.cpp \
                 atcommand.cpp commanditem.cpp mobilegui_base.ui mobilegui.cpp \
                 commandscheduler.cpp commandset.cpp \
                 kandyprefs.cpp kandyprefsdialog.cpp \

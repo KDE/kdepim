@@ -2,7 +2,7 @@
 
  kandy.cpp
 
- Copyright (C) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
+ Copyright (C) 2000,2001,2002 Cornelius Schumacher <schumacher@kde.org>
 
 */
 
@@ -345,4 +345,9 @@ void Kandy::modemDisconnect()
 void Kandy::showMobileGui()
 {
   emit showMobileWin();
+}
+
+void Kandy::showErrorMessage( const QString &text )
+{
+  KMessageBox::error( 0, text );
 }
