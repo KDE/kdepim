@@ -314,9 +314,8 @@ void KPilotInstaller::initComponents()
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	addComponentPage(new AddressWidget(
-		getManagingWidget()->addVBoxPage(i18n("Address Viewer")),
-		defaultDBPath), 
+	ADDICONPAGE(i18n("Address Viewer"),"kpilot/kpilot-address.png");
+	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
 
 	ADDICONPAGE(i18n("File Installer"),"kpilot/kpilot-fileinstaller.png");
@@ -857,6 +856,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.70  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.69  2002/01/23 08:35:54  adridg
 // Remove K-menu dependency
 //
