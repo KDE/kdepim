@@ -58,7 +58,7 @@ class KNMainWidget : public KDockArea
 {
   Q_OBJECT
 public:
-  KNMainWidget( KXMLGUIClient *client, QWidget* parent, const char* name );
+  KNMainWidget( KXMLGUIClient *client, bool detachable, QWidget* parent, const char* name );
   ~KNMainWidget();
 
   //GUI

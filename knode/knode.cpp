@@ -45,7 +45,7 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()),
                                 actionCollection(), "knode_configure_toolbars" );
 
-  m_mainWidget = new KNMainWidget( this, this, 0 );
+  m_mainWidget = new KNMainWidget( this, true, this, 0 );
   connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
            SLOT( setCaption(const QString&)) );
   setCentralWidget( m_mainWidget );

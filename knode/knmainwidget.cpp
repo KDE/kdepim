@@ -59,7 +59,7 @@ using KRecentAddress::RecentAddresses;
 
 KNGlobals knGlobals;
 
-KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent, const char* name  )
+KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent, const char* name  )
   : KDockArea( parent, name ), b_lockui( false ), m_GUIClient( client ),
     b_popupInitialized( false )
 {
@@ -83,6 +83,9 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent, const char* 
   //article view
   a_rtDock = createDockWidget("article_viewer", SmallIcon("contents"), 0,
                               kapp->makeStdCaption(i18n("Article Viewer")), i18n("Article Viewer"));
+  if (!detachable) {
+    a_rtDock->setEnableDocking(KDockWidget::DockFullSite);
+  }
   KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock, "artDockHeader");
   a_rtDock->setHeader(header);
   a_rtView=new KNArticleWidget( actionCollection(), a_rtDock ,"artView");
@@ -102,6 +105,9 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent, const char* 
   //collection view
   c_olDock = createDockWidget("group_view", UserIcon("group"), 0,
                               kapp->makeStdCaption(i18n("Group View")), i18n("Group View"));
+  if (!detachable) {
+    c_olDock->setEnableDocking(KDockWidget::DockFullSite);
+  }
   header = new KDockWidgetHeader(c_olDock, "colDockHeader");
   c_olDock->setHeader(header);
   c_olView=new KNListView( this, "collectionView");
@@ -148,6 +154,9 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent, const char* 
   //header view
   h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
                               kapp->makeStdCaption(i18n("Header View")), i18n("Header View"));
+  if (!detachable) {
+    h_drDock->setEnableDocking(KDockWidget::DockFullSite);
+  }
   header = new KDockWidgetHeader(h_drDock, "headerDockHeader");
   h_drDock->setHeader(header);
   h_drView=new KNListView(h_drDock, "hdrView");
