@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-06-24</date>
-<releaseinfo>0.09.04</releaseinfo>
+<date>2003-09-01</date>
+<releaseinfo>0.09.05</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -71,7 +71,7 @@ deletion. You can also optionally view expired alarms.</para>
 the alarm message text, specify a text file to display, specify a
 command to execute, or enter an email to send. You can also choose the
 colour of the alarm message, whether it should repeat, whether to play
-a sound, and whether the alarm should be canceled if it can't be
+a sound, and whether the alarm should be cancelled if it can't be
 triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
@@ -371,8 +371,15 @@ can select email recipients. Attachments may be added using the
 <guibutton>Add...</guibutton> button. Note that attached files must
 still exist when the alarm is triggered; no copy is stored at the time
 the alarm is configured. To remove an attachment, highlight it in the
-drop-down list and click the <guibutton>Remove</guibutton> button. Set
-the following option:</para>
+drop-down list and click the <guibutton>Remove</guibutton>
+button.</para>
+
+<para>You can set your email address from which the email is sent, in
+the <link linkend="preferences">Preferences dialog</link>, the
+default being your email address set in the &kde; Control
+Centre.</para>
+
+<para>Set the following option:</para>
 
 <itemizedlist>
 <listitem>
@@ -456,11 +463,16 @@ a position (&eg; the second Tuesday).</para>
 </listitem>
 
 <listitem>
-<para>For a yearly recurrence, you may select either a fixed date in
-the year, or a position in a month (&eg; the last Saturday in
-May).</para>
+<para>For a yearly recurrence, you may select either a fixed day in
+the month, or a position in a month (&eg; the last Saturday in
+May). Check each month of the year in which you wish to trigger the
+alarm.</para>
 </listitem>
 </itemizedlist>
+
+<tip><para>To set a daily alarm to occur only on weekdays, use a
+weekly recurrence and check each weekday.</para></tip>
+
 </listitem>
 </itemizedlist>
 </listitem>
@@ -481,6 +493,19 @@ date/time until which the alarm will be repeated.</para></listitem>
 </itemizedlist>
 
 </listitem>
+
+<listitem>
+<para>If you wish to exclude certain date/times from the recurrence
+which you have set up, specify them in the
+<guilabel>Exceptions</guilabel> group box. The list of exceptions
+(&ie; excluded date/times) is shown on the left. To add a new
+exception, enter a date on the right and press
+<guibutton>Add</guibutton>. To change an exception, highlight it in
+the list, enter the new date on the right and press
+<guibutton>Change</guibutton>. To delete an exception, highlight it
+in the list and press <guibutton>Delete</guibutton>.</para>
+</listitem>
+
 </itemizedlist>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
@@ -490,7 +515,7 @@ one minute after the right time.
 Leave the box unchecked to trigger the alarm at
 the first opportunity starting at the scheduled time. Date-only alarms,
 &ie; ones for which the <guilabel>Any time</guilabel> option is
-selected, will be canceled if they cannot be displayed within 24
+selected, will be cancelled if they cannot be displayed within 24
 hours of the start-of-day time on the date scheduled.</para>
 
 <note><para>An alarm can only be triggered while you are logged in,
@@ -831,6 +856,26 @@ selected.</para></note>
 convenient way to activate &kalarm;. Clicking it has no effect on the
 alarm message window.</para>
 
+<para>The alarm message window may be displayed in two different
+modes, depending on your preferences. You can choose the mode in the
+<link linkend="preferences">Preferences dialog</link>.</para>
+
+<itemizedlist>
+<listitem>
+<para>As a normal window. In this mode, the keyboard focus is taken
+by the alarm message window when it appears, so if you are typing at
+the time your keystrokes will be diverted to it rather than your
+original application.</para>
+</listitem>
+
+<listitem>
+<para>As a non-modal window. In this mode, the keyboard focus is
+unaffected when the alarm message window appears, so it will not
+interfere with your typing. However in this mode the window has no
+title bar, so you cannot move it.</para>
+</listitem>
+</itemizedlist>
+
 </sect1>
 
 <sect1 id="system-tray">
@@ -839,8 +884,8 @@ alarm message window.</para>
 <para>&kalarm; may be run as an icon in the &kde; system tray. This
 icon allows one-click activation of &kalarm;, and provides both
 control and status indication of alarm monitoring. A normal &kalarm;
-icon indicates that alarms are being monitored, while a red cross
-through the icon indicates that alarms are not being monitored.</para>
+icon indicates that alarms are being monitored, while a grey icon
+indicates that alarms are not being monitored.</para>
 
 <para>If you hover the mouse cursor over the system tray icon, a
 summary of the first few message alarms due in the next 24 hours are
@@ -1372,12 +1417,13 @@ Centre.</para>
 <chapter id="preferences">
 <title>Configuring &kalarm;</title>
 
-<para>To configure &kalarm;'s operation, select
-<menuchoice><guimenu>Settings</guimenu>
+<para>To configure &kalarm;'s operation to suit your system and your
+personal preferences, select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
-This displays the configuration dialog. The
-<guilabel>General</guilabel> section lets you control &kalarm;'s
-overall behaviour:</para>
+This displays the configuration dialog.</para>
+
+<para>The <guilabel>General</guilabel> section lets you control
+&kalarm;'s overall behaviour:</para>
 
 <itemizedlist>
 <listitem><para><guilabel>Run Mode</guilabel> group box: These options
@@ -1455,54 +1501,6 @@ whether you should be prompted for confirmation each time you delete
 an alarm.</para>
 </listitem>
 
-<listitem>
-<para><guilabel>Email Alarms</guilabel> group box: These options
-control the sending and addressing of email alarms.</para>
-
-<itemizedlist>
-<listitem>
-<para><guilabel>Email client</guilabel>: Specify the email
-client to be used to send email alarms:</para>
-
-<itemizedlist>
-<listitem><para><guilabel>KMail</guilabel>: When an email alarm is
-triggered, the email is added to &kmail;'s
-<filename>outbox</filename> folder, provided that &kmail; is running
-at the time. If it is not running, a &kmail; composer window is
-displayed filled in with the email details, to enable you to send the
-email manually.</para>
-</listitem>
-
-<listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
-triggered, the email is sent automatically using
-<application>sendmail</application>. This option will only work if
-your system is configured to use <application>sendmail</application>
-or <application>mail</application>.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
-<para><guilabel>Use email address from Control Center</guilabel>:
-Select this option to use the email address which is configured in
-the &kde; Control Centre for sending blind copies of email alarms to
-yourself when the <guilabel>Copy email to self</guilabel> option is
-selected. To specify a different email address, deselect it and enter
-the address in the <guilabel>Email address</guilabel> edit box
-below.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Notify when remote emails are queued</guilabel>:
-Select this option to display a notification whenever an email alarm
-queues an email for sending to a remote system. This may be useful
-if, for example, you have a dial-up connection, so that you can
-ensure that you do whatever is needed to actually transmit
-the email.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
 <listitem><para><guilabel>Expired Alarms</guilabel> group box: These
 options control the storage of expired alarms.</para>
 <itemizedlist>
@@ -1522,6 +1520,62 @@ effect on alarms which subsequently expire; they will continue to be
 stored according to the selected options.</para>
 </listitem>
 </itemizedlist>
+</listitem>
+</itemizedlist>
+
+<para>The <guilabel>Email</guilabel> section lets you choose options
+for sending and addressing email alarms:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Email client</guilabel>: Specify the email
+client to be used to send email alarms:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>KMail</guilabel>: When an email alarm is
+triggered, the email is added to &kmail;'s
+<filename>outbox</filename> folder, provided that &kmail; is running
+at the time. If it is not running, a &kmail; composer window is
+displayed filled in with the email details, to enable you to send the
+email manually.</para>
+</listitem>
+
+<listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
+triggered, the email is sent automatically using
+<application>sendmail</application>. This option will only work if
+your system is configured to use <application>sendmail</application>
+or an equivalent mail transport agent.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>The <guilabel>From</guilabel> email address specifies your email
+address to be used as the sender's address in email alarms.
+Select <guilabel>Use address from Control Center</guilabel> to use
+the email address which is configured in the &kde; Control
+Centre.</para>
+</listitem>
+
+<listitem>
+<para>The <guilabel>Bcc</guilabel> email address specifies your email
+address to be used for sending blind copies of email alarms to
+yourself when the <guilabel>Copy email to self</guilabel> option is
+selected. If blind copies are to be sent to your account on the
+computer which &kalarm; runs on, you could simply enter your user
+login name here.
+Select <guilabel>Use address from Control Center</guilabel> to use
+the email address which is configured in the &kde; Control
+Centre.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Notify when remote emails are queued</guilabel>:
+Select this option to display a notification whenever an email alarm
+queues an email for sending to a remote system. This may be useful
+if, for example, you have a dial-up connection, so that you can
+ensure that you do whatever is needed to actually transmit
+the email.</para>
 </listitem>
 </itemizedlist>
 
@@ -1589,6 +1643,13 @@ time at which the alarm is scheduled.</para>
 </itemizedlist>
 </listitem>
 
+<listitem><para><guilabel>Modal message windows</guilabel>: This
+option controls whether alarm message windows are modal or not, &ie;
+whether they grab the keyboard focus when they appear. See the
+<link linkend="message-window">Alarm message window</link> section for
+details.</para>
+</listitem>
+
 <listitem><para><guilabel>Show expired alarms</guilabel>: Select this
 option to initially show expired alarms in the alarm list, when
 &kalarm; starts up. (Once &kalarm; has started, use the
@@ -1603,31 +1664,6 @@ reflect whether alarms are currently being monitored. This involves
 checking whether the <application>alarm daemon</application> is
 running.</para>
 </listitem>
-</itemizedlist>
-
-<para>The <guilabel>Alarm Defaults</guilabel> section lets you choose
-default values for the options in the alarm edit dialog:</para>
-<itemizedlist>
-
-<listitem><para>Set the text colour used to show expired alarms in the
-alarm list.</para>
-</listitem>
-
-<listitem><para>Set the default states for the <guilabel>Cancel if
-late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
-<guilabel>Copy email to self</guilabel> checkboxes.</para>
-</listitem>
-
-<listitem><para>Set beep as the default for the
-<guilabel>Sound</guilabel> option.</para>
-</listitem>
-
-<listitem><para>Set the default recurrence type.</para>
-</listitem>
-
-<listitem><para>Set the default reminder period units.</para>
-</listitem>
-
 </itemizedlist>
 
 <para>The <guilabel>Appearance</guilabel> section lets you set the
@@ -1654,6 +1690,31 @@ the list, and when it is displayed, this button is disabled.</para>
 </listitem>
 
 </itemizedlist>
+</listitem>
+
+</itemizedlist>
+
+<para>The <guilabel>Edit</guilabel> section lets you choose
+default values for the options in the alarm edit dialog:</para>
+<itemizedlist>
+
+<listitem><para>Set the text colour used to show expired alarms in the
+alarm list.</para>
+</listitem>
+
+<listitem><para>Set the default states for the <guilabel>Cancel if
+late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
+<guilabel>Copy email to self</guilabel> checkboxes.</para>
+</listitem>
+
+<listitem><para>Set beep as the default for the
+<guilabel>Sound</guilabel> option.</para>
+</listitem>
+
+<listitem><para>Set the default recurrence type.</para>
+</listitem>
+
+<listitem><para>Set the default reminder period units.</para>
 </listitem>
 
 </itemizedlist>
@@ -1701,14 +1762,14 @@ void cancelEvent(const QString&amp; <replaceable>calendarFile</replaceable>, con
 <term><parameter>calendarFile</parameter></term>
 <listitem>
 <para>Specifies the &URL; of the calendar file containing the event to
-be canceled.</para>
+be cancelled.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>eventID</parameter></term>
 <listitem>
-<para>Specifies the unique ID of the event to be canceled, as stored
+<para>Specifies the unique ID of the event to be cancelled, as stored
 in <replaceable>calendarFile</replaceable>.</para>
 </listitem>
 </varlistentry>
@@ -1818,7 +1879,7 @@ void handleEvent(const QString&amp; <replaceable>calendarFile</replaceable>, con
 <term><parameter>calendarFile</parameter></term>
 <listitem>
 <para>Specifies the &URL; of the calendar file containing the event to
-be displayed/executed or canceled.</para>
+be displayed/executed or cancelled.</para>
 </listitem>
 </varlistentry>
 
@@ -1826,7 +1887,7 @@ be displayed/executed or canceled.</para>
 <term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be displayed/executed or
-canceled, as stored in
+cancelled, as stored in
 <replaceable>calendarFile</replaceable>.</para>
 </listitem>
 </varlistentry>
