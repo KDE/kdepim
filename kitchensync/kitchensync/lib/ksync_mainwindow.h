@@ -34,6 +34,8 @@
 
 
 #include <qptrlist.h>
+#include <qmap.h>
+
 #include <kparts/mainwindow.h>
 
 #include <manipulatorpart.h>
@@ -57,7 +59,7 @@ namespace KitchenSync {
         KSyncSystemTray *tray();
         Konnector*  konnector();
         QString  currentId()const;
-        QStringList ids()const;
+        QMap<QString,QString> ids()const;
     private:
         virtual void initActions();
         void addModPart( ManipulatorPart * );
@@ -69,11 +71,13 @@ namespace KitchenSync {
         KSyncSystemTray *m_tray;
         Konnector *m_konnector;
         QString m_currentId;
-        QString m_ids;
+        // udi + Identify
+        QMap<QString, QString> m_ids;
     signals:
         void konnectorChanged( const QString & );
         void konnectorStateChanged( const QString &,  int mode );
    private slots:
+        void initKonnector();
         void initPlugins();
         void slotSync();
         void slotBackup();
@@ -81,6 +85,10 @@ namespace KitchenSync {
         void slotConfigure();
         void slotActivated(ManipulatorPart *);
         void slotQuit();
-
+        void slotSync(const QString &udi, QPtrList<KSyncEntry> );
+        void slotStateChanged( const QString& udi,  bool connected );
+        void slotKonnectorError( const QString& udi,
+                                 int error,
+                                 const QString &id );
     };
 };

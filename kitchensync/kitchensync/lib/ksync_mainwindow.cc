@@ -32,6 +32,7 @@
 #include <qsize.h>
 
 #include <kaction.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kdebug.h>
@@ -42,6 +43,7 @@
 #include <kpopupmenu.h>
 
 #include <kapabilities.h>
+#include <kdevice.h>
 #include <konnector.h>
 
 #include "ksync_configpart.h"
@@ -62,10 +64,12 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   initActions();
   setXMLFile("ksyncgui.rc");
   setInstance( KGlobal::instance() );
+
   createGUI( 0l );
   // now add a layout or QWidget?
   m_lay = new QHBox(this,   "main widget" );
   setCentralWidget( m_lay );
+
   m_bar = new PartBar(m_lay , "partBar" );
   m_stack = new QWidgetStack( m_lay, "dummy" );
   QWidget *test = new QWidget(m_stack);
@@ -74,10 +78,14 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   m_stack->raiseWidget(0);
   m_bar->setMaximumWidth(100 );
   m_bar->setMinimumWidth(100 );
+
   connect( m_bar, SIGNAL(activated(ManipulatorPart*) ), this, SLOT(slotActivated(ManipulatorPart*) ));
 
   resize(600,400);
   m_parts.setAutoDelete( true );
+
+  kdDebug() << "Init konnector" << endl;
+  initKonnector();
   initPlugins();
 
   //statusBar()->insertItem(i18n("Not Connected"), 10, 0, true );
@@ -204,8 +212,52 @@ QString KSyncMainWindow::currentId() const
 {
     return m_currentId;
 }
-QStringList KSyncMainWindow::ids() const
+QMap<QString,QString> KSyncMainWindow::ids() const
 {
     return m_ids;
+}
+void KSyncMainWindow::initKonnector()
+{
+    kdDebug() << "init konnector" << endl;
+    m_konnector = new Konnector(this,  "Konnector");
+    connect(m_konnector,SIGNAL(wantsToSync(const QString&, QPtrList<KSyncEntry> ) ),
+            this, SLOT(slotSync( const QString&,  QPtrList<KSyncEntry>) ) );
+
+    connect(m_konnector, SIGNAL(stateChanged(const QString&,  bool) ),
+            this,  SLOT(slotStateChanged(const QString&,  bool) ) );
+
+    connect(m_konnector, SIGNAL(konnectorError(const QString&,  int,  const QString& ) ),
+            this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
+    // ok now just load the Opie Konnector // FIXME Don't hard code
+    QValueList<KDevice> device;
+    device = m_konnector->query();
+    for(QValueList<KDevice>::Iterator it = device.begin(); it != device.end(); ++it ){
+        kdDebug() << "Identify "  << (*it).identify() << endl;
+        kdDebug() << "Group " << (*it).group() << endl;
+        kdDebug() << "Vendor " << (*it).vendor() << endl;
+        kdDebug() << "UNIX " << (*it).id() << endl;
+        if ( (*it).id() == QString::fromLatin1("Opie-1") ) {
+            QString tmp = m_konnector->registerKonnector( (*it) );
+            if ( !tmp.isEmpty() ) {
+
+            }
+        }
+    }
+}
+void KSyncMainWindow::slotSync( const QString &udi,
+                                QPtrList<KSyncEntry> )
+{
+
+}
+void KSyncMainWindow::slotStateChanged( const QString &udi,
+                                        bool connected )
+{
+
+}
+void KSyncMainWindow::slotKonnectorError( const QString& udi,
+                                          int error,
+                                          const QString& id )
+{
+
 }
 //#include "ksync_mainwindow.moc"
