@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+if test -x /usr/bin/update-menus ; then update-menus ; fi
+grep kpilot /usr/share/mimelnk/magic 2>&1 > /dev/null || cat /usr/share/mimelnk/kpilot.magic >> /usr/share/mimelnk/magic ; 
+
+#DEBHELPER#
+
+exit 0

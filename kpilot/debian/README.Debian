@@ -1,0 +1,17 @@
+kpilot for DEBIAN
+----------------------
+
+This is the beta version of KPilot.  I chose to package this version because 
+it's got a lot of the really cool new features.  If someone wants me to 
+package the older version I will but I feel this is the better one to package 
+especially with the new KDE getting ready to be released and all.  
+
+Please keep in mind that this is beta software so some things may not work 
+still.  
+
+KPilot requires KDE.  KDE and KPilot both use the QT library which is 
+currently not GPL'd and therfore non-free.  This will soon change with the 
+release of QT 2.0
+
+
+Ivan E. Moore II <rkrusty@debian.org>, Fri, 25 Dec 1998 22:40:10 -0500
