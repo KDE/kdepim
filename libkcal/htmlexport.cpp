@@ -648,7 +648,7 @@ QString HtmlExport::styleSheet() const
 }
 
 
-void HtmlExport::addHoliday( QDate date, QString name)
+void HtmlExport::addHoliday( const QDate &date, const QString &name)
 {
   mHolidayMap[date] = name;
 }

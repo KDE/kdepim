@@ -56,7 +56,7 @@ class HtmlExport
     */
     bool save( QTextStream * );
 
-    void addHoliday( QDate date, QString name );
+    void addHoliday( const QDate &date, const QString &name );
 
   protected:
     void createWeekView( QTextStream *ts );
