@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: automake, libtool, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, libgl-dev, docbook-stylesheets
+Build-Depends: automake, libtool, kdelibs3-dev (>= 4:2.0-final-0), debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, docbook-stylesheets
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
@@ -58,7 +58,7 @@ Package: kdepim-dev
 Architecture: any
 Section: devel
 Replaces: kdepim-dev-cvs, korganizer-dev
-Depends: korganizer (= ${Source-Version}), abbrowser (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev
+Depends: korganizer (= ${Source-Version}), abbrowser (= ${Source-Version}), libqt2.2-dev, libc6-dev, kdelibs3-dev
 Description: Personal Information Management (development files)
  Development files for KDE related Personal Information Management apps
  including abbrowser and korganizer
