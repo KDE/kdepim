@@ -58,6 +58,8 @@ Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
 
   connect( job, SIGNAL(progress(const QString&,int,int,int)),
 	   SLOT(slotProgress(const QString&,int,int,int)) );
+  connect( job, SIGNAL(progress(const QString&,int,int)),
+	   SLOT(slotProgress(const QString&,int,int)) );
   connect( job, SIGNAL(done()), SLOT(slotDone()) );
   connect( this, SIGNAL(canceled()),
 	   job, SLOT(slotCancel()) );
@@ -75,9 +77,13 @@ void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
   QProgressDialog::setMinimumDuration( ms );
 }
 
-void Kleo::ProgressDialog::slotProgress( const QString & what, int type, int current, int total ) {
+void Kleo::ProgressDialog::slotProgress( const QString & what, int, int current, int total ) {
+  slotProgress( what, current, total );
+}
+
+void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int total ) {
   kdDebug(5150) << "Kleo::ProgressDialog::slotProgress( \"" << what << "\", "
-		<< type << ", " << current << ", " << total << " )" << endl;
+		<< current << ", " << total << " )" << endl;
   if ( mBaseText.isEmpty() )
     setLabelText( what );
   else if ( what.isEmpty() )

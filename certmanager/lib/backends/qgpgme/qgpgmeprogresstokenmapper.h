@@ -1,5 +1,5 @@
 /*
-    qgpgmekeygenerationjob.h
+    qgpgmeprogresstokenmapper.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,48 +30,28 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
-#define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
-#include <kleo/keygenerationjob.h>
+#ifndef __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__
+#define __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__
 
-#include "qgpgmejob.h"
 
-namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
-}
+class QString;
 
 namespace Kleo {
 
-  class QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEProgressTokenMapper {
+    QGpgMEProgressTokenMapper();
+    ~QGpgMEProgressTokenMapper();
   public:
-    QGpgMEKeyGenerationJob( GpgME::Context * context );
-    ~QGpgMEKeyGenerationJob();
-    
-    /*! \reimp from KeygenerationJob */
-    GpgME::Error start( const QString & parameters );
-    
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & error ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, error );
-    }
+    static const QGpgMEProgressTokenMapper * instance();
+
+    QString map( const QString & token, int subtoken, int current, int total ) const;
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private:
-    QGpgME::QByteArrayDataProvider * mPubKeyDataProvider;
-    GpgME::Data * mPubKey;
+    static QGpgMEProgressTokenMapper * mSelf;
   };
 
 }
 
-#endif // __KLEO_QGPGMEKEYGENERATIONJOB_H__
+
+#endif // __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__

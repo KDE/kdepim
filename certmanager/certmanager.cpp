@@ -406,6 +406,8 @@ void CertManager::connectJobToStatusBarProgress( Kleo::Job * job, const QString 
     statusBar()->message( initialText );
   connect( job, SIGNAL(progress(const QString&,int,int,int)),
 	   mProgressBar, SLOT(slotProgress(const QString&,int,int,int)) );
+  connect( job, SIGNAL(progress(const QString&,int,int)),
+	   mProgressBar, SLOT(slotProgress(const QString&,int,int)) );
   connect( job, SIGNAL(done()), mProgressBar, SLOT(reset()) );
   connect( this, SIGNAL(stopOperations()), job, SLOT(slotCancel()) );
 

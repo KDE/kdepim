@@ -46,6 +46,10 @@ Kleo::ProgressBar::ProgressBar( QWidget * parent, const char * name, WFlags f )
   fixup( true );
 }
 
+void Kleo::ProgressBar::slotProgress( const QString &, int cur, int tot ) {
+  setProgress( cur, tot );
+}
+
 void Kleo::ProgressBar::slotProgress( const QString &, int, int cur, int tot ) {
   setProgress( cur, tot );
 }

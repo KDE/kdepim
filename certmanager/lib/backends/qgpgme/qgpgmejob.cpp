@@ -1,5 +1,5 @@
 /*
-    qgpgmekeygenerationjob.cpp
+    qgpgmejob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -34,53 +34,57 @@
 #include <config.h>
 #endif
 
-#include "qgpgmekeygenerationjob.h"
+#include "qgpgmejob.h"
+#include "qgpgmeprogresstokenmapper.h"
 
-#include <qgpgme/dataprovider.h>
+#include <kleo/job.h>
+
 #include <qgpgme/eventloopinteractor.h>
 
 #include <gpgmepp/context.h>
-#include <gpgmepp/keygenerationresult.h>
-#include <gpgmepp/data.h>
+
+#include <qstring.h>
 
 #include <assert.h>
 
-Kleo::QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( GpgME::Context * context )
-  : KeyGenerationJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyGenerationJob" ),
-    QGpgMEJob( this, context ),
-    mPubKeyDataProvider( 0 ),
-    mPubKey( 0 )
+Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
+  : GpgME::ProgressProvider(),
+    mThis( _this ),
+    mCtx( context ),
+    mPatterns( 0 )
 {
   assert( context );
 }
 
-Kleo::QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {
-  delete mPubKey; mPubKey = 0;
-  delete mPubKeyDataProvider; mPubKeyDataProvider = 0;
+Kleo::QGpgMEJob::~QGpgMEJob() {
+  delete mCtx; mCtx = 0;
+  if ( mPatterns )
+    for ( const char* * it = mPatterns ; *it ; ++it )
+      free( (void*)*it );
+  delete[] mPatterns; mPatterns = 0;
 }
 
-GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
-  assert( !mPubKey );
+void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
+  mCtx->setManagedByEventLoopInteractor( true );
+  QObject::connect( QGpgME::EventLoopInteractor::instance(),
+		    SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
+		    mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
+  mCtx->setProgressProvider( this );
+}
 
-  // set up empty data object for the public key data
-  if ( mCtx->protocol() == GpgME::Context::CMS ) {
-    mPubKeyDataProvider = new QGpgME::QByteArrayDataProvider();
-    mPubKey = new GpgME::Data( mPubKeyDataProvider );
-    assert( !mPubKey->isNull() );
+void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+  if ( context == mCtx ) {
+    doEmitDoneSignal();
+    doOperationDoneEvent( e );
+    mThis->deleteLater();
   }
-
-  hookupContextToEventLoopInteractor();
-
-  const GpgME::Error err =
-    mCtx->startKeyGeneration( parameters.utf8().data(), mPubKey ? *mPubKey : GpgME::Data::null );
-						  
-  if ( err )
-    deleteLater();
-  return err;
 }
 
-void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->keyGenerationResult(), mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray() );
+void Kleo::QGpgMEJob::doSlotCancel() {
+  mCtx->cancelPendingOperation();
 }
 
-#include "qgpgmekeygenerationjob.moc"
+void Kleo::QGpgMEJob::showProgress( const char * what, int type, int current, int total ) {
+  doEmitProgressSignal( QGpgMEProgressTokenMapper::instance()->map( what, type, current, total ), current, total );
+}
+

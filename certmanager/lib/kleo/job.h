@@ -70,6 +70,7 @@ namespace Kleo {
     virtual void slotCancel() = 0;
 
   signals:
+    void progress( const QString & what, int current, int total );
     void progress( const QString & what, int type, int current, int total );
     void done();
   };
