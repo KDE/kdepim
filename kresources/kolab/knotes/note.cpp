@@ -184,5 +184,5 @@ void Note::saveTo( KCal::Journal* journal )
 
 QString Note::productID() const
 {
-  return QString( "KNotes %s, Kolab resource" ).arg( "KNOTES_VERSION" );
+  return QString( "KNotes %1, Kolab resource" ).arg( KNOTES_VERSION );
 }
