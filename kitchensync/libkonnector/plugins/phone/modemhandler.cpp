@@ -67,9 +67,9 @@ void ModemHandler::newChar(unsigned char data){
 
 	switch (data) {
 	case '\r':
-		if (m_Response != "") {
+		if (!m_Response.isEmpty()) {
 			emit responseReady(m_Response);
-		    m_Response = "";
+		    m_Response = QString::null;
 		}
 		break;
 		
@@ -80,7 +80,7 @@ void ModemHandler::newChar(unsigned char data){
 		m_Response += data;
 		if (m_Response == "> ") {
 			emit responseReady(m_Response);
-			m_Response = "";
+			m_Response = QString::null;
 		}
 		break;
 	}
