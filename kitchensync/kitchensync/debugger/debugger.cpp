@@ -135,6 +135,10 @@ QWidget *Debugger::widget()
     connect( button, SIGNAL( clicked() ), SLOT( configureKonnector() ) );    
     commandLayout->addWidget( button );
 
+    button = new QPushButton( "Connect Device", m_widget );
+    connect( button, SIGNAL( clicked() ), SLOT( connectDevice() ) );
+    commandLayout->addWidget( button );
+
     button = new QPushButton( "Read Syncees", m_widget );
     connect( button, SIGNAL( clicked() ), SLOT( readSyncees() ) );
     commandLayout->addWidget( button );
@@ -142,6 +146,11 @@ QWidget *Debugger::widget()
     button = new QPushButton( "Write Syncees", m_widget );
     connect( button, SIGNAL( clicked() ), SLOT( writeSyncees() ) );
     commandLayout->addWidget( button );
+
+    button = new QPushButton( "Disconnect Device", m_widget );
+    connect( button, SIGNAL( clicked() ), SLOT( disconnectDevice() ) );
+    commandLayout->addWidget( button );
+
 
     commandLayout->addStretch();
 
@@ -197,6 +206,10 @@ Konnector *Debugger::currentKonnector()
     k = core()->konnectorManager()->load( (*it).device() );
     connect( k, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
              SLOT( slotReceiveData( Konnector *, const SynceeList & ) ) );
+    connect( k, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
+             SLOT( slotProgress( Konnector *, const Progress & ) ) );
+    connect( k, SIGNAL( sig_error( Konnector *, const Error & ) ),
+             SLOT( slotError( Konnector *, const Error & ) ) );
     mKonnectorMap.insert( konnectorName, k );
   }
 
@@ -212,8 +225,9 @@ void Debugger::readSyncees()
   if ( k ) k->readSyncees();
 }
 
-void Debugger::slotReceiveData( Konnector *, const SynceeList &syncees )
+void Debugger::slotReceiveData( Konnector *k, const SynceeList &syncees )
 {
+  logMessage( i18n("Got Syncee list from Konnector at address %1").arg( (long)k ) );
   mSynceeList = syncees;
 
   SynceeList::ConstIterator it;
@@ -226,6 +240,16 @@ void Debugger::slotReceiveData( Konnector *, const SynceeList &syncees )
       logMessage( syncEntry->id() + ": " + syncEntry->name() );
     }
   }
+}
+
+void Debugger::slotProgress( Konnector *k, const Progress &p )
+{
+  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( p.text() ) );
+}
+
+void Debugger::slotError( Konnector *k, const Error &e )
+{
+  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( e.text() ) );
 }
 
 void Debugger::writeSyncees()
@@ -262,6 +286,22 @@ void Debugger::writeSyncees()
     Konnector *k = currentKonnector();
     if ( k ) k->writeSyncees();
   }
+}
+
+void Debugger::connectDevice()
+{
+  logMessage( i18n("Connecting to Device.") );
+
+  Konnector *k = currentKonnector();
+  if ( k ) k->connectDevice();
+}
+
+void Debugger::disconnectDevice()
+{
+  logMessage( i18n("Disconnecting from Device.") );
+
+  Konnector *k = currentKonnector();
+  if ( k ) k->disconnectDevice();
 }
 
 void Debugger::logMessage( const QString &message )

@@ -67,8 +67,12 @@ class Debugger : public ManipulatorPart
     void configureKonnector();
     void readSyncees();
     void writeSyncees();
+    void connectDevice();
+    void disconnectDevice();
 
     void slotReceiveData( Konnector *, const SynceeList &syncees );
+    void slotProgress( Konnector *, const Progress & );
+    void slotError( Konnector *, const Error & );
 
   private:
     QPixmap m_pixmap;
