@@ -47,7 +47,7 @@ class ExchangeDownload : public QObject {
    ~ExchangeDownload();
 
     // Synchronous functions
-    QPtrList<KCal::Event> eventsForDate( const QDate &qd );
+    QPtrList<KCal::Event> eventsForDate( KCal::Calendar* calendar, const QDate &qd );
 
     // Asynchronous functions
     void download( KCal::Calendar* calendar, 
@@ -85,6 +85,7 @@ class ExchangeDownload : public QObject {
     QString dateSelectQuery( const QDate& start, const QDate& end );
     
     KCal::Calendar *mCalendar;
+    QPtrList<KCal::Event> mEvents;
     ExchangeAccount *mAccount;
     ExchangeProgress *mProgress;
     int mDownloadsBusy;

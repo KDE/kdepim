@@ -6,6 +6,7 @@ METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/korganizer/interfaces \
     -I$(top_srcdir)/interfaces \
+    -I$(top_srcdir) \
     -I$(top_srcdir)/libkcal -I$(top_builddir)/libkcal \
     -I$(top_srcdir)/libkpimexchange/core -I$(top_builddir)/libkpimexchange/core \
     -I$(top_srcdir)/libical/src/libical -I$(top_srcdir)/libical/src/libicalss \

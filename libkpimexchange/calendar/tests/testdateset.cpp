@@ -38,10 +38,10 @@ int main(int argc,char **argv)
   
   DateSet dates;
   QMap<QDate,int> map;
-  KRandomSequence random( 5 );
+  KRandomSequence random( 0 );
 
-  dates.add( QDate( 2002, 7, 15 ) );
-  map.insert( QDate( 2002, 7, 16 ), 1 );
+  // dates.add( QDate( 2002, 7, 15 ) );
+  // map.insert( QDate( 2002, 7, 16 ), 1 );
 
   for( int i=0; i<50; i++ ) {
     int month = 6 + random.getLong(2);

@@ -1,8 +1,6 @@
 /*
-    This file is part of libexchangecalendar.
-    Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 Jan-Pascal van Best
+    This file is part of libkimexchange
+    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,65 +17,78 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef KPIM_EXCHANGECALENDAR_H
+#define KPIM_EXCHANGECALENDAR_H
 
-// $Id$
-
-#ifndef _CALENDAREXCHANGE_H
-#define _CALENDAREXCHANGE_H
-
-#include <qintdict.h>
 #include <qmap.h>
-
 #include <libkcal/calendar.h>
-#include <libkcal/journal.h>
+#include <libkcal/calendarlocal.h>
 
-#include <exchangeaccount.h>
-#include <exchangeclient.h>
+class DateSet;
+
+namespace KPIM {
+class ExchangeAccount;
+class ExchangeClient;
+}
+
+namespace KCal {
+class Event;
+}
 
 namespace KCal {
 
+class CalFormat;
+
 /**
-  This class provides access to a calendar on a MS Exchange 2000 server.
+  This class provides a calendar stored on a Microsoft Exchange 2000 server
 */
-class ExchangeCalendar : public Calendar, public IncidenceBase::Observer {
+class ExchangeCalendar : public Calendar, public IncidenceBase::Observer
+{
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
     ExchangeCalendar( KPIM::ExchangeAccount* account );
-//    /** constructs a new calendar, with variables initialized to sane values. */
-//    ExchangeCalendar(const QString &timeZoneId);
+    /** constructs a new calendar, with variables initialized to sane values. */
+    ExchangeCalendar( KPIM::ExchangeAccount* account, const QString &timeZoneId );
     virtual ~ExchangeCalendar();
   
+    /**
+      Semantics not yet defined. Should the Exchange calendar be wiped clean?
+      Should the disk calendar be copied to the Exchange calendar?
+      At the moment, just reads the calendar data into the cache.
+      @return true, if successfull, false on error.
+      @param fileName the name of the calendar on disk.
+    */
+    bool load( const QString &fileName );
+    /**
+      Writes out the calendar to disk in the specified \a format.
+      ExchangeCalendar takes ownership of the CalFormat object.
+      @return true, if successfull, false on error.
+      @param fileName the name of the file
+    */
+    bool save( const QString &fileName, CalFormat *format = 0 );
+
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
-
-    bool load (const QString &);
-    bool save( const QString &, CalFormat *);
   
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
-    /** retrieves an event on the basis of the unique string ID. */
+    /**
+      Retrieves an event on the basis of the unique string ID.
+    */
     Event *event(const QString &UniqueStr);
-    /** builds and then returns a list of all events that match for the
-     * date specified. useful for dayView, etc. etc. */
-    QPtrList<Event> events(const QDate &date, bool sorted = FALSE);
-    /** Get events for date \a qdt. */
-    QPtrList<Event> events(const QDateTime &qdt);
-    /** Get events in a range of dates. If inclusive is set to true, only events
-     * are returned, which are completely included in the range. */
-    QPtrList<Event> events(const QDate &start,const QDate &end,
-                             bool inclusive=false);
-    /** Return all events in calendar */
-    QPtrList<Event> events() { QPtrList<Event> list; return list; }
+    /**
+      Return filtered list of all events in calendar.
+    */
+//    QPtrList<Event> events();
+    /**
+      Return unfiltered list of all events in calendar.
+      Use with care, since this causes a LOT of network activity
+    */
+    QPtrList<Event> rawEvents();
 
-    QPtrList<Event> rawEvents() { QPtrList<Event> list; return list; }
-    QPtrList<Event> rawEventsForDate(const QDate &date, bool sorted = FALSE) { return events( date, sorted ); }
-    QPtrList<Event> rawEventsForDate(const QDateTime &qdt) { return events( qdt ); }
-    QPtrList<Event> rawEvents(const QDate &start,const QDate &end,
-                             bool inclusive=false) { return events( start, end, inclusive ); }
- 
     /*
       Returns a QString with the text of the holiday (if any) that falls
       on the specified date.
@@ -87,43 +98,73 @@ class ExchangeCalendar : public Calendar, public IncidenceBase::Observer {
     /** returns the number of events that are present on the specified date. */
     int numEvents(const QDate &qd);
   
-    /** add a todo to the todolist. */
-    void addTodo(Todo *todo) { return; }
-    /** remove a todo from the todolist. */
-    void deleteTodo(Todo *) { return; }
-    const QPtrList<Todo> &todos() const { QPtrList<Todo> list; return list; }
-    /** searches todolist for an event with this unique string identifier,
-      returns a pointer or null. */
-    Todo *todo(const QString &UniqueStr) { return new Todo(); }
-    /** Returns list of todos due on the specified date */
-    QPtrList<Todo> todos(const QDate & date) { QPtrList<Todo> list; return list; }
-
-    QPtrList<Todo> rawTodos() const { QPtrList<Todo> list; return list; }
-    QPtrList<Todo> rawTodos(const QDate & date) { QPtrList<Todo> list; return list; }
+    /**
+      Add a todo to the todolist.
+    */
+    void addTodo( Todo *todo );
+    /**
+      Remove a todo from the todolist.
+    */
+    void deleteTodo( Todo * );
+    /**
+      Searches todolist for an event with this unique string identifier,
+      returns a pointer or null.
+    */
+    Todo *todo( const QString &uid );
+    /**
+      Return list of all todos.
+    */
+    QPtrList<Todo> rawTodos() const;
+    /**
+      Returns list of todos due on the specified date.
+    */
+    QPtrList<Todo> todos( const QDate &date );
+    /**
+      Return list of all todos.
+      
+      Workaround because compiler does not recognize function of base class.
+    */
+    QPtrList<Todo> todos() { return Calendar::todos(); }
 
     /** Add a Journal entry to calendar */
-    virtual void addJournal(Journal *) { return; }
+    virtual void addJournal(Journal *);
     /** Return Journal for given date */
-    virtual Journal *journal(const QDate &) { return new Journal(); }
+    virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID) { return new Journal; }
+    virtual Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
-    QPtrList<Journal> journals(){ QPtrList<Journal> list; return list; }
+    QPtrList<Journal> journals();
 
     /** Return all alarms, which ocur in the given time interval. */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to ) { Alarm::List list; return list; }
+    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
     /** Return all alarms, which ocur before given date. */
-    Alarm::List alarmsTo( const QDateTime &to ) { Alarm::List list; return list; }
+    Alarm::List alarmsTo( const QDateTime &to );
 
   protected:
+    /**
+      Builds and then returns a list of all events that match for the
+      date specified. useful for dayView, etc. etc.
+    */
+    QPtrList<Event> rawEventsForDate( const QDate &date, bool sorted = false );
+    /**
+      Get unfiltered events for date \a qdt.
+    */
+    QPtrList<Event> rawEventsForDate( const QDateTime &qdt );
+    /**
+      Get unfiltered events in a range of dates. If inclusive is set to true,
+      only events are returned, which are completely included in the range.
+    */
+    QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
+                               bool inclusive = false );
+
     /** this method should be called whenever a Event is modified directly
-     * via its pointer.  It makes sure that the calendar is internally
+     * via it's pointer.  It makes sure that the calendar is internally
      * consistent. */
     void update(IncidenceBase *incidence);
   
     /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i ) { update( i ); }
+    void incidenceUpdated( IncidenceBase *i ) { mCache->update( i ); update( i ); }
   
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent(const Event *anEvent);
@@ -141,16 +182,11 @@ class ExchangeCalendar : public Calendar, public IncidenceBase::Observer {
 
     KPIM::ExchangeAccount* mAccount;
     KPIM::ExchangeClient* mClient;
-
-    QIntDict<QPtrList<Event> > *mCalDict;    // dictionary of lists of events.
-    QPtrList<Event> mRecursList;             // list of repeating events.
-
-    QPtrList<Todo> mTodoList;               // list of todo items.
-
-    QMap<QDate,Journal *> mJournalMap;
-  
-//    QDate *mOldestDate;
-//    QDate *mNewestDate;
+    CalendarLocal* mCache;
+    DateSet* mDates;
+    QMap<Event, QDateTime>* mEventDates;
+    QMap<QDate, QDateTime>* mCacheDates;
+    int mCachedSeconds;
 };  
 
 }

@@ -129,13 +129,23 @@ void ExchangeClient::test2()
   kdDebug() << "Entering test2()" << endl;
 }
 
-QPtrList<KCal::Event> ExchangeClient::events( const QDate &qd )
+QPtrList<KCal::Event> ExchangeClient::events( KCal::Calendar* calendar, const QDate &qd )
 {
    // QString query = dateSelectQuery( qd, qd, true /* inclusive */ );
+  ExchangeDownload download( mAccount );
+  return download.eventsForDate( calendar, qd );
+   // QDomDocument response = NetDavAccess::davSearch( mAccount->calendarURL(), "DAV:", "sql", query );  
+}
+/*
+QPtrList<KCal::Event> ExchangeClient::events( const QDate &qd )
+{
+  KCal::CalendarLocal* 
+   // QString query = dateSelectQuery( qd, qd, true );
   ExchangeDownload download( mAccount );
   return download.eventsForDate( qd );
    // QDomDocument response = NetDavAccess::davSearch( mAccount->calendarURL(), "DAV:", "sql", query );  
 }
+*/
 
 void ExchangeClient::download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress )
 {

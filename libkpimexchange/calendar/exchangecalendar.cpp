@@ -1,7 +1,5 @@
 /*
-    This file is part of libkcal.
-    Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    This file is part of libkpimexchange.
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
     This library is free software; you can redistribute it and/or
@@ -20,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #include <stdlib.h>
 
 #include <qdatetime.h>
@@ -29,161 +25,109 @@
 #include <qptrlist.h>
 
 #include <kdebug.h>
-// #include <kio/netdavaccess.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "exceptions.h"
-#include "incidence.h"
-#include "journal.h"
+#include <libkcal/calendarlocal.h>
+#include <libkcal/calendar.h>
+#include <libkcal/journal.h>
 
-#include "calendar.h"
-
-#include "exchangeclient.h"
+#include "dateset.h"
 #include "exchangeaccount.h"
+#include "exchangeclient.h"
 
 #include "exchangecalendar.h"
 
 using namespace KCal;
+using namespace KPIM;
 
 ExchangeCalendar::ExchangeCalendar( KPIM::ExchangeAccount* account )
   : Calendar()
 {
-  kdDebug() << "Creating ExchangeCalendar" << endl;
   init( account );
+  mCache = new CalendarLocal();
 }
 
-/*
-ExchangeCalendar::ExchangeCalendar(const QString &timeZoneId)
+ExchangeCalendar::ExchangeCalendar( KPIM::ExchangeAccount* account, const QString &timeZoneId)
   : Calendar(timeZoneId)
 {
-  init();
+  init( account );
+  mCache = new CalendarLocal( timeZoneId );
 }
-*/
 
 void ExchangeCalendar::init( KPIM::ExchangeAccount* account )
 {
   mAccount = account;
-  mClient = new KPIM::ExchangeClient( account );
+  mClient = new ExchangeClient( account );
+  mDates = new DateSet();
+
+  mEventDates = new QMap<Event,QDateTime>();
+  mCacheDates = new QMap<QDate, QDateTime>();
+
+  mCachedSeconds = 600; // After 5 minutes, reread from server
+  // mOldestDate = 0L;
+  // mNewestDate = 0L;
 }
 
 
 ExchangeCalendar::~ExchangeCalendar()
 {
   close();
+  // delete mNewestDate;
+  // delete mOldestDate;
+  delete mDates;
   delete mClient;
+  delete mEventDates;
+  delete mCacheDates;
+  delete mCache;
+}
+ 
+
+bool ExchangeCalendar::load( const QString &fileName )
+{
+  return mCache->load( fileName );
 }
 
-
-bool ExchangeCalendar::load(const QString &fileName)
+bool ExchangeCalendar::save( const QString &fileName, CalFormat *format )
 {
-  setModified( false );
-
-  return true;
-}
-
-bool ExchangeCalendar::save(const QString &fileName,CalFormat *format)
-{
-  bool success;
-
-  if (format) {
-    success = format->save( this, fileName);
-  } else {
-    CalFormat *format = new ICalFormat;
-    success = format->save( this, fileName);
-    delete format;
-  }
-
-  if ( success ) setModified( false );
-  
-  return success;
+  return mCache->save( fileName, format );
 }
 
 void ExchangeCalendar::close()
 {
-/*
-  QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
-  QPtrList<Event> *tmpList;
-
-  // Delete non-recurring events
-  qdi.toFirst();
-  while (qdi.current()) {
-    tmpList = qdi.current();
-    QDate keyDate = keyToDate(qdi.currentKey());
-    Event *ev;
-    for(ev = tmpList->first();ev;ev = tmpList->next()) {
-//      kdDebug(5800) << "-----FIRST.  " << ev->summary() << endl;
-//      kdDebug(5800) << "---------MUL: " << (ev->isMultiDay() ? "Ja" : "Nein") << endl;
-      bool del = false;
-      if (ev->isMultiDay()) {
-        if (ev->dtStart().date() == keyDate) {
-          del = true;
-        }
-      } else {
-        del = true;
-      }
-      if (del) {
-//        kdDebug(5800) << "-----DEL  " << ev->summary() << endl;
-        delete ev;
-      }
-    }
-    ++qdi;
-  }
-
-  mCalDict->clear();
-  mRecursList.clear();
-  mTodoList.clear();
-
-  // reset oldest/newest date markers
-  delete mOldestDate;
-  mOldestDate = 0L;
-  delete mNewestDate;
-  mNewestDate = 0L;
-*/
+  mCache->close();
   setModified( false );
 }
 
 
 void ExchangeCalendar::addEvent(Event *anEvent)
 {
+  kdDebug() << "ExchangeCalendar::addEvent" << endl;
+  mCache->addEvent( anEvent );
   insertEvent(anEvent);
-  if (anEvent->organizer() != getEmail()) {
-    kdDebug(5800) << "Event " << anEvent->summary() << " Organizer: " << anEvent->organizer()
-              << " Email: " << getEmail() << endl;
-//    anEvent->setReadOnly(true);
-  }
-  
+ 
   anEvent->registerObserver( this );
 
   setModified( true );
 }
 
+// probably not really efficient, but...it works for now.
 void ExchangeCalendar::deleteEvent(Event *event)
 {
   kdDebug(5800) << "ExchangeCalendar::deleteEvent" << endl;
-
-  // Delete event from Exchange store, by looking at uid
-
+  mCache->deleteEvent( event );
   setModified( true );
 }
 
-Event *ExchangeCalendar::event(const QString &uid)
+
+Event *ExchangeCalendar::event( const QString &uid )
 {
-  kdDebug(5800) << "ExchangeCalendar::getEvent(uid): " << uid << endl;
+  kdDebug(5800) << "ExchangeCalendar::event(): " << uid << endl;
 
-  Event *anEvent;
-
-  return anEvent;
-  
-  // catch-all.
-  // return (Event *) 0L;
+  return mCache->event( uid );
 }
 
-/*
 void ExchangeCalendar::addTodo(Todo *todo)
 {
-  mTodoList.append(todo);
+  mCache->addTodo( todo );
 
   todo->registerObserver( this );
 
@@ -192,169 +136,61 @@ void ExchangeCalendar::addTodo(Todo *todo)
 
 void ExchangeCalendar::deleteTodo(Todo *todo)
 {
-  mTodoList.findRef(todo);
-  mTodoList.remove();
+  mCache->deleteTodo( todo );
 
   setModified( true );
 }
 
-
-const QPtrList<Todo> &ExchangeCalendar::getTodoList() const
+QPtrList<Todo> ExchangeCalendar::rawTodos() const
 {
-  return mTodoList;
+  return mCache->rawTodos();
 }
 
-Todo *ExchangeCalendar::todo(const QString &UniqueStr)
+Todo *ExchangeCalendar::todo( const QString &uid )
 {
-  Todo *aTodo;
-  for (aTodo = mTodoList.first(); aTodo;
-       aTodo = mTodoList.next())
-    if (aTodo->uid() == UniqueStr)
-      return aTodo;
-  // not found
-  return 0;
+  return mCache->todo( uid );
 }
 
-QPtrList<Todo> ExchangeCalendar::getTodosForDate(const QDate & date)
+QPtrList<Todo> ExchangeCalendar::todos( const QDate &date )
 {
-  QPtrList<Todo> todos;
-
-  Todo *aTodo;
-  for (aTodo = mTodoList.first();aTodo;aTodo = mTodoList.next()) {
-    if (aTodo->hasDueDate() && aTodo->dtDue().date() == date) {
-      todos.append(aTodo);
-    }
-  }
-
-  return todos;
+  return mCache->todos( date );
 }
-*/
 
 int ExchangeCalendar::numEvents(const QDate &qd)
 {
-  kdDebug(5800) << "ExchangeCalendar:: numEvent" << endl;
-  int count = 0;
-  return count;
+   kdDebug() << "ExchangeCalendar::numEvents" << endl;
+  return mCache->numEvents( qd );
 }
 
-/*
+
 Alarm::List ExchangeCalendar::alarmsTo( const QDateTime &to )
 {
-  if( mOldestDate )
-    return alarms( *mOldestDate, to );
-  else
-    return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
+  return mCache->alarmsTo( to );
 }
 
 Alarm::List ExchangeCalendar::alarms( const QDateTime &from, const QDateTime &to )
 {
   kdDebug(5800) << "ExchangeCalendar::alarms(" << from.toString() << " - " << to.toString() << ")\n";
-  Alarm::List alarms;
-
-  // Check all non-recurring events.
-  QIntDictIterator<QPtrList<Event> > it( *mCalDict );
-  for( ; it.current(); ++it ) {
-    QPtrList<Event> *events = it.current();
-    Event *e;
-    for( e = events->first(); e; e = events->next() ) {
-      appendAlarms( alarms, e, from, to );
-    }
-  }
-
-  // Check all recurring events.
-  Event *e;
-  for( e = mRecursList.first(); e; e = mRecursList.next() ) {
-    appendRecurringAlarms( alarms, e, from, to );
-  }
-
-  // Check all todos.
-  Todo *t;
-  for( t = mTodoList.first(); t; t = mTodoList.next() ) {
-    appendAlarms( alarms, t, from, to );
-  }
-
-  return alarms;
+  return mCache->alarms( from, to );
 }
-
+/*
 void ExchangeCalendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
                                   const QDateTime &from, const QDateTime &to )
 {
-  QPtrList<Alarm> alarmList = incidence->alarms();
-  Alarm *alarm;
-  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-//    kdDebug(5800) << "ExchangeCalendar::appendAlarms() '" << incidence->summary()
-//                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
-    if ( alarm->enabled() ) {
-      if ( alarm->time() >= from && alarm->time() <= to ) {
-        kdDebug(5800) << "ExchangeCalendar::appendAlarms() '" << incidence->summary()
-                      << "': " << alarm->time().toString() << endl;
-        alarms.append( alarm );
-      }
-    }
-  }
+  return mCache->appendAlarms( alarms, incidence, from, to ); 
 }
 
 void ExchangeCalendar::appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
                                   const QDateTime &from, const QDateTime &to )
 {
-  QPtrList<Alarm> alarmList = incidence->alarms();
-  Alarm *alarm;
-  QDateTime qdt;
-  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-    if (incidence->recursOn(from.date())) {
-      qdt.setTime(alarm->time().time());
-      qdt.setDate(from.date());
-    }
-    else qdt = alarm->time();
-    kdDebug(5800) << "ExchangeCalendar::appendAlarms() '" << incidence->summary()
-                  << "': " << qdt.toString() << " - " << alarm->enabled() << endl;
-    if ( alarm->enabled() ) {
-//      kdDebug(5800) << "ExchangeCalendar::appendAlarms() '" << incidence->summary()
-//                    << "': " << alarm->time().toString() << endl;
-      if ( qdt >= from && qdt <= to ) {
-        alarms.append( alarm );
-      }
-    }
-  }
+   return mCache->appendRecurringAlarms( alarms, incidence, from, to ); 
 }
-
 */
-
 /****************************** PROTECTED METHODS ****************************/
 
 // after changes are made to an event, this should be called.
 void ExchangeCalendar::update(IncidenceBase *incidence)
 {
-   kdDebug(5800) << "ExchangeCalendar::update" << endl; 
-   incidence->setSyncStatus(Event::SYNCMOD);
-  incidence->setLastModified(QDateTime::currentDateTime());
-  // we should probably update the revision number here,
-  // or internally in the Event itself when certain things change.
-  // need to verify with ical documentation.
-
-  if ( incidence->type() == "Event" ) {
-    Event *anEvent = static_cast<Event *>(incidence);
-/*
-    QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
-    QPtrList<Event> *tmpList;
-
-    // the first thing we do is REMOVE all occurances of the event from
-    // both the dictionary and the recurrence list.  Then we reinsert it.
-    // We don't bother about optimizations right now.
-    qdi.toFirst();
-    while ((tmpList = qdi.current()) != 0L) {
-      ++qdi;
-      tmpList->removeRef(anEvent);
-    }
-    // take any instances of it out of the recurrence list
-    if (mRecursList.findRef(anEvent) != -1)
-      mRecursList.take();
-
-    // ok the event is now GONE.  we want to re-insert it.
-    insertEvent(anEvent);
-*/
-  }
-
   setModified( true );
 }
 
@@ -363,100 +199,37 @@ void ExchangeCalendar::update(IncidenceBase *incidence)
 // particular location in the dictionary, a new one will be created.
 void ExchangeCalendar::insertEvent(const Event *anEvent)
 {
-  kdDebug(5800) << "Inserting event into ExchangeCalendar" << endl;
-
-/*
-  // initialize if they haven't been allocated yet;
-  if (!mOldestDate) {
-    mOldestDate = new QDate();
-    (*mOldestDate) = anEvent->dtStart().date();
-  }
-  if (!mNewestDate) {
-    mNewestDate = new QDate();
-    (*mNewestDate) = anEvent->dtStart().date();
-  }
-
-  // update oldest and newest dates if necessary.
-  if (anEvent->dtStart().date() < (*mOldestDate))
-    (*mOldestDate) = anEvent->dtStart().date();
-  if (anEvent->dtStart().date() > (*mNewestDate))
-    (*mNewestDate) = anEvent->dtStart().date();
-
-  if (anEvent->recurrence()->doesRecur()) {
-    mRecursList.append(anEvent);
-  } else {
-    // set up the key
-    extraDays = anEvent->dtStart().date().daysTo(anEvent->dtEnd().date());
-    for (dayCount = 0; dayCount <= extraDays; dayCount++) {
-      tmpKey = makeKey(anEvent->dtStart().addDays(dayCount));
-      // insert the item into the proper list in the dictionary
-      if ((eventList = mCalDict->find(tmpKey)) != 0) {
-	eventList->append(anEvent);
-      } else {
-	// no items under that date yet
-	eventList = new QPtrList<Event>;
-	eventList->append(anEvent);
-	mCalDict->insert(tmpKey, eventList);
-      }
-    }
-  }
-*/
+  kdDebug() << "ExchangeCalendar::insertEvent" << endl;
+ 
 }
 
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-// BL: an the returned list should be deleted!!!
-QPtrList<Event> ExchangeCalendar::events(const QDate &qd, bool sorted)
+QPtrList<Event> ExchangeCalendar::rawEventsForDate(const QDate &qd, bool sorted)
 {
-   kdDebug(5800) << "ExchangeCalendar::events(QDate, bool)" << endl; 
-
-   QPtrList<Event> eventList = mClient->events( qd );
-   Event *anEvent;
+  kdDebug() << "ExchangeCalendar::rawEventsForDate(" << qd.toString() << "," << sorted << ")" << endl;
  
-   //   	mAccount
-//   KURL url = m
-//   QDomDocument response = NetDavAccess::search( url, "DAV:", "sql", query );
+  // If the events for this date are not in the cache, or if they are old,
+  // get them again
+  QDateTime now = QDateTime::currentDateTime();
+  if ( !mDates->contains( qd ) || (*mCacheDates)[qd].secsTo( now ) > mCachedSeconds ) {
+    kdDebug() << "Reading events for date " << qd.toString() << endl;
+    mClient->events( mCache, qd );
+    mDates->add( qd );
+    mCacheDates->insert( qd, now );
+  }
 
+  // Events are safely in the cache now, return them from cache
+  return mCache->rawEventsForDate( qd, sorted );
 
-   
 /*
- * // Search non-recurring events
-  QPtrList<Event> eventList;
-  QPtrList<Event> *tmpList;
- tmpList = mCalDict->find(makeKey(qd));
-  if (tmpList) {
-    for (anEvent = tmpList->first(); anEvent;
-	 anEvent = tmpList->next())
-      eventList.append(anEvent);
-  }
-
-  // Search recurring events
-  int extraDays, i;
-  for (anEvent = mRecursList.first(); anEvent; anEvent = mRecursList.next()) {
-    if (anEvent->isMultiDay()) {
-      extraDays = anEvent->dtStart().date().daysTo(anEvent->dtEnd().date());
-      for (i = 0; i <= extraDays; i++) {
-	if (anEvent->recursOn(qd.addDays(-i))) {
-	  eventList.append(anEvent);
-	  break;
-	}
-      }
-    } else {
-      if (anEvent->recursOn(qd))
-	eventList.append(anEvent);
-    }
-  }
-*/
   if (!sorted) {
     return eventList;
   }
 
-  kdDebug(5800) << "Sorting getEvents for date\n" << endl;
+  //  kdDebug(5800) << "Sorting events for date\n" << endl;
   // now, we have to sort it based on getDtStart.time()
-
   QPtrList<Event> eventListSorted;
-
-  int i;
   for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
     if (!eventListSorted.isEmpty() &&
 	anEvent->dtStart().time() < eventListSorted.at(0)->dtStart().time()) {
@@ -474,123 +247,34 @@ QPtrList<Event> ExchangeCalendar::events(const QDate &qd, bool sorted)
   nextToInsert:
     continue;
   }
-
   return eventListSorted;
-}
-
-
-QPtrList<Event> ExchangeCalendar::events(const QDate &start,const QDate &end,
-                                    bool inclusive)
-{
-    kdDebug(5800) << "ExchangeCalendar::events()" << endl; 
- // QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
-  QPtrList<Event> matchList, *tmpList, tmpList2;
-  Event *ev = 0;
-/*
-  qdi.toFirst();
-
-  // Get non-recurring events
-  while (qdi.current()) {
-    QDate keyDate = keyToDate(qdi.currentKey());
-    if (keyDate >= start && keyDate <= end) {
-      tmpList = qdi.current();
-      for(ev = tmpList->first();ev;ev = tmpList->next()) {
-        bool found = false;
-        if (ev->isMultiDay()) {  // multi day event
-          QDate mStart = ev->dtStart().date();
-          QDate mEnd = ev->dtEnd().date();
-
-          // Check multi-day events only on one date of its duration, the first
-          // date which lies in the specified range.
-          if ((mStart >= start && mStart == keyDate) ||
-              (mStart < start && start == keyDate)) {
-            if (inclusive) {
-              if (mStart >= start && mEnd <= end) {
-                // Event is completely included in range
-                found = true;
-              }
-            } else {
-              // Multi-day event has a day in the range
-              found = true;
-            }
-          }
-        } else {  // single day event
-          found = true;
-        }
-        if (found) matchList.append(ev);
-      }
-    }
-    ++qdi;
-  }
-
-  // Get recurring events
-  for(ev = mRecursList.first();ev;ev = mRecursList.next()) {
-    QDate rStart = ev->dtStart().date();
-    bool found = false;
-    if (inclusive) {
-      if (rStart >= start && rStart <= end) {
-        // Start date of event is in range. Now check for end date.
-        // if duration is negative, event recurs forever, so do not include it.
-        if (ev->recurrence()->duration() == 0) {  // End date set
-          QDate rEnd = ev->recurrence()->endDate();
-          if (rEnd >= start && rEnd <= end) {  // End date within range
-            found = true;
-          }
-        } else if (ev->recurrence()->duration() > 0) {  // Duration set
-          // TODO: Calculate end date from duration. Should be done in Event
-          // For now exclude all events with a duration.
-        }
-      }
-    } else {
-      if (rStart <= end) {  // Start date not after range
-        if (rStart >= start) {  // Start date within range
-          found = true;
-        } else if (ev->recurrence()->duration() == -1) {  // Recurs forever
-          found = true;
-        } else if (ev->recurrence()->duration() == 0) {  // End date set
-          QDate rEnd = ev->recurrence()->endDate();
-          if (rEnd >= start && rEnd <= end) {  // End date within range
-            found = true;
-          }
-        } else {  // Duration set
-          // TODO: Calculate end date from duration. Should be done in Event
-          // For now include all events with a duration.
-          found = true;
-        }
-      }
-    }
-
-    if (found) matchList.append(ev);
-  }
 */
-  return matchList;
 }
 
-/*
-QPtrList<Event> ExchangeCalendar::getAllEvents()
+
+QPtrList<Event> ExchangeCalendar::rawEvents( const QDate &start, const QDate &end,
+                                          bool inclusive )
 {
-  QPtrList<Event> eventList;
-
-  if( mOldestDate && mNewestDate )
-    eventList = events(*mOldestDate,*mNewestDate);
-
-  return eventList;
+   kdDebug() << "ExchangeCalendar::rawEvents(start,end,inclusive)" << endl;
+ return mCache->rawEvents( start, end, inclusive );
 }
-*/
 
-// taking a QDateTime, this function will look for an eventlist in the dict
-// with that date attached.
-QPtrList<Event> ExchangeCalendar::events(const QDateTime &qdt)
+QPtrList<Event> ExchangeCalendar::rawEventsForDate(const QDateTime &qdt)
 {
-  return events(qdt.date());
+   kdDebug() << "ExchangeCalendar::rawEventsForDate(qdt)" << endl;
+ return rawEventsForDate( qdt.date() );
 }
 
-/*
+QPtrList<Event> ExchangeCalendar::rawEvents()
+{
+   kdDebug() << "ExchangeCalendar::rawEvents()" << endl;
+ return mCache->rawEvents();
+}
+
 void ExchangeCalendar::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-
-  mJournalMap.insert(journal->dtStart().date(),journal);
+  mCache->addJournal( journal );
 
   journal->registerObserver( this );
 
@@ -600,34 +284,15 @@ void ExchangeCalendar::addJournal(Journal *journal)
 Journal *ExchangeCalendar::journal(const QDate &date)
 {
 //  kdDebug(5800) << "ExchangeCalendar::journal() " << date.toString() << endl;
-
-  QMap<QDate,Journal *>::ConstIterator it = mJournalMap.find(date);
-  if (it == mJournalMap.end()) return 0;
-  else {
-//    kdDebug(5800) << "  Found" << endl;
-    return *it;
-  }
+  return mCache->journal( date );
 }
 
 Journal *ExchangeCalendar::journal(const QString &uid)
 {
-  QMap<QDate,Journal *>::ConstIterator it = mJournalMap.begin();
-  QMap<QDate,Journal *>::ConstIterator end = mJournalMap.end();
-  for(;it != end; ++it) {
-    if ((*it)->uid() == uid) return *it;
-  }
-  return 0;
+  return mCache->journal( uid );
 }
 
-QPtrList<Journal> ExchangeCalendar::journalList()
+QPtrList<Journal> ExchangeCalendar::journals()
 {
-  QPtrList<Journal> list;
-
-  QMap<QDate,Journal *>::Iterator it;
-  for( it = mJournalMap.begin(); it != mJournalMap.end(); ++it ) {
-    list.append(*it);
-  }
-
-  return list;
+  return mCache->journals();
 }
-*/

@@ -94,7 +94,7 @@ void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, co
 
 void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, bool showProgress ) 
 {
-  // mAccount->authenticate();
+  mAccount->authenticate();
 
   if( showProgress ) {
     kdDebug() << "Creating progress dialog" << endl;
@@ -310,6 +310,10 @@ void ExchangeDownload::handlePart( DwEntity *part ) {
     kdDebug() << "VCalendar text:" << endl << "---- BEGIN ----" << endl << part->Body().AsString().c_str() << "---- END ---" << endl;
     KCal::ICalFormat *format = new KCal::ICalFormat();
     bool result = format->fromString( mCalendar, part->Body().AsString().c_str() );
+    if ( mMode == Synchronous )
+    {
+      // mEvents.add();
+    }
     delete format;
     kdDebug() << "Result:" << result << endl;
   } else {
@@ -354,7 +358,7 @@ void ExchangeDownload::decreaseDownloads()
 
 // Synchronous functions
 
-QPtrList<KCal::Event> ExchangeDownload::eventsForDate( const QDate &qd )
+QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar, const QDate &qd )
 {
   kdDebug() << "Entering ExchangeDownload::eventsForDate()" << endl;
   kdDebug() << "Account : " << mAccount << endl;
@@ -364,13 +368,11 @@ QPtrList<KCal::Event> ExchangeDownload::eventsForDate( const QDate &qd )
 
   mState = WaitingForResult;
   mMode = Synchronous;
-  kdDebug() << "Creating CalendarLocal" << endl;
-  mCalendar = new KCal::CalendarLocal();
+  mCalendar = calendar;
+  mEvents = QPtrList<KCal::Event>();
 
   kdDebug() << "Initiating download..." << endl;
-  QDate end = qd;
-  end.addDays(1);
-  initiateDownload( qd, end, false );
+  initiateDownload( qd, qd.addDays( 1 ), false );
 
   connect(this, SIGNAL(downloadFinished( ExchangeDownload * )), 
 		  this, SLOT(slotDownloadFinished( ExchangeDownload *)));
@@ -379,7 +381,7 @@ QPtrList<KCal::Event> ExchangeDownload::eventsForDate( const QDate &qd )
   } while ( mState==WaitingForResult );
 
   // This leaks: the calendarLocal we allocated is now lost
-  return mCalendar->rawEvents();
+  return mEvents;
 
   /*
   mAccount->authenticate();
