@@ -269,14 +269,18 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     incidence = mImpl->readEvent(c);
   }
 
-  c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
-  if (c) {
-    incidence = mImpl->readTodo(c);
+  if (!incidence) {
+    c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
+    if (c) {
+      incidence = mImpl->readTodo(c);
+    }
   }
 
-  c = icalcomponent_get_first_component(message,ICAL_VFREEBUSY_COMPONENT);
-  if (c) {
-    incidence = mImpl->readFreeBusy(c);
+  if (!incidence) {
+    c = icalcomponent_get_first_component(message,ICAL_VFREEBUSY_COMPONENT);
+    if (c) {
+      incidence = mImpl->readFreeBusy(c);
+    }
   }
 
   if (!incidence) {
