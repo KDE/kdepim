@@ -31,6 +31,7 @@ static const char *id="$Id$";
 #include <qlistbox.h>
 #include <qfile.h>
 #include <qpushbt.h>
+#include <qlayout.h>
 #include <kapp.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
@@ -250,9 +251,6 @@ MemoWidget::saveData()
 //
 // Setup all the GUI components by allocating them. 
 //
-// QADE: I don't like all these new() calls without checks -- unless
-// Qt provides a new() that throws exceptions when new() fails to allocate
-// enough memory.
 //
 void
 MemoWidget::setupWidget()
@@ -261,38 +259,40 @@ MemoWidget::setupWidget()
 
 	QLabel *label=NULL;
 	QPushButton *button=NULL;
+	QGridLayout *grid = new QGridLayout(this,5,4,SPACING);
 
 	fCatList = new QComboBox(this);
-	fCatList->move(110, 25);
+	grid->addWidget(fCatList,0,1);
 	connect(fCatList, SIGNAL(activated(int)), 
 		this, SLOT(slotSetCategory(int)));
 
 	label = new QLabel(i18n("Memos:"), this);
-	label->move(10, 30);
+	label->setBuddy(fCatList);
+	grid->addWidget(label,0,0);
 
 	fListBox = new QListBox(this);
-	fListBox->setGeometry(10, 60, 200, 150);
+	grid->addMultiCellWidget(fListBox,1,1,0,1);
 	connect(fListBox, SIGNAL(highlighted(int)), 
 		this, SLOT(slotShowMemo(int)));
 
 	label = new QLabel(i18n("Memo Text:"), this);
-	label->move(290, 0);
+	grid->addWidget(label,0,2);
 
 	fTextWidget = new QMultiLineEdit(this, "textArea");
-	fTextWidget->setGeometry(230, 30, 260, 290);
+	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
 	connect(fTextWidget, SIGNAL(textChanged()), 
 		this, SLOT(slotTextChanged()));
 
 	button = new QPushButton(i18n("Import Memo"), this);
-	button->move(10, 220);
+	grid->addWidget(button,2,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
 
 	button = new QPushButton(i18n("Export Memo"), this);
-	button->move(110, 220);
+	grid->addWidget(button,2,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotExportMemo()));
 
 	button = new QPushButton(i18n("Delete Memo"), this);
-	button->move(60, 250);
+	grid->addWidget(button,3,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotDeleteMemo()));
 }
 

@@ -35,6 +35,7 @@ static const char *id="$Id$";
 #include <qfile.h>
 #include <qpushbt.h>
 #include <qtextstream.h>
+#include <qlayout.h>
 
 #include <kapp.h>
 #include <kmessagebox.h>
@@ -214,38 +215,47 @@ AddressWidget::setupWidget()
 {
 	FUNCTIONSETUP;
 
+	QLabel *label;
+	QGridLayout *grid=new QGridLayout(this,6,4,SPACING);
+
 	fCatList = new QComboBox(this);
-	fCatList->move(110, 25);
+	grid->addWidget(fCatList,0,1);
 	connect(fCatList, SIGNAL(activated(int)), 
 		this, SLOT(slotSetCategory(int)));
-	QLabel* label = new QLabel(i18n("Addresses:"), this);
-	label->move(10, 30);
+
+	label = new QLabel(i18n("Category:"), this);
+	label->setBuddy(fCatList);
+	grid->addWidget(label,0,0);
+
 	fListBox = new QListBox(this);
-	fListBox->setGeometry(10, 60, 200, 150);
+	grid->addMultiCellWidget(fListBox,1,1,0,1);
 	connect(fListBox, SIGNAL(highlighted(int)), 
 		this, SLOT(slotShowAddress(int)));
 	connect(fListBox, SIGNAL(selected(int)), 
 		this, SLOT(slotEditRecord()));
+
 	label = new QLabel(i18n("Address Info:"), this);
-	label->move(290, 0);
+	grid->addWidget(label,0,2);
+
 	fTextWidget = new QMultiLineEdit(this, "textArea");
-	fTextWidget->setGeometry(230, 30, 260, 290);
 	fTextWidget->setFont(QFont("fixed", 10));
 	fTextWidget->setReadOnly(TRUE);
+	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
+
 	QPushButton* button = new QPushButton(i18n("Edit Record"), this);
-	button->move(10, 220);
+	grid->addWidget(button,2,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
 	button = new QPushButton(i18n("New Record"), this);
-	button->move(110, 220);
+	grid->addWidget(button,2,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
 	button = new QPushButton(i18n("Delete Record"), this);
-	button->move(60, 250);
+	grid->addWidget(button,3,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotDeleteRecord()));
 	button = new QPushButton(i18n("Import List"), this);
-	button->move(10, 290);
+	grid->addWidget(button,4,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportAddressList()));
 	button = new QPushButton(i18n("Export List"), this);
-	button->move(110, 290);
+	grid->addWidget(button,4,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotExportAddressList()));
 }
 
@@ -804,6 +814,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.14  2000/11/10 16:11:21  adridg
+// Re-patched array overflows in category boxes
+//
 // Revision 1.13  2000/11/10 08:33:24  adridg
 // General administrative
 //
