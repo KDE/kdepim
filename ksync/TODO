@@ -1,0 +1,5 @@
+libksync is in a stage of early development. A lot of things are still to be
+done. Some of the more important are:
+
+- Implement correct syncing of deleted items.
+- Implement syncing of address book entries.

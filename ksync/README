@@ -1,0 +1,19 @@
+KSync and libksync
+==================
+
+libksync is a generic library for syncing collections of data entries like
+calenders, bookmarks, contacts, mail folders etc. It provides an abstract
+interface for syncing data sets and an implementation of a syncing algorithm. By
+implementing of the interfaces for concrete data types you enable syncing of
+sets of this data type.
+
+Currently libksync includes implementations for syncing of calendars and
+bookmarks.
+
+KSync is a small application using libksync, which provides a GUI for selecting
+and syncing files, which contain data of the types, for which implementations of
+the libksync interfaces exist. It is able to sync data across networks by using
+the KDE ioslaves.
+
+If you have questions or comments or would like to join the development of ksync
+and libksync please contact Cornelius Schumacher <schumacher@kde.org>.

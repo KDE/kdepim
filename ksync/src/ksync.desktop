@@ -1,0 +1,12 @@
+# KDE Config File  
+[Desktop Entry]
+Type=Application
+Exec=ksync -caption "%c" %i %m  
+Icon=ksync.png
+MiniIcon=ksync.png
+DocPath=ksync/index.html
+Comment=
+Comment[de]=
+Terminal=0
+Name=Ksync
+Name[de]=Ksync
