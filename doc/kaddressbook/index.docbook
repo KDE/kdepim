@@ -452,7 +452,7 @@ and press the <guibutton>Search</guibutton> button.
 <para>When the results display in the listbox it is possible to select
 one or more address(es); you can then use the <guibutton>Add Selected</guibutton> to
 import the selected address(es) to the local addressbook, or click the
-<guibutton>Mail to Selected</guibutton> to invoke a mail program
+<guibutton>Send email to Contact</guibutton> to invoke a mail program
 to write an email to the selected recipients.
 </para>
 <para>
@@ -632,7 +632,7 @@ contact</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Mail</guimenuitem>
+<guimenuitem>Send email to Contact</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the preferred mail program with the currently-selected
 contacts as recipients</action>.</para></listitem>
@@ -641,7 +641,7 @@ contacts as recipients</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Mail vCard</guimenuitem>
+<guimenuitem>Send Contact</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the preferred mail program with the currently-selected
 contact details attached as vCard</action>.</para></listitem>
