@@ -993,11 +993,17 @@ QString KNContentCodec::asUnicodeString()
 void KNContentCodec::matchFont(QFont &f)
 {
   KCharsets *c=KGlobal::charsets();
+  QFont::CharSet cs;
 
   if(c_sAvailable)
-    c->setQFont(f, c_harset);
-  else
-    c->setQFont(f, c->charsetForLocale());
+    cs = c->nameToID(c_harset);
+  else {
+    cs = c->charsetForLocale();
+    if (cs == QFont::AnyCharSet)       // using QFont::AnyCharSet results in broken font
+      cs = QFont::ISO_8859_1;
+  }
+
+  c->setQFont(f, cs);
 }
 
 
@@ -1029,7 +1035,9 @@ void KNContentCodec::setCharset(const QString &chset)
 
   KCharsets *c=KGlobal::charsets();
 
-  if(!(c_sAvailable=c->isAvailable(c_harset)))
+  c_sAvailable = ((c->nameToID(c_harset)!=QFont::AnyCharSet) && c->isAvailable(c_harset));
+
+  if(!c_sAvailable)
     c_odec=0;
   else
     c_odec=c->codecForName(c_harset);
@@ -1075,7 +1083,7 @@ QString KNContentCodec::toUnicode(const char *aStr)
   if(c_odec)
     uc=c_odec->toUnicode(aStr, strlen(aStr));
   else {
-    kdDebug(5003) << "KNContentCodec::toUnicode() : no codec available!! => Text is not converted" << endl;
+    // kdDebug(5003) << "KNContentCodec::toUnicode() : no codec available!! => Text is not converted" << endl;
     uc=QString::fromLatin1(aStr); //take the text "as is" and hope the best ;-)
   }
 

@@ -73,7 +73,7 @@ bool KNGroupInfo::operator== (const KNGroupInfo &gi2)
 }
 
 
-bool KNGroupInfo::KNGroupInfo::operator< (const KNGroupInfo &gi2)
+bool KNGroupInfo::operator< (const KNGroupInfo &gi2)
 {
   return (name < gi2.name);
 }
