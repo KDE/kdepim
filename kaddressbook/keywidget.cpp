@@ -26,7 +26,6 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 
-#include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kdialog.h>
@@ -119,7 +118,7 @@ void KeyWidget::addKey()
     return;
 
   QString tmpFile;
-  if ( KIO::NetAccess::download( url, tmpFile ) ) {
+  if ( KIO::NetAccess::download( url, tmpFile, this ) ) {
     QFile file( tmpFile );
     if ( !file.open( IO_ReadOnly ) ) {
       QString text( i18n( "<qt>Unable to open file <b>%1</b>.</qt>" ) );

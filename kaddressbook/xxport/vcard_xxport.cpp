@@ -141,7 +141,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
     QString caption( i18n( "vCard Import Failed" ) );
     KURL::List::Iterator it;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
-      if ( KIO::NetAccess::download( *it, fileName ) ) {
+      if ( KIO::NetAccess::download( *it, fileName, parentWidget() ) ) {
 
         QFile file( fileName );
 

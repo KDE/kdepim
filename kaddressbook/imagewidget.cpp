@@ -22,7 +22,6 @@
 */                                                                      
 
 #include <kabc/picture.h>
-#include <kaccelmanager.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kiconloader.h>
@@ -109,8 +108,6 @@ ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
            SLOT( updateGUI() ) );
   connect( mUseLogoUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
-
-  KAcceleratorManager::manage( this );
 }
 
 ImageWidget::~ImageWidget()
@@ -225,7 +222,7 @@ QPixmap ImageWidget::loadPixmap( const KURL &url )
 
   if ( url.isLocalFile() )
     pixmap = QPixmap( url.path() );
-  else if ( KIO::NetAccess::download( url, tempFile ) ) {
+  else if ( KIO::NetAccess::download( url, tempFile, this ) ) {
     pixmap = QPixmap( tempFile );
     KIO::NetAccess::removeTempFile( tempFile );
   }

@@ -22,7 +22,6 @@
 */                                                                      
 
 #include <kabc/sound.h>
-#include <kaccelmanager.h>
 #include <kaudioplayer.h>
 #include <kdebug.h>
 #include <kdialog.h>
@@ -67,8 +66,6 @@ SoundWidget::SoundWidget( bool readOnly, QWidget *parent, const char *name )
            SLOT( updateGUI() ) );
   connect( mPlayButton, SIGNAL( clicked() ),
            SLOT( playSound() ) );
-
-  KAcceleratorManager::manage( this );
 }
 
 SoundWidget::~SoundWidget()
@@ -130,7 +127,7 @@ void SoundWidget::loadSound()
 
   if ( url.isLocalFile() )
     fileName = url.path();
-  else if ( !KIO::NetAccess::download( url, fileName ) )
+  else if ( !KIO::NetAccess::download( url, fileName, this ) )
     return;
 
   QFile file( fileName );

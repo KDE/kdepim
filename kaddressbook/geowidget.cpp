@@ -100,8 +100,6 @@ GeoWidget::GeoWidget( bool readOnly, QWidget *parent, const char *name )
            mExtendedButton, SLOT( setEnabled( bool ) ) );
   connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
-
-  KAcceleratorManager::manage( this );
 }
 
 GeoWidget::~GeoWidget()
@@ -237,6 +235,8 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
            SLOT( sexagesimalInputChanged() ) );
   connect( mLongDirection, SIGNAL( activated( int ) ),
            SLOT( sexagesimalInputChanged() ) );
+
+  KAcceleratorManager::manage( this );
 }
 
 GeoDialog::~GeoDialog()
