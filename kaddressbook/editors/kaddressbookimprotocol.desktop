@@ -9,6 +9,7 @@ Name[da]=KAddressbook kvikbesked-protokol
 Name[de]=Addressbuch Instant Messaging Protokoll
 Name[es]=Protocolo de mensajería instantánea de KAddressbook
 Name[et]=KDE aadressiraamatu kiirsuhtlusprotokoll
+Name[fi]=KAddresbookin pikaviestintäprotokolla
 Name[fr]=Protocole de messagerie instantanée pour KAddressbook
 Name[gl]=Protocolo de Mensaxería Instantánea de KAddressbook
 Name[he]=פרוטוקול מסרים מידיים של KAddressbook
@@ -30,6 +31,7 @@ Name[sr@Latn]=KAddressbook protokol trenutnih adresa
 Name[sv]=Direktmeddelandeprotokoll för adressboken
 Name[ta]=கேஅட்ரஸ்புக் உடனடி செய்தி பரிமாற்றம்
 Name[tg]=Протоколи мубодилаи иттилооти китоби адресии KDE
+Name[uk]=Протокол миттєвого зв'язку KAddressbook
 Name[zh_CN]=KAddressbook 即时消息协议
 [PropertyDef::X-KDE-InstantMessagingKABCField]
 Type=QString

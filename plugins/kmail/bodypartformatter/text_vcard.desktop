@@ -21,6 +21,7 @@ Name[ta]=பயன்பாட்டு எண்மம்
 Name[tg]=Миқдори зиёди бинарии барномот
 Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/vcard
+Comment[br]=Arload tresañ Xfig
 Comment[bs]=Dodatak za formatiranje tijela poruke za text/vcard
 Comment[ca]=Un endollable formatador del cos per a text/vcard
 Comment[cs]=Formátovač těla emailu pro typ text/vcard
@@ -46,6 +47,7 @@ Comment[sr@Latn]=Priključak formater tela za tekst-vcard
 Comment[sv]=Ett insticksprogram för brevtextformatering av text/vcard
 Comment[ta]=உரை அல்லது விஅட்டைக்கான அங்க அமைப்பு சொருகி
 Comment[tg]=Модули ба андозадарории text/vcard
+Comment[uk]=Втулок форматування для text/vcard
 Comment[zh_CN]=text/vcard 的格式化插件
 
 [Plugin]

@@ -9,6 +9,7 @@ Name[da]=Ikke valideret nøgle
 Name[de]=Nichtvalidierter Schlüssel
 Name[es]=Clave no validada
 Name[et]=Võtme ehtsus kontrollimatu
+Name[fi]=Ei-validoitu avain
 Name[fr]=Clé non validée
 Name[gl]=Chave non validada
 Name[he]=מפתח לא מוודא
@@ -29,6 +30,7 @@ Name[sr@Latn]=Neispravni ključ
 Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
 Name[tg]=Кадиди озмоида нашуда
+Name[uk]=Неперевірений ключ
 Name[zh_CN]=未校验的密钥
 
 [Key Filter #1]
@@ -45,6 +47,7 @@ Name[da]=Udløbet nøgle
 Name[de]=Abgelaufener Schlüssel
 Name[es]=Clave caducada
 Name[et]=Aegunud võti
+Name[fi]=Vanhentunut avain
 Name[fr]=Clé expirée
 Name[gl]=Chave caducada
 Name[he]=מפתח לא תקף
@@ -67,6 +70,7 @@ Name[sr@Latn]=Istekli ključ
 Name[sv]=Utgången nyckel
 Name[ta]=காலம் கடந்த விசை
 Name[tg]=Калиди аз мӯҳлат баромада
+Name[uk]=Застарілий ключ
 Name[zh_CN]=过期密钥
 
 [Key Filter #2]
@@ -81,6 +85,7 @@ Name[da]=Fjernet nøgle
 Name[de]=Widerrufener Schlüssel
 Name[es]=Clave revocada
 Name[et]=Tühistatud võti
+Name[fi]=Peruutettu avain
 Name[fr]=Clé révoquée
 Name[gl]=Chave revocada
 Name[he]=מפתח לא קביל
@@ -101,6 +106,7 @@ Name[sr@Latn]=Opozvani ključ
 Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
 Name[tg]=Калиди барқароршуда
+Name[uk]=Анульований ключ
 Name[zh_CN]=吊销的密钥
 
 [Key Filter #3]
@@ -116,6 +122,7 @@ Name[da]=Root-certifikat der stoles på
 Name[de]=Vertrauenswürdiges Wurzelzertifikat
 Name[es]=Certificado raíz de confianza
 Name[et]=Usaldusväärne juursertifikaat
+Name[fi]=Luotettu juurisertifikaatti
 Name[fr]=Certificat racine de confiance
 Name[gl]=Certificado root autentificado
 Name[hu]=Megbízható gyökértanúsítvány
@@ -136,6 +143,7 @@ Name[sr@Latn]=Korenski sertifikat kome se veruje
 Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tg]=Сертификати решавии эътимод
+Name[uk]=Кореневі сертифікати з довірою
 Name[zh_CN]=可信任的根证书
 
 [Key Filter #4]
@@ -151,6 +159,7 @@ Name[da]=Root-certifikat der ikke stoles på
 Name[de]=Nichtvertrauenswürdiges Wurzelzertifikat
 Name[es]=Certificado raíz no de confianza
 Name[et]=Ebausaldusväärne juursertifikaat
+Name[fi]=Ei-luotettu juurisertifikaatti
 Name[fr]=Certificat racine pas de confiance
 Name[hu]=Nem megbízható gyökértanúsítvány
 Name[it]=Certificato radice non affidabile
@@ -170,6 +179,7 @@ Name[sr@Latn]=Korenski sertifikat kome se ne veruje
 Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tg]=Сертификати решавии ғайриэътимод
+Name[uk]=Кореневі сертифікати без довіри
 Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
@@ -184,6 +194,7 @@ Name[da]=Andre nøgler
 Name[de]=Andere Schlüssel
 Name[es]=Otras claves
 Name[et]=Muud võtmed
+Name[fi]=Muut avaimet
 Name[fr]=Autres clés
 Name[gl]=Outras chaves
 Name[he]=מפתחות אחרים
@@ -206,5 +217,6 @@ Name[sr@Latn]=Drugi ključevi
 Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
 Name[tg]=Дигар калидҳо
+Name[uk]=Інші ключі
 Name[zh_CN]=其它密钥
 
