@@ -75,12 +75,13 @@
 K Desktop Environment. Our goal is to make a mailer that is beautiful
 and intuitive without sacrificing power. </para>
 
-<para>If you have never set up an email client on a &UNIX; system before, we
-suggest that you read through the <link linkend="getting-started">Getting
-Started</link> section first so that your setup goes smoothly.</para>
+<para>If you have never set up an email client on a &UNIX; system
+before, we suggest that you read through the <link
+linkend="getting-started">Getting Started</link> section first so that
+your setup goes smoothly.</para>
 
-<para>Since most people don't read documentation anyway, here is a collection of the
-most helpful tips:</para>
+<para>Since most people don't read documentation anyway, here is a
+collection of the most helpful tips:</para>
 
 <itemizedlist>
 <listitem>
@@ -125,29 +126,31 @@ bug...</guimenuitem></menuchoice>.</para>
 <chapter id="getting-started">
 <title>Getting Started</title>
 
-<para>This is a short introduction to &kmail; and its usage so you can start
-working with it right away. For more in-depth information see the <link
-linkend="using-kmail">Using &kmail;</link> section. Note that &kmail;'s
-installation is described in <link linkend="installation">the appendix</link>.</para>
+<para>This is a short introduction to &kmail; and its usage so you can
+start working with it right away. For more in-depth information see the
+<link linkend="using-kmail">Using &kmail;</link> section. Note that
+&kmail;'s installation is described in <link linkend="installation">the
+appendix</link>.</para>
 
-<para>Invoking &kmail; for the first time creates a directory called <filename
-class="directory">Mail</filename> containing the initial files
+<para>Invoking &kmail; for the first time creates a directory called
+<filename class="directory">Mail</filename> containing the initial files
 (<filename>inbox</filename>, <filename>outbox</filename>,
-<filename>sent-mail</filename>, <filename>trash</filename> and <filename>drafts</filename>) in your home
-directory. Use <menuchoice> <guimenu>Settings</guimenu>
-<guimenuitem>Configure &kmail;...</guimenuitem> </menuchoice> to enter some initial
-information so &kmail; will be able to properly retrieve and send your
+<filename>sent-mail</filename>, <filename>trash</filename> and
+<filename>drafts</filename>) in your home directory. Use <menuchoice>
+<guimenu>Settings</guimenu> <guimenuitem>Configure
+&kmail;...</guimenuitem> </menuchoice> to enter some initial information
+so &kmail; will be able to properly retrieve and send your
 messages.</para>
 
 <para>The Configure window consists of seven sections:
 <guilabel>Identity</guilabel>, <guilabel>Network</guilabel>,
 <guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>, <guilabel>Mime
 Headers</guilabel>, <guilabel>Security</guilabel>, and
-<guilabel>Miscellaneous</guilabel>.
+<guilabel>Miscellaneous</guilabel>.</para>
 
-To begin sending and receiving messages you will only have to change the settings
-in the <guilabel>Identity</guilabel> and <guilabel>Network</guilabel>
-tabs.</para>
+<para>To begin sending and receiving messages you will only have to
+change the settings in the <guilabel>Identity</guilabel> and
+<guilabel>Network</guilabel> tabs.</para>
 
 <sect1 id="setting-your-identity">
 <title>Setting your Identity</title>
@@ -172,52 +175,55 @@ box.</para>
 Transport...</guilabel> button will appear (this button does not exist
 for the <guilabel>Default</guilabel> identity). It allows you to
 configure a way of sending messages for a specific identity, &eg; you
-might want to use a different <acronym>SMTP</acronym> server for one
-of your identities.</para>
+might want to use a different <acronym>SMTP</acronym> server for one of
+your identities.</para>
 
 </sect1>
 
 <sect1 id="setting-up-your-account">
 <title>Setting up your Account</title>
 
-<para>The <guilabel>Network</guilabel> tab contains the settings that tell
-&kmail; how to send and receive your email. Many of these settings can vary
-greatly depending on the setup of your system and on the kind of network that
-your mail server is located. If you do not know what setting to choose or what to
-put in a field, consult your Internet Service Provider (<acronym>ISP</acronym>)
-or System Administrator.</para>
+<para>The <guilabel>Network</guilabel> tab contains the settings that
+tell &kmail; how to send and receive your email. Many of these settings
+can vary greatly depending on the setup of your system and on the kind
+of network that your mail server is located. If you do not know what
+setting to choose or what to put in a field, consult your Internet
+Service Provider (<acronym>ISP</acronym>) or System
+Administrator.</para>
 
 <sect2 id="sending-mail">
 <title>Sending Mail</title>
 
-<para>The <guilabel>Sending Mail</guilabel> section provides two options for
-sending messages: <guilabel>sendmail</guilabel> and
-<guilabel>SMTP</guilabel>. <application>Sendmail</application> has a reputation of
-being difficult to set up, so if you do not already have a working
-<application>sendmail</application> configuration, choose
-<guilabel>SMTP</guilabel> and fill in the <guilabel>Server</guilabel> field with
-the name and domain of your mail server. You will probably not need to change
-the <guilabel>Port</guilabel> setting (the default is
+<para>The <guilabel>Sending Mail</guilabel> section provides two options
+for sending messages: <guilabel>sendmail</guilabel> and
+<guilabel>SMTP</guilabel>. <application>Sendmail</application> has a
+reputation of being difficult to set up, so if you do not already have a
+working <application>sendmail</application> configuration, choose
+<guilabel>SMTP</guilabel> and fill in the <guilabel>Server</guilabel>
+field with the name and domain of your mail server. You will probably
+not need to change the <guilabel>Port</guilabel> setting (the default is
 <userinput>25</userinput>).</para>
+        
+<para>If you do want to use &Sendmail; and you are using a dial-up
+connection, follow the instructions for setting up sendmail for a
+dial-up connection in the <link linkend="faq">&FAQ;</link>
+section.</para>
 
-<para>If you do want to use <application>sendmail</application> and you are
-using a dial-up connection, follow the instructions for setting up sendmail for
-a dial-up connection in the <link linkend="faq">FAQ</link> section.</para>
-
-<para>The way of sending messages configured here will be used for your default
-identity and for all other identities that have no own way of sending messages. You 
-can use different ways of sending messages for different
-identities by adding them with the <guilabel>Add Transport...</guilabel> button
-in the <guilabel>Identity</guilabel> section.</para>
+<para>The way of sending messages configured here will be used for your
+default identity and for all other identities that have no own way of
+sending messages. You can use different ways of sending messages for
+different identities by adding them with the <guilabel>Add
+Transport...</guilabel> button in the <guilabel>Identity</guilabel>
+section.</para>
 
 </sect2>
-      
+
 <sect2 id="properties">
 <title>Properties</title>
 
-<para>The <guilabel>Properties</guilabel> section lets you configure
-how and when messages are sent.</para>
-
+<para>The <guilabel>Properties</guilabel> section lets you configure how
+and when messages are sent.</para>
+        
 <para><guilabel>Default send method</guilabel> lets you define what
 happens when a message is sent. If <guilabel>Send now</guilabel> is
 selected, the message is sent to the mail server immediately, while if
@@ -228,19 +234,20 @@ Queued</guimenuitem></menuchoice> command or automatically when you
 check your mail, depending on the settings in the
 <guilabel>Miscellaneous</guilabel> tab.</para>
 
-<para><guilabel>Message Property</guilabel> lets you select how your message
-will be encoded when it is sent. <guilabel>Allow 8-bit</guilabel> means that
-&kmail; will send your message in 8 bit <acronym>ASCII</acronym>, which means
-that all special characters such as accented letters will be sent as-is. If
-<guilabel>MIME Compliant (Quoted Printable)</guilabel> is selected, special
-characters will be encoded using standard &MIME; encodings, which may be more
-portable to other mailing systems than 8-bit <acronym>ASCII</acronym>. You
-normally do not need to change the default.<!-- TODO:
-advise what's better --></para>
-
+<para><guilabel>Message Property</guilabel> lets you select how your
+message will be encoded when it is sent. <guilabel>Allow
+8-bit</guilabel> means that &kmail; will send your message in 8 bit
+<acronym>ASCII</acronym>, which means that all special characters such
+as accented letters will be sent as-is. If <guilabel>MIME Compliant
+(Quoted Printable)</guilabel> is selected, special characters will be
+encoded using standard &MIME; encodings, which may be more portable to
+other mailing systems than 8-bit <acronym>ASCII</acronym>. You normally
+do not need to change the default.<!-- TODO: advise what's better
+--></para>
+        
 <para>With <guilabel>Precommand</guilabel> you can specify a command 
 that will be executed before your messages will be sent.</para>
-
+        
 <para><guilabel>Confirm before send</guilabel> enables a dialog that
 asks, every time you click  <guilabel>Send now</guilabel>, if you 
 really want to send your mail.</para>
@@ -254,7 +261,7 @@ really want to send your mail.</para>
 <guibutton>Add...</guibutton> button in the <guilabel>Incoming Mail</guilabel>
 section. You will then be prompted for the type of account.  Most users should
 select <guilabel>Pop3</guilabel> or <guilabel>IMAP</guilabel>.</para>
-
+        
 <para>After pressing <guibutton>OK</guibutton> you will be presented with
 the <guilabel>Add Account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
@@ -262,20 +269,20 @@ you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Host</guilabel> should be filled in with the appropriate information
 from your <acronym>ISP</acronym> or System Administrator. You should not
 need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
-<userinput>110</userinput>, the default for IMAP is <userinput>143</userinput>).</para>
-
+<userinput>110</userinput>, the default for <acronym>IMAP</acronym> is <userinput>143</userinput>).</para>
+        
 <sect3 id="receiving-mail-imap">
-<title>Options only relevant to IMAP</title>
+<title>Options only relevant to <acronym>IMAP</acronym></title>
 
-<para>If you are using IMAP, you can optionally specify a path
-in the <guilabel>Prefix to folders</guilabel> field. This tells
-&kmail; where it can find your folders on the server. If you also have
-a shell account on the server and the mails are stored in your home
+<para>If you are using <acronym>IMAP</acronym>, you can optionally
+specify a path in the <guilabel>Prefix to folders</guilabel> field. This
+tells &kmail; where it can find your folders on the server. If you also
+have a shell account on the server and the mails are stored in your home
 directory it might be useful to store the mails in a subdirectory
-<filename class="directory">/Mail/</filename>. Use this as a value
-in the <guilabel>Prefix to folders</guilabel> field so that &kmail;
-does not mix up mailbox files and other files. If you are not
-interested in this feature, simple leave the field blank.</para>
+<filename class="directory">/Mail/</filename>. Use this as a value in
+the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
+not mix up mailbox files and other files. If you are not interested in
+this feature, simple leave the field blank.</para>
 
 <para>If you check <guilabel>Automatically expunge deleted
 messages</guilabel> &kmail; removes the mails you deleted from the
@@ -283,7 +290,7 @@ server as soon as you leave a folder. Otherwise the mails are
 only marked as deleted and it is up to you to compact the folders
 manually by using the menu item <guimenuitem>Compact all
 folders</guimenuitem>.</para>
-
+          
 <para>If you check <guilabel>Show hidden folders</guilabel>,
 folders whose name starts with a dot are also displayed.</para>
 
@@ -318,36 +325,38 @@ that &kmail; will not continue until the program returns.</para>
 </sect3>
 
 <sect3 id="receiving-mail-imap-pop3">
-<title>Options for both IMAP and POP3</title>
+<title>Options for both <acronym>IMAP</acronym> and POP3</title>
 
 <para>If you select <guilabel>Store POP password in configuration
 file</guilabel> resp. <guilabel>Store IMAP password in configuration
-file</guilabel> &kmail; will remember your password so you won't have to type it
-every time you start &kmail; and fetch new mail.</para>
+file</guilabel> &kmail; will remember your password so you won't have to
+type it every time you start &kmail; and fetch new mail.</para>
 
-<warning><para>Be warned that we cannot really
-encrypt your password, so people who can access your configuration files (&eg;
-system administrators) can easily get your password if you select this option.</para></warning>
+<warning><para>Be warned that we cannot really encrypt your password, so
+people who can access your configuration files (&eg; system
+administrators) can easily get your password if you select this
+option.</para></warning>
 
-<para>&kmail; supports encryption via <guilabel>SSL</guilabel> 
-and <guilabel>TLS</guilabel> (<guilabel>TLS</guilabel> should be preferred
-if it is available).</para> 
+<para>&kmail; supports encryption via <guilabel>SSL</guilabel> and
+<guilabel>TLS</guilabel> (<guilabel>TLS</guilabel> should be preferred
+if it is available).</para>
 
-<para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>, 
+<para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>,
 <guilabel>PLAIN</guilabel>, <guilabel>CRAM-MD5</guilabel> and
-<guilabel>APOP</guilabel> authentication. 
-<guilabel>APOP</guilabel> and <guilabel>CRAM-MD5</guilabel> are secure 
-on their own, all the other options are only secure when used together
-with <guilabel>SSL</guilabel> or <guilabel>TLS</guilabel>.
-You should only use <guilabel>Clear text</guilabel> if your server doesn't support any 
-of the other authentication methods. Additionally, for IMAP
+<guilabel>APOP</guilabel> authentication.  <guilabel>APOP</guilabel> and
+<guilabel>CRAM-MD5</guilabel> are secure on their own, all the other
+options are only secure when used together with <guilabel>SSL</guilabel>
+or <guilabel>TLS</guilabel>.  You should only use <guilabel>Clear
+text</guilabel> if your server doesn't support any of the other
+authentication methods. Additionally, for <acronym>IMAP</acronym>
 <guilabel>Anonymous</guilabel> is supported.</para>
 
-<para>You are now ready to send and receive mail! For IMAP,
-click on the <guilabel>+</guilabel> sign in the folder tree in
-&kmail;'s main window. &kmail; then connects to your server and
-displays the folders it finds. For POP3 use <menuchoice><guimenu>File</guimenu>
-<guimenuitem>Check Mail</guimenuitem></menuchoice>.</para>
+<para>You are now ready to send and receive mail! For
+<acronym>IMAP</acronym>, click on the <guilabel>+</guilabel> sign in the
+folder tree in &kmail;'s main window. &kmail; then connects to your
+server and displays the folders it finds. For POP3 use
+<menuchoice><guimenu>File</guimenu> <guimenuitem>Check
+Mail</guimenuitem></menuchoice>.</para>
 
 </sect3>
 
@@ -358,27 +367,28 @@ displays the folders it finds. For POP3 use <menuchoice><guimenu>File</guimenu>
 <sect1 id="testing-your-setup">
 <title>Testing your Setup</title>
 
-<para>First, you should send yourself a message to test your configuration. To
-send a message, hit <keycombo
+<para>First, you should send yourself a message to test your
+configuration. To send a message, hit <keycombo
 action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
-<guiicon>New message</guiicon> icon (the empty sheet of paper)
-or select the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
+<guiicon>New message</guiicon> icon (the empty sheet of paper) or select
+the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message...</guimenuitem></menuchoice> menu item.  The
 <guilabel>Composer</guilabel> window will appear. Fill in the
 <guilabel>To:</guilabel> field with your email address and type
 something in the <guilabel>Subject</guilabel> field. Send the message by
-selecting <menuchoice><guimenu>Message</guimenu>
-<guimenuitem>Send now</guimenuitem></menuchoice>.</para>
+selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send
+now</guimenuitem></menuchoice>.</para>
       
 <para>To check your email, select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check
-Mail</guimenuitem></menuchoice>. In the lower right corner of the main window, a
-progress bar will indicate how many messages are being downloaded. If you receive the
-message you just sent, then congratulations!  If, however, you receive any error
-messages while testing your setup, make sure that your network connection is
-working and recheck your settings by selecting
-<menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure &kmail;...</guimenuitem></menuchoice></para>
+Mail</guimenuitem></menuchoice>. In the lower right corner of the main
+window, a progress bar will indicate how many messages are being
+downloaded. If you receive the message you just sent, then
+congratulations!  If, however, you receive any error messages while
+testing your setup, make sure that your network connection is working
+and recheck your settings by selecting
+<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice></para>
 
 </sect1>
 
@@ -419,7 +429,7 @@ folders.</para>
 Date, optionally Size and Score) for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane. You can also select
 a series of messages by clicking on one message, holding down the
-<keycap>Shift</keycap> key, and clicking on another message. The two messages
+&Shift; key, and clicking on another message. The two messages
 you just clicked on will be selected, along with all the messages in between. By
 holding down the &Ctrl; key you can select any number of messages without those
 in between. You may sort the messages by clicking on the column that you wish to
@@ -492,6 +502,9 @@ action="simul">&Ctrl;<keycap>-</keycap></keycombo></entry>
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
 Status</guimenuitem></menuchoice> submenu. The status flags are described
 below:</para>
+
+<!-- TODO: I think it's worth adding inline images here, at some -->
+<!-- point. LW. -->
 
 <informaltable>
 <tgroup cols="2">
@@ -929,7 +942,7 @@ all changes and leave the dialog open, and
 changes.</para>
 
 <note>
-<para> If you apply filter changes, &ie; via
+<para>If you apply filter changes, via
 <guibutton>OK</guibutton> or <guibutton>Apply</guibutton>, only valid
 filters are actually copied to the internal filter manager.</para>
 
@@ -1083,7 +1096,7 @@ action allows you to select who will get
 delivery receipts from you. Though you can enable the sending of
 delivery confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog (section
 <guilabel>Security</guilabel>) we recommended to not send them to
-everyone, since this makes tracking of &eg; spam very easy for
+everyone, since this makes tracking of such things as spam very easy for
 the sender.</para>
 </listitem>
 </varlistentry>
@@ -1345,8 +1358,8 @@ co-operation between &kmail; and <application>pgp</application>.</para>
 <para>Enter your <application>PGP</application> user identity in the
 corresponding field of the <guilabel>Identity</guilabel> settings.
 Then select the <guilabel>PGP</guilabel> tab on
-the <guilabel>Security</guilabel> settings page. There you'
-ll find the following options:</para>
+the <guilabel>Security</guilabel> settings page. There you'll find the
+following options:</para>
 
 <variablelist>
 <varlistentry>
@@ -1356,7 +1369,7 @@ ll find the following options:</para>
 time you sign a message (before sending) or select an encrypted message.
 If you turn this option on, &kmail; will remember your passphrase from
 after your first successful input until you finish your &kmail; session. The
-passphrase is stored in memory and not written to the harddisk.</para>
+passphrase is stored in memory and not written to the hard disk.</para>
 </listitem>
 </varlistentry>
 
@@ -1736,7 +1749,7 @@ to leave this  option off (although it has no effect if
 <guilabel>Prefer HTML to plain  text</guilabel> is off already). By
 adding external references to their mails, people sending spam can
 detect that you have looked at their message. Note that this option
-has no effect on Java, Javascript and Plugins - these are disabled
+has no effect on &Java;, Javascript and Plugins - these are disabled
 anyway and cannot be enabled at all.</para>
 
 <para><guilabel>Automatically send receive and read
@@ -1837,7 +1850,6 @@ linkend="receiving-mail">Incoming Mail</link>.</para>
 </sect1>
 
 </chapter>
-
 
 <chapter id="menus">
 <title>Menus and Keyboard Shortcuts</title>
@@ -3454,7 +3466,7 @@ to move your existing folders.</para>
 <question><para>The button to sign messages is not enabled anymore, it was enabled 
 some time ago.</para></question>
 <answer><para>Enter your <guilabel>PGP User Identity</guilabel> in the
-<guilabel>Identity</guilabel> configuration dialog. Without a PGP User Identity &kmail;
+<guilabel>Identity</guilabel> configuration dialog. Without a <acronym>PGP</acronym> User Identity &kmail;
 can't know which key should be used to sign your messages with.</para>
 </answer>
 </qandaentry>
@@ -3547,7 +3559,7 @@ you might lose messages. Note that you should make backups of your messages anyw
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted mails. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
-Java and Javascript will not be displayed in &kmail; and there's no way
+&Java; and Javascript will not be displayed in &kmail; and there's no way
 to activate them.</para></answer>
 </qandaentry>
 
@@ -3590,7 +3602,7 @@ and the mailing list address will be set to the <guilabel>To:</guilabel> field.
 
 <qandaentry>
 <question><para>My SMTP server requires authentication. Does &kmail; support it?</para></question>
-<answer><para>There are two common techniques used for SMTP authentication:
+<answer><para>There are two common techniques used for <acronym>SMTP</acronym> authentication:
 <quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
 <quote>SMTP Auth</quote> is currently not supported.<!-- fixme? -->
 To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
@@ -3600,20 +3612,23 @@ To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
 <qandaentry>
 <question><para>Can I use &kmail; and <application>procmail</application>?</para></question>
 <answer><para>Yes, but it's important to do it the right way or you might lose
-mail. In order to use procmail and &kmail; you need 
-to set up KMail so that it will fetch new
-mail from the spoolfiles in which procmail drops your mail. Do <emphasis>not</emphasis> set up
-procmail to deliver mail in a KMail folder, this 
-cannot work.</para>
-<para>For each procmail spoolfile, you then need to create an account from which
-&kmail; will fetch new mail. You also need to make sure you specify the right
-lockfile name for this account. When setting up an account, &kmail; will do
-some minimal parsing on your procmail file, and will try to list every
-spoolfile it has found, and also the lockfiles next to the "procmail
-lockfile" item. procmail lets the user specify lockfiles in three different
-ways, so there's no way to establish a correspondence between the spoolfiles
-and lockfiles. So it's really up to you to make sure you specify the right
-lockfile for each spoolfile.</para>
+mail. In order to use <application>procmail</application> and &kmail; you need 
+to set up &kmail; so that it will fetch new
+mail from the spoolfiles in which <application>procmail</application>
+drops your mail. Do <emphasis>not</emphasis> set up procmail to deliver
+mail in a &kmail; folder, this  cannot work.</para>
+          
+<para>For each procmail spoolfile, you then need to create an account
+from which &kmail; will fetch new mail. You also need to make sure you
+specify the right lockfile name for this account. When setting up an
+account, &kmail; will do some minimal parsing on your
+<filename>.procmail</filename> file, and will try to list every
+spoolfile it has found, and also the lockfiles next to the
+<guilabel>procmail lockfile</guilabel> item. procmail lets the user
+specify lockfiles in three different ways, so there's no way to
+establish a correspondence between the spoolfiles and lockfiles. So it's
+really up to you to make sure you specify the right lockfile for each
+spoolfile.</para>
 </answer>
 </qandaentry>
 
@@ -3807,7 +3822,7 @@ or deselect <guilabel>Automatically append signature</guilabel>.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>How do I set up <application>sendmail</application> to work with
+<question><para>How do I set up &Sendmail; to work with
 &kmail; if I have a  dial-up connection?</para></question> 
 
 <answer><para>First you should check if your &Linux;/BSD/whatever distribution
@@ -3835,7 +3850,6 @@ in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 </qandaset>
 
 </chapter>
-
 
 <chapter id="importing">
 <title>Using other Mailbox Files with &kmail;</title>
@@ -4082,7 +4096,7 @@ Original documentation by Markus Wuebben
 <email>rwilliams@kde.org</email> (Editor).</para>
 
 <para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his excellent
-description of the different Unix mail formats in the Mutt documentation.</para>
+description of the different &UNIX; mail formats in the <application>Mutt</application> documentation.</para>
 
 <para>Thanks to the following people for providing directions on using other
 mail client mailboxes with &kmail;:</para>
@@ -4136,11 +4150,17 @@ lists.</para>
 </appendix>
 
 </book>
+
 <!--
 Local Variables:
 mode: sgml
-sgml-omittag: nil
-sgml-shorttag: t
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
 End:
+
+// vim:ts=0:sw=2:tw=78:noet
 -->
+
 
