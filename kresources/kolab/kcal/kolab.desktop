@@ -1,6 +1,26 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar on IMAP Server via KMail
+Name[bg]=Календар на сървър IMAP чрез KMail
+Name[br]=Deiziadur en ur servijer IMAP gant KMail
+Name[ca]=Calendari sobre servidor IMAP mitjançant KMail
+Name[cs]=Kalendář na IMAP serveru přes KMail
+Name[da]=Kalender på IMAP-server via KMail
+Name[de]=Kalender auf einem IMAP-Server via KMail
+Name[es]=Calendario en servidor IMAP por medio de KMail
+Name[et]=Kalender IMAP-serveril (KMaili vahendusel)
+Name[fr]=Agenda sur serveur IMAP (via KMail)
+Name[hu]=IMAP-kiszolgálón tárolt naptár a KMailen keresztül
+Name[it]=Calendario su server IMAP via KMail
+Name[nl]=Agenda op IMAP-server via KMail
+Name[pl]=Kalendarz na serwerze IMAP za pośrednictwem KMail
+Name[pt]=Calendário em Servidor IMAP via KMail
+Name[pt_BR]=Calendário em Servidor IMAP via KMail
+Name[ru]=Календарь на сервере IMAP через KMail
+Name[sl]=Koledar na strežniku IMAP preko KMaila
+Name[sv]=Kalender på IMAP-server via Kmail
+Name[uk]=Календар на сервері IMAP через KMail
+Name[zh_CN]=通过 KMail 访问 IMAP 服务器上的日历
 X-KDE-Library=kcal_kolab
 Type=Service
 ServiceTypes=KResources/Plugin

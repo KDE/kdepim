@@ -1,6 +1,25 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=SUSE LINUX Openexchange Server
+Name[bg]=Сървър SUSE LINUX Openexchange
+Name[br]=Servijer Openexchange SUSE LINUX
+Name[ca]=Servidor SUSE LINUX Openexchange
+Name[cs]=SUSE LINUX Openexchange server
+Name[da]=SUSE Linux Openexchange-server
+Name[es]=Servidor Openexchange de SUSE LINUX
+Name[et]=SUSE LINUX Openexchange server
+Name[fr]=Serveur SUSE Linux Openexchange
+Name[hu]=SUSE LINUX Openexchange-kiszolgáló
+Name[it]=Server SUSE LINUX Openexchange
+Name[nl]=SUSE LINUX Openexchange-server
+Name[pl]=Server SUSE LINUX Openexchange
+Name[pt]=Servidor SUSE LINUX Openexchange
+Name[pt_BR]=Servidor OpenExchange do SUSE Linux (SLOX)
+Name[ru]=Сервер SUSE LINUX Openexchange
+Name[sl]=Strežnik SUSE LINUX Openexchange
+Name[sv]=SUSE Linux Openexchange-server
+Name[uk]=Сервер SUSE LINUX Openexchange
+Name[zh_CN]=SUSE LINUX Openexchange 服务器
 X-KDE-Library=kabc_slox
 Type=Service
 ServiceTypes=KResources/Plugin

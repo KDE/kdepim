@@ -1,14 +1,18 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=XML Feature Plan
+Name[cs]=XML plán vlastností
 Name[da]=XML Funktionsplan
 Name[es]=Plan de características XML
 Name[et]=XML võimaluste plaan
 Name[fr]=Plan de fonctionnalités XML
+Name[hu]=XML FeaturePlan
 Name[it]=Piano caratteristiche XML
 Name[nl]=Functionaliteitsplanning in XML
+Name[pl]=Plan funkcjonalności XML
 Name[pt]=Plano de Funcionalidades em XML
-Name[pt_BR]=Plano de Funcionalidades em XML
+Name[pt_BR]=Plano de Funcionalidades XML
+Name[sl]=Načrt zmožnosti v XML
 Name[sr]=XML план могућности
 Name[sr@Latn]=XML план могућности
 Name[tr]=XML Özellik Planı
