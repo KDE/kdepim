@@ -1,4 +1,4 @@
-/* pilotCOmponent.h			KPilot
+/* pilotComponent.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -48,6 +48,7 @@ Q_OBJECT
 
 public:
 	PilotComponent(QWidget* parent, 
+		const char *id,
 		const QString& dbPath);
 
 	/**
@@ -72,7 +73,6 @@ public:
 	* Save data to local disk (?), return true if succesful.
 	*/
 	virtual bool saveData() = 0;
-
 
 protected:
 	/**
@@ -107,6 +107,12 @@ protected:
 
 	const QString& dbPath() const { return fDBPath; } ;
 
+public slots:
+	void slotShowComponent();
+
+signals:
+	void showComponent(PilotComponent *);
+
 private:
 	QString fDBPath;
 } ;
@@ -118,6 +124,9 @@ private:
 
 
 // $Log$
+// Revision 1.7  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.6  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

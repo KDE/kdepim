@@ -33,16 +33,16 @@ static const char *fileinstallwidget_id="$Id$";
 #include "options.h"
 
 #include <unistd.h>
-// #include <sys/stat.h>
-// #include <qdir.h>
-// #include <qfile.h>
-// #include <qlist.h>
 #include <qlistbox.h>
 #include <qstring.h>
 #include <qlabel.h>
 #include <qpushbt.h>
 #include <qdragobject.h>
 #include <qlayout.h>
+#ifndef QTOOLTIP_H
+#include <qtooltip.h>
+#endif
+
 #include <kfiledialog.h>
 
 #include "kpilotlink.h"
@@ -52,7 +52,7 @@ static const char *fileinstallwidget_id="$Id$";
 
 FileInstallWidget::FileInstallWidget( QWidget* parent,
 	const QString& path) : 
-	PilotComponent(parent,path), 
+	PilotComponent(parent,"component_files",path), 
 	fSaveFileList(false) 
 {
 	setGeometry(0, 0, 
@@ -67,13 +67,16 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 	QPushButton* abutton = new QPushButton(i18n("Clear List"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
 	grid->addWidget(abutton,3,1);
+	QToolTip::add(abutton,i18n("Clear the list of files to install.\nNo files wil be installed."));
 
 	abutton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton,4,1);
+	QToolTip::add(abutton,i18n("Choose a file to add to the list\nof files to install."));
 
 	fListBox = new QListBox(this);
 	grid->addMultiCellWidget(fListBox,1,4,2,3);
+	QToolTip::add(fListBox,i18n("This lists files that will be installed on the Pilot during the next HotSync.\nDrag files here or use the Add button."));
 
 	grid->setRowStretch(2,100);
 	grid->setColStretch(2,50);
@@ -88,11 +91,13 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 	setAcceptDrops(true);
 }
 
+#if 0
 void FileInstallWidget::resizeEvent( QResizeEvent *e )
 {
 	FUNCTIONSETUP;
 
 }
+#endif
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
 {
@@ -173,6 +178,9 @@ FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.15  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.14  2001/03/04 13:11:58  adridg
 // Actually use the fileInstaller object
 //

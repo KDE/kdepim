@@ -30,6 +30,8 @@
 static const char *kpilot_id="$Id$";
 
 
+#define KPILOT_USE_XMLGUI	(1)
+
 #include "options.h"
 
 
@@ -113,6 +115,12 @@ static const char *kpilot_id="$Id$";
 #ifndef _KUNIQUEAPP_H_
 #include <kuniqueapp.h>
 #endif
+#ifndef _KKDEYDIALOG_H_
+#include <kkeydialog.h>
+#endif
+#ifndef _KACTION_H_
+#include <kaction.h>
+#endif
 
 
 #ifndef _KPILOT_KPILOTOPTIONS_H
@@ -194,8 +202,9 @@ KPilotInstaller::KPilotInstaller() :
 		return;
 	}
     setupWidget();
-    initComponents();
     initStatusLink();  // This is separate to allow components to initialize
+
+
     showTitlePage(QString::null,true);
     show();
     }
@@ -236,26 +245,46 @@ void KPilotInstaller::readConfig(KConfig& config)
 
 void
 KPilotInstaller::setupWidget()
-    {
+{
 	FUNCTIONSETUP;
 
-    setCaption("KPilot");
-    setMinimumSize(500,405);
-    initIcons();
-    initToolBar();
-    initMenu();
-    initStatusBar();
-    fManagingWidget = new QWidget(this);
-    fManagingWidget->setMinimumSize(500,330);
-    fManagingWidget->show();
-    setCentralWidget(fManagingWidget);
-    }
+	DEBUGKPILOT << fname
+		<< ": Creating central widget."
+		<< endl;
+
+	setCaption("KPilot");
+	setMinimumSize(500,405);
+	fManagingWidget = new QWidget(this);
+	fManagingWidget->setMinimumSize(500,330);
+	fManagingWidget->show();
+	setCentralWidget(fManagingWidget);
+
+	initIcons();
+	initMenu();
+	initComponents();
+
+	createGUI("kpilotui.rc",false);
+	DEBUGKPILOT << fname
+		<< ": Got XML from "
+		<< xmlFile()
+		<< " and "
+		<< localXMLFile()
+		<< endl;
+
+
+	initToolBar();
+	initStatusBar();
+}
 
 
 void
 KPilotInstaller::initComponents()
 {
 	FUNCTIONSETUP;
+
+	DEBUGKPILOT << fname
+		<< ": Creating title screen."
+		<< endl;
 
 	QLabel* titleScreen = new QLabel(getManagingWidget());
 	titleScreen->setPixmap(QPixmap(kpilot_on_pp));
@@ -267,6 +296,10 @@ KPilotInstaller::initComponents()
 	fVisibleWidgetList.append(titleScreen);
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
+
+	DEBUGKPILOT << fname
+		<< ": Creating component pages."
+		<< endl;
 
 	addComponentPage(new MemoWidget(getManagingWidget(),defaultDBPath),
 		i18n("Memo Viewer"));
@@ -301,22 +334,35 @@ void KPilotInstaller::initIcons()
 }
 
 
+#if KPILOT_USE_XMLGUI
+#define	theToolbar	toolBar()
+#else
+#define theToolbar	fToolBar
+#endif
+
 void
 KPilotInstaller::initToolBar()
 {
 	FUNCTIONSETUP;
 
-	fToolBar = new KToolBar(this, "toolbar");
+#if !KPILOT_USE_XMLGUI
+	fToolBar = new KToolBar(this,"toolbar");
+#endif
 
+#if 0
+ 	conduitCombo=new QComboBox(theToolbar,"conduitCombo");
+ 	conduitCombo->insertItem(version(0));
 
-	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
-	conduitCombo->insertItem(version(0));
-	fToolBar->insertWidget(KPilotInstaller::ID_COMBO,140,conduitCombo,0);
-	connect(conduitCombo,SIGNAL(activated(int)),
-		this,SLOT(slotModeSelected(int)));
+	theToolbar->insertWidget(KPilotInstaller::ID_COMBO,140,conduitCombo,0);
+ 	connect(conduitCombo,SIGNAL(activated(int)),
+ 		this,SLOT(slotModeSelected(int)));
 
-	fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
+	theToolbar->alignItemRight(KPilotInstaller::ID_COMBO);
+#endif
+
+#if !KPILOT_USE_XMLGUI
 	addToolBar(fToolBar);
+#endif
 }
 
 void KPilotInstaller::resizeEvent(QResizeEvent *e)
@@ -382,17 +428,56 @@ KPilotInstaller::slotModeSelected(int selected)
 	}
 		
 
-	fStatusBar->changeItem(conduitCombo->text(selected),0);
+	if (conduitCombo)
+	{
+		fStatusBar->changeItem(conduitCombo->text(selected),0);
+	}
+}
+
+void KPilotInstaller::slotShowComponent(PilotComponent *p)
+{
+	FUNCTIONSETUP;
+
+	DEBUGKPILOT << fname
+		<< ": Trying to show component @"
+		<< (int) p
+		<< endl;
+
+	for (QWidget *q = fVisibleWidgetList.first();
+		fVisibleWidgetList.current();
+		q = fVisibleWidgetList.next())
+	{
+		if (q != p)
+		{
+			q->hide();
+		}
+		else
+		{
+			p->show();
+		}
+	}
+}
+
+void KPilotInstaller::slotShowTitlePage()
+{
+	showTitlePage();
 }
 
 void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 {
 	FUNCTIONSETUP;
 
-	if ((conduitCombo->currentItem()!=0) || force)
+	if (conduitCombo)
+	{
+		if ((conduitCombo->currentItem()!=0) || force)
+		{
+			slotModeSelected(0);
+			conduitCombo->setCurrentItem(0);
+		}
+	}
+	else
 	{
 		slotModeSelected(0);
-		conduitCombo->setCurrentItem(0);
 	}
 
 	if (!msg.isNull())
@@ -906,15 +991,16 @@ KPilotInstaller::closeEvent(QCloseEvent *e)
   e->accept();
 }
 
+#if !KPILOT_USE_XMLGUI
 void
 KPilotInstaller::initMenu()
 {
-	FUNCTIONSETUP;
-
+ 	FUNCTIONSETUP;
+ 
 	QPopupMenu* fileMenu = new QPopupMenu;
 
-	KAction *p;
-
+ 	KAction *p;
+ 
 	p = KStdAction::preferences(this,
 		SLOT(slotConfigureKPilot()));
 	p->plug(fileMenu);
@@ -969,6 +1055,51 @@ KPilotInstaller::initMenu()
 	fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
 	fMenuBar->show();
 }
+#else
+void
+KPilotInstaller::initMenu()
+{
+	FUNCTIONSETUP;
+
+	KAction *p;
+
+	// File actions
+	p = new KAction(i18n("&HotSync"), "hotsync", 0,
+			this, SLOT(slotHotSyncRequested()),
+			actionCollection(), "file_hotsync"  );
+	p = new KAction(i18n("&FastSync"), "fastsync", 0,
+			this, SLOT(slotHotSyncRequested()),
+			actionCollection(), "file_fastsync"  );
+	p = new KAction(i18n("&Backup"), "backup", 0,
+			this, SLOT(slotBackupRequested()),
+			actionCollection(), "file_backup"  );
+	p = new KAction(i18n("&Restore"), "restore", 0,
+			this, SLOT(slotRestoreRequested()),
+			actionCollection(), "file_restore"  );
+	p = KStdAction::quit(this, SLOT(quit()),
+			     actionCollection());
+
+	// View actions
+	p = new KAction(i18n("&KPilot"),"kpilot", 0,
+		this, SLOT(slotShowTitlePage()),
+		actionCollection(),"view_kpilot");
+	
+	// Options actions
+	m_statusbarAction
+	    = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()),
+					actionCollection());
+	m_toolbarAction
+	    = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
+				      actionCollection());
+	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
+				    actionCollection());
+	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
+				    actionCollection());
+	p = new KAction(i18n("C&onfigure Conduits..."), "configure", 0,
+			this, SLOT(slotConfigureConduits()),
+			actionCollection(), "options_configure_conduits");
+}
+#endif
 
 void
 KPilotInstaller::fileInstalled(int )
@@ -1029,14 +1160,46 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 	DEBUGKPILOT << fname
 		<< ": Adding component @"
 		<< (int) p
+		<< " called " 
+		<< p->name("(none)")
 		<< endl;
 
 	p->initialize();
 	fPilotComponentList.append(p);
-
-	conduitCombo->insertItem(name,fVisibleWidgetList.count());
 	fVisibleWidgetList.append(p);
+
+
+	// conduitCombo->insertItem(name,fVisibleWidgetList.count()); 
+
+	const char *componentname = p->name("(none)");
+	char *actionname = 0L;
+	if (strncmp(componentname,"component_",10)==0)
+	{
+		actionname = new char[strlen(componentname)-10+8];
+		strcpy(actionname,"view_");
+		strcat(actionname,componentname+10);
+	}
+	else
+	{
+		actionname = new char[8+strlen(componentname)];
+		strcpy(actionname,"view_");
+		strcat(actionname,componentname);
+	}
+
+	DEBUGKPILOT << fname
+		<< ": Using component action name "
+		<< name
+		<< " for "
+		<< actionname
+		<< endl;
+
+	(void) new KAction(name, /* "kpilot" -- component icon, */  0,
+		p, SLOT(slotShowComponent()),
+		actionCollection(),actionname);
+	connect(p,SIGNAL(showComponent(PilotComponent *)),
+		this,SLOT(slotShowComponent(PilotComponent *)));
 }
+
 
 void KPilotInstaller::menuCallback(int item)
 {
@@ -1054,7 +1217,10 @@ void KPilotInstaller::menuCallback(int item)
 	if ((item>=ID_COMBO) && 
 		(item<ID_COMBO+(int)fVisibleWidgetList.count()))
 	{
-		conduitCombo->setCurrentItem(item-ID_COMBO);
+		if (conduitCombo)
+		{
+			conduitCombo->setCurrentItem(item-ID_COMBO);
+		}
 		slotModeSelected(item-ID_COMBO);
 		return;
 	}
@@ -1103,6 +1269,33 @@ void KPilotInstaller::menuCallback(int item)
 	}
 #endif
 }
+
+
+
+void KPilotInstaller::optionsShowStatusbar()
+{
+    if (m_statusbarAction->isChecked())
+        statusBar()->show();
+    else
+        statusBar()->hide();
+}
+
+
+void KPilotInstaller::optionsShowToolbar()
+{
+    if (m_toolbarAction->isChecked())
+        toolBar()->show();
+    else
+        toolBar()->hide();
+}
+
+
+void KPilotInstaller::optionsConfigureKeys()
+{
+    KKeyDialog::configureKeys(actionCollection(), "kpilotui.rc");
+}
+
+
 
 void
 KPilotInstaller::slotConfigureKPilot()
@@ -1283,9 +1476,19 @@ int main(int argc, char** argv)
 		I18N_NOOP("Maintainer"),
 		"adridg@cs.kun.nl",
 		"http://www.cs.kun.nl/~adridg/kpilot/");
+	about.addAuthor("Preston Brown",
+		I18N_NOOP("VCal conduit"));
+	about.addAuthor("Greg Stern",
+		I18N_NOOP("Abbrowser conduit"));
+	about.addAuthor("Chris Molnar",
+		I18N_NOOP("Expenses conduit"));
 	about.addAuthor("Heiko Purnhagen",
-		I18N_NOOP("Bugfixer"),
-		"purnhage@tnt.uni-hannover.de");
+		I18N_NOOP("Bugfixer"));
+	about.addAuthor("Joerg Habenicht",
+		I18N_NOOP("Bugfixer"));
+	about.addAuthor("Martin Junius",
+		I18N_NOOP("XML GUI"));
+
 
 
         KCmdLineArgs::init(argc, argv, &about);
@@ -1385,6 +1588,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.46  2001/04/11 21:36:54  adridg
+// Added app icons
+//
 // Revision 1.45  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

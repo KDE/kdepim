@@ -40,6 +40,10 @@ static const char *memowidget_id="$Id$";
 #include <qfile.h>
 #include <qpushbt.h>
 #include <qlayout.h>
+#ifndef QTOOLTIP_H
+#include <qtooltip.h>
+#endif
+
 #include <kapp.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
@@ -62,7 +66,7 @@ static const char *memowidget_id="$Id$";
 
 
 MemoWidget::MemoWidget( QWidget* parent, const QString& path) : 
-	PilotComponent(parent,path), 
+	PilotComponent(parent,"component_memo",path), 
 	fTextWidget(0L)
 {
 	FUNCTIONSETUP;
@@ -239,6 +243,9 @@ MemoWidget::setupWidget()
 	grid->addWidget(fCatList,0,1);
 	connect(fCatList, SIGNAL(activated(int)), 
 		this, SLOT(slotSetCategory(int)));
+	QToolTip::add(fCatList,
+		i18n("Select the category of addresses\n"
+			"to display here."));
 
 	label = new QLabel(i18n("Memos:"), this);
 	label->setBuddy(fCatList);
@@ -250,6 +257,10 @@ MemoWidget::setupWidget()
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
 		this, SLOT(slotUpdateButtons()));
+	QToolTip::add(fListBox,
+		i18n("This list displays all the memos\n"
+			"in the selected category. Click on\n"
+			"one to display it to the right."));
 
 	label = new QLabel(i18n("Memo Text:"), this);
 	grid->addWidget(label,0,2);
@@ -259,18 +270,26 @@ MemoWidget::setupWidget()
 	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
 	connect(fTextWidget, SIGNAL(textChanged()), 
 		this, SLOT(slotTextChanged()));
+	QToolTip::add(fTextWidget,
+		i18n("The text of the selected memo appears here."));
 
 	button = new QPushButton(i18n("Import Memo"), this);
 	grid->addWidget(button,2,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
+	QToolTip::add(button,
+		i18n("Read a text file and add it to the Pilot's memo database."));
 
 	fExportButton = new QPushButton(i18n("Export Memo"), this);
 	grid->addWidget(fExportButton,2,1);
 	connect(fExportButton, SIGNAL(clicked()), this, SLOT(slotExportMemo()));
+	QToolTip::add(fExportButton,
+		i18n("Write the selected memo to a file."));
 
 	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
 	grid->addWidget(fDeleteButton,3,0);
 	connect(fDeleteButton, SIGNAL(clicked()), this, SLOT(slotDeleteMemo()));
+	QToolTip::add(fDeleteButton,
+		i18n("Delete the selected memo."));
 }
 
 void
@@ -541,6 +560,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.28  2001/04/01 17:32:52  adridg
+// I really don't remember
+//
 // Revision 1.27  2001/03/24 15:59:22  adridg
 // Some populateCategories changes for bug #22112
 //

@@ -67,14 +67,6 @@
 #include <kprogress.h>
 #endif
 
-
-class QPopupMenu;
-class QComboBox;
-class KProcess;
-
-class PilotComponent;
-class FileInstallWidget;
-
 #ifndef _KPILOT_KPILOTLINK_H
 #include "kpilotlink.h"
 #endif
@@ -82,6 +74,16 @@ class FileInstallWidget;
 #ifndef _KPILOT_KPILOTDCOP_H
 #include "kpilotDCOP.h"
 #endif
+
+class QPopupMenu;
+class QComboBox;
+class KProcess;
+class KAction;
+class KToggleAction;
+
+class PilotComponent;
+class FileInstallWidget;
+
 
 
 
@@ -154,6 +156,11 @@ public slots:
 	void slotBackupRequested();
 	void slotHotSyncRequested();
 	void slotFastSyncRequested();
+	void slotShowTitlePage();
+	void optionsShowStatusbar();
+	void optionsShowToolbar();
+	void optionsConfigureKeys();
+	
 
 protected:
 	int testSocket(KSocket *);
@@ -236,6 +243,13 @@ private:
 
 	FileInstallWidget *fFileInstallWidget;
 
+	/**
+	 * toggle action from Options menu
+	 */
+	KToggleAction  *m_toolbarAction;
+	KToggleAction  *m_statusbarAction;
+
+	
  protected slots:
       void menuCallback(int);
       void quit();
@@ -243,6 +257,7 @@ private:
 	void slotConfigureConduits();
       void fileInstalled(int which);
       void slotModeSelected(int selected);
+      void slotShowComponent(PilotComponent *);
       void slotSyncDone(KProcess* which);
       void slotDaemonStatus(KSocket*);
 
@@ -261,6 +276,9 @@ private:
 
 
 // $Log$
+// Revision 1.22  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.21  2001/03/04 22:22:29  adridg
 // DCOP cooperation between daemon & kpilot for d&d file install
 //

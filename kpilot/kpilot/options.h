@@ -92,7 +92,7 @@
 #define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
 
 
-#define KPILOT_VERSION	"4.2.1"
+#define KPILOT_VERSION	"4.2.2"
 
 #ifdef DEBUG
 // KPilot contains two kinds of debugging messages:
@@ -222,6 +222,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.24  2001/04/11 21:33:06  adridg
+// Make version number consistent across KPilot applications
+//
 // Revision 1.23  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

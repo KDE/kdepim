@@ -62,7 +62,7 @@ protected:
 
     KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
-	/* virtual */ void resizeEvent(QResizeEvent *);
+	// /* virtual */ void resizeEvent(QResizeEvent *);
 
 private:
     QListBox*   fListBox;
@@ -84,6 +84,9 @@ public slots:
 
 
 // $Log$
+// Revision 1.11  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.10  2001/03/04 22:22:29  adridg
 // DCOP cooperation between daemon & kpilot for d&d file install
 //

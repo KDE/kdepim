@@ -48,10 +48,14 @@ kpilot_LDADD   = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIB
 kpilotDaemon_LDADD = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ $(LIBPISOCK)
 
 appsdir = $(kde_appsdir)/Utilities
+servicetypedir = $(kde_servicetypesdir)
 apps_DATA = kpilot.desktop kpilotdaemon.desktop
 servicetype_DATA = kpilotconduit.desktop
-servicetypedir = $(kde_servicetypesdir)
+
 kpiloticondir = $(kde_datadir)/kpilot/icons
 kpiloticon_ICON = AUTO
 
 KDE_ICON = kpilot
+
+rcdir = $(kde_datadir)/kpilot
+rc_DATA = kpilotui.rc

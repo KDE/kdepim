@@ -1,4 +1,3 @@
-
 /* pilotComponent.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -62,12 +61,13 @@ static const char *pilotComponent_id =
 #define MAX_CATEGORIES	(15)
 
 PilotComponent::PilotComponent(QWidget* parent,
+	const char *id,
 	const QString &path) : 
-	QWidget(parent),
+	QWidget(parent,id),
 	fDBPath(path)
-    {
-    (void) pilotComponent_id;
-    }
+{
+	(void) pilotComponent_id;
+}
 
 
 
@@ -269,7 +269,22 @@ CategoryAll:
 }
 
 
+void PilotComponent::slotShowComponent()
+{
+	FUNCTIONSETUP;
+
+	DEBUGKPILOT << fname
+		<< ": Showing component @"
+		<< (int) this
+		<< endl;
+
+	emit showComponent(this);
+}
+
 // $Log$
+// Revision 1.17  2001/04/11 21:39:22  adridg
+// Fix for bad-categories bug
+//
 // Revision 1.16  2001/04/03 09:55:13  adridg
 // Administrative, cleanup
 //
