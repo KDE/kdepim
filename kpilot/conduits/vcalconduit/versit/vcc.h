@@ -51,7 +51,7 @@ typedef void (*MimeErrorHandler)(char *);
 extern void registerMimeErrorHandler(MimeErrorHandler);
 
 extern VObject* Parse_MIME(const char *input, unsigned long len);
-extern VObject* Parse_MIME_FromFileName(char* fname);
+extern VObject* Parse_MIME_FromFileName(const char* fname);
 
 
 /* NOTE regarding Parse_MIME_FromFile

@@ -152,7 +152,7 @@ void VCalConduit::getCalendar()
 		<< charExpansion(s)
 		<< endl;
 #endif
-	fCalendar = Parse_MIME_FromFileName((const char *)s);
+	fCalendar = Parse_MIME_FromFileName((const char*)s);
 
 	if(fCalendar == 0L) 
 	{
@@ -1824,6 +1824,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.21  2001/01/08 22:27:12  adridg
+// Fixed QFile::encodeName stupidity
+//
 // Revision 1.20  2001/01/05 12:06:01  adridg
 // Updated version number, removed VCalConduit::version()
 //
