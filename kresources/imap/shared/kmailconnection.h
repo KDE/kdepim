@@ -40,50 +40,50 @@ class KMailConnection : public QObject, public DCOPObject {
   K_DCOP
 
   // These are the methods called by KMail when the resource changes
-  k_dcop:
-    bool addIncidence( const QString& type, const QString& resource,
-                       const QString& ical );
-    void deleteIncidence( const QString& type, const QString& resource,
-                          const QString& uid );
-    void slotRefresh( const QString& type, const QString& resource );
-    void subresourceAdded( const QString& type, const QString& resource );
-    void subresourceDeleted( const QString& type, const QString& resource );
+k_dcop:
+  bool addIncidence( const QString& type, const QString& resource,
+                     const QString& ical );
+  void deleteIncidence( const QString& type, const QString& resource,
+                        const QString& uid );
+  void slotRefresh( const QString& type, const QString& resource );
+  void subresourceAdded( const QString& type, const QString& resource );
+  void subresourceDeleted( const QString& type, const QString& resource );
 
-  public:
-    KMailConnection( ResourceIMAPShared* resource, const QCString& objId );
-    virtual ~KMailConnection();
+public:
+  KMailConnection( ResourceIMAPShared* resource, const QCString& objId );
+  virtual ~KMailConnection();
 
-    /**
-     * Do the connection to KMail.
-     */
-    bool connectToKMail();
+  /**
+   * Do the connection to KMail.
+   */
+  bool connectToKMail();
 
-    // Call the DCOP methods
-    bool kmailIncidences( QStringList& lst, const QString& type,
+  // Call the DCOP methods
+  bool kmailIncidences( QStringList& lst, const QString& type,
+                        const QString& resource );
+  bool kmailSubresources( QStringList& lst, const QString& type );
+  bool kmailAddIncidence( const QString& type, const QString& uid,
+                          const QString& incidence,
                           const QString& resource );
-    bool kmailSubresources( QStringList& lst, const QString& type );
-    bool kmailAddIncidence( const QString& type, const QString& uid,
-                            const QString& incidence,
-                            const QString& resource );
-    bool kmailDeleteIncidence( const QString& type, const QString& uid,
-                               const QString& resource );
-    bool kmailUpdate( const QString& type, const QString& resource,
-                      const QStringList& lst );
-    bool kmailUpdate( const QString& type, const QString& resource,
-                      const QString& uid, const QString& incidence );
+  bool kmailDeleteIncidence( const QString& type, const QString& uid,
+                             const QString& resource );
+  bool kmailUpdate( const QString& type, const QString& resource,
+                    const QStringList& lst );
+  bool kmailUpdate( const QString& type, const QString& resource,
+                    const QString& uid, const QString& incidence );
+  bool kmailIsWritableFolder( const QString& type,
+                              const QString& resource );
 
-  private slots:
-    virtual void unregisteredFromDCOP( const QCString& );
+private slots:
+  virtual void unregisteredFromDCOP( const QCString& );
 
-  private:
-    /**
-     * Connect a signal from KMail to a local slot.
-     */
-    bool connectKMailSignal( const QCString&, const QCString& );
+private:
+  /** Connect a signal from KMail to a local slot. */
+  bool connectKMailSignal( const QCString&, const QCString& );
 
-    ResourceIMAPShared* mResource;
-    DCOPClient* mDCOPClient;
-    KMailICalIface_stub* mKMailIcalIfaceStub;
+  ResourceIMAPShared* mResource;
+  DCOPClient* mDCOPClient;
+  KMailICalIface_stub* mKMailIcalIfaceStub;
 };
 
 }

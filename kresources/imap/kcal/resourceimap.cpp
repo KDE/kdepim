@@ -38,7 +38,7 @@ ResourceIMAP::ResourceIMAP( const QString &server )
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-     mOpen( false )
+    mOpen( false )
 {
   init();
 
@@ -254,8 +254,7 @@ bool ResourceIMAP::addEvent( Event *anEvent, const QString& subresource )
   // Register for the subresource
   QString resource = subresource;
   if ( subresource.isEmpty() )
-    // TODO: Do something a bit more clever
-    resource = mEventResources.begin().key();
+    resource = findWritableResource( mEventResources, "Calendar" );
   mUidmap[ uid ] = resource;
 
   if ( mSilent ) return true;
@@ -331,8 +330,7 @@ bool ResourceIMAP::addTodo( Todo *todo, const QString& subresource )
   // Register for the subresource
   QString resource = subresource;
   if ( subresource.isEmpty() )
-    // TODO: Do something a bit more clever
-    resource = mTaskResources.begin().key();
+    resource = findWritableResource( mTaskResources, "Task" );
   mUidmap[ uid ] = resource;
 
   if ( mSilent ) return true;
@@ -392,8 +390,7 @@ bool ResourceIMAP::addJournal( Journal *journal, const QString& subresource )
   // Register for the subresource
   QString resource = subresource;
   if ( subresource.isEmpty() )
-    // TODO: Do something a bit more clever
-    resource = mJournalResources.begin().key();
+    resource = findWritableResource( mJournalResources, "Journal" );
   mUidmap[ uid ] = resource;
 
   if ( mSilent ) return true;

@@ -198,8 +198,7 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
     bool rc;
     if( !update ) {
       // Save the new addressee
-      // TODO: In which resource?
-      const QString resource = mResources.begin().key();
+      const QString resource = findWritableResource( mResources, "Contact" );
       rc = kmailAddIncidence( "Contact", resource, uid, vCard );
       mUidmap[ uid ] = resource;
     } else

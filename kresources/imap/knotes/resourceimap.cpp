@@ -161,8 +161,7 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal,
 
   QString resource = subresource;
   if ( subresource.isEmpty() )
-    // TODO: In which resource?
-    resource = mResources.begin().key();
+    resource = findWritableResource( mResources, "Note" );
   mUidmap[ journal->uid() ] = resource;
 
   if ( mSilent ) return true;

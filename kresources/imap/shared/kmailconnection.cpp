@@ -220,6 +220,17 @@ bool KMailConnection::kmailUpdate( const QString& type,
     && mKMailIcalIfaceStub->ok();
 }
 
+bool KMailConnection::kmailIsWritableFolder( const QString& type,
+                                             const QString& resource )
+{
+  if ( !connectToKMail() ) {
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
+    return false;
+  }
+
+  return mKMailIcalIfaceStub->isWritableFolder( type, resource );
+}
+
 
 void KMailConnection::unregisteredFromDCOP( const QCString& appId )
 {
@@ -230,6 +241,5 @@ void KMailConnection::unregisteredFromDCOP( const QCString& appId )
     mKMailIcalIfaceStub = 0;
   }
 }
-
 
 #include "kmailconnection.moc"

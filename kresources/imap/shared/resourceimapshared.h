@@ -23,6 +23,7 @@
 #define IMAPSHARED_H
 
 #include <qstring.h>
+#include <qmap.h>
 
 class QCString;
 class QStringList;
@@ -51,9 +52,7 @@ public:
                                    const QString& resource ) = 0;
 
 protected:
-  /**
-   * Do the connection to KMail.
-   */
+  /** Do the connection to KMail. */
   bool connectToKMail() const;
 
   // These are the KMail dcop functions
@@ -68,8 +67,14 @@ protected:
                     const QStringList& lst );
   bool kmailUpdate( const QString& type, const QString& resource,
                     const QString& uid, const QString& incidence );
+  bool kmailIsWritableFolder( const QString& type, const QString& resource );
 
+  /** Get the full path of the config file. */
   QString configFile( const QString& type ) const;
+
+  /** If only one of these is writable, return that. Otherwise return null. */
+  QString findWritableResource( const QMap<QString, bool>& resources,
+                                const QString& type );
 
   bool mSilent;
 

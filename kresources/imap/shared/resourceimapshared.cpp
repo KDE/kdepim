@@ -19,11 +19,12 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <klocale.h>
-#include <kstandarddirs.h>
-
 #include "resourceimapshared.h"
 #include "kmailconnection.h"
+
+#include <klocale.h>
+#include <kstandarddirs.h>
+#include <kinputdialog.h>
 
 using namespace ResourceIMAPBase;
 
@@ -84,6 +85,12 @@ bool ResourceIMAPShared::kmailUpdate( const QString& type,
   return mSilent || mConnection->kmailUpdate( type, resource, uid, incidence );
 }
 
+bool ResourceIMAPShared::kmailIsWritableFolder( const QString& type,
+                                                const QString& resource )
+{
+  return mConnection->kmailIsWritableFolder( type, resource );
+}
+
 QString ResourceIMAPShared::configFile( const QString& type ) const
 {
   return locateLocal( "config",
@@ -93,4 +100,34 @@ QString ResourceIMAPShared::configFile( const QString& type ) const
 bool ResourceIMAPShared::connectToKMail() const
 {
   return mConnection->connectToKMail();
+}
+
+QString ResourceIMAPShared::findWritableResource( const QMap<QString, bool>& resources,
+                                                  const QString& type )
+{
+  QStringList possible;
+  QMap<QString, bool>::ConstIterator it;
+  for ( it = resources.begin(); it != resources.end(); ++it )
+    if ( it.data() ) {
+      // Ask KMail if this one is writable
+      if ( !kmailIsWritableFolder( type, it.key() ) )
+        // It wasn't
+        continue;
+
+      // Writable possibility
+      possible << it.key();
+    }
+
+  if ( possible.isEmpty() )
+    // None found!!
+    return QString::null;
+  if ( possible.count() == 1 )
+    // Just one found
+    return possible[ 0 ];
+
+  // Several found, ask the user
+  return KInputDialog::getItem( i18n( "Select Resource Folder" ),
+                                i18n( "You have more than one writable resource folder. "
+                                      "Please select the one you want to write to." ),
+                                possible );
 }
