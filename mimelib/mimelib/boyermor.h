@@ -8,7 +8,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -50,7 +50,7 @@
 class DW_EXPORT DwBoyerMoore {
 
 public:
-    
+
     DwBoyerMoore(const char* aCstr);
     DwBoyerMoore(const DwString& aStr);
     DwBoyerMoore(const DwBoyerMoore& other);
@@ -65,7 +65,7 @@ public:
     void Assign(const DwString& aStr);
     //. Sets the string to search for.
 
-    size_t FindIn(const DwString& aStr, size_t aPos) const;
+    size_t FindIn(const DwString& aStr, size_t aPos, bool lc = false) const;
     //. Searches for the search string in {\tt aStr} starting at position
     //. {\tt aPos}.  If found, the function returns the first position in
     //. {\tt aStr} where the search string was found.  If not found, the

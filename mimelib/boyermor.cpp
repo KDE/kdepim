@@ -26,6 +26,7 @@
 
 #include <mimelib/config.h>
 #include <mimelib/debug.h>
+#include <ctype.h>
 #include <string.h>
 #include <mimelib/boyermor.h>
 
@@ -98,7 +99,7 @@ void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen)
 }
 
 
-size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos) const
+size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos, bool lc) const
 {
     if (aStr.length() <= aPos) {
         return (size_t) -1;
@@ -112,7 +113,7 @@ size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos) const
     for (i=mPatLen-1; i < bufLen; i += mSkipAmt[(unsigned char)buf[i]]) {
         int iBuf = i;
         int iPat = mPatLen - 1;
-        while (iPat >= 0 && buf[iBuf] == mPat[iPat]) {
+        while (iPat >= 0 && (lc ? tolower(buf[iBuf]) : buf[iBuf]) == mPat[iPat]) {
             --iBuf;
             --iPat;
         }
