@@ -1,9 +1,9 @@
 <chapter id="using-kpilot">
-<title>Using &kpilot;</title>
+<title>Using &kpilot; Application Interface and Data Viewers</title>
 
 <para>
-This chapter describes the usage of &kpilot; as a viewer application
-for data on the &handheld;.
+This chapter describes the usage of &kpilot's main window; as a viewer
+application for data on the &handheld;, and  its menu structure.
 The main window of &kpilot; also contains
 the &HotSync;-log, which can be useful when
 debugging problems.
@@ -30,9 +30,25 @@ debugging problems.
 The main window contains the application menu, which we will deal with here.
 </para>
 
+<para>
+The <guimenu>file</guimenu> menu contains the synchronization menu items. Note
+that these items do not start the sync process, they only select what the new
+sync will be. To really start it, you must press the HotSync button on your
+&PalmPilot;'s cradle (or on the &handheld; itself, when there is no cradle).
+</para>
+<note>
+<para>
+It is not possible to cancel a sync operation once the request has been made.
+</para>
+</note>
+<para>
+For more information regarding the synchronization functionality, please check the
+<link linkend="synchronization">Synchronization Chapter</link> of this handbook,
+where you can find detailed descriptions of the synchronization methods
+and options offered by &kpilot;.
+</para>
+
 <variablelist id="menu-file">
-
-
 
 <varlistentry>
 <term>
@@ -43,18 +59,12 @@ The main window contains the application menu, which we will deal with here.
 </term>
 <listitem>
 <para>
-Starts a &HotSync;. You should press the
-HotSync button on your &PalmPilot;'s cradle.
+Make the next sync a &HotSync;. For more information, please check the
+<link linkend="sync-s"> Syncing your &handheld; data</link> section of this
+handbook.
 </para>
-<note>
-<para>
-It is not possible to cancel a &HotSync; once
-the request has been made.
-</para>
-</note>
 </listitem>
 </varlistentry>
-
 
 <varlistentry>
 <term>
@@ -66,15 +76,29 @@ the request has been made.
 <listitem>
 <para>
 (not available with all installations)
-Starts a FastSync in the same way that
-a &HotSync; is started.
+Make the next sync a FastSync. For more information, please check the
+<link linkend="sync-s">Syncing your &handheld; data</link> section of this
+handbook.
 </para>
 </listitem>
 </varlistentry>
 
-
-
-
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>FullSync</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+(not available with all installations)
+Make the next sync a FullSync. For more information, please check the
+<link linkend="sync-s"> Syncing your &handheld; data</link> section of this
+handbook.
+</para>
+</listitem>
+</varlistentry>
 
 <varlistentry>
 <term>
@@ -85,17 +109,19 @@ a &HotSync; is started.
 </term>
 <listitem>
 <para>
-Performs a full backup of your &PalmPilot;. This
-is like a &HotSync;, but can take several minutes.
+Make the next sync a full backup of your &PalmPilot; data. This action can take
+several minutes. For more information, please check the
+<link linkend="backup"> Backing up your &handheld; data</link> section of this
+handbook.
 </para>
 <tip>
 <para>
 The first thing you should do after starting &kpilot; for
-the first time is make a full backup.</para>
+the first time is make a full backup.
+</para>
 </tip>
 </listitem>
 </varlistentry>
-
 
 <varlistentry>
 <term>
@@ -106,11 +132,13 @@ the first time is make a full backup.</para>
 </term>
 <listitem>
 <para>
-This copies all the data on your
+This copies all the data from a previous backup on your
 <acronym>PC</acronym> to your &PalmPilot;,
 replacing whatever data was there.
-Use this if your &PalmPilot; suffers some catastrophe
-(or is replaced by a new one).
+Use this if your &PalmPilot; suffers some from software or hardware failure
+(or is replaced by a new one). For more information, please check the
+<link linkend="restore"> Restoring your &handheld; data</link> section of this
+handbook.
 </para>
 <warning>
 <para>
@@ -118,6 +146,21 @@ Doing a restore will erase all data on the &PalmPilot;
 before restoring the information from your
 <acronym>PC</acronym>!</para>
 </warning>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>List Only</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+The next sync will only list the databases on your &handheld;, no exchange of
+data will be performed.
+</para>
 </listitem>
 </varlistentry>
 
@@ -139,7 +182,6 @@ is enabled.
 </listitem>
 </varlistentry>
 </variablelist>
-
 
 <para>
 The <guimenu>View</guimenu> menu
@@ -536,7 +578,7 @@ your &kmail; outbox.  &kmail; saves mail in the outbox until you request
 that those pieces of mail are <emphasis>really</emphasis> sent.  Check
 the <guilabel>Send mail through &kmail; immediately</guilabel> to let
 the Mail Conduit tell &kmail; to send all mail from the outbox as soon
-as it it done HotSyncing.  This has the side effect of also sending any
+as it it done Hotsynchronization.  This has the side effect of also sending any
 other pieces of mail that may be in your outbox.
 </para>
 

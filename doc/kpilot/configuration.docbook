@@ -294,7 +294,7 @@ change the same data.
 <para>
 &kpilot; interfaces with your &handheld; in two ways: using the
 the conduits and the internal viewers. Conduits are plugin programs which extend
-the syncing capabilities of &kpilot;. &kpilot; stores separate copies of the
+the synchronization capabilities of &kpilot;. &kpilot; stores separate copies of the
 databases and records for conduits, while the internal viewers and backup
 operation share the same copy. This distinction is important to choose your
 update method depending on your usage. If you use mainly the conduits to sync
@@ -383,7 +383,7 @@ You can disable the full sync by unchecking this box.
 <term><guilabel>Do not sync when screensaver is active</guilabel></term>
 <listitem>
 <para>
-This is a security feature that prevents the &handheld; from syncing
+This is a security feature that prevents the &handheld; from synchronization
 while the PC screensaver is active. This prevents other people from
 stealing your data through the &handheld; cradle while your PC is
 unattended. The feature only works with the KDE screensavers, though,
@@ -424,7 +424,7 @@ discarding changes on the &handheld;.
 </para></listitem>
 <listitem><para><guilabel>Values From Last Sync (if possible)</guilabel>:
 &kpilot; stores a backup copy of the information on your &handheld; depending on
-the syncing method you selected. If this information is available, use neither
+the synchronization method you selected. If this information is available, use neither
 the values from the &handheld; or the PC, but the values from
 the last sync.
 </para></listitem>
@@ -525,7 +525,7 @@ when you perform a &HotSync;.
 <para>
 The backup typically updates the copy of the &handheld; databases.
 Conduits are programs that extend the &kpilot; functionality. Running them
-usually means syncing the &handheld; to other <acronym>PC</acronym> databases,
+usually means synchronization the &handheld; to other <acronym>PC</acronym> databases,
 like the addressbook or the calender. Check this box to perform both operation on
 every backup.
 </para>
@@ -710,7 +710,7 @@ starts &kpilot; automatically.
 <anchor id="stopdaemononexit"/>
 <guilabel>Stop daemon on exit</guilabel>:
 Setting this option will cause the daemon to exit when you quit
-&kpilot;, leaving the device port free for other &PalmPilot;-syncing tools
+&kpilot;, leaving the device port free for other &PalmPilot;-synchronization tools
 such as <application>malsync</application>
 </para>
 </listitem>

@@ -38,6 +38,14 @@
 
 <authorgroup>
 <author>
+	<firstname>Carlos</firstname>
+	<othername>Leonhard</othername>
+	<surname>Woelz</surname>
+	<affiliation>
+		<address><email>carloswoelz@imap-mail.com</email></address>
+	</affiliation>
+</author>
+<author>
 	<firstname>Adriaan</firstname>
 	<othername>de</othername>
 	<surname>Groot</surname>
@@ -64,6 +72,12 @@
 <year>2004</year>
 <holder>Adriaan de Groot</holder>
 </copyright>
+
+<copyright>
+<year>2004</year>
+<holder>Carlos Woelz</holder>
+</copyright>
+
 
 <legalnotice>&FDLNotice;</legalnotice>
 

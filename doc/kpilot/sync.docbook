@@ -1,5 +1,5 @@
 <chapter id="synchronization">
-<title>Synchronization</title>
+<title>synchronization</title>
 
 <para>
 This chapter describes the synchronization process
@@ -35,6 +35,11 @@ and select one of the menu items under the
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
 sub menu.
+<tip><para>
+If you hover over the &kpilot; daemon icon, a tooltip will appear showing you
+what is the type of sync &kpilot; will perform next.
+</para></tip>
+
 </para>
 
 
@@ -51,7 +56,7 @@ a nice balance between speed and data safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>FastSync</guilabel>: only synchronize those
+<guilabel>FastSync</guilabel>: only sync those
 databases that have conduits.
 </para></listitem>
 
@@ -147,7 +152,7 @@ applications.</para>
 
 <para>
 The most common use for the restore functionality is to recover from a hardware
-or software failure on the device, or accidental database or record deletion.
+or software failure on the device.
 The restore function can only be accessed from the 
 main &kpilot; application, and not from the &kpilot; daemon, as
 restoring the data is not a common operation. In order 
@@ -228,7 +233,7 @@ submenu.
 </para></listitem>
 
 <listitem><para>
-<guilabel>FastSync</guilabel>: Only synchronize those
+<guilabel>FastSync</guilabel>: Only sync those
 databases that have conduits, and perform no backup of the data
 on the &PalmPilot;, reducing greatly the time required for the sync
 operation. This also means that if something goes wrong with your &PalmPilot;,

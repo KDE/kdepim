@@ -279,7 +279,7 @@ url="http://www.palm.com/">Palm</ulink> web pages for more information.
 Assuming your &PalmPilot; now has <acronym>PC</acronym> HotSync support
 and it is setup to do <acronym>IR</acronym> HotSyncs (in the HotSync
 preferences on the &PalmPilot;), we can turn our attention to the
-<acronym>PC</acronym> you will be syncing with.  It needs an
+<acronym>PC</acronym> you will be synchronization with.  It needs an
 <acronym>IR</acronym> port.  For laptops, this is trivial, desktop
 <acronym>PCs</acronym> may require some extra hardware.
 </para>
