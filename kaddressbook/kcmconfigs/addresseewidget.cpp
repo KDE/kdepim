@@ -23,7 +23,6 @@
 
 #include <qcstring.h>
 #include <qgroupbox.h>
-#include <qinputdialog.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlistbox.h>
@@ -35,14 +34,15 @@
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdialog.h>
+#include <kinputdialog.h>
 #include <klocale.h>
 #include <klineedit.h>
 
 #include "addresseewidget.h"
 
-NamePartWidget::NamePartWidget( const QString &title, QWidget *parent,
-                                const char *name )
-  : QWidget( parent, name ), mTitle( title )
+NamePartWidget::NamePartWidget( const QString &title, const QString &label,
+                                QWidget *parent, const char *name )
+  : QWidget( parent, name ), mTitle( title ), mLabel( label )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
 
@@ -90,7 +90,7 @@ void NamePartWidget::add()
 {
   bool ok;
 
-  QString namePart = QInputDialog::getText( i18n( "New" ), mTitle, QLineEdit::Normal,
+  QString namePart = KInputDialog::getText( i18n( "New" ), mLabel,
                                             QString::null, &ok );
   if ( ok && !namePart.isEmpty() ) {
     mBox->insertItem( namePart );
@@ -106,7 +106,7 @@ void NamePartWidget::edit()
   if ( index == -1 )
     return;
 
-  QString namePart = QInputDialog::getText( i18n( "Edit" ), mTitle, QLineEdit::Normal,
+  QString namePart = KInputDialog::getText( i18n( "Edit" ), mLabel,
                                             mBox->text( index ), &ok );
   if ( ok && !namePart.isEmpty() ) {
     mBox->changeItem( namePart, index );
@@ -137,13 +137,13 @@ AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
                                          KDialog::spacingHint() );
 
-  mPrefix = new NamePartWidget( i18n( "Prefixes" ), this );
+  mPrefix = new NamePartWidget( i18n( "Prefixes"), i18n( "Enter prefix:" ), this );
   layout->addWidget( mPrefix, 0, 0 );
 
-  mInclusion = new NamePartWidget( i18n( "Inclusions" ), this );
+  mInclusion = new NamePartWidget( i18n( "Inclusions"), i18n( "Enter inclusion:" ), this );
   layout->addWidget( mInclusion, 0, 1 );
 
-  mSuffix = new NamePartWidget( i18n( "Suffixes" ), this );
+  mSuffix = new NamePartWidget( i18n( "Suffixes" ), i18n( "Enter suffix:" ), this );
   layout->addWidget( mSuffix, 0, 2 );
 
   QLabel *label = new QLabel( i18n( "Default formatted name:" ), this );
