@@ -66,23 +66,23 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent,  const 
   mCfg->setTimeLimit( mServer->timeLimit() );
   mCfg->setSizeLimit( mServer->sizeLimit() );
   mCfg->setVer( mServer->version() );
- //0-No, 1-TLS, 2-SSL - KDE4: add an enum to LdapConfigWidget
+
   switch ( mServer->security() ) {
-    case 1:
+    case KPIM::LdapServer::TLS:
       mCfg->setSecTLS();
       break;
-    case 2:
+    case KPIM::LdapServer::SSL:
       mCfg->setSecSSL();
       break;
     default:
       mCfg->setSecNO();
   }
- //0-Anonymous, 1-simple, 2-SASL - KDE4: add an enum to LdapConfigWidget
+
   switch ( mServer->auth() ) {
-    case 1:
+    case KPIM::LdapServer::Simple:
       mCfg->setAuthSimple();
       break;
-    case 2:
+    case KPIM::LdapServer::SASL:
       mCfg->setAuthSASL();
       break;
     default:
@@ -114,12 +114,12 @@ void AddHostDialog::slotOk()
   mServer->setTimeLimit( mCfg->timeLimit() );
   mServer->setSizeLimit( mCfg->sizeLimit() );
   mServer->setVersion( mCfg->ver() );
-  mServer->setSecurity( 0 );
-  if ( mCfg->isSecTLS() ) mServer->setSecurity( 1 );
-  if ( mCfg->isSecSSL() ) mServer->setSecurity( 2 );
-  mServer->setAuth( 0 );
-  if ( mCfg->isAuthSimple() ) mServer->setAuth( 1 );
-  if ( mCfg->isAuthSASL() ) mServer->setAuth( 2 );
+  mServer->setSecurity( KPIM::LdapServer::Sec_None );
+  if ( mCfg->isSecTLS() ) mServer->setSecurity( KPIM::LdapServer::TLS );
+  if ( mCfg->isSecSSL() ) mServer->setSecurity( KPIM::LdapServer::SSL );
+  mServer->setAuth( KPIM::LdapServer::Anonymous );
+  if ( mCfg->isAuthSimple() ) mServer->setAuth( KPIM::LdapServer::Simple );
+  if ( mCfg->isAuthSASL() ) mServer->setAuth( KPIM::LdapServer::SASL );
   mServer->setMech( mCfg->mech() );
   KDialog::accept();
 }
