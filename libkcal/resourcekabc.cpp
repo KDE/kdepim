@@ -133,18 +133,18 @@ bool ResourceKABC::load()
   mCalendar.close();
 
   // import from kabc
-  QDateTime birthdate;
   QString summary;
 
   KABC::AddressBook::Iterator it;
   for ( it = mAddressbook->begin(); it != mAddressbook->end(); ++it ) {
-    if ( (*it).birthday().date().isValid() ) {
-      kdDebug() << "found a birthday " << (*it).birthday().toString() << endl;
+
+    QDateTime birthdate = (*it).birthday().date();
+    if ( birthdate.isValid() ) {
+      kdDebug() << "found a birthday " << birthdate.toString() << endl;
 
       QString name = (*it).nickName();
       if (name.isEmpty()) name = (*it).realName();
       summary = i18n("%1's birthday").arg( name );
-      birthdate = (*it).birthday();
 
       Event *ev = new Event();
 
@@ -179,6 +179,49 @@ bool ResourceKABC::load()
       ev->setReadOnly( true );
       mCalendar.addEvent(ev);
       kdDebug() << "imported " << birthdate.toString() << endl;
+    }
+
+    QDateTime anniversary = QDate::fromString( (*it).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+    if ( anniversary.isValid() ) {
+      kdDebug() << "found a anniversary " << anniversary.toString() << endl;
+
+      QString name = (*it).nickName();
+      if (name.isEmpty()) name = (*it).realName();
+      summary = i18n("%1's anniversary").arg( name );
+
+      Event *ev = new Event();
+
+      ev->setDtStart(anniversary);
+      ev->setDtEnd(anniversary);
+      ev->setHasEndDate(true);
+      ev->setFloats(true);
+
+      ev->setSummary(summary);
+
+      // Set the recurrence
+      Recurrence *vRecurrence = ev->recurrence();
+      vRecurrence->setRecurStart(anniversary);
+      vRecurrence->setYearly(Recurrence::rYearlyMonth,1,-1);
+      vRecurrence->addYearlyNum(anniversary.date().month());
+
+      ev->clearAlarms();
+
+      if ( mAlarm ) {
+        // Set the alarm
+        Alarm* vAlarm = ev->newAlarm();
+        vAlarm->setText(summary);
+        vAlarm->setTime(anniversary);
+        // 24 hours before
+        vAlarm->setStartOffset( -1440 * mAlarmDays );
+        vAlarm->setEnabled(true);
+      }
+
+      // insert category
+      ev->setCategories(i18n("Anniversary"));
+
+      ev->setReadOnly( true );
+      mCalendar.addEvent(ev);
+      kdDebug() << "imported " << anniversary.toString() << endl;
     }
   }
 
