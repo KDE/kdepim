@@ -126,13 +126,11 @@ static const char *kpilotconfig_id =
 #ifndef DEBUG
 /* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings &)
 {
-	FUNCTIONSETUP;
 	return 0;
 }
 
 /* static */ int KPilotConfig::getDebugLevel(bool)
 {
-	FUNCTIONSETUP;
 	return 0;
 }
 #else
@@ -365,6 +363,9 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 
 
 // $Log$
+// Revision 1.10  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.9  2001/09/29 16:26:18  adridg
 // The big layout change
 //
