@@ -23,8 +23,6 @@
 
 #include "calendarsyncee.h"
 #include "addressbooksyncee.h"
-#include "eventsyncee.h"
-#include "todosyncee.h"
 #include "bookmarksyncee.h"
 
 using namespace KSync;
@@ -57,32 +55,6 @@ AddressBookSyncee *SynceeList::addressBookSyncee() const
   ConstIterator it;
   for( it = begin(); it != end(); ++it ) {
     syncee = dynamic_cast<AddressBookSyncee *>( *it );
-    if ( syncee ) return syncee;
-  }
-
-  return 0;
-}
-
-EventSyncee *SynceeList::eventSyncee() const
-{
-  EventSyncee *syncee;
-
-  ConstIterator it;
-  for( it = begin(); it != end(); ++it ) {
-    syncee = dynamic_cast<EventSyncee *>( *it );
-    if ( syncee ) return syncee;
-  }
-
-  return 0;
-}
-
-TodoSyncee *SynceeList::todoSyncee() const
-{
-  TodoSyncee *syncee;
-
-  ConstIterator it;
-  for( it = begin(); it != end(); ++it ) {
-    syncee = dynamic_cast<TodoSyncee *>( *it );
     if ( syncee ) return syncee;
   }
 

@@ -29,8 +29,6 @@ namespace KSync {
 
 class CalendarSyncee;
 class AddressBookSyncee;
-class EventSyncee;
-class TodoSyncee;
 class BookmarkSyncee;
 
 /**
@@ -43,9 +41,7 @@ class SynceeList : public QValueList<Syncee *>
     ~SynceeList();
 
     CalendarSyncee *calendarSyncee() const;
-    AddressBookSyncee *addressBookSyncee() const;
-    EventSyncee *eventSyncee() const;
-    TodoSyncee *todoSyncee() const;
+    AddressBookSyncee *addressBookSyncee() const;    
     BookmarkSyncee *bookmarkSyncee() const;
 };
 
