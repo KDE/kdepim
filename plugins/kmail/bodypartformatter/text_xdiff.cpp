@@ -53,6 +53,10 @@
 #include <qstylesheet.h>
 
 namespace {
+
+  // TODO: Show filename header to make it possible to save the patch.
+  // FIXME: The box should only be as wide as necessary.
+
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
     Result format( KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
@@ -66,31 +70,27 @@ namespace {
 
       QString addedLineStyle = QString::fromLatin1(
         "style=\""
-        "padding-left: 4px; "
-        "font-family: monospace; "
-        //"border-right: #000 dashed 1px; "
         "color: green;\"");
-      QString fileAddStyle( "style=\"font-weight: bold; font-family: monospace; color: green; \"" );
+      QString fileAddStyle( "style=\"font-weight: bold; "
+                            "color: green; \"" );
 
       QString removedLineStyle = QString::fromLatin1(
         "style=\""
-        "padding-left: 4px; "
-        "font-family: monospace; "
         "color: red;\"");
-      QString fileRemoveStyle( "style=\"font-weight: bold; font-family: monospace; color: red ;\"" );
+      QString fileRemoveStyle( "style=\"font-weight: bold; "
+                               "color: red ;\"" );
 
       QString tableStyle = QString::fromLatin1(
         "style=\""
-        "border: dashed 1px; "
+        "border: solid black 1px; "
+        "padding: 0.5em; "
         "margin: 0em;\"");
 
-      QString sepStyle( "style=\"color: black; font-weight: bold; font-family: monospace; \"" );
-      QString chunkStyle( "style=\"color: blue; font-family: monospace;  \"" );
-
-      QString regularStyle( "style=\"font-family: monospace;\"" );
+      QString sepStyle( "style=\"color: black; font-weight: bold;\"" );
+      QString chunkStyle( "style=\"color: blue;\"" );
 
       QString html = "<br><div align=\"center\">";
-      html += "<table " + tableStyle +">";
+      html += "<pre " + tableStyle + ">";
 
       QStringList lines = QStringList::split( '\n', diff, true );
       for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
@@ -110,13 +110,14 @@ namespace {
           } else if ( line.startsWith( "@@" ) ) {
             style = chunkStyle;
           } else {
-            style = regularStyle;
+            style = "";
           }
         }
-        html += "<tr><td " + style + ">" + line + "</td></tr>";
+        html += "<span " + style + ">" + line + "</span>\n";
       }
 
-      html += "</table></div>";
+      html += "</pre></div>";
+      //qDebug( "%s", html.latin1() );
       writer->queue( html );
 
       return Ok;
