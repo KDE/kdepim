@@ -42,6 +42,7 @@
 #include <qrect.h>
 #include <qheader.h>
 #include <qpoint.h>
+#include <qptrlist.h>
 
 namespace {
 
@@ -476,6 +477,12 @@ Kleo::KeyListViewItem * Kleo::KeyListView::selectedItem() const {
   return static_cast<Kleo::KeyListViewItem*>( KListView::selectedItem() );
 }
 
-
+QPtrList<Kleo::KeyListViewItem> Kleo::KeyListView::selectedItems() const {
+  QPtrList<KeyListViewItem> result;
+  for ( KeyListViewItem * item = firstChild() ; item ; item = item->nextSibling() )
+    if ( item->isSelected() )
+      result.append( item );
+  return result;
+}
 
 #include "keylistview.moc"

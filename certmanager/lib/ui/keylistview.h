@@ -200,6 +200,8 @@ namespace Kleo {
   public:
     /*! \reimp for covariant return */
     KeyListViewItem * selectedItem() const;
+    /*! \reimp */
+    QPtrList<KeyListViewItem> selectedItems() const;
     /*! \reimp for covariant return */
     KeyListViewItem * firstChild() const;
 
