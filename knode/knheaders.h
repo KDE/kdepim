@@ -266,7 +266,7 @@ class AddressField : public Base {
     virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
     virtual void clear()              { n_ame.truncate(0); e_mail.resize(0); }
-    virtual bool isEmpty()            { return (e_mail.isEmpty()); }
+    virtual bool isEmpty()            { return (e_mail.isEmpty() && n_ame.isEmpty()); }
 
     bool hasName()                    { return ( !n_ame.isEmpty() ); }
     bool hasEmail()                   { return ( !e_mail.isEmpty() ); }
