@@ -30,9 +30,7 @@ static const char *pilotMemo_id =
 
 #include "options.h"
 
-// #include <iostream.h>
-// #include <pi-memo.h>
-// #include <klocale.h>
+#include <qtextcodec.h>
 
 #include "pilotMemo.h"
 
@@ -51,7 +49,6 @@ void PilotMemo::unpack(const void *text, int firstTime)
 	if (!firstTime && fText)
 	{
 		delete fText;
-		delete fTitle;
 	}
 
 	fSize = strlen((const char *) text) + 1;
@@ -63,10 +60,11 @@ void PilotMemo::unpack(const void *text, int firstTime)
 
 	while (fText[memoTitleLen] && (fText[memoTitleLen] != '\n'))
 		memoTitleLen++;
-	fTitle = new char[memoTitleLen + 1];
-
-	strncpy(fTitle, fText, memoTitleLen);
-	fTitle[memoTitleLen] = 0;
+	// Null-terminate for a moment so that toUnicode() works.
+	char c = fText[memoTitleLen];
+	fText[memoTitleLen]=0;
+	fTitle = codec()->toUnicode(fText);
+	fText[memoTitleLen]=c;
 }
 
 // The indirection just to make the base class happy
@@ -112,11 +110,11 @@ QString PilotMemo::shortTitle() const
 QString PilotMemo::sensibleTitle() const
 {
 	FUNCTIONSETUP;
-	const char *s = getTitle();
+	QString s = getTitle();
 
-	if (s && *s)
+	if (!s.isEmpty())
 	{
-		return QString(s);
+		return s;
 	}
 	else
 	{

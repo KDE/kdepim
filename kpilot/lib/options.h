@@ -41,6 +41,8 @@
 #include "config.h"
 #endif
 
+// #define QT_NO_ASCII_CAST		(1)
+
 #ifndef QT_VERSION
 #include <qglobal.h>
 #endif

@@ -36,6 +36,8 @@
 
 // #include <pi-macros.h>
 
+#include <qstring.h>
+
 #include "pilotRecord.h"
 
 class QTextCodec;
@@ -135,6 +137,7 @@ public:
 	static QTextCodec *codec() 
 		{ if (pilotCodec) return pilotCodec; else return createCodec(0L); } ;
 	static QTextCodec *createCodec(const char *);
+	static QTextCodec *setupPilotCodec(const QString &);
 };
 
 #endif

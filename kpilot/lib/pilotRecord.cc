@@ -105,10 +105,42 @@ void PilotRecord::setData(const char *data, int len)
 /* static */ QTextCodec *PilotAppCategory::pilotCodec = 0L;
 
 static const char *latin1 = "ISO8859-1" ;
+// static const char *sjis = "Shift-JIS" ;
+
 /* static */ QTextCodec *PilotAppCategory::createCodec(const char *p)
 {
+	FUNCTIONSETUP;
+	
 	if (!p) p=latin1;
+#ifdef DEBUG
+	DEBUGKPILOT << ": Creating codec for " << p << endl;
+#endif
 	QTextCodec *q = QTextCodec::codecForName(p);
 	if (!q) q = QTextCodec::codecForName(latin1);
+	pilotCodec = q;
 	return q;
 }
+
+/* static */ QTextCodec *PilotAppCategory::setupPilotCodec(const QString &s)
+{
+	FUNCTIONSETUP;
+	
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Creating codec " << s << endl;
+#endif
+
+	const char *p = 0L;
+	// This latin1() is OK. The names of the encodings
+	// as shown in the table in the QTextCodec docs
+	// are all US-ASCII.
+	if (!s.isEmpty()) p=s.latin1();
+	
+	(void) PilotAppCategory::createCodec(p);
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Got codec " << codec()->name() << endl;
+#endif
+}
+

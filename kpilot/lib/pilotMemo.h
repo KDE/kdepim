@@ -41,11 +41,11 @@ public:
 	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); }
 	PilotMemo(void *buf, int attr, recordid_t id, int category)
 		: PilotAppCategory(attr, id, category) { unpack(buf, 1); }
-	~PilotMemo() { if (fText) delete fText; if (fTitle) delete fTitle;}
+	~PilotMemo() { if (fText) delete fText; }
 
 	const char *text(void) const { return fText; }
 	void setText(const char* text) { unpack(text, 0); }
-	const char* getTitle(void) const { return fTitle; }
+	QString getTitle(void) const { return fTitle; }
 	PilotRecord* pack() { return PilotAppCategory::pack(); }
 
 	typedef enum { MAX_MEMO_LEN=8192 } Constants ;
@@ -71,7 +71,7 @@ protected:
 private:
 	char *fText;
 	int fSize;
-	char* fTitle;
+	QString fTitle;
 
 	void *internalPack(unsigned char *);
 };

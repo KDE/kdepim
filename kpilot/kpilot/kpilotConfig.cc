@@ -56,7 +56,6 @@
 #include "kpilotConfig.h"
 #endif
 
-
 static const char *kpilotconfig_id =
 	"$Id$";
 
@@ -315,6 +314,7 @@ BoolProperty_(UseKeyField, "UseKeyField", false)
 
 
 StringProperty_(PilotDevice, "PilotDevice", "/dev/pilot")
+StringProperty_(Encoding, "Encoding", QString::null)
 
 
 StringProperty_(User, "UserName", QString::null)

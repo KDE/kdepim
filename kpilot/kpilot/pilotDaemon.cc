@@ -116,6 +116,8 @@ static const char *pilotdaemon_id =
 #endif
 
 
+#include "pilotAppCategory.h"
+
 #ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
 #endif
@@ -426,6 +428,8 @@ void PilotDaemon::showTray()
 	fPilotDevice = config.getPilotDevice();
 	fPilotType = KPilotDeviceLink::None;
 	int t = config.getPilotType();
+	
+	(void) PilotAppCategory::setupPilotCodec(config.getEncoding());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname

@@ -236,6 +236,8 @@ void KPilotInstaller::readConfig()
 
 	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	fKillDaemonOnExit = c.getKillDaemonOnExit();
+	
+	(void) PilotAppCategory::setupPilotCodec(c.getEncoding());
 }
 
 

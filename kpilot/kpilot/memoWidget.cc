@@ -374,11 +374,6 @@ void MemoWidget::slotDeleteMemo()
 
 	int item = fListBox->currentItem();
 	
-	// ick! data loss here. need to check first if
-	// the item is selected, and besides, iterate 
-	// through all the selected items.
-	#warning "Memo viewer can cause data loss"
-	
 	if (item == -1)
 	{
 #ifdef DEBUG
