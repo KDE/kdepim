@@ -39,7 +39,8 @@ enum IMAP_TYPE
   ITYPE_DIR,     /*< Object is a directory. i.e. does not contain message, just mailboxes */
   ITYPE_BOX,     /*< Object is a mailbox. i.e. contains mails */
   ITYPE_DIR_AND_BOX, /*< Object contains both mails and mailboxes */
-  ITYPE_MSG   /*< Object is a mail */
+  ITYPE_MSG,   /*< Object is a mail */
+  ITYPE_ATTACH   /*< Object is an attachment */
 };
 
 /** @brief IOSlave derived class */
@@ -65,7 +66,6 @@ public:
   virtual void get (const KURL & _url);
   virtual void stat (const KURL & _url);
   virtual void slave_status ();
-  virtual void mimetype (const KURL & _url);
   virtual void del (const KURL & _url, bool isFile);
   virtual void special (const QByteArray & data);
   virtual void listDir (const KURL & _url);
@@ -144,7 +144,7 @@ private:
   int myPort;
   bool mySSL;
 
-  bool relayEnabled, cacheOutput;
+  bool relayEnabled, cacheOutput, findMimeType;
   QByteArray outputCache;
   QBuffer outputBuffer;
   Q_ULONG outputBufferIndex;

@@ -70,6 +70,7 @@
 #include <kio/slaveinterface.h>
 #include <kio/passdlg.h>
 #include <klocale.h>
+#include <kmimetype.h>
 
 #define IMAP_PROTOCOL "newimap"
 #define IMAP_SSL_PROTOCOL "newimaps"
@@ -138,6 +139,7 @@ IMAP4Protocol::IMAP4Protocol (const QCString & pool, const QCString & app, bool 
   relayEnabled = false;
   readBufferLen = 0;
   cacheOutput = false;
+  findMimeType = false;
   mTimeOfLastNoop = QDateTime();
   mHierarchyDelim.clear();
 }
@@ -156,7 +158,10 @@ IMAP4Protocol::get (const KURL & _url)
   QString aBox, aSequence, aType, aSection, aValidity, aDelimiter;
   enum IMAP_TYPE aEnum =
     parseURL (_url, aBox, aSection, aType, aSequence, aValidity, aDelimiter);
-  mimeType (getMimeType(aEnum));
+  if (aEnum != ITYPE_ATTACH)
+    mimeType (getMimeType(aEnum));
+  else
+    findMimeType = true;
 
   if (aSequence == "0:0" && getState() == ISTATE_SELECT)
   {
@@ -259,7 +264,7 @@ IMAP4Protocol::get (const KURL & _url)
       outputLine ("\r\n", 2);
     }
 
-    if (aEnum == ITYPE_MSG)
+    if (aEnum == ITYPE_MSG || aEnum == ITYPE_ATTACH)
       relayEnabled = true;
 
     if (aSequence != "0:0")
@@ -560,6 +565,13 @@ IMAP4Protocol::setHost (const QString & _host, int _port,
 void
 IMAP4Protocol::parseRelay (const QByteArray & buffer)
 {
+  if (findMimeType) {
+    // try to find the mimetype
+    QString mimetype = KMimeType::findByContent( buffer )->name();
+    kdDebug(7116) << "IMAP4::parseRelay - mimeType " << mimetype << endl;
+    mimeType(mimetype);
+    findMimeType = false;
+  }
   if (relayEnabled)  {
     data( buffer );
     mProcessedSize += buffer.size();
@@ -662,18 +674,6 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
       return FALSE;
     }
   }
-}
-
-
-void
-IMAP4Protocol::mimetype (const KURL & _url)
-{
-  kdDebug(7116) << "IMAP4::mimetype - " << _url.prettyURL() << endl;
-  QString aBox, aSequence, aType, aSection, aValidity, aDelimiter;
-
-  mimeType (getMimeType(parseURL (_url, aBox, aSection, aType, aSequence,
-            aValidity, aDelimiter)));
-  finished ();
 }
 
 void
@@ -1068,6 +1068,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
     break;
 
   case ITYPE_UNKNOWN:
+  case ITYPE_ATTACH:
     error (ERR_CANNOT_DELETE, _url.prettyURL());
     break;
   }
@@ -1327,6 +1328,7 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
       break;
 
     case ITYPE_MSG:
+    case ITYPE_ATTACH:
     case ITYPE_UNKNOWN:
       error (ERR_CANNOT_RENAME, src.prettyURL());
       break;
@@ -1384,14 +1386,21 @@ IMAP4Protocol::stat (const KURL & _url)
       }
       setState(ISTATE_LOGIN);
     }
-    imapCommand *cmd = doCommand(imapCommand::clientStatus(aBox, aSection));
-    bool ok = cmd->result() == "OK";
-    QString cmdInfo = cmd->resultInfo();
-    completeQueue.removeRef(cmd);
+    bool ok = false;
+    QString cmdInfo;
+    if (aType == ITYPE_MSG || aType == ITYPE_ATTACH)
+      ok = true;
+    else
+    {
+      imapCommand *cmd = doCommand(imapCommand::clientStatus(aBox, aSection));
+      ok = cmd->result() == "OK";
+      cmdInfo = cmd->resultInfo();
+      completeQueue.removeRef(cmd);
+    }
     if (!ok)
     {
       bool found = false;
-      cmd = doCommand (imapCommand::clientList ("", aBox));
+      imapCommand *cmd = doCommand (imapCommand::clientList ("", aBox));
       if (cmd->result () == "OK")
       {
         for (QValueListIterator < imapList > it = listResponses.begin ();
@@ -1417,7 +1426,8 @@ IMAP4Protocol::stat (const KURL & _url)
       entry.append(atom);
     }
   } else
-  if (aType == ITYPE_BOX || aType == ITYPE_DIR_AND_BOX || aType == ITYPE_MSG)
+  if (aType == ITYPE_BOX || aType == ITYPE_DIR_AND_BOX || aType == ITYPE_MSG ||
+      aType == ITYPE_ATTACH)
   {
     ulong validity = 0;
     // see if the box is already in select/examine state
@@ -1449,7 +1459,7 @@ IMAP4Protocol::stat (const KURL & _url)
         redirection (newUrl);
       }
     }
-    else if (aType == ITYPE_MSG)
+    else if (aType == ITYPE_MSG || aType == ITYPE_ATTACH)
     {
       //must determine if this message exists
       //cause konqueror will check this on paste operations
@@ -1487,6 +1497,7 @@ IMAP4Protocol::stat (const KURL & _url)
     break;
 
   case ITYPE_MSG:
+  case ITYPE_ATTACH:
     atom.m_uds = UDS_FILE_TYPE;
     atom.m_str = QString::null;
     atom.m_long = S_IFREG;
@@ -1696,6 +1707,11 @@ IMAP4Protocol::getMimeType (enum IMAP_TYPE aType)
 
   case ITYPE_MSG:
     return "message/rfc822";
+    break;
+
+  // this should be handled by parseRelay  
+  case ITYPE_ATTACH:
+    return "application/octet-stream";
     break;
 
   case ITYPE_UNKNOWN:
@@ -1980,6 +1996,12 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
         retVal = ITYPE_MSG;
     }
   }
+  if (retVal == ITYPE_MSG)
+  {
+    if (_section.find ("BODY.PEEK[", 0, false) != -1 ||
+        _section.find ("BODY[", 0, false) != -1)
+      retVal = ITYPE_ATTACH;
+  }
   if ( _hierarchyDelimiter.isEmpty() &&
        (_type == "LIST" || _type == "LSUB" || _type == "LSUBNOCHECK") )
   {
@@ -1995,6 +2017,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
     if (_hierarchyDelimiter.isEmpty())
       _hierarchyDelimiter = "/";
   }
+  kdDebug(7116) << "IMAP4::parseURL - return " << retVal << endl;
 
   return retVal;
 }
