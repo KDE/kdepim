@@ -125,15 +125,18 @@ EmpathMailboxPOP3::_nextCommand()
 	if (commandQueue_.isEmpty())
 		return;
 
+	// FIXME: Ask user about password if not given
 	QString prefix =
-	//	"pop://" + username_ + ":" + password_ + "@" + serverAddress_ + "/";
-		"pop://" + serverAddress_ + "/";
+		"pop://" + username_ + ":" + password_ + "@" + serverAddress_ + "/";
 	
 	QString command = prefix + commandQueue_.head()->command();
 	
 	empathDebug("command == " + command);
 	
-	job->get(command);
+	if(job->get(command)) 
+		empathDebug("job->get() returned TRUE");
+	else 
+		empathDebug("job->get() returned FALSE");
 }
 
 	bool

@@ -92,7 +92,7 @@ EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
 	px.resize(width(), height());
 	px.gradientFill(
 		kapp->palette().color(QPalette::Normal, QColorGroup::Base),
-		kapp->palette().color(QPalette::Normal, QColorGroup::Background));
+		kapp->palette().color(QPalette::Normal, QColorGroup::Background), KPixmap::Vertical);
 	
 	int th = QFontMetrics(KGlobal::generalFont()).height();
 	
@@ -162,7 +162,7 @@ EmpathHeaderViewWidget::mouseMoveEvent(QMouseEvent * e)
 		px.resize(30, height());
 		px.gradientFill(
 			kapp->palette().color(QPalette::Normal, QColorGroup::Base),
-			kapp->palette().color(QPalette::Normal, QColorGroup::Background));		
+			kapp->palette().color(QPalette::Normal, QColorGroup::Background), KPixmap::Vertical);		
 		p.drawPixmap(width() - 30, 0, px);
 		p.drawPixmap(width() - 26, 2, clipIcon_);
 		glowing_ = false;

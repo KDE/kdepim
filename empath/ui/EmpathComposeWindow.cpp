@@ -178,12 +178,12 @@ EmpathComposeWindow::setupToolBar()
 	tb2->insertButton(
 		empathIcon("dig-sign.png"),
 		id_digitallySign_, SIGNAL(toggled(bool)),
-		this, SLOT(s_digSign(bool)), true, i18n("Digitally Sign"));
+		this, SLOT(s_digitallySign(bool)), true, i18n("Digitally Sign"));
 
 	tb2->insertButton(
 		empathIcon("sign.png"),
 		id_addSignature_, SIGNAL(toggled(bool)),
-		this, SLOT(s_sign(bool)), true, i18n("Add Signature"));
+		this, SLOT(s_addSignature(bool)), true, i18n("Add Signature"));
 	
 	KConfig * c(KGlobal::config());
 

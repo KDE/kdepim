@@ -28,11 +28,11 @@
 // Qt includes
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qmessagebox.h>
 
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kmsgbox.h>
 #include <klocale.h>
 
 // Local includes
@@ -73,9 +73,8 @@ EmpathMailSender::send(RMM::RMessage & message)
 	if (queueFolder == 0) {
 		empathDebug("Couldn't queue message - couldn't find queue folder !");
 		empathDebug("Queue folder was specified as: \"" + queueURL.asString() + "\"");
-		KMsgBox::message(0, "Empath",
-			i18n("Couldn't queue message ! Writing backup"),
-			KMsgBox::EXCLAMATION, i18n("OK"));
+		QMessageBox::critical(0, "Empath",
+			i18n("Couldn't queue message ! Writing backup"), i18n("OK"));
 		emergencyBackup(message);
 		t->done();
 		empath->s_infoMessage(i18n("Unable to send message"));
@@ -86,9 +85,9 @@ EmpathMailSender::send(RMM::RMessage & message)
 	
 	if (id.isNull()) {
 		empathDebug("Couldn't queue message - folder won't accept !");
-		KMsgBox::message(0, "Empath",
+		QMessageBox::critical(0, "Empath",
 			i18n("Couldn't queue message ! Writing backup"),
-			KMsgBox::EXCLAMATION, i18n("OK"));
+			i18n("OK"));
 		emergencyBackup(message);
 		t->done();
 		empath->s_infoMessage(i18n("Unable to send message"));
@@ -206,9 +205,8 @@ EmpathMailSender::queue(RMM::RMessage & message)
 	
 	if (queueFolder == 0) {
 		empathDebug("Couldn't queue message - couldn't find queue folder !");
-		KMsgBox::message(0, "Empath",
-			i18n("Couldn't queue message ! Writing backup"),
-			KMsgBox::EXCLAMATION, i18n("OK"));
+		QMessageBox::critical(0, "Empath",
+			i18n("Couldn't queue message ! Writing backup"), i18n("OK"));
 		emergencyBackup(message);
 		empath->s_infoMessage(i18n("Unable to queue message"));
 		return;
@@ -216,9 +214,8 @@ EmpathMailSender::queue(RMM::RMessage & message)
 	
 	if (!queueFolder->writeMessage(message)) {
 		empathDebug("Couldn't queue message - folder won't accept !");
-		KMsgBox::message(0, "Empath",
-			i18n("Couldn't queue message ! Writing backup"),
-			KMsgBox::EXCLAMATION, i18n("OK"));
+		QMessageBox::critical(0, "Empath", i18n("Couldn't queue message ! Writing backup"),
+				     i18n("OK"));
 		emergencyBackup(message);
 		empath->s_infoMessage(i18n("Unable to queue message"));
 		return;
@@ -246,13 +243,12 @@ EmpathMailSender::emergencyBackup(RMM::RMessage & message)
 	empathDebug("Opening file " + QString(tempName));
 	QFile f;
 
-	if (!f.open(IO_WriteOnly, fd)) {
+	if (!f.open(IO_WriteOnly|IO_Raw, fd)) {
 		empathDebug("Couldn't open the temporary file " + tempName);
 		empathDebug("EMERGENCY BACKUP COULD NOT BE WRITTEN !");
 		empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
-		KMsgBox::message(0, "Empath",
-			i18n("Couldn't write the backup file ! Message has been LOST !"),
-			KMsgBox::EXCLAMATION, i18n("OK"));
+		QMessageBox::critical(0, "Empath",
+			i18n("Couldn't write the backup file ! Message has been LOST !"), i18n("OK"));
 		empath->s_infoMessage(i18n("Couldn't write backup file !"));
 		return;
 	}
@@ -262,24 +258,35 @@ EmpathMailSender::emergencyBackup(RMM::RMessage & message)
 	QCString text(message.asString());
 	f.writeBlock(text.data(), text.length());
 
-	f.flush();
-	f.close();
-	
 	if (f.status() != IO_Ok) {
-		empathDebug("Couldn't successfully close the file.");
+		empathDebug("Couldn't successfully write the temporary file " + tempName);
 		empathDebug("EMERGENCY BACKUP COULD NOT BE VERIFIED !");
 		empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
-		KMsgBox::message(0, "Empath",
-		i18n("Couldn't write the backup file ! Message may have been LOST !"),
-			KMsgBox::EXCLAMATION, i18n("OK"));
+		QMessageBox::critical(0, "Empath",
+				      i18n("Couldn't write the backup file ! Message may have been LOST !"),
+				      i18n("OK"));
 		empath->s_infoMessage(i18n("Couldn't write backup file !"));
 		return;
 	}
 	
-	KMsgBox::message(0, "Empath",
+
+	f.close();
+	
+	if (close(fd) != 0) {
+		empathDebug("Couldn't successfully close the temporary file " + tempName);
+		empathDebug("EMERGENCY BACKUP COULD NOT BE VERIFIED !");
+		empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
+		QMessageBox::critical(0, "Empath",
+				      i18n("Couldn't write the backup file ! Message may have been LOST !"),
+				      i18n("OK"));
+		empath->s_infoMessage(i18n("Couldn't write backup file !"));
+		return;
+	}
+	
+	QMessageBox::critical(0, "Empath",
 		i18n("Message backup written to") + " " +
 		QString::fromLatin1(tempComposeFilename),
-		KMsgBox::INFORMATION, i18n("OK"));
+		i18n("OK"));
 	
 	empath->s_infoMessage(
 		i18n("Message backup written to:") + " " +

@@ -51,7 +51,7 @@ class EmpathAddressSelectionWidget : public QWidget
 
 	protected slots:
 
-		void s_textChanged();
+		void s_textChanged(const QString&);
 		void s_lostFocus();
 		void s_browseClicked();
 		

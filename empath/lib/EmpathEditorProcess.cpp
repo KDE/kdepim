@@ -90,12 +90,6 @@ EmpathEditorProcess::go()
 	f.flush();
 	f.close();
 
-	// f doesn't own the file so I must ::close().
-	if (f.status() != IO_Ok) {
-		empathDebug("Couldn't successfully close the file.");
-		return;
-	}
-
 	// Hold mtime for the file.
 	// FIXME: Will this work over NFS ?
 	struct stat statbuf;
@@ -117,6 +111,10 @@ EmpathEditorProcess::go()
 	kapp->processEvents();
 
 	myModTime_.setTime_t(statbuf.st_mtime);
+	
+	// f doesn't own the file so I must ::close().
+	if (close(fd) != 0) 
+		empathDebug("Couldn't successfully close the file.");
 }
 
 	void

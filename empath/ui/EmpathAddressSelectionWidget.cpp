@@ -64,8 +64,8 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
 	layout_->addWidget(le_address_,	0, 0);
 	layout_->addWidget(pb_browse_,	0, 1);
 
-	QObject::connect(le_address_, SIGNAL(textChanged()),
-			this, SLOT(s_textChanged()));
+	QObject::connect(le_address_, SIGNAL(textChanged(const QString&)),
+			this, SLOT(s_textChanged(const QString&)));
 	
 	// FIXME
 	QObject::connect(le_address_, SIGNAL(returnPressed()),
@@ -95,7 +95,7 @@ EmpathAddressSelectionWidget::setAddress(const QString & address)
 }
 
 	void
-EmpathAddressSelectionWidget::s_textChanged()
+EmpathAddressSelectionWidget::s_textChanged(const QString&)
 {
 	empathDebug("s_textChanged() called");
 }

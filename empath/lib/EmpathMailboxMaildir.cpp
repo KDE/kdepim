@@ -223,7 +223,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 	// through subdirs. Any subdir that has cur, tmp and new is a Maildir
 	// folder.
 
-	empathDebug("path == " + path_);
 	while (path_.at(path_.length() - 1) == '/')
 		path_.truncate(path_.length() - 1);
 	empathDebug("path == " + path_);
@@ -290,6 +289,9 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 		boxList_.append(m);
 		emit(updateFolderLists());
 	}
+	else
+		empathDebug("dir " + currentDir + " doesn't look like a maildir!");
+	
 }
 
 	bool
