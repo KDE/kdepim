@@ -2508,6 +2508,10 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
     FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
     icalcomponent_add_component(message,writeFreeBusy(freebusy, method));
   }
+  if (incidence->type() == "Journal" ) {
+    Journal *journal = static_cast<Journal *>(incidence);
+    icalcomponent_add_component( message, writeJournal( journal ) );
+  }
 
   return message;
 }
