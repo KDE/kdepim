@@ -83,6 +83,7 @@ class KNGroupBrowser : public KDialogBase {
 
     QWidget *page;
     QListView *groupView;
+    int delayedCenter;
     KLineEdit *filterEdit;
     QCheckBox *subCB, *newCB;
     QPushButton  *arrowBtn1, *arrowBtn2;
@@ -97,6 +98,7 @@ class KNGroupBrowser : public KDialogBase {
   protected slots:
     void slotLoadList();
     void slotItemExpand(QListViewItem *it);
+    void slotCenterDelayed();
     void slotItemDoubleClicked(QListViewItem *it);   // double click checks/unchecks (opens/closes) item
     void slotFilter(const QString &txt);
     void slotRefilter();

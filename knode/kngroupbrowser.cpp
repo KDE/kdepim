@@ -273,6 +273,25 @@ void KNGroupBrowser::slotItemExpand(QListViewItem *it)
   }
 
   createListItems(it);
+
+  // center the item - smart scrolling
+  delayedCenter = -1;
+  int y = groupView->itemPos(it);
+  int h = it->height();
+
+  if ( (y+h*4+5) >= (groupView->contentsY()+groupView->visibleHeight()) )
+  {
+    groupView->ensureVisible(groupView->contentsX(), y+h/2, 0, h/2);
+    delayedCenter = y+h/2;
+    QTimer::singleShot(300, this, SLOT(slotCenterDelayed()));
+  }
+}
+
+
+void KNGroupBrowser::slotCenterDelayed()
+{
+  if (delayedCenter != -1)
+    groupView->ensureVisible(groupView->contentsX(), delayedCenter, 0, groupView->visibleHeight()/2);
 }
 
 
