@@ -27,16 +27,22 @@ TODO LIST (Ignore the file TODO)
   interface (and registration!) so that you can follow the daemon's log
   output without starting KPilot at all.
 
-KPilot Developer's notes for February 8th, 2003
+KPilot Developer's notes for February 7th, 2003
 ===============================================  
 
+* KPilot 4.3.7 is released. Tarballs on the website tonight.
 * Need to backport the changes from 2002-11-10 to BRANCH.
 * Grep for and destroy latin1() calls in code. These are now in
   the code to keep KPilot working under QT_NO_ASCII_CAST conditions,
   but should all be replaced by the proper functions instead - either
   QFile::encodeName() or by updating other functions to take QStrings
   instead of const char *, and using the Pilot codec where appropriate.
+* Reinhold's on vacation for a little while.
 
+2003-2-7  Adriaan de Groot
+* Updated the website some.
+* options.h [BRANCH] Version number now 4.3.7.
+  
 2003-2-6  Adriaan de Groot
 * Did a big chunk of merging from BRANCH to HEAD. Discovered two
   things that didn't work well:
