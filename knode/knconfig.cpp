@@ -32,6 +32,7 @@
 #include <kstddirs.h>
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kiconeffect.h>
 #include <kcharsets.h>
 
 #include "knglobals.h"
@@ -181,12 +182,20 @@ KNConfig::Appearance::Appearance()
   c_olorNames[url]=i18n("Link");
 
   defCol=kapp->palette().disabled().text();
-  c_olors[readArticle]=c->readColorEntry("readThreadColor",&defCol);
-  c_olorNames[readArticle]=i18n("Read Thread");
+  c_olors[readThread]=c->readColorEntry("readThreadColor",&defCol);
+  c_olorNames[readThread]=i18n("Read Thread");
 
   defCol=kapp->palette().active().text();
-  c_olors[unreadArticle]=c->readColorEntry("unreadThreadColor",&defCol);
-  c_olorNames[unreadArticle]=i18n("Unread Thread");
+  c_olors[unreadThread]=c->readColorEntry("unreadThreadColor",&defCol);
+  c_olorNames[unreadThread]=i18n("Unread Thread");
+
+  defCol.setRgb(136,136,136);
+  c_olors[readArticle]=c->readColorEntry("readArtColor",&defCol);
+  c_olorNames[readArticle]=i18n("Read Article");
+
+  defCol.setRgb(183,154,11);
+  c_olors[unreadArticle]=c->readColorEntry("unreadArtColor",&defCol);
+  c_olorNames[unreadArticle]=i18n("Unread Article");
 
   defCol=kapp->palette().active().highlight();
   c_olors[activeItem]=c->readColorEntry("activeItemColor",&defCol);
@@ -215,10 +224,7 @@ KNConfig::Appearance::Appearance()
   updateHexcodes();
 
   //icons
-  i_cons[greyBall]        = UserIcon("greyball");
-  i_cons[redBall]         = UserIcon("redball");
-  i_cons[greyBallChkd]    = UserIcon("greyballchk");
-  i_cons[redBallChkd]     = UserIcon("redballchk");
+  recreateLVIcons();
   i_cons[newFups]         = UserIcon("newsubs");
   i_cons[eyes]            = UserIcon("eyes");
   i_cons[mail]            = SmallIcon("mail_generic");
@@ -253,8 +259,10 @@ void KNConfig::Appearance::save()
   c->writeEntry("quote2Color", c_olors[quoted2]);
   c->writeEntry("quote3Color", c_olors[quoted3]);
   c->writeEntry("URLColor", c_olors[url]);
-  c->writeEntry("readArticleColor", c_olors[readArticle]);
-  c->writeEntry("unreadArticleColor", c_olors[unreadArticle]);
+  c->writeEntry("readThreadColor", c_olors[readThread]);
+  c->writeEntry("unreadThreadColor", c_olors[unreadThread]);
+  c->writeEntry("readArtColor", c_olors[readArticle]);
+  c->writeEntry("unreadArtColor", c_olors[unreadArticle]);
   c->writeEntry("activeItemColor", c_olors[activeItem]);
   c->writeEntry("selectedItemColor", c_olors[selectedItem]);
 
@@ -332,12 +340,30 @@ QColor KNConfig::Appearance::headerDecoColor()
 }
 
 
+QColor KNConfig::Appearance::unreadThreadColor()
+{
+  if(u_seColors)
+    return c_olors[unreadThread];
+  else
+    return kapp->palette().active().text();
+}
+
+
+QColor KNConfig::Appearance::readThreadColor()
+{
+  if(u_seColors)
+    return c_olors[readThread];
+  else
+    return kapp->palette().disabled().text();
+}
+
+
 QColor KNConfig::Appearance::unreadArticleColor()
 {
   if(u_seColors)
     return c_olors[unreadArticle];
   else
-    return kapp->palette().active().text();
+    return QColor(183,154,11);
 }
 
 
@@ -346,7 +372,7 @@ QColor KNConfig::Appearance::readArticleColor()
   if(u_seColors)
     return c_olors[readArticle];
   else
-    return kapp->palette().disabled().text();
+    return QColor(136,136,136);
 }
 
 
@@ -429,7 +455,7 @@ QColor KNConfig::Appearance::defaultColor(int i)
     case quoted1:
     case quoted2:
     case quoted3:
-    case unreadArticle:
+    case unreadThread:
       return kapp->palette().active().text();
     break;
 
@@ -437,7 +463,7 @@ QColor KNConfig::Appearance::defaultColor(int i)
       return KGlobalSettings::linkColor();
     break;
 
-    case readArticle:
+    case readThread:
       return kapp->palette().disabled().text();
     break;
 
@@ -448,6 +474,13 @@ QColor KNConfig::Appearance::defaultColor(int i)
     case selectedItem:
       return kapp->palette().active().background();
     break;
+
+    case unreadArticle:
+      return QColor(183,154,11);
+    break;
+
+    case readArticle:
+      return QColor(136,136,136);
   }
 
   return kapp->palette().disabled().text();
@@ -457,6 +490,30 @@ QColor KNConfig::Appearance::defaultColor(int i)
 QFont KNConfig::Appearance::defaultFont(int)
 {
   return KGlobalSettings::generalFont();
+}
+
+
+void KNConfig::Appearance::recreateLVIcons()
+{
+  QPixmap tempPix = UserIcon("greyball");
+
+  QImage tempImg=tempPix.convertToImage();
+  KIconEffect::colorize(tempImg, readArticleColor(), 1.0);
+  i_cons[greyBall].convertFromImage(tempImg);
+
+  tempImg=tempPix.convertToImage();
+  KIconEffect::colorize(tempImg, unreadArticleColor(), 1.0);
+  i_cons[redBall].convertFromImage(tempImg);
+
+  tempPix = UserIcon("greyballchk");
+
+  tempImg=tempPix.convertToImage();
+  KIconEffect::colorize(tempImg, readArticleColor(), 1.0);
+  i_cons[greyBallChkd].convertFromImage(tempImg);
+
+  tempImg=tempPix.convertToImage();
+  KIconEffect::colorize(tempImg, unreadArticleColor(), 1.0);
+  i_cons[redBallChkd].convertFromImage(tempImg);
 }
 
 

@@ -709,6 +709,8 @@ void KNConfig::AppearanceWidget::apply()
     d_ata->f_onts[i] = (static_cast<FontListItem*>(f_List->item(i)))->font();
 
   d_ata->save();
+
+  d_ata->recreateLVIcons();
 }
 
 

@@ -258,7 +258,7 @@ class SmtpAccountWidget : public BaseWidget {
 
 class Appearance : public Base {
 
-#define COL_CNT 11
+#define COL_CNT 13
 #define FNT_CNT 4
 #define HEX_CNT 4
 #define ICON_CNT 14
@@ -267,8 +267,8 @@ class Appearance : public Base {
 
   public:
     enum ColorIndex   { background=0, header=1, normalText=2, quoted1=3, quoted2=4,
-                        quoted3=5, url=6, unreadArticle=7, readArticle=8,activeItem=9,
-                        selectedItem=10 };
+                        quoted3=5, url=6, unreadThread=7, readThread=8, unreadArticle=9,
+                        readArticle=10, activeItem=11, selectedItem=12 };
 
     enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2, headerHex=3 };
 
@@ -293,6 +293,8 @@ class Appearance : public Base {
     QColor quoteColor3();
     QColor linkColor();
     QColor headerDecoColor();
+    QColor unreadThreadColor();
+    QColor readThreadColor();
     QColor unreadArticleColor();
     QColor readArticleColor();
     QColor activeItemColor();
@@ -319,6 +321,8 @@ class Appearance : public Base {
     const QString& fontName(int i)       { return f_ontNames[i]; }
     int fontCount()                      { return FNT_CNT; }
     QFont defaultFont(int);
+
+    void recreateLVIcons();
 
     bool l_ongGroupList,
          u_seColors,

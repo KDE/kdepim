@@ -428,6 +428,8 @@ void KNodeView::configChanged()
     h_drView->header()->resizeSection(3,0);
     h_drView->header()->setResizeEnabled(false,3);
   }
+
+  a_rtManager->updateListViewItems();
 }
 
 

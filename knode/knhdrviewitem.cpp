@@ -89,13 +89,13 @@ bool KNHdrViewItem::firstColBold()
 
 QColor KNHdrViewItem::normalColor()
 {
-  return knGlobals.cfgManager->appearance()->unreadArticleColor();
+  return knGlobals.cfgManager->appearance()->unreadThreadColor();
 }
 
 
 QColor KNHdrViewItem::greyColor()
 {
-  return knGlobals.cfgManager->appearance()->readArticleColor();
+  return knGlobals.cfgManager->appearance()->readThreadColor();
 }
 
 

@@ -335,31 +335,34 @@ void KNArticleManager::showHdrs(bool clear)
 }
 
 
-void KNArticleManager::verifyPGPSignature(KNArticle* a)
-{
-  //create a PGP object and check if the posting is signed
-  KNPgp pgp;
-  pgp.setMessage(a->body());
-  if (!pgp.isSigned()) {
-    KMessageBox::sorry(knGlobals.topWidget,i18n("Cannot find a signature in this message!"));
-    return;
-  }
-  kdDebug(5003) << "KNArticleFactory::createVerify() found signed article, check it now" << endl;
-  if (pgp.goodSignature()) {
-    QString signer = pgp.signedBy();
-    QString key = pgp.signedByKey();
-    KMessageBox::sorry(knGlobals.topWidget,i18n("The signature is valid.\nThe message was signed by %1.").arg(signer));
-  }
-  else {
-    KMessageBox::error(knGlobals.topWidget,i18n("This signature is invalid!"));
-  }
-}                                                                                                                                    
-
-
 void KNArticleManager::updateViewForCollection(KNArticleCollection *c)
 {
   if(g_roup==c || f_older==c)
     showHdrs(false);
+}
+
+
+void KNArticleManager::updateListViewItems()
+{
+  if(!g_roup && !f_older) return;
+
+  if(g_roup) {
+    KNRemoteArticle *art;
+
+    for(int i=0; i<g_roup->length(); i++) {
+      art=g_roup->at(i);
+      if(art->listItem())
+        art->updateListItem();
+    }
+  } else { //folder
+    KNLocalArticle *art;
+
+    for(int idx=0; idx<f_older->length(); idx++) {
+      art=f_older->at(idx);
+      if(art->listItem())
+        art->updateListItem();
+    }
+  }
 }
 
 
@@ -418,6 +421,27 @@ KNArticleCollection* KNArticleManager::collection()
    return f_older;
 
   return 0;
+}
+
+
+void KNArticleManager::verifyPGPSignature(KNArticle* a)
+{
+  //create a PGP object and check if the posting is signed
+  KNPgp pgp;
+  pgp.setMessage(a->body());
+  if (!pgp.isSigned()) {
+    KMessageBox::sorry(knGlobals.topWidget,i18n("Cannot find a signature in this message!"));
+    return;
+  }
+  kdDebug(5003) << "KNArticleFactory::createVerify() found signed article, check it now" << endl;
+  if (pgp.goodSignature()) {
+    QString signer = pgp.signedBy();
+    QString key = pgp.signedByKey();
+    KMessageBox::sorry(knGlobals.topWidget,i18n("The signature is valid.\nThe message was signed by %1.").arg(signer));
+  }
+  else {
+    KMessageBox::error(knGlobals.topWidget,i18n("This signature is invalid!"));
+  }
 }
 
 
