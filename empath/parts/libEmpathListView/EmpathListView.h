@@ -44,20 +44,10 @@ class EmpathListView : public KListView
 
     public:
         
-        EmpathListView(
-            QWidget * parent = 0,
-            const char * name = 0);
-
+        EmpathListView(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathListView();
 
         enum Area { Item, OpenClose, Void };
-
-        /**
-         * When set TRUE the link isn't shown immediately when the cursor is
-         * moved using the keyboard, but after a short delay. 
-         */
-        void setDelayedLink(bool flag) { delayedLink_ = flag; };
-        bool isDelayedLink() { return delayedLink_; };
 
         virtual void setLinkItem(QListViewItem *);
         QListViewItem * linkItem() const
@@ -71,6 +61,9 @@ class EmpathListView : public KListView
         QList<QListViewItem> thread(QListViewItem *);
         QList<QListViewItem> subThread(QListViewItem *);
         
+        bool delayedLink() { return delayedLink_; }
+        void setDelayedLink(bool b) { delayedLink_ = b; }
+
     protected slots:
 
         void s_currentChanged       (QListViewItem *);
@@ -95,10 +88,10 @@ class EmpathListView : public KListView
 
         QListViewItem * linkItem_;
 
-        bool delayedLink_;
         QTimer * delayedLinkTimer_;
 
         bool waitForLink_;
+        bool delayedLink_;
 
         // DnD stuff
         QPoint pressPos_;

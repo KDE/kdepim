@@ -65,9 +65,9 @@ class EmpathMessageListWidget : public EmpathListView
         QString     firstSelected();
         QStringList selection();
         
-        KActionCollection * actionCollection() { return actionCollection_; }
-        
         void setIndex(const QDict<EmpathIndexRecord> &);
+
+        KActionCollection * actionCollection() { return actionCollection_; }
  
     protected:
         
@@ -180,14 +180,14 @@ class EmpathMessageListWidget : public EmpathListView
         void _setSelected(EmpathMessageListItem *, bool);
  
         void _markOne(EmpathIndexRecord::Status);
+
+        KActionCollection * actionCollection_;
         
         QPopupMenu  messageMenu_;
         QPopupMenu  multipleMessageMenu_;
         QPopupMenu  messageMarkMenu_;
         QPopupMenu  threadMenu_;
  
-        KActionCollection * actionCollection_;
-
         QPixmap px_unread_, px_read_, px_marked_, px_attachments_, px_replied_;
         
         QList<EmpathMessageListItem> selected_;

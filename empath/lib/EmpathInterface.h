@@ -19,6 +19,8 @@ class EmpathInterface : virtual public DCOPObject
         virtual QString draftsURL() = 0;
         virtual QString trashURL() = 0;
         virtual QByteArray message(QString url) = 0;
+        virtual QStringList mailboxList() = 0;
+        virtual QStringList folderList(QString url) = 0;
         virtual unsigned int queue(QByteArray message) = 0;
         virtual unsigned int send(QByteArray message) = 0;
         virtual unsigned int sendQueued() = 0;

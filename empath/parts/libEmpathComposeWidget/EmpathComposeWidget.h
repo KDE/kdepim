@@ -53,12 +53,8 @@ class EmpathComposeWidget : public QWidget
 
         ~EmpathComposeWidget();
 
-        /**
-         * Return a composeform when the user wants to send the 
-         * message.
-         */
         EmpathComposeForm composeForm();
-        
+
         QActionCollection * actionCollection() { return actionCollection_; }
         
     protected slots:
@@ -68,9 +64,9 @@ class EmpathComposeWidget : public QWidget
     private:
 
         void _initActions();
-        
+    
         EmpathComposeForm composeForm_;
-       
+        
         EmpathEnvelopeWidget        * envelopeWidget_;
         QMultiLineEdit              * editorWidget_;
         EmpathAttachmentListWidget  * attachmentWidget_;

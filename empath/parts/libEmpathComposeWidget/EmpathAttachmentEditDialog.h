@@ -43,9 +43,9 @@ class EmpathAttachmentEditDialog : public KDialog
 
         EmpathAttachmentEditDialog(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathAttachmentEditDialog();
+
+        EmpathAttachmentSpec attachmentSpec();
         
-        void setSpec(const EmpathAttachmentSpec & s);
-        EmpathAttachmentSpec spec();
         void browse() { s_browse(); }
         
     protected slots:
@@ -62,6 +62,8 @@ class EmpathAttachmentEditDialog : public KDialog
     private:
         
         void    _init();
+
+        EmpathAttachmentSpec spec_;
 
         QButtonGroup    * bg_encoding_;
 
@@ -83,8 +85,6 @@ class EmpathAttachmentEditDialog : public KDialog
         QComboBox       * cb_charset_;
 
         QStringList txtST_, msgST_, appST_, imgST_, vidST_, audST_, chrT_;
-
-        EmpathAttachmentSpec spec_;
 };
 
 #endif

@@ -131,4 +131,73 @@ EmpathMailboxIMAP4::init()
     empathDebug("init() called");
 }
 
+    bool
+EmpathMailboxIMAP4::removeMessage(const EmpathURL & /* url */)
+{
+    // STUB
+    return false;
+}
+ 
+    bool
+EmpathMailboxIMAP4::createFolder(const EmpathURL &)
+{
+    // STUB
+    return false;
+}
+
+    bool
+EmpathMailboxIMAP4::removeFolder(const EmpathURL &)
+{
+    // STUB
+    return false;
+}
+ 
+    RMM::Message
+EmpathMailboxIMAP4::retrieveMessage(const EmpathURL & /* url */)
+{
+    // STUB
+    RMM::Message retval;
+    return retval;
+}
+
+    QString
+EmpathMailboxIMAP4::writeMessage(
+    RMM::Message &,
+    const EmpathURL &
+)
+{
+    // STUB
+    return QString::null;
+}
+
+    bool
+EmpathMailboxIMAP4::markMessage(const EmpathURL &, EmpathIndexRecord::Status)
+{
+    // STUB
+    return false;
+}
+
+    EmpathSuccessMap
+EmpathMailboxIMAP4::markMessage(
+    const EmpathURL &,
+    const QStringList &,
+    EmpathIndexRecord::Status)
+{
+    // STUB
+    EmpathSuccessMap retval;
+    return retval;
+}
+
+    EmpathSuccessMap
+EmpathMailboxIMAP4::removeMessage(
+    const EmpathURL & /* folder */,
+    const QStringList & /* messageIDList */
+)
+{
+    // STUB
+    EmpathSuccessMap retval;
+    return retval;
+}
+
+
 // vim:ts=4:sw=4:tw=78
