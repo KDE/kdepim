@@ -58,8 +58,8 @@ $Id$
 
 </authorgroup>
 
-<date>2002-09-06</date>
-<releaseinfo>1.04.02</releaseinfo>
+<date>2002-09-30</date>
+<releaseinfo>1.04.07</releaseinfo>
 
 <copyright>
 <year>1999</year>
@@ -2327,43 +2327,6 @@ not to delete old messages at all).</para>
 
 </sect2>
 
-<!-- fixme in kmail: address book vs addressbook -->
-<!-- fixme in KDE3.1: this has been removed short before KDE3.0
-<sect2 id="configure-misc-addressbook">
-<title>Addressbook</title>
-
-<para>An address book lets you store your commonly used email
-addresses. You can call up the address book via
-<menuchoice><guimenu>File</guimenu><guimenuitem>Address Book</guimenuitem></menuchoice>,
-the <guiicon>Address Book</guiicon> button in the main window, 
-or the <guiicon>Address Book</guiicon> button in the
-composer window.</para>
-
-<para>You can choose between two different address books:</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>KAdressbook</guilabel></term>
-<listitem>
-<para>This is the default address book, which has <ulink
-url="/kaddressbook/">its own documentation</ulink>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>KAB</guilabel></term>
-<listitem>
-<para>If the kdeutils package is installed on your system you
-can also choose this address book. See the <ulink
-url="/kab/">&kab; documentation</ulink>.</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-</sect2>
--->
 </sect1>
 
 </chapter>
@@ -2385,7 +2348,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>New Mail Client...</guimenuitem>
+<guimenuitem>New Window...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2416,7 +2379,7 @@ and attachments.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Prints the currently displayed message.</para>
+<para>Display a dialog that lets you prints the currently displayed message.</para>
 </listitem>
 </varlistentry>
 
@@ -2424,7 +2387,7 @@ and attachments.</para>
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Compact All folders</guimenuitem>
+<guimenuitem>Compact All Folders</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Will compact all folders, &ie; it will really move and delete the messages
@@ -2436,7 +2399,7 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Expire All folders</guimenuitem>
+<guimenuitem>Expire All Folders</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Delete old messages from all folders, according to the rules in
@@ -2474,47 +2437,19 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Send Queued</guimenuitem>
+<guimenuitem>Send Queued Messages</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Sends the messages that are in your outbox.</para>
 </listitem>
 </varlistentry>
 
-<!-- fixme in KDE3.1: this has been removed short before KDE3.0
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Address Book...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the <link linkend="configure-misc-addressbook">Address Book</link>.</para>
-</listitem>
-</varlistentry>
--->
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Import...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
-This application lets you import messages from several proprietary mail clients to
-&kmail;.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Close</guimenuitem>
+<guimenuitem>Quit</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2526,6 +2461,7 @@ This application lets you import messages from several proprietary mail clients 
 </variablelist>
 
 </sect2>
+
 
 <sect2 id="reader-edit-menu">
 <title><guimenu>Edit</guimenu> Menu</title>
@@ -2551,7 +2487,7 @@ in the trash.</para>
 <menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Copy Text</guimenuitem>
+<guimenuitem>Copy</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2562,13 +2498,27 @@ in the trash.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>D</keycap></shortcut>
+<shortcut><keycap>T</keycap></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Delete</guimenuitem>
+<guimenuitem>Edit Message</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Moves the selected messages in the trash folder. If the selected
+<para>Edits the selected message if it is editable. Only messages in the
+<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>D</keycap></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Move To Trash</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Moves the selected messages to the trash folder. If the selected
 messages are already in the trash folder, they will really be deleted.</para>
 </listitem>
 </varlistentry>
@@ -2576,17 +2526,14 @@ messages are already in the trash folder, they will really be deleted.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>S</keycap></shortcut>
+<shortcut><keycombo action="simul">&Shift;<keycap>Delete</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Search Messages...</guimenuitem>
+<guimenuitem>Delete</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up a search window that lets you search for messages with
-certain characteristics, &eg; a certain subject. Start the search by entering
-some values and press <guibutton>Search</guibutton>. Click on one of the
-resulting messages and it will appear in the <guilabel>Message
-pane</guilabel>.</para>
+<para>Deletes the selected messages. There is no way to recover the messages
+once they are deleted with this command.</para>
 </listitem>
 </varlistentry>
 
@@ -2599,13 +2546,14 @@ pane</guilabel>.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Lets you search for a string in the current message.</para>
+<para>Lets you search for a string in the currently displayed message.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycap>K</keycap></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Select All Messages</guimenuitem>
 </menuchoice>
@@ -2636,36 +2584,20 @@ pane</guilabel>.</para>
 <sect2 id="reader-view-menu">
 <title><guimenu>View</guimenu> Menu</title>
 
-<!-- LW: This really needs to be broken up to one varlistentry per menu item, fixme -->
-
 <variablelist>
 
+<!-- LW: This really needs to be broken up to one varlistentry per menu item, fixme -->
 <varlistentry>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Brief Headers</guimenuitem>
-</menuchoice>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Fancy Headers</guimenuitem>
-</menuchoice>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Standard Headers</guimenuitem>
-</menuchoice>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Long Headers</guimenuitem>
-</menuchoice>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>All Headers</guimenuitem>
+<guimenuitem>Headers</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>Changes the number of headers that are displayed and the format of the
 headers in the <guilabel>Message pane</guilabel>.</para>
+<!-- fixme: more detailed? -->
 </listitem>
 </varlistentry>
 
@@ -2673,27 +2605,22 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Iconic Attachments</guimenuitem>
-</menuchoice>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Smart Attachments</guimenuitem>
-</menuchoice>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Inlined Attachments</guimenuitem>
+<guimenuitem>Attachments</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>Changes the way that attachments appear in the <guilabel>Message
-pane</guilabel>. With <guimenuitem>Iconic Attachments</guimenuitem>
+pane</guilabel>. With <guimenuitem>Icons</guimenuitem>
 all attachments appear as icons at the bottom of the message.
-<guimenuitem>Inlined Attachments</guimenuitem> shows the attachments
+<guimenuitem>Smart</guimenuitem> will show attachments as
+icons, unless they are so-called inline attachments.
+<!-- fixme: what's that? -->
+<guimenuitem>Inline</guimenuitem> shows the contents of the attachments
 at the bottom of the message. Attachments that cannot be displayed, &eg;
 compressed files, will still be shown as an icon.
-<guimenuitem>Smart Attachments</guimenuitem> will show attachments as
-icons, unless they are so-called inline attachments.</para>
-<!-- fixme: what's that? -->
+<guimenuitem>Hide</guimenuitem> will not show attachments.
+</para>
+<!-- fixme: more detailed? -->
 </listitem>
 </varlistentry>
 
@@ -2701,7 +2628,106 @@ icons, unless they are so-called inline attachments.</para>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Fixed Font Widths</guimenuitem>
+<guimenuitem>Unread Column</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a column in the list of folders which show the number 
+of unread messages per folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Total Column</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a column in the list of folders which show the number 
+of messages per folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>.</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Expand Thread</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If <menuchoice><guimenu>Folder</guimenu><guimenuitem>Thread Messages</guimenuitem>
+</menuchoice> is activated, this will display the thread of the current message, &ie;
+all messages that are replies to the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>,</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Collapse Thread</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If <menuchoice><guimenu>Folder</guimenu><guimenuitem>Thread Messages</guimenuitem>
+</menuchoice> is activated, this will hide the thread of the current message, &ie;
+it will hide all messages that are replies to the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>.</keycap></keycombo></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Expand All Threads</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Expands all threads in the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>,</keycap></keycombo></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Collapse All Threads</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Collapses all threads in the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>V</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>View Source</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Shows the message and its complete headers in plain text format in a new
+window. This can be useful to find out the origin of a mail. You should know
+that it's easy to fake the <literal>From:</literal> header of a mail, but
+one can still find out which mail servers have been used to send the message by looking
+at the <literal>Received:</literal> lines in the header.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Use Fixed Font</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2712,9 +2738,126 @@ dialog.</para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Set Encoding</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Lets you choose the character encoding to be used in the Message
+Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect2>
+
+
+<sect2 id="reader-go-menu">
+<title><guimenu>Go</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>N</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the next message in the Headers pane. The keyboard shortcut
+<keycap>Right Arrow</keycap> also performs this action.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>+</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Unread Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the next unread message in the Headers pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>P</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Previous Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the previous message in the Headers pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>-</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Previous Unread Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the previous unread message in the Headers pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>+</keycap></keycombo></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Unread Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Jumps to the the next folder with unread messages.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>-</keycap></keycombo></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Previous Unread Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Jumps to the the previous folder with unread messages.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>Space</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Unread Text</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Scroll down if you are not yet at the bottom of a message, otherwise jumps
+to the next unread message.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
 
 <sect2 id="reader-folder-menu">
 <title><guimenu>Folder</guimenu> Menu</title>
@@ -2725,10 +2868,11 @@ dialog.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Create...</guimenuitem>
+<guimenuitem>New Folder...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
+<!-- fixme: move this to an extra section?! -->
 <para>Opens the <guilabel>Create Folder</guilabel> dialog which lets you create
 a new folder. You can make this new folder a sub folder if you choose a parent
 folder using the <guilabel>Belongs to</guilabel> selection. The folder
@@ -2768,19 +2912,6 @@ according identity is found.</para>
 visible columns in the header pane. This is useful if you use the
 current folder for your own sent messages.</para>
 
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Properties...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the <guilabel>Modify Folder</guilabel> dialog which lets you
-change the settings for the selected folder.</para> 
 </listitem>
 </varlistentry>
 
@@ -2828,7 +2959,7 @@ not to delete old messages at all).</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Empty</guimenuitem>
+<guimenuitem>Move All Messages to Trash</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2842,11 +2973,11 @@ deleted.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Remove</guimenuitem>
+<guimenuitem>Delete Folder</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Removes the selected folder and all its contents.</para>
+<para>Removes the selected folder and all its contents, including sub folders.</para>
 <para><warning><para>Note that there's no way to access the contents
 of a folder after it has been removed.</para></warning></para>
 </listitem>
@@ -2870,13 +3001,27 @@ activate this for trusted messages.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Thread messages</guimenuitem>
+<guimenuitem>Thread Messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>Shows the messages in the <guilabel>Header pane</guilabel>
 in a tree-like list, with replies showing up directly under the message
 they reply to.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Properties...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<!-- fixme: link to special section?! -->
+<para>Opens up the <guilabel>Properties</guilabel> dialog which lets you
+change the settings for the selected folder.</para> 
 </listitem>
 </varlistentry>
 
@@ -2888,6 +3033,7 @@ they reply to.</para>
 <title><guimenu>Message</guimenu> Menu</title>
 
 <variablelist>
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -2897,63 +3043,23 @@ they reply to.</para>
 </menuchoice>
 </term>
 <listitem>
+<!-- fixme: link composer? -->
+<para>Opens the composer window so you can write a new message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>New Message to Mailing-List...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
 <para>Opens the composer window so you can write a new
 mail. If the current folder holds a mailing list and has a <guilabel>Post 
 Address</guilabel> defined, this address will be default <guilabel>To:</guilabel>
 address.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>N</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Next</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the next message in the Headers pane. The keyboard shortcut
-<keycap>Right Arrow</keycap> also performs this action.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>+</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Next Unread</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the next unread message in the Headers pane.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>P</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Previous</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the previous message in the Headers pane.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>-</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Previous Unread</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selects the previous unread message in the Headers pane.</para>
 </listitem>
 </varlistentry>
 
@@ -2995,7 +3101,7 @@ composer window.</para>
 <menuchoice>
 <shortcut><keycap>L</keycap></shortcut>
 <guimenu>Message</guimenu>
-<guimenuitem>Reply List...</guimenuitem>
+<guimenuitem>Reply Mailing-List...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3009,7 +3115,7 @@ Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Alt;<keycap>R</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Shift;<keycap>R</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Reply Without Quote...</guimenuitem>
 </menuchoice>
@@ -3028,12 +3134,14 @@ text of the original message.</para>
 </menuchoice>
 </term>
 <listitem>
+<!-- fixme: submenu! -->
 <para>Forwards the message to a new recipient. The message's text and some
 important header fields will be copied to the body of the new message 
 with a text marking the forwarded part. Attachments will be forwarded, too.</para>
 </listitem>
 </varlistentry>
 
+<!-- fixme: see above 
 <varlistentry>
 <term><menuchoice>
 <shortcut><keycombo action="simul">&Shift;<keycap>F</keycap></keycombo>
@@ -3048,7 +3156,6 @@ headers will be included in the forwarded message, too. Attachments
 in the original message will also be in the forwarded message's attachment.</para>
 </listitem>
 </varlistentry>
-
 <varlistentry>
 <term>
 <menuchoice>
@@ -3065,6 +3172,7 @@ added in special header fields (<literal>Redirect-From</literal>,
 &etc;).</para> 
 </listitem>
 </varlistentry>
+-->
 
 <varlistentry>
 <term>
@@ -3084,7 +3192,7 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guimenuitem>Send again...</guimenuitem>
+<guimenuitem>Send Again...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3096,26 +3204,11 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guisubmenu>Set Encoding</guisubmenu>
+<guisubmenu>Copy To</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
-<para>Lets you choose the character encoding to be used in the Message
-Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>T</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Edit</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Edits the selected message if it is editable. Only messages in the
-<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
+<para>Copies all of the the selected messages to a certain folder.</para>
 </listitem>
 </varlistentry>
 
@@ -3123,13 +3216,11 @@ Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guisubmenu>Create filter</guisubmenu>
+<guisubmenu>Move To</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
-This new filter is based on fields of the current mail, depending on which
-sub menu you select.</para>
+<para>Moves all of the selected messages to a certain folder.</para>
 </listitem>
 </varlistentry>
 
@@ -3143,10 +3234,9 @@ sub menu you select.</para>
 <listitem>
 <para>Allows you to change the status of the selected message to one of the
 following states (more than one status per message is currently not supported):</para>
-<!-- fixme: more than one somewhen supported? -->
+<!-- TODO: more than one somewhen supported? -->
 
-<!-- TODO: I think it's worth adding inline images here, at some -->
-<!-- point. LW. -->
+<!-- TODO: I think it's worth adding inline images here, at some point. LW. -->
 <informaltable>
 <tgroup cols="2">
 <thead>
@@ -3177,6 +3267,11 @@ has not yet been read.</entry>
 <entry><guimenuitem>Replied</guimenuitem></entry>
 <entry>Blue u-turn arrow</entry>
 <entry>A reply to this message has been sent.</entry>
+</row>
+<row>
+<entry><guimenuitem>Forwarded</guimenuitem></entry>
+<entry>Blue arrow</entry>
+<entry>The message has been forwaded to someone else.</entry>
 </row>
 <row>
 <entry><guimenuitem>Queued</guimenuitem></entry>
@@ -3218,30 +3313,6 @@ states are the same as for <menuchoice><guimenu>Message</guimenu>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Move To</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Moves all of the selected messages to a certain folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Copy To</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Copies all of the the selected messages to a certain folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Apply Filters</guimenuitem>
@@ -3252,24 +3323,76 @@ states are the same as for <menuchoice><guimenu>Message</guimenu>
 </listitem>
 </varlistentry>
 
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-tools-menu">
+<title><guimenu>Tools</guimenu> Menu</title>
+
+<variablelist>
+
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>V</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>View Source...</guimenuitem>
+<shortcut><keycap>S</keycap></shortcut>
+<guimenu>Tools</guimenu>
+<guimenuitem>Find Messages...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Shows the message and its complete headers in plain text format in a new
-window. This can be useful to find out the origin of a mail. You should know
-that it's easy to fake the <literal>From:</literal> header of a mail, but
-one can still find out which mail servers have been used by looking
-at the <literal>Received:</literal> lines in the header.</para>
+<para>Opens up a search window that lets you search for messages with
+certain characteristics, &eg; a certain subject. Start the search by entering
+some values and press <guibutton>Search</guibutton>. Click on one of the
+resulting messages and it will appear in the <guilabel>Message
+pane</guilabel>.</para>
+</listitem>
+</varlistentry>
+
+<!-- fixme in kmail: address book vs addressbook -->
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Address Book</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Starts up <ulink url="/kaddressbook/">&kaddressbook;</ulink>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Import...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
+This application lets you import messages from several proprietary mail clients to
+&kmail;.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guisubmenu>Create Filter</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
+This new filter is based on fields of the current mail, depending on which
+sub menu you select.</para>
 </listitem>
 </varlistentry>
 
 </variablelist>
+
 </sect2>
 
 
@@ -3334,6 +3457,19 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
+<guimenuitem>Configure Notifications...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that lets you configure what happens when new mail arrives,
+like playing a sound.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice>
 </term>
@@ -3358,7 +3494,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Pop Filters...</guimenuitem>
+<guimenuitem>Configure POP Filters...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3373,12 +3509,13 @@ toolbar.</para>
 <sect2 id="reader-help-menu">
 <title><guimenu>Help</guimenu> Menu</title>
 
+<!-- fixme: how to add items here? -->
 &help.menu.documentation;
 
 </sect2>
 </sect1>
 
-
+<!-- ### -->
 <sect1 id="composer-window-menus">
 <title>The Composer Window</title>
 
@@ -4231,8 +4368,8 @@ mailing list post</ulink>.</para></answer>
 <qandaentry>
 <question><para>Are there any known bugs in &kmail;?</para></question>
 <answer>
-<para>You can find a list of submitted bugs at <ulink
-url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>. Note that not all
+<para>A list of submitted bugs is linked at <ulink
+url="http://kmail.kde.org/">the &kmail; homepage</ulink>. Note that not all
 these bugs are valid. All in all we think that &kmail; is now a very robust piece
 of software.</para>
 <para><warning><para>However, you should not run &kmail; while another mail client is already
@@ -4254,9 +4391,8 @@ management).</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as
-<acronym>HTML</acronym>, I can only see plain text.</para></question>
-<answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
+<question><para>&kmail; doesn't display <acronym>HTML</acronym> mails properly.</para></question>
+<answer><para>To view <acronym>HTML</acronym> mails select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted messages. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
@@ -4490,17 +4626,6 @@ messages?</para></question>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>
 Look in the <guilabel>Identity</guilabel> page for the <guilabel>Signature</guilabel>
 tab and add your signature there.</para></answer> 
-</qandaentry>
-
-<qandaentry>
-<question><para>Why does &kmail; keep asking me for the location of my signature
-file?</para></question>
-<answer><para>&kmail; will ask you for the location of your signature file if you
-have checked the option <guilabel>Automatically append signature</guilabel> in the
-<guilabel>Composer</guilabel> page of the <guilabel>Configure &kmail;...</guilabel> dialog,
-but you have not specified a valid signature file in the <guilabel>Identity</guilabel>
-page. You should either specify a signature file that really exists
-or deselect <guilabel>Automatically append signature</guilabel>.</para></answer>
 </qandaentry>
 
 <qandaentry>
