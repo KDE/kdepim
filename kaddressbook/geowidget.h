@@ -119,6 +119,7 @@ class GeoDialog : public KDialogBase
     double mLatitude;
     double mLongitude;
     QMap<QString, GeoData> mGeoDataMap;
+    bool mUpdateSexagesimalInput;
 };
 
 class GeoMapWidget : public QWidget

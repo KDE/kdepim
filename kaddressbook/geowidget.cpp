@@ -125,7 +125,8 @@ void GeoWidget::editGeoData()
 
 GeoDialog::GeoDialog( QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Geo Data Input" ), Ok | Cancel, Ok,
-                 parent, name, true, true )
+                 parent, name, true, true ),
+    mUpdateSexagesimalInput( true )
 {
   QFrame *page = plainPage();
 
@@ -238,15 +239,17 @@ double GeoDialog::longitude() const
 
 void GeoDialog::sexagesimalInputChanged()
 {
-  mLatitude = (float)( mLatDegrees->value() + (float)mLatMinutes->value() /
-                       60 + (float)mLatSeconds->value() / 3600 );
+  mLatitude = (double)( mLatDegrees->value() + (double)mLatMinutes->value() /
+                        60 + (double)mLatSeconds->value() / 3600 );
 
   mLatitude *= ( mLatDirection->currentItem() == 1 ? -1 : 1 );
 
-  mLongitude = (float)( mLongDegrees->value() + (float)mLongMinutes->value() /
-                       60 + (float)mLongSeconds->value() / 3600 );
+  mLongitude = (double)( mLongDegrees->value() + (double)mLongMinutes->value() /
+                         60 + (double)mLongSeconds->value() / 3600 );
 
   mLongitude *= ( mLongDirection->currentItem() == 1 ? -1 : 1 );
+
+  mUpdateSexagesimalInput = false;
 
   updateInputs();
 }
@@ -285,31 +288,34 @@ void GeoDialog::updateInputs()
   mMapWidget->setLongitude( mLongitude );
   mMapWidget->update();
 
-  int degrees, minutes, seconds;
-  double latitude = mLatitude;
-  double longitude = mLongitude;
+  if ( mUpdateSexagesimalInput ) {
+    int degrees, minutes, seconds;
+    double latitude = mLatitude;
+    double longitude = mLongitude;
 
-  latitude *= ( mLatitude < 0 ? -1 : 1 );
-  longitude *= ( mLongitude < 0 ? -1 : 1 );
+    latitude *= ( mLatitude < 0 ? -1 : 1 );
+    longitude *= ( mLongitude < 0 ? -1 : 1 );
 
-  degrees = (int)( latitude * 1 );
-  minutes = (int)( ( latitude - degrees ) * 60 );
-  seconds = (int)( (float)( (float)latitude - (float)degrees - ( (float)minutes / (float)60 ) ) * (float)3600 );
+    degrees = (int)( latitude * 1 );
+    minutes = (int)( ( latitude - degrees ) * 60 );
+    seconds = (int)( (double)( (double)latitude - (double)degrees - ( (double)minutes / (double)60 ) ) * (double)3600 );
 
-  mLatDegrees->setValue( degrees );
-  mLatMinutes->setValue( minutes );
-  mLatSeconds->setValue( seconds );
+    mLatDegrees->setValue( degrees );
+    mLatMinutes->setValue( minutes );
+    mLatSeconds->setValue( seconds );
 
-  mLatDirection->setCurrentItem( mLatitude < 0 ? 1 : 0 );
+    mLatDirection->setCurrentItem( mLatitude < 0 ? 1 : 0 );
 
-  degrees = (int)( longitude * 1 );
-  minutes = (int)( ( longitude - degrees ) * 60 );
-  seconds = (int)( (float)( longitude - (float)degrees - ( (float)minutes / 60 ) ) * 3600 );
+    degrees = (int)( longitude * 1 );
+    minutes = (int)( ( longitude - degrees ) * 60 );
+    seconds = (int)( (double)( longitude - (double)degrees - ( (double)minutes / 60 ) ) * 3600 );
 
-  mLongDegrees->setValue( degrees );
-  mLongMinutes->setValue( minutes );
-  mLongSeconds->setValue( seconds );
-  mLongDirection->setCurrentItem( mLongitude < 0 ? 1 : 0 );
+    mLongDegrees->setValue( degrees );
+    mLongMinutes->setValue( minutes );
+    mLongSeconds->setValue( seconds );
+    mLongDirection->setCurrentItem( mLongitude < 0 ? 1 : 0 );
+  }
+  mUpdateSexagesimalInput = true;
 
   int pos = nearestCity( mLongitude, mLatitude );
   if ( pos != -1 )
