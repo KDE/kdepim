@@ -1,3 +1,6 @@
+#ifndef _CERTMANAGER_H_
+#define _CERTMANAGER_H_
+
 #include <kmainwindow.h>
 class CertBox;
 
@@ -22,3 +25,5 @@ protected slots:
 private:
   CertBox* _certBox;
 };
+
+#endif // _CERTMANAGER_H_
