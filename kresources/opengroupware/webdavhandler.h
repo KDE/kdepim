@@ -33,17 +33,13 @@ class WebdavHandler
     static KURL toDAV( const KURL& url );
 
 
-    static QDomElement addElement( QDomDocument &doc, QDomNode &node,
-                                   const QString &ns, const QString &tag );
+    static QDomElement addElementNS( QDomDocument &doc, QDomNode &node,
+                                   const QString &ns, const QString &tag,
+                                   const QString &value = QString::null );
     static QDomElement addElement( QDomDocument &, QDomNode &,
-                                   const QString &tag );
+                                   const QString &tag, const QString &value = QString::null );
     static QDomElement addDavElement( QDomDocument &, QDomNode &,
-                                      const QString &tag );
-    static QDomElement addSloxElement( QDomDocument &, QDomNode &,
-                                       const QString &tag,
-                                       const QString &text = QString::null );
-    static QDomText addTextNode( QDomDocument &doc, 
-                                 QDomNode &node, const QString &text );
+                                      const QString &tag, const QString &value = QString::null );
     
     /** 
      * Creates a request body which asks for the standard properties. Used as a stat.

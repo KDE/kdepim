@@ -41,34 +41,35 @@ KURL WebdavHandler::toDAV( const KURL& url ) {
 
 
 QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
-                                       const QString &tag )
+                                       const QString &tag, const QString &value )
 {
   QDomElement el = doc.createElement( tag );
   node.appendChild( el );
+  if ( !value.isNull() ) {
+    QDomText txt = doc.createTextNode( value );
+    el.appendChild( txt );
+  }
   return el;
 }
 
-QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
-                                       const QString &ns, const QString &tag )
+QDomElement WebdavHandler::addElementNS( QDomDocument &doc, QDomNode &node,
+                                       const QString &ns, const QString &tag, const QString &value )
 {
   QDomElement el = doc.createElementNS( ns, tag );
   node.appendChild( el );
+  if ( !value.isNull() ) {
+    QDomText txt = doc.createTextNode( value );
+    el.appendChild( txt );
+  }
   return el;
 }
 
 QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
-                                          const QString &tag )
+                                          const QString &tag, const QString &value )
 {
-  QDomElement el = doc.createElementNS( "DAV:", tag );
-  node.appendChild( el );
-  return el;
+  return addElementNS( doc, node, "DAV:", tag, value );
 }
-QDomText WebdavHandler::addTextNode( QDomDocument &doc, QDomNode &node, const QString &text )
-{
-  QDomText el = doc.createTextNode( text );
-  node.appendChild( el );
-  return el;
-}
+
 
 QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
 {
