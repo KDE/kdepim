@@ -47,6 +47,8 @@ namespace KXMLRPC
     signals:
       void message( const QValueList<QVariant> &result, const QVariant &id );
       void fault( int, const QString&, const QVariant &id );
+      void finished( Query* );
+
     private slots:
       void slotData( KIO::Job *job, const QByteArray &data );
       void slotResult( KIO::Job *job );
@@ -78,6 +80,7 @@ namespace KXMLRPC
     public:
       Server( const KURL &url = KURL(),
               QObject *parent = 0, const char *name = 0 );
+      ~Server();
 
       const KURL &url() const { return m_url; }
       void setUrl( const KURL &url );
@@ -133,9 +136,14 @@ namespace KXMLRPC
         QObject* msgObj, const char* messageSlot,
         const QVariant &id = QVariant() );
 
+    private slots:
+      void queryFinished( Query* );
+
     private:
       KURL m_url;
       QString m_userAgent;
+
+      QValueList<Query*> mPendingQueries;
   };
 };
 

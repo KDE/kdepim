@@ -62,7 +62,7 @@ void Query::call( const QString &server, const QString &method,
                   const QValueList<QVariant> &args, const QString &userAgent )
 {
   const QString xmlMarkup = markupCall( method, args );
-  kdError() << "\033[34;40m" << "Query: " << xmlMarkup  << "\033[0;0m" << endl;
+  qDebug( "\033[34;40mQuery: %s\033[0;0m", xmlMarkup.latin1() );
   QByteArray postData;
   QDataStream stream( postData, IO_WriteOnly );
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
@@ -94,12 +94,12 @@ void Query::slotResult( KIO::Job *job )
   if ( job->error() != 0 )
   {
     emit fault( job->error(), job->errorString(), m_id );
-    delete this;
+    emit finished( this );
     return ;
   }
 
   QString data = QString::fromUtf8( m_buffer.data(), m_buffer.size() );
-  kdError() << "\033[35;40m" << "Result: " << data << "\033[0;0m" << endl;
+  qDebug( "\033[35;40mResult: %s\033[0;0m", data.latin1() );
 
   QDomDocument doc;
   QString errMsg;
@@ -108,7 +108,7 @@ void Query::slotResult( KIO::Job *job )
   {
     emit fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" )
                         .arg( errMsg ).arg( errLine ).arg( errCol ), m_id );
-    delete this;
+    emit finished( this );
     return ;
   }
 
@@ -124,7 +124,8 @@ void Query::slotResult( KIO::Job *job )
   {
     emit fault( 1, i18n( "Unknown type of XML markup received" ), m_id );
   }
-  delete this;
+
+  emit finished( this );
 }
 
 bool Query::isMessageResponse( const QDomDocument &doc ) const
@@ -316,6 +317,21 @@ Server::Server( const KURL &url, QObject *parent, const char *name )
   m_userAgent = "KDE XMLRPC resources";
 }
 
+Server::~Server()
+{
+  QValueList<Query*>::Iterator it;
+  for ( it = mPendingQueries.begin(); it !=mPendingQueries.end(); ++it )
+    (*it)->deleteLater();
+
+  mPendingQueries.clear();
+}
+
+void Server::queryFinished( Query *query )
+{
+  mPendingQueries.remove( query );
+  query->deleteLater();
+}
+
 void Server::setUrl( const KURL &url )
 {
   m_url = url.isValid() ? url : KURL();
@@ -334,6 +350,9 @@ void Server::call( const QString &method, const QValueList<QVariant> &args,
   Query *query = Query::create( id, this );
   connect( query, SIGNAL( message( const QValueList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
   connect( query, SIGNAL( fault( int, const QString&, const QVariant& ) ), faultObj, faultSlot );
+  connect( query, SIGNAL( finished( Query* ) ), this, SLOT( queryFinished( Query* ) ) );
+  mPendingQueries.append( query );
+
   query->call( m_url.url(), method, args, m_userAgent );
 }
 
