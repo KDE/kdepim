@@ -107,6 +107,7 @@ class KNListView : public QListView  {
 
   signals:
     void itemSelected(QListViewItem*);
+    void middleMBClick(QListViewItem*);
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
     void dropReceived(const char*,QListViewItem*);

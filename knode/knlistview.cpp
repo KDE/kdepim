@@ -283,6 +283,8 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
     return;
   }
 
+  if ((e->button() == MidButton) && i)
+    emit middleMBClick(i);
 
   // select item ?
   if(!i || !i->isSelected() || selectMode) {

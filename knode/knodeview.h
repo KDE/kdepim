@@ -117,7 +117,7 @@ class KNodeView : public QSplitter
     void slotCollectionSelected(QListViewItem*);
     void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
     void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
-    void slotArticleMousePressed(int button, QListViewItem *item, const QPoint &p, int c);
+    void slotArticleMMB(QListViewItem *item);
     void slotHdrViewSortingChanged(int i);
 
     //DnD

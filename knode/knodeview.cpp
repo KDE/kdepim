@@ -118,8 +118,8 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
     this, SLOT(slotArticleSelectionChanged()));
   connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
-  connect(h_drView, SIGNAL(mouseButtonPressed(int, QListViewItem *, const QPoint &, int)),
-    this, SLOT(slotArticleMousePressed(int, QListViewItem *, const QPoint &, int)));
+  connect(h_drView, SIGNAL(middleMBClick(QListViewItem *)),
+    this, SLOT(slotArticleMMB(QListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
     this, SLOT(slotHdrViewSortingChanged(int)));
   connect(h_drView, SIGNAL(dropReceived(const char*, QListViewItem*)),
@@ -917,12 +917,12 @@ void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
 }
 
 
-void KNodeView::slotArticleMousePressed(int button, QListViewItem *item, const QPoint &, int)
+void KNodeView::slotArticleMMB(QListViewItem *item)
 {
   if(b_lockui)
     return;
 
-  if (item && (button == MidButton)) {
+  if (item) {
     KNArticle *art=(static_cast<KNHdrViewItem*>(item))->art;
 
     if ((art->type()==KNMimeBase::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
