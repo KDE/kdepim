@@ -8,9 +8,15 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>413</width>
-            <height>374</height>
+            <width>423</width>
+            <height>397</height>
         </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>250</width>
+            <height>0</height>
+        </size>
     </property>
     <property name="caption">
         <string>CertificateInfoWidget</string>
@@ -19,26 +25,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <property name="margin">
-            <number>11</number>
-        </property>
-        <property name="spacing">
-            <number>6</number>
-        </property>
-        <widget class="QLabel" row="0" column="0">
-            <property name="name">
-                <cstring>TextLabel1</cstring>
-            </property>
-            <property name="font">
-                <font>
-                    <bold>1</bold>
-                </font>
-            </property>
-            <property name="text">
-                <string>Certificate Information</string>
-            </property>
-        </widget>
-        <widget class="QFrame" row="1" column="0">
+        <widget class="QFrame" row="1" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>Frame3</cstring>
             </property>
@@ -49,9 +36,17 @@
                 <enum>Sunken</enum>
             </property>
         </widget>
-        <widget class="QTabWidget" row="2" column="0">
+        <widget class="QTabWidget" row="2" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>tabWidget</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
             <widget class="QWidget">
                 <property name="name">
@@ -65,9 +60,6 @@
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
                         <number>6</number>
                     </property>
                     <widget class="QListView" row="0" column="0">
@@ -102,6 +94,9 @@
                         <property name="showSortIndicator">
                             <bool>false</bool>
                         </property>
+                        <property name="resizeMode">
+                            <enum>AllColumns</enum>
+                        </property>
                     </widget>
                     <widget class="QTextEdit" row="1" column="0">
                         <property name="name">
@@ -128,7 +123,7 @@
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>11</number>
+                        <number>6</number>
                     </property>
                     <widget class="QListView" row="0" column="0">
                         <column>
@@ -148,50 +143,50 @@
                         <property name="rootIsDecorated">
                             <bool>true</bool>
                         </property>
+                        <property name="resizeMode">
+                            <enum>AllColumns</enum>
+                        </property>
                     </widget>
                 </grid>
             </widget>
         </widget>
-        <widget class="QLayoutWidget" row="3" column="0">
+        <widget class="QPushButton" row="3" column="1">
             <property name="name">
-                <cstring>Layout2</cstring>
+                <cstring>importButton</cstring>
             </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>0</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>importButton</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Import to Local</string>
-                    </property>
-                </widget>
-            </hbox>
+            <property name="text">
+                <string>&amp;Import to Local</string>
+            </property>
+        </widget>
+        <spacer row="3" column="0">
+            <property name="name">
+                <cstring>Spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>291</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>TextLabel1</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <bold>1</bold>
+                </font>
+            </property>
+            <property name="text">
+                <string>Certificate Information</string>
+            </property>
         </widget>
     </grid>
 </widget>
