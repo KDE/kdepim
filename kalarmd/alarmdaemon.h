@@ -46,8 +46,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
   private slots:
     void    calendarLoaded( ADCalendarBase *, bool success );
     void    checkAlarmsSlot();
-//    void    checkIfSessionStarted();
-
     void    checkAlarms();
 
   private:
@@ -118,7 +116,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
 
     GuiMap            mGuis;                // client GUI application names and data
     QTimer*           mAlarmTimer;
-    QTimer*           mSessionStartTimer;   // timer waiting for session startup to complete
     QString           mClientDataFile;      // path of file containing client data
     int               mCheckInterval;       // alarm check interval (minutes)
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
