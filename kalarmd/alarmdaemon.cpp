@@ -1,5 +1,6 @@
+#include <stdio.h>
 /*
-    KDE Panel docking window for KDE Alarm Daemon.
+    KDE Alarm Daemon.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
@@ -37,6 +38,7 @@
 
 #include <libkcal/calendarlocal.h>
 
+#include "alarmapp.h"
 #include "dockwindow.h"
 #include "alarmdialog.h"
 
@@ -55,17 +57,32 @@ const QString DEFAULT_CLIENT_KEY("Default Client");
 const QString AUTOSTART_KEY("Autostart");
 #define CALENDAR_KEY  "Calendar"
 
+const int LOGIN_DELAY = 10;      // seconds to wait if ksplash can't be detected at login
+
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : QObject(parent, name), DCOPObject(name),
     mSessionStartTimer(0L),
     mRevisingAlarmDialog(false),
-    mDrawAlarmDialog(false),
-    mSessionStarted(false)
+    mDrawAlarmDialog(false)
 {
   kdDebug() << "AlarmDaemon::AlarmDaemon()" << endl;
 
   mCalendars.setAutoDelete(true);
+
+  bool splash = kapp->dcopClient()->isApplicationRegistered("ksplash");
+  if (splash  ||  static_cast<AlarmApp*>(kapp)->startedAtLogin())
+  {
+    // Login session is starting up - need to wait for it to complete
+    // in order to prevent the daemon starting clients before they are
+    // restored by the session (where applicable).
+    // If ksplash can be detected as running, start a 1-second timer;
+    // otherwise, wait a few seconds.
+    kdDebug() << "AlarmDaemon::AlarmDaemon(): session start\n";
+    mSessionStartTimer = new QTimer(this);
+    connect(mSessionStartTimer, SIGNAL(timeout()), SLOT(checkIfSessionStarted()));
+    mSessionStartTimer->start(splash ? 1000 : LOGIN_DELAY * 1000);
+  }
 
   QString defaultClient = readConfig();
 
@@ -79,8 +96,6 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   // set up the alarm timer
   mAlarmTimer   = new QTimer(this);
   mSuspendTimer = new QTimer(this);
-
-  mCalendars.setAutoDelete(true);
 
   setToolTipStartTimer();
   checkAlarms();
@@ -106,7 +121,7 @@ void AlarmDaemon::quit()
  */
 void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool msgCal)
 {
-  kdDebug() << "AlarmDaemon::addCal_(): '" << urlString << "' (" << (msgCal ? "KALARM)" : "KORGANISER)") << endl;
+  kdDebug() << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANISER") << endl;
 
   ADCalendar* cal = getCalendar(urlString);
   if (cal)
@@ -144,7 +159,7 @@ void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool
  */
 void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, bool msgCal)
 {
-  kdDebug() << "AlarmDaemon::reloadCal_(): '" << urlString << "' (" << (msgCal ? "KALARM)" : "KORGANISER)") << endl;
+  kdDebug() << "AlarmDaemon::reloadCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANISER") << endl;
 
   if (!urlString.isEmpty())
   {
@@ -189,7 +204,7 @@ void AlarmDaemon::reloadCal_(ADCalendar* cal)
  */
 void AlarmDaemon::resetMsgCal_(const QString& appname, const QString& urlString)
 {
-  kdDebug() << "AlarmDaemon::resetMsgCal_(): '" << urlString << "'" << endl;
+  kdDebug() << "AlarmDaemon::resetMsgCal_(" << urlString << ")\n";
 
   reloadCal_(appname, urlString, true);
   ADCalendar::clearEventsHandled(urlString);
@@ -198,7 +213,7 @@ void AlarmDaemon::resetMsgCal_(const QString& appname, const QString& urlString)
 /* Remove a calendar file from the list of monitored calendars */
 void AlarmDaemon::removeCal_(const QString& urlString)
 {
-  kdDebug() << "AlarmDaemon::removeCal_(): '" << urlString << "'" << endl;
+  kdDebug() << "AlarmDaemon::removeCal_(" << urlString << ")\n";
 
   ADCalendar* cal = getCalendar(urlString);
   if (cal)
@@ -206,7 +221,7 @@ void AlarmDaemon::removeCal_(const QString& urlString)
     if (cal->loaded()  &&  cal->actionType() == ADCalendar::KORGANISER)
       removeDialogEvents(cal);
     deleteConfigCalendar(cal);
-    mCalendars.remove();
+    mCalendars.remove(cal);
     kdDebug() << "AlarmDaemon::removeCal_(): calendar removed" << endl;
     mDocker->updateMenuCalendars(true);
     setToolTipStartTimer();
@@ -221,30 +236,36 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
                               const QString& dcopObject, bool commandLineNotify,
                               bool displayCalendarName)
 {
-  kdDebug() << "AlarmDaemon::registerApp(): " << appName << ":" << appTitle << endl;
+  kdDebug() << "AlarmDaemon::registerApp(" << appName << ", " << appTitle << ")\n";
   if (!appName.isEmpty())
   {
-    const ClientInfo* c = getClientInfo(appName);
-    if (c)
+    if (KStandardDirs::findExe(appName) == QString::null)
+      kdError() << "AlarmDaemon::registerApp(): app not found\n";
+    else
     {
-      // The application is already in the clients list.
-      // Mark all its calendar files as unregistered and remove it from the list.
-      for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+      const ClientInfo* c = getClientInfo(appName);
+      if (c)
       {
-        if (cal->appName() == appName)
-          cal->unregistered = true;
+        // The application is already in the clients list.
+        // Mark all its calendar files as unregistered and remove it from the list.
+        for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+        {
+          if (cal->appName() == appName)
+            cal->unregistered = true;
+        }
+        mClients.remove(appName);
       }
-      mClients.remove(appName);
+      ClientInfo cinfo(appTitle, dcopObject, commandLineNotify, displayCalendarName, false);
+      mClients.insert(appName, cinfo);
+
+      writeConfigClient(appName, cinfo);
+
+      setAutostart(true);
+      mDocker->updateMenuClients();
+      setToolTipStartTimer();
+      notifyPendingEvents(appName);
+      checkAlarms(appName);
     }
-    ClientInfo cinfo(appTitle, dcopObject, commandLineNotify, displayCalendarName);
-    mClients.insert(appName, cinfo);
-
-    writeConfigClient(appName, cinfo);
-
-    setAutostart(true);
-    mDocker->updateMenuClients();
-    setToolTipStartTimer();
-    checkAlarms(appName);
   }
 }
 
@@ -280,15 +301,22 @@ QString AlarmDaemon::readConfig()
     else
     {
       // Get this client's details from its own config section
-      ClientInfo info;
+      ClientMap::Iterator c = mClients.find(clients[i]);
+      bool found = (c != mClients.end());
+      ClientInfo newinfo;
+      ClientInfo* info = found ? &c.data() : &newinfo;
       QString groupKey = QString(CLIENT_KEY) + clients[i];
       clientConfig.setGroup(groupKey);
-      info.title             = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
-      info.dcopObject        = clientConfig.readEntry("DCOP object");
-      info.commandLineNotify = clientConfig.readBoolEntry("Command line notify", false);
-      info.displayCalName    = clientConfig.readBoolEntry("Display calendar names", true);
-      info.menuIndex = 0;
-      mClients.insert(clients[i], info);
+      info->title             = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
+      info->dcopObject        = clientConfig.readEntry("DCOP object");
+      info->commandLineNotify = clientConfig.readBoolEntry("Command line notify", false);
+      info->displayCalName    = clientConfig.readBoolEntry("Display calendar names", true);
+      info->menuIndex         = 0;
+      if (!found)
+      {
+        info->waitForRegistration = !!mSessionStartTimer;
+        mClients.insert(clients[i], newinfo);
+      }
 
       // Get the client's calendar files
       int len = strlen(CALENDAR_KEY);
@@ -560,7 +588,6 @@ void AlarmDaemon::checkAlarms(const QString& appName)
  */
 bool AlarmDaemon::checkAlarms(ADCalendar* cal, bool showDialog)
 {
-//  kdDebug() << "AlarmDaemon::checkAlarms(ADCalendar*)"<<endl;
   bool korgAlarms = false;
   if (mDocker->alarmsOn()  &&  cal->loaded()  &&  cal->enabled())
   {
@@ -588,10 +615,12 @@ kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
           {
             const QString& eventID = event->VUID();
             kdDebug() << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
-            if (!cal->eventHandled(event))
+            QValueList<QDateTime> alarmtimes;
+            checkEventAlarms(*event, alarmtimes);
+            if (!cal->eventHandled(event, alarmtimes))
             {
               if (notifyEvent(cal, eventID))
-                cal->setEventHandled(event);
+                cal->setEventHandled(event, alarmtimes);
               else
                 cal->setEventPending(eventID);
             }
@@ -607,6 +636,20 @@ kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
 }
 
 /*
+ * Check which of the alarms for the given event are due.
+ * The times in 'alarmtimes' corresponding to due alarms are set.
+ */
+void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes)
+{
+  alarmtimes.clear();
+  const KOAlarm* alarm;
+  QDateTime now = QDateTime::currentDateTime();
+  for (QPtrListIterator<KOAlarm> it(event.alarms());  (alarm = it.current()) != 0;  ++it) {
+    alarmtimes.append((alarm->enabled()  &&  alarm->time() <= now) ? alarm->time() : QDateTime());
+  }
+}
+
+/*
  * Send a DCOP message to a client application telling it that an alarm
  * should now be handled.
  * Reply = false if the event should be held pending until the client
@@ -614,7 +657,7 @@ kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
  */
 bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID)
 {
-  kdDebug() << "AlarmDaemon::notifyEvent(): " << eventID << endl;
+  kdDebug() << "AlarmDaemon::notifyEvent(" << eventID << ")\n";
   if (calendar)
   {
     const ClientInfo* client = getClientInfo(calendar->appName());
@@ -622,17 +665,20 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
       kdDebug() << "AlarmDaemon::notifyEvent(): unknown client" << endl;
     else
     {
+      if (client->waitForRegistration)
+      {
+        // Don't start the client application if the session manager is still
+        // starting the session, since if we start the client before the
+        // session manager does, a KUniqueApplication client will not then be
+        // able to restore its session.
+        // And don't start a client which was started by the login session
+        // until it's ready to handle DCOP calls.
+        kdDebug() << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
+        return false;
+      }
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
       {
         // The client application is not running, so start it
-        if (!isSessionStarted())
-        {
-          // Don't start the client application if the session manager is still
-          // starting the session, since if we start the client before the
-          // session manager does, a KUniqueApplication client will not then be
-          // able to restore its session.
-          return false;
-        }
         QString execStr = locate("exe", calendar->appName());
         if (execStr.isEmpty())
         {
@@ -647,10 +693,13 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
           execStr += " --calendarURL ";
           execStr += calendar->urlString();
           system(execStr.latin1());
+          kdDebug() << "AlarmDaemon::notifyEvent(): used command line" << endl;
           return true;
         }
         system(execStr.latin1());
+        kdDebug() << "AlarmDaemon::notifyEvent(): started " << execStr.latin1() << endl;
       }
+
       // Use DCOP to tell the client about the alarm
       QByteArray data;
       QDataStream arg(data, IO_WriteOnly);
@@ -665,52 +714,55 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
   return true;
 }
 
-/*
- * Check whether session startup is complete.
- * Ideally this would be done using a signal from ksmserver, but until such a
- * signal is available, we can check whether ksplash is still running.
- */
-bool AlarmDaemon::isSessionStarted()
+/* Notify the specified client of any pending alarms */
+void AlarmDaemon::notifyPendingEvents(const QString& appname)
 {
-  if (!mSessionStarted)
-    checkIfSessionStarted();
-  return mSessionStarted;
+  kdDebug() << "AlarmDaemon::notifyPendingEvents(" << appname << ")\n";
+  for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+  {
+    if (cal->appName() == appname
+    &&  cal->actionType() == ADCalendar::KALARM)
+    {
+      QString eventID;
+      while (cal->getEventPending(eventID))
+      {
+        notifyEvent(cal, eventID);
+        const Event* event = cal->getEvent(eventID);
+        QValueList<QDateTime> alarmtimes;
+        checkEventAlarms(*event, alarmtimes);
+        cal->setEventHandled(event, alarmtimes);
+      }
+    }
+  }
 }
 
 /*
  * Called by the timer to check whether session startup is complete.
- * If so, it notifies clients of any pending alarms.
+ * If so, it checks which clients are already running and notifies
+ * any which have registered of any pending alarms.
+ * (Ideally checking for session startup would be done using a signal
+ * from ksmserver, but until such a signal is available, we can check
+ * whether ksplash is still running.)
  */
 void AlarmDaemon::checkIfSessionStarted()
 {
   if (!kapp->dcopClient()->isApplicationRegistered("ksplash"))
   {
-    // Session startup has now completed. Cancel the timer.
-    mSessionStarted = true;
+    // Session startup has now presumably completed. Cancel the timer.
+    kdDebug() << "AlarmDaemon::checkIfSessionStarted(): startup complete\n";
     delete mSessionStartTimer;
-    mSessionStartTimer = 0L;
 
-    // Notify clients of pending alarms.
-    for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+    // Notify clients which are not yet running of pending alarms
+    for (ClientMap::Iterator client = mClients.begin();  client != mClients.end();  ++client)
     {
-      if (cal->actionType() == ADCalendar::KALARM)
+      if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(client.key())))
       {
-        QString eventID;
-        while (cal->getEventPending(eventID))
-        {
-          notifyEvent(cal, eventID);
-          cal->setEventHandled(cal->getEvent(eventID));
-        }
+        client.data().waitForRegistration = false;
+        notifyPendingEvents(client.key());
       }
     }
-  }
-  else if (!mSessionStartTimer)
-  {
-    // Need to wait for session startup to complete.
-    // Start a 1-second timer.
-    mSessionStartTimer = new QTimer(this);
-    connect(mSessionStartTimer, SIGNAL(timeout()), SLOT(checkIfSessionStarted()));
-    mSessionStartTimer->start(1000);
+
+    mSessionStartTimer = 0L;    // indicate that session startup is complete
   }
 }
 
@@ -771,7 +823,7 @@ QString AlarmDaemon::expandURL(const QString& urlString)
 }
 
 /* Return the ClientInfo structure for the specified client application */
-const ClientInfo* AlarmDaemon::getClientInfo(const QString& appName)
+const ClientInfo* AlarmDaemon::getClientInfo(const QString& appName) const
 {
   if (!appName.isEmpty())
   {
@@ -856,12 +908,13 @@ void AlarmDaemon::setToolTipStartTimer()
 // class ClientInfo
 ///////////////////////////////////////////////////////////////////////////////
 
-ClientInfo::ClientInfo(const QString& titl, const QString& dcopObj, bool cmdLine, bool disp, int menuindex)
+ClientInfo::ClientInfo(const QString& titl, const QString& dcopObj, bool cmdLine, bool disp, bool wait)
   : title(titl),
     dcopObject(dcopObj),
-    menuIndex(menuindex),
+    menuIndex(0),
     commandLineNotify(cmdLine),
-    displayCalName(disp)
+    displayCalName(disp),
+    waitForRegistration(wait)
 {
 }
 
@@ -916,26 +969,53 @@ bool ADCalendar::loadFile(bool quiet)
     }
   }
   else if (!quiet)
-    KMessageBox::error(0L, i18n("Cannot download calendar from %1.").arg(url.prettyURL()));
+    KMessageBox::error(0L, i18n("Cannot download calendar from\n%1.").arg(url.prettyURL()), QString::fromLatin1("Alarm Daemon"));
   return loaded_;
 }
 
 /*
- * Check whether the event with the given ID has already been handled.
+ * Check whether all the alarms for the event with the given ID
+ * have already been handled.
  */
-bool ADCalendar::eventHandled(const Event* event)
+bool ADCalendar::eventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
 {
   EventsMap::ConstIterator it = eventsHandled_.find(event->VUID());
-  return (it != eventsHandled_.end()  &&  it.data().eventSequence == event->revision());
+  if (it == eventsHandled_.end())
+    return false;
+
+  int oldCount = it.data().alarmTimes.count();
+  int count = alarmtimes.count();
+  for (int i = 0;  i < count;  ++i) {
+    if (alarmtimes[i].isValid()) {
+      if (i >= oldCount                              // is it an additional alarm?
+      ||  !it.data().alarmTimes[i].isValid()         // or has it just become due?
+      ||  it.data().alarmTimes[i].isValid()          // or has it changed?
+       && alarmtimes[i] != it.data().alarmTimes[i])
+        return false;     // this alarm has changed
+    }
+  }
+  return true;
 }
 
 /*
- * Remember that the event with the given ID has been handled.
+ * Remember that the specified alarms for the event with the given ID
+ * have been handled.
  */
-void ADCalendar::setEventHandled(const Event* event)
+void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
 {
   if (event)
-    eventsHandled_.replace(event->VUID(), EventItem(urlString_, event->revision()));
+  {
+    kdDebug() << "ADCalendar::setEventHandled(): " << event->VUID() << endl;
+    EventsMap::Iterator it = eventsHandled_.find(event->VUID());
+    if (it != eventsHandled_.end())
+    {
+      // Update the existing entry for the event
+      it.data().alarmTimes = alarmtimes;
+      it.data().eventSequence = event->revision();
+    }
+    else
+      eventsHandled_.insert(event->VUID(), EventItem(urlString_, event->revision(), alarmtimes));
+  }
 }
 
 /*
@@ -963,7 +1043,10 @@ void ADCalendar::clearEventsHandled(const QString& calendarURL)
 void ADCalendar::setEventPending(const QString& ID)
 {
   if (actionType_ == KALARM  &&  !eventsPending_.containsRef(&ID))
+  {
     eventsPending_.append(&ID);
+    kdDebug() << "ADCalendar::setEventPending(): " << ID << endl;
+  }
 }
 
 /*
@@ -982,4 +1065,11 @@ bool ADCalendar::getEventPending(QString& ID)
     }
   }
   return false;
+}
+
+ADCalendar::EventItem::EventItem(const QString& url, int seqno, const QValueList<QDateTime>& alarmtimes)
+  : calendarURL(url),
+    eventSequence(seqno),
+    alarmTimes(alarmtimes)
+{
 }

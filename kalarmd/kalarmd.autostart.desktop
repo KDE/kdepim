@@ -1,0 +1,28 @@
+# KDE Config File
+[Desktop Entry]
+Name=Alarm daemon
+Name[ara]=Ù~EØ±Ø§Ù~BØ¨ Alarm
+Name[az]=Alarm Cini
+Name[cs]=Alarm dÃ©mon
+Name[da]=AlarmdÃ¦mon
+Name[eu]=Alarma demonioa
+Name[he]=×ª×~T×~\×~Y×~Z ×©×~Y×¨×~U×ª ×~T×ª×~V×~[×~U×¨×~U×ª
+Name[hu]=EmlÃ©keztetÅ~Q szolgÃ¡ltatÃ¡s
+Name[is]=VekjarapÃºkinn
+Name[ko]=ì~U~Lë~^~L ë~M°ëª¬
+Name[lv]=Trauksmes dÄ~Smons
+Name[pt]=Servidor de alarme
+Name[pt_BR]=Servidor de alarme
+Name[sv]=Alarmdemon
+Name[tr]=Alarm programÄ±
+Name[xxx]=xx
+Name[zh_TW.Big5]=è­¦ç¤ºæ~\~Må~K~Yç¨~Kå¼~O
+Exec=kalarmd --login
+Icon=kalarmd
+Type=Application
+Comment=KOrganizer/KAlarm alarm daemon autostart at login
+Terminal=false
+NoDisplay=true
+X-KDE-autostart-after=panel
+X-KDE-autostart-condition=kalarmdrc:General:Autostart:true
+X-KDE-StartupNotify=true

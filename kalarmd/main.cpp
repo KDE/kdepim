@@ -36,7 +36,8 @@
 static const char* kalarmdVersion = "0.9";
 static const KCmdLineOptions options[] =
 {
-   {0L,0L,0L}
+   { "login", I18N_NOOP("Application is being auto-started at KDE session start"), 0L },
+   { 0L, 0L, 0L }
 };
 
 int main(int argc, char **argv)

@@ -33,10 +33,12 @@ class AlarmApp : public KUniqueApplication
     AlarmApp();
     virtual ~AlarmApp();
 
-    int newInstance();
-    
+    int  newInstance();
+    bool startedAtLogin() const   { return mStartedAtLogin; }
+
   private:
-    AlarmDaemon *mAd;
+    AlarmDaemon* mAd;
+    bool         mStartedAtLogin;
 };
 
 #endif

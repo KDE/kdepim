@@ -8,13 +8,13 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp alarmdialog.cpp \
 	dockwindow.cpp alarmdaemoniface.skel alarmdaemoniface.stub \
 	koeventviewer.cpp
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h alarmdialog.h \
-	dockwindow.h
+	dockwindow.h koeventviewer.h
 
 METASOURCES = AUTO
 
 SUBDIRS = pixmaps
  
-autostart_DATA = kalarmd.desktop
+autostart_DATA = kalarmd.autostart.desktop
 autostartdir = $(prefix)/share/autostart
 
 #datadir = $(kde_bindir)
@@ -22,6 +22,9 @@ autostartdir = $(prefix)/share/autostart
 kde_conf_DATA = kalarmdrc
 
 KDE_ICON = AUTO
+
+install-data-local:
+	-rm -f $(prefix)/share/autostart/kalarmd.desktop
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kalarmd.pot

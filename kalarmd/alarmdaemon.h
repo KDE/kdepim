@@ -23,6 +23,12 @@
 #ifndef _ALARMDAEMON_H
 #define _ALARMDAEMON_H
 
+#include <qglobal.h>
+#if QT_VERSION < 300
+   #define QPtrList         QList
+   #define QPtrListIterator QListIterator
+#endif
+
 #include <qfont.h>
 #include <qstrlist.h>
 
@@ -39,12 +45,13 @@ using namespace KCal;
 struct ClientInfo
 {
     ClientInfo() { }
-    ClientInfo(const QString& titl, const QString& dcopObj, bool cmdLine, bool disp, int menuindex = 0);
-    QString  title;             // application title for display purposes
-    QString  dcopObject;        // object to receive DCOP messages (if applicable)
-    int      menuIndex;         // context menu index to this client's entry
-    bool     commandLineNotify; // notify events using command line if client app isn't running
-    bool     displayCalName;    // true to display calendar name in tooltip
+    ClientInfo(const QString& titl, const QString& dcopObj, bool cmdLine, bool disp, bool wait);
+    QString  title;               // application title for display purposes
+    QString  dcopObject;          // object to receive DCOP messages (if applicable)
+    int      menuIndex;           // context menu index to this client's entry
+    bool     commandLineNotify;   // notify events using command line if client app isn't running
+    bool     displayCalName;      // true to display calendar name in tooltip
+    bool     waitForRegistration; // don't notify any events until client has registered
 };
 
 typedef QMap<QString, ClientInfo> ClientMap;   // maps client names against client data
@@ -78,8 +85,8 @@ class ADCalendar : public CalendarLocal
     bool           enabled() const     { return enabled_ && !unregistered; }
     bool           available() const   { return loaded_ && !unregistered; }
     Type           actionType() const  { return actionType_; }
-    static bool    eventHandled(const Event*);
-    void           setEventHandled(const Event*);
+    static bool    eventHandled(const Event*, const QValueList<QDateTime>& alarmtimes);
+    void           setEventHandled(const Event*, const QValueList<QDateTime>& alarmtimes);
     static void    clearEventsHandled(const QString& calendarURL);
     void           setEventPending(const QString& ID);
     bool           getEventPending(QString& ID);
@@ -101,9 +108,10 @@ class ADCalendar : public CalendarLocal
     struct EventItem
     {
       EventItem() : eventSequence(0) { }
-      EventItem(const QString& url, int seqno)  : calendarURL(url), eventSequence(seqno) { }
-      QString   calendarURL;
-      int       eventSequence;
+      EventItem(const QString& url, int seqno, const QValueList<QDateTime>& alarmtimes);
+      QString               calendarURL;
+      int                   eventSequence;
+      QValueList<QDateTime> alarmTimes;
     };
     typedef QMap<QString, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
     static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
@@ -137,7 +145,7 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
     AlarmDaemon(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmDaemon();
 
-    const ClientInfo* getClientInfo(const QString& appName);
+    const ClientInfo* getClientInfo(const QString& appName) const;
     ClientIteration   getClientIteration()    { return ClientIteration(mClients); }
     CalendarIteration getCalendarIteration()  { return CalendarIteration(mCalendars); }
     int               clientCount() const     { return mClients.count(); }
@@ -181,14 +189,15 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
     void        checkAlarms();
     bool        checkAlarms(ADCalendar*, bool showDialog);
     void        checkAlarms(const QString& appName);
+    void        checkEventAlarms(const Event&, QValueList<QDateTime>& alarmtimes);
     bool        notifyEvent(const ADCalendar*, const QString& eventID);
+    void        notifyPendingEvents(const QString& appname);
     QString     readConfig();
     void        writeConfigClient(const QString& appName, const ClientInfo&);
     void        writeConfigCalendar(const QString& appName, const ADCalendar*);
     void        deleteConfigCalendar(const ADCalendar*);
     QString     checkDefaultClient();
     ADCalendar* getCalendar(const QString& calendarURL);
-    bool        isSessionStarted();
     void        setToolTipStartTimer();
     void        removeDialogEvents(const Calendar*);
     static QString expandURL(const QString& urlString);
@@ -204,7 +213,6 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
     bool              mRevisingAlarmDialog; // true while mAlarmDialog is being revised
     bool              mDrawAlarmDialog;     // true to show mAlarmDialog after revision is complete
-    bool              mSessionStarted;      // true once session startup is complete
 };
 
 #endif
