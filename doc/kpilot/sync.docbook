@@ -164,7 +164,7 @@ or software failure on the device.
 The restore function can only be accessed from the 
 main &kpilot; application, and not from the &kpilot; daemon, as
 restoring the data is not a common operation. In order 
-to make the next sync a backup, click the 
+to restore the data at the next sync, click the 
 <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Restore</guimenuitem>
