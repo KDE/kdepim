@@ -1,13 +1,12 @@
-<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN"
-[  <!ENTITY knode "<application>KNode</application>">
- <!ENTITY kappname "&kapp;">
+<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [  
+ <!ENTITY kappname "&knode;">
  <!ENTITY % English "INCLUDE">
  <!ENTITY % addindex "IGNORE">
  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
  %ents;
 ]>
 
-<book lang="en">
+<book lang="&language;">
 
 <bookinfo>
 
@@ -20,56 +19,56 @@
 </affiliation>
 </author>
 
-<othercredit>
+<othercredit role="developer">
 <firstname>Christian</firstname><surname>Thurner</surname>
 <contrib>Developer and maintainer</contrib>
 <affiliation><address><email>cthurner@freepage.de</email></address>
 </affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="developer">
 <firstname>Christian</firstname><surname>Gebauer</surname>
 <contrib>Developer</contrib>
 <affiliation><address><email>gebauer@bigfoot.com</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="developer">
 <firstname>Dirk</firstname><surname>Mueller</surname>
 <contrib>Developer</contrib>
 <affiliation><address><email>mueller@kde.org</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="developer">
 <firstname>Matthias Kalle</firstname><surname>Dalheimer</surname>
 <contrib>Developer</contrib>
 <affiliation><address><email>kalle@kde.org</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="translator">
 <firstname>Rainer</firstname><surname>Endres</surname>
 <contrib> Documentation translator and maintainer of the English documentation</contrib>
 <affiliation><address><email>endres@physos.com</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="translator">
 <firstname>Frerich</firstname><surname>Raabe</surname>
 <contrib>Documentation translator</contrib>
 <affiliation><address><email>frerichraabe@gmx.de</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="translator">
 <firstname>Oliver</firstname><surname>Henning</surname>
 <contrib>Documentation translator</contrib>
 <affiliation><address><email>oliver@henning.com</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="translator">
 <firstname>Martin</firstname><surname>Piskernig</surname>
 <contrib>Documentation translator</contrib>
 <affiliation><address><email>martin.piskernig@stuwo.at</email></address></affiliation>
 </othercredit>
 
-<othercredit>
+<othercredit role="reviewer">
 <firstname>Lauri</firstname><surname>Watts</surname>
 <contrib>Reviewer</contrib>
 <affiliation><address><email>vampyr@atconnex.net</email></address></affiliation>
@@ -84,22 +83,11 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<!-- Date and version information of the documentation
-Don't forget to include this last date and this last revision number, we
-need them for translation coordination !
-Please respect the format of the date (DD/MM/YYYY) and of the version
-(Major.minor.lesser), it could be used by automation scripts -->
-
-<date>15/10/2000</date>
+<date>16/12/2000</date>
 <releaseinfo>0.3.2</releaseinfo>
 
-<!-- Abstract about this handbook -->
 
-<abstract>
-<para>
-&knode; is an easy-to-use newsreader.
-</para>
-</abstract>
+<abstract><para>&knode; is an easy-to-use newsreader.</para></abstract>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -113,16 +101,16 @@ Please respect the format of the date (DD/MM/YYYY) and of the version
 <title>Introduction</title>
 
 <para>&knode; is an easy-to-use, convenient newsreader. It is intended to allow
-even newbies to use a newsreader under KDE. &knode; also offers advanced
+even newbies to use a newsreader under &kde;. &knode; also offers advanced
 features appealing to experienced users.</para>
 
 <para>&knode; is an online-reader, but can also, in conjunction with a local
 news server, be used as an offline-reader.</para>
 
 <para>If you have problems or questions about this program, please contact the
-mailing list for KDE users (for subscription, see <ulink
+mailing list for &kde; users (for subscription, see <ulink
 url="http://www.kde.org/contact.html">Homepage of the KDE mailing lists</ulink>
-) or one of the KDE newsgroups: </para>
+) or one of the &kde; newsgroups: </para>
 
 <simplelist>
 <member>comp.windows.x.kde</member>
@@ -133,20 +121,19 @@ url="http://www.kde.org/contact.html">Homepage of the KDE mailing lists</ulink>
 <menuchoice><guimenu>Help</guimenu><guimenuitem>Report a
 bug...</guimenuitem></menuchoice>.</para>
 
-
 <para>Please make sure when asking questions in the above mentioned newsgroups
 and mailing lists to only ask questions that are not answered in this
 manual.</para>
 
-<para>For those new to reading news and posting articles,
-I want to recommend the chapter <link linkend="knode-journey">A journey through
-Usenet</link>. It is not so much about the program &knode; as how to move about
-in the Usenet with its help. In general, it is not sufficient to just master a
-news reader for writing news articles. Imagine a car driver who masters his car
-perfectly but does not know about the traffic rules or signs. Do you want to
-encounter such a driver when out in traffic? So please take your time to learn
-at least a little about the "traffic rules" of the Usenet. The other
-participants will thank you.</para>
+<para>For those new to reading news and posting articles, I want to recommend
+the chapter <link linkend="knode-journey">A journey through Usenet</link>. It is
+not so much about the program &knode; as how to move about in the Usenet with
+its help. In general, it is not sufficient to just master a news reader for
+writing news articles. Imagine a car driver who masters his car perfectly but
+does not know about the traffic rules or signs. Do you want to encounter such a
+driver when out in traffic? So please take your time to learn at least a little
+about the "traffic rules" of the Usenet. The other participants will thank
+you.</para>
 
 <tip><para>&knode; supports you in many cases with hints and warnings. If you do
 not simply ignore them, you will avoid many beginners' mistakes.  But do not
@@ -154,133 +141,6 @@ exclusively depend on them either.</para> </tip>
 
 <!-- Revisions here should be about the *application* not the documentation, -->
 <!-- that's handled in the prologue.  I removed this section. -->
-
-</chapter>
-
-<chapter id="update-installation">
-<title>Notes about updating an older version of &knode;</title>
-
-<para>This section contains notes about what to take care of when installing a
-newer version of &knode; with an older version already installed.</para>
-
-<sect1 id="update-from-0.1.x">
-<title>Update from version 0.1.x</title>
-
-<para>Since version 0.2 the format of the configuration files and the saved
-articles has changed. An update is not readily possible. Unfortunately, your old
-configuration files can not be imported. </para>
-
-</sect1>
-</chapter>
-
-<chapter id="installation">
-<title>Installation</title>
-
-<sect1 id="getting-knode">
-<title>Where do I get &knode; ?</title>
-
-<para>&knode; is part of <ulink url="http://www.kde.org">KDE
-Project</ulink>. You will find the current version of &knode; in the package
-kdenetwork at <ulink
-url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
-ftp-Server of the KDE Project or at the <ulink
-url="http://knode.sourceforge.net">Homepage of &knode;</ulink>.</para>
-
-</sect1>
-
-<sect1 id="requirements">
-<title>Requirements</title>
-
-<para>If you want to successfully install &knode;, you need a KDE
-2.x.</para>
-
-<para>If, in addition, you want to use &knode; as an offline newsreader, you
-need a local news server, <abbrev>e.g.</abbrev> <ulink
-url="http://www.leafnode.org"><application>leafnode</application></ulink>.</para>
-
-<para>If you want to compile and install &knode;, you must make sure that the
-following programs are present: </para>
-
-<itemizedlist>
-<listitem><para>g++2.8/egcs 1.0.3 (or compatible)</para></listitem>
-<listitem><para>GNU make</para></listitem>
-<listitem><para>autoconf 2.1</para></listitem>
-<listitem><para>automake 1.4</para></listitem>
-<listitem><para>QT 2.2</para></listitem>
-<listitem><para>KDE 2.x</para></listitem>
-</itemizedlist>
-
-</sect1>
-
-<sect1 id="compilation">
-<title>Compile and install</title>
-
-<para>&knode; is part of the package kdenetwork of KDE 2.x and is installed
-together with it. so in general, there is no need for a user to compile the
-sources of &knode;. If you nonetheless intend to or if you only have the sources
-available, compilation and installation is done, as is custom on Linux, by
-typing: </para>
-
-<screen width="40">
-<prompt>%</prompt> <command>./configure</command>
-<prompt>%</prompt> <command>make</command>
-<prompt>%</prompt> <command>su</command>
-<prompt>%</prompt> <command>make <option>install</option></command>
-</screen>
-
-<para>&knode; uses <application>autoconf</application> and
-<application>automake</application>, so there should be no problems during
-compilation. But if so, please contact the already mentioned mailing list or the
-KDE newsgroups. </para>
-
-</sect1>
-
-<sect1 id="configuration">
-<title>Configuration</title>
-
-<para>If you use &knode; together with with a local news server, you must make
-sure that this server is correctly set up and started. For further details,
-please consult the documentation of your local news server. </para>
-
-<tip><para>The availability of the local news server can easily be verified with
-the program <application>telnet</application>. Open a console and type:</para>
-
-<screen width="40">
-<prompt>%</prompt> <command>telnet localhost nntp </command>
-</screen>
-
-<para>Followed by that, the news server should respond with:</para>
-
-<screen width="40">
-<prompt>%</prompt>
-<computeroutput>
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.
-200 Leafnode NNTP Daemon, version 1.9.16 running at konqi.org
-</computeroutput>
-</screen>
-
-<para>You quit the <application>telnet</application> session with:</para>
-
-<screen width="20">
-<prompt>%</prompt> <userinput>quit</userinput>
-</screen>
-
-<para>If that should not work, there is either no local news server set up or
-the server was not started. In this case, please consult the documentation of
-your local news server.</para> </tip>
-
-<para>Further, you need of course a (dial-in) connection to a news server on the
-Internet. From there, &knode; or the local news server retrieves the
-articles. Your Internet provider should be able to give
-you information about which news servers you can use. You need this information
-in any case.</para>
-
-<para>You will learn more about setting up &knode; in the chapter <link
-linkend="using-knode">Working with &knode;</link></para>
-
-</sect1>
 
 </chapter>
 
@@ -295,7 +155,7 @@ linkend="using-knode">Working with &knode;</link></para>
 <guimenuitem>KNode</guimenuitem> launches the program.</para>
 
 <tip><para>If the entry for &knode; can not be found or if &knode; should not
-appear on the desktop after clicking on the menu entry, read  <link
+appear on the desktop after clicking on the menu entry, read <link
 linkend="faq">Questions and Answers</link></para></tip>
 
 <para>The main window of &knode; should now be displayed on your desktop as
@@ -2058,14 +1918,14 @@ browse through all subscribed newsgroups like this. </para></listitem>
 
 <varlistentry>
 <term>Next unread article
-<keycombo><keycap>Alt</keycap><keysym>Space</keysym></keycombo></term>
+<keycombo action="simul"><keycap>Alt</keycap><keysym>Space</keysym></keycombo></term>
 <listitem><para>This key binding jumps to the next unread article. The sequence
 follows the order of articles in the article view. A thread is opend if needed
 to do so.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Next unread thread <keycombo><keycap>Ctrl</keycap><keysym>Space</keysym>
+<term>Next unread thread <keycombo action="simul"><keycap>Ctrl</keycap><keysym>Space</keysym>
 </keycombo></term>
 <listitem><para>This command jumps to the next thread containing unread
 articles. The first unread article is selected and shown. The sequence follows
@@ -3356,34 +3216,26 @@ newsgroups.</para>
 </sect1>
 </chapter>
 
-
-
-
-
-
 <chapter id="commands">
 <title>Command reference</title>
 
 <para>The following keybinding assume, you did not change the
-default settings.
-</para>
+default settings.</para>
 
 <sect1 id="knode-mainwindow">
 <title>The main &knode; window</title>
 
-<para></para>
-
 <sect2>
 <title>The menu <guimenu>File</guimenu></title>
-<para>
+
 <variablelist>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>S</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>S</keycap></keycombo>
 </shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Save</guimenuitem>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem><accel>S</accel>ave</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Saves the selected article in a file.</action>
 </para></listitem> </varlistentry>
@@ -3391,10 +3243,10 @@ default settings.
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>P</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>P</keycap></keycombo>
 </shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Print</guimenuitem>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem><accel>P</accel>rint</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Prints the selected article.</action>
 </para></listitem>
@@ -3402,8 +3254,8 @@ default settings.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Send pending messages</guimenuitem>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem>Sen<accel>d</accel> pending messages</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>The messages in the folder Outbox are
 send.</action>
@@ -3411,8 +3263,8 @@ send.</action>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Stop Network</guimenuitem>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem>Stop <accel>N</accel>etwork</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Disconnects the current connection to a
 newsserver.</action>
@@ -3423,30 +3275,29 @@ newsserver.</action>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>
 </shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Quit</guimenuitem>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem><accel>Q</accel>uit</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Quits &knode;.</action></para></listitem>
+<listitem><para><action>Quits</action> &knode;.</para></listitem>
 </varlistentry>
 
 </variablelist>
-</para>
 </sect2>
 
 <sect2>
 <title>The <guimenu>Edit</guimenu> menu</title>
-<para>
+
 <variablelist>
 
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>c</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>c</keycap></keycombo>
 </shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Copy</guimenuitem>
+<guimenu><accel>E</accel>dit</guimenu>
+<guimenuitem><accel>C</accel>opy</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Copy the selected text in the 
 clipboard.</action></para></listitem>
@@ -3454,52 +3305,51 @@ clipboard.</action></para></listitem>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Edit</guimenu>
-<guimenuitem>Select All</guimenuitem>
+<guimenu><accel>E</accel>dit</guimenu>
+<guimenuitem>Select <accel>A</accel>ll</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Selects the whole 
 article.</action></para></listitem>
 </varlistentry>
 
 </variablelist>
-</para>
+
 </sect2>
 
 <sect2>
 <title>The <guimenu>View</guimenu> menu</title>
-<para>
+
 <variablelist>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Show threads</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem>Show <accel>T</accel>hreads</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>When this is activated, &knode; shows 
+<listitem><para>When this is activated, &knode; <action>shows 
 discussions as a tree view in the
 article view. </action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Expand all threads</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem>E<accel>x</accel>pand all threads</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>
-When this is activated, &knode; shows the complete threads.
-This is only funtional when <guilabel>Show threads</guilabel> is activ.
-</action></para></listitem>
+<listitem><para>
+When this is activated, &knode; <action>shows the complete threads.</action>
+This is only funtional when <guilabel>Show threads</guilabel> is
+active.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Collapse all threads</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem><accel>C</accel>ollapse all threads</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>When this is activated, &knode; shows no 
-threads.
-This is only funtional when <guilabel>Show threads</guilabel> is activ.
-</action></para></listitem>
+<listitem><para>When this is activated, &knode; <action>shows no 
+threads.</action> This is only funtional when <guilabel>Show threads</guilabel>
+is active. </para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -3507,8 +3357,8 @@ This is only funtional when <guilabel>Show threads</guilabel> is activ.
 <shortcut>
 <keycap>T</keycap>
 </shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Toggle Subthread</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem><accel>T</accel>oggle Subthread</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Toggles between showing and collapsing the selected thread.
 </action>
@@ -3518,8 +3368,8 @@ Toggles between showing and collapsing the selected thread.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Filter</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem><accel>F</accel>ilter</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>
 Allows you to choose a filter for the article 
@@ -3528,8 +3378,8 @@ view.</action></para></listitem>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Sort</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem>S<accel>o</accel>rt</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>
 Allows you to sort the article view.</action></para></listitem>
@@ -3540,8 +3390,8 @@ Allows you to sort the article view.</action></para></listitem>
 <shortcut>
 <keycap>F5</keycap>
 </shortcut>
-<guimenu>View</guimenu>
-<guimenuitem>Refresh list</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem><accel>R</accel>efresh list</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>
 Refeshes the article view</action></para></listitem>
@@ -3549,23 +3399,20 @@ Refeshes the article view</action></para></listitem>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Show all headers</guimenuitem>
+<guimenu><accel>V</accel>iew</guimenu>
+<guimenuitem>Show <accel>a</accel>ll headers</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>
-When this setting is activated, &knode; shows the complete article header
-in the article window.
-</action>
-</para>
-</listitem>
+<listitem><para>
+When this setting is activated, &knode; <action>shows the complete article header
+in the article window.</action></para></listitem>
 </varlistentry>
 </variablelist>
-</para>
+
 </sect2>
 
 <sect2>
 <title>The <guimenu>Go</guimenu> menu</title>
-<para>
+
 <variablelist>
 
 <varlistentry>
@@ -3573,8 +3420,8 @@ in the article window.
 <shortcut>
 <keycap>N</keycap>
 </shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next article</guimenuitem>
+<guimenu><accel>G</accel>o</guimenu>
+<guimenuitem><accel>N</accel>ext article</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Jumps to next article in the article 
 view.</action>
@@ -3587,8 +3434,8 @@ view.</action>
 <shortcut>
 <keycap>B</keycap>
 </shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous article</guimenuitem>
+<guimenu><accel>G</accel>o</guimenu>
+<guimenuitem><accel>P</accel>revious article</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Jumps to previous article in the article 
 view.</action>
@@ -3599,10 +3446,10 @@ view.</action>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Alt</keycap><keycap>Space</keycap></keycombo>
+<keycombo action="simul"><keycap>Alt</keycap><keycap>Space</keycap></keycombo>
 </shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next unread article</guimenuitem>
+<guimenu><accel>G</accel>o</guimenu>
+<guimenuitem>Next unread <accel>a</accel>rticle</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Jumps to the next unread article and to the 
 first unread
@@ -3613,10 +3460,10 @@ article of the next newsgroup if nessecarry.
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>Space</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>Space</keycap></keycombo>
 </shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next unread thread</guimenuitem>
+<guimenu><accel>G</accel>o</guimenu>
+<guimenuitem>Next unread <accel>t</accel>hread</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Jumps to the next unread thread and to the next
 unread thread in the next newsgroup, if nessecary.
@@ -3628,8 +3475,8 @@ unread thread in the next newsgroup, if nessecary.
 <shortcut>
 <keycap>+</keycap>
 </shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Next group</guimenuitem>
+<guimenu><accel>G</accel>o</guimenu>
+<guimenuitem>Ne<accel>x</accel>t group</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Jumps to the next news group in the folder 
 view</action>
@@ -3642,25 +3489,23 @@ view</action>
 <shortcut>
 <keycap>-</keycap>
 </shortcut>
-<guimenu>Go</guimenu>
-<guimenuitem>Previous group</guimenuitem>
+<guimenu><accel>G</accel>o</guimenu>
+<guimenuitem>Pre<accel>v</accel>ious group</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Jumps to the previous news group in the folder 
 view</action></para></listitem>
 </varlistentry>
 </variablelist>
-</para>
+
 </sect2>
 
 <sect2>
 <title>The <guimenu>Account</guimenu> menu</title>
-<para>
+
 <variablelist>
-
-
 <varlistentry>
-<term><menuchoice> <guimenu>Account</guimenu>
-<guimenuitem>Get new articles</guimenuitem>
+<term><menuchoice> <guimenu>A<accel>c</accel>count</guimenu>
+<guimenuitem><accel>G</accel>et new articles</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Connects with the active account and fetches the
 new messages.</action>
@@ -3670,8 +3515,8 @@ new messages.</action>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Account</guimenu>
-<guimenuitem>Subscribe to Newsgroups</guimenuitem>
+<guimenu>A<accel>c</accel>count</guimenu>
+<guimenuitem><accel>S</accel>ubscribe to Newsgroups</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>
 Opens the Dialog Box for subscribing to newsgroups for the active 
@@ -3682,8 +3527,8 @@ account.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Account</guimenu>
-<guimenuitem>Properties</guimenuitem>
+<guimenu>A<accel>c</accel>count</guimenu>
+<guimenuitem><accel>P</accel>roperties</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the properties dialog for the active 
 account.</action>
@@ -3691,14 +3536,14 @@ account.</action>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice> <guimenu>Account</guimenu>
-<guimenuitem>Delete</guimenuitem> </menuchoice></term>
+<term><menuchoice> <guimenu>A<accel>c</accel>count</guimenu>
+<guimenuitem><accel>D</accel>elete</guimenuitem> </menuchoice></term>
 <listitem><para><action>
 Deletes the active account and all subscribed newsgroups within.
 </action></para></listitem>
 </varlistentry>
 </variablelist>
-</para>
+
 </sect2>
 
 <sect2>
@@ -3708,7 +3553,7 @@ Deletes the active account and all subscribed newsgroups within.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Group</guimenu>
+<guimenu>G<accel>r</accel>oup</guimenu>
 <guimenuitem>Mark all as unread</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Sets the status of all aticles in the active 
@@ -3719,8 +3564,8 @@ newsgroup to
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Group</guimenu>
-<guimenuitem>Properties</guimenuitem>
+<guimenu>G<accel>r</accel>oup</guimenu>
+<guimenuitem><accel>P</accel>roperties</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the dialog for the group 
 properties.</action>
@@ -3729,8 +3574,8 @@ properties.</action>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Group</guimenu>
-<guimenuitem>Unsubscribe</guimenuitem>
+<guimenu><accel>G</accel>roup</guimenu>
+<guimenuitem><accel>U</accel>nsubscribe</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Unsubscribes from the active newsgroup</action>
 </para>
@@ -3739,8 +3584,8 @@ properties.</action>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Group</guimenu>
-<guimenuitem>Compact Folder</guimenuitem>
+<guimenu><accel>G</accel>roup</guimenu>
+<guimenuitem><accel>C</accel>ompact Folder</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>removes all deleted or moved articles physically
 out of the active folder.
@@ -3751,8 +3596,8 @@ out of the active folder.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Group</guimenu>
-<guimenuitem>Empty Folder</guimenuitem>
+<guimenu><accel>G</accel>roup</guimenu>
+<guimenuitem><accel>E</accel>mpty Folder</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Deletes all articles from the active
 folder.</action>
@@ -3773,8 +3618,8 @@ folder.</action>
 <shortcut>
 <keycap>P</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Post new article</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem><accel>P</accel>ost to newsgroup</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the Composer with the settings for 
 writing new
@@ -3789,8 +3634,8 @@ articles of the active newsgroup.
 <shortcut>
 <keycap>R</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Post reply</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem><accel>F</accel>ollow up to newsgroup</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the Composer for writing a followup
 with the content of the active article.
@@ -3804,8 +3649,8 @@ with the content of the active article.
 <shortcut>
 <keycap>A</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Mail Reply
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem>Reply by E-<accel>M</accel>ail
 </guimenuitem></menuchoice></term>
 <listitem><para><action>Opens
 the Composer for writing an e-mail to the author of the active article.
@@ -3818,8 +3663,8 @@ the Composer for writing an e-mail to the author of the active article.
 <shortcut>
 <keycap>F</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Forward</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem>Forw<accel>a</accel>rd by E-Mail</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the Composer for forwarding the
 active article as e-mail.
@@ -3832,12 +3677,12 @@ active article as e-mail.
 <shortcut>
 <keycap>D</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Mark</guisubmenu>
-<guimenuitem>Mark as read</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu>Mar<accel>k</accel></guisubmenu>
+<guimenuitem>Mark as <accel>r</accel>ead</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Set the status of the active article to "read"
-</action>
+<listitem><para><action>Set the status of the active article</action> to
+<quote>read</quote>
 </para></listitem>
 </varlistentry>
 
@@ -3846,46 +3691,41 @@ active article as e-mail.
 <shortcut>
 <keycap>U</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Mark</guisubmenu>
-<guimenuitem>Mark as unread
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu>Mar<accel>k</accel></guisubmenu>
+<guimenuitem>Mar<accel>k</accel> as unread
 </guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Set the status of the active article to "unread"
-</action>
-</para></listitem>
+<listitem><para><action>Set the status of the active article</action> to
+<quote>unread</quote></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>D</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>D</keycap></keycombo>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Thread</guisubmenu>
-<guimenuitem>Mark thread as read
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu><accel>T</accel>hread</guisubmenu>
+<guimenuitem>Mark thread as r<accel>e</accel>ad
 </guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Set the status of the active thread to "read"
-</action>
-</para>
-</listitem>
+<listitem><para><action>Set the status of the active thread</action> to
+<quote>read</quote></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo><keycap>Ctrl</keycap><keycap>U</keycap></keycombo>
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>U</keycap></keycombo>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Thread</guisubmenu>
-<guimenuitem>Mark thread as unread
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu><accel>T</accel>hread</guisubmenu>
+<guimenuitem>Mark thread as u<accel>n</accel>read
 </guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Set the status of the active thread to "unread"
-</action>
-</para>
-</listitem>
+<listitem><para><action>Set the status of the active thread</action> to
+<quote>unread</quote></para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -3893,8 +3733,8 @@ active article as e-mail.
 <shortcut>
 <keycap>S</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Thread</guisubmenu>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu><accel>T</accel>hread</guisubmenu>
 <guimenuitem>Score ...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>
@@ -3907,13 +3747,11 @@ Opens the dialog for scoring the active thread.
 <shortcut>
 <keycap>W</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Thread</guisubmenu>
-<guimenuitem>Watch</guimenuitem> </menuchoice></term>
-<listitem><para><action>Set the status of the active thread to "watched"
-</action>
-</para>
-</listitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu><accel>T</accel>hread</guisubmenu>
+<guimenuitem><accel>W</accel>atch</guimenuitem> </menuchoice></term>
+<listitem><para><action>Set the status of the active thread</action> to
+<quote>watched</quote></para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -3921,21 +3759,18 @@ Opens the dialog for scoring the active thread.
 <shortcut>
 <keycap>I</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guisubmenu>Thread</guisubmenu>
-<guimenuitem>Ignore</guimenuitem> </menuchoice></term>
-<listitem><para><action>Set the status of the active thread to "ignored"
-</action>
-</para>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guisubmenu><accel>T</accel>hread</guisubmenu>
+<guimenuitem><accel>I</accel>gnore</guimenuitem> </menuchoice></term>
+<listitem><para><action>Set the status of the active thread</action> to
+<quote>ignored</quote></para>
 </listitem>
 </varlistentry>
 
-
-
 <varlistentry>
 <term><menuchoice>
-<guimenu>Article</guimenu>
-<guimenuitem>Cancel
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem><accel>C</accel>ancel
 </guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Generate a message which deletes the
@@ -3947,8 +3782,8 @@ active Article in Usenet. You can only use this with your own articles.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Article</guimenu>
-<guimenuitem>Supersede</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem>S<accel>u</accel>persede</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the Composer with the content of
 the active article. When this article is posted, it overwrites
@@ -3963,8 +3798,8 @@ the original article. You can only use this with your own articles.
 <shortcut>
 <keycap>O</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Open in own window</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem>Open in own <accel>w</accel>indow</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>The active article is opend in a new window.
 </action>
@@ -3977,13 +3812,13 @@ the original article. You can only use this with your own articles.
 <shortcut>
 <keycap>E</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Edit</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem><accel>E</accel>dit</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the Composer, for editing the active 
-article.
+article.</action>
 You can only use this in the folders <guilabel>Outbox</guilabel> and
-<guilabel>Drafts</guilabel>.</action></para></listitem>
+<guilabel>Drafts</guilabel>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -3991,35 +3826,32 @@ You can only use this in the folders <guilabel>Outbox</guilabel> and
 <shortcut>
 <keycap>Delete</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
-<guimenuitem>Delete</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem><accel>D</accel>elete</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Deletes the active article.
+<listitem><para><action>Deletes the active article.</action>
 You can only use this in the folders <guilabel>Outbox</guilabel> and
-<guilabel>Drafts</guilabel>.
-</action></para></listitem>
+<guilabel>Drafts</guilabel>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Article</guimenu>
-<guimenuitem>Send Now</guimenuitem>
+<guimenu><accel>A</accel>rticle</guimenu>
+<guimenuitem>Send <accel>n</accel>ow</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Sends the active article.
+<listitem><para><action>Sends the active article.</action>
 You can only use this in the folders <guilabel>Outbox</guilabel> and
-<guilabel>Drafts</guilabel>.
-</action></para></listitem>
+<guilabel>Drafts</guilabel>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Article</guimenu>
+<guimenu><accel>A</accel>rticle</guimenu>
 <guimenuitem>Send Later</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Puts the active article in the folder
+<listitem><para>Puts the active article in the folder
 <guilabel>Outbox</guilabel>. You can only use this in the folder
-<guilabel>Drafts</guilabel>.
-</action></para></listitem>
+<guilabel>Drafts</guilabel>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -4027,7 +3859,7 @@ You can only use this in the folders <guilabel>Outbox</guilabel> and
 <shortcut>
 <keycap>F4</keycap>
 </shortcut>
-<guimenu>Article</guimenu>
+<guimenu><accel>A</accel>rticle</guimenu>
 <guimenuitem>Search</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>
@@ -4046,8 +3878,8 @@ Opens the Search Dialog Box for searching in the active group.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Show Toolbar</guimenuitem>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Show <accel>T</accel>oolbar</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>This option toggles if the toolbar is shown or 
 not.
@@ -4057,8 +3889,8 @@ not.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Show Statusbar</guimenuitem>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Show St<accel>a</accel>tusbar</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 This option toggles if the statusbar is shown or not.
 </action></para></listitem>
@@ -4067,8 +3899,8 @@ This option toggles if the statusbar is shown or not.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Key Bindings</guimenuitem>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Configure <accel>K</accel>ey Bindings</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens a dialog for configuring the key bindings.
 </action></para></listitem>
@@ -4077,8 +3909,8 @@ Opens a dialog for configuring the key bindings.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Toolbars</guimenuitem>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Configure Tool<accel>b</accel>ars</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens a dialog for configuring the toolbars.
 </action></para></listitem>
@@ -4086,11 +3918,10 @@ Opens a dialog for configuring the toolbars.
 
 
 <varlistentry>
-<term><menuchoice> <guimenu>Settings</guimenu>
-<guimenuitem>Preferences</guimenuitem> </menuchoice></term>
-<listitem><para><action>
-Opens a dialog for configuring &knode;.
-</action></para></listitem>
+<term><menuchoice> <guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem><accel>C</accel>onfigure KNode</guimenuitem> </menuchoice></term>
+<listitem><para><action>Opens a dialog for configuring</action>
+&knode;.</para></listitem>
 </varlistentry>
 
 
@@ -4106,20 +3937,20 @@ Opens a dialog for configuring &knode;.
 <varlistentry>
 <term><menuchoice>
 <shortcut><keycap>F1</keycap></shortcut>
-<guimenu>Help</guimenu>
-<guimenuitem>Contents</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>C</accel>ontents</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>
+<listitem><para>
 Opens the &knode; online-help. The document you are
 reading right now.
-</action></para></listitem>
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Shift</keycap><keycap>F1</keycap></keycombo></shortcut>
-<guimenu>Help</guimenu>
-<guimenuitem>What's this?</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Shift</keycap><keycap>F1</keycap></keycombo></shortcut>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>What's <accel>t</accel>his?</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens the quick help.</action></para></listitem>
 </varlistentry>
@@ -4127,8 +3958,8 @@ Opens the quick help.</action></para></listitem>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>Report Bug</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>R</accel>eport Bug</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens the Bug Report Dialog.
 </action></para></listitem>
@@ -4136,17 +3967,17 @@ Opens the Bug Report Dialog.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>About KNode</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>A</accel>bout KNode</guimenuitem>
 </menuchoice></term> <listitem><para><action>
-Opens the dialog with information about &knode;.
-</action></para></listitem>
+Opens the dialog with information</action> about &knode;.
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>About KDE</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>About <accel>K</accel>DE</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens a dialog with information about the KDE-Project and the
 current KDE version you use.
@@ -4164,15 +3995,16 @@ current KDE version you use.
 <title>The composor menus.</title>
 
 <sect2>
-<title>The <guimenu>File</guimenu> menu</title>
+<title>The <guimenu><accel>F</accel>ile</guimenu> menu</title>
 
 <variablelist>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Return</keycap></keycombo></shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Send Now</guimenuitem>
+<shortcut><keycombo action="simul">
+<keycap>Ctrl</keycap><keycap>Return</keycap></keycombo></shortcut>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem><accel>S</accel>end Now</guimenuitem>
 </menuchoice></term> <listitem><para><action>Send the current article immediately.
 </action>
 </para>
@@ -4180,34 +4012,33 @@ current KDE version you use.
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice> <guimenu>File</guimenu> <guimenuitem>Send Later</guimenuitem>
+<term><menuchoice> <guimenu><accel>F</accel>ile</guimenu> <guimenuitem>Send
+<accel>L</accel>ater</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Store the current article in the
-<guilabel>Outbox</guilabel> to be sent later.</action>
-</para>
-</listitem>
+<listitem><para><action>Store the current article</action> in the
+<guilabel>Outbox</guilabel> to be sent later.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice> <guimenu>File</guimenu> <guimenuitem>Save as
-Draft</guimenuitem> </menuchoice></term>
-<listitem><para><action>Save the current article in the
+<term><menuchoice> <guimenu><accel>F</accel>ile</guimenu> <guimenuitem>Save as
+<accel>D</accel>raft</guimenuitem> </menuchoice></term>
+<listitem><para><action>Save the current article</action> in the
 <guilabel>Drafts</guilabel> folder, so you can finish editing it another
-time.</action></para>
+time.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice> <guimenu>File</guimenu>
-<guimenuitem>Delete</guimenuitem> </menuchoice></term>
+<term><menuchoice> <guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem>D<accel>e</accel>lete</guimenuitem> </menuchoice></term>
 <listitem><para><action>Delete the current article, closing the editor.
 </action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo></shortcut>
-<guimenu>File</guimenu> <guimenuitem>Close</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>W</keycap></keycombo></shortcut>
+<guimenu><accel>F</accel>ile</guimenu> <guimenuitem><accel>C</accel>lose</guimenuitem>
 </menuchoice></term> <listitem><para><action>Close the editor
 window</action></para></listitem>
 </varlistentry>
@@ -4220,26 +4051,26 @@ window</action></para></listitem>
 <variablelist>
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Undo</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem>Und<accel>o</accel></guimenuitem>
 </menuchoice></term> <listitem><para><action>Undo the last edit.
 </action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap>
 <keycap>Shift</keycap>
 <keycap>Z</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Redo</guimenuitem>
-</menuchoice></term> <listitem><para><action>Redo the last action undone with
-the <guimenuitem>Undo</guimenuitem> menu entry.</action></para></listitem>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem>Re<accel>d</accel>o</guimenuitem>
+</menuchoice></term> <listitem><para><action>Redo the last action</action> undone with
+the <guimenuitem>Undo</guimenuitem> menu entry.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Cut</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>X</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem>C<accel>u</accel>t</guimenuitem>
 </menuchoice></term> <listitem><para><action>Cut the currently selected text to
 the clipboard, deleting it from the editor window.
 </action></para></listitem>
@@ -4247,8 +4078,8 @@ the clipboard, deleting it from the editor window.
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Copy</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>C</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem><accel>C</accel>opy</guimenuitem>
 </menuchoice></term> <listitem><para><action>Copy the selected text to the
 clipboard, without removing it from the editor window.
 </action></para></listitem>
@@ -4256,24 +4087,24 @@ clipboard, without removing it from the editor window.
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Paste</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>V</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem><accel>P</accel>aste</guimenuitem>
 </menuchoice></term> <listitem><para><action>Paste the current contents of the
 clipboard to the editor window.</action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>A</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Select All</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>A</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem>Select <accel>A</accel>ll</guimenuitem>
 </menuchoice></term> <listitem><para><action>Select all the text in the editor window.
 </action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Find</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>F</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem><accel>F</accel>ind</guimenuitem>
 </menuchoice></term> <listitem><para><action>Open the Find dialog.
 </action></para></listitem>
 </varlistentry>
@@ -4281,22 +4112,22 @@ clipboard to the editor window.</action></para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut><keycap>F3</keycap></shortcut>
-<guimenu>Edit</guimenu><guimenuitem>Find Again</guimenuitem>
+<guimenu><accel>E</accel>dit</guimenu><guimenuitem>Find <accel>N</accel>ext</guimenuitem>
 </menuchoice></term> <listitem><para><action>Repeat the last search.
 </action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Replace...</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>R</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem><accel>R</accel>eplace...</guimenuitem>
 </menuchoice></term> <listitem><para><action>Open the replace dialog.
 </action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Edit</guimenu> <guimenuitem>Start External Editor</guimenuitem>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem>Start External Editor</guimenuitem>
 </menuchoice></term> <listitem><para><action>Start the external editor (if one
 is configured), with the current contents of the editor window.
 </action></para></listitem>
@@ -4304,8 +4135,8 @@ is configured), with the current contents of the editor window.
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo></shortcut>
-<guimenu>Edit</guimenu> <guimenuitem>Spelling...</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu> <guimenuitem>Spelling...</guimenuitem>
 </menuchoice></term> <listitem><para><action>Opens a dialog box to check your spelling.
 </action></para></listitem>
 </varlistentry>
@@ -4320,7 +4151,7 @@ is configured), with the current contents of the editor window.
 <variablelist>
 <varlistentry>
 <term><menuchoice>
-<guimenu>Attach</guimenu> <guimenuitem>Append Signature</guimenuitem>
+<guimenu><accel>A</accel>ttach</guimenu> <guimenuitem>Append <accel>S</accel>ignature</guimenuitem>
 </menuchoice></term> <listitem><para><action>Insert your signature at the end of
 the article you are editing.</action>
 </para>
@@ -4329,7 +4160,7 @@ the article you are editing.</action>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Attach</guimenu> <guimenuitem>Insert File</guimenuitem>
+<guimenu><accel>A</accel>ttach</guimenu> <guimenuitem><accel>I</accel>nsert File</guimenuitem>
 </menuchoice></term> <listitem><para><action>Insert the contents of a file into
 the editor window.
 </action></para></listitem>
@@ -4337,7 +4168,7 @@ the editor window.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Attach</guimenu> <guimenuitem>Attach File</guimenuitem>
+<guimenu><accel>A</accel>ttach</guimenu> <guimenuitem>Attach <accel>F</accel>ile</guimenuitem>
 </menuchoice></term> <listitem><para><action>Insert a file as an attachment.
 </action></para></listitem>
 </varlistentry>
@@ -4352,29 +4183,29 @@ the editor window.
 <variablelist>
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu> <guimenuitem>Show Toolbar</guimenuitem>
+<guimenu><accel>S</accel>ettings</guimenu> <guimenuitem>Show <accel>T</accel>oolbar</guimenuitem>
 </menuchoice></term> <listitem><para><action>Toggles on and off the
 toolbar.</action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu> <guimenuitem>Configure Keybindings...</guimenuitem>
+<guimenu><accel>S</accel>ettings</guimenu> <guimenuitem>Configure <accel>K</accel>eybindings...</guimenuitem>
 </menuchoice></term> <listitem><para><action>Open a dialog box where you can
 configure the keyboard shortcuts.</action></para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-Toolbars...</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenu><accel>S</accel>ettings</guimenu><guimenuitem>Configure
+Tool<accel>b</accel>ars...</guimenuitem></menuchoice></term>
 <listitem><para><action>Open a dialog box where you can configure the toolbar
 icons.</action></para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Settings</guimenu> <guimenuitem>Preferences</guimenuitem>
-</menuchoice></term> <listitem><para><action>Open the &knode; Preferences
+<guimenu><accel>S</accel>ettings</guimenu> <guimenuitem><accel>C</accel>onfigure KNode</guimenuitem>
+</menuchoice></term> <listitem><para>Open the &knode; <action>Preferences
 dialog.</action></para></listitem>
 </varlistentry>
 
@@ -4389,20 +4220,19 @@ dialog.</action></para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut><keycap>F1</keycap></shortcut>
-<guimenu>Help</guimenu>
-<guimenuitem>Contents</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>C</accel>ontents</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>
-Opens the &knode; online-help. The document you are
-reading right now.
-</action></para></listitem>
+<listitem><para>
+Opens the &knode; <action>online-help</action>. The document you are reading
+right now.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycombo><keycap>Shift</keycap><keycap>F1</keycap></keycombo></shortcut>
-<guimenu>Help</guimenu>
-<guimenuitem>What's this?</guimenuitem>
+<shortcut><keycombo action="simul"><keycap>Shift</keycap><keycap>F1</keycap></keycombo></shortcut>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>What's <accel>t</accel>his?</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens the quick help.</action></para></listitem>
 </varlistentry>
@@ -4410,8 +4240,8 @@ Opens the quick help.</action></para></listitem>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>Report Bug</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>R</accel>eport Bug</guimenuitem>
 </menuchoice></term> <listitem><para><action>
 Opens the Bug Report Dialog.
 </action></para></listitem>
@@ -4419,21 +4249,20 @@ Opens the Bug Report Dialog.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>About KNode</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>A</accel>bout KNode</guimenuitem>
 </menuchoice></term> <listitem><para><action>
-Opens the dialog with information about &knode;.
-</action></para></listitem>
+Opens the dialog with information</action> about &knode;.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Help</guimenu>
-<guimenuitem>About KDE</guimenuitem>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>About <accel>K</accel>DE</guimenuitem>
 </menuchoice></term> <listitem><para><action>
-Opens a dialog with information about the KDE-Project and the
-current KDE version you use.
-</action></para></listitem>
+Opens a dialog with information</action> about the &kde; Project and the
+current &kde; version you use.
+</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -4461,12 +4290,12 @@ do this for you. If the entry is there, but you don't have an item
 <application>Konsole</application> and run &knode; from there. Type</para>
 
 <screen width="40">
-<prompt>%</prompt> <userinput>knode &</userinput>
+<prompt>%</prompt> <userinput><command>knode</command> <option>&</option></userinput>
 </screen>
 <para>If an error message appears that tells you that &knode; could not be
 started or found, please check whether the file <filename>knode</filename>
-exists in <filename>$KDEDIR/bin</filename> and its permissions are correctly
-set. </para>
+exists in <filename class="directory">$KDEDIR/bin</filename> and its permissions
+are correctly set. </para>
 </answer>
 </qandaentry>
 
@@ -4477,8 +4306,8 @@ suddenly disappears without &knode; being started.</para></question>
 <answer><para>Try to start &knode; from the <application>konsole</application>
 (see previous question) and keep attention for the messages displayed there. If
 those don't look obvious to you, mark them with your mouse and copy it to the
-clipboard. Turn to a KDE mailing list or use another news reader to ask for help
-in a KDE news group.</para></answer>
+clipboard. Turn to a &kde; mailing list or use another news reader to ask for help
+in a &kde; news group.</para></answer>
 
 </qandaentry>
 
@@ -4570,14 +4399,14 @@ started; but the editor is correctly set.
 <answer>
 <para>
 Have a look whether you entered the place-holder for a filename
-after the editor command. If not, enter it. If you <abbrev>e.g.</abbrev> want to use
+after the editor command. If not, enter it. If you &eg; want to use
 <application>kedit</application>
 enter
 </para>
 <para>
-<userinput>kedit %f</userinput>
+<userinput><command>kedit</command> <token>%f</token></userinput>
 </para>
-<para>If the <option>%f</option> is absent, your editor can not be run.
+<para>If the <token>%f</token> is absent, your editor can not be run.
 </para>
 </answer>
 </qandaentry>
@@ -4591,11 +4420,11 @@ enter
 <title>A journey in the World of Newsgroups</title>
 
 <para>This chapter is supposed to glance over the World of Newsgroups and their
-"inhabitants". Someone who never dared to go there will encounter some strange
-customs, wich may give you a feeling of being a lonely alien without backup.
-But stay calm, it is not like this. The Usenet is a meeting place for all kinds
-of normal and not-so-normal folks. It is here where they are distributing a lot
-of information but also gossip and other stuff.  </para>
+<quote>inhabitants</quote>. Someone who never dared to go there will encounter
+some strange customs, wich may give you a feeling of being a lonely alien
+without backup.  But stay calm, it is not like this. The Usenet is a meeting
+place for all kinds of normal and not-so-normal folks. It is here where they are
+distributing a lot of information but also gossip and other stuff.  </para>
 
 <tip><para>References to more detailed and qualified essays on the Usenet can be found at
 <link linkend="knode-more-info">More Resources</link>
@@ -4710,7 +4539,7 @@ in the description of the group in the grouplist.  </para>
 but  happily it is easy to learn.</para>
 
 <sect2>
-<title>RTFM and other typos</title>
+<title><acronym>RTFM</acronym> and other typos</title>
 
 <para>When you read news, after some time you will read some strange
 combinations of letters. For example you can get a reply like:</para>
@@ -4723,22 +4552,22 @@ RTFM
 </para>
 
 <para>
-Nothing else. Strange but absolutely intended.
-To solve the riddle: Those, most of the time, are shortcuts,  acronyms.
-It is easier to  drop some letters, than writing
-the same sentence over and over again.
+Nothing else. Strange but absolutely intended.  To solve the riddle: Those, most
+of the time, are shortcuts, acronyms.  It is easier to drop some letters, than
+writing the same sentence over and over again.
 </para>
 
 <para>
-But what is the meaning of RTFM?  The writer demands you, to read the manual,
-documentation or FAQ before asking questions in the newsgroup. Clearer:
-(R)ead (T)he (F)ucking (M)anual. BTW an advice you should adopt.
+But what is the meaning of <acronym>RTFM</acronym>?  The writer demands you, to
+read the manual, documentation or <acronym>FAQ</acronym> before asking questions
+in the newsgroup. Clearer: (R)ead (T)he (F)ucking
+(M)anual. <acronym>BTW</acronym> an advice you should adopt.
 </para>
 
 <para>
-Wait, what is BTW now? Another often seen acronym which means
-(B)y (T)he (W)ay. It is easy when you know it. Now, for you not to be continously
-speculating over acronyms there is table at he end of this section,
+Wait, what is <acronym>BTW</acronym> now? Another often seen acronym which means
+(B)y (T)he (W)ay. It is easy when you know it. Now, for you not to be
+continously speculating over acronyms there is table at he end of this section,
 containing the most often used aconyms. ;-)
 </para>
 </sect2>
@@ -5107,7 +4936,7 @@ stupid questions with patience. Then Thomas Diehl and
 Matthias Kiefer who always were competent contacts regards to
 translation. Not to forget Michael McBride, always there to
 help me out with documentation-related and general stuff, and
-everybody else in the KDE Team who contributed to the creation
+everybody else in the &kde; Team who contributed to the creation
 of this document.</para>
 
 <para>
@@ -5134,10 +4963,139 @@ Reviewer:</para>
 </listitem>
 </itemizedlist>
 
-
-&gpllicense-links;
+&underFDL;
+&underGPL;
 
 </chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="getting-knode">
+<title>Where do I get &knode; ?</title>
+
+<para>&knode; is part of <ulink url="http://www.kde.org">KDE
+Project</ulink>. You will find the current version of &knode; in the package
+kdenetwork at <ulink
+url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
+ftp-Server of the KDE Project or at the <ulink
+url="http://knode.sourceforge.net">Homepage of &knode;</ulink>.</para>
+
+</sect1>
+
+<sect1 id="requirements">
+<title>Requirements</title>
+
+<para>If you want to successfully install &knode;, you need a KDE
+2.x.</para>
+
+<para>If, in addition, you want to use &knode; as an offline newsreader, you
+need a local news server, <abbrev>e.g.</abbrev> <ulink
+url="http://www.leafnode.org"><application>leafnode</application></ulink>.</para>
+
+<para>If you want to compile and install &knode;, you must make sure that the
+following programs are present: </para>
+
+<itemizedlist>
+<listitem><para>g++2.8/egcs 1.0.3 (or compatible)</para></listitem>
+<listitem><para>GNU make</para></listitem>
+<listitem><para>autoconf 2.1</para></listitem>
+<listitem><para>automake 1.4</para></listitem>
+<listitem><para>QT 2.2</para></listitem>
+<listitem><para>KDE 2.x</para></listitem>
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compile and install</title>
+
+<para>&knode; is part of the package kdenetwork of KDE 2.x and is installed
+together with it. so in general, there is no need for a user to compile the
+sources of &knode;. If you nonetheless intend to or if you only have the sources
+available, compilation and installation is done, as is custom on Linux, by
+typing: </para>
+
+<screen width="40">
+<prompt>%</prompt> <userinput><command>./configure</command></userinput>
+<prompt>%</prompt> <userinput><command>make</command></userinput>
+<prompt>%</prompt> <userinput><command>su</command></userinput>
+<prompt>%</prompt> <userinput><command>make</command> <option>install</option></userinput>
+</screen>
+
+<para>&knode; uses <application>autoconf</application> and
+<application>automake</application>, so there should be no problems during
+compilation. But if so, please contact the already mentioned mailing list or the
+KDE newsgroups. </para>
+
+</sect1>
+
+<sect1 id="configuration">
+<title>Configuration</title>
+
+<para>If you use &knode; together with with a local news server, you must make
+sure that this server is correctly set up and started. For further details,
+please consult the documentation of your local news server. </para>
+
+<tip><para>The availability of the local news server can easily be verified with
+the program <application>telnet</application>. Open a console and type:</para>
+
+<screen width="40">
+<prompt>%</prompt> <command>telnet localhost nntp </command>
+</screen>
+
+<para>Followed by that, the news server should respond with:</para>
+
+<screen width="40">
+<prompt>%</prompt>
+<computeroutput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+200 Leafnode NNTP Daemon, version 1.9.16 running at konqi.org
+</computeroutput>
+</screen>
+
+<para>You quit the <application>telnet</application> session with:</para>
+
+<screen width="20">
+<prompt>%</prompt> <userinput>quit</userinput>
+</screen>
+
+<para>If that should not work, there is either no local news server set up or
+the server was not started. In this case, please consult the documentation of
+your local news server.</para> </tip>
+
+<para>Further, you need of course a (dial-in) connection to a news server on the
+Internet. From there, &knode; or the local news server retrieves the
+articles. Your Internet provider should be able to give
+you information about which news servers you can use. You need this information
+in any case.</para>
+
+<para>You will learn more about setting up &knode; in the chapter <link
+linkend="using-knode">Working with &knode;</link></para>
+
+</sect1>
+
+</appendix>
+
+
+<appendix id="update-installation">
+<title>Notes about updating an older version of &knode;</title>
+
+<para>This section contains notes about what to take care of when installing a
+newer version of &knode; with an older version already installed.</para>
+
+<sect1 id="update-from-0.1.x">
+<title>Update from version 0.1.x</title>
+
+<para>Since version 0.2 the format of the configuration files and the saved
+articles has changed. An update is not readily possible. Unfortunately, your old
+configuration files can not be imported. </para>
+
+</sect1>
+</appendix>
+
 
 <!-- martin end -->
 <![ %addindex; [ &kdedocindex; ]]>
