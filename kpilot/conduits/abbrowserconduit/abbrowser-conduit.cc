@@ -209,13 +209,15 @@ bool AbbrowserConduit::_loadAddressBook()
 {
 	FUNCTIONSETUP;
 
+	startTickle();
 	switch ( AbbrowserSettings::addressbookType() )
 	{
 		case AbbrowserSettings::eAbookResource:
 			DEBUGCONDUIT<<"Loading standard addressbook"<<endl;
 			aBook = StdAddressBook::self();
 			break;
-		case AbbrowserSettings::eAbookFile: { // initialize the abook with the given file
+		case AbbrowserSettings::eAbookFile:
+		{ // initialize the abook with the given file
 			DEBUGCONDUIT<<"Loading custom addressbook"<<endl;
 			KURL kurl(AbbrowserSettings::fileName());
 			if(!KIO::NetAccess::download(AbbrowserSettings::fileName(), fABookFile, 0L) &&
@@ -226,18 +228,28 @@ bool AbbrowserConduit::_loadAddressBook()
 							"valid file name in the conduit's configuration dialog. "
 							"Aborting the conduit.").arg(AbbrowserSettings::fileName()));
 				KIO::NetAccess::removeTempFile(fABookFile);
+				stopTickle();
 				return false;
 			}
 
 			aBook = new AddressBook();
-			if (!aBook) return false;
-			KABC::Resource *res = new ResourceFile(fABookFile, "vcard" );
-			if ( !aBook->addResource( res ) ) {
-				DEBUGCONDUIT << "Unable to open resource for file " << fABookFile << endl;
-				KPILOT_DELETE( aBook );
+			if (!aBook)
+			{
+				stopTickle();
 				return false;
 			}
-			break;}
+			KABC::Resource *res = new ResourceFile(fABookFile, "vcard" );
+
+			bool r = aBook->addResource( res );
+			if ( !r )
+			{
+				DEBUGCONDUIT << "Unable to open resource for file " << fABookFile << endl;
+				KPILOT_DELETE( aBook );
+				stopTickle();
+				return false;
+			}
+			break;
+		}
 		default: break;
 	}
 	// find out if this can fail for reasons other than a non-existent
@@ -249,6 +261,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		kdWarning()<<k_funcinfo<<": Unable to initialize the addressbook for the sync."<<endl;
 		KPILOT_DELETE(aBook);
+		stopTickle();
 		return false;
 	}
 	abChanged = false;
@@ -257,6 +270,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	{
 		kdWarning()<<k_funcinfo<<": Unable to lock addressbook for writing "<<endl;
 		KPILOT_DELETE(aBook);
+		stopTickle();
 		return false;
 	}
 	// get the addresseMap which maps Pilot unique record(address) id's to
@@ -269,6 +283,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	{
 		_mapContactsToPilot(addresseeMap);
 	}
+	stopTickle();
 	return(aBook != 0L);
 }
 bool AbbrowserConduit::_saveAddressBook()
