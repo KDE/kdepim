@@ -51,6 +51,7 @@ static const char *addresswidget_id =
 #include <qwhatsthis.h>
 #include <qtextview.h>
 #include <qtextcodec.h>
+#include <qregexp.h>
 
 #include <kapplication.h>
 #include <kmessagebox.h>
@@ -299,6 +300,7 @@ void AddressWidget::updateWidget()
 
 			if (!title.isEmpty())
 			{
+				title.remove(QRegExp("\n.*"));
 				PilotListItem *p = new PilotListItem(title,
 					listIndex,
 					fAddressList.current());
