@@ -51,10 +51,10 @@ void filter_plain::import(filterInfo *info)
               "The emails are placed in a folder with the same name as the\n"
               "directory they were in.\n"
               "This filter will import all .msg, .eml and .txt emails.\n"
-              "If this causes trouble to you (you've got kmail folders\n"
-              "with that name, or there are some non-email txt files)\n"
-              "cancel this import function (next dialog\n"
-              "will let you do that) and rename the existing kmail\n"
+              "If this causes problems for you (ie. you have KMail folders\n"
+              "with that name, or there are some non-email txt files),\n"
+              "cancel this import function (the next dialog\n"
+              "will allow you to do that) and rename the existing KMail\n"
               "folders, or move the non-email txt files."
              ));
 
@@ -66,22 +66,22 @@ void filter_plain::import(filterInfo *info)
    }
 
    // Count total number of files to be processed
-   inf->log(i18n("Counting files ..."));
+   inf->log(i18n("Counting files..."));
    totalFiles = countFiles("*.msg");
    totalFiles += countFiles("*.eml");
    totalFiles += countFiles("*.txt");
    currentFile = 0;
 
    if (!kmailStart(inf)) { // Couldn't start KMail
-   	inf->alert(name(), i18n("Couldn't start KMail"));
+   	inf->alert(name(), i18n("Unable to start KMail"));
    	return;
    }
    
-   inf->log(i18n("Importing new mail files ('.msg') ..."));
+   inf->log(i18n("Importing new mail files ('.msg')..."));
    processFiles("*.msg");
-   inf->log(i18n("Importing new mail files ('.eml') ..."));
+   inf->log(i18n("Importing new mail files ('.eml')..."));
    processFiles("*.eml");
-   inf->log(i18n("Importing new mail files ('.txt') ..."));
+   inf->log(i18n("Importing new mail files ('.txt')..."));
    processFiles("*.txt");
    
    kmailStop(inf); // Stop KMail
