@@ -31,6 +31,7 @@ COMPILE_BEFORE_kitchensync = libkdepim
 COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
 COMPILE_AFTER_libkholidays = korganizer kontact
 COMPILE_BEFORE_akregator = libkdepim
+COMPILE_BEFORE_knotes = libkdepim
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
