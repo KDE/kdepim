@@ -123,6 +123,7 @@ protected:
   /// The parameter sernum is updated with the right KMail serial number
   bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
                     const QString& xml,
+                    const QCString& subject = QCString("internal kolab data: Do not delete this mail."),
                     const QStringList& attachments = QStringList(),
                     const QStringList& deletedAttachments = QStringList() );
 

@@ -207,11 +207,13 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
 
 bool KMailConnection::kmailUpdate( const QString& resource,
                                    Q_UINT32& sernum,
+                                   const QCString& subject,
                                    const QStringList& attachments,
                                    const QStringList& deletedAttachments )
 {
   if ( connectToKMail() ) {
-    sernum = mKMailIcalIfaceStub->update( resource, sernum, attachments,
+    sernum = mKMailIcalIfaceStub->update( resource, sernum,
+                                          subject, attachments,
                                           deletedAttachments );
 
     return sernum && mKMailIcalIfaceStub->ok();

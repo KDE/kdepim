@@ -85,6 +85,7 @@ bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
 bool ResourceKolabBase::kmailUpdate( const QString& resource,
                                      Q_UINT32& sernum,
                                      const QString& xml,
+                                     const QCString& subject,
                                      const QStringList& attachments,
                                      const QStringList& deletedAttachments )
 {
@@ -106,7 +107,7 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
   url.setFileEncoding( "UTF-8" );
   a.prepend( url.url() );
 
-  return mConnection->kmailUpdate( resource, sernum, a, deletedAttachments );
+  return mConnection->kmailUpdate( resource, sernum, subject, a, deletedAttachments );
 }
 
 QString ResourceKolabBase::configFile( const QString& type ) const
