@@ -6,7 +6,10 @@
 #include "agent.h"
 #include <qframe.h>
 
+#include "certificateinfowidgetimpl.h"
+
 CertItem::CertItem( const QString& DN, 
+		    const QString& serial,
 		    const QString& issuer, 
 		    const QString& CN, 
 		    const QString& L,
@@ -14,10 +17,56 @@ CertItem::CertItem( const QString& DN,
 		    const QString& OU,
 		    const QString& C, 
 		    const QString& email, 
-		    Agent* agent, CertBox* parent )
-  : QListViewItem( parent, DN, agent->shortName() ), 
-   _DN(DN), _issuer(issuer), _CN(CN),_L(L), _O(O), _OU(OU), _C(C), _email(email), _agent(agent)
+		    const QDateTime& created,
+		    const QDateTime& expire,
+		    bool sign,
+		    bool encrypt,
+		    bool certify,
+		    const CryptPlugWrapper::CertificateInfo& info,
+		    Agent* agent,CertManager* manager, CertBox* parent )
+  : QListViewItem( parent, DN, issuer, serial /*agent?agent->shortName():""*/) , 
+   _DN(DN), _serial(serial),_issuer(issuer), _CN(CN),_L(L), _O(O), _OU(OU), _C(C), _email(email),
+    _created(created),_expire(expire),
+    _sign(sign),_encrypt(encrypt),_certify(certify),
+    _info(info),
+    _agent(agent),
+    _manager(manager)
 {
+  init();
+}
+
+CertItem::CertItem( const QString& DN, 
+		    const QString& serial,
+		    const QString& issuer, 
+		    const QString& CN, 
+		    const QString& L,
+		    const QString& O,
+		    const QString& OU,
+		    const QString& C, 
+		    const QString& email, 
+		    const QDateTime& created,
+		    const QDateTime& expire,
+		    bool sign,
+		    bool encrypt,
+		    bool certify,
+		    const CryptPlugWrapper::CertificateInfo& info,
+		    Agent* agent,CertManager* manager, CertItem* parent )
+  : QListViewItem( parent, DN, issuer, serial /*agent?agent->shortName():"" */), 
+   _DN(DN), _serial(serial), _issuer(issuer), _CN(CN),_L(L), _O(O), _OU(OU), _C(C), _email(email), 
+    _created(created),_expire(expire),
+    _sign(sign),_encrypt(encrypt),_certify(certify),
+    _info(info),
+    _agent(agent),
+    _manager(manager)
+{
+  init();
+}
+
+void CertItem::init()
+{
+  setOpen( true );
+  setText( 3, _created.toString() );
+  setText( 4, _expire.toString() );
 }
 
 /**
@@ -37,23 +86,11 @@ void CertItem::addKey( const QString& key, const QString& value )
 void CertItem::display() 
 {
   KDialogBase* dialog = new KDialogBase( listView(), "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
-  QVBox* top = new QVBox( dialog );
-  top->setSpacing(6);
-  
-  dialog->setMainWidget( top );
-  
-  // Fixed Keys
-  new QLabel(i18n("<b>Certificate Information</b>"), top );
-  new QLabel(i18n("DN: %1").arg( _DN ), top );
-  new QLabel(i18n("CN: %1").arg( _CN ), top );
-  new QLabel(i18n("L: %1").arg( _L ), top );
-  new QLabel(i18n("O: %1").arg( _O ), top );
-  new QLabel(i18n("OU: %1").arg( _OU ), top );
-  new QLabel(i18n("C: %1").arg( _C ), top );
-  new QLabel(i18n("Email: %1").arg( _email ), top );
 
-  new QLabel(i18n("Issued by: %1").arg( _issuer ), top );
- 
+  CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, dialog );
+  dialog->setMainWidget( top );
+  top->setCert( _info ); 
+#if 0
   // Extra Keys
   for ( QValueList< QPair<QString,QString> >::iterator it = _extras.begin(); it != _extras.end(); ++it ) {
     new QLabel( QString("%1: %2").arg( (*it).first ).arg( (*it).second ), top );
@@ -64,7 +101,10 @@ void CertItem::display()
   frame->setFrameStyle( QFrame::HLine | QFrame:: Plain );
   
   new QLabel(i18n("<b>CA information</b>"), top);
-  new QLabel( _agent->tree(), top );
+  //new QLabel( _agent->tree(), top );
+  //if( parent() ) new QLabel( static_cast<CertItem*>(parent())->dn(), top );
+  new QLabel(i18n("Issued by: %1").arg( _issuer ), top );
+#endif
   
   dialog->exec();
   delete dialog;

@@ -103,31 +103,91 @@ CertManager::CertManager( QWidget* parent, const char* name ) :
   loadCertificates();
 }
 
+CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
+				      const CryptPlugWrapper::CertificateInfo& info )
+{
+  if( parent ) {
+    //qDebug("New with parent");
+    return new CertItem( info.userid.stripWhiteSpace(),
+			 info.serial.stripWhiteSpace(), 
+			 info.issuer.stripWhiteSpace(),
+			 info.dn["CN"], 
+			 info.dn["L"], 
+			 info.dn["O"], 
+			 info.dn["OU"], 
+			 info.dn["C"],
+			 info.dn["1.2.840.113549.1.9.1"], 
+			 info.created,info.expire,
+			 info.sign, info.encrypt, info.certify,
+			 info,
+			 0, this, parent );  
+  } else {
+    //qDebug("New root");
+    return new CertItem( info.userid.stripWhiteSpace(), 
+			 info.serial.stripWhiteSpace(),
+			 info.issuer.stripWhiteSpace(),
+			 info.dn["CN"], 
+			 info.dn["L"], 
+			 info.dn["O"], 
+			 info.dn["OU"], 
+			 info.dn["C"],
+			 info.dn["1.2.840.113549.1.9.1"], 
+			 info.created,info.expire,
+			 info.sign, info.encrypt, info.certify,
+			 info,			
+			 0, this, lv );
+  }
+}
+
+#if 0
+CryptPlugWrapper::CertificateInfoList fillInListView( CertBox* lv, CertItem* parent, 
+							     CryptPlugWrapper::CertificateInfoList list )
+{
+  if( list.isEmpty() ) return list;
+  for( CryptPlugWrapper::CertificateInfoList::Iterator it = list.begin();
+       it != list.end(); ) {
+    CryptPlugWrapper::CertificateInfo info = *it;
+    qDebug("Handling %s", info.issuer.utf8().data() );
+    //info.dn.detach();
+    if( (info.issuer == info.userid) ) {
+      it = list.erase( it );
+      CertItem* item = fillInOneItem( lv, 0, info );
+      list = fillInListView( lv, item, list );
+      it = list.begin();
+    } else if( parent && (info.issuer == parent->dn()) ) {
+      it = list.erase( it );      
+      CertItem* item = fillInOneItem( lv, parent, info );
+      list = fillInListView( lv, item, list ); 
+      it = list.begin();
+    } else ++it;
+  }
+  return list;
+}
+#endif
+
 /**
    This is an internal function, which loads the users current certificates
 */
 void CertManager::loadCertificates()
 {
   // These are just some demonstration data
+  /*
   Agent* root = new Agent( "Root Agent", 0, this );
   Agent* sub = new Agent( "Sub Agent", root, this );
   Agent* subsub = new Agent( "SubSub Agent", sub, this );
+  */
 
   // Clear display
   _certBox->clear();
 
-  QValueList<CryptPlugWrapper::CertificateInfo> lst = pWrapper->listKeys();
-  for( QValueList<CryptPlugWrapper::CertificateInfo>::Iterator it = lst.begin(); 
-       it != lst.end(); ++it ) {
-    qDebug("New CertItem %s", (*it).userid.latin1() );
-    (void)new CertItem( (*it).userid.stripWhiteSpace(), 
-			(*it).issuer.stripWhiteSpace(),
-			(*it).dn["CN"], 
-			(*it).dn["L"], 
-			(*it).dn["O"], 
-			(*it).dn["OU"], 
-			(*it).dn["C"],
-			(*it).dn["1.2.840.113549.1.9.1"], root, _certBox );
+  _certList = pWrapper->listKeys();
+  
+  //lst = fillInListView( _certBox, 0, lst );
+  
+  for( CryptPlugWrapper::CertificateInfoList::Iterator it = _certList.begin(); 
+       it != _certList.end(); ++it ) {
+    //qDebug("New CertItem %s", (*it).userid.latin1() );
+    fillInOneItem( _certBox, 0, *it );
   }
 }
 

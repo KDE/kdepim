@@ -1,0 +1,113 @@
+/* -*- Mode: C -*-
+
+  $Id:$
+
+  Copyright (C) 2001 by Klarälvdalens Datakonsult AB
+
+  GPGMEPLUG is free software; you can redistribute it and/or modify
+  it under the terms of GNU General Public License as published by
+  the Free Software Foundation; version 2 of the License.
+
+  GPGMEPLUG is distributed in the hope that it will be useful,
+  it under the terms of GNU General Public License as published by
+  the Free Software Foundation; version 2 of the License
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+*/
+
+#include <qlistview.h>
+#include <qtextedit.h>
+#include <klocale.h>
+#include <qheader.h>
+
+#include "certificateinfowidgetimpl.h"
+#include "certmanager.h"
+
+CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, 
+						      QWidget* parent, const char* name )
+  : CertificateInfoWidget( parent, name ), _manager(manager)
+{
+  listView->setColumnWidthMode( 1, QListView::Manual );
+  listView->setResizeMode( QListView::LastColumn );
+  QFontMetrics fm = fontMetrics();
+  listView->setColumnWidth( 1, fm.width( i18n("Information") ) * 5 );
+
+  listView->header()->setClickEnabled( false );
+  listView->setSorting( -1 );
+
+  connect( listView, SIGNAL( selectionChanged( QListViewItem* ) ),
+	   this, SLOT( slotShowInfo( QListViewItem* ) ) );
+  pathView->setColumnWidthMode( 0, QListView::Manual );
+  pathView->setResizeMode( QListView::LastColumn );
+  pathView->header()->hide();
+}
+
+void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo& info )
+{
+  listView->clear();
+  pathView->clear();
+
+  // These will show in the opposite order
+  new QListViewItem( listView, i18n("Fingerprint"), info.fingerprint );
+  new QListViewItem( listView, i18n("Can be used for certification"), 
+		     info.certify?i18n("Yes"):i18n("No") );
+  new QListViewItem( listView, i18n("Can be used for encryption"), 
+		     info.encrypt?i18n("Yes"):i18n("No") );
+  new QListViewItem( listView, i18n("Can be used for signing"), 
+		     info.sign?i18n("Yes"):i18n("No") );
+
+  new QListViewItem( listView, i18n("Valid to"), info.expire.toString() );
+  new QListViewItem( listView, i18n("Valid from"), info.created.toString() );
+
+  new QListViewItem( listView, i18n("Email"), info.dn["1.2.840.113549.1.9.1"] );
+  new QListViewItem( listView, i18n("Country"), info.dn["C"] );
+  new QListViewItem( listView, i18n("Organizational Unit"), info.dn["OU"] );
+  new QListViewItem( listView, i18n("Organization"), info.dn["O"] );
+  new QListViewItem( listView, i18n("Location"), info.dn["L"] );
+  new QListViewItem( listView, i18n("Name"), info.dn["CN"] );
+  new QListViewItem( listView, i18n("Issuer"), info.issuer.stripWhiteSpace() );
+  new QListViewItem( listView, i18n("Subject"), info.userid.stripWhiteSpace() );
+
+  // Set up cert. path
+  if( !_manager ) return;
+  const CryptPlugWrapper::CertificateInfoList& lst = _manager->certList();
+  QString issuer = info.issuer;
+  QStringList items;
+  items << info.userid;
+  while( true ) {
+    bool found = false;
+    CryptPlugWrapper::CertificateInfo info;
+    for( CryptPlugWrapper::CertificateInfoList::ConstIterator it = lst.begin();
+	 it != lst.end(); ++it ) {
+      if( (*it).userid == issuer && !items.contains(info.userid) ) {
+	info = (*it);
+	found = true;
+	break;
+      }
+    }
+    if( found ) {
+      items.prepend( info.userid );
+      issuer = info.issuer;
+      if( info.userid == info.issuer ) {
+	// Root item
+	break;
+      } 
+    } else break;
+  }
+  QListViewItem* item = 0;
+  for( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
+    if( item ) item = new QListViewItem( item, *it );
+    else item = new QListViewItem( pathView, *it );
+    item->setOpen( true );
+  }
+}
+
+void CertificateInfoWidgetImpl::slotShowInfo( QListViewItem* item )
+{
+  textView->setText( item->text(1) );
+}

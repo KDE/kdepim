@@ -2,9 +2,10 @@
 #define _CERTMANAGER_H_
 
 #include <kmainwindow.h>
+#include <cryptplugwrapper.h>
 class CertBox;
 class KProcess;
-class CryptPlugWrapper;
+class CertItem;
 
 class CertManager :public KMainWindow
 {
@@ -13,6 +14,8 @@ Q_OBJECT
 public:
     CertManager( QWidget* parent = 0, const char* name = 0);
 
+    const CryptPlugWrapper::CertificateInfoList& certList() const { return _certList; }
+    
 protected:
 
 protected slots:
@@ -27,7 +30,10 @@ protected slots:
     void slotGPGSMExited();
 
 private:
-  //CryptPlugWrapper* _wrapper;
+  CertItem* fillInOneItem( CertBox* lv, CertItem* parent, 
+			   const CryptPlugWrapper::CertificateInfo& info );
+
+    CryptPlugWrapper::CertificateInfoList _certList;
     KProcess* gpgsmProc;
     CertBox* _certBox;
 };
