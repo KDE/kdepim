@@ -190,7 +190,8 @@ bool ResourceIMAP::loadAllJournals()
 
 bool ResourceIMAP::save()
 {
-  return false;
+  // The KMail folders are always up to date with the state of the folders
+  return true;
 }
 
 KABC::Lock *ResourceIMAP::lock()
