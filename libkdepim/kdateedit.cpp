@@ -46,7 +46,7 @@ KDateEdit::KDateEdit(QWidget *parent, const char *name)
   QString today = KGlobal::locale()->formatDate(value, true);
   insertItem(today);
   setCurrentItem(0);
-  setEditText(today);
+  changeItem(today, 0);
   setMinimumSize(sizeHint());
 
   mDateFrame = new QVBox(0,0,WType_Popup);
@@ -102,7 +102,7 @@ void KDateEdit::setDate(const QDate& newDate)
   // the date
   bool b = signalsBlocked();
   blockSignals(true);
-  setEditText(dateString);
+  changeItem(dateString, 0);
   blockSignals(b);
 
   value = newDate;
