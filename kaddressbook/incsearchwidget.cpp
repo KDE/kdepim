@@ -1,54 +1,85 @@
-#include <qlayout.h>
-#include <qcombobox.h>
+/*                                                                      
+    This file is part of KAddressBook.                                  
+    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>                   
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/
+
 #include <qlabel.h>
+#include <qlayout.h>
+#include <qtooltip.h>
+
 #include <kdialog.h>
-#include <kdebug.h>
 #include <klineedit.h>
+#include <klocale.h>
+
 #include "incsearchwidget.h"
 
-IncSearchWidget::IncSearchWidget(QWidget *parent, const char* /*name*/)
-    : IncSearchWidgetBase(parent, "kde toolbar widget")
+IncSearchWidget::IncSearchWidget( QWidget *parent, const char* )
+    : QWidget( parent, "kde toolbar widget" )
 {
-    setName("kde toolbar widget");
-    labelIncSearch->setName("kde toolbar widget");
-    layout()->setMargin(2);
-    layout()->setSpacing(KDialog::spacingHint());
-    connect(leIncSearch, SIGNAL(textChanged(const QString&)),
-            SLOT(incSearchTextChanged(const QString&)));
-    connect(leIncSearch, SIGNAL(returnPressed()),
-            SLOT(incSearchTextReturnPressed()));
-    connect(cbIncSearch, SIGNAL(activated(const QString&)),
-            SLOT(incSearchComboActivated(const QString&)));
+  setCaption( i18n( "Incremental Search" ) );
+
+  initGUI();
+
+  connect( mEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotAnnounce() ) );
+  connect( mEdit, SIGNAL( returnPressed() ),
+           SLOT( slotAnnounce() ) );
+  connect( mCombo, SIGNAL( activated( const QString& ) ),
+           SLOT( slotAnnounce() ) );
 }
 
 IncSearchWidget::~IncSearchWidget()
 {
 }
 
-void IncSearchWidget::incSearchTextChanged(const QString&)
+void IncSearchWidget::slotAnnounce()
 {
-    announce();
+  emit incSearch( mEdit->text(), mCombo->currentItem() );
 }
 
-void IncSearchWidget::incSearchTextReturnPressed()
+void IncSearchWidget::setFields( const QStringList& fields )
 {
-    announce();
+  mCombo->clear();
+  mCombo->insertStringList( fields );
 }
 
-void IncSearchWidget::incSearchComboActivated(const QString&)
+void IncSearchWidget::initGUI()
 {
-    announce();
-}
+  setName("kde toolbar widget");
 
-void IncSearchWidget::announce()
-{
-    emit(incSearch(leIncSearch->text(), cbIncSearch->currentItem()));
-}
+  QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() ); 
 
-void IncSearchWidget::setFields(const QStringList& fields)
-{
-    cbIncSearch->clear();
-    cbIncSearch->insertStringList(fields);
+  QLabel *label = new QLabel( i18n( "Incremental search:" ), this, "kde toolbar widget" );
+  label->setAlignment( int( QLabel::AlignVCenter | QLabel::AlignRight ) );
+  layout->addWidget( label );
+
+  mEdit = new KLineEdit( this );
+  layout->addWidget( mEdit );
+
+  mCombo = new QComboBox( false, this );
+  layout->addWidget( mCombo );
+
+  QToolTip::add( mCombo, i18n( "Select Incremental Search Field" ) );
+
+  resize( QSize(420, 50).expandedTo(sizeHint()) );
 }
 
 #include "incsearchwidget.moc"

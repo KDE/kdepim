@@ -40,7 +40,7 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
   filterselectionwidget.cpp configureviewfilterpage.cpp \
   actionmanager.cpp \
-  incsearchwidget_base.ui incsearchwidget.cpp addresseeconfig.cpp \
+  incsearchwidget.cpp addresseeconfig.cpp \
   detailsviewcontainer.cpp detailsviewcontainer_base.ui look_basic.cpp \
   look_details.cpp
 
