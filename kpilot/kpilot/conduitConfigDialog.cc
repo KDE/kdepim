@@ -49,197 +49,12 @@ static const char *conduitconfigdialog_id =
 #include "plugin.h"
 #include "kpilotConfig.h"
 
-#include "conduitConfigDialog_base.h"
 #include "conduitConfigDialog.moc"
 
 #define CONDUIT_NAME    (0)
 #define CONDUIT_COMMENT (1)
 #define CONDUIT_DESKTOP (2)
 #define CONDUIT_LIBRARY (3)
-
-class ConduitTip : public QToolTip
-{
-public:
-	ConduitTip(QListView *parent);
-	virtual ~ConduitTip();
-
-protected:
-	virtual void maybeTip(const QPoint &);
-
-	QListView *fListView;
-} ;
-
-
-ConduitTip::ConduitTip(QListView *p) :
-	QToolTip(p->viewport(),0L),
-	fListView(p)
-{
-	FUNCTIONSETUP;
-}
-
-ConduitTip::~ConduitTip()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void ConduitTip::maybeTip(const QPoint &p)
-{
-	FUNCTIONSETUP;
-
-	QListViewItem *l = fListView->itemAt(p);
-
-	if (!l) return;
-
-	// ConduitListItem *q = static_cast<ConduitListItem *>(l);
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Tip over "
-		<< l->text(CONDUIT_NAME)
-		<< " with text "
-		<< l->text(CONDUIT_COMMENT)
-		<< endl;
-#endif
-
-	QString s = l->text(CONDUIT_COMMENT);
-
-	if (s.isEmpty()) return;
-	if (s.find(CSL1("<qt>"),0,false) == -1)
-	{
-		s.prepend(CSL1("<qt>"));
-		s.append(CSL1("</qt>"));
-	}
-
-	tip(fListView->itemRect(l),s);
-}
-
-
-#if 0
-/**
-*** As-yet unused class for a list of QCheckBoxes, to replace
-*** the unwieldy two-listbox layout we have now. This code
-*** pretty much copies things from KDebugDialog.
-***
-*** We'll be inserting conduitDescription objects into the list,
-*** which subsume the hacked QListViewItems we use now. 
-**/
-
-/*
-** KCheckBoxList
-*/
-
-#include <qscrollview.h>
-#include <qptrlist.h>
-#include <qvbox.h>
-#include <qcheckbox.h>
-
-class KCheckBoxList : public QScrollView
-{
-public:
-	KCheckBoxList(QWidget *parent=0L);
-	virtual ~KCheckBoxList();
-
-	void addBoxes(const QStringList &);
-	bool addBox(QCheckBox *p) 
-		{ if (p->parent()==boxParent()) 
-			{ m_boxes.append(p); return true; }
-		  else return false; } ;
-	QPtrList<QCheckBox> checkedBoxes() const;
-	const QPtrList<QCheckBox> allBoxes() const { return m_boxes; } ;
-	
-	void selectAllBoxes(bool);
-
-	QWidget *boxParent() const { return m_box; } ;
-	
-protected:
-	QVBox *m_box;
-	QPtrList<QCheckBox> m_boxes;
-} ;
-
-KCheckBoxList::KCheckBoxList(QWidget *parent) :
-	QScrollView(parent)
-{
-	setResizePolicy(QScrollView::AutoOneFit);
-	m_box = new QVBox( viewport() );
-	addChild(m_box);
-}
-
-KCheckBoxList::~KCheckBoxList()
-{
-	// All of the QCheckBoxes are my children,
-	// they die with the widget.
-}
-
-void KCheckBoxList::addBoxes(const QStringList &l)
-{
-	QStringList::ConstIterator it = l.begin();
-	for ( ; it != l.end(); ++it)
-	{
-		QCheckBox *cb = new QCheckBox(*it,m_box);
-		m_boxes.append(cb);
-	}
-}
-
-void KCheckBoxList::selectAllBoxes(bool b)
-{
-	QCheckBox *p;
-	
-	for (p=m_boxes.first(); p; p=m_boxes.next())
-	{
-		p->setChecked(b);
-	}
-}
-
-QPtrList<QCheckBox> KCheckBoxList::checkedBoxes() const
-{
-	QPtrList<QCheckBox> l;
-	QPtrListIterator<QCheckBox> it(m_boxes);
-	QCheckBox *p;
-	
-	for ( ; (p = it.current()) ; ++it)
-	{
-		if (p->isChecked()) l.append(p);
-	}
-	
-	return l;
-}
-
-class ConduitDescription : public QCheckBox
-{
-public:
-	ConduitDescription(KCheckBoxList *owner,
-		const QString &name,
-		const QString &comment,
-		const QString &desktop,
-		const QString &library);
-	virtual ~ConduitDescription();
-	
-	QString conduit() const { return text(); } ;
-	QString comment() const { return fComment; } ;
-	QString desktop() const { return fDesktop; } ;
-	QString library() const { return fLibrary; } ;
-	
-protected:
-	QString fComment,fDesktop,fLibrary;
-} ;
-
-ConduitDescription::ConduitDescription(KCheckBoxList *owner,
-	const QString &name,
-	const QString &comment,
-	const QString &desktop,
-	const QString &library) :
-	QCheckBox(name,owner->boxParent()),
-	fComment(comment),
-	fDesktop(desktop),
-	fLibrary(library)
-{
-	owner->addBox(this);
-}
-
-ConduitDescription::~ConduitDescription()
-{
-}
-#endif
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
@@ -248,49 +63,7 @@ ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
 	FUNCTIONSETUP;
 
 	fConfigWidget = new ConduitConfigWidget(widget());
-
-	fillLists();
-
-	fConfigWidget->active->adjustSize();
-	fConfigWidget->available->adjustSize();
-
-	int w = QMAX(fConfigWidget->active->width(),
-		fConfigWidget->available->width());
-
-
-	fConfigWidget->available->resize(w,fConfigWidget->available->height());
-	fConfigWidget->active->resize(w,fConfigWidget->active->height());
-	fConfigWidget->available->setColumnWidth(0,w);
-	fConfigWidget->active->setColumnWidth(0,w);
-	fConfigWidget->available->setColumnWidthMode(0,QListView::Manual);
-	fConfigWidget->active->setColumnWidthMode(0,QListView::Manual);
-
-	QObject::connect(fConfigWidget->active,
-		SIGNAL(selectionChanged(QListViewItem *)),
-		this,SLOT(selected(QListViewItem *)));
-	QObject::connect(fConfigWidget->available,
-		SIGNAL(selectionChanged(QListViewItem *)),
-		this,SLOT(selected(QListViewItem *)));
-	QObject::connect(fConfigWidget->active,
-		SIGNAL(doubleClicked(QListViewItem *)),
-		this,SLOT(configureConduit()));
-
-	QObject::connect(fConfigWidget->enableButton,
-		SIGNAL(clicked()),
-		this,SLOT(enableConduit()));
-	QObject::connect(fConfigWidget->disableButton,
-		SIGNAL(clicked()),
-		this,SLOT(disableConduit()));
-	QObject::connect(fConfigWidget->configButton,
-		SIGNAL(clicked()),
-		this,SLOT(configureConduit()));
-
-	fConfigWidget->adjustSize();
-
-	(void) new ConduitTip(fConfigWidget->active);
-	(void) new ConduitTip(fConfigWidget->available);
-
-	selected(0L);
+	fConfigWidget->show();
 
 	(void) conduitconfigdialog_id;
 }
@@ -300,7 +73,47 @@ ConduitConfigDialog::~ConduitConfigDialog()
 	FUNCTIONSETUP;
 }
 
-void ConduitConfigDialog::fillLists()
+/* virtual */ void ConduitConfigDialog::commitChanges()
+{
+	fConfigWidget->commitChanges();
+}
+
+ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n) :
+	ConduitConfigWidgetBase(p,n)
+{
+	FUNCTIONSETUP;
+
+	fillLists();
+	fConduitList->adjustSize();
+	fConduitList->show();
+	fEnableAll->show();
+
+	QObject::connect(fConduitList,
+		SIGNAL(doubleClicked(QListViewItem *)),
+		this,SLOT(configureConduit()));
+	QObject::connect(fConduitList,
+		SIGNAL(selectionChanged(QListViewItem *)),
+		this,SLOT(selected(QListViewItem *)));
+	QObject::connect(fEnableAll,
+		SIGNAL(clicked()),
+		this,SLOT(enableConduit()));
+	QObject::connect(fDisableAll,
+		SIGNAL(clicked()),
+		this,SLOT(disableConduit()));
+	QObject::connect(fConfigure,
+		SIGNAL(clicked()),
+		this,SLOT(configureConduit()));
+
+	selected(0L);
+	adjustSize();
+}
+
+ConduitConfigWidget::~ConduitConfigWidget()
+{
+	FUNCTIONSETUP;
+}
+
+void ConduitConfigWidget::fillLists()
 {
 	FUNCTIONSETUP;
 
@@ -310,10 +123,6 @@ void ConduitConfigDialog::fillLists()
 	KServiceTypeProfile::OfferList offers =
 		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
-	// Now actually fill the two list boxes, just make
-	// sure that nothing gets listed in both.
-	//
-	//
 	QValueListIterator < KServiceOffer > availList(offers.begin());
 	while (availList != offers.end())
 	{
@@ -325,7 +134,7 @@ void ConduitConfigDialog::fillLists()
 			<< " = " << o->name() << endl;
 #endif
 
-		QListViewItem *p = 0L;
+		QCheckListItem *p = 0L;
 
 		if (!o->exec().isEmpty())
 		{
@@ -335,90 +144,71 @@ void ConduitConfigDialog::fillLists()
 				<< endl;
 		}
 
+		p = new QCheckListItem(fConduitList,
+			o->name(),
+			QCheckListItem::CheckBox);
+		p->setMultiLinesEnabled(true);
+		p->setText(CONDUIT_COMMENT,o->comment());
+		p->setText(CONDUIT_DESKTOP,o->desktopEntryName());
+		p->setText(CONDUIT_LIBRARY,o->library());
+		
 		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
 		{
-			p = new QListViewItem(fConfigWidget->available,
-				o->name(),
-				o->comment(),
-				o->desktopEntryName(),
-				o->library());
+			p->setOn(false);
 		}
 		else
 		{
-			p = new QListViewItem(fConfigWidget->active,
-				o->name(),
-				o->comment(),
-				o->desktopEntryName(),
-				o->library());
+			p->setOn(true);
 		}
 
 		++availList;
 	}
 }
 
-void ConduitConfigDialog::selected(QListViewItem *p)
+void ConduitConfigWidget::selected(QListViewItem *p)
 {
 	FUNCTIONSETUP;
+	fConfigure->setEnabled(p);
+}
 
-	if (!p)
+// In spite of its name, enable _all_ conduits
+void ConduitConfigWidget::enableConduit()
+{
+	FUNCTIONSETUP;
+	
+	QListViewItem *l = 0L;
+	QCheckListItem *c = 0L;
+	
+	l = fConduitList->firstChild();
+	while (l && (c=dynamic_cast<QCheckListItem *>(l)))
 	{
-		fConfigWidget->configButton->setEnabled(false);
-		fConfigWidget->enableButton->setEnabled(false);
-		fConfigWidget->disableButton->setEnabled(false);
-		return;
-	}
-
-	if (p->listView() == fConfigWidget->active)
-	{
-		fConfigWidget->configButton->setEnabled(true);
-		fConfigWidget->enableButton->setEnabled(false);
-		fConfigWidget->disableButton->setEnabled(true);
-		fConfigWidget->available->clearSelection();
-	}
-	else
-	{
-		fConfigWidget->configButton->setEnabled(false);
-		fConfigWidget->enableButton->setEnabled(true);
-		fConfigWidget->disableButton->setEnabled(false);
-		fConfigWidget->active->clearSelection();
+		c->setOn(true);
+		l=l->nextSibling();
 	}
 }
 
-void ConduitConfigDialog::enableConduit()
+// In spite of its name, disable _all_ conduits
+void ConduitConfigWidget::disableConduit()
 {
 	FUNCTIONSETUP;
-
-	QListViewItem *l = fConfigWidget->available->currentItem();
-	if (!l) return;
-
-	fConfigWidget->available->takeItem(l);
-	fConfigWidget->active->clearSelection();
-	fConfigWidget->active->insertItem(l);
-	fConfigWidget->active->setSelected(l,true);
-	selected(l);
-}
-
-void ConduitConfigDialog::disableConduit()
-{
-	FUNCTIONSETUP;
-
-	QListViewItem *l = fConfigWidget->active->currentItem();
-	if (!l) return;
-
-	fConfigWidget->active->takeItem(l);
-	fConfigWidget->available->clearSelection();
-	fConfigWidget->available->insertItem(l);
-	fConfigWidget->available->setSelected(l,true);
-	selected(l);
-	fConfigWidget->available->setFocus();
+	
+	QListViewItem *l = 0L;
+	QCheckListItem *c = 0L;
+	
+	l = fConduitList->firstChild();
+	while (l && (c=dynamic_cast<QCheckListItem *>(l)))
+	{
+		c->setOn(false);
+		l=l->nextSibling();
+	}
 }
 
 
-void ConduitConfigDialog::configureConduit()
+void ConduitConfigWidget::configureConduit()
 {
 	FUNCTIONSETUP;
 
-	QListViewItem *p = fConfigWidget->active->currentItem();
+	QListViewItem *p = fConduitList->selectedItem();
 
 	if (!p)
 	{
@@ -507,7 +297,7 @@ void ConduitConfigDialog::configureConduit()
 }
 
 
-void ConduitConfigDialog::warnNoExec(const QListViewItem * p)
+void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
 {
 	FUNCTIONSETUP;
 
@@ -523,7 +313,7 @@ void ConduitConfigDialog::warnNoExec(const QListViewItem * p)
 	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
-void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
+void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
 {
 	FUNCTIONSETUP;
 
@@ -535,20 +325,24 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
-/* virtual */ void ConduitConfigDialog::commitChanges()
+/* virtual */ void ConduitConfigWidget::commitChanges()
 {
 	FUNCTIONSETUP;
 
 	QStringList activeConduits;
-	const QListViewItem *p = fConfigWidget->active->firstChild();
+	const QCheckListItem *p = 
+		dynamic_cast<QCheckListItem *>(fConduitList->firstChild());
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
 
 
 
 	while (p)
 	{
-		activeConduits.append(p->text(CONDUIT_DESKTOP));
-		p = p->nextSibling();
+		if (p->isOn())
+		{
+			activeConduits.append(p->text(CONDUIT_DESKTOP));
+		}
+		p = dynamic_cast<QCheckListItem *>(p->nextSibling());
 	}
 	config.setConduitGroup().setInstalledConduits(activeConduits);
 	config.sync();

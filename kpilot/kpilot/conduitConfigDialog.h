@@ -31,12 +31,36 @@
 
 #include <qstringlist.h>
 
+#include "conduitConfigDialog_base.h"
 #include "uiDialog.h"
 
 class QListViewItem;
 class KProcess;
 
-class ConduitConfigWidget;
+class ConduitConfigWidget : public ConduitConfigWidgetBase
+{
+Q_OBJECT
+public:
+	ConduitConfigWidget(QWidget *, const char *name=0L);
+	virtual ~ConduitConfigWidget();
+
+protected:
+	void fillLists();
+
+	void warnNoExec(const QListViewItem *);
+	void warnNoLibrary(const QListViewItem *);
+
+public slots:
+	void commitChanges();
+
+protected slots:
+	void selected(QListViewItem *);
+	void enableConduit();
+	void disableConduit();
+
+	void configureConduit();
+
+} ;
 
 class ConduitConfigDialog : public UIDialog
 {
@@ -47,18 +71,6 @@ public:
 
 protected:
 	virtual void commitChanges();
-
-	void fillLists();
-
-	void warnNoExec(const QListViewItem *);
-	void warnNoLibrary(const QListViewItem *);
-
-protected slots:
-	void selected(QListViewItem *);
-	void enableConduit();
-	void disableConduit();
-
-	void configureConduit();
 
 private:
 	ConduitConfigWidget *fConfigWidget;

@@ -38,10 +38,21 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
+2003-4-16  Adriaan de Groot
+* Moved conduit config to a list of QCheckListItems, finally.
+  This was easier than I thought. Took a bit of time to polish,
+  though. This change introduces a new class ConduitConfigWidget
+  which could be placed in a tab elsewhere if needed.
+
 2003-4-15  Reinhold Kainhofer
 * Finally fixed the configure.in.in check for libmal in the malconduit
 * calendar conduit had wrong RadioButton IDs, so the Resource and LocalCalendar
   settings were messed upt
+
+2003-4-14  Adriaan de Groot
+* Made some reasonable mock-ups, see my kpilot page, mulled over the
+  non-editing by the viewers. I'm now working in HEAD only.
+* kpilot.{h,cc} Fixed up backwards compatibility.
 
 2003-4-12  Adriaan de Groot
 * Mucking about with KPilot's UI again. Trying to remove dialogs
