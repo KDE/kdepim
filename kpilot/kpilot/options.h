@@ -15,6 +15,8 @@
 //
 //
 
+#include "config.h"
+
 #ifndef QT_VERSION
 #include <qglobal.h>
 #endif
@@ -67,4 +69,3 @@ void usage(const char *banner, struct option *longOptions);
 //
 //
 #define SPACING		(10)
-
