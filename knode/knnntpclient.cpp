@@ -333,7 +333,7 @@ void KNNntpClient::doFetchNewHeaders()
 {
   KNGroup* target=static_cast<KNGroup*>(job->data());
   char* s;
-  int first=0, last=0, oldlast=0, toFetch=0;
+  int first=0, last=0, oldlast=0, toFetch=0, rep=0;
   QCString cmd;
 
   sendSignal(TSdownloadNew);
@@ -398,10 +398,18 @@ void KNNntpClient::doFetchNewHeaders()
     
   //qDebug("knode: KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
-  if (!sendCommandWCheck(cmd,224)) {       // 224 success
+  if (sendCommand(cmd,rep))
+    return;
+
+  // no articles in selected range...
+  if (rep==240) {         // 240 No article(s) selected
+    target->setLastNr(last);
+    return;
+  } else if (rep!=224) {  // 224 success
+    handleErrors();
     return;
   }
-    
+
   QStrList headers;
   if (!getMsg(headers)) {
     return;
