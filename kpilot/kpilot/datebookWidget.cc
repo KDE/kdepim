@@ -87,3 +87,5 @@ void DatebookWidget::initialize()
 }
 
 
+
+#include "datebookWidget.moc"

@@ -130,3 +130,5 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 	pi_file_close(pf);
 }
 
+
+#include "dbviewerWidget.moc"
