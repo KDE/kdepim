@@ -60,8 +60,8 @@ AlarmDockWindow::AlarmDockWindow(KOAlarmClient *client, QWidget *parent,
 
   // Set up GUI icons
   KGlobal::iconLoader()->addAppDir( "kalarmdgui" );
-  mPixmapEnabled  = BarIcon( "kalarmdgui" );
-  mPixmapDisabled = BarIcon( "kalarmdgui_disabled" );
+  mPixmapEnabled  = loadIcon( "kalarmdgui" );
+  mPixmapDisabled = loadIcon( "kalarmdgui_disabled" );
 
   setPixmap( alarmsEnabled ? mPixmapEnabled : mPixmapDisabled );
 

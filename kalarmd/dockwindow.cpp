@@ -57,8 +57,8 @@ AlarmDockWindow::AlarmDockWindow(AlarmGui *ag, QWidget *parent, const char *name
   // Set up GUI icons
   KGlobal::iconLoader()->addAppDir(kapp->aboutData()->appName());
   kdDebug() << "kalarmd, icon dir = " << kapp->aboutData()->appName() << endl;
-  mPixmapEnabled  = KGlobal::iconLoader()->loadIcon("kalarmdgui", KIcon::Panel );
-  mPixmapDisabled = KGlobal::iconLoader()->loadIcon("kalarmdgui_disabled", KIcon::Panel );
+  mPixmapEnabled  = loadIcon( "kalarmdgui" );
+  mPixmapDisabled = loadIcon( "kalarmdgui_disabled" );
 
   if (mPixmapEnabled.isNull() || mPixmapDisabled.isNull())
     KMessageBox::sorry(this, i18n("Can't load docking tray icon!"),
