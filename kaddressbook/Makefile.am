@@ -21,7 +21,7 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	./features/libfeatures.la \
 	./printing/libprinter.la \
 	./views/libviews.la \
-	$(LIB_KPARTS) $(LIB_KFILE) \
+	$(LIB_KPARTS) $(LIB_KHTML) \
 	-lkabc -lkdeprint
 
 libkaddressbookpart_la_SOURCES = \
