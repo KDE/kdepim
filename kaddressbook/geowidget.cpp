@@ -54,7 +54,8 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   topLayout->setSpacing( KDialog::spacingHint() );
 
   label = new QLabel( this );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network", KIcon::Desktop ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network",
+                    KIcon::Desktop, KIcon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addMultiCellWidget( label, 0, 3, 0, 0 );
 
