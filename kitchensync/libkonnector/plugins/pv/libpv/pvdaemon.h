@@ -138,8 +138,10 @@ namespace CasioPV {
       /**
          * Writes the entries included in a DOM node to the PV.
          * @param n The dome node which holds the entries
+         * @param ignoreState If set, the state of the entries are ignored and
+         * all entries are written to the PV
          */
-      void writeEntries(QDomNode& n);
+      void writeEntries(QDomNode& n, bool ignoreState=false);
 
       /**
          * Sends an exception as a DCOP call to the PV Plugin.

@@ -423,7 +423,7 @@ void pvDaemon::setAllEntries(const QByteArray& array)
         QDomNode n =  docElem.firstChild();
 
         // Write entries to PV
-        writeEntries(n);
+        writeEntries(n, true);
       }  // end of if pvdataentries
       else
       {
@@ -621,9 +621,10 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
 
 /**
    * Writes the entries included in a DOM node to the PV.
-   * @param n The dome node which holds the entries
+   * @param ignoreState If set, the state of the entries are ignored and
+   * all entries are written to the PV
    */
-void pvDaemon::writeEntries(QDomNode& n)
+void pvDaemon::writeEntries(QDomNode& n, bool ignoreState)
 {
   try
   {
@@ -703,7 +704,7 @@ void pvDaemon::writeEntries(QDomNode& n)
           entry = ClearEntry(category, uid);
           textStream << e;
           //kdDebug() << e.tagName() << " as string: " << endl << str << endl;
-          if (state == "added")
+          if ((state == "added") || ignoreState)
           {
             // convert xml to PVDataEntry
             entry->fromXML(str.latin1());
