@@ -79,7 +79,7 @@ LocationWidget::LocationWidget( KABCore *core, QWidget *parent, const char *name
   mURLTypeCombo = new KComboBox( this );
   topLayout->addWidget( mURLTypeCombo, 0, 0 );
 
-  QLabel *label = new QLabel( i18n( "Address Type:" ), this );
+  QLabel *label = new QLabel( i18n( "Address type:" ), this );
   topLayout->addWidget( label, 0, 1 );
 
   mAddressTypeCombo = new KComboBox( this );
