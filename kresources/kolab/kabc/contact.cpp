@@ -489,9 +489,9 @@ bool Contact::loadXML( const QDomDocument& document )
       QDomElement e = n.toElement();
       if ( !loadAttribute( e ) )
         // TODO: Unhandled tag - save for later storage
-        qDebug( "Warning: Unhandled tag %s", e.tagName().ascii() );
+        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
     } else
-      qDebug( "Node is not a comment or an element???" );
+      kdDebug() << "Node is not a comment or an element???" << endl;
   }
 
   return true;
