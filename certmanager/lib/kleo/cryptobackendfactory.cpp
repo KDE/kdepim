@@ -59,10 +59,12 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
   mSelf = this;
   mConfigObject = 0;
   mBackendList.push_back( new QGpgMEBackend() );
+#if 0 // disabled for kde-3.3
   mBackendList.push_back( new PGP2Backend() );
   mBackendList.push_back( new PGP5Backend() );
   mBackendList.push_back( new PGP6Backend() );
   mBackendList.push_back( new GPG1Backend() );
+#endif
   scanForBackends();
   readConfig();
 }
