@@ -76,7 +76,7 @@ void DwEntityParser::Parse()
                     break;
                 }
                 // Check for LF LF
-                else if (pos+1 < bufEnd && buf[pos+1] == '\n') {
+                else if (pos < bufEnd && buf[pos] == '\n') {
                     break;
                 }
                 lineStart = pos;
