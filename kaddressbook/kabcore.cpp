@@ -466,13 +466,21 @@ void KABCore::mergeContacts()
   KABC::Addressee addr = KABTools::mergeContacts( list );
 
   KABC::Addressee::List::Iterator it = list.begin();
+  KABC::Addressee origAddr = *it;
+  QString uids;
   ++it;
   while ( it != list.end() ) {
-    mAddressBook->removeAddressee( *it );
+    uids.append( (*it).uid() );
     ++it;
   }
 
-  mAddressBook->insertAddressee( addr );
+  PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
+  UndoStack::instance()->push( command );
+  RedoStack::instance()->clear();
+
+  PwEditCommand *editCommand = new PwEditCommand( mAddressBook, origAddr, addr );
+  UndoStack::instance()->push( editCommand );
+  RedoStack::instance()->clear();
 
   mSearchManager->reload();
 }
@@ -1058,7 +1066,7 @@ void KABCore::initActions()
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
-    action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0,
+    action = new KAction( i18n( "&Configure Address Book..." ), "configure", 0,
                           this, SLOT( configure() ), actionCollection(),
                           "kaddressbook_configure" );
   else
