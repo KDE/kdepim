@@ -304,7 +304,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mCountryCombo->setEditable( true );
   mCountryCombo->setDuplicatesEnabled( false );
 
-#if KDE_VERSION >= 330
+#if KDE_IS_VERSION(3,3,0)
   QPushButton *labelButton = new QPushButton( i18n( "Edit Label..." ), page );
   topLayout->addMultiCellWidget( labelButton, 7, 7, 0, 1 );
   connect( labelButton, SIGNAL( clicked() ), SLOT( editLabel() ) );
@@ -425,7 +425,7 @@ void AddressEditDialog::changeType()
 
 void AddressEditDialog::editLabel()
 {
-#if KDE_VERSION >= 330
+#if KDE_IS_VERSION(3,3,0)
   bool ok = false;
   QString result = KInputDialog::getMultiLineText( KABC::Address::labelLabel(),
                                                    KABC::Address::labelLabel(),
