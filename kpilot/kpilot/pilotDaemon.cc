@@ -400,7 +400,7 @@ PilotDaemon::setupConnections()
 	return;
 
 ErrConn:
-	kdError() << fname
+	kdError() << __FUNCTION__
 		<< ": Error creating socket for daemon: "
 		<< strerror(e)
 		<< endl;
@@ -1136,6 +1136,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.23  2001/01/03 00:02:45  adridg
+// Added Heiko's FastSync
+//
 // Revision 1.22  2001/01/02 15:02:59  bero
 // Fix build
 //
