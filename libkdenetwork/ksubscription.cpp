@@ -759,7 +759,7 @@ void KSubscription::slotUpdateStatusLabel()
 {
   QString text;
   if (mLoading)
-    text = i18n("Loading...(%2 matching)").arg(activeItemCount());
+    text = i18n("Loading...(%1 matching)").arg(activeItemCount());
   else
     text = i18n("%1: (%2 matching)").arg(account()->name()).
       arg(activeItemCount());
