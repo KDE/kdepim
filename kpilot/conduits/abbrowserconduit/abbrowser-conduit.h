@@ -269,7 +269,6 @@ private:
 	static QString fCustomFmt;
 
 	static void cleanupOnCrash(int);
-	static KCrash::HandlerType oldCleanupOnCrash;
 } ;
 
 #endif

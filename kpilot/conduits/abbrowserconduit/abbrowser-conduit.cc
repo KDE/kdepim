@@ -73,7 +73,6 @@ bool AbbrowserConduit::fPilotFaxHome=true;
 bool AbbrowserConduit::fArchive=true;
 enum AbbrowserConduit::ePilotOtherEnum AbbrowserConduit::ePilotOther=AbbrowserConduit::eOtherPhone;
 AddressBook*AbbrowserConduit::aBook=0L;
-KCrash::HandlerType AbbrowserConduit::oldCleanupOnCrash=0L;
 
 enum AbbrowserConduit::eCustomEnum AbbrowserConduit::eCustom[4] = {
 	AbbrowserConduit::eCustomField,
@@ -90,14 +89,6 @@ QString AbbrowserConduit::fCustomFmt=QString::null;
 	{ PhoneNumber phone = abEntry.phoneNumber(type); \
 	phone.setNumber(nr); \
 	abEntry.insertPhoneNumber(phone); }
-
-
-void AbbrowserConduit::cleanupOnCrash(int sig)
-{
-	kdWarning()<<"Crash handler, cleaning up addressbook"<<endl;
-	if (aBook) aBook->cleanUp();
-	KCrash::defaultCrashHandler(sig);
-}
 
 
 /*********************************************************************
@@ -120,17 +111,12 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 	DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
 #endif
 	fConduitName=i18n("Addressbook");
-	// Set crash handler, store old handler
-	oldCleanupOnCrash=KCrash::crashHandler();
-	KCrash::setCrashHandler(AbbrowserConduit::cleanupOnCrash);
 }
 
 
 
 AbbrowserConduit::~AbbrowserConduit()
 {
-	FUNCTIONSETUP;
-	if (oldCleanupOnCrash) KCrash::setCrashHandler(oldCleanupOnCrash);
 }
 
 
@@ -327,30 +313,19 @@ bool AbbrowserConduit::_saveAddressBook()
 		if (abChanged) 
 		{
 			res=aBook->save(ticket);
-
-			if (res) 
-			{ 
-#if 0
-				// XXX: Reenable for KDE 4
-				aBook->releaseSaveTicket(ticket);
-				ticket=0;
-#endif
-				/* EMPTY */
-			}
-			else
-			{
-				aBook->cleanUp();
-			}
-			ticket = 0L;
 		}
 		else
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Addressbook not changed, freeing ticket"<<endl;
+			DEBUGCONDUIT<<"Addressbook not changed, no need to save it"<<endl;
 #endif
-			aBook->cleanUp();
-			KPILOT_DELETE(ticket);
 		}
+		// XXX: KDE4: release ticket in all cases (save no longer releases it)
+		if ( !res ) // didn't save, delete ticket manually
+		{
+			aBook->releaseSaveTicket(ticket);
+		}
+		ticket=0;
 	}
 	else
 	{
