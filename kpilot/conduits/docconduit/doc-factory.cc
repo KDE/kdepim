@@ -3,8 +3,8 @@
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
 ** This file defines the factory for the doc-conduit plugin.
-*/  
-	
+*/
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
 ** along with this program in a file called COPYING; if not, write to
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
-*/ 
-	
+*/
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
-*/ 
-	
+*/
+
 #include "options.h"
 #include "doc-factory.moc"
 #include "doc-factory.h"
-	
+
 #include <kinstance.h>
 #include <kaboutdata.h>
 #include <kpilotlink.h>
@@ -41,12 +41,12 @@
 extern "C" {
 	void *init_libdocconduit() {
 		return new DOCConduitFactory;
-	} 
+	}
 };
 
 
 
-// A number of static variables; except for fAbout, they're 
+// A number of static variables; except for fAbout, they're
 // all KConfig group or entry keys.
 //
 //
@@ -68,13 +68,15 @@ const char *DOCConduitFactory::fIgnoreBmkChanges = "Ignore only bookmark changes
 const char *DOCConduitFactory::fAlwaysUseResolution = "Always show resolution dialog";
 const char *DOCConduitFactory::fPCBookmarks = "Bookmarks to PC";
 
+const char *DOCConduitFactory::fLocalSync = "Sync only locally";
+
 const char *DOCConduitFactory::dbDOCtype = "TEXt";
 const char *DOCConduitFactory::dbDOCcreator = "REAd";
 
 
 
 DOCConduitFactory::DOCConduitFactory(QObject * p, const char *n):
-KLibFactory(p, n) 
+KLibFactory(p, n)
 {
 	FUNCTIONSETUP;
 	fInstance = new KInstance("docconduit");
@@ -82,22 +84,22 @@ KLibFactory(p, n)
 		I18N_NOOP("Palm DOC Conduit for KPilot"), KPILOT_VERSION,
 		I18N_NOOP("Configures the DOC Conduit for KPilot"),
 		KAboutData::License_GPL, "(C) 2002, Reinhold Kainhofer");
-	
+
 	fAbout->addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Maintainer"), "reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com");
-} 
+}
 
-DOCConduitFactory::~DOCConduitFactory() 
+DOCConduitFactory::~DOCConduitFactory()
 {
 	FUNCTIONSETUP;
 	KPILOT_DELETE(fInstance);
 	KPILOT_DELETE(fAbout);
-} 
+}
 
 
-/* virtual */ QObject * DOCConduitFactory::createObject(QObject * p, 
-	const char *n, const char *c, const QStringList & a) 
+/* virtual */ QObject * DOCConduitFactory::createObject(QObject * p,
+	const char *n, const char *c, const QStringList & a)
 {
 	FUNCTIONSETUP;
 
@@ -113,7 +115,7 @@ DOCConduitFactory::~DOCConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo 
+			kdError() << k_funcinfo
 				<<": Couldn't cast parent to widget." <<endl;
 			return 0L;
 		}
@@ -127,7 +129,7 @@ DOCConduitFactory::~DOCConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo 
+			kdError() << k_funcinfo
 				<<": Couldn't cast parent to KPilotDeviceLink" <<endl;
 			return 0L;
 		}
