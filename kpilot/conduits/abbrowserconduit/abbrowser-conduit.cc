@@ -708,9 +708,11 @@ void AbbrowserConduit::_handleConflict(PilotAddress * pilotAddress,
 				   "were changed => conflict, "
 				   " unable to merge; keeping both."
 				<< endl;
-#endif
 			showPilotAddress(*pilotAddress);
 			showContactEntry(*abEntry);
+#endif
+
+
 			switch (getResolveConflictOption())
 			{
 			case eUserChoose:
@@ -744,8 +746,8 @@ void AbbrowserConduit::_handleConflict(PilotAddress * pilotAddress,
 		DEBUGCONDUIT << fname <<
 			" ContactEntry was deleted but pilotAddress was modified"
 			<< endl;
-#endif
 		showPilotAddress(*pilotAddress);
+#endif
 	}
 	else
 	{
@@ -753,8 +755,8 @@ void AbbrowserConduit::_handleConflict(PilotAddress * pilotAddress,
 		DEBUGCONDUIT << fname <<
 			" PilotAddress was deleted but ConactEntry was modified"
 			<< endl;
-#endif
 		showContactEntry(*abEntry);
+#endif
 	}
 }
 
@@ -764,8 +766,8 @@ void AbbrowserConduit::_removePilotAddress(PilotAddress & address)
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << " deleting from palm pilot " << endl;
-#endif
 	showPilotAddress(address);
+#endif
 
 	address.makeDeleted();
 	PilotRecord *pilotRec = address.pack();
@@ -1191,8 +1193,8 @@ ContactEntry *AbbrowserConduit::_syncPilotEntry(PilotAddress & pilotAddress,
 			DEBUGCONDUIT << fname <<
 				" adding new pilot record to kaddressbook => "
 				<< endl;
-#endif
 			showPilotAddress(pilotAddress);
+#endif
 			_addToAbbrowser(pilotAddress);
 		}
 	}
@@ -1499,8 +1501,8 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 				DEBUGCONDUIT << fname <<
 					"abEntry is modified but pilot wasn't; abEntry => "
 					<< endl;
-#endif
 				showContactEntry(*abEntry);
+#endif
 				// update pilot
 				_copy(pilotAddress, *abEntry);
 				_savePilotAddress(pilotAddress, *abEntry);
@@ -1538,8 +1540,8 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 		DEBUGCONDUIT << fname <<
 			" adding kab contact that has an old pilot id " <<
 			endl;
-#endif
 		showContactEntry(*abEntry);
+#endif
 		_addToPalm(abKey, *abEntry);
 	}
 

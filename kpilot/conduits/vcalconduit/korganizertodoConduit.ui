@@ -11,7 +11,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>592</width>
+            <width>580</width>
             <height>480</height>
         </rect>
     </property>
@@ -30,8 +30,8 @@
             <rect>
                 <x>10</x>
                 <y>10</y>
-                <width>571</width>
-                <height>330</height>
+                <width>436</width>
+                <height>155</height>
             </rect>
         </property>
         <widget>
@@ -44,118 +44,104 @@
                 <name>title</name>
                 <string>ToDo File</string>
             </attribute>
-            <widget>
-                <class>QLineEdit</class>
+            <grid>
                 <property stdset="1">
-                    <name>name</name>
-                    <cstring>fCalFile</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>130</x>
-                        <y>30</y>
-                        <width>321</width>
-                        <height>32</height>
-                    </rect>
-                </property>
-                <property>
-                    <name>toolTip</name>
-                    <string>Path to the KOrganizer calendar file</string>
-                </property>
-            </widget>
-            <widget>
-                <class>QPushButton</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>fCalBrowse</cstring>
+                    <name>margin</name>
+                    <number>11</number>
                 </property>
                 <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>460</x>
-                        <y>30</y>
-                        <width>101</width>
-                        <height>31</height>
-                    </rect>
+                    <name>spacing</name>
+                    <number>6</number>
                 </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>Browse</string>
-                </property>
-                <property>
-                    <name>toolTip</name>
-                    <string>Open a file browser</string>
-                </property>
-            </widget>
-            <widget>
-                <class>QCheckBox</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>fPromptBeforeChange</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>130</x>
-                        <y>110</y>
-                        <width>321</width>
-                        <height>31</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>Prompt before changing data</string>
-                </property>
-                <property>
-                    <name>toolTip</name>
-                    <string>Prompt for confirmation before each change</string>
-                </property>
-            </widget>
-            <widget>
-                <class>QCheckBox</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>fDeleteRecords</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>130</x>
-                        <y>190</y>
-                        <width>321</width>
-                        <height>31</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>Delete locally deleted records on PDA</string>
-                </property>
-                <property>
-                    <name>toolTip</name>
-                    <string>Deleting something in Korganizer will delete it in your PDA as well</string>
-                </property>
-            </widget>
-            <widget>
-                <class>QLabel</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>TextLabel1</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>10</x>
-                        <y>30</y>
-                        <width>110</width>
-                        <height>31</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>Calendar File:</string>
-                </property>
-            </widget>
+                <widget row="0"  column="1" >
+                    <class>QLineEdit</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>fCalendarFile</cstring>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Path to the KOrganizer calendar file</string>
+                    </property>
+                </widget>
+                <widget row="0"  column="2" >
+                    <class>QPushButton</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>fCalBrowse</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Browse</string>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Open a file browser</string>
+                    </property>
+                </widget>
+                <widget row="0"  column="0" >
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>TextLabel1</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Calendar File:</string>
+                    </property>
+                </widget>
+                <widget row="1"  column="1" >
+                    <class>QCheckBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>fPromptFirstTime</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Prompt before changing data</string>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Prompt for confirmation before each change</string>
+                    </property>
+                </widget>
+                <widget row="2"  column="1" >
+                    <class>QCheckBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>fDeleteOnPilot</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Delete locally deleted records on PDA</string>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Deleting something in Korganizer will delete it in your PDA as well</string>
+                    </property>
+                </widget>
+                <spacer row="3"  column="1" >
+                    <property>
+                        <name>name</name>
+                        <cstring>Spacer1</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>orientation</name>
+                        <enum>Vertical</enum>
+                    </property>
+                    <property stdset="1">
+                        <name>sizeType</name>
+                        <enum>Expanding</enum>
+                    </property>
+                    <property>
+                        <name>sizeHint</name>
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </grid>
         </widget>
     </widget>
 </widget>

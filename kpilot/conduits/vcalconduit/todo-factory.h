@@ -7,7 +7,7 @@
 ** This file defines the factory for the todo-conduit plugin.
 ** It also defines the class for the behavior of the setup dialog.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -24,34 +24,15 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include <klibloader.h>
 
-#include "plugin.h"
-
-class ToDoWidget;
 class KInstance;
 class KAboutData;
-
-class ToDoWidgetSetup : public ConduitConfig
-{
-Q_OBJECT
-public:
-	ToDoWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~ToDoWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	ToDoWidget *fConfigWidget;
-} ;
 
 class ToDoConduitFactory : public KLibFactory
 {
@@ -63,10 +44,18 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
+	// Configuration keys
+	//
+	//
+	static const char * const group;
+	static const char * const calendarFile;
+	static const char * const firstTime;
+	static const char * const deleteOnPilot;
+
 protected:
-	virtual QObject* createObject( QObject* parent = 0, 
-		const char* name = 0, 
-		const char* classname = "QObject", 
+	virtual QObject* createObject( QObject* parent = 0,
+		const char* name = 0,
+		const char* classname = "QObject",
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
@@ -81,5 +70,8 @@ void *init_libtodoconduit();
 } ;
 
 // $Log$
+// Revision 1.1  2001/12/13 21:40:40  adridg
+// New files for move to .so
+//
 
 #endif

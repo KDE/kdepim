@@ -4,7 +4,7 @@
 **
 ** This file defines the factory for the vcal-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -21,22 +21,17 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include "options.h"
 
-#include <qtabwidget.h>
-#include <qlineedit.h>
-
-#include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "korganizerConduit.h"
-
+#include "vcal-setup.h"
 #include "vcal-factory.moc"
 
 
@@ -49,6 +44,14 @@ void *init_libvcalconduit()
 }
 
 } ;
+
+// Configuration keys
+//
+//
+const char * const VCalConduitFactory::calendarFile = "CalFile" ;
+const char * const VCalConduitFactory::firstTime = "FirstTime" ;
+const char * const VCalConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
+const char * const VCalConduitFactory::group = "vcalOptions" ;
 
 
 KAboutData *VCalConduitFactory::fAbout = 0L;
@@ -100,7 +103,7 @@ VCalConduitFactory::~VCalConduitFactory()
 		{
 			return new VCalWidgetSetup(w,n,a);
 		}
-		else 
+		else
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -114,44 +117,8 @@ VCalConduitFactory::~VCalConduitFactory()
 	return 0L;
 }
 
-VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n, 
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	fConfigWidget = new VCalWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,VCalConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-}
-
-VCalWidgetSetup::~VCalWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void VCalWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,"VCal-conduit");
-
-}
-
-/* virtual */ void VCalWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,"VCal-conduit");
-}
-
-
 // $Log$
+// Revision 1.1  2001/12/13 21:40:40  adridg
+// New files for move to .so
+//
 

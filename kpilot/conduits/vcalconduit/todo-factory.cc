@@ -21,21 +21,17 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include "options.h"
 
-#include <qtabwidget.h>
-#include <qlineedit.h>
-
-#include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "korganizertodoConduit.h"
+#include "todo-setup.h"
 #include "todo-factory.moc"
 
 
@@ -48,6 +44,15 @@ void *init_libtodoconduit()
 }
 
 } ;
+
+
+// Configuration keys
+//
+//
+const char * const ToDoConduitFactory::calendarFile = "CalFile" ;
+const char * const ToDoConduitFactory::firstTime = "FirstTime" ;
+const char * const ToDoConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
+const char * const ToDoConduitFactory::group = "todoOptions" ;
 
 
 KAboutData *ToDoConduitFactory::fAbout = 0L;
@@ -63,8 +68,14 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Configures the ToDo Conduit for KPilot"),
 		KAboutData::License_GPL,
 		"(C) 2001, Adriaan de Groot");
+	fAbout->addAuthor("Dan Pilone",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Preston Brown",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Herwin-Jan Steehouwer",
+		I18N_NOOP("Original Author"));
 	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
+		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
 }
@@ -99,7 +110,7 @@ ToDoConduitFactory::~ToDoConduitFactory()
 		{
 			return new ToDoWidgetSetup(w,n,a);
 		}
-		else 
+		else
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -113,56 +124,8 @@ ToDoConduitFactory::~ToDoConduitFactory()
 	return 0L;
 }
 
-ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n, 
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	fConfigWidget = new ToDoWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,ToDoConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-}
-
-ToDoWidgetSetup::~ToDoWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void ToDoWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,"Null-conduit");
-
-#if 0
-	fConfig->writeEntry("LogMessage",fConfigWidget->fLogMessage->text());
-	fConfig->writeEntry("Databases",fConfigWidget->fDatabases->text());
-#endif
-}
-
-/* virtual */ void ToDoWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,"Null-conduit");
-
-#if 0
-	fConfigWidget->fLogMessage->setText(
-		fConfig->readEntry("LogMessage",i18n("KPilot was here!")));
-	fConfigWidget->fDatabases->setText(
-		fConfig->readEntry("Databases"));
-
-#endif
-}
-
-
 // $Log$
+// Revision 1.1  2001/12/13 21:40:40  adridg
+// New files for move to .so
+//
 
