@@ -26,6 +26,7 @@
 #define RMM_RADDRESS_H
 
 #include <qstring.h>
+#include <qvaluelist.h>
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
 
@@ -41,8 +42,11 @@ class RMailbox;
 class RAddress : public RHeaderBody {
 
 #include "generated/RAddress_generated.h"
-
+    
     public:
+
+        typedef KSharedPtr<RAddress> Ptr;
+        typedef QValueList<Ptr> List;
     
         RMailbox    * mailbox();
         RGroup      * group();

@@ -44,6 +44,9 @@ class RMailbox : public RAddress {
         
     public:
 
+        typedef KSharedPtr<RMailbox> Ptr;
+        typedef QValueList<Ptr> List;
+        
         friend QDataStream & operator >> (QDataStream & s, RMailbox & mailbox);
         
         friend QDataStream & operator << (QDataStream & s, RMailbox & mailbox);

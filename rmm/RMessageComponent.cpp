@@ -29,22 +29,28 @@
 using namespace RMM;
 
 RMessageComponent::RMessageComponent()
-    :    parsed_        (false),
-        assembled_    (false)
+    :  
+        KShared     (),
+        parsed_     (false),
+        assembled_  (false)
 {
     rmmDebug("ctor");
 }
 
 RMessageComponent::RMessageComponent(const RMessageComponent & mc)
-    :    strRep_(mc.strRep_),
-        parsed_(mc.parsed_),
-        assembled_(mc.assembled_)
+    :   
+        KShared     (mc),
+        strRep_     (mc.strRep_),
+        parsed_     (mc.parsed_),
+        assembled_  (mc.assembled_)
 {
     rmmDebug("ctor");
 }
 
 RMessageComponent::RMessageComponent(const QCString & s)
-    :    strRep_(s),
+    :    
+        KShared(),
+        strRep_(s),
         parsed_(false),
         assembled_(false)
 {

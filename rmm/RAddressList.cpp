@@ -22,8 +22,6 @@
 # pragma implementation "RMM_AddressList.h"
 #endif
 
-#include <qlist.h>
-
 #include <RMM_Address.h>
 #include <RMM_AddressList.h>
 #include <RMM_HeaderBody.h>
@@ -37,8 +35,6 @@ RAddressList::RAddressList()
     :    RHeaderBody()
 {
     rmmDebug("ctor");
-    list_.setAutoDelete(true);
-    assembled_    = false;
 }
 
 
@@ -46,9 +42,7 @@ RAddressList::RAddressList(const RAddressList & list)
     :    RHeaderBody(list)
 {
     rmmDebug("ctor");
-    list_.setAutoDelete(true);
     list_ = list.list_;
-    assembled_    = false;
 }
 
 RAddressList::RAddressList(const QCString & s)
@@ -90,11 +84,11 @@ RAddressList::operator == (RAddressList & al)
     return true; // FIXME: Duh ? This isn't right.
 }
         
-    RAddress *
-RAddressList::at(int i)
+    RAddress::Ptr
+RAddressList::at(unsigned int i)
 {
     parse();
-    return list_.at(i);
+    return *(list_.at(i));
 }
 
     unsigned int
@@ -118,7 +112,7 @@ RAddressList::_parse()
         RAddress * a = new RAddress;
         CHECK_PTR(a);
         *a = strRep_;
-        list_.append(a);
+        list_.append(RAddress::Ptr(a));
         
     } else {
 
@@ -129,7 +123,7 @@ RAddressList::_parse()
             RAddress * a = new RAddress;
             CHECK_PTR(a);
             *a = lit.current();
-            list_.append(a);
+            list_.append(RAddress::Ptr(a));
         }
     }
 }
@@ -139,18 +133,18 @@ RAddressList::_assemble()
 {
     bool firstTime = true;
 
-    RAddressListIterator it(list_);
+    RAddress::List::Iterator it;
 
     strRep_ = "";
     
-    for (; it.current(); ++it) {
+    for (it = list_.begin(); it != list_.end(); ++it) {
         
         if (!firstTime) {
             strRep_ += QCString(",\n    ");
             firstTime = false;
         }
 
-        strRep_ += it.current()->asString();
+        strRep_ += (*it)->asString();
     }
 }
 
@@ -161,7 +155,7 @@ RAddressList::createDefault()
     if (count() == 0) {
         RAddress * a = new RAddress;
         a->createDefault();
-        list_.append(a);
+        list_.append(RAddress::Ptr(a));
     }
 }
 

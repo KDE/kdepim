@@ -26,13 +26,10 @@
 #define RMM_RADDRESSLIST_H
 
 #include <qstring.h>
-#include <qlist.h>
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
 namespace RMM {
-
-typedef QListIterator<RAddress> RAddressListIterator;
 
 /**
  * @short Simple encapsulation of a list of RAddress, which is also an
@@ -44,12 +41,12 @@ class RAddressList : public RHeaderBody {
 
     public:
         
-        RAddress * at(int);
+        RAddress::Ptr at(unsigned int);
         unsigned int count();
 
     private:
         
-        QList<RAddress> list_;
+        RAddress::List list_;
 };
 
 }

@@ -27,7 +27,6 @@
 
 #include <qstring.h>
 
-#include <RMM_Mailbox.h>
 #include <RMM_MailboxList.h>
 #include <RMM_Token.h>
 
@@ -39,11 +38,11 @@ RMailboxList::RMailboxList()
     rmmDebug("ctor");
 }
 
-RMailboxList::RMailboxList(const RMailboxList & l)
-    :    RHeaderBody(l)
+RMailboxList::RMailboxList(const RMailboxList & list)
+    :    RHeaderBody(list)
 {
     rmmDebug("ctor");
-    list_ = l.list_;
+    list_ = list.list_;
 }
 
 RMailboxList::RMailboxList(const QCString & s)
@@ -122,7 +121,7 @@ RMailboxList::_parse()
         RMailbox * m = new RMailbox;
         CHECK_PTR(m);
         *m = strRep_;
-        list_.append(m);
+        list_.append(RMailbox::Ptr(m));
         
     } else {
 
@@ -133,7 +132,7 @@ RMailboxList::_parse()
             RMailbox * m = new RMailbox;
             CHECK_PTR(m);
             *m = lit.current();
-            list_.append(m);
+            list_.append(RMailbox::Ptr(m));
         }
     }
 }
@@ -143,18 +142,18 @@ RMailboxList::_assemble()
 {
     bool firstTime = true;
     
-    RMailboxListIterator it(list_);
+    RMailbox::List::Iterator it;
 
     strRep_ = "";
     
-    for (; it.current(); ++it) {
+    for (it = list_.begin(); it != list_.end(); ++it) {
         
         if (!firstTime) {
             strRep_ += QCString(",\n    ");
             firstTime = false;
         }
 
-        strRep_ += it.current()->asString();
+        strRep_ += (*it)->asString();
     }
 }
 
@@ -165,7 +164,7 @@ RMailboxList::createDefault()
     if (count() == 0) {
         RMailbox * m = new RMailbox;
         m->createDefault();
-        list_.append(m);
+        list_.append(RMailbox::Ptr(m));
     }
     
     assembled_ = false;
@@ -176,15 +175,15 @@ RMailboxList::append(RMailbox m)
 {
     parse();
     RMailbox * mailbox = new RMailbox(m);
-    list_.append(mailbox);
+    list_.append(RMailbox::Ptr(mailbox));
     assembled_ = false;
 }
 
-    RMailbox *
+    RMailbox::Ptr
 RMailboxList::at(int idx)
 {
     parse();
-    return list_.at(idx);
+    return *(list_.at(idx));
 }
 
     unsigned int

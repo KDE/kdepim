@@ -26,6 +26,7 @@
 #define RMM_MESSAGE_COMPONENT_H
 
 #include <qstring.h>
+#include <ksharedptr.h>
 #include <RMM_Defines.h>
 
 namespace RMM {
@@ -39,7 +40,7 @@ namespace RMM {
  * This representation is parsed to create the subcomponents of a component,
  * and assembled from the subcomponents.
  */
-class RMessageComponent {
+class RMessageComponent : public KShared {
 
     public:
 

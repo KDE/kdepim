@@ -132,7 +132,7 @@ RContentType::_assemble()
     
     parameterList_.assemble();
     
-    if (parameterList_.count() == 0) return;
+    if (parameterList_.QList<RParameter>::count() == 0) return;
     
     strRep_ += QCString(";\n    ");
     

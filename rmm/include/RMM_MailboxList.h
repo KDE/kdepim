@@ -26,13 +26,11 @@
 #define RMM_RMAILBOXLIST_H
 
 #include <qstring.h>
-#include <qlist.h>
 
+#include <RMM_Mailbox.h>
 #include <RMM_Defines.h>
 
 namespace RMM {
-
-typedef QListIterator<RMailbox> RMailboxListIterator;
 
 /**
  * @short Simple encapsulation of a list of RMailbox
@@ -45,12 +43,12 @@ class RMailboxList : public RHeaderBody {
     public:
         
         unsigned int count();
-        RMailbox * at(int);
+        RMailbox::Ptr at(int);
         void append(RMailbox);
         
     private:
         
-        QList<RMailbox> list_;
+        RMailbox::List list_;
 };
 
 }
