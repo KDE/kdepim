@@ -114,7 +114,7 @@ void Pab::newContact()
 
 void Pab::addEmail( QString addr )
 {
-  view->addEntry( addr );
+  view->addEmail( addr );
   return;
 }
 
