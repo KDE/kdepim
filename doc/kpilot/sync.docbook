@@ -3,17 +3,119 @@
 
 <para>
 This chapter describes the synchronization process
-that &kpilot; uses. It is a good idea to make a <link linkend="backup">backup</link>
+that &kpilot; uses, focusing on the &kpilot; daemon functionality.
+It is a good idea to make a <link linkend="backup">backup</link>
 of your &handheld; regularly. Other than making backups, it should rarely be necessary
 to do anything other than drop your &handheld; in the cradle and press
 the &HotSync; button.
 </para>
 
-<sect1 id="backup">
-<title>Backing up your &handheld;</title>
+<screenshot>
+<screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
+<textobject><phrase>KPilot daemon pop-up menu</phrase></textobject>
+<caption><para>KPilot daemon pop-up menu</para></caption>
+</mediaobject>
+</screenshot>
+
 
 <para>
-Thong.
+To define the type of sync &kpilot; will perform next, you can use the main
+application
+<link linkend="menu-file">
+<menuchoice>
+<guimenu>File</guimenu>
+</menuchoice>
+menu</link>,
+or right click the &kpilot; daemon icon located in the panel's system tray,
+and select one of the menu items under the 
+<menuchoice>
+<guisubmenu>Next Sync</guisubmenu>
+</menuchoice>
+sub menu.
+</para>
+
+<para>
+In short, the sync types are:
+</para>
+
+<itemizedlist>
+
+<listitem><para>
+<guilabel>Hot Sync</guilabel>: run all selected conduits and sync the databases
+with a modified flag set, updating the modified records only. This option offers
+a nice balance between speed and data safety.
+</para></listitem>
+
+<listitem><para>
+<guilabel>Fast Sync</guilabel>: Only synchronize those
+databases that have conduits, and perform no backup of the data
+on the &PalmPilot;, reducing greatly the time required for the sync
+operation. This also means that if something goes wrong with your &PalmPilot;,
+you may not be able to recover databases with no conduit. This is a classic
+trade-off between speed and safety.
+</para></listitem>
+
+<listitem><para>
+<guilabel>Full Sync</guilabel>: run all selected conduits, and sync all databases,
+reading all records, and performing a full backup. It is the safest option, but
+takes the longest time to complete.
+</para></listitem>
+
+<listitem><para>
+<guilabel>Backup</guilabel>: copy all the data from the &handheld; to the 
+<acronym>PC</acronym>.
+</para></listitem>
+
+<listitem><para>
+<guilabel>Restore</guilabel>: copy a previous backup data from the PC to the
+&handheld;, erasing the data previously held. If you face hardware or software
+problems in your &handheld; preventing you to access your data, you can use
+this to return it to a previous state.
+
+<warning><para>
+Use the restore functionality with care, as you can lose all the new
+data entered on the &handheld; since the last backup.
+</para></warning>
+
+</para>
+</listitem>
+</itemizedlist>
+
+
+<para>
+Alternatively, you can change the default syncing behavior of &kpilot; by
+choosing the most suitable option in the <link linkend="page-hotsync">HotSync
+configure dialog</link>. 
+</para>
+
+<sect1 id="backup">
+<title>Backing up your &handheld; data</title>
+
+<para>
+On every backup, &kpilot; stores a copy of all your &handheld; data under the
+<filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
+folder, allowing you to restore that copy later, if needed. The 
+<filename class="directory">$KDEHOME</filename> environment variable
+(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+points to the folder that contains your configuration and data for the &kde;
+applications.</para>
+
+<para>
+It is a good idea to backup your data often. To perform a backup, you can click
+the 
+<menuchoice>
+<guisubmenu>Next Sync</guisubmenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+in the &kpilot; daemon icon pop-up menu or the 
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+menu item in the main &kpilot; application in order 
+to make the next sync a backup. Then, just press the &HotSync; button.
 </para>
 
 </sect1>
@@ -22,7 +124,10 @@ Thong.
 <title>Normal &HotSync; Operation</title>
 
 <para>
-Thong.
+The &HotSync; is &kpilot;'s default sync operation. It will run
+all conduits selected in the
+<link linkend="config-conduits">conduits configuration</link>,
+and sync all records and databases with a modified flag.
 </para>
 
 </sect1>

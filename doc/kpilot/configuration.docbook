@@ -342,8 +342,8 @@ trade-off between speed and safety.
 
 <listitem><para>
 <guilabel>Full Sync</guilabel>: run all selected conduits, and sync all databases,
-reading all records, performing a full backup, . It is the safest option, but
-takes the longest time to update.
+reading all records, and performing a full backup. It is the safest option, but
+takes the longest time to complete.
 </para></listitem>
 
 <listitem><para>
