@@ -213,6 +213,8 @@ bool MALConduit::skip()
 		return false;
 	}
 
+	pInfo->lowres = 1;
+
 	QString proxyServer( MALConduitSettings::proxyServer() );
 	int proxyPort( MALConduitSettings::proxyPort() );
 	QString syncMessage;
