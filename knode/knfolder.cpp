@@ -451,6 +451,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
   }
 
   closeFiles();
+  syncIndex();
 
   if(addCnt>0) {
     c_ount=length();
