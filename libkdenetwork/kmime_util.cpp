@@ -13,6 +13,11 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "kmime_util.h"
 
 #include <kmdcodec.h> // for KCodec::{quotedPrintableDe,base64{En,De}}code
@@ -32,7 +37,6 @@
 #include <ctype.h>
 #include <time.h> // for time()
 #include <unistd.h> // for getpid()
-#include "config.h" //for HAVE_TIMEZONE and GMTOFF
 
 using namespace KMime;
 
@@ -172,7 +176,7 @@ QString decodeRFC2047String(const QCString &src, const char **usedCS,
   QCString result, str;
   QCString declaredCS;
   char *pos, *dest, *beg, *end, *mid, *endOfLastEncWord=0;
-  char encoding;
+  char encoding = '\0';
   bool valid, onlySpacesSinceLastWord=false;
   const int maxLen=400;
   int i;
@@ -623,7 +627,9 @@ QCString
 DateFormatter::zone(time_t otime) const
 {
   QCString ret;
+#if defined(HAVE_TIMEZONE) || defined(HAVE_TM_GMTOFF)
   struct tm *local = localtime( &otime );
+#endif
 
 #if defined(HAVE_TIMEZONE)
 
