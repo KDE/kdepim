@@ -39,34 +39,15 @@ class ActionManager;
 
 }
 
-class KitchenSyncFactory : public KParts::Factory
-{
-    Q_OBJECT
-  public:
-    KitchenSyncFactory();
-    virtual ~KitchenSyncFactory();
-
-    virtual KParts::Part *createPartObject( QWidget *parentWidget,
-                                            const char *name,
-                                            QObject *parent = 0,
-                                            const char* name1 = 0,
-                                            const char *classname = "QObject",
-                                            const QStringList &args = QStringList() );
-
-    static KInstance *instance();
-
-  private:
-    static KInstance *s_instance;
-    static KAboutData *s_about;
-};
-
 class KitchenSyncPart: public KParts::ReadOnlyPart
 {
     Q_OBJECT
   public:
     KitchenSyncPart( QWidget *parentWidget, const char *widgetName,
-                     QObject *parent, const char *name );
+                     QObject *parent, const char *name, const QStringList & );
     virtual ~KitchenSyncPart();
+
+    static KAboutData *createAboutData();
 
   protected:
     virtual bool openFile();

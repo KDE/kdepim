@@ -26,6 +26,7 @@
 
 #include "actionmanager.h"
 #include "kitchensync.h"
+#include "aboutdata.h"
 
 #include <kinstance.h>
 #include <klocale.h>
@@ -36,65 +37,18 @@
 #include <kconfig.h>
 #include <kstatusbar.h>
 #include <kkeydialog.h>
+#include <kparts/genericfactory.h>
 
 #include <qapplication.h>
 #include <qfile.h>
 
-extern "C"
-{
-  /**
-   * This function is the 'main' function of this part.  It takes
-   * the form 'void *init_lib<library name>()  It always returns a
-   * new factory object
-   */
-  void *init_libkitchensyncpart()
-  {
-    return new KitchenSyncFactory;
-  }
-}
-
-/**
-* We need one static instance of the factory for our C 'main'
-* function
-*/
-KInstance *KitchenSyncFactory::s_instance = 0;
-KAboutData *KitchenSyncFactory::s_about = 0;
-
-KitchenSyncFactory::KitchenSyncFactory()
-{
-}
-
-KitchenSyncFactory::~KitchenSyncFactory()
-{
-  delete s_instance;
-  s_instance = 0;
-  delete s_about;
-}
-
-KParts::Part *KitchenSyncFactory::createPartObject(QWidget *parentWidget, const char *widgetName,
-                                   QObject *parent, const char *name,
-                                   const char*,const QStringList& )
-{
-  KParts::Part *obj = new KitchenSyncPart(parentWidget, widgetName, parent, name );
-  return obj;
-}
-
-KInstance *KitchenSyncFactory::instance()
-{
-  if ( !s_instance ) {
-    s_about = new KAboutData("kitchensync", I18N_NOOP("KitchenSync"),"0.1");
-    s_instance = new KInstance(s_about);
-  }
-
-  kdDebug(5850) << "KitchenSyncFactory::instance(): Name: " <<
-               s_instance->instanceName() << endl;
-
-  return s_instance;
-}
+typedef KParts::GenericFactory< KitchenSyncPart > KitchenSyncFactory;
+K_EXPORT_COMPONENT_FACTORY( libkitchensyncpart, KitchenSyncFactory )
 
 KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *,
-                                  QObject *parent, const char *name ) :
-  KParts::ReadOnlyPart( parent, name )
+                                  QObject *parent, const char *name,
+                                  const QStringList & )
+  : KParts::ReadOnlyPart( parent, name )
 {
   QString pname( name );
 
@@ -119,6 +73,11 @@ KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *,
 KitchenSyncPart::~KitchenSyncPart()
 {
   delete mActionManager;
+}
+
+KAboutData *KitchenSyncPart::createAboutData()
+{
+  return KSync::AboutData::self();
 }
 
 bool KitchenSyncPart::openFile()
