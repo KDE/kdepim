@@ -115,7 +115,7 @@ class ViewManager : public QWidget
     /**
       Return if the quick edit currently is shown or not.
      */
-    bool isQuickEditVisible();
+    bool isQuickEditVisible()const;
 
     /**
       Set the list of filters, which are defined for the application.
@@ -140,12 +140,12 @@ class ViewManager : public QWidget
     /**
       Returns the address book.
      */
-    KABC::AddressBook *addressBook();
+    KABC::AddressBook *addressBook()const;
 
     /**
       Returns the current global search field.
      */
-    KABC::Field *currentSearchField();
+    KABC::Field *currentSearchField()const;
 
     /**
       @return KConfig for kaddressbookrc, useful for when KAddressBook

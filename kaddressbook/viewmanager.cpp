@@ -625,7 +625,7 @@ void ViewManager::setDetailsVisible( bool visible )
     mDetails->hide();
 }
 
-bool ViewManager::isQuickEditVisible()
+bool ViewManager::isQuickEditVisible()const
 {
   return ( mCurrentExtensionWidget &&
       mCurrentExtensionWidget->identifier() == "contact_editor" );
@@ -801,12 +801,12 @@ void ViewManager::setUsersContact()
     KABC::StdAddressBook::setUsersContact( addr.uid() );
 }
 
-KABC::AddressBook *ViewManager::addressBook()
+KABC::AddressBook *ViewManager::addressBook()const
 {
   return mAddressBook;
 }
 
-KABC::Field *ViewManager::currentSearchField()
+KABC::Field *ViewManager::currentSearchField()const
 {
   return mIncSearchWidget->currentField();
 }
