@@ -356,19 +356,21 @@ void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const
 
     case ADCalendar::KALARM:
       alarms = cal->alarmsTo( QDateTime::currentDateTime() );
-      kdDebug(5901) << "Kalarm alarms=" << alarms.count() << endl;
-      for ( it = alarms.begin(); it != alarms.end(); ++it ) {
-        Event *event = dynamic_cast<Event *>( (*it)->parent() );
-        if ( event ) {
-          const QString& eventID = event->VUID();
-          kdDebug(5901) << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
-          QValueList<QDateTime> alarmtimes;
-          checkEventAlarms(*event, alarmtimes);
-          if (!cal->eventHandled(event, alarmtimes)) {
-            if (notifyEvent(cal, eventID))
-              cal->setEventHandled(event, alarmtimes);
-            else
-              cal->setEventPending(eventID);
+      if (alarms.count()) {
+        kdDebug(5901) << "Kalarm alarms=" << alarms.count() << endl;
+        for ( it = alarms.begin(); it != alarms.end(); ++it ) {
+          Event *event = dynamic_cast<Event *>( (*it)->parent() );
+          if ( event ) {
+            const QString& eventID = event->VUID();
+            kdDebug(5901) << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
+            QValueList<QDateTime> alarmtimes;
+            checkEventAlarms(*event, alarmtimes);
+            if (!cal->eventHandled(event, alarmtimes)) {
+              if (notifyEvent(cal, eventID))
+                cal->setEventHandled(event, alarmtimes);
+              else
+                cal->setEventPending(eventID);
+            }
           }
         }
       }
@@ -402,6 +404,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
   if (calendar)
   {
     ClientInfo client = getClientInfo(calendar->appName());
+kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->appName()<<endl;
     if (!client.isValid())
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): unknown client" << endl;
     else
@@ -421,13 +424,16 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
       {
         // The client application is not running
         if (client.notificationType == ClientInfo::NO_START_NOTIFY)
+        {
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
           return true;
+        }
 
         // Start the client application
         QString execStr = locate("exe", calendar->appName());
         if (execStr.isEmpty())
         {
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found" << endl;
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found\n";
           return true;
         }
         if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
@@ -438,7 +444,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
           execStr += " --calendarURL ";
           execStr += calendar->urlString();
           system(QFile::encodeName(execStr));
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line\n";
           return true;
         }
         system(QFile::encodeName(execStr));
