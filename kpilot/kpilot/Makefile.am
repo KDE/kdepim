@@ -66,10 +66,10 @@ kpilotConfig_SOURCES = kpilotConfig.cc \
 	listCat.cc main-config.cc
 
 
-kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
-kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
-kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
-kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
+kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
