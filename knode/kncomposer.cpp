@@ -1164,7 +1164,7 @@ void KNComposer::slotConfToolbar()
 void KNComposer::slotSubjectChanged(const QString &t)
 {
   if(!t.isEmpty()) setCaption(t);
-  else setCaption(i18n("No subject"));
+  else setCaption(i18n("No Subject"));
 }
 
 

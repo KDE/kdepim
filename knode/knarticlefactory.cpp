@@ -1083,7 +1083,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
   connect(j_obs, SIGNAL(highlighted(int)), this, SLOT(slotHighlighted(int)));
   connect(c_loseBtn, SIGNAL(clicked()), this, SLOT(slotCloseBtnClicked()));
 
-  setCaption(kapp->makeStdCaption(i18n("Errors while sending")));
+  setCaption(kapp->makeStdCaption(i18n("Errors While Sending")));
   KNHelper::restoreWindowSize("sendDlg", this, sizeHint());
 }
 
