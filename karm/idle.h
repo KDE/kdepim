@@ -2,12 +2,14 @@
 #define __IDLETIMER
 #include <qobject.h>
 #include "config.h"
+
+class QTimer;
+
 #ifdef HAVE_LIBXSS
  #include <X11/Xlib.h>
  #include <X11/Xutil.h>
  #include <X11/extensions/scrnsaver.h>
 #endif // HAVE_LIBXSS
-class QTimer;
 
 // Seconds per minutes - usefull for speeding debugging up!
 const int secsPerMinutes = 60;
