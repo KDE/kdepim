@@ -48,7 +48,8 @@ public:
         Calendar,
         Transactions,
         Files,
-        Desktops
+        Desktops,
+        Flush
     };
     enum Status {
         Start = 0,
@@ -107,6 +108,7 @@ QtopiaSocket::QtopiaSocket( QObject* obj, const char* name )
     d->edit    = 0;
     d->first   = false;
     d->device = new OpieHelper::Device;
+    m_flushedApps = 0;
 }
 QtopiaSocket::~QtopiaSocket() {
     delete d->device;
@@ -251,10 +253,17 @@ void QtopiaSocket::write( Syncee::PtrList list) {
     writeCategory();
     d->helper->save();
 
+
+    /* trigger reload for apps on pda */
+    QTextStream stream( d->socket );
+    stream << "call QPE/Application/datebook reload()" << endl;
+    stream << "call QPE/Application/addressbook reload()" << endl;
+    stream << "call QPE/Application/todolist reload()" << endl;
+
     /*
      * tell Opie/Qtopia that we're ready
      */
-    QTextStream stream( d->socket );
+    //QTextStream stream( d->socket );
     stream << "call QPE/System stopSync()" << endl;
     d->isSyncing = false;
 
@@ -604,9 +613,14 @@ void QtopiaSocket::call( const QString& line) {
         if ( sync )
             d->m_sync.append( sync );
     }
+
+
     switch( d->getMode ) {
     case d->Handshake:
-        handshake(line);
+        handshake( line );
+        break;
+    case d->Flush:
+        flush( line );
         break;
     case d->ABook:
         download();
@@ -616,6 +630,42 @@ void QtopiaSocket::call( const QString& line) {
         break;
     }
 }
+
+void QtopiaSocket::flush( const QString& _line )  {
+
+    if ( _line.startsWith("CALL QPE/Desktop flushDone(QString)") || _line.startsWith("599 ChannelNotRegistered") )  {
+
+        QString line = _line.stripWhiteSpace();
+        QString appName;
+
+        if ( line.endsWith( "datebook" ) )  {
+            readDatebook();
+            appName = i18n( "datebook" );
+            m_flushedApps++;
+        } else if ( line.endsWith( "todolist" ) ) {
+            readTodoList();
+            appName = i18n( "todolist" );
+            m_flushedApps++;
+        } else if ( line.endsWith( "addressbook" ) )  {
+            readAddressbook();
+            appName = i18n( "addressbook" );
+            m_flushedApps++;
+        }
+        emit prog( Progress( i18n( "Flushed" ) + appName ) );
+    }
+
+    /* all apps have been flushed or have not been running */
+    if ( m_flushedApps == 3 )  {
+        /*
+         * now we can progress during sync
+         */
+        QTextStream stream( d->socket );
+        d->getMode  = d->ABook;
+        stream << "call QPE/System getAllDocLinks()" << endl;
+        m_flushedApps = 0;
+    }
+}
+
 void QtopiaSocket::noop( const QString&) {
     d->isConnecting = false;
     if (!d->startSync ) {
@@ -636,9 +686,6 @@ void QtopiaSocket::handshake( const QString& line) {
     }
 }
 void QtopiaSocket::download() {
-    readAddressbook();
-    readDatebook();
-    readTodoList();
 
     /*
      * we're all set now
@@ -666,13 +713,14 @@ void QtopiaSocket::initSync( const QString& ) {
     /* TimeZones */
     readTimeZones();
 
-    /*
-     * now we can progress during sync
-     */
+    /* flush the data on pda side to make sure to get the latest version */
     QTextStream stream( d->socket );
-    stream << "call QPE/System getAllDocLinks()" << endl;
-    d->getMode  = d->ABook;
+    stream << "call QPE/Application/datebook flush()" << endl;
+    stream << "call QPE/Application/addressbook flush()" << endl;
+    stream << "call QPE/Application/todolist flush()" << endl;
+    d->getMode  = d->Flush;
 }
+
 void QtopiaSocket::initFiles() {
     QDir di( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
     /*

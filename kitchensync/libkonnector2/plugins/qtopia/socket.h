@@ -75,7 +75,9 @@ namespace KSync {
         void user( const QString& );
         void pass( const QString& );
         void call( const QString& );
+	void flush( const QString& );
         void noop( const QString& );
+
 
         void handshake( const QString& );
         void download();
@@ -87,6 +89,7 @@ namespace KSync {
 
         /* download relative from the home dir */
         bool downloadFile( const QString& str,  QString& newDest);
+	int m_flushedApps;
 
     };
 };
