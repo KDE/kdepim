@@ -112,7 +112,7 @@ public:
 	virtual int cleanup();
 
 
-	// Writes a new ID to the record specified the index.  Not supported on Serial connections
+	// Writes a new ID to the record specified. 
 	virtual recordid_t writeID(PilotRecord* rec);
 	QString getDBName() const { return fDBName; }
 
