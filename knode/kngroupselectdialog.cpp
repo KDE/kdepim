@@ -17,6 +17,8 @@
 
 #include "kngroupselectdialog.h"
 #include "knstringsplitter.h"
+#include "utilities.h"
+
 
 KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act) :
   KNGroupBrowser(parent, a)
@@ -49,12 +51,15 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCSt
     this, SLOT(slotItemSelected(QListViewItem*)));
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
+
+  setDialogSize("groupSelDlg", this);
 }
 
 
 
 KNGroupSelectDialog::~KNGroupSelectDialog()
 {
+  saveDialogSize("groupSelDlg", this->size());
 }
 
 

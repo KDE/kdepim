@@ -13,10 +13,10 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "kngroupdialog.h"
 #include <klocale.h> //i18n
 
+#include "kngroupdialog.h"
+#include "utilities.h"
 
 
 KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
@@ -49,12 +49,15 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
   connect(newListBtn, SIGNAL(clicked()), this, SLOT(slotNewListBtn()));
+
+  setDialogSize("groupDlg", this);
 }
 
 
 
 KNGroupDialog::~KNGroupDialog()
 {
+  saveDialogSize("groupDlg", this->size());
 }
 
 
