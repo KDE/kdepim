@@ -1,5 +1,5 @@
 /*
-    KDE Panel docking window for KDE Alarm Daemon.
+    KDE Alarm Daemon.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
@@ -30,121 +30,72 @@
 
 #include "alarmdaemoniface.h"
 
-class AlarmDialog;
-class AlarmDockWindow;
-
 using namespace KCal;
 
 
-struct ClientInfo
-{
-    ClientInfo() { }
-    ClientInfo(const QString& titl, const QString& dcopObj, bool cmdLine, bool disp, bool wait);
-    QString  title;               // application title for display purposes
-    QString  dcopObject;          // object to receive DCOP messages (if applicable)
-    int      menuIndex;           // context menu index to this client's entry
-    bool     commandLineNotify;   // notify events using command line if client app isn't running
-    bool     displayCalName;      // true to display calendar name in tooltip
-    bool     waitForRegistration; // don't notify any events until client has registered
-};
-
-typedef QMap<QString, ClientInfo> ClientMap;   // maps client names against client data
-
-// The ClientIteration class gives secure public access to AlarmDaemon::mClients
-class ClientIteration
+// Provides read-write access to the Alarm Daemon config files
+class ADConfigDataRW : public ADConfigDataBase
 {
   public:
-    ClientIteration(ClientMap& c)     : clients(c) { iter = clients.begin(); }
-    bool           ok() const         { return iter != clients.end(); }
-    bool           next()             { return ++iter != clients.end(); }
-    const QString& appName() const    { return iter.key(); }
-    const QString& title() const      { return iter.data().title; }
-    int            menuIndex() const  { return iter.data().menuIndex; }
-    void           menuIndex(int n)   { iter.data().menuIndex = n; }
+    ADConfigDataRW()  : ADConfigDataBase(true) { }
+    void           readDaemonData(bool sessionStarting);
+    void           writeConfigClient(const QString& appName, const ClientInfo&);
+    void           writeConfigClientGui(const QString& appName, const QString& dcopObject);
+    void           addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
+    void           writeConfigCalendar(const QString& appName, const ADCalendar*);
+
+    typedef QMap<QString, QString> GuiMap;  // maps GUI client names against DCOP object names
+
+    GuiMap         mGuis;                // client GUI application names and data
+
   private:
-    ClientMap&          clients;
-    ClientMap::Iterator iter;
+    virtual void   deleteConfigCalendar(const ADCalendar*);
 };
 
-// Class for Alarm Daemon calendar access
-class ADCalendar : public CalendarLocal
+// Alarm Daemon calendar access
+class ADCalendar : public ADCalendarBase
 {
   public:
-    enum Type { KORGANISER = 0, KALARM = 1 };
-    ADCalendar(const QString& url, const QString& appname, Type type, bool quiet = false);
+    ADCalendar(const QString& url, const QString& appname, Type);
     ~ADCalendar()  { }
-    const QString& urlString() const   { return urlString_; }
-    const QString& appName() const     { return appName_; }
-    bool           loaded() const      { return loaded_; }
+    virtual ADCalendarBase* create(const QString& url, const QString& appname, Type);
     bool           enabled() const     { return enabled_ && !unregistered; }
     bool           available() const   { return loaded_ && !unregistered; }
-    Type           actionType() const  { return actionType_; }
-    static bool    eventHandled(const Event*, const QValueList<QDateTime>& alarmtimes);
-    void           setEventHandled(const Event*, const QValueList<QDateTime>& alarmtimes);
+    static bool    eventHandled(const Event*);
+    void           setEventHandled(const Event*);
     static void    clearEventsHandled(const QString& calendarURL);
     void           setEventPending(const QString& ID);
     bool           getEventPending(QString& ID);
-    bool           loadFile(bool quiet = false);
+    bool           loadFile()          { return loadFile_(QString()); }
 
-    bool             enabled_;       // events are currently manually enabled
-    bool             unregistered;   // client has registered since calendar was
-                                     // constructed, but has not since added the
-                                     // calendar. Monitoring is disabled.
+    bool              enabled_;       // events are currently manually enabled
+    bool              unregistered;   // client has registered since calendar was
+                                      // constructed, but has not since added the
+                                      // calendar. Monitoring is disabled.
   private:
-    ADCalendar(const ADCalendar&);             // prohibit copying
-    ADCalendar& operator=(const ADCalendar&);  // prohibit copying
-
-    QString          urlString_;     // calendar file URL
-    QString          appName_;       // name of application owning this calendar
-    QPtrList<QString>   eventsPending_; // IDs of pending KALARM type events
-    Type             actionType_;    // action to take on event
-    bool             loaded_;        // true if calendar file is currently loaded
+    QPtrList<QString> eventsPending_; // IDs of pending KALARM type events
     struct EventItem
     {
       EventItem() : eventSequence(0) { }
-      EventItem(const QString& url, int seqno, const QValueList<QDateTime>& alarmtimes);
-      QString               calendarURL;
-      int                   eventSequence;
-      QValueList<QDateTime> alarmTimes;
+      EventItem(const QString& url, int seqno)  : calendarURL(url), eventSequence(seqno) { }
+      QString   calendarURL;
+      int       eventSequence;
     };
     typedef QMap<QString, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
     static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
 };
 
-typedef QPtrList<ADCalendar> CalendarList;
 
-// The CalendarIteration class gives secure public access to AlarmDaemon::mCalendars
-class CalendarIteration
-{
-  public:
-    CalendarIteration(CalendarList& c)  : calendars(c) { calendar = calendars.first(); }
-    bool           ok() const           { return !!calendar; }
-    bool           next()               { return !!(calendar = calendars.next()); }
-    bool           loaded() const       { return calendar->loaded(); }
-    bool           available() const    { return calendar->available(); }
-    bool           enabled() const      { return calendar->enabled(); }
-    void           enabled(bool tf)     { calendar->enabled_ = tf; }
-    const QString& urlString() const    { return calendar->urlString(); }
-  private:
-    CalendarList&  calendars;
-    ADCalendar*    calendar;
-};
-
-
-
-class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
+class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmDaemonIface
 {
     Q_OBJECT
   public:
     AlarmDaemon(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmDaemon();
 
-    const ClientInfo* getClientInfo(const QString& appName) const;
     ClientIteration   getClientIteration()    { return ClientIteration(mClients); }
     CalendarIteration getCalendarIteration()  { return CalendarIteration(mCalendars); }
-    int               clientCount() const     { return mClients.count(); }
-    void              setDefaultClient(int menuIndex);
-    void              setAutostart(bool on);
+    int               calendarCount() const   { return mCalendars.count(); }
     int               calendarCount() const   { return mCalendars.count(); }
 
   public slots:
@@ -152,11 +103,13 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
     void    toggleAutostart();
   private slots:
     void    checkAlarmsSlot();
-    void    showAlarmDialog();
     void    checkIfSessionStarted();
 
   private:
     // DCOP interface
+    void    enableAutoStart(bool enable);
+    void    enableCal(const QString& urlString, bool enable)
+                       { enableCal_(expandURL(urlString), enable); }
     void    reloadCal(const QString& appname, const QString& urlString)
                        { reloadCal_(appname, expandURL(urlString), false); }
     void    reloadMsgCal(const QString& appname, const QString& urlString)
@@ -172,41 +125,52 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
     void    registerApp(const QString& appName, const QString& appTitle,
                         const QString& dcopObject, bool commandLineNotify,
                         bool displayCalendarName);
+    void    registerGui(const QString& appName, const QString& dcopObject);
     void    quit();
 
   private:
+
+    enum GuiChangeType          // parameters to GUI client notification
+    {
+      CHANGE_STATUS,           // change of alarm daemon or calendar status
+      CHANGE_CLIENT,           // change to client application list
+      CHANGE_GUI,              // change to GUI client list
+      ADD_CALENDAR,            // addition to calendar list (KOrganizer-type calendar)
+      ADD_MSG_CALENDAR,        // addition to calendar list (KAlarm-type calendar)
+      DELETE_CALENDAR,         // deletion from calendar list
+      ENABLE_CALENDAR,         // calendar is now being monitored
+      DISABLE_CALENDAR,        // calendar is available but not being monitored
+      CALENDAR_UNAVAILABLE     // calendar is unavailable for monitoring
+    };
+    void        enableCal_(const QString& urlString, bool enable);
     void        addCal_(const QString& appname, const QString& urlString, bool msgCal);
     void        reloadCal_(const QString& appname, const QString& urlString, bool msgCal);
     void        reloadCal_(ADCalendar*);
     void        resetMsgCal_(const QString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
     void        checkAlarms();
-    bool        checkAlarms(ADCalendar*, bool showDialog);
+    bool        checkAlarms(ADCalendar*);
     void        checkAlarms(const QString& appName);
-    void        checkEventAlarms(const Event&, QValueList<QDateTime>& alarmtimes);
     bool        notifyEvent(const ADCalendar*, const QString& eventID);
-    void        notifyPendingEvents(const QString& appname);
-    QString     readConfig();
+    void        notifyGuiCalStatus(const ADCalendar*);
+    void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null);
     void        writeConfigClient(const QString& appName, const ClientInfo&);
+    void        writeConfigClientGui(const QString& appName, const QString& dcopObject);
+    void        addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
     void        writeConfigCalendar(const QString& appName, const ADCalendar*);
     void        deleteConfigCalendar(const ADCalendar*);
-    QString     checkDefaultClient();
-    ADCalendar* getCalendar(const QString& calendarURL);
-    void        setToolTipStartTimer();
-    void        removeDialogEvents(const Calendar*);
-    static QString expandURL(const QString& urlString);
+    bool        isSessionStarted();
+    void        setTimerStatus();
 
-    AlarmDockWindow*  mDocker;              // the panel icon
-    ClientMap         mClients;             // client application names and data
-    CalendarList      mCalendars;           // the calendars being monitored
-    AlarmDialog*      mAlarmDialog;
+    typedef QMap<QString, QString> GuiMap;  // maps GUI client names against DCOP object names
+
+    GuiMap            mGuis;                // client GUI application names and data
     QTimer*           mAlarmTimer;
-    QTimer*           mSuspendTimer;
     QTimer*           mSessionStartTimer;   // timer waiting for session startup to complete
     QString           mClientDataFile;      // path of file containing client data
+    bool              mEnabled;             // true if the alarm daemon is enabled
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
-    bool              mRevisingAlarmDialog; // true while mAlarmDialog is being revised
-    bool              mDrawAlarmDialog;     // true to show mAlarmDialog after revision is complete
+    bool              mSessionStarted;      // true once session startup is complete
 };
 
 #endif

@@ -1,5 +1,6 @@
 /*
-    This file is part of the KDE alarm daemon.
+    KDE Panel docking window for KDE Alarm Daemon GUI.
+
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
 
     This program is free software; you can redistribute it and/or modify
@@ -29,43 +30,45 @@ class AlarmDockWindow : public KSystemTray
 {
     Q_OBJECT
   public:
-    AlarmDockWindow(AlarmDaemon&, const QString& defaultClient,
-                    QWidget *parent = 0L, const char *name = 0L);
+    AlarmDockWindow(AlarmGui&, QWidget *parent = 0L, const char *name = 0L);
     virtual ~AlarmDockWindow();
 
-    bool alarmsOn()     { return contextMenu()->isItemChecked(alarmsEnabledId); }
-    bool autostartOn()  { return contextMenu()->isItemChecked(autostartId); }
+    bool alarmsOn()        { return contextMenu()->isItemChecked(alarmsEnabledId); }
+    bool autostartGuiOn()  { return contextMenu()->isItemChecked(autostartGuiId); }
 
-    void setAutostart(bool on)   { contextMenu()->setItemChecked(autostartId, on); }
+    void setGuiAutostart(bool on)      { contextMenu()->setItemChecked(autostartGuiId, on); }
+    void setDaemonAutostart(bool on)   { contextMenu()->setItemChecked(autostartDaemonId, on); }
     void updateMenuClients();
     void updateMenuCalendars(bool recreate);
     void addToolTip(const QString&);
 
   protected:
+    virtual void contextMenuAboutToShow(KPopupMenu*);
     void mousePressEvent(QMouseEvent*);
     void closeEvent(QCloseEvent*);
 
   public slots:
-    void toggleAlarmsEnabled()
-    {
-      contextMenu()->setItemChecked(alarmsEnabledId,
-              !contextMenu()->isItemChecked(alarmsEnabledId));
-      setPixmap(contextMenu()->isItemChecked(alarmsEnabledId) ? dPixmap1 : dPixmap2);
-    }
-    void select(int menuIndex);
+    void toggleAlarmsEnabled();
+    void toggleGuiAutostart()     { setGuiAutostart(!autostartGuiOn()); }
+    void toggleDaemonAutostart();
+    void selectClient(int menuIndex);
     void selectCal(int menuIndex);
 
   protected:
-    QPixmap       dPixmap1, dPixmap2;
-    int           alarmsEnabledId;  // alarms enabled item in menu
-    int           autostartId;      // autostart item in menu
+    QPixmap    dPixmap1, dPixmap2;
+    int        alarmsEnabledId;     // alarms enabled item in menu
+    int        autostartGuiId;      // GUI autostart item in menu
+    int        autostartDaemonId;   // daemon autostart item in menu
 
   private:
-    AlarmDaemon&  alarmDaemon;
-    QString       defaultClient;    // default application name
-    int           clientIndex;      // menu index to client names separator
-    int           nClientIds;       // number of client names + 1 in menu
-    int           nCalendarIds;     // number of calendar URLs + 1 in menu
+    // DCOP interface
+    void            handleEvent(const QString& calendarURL, const QString& eventID);
+
+    AlarmGui&  alarmDaemon;
+    QString    defaultClient;    // default application name
+    int        clientIndex;      // menu index to client names separator
+    int        nClientIds;       // number of client names + 1 in menu
+    int        nCalendarIds;     // number of calendar URLs + 1 in menu
 };
 
 #endif

@@ -1,30 +1,32 @@
 # set the include path for X, qt and KDE, and versit library for vCalendar
-INCLUDES= -I$(top_srcdir) $(all_includes)
+INCLUDES= $(all_includes) -I$(top_srcdir)/libkcal
 
-bin_PROGRAMS = kalarmd
+bin_PROGRAMS = kalarmd kalarmdgui
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
-kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp alarmdialog.cpp \
-	dockwindow.cpp alarmdaemoniface.skel alarmdaemoniface.stub \
+kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
+	alarmdaemoniface.skel alarmdaemoniface.stub
+kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
+kalarmdgui_SOURCES = guimain.cpp alarmguiapp.cpp alarmdialog.cpp \
+	dockwindow.cpp daemonguiiface.skel daemonguiiface.stub \
 	koeventviewer.cpp
-noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h alarmdialog.h \
+noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
+	alarmguiapp.h daemongui.h daemonguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h
 
 METASOURCES = AUTO
 
 SUBDIRS = pixmaps
  
-autostart_DATA = kalarmd.autostart.desktop
+autostart_DATA = kalarmd.desktop kalarmdgui.desktop
 autostartdir = $(prefix)/share/autostart
 
 #datadir = $(kde_bindir)
 
-kde_conf_DATA = kalarmdrc
+kde_conf_DATA = kalarmdrc kalarmdguirc
 
 KDE_ICON = AUTO
 
-install-data-local:
-	-rm -f $(prefix)/share/autostart/kalarmd.desktop
-
 messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kalarmd.pot
+	$(XGETTEXT) *.cpp -o $(podir)/kalarmdgui.pot

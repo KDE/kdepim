@@ -29,16 +29,19 @@ class AlarmDaemonIface : virtual public DCOPObject
 {
     K_DCOP
   k_dcop:
-    virtual void addCal(const QString& appname, const QString& urlString) = 0;
-    virtual void addMsgCal(const QString& appname, const QString& urlString) = 0;
-    virtual void reloadCal(const QString& appname, const QString& urlString) = 0;
-    virtual void reloadMsgCal(const QString& appname, const QString& urlString) = 0;
-    virtual void removeCal(const QString& urlString) = 0;
-    virtual void resetMsgCal(const QString& appname, const QString& urlString) = 0;
-    virtual void registerApp(const QString& appName, const QString& appTitle,
-                             const QString& dcopObject, bool commandLineNotify,
+    virtual ASYNC enableAutoStart(bool enable) = 0;
+    virtual ASYNC enableCal(const QString& urlString, bool enable) = 0;
+    virtual ASYNC addCal(const QString& appname, const QString& urlString) = 0;
+    virtual ASYNC addMsgCal(const QString& appname, const QString& urlString) = 0;
+    virtual ASYNC reloadCal(const QString& appname, const QString& urlString) = 0;
+    virtual ASYNC reloadMsgCal(const QString& appname, const QString& urlString) = 0;
+    virtual ASYNC removeCal(const QString& urlString) = 0;
+    virtual ASYNC resetMsgCal(const QString& appname, const QString& urlString) = 0;
+    virtual ASYNC registerApp(const QString& appName, const QString& appTitle,
+                             const QString& dcopObject, int notificationType,
                              bool displayCalendarName) = 0;
-    virtual void quit() = 0;
+    virtual ASYNC registerGui(const QString& appName, const QString& dcopObject) = 0;
+    virtual ASYNC quit() = 0;
 };
 
 #endif
