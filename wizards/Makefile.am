@@ -4,6 +4,7 @@ INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkpimidentities -I$(top_s
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \
            -I$(top_srcdir)/certmanager/lib \
+	   -I$(top_builddir)/kresources/groupwise \
            $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
@@ -64,7 +65,9 @@ libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc
 libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
                           $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
                           $(top_builddir)/libkdepim/libkdepim.la
-libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h 
+libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h \
+                                      $(top_builddir)/kresources/groupwise/kcal_groupwiseprefsbase.h
+
 
 groupwisewizard_LDADD = libgroupwisewizard.la
 groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
