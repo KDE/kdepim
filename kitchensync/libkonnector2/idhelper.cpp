@@ -105,7 +105,7 @@ void KonnectorUIDHelper::addId( const QString& appName,
         m_ids.replace( appName,  kontainer );
     }else{
 //        kdDebug(5201) << "Already inserted" << endl;
-        Kontainer::ValueList kontainer = it.data();
+        Kontainer::ValueList &kontainer = it.data();
         Kontainer kont( konnectorId,  kdeId );
         kontainer.remove( kont );
         kontainer.append( kont );
@@ -116,8 +116,8 @@ void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
 {
     QMap<QString,  Kontainer::ValueList >::Iterator it;
     it = m_ids.find( appName );
-    if ( it== m_ids.end() ) {
-        Kontainer::ValueList kontainer = it.data();
+    if ( it != m_ids.end() ) {
+        Kontainer::ValueList &kontainer = it.data();
         Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( (*it).first == id || (*it).second == id ) {
