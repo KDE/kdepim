@@ -1,3 +1,3 @@
 #SUBDIRS = test
 
-SUBDIRS = opie pv qtopia
+SUBDIRS = opie qtopia

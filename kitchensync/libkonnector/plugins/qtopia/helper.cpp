@@ -49,7 +49,7 @@ QDateTime Base::fromUTC( time_t time )
         if (!real_TZ.isEmpty() )
             setenv("TZ",  real_TZ, true );
     }
-    kdDebug(5229) << "DateTime is " << dt << endl;
+    kdDebug(5229) << "DateTime is " << dt.toString() << endl;
     // done
     return dt;
 }

@@ -226,7 +226,7 @@ EventSyncee* OrganizerPart::loadEvents(const QString& pa,  const QString& timeZo
     for ( event = events.first(); event; event = events.next() ) {
         entry = new EventSyncEntry( (KCal::Event*)event->clone() );
         syncee->addEntry( entry );
-        kdDebug() << "Start Date of loaded " <<  entry->incidence()->dtStart() << " " << entry->incidence()->uid() << endl;
+        kdDebug() << "Start Date of loaded " <<  entry->incidence()->dtStart().toString() << " " << entry->incidence()->uid() << endl;
     }
     return syncee;
 }
