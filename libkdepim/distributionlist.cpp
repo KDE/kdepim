@@ -138,19 +138,27 @@ static KABC::Addressee findByUidOrName( KABC::AddressBook* book, const QString& 
 {
   KABC::Addressee a = book->findByUid( uidOrName );
   if ( a.isEmpty() ) {
-    // uid not found, check if maybe this is an email instead. Used by kolab resource.
-    // (But this has to be done here, since when loading we might not have the entries yet)
-    KABC::Addressee::List lst = findByFormattedName( book, uidOrName );
-
-    if ( !lst.isEmpty() && email.isEmpty() ) // no email specified, take first match
-      a = lst.first();
-    else {
+    // UID not found, maybe it is a name instead.
+    // If we have an email, let's use that for the lookup.
+    // [This is used by e.g. the Kolab resource]
+    if ( !email.isEmpty() ) {
+      KABC::Addressee::List lst = book->findByEmail( email );
       KABC::Addressee::List::ConstIterator listit = lst.begin();
       for ( ; listit != lst.end(); ++listit )
-        if ( (*listit).emails().contains( email ) ) {
+        if ( (*listit).formattedName() == uidOrName ) {
           a = *listit;
           break;
         }
+      if ( !lst.isEmpty() && a.isEmpty() ) { // found that email, but no match on the fullname
+        a = lst.first(); // probably the last name changed
+      }
+    }
+    // If we don't have an email, or if we didn't find any match for it, look up by full name
+    if ( a.isEmpty() ) {
+      // (But this has to be done here, since when loading we might not have the entries yet)
+      KABC::Addressee::List lst = findByFormattedName( book, uidOrName );
+      if ( !lst.isEmpty() )
+        a = lst.first();
     }
   }
   return a;
