@@ -162,16 +162,15 @@ bool KMail::kmailMessage(FilterInfo *info,QString folderName,QString msgPath)
   const QByteArray kmData;
   QByteArray kmRes;
   QDataStream kmArg(kmData,IO_WriteOnly);
-  KURL message(msgPath);
   QCString type;
 
-  kmArg << folderName << message;
+  kmArg << folderName << msgPath;
 
   DCOPClient *c=kapp->dcopClient();
-  if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,KURL)", kmData, type, kmRes)) {
+  if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,QString)", kmData, type, kmRes)) {
     // Maybe KMail isn't already running, so try starting it
     KApplication::startServiceByDesktopName("kmail", QString::null); // Will wait until kmail is started
-    if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,KURL)", kmData, type, kmRes)) {
+    if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,QString)", kmData, type, kmRes)) {
       info->alert(cap, i18n("FATAL: Unable to start KMail for DCOP communication.\n"
                "       Make sure 'kmail' is installed."));
       return false;

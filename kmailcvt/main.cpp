@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
   DCOPClient *client=a.dcopClient();
   if (!client->attach()) {
-    exit(1);
+    return 1;
   }
 
   return a.exec();
