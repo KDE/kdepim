@@ -31,32 +31,47 @@
 
 */
 
-#ifndef ksync_mainwindow_h
-#define ksync_mainwindow_h
 
-//#include <qptrlist.h>
 
-//#include <qwidgetstack.h>
-
+#include <qptrlist.h>
 #include <kparts/mainwindow.h>
 
-//#include "ksync_systemtray.h"
+#include <manipulatorpart.h>
+#include <ksync_systemtray.h>
+
+class PartBar;
+class QHBox;
+class QWidgetStack;
 
 class Konnector;
-//class PartBar;
+
 namespace KitchenSync {
-
+    // no idea why we have this window
     class KSyncMainWindow : public KParts::MainWindow {
-        Q_OBJECT
+       Q_OBJECT
     public:
-        KSyncMainWindow(QWidget *widget =0l,
-                        const char *name = 0l,
-                        WFlags f = WType_TopLevel );
+        KSyncMainWindow(QWidget *widget =0l, const char *name = 0l, WFlags f = WType_TopLevel );
         ~KSyncMainWindow();
-        //KSyncSystemTray *tray();
-        //Konnector*  konnector();
-   };
+        KSyncSystemTray *tray();
+        Konnector*  konnector();
+    private:
+        virtual void initActions();
+        void addModPart( ManipulatorPart * );
+        void initSystray ( void );
+        PartBar *m_bar;
+        QHBox *m_lay;
+        QWidgetStack *m_stack;
+        QPtrList<ManipulatorPart> m_parts;
+        KSyncSystemTray *m_tray;
+
+   private slots:
+        void initPlugins();
+        void slotSync();
+        void slotBackup();
+        void slotRestore();
+        void slotConfigure();
+        void slotActivated(ManipulatorPart *);
+        void slotQuit();
+
+    };
 };
-
-
-#endif
