@@ -112,7 +112,6 @@ private:
   KColorCombo *colorEditor;
   /** the dummy label */
   QLabel *dummyLabel;
-  int dummyIndex;
 
   KScoringManager *manager;
 };

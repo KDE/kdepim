@@ -187,10 +187,10 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
   topL->addWidget(stack);
   
   dummyLabel = new QLabel(i18n("Select an action:"), stack);
-  stack->addWidget(dummyLabel, dummyIndex);
+  stack->addWidget(dummyLabel);
 
   // init widget stack and the types combo box
-  int index = 0;
+  int index = 1;
   QStringList l = ActionBase::userNames();
   for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
     QString name = *it;
@@ -213,13 +213,12 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
     }
   }
   types->insertItem(QString::null);
-  dummyIndex = index;
 
   connect(types,SIGNAL(activated(int)),stack,SLOT(raiseWidget(int)));
 
   // raise the dummy label
-  types->setCurrentItem(dummyIndex);
-  stack->raiseWidget(dummyIndex);
+  types->setCurrentItem(0);
+  stack->raiseWidget(dummyLabel);
 }
 
 SingleActionWidget::~SingleActionWidget()
@@ -272,8 +271,8 @@ void SingleActionWidget::clear()
   if (scoreEditor) scoreEditor->setValue(0);
   if (notifyEditor) notifyEditor->clear();
   if (colorEditor) colorEditor->setCurrentItem(0);
-  types->setCurrentItem(dummyIndex);
-  stack->raiseWidget(dummyIndex);
+  types->setCurrentItem(0);
+  stack->raiseWidget(dummyLabel);
 }
 
 //============================================================================
