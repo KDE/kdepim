@@ -479,7 +479,7 @@ void Contact::saveCustomAttributes( QDomElement& element ) const
 {
   QValueList<Custom>::ConstIterator it = mCustomList.begin();
   for ( ; it != mCustomList.end(); ++it ) {
-    Q_ASSERT( !(*it).name.isEmpty() ) );
+    Q_ASSERT( !(*it).name.isEmpty() );
     if ( (*it).app == s_unhandledTagAppName ) {
       writeString( element, (*it).name, (*it).value );
     } else {
