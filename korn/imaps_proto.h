@@ -31,7 +31,7 @@ public:
 
 	virtual KIO_Protocol * clone() const { return new Imaps_Protocol; }
 	
-	virtual QString protocol() const { return "newimaps"; }
+	virtual QString protocol() const { return "imaps"; }
 	virtual QString configName() const { return "imaps"; }
 
 	virtual unsigned short defaultPort() const { return 993; }

@@ -38,7 +38,7 @@ public:
 
 	virtual bool connectionBased() const { return true; }
 	
-	virtual QString protocol() const { return "newimap"; }
+	virtual QString protocol() const { return "imap"; }
 	virtual QString configName() const { return "imap"; }
 	virtual bool canReadSubjects() const { return true; }
 	virtual bool canDeleteMail() const { return false; } //See comment above class: metadata expunge=auto doesn't work.

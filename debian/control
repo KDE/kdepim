@@ -115,7 +115,7 @@ Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE pim I/O Slaves
- This package includes the pim kioslaves. This includes newimap4 and sieve.
+ This package includes the pim kioslaves. This includes imap4 and sieve.
  .
  This package is part of the official KDE pim module.
 
