@@ -223,7 +223,7 @@ bool KNProtocolClient::openConnection()
     struct hostent* hostData = gethostbyname(account.server().local8Bit().data());
 
     if (NULL==hostData) {
-      herror("connect(): ");
+      perror("connect(): ");
       job->setErrorString(i18n("Unable to resolve hostname"));
       closeSocket();
       return false;
@@ -643,7 +643,7 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
         return true;
 #else
       int err = 0;
-      unsigned int len = 1;
+      ksize_t len = 1;
       if (getsockopt(tcpSocket,SOL_SOCKET,SO_ERROR,(char*)&err,&len)!=0) {
         QString str = i18n("Communication error:\n");
         str += strerror(errno);

@@ -17,6 +17,7 @@
 #ifndef KNHEADERS_H
 #define KNHEADERS_H
 
+#include <config.h>
 #include <qstring.h>
 #include <time.h>
 #include <qstrlist.h>
