@@ -27,14 +27,15 @@ int main( int argc, char** argv )
 {
   KAboutData aboutData( "kgpgcertmanager", I18N_NOOP("KGpgCertManager"),
 			KGPGCERTMANAGER_VERSION, DESCRIPTION, KAboutData::License_GPL,
-			"(c) 2002, Steffen Hansen, Jesper Pedersen,\nKalle Dalheimer, Klarälvdalens Datakonsult AB");
+			"(c) 2002, Steffen Hansen, Jesper Pedersen,\n"
+			"Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB");
   aboutData.addAuthor( "Steffen Hansen",    I18N_NOOP("Current Maintainer"),		       
 		       "hansen@kde.org" );
   aboutData.addAuthor( "Kalle Dalheimer",   0, "kalle@kde.org" );
   aboutData.addAuthor( "Jesper Pedersen",   0, "blackie@kde.org" );
   
   KCmdLineArgs::init(argc, argv, &aboutData);
-  static KCmdLineOptions options[] = {
+  static const KCmdLineOptions options[] = {
             { "+name", I18N_NOOP("The name of the plugin"), 0 },
             { "+lib" , I18N_NOOP("The library of the plugin"), 0 },
             { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
