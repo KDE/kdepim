@@ -162,17 +162,36 @@ void KAddressBookTableView::refresh(QString uid)
 
   if (uid.isNull()) {
     // Clear the list view
+    QString currentUID, nextUID;
+    ContactListViewItem *currentItem = dynamic_cast<ContactListViewItem*>( mListView->currentItem() );
+    if ( currentItem ) {
+      ContactListViewItem *nextItem = dynamic_cast<ContactListViewItem*>( currentItem->itemBelow() );
+      if ( currentItem )
+        nextUID = nextItem->addressee().uid();
+      currentUID = currentItem->addressee().uid();
+    }
+
     mListView->clear();
 
+    currentItem = 0;
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator it;
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
-      new ContactListViewItem(*it, mListView, addressBook(), fields());
+      ContactListViewItem *item = new ContactListViewItem(*it, mListView, addressBook(), fields());
+      if ( (*it).uid() == currentUID )
+        currentItem = item;
+      else if ( (*it).uid() == nextUID && !currentItem )
+        currentItem = item;
     }
 
     // Sometimes the background pixmap gets messed up when we add lots
     // of items.
     mListView->repaint();
+
+    if ( currentItem ) {
+      mListView->setCurrentItem( currentItem );
+      mListView->ensureItemVisible( currentItem );
+    }
   } else {
     // Only need to update on entry. Iterate through and try to find it
     ContactListViewItem *ceItem;
