@@ -31,7 +31,7 @@ class GroupwarePrefsBase;
 /**
   This class provides a resource for accessing an OpenGroupware.org server
 */
-class ResourceOpenGroupware : public ResourceGroupwareBase
+class KDE_EXPORT ResourceOpenGroupware : public ResourceGroupwareBase
 {
     Q_OBJECT
   public:

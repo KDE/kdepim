@@ -25,7 +25,7 @@
 
 namespace KABC {
 
-class ResourceExchange : public ResourceGroupwareBase
+class KDE_EXPORT ResourceExchange : public ResourceGroupwareBase
 {
   Q_OBJECT
 

@@ -31,7 +31,7 @@ class GroupwarePrefsBase;
 /**
   This class provides a resource for accessing an Exchange server
 */
-class ResourceExchange : public ResourceGroupwareBase
+class KDE_EXPORT ResourceExchange : public ResourceGroupwareBase
 {
     Q_OBJECT
   public:

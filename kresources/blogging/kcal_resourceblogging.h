@@ -22,6 +22,7 @@
 #define KCAL_RESOURCEBLOGGING_H
 
 #include <kcal_resourcegroupwarebase.h>
+#include <kdepimmacros.h>
 
 namespace KBlog {
 class APIBlog;
@@ -32,7 +33,7 @@ namespace KCal {
 /**
   This class provides a resource for accessing blogs on a blogging server as journals
 */
-class ResourceBlogging : public ResourceGroupwareBase
+class KDE_EXPORT ResourceBlogging : public ResourceGroupwareBase
 {
     Q_OBJECT
   public:

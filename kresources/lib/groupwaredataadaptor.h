@@ -28,6 +28,7 @@
 #include <qstring.h>
 #include <libkcal/listbase.h>
 #include <qobject.h>
+#include <kdepimmacros.h>
 
 
 namespace KIO {
@@ -42,7 +43,7 @@ class IdMapper;
 class GroupwareDataAdaptor;
 //class GroupwareJob;
 
-class GroupwareUploadItem
+class KDE_EXPORT GroupwareUploadItem
 {
   public:
     typedef KCal::ListBase<GroupwareUploadItem> List;
@@ -77,7 +78,7 @@ class GroupwareUploadItem
 };
 
 
-class GroupwareDataAdaptor : public QObject
+class KDE_EXPORT GroupwareDataAdaptor : public QObject
 {
 Q_OBJECT
   public:

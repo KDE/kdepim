@@ -22,10 +22,11 @@
 #define KABC_RESOURCEOPENGROUPWARE_H
 
 #include "kabc_resourcegroupwarebase.h"
+#include <kdepimmacros.h>
 
 namespace KABC {
 
-class ResourceOpenGroupware : public ResourceGroupwareBase
+class KDE_EXPORT ResourceOpenGroupware : public ResourceGroupwareBase
 {
   Q_OBJECT
 

@@ -22,6 +22,7 @@
 #define KCAL_RESOURCEGROUPWAREBASECONFIG_H
 
 #include <kresources/configwidget.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 
@@ -42,7 +43,7 @@ class ResourceCachedSaveConfig;
   
   @see KCalOpenGroupware
 */
-class ResourceGroupwareBaseConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

@@ -24,10 +24,11 @@
 #include "calendaradaptor.h"
 #include "folderlister.h"
 #include <qdom.h>
+#include <kdepimmacros.h>
 
 namespace KCal {
 
-class DavCalendarAdaptor : public CalendarAdaptor
+class KDE_EXPORT DavCalendarAdaptor : public CalendarAdaptor
 {
   public:
     DavCalendarAdaptor() {}

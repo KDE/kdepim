@@ -24,6 +24,7 @@
 #define KPIM_FOLDERLISTER_H
 
 #include <kurl.h>
+#include <kdepimmacros.h>
 
 #include <qvaluelist.h>
 #include <qstring.h>
@@ -40,7 +41,7 @@ namespace KPIM {
 
 class GroupwareDataAdaptor;
 
-class FolderLister : public QObject
+class KDE_EXPORT FolderLister : public QObject
 {
     Q_OBJECT
   public:

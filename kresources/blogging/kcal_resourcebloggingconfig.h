@@ -26,6 +26,7 @@
 #include "folderconfig.h"
 
 #include <kurlrequester.h>
+#include <kdepimmacros.h>
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
@@ -44,7 +45,7 @@ class ResourceCachedSaveConfig;
   
   @see KCalOpenGroupware
 */
-class ResourceBloggingConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceBloggingConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

@@ -24,7 +24,7 @@
 
 #include <kurl.h>
 #include <libkcal/resourcecached.h>
-
+#include <kdepimmacros.h>
 #include <kabc/locknull.h>
 
 namespace KIO {
@@ -47,7 +47,7 @@ class GroupwarePrefsBase;
   This class provides a resource for accessing a Groupware kioslave-based
   calendar.
 */
-class ResourceGroupwareBase : public ResourceCached
+class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
 {
     Q_OBJECT
   public:

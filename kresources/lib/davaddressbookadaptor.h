@@ -24,10 +24,11 @@
 #include "addressbookadaptor.h"
 #include "folderlister.h"
 #include <qdom.h>
+#include <kdepimmacros.h>
 
 namespace KABC {
 
-class DavAddressBookAdaptor : public AddressBookAdaptor
+class KDE_EXPORT DavAddressBookAdaptor : public AddressBookAdaptor
 {
   public:
     DavAddressBookAdaptor() {}
