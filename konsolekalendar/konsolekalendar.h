@@ -40,7 +40,7 @@ class KonsoleKalendar
 
   private:
     void showNext();
-    void showDate( QDate date );
+    void showDate( QDateTime date );
     void printEventTime(Event *event);
     bool isHappened(Event *event);
       
