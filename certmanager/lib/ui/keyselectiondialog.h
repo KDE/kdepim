@@ -40,6 +40,7 @@
 #include <kdialogbase.h>
 
 #include <kleo/cryptobackend.h>
+#include <gpgmepp/key.h>
 
 #include <vector>
 
@@ -56,7 +57,6 @@ namespace Kleo {
 }
 
 namespace GpgME {
-  class Key;
   class KeyListResult;
 }
 
@@ -126,6 +126,7 @@ namespace Kleo {
     void slotCheckSelection( Kleo::KeyListViewItem * );
     void slotRMB( Kleo::KeyListViewItem *, const QPoint & );
     void slotRecheckKey();
+    void slotTryOk();
     void slotOk();
     void slotCancel();
     void slotSearch( const QString & text );

@@ -35,6 +35,16 @@ class Core;
 
 class KSelectAction;
 
+class ExtensionData
+{
+  public:
+    typedef QValueList<ExtensionData> List;
+
+    KAB::ExtensionWidget *widget;
+    QString identifier;
+    QString title;
+};
+
 class ExtensionManager : public QHBox
 {
   Q_OBJECT
@@ -79,8 +89,7 @@ class ExtensionManager : public QHBox
     KAB::Core *mCore;
 
     KAB::ExtensionWidget *mCurrentExtensionWidget;
-    QPtrList<KAB::ExtensionWidget> mExtensionWidgetList;
-
+    ExtensionData::List mExtensionList;
     KSelectAction *mActionExtensions;
 };
 

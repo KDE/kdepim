@@ -48,6 +48,7 @@
 #include <qregexp.h>
 #include <qevent.h>
 #include <qdragobject.h>
+#include <qclipboard.h>
 #include "resourceabc.h"
 
 using namespace KPIM;
@@ -58,11 +59,13 @@ QTimer* AddresseeLineEdit::s_LDAPTimer = 0L;
 KPIM::LdapSearch* AddresseeLineEdit::s_LDAPSearch = 0L;
 QString* AddresseeLineEdit::s_LDAPText = 0L;
 AddresseeLineEdit* AddresseeLineEdit::s_LDAPLineEdit = 0L;
+KConfig *AddresseeLineEdit::s_config = 0L;
 
 static KStaticDeleter<KCompletion> completionDeleter;
 static KStaticDeleter<QTimer> ldapTimerDeleter;
 static KStaticDeleter<KPIM::LdapSearch> ldapSearchDeleter;
 static KStaticDeleter<QString> ldapTextDeleter;
+static KStaticDeleter<KConfig> configDeleter;
 
 AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
                                       const char *name )
@@ -164,13 +167,29 @@ void AddresseeLineEdit::insert( const QString &t )
     KLineEdit::insert( t );
     return;
   }
+        
+  //kdDebug(5300) << "     AddresseeLineEdit::insert( \"" << t << "\" )" << endl;
 
   QString newText = t.stripWhiteSpace();
   if ( newText.isEmpty() )
     return;
 
-  // remove newlines in the to-be-pasted string
+  // remove newlines in the to-be-pasted string as well as an eventual
+  // mailto: protocol
   newText.replace( QRegExp("\r?\n"), ", " );
+
+  if ( newText.startsWith("mailto:") ) {
+    KURL url( newText );
+    newText = url.path();
+  }
+  else if ( newText.find(" at ") != -1 ) {
+    // Anti-spam stuff
+    newText.replace( " at ", "@" );
+    newText.replace( " dot ", "." );
+  }
+  else if ( newText.find("(at)") != -1 ) {
+    newText.replace( QRegExp("\\s*\\(at\\)\\s*"), "@" );
+  }
 
   QString contents = text();
   int start_sel = 0;
@@ -211,6 +230,55 @@ void AddresseeLineEdit::paste()
   m_smartPaste = false;
 }
 
+void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *e )
+{
+  // reimplemented from QLineEdit::mouseReleaseEvent()
+  if ( m_useCompletion
+       && QApplication::clipboard()->supportsSelection()
+       && !isReadOnly()
+       && e->button() == MidButton ) {
+    m_smartPaste = true;
+  }
+
+  KLineEdit::mouseReleaseEvent( e );
+  m_smartPaste = false;
+}
+
+void AddresseeLineEdit::dropEvent( QDropEvent *e )
+{
+  KURL::List uriList;
+  if ( !isReadOnly()
+       && KURLDrag::canDecode(e) && KURLDrag::decode( e, uriList ) ) {
+    QString contents = text();
+    // remove trailing white space and comma
+    int eot = contents.length();
+    while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() )
+      eot--;
+    if ( eot == 0 )
+      contents = QString::null;
+    else if ( contents[ eot - 1 ] == ',' ) {
+      eot--;
+      contents.truncate( eot );
+    }
+    // append the mailto URLs
+    for ( KURL::List::Iterator it = uriList.begin();
+          it != uriList.end(); ++it ) {
+      if ( !contents.isEmpty() )
+        contents.append( ", " );
+      KURL u( *it );
+      contents.append( (*it).path() );
+    }
+    setText( contents );
+    setEdited( true );
+  }
+  else {
+    if ( m_useCompletion )
+       m_smartPaste = true;
+    QLineEdit::dropEvent( e );
+    m_smartPaste = false;
+  }
+}
+
 void AddresseeLineEdit::cursorAtEnd()
 {
   setCursorPosition( text().length() );
@@ -249,7 +317,7 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
 
   // cursor at end of string - or Ctrl+T pressed for substring completion?
   if ( ctrlT ) {
-    QStringList completions = s_completion->substringCompletion( s );
+    const QStringList completions = s_completion->substringCompletion( s );
 
     if ( completions.count() > 1 )
       m_previousAddresses = prevAddr;
@@ -355,7 +423,7 @@ void AddresseeLineEdit::loadContacts()
   KConfig config( "kpimcompletionorder" ); // The weights for non-imap kabc resources is there.
   config.setGroup( "CompletionWeights" );
 
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
+  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   // Can't just use the addressbook's iterator, we need to know which subresource
   // is behind which contact.
   QPtrList<KABC::Resource> resources( addressBook->resources() );
@@ -390,14 +458,28 @@ void AddresseeLineEdit::loadContacts()
   }
 
   QApplication::restoreOverrideCursor();
+
+  disconnect( addressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
+              this, SLOT( loadContacts() ) );
+
+  connect( addressBook, SIGNAL( addressBookChanged( AddressBook* ) ), SLOT( loadContacts() ) );
 }
 
 void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
 {
   //m_contactMap.insert( addr.realName(), addr );
-  QString fullEmail = addr.fullEmail();
-  //kdDebug(5300) << "addContact: " << fullEmail << " weight=" << weight << endl;
-  s_completion->addItem( fullEmail.simplifyWhiteSpace(), weight );
+  const QStringList emails = addr.emails();
+  QStringList::ConstIterator it;
+  for ( it = emails.begin(); it != emails.end(); ++it ) {
+    int len = (*it).length();
+    if( '\0' == (*it)[len-1] )
+      --len;
+    const QString tmp = (*it).left( len );
+    //kdDebug(5300) << "     AddresseeLineEdit::addContact() \"" << tmp << "\"" << endl;
+    QString fullEmail = addr.fullEmail( tmp );
+    //kdDebug(5300) << "                                     \"" << fullEmail << "\"" << endl;
+    s_completion->addItem( fullEmail.simplifyWhiteSpace(), weight );
+  }
 }
 
 void AddresseeLineEdit::slotStartLDAPLookup()
@@ -440,7 +522,7 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
   for ( KPIM::LdapResultList::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
     KABC::Addressee addr;
     addr.setNameFromString( (*it).name );
-    addr.insertEmail( (*it).email, true );
+    addr.setEmails( (*it).email );
     addContact( addr, (*it).completionWeight );
   }
 
@@ -477,146 +559,6 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
     }
 }
 
-//static:
-bool AddresseeLineEdit::getNameAndMail(const QString& aStr, QString& name, QString& mail)
-{
-  name = QString::null;
-  mail = QString::null;
-
-  const int len=aStr.length();
-
-  bool bInComment;
-  int i=0, iAd=0, iMailStart=0, iMailEnd=0;
-  QChar c;
-
-  // Find the '@' of the email address
-  // skipping all '@' inside "(...)" comments:
-  bInComment = false;
-  while( i < len ){
-    c = aStr[i];
-    if( !bInComment ){
-      if( '(' == c ){
-        bInComment = true;
-      }else{
-        if( '@' == c ){
-          iAd = i;
-          break; // found it
-        }
-      }
-    }else{
-      if( ')' == c ){
-        bInComment = false;
-      }
-    }
-    ++i;
-  }
-
-  if( !iAd ){
-    // We suppose the user is typing the string manually and just
-    // has not finished typing the mail address part.
-    // So we take everything that's left of the '<' as name and the rest as mail
-    for( i = 0; len > i; ++i ) {
-      c = aStr[i];
-      if( '<' != c )
-        name.append( c );
-      else
-        break;
-    }
-    mail = aStr.mid( i+1 );
-
-  }else{
-
-    // Loop backwards until we find the start of the string
-    // or a ',' outside of a comment.
-    bInComment = false;
-    for( i = iAd-1; 0 <= i; --i ) {
-      c = aStr[i];
-      if( bInComment ){
-        if( '(' == c ){
-          if( !name.isEmpty() )
-            name.prepend( ' ' );
-          bInComment = false;
-        }else{
-          name.prepend( c ); // all comment stuff is part of the name
-        }
-      }else{
-        // found the start of this addressee ?
-        if( ',' == c )
-          break;
-        // stuff is before the leading '<' ?
-        if( iMailStart ){
-          name.prepend( c );
-        }else{
-          switch( c ){
-            case '<':
-              iMailStart = i;
-              break;
-            case ')':
-              if( !name.isEmpty() )
-                name.prepend( ' ' );
-              bInComment = true;
-              break;
-            default:
-              if( ' ' != c )
-                mail.prepend( c );
-          }
-        }
-      }
-    }
-
-    name = name.simplifyWhiteSpace();
-    mail = mail.simplifyWhiteSpace();
-
-    if( mail.isEmpty() )
-      return false;
-
-    mail.append('@');
-
-    // Loop forward until we find the end of the string
-    // or a ',' outside of a comment.
-    bInComment = false;
-    for( i = iAd+1; len > i; ++i ) {
-      c = aStr[i];
-      if( bInComment ){
-        if( ')' == c ){
-          if( !name.isEmpty() )
-            name.append( ' ' );
-          bInComment = false;
-        }else{
-          name.append( c ); // all comment stuff is part of the name
-        }
-      }else{
-        // found the end of this addressee ?
-        if( ',' == c )
-          break;
-        // stuff is behind the trailing '<' ?
-        if( iMailEnd ){
-          name.append( c );
-        }else{
-          switch( c ){
-            case '>':
-              iMailEnd = i;
-              break;
-            case '(':
-              if( !name.isEmpty() )
-                name.append( ' ' );
-              bInComment = true;
-              break;
-            default:
-              if( ' ' != c )
-                mail.append( c );
-          }
-        }
-      }
-    }
-  }
-
-  name = name.simplifyWhiteSpace();
-  mail = mail.simplifyWhiteSpace();
-
-  return ! (name.isEmpty() || mail.isEmpty());
-}
-
 QPopupMenu* AddresseeLineEdit::createPopupMenu()
 {
   QPopupMenu *menu = KLineEdit::createPopupMenu();
@@ -634,6 +576,15 @@ void AddresseeLineEdit::slotEditCompletionOrder()
   init(); // for s_LDAPSearch
   CompletionOrderEditor editor( s_LDAPSearch, this );
   editor.exec();
+}
+
+KConfig* AddresseeLineEdit::config()
+{
+  if ( !s_config )
+    configDeleter.setObject( s_config, new KConfig( locateLocal( "config",
+                             "kabldaprc" ) ) );
+
+  return s_config;
 }
 
 #include "addresseelineedit.moc"
