@@ -22,7 +22,7 @@
 #endif
 
 #include <kdockwidget.h>
-
+#include <kdialogbase.h>
 #include "resource.h"
 
 #include <qglobal.h>
@@ -35,6 +35,7 @@ class KAction;
 class KToggleAction;
 class KSelectAction;
 class KStatusBarLabel;
+class KLineEdit;
 
 class KNListView;
 class KNProgress;
@@ -349,6 +350,20 @@ class KNMainWindow : public KDockMainWindow
 
 private:
   KStatusBarLabel *s_tatusGroup; // widget used in the statusBar() for the group status
+};
+
+
+class  FetchArticleIdDlg : public KDialogBase
+{
+    Q_OBJECT
+public:
+    FetchArticleIdDlg(QWidget *parent, const char */*name*/ );
+    QString messageId() const;
+
+protected slots:
+    void slotTextChanged(const QString & );
+protected:
+    KLineEdit *edit;
 };
 
 #endif // KNODE_H

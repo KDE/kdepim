@@ -2161,17 +2161,10 @@ void KNMainWindow::slotFetchArticleWithID()
   if( !g_rpManager->currentGroup() )
     return;
 
-  KDialogBase *dlg =  new KDialogBase(this, 0, true, i18n("Fetch Article with ID"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok);
-  QHBox *page = dlg->makeHBoxMainWidget();
-
-  QLabel *label = new QLabel(i18n("&Message-ID:"),page);
-  KLineEdit *edit = new KLineEdit(page);
-  label->setBuddy(edit);
-  edit->setFocus();
-  KNHelper::restoreWindowSize("fetchArticleWithID", dlg, QSize(325,66));
+  FetchArticleIdDlg *dlg = new FetchArticleIdDlg(this, "messageid" );
 
   if (dlg->exec()) {
-    QString id = edit->text().simplifyWhiteSpace();
+    QString id = dlg->messageId().simplifyWhiteSpace();
     if (id.find(QRegExp("*@*",false,true))!=-1) {
       if (id.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
         id = QString("<%1>").arg(id);
@@ -2263,5 +2256,30 @@ void KNMainWindow::slotSettings()
 }
 
 //--------------------------------
+
+
+FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
+    :KDialogBase(parent, 0, true, i18n("Fetch Article with ID"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok)
+{
+  QHBox *page = makeHBoxMainWidget();
+
+  QLabel *label = new QLabel(i18n("&Message-ID:"),page);
+  KLineEdit *edit = new KLineEdit(page);
+  label->setBuddy(edit);
+  edit->setFocus();
+  enableButtonOK( false );
+  connect( edit, SIGNAL(textChanged( const QString & )), this, SLOT(slotTextChanged(const QString & )));
+  KNHelper::restoreWindowSize("fetchArticleWithID", this, QSize(325,66));
+}
+
+QString FetchArticleIdDlg::messageId() const
+{
+    return edit->text();
+}
+
+void FetchArticleIdDlg::slotTextChanged(const QString &_text )
+{
+    enableButtonOK( !_text.isEmpty() );
+}
 
 #include "knode.moc"
