@@ -369,7 +369,7 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
       startLineBack->hide();
       endLineBack->hide();
     }
-  if (textCanvas->text() == "")
+  if (textCanvas->text().isEmpty())
     textCanvas->hide();
 }
 void KDGanttViewSummaryItem::initItem()

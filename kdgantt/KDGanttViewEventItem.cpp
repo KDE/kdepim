@@ -247,7 +247,7 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   startShapeBack->show();
   textCanvas->move(startX+2*myItemSize,allY-myItemSize/2 );
   textCanvas->show();
-  if (textCanvas->text() == "")
+  if (textCanvas->text().isEmpty())
     textCanvas->hide();
 }
 void KDGanttViewEventItem::initItem()

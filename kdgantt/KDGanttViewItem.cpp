@@ -33,6 +33,7 @@
  **********************************************************************/
 
 #include "KDGanttViewSubwidgets.h"
+#include <kapplication.h>
 #include "KDGanttViewTaskItem.h"
 #include "KDGanttViewSummaryItem.h"
 #include "KDGanttViewEventItem.h"
@@ -243,27 +244,27 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttViewItem* parentItem,
 
 KDGanttViewItem::~KDGanttViewItem()
 {
-  if ( startLine ) delete startLine;
-  if ( endLine ) delete endLine  ;
-  if ( startLineBack ) delete startLineBack  ;
-  if ( endLineBack ) delete  endLineBack ;
-  if ( actualEnd ) delete actualEnd  ;
-  if ( textCanvas  ) delete textCanvas   ;
-  if ( startShape ) delete  startShape ;
-  if ( midShape ) delete midShape  ;
-  if ( endShape ) delete endShape  ;
-  if ( startShapeBack ) delete startShapeBack  ;
-  if ( midShapeBack ) delete midShapeBack   ;
-  if ( endShapeBack ) delete endShapeBack  ;
-    if ( listView() ) {
-        if ( parent() )
-            parent()->takeItem( this );
-        else
-            myGantView->myListView->takeItem( this );
-        myGantView->myTimeTable->updateMyContent();
-    }
-    myGantView->myTimeTable->removeItemFromTasklinks( this );
-    myGantView->myCanvasView->resetCutPaste( this );
+  delete startLine;
+  delete endLine  ;
+  delete startLineBack  ;
+  delete endLineBack ;
+  delete actualEnd  ;
+  delete textCanvas   ;
+  delete startShape ;
+  delete midShape  ;
+  delete endShape  ;
+  delete startShapeBack  ;
+  delete midShapeBack   ;
+  delete endShapeBack  ;
+  if ( listView() ) {
+     if ( parent() )
+        parent()->takeItem( this );
+     else
+        myGantView->myListView->takeItem( this );
+     myGantView->myTimeTable->updateMyContent();
+  }
+  myGantView->myTimeTable->removeItemFromTasklinks( this );
+  myGantView->myCanvasView->resetCutPaste( this );
 }
 
 
@@ -281,10 +282,10 @@ void KDGanttViewItem::generateAndInsertName( const QString& name )
     QString newName = name;
     // if name is empty, we take the text of the listviewitem
     // or the number of the pointer of this
-    if ( newName == "" )
+    if ( newName.isEmpty() )
         newName =  QListViewItem::text(0);
-    if ( newName == "" )
-        newName.setNum( (uint) this );
+    if ( newName.isEmpty() )
+        newName = KApplication::randomString(7);
     // Append _0 until we find a name that doesn't exist yet
     while( sItemDict.find( newName ) ) {
         newName += "_0";

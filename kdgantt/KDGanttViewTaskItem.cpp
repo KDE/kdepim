@@ -264,7 +264,7 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     textCanvas->move(endX+2*myItemSize,allY-myItemSize/2 );
     textCanvas->show();
   } else {
-    if ( textCanvasText == "" || wid < 5)
+    if ( textCanvasText.isEmpty() || wid < 5)
       textCanvas->hide();
     else {
       textCanvas->move(startX+3, allY-hei/2 +2 );
@@ -275,7 +275,7 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
 	temp.truncate(--len);
 	textCanvas->setText(temp);
       }
-      if ( temp == "")
+      if ( temp.isEmpty() )
 	textCanvas->hide();
       else {
 	textCanvas->show();
