@@ -102,7 +102,7 @@ NullConduit::~NullConduit()
 	}
 
 	QString m=fConfig->readEntry(NullConduitFactory::message);
-	if (!m.isEmpty)
+	if (!m.isEmpty())
 	{
 		addSyncLogEntry(m);
 		emit logMessage(m);
