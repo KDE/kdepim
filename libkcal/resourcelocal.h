@@ -65,6 +65,8 @@ class ResourceLocal : public ResourceCached
 
     KABC::Lock *lock();
 
+    QString fileName() const;
+
     void dump() const;
 
   protected slots:

@@ -212,4 +212,9 @@ void ResourceLocal::dump() const
   kdDebug(5800) << "  Url: " << mURL.url() << endl;
 }
 
+QString ResourceLocal::fileName() const
+{
+  return mURL.path();
+}
+
 #include "resourcelocal.moc"
