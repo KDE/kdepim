@@ -30,6 +30,7 @@
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kurldrag.h>
 #include <kurlrequester.h>
 #include <libkdepim/kpixmapregionselectordialog.h>
 
@@ -68,14 +69,41 @@ void ImageLabel::startDrag()
 
 void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
 {
-  event->accept( QImageDrag::canDecode( event ) );
+  bool accepted = false;
+
+  if ( QImageDrag::canDecode( event ) )
+    accepted = true;
+
+  if ( QUriDrag::canDecode( event ) )
+    accepted = true;
+
+  event->accept( accepted );
 }
 
 void ImageLabel::dropEvent( QDropEvent *event )
 {
-  QPixmap pm;
-  if ( QImageDrag::decode( event, pm ) && !mReadOnly ) {
-    setPixmap( pm );
+  if ( mReadOnly )
+    return;
+
+  if ( QImageDrag::canDecode( event ) ) {
+    QPixmap pm;
+
+    if ( QImageDrag::decode( event, pm ) ) {
+      setPixmap( pm );
+      emit changed();
+    }
+  }
+
+  if ( QUriDrag::canDecode( event ) ) {
+    KURL::List urls;
+    if ( KURLDrag::decode( event, urls ) ) {
+      if ( urls.isEmpty() ) { // oops, no data
+        event->accept( false );
+        return;
+      }
+    }
+
+    emit urlDropped( urls.first() );
     emit changed();
   }
 }
@@ -138,6 +166,8 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 
   connect( mImageLabel, SIGNAL( changed() ),
            SIGNAL( changed() ) );
+  connect( mImageLabel, SIGNAL( urlDropped( const KURL& ) ),
+           SLOT( urlDropped( const KURL& ) ) );
   connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
   connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
@@ -167,8 +197,10 @@ void ImageBaseWidget::setReadOnly( bool readOnly )
 
 void ImageBaseWidget::showBlogButton( bool show )
 {
-  if ( show ) mBlogButton->show();
-  else mBlogButton->hide();
+  if ( show )
+    mBlogButton->show();
+  else
+    mBlogButton->hide();
 }
 
 void ImageBaseWidget::setBlogFeed( const QString &feed )
@@ -221,6 +253,15 @@ KABC::Picture ImageBaseWidget::image() const
   return photo;
 }
 
+void ImageBaseWidget::urlDropped( const KURL &url )
+{
+  mImageUrl->setURL( url.url() );
+  loadImage();
+  mImageUrl->setURL( url.url() );
+
+  emit changed();
+}
+
 void ImageBaseWidget::loadImage()
 {
   mImageLabel->setPixmap( loadPixmap( KURL( mImageUrl->url() ) ) );
@@ -248,7 +289,7 @@ void ImageBaseWidget::clear()
 void ImageBaseWidget::imageChanged()
 {
   updateGUI();
-  
+
   emit changed();
 }
 
@@ -294,7 +335,7 @@ void ImageBaseWidget::getPictureFromBlog()
   if ( mRssLoader ) {
     return;
   }
-  
+
   mRssLoader = RSS::Loader::create();
   connect( mRssLoader, SIGNAL( loadingComplete( Loader *, Document,
     Status ) ),
@@ -325,7 +366,7 @@ void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
   loadImage();
   blockSignals( false );
   imageChanged();
-  
+
   mRssLoader = 0;
 }
 

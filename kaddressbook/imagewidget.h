@@ -57,6 +57,7 @@ class ImageLabel : public QLabel
 
   signals:
     void changed();
+    void urlDropped( const KURL& );
 
   protected:
     virtual void dragEnterEvent( QDragEnterEvent *event );
@@ -103,6 +104,9 @@ class ImageBaseWidget : public QWidget
 
   signals:
     void changed();
+
+  public slots:
+    void urlDropped( const KURL& );
 
   private slots:
     void loadImage();
