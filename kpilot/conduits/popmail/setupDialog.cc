@@ -637,7 +637,7 @@ void PopMailWidgetConfig::load(KConfig *fConfig)
 #define RD(a,b,c,d,e) fConfigWidget->a->b(fConfig->read##c##Entry(d,e))
 	RD(fSendMode,setCurrentItem,Num,PopmailConduitFactory::syncIncoming,(int)NoSend);
 	RD(fEmailFrom,setText,,"EmailAddress",QString::null);
-	RD(fSignature,setURL,,"Signature",QString::null);
+	RD(fSignature,setURL,,"Signature",CSL1("$HOME/.signature"));
 	RD(fLeaveMail,setChecked,Bool,"LeaveMail",true);
 #undef RD
 
