@@ -50,6 +50,9 @@ class KPilotLink;
 // KPilotLink then you need to connect to the command port _BEFORE_ the 
 // hot sync begins. (ie: before the user presses the button...)
 
+class QDragEnterEvent;
+class QDropEvent;
+
 class PilotDaemon;
 
 class PilotDaemonTray : public KSystemTray
@@ -63,6 +66,9 @@ public:
 	void changeIcon(IconShape);
 
 	void enableRunKPilot(bool);
+
+	virtual void dragEnterEvent(QDragEnterEvent *);
+	virtual void dropEvent(QDropEvent *);
 
 protected:
 	void setupWidget();
@@ -207,6 +213,9 @@ private slots:
 #endif
 
 // $Log$
+// Revision 1.16  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.15  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

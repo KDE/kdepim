@@ -87,6 +87,23 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
 {
 	FUNCTIONSETUP;
 	setupWidget();
+	setAcceptDrops(true);
+}
+
+/* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent *e)
+{
+	e->accept(QUriDrag::canDecode(e));
+}
+
+/* virtual */ void PilotDaemonTray::dropEvent(QDropEvent *e)
+{
+	QStrList list;
+	QUriDrag::decode(e, list);
+
+#ifdef DEBUG
+	kdbgstream s = kdDebug(DAEMON_AREA);
+	listStrList(s,list);
+#endif
 }
 
 /* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent *e)
@@ -1217,6 +1234,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.31  2001/02/26 22:09:49  adridg
+// Fixed some exit() calls; extra listener process debugging
+//
 // Revision 1.30  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

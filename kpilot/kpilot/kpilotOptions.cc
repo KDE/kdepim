@@ -438,7 +438,8 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	fStartDaemonAtLogin->setChecked(
 		config.readBoolEntry("StartDaemonAtLogin", false));
 	grid->addMultiCellWidget(fStartDaemonAtLogin,2,2,fieldCol,fieldCol+2);
-	t = locate("apps","Utilities/KPilotDaemon.desktop");
+	// Utilities/KPilotDaemon
+	t = locate("apps","kpilotdaemon.desktop");
 	if (t.isNull())
 	{
 		fStartDaemonAtLogin->setEnabled(false);
@@ -713,6 +714,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.22  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.21  2001/02/19 12:31:23  adridg
 // Removed broken bug-reporting address
 //
