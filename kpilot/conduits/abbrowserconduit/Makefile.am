@@ -17,8 +17,7 @@ libabbrowserconduit_la_SOURCES = \
 	abbrowser-factory.cc \
 	abbrowser-setup.cc \
 	abbrowser-conduit.cc \
-	abbrowserConduitConfig_base.ui \
-	deconflictDialog_base.ui
+	abbrowserConduitConfig_base.ui
 libabbrowserconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
 # You may want to enable debugging like this on systems with broken kdelibs
