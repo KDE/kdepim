@@ -1,6 +1,6 @@
-INCLUDES= -I$(top_srcdir) $(all_includes)
+INCLUDES= -I$(top_srcdir) -I$(top_srcdir)/kalarm $(all_includes)
 
-lib_LTLIBRARIES = libkalarmd.la
+noinst_LTLIBRARIES = libkalarmd.la
 
 libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 libkalarmd_la_LIBADD  = $(LIB_KDECORE)
@@ -29,4 +29,4 @@ autostartdir = $(datadir)/autostart
 app_DATA = kalarmd.desktop
 appdir = $(kde_appsdir)/.hidden
 
-include ../admin/Doxyfile.am
+include ../../admin/Doxyfile.am
