@@ -1,5 +1,5 @@
 
-SUBDIRS = lib overview organizer
+SUBDIRS = lib overview organizer fileview
 
 INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/kitchensync/lib $(all_includes)
 
@@ -15,5 +15,5 @@ kitchensync_SOURCES = ksync_mainwindow.cc \
 	ksync_systemtray.cc \
 	ksync_splash.cc
 
-kitchensync_LDADD = ../lib/libksyncentries.la ../libkonnector/libkonnector.la ./organizer/liborganizerpart.la ./overview/liboverviewpart.la ./lib/libkitchensync.la -lkparts
+kitchensync_LDADD = ../lib/libksyncentries.la ../libkonnector/libkonnector.la ./organizer/liborganizerpart.la ./overview/liboverviewpart.la ./fileview/libfileviewpart.la  ./lib/libkitchensync.la -lkparts
 kitchensync_LDFLAGS = $(KDE_RPATH) $(all_libraries)
