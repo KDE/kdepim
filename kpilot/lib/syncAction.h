@@ -69,7 +69,7 @@ protected:
 	KPilotDeviceLink *fHandle;
 	int fStatus;
 
-	void addSyncLogEntry(const QString &e,bool suppress=false) 
+	void addSyncLogEntry(const QString &e,bool suppress=false)
 		{ fHandle->addSyncLogEntry(e,suppress); } ;
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 } ;
@@ -127,19 +127,25 @@ protected:
 	* Ask a yes-no question of the user. This has a timeout so that
 	* you don't wait forever for inattentive users. It's much like
 	* KMessageBox::questionYesNo(), but with this extra timeout-on-
-	* no-answer feature. Returns a KDialogBase value - Yes,No or
-	* Cancel on timeout.
+	* no-answer feature. Returns a KDialogBase::ButtonCode value - Yes,No or
+	* Cancel on timeout. If there is a key set and the user indicates not to ask again,
+	* the selected answer (Yes or No) is remembered for future reference.
 	*
 	* @p caption Message Box caption, uses "Question" if null.
+	* @p key     Key for the "Don't ask again" code.
 	* @p timeout Timeout, in ms.
 	*/
 	int questionYesNo(const QString &question ,
 		const QString &caption = QString::null,
+		const QString &key = QString::null,
 		unsigned timeout = 20000);
 } ;
 
 
 // $Log$
+// Revision 1.2  2001/10/10 13:40:07  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

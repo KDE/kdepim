@@ -115,10 +115,6 @@ static const char *id =
 #include <dcopclient.h>
 #endif
 
-// These two are XPMs disguised as .h files
-// #include "hotsync.h"
-// #include "busysync.h"
-
 
 #ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
@@ -127,29 +123,18 @@ static const char *id =
 #include "kpilotConfig.h"
 #endif
 
-#include "hotSync.h"
-#include "interactiveSync.h"
+// #include "hotSync.h"
+// #include "interactiveSync.h"
+#include "syncStack.h"
 
 #include "kpilotDCOP_stub.h"
 
 #include "pilotDaemon.moc"
 
-class PilotDaemon::PilotDaemonPrivate 
-{
-private:
-	QStack < SyncAction > SyncActionStack;
 
-public:
-	bool isEmpty() const { return SyncActionStack.isEmpty(); };
-	void clear() { SyncActionStack.clear(); };
-	void addAction(SyncAction * a) { SyncActionStack.push(a); };
-	SyncAction *nextAction() { return SyncActionStack.pop(); };
-};
-
-
-PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) : 
-	KSystemTray(0, "pilotDaemon"), 
-	daemon(p), 
+PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
+	KSystemTray(0, "pilotDaemon"),
+	daemon(p),
 	kap(0L)
 {
 	FUNCTIONSETUP;
@@ -284,14 +269,12 @@ PilotDaemon::PilotDaemon() :
 	fPilotLink(0L),
 	fPilotDevice(QString::null),
 	fNextSyncType(0),
-	fP(0L), 
-	fTray(0L), 
+	fSyncStack(0L),
+	fTray(0L),
 	fInstaller(0L),
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
-
-	fP = new PilotDaemonPrivate;
 
 	fInstaller = new FileInstaller;
 	connect(fInstaller, SIGNAL(filesChanged()),
@@ -635,8 +618,6 @@ QString PilotDaemon::syncTypeString(int i) const
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
-	getKPilot().logMessage(i18n("Starting HotSync ..."));
-
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Starting Sync with type "
@@ -644,23 +625,22 @@ QString PilotDaemon::syncTypeString(int i) const
 		<< " (" << fNextSyncType << ")" << endl;
 #endif
 
-	fP->clear();
-
-	fP->addAction(new CleanupAction(fPilotLink));
-
-	if (KPilotConfig::getConfig().resetGroup().getSyncFiles())
-	{
-		fP->addAction(new FileInstallAction(fPilotLink,
-				fInstaller->dir(), fInstaller->fileNames()));
-	}
+	KPilotConfig::getConfig().setGroup("Conduit Names");
+	QStringList conduits = KPilotConfig::getConfig()
+		.readListEntry("InstalledConduits");
+	fSyncStack = new SyncStack(fPilotLink,
+		&KPilotConfig::getConfig(),
+		conduits,
+		fInstaller->dir(),
+		fInstaller->fileNames());
 
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test:
-		fP->addAction(new TestLink(fPilotLink));
+		fSyncStack->prepare(SyncStack::Test);
 		break;
 	case PilotDaemonDCOP::Backup:
-		fP->addAction(new BackupAction(fPilotLink));
+		fSyncStack->prepareBackup();
 		break;
 	default:
 #ifdef DEBUG
@@ -671,9 +651,14 @@ QString PilotDaemon::syncTypeString(int i) const
 		break;
 	}
 
-	fP->addAction(new CheckUser(fPilotLink, 0L));
+	QObject::connect(fSyncStack, SIGNAL(logError(const QString &)),
+		this, SLOT(logMessage(const QString &)));
+	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
+		this, SLOT(logMessage(const QString &)));
+	QObject::connect(fSyncStack, SIGNAL(syncDone(SyncAction *)),
+		this, SLOT(endHotSync()));
 
-	nextSyncAction(0L);
+	QTimer::singleShot(0,fSyncStack,SLOT(exec()));
 }
 
 /* slot */ void PilotDaemon::logMessage(const QString & s)
@@ -696,58 +681,16 @@ QString PilotDaemon::syncTypeString(int i) const
 	getKPilot().logProgress(s, i);
 }
 
-/* slot */ void PilotDaemon::nextSyncAction(SyncAction * b)
-{
-	FUNCTIONSETUP;
-
-	if (b)
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname
-			<< ": Completed action " << b->name() << endl;
-#endif
-		delete b;
-	}
-
-	if (fP->isEmpty())
-	{
-		endHotSync();
-		return;
-	}
-
-	SyncAction *a = fP->nextAction();
-
-	if (!a)
-		return;
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Will run action " << a->name() << endl;
-#endif
-
-	QObject::connect(a, SIGNAL(logMessage(const QString &)),
-		this, SLOT(logMessage(const QString &)));
-	QObject::connect(a, SIGNAL(logError(const QString &)),
-		this, SLOT(logMessage(const QString &)));
-	QObject::connect(a, SIGNAL(logProgress(const QString &, int)),
-		this, SLOT(logProgress(const QString &, int)));
-	QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
-		this, SLOT(nextSyncAction(SyncAction *)));
-
-	a->exec();
-}
-
-
 /* slot */ void PilotDaemon::endHotSync()
 {
 	FUNCTIONSETUP;
-
-	ASSERT(fP->isEmpty());
 
 	if (fTray)
 	{
 		fTray->changeIcon(PilotDaemonTray::Normal);
 	}
 
+	KPILOT_DELETE(fSyncStack);
 	fPilotLink->close();
 
 	getKPilot().logProgress(i18n("HotSync Completed."), 100);
@@ -879,6 +822,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.54  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.53  2001/10/10 13:40:07  cschumac
 // Compile fixes.
 //

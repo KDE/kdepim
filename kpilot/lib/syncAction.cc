@@ -1,6 +1,7 @@
 /* syncAction.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2001 by Waldo Bastian (code in questionYesNo)
 **
 */
 
@@ -17,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -37,6 +38,7 @@ static const char *syncAction_id =
 #include <qtimer.h>
 #include <qvbox.h>
 #include <qlayout.h>
+#include <qcheckbox.h>
 #include <qlabel.h>
 #include <qmessagebox.h>
 #include <qdir.h>
@@ -48,6 +50,7 @@ static const char *syncAction_id =
 #include <kdialogbase.h>
 #include <kglobal.h>
 #include <kstddirs.h>
+#include <kconfig.h>
 
 #if KDE_VERSION < 300
 #include <kapp.h>
@@ -151,9 +154,29 @@ void InteractiveAction::tickle()
 }
 
 int InteractiveAction::questionYesNo(const QString & text,
-	const QString & caption, unsigned timeout)
+	const QString & caption,
+	const QString & key,
+	unsigned timeout)
 {
 	FUNCTIONSETUP;
+
+	KConfig *config = kapp->config();
+	KConfigGroupSaver cfgs(config,"Notification Messages");
+
+
+	if (!key.isEmpty())
+	{
+		QString prev = config->readEntry(key).lower();
+
+		if (prev == "yes")
+		{
+			return KDialogBase::Yes;
+		}
+		else if (prev == "no")
+		{
+			return KDialogBase::No;
+		}
+	}
 
 	KDialogBase *dialog =
 		new KDialogBase(caption.isNull()? i18n("Question") : caption,
@@ -193,6 +216,13 @@ int InteractiveAction::questionYesNo(const QString & text,
 
 	QSize extraSize = QSize(50, 30);
 
+	QCheckBox *checkbox = 0L;
+	if (!key.isEmpty())
+	{
+		checkbox = new QCheckBox(i18n("Do not ask again"),topcontents);
+		extraSize = QSize(50,0);
+	}
+
 	dialog->setMainWidget(topcontents);
 	dialog->enableButtonSeparator(false);
 	dialog->incInitialSize(extraSize);
@@ -207,12 +237,26 @@ int InteractiveAction::questionYesNo(const QString & text,
 	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;
 #endif
 
-	delete dialog;
+	if (!key.isEmpty() && checkbox && checkbox->isChecked())
+	{
+		if (result == KDialogBase::Yes)
+		{
+			config->writeEntry(key,"Yes");
+		}
+		else if (result == KDialogBase::No)
+		{
+			config->writeEntry(key,"No");
+		}
+	}
 
+	delete dialog;
 	return result;
 }
 
 // $Log$
+// Revision 1.2  2001/10/10 13:40:07  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

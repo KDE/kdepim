@@ -35,6 +35,10 @@
 #include "kpilotlink.h"
 #include "pilotDaemonDCOP.h"
 
+class QDragEnterEvent;
+class QDropEvent;
+
+class KServerSocket;
 class KConfig;
 class KSocket;
 class KProcess;
@@ -43,17 +47,10 @@ class KAboutApplication;
 class PilotRecord;
 class KPilotDCOP_stub;
 
-// Daemon for Palm Pilot syncing.  Note, if you wish to send commands to
-// KPilotLink then you need to connect to the command port _BEFORE_ the 
-// hot sync begins. (ie: before the user presses the button...)
-
-class QDragEnterEvent;
-class QDropEvent;
-
-class KServerSocket;
 
 class PilotDaemon;
 class FileInstaller;
+class SyncStack;
 
 class PilotDaemonTray : public KSystemTray
 {
@@ -150,7 +147,6 @@ protected:
 
 protected slots:
 	void startHotSync();
-	void nextSyncAction(SyncAction *);
 	void endHotSync();
 
 	void logMessage(const QString &);
@@ -168,8 +164,7 @@ private:
 	KPilotDeviceLink::DeviceType fPilotType;
 	int fNextSyncType;
 
-	class PilotDaemonPrivate;
-	PilotDaemonPrivate *fP;
+	SyncStack *fSyncStack;
 
 
 	/**
@@ -206,6 +201,9 @@ private:
 
 
 // $Log$
+// Revision 1.30  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.29  2001/10/08 12:49:11  cschumac
 // kde3 compile fixes.
 //
