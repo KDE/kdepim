@@ -119,7 +119,6 @@ void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const G
 void Kleo::QGpgMEKeyListJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
   if ( context == mCtx ) {
     emit done();
-    // ### hmm, shall we call endKeyListing() or keyListResult() (then t.b.i.) here?
     emit result( mCtx->keyListResult() );
     deleteLater();
   }
