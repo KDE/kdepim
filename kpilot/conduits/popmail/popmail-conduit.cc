@@ -854,11 +854,8 @@ int PopMailConduit::sendViaSendmail()
 	if(pilotRec == 0L)
 	{
 #ifdef DEBUG
-		if (debug_level)
-		{
-			kdDebug() << fname << ": Got a NULL record from "
-				"readNextRecord" << endl;
-		}
+		DEBUGCONDUIT << fname << ": Got a NULL record from "
+			"readNextRecord" << endl;
 #endif
 		break;
 	}
@@ -1975,6 +1972,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.35  2002/01/23 10:14:51  adridg
+// CVS_SILENT: Compile fix on RH72
+//
 // Revision 1.34  2002/01/20 06:46:22  waba
 // Messagebox changes.
 //

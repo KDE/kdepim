@@ -26,11 +26,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *vcalconduit_id = "$Id:$";
+static const char *vcalconduit_id = "$Id$";
 
 #include <options.h>
 
 #include <qdatetime.h>
+#include <qtimer.h>
 
 #include <kconfig.h>
 
@@ -49,9 +50,9 @@ static const char *vcalconduit_id = "$Id:$";
 #define DateListIterator_t QDateListIterator
 #else
 #include <recurrence.h>
-#define Recurrence_t Recurrence
-#define DateList_t DateList
-#define DateListIterator_t DateList::ConstIterator
+#define Recurrence_t KCal::Recurrence
+#define DateList_t KCal::DateList
+#define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
 #include <pilotSerialDatabase.h>
@@ -88,6 +89,58 @@ struct tm writeTm(const QDateTime &dt)
   return t;
 }
 
+class VCalConduit::VCalPrivate
+{
+public:
+	VCalPrivate(KCal::Calendar *buddy);
+
+#ifdef KDE2
+	QList<KCal::Event> fAllEvents;
+#else
+	QPtrList<KCal::Event> fAllEvents;
+#endif
+
+	int updateEvents();
+	void removeEvent(KCal::Event *);
+	KCal::Event *findEvent(recordid_t);
+
+private:
+	KCal::Calendar *fCalendar;
+} ;
+
+VCalConduit::VCalPrivate::VCalPrivate(KCal::Calendar *b) :
+	fCalendar(b)
+{
+	fAllEvents.setAutoDelete(false);
+}
+
+int VCalConduit::VCalPrivate::updateEvents()
+{
+	fAllEvents = fCalendar->getAllEvents();
+	fAllEvents.setAutoDelete(false);
+	return fAllEvents.count();
+}
+
+void VCalConduit::VCalPrivate::removeEvent(KCal::Event *e)
+{
+	fAllEvents.remove(e);
+	fCalendar->deleteEvent(e);
+}
+
+KCal::Event *VCalConduit::VCalPrivate::findEvent(recordid_t id)
+{
+	KCal::Event *event = fAllEvents.first();
+	while(event)
+	{
+		if (event->pilotId() == id) return event;
+		event = fAllEvents.next();
+	}
+
+	return 0L;
+}
+
+
+
 
 VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	const char *n,
@@ -95,15 +148,21 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	ConduitAction(d,n,a),
 	fCalendar(0L),
 	fCurrentDatabase(0L),
-	fPreviousDatabase(0L)
+	fBackupDatabase(0L),
+	fP(0L)
 {
 	FUNCTIONSETUP;
-	(void)vcalconduit_id;
+	(void) vcalconduit_id;
 }
 
 VCalConduit::~VCalConduit()
 {
 	FUNCTIONSETUP;
+
+	KPILOT_DELETE(fP);
+	KPILOT_DELETE(fCurrentDatabase);
+	KPILOT_DELETE(fBackupDatabase);
+	KPILOT_DELETE(fCalendar);
 }
 
 /* virtual */ void VCalConduit::exec()
@@ -144,16 +203,19 @@ VCalConduit::~VCalConduit()
 		"DatebookDB",
 		this,
 		"DatebookDB");
-	fPreviousDatabase = new PilotLocalDatabase("DatebookDB");
+	fBackupDatabase = new PilotLocalDatabase("DatebookDB");
 	fCalendar = new KCal::CalendarLocal();
 
 	// Handle lots of error cases.
 	//
-	if (!fCurrentDatabase || !fPreviousDatabase || !fCalendar) goto error;
+	if (!fCurrentDatabase || !fBackupDatabase || !fCalendar) goto error;
 	if (!fCurrentDatabase->isDBOpen() ||
-		!fPreviousDatabase->isDBOpen()) goto error;
+		!fBackupDatabase->isDBOpen()) goto error;
 	loadSuccesful = fCalendar->load(fCalendarFile);
 	if (!loadSuccesful) goto error;
+
+	fP = new VCalPrivate(fCalendar);
+	fP->updateEvents();
 
 	QTimer::singleShot(0,this,SLOT(syncRecord()));
 	return;
@@ -165,7 +227,7 @@ error:
 			<< ": Couldn't open database on Pilot"
 			<< endl;
 	}
-	if (!fPreviousDatabase)
+	if (!fBackupDatabase)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Couldn't open local copy"
@@ -182,7 +244,7 @@ error:
 
 	emit logError(i18n("Couldn't open the calendar databases."));
 	KPILOT_DELETE(fCurrentDatabase);
-	KPILOT_DELETE(fPreviousDatabase);
+	KPILOT_DELETE(fBackupDatabase);
 	KPILOT_DELETE(fCalendar);
 	emit syncDone(this);
 }
@@ -196,11 +258,12 @@ void VCalConduit::syncRecord()
 
 	if (!r)
 	{
-		QTimer::singleShot(0,this,SLOT(cleanup()));
+		fP->updateEvents();
+		QTimer::singleShot(0,this,SLOT(syncRecord()));
 		return;
 	}
 
-	s = fPreviousDatabase->readRecordById(r->getID());
+	s = fBackupDatabase->readRecordById(r->getID());
 	if (!s)
 	{
 		addRecord(r);
@@ -223,12 +286,20 @@ void VCalConduit::syncRecord()
 	QTimer::singleShot(0,this,SLOT(syncRecord()));
 }
 
+void VCalConduit::syncEvent()
+{
+	FUNCTIONSETUP;
+
+
+	QTimer::singleShot(0,this,SLOT(cleanup()));
+}
+
 void VCalConduit::cleanup()
 {
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fCurrentDatabase);
-	KPILOT_DELETE(fPreviousDatabase);
+	KPILOT_DELETE(fBackupDatabase);
 
 	fCalendar->save(fCalendarFile);
 	KPILOT_DELETE(fCalendar);
@@ -241,16 +312,11 @@ void VCalConduit::addRecord(PilotRecord *r)
 {
 	FUNCTIONSETUP;
 
-	fPreviousDatabase->writeRecord(r);
+	fBackupDatabase->writeRecord(r);
 
 	PilotDateEntry de(r);
-	KCal::Event *e = eventFromRecord(de);
-	e->setOrganizer(fCalendar->getEmail());
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
-	e->setSecrecy(r->isSecret() ?
-		KCal::Event::SecrecyPrivate :
-		KCal::Event::SecrecyPublic);
-
+	KCal::Event *e = new KCal::Event;
+	eventFromRecord(e,de);
 	fCalendar->addEvent(e);
 }
 
@@ -258,19 +324,43 @@ void VCalConduit::deleteRecord(PilotRecord *r, PilotRecord *s)
 {
 	FUNCTIONSETUP;
 
-	KCal::Event *e = findEvent(r->getID());
-	if (e) { fCalendar->deleteEvent(e); }
-	fPreviousDatabase->writeRecord(r);
+	KCal::Event *e = fP->findEvent(r->getID());
+	if (e)
+	{
+		// RemoveEvent also takes it out of the calendar.
+		fP->removeEvent(e);
+	}
+	fBackupDatabase->writeRecord(r);
 }
 
 void VCalConduit::changeRecord(PilotRecord *r,PilotRecord *s)
 {
 	FUNCTIONSETUP;
+
+	PilotDateEntry de(r);
+	KCal::Event *e = findEvent(r->getID());
+	if (e)
+	{
+		eventFromRecord(e,de);
+		fBackupDatabase->writeRecord(s);
+	}
+	else
+	{
+		kdWarning() << k_funcinfo
+			<< ": While changing record -- not found in iCalendar"
+			<< endl;
+
+		addRecord(r);
+	}
 }
 
-KCal::Event *VCalConduit::eventFromRecord(const PilotDateEntry &de)
+KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &de)
 {
-	KCal::Event *e = new KCal::Event;
+	e->setOrganizer(fCalendar->getEmail());
+	e->setSyncStatus(KCal::Incidence::SYNCNONE);
+	e->setSecrecy(de.isSecret() ?
+		KCal::Event::SecrecyPrivate :
+		KCal::Event::SecrecyPublic);
 
 	e->setPilotId(de.getID());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
@@ -458,19 +548,8 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 	}
 }
 
-KCal::Event *VCalConduit::findEvent(recordid_t id)
-{
-	QList<KCal::Event> events = fCalendar->getAllEvents();
-
-	KCal::Event *event = events.first();
-	while(event)
-	{
-		if (event->pilotId() == id) return event;
-		event = events.next();
-	}
-
-	return 0L;
-}
-
-// $Log:$
+// $Log$
+// Revision 1.49  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 

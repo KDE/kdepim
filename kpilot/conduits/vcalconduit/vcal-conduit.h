@@ -53,7 +53,14 @@ public:
 	virtual void exec();
 
 protected slots:
+	/**
+	* This function is called to sync modified records from the Pilot to KOrganizer.
+	*/
 	void syncRecord();
+	/**
+	* This function goes the other way around: KOrganizer -> Pilot.
+	*/
+	void syncEvent();
 	void cleanup();
 
 protected:
@@ -61,7 +68,7 @@ protected:
 	void deleteRecord(PilotRecord *,PilotRecord *);
 	void changeRecord(PilotRecord *,PilotRecord *);
 
-	KCal::Event *eventFromRecord(const PilotDateEntry &);
+	KCal::Event *eventFromRecord(KCal::Event *, const PilotDateEntry &);
 
 	void setStartEndTimes(KCal::Event *,const PilotDateEntry &);
 	void setAlarms(KCal::Event *,const PilotDateEntry &);
@@ -73,12 +80,19 @@ protected:
 protected:
 	KCal::Calendar *fCalendar;
 	PilotSerialDatabase *fCurrentDatabase;
-	PilotLocalDatabase *fPreviousDatabase;
+	PilotLocalDatabase *fBackupDatabase;
 
 	QString fCalendarFile;
 	bool fFirstTime,fDeleteOnPilot;
+
+private:
+	class VCalPrivate;
+	VCalPrivate *fP;
 } ;
 
-// $Log: $
+// $Log$
+// Revision 1.19  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 
 #endif
