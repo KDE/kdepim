@@ -17,7 +17,9 @@ libkmail_bodypartformatter_text_vcard_la_LIBADD  = $(LIB_QT) $(LIB_KABC) \
                                                    ../../../libkdenetwork/libkdenetwork.la
 
 libkmail_bodypartformatter_text_calendar_la_SOURCES = text_calendar.cpp
-libkmail_bodypartformatter_text_calendar_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+libkmail_bodypartformatter_text_calendar_la_LDFLAGS = \
+  $(top_builddir)/libkcal/libkcal.la \
+  $(all_libraries) -module $(KDE_PLUGIN)
 libkmail_bodypartformatter_text_calendar_la_LIBADD  = $(LIB_QT) $(LIB_KABC)
 
 linkdir = $(kde_datadir)/kmail/plugins/bodypartformatter
