@@ -1,8 +1,8 @@
 KDE_CXXFLAGS = -DKPARTS_VERSION
 
-INCLUDES = $(all_includes) \
+INCLUDES = \
   -I$(top_srcdir)/empath/lib \
-  -I$(top_srcdir)/empath/ui
+  -I$(top_srcdir)/empath/ui $(all_includes)
 
 lib_LTLIBRARIES = libEmpathView.la
 
