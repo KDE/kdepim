@@ -201,7 +201,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   sasl_conn_t *conn = NULL;
   sasl_interact_t *client_interact = NULL;
   const char *out = NULL;
-  uint outlen;
+  uint outlen = 0;
   const char *mechusing = NULL;
   QByteArray tmp, challenge;
 
