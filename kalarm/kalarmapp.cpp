@@ -39,6 +39,7 @@
 #include <kfileitem.h>
 #include <kaction.h>
 #include <kstdaction.h>
+#include <kstdguiitem.h>
 #include <kstaticdeleter.h>
 #include <kdebug.h>
 
