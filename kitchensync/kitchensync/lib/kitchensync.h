@@ -35,13 +35,13 @@
 #include "manpartservice.h"
 #include "core.h"
 
-class PartBar;
 class QHBox;
 class QWidgetStack;
 class KSelectAction;
 
 namespace KSync {
 
+class PartBar;
 class KonnectorBar;
 class MainWindow;
 class ActionManager;
