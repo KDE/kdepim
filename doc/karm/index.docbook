@@ -49,10 +49,15 @@
 <holder>Jonathan Singer</holder>
 </copyright>
 
+<copyright>
+<year>2004-2005</year>
+<holder>Mark Bucciarelli</holder>
+</copyright>
+
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-10-16</date>
-<releaseinfo>1.4.1</releaseinfo>
+<date>2005-02-02</date>
+<releaseinfo>1.5.0</releaseinfo>
 
 <abstract><para>&karm; tracks time spent on various tasks.</para></abstract>
 
@@ -81,8 +86,9 @@
 	timer running on the correct task.</para>
 
 <para>&karm; was originally written by Sirtaj Singh Kang. The word
-<quote>karm</quote> means <quote>work</quote> in the author's native
-Punjabi.</para>
+<quote>karm</quote> means <quote>work</quote> or <quote>deeds</quote> in the
+author's native Punjabi and is the same word (but a better transliteration)
+as <quote>karma</quote>.</para>
 
 </chapter>
 
@@ -100,6 +106,11 @@ menu</guimenu>. The standard &Qt; and &kde; command options are
 available, and can be listed by entering
 <userinput><command>karm</command> <option>--help</option></userinput>
 at the command line.</para>
+
+<para>&karm; provides an additional command option that allows you to enter
+the name of the iCalendar file that is used to store your labor history.
+You enter a remote iCalendar file by using http or ftp as part of the file
+name; for example, http://www.mysite.com/mydata/mylabor.ics.</para>
 
 </sect1>
 
@@ -455,9 +466,48 @@ and import its tasks to &karm;, to have them in the industry
 standard <ulink
 url="http://developer.kde.org/documentation/standards/index.html">iCalendar</ulink> 
 format. Having done so, you are able to schedule the tasks in KOrganizer, and account your time 
-to them in &karm;. That's a way of controlling if your project stays in its 
-budget and time thresholds.</para>
+to them in &karm;. That's one way to help ensure your project stays on time
+and under budget.</para>
 
+</sect2>
+
+<sect2 id="dcop"><title>&DCOP;</title>
+
+<para>&DCOP; is the mechanism KDE programs use to communicate with each
+other.  A KDE program provides a list of functions that other programs (a Bash
+script, for example) can use.</para>
+
+<example><title>Bash script that echo's &karm;'s version</title>
+<programlisting>
+	DCOPID=`dcop | grep karm`
+	if [ $DCOPID ]
+	then
+		VERS=`dcop $DCOPID KarmDCOPIface version`
+		echo "&karm; version is $VERS"
+	else
+		echo "&karm; not running"
+	fi
+</programlisting>
+</example>
+
+<para>&karm;'s current &DCOP; interface is currently used mainly for automated
+	testing, so it is very limited.  For the full interface definition, see
+	<link linkend="dcopappendix">&DCOP; Interface Appendix</link>.</para>
+
+<para>To see the full &DCOP; interface of the &karm; version installed on your
+	system, run the following Bash script:</para>
+
+<example><title>List &karm;'s &DCOP; interface to console</title>
+<programlisting>
+	DCOPID=`dcop | grep karm`
+	if [ $DCOPID ]
+	then
+		dcop $DCOPID KarmDCOPIface
+	else
+		echo "&karm; not running"
+	fi
+</programlisting>
+</example>
 </sect2>
 
 <sect2 id="csv-export"><title>Export Totals to CSV</title>
@@ -977,9 +1027,16 @@ which is that it is based on the Xt toolkit.</para>
 </chapter>
 
 <glossary id="glossary">
+
 <glossentry id="gloss-active-task">
 <glossterm>active task</glossterm>
 <glossdef><para>A task which has a timer running.</para></glossdef>
+</glossentry>
+
+<glossentry id="gloss-dcop">
+<glossterm>&DCOP;</glossterm>
+<glossdef><para>The interprocess communication protocol used in KDE.  Short
+for Desktop COmmunication Protocol.</para></glossdef>
 </glossentry>
 
 <glossentry id="gloss-desktop">
@@ -1047,6 +1104,123 @@ times were reset.</para></glossdef> </glossentry>
 &install.compile.documentation;
 
 </sect1>
+
+</appendix>
+
+<appendix id="dcopappendix"><title>&DCOP; Interface</title>
+
+<refentry id="dcop-version">
+<refmeta>
+<refentrytitle>version</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>version</refname>
+<refpurpose>Return &karm;'s version.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+QString version()
+</synopsis>
+</refsynopsisdiv>
+<refsect1>
+<title>Description</title>
+<para><function>version()</function> is a &DCOP; call that returns &karm;'s
+version number; for example 1.5.0.  The version number is returned as a string
+in the typical GNU format of major.minor.bugfix.</para>
+</refsect1>
+</refentry>
+
+<refentry id="dcop-quit">
+<refmeta>
+<refentrytitle>quit</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>quit</refname>
+<refpurpose>Return &karm;'s quit.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+QString quit()
+</synopsis>
+</refsynopsisdiv>
+<refsect1>
+<title>Description</title>
+<para><function>quit()</function> is a &DCOP; call that provides a way that an
+external program can gracefully shutdown &karm;.
+</para>
+</refsect1>
+</refentry>
+
+<refentry id="dcop-hastodo">
+<refmeta>
+<refentrytitle>hastodo</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>hastodo</refname>
+<refpurpose>Check if top-level todo exists.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+QString hastodo(QString taskname)
+</synopsis>
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>taskname</parameter></term>
+<listitem>
+	<para>The name of the todo to look for.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+<refsect1>
+<title>Description</title>
+<para><function>hastodo(QString taskname)</function> is a &DCOP; call that
+	looks for a of the given name.  If found, it returns the
+	iCalendar UID that identifies that todo.  If not found, it returns an empty
+	string.
+</para>
+<para>The iCalendar file that &karm; currently has opened is the file that is
+searched.  All todo trees are searched, not just top-level todo's.  If more
+than one todo has a matching name, the first one found is returned.</para>
+</refsect1>
+</refentry>
+
+<refentry id="dcop-addtodo">
+<refmeta>
+<refentrytitle>addtodo</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>addtodo</refname>
+<refpurpose>Add new todo.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+QString addtodo(QString todoname)
+</synopsis>
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>todoname</parameter></term>
+<listitem>
+	<para>The name of new todo.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+<para><function>addtodo(QString todoname)</function> is a &DCOP; call that
+	adds a new top-level todo to the current storage.  The UID of the new todo
+	is returned.
+</para>
+</refsect1>
+</refentry>
 
 </appendix>
 
