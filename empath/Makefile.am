@@ -70,8 +70,8 @@ empath_SOURCES = \
 	EmpathMenuMaker.cpp \
 	EmpathMessage.cpp \
 	EmpathMessageDataCache.cpp \
-	EmpathMessageDescription.cpp \
-	EmpathMessageDescriptionList.cpp \
+	EmpathIndexRecord.cpp \
+	EmpathIndex.cpp \
 	EmpathMessageDownloadStatus.cpp \
 	EmpathMessageHTMLView.cpp \
 	EmpathMessageList.cpp \
@@ -162,8 +162,8 @@ noinst_HEADERS = \
 	EmpathMenuMaker.h \
 	EmpathMessage.h \
 	EmpathMessageDataCache.h \
-	EmpathMessageDescription.h \
-	EmpathMessageDescriptionList.h \
+	EmpathIndexRecord.h \
+	EmpathIndex.h \
 	EmpathMessageDownloadStatus.h \
 	EmpathMessageHTMLView.h \
 	EmpathMessageList.h \
