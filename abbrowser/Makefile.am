@@ -23,7 +23,7 @@ abbrowser_LDADD = -lkab $(LIB_KFILE)
 noinst_HEADERS = abbrowserapp.h abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h entry.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 
 messages:
-	$(XGETTEXT) $(abbrowser_SOURCES) -o $(podir)/abbrowser.pot
+	$(XGETTEXT) *.cpp -o $(podir)/abbrowser.pot
 
 srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)

@@ -318,7 +318,7 @@ MemoWidget::slotDeleteMemo()
 			": Refusing to delete new memo.\n";
 
 		KMessageBox::error(this, i18n("Hot-Sync Required"), 
-			i18n("Cannot delete new memo until \r\n" 
+			i18n("Cannot delete new memo until \n" 
 				"Hot-Synced with pilot."));
 		return;
 	}
@@ -453,7 +453,7 @@ MemoWidget::slotTextChanged()
       if(currentMemo->id() == 0x0)
 	{
 	  KMessageBox::error(0L,
-			     i18n("Cannot edit new memo until \r\n Hot-Synced with pilot."), 
+			     i18n("Cannot edit new memo until \n Hot-Synced with pilot."), 
 			     i18n("Hot-Sync Required"));
 	  slotShowMemo(fListBox->currentItem());
 	  return;

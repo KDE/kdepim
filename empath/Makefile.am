@@ -38,8 +38,7 @@ dummy.cpp:
 #############################################################################
 
 messages:
-	$(XGETTEXT) -C -kI18N_NOOP -ki18n -x $(includedir)/kde.pot \
-	-o $(podir)/empath.pot */*.cpp *.cpp
+	$(XGETTEXT) */*.cpp *.cpp -o $(podir)/empath.pot
 
 #############################################################################
 # Extra data to install

@@ -86,7 +86,7 @@ PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, 
    // Die Buttons "Ok" & "Cancel" erzeugen
    //
    QPushButton *b1, *b2;
-   b1 = new QPushButton(i18n("Ok"), this);
+   b1 = new QPushButton(i18n("OK"), this);
    b1->setGeometry( 10, 90, 80, 30 );
    
    b2 = new QPushButton(i18n("Cancel"), this);

@@ -44,8 +44,7 @@ twister_LDADD = \
 #############################################################################
 
 messages:
-	$(XGETTEXT) -C -kI18N_NOOP -ki18n -x $(includedir)/kde.pot \
-	-o $(podir)/twister.pot */*.cpp *.cpp
+	$(XGETTEXT) */*.cpp *.cpp -o $(podir)/twister.pot
 
 #############################################################################
 # Extra data to install
