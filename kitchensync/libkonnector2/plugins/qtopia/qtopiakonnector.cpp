@@ -144,7 +144,7 @@ Kapabilities QtopiaKonnector::capabilities()
 
 SynceeList QtopiaKonnector::syncees()
 {
-  return SynceeList();
+  return mSynceeList;
 }
 
 bool QtopiaKonnector::readSyncees()
@@ -186,13 +186,14 @@ QString QtopiaKonnector::iconName() const
 bool QtopiaKonnector::writeSyncees()
 {
   kdDebug(5201) << " writing it now " << endl;
-  d->socket->write( SynceeList() );
+  d->socket->write( mSynceeList );
   return true;
 }
 
 /* private slots for communication here */
-void QtopiaKonnector::slotSync( SynceeList )
+void QtopiaKonnector::slotSync( SynceeList list )
 {
+  mSynceeList = list;
   emit synceesRead( this );
 }
 

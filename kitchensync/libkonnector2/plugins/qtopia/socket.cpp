@@ -419,7 +419,7 @@ void QtopiaSocket::writeCategory()
     QString fileName = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId + "/categories.xml";
     d->edit->save( fileName );
     KURL uri = url(  d->path + "/Settings/Categories.xml" );
-    KIO::NetAccess::upload( fileName,  uri );
+    KIO::NetAccess::upload( fileName,  uri, 0 );
 }
 
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
@@ -429,7 +429,7 @@ void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
     KTempFile* file = abDB.fromKDE( syncee, d->extras );
     KURL uri = url( AddressBook );
 
-    KIO::NetAccess::upload( file->name(), uri );
+    KIO::NetAccess::upload( file->name(), uri, 0 );
     file->unlink();
     delete file;
 
@@ -447,7 +447,7 @@ void QtopiaSocket::writeDatebook( EventSyncee* syncee )
     KTempFile* file = dbDB.fromKDE( syncee, d->extras );
     KURL uri = url( DateBook );
 
-    KIO::NetAccess::upload( file->name(), uri );
+    KIO::NetAccess::upload( file->name(), uri, 0 );
     file->unlink();
     delete file;
 
@@ -465,7 +465,7 @@ void QtopiaSocket::writeTodoList( TodoSyncee* syncee)
     KTempFile* file = toDB.fromKDE( syncee, d->extras );
     KURL uri = url( TodoList );
 
-    KIO::NetAccess::upload( file->name(), uri );
+    KIO::NetAccess::upload( file->name(), uri, 0 );
     file->unlink();
     delete file;
 
@@ -843,7 +843,7 @@ void QtopiaSocket::readTimeZones()
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest )
 {
     KURL uri = url( d->path + str );
-    bool b = KIO::NetAccess::download( uri, dest );
+    bool b = KIO::NetAccess::download( uri, dest, 0 );
     kdDebug(5225) << "Getting " << str << " " << b << endl;
     return b;
 }

@@ -82,6 +82,8 @@ class QtopiaKonnector : public Konnector
     QString mModel;
     QString mModelName;
 
+    SynceeList mSynceeList;
+
     /* for compiling purposes */
     class Private;
     Private *d;
