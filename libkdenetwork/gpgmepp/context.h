@@ -136,6 +136,7 @@ namespace GpgME {
     Key nextKey( GpgME::Error & e );
     
     KeyListResult endKeyListing();
+    KeyListResult keyListResult() const;
 
     Key key( const char * fingerprint, GpgME::Error & e, bool secret=false );
 

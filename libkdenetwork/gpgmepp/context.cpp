@@ -269,6 +269,10 @@ namespace GpgME {
 
   KeyListResult Context::endKeyListing() {
     d->lasterr = gpgme_op_keylist_end( d->ctx );
+    return keyListResult();
+  }
+
+  KeyListResult Context::keyListResult() const {
     return KeyListResult( d->ctx, d->lasterr );
   }
 
