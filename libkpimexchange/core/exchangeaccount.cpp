@@ -241,11 +241,7 @@ void ExchangeAccount::slotFolderResult( KIO::Job * job )
     return;
   }
   QString calendar = calElement.text();
-  mCalendarURL = new KURL( calendar );
-  if ( mCalendarURL->protocol() == "https" )
-    mCalendarURL->setProtocol("webdavs");
-  else
-    mCalendarURL->setProtocol("webdav");
+  mCalendarURL = toDAV( new KURL( calendar ) );
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
 }
 
@@ -289,12 +285,8 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& use
         kdWarning() << "Strange, could not get URL from " << mailboxString << " in line " << line << endl;
         continue;
       }
-      if ( mailbox.protocol() == "https" )
-        mailbox.setProtocol("webdavs");
-      else
-        mailbox.setProtocol("webdav");
       kdDebug() << "Found mailbox: " << mailbox.prettyURL( -1 ) << endl;
-      result = mailbox.prettyURL( -1 ); // Strip ending slash from URL, if present
+      result = toDAV( mailbox ).prettyURL( -1 ); // Strip ending slash from URL, if present
     }
     file.close();
 

@@ -67,3 +67,22 @@ QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
   int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
   return zone.addSecs( - offset );
 }
+
+KURL toDAV( const KURL& url ) {
+  KURL result( url );
+  if ( result.protocol() == "http" )
+    result.setProtocol( "webdav" );
+  else if ( result.protocol() = "https" )
+    result.setProtocol( "https" );
+  return result;
+}
+
+KURL* toDAV( const KURL* url ) {
+  KURL* result = new KURL( *url );
+  if ( result->protocol() == "http" )
+     result->setProtocol( "webdav" );
+  else if (  result->protocol() = "https" )
+     result->setProtocol( "https" );
+  return result;
+}
+

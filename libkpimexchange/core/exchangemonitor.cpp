@@ -157,8 +157,7 @@ void ExchangeMonitor::addWatch( const KURL &url, int mode, int depth )
 
   kdDebug() << "Headers: " << headers << endl;
 
-  KURL myURL = url;
-  myURL.setProtocol( "webdav" );
+  KURL myURL = toDAV( url );
   KIO::DavJob *job = new KIO::DavJob( myURL, (int) KIO::DAV_SUBSCRIBE, QString::null, false );
   job->addMetaData( "customHTTPHeader", headers );
   job->addMetaData( "PropagateHttpHeader", "true" );
@@ -167,8 +166,7 @@ void ExchangeMonitor::addWatch( const KURL &url, int mode, int depth )
 
 void ExchangeMonitor::removeWatch( const KURL &url ) 
 {
-  KURL myURL = url;
-  myURL.setProtocol("webdav");
+  KURL myURL = toDAV( url );
   QMap<ID,KURL>::Iterator it;
   for ( it = mSubscriptionMap.begin(); it != mSubscriptionMap.end(); ++it ) {
     if ( it.data() == myURL ) {
@@ -217,8 +215,7 @@ void ExchangeMonitor::slotSubscribeResult( KIO::Job * job )
       id = value.toLong();
       gotID = true;
     } else if ( tag == "content-location" ) {
-      url = value;
-      url.setProtocol( "webdav" );
+      url = toDAV( value );
       gotURL = true;
     }
   }
