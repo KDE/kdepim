@@ -671,15 +671,22 @@ void EditAlarmDlg::getEvent(KAlarmEvent& event)
 			mAlarmDateTime = event.startDateTime();
 			if (mDeferDateTime.isValid()  &&  mDeferDateTime < mAlarmDateTime)
 			{
+				bool deferral = true;
 				bool deferReminder = false;
 				int reminder = mReminder->getMinutes();
 				if (reminder)
 				{
 					DateTime remindTime = mAlarmDateTime.addMins(-reminder);
-					if (mDeferDateTime > remindTime)
-						deferReminder = true;
+					if (mDeferDateTime >= remindTime)
+					{
+						if (remindTime > QDateTime::currentDateTime())
+							deferral = false;    // ignore deferral if it's after next reminder
+						else if (mDeferDateTime > remindTime)
+							deferReminder = true;    // it's the reminder which is being deferred
+					}
 				}
-				event.defer(mDeferDateTime, deferReminder, false);
+				if (deferral)
+					event.defer(mDeferDateTime, deferReminder, false);
 			}
 		}
 	}
