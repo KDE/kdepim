@@ -20,14 +20,9 @@ class ConduitApp : protected KApplication
   Q_OBJECT
 
 public:
-  // ConduitApp(int& argc, char** argv);
 	ConduitApp(int& argc, 
 		char** argv, 
-#ifdef KDE2
 		const QCString& rAppName,
-#else
-		const QString& rAppName,
-#endif
 		const char *banner);
 
   void setConduit(BaseConduit* conduit);

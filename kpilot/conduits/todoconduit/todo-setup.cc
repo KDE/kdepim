@@ -24,22 +24,14 @@ static const char *id="$Id$";
 #include "todo-setup.moc"
 #include "kpilot.h"
 
-/* virtual */ const char *TodoSetup::groupName()
-{
-	return configGroup();
-}
 
-/* static */ const char *TodoSetup::configGroup()
-{
-	return "Todo Conduit";
-}
+/* static */ const QString TodoSetup::TodoGroup("todoOptions");
 
 TodoSetup::TodoSetup(QWidget *parent)
-  : setupDialog(parent,"totoOptions",TodoConduit::version())
+  : setupDialog(parent,TodoGroup,TodoConduit::version())
 {
 	FUNCTIONSETUP;
-	KConfig *config=kapp->getConfig();
-	config->setGroup(configGroup());
+	KConfig *config=KPilotLink::getConfig(TodoGroup);
 	addPage(new TodoSetupPage(this,config));
 	addPage(new setupInfoPage(this,
 		TodoConduit::version(),
@@ -48,11 +40,6 @@ TodoSetup::TodoSetup(QWidget *parent)
 	setupDialog::setupWidget();
 }
 
-
-/* virtual */ const char *TodoSetupPage::tabName()
-{
-	return "Todo File";
-}
 
 int TodoSetupPage::commitChanges(KConfig *config)
 {
@@ -80,7 +67,7 @@ void TodoSetupPage::slotBrowse()
 }
 
 TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig *config) :
-	setupDialogPage(parent,config)
+	setupDialogPage(i18n("ToDo File"),parent,config)
 {
 	FUNCTIONSETUP;
 

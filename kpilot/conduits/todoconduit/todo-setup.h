@@ -25,7 +25,6 @@ public:
 	TodoSetupPage(setupDialog *,KConfig *);
 
 	virtual int commitChanges(KConfig *);
-	virtual const char *tabName();
 
 public slots:
 	void slotBrowse();
@@ -41,11 +40,12 @@ class TodoSetup : public setupDialog
 {
 	Q_OBJECT
 
+friend class TodoConduit;
 public:
 	TodoSetup(QWidget *parent=0L);
-  
-	static const char *configGroup();
-	virtual const char *groupName();
+
+protected:
+	static const QString TodoGroup;
 };
 
 #endif

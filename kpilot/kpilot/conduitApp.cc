@@ -83,11 +83,7 @@ BaseConduit::eConduitMode ConduitApp::handleOptions(const char *banner,
 ConduitApp::ConduitApp(
 	int& argc, 
 	char** argv, 
-#ifdef KDE2
-	const QCString &rAppName,
-#else
-	const QString& rAppName,
-#endif
+	const QCString& rAppName,
 	const char *banner)
   : KApplication(argc, argv, rAppName), fConduit(0L)
 {

@@ -7,7 +7,7 @@
 // COPYING. 
 //
 //
-// $Revision$
+// This is setupDialog.cc for KDE 2 / KPilot 4
 
 
 // This is the setup dialog for null-conduit.
@@ -16,21 +16,40 @@
 //
 //
 
+#include "options.h"
 
+#ifdef KDE2
+#include <stream.h>
+#include <qlabel.h>
+#include <qlineedit.h>
+#include <kconfig.h>
+#include <klocale.h>
+#include "kpilotlink.h"
+#include "setupDialog.moc"
+#else
 // KDE standard includes
 //
 //
 #include <kconfig.h>
 #include <kapp.h>
 #include <stream.h>
+
+
+
 // KPilot standard includes
 //
 //
 #include "kpilot.h"
+#include "options.h"
+
+
+
 // null-conduit specific includes
 //
 //
 #include "setupDialog.moc"
+#include "null-conduit.h"
+#endif
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -46,25 +65,13 @@ static char *id="$Id$";
 //
 #define max(a,b) ((a)>(b) ? (a) : (b))
 
-// groupName returns the group that
-// our configuration options go in.
-//
-//
-/* virtual */ const char *NullOptions::groupName() 
-{
-	return configGroup();
-}
-
-/* static */ const char *NullOptions::configGroup() 
-{
-	return "NULL Conduit";
-}
+/* static */ const QString NullOptions::NullGroup("Null-conduit Options");
 
 NullOptions::NullOptions(QWidget *parent) :
-	setupDialog(parent, "Null-conduit Options",0L)
+	setupDialog(parent, NullGroup,0L)
 {
 	FUNCTIONSETUP;
-	KConfig *config=kapp->getConfig();
+	KConfig *config=KPilotLink::getConfig(NullGroup);
 
 	addPage(new NullPage(this,config));
 	addPage(new setupInfoPage(this,
@@ -75,6 +82,8 @@ NullOptions::NullOptions(QWidget *parent) :
 			"You can attach it to databases you don't want "
 			"to synchronize.")));
 	setupDialog::setupWidget();
+
+	delete config;
 }
 
   
@@ -94,17 +103,17 @@ int NullPage::commitChanges(KConfig *config)
 
 
 NullPage::NullPage(setupDialog *parent, KConfig *config) :
-	setupDialogPage(parent,config)
+	setupDialogPage(i18n("Null Conduit"),parent,config)
 {
 	FUNCTIONSETUP;
 
-	generalLabel=new QLabel(klocale->translate(
+	generalLabel=new QLabel(i18n(
 		"The NULL conduit doesn't actually do anything."),
 		this);
 	generalLabel->adjustSize();
 	generalLabel->move(10,14);
 
-	textFieldLabel=new QLabel(klocale->translate("Log message:"),
+	textFieldLabel=new QLabel(i18n("Log message:"),
 		this);
 	textFieldLabel->adjustSize();
 	textFieldLabel->move(10,BELOW(generalLabel));
@@ -116,12 +125,20 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 
 }
 
-/* virtual */ const char *NullPage::tabName()
-{
-	return "Null Conduit";
-}
 
 // $Log$
+// Revision 1.7  2000/07/19 20:12:06  adridg
+// Added KDE2 code
+//
+// Revision 1.6  2000/07/13 18:08:42  adridg
+// Restructuring and sanitation of config files
+//
+// Revision 1.5  2000/07/10 21:23:33  adridg
+// Adjusted to changes in setupDialog class
+//
+// Revision 1.4  2000/05/21 00:40:36  adridg
+// Changed to reflect new debug guidelines
+//
 // Revision 1.3  2000/01/23 23:13:59  adridg
 // Unified dialog layout
 //

@@ -11,12 +11,15 @@
 #include <iostream.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include <qbitarray.h>
 #include <qdir.h>
 #include <qdatetm.h>
 #include <qstring.h>
-#include <kapp.h>
 #include <qmsgbox.h>
+
+#include <kconfig.h>
+#include <kapp.h>
 
 #include "kpilotlink.h"
 #include "pilotDatabase.h"
@@ -64,10 +67,10 @@ VCalConduit::VCalConduit(eConduitMode mode)
   first = config->readBoolEntry("FirstTime", TRUE);
 
   if ((fMode == BaseConduit::HotSync) || (fMode == BaseConduit::Backup)) {
-    fCalendar = Parse_MIME_FromFileName(calName.data());
+    fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
 
     if(fCalendar == 0L) {
-      QString message(1000);
+      QString message;
       message.sprintf("The VCalConduit could not open the file %s.\n "
 		      "Please configure the conduit with the correct filename and try again",calName.data());
       QMessageBox::critical(0, "KPilot vCalendar Conduit Fatal Error",
@@ -90,7 +93,7 @@ VCalConduit::~VCalConduit()
 
 /* static */ const char *VCalConduit::version()
 {
-	return i18n("VCal Conduit v" VERSION);
+	return i18n("VCal Conduit v2.0");
 }
 
 void VCalConduit::doBackup()
@@ -544,7 +547,7 @@ void VCalConduit::saveVCal()
 	QString calName = config->readEntry("CalFile");
 	if (fCalendar)
 	{
-		writeVObjectToFile(calName.data(), fCalendar);  
+		writeVObjectToFile((char*)calName.data(), fCalendar);  
 	}
 }
 

@@ -34,8 +34,6 @@ public:
 
 	virtual int commitChanges(KConfig *);
 
-	virtual const char *tabName();
-
 private:
 	QLabel *textFieldLabel;
 	QLineEdit *textField;
@@ -46,11 +44,12 @@ class NullOptions : public setupDialog
 {
 	Q_OBJECT
 
+friend class NullConduit;
 public:
 	NullOptions(QWidget *parent);
 
-	static const char *configGroup();
-	virtual const char *groupName();
+protected:
+	static const QString NullGroup;
 };
 
 #endif

@@ -15,6 +15,7 @@
 #include <qstring.h>
 #include <kapp.h>
 #include <qmsgbox.h>
+#include <kconfig.h>
 
 #include "kpilotlink.h"
 #include "pilotDatabase.h"
@@ -24,6 +25,8 @@
 #include "todo-conduit.h"
 #include "todo-setup.h"
 #include "conduitApp.h"
+
+#include "options.h"
 
 // globals
 bool first = TRUE;
@@ -38,26 +41,28 @@ int main(int argc, char* argv[])
   logfile = fopen(fileName.data(), "w+");
   fprintf(logfile, "todoconduit log file opened for writing\n");
   fflush(logfile);
-  ConduitApp a(argc, argv, "todo_conduit");
+  ConduitApp a(argc, argv, "todo_conduit",
+  	"\t\ttodo_conduit -- A conduit for KPilot\n");
   TodoConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
 }
 
+
 TodoConduit::TodoConduit(eConduitMode mode)
   : BaseConduit(mode)
 {
   fCalendar = 0L;
-  KConfig* config = kapp->getConfig();
-  config->setGroup("Todo Conduit");
+  KConfig* config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+
   QString calName = config->readEntry("CalFile");
   first = config->readBoolEntry("FirstTime", TRUE);
 
   if ((fMode == BaseConduit::HotSync) || (fMode == BaseConduit::Backup)) {
-    fCalendar = Parse_MIME_FromFileName(calName.data());
+    fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
 
     if (fCalendar == 0L) {
-      QString message(1000);
+      QString message;
       message.sprintf("The TodoConduit could not open the file %s.\n "
 		      "Please configure the conduit with the correct "
 		      "filename and try again",calName.data());
@@ -78,17 +83,12 @@ TodoConduit::~TodoConduit()
   fflush(logfile);
   fclose(logfile);
 
-  // This is handled in the setup dialog now.  - DP
-//   KConfig *config = kapp->getConfig();
-//   config->setGroup("Todo Conduit");
-//   config->writeEntry("FirstTime", "false");
-//   config->sync();
 }
 
 
 /* static */ const char *TodoConduit::version()
 {
-	return "ToDo Conduit v1.0";
+	return "ToDo Conduit v2.0";
 }
 
 void TodoConduit::doBackup()
@@ -337,11 +337,15 @@ void TodoConduit::deleteVObject(PilotRecord *rec)
 
 void TodoConduit::saveTodo()
 {
-  KConfig* config = kapp->getConfig();
-  config->setGroup("Todo Conduit");
-  QString calName = config->readEntry("CalFile");
-  if (fCalendar)
-    writeVObjectToFile(calName.data(), fCalendar);  
+	FUNCTIONSETUP;
+
+	KConfig* config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	QString calName = config->readEntry("CalFile");
+
+	if (fCalendar)
+	{
+		writeVObjectToFile((char*)calName.latin1(), fCalendar);  
+	}
 }
 
 void TodoConduit::doLocalSync()

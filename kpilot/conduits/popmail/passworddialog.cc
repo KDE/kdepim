@@ -58,7 +58,7 @@ PasswordDialog::PasswordDialog(const char *head, QWidget* parent, const char* na
    //
    // Die eine oder zwei Zeile(n) mit der Passwortabfrage
    //
-   QLabel *l_password = new QLabel(klocale->translate("Password"), this);
+   QLabel *l_password = new QLabel(i18n("Password"), this);
    l_password->setGeometry( 10, 40, 80, 30 );
    
    _w_password = new QLineEdit( this );
@@ -86,10 +86,10 @@ PasswordDialog::PasswordDialog(const char *head, QWidget* parent, const char* na
    // Die Buttons "Ok" & "Cancel" erzeugen
    //
    QPushButton *b1, *b2;
-   b1 = new QPushButton(klocale->translate("Ok"), this);
+   b1 = new QPushButton(i18n("Ok"), this);
    b1->setGeometry( 10, 90, 80, 30 );
    
-   b2 = new QPushButton(klocale->translate("Cancel"), this);
+   b2 = new QPushButton(i18n("Cancel"), this);
    b2->setGeometry( 110, 90, 80, 30 );
    
    // Buttons mit Funktionaliataet belegen
@@ -97,7 +97,7 @@ PasswordDialog::PasswordDialog(const char *head, QWidget* parent, const char* na
    connect( b2, SIGNAL(clicked()), SLOT(reject()) );
    
    // Fenstertitel
-   setCaption(klocale->translate("Password"));
+   setCaption(i18n("Password"));
    
    // Focus
    _w_password->setFocus();

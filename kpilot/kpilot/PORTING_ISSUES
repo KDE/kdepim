@@ -10,3 +10,6 @@ _ pilotDaemon.cc drag and drop issues
 x pilotDaemon.cc docking issues (Dan - 7/26/00)
 _ pilotDaemon.cc KFM issues
 x Add pilotInstalls, pilotdbs, and conduits to resource dirs (Dan - 7/26/00 removed)
+_ Should port the popmail conduit to use the kio slave...
+_ Should port popmail-conduit/passworddialg.cc to kde password thingee
+_ Should clean up popmail-conduit to use long version of qt includes

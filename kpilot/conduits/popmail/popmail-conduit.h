@@ -14,7 +14,6 @@
 #define _POPMAIL_CONDUIT_H
 
 #include "baseConduit.h"
-#include <kmsgbox.h>
 #include "pi-mail.h"
 
 class PilotRecord;
@@ -30,6 +29,8 @@ public:
 
   virtual const char* dbInfo() { return "MailDB"; }
 
+	virtual QPixmap *icon() const;
+
 	/**
 	* Returns a string describing the version of
 	* the popmail conduit being used. This is used
@@ -39,6 +40,10 @@ public:
 
 
 	typedef enum RetrievalMode { NONE=0, POP=1, UNIXMailbox=2 } ;
+	typedef enum SendMode { SEND_NONE=0,
+		SEND_SENDMAIL=7,
+		SEND_SMTP=12
+		} ;
 
 
 	static PilotRecord *readMessage(FILE *mailbox,
@@ -48,27 +53,34 @@ protected:
 	// Pilot -> Sendmail
 	//
 	//
-	void sendPendingMail(int mode /* unused */);
-	void sendViaSendmail();
-	void sendViaSMTP();
+	int sendPendingMail(int mode /* unused */);
+	int sendViaSendmail();
+	int sendViaSMTP();
 	void sendMessage(FILE* sendf, struct Mail& theMail);
 
 
 	// Local mail -> Pilot
 	//
 	//
-	void retrieveIncoming(int mode);
-	void doPopQuery();
+	int retrieveIncoming(int mode);
+	int doPopQuery();
 	int doUnixStyle();
 
-  // Just a convienience function
-  void showMessage(char* message)
-    { KMsgBox::message(0L, "Error retrieving mail", message, KMsgBox::STOP); }
 
   // Taken from pilot-mail.c in pilot-link.0.8.7 by Kenneth Albanowski
   int getpopchar(int socket);
   int getpopstring(int socket, char * buf);
   int getpopresult(int socket, char * buf);
+
+	// Helper functions for the POP mail handler
+	//
+	//
+	typedef enum { POP_DELE=16 } retrieveFlags ;
+	void retrievePOPMessages(KSocket *,
+		int const msgcount,
+		int const flags,
+		char *buffer, int const buffer_size);
+
 	static char* skipspace(char * c);
 	static void header(struct Mail * m, char * t);
 

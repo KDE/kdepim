@@ -7,8 +7,8 @@
    *******************************************************
  */
 
-#ifndef __KPILOT_DATE_ENTRY_H
-#define __KPILOT_DATE_ENTRY_H
+#ifndef KPILOT_DATE_ENTRY_H
+#define KPILOT_DATE_ENTRY_H
 
 #include <qbitarray.h>
 #include <time.h>
@@ -89,7 +89,7 @@ public:
   
 protected:
   void *pack(void *, int *);
-  void unpack(void *, int = 0) { }
+  void unpack(const void *, int = 0) { }
   
 private:
   struct Appointment fAppointmentInfo;

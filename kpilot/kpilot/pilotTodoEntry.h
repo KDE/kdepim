@@ -51,7 +51,7 @@ public:
   
 protected:
   void *pack(void *, int *);
-  void unpack(void *, int = 0) { }
+  void unpack(const void *, int = 0) { }
   
 private:
   struct ToDo fTodoInfo;

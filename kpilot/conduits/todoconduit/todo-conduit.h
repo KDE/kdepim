@@ -24,6 +24,7 @@ public:
   
 	static const char *version();
 
+
 protected:
   void doLocalSync();
   PilotRecord *findEntryInDB(unsigned int id);

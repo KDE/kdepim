@@ -6,7 +6,7 @@
 // The GPL should have been included with this file in a file called
 // COPYING. 
 //
-// $Revision$
+// This is the version of null-conduit.cc for KDE 2 / KPilot 4
 
 
 // The NULL conduit is a conduit that does nothing.
@@ -18,9 +18,26 @@
 
 
 
+#include "options.h"
+
+#ifdef KDE2
+// Only include what we really need:
+// First UNIX system stuff, then std C++, 
+// then Qt, then KDE, then local includes.
+//
+//
+#include <stream.h>
+#include <kmessagebox.h>
+#include <kconfig.h>
+#include "conduitApp.h"
+#include "kpilotlink.h"
+#include "null-conduit.h"
+#include "setupDialog.h"
+#else
 // KDE standard includes 
 //
 //
+#include <stream.h>
 #include <qdir.h>
 #include <kapp.h>
 #include <kconfig.h>
@@ -38,6 +55,7 @@
 //
 #include "null-conduit.h"
 #include "setupDialog.h"
+#endif
 
 
 // Something to allow us to check what revision
@@ -54,7 +72,9 @@ static char *id="$Id$";
 //
 int main(int argc, char* argv[])
 {
-	ConduitApp a(argc, argv, "null-conduit");
+	ConduitApp a(argc, argv, "null-conduit",
+		"\t\tNull-Conduit -- A conduit for KPilot\n"
+		"Copyright (C) 2000 Adriaan de Groot");
 
 	if (a.getMode() != BaseConduit::Error)
 	{
@@ -95,12 +115,17 @@ NullConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = kapp->getConfig();
-	config->setGroup(NullOptions::configGroup());
-	// pilotLink->addSyncLogEntry(config->readEntry("Text"));
+	KConfig* config = KPilotLink::getConfig();
+	config->setGroup(NullOptions::NullGroup);
+
+	QString m=config->readEntry("Text");
+	addSyncLogMessage(m);
 
 	cerr << fname << ": Message from null-conduit:\n"
-		<< fname << ": " << config->readEntry("Text");
+		<< fname << ": " << m
+		<< endl;
+
+	delete config;
 }
 
 // aboutAndSetup is pretty much the same
@@ -116,6 +141,21 @@ NullConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.8  2000/07/20 21:29:42  adridg
+// Minor KDE1 & KDE2 interoperability issues
+//
+// Revision 1.7  2000/07/19 20:12:06  adridg
+// Added KDE2 code
+//
+// Revision 1.6  2000/07/13 18:08:42  adridg
+// Restructuring and sanitation of config files
+//
+// Revision 1.5  2000/07/10 21:23:33  adridg
+// Adjusted to changes in setupDialog class
+//
+// Revision 1.4  2000/05/21 00:42:53  adridg
+// Changed to reflect new debug guidelines and usage()
+//
 // Revision 1.3  2000/01/23 23:13:59  adridg
 // Unified dialog layout
 //

@@ -1,13 +1,18 @@
 // popmail-conduit.cc
 //
-// Copyright (C) 1998,1999 Dan Pilone
-// Copyright (C) 1999 Michael Kropfberger
+// Copyright (C) 1998,1999,2000 Dan Pilone
+// Copyright (C) 1999,2000 Michael Kropfberger
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
 // COPYING. 
 //
 // $Revision$
+
+// Note that there are still some internationalisation issues
+// in the messages sent to the pilot as part of the log.
+//
+//
 
 // This is an old trick so you can determine what revisions
 // make up a binary distribution.
@@ -18,16 +23,22 @@ static char *id="$Id$";
 
 #include <sys/types.h>
 #include <sys/socket.h> 
+#include <ctype.h>
 
 #include <qdir.h>
+#include <qtextstream.h>
+
 #include <iostream.h>
 #include <kapp.h>
 #include <kconfig.h>
-#include <kmsgbox.h>
+#include <kmessagebox.h>
 #include <ksock.h>
+#include <kiconloader.h>
+
 #include "conduitApp.h"
 #include "pi-source.h"
 #include "pi-mail.h"
+#include "pi-dlp.h"
 #include "passworddialog.h"
 #include "popmail-conduit.h"
 #include "setupDialog.h"
@@ -38,16 +49,176 @@ extern time_t parsedate(char * p);
 }
 
 
-
-
-
-int main(int argc, char* argv[])
-{
-  ConduitApp a(argc, argv, "popmail-conduit");
-  PopMailConduit conduit(a.getMode());
-  a.setConduit(&conduit);
-  return a.exec();
+// Just a convienience function [that doesn't
+// belong in the class interface]
+//
+//
+void showMessage(const char *message)
+{ 
+  KMessageBox::error(0L, message, "Error retrieving mail");
 }
+
+
+// Errors returned from getXXResponse()
+// and interpreted by showResponse():
+//
+//
+#define	TIMEOUT	(-2)
+#define PERROR	(-3)
+
+#define BADPOP	(-333)
+
+// This is a convenience function, that displays 
+// a message with either
+//
+//	* an error text describing the error if ret < 0,
+//	  errors as described by getXXXResponse
+//	* an error text with the contents of the buffer,
+//	  if ret>=0
+//
+// Since we're printing an error message, we're
+// going to use someone else's fname, since the error
+// doesn't come from us.
+//
+//
+void showResponseResult(int const ret,
+	const char *message,
+	const char *buffer,
+	const char *fname)
+{
+	QString msg(i18n(message));
+
+	if (ret==TIMEOUT)
+	{
+		msg.append(i18n(" (Timed out)"));
+		cerr << fname
+			<< ": " << message
+			<< endl;
+	}
+	if (ret==PERROR)
+	{
+		cerr << fname
+			<< ": " << message
+			<< endl ;
+		perror(fname);
+	}
+
+	if (ret>=0)
+	{
+		cerr << fname
+			<< ": " << message
+			<< endl;
+
+		// Only add the buffer contents if they're interesting
+		//
+		//
+		if (buffer && buffer[0])
+		{
+			msg.append("\n");
+			msg.append(buffer);
+			cerr << fname
+				<< ": " << buffer
+				<< endl;
+		}
+	}
+
+
+	showMessage(msg);
+}
+
+// This function waits for a response from a socket
+// (with some kind of busy waiting :( ) and returns:
+//
+//	>=0	The number of bytes read
+//	-2	If the response times out (currently
+//		unimplemented)
+//
+//
+static int getResponse(KSocket *s,char *buffer,const int bufsiz)
+{
+	FUNCTIONSETUP;
+	int ret;
+
+	// We read one byte less than the buffer
+	// size, to account for the fact that we're
+	// going to add a 0 byte to the end.
+	//
+	//
+	do
+	{
+		ret=read(s->socket(), buffer, bufsiz-1);
+	}
+	while ((ret==-1) && (errno==EAGAIN));
+
+	buffer[ret]=0;
+
+	return ret;
+}
+
+// This function waits for a response from the
+// POP3 server and then returns. It returns
+//
+//	BADPOP	If the response doesn't begin(*) with a +
+//		(indicating OK in POP3)
+//      >=0	If the response begins with a +, the number 
+//		returned indicates the offset of the + in
+//		the buffer.
+//	TIMEOUT	If the POP3 server times out (currently
+//		not implemented)
+//
+//
+static int getPOPResponse(KSocket *s,const char *message,
+	char *buffer,const int bufsiz)
+{
+	FUNCTIONSETUP;
+	int i,ret;
+
+	ret=getResponse(s,buffer,bufsiz);
+
+	if (ret==TIMEOUT)
+	{
+		showResponseResult(ret,message,buffer,fname);
+		return TIMEOUT;
+	}
+
+	// Skip any leading whitespace the POP3
+	// server may print before the banner.
+	//
+	i=0;
+	while(i<ret && isspace(buffer[i]) && i<bufsiz)
+	{
+		i++;
+	}
+
+	// If the POP3 server gives us a buffer full of
+	// whitespace this test will fail as well.
+	// Is that really bad?
+	//
+	//
+	if(buffer[i] != '+')
+	{
+		showResponseResult(ret,message,buffer+i,fname);
+		return BADPOP;
+	}
+
+	return i;
+}
+
+
+static void disconnectPOP(KSocket *s)
+{
+	FUNCTIONSETUP;
+
+	// This buffer is kinda small, but because
+	// the POP server's response isn't important
+	// *anyway*...
+	//
+	char buffer[12];
+	char *quitmsg="QUIT\r\n";
+	write(s->socket(),quitmsg,strlen(quitmsg));
+	getPOPResponse(s,"QUIT command to POP server failed",buffer,12);
+}
+
 
 
 void reset_Mail(struct Mail *t)
@@ -74,7 +245,7 @@ PopMailConduit::~PopMailConduit()
 
 /* static */ const char *PopMailConduit::version()
 {
-	return "popmail-conduit 1.2";
+	return "popmail-conduit " VERSION;
 }
 
 void
@@ -82,19 +253,20 @@ PopMailConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = kapp->getConfig();
+	KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup);
 	int mode=0;
+	int sent_count=0,received_count=0;
 
-	config->setGroup(PopMailOptions::configGroup());
+	addSyncLogMessage("Mail ");
 
-	mode=config->readNumEntry("SendOutgoing");
+	mode=config->readNumEntry("SyncOutgoing");
 	if(mode)
 	{
 		if (debug_level)
 		{
 			cerr << fname << ": Sending pending mail" << endl;
 		}
-		sendPendingMail(mode);
+		sent_count=sendPendingMail(mode);
 	}
 
 	mode=config->readNumEntry("SyncIncoming");
@@ -104,8 +276,45 @@ PopMailConduit::doSync()
 		{
 			cerr << fname << ": Querying pop server." << endl;
 		}
-		retrieveIncoming(mode);
+		received_count=retrieveIncoming(mode);
 	}
+
+	// Internationalisation and Qt issues be here.
+	// This is an attempt at making a nice log 
+	// message on the pilot, but it's obviously very
+	// en locale-centric.
+	//
+	//
+	if ((sent_count>0) || (received_count>0))
+	{
+		char buffer[128];
+		if ((sent_count>0) && (received_count>0))
+		{
+			sprintf(buffer,"[ Sent %d message%c",
+				sent_count,(sent_count>1) ? 's' : 0);
+			addSyncLogMessage(buffer);
+			sprintf(buffer,", Receved %d message%c",
+				received_count,(received_count>1) ? 's' : 0);
+			addSyncLogMessage(buffer);
+		}
+		if ((sent_count>0) && !(received_count>0))
+		{
+			sprintf(buffer,"[ Sent %d message%c",
+				sent_count,(sent_count>1) ? 's' : 0);
+			addSyncLogMessage(buffer);
+		}
+		if (!(sent_count>0) && (received_count>0))
+		{
+			sprintf(buffer,"[ Received %d message%c",
+				received_count,(received_count>1) ? 's' : 0);
+			addSyncLogMessage(buffer);
+		}
+		
+		addSyncLogMessage(" ] ");
+	}
+	addSyncLogMessage("OK\n");
+
+	delete config;
 }
 
 QWidget*
@@ -115,43 +324,56 @@ PopMailConduit::aboutAndSetup()
 }
 
 // additional changes by Michael Kropfberger
-void PopMailConduit::sendPendingMail(int mode /* unused */)
+int PopMailConduit::sendPendingMail(int mode)
 {
 	FUNCTIONSETUP;
+	int count=0;
 
-	KConfig* config = kapp->getConfig();
-	config->setGroup(PopMailOptions::configGroup());
 
-	if (config->readBoolEntry("UseSMTP"))
+	if (mode == PopMailConduit::SEND_SMTP)
 	{
-		sendViaSMTP();
+		count=sendViaSMTP();
 	}
-	else
+	if (mode==PopMailConduit::SEND_SENDMAIL)
 	{
-		sendViaSendmail();
+		count=sendViaSendmail();
 	}
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname << ": Sent "
+			<< count << " messages"
+			<< endl;
+	}
+
+	return count;
 }
 
-void PopMailConduit::retrieveIncoming(int mode)
+int PopMailConduit::retrieveIncoming(int mode)
 {
 	FUNCTIONSETUP;
+	int count=0;
 
 	if (mode==POP)
 	{
-		doPopQuery();
+		count=doPopQuery();
 	}
 	if (mode==UNIXMailbox)
 	{
-		doUnixStyle();
+		count=doUnixStyle();
 	}
+
+	return count;
 }
+
 
 
 
 // additional changes by Michael Kropfberger
-void PopMailConduit::sendViaSMTP() 
+int PopMailConduit::sendViaSMTP() 
 {
 	FUNCTIONSETUP;
+	int count=0;
 
   int i = 0;
   struct Mail theMail;
@@ -163,51 +385,79 @@ void PopMailConduit::sendViaSMTP()
   char buffer[0xffff];
   int ret;
   
-  KConfig* config = kapp->getConfig();
-  config->setGroup(PopMailOptions::configGroup());
+  KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup);
   smtpSrv = config->readEntry("SMTPServer","localhost");
   smtpPort = config->readNumEntry("SMTPPort",25);
   
-//   pilotLink->addSyncLogEntry("Reading outgoing mail...");
-  smtpSocket = new KSocket(smtpSrv.data(),smtpPort); CHECK_PTR(smtpSocket);
-  if(smtpSocket->socket() < 0)
-    {
-      showMessage("Cannot connect to SMTP server.");
-      cout << "Cannot connect to server." << endl;
-      delete smtpSocket;
-      return;
-    }
-  smtpSocket->enableRead(true);
-  smtpSocket->enableWrite(true);
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname
+			<< ": Connecting to SMTP server "
+			<< smtpSrv << " on port " << smtpPort
+			<< endl;
+	}
 
-  // all do-while loops wait until data is avail
-  do
-    ret=read(smtpSocket->socket(), buffer, 1024);
-  while ((ret==-1) && (errno==EAGAIN));
-  msg=buffer;
-  if (msg.find("220") == -1) 
-    {
-      msg.prepend("SMTP server failed to announce itself");
-      showMessage(msg.data());
-      delete smtpSocket;
-      return;
-    }  
-  getdomainname(buffer,strlen(buffer));
-  sprintf(buffer, "EHLO %s\r\n",buffer);
-  write(smtpSocket->socket(), buffer, strlen(buffer));
-    do
-      ret=read(smtpSocket->socket(), buffer, 1024);
-    while ((ret==-1) && (errno==EAGAIN));
-  msg=buffer;
-  if (msg.find("Hello") == -1) 
-    {
-      msg.prepend("Couldn't EHLO to SMTP Server.\n");
-      showMessage(msg.data());
-      delete smtpSocket;
-      return;
-    }  
+	smtpSocket = new KSocket(smtpSrv.data(),smtpPort); 
+	CHECK_PTR(smtpSocket);
+	if(smtpSocket->socket() < 0)
+	{
+		showResponseResult(PERROR,"Cannot connect to SMTP server",
+			0L,fname);
+		delete smtpSocket;
+		return -1;
+	}
+	smtpSocket->enableRead(true);
+	smtpSocket->enableWrite(true);
+
+	// all do-while loops wait until data is avail
+	ret=getResponse(smtpSocket,buffer,1024);
+
+	if ((ret<0) || (strstr(buffer,"220")==0L))
+	{
+		showResponseResult(ret,"SMTP server failed to announce itself",
+			buffer,fname);
+		delete smtpSocket;
+		return -1;
+	}
+
+
+	// Now we're going to do some yucky things with
+	// buffer -- one part will be used to hold the domain 
+	// name and the other will be used to hold the
+	// SMTP message being constructed.
+	//
+	//	buffer+1024	Area for domainname
+	//	buffer		Area for message
+	//
+	// Now we're assuming that the message is never
+	// longer than 1024 characters.
+	//
+	//
+	getdomainname(buffer+1024,1024);
+	sprintf(buffer, "EHLO %s\r\n",buffer+1024);
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname
+			<< ": " << buffer
+			;
+	}
+	write(smtpSocket->socket(), buffer, strlen(buffer));
+	ret=getResponse(smtpSocket,buffer,1024);
+	if ((ret < 0 ) || (strstr(buffer,"Hello")==0L))
+	{
+		showResponseResult(ret,"Couldn't EHLO to SMTP server",
+			buffer,fname);
+		//
+		// Should we QUIT from SMTP server?
+		//
+		//
+		delete smtpSocket;
+    		return -1;
+	}
+
   // Should probably read the prefs.. 
   // But, let's just get the mail..
+	count=0;
   for(i = 0;; i++)
     {
       pilotRec = readNextRecordInCategory(1);
@@ -215,9 +465,12 @@ void PopMailConduit::sendViaSMTP()
 	break;
       if((pilotRec->getAttrib() & dlpRecAttrDeleted) 
                || (pilotRec->getAttrib() & dlpRecAttrArchived))
+	{
 	delete pilotRec;
+	}
       else
 	{
+		count++;
 	  unpack_Mail(&theMail, (unsigned char*)pilotRec->getData()
                       , pilotRec->getLen());
 	  currentDest = "Mailing: ";
@@ -227,38 +480,38 @@ void PopMailConduit::sendViaSMTP()
           QString fromAddress = config->readEntry("EmailAddress");
         sprintf(buffer,"MAIL FROM: %s\r\n",fromAddress.data());
           write(smtpSocket->socket(), buffer, strlen(buffer));
-          do
-            ret=read(smtpSocket->socket(), buffer, 1024);
-          while ((ret==-1) && (errno==EAGAIN));
+
+	getResponse(smtpSocket,buffer,1024);
+
           msg=buffer;
           if (msg.find("250") == -1){
             showMessage("Couldn't start sending new mail.");
             delete smtpSocket;
-            return;
+            return count;
           }  
              
           sprintf(buffer,"RCPT TO: %s\r\n",theMail.to);
              write(smtpSocket->socket(), buffer, strlen(buffer));
-          do
-            ret=read(smtpSocket->socket(), buffer, 1024);
-          while ((ret==-1) && (errno==EAGAIN));
+
+	getResponse(smtpSocket,buffer,1024);
+
           msg=buffer;
           if (msg.find("25") == -1){  // positively could be 250 or 251
             showMessage("The recipient doesn't exist!");
             delete smtpSocket;
-            return;
+            return count;
           }  
           sprintf(buffer,"DATA\r\n");
              write(smtpSocket->socket(), buffer, strlen(buffer));
-          do
-            ret=read(smtpSocket->socket(), buffer, 1024);
-          while ((ret==-1) && (errno==EAGAIN));
+
+	getResponse(smtpSocket,buffer,1024);
+
           msg=buffer;
           if (msg.find("354") == -1){
             msg.prepend("Couldn't start writing mailbody\n");
             showMessage(msg.data());
             delete smtpSocket;
-            return;
+            return count;
           }  
           sprintf(buffer,"From: %s\r\n",fromAddress.data());
              write(smtpSocket->socket(), buffer, strlen(buffer));
@@ -304,14 +557,14 @@ void PopMailConduit::sendViaSMTP()
 	    
           sprintf(buffer,".\r\n");  //end of mail
           write(smtpSocket->socket(), buffer, strlen(buffer));
-          do
-            ret=read(smtpSocket->socket(), buffer, 1024);
-          while ((ret==-1) && (errno==EAGAIN));
+
+	getResponse(smtpSocket,buffer,1024);
+
           msg=buffer;
           if (msg.find("250") == -1){
             showMessage("Couldn't send message.");
             delete smtpSocket;
-            return;
+            return -1;
           }  
 
 	  // Mark it as filed...
@@ -325,9 +578,9 @@ void PopMailConduit::sendViaSMTP()
     }
   sprintf(buffer, "QUIT\r\n");
   write(smtpSocket->socket(), buffer, strlen(buffer));
-  do
-    ret=read(smtpSocket->socket(), buffer, 1024);
-  while ((ret==-1) && (errno==EAGAIN));
+
+	getResponse(smtpSocket,buffer,1024);
+
   msg=buffer;
   if (msg.find("221") == -1) 
     {
@@ -336,11 +589,14 @@ void PopMailConduit::sendViaSMTP()
     }
   delete smtpSocket;
 //   pilotLink->addSyncLogEntry("OK\n");}
+
+	return count;
 }
 
-void PopMailConduit::sendViaSendmail() 
+int PopMailConduit::sendViaSendmail() 
 {
 	FUNCTIONSETUP;
+	int count=0;
 
   int i = 0;
   struct Mail theMail;
@@ -348,17 +604,22 @@ void PopMailConduit::sendViaSendmail()
   QString currentDest;
   PilotRecord* pilotRec;
   
-  KConfig* config = kapp->getConfig();
-  config->setGroup(PopMailOptions::configGroup());
+  KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+
   sendmailCmd = config->readEntry("SendmailCmd");
   
 //   pilotLink->addSyncLogEntry("Reading outgoing mail...");
 
   // Should probably read the prefs.. 
   // But, let's just get the mail..
-  for(i = 0;; i++)
+  for(i = 0;i<100; i++)
     {
       FILE* sendf; // for talking to sendmail
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname << ": Reading " << i << "th message" << endl;
+	}
       pilotRec = readNextRecordInCategory(1);
 	if(pilotRec == 0L)
 	{
@@ -372,7 +633,7 @@ void PopMailConduit::sendViaSendmail()
       if((pilotRec->getAttrib() & dlpRecAttrDeleted) 
                || (pilotRec->getAttrib() & dlpRecAttrArchived))
 	{
-		if (debug_level > TEDIOUS)
+		if (debug_level & SYNC_TEDIOUS )
 		{
 			cerr << fname << ": Skipping deleted record." << endl;
 		}
@@ -385,9 +646,14 @@ void PopMailConduit::sendViaSendmail()
 	  sendf = popen(sendmailCmd, "w");
 	  if(!sendf)
 	    {
- 	      KMsgBox::message(0L, "Error Sending Mail"
-                      , "Cannot talk to sendmail!", KMsgBox::STOP);
-	      return;
+ 	      KMessageBox::error(0L, "Cannot talk to sendmail!",
+				   "Error Sending Mail");
+		cerr << fname 
+			<< ": Could not start sendmail.\n"
+			<< fname << ": " << count 
+			<< " messages sent OK"
+			<< endl ;
+	      return -1;
 	    }
 	  currentDest = "Mailing: ";
 	  currentDest += theMail.to;
@@ -400,9 +666,18 @@ void PopMailConduit::sendViaSendmail()
 	  delete pilotRec;
 	  // This is ok since we got the mail with unpack mail..
 	  free_Mail(&theMail);
+		count++;
 	}
     }
 //   free_MailAppInfo(&mailAppInfo);
+
+	if (debug_level & SYNC_MAJOR)
+	{
+		cerr << fname << ": Sent " << count << " messages"
+			<< endl;
+	}
+
+	return count;
 }
 
 // From pilot-link-0.8.7 by Kenneth Albanowski
@@ -413,10 +688,9 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
 {
 	FUNCTIONSETUP;
 
-  KConfig* config = kapp->getConfig();
+	KConfig *config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
   QTextStream mailPipe(sendf, IO_WriteOnly);
   
-  config->setGroup(PopMailOptions::configGroup());
   QString fromAddress = config->readEntry("EmailAddress");
   mailPipe << "From: " << fromAddress << "\r\n";
   mailPipe << "To: " << theMail.to << "\r\n";
@@ -430,11 +704,30 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
     mailPipe << "Subject: " << theMail.subject << "\r\n";
   mailPipe << "X-mailer: " << version() << "\r\n";
   mailPipe << "\r\n";
-  if(theMail.body)
-    mailPipe << theMail.body << "\r\n";
+
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname << ": To: " << theMail.to << endl;
+	}
+
+
+	if(theMail.body)
+	{
+		if (debug_level & SYNC_MINOR)
+		{
+			cerr << fname << ": Sent body." << endl;
+		}
+		mailPipe << theMail.body << "\r\n";
+	}
 
   //insert the real signature file from disk
   if(config->readEntry("Signature")) {
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname << ": Reading signature" << endl;
+	}
+
       QFile f(config->readEntry("Signature"));
       if ( f.open(IO_ReadOnly) ) {    // file opened successfully
          mailPipe << "-- \r\n";
@@ -446,6 +739,11 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
       }
    }
     mailPipe << "\r\n";
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname << ": Done" << endl;
+	}
 }
 
 /* static */ char*
@@ -560,258 +858,342 @@ PopMailConduit::header(struct Mail * m, char * t)
 	strcpy(holding, t);
     }
 
-void PopMailConduit::doPopQuery()
+void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
+	int const flags,
+	char *buffer,int const bufsiz)
 {
-  KSocket* popSocket;
-  KConfig* config = kapp->getConfig();
-  char buffer[0xffff];
-  int i, ret;
-  
-//   pilotLink->addSyncLogEntry("Retrieving incoming mail...");
-  config->setGroup(PopMailOptions::configGroup());
-  popSocket = new KSocket(config->readEntry("PopServer").data()
-            , config->readNumEntry("PopPort")); CHECK_PTR(popSocket);
-  if(popSocket->socket() < 0)
-    {
-      showMessage("Cannot connect to POP server.");
-      cout << "Cannot connect to server." << endl;
-      delete popSocket;
-      return;
-    }
-  popSocket->enableRead(true);
-  popSocket->enableWrite(true);
-  // The following code is based _HEAVILY_ :) on pilot-mail.c by Kenneth Albanowski
-  // additional changes by Michael Kropfberger
-  // all do-while loops wait until data is avail
-  do
-    ret=read(popSocket->socket(), buffer, 1024);
-  while ((ret==-1) && (errno==EAGAIN));
-  if(buffer[0] != '+')
-    {
-      QString msg;
-      msg.sprintf("POP server failed to announce itself");
-      showMessage(msg.data());
-      delete popSocket;
-      return;
-    }
-  sprintf(buffer, "USER %s\r\n", config->readEntry("PopUser").data());
-  write(popSocket->socket(), buffer, strlen(buffer));
-    do
-      ret=read(popSocket->socket(), buffer, 1024);
-    while ((ret==-1) && (errno==EAGAIN));
-  if (buffer[0] != '+') 
-    {
-      showMessage("USER command to POP server failed.");
-      delete popSocket;
-      return;
-    }
-  if(config->readNumEntry("StorePass", 0))
-    sprintf(buffer, "PASS %s\r\n", config->readEntry("PopPass").data());
-  else
-    {
-      PasswordDialog* passDialog = new PasswordDialog("Please Enter your POP password:", 0L, "PopPassword", true);
-      passDialog->show();
-      sprintf(buffer, "PASS %s\r\n", passDialog->password());
-      delete passDialog;
-    }
-  write(popSocket->socket(), buffer, strlen(buffer));
-    do
-      ret=read(popSocket->socket(), buffer, 1024);
-    while ((ret==-1) && (errno==EAGAIN));
-  if (buffer[0] != '+') 
-    {
-      showMessage("PASS command to POP server failed.");
-//       pilotLink->addSyncLogEntry("\n   Invalid POP Password.\n");
-      delete popSocket;
-      return;
-    }
-  sprintf(buffer, "STAT\r\n");
-  write(popSocket->socket(), buffer, strlen(buffer));
-  do
-    ret=read(popSocket->socket(), buffer, 1024);
-  while ((ret==-1) && (errno==EAGAIN));
-  if (ret<0) 
-    {
-      sprintf(buffer, "Socket error getting mail: %i",errno);
-      showMessage(buffer);
-      delete popSocket;
-      return;
-    }
-  buffer[ret] = 0;
-  if (buffer[0] == '+')
-    {
-      //sometimes looks like: "+OK ? messages (??? octets)
-      //                  or: "+OK <user> has ? message (??? octets)
-      QString msg(buffer);
-      if (msg.find( config->readEntry("PopUser")) != -1) // with username
-          sscanf(buffer, "%*s %*s %*s %d %*s", &i);
-      else // normal version
-          sscanf(buffer, "%*s %d %*s", &i);
-      //msg.sprintf("[%s] so read %i mails...",buffer,i);
-      //showMessage(msg.data());
-      if(i < 1)
-	{
-	  // No messages, so bail early..
-	  sprintf(buffer, "QUIT\r\n");
-	  write(popSocket->socket(), buffer, strlen(buffer));
-          do
-            ret=read(popSocket->socket(), buffer, 1024);
-          while ((ret==-1) && (errno==EAGAIN));
-	  if (buffer[0] != '+') { showMessage("QUIT command to POP server failed."); }
-	  delete popSocket;
-// 	  pilotLink->addSyncLogEntry("OK\n");
-	  return;
-	}
-//       else
-// 	pilotLink->createNewProgressBar("Syncing Email", "Retrieving incoming...", 1, i+1, 0);
-    }
-  for(i=1;;i++) 
-    {
-      int len;
-      char * msg;
-      int h;
-      struct Mail t;
-      PilotRecord* pilotRec;
-      
-      reset_Mail(&t);
-      
-      //       pilotLink->updateProgressBar(i);
+	FUNCTIONSETUP;
+	int i,ret;
 
-      sprintf(buffer, "LIST %d\r\n", i);
-      write(popSocket->socket(), buffer, strlen(buffer));
-      do
-        ret=read(popSocket->socket(), buffer, 1024);
-      while ((ret==-1) && (errno==EAGAIN));
-      if (ret<0) 
+	for(i=1;i<(msgcount+1);i++) 
 	{
-          sprintf(buffer, "Socket error getting mail: %i",errno);
-	  showMessage(buffer);
-	  // 	  pilotLink->destroyProgressBar();
-	  delete popSocket;
-	  return;
-	}
-      buffer[ret] = 0;
-      if (buffer[0] != '+')
-	break;
-      
-      sscanf(buffer, "%*s %*d %d", &len);
-      
-      if (len > 16000) 
-	continue; 
-      
-      sprintf(buffer, "RETR %d\r\n", i);
-      write(popSocket->socket(), buffer, strlen(buffer));
-      ret = getpopstring(popSocket->socket(), buffer);
-      if ((ret < 0) || (buffer[0] != '+')) 
-	{
-	  /* Weird */
-	  continue;
-	} 
-      else
-	buffer[ret] = 0;
-      
-      msg = (char*)buffer;
-      h = 1;
-      for(;;) 
-	{
-	  if (getpopstring(popSocket->socket(), msg) < 0) 
-	    {
-	      showMessage("Error reading message");
-	      // 	      pilotLink->destroyProgressBar();
-	      delete popSocket;
-	      return;
-	    }
-	  
-	  if (h == 1) 
-	    { 
-	      /* Header mode */
-	      if ((msg[0] == '.') && (msg[1] == '\n') && (msg[2] == 0)) 
+		int len;
+		char * msg;
+		int h;
+		struct Mail t;
+		PilotRecord* pilotRec;
+
+		reset_Mail(&t);
+
+		//       pilotLink->updateProgressBar(i);
+
+		sprintf(buffer, "LIST %d\r\n", i);
+		write(popSocket->socket(), buffer, strlen(buffer));
+		ret=getPOPResponse(popSocket,"LIST command failed",
+			buffer,bufsiz);
+		if (ret<0) return;
+
+		sscanf(buffer+ret, "%*s %*d %d", &len);
+
+		if (debug_level & SYNC_TEDIOUS)
 		{
-		  break; /* End of message */
+			cerr << fname
+				<< ": Message " << i
+				<< " is " << len << " bytes long"
+				<< endl;
 		}
-	      if (msg[0] == '\n') 
+
+		if (len > 16000) 
 		{
-		  h = 0;
-		  header(&t, 0);
+			cerr << fname
+				<< ": Skipped long message " << i
+				<< endl;
+			continue; 
+		}
+
+		sprintf(buffer, "RETR %d\r\n", i);
+		write(popSocket->socket(), buffer, strlen(buffer));
+		ret = getpopstring(popSocket->socket(), buffer);
+		if ((ret < 0) || (buffer[0] != '+')) 
+		{
+			/* Weird */
+			continue;
 		} 
-	      else 
-		header(&t, msg);
-	      continue;
-	    }
-	  if ((msg[0] == '.') && (msg[1] == '\n') && (msg[2] == 0)) 
-	    {
-	      msg[0] = 0;
-	      break; /* End of message */
-	    }
-	  if (msg[0] == '.') 
-	    {
-	      /* Must be escape */
-	      memmove(msg, msg+1, strlen(msg));
-	    }
-	  msg += strlen(msg);
-	}
-      
-      /* Well, we've now got the message. I bet _you_ feel happy with yourself. */
-      
-      if (h) 
-	{
-	  /* Oops, incomplete message, still reading headers */
-	  // 	  showMessage("Incomplete message");
-	  // This is ok since we used strdup's for them all.
-	  free_Mail(&t);
-	  continue;
-	}
-      
-      // Need to add this support...
-      // 	if (strlen(msg) > p.truncate) 
-      // 	    {
-      // 	    /* We could truncate it, but we won't for now */
-      // 	    fprintf(stderr, "Message %d too large (%ld bytes)\n", i, (long)strlen(msg));
-      // 	    free_Mail(&t);
-      // 	    continue;
-      // 	    }
-      
-      t.body = strdup(buffer);
-      
-      len = pack_Mail(&t, (unsigned char*)buffer, 0xffff);
-      pilotRec = new PilotRecord(buffer, len, 0, 0, 0);
-      if (writeRecord(pilotRec) > 0) 
-	{
-	  if (config->readNumEntry("LeaveMail") == 0)
-	    { 
-	      sprintf(buffer, "DELE %d\r\n", i);
-	      write(popSocket->socket(), buffer, strlen(buffer));
-              do
-                ret=read(popSocket->socket(), buffer, 1024);
-              while ((ret==-1) && (errno==EAGAIN));
-	      if (buffer[0] != '+') 
+		else
 		{
-		  showMessage("Error deleting message.");
+			buffer[ret] = 0;
 		}
-	    } 
-	} 
-      else 
-	{
-	  showMessage("Error writing message to the Pilot.");
+
+		msg = (char*)buffer;
+		h = 1;
+		for(;;) 
+		{
+			if (getpopstring(popSocket->socket(), msg) < 0) 
+			{
+				showMessage("Error reading message");
+				return;
+			}
+
+			if (h == 1) 
+			{ 
+				/* Header mode */
+				if ((msg[0] == '.') && 
+					(msg[1] == '\n') && (msg[2] == 0)) 
+				{
+					break; /* End of message */
+				}
+				if (msg[0] == '\n') 
+				{
+					h = 0;
+					header(&t, 0);
+				} 
+				else 
+				{
+					header(&t, msg);
+				}
+				continue;
+			}
+			if ((msg[0] == '.') && 
+				(msg[1] == '\n') && (msg[2] == 0)) 
+			{
+				msg[0] = 0;
+				break; /* End of message */
+			}
+			if (msg[0] == '.') 
+			{
+				/* Must be escape */
+				memmove(msg, msg+1, strlen(msg));
+			}
+			msg += strlen(msg);
+		}
+
+		// Well, we've now got the message. 
+		// I bet _you_ feel happy with yourself. 
+
+		if (h) 
+		{
+			/* Oops, incomplete message, still reading headers */
+			// 	  showMessage("Incomplete message");
+			// This is ok since we used strdup's for them all.
+			free_Mail(&t);
+			continue;
+		}
+
+		// Need to add this support...
+		// 	if (strlen(msg) > p.truncate) 
+		// 	    {
+		// 	    /* We could truncate it, but we won't for now */
+		// 	    fprintf(stderr, "Message %d too large (%ld bytes)\n", i, (long)strlen(msg));
+		// 	    free_Mail(&t);
+		// 	    continue;
+		// 	    }
+
+		t.body = strdup(buffer);
+
+		len = pack_Mail(&t, (unsigned char*)buffer, 0xffff);
+		pilotRec = new PilotRecord(buffer, len, 0, 0, 0);
+		if (writeRecord(pilotRec) > 0) 
+		{
+			if (flags & POP_DELE)
+			{ 
+				sprintf(buffer, "DELE %d\r\n", i);
+				write(popSocket->socket(), 
+					buffer, strlen(buffer));
+				getPOPResponse(popSocket,
+					"Error deleting message",
+					buffer,bufsiz);
+
+			} 
+		} 
+		else 
+		{
+			showMessage(
+				i18n("Error writing message to the Pilot."));
+		}
+
+		delete pilotRec;
+		// This is ok since we used strdup's for them all..
+		free_Mail(&t);
 	}
-      
-      delete pilotRec;
-      // This is ok since we used strdup's for them all..
-      free_Mail(&t);
-    }
-  
-  sprintf(buffer, "QUIT\r\n");
-  write(popSocket->socket(), buffer, strlen(buffer));
-  do
-    ret=read(popSocket->socket(), buffer, 1024);
-  while ((ret==-1) && (errno==EAGAIN));
-  if (buffer[0] != '+') 
-    {
-      showMessage("QUIT command to POP server failed.");
-    }
-  delete popSocket;
-//   pilotLink->addSyncLogEntry("OK\n");
+
 }
+
+
+
+int PopMailConduit::doPopQuery()
+{
+	FUNCTIONSETUP;
+
+	KSocket* popSocket;
+	KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup); 
+	char buffer[0xffff];
+	int offset;
+	int flags=0;
+	int msgcount;
+  
+
+	// Setup the flags to reflect the settings in
+	// the config file.
+	//
+	//
+	if (config->readNumEntry("LeaveMail") == 0)
+	{
+		flags |= POP_DELE ;
+	}
+
+	popSocket = new KSocket(config->readEntry("PopServer").data(),
+		config->readNumEntry("PopPort")); 
+	CHECK_PTR(popSocket);
+
+	if (debug_level & SYNC_MAJOR)
+	{
+		cerr << fname 
+			<< ": Attempted to connect to POP3 server "
+			<< config->readEntry("PopServer")
+			<< endl;
+	}
+
+	if(popSocket->socket() < 0)
+	{
+		showResponseResult(PERROR,
+			"Cannot connect to POP server -- no socket",
+			0L,fname);
+		delete popSocket;
+		return -1;
+	}
+
+
+
+	popSocket->enableRead(true);
+	popSocket->enableWrite(true);
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname 
+			<< ": Connected to POP3 server socket "
+			<< popSocket->socket()
+			<< endl ;
+	}
+
+	// The following code is based _HEAVILY_ :) 
+	// on pilot-mail.c by Kenneth Albanowski
+	// additional changes by Michael Kropfberger
+	// all do-while loops wait until data is avail
+
+	if (getPOPResponse(popSocket,"POP server failed to announce itself",
+		buffer,1024)<0)
+	{
+		delete popSocket;
+		return -1;
+	}
+
+
+	sprintf(buffer, "USER %s\r\n", config->readEntry("PopUser").data());
+	write(popSocket->socket(), buffer, strlen(buffer));
+	if (getPOPResponse(popSocket,"USER command to POP server failed",
+		buffer,1024)<0)
+	{
+		delete popSocket;
+		return -1;
+	}
+
+	if(config->readNumEntry("StorePass", 0))
+	{
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			cerr << fname 
+				<< ": Reading password from config."
+				<< endl;
+		}
+
+		sprintf(buffer, "PASS %s\r\n", 
+			config->readEntry("PopPass").data());
+	}
+	else
+	{
+		// Create a modal password dialog.
+		//
+		//
+		PasswordDialog* passDialog = new PasswordDialog(
+			i18n("Please Enter your POP password:"), 
+			0L, "PopPassword", true);
+		passDialog->show();
+		if (passDialog->result()==QDialog::Accepted)
+		{
+			sprintf(buffer, "PASS %s\r\n", passDialog->password());
+			delete passDialog;
+		}
+		else
+		{
+			cerr << fname
+				<< ": Password dialog was canceled." 
+				<< endl;
+			delete passDialog;
+			disconnectPOP(popSocket);
+			delete popSocket;
+			return -1;
+		}
+	}
+
+
+
+	write(popSocket->socket(), buffer, strlen(buffer));
+	if (getPOPResponse(popSocket,"PASS command to POP server failed",
+		buffer,1024)<0)
+	{
+		disconnectPOP(popSocket);
+		delete popSocket;
+		return -1;
+	}
+
+
+	sprintf(buffer, "STAT\r\n");
+	write(popSocket->socket(), buffer, strlen(buffer));
+	if ((offset=getPOPResponse(popSocket,
+		"STAT command to POP server failed",
+		buffer,1024))<0)
+	{
+		disconnectPOP(popSocket);
+		delete popSocket;
+		return -1;
+	}
+		
+	//sometimes looks like: "+OK ? messages (??? octets)
+	//                  or: "+OK <user> has ? message (??? octets)
+	//
+	// [ The standard says otherwise ]
+	//
+	QString msg(buffer+offset);
+	if (msg.find( config->readEntry("PopUser")) != -1) // with username
+	{
+		sscanf(buffer+offset, "%*s %*s %*s %d %*s", &msgcount);
+	}
+	else // normal version
+	{
+		sscanf(buffer+offset, "%*s %d %*s", &msgcount);
+	}
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname
+			<< ": POP STAT is "
+			<< buffer+offset
+			<< endl;
+		cerr << fname
+			<< ": Will retrieve "
+			<< msgcount << " messages."
+			<< endl;
+	}
+
+	if(msgcount < 1)
+	{
+		// No messages, so bail early..
+		disconnectPOP(popSocket);
+		delete popSocket;
+		return 0;
+	}
+
+
+
+	retrievePOPMessages(popSocket,flags,msgcount,buffer,1024);
+
+	disconnectPOP(popSocket);
+	delete popSocket;
+
+	return msgcount;
+}
+
+
 
 /* static */ int PopMailConduit::skipBlanks(FILE *f,char *buffer,int buffersize)
 {
@@ -1060,8 +1442,7 @@ int PopMailConduit::doUnixStyle()
 	PilotRecord *pilotRec=0L;
 
 	{
-		KConfig *config=kapp->getConfig();
-		config->setGroup(PopMailOptions::configGroup());
+		KConfig *config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
 	
 		filename=config->readEntry("UNIX Mailbox");
 		if (filename.isEmpty()) return 0;
@@ -1084,6 +1465,8 @@ int PopMailConduit::doUnixStyle()
 		{
 			cerr << fname << ": Mailbox found." << endl;
 		}
+
+		delete config;
 	}
 
 	mailbox=fopen(filename,"r");
@@ -1129,3 +1512,23 @@ int PopMailConduit::doUnixStyle()
 }
 #undef BUFFERSIZE
 
+/* virtual */ QPixmap *PopMailConduit::icon() const
+{
+	FUNCTIONSETUP;
+
+	QPixmap *p=new QPixmap;
+	*p = KGlobal::iconLoader()->loadIcon("kbiff", KIcon::Desktop);
+	return p;
+}
+
+
+int main(int argc, char* argv[])
+{
+  ConduitApp a(argc, argv, "popmail-conduit",
+  	"\t\tPopmail-Conduit -- A conduit for KPilot\n"
+	"Copyright (C) 1998,1999 Dan Pilone, Michael Kropfberger\n"
+	"Copyright (C) 2000 Adriaan de Groot");
+  PopMailConduit conduit(a.getMode());
+  a.setConduit(&conduit);
+  return a.exec();
+}
