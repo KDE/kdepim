@@ -3,8 +3,8 @@ apidox-am-yes:
 	@if test "$(subdir)" != "."; then \
 		$(mkinstalldirs) $(top_builddir)/apidocs/$(subdir) ;\
 		if test ! -x $(top_builddir)/apidocs/common; then \
-			if test -d $(top_srcdir)/doc/common; then \
-			   common_dir=`cd $(top_srcdir)/doc/common && pwd` ;\
+			if test -d $(top_srcdir)/doc/api; then \
+			   common_dir=`cd $(top_srcdir)/doc/api && pwd` ;\
 			else \
 	   		   common_dir=$(kde_libs_htmldir)/en/common ;\
 			fi ;\
