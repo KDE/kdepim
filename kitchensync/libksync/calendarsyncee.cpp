@@ -68,22 +68,25 @@ CalendarSyncEntry *CalendarSyncEntry::clone()
 
 
 CalendarSyncee::CalendarSyncee()
+  : mOwnCalendar( true )
 {
   mCalendar = new CalendarLocal;
-
-  mEntries.setAutoDelete(true);
 }
 
 CalendarSyncee::CalendarSyncee( CalendarLocal *calendar )
+  : mOwnCalendar( false )
 {
   mCalendar = calendar;
-
-  mEntries.setAutoDelete(true);
 }
 
 CalendarSyncee::~CalendarSyncee()
 {
-  delete mCalendar;
+  QMap<Incidence *, CalendarSyncEntry *>::Iterator it;
+  for( it = mEntries.begin(); it != mEntries.end(); ++it ) {
+    delete it.data();
+  }
+
+  if ( mOwnCalendar ) delete mCalendar;
 }
 
 CalendarSyncEntry *CalendarSyncee::firstEntry()
@@ -147,11 +150,15 @@ void CalendarSyncee::removeEntry( SyncEntry *entry )
   }
 }
 
-CalendarSyncEntry *CalendarSyncee::createEntry(Incidence *incidence)
+CalendarSyncEntry *CalendarSyncee::createEntry( Incidence *incidence )
 {
-  if (incidence) {
+  if ( incidence ) {
+    QMap<Incidence *,CalendarSyncEntry *>::ConstIterator it;
+    it = mEntries.find( incidence );
+    if ( it != mEntries.end() ) return it.data();
+
     CalendarSyncEntry *entry = new CalendarSyncEntry(incidence);
-    mEntries.append(entry);
+    mEntries.insert( incidence, entry );
     return entry;
   } else {
     return 0;
