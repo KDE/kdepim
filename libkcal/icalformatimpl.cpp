@@ -203,19 +203,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
 
   icalcomponent *vfreebusy = icalcomponent_new(ICAL_VFREEBUSY_COMPONENT);
 
-  icalcomponent_add_property(vfreebusy,icalproperty_new_organizer(
-      ("MAILTO:" + freebusy->organizer()).utf8()));
-
-  if (freebusy->attendeeCount() != 0) {
-    QPtrList<Attendee> al = freebusy->attendees();
-    QPtrListIterator<Attendee> ai(al);
-    for (; ai.current(); ++ai) {
-      icalcomponent_add_property(vfreebusy,writeAttendee(ai.current()));
-    }
-  }
-
-  icalcomponent_add_property(vfreebusy,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime())));
+  writeIncidenceBase(vfreebusy,freebusy);
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
       writeICalDateTime(freebusy->dtStart())));
@@ -265,6 +253,15 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
 
 void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 {
+  // pilot sync stuff
+// TODO: move this application-specific code to kpilot
+  if (incidence->pilotId()) {
+    incidence->setNonKDECustomProperty("X-PILOTID", QString::number(incidence->pilotId()));
+    incidence->setNonKDECustomProperty("X-PILOTSTAT", QString::number(incidence->syncStatus()));
+  }
+
+  writeIncidenceBase(parent,incidence);
+
   // creation date
   icalcomponent_add_property(parent,icalproperty_new_created(
       writeICalDateTime(incidence->created())));
@@ -280,22 +277,6 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // last modification date
   icalcomponent_add_property(parent,icalproperty_new_lastmodified(
       writeICalDateTime(incidence->lastModified())));
-
-  icalcomponent_add_property(parent,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime())));
-
-  // organizer stuff
-  icalcomponent_add_property(parent,icalproperty_new_organizer(
-      ("MAILTO:" + incidence->organizer()).utf8()));
-
-  // attendees
-  if (incidence->attendeeCount() != 0) {
-    QPtrList<Attendee> al = incidence->attendees();
-    QPtrListIterator<Attendee> ai(al);
-    for (; ai.current(); ++ai) {
-      icalcomponent_add_property(parent,writeAttendee(ai.current()));
-    }
-  }
 
   // description
   if (!incidence->description().isEmpty()) {
@@ -378,15 +359,6 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
         incidence->relatedTo()->uid().utf8()));
   }
 
-  // pilot sync stuff
-  icalproperty *p =
-      icalproperty_new_x((QString::number(incidence->pilotId())).utf8());
-  icalproperty_set_x_name(p,"X-PILOTID");
-  icalcomponent_add_property(parent,p);
-  p = icalproperty_new_x((QString::number(incidence->syncStatus())).utf8());
-  icalproperty_set_x_name(p,"X-PILOTSTAT");
-  icalcomponent_add_property(parent,p);
-
   // recurrence rule stuff
   Recurrence *recur = incidence->recurrence();
   if (recur->doesRecur()) {
@@ -422,6 +394,38 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 //    duration = writeICalDuration(incidence->duration());
 //    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
 //  }
+}
+
+void ICalFormatImpl::writeIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
+{
+  icalcomponent_add_property(parent,icalproperty_new_dtstamp(
+      writeICalDateTime(QDateTime::currentDateTime())));
+
+  // organizer stuff
+  icalcomponent_add_property(parent,icalproperty_new_organizer(
+      ("MAILTO:" + incidenceBase->organizer()).utf8()));
+
+  // attendees
+  if (incidenceBase->attendeeCount() != 0) {
+    QPtrList<Attendee> al = incidenceBase->attendees();
+    QPtrListIterator<Attendee> ai(al);
+    for (; ai.current(); ++ai) {
+      icalcomponent_add_property(parent,writeAttendee(ai.current()));
+    }
+  }
+
+  // custom properties
+  writeCustomProperties(parent, incidenceBase);
+}
+
+void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomProperties *properties)
+{
+  QMap<QCString, QString> custom = properties->customProperties();
+  for (QMap<QCString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
+    icalproperty *p = icalproperty_new_x(c.data().utf8());
+    icalproperty_set_x_name(p,c.key());
+    icalcomponent_add_property(parent,p);
+  }
 }
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
@@ -694,6 +698,14 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
                              icaldurationtype_from_int(alarm->snoozeTime()*60)));
   }
 
+  // Custom properties
+  QMap<QCString, QString> custom = alarm->customProperties();
+  for (QMap<QCString, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
+    icalproperty *p = icalproperty_new_x(c.data().utf8());
+    icalproperty_set_x_name(p,c.key());
+    icalcomponent_add_property(a,p);
+  }
+
   return a;
 }
 
@@ -863,19 +875,6 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
         mEventsRelate.append(event);
         break;
 
-      case ICAL_X_PROPERTY:
-        if (strcmp(icalproperty_get_name(p),"X-MICROSOFT-CDO-ALLDAYEVENT") == 0) {
-          const char *text = icalproperty_get_value_as_string(p);
-          bool floats = (strcmp(text, "TRUE") == 0);
-          kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
-          event->setFloats(floats);
-          if (floats) {
-            QDateTime endDate = event->dtEnd();
-            event->setDtEnd(endDate.addDays(-1));
-          }
-        }
-        break;
-
 
       default:
 //        kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
@@ -884,6 +883,17 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
     }
 
     p = icalcomponent_get_next_property(vevent,ICAL_ANY_PROPERTY);
+  }
+
+  QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
+  if (!msade.isNull()) {
+    bool floats = (msade == QString::fromLatin1("TRUE"));
+    kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
+    event->setFloats(floats);
+    if (floats) {
+      QDateTime endDate = event->dtEnd();
+      event->setDtEnd(endDate.addDays(-1));
+    }
   }
 
   // some stupid vCal exporters ignore the standard and use Description
@@ -902,6 +912,8 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 {
   FreeBusy *freebusy = new FreeBusy;
 
+  readIncidenceBase(vfreebusy,freebusy);
+
   icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
 
   icaltimetype icaltime;
@@ -911,18 +923,6 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
     switch (kind) {
-
-      case ICAL_UID_PROPERTY:  // unique id
-        freebusy->setUid(QString::fromUtf8(icalproperty_get_uid(p)));
-        break;
-
-      case ICAL_ORGANIZER_PROPERTY:  // organizer
-        freebusy->setOrganizer(QString::fromUtf8(icalproperty_get_organizer(p)));
-        break;
-
-      case ICAL_ATTENDEE_PROPERTY:  // attendee
-        freebusy->addAttendee(readAttendee(p));
-        break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtstart(p);
@@ -1050,6 +1050,8 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 
 void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 {
+  readIncidenceBase(parent,incidence);
+
   icalproperty *p = icalcomponent_get_first_property(parent,ICAL_ANY_PROPERTY);
 
   const char *text;
@@ -1068,11 +1070,6 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         incidence->setCreated(readICalDateTime(icaltime));
         break;
 
-      case ICAL_UID_PROPERTY:  // unique id
-        text = icalproperty_get_uid(p);
-        incidence->setUid(QString::fromUtf8(text));
-        break;
-
       case ICAL_SEQUENCE_PROPERTY:  // sequence
         intvalue = icalproperty_get_sequence(p);
         incidence->setRevision(intvalue);
@@ -1081,15 +1078,6 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       case ICAL_LASTMODIFIED_PROPERTY:  // last modification date
         icaltime = icalproperty_get_lastmodified(p);
         incidence->setLastModified(readICalDateTime(icaltime));
-        break;
-
-      case ICAL_ORGANIZER_PROPERTY:  // organizer
-        text = icalproperty_get_organizer(p);
-        incidence->setOrganizer(QString::fromUtf8(text));
-        break;
-
-      case ICAL_ATTENDEE_PROPERTY:  // attendee
-        incidence->addAttendee(readAttendee(p));
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
@@ -1162,17 +1150,6 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         }
         break;
 
-
-      case ICAL_X_PROPERTY:
-        if (strcmp(icalproperty_get_name(p),"X-PILOTID") == 0) {
-          text = icalproperty_get_value_as_string(p);
-          incidence->setPilotId(QString::fromUtf8(text).toInt());
-        } else if (strcmp(icalproperty_get_name(p),"X-PILOTSTAT") == 0) {
-          text = icalproperty_get_value_as_string(p);
-          incidence->setSyncStatus(QString::fromUtf8(text).toInt());
-        }
-        break;
-
       default:
 //        kdDebug(5800) << "ICALFormat::readIncidence(): Unknown property: " << kind
 //                  << endl;
@@ -1180,6 +1157,17 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
     }
 
     p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+  }
+
+  // kpilot stuff
+// TODO: move this application-specific code to kpilot
+  QString kp = incidence->nonKDECustomProperty("X-PILOTID");
+  if (!kp.isNull()) {
+    incidence->setPilotId(kp.toInt());
+  }
+  kp = incidence->nonKDECustomProperty("X-PILOTSTAT");
+  if (!kp.isNull()) {
+    incidence->setSyncStatus(kp.toInt());
   }
 
   // Cancel backwards compatibility mode for subsequent changes by the application
@@ -1194,6 +1182,54 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
        alarm = icalcomponent_get_next_component(parent,ICAL_VALARM_COMPONENT)) {
     readAlarm(alarm,incidence);
   }
+}
+
+void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
+{
+  icalproperty *p = icalcomponent_get_first_property(parent,ICAL_ANY_PROPERTY);
+
+  while (p) {
+    icalproperty_kind kind = icalproperty_isa(p);
+    switch (kind) {
+
+      case ICAL_UID_PROPERTY:  // unique id
+        incidenceBase->setUid(QString::fromUtf8(icalproperty_get_uid(p)));
+        break;
+
+      case ICAL_ORGANIZER_PROPERTY:  // organizer
+        incidenceBase->setOrganizer(QString::fromUtf8(icalproperty_get_organizer(p)));
+        break;
+
+      case ICAL_ATTENDEE_PROPERTY:  // attendee
+        incidenceBase->addAttendee(readAttendee(p));
+        break;
+
+      default:
+        break;
+    }
+
+    p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+  }
+
+  // custom properties
+  readCustomProperties(parent, incidenceBase);
+}
+
+void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties *properties)
+{
+  QMap<QCString, QString> customProperties;
+
+  icalproperty *p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
+
+  while (p) {
+
+    QString value = QString::fromUtf8(icalproperty_get_value_as_string(p));
+    customProperties[icalproperty_get_name(p)] = value;
+
+    p = icalcomponent_get_next_property(parent,ICAL_X_PROPERTY);
+  }
+
+  properties->setCustomProperties(customProperties);
 }
 
 void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence)
@@ -1477,6 +1513,9 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
     p = icalcomponent_get_next_property(alarm,ICAL_ATTACH_PROPERTY);
   }
 
+  // custom properties
+  readCustomProperties(alarm, ialarm);
+
   // TODO: check for consistency of alarm properties
 }
 
@@ -1588,7 +1627,7 @@ int ICalFormatImpl::readICalDuration(icaldurationtype d)
   return result;
 }
 
-icalcomponent *ICalFormatImpl::createCalendarComponent()
+icalcomponent *ICalFormatImpl::createCalendarComponent(Calendar *cal)
 {
   icalcomponent *calendar;
 
@@ -1607,13 +1646,16 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
   p = icalproperty_new_version(const_cast<char *>(_ICAL_VERSION));
   icalcomponent_add_property(calendar,p);
 
+  // Custom properties
+  writeCustomProperties(calendar, cal);
+
   return calendar;
 }
 
 
 
 // take a raw vcalendar (i.e. from a file on disk, clipboard, etc. etc.
-// and break it down from it's tree-like format into the dictionary format
+// and break it down from its tree-like format into the dictionary format
 // that is used internally in the ICalFormatImpl.
 bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 {
@@ -1705,6 +1747,9 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     deleteStr(s);
   }
 #endif
+
+  // custom properties
+  readCustomProperties(calendar, cal);
 
 // TODO: set time zone
 #if 0

@@ -28,6 +28,7 @@
 #include <qvaluelist.h>
 #include <qptrlist.h>
 
+#include "customproperties.h"
 #include "attendee.h"
 
 namespace KCal {
@@ -37,7 +38,7 @@ typedef QValueList<QDate> DateList;
 /**
   This class provides the base class common to all calendar components.
 */
-class IncidenceBase
+class IncidenceBase : public CustomProperties
 {
   public:
     class Observer {

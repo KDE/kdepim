@@ -13,7 +13,7 @@ libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
 libkcal_la_SOURCES = \
         incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
         freebusy.cpp attendee.cpp recurrence.cpp alarm.cpp \
-        calendar.cpp calendarlocal.cpp \
+        customproperties.cpp calendar.cpp calendarlocal.cpp \
         calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	vcaldrag.cpp icaldrag.cpp \
         exceptions.cpp \

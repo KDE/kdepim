@@ -24,6 +24,7 @@
 #include <qstring.h>
 #include <qvaluelist.h>
 
+#include "customproperties.h"
 #include "duration.h"
 #include "person.h"
 
@@ -34,7 +35,8 @@ class Incidence;
 /**
   This class represents an alarm notification.
 */
-class Alarm {
+class Alarm : public CustomProperties
+{
   public:
     enum Type { Display, Procedure, Email, Audio };
     typedef QValueList<Alarm *> List;
@@ -122,20 +124,20 @@ class Alarm {
     Incidence *parent() const  { return mParent; }
 
   private:
-    QString mAudioAlarmFile;      // url/filename of sound to play
-    QString mProgramAlarmFile;    // filename of program to run
-    QStringList mMailAttachFiles; // filenames to attach to email
+    QString mAudioAlarmFile;     // url/filename of sound to play
+    QString mProgramAlarmFile;   // filename of program to run
+    QStringList mMailAttachFiles;           // filenames to attach to email
     QValueList<Person> mMailAlarmAddresses; // who to mail for reminder
-    QString mMailAlarmSubject;    // subject of email
-    QString mAlarmText;           // text to display/mail for alarm
+    QString mMailAlarmSubject;   // subject of email
+    QString mAlarmText;          // text to display/mail for alarm
 
-    int mAlarmSnoozeTime;         // number of minutes after alarm to
-                                  // snooze before ringing again
-    int mAlarmRepeatCount;        // number of times for alarm to repeat
-                                  // after the initial time
+    int mAlarmSnoozeTime;        // number of minutes after alarm to
+                                 // snooze before ringing again
+    int mAlarmRepeatCount;       // number of times for alarm to repeat
+                                 // after the initial time
     bool mAlarmEnabled;
 
-    QDateTime mAlarmTime;         // time at which to display the alarm
+    QDateTime mAlarmTime;        // time at which to display the alarm
     bool mHasTime;
     Duration mOffset;
 

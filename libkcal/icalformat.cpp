@@ -147,7 +147,7 @@ QString ICalFormat::toString( Calendar *cal )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 
-  icalcomponent *calendar = mImpl->createCalendarComponent();
+  icalcomponent *calendar = mImpl->createCalendarComponent(cal);
 
   icalcomponent *component;
 
@@ -329,7 +329,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     return 0;
   }
 
-  icalcomponent *calendarComponent = mImpl->createCalendarComponent();
+  icalcomponent *calendarComponent = mImpl->createCalendarComponent(cal);
 
   Incidence *existingIncidence = cal->event(incidence->uid());
   if (existingIncidence) {

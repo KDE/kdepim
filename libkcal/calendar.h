@@ -26,6 +26,7 @@
 #include <qdatetime.h>
 #include <qptrlist.h>
 
+#include "customproperties.h"
 #include "event.h"
 #include "todo.h"
 
@@ -53,7 +54,8 @@ class CalFilter;
   visible in the Calendar. You shouldn't delete any Event object you get from
   Calendar.
 */
-class Calendar {
+class Calendar : public CustomProperties
+{
   public:
     Calendar();
     Calendar(const QString &timeZoneId);
