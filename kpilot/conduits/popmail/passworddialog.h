@@ -55,11 +55,4 @@ private:
     QLineEdit *_w_password;      
 };
 
-
 #endif
-
-
-// $Log$
-// Revision 1.5  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

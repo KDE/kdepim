@@ -111,29 +111,3 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fOtherPhone->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::otherField(),0));
 }
-
-
-// $Log$
-// Revision 1.6  2002/08/15 21:40:14  kainhofe
-// some more work in the addressbook conduit. Does not yet work
-//
-// Revision 1.5  2002/06/30 16:23:23  kainhofe
-// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
-//
-// Revision 1.4  2002/05/15 17:15:32  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.3  2002/04/16 18:22:12  adridg
-// Wishlist fix from David B: handle formatted names when syncing
-//
-// Revision 1.2  2001/12/20 22:55:21  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.1  2001/10/31 23:54:45  adridg
-// CVS_SILENT: Ongoing conduits ports
-//

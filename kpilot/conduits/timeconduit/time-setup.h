@@ -49,6 +49,4 @@ private:
 	TimeWidget *fConfigWidget;
 } ;
 
-// $Log$
-
 #endif

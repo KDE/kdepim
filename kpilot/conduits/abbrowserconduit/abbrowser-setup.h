@@ -49,6 +49,4 @@ private:
 	AbbrowserWidget *fConfigWidget;
 } ;
 
-// $Log$
-
 #endif

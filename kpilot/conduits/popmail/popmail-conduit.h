@@ -141,27 +141,3 @@ private:
 };
 
 #endif
-
-
-// $Log$
-// Revision 1.14  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.13  2001/05/03 06:36:34  leitner
-// the typedef is not required here, Compaq C++ even complains about it
-//
-// Revision 1.12  2001/04/26 19:20:17  adridg
-// Respect KMail's outboxFolder setting
-//
-// Revision 1.11  2001/04/23 21:18:36  adridg
-// Some i18n() fixups and KMail sending
-//
-// Revision 1.10  2001/03/29 22:06:14  stern
-// Must include ksock.h since it was taken out of baseConduit.h
-//
-// Revision 1.9  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.8  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

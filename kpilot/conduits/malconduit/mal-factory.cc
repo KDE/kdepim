@@ -153,13 +153,3 @@ MALConduitFactory::~MALConduitFactory()
 	return 0L;
 }
 
-
-// $Log$
-// Revision 1.2  2002/08/17 22:31:20  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// When replying, please CC me - I'm not subscribed
-//
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//

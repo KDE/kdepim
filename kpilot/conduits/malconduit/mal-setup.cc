@@ -151,9 +151,3 @@ MALWidgetSetup::~MALWidgetSetup()
 	fConfigWidget->malUserName->setText(fConfig->readEntry(MALConduitFactory::malUser(), ""));
 	fConfigWidget->malPassword->setText(fConfig->readEntry(MALConduitFactory::malPassword(), ""));
 }
-
-
-// $Log$
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//

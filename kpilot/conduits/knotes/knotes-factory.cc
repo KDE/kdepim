@@ -138,32 +138,3 @@ KNotesConduitFactory::~KNotesConduitFactory()
 
 	return 0L;
 }
-
-
-// $Log$
-// Revision 1.8  2001/12/20 22:55:44  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.7  2001/10/31 23:46:51  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.6  2001/10/16 21:44:53  adridg
-// Split up some files, added behavior
-//
-// Revision 1.5  2001/10/11 10:13:27  cschumac
-// Compile fixes.
-//
-// Revision 1.4  2001/10/10 22:39:49  adridg
-// Some UI/Credits/About page patches
-//
-// Revision 1.3  2001/10/10 21:42:09  adridg
-// Actually do part of a sync now
-//
-// Revision 1.2  2001/10/10 13:40:07  cschumac
-// Compile fixes.
-//
-// Revision 1.1  2001/10/08 22:27:42  adridg
-// New ui, moved to lib-based conduit
-//
-//
-

@@ -147,29 +147,4 @@ private:
 	RetrievalMode fMode;
 } ;
 
-
-
-
 #endif
-
-
-// $Log$
-// Revision 1.11  2001/12/13 21:35:33  adridg
-// Gave all conduits a config dialog
-//
-// Revision 1.10  2001/10/31 23:47:12  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.9  2001/07/04 08:53:37  cschumac
-// - Added explicitDomainName text widget to setup dialog
-// - Changed the support for the explicit domain name a little
-//   (added a few more debug lines)
-// - Changed expected response to EHLO to "^250" instead of "Hello", to
-//   fix some people's protocol-correct but unexpected SMTP server reply.
-//
-// Revision 1.8  2001/04/23 21:18:43  adridg
-// Some i18n() fixups and KMail sending
-//
-// Revision 1.7  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
