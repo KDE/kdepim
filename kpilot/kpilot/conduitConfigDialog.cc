@@ -234,7 +234,7 @@ void ConduitConfigWidget::fillLists()
 		p->setText(CONDUIT_COMMENT,o->comment());
 		p->setText(CONDUIT_DESKTOP,o->desktopEntryName());
 		p->setText(CONDUIT_LIBRARY,o->library());
-		
+
 		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
 		{
 			p->setOn(false);
@@ -351,6 +351,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 
 		fCurrentOldStyle=d;
 		d->setConfig(&KPilotConfig::getConfig());
+		d->readSettings();
 	}
 	else
 	{
@@ -423,7 +424,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": " 
+	DEBUGKPILOT << fname << ": "
 		<< ( p ? p->text(CONDUIT_NAME) : CSL1("None") )
 		<< endl;
 #endif
@@ -487,7 +488,7 @@ void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
 	FUNCTIONSETUP;
 
 	QStringList activeConduits;
-	const QCheckListItem *p = 
+	const QCheckListItem *p =
 		dynamic_cast<QCheckListItem *>(fConduitList->firstChild());
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
 
