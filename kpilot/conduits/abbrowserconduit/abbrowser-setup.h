@@ -34,17 +34,17 @@
 
 class AbbrowserWidget;
 
-class AbbrowserWidgetSetup : public ConduitConfig
+class AbbrowserWidgetSetup : public ConduitConfigBase
 {
-Q_OBJECT
 public:
-	AbbrowserWidgetSetup(QWidget *,const char *,const QStringList &);
+	AbbrowserWidgetSetup(QWidget *,const char *);
 	virtual ~AbbrowserWidgetSetup();
-protected:
-	virtual void readSettings();
-	virtual void commitChanges();
+	virtual void load(KConfig *);
+	virtual void commit(KConfig *);
+	static ConduitConfigBase *create(QWidget *,const char *);
 private:
 	AbbrowserWidget *fConfigWidget;
 } ;
 
 #endif
+

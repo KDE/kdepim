@@ -1,8 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=KDE Addressbook Conduit
+Comment=This conduit syncs the handheld addressbook with KDE's addressbook.
+Name=Addressbook
 Name[af]=Kde Adresboek Pad
+Name[be]=Канал "Адрасная кніга KDE"
+Name[bg]=Път на KDE Адресната Книга
+Name[ca]=Conducte de la Llibreta d'adreces del KDE
 Name[cs]=Propojení s Knihou adres KDE
 Name[da]=KDE-Addressbook-conduit
 Name[de]=Adressbuch-Leitung

@@ -34,9 +34,32 @@
 
 class VCalWidget;
 
+class VCalWidgetSetupBase : public ConduitConfigBase
+{
+public:
+	VCalWidgetSetupBase(QWidget *, const char *);
+	virtual ~VCalWidgetSetupBase();
+
+	virtual void load(KConfig *);
+	virtual void commit(KConfig *);
+
+	QString configGroup() const { return fGroupName; } ;
+protected:
+	VCalWidget *fConfigWidget;
+	QString fGroupName;
+} ;
+
+class VCalWidgetSetup : public VCalWidgetSetupBase
+{
+public:
+	VCalWidgetSetup(QWidget *, const char *);
+	static ConduitConfigBase *create(QWidget *, const char *);
+} ;
+
+#if 0
 class VCalWidgetSetup : public ConduitConfig
 {
-Q_OBJECT
+// Q_OBJECT
 public:
 	VCalWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~VCalWidgetSetup();
@@ -48,5 +71,6 @@ protected:
 	virtual void commitChanges();
 	VCalWidget *fConfigWidget;
 } ;
+#endif
 
 #endif

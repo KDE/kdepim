@@ -28,7 +28,6 @@
 */
 
 #include "options.h"
-#include "abbrowser-setup.moc"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
@@ -40,21 +39,31 @@
 
 #include "kaddressbookConduit.h"
 #include "abbrowser-factory.h"
+#include "abbrowser-setup.h"
 
-AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
+AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
+	ConduitConfigBase(w,n),
+	fConfigWidget(new AbbrowserWidget(w))
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new AbbrowserWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,AbbrowserConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-
 	fConduitName=i18n("Addressbook");
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,AbbrowserConduitFactory::about());
+	fWidget=fConfigWidget;
+#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	CM(fSyncDestination,SIGNAL(clicked(int)));
+	CM(fAbookFile,SIGNAL(textChanged(const QString &)));
+	CM(fArchive,SIGNAL(toggled(bool)));
+	CM(fConflictResolution,SIGNAL(activated(int)));
+	CM(fSmartMerge,SIGNAL(toggled(bool)));
+	CM(fOtherPhone,SIGNAL(activated(int)));
+	CM(fAddress,SIGNAL(activated(int)));
+	CM(fFax,SIGNAL(activated(int)));
+	CM(fCustom0,SIGNAL(activated(int)));
+	CM(fCustom1,SIGNAL(activated(int)));
+	CM(fCustom2,SIGNAL(activated(int)));
+	CM(fCustom3,SIGNAL(activated(int)));
+#undef CM
 }
 
 AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
@@ -62,7 +71,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void AbbrowserWidgetSetup::commitChanges()
+/* virtual */ void AbbrowserWidgetSetup::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 
@@ -101,9 +110,11 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfigWidget->fCustom2->currentItem());
 	fConfig->writeEntry(AbbrowserConduitFactory::custom(3),
 		fConfigWidget->fCustom3->currentItem());
+
+	unmodified();
 }
 
-/* virtual */ void AbbrowserWidgetSetup::readSettings()
+/* virtual */ void AbbrowserWidgetSetup::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 
@@ -142,4 +153,12 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfig->readNumEntry(AbbrowserConduitFactory::custom(2)));
 	fConfigWidget->fCustom3->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::custom(3)));
+
+	unmodified();
 }
+
+/* static */ ConduitConfigBase *AbbrowserWidgetSetup::create(QWidget *w, const char *n)
+{
+	return new AbbrowserWidgetSetup(w,n);
+}
+

@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>392</width>
-            <height>328</height>
+            <width>411</width>
+            <height>285</height>
         </rect>
     </property>
     <property name="caption">
@@ -21,7 +21,7 @@
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
-            <number>11</number>
+            <number>0</number>
         </property>
         <property name="spacing">
             <number>6</number>
@@ -673,17 +673,6 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QLabel" row="7" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel1_6</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Currently, custom fields cannot be synced with the birthdate. Instead, the "Store as Custom Field" setting will be use.</string>
-                        </property>
-                        <property name="alignment">
-                            <set>WordBreak|AlignVCenter</set>
-                        </property>
-                    </widget>
                 </grid>
             </widget>
         </widget>

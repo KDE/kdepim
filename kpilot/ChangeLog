@@ -1,5 +1,17 @@
 TODO LIST (Moved again to the file TODO)
 
+2003-7-4  Adriaan de Groot
+* Removed the words "KPilot", "KDE" and "Conduit" from all the conduit names.
+* Removed double logging in NULL conduit, added message for explicit fail.
+  Use the generic config dialog implementation. I see now that the NULL
+  conduit isn't built or installed anymore. Fixed its .desktop comment.
+* Disabled the expenses and popmail conduit from compiling.
+* Made new-style config for the vcal conduit. Made new-style config for the
+  todo conduit. Stripped out lots of extra #includes. Stripped out extra
+  Q_OBJECT macros. Reduced space in widget some. Fixed void return 0;
+  Fixed improper AboutData in todo conduit.
+* New-style for abbrowser. Minor == vs = mixup. 
+
 2003-6-29  Adriaan de Groot
 * Added some code validation support to plugin.h
 * Messed about with popmail's config. What was the firewall stuff for?

@@ -29,7 +29,6 @@
 
 #include "options.h"
 
-#include "vcal-setup.moc"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
@@ -41,45 +40,37 @@
 
 #include "korganizerConduit.h"
 #include "vcal-factory.h"
+#include "vcal-setup.h"
 
 
-VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
+VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const char *n) :
+	ConduitConfigBase(w,n),
+	fConfigWidget(new VCalWidget(w))
 {
 	FUNCTIONSETUP;
-
-	fConfigWidget = new VCalWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,VCalConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-
-	// This is a little hack to force the config dialog to the
-	// correct size, since the designer dialog is so small.
-	//
-	//
-//	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
-//	fConfigWidget->resize(s);
-//	fConfigWidget->setMinimumSize(s);
+	fWidget=fConfigWidget;
 
 	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
 	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)");
 
-	fConduitName=i18n("Calendar");
+#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	CM(fSyncDestination,SIGNAL(clicked(int)));
+	CM(fCalendarFile,SIGNAL(textChanged(const QString &)));
+	CM(fArchive,SIGNAL(toggled(bool)));
+	CM(fConflictResolution,SIGNAL(activated(int)));
+#undef CM
 }
 
-VCalWidgetSetup::~VCalWidgetSetup()
+VCalWidgetSetupBase::~VCalWidgetSetupBase()
 {
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void VCalWidgetSetup::commitChanges()
+/* virtual */ void VCalWidgetSetupBase::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig,configGroup() );
+	KConfigGroupSaver s(fConfig,configGroup());
 	// General page
 	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
 		fConfigWidget->fSyncDestination->id(
@@ -94,9 +85,10 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
 		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
 
+	unmodified();
 }
 
-/* virtual */ void VCalWidgetSetup::readSettings()
+/* virtual */ void VCalWidgetSetupBase::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 
@@ -116,4 +108,23 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	fConfigWidget->fConflictResolution->setCurrentItem(
 		fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution,
 		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
+
+	unmodified();
 }
+
+VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
+	VCalWidgetSetupBase(w,n)
+{
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,VCalConduitFactory::about());
+	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));
+	fConduitName=i18n("Calendar");
+	fGroupName=QString::fromLatin1(VCalConduitFactory::group);
+
+}
+
+/* static */ ConduitConfigBase *VCalWidgetSetup::create(QWidget *w,const char *n)
+{
+	return new VCalWidgetSetup(w,n);
+}
+
+

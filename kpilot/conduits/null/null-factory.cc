@@ -57,6 +57,8 @@ public:
 	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
 	virtual void commit(KConfig *);
 	virtual void load(KConfig *);
+	static ConduitConfigBase *create(QWidget *p,const char *n)
+		{ return new NullConduitConfig(p,n); } ;
 protected:
 	NullWidget *fConfigWidget;
 } ;
@@ -192,9 +194,10 @@ NullConduitFactory::~NullConduitFactory()
 
 		if (w)
 		{
-			return new NullWidgetSetup(w,n,a);
+			return new ConduitConfigImplementation(w,n,a,
+				NullConduitConfig::create);
 		}
-		else 
+		else
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -224,28 +227,4 @@ NullConduitFactory::~NullConduitFactory()
 	return 0L;
 }
 
-NullWidgetSetup::NullWidgetSetup(QWidget *w, const char *n, 
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-	fConduitName = i18n("Null");
-	fConfigWidget = new NullConduitConfig(this);
-}
 
-NullWidgetSetup::~NullWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void NullWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-	fConfigWidget->commit(fConfig);
-}
-
-/* virtual */ void NullWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-	fConfigWidget->load(fConfig);
-}

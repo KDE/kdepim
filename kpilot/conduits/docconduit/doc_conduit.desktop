@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
+Conduit=Adds text files to your Pilot, suitable for DOC readers.
 Name=Palm DOC
 Name[ca]=Conducte DOC de Palm
 Name[da]=Palm DOC-conduit

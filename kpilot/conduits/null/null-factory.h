@@ -24,7 +24,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -36,22 +36,6 @@
 class NullWidget;
 class KInstance;
 class KAboutData;
-
-class NullWidgetSetup : public ConduitConfig
-{
-Q_OBJECT
-public:
-	NullWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~NullWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	ConduitConfigBase *fConfigWidget;
-} ;
 
 class NullConduitFactory : public KLibFactory
 {

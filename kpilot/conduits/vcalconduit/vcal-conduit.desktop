@@ -1,11 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=KOrganizer Calendar Conduit
+Comment=This conduit syncs the Datebook from your handheld to KOrganizer.
+Name=KOrganizer Calendar
 Name[af]=Korganizer Kalender Pad
 Name[ar]=أنبوب تقويم KOrganizer
 Name[az]=KOrganizer Vaxt Cədvəli
-Name[ca]=Conducte de calendari KOrganizer
+Name[be]=Канал "Каляндар K Арганізатара"
+Name[ca]=Conducte calendari de KOrganizer
 Name[cs]=Propojení s kalendářem Organizéru
 Name[da]=KOrganizer Kalender-conduit
 Name[de]=Terminplaner-Kalender
@@ -51,6 +53,7 @@ Comment=This conduit synchronizes your Pilot with the KOrganizer datebook.
 Comment[af]=Hierdie pad sinkroniseer jou Pilot met die Korganizer datumboek.
 Comment[ar]=هذا الأنبوب يزامن جهاز Pilot الخاص بك مع أجندة تقويم المنظم
 Comment[az]=Bu əlavə sizin Pilot-u KOrganizer kitabcığı ilə sinxronlaşdırır.
+Comment[ca]=Aquest conducte sincronitza el vostre Pilot amb la llibreta de dates de KOrganizer.
 Comment[cs]=Toto propojení synchronizuje vašeho Pilota s kalendářem KOrganizéru
 Comment[da]=Denne conduit synkroniserer din Pilot med KOrganizer-datobogen.
 Comment[de]=Abgleich des Palm Pilot mit dem KOrganizer-Terminkalender

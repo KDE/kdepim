@@ -296,7 +296,7 @@ bool AbbrowserConduit::_saveAddressBook()
 	switch (fAbookType)
 	{
 		case eAbookResource:
-			if (abChanged) res==StdAddressBook::save();
+			if (abChanged) res=StdAddressBook::save();
 //			if (aBook) aBook->cleanUp();
 			break;
 		case eAbookLocal: // initialize the abook with the given file
@@ -607,7 +607,9 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
-	DEBUGCONDUIT << fname << ": syncAction=" << syncAction << ", archive = " << fArchive << endl;
+	DEBUGCONDUIT << fname << ": "
+		/* << "syncAction=" << syncAction << ", " */
+		<< "archive = " << fArchive << endl;
 	DEBUGCONDUIT << fname << ": smartmerge=" << fSmartMerge << ", conflictRes="<< fConflictResolution << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << fPilotStreetHome << ", PilotFaxHOme" << fPilotFaxHome << endl;
 #endif

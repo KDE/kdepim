@@ -31,15 +31,14 @@
 
 #include "plugin.h"
 #include "vcal-setup.h"
-#include "todo-factory.h"
 
-class ToDoWidgetSetup : public VCalWidgetSetup
+class ToDoWidgetSetup : public VCalWidgetSetupBase
 {
-Q_OBJECT
 public:
-	ToDoWidgetSetup(QWidget *,const char *,const QStringList &);
+	ToDoWidgetSetup(QWidget *,const char *);
 	virtual ~ToDoWidgetSetup();
-	virtual QString configGroup() const { return ToDoConduitFactory::group; };
+
+	static ConduitConfigBase *create(QWidget *, const char *);
 } ;
 
 #endif

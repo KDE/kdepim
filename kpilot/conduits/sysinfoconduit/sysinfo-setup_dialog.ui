@@ -35,7 +35,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Output</string>
+                    <string>General</string>
                 </attribute>
                 <grid>
                     <property name="name">

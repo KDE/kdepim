@@ -99,6 +99,7 @@ NullConduit::~NullConduit()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Config says to fail now." << endl;
 #endif
+		emit logError(i18n("NULL conduit is programmed to fail."));
 		return false;
 	}
 
@@ -106,7 +107,6 @@ NullConduit::~NullConduit()
 	if (!m.isEmpty())
 	{
 		addSyncLogEntry(m);
-		emit logMessage(m);
 	}
 
 #ifdef DEBUG

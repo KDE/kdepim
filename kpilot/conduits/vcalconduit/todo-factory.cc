@@ -76,7 +76,7 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
-	fAbout->addAuthor("Reinhold Kainhofer", 
+	fAbout->addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Maintainer"),
 		"reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com/Linux/");
@@ -104,13 +104,33 @@ ToDoConduitFactory::~ToDoConduitFactory()
 		<< endl;
 #endif
 
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+
+		if (w)
+		{
+			return new ToDoWidgetSetup(w,n);
+		}
+		else
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+				<< ": Couldn't cast parent to widget."
+				<< endl;
+#endif
+			return 0L;
+		}
+	}
+
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
 
 		if (w)
 		{
-			return new ToDoWidgetSetup(w,n,a);
+			return new ConduitConfigImplementation(w,n,a,
+				ToDoWidgetSetup::create);
 		}
 		else
 		{

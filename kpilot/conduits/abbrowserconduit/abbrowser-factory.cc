@@ -184,13 +184,30 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 		<< endl;
 #endif
 
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+
+		if (w)
+		{
+			return new AbbrowserWidgetSetup(w,n);
+		}
+		else
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't cast parent to widget."
+				<< endl;
+			return 0L;
+		}
+	}
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
 
 		if (w)
 		{
-			return new AbbrowserWidgetSetup(w,n,a);
+			return new ConduitConfigImplementation(w,n,a,
+				AbbrowserWidgetSetup::create);
 		}
 		else
 		{
@@ -220,4 +237,5 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 	return 0L;
 }
+
 

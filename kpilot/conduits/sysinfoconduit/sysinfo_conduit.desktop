@@ -1,11 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
+Comment=This conduit writes information about your handheld and the sync to a file.
 Name=System Information
-Name[be]=Сынхранізацыя часу
-Name[da]=Tidsynkronisering
-Name[es]=Sincronización de hora
-Name[sv]=Tidssynkronisering
+Name[ca]=Sistema d'informació
+Name[es]=Información del sistema
+Name[pt_BR]=Informação do Sistema
+Name[sv]=Systeminformation
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=libsysinfoconduit

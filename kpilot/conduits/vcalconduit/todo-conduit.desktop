@@ -1,11 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=KOrganizer Todo Conduit
+Comment=This conduit syncs the ToDo list from your handheld to KOrganizer.
+Name=KOrganizer ToDo's
 Name[af]=Korganizer Te-doen Pad
 Name[ar]=أنبوب مهام KOrganizer
 Name[az]=KOrganizer Planlar
-Name[ca]=Conducte de pendents KOrganizer
+Name[be]=Канал "Заданьні K Арганізатара"
+Name[ca]=Conducte pendents de KOrganizer
 Name[cs]=Propojení s plánovačem Organizéru
 Name[da]=KOrganizer Gøremål-conduit
 Name[de]=Terminplaner-Aufgaben

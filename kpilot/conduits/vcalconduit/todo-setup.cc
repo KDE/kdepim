@@ -29,34 +29,34 @@
 
 #include "options.h"
 
-#include "todo-setup.moc"
-
-//#include <qpushbutton.h>
 #include <qtabwidget.h>
-#include <qcheckbox.h>
 #include <qbuttongroup.h>
-
-#include <kconfig.h>
-//#include <kinstance.h>
-//#include <kaboutdata.h>
-#include <kurlrequester.h>
 
 #include "korganizerConduit.h"
 #include "todo-factory.h"
+#include "todo-setup.h"
 
 
 
-ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	VCalWidgetSetup(w,n,a)
+ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
+	VCalWidgetSetupBase(w,n)
 {
 	FUNCTIONSETUP;
-	fConfigWidget->tabWidget->setTabLabel(fConfigWidget->tabWidget->page(0), i18n("ToDo File"));
-	fConduitName = i18n("To-do");
+	fConduitName = i18n("ToDo");
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,ToDoConduitFactory::about());
+
+	fConfigWidget->fSyncDestination->setTitle(i18n("ToDo Destination"));
+	fGroupName = QString::fromLatin1(ToDoConduitFactory::group);
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()
 {
 	FUNCTIONSETUP;
 }
+
+/* static */ ConduitConfigBase *ToDoWidgetSetup::create(QWidget *w, const char *n)
+{
+	return new ToDoWidgetSetup(w,n);
+}
+
 

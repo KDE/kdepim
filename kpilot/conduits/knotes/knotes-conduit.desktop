@@ -1,9 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=KPilot KNotes Conduit
+Comment=This conduit syncs the Memo Pad application with KNotes.
+Name=KNotes / Memos
 Name[af]=Kpilot Knotas Pad
 Name[ar]=أنبوب Kpilot KNotes
+Name[be]=Канал "K Нататкі"
+Name[ca]=Conducte KNotes de KPilot
 Name[cs]=Propojení s poznámkami KNotes
 Name[da]=KPilot KNotes-conduit
 Name[de]=KPilot-Einrichtung für KNotes

@@ -1,26 +1,45 @@
 <!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>VCalWidget</class>
+<author>Adriaan de Groot</author>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form2</cstring>
+        <cstring>Form1</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>392</width>
-            <height>265</height>
+            <width>453</width>
+            <height>209</height>
         </rect>
     </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="baseSize">
+        <size>
+            <width>570</width>
+            <height>270</height>
+        </size>
+    </property>
     <property name="caption">
-        <string>Form1</string>
+        <string>Null-Conduit Options</string>
+    </property>
+    <property name="layoutMargin" stdset="0">
+    </property>
+    <property name="layoutSpacing" stdset="0">
     </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
-            <number>11</number>
+            <number>0</number>
         </property>
         <property name="spacing">
             <number>6</number>
@@ -29,18 +48,45 @@
             <property name="name">
                 <cstring>tabWidget</cstring>
             </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="layoutMargin" stdset="0">
+            </property>
             <widget class="QWidget">
                 <property name="name">
-                    <cstring>tab</cstring>
+                    <cstring>Widget2</cstring>
                 </property>
                 <attribute name="title">
                     <string>General</string>
                 </attribute>
-                <vbox>
+                <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QButtonGroup">
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>Spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>fSyncDestination</cstring>
                         </property>
@@ -51,6 +97,31 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>fSyncStdCalendar</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Standard calendar</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Select this to use the calendar specified by the KDE calendar settings.</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fSyncFile_2</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Calendar &amp;file:</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Use a specific calendar file, not necessarily the one the KDE calendar uses.</string>
+                                </property>
+                            </widget>
                             <widget class="KURLRequester" row="1" column="1">
                                 <property name="name">
                                     <cstring>fCalendarFile</cstring>
@@ -73,56 +144,21 @@
                                     <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>fSyncStdCalendar</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Standard calendar</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>fSyncFile</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Calendar &amp;file:</string>
-                                </property>
-                            </widget>
                         </grid>
                     </widget>
-                    <widget class="QCheckBox">
+                    <widget class="QCheckBox" row="1" column="0">
                         <property name="name">
                             <cstring>fArchive</cstring>
                         </property>
                         <property name="text">
-                            <string>Store &amp;archived records  in the KDE calendar</string>
+                            <string>Store &amp;archived records in the KDE calendar</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
+                            <string>When this box is checked, archived records will still
+be saved in the calendar on the PC.</string>
                         </property>
                     </widget>
-                    <spacer>
-                        <property name="name">
-                            <cstring>Spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>80</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </vbox>
+                </grid>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -135,96 +171,76 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QGroupBox" row="0" column="0">
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>groupBox4</cstring>
+                            <cstring>textLabel1_2</cstring>
                         </property>
-                        <property name="title">
-                            <string>Conflict resolution</string>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>4</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel" row="1" column="0">
-                                <property name="name">
-                                    <cstring>textLabel1_2</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>4</hsizetype>
-                                        <vsizetype>5</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                                <property name="text">
-                                    <string>Conflict &amp;resolution:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fConflictResolution</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>textLabel1</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&lt;p&gt;Here you can select the default action if an event was modified on both sides. &lt;/p&gt;&lt;p&gt;Conflict resolution is not meant to resolve double-scheduling conflicts, e.g. if you have two meetings at the same time, the conduit will not warn you!&lt;/p&gt;
-</string>
-                                </property>
-                                <property name="alignment">
-                                    <set>WordBreak|AlignJustify|AlignVCenter</set>
-                                </property>
-                            </widget>
-                            <widget class="QComboBox" row="1" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Use KPilot's global setting</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ask user</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Do Nothing</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Handheld overrides</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>PC overrides</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Values from last sync (if possible)</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Use both entries</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>fConflictResolution</cstring>
-                                </property>
-                                <property name="currentItem">
-                                    <number>6</number>
-                                </property>
-                            </widget>
-                        </grid>
+                        <property name="text">
+                            <string>Conflict &amp;resolution:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
                     </widget>
-                    <spacer row="1" column="0">
+                    <widget class="QComboBox" row="0" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Use KPilot's global setting</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Ask user</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Do Nothing</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Handheld overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>PC overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Values from last sync (if possible)</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Use both entries</string>
+                            </property>
+                        </item>
                         <property name="name">
-                            <cstring>Spacer3</cstring>
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                        <property name="currentItem">
+                            <number>6</number>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Here you can select the action to take if an event was modified on both
+the handheld and the PC. This does &lt;i&gt;not&lt;/i&gt; handle double-scheduling
+conflicts.</string>
+                        </property>
+                    </widget>
+                    <spacer row="1" column="1">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Vertical</enum>
@@ -235,7 +251,7 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>20</height>
+                                <height>31</height>
                             </size>
                         </property>
                     </spacer>
@@ -244,17 +260,8 @@
         </widget>
     </grid>
 </widget>
-<connections>
-    <connection>
-        <sender>fSyncFile</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>fCalendarFile</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-</connections>
 <tabstops>
     <tabstop>tabWidget</tabstop>
-    <tabstop>fArchive</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
