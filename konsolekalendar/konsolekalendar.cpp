@@ -71,6 +71,16 @@ void KonsoleKalendar::closeCalendar()
 		delete m_Calendar;
 }
 
+void KonsoleKalendar::importCalendar()
+{
+	KonsoleKalendarAdd add( &m_variables );
+
+	kdDebug() << "konsolecalendar.cpp::addEvent | importing now!"  << endl;
+	add.addImportedCalendar();
+
+
+}
+
 void KonsoleKalendar::createCalendar()
 {
 

@@ -52,6 +52,12 @@ class KonsoleKalendar
    void closeCalendar();
 
    /*
+    * Imports calendar file
+    */
+
+   void importCalendar();
+
+   /*
     * Add event to calendar
     */
    void addEvent();
