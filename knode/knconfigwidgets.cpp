@@ -36,6 +36,7 @@
 #include <kdebug.h>
 #include <kscoring.h>
 #include <kscoringeditor.h>
+#include <kpgp.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -2001,88 +2002,13 @@ void KNConfig::PostNewsSpellingWidget::apply()
 
 //==============================================================================================================
 
-KNConfig::PrivacyWidget::PrivacyWidget(Privacy *pr, QWidget *p, const char *n) : BaseWidget(p,n), d_ata(pr)
+KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n) 
+  : BaseWidget(p,n)
 {
-//  QVBoxLayout *topL = new QVBoxLayout(this, 2);
-  QGridLayout *topL=new QGridLayout(this, 3,3, 8,5);
-
-//  don't use a groupbox as long as we have nothing to group in here (CG)
-
-  // === groups ===========================================================
-
-//  QGroupBox *groupsB=new QGroupBox(this);
-
-//  QGridLayout *groupsL=new QGridLayout(groupsB, 2,3, 8,5);
-//  groupsL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  pgp_version = new QComboBox(this);
-  QLabel *l1 = new QLabel(pgp_version,i18n("&PGP version"), this);
-  topL->addWidget(l1,0,0);
-  topL->addMultiCellWidget(pgp_version,0,0,1,2);
-  connect(pgp_version, SIGNAL(activated(int)), SLOT(slotDefaultProg(int)));
-
-  pgp_path = new QLineEdit(this);
-  l1 =new QLabel(pgp_path, i18n("Crypt progra&m:"), this);
-  topL->addWidget(l1,1,0);
-  topL->addWidget(pgp_path,1,1);
-
-  QPushButton *choosePgp = new QPushButton(i18n("Choo&se..."),this);
-  topL->addWidget(choosePgp,1,2);
-  connect(choosePgp, SIGNAL(clicked()), SLOT(slotChoosePgp()));
-
-  //l1 = new QLabel(i18n("alternate keyring:"), groupsB);
-  //groupsL->addWidget(l1,3,0);
-  //keyring = new QLineEdit(groupsB);
-  //groupsL->addWidget(keyring,3,1);
-
-  //l1 = new QLabel(i18n("keyserver:"), groupsB);
-  //groupsL->addWidget(l1,4,0);
-  //keyserv = new QLineEdit(groupsB);
-  //groupsL->addWidget(keyserv,4,1);
-
-  //l1 = new QLabel(i18n("PGP method"), groupsB);
-  //groupsL->addWidget(l1,5,0);
-  //enc_style = new QComboBox(groupsB);
-  //groupsL->addWidget(enc_style,5,1);
-
-  //keeppasswd = new QCheckBox("keep passphrase in memory",groupsB);
-  //groupsL->addMultiCellWidget(keeppasswd, 6,6,0,1);
-
-  topL->setColStretch(1,1);
-  topL->setRowStretch(2,1);
-
-//  topL->addWidget(groupsB);
-//  topL->addStretch(1);
-
-  // === init ===========================================================
-  pgp_version->insertStringList(d_ata->v_ersions);
-  pgp_version->setCurrentItem(d_ata->v_ersion);
-  pgp_path->setText(d_ata->p_rogpath);
-  //keyring->setText(d_ata->k_eyring);
-  //keyserv->setText(d_ata->k_eyserv);
-  //enc_style->insertStringList(d_ata->e_ncodings);
-  //enc_style->setCurrentItem(d_ata->e_ncoding);
-  //keeppasswd->setChecked(d_ata->k_eeppasswd);
-  //kdDebug(5003) << k_funcinfo << endl;
+  QGridLayout *topLayout = new QGridLayout(this,1,1);
+  conf = new KpgpConfig(this,"knode pgp config",false);
+  topLayout->addWidget(conf,0,0);
 }
-
-
-void KNConfig::PrivacyWidget::slotChoosePgp()
-{
-  QString path = pgp_path->text().simplifyWhiteSpace();
-
-  path = KFileDialog::getOpenFileName(path, QString::null, this, i18n("Choose PGP binary"));
-
-  if (!path.isEmpty())
-    pgp_path->setText(path);
-}
-
-
-void KNConfig::PrivacyWidget::slotDefaultProg(int version)
-{
-   pgp_path->setText(d_ata->defaultProg(version));
-}
-
 
 KNConfig::PrivacyWidget::~PrivacyWidget()
 {
@@ -2092,14 +2018,7 @@ void KNConfig::PrivacyWidget::apply()
 {
   if(!d_irty)
     return;
-
-  d_ata->v_ersion = pgp_version->currentItem();
-  //d_ata->e_ncoding = enc_style->currentItem();
-  //d_ata->k_eeppasswd = keeppasswd->isChecked();
-  //d_ata->k_eyring = keyring->text();
-  d_ata->p_rogpath = pgp_path->text();
-
-  d_ata->save();
+  conf->applySettings();
 }
 
 

@@ -53,6 +53,7 @@
 #include "kncleanup.h"
 #include "utilities.h"
 #include "knscoring.h"
+#include "knpgp.h"
 
 
 KNodeView::KNodeView(KNMainWindow *w, const char * name)
@@ -174,6 +175,9 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   // Score Manager
   s_coreManager = new KNScoringManager();
   knGlobals.scoreManager = s_coreManager;
+
+  // create a global pgp instance
+  new KNpgp();
 
   //-------------------------------- <GUI again> -------------------------------
   connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotGrpReorganize()));

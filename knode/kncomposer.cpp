@@ -275,8 +275,8 @@ void KNComposer::setConfig(bool onlyFonts)
     v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
     a_ctWordWrap->setChecked(knGlobals.cfgManager->postNewsComposer()->wordWrap());
 
-    KNPgp pgp;
-    a_ctPGPsign->setEnabled(pgp.havePGP());
+    Kpgp *pgp = Kpgp::getKpgp();
+    a_ctPGPsign->setEnabled(pgp->havePGP());
   }
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
@@ -807,14 +807,14 @@ void KNComposer::slotRemoveAttachment()
 void KNComposer::slotSignArticle()
 {
   QString text = v_iew->e_dit->text();
-  KNPgp pgp;
-  pgp.setMessage(text);
-  pgp.setUser(article()->from()->email());
+  Kpgp *pgp = Kpgp::getKpgp();
+  pgp->setMessage(text.latin1());
+  pgp->setUser(article()->from()->email());
   kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-  if (!pgp.sign())
-    KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n\n%1").arg(pgp.lastErrorMsg()));
+  if (!pgp->sign())
+    KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n\n%1").arg(pgp->lastErrorMsg()));
   else {
-    v_iew->e_dit->setText( pgp.message() );
+    v_iew->e_dit->setText( pgp->message() );
     v_iew->e_dit->setModified(true);
   }
 }

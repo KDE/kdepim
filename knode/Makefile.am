@@ -57,7 +57,6 @@ knode_SOURCES =   knconfigmanager.cpp \
                   utilities.cpp \
                   \
                   knpgp.cpp \
-                  knpgpbase.cpp \
                   \
                   knscoring.cpp \
                   \
@@ -124,7 +123,6 @@ noinst_HEADERS =  knconfigmanager.h \
                   utilities.h \
                   \
                   knpgp.h \
-                  knpgpbase.h \
                   \
                   knscoring.h \
                   \

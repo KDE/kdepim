@@ -46,6 +46,7 @@ class KNServerInfo;
 class KNScoringManager;
 class KScoringRule;
 class KScoringRulesConfig;
+class KpgpConfig;
 
 namespace KNConfig {
 
@@ -945,63 +946,18 @@ class PostNewsSpellingWidget : public BaseWidget {
 };
 
 
-class Privacy: public Base {
-
-  friend class PrivacyWidget;
- 
-  public:
-    Privacy();
-    ~Privacy();
-    void save();
-
-    enum { GPG1 = 0, PGP2, PGP5, PGP6 };
-    QString defaultProg(int version);
-
-  private:
-    // k_eyserv is the used Keyserver
-    QString k_eyserv;
-    // p_rogpath is the path to the used PGP program, ie /usr/bin/gpg
-    QString p_rogpath;
-    // k_eyring is the used Keyring
-    QString k_eyring;
-    // v_ersions contains a list of currently supported PGP/GPG versions
-    const QStringList v_ersions;
-    // e_ncodings contains a list of currently supported message encodings
-    // (that means something like where to store the signature in an article)
-    const QStringList e_ncodings;
-    // v_version is the used version, its in fact the offset in the v_ersions list
-    int v_ersion;
-    // e_ncoding is the used encoding, its in fact the offset in the e_ncodings list
-    int e_ncoding;
-    // shall knode store the passphrase in memory? (thats an security hole, but really handy)
-    bool k_eeppasswd;
-
-};
-
 
 class PrivacyWidget : public BaseWidget {
 
   Q_OBJECT
  
   public:
-    PrivacyWidget(Privacy *p, QWidget *_p=0, const char *n=0);
+    PrivacyWidget(QWidget *_p=0, const char *n=0);
     ~PrivacyWidget();
     void apply();   // overrides BaseWidget::apply()
  
   protected:
- 
-    Privacy* d_ata;
- 
-    QComboBox *pgp_version,
-              *enc_style;
-    QCheckBox *keeppasswd;
-    QLineEdit *keyring,
-              *keyserv,
-              *pgp_path;
-  protected slots:
-    void slotDefaultProg(int);
-    void slotChoosePgp();
-
+    KpgpConfig *conf;
 };
 
 
