@@ -101,7 +101,7 @@ void RemoteKonnectorConfig::setupStandard()
     return;
 
   QString urlBase = "fish://" + hostname + "/~" + username + "/";
-  mCalendarUrl->setURL( urlBase + ".kde/share/apps/kontact/std.ics" );
+  mCalendarUrl->setURL( urlBase + ".kde/share/apps/korganizer/std.ics" );
   mAddressBookUrl->setURL( urlBase + ".kde/share/apps/kabc/std.vcf" );
 }
 
