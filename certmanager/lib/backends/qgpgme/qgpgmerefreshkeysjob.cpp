@@ -99,12 +99,14 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     strlen("--enable-crl-checks") + 1;
   while ( !mPatternsToDo.empty() ) {
     const QCString pat = mPatternsToDo.front().utf8().stripWhiteSpace();
-    if ( pat.length() >= commandLineLength )
+    const unsigned int patLength = pat.length();
+    if ( patLength >= commandLineLength )
       break;
     mPatternsToDo.pop_front();
     if ( pat.isEmpty() )
       continue;
     *mProcess << pat;
+    commandLineLength -= patLength + 1;
   }
 
   mProcess->setUseStatusFD( true );
