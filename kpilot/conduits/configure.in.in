@@ -44,7 +44,12 @@ AC_ARG_WITH(mal,
 
 if test "x$with_mal" = "xCHECK" ; then
   with_mal=NOTFOUND
-  search_incs="$kde_includes /usr/include /usr/local/include /usr/include/libmal /usr/local/include/libmal"
+  search_incs_tmp="$kde_includes /usr/include /usr/local/include"
+	dnl build the list of include dirs, both with and without libmal appended
+	search_incs="";
+	for idir in $search_incs_tmp; do
+		search_incs="$search_incs $idir $idir/libmal"
+	done
   AC_FIND_FILE(libmal.h, $search_incs, mal_incdir)
   if test -r $mal_incdir/libmal.h ; then
     test "x$mal_incdir" != "x/usr/include" && MAL_INCLUDE="-I$mal_incdir"
@@ -106,11 +111,6 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
   ],
   , with_mal=no
   )
-  AC_LANG_RESTORE
-  CFLAGS=$kde_save_CFLAGS
-  CPPFLAGS=$kde_save_CPPFLAGS
-  LIBS=$kde_save_LIBS
-  LDFLAGS=$kde_save_LDFLAGS
   if test "$with_mal" = "no" ; then
     MAL_INCLUDE=
     MAL_LIB=
@@ -120,9 +120,26 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
     AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
   else
     AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
+		dnl check which version we have (pre 0.40 or >=0.40):		
+    AC_TRY_LINK(dnl
+    [#include <libmal.h>],
+    [
+    PalmSyncInfo *psi;
+		psi->httpProxy;
+    ],
+    , mal_version20=yes
+    )
+    if test "$mal_version20" = "yes" ; then
+			AC_DEFINE(LIBMAL20, 1, [Define if we have the old libmal version (<0.40)])
+		fi
     HAVE_LIBMAL=1
     AC_MSG_RESULT($msg)
   fi
+  AC_LANG_RESTORE
+  CFLAGS=$kde_save_CFLAGS
+  CPPFLAGS=$kde_save_CPPFLAGS
+  LIBS=$kde_save_LIBS
+  LDFLAGS=$kde_save_LDFLAGS
   ;;
 esac
 
@@ -134,12 +151,24 @@ AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
 
 ])
 
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the addressbook conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
 AC_DEFUN(KPILOT_CHECK_KABC,[HAVE_KABC=0
 KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
 	AC_MSG_WARN([KPILOT: Older kaddressbook version detected. No address book
 	conduit will be compiled.]))
 AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 ])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                   actually call the checks
+dnl
+dnl ----------------------------------------------------------------------------
 
 KPILOT_CHECK_MAL
 KPILOT_CHECK_KABC
