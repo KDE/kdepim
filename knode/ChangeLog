@@ -1,12 +1,14 @@
 changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets
 - Followup and reply at same time now possible
+- selection of multiple articles/groups in the listview
+- rot13 decoding
 - improvements for the composer:
   + switching from news article to mail and back on the fly
   + paste as quotation
   + add/remove quotation
   + box quote support
-  * rot13
+  + rot13
   + status bar
   + it's now possible to get the original text if
     the automatic rewrap has gone wrong

@@ -170,7 +170,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
                                     SLOT(slotUndoRewrap()), actionCollection(), "tools_undoRewrap");
   undoRewrap->setEnabled(u_nwraped!=QString::null);
 
-  KAction *rot13 = new KAction(i18n("S&cramble (Rot 13)"), 0, v_iew->e_dit,
+  KAction *rot13 = new KAction(i18n("S&cramble (Rot 13)"), "encrypted", 0, v_iew->e_dit,
                                SLOT(slotRot13()), actionCollection(), "tools_rot13");
   rot13->setEnabled(false);
   connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));

@@ -75,7 +75,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void keyPressEvent(QKeyEvent *e);
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
     void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
-    QString toHtmlString(const QString &line, bool parseURLs=true, bool beautification=true);
+    QString toHtmlString(const QString &line, bool parseURLs=false, bool beautification=false, bool allowRot13=false);
     void openURL(const QString &url);
     void saveAttachment(int id);
     void openAttachment(int id);
@@ -85,7 +85,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
 
     KNArticle *a_rticle;
     QList<KNMimeContent> *a_tt;
-    bool h_tmlDone, f_ullHdrs;
+    bool h_tmlDone, f_ullHdrs, r_ot13;
    	QTimer *t_imer;
     	
     KPopupMenu *u_rlPopup, *a_ttPopup;
@@ -105,7 +105,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
             *a_ctCancel,
             *a_ctSupersede,
             *a_ctEdit;
-    KToggleAction *a_ctToggleFullHdrs;
+    KToggleAction *a_ctToggleFullHdrs, *a_ctToggleRot13;
 
 
   protected slots:
@@ -119,6 +119,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void slotSupersede();
     void slotEdit();
     void slotToggleFullHdrs();
+    void slotToggleRot13();
 
   //-------------------------- </Actions> --------------------------
 
@@ -126,7 +127,6 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
 
   signals:
     void focusChanged(QFocusEvent*);
-
 
   //----------------------- Static members -------------------------
   public:

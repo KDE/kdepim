@@ -48,13 +48,13 @@
 #include "knfolder.h"
 #include "knnntpaccount.h"
 #include "knstringsplitter.h"
+#include "utilities.h"
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000
 #define PUP_COPYURL 3000
 #define PUP_SELALL  4000
 #define PUP_COPY    5000
-
 
 #define HDR_COL   0
 #define QCOL_1    1
@@ -63,9 +63,7 @@
 
 
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
-    : QTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false),
-      a_ctions(actColl)
-
+    : QTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), a_ctions(actColl)
 {
   i_nstances.append(this);
 
@@ -108,6 +106,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotEdit()), a_ctions, "article_edit");
   a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &all headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
+  a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
+                          SLOT(slotToggleRot13()), a_ctions, "view_rot13");
 
   //timer
   t_imer=new QTimer(this);
@@ -116,6 +116,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   //config
   f_ullHdrs=false;
   a_ctToggleFullHdrs->setChecked(f_ullHdrs);
+  r_ot13=false;
+  a_ctToggleRot13->setChecked(false);
   applyConfig();
 }
 
@@ -225,17 +227,22 @@ void KNArticleWidget::applyConfig()
 
 
 
-QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool beautification)
+QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool beautification, bool allowRot13)
 {
-  QString result;
+  QString text,result;
   QRegExp regExp;
   uint len=line.length();
   int matchLen;
   bool forceNBSP=false; //use "&nbsp;" for spaces => workaround for a bug in QTextBrowser
 
+  if (allowRot13 && r_ot13)
+    text = rot13(line);
+  else
+    text = line;
+
   for(uint idx=0; idx<len; idx++){
     
-    switch(line[idx].latin1()) {
+    switch(text[idx].latin1()) {
       
       case '\r':  break;
       case '\n':  result+="<br>"; break;  
@@ -246,8 +253,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '\t':  result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;   // tab == 8 spaces
       
       case 32 :
-        if(line[idx+1].isSpace())  {
-          while(line[idx].isSpace()) {
+        if(text[idx+1].isSpace())  {
+          while(text[idx].isSpace()) {
             result+="&nbsp;";
             idx++;
 
@@ -264,72 +271,72 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       
       case 'h' :  
         if((parseURLs)&&
-           (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'         
+           (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
           regExp="^https?://[^\\s<>()\"|]+";
-          if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString::fromLatin1("<a href=\"") + line.mid(idx,matchLen) +
-                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
+          if (regExp.match(text,idx,&matchLen)!=-1) {
+            result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
         }
-        result+=line[idx];
+        result+=text[idx];
         break;  
       
       case 'w' :
         if((parseURLs)&&
-           (line[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'         
+           (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
           regExp="^www\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
-          if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString::fromLatin1("<a href=\"http://") + line.mid(idx,matchLen) +
-                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
+          if (regExp.match(text,idx,&matchLen)!=-1) {
+            result+=QString::fromLatin1("<a href=\"http://") + text.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
         }
-        result+=line[idx];
+        result+=text[idx];
         break;  
       
       case 'f' :
         if((parseURLs)&&
-           (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'         
+           (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
           regExp="^ftp://[^\\s<>()\"|]+";
-          if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString::fromLatin1("<a href=\"") + line.mid(idx,matchLen) +
-                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
+          if (regExp.match(text,idx,&matchLen)!=-1) {
+            result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
           regExp="^ftp\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
-          if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString::fromLatin1("<a href=\"ftp://") + line.mid(idx,matchLen) +
-                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
+          if (regExp.match(text,idx,&matchLen)!=-1) {
+            result+=QString::fromLatin1("<a href=\"ftp://") + text.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
         }
-        result+=line[idx];
+        result+=text[idx];
         break;        
 
       case '_' :
       case '/' :
       case '*' :
         if(beautification) {
-          regExp=QString("^\\%1[^\\s%2]+\\%3").arg(line[idx]).arg(line[idx]).arg(line[idx]);
-          if (regExp.match(line,idx,&matchLen)!=-1) {
+          regExp=QString("^\\%1[^\\s%2]+\\%3").arg(text[idx]).arg(text[idx]).arg(text[idx]);
+          if (regExp.match(text,idx,&matchLen)!=-1) {
             if (( matchLen > 3 ) &&
-                ((idx==0)||line[idx-1].isSpace()||(line[idx-1] == '(')) &&
-                ((idx+matchLen==len)||line[idx+matchLen].isSpace()||(line[idx+matchLen]==',')||
-                 (line[idx+matchLen]=='.')||(line[idx+matchLen]==')'))) {
-              switch (line[idx].latin1()) {
+                ((idx==0)||text[idx-1].isSpace()||(text[idx-1] == '(')) &&
+                ((idx+matchLen==len)||text[idx+matchLen].isSpace()||(text[idx+matchLen]==',')||
+                 (text[idx+matchLen]=='.')||(text[idx+matchLen]==')'))) {
+              switch (text[idx].latin1()) {
                 case '_' :
-                  result+=QString("<u>%1</u>").arg(toHtmlString(line.mid(idx+1,matchLen-2),parseURLs));
+                  result+=QString("<u>%1</u>").arg(toHtmlString(text.mid(idx+1,matchLen-2),parseURLs,beautification));
                   break;
                 case '/' :
-                  result+=QString("<i>%1</i>").arg(toHtmlString(line.mid(idx+1,matchLen-2),parseURLs));
+                  result+=QString("<i>%1</i>").arg(toHtmlString(text.mid(idx+1,matchLen-2),parseURLs,beautification));
                   break;
                 case '*' :
-                  result+=QString("<b>%1</b>").arg(toHtmlString(line.mid(idx+1,matchLen-2),parseURLs));
+                  result+=QString("<b>%1</b>").arg(toHtmlString(text.mid(idx+1,matchLen-2),parseURLs,beautification));
                   break;                  
               }
               idx+=matchLen-1;
@@ -337,10 +344,10 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             }
           }
         }
-        result+=line[idx];
+        result+=text[idx];
         break;    
             
-      default  : result+=line[idx];
+      default  : result+=text[idx];
     }
   }           
   return result;
@@ -421,6 +428,7 @@ void KNArticleWidget::showBlankPage()
   a_ctEdit->setEnabled(false);
   a_ctSupersede->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
+  a_ctToggleRot13->setEnabled(false);
 }
 
 
@@ -431,7 +439,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   setFont(knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
 
   QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>");
-  msg+=toHtmlString(s, false, false)+"</qt>";
+  msg+=toHtmlString(s)+"</qt>";
   setText(msg);
 
   a_rticle=0;
@@ -448,6 +456,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctSupersede->setEnabled(false);
   a_ctEdit->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
+  a_ctToggleRot13->setEnabled(false);
 }
 
 
@@ -466,6 +475,8 @@ void KNArticleWidget::setArticle(KNArticle *a)
 {
   a_rticle=a;
   h_tmlDone=false;
+  r_ot13=false;
+  a_ctToggleRot13->setChecked(false);
 
   t_imer->stop();
 
@@ -550,11 +561,11 @@ void KNArticleWidget::createHtmlPage()
     	html+="<tr><td align=right>";
       temp=QString::fromLatin1(split.string().data(), split.string().length());
       if( (pos=temp.find(':'))==-1 )
-        html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp, false, false));
+        html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp));
       else
         html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>")
-                      .arg(toHtmlString(temp.left(pos+1), false, false))
-                      .arg(toHtmlString(temp.right(temp.length()-pos-2), false, false));
+                      .arg(toHtmlString(temp.left(pos+1)))
+                      .arg(toHtmlString(temp.right(temp.length()-pos-2)));
 			splitOk=split.next();
     }
   }
@@ -569,7 +580,7 @@ void KNArticleWidget::createHtmlPage()
 
       if(dh->hasName()) {
         html += QString("<tr><td align=right>%1%2:%3</td><td width=\"100%\">")
-        .arg(dh->nameOpenTag()).arg(toHtmlString(dh->translatedName(),false,false))
+        .arg(dh->nameOpenTag()).arg(toHtmlString(dh->translatedName()))
         .arg(dh->nameCloseTag());
       }
       else
@@ -579,13 +590,13 @@ void KNArticleWidget::createHtmlPage()
 
       if(hb->is("From"))
 				html+=QString("<a href=\"internal:author\">%1</a>")
-                .arg(toHtmlString(hb->asUnicodeString(), false));
+                .arg(toHtmlString(hb->asUnicodeString()));
       else if(hb->is("Date")) {
       	KNHeaders::Date *date=static_cast<KNHeaders::Date*>(hb);
-				html+=KGlobal::locale()->formatDateTime(date->qdt(), false, true);
+				html+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
       }
       else
-				html+=toHtmlString(hb->asUnicodeString(), false);
+				html+=toHtmlString(hb->asUnicodeString());
 
       html += dh->headerCloseTag()+"</td></tr>";
     }
@@ -672,7 +683,7 @@ void KNArticleWidget::createHtmlPage()
     if(text->contentType()->isHTMLText()) {
     	QString htmlTxt;
     	text->decodedText(htmlTxt);
-    	setText(htmlTxt);
+    	setText(htmlTxt);             // is this correct? what happens to the headers? (CG)
    	}
 		else {
       QChar firstChar;
@@ -718,7 +729,7 @@ void KNArticleWidget::createHtmlPage()
               }
             }
           }
-          html+=toHtmlString(line)+"<br>";
+          html+=toHtmlString(line,true,true,true)+"<br>";
 	      }
 	      else
           html+="<br>";
@@ -761,7 +772,7 @@ void KNArticleWidget::createHtmlPage()
 						if(ct->isHTMLText())
 							html+=tmp;
 						else
-              html+="<pre>"+toHtmlString(tmp,true,false)+"</pre>";
+              html+="<pre>"+toHtmlString(tmp,true,false,true)+"</pre>";
           }
           html+="</td></tr>";
         }
@@ -792,6 +803,7 @@ void KNArticleWidget::createHtmlPage()
   a_ctEdit->setEnabled(a_rticle->type()==KNMimeBase::ATlocal);
 
   a_ctToggleFullHdrs->setEnabled(true);
+  a_ctToggleRot13->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && rng->autoMark())
@@ -1051,7 +1063,14 @@ void KNArticleWidget::slotToggleFullHdrs()
 {
   kdDebug(5003) << "KNArticleWidget::slotToggleFullHdrs()" << endl;
   f_ullHdrs=!f_ullHdrs;
-  a_ctToggleFullHdrs->setChecked(f_ullHdrs);
+//  a_ctToggleFullHdrs->setChecked(f_ullHdrs);
+  updateContents();
+}
+
+
+void KNArticleWidget::slotToggleRot13()
+{
+  r_ot13=!r_ot13;
   updateContents();
 }
 
