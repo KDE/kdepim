@@ -26,7 +26,7 @@ RHeader::RHeader(const RHeader & h)
         headerName_(h.headerName_),
         headerType_(h.headerType_)
 {
-    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);   
+    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);
 }
 
 RHeader::~RHeader()
@@ -37,6 +37,7 @@ RHeader::~RHeader()
 
 RHeader::RHeader(const QCString & s)
     :   RMessageComponent(s),
+        headerType_(HeaderUnknown),
         headerBody_(0)
 {
     // Empty.
