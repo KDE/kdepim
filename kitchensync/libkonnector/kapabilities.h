@@ -25,6 +25,8 @@
 #include <qvaluelist.h>
 #include <qhostaddress.h>
 #include <qpair.h>
+#include <qmap.h>
+#include <qvariant.h>
 
 class Kapabilities {
  public:
@@ -74,6 +76,8 @@ class Kapabilities {
   void setUserProposals( QValueList< QPair<QString, QString> > );
   Kapabilities &operator=(const Kapabilities & );
 
+  void setExtraOption( const QString &, const QVariant & );
+  QMap<QString, QVariant> extras()const { return m_extras; };
  private:
   class KapabilitiesPrivate;
   KapabilitiesPrivate *d;
@@ -93,6 +97,7 @@ class Kapabilities {
   int m_current;
   QString m_user;
   QString m_pass;
+  QMap<QString,QVariant> m_extras;
 };
 #endif
 

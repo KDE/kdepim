@@ -178,6 +178,10 @@ void Kapabilities::setUserProposals( QValueList< QPair<QString, QString> > auth 
 {
   m_propAuth = auth;
 }
+void Kapabilities::setExtraOption( const QString &extra, const QVariant &variant )
+{
+  m_extras.replace( extra, variant );
+}
 Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
 {
     m_push = rhs.m_push;
@@ -196,6 +200,7 @@ Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
     m_current = rhs.m_current;
     m_user = rhs.m_user;
     m_pass = rhs.m_pass;
+    m_extras = rhs.m_extras;
 
     return (*this );   
 }

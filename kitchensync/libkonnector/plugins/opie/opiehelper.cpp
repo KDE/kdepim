@@ -3,6 +3,7 @@
 #include <qregexp.h>
 #include <qdom.h>
 #include <qfile.h>
+#include <kapplication.h>
 
 #include "opiehelper.h"
 
@@ -89,7 +90,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
 }
 void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &)
 {
-    QPtrList<KAddressbookSyncEntry> entry;
+    KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
     //return entry;
     QFile file( fileName );
     if( !file.open(IO_ReadOnly ) ){
@@ -100,7 +101,13 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 	file.close();
 	return;
     }
+
+    entry->setId( kapp->randomString(8) );
+
     KABC::AddressBook *abook = new KABC::AddressBook( );
+    entry->setAddressbook( abook );
+    list->append( entry );
+
     QDomElement docElem = doc.documentElement( );
     QDomNode n =  docElem.firstChild();
     while(!n.isNull() ){
@@ -122,6 +129,9 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 			adr.setNickName(el.attribute("Nickname" ) );
 			adr.setBirthday( QDate::fromString(el.attribute("Birthday")  ) );
 			adr.setRole(el.attribute("JobTitle" ) );
+			// inside into custom
+			abook->insertAddressee(adr );
+
 		    }
 		    no = no.nextSibling();
 		}
