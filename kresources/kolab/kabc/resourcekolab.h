@@ -118,9 +118,6 @@ public:
   /// Return the list of subresources.
   QStringList subresources() const;
 
-  /// Return the list of active subresources.
-  QStringList activeSubresources() const;
-
   /// Is this subresource active?
   bool subresourceActive( const QString& ) const;
 

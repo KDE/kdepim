@@ -220,7 +220,7 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
     bool rc;
     if( !update ) {
       // Save the new addressee
-      const QString resource = findWritableResource( activeSubresources(), "Contact" );
+      const QString resource = findWritableResource( mResources, "Contact" );
       rc = kmailAddIncidence( "Contact", resource, uid, vCard );
       mUidmap[ uid ] = resource;
     } else
@@ -369,17 +369,6 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
 QStringList KABC::ResourceKolab::subresources() const
 {
   return mResources.keys();
-}
-
-QStringList KABC::ResourceKolab::activeSubresources() const
-{
-  QStringList lst;
-  Kolab::ResourceMap::ConstIterator itR;
-  for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
-    if ( itR.data().active() )
-      lst << itR.key();
-  }
-  return lst;
 }
 
 bool KABC::ResourceKolab::subresourceActive( const QString& subresource ) const
