@@ -114,6 +114,8 @@ KCal::Incidence *VCalConduitPrivate::getNextIncidence()
         } else {
 	        reading=true;
                 fAllEventsIterator = fAllEvents.begin();
+		// Handle case of empty list.
+                if ( fAllEventsIterator == fAllEvents.end() ) return 0;
         }
         return *fAllEventsIterator;
 }
