@@ -421,7 +421,7 @@ void CSVImportDialog::fillTable()
          S_MAYBE_NORMAL_FIELD, S_NORMAL_FIELD } state = S_START;
 
   QChar x;
-  QString field = "";
+  QString field;
 
   // store previous assignment
   mTypeStore.clear();
