@@ -1,6 +1,5 @@
 [Desktop Entry]
 Type=Service
-Comment=
 Name= Addressbook Part
 Icon=addressbook
 ServiceTypes=KitchenSync/Manipulator
