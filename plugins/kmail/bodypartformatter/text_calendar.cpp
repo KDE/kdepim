@@ -46,6 +46,8 @@
 #include <kmail/kmmessage.h>
 #include <kmail/kmcommands.h>
 
+#include <email.h>
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstringhandler.h>
@@ -127,7 +129,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         myself = *attendees.begin();
       else {
         for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-          if( (*it)->email() == receiver ) {
+          // match only the email part, not the name
+          if( KPIM::compareEmail( (*it)->email(), receiver, false ) ) {
             // We are the current one, and even the receiver, note
             // this and quit searching.
             myself = (*it);

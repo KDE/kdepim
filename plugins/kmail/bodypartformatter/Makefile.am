@@ -5,6 +5,7 @@ INCLUDES = -I$(top_srcdir)/kmail \
            -I$(top_srcdir)/libkdepim \
            -I$(top_srcdir)/libkmime \
            -I$(top_srcdir)/mimelib \
+           -I$(top_srcdir)/libemailfunctions \
            -I$(top_srcdir) \
            $(all_includes)
 
@@ -16,7 +17,8 @@ libkmail_bodypartformatter_text_vcard_la_SOURCES = text_vcard.cpp
 libkmail_bodypartformatter_text_vcard_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 libkmail_bodypartformatter_text_vcard_la_LIBADD  = $(LIB_QT) $(LIB_KABC) \
                                                    ../../../libkdepim/libkdepim.la \
-                                                   ../../../libkmime/libkmime.la
+                                                   ../../../libkmime/libkmime.la \
+                                                   ../../../libemailfunctions/libemailfunctions.la
 
 libkmail_bodypartformatter_text_calendar_la_SOURCES = text_calendar.cpp
 libkmail_bodypartformatter_text_calendar_la_LDFLAGS = \
