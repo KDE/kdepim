@@ -100,21 +100,6 @@ class KonsoleKalendarVariables
 
 
    
-   //Q_ENUMS( export_types );
-   
-   /*
-    * Our export types
-    */
-   enum {
-     NONE,
-     TEXT_NORMAL,
-     TEXT_KORGANIZER,
-     HTML,
-     XHTML,
-     XML,
-     CSV,
-     VCARD
-   } export_types;
    
 
   private:
@@ -142,6 +127,23 @@ class KonsoleKalendarVariables
     // We can use this from everywhere
     CalendarLocal *m_caledarLocal;
    
+   /*
+    * Our export types
+    */
+  struct XportTypes{
+   enum Args{
+     NONE,
+     TEXT_NORMAL,
+     TEXT_KORGANIZER,
+     HTML,
+     XHTML,
+     XML,
+     CSV,
+     VCARD
+    } args_needed;
+  };
+
+
 };
 
 }
