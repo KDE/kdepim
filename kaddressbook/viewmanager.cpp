@@ -573,7 +573,8 @@ void ViewManager::incSearch(const QString& text, int field)
 void ViewManager::jumpToLetter(const QChar &ch)
 {
   // Jumping always works based on the first field
-    mActiveView->incrementalSearch(QString(ch), mCurrentIncSearchField);
+    if ( mActiveView )
+        mActiveView->incrementalSearch(QString(ch), mCurrentIncSearchField);
 }
 
 void ViewManager::setJumpButtonBarVisible(bool visible)
