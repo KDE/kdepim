@@ -244,6 +244,10 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
   for( it = incidence->alarms().begin(); it != incidence->alarms().end();
        ++it ) {
     if ( incidence->recursOn( from.date() ) ) {
+      // Find a recurrence which might have an alarm in the
+      // specified time interval
+#warning "This doesn't work for minutely or hourly recurrences"
+// TODO: This misses recurrences after 'from' but within the time range.
       qdt.setTime( (*it)->time().time() );
       qdt.setDate( from.date() );
     }
