@@ -56,7 +56,7 @@ QString Syncee::identifier()
 
 SyncEntry *Syncee::findEntry( const QString &id )
 {
-  kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
+//  kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
 
   SyncEntry *entry = firstEntry();
   while ( entry ) {
@@ -76,9 +76,9 @@ void Syncee::replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry )
 bool Syncee::hasChanged( SyncEntry *entry )
 {
   if ( entry->state() != SyncEntry::Undefined ) return true;
-  if ( entry->timestamp().isEmpty() ) return false; // sure -zecke
+  if ( entry->timestamp().isEmpty() ) return true;
+  if ( !mStatusLog ) return true;
 
-  if ( !mStatusLog ) return false;
   mStatusLog->setGroup( entry->id() );
   QString timestamp = mStatusLog->readEntry( "Timestamp" );
 
@@ -95,13 +95,7 @@ bool Syncee::loadLog()
 
 bool Syncee::saveLog()
 {
-  writeLog();
-  return true;
-}
-
-void Syncee::writeLog()
-{
-  if ( !mStatusLog ) return;
+  if ( !mStatusLog ) return false;
   for ( SyncEntry *entry = firstEntry(); entry; entry = nextEntry() ) {
     mStatusLog->setGroup( entry->id() );
     mStatusLog->writeEntry( "Name",entry->name() );
@@ -109,6 +103,8 @@ void Syncee::writeLog()
   }
 
   mStatusLog->sync();
+
+  return true;
 }
 
 QString Syncee::statusLogName()

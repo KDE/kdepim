@@ -136,16 +136,11 @@ class Syncee
     */
     bool loadLog();
     /**
-      Save the syncing log.
+      Save the status log file with the name @ref statusLogName().
 
       @return true, if loading is successful, otherwise false.
     */
     bool saveLog();
-
-    /**
-      Write the status log file with the name @ref statusLogName().
-    */
-    void writeLog();
 
     /**
       Return, if the given @ref SyncEntry has changed since the last syncing.
