@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>621</width>
-            <height>475</height>
+            <height>477</height>
         </rect>
     </property>
     <property name="caption">
@@ -62,17 +62,77 @@ The certificates will be generated in a decentralized manner. Please contact you
                     </size>
                 </property>
             </spacer>
-            <widget class="QLayoutWidget">
+        </vbox>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>WizardPage</cstring>
+        </property>
+        <attribute name="title">
+            <string>Certificate Parameters</string>
+        </attribute>
+        <vbox>
                 <property name="name">
-                    <cstring>layout1</cstring>
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>TextLabel2_2</cstring>
+                </property>
+                <property name="text">
+                    <string>On this page, you will configure the cryptographic key length and the type of certificate to create.</string>
+                </property>
+                <property name="alignment">
+                    <set>WordBreak|AlignVCenter</set>
+                </property>
+            </widget>
+            <spacer>
+                <property name="name">
+                    <cstring>spacer14</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>31</height>
+                    </size>
+                </property>
+            </spacer>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox1</cstring>
+                </property>
+                <property name="title">
+                    <string>Cryptographic Key Length</string>
                 </property>
                 <hbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Choose &amp;key length:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>comboBox1</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox">
+                        <property name="name">
+                            <cstring>keyLengthCB</cstring>
+                        </property>
+                    </widget>
                     <spacer>
                         <property name="name">
-                            <cstring>spacer9</cstring>
+                            <cstring>spacer13</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Horizontal</enum>
@@ -82,11 +142,13 @@ The certificates will be generated in a decentralized manner. Please contact you
                         </property>
                         <property name="sizeHint">
                             <size>
-                                <width>141</width>
+                                <width>61</width>
                                 <height>20</height>
                             </size>
                         </property>
                     </spacer>
+                </hbox>
+            </widget>
                     <widget class="QButtonGroup">
                         <property name="name">
                             <cstring>certTypeBG</cstring>
@@ -105,6 +167,9 @@ The certificates will be generated in a decentralized manner. Please contact you
                                 <property name="text">
                                     <string>For &amp;signing only</string>
                                 </property>
+                        <property name="accel">
+                            <string>Alt+S</string>
+                        </property>
                             </widget>
                             <widget class="QRadioButton">
                                 <property name="name">
@@ -113,6 +178,9 @@ The certificates will be generated in a decentralized manner. Please contact you
                                 <property name="text">
                                     <string>For &amp;encrypting only</string>
                                 </property>
+                        <property name="accel">
+                            <string>Alt+E</string>
+                        </property>
                             </widget>
                             <widget class="QRadioButton">
                                 <property name="name">
@@ -121,6 +189,9 @@ The certificates will be generated in a decentralized manner. Please contact you
                                 <property name="text">
                                     <string>For signing &amp;and encrypting</string>
                                 </property>
+                        <property name="accel">
+                            <string>Alt+A</string>
+                        </property>
                                 <property name="checked">
                                     <bool>true</bool>
                                 </property>
@@ -129,26 +200,7 @@ The certificates will be generated in a decentralized manner. Please contact you
                     </widget>
                     <spacer>
                         <property name="name">
-                            <cstring>spacer8</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>111</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </hbox>
-            </widget>
-            <spacer>
-                <property name="name">
-                    <cstring>spacer3_2</cstring>
+                    <cstring>spacer12</cstring>
                 </property>
                 <property name="orientation">
                     <enum>Vertical</enum>
@@ -158,8 +210,8 @@ The certificates will be generated in a decentralized manner. Please contact you
                 </property>
                 <property name="sizeHint">
                     <size>
-                        <width>20</width>
-                        <height>30</height>
+                        <width>21</width>
+                        <height>60</height>
                     </size>
                 </property>
             </spacer>
@@ -457,8 +509,6 @@ If you want to change anything, press Back and make your changes; otherwise, pre
         </vbox>
     </widget>
 </widget>
-<customwidgets>
-</customwidgets>
 <connections>
     <connection>
         <sender>generatePB</sender>
