@@ -212,7 +212,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // start date
   if (anEvent->hasStartDate()) {
     tmpStr = qDateTimeToISO(anEvent->dtStart(),
-	                    !anEvent->doesFloat());
+                            !anEvent->doesFloat());
     addPropValue(vtodo, VCDTstartProp, tmpStr.local8Bit());
   }
 
@@ -222,7 +222,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   // unique id
   addPropValue(vtodo, VCUniqueStringProp,
-	       anEvent->uid().local8Bit());
+               anEvent->uid().local8Bit());
 
   // revision
   tmpStr.sprintf("%i", anEvent->revision());
@@ -244,7 +244,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
           ++it ) {
       curAttendee = *it;
       if (!curAttendee->email().isEmpty() &&
-	  !curAttendee->name().isEmpty())
+          !curAttendee->name().isEmpty())
         tmpStr = "MAILTO:" + curAttendee->name() + " <" +
                  curAttendee->email() + ">";
       else if (curAttendee->name().isEmpty())
@@ -252,8 +252,8 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
       else if (curAttendee->email().isEmpty())
         tmpStr = "MAILTO: " + curAttendee->name();
       else if (curAttendee->name().isEmpty() &&
-	       curAttendee->email().isEmpty())
-	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
+               curAttendee->email().isEmpty())
+        kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vtodo, VCAttendeeProp, tmpStr.local8Bit());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
@@ -263,7 +263,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // description BL:
   if (!anEvent->description().isEmpty()) {
     VObject *d = addPropValue(vtodo, VCDescriptionProp,
-			      anEvent->description().local8Bit());
+                              anEvent->description().local8Bit());
     if (anEvent->description().find('\n') != -1)
       addProp(d, VCQuotedPrintableProp);
   }
@@ -294,7 +294,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // related event
   if (anEvent->relatedTo()) {
     addPropValue(vtodo, VCRelatedToProp,
-	         anEvent->relatedTo()->uid().local8Bit());
+                 anEvent->relatedTo()->uid().local8Bit());
   }
 
   // categories
@@ -366,14 +366,14 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // start and end time
   tmpStr = qDateTimeToISO(anEvent->dtStart(),
-			  !anEvent->doesFloat());
+                          !anEvent->doesFloat());
   addPropValue(vevent, VCDTstartProp, tmpStr.local8Bit());
 
   // events that have time associated but take up no time should
   // not have both DTSTART and DTEND.
   if (anEvent->dtStart() != anEvent->dtEnd()) {
     tmpStr = qDateTimeToISO(anEvent->dtEnd(),
-			    !anEvent->doesFloat());
+                            !anEvent->doesFloat());
     addPropValue(vevent, VCDTendProp, tmpStr.local8Bit());
   }
 
@@ -383,7 +383,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // unique id
   addPropValue(vevent, VCUniqueStringProp,
-	       anEvent->uid().local8Bit());
+               anEvent->uid().local8Bit());
 
   // revision
   tmpStr.sprintf("%i", anEvent->revision());
@@ -404,7 +404,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
           ++it ) {
       Attendee *curAttendee = *it;
       if (!curAttendee->email().isEmpty() &&
-	  !curAttendee->name().isEmpty())
+          !curAttendee->name().isEmpty())
         tmpStr = "MAILTO:" + curAttendee->name() + " <" +
                  curAttendee->email() + ">";
       else if (curAttendee->name().isEmpty())
@@ -412,8 +412,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       else if (curAttendee->email().isEmpty())
         tmpStr = "MAILTO: " + curAttendee->name();
       else if (curAttendee->name().isEmpty() &&
-	       curAttendee->email().isEmpty())
-	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
+               curAttendee->email().isEmpty())
+        kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vevent, VCAttendeeProp, tmpStr.local8Bit());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
@@ -434,13 +434,13 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rDaily:
       tmpStr.sprintf("D%i ",anEvent->recurrence()->frequency());
 //      if (anEvent->rDuration > 0)
-//	tmpStr += "#";
+//        tmpStr += "#";
       break;
     case Recurrence::rWeekly:
       tmpStr.sprintf("W%i ",anEvent->recurrence()->frequency());
       for (i = 0; i < 7; i++) {
-	if (anEvent->recurrence()->days().testBit(i))
-	  tmpStr += dayFromNum(i);
+        if (anEvent->recurrence()->days().testBit(i))
+          tmpStr += dayFromNum(i);
       }
       break;
     case Recurrence::rMonthlyPos:
@@ -448,19 +448,19 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       // write out all rMonthPos's
       tmpPositions = anEvent->recurrence()->monthPositions();
       for (tmpPos = tmpPositions.first();
-	   tmpPos;
-	   tmpPos = tmpPositions.next()) {
+           tmpPos;
+           tmpPos = tmpPositions.next()) {
 
-	tmpStr2.sprintf("%i", tmpPos->rPos);
-	if (tmpPos->negative)
-	  tmpStr2 += "- ";
-	else
-	  tmpStr2 += "+ ";
-	tmpStr += tmpStr2;
-	for (i = 0; i < 7; i++) {
-	  if (tmpPos->rDays.testBit(i))
-	    tmpStr += dayFromNum(i);
-	}
+        tmpStr2.sprintf("%i", tmpPos->rPos);
+        if (tmpPos->negative)
+          tmpStr2 += "- ";
+        else
+          tmpStr2 += "+ ";
+        tmpStr += tmpStr2;
+        for (i = 0; i < 7; i++) {
+          if (tmpPos->rDays.testBit(i))
+            tmpStr += dayFromNum(i);
+        }
       } // loop for all rMonthPos's
       break;
     case Recurrence::rMonthlyDay:
@@ -468,10 +468,10 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       // write out all rMonthDays;
       tmpDays = anEvent->recurrence()->monthDays();
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
       break;
     case Recurrence::rYearlyMonth:
@@ -479,10 +479,10 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       // write out all the rYearNums;
       tmpDays = anEvent->recurrence()->yearNums();
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
       break;
     case Recurrence::rYearlyDay:
@@ -490,10 +490,10 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       // write out all the rYearNums;
       tmpDays = anEvent->recurrence()->yearNums();
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
       break;
     default:
@@ -530,7 +530,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // description
   if (!anEvent->description().isEmpty()) {
     VObject *d = addPropValue(vevent, VCDescriptionProp,
-			      anEvent->description().local8Bit());
+                              anEvent->description().local8Bit());
     if (anEvent->description().find('\n') != -1)
       addProp(d, VCQuotedPrintableProp);
   }
@@ -635,7 +635,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // related event
   if (anEvent->relatedTo()) {
     addPropValue(vevent, VCRelatedToProp,
-	         anEvent->relatedTo()->uid().local8Bit());
+                 anEvent->relatedTo()->uid().local8Bit());
   }
 
   if (anEvent->pilotId()) {
@@ -679,7 +679,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   }
   else
     anEvent->setLastModified(QDateTime(QDate::currentDate(),
-				       QTime::currentTime()));
+                                       QTime::currentTime()));
 
   // organizer
   // if our extension property for the event's ORGANIZER exists, add it.
@@ -703,26 +703,26 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
       tmpStr = tmpStr.simplifyWhiteSpace();
       int emailPos1, emailPos2;
       if ((emailPos1 = tmpStr.find('<')) > 0) {
-	// both email address and name
-	emailPos2 = tmpStr.findRev('>');
-	a = new Attendee(tmpStr.left(emailPos1 - 1),
-			 tmpStr.mid(emailPos1 + 1,
-				    emailPos2 - (emailPos1 + 1)));
+        // both email address and name
+        emailPos2 = tmpStr.findRev('>');
+        a = new Attendee(tmpStr.left(emailPos1 - 1),
+                         tmpStr.mid(emailPos1 + 1,
+                                    emailPos2 - (emailPos1 + 1)));
       } else if (tmpStr.find('@') > 0) {
-	// just an email address
-	a = new Attendee(0, tmpStr);
+        // just an email address
+        a = new Attendee(0, tmpStr);
       } else {
-	// just a name
+        // just a name
         QString email = tmpStr.replace( QRegExp(" "), "." );
-	a = new Attendee(tmpStr,email);
+        a = new Attendee(tmpStr,email);
       }
 
       // is there an RSVP property?
       if ((vp = isAPropertyOf(vo, VCRSVPProp)) != 0)
-	a->setRSVP(vObjectStringZValue(vp));
+        a->setRSVP(vObjectStringZValue(vp));
       // is there a status property?
       if ((vp = isAPropertyOf(vo, VCStatusProp)) != 0)
-	a->setStatus(readStatus(vObjectStringZValue(vp)));
+        a->setStatus(readStatus(vObjectStringZValue(vp)));
       // add the attendee
       anEvent->addAttendee(a);
     }
@@ -787,7 +787,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   // start time
   if ((vo = isAPropertyOf(vtodo, VCDTstartProp)) != 0) {
     anEvent->setDtStart(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))));
-    //    kdDebug(5800) << "s is " << //	  s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
+    //    kdDebug(5800) << "s is " << //          s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
     deleteStr(s);
     anEvent->setHasStartDate(true);
   } else {
@@ -806,16 +806,16 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     alarm->setEnabled(true);
     if ((vo = isAPropertyOf(vtodo, VCPAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
-	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setProcedureAlarm(QFile::decodeName(s));
-	deleteStr(s);
+        s = fakeCString(vObjectUStringZValue(a));
+        alarm->setProcedureAlarm(QFile::decodeName(s));
+        deleteStr(s);
       }
     }
     if ((vo = isAPropertyOf(vtodo, VCAAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
-	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setAudioAlarm(QFile::decodeName(s));
-	deleteStr(s);
+        s = fakeCString(vObjectUStringZValue(a));
+        alarm->setAudioAlarm(QFile::decodeName(s));
+        deleteStr(s);
       }
     }
   }
@@ -838,7 +838,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     //const char* category;
     QString category;
     while ((index2 = categories.find(',', index1)) != -1) {
-	//category = (const char *) categories.mid(index1, (index2 - index1));
+        //category = (const char *) categories.mid(index1, (index2 - index1));
       category = categories.mid(index1, (index2 - index1));
       tmpStrList.append(category);
       index1 = index2+1;
@@ -906,7 +906,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   }
   else
     anEvent->setLastModified(QDateTime(QDate::currentDate(),
-				       QTime::currentTime()));
+                                       QTime::currentTime()));
 
   // organizer
   // if our extension property for the event's ORGANIZER exists, add it.
@@ -930,26 +930,26 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       tmpStr = tmpStr.simplifyWhiteSpace();
       int emailPos1, emailPos2;
       if ((emailPos1 = tmpStr.find('<')) > 0) {
-	// both email address and name
-	emailPos2 = tmpStr.findRev('>');
-	a = new Attendee(tmpStr.left(emailPos1 - 1),
-			 tmpStr.mid(emailPos1 + 1,
-				    emailPos2 - (emailPos1 + 1)));
+        // both email address and name
+        emailPos2 = tmpStr.findRev('>');
+        a = new Attendee(tmpStr.left(emailPos1 - 1),
+                         tmpStr.mid(emailPos1 + 1,
+                                    emailPos2 - (emailPos1 + 1)));
       } else if (tmpStr.find('@') > 0) {
-	// just an email address
-	a = new Attendee(0, tmpStr);
+        // just an email address
+        a = new Attendee(0, tmpStr);
       } else {
-	// just a name
+        // just a name
         QString email = tmpStr.replace( QRegExp(" "), "." );
-	a = new Attendee(tmpStr,email);
+        a = new Attendee(tmpStr,email);
       }
 
       // is there an RSVP property?
       if ((vp = isAPropertyOf(vo, VCRSVPProp)) != 0)
-	a->setRSVP(vObjectStringZValue(vp));
+        a->setRSVP(vObjectStringZValue(vp));
       // is there a status property?
       if ((vp = isAPropertyOf(vo, VCStatusProp)) != 0)
-	a->setStatus(readStatus(vObjectStringZValue(vp)));
+        a->setStatus(readStatus(vObjectStringZValue(vp)));
       // add the attendee
       anEvent->addAttendee(a);
     }
@@ -969,7 +969,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // start time
   if ((vo = isAPropertyOf(vevent, VCDTstartProp)) != 0) {
     anEvent->setDtStart(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))));
-    //    kdDebug(5800) << "s is " << //	  s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
+    //    kdDebug(5800) << "s is " << //          s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
     deleteStr(s);
     if (anEvent->dtStart().time().isNull())
       anEvent->setFloats(TRUE);
@@ -980,7 +980,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     anEvent->setDtEnd(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))));
       deleteStr(s);
       if (anEvent->dtEnd().time().isNull())
-	anEvent->setFloats(TRUE);
+        anEvent->setFloats(TRUE);
   }
 
   // at this point, there should be at least a start or end time.
@@ -1006,14 +1006,14 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       index = tmpStr.findRev(' ') + 1; // advance to last field
       if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setDaily(rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->recurrence()->setDaily(rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0) // VEvents set this to 0 forever, we use -1
-	  anEvent->recurrence()->setDaily(rFreq, -1);
-	else
-	  anEvent->recurrence()->setDaily(rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0) // VEvents set this to 0 forever, we use -1
+          anEvent->recurrence()->setDaily(rFreq, -1);
+        else
+          anEvent->recurrence()->setDaily(rFreq, rDuration);
       }
     }
     /********************************* WEEKLY ******************************/
@@ -1025,28 +1025,28 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       QBitArray qba(7);
       QString dayStr;
       if( index == last ) {
-	// e.g. W1 #0
-	qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+        // e.g. W1 #0
+        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
       }
       else {
-	// e.g. W1 SU #0
-	while (index < last) {
-	  dayStr = tmpStr.mid(index, 3);
-	  int dayNum = numFromDay(dayStr);
-	  qba.setBit(dayNum);
-	  index += 3; // advance to next day, or possibly "#"
-	}
+        // e.g. W1 SU #0
+        while (index < last) {
+          dayStr = tmpStr.mid(index, 3);
+          int dayNum = numFromDay(dayStr);
+          qba.setBit(dayNum);
+          index += 3; // advance to next day, or possibly "#"
+        }
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setWeekly(rFreq, qba, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->recurrence()->setWeekly(rFreq, qba, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->recurrence()->setWeekly(rFreq, qba, -1);
-	else
-	  anEvent->recurrence()->setWeekly(rFreq, qba, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->recurrence()->setWeekly(rFreq, qba, -1);
+        else
+          anEvent->recurrence()->setWeekly(rFreq, qba, rDuration);
       }
     }
     /**************************** MONTHLY-BY-POS ***************************/
@@ -1058,43 +1058,43 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       QBitArray qba(7);
       short tmpPos;
       if( index == last ) {
-	// e.g. MP1 #0
-	tmpPos = anEvent->dtStart().date().day()/7 + 1;
-	if( tmpPos == 5 )
-	  tmpPos = -1;
-	qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
-	anEvent->recurrence()->addMonthlyPos(tmpPos, qba);
+        // e.g. MP1 #0
+        tmpPos = anEvent->dtStart().date().day()/7 + 1;
+        if( tmpPos == 5 )
+          tmpPos = -1;
+        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+        anEvent->recurrence()->addMonthlyPos(tmpPos, qba);
       }
       else {
-	// e.g. MP1 1+ SU #0
-	while (index < last) {
-	  tmpPos = tmpStr.mid(index,1).toShort();
-	  index += 1;
-	  if (tmpStr.mid(index,1) == "-")
-	    // convert tmpPos to negative
-	    tmpPos = 0 - tmpPos;
-	  index += 2; // advance to day(s)
-	  while (numFromDay(tmpStr.mid(index,3)) >= 0) {
-	    int dayNum = numFromDay(tmpStr.mid(index,3));
-	    qba.setBit(dayNum);
-	    index += 3; // advance to next day, or possibly pos or "#"
-	  }
-	  anEvent->recurrence()->addMonthlyPos(tmpPos, qba);
-	  qba.detach();
-	  qba.fill(FALSE); // clear out
-	} // while != "#"
+        // e.g. MP1 1+ SU #0
+        while (index < last) {
+          tmpPos = tmpStr.mid(index,1).toShort();
+          index += 1;
+          if (tmpStr.mid(index,1) == "-")
+            // convert tmpPos to negative
+            tmpPos = 0 - tmpPos;
+          index += 2; // advance to day(s)
+          while (numFromDay(tmpStr.mid(index,3)) >= 0) {
+            int dayNum = numFromDay(tmpStr.mid(index,3));
+            qba.setBit(dayNum);
+            index += 3; // advance to next day, or possibly pos or "#"
+          }
+          anEvent->recurrence()->addMonthlyPos(tmpPos, qba);
+          qba.detach();
+          qba.fill(FALSE); // clear out
+        } // while != "#"
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
-						    index))).date();
-	anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
+                                                    index))).date();
+        anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, -1);
-	else
-	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, -1);
+        else
+          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rDuration);
       }
     }
 
@@ -1110,32 +1110,32 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       // recurrence isn't yet set to monthly, addMonthlyDay doesn't do anything
       anEvent->recurrence()->setMonthly( Recurrence::rMonthlyDay, rFreq, -1 );
       if( index == last ) {
-	// e.g. MD1 #0
-	tmpDay = anEvent->dtStart().date().day();
-	anEvent->recurrence()->addMonthlyDay(tmpDay);
+        // e.g. MD1 #0
+        tmpDay = anEvent->dtStart().date().day();
+        anEvent->recurrence()->addMonthlyDay(tmpDay);
       }
       else {
-	// e.g. MD1 3 #0
-	while (index < last) {
-	  int index2 = tmpStr.find(' ', index);
-	  tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-	  index = index2-1;
-	  if (tmpStr.mid(index, 1) == "-")
-	    tmpDay = 0 - tmpDay;
-	  index += 2; // advance the index;
-	  anEvent->recurrence()->addMonthlyDay(tmpDay);
-	} // while != #
+        // e.g. MD1 3 #0
+        while (index < last) {
+          int index2 = tmpStr.find(' ', index);
+          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
+          index = index2-1;
+          if (tmpStr.mid(index, 1) == "-")
+            tmpDay = 0 - tmpDay;
+          index += 2; // advance the index;
+          anEvent->recurrence()->addMonthlyDay(tmpDay);
+        } // while != #
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, -1);
-	else
-	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, -1);
+        else
+          anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rDuration);
       }
     }
 
@@ -1147,29 +1147,29 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       index += 1;
       short tmpMonth;
       if( index == last ) {
-	// e.g. YM1 #0
-	tmpMonth = anEvent->dtStart().date().month();
-	anEvent->recurrence()->addYearlyNum(tmpMonth);
+        // e.g. YM1 #0
+        tmpMonth = anEvent->dtStart().date().month();
+        anEvent->recurrence()->addYearlyNum(tmpMonth);
       }
       else {
-	// e.g. YM1 3 #0
-	while (index < last) {
-	  int index2 = tmpStr.find(' ', index);
-	  tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
-	  index = index2+1;
-	  anEvent->recurrence()->addYearlyNum(tmpMonth);
-	} // while != #
+        // e.g. YM1 3 #0
+        while (index < last) {
+          int index2 = tmpStr.find(' ', index);
+          tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
+          index = index2+1;
+          anEvent->recurrence()->addYearlyNum(tmpMonth);
+        } // while != #
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, -1);
-	else
-	  anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, -1);
+        else
+          anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rDuration);
       }
     }
 
@@ -1181,29 +1181,29 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       index += 1;
       short tmpDay;
       if( index == last ) {
-	// e.g. YD1 #0
-	tmpDay = anEvent->dtStart().date().dayOfYear();
-	anEvent->recurrence()->addYearlyNum(tmpDay);
+        // e.g. YD1 #0
+        tmpDay = anEvent->dtStart().date().dayOfYear();
+        anEvent->recurrence()->addYearlyNum(tmpDay);
       }
       else {
-	// e.g. YD1 123 #0
-	while (index < last) {
-	  int index2 = tmpStr.find(' ', index);
-	  tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-	  index = index2+1;
-	  anEvent->recurrence()->addYearlyNum(tmpDay);
-	} // while != #
+        // e.g. YD1 123 #0
+        while (index < last) {
+          int index2 = tmpStr.find(' ', index);
+          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
+          index = index2+1;
+          anEvent->recurrence()->addYearlyNum(tmpDay);
+        } // while != #
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, -1);
-	else
-	  anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, -1);
+        else
+          anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rDuration);
       }
     } else {
       kdDebug(5800) << "we don't understand this type of recurrence!" << endl;
@@ -1234,7 +1234,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     s = fakeCString(vObjectUStringZValue(vo));
     if (!anEvent->description().isEmpty()) {
       anEvent->setDescription(anEvent->description() + "\n" +
-			      QString::fromLocal8Bit(s));
+                              QString::fromLocal8Bit(s));
     } else {
       anEvent->setDescription(QString::fromLocal8Bit(s));
     }
@@ -1293,7 +1293,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     //const char* category;
     QString category;
     while ((index2 = categories.find(',', index1)) != -1) {
-	//category = (const char *) categories.mid(index1, (index2 - index1));
+        //category = (const char *) categories.mid(index1, (index2 - index1));
       category = categories.mid(index1, (index2 - index1));
       tmpStrList.append(category);
       index1 = index2+1;
@@ -1343,16 +1343,16 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     alarm->setEnabled(true);
     if ((vo = isAPropertyOf(vevent, VCPAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
-	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setProcedureAlarm(QFile::decodeName(s));
-	deleteStr(s);
+        s = fakeCString(vObjectUStringZValue(a));
+        alarm->setProcedureAlarm(QFile::decodeName(s));
+        deleteStr(s);
       }
     }
     if ((vo = isAPropertyOf(vevent, VCAAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
-	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setAudioAlarm(QFile::decodeName(s));
-	deleteStr(s);
+        s = fakeCString(vObjectUStringZValue(a));
+        alarm->setAudioAlarm(QFile::decodeName(s));
+        deleteStr(s);
       }
     }
   }
@@ -1403,7 +1403,7 @@ QString VCalFormat::qDateToISO(const QDate &qd)
   Q_ASSERT(qd.isValid());
 
   tmpStr.sprintf("%.2d%.2d%.2d",
-		 qd.year(), qd.month(), qd.day());
+                 qd.year(), qd.month(), qd.day());
   return tmpStr;
 
 }
@@ -1541,59 +1541,56 @@ void VCalFormat::populate(VObject *vcal)
     if (strcmp(vObjectName(curVO), VCEventProp) == 0) {
 
       if ((curVOProp = isAPropertyOf(curVO, KPilotStatusProp)) != 0) {
-	char *s;
-	s = fakeCString(vObjectUStringZValue(curVOProp));
-	// check to see if event was deleted by the kpilot conduit
-	if (atoi(s) == Event::SYNCDEL) {
-	  deleteStr(s);
-	  kdDebug(5800) << "skipping pilot-deleted event" << endl;
-	  goto SKIP;
-	}
-	deleteStr(s);
+        char *s;
+        s = fakeCString(vObjectUStringZValue(curVOProp));
+        // check to see if event was deleted by the kpilot conduit
+        if (atoi(s) == Event::SYNCDEL) {
+          deleteStr(s);
+          kdDebug(5800) << "skipping pilot-deleted event" << endl;
+          goto SKIP;
+        }
+        deleteStr(s);
       }
 
       // this code checks to see if we are trying to read in an event
       // that we already find to be in the calendar.  If we find this
       // to be the case, we skip the event.
       if ((curVOProp = isAPropertyOf(curVO, VCUniqueStringProp)) != 0) {
-	char *s = fakeCString(vObjectUStringZValue(curVOProp));
-	QString tmpStr(s);
-	deleteStr(s);
+        char *s = fakeCString(vObjectUStringZValue(curVOProp));
+        QString tmpStr(s);
+        deleteStr(s);
 
-	if (mCalendar->event(tmpStr)) {
-	  goto SKIP;
-	}
-	if (mCalendar->todo(tmpStr)) {
-	  goto SKIP;
-	}
+        if (mCalendar->incidence(tmpStr)) {
+          goto SKIP;
+        }
       }
 
       if ((!(curVOProp = isAPropertyOf(curVO, VCDTstartProp))) &&
-	  (!(curVOProp = isAPropertyOf(curVO, VCDTendProp)))) {
-	kdDebug(5800) << "found a VEvent with no DTSTART and no DTEND! Skipping..." << endl;
-	goto SKIP;
+          (!(curVOProp = isAPropertyOf(curVO, VCDTendProp)))) {
+        kdDebug(5800) << "found a VEvent with no DTSTART and no DTEND! Skipping..." << endl;
+        goto SKIP;
       }
 
       anEvent = VEventToEvent(curVO);
       // we now use addEvent instead of insertEvent so that the
       // signal/slot get connected.
       if (anEvent) {
-      	if ( !anEvent->dtStart().isValid() || !anEvent->dtEnd().isValid() ) {
-	  kdDebug(5800) << "VCalFormat::populate(): Event has invalid dates."
-	            << endl;
-	} else {
+              if ( !anEvent->dtStart().isValid() || !anEvent->dtEnd().isValid() ) {
+          kdDebug(5800) << "VCalFormat::populate(): Event has invalid dates."
+                    << endl;
+        } else {
           mCalendar->addEvent(anEvent);
-      	}
+              }
       } else {
-	// some sort of error must have occurred while in translation.
-	goto SKIP;
+        // some sort of error must have occurred while in translation.
+        goto SKIP;
       }
     } else if (strcmp(vObjectName(curVO), VCTodoProp) == 0) {
       Todo *aTodo = VTodoToEvent(curVO);
       mCalendar->addTodo(aTodo);
     } else if ((strcmp(vObjectName(curVO), VCVersionProp) == 0) ||
-	       (strcmp(vObjectName(curVO), VCProdIdProp) == 0) ||
-	       (strcmp(vObjectName(curVO), VCTimeZoneProp) == 0)) {
+               (strcmp(vObjectName(curVO), VCProdIdProp) == 0) ||
+               (strcmp(vObjectName(curVO), VCTimeZoneProp) == 0)) {
       // do nothing, we know these properties and we want to skip them.
       // we have either already processed them or are ignoring them.
       ;
@@ -1607,11 +1604,11 @@ void VCalFormat::populate(VObject *vcal)
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;
   for ( eIt = mEventsRelate.begin(); eIt != mEventsRelate.end(); ++eIt ) {
-    (*eIt)->setRelatedTo( mCalendar->event( (*eIt)->relatedToUid() ) );
+    (*eIt)->setRelatedTo( mCalendar->incidence( (*eIt)->relatedToUid() ) );
   }
   Todo::List::ConstIterator tIt;
   for ( tIt = mTodosRelate.begin(); tIt != mTodosRelate.end(); ++tIt ) {
-    (*tIt)->setRelatedTo( mCalendar->todo( (*tIt)->relatedToUid() ) );
+    (*tIt)->setRelatedTo( mCalendar->incidence( (*tIt)->relatedToUid() ) );
    }
 }
 
