@@ -57,7 +57,7 @@ void ConfigureViewDialog::readConfig(KConfig *config)
     fields = KABC::Field::defaultFields();
   }
   
-  mSelectFieldsWidget->setOldFields( fields );
+  mSelectFieldsWidget->setSelectedFields( fields );
   mFilterPage->readConfig(config);
 }
 
@@ -65,7 +65,7 @@ void ConfigureViewDialog::writeConfig(KConfig *config)
 {
   kdDebug() << "ConfigureViewDialog::writeConfig()" << endl;
 
-  KABC::Field::List fields = mSelectFieldsWidget->chosenFields();
+  KABC::Field::List fields = mSelectFieldsWidget->selectedFields();
 
   KABC::Field::saveFields( config, "KABCFields", fields );
   
