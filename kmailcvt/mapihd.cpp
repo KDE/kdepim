@@ -355,19 +355,19 @@ int       i;
   P.read(_mem,size);
 
   P.go(A+offset);
-  P.read(_N);
-  _W=new word_t[_N+1];
+  P.read(m_N);
+  m_W=new word_t[m_N+1];
 
   P.read(dummy);
-  for(i=0;i<=_N;i++) {
-    P.read(_W[i]);
+  for(i=0;i<=m_N;i++) {
+    P.read(m_W[i]);
   }
 }
 
 pabrec::~pabrec()
 {
   delete _mem;
-  delete _W;
+  delete m_W;
 }
 
 
@@ -385,7 +385,7 @@ const char *pabrec::getEntry(int i)
 {
 int mb,me;
 int k;
-  mb=_W[i];me=_W[i+1];
+  mb=m_W[i];me=m_W[i+1];
   for(k=0;mb!=me;mb++) {
     if (_mem[mb]>=' ' || _mem[mb]=='\n' || _mem[mb]==13 || _mem[mb]=='\t') {
       if (_mem[mb]==13) { entry[k]='\n'; }

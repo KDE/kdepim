@@ -41,14 +41,14 @@
    private:
      char   entry[1024];
      byte   *_mem;
-     word_t _N;
-     word_t *_W;
+     word_t m_N;
+     word_t *m_W;
    public:
      pabrec(pab &);       // expects record the begin at reading point (ftell).
     ~pabrec();
    public:
-     word_t N(void)                 { return _N; }
-     word_t operator[](int i)       { return _W[i]; }
+     word_t N(void)                 { return m_N; }
+     word_t operator[](int i)       { return m_W[i]; }
      const char *getEntry(int i);
    public:
      content_t read(word_t offset);
@@ -94,7 +94,7 @@
  {
    private:
      harray<mapitag_t> tags,context_tags;
-     pabrec            *_R;
+     pabrec            *m_R;
      QString givenName,email,
              title,firstName,additionalName,lastName,
              address,town,state,zip,country,
