@@ -6,7 +6,8 @@ libkitchensyncui_la_SOURCES = partbar.cc manipulatorpart.cc \
     ksync_configuredialog.cc \
     ksync_systemtray.cc ksync_mainwindow.cc \
     ksync_configpart.cc ksync_profile.cc \
-    manpartservice.cpp profilemanager.cpp
+    manpartservice.cpp profilemanager.cpp \
+    profilefilemanager.cpp
 libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined 
 libkitchensyncui_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kitchensync/libkonnector/libkonnector.la
 

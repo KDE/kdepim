@@ -23,7 +23,7 @@ ProfileFileManager::~ProfileFileManager() {
  * saves Profils
  */
 void ProfileFileManager::save( const QValueList<Profile>& list) {
-    QValueList<Profile>::Iterator it;
+    QValueList<Profile>::ConstIterator it;
     KConfig conf("kitchensync_profiles");
     clear( &conf ); // clear the config first
     QStringList strlist;
@@ -66,12 +66,12 @@ void ProfileFileManager::saveOne( KConfig* conf,  const Profile& prof ) {
     conf->writeEntry("Name", prof.name() );
     conf->writeEntry("Pixmap", prof.pixmap() );
 
-    PathMap paths = prof.paths();
-    PathMap::Iterator pathIt;
+    QMap<QString,QString> paths = prof.paths();
+    QMap<QString,QString>::Iterator pathIt;
     QStringList pathlist;
     for ( pathIt = paths.begin(); pathIt != paths.end(); ++pathIt ) {
         pathlist << pathIt.key();
-        conf->writeEntry("Path"+patIt.key(), it.data() );
+        conf->writeEntry("Path"+pathIt.key(), pathIt.data() );
     }
     conf->writeEntry("LocationPath", pathlist );
 
@@ -96,9 +96,9 @@ Profile ProfileFileManager::readOne(KConfig *conf) {
 
     QStringList locationPath = conf->readListEntry("LocationPath");
     QStringList::Iterator it;
-    PathMap map;
+    QMap<QString,QString> map;
     for ( it = locationPath.begin(); it != locationPath.end(); ++it ) {
-        QString val = conf.readEntry("Path"+(*it) );
+        QString val = conf->readEntry("Path"+(*it) );
         map.insert( (*it),  val );
     };
     prof.setPaths( map );
@@ -107,11 +107,14 @@ Profile ProfileFileManager::readOne(KConfig *conf) {
     int count = conf->readNumEntry("ManPartServices");
     ManPartService::ValueList partList;
     for ( int i = 0; i < count; i++ ) {
+        conf->setGroup( prof.uid() +"ManPart" + QString::number( i ) );
         ManPartService service;
-        service.setName();
-        service.setComment();
-        service.setLibname();
-        service.setIcon();
+        service.setName( conf->readEntry("Name") );
+        service.setComment(conf->readEntry("Comment") );
+        service.setLibname(conf->readEntry("Libname") );
+        service.setIcon(conf->readEntry("icon") );
         partList.append( service );
     }
+    prof.setManParts( partList );
+    return prof;
 }

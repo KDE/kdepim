@@ -1,6 +1,6 @@
 
-#include <kconfig.h>
 
+#include "profilefilemanager.h"
 #include "profilemanager.h"
 
 using namespace KSync;
@@ -56,19 +56,13 @@ Profile::ValueList ProfileManager::byName2( const QString& name ) {
  *
  */
 void ProfileManager::load() {
-
-
-
+    ProfileFileManager man;
+    m_list = man.load();
 };
 
 void ProfileManager::save() {
-    KConfig conf("kitchensync_profiles");
-    Profile::ValueList::Iterator it;
-    for ( it = m_list.begin(); it != m_list.end(); ++it ) {
-        conf.setGroup( (*it).uid() );
-        conf.writeEntry("Name", (*it).name() );
-
-    };
+    ProfileFileManager man;
+    man.save( m_list );
 }
 void ProfileManager::addProfile( const Profile& prof ) {
     m_list.append( prof );
