@@ -137,12 +137,13 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 
-  mLocationMapURL = new QLineEdit( groupBox );
+  mLocationMapURL = new QComboBox( true, groupBox );
   QToolTip::add( mLocationMapURL, i18n( "<ul> <li>%s: Street</li>"
                                  "<li>%r: Region</li>"
                                  "<li>%l: Location</li>"
                                  "<li>%z: Zip Code</li>"
                                  "<li>%c: Country ISO Code</li> </ul>" ) );
+  mLocationMapURL->insertStringList( KABPrefs::instance()->mLocationMapURLs );
   boxLayout->addWidget( mLocationMapURL );
   layout->addWidget( groupBox );
 
@@ -172,6 +173,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   connect( mLimitContactDisplay, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mLocationMapURL, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mExtensionView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( selectionChanged( QListViewItem* ) ) );
   connect( mExtensionView, SIGNAL( clicked( QListViewItem* ) ),
@@ -208,8 +210,8 @@ void KABConfigWidget::restoreSettings()
   mFaxHook->setText( KABPrefs::instance()->mFaxHookApplication );
   mAddresseeWidget->restoreSettings();
   mEditorCombo->setCurrentItem( KABPrefs::instance()->mEditorType );
-  mLocationMapURL->setText( KABPrefs::instance()->mLocationMapURL.arg( KGlobal::locale()->country() ) );
-  mLocationMapURL->setCursorPosition( 0 );
+  mLocationMapURL->setCurrentText( KABPrefs::instance()->mLocationMapURL.arg( KGlobal::locale()->country() ) );
+  mLocationMapURL->lineEdit()->setCursorPosition( 0 );
 
   restoreExtensionSettings();
 
@@ -230,7 +232,7 @@ void KABConfigWidget::saveSettings()
   KABPrefs::instance()->mPhoneHookApplication = mPhoneHook->text();
   KABPrefs::instance()->mFaxHookApplication = mFaxHook->text();
   KABPrefs::instance()->mEditorType = mEditorCombo->currentItem();
-  KABPrefs::instance()->mLocationMapURL = mLocationMapURL->text();
+  KABPrefs::instance()->mLocationMapURL = mLocationMapURL->currentText();
   mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();

@@ -44,6 +44,7 @@ class KABPrefs : public KPimPrefs
     QString mPhoneHookApplication;
     QString mFaxHookApplication;
     QString mLocationMapURL;
+    QStringList mLocationMapURLs;
 
     // GUI
     bool mJumpButtonBarVisible;

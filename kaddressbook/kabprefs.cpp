@@ -42,8 +42,12 @@ KABPrefs::KABPrefs()
   addItemString( "PhoneHookApplication", mPhoneHookApplication, "" );
   addItemString( "FaxHookApplication", mFaxHookApplication,
                  "kdeprintfax --phone %N" );
-  addItemString( "LocationMapURL", mLocationMapURL,
-                 "http://link2.map24.com/?lid=9cc343ae&maptype=CGI&lang=%1&street0=%s&zip0=%z&city0=%l&country0=%c" );
+
+  QStringList defaultMaps;
+  defaultMaps << "http://link2.map24.com/?lid=9cc343ae&maptype=CGI&lang=%1&street0=%s&zip0=%z&city0=%l&country0=%c";
+  defaultMaps << "http://www.mapquest.com/main.adp?searchtab=address&searchtype=address&country=%c&address=%s&state=%r&zipcode=%z&city=%l&search=1";
+  addItemString( "LocationMapURL", mLocationMapURL, defaultMaps[ 0 ] );
+  addItemStringList( "LocationMapURLs", mLocationMapURLs, defaultMaps );
 
   KConfigSkeleton::setCurrentGroup( "MainWindow" );
   addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );

@@ -72,7 +72,7 @@ class KABConfigWidget : public QWidget
     QLineEdit *mPhoneHook;
     QLineEdit *mFaxHook;
     QCheckBox *mLimitContactDisplay;
-    QLineEdit *mLocationMapURL;
+    QComboBox *mLocationMapURL;
 
     AddresseeWidget *mAddresseeWidget;
 };
