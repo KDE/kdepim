@@ -70,12 +70,7 @@ const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
 const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
 const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
 const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
-
-// TODO: Get rid of these:
-//const char *AbbrowserConduitFactory::fOtherMap = "PilotOther";
-//const char *AbbrowserConduitFactory::fCloseAbbrowser = "CloseAbbrowser";
-//const char *AbbrowserConduitFactory::fFormatName = "FormatName";
-
+const char *AbbrowserConduitFactory::fOtherField = "PilotOther";
 
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
@@ -96,6 +91,7 @@ AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
 	fAbout->addCredit("David Bishop",
 		I18N_NOOP("UI"));
 }
@@ -161,6 +157,9 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 
 // $Log$
+// Revision 1.6  2002/06/30 16:23:23  kainhofe
+// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
+//
 // Revision 1.5  2002/05/15 17:15:32  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

@@ -51,10 +51,7 @@ public:
 	static const char *syncMode() { return fSyncMode;};
 	static const char *firstSync() { return fFirstSync; } ;
 	static const char *fullSyncOnPCChange() {return fFullSyncOnPCChange; } ;
-		
-	// TODO: get rid of these:
-	static const char *mapOther() { return "dummy"; } ;
-	static const char *formatName() { return "dummy"; } ;
+	static const char *otherField() { return fOtherField; } ;
 	
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -76,9 +73,7 @@ private:
 		*fFaxType,
 		*fSyncMode, 
 		*fFirstSync,
-//		*fFormatName,
-//		*fOtherMap,
-//		*fCloseAbbrowser,
+		*fOtherField,
 		*fFullSyncOnPCChange;
 } ;
 
@@ -90,6 +85,9 @@ void *init_libaddressconduit();
 } ;
 
 // $Log$
+// Revision 1.5  2002/06/30 16:23:23  kainhofe
+// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
+//
 // Revision 1.4  2002/04/16 18:22:12  adridg
 // Wishlist fix from David B: handle formatted names when syncing
 //

@@ -35,7 +35,7 @@
 #include <kapplication.h>
 #include <kconfig.h>
 
-#include "abbrowserConduitConfig_base.h"
+#include "kaddressbookConduit.h"
 
 #include "abbrowser-factory.h"
 #include "abbrowser-setup.moc"
@@ -68,22 +68,22 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
-	fConfig->writeEntry(AbbrowserConduitFactory::firstSync(),
-		fConfigWidget->fFirstTimeSync->isChecked());
-	fConfig->writeEntry(AbbrowserConduitFactory::formatName(),
-		fConfigWidget->fFormatName->isChecked());
-//	fConfig->writeEntry(AbbrowserConduitFactory::closeAbbrowser(),
-//		fConfigWidget->fCloseKab->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::smartMerge(),
 		fConfigWidget->fSmartMerge->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::conflictResolution(),
 		fConfigWidget->fConflictStrategy->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::mapOther(),
-		fConfigWidget->fOtherPhone->currentItem());
+	fConfig->writeEntry(AbbrowserConduitFactory::archiveDeletedRecs(),
+		fConfigWidget->fArchive->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::streetType(),
 		fConfigWidget->fAddress->currentItem());
 	fConfig->writeEntry(AbbrowserConduitFactory::faxType(),
 		fConfigWidget->fFax->currentItem());
+	fConfig->writeEntry(AbbrowserConduitFactory::syncMode(),
+		fConfigWidget->fSyncMode->currentItem());
+	fConfig->writeEntry(AbbrowserConduitFactory::firstSync(),
+		fConfigWidget->fFirstTimeSync->isChecked());
+	fConfig->writeEntry(AbbrowserConduitFactory::otherField(),
+		fConfigWidget->fOtherPhone->currentItem());
 }
 
 /* virtual */ void AbbrowserWidgetSetup::readSettings()
@@ -94,24 +94,29 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
-	fConfigWidget->fFirstTimeSync->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
-//	fConfigWidget->fCloseKab->setChecked(
-//		fConfig->readBoolEntry(AbbrowserConduitFactory::closeAbbrowser(),false));
 	fConfigWidget->fSmartMerge->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::smartMerge(),true));
 	fConfigWidget->fConflictStrategy->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::conflictResolution(),0));
-	fConfigWidget->fOtherPhone->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::mapOther(),0));
+	fConfigWidget->fArchive->setChecked(
+		fConfig->readBoolEntry(AbbrowserConduitFactory::archiveDeletedRecs(),true));
 	fConfigWidget->fAddress->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::streetType(),0));
 	fConfigWidget->fFax->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::faxType(),0));
+	fConfigWidget->fConflictStrategy->setCurrentItem(
+		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),0));
+	fConfigWidget->fFirstTimeSync->setChecked(
+		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
+	fConfigWidget->fOtherPhone->setCurrentItem(
+		fConfig->readNumEntry(AbbrowserConduitFactory::otherField(),0));
 }
 
 
 // $Log$
+// Revision 1.5  2002/06/30 16:23:23  kainhofe
+// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
+//
 // Revision 1.4  2002/05/15 17:15:32  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

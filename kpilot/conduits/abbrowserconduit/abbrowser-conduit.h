@@ -134,13 +134,21 @@ private:
 	*  @return true if successful, false if not
 	*/
 	bool _saveAddressBook();
+	
+	QString getOtherField(const KABC::Addressee&abEntry) const;
+	void setOtherField(KABC::Addressee&abEntry, QString nr);
+	KABC::PhoneNumber getFax(const KABC::Addressee &abEntry) const;
+	KABC::Address getAddress(const KABC::Addressee &abEntry) const;
+	
 
 	void _setAppInfo();
    KABC::Addressee _addToAbbrowser(const PilotAddress & address);
 	int _mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry);
 	int _handleConflict(PilotAddress &piAddress, PilotAddress &backup, KABC::Addressee &abEntry);
 	int _smartMerge(PilotAddress & outPilotAddress, const PilotAddress & backupAddress, KABC::Addressee & outAbEntry);
-	int _smartMergePhone(KABC::Addressee &abEntry, const PilotAddress &backupAddress, PilotAddress &pilotAddress, PilotAddress::EPhoneType PalmFlag, KABC::PhoneNumber::Types PCFlag, QString thisName, QString name);
+	int _smartMergePhone(KABC::Addressee &abEntry, const PilotAddress &backupAddress, 
+		PilotAddress &pilotAddress, PilotAddress::EPhoneType PalmFlag, KABC::PhoneNumber phone, QString
+		 thisName, QString name);
 	int _smartMergeEntry(QString abEntry, const PilotAddress &backupAddress, PilotAddress &pilotAddress, int PalmFlag, QString thisName, QString name, QString &mergedString);
 	
 	void _removePilotAddress(PilotAddress &address);
@@ -193,18 +201,23 @@ private:
 //
 	bool fSmartMerge;
 	EConflictResolution fConflictResolution, fEntryResolution;
-////	QString fPilotOtherMap;
-	bool fPilotStreetHome;
-	bool fPilotFaxHome;
-//	bool fFormatName;
-//// It seems you can't select a abook different from the system addressbook :-((((
-////	bool fStdAddressBook;
-////	QString fAddressBookFile;
-////	Mode fMode;
-	bool fFullSync,
-        fFirstTime,
-        fArchive;
-   int syncAction; 
+//	int fPilotOther;
+	bool fPilotStreetHome, fPilotFaxHome;
+	bool fFullSync, fFirstTime, fArchive;
+   enum  ePilotOtherField
+	{
+		eOtherPhone,
+		eAssistant,
+//		eBusiness2,
+		eBusinessFax,
+		eCarPhone,
+		eEmail2,
+		eHomeFax,
+//		eHomePhone2,
+		eTelex,
+		eTTYTTDPhone
+	} ePilotOther;
+	int syncAction; 
 	int pilotindex;
 	bool abChanged;
 	static const QString appString;
@@ -212,7 +225,7 @@ private:
 	static const QString idString;
 	QMap < recordid_t, QString> addresseeMap;
 	QValueList <recordid_t> syncedIds;
-	QValueList <recordid_t> recordIds;
+//	QValueList <recordid_t> recordIds;
 	KABC::AddressBook* aBook;
 //	KABC::Ticket* ticket;
 	KABC::AddressBook::Iterator abiter;
@@ -222,6 +235,9 @@ private:
 
 
 // $Log$
+// Revision 1.21  2002/07/23 00:52:02  kainhofe
+// Reorder the resolution methods
+//
 // Revision 1.20  2002/07/20 18:50:45  kainhofe
 // added a terrible hack to add new contacts to the addressbook. Need to fix kabc for this...
 //
