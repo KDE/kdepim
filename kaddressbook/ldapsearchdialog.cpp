@@ -38,9 +38,10 @@
 
 static QString asUtf8( const QByteArray &val )
 {
-  const char *data = val.data();
-  if ( !data ) 
+  if ( val.isEmpty() )
     return QString::null;
+
+  const char *data = val.data();
 
   //QString::fromUtf8() bug workaround
   if ( data[ val.size() - 1 ] == '\0' ) 
