@@ -1,7 +1,11 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 INCLUDES= $(all_includes)
+if have_gpgme
+GPGME_SUBDIRS = gpgmepp qgpgme
+endif
+
 # make this pics/ again:
-SUBDIRS = . pics4kmail
+SUBDIRS = $(GPGME_SUBDIRS) . pics4kmail
 
 lib_LTLIBRARIES = libkdenetwork.la
 
@@ -60,3 +64,5 @@ update_DATA = kpgp.upd kpgp-3.1-upgrade-address-data.pl
 
 messages: 
 	$(XGETTEXT) *.cpp *.h -o $(podir)/libkdenetwork.pot
+
+include ../admin/Doxyfile.am

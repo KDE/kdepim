@@ -1,0 +1,9 @@
+if test -z "$GPGME_LIBS"; then
+   echo
+   echo "You are missing gpgme 0.4.4 or higher."
+   echo "The following libraries and applications will not be compiled:"
+   echo "  gpgme++, qpgpgme, certmanager"
+   echo "Download gpgme >= 0.4.4 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme"
+   echo "or use the --with-gpgme-prefix=/path/where/gpgme/is/installed option."
+   echo
+fi
