@@ -17,7 +17,7 @@
 //
 QString KarmLogEvent::escapeXML(const QString& string )
 {
-  result = QStyleSheet::escape(string); // escapes <, >, &
+  QString result = QStyleSheet::escape(string); // escapes <, >, &
   result.replace( '\'', QSl1("&apos;") );
   result.replace( '\"', QSl1("&quot;") );
   // protect also our task-separator
