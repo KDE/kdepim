@@ -454,6 +454,7 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
   QString rdelim = i18n( "\\" ) + delim;
 
   QString err;
+  Task* task;
 
   kdDebug(5970)
     << "KarmStorage::exportcsvFile: " << filename << endl;
@@ -467,47 +468,22 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
   {
     QTextStream stream(&f);
 
-    // Determine depth of the tasks.
-    // The depth is: how often can you say "the task is a subtask of".
-    //
-    // Example:
-    // The task is a subtask of a subtask of a supertask=> depth is 2
-    int depth = 0;                     // depth of deepest task
-    int taskdeepn[taskview->count()];  // depth of each task
-
-    Task* task;
     for (int tasknr=0; tasknr<=taskview->count()-1; ++tasknr)
     {
       task = taskview->item_at_index(tasknr);
 
-      taskdeepn[tasknr+1] = 0;
-      for (uint i=0; i<=task->fullName().length()-1; ++i)
-      {
-        // Each '/' character indicates the next in depth
-        if (task->fullName().latin1()[i] == '/')
-        {
-          taskdeepn[tasknr+1]++;
-        }
-      }
-      if (taskdeepn[tasknr+1] > depth)
-      {
-        depth=taskdeepn[tasknr+1];
-      }
-    }
-
-    for (int tasknr=0; tasknr<=taskview->count()-1; ++tasknr)
-    {
-      task = taskview->item_at_index(tasknr);
+      kdDebug(5970) << "KarmStorage::exportcsvFile: " 
+        << task->name() << ": " << task->depth() << endl;
 
       // indent the task in the csv-file:
-      for (int i=0; i<taskdeepn[tasknr+1]; ++i)
+      for (int i=0; i < task->depth(); ++i)
       {
         stream << delim;
       }
       stream << task->name().replace( delim, rdelim );
 
       // maybe other tasks are more indented, so to align the columns:
-      for (int i=0; i<depth-taskdeepn[tasknr+1]; ++i)
+      for (int i=0; i<task->depth(); ++i)
       {
         stream << delim;
       }
