@@ -217,6 +217,22 @@ bool KonnectorManager::startSync(const QString &udi )
 
     return plugin->startSync();
 }
+bool KonnectorManager::startBackup(const QString &udi, const QString& path)
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return false;
+
+    return plugin->startBackup(path);
+}
+bool KonnectorManager::startRestore(const QString &udi, const QString& path)
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return false;
+
+    return plugin->startRestore(path);
+}
 /**
  * convert the Service to a Device
  */
@@ -282,6 +298,7 @@ void KonnectorManager::slotSync(const QString &udi,  Syncee::PtrList entry)
 void KonnectorManager::slotError(const QString &udi, int mode, const QString &
                           info)
 {
+  kdDebug() << "KonnectorManager::Error received" << endl;
   emit konnectorError(udi, mode, info );
 
 }

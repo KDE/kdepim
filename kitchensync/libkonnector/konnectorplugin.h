@@ -49,6 +49,8 @@ public:
     virtual Kapabilities capabilities( )  = 0 ;
     virtual void setCapabilities( const Kapabilities &kaps ) = 0;
     virtual bool startSync() = 0;
+    virtual bool startRestore(const QString& path) = 0;
+    virtual bool startBackup(const QString& path) = 0;
     virtual bool connectDevice() = 0;
     virtual void disconnectDevice() = 0;
     virtual bool isConnected() = 0;

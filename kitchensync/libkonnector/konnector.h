@@ -165,6 +165,19 @@ public:
      * @param udi Device Id
      */
     bool startSync(const QString &udi);
+    /**
+     *  Pushes backup to udi
+     * @param udi Device Id
+     * @param path Path to the backup file
+     */
+    bool startBackup(const QString &udi, const QString& path);
+    /**
+     *  Pushes a restore to udi
+     * @param udi Device Id
+     * @param path Path to the backup file
+     */
+    bool startRestore(const QString &udi, const QString& path);
+
     //bool canPush(const QString& udi)const;
     /**
      * Returns an IconSet for the given udi
@@ -225,7 +238,7 @@ private:
     KonnectorPlugin* pluginByUDI(const QString &udi )const;
 
 private slots:
-    void slotSync(const QString&, Syncee::PtrList entry );
+    void slotSync(const QString&, Syncee::PtrList entry);
     void slotError(const QString&, int, const QString&);
     void slotChanged(const QString&,  bool );
 };

@@ -32,6 +32,7 @@
 #include <qptrlist.h>
 #include <qwidgetstack.h>
 #include <qsize.h>
+#include <qdir.h>
 
 #include <kaction.h>
 #include <kapplication.h>
@@ -40,6 +41,8 @@
 #include <kmenubar.h>
 #include <ktrader.h>
 #include <kstatusbar.h>
+#include <kmessagebox.h>
+#include <kfiledialog.h>
 
 #include <kparts/componentfactory.h>
 #include <kpopupmenu.h>
@@ -218,10 +221,52 @@ void KSyncMainWindow::slotSync(){
         return;
     m_konnector->startSync( prof.udi() );
 }
+
 void KSyncMainWindow::slotBackup() {
+    kdDebug() << "Slot backup " << endl;
+
+    QString path = KFileDialog::getSaveFileName(
+                          QDir::homeDirPath(), i18n("*.xml|Backup files"), this,
+                          i18n("Please enter a filename to backup the data"));
+    if (path)
+    {
+      // Check if .xml added. If not, add it.
+      QFileInfo fi(path);
+      if (!(fi.extension().lower() == "xml"))
+      {
+        path.append(".xml");
+      }
+    }
+    else
+    {
+      return;
+    }
+
+    KonnectorProfile prof = konnectorProfile();
+    if (prof.udi().isEmpty() ) return;
+
+    if (!prof.kapabilities().supportsPushSync() )
+        return;
+    m_konnector->startBackup(prof.udi(), path);
 }
+
 void KSyncMainWindow::slotRestore() {
+    kdDebug() << "Slot restore " << endl;
+
+    QString path = KFileDialog::getOpenFileName(
+                           QDir::homeDirPath(), "*.xml|Backup files", this,
+                           i18n("Please choose a backup file to restore the data"));
+    if (!path)
+      return;
+
+    KonnectorProfile prof = konnectorProfile();
+    if (prof.udi().isEmpty() ) return;
+
+    if (!prof.kapabilities().supportsPushSync() )
+        return;
+    m_konnector->startRestore(prof.udi(), path);
 }
+
 void KSyncMainWindow::slotConfigure() {
     KonnectorDialog dlg(m_konprof->list() ,  m_konnector);
     /* clicked ok - now clean up*/
@@ -428,7 +473,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
 {
-    kdDebug(5210) << "State changed" << connected << endl;
+    kdDebug(5210) << "State changed " << connected << endl;
     if ( !connected )
         statusBar()->message(i18n("Not connected") );
     else
@@ -436,14 +481,15 @@ void KSyncMainWindow::slotStateChanged( const QString &udi,
     statusBar()->show();
 }
 /*
- * Show a KmessageBox
+ * Show a KMessageBox
  */
 void KSyncMainWindow::slotKonnectorError( const QString& udi,
                                           int error,
                                           const QString& id )
 {
-
+  KMessageBox::error(this, i18n("Error number: ") + QString::number(error) + "\n" + i18n("Message: ") + id);
 }
+
 /*
  * configure profiles
  */

@@ -41,9 +41,9 @@ OpiePlugin::OpiePlugin(QObject *obj, const char *name, const QStringList )
 
     connect(d->socket, SIGNAL(sync(Syncee::PtrList ) ),
 	    this, SLOT(slotSync(Syncee::PtrList ) ) );
-
     connect(d->socket, SIGNAL(errorKonnector(int, QString ) ),
 	    this, SLOT(slotErrorKonnector(int, QString) ) );
+
     connect(d->socket, SIGNAL(stateChanged( bool ) ),
             this, SLOT(slotChanged( bool ) ) );
 
@@ -53,6 +53,7 @@ OpiePlugin::~OpiePlugin()
 {
   delete d;
 }
+
 void OpiePlugin::setUDI(const QString &udi )
 {
   d->udi = udi;
@@ -113,6 +114,14 @@ void OpiePlugin::setCapabilities( const Kapabilities &kaps )
 bool OpiePlugin::startSync()
 {
   return d->socket->startSync();
+}
+bool OpiePlugin::startBackup(const QString& path)
+{
+  return true;
+}
+bool OpiePlugin::startRestore(const QString& path)
+{
+  return true;
 }
 bool OpiePlugin::isConnected()
 {
