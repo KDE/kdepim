@@ -16,7 +16,7 @@
 
 #include"kornbutt.h"
 #include"mailsubject.h"
-#include"shell.h"
+#include"kornshell.h"
 #include"maildrop.h"
 #include"btnstyle.h"
 

@@ -7,7 +7,7 @@
 
 #include"kornapp.h"
 #include<kdebug.h>
-#include"shell.h"
+#include"kornshell.h"
 
 int KornApp::newInstance()
 {
