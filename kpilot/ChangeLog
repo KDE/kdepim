@@ -64,6 +64,52 @@ devel box. This is troubling -- using the software you write. Heck, next
 thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
 
 
+2001-12-29  Adriaan de Groot
+* kpilot/conduitConfigDialog.{h,cc}
+  - Removed old Exec= style conduits entirely. They're warned for now.
+* conduits/abbrowserconduit/*
+  - See conduit run. See DrKonqui. Whee! Oh, and this *one* conduit has
+    a name of the form bla_conduit, while all others are bla-conduit. Yay.
+    See pointer get used before initialization. Cool! It crashes elsewhere.
+    Isn't delayed loading great? __rs__FR11QDataStreamRt5QDict1Z12ContactEntry
+    And ... that was fucking amazing. Greg, you da man.
+
+    OK, so that one also runs to completion, at least the first time. It looks
+    like FirstTime isn't being turned off like it should, so I'll do that by 
+    hand. OK, changes get copied from the Pilot to KAddressbook ok, but the
+    conduit seems to read *all* records from the Pilot, not just the modified
+    ones. That's bad for the batteries. Oh well, I'm just so happy it works
+    that I'll move on to the next conduit and deal with bugs tomorrow.
+* conduits/expense/*
+  - Seems to work fine.
+* conduits/knotes/*
+  - Undefined symbols ... man, I (semi) hate libtool libraries.
+    See, I just left some essential code *out* here, and thus libtool 
+    thinks it'll be resolved later. Ha!
+
+    OK, it at least copies new KNotes to the Pilot. That's enough for now.
+* conduits/popmail/*
+  - Um, does this actually *do* anything? OK, config fixes, dcop fixes ...
+    and voila, a message shows up in the outbox of KMail. So let's call 
+    sending via KMail a success and have a cup of tea.
+* conduits/vcalconduit/*
+  - Now things get hairy / exciting. Let's start with the ToDo conduit:
+
+    kpilotTest: WARNING: [void ConduitProxy::exec()] : Can't create SyncAction.
+
+    Very wise. Of course, the code to create a conduit is not in the
+    factory. Brilliant! Nothing a little cut-n-paste can't cure, and 
+    configure, and .. DrKonqui. Did some indenting, my brain hurts from
+    trying to (a) understand this (b) fix all the memory leaks. Rewrite?
+  - VCalConduit: it doesn't crash, but it's probably going to read all
+    the things from my Pilot and install them in KOrganizer with a date
+    of 0000/00/00 (from looking at the debug messages as they fly by).
+    And .. whump, KOrganizer now can't read the .ics file anymore.
+
+*Every* sync, KPilot tells me that the name in the pilot is different
+from the name in KPilot. Gotta fix that.
+
+
 KPilot Developer's notes for december 27th 2001
 ===============================================
 
