@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>31/10/2000</date>
+<date>01/11/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -529,7 +529,10 @@ other actions a filter can start:</para>
 	<listitem><para><guilabel>forward to</guilabel> will forward the message to another email address.</para></listitem>
 	<listitem><para><guilabel>execute</guilabel> will execute a program, but will not modify the message.
 		Specify the full path to any program you want to execute. &kmail; will block
-		until the program returns.</para></listitem>
+		until the program returns. You can feed the program with the parts of the mail:
+		<userinput>%0</userinput>, <userinput>%1</userinput>, etc
+		will stand for files representing the message parts. For common mails <userinput>%0</userinput>
+		is the text, <userinput>%1</userinput> the first attachment and so on.</para></listitem>
 	<listitem><para><guilabel>filter app</guilabel> will feed the message to a program. If that
 		program returns output, the entire message (including the headers) will be replaced
 		with this output. If the program doesn't return output, the message won't change.
