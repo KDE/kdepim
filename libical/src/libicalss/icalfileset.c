@@ -288,6 +288,30 @@ int icalfileset_safe_saves=1;
 int icalfileset_safe_saves=0;
 #endif
 
+static char * shell_quote(const char *s)
+{
+   char *result;
+   char *p;
+   p = result = malloc(strlen(s)*5+1);
+   while(*s)
+   {
+     if (*s == '\'')
+     {
+        *p++ = '\'';
+        *p++ = '"';
+        *p++ = *s++;
+        *p++ = '"';
+        *p++ = '\'';
+     }
+     else
+     {
+        *p++ = *s++;
+     }
+   }
+   *p = '\0';
+   return result;
+}
+
 icalerrorenum icalfileset_commit(icalfileset* cluster)
 {
     char tmp[ICAL_PATH_MAX]; 
@@ -307,7 +331,9 @@ icalerrorenum icalfileset_commit(icalfileset* cluster)
     }
     
     if(icalfileset_safe_saves == 1){
-	snprintf(tmp,ICAL_PATH_MAX,"cp %s %s.bak",impl->path,impl->path);
+        char *quoted_file = shell_quote(impl->path);
+	snprintf(tmp,ICAL_PATH_MAX,"cp '%s' '%s.bak'",quoted_file,quoted_file);
+	free(quoted_file);
 	
 	if(system(tmp) < 0){
 	    icalerror_set_errno(ICAL_FILE_ERROR);

@@ -1,0 +1,7 @@
+debian/tmp/usr/bin/karm
+debian/tmp/usr/share/applnk/Utilities/karm.desktop
+debian/tmp/usr/share/apps/karm
+debian/tmp/usr/share/doc/kde/HTML/en/karm
+debian/tmp/usr/share/icons/hicolor/16x16/apps/karm.png
+debian/tmp/usr/share/icons/hicolor/32x32/apps/karm.png
+debian/tmp/usr/share/icons/hicolor/48x48/apps/karm.png

@@ -81,7 +81,8 @@ int MarcusBains::todayColumn()
     int col = 0;
     for(it = dateList.begin(); it != dateList.end(); ++it) {
 	if((*it) == currentDate)
-	    return col;
+	    return QApplication::reverseLayout() ?
+	                         agenda->columns() - 1 - col : col;
         ++col;
     }
 
@@ -272,7 +273,10 @@ void KOAgenda::changeColumns(int columns)
 //  setMinimumSize(mColumns * 10, mGridSpacingY + 1);
 //  init();
 //  update();
-  QApplication::sendEvent(this,new QResizeEvent(size(),size()));
+
+  QResizeEvent event( size(), size() );
+
+  QApplication::sendEvent( this, &event );
 }
 
 
@@ -760,7 +764,8 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
 */
 void KOAgenda::contentsToGrid (int x, int y, int& gx, int& gy)
 {
-  gx = x/mGridSpacingX;
+  gx = QApplication::reverseLayout() ? mColumns - 1 - x/mGridSpacingX :
+                                                        x/mGridSpacingX;
   gy = y/mGridSpacingY;
 }
 
@@ -769,7 +774,8 @@ void KOAgenda::contentsToGrid (int x, int y, int& gx, int& gy)
 */
 void KOAgenda::gridToContents (int gx, int gy, int& x, int& y)
 {
-  x = gx*mGridSpacingX;
+  x = QApplication::reverseLayout() ? (mColumns - 1 - gx)*mGridSpacingX:
+                                                         gx*mGridSpacingX;
   y = gy*mGridSpacingY;
 }
 
@@ -967,8 +973,10 @@ void KOAgenda::resizeEvent ( QResizeEvent *ev )
     for ( item=mItems.first(); item != 0; item=mItems.next() ) {
       subCellWidth = mGridSpacingY / item->subCells();
       item->resize(mGridSpacingX * item->cellWidth(),subCellWidth);
-      moveChild(item,item->cellX() * mGridSpacingX,
-                item->subCell() * subCellWidth);
+      moveChild(item,QApplication::reverseLayout() ?
+                     (mColumns - 1 - item->cellX()) * mGridSpacingX :
+                      item->cellX() * mGridSpacingX,
+                      item->subCell() * subCellWidth);
     }
   } else {
     mGridSpacingX = (width() - verticalScrollBar()->width())/mColumns;
@@ -979,8 +987,10 @@ void KOAgenda::resizeEvent ( QResizeEvent *ev )
     for ( item=mItems.first(); item != 0; item=mItems.next() ) {
       subCellWidth = mGridSpacingX / item->subCells();
       item->resize(subCellWidth,item->height());
-      moveChild(item,item->cellX() * mGridSpacingX +
-                item->subCell() * subCellWidth,childY(item));
+      moveChild(item,(QApplication::reverseLayout() ?
+                     (mColumns - 1 - item->cellX()) * mGridSpacingX :
+                     item->cellX() * mGridSpacingX) +
+                     item->subCell() * subCellWidth,childY(item));
     }
   }
 

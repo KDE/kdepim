@@ -3,7 +3,7 @@
 ### The conduits are copyrighted by all kinds of people, see
 ### the individual files.
 
-INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
+INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -15,7 +15,7 @@ kde_module_LTLIBRARIES = libpopmailconduit.la
 
 # Which sources should be compiled for popmail_conduit
 libpopmailconduit_la_SOURCES = popmail-factory.cc setupDialog.cc \
-	passworddialog.cc popmail-conduit.cc
+	passworddialog.cc popmail-conduit.cc parsedate.c
 libpopmailconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libpopmailconduit_la_LIBADD   =  -lkpilot
 

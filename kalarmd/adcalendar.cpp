@@ -112,9 +112,9 @@ void ADCalendar::clearEventsHandled(const QString& calendarURL)
  */
 void ADCalendar::setEventPending(const QString& ID)
 {
-  if (actionType() == KALARM  &&  !eventsPending_.containsRef(&ID))
+  if (actionType() == KALARM  &&  !eventsPending_.contains(ID))
   {
-    eventsPending_.append(&ID);
+    eventsPending_.append(ID);
     kdDebug(5900) << "ADCalendar::setEventPending(): " << ID << endl;
   }
 }
@@ -126,11 +126,11 @@ bool ADCalendar::getEventPending(QString& ID)
 {
   if (actionType() == KALARM)
   {
-    QString* eventID = eventsPending_.getFirst();
-    if (eventID)
+    QValueList<QString>::iterator it = eventsPending_.begin();
+    if (it != eventsPending_.end())
     {
-      eventsPending_.removeFirst();
-      ID = *eventID;
+      ID = *it;
+      eventsPending_.remove(it);
       return true;
     }
   }

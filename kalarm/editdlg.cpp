@@ -96,7 +96,6 @@ EditAlarmDlg::EditAlarmDlg(const QString& caption, QWidget* parent, const char* 
 	QSize size = messageEdit->sizeHint();
 	size.setHeight(messageEdit->fontMetrics().lineSpacing()*13/4 + 2*messageEdit->frameWidth());
 	messageEdit->setMinimumSize(size);
-	messageEdit->setWrapPolicy(QMultiLineEdit::Anywhere);
 	connect(messageEdit, SIGNAL(textChanged()), this, SLOT(slotMessageTextChanged()));
 	grid->addMultiCellWidget(messageEdit, 1, 1, 0, 3);
 

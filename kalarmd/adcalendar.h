@@ -56,7 +56,7 @@ class ADCalendar : public ADCalendarBase
     bool              available_;
     bool              enabled_;       // events are currently manually enabled
   private:
-    QPtrList<QString> eventsPending_; // IDs of pending KALARM type events
+    QValueList<QString> eventsPending_; // IDs of pending KALARM type events
 };
 
 class ADCalendarFactory : public ADCalendarBaseFactory

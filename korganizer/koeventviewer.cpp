@@ -27,10 +27,11 @@
 #include <libkcal/todo.h>
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kprocess.h>
 #include <krun.h>
-#include <dcopclient.h>
 
 #ifndef KORG_NODCOP
+#include <dcopclient.h>
 #include "korganizer.h"
 #endif
 
@@ -80,7 +81,7 @@ void KOEventViewer::setSource(const QString& n)
       QString iconPath = iconLoader->iconPath("go",KIcon::Small);
       KOrganizer::setStartedKAddressBook(true);
       tmpStr = "kaddressbook --editor-only --uid ";
-      tmpStr += n.mid(6);
+      tmpStr += KShellProcess::quote(n.mid(6));
       bool result = KRun::runCommand(tmpStr,"KAddressBook",iconPath);
       return;
     }

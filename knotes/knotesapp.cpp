@@ -55,7 +55,7 @@ KNotesApp::KNotesApp()
     // create the GUI...
     new KAction( i18n("New Note"), "filenew", 0, this, SLOT(slotNewNote()), actionCollection(), "new_note" );
     new KAction( i18n("&Preferences..."), "configure", 0, this, SLOT(slotPreferences()), actionCollection(), "options_configure" );
-    new KAction( i18n("&Quit"), "exit", 0, kapp, SLOT( quit() ), actionCollection(), "quit" );
+    new KAction( i18n("&Quit"), "exit", 0, this, SLOT(slotQuit()), actionCollection(), "quit" );
     new KHelpMenu( this, kapp->aboutData(), false, actionCollection() );
 
     setXMLFile( QString( instance()->instanceName() + "ui.rc" ) );
@@ -69,7 +69,7 @@ KNotesApp::KNotesApp()
     QString configfile = KGlobal::dirs()->findResource( "config", "knotesrc" );
     KSimpleConfig *test = new KSimpleConfig( configfile, true );
     test->setGroup( "General" );
-    if ( test->readNumEntry( "version", 1 ) == 1 )
+    if ( test->readDoubleNumEntry( "version", 1 ) == 1 )
     {
         delete test;
         if ( !( checkAccess( configfile, W_OK ) &&
@@ -123,36 +123,33 @@ KNotesApp::KNotesApp()
     }
     updateNoteActions();
 
+    connect( kapp, SIGNAL( lastWindowClosed() ), kapp, SLOT( quit() ) );
+    
     kapp->installEventFilter( this );
-
+    
     if ( m_noteList.count() == 0 && !kapp->isRestored() )
         slotNewNote();
 }
 
 KNotesApp::~KNotesApp()
 {
-    saveNotes();
-    delete m_note_menu;
-    delete m_context_menu;
-    disconnect();
+    saveNotes( false );
+    blockSignals( true );
     m_noteList.clear();
+    blockSignals( false );
+
     delete factory;
 }
 
 bool KNotesApp::saveState( QSessionManager& )
 {
-    saveNotes();
-
-    QDictIterator<KNote> it( m_noteList );
-    for ( ; it.current(); ++it )
-        it.current()->hide();
-
-   return true;
+    saveNotes( false );
+    return true;
 }
 
 bool KNotesApp::commitData( QSessionManager& )
 {
-    saveNotes();
+    saveNotes( true );
     return true;
 }
 
@@ -166,7 +163,7 @@ int KNotesApp::newNote( QString name, const QString& text )
         kdError(5500) << "A note with this name already exists!" << endl;
         return -1;
     }
-    
+
     // must be done here to check if !m_noteList[name]
     QDir noteDir( KGlobal::dirs()->saveLocation( "appdata", "notes/" ) );
     if ( name.isEmpty() )
@@ -213,7 +210,7 @@ void KNotesApp::showNote( const QString& name ) const
 void KNotesApp::showNote( int noteId ) const
 {
     KNote* note = noteById( noteId );
-    
+
     if ( !note )
     {
         kdWarning(5500) << "No note with id " << noteId << endl;
@@ -251,7 +248,7 @@ QMap<int,QString> KNotesApp::notes() const
 QString KNotesApp::text( const QString& name ) const
 {
     KNote* note = m_noteList[name];
-    
+
     if ( note )
         return note->text();
     else
@@ -261,7 +258,7 @@ QString KNotesApp::text( const QString& name ) const
 QString KNotesApp::text( int noteId ) const
 {
     KNote* note = noteById( noteId );
-    
+
     if ( note )
         return note->text();
     else
@@ -366,6 +363,7 @@ void KNotesApp::mousePressEvent( QMouseEvent* e )
         break;
     case RightButton:
         m_context_menu->popup( e->globalPos() );
+    default: break;
     }
 }
 
@@ -447,6 +445,11 @@ void KNotesApp::slotPreferences() const
     config.exec();
 }
 
+void KNotesApp::slotQuit()
+{
+    saveNotes( true );
+    kapp->quit();
+}
 
 // -------------------- private methods -------------------- //
 
@@ -481,7 +484,7 @@ void KNotesApp::showNote( KNote* note ) const
     }
 }
 
-void KNotesApp::saveNotes() const
+void KNotesApp::saveNotes( bool display ) const
 {
     // save all the notes...
     QDictIterator<KNote> it( m_noteList );
@@ -489,7 +492,8 @@ void KNotesApp::saveNotes() const
     {
         it.current()->saveData();
         it.current()->saveConfig();
-        it.current()->saveDisplayConfig();
+        if ( display )
+            it.current()->saveDisplayConfig();
     }
 }
 

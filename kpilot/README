@@ -1,10 +1,10 @@
-KPILOT 4.3.0-beta by Dan Pilone
-===============================
+KPILOT 4.3.2 by Dan Pilone / Adriaan de Groot
+================================================
 	Additional work by Robert Ambrose, 
 	Preston Brown, Adriaan de Groot, 
 	Heiko Purnhagen, Jorg Habenicht,
-	David Bishop, Aaron Seigo,
-	and probably many more.
+	David Bishop, Reinhold Kainhofer,
+	Aaron Seigo, and probably many more.
 
 	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
 (UNTESTED!) with a machine running some flavor of unix.  By default KPilot

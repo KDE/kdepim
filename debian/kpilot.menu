@@ -1,8 +1,7 @@
 ?package(kpilot):\
-	needs=x11\
+	needs=X11\
 	section=Apps/Tools\
 	hints="KDE"\
 	kderemove="y"\
 	title="KPilot"\
-	command=/usr/bin/kpilot
-
+	command="/usr/bin/kpilot"

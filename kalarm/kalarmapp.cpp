@@ -50,6 +50,8 @@
 #include "prefdlg.h"
 #include "kalarmapp.moc"
 
+#include <netwm.h>
+
 #define     DAEMON_APP_NAME_DEF       "kalarmd"
 const char* DCOP_OBJECT_NAME        = "display";
 const char* GUI_DCOP_OBJECT_NAME    = "tray";
@@ -80,8 +82,12 @@ KAlarmApp::KAlarmApp()
 	CalFormat::setApplication(aboutData()->programName(),
 	                          QString::fromLatin1("-//K Desktop Environment//NONSGML %1 " VERSION "//EN")
 	                                       .arg(aboutData()->programName()));
-	KWinModule wm;
-	mKDEDesktop             = wm.systemTrayWindows().count();
+
+	// Check if it's a KDE desktop by comparing the window manager name to "KWin"
+	NETRootInfo nri(qt_xdisplay(), NET::SupportingWMCheck);
+	const char* wmname = nri.wmName();
+	mKDEDesktop = wmname && !strcmp(wmname, "KWin");
+
 	mOldRunInSystemTray     = mKDEDesktop && mSettings->runInSystemTray();
 	mDisableAlarmsIfStopped = mOldRunInSystemTray && mSettings->disableAlarmsIfStopped();
 
@@ -392,7 +398,22 @@ void KAlarmApp::quitIf(int exitCode)
 {
 	if (activeCount <= 0  &&  !KAlarmMainWindow::count()  &&  !MessageWin::instanceCount()  &&  !mTrayWindow)
 	{
-		// This was the last/only running "instance" of the program, so exit completely.
+/* This was the last/only running "instance" of the program, so exit completely.
+		 * First, change the name which we are registered with at the DCOP server. This is
+		 * to ensure that the alarm daemon immediately sees us as not running. It prevents
+		 * the following situation which otherwise has been observed:
+		 *
+		 * If KAlarm is not running and, for instance, it has registered more than one
+		 * calendar at some time in the past, when the daemon checks pending alarms, it
+		 * starts KAlarm to notify us of the first event. If this is for a different
+		 * calendar from what KAlarm expects, we exit. But without DCOP re-registration,
+		 * when the daemon then notifies us of the next event (from the correct calendar),
+		 * it will still see KAlarm as registered with DCOP and therefore tells us via a
+		 * DCOP call. The call of course never reaches KAlarm but the daemon sees it as
+		 * successful. The result is that the alarm is never seen.
+		 */
+		kdDebug(5950) << "KAlarmApp::quitIf(" << exitCode << "): quitting" << endl;
+		dcopClient()->registerAs(QCString(aboutData()->appName()) + "-quitting");
 		exit(exitCode);
 	}
 }

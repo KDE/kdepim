@@ -8,6 +8,8 @@ o The null conduit and KNotes conduit were written by Adriaan de Groot.
 o The XML GUI stuff was written by Martin Junius.
 o Philipp Hullmann fixed many bugs in the todo conduit.
 o David Bishop converted most of the UI to Qt Designer .ui.
+o Reinhold Kainhofer fixed the VCal conduit when it was really needed.
+o Aaron J. Seigo, Jorg Habenicht, and others contributed too.
 
 For more information, see the About box or:
 http://www.slac.com/pilone/kpilot_home/
