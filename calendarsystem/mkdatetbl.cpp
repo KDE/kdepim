@@ -92,15 +92,15 @@ KDateTable::KDateTable(const QString& calType, QWidget *parent, QDate date_, con
     calendarSystem(KCalendarSystemFactory::create(calType))
 {
 
-  kdDebug() << " 0";
+  kdDebug(5400) << " 0";
   setFontSize(10);
-  kdDebug()  << "1";
+  kdDebug(5400)  << "1";
   if(!date_.isValid())
     {
-      kdDebug() << "KDateTable ctor: WARNING: Given date is invalid, using current date." << endl;
+      kdDebug(5400) << "KDateTable ctor: WARNING: Given date is invalid, using current date." << endl;
       date_=QDate::currentDate();
     }
-    kdDebug() << "2";
+    kdDebug(5400) << "2";
   setFocusPolicy( QWidget::StrongFocus );
   setNumRows(7); // 6 weeks max + headline
   setNumCols(7); // 7 days a week
@@ -392,7 +392,7 @@ KDateTable::setDate(const QDate& date_)
   // -----
   if(!date_.isValid())
     {
-      kdDebug() << "KDateTable::setDate: refusing to set invalid date." << endl;
+      kdDebug(5400) << "KDateTable::setDate: refusing to set invalid date." << endl;
       return false;
     }
   if(date!=date_)
@@ -453,7 +453,7 @@ KDateTable::sizeHint() const
       return QSize(maxCell.width()*numCols()+2*frameWidth(),
              (maxCell.height()+2)*numRows()+2*frameWidth());
     } else {
-      kdDebug() << "KDateTable::sizeHint: obscure failure - " << endl;
+      kdDebug(5400) << "KDateTable::sizeHint: obscure failure - " << endl;
       return QSize(-1, -1);
     }
 }

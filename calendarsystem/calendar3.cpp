@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 	// Added optional parameter to specify calendar type y KDatePicker constructor
 	KDatePicker *hijriCalendar = new KDatePicker("hijri");
 	KDatePicker* defaultCalendar = new KDatePicker();
-	kdDebug() << "BB";
+	kdDebug(5400) << "BB";
 	app->setMainWidget(defaultCalendar);
 
 	defaultCalendar->show();
