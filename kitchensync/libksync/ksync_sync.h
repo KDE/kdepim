@@ -19,13 +19,13 @@ namespace KitchenSync {
         SyncManager( QObject *obj,  const char* name );
         ~SyncManager();
         SyncReturn sync(int mode,
-                        const QPtrList<KSyncEntry>& first,
-                        const QPtrList<KSyncEntry>& second);
+                        const KSyncEntryList& first,
+                        const KSyncEntryList& second);
 
         // synchronize asynchron
         void syncAsync( int mode,
-                        const QPtrList<KSyncEntry>& first,
-                        const QPtrList<KSyncEntry>& second );
+                        const KSyncEntryList& first,
+                        const KSyncEntryList& second );
     signals:
         void done( const SyncReturn& );
     private slots:

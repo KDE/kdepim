@@ -31,6 +31,10 @@
 class Kapabilities;
 class KSyncEntry;
 
+/**
+ * Convinience type definition
+ */
+typedef QPtrList<KSyncEntry> KSyncEntryList;
 
 /**
  *  The base class of all plugins. The functions are
@@ -59,10 +63,10 @@ public:
     //virtual QString metaId()const = 0;
 public slots:
     virtual void slotWrite(const QString &, const QByteArray & ) = 0;
-    virtual void slotWrite(QPtrList<KSyncEntry> ) = 0;
+    virtual void slotWrite(KSyncEntryList ) = 0;
     virtual void slotWrite(QValueList<KOperations> ) = 0;
 signals:
-    void sync(const QString&,  QPtrList<KSyncEntry> );
+    void sync(const QString&,  KSyncEntryList );
     void errorKonnector(const QString&, int, const QString& );
 };
 #endif

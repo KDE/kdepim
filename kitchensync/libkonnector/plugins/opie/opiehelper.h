@@ -8,6 +8,7 @@
 #include <ksyncentry.h>
 #include <kalendarsyncentry.h>
 #include <kaddressbooksyncentry.h>
+#include <konnectorplugin.h>
 #include <opiedesktopsyncentry.h>
 #include "opiecategories.h"
 #include "categoryedit.h"
@@ -17,18 +18,18 @@ class OpieHelperClass {
   OpieHelperClass() {};
   ~OpieHelperClass()  {};
   void toOpieDesktopEntry(  const QString &,
-			   QPtrList<KSyncEntry> *list,
+			   KSyncEntryList *list,
 			   OpieHelper::CategoryEdit *edit );
 
   void toCalendar(const QString &timeStamp,
 		  const QString &todo,
 		  const QString &calendar ,
-		  QPtrList<KSyncEntry> *list,
+		  KSyncEntryList *list,
 		  OpieHelper::CategoryEdit *edit);
 
   void toAddressbook( const QString &timeStamp,
 		      const QString &fileName,
-		      QPtrList<KSyncEntry> *list,
+		      KSyncEntryList *list,
 		      OpieHelper::CategoryEdit *edit );
   static OpieHelperClass *self();
  private:

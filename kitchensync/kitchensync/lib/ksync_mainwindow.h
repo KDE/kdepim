@@ -92,7 +92,7 @@ namespace KitchenSync {
         void slotConfigure();
         void slotActivated(ManipulatorPart *);
         void slotQuit();
-        void slotSync(const QString &udi, QPtrList<KSyncEntry> );
+        void slotSync(const QString &udi, KSyncEntryList );
         void slotStateChanged( const QString& udi,  bool connected );
         void slotKonnectorError( const QString& udi,
                                  int error,

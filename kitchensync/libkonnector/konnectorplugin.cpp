@@ -28,3 +28,4 @@ KonnectorPlugin::~KonnectorPlugin()
 {
 
 }
+#include "konnectorplugin.moc"

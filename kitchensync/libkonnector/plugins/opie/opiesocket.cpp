@@ -55,7 +55,7 @@ public:
     int getMode;
     enum Call{NOTSTARTED=0, HANDSHAKE=0, ABOOK, TODO, CALENDAR, TRANSACTIONS, FILES, DESKTOPS};
     enum Status {START=0, USER=1, PASS, CALL, NOOP, DONE , CONNECTED};
-    QPtrList<KSyncEntry> m_sync;
+    KSyncEntryList m_sync;
     QValueList<OpieCategories> m_categories;
     QString partnerId;
     QStringList files;
@@ -213,7 +213,7 @@ void OpieSocket::write(const QString &path, const QByteArray &array )
     temp.unlink();
 }
 // write back to my iPAQ
-void OpieSocket::write(QPtrList<KSyncEntry> lis)
+void OpieSocket::write(KSyncEntryList lis)
 {
 // ok the list
     kdDebug(5202) << "Write back" << endl;
@@ -737,3 +737,4 @@ void OpieSocket::doAddressbook()
     d->m_sync.append( entry  );
     KIO::NetAccess::removeTempFile( tmpFileName );
 }
+#include "opiesocket.moc"

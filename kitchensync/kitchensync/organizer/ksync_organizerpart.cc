@@ -127,8 +127,8 @@ void OrganizerPart::slotConfigOk()
     m_conf->writeEntry( "Path",  m_path );
     m_conf->writeEntry( "Evo", m_evo );
 }
-void OrganizerPart::processEntry( const QPtrList<KSyncEntry>& in,
-                                  QPtrList<KSyncEntry>& out )
+void OrganizerPart::processEntry( const KSyncEntryList& in,
+                                  KSyncEntryList& out )
 {
     QPtrList<KAlendarSyncEntry> our;
     QPtrListIterator<KSyncEntry> it( in );
@@ -151,10 +151,10 @@ void OrganizerPart::processEntry( const QPtrList<KSyncEntry>& in,
 
     // sync
     SyncManager manager( this,  "SyncManager");
-    QPtrList<KSyncEntry> one;
+    KSyncEntryList one;
     one.append( entry2 );
 
-    QPtrList<KSyncEntry> two;
+    KSyncEntryList two;
     two.append( met );
     SyncReturn ret =  manager.sync( SYNC_INTERACTIVE,  one, two );
     QDateTime time = QDateTime::currentDateTime();

@@ -254,8 +254,8 @@ void KSyncMainWindow::initKonnector()
 {
     kdDebug(5210) << "init konnector" << endl;
     m_konnector = new Konnector(this,  "Konnector");
-    connect(m_konnector,SIGNAL(wantsToSync(const QString&, QPtrList<KSyncEntry> ) ),
-            this, SLOT(slotSync( const QString&,  QPtrList<KSyncEntry>) ) );
+    connect(m_konnector,SIGNAL(wantsToSync(const QString&, KSyncEntryList ) ),
+            this, SLOT(slotSync( const QString&,  KSyncEntryList) ) );
 
     connect(m_konnector, SIGNAL(stateChanged(const QString&,  bool) ),
             this,  SLOT(slotStateChanged(const QString&,  bool) ) );
@@ -284,9 +284,9 @@ void KSyncMainWindow::initKonnector()
 // do we need to change the Konnector first?
 // raise overview and then pipe informations
 void KSyncMainWindow::slotSync( const QString &udi,
-                                QPtrList<KSyncEntry> lis)
+                                KSyncEntryList lis)
 {
-    QPtrList<KSyncEntry> ret;
+    KSyncEntryList ret;
     kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
     KSyncEntry *entry=0;

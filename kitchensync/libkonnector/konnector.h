@@ -27,8 +27,9 @@
 #include <qstring.h>
 #include <qcstring.h>
 #include <ksyncentry.h>
-#include "koperations.h"
 
+#include "koperations.h"
+#include "konnectorplugin.h" //typedefs
 
 class Kapabilities;
 class KDevice;
@@ -142,7 +143,7 @@ public slots:
      * @param udi Device Id
      * @param param The list of KSyncEntries
      */
-    void write(const QString &udi, QPtrList<KSyncEntry> param );
+    void write(const QString &udi, KSyncEntryList param );
     /**
      * This will do the KOperations
      * @param udi Device Id
@@ -162,7 +163,7 @@ signals:
      * @param udi Device Id
      * @param param the List of KSyncEntry
      */
-    void wantsToSync(const QString &, QPtrList<KSyncEntry>);
+    void wantsToSync(const QString &, KSyncEntryList);
     /**
      * The connection state of udi changes
      * @param udi Device Id
@@ -184,7 +185,7 @@ private:
     KonnectorPlugin* pluginByUDI(const QString &udi )const;
 
 private slots:
-    void slotSync(const QString&, QPtrList<KSyncEntry> entry );
+    void slotSync(const QString&, KSyncEntryList entry );
     void slotError(const QString&, int, const QString&);
     void slotChanged(const QString&,  bool );
 };

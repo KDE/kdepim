@@ -81,9 +81,9 @@ SyncReturn SyncKalendar::sync( int mode,
             syncMetaTodo( entry1,  entry2 );
         }
     }
-    QPtrList<KSyncEntry> synced;
-    QPtrList<KSyncEntry> in2;
-    QPtrList<KSyncEntry> out2;
+    KSyncEntryList synced;
+    KSyncEntryList in2;
+    KSyncEntryList out2;
     synced.append( m_entry );
     SyncReturn ret( synced,  in2, out2 );
     return ret;

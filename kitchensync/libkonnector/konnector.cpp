@@ -74,8 +74,8 @@ QString Konnector::registerKonnector(const QString &Device )
 	return QString::null;
       }
       plugin->setUDI( randStr );
-      connect(plugin, SIGNAL(sync(const QString&, QPtrList<KSyncEntry> ) ),
-              this, SLOT(slotSync(const QString&,  QPtrList<KSyncEntry> ) ) );
+      connect(plugin, SIGNAL(sync(const QString&, KSyncEntryList ) ),
+              this, SLOT(slotSync(const QString&,  KSyncEntryList ) ) );
 
       connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
               this, SLOT(slotError(const QString&,int, const QString&)) );
@@ -101,8 +101,8 @@ QString Konnector::registerKonnector(const KDevice &Device )
     return QString::null;
   }
   plugin->setUDI(randStr);
-  connect(plugin, SIGNAL(sync(const QString&, QPtrList<KSyncEntry> ) ),
-              this, SLOT(slotSync(const QString&,  QPtrList<KSyncEntry> ) ) );
+  connect(plugin, SIGNAL(sync(const QString&, KSyncEntryList ) ),
+              this, SLOT(slotSync(const QString&,  KSyncEntryList ) ) );
 
   connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
               this, SLOT(slotError(const QString&,int, const QString&)) );
@@ -152,7 +152,7 @@ void Konnector::retrieveFile(const QString &udi, const QString &file )
 
   plugin->insertFile(file );
 }
-void Konnector::write( const QString &udi, QPtrList<KSyncEntry> entry)
+void Konnector::write( const QString &udi, KSyncEntryList entry)
 {
     kdDebug() << "write " << endl;
   KonnectorPlugin *plugin = pluginByUDI( udi );
@@ -250,7 +250,7 @@ KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )const
    }
   return plugin;
 }
-void Konnector::slotSync(const QString &udi,  QPtrList<KSyncEntry> entry)
+void Konnector::slotSync(const QString &udi,  KSyncEntryList entry)
 {
   emit wantsToSync(udi, entry );
 }
@@ -306,3 +306,4 @@ QString Konnector::metaId( const QString& udi ) const
 
     return plugin->metaId();
 }
+#include "konnector.moc"

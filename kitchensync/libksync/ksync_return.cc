@@ -7,9 +7,9 @@ SyncReturn::SyncReturn()
 {
     m_empty = true;
 }
-SyncReturn::SyncReturn( const QPtrList<KSyncEntry>& synced,
-                        const QPtrList<KSyncEntry>& in1,
-                        const QPtrList<KSyncEntry>& in2 )
+SyncReturn::SyncReturn( const KSyncEntryList& synced,
+                        const KSyncEntryList& in1,
+                        const KSyncEntryList& in2 )
 {
     m_empty = false;
     m_sycned = synced;
@@ -32,15 +32,15 @@ SyncReturn &SyncReturn::operator=( const SyncReturn& ret )
     m_empty = ret.m_empty;
     return *this;
 }
-QPtrList<KSyncEntry> SyncReturn::synced()
+KSyncEntryList SyncReturn::synced()
 {
     return m_sycned;
 }
-QPtrList<KSyncEntry> SyncReturn::in1NotSynced()
+KSyncEntryList SyncReturn::in1NotSynced()
 {
     return  m_1not;
 }
-QPtrList<KSyncEntry> SyncReturn::in2NotSynced()
+KSyncEntryList SyncReturn::in2NotSynced()
 {
     return m_2not;
 }

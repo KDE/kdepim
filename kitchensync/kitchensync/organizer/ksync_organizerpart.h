@@ -32,7 +32,7 @@ namespace KitchenSync {
     bool partIsVisible()const { return false; };
     QWidget* widget();
     QWidget* configWidget();
-    void processEntry( const QPtrList<KSyncEntry>&,  QPtrList<KSyncEntry>& );
+    void processEntry( const KSyncEntryList&,  KSyncEntryList& );
   public:
       void slotConfigOk();
   private:
