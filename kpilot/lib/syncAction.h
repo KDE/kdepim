@@ -202,12 +202,18 @@ protected:
 	*
 	* @p caption Message Box caption, uses "Question" if null.
 	* @p key     Key for the "Don't ask again" code.
-	* @p timeout Timeout, in ms.
+	* @p timeout Timeout, in seconds.
 	*/
 	int questionYesNo(const QString &question ,
 		const QString &caption = QString::null,
 		const QString &key = QString::null,
-		unsigned timeout = 20000);
+		unsigned timeout = 20 );
+	int questionYesNoCancel(const QString &question ,
+		const QString &caption = QString::null,
+		const QString &key = QString::null,
+		unsigned timeout = 20,
+		const QString &yes = QString::null,
+		const QString &no = QString::null ) ;
 } ;
 
 #endif
