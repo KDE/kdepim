@@ -8,6 +8,9 @@ changes between 0.3.3 and 0.4
   + box quote support
   * rot13
   + status bar
+  + it's now possible to get the original text if
+    the automatic rewrap has gone wrong
+- '>' instead of '> ' as quote prefix for quote levels >= 2
 - code cleanups
 
 changes between 0.3.2 and 0.3.3

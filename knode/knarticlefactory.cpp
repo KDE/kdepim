@@ -65,7 +65,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   art->setDoPost(true);
   art->setDoMail(false);
 
-  KNComposer *c=new KNComposer(art, QString::null, sig, true);
+  KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -88,7 +88,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoMail(false);
   art->newsgroups()->from7BitString(g->groupname());
 
-  KNComposer *c=new KNComposer(art, QString::null, sig, true);
+  KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -171,14 +171,28 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   attribution.replace(QRegExp("%MSID"),a->messageID()->asUnicodeString());
   attribution+="\n\n";
 
-  QString quoted;
+  QString quoted=attribution;
+  QString notRewraped=QString::null;
   QStringList text;
   QStringList::Iterator line;
   bool incSig=knGlobals.cfgManager->postNewsComposer()->includeSignature();
 
   a->decodedText(text);
 
+  for(line=text.begin(); line!=text.end(); ++line) {
+    if(!incSig && (*line)=="-- ")
+      break;
+
+    if ((*line)[0]=='>')
+      quoted+=">"+(*line)+"\n";  // second quote level without space
+    else
+      quoted+="> "+(*line)+"\n";
+  }
+
   if(knGlobals.cfgManager->postNewsComposer()->rewrap()) {  //rewrap original article
+
+    notRewraped=quoted;     // store the original text in here, the user can request it in the composer
+    quoted=attribution;
 
     int wrapAt=knGlobals.cfgManager->postNewsComposer()->maxLineLength(), idx=0, breakPos=0;
     QString lastPrefix, thisPrefix, leftover, thisLine;
@@ -189,9 +203,15 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
       if(!incSig && (*line)=="-- ")
         break;
 
+      thisLine=(*line);
+      if (thisLine[0]=='>')
+        thisLine.prepend('>');  // second quote level without space
+      else
+        thisLine.prepend("> ");
+
       thisPrefix=QString::null;
       idx=0;
-      for(QChar uc=(*line).at(idx); uc!=(char)(0); uc=(*line).at(++idx)) {
+      for(QChar uc=thisLine.at(idx); uc!=(char)(0); uc=thisLine.at(++idx)) {
         c=uc.latin1();
         if( (c=='>') || (c=='|') || (c==' ') || (c==':') || (c=='#') || (c=='[') )
           thisPrefix.append(uc);
@@ -199,47 +219,37 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
           break;
       }
 
-      thisLine=(*line);
       thisLine.remove(0,thisPrefix.length());
       thisLine = thisLine.stripWhiteSpace();
 
       if(!leftover.isEmpty()) {   // don't break paragraphs, tables and quote levels
         if(thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))
-          appendTextWPrefix(quoted, leftover, "> "+lastPrefix);
+          appendTextWPrefix(quoted, leftover, lastPrefix);
         else
           thisLine.prepend(leftover+" ");
         leftover=QString::null;
       }
 
-      if((int)(thisPrefix.length()+thisLine.length()) > wrapAt-2) {
-        breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length()-2);
+      if((int)(thisPrefix.length()+thisLine.length()) > wrapAt) {
+        breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length());
         if(breakPos < (int)(thisLine.length())) {
           leftover=thisLine.right(thisLine.length()-breakPos-1);
           thisLine.truncate(breakPos);
         }
       }
 
-      quoted+=("> "+thisPrefix+thisLine+"\n");
+      quoted+=thisPrefix+thisLine+"\n";
       lastPrefix=thisPrefix;
     }
 
     if (!leftover.isEmpty())
-      appendTextWPrefix(quoted, leftover, "> "+lastPrefix);
-
-  }
-  else {
-    for(line=text.begin(); line!=text.end(); ++line) {
-      if(!incSig && (*line)=="-- ")
-        break;
-      quoted+="> "+(*line)+"\n";
-    }
+      appendTextWPrefix(quoted, leftover, lastPrefix);
   }
 
   //-------------------------- </Body> -----------------------------
 
-
   //open composer
-  KNComposer *c=new KNComposer(art, attribution+quoted, sig, true);
+  KNComposer *c=new KNComposer(art, quoted, sig, notRewraped, true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -290,7 +300,7 @@ void KNArticleFactory::createForward(KNArticle *a)
 
 
   //open composer
-  KNComposer *c=new KNComposer(art, fwd, sig, true);
+  KNComposer *c=new KNComposer(art, fwd, sig, QString::null, true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -459,7 +469,7 @@ void KNArticleFactory::createMail(KNHeaders::AddressField *address)
   art->to()->addAddress((*address));
 
   //open composer
-  KNComposer *c=new KNComposer(art, QString::null, sig, true);
+  KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -496,7 +506,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   }
 
   //open composer
-  com=new KNComposer(a, QString::null, id->getSignature(), false);
+  com=new KNComposer(a, QString::null, id->getSignature());
   c_ompList.append(com);
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();

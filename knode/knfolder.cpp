@@ -276,7 +276,6 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
     return false;
   }
 
-
   int idx=0, addCnt=0;
   bool ret=true;
   QTextStream ts(&m_boxFile);

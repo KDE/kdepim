@@ -45,8 +45,9 @@ class KNComposer : public KMainWindow  {
                           CRdel, CRsave, CRcancel };
     enum MessageMode { news=0, mail=1, news_mail=2 };
 
+    // unwraped == original, not rewraped text
     // firstEdit==true: place the cursor at the end of the article
-    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, bool firstEdit=false);
+    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, const QString &unwraped=QString::null, bool firstEdit=false);
     ~KNComposer();
     void setConfig();
 
@@ -85,7 +86,7 @@ class KNComposer : public KMainWindow  {
     //Data
     composerResult r_esult;
     KNLocalArticle *a_rticle;
-    QString s_ignature;
+    QString s_ignature, u_nwraped;
     QCString c_harset;
     MessageMode m_ode;
     bool d_oneSuccess;
@@ -124,6 +125,7 @@ class KNComposer : public KMainWindow  {
     void slotAttachFile();
     void slotRemoveAttachment();
     void slotAttachmentProperties();
+    void slotUndoRewrap();
     void slotExternalEditor();
     void slotSpellcheck();
     void slotToggleToolBar();

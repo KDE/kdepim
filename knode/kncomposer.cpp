@@ -49,9 +49,9 @@
 
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, bool firstEdit)
-    : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), e_xternalEdited(false),
-      e_xternalEditor(0), e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit)
+    : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
+      e_xternalEdited(false), e_xternalEditor(0), e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
 {
   d_elAttList.setAutoDelete(true);
     
@@ -137,19 +137,19 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Append &Signature"), "signature", 0 , this, SLOT(slotAppendSig()),
                    actionCollection(), "append_signature");
 
-  new KAction(i18n("&Insert File"), 0, this, SLOT(slotInsertFile()),
+  new KAction(i18n("&Insert File..."), 0, this, SLOT(slotInsertFile()),
                    actionCollection(), "insert_file");
 
-  new KAction(i18n("Insert File (in a &box)"), 0, this, SLOT(slotInsertFileBoxed()),
+  new KAction(i18n("Insert File (in a &box)..."), 0, this, SLOT(slotInsertFileBoxed()),
                    actionCollection(), "insert_file_boxed");
 
-  new KAction(i18n("Attach &File"), "attach", 0, this, SLOT(slotAttachFile()),
+  new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
                                     SLOT(slotRemoveAttachment()), actionCollection(), "remove_attachment");
 
-  a_ctAttachmentProperties  = new KAction(i18n("&Properties"), 0, this,
+  a_ctAttachmentProperties  = new KAction(i18n("&Properties..."), 0, this,
                                           SLOT(slotAttachmentProperties()), actionCollection(), "attachment_properties");
 
   //tools menu
@@ -165,6 +165,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   new KAction(i18n("Re&move Box"), 0, v_iew->e_dit,
               SLOT(slotRemoveBox()), actionCollection(), "tools_unbox");
+
+  KAction *undoRewrap = new KAction(i18n("Get &Original Text (not rewraped)"), 0, this,
+                                    SLOT(slotUndoRewrap()), actionCollection(), "tools_undoRewrap");
+  undoRewrap->setEnabled(u_nwraped!=QString::null);
 
   KAction *rot13 = new KAction(i18n("S&cramble (Rot 13)"), 0, v_iew->e_dit,
                                SLOT(slotRot13()), actionCollection(), "tools_rot13");
@@ -697,6 +701,13 @@ void KNComposer::slotAttachmentProperties()
   }
 }
 
+
+void KNComposer::slotUndoRewrap()
+{
+  if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written!"),
+                                         QString::null, QString::null) == KMessageBox::Continue);
+    v_iew->e_dit->setText(u_nwraped);
+}
 
 void KNComposer::slotExternalEditor()
 {

@@ -72,8 +72,6 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     KNComposer* findComposer(KNLocalArticle *a);
     void configChanged();
 
-
-
   protected:
     //job handling
     void processJob(KNJobData *j); //reimplemented from KNJobConsumer
