@@ -57,8 +57,11 @@ class ExchangeAccount : public QObject {
     KURL baseURL();
     KURL calendarURL();
 
+    // Returns the mailbox URL of this user. QString::null if unsuccessful
+    QString tryFindMailbox( const QString& host, const QString& user, const QString& password );
+
     //  Put authentication info in KDE password store for auto-authentication
-    //  with later webdav access
+    //  with later webdav access. Also calculates the calendar URL.
     void authenticate();
     void authenticate( QWidget* window );
 

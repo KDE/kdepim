@@ -19,10 +19,12 @@
 */
 
 #include <qstring.h>
+#include <qtextstream.h>
 #include <qapplication.h>
 #include <qdom.h>
 #include <qwidgetlist.h>
 #include <qwidget.h>
+#include <qfile.h>
 
 #include <kurl.h>
 #include <kapplication.h>
@@ -34,6 +36,7 @@
 #include <kio/authinfo.h>
 #include <kio/davjob.h>
 #include <kio/job.h>
+#include <kio/netaccess.h>
 
 #include "exchangeaccount.h"
 #include "utils.h"
@@ -44,7 +47,7 @@ ExchangeAccount::ExchangeAccount( QString host, QString account, QString passwor
 {
   mHost = host;
   mAccount = account;
-  mMailbox = account;
+  mMailbox = "webdav://" + host + "/exchange/" + account;
   mPassword = password;
 
   mCalendarURL = 0;
@@ -55,7 +58,7 @@ ExchangeAccount::ExchangeAccount( QString host, QString account, QString mailbox
   mHost = host;
   mAccount = account;
   if ( mailbox.isNull() ) 
-    mMailbox = account;
+    mMailbox = "webdav://" + host + "/exchange/" + account;
   else 
     mMailbox = mailbox;
   mPassword = password;
@@ -98,18 +101,22 @@ void ExchangeAccount::load( QString const& group )
   QString host = kapp->config()->readEntry( "host" );
   if ( ! host.isNull() ) {
     mHost = host;
+  } else {
+    mHost = "mail.company.com";
   }
 
   QString user = kapp->config()->readEntry( "user" );
   if ( ! user.isNull() ) {
     mAccount = user;
+  } else {
+    mAccount = "username";
   }
 
   QString mailbox = kapp->config()->readEntry( "mailbox" );
   if ( ! mailbox.isNull() ) {
     mMailbox = mailbox;
   } else {
-    mMailbox = mAccount;
+    mMailbox = "webdav://" + host + "/exchange/" + mAccount;
   }
 
   QString password = endecryptStr( kapp->config()->readEntry( "MS-ID" ) );
@@ -120,7 +127,8 @@ void ExchangeAccount::load( QString const& group )
 
 KURL ExchangeAccount::baseURL()
 {
-  KURL url = KURL( "webdav://" + mHost + "/exchange/" + mMailbox );
+  KURL url = KURL( mMailbox );
+  url.setProtocol( "webdav" );
   return url;
 }
 
@@ -237,6 +245,56 @@ void ExchangeAccount::slotFolderResult( KIO::Job * job )
   mCalendarURL = new KURL( calendar );
   mCalendarURL->setProtocol("webdav");
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
+}
+
+QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& user, const QString& password )
+{
+  kdDebug() << "Entering ExchangeAccount::tryFindMailbox()" << endl;
+
+  KURL url = KURL( "http://" + host + "/exchange" );
+  url.setUser( user );
+  url.setPass( password );
+
+  QString tmpFile;
+  if ( !KIO::NetAccess::download( url, tmpFile ) )
+  {
+    kdWarning() << "Trying to find mailbox failed: not able to download " << url.prettyURL() << endl;
+    return QString::null;
+  }
+  QFile file( tmpFile );
+  if ( !file.open( IO_ReadOnly ) ) {
+    kdWarning() << "Trying to find mailbox failed: not able to open temp file " << tmpFile << endl;
+    KIO::NetAccess::removeTempFile( tmpFile );
+    return QString::null;
+  }
+
+  QTextStream stream( &file );
+  QString line;
+  QString result;
+  while ( !stream.eof() ) {
+      line = stream.readLine(); // line of text excluding '\n'
+      int pos = line.find( "<BASE href=\"", 0, FALSE );
+      if ( pos < 0 )
+        continue;
+      int end = line.find( "\"", pos+12, FALSE );
+      if ( pos < 0 ) {
+        kdWarning() << "Strange, found no closing quote in " << line << endl;
+        continue;
+      } 
+      QString mailboxString = line.mid( pos+12, end-pos-12 );
+      KURL mailbox( mailboxString );
+      if ( mailbox.isEmpty() ) {
+        kdWarning() << "Strange, could not get URL from " << mailboxString << " in line " << line << endl;
+        continue;
+      }
+      mailbox.setProtocol( "webdav" );
+      kdDebug() << "Found mailbox: " << mailbox.prettyURL( -1 ) << endl;
+      result = mailbox.prettyURL( -1 ); // Strip ending slash from URL, if present
+    }
+    file.close();
+
+    KIO::NetAccess::removeTempFile( tmpFile );
+    return result;
 }
 
 #include "exchangeaccount.moc"
