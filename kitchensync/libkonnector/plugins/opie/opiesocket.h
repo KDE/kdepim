@@ -41,6 +41,9 @@ Q_OBJECT
   void slotClosed();
   void process(); // ready read
   void slotNOOP();
+  void slotStartSync();
+  void manageCall(const QString &line );
+  void parseCategory(const QString &tempFile );
 };
 
 

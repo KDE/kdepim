@@ -48,11 +48,13 @@ int main(int argc, char *argv[] )
     adr.setAddress("192.168.0.10" );
     caps.setDestIP(adr );
     konnector->setCapabilities( outp, caps ); 
+    konnector->startSync( outp );
     if(outp.isEmpty() ){
       qWarning("couldn't load" );
     }
   }
   return a.exec();
 }
+
 
 
