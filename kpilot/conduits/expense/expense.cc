@@ -36,131 +36,69 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#ifndef STREAM_H
 #include <iostream.h>
-#endif
-
-#ifndef TIME_H
 #include <time.h>
-#endif
-
-
-#ifndef QDIR_H
-#include <qdir.h>
-#endif
-
-#ifndef QMAP_H
-#include <qmap.h>
-#endif
-
-#ifndef _KGLOBAL_H
-#include <kglobal.h>
-#endif
-
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-
-#ifndef _KMESSAGEBOX_H
-#include <kmessagebox.h>
-#endif
-
-#ifndef _KSIMPLECONFIG_H
-#include <ksimpleconfig.h>
-#endif
-
-#ifndef _KCONFIG_H
-#include <kconfig.h>
-#endif
-
-#ifndef _DCOPCLIENT_H
-#include <dcopclient.h>
-#endif
-
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-#ifndef _KPROCESS_H
-#include <kprocess.h>
-#endif
-
-
-#ifndef _PILOT_EXPENSE_H_
-#include <pi-expense.h>
-#endif
-
-
-
-#ifndef _STDLIB_H
 #include <stdlib.h>
-#endif
-
-#ifndef _QCSTRING_H
-#include <qcstring.h>
-#endif
-
-#ifndef _QOBJECT_H
-#include <qobject.h>
-#endif
-
-#ifndef _QDATETIME_H
-#include <qdatetime.h>
-#endif
-
-#ifndef _QTEXTSTREAM_H
-#include <qtextstream.h>
-#endif
-
-#ifndef _STDIO_H
 #include <stdio.h>
-#endif
-
-#ifndef _STRING_H
 #include <string.h>
-#endif
 
 
-#include "pilotDatabase.h"
+#include <qdir.h>
+#include <qmap.h>
+#include <qcstring.h>
+#include <qobject.h>
+#include <qdatetime.h>
+#include <qtextstream.h>
+
+#include <kconfig.h>
+#include <kdebug.h>
+#include <kprocess.h>
+
+#include <pi-expense.h>
+
+
+
+
+
+#include "pilotSerialDatabase.h"
 #include "pilotRecord.h"
 
-// #include "pilotDateEntry.h"
-
-#include "expense.h"
+#include "setupDialog.h"
+#include "expense.moc"
 
 #define DATESIZE 10
-/*  This was copied out of the pilot-link package.  
-*  I just like it here for quick reference. 
-struct Expense {  
-struct tm date;  
-enum ExpenseType type;  
-enum ExpensePayment payment;  
-int currency;  
-char * amount;  
-char * vendor;  
-char * city;  
-char * attendees;  
-char * note;  
+/*  This was copied out of the pilot-link package.
+*  I just like it here for quick reference.
+struct Expense {
+struct tm date;
+enum ExpenseType type;
+enum ExpensePayment payment;
+int currency;
+char * amount;
+char * vendor;
+char * city;
+char * attendees;
+char * note;
 };
 */
 
 const char *
 get_entry_type(enum ExpenseType type)
  {
-   switch(type) {     
-	case etAirfare:       
-		return "Airfare";     
+   switch(type) {
+	case etAirfare:
+		return "Airfare";
 	case etBreakfast:       
 		return "Breakfast";     
-	case etBus:       
+	case etBus:
 		return "Bus";     
-	case etBusinessMeals:       
+	case etBusinessMeals:
 		return "BusinessMeals";     
 	case etCarRental:       
 		return "CarRental";     
 	case etDinner:       
 		return "Dinner";     
-	case etEntertainment:       
+	case etEntertainment:
 		return "Entertainment";     
 	case etFax:       
 		return "Fax";     
@@ -248,7 +186,10 @@ static const char *expense_id =
 ExpenseConduit::ExpenseConduit(KPilotDeviceLink *d,
 	const char *name,
 	const QStringList &l) :
-	ConduitAction(d,name,l)
+	ConduitAction(d,name,l),
+	fDatabase(0L),
+	fCSVFile(0L),
+	fCSVStream(0L)
 {
 	FUNCTIONSETUP;
 
@@ -257,229 +198,288 @@ ExpenseConduit::ExpenseConduit(KPilotDeviceLink *d,
 ExpenseConduit::~ExpenseConduit()
 {
 	FUNCTIONSETUP;
-
+	cleanup();
 }
 
-/* virtual */ void
-ExpenseConduit::exec()
+/* virtual */ void ExpenseConduit::exec()
 {
 	FUNCTIONSETUP;
-	struct Expense e;
-	kdDebug() << "expense" << ": In expense doSync" << endl;
+
+	if (!fConfig)
+	{
+		kdWarning() << k_funcinfo
+			<< ": No configuration set for expense conduit."
+			<< endl;
+		cleanup();
+		emit syncDone(this);
+		return;
+	}
+
+	fDatabase=new PilotSerialDatabase(pilotSocket(),"ExpenseDB",
+		this,"ExpenseDB");
 
 	fConfig->setGroup("Expense-conduit");
-	
-	QString mDBType=fConfig->readEntry("DBTypePolicy");
-	QString mDBnm=fConfig->readEntry("DBname");
-	QString mDBsrv=fConfig->readEntry("DBServer");
-	QString mDBtable=fConfig->readEntry("DBtable");
-	QString mDBlogin=fConfig->readEntry("DBlogin");
-	QString mDBpasswd=fConfig->readEntry("DBpasswd");
-	QString mCSVname=fConfig->readEntry("CSVFileName");
-	
-	PilotRecord* rec;
-	KShellProcess * shproc;
-    
-        int recordcount=0;
-	int index=0;
-	int syscall=0;
 
-// Now let's open databases
+	fDBType = fConfig->readNumEntry("DBTypePolicy",
+			ExpenseDBPage::PolicyNone);
 
-	if (mDBType=="1")
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Syncing with policy "
+		<< fDBType
+		<< endl;
+#endif
+
+	fDBnm=fConfig->readEntry("DBname");
+	fDBsrv=fConfig->readEntry("DBServer");
+	fDBtable=fConfig->readEntry("DBtable");
+	fDBlogin=fConfig->readEntry("DBlogin");
+	fDBpasswd=fConfig->readEntry("DBpasswd");
+
+	fRecordCount = 0;
+
+	if (isTest())
 	{
-		
-		DEBUGCONDUIT << fname << " Postgres database requested" << endl;
-// next three lines just for debug purposes - Remove for final creates a dump of table.		
-		char sqlcmd[300];
-		shproc = new KShellProcess;
-		sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"select * from %s;\" %s >testpg.txt",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),mDBnm.latin1());
-		shproc->clearArguments();
-		(*shproc) << sqlcmd;
-		shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
-		while (shproc->isRunning())
-			{
-			DEBUGCONDUIT << fname << " " << shproc->pid() << " still running" << endl;
-			sleep(1);
-			}
-		// DEBUGCONDUIT << fname << shproc.args() << endl;
-		// DEBUGCONDUIT << fname << sqlcmd << endl;
-		delete shproc;
+		doTest();
+		cleanup();
+		emit syncDone(this);
+		return;
 	}
-
-	if (mDBType=="2")
+	else
 	{
-		DEBUGCONDUIT << fname << "MySQL database requested" << endl;
-	}
+		QString CSVName=fConfig->readEntry("CSVFileName");
+		if (!CSVName.isEmpty())
+		{
+			fCSVFile = new QFile(CSVName);
 
-// Now let's read records
-	while ((rec=fHandle->readNextModifiedRecord()))
-        {
-                if (rec->isDeleted())
-                {
-                        FUNCTIONSETUP;
-                }
-                else
-                {
-                        FUNCTIONSETUP;
-			DEBUGCONDUIT << fname
-               		 << ": Got record "
-           		 << index-1
-               		 << " @"
-                	<< (int) rec
-			<< endl;
-			(void) unpack_Expense(&e,(unsigned char *)rec->getData(),rec->getLen());
-			rec=0L;
-			
-			if (!mCSVname.isEmpty())
+			// Change the flags value in the switch() below.
+			//
+			//
+			int flags = 0;
+			int logPolicy = fConfig->readNumEntry("CSVRotatePolicy",
+				ExpenseCSVPage::PolicyAppend);
+
+			switch(logPolicy)
 			{
-				DEBUGCONDUIT << fname
-				<< mCSVname 
-				<< endl;
-//open file
-				QFile fp(mCSVname);
-				fp.open(IO_ReadWrite|IO_Append);	
-				
-//format date for csv file
-				int tmpyr=e.date.tm_year+1900;
-				char dtstng[DATESIZE];
-				int tmpday=e.date.tm_mday;
-				int tmpmon=e.date.tm_mon+1;
-				sprintf(dtstng,"%d-%d-%d",tmpyr,tmpmon,tmpday);
-				const char* mesg=dtstng;
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				const char* delim=",";
-				fp.writeBlock(delim,qstrlen(delim));	
-//write rest of record
-				mesg=e.amount;
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-				mesg=get_pay_type(e.payment);
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-				mesg=e.vendor;
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-				mesg=get_entry_type(e.type);
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-				mesg=e.city;
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-
-// remove line breaks from list of attendees - can't have in csv files
-
-				QString tmpatt=e.attendees;
-				QString tmpatt2=tmpatt.simplifyWhiteSpace();
-				mesg=tmpatt2.latin1();				
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-
-// remove extra formatting from notes - can't have in csv files
-
-				QString tmpnotes=e.note;
-				QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
-				DEBUGCONDUIT << tmpnotes2 << endl;
-				mesg=tmpnotes2.latin1();				
-				DEBUGCONDUIT << mesg << endl;
-				fp.writeBlock(mesg,qstrlen(mesg));	
-				fp.writeBlock(delim,qstrlen(delim));	
-
-//Finish line
-				const char* endline="\n";	
-				fp.writeBlock(endline,qstrlen(endline));	
-
-//be nice and close file
-				fp.close();	
-				
+			case ExpenseCSVPage::PolicyAppend :
+				flags = IO_ReadWrite | IO_Append;
+				break;
+			case ExpenseCSVPage::PolicyOverwrite :
+				flags = IO_WriteOnly | IO_Truncate;
+				break;
+			default :
+				flags = IO_ReadWrite | IO_Append;
 			}
 
-// Now let's write record to correct database
-	
-			if (mDBType=="0")
+			if (fCSVFile && fCSVFile->open(flags))
 			{
-				DEBUGCONDUIT << fname << " No database requested" << endl;
-
+				fCSVStream = new QTextStream(fCSVFile);
 			}
-
-			if (mDBType=="1")
-			{
-				DEBUGCONDUIT << fname << " Postgres database requested" << endl;
-			int tmpyr=e.date.tm_year+1900;
-                                char dtstng[DATESIZE];
-                                int tmpday=e.date.tm_mday;
-                                int tmpmon=e.date.tm_mon+1;
-                                sprintf(dtstng,"%d-%d-%d",tmpyr,tmpmon,tmpday);
-			QString tmpnotes=e.note;
-                        QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
-			const char* nmsg=tmpnotes2.latin1();
-
-			QString tmpatt=e.attendees;
-                        QString tmpatt2=tmpatt.simplifyWhiteSpace();
-                        const char* amesg=tmpatt2.latin1();
-			const char* etmsg=get_entry_type(e.type);
-			const char* epmsg=get_pay_type(e.payment);
-			char sqlcmd[400];
-			sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c "
-"\"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", "
-"\"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", "
-"\"fldNotes\") VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\" %s",
-mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,
-e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
-			// DEBUGCONDUIT << fname << " " << sqlcmd << endl;
-		        //	DEBUGCONDUIT << fname << " " << proc.args() << endl;
-			shproc = new KShellProcess;
-			shproc->clearArguments();
-			(*shproc) << sqlcmd;
-			shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
-			DEBUGCONDUIT << fname << " " << shproc->pid() << " finished OK " << endl;
-			DEBUGCONDUIT << fname << " " << syscall << endl;
-			}
-
-			if (mDBType=="2")
-			{
-				DEBUGCONDUIT << fname << " MySQL database requested" << endl;
-
-			}
-
-// REMEMBER to CLOSE database			
-
 		}
-	DEBUGCONDUIT << fname << " Records: " << recordcount << endl;
+
+		// Start the mechanism for reading one record
+		// at a time while retaining responsiveness.
+		//
+		//
+		QTimer::singleShot(0,this,SLOT(slotNextRecord()));
 	}
 }
 
+void ExpenseConduit::doTest()
+{
+	DEBUGCONDUIT << k_funcinfo
+		<< ": Got settings "
+		<< fDBType << " "
+		<< fDBnm << " "
+		<< fDBsrv << " "
+		<< fDBtable << " "
+		<< fDBlogin
+		<< endl;
+}
 
-
-// aboutAndSetup is pretty much the same
-// on all conduits as well.
-//
-//
-QWidget*
-ExpenseConduit::aboutAndSetup()
+void ExpenseConduit::csvOutput(QTextStream *out,Expense *e)
 {
 	FUNCTIONSETUP;
 
-	return new ExpenseOptions(0L);
+	//format date for csv file
+	int tmpyr=e->date.tm_year+1900;
+	char dtstng[DATESIZE];
+	int tmpday=e->date.tm_mday;
+	int tmpmon=e->date.tm_mon+1;
+
+	(*out) << tmpyr << "-" << tmpmon << "-" << tmpday << "," ;
+
+	//write rest of record
+	(*out) << e->amount << ","
+		<< get_pay_type(e->payment) << ","
+		<< e->vendor << ","
+		<< get_entry_type(e->type) << ","
+		<< e->city << ","
+		;
+
+	// remove line breaks from list of attendees -
+	// can't have in csv files
+	//
+	//
+	QString tmpatt=e->attendees;
+	QString tmpatt2=tmpatt.simplifyWhiteSpace();
+
+	(*out) << tmpatt2 << "," ;
+
+	// remove extra formatting from notes -
+	// can't have in csv files
+	QString tmpnotes=e->note;
+	QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
+
+	(*out) << tmpnotes2 << endl;
 }
 
-const char *
-ExpenseConduit::dbInfo()
-{
-	return "ExpenseDB";
-}
-
-
-
-/* virtual */ void
-ExpenseConduit::doTest()
+void ExpenseConduit::slotNextRecord()
 {
 	FUNCTIONSETUP;
 
-	(void) expense_id;
+	Expense e;
+
+	PilotRecord *rec=fDatabase->readNextModifiedRec();
+	if (!rec)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< ": No more records left."
+			<< endl;
+#endif
+
+		QString msg(i18n("Synced one record.",
+			"Synced %n records.",fRecordCount));
+		addSyncLogEntry(msg);
+
+		fDatabase->resetSyncFlags();
+
+		cleanup();
+		emit syncDone(this);
+		return;
+	}
+	else
+	{
+		fRecordCount++;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< ": Got record "
+			<< fRecordCount
+			<< " @"
+			<< (int) rec
+			<< endl;
+#endif
+	}
+
+	(void) unpack_Expense(&e,
+		(unsigned char *)rec->getData(),rec->getLen());
+
+	delete rec;
+	rec = 0L;
+
+	if (fCSVStream)
+	{
+		csvOutput(fCSVStream,&e);
+	}
+
+	switch(fDBType)
+	{
+	case ExpenseDBPage::PolicyPostgresql :
+		postgresOutput(&e);
+		break;
+	}
+
+	QTimer::singleShot(0,this,SLOT(slotNextRecord()));
 }
+
+
+void ExpenseConduit::dumpPostgresTable()
+{
+	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	// next three lines just for debug purposes -
+	// Remove for final creates a dump of table.
+	//
+	//
+	char sqlcmd[300];
+	KShellProcess *shproc = new KShellProcess;
+	sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"select * from %s;\" %s >testpg.txt",
+		fDBpasswd.latin1(),
+		fDBsrv.latin1(),
+		fDBlogin.latin1(),
+		fDBtable.latin1(),fDBnm.latin1());
+	shproc->clearArguments();
+	(*shproc) << sqlcmd;
+	shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
+	while (shproc->isRunning())
+	{
+		DEBUGCONDUIT << fname << " " << shproc->pid() << " still running" << endl;
+		sleep(1);
+	}
+	delete shproc;
+#endif
+}
+
+void ExpenseConduit::postgresOutput(Expense *e)
+{
+	FUNCTIONSETUP;
+
+	KShellProcess *shproc=0L;
+
+        // int recordcount=0;
+	// int index=0;
+	// int syscall=0;
+
+
+	int tmpyr=e->date.tm_year+1900;
+	char dtstng[DATESIZE];
+	int tmpday=e->date.tm_mday;
+	int tmpmon=e->date.tm_mon+1;
+	sprintf(dtstng,"%d-%d-%d",tmpyr,tmpmon,tmpday);
+	QString tmpnotes=e->note;
+	QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
+	const char* nmsg=tmpnotes2.latin1();
+
+	QString tmpatt=e->attendees;
+	QString tmpatt2=tmpatt.simplifyWhiteSpace();
+	const char* amesg=tmpatt2.latin1();
+	const char* etmsg=get_entry_type(e->type);
+	const char* epmsg=get_pay_type(e->payment);
+	char sqlcmd[400];
+
+	sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c "
+		"\"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", "
+		"\"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", "
+		"\"fldNotes\") VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\" %s",
+		fDBpasswd.latin1(),fDBsrv.latin1(),
+		fDBlogin.latin1(),fDBtable.latin1(),
+		dtstng,
+		e->amount,epmsg,e->vendor,etmsg,e->city,amesg,nmsg,fDBnm.latin1());
+
+	shproc = new KShellProcess;
+	shproc->clearArguments();
+	(*shproc) << sqlcmd;
+	shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
+
+	KPILOT_DELETE(shproc);
+}
+
+void ExpenseConduit::cleanup()
+{
+	FUNCTIONSETUP;
+
+	KPILOT_DELETE(fCSVStream);
+	KPILOT_DELETE(fCSVFile);
+	KPILOT_DELETE(fDatabase);
+}
+
 
 // $Log$
+// Revision 1.17  2001/11/25 22:03:44  adridg
+// Port expense conduit to new arch. Doesn't compile yet.
+//
 // Revision 1.16  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

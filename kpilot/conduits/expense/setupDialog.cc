@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -70,6 +70,7 @@ ExpenseCSVPage::ExpenseCSVPage(QWidget *parent) :
 	fOverWrite = new QRadioButton(i18n("&Overwrite"),g);
 	fAppend = new QRadioButton(i18n("&Append"),g);
 	fRotate = new QRadioButton(i18n("&Rotate"),g);
+	fRotate->setEnabled(false);
 
 
 
@@ -145,6 +146,10 @@ void ExpenseCSVPage::readSettings(KConfig &c)
 {
 	fCSVFileName->setText(c.readEntry("CSVFileName"));
 	int m = c.readNumEntry("CSVRotatePolicy",PolicyOverwrite);
+	if (m == PolicyRotate)
+	{
+		m=PolicyAppend;
+	}
 	setPolicy((RotatePolicy) m);
 	fRotateNumber->setValue(c.readNumEntry("CSVRotate",3));
 }
@@ -264,7 +269,8 @@ ExpenseDBPage::ExpenseDBPage(QWidget *parent) :
 	fnone = new QRadioButton(i18n("&None"),gt);
 	fpostgresql = new QRadioButton(i18n("&PostgreSQL"),gt);
 	fmysql = new QRadioButton(i18n("&MySQL"),gt);
-
+	fmysql->setEnabled(false);
+	
 	grid->addMultiCellWidget(gt,1,1,1,2);
 
 
@@ -333,6 +339,9 @@ void ExpenseDBPage::slotPolicyChanged()
 
   
 // $Log$
+// Revision 1.6  2001/11/25 22:03:44  adridg
+// Port expense conduit to new arch. Doesn't compile yet.
+//
 // Revision 1.5  2001/10/10 17:01:15  mueller
 // CVS_SILENT: fixincludes
 //

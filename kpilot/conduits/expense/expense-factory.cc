@@ -36,6 +36,7 @@
 #include <kaboutdata.h>
 
 #include "setupDialog.h"
+#include "expense.h"
 
 #include "expense-factory.moc"
 
@@ -102,7 +103,7 @@ ExpenseConduitFactory::~ExpenseConduitFactory()
 		{
 			return new ExpenseWidgetSetup(w,n,a);
 		}
-		else 
+		else
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -113,10 +114,26 @@ ExpenseConduitFactory::~ExpenseConduitFactory()
 		}
 	}
 
+	if (qstrcmp(c,"SyncAction")==0)
+	{
+		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+
+		if (d)
+		{
+			return new ExpenseConduit(d,n,a);
+		}
+		else
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't cast to KPilotDeviceLink"
+				<< endl;
+			return 0L;
+		}
+	}
 	return 0L;
 }
 
-ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n, 
+ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
 	ConduitConfig(w,n,a)
 {
@@ -165,6 +182,9 @@ ExpenseWidgetSetup::~ExpenseWidgetSetup()
 
 
 // $Log$
+// Revision 1.1  2001/11/18 16:55:51  adridg
+// Moving expenses conduit to new arch.
+//
 // Revision 1.2  2001/10/08 22:25:41  adridg
 // Moved to libkpilot and lib-based conduits
 //

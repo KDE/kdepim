@@ -31,6 +31,8 @@
 */
 
 
+#include <qwidget.h>
+
 class QLabel;
 class QLineEdit;
 class QRadioButton;
@@ -91,6 +93,9 @@ protected:
 
 
 // $Log$
+// Revision 1.3  2001/11/25 22:03:44  adridg
+// Port expense conduit to new arch. Doesn't compile yet.
+//
 // Revision 1.2  2001/03/14 16:56:02  molnarc
 //
 // CJM - Added browse button on csv export tab.
