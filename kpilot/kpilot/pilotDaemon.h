@@ -71,6 +71,8 @@ public:
 	virtual void dragEnterEvent(QDragEnterEvent *);
 	virtual void dropEvent(QDropEvent *);
 
+	QStringList installFiles();
+
 protected:
 	void setupWidget();
 
@@ -101,8 +103,6 @@ private:
 
 	FileInstaller *fInstaller;
 } ;
-
-class SyncActionStack;
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
 {
@@ -156,6 +156,7 @@ protected slots:
 	void endHotSync();
 
 	void logMessage(const QString &);
+	void logProgress(const QString &,int);
 
 private:
 	int getPilotSpeed(KPilotConfigSettings &);
@@ -168,7 +169,9 @@ private:
 	QString fPilotDevice;
 	KPilotDeviceLink::DeviceType fPilotType;
 	int fNextSyncType;
-	SyncActionStack *fSyncStack;
+
+	class PilotDaemonPrivate;
+	PilotDaemonPrivate *fP;
 
 
 	/**
@@ -203,6 +206,9 @@ private:
 
 
 // $Log$
+// Revision 1.25  2001/09/23 18:24:59  adridg
+// New syncing architecture
+//
 // Revision 1.24  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

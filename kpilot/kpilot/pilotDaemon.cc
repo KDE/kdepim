@@ -129,10 +129,13 @@ static const char *id="$Id$";
 
 #include "kpilotDCOP_stub.h"
 
-typedef QStack<SyncAction> SyncActionStack;
-
 #include "pilotDaemon.moc"
 
+class PilotDaemon::PilotDaemonPrivate
+{
+public:
+	QStack<SyncAction> SyncActionStack;
+} ;
 
 
 PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
@@ -279,6 +282,17 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	}
 }
 
+QStringList PilotDaemonTray::installFiles()
+{
+	if (fInstaller)
+	{
+		return fInstaller->fileNames();
+	}
+	else
+	{
+		return QStringList();
+	}
+}
 
 
 
@@ -623,24 +637,24 @@ QString  PilotDaemon::syncTypeString(int i) const
 		<< endl;
 
 	SyncAction *a=0L;
-	fSyncStack->clear();
+	fP->SyncActionStack.clear();
 
 	if (KPilotConfig::getConfig().resetGroup().getSyncFiles())
 	{
 		a = new FileInstallAction(fPilotLink,
 			fTray->installFiles());
-		fSyncStack->push(a);
+		fP->SyncActionStack.push(a);
 	}
 
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test :
 		a = new TestLink(fPilotLink);
-		fSyncStack->push(a);
+		fP->SyncActionStack.push(a);
 		break;
 	case PilotDaemonDCOP::Backup :
 		a = new BackupAction(fPilotLink);
-		fSyncStack->push(a);
+		fP->SyncActionStack.push(a);
 		break;
 	default :
 		DEBUGDAEMON << fname
@@ -672,13 +686,13 @@ QString  PilotDaemon::syncTypeString(int i) const
 
 	if (b) delete b;
 
-	if (fSyncStack->isEmpty()) 
+	if (fP->SyncActionStack.isEmpty()) 
 	{ 
 		endHotSync(); 
 		return;
 	}
 
-	a = fSyncStack->pop();
+	SyncAction *a = fP->SyncActionStack.pop();
 	if (!a) return;
 
 	QObject::connect(a,SIGNAL(logMessage(const QString &)),
@@ -698,7 +712,7 @@ QString  PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fSyncStack->isEmpty());
+	ASSERT(fP->SyncActionStack.isEmpty());
 
 	if (fTray) { fTray -> changeIcon(PilotDaemonTray::Normal); } 
 
@@ -862,6 +876,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.44  2001/09/23 18:24:59  adridg
+// New syncing architecture
+//
 // Revision 1.43  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //
