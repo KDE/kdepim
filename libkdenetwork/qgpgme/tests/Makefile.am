@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/libkdenetwork $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
 check_PROGRAMS = dataprovidertest
 
