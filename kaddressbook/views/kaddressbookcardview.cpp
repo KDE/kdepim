@@ -66,9 +66,6 @@ class AddresseeCardViewItem : public CardViewItem
         {
           clearFields();
           
-          // We might want to make this the first field. hmm... -mpilone
-          setCaption( mAddressee.realName() );
-          
           // Try all the selected fields until we find one with text.
           // This will limit the number of unlabeled icons in the view
           KABC::Field::List::Iterator iter;
@@ -77,6 +74,9 @@ class AddresseeCardViewItem : public CardViewItem
             if (mShowEmptyFields || !(*iter)->value( mAddressee ).isEmpty())
               insertField((*iter)->label(), (*iter)->value( mAddressee ));
           }
+
+          // We might want to make this the first field. hmm... -mpilone
+          setCaption( mAddressee.realName() );
         }
     }
     
