@@ -32,7 +32,7 @@ using namespace KCal;
 
 IncidenceBase::IncidenceBase() :
   mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
-  mPilotId(0), mSyncStatus(SYNCMOD)
+  mPilotId(0), mSyncStatus(SYNCMOD), mObserver(0)
 {
   setVUID(CalFormat::createUniqueId());
 }
