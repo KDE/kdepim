@@ -93,6 +93,24 @@ void KNArticleCache::remove(KNArticle *a)
 }
 
 
+void KNArticleCache::remove(KNArticleCollection *c)
+{
+  int cnt=0;
+  KNArticle *a=m_emCache.first();
+  while(a) {
+    if( a->collection()==c && m_emCache.remove() ) {
+      m_emCacheSize-=a->storageSize();
+      a=m_emCache.current();
+      cnt++;
+    }
+    else
+      a=m_emCache.next();
+ }
+
+ kdDebug(5003) << "KNArticleCache::remove() : " << cnt << " articles removed" << endl;
+}
+
+
 void KNArticleCache::clearMemoryCache()
 {
 }

@@ -36,6 +36,7 @@
 #include "kncleanup.h"
 #include "knconfig.h"
 #include "knarticlewidget.h"
+#include "knarticlemanager.h"
 
 
 
@@ -153,7 +154,9 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
     g->saveStaticData(g->length(), true);
     g->saveDynamicData(g->length(), true);
     g->decCount(delCnt);
-    g->setNewCount(newCnt);
+    g->setNewCount(0);
+    //g->setNewCount(newCnt);
+    knGlobals.artManager->cache()->remove(g);
     g->clear();
   }
   else

@@ -1348,7 +1348,7 @@ void KNodeView::slotFolEmpty()
     }
     if( KMessageBox::Yes == KMessageBox::questionYesNo(
         knGlobals.topWidget, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name())) )
-      f_olManager->currentFolder()->deleteAll();
+      f_olManager->emptyFolder(f_olManager->currentFolder());
   }
 }
 

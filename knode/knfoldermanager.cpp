@@ -135,11 +135,22 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   for(fol=del.first(); fol; fol=del.next()) {
     if(c_urrentFolder==fol)
       c_urrentFolder=0;
+    knGlobals.artManager->cache()->remove(fol);
     fol->killYourself();
     f_List.removeRef(fol); // deletes fol
   }
 
   return true;
+}
+
+
+void KNFolderManager::emptyFolder(KNFolder *f)
+{
+  if(!f)
+    return;
+
+  knGlobals.artManager->cache()->remove(f);
+  f->deleteAll();
 }
 
 

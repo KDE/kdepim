@@ -43,6 +43,7 @@ class KNArticleCache {
 
     void add(KNArticle *a);
     void remove(KNArticle *a);
+    void remove(KNArticleCollection *c);
 
     void clearMemoryCache();
     void clearDiskCache();
@@ -100,6 +101,9 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void saveInFolder(KNRemoteArticle::List &l, KNFolder *f);
     void saveInFolder(KNLocalArticle::List &l, KNFolder *f);
     bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
+
+    //cache
+    KNArticleCache* cache()   { return &c_ache; }
 
     //article handling
     void setAllRead(bool r=true);
