@@ -88,6 +88,9 @@ void ResourceGroupwise::initGroupwise()
 
 ResourceGroupwise::~ResourceGroupwise()
 {
+  delete mServer;
+  mServer = 0;
+
   delete mPrefs;
   mPrefs = 0;
 }
