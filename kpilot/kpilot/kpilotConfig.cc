@@ -34,27 +34,13 @@
 #include <qcombobox.h>
 #include <qcheckbox.h>
 
-#ifndef _KLOCALE_H
-#include <klocale.h>
-#endif
-#ifndef _KGLOBAL_H
-#include <kglobal.h>
-#endif
-#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
-#endif
-#ifndef _KCONFIG_H
 #include <kconfig.h>
-#endif
 #include <ksimpleconfig.h>
-
-#ifdef DEBUG
 #include <kcmdlineargs.h>
-#endif
+#include <kmessagebox.h>
 
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
 
 static const char *kpilotconfig_id =
 	"$Id$";
@@ -67,7 +53,7 @@ static const char *kpilotconfig_id =
 // (increase) this number.
 //
 //
-/* static */ const int KPilotConfig::ConfigurationVersion = 404;
+/* static */ const int KPilotConfig::ConfigurationVersion = 440;
 
 /* static */ int KPilotConfig::getConfigVersion(KConfig * config)
 {
@@ -122,53 +108,20 @@ static const char *kpilotconfig_id =
 	return defaultDBPath;
 }
 
-#ifndef DEBUG
-/* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings &)
-{
-	return 0;
-}
-
-/* static */ int KPilotConfig::getDebugLevel(bool)
-{
-	return 0;
-}
-#else
-/* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings & c)
+/* static */ int KPilotConfig::getDebugLevel(KCmdLineArgs *p)
 {
 	FUNCTIONSETUP;
-
-	int d = c.getDebug();
-
-	debug_level |= d;
-
-	if (debug_level)
-	{
-		DEBUGKPILOT << fname
-			<< ": Debug level set to " << debug_level << endl;
-	}
-
-	return debug_level;
-}
-
-/* static */ int KPilotConfig::getDebugLevel(bool useDebugId)
-{
-	FUNCTIONSETUP;
-
-	KCmdLineArgs *p = KCmdLineArgs::parsedArgs(useDebugId ? "debug" : 0L);
 
 	if (p)
 	{
 		if (p->isSet("debug"))
 		{
-			debug_level = atoi(p->getOption("debug"));
+			debug_level = p->getOption("debug").toInt();
 		}
 	}
 
-	getDebugLevel(getConfig());
-
 	return debug_level;
 }
-#endif
 
 static KPilotConfigSettings *theconfig = 0L;
 
@@ -437,3 +390,113 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 }
 
 
+/* static */ QString KPilotConfig::versionDetails(int fileversion, bool run)
+{
+	FUNCTIONSETUP;
+	QString s = CSL1("<qt><p>");
+	s = i18n("The configuration file is outdated.");
+	s += ' ';
+	s += i18n("The configuration file has version %1, while KPilot "
+		"needs version %2.").arg(fileversion).arg(ConfigurationVersion);
+	if (run)
+	{
+		s += ' ';
+		s += i18n("Please run KPilot and check the configuration carefully "
+			"to update the file.");
+	}
+	s += CSL1("</p><p>");
+	s += i18n("Important changes to watch for are:");
+	s += ' ';
+	if (fileversion < 440)
+	{
+		s += i18n("Renamed conduits, Kroupware and file installer have "
+			"been made conduits as well.");
+		s += ' ';
+		s += i18n("Conflict resolution is now a global setting.");
+	}
+	// Insert more recent additions here
+
+
+	return s;
+}
+
+/* static */ void KPilotConfig::sorryVersionOutdated(int fileversion)
+{
+	FUNCTIONSETUP;
+	KMessageBox::detailedSorry(0L,
+		i18n("The configuration file for KPilot is out-of "
+			"date. Please run KPilot to update it."),
+		KPilotConfig::versionDetails(fileversion,true),
+		i18n("Configuration File Out-of Date"));
+}
+
+
+/* static */ void KPilotConfig::interactiveUpdate()
+{
+	FUNCTIONSETUP;
+	KPilotConfigSettings &c = KPilotConfig::getConfig();
+	int fileversion = c.getVersion();
+	int res = 0;
+
+	res = KMessageBox::warningContinueCancel(0L,
+		i18n("The configuration file for KPilot is out-of "
+			"date. KPilot can update some parts of the "
+			"configuration automatically. Do you wish to "
+			"continue?"),
+		i18n("Configuration File Out-of Date"));
+	if (res!=KMessageBox::Continue) return;
+
+	// Try to update conduit list
+	{
+	QStringList conduits( c.getInstalledConduits() );
+	c.resetGroup();
+	bool useKroupware = c.readBoolEntry("SyncWithKMail",false);
+	bool installFiles = c.readBoolEntry("SyncFiles",true);
+	if (useKroupware) conduits.append( CSL1("internal_kroupware") );
+	if (installFiles) conduits.append( CSL1("internal_fileinstall") );
+	c.deleteEntry("SyncWithKMail");
+	c.deleteEntry("SyncFiles");
+	c.setInstalledConduits(conduits);
+	c.sync();
+	if (useKroupware || installFiles)
+		KMessageBox::information(0L,
+			i18n("The settings for Kroupware syncing with KMail "
+				"and the file installer have been moved to the "
+				"conduits configuration. Check the installed "
+				"conduits list."),
+			i18n("Settings Updated"));
+
+	}
+
+	// Check if individual conduits have conflict settings?
+
+	// Search for old conduit libraries.
+	{
+	QStringList foundlibs ;
+	static const char *oldconduits[] = { "null", "address", "doc",
+		"knotes", "sysinfo", "time", "todo", "vcal", 0L } ;
+	const char **s = oldconduits;
+	while (*s)
+	{
+		QString libname = CSL1("kde3/lib%1conduit.so").arg(*s);
+		QString foundlib = ::locate("lib",libname);
+		if (!foundlib.isEmpty())
+		{
+			foundlibs.append(foundlib);
+		}
+		s++;
+	}
+
+	if (!foundlibs.isEmpty())
+		KMessageBox::informationList(0L,
+			i18n("<qt>The following old conduits were found on "
+				"your system. It is a good idea to remove "
+				"them and the associated <tt>.la</tt> "
+				"and <tt>.so.0</tt> files.</qt>"),
+			foundlibs,
+			i18n("Old Conduits Found"));
+	}
+
+	KPilotConfig::updateConfigVersion();
+	c.sync();
+}

@@ -194,27 +194,26 @@ public:
 	static void updateConfigVersion();
 
 	/**
-	* We might have an additional Debug= line in their
-	* config which may be read and ORed with the user-specified
-	* debug level. This function does that.
-	*
-	* Note that this will SIGSEGV if there is no KApplication
-	* instance (yet) since it uses functions from there. @em Only
-	* call this after the KApplication object has been created.
-	*
+	* Warn the user that the config file is outdated.
+	* versionDetails() returns a descriptive string.
+	* sorryVersionOutdated() uses KMessageBox to display it.
+	* interactiveUpdate() tries to copy old configs to new.
+	*/
+	static QString versionDetails(int fileversion, bool run);
+	static void sorryVersionOutdated(int fileversion);
+	static void interactiveUpdate();
+
+	/**
+	* Deal with --debug options.
 	* @ret resulting debug level
 	*/
-	static int getDebugLevel(bool useDebugId=true);
-
+	static int getDebugLevel(KCmdLineArgs *p);
 
 	/**
 	* Returns the user's preference for the system-wide
 	* fixed font.
 	*/
 	static const QFont& fixed() ;
-
-protected:
-	static int getDebugLevel(KPilotConfigSettings &);
 } ;
 
 
