@@ -215,17 +215,8 @@ void TodoConduit::_getAppInfo()
 	buffer = NULL;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << " lastUniqueId"
-		<< fTodoAppInfo.category.lastUniqueID << endl;
+	PilotAppCategory::dumpCategories(fTodoAppInfo.category);
 #endif
-	for (int i = 0; i < 16; i++)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << " cat " << i << " =" <<
-			fTodoAppInfo.category.name[i] << endl;
-#endif
-	}
-
 }
 
 
