@@ -169,7 +169,7 @@ void DeviceConfigPage::getEncoding()
 	FUNCTIONSETUP;
 	QString e = KPilotSettings::encoding();
 	if (e.isEmpty())
-		fConfigWidget->fPilotEncoding->setCurrentItem(0);
+		fConfigWidget->fPilotEncoding->setCurrentText("ISO8859-15");
 	else
 		fConfigWidget->fPilotEncoding->setCurrentText(e);
 }
