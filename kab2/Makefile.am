@@ -22,7 +22,7 @@ libKAddressBook_la_SOURCES = \
 
 libKAddressBook_la_METASOURCES = AUTO
 
-libKAddressBook_la_LIBADD = $(LIB_KDECORE)
+libKAddressBook_la_LIBADD = $(LIB_KDECORE) $(all_libraries)
 
 kab2includedir = $(includedir)/kab2
 
@@ -46,7 +46,7 @@ libKAddressBookServer_la_SOURCES  = \
 
 libKAddressBookServer_la_METASOURCES = AUTO
 
-libKAddressBookServer_la_LIBADD = ./libKAddressBook.la $(LIB_KDECORE)
+libKAddressBookServer_la_LIBADD = ./libKAddressBook.la $(LIB_KDECORE) $(all_libraries)
 
 kab2includedir = $(includedir)/kab2
 kab2include_HEADERS = KAddressBookServerInterface.h

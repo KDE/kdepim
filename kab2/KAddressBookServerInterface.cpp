@@ -20,6 +20,7 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
+#include <qregexp.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>
@@ -87,7 +88,7 @@ KAddressBookServerInterface::list()
 {
   QStringList ret;
 
-  QListIterator<KAddressBookInterface> it(addressBookList_); 
+  QPtrListIterator<KAddressBookInterface> it(addressBookList_); 
 
   for (; it.current(); ++it)
     ret << it.current()->name();
@@ -100,7 +101,7 @@ KAddressBookServerInterface::remove(QString name)
 {
   bool deleted = false;
 
-  QListIterator<KAddressBookInterface> it(addressBookList_);
+  QPtrListIterator<KAddressBookInterface> it(addressBookList_);
 
   for (; it.current(); ++it)
   {
@@ -183,7 +184,7 @@ KAddressBookServerInterface::_writeConfig()
 
   QStringList l;
 
-  QListIterator<KAddressBookInterface> it(addressBookList_);
+  QPtrListIterator<KAddressBookInterface> it(addressBookList_);
 
   for (it.toFirst(); it.current(); ++it)
   {

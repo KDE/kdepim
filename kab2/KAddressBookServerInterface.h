@@ -60,7 +60,7 @@ k_dcop:
     void _readConfig();
     void _writeConfig();
 
-    QList<KAddressBookInterface> addressBookList_;
+    QPtrList<KAddressBookInterface> addressBookList_;
     QStringList formatDefinitionList_;
 };
 
