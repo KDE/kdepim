@@ -615,6 +615,11 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
   mPhoneList = list;
 
+  mPrefCombo->clear();
+  mSecondCombo->clear();
+  mThirdCombo->clear();
+  mFourthCombo->clear();
+
   updateAllTypeCombos();
 }
 
@@ -640,24 +645,30 @@ void PhoneEditWidget::updateTypeCombo( const KABC::PhoneNumber::List &list, KCom
 
 void PhoneEditWidget::updateAllTypeCombos()
 {
-  updateTypeCombo( mPhoneList, mPrefCombo );
-  updateTypeCombo( mPhoneList, mSecondCombo );
-  updateTypeCombo( mPhoneList, mThirdCombo );
-  updateTypeCombo( mPhoneList, mFourthCombo );
-
-  comboChanged( mPrefCombo, mPrefCombo->currentItem() );
-  comboChanged( mSecondCombo, mSecondCombo->currentItem() );
-  comboChanged( mThirdCombo, mThirdCombo->currentItem() );
-  comboChanged( mFourthCombo, mFourthCombo->currentItem() );
-
-  if ( mPhoneList.count() > 0 )
+  if ( mPhoneList.count() > 0 ) {
+    updateTypeCombo( mPhoneList, mPrefCombo );
     mPrefCombo->setCurrentItem( 0 );
-  if ( mPhoneList.count() > 1 )
+  }
+
+  if ( mPhoneList.count() > 1 ) {
+    updateTypeCombo( mPhoneList, mSecondCombo );
     mSecondCombo->setCurrentItem( 1 );
-  if ( mPhoneList.count() > 2 )
+  }
+
+  if ( mPhoneList.count() > 2 ) {
+    updateTypeCombo( mPhoneList, mThirdCombo );
     mThirdCombo->setCurrentItem( 2 );
-  if ( mPhoneList.count() > 3 )
+  }
+
+  if ( mPhoneList.count() > 3 ) {
+    updateTypeCombo( mPhoneList, mFourthCombo );
     mFourthCombo->setCurrentItem( 3 );
+  }
+
+    comboChanged( mPrefCombo, mPrefCombo->currentItem() );
+    comboChanged( mSecondCombo, mSecondCombo->currentItem() );
+    comboChanged( mThirdCombo, mThirdCombo->currentItem() );
+    comboChanged( mFourthCombo, mFourthCombo->currentItem() );
 }
 
 KABC::PhoneNumber PhoneEditWidget::currentPhoneNumber( KComboBox *combo, int index )
