@@ -285,7 +285,7 @@ void ProbeDialog::disconnectDevices()
 	fTimeoutTimer->stop();
 	fProgressTimer->stop();
 	fRotateLinksTimer->stop();
-	fProgress->setProgress(fProgress->maxValue());
+	fProgress->setProgress(fProgress->totalSteps());
 	for (int i=0; i<3; ++i)
 	{
 		PilotLinkList::iterator end(mDeviceLinks[i].end());

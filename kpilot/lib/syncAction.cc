@@ -126,6 +126,7 @@ bool SyncAction::delayDone()
 	case eBackup : return i18n("Backup");
 	case eRestore : return i18n("Restore from Backup");
 	}
+	return i18n("Unknown sync mode");
 }
 
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,

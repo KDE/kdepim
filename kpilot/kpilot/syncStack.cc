@@ -280,7 +280,7 @@ void ActionQueue::queueInit(bool checkUser)
 	}
 }
 
-void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, bool local)
+void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, bool /*local*/)
 {
 	FUNCTIONSETUP;
 

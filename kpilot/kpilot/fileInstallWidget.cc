@@ -180,7 +180,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 	fInstaller->addFiles(files, this );
 }
 
-void FileInstallWidget::slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & lst)
+void FileInstallWidget::slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & /*lst*/)
 {
 	FUNCTIONSETUP;
 	dropEvent(drop);

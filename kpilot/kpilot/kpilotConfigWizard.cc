@@ -74,6 +74,8 @@ ConfigWizard::ConfigWizard(QWidget *parent, const char *n, int m) :
 	page2->fUserName->setText( KPilotSettings::userName() );
 	page2->fDeviceName->setText( KPilotSettings::pilotDevice() );
 	page2->fPilotRunningPermanently->setChecked( KPilotSettings::startDaemonAtLogin() );
+	
+	conduitconfigwizard_id;
 }
 
 ConfigWizard::~ConfigWizard()
