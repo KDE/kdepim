@@ -66,7 +66,7 @@ class KolabFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory);
+K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory)
 
 static const char* s_kmailContentsType = "Contact";
 static const char* s_attachmentMimeType = "application/x-vnd.kolab.contact";

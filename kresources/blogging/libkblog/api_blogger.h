@@ -20,7 +20,7 @@ Implementation for BloggerAPI
 namespace KXMLRPC
 {
   class Server;
-};
+}
 
 namespace KBlog {
 
@@ -88,5 +88,5 @@ class bloggerAPI : public blogInterface
     QString mDefaultBlogID;
 };
 
-};
+}
 #endif

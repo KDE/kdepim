@@ -27,5 +27,5 @@ public:
   QString interfaceName() const { return "MetaWeblog API"; }
 };
 
-};
+}
 #endif

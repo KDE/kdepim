@@ -283,7 +283,7 @@ bool CryptPlug::initialize() {
   GpgME::setDefaultLocale( LC_CTYPE, setlocale( LC_CTYPE, 0 ) );
   GpgME::setDefaultLocale( LC_MESSAGES, setlocale( LC_MESSAGES, 0 ) );
   return (gpgme_engine_check_version (GPGMEPLUG_PROTOCOL) == GPG_ERR_NO_ERROR);
-};
+}
 
 
 bool CryptPlug::hasFeature( Feature flag )

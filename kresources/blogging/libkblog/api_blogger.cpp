@@ -417,7 +417,7 @@ void bloggerAPI::fault( int code, const QString &message )
   emit error( message );
 }
 
-};
+}
 
 #include "api_blogger.moc"
 

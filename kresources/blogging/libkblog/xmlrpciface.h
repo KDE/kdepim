@@ -21,7 +21,7 @@
 namespace KIO
 {
   class Job;
-};
+}
 
 namespace KXMLRPC
 {
@@ -145,7 +145,7 @@ namespace KXMLRPC
 
       QValueList<Query*> mPendingQueries;
   };
-};
+}
 
 template <typename T>
 void KXMLRPC::Server::call( const QString &method, const QValueList<T> &arg,

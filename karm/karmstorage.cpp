@@ -826,7 +826,7 @@ QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
       // hmmmm ... assert(0)?
       ;
   return err;
-};
+}
 
 // export history report as csv, all tasks X all dates in one block
 QString KarmStorage::exportcsvHistory ( TaskView      *taskview, 

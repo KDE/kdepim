@@ -24,4 +24,4 @@
 using namespace KABC;
 
 typedef KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig> GroupwiseFactory;
-K_EXPORT_COMPONENT_FACTORY(kabc_groupwise, GroupwiseFactory );
+K_EXPORT_COMPONENT_FACTORY(kabc_groupwise, GroupwiseFactory )

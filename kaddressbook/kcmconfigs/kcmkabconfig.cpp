@@ -33,7 +33,7 @@
 
 extern "C"
 {
-  KCModule *create_kabconfig( QWidget *parent, const char * ) {
+  KDE_EXPORT KCModule *create_kabconfig( QWidget *parent, const char * ) {
     return new KCMKabConfig( parent, "kcmkabconfig" );
   }
 }

@@ -72,7 +72,7 @@ void KNConfig::BasePageWithTabs::defaults() {
 //
 extern "C"
 {
-  KCModule *create_knode_config_identity( QWidget *parent, const char * )
+  KDE_EXPORT KCModule *create_knode_config_identity( QWidget *parent, const char * )
   {
     KNConfig::IdentityWidget *page = new KNConfig::IdentityWidget( 
       knGlobals.configManager()->identity(), 

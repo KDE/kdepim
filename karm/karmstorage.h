@@ -100,7 +100,7 @@ class KarmStorage
      */
     QString load(TaskView* taskview, const Preferences* preferences);
 
-    QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view);
+    QString buildTaskView(KCal::ResourceCalendar *rc, TaskView *view);
     
     /* Close calendar and clear view.  Release lock if holding one. */
     void closeStorage(TaskView* view);

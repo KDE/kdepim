@@ -58,7 +58,7 @@ protected:
   }
   Journal *mJournal;
 };
-};
+}
 
 
 

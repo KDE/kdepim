@@ -58,5 +58,5 @@ class fileAPI : public blogInterface
     QValueList<KBlog::BlogPosting> mBlogList;
 };
 
-};
+}
 #endif

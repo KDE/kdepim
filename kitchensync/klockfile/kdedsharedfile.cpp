@@ -160,7 +160,7 @@ bool KShareFileModule::writeUnlockFile(const QString &fileName )
 
 
 extern "C" {
-  KDEDModule *create_ksharedfile(const QCString &obj)
+  KDE_EXPORT KDEDModule *create_ksharedfile(const QCString &obj)
   {
     return new KShareFileModule(obj);
   }

@@ -68,7 +68,7 @@ void DNOrderConfigPage::slotChanged() {
   emit changed(true);
 }
 
-extern "C" KCModule * create_kleopatra_config_dnorder( QWidget * parent, const char * ) {
+extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget * parent, const char * ) {
     return new DNOrderConfigPage( parent, "kleopatra_config_dnorder" );
 }
 

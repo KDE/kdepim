@@ -74,7 +74,7 @@ void BloggerPostingWrapper::postFault( int code, const QString& message )
   delete this;
 }
 
-};
+}
 
 #include "bloggerwrapper.moc"
 

@@ -31,7 +31,7 @@
 
 extern "C"
 {
-  KCModule *create_kabcustomfields( QWidget *parent, const char * ) {
+  KDE_EXPORT KCModule *create_kabcustomfields( QWidget *parent, const char * ) {
     return new KCMKabCustomFields( parent, "kcmkabcustomfields" );
   }
 }

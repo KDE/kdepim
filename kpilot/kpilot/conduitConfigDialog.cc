@@ -73,12 +73,12 @@ static const char *conduitconfigdialog_id =
 
 extern "C"
 {
-	KCModule *create_kpilotconfig( QWidget *parent, const char * )
+	KDE_EXPORT KCModule *create_kpilotconfig( QWidget *parent, const char * )
 	{
 		return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
 	}
 
-	ConfigWizard *create_wizard(QWidget *parent, int m)
+	KDE_EXPORT ConfigWizard *create_wizard(QWidget *parent, int m)
 	{
 		return new ConfigWizard(parent,"Wizard", m);
 	}

@@ -28,5 +28,5 @@ public:
   QString getFunctionName( blogFunctions type );
 };
 
-};
+}
 #endif

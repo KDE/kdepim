@@ -69,7 +69,7 @@ void AppearanceConfigurationPage::defaults()
 
 extern "C"
 {
-  KCModule *create_kleopatra_config_appear( QWidget *parent, const char * )
+  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent, const char * )
   {
     AppearanceConfigurationPage *page =
       new AppearanceConfigurationPage( parent, "kleopatra_config_appear" );

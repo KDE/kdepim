@@ -38,5 +38,5 @@ public slots:
   void postFault( int, const QString& );
 };
 
-};
+}
 #endif

@@ -91,7 +91,7 @@ using namespace KIO;
 extern "C"
 {
   void sigalrm_handler (int);
-  int kdemain (int argc, char **argv);
+  KDE_EXPORT int kdemain (int argc, char **argv);
 }
 
 #ifdef HAVE_LIBSASL2

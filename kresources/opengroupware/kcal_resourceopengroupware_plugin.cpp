@@ -26,4 +26,4 @@
 using namespace KCal;
 
 typedef KRES::PluginFactory< OpenGroupware, OpenGroupwareConfig > OpenGroupwareFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_opengroupware, OpenGroupwareFactory );
+K_EXPORT_COMPONENT_FACTORY( kcal_opengroupware, OpenGroupwareFactory )

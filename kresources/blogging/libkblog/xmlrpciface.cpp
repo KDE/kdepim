@@ -52,7 +52,7 @@ namespace KXMLRPC
       QString m_errorString;
       QValueList<QVariant> m_data;
   };
-};
+}
 
 Query *Query::create( const QVariant &id, QObject *parent, const char *name )
 {

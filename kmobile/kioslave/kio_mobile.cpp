@@ -38,7 +38,7 @@ using namespace KIO;
 #define KIO_MOBILE_DEBUG_AREA 7126
 #define PRINT_DEBUG kdDebug(KIO_MOBILE_DEBUG_AREA) << "kio_mobile: "
 
-extern "C" { int kdemain(int argc, char **argv); }
+extern "C" { KDE_EXPORT int kdemain(int argc, char **argv); }
 
 /**
  * The main program.

@@ -76,7 +76,7 @@ static const unsigned int SIEVE_DEFAULT_RECIEVE_BUFFER = 512;
 using namespace KIO;
 extern "C"
 {
-	int kdemain(int argc, char **argv)
+	KDE_EXPORT int kdemain(int argc, char **argv)
 	{
 		KInstance instance("kio_sieve" );
 		

@@ -27,5 +27,5 @@ public:
   QString interfaceName() const { return "MovableType API"; }
 };
 
-};
+}
 #endif

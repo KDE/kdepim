@@ -67,8 +67,8 @@ class CalendarAdaptor : public GroupwareDataAdaptor
     void deleteItem( const QString &localId );
     QString addItem( const QString &rawText,
       const QString &localId, const QString &storageLocation );
-    QString CalendarAdaptor::extractUid( const QString &data );
-    void CalendarAdaptor::clearChange( const QString &uid );
+    QString CalendarAdaptor::extractUid( const QString &data )
+    void CalendarAdaptor::clearChange( const QString &uid )
 
     virtual KCal::Incidence::List parseData( const QString &rawText );
 

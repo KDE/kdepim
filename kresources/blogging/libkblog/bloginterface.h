@@ -197,5 +197,5 @@ class blogInterface : public QObject
     QString mAppID;
 };
 
-};
+}
 #endif

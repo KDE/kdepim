@@ -34,7 +34,7 @@
 
 extern "C"
 {
-  KCModule *create_kabldapconfig( QWidget *parent, const char * ) {
+  KDE_EXPORT KCModule *create_kabldapconfig( QWidget *parent, const char * ) {
     return new KCMKabLdapConfig( parent, "kcmkabldapconfig" );
   }
 }

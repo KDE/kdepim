@@ -31,7 +31,7 @@
 
 namespace KBlog {
 class JournalBlogPosting;
-};
+}
 namespace KCal {
 
 class Journal;
