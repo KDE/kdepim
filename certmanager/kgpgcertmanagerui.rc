@@ -10,6 +10,7 @@
 	</Menu>
 	<Menu name="view" >
 		<text>View</text>
+		<Action name="view_stop_operations"/>
 		<Action name="viewCRLs" />
 	</Menu>
 	<Menu name="certMenu" >

@@ -80,6 +80,9 @@ public:
 
     bool isRemote() const { return mRemote; }
 
+signals:
+    void stopOperations();
+
 private slots:
     void slotStartCertificateDownload( const QString & fingerprint );
     void slotStartCertificateListing();

@@ -184,6 +184,10 @@ void CertManager::createActions() {
 			       actionCollection() );
   (void)KStdAction::quit( this, SLOT( quit() ), actionCollection());
 
+  (void)new KAction( i18n("Stop Operation"), "stop", 0,
+		     this, SIGNAL(stopOperations()),
+		     actionCollection(), "view_stop_operations" );
+
   // New Certificate
   (void)new KAction( i18n("New Certificate"), QIconSet(), 0, this, SLOT( newCertificate() ),
 		     actionCollection(), "newCert" );
@@ -317,6 +321,8 @@ void CertManager::slotStartCertificateListing()
   connect( job, SIGNAL(done()), mProgressBar, SLOT(reset()) );
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
 	   this, SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+  connect( this, SIGNAL(stopOperations()),
+	   job, SLOT(slotCancel()) );
 
   const GpgME::Error err = job->start( query );
   if ( err ) {
