@@ -1,0 +1,12 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="EmpathMessageViewWidget">
+<MenuBar>
+    <Menu name="message"><text>&amp;Message</text>
+        <Action name="messageCompose"/>
+        <Separator/>
+        <Action name="messageReply"/>
+        <Action name="messageReplyAll"/>
+        <Action name="messageForward"/>
+    </Menu>
+</MenuBar>
+</kpartgui>

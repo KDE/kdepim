@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Comment=email message viewer
+Name=EmpathMessageViewWidget
+MimeType=message/rfc822
+ServiceTypes=KParts/ReadOnlyPart,Browser/View
+X-KDE-Library=libEmpathMessageViewWidget
+X-KDE-BrowserView-AllowAsDefault=true
