@@ -4,7 +4,8 @@ LDADD = -lKAddressBook -lkdecore -lqt
 
 bin_PROGRAMS = kab_server
 
-kab_server_SOURCES = KAddressBook.cpp main.cpp
+KAddressBookInterface_DIR = $(top_srcdir)/kab2/lib
+kab_server_SOURCES = KAddressBook.cpp KAddressBookInterface.skel main.cpp
 
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kab_server.desktop

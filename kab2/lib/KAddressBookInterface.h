@@ -25,7 +25,7 @@
 #include <qstringlist.h>
 #include <dcopobject.h>
 
-class Entity;
+#include <Entity.h>
 
 class KAddressBook : virtual public DCOPObject
 {

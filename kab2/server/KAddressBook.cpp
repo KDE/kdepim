@@ -52,85 +52,6 @@ KAddressBook::~KAddressBook()
 {
 }
 
-  bool
-KAddressBook::process(
-  const QCString & fun, const QByteArray & argData,
-	QCString & replyType, QByteArray & replyData)
-{
-  QDataStream argStream   (argData, IO_ReadOnly);
-  QDataStream replyStream (replyData, IO_WriteOnly);
-  
-  if (fun == "entity(QString)") {
-    replyType = "Entity";
-
-    QString arg;
-    argStream >> arg;
-
-    Entity retval;
-    retval = entity(arg);
-    replyStream << retval;
-
-    return true;
-  }
-  
-  else if (fun == "insert(Entity)") {
-    replyType = "QString";
-
-    Entity arg;
-    argStream >> arg;
-
-    QString retval;
-    retval = insert(arg);
-    replyStream << retval;
-
-    return true;
-  }
-  
-  else if (fun == "remove(QString)") {
-    replyType = "bool";
-
-    QString arg;
-    argStream >> arg;
-
-    bool retval;
-    retval = remove(arg);
-    replyStream << retval;
-
-    return true;
-  }
-  
-  else if (fun == "bool replace(Entity)") {
-    replyType = "bool";
-
-    Entity arg;
-    argStream >> arg;
-
-    bool retval;
-    retval = replace(arg);
-    replyStream << retval;
-
-    return true;
-  }
-
-  else if (fun == "bool contains(QString)") {
-    replyType = "bool";
-
-    QString arg;
-    argStream >> arg;
-
-    bool retval;
-    retval = contains(arg);
-    replyStream << retval;
-
-    return true;
-  }
-
-  else {
-    qDebug("Unknown function call to KAddressBook::process()");
-    return false;
-  }
-}
-
   Entity
 KAddressBook::entity(QString id)
 {
@@ -348,13 +269,3 @@ KAddressBook::_removeEntity(const QString & id)
   return true;
 }
 
-QCString KAddressBook::functions()
-{
-  return DCOPObject::functions() + 
-  "entity(QString);"
-  "insert(Entity);"
-  "remove(QString);"
-  "replace(Entity);"
-  "contains(QString);"
-  ;
-}
