@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -147,7 +147,8 @@ bool KonsoleKalendar::showInstance()
 
       QTextStream ts( &f );
 
-      if ( m_variables->getExportType() != ExportTypeHTML ) {
+      if ( m_variables->getExportType() != ExportTypeHTML &&
+           m_variables->getExportType() != ExportTypeMonthHTML ) {
 
 	if ( m_variables->getAll() ) {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -243,11 +244,6 @@ bool KonsoleKalendar::showInstance()
 
         HTMLExportSettings htmlSettings( "Konsolekalendar" );
 
-        title = "Appointments for " + firstdate.toString(Qt::TextDate);
-        if ( firstdate != lastdate ) {
-          title += " - " + lastdate.toString(Qt::TextDate);
-        }
-        htmlSettings.setEventTitle( title );
         //TODO: get progname and url from the values set in main
         htmlSettings.setCreditName( "KonsoleKalendar" );
         htmlSettings.setCreditURL( "http://pim.kde.org/components/konsolekalendar.php" );
@@ -255,8 +251,20 @@ bool KonsoleKalendar::showInstance()
         htmlSettings.setExcludePrivate( true );
         htmlSettings.setExcludeConfidential( true );
 
+        htmlSettings.setEventView( false );
         htmlSettings.setMonthView( false );
-        htmlSettings.setEventView( true );
+        title = i18n( "Appointments for " );
+        if ( m_variables->getExportType() == ExportTypeMonthHTML ) {
+          title += QDate::longMonthName( firstdate.month() );
+          htmlSettings.setMonthView( true );
+        } else {
+          title += firstdate.toString( Qt::TextDate );
+          if ( firstdate != lastdate ) {
+            title += " - " + lastdate.toString( Qt::TextDate );
+          }
+          htmlSettings.setEventView( true );
+        }
+        htmlSettings.setEventTitle( title );
         htmlSettings.setEventAttendees( true );
 // Not supporting Todos yet
 //         title = "To-Do List for " + firstdate.toString(Qt::TextDate);

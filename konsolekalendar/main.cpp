@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -168,7 +168,7 @@ int main( int argc, char *argv[] )
     progVersion,                     // version string
     I18N_NOOP( progDesc ),           // short porgram description
     KAboutData::License_GPL,         // license type
-    "(c) 2002-2004, Tuukka Pasanen and Allen Winter", // copyright statement
+    "(c) 2002-2005, Tuukka Pasanen and Allen Winter", // copyright statement
     0,                               // any free form text
     progURL,                         // program home page address
     "bugs.kde.org"                   // bug report email address
@@ -249,6 +249,7 @@ int main( int argc, char *argv[] )
       "  Text [Default]\n"
       "  Short (like Text, but more compact)\n"
       "  HTML\n"
+      "  HTMLmonth (like HTML, but in a month view)\n"
       "  CSV (Comma-Separated Values)\n"
       ).local8Bit()
          << endl;
@@ -296,6 +297,9 @@ int main( int argc, char *argv[] )
     if ( option.upper() == "HTML" ) {
       kdDebug() << "main | export-type | Export to HTML" << endl;
       variables.setExportType( ExportTypeHTML );
+    } else if ( option.upper() == "HTMLMONTH" ) {
+      kdDebug() << "main | export-type | Export to HTML by Month" << endl;
+      variables.setExportType( ExportTypeMonthHTML );
     } else if ( option.upper() == "CSV" ) {
       kdDebug() << "main | export-type | Export to CSV" << endl;
       variables.setExportType( ExportTypeCSV );
