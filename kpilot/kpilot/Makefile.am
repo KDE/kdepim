@@ -32,7 +32,7 @@ kpilot_SOURCES	= kpilot.cc \
 	strToken.cc \
 	conduitSetup.cc listCat.cc \
 	pilotComponent.cc \
-	fileInstaller.cc fileInstallWidget.cc \
+	logWidget.cc fileInstaller.cc fileInstallWidget.cc \
 	memoWidget.cc \
 	addressWidget.cc addressEditor.cc \
 	options.cc
