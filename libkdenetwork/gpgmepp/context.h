@@ -26,8 +26,6 @@
 #include <vector>
 #include <utility>
 
-#include <sys/types.h> // for time_t
-
 namespace GpgME {
 
   class Key;
@@ -91,9 +89,15 @@ namespace GpgME {
     void setIncludeCertificates( int which );
     int includeCertificates() const;
 
-    enum KeyListMode { Local, Extern };
-    void setKeyListMode( KeyListMode keyListMode );
-    KeyListMode keyListMode() const;
+    enum KeyListMode {
+      Local = 0x1,
+      Extern = 0x2,
+      Signatures = 0x4,
+      Validate = 0x10
+    };
+    void setKeyListMode( unsigned int keyListMode );
+    void addKeyListMode( unsigned int keyListMode );
+    unsigned int keyListMode() const;
 
     void setPassphraseProvider( PassphraseProvider * provider );
     PassphraseProvider * passphraseProvider() const;

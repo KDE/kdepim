@@ -129,28 +129,54 @@ namespace GpgME {
     return gpgme_get_include_certs( d->ctx );
   }
 
-  void Context::setKeyListMode( KeyListMode mode ) {
-    switch ( mode ) {
-    case Local:
-      gpgme_set_keylist_mode( d->ctx, GPGME_KEYLIST_MODE_LOCAL );
-      break;
-    case Extern:
-      gpgme_set_keylist_mode( d->ctx, GPGME_KEYLIST_MODE_EXTERN );
-      break;
-    default:
-#ifndef NDEBUG
-      cerr << "GpgME::Context::setKeyListMode: mode must be one of Local or Extern!" << endl;
-#else
-      ;
+  static inline gpgme_keylist_mode_t add_to_gpgme_keylist_mode_t( unsigned int oldmode, unsigned int newmodes ) {
+    if ( newmodes & Context::Local ) oldmode |= GPGME_KEYLIST_MODE_LOCAL;
+    if ( newmodes & Context::Extern ) oldmode |= GPGME_KEYLIST_MODE_EXTERN;
+    if ( newmodes & Context::Signatures ) oldmode |= GPGME_KEYLIST_MODE_SIGS;
+    if ( newmodes & Context::Validate ) {
+#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
+      oldmode |= GPGME_KEYLIST_MODE_VALIDATE;
+#elif !defined(NDEBUG)
+      std::cerr << "GpgME::Context: ignoring Valdidate keylist flag (gpgme too old)." << std::endl;
 #endif
     }
+#ifndef NDEBUG
+    if ( newmodes & ~(Context::Local|Context::Extern|Context::Signatures|Context::Validate) )
+      cerr << "GpgME::Context: keylist mode must be one of Local, "
+	"Extern, Signatures, or Validate, or a combination thereof!" << endl;
+#endif
+    return static_cast<gpgme_keylist_mode_t>( oldmode );
   }
-  Context::KeyListMode Context::keyListMode() const {
-    switch ( gpgme_get_keylist_mode( d->ctx ) ) {
-    case GPGME_KEYLIST_MODE_LOCAL: return Local;
-    case GPGME_KEYLIST_MODE_EXTERN: return Extern;
-    default: assert( 0 );
-    }
+
+  void Context::setKeyListMode( unsigned int mode ) {
+    gpgme_set_keylist_mode( d->ctx, add_to_gpgme_keylist_mode_t( 0, mode ) );
+  }
+
+  void Context::addKeyListMode( unsigned int mode ) {
+    const unsigned int cur = gpgme_get_keylist_mode( d->ctx );
+    gpgme_set_keylist_mode( d->ctx, add_to_gpgme_keylist_mode_t( cur, mode ) );
+  }
+    
+
+  unsigned int Context::keyListMode() const {
+    const unsigned int cur = gpgme_get_keylist_mode( d->ctx );
+    unsigned int result = 0;
+    if ( cur & GPGME_KEYLIST_MODE_LOCAL ) result |= Local;
+    if ( cur & GPGME_KEYLIST_MODE_EXTERN ) result |= Extern;
+    if ( cur & GPGME_KEYLIST_MODE_SIGS ) result |= Signatures;
+#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
+    if ( cur & GPGME_KEYLIST_MODE_VALIDATE ) result |= Validate;
+#endif
+#ifndef NDEBUG
+    if ( cur & ~(GPGME_KEYLIST_MODE_LOCAL|
+		 GPGME_KEYLIST_MODE_EXTERN|
+#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
+		 GPGME_KEYLIST_MODE_VALIDATE|
+#endif
+		 GPGME_KEYLIST_MODE_SIGS) )
+      std::cerr << "GpgME::Context: WARNING: gpgme_get_keylist_mode() returned an unknown flag!" << std::endl;
+#endif // NDEBUG
+    return result;
   }
 
   void Context::setProgressProvider( ProgressProvider * provider ) {

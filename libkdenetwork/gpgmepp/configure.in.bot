@@ -1,9 +1,10 @@
-if test -z "$GPGME_LIBS"; then
+if test -z "$GPGME_LIBS" || test -n "$kdepim_needs_gpgme_copy" ; then
    echo
    echo "You are missing gpgme 0.4.4 or higher."
-   echo "The following libraries and applications will not be compiled:"
-   echo "  gpgme++, qpgpgme, certmanager, kmail"
-   echo "Download gpgme >= 0.4.4 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme"
+   echo "Gpgme will be built statically from libkdenetwork/libgpgme-copy."
+   echo "If you are a packager, we most strongly recommend to build against"
+   echo "the system's shared gpgme."
+   echo "Consider downloading gpgme >= 0.4.4 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme"
    echo "or use the --with-gpgme-prefix=/path/where/gpgme/is/installed option."
    echo
 fi
