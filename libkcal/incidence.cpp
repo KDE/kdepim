@@ -180,20 +180,9 @@ QString Incidence::organizer() const
 
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
-  /*int diffsecs = mDtStart.secsTo(dtStart);
-
-  if (mReadOnly) return;
-  for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next()) {
-    if (alarm->enabled())
-      alarm->setTime(alarm->time().addSecs(diffsecs));
-  }*/
-
+//  if (mReadOnly) return;
   mDtStart = dtStart;
-
   recurrence()->setRecurStart(mDtStart);
-  /*for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next())
-    alarm->setAlarmStart(mDtStart);*/
-
   emit eventUpdated(this);
 }
 
