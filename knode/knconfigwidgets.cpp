@@ -791,7 +791,6 @@ void KNConfig::AppearanceWidget::apply()
 
   d_ata->setDirty(true);
 
-  d_ata->updateHexcodes();
   d_ata->recreateLVIcons();
 }
 
