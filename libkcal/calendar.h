@@ -29,16 +29,12 @@
 #include "event.h"
 #include "todo.h"
 
-#include "calformat.h"
-
 #define _TIME_ZONE "-0500" /* hardcoded, overridden in config file. */
 
 class KConfig;
 
 namespace KCal {
 
-class VCalDrag;
-class ICalFormat;
 class CalFilter;
 
 /**
@@ -62,16 +58,6 @@ class Calendar {
     Calendar();
     Calendar(const QString &timeZoneId);
     virtual ~Calendar();
-
-    /**
-      Return the calendar format class the calendar object uses for load
-      operations, and the default format it uses for save operations.
-    */
-    CalFormat *calFormat();
-    /**
-      Return the iCalendar format class the calendar object uses.
-    */
-    ICalFormat *iCalFormat();
 
     /**
       Clears out the current calendar, freeing all used memory etc.
@@ -248,6 +234,17 @@ class Calendar {
 
     void setModified( bool );
 
+    /**
+      Set product id returned by loadedProductId(). This function is only
+      useful for the calendar loading code.
+    */
+    void setLoadedProductId( const QString & );
+    /**
+      Return product id taken from file that has been loaded. Returns
+      QString::null, if no calendar has been loaded.
+    */
+    QString loadedProductId();
+
   protected:
     /**
       Get unfiltered events, which occur on the given date.
@@ -264,11 +261,7 @@ class Calendar {
     */
     virtual QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
                                        bool inclusive = false ) = 0;
-  
-    CalFormat *mFormat;     // format used for load, and default for save, operations
-    CalFormat *mDndFormat;  // format used for drag and drop operations
-    ICalFormat *mICalFormat;
-    
+
   private:
     void init();
   
@@ -286,6 +279,8 @@ class Calendar {
     bool mNewObserver;
     
     bool mModified;
+
+    QString mLoadedProductId;
 };
   
 }

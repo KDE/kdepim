@@ -31,6 +31,8 @@
 
 namespace KCal {
 
+class CalFormat;
+
 /**
   This class provides a calendar stored as a local file.
 */

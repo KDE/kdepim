@@ -61,11 +61,12 @@ QString ScheduleMessage::statusName(ScheduleMessage::Status status)
 Scheduler::Scheduler(Calendar *calendar)
 {
   mCalendar = calendar;
-  mFormat = mCalendar->iCalFormat();
+  mFormat = new ICalFormat();
 }
 
 Scheduler::~Scheduler()
 {
+  delete mFormat;
 }
 
 bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)

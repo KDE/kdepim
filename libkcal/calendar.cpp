@@ -24,9 +24,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
 #include "exceptions.h"
 #include "calfilter.h"
 
@@ -67,12 +64,6 @@ void Calendar::init()
   mNewObserver = false;
 
   mModified = false;
-
-  mDndFormat = new VCalFormat;
-  
-  mFormat = 0;
-
-  mICalFormat = new ICalFormat;
 
   // Setup default filter, which does nothing
   mDefaultFilter = new CalFilter;
@@ -128,19 +119,6 @@ void Calendar::init()
 Calendar::~Calendar() 
 {
   delete mDefaultFilter;
-  delete mICalFormat;
-  delete mDndFormat;
-  delete mFormat;
-}
-
-CalFormat *Calendar::calFormat()
-{
-  return mFormat;
-}
-
-ICalFormat *Calendar::iCalFormat()
-{
-  return mICalFormat;
 }
 
 const QString &Calendar::getOwner() const
@@ -316,4 +294,14 @@ void Calendar::setModified( bool modified )
     if ( mObserver ) mObserver->calendarModified( modified, this );
     mModified = modified;
   }
+}
+
+void Calendar::setLoadedProductId( const QString &id )
+{
+  mLoadedProductId = id;
+}
+
+QString Calendar::loadedProductId()
+{
+  return mLoadedProductId;
 }
