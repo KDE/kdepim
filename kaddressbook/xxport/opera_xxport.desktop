@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=libkaddrbk_opera_xxport
+Name=KAB Opera XXPort Plugin
+Comment=Plugin to import Opera contacts
+Type=Service
+ServiceTypes=KAddressBook/XXPort
