@@ -47,7 +47,7 @@ int UnknownSyncEntry::mode() const {
 QDateTime UnknownSyncEntry::lastAccess() const {
     return mTime;
 }
-void UnknownSyncEntry::setLastAccess( QDateTime time ) {
+void UnknownSyncEntry::setLastAccess( const QDateTime& time ) {
     mHasAccess = true;
     mTime = time;
 }

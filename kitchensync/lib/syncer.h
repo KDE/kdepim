@@ -3,6 +3,7 @@
 // $Id$
 
 #include <qbitarray.h>
+#include <qobject.h>
 #include <qmap.h>
 #include <qstring.h>
 #include <qptrlist.h>
@@ -162,6 +163,12 @@ class SyncEntry
        Return the @ref KSyncee data set, the entry belongs to.
     */
     Syncee *syncee();
+
+    /**
+     * Merges two sync entries where ever one entry
+     * does not support one specefic attribute
+     */
+    virtual bool mergeWith( SyncEntry* );
 
 
   private:
@@ -408,6 +415,7 @@ class Syncee
      * Attributes
      */
     virtual QBitArray bitArray()const;
+
 
     /**
      * convience function to figure

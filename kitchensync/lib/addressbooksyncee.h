@@ -10,12 +10,6 @@ namespace KSync {
     class AddressBookSyncEntry : public SyncEntry
     {
     public:
-        enum Supports {
-            Name = 0,
-            FamilyName,
-            GivenName,
-            AdditionalName
-        };
         typedef QPtrList<AddressBookSyncEntry> PtrList;
         AddressBookSyncEntry( const KABC::Addressee & = KABC::Addressee() );
         AddressBookSyncEntry( const AddressBookSyncEntry& );
@@ -25,6 +19,7 @@ namespace KSync {
         void setId(const QString& id );
         QString timestamp();
         QString type()const;
+        bool mergeWith( SyncEntry* );
 
         SyncEntry* clone();
         bool equals( SyncEntry *entry );
@@ -42,6 +37,36 @@ namespace KSync {
     class AddressBookSyncee : public Syncee
     {
     public:
+        enum Supports {
+            FamilyName,
+            GivenName,
+            AdditionalName,
+            Prefix,
+            Suffix,
+            NickName,
+            Birthday,
+            HomeAddress,
+            BusinessAddress,
+            TimeZone,
+            Geo,
+            Title,
+            Role,
+            Organization,
+            Note,
+            Url,
+            Secrecy,
+            Picture,
+            Sound,
+            Agent,
+            HomeNumbers,
+            OfficeNumbers,
+            Category,
+            Custom,
+            Keys,
+            Logo,
+            Email,
+            Emails // more than one
+        };
         AddressBookSyncee();
         ~AddressBookSyncee();
 

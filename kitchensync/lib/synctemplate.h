@@ -16,7 +16,7 @@ namespace KSync {
     class SyncTemplate : public Syncee {
     public:
         typedef QPtrList<Entry> PtrList;
-        SyncTemplate() : Syncee()  {
+        SyncTemplate(uint i = 0) : Syncee(i)  {
             mList.setAutoDelete( true );
         };
         ~SyncTemplate() { };

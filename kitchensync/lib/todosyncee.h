@@ -28,6 +28,35 @@ namespace KSync {
     class TodoSyncee : public SyncTemplate<TodoSyncEntry> {
 
     public:
+        enum Supports {
+            // InicdenceBase
+            Organizer = 0,
+            ReadOnly,
+            DtStart,
+            Duration,
+            Float,
+            // Inicdence
+            Attendee,
+            CreatedDate,
+            Revision,
+            Description,
+            Summary,
+            Category,
+            Relations,
+            ExDates,
+            Attachments,
+            Secrecy,
+            Resources,
+            Priority,
+            Alarms,
+            Recurrence,
+            Location,
+            // Todo
+            DtDue,
+            StartDate,
+            Completed,
+            Percent
+        };
         TodoSyncee();
         QString type() const;
         Syncee* clone();

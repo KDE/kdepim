@@ -11,7 +11,7 @@ SyncEntry* EventSyncEntry::clone()  {
 }
 
 EventSyncee::EventSyncee()
-    : SyncTemplate<EventSyncEntry>() {
+    : SyncTemplate<EventSyncEntry>(DtEnd+1) {
 
 };
 QString EventSyncee::type() const{

@@ -70,6 +70,9 @@ Syncee *SyncEntry::syncee()
 void SyncEntry::setId( const QString& ) {
 
 }
+bool SyncEntry::mergeWith( SyncEntry* ) {
+    return false;
+}
 ///// Syncee ////////////////
 Syncee::Syncee(uint size) :
   mStatusLog(0), mSupport( size )

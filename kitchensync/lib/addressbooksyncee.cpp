@@ -1,5 +1,6 @@
 #include <kapplication.h>
 #include <kdebug.h>
+#include <kstaticdeleter.h>
 #include <kabc/resourcefile.h>
 
 #include "addressbooksyncee.h"
@@ -56,8 +57,92 @@ bool AddressBookSyncEntry::equals( SyncEntry *entry )
   }
 }
 
+/*
+ * mergeWith hell :)
+ * I hope it's worth the effort
+ *
+ */
+namespace {
+    /* merge function */
+    typedef void (*merge)(KABC::Addressee&, const KABC::Addressee& );
+    typedef QMap<int, merge> MergeMap;
+
+    static MergeMap* mergeMap= 0l;
+    static KStaticDeleter<MergeMap> deleter;
+
+    /* merge functions */
+    void mergeFamily    ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeGiven     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeAdditional( KABC::Addressee&, const KABC::Addressee& );
+    void mergePrefix    ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeSuffix    ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeNick      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeBirth     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeHome      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeBus       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeTime      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeGeo       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeTitle     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeRole      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeOrg       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeNote      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeUrl       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeSecrecy   ( KABC::Addressee&, const KABC::Addressee& );
+    void mergePicture   ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeSound     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeAgent     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeHomeTel   ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeOffTel    ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeCat       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeKeys      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeCustom    ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeLogo      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeEmail     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeEmails    ( KABC::Addressee&, const KABC::Addressee& );
+
+
+    MergeMap* map() {
+        if (!mergeMap ) {
+            deleter.setObject( mergeMap,  new MergeMap );
+            mergeMap->insert(AddressBookSyncee::FamilyName, mergeFamily );
+            mergeMap->insert(AddressBookSyncee::GivenName,  mergeGiven );
+            mergeMap->insert(AddressBookSyncee::AdditionalName, mergeAdditional );
+            mergeMap->insert(AddressBookSyncee::Prefix, mergePrefix );
+            mergeMap->insert(AddressBookSyncee::Suffix, mergeSuffix );
+            mergeMap->insert(AddressBookSyncee::NickName, mergeNick );
+            mergeMap->insert(AddressBookSyncee::Birthday, mergeBirth );
+            mergeMap->insert(AddressBookSyncee::HomeAddress, mergeHome );
+            mergeMap->insert(AddressBookSyncee::BusinessAddress, mergeBus );
+            mergeMap->insert(AddressBookSyncee::TimeZone, mergeTime );
+            mergeMap->insert(AddressBookSyncee::Geo, mergeGeo );
+            mergeMap->insert(AddressBookSyncee::Title, mergeTitle );
+            mergeMap->insert(AddressBookSyncee::Role, mergeRole );
+            mergeMap->insert(AddressBookSyncee::Organization, mergeOrg );
+            mergeMap->insert(AddressBookSyncee::Note, mergeNote );
+            mergeMap->insert(AddressBookSyncee::Url, mergeUrl );
+            mergeMap->insert(AddressBookSyncee::Secrecy, mergeSecrecy );
+            mergeMap->insert(AddressBookSyncee::Picture, mergePicture );
+            mergeMap->insert(AddressBookSyncee::Sound, mergeSound );
+            mergeMap->insert(AddressBookSyncee::Agent, mergeAgent );
+            mergeMap->insert(AddressBookSyncee::HomeNumbers, mergeHomeTel );
+            mergeMap->insert(AddressBookSyncee::OfficeNumbers, mergeOffTel );
+            mergeMap->insert(AddressBookSyncee::Category, mergeCat );
+            mergeMap->insert(AddressBookSyncee::Custom, mergeCustom );
+            mergeMap->insert(AddressBookSyncee::Keys, mergeKeys );
+            mergeMap->insert(AddressBookSyncee::Logo, mergeLogo );
+            mergeMap->insert(AddressBookSyncee::Email, mergeEmails );
+            /* now fill it with functions.... */
+        }
+        return mergeMap;
+    }
+}
+
+bool AddressBookSyncEntry::mergeWith( SyncEntry* ) {
+    return false;
+}
+
 AddressBookSyncee::AddressBookSyncee()
- : Syncee()
+    : Syncee(28) // set the support size
 {
 //  mAddressBook = new KABC::AddressBook;
 
@@ -185,4 +270,94 @@ QString AddressBookSyncee::type() const {
 }
 QString AddressBookSyncee::newId()const {
     return KApplication::randomString( 10 );
+}
+
+namespace {
+    /* merge functions */
+    void mergeFamily    ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setFamilyName( other.familyName() );
+    }
+    void mergeGiven     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setGivenName( other.givenName() );
+    }
+    void mergeAdditional( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setAdditionalName( other.additionalName() );
+    }
+    void mergePrefix    ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setPrefix( other.prefix() );
+    }
+    void mergeSuffix    ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setSuffix( other.suffix() );
+    }
+    void mergeNick      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setNickName( other.nickName() );
+    }
+    void mergeBirth     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setBirthday( other.birthday() );
+    }
+    void mergeHome      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertAddress( other.address( KABC::Address::Home ) );
+    }
+    void mergeBus       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertAddress( other.address( KABC::Address::Work ) );
+    }
+    void mergeTime      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setTimeZone( other.timeZone() );
+    }
+    void mergeGeo       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setGeo( other.geo() );
+    }
+    void mergeTitle     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setTitle( other.title() );
+    }
+    void mergeRole      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setRole( other.role() );
+    }
+    void mergeOrg       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setOrganization( other.organization() );
+    }
+    void mergeNote      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setNote( other.note() );
+    }
+    void mergeUrl       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setUrl( other.url() );
+    }
+    void mergeSecrecy   ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setSecrecy( other.secrecy() );
+    }
+    void mergePicture   ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setPhoto( other.photo() );
+    }
+    void mergeSound     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setSound( other.sound() );
+    }
+    void mergeAgent     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setAgent( other.agent() );
+    }
+    void mergeHomeTel   ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Home ) );
+    }
+    void mergeOffTel    ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Work ) );
+    }
+    void mergeCat       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setCategories( other.categories() );
+    }
+    void mergeKeys      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setKeys( other.keys() );
+    }
+    void mergeCustom    ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setCustoms( other.customs() );
+    }
+    void mergeLogo      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.setLogo( other.logo() );
+    }
+    void mergeEmail     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertEmail( other.preferredEmail(), true );
+    }
+    void mergeEmails    ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        QString pref = entry.preferredEmail();
+        entry.setEmails( other.emails() );
+        entry.insertEmail( pref, true );
+    }
 }

@@ -6,6 +6,11 @@
 
 /**
  * $Log$
+ * Revision 1.1  2002/07/15 19:20:52  zecke
+ * addressbooksyncee fixes in regard of the modificationState
+ *
+ * Ported KUnknownSyncEntry to the new API and namespace
+ *
  */
 
 #include <qdatetime.h>
@@ -82,7 +87,7 @@ namespace KSync {
         /**
          * set the last access
          */
-        void setLastAccess(QDateTime time);
+        void setLastAccess(const QDateTime& time);
 
         QString name();
         QString id();

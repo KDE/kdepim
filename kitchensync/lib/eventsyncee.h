@@ -18,6 +18,32 @@ namespace KSync {
     };
     class EventSyncee : public SyncTemplate<EventSyncEntry> {
     public:
+        enum Supports  {
+        // InicdenceBase
+            Organizer = 0,
+            ReadOnly,
+            DtStart,
+            Duration,
+            Float,
+            // Inicdence
+            Attendee,
+            CreatedDate,
+            Revision,
+            Description,
+            Summary,
+            Category,
+            Relations,
+            ExDates,
+            Attachments,
+            Secrecy,
+            Resources,
+            Priority,
+            Alarms,
+            Recurrence,
+            Location,
+            // Event
+            DtEnd
+        };
         EventSyncee();
         Syncee* clone();
         QString type() const;

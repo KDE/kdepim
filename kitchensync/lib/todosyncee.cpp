@@ -57,7 +57,7 @@ bool TodoSyncEntry::equals(SyncEntry* entry ) {
 }
 /// Syncee
 TodoSyncee::TodoSyncee()
-    : SyncTemplate<TodoSyncEntry>() {
+    : SyncTemplate<TodoSyncEntry>(TodoSyncee::Percent+1) { // Percent is the last item
 };
 QString TodoSyncee::type() const {
     return QString::fromLatin1("TodoSyncee");
