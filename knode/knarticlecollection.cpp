@@ -225,7 +225,7 @@ const QCString& KNFile::readLine()
   filePos=at();
   readBytes=QFile::readLine(dataPtr, buffer.size()-1);
   if(readBytes!=-1) {
-    while(static_cast<unsigned int>(readBytes+1)==buffer.size()) {
+   while(dataPtr[readBytes-1]!='\n') {
       at(filePos);
       if(!increaseBuffer() ||
         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
@@ -247,7 +247,7 @@ const QCString& KNFile::readLineWnewLine()
   filePos=at();
   readBytes=QFile::readLine(dataPtr, buffer.size()-1);
   if(readBytes!=-1) {
-    while(static_cast<unsigned int>(readBytes+1)==buffer.size()){
+    while(dataPtr[readBytes-1]!='\n') {
       at(filePos);
       if(!increaseBuffer() ||
         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
