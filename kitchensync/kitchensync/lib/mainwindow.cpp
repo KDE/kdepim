@@ -80,6 +80,8 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
            mView, SLOT( slotKonnectorBar( bool ) ) );
   statusBar()->addWidget( m_konBar, 0, true );
   statusBar()->show();
+
+  setAutoSaveSettings();
 }
 
 MainWindow::~MainWindow()
