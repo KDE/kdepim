@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I$(srcdir)/../lib -I$(srcdir)/../lib/ui -I../lib/ui -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+AM_CPPFLAGS = -DLIBKLEOPATRA_NO_COMPAT -I$(srcdir)/../lib -I$(srcdir)/../lib/ui -I../lib/ui -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
 METASOURCES = AUTO
 
