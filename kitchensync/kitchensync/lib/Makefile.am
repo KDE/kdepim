@@ -3,7 +3,7 @@ INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnec
 lib_LTLIBRARIES = libkitchensyncui.la
 
 libkitchensyncui_la_SOURCES = partbar.cpp manipulatorpart.cpp \
-    configuredialog.cpp \
+    configuredialog.cpp aboutdata.cpp \
     systemtray.cpp core.cpp actionmanager.cpp mainwindow.cpp kitchensync.cpp \
     profile.cpp \
     manpartservice.cpp profilemanager.cpp \

@@ -29,6 +29,7 @@
 #include <mainwindow.h>
 
 #include "splash.h"
+#include "aboutdata.h"
 
 static KCmdLineOptions options[] =
 {
@@ -37,31 +38,7 @@ static KCmdLineOptions options[] =
 
 int main( int argc, char *argv[] )
 {
-  KAboutData aboutData("kitchensync",I18N_NOOP("KitchenSync"),
-		       "0.0.6-1",
-		       I18N_NOOP("Synchronize Data with KDE"),
-		       KAboutData::License_GPL,
-		       "(c) 2001-2002 Holger Freyther\n"
-		       "(c) 2002 Maximilian Reiss\n"
-		       "(c) 2003 Cornelius Schumacher",
-		       0,
-		       "http://opie.handhelds.org" );
-  aboutData.addAuthor("Maximilian Reiss",I18N_NOOP("Current Maintainer"),
-                      "harlekin@handhelds.org");
-  aboutData.addAuthor("Holger Freyther", I18N_NOOP("Current Maintainer"),
-		      "zecke@handhelds.org");
-  aboutData.addAuthor("Cornelius Schumacher", "", "schumacher@kde.org" );
-  aboutData.addCredit("Alexandra Chalupka",
-		      I18N_NOOP("For her understanding that I'm an addict."), 0 );
-  aboutData.addCredit("HP ( former Compaq )",
-		      I18N_NOOP("For all the support HP is giving OpenSource projects"
-		    		"at handhelds.org. Thanks a lot."), 0 );
-  aboutData.addCredit("Bipolar and the rest of the Opie TEAM!",
-                      I18N_NOOP("Testing, testing, testing"),
-                      "opie@handhelds.org" );
-  aboutData.addCredit("Philib Bundell",
-                      I18N_NOOP("For being such a nice guy."),
-                      "pb@gnu.org" );
+  KSync::AboutData aboutData;
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
