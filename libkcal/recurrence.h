@@ -252,7 +252,7 @@ class Recurrence
      * the rule is to repeat every 2nd Monday and Wednesday in the month.
      */
     void addMonthlyPos(short _rPos, const QBitArray &_rDays);
-    /** Adds a position the the recursMonthlyDay list.
+    /** Adds a position to the recursMonthlyDay list.
      * @param _rDay the date in the month to recur.
      */
     void addMonthlyDay(short _rDay);

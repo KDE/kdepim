@@ -252,9 +252,19 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
   if ( single ) {
     recur->unsetRecurs();
   } else {
-    // TODO_RK: Adjust the recurrence for the future incidences. In particular
+    // Adjust the recurrence for the future incidences. In particular
     // adjust the "end after n occurences" rules! "No end date" and "end by ..."
     // don't need to be modified.
+    int duration = recur->duration();
+    if ( duration > 0 ) {
+      int doneduration = recur->durationTo( date.addDays(-1) );
+      if ( doneduration >= duration ) {
+        kdDebug(5850) << "The dissociated event already occured more often that it was supposed to ever occur. ERROR!" << endl;
+        recur->unsetRecurs();
+      } else {
+        recur->setDuration( duration - doneduration );
+      }
+    }
   }
   // Adjust the date of the incidence
   if ( incidence->type() == "Event" ) {
@@ -285,8 +295,10 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
       incidence->addExDate( date );
     } else {
       recur = incidence->recurrence();
-      // TODO_RK: Make sure the recurrence of the past events ends at the corresponding day
-      // recur->???
+      if ( recur ) {
+        // Make sure the recurrence of the past events ends at the corresponding day
+        recur->setEndDate( date.addDays(-1) );
+      }
     }
   } else {
     delete newInc;
