@@ -140,28 +140,28 @@ private slots:
 	 */
 	void doubleClicked ( QListViewItem *item );
 
-	/*
+	/**
 	 * After delete of message, the messages have to be recount.
 	 * After that, this slots redisplay them.
 	 */
 	void messagesCount( );
 		
-	/*
+	/**
 	 * Called when asynchone subject arrived
 	 */
 	void subjectAvailable( KornMailSubject * );
 	
-	/*
+	/**
 	 * called when asynchone mail is in
 	 */
 	void subjectsReady( bool );
 
-	/*
+	/**
 	 * Called when asynchrone deleting is ready
 	 */
 	void deleteMailsReady( bool );
 	
-	/*
+	/**
 	 * Called if user end the dialog
 	 */
 	void closeDialog( );

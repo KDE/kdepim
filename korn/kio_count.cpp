@@ -79,7 +79,7 @@ void KIO_Count::count( KKioDrop *drop )
 	
 	KURL kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
-
+	
 	// Serup a connection
 	if( _protocol->connectionBased( ) )
 	{
@@ -92,6 +92,7 @@ void KIO_Count::count( KKioDrop *drop )
 		{
 			kdWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
 			_valid = false;
+			delete _new_mailurls; _new_mailurls = 0; //No connection pending
 			return;
 		}
 		
@@ -102,6 +103,10 @@ void KIO_Count::count( KKioDrop *drop )
 		 */
 		kurl = *_kurl;
 		metadata = *_metadata;
+	}
+	else
+	{
+		_slave = 0; //Prevent disconnecting not-existing slave
 	}
 	
 	_protocol->recheckKURL( kurl, metadata );
@@ -121,6 +126,31 @@ void KIO_Count::count( KKioDrop *drop )
 		KIO::Scheduler::assignJobToSlave( _slave, _job );
 	else
 		KIO::Scheduler::scheduleJob( _job );
+}
+
+void KIO_Count::stopActiveCount()
+{
+	if( !_new_mailurls )
+		return;
+	
+	disconnect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
+	disconnect( _job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
+	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
+	
+	KIO::Scheduler::cancelJob( _job );
+		       
+	if( _slave )
+	{
+		KIO::Scheduler::disconnectSlave( _slave );
+		_slave = 0;
+	}
+	
+	//Deletings settings
+	delete _kurl; _kurl = 0;
+	delete _metadata; _metadata = 0;
+	delete _protocol; _protocol = 0;
+	
+	delete _new_mailurls; _new_mailurls = 0;
 }
 
 void KIO_Count::showPassive( const QString& id )
@@ -158,8 +188,11 @@ void KIO_Count::result( KIO::Job* job )
 	disconnect( job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
 		    
-	if( _protocol->connectionBased( ) )
+	if( _protocol->connectionBased( ) && _slave )
+	{
 		KIO::Scheduler::disconnectSlave( _slave );
+		_slave = 0;
+	}
 	
 	//Deletings settings
 	delete _kurl; _kurl = 0;

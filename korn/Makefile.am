@@ -97,14 +97,23 @@ noinst_HEADERS = \
   kio_read.h \
   kio_delete.h \
   kiocfg.h \
-  sortedmailsubject.h 
+  sortedmailsubject.h \
+  imap_proto.h \
+  imaps_proto.h \
+  kio_proto.h \
+  maildir_proto.h \
+  nntp_proto.h \
+  pop3_proto.h \
+  pop3s_proto.h \
+  process_proto.h \
+  qmail_proto.h 
 
 srcdoc:
 	kdoc -p -u "/~ssk/src/korn/" -n korn -d /home/ssk/web/src/korn *.h \
 		-lqt -lkdeui -lkdecore
 
 messages:
-	$(XGETTEXT) $(korn_SOURCES) -o $(podir)/korn.pot
+	$(XGETTEXT) *.{h,cpp} -o $(podir)/korn.pot
 
 KDE_ICON = korn
 

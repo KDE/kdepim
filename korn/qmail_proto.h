@@ -30,7 +30,7 @@ public:
 
 	virtual KIO_Protocol * clone() const { return new QMail_Protocol; }
 
-	virtual bool connectionBased() const { return true; }
+	virtual bool connectionBased() const { return false; }
 
 	virtual QString protocol() const { return "file"; }
 	virtual QString configName() const { return "qmail"; }
@@ -45,6 +45,14 @@ public:
 	virtual bool hasUsername() const { return false; }
 	virtual bool hasMailbox() const { return true; }
 	virtual bool hasPassword() const { return false; }
+	
+	virtual void recheckKURL( KURL &kurl, KIO::MetaData& )
+		{ if( kurl.path().right( 1 ) == "/" )
+		  	kurl.setPath( kurl.path() +  "new" );
+		  else
+		  	kurl.setPath( kurl.path() + "/new" );
+		}
+	 
 	
 	virtual QString mailboxName() const { return i18n( "Path:" ); }
 };

@@ -161,6 +161,8 @@ void KKioDrop::setKioServer(const QString & proto, const QString & server, int p
 			(*_metadata)["auth"] = auth;
 	} else
 		*_metadata = metadata;
+		
+	_count->stopActiveCount();
 }
 
 void KKioDrop::setUser(const QString & user, const QString & password,
@@ -179,6 +181,8 @@ void KKioDrop::setUser(const QString & user, const QString & password,
 
 	if( ! _valid )
 		kdWarning() << i18n( "url is not valid" ) << endl;
+	
+	_count->stopActiveCount();
 }
 
 QString KKioDrop::protocol() const

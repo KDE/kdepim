@@ -338,8 +338,9 @@ bool KornSubjectsDlg::reload()
 			{
 				new SubjectListViewItem(_list, &(*it));
 			}
-		} else //else: asynchone
+		} else { //else: asynchone
 			return false;
+		}
 		return true;
 	}
 	else

@@ -129,7 +129,6 @@ void KIO_Delete::deleteItem( const KornMailId *item, KURL kurl, KIO::MetaData me
 		
 	if( protocol->deleteFunction() == KIO_Protocol::get )
 	{
-		kdDebug() << "KIO::get( " << kurl << ", true, false )" << endl;
 		job = KIO::get( kurl, true, false );
 		
 		if( protocol->connectionBased() )
@@ -161,7 +160,6 @@ void KIO_Delete::commitDelete( KURL kurl, KIO::MetaData metadata, KIO_Protocol *
 	if( kurl.port() == 0 )
 		kurl.setPort( protocol->defaultPort() );
 	
-	kdDebug() << "KIO::get( " << kurl << ", true, false )" << endl;
 	KIO::TransferJob *job = KIO::get( kurl, true, false );
 	job->addMetaData( metadata );
 	connect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );

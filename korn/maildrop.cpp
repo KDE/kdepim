@@ -40,6 +40,12 @@ KMailDrop::KMailDrop()
     _resetCounter(-1)
 {
   connect(this, SIGNAL(changed(int)), SLOT(setCount(int)));
+  
+  //Set default colours; this prevents black (QColor::invalid) boxes after creating a new box.
+  _bgColour  = QApplication::palette().active().background();
+  _fgColour  = QApplication::palette().active().text();
+  _nbgColour = QApplication::palette().active().background();
+  _nfgColour = QApplication::palette().active().text();
 }
 
 KMailDrop::~KMailDrop()

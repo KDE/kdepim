@@ -90,7 +90,10 @@ void KIO_Subjects::getConnection( )
 	KIO::MetaData metadata = *_metadata;
 
 	if( _slave )
+	{
 		KIO::Scheduler::disconnectSlave( _slave );
+		_slave = 0;
+	}
 	
 	if( _protocol->connectionBased( ) )
 	{
@@ -103,6 +106,7 @@ void KIO_Subjects::getConnection( )
 		{
 			kdWarning() << i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() );
 			_valid = false;
+			_slave = 0;
 			_kio->emitReadSubjectsReady( false );
 			return;
 		}
@@ -134,8 +138,11 @@ void KIO_Subjects::disConnect( bool result )
 {
 	if( _jobs->isEmpty() )
 	{
-		KIO::Scheduler::disconnectSlave( _slave );
-		_slave = 0;
+		if( _slave )
+		{
+			KIO::Scheduler::disconnectSlave( _slave );
+			_slave = 0;
+		}
 		_kio->emitReadSubjectsReady( result );
 	}
 }
@@ -143,6 +150,9 @@ void KIO_Subjects::disConnect( bool result )
 void KIO_Subjects::cancelled( )
 {
 	_jobs->clear();
+	//_slave died in cancelJob with is by called from the destructor of KIO_Single_Subject,
+	//withs is by called by _jobs->clear because autoRemove equals true.
+	_slave = 0;
 	disConnect( false );
 }
 

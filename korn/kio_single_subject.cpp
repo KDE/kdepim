@@ -53,6 +53,8 @@ KIO_Single_Subject::KIO_Single_Subject( QObject * parent, const char * name,
 
 KIO_Single_Subject::~KIO_Single_Subject( )
 {
+	if( _job )
+		KIO::Scheduler::cancelJob( _job );
 	delete _kurl;
 	delete _metadata;
 	delete _protocol;
@@ -140,6 +142,8 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 		mailSubject->setSize( _size );
 		emit readSubject( mailSubject );
 	}
+	
+	_job = 0;
 	
 	emit finished( this );
 }

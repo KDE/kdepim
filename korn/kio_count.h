@@ -53,6 +53,8 @@ public:
 	
 	//This functions returns true of no error has occured.
 	bool valid( ) { return _valid; }
+	
+	void stopActiveCount();
 private:
 	KKioDrop *_kio;
 	KIO::ListJob *_job;
