@@ -226,6 +226,9 @@ int main(int argc, char *argv[])
   // Domains literals also need to work
   checkIsValidEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "AddressOk" );
 
+  // Some more insane tests but still valid so they must work
+  checkIsValidEmailAddress( "Matt Douhan <\"m@att\"@jongel.com>", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
