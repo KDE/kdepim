@@ -32,6 +32,7 @@ using KRecentAddress::RecentAddresses;
 #include <kstdaction.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
+#include <kpopupmenu.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
 #include <klineedit.h>
@@ -1744,8 +1745,10 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   QColor col4 = config->readColorEntry( "quote1Color", &defaultColor1 );
   QColor c = QColor("red");
   mSpellChecker = new DictSpellChecker(e_dit, /*active*/ true, /*autoEnabled*/ true,
-    /*spellColor*/ config->readColorEntry("NewMessage", &c),
-    /*colorQuoting*/ true, col1, col2, col3, col4);
+                                       /*spellColor*/ config->readColorEntry("NewMessage", &c),
+                                       /*colorQuoting*/ true, col1, col2, col3, col4);
+  connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)),
+           SLOT(addSuggestion(const QString&, const QStringList&, unsigned int)) );
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
@@ -1942,7 +1945,7 @@ KNComposer::Editor::Editor(KNComposer::ComposerView *_composerView, KNComposer *
   spell = 0L;
   installEventFilter(this);
   KCursor::setAutoHideCursor( this, true, true );
-
+  m_bound = QRegExp( QString::fromLatin1("[\\s\\W]") );
 }
 
 
@@ -1978,11 +1981,77 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
       m_composerView->focusNextPrevEdit(0, false);
       return TRUE;
     }
+  } else if ( e->type() == QEvent::ContextMenu ) {
+    QContextMenuEvent *event = (QContextMenuEvent*) e;
 
+    int para = 1, charPos, firstSpace, lastSpace;
+
+    //Get the character at the position of the click
+    charPos = charAt( event->pos(), &para );
+    QString paraText = text( para );
+
+    if( !paraText.at(charPos).isSpace() )
+    {
+      //Get word right clicked on
+      firstSpace = paraText.findRev( m_bound, charPos ) + 1;
+      lastSpace = paraText.find( m_bound, charPos );
+      if( lastSpace == -1 )
+        lastSpace = paraText.length();
+      QString word = paraText.mid( firstSpace, lastSpace - firstSpace );
+      //Continue if this word was misspelled
+      if( !word.isEmpty() && m_replacements.contains( word ) )
+      {
+        KPopupMenu p;
+        p.insertTitle( i18n("Suggestions") );
+
+        //Add the suggestions to the popup menu
+        QStringList reps = m_replacements[word];
+        if( reps.count() > 0 )
+        {
+          int listPos = 0;
+          for ( QStringList::Iterator it = reps.begin(); it != reps.end(); ++it ) {
+            p.insertItem( *it, listPos );
+            listPos++;
+          }
+        }
+        else
+        {
+          p.insertItem( QString::fromLatin1("No Suggestions"), -2 );
+        }
+
+        //Execute the popup inline
+        int id = p.exec( mapToGlobal( event->pos() ) );
+
+        if( id > -1 )
+        {
+          //Save the cursor position
+          int parIdx = 1, txtIdx = 1;
+          getCursorPosition(&parIdx, &txtIdx);
+
+          //Put in our replacement
+          QString txtContents = text();
+          QString newContents = txtContents.left(firstSpace) + m_replacements[word][id] +
+                                txtContents.right( txtContents.length() - lastSpace );
+          setText( newContents );
+
+          //Restore the cursor position
+          if( txtIdx > lastSpace )
+            txtIdx += newContents.length() - txtContents.length();
+          setCursorPosition(parIdx, txtIdx);
+        }
+        //Cancel original event
+        return true;
+      }
+    }
   }
+
   return KEdit::eventFilter(o, e);
 }
 
+void KNComposer::Editor::slotAddSuggestion( const QString &text, const QStringList &lst, unsigned int )
+{
+  m_replacements[text] = lst;
+}
 
 // expand tabs to avoid the "tab-damage",
 // auto-wraped paragraphs have to split (code taken from KEdit::saveText)

@@ -23,6 +23,7 @@
 #include <kdialogbase.h>
 #include <keditcl.h>
 #include <qlineedit.h>
+#include <qregexp.h>
 
 #include <kdeversion.h>
 #if !KDE_IS_VERSION( 3, 1, 90 )
@@ -287,7 +288,7 @@ protected slots:
     virtual void cut();
     virtual void clear();
     virtual void del();
-
+    void slotAddSuggestion( const QString &, const QStringList &lst, unsigned int );
   signals:
     void sigDragEnterEvent(QDragEnterEvent *);
     void sigDropEvent(QDropEvent *);
@@ -305,7 +306,8 @@ private:
     KNComposer *m_composer;
     KNComposer::ComposerView *m_composerView;
     KSpell *spell;
-
+    QMap<QString,QStringList> m_replacements;
+    QRegExp m_bound;
 };
 
 
