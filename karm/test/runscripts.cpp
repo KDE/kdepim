@@ -30,6 +30,8 @@ static QString srcdir();
 static int runscripts
 ( const QString &interpreter, const QString &extension, const QString &path );
 
+const QString dots = ".................................................."; 
+
 // Read srcdir from Makefile (for builddir != srcdir).
 QString srcdir()
 {
@@ -77,8 +79,6 @@ int runscripts
     // Don't run scripts that are shared routines.
     if ( ! fi->fileName().startsWith( "__" ) ) 
     {
-      kdDebug() << "runscripts: running " << fi->fileName() << endl;
-
       s->addArgument( interpreter );
       s->addArgument( path + QDir::separator() + fi->fileName().latin1() );
 
@@ -87,6 +87,11 @@ int runscripts
       if ( interpreter == "php" ) s->addArgument( "--batch" );
 
       rval = s->run();
+
+      kdDebug() << "runscripts: " << fi->fileName() 
+        << " " << dots.left( dots.length() - fi->fileName().length() )
+        << " " << ( ! rval ? "PASS" : "FAIL" ) << endl;
+
       delete s;
       s = new Script( dir );
     }
