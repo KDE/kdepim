@@ -1,9 +1,9 @@
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
 <!ENTITY kappname "&korganizer;">
 <!ENTITY % addindex "IGNORE">
 <!ENTITY % English "INCLUDE">
-<!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
-  %ents;
+
+  
 ]>
 
 <book id="korganizer" lang="&language;">
@@ -135,7 +135,7 @@ here.</para>
 <procedure>
 <step><para>Click on the desired date in the Date Navigator.</para></step>
 <step><para>Click on <guiicon><inlinemediaobject><imageobject>
-<imagedata fileref="i_view_day.png" format="PNG"></imageobject>
+<imagedata fileref="i_view_day.png" format="PNG"/></imageobject>
 </inlinemediaobject></guiicon>.</para></step> 
 <step><para>Double-click the desired hour in the main panel.</para></step> 
 <step><para>Enter event details. Use tabs <guilabel>General</guilabel>,
@@ -1192,7 +1192,7 @@ the entire calendar.</para>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>n</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_new.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_new.png" format="PNG"/></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>New</guimenuitem></menuchoice></term>
 <listitem><para><action>Opens another main window.</action> This window initially contains unnamed calendar. You can use the new window to:</para>
 <itemizedlist>
@@ -1213,7 +1213,7 @@ to give your new calendar a filename and to save it).</para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>o</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_open.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_open.png" format="PNG"/></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Open</guimenuitem></menuchoice></term>
 <listitem><para><action>Opens a file dialog allowing you to select a new vCalendar
 to load.</action>  If you have made changes to the current calendar, you will
@@ -1233,7 +1233,7 @@ dialog entirely.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>s</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_save.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_save.png" format="PNG"/></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Save</guimenuitem></menuchoice></term>
 <listitem><para>When you choose <guimenuitem>Save</guimenuitem> or click the
 <guiicon>Save</guiicon> icon, &korganizer; <action>saves the calendar to disk, and makes
@@ -1256,7 +1256,7 @@ calendar.</para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>w</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_close.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_close.png" format="PNG"/></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Close</guimenuitem></menuchoice></term>
 <listitem><para><action>Closes the current calendar. The window itself will
 remain open, and may be reused to open another
@@ -1267,7 +1267,7 @@ calendar.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>p</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_print.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_print.png" format="PNG"/></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Print</guimenuitem></menuchoice></term>
 <listitem><para>Choose <guimenuitem>Print</guimenuitem> or click the
 <guilabel>Print</guilabel> icon to <action>print the current
@@ -1278,7 +1278,7 @@ To-Do).</para></listitem>
 <varlistentry id="file-print-preview">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_print_preview.png"
-format="PNG"></imageobject></inlinemediaobject>
+format="PNG"/></imageobject></inlinemediaobject>
 File</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice></term>
 <listitem><para>If you choose <guimenuitem>Print Preview</guimenuitem> or click
 the <guiicon>Print Preview</guiicon> icon, <action>the current calendar will be
@@ -1389,7 +1389,7 @@ make your main calendar active.</para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>q</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_quit.png"></imageobject></inlinemediaobject> File</guimenu>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_quit.png"/></imageobject></inlinemediaobject> File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
 <listitem><para>When you choose <guimenuitem>Quit</guimenuitem> or click
@@ -1420,7 +1420,7 @@ find event and to-do entries accross the current calendar.</para>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>x</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_cut.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_cut.png" format="PNG"/></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Cut</guimenuitem> </menuchoice></term>
 <listitem><para><action>Cuts the currently selected event(s) to the clipboard,
 removing them from your calendar.</action></para></listitem>
@@ -1430,7 +1430,7 @@ removing them from your calendar.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>c</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_copy.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_copy.png" format="PNG"/></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Copy</guimenuitem></menuchoice></term>
 <listitem><para><action>Copies the currently selected event(s) to the clipboard,
 leaving them untouched in your calendar.</action></para></listitem>
@@ -1440,7 +1440,7 @@ leaving them untouched in your calendar.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>v</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_paste.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_paste.png" format="PNG"/></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Paste</guimenuitem></menuchoice></term>
 <listitem><para><guimenuitem>Paste</guimenuitem> <action>inserts the
 contents of the clipboard into your calendar</action>. The clipboard must
@@ -1458,7 +1458,7 @@ application to a &korganizer; Edit Event window and vice versa. </para></tip></l
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>f</keycap></keycombo>
 </shortcut>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_edit_find.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_edit_find.png" format="PNG"/></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Find</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guimenuitem>Find</guimenuitem> from the
@@ -1503,7 +1503,7 @@ operations.</para>
 <variablelist>
 <varlistentry id="view-list-view">
 <term><menuchoice>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_list.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_list.png" format="PNG"/></imageobject></inlinemediaobject>
 View</guimenu><guimenuitem>List</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the List view.</action></para>
 <para>This view displays all your events for the day as a list. Events are
@@ -1520,7 +1520,7 @@ of the other views.</para></listitem>
 </varlistentry>
 <varlistentry id="view-day-view">
 <term><menuchoice>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_day.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_day.png" format="PNG"/></imageobject></inlinemediaobject>
 View</guimenu><guimenuitem>Day</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the Day view.</action></para>
 <para>This view presents your event for a single day, sorted
@@ -1559,7 +1559,7 @@ to the closest half hour from where you clicked.</para></tip> </listitem>
 <varlistentry id="view-workweek-view">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_work_week.png"
-format="PNG"></imageobject></inlinemediaobject> View</guimenu><guimenuitem>Work
+format="PNG"/></imageobject></inlinemediaobject> View</guimenu><guimenuitem>Work
 Week</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the Work Week
 view.</action></para>
@@ -1569,7 +1569,7 @@ week are shown.</para></listitem>
 
 <varlistentry id="view-week-view">
 <term><menuchoice>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_week.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_week.png" format="PNG"/></imageobject></inlinemediaobject>
 View</guimenu> <guimenuitem>Week</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the Week view.</action></para>
 <para>The week view provides a view similar to the day view. Events for seven
@@ -1600,7 +1600,7 @@ buttons will navigate to the future.</para></listitem>
 <varlistentry id="view-todo-view">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_todo_list.png"
-format="PNG"></imageobject></inlinemediaobject> View</guimenu> <guimenuitem>To-do
+format="PNG"/></imageobject></inlinemediaobject> View</guimenu> <guimenuitem>To-do
 list</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the To-Do view.</action></para>
 <para>The To-Do list provides a place for you to jot down quick (or long-term)
@@ -1656,20 +1656,20 @@ available drag-and-drop operations.</para></listitem>
 <varlistentry id="go-previous-day">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_backward.png"
-format="PNG"></imageobject></inlinemediaobject>
+format="PNG"/></imageobject></inlinemediaobject>
 Go</guimenu><guimenuitem>Previous Day</guimenuitem></menuchoice></term>
 <listitem><para><action>Go to the previous day.</action></para></listitem>
 </varlistentry>
 <varlistentry id="go-next-day">
 <term><menuchoice>
-<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_forward.png" format="PNG"></imageobject></inlinemediaobject>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_forward.png" format="PNG"/></imageobject></inlinemediaobject>
 Go</guimenu><guimenuitem>Next Day</guimenuitem></menuchoice></term>
 <listitem><para><action>Go to the next day.</action></para></listitem>
 </varlistentry>
 <varlistentry id="go-goto-today">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_to_today.png"
-format="PNG"></imageobject></inlinemediaobject>
+format="PNG"/></imageobject></inlinemediaobject>
 Go</guimenu><guimenuitem>Go to Today</guimenuitem></menuchoice></term>
 <listitem><para><action>Go to today.</action></para></listitem>
 </varlistentry>
@@ -1758,7 +1758,7 @@ Window</link>.</para></listitem>
 <varlistentry id="settings-preferences">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_settings_prefs.png"
-format="PNG"></imageobject></inlinemediaobject>
+format="PNG"/></imageobject></inlinemediaobject>
 Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice></term>
 <listitem><para>Choose <menuchoice> <guimenu>Settings</guimenu>
 <guimenuitem>Preferences</guimenuitem> </menuchoice> or click the
@@ -1777,7 +1777,7 @@ window</link>.</para></listitem>
 <varlistentry id="help-contents">
 <term><menuchoice>
 <guimenu><inlinemediaobject><imageobject><imagedata fileref="i_help_contents.png"
-format="PNG"></imageobject></inlinemediaobject> Help</guimenu>
+format="PNG"/></imageobject></inlinemediaobject> Help</guimenu>
 <guimenuitem>Contents</guimenuitem></menuchoice></term>
 <listitem><para>Choose
 <menuchoice><guimenu>Help</guimenu><guimenuitem>Contents</guimenuitem></menuchoice>
@@ -1833,8 +1833,8 @@ the handbook.</para>
 
 <informaltable>
 <tgroup cols="2">
-<colspec colname="hotkey">
-<colspec colname="desc">
+<colspec colname="hotkey"/>
+<colspec colname="desc"/>
 <thead>
 <row>
   <entry>Hotkey</entry>
@@ -1919,8 +1919,8 @@ the handbook.</para>
 
 <informaltable>
 <tgroup cols="2">
-<colspec colname="desc">
-<colspec colname="hotkey">
+<colspec colname="desc"/>
+<colspec colname="hotkey"/>
 <thead>
 <row>
   <entry>Description</entry>
@@ -2420,5 +2420,6 @@ view.</para>
 
 </glossary>
 
-<![ %addindex; [ &documentation.index; ]]>
+&documentation.index; 
 </book>
+
