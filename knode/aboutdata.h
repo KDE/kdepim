@@ -15,6 +15,7 @@
 */
 
 #include <kaboutdata.h>
+#include <kdepimmacros.h>
 
 #ifndef KNODE_ABOUTDATA_H
 #define KNODE_ABOUTDATA_H

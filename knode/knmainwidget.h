@@ -22,6 +22,7 @@
 #include "resource.h"
 
 #include <qglobal.h>
+#include <kdepimmacros.h>
 
 class QListViewItem;
 

@@ -2,7 +2,6 @@ KDE_OPTIONS = nofinal
 KDE_CXXFLAGS = $(USE_RTTI)
 
 INCLUDES = -I$(top_srcdir)/kmail \
-           -I$(top_builddir)/libkdepim \
            -I$(top_srcdir)/libkdepim \
            -I$(top_srcdir)/libkmime \
            -I$(top_srcdir)/mimelib \

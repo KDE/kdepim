@@ -1,5 +1,3 @@
-INCLUDES = -I$(top_builddir)/libkdepim $(all_includes)
-
 SUBDIRS = pics
 
 lib_LTLIBRARIES = libkpgp.la

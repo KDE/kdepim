@@ -23,6 +23,7 @@
 
 #include <qglobal.h>
 #include <qptrlist.h>
+#include <kdepimmacros.h>
 
 class QListBox;
 class QLabel;
