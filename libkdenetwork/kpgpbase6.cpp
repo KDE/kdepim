@@ -722,17 +722,19 @@ Base6::parseSingleKey( const QCString& output, Key* key /* = 0 */ )
 
   // search start of header line
   if( !strncmp( output.data(), "Type bits", 9 ) )
-    offset = 0;
+    offset = 9;
   else
   {
-    offset = output.find( "\nType bits" ) + 1;
-    if( offset == 0 )
+    offset = output.find( "\nType bits" );
+    if( offset == -1 )
       return 0;
+    else
+      offset += 10;
   }
 
   // key data begins in the next line
   offset = output.find( '\n', offset ) + 1;
-  if( offset == -1 )
+  if( offset == 0 )
     return 0;
 
   key = parseKeyData( output, offset, key );
