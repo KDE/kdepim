@@ -477,9 +477,38 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
   }
 
   KMessageBox::information( this,
-			    i18n( "<qt><p>Certificate imported successfully.</p>"
-				  "<p>Additional info: %1</p></qt>" ).arg("FIXME"),
-			    i18n( "Certificate Imported" ) );
+    QString( "<qt><p>%1</p>"
+    "<p>%1</p>"
+    "<table>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1 (%1 %1)</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1 <br>&nbsp;</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "<tr><td align=right>%1</td><td>%1</td></tr>"
+    "</table></qt>" )
+    .arg(i18n("Certificate imported successfully."))
+    .arg(i18n("Additional info:"))
+    .arg(i18n("Total number processed:")).arg(res.numConsidered())
+    .arg(i18n("imported:")).arg(res.numImported()).arg(i18n("RSA:")).arg(res.numRSAImported())
+    .arg(i18n("new signatures:")).arg(res.newSignatures())
+    .arg(i18n("new user IDs:")).arg(res.newUserIDs())
+    .arg(i18n("keys without user ID:")).arg(res.numKeysWithoutUserID())
+    .arg(i18n("new subkeys:")).arg(res.newSubkeys())
+    .arg(i18n("new revocations:")).arg(res.newRevocations())
+    .arg(i18n("not imported:")).arg(res.notImported())
+    .arg(i18n("unchanged:")).arg(res.numUnchanged())
+    .arg(i18n("number of secret keys:")).arg(res.numSecretKeysConsidered())
+    .arg(i18n("secret keys imported:")).arg(res.numSecretKeysImported())
+    .arg(i18n("secret keys unchanged:")).arg(res.numSecretKeysUnchanged())
+    ,
+    i18n( "Certificate Imported" ) );
   if ( !isRemote() )
     slotStartCertificateListing();
 }
