@@ -643,5 +643,6 @@ extern "C"
 KMail::Interface::BodyPartFormatterPlugin *
 libkmail_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
+  KGlobal::locale()->insertCatalogue( "kmail_text_calendar_plugin" );
   return new Plugin();
 }

@@ -155,6 +155,7 @@ namespace {
 extern "C"
 KMail::Interface::BodyPartFormatterPlugin *
 libkmail_bodypartformatter_text_vcard_create_bodypart_formatter_plugin() {
+  KGlobal::locale()->insertCatalogue( "kmail_text_vcard_plugin" );
   return new Plugin();
 }
 
