@@ -1,0 +1,2 @@
+kdevice.[cpp,h]:	Holger Freyther <freyther@kde.org>
+			* A class to store "device" informations
