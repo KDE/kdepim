@@ -60,7 +60,7 @@ EmpathBrowserPartFactory::~EmpathBrowserPartFactory()
 }
 
     QObject *
-EmpathBrowserPartFactory::create(
+EmpathBrowserPartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,
@@ -95,9 +95,12 @@ EmpathBrowserPart::EmpathBrowserPart(
     widget_->setFocusPolicy(QWidget::StrongFocus);
     setWidget(widget_);
 
-    insertChildClient(widget_->folderListPart_);
-    insertChildClient(widget_->messageListPart_);
-    insertChildClient(widget_->messageViewPart_);
+	if (widget_->folderListPart_)
+    	insertChildClient(widget_->folderListPart_);
+	if (widget_->messageListPart_)
+    	insertChildClient(widget_->messageListPart_);
+	if (widget_->messageViewPart_)
+    	insertChildClient(widget_->messageViewPart_);
 
     setXMLFile("EmpathBrowser.rc");
 
@@ -125,7 +128,10 @@ EmpathBrowserPart::s_showFolder(const EmpathURL & url)
 
 
 EmpathBrowser::EmpathBrowser(QWidget * parent)
-    : QWidget(parent, "Browser")
+    : QWidget(parent, "Browser"), 
+	folderListPart_(0),
+	messageListPart_(0),
+	messageViewPart_(0)
 {
     QSplitter * hSplit = new QSplitter(this, "hSplit");
 

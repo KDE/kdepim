@@ -62,7 +62,7 @@ EmpathMessageListPartFactory::~EmpathMessageListPartFactory()
 }
 
     QObject *
-EmpathMessageListPartFactory::create(
+EmpathMessageListPartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,

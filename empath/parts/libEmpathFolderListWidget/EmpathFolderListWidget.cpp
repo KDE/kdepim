@@ -24,6 +24,7 @@
 #include <qpixmap.h>
 #include <qdragobject.h>
 #include <qstringlist.h>
+#include <qcursor.h>
 
 // KDE includes
 #include <kconfig.h>
@@ -69,7 +70,7 @@ EmpathFolderListPartFactory::~EmpathFolderListPartFactory()
 }
 
     QObject *
-EmpathFolderListPartFactory::create(
+EmpathFolderListPartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,

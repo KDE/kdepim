@@ -228,7 +228,7 @@ class EmpathMessageListPartFactory : public KLibFactory
         EmpathMessageListPartFactory();
         virtual ~EmpathMessageListPartFactory();
 
-        virtual QObject * create(
+        virtual QObject * createObject(
             QObject * parent = 0,
             const char * name = 0,
             const char * classname = "QObject",

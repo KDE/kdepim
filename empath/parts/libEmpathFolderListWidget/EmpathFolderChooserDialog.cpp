@@ -49,9 +49,9 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
     
     buttonBox->layout();
 
-    QObject::connect(pb_OK,     SIGNAL(clicked()), SLOT(s_OK())); 
-    QObject::connect(pb_cancel, SIGNAL(clicked()), SLOT(s_cancel()));
-    QObject::connect(pb_help,   SIGNAL(clicked()), SLOT(s_help()));
+    QObject::connect((QObject*)pb_OK,     SIGNAL(clicked()), SLOT(s_OK())); 
+    QObject::connect((QObject*)pb_cancel, SIGNAL(clicked()), SLOT(s_cancel()));
+    QObject::connect((QObject*)pb_help,   SIGNAL(clicked()), SLOT(s_help()));
 
     QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
