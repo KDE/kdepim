@@ -489,10 +489,9 @@ void KPilotInstaller::slotTestSyncRequested()
 	case KPilotDCOP::DaemonQuit :
 		if (fLogWidget)
 		{
-			fLogWidget->logMessage(
-			i18n("The daemon has exited. No further HotSyncs are possible "
-			"until the daemon is restarted (by quitting and restarting KPilot, "
-			"for instance.)"));
+			fLogWidget->logMessage(i18n("The daemon has exited."));
+			fLogWidget->logMessage(i18n("No further HotSyncs are possible."));
+			fLogWidget->logMessage(i18n("Restart the daemon to HotSync again."));
 		}
 		fAppStatus=WaitingForDaemon;
 		break;
