@@ -614,7 +614,7 @@ Journal::List CalendarResources::rawJournals( JournalSortField sortField, SortDi
 
 Journal *CalendarResources::rawJournalForDate( const QDate &date )
 {
-  Journal *result;
+  Journal *result = 0;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
