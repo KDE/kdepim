@@ -137,7 +137,8 @@ int KMFolderMbox::open()
        emit statusMsg(str);
      } else {
        mIndexStream = fopen(QFile::encodeName(indexLocation()), "r+"); // index file
-       updateIndexStreamPtr();
+       if ( mIndexStream )
+         updateIndexStreamPtr();
      }
 
      if (!mIndexStream)
