@@ -37,7 +37,7 @@ class PilotMemo : public PilotAppCategory
 {
 public:
 	PilotMemo(void) : PilotAppCategory() { } ;
-	PilotMemo(const QString &s) : PilotAppCategory() { fText=s; } ;
+	PilotMemo(const QString &s) : PilotAppCategory() { setText(s); } ;
 	PilotMemo(PilotRecord* rec);
 	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); } ;
 	PilotMemo(void *buf, int attr, recordid_t id, int category)

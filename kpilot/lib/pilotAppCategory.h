@@ -58,7 +58,13 @@ protected:			// Use protected since we will be subclassed
 	*/
 	int fCategory;		// The category ID this record belongs to
 
-	virtual void *pack(void *, int *) = 0;
+	/**
+	* Pack whatever data the interpreted record holds into the given
+	* buffer, of length @p size; return NULL to indicate failure,
+	* otherwise @p buf. Set @p size to the actual size of data returned.
+	* (all of this is dictated by the pilot-link interfaces).
+	*/
+	virtual void *pack(void *buf, int *size) = 0;
 	virtual void unpack(const void *, int = 0) = 0;
 
 

@@ -179,7 +179,7 @@ void AddressWidget::hideComponent()
 	{
 		fAddressList.clear();
 		fListBox->clear();
-	
+
 		updateWidget();
 	}
 }
@@ -215,7 +215,7 @@ void AddressWidget::postHotSync()
 {
 	FUNCTIONSETUP;
 
-	if ( shown ) 
+	if ( shown )
 	{
 		fAddressList.clear();
 		showComponent();
@@ -463,7 +463,7 @@ void AddressWidget::slotCreateNewRecord()
 			<< dbPath()
 			<< "/AddressDB"
 			<< " and got pointer @"
-			<< (int) myDB
+			<< (long) myDB
 			<< " with status "
 			<< ( myDB ? myDB->isDBOpen() : false )
 			<< endl;

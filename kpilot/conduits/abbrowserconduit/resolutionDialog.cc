@@ -183,11 +183,11 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH,
 	fTable->fResolution=SyncAction::eDoNothing;
 	fWidget->fIntroText->setText(helpText);
 
-	adjustSize();
-	resize(size());
-
 	fillListView();
 	adjustButtons(tab);
+
+	adjustSize();
+	resize(size());
 
 	if (fHandle) tickleTimer=new QTimer(this, "TickleTimer");
 
