@@ -23,7 +23,7 @@
 
 #include <qfile.h>
 
-#include <kabc/vcardconverter.h>
+#include <kabc/vcardtool.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
@@ -84,20 +84,11 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
   QTextStream t( &outFile );
   t.setEncoding( QTextStream::UnicodeUTF8 );
 
-  KABC::Addressee::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    KABC::VCardConverter converter;
-    QString vcard;
-
-    KABC::VCardConverter::Version version;
-    if ( data == "v21" )
-      version = KABC::VCardConverter::v2_1;
-    else
-      version = KABC::VCardConverter::v3_0;
-
-    converter.addresseeToVCard( *it, vcard, version );
-    t << vcard << "\r\n\r\n";
-  }
+  KABC::VCardTool tool;
+  if ( data == "v21" )
+    t << tool.createVCards( list, KABC::VCard::v2_1 );
+  else
+    t << tool.createVCards( list, KABC::VCard::v3_0 );
 
   outFile.close();
 
@@ -148,35 +139,9 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
 KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
 {
-  KABC::VCardConverter converter;
-  KABC::AddresseeList addrList;
+  KABC::VCardTool tool;
 
-  uint numVCards = data.contains( "BEGIN:VCARD", false );
-  QStringList dataList = QStringList::split( "\r\n\r\n", data );
-
-  for ( uint i = 0; i < numVCards && i < dataList.count(); ++i ) {
-    KABC::Addressee addr;
-    bool ok = false;
-
-    if ( dataList[ i ].contains( "VERSION:3.0" ) )
-      ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v3_0 );
-    else if ( dataList[ i ].contains( "VERSION:2.1" ) )
-      ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v2_1 );
-    else {
-      KMessageBox::sorry( parentWidget(), i18n( "Not supported vCard version." ) );
-      continue;
-    }
-
-    if ( !addr.isEmpty() && ok )
-      addrList.append( addr );
-    else {
-      QString text = i18n( "The selected file does not include a valid vCard. "
-                           "Please check the file and try again." );
-      KMessageBox::sorry( parentWidget(), text );
-    }
-  }
-
-  return addrList;
+  return tool.parseVCards( data );
 }
 
 #include "vcard_xxport.moc"

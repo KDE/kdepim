@@ -22,7 +22,7 @@
 */                                                                      
 
 #include <kabc/stdaddressbook.h>
-#include <kabc/vcardconverter.h>
+#include <kabc/vcardtool.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -31,36 +31,14 @@
 
 QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
 {
-  KABC::VCardConverter converter;
-  QString vcard;
+  KABC::VCardTool tool;
 
-  KABC::Addressee::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    QString tmp;
-    if ( converter.addresseeToVCard( *it, tmp ) )
-      vcard += tmp + "\r\n";
-  }
-
-  return vcard;
+  return tool.createVCards( list );
 }
 
 KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data )
 {
-  uint numVCards = data.contains( "BEGIN:VCARD", false );
-  QStringList dataList = QStringList::split( "\r\n\r\n", data );
+  KABC::VCardTool tool;
 
-  KABC::Addressee::List addrList;
-  for ( uint i = 0; i < numVCards && i < dataList.count(); ++i ) {
-    KABC::VCardConverter converter;
-    KABC::Addressee addr;
-
-    if ( !converter.vCardToAddressee( dataList[ i ].stripWhiteSpace(), addr ) ) {
-      KMessageBox::error( 0, i18n( "Invalid vCard format in clipboard" ) );
-      continue;
-    }
-
-    addrList.append( addr );
-  }
-
-  return addrList;
+  return tool.parseVCards( data );
 }

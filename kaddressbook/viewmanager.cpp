@@ -26,7 +26,7 @@
 
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
-#include <kabc/vcardconverter.h>
+#include <kabc/vcardtool.h>
 #include <kactionclasses.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -391,17 +391,15 @@ void ViewManager::dropped( QDropEvent *e )
     } else if ( c == 1 )
       emit urlDropped( *it );
   } else if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::Addressee addr;
-    KABC::VCardConverter converter;
-    QStringList list = QStringList::split( "\r\n\r\n", vcards );
-    QStringList::Iterator it;
+    KABC::VCardTool tool;
+
+    KABC::Addressee::List list = tool.parseVCards( vcards );
+    KABC::Addressee::List::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
-      if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) ) {
-        KABC::Addressee a = mCore->addressBook()->findByUid( addr.uid() );
-        if ( a.isEmpty() ) {
-          mCore->addressBook()->insertAddressee( addr );
-          emit modified();
-        }
+      KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );
+      if ( a.isEmpty() ) { // not yet in address book
+        mCore->addressBook()->insertAddressee( *it );
+        emit modified();
       }
     }
 
@@ -416,21 +414,16 @@ void ViewManager::startDrag()
   // Get the list of all the selected addressees
   KABC::Addressee::List addrList;
   QStringList uidList = selectedUids();
-  QStringList::Iterator iter;
-  for ( iter = uidList.begin(); iter != uidList.end(); ++iter )
-    addrList.append( mCore->addressBook()->findByUid( *iter ) );
+  QStringList::Iterator it;
+  for ( it = uidList.begin(); it != uidList.end(); ++it )
+    addrList.append( mCore->addressBook()->findByUid( *it ) );
 
   KMultipleDrag *drag = new KMultipleDrag( this );
-  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard(addrList), this ) );
-  KABC::Addressee::List::Iterator it;
-  QStringList vcards;
-  for ( it = addrList.begin(); it != addrList.end(); ++it ) {
-    QString vcard = QString::null;
-    KABC::VCardConverter converter;
-    if ( converter.addresseeToVCard( *it, vcard ) )
-      vcards.append( vcard );
-  }
-  drag->addDragObject( new KVCardDrag( vcards.join( "\r\n" ), this ) );
+  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard( addrList ), this ) );
+
+  KABC::VCardTool tool;
+  QString vcards = tool.createVCards( addrList );
+  drag->addDragObject( new KVCardDrag( vcards, this ) );
 
   drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
   drag->dragCopy();

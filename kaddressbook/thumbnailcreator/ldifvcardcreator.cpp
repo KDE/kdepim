@@ -34,7 +34,7 @@
 #include <qtextstream.h>
 
 #include <kabc/ldifconverter.h>
-#include <kabc/vcardconverter.h>
+#include <kabc/vcardtool.h>
 #include <kpixmapsplitter.h>
 #include <kstandarddirs.h>
 
@@ -107,19 +107,20 @@ bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImag
   file.close();
 
   // convert the file contents to a KABC::Addressee address
-  bool ok;
+  bool ok = true;
+  KABC::AddresseeList addrList;
   KABC::Addressee addr;
-  KABC::VCardConverter converter;
-  ok = converter.vCardToAddressee( contents, addr, KABC::VCardConverter::v3_0 );
-  if (!ok) {
-    KABC::AddresseeList addrList;
+  KABC::VCardTool tool;
+
+  addrList = tool.parseVCards( contents );
+  if ( addrList.count() == 0 ) {
     ok = KABC::LDIFConverter::LDIFToAddressee( contents, addrList );
     if ( ok )
       addr = addrList[ 0 ];
-  }
-
-  if ( !ok )
-    return false;
+    else
+      return false;
+  } else
+    addr = addrList[ 0 ];
 
   // prepare the text to show
   QString text, info;

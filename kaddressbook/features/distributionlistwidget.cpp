@@ -38,7 +38,7 @@
 #include <kabc/addressbook.h>
 #include <kabc/addresseedialog.h>
 #include <kabc/distributionlist.h>
-#include <kabc/vcardconverter.h>
+#include <kabc/vcardtool.h>
 #include <libkdepim/kvcarddrag.h>
 
 #include "kabcore.h"
@@ -338,14 +338,11 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
 
   QString vcards;
   if ( KVCardDrag::decode( e, vcards ) ) {
-    QStringList list = QStringList::split( "\r\n\r\n", vcards );
-    QStringList::Iterator it;
-    KABC::VCardConverter converter;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      KABC::Addressee addr;
-      if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) )
-        distributionList->insertEntry( addr );
-    }
+    KABC::VCardTool tool;
+    KABC::Addressee::List list = tool.parseVCards( vcards );
+    KABC::Addressee::List::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it )
+      distributionList->insertEntry( *it );
 
     changed();
     updateContactView();
