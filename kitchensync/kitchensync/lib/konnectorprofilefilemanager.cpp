@@ -22,7 +22,13 @@ KonnectorProfile::ValueList KonnectorProfileFileManager::load() {
         conf.setGroup( (*it) );
         KonnectorProfile prof;
         prof.loadFromConfig(&conf );
-        list.append(prof );
+
+        /* see if it is valid Transputer had an almost empty config
+         * only keys and no values which hit an assert later in the mainwindow
+         * ...
+         */
+        if (prof.isValid() )
+            list.append(prof );
     }
 
     return list;

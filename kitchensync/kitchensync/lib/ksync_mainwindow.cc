@@ -607,12 +607,15 @@ void KSyncMainWindow::slotKonnectorProfile() {
     if ( item == -1 ) item = 0;
     if (m_konprof->count() == 0 ) return;
 
-    // make sure it honors the deactivated plugins - not really nice like this, maybe do it better later
+    // make sure it honors the deactivated plugins - not really nice like this, maybe do it better later -Max
+    // IT is hitting an assert -zecke
     for ( int j = 0; j <= item; j++ )  {
         if ( (m_konprof->profile(j)).udi().isEmpty() )  {
             item++;
         }
     }
+
+    if ( item > (int)m_konprof->count() ) return;
 
     KonnectorProfile cur = m_konprof->profile( item );
     switchProfile( cur );

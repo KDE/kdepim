@@ -91,6 +91,9 @@ void KonnectorProfile::setUdi( const QString& udi ) {
 void KonnectorProfile::setKapabilities( const Kapabilities& caps ) {
     m_caps = caps;
 }
+bool KonnectorProfile::isValid()const {
+    return !m_dev.identify().stripWhiteSpace().isEmpty();
+}
 void KonnectorProfile::saveToConfig( KConfig* config ) const{
     config->setGroup(m_uid );
     config->writeEntry("Name", m_name );
