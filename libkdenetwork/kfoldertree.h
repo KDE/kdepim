@@ -1,4 +1,6 @@
-/* This file is part of the KDE libraries
+/* -*- mode: C++; c-file-style: "gnu" -*-
+
+   This file is part of the KDE libraries
    Copyright (C) 2002 Carsten Burghardt <burghardt@kde.org>
    Copyright (C) 2002 Marc Mutz <mutz@kde.org>
 
@@ -35,7 +37,7 @@ struct KPaintInfo {
   QColor colNew;
   QColor colUnread;
   QColor colFlag;
-  bool showSize; 
+  bool showSize;
 #ifdef SCORING
   bool showScore;
   int scoreCol;
@@ -56,20 +58,20 @@ class KFolderTreeItem : public KListViewItem
 {
   public:
     /** Protocol information */
-    enum Protocol { 
-      Imap, 
-      Local, 
+    enum Protocol {
+      Imap,
+      Local,
       News,
       CachedImap,
       Search,
       NONE
     };
-  
+
     /** Type information */
-    enum Type { 
-      Inbox, 
-      Outbox, 
-      SentMail, 
+    enum Type {
+      Inbox,
+      Outbox,
+      SentMail,
       Trash,
       Drafts,
       Templates,
@@ -87,12 +89,12 @@ class KFolderTreeItem : public KListViewItem
         Protocol protocol=NONE, Type type=Root );
 
     /** constructs a child-item */
-    KFolderTreeItem( KFolderTreeItem *parent, const QString & label=QString::null, 
+    KFolderTreeItem( KFolderTreeItem *parent, const QString & label=QString::null,
         Protocol protocol=NONE, Type type=Other, int unread=0, int total=0 );
 
     /** compare */
     virtual int compare( QListViewItem * i, int col,
-        bool ascending ) const; 
+        bool ascending ) const;
 
     /** set/get the unread-count */
     int unreadCount() { return mUnread; }
@@ -115,7 +117,7 @@ class KFolderTreeItem : public KListViewItem
 
     /** paints the cell */
     virtual void paintCell( QPainter * p, const QColorGroup & cg,
-        int column, int width, int align );     
+        int column, int width, int align );
 
     /** dnd */
     virtual bool acceptDrag(QDropEvent* ) const { return true; }
@@ -177,7 +179,7 @@ class KFolderTree : public KListView
 
     virtual void contentsMousePressEvent( QMouseEvent *e );
     virtual void contentsMouseReleaseEvent( QMouseEvent *e );
-    
+
     /** for mimetypes */
     QMemArray<const char*> mAcceptableDropMimetypes;
     QBitArray mAcceptOutside;
