@@ -595,9 +595,15 @@ void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 	de->setEventStart(ttm);
 	de->setEvent(e->doesFloat());
 
-	ttm=writeTm(e->dtEnd());
+	if (e->hasEndDate()) 
+	{
+		ttm=writeTm(e->dtEnd());
+	}
+	else
+	{
+		ttm=writeTm(e->dtStart());
+	}
 	de->setEventEnd(ttm);
-	//TODO:... Use setRepeatEnd???
 }
 
 void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
@@ -751,37 +757,70 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 {
 	FUNCTIONSETUP;
 
-	// TODO: When do I have to set "NoRepeat"
-	// TODO: When do I have to set "dailyRepeat"
-
 	KCal::Recurrence*r=event->recurrence();
 	if (!r) return;
+
+	ushort recType=r->doesRecur();
 	int freq=r->frequency();
 	QDate endDate=r->endDate();
+	QDateTime startDt(readTm(dateEntry->getEventStart())), endDt(readTm(dateEntry->getEventEnd()));
 
-	bool forever=( (!endDate.isValid()) && (r->duration()==0));
-	if (forever) dateEntry->setRepeatForever();
-	else
+	// whether we have to recalc the end date depending on the duration and the recurrence type
+	bool needCalc=( (!endDate.isValid()) && (r->duration()>0));
+	// TODO: What if duration>0 and the date is valid???
+	if (r->duration()==0)
 	{
-		dateEntry->setRepeatEnd(writeTm(endDate));
+		if (!endDate.isValid())
+		{
+			dateEntry->setRepeatForever();
+		}
+		else
+		{
+			dateEntry->setRepeatEnd(writeTm(endDate));
+		}
 	}
+	dateEntry->setRepeatFrequency(freq);
 
+	//  first we have 'fake type of recurrence' when a multi-day
+	// event is passed to the pilot, it is converted to an event 
+	// which recurs daily a number of times.
+	// if the event itself recurs, this will be overridden, and 
+	// only the first day will be included in the event!!!!
+	if (startDt.daysTo(endDt)) 
+	{
+		// multi day event
+		dateEntry->setRepeatType(repeatDaily);
+		dateEntry->setRepeatFrequency(1);
+		dateEntry->setRepeatEnd(dateEntry->getEventEnd());
+#ifdef DEBUG
+		DEBUGCONDUIT << fname <<": Setting single-day recurrence (" << startDt.toString() << 
+			" - " << endDt.toString() << ")" <<endl;
+#endif
+	}
 	QBitArray dayArray;
-	switch(freq)
+	switch(recType)
 	{
 	case KCal::Recurrence::rDaily:
-		dateEntry->setRepeatFrequency(repeatDaily);
+		dateEntry->setRepeatType(repeatDaily);
+		if (needCalc)
+		{
+			dateEntry->setRepeatEnd(writeTm( startDt.addDays(r->duration()) ));
+		}
 		break;
 	case KCal::Recurrence::rWeekly:
-		dateEntry->setRepeatFrequency(repeatWeekly);
+		dateEntry->setRepeatType(repeatWeekly);
 		dayArray=r->days();
 		// TODO: Do I have to rotate the bits by one?
 		dateEntry->setRepeatDays(dayArray);
+		if (needCalc)
+		{
+			dateEntry->setRepeatEnd(writeTm( startDt.addDays(7*r->duration()) ));
+		}
 		break;
 	case KCal::Recurrence::rMonthlyPos:
-		dateEntry->setRepeatFrequency(repeatMonthlyByDate);
+		dateEntry->setRepeatType(repeatMonthlyByDay);
 		if (r->monthPositions().count()>0)
-		{
+		{ // Only take the first monthly position, as the palm allows only one
 			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
 			const KCal::Recurrence::rMonthPos*mp=mps.first();
 			int pos=0;
@@ -791,19 +830,32 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 				if (dayArray[j]) pos=j;
 			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*(mp->rPos-1) + pos));
 		}
+		if (needCalc)
+		{
+			dateEntry->setRepeatEnd(writeTm( startDt.addMonths(r->duration()) ));
+		}
 		break;
 	case KCal::Recurrence::rMonthlyDay:
-		dateEntry->setRepeatFrequency(repeatMonthlyByDay);
+		dateEntry->setRepeatType(repeatMonthlyByDate);
+		if (needCalc)
+		{
+			dateEntry->setRepeatEnd(writeTm( startDt.addMonths(r->duration()) ));
+		}
 		break;
 	case KCal::Recurrence::rYearlyDay:
-		dateEntry->setRepeatFrequency(repeatYearly);
+		dateEntry->setRepeatType(repeatYearly);
+		if (needCalc)
+		{
+			dateEntry->setRepeatEnd(writeTm( startDt.addYears(r->duration()) ));
+		}
 		break;
 	case KCal::Recurrence::rNone:
-		dateEntry->setRepeatFrequency(repeatNone);
+		dateEntry->setRepeatType(repeatNone);
 		break;
 	default:
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Unknown recurrence frequency "<< freq <<endl;
+		DEBUGCONDUIT << fname << ": Unknown recurrence type "<< recType << " with frequency "
+			<< freq << " and duration " << r->duration() << endl;
 #endif
 		break;
 	}
@@ -833,17 +885,46 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
 {
 	FUNCTIONSETUP;
-	KCal::DateList list=vevent->exDates();
-	KCal::DateList::iterator it;
-	for ( it = list.begin(); it != list.end(); ++it )
+	struct tm *ex_List;
+	
+	// first, we need to delete the old exceptions list, if it existed...
+	// This is no longer needed, as I fixed PilotDateEntry::setExceptions to do this automatically
+/*	ex_List=const_cast<structdateEntry->getExceptions();
+	if (ex_List)
+		KPILOT_DELETE(ex_List);*/
+
+	size_t excount=vevent->exDates().size();
+	if (excount<1)
 	{
-		QDateTime dt(*it);
-		struct tm ttm=writeTm(dt);
-		dateEntry->setExceptions(&ttm);
+		dateEntry->setExceptionCount(0);
+		dateEntry->setExceptions(0);
+		return;
 	}
+
+	// we have exceptions, so allocate mem and copy them there...
+	ex_List=new struct tm[excount];
+	if (!ex_List)
+	{
+		kdWarning() << k_funcinfo << ": Couldn't allocate memory for the exceptions" << endl;
+		dateEntry->setExceptionCount(0);
+		dateEntry->setExceptions(0);
+		return;
+	}
+
+	size_t n=0;
+	KCal::DateList::const_iterator it;
+	for ( it = vevent->exDates().begin(); it != vevent->exDates().end(); ++it )
+	{
+		ex_List[n++]=writeTm(*it);
+	}
+	dateEntry->setExceptionCount(excount);
+	dateEntry->setExceptions(ex_List);
 }
 
 // $Log$
+// Revision 1.52  2002/04/14 22:18:16  kainhofe
+// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
+//
 // Revision 1.51  2002/02/23 20:57:41  adridg
 // #ifdef DEBUG stuff
 //
