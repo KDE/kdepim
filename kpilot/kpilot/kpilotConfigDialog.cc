@@ -58,49 +58,49 @@ static const char *kpilotconfigdialog_id =
 	Description (actual codec name)
 where only the parts in brackets will be used in the QTextCodec. */
 #define ENCODING_COUNT	(42)
-static QString encodings[ENCODING_COUNT+11] = {
-	i18n("Western (ISO8859-1)"),
-	i18n("Central European (ISO8859-2)"),
-	i18n("Central European (ISO8859-3)"),
-	i18n("Baltic (ISO8859-4)"),
-	i18n("Cyrillic (ISO8859-5)"),
-	i18n("Arabic (ISO8859-6)"),
-	i18n("Greek (ISO8859-7)"),
-	i18n("Hebrew, visually ordered (ISO8859-8)"),
-	i18n("Hebrew, logically ordered (ISO8859-8-i)"),
-	i18n("Turkish (ISO8859-9)"),
+static const char *encodings[ENCODING_COUNT+11] = {
+	I18N_NOOP("Western (ISO8859-1)"),
+	I18N_NOOP("Central European (ISO8859-2)"),
+	I18N_NOOP("Central European (ISO8859-3)"),
+	I18N_NOOP("Baltic (ISO8859-4)"),
+	I18N_NOOP("Cyrillic (ISO8859-5)"),
+	I18N_NOOP("Arabic (ISO8859-6)"),
+	I18N_NOOP("Greek (ISO8859-7)"),
+	I18N_NOOP("Hebrew, visually ordered (ISO8859-8)"),
+	I18N_NOOP("Hebrew, logically ordered (ISO8859-8-i)"),
+	I18N_NOOP("Turkish (ISO8859-9)"),
 	"ISO8859-10",
 	"ISO8859-13",
 	"ISO8859-14",
-	i18n("Western Euro (ISO8859-15)"),
+	I18N_NOOP("Western Euro (ISO8859-15)"),
 	"Apple Roman",
-	i18n("Arabic (CP1256)"),
-	i18n("Baltic (CP1257)"),
-	i18n("Central European (CP1250)"),
-	i18n("Chinese (Big5)"),	// Chinese, hopefully the same as gtkrc.zh_TW.Big5
-	i18n("Chinese (Big5-HKSCS)"),
-	i18n("Chinese (GB18030)"),
-	i18n("Chinese (GB2312)"),
-	i18n("Chinese (GBK)"),
+	I18N_NOOP("Arabic (CP1256)"),
+	I18N_NOOP("Baltic (CP1257)"),
+	I18N_NOOP("Central European (CP1250)"),
+	I18N_NOOP("Chinese (Big5)"),	// Chinese, hopefully the same as gtkrc.zh_TW.Big5
+	I18N_NOOP("Chinese (Big5-HKSCS)"),
+	I18N_NOOP("Chinese (GB18030)"),
+	I18N_NOOP("Chinese (GB2312)"),
+	I18N_NOOP("Chinese (GBK)"),
 	"CP1258",
 	"CP874",
-	i18n("Cyrillic (CP1251)"),
-	i18n("Greek (CP1253)"),
-	i18n("Hebrew (CP1255)"),
+	I18N_NOOP("Cyrillic (CP1251)"),
+	I18N_NOOP("Greek (CP1253)"),
+	I18N_NOOP("Hebrew (CP1255)"),
 	"IBM 850",
 	"IBM 866",
-	i18n("Japanese (eucJP)"),
-	i18n("Japanese (JIS7)"),
-	i18n("Japanese (Shift-JIS)"),
-	i18n("Korean (eucKR)"),
-	i18n("Russian (KOI8-R)"),
-	i18n("Tamil (TSCII)"),
-	i18n("Thai (TIS-620)"),
-	i18n("Turkish (CP1254)"),
-	i18n("Ukrainian (KOI8-U)"),
-	i18n("Unicode, 8-bit (utf8)"),
-	i18n("Unicode (utf16)"),
-	i18n("Western (CP1252)")
+	I18N_NOOP("Japanese (eucJP)"),
+	I18N_NOOP("Japanese (JIS7)"),
+	I18N_NOOP("Japanese (Shift-JIS)"),
+	I18N_NOOP("Korean (eucKR)"),
+	I18N_NOOP("Russian (KOI8-R)"),
+	I18N_NOOP("Tamil (TSCII)"),
+	I18N_NOOP("Thai (TIS-620)"),
+	I18N_NOOP("Turkish (CP1254)"),
+	I18N_NOOP("Ukrainian (KOI8-U)"),
+	I18N_NOOP("Unicode, 8-bit (utf8)"),
+	I18N_NOOP("Unicode (utf16)"),
+	I18N_NOOP("Western (CP1252)")
 };
 
 KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
@@ -112,7 +112,7 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
 	// Fill the encodings list
 	for (int i=0; i<ENCODING_COUNT; i++)
 	{
-		fConfigWidget->fPilotEncoding->insertItem(encodings[i]);
+		fConfigWidget->fPilotEncoding->insertItem(i18n(encodings[i]));
 	}
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
