@@ -215,9 +215,9 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	grid->addRowSpacing(10,SPACING);
 	grid->addWidget(fKMailSendImmediate,11,1);
 	QToolTip::add(fKMailSendImmediate,
-		i18n("Check this box if you want the conduit\n"
-			"to send all items in the outbox as soon\n"
-			"as it is done, as if you clicked KMail's\n"
+		i18n("Check this box if you want the conduit "
+			"to send all items in the outbox as soon "
+			"as it is done, as if you clicked KMail's "
 			"File->Send Queued menu item."));
 
 
@@ -676,6 +676,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.22  2001/12/31 09:35:23  adridg
+// Sanitizing __FUNCTION__ and cerr
+//
 // Revision 1.21  2001/12/28 13:01:16  adridg
 // Add SyncAction
 //

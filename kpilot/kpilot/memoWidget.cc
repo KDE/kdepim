@@ -383,7 +383,7 @@ void MemoWidget::slotDeleteMemo()
 			": Refusing to delete new memo.\n";
 
 		KMessageBox::error(this,
-			i18n("Cannot delete new memo until \n"
+			i18n("Cannot delete new memo until "
 				"Hot-Synced with pilot."),
 			i18n("Hot-Sync Required"));
 		return;
@@ -604,6 +604,9 @@ void MemoWidget::slotExportMemo()
 }
 
 // $Log$
+// Revision 1.42  2001/10/19 14:03:04  adridg
+// Qt3 include fixes
+//
 // Revision 1.41  2001/10/10 22:22:39  adridg
 // Removed really weird debugging
 //

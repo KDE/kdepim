@@ -949,7 +949,7 @@ int PopMailConduit::sendViaKMail()
 			<< ": Can't get DCOP client."
 			<< endl;
 		KMessageBox::error(0L,
-			i18n("Couldn't connect to DCOP server for\n"
+			i18n("Couldn't connect to DCOP server for "
 				"the KMail connection."),
 			i18n("Error Sending Mail"));
 		return -1;
@@ -982,7 +982,7 @@ int PopMailConduit::sendViaKMail()
 				<< ": Can't open temp file."
 				<< endl;
 			KMessageBox::error(0L, 
-				i18n("Cannot open temporary file to store\n"
+				i18n("Cannot open temporary file to store "
 					"mail from Pilot in."),
 				i18n("Error Sending Mail"));
 			continue;
@@ -996,7 +996,7 @@ int PopMailConduit::sendViaKMail()
 				<< ": Can't open temporary file for writing!"
 				<< endl;
 			KMessageBox::error(0L, 
-				i18n("Cannot open temporary file to store\n"
+				i18n("Cannot open temporary file to store "
 					"mail from Pilot in."),
 				i18n("Error Sending Mail"));
 			continue;
@@ -1974,6 +1974,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.33  2002/01/17 16:24:10  adridg
+// Compile fixes on Solaris
+//
 // Revision 1.32  2002/01/08 01:25:03  cschumac
 // Compile fixes.
 //

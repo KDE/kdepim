@@ -1755,7 +1755,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     if (strcmp(CalFormat::productId().local8Bit(), s) != 0)
       if (mEnableDialogs)
 	KMessageBox::information(mTopWidget,
-			     i18n("This vCalendar file was not created by KOrganizer\n"
+			     i18n("This vCalendar file was not created by KOrganizer "
 				     "or any other product we support. Loading anyway..."),
                              i18n("%1: Unknown vCalendar Vendor").arg(CalFormat::application()));
     deleteStr(s);

@@ -1447,7 +1447,7 @@ void VCalFormat::populate(VObject *vcal)
     if (strcmp(productId().local8Bit(), s) != 0)
       if (mEnableDialogs)
 	KMessageBox::information(mTopWidget,
-			     i18n("This vCalendar file was not created by KOrganizer\n"
+			     i18n("This vCalendar file was not created by KOrganizer "
 				     "or any other product we support. Loading anyway..."),
                              i18n("%1: Unknown vCalendar Vendor").arg(application()));
     deleteStr(s);
@@ -1519,9 +1519,9 @@ void VCalFormat::populate(VObject *vcal)
 				      "calendar.\n"
 				      "UID is %1\n"
 				      "Please check your vCalendar file for "
-				      "duplicate UIDs\n"
+				      "duplicate UIDs "
 				      "and change them MANUALLY to be unique "
-				      "if you find any.\n").arg(tmpStr),
+				      "if you find any.").arg(tmpStr),
 				 i18n("%1: Possible Duplicate Event").arg(application()));
 #endif
 	  goto SKIP;
@@ -1534,9 +1534,9 @@ void VCalFormat::populate(VObject *vcal)
 				      "calendar.\n"
 				      "UID is %1\n"
 				      "Please check your vCalendar file for "
-				      "duplicate UIDs\n"
+				      "duplicate UIDs "
 				      "and change them MANUALLY to be unique "
-				      "if you find any.\n").arg(tmpStr),
+				      "if you find any.").arg(tmpStr),
 				 i18n("%1: Possible Duplicate Event").arg(application()));
 
 #endif
