@@ -37,6 +37,8 @@
 class QListViewItem;
 class QPushButton;
 class KProcess;
+class ConduitConfigBase;
+class ConduitConfig;
 
 class ConduitConfigWidget : public ConduitConfigWidgetBase
 {
@@ -52,6 +54,8 @@ protected:
 	void warnNoExec(const QListViewItem *);
 	void warnNoLibrary(const QListViewItem *);
 
+	void loadAndConfigure(QListViewItem *); // ,bool);
+	void release();
 public slots:
 	void commitChanges();
 
@@ -60,12 +64,13 @@ signals:
 
 protected slots:
 	void selected(QListViewItem *);
-
-	void configureConduit();
+	void configure();
 
 private:
 	QPushButton *fConfigure;
-	QListViewItem *fGeneralItem;
+	QListViewItem *fCurrentConduit;
+	ConduitConfigBase *fCurrentConfig;
+	ConduitConfig *fCurrentOldStyle;
 } ;
 
 class ConduitConfigDialog : public UIDialog

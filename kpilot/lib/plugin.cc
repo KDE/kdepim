@@ -47,6 +47,35 @@
 #include "plugin.moc"
 
 
+ConduitConfigBase::ConduitConfigBase(QWidget *parent,
+	const char *name) :
+	QObject(parent,name),
+	fModified(false),
+	fWidget(0L)
+{
+	FUNCTIONSETUP;
+}
+
+ConduitConfigBase::~ConduitConfigBase()
+{
+	FUNCTIONSETUP;
+}
+
+/* slot */ void ConduitConfigBase::modified()
+{
+	fModified=true;
+}
+
+
+void ConduitConfigBase::commit(KConfig *)
+{
+	FUNCTIONSETUP;
+}
+
+void ConduitConfigBase::load(KConfig *)
+{
+	FUNCTIONSETUP;
+}
 
 
 ConduitConfig::ConduitConfig(QWidget *parent,

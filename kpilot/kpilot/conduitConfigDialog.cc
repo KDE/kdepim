@@ -119,12 +119,11 @@ ConduitTip::~ConduitTip()
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
-	bool m) : UIDialog(_w, n, Ok|Cancel|User1,m)
+	bool m) : UIDialog(_w, n, Ok|Cancel,m)
 {
 	FUNCTIONSETUP;
 
 	enableButtonSeparator(true);
-	setButtonText(User1,i18n("Configure..."));
 	selected(0L);
 
 	fConfigWidget = new ConduitConfigWidget(widget(),0L);
@@ -147,15 +146,23 @@ ConduitConfigDialog::~ConduitConfigDialog()
 	fConfigWidget->commitChanges();
 }
 
-void ConduitConfigDialog::selected(QListViewItem *p)
+void ConduitConfigDialog::selected(QListViewItem *)
 {
-	enableButton(User1,p);
 }
 
+// Page numbers in the widget stack
+#define INTRO		(0)
+#define OLD_CONDUIT	(1)
+#define BROKEN_CONDUIT	(2)
+#define NEW_CONDUIT	(3)
+
 ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
-	bool ownbuttons) :
+	bool) :
 	ConduitConfigWidgetBase(p,n),
-	fConfigure(0L)
+	fConfigure(0L),
+	fCurrentConduit(0L),
+	fCurrentConfig(0L),
+	fCurrentOldStyle(0L)
 {
 	FUNCTIONSETUP;
 
@@ -164,30 +171,16 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 	fConduitList->adjustSize();
 	fConduitList->show();
 
-	if (ownbuttons)
-	{
-		QHBox *h = new QHBox(this);
-		fConfigure = new QPushButton(i18n("Configure..."),h);
-		fConduitConfigLayout->addWidget(h,5,0);
-		h->setStretchFactor(fConfigure,0);
-		
-		QWidget *w = new QWidget(h);
-		h->setStretchFactor(w,100);
-		
-		KSeparator *s = new KSeparator(this);
-		fConduitConfigLayout->addWidget(s,4,0);
-	}
-	
-	QObject::connect(fConduitList,
-		SIGNAL(doubleClicked(QListViewItem *)),
-		this,SLOT(configureConduit()));
 	QObject::connect(fConduitList,
 		SIGNAL(selectionChanged(QListViewItem *)),
 		this,SLOT(selected(QListViewItem *)));
+	QObject::connect(fConfigureButton,
+		SIGNAL(clicked()),
+		this,SLOT(configure()));
 
 	selected(0L);
 	adjustSize();
-	fStack->raiseWidget(0);
+	fStack->raiseWidget(INTRO);
 
 	(void) new ConduitTip(fConduitList);
 }
@@ -195,15 +188,12 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 ConduitConfigWidget::~ConduitConfigWidget()
 {
 	FUNCTIONSETUP;
+	release();
 }
 
 void ConduitConfigWidget::fillLists()
 {
 	FUNCTIONSETUP;
-
-	fGeneralItem = new QListViewItem(fConduitList,
-		i18n("General"),
-		i18n("Settings that apply to all conduits."));
 
 	QStringList potentiallyInstalled =
 		KPilotConfig::getConfig().setConduitGroup().
@@ -253,29 +243,10 @@ void ConduitConfigWidget::fillLists()
 	}
 }
 
-void ConduitConfigWidget::selected(QListViewItem *p)
-{
-	FUNCTIONSETUP;
-	// Don't enable configure for the general item.
-	if (p==fGeneralItem) 
-	{
-		fStack->raiseWidget(1);
-		p=0L;
-	}
-	else
-	{
-		fStack->raiseWidget(0);
-	}
-	if (fConfigure) fConfigure->setEnabled(p);
-	emit selectionChanged(p);
-}
-
-void ConduitConfigWidget::configureConduit()
+void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 {
 	FUNCTIONSETUP;
 
-	QListViewItem *p = fConduitList->selectedItem();
-	if (p==fGeneralItem) return;
 	if (!p)
 	{
 #ifdef DEBUG
@@ -283,6 +254,7 @@ void ConduitConfigWidget::configureConduit()
 			<< ": Executed NULL conduit?"
 			<< endl;
 #endif
+		fStack->raiseWidget(INTRO);
 		return;
 	}
 
@@ -295,6 +267,7 @@ void ConduitConfigWidget::configureConduit()
 
 	if (p->text(CONDUIT_LIBRARY).isEmpty())
 	{
+		fStack->raiseWidget(BROKEN_CONDUIT);
 		warnNoExec(p);
 		return;
 	}
@@ -312,6 +285,7 @@ void ConduitConfigWidget::configureConduit()
 			<< " found."
 			<< endl;
 #endif
+		fStack->raiseWidget(BROKEN_CONDUIT);
 		warnNoLibrary(p);
 		return;
 	}
@@ -320,61 +294,143 @@ void ConduitConfigWidget::configureConduit()
 	a.append(CSL1("modal"));
 
 	// QObject *o = f->create(this, 0L, "ConduitConfig",a);
-	QObject *o = f->create(fStack, 0L, "ConduitConfigWidget",a);
+	QObject *o = f->create(fStack, 0L, "ConduitConfigBase", a);
+	bool oldstyle=false;
 
 	if (!o)
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
-			<< ": Can't create object."
+			<< ": Can't create ConduitConfigBase - must be old conduit."
 			<< endl;
 #endif
 
-		KLibLoader::self()->unloadLibrary(
-			library);
-		warnNoLibrary(p);
-		return;
+		o = f->create(this,0L,"ConduitConfig",a);
+		oldstyle=true;
+
+		if (!o)
+		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname
+				<< ": No ConduitConfig either."
+				<< endl;
+#endif
+			KLibLoader::self()->unloadLibrary(
+				library);
+			fStack->raiseWidget(BROKEN_CONDUIT);
+			warnNoLibrary(p);
+			return;
+		}
 	}
 
-	QWidget *d = dynamic_cast<QWidget *>(o);
-
-	if (!d)
+	if (oldstyle)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Can't cast to dialog."
-			<< endl;
-#endif
+		ConduitConfig *d = dynamic_cast<ConduitConfig *>(o);
 
-		delete o;
-		KLibLoader::self()->unloadLibrary(
-			library);
-		warnNoLibrary(p);
-		return;
-	}
-
-	// d->setConfig(&KPilotConfig::getConfig());
-	// d->readSettings();
-	// d->exec();
-	if (fStack->addWidget(d,2)<0)
-	{
+		if (!d)
+		{
 #ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Can't add config widget to stack."
-			<< endl;
+			DEBUGKPILOT << fname
+				<< ": Can't cast to config dialog."
+				<< endl;
 #endif
+			fStack->raiseWidget(BROKEN_CONDUIT);
+			warnNoLibrary(p);
+			return;
+		}
+		fStack->raiseWidget(OLD_CONDUIT);
+		fOldStyleLabel->setText(i18n("<qt>The conduit <i>%1</i> "
+			"is an old-style conduit. To configure it, "
+			"click the configure button below.")
+				.arg(p->text(CONDUIT_NAME)));
+
+		fCurrentOldStyle=d;
 	}
 	else
 	{
-		fStack->raiseWidget(2);
-		d->show();
-	}
+		ConduitConfigBase *d = dynamic_cast<ConduitConfigBase *>(o);
 
-	// delete d;
-	// KLibLoader::self()->unloadLibrary(
-	//	library);
+		if (!d)
+		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname
+				<< ": Can't cast to config base object."
+				<< endl;
+#endif
+			fStack->raiseWidget(BROKEN_CONDUIT);
+			warnNoLibrary(p);
+			return;
+		}
+
+		if (fStack->addWidget(d->widget(),NEW_CONDUIT)<0)
+		{
+	#ifdef DEBUG
+			DEBUGKPILOT << fname
+				<< ": Can't add config widget to stack."
+				<< endl;
+	#endif
+		}
+		else
+		{
+			fStack->adjustSize();
+			fStack->raiseWidget(NEW_CONDUIT);
+			d->widget()->show();
+			fCurrentConfig=d;
+			adjustSize();
+		}
+	}
 }
 
+void ConduitConfigWidget::release()
+{
+	FUNCTIONSETUP;
+	if (fCurrentConfig)
+	{
+		fStack->raiseWidget(0);
+		delete fCurrentConfig;
+	}
+	if (fCurrentOldStyle)
+	{
+		fStack->raiseWidget(0);
+		delete fCurrentOldStyle;
+	}
+	if (fCurrentConduit)
+	{
+		KLibLoader::self()->unloadLibrary(
+			QFile::encodeName(fCurrentConduit->text(CONDUIT_LIBRARY)));
+	}
+	fCurrentConduit=0L;
+	fCurrentConfig=0L;
+	fCurrentOldStyle=0L;
+}
+
+void ConduitConfigWidget::selected(QListViewItem *p)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": " 
+		<< ( p ? p->text(CONDUIT_NAME) : CSL1("None") )
+		<< endl;
+#endif
+	if (p!=fCurrentConduit)
+	{
+		release();
+	}
+	fCurrentConduit=p;
+	loadAndConfigure(p);
+}
+
+void ConduitConfigWidget::configure()
+{
+	if (!fCurrentOldStyle)
+	{
+		loadAndConfigure(fConduitList->selectedItem());
+	}
+	if (fCurrentOldStyle)
+	{
+		fCurrentOldStyle->exec();
+	}
+}
 
 void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
 {

@@ -4,11 +4,23 @@ TODO LIST (Moved again to the file TODO)
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
+2003-4-24  Adriaan de Groot
+* More work on the conduit configuration stuff.
+* Make FUNCTIONSETUP print PRETTY_FUNCTION instead of just FUNCTION.
+* Added a ConduitConfigBase object to the time conduit.
+
 2003-4-22  Reinhold Kainhofer
 * Cleanup of several cout and other debug messages
 * In the addressbook and todo conduits, after the sync the AppInfoBlock
   is written back to the databases so that adding categories to the 
   database finally works.
+
+2003-4-21  Adriaan de Groot
+* Changed the description for the KPilot NULL conduit to just "NULL",
+  since both "KPilot" and "conduit" are redundant in this context.
+* Messed around a little with the types of plugin code, created a
+  class ConduitConfigBase which is supposed to supplant the current
+  config widget stuff.
 
 2003-4-21  Reinhold Kainhofer
 * Implemented different ways to convert the bookmarks in the doc
@@ -24,8 +36,11 @@ KPilot Developer's notes for April 30th, 2003
 * kpilot.cc Minor change to detect non-functioning daemon better.
 * Restored the tooltip code to the conduit config dialog. Removed
   the "description" column again.
-* uiDialog.cc Moved the addAboutPage() code to a static function so
+* uiDialog.{h,cc} Moved the addAboutPage() code to a static function so
   that it can be reused elsewhere.
+* plugin.{h,cc} Added a new base class ConduitConfigBase for deriving
+  the configuration widgets for conduits from. This will make them
+  more generically pluggable.
 
 2003-4-19  Reinhold Kainhofer
 * Fixed the categories sync in both the addressbook and the todo conduits.

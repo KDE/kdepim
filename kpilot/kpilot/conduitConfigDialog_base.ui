@@ -45,6 +45,12 @@
             <property name="name">
                 <cstring>fConduitList</cstring>
             </property>
+            <property name="minimumSize">
+                <size>
+                    <width>150</width>
+                    <height>0</height>
+                </size>
+            </property>
             <property name="maximumSize">
                 <size>
                     <width>200</width>
@@ -62,10 +68,18 @@
             <property name="name">
                 <cstring>fStack</cstring>
             </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
             <property name="minimumSize">
                 <size>
-                    <width>200</width>
-                    <height>0</height>
+                    <width>402</width>
+                    <height>162</height>
                 </size>
             </property>
             <widget class="QWidget">
@@ -79,9 +93,18 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
                             <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>402</width>
+                                <height>162</height>
+                            </size>
                         </property>
                         <property name="frameShape">
                             <enum>Box</enum>
@@ -109,157 +132,89 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QButtonGroup" row="0" column="0">
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
                         <property name="name">
-                            <cstring>fSyncMode</cstring>
+                            <cstring>fOldStyleLabel</cstring>
                         </property>
-                        <property name="title">
-                            <string>Sync Mode:</string>
+                        <property name="text">
+                            <string>This is an old-style conduit.
+To configure it, click the
+configure button below.</string>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QRadioButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>radioButton3</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Fast sync (if possible)</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>radioButton3_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Always do a fu&amp;ll sync</string>
-                                </property>
-                            </widget>
-                        </grid>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
                     </widget>
-                    <widget class="QGroupBox" row="1" column="0">
+                    <widget class="QPushButton" row="1" column="1">
                         <property name="name">
-                            <cstring>GroupBox29</cstring>
+                            <cstring>fConfigureButton</cstring>
                         </property>
-                        <property name="title">
-                            <string></string>
+                        <property name="text">
+                            <string>Configure ...</string>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel" row="1" column="0">
-                                <property name="name">
-                                    <cstring>textLabel2_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Emergency sync:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fEmergencySync_2</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QComboBox" row="1" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Do ordinary sync</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Copy all data from PC to Handheld</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Copy all data from Handheld to PC</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>fEmergencySync_2</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>3</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="0" column="0">
-                                <property name="name">
-                                    <cstring>textLabel1_2_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Conflict &amp;Resolution:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fConflictResolution_2</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QComboBox" row="0" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Ask user</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Handheld overrides</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>PC overrides</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>reset to values of last sync</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>do nothing (ask again next sync)</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>fConflictResolution_2</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>3</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>fSyncFiles_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Install files</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+I</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                        </grid>
                     </widget>
+                    <spacer row="1" column="2">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>121</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="1" column="0">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>101</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
                 </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>page</cstring>
+                </property>
+                <attribute name="id">
+                    <number>2</number>
+                </attribute>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>15</x>
+                            <y>59</y>
+                            <width>346</width>
+                            <height>30</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>&lt;p align="center"&gt;This conduit appears to be broken and cannot be configured.&lt;/p&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
             </widget>
         </widget>
     </grid>

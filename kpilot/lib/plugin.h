@@ -40,6 +40,27 @@
 class KConfig;
 class PilotDatabase;
 
+class ConduitConfigBase : public QObject
+{
+Q_OBJECT
+public:
+	ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
+	virtual ~ConduitConfigBase();
+
+	bool isModified() const { return fModified; } ;
+	QWidget *widget() const { return fWidget; } ;
+
+public slots:
+	virtual void commit(KConfig *);
+	virtual void load(KConfig *);
+protected slots:
+	void modified();
+
+protected:
+	bool fModified;
+	QWidget *fWidget;
+} ;
+
 /**
 * Dialogs that are created by the factory take a stringlist of
 * arguments. They interpret at least an argument of "modal",
