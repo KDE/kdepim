@@ -11,6 +11,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
 	  -I$(top_srcdir)/kaddressbook/editors \
           -I$(top_builddir)/kaddressbook/common \
           -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
+	  -Ieditors \
           $(all_includes)
 
 bin_PROGRAMS = kaddressbook
