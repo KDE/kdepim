@@ -506,15 +506,13 @@ void KABCore::incrementalSearch( const QString& text )
   if ( !text.isEmpty() ) {
     KABC::Field *field = mIncSearchWidget->currentField();
 
-  QString pattern = text.lower();
-
 #if KDE_VERSION >= 319
     KABC::AddresseeList list( mAddressBook->allAddressees() );
     if (  field ) {
       list.sortByField( field );
       KABC::AddresseeList::Iterator it;
       for ( it = list.begin(); it != list.end(); ++it ) {
-        if ( field->value( *it ).lower().startsWith( pattern ) ) {
+        if ( field->value( *it ).startsWith( text, false ) ) {
           mViewManager->setSelected( (*it).uid(), true );
           return;
         }
@@ -525,7 +523,7 @@ void KABCore::incrementalSearch( const QString& text )
         KABC::Field::List fieldList = mIncSearchWidget->fields();
         KABC::Field::List::ConstIterator fieldIt;
         for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).lower().startsWith( pattern ) ) {
+          if ( (*fieldIt)->value( *it ).startsWith( text, false ) ) {
             mViewManager->setSelected( (*it).uid(), true );
             return;
           }
@@ -536,7 +534,7 @@ void KABCore::incrementalSearch( const QString& text )
     KABC::AddressBook::Iterator it;
     for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
       if ( field ) {
-        if ( field->value( *it ).lower().startsWith( pattern ) ) {
+        if ( field->value( *it ).startsWith( text, false ) ) {
           mViewManager->setSelected( (*it).uid(), true );
           return;
         }
@@ -544,7 +542,7 @@ void KABCore::incrementalSearch( const QString& text )
         KABC::Field::List fieldList = mIncSearchWidget->fields();
         KABC::Field::List::ConstIterator fieldIt;
         for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).lower().startsWith( pattern ) ) {
+          if ( (*fieldIt)->value( *it ).startsWith( text, false ) ) {
             mViewManager->setSelected( (*it).uid(), true );
             return;
           }
