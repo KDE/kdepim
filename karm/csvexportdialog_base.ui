@@ -115,7 +115,7 @@
                 </property>
                 <property name="whatsThis" stdset="0">
                     <string>&lt;p&gt;You can choose to output time values in fractions of an hour or in minutes.&lt;/p&gt;
-&lt;p&gt;For example, if the value is 5 hours and 45 minutes, then the Decimal option would ouput &lt;tt&gt;5.75&lt;/tt&gt;, and the Hours:Minutes option would output &lt;tt&gt;5.5&lt;/tt&gt;&lt;/p&gt;</string>
+&lt;p&gt;For example, if the value is 5 hours and 45 minutes, then the Decimal option would output &lt;tt&gt;5.75&lt;/tt&gt;, and the Hours:Minutes option would output &lt;tt&gt;5.5&lt;/tt&gt;&lt;/p&gt;</string>
                 </property>
                 <widget class="QRadioButton">
                     <property name="name">
