@@ -66,11 +66,10 @@ Should you run into problems please report them to the <sf/KDE/ mailing lists.
 
 <sect>Fundamentals
 <p>
-The main screen is devided into 3 parts:
-1. The folder widget (upper left widget).
-2. The mail header widget (upper right widget).
-3. The reader widget (lower widget).
-
+The main screen is devided into 3 parts:<p>
+1. The folder widget (upper left widget).<p>
+2. The mail header widget (upper right widget).<p>
+3. The reader widget (lower widget).<p>
 Clicking a folder will open it and display the messages in the header widget.
 Clicking one of the headers will make the message appear in the reader widget.
 
@@ -94,26 +93,147 @@ Sorry but this feature is not yet implemented.
 
 <sect>The Menu Entries
 <p>
+<sect1>The Main Dialog
+<p>
+<sect2>File
+<p>
+<sect2>New Composer
+<p>
+Creates a new Composer Dialog.
+<p>
+<sect2>New Mailreader
+<p>
+Creates a new Mailreader Dialog.
+<p>
+<sect2>Settings
+<p>
+You can set your preferences and network setup here.
+<p>
+<sect2>Close
+<p>
+Closes current Mailreader Dialog. KMail exists if only one Mailreader Dialog is open.
+<p>
+<sect2>Quit
+<p>
+Ends kmail.
+<p>
+<p>
 
-<sect1>Help
+<sect2>Edit
+<p>
+<sect2>Undo
+<p>
+Undoes last action.
+<p>
+<sect2>Cut
+<p>
+Cuts out marked text
+<p>
+<sect2>Copy
+<p>
+Copies marked stuff
+<p>
+<sect2>Paste
+<p>
+Pastes marked stuff
+<p>
+<sect2>Find
+<p>
+Finds expressions
+<p>
+<p>
+
+<sect2>Message
+<p>
+
+<sect2>Folder
+<p>
+
+
+<sect2>Help
 <p>
 <sect2>Help
 <p>
-Invokes the KDE help system with the KEdit help pages displayed.
+Invokes the KDE help system with the KMail help pages displayed.
 <sect2>About 
 <p>
 Displays essential information about KMail.
+
+<sect1>The Composer Dialog
+<p>
+<sect2>File
+<p>
+<sect2>Send
+<p>
+<sect2>Send later
+<p>
+<sect2>Address Book
+<p>
+<sect2>Print
+<p>
+<sect2>New Composer
+<p>
+<sect2>New Mailreader
+<p>
+<sect2>Close
+<p>
+<p>
+<sect2>Edit
+<p>
+<sect2>Cut
+<p>
+<sect2>Copy
+<p>
+<sect2>Paste
+<p>
+<sect2>Mark all
+<p>
+<sect2>Find
+<p>
+<p>
+<sect2>Message
+<p>
+<sect2>Recipients
+<p>
+<sect2>Insert File
+<p>
+<sect2>Priority
+<p>
+<p>
+<sect2>Attach
+<p>
+<sect2>File
+<p>
+<sect2>Signature
+<p>
+<sect2>Encoding
+<p>
+<p>
+<sect2>Options
+<p>
+<sect2>Toogle Toolbar
+<p>
+<sect2>Change Font
+<p>
+<p>
+<sect2>Help
+<p>
+<sect2>Help
+<p>
+<sect2>About
+<p>
+<p>
 
 <sect>Questions and answers
 <p>
 <sect>Authors
 <p>
-Stefan Taferner taferner@alpin.or.at
-Markus Wuebben markus.wuebben@kde.org
-based on the work of:
-Lynx lynx@topaz.hknet.com
-Stephan Meyer Stephan.Meyer@pobox.com
-and the above authors.
+Stefan Taferner <tt>taferner@alpin.or.at</tt><p>
+Markus Wuebben <tt>markus.wuebben@kde.org</tt><p>
+based on the work of:<p>
+Lynx <tt>lynx@topaz.hknet.com</tt><p>
+Stephan <tt>Meyer Stephan.Meyer@pobox.com</tt><p>
+and the above authors.<p>
 
 <p>
 </article>
