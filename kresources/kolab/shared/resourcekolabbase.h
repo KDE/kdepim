@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef RESOURCEKOLAB_H
-#define RESOURCEKOLAB_H
+#ifndef RESOURCEKOLABBASE_H
+#define RESOURCEKOLABBASE_H
 
 #include <qstring.h>
 #include <qmap.h>
@@ -120,4 +120,4 @@ private:
 
 }
 
-#endif // RESOURCEKOLAB_H
+#endif // RESOURCEKOLABBASE_H
