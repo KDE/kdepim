@@ -421,7 +421,7 @@ void ViewManager::startDrag()
     addrList.append( mCore->addressBook()->findByUid( *it ) );
 
   KMultipleDrag *drag = new KMultipleDrag( this );
-  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard( addrList ), this ) );
+  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
 
   KABC::VCardTool tool;
   QString vcards = tool.createVCards( addrList );

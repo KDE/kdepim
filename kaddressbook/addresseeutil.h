@@ -40,19 +40,24 @@
 class AddresseeUtil
 {
   public:
-   /**
-     Same as above function, except that an entire list of KABC::Addressee
-     objects will be converted to vCard and put in the string.
-    */
-   static QString addresseesToClipboard( const KABC::Addressee::List &addrList );
+    /**
+      Same as above function, except that an entire list of KABC::Addressee
+      objects will be converted to vCard and put in the string.
+     */
+    static QString addresseesToClipboard( const KABC::Addressee::List &addrList );
    
-   /**
-     Convert a string from the clipboard into a list of addressee objects.
-     If the clipboard text was not a valid vcard, an empty list
-     will be returned.
-    */
-   static KABC::Addressee::List clipboardToAddressees( const QString &clipboard );
+    /**
+      Convert a string from the clipboard into a list of addressee objects.
+      If the clipboard text was not a valid vcard, an empty list
+      will be returned.
+     */
+    static KABC::Addressee::List clipboardToAddressees( const QString &clipboard );
    
+    /**
+      Converts the list of addressee objects into a list of email addresses.
+     */
+    static QString addresseesToEmails( const KABC::Addressee::List &addrList );
+
   private:
     AddresseeUtil() {}
     ~AddresseeUtil() {}

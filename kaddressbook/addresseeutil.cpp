@@ -42,3 +42,14 @@ KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data 
 
   return tool.parseVCards( data );
 }
+
+QString AddresseeUtil::addresseesToEmails( const KABC::Addressee::List &addrList )
+{
+  QStringList emails;
+
+  KABC::Addressee::List::ConstIterator it;
+  for ( it = addrList.begin(); it != addrList.end(); ++it )
+    emails.append( (*it).fullEmail() );
+
+  return emails.join( "," );
+}
