@@ -320,7 +320,7 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel(i18n("Spouse's name:"), tab2);
   layout->addWidget(label, 5, 1);
   mSpouseEdit = new KLineEdit(tab2, "mSpouseEdit");
-  connect(mProfessionEdit, SIGNAL(textChanged(const QString &)),
+  connect(mSpouseEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
   layout->addWidget(mSpouseEdit, 5, 2);
 

@@ -654,6 +654,8 @@ void PhoneEditWidget::setPhoneNumbers(const KABC::PhoneNumber::List &list)
 {
   mPhoneNumberList = list;
 
+  mListView->clear();
+
   KABC::PhoneNumber::List::Iterator it;
   for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it ) {
     new PhoneItem( mListView, *it );
