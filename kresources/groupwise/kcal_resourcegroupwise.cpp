@@ -123,7 +123,9 @@ void ResourceGroupwise::writeConfig( KConfig *config )
 
 bool ResourceGroupwise::doOpen()
 {
-  return mServer->login();
+  bool success = mServer->login();
+  if ( !success ) loadError( i18n("Unable to login to server") );
+  return success;
 }
 
 void ResourceGroupwise::doClose()
@@ -148,7 +150,10 @@ bool ResourceGroupwise::doLoad()
 
   clearChanges();
 
-  mServer->readCalendar( &mCalendar, this );
+  if ( !mServer->readCalendar( &mCalendar, this ) ) {
+    loadError( i18n("Unable to read calendar.") );
+    return false;
+  }
 
   return true;
 }
