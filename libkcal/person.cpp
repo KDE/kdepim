@@ -213,8 +213,15 @@ QString Person::fullName() const
   } else {
     if( mEmail.isEmpty() )
       return mName;
-    else
-      return mName + " <" + mEmail + ">";
+    else {
+      // Taken from KABC::Addressee::fullEmail
+      QString name = mName;
+      QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
+      if ( name.find( needQuotes ) != -1 )
+        return "\"" + name + "\" <" + mEmail + ">";
+      else
+        return name + " <" + mEmail + ">";
+    }
   }
 }
 
