@@ -217,7 +217,6 @@ int main( int argc, char *argv[] )
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
 
-
   variables.setExportType( NONE );
   variables.setFloating( false ); // by default, new events do NOT float
 
@@ -230,8 +229,8 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *
    *  Switch on export list
+   *
    */
   if ( args->isSet( "export-list" ) ) {
     cout << i18n(
@@ -265,8 +264,8 @@ int main( int argc, char *argv[] )
       kdDebug() << "main | export-type | Export to TEXT-SHORT" << endl;
       variables.setExportType( TEXT_SHORT );
     } else {
-      cout << i18n( "Invalid Export Type Specified: " ).local8Bit()
-           << option.local8Bit()
+      cout << i18n( "Invalid Export Type Specified: %1" ).
+        arg( option ).local8Bit()
            << endl;
       return 1;
     }
@@ -396,6 +395,7 @@ int main( int argc, char *argv[] )
 
     variables.setLocation( option );
   }
+
   /*
    *  Show next happening and exit
    *
@@ -439,8 +439,8 @@ int main( int argc, char *argv[] )
 
     startdate = QDate::fromString( option,  Qt::ISODate );
     if ( ! startdate.isValid() ) {
-      cout << i18n( "Invalid Start Date Specified: " ).local8Bit()
-           << option.local8Bit()
+      cout << i18n( "Invalid Start Date Specified: %1" ).
+        arg( option ).local8Bit()
            << endl;
       return 1;
     }
@@ -449,7 +449,6 @@ int main( int argc, char *argv[] )
               << "(" << startdate.toString() << ")"
               << endl;
   }
-
 
   /*
    *  Set starting time
@@ -466,8 +465,8 @@ int main( int argc, char *argv[] )
     if ( option.upper() != "FLOAT" ) {
       starttime = QTime::fromString( option,  Qt::ISODate );
       if ( ! starttime.isValid() ) {
-        cout << i18n( "Invalid Start Time Specified: " ).local8Bit()
-             << option.local8Bit()
+        cout << i18n( "Invalid Start Time Specified: %1" ).
+          arg( option ).local8Bit()
              << endl;
         return 1;
       }
@@ -487,7 +486,6 @@ int main( int argc, char *argv[] )
    *  Set end date for calendar
    *
    */
-
   if ( args->isSet( "end-date" ) ) {
     QString option = args->getOption( "end-date" );
 
@@ -498,8 +496,8 @@ int main( int argc, char *argv[] )
 
     enddate = QDate::fromString( option,  Qt::ISODate );
     if ( ! enddate.isValid() ) {
-      cout << i18n( "Invalid End Date Specified: " ).local8Bit()
-           << option.local8Bit()
+      cout << i18n( "Invalid End Date Specified: %1" ).
+        arg( option ).local8Bit()
            << endl;
       return 1;
     }
@@ -513,7 +511,6 @@ int main( int argc, char *argv[] )
    *  Show next # days and exit
    *
    */
-
   if ( args->isSet( "show-next" ) )
   {
     bool ok;
@@ -525,8 +522,8 @@ int main( int argc, char *argv[] )
     variables.setDaysCount( option.toInt( &ok, 10 ) );
 
     if ( ! ok ) {
-      cout << i18n( "Invalid Date Count Specified: " ).local8Bit()
-           << option.local8Bit()
+      cout << i18n( "Invalid Date Count Specified: %1" ).
+        arg( option ).local8Bit()
            << endl;
       return 1;
     }
@@ -554,8 +551,8 @@ int main( int argc, char *argv[] )
     if ( option.upper() != "FLOAT" ) {
       endtime = QTime::fromString( option,  Qt::ISODate );
       if ( ! endtime.isValid() ) {
-        cout << i18n( "Invalid End Time Specified: " ).local8Bit()
-             << option.local8Bit()
+        cout << i18n( "Invalid End Time Specified: %1" ).
+          arg( option ).local8Bit()
              << endl;
         return 1;
       }
@@ -642,29 +639,27 @@ int main( int argc, char *argv[] )
                 << endl;
 
       if ( exists ) {
-        cout << i18n( "Calendar " ).local8Bit()
-             << variables.getCalendarFile().local8Bit()
-             << i18n( " already exists" ).local8Bit()
+        cout << i18n( "Calendar %1 already exists" ).
+          arg( variables.getCalendarFile() ).local8Bit()
              << endl;
         return 1;
       }
       if ( konsolekalendar->createCalendar() ) {
-        cout << i18n( "Calendar " ).local8Bit()
-             << variables.getCalendarFile().local8Bit()
-             << i18n( " successfully created." ).local8Bit()
+        cout << i18n( "Calendar %1 successfully created" ).
+          arg( variables.getCalendarFile() ).local8Bit()
              << endl;
         return 0;
       } else {
-        cout << i18n( "Unable to create calendar: " ).local8Bit()
-             << variables.getCalendarFile().local8Bit()
+        cout << i18n( "Unable to create calendar: %1" ).
+          arg( variables.getCalendarFile() ).local8Bit()
              << endl;
         return 1;
       }
     }
 
     if ( ! exists ) {
-      cout << i18n( "Calendar file not found" ).local8Bit()
-           << option.local8Bit()
+      cout << i18n( "Calendar file not found %1" ).
+        arg( option ).local8Bit()
            << endl;
       cout << i18n( "Try --create to create new calendar file" ).local8Bit()
            << endl;
@@ -850,14 +845,13 @@ int main( int argc, char *argv[] )
 
   if ( importFile ) {
     if ( konsolekalendar->importCalendar() ) {
-      cout << i18n( "Calendar " ).local8Bit()
-           << variables.getImportFile().local8Bit()
-           << i18n( " successfully imported." ).local8Bit()
+      cout << i18n( "Calendar %1 successfully imported" ).
+        arg( variables.getImportFile() ).local8Bit()
            << endl;
       return 0;
     } else {
-      cout << i18n( "Unable to import calendar: " ).local8Bit()
-           << variables.getImportFile().local8Bit()
+      cout << i18n( "Unable to import calendar: %1" ).
+        arg( variables.getImportFile() ).local8Bit()
            << endl;
       return 1;
     }
@@ -923,13 +917,13 @@ int main( int argc, char *argv[] )
               << "calling showInstance() to view events"
               << endl;
     if ( ! konsolekalendar->showInstance() ) {
-      cout << i18n( "Cannot open specified export file: " ).local8Bit()
-           << variables.getExportFile().local8Bit() << endl;
+      cout << i18n( "Cannot open specified export file: %1" ).
+        arg( variables.getExportFile() ).local8Bit()
+           << endl;
       return 1;
     }
   }
 
-  //TODO: code never gets here because all cases above exit
   delete konsolekalendar;
 
   if ( calendarFile ) {

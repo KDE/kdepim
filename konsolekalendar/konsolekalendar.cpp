@@ -74,8 +74,8 @@ bool KonsoleKalendar::createCalendar()
   CalendarLocal newCalendar;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n("Create Calendar <Dry Run>:").local8Bit()
-         << m_variables->getCalendarFile().local8Bit()
+    cout << i18n("Create Calendar <Dry Run>: %1").
+      arg( m_variables->getCalendarFile() ).local8Bit()
          << endl;
   } else {
     kdDebug() << "konsolekalendar.cpp::createCalendar() | "
@@ -84,8 +84,8 @@ bool KonsoleKalendar::createCalendar()
               << endl;
 
     if ( m_variables->isVerbose() ) {
-      cout << i18n("Create Calendar <Verbose>:").local8Bit()
-           << m_variables->getCalendarFile().local8Bit()
+      cout << i18n("Create Calendar <Verbose>: %1").
+        arg( m_variables->getCalendarFile() ).local8Bit()
            << endl;
     }
 
@@ -426,16 +426,16 @@ Event::List KonsoleKalendar::allEventsSorted()
 
 void KonsoleKalendar::printSpecs()
 {
-  cout << i18n("  What:  ").local8Bit()
-       << m_variables->getSummary().local8Bit()
+  cout << i18n("  What:  %1").
+    arg( m_variables->getSummary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: ").local8Bit()
-       << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  Begin: %1").
+    arg( m_variables->getStartDateTime().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   ").local8Bit()
-       << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  End:   %1").
+    arg( m_variables->getEndDateTime().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
@@ -443,7 +443,11 @@ void KonsoleKalendar::printSpecs()
          << endl;
   }
 
-  cout << i18n("  Desc:  ").local8Bit()
-       << m_variables->getDescription().local8Bit()
+  cout << i18n("  Desc:  %1").
+    arg( m_variables->getDescription() ).local8Bit()
+       << endl;
+
+  cout << i18n("  Location:  %1").
+    arg( m_variables->getLocation() ).local8Bit()
        << endl;
 }

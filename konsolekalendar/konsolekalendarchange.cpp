@@ -120,54 +120,54 @@ bool KonsoleKalendarChange::changeEvent()
 
 void KonsoleKalendarChange::printSpecs( Event *event )
 {
-  cout << i18n("  UID:   ").local8Bit()
-       << event->uid().local8Bit()
+  cout << i18n("  UID:   %1").
+    arg( event->uid() ).local8Bit()
        << endl;
 
-  cout << i18n("  What:  ").local8Bit()
-       << event->summary().local8Bit()
+  cout << i18n("  What:  %1").
+    arg( event->summary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: ").local8Bit()
-       << event->dtStart().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  Begin: %1").
+    arg( event->dtStart().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   ").local8Bit()
-       << event->dtEnd().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  End:   %1").
+    arg( event->dtEnd().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
-  cout << i18n("  Desc:  ").local8Bit()
-       << event->description().local8Bit()
+  cout << i18n("  Desc:  %1").
+    arg( event->description() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  ").local8Bit()
-       << event->location().local8Bit()
+  cout << i18n("  Location:  %1").
+    arg( event->location() ).local8Bit()
        << endl;
 }
 
 void KonsoleKalendarChange::printSpecs( )
 {
-  cout << i18n("  UID:   ").local8Bit()
-       << m_variables->getUID().local8Bit()
+  cout << i18n("  UID:   %1").
+    arg( m_variables->getUID() ).local8Bit()
        << endl;
 
-  cout << i18n("  What:  ").local8Bit()
-       << m_variables->getSummary().local8Bit()
+  cout << i18n("  What:  %1").
+    arg( m_variables->getSummary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: ").local8Bit()
-       << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  Begin: %1").
+    arg( m_variables->getStartDateTime().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   ").local8Bit()
-       << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  End:   %1").
+    arg( m_variables->getEndDateTime().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
-  cout << i18n("  Desc:  ").local8Bit()
-       << m_variables->getDescription().local8Bit()
+  cout << i18n("  Desc:  %1").
+    arg( m_variables->getDescription() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  ").local8Bit()
-       << m_variables->getLocation().local8Bit()
+  cout << i18n("  Location:  %1").
+    arg( m_variables->getLocation() ).local8Bit()
        << endl;
 }

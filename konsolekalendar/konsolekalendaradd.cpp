@@ -130,16 +130,16 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 
 void KonsoleKalendarAdd::printSpecs()
 {
-  cout << i18n("  What:  ").local8Bit()
-       << m_variables->getSummary().local8Bit()
+  cout << i18n("  What:  %1").
+    arg( m_variables->getSummary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: ").local8Bit()
-       << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  Begin: %1").
+    arg( m_variables->getStartDateTime().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   ").local8Bit()
-       << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit()
+  cout << i18n("  End:   %1").
+    arg( m_variables->getEndDateTime().toString(Qt::TextDate) ).local8Bit()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
@@ -147,11 +147,11 @@ void KonsoleKalendarAdd::printSpecs()
          << endl;
   }
 
-  cout << i18n("  Desc:  ").local8Bit()
-       << m_variables->getDescription().local8Bit()
+  cout << i18n("  Desc:  %1").
+    arg( m_variables->getDescription() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  ").local8Bit()
-       << m_variables->getLocation().local8Bit()
+  cout << i18n("  Location:  %1").
+    arg( m_variables->getLocation() ).local8Bit()
        << endl;
 }
