@@ -1055,7 +1055,7 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       return QDate();
   }
 
-  if (nextDate.isValid()) {
+  if (rDuration >= 0 && nextDate.isValid()) {
     // Check that the date found is within the range of the recurrence
     QDate end = endDate();
     if (nextDate > end)
@@ -1154,11 +1154,13 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
     // Check that the date found is within the range of the recurrence
     if (prevDate < dStart)
       return QDate();
-    QDate end = endDate();
-    if (prevDate >= end) {
-      if (last)
-        *last = true;
-      return end;
+    if (rDuration >= 0) {
+      QDate end = endDate();
+      if (prevDate >= end) {
+        if (last)
+          *last = true;
+        return end;
+      }
     }
   }
   return prevDate;
