@@ -43,6 +43,7 @@
 #include <backends/qgpgme/qgpgmekeygenerationjob.h>
 #include <backends/qgpgme/qgpgmeimportjob.h>
 #include <backends/qgpgme/qgpgmeexportjob.h>
+#include <backends/qgpgme/qgpgmesecretkeyexportjob.h>
 #include <backends/qgpgme/qgpgmedownloadjob.h>
 #include <backends/qgpgme/qgpgmedeletejob.h>
 #include <backends/qgpgme/qgpgmesignencryptjob.h>
@@ -1507,7 +1508,7 @@ Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor ) const {
     return 0;
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-  return 0;//new Kleo::GpgSMSecretKeyExportJob( armor );
+  return new Kleo::QGpgMESecretKeyExportJob( armor );
 }
 
 Kleo::DownloadJob * CryptPlugWrapper::downloadJob( bool armor ) const {

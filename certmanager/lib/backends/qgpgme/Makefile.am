@@ -11,6 +11,7 @@ libkleopatra_backend_qgpgme_la_SOURCES = \
 			qgpgmekeygenerationjob.cpp \
 			qgpgmeimportjob.cpp \
 			qgpgmeexportjob.cpp \
+			qgpgmesecretkeyexportjob.cpp \
 			qgpgmedownloadjob.cpp \
 			qgpgmedeletejob.cpp \
 			qgpgmeencryptjob.cpp \
