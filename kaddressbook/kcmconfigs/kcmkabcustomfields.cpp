@@ -81,6 +81,7 @@ class PageItem : public QCheckListItem
 
         QMap<QString, QString> allowedTypes;
         allowedTypes.insert( "QLineEdit", i18n( "Text" ) );
+        allowedTypes.insert( "QTextEdit", i18n( "Text" ) );
         allowedTypes.insert( "QSpinBox", i18n( "Numeric Value" ) );
         allowedTypes.insert( "QCheckBox", i18n( "Boolean" ) );
         allowedTypes.insert( "QComboBox", i18n( "Selection" ) );

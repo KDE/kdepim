@@ -28,6 +28,7 @@
 #include <qobjectlist.h>
 #include <qspinbox.h>
 #include <qregexp.h>
+#include <qtextedit.h>
 #include <qwidgetfactory.h>
 
 #include <kdatepicker.h>
@@ -66,27 +67,30 @@ void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
   QMap<QString, QWidget*>::Iterator widIt;
   for ( widIt = mWidgets.begin(); widIt != mWidgets.end(); ++widIt ) {
     QString value;
-    if ( widIt.data()->isA( "QLineEdit" ) || widIt.data()->isA( "KLineEdit" ) ) {
+    if ( widIt.data()->inherits( "QLineEdit" ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( widIt.data() );
       wdg->setText( QString::null );
-    } else if ( widIt.data()->isA( "QSpinBox" ) ) {
+    } else if ( widIt.data()->inherits( "QSpinBox" ) ) {
       QSpinBox *wdg = static_cast<QSpinBox*>( widIt.data() );
       wdg->setValue( wdg->minValue() );
-    } else if ( widIt.data()->isA( "QCheckBox" ) ) {
+    } else if ( widIt.data()->inherits( "QCheckBox" ) ) {
       QCheckBox *wdg = static_cast<QCheckBox*>( widIt.data() );
       wdg->setChecked( false );
-    } else if ( widIt.data()->isA( "QDateTimeEdit" ) ) {
+    } else if ( widIt.data()->inherits( "QDateTimeEdit" ) ) {
       QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( widIt.data() );
       wdg->setDateTime( QDateTime::currentDateTime() );
-    } else if ( widIt.data()->isA( "KDateTimeWidget" ) ) {
+    } else if ( widIt.data()->inherits( "KDateTimeWidget" ) ) {
       KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( widIt.data() );
       wdg->setDateTime( QDateTime::currentDateTime() );
-    } else if ( widIt.data()->isA( "KDatePicker" ) ) {
+    } else if ( widIt.data()->inherits( "KDatePicker" ) ) {
       KDatePicker *wdg = static_cast<KDatePicker*>( widIt.data() );
       wdg->setDate( QDate::currentDate() );
-    } else if ( widIt.data()->isA( "QComboBox" ) ) {
+    } else if ( widIt.data()->inherits( "QComboBox" ) ) {
       QComboBox *wdg = static_cast<QComboBox*>( widIt.data() );
       wdg->setCurrentItem( 0 );
+    } else if ( widIt.data()->inherits( "QTextEdit" ) ) {
+      QTextEdit *wdg = static_cast<QTextEdit*>( widIt.data() );
+      wdg->setText( QString::null );
     }
   }
 
@@ -98,27 +102,30 @@ void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
     if ( app == ns ) {
       QMap<QString, QWidget*>::Iterator it = mWidgets.find( name );
       if ( it != mWidgets.end() ) {
-        if ( it.data()->isA( "QLineEdit" ) || it.data()->isA( "KLineEdit" ) ) {
+        if ( it.data()->inherits( "QLineEdit" ) ) {
           QLineEdit *wdg = static_cast<QLineEdit*>( it.data() );
           wdg->setText( value );
-        } else if ( it.data()->isA( "QSpinBox" ) ) {
+        } else if ( it.data()->inherits( "QSpinBox" ) ) {
           QSpinBox *wdg = static_cast<QSpinBox*>( it.data() );
           wdg->setValue( value.toInt() );
-        } else if ( it.data()->isA( "QCheckBox" ) ) {
+        } else if ( it.data()->inherits( "QCheckBox" ) ) {
           QCheckBox *wdg = static_cast<QCheckBox*>( it.data() );
           wdg->setChecked( value == "true" || value == "1" );
-        } else if ( it.data()->isA( "QDateTimeEdit" ) ) {
+        } else if ( it.data()->inherits( "QDateTimeEdit" ) ) {
           QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( it.data() );
           wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
-        } else if ( it.data()->isA( "KDateTimeWidget" ) ) {
+        } else if ( it.data()->inherits( "KDateTimeWidget" ) ) {
           KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( it.data() );
           wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
-        } else if ( it.data()->isA( "KDatePicker" ) ) {
+        } else if ( it.data()->inherits( "KDatePicker" ) ) {
           KDatePicker *wdg = static_cast<KDatePicker*>( it.data() );
           wdg->setDate( QDate::fromString( value, Qt::ISODate ) );
-        } else if ( it.data()->isA( "QComboBox" ) ) {
+        } else if ( it.data()->inherits( "QComboBox" ) ) {
           QComboBox *wdg = static_cast<QComboBox*>( it.data() );
           wdg->setCurrentText( value );
+        } else if ( it.data()->inherits( "QTextEdit" ) ) {
+          QTextEdit *wdg = static_cast<QTextEdit*>( it.data() );
+          wdg->setText( value );
         }
       }
     }
@@ -130,28 +137,31 @@ void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
   QMap<QString, QWidget*>::Iterator it;
   for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
     QString value;
-    if ( it.data()->isA( "QLineEdit" ) || it.data()->isA( "KLineEdit" ) ) {
+    if ( it.data()->inherits( "QLineEdit" ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( it.data() );
       value = wdg->text();
-    } else if ( it.data()->isA( "QSpinBox" ) ) {
+    } else if ( it.data()->inherits( "QSpinBox" ) ) {
       QSpinBox *wdg = static_cast<QSpinBox*>( it.data() );
       value = QString::number( wdg->value() );
-    } else if ( it.data()->isA( "QCheckBox" ) ) {
+    } else if ( it.data()->inherits( "QCheckBox" ) ) {
       QCheckBox *wdg = static_cast<QCheckBox*>( it.data() );
       value = ( wdg->isChecked() ? "true" : "false" );
-    } else if ( it.data()->isA( "QDateTimeEdit" ) ) {
+    } else if ( it.data()->inherits( "QDateTimeEdit" ) ) {
       QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( it.data() );
       value = wdg->dateTime().toString( Qt::ISODate );
-    } else if ( it.data()->isA( "KDateTimeWidget" ) ) {
+    } else if ( it.data()->inherits( "KDateTimeWidget" ) ) {
       KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( it.data() );
       value = wdg->dateTime().toString( Qt::ISODate );
-    } else if ( it.data()->isA( "KDatePicker" ) ) {
+    } else if ( it.data()->inherits( "KDatePicker" ) ) {
       KDatePicker *wdg = static_cast<KDatePicker*>( it.data() );
       value = wdg->date().toString( Qt::ISODate );
-    } else if ( it.data()->isA( "QComboBox" ) ) {
+    } else if ( it.data()->inherits( "QComboBox" ) ) {
       QComboBox *wdg = static_cast<QComboBox*>( it.data() );
       value = wdg->currentText();
-    }
+    } else if ( it.data()->inherits( "QTextEdit" ) ) {
+      QTextEdit *wdg = static_cast<QTextEdit*>( it.data() );
+      value = wdg->text();
+   }
 
     QString ns;
     if ( (mIdentifier.upper() == "KADDRESSBOOK") ||
@@ -197,6 +207,7 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
 
   QStringList allowedTypes;
   allowedTypes << "QLineEdit"
+               << "QTextEdit"
                << "QSpinBox"
                << "QCheckBox"
                << "QComboBox"
@@ -215,27 +226,29 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
         if ( !name.isEmpty() )
           mWidgets.insert( name, widget );
 
-        if ( it.current()->isA( "QLineEdit" ) ||
-             it.current()->isA( "KLineEdit" ) )
+        if ( it.current()->inherits( "QLineEdit" ) )
           connect( it.current(), SIGNAL( textChanged( const QString& ) ),
                    this, SLOT( setModified() ) );
-        else if ( it.current()->isA( "QSpinBox" ) )
+        else if ( it.current()->inherits( "QSpinBox" ) )
           connect( it.current(), SIGNAL( valueChanged( int ) ),
                    this, SLOT( setModified() ) );
-        else if ( it.current()->isA( "QCheckBox" ) )
+        else if ( it.current()->inherits( "QCheckBox" ) )
           connect( it.current(), SIGNAL( toggled( bool ) ),
                    this, SLOT( setModified() ) );
-        else if ( it.current()->isA( "QComboBox" ) )
+        else if ( it.current()->inherits( "QComboBox" ) )
           connect( it.current(), SIGNAL( activated( const QString& ) ),
                    this, SLOT( setModified() ) );
-        else if ( it.current()->isA( "QDateTimeEdit" ) )
+        else if ( it.current()->inherits( "QDateTimeEdit" ) )
           connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),
                    this, SLOT( setModified() ) );
-        else if ( it.current()->isA( "KDateTimeWidget" ) )
+        else if ( it.current()->inherits( "KDateTimeWidget" ) )
           connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),
                    this, SLOT( setModified() ) );
-        else if ( it.current()->isA( "KDatePicker" ) )
+        else if ( it.current()->inherits( "KDatePicker" ) )
           connect( it.current(), SIGNAL( dateChanged( QDate ) ),
+                   this, SLOT( setModified() ) );
+        else if ( it.current()->inherits( "QTextEdit" ) )
+          connect( it.current(), SIGNAL( textChanged() ),
                    this, SLOT( setModified() ) );
 
         if ( !widget->isEnabled() )
