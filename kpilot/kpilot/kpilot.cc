@@ -348,10 +348,14 @@ void KPilotInstaller::slotAboutToShowComponent( QWidget *c )
 	FUNCTIONSETUP;
 	int ix = fManagingWidget->pageIndex( c );
 	PilotComponent*compToShow = fP->list().at(ix);
-DEBUGKPILOT<<"Index: "<<ix<<", Widget="<<c<<", ComToShow="<<compToShow<<endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname 
+		<< ": Index: " << ix 
+		<< ", Widget=" << c
+		<< ", ComToShow=" << compToShow << endl;
+#endif
 	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
 	{
-DEBUGKPILOT<<"comp="<<comp<<endl;
 		// Load/Unload the data needed
 		comp->showKPilotComponent( comp == compToShow );
 	}

@@ -1,6 +1,9 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-11-23  Adriaan de Groot
+* Squashed several silly bugs in wizard and startup code.
+
 2004-11-17  Adriaan de Groot
 * Hiatus in KPilot due to working upstream on pilot-link.
 * Patches from Olivier, merci.
