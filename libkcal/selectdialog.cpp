@@ -20,7 +20,7 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
+#include <kdeversion.h>
 #include <kbuttonbox.h>
 #include <klistbox.h>
 #include <klocale.h>
@@ -94,8 +94,15 @@ SelectDialog::SelectDialog( QPtrList<ResourceCalendar> list,
   KButtonBox *buttonBox = new KButtonBox( this );
 
   buttonBox->addStretch();
+
+#if KDE_IS_VERSION(3,3,0)
   buttonBox->addButton( KStdGuiItem::ok(), this, SLOT( accept() ) );
   buttonBox->addButton( KStdGuiItem::cancel(), this, SLOT( reject() ) );
+#else
+  buttonBox->addButton( KStdGuiItem::ok().text(), this, SLOT( accept() ) );
+  buttonBox->addButton( KStdGuiItem::cancel().text(), this, SLOT( reject() ) );
+#endif
+    
   buttonBox->layout();
 
   mainLayout->addWidget( buttonBox );
