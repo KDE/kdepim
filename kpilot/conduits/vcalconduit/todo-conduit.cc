@@ -86,7 +86,11 @@ void TodoConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int TodoConduitPrivate::updateIncidences()
 {
+#if KDE_VERSION >= 310
 	fAllTodos = fCalendar->todos();
+#else
+	fAllTodos = fCalendar->getTodoList();
+#endif
 	fAllTodos.setAutoDelete(false);
 	return fAllTodos.count();
 }
@@ -420,6 +424,9 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 
 
 // $Log$
+// Revision 1.20  2002/08/15 10:47:56  kainhofe
+// Finished categories syncing for the todo conduit
+//
 // Revision 1.19  2002/07/28 17:27:54  cschumac
 // Move file loading/saving code from CalendarLocal to own class.
 //

@@ -83,7 +83,11 @@ void VCalConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int VCalConduitPrivate::updateIncidences()
 {
+#if KDE_VERSION >= 310
 	fAllEvents = fCalendar->events();
+#else
+	fAllEvents = fCalendar->getAllEvents();
+#endif
 	fAllEvents.setAutoDelete(false);
 	return fAllEvents.count();
 }
@@ -688,6 +692,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.73  2002/08/15 10:47:56  kainhofe
+// Finished categories syncing for the todo conduit
+//
 // Revision 1.72  2002/07/28 17:27:54  cschumac
 // Move file loading/saving code from CalendarLocal to own class.
 //
