@@ -127,7 +127,6 @@
 
 <ToolBar noMerge="1" name="mainToolBar"><text>Main Toolbar</text>
   <Action name="account_dnlHeaders"/>
-  <Action name="account_dnlAllHeaders"/>
   <Action name="net_stop"/>
   <Separator/>
   <Action name="article_postNew"/>
