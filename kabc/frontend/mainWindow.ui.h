@@ -19,7 +19,7 @@ class AddresseeItem : public QListViewItem
 {
   public:
     AddresseeItem( QListView *parent, const Addressee &a ) :
-      QListViewItem( parent, a.name(), a.uid() ), mAddressee( a ) {}
+      QListViewItem( parent, a.realName(), a.uid() ), mAddressee( a ) {}
       
     void setAddressee( const Addressee &a ) { mAddressee = a; }
     Addressee &addressee() { return mAddressee; }
