@@ -4,8 +4,10 @@
 #include <qwidget.h>
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qlist.h>
 
 class QTextEdit;
+class QSplitter;
 namespace KSync {
     class KonnectorProfile;
     class Profile;
@@ -37,6 +39,10 @@ namespace OverView {
         QLabel* m_device;
         QLabel* m_profile;
         QLabel* m_logo;
+	QVBoxLayout* m_layout;
+	QList<QWidget> m_messageList;
+	QSplitter *m_split;
+	QWidget* m_ab;
         QTextEdit* m_edit;
 
     };
