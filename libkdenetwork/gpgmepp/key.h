@@ -74,8 +74,7 @@ namespace GpgME {
     OwnerTrust ownerTrust() const;
     char ownerTrustAsString() const;
 
-    // syntax error?? WHY?
-    //Context::Protocol protocol() const;
+    Context::Protocol protocol() const;
     const char * protocolAsString() const;
 
     const char * issuerSerial() const;

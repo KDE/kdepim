@@ -21,7 +21,6 @@
 #ifndef __GPGMEPP_CONTEXT_H__
 #define __GPGMEPP_CONTEXT_H__
 
-#include <gpgmepp/key.h>
 #include <gpgmepp/gpgmefw.h>
 
 #include <vector>

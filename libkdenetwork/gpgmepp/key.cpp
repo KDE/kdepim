@@ -154,7 +154,6 @@ namespace GpgME {
     }
   }
 
-#if 0 // declaration in key.h gives syntax error...
   Context::Protocol Key::protocol() const {
     if ( !d->key )
       return Context::Unknown;
@@ -164,7 +163,6 @@ namespace GpgME {
     default:                     return Context::Unknown;
     }
   }
-#endif
 
   const char * Key::protocolAsString() const {
     return d->key ? gpgme_get_protocol_name( d->key->protocol ) : 0 ;
