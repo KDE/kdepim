@@ -52,7 +52,6 @@ ViewManager::ViewManager( KABCore *core, QWidget *parent, const char *name )
   initActions();
 
   mViewDict.setAutoDelete( true );
-  mViewFactoryDict.setAutoDelete( true );
 
   createViewFactories();
 }

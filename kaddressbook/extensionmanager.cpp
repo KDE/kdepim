@@ -34,7 +34,7 @@
 
 ExtensionManager::ExtensionManager( KABCore *core, QWidget *parent,
                                     const char *name )
-  : QHBox( parent, name ), mCore( core )
+  : QHBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 )
 {
   mActionExtensions = new KSelectAction( i18n( "Show Extension Bar" ), 0,
                                          mCore->actionCollection(),

@@ -129,8 +129,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 KABCore::~KABCore()
 {
   saveSettings();
-  delete mAddressBook;
   mAddressBook = 0;
+  KABC::StdAddressBook::close();
 }
 
 void KABCore::restoreSettings()
