@@ -1273,6 +1273,17 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	QToolTip::remove(fTray);
 	QToolTip::add(fTray,tipText);
 	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
+	// emit the same dcop signal but including the information needed by Kontact to update its kpilot summary widget
+	QByteArray data;
+	QDataStream arg(data, IO_WriteOnly);
+	arg << lastSyncDate();
+	arg << shortStatusString();
+	arg << configuredConduitList();
+	arg << logFileName();
+	arg << userName();
+	arg << pilotDevice();
+	arg << killDaemonOnExit();
+	emitDCOPSignal( "kpilotDaemonStatusDetails(QDateTime,QString,QStringList,QString,QString,QString,bool)", data );
 }
 
 static KCmdLineOptions daemonoptions[] = {

@@ -87,6 +87,8 @@ k_dcop:
 
 k_dcop_signals:
 	void kpilotDaemonStatusChanged();
+	// used to push status information 
+	void kpilotDaemonStatusDetails( QDateTime, QString, QStringList, QString, QString, QString, bool );
 } ;
 
 #endif
