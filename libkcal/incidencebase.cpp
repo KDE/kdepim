@@ -53,7 +53,10 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i)
   mLastModified = i.mLastModified;
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
-  mObserver = i.mObserver;
+
+  // The copied object is a new one, so it isn't observed by the observer
+  // of the original object.
+  mObserver = 0;
   
   mAttendees.setAutoDelete( true );
 }
