@@ -52,7 +52,8 @@ private:
   QString s_aveName;
   KURL url;
   QFile* file;
-  KTempFile* tmpFile; 
+  KTempFile* tmpFile;
+  static QString lastPath;
 
 };
 
@@ -77,8 +78,8 @@ class KNArticleManager {
   protected:  
     KNListView *view;
     KNArticleWidget *mainArtWidget;
-    static QList<KTempFile> tempFiles;  
-      
+    static QList<KTempFile> tempFiles;
+
 };
 
 #endif

@@ -32,6 +32,8 @@
 #include "knarticlemanager.h"
 
 
+QString KNSaveHelper::lastPath;
+
 KNSaveHelper::KNSaveHelper(QString saveName)
   : s_aveName(saveName), file(0), tmpFile(0)
 {
@@ -55,10 +57,13 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile()
 {
-  url = KFileDialog::getSaveURL(s_aveName,QString::null,knGlobals.topWidget,i18n("Save Article"));
+  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,knGlobals.topWidget,i18n("Save Article"));
 
   if (url.isEmpty())
     return 0;
+
+  lastPath = url.url(-1);
+  lastPath.truncate(lastPath.length()-url.filename().length());
 
   if (url.isLocalFile()) {
     file = new QFile(url.path());
