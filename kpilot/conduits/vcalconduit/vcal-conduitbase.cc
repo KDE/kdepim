@@ -235,7 +235,7 @@ there are two special cases: a full and a first sync.
 #ifdef DEBUG
 	DEBUGCONDUIT<<fname<<": fullsync="<<isFullSync()<<", firstSync="<<isFirstSync()<<endl;
 	DEBUGCONDUIT<<fname<<": syncAction="<<fSyncDirection<<
-		<<", conflictResolution = "<<fConflictResolution<<", archive = "<<archive<<endl;
+		", conflictResolution = "<<fConflictResolution<<", archive = "<<archive<<endl;
 #endif
 
 	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(fCalendarFile));
