@@ -1,6 +1,7 @@
 /* addressWidget.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2004 by Adriaan de Groot
 **
 ** This file defines the addressWidget, that part of KPilot that
 ** displays address records from the Pilot.
@@ -254,24 +255,34 @@ void AddressWidget::setupWidget()
 	grid->addMultiCellWidget(fAddrInfo, 1, 4, 2, 2);
 
 	QPushButton *button;
+	QString wt;
 
 	fEditButton = new QPushButton(i18n("Edit Record..."), this);
 	grid->addWidget(fEditButton, 2, 0);
 	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
-	QWhatsThis::add(fEditButton,
-		i18n("<qt>You can edit an address when it is selected.</qt>"));
+	wt = KPilotSettings::internalEditors() ?
+		i18n("<qt>You can edit an address when it is selected.</qt>") :
+		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
+	QWhatsThis::add(fEditButton,wt);
 
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
-	QWhatsThis::add(button, i18n("<qt>Add a new address to the address book.</qt>"));
+	wt = KPilotSettings::internalEditors() ?
+		i18n("<qt>Add a new address to the address book.</qt>") :
+		i18n("<qt><i>Adding is disabled by the 'internal editors' setting.</i></qt>") ;
+	QWhatsThis::add(button, wt);
+
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
 	grid->addWidget(fDeleteButton, 3, 0);
 	connect(fDeleteButton, SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
-	QWhatsThis::add(fDeleteButton,
-		i18n("<qt>Delete the selected address from the address book.</qt>"));
+	wt = KPilotSettings::internalEditors() ?
+		i18n("<qt>Delete the selected address from the address book.</qt>") :
+		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
+
+	QWhatsThis::add(fDeleteButton,wt);
 }
 
 void AddressWidget::updateWidget()
@@ -392,6 +403,7 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 
 	bool enabled = (fListBox->currentItem() != -1);
 
+	enabled &= KPilotSettings::internalEditors();
 	fEditButton->setEnabled(enabled);
 	fDeleteButton->setEnabled(enabled);
 }

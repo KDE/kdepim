@@ -262,12 +262,16 @@ void TodoWidget::setupWidget()
 	grid->addMultiCellWidget(fTodoInfo, 1, 4, 2, 2);
 
 	QPushButton *button;
+	QString wt;
 
 	fEditButton = new QPushButton(i18n("Edit Record..."), this);
 	grid->addWidget(fEditButton, 2, 0);
 	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
-	QWhatsThis::add(fEditButton,
-		i18n("<qt>You can edit a todo when it is selected.</qt>"));
+
+	wt = KPilotSettings::internalEditors() ?
+		i18n("<qt>You can edit a todo when it is selected.</qt>") :
+		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
+	QWhatsThis::add(fEditButton,wt);
 
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
@@ -278,8 +282,10 @@ void TodoWidget::setupWidget()
 	grid->addWidget(fDeleteButton, 3, 0);
 	connect(fDeleteButton, SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
-	QWhatsThis::add(fDeleteButton,
-		i18n("<qt>Delete the selected todo from the todo list.</qt>"));
+	wt = KPilotSettings::internalEditors() ?
+		i18n("<qt>Delete the selected todo from the todo list.</qt>") :
+		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
+	QWhatsThis::add(fDeleteButton,wt);
 }
 
 void TodoWidget::updateWidget()
@@ -330,6 +336,8 @@ void TodoWidget::updateWidget()
 	FUNCTIONSETUP;
 
 	bool enabled = (fListBox->currentItem() != 0L);
+
+	enabled &= KPilotSettings::internalEditors() ;
 
 	fEditButton->setEnabled(enabled);
 	fDeleteButton->setEnabled(enabled);

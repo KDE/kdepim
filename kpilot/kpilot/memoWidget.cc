@@ -1,6 +1,8 @@
 /* memoWidget.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2001 by David Bishop (XML stuff)
+** Copyright (C) 2004 by Adriaan de Groot
 **
 ** This is the memo-viewing widget (internal conduit) used by KPilot.
 */
@@ -256,6 +258,7 @@ void MemoWidget::setupWidget()
 	QLabel *label = NULL;
 	QPushButton *button = NULL;
 	QGridLayout *grid = new QGridLayout(this, 5, 4, SPACING);
+	QString wt;
 
 	fCatList = new QComboBox(this);
 	grid->addWidget(fCatList, 0, 1);
@@ -290,13 +293,15 @@ void MemoWidget::setupWidget()
 	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
 	QWhatsThis::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
+	fTextWidget->setReadOnly(!KPilotSettings::internalEditors());
 
 	button = new QPushButton(i18n("Import Memo..."), this);
 	grid->addWidget(button, 2, 0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
-	QWhatsThis::add(button,
-		i18n
-		("Read a text file and add it to the Pilot's memo database."));
+	wt = KPilotSettings::internalEditors() ?
+		i18n	("Read a text file and add it to the Pilot's memo database.") :
+		i18n("<qt><i>Import is disabled by the 'internal editors' setting.</i></qt>");
+	QWhatsThis::add(button,wt);
 
 	fExportButton = new QPushButton(i18n("Export Memo..."), this);
 	grid->addWidget(fExportButton, 2, 1);
@@ -309,7 +314,10 @@ void MemoWidget::setupWidget()
 	grid->addWidget(fDeleteButton, 3, 0);
 	connect(fDeleteButton, SIGNAL(clicked()), this,
 		SLOT(slotDeleteMemo()));
-	QWhatsThis::add(fDeleteButton, i18n("Delete the selected memo."));
+	wt = KPilotSettings::internalEditors() ?
+		i18n("Delete the selected memo.") :
+		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
+	QWhatsThis::add(fDeleteButton, wt);
 }
 
 void MemoWidget::slotUpdateButtons()
@@ -330,6 +338,10 @@ void MemoWidget::slotUpdateButtons()
 	{
 		fExportButton->setEnabled(highlight);
 	}
+
+	//  The remaining buttons are relevant only if the
+	// internal editors are editable.
+	highlight &= KPilotSettings::internalEditors() ;
 	if (fDeleteButton)
 	{
 		fDeleteButton->setEnabled(highlight);
