@@ -33,7 +33,7 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### Non-automake variables
 ###
 
-libkhexedit_shared_la_SOURCES = hexbuffer.cc hexclipboard.cc hexdrag.cc hexerror.cc hexviewwidget.cc hexprinter.cc conversion.cc hexviewwidget.cc
+libkhexedit_shared_la_SOURCES = hexbuffer.cc hexclipboard.cc hexdrag.cc hexerror.cc hexviewwidget.cc hexprinter.cc conversion.cc 
 
 
 kpilot_SOURCES	= \
