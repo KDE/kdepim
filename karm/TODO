@@ -1,6 +1,6 @@
 * right now times can be negative - does that make any sense?
-* right now one can adjust subtask *and* task times which has the effect that times
-  won't add up any more - does that make sense?
+* right now one can adjust subtask *and* task times which has the effect
+  that times won't add up any more - does that make sense?
 * add a log
 * add notes to logentries
 * the BUGS file contains nonsense
