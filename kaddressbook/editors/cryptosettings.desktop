@@ -2,14 +2,17 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_cryptosettings
 Name=Crypto Preferences
+Name[be]=Перавагі крыптаграфіі
 Name[da]=Krypto-indstillinger
 Name[es]=Preferencias de cifrado
 Name[et]=Krüptoseadistused
 Name[it]=Preferenze crittografia
 Name[nl]=Versleutelingsinstellingen
+Name[ru]=Настройки шифрования
 Name[sl]=Lastnosti šifriranja
 Name[sv]=Krypteringsinställningar
 Name[ta]= மறைக்குறிக்கு சலுகைகள்
 Name[xx]=xxCrypto Preferencesxx
+Name[zh_CN]=加密首选项
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget
