@@ -29,7 +29,6 @@
     TODO:
 	- create a log file and give user possibility to see it afterwards
 	- handle callergroup value (Friend, VIP, Family, ...) better
-	- we do not yet write back to SIM memory (for security reasons)
 */
 
 #include "config.h"
@@ -107,7 +106,8 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 
 #ifdef HAVE_GNOKII_H
 static char *lockfile = NULL;
-static char model[GN_MODEL_MAX_LENGTH+1], revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
+static char manufacturer[64], model[GN_MODEL_MAX_LENGTH+1], 
+            revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
 static QString PhoneProductId;
 
 static struct gn_statemachine state;
@@ -167,41 +167,27 @@ static QString businit(void)
 			.arg(gn_error_print(error));
 	}
 
-	// model
+	// identify phone
 	gn_data_clear(&data);
+	data.manufacturer = manufacturer;
 	data.model = model;
-	model[0] = 0;
-	if (m_progressDlg->wasCancelled())
-		return QString::null;
-	else
-		error = gn_sm_functions(GN_OP_GetModel, &data, &state);
-	GNOKII_CHECK_ERROR(error);
-	if (model[0] == 0)
-		strcpy(model, GN_TO(i18n("Unknown")));
-	data.model = NULL;
-
-	// revision
 	data.revision = revision;
-	revision[0] = 0;
-	if (m_progressDlg->wasCancelled())
-		return QString::null;
-	else
-		error = gn_sm_functions(GN_OP_GetRevision, &data, &state);
-	GNOKII_CHECK_ERROR(error);
-	data.revision = NULL;
-
-	// imei
 	data.imei = imei;
-	imei[0] = 0;
+
+	QCString unknown(GN_TO(i18n("Unknown")));
+	qstrncpy(manufacturer, unknown, sizeof(manufacturer)-1);
+	qstrncpy(model, unknown, sizeof(model)-1);
+	qstrncpy(revision, unknown, sizeof(revision)-1);
+	qstrncpy(imei, unknown, sizeof(imei)-1);
+
 	if (m_progressDlg->wasCancelled())
 		return QString::null;
 	else
-		error = gn_sm_functions(GN_OP_GetImei, &data, &state);
+		error = gn_sm_functions(GN_OP_Identify, &data, &state);
 	GNOKII_CHECK_ERROR(error);
-	data.imei = NULL;
 
-	GNOKII_DEBUG( QString("Found mobile phone: Model: %1, Revision: %2, IMEI: %3\n")
-				.arg(model, revision, imei) );
+	GNOKII_DEBUG( QString("Found mobile phone: %1 %2, Revision: %3, IMEI: %4\n")
+				.arg(manufacturer, model, revision, imei) ); 
 
 	PhoneProductId = QString("%1-%2-%3-%4").arg(APP).arg(model).arg(revision).arg(imei);
 
@@ -270,18 +256,16 @@ static bool phone_entry_empty( const int index, const gn_memory_type memtype )
 
 static QString buildPhoneInfoString( const gn_memory_status &memstat )
 {
-	return QString("<b>%1</b><br><table>"
-		"<tr><td><b>%2</b></td><td>%3</td></tr>"
-		"<tr><td><b>%4</b></td><td>%5</td></tr>"
-		"<tr><td><b>%6</b></td><td>%7</td></tr>"
-		"<tr><td><b>%8</b></td><td>%9</td></tr>"
-		"</table><br>")
+	QString format = QString::fromLatin1("<tr><td><b>%1</b></td><td>%2</td></tr>");
+
+	return QString::fromLatin1("<b>%1</b><br><table>%2%3%4%5%6</table><br>")
 		.arg(i18n("Mobile Phone information:"))
-		.arg(i18n("Phone model"))	.arg(GN_FROM(model))
-		.arg(i18n("Revision"))		.arg(GN_FROM(revision))
-		.arg(i18n("IMEI"))		.arg(GN_FROM(imei))
-		.arg(i18n("Phonebook status"))
-		.arg(i18n("%1 out of %2 contacts used").arg(memstat.used).arg(memstat.used+memstat.free));
+		.arg(format.arg(i18n("Manufacturer")).arg(GN_FROM(manufacturer)))
+		.arg(format.arg(i18n("Phone model")).arg(GN_FROM(model)))
+		.arg(format.arg(i18n("Revision")).arg(GN_FROM(revision)))
+		.arg(format.arg(i18n("IMEI")).arg(GN_FROM(imei)))
+		.arg(format.arg(i18n("Phonebook status"))
+			   .arg(i18n("%1 out of %2 contacts used").arg(memstat.used).arg(memstat.used+memstat.free)));
 }
 
 static QString buildMemoryTypeString( gn_memory_type memtype )
@@ -509,7 +493,7 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	m_progressDlg->progressBar()->setProgress(0);
 	m_progressDlg->progressBar()->setCenterIndicator(true);
 	m_progressDlg->setModal(true);
-	m_progressDlg->setMinimumSize(450,300); // not honored yet - seems like bug in KProgressDialog
+	m_progressDlg->setMinimumSize(450,350); // not honored yet - seems like bug in KProgressDialog
 	m_progressDlg->show();
   	processEvents();
 
@@ -747,7 +731,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	m_progressDlg->progressBar()->setProgress(0);
 	m_progressDlg->progressBar()->setCenterIndicator(true);
 	m_progressDlg->setModal(true);
-	m_progressDlg->setMinimumSize(450,300); // not honored yet - seems like bug in KProgressDialog
+	m_progressDlg->setMinimumSize(450,350); // not honored yet - seems like bug in KProgressDialog
 	m_progressDlg->show();
   	processEvents();
 
