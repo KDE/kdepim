@@ -43,7 +43,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
   setDtEnd(end);
 
   // Get all the events in the calendar
-  Event::List eventList = mCalendar->rawEvents( start, end );
+  Event::List eventList = mCalendar->rawEvents( start.date(), end.date() );
 
   int extraDays, i, x, duration;
   duration = start.daysTo(end);
