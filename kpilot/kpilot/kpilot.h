@@ -66,6 +66,12 @@ class KPilotInstaller : public KTMainWindow
 	*/
 	void showTitlePage(bool force=false);
 
+	/**
+	* Returns the user's preference for the system-wide
+	* fixed font.
+	*/
+	const QFont& fixed() const { return fixedFont; }  ;
+
     void testDir(QString name);
     bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
     // Adds 'name' to the pull down menu of components
@@ -143,6 +149,7 @@ private:
 	QComboBox	*conduitCombo;
 
 	QPixmap	icon_hotsync,icon_backup;
+	QFont fixedFont;
 
  protected slots:
       void menuCallback(int);

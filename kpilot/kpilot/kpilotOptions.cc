@@ -522,13 +522,51 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 	return 0;
 }
 
+
+
+KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
+	setupDialogPage(i18n("Advanced Sync"),s)
+{
+	FUNCTIONSETUP;
+
+	QGridLayout *grid = new QGridLayout(this,5,3,SPACING);
+
+	fForceFirstTime = new QCheckBox(
+		i18n("Force first-time sync every time"),this);
+	fForceFirstTime -> setChecked(
+		config.readNumEntry("ForceFirst",0));
+	fSyncLastPC = new QCheckBox(
+		i18n("Do full backup when changing PCs"),this);
+	fSyncLastPC -> setChecked(
+		config.readNumEntry("SyncLastPC",1));
+
+	grid->addWidget(fSyncLastPC,0,1);
+	grid->addWidget(fForceFirstTime,1,1);
+	grid->setRowStretch(4,100);
+	grid->setColStretch(2,100);
+	grid->addColSpacing(2,SPACING);
+}
+
+
+/* virtual */ int KPilotOptionsSync::commitChanges(KConfig& c)
+{
+	FUNCTIONSETUP;
+
+	c.writeEntry("ForceFirst",(int)fForceFirstTime->isChecked());
+	c.writeEntry("SyncLastPC",(int)fSyncLastPC->isChecked());
+
+	c.sync();
+
+	return 0;
+}
+
 // ----------------------------------------------------
 //
 // KPilotOptions
 //
 // The actual dialog that contains all the pages.
 
-/* static */ int KPilotOptions::fConfigVersion = 400 ;
+/* static */ int KPilotOptions::fConfigVersion = 401 ;
 
 /* static */ bool KPilotOptions::isNewer(KConfig& c)
 {
@@ -561,6 +599,7 @@ KPilotOptions::KPilotOptions(QWidget* parent) :
 	addPage(new KPilotOptionsGeneral(this,config));
 	addPage(new  KPilotOptionsAddress(this,config));
 	addPage(new KPilotOptionsPrivacy(this,config));
+	addPage(new KPilotOptionsSync(this,config));
 #ifdef USE_STANDALONE
 	addPage(new setupInfoPage(this));
 #endif
@@ -622,6 +661,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.13  2000/11/14 06:32:26  adridg
+// Ditched KDE1 stuff
+//
 // Revision 1.12  2000/11/10 08:32:33  adridg
 // Fixed spurious config new() and delete()
 //

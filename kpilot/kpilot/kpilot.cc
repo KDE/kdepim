@@ -92,9 +92,8 @@ KPilotInstaller::KPilotInstaller()
 
 	int cfg_version;
 
-	KConfig* config = KGlobal::config();
-	config->setGroup(QString());
-	cfg_version=config->readNumEntry("Configured", 0);
+	KConfig& config = KPilotLink::getConfig();
+	cfg_version=config.readNumEntry("Configured", 0);
 
 	if(cfg_version < KPilotLink::ConfigurationVersion)
 	{
@@ -103,29 +102,21 @@ KPilotInstaller::KPilotInstaller()
 			<< " shouldn't be used."
 			<< endl;
 
-#if 0
-		if (debug_level & UI_MAJOR)
-		{
-			cerr << fname << ": Read config version "
-				<< cfg_version
-				<< " require "
-				<< KPilotLink::ConfigurationVersion
-				<< endl;
-		}
-
-		// If we haven't been configured,
-		// force the user to set things up.
-		KPilotOptions* options = new KPilotOptions(this);
-		options->show();
-		delete options;
-#endif
 	}
-    if(config->readNumEntry("NextUniqueID", 0) == 0)
+    if(config.readNumEntry("NextUniqueID", 0) == 0)
       {
 	// Is this an ok value to use??
-	config->writeEntry("NextUniqueID", 0xf000);
-	config->sync();
+	config.writeEntry("NextUniqueID", 0xf000);
+	config.sync();
       }
+
+	{
+	KConfig *KDEGlobalConfig = new KConfig(QString::null);
+	KDEGlobalConfig->setGroup("General");
+	fixedFont = KDEGlobalConfig->readFontEntry("fixed");
+	delete KDEGlobalConfig;
+	}
+
     initPilotLink();
 	if (!fPilotCommandSocket)
 	{

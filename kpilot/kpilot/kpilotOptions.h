@@ -41,6 +41,19 @@ private:
 	QLineEdit *fBackupOnly,*fSkipDB;
 } ;
 
+class KPilotOptionsSync : public setupDialogPage
+{
+	Q_OBJECT
+
+public:
+	KPilotOptionsSync(setupDialog *,KConfig&);
+
+	virtual int commitChanges(KConfig&);
+
+private:
+	QCheckBox *fSyncLastPC;
+	QCheckBox *fForceFirstTime;
+} ;
 
 class KPilotOptionsGeneral : public setupDialogPage
 {
