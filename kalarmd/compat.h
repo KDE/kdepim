@@ -35,6 +35,7 @@
 #include <kapp.h>
 #if KDE_VERSION < 290
    #define Alarm KOAlarm
+   #define uid   VUID
 #endif
 
 #endif
