@@ -39,39 +39,19 @@ static const char *fileinstallwidget_id =
 
 
 
-#ifndef QLISTBOX_H
 #include <qlistbox.h>
-#endif
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-#ifndef QPUSHBT_H
-#include <qpushbt.h>
-#endif
-#ifndef QDRAGOBJECT_H
+#include <qpushbutton.h>
 #include <qdragobject.h>
-#endif
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
 #include <qwhatsthis.h>
-#ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
-#endif
 
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
-#endif
 
 
 #include "fileInstallWidget.moc"
