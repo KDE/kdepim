@@ -98,6 +98,9 @@ public:
 		long type=0, int cardno=0, int flags=0, int version=0);
 	QString getDBName() { return fDBName; }
 
+
+	virtual DBType dbType() const;
+
 protected:
 	virtual void openDatabase();
 	virtual void closeDatabase();

@@ -61,10 +61,13 @@ public:
 	inline int   getAttrib() const { return fAttrib; }
 	inline void  setAttrib(int attrib) { fAttrib = attrib; }
 
-	int   getCat() const { return fCat; }
-	void  setCat(int cat) { fCat = cat; }
+	int   category() const { return fCat; }
+	void  setCategory(int cat) { fCat = cat; }
+	int   getCat() const KDE_DEPRECATED;
+	void  setCat(int cat) KDE_DEPRECATED;
 
-	recordid_t getID() const { return fID; }
+	inline recordid_t id() const { return fID; }
+	recordid_t getID() const KDE_DEPRECATED;
 	void setID(recordid_t id) { fID = id; }
 
 private:
@@ -78,8 +81,14 @@ public:
 	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
 	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
 	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
-	inline void makeDeleted() { fAttrib |= dlpRecAttrDeleted; } ;
-	inline void makeSecret() { fAttrib |= dlpRecAttrSecret; } ;
+	inline void setDeleted(bool d=true) {
+		if (d) { fAttrib |= dlpRecAttrDeleted; }
+		else   { fAttrib &= ~dlpRecAttrDeleted; } }
+	inline void setSecret(bool s=true) {
+		if (s) { fAttrib |= dlpRecAttrSecret; }
+		else   { fAttrib &= ~dlpRecAttrSecret; } }
+	void makeDeleted() KDE_DEPRECATED;
+	void makeSecret() KDE_DEPRECATED;
 
 	/**
 	* This is an interface for tracking down memory leaks

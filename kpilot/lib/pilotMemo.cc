@@ -137,6 +137,6 @@ QString PilotMemo::sensibleTitle() const
 	}
 	else
 	{
-		return QString(i18n("[unknown]"));
+		return i18n("[unknown]");
 	}
 }
