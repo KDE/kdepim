@@ -11,6 +11,7 @@ messages:
 
 # Just for the KPilot developers: grab all the strings, for checking.
 devel-pot :
-	$(XGETTEXT) -C --keyword=i18n --keyword=I18N_NOOP -o /tmp/kpilot.po \
-		`find . -name "*.cc"`
+	extractrc `find . -name "*.rc" -o -name "*.ui"` > /tmp/rc.cpp
+	xgettext -C --keyword=i18n --keyword=I18N_NOOP -o /tmp/kpilot.po \
+		`find . -name "*.cc"` /tmp/rc.cpp
 
