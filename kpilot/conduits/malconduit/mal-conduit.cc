@@ -242,7 +242,7 @@ bool MALConduit::skip()
 #else
 			pInfo->httpProxy = new char[ proxyServer.length() + 1 ];
 			strncpy( pInfo->httpProxy, proxyServer.latin1(), proxyServer.length() );
-			pInfo->httpProxy[proxyServer().length()] = '\0';			
+			pInfo->httpProxy[proxyServer.length()] = '\0';
 			if (proxyPort>0 && proxyPort<65536) pInfo->httpProxyPort = proxyPort;
 			else pInfo->httpProxyPort = 80;
 #endif
