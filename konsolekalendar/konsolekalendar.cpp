@@ -78,7 +78,7 @@ void KonsoleKalendar::showInstance(){
 				
 			
 			if(m_variables.isVerbose()){
-				cout << "konsolecalendar.cpp::showInstance(int argc, char *argv[]) | " << start.toString()  << endl;            
+				cout << "konsolecalendar.cpp::showInstance(int argc, char *argv[]) | " << start.toString().local8Bit()  << endl;            
 				cout << "konsolecalendar.cpp::showInstance(int argc, char *argv[]) | days to end " << start.daysTo( end )  << endl;             
 	
 			}
@@ -119,7 +119,7 @@ void KonsoleKalendar::showDate( QDate date ){
 		tempString = date.toString();
 		len -= tempString.length();
 	
-		      cout << endl << tempString << " ";
+		      cout << endl << tempString.local8Bit() << " ";
 
 	
 		    for( len = len; len < 100; len ++){
@@ -196,7 +196,7 @@ void KonsoleKalendar::showNext(){
 				tempString = m_variables.getDate().toString();
 	      len -= tempString.length();
 	
-	      cout << endl << tempString << " ";
+	      cout << endl << tempString.local8Bit() << " ";
 
 	
 	      for( len = len; len < 80; len ++){
