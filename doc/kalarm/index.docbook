@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-10-01</date>
-<releaseinfo>0.09.06</releaseinfo>
+<date>2003-12-01</date>
+<releaseinfo>1.00.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -79,7 +79,7 @@ the alarm message text, specify a text or image file to display,
 specify a command to execute, or enter an email to send. You can also
 choose the color of the alarm message, whether it should repeat,
 whether to play a sound, and whether the alarm should be canceled if
-it can't be triggered at its scheduled time.</para>
+it cannot be triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
 calls from programs.</para>
@@ -167,8 +167,8 @@ triggers on Monday and Wednesday every third week,
 <quote>Login</quote> for a repeat-at-login alarm).</para>
 
 <para>The alarms may be ordered by date/time, repeat interval, color
-or text by clicking on the title bar for the appropriate column.
-To reverse the sort order, click the column title bar again.</para>
+or text by clicking on the titlebar for the appropriate column.
+To reverse the sort order, click the column titlebar again.</para>
 
 <para>You can optionally show the remaining time until each alarm is
 due, together with, or instead of, the alarm's scheduled time.
@@ -419,6 +419,12 @@ alarm: in this case the alarm will be displayed at the first
 opportunity on or after the configured start-of-day time, on the
 specified date. (<link linkend="preferences">Configuring
 &kalarm;</link> describes how to set the start-of-day time.)</para>
+
+<para>For a non-recurring alarm, the date/time which you enter must be
+in the future, or if you enter only a date it must be today or later.
+For a recurring alarm, there are no such restrictions since the start
+date/time will be automatically adjusted to the first recurrence due
+after the current time.</para>
 </listitem>
 
 <listitem>
@@ -516,8 +522,8 @@ in the list and press <guibutton>Delete</guibutton>.</para>
 </itemizedlist>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
-happens if the alarm can't be triggered at its scheduled time. Check
-this box to cancel the alarm if it can't be triggered within
+happens if the alarm cannot be triggered at its scheduled time. Check
+this box to cancel the alarm if it cannot be triggered within
 one minute after the right time.
 Leave the box unchecked to trigger the alarm at
 the first opportunity starting at the scheduled time. Date-only alarms,
@@ -879,7 +885,7 @@ original application.</para>
 <para>As a non-modal window. In this mode, the keyboard focus is
 unaffected when the alarm message window appears, so it will not
 interfere with your typing. However in this mode the window has no
-title bar, so you cannot move it.</para>
+titlebar, so you cannot move it.</para>
 </listitem>
 </itemizedlist>
 
