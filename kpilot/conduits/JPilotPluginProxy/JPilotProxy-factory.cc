@@ -65,6 +65,13 @@ JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) 
 	FUNCTIONSETUP;
 	fConfig=0L;
 	plugins=new PluginList_t();
+	// load the library containing the JPilot API functions. If this fails, any plugin will probably crash KPilot, so just exit!!!
+	apilib=KLibLoader::self()->globalLibrary("libJPilotAPI");
+		#ifdef DEBUG
+	if (!apilib) DEBUGCONDUIT << fname << ": JPilotAPI library could not be loaded\n  error ["<<KLibLoader::self()->lastErrorMessage()<<"]" << endl;
+	else DEBUGCONDUIT << fname << ": loaded JPilotAPI library" << endl;
+ 	#endif
+  jp_logf(4, "testing...");
 
 	fInstance = new KInstance(n);
 	fAbout = new KAboutData(n,
@@ -75,6 +82,7 @@ JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) 
 		"(C) 2002, Reinhold F. Kainhofer");
 	fAbout->addAuthor("Dan Pilone", I18N_NOOP("Original Author of KPilot"));
 	fAbout->addAuthor("Adriaan de Groot", I18N_NOOP("Maintainer or KPilot"), "groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Judd Montgomery", I18N_NOOP("Author of JPilot"), 	"judd@engineer.com", "http://www.jpilot.org/");
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Original author and maintainer of this conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
 }
 
@@ -85,6 +93,7 @@ JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
 	for ( ; it.current(); ++it ) {
 		it.current()->exit_cleanup();
 	}
+	if (apilib) KLibLoader::self()->unloadLibrary(apilib->fileName());
 
 	KPILOT_DELETE(fInstance);
 	KPILOT_DELETE(fAbout);
@@ -216,6 +225,9 @@ int JPilotProxyConduitFactory::loadPlugins(KConfig*fC) {
 }
 
 // $Log$
+// Revision 1.1  2002/04/07 11:17:54  kainhofe
+// First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
+//
 // Revision 1.6  2002/04/07 11:11:18  reinhold
 // If the plugin is removed, this conduit does no longer crash
 //

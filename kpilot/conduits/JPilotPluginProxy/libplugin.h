@@ -120,10 +120,11 @@ int get_next_unique_pc_id(unsigned int *next_unique_id);
 #define JPILOT_EOF -7
 
 int jpilot_logf(int level, char *format, ...);
-/* FIXME: Need a policy.  Should all symbols avaliable to 
+int jp_logf(int level, char *format, ...);
+/* FIXME: Need a policy.  Should all symbols avaliable to
  * plugins start with jp or jpilot?
  */
-#define jp_logf jpilot_logf
+//#define jp_logf jpilot_logf
 
 #define SPENT_PC_RECORD_BIT 256
 

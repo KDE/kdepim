@@ -9,10 +9,14 @@ METASOURCES = AUTO
 servicedir = $(kde_servicesdir)
 service_DATA = JPilotPluginProxy.desktop
 
-kde_module_LTLIBRARIES = libJPilotProxy.la
+kde_module_LTLIBRARIES = libJPilotAPI.la libJPilotProxy.la
+
+libJPilotAPI_la_SOURCES = libplugin.c APIEmulation.c
+libJPilotAPI_la_LDFLAGS = $(KDE_RPATH) -L../../lib -Wl,-export-dynamic
+libJPilotAPI_la_LIBADD = -lc -lgtk -lgdk
 
 libJPilotProxy_la_SOURCES = JPilotPluginProxy.ui \
-	JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp libplugin.c
+	JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
 libJPilotProxy_la_LDFLAGS = $(KDE_RPATH) -L../../lib -Wl,-export-dynamic
-libJPilotProxy_la_LIBADD = -lkpilot
+libJPilotProxy_la_LIBADD = -lkpilot -lgtk -lgdbm -lgdk
 

@@ -81,6 +81,7 @@ public:
 	static QString PluginPathes;
 	static QString LoadedPlugins;
 	static bool pluginsloaded;
+	KLibrary*apilib;
 };
 
 extern "C"
@@ -92,6 +93,9 @@ void *init_libJPilotProxy();
 
 
 // $Log$
+// Revision 1.1  2002/04/07 11:17:54  kainhofe
+// First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
+//
 // Revision 1.4  2002/04/07 00:10:49  reinhold
 // Settings are now saved
 //
