@@ -14,7 +14,7 @@ the Null-conduit settings.</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>391</width>
+            <width>383</width>
             <height>202</height>
         </rect>
     </property>
@@ -98,7 +98,7 @@ the Null-conduit settings.</comment>
                         </property>
                         <property>
                             <name>toolTip</name>
-                            <string>Enter the message to add to the Sync Log on your Pilot here.</string>
+                            <string>&lt;qt&gt;Enter the message to add to the Sync Log on your Pilot here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget row="0"  column="0" >
@@ -139,7 +139,7 @@ the Null-conduit settings.</comment>
                         </property>
                         <property>
                             <name>toolTip</name>
-                            <string>The Null-conduit can be attached to several databases, effectively preventing them from Syncing. Enter the database names here.</string>
+                            <string>&lt;qt&gt;The Null-conduit can be attached to several databases, effectively preventing them from Syncing. Enter the database names here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <spacer row="2"  column="1" >

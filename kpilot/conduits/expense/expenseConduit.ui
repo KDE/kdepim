@@ -12,7 +12,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>584</width>
+            <width>576</width>
             <height>480</height>
         </rect>
     </property>
@@ -73,7 +73,7 @@
                     </property>
                     <property>
                         <name>toolTip</name>
-                        <string>Full path to csv file containing expense data</string>
+                        <string>&lt;qt&gt;Full path to csv file containing expense data&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget row="0"  column="2" >
@@ -97,6 +97,50 @@
                         <name>title</name>
                         <string>Rotate Policy</string>
                     </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;For an explanation of these options, please read the documentation!&lt;/qt&gt;</string>
+                    </property>
+                    <widget>
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>20</x>
+                                <y>140</y>
+                                <width>110</width>
+                                <height>31</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>Rotate Depth:</string>
+                        </property>
+                    </widget>
+                    <widget>
+                        <class>QRadioButton</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fOverWrite</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>20</x>
+                                <y>30</y>
+                                <width>160</width>
+                                <height>28</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Overwrite</string>
+                        </property>
+                    </widget>
                     <widget>
                         <class>QRadioButton</class>
                         <property stdset="1">
@@ -143,46 +187,6 @@
                         <property stdset="1">
                             <name>checked</name>
                             <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget>
-                        <class>QRadioButton</class>
-                        <property stdset="1">
-                            <name>name</name>
-                            <cstring>fOverWrite</cstring>
-                        </property>
-                        <property stdset="1">
-                            <name>geometry</name>
-                            <rect>
-                                <x>20</x>
-                                <y>30</y>
-                                <width>160</width>
-                                <height>28</height>
-                            </rect>
-                        </property>
-                        <property stdset="1">
-                            <name>text</name>
-                            <string>&amp;Overwrite</string>
-                        </property>
-                    </widget>
-                    <widget>
-                        <class>QLabel</class>
-                        <property stdset="1">
-                            <name>name</name>
-                            <cstring>TextLabel2</cstring>
-                        </property>
-                        <property stdset="1">
-                            <name>geometry</name>
-                            <rect>
-                                <x>20</x>
-                                <y>140</y>
-                                <width>110</width>
-                                <height>31</height>
-                            </rect>
-                        </property>
-                        <property stdset="1">
-                            <name>text</name>
-                            <string>Rotate Depth:</string>
                         </property>
                     </widget>
                     <widget>
@@ -296,12 +300,20 @@
                         <name>name</name>
                         <cstring>fDBName</cstring>
                     </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;Name of the database, like Expenses&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget row="5"  column="1" >
                     <class>QLineEdit</class>
                     <property stdset="1">
                         <name>name</name>
                         <cstring>fDBTable</cstring>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;Name of the table to update, like UsernameExpenses&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget row="0"  column="0"  rowspan="1"  colspan="2" >
@@ -316,7 +328,7 @@
                     </property>
                     <property>
                         <name>toolTip</name>
-                        <string>Select "None" if you are using a CSV file</string>
+                        <string>&lt;qt&gt;Select "None" if you are using a CSV file&lt;/qt&gt;</string>
                     </property>
                     <widget>
                         <class>QRadioButton</class>
@@ -389,12 +401,20 @@
                         <name>name</name>
                         <cstring>fDBServer</cstring>
                     </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>foo.bar.com</string>
+                    </property>
                 </widget>
                 <widget row="2"  column="1" >
                     <class>QLineEdit</class>
                     <property stdset="1">
                         <name>name</name>
                         <cstring>fDBLogin</cstring>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>username</string>
                     </property>
                 </widget>
                 <widget row="3"  column="1" >
@@ -410,6 +430,10 @@
                     <property stdset="1">
                         <name>echoMode</name>
                         <enum>Password</enum>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;Password, not echoed to the screen!&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>

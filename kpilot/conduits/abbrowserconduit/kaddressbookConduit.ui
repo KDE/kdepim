@@ -11,7 +11,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>588</width>
+            <width>584</width>
             <height>480</height>
         </rect>
     </property>
@@ -30,8 +30,8 @@
             <rect>
                 <x>10</x>
                 <y>10</y>
-                <width>413</width>
-                <height>232</height>
+                <width>522</width>
+                <height>292</height>
             </rect>
         </property>
         <widget>
@@ -62,6 +62,13 @@
                     <property stdset="1">
                         <name>text</name>
                         <string>Handle conflict in addresses:</string>
+                    </property>
+                    <property stdset="1">
+                        <name>alignment</name>
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property>
+                        <name>hAlign</name>
                     </property>
                 </widget>
                 <widget row="3"  column="1"  rowspan="1"  colspan="2" >
@@ -100,6 +107,10 @@
                         <name>name</name>
                         <cstring>ComboBox1</cstring>
                     </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;How to handle a situation where the pim's address book has conflicting information with the KDE's addressbook&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget row="5"  column="2" >
                     <class>QComboBox</class>
@@ -118,6 +129,10 @@
                     <property stdset="1">
                         <name>name</name>
                         <cstring>ComboBox8</cstring>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;What to map the pim's "Street Address" field to locally&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget row="4"  column="2" >
@@ -186,6 +201,10 @@
                         <name>name</name>
                         <cstring>ComboBox3</cstring>
                     </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;What to map the pim's "Other" field to locally&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget row="4"  column="0"  rowspan="1"  colspan="2" >
                     <class>QLabel</class>
@@ -238,6 +257,10 @@
                         <name>name</name>
                         <cstring>ComboBox24</cstring>
                     </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>&lt;qt&gt;What to map the pim's "Fax" field to locally&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget row="1"  column="0"  rowspan="1"  colspan="3" >
                     <class>QCheckBox</class>
@@ -251,7 +274,7 @@
                     </property>
                     <property>
                         <name>toolTip</name>
-                        <string>Close Kaddressbook if the conduit had to open it</string>
+                        <string>&lt;qt&gt;Close Kaddressbook if the conduit had to open it&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget row="2"  column="0"  rowspan="1"  colspan="3" >
@@ -270,7 +293,7 @@
                     </property>
                     <property>
                         <name>toolTip</name>
-                        <string>Use key fields to merge address books</string>
+                        <string>&lt;qt&gt;Use key fields (like Name and Company) to merge address books&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget row="0"  column="0" >
