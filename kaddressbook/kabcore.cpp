@@ -1006,7 +1006,7 @@ void KABCore::initActions()
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
-  mActionChat = new KAction( i18n("Chat &With..."), "chat", 0,
+  mActionChat = new KAction( i18n("Chat &With..."), 0,
                                   this, SLOT( startChat() ),
                                   actionCollection(), "file_chat" );
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
