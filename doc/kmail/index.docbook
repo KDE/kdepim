@@ -20,18 +20,22 @@
 </author>
 </authorgroup>
 
-<date>14/01/2001</date>
+<date>02/02/2001</date>
 <releaseinfo>1.2</releaseinfo>
 
+<copyright>
+<year>1999</year>
+<year>2000</year>
+<year>2001</year>
+<holder>David Rugge</holder>
+</copyright>
+  
 <abstract>
 	
 <para>Even if you don't like reading documentation: Some very helpful hints you probably
-don't want to miss are collected in the 
-<link linkend="secintro">Introduction</link>
-section.</para>
-	
-<para>Please mail any comments and additions to
-<email>kmail@kde.org</email>.</para>
+don't want to miss are collected in the <link linkend="secintro">Introduction</link>
+section. Please also read the <link linkend="faq">FAQ</link>. Mail any comments and additions 
+to <email>kmail@kde.org</email>.</para>
 
 </abstract>
 
@@ -42,6 +46,7 @@ section.</para>
 <keyword>Client</keyword>
 <keyword>POP3</keyword>
 <keyword>PGP</keyword>
+<keyword>GnuPG</keyword>
 </keywordset>
 </bookinfo>
 
@@ -576,7 +581,7 @@ to create this filter:</para>
 
 <para><orderedlist><listitem>
 <para>Think of a unique way of identifying the messages you want to filter. The unique property
-of my KDE User List messages is that they always contain "kde-user@kde.org" in the
+of my KDE User List messages is that they always contain <quote>kde-user@kde.org</quote> in the
 <guilabel>To:</guilabel> or <guilabel>Cc:</guilabel> field. 
 </para>
 
@@ -597,7 +602,7 @@ second pull-down menu, and type <userinput>kde-user@kde.org</userinput> in the t
 <para>Skip down to the actions section. Select <guilabel>transfer</guilabel> from the first pull-down menu. A new
 pull-down menu containing a list of folders will appear. Select the folder that you want the
 filtered messages to be transferred to if they match the criteria you selected. For this example, 
-you would select "KDE-User" from the pull-down menu.</para>
+you would select <guilabel>KDE-User</guilabel> from the pull-down menu.</para>
 </listitem>
 </orderedlist>
 </para>
@@ -611,7 +616,7 @@ into play:</para>
 <para>Open up the <guilabel>Filter Rules</guilabel> window and select the filter you just created.</para>
 </listitem>
 <listitem>
-<para>Since you want to filter all messages that have "kde-user@kde.org" in the <guilabel>To:</guilabel>
+<para>Since you want to filter all messages that have <quote>kde-user@kde.org</quote> in the <guilabel>To:</guilabel>
 or <guilabel>Cc:</guilabel> field
 AND that are from Fred, select the <guilabel>and</guilabel> option from the pull down menu between the two criteria
 sections.</para>
@@ -699,7 +704,7 @@ the co-operation between &kmail; and pgp.</para>
 
 <para>Open the &kmail; <guilabel>Configure</guilabel> dialog and go to the <guilabel>Security</guilabel>
 settings page. Type your identity into the <guilabel>PGP user identity</guilabel>
-entry field. There are also two options:</para>
+entry field. There are also three options:</para>
 
 <para><guilabel>Keep passphrase in memory</guilabel>: When this option is off, then &kmail; will ask for
 your passphrase each time you sign a message (before sending) or decrypting a
@@ -890,7 +895,7 @@ will denote quoted text (you will probably want to use the default).</para>
 lets you toggle whether to automatically include your signature.</para>
 
 <para><guilabel>Use smart quoting</guilabel> will break long lines but will try to
-keep the correct quoting (e.g. the "&gt;" will always be at the start of the line).</para>
+keep the correct quoting (e.g. the <quote>&gt;</quote> will always be at the start of the line).</para>
 
 <para><guilabel>Automatically sign messages using PGP</guilabel> let you toggle whether
 to automatically sign your messages by default. Of course you can still deselect the
@@ -1978,7 +1983,7 @@ the following entry:
 <qandaentry>
  <question><para>Are there any known bugs in &kmail;?</para></question>
  <answer><para>You can find a list of submitted bugs at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.
- Not all these bugs are "real", some are based on misunderstanding
+ Not all these bugs are <quote>real</quote>, some are based on misunderstanding
  of features etc. Here's a real problem (only affects &kmail; before KDE 2.1): &kmail; will not delete some temporary files if it crashes. In this
  case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
  and delete all the files and folders there.</para></answer>
@@ -2017,7 +2022,7 @@ the following entry:
 	  <itemizedlist>
 	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
 	   <listitem><para>Install in <filename class="directory">/usr/bin</filename> the following shell script, calling it 
-		<filename>kmail</filename> and making sure it is owned by "root" and has 755 permissions (rwxr-xr-x):</para>
+		<filename>kmail</filename> and making sure it is owned by <quote>root</quote> and has 755 permissions (rwxr-xr-x):</para>
 <screen>
 #!/bin/bash
 LANGUAGE=en
@@ -2094,7 +2099,8 @@ way for the user to force &kmail; to use version 2.x in this case. There
 are patches for PGP6 and GnuPG support at <ulink url="http://kmail.kde.org">&kmail;'s
 homepage</ulink>. If the GnuPG patch is applied, and GnuPG <emphasis>and</emphasis> PGP are installed, &kmail;
 will prefer GnuPG. Here is no way to force &kmail; to use PGP.</para>
-<para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para></answer>
+<para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para>
+<para>&kmail; 1.2.x: Now you can choose which encryption tool to use if you have more than one.</para></answer>
 </qandaentry>
 
 <qandaentry>
