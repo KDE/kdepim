@@ -244,14 +244,14 @@ void icalssutil_get_parts(icalcomponent* c,
 	p  = icalcomponent_get_first_property(inner,ICAL_ATTENDEE_PROPERTY);
 
 	if(p!=0){
-
+	    char *attendee = 0;
 	    param = icalproperty_get_first_parameter(p,ICAL_PARTSTAT_PARAMETER);
 	    
 	    if(param != 0){
 		parts->reply_partstat = 
 		    icalparameter_get_partstat(param);
 	    }
-	 const char *attendee = icalproperty_get_attendee(p);
+	  attendee = icalproperty_get_attendee(p);
 	 if ( attendee )
 	 	parts->reply_attendee = strdup( attendee );
 	}
