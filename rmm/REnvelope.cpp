@@ -468,7 +468,7 @@ REnvelope::firstSender()
         return m;
     }
     
-    return from().at(0);
+    return *(from().at(0));
 }
 
     RMessageID

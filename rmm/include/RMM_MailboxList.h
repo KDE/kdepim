@@ -45,7 +45,7 @@ class RMailboxList : public RHeaderBody {
 #include "generated/RMailboxList_generated.h"
 
         int count();
-        RMailbox at(int);
+        RMailbox * at(int);
         void append(RMailbox);
         
     private:

@@ -180,11 +180,11 @@ RMailboxList::append(RMailbox m)
     assembled_ = false;
 }
 
-    RMailbox
+    RMailbox *
 RMailboxList::at(int idx)
 {
     parse();
-    return *(list_.at(idx));
+    return list_.at(idx);
 }
 
     int
