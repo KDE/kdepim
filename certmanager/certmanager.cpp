@@ -754,11 +754,13 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
 
 void CertManager::slotExportSecretKey() {
   Kleo::KeySelectionDialog dlg( i18n("Secret Key Export"),
-				i18n("Select the secret keys to export:"),
+				i18n("Select the secret key to export "
+				     "(<b>Warning: The PKCS#12 format is insecure. "
+				     "Exporting secret keys is discouraged</b>):"),
 				Kleo::CryptPlugFactory::instance()->smime(),
 				std::vector<GpgME::Key>(),
 				Kleo::KeySelectionDialog::SecretKeys,
-				true /* multiple */,
+				false /* no multiple selection */,
 				false /* no remember choice box */,
 				this, "secret key export key selection dialog" );
   //dlg.setHideInvalidKeys( false );
@@ -766,8 +768,7 @@ void CertManager::slotExportSecretKey() {
   if ( dlg.exec() != QDialog::Accepted )
     return;
 
-  kdDebug() << "selected " << dlg.fingerprints().size() << " keys" << endl;
-  startSecretKeyExport( dlg.fingerprints() );
+  startSecretKeyExport( dlg.fingerprint() );
 }
 
 static void showSecretKeyExportError( QWidget * parent, const GpgME::Error & err ) {
@@ -779,8 +780,8 @@ static void showSecretKeyExportError( QWidget * parent, const GpgME::Error & err
   KMessageBox::error( parent, msg, i18n("Secret Key Export Failed") );
 }
 
-void CertManager::startSecretKeyExport( const QStringList & fingerprints ) {
-  if ( fingerprints.empty() )
+void CertManager::startSecretKeyExport( const QString & fingerprint ) {
+  if ( fingerprint.isEmpty() )
     return;
 
   // PENDING(marc): let user choose between binary and PEM format?
@@ -790,11 +791,11 @@ void CertManager::startSecretKeyExport( const QStringList & fingerprints ) {
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
 	   SLOT(slotSecretKeyExportResult(const GpgME::Error&,const QByteArray&)) );
 
-  const GpgME::Error err = job->start( fingerprints );
+  const GpgME::Error err = job->start( fingerprint );
   if ( err )
     showSecretKeyExportError( this, err );
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Exporting secret keys"), this );
+    (void)new Kleo::ProgressDialog( job, i18n("Exporting secret key"), this );
 }
 
 void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QByteArray & data ) {

@@ -125,7 +125,7 @@ private:
     void updateImportActions( bool enable );
     void startCertificateImport( const QByteArray & keyData );
     void startImportCRL( const QString& fileName, bool isTempFile );
-    void startSecretKeyExport( const QStringList & fingerprints );
+    void startSecretKeyExport( const QString & fingerprint );
     void startCertificateExport( const QStringList & fingerprints );
 
 private:
