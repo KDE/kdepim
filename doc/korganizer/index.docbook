@@ -36,6 +36,15 @@
 <affiliation><address><email>juergen.nagel@student.fh-reutlingen.de</email></address></affiliation>
 </author>
 
+<para />
+
+<othercredit role="developer">
+<firstname>Reinhold</firstname>
+<surname>Kainhofer</surname>
+<affiliation><address><email>reinhold@kainhofer.com</email></address></affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
 <othercredit role="developer">
 <firstname>Cornelius</firstname>
 <surname>Schumacher</surname>
@@ -56,6 +65,9 @@
 <affiliation><address><email>lauri@kde.org</email></address></affiliation>
 <contrib>Reviewer</contrib>
 </othercredit>
+
+<para />
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -2852,11 +2864,13 @@ the next releases.</para>
 
 <para>&korganizer;</para>
 
-<para>Program copyright 2000, The &kde; Developers</para>
+<para>Program copyright 2000-2004, The &kde; Developers</para>
 
 <para>Contributors:</para>
 
 <itemizedlist>
+<listitem><para>Reinhold Kainhofer <email>reinhold@kainhofer.com</email></para>
+</listitem>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
 <listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
@@ -2873,6 +2887,10 @@ the next releases.</para>
 
 <para>&korganizer; homepage is at <ulink
 url="http://korganizer.kde.org">http://korganizer.kde.org</ulink></para>
+
+<para>If you discover bugs or see room for improvement in &korganizer; please
+visit <ulink url="http://korganizer.kde.org/contact/bugswishes.html">
+http://korganizer.kde.org/contact/bugswishes.html</ulink>.</para>
 
 &underFDL;
 &underGPL;
@@ -2922,50 +2940,6 @@ url="http://korganizer.kde.org">http://korganizer.kde.org</ulink>
 </para>
 
 </sect1>
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-<para>If &korganizer; is not installed and if you are the administrator
-of your system, your best bet is to use a precompiled binary
-file. </para>
-
-<itemizedlist>
-
-<listitem><para>If your system understands rpm binary package format,
-you should get a file <filename>kdepim-2.2.i386.rpm</filename> or
-similar. The correct installation command is: <userinput><command>rpm</command>
-<option>-i</option> <replaceable>kdepim-2.2.i386.rpm</replaceable></userinput>,
- and the
-correct upgrade command is: <userinput><command>rpm</command>
- <option>-U</option>
-<replaceable>kdepim2.i386.rpm</replaceable></userinput></para></listitem>
-
-<listitem><para>If your system uses different binary package format, you
-need to read the instructions that came with your
-system.</para></listitem>
-
-<listitem><para>If you cannot obtain precompiled binary package, you
-have to compile &korganizer; yourself from a source file.</para>
-
-&install.compile.documentation;
-
-</listitem>
-
-</itemizedlist>
-
-</sect1>
-
-<sect1 id="groupscheduling-setup">
-<title>Setting up Groupscheduling</title>
-<para>To make groupscheduling work with &korganizer; you need to apply a filter to
-your mail-client. If you use <application>kmail</application> you have to make 
-a filter, that <emphasis>pipes</emphasis> every email through a script called
-<emphasis>korganizerIn</emphasis>, which you should find in the same folder,
-as the korganizer binary is.
-</para>
-</sect1>
-
 
 </appendix>
 
