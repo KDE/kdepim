@@ -1,10 +1,16 @@
 changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets
+- basic PGP/GnuPG support
+- full GNKSA compliance
 - Followup and reply at same time now possible
 - selection of multiple articles/groups in the listview
 - the moderation status of newsgroups is detected and displayed
-- rot13 decoding
+- rot13 de-/encoding
+- server specific identities
+- the article line count can now be displayed in the listview
 - improved keyboard handling in the configuration dialog
+- selection dialogs for sort column (F7) and filter (F6) that
+  can be reached with a keyboard shortcut
 - the interpretation of text format tags can now be disabled
 - support for other webbrowsers (Mozilla, Opera, user-defined)
 - added a context menu for the article pane
@@ -13,8 +19,8 @@ changes between 0.3.3 and 0.4
   + paste as quotation
   + add/remove quotation
   + box quote support
-  + rot13
   + status bar
+  + word wrap can now be disabled
   + it's now possible to get the original text if
     the automatic rewrap has gone wrong
   + the user can determine which part of the original
@@ -25,6 +31,7 @@ changes between 0.3.3 and 0.4
   but they have to be edited in the composer again
   before the are sent.
 - '>' instead of '> ' as quote prefix for quote levels >= 2
+- numerous bugfixes
 - code cleanups
 
 changes between 0.3.2 and 0.3.3
