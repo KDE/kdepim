@@ -73,7 +73,9 @@ protected:
 	QCheckBox* fSecret;
 	QCheckBox* fArchived;
 	QWidget* fRecordData;
+#ifdef USE_KHEXEDIT
 	KHE::BytesEditInterface*fRecordDataIf;
+#endif
 	
 protected:
 	QGridLayout* DBRecordEditorBaseLayout;

@@ -10,7 +10,9 @@
 #include <kdeversion.h>
 #endif
 
-#if KDE_VERSION < 0x30110
+#if KDE_IS_VERSION(3,1,90)
+#include <ktimewidget.h>
+#else
 #warning "Workaround for KTimeWidget in KDE 3.1"
 class KTimeWidget : public QWidget
 {

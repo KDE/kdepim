@@ -33,7 +33,7 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 #include <kdatewidget.h>
-#if KDE_VERSION > 0x30109
+#if KDE_IS_VERSION(3,1,90)
 #include <ktimewidget.h>
 #endif
 #include <kmessagebox.h>
