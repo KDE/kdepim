@@ -86,7 +86,11 @@ class Incidence : public IncidenceBase
     ~Incidence();
 
     /**
-      Accept IncidenceVisitor. This function has to be overridden by all child classes.
+      Accept IncidenceVisitor. A class taking part in the visitor mechanism has to
+      provide this implementation:
+      <pre>
+        bool accept(Visitor &v) { return v.visit(this); }
+      </pre>
     */
     virtual bool accept(Visitor &) { return false; }
 
