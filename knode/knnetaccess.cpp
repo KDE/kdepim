@@ -222,7 +222,7 @@ void KNNetAccess::startJobNntp()
   }
   
   mNNTPProgressItem = ProgressManager::createProgressItem( 
-      0, "NNTP", i18n("Knode NNTP"), QString::null, true, false );
+      0, "NNTP", i18n("KNode NNTP"), QString::null, true, false );
   connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelNNTPJobs()));
 
   currentNntpJob = nntpJobQueue.take(0);
