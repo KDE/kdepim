@@ -1,31 +1,59 @@
+* Note: Lines starting with a # are my comments - Cornelius
+
 Misc:
 =====
 
 - Configuration Merge
-  Idea: The KOffice way of life: Offer a method that adds a given wiget of a predefined type as page
-  in a KDialogBase or offer a pointer to a KDialogBase -> requires a kaplan part or an external lib per part
+  Idea: The KOffice way of life: Offer a method that adds a given wiget of a
+  predefined type as page in a KDialogBase or offer a pointer to a KDialogBase
+  -> requires a kaplan part or an external lib per part
 
 - Merged Foldertree View
-  Idea: Let the part send a description of their folders and reaction to calls as XML, similar to XMLGUI
+  Idea: Let the part send a description of their folders and reaction to calls
+  as XML, similar to XMLGUI
+
+# Is a folder tree really the right tool to represent events, todos or contacts?
 
 - Toolbar Items
-  The KParts Technology only provides actions for the current part. It might be desireable to have common
-  actions that are always available.
+  The KParts Technology only provides actions for the current part. It might be
+  desireable to have common actions that are always available.
+
+# Certainly. Actions like "New Mail", "New Contact", "New Event" should be
+# available independently of a selected part.
 
 - Status Bar
   We need a more sophisticated handling (progressbar, etc)
+
+# - Kaplan plugin unification
+# Currentlly all Kaplan plugins look quite similar. It would be nice, if we
+# could provide infratructure to reduce duplicated code as far as possible.
   
 Communication/Interaction:
 ==========================
 
-- Invoking parts when they are needed for the first time takes too long, starting all takes too long on startup
+- Invoking parts when they are needed for the first time takes too long,
+  starting all takes too long on startup
   Idea: Mark complex parts as basic parts that get loaded anyway
 
-- DCOP is too slow, internal communication should be handled via a dedicated interface, communication with
-  external applications (i.e. knotes) should be done via wrapper parts that communicate with their respective 
-  IPC method to their application using the native protocol (DCOP, Corba, etc).
+# parts could be loaded in the background based on usage patterns. Kaplan could
+# remeber which parts were used at the last session and load them in the
+# background after loading the initial part to be shown at startup.
 
-- Security: If we use the kparts (ktrader) approach to find a parts by looking for an application
-            with the correct mime type this might raise security problems. (Martin's concern)
+- DCOP is too slow, internal communication should be handled via a dedicated
+  interface, communication with external applications (i.e. knotes) should be
+  done via wrapper parts that communicate with their respective IPC method to
+  their application using the native protocol (DCOP, Corba, etc).
 
+# Are you sure that DCOP is too slow for in-process communications? I thought it
+# would handle this special case efficiently.
+#
+# Communication with external applications is something which doesn't fit too
+# well with the 'integrated' approach of Kaplan. Is this really necessary?
 
+- Security: If we use the kparts (ktrader) approach to find a parts by looking
+  for an application with the correct mime type this might raise security
+  problems. (Martin's concern)
+
+# Looking up kaplan parts isn't based on mime types but on services of type
+# "Kaplan/Plugin". This is just as save as starting a program statically linking
+# its parts. I really don't see any security concerns here.
