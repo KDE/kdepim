@@ -19,6 +19,6 @@ EXTRA_DIST = printingwizard_base.ui \
 	detailledstyle.cpp detailledstyle.h \
 	mikesstyle.cpp mikesstyle.h
 
-preview_DATA = detailed-style.png
+preview_DATA = detailed-style.png mike-style.png
 
 previewdir = $(kde_datadir)/kaddressbook/printing

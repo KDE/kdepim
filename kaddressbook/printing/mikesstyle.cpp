@@ -39,6 +39,7 @@ namespace KABPrinting
     MikesStyle::MikesStyle(PrintingWizard* parent, const char* name)
         : PrintStyle(parent, name)
     {
+      setPreview("mike-style.png");
     }
 
     MikesStyle::~MikesStyle()
