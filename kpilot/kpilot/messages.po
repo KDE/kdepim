@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-07-26 01:01+0200\n"
+"POT-Creation-Date: 2000-07-27 01:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,269 +14,273 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 
-#: kpilot.cc:212
+#: kpilot.cc:215
 msgid "Welcome to KPilot"
 msgstr ""
 
-#: kpilot.cc:238
+#: kpilot.cc:241
 msgid "Hot-Sync"
 msgstr ""
 
-#: kpilot.cc:249
+#: kpilot.cc:252
 msgid "Full Backup"
 msgstr ""
 
-#: kpilot.cc:264
+#: kpilot.cc:267
 msgid "Pilot Application"
 msgstr ""
 
-#: kpilot.cc:339
+#: kpilot.cc:342
 msgid "Allocating PilotLink failed."
 msgstr ""
 
-#: kpilot.cc:340 kpilot.cc:389
+#: kpilot.cc:343 kpilot.cc:392
 msgid "Cannot create link to Daemon"
 msgstr ""
 
-#: kpilot.cc:388
+#: kpilot.cc:391
 msgid "Allocating fPilotCommandSocket failed."
 msgstr ""
 
-#: kpilot.cc:426
+#: kpilot.cc:429
 msgid "Starting Sync Daemon. Please Wait."
 msgstr ""
 
-#: kpilot.cc:486
+#: kpilot.cc:489
 msgid "Cannot start KPilot Daemon. Check settings and restart KPilot manually."
 msgstr ""
 
-#: kpilot.cc:489
+#: kpilot.cc:492
 msgid "Cannot connect to Daemon"
 msgstr ""
 
-#: kpilot.cc:590
+#: kpilot.cc:593
 msgid "Hot-Sync in progress..."
 msgstr ""
 
-#: kpilot.cc:599 kpilot.cc:877
+#: kpilot.cc:602 kpilot.cc:880
 msgid "Hot-Sync complete."
 msgstr ""
 
-#: kpilot.cc:618
+#: kpilot.cc:621
 msgid "Backing up pilot. Please press the hot-sync button."
 msgstr ""
 
-#: kpilot.cc:629
+#: kpilot.cc:632
 msgid "Restoring pilot. Please press the hot-sync button."
 msgstr ""
 
-#: kpilot.cc:640
+#: kpilot.cc:643
 msgid "Hot-Syncing.  Please press the hot-sync button."
 msgstr ""
 
-#: kpilot.cc:674
+#: kpilot.cc:677
 msgid "&Settings"
 msgstr ""
 
-#: kpilot.cc:676
+#: kpilot.cc:679
 msgid "&Backup"
 msgstr ""
 
-#: kpilot.cc:677
+#: kpilot.cc:680
 msgid "&Restore"
 msgstr ""
 
-#: kpilot.cc:683
+#: kpilot.cc:686
 msgid "&External"
 msgstr ""
 
-#: kpilot.cc:690
+#: kpilot.cc:693
 msgid ""
 "\n"
 "\n"
 "Copyright (C) 1998-2000 Dan Pilone, Adriaan de Groot"
 msgstr ""
 
-#: kpilot.cc:691
+#: kpilot.cc:694
 msgid ""
 "\n"
 "\n"
 "Programming by:\n"
 msgstr ""
 
-#: kpilot.cc:696
+#: kpilot.cc:699
 msgid "&Conduits"
 msgstr ""
 
-#: kpilot.cc:769
+#: kpilot.cc:772
 msgid ""
 "Hot-Sync Software for Unix\n"
 "By: Dan Pilone\n"
 "Email: pilone@slac.com"
 msgstr ""
 
-#: kpilot.cc:873
+#: kpilot.cc:876
 msgid "Updating display..."
 msgstr ""
 
-#: kpilot.cc:915
+#: kpilot.cc:918
 msgid "and many others."
 msgstr ""
 
-#: kpilotlink.cc:149
+#: kpilot.cc:979
+msgid "KPilot"
+msgstr ""
+
+#: kpilotlink.cc:163
 msgid "Sync Status"
 msgstr ""
 
-#: kpilotlink.cc:188
+#: kpilotlink.cc:202
 msgid "Cannot create socket for communicating with the Pilot"
 msgstr ""
 
-#: kpilotlink.cc:190 kpilotlink.cc:193 kpilotlink.cc:214 kpilotlink.cc:218
+#: kpilotlink.cc:204 kpilotlink.cc:207 kpilotlink.cc:228 kpilotlink.cc:232
 msgid "Error Initializing"
 msgstr ""
 
-#: kpilotlink.cc:194
+#: kpilotlink.cc:208
 msgid "Cannot create socket."
 msgstr ""
 
-#: kpilotlink.cc:212
+#: kpilotlink.cc:226
 msgid "Cannot connect socket to Pilot (check Pilot path)"
 msgstr ""
 
-#: kpilotlink.cc:219
+#: kpilotlink.cc:233
 msgid "Cannot connect to pilot (check pilot path)."
 msgstr ""
 
-#: kpilotlink.cc:487 kpilotlink.cc:492
+#: kpilotlink.cc:501 kpilotlink.cc:506
 msgid "Replace all data on pilot with local data?"
 msgstr ""
 
-#: kpilotlink.cc:488 kpilotlink.cc:491
+#: kpilotlink.cc:502 kpilotlink.cc:505
 msgid "Full Restore"
 msgstr ""
 
-#: kpilotlink.cc:597
+#: kpilotlink.cc:611
 msgid "Restoring databases to Palm Pilot. Slow sync required."
 msgstr ""
 
-#: kpilotlink.cc:710
+#: kpilotlink.cc:724
 msgid "Backing up Palm Pilot... Slow sync required."
 msgstr ""
 
-#: kpilotlink.cc:720
+#: kpilotlink.cc:734
 msgid ""
 "Exiting on cancel.\n"
 "<B>Not</B> all the data was backed up."
 msgstr ""
 
-#: kpilotlink.cc:722 kpilotlink.cc:724 kpilotlink.cc:747 kpilotlink.cc:1307
-#: kpilotlink.cc:1310
+#: kpilotlink.cc:736 kpilotlink.cc:738 kpilotlink.cc:761 kpilotlink.cc:1321
+#: kpilotlink.cc:1324
 msgid "Backup"
 msgstr ""
 
-#: kpilotlink.cc:725
+#: kpilotlink.cc:739
 msgid ""
 "Exiting on canel.\n"
 " All Data NOT backed up"
 msgstr ""
 
-#: kpilotlink.cc:744 kpilotlink.cc:748 kpilotlink.cc:1310
+#: kpilotlink.cc:758 kpilotlink.cc:762 kpilotlink.cc:1324
 msgid "Could not backup data!"
 msgstr ""
 
-#: kpilotlink.cc:745
+#: kpilotlink.cc:759
 msgid "Backup failed"
 msgstr ""
 
-#: kpilotlink.cc:803
+#: kpilotlink.cc:817
 msgid "Installing Files"
 msgstr ""
 
-#: kpilotlink.cc:804
+#: kpilotlink.cc:818
 msgid "Percentage of files installed:"
 msgstr ""
 
-#: kpilotlink.cc:806
+#: kpilotlink.cc:820
 msgid "Installing files..."
 msgstr ""
 
-#: kpilotlink.cc:849
+#: kpilotlink.cc:863
 msgid "Unable to open file &quot;%1&quot;!"
 msgstr ""
 
-#: kpilotlink.cc:853
+#: kpilotlink.cc:867
 msgid "Missing File"
 msgstr ""
 
-#: kpilotlink.cc:855
+#: kpilotlink.cc:869
 msgid "Unable to open file: "
 msgstr ""
 
-#: kpilotlink.cc:858 kpilotlink.cc:872
+#: kpilotlink.cc:872 kpilotlink.cc:886
 msgid "Missing file?"
 msgstr ""
 
-#: kpilotlink.cc:869
+#: kpilotlink.cc:883
 msgid "Cannot install file on Pilot"
 msgstr ""
 
-#: kpilotlink.cc:870
+#: kpilotlink.cc:884
 msgid "Install File Error"
 msgstr ""
 
-#: kpilotlink.cc:964
+#: kpilotlink.cc:978
 msgid "Waiting to Sync"
 msgstr ""
 
-#: kpilotlink.cc:965
+#: kpilotlink.cc:979
 msgid "Reading user information..."
 msgstr ""
 
-#: kpilotlink.cc:1007
+#: kpilotlink.cc:1021
 msgid "Hot-Sync started."
 msgstr ""
 
-#: kpilotlink.cc:1008
+#: kpilotlink.cc:1022
 msgid "Sync started with KPilot-v3.2\n"
 msgstr ""
 
-#: kpilotlink.cc:1204
+#: kpilotlink.cc:1218
 msgid "Could not backup data for database &quot;%1&quot;"
 msgstr ""
 
-#: kpilotlink.cc:1209 kpilotlink.cc:1212
+#: kpilotlink.cc:1223 kpilotlink.cc:1226
 msgid "Backup for Sync"
 msgstr ""
 
-#: kpilotlink.cc:1213
+#: kpilotlink.cc:1227
 msgid "Could not backup data for database "
 msgstr ""
 
-#: kpilotlink.cc:1298
+#: kpilotlink.cc:1312
 msgid "No previous copy.  Copying data from pilot..."
 msgstr ""
 
-#: kpilotlink.cc:1305
+#: kpilotlink.cc:1319
 msgid "Could not create local copy of database &quot;%1&quot;"
 msgstr ""
 
-#: kpilotlink.cc:1320
+#: kpilotlink.cc:1334
 msgid "Hot-Syncing Pilot. Looking for modified data..."
 msgstr ""
 
-#: kpilotlink.cc:1327
+#: kpilotlink.cc:1341
 msgid "Cannot find database &quot;%1&quot;"
 msgstr ""
 
-#: kpilotlink.cc:1331
+#: kpilotlink.cc:1345
 msgid "Error Syncing Database"
 msgstr ""
 
-#: kpilotlink.cc:1336
+#: kpilotlink.cc:1350
 msgid "Error syncing."
 msgstr ""
 
-#: kpilotlink.cc:1419
+#: kpilotlink.cc:1433
 msgid ""
 "The Palm Pilot thinks the user name is &quot;%1&quot;, however KPilot says "
 "you are &quot;%2&quot;.\n"
@@ -284,7 +288,7 @@ msgid ""
 "&quot;%1&quot;? (Otherwise I'll use &quot;%2&quot; for now)"
 msgstr ""
 
-#: kpilotlink.cc:1429
+#: kpilotlink.cc:1443
 msgid "Pilot User Changed"
 msgstr ""
 
@@ -445,11 +449,11 @@ msgstr ""
 msgid "KPilot Options"
 msgstr ""
 
-#: gsetupDialog.cc:280
+#: gsetupDialog.cc:275
 msgid "Cannot find the"
 msgstr ""
 
-#: gsetupDialog.cc:288
+#: gsetupDialog.cc:283
 msgid "Really use this file?"
 msgstr ""
 
