@@ -3,7 +3,7 @@
 SUBDIRS = pics import lib ui
 APPSDIR = $(kde_appsdir)/Internet
 KDE_CXXFLAGS = $(USE_RTTI)
-INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui $(all_includes)
+INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui -I$(top_srcdir)/rmm $(all_includes)
 
 #############################################################################
 # Compile as a library for kinit

@@ -16,7 +16,7 @@ abbrowser_SOURCES = abbrowser.cpp undo.cpp attributes.cpp selectfields.cpp viewo
 
 abbrowser_METASOURCES = AUTO
 
-abbrowser_LDFLAGS = -L$(top_srcdir)/kab2/lib $(all_libraries) $(KDE_RPATH)
+abbrowser_LDFLAGS = -L$(top_builddir)/kab2/lib $(all_libraries) $(KDE_RPATH)
 
 abbrowser_LDADD = -lkab2 -lkimgio $(LIB_KFILE)
 
