@@ -35,7 +35,7 @@
 #include <kspell.h>
 #include <ktempfile.h>
 #include <kpgpblock.h>
-
+#include <kprocess.h>
 #include <kqcstringsplitter.h>
 
 #include "kngroupselectdialog.h"
@@ -1096,10 +1096,10 @@ void KNComposer::slotSpellcheck()
 
   connect(s_pellChecker, SIGNAL(death()), this, SLOT(slotSpellFinished()));
   connect(s_pellChecker, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
-  connect(s_pellChecker, SIGNAL(misspelling (QString, QStringList *, unsigned)),
-          v_iew->e_dit, SLOT(misspelling (QString, QStringList *, unsigned)));
-  connect(s_pellChecker, SIGNAL(corrected (QString, QString, unsigned)),
-          v_iew->e_dit, SLOT(corrected (QString, QString, unsigned)));
+  connect(s_pellChecker, SIGNAL(misspelling (const QString &, const QStringList &, unsigned int)),
+          v_iew->e_dit, SLOT(misspelling (const QString &, const QStringList &, unsigned int)));
+  connect(s_pellChecker, SIGNAL(corrected (const QString &, const QString &, unsigned int)),
+          v_iew->e_dit, SLOT(corrected (const QString &, const QString &, unsigned int)));
 }
 
 
