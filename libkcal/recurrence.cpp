@@ -1242,6 +1242,7 @@ void Recurrence::setDailySub(short type, int freq, int duration)
   rYearNums.clear();
   if (type != rDaily)
     mFloats = false;     // sub-daily types can't be floating
+
   if (mParent) mParent->updated();
 }
 

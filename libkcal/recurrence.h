@@ -60,6 +60,8 @@ class Recurrence
     Recurrence(const Recurrence&, Incidence *parent);
     ~Recurrence();
 
+    Incidence *parent() { return mParent; }
+
     /** Return the start of the recurrence */
     QDateTime recurStart() const   { return mRecurStart; }
     /** Returns the number of exception dates for the recurrence */
