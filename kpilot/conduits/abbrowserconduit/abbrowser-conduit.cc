@@ -235,24 +235,28 @@ void AbbrowserConduit::_copy(PilotAddress &toPilotAddr,
     // don't do a reset since this could wipe out non copied info 
     //toPilotAddr.reset();
     toPilotAddr.setField(entryLastname, fromAbEntry.getLastName().latin1());
-    toPilotAddr.setField(entryFirstname, fromAbEntry.getFirstName().latin1());
+    QString firstAndMiddle = fromAbEntry.getFirstName();
+    if (!fromAbEntry.getMiddleName().isEmpty())
+	firstAndMiddle += " " + fromAbEntry.getMiddleName();
+    toPilotAddr.setField(entryFirstname, firstAndMiddle.latin1());
     toPilotAddr.setField(entryCompany, fromAbEntry.getCompany().latin1());
     toPilotAddr.setField(entryTitle, fromAbEntry.getJobTitle().latin1());
     toPilotAddr.setField(entryNote, fromAbEntry.getNote().latin1());
     
     // do email first, to ensure its gets stored
-    toPilotAddr.setField(PilotAddress::eEmail,
+    toPilotAddr.setPhoneField(PilotAddress::eEmail,
 			 fromAbEntry.getEmail().latin1());
-    toPilotAddr.setField(PilotAddress::eWork,
+    toPilotAddr.setPhoneField(PilotAddress::eWork,
 			 fromAbEntry.getBusinessPhone().latin1());
-    toPilotAddr.setField(PilotAddress::eHome,
+    toPilotAddr.setPhoneField(PilotAddress::eHome,
 			 fromAbEntry.getHomePhone().latin1());
-    toPilotAddr.setField(PilotAddress::eMobile,
+    toPilotAddr.setPhoneField(PilotAddress::eMobile,
 			 fromAbEntry.getMobilePhone().latin1());
-    toPilotAddr.setField(PilotAddress::eFax,
+    toPilotAddr.setPhoneField(PilotAddress::eFax,
 			 fromAbEntry.getBusinessFax().latin1());
-    toPilotAddr.setField(PilotAddress::ePager,
+    toPilotAddr.setPhoneField(PilotAddress::ePager,
 			 fromAbEntry.getPager().latin1());
+    toPilotAddr.setShownPhone(PilotAddress::eMobile);
     
     // in future, may want prefs that will map from abbrowser entries
     // to the pilot phone entries so they can do the above assignment and
@@ -574,9 +578,14 @@ void AbbrowserConduit::_handleConflict(PilotAddress *pilotAddress,
 	    }
 	else
 	    { 
-	    qDebug("AbbrowserConduit::_handleConflict => Both records exist but both were changed => conflict, unable to merge");
+	    qDebug("AbbrowserConduit::_handleConflict => Both records exist but both were changed => conflict, unable to merge; keeping both");
 	    showPilotAddress(*pilotAddress);
 	    showContactEntry(*abEntry);
+	    // in future, should see what the config wants to do for
+	    // deconfliction; for now will just keep both
+	    if (getMode() != BaseConduit::Backup)
+		_addToPalm(*abEntry);
+	    _addToAbbrowser(*pilotAddress);
 	    }
 	}
     else if (pilotAddress)
@@ -648,12 +657,14 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
 bool AbbrowserConduit::_savePilotAddress(PilotAddress &address,
 					 ContactEntry &abEntry)
     {
-    qDebug("AbbrowserConduit::_savePilotAddress");
+    qDebug("AbbrowserConduit::_savePilotAddress id = %d", address.id());
 
     PilotRecord *pilotRec = address.pack();
     recordid_t pilotId = writeRecord(pilotRec);
     delete pilotRec;
-    address.setID(pilotId);
+    // pilotId == 0 if using local db, so don't overwrite the valid id
+    if (pilotId != 0)
+	address.setID(pilotId);
     
     recordid_t abId = 0;
     if (abEntry.getCustomField("KPILOT_ID") != QString::null)
@@ -930,14 +941,19 @@ void AbbrowserConduit::doSync()
 	    //     else // not been deleted, so must be new
 	    //        add record to abbrowser
 
-	    // assume that it was deleted from the abbrowser since a backup
-	    // should have been done before the first sync; if the pilot
-	    // address was modified, then query the user what to do?
+	    // if pilotAddress id == 0, then probably syncing locally
+	    // and the pilotAddress has already been added
+	    if (pilotAddress.id() != 0)
+		{
+		// assume that it was deleted from the abbrowser since a backup
+		// should have been done before the first sync; if the pilot
+		// address was modified, then query the user what to do?
 
-	    if (pilotAddress.isModified())
-		_handleConflict(&pilotAddress, NULL, abKey);
-	    else
-		_removePilotAddress(pilotAddress);
+		if (pilotAddress.isModified())
+		    _handleConflict(&pilotAddress, NULL, abKey);
+		else
+		    _removePilotAddress(pilotAddress);
+		}
 	    }
 	else 
 	    {
@@ -965,10 +981,14 @@ void AbbrowserConduit::doSync()
 		    }
 		else if (abEntry->isModified())
 		    {
+		    qDebug("AbbrowserConduit::doSync abEntry is modified but pilot wasn't; abEntry => ");
+		    showContactEntry(*abEntry);
 		    // update pilot
 		    _copy(pilotAddress, *abEntry);
-		    if (_savePilotAddress( pilotAddress, *abEntry ))
-			_saveAbEntry(*abEntry, abKey);
+		    _savePilotAddress( pilotAddress, *abEntry );
+		    // set modified to false and save abEntry
+		    abEntry->setModified(false);
+		    _saveAbEntry(*abEntry, abKey);
 		    }
 	    // else not modified at either end, leave alone
 	    }
