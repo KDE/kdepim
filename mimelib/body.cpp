@@ -235,7 +235,7 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
             && pos+blen+3 < endPos
             && buf[pos+3] == '-'
             && strncmp(&buf[pos+4], mBoundary.data(), blen) == 0
-	    && isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 3, buf + endPos ) ) {
+	    && isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 4, buf + endPos ) ) {
 
             *aBoundaryStart = pos;
             pos += blen + 4;
