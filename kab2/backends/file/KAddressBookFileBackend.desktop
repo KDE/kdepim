@@ -1,4 +1,18 @@
 [Desktop Entry]
 Name=KAddressBookFileBackend
+Name[af]=K-ADRESBOEK-LêER-AGTERKANT
+Name[az]=K Ünvan Dəftəri
+Name[da]=KAddresseBogFilBagende
+Name[de]=KAdressbuch-Datei
+Name[eo]=Modulo por Adresarodosieroj
+Name[es]=Terminal de archivo de KAddressBook
+Name[fr]=Module fichier du carnet d'adresses
+Name[ja]=アドレス帳 ファイルバックエンド
+Name[nl]=KAdressenboek Bestandsbackend
+Name[pl]=Interfejs książki adresowej z pliku
+Name[pt_BR]=LivroDeEndereçosBackendFicheiros
+Name[pt]=LivroDeEndereçosBackendFicheiros
+Name[sv]=Kadressbokfilbaksida
+Name[tr]=K Adress Defteri
 X-KDE-Library=libkabbackend_file
 
