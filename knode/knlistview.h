@@ -19,12 +19,12 @@
 
 #include <qbitarray.h>
 
-#include <kfoldertree.h>
+#include <klistview.h>
 
 class KNListView;
 class QPainter;
 
-class KNLVItemBase : public KFolderTreeItem  {
+class KNLVItemBase : public KListViewItem  {
 
   public:
   /** restricted to KNListView to prevent that the
@@ -45,10 +45,8 @@ class KNLVItemBase : public KFolderTreeItem  {
     // DND
     virtual QDragObject *dragObject()              { return 0; };
     virtual bool acceptDrag(QDropEvent* ) const    { return false; };
-
-    virtual int countUnreadRecursive();
+    
     virtual int countUnreadInThread()   { return 0; }
-
 
   protected:
     virtual bool greyOut()          { return false; }
@@ -64,7 +62,7 @@ class KNLVItemBase : public KFolderTreeItem  {
 };
 
 
-class KNListView : public KFolderTree  {
+class KNListView : public KListView  {
 
   Q_OBJECT
 
