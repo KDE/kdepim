@@ -37,6 +37,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kglobal.h>
 
 #include "pilotSerialDatabase.h"
 
@@ -81,8 +82,18 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	return dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0, (void *) buffer,
 		maxLen);
+#else
+	pi_buffer_t *buf = pi_buffer_new(maxLen);
+	int r = dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0 /* offset */, maxLen, buf);
+	if (r>=0)
+	{
+		memcpy(buffer, buf->data, KMAX(maxLen, r));
+	}
+	return r;
+#endif
 }
 
 // Writes the application block info.
