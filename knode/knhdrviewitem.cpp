@@ -52,6 +52,11 @@ QString KNHdrViewItem::key(int col, bool) const
   return text(col);
 }
 
+int KNHdrViewItem::compare(QListViewItem *i, int col, bool ascending) const
+{
+  return key(col, ascending).localeAwareCompare(i->key(col, ascending));
+}
+
 
 QDragObject* KNHdrViewItem::dragObject()
 {

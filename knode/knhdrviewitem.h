@@ -33,6 +33,7 @@ class KNHdrViewItem : public KNLVItemBase  {
     ~KNHdrViewItem();
 
     QString key(int, bool) const;
+    virtual int compare(QListViewItem *i, int col, bool ascending) const;
 
     // DND
     virtual QDragObject* dragObject();
