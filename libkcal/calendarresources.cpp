@@ -126,16 +126,26 @@ void CalendarResources::load()
     (*i1)->setTimeZoneId( timeZoneId() );
   }
 
+  QValueList<ResourceCalendar *> failed;
+
   // Open all active resources
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    (*it)->load();
+    if ( !(*it)->load() ) {
+      failed.append( *it );
+    }
     Incidence::List incidences = (*it)->rawIncidences();
     Incidence::List::Iterator incit;
     for ( incit = incidences.begin(); incit != incidences.end(); ++incit ) {
       (*incit)->registerObserver( this );
       notifyIncidenceAdded( *incit );
     }
+  }
+
+  QValueList<ResourceCalendar *>::ConstIterator it2;
+  for( it2 = failed.begin(); it2 != failed.end(); ++it2 ) {
+    (*it2)->setActive( false );
+    emit signalResourceModified( *it2 );
   }
 
   mOpen = true;
