@@ -123,7 +123,7 @@ void KNConvert::convert()
     if(!c->doConvert())
       errors++;
 
-  if(errors==0)
+  if(errors>0)
     r_esultLabel->setText(i18n(
 "<b>Some errors occured during the converison!</b>\
 <br>You should now view the log to find out what went wrong."));
