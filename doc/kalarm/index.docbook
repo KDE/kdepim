@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-02-24</date>
-<releaseinfo>0.09.02</releaseinfo>
+<date>2003-06-24</date>
+<releaseinfo>0.09.04</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -163,6 +163,16 @@ triggers on Monday and Wednesday every third week,
 or text by clicking on the title bar for the appropriate column.
 To reverse the sort order, click the column title bar again.</para>
 
+<para>You can optionally show the remaining time until each alarm is
+due, together with, or instead of, the alarm's scheduled time.
+To show or hide the alarm time column, select
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Alarm
+Times</guimenuitem></menuchoice>.
+To show or hide the time-to-alarm column, select
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Time To
+Alarms</guimenuitem></menuchoice>. At least one of these columns is
+always shown.</para>
+
 <para>Expired alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
 Alarms</guimenuitem></menuchoice>. To hide them again, repeat the
@@ -173,19 +183,72 @@ action.</para>
 <sect2>
 <title>Adding a new alarm</title>
 
-<para>To add a new alarm, select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>.
-This displays the alarm edit dialog as described below.</para>
+<para>To add a new alarm, do one of the following. This displays the
+alarm edit dialog as described below.</para>
 
-<para>Alternatively, to base your new alarm on an existing one,
-highlight the existing alarm in the list and select <menuchoice>
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>New</guimenuitem></menuchoice>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>New</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+
+<listitem>
+<para>Double click on empty space below the last entry in the alarm
+list.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on empty space below the
+last entry in the alarm list and choose
+<menuchoice><guimenuitem>New</guimenuitem></menuchoice> from the
+context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>Alternatively, you can create new alarms preconfigured from
+various sources:</para>
+
+<itemizedlist>
+<listitem>
+<para>To base your new alarm on an existing one, highlight the existing
+alarm in the list and select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
-This displays the alarm edit dialog already filled in with a copy of
+This opens the alarm edit dialog already filled in with a copy of
 the selected alarm's details.</para>
+</listitem>
 
+<listitem>
+<para>To create a new alarm which displays an existing email message,
+drag the email from &kmail; onto &kalarm;'s main window or system tray
+icon. This opens the alarm edit dialog with the entire email message
+(including sender, recipient, etc.) as the alarm text.</para>
+</listitem>
+
+<listitem>
+<para>Dragging any piece of text onto &kalarm;'s main window or system
+tray icon opens the alarm edit dialog and sets the alarm text.</para>
+</listitem>
+
+<listitem>
+<para>To create a file display alarm, drag a file URL onto &kalarm;'s
+main window or system tray icon. This opens the alarm edit dialog and
+sets the file name.</para>
+</listitem>
+
+<listitem>
 <para>You can automatically create birthday alarms for people in
 &kaddressbook; as described in <link linkend="birthdays">Importing
 birthdays from &kaddressbook;</link>.</para>
+</listitem>
+
+</itemizedlist>
 
 </sect2>
 
@@ -262,18 +325,20 @@ controls beside the checkbox.</para>
 </listitem>
 
 <listitem>
-<para>Select the background colour for the alarm message
-window.</para>
+<para>Select the background colour for the alarm message window.
+(The color selection list can be configured in the
+<link linkend="preferences">Preferences dialog</link>.) </para>
 </listitem>
 
 <listitem>
 <para>Use the <guibutton>Font &amp; Colour...</guibutton> button to
-select a font for the alarm message. In the <guilabel>Choose Alarm Font
-&amp; Colour</guilabel> dialog, check <guilabel>Use default
-font</guilabel> to display the message in whatever font is configured
-as the default at the time the message is displayed. (The default font
-can be set in the <link linkend="preferences">Preferences
-dialog</link>.) To choose a specific font for the message, uncheck
+select a font or background color for the alarm message. In the
+<guilabel>Choose Alarm Font &amp; Colour</guilabel> dialog, check
+<guilabel>Use default font</guilabel> to display the message in
+whatever font is configured as the default at the time the message is
+displayed. (The default font can be set in the
+<link linkend="preferences">Preferences dialog</link>.) To choose a
+specific font for the message, uncheck
 <guilabel>Use default font</guilabel>.</para>
 </listitem>
 </itemizedlist>
@@ -338,8 +403,8 @@ when the alarm is to be triggered. Check the <guilabel>Any
 time</guilabel> checkbox if you want to specify only a date for the
 alarm: in this case the alarm will be displayed at the first
 opportunity on or after the configured start-of-day time, on the
-specified date. (<link linkend="preferences">Configuring default
-options</link> describes how to set the start-of-day time.)</para>
+specified date. (<link linkend="preferences">Configuring
+&kalarm;</link> describes how to set the start-of-day time.)</para>
 </listitem>
 
 <listitem>
@@ -540,8 +605,8 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 &kalarm; in the system tray. If &kalarm; is running in
 <quote>continuous</quote> mode, the system tray icon is always
 displayed. These instructions apply only to <quote>on-demand</quote>
-mode. (See <link linkend="preferences">Configuring default
-options</link> for a description of run modes.)</para>
+mode. (See <link linkend="preferences">Configuring &kalarm;</link>
+for a description of run modes.)</para>
 
 <para>To display &kalarm; in the &kde; system tray, select <menuchoice>
 <guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
@@ -777,6 +842,12 @@ control and status indication of alarm monitoring. A normal &kalarm;
 icon indicates that alarms are being monitored, while a red cross
 through the icon indicates that alarms are not being monitored.</para>
 
+<para>If you hover the mouse cursor over the system tray icon, a
+summary of the first few message alarms due in the next 24 hours are
+displayed as a tooltip. You can switch this feature off, or configure
+the number of alarms to display and their format, in the
+<link linkend="preferences">Preferences dialog</link>.</para>
+
 <para><mousebutton>Left</mousebutton> click on the system tray icon to
 toggle between displaying and hiding the &kalarm; main window.</para>
 
@@ -803,10 +874,18 @@ for details.</para>
 </varlistentry>
 
 <varlistentry>
+<term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
+<listitem><para><action>Opens the alarm edit dialog to create a new alarm.</action></para>
+<para>The alarm edit dialog is described in
+<link linkend="edit-alarm">Modifying an existing alarm</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><menuchoice><guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice></term>
 <listitem><para><action>Displays the &kalarm; preferences dialog.</action></para>
 <para>The preferences dialog is described in
-<link linkend="preferences">Configuring default options</link>. It
+<link linkend="preferences">Configuring &kalarm;</link>. It
 includes options relating to the &kalarm; system tray icon.</para>
 </listitem>
 </varlistentry>
@@ -827,7 +906,7 @@ Service Manager</link> for details.</para>
 <listitem><para><action>Restores or minimises the main &kalarm; window.</action></para>
 <para>This option is only available if the run mode is
 <quote>continuous</quote>. (See
-<link linkend="preferences">Configuring default options</link> for a
+<link linkend="preferences">Configuring &kalarm;</link> for a
 description of run modes.)</para>
 </listitem>
 </varlistentry>
@@ -844,191 +923,6 @@ while not running</guilabel> in the Preferences dialog.</para>
 </listitem>
 </varlistentry>
 </variablelist>
-
-</sect1>
-
-<sect1 id="preferences">
-<title>Configuring default options</title>
-
-<para>To set default options for &kalarm;, select
-<menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
-This displays the configuration dialog. The
-<guilabel>General</guilabel> section lets you control &kalarm;'s
-overall behaviour:</para>
-
-<itemizedlist>
-<listitem><para><guilabel>Run Mode</guilabel> group box: These options
-control &kalarm;'s system tray icon, and also allow some control over
-&kalarm;'s use of system resources by specifying whether or not to run
-it continuously. If system performance is of concern, running it on
-demand without displaying the system tray icon may be desirable;
-running it continuously in the system tray uses more system resources
-but gives the benefits of displaying an alarm-enabled indication and
-making the application more accessible. Running &kalarm; on demand
-does not affect the execution of alarms, since it is the
-<application>alarm daemon</application> and not &kalarm; which
-monitors the alarm list and triggers alarms.</para>
-
-<itemizedlist>
-<listitem><para><guilabel>Run continuously in system tray</guilabel>:
-&kalarm; runs continuously and the system tray icon is always
-displayed while it is running. In this mode, closing the system tray
-icon closes all &kalarm; main windows, and if no message windows are
-visible, quits the application. The options available in this mode
-are:</para>
-
-<itemizedlist>
-<listitem><para><guilabel>Autostart at login</guilabel>: This starts
-&kalarm; at &kde; session login, ensuring that &kalarm; runs at all
-times unless you manually quit.</para>
-</listitem>
-<listitem><para><guilabel>Disable alarms while not running</guilabel>:
-Checking this option has the effect that alarms will be disabled
-whenever &kalarm;'s system tray icon is not visible.</para>
-
-<itemizedlist>
-<listitem><para><guilabel>Warn before quitting</guilabel>: When alarms
-are disabled while &kalarm; is not running, checking this option
-prompts you for confirmation if you attempt to terminate &kalarm; using
-the system tray icon's <menuchoice><guimenu>Quit</guimenu></menuchoice>
-option. This prevents accidental disabling of alarms. For safety, this
-option is automatically re-enabled by default whenever you change run
-mode.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</itemizedlist>
-
-<para>In this mode, if no &kde; system tray exists, &kalarm; runs
-continuously in the background and alarms are always enabled.</para>
-</listitem>
-
-<listitem><para><guilabel>Run only on demand</guilabel>: &kalarm;
-is run only when an alarm is triggered, if you run it manually, or
-while its system tray icon is displayed. In this mode the system tray
-icon can still be displayed, but closing the system tray icon has no
-effect on any &kalarm; windows.</para>
-
-<itemizedlist>
-<listitem><para><guilabel>Autostart system tray icon at
-login</guilabel>: This displays &kalarm;'s system tray icon at login.
-&kalarm; will run until the system tray icon is closed.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem><para><guilabel>System tray update interval</guilabel>: Set
-the frequency at which the &kalarm; system tray icon is updated to
-reflect whether alarms are currently being monitored. This involves
-checking whether the <application>alarm daemon</application> is
-running.</para>
-</listitem>
-
-<listitem><para><guilabel>Start of day for date-only
-alarms</guilabel>: Set the start-of-day time for the purposes of
-triggering date-only alarms, &ie; ones for which the <guilabel>Any
-time</guilabel> option was selected. On the date when they are due,
-such alarms will be output at the earliest opportunity during the
-24 hours starting from the start-of-day time.</para>
-</listitem>
-
-<listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
-whether you should be prompted for confirmation each time you delete
-an alarm.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Email Alarms</guilabel> group box: These options
-control the sending and addressing of email alarms.</para>
-
-<itemizedlist>
-<listitem>
-<para><guilabel>Email client</guilabel>: Specify the email
-client to be used to send email alarms:</para>
-
-<itemizedlist>
-<listitem><para><guilabel>KMail</guilabel>: When an email alarm is
-triggered, a &kmail; composer window is displayed filled in with the
-email details. You can then choose to send it if and when you
-wish.</para>
-</listitem>
-
-<listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
-triggered, the email is sent automatically using
-<application>sendmail</application>. This option will only work if
-your system is configured to use <application>sendmail</application>
-or <application>mail</application>.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
-<para><guilabel>Use email address from Control Center</guilabel>:
-Check this option to use the email address which is configured in the
-&kde; Control Centre for sending blind copies of email alarms to
-yourself when the <guilabel>Copy email to self</guilabel> option is
-selected. To specify a different email address, uncheck it and enter
-the address in the <guilabel>Email address</guilabel> edit box
-below.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem><para><guilabel>Expired Alarms</guilabel> group box: These
-options control the storage of expired alarms.</para>
-<itemizedlist>
-<listitem><para><guilabel>Keep alarms after expiry</guilabel>: Check
-this option to store expired alarms. Uncheck it to keep no record of
-alarms once they have expired.</para>
-</listitem>
-
-<listitem><para><guilabel>Discard expired alarms after</guilabel>:
-Set the number of days to store expired alarms after their last
-activation.</para>
-</listitem>
-
-<listitem><para><guibutton>Clear expired alarms</guibutton>: This
-button discards all currently stored  expired alarms. This has no
-effect on alarms which subsequently expire; they will continue to be
-stored according to the selected options.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</itemizedlist>
-
-<para>The <guilabel>Alarm Defaults</guilabel> and
-<guilabel>Appearance</guilabel> sections let you choose default values
-for the options in the alarm edit dialog, and other appearance
-settings:</para>
-<itemizedlist>
-
-<listitem><para>Set the default font and background colour to use for
-alarm message display.</para>
-</listitem>
-
-<listitem><para>Set the text colour used to show expired alarms in the
-alarm list.</para>
-</listitem>
-
-<listitem><para>Set the default states for the <guilabel>Cancel if
-late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
-<guilabel>Copy email to self</guilabel> checkboxes.</para>
-</listitem>
-
-<listitem><para>Set beep as the default for the
-<guilabel>Sound</guilabel> option.</para>
-</listitem>
-
-<listitem><para>Set the default recurrence type.</para>
-</listitem>
-
-<listitem><para>Set the default reminder period units.</para>
-</listitem>
-
-</itemizedlist>
 
 </sect1>
 
@@ -1473,6 +1367,297 @@ Centre.</para>
 
 </sect2>
 </sect1>
+</chapter>
+
+<chapter id="preferences">
+<title>Configuring &kalarm;</title>
+
+<para>To configure &kalarm;'s operation, select
+<menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
+This displays the configuration dialog. The
+<guilabel>General</guilabel> section lets you control &kalarm;'s
+overall behaviour:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Run Mode</guilabel> group box: These options
+control &kalarm;'s system tray icon, and also allow some control over
+&kalarm;'s use of system resources by specifying whether or not to run
+it continuously. If system performance is of concern, running it on
+demand without displaying the system tray icon may be desirable;
+running it continuously in the system tray uses more system resources
+but gives the benefits of displaying an alarm-enabled indication and
+making the application more accessible. Running &kalarm; on demand
+does not affect the execution of alarms, since it is the
+<application>alarm daemon</application> and not &kalarm; which
+monitors the alarm list and triggers alarms.</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Run continuously in system tray</guilabel>:
+&kalarm; runs continuously and the system tray icon is always
+displayed while it is running. In this mode, closing the system tray
+icon closes all &kalarm; main windows, and if no message windows are
+visible, quits the application. The options available in this mode
+are:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Autostart at login</guilabel>: This starts
+&kalarm; at &kde; session login, ensuring that &kalarm; runs at all
+times unless you manually quit.</para>
+</listitem>
+<listitem><para><guilabel>Disable alarms while not running</guilabel>:
+Selecting this option has the effect that alarms will be disabled
+whenever &kalarm;'s system tray icon is not visible.</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Warn before quitting</guilabel>: When alarms
+are disabled while &kalarm; is not running, selecting this option
+prompts you for confirmation if you attempt to terminate &kalarm; using
+the system tray icon's <menuchoice><guimenu>Quit</guimenu></menuchoice>
+option. This prevents accidental disabling of alarms. For safety, this
+option is automatically re-enabled by default whenever you change run
+mode.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<para>In this mode, if no &kde; system tray exists, &kalarm; runs
+continuously in the background and alarms are always enabled.</para>
+</listitem>
+
+<listitem><para><guilabel>Run only on demand</guilabel>: &kalarm;
+is run only when an alarm is triggered, if you run it manually, or
+while its system tray icon is displayed. In this mode the system tray
+icon can still be displayed, but closing the system tray icon has no
+effect on any &kalarm; windows.</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Autostart system tray icon at
+login</guilabel>: This displays &kalarm;'s system tray icon at login.
+&kalarm; will run until the system tray icon is closed.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem><para><guilabel>Start of day for date-only
+alarms</guilabel>: Set the start-of-day time for the purposes of
+triggering date-only alarms, &ie; ones for which the <guilabel>Any
+time</guilabel> option was selected. On the date when they are due,
+such alarms will be output at the earliest opportunity during the
+24 hours starting from the start-of-day time.</para>
+</listitem>
+
+<listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
+whether you should be prompted for confirmation each time you delete
+an alarm.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Email Alarms</guilabel> group box: These options
+control the sending and addressing of email alarms.</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Email client</guilabel>: Specify the email
+client to be used to send email alarms:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>KMail</guilabel>: When an email alarm is
+triggered, the email is added to &kmail;'s
+<filename>outbox</filename> folder, provided that &kmail; is running
+at the time. If it is not running, a &kmail; composer window is
+displayed filled in with the email details, to enable you to send the
+email manually.</para>
+</listitem>
+
+<listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
+triggered, the email is sent automatically using
+<application>sendmail</application>. This option will only work if
+your system is configured to use <application>sendmail</application>
+or <application>mail</application>.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para><guilabel>Use email address from Control Center</guilabel>:
+Select this option to use the email address which is configured in
+the &kde; Control Centre for sending blind copies of email alarms to
+yourself when the <guilabel>Copy email to self</guilabel> option is
+selected. To specify a different email address, deselect it and enter
+the address in the <guilabel>Email address</guilabel> edit box
+below.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Notify when remote emails are queued</guilabel>:
+Select this option to display a notification whenever an email alarm
+queues an email for sending to a remote system. This may be useful
+if, for example, you have a dial-up connection, so that you can
+ensure that you do whatever is needed to actually transmit
+the email.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem><para><guilabel>Expired Alarms</guilabel> group box: These
+options control the storage of expired alarms.</para>
+<itemizedlist>
+<listitem><para><guilabel>Keep alarms after expiry</guilabel>:
+Select this option to store expired alarms. Deselect it to keep no
+record of alarms once they have expired.</para>
+</listitem>
+
+<listitem><para><guilabel>Discard expired alarms after</guilabel>:
+Set the number of days to store expired alarms after their last
+activation.</para>
+</listitem>
+
+<listitem><para><guibutton>Clear expired alarms</guibutton>: This
+button discards all currently stored  expired alarms. This has no
+effect on alarms which subsequently expire; they will continue to be
+stored according to the selected options.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<para>The <guilabel>View</guilabel> section lets you control some
+aspects of &kalarm;'s appearance:</para>
+<itemizedlist>
+
+<listitem>
+<para><guilabel>Alarm List</guilabel> group box: These options control
+what information is initially shown in the alarm list, when &kalarm;
+starts up. (Once &kalarm; has started, use the <guimenu>View</guimenu>
+menu to change what is displayed.)</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Show alarm time</guilabel>: Select this option to show
+the date and time at which each alarm is next scheduled.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Show time until alarm</guilabel>: Select this option to
+show the length of time remaining before each alarm's next scheduled
+occurrence. The length of time is shown in days (if applicable), hours
+and minutes.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para><guilabel>System Tray Tooltip</guilabel> group box: These options
+control what information is shown in the tooltip which appears when the
+mouse cursor hovers over &kalarm;'s system tray icon.</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Show next 24 hours' alarms</guilabel>: When selected,
+a summary of the first few alarms due in the next 24 hours is
+displayed.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Maximum number of alarms to show</guilabel>: Deselect
+this option to display all of the next 24 hours' alarms. Select it to
+set the maximum number of alarms which will be displayed.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Show alarm time</guilabel>: Select this option to show
+the time at which each alarm is scheduled.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Show time until alarm</guilabel>: Select this option to
+show the length of time remaining before each alarm's next scheduled
+occurrence. The length of time is shown in hours and minutes.</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Prefix</guilabel>: Specify a symbol or text to show in
+front of the length of time until the alarm, to distinguish it from the
+time at which the alarm is scheduled.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem><para><guilabel>Show expired alarms</guilabel>: Select this
+option to initially show expired alarms in the alarm list, when
+&kalarm; starts up. (Once &kalarm; has started, use the
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
+Alarms</guimenuitem></menuchoice> menu option to change what is
+displayed.)</para>
+</listitem>
+
+<listitem><para><guilabel>System tray update interval</guilabel>: Set
+the frequency at which the &kalarm; system tray icon is updated to
+reflect whether alarms are currently being monitored. This involves
+checking whether the <application>alarm daemon</application> is
+running.</para>
+</listitem>
+</itemizedlist>
+
+<para>The <guilabel>Alarm Defaults</guilabel> section lets you choose
+default values for the options in the alarm edit dialog:</para>
+<itemizedlist>
+
+<listitem><para>Set the text colour used to show expired alarms in the
+alarm list.</para>
+</listitem>
+
+<listitem><para>Set the default states for the <guilabel>Cancel if
+late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
+<guilabel>Copy email to self</guilabel> checkboxes.</para>
+</listitem>
+
+<listitem><para>Set beep as the default for the
+<guilabel>Sound</guilabel> option.</para>
+</listitem>
+
+<listitem><para>Set the default recurrence type.</para>
+</listitem>
+
+<listitem><para>Set the default reminder period units.</para>
+</listitem>
+
+</itemizedlist>
+
+<para>The <guilabel>Appearance</guilabel> section lets you set the
+default appearance of alarm messages:</para>
+<itemizedlist>
+
+<listitem><para>Select the default font and background colour to use
+for alarm message display.</para>
+</listitem>
+
+<listitem><para>Edit the colour selection list which is displayed when
+you click on the background colour combo box:</para>
+<itemizedlist>
+
+<listitem><para><guilabel>New color</guilabel>: Displays a colour
+selection dialog which lets you choose a colour to add to the
+list.</para>
+</listitem>
+
+<listitem><para><guilabel>Remove color</guilabel>: Removes the colour
+currently displayed in the <guilabel>Background color</guilabel>
+combo box from the list. The Custom colour item cannot be removed from
+the list, and when it is displayed, this button is disabled.</para>
+</listitem>
+
+</itemizedlist>
+</listitem>
+
+</itemizedlist>
+
 </chapter>
 
 <chapter id="developers">
