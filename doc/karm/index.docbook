@@ -518,8 +518,8 @@ Bucciarelli<email>mark@hubcapconsulting.com</email></para></listitem>
 
 <para>Contributors (in alphabetical order)</para>
 <itemizedlist>
-<listitem><para>Allen Winter<email>winterz@verizon.net</email></para></listitem>
-<listitem><para>David Faure<email>faure@kde.org</email></para></listitem>
+<listitem><para>Allen Winter <email>winterz@verizon.net</email></para></listitem>
+<listitem><para>David Faure <email>faure@kde.org</email></para></listitem>
 <listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
 <listitem><para>Gioele Barabucci <email>gioele@gioelebarabucci.com</email></para></listitem>
 <listitem><para>Jan Schaumann <email>jschauma@netmeister.org</email></para></listitem>
@@ -527,7 +527,9 @@ Bucciarelli<email>mark@hubcapconsulting.com</email></para></listitem>
 <listitem><para>Kalle Dalheimer <email>kalle@kde.org</email></para></listitem>
 <listitem><para>Klar&auml;lvdalens Datakonsult AB</para></listitem>
 <listitem><para>Mark Bucciarelli <email>mark@hubcapconsulting.com</email></para></listitem>
+<listitem><para>Thorsten St&auml;rk <email>dev@staerk.de</email></para></listitem>
 <listitem><para>Tomas Pospisek <email>tpo_deb@sourcepole.ch</email></para></listitem>
+<listitem><para>Willi Richert <email>w.richert@cox.net</email></para></listitem>
 </itemizedlist>
 
 <para>&karm; was inspired by Harald Tveit Alvestrand's very useful
