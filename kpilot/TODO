@@ -8,30 +8,26 @@ for details on how an issue is resolved, since resolved issues are
 
 Essential
 =========
-+(1)  VCal conduit: Currently using the ResourceCalendar (standard
-    calendar) doesn't work for some (unknown) reason. Every sync
-    happens with the filename given in the setup dialog. Probably
-    very easy to fix.
 2)  Redesign the config dialog of kpilot (get rid of deprecated
     options, include conflict resolution, etc.)
 3)  Fix all conduits to use the new global options: conflict resolution,
     emergency sync, sync mode etc.
--(4)  VCal conduit: Fields not supported on the handheld are erased
-    in the calendar (e.g. categories). I need to get the Event
-    before I copy all fields over, and only overwrite the fields
-    from the handheld, so the others remain unchanged.
-	 RESOLUTION: Found out that this is not true any longer, and everything
-	 works just fine!
 4a) Config troubles: Start kpilotDaemon and then kpilot. Configure a conduit 
     in kpilot, then do a sync (which writes something to the  config, e.g. 
-	 run the docconduit). Now configure another conduit in kpilot. The config
-	 file will be changed again, but the changes from the sync are lost (i.e.
-	 after a sync, kpilot needs to reload the config).
-
+    run the docconduit). Now configure another conduit in kpilot. The config
+    file will be changed again, but the changes from the sync are lost (i.e.
+    after a sync, kpilot needs to reload the config).
+4b) Conduits should not use the backup databases, otherwise a backup run will 
+    screw up the sync. 
+4c) Need to find a better way to detect runs without a conduit, and switch to
+    full (or first) sync in that case to prevent data loss.
+4d) Need to find a good way to avoid a mess when implementing new features 
+    (e.g. after implementing the correct category sync, how do I ensure that
+	 no category settings are lost?)
+	 
 
 Important (hight priority)
 ============================
-+(5)  AvantGo conduit: fix the configure.in.in checks for libmal
 6)  ABook conduit: fix the first sync setting
 6a) The abook conduit currently only syncs one email address and one
     phone number of each type. I need to find a way to sync two email
@@ -39,6 +35,74 @@ Important (hight priority)
 7)  Check the first-time syncing behavior of all the conduits.
 8)  Find out what's the reason of the "Invalid unique ID" crashes in
     the calendar conduits (and the addresssbook conduit)
+12) ABook conduit: Check all fields for differences before asking
+    for conflict resolution. (i.e.. don't ask for conflict resolution
+    of single fields, just for the whole record)
+13) ABook conduit: custom field sync doesn't work with birthdate
+    (how do I convert a date to a string and back in an arbitrary
+    format???)
+15) Add force-first-time to the KNotes conduit.
+16) Remove the edit capabilities from the built-in viewers.
+17) Include a calendar viewer, or get rid of the internal viewers
+    altogether.
+18) VCal conduit: events going over midnight need to be split up
+    on the handheld
+19) GJJ: Replace newlines in TODO summaries (not allowed in libkabc)
+19a)When syncing, also backup the databases (if option is set)
+
+
+Medium (nice to have, but not essential)
+========================================
+20) GJJ: Check all debug output, what should be put in the log (i.e.
+    be visible to the user) and what is just debug output to track
+    down problems.
+21) GJJ: Hunt down and kill printfs. Hunt down bad i18n.
+26) ABook conduit: sync with preferred address (not home or work address)
+27) Update the conduit programming howto (some changes in the database
+    and record classes)
+29) Fix the NULL conduit's tooltip - OR - make it actually do what the
+    current tooltip says.
+31) GJJ: Extend all conduits to allow arbitrary URLs instead of local
+    files.
+32) JPilot conduit: fix the configure.in.in checks for gtk/glibc
+    (although the conduit isn't even remotely finished)
+32a)Find a replacement for the NULL conduit (skip databases when 
+    doing a backup)
+
+Unimportant (lowest priority)
+=============================
+33) JPilot conduit: Implement the conduit as an external GTK application,
+    that is embedded into kpilot using qxembed
+34) GJJ: Add tooltips to all controls in all conduit configure dialogs
+35) Do not store the RecordID with the vcalendar entry, but in the kpilot
+    config
+36) GJJ: Move the file install widget to an iconview.
+37) GJJ: Show the sync log as a KPassivePopup
+39) Make an application that just has a LogWidget and KPilot's dcop
+    interface (and registration!) so that you can follow the daemon's
+    log output without starting KPilot at all.
+40) Allow the todo conduit to use the manana database (see jpilot)
+41) Allow the memo conduit to use the pedit32 database (see jpilot)
+
+
+
+
+
+
+FINISHED TODO jobs
+==================  
+
++(1)  VCal conduit: Currently using the ResourceCalendar (standard
+    calendar) doesn't work for some (unknown) reason. Every sync
+    happens with the filename given in the setup dialog. Probably
+    very easy to fix.
++(4)  VCal conduit: Fields not supported on the handheld are erased
+    in the calendar (e.g. categories). I need to get the Event
+    before I copy all fields over, and only overwrite the fields
+    from the handheld, so the others remain unchanged.
+	 RESOLUTION: Found out that this is not true any longer, and everything
+	 works just fine!
++(5)  AvantGo conduit: fix the configure.in.in checks for libmal
 -(9)  GJJ: PalmDOC conduit: kpalmdoc is run as a modal dialog, not as
     a standalone dialog (e.g. create a link  on the desktop to
     kpalmdoc and start kpalmdoc from there. You can't access the
@@ -51,68 +115,25 @@ Important (hight priority)
     RESOLUTION: This is not possible in a QTextEdit in LogText mode.
     However, I got rid of the pseudoo-progressbar, so this i no longer
     needed.
-11) Merge between HEAD and BRANCH (again).
-12) ABook conduit: Check all fields for differences before asking
-    for conflict resolution. (i.e.. don't ask for conflict resolution
-    of single fields, just for the whole record)
-13) ABook conduit: custom field sync doesn't work with birthdate
-    (how do I convert a date to a string and back in an arbitrary
-    format???)
-14) ABook conduit: Fix categories sync
-15) Add force-first-time to the KNotes conduit.
-16) Remove the edit capabilities from the built-in viewers.
-17) Include a calendar viewer, or get rid of the internal viewers
-    altogether.
-18) VCal conduit: events going over midnight need to be split up
-    on the handheld
-19) GJJ: Replace newlines in TODO summaries (not allowed in libkabc)
-
-
-Medium (nice to have, but not essential)
-========================================
-20) GJJ: Check all debug output, what should be put in the log (i.e.
-    be visible to the user) and what is just debug output to track
-    down problems.
-21) GJJ: Hunt down and kill printfs. Hunt down bad i18n.
-22) Update README, TODO, NEWS, AUTHORS in HEAD.
++(11) Merge between HEAD and BRANCH (again).
++(14) ABook conduit: Fix categories sync
+    RESOLUTION: Fixed for the abook and the todo conduit
++(22) Update README, TODO, NEWS, AUTHORS in HEAD.
 +(23) GJJ: Move the conduit configuration dialog (for the umpteenth time)
     to a list of QCheckBoxes, like noatun's plain playlist or
     kdebugdialog
-24) PalmDOC conduit: choosing the bookmark type of the pdb->txt
++(24) PalmDOC conduit: choosing the bookmark type of the pdb->txt
     conversion is not yet implemented. Only create .bm file, if there
     are bookmarks in the text.
-25) ABook conduit: sync with multiple email addresses (space-separated
+-(25) ABook conduit: sync with multiple email addresses (space-separated
     list received from handheld)
-26) ABook conduit: sync with preferred address (not home or work address)
-27) Update the conduit programming howto (some changes in the database
-    and record classes)
-28) GJJ: The question asked when kpilot and the pilot's usernames don't
+		RESOLUTION: Duplicate of 6a)
++(28) GJJ: The question asked when kpilot and the pilot's usernames don't
     match isn't very intuitive. It should be changed to a yes/no/cancel
     with "Use KPilot name" "Use Pilot name" "Cancel". This is in
     interactiveSync.cc.
-29) Fix the NULL conduit's tooltip - OR - make it actually do what the
-    current tooltip says (resetSyncFlags() should be enough).
-30) GJJ: Create good icons for the kpalmdoc converter application.
-31) GJJ: Extend all conduits to allow arbitrary URLs instead of local
-    files.
-32) JPilot conduit: fix the configure.in.in checks for gtk/glibc
-    (although the conduit isn't even remotely finished)
-
-
-Unimportant (lowest priority)
-=============================
-33) JPilot conduit: Implement the conduit as an external GTK application,
-    that is embedded into kkpilot using qxembed
-34) GJJ: Add tooltips to all controls in all conduit configure dialogs
-35) Do not store the RecordID with the vcalendar entry, but in the kpilot
-    config
-36) GJJ: Move the file install widget to an iconview.
-37) GJJ: Show the sync log as a KPassivePopup
-38) Should interactiveSync and syncStack be moved to lib/ ?
-39) Make an application that just has a LogWidget and KPilot's dcop
-    interface (and registration!) so that you can follow the daemon's
-    log output without starting KPilot at all.
-
+-(30) GJJ: Create good icons for the kpalmdoc converter application.
++(38) Should interactiveSync and syncStack be moved to lib/ ?
 
 
 
@@ -120,7 +141,6 @@ Unimportant (lowest priority)
 
 Specific JOBS
 =============
-
 
 ***
 *** PilotLocalDatabase fixups
