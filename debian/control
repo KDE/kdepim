@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: automake, libtool, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, docbook-stylesheets
+Build-Depends: automake, libtool, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlibs-dev | xlib6g-dev, jade, sgml-base, docbook, gettext, bison | byacc, docbook-stylesheets
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>

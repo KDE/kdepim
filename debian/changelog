@@ -1,3 +1,12 @@
+kdepim (2.0-final-6) unstable; urgency=low
+ 
+  * Minor upstream fixes
+  * Adding in lintian overrides
+  * Fixing build-depends for non x4 ports
+  * Fixing up documentation a bit more
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 21 Nov 2000 02:49:00 -0700
+
 kdepim (2.0-final-5) unstable; urgency=low
  
   * Removing /etc/kde2/korganizerrc - upstream workaround fix (Closes: #77256, #75555)
