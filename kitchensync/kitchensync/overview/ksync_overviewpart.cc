@@ -24,6 +24,9 @@ namespace {
         str << no.code() << " " << no.text();
         return str;
     }
+    kndbgstream operator <<( kndbgstream str, const Notify& no ) {
+        return str;
+    }
 }
 
 OverviewPart::OverviewPart(QWidget *parent, const char *name,
