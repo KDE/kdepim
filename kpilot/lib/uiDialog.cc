@@ -42,6 +42,7 @@
 #include <kglobal.h>
 #include <kinstance.h>
 #include <kiconloader.h>
+#include <kactivelabel.h>
 
 #include "uiDialog.moc"
 
@@ -75,10 +76,10 @@ UIDialog::~UIDialog()
 
 /* static */ QPushButton *UIDialog::addAboutPage(QTabWidget *tw,
 	KAboutData *ad,
-	bool aboutbutton)
+	bool /* aboutbutton */)
 {
 	FUNCTIONSETUP;
-	
+
 	Q_ASSERT(tw);
 
 	QWidget *w = new QWidget(tw, "aboutpage");
@@ -121,27 +122,6 @@ UIDialog::~UIDialog()
 	}
 
 	text = new QLabel(w);
-	text->setPixmap(applicationIcon);
-	text->adjustSize();
-	grid->addWidget(text, 0, 1);
-
-
-	text = new QLabel(w);
-	s = QString::null;
-	s += p->programName();
-	s += ' ';
-	s += p->version();
-	s += '\n';
-	s += p->copyrightStatement();
-	text->setText(s);
-	grid->addMultiCellWidget(text, 0, 0, 2, 3);
-
-	text = new QLabel(w);
-	s = CSL1("<qt>") + p->shortDescription() + CSL1("</qt>");
-	text->setText(s);
-	grid->addMultiCellWidget(text, 1, 1, 2, 3);
-
-	text = new QLabel(w);
 	// Experiment with a long non-<qt> string. Use that to find
 	// sensible widths for the columns.
 	//
@@ -155,83 +135,104 @@ UIDialog::~UIDialog()
 		<< text->size().height()
 		<< endl;
 #endif
-	grid->addColSpacing(2,SPACING+text->size().width()/2);
-	grid->addColSpacing(3,SPACING+text->size().width()/2);
+	int linewidth = text->size().width();
+	int lineheight = text->size().height();
 
-	s = "<qt>";
+	// Use the label to display the applciation icon
+	text->setText(QString::null);
+	text->setPixmap(applicationIcon);
+	text->adjustSize();
+	grid->addWidget(text, 0, 1);
+
+
+	KActiveLabel *linktext = new KActiveLabel(w);
+	grid->addRowSpacing(1,QMAX(100,6*lineheight));
+	grid->addRowSpacing(2,QMAX(100,6*lineheight));
+	grid->addColSpacing(2,SPACING+linewidth/2);
+	grid->addColSpacing(3,SPACING+linewidth/2);
+	grid->setRowStretch(1,50);
+	grid->setRowStretch(2,50);
+	grid->setColStretch(2,50);
+	grid->setColStretch(3,50);
+	linktext->setMinimumSize(linewidth,QMAX(260,60+12*lineheight));
+	linktext->setFixedHeight(QMAX(260,60+12*lineheight));
+	linktext->setVScrollBarMode(QScrollView::AlwaysOn);
+	grid->addMultiCellWidget(linktext,0,2,2,3);
+
+	// Now set the program and copyright information.
+	s = CSL1("<h3>");
+	s += p->programName();
+	s += ' ';
+	s += p->version();
+	s += CSL1("</h3>");
+	linktext->append(s);
+	s = p->copyrightStatement() + CSL1("<br>");
+	linktext->append(s);
+	linktext->append(p->shortDescription() + CSL1("<br>"));
+
 	if (!p->homepage().isEmpty())
 	{
+		s = QString::null;
+		s += CSL1("<a href=\"%1\">").arg(p->homepage());
 		s += p->homepage();
-		s += CSL1("<br>");
+		s += CSL1("</a>");
+		linktext->append(s);
 	}
-	s += i18n("Send questions and comments to <i>kde-pim@kde.org</i>");
+
+	s = QString::null;
+	s += i18n("Send questions and comments to <a href=\"mailto:%1\">%2</a>.")
+		.arg( CSL1("kde-pim@kde.org") )
+		.arg( CSL1("kde-pim@kde.org") );
+	s += ' ';
+	s += i18n("Send bug reports to <a href=\"mailto:%1\">%2</a>.")
+		.arg(p->bugAddress())
+		.arg(p->bugAddress());
+	s += ' ';
+	s += i18n("For trademark information, see the "
+		"<a href=\"help:/kpilot/trademarks.html\">KPilot User's Guide</a>.");
 	s += CSL1("<br>");
-	s += i18n("Send bug reports to <i>%1</i>").arg(p->bugAddress());
-	s += CSL1("</qt>");
-
-	text->setText(s);
-	grid->addMultiCellWidget(text, 2, 2, 2, 3);
+	linktext->append(s);
+	linktext->append(QString::null);
 
 
 
-	if (aboutbutton)
+	QValueList<KAboutPerson> pl = p->authors();
+	QValueList<KAboutPerson>::ConstIterator i;
+
+	s = i18n("<b>Authors:</b> ");
+
+	QString comma = CSL1(", ");
+
+	unsigned int count=1;
+	for (i=pl.begin(); i!=pl.end(); ++i)
 	{
-		but = new QPushButton(i18n("More About"),w);
-
-		but->adjustSize();
-		grid->addWidget(but, 4, 2);
-		grid->setRowStretch(3, 100);
+		s.append(CSL1("%1 (<i>%2</i>)%3")
+			.arg((*i).name())
+			.arg((*i).task())
+			.arg(count<pl.count() ? comma : QString::null)
+			);
+		count++;
 	}
-	else
+	linktext->append(s);
+
+	s = QString::null;
+	pl = p->credits();
+	if (pl.count()>0)
 	{
-		QValueList<KAboutPerson> l = p->authors();
-		QValueList<KAboutPerson>::ConstIterator i;
-		s = i18n("<qt><b>Authors:</b> ");
-
-		QString comma = CSL1(", ");
-
-		unsigned int count=1;
-		for (i=l.begin(); i!=l.end(); ++i)
+		count=1;
+		s.append(i18n("<b>Credits:</b> "));
+		for (i=pl.begin(); i!=pl.end(); ++i)
 		{
 			s.append(CSL1("%1 (<i>%2</i>)%3")
 				.arg((*i).name())
 				.arg((*i).task())
-				.arg(count<l.count() ? comma : QString::null)
+				.arg(count<pl.count() ? comma : QString::null)
 				);
 			count++;
 		}
-
-		l = p->credits();
-		if (l.count()>0)
-		{
-			count=1;
-			s.append(i18n("<br><b>Credits:</b> "));
-			for (i=l.begin(); i!=l.end(); ++i)
-			{
-				s.append(CSL1("%1 (<i>%2</i>)%3")
-					.arg((*i).name())
-					.arg((*i).task())
-					.arg(count<l.count() ? comma : QString::null)
-					);
-				count++;
-			}
-		}
-
-
-		s.append(CSL1("</qt>"));
-
-		text = new QLabel(w);
-		text->setText(s);
-		text->adjustSize();
-
-		grid->addMultiCellWidget(text,4,4,2,3);
-
-		grid->setRowStretch(4,100);
-		grid->addRowSpacing(5,SPACING);
 	}
-
-
-	grid->setColStretch(3, 100);
+	linktext->append(s);
+	linktext->ensureVisible(0,0);
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -274,6 +275,7 @@ UIDialog::~UIDialog()
 
 	tw->resize(sz);
 	tw->addTab(w, i18n("About"));
+	tw->adjustSize();
 	return but;
 }
 
