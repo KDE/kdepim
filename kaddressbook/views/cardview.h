@@ -89,7 +89,7 @@ class CardViewItem
     *
     * @param label The label of the field. The field labels must be unique
     * within a card.
-    * @param The value of the field.
+    * @param value The value of the field.
     */
     void insertField(const QString &label, const QString &value);
 
@@ -339,9 +339,9 @@ class CardView : public QScrollView
     * Note that this should not be greater than half of the minimal item width,
     * which is 80. It is currently not checked, so setting a value greater than 40
     * will probably mean a crash in the items painting routine.
-    * @private Note: I looked for a value in QStyle::PixelMetric to use, but I could
-    * not see a useful one. One may turn up in a future version of Qt.
     */
+    // Note: I looked for a value in QStyle::PixelMetric to use, but I could
+    // not see a useful one. One may turn up in a future version of Qt.
     uint itemMargin();
 
     /** Sets the internal item margin. @see itemMargin().
@@ -351,11 +351,10 @@ class CardView : public QScrollView
     /** @return the item spacing.
     * The item spacing is the space (in pixels) between each item in a
     * column, between the items and column separators if drawn, and between
-    * the items and the borders of the widget. The default value is set to
-    * 10.
-    * @private Note: There is no useful QStyle::PixelMetric to use for this atm.
-    * An option would be using KDialog::spacingHint().
+    * the items and the borders of the widget. The default value is set to 10.
     */
+    // Note: There is no useful QStyle::PixelMetric to use for this atm.
+    // An option would be using KDialog::spacingHint().
     uint itemSpacing();
 
     /** Sets the item spacing.
@@ -375,7 +374,7 @@ class CardView : public QScrollView
     /** @return the header font */
     QFont headerFont() const;
 
-    /** @reimp */
+    /** Reimplementation from QWidget */
     void setFont( const QFont &fnt );
 
     /** Sets the column separator width */
@@ -462,7 +461,7 @@ class CardView : public QScrollView
     virtual void contentsMouseMoveEvent(QMouseEvent *e);
     virtual void contentsMouseReleaseEvent(QMouseEvent *e);
     virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
-	
+
     virtual void enterEvent( QEvent * );
     virtual void leaveEvent( QEvent * );
 

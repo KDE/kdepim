@@ -44,10 +44,10 @@ namespace KABC { class AddressBook; }
 /**
   Base class for all views in kaddressbook. This class implements
   all the common methods needed to provide a view to the user.
- 
+
   To implement a specific view (table, card, etc), just inherit from
   this class and implement all the pure virtuals.
- 
+
   @author Mike Pilone <mpilone@slac.com>
  */
 class KAddressBookView : public QWidget
@@ -56,7 +56,7 @@ class KAddressBookView : public QWidget
 
   public:
     enum DefaultFilterType { None = 0, Active = 1, Specific = 2 };
-    
+
     KAddressBookView( KAB::Core *core, QWidget *parent, const char *name );
     virtual ~KAddressBookView();
 
@@ -89,11 +89,10 @@ class KAddressBookView : public QWidget
 
       If overloaded in the subclass, do not forget to call the super class's
       method.
-
-      @param config The KConfig object to read from. The group will already
-      be set, so do not change the group.
      */
-    virtual void writeConfig( KConfig *config );
+    // The KConfig object is unused so we do not document it
+    // else doxygen will complain.
+    virtual void writeConfig( KConfig * );
 
     /**
       Returns a QString with all the selected email addresses concatenated
@@ -113,13 +112,13 @@ class KAddressBookView : public QWidget
       is composed of the fields proper names (ie: Home Address), so
       the view may need to translate them in order to get the
       value from the addressee.
-    
+
       This list is generated from the config file, so it is advisable to call
       this method whenever a readConfig() is called in order to get the newest
       list of fields.
      */
     KABC::Field::List fields() const;
-    
+
     /**
       Sets the active filter. This filter will be used for filtering
       the list of addressees to display. The view will <b>not</b>
@@ -127,20 +126,20 @@ class KAddressBookView : public QWidget
       KAddressBookView::refresh() after this method.
      */
     void setFilter( const Filter& );
-    
+
     /**
       @return The default filter type selection. If the selection
       is SpecificFilter, the name of the filter can be retrieved with
       defaultFilterName()
      */
     DefaultFilterType defaultFilterType() const;
-    
+
     /**
       @return The name of the default filter. This string is
       only valid if defaultFilterType() is returning SpecificFilter.
      */
     const QString &defaultFilterName() const;
-    
+
     /**
       @return The Core object.
      */
@@ -188,9 +187,9 @@ class KAddressBookView : public QWidget
       Some widgets may call this 'highlighted'. The view is responsible for
       emitting this signal multiple times if multiple items are selected,
       with the last item selected being the last emit.
-    
+
       @param uid The uid of the selected addressee.
-    
+
       @see KListView
      */
     void selected( const QString &uid );
@@ -199,20 +198,20 @@ class KAddressBookView : public QWidget
       This signal should be emitted by a subclass whenever an addressee
       is executed. This is defined by the KDE system wide config, but it
       either means single or doubleclicked.
-    
-      @param ui The uid of the selected addressee
-    
+
+      @param uid The uid of the selected addressee
+
       @see KListView
      */
     void executed( const QString &uid );
-    
+
     /**
       This signal is emitted whenever a user attempts to start a drag
       in the view. The slot connected to this signal would usually want
       to create a QDragObject.
      */
     void startDrag();
-    
+
     /**
       This signal is emitted whenever the user drops something on the
       view. The individual view should handle checking if the item is
@@ -258,7 +257,7 @@ class KAddressBookView : public QWidget
     QString mDefaultFilterName;
     KAB::Core *mCore;
     KABC::Field::List mFieldList;
-    
+
     QWidget *mViewWidget;
 };
 
@@ -272,16 +271,16 @@ class ViewFactory : public KLibFactory
       string (ie: Table, Icon, Tree, etc).
      */
     virtual QString type() const = 0;
-    
+
     /**
       @return The description of the view. This should be a 3 to
       4 line string (don't actually use return characters in the string)
       describing the features offered by the view.
      */
     virtual QString description() const = 0;
-    
+
     /**
-      Creates a config dialog for the view type. The default 
+      Creates a config dialog for the view type. The default
       implementation will return a ViewConfigDialog. This default
       dialog will allow the user to set the visible fields only. If
       you need more config options (as most views will), this method
@@ -291,7 +290,7 @@ class ViewFactory : public KLibFactory
      */
     virtual ViewConfigureWidget *configureWidget( KABC::AddressBook *ab,
                                                   QWidget *parent,
-                                                  const char *name = 0 ); 
+                                                  const char *name = 0 );
 
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,
