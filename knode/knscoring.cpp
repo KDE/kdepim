@@ -79,7 +79,7 @@ QString KNScorableArticle::getHeaderByType(const QString& s) const
   KMime::Headers::Base *h = _a->getHeaderByType(s.latin1());
   if (!h) return "";
   QString t = _a->getHeaderByType(s.latin1())->asUnicodeString();
-  Q_ASSERT( t );
+  Q_ASSERT( !t.isEmpty() );
   return t;
 }
 
