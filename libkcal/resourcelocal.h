@@ -32,14 +32,14 @@
 #include "incidence.h"
 #include "calendarlocal.h"
 
-#include "resourcecalendar.h"
+#include "resourcecached.h"
 
 namespace KCal {
 
 /**
   This class provides a calendar stored as a local file.
 */
-class ResourceLocal : public ResourceCalendar
+class ResourceLocal : public ResourceCached
 {
     Q_OBJECT
 
@@ -56,91 +56,13 @@ class ResourceLocal : public ResourceCalendar
 
     bool save();
 
-    /** Add Event to calendar. */
-    bool addEvent(Event *anEvent);
-    /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
-
-    /**
-      Retrieves an event on the basis of the unique string ID.
-    */
-    Event *event(const QString &UniqueStr);
-    /**
-      Return filtered list of all events in calendar.
-    */
-//    QPtrList<Event> events();
-    /**
-      Return unfiltered list of all events in calendar.
-    */
-    QPtrList<Event> rawEvents();
-    /**
-      Builds and then returns a list of all events that match for the
-      date specified. useful for dayView, etc. etc.
-    */
-    QPtrList<Event> rawEventsForDate( const QDate &date, bool sorted = false );
-    /**
-      Get unfiltered events for date \a qdt.
-    */
-    QPtrList<Event> rawEventsForDate( const QDateTime &qdt );
-    /**
-      Get unfiltered events in a range of dates. If inclusive is set to true,
-      only events are returned, which are completely included in the range.
-    */
-    QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false );
-  
-
-    /*
-      Returns a QString with the text of the holiday (if any) that falls
-      on the specified date.
-    */
-    // QString getHolidayForDate(const QDate &qd);
-    
-    /**
-      Add a todo to the todolist.
-    */
-    bool addTodo( Todo *todo );
-    /**
-      Remove a todo from the todolist.
-    */
-    void deleteTodo( Todo * );
-    /**
-      Searches todolist for an event with this unique string identifier,
-      returns a pointer or null.
-    */
-    Todo *todo( const QString &uid );
-    /**
-      Return list of all todos.
-    */
-    QPtrList<Todo> rawTodos();
-    /**
-      Returns list of todos due on the specified date.
-    */
-    QPtrList<Todo> todos( const QDate &date );
-    /** Add a Journal entry to calendar */
-    virtual bool addJournal(Journal *);
-    /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
-    /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID);
-    /** Return list of all Journals stored in calendar */
-    QPtrList<Journal> journals();
-
-    /** Return all alarms, which ocur in the given time interval. */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
-
-    /** Return all alarms, which ocur before given date. */
-    Alarm::List alarmsTo( const QDateTime &to );
-
-    // Public because needed in MultiCalendar::load()
-    bool doOpen();
-
     void dump() const;
 
   protected slots:
     void reload();
 
   protected:
+    bool doOpen();
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
@@ -152,8 +74,6 @@ class ResourceLocal : public ResourceCalendar
  
   private:
     void init();
-
-    CalendarLocal mCalendar;
 
     KURL mURL;
     CalFormat* mFormat;

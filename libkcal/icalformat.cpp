@@ -181,6 +181,8 @@ QString ICalFormat::toString( Calendar *cal )
   QPtrList<Todo> todoList = cal->rawTodos();
   QPtrListIterator<Todo> qlt(todoList);
   for (; qlt.current(); ++qlt) {
+//    kdDebug(5800) << "ICalFormat::toString() write todo "
+//                  << qlt.current()->uid() << endl;
     component = mImpl->writeTodo(qlt.current());
     icalcomponent_add_component(calendar,component);
   }
@@ -189,6 +191,8 @@ QString ICalFormat::toString( Calendar *cal )
   QPtrList<Event> events = cal->rawEvents();
   Event *ev;
   for(ev=events.first();ev;ev=events.next()) {
+//    kdDebug(5800) << "ICalFormat::toString() write event "
+//                  << ev->uid() << endl;
     component = mImpl->writeEvent(ev);
     icalcomponent_add_component(calendar,component);
   }
@@ -197,6 +201,8 @@ QString ICalFormat::toString( Calendar *cal )
   QPtrList<Journal> journals = cal->journals();
   Journal *j;
   for(j=journals.first();j;j=journals.next()) {
+//    kdDebug(5800) << "ICalFormat::toString() write journal "
+//                  << j->uid() << endl;
     component = mImpl->writeJournal(j);
     icalcomponent_add_component(calendar,component);
   }
@@ -249,7 +255,7 @@ bool ICalFormat::fromString( Recurrence * recurrence, const QString& rrule )
   icalerror_clear_errno();
   struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.latin1() );
   if ( icalerrno != ICAL_NO_ERROR ) {
-    kdDebug() << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
+    kdDebug(5800) << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
     success = false;
   }
 
@@ -318,7 +324,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   if (!incidence) {
-    kdDebug() << "ICalFormat:parseScheduleMessage: object is not a freebusy, event or todo" << endl;
+    kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event or todo" << endl;
     return 0;
   }
 

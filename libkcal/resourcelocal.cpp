@@ -58,7 +58,7 @@ extern "C"
 
 
 ResourceLocal::ResourceLocal( const KConfig* config )
-  : ResourceCalendar( config )
+  : ResourceCached( config )
 {
   if ( config ) {
     QString url = config->readEntry( "CalendarURL" );
@@ -80,7 +80,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
 }
 
 ResourceLocal::ResourceLocal( const QString& fileName ) 
-  : ResourceCalendar( 0 )
+  : ResourceCached( 0 )
 {
   mURL = KURL( fileName );
   mFormat = new ICalFormat();
@@ -168,111 +168,6 @@ void ResourceLocal::doClose()
   mOpen = false;
 }
 
-
-bool ResourceLocal::addEvent(Event *event)
-{
-  return mCalendar.addEvent( event );
-}
-
-// probably not really efficient, but...it works for now.
-void ResourceLocal::deleteEvent(Event *event)
-{
-  kdDebug(5800) << "ResourceLocal::deleteEvent" << endl;
-
-  mCalendar.deleteEvent( event );
-}
-
-
-Event *ResourceLocal::event( const QString &uid )
-{
-  return mCalendar.event( uid );
-}
-
-QPtrList<Event> ResourceLocal::rawEventsForDate(const QDate &qd, bool sorted)
-{
-  return mCalendar.rawEventsForDate( qd, sorted );
-}
-
-
-QPtrList<Event> ResourceLocal::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
-{
-  return mCalendar.rawEvents( start, end, inclusive );
-}
-
-QPtrList<Event> ResourceLocal::rawEventsForDate(const QDateTime &qdt)
-{
-  return mCalendar.rawEventsForDate( qdt.date() );
-}
-
-QPtrList<Event> ResourceLocal::rawEvents()
-{
-  return mCalendar.rawEvents();
-}
-
-bool ResourceLocal::addTodo(Todo *todo)
-{
-  return mCalendar.addTodo( todo );
-}
-
-void ResourceLocal::deleteTodo(Todo *todo)
-{
-  mCalendar.deleteTodo( todo );
-}
-
-
-QPtrList<Todo> ResourceLocal::rawTodos()
-{
-  return mCalendar.rawTodos();
-}
-
-Todo *ResourceLocal::todo( const QString &uid )
-{
-  return mCalendar.todo( uid );
-}
-
-QPtrList<Todo> ResourceLocal::todos( const QDate &date )
-{
-  return mCalendar.todos( date );
-}
-
-
-bool ResourceLocal::addJournal(Journal *journal)
-{
-  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-
-  return mCalendar.addJournal( journal );
-}
-
-Journal *ResourceLocal::journal(const QDate &date)
-{
-//  kdDebug(5800) << "ResourceLocal::journal() " << date.toString() << endl;
-
-  return mCalendar.journal( date );
-}
-
-Journal *ResourceLocal::journal(const QString &uid)
-{
-  return mCalendar.journal( uid );
-}
-
-QPtrList<Journal> ResourceLocal::journals()
-{
-  return mCalendar.journals();
-}
-
-
-Alarm::List ResourceLocal::alarmsTo( const QDateTime &to )
-{
-  return mCalendar.alarmsTo( to );
-}
-
-Alarm::List ResourceLocal::alarms( const QDateTime &from, const QDateTime &to )
-{
-//  kdDebug(5800) << "ResourceLocal::alarms(" << from.toString() << " - " << to.toString() << ")\n";
-
-  return mCalendar.alarms( from, to );
-}
 
 void ResourceLocal::update(IncidenceBase *)
 {

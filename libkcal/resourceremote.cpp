@@ -60,7 +60,7 @@ extern "C"
 
 
 ResourceRemote::ResourceRemote( const KConfig* config )
-  : ResourceCalendar( config )
+  : ResourceCached( config )
 {
   if ( config ) {
     readConfig( config );
@@ -70,7 +70,7 @@ ResourceRemote::ResourceRemote( const KConfig* config )
 }
 
 ResourceRemote::ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl )
-  : ResourceCalendar( 0 )
+  : ResourceCached( 0 )
 {
   mDownloadUrl = downloadUrl;
   
@@ -259,110 +259,6 @@ void ResourceRemote::doClose()
   mOpen = false;
 }
 
-
-bool ResourceRemote::addEvent(Event *event)
-{
-  return mCalendar.addEvent( event );
-}
-
-void ResourceRemote::deleteEvent(Event *event)
-{
-  kdDebug(5800) << "ResourceRemote::deleteEvent" << endl;
-
-  mCalendar.deleteEvent( event );
-}
-
-
-Event *ResourceRemote::event( const QString &uid )
-{
-  return mCalendar.event( uid );
-}
-
-QPtrList<Event> ResourceRemote::rawEventsForDate(const QDate &qd, bool sorted)
-{
-  return mCalendar.rawEventsForDate( qd, sorted );
-}
-
-
-QPtrList<Event> ResourceRemote::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
-{
-  return mCalendar.rawEvents( start, end, inclusive );
-}
-
-QPtrList<Event> ResourceRemote::rawEventsForDate(const QDateTime &qdt)
-{
-  return mCalendar.rawEventsForDate( qdt.date() );
-}
-
-QPtrList<Event> ResourceRemote::rawEvents()
-{
-  return mCalendar.rawEvents();
-}
-
-bool ResourceRemote::addTodo(Todo *todo)
-{
-  return mCalendar.addTodo( todo );
-}
-
-void ResourceRemote::deleteTodo(Todo *todo)
-{
-  mCalendar.deleteTodo( todo );
-}
-
-
-QPtrList<Todo> ResourceRemote::rawTodos()
-{
-  return mCalendar.rawTodos();
-}
-
-Todo *ResourceRemote::todo( const QString &uid )
-{
-  return mCalendar.todo( uid );
-}
-
-QPtrList<Todo> ResourceRemote::todos( const QDate &date )
-{
-  return mCalendar.todos( date );
-}
-
-
-bool ResourceRemote::addJournal(Journal *journal)
-{
-  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-
-  return mCalendar.addJournal( journal );
-}
-
-Journal *ResourceRemote::journal(const QDate &date)
-{
-//  kdDebug(5800) << "ResourceRemote::journal() " << date.toString() << endl;
-
-  return mCalendar.journal( date );
-}
-
-Journal *ResourceRemote::journal(const QString &uid)
-{
-  return mCalendar.journal( uid );
-}
-
-QPtrList<Journal> ResourceRemote::journals()
-{
-  return mCalendar.journals();
-}
-
-
-Alarm::List ResourceRemote::alarmsTo( const QDateTime &to )
-{
-  return mCalendar.alarmsTo( to );
-}
-
-Alarm::List ResourceRemote::alarms( const QDateTime &from, const QDateTime &to )
-{
-//  kdDebug(5800) << "ResourceRemote::alarms(" << from.toString() << " - " << to.toString() << ")\n";
-
-  return mCalendar.alarms( from, to );
-}
 
 void ResourceRemote::update(IncidenceBase *)
 {

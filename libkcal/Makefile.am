@@ -28,7 +28,8 @@ libkcal_la_SOURCES = \
         compat.cpp \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	calendarresources.cpp \
-        qtopiaformat.cpp
+        qtopiaformat.cpp \
+	resourcecached.cpp
 
 kde_module_LTLIBRARIES = kcal_localdir.la kcal_remote.la kcal_kabc.la
 
