@@ -139,7 +139,7 @@ class RMM
 			MimeSubTypeJpeg,
 			MimeSubTypeGIF,
 			MimeSubTypeBasic,
-			MimeSubTypeMPEG,
+			MimeSubTypeMPEG
 		};
 
 		enum DispType {

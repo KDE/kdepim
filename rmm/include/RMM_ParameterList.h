@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -39,7 +39,7 @@ class RParameterList : public QList<RParameter> {
 
 		RParameterList();
 		RParameterList(const RParameterList & pl);
-		RParameterList(const QCString & s) : QList<RParameter>() { }
+                RParameterList(const QCString & /*s*/) : QList<RParameter>() { }
 		const RParameterList & operator = (const RParameterList & pl);
 		const QCString & asString() const { return strRep_; }
 
@@ -47,11 +47,11 @@ class RParameterList : public QList<RParameter> {
 
 		void parse();
 		void assemble();
-		
+
 		bool isValid() const;
 
 		void createDefault();
-		
+
 		const char * className() const { return "RParameterList"; }
 
 
