@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-10-07  Adriaan de Groot
+* Started adding encoding support to PalmDOC conduit dialogs. Not
+  sure how to proceed there.
+
 2004-10-05  Adriaan de Groot
 * I wonder if the codec() stuff shouldn't move from the PilotAppCategory
   to the device link -- after all, it's the _device_ that knows what
@@ -8,6 +12,13 @@
   able to tell th desktop this).
 * Added a localBackup action, so we can make ~ backup files of all the
   database files before doing a sync, just in case.
+* Merged lots of bugs.
+* Found out that KPilot uses title instead of prefix for the honorific
+  titles in the addressbook - this means KPilot and KAddressbook got
+  out of sync. Fixed.
+* New questionYesNoCancel() didn't return correct button codes.
+* Checked all the codec stuff, added some in relevant places but can't
+  spot any addressbook fields that are not synced.
 
 2004-10-04  Adriaan de Groot
 * Bail if the Pilot disconnects, but only between conduits. Conduits
