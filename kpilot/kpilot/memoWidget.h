@@ -1,3 +1,5 @@
+#ifndef _KPILOT_MEMOWIDGET_H
+#define _KPILOT_MEMOWIDGET_H
 /* memoWidget.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -25,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_MEMOWIDGET_H
-#define _KPILOT_MEMOWIDGET_H
 
 #ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
@@ -54,6 +54,10 @@ class QListBox;
 #include "pilotComponent.h"
 #endif
 
+#ifndef _KPILOT_LISTITEMS_H
+#include "listItems.h"
+#endif
+
 class MemoWidget : public PilotComponent
 {
 Q_OBJECT
@@ -65,7 +69,11 @@ public:
 	// Pilot Component Methods:
 	void initialize();
 	void postHotSync();
-  
+
+	// Added by David Bishop, please move to correct location!
+	bool saveAsXML(const QString &fileName,const QList<PilotListItem> &menu_item );
+	bool saveAsText(const QString &fileName,const QList<PilotListItem> &menu_item );
+	
 	typedef enum { 
 		MAX_MEMO_LEN = 8192 
 		} Constants ;
@@ -102,14 +110,11 @@ private:
 	QPushButton *fExportButton,*fDeleteButton;
 };
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
-
 
 // $Log$
+// Revision 1.18  2001/09/30 16:59:22  adridg
+// Cleaned up preHotSync
+//
 // Revision 1.17  2001/09/29 16:26:18  adridg
 // The big layout change
 //
@@ -144,3 +149,4 @@ private:
 // Revision 1.7  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif

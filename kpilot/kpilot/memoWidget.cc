@@ -55,10 +55,18 @@ static const char *memowidget_id =
 #ifndef QLAYOUT_H
 #include <qlayout.h>
 #endif
+#ifndef QDOM_H
+#include <qdom.h>
+#endif
+#ifndef QTEXTSTREAM_H
+#include <qtextstream.h>
+#endif
+#ifndef QWHATSTHIS_H
 #include <qwhatsthis.h>
-
+#endif
+#ifndef QLABEL_H
 #include <qlabel.h>
-
+#endif
 #ifndef _KAPP_H
 #include <kapp.h>
 #endif
@@ -75,7 +83,7 @@ static const char *memowidget_id =
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
-#ifndef _KPILOT_LISTITEMS_H
+#ifndef _KPILOT_LISTITEMS_H 
 #include "listItems.h"
 #endif
 #ifndef _KPILOT_PILOTLOCALDATABASE_H
@@ -292,6 +300,7 @@ void MemoWidget::setupWidget()
 
 	fListBox = new QListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	fListBox->setSelectionMode( QListBox::Extended );
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
@@ -336,6 +345,10 @@ void MemoWidget::slotUpdateButtons()
 	FUNCTIONSETUP;
 
 	int item = fListBox->currentItem();
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Selected item " << item << endl;
+#endif
 
 	if (fExportButton)
 	{
@@ -571,37 +584,181 @@ void MemoWidget::slotImportMemo()
 void MemoWidget::slotExportMemo()
 {
 	FUNCTIONSETUP;
-
-	int item = fListBox->currentItem();
-	const char *data;
-
-	if (item == -1)
+	
+	int index = fListBox->numRows();
+	if (index == 0)
 		return;
 
-	PilotListItem *p = (PilotListItem *) fListBox->item(item);
-	PilotMemo *theMemo = (PilotMemo *) p->rec();
+	QString data;
 
-	QString fileName = KFileDialog::getSaveFileName();
-
+	const QString filter = "*|Plain text output\n*.xml|XML output";
+	QString fileName;
+	
+	KFileDialog kfile( QString::null , filter, fExportButton , "memoSave" , true );
+	kfile.setOperationMode( KFileDialog::Saving );
+	
+	if ( kfile.exec() == QDialog::Accepted ) {
+		fileName = kfile.selectedFile();
+	}
+	
 	if (fileName.isEmpty())
 		return;
 
-	data = theMemo->text();
+	QList<PilotListItem> menu_items;
 
-	QFile outFile(fileName);
-
-	if (outFile.open(IO_WriteOnly | IO_Truncate) == FALSE)
-	{
-		// show error!
-		return;
+	for (int x = 0; x < index; x++){
+		if (fListBox->item(x)->selected()){
+			menu_items.append((PilotListItem *) fListBox->item(x));
+		}
 	}
-	QDataStream outStream(&outFile);
 
-	outStream.writeRawBytes(data, strlen(data) + 1);
-	outFile.close();
+	if (kfile.currentFilter() == "*.xml" )
+	{
+		MemoWidget::saveAsXML( fileName , menu_items );
+	}
+	else
+	{
+		MemoWidget::saveAsText( fileName , menu_items );
+	}
+
+
+	return;
+}
+
+bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &memo_list)
+{
+	QFile f( fileName );
+	QTextStream stream(&f);
+		
+	if ( QFile::exists( fileName ) )
+	{
+		if( !f.open(IO_ReadWrite | IO_Append) )
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if( !f.open(IO_WriteOnly) )
+		{
+			return false;
+		}
+	}
+
+	QListIterator<PilotListItem> it(memo_list);
+	for ( ; it.current(); ++it )
+	{
+		PilotListItem *p = it.current();
+		PilotMemo *theMemo = (PilotMemo *) p->rec();
+		stream << theMemo->text() << endl;
+	}
+
+	
+	return true;
+}	
+
+bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &memo_list)
+{
+	QDomDocument doc( "kpilotmemos" );
+	QFile f( fileName );
+	QTextStream stream( &f );
+	QDomElement memos;
+	int append = 0;
+	
+
+	if ( f.exists() )
+	{
+		if ( !f.open(IO_ReadOnly ) ) return false;
+
+		if ( doc.setContent( &f ) )
+		{
+		//
+		//
+		//Only if QDom can read the .xml file and set the doc object to be populated with it's contents
+			memos = doc.documentElement();
+			if ( memos.tagName()!="memos" ) 
+			{ 
+				return false; 
+			} 
+				//
+				//			
+				//This is an XML Document but it isn't a valid KPilot-Memo xml document
+			else 
+			{
+				append = 1; 
+			}
+				//
+				//
+				//This is a valid KPilot memo, and we will append the current memo to the xml
+		}
+		else
+		{
+		//
+		//
+		//We *couldn't* understand the xml.  Return false!
+			return false;
+		}
+	}
+	else
+	{
+		if ( !f.open(IO_ReadWrite ) ) return false;
+		//
+		//
+		//If there's no such file, we are not appending, just opening the file to read/write.
+	}
+
+	f.close();
+    // These are temporary, and should be retrieved from the pilot stuff
+    QString mpilotid;
+    mpilotid = "1";
+    //  End of temp variables
+
+	if (append == 1)
+	{
+		memos = doc.documentElement();
+	}
+	else
+	{
+		memos = doc.createElement( "memos" );
+		doc.appendChild ( memos );
+	}
+
+	QListIterator<PilotListItem> it(memo_list);
+	for ( ; it.current(); ++it )
+	{
+		PilotListItem *p = it.current();
+		PilotMemo *theMemo = (PilotMemo *) p->rec();
+	
+
+    	QDomElement memo = doc.createElement( "memo" );
+	    memo.setAttribute ( "pilotid" , mpilotid );
+	    memos.appendChild ( memo );
+
+	    //QDomElement category = doc.createElement( "category" );
+	    //head.appendChild ( category );
+		//
+	 	//QDomText categorytext = doc.createTextNode( memo->category() );
+		//category.appendChild ( categorytext );
+		//FIXME
+
+		QDomElement title = doc.createElement( "title" );
+		memo.appendChild ( title );
+
+		QDomText titletext = doc.createTextNode( theMemo->shortTitle() );
+		title.appendChild ( titletext );
+
+		QDomText body = doc.createTextNode( theMemo->text() );
+		memo.appendChild ( body );
+	}
+	if ( !f.open(IO_WriteOnly ) ) return false;
+	stream << doc.toString();
+	return true;
 }
 
 // $Log$
+// Revision 1.44  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.43  2002/01/20 06:46:23  waba
 // Messagebox changes.
 //
