@@ -1061,6 +1061,7 @@ KNConfig::Cleanup::Cleanup()
   conf->setGroup("EXPIRE");
 
   d_oExpire=conf->readBoolEntry("doExpire", true);
+  r_emoveUnavailable=conf->readBoolEntry("removeUnavailable", true);
   p_reserveThr=conf->readBoolEntry("saveThreads",true);
   d_oCompact=conf->readBoolEntry("doCompact", true);
   e_xpireInterval=conf->readNumEntry("expInterval", 5);
@@ -1083,6 +1084,7 @@ void KNConfig::Cleanup::save()
   conf->setGroup("EXPIRE");
 
   conf->writeEntry("doExpire", d_oExpire);
+  conf->writeEntry("removeUnavailable", r_emoveUnavailable);
   conf->writeEntry("saveThreads", p_reserveThr);
   conf->writeEntry("doCompact", d_oCompact);
   conf->writeEntry("expInterval", e_xpireInterval);

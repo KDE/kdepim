@@ -2059,36 +2059,39 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   // === groups ===========================================================
 
-  QGroupBox *groupsB=new QGroupBox(i18n("Groups"), this);
+  QGroupBox *groupsB=new QGroupBox(i18n("Newsgroups"), this);
   topL->addWidget(groupsB);
-  QGridLayout *groupsL=new QGridLayout(groupsB, 6,2, 8,5);
+  QGridLayout *groupsL=new QGridLayout(groupsB, 7,2, 8,5);
 
   groupsL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  g_roupCB=new QCheckBox(i18n("&Remove old articles from newsgroups"), groupsB);
+  g_roupCB=new QCheckBox(i18n("&Expire old articles automatically"), groupsB);
   connect(g_roupCB, SIGNAL(toggled(bool)), this, SLOT(slotGroupCBtoggled(bool)));
   groupsL->addMultiCellWidget(g_roupCB,1,1,0,1);
 
-  g_roupDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
+  g_roupDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
   g_roupDays->setSuffix(i18n(" days"));
   g_roupDaysL=new QLabel(g_roupDays,i18n("&Purge groups every"), groupsB);
   groupsL->addWidget(g_roupDaysL,2,0);
   groupsL->addWidget(g_roupDays,2,1,Qt::AlignRight);
 
-  r_eadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
+  r_eadDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
   r_eadDays->setSuffix(i18n(" days"));
   r_eadDaysL=new QLabel(r_eadDays, i18n("&Keep read articles"), groupsB);
   groupsL->addWidget(r_eadDaysL,3,0);
   groupsL->addWidget(r_eadDays,3,1,Qt::AlignRight);
 
-  u_nreadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
+  u_nreadDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
   u_nreadDays->setSuffix(i18n(" days"));
   u_nreadDaysL=new QLabel(u_nreadDays, i18n("Keep u&nread articles"), groupsB);
   groupsL->addWidget(u_nreadDaysL,4,0);
   groupsL->addWidget(u_nreadDays,4,1,Qt::AlignRight);
 
+  u_navailableCB=new QCheckBox(i18n("&Remove articles that aren't available on the server"), groupsB);
+  groupsL->addMultiCellWidget(u_navailableCB, 5,5, 0,1);
+
   t_hrCB=new QCheckBox(i18n("Preser&ve threads"), groupsB);
-  groupsL->addWidget(t_hrCB,5,0);
+  groupsL->addMultiCellWidget(t_hrCB, 6,6, 0,1);
 
   groupsL->setColStretch(1,1);
 
@@ -2100,11 +2103,11 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   foldersL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  f_olderCB=new QCheckBox(i18n("Co&mpact folders"), foldersB);
+  f_olderCB=new QCheckBox(i18n("Co&mpact folders automatically"), foldersB);
   connect(f_olderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));
   foldersL->addMultiCellWidget(f_olderCB,1,1,0,1);
 
-  f_olderDays=new KIntSpinBox(0, 999, 1, 0, 10, foldersB);
+  f_olderDays=new KIntSpinBox(0, 99999, 1, 0, 10, foldersB);
   f_olderDays->setSuffix(i18n(" days"));
   f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every"), foldersB);
   foldersL->addWidget(f_olderDaysL,2,0);
@@ -2119,6 +2122,7 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
   slotFolderCBtoggled(d->d_oCompact);
   g_roupCB->setChecked(d->d_oExpire);
   slotGroupCBtoggled(d->d_oExpire);
+  u_navailableCB->setChecked(d->r_emoveUnavailable);
   t_hrCB->setChecked(d->p_reserveThr);
   f_olderDays->setValue(d->c_ompactInterval);
   g_roupDays->setValue(d->e_xpireInterval);
@@ -2142,6 +2146,7 @@ void KNConfig::CleanupWidget::apply()
   d_ata->e_xpireInterval=g_roupDays->value();
   d_ata->u_nreadMaxAge=u_nreadDays->value();
   d_ata->r_eadMaxAge=r_eadDays->value();
+  d_ata->r_emoveUnavailable=u_navailableCB->isChecked();
   d_ata->p_reserveThr=t_hrCB->isChecked();
   d_ata->d_oCompact=f_olderCB->isChecked();
   d_ata->c_ompactInterval=f_olderDays->value();
@@ -2154,11 +2159,6 @@ void KNConfig::CleanupWidget::slotGroupCBtoggled(bool b)
 {
   g_roupDaysL->setEnabled(b);
   g_roupDays->setEnabled(b);
-  r_eadDaysL->setEnabled(b);
-  r_eadDays->setEnabled(b);
-  u_nreadDaysL->setEnabled(b);
-  u_nreadDays->setEnabled(b);
-  t_hrCB->setEnabled(b);
 }
 
 

@@ -89,7 +89,8 @@ void KNCleanUp::reset()
 
 void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 {
-  int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0;
+  int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr();
+  bool unavailable=false;
   KNRemoteArticle *art, *ref;
 
   if(!g->loadHdrs()) return;
@@ -103,7 +104,11 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
     else
       expDays=c_onfig->maxAgeForUnread();
 
-    art->setExpired( (art->date()->ageInDays() >= expDays) );
+    unavailable = false;
+    if ((art->articleNumber() != -1) && c_onfig->removeUnavailable())
+      unavailable = (art->articleNumber() < firstArtNr);
+
+    art->setExpired( (art->date()->ageInDays() >= expDays) || unavailable );
   }
 
   //save threads

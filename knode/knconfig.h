@@ -999,6 +999,7 @@ class Cleanup : public Base {
     //expire
     int maxAgeForRead()         { return r_eadMaxAge; }
     int maxAgeForUnread()       { return u_nreadMaxAge; }
+    bool removeUnavailable()    { return r_emoveUnavailable; }
     bool preserveThreads()      { return p_reserveThr; }
     bool expireToday();
     void setLastExpireDate();
@@ -1010,6 +1011,7 @@ class Cleanup : public Base {
 
   protected:
     bool  d_oExpire,
+          r_emoveUnavailable,
           p_reserveThr,
           d_oCompact;
     int   e_xpireInterval,
@@ -1033,6 +1035,7 @@ class CleanupWidget : public BaseWidget {
   protected:
     QCheckBox   *f_olderCB,
                 *g_roupCB,
+                *u_navailableCB,
                 *t_hrCB;
     KIntSpinBox *f_olderDays,
                 *g_roupDays,

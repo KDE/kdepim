@@ -326,7 +326,7 @@ void KNNntpClient::doFetchNewHeaders()
 {
   KNGroup* target=static_cast<KNGroup*>(job->data());
   char* s;
-  int first, last, oldlast, toFetch;
+  int first=0, last=0, oldlast=0, toFetch=0;
   QCString cmd;
   
   sendSignal(TSdownloadNew);
@@ -350,6 +350,7 @@ void KNNntpClient::doFetchNewHeaders()
   if (s) {
     s++;
     first=atoi(s);
+    target->setFirstNr(first);
     s = strchr(s,' ');
   }
   if (s) {

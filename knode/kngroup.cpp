@@ -88,6 +88,7 @@ bool KNGroup::readInfo(const QString &confPath)
   n_ame = info.readEntry("name");
   c_ount = info.readNumEntry("count",0);
   r_eadCount = info.readNumEntry("read",0);
+  f_irstNr = info.readNumEntry("firstMsg",0);
   l_astNr = info.readNumEntry("lastMsg",0);
   d_ynDataFormat = info.readNumEntry("dynDataFormat",0);
   u_seCharset = info.readBoolEntry("useCharset", false);
@@ -126,6 +127,7 @@ void KNGroup::saveInfo()
   
     info.writeEntry("groupname", g_roupname);
     info.writeEntry("description", d_escription);
+    info.writeEntry("firstMsg", f_irstNr);
     info.writeEntry("lastMsg", l_astNr);
     info.writeEntry("count", c_ount);
     info.writeEntry("read", r_eadCount);

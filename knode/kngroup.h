@@ -67,6 +67,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void incReadCount(int i=1)    { r_eadCount+=i; }
     void decReadCount(int i=1)    { r_eadCount-=i; }
 
+    int firstNr()                 { return f_irstNr; }
+    void setFirstNr(int i)        { f_irstNr=i; }
     int lastNr()                  { return l_astNr; }
     void setLastNr(int i)         { l_astNr=i; }
     int maxFetch()                { return m_axFetch; }
@@ -121,6 +123,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
         
     int       n_ewCount,
               r_eadCount,
+              f_irstNr,
               l_astNr,
               m_axFetch,
               d_ynDataFormat;
