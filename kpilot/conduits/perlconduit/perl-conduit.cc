@@ -64,7 +64,7 @@ public:
 
 protected:
 	QObject *fParent;
-	PerlInterpreter *fPerl;
+	PerlInterpreter *my_perl;
 
 	QString fResult;
 } ;
@@ -129,10 +129,10 @@ void PerlThread::run()
 	DEBUGCONDUIT << fname << ": Thread starting." << endl;
 #endif
 
-	fPerl = perl_alloc();
-	perl_construct(fPerl);
-	perl_parse(fPerl, NULL, 3, const_cast<char **>(perl_args), NULL);
-	perl_run(fPerl);
+	my_perl = perl_alloc();
+	perl_construct(my_perl);
+	perl_parse(my_perl, NULL, 3, const_cast<char **>(perl_args), NULL);
+	perl_run(my_perl);
 
 	eval_pv(PerlConduitSettings::expression().latin1(),TRUE);
 
@@ -142,8 +142,8 @@ void PerlThread::run()
 
 	fResult.setNum(SvIV(get_sv("a",FALSE)));
 
-	perl_destruct(fPerl);
-	perl_free(fPerl);
+	perl_destruct(my_perl);
+	perl_free(my_perl);
 
 	QApplication::postEvent(fParent,new QEvent(QEvent::User));
 }
