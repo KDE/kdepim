@@ -33,7 +33,7 @@
 #include <kstdguiitem.h>
 
 #include "egroupwarewizard.h"
-//#include "kolabwizard.h"
+#include "kolabwizard.h"
 #include "sloxwizard.h"
 
 #include "overviewpage.h"
