@@ -304,12 +304,12 @@ void KornBoxCfgImpl::slotChangeNewFont()
 void KornBoxCfgImpl::slotNormalAnimToggled( bool enabled )
 {
 	this->chNormalText->setEnabled( !enabled );
-	this->chNormalBack->setEnabled( !enabled );
+	//this->chNormalBack->setEnabled( !enabled );
 	this->chNormalIcon->setEnabled( !enabled );
 	this->chNormalFont->setEnabled( !enabled );
 
 	this->cbNormalText->setEnabled( !enabled && this->chNormalText->isChecked() );
-	this->cbNormalBack->setEnabled( !enabled && this->chNormalBack->isChecked() );
+	//this->cbNormalBack->setEnabled( !enabled && this->chNormalBack->isChecked() );
 	this->ibNormalIcon->setEnabled( !enabled && this->chNormalIcon->isChecked() );
 	this->pbNormalFont->setEnabled( !enabled && this->chNormalFont->isChecked() );
 }
@@ -317,12 +317,12 @@ void KornBoxCfgImpl::slotNormalAnimToggled( bool enabled )
 void KornBoxCfgImpl::slotNewAnimToggled( bool enabled )
 {
 	this->chNewText->setEnabled( !enabled );
-	this->chNewBack->setEnabled( !enabled );
+	//this->chNewBack->setEnabled( !enabled );
 	this->chNewIcon->setEnabled( !enabled );
 	this->chNewFont->setEnabled( !enabled );
 	
 	this->cbNewText->setEnabled( !enabled && this->chNewText->isChecked() );
-	this->cbNewBack->setEnabled( !enabled && this->chNewBack->isChecked() );
+	//this->cbNewBack->setEnabled( !enabled && this->chNewBack->isChecked() );
 	this->ibNewIcon->setEnabled( !enabled && this->chNewIcon->isChecked() );
 	this->pbNewFont->setEnabled( !enabled && this->chNewFont->isChecked() );
 }

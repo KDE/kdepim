@@ -1338,7 +1338,7 @@
                                     <cstring>edCommand</cstring>
                                 </property>
                                 <property name="enabled">
-                                    <bool>false</bool>
+                                    <bool>true</bool>
                                 </property>
                             </widget>
                         </hbox>

@@ -261,6 +261,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	//This would fail if bool have fome other values.
 	short index = newMessages ? 1 : 0;
 	
+	bool hasAnim = _anims[ index ] && !_anims[ index ]->isEmpty();
 	bool hasIcon = _icons[ index ] && !_icons[ index ]->isEmpty();
 	bool hasBg = _bgColour[ index ] && _bgColour[ index ]->isValid();
 	bool hasFg = _fgColour[ index ] && _fgColour[ index ]->isValid();
@@ -270,10 +271,12 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	label->setText( "" );
 	//QToolTip::add( label, this->getTooltip() );
 	
-	if( _anims[ index ] && !_anims[ index ]->isEmpty() )
-	{ //Animations can't have other options
+	if( hasAnim )
+	{ //An animation can't have a foreground-colour and can't have a icon.
 		setAnimIcon( label, *_anims[ index ] );
-		return;
+
+		hasFg = false;
+		hasIcon = false;
 	}
 	
 	if( hasIcon )
@@ -316,7 +319,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 		label->setText( QString::number( count ) );
 	}
 	
-	if( hasFg || hasBg || hasIcon )
+	if( hasFg || hasBg || hasIcon || hasAnim )
 		label->show();
 	else
 		label->hide();
@@ -345,7 +348,8 @@ QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& 
 
 void BoxContainerItem::setAnimIcon( QLabel* label, const QString& anim )
 {
-	label->setMovie( KGlobal::iconLoader()->loadMovie( anim, KIcon::Desktop ) );
+	label->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+	label->setMovie( QMovie( anim ) );
 	label->show();
 }
 
