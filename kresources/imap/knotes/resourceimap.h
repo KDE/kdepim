@@ -1,6 +1,6 @@
 /*
     This file is part of the IMAP resources.
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -85,7 +85,7 @@ public:
 
   // Listen to KMail telling us the async load finished
   void asyncLoadResult( const QStringList&, const QString&, const QString& );
-  
+
   /** Return the list of subresources. */
   QStringList subresources() const;
 
@@ -103,7 +103,7 @@ private:
 
   // parse a list of notes and add the result to the resource
   bool populate( const QStringList&, const QString& resource );
-  
+
   QString configFile() const {
     return ResourceIMAPBase::ResourceIMAPShared::configFile( "knotes" );
   }

@@ -2,7 +2,7 @@
     This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -243,8 +243,8 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
   /* Remove from the local calendar and the uidmap. The update will add the
-   * event to a folder which will result in the signals telling us about it. 
-   * This way the other instances of this resource are notified as well, and 
+   * event to a folder which will result in the signals telling us about it.
+   * This way the other instances of this resource are notified as well, and
    * we know which uids are currently being processed. */
   if ( mUidMap.contains( uid ) ) {
     mUidMap.remove( uid );
@@ -279,7 +279,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
                     emit useGlobalMode() ;
         }
         Incidence* result = ch->getIncidence();
-      delete ch; 
+      delete ch;
       if ( result == local ) {
           localIncidence = local->clone();
           delete inc;
@@ -313,7 +313,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       }
       mSilent = silent;
 
-   
+
   }
 #endif
 }
@@ -765,9 +765,9 @@ QStringList ResourceKolab::subresources() const
   // Workaround: The ResourceView in KOrganizer wants to know this
   // before it opens the resource :-( Make sure we are open
   const_cast<ResourceKolab*>( this )->doOpen();
-  return ( mEventSubResources.keys() 
-         + mTodoSubResources.keys() 
-         + mJournalSubResources.keys() ); 
+  return ( mEventSubResources.keys()
+         + mTodoSubResources.keys()
+         + mJournalSubResources.keys() );
 }
 
 const QString
@@ -811,18 +811,18 @@ bool ResourceKolab::subresourceActive( const QString& subresource ) const
 
   return true;
 }
-  
+
 void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 {
   ResourceMap *map = 0;
-  
+
   if ( mEventSubResources.contains( subresource ) )
      map = &mEventSubResources;
   if ( mTodoSubResources.contains( subresource ) )
      map = &mTodoSubResources;
   if ( mJournalSubResources.contains( subresource ) )
      map = &mJournalSubResources;
-  
+
   if ( map && ( ( *map )[ subresource ].active() != v ) ) {
     ( *map )[ subresource ].setActive( v );
     doLoad();                     // refresh the mCalendar cache
