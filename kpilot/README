@@ -62,7 +62,7 @@ Installation
 	KPilot _REQUIRES_ at least Beta 4 of KDE (http://www.kde.org/)
 and v1.33 or better of the QT widget set (http://www.troll.no/). As of
 this writing, Qt-1.44 and KDE 1.1.2 are current; no support has been
-introduced for the upcoming KDE2 and Qt-2.02.
+introduced for the upcoming KDE2 and Qt-2.0.2.
 
 	If you have these packages, a simple:
 
@@ -92,6 +92,19 @@ KPilot mailing list and state the nature of the failure there.
 	NOTE that KPilot makes assumptions about where pilot-link and
 the Qt libraries are; in particular it is important to set QTDIR
 correctly (to the Qt 1.44 directories) when compiling KPilot.
+
+Common Installation Problems
+============================
+
+o "configure can not run a little KDE program to test the environment."
+
+	If you have Qt 2.0.1 installed (most Red Hat 6.1 systems do) 
+	as well as Qt 1.44, and KDE is linked against Qt 1.44 (like on 
+	Red Hat 6.1 systems) then DOUBLE CHECK QTDIR; it is probably 
+	set to the directory for 2.0.1, and this causes linkage problems.
+
+	Set QTDIR to /usr/lib/qt-1.44/ (or wherever you keep the Qt
+	version KDE was linked with)
 
 Using the software
 ==================
