@@ -10,6 +10,8 @@ debian/tmp/usr/lib/kde3/libnullconduit.la
 debian/tmp/usr/lib/kde3/libnullconduit.so.*
 debian/tmp/usr/lib/kde3/libpopmailconduit.la
 debian/tmp/usr/lib/kde3/libpopmailconduit.so.*
+debian/tmp/usr/lib/kde3/libtodoconduit.la
+debian/tmp/usr/lib/kde3/libtodoconduit.so.*
 debian/tmp/usr/lib/kde3/libvcalconduit.la
 debian/tmp/usr/lib/kde3/libvcalconduit.so.*
 debian/tmp/usr/lib/libkpilot.la
@@ -29,5 +31,6 @@ debian/tmp/usr/share/services/expense-conduit.desktop
 debian/tmp/usr/share/services/knotes-conduit.desktop
 debian/tmp/usr/share/services/null-conduit.desktop
 debian/tmp/usr/share/services/popmail-conduit.desktop
+debian/tmp/usr/share/services/todo-conduit.desktop
 debian/tmp/usr/share/services/vcal-conduit.desktop
 debian/tmp/usr/share/servicetypes/kpilotconduit.desktop
