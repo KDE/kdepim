@@ -47,10 +47,10 @@ static const char *popmail_conduit_id=
 #include <ctype.h>
 #include <iostream.h>
 
-
 #include <unistd.h>
 #include <errno.h>
 
+#include <time.h>  // Needed by pilot-link include
 #include <pi-mail.h>
 
 #include <qdir.h>
@@ -1975,6 +1975,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.31  2001/12/31 09:24:45  adridg
+// Cleanup, various fixes for runtime loading
+//
 // Revision 1.30  2001/12/28 13:01:16  adridg
 // Add SyncAction
 //

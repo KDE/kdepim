@@ -29,6 +29,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <time.h>
+
 #include <qobject.h>
 #include <pi-macros.h>
 
@@ -105,6 +107,9 @@ private:
 
 
 // $Log$
+// Revision 1.2  2001/10/17 08:46:08  adridg
+// Minor cleanups
+//
 // Revision 1.1  2001/10/10 21:47:14  adridg
 // Shared files moved from ../kpilot/ and polished
 //

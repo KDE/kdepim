@@ -242,10 +242,12 @@ void VCalConduit::setVcalAlarms(Incidence *vevent,
       advanceUnits=1;
   }
 
+#if TODO_fix_alarms
   alarmDT = alarmDT.addSecs(60*advanceUnits*-(dateEntry.getAdvance()));
 
   vevent->alarm()->setTime(alarmDT);
   vevent->alarm()->setRepeatCount(1);  // Enable alarm
+#endif
 }
 
 
@@ -262,7 +264,7 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
     return;
   }
 
-  KORecurrence *recur = vevent->recurrence();
+  Recurrence *recur = vevent->recurrence();
   int freq = dateEntry.getRepeatFrequency();
   bool repeatsForever = dateEntry.getRepeatForever();
   QDate endDate;
@@ -305,8 +307,8 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
       }
       break;
     case repeatMonthlyByDay:
-      if (repeatsForever) recur->setMonthly(KORecurrence::rMonthlyPos,freq,0);
-      else recur->setMonthly(KORecurrence::rMonthlyPos,freq,endDate);
+      if (repeatsForever) recur->setMonthly(Recurrence::rMonthlyPos,freq,0);
+      else recur->setMonthly(Recurrence::rMonthlyPos,freq,endDate);
 
       dayArray.setBit(dateEntry.getRepeatDay() % 7);
       recur->addMonthlyPos((dateEntry.getRepeatDay() / 7) + 1,dayArray);
@@ -317,15 +319,15 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
 #endif
       break;
     case repeatMonthlyByDate:
-      if (repeatsForever) recur->setMonthly(KORecurrence::rMonthlyDay,freq,0);
-      else recur->setMonthly(KORecurrence::rMonthlyDay,freq,endDate);
+      if (repeatsForever) recur->setMonthly(Recurrence::rMonthlyDay,freq,0);
+      else recur->setMonthly(Recurrence::rMonthlyDay,freq,endDate);
 #if 0      
       tmpStr.sprintf("MD%i ", dateEntry.getRepeatFrequency());
 #endif
       break;
     case repeatYearly:
-      if (repeatsForever) recur->setYearly(KORecurrence::rYearlyDay,freq,0);
-      else recur->setYearly(KORecurrence::rYearlyDay,freq,endDate);
+      if (repeatsForever) recur->setYearly(Recurrence::rYearlyDay,freq,0);
+      else recur->setYearly(Recurrence::rYearlyDay,freq,endDate);
 #if 0
       tmpStr.sprintf("YD%i ", dateEntry.getRepeatFrequency());
 #endif
@@ -511,18 +513,16 @@ struct tm *VCalConduit::getExceptionDates(Event *vevent, int *n)
   struct tm *tmList = 0;
   int count = 0;
 
-  QDateList dates = vevent->exDates();
-  QDate *date = dates.first();
-  while(date) {
-    struct tm extm = writeTm(*date);
+  DateList dates = vevent->exDates();
+  DateList::ConstIterator it;
+  for( it = dates.begin(); it != dates.end(); ++it ) {
+    struct tm extm = writeTm(*it);
     ++count;
     tmList = (struct tm *) realloc(tmList, sizeof(struct tm)*count);
     if (!tmList)
       kdFatal(CONDUIT_AREA) << __FUNCTION__
 			    << ": realloc() failed!" << endl;
     tmList[count-1] = extm;
-
-    date = dates.next();
   }
 
   if (n) *n = count;
@@ -623,21 +623,21 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
 {
   FUNCTIONSETUP;
 
-  KORecurrence *recur = incidence->recurrence();
+  Recurrence *recur = incidence->recurrence();
 
   // Default to repeat daily, since there is no "None" element of
   // PeriodConstants.
   PeriodConstants period = DailyPeriod;
 
   switch (recur->doesRecur()) {
-    case KORecurrence::rNone:
+    case Recurrence::rNone:
       dateEntry->setRepeatType(repeatNone);
       break;
-    case KORecurrence::rDaily:
+    case Recurrence::rDaily:
       dateEntry->setRepeatType(repeatDaily);
       period = DailyPeriod;
       break;
-    case KORecurrence::rWeekly:
+    case Recurrence::rWeekly:
       {
 	// On the pilot bit 0 means sunday, on the desktop it means
 	// monday. => We need to rotate the the bit array by one.
@@ -650,12 +650,12 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
 	dateEntry->setRepeatDays(days2);
       }
       break;
-    case KORecurrence::rMonthlyPos:
+    case Recurrence::rMonthlyPos:
       dateEntry->setRepeatType(repeatMonthlyByDay);
       period = MonthlyByPosPeriod;
       {
-        QList<KORecurrence::rMonthPos> rl = recur->monthPositions();
-        KORecurrence::rMonthPos *r = rl.first();
+        QList<Recurrence::rMonthPos> rl = recur->monthPositions();
+        Recurrence::rMonthPos *r = rl.first();
         if (!r) {
           kdDebug() << "Recurrence monthlyPos, but no rMonthPos" << endl;
           dateEntry->setRepeatType(repeatNone);
@@ -671,11 +671,11 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
         }
       }
       break;
-    case KORecurrence::rMonthlyDay:
+    case Recurrence::rMonthlyDay:
       dateEntry->setRepeatType(repeatMonthlyByDate);
       period = MonthlyByDayPeriod;
       break;
-    case KORecurrence::rYearlyDay:
+    case Recurrence::rYearlyDay:
       dateEntry->setRepeatType(repeatYearly);
       period = YearlyByDayPeriod;
       break;
@@ -747,6 +747,7 @@ void VCalConduit::setStartEndTimes(PilotDateEntry *dateEntry,Event *vevent)
 
 void VCalConduit::setAlarms(PilotDateEntry *dateEntry,Event *vevent)
 {
+#if TODO_fix_alarms
   if (vevent->alarm()->repeatCount() == 0) {
     dateEntry->setAlarm(0);
   } else {
@@ -767,6 +768,7 @@ void VCalConduit::setAlarms(PilotDateEntry *dateEntry,Event *vevent)
       dateEntry->setAdvance((int) diffSecs/60);
     }
   }
+#endif
 }
 
 
@@ -818,6 +820,9 @@ void VCalConduit::doTest()
 }
 
 // $Log$
+// Revision 1.46  2001/12/31 09:35:43  adridg
+// Sanitizing __FUNCTION__ and cerr
+//
 // Revision 1.45  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //
