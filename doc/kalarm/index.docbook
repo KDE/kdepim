@@ -592,7 +592,7 @@ played.</para>
 
 <note><para>When possible, &kmix; is used to set the volume. This
 ensures that the volume at which the alarm is played is unaffected by
-any changes in the computer's sound level. If &kmix; is not available
+any changes in the computer's sound level. If &kmix; is not running
 (or is older than &kde; 3.1), the volume is set relative to the sound
 level current at the time the alarm triggers. So in this case, the
 volume at which the alarm is played will vary depending on any changes
