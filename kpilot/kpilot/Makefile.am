@@ -3,7 +3,7 @@ noinst_LIBRARIES = libconduit.a
 
 METASOURCES = AUTO
 
-INCLUDES= @all_includes@ -I/usr/local/include
+INCLUDES= $(all_includes)
 
 #SUBDIRS = doc
 
@@ -36,5 +36,3 @@ kpilotDaemon_LDADD = $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ -
 appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kpilot.desktop kpilotdaemon.desktop
 
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)

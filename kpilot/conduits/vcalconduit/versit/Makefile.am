@@ -30,27 +30,6 @@ libversit_a_SOURCES = vcc.c vobject.c
 
 noinst_HEADERS = port.h vcc.h vobject.h vcc.y
 
-# just to make sure, automake makes them 
-BUILTSOURCES = vcc.o vobject.o libversit.a
-
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
-
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
-
-# just install datas here. Use install-exec-data for scripts and etc.
-# the binary itself is already installed from automake
-# use mkinstalldirs, not "install -d"
-# don't install a list of file. Just one file per install.
-# if you have more of them, create a subdirectory with an extra Makefile 
-install-data-local: 
-
-# remove ALL you have installed in install-data-local or install-exec-local
-uninstall-local:
-
 # add a dependency for every moc file to be full portable
 # I've added a key binding to emacs for this. 
 $(srcdir)/vcc.c: vcc.y

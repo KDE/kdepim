@@ -20,10 +20,3 @@ popmail_conduit_LDADD   =  -lconduit \
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = popmail-conduit.h passworddialog.h setupDialog.h
 
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
-
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
