@@ -86,8 +86,8 @@ class Backup : public ActionPart
     void slotBackupDeleted( const QString & );
     
   private:
-    QPixmap m_pixmap;
-    QWidget *m_widget;
+    QPixmap mPixmap;
+    QWidget *mWidget;
 
     KonnectorView *mKonnectorList;
     BackupView *mBackupView;

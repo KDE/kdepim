@@ -44,8 +44,9 @@ class KonnectorView;
 }
 
 namespace KSPlucker {
-class ProcessHandler;
-class PluckerPart : public KSync::ActionPart, virtual public PluckerInterface {
+class PluckerProcessHandler;
+class PluckerPart : public KSync::ActionPart, virtual public PluckerInterface 
+{
     Q_OBJECT
 public:
     PluckerPart( QWidget* parent, const char* name, QObject* obj,
@@ -79,7 +80,7 @@ public slots:
 
 private slots:
     void slotCleanUp();
-    void slotFinished(ProcessHandler*);
+    void slotFinished(PluckerProcessHandler*);
     void slotProfileChanged(const Profile&);
 
 private:

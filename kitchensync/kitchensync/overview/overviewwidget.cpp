@@ -30,8 +30,6 @@
 #include <klocale.h>
 
 #include <actionpart.h>
-#include <error.h>
-#include <progress.h>
 
 #include "overviewwidget.h"
 
@@ -103,16 +101,6 @@ void Widget::setProfile( const QString& name, const QPixmap& pix )
   cleanView();
 }
 
-void Widget::addProgress( Konnector *, const Progress& prog )
-{
-  m_edit->append( "<b>" + QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
-}
-
-void Widget::addProgress( ActionPart *, const Progress& prog )
-{
-  m_edit->append( "<b>" + QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
-}
-
 void Widget::syncProgress( ActionPart * part, int status, int )
 {
   OverViewProgressEntry* it;
@@ -138,16 +126,6 @@ void Widget::syncProgress( ActionPart * part, int status, int )
   m_layout->insertWidget( m_layoutFillIndex , test, 0, AlignTop );
   m_layoutFillIndex++;
   test->show();
-}
-
-void Widget::addError( Konnector *, const Error& prog )
-{
-  m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
-}
-
-void Widget::addError( ActionPart *, const Error& prog )
-{
-  m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 
 void Widget::startSync()

@@ -41,10 +41,6 @@ class KCalKonnector : public KSync::Konnector
 
     void writeConfig( KConfig * );
 
-    KSync::Kapabilities capabilities();
-
-    void setCapabilities( const KSync::Kapabilities& );
-
     SynceeList syncees() { return mSyncees; }
 
     bool readSyncees();
@@ -54,8 +50,6 @@ class KCalKonnector : public KSync::Konnector
     bool disconnectDevice();
 
     KSync::KonnectorInfo info() const;
-
-    void download( const QString& );
 
     void setCurrentResource( const QString &identifier ) { mResourceIdentifier = identifier; }
     QString currentResource() const { return mResourceIdentifier; }

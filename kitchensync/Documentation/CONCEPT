@@ -13,10 +13,11 @@ It is a Syncee and this Syncee contains SyncEntry. The Syncee provides
 at least cloning and iterating through the SyncEntries. 
 
 Device Independent:
-    There are different kind of devices and different situations to use them.
-You can have a one way copy or two way blind copy where all records are just
-copied. Then we also support the concept of MetaSync. In MetaSync we collect
-and then can recognize changes and do merging on them.
+Each SyncEntry contains a state to indicate if they were added, modified
+or removed. The Konnector can use whatever it wants to identify the
+SyncEntry as such. There is a helper class called SyncHistory to help
+identifying records and setting the state.
+
     Also there are limitations of the different device. For example with KDE 
 Addressbook you can save Geo Data and Keys but the Opie Addressbook is not capable
 of saving this data. So we need a way not to lose these attributes. This is why

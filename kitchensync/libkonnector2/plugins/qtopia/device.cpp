@@ -32,7 +32,7 @@ using KSync::CalendarSyncee;
 using namespace OpieHelper;
 
 Device::Device()
-  : mAMerger( 0l ), mCMerger( 0l )
+  : mABookMerger( 0l ), mCalendarMerger( 0l )
 {
     m_model = Opie;
 }
@@ -48,22 +48,27 @@ void Device::setDistribution( int dist ) {
     m_model = dist;
 }
 
-KSync::Merger* Device::merger( enum PIM pim){
-    KSync::Merger* m;
-    switch( pim ) {
+KSync::Merger* Device::merger( enum PIM pim )
+{
+  KSync::Merger* merger;
+
+  switch( pim ) {
     case Calendar:
-        m = opieCal();
-        break;
+      merger = opieCalendarMerger();
+      break;
     case Addressbook:
-        m = opieAddr();
-        break;
-    }
-    return m;
+      merger = opieAddressBookMerger();
+      break;
+    default:
+      merger = 0;
+  }
+
+  return merger;
 }
 
-KSync::Merger* Device::opieCal(){
-  if ( mCMerger )
-    return mCMerger;
+KSync::Merger* Device::opieCalendarMerger(){
+  if ( mCalendarMerger )
+    return mCalendarMerger;
 
   QBitArray cal( KSync::CalendarMerger::DtEnd+1 );
   cal[KSync::CalendarMerger::Organizer] = false;
@@ -115,14 +120,14 @@ KSync::Merger* Device::opieCal(){
   todo[KSync::CalendarMerger::StartDateTime] = false;
   todo[KSync::CalendarMerger::DueDateTime] = false;
 
-  mCMerger = new KSync::CalendarMerger(todo, cal );
+  mCalendarMerger = new KSync::CalendarMerger(todo, cal );
 
-  return mCMerger;
+  return mCalendarMerger;
 }
 
-KSync::Merger* Device::opieAddr(){
-  if ( mAMerger )
-    return mAMerger;
+KSync::Merger* Device::opieAddressBookMerger(){
+  if ( mABookMerger )
+    return mABookMerger;
 
   QBitArray ar(KSync::AddressBookMerger::Emails +1 );
 
@@ -170,9 +175,9 @@ KSync::Merger* Device::opieAddr(){
   ar[KSync::AddressBookMerger::Email] = true;
   ar[KSync::AddressBookMerger::Emails] = true;
 
-  mAMerger = new KSync::AddressBookMerger( ar );
+  mABookMerger = new KSync::AddressBookMerger( ar );
 
-  return mAMerger;
+  return mABookMerger;
 }
 
 QString Device::user()const {

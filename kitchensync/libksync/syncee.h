@@ -217,7 +217,7 @@ class Syncee
       You might want a new uid to be generated. To later find
       an Entry again you'll need this map
     */
-    virtual QString newId() const;
+    virtual QString generateNewId() const;
     /**
       @param type The type for the ids to returned
       @return the ids as QValueList

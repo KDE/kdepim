@@ -35,10 +35,8 @@ class QTextEdit;
 
 namespace KSync {
 
-class Error;
 class KonnectorProfile;
 class Profile;
-class Progress;
 
 namespace OverView {
 
@@ -55,10 +53,6 @@ class Widget : public QWidget
 
     void setProfile( const Profile& );
     void setProfile( const QString&,const QPixmap& pix );
-    void addProgress( Konnector *, const Progress& );
-    void addProgress( ActionPart*, const Progress& );
-    void addError( Konnector *, const Error& );
-    void addError( ActionPart*, const Error& );
     void syncProgress( ActionPart*, int, int);
     void startSync();
     void cleanView();

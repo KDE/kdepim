@@ -21,7 +21,6 @@
 
 #include <kdebug.h>
 
-#include <configwidget.h>
 #include <klocale.h>
 #include <konnector.h>
 #include <konnectorinfo.h>

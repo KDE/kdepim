@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libremotekonnector.la
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/kitchensync/libkonnector2 \
+           -I$(top_srcdir)/libkcal -I$(top_srcdir)/libemailfunctions $(all_includes)
 
 libremotekonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/libksync -I../../   $(all_includes)
 libremotekonnector_la_LIBADD = ../../libkonnector.la -lkabc_file

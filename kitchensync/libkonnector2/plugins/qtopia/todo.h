@@ -62,15 +62,15 @@ public:
   KTempFile* fromKDE( KSync::CalendarSyncee* entry, ExtraMap& map  );
 
 private:
-  QStringList attributes()const;
+  QStringList supportedAttributes();
   void setUid( KCal::Todo*,  const QString &uid );
   KCal::Todo* dom2todo( QDomElement, ExtraMap&, const QStringList& );
   QString todo2String( KCal::Todo*, ExtraMap&  );
 
 /* time conversions */
 private:
-  QString  dateToString( const QDate& );
-  QDate    stringToDate( const QString& );
+  static QString  dateToString( const QDate& );
+  static QDate    stringToDate( const QString& );
 };
 }
 

@@ -81,6 +81,7 @@ class BookmarkSyncee : public Syncee
     void init();
 
     BookmarkSyncEntry *createEntry( KBookmark );
+    /* ### naming */
     void listGroup( KBookmarkGroup );
     KBookmarkGroup findGroup( KBookmarkGroup group );
 

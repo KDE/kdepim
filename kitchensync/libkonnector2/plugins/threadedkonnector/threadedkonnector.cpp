@@ -22,7 +22,6 @@
 #include <kdebug.h>
 #include <kgenericfactory.h>
 #include <kconfig.h>
-#include <kapabilities.h>
 #include <konnectorinfo.h>
 
 #include "clientmanager.h"
@@ -65,15 +64,6 @@ ThreadedPlugin::~ThreadedPlugin() {
   kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
   mClientManager.terminate();
   mClientManager.wait();
-}
-
-Kapabilities ThreadedPlugin::capabilities() {
-  kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
-  return Kapabilities();
-}
-
-void ThreadedPlugin::setCapabilities( const KSync::Kapabilities& ) {
-  kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
 }
 
 bool ThreadedPlugin::readSyncees() {

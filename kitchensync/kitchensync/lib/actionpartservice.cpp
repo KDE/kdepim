@@ -72,7 +72,7 @@ ActionPartService::ActionPartService()
 ActionPartService::ActionPartService( const KService::Ptr &service )
   : m_id( service->desktopEntryName() ), m_name( service->name() ),
     m_comment( service->comment() ),
-    m_icon( service->icon() ), m_lib( service->library() )
+    m_iconName( service->icon() ), m_libName( service->library() )
 {
   kdDebug() << "xx: " << m_id << endl;
 }
@@ -96,14 +96,14 @@ QString ActionPartService::comment() const
   return m_comment;
 }
 
-QString ActionPartService::libname() const
+QString ActionPartService::libraryName() const
 {
-  return m_lib;
+  return m_libName;
 }
 
-QString ActionPartService::icon() const
+QString ActionPartService::iconName() const
 {
-  return m_icon;
+  return m_iconName;
 }
 
 void ActionPartService::setId( const QString &id )
@@ -121,22 +121,22 @@ void ActionPartService::setComment( const QString &comment )
   m_comment = comment;
 }
 
-void ActionPartService::setLibname( const QString &libName )
+void ActionPartService::setLibraryName( const QString &libName )
 {
-  m_lib = libName;
+  m_libName = libName;
 }
 
-void ActionPartService::setIcon( const QString &icon )
+void ActionPartService::setIconName( const QString &icon )
 {
-  m_icon = icon;
+  m_iconName = icon;
 }
 
 ActionPartService &ActionPartService::operator=( const ActionPartService &man1 )
 {
   m_name = man1.m_name;
   m_comment = man1.m_comment;
-  m_icon = man1.m_icon;
-  m_lib = man1.m_lib;
+  m_iconName = man1.m_iconName;
+  m_libName = man1.m_libName;
   return *this;
 }
 

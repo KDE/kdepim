@@ -57,16 +57,16 @@ namespace OpieHelper {
         void setPassword( const QString& );
 
     private:
-        KSync::Merger* opieCal();
-        KSync::Merger* opieAddr();
+        KSync::Merger* opieCalendarMerger();
+        KSync::Merger* opieAddressBookMerger();
 
         int m_model;
         QString m_meta;
         QString m_user;
         QString m_pass;
 
-        KSync::Merger *mAMerger;
-        KSync::Merger *mCMerger;
+        KSync::Merger *mABookMerger;
+        KSync::Merger *mCalendarMerger;
     };
 }
 

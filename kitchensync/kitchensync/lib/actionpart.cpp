@@ -86,26 +86,9 @@ Core* ActionPart::core() const
     return m_window;
 }
 
-void ActionPart::progress( int pro )
-{
-    m_prog = pro;
-    emit sig_progress( this, pro );
-}
-
-void ActionPart::progress( const Progress& pro )
-{
-    emit sig_progress( this,pro );
-}
-
-void ActionPart::error( const Error& err )
-{
-    emit sig_error( this, err );
-}
-
 void ActionPart::done()
 {
     m_stat = SYNC_DONE;
-    emit sig_syncStatus( this, m_stat );
 }
 
 void ActionPart::slotConfigOk()
@@ -115,31 +98,6 @@ void ActionPart::slotConfigOk()
 void ActionPart::connectPartChange( const char *slot )
 {
     connect( core(), SIGNAL( partChanged( ActionPart * ) ), slot );
-}
-
-void ActionPart::connectPartProgress( const char *slot )
-{
-    connect( core(), SIGNAL( partProgress( ActionPart *, const Progress & ) ),
-             slot );
-}
-
-void ActionPart::connectPartError( const char *slot )
-{
-    connect( core(), SIGNAL( partError( ActionPart *, const Error & ) ),
-             slot );
-}
-
-void ActionPart::connectKonnectorProgress( const char *slot )
-{
-    connect( core(),
-             SIGNAL( konnectorProgress( Konnector *, const Progress & ) ),
-             slot );
-}
-
-void ActionPart::connectKonnectorError( const char *slot )
-{
-    connect( core(), SIGNAL( konnectorError( Konnector *, const Error & ) ),
-             slot );
 }
 
 void ActionPart::connectSyncProgress( const char *slot )

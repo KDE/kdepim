@@ -39,31 +39,33 @@ static KStaticDeleter<MergeMap> mergeMapDeleter;
 /* merge functions */
 static void mergeFamily    ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeGiven     ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeAdditional( KABC::Addressee&, const KABC::Addressee& );
+static void mergeAdditionalName( KABC::Addressee&, const KABC::Addressee& );
 static void mergePrefix    ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeSuffix    ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeNick      ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeBirth     ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeHome      ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeBus       ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeTime      ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeNickName      ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeBirthDay      ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeHomeAddress   ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeBusinessAddress ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeTimeZone      ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeGeo       ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeTitle     ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeRole      ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeOrg       ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeOrganization  ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeNote      ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeUrl       ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeSecrecy   ( KABC::Addressee&, const KABC::Addressee& );
 static void mergePicture   ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeSound     ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeAgent     ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeHomeTel   ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeOffTel    ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeHomeTelephoneNumber( KABC::Addressee&,
+                                      const KABC::Addressee& );
+static void mergeOfficeTelephoneNumber( KABC::Addressee&,
+                                        const KABC::Addressee& );
 static void mergeMessenger ( KABC::Addressee&, const KABC::Addressee& );
 static void mergePreferredNumber( KABC::Addressee&, const KABC::Addressee& );
 static void mergeVoice     ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeFax       ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeCell      ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeCellPhone ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeVideo     ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeMailbox   ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeModem     ( KABC::Addressee&, const KABC::Addressee& );
@@ -73,12 +75,11 @@ static void mergePCS       ( KABC::Addressee&, const KABC::Addressee& );
 static void mergePager     ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeHomeFax   ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeWorkFax   ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeOtherTel  ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeCat       ( KABC::Addressee&, const KABC::Addressee& );
+static void mergeOtherTelephone( KABC::Addressee&, const KABC::Addressee& );
+static void mergeCategory  ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeKeys      ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeCustom    ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeLogo      ( KABC::Addressee&, const KABC::Addressee& );
-static void mergeEmail     ( KABC::Addressee&, const KABC::Addressee& );
 static void mergeEmails    ( KABC::Addressee&, const KABC::Addressee& );
 static QStringList mergeList( const QStringList& entry, const QStringList& other );
 
@@ -89,31 +90,31 @@ MergeMap* mergeMap()
     mergeMapDeleter.setObject( _mergeMap,  new MergeMap );
     _mergeMap->insert(AddressBookMerger::FamilyName, mergeFamily );
     _mergeMap->insert(AddressBookMerger::GivenName,  mergeGiven );
-    _mergeMap->insert(AddressBookMerger::AdditionalName, mergeAdditional );
+    _mergeMap->insert(AddressBookMerger::AdditionalName, mergeAdditionalName );
     _mergeMap->insert(AddressBookMerger::Prefix, mergePrefix );
     _mergeMap->insert(AddressBookMerger::Suffix, mergeSuffix );
-    _mergeMap->insert(AddressBookMerger::NickName, mergeNick );
-    _mergeMap->insert(AddressBookMerger::Birthday, mergeBirth );
-    _mergeMap->insert(AddressBookMerger::HomeAddress, mergeHome );
-    _mergeMap->insert(AddressBookMerger::BusinessAddress, mergeBus );
-    _mergeMap->insert(AddressBookMerger::TimeZone, mergeTime );
+    _mergeMap->insert(AddressBookMerger::NickName, mergeNickName );
+    _mergeMap->insert(AddressBookMerger::Birthday, mergeBirthDay );
+    _mergeMap->insert(AddressBookMerger::HomeAddress, mergeHomeAddress );
+    _mergeMap->insert(AddressBookMerger::BusinessAddress, mergeBusinessAddress );
+    _mergeMap->insert(AddressBookMerger::TimeZone, mergeTimeZone );
     _mergeMap->insert(AddressBookMerger::Geo, mergeGeo );
     _mergeMap->insert(AddressBookMerger::Title, mergeTitle );
     _mergeMap->insert(AddressBookMerger::Role, mergeRole );
-    _mergeMap->insert(AddressBookMerger::Organization, mergeOrg );
+    _mergeMap->insert(AddressBookMerger::Organization, mergeOrganization );
     _mergeMap->insert(AddressBookMerger::Note, mergeNote );
     _mergeMap->insert(AddressBookMerger::Url, mergeUrl );
     _mergeMap->insert(AddressBookMerger::Secrecy, mergeSecrecy );
     _mergeMap->insert(AddressBookMerger::Picture, mergePicture );
     _mergeMap->insert(AddressBookMerger::Sound, mergeSound );
     _mergeMap->insert(AddressBookMerger::Agent, mergeAgent );
-    _mergeMap->insert(AddressBookMerger::HomeNumbers, mergeHomeTel );
-    _mergeMap->insert(AddressBookMerger::OfficeNumbers, mergeOffTel );
+    _mergeMap->insert(AddressBookMerger::HomeNumbers, mergeHomeTelephoneNumber );
+    _mergeMap->insert(AddressBookMerger::OfficeNumbers, mergeOfficeTelephoneNumber );
     _mergeMap->insert(AddressBookMerger::Messenger, mergeMessenger );
     _mergeMap->insert(AddressBookMerger::PreferredNumber, mergePreferredNumber );
     _mergeMap->insert(AddressBookMerger::Voice, mergeVoice );
     _mergeMap->insert(AddressBookMerger::Fax, mergeFax );
-    _mergeMap->insert(AddressBookMerger::Cell, mergeCell );
+    _mergeMap->insert(AddressBookMerger::Cell, mergeCellPhone );
     _mergeMap->insert(AddressBookMerger::Video, mergeVideo );
     _mergeMap->insert(AddressBookMerger::Mailbox, mergeMailbox );
     _mergeMap->insert(AddressBookMerger::Modem, mergeModem );
@@ -123,8 +124,8 @@ MergeMap* mergeMap()
     _mergeMap->insert(AddressBookMerger::Pager, mergePager );
     _mergeMap->insert(AddressBookMerger::HomeFax, mergeHomeFax );
     _mergeMap->insert(AddressBookMerger::WorkFax, mergeWorkFax );
-    _mergeMap->insert(AddressBookMerger::OtherTel, mergeOtherTel );
-    _mergeMap->insert(AddressBookMerger::Category, mergeCat );
+    _mergeMap->insert(AddressBookMerger::OtherTel, mergeOtherTelephone );
+    _mergeMap->insert(AddressBookMerger::Category, mergeCategory );
     _mergeMap->insert(AddressBookMerger::Custom, mergeCustom );
     _mergeMap->insert(AddressBookMerger::Keys, mergeKeys );
     _mergeMap->insert(AddressBookMerger::Logo, mergeLogo );
@@ -143,7 +144,7 @@ static void mergeGiven     ( KABC::Addressee& entry, const KABC::Addressee& othe
   entry.setGivenName( other.givenName() );
 }
 
-static void mergeAdditional( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeAdditionalName( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setAdditionalName( other.additionalName() );
 }
@@ -158,27 +159,27 @@ static void mergeSuffix    ( KABC::Addressee& entry, const KABC::Addressee& othe
   entry.setSuffix( other.suffix() );
 }
 
-static void mergeNick      ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeNickName( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setNickName( other.nickName() );
 }
 
-static void mergeBirth     ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeBirthDay( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setBirthday( other.birthday() );
 }
 
-static void mergeHome      ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeHomeAddress( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.insertAddress( other.address( KABC::Address::Home ) );
 }
 
-static void mergeBus       ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeBusinessAddress( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.insertAddress( other.address( KABC::Address::Work ) );
 }
 
-static void mergeTime      ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeTimeZone( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setTimeZone( other.timeZone() );
 }
@@ -198,7 +199,7 @@ static void mergeRole      ( KABC::Addressee& entry, const KABC::Addressee& othe
   entry.setRole( other.role() );
 }
 
-static void mergeOrg       ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeOrganization( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setOrganization( other.organization() );
 }
@@ -233,12 +234,12 @@ static void mergeAgent     ( KABC::Addressee& entry, const KABC::Addressee& othe
   entry.setAgent( other.agent() );
 }
 
-static void mergeHomeTel   ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeHomeTelephoneNumber( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Home ) );
 }
 
-static void mergeOffTel    ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeOfficeTelephoneNumber( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Work ) );
 }
@@ -263,7 +264,7 @@ static void mergeFax       ( KABC::Addressee& entry, const KABC::Addressee& othe
   entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Fax ) );
 }
 
-static void mergeCell      ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeCellPhone ( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Cell ) );
 }
@@ -313,10 +314,10 @@ static void mergeWorkFax   ( KABC::Addressee& entry, const KABC::Addressee& othe
   entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax ) );
 }
 
-static void mergeOtherTel ( KABC::Addressee&, const KABC::Addressee& )
+static void mergeOtherTelephone ( KABC::Addressee&, const KABC::Addressee& )
 {}
 
-static void mergeCat       ( KABC::Addressee& entry, const KABC::Addressee& other)
+static void mergeCategory( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setCategories( other.categories() );
 }
@@ -334,11 +335,6 @@ static void mergeCustom    ( KABC::Addressee& entry, const KABC::Addressee& othe
 static void mergeLogo      ( KABC::Addressee& entry, const KABC::Addressee& other)
 {
   entry.setLogo( other.logo() );
-}
-
-static void mergeEmail     ( KABC::Addressee& entry, const KABC::Addressee& other)
-{
-  entry.insertEmail( other.preferredEmail(), true );
 }
 
 static void mergeEmails    ( KABC::Addressee& entry, const KABC::Addressee& other)

@@ -33,8 +33,9 @@
 #include <syncee.h>
 #include <synceelist.h>
 
-#include "stderror.h"
-#include "stdprogress.h"
+namespace KPIM {
+class ProgressItem;
+}
 
 namespace KSync {
 
@@ -52,7 +53,8 @@ class ConfigWidget;
 */
 class Konnector : public KRES::Resource
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     typedef QPtrList<Konnector> List;
     static QString generateMD5Sum( const QString& );
@@ -118,6 +120,38 @@ class Konnector : public KRES::Resource
      */
     void setStoragePath(const QString& path );
 
+    /**
+      Returns a progress item with the given msg. The item is already
+      connected to the progressItemCanceled() slot. You can reimplement
+      this slot for special needs.
+     */
+    KPIM::ProgressItem *progressItem( const QString &msg );
+
+    /**
+      Connect device. Return true, if device could be connected.
+    */
+    virtual bool connectDevice() = 0;
+    /**
+      Disconnect device.
+    */
+    virtual bool disconnectDevice() = 0;
+
+    bool isConnected() const;
+
+    /**
+      Return meta information about this Konnector.
+    */
+    virtual KonnectorInfo info() const = 0;
+
+    // Obsolete ?
+    virtual void add( const QString &res );
+    virtual void remove( const QString &res );
+    virtual QStringList resources() const;
+    /**
+     * the Syncees that are supported builtIn
+     */
+    virtual QStringList builtIn() const;
+
   signals:
     /**
       Emitted when Syncee list becomes available as response to
@@ -146,45 +180,9 @@ class Konnector : public KRES::Resource
      */
     void storagePathChanged( const QString& path );
 
-  public:
-    /**
-      Return capabilities of the Konnector.
-    */
-    virtual Kapabilities capabilities() = 0;
 
-    /**
-      Connect device. Return true, if device could be connected.
-    */
-    virtual bool connectDevice() = 0;
-    /**
-      Disconnect device.
-    */
-    virtual bool disconnectDevice() = 0;
-
-    bool isConnected() const;
-
-    /**
-      Return meta information about this Konnector.
-    */
-    virtual KonnectorInfo info() const = 0;
-
-    // Obsolete ?
-    virtual void add( const QString &res );
-    virtual void remove( const QString &res );
-    virtual QStringList resources() const;
-    /**
-     * the Syncees that are supported builtIn
-     */
-    virtual QStringList builtIn() const;
-
-  protected:
-    void progress( const Progress & );
-    void error( const Error & );
-
-  signals:
-    void sig_progress( Konnector *, const Progress & );
-    void sig_error( Konnector *, const Error & );
-    void sig_downloaded( Konnector *, const SynceeList & );
+  protected slots:
+    void progressItemCanceled( KPIM::ProgressItem* );
 
   private:
     QStringList m_resources;

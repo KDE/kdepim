@@ -21,7 +21,6 @@
 #include "debugger.h"
 
 #include <konnector.h>
-#include <configwidget.h>
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
 #include <mainwindow.h>
@@ -220,10 +219,6 @@ Konnector *Debugger::currentKonnector()
     kdDebug() << "Connect Konnector" << endl;
     connect( k, SIGNAL( synceesRead( Konnector * ) ),
              SLOT( slotReceiveData( Konnector * ) ) );
-    connect( k, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
-             SLOT( slotProgress( Konnector *, const Progress & ) ) );
-    connect( k, SIGNAL( sig_error( Konnector *, const Error & ) ),
-             SLOT( slotError( Konnector *, const Error & ) ) );
     mConnectedKonnectors.append( k );
   }
 
@@ -257,16 +252,6 @@ void Debugger::slotReceiveData( Konnector *k )
     }
     if ( i == 0 ) logMessage( i18n(" Empty") );
   }
-}
-
-void Debugger::slotProgress( Konnector *k, const Progress &p )
-{
-  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( p.text() ) );
-}
-
-void Debugger::slotError( Konnector *k, const Error &e )
-{
-  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( e.text() ) );
 }
 
 void Debugger::writeSyncees()

@@ -87,6 +87,6 @@ void KSPluckerConfigWidget::slotConfigureJXL()
     if ( file.isEmpty() )
         return;
 
-    KSPlucker::ProcessHandler p( KSPlucker::ProcessHandler::Configure, true, file);
+    KSPlucker::PluckerProcessHandler p( KSPlucker::PluckerProcessHandler::Configure, true, file);
     p.run();
 }

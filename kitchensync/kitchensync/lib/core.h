@@ -83,37 +83,10 @@ class Core : public QWidget
     void profileChanged( const Profile &oldProfile );
 
     /**
-     * signal emitted when progress from the konnectorProgress arrived
-     * @param konnector pointer to Konnector object
-     * @param prog the Progress
-     */
-    void konnectorProgress( Konnector *konnector , const Progress &prog );
-
-    /**
-     * @param konnector pointer to Konnector object
-     * @param err the error
-     */
-    void konnectorError( Konnector *konnector, const Error &err );
-
-    /**
      * Whenever the currently activated parts changed
      * @param newPart the newly activated part
      */
     void partChanged( ActionPart *newPart );
-
-    /**
-     * progress coming from one part
-     * @param part where the progress comes from, 0 if from MainWindow
-     * @param prog The progress
-     */
-    void partProgress( ActionPart *part, const Progress &prog );
-
-    /**
-     * error coming from one part
-     * @param part where the error comes from, 0 if from MainWindow
-     * @param error The error
-     */
-    void partError( ActionPart *part, const Error &error );
 
     /**
      * emitted when ever sync starts

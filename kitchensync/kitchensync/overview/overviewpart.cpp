@@ -38,21 +38,6 @@ K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory )
 
 using namespace KSync;
 
-namespace {
-
-kdbgstream operator<<( kdbgstream str, const Notify& no )
-{
-    str << no.code() << " " << no.text();
-    return str;
-}
-
-kndbgstream operator <<( kndbgstream str, const Notify & )
-{
-    return str;
-}
-
-}
-
 OverviewPart::OverviewPart( QWidget *parent, const char *name,
                             QObject *, const char *,const QStringList & )
   : ActionPart( parent, name )
@@ -61,10 +46,6 @@ OverviewPart::OverviewPart( QWidget *parent, const char *name,
   m_widget=0;
 
   connectPartChange( SLOT( slotPartChanged( ActionPart* ) ) );
-  connectPartProgress( SLOT( slotPartProgress( ActionPart*, const Progress& ) ) );
-  connectPartError( SLOT( slotPartError( ActionPart*, const Error& ) ) );
-  connectKonnectorProgress( SLOT( slotKonnectorProgress( Konnector *, const Progress& ) ) );
-  connectKonnectorError( SLOT( slotKonnectorError( Konnector *, const Error& ) ) );
   connectProfileChanged( SLOT( slotProfileChanged( const Profile& ) ) );
   connectSyncProgress( SLOT( slotSyncProgress( ActionPart*, int, int ) ) );
   connectStartSync( SLOT( slotStartSync() ) );
@@ -122,30 +103,6 @@ QWidget* OverviewPart::widget()
 void OverviewPart::slotPartChanged( ActionPart* part )
 {
   kdDebug(5210) << "PartChanged" << part << " name" << part->name() << endl;
-}
-
-void OverviewPart::slotPartProgress( ActionPart* part, const Progress& prog )
-{
-  kdDebug(5210) << "PartProg: " << part << " " << prog << endl;
-  m_widget->addProgress( part, prog );
-}
-
-void OverviewPart::slotPartError( ActionPart* part, const Error& err )
-{
-  kdDebug(5210) << "PartError: " << part << " " << err << endl;
-  m_widget->addError( part, err );
-}
-
-void OverviewPart::slotKonnectorProgress( Konnector *k, const Progress& prog )
-{
-  kdDebug(5210) << "KonnectorProgress: " << prog << endl;
-  m_widget->addProgress( k, prog );
-}
-
-void OverviewPart::slotKonnectorError( Konnector *k, const Error& prog )
-{
-  kdDebug(5210) << "KonnectorError : " << prog << endl;
-  m_widget->addError( k, prog );
 }
 
 void OverviewPart::slotProfileChanged( const Profile & )

@@ -26,7 +26,6 @@
 #include <kstringhandler.h>
 
 #include <konnectorinfo.h>
-#include <kapabilities.h>
 
 #include "qtopiaconfig.h"
 #include "socket.h"
@@ -61,7 +60,16 @@ extern "C"
 class QtopiaKonnector::Private
 {
   public:
-    Private() : socket( 0 ) {}
+    Private()
+      : socket( 0 )
+    {
+    }
+
+    ~Private()
+    {
+      delete socket;
+      socket = 0;
+    }
 
     QtopiaSocket *socket;
 };
@@ -82,26 +90,21 @@ QtopiaKonnector::QtopiaKonnector( const KConfig *cfg )
   d->socket->setStoragePath( storagePath() );
 
   /* now do some signal and slot connection */
-  connect( d->socket, SIGNAL( sync( SynceeList ) ),
-           SLOT( slotSync( SynceeList ) ) );
-  connect( d->socket, SIGNAL( error( const Error & ) ),
-           SLOT( slotError( const Error & ) ) );
-  connect( d->socket, SIGNAL( prog( const Progress & ) ),
-           SLOT( slotProg( const Progress & ) ) );
   connect( this, SIGNAL(storagePathChanged(const QString&)),
            d->socket, SLOT(setStoragePath(const QString&)) );
+  connect( d->socket, SIGNAL( sync( SynceeList ) ),
+           this, SLOT( slotSync( SynceeList ) ) );
 
   d->socket->setDestIP( mDestinationIP );
   d->socket->setUser( mUserName );
   d->socket->setPassword( mPassword );
   d->socket->setModel( mModel, mModelName );
-
-  d->socket->startUp();
 }
 
 QtopiaKonnector::~QtopiaKonnector()
 {
   delete d;
+  d = 0;
 }
 
 void QtopiaKonnector::writeConfig( KConfig *cfg )
@@ -113,36 +116,6 @@ void QtopiaKonnector::writeConfig( KConfig *cfg )
   cfg->writeEntry( "Password", KStringHandler::obscure( mPassword ) );
   cfg->writeEntry( "Model", mModel );
   cfg->writeEntry( "ModelName", mModelName );
-}
-
-Kapabilities QtopiaKonnector::capabilities()
-{
-  Kapabilities caps;
-  caps.setSupportMetaSyncing( true );
-  caps.setSupportsPushSync( true );
-  caps.setNeedsConnection( true );
-  caps.setSupportsListDir( true );
-  caps.setNeedsIPs( true );
-  caps.setNeedsSrcIP( false );
-  caps.setNeedsDestIP( true );
-  caps.setAutoHandle( false );
-  caps.setNeedAuthentication( true );
-
-  QValueList<QPair<QString, QString> > user;
-  user.append(qMakePair(QString::fromLatin1("root"), QString::fromLatin1("rootme") ) );
-  caps.setUserProposals( user );
-
-  QStringList ips;
-  ips << "1.1.1.1";
-  caps.setIpProposals( ips );
-
-  // Model Stuff
-  QStringList models;
-  models << "Opie and Qtopia 1.6" << "Sharp Zaurus ROM";
-  caps.setModels( models );
-  caps.setNeedsModelName( true );
-
-  return caps;
 }
 
 SynceeList QtopiaKonnector::syncees()
@@ -164,7 +137,7 @@ bool QtopiaKonnector::connectDevice()
 
 bool QtopiaKonnector::disconnectDevice()
 {
-  d->socket->hangUP();
+  d->socket->hangUp();
   return true;
 }
 
@@ -197,6 +170,9 @@ void QtopiaKonnector::appendSyncee( KSync::Syncee* syn)
 bool QtopiaKonnector::writeSyncees()
 {
   d->socket->write( mSynceeList );
+
+  emit synceesWritten( this );
+
   return true;
 }
 
@@ -205,16 +181,6 @@ void QtopiaKonnector::slotSync( SynceeList list )
 {
   mSynceeList = list;
   emit synceesRead( this );
-}
-
-void QtopiaKonnector::slotError( const Error& err )
-{
-  error( err );
-}
-
-void QtopiaKonnector::slotProg( const Progress& prog )
-{
-  progress( prog );
 }
 
 KonnectorInfo QtopiaKonnector::info() const

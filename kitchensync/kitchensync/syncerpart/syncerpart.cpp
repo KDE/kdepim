@@ -27,7 +27,6 @@
 #include <konnectorview.h>
 #include <syncuikde.h>
 #include <konnector.h>
-#include <configwidget.h>
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
 #include <mainwindow.h>
@@ -137,16 +136,6 @@ QWidget *SyncerPart::widget()
     logMessage( i18n("Ready.") );
   }
   return m_widget;
-}
-
-void SyncerPart::slotProgress( Konnector *k, const Progress &p )
-{
-  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( p.text() ) );
-}
-
-void SyncerPart::slotError( Konnector *k, const Error &e )
-{
-  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( e.text() ) );
 }
 
 // FIXME: Move logging of all parts to common class

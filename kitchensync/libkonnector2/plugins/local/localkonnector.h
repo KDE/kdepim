@@ -47,15 +47,6 @@ class LocalKonnector : public KSync::Konnector
 
     void writeConfig( KConfig * );
 
-    /** return our capabilities() */
-    KSync::Kapabilities capabilities();
-
-    /**
-     * the user configured this konnector
-     * apply his preferecnes
-     */
-    void setCapabilities( const KSync::Kapabilities& );
-
     SynceeList syncees() { return mSyncees; }
 
     bool readSyncees();
@@ -66,9 +57,6 @@ class LocalKonnector : public KSync::Konnector
 
     /** the state and some informations */
     KSync::KonnectorInfo info() const;
-
-    /** download a resource/url/foobar */
-    void download( const QString& );
 
     void setCalendarFile( const QString &f ) { mCalendarFile = f; }
     QString calendarFile() const { return mCalendarFile; }
@@ -104,6 +92,8 @@ class LocalKonnector : public KSync::Konnector
     LocalBookmarkManager mBookmarkManager;
 
     SynceeList mSyncees;
+
+    KPIM::ProgressItem *mProgressItem;
 };
 
 }

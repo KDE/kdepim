@@ -48,15 +48,6 @@ class RemoteKonnector : public KSync::Konnector
 
     void writeConfig( KConfig * );
 
-    /** return our capabilities() */
-    KSync::Kapabilities capabilities();
-
-    /**
-     * the user configured this konnector
-     * apply his preferecnes
-     */
-    void setCapabilities( const KSync::Kapabilities & );
-
     SynceeList syncees() { return mSyncees; }
 
     bool readSyncees();

@@ -39,8 +39,6 @@
 
 #include <konnectormanager.h>
 #include <konnector.h>
-#include <error.h>
-#include <progress.h>
 
 #include "syncconfig.h"
 #include "configuredialog.h"

@@ -26,9 +26,11 @@
 
 #include <kmdcodec.h>
 #include <kdebug.h>
+#include <libkdepim/progressmanager.h>
 
 #include <qdir.h>
 
+using namespace KPIM;
 using namespace KSync;
 
 Konnector::Konnector( const KConfig *config )
@@ -67,16 +69,6 @@ bool Konnector::isConnected() const
     return info().isConnected();
 }
 
-void Konnector::progress( const Progress& prog )
-{
-    emit sig_progress( this, prog );
-}
-
-void Konnector::error( const Error& err )
-{
-    emit sig_error( this, err );
-}
-
 QStringList Konnector::builtIn() const
 {
     return QStringList();
@@ -91,6 +83,22 @@ void Konnector::setStoragePath( const QString& path )
 {
   m_sPath = path;
   emit storagePathChanged( m_sPath );
+}
+
+KPIM::ProgressItem* Konnector::progressItem( const QString &msg )
+{
+  ProgressItem *item = ProgressManager::instance()->createProgressItem(
+                       ProgressManager::getUniqueID(), msg );
+
+  connect( item, SIGNAL( progressItemCanceled( ProgressItem* ) ),
+           SLOT( progressItemCanceled( ProgressItem* ) ) );
+
+  return item;
+}
+
+void Konnector::progressItemCanceled( ProgressItem *item )
+{
+  item->setComplete();
 }
 
 /**

@@ -38,8 +38,6 @@ class QtopiaKonnector : public Konnector
 
     void writeConfig( KConfig *cfg );
 
-    Kapabilities capabilities();
-
     SynceeList syncees();
 
     bool readSyncees();
@@ -74,8 +72,6 @@ class QtopiaKonnector : public Konnector
 
   private slots:
     void slotSync( SynceeList );
-    void slotError( const Error & );
-    void slotProg( const Progress & );
 
   private:
     QString mDestinationIP;

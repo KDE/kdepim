@@ -76,8 +76,8 @@ void StandardSync::syncMeta( Syncee* syncee,
 	}
     }
     /* modified */
-    forAll( syncee->modified(), syncee, target, over );
-    forAll( syncee->removed(), syncee,  target,over );
+    syncSyncEntryListToSyncee( syncee->modified(), syncee, target, over );
+    syncSyncEntryListToSyncee( syncee->removed(), syncee,  target,over );
 
 }
 
@@ -88,7 +88,7 @@ void StandardSync::addEntry( Syncee* in, Syncee* out, SyncEntry* add )
 {
     if ( add->id().startsWith("Konnector-") ) {
         QString oldId = add->id();
-        add->setId( in->newId() );
+        add->setId( in->generateNewId() );
         in->insertId( add->type(), oldId, add->id() );
         out->insertId( add->type(), oldId, add->id() );
     }
@@ -104,7 +104,7 @@ void StandardSync::addEntry( Syncee* in, Syncee* out, SyncEntry* add )
  * If yes check if they're equal otherwise
  * we need to deconflict
  */
-void StandardSync::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
+void StandardSync::syncSyncEntryListToSyncee(QPtrList<SyncEntry> entries,  Syncee* syncee,
                         Syncee* target,
                         bool over )
 {

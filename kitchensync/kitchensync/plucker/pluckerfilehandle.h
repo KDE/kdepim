@@ -26,7 +26,8 @@
 #include <qstring.h>
 
 namespace KSPlucker {
-struct PluckerFileHandle {
+struct PluckerFileHandle 
+{
     static void addFile( const KURL& url, const QString& uid,
                          bool f = true);
 };

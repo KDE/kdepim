@@ -28,24 +28,25 @@
 #include <qstringlist.h>
 
 namespace KSPlucker {
-class ProcessHandler : public QObject {
+class PluckerProcessHandler : public QObject 
+{
     Q_OBJECT
 public:
     enum Mode {
         Configure,
         Convert
     };
-    ProcessHandler( enum Mode, bool forget,
+    PluckerProcessHandler( enum Mode, bool forget,
                     const QString& file, QObject* parent = 0);
-    ProcessHandler( enum Mode, bool forget,
+    PluckerProcessHandler( enum Mode, bool forget,
                     const QStringList& file, const QString& dest,
                     QObject* parent = 0);
-    ~ProcessHandler();
+    ~PluckerProcessHandler();
 
     void run();
 signals:
     void sigProgress( const QString& );
-    void sigFinished( ProcessHandler* );
+    void sigFinished( PluckerProcessHandler* );
 
 private:
     void runConfig (KProcess*);

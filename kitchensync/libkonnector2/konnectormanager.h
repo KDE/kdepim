@@ -31,23 +31,20 @@
 #include <synceelist.h>
 
 #include "konnector.h"
-#include "kdevice.h"
 #include "filter.h"
-#include "error.h"
-#include "progress.h"
 
 namespace KSync
 {
 
 class Kapabilities;
-class ConfigWidget;
 class Konnector;
 class KonnectorInfo;
 
 class KonnectorManager : public QObject, public KRES::Manager<Konnector>
 {
-    Q_OBJECT
-    friend class KStaticDeleter<KonnectorManager>;
+  Q_OBJECT
+  friend class KStaticDeleter<KonnectorManager>;
+
   public:
     static KonnectorManager *self();
 
@@ -74,27 +71,15 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
     */
     void synceeWriteError( Konnector * );
 
-  signals:
-    void sync( Konnector *, const SynceeList & );
-    void progress( Konnector *, const Progress & );
-    void error( Konnector *, const Error & );
-    void downloaded( Konnector *, const SynceeList & );
-
-  private slots:
-    void slotSync( Konnector *, const SynceeList & );
-    void slotProgress( Konnector *, const Progress & );
-    void slotError( Konnector *, const Error & );
-    void slotDownloaded( Konnector *, const SynceeList & );
-
   protected:
     void connectSignals();
 
   private:
-
     KonnectorManager();
     ~KonnectorManager();
 
     static KonnectorManager *m_self;
+
     class Private;
     Private *d;
 };

@@ -23,9 +23,6 @@
 
 #include <qobject.h>
 
-#include <stderror.h>
-#include <stdprogress.h>
-
 #include "qtopiakonnector.h"
 
 class KURL;
@@ -36,16 +33,13 @@ class CalendarSyncee;
 
 class QtopiaSocket : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     QtopiaSocket( QObject *obj, const char *name );
     ~QtopiaSocket();
 
-public slots:
-    void setStoragePath(const QString&);
-public:
     QString storagePath()const;
-
 
     void setUser( const QString &user );
     void setPassword( const QString &pass );
@@ -54,7 +48,7 @@ public:
     void setModel( const QString &model, const QString &name );
 
     void startUp();
-    void hangUP();
+    void hangUp();
 
     bool startSync();
     bool isConnected();
@@ -66,8 +60,9 @@ public:
 
   signals:
     void sync( SynceeList );
-    void error( const Error & );
-    void prog( const Progress & );
+
+  public slots:
+    void setStoragePath(const QString&);
 
   private slots:
     void slotError(int);
@@ -78,15 +73,11 @@ public:
     void slotStartSync();
 
   private:
-    class Private;
-    Private *d;
-
-  private:
     enum Type
     {
-        AddressBook,
-        TodoList,
-        DateBook
+      AddressBook,
+      TodoList,
+      DateBook
     };
 
 
@@ -126,6 +117,11 @@ public:
     /* download relative from the home dir */
     bool downloadFile( const QString &str, QString &newDest );
     int m_flushedApps;
+
+    KPIM::ProgressItem *mProgressItem;
+
+    class Private;
+    Private *d;
 };
 
 }

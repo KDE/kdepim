@@ -78,7 +78,7 @@ class CalendarSyncee : public Syncee
     bool writeBackup( const QString & );
     bool restoreBackup( const QString & );
 
-    QString newId() const;
+    QString generateNewId() const;
 
   private:
     CalendarSyncEntry *createEntry( KCal::Incidence * );

@@ -47,7 +47,7 @@ class StandardSync : public SyncAlgorithm
     void addEntry( Syncee* in,
                    Syncee* out,
                    SyncEntry* entry );
-    void forAll  ( QPtrList<SyncEntry>,
+    void syncSyncEntryListToSyncee ( QPtrList<SyncEntry>,
                    Syncee* syncee,
                    Syncee* target,bool over );
 };

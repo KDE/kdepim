@@ -39,8 +39,6 @@
 
 #include <konnectormanager.h>
 #include <konnector.h>
-#include <error.h>
-#include <progress.h>
 
 #include "syncconfig.h"
 #include "configuredialog.h"
@@ -55,37 +53,9 @@
 
 using namespace KSync;
 
-namespace {
-
-struct MainProgress
-{
-    static Error noKonnector();
-    static Error noPush();
-};
-
-Error MainProgress::noKonnector()
-{
-    return Error(i18n("There is no current Konnector") );
-}
-
-Error MainProgress::noPush()
-{
-    return Error(i18n("The current Konnector does not support pushing") );
-}
-
-kdbgstream operator<<( kdbgstream str, const Notify& no )
-{
-    str << no.code() << " " << no.text();
-    return str;
-}
-
-}
-
 KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
   : Core( parent ), mActionManager( actionManager ), m_profileManager( 0 )
 {
-
-
   m_syncUi = 0;
   m_partsIt = 0;
   m_isSyncing = false;
@@ -166,7 +136,7 @@ void KitchenSync::addPart( const ActionPartService &service )
     kdDebug() << "KitchenSync::addPart() " << service.name() << endl;
 
     ActionPart *part = KParts::ComponentFactory
-      ::createInstanceFromLibrary<ActionPart>( service.libname().local8Bit(),
+      ::createInstanceFromLibrary<ActionPart>( service.libraryName().local8Bit(),
                                                this );
 
     if ( !part ) {
@@ -218,8 +188,6 @@ void KitchenSync::initSystray( void )
 
 void KitchenSync::slotSync()
 {
-  emit partProgress( 0, Progress( i18n( "Starting sync" ) ) );
-
   mEngine->go();
 }
 
@@ -373,42 +341,6 @@ const QPtrList<ActionPart> KitchenSync::parts() const
     return m_parts;
 }
 
-void KitchenSync::slotKonnectorProg( Konnector *konnector,
-                                         const Progress & prog )
-{
-    switch( prog.code() ) {
-    case Progress::Connected:
-//        m_konBar->setState( true );
-        m_tray->setState( true );
-        break;
-    case Progress::Done:
-        emit doneSync();
-        m_isSyncing = false;
-        break;
-    default:
-        break;
-    }
-    emit konnectorProgress( konnector, prog );
-}
-
-void KitchenSync::slotKonnectorErr( Konnector *konnector,
-                                        const Error & prog )
-{
-    switch( prog.code() ) {
-      case Error::ConnectionLost: // fall through
-      case Error::CouldNotConnect:
-//        m_konBar->setState( false );
-        m_tray->setState( false );
-        break;
-      case Error::CouldNotDisconnect:
-//        if ( konnector->isConnected() ) m_konBar->setState( true );
-        m_tray->setState( true );
-      default:
-        break;
-    }
-    emit konnectorError( konnector, prog );
-}
-
 /*
  * emitted when one part is done with syncing
  * go to the next part and continue
@@ -418,18 +350,6 @@ void KitchenSync::slotPartProg( ActionPart *par, int prog )
     kdDebug(5210) << "PartProg: " << par << " " << prog << endl;
     if (prog != 2 ) return;
 
-}
-
-void KitchenSync::slotPartProg( ActionPart *part, const Progress &prog )
-{
-    emit partProgress( part, prog );
-    emit syncProgress( part, 1, 0 );
-}
-
-void KitchenSync::slotPartErr( ActionPart *part, const Error &err )
-{
-    emit partError( part, err );
-    emit syncProgress( part, 3, 0 );
 }
 
 void KitchenSync::slotPartSyncStatus( ActionPart *par, int err )

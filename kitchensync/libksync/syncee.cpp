@@ -129,7 +129,7 @@ bool Syncee::trustIdsOnFirstSync() const
   return false;
 }
 
-QString Syncee::newId() const
+QString Syncee::generateNewId() const
 {
   return QString::null;
 }

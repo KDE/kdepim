@@ -24,9 +24,6 @@
 #include <qmap.h>
 #include <qstring.h>
 
-#include <kapabilities.h>
-#include <kdevice.h>
-
 #include "actionpartservice.h"
 
 namespace KSync {

@@ -28,6 +28,7 @@
 #include <kio/netaccess.h>
 #include <libkcal/calendarlocal.h>
 #include <libkdepim/kpimprefs.h>
+#include <libkdepim/progressmanager.h>
 
 #include <addressbooksyncee.h>
 #include <calendarsyncee.h>
@@ -181,6 +182,9 @@ void QtopiaSocket::setModel( const QString& model, const QString& name )
 
 void QtopiaSocket::startUp()
 {
+  mProgressItem = KPIM::ProgressManager::instance()->createProgressItem(
+      KPIM::ProgressManager::getUniqueID(), i18n( "Connecting" ) );
+
     delete d->socket;
     d->socket = new QSocket(this, "Qtopia Socket" );
 
@@ -203,13 +207,13 @@ void QtopiaSocket::startUp()
     d->socket->connectToHost(d->dest, 4243 );
 }
 
-void QtopiaSocket::hangUP()
+void QtopiaSocket::hangUp()
 {
     if (d->isSyncing ) {
-        emit error( Error(Error::CouldNotDisconnect, i18n("Can not disconnect now. Try again after syncing was finished") ) );
+//        emit error( Error(Error::CouldNotDisconnect, i18n("Can not disconnect now. Try again after syncing was finished") ) );
         return;
     }
-    /* now connect to some slots */
+
     disconnect(d->socket, SIGNAL(error(int) ),
             this, SLOT(slotError(int) ) );
     disconnect(d->socket, SIGNAL(connected() ),
@@ -218,8 +222,8 @@ void QtopiaSocket::hangUP()
             this, SLOT(slotClosed() ) );
     disconnect(d->socket, SIGNAL(readyRead() ),
             this, SLOT(process() ) );
-    delete d->socket;
-    d->socket = 0;
+
+    d->socket->close();
     d->isSyncing = false;
     d->connected = false;
     d->startSync = false;
@@ -227,7 +231,8 @@ void QtopiaSocket::hangUP()
     d->categories.clear();
     d->getMode = d->NotStarted;
     d->mode = d->Start;
-    emit prog( Progress(i18n("Disconnected from the device.") ) );
+//    emit prog( Progress(i18n("Disconnected from the device.") ) );
+  mProgressItem->setComplete();
 }
 
 void QtopiaSocket::setResources( const QStringList& list )
@@ -272,8 +277,8 @@ bool QtopiaSocket::isConnected()
 void QtopiaSocket::write( SynceeList list )
 {
     if (!isConnected() ) {
-        emit error( Error( i18n("<qt>Can not write the data back.\n There is no connection to the device") ) );
-        emit prog( StdProgress::done() );
+//        emit error( Error( i18n("<qt>Can not write the data back.\n There is no connection to the device") ) );
+//        emit prog( StdProgress::done() );
         return;
     }
 
@@ -323,12 +328,12 @@ void QtopiaSocket::write( SynceeList list )
      * now we need that it's not first sync
      */
     d->first = false;
-    emit prog(StdProgress::done() );
+//    emit prog(StdProgress::done() );
 
     /*
      * Delete the Syncee
      */
-    list.deleteAndClear();
+//    list.deleteAndClear();
 }
 
 QString QtopiaSocket::metaId() const
@@ -338,15 +343,16 @@ QString QtopiaSocket::metaId() const
 
 void QtopiaSocket::slotError( int )
 {
+  mProgressItem->setStatus( i18n( "Error during connect" ) );
     d->isSyncing = false;
     d->isConnecting = false;
 
-    emit error( StdError::connectionLost() );
+//    emit error( StdError::connectionLost() );
 }
 
 void QtopiaSocket::slotConnected()
 {
-    emit prog( StdProgress::connection() );
+  mProgressItem->setStatus( i18n( "Connected" ) );
     d->connected = true;
     delete d->timer;
     d->mode = d->Start;
@@ -354,10 +360,11 @@ void QtopiaSocket::slotConnected()
 
 void QtopiaSocket::slotClosed()
 {
+  mProgressItem->setStatus( i18n( "Connecting closed" ) );
     d->connected    = false;
     d->isConnecting = false;
     d->isSyncing    = false;
-    emit error( StdError::connectionLost() );
+//    emit error( StdError::connectionLost() );
 }
 
 void QtopiaSocket::slotNOOP()
@@ -368,34 +375,38 @@ void QtopiaSocket::slotNOOP()
 
 void QtopiaSocket::process()
 {
-    while ( d->socket->canReadLine() ) {
-        QTextStream stream( d->socket );
-        QString line = d->socket->readLine();
-        switch( d->mode ) {
-        case QtopiaSocket::Private::Start:
-            start(line);
-            break;
-        case QtopiaSocket::Private::User:
-            user(line);
-            break;
-        case QtopiaSocket::Private::Pass:
-            pass(line);
-            break;
-        case QtopiaSocket::Private::Call:
-            call(line);
-            break;
-        case QtopiaSocket::Private::Noop:
-            noop(line);
-            break;
-        default:
-            break;
-        }
+  // it can happen that the socket emitted a signal before we deleted it
+  if ( d->socket == 0 )
+    return;
+
+  while ( d->socket->canReadLine() ) {
+    QTextStream stream( d->socket );
+    QString line = d->socket->readLine();
+    switch( d->mode ) {
+      case QtopiaSocket::Private::Start:
+        start(line);
+        break;
+      case QtopiaSocket::Private::User:
+        user(line);
+        break;
+      case QtopiaSocket::Private::Pass:
+        pass(line);
+        break;
+      case QtopiaSocket::Private::Call:
+        call(line);
+        break;
+      case QtopiaSocket::Private::Noop:
+        noop(line);
+        break;
+      default:
+        break;
     }
+  }
 }
 
 void QtopiaSocket::slotStartSync()
 {
-    emit prog( Progress( i18n("Starting to sync now") ) );
+//    emit prog( Progress( i18n("Starting to sync now") ) );
     d->startSync = false;
     sendCommand( "call QPE/System sendHandshakeInfo()" );
     d->getMode = d->Handshake;
@@ -446,7 +457,7 @@ void QtopiaSocket::writeCategory()
 
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
 {
-    emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
+//    emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
     OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->device );
     KTempFile* file = abDB.fromKDE( syncee, d->extras );
     KURL uri = url( AddressBook );
@@ -508,16 +519,16 @@ void QtopiaSocket::writeUnknown( KSync::UnknownSyncee *syncee )
 void QtopiaSocket::readAddressbook()
 {
     KSync::AddressBookSyncee* syncee = 0;
-    emit prog( StdProgress::downloading(i18n("Addressbook") ) );
+//    emit prog( StdProgress::downloading(i18n("Addressbook") ) );
     QString tempfile;
 
     if (!downloadFile( "/Applications/addressbook/addressbook.xml", tempfile ) ) {
-        emit error( StdError::downloadError(i18n("Addressbook") ) );
+//        emit error( StdError::downloadError(i18n("Addressbook") ) );
         syncee = new KSync::AddressBookSyncee;
         tempfile = QString::null;
     }
 
-    emit prog( StdProgress::converting(i18n("Addressbook") ) );
+//    emit prog( StdProgress::converting(i18n("Addressbook") ) );
 
     if (!syncee) {
         OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->device );
@@ -527,7 +538,7 @@ void QtopiaSocket::readAddressbook()
 
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
-         emit error( i18n("Cannot read the addressbook file. It is corrupted.") );
+//         emit error( i18n("Cannot read the addressbook file. It is corrupted.") );
         return;
     }
 
@@ -536,7 +547,7 @@ void QtopiaSocket::readAddressbook()
      * If in meta mode but not the first syncee
      * collect some meta infos
      */
-    emit prog( Progress(i18n("Collecting the changes now") ) );
+//    emit prog( Progress(i18n("Collecting the changes now") ) );
 
     OpieHelper::MetaAddressbook metaBook( syncee, storagePath() + "/" + d->partnerId + "/contacts.md5.qtopia" );
     metaBook.load();
@@ -567,15 +578,15 @@ CalendarSyncee *QtopiaSocket::defaultCalendarSyncee()
 void QtopiaSocket::readDatebook()
 {
     KSync::CalendarSyncee* syncee = defaultCalendarSyncee();
-    emit prog( StdProgress::downloading(i18n("Datebook") ) );
+//    emit prog( StdProgress::downloading(i18n("Datebook") ) );
     QString tempfile;
 
     bool ok = downloadFile( "/Applications/datebook/datebook.xml", tempfile );
     if ( !ok ) {
-      emit error( StdError::downloadError(i18n("Datebook") ) );
+//      emit error( StdError::downloadError(i18n("Datebook") ) );
       tempfile = QString::null;
     }
-    emit prog( StdProgress::converting(i18n("Datebook") ) );
+//    emit prog( StdProgress::converting(i18n("Datebook") ) );
 
     /* the datebook.xml might not exist in this case we created an empty Entry
      * and there is no need to parse a non existint file
@@ -587,14 +598,14 @@ void QtopiaSocket::readDatebook()
 
     if ( !ok ) {
         KIO::NetAccess::removeTempFile( tempfile );
-        emit error( i18n("Cannot read the datebook file. It is corrupted.") );
+//        emit error( i18n("Cannot read the datebook file. It is corrupted.") );
         return;
     }
 
     /*
      * for meta mode get meta info
      */
-    emit prog( StdProgress::converting(i18n("Datebook") ) );
+//    emit prog( StdProgress::converting(i18n("Datebook") ) );
 
     /*
      * SyncHistory applying is done after both calendar and todo
@@ -613,11 +624,11 @@ void QtopiaSocket::readTodoList()
 {
     KSync::CalendarSyncee* syncee = defaultCalendarSyncee();
     QString tempfile;
-    emit prog( StdProgress::downloading(i18n("TodoList") ) );
+//    emit prog( StdProgress::downloading(i18n("TodoList") ) );
 
     bool ok = downloadFile( "/Applications/todolist/todolist.xml", tempfile );
     if ( !ok ) {
-      emit error( StdError::downloadError(i18n("TodoList") ) );
+//      emit error( StdError::downloadError(i18n("TodoList") ) );
       tempfile = QString::null;
     }
 
@@ -628,11 +639,11 @@ void QtopiaSocket::readTodoList()
 
     if ( !ok ) {
         KIO::NetAccess::removeTempFile( tempfile );
-        emit error( i18n("Cannot read the TodoList file. It is corrupted.") );
+//        emit error( i18n("Cannot read the TodoList file. It is corrupted.") );
         return;
     }
 
-    emit prog( Progress(i18n("Collection changes for todolist") ) );
+//    emit prog( Progress(i18n("Collection changes for todolist") ) );
 
     /*
      * SyncHistory applying is done after both calendar and todo
@@ -650,7 +661,7 @@ void QtopiaSocket::readTodoList()
 void QtopiaSocket::start( const QString& line )
 {
     if ( line.left(3) != QString::fromLatin1("220") ) {
-        emit error( Error(i18n("The device returned bogus data. giving up now.") ) );
+//        emit error( Error(i18n("The device returned bogus data. giving up now.") ) );
         // something went wrong
         d->socket->close();
         d->mode = d->Done;
@@ -677,10 +688,10 @@ void QtopiaSocket::start( const QString& line )
 
 void QtopiaSocket::user( const QString &line )
 {
-    emit prog( StdProgress::connected() );
+//    emit prog( StdProgress::connected() );
 //    emit prog( StdProgress::authentication() );
     if ( line.left(3) != QString::fromLatin1("331") ) {
-        emit error( StdError::wrongUser( d->device->user() ) );
+//        emit error( StdError::wrongUser( d->device->user() ) );
         // wrong user name
         d->socket->close();
         d->mode = d->Done;
@@ -695,14 +706,14 @@ void QtopiaSocket::user( const QString &line )
 void QtopiaSocket::pass( const QString& line)
 {
     if ( line.left(3) != QString::fromLatin1("230") ) {
-        emit error( StdError::wrongPassword() );
+//        emit error( StdError::wrongPassword() );
         // wrong password
         d->socket->close();
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
     } else {
-        emit prog( StdProgress::authenticated() );
+//        emit prog( StdProgress::authenticated() );
         d->mode = d->Noop;
         QTimer::singleShot(10000, this, SLOT(slotNOOP() ) );
     }
@@ -715,7 +726,7 @@ void QtopiaSocket::call( const QString& line)
         return;
 
     if ( line.startsWith("CALL QPE/Desktop docLinks(QString)") ) {
-        emit prog( Progress(i18n("Getting the Document Links of the Document Tab") ) );
+//        emit prog( Progress(i18n("Getting the Document Links of the Document Tab") ) );
         OpieHelper::Desktop desk( d->edit );
         Syncee* sync = desk.toSyncee( line );
         if ( sync )
@@ -760,7 +771,7 @@ void QtopiaSocket::flush( const QString& _line )
             appName = i18n( "addressbook" );
             m_flushedApps++;
         }
-        emit prog( Progress( i18n( "Flushed " ) + appName ) );
+//        emit prog( Progress( i18n( "Flushed " ) + appName ) );
     }
 
     /* all apps have been flushed or have not been running */
@@ -822,7 +833,7 @@ void QtopiaSocket::initSync( const QString& )
 {
     /* clear the extra map for the next round */
     d->extras.clear();
-    emit prog( StdProgress::downloading("Categories.xml") );
+//    emit prog( StdProgress::downloading("Categories.xml") );
     QString tmpFileName;
     downloadFile( "/Settings/Categories.xml", tmpFileName );
 

@@ -25,7 +25,8 @@
 #include <kurl.h>
 
 namespace KSPlucker {
-class PluckerInterface : virtual public DCOPObject {
+class PluckerInterface : virtual public DCOPObject 
+{
     K_DCOP
 k_dcop:
     virtual ASYNC addPluckerUrl( KURL ) = 0;

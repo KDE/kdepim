@@ -34,9 +34,6 @@
 #include <syncee.h>
 #include <synceelist.h>
 
-#include <error.h>
-#include <progress.h>
-
 #include "profile.h"
 
 namespace KSync {
@@ -178,17 +175,7 @@ class ActionPart : public KParts::Part
     void progress( int );
 
   protected slots:
-    void progress( const Progress& );
-    void error( const Error& );
     void done();
-
-  signals:
-    // 0 - 100
-    void sig_progress( ActionPart *, int );
-    void sig_progress( ActionPart *, const Progress & );
-    void sig_error( ActionPart *, const Error & );
-    // SYNC_START SYNC_SYNC SYNC_STOP
-    void sig_syncStatus( ActionPart *, int );
 
   protected:
     /**
@@ -198,20 +185,7 @@ class ActionPart : public KParts::Part
     /* ActionPart* old,ActionPart* ne */
     void connectPartChange( const char* slot);
 
-    /* ActionPart* part,const Progress& */
-    void connectPartProgress( const char* slot );
-
-    /* ActionPart* part, const Error& */
-    void connectPartError( const char* slot );
-
-    /* Konnector *,const Progress& */
-    void connectKonnectorProgress(const char* slot );
-
-    /* Konnector *, const Error& */
-    void connectKonnectorError( const char* slot );
-
-    /* ActionPart*,int status,int prog */
-    void connectSyncProgress( const char* slot );
+    void connectSyncProgress( const char *slot );
 
     /* const Profile& */
     void connectProfileChanged( const char* slot );

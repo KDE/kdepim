@@ -29,11 +29,11 @@
 #include <synchistory.h>
 
 #include <libkdepim/kpimprefs.h>
+#include <libkdepim/progressmanager.h>
 
 #include <kabc/resourcefile.h>
 
 #include <konnectorinfo.h>
-#include <kapabilities.h>
 
 #include <kconfig.h>
 #include <kgenericfactory.h>
@@ -51,7 +51,7 @@ extern "C"
 
 LocalKonnector::LocalKonnector( const KConfig *config )
     : Konnector( config ), mConfigWidget( 0 ), 
-    mCalendar( KPimPrefs::timezone() )
+      mCalendar( KPimPrefs::timezone() ), mProgressItem( 0 )
 {
   if ( config ) {
     mCalendarFile = config->readPathEntry( "CalendarFile" );
@@ -90,36 +90,17 @@ void LocalKonnector::writeConfig( KConfig *config )
   config->writeEntry( "BookmarkFile", mAddressBookFile );
 }
 
-KSync::Kapabilities LocalKonnector::capabilities()
-{
-  KSync::Kapabilities caps;
-
-  caps.setSupportMetaSyncing( false ); // we can meta sync
-  caps.setSupportsPushSync( false ); // we can initialize the sync from here
-  caps.setNeedsConnection( false ); // we need to have pppd running
-  caps.setSupportsListDir( false ); // we will support that once there is API for it...
-  caps.setNeedsIPs( false ); // we need the IP
-  caps.setNeedsSrcIP( false ); // we do not bind to any address...
-  caps.setNeedsDestIP( false ); // we need to know where to connect
-  caps.setAutoHandle( false ); // we currently do not support auto handling
-  caps.setNeedAuthentication( false ); // HennevL says we do not need that
-  caps.setNeedsModelName( false ); // we need a name for our meta path!
-
-  return caps;
-}
-
-void LocalKonnector::setCapabilities( const KSync::Kapabilities& )
-{
-}
-
 bool LocalKonnector::readSyncees()
 {
   kdDebug() << "LocalKonnector::readSyncee()" << endl;
+
+  mProgressItem = progressItem( i18n( "Start loading local data..." ) );
 
   if ( !mCalendarFile.isEmpty() ) {
     kdDebug() << "LocalKonnector::readSyncee(): calendar: " << mCalendarFile
               << endl;
     mCalendar.close();
+    mProgressItem->setStatus( i18n( "Load Calendar..." ) );
     if ( mCalendar.load( mCalendarFile ) ) {
       kdDebug() << "Read succeeded." << endl;
       mCalendarSyncee->reset();
@@ -129,18 +110,26 @@ bool LocalKonnector::readSyncees()
       /* apply SyncInformation here this will also create the SyncEntries */
       CalendarSyncHistory cHelper(  mCalendarSyncee, storagePath() + "/"+mMd5sumCal );
       cHelper.load();
+      mProgressItem->setStatus( i18n( "Calendar loaded." ) );
     } else {
+      mProgressItem->setStatus( i18n( "Loading Calendar failed." ) );
+      emit synceeReadError( this );
       kdDebug() << "Read failed." << endl;
       return false;
     }
   }
 
+  mProgressItem->setProgress( 50 );
+
     if ( !mAddressBookFile.isEmpty() ) {
       kdDebug() << "LocalKonnector::readSyncee(): addressbook: "
                 << mAddressBookFile << endl;
 
+      mProgressItem->setStatus( i18n( "Load AddressBook..." ) );
       mAddressBookResourceFile->setFileName( mAddressBookFile );
       if ( !mAddressBook.load() ) {
+        mProgressItem->setStatus( i18n( "Loading AddressBook failed." ) );
+        emit synceeReadError( this );
         kdDebug() << "Read failed." << endl;
         return false;
       }
@@ -159,9 +148,13 @@ bool LocalKonnector::readSyncees()
       /* let us apply Sync Information */
       AddressBookSyncHistory aHelper( mAddressBookSyncee, storagePath() + "/"+mMd5sumAbk );
       aHelper.load();
+      mProgressItem->setStatus( i18n( "AddressBook loaded." ) );
     }
 
   // TODO: Read Bookmarks
+  mProgressItem->setProgress( 100 );
+  mProgressItem->setComplete();
+  mProgressItem = 0;
 
   emit synceesRead( this );
 
@@ -188,11 +181,6 @@ KSync::KonnectorInfo LocalKonnector::info() const
                         false );
 }
 
-void LocalKonnector::download( const QString& )
-{
-  error( StdError::downloadNotSupported() );
-}
-
 bool LocalKonnector::writeSyncees()
 {
   if ( !mCalendarFile.isEmpty() ) {
@@ -210,6 +198,7 @@ bool LocalKonnector::writeSyncees()
     if ( !ticket ) {
       kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
                   << "addressbook." << endl;
+      emit synceeWriteError( this );
       return false;
     }
     if ( !mAddressBook.save( ticket ) ) return false;

@@ -40,35 +40,34 @@ namespace KSync {
  */
 namespace CalendarMergerInternal {
 /* forwards */
-template<class T> void mergeOrg( T* const, const T* const );
-template<class T> void mergeRead( T* const, const T* const );
-template<class T> void mergedtStart( T* const, const T* const );
-template<class T> void mergeDur( T* const, const T* const );
+template<class T> void mergeOrganizer( T* const, const T* const );
+template<class T> void mergeReadOnly( T* const, const T* const );
+template<class T> void mergeStartDate( T* const, const T* const );
+template<class T> void mergeDuration( T* const, const T* const );
 template<class T> void mergeFloat( T* const, const T* const );
-template<class T> void mergeAttend( T* const, const T* const );
-template<class T> void mergeCreated( T* const, const T* const );
-template<class T> void mergeRev( T* const, const T* const );
-template<class T> void mergeDes( T* const, const T* const );
-template<class T> void mergeSum( T* const, const T* const );
-template<class T> void mergeCat( T* const, const T* const );
-template<class T> void mergeRel( T* const, const T* const );
+template<class T> void mergeAttendee( T* const, const T* const );
+template<class T> void mergeCreatedDate( T* const, const T* const );
+template<class T> void mergeRevision( T* const, const T* const );
+template<class T> void mergeDescription( T* const, const T* const );
+template<class T> void mergeSummary( T* const, const T* const );
+template<class T> void mergeCategory( T* const, const T* const );
+template<class T> void mergeRelations( T* const, const T* const );
 template<class T> void mergeExDates( T* const, const T* const );
-template<class T> void mergeAtt( T* const, const T* const );
-template<class T> void mergeSec( T* const,  const T* const );
-template<class T> void mergeRes( T* const,  const T* const );
-template<class T> void mergePrio( T* const, const T* const );
-template<class T> void mergeAlarm( T* const, const T* const );
-template<class T> void mergeRecur( T* const, const T* const );
-template<class T> void mergeLoc( T* const, const T* const );
+template<class T> void mergeAttachments( T* const, const T* const );
+template<class T> void mergeSecrecy( T* const,  const T* const );
+template<class T> void mergeResources( T* const,  const T* const );
+template<class T> void mergePriority( T* const, const T* const );
+template<class T> void mergeAlarms( T* const, const T* const );
+template<class T> void mergeRecurrence( T* const, const T* const );
+template<class T> void mergeLocation( T* const, const T* const );
 
-template<class T> void mergeDue( T* const, const T* const);
-template<class T> void mergeStart( T* const, const T* const );
-template<class T> void mergeComp(T* const, const T* const );
-template<class T> void mergePer(T* const, const T* const );
-
+template<class T> void mergeDtDue( T* const, const T* const);
+template<class T> void mergeDtStart( T* const, const T* const );
+template<class T> void mergeCompleted(T* const, const T* const );
+template<class T> void mergePercent(T* const, const T* const );
 template<class T> void mergeDtEnd( T* const, const T* const );
-template<class T> void mergeStartFloat( T* const, const T* const ); /* merge date and float attribute */
-template<class T> void mergeDueFloat( T* const, const T* const );   /* merge date and float attribute */
+template<class T> void mergeStartDateFloat( T* const, const T* const );
+template<class T> void mergeDueDateFloat( T* const, const T* const );
 
 template <class T>
 class MergeBase
@@ -96,26 +95,26 @@ static KStaticDeleter<MergeTodo> mergeTodoDeleter;
 
 template <class T> MergeBase<T>::MergeBase()
 {
-  map.insert( CalendarMerger::Organizer,    mergeOrg );
-  map.insert( CalendarMerger::ReadOnly,     mergeRead );
-  map.insert( CalendarMerger::DtStart,      mergedtStart );
-  map.insert( CalendarMerger::Duration,     mergeDur );
+  map.insert( CalendarMerger::Organizer,    mergeOrganizer );
+  map.insert( CalendarMerger::ReadOnly,     mergeReadOnly );
+  map.insert( CalendarMerger::DtStart,      mergeDtStart );
+  map.insert( CalendarMerger::Duration,     mergeDuration );
   map.insert( CalendarMerger::Float,        mergeFloat );
-  map.insert( CalendarMerger::Attendee,     mergeAttend );
-  map.insert( CalendarMerger::CreatedDate,  mergeCreated );
-  map.insert( CalendarMerger::Revision,     mergeRev );
-  map.insert( CalendarMerger::Description,  mergeDes );
-  map.insert( CalendarMerger::Summary,      mergeSum );
-  map.insert( CalendarMerger::Category,     mergeCat );
-  map.insert( CalendarMerger::Relations,    mergeRel );
+  map.insert( CalendarMerger::Attendee,     mergeAttendee );
+  map.insert( CalendarMerger::CreatedDate,  mergeCreatedDate );
+  map.insert( CalendarMerger::Revision,     mergeRevision );
+  map.insert( CalendarMerger::Description,  mergeDescription );
+  map.insert( CalendarMerger::Summary,      mergeSummary );
+  map.insert( CalendarMerger::Category,     mergeCategory );
+  map.insert( CalendarMerger::Relations,    mergeRelations );
   map.insert( CalendarMerger::ExDates,      mergeExDates );
-  map.insert( CalendarMerger::Attachments,  mergeAtt );
-  map.insert( CalendarMerger::Secrecy,      mergeSec );
-  map.insert( CalendarMerger::Resources,    mergeRes );
-  map.insert( CalendarMerger::Priority,     mergePrio );
-  map.insert( CalendarMerger::Alarms,       mergeAlarm );
-  map.insert( CalendarMerger::Recurrence,   mergeRecur );
-  map.insert( CalendarMerger::Location,     mergeLoc );
+  map.insert( CalendarMerger::Attachments,  mergeAttachments );
+  map.insert( CalendarMerger::Secrecy,      mergeSecrecy );
+  map.insert( CalendarMerger::Resources,    mergeResources );
+  map.insert( CalendarMerger::Priority,     mergePriority );
+  map.insert( CalendarMerger::Alarms,       mergeAlarms );
+  map.insert( CalendarMerger::Recurrence,   mergeRecurrence );
+  map.insert( CalendarMerger::Location,     mergeLocation );
 }
 
 template <class T> MergeBase<T>::~MergeBase()
@@ -144,12 +143,12 @@ void init()
   mergeEventDeleter.setObject(mergeEventMap, new MergeCal );
 
   /* todo specefic additional information */
-  mergeTodoMap->add( CalendarMerger::DtDue,     mergeDue   );
-  mergeTodoMap->add( CalendarMerger::StartDate, mergeStart );
-  mergeTodoMap->add( CalendarMerger::Completed, mergeComp  );
-  mergeTodoMap->add( CalendarMerger::Percent,   mergePer   );
-  mergeTodoMap->add( CalendarMerger::StartDateTime, mergeStartFloat );
-  mergeTodoMap->add( CalendarMerger::DueDateTime,   mergeDueFloat   );
+  mergeTodoMap->add( CalendarMerger::DtDue,     mergeDtDue   );
+  mergeTodoMap->add( CalendarMerger::StartDate, mergeStartDate );
+  mergeTodoMap->add( CalendarMerger::Completed, mergeCompleted  );
+  mergeTodoMap->add( CalendarMerger::Percent,   mergePercent   );
+  mergeTodoMap->add( CalendarMerger::StartDateTime, mergeStartDateFloat );
+  mergeTodoMap->add( CalendarMerger::DueDateTime,   mergeDueDateFloat   );
 
   /* event specefic additional information */
   mergeEventMap->add( CalendarMerger::DtEnd,    mergeDtEnd );
@@ -159,7 +158,7 @@ void init()
 /*
  * Merge the Organizer Field.
  */
-template <class Todo> void mergeOrg( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeOrganizer( Todo* const dest, const Todo* const src)
 {
   dest->setOrganizer( src->organizer() );
 }
@@ -167,7 +166,7 @@ template <class Todo> void mergeOrg( Todo* const dest, const Todo* const src)
 /*
  * Merge the ReadOnly Field.
  */
-template <class Todo> void mergeRead( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeReadOnly( Todo* const dest, const Todo* const src)
 {
   dest->setReadOnly( src->isReadOnly() );
 }
@@ -175,7 +174,7 @@ template <class Todo> void mergeRead( Todo* const dest, const Todo* const src)
 /*
  * Merge the Start Date.
  */
-template <class Todo> void mergedtStart( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeDtStart( Todo* const dest, const Todo* const src)
 {
   dest->setDtStart( src->dtStart() );
 }
@@ -183,7 +182,7 @@ template <class Todo> void mergedtStart( Todo* const dest, const Todo* const src
 /*
  * Merge the Duration.
  */
-template <class Todo> void mergeDur( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeDuration( Todo* const dest, const Todo* const src)
 {
   dest->setDuration( src->duration() );
 }
@@ -199,7 +198,8 @@ template <class Todo> void mergeFloat( Todo* const dest, const Todo* const src)
 /*
  * Merge in the Attendees.
  */
-template <class Todo>  void mergeAttend( Todo* const dest, const Todo* const src)
+template <class Todo>  void mergeAttendee( Todo* const dest,
+                                           const Todo* const src)
 {
   KCal::Attendee::List att = src->attendees();
   KCal::Attendee::List::ConstIterator it;
@@ -210,7 +210,8 @@ template <class Todo>  void mergeAttend( Todo* const dest, const Todo* const src
 /*
  * Merge the Created on field.
  */
-template <class Todo>  void mergeCreated( Todo* const dest, const Todo* const src)
+template <class Todo>  void mergeCreatedDate( Todo* const dest,
+                                              const Todo* const src)
 {
   dest->setCreated( src->created() );
 }
@@ -218,7 +219,8 @@ template <class Todo>  void mergeCreated( Todo* const dest, const Todo* const sr
 /*
  * Merge the Revision Field.
  */
-template <class Todo> void mergeRev( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeRevision( Todo* const dest,
+                                          const Todo* const src)
 {
   dest->setRevision( src->revision() );
 }
@@ -226,7 +228,8 @@ template <class Todo> void mergeRev( Todo* const dest, const Todo* const src)
 /*
  * Merge the Description.
  */
-template <class Todo> void mergeDes( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeDescription( Todo* const dest,
+                                             const Todo* const src)
 {
   dest->setDescription( src->description() );
 }
@@ -234,7 +237,8 @@ template <class Todo> void mergeDes( Todo* const dest, const Todo* const src)
 /*
  * Merge the Summary.
  */
-template <class Todo> void mergeSum( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeSummary( Todo* const dest,
+                                         const Todo* const src)
 {
   dest->setSummary( src->summary() );
 }
@@ -242,7 +246,8 @@ template <class Todo> void mergeSum( Todo* const dest, const Todo* const src)
 /*
  * Merge the Category.
  */
-template <class Todo> void mergeCat( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeCategory( Todo* const dest,
+                                          const Todo* const src)
 {
   dest->setCategories( src->categories() );
 }
@@ -250,7 +255,8 @@ template <class Todo> void mergeCat( Todo* const dest, const Todo* const src)
 /*
  * Merge the Relations by cloning.
  */
-template <class Todo> void mergeRel( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeRelations( Todo* const dest,
+                                           const Todo* const src)
 {
   KCal::Incidence::List rel = src->relations();
   KCal::Incidence::List::ConstIterator it;
@@ -262,7 +268,8 @@ template <class Todo> void mergeRel( Todo* const dest, const Todo* const src)
 /*
  * Merge the EXteded Dates.
  */
-template <class Todo> void mergeExDates( Todo* const dest, const Todo* const src)
+template <class Todo> void mergeExDates( Todo* const dest,
+                                         const Todo* const src)
 {
   dest->setExDates( src->exDates() );
 }
@@ -270,7 +277,7 @@ template <class Todo> void mergeExDates( Todo* const dest, const Todo* const src
 /*
  * @todo
  */
-template <class Todo> void mergeAtt( Todo* const, const Todo* const )
+template <class Todo> void mergeAttachments( Todo* const, const Todo* const )
 {
 // FIXME!!!
 }
@@ -278,7 +285,8 @@ template <class Todo> void mergeAtt( Todo* const, const Todo* const )
 /*
  * Merge the secrecy attribute
  */
-template <class Todo> void mergeSec( Todo* const dest,  const Todo* const src)
+template <class Todo> void mergeSecrecy( Todo* const dest,
+                                         const Todo* const src)
 {
   dest->setSecrecy( src->secrecy() );
 }
@@ -286,7 +294,8 @@ template <class Todo> void mergeSec( Todo* const dest,  const Todo* const src)
 /**
  * Merge the 'resources' list. Not KRES but what is needed for the Incidence
  */
-template <class Todo> void mergeRes( Todo* const dest,  const Todo* const src)
+template <class Todo> void mergeResources( Todo* const dest,
+                                           const Todo* const src)
 {
   dest->setResources( src->resources() );
 }
@@ -294,7 +303,8 @@ template <class Todo> void mergeRes( Todo* const dest,  const Todo* const src)
 /*
  * Merge the Priority.
  */
-template <class Todo> void mergePrio( Todo* const dest, const Todo* const src)
+template <class Todo> void mergePriority( Todo* const dest,
+                                          const Todo* const src)
 {
     dest->setPriority( src->priority() );
 }
@@ -302,7 +312,8 @@ template <class Todo> void mergePrio( Todo* const dest, const Todo* const src)
 /*
  * Merge the Alarms
  */
-template <class Todo> void mergeAlarm( Todo* const dest, const Todo* const src )
+template <class Todo> void mergeAlarms( Todo* const dest,
+                                        const Todo* const src )
 {
     KCal::Alarm::List als = src->alarms();
     KCal::Alarm::List::ConstIterator it;
@@ -314,7 +325,8 @@ template <class Todo> void mergeAlarm( Todo* const dest, const Todo* const src )
 /*
  * Merge Recurrence @todo
  */
-template <class Todo> void mergeRecur( Todo* const , const Todo* const )
+template <class Todo> void mergeRecurrence( Todo* const ,
+                                            const Todo* const )
 {
   // not available
 }
@@ -322,7 +334,8 @@ template <class Todo> void mergeRecur( Todo* const , const Todo* const )
 /*
  * Merget the Location of the Incidence.
  */
-template <class Todo> void mergeLoc( Todo* const dest , const Todo* const src)
+template <class Todo> void mergeLocation( Todo* const dest ,
+                                          const Todo* const src)
 {
     dest->setLocation( src->location() );
 }
@@ -333,7 +346,7 @@ template <class Todo> void mergeLoc( Todo* const dest , const Todo* const src)
  * Merge the Due Date
  */
 template<class T>
-void mergeDue( T* const dest, const T* const src)
+void mergeDtDue( T* const dest, const T* const src)
 {
  dest->setDtDue( src->dtDue() );
 }
@@ -342,7 +355,7 @@ void mergeDue( T* const dest, const T* const src)
  * Merge the Start Date
  */
 template<class T>
-void mergeStart( T* const dest, const T* const src)
+void mergeStartDate( T* const dest, const T* const src)
 {
   dest->setHasStartDate( src->hasStartDate() );
 }
@@ -351,7 +364,7 @@ void mergeStart( T* const dest, const T* const src)
  * Merge if they were completed
  */
 template<class T>
-void mergeComp( T* const dest, const T* const src)
+void mergeCompleted( T* const dest, const T* const src)
 {
   dest->setCompleted( src->isCompleted() );
 }
@@ -360,7 +373,7 @@ void mergeComp( T* const dest, const T* const src)
  * Merge how many percent where completed
  */
 template<class T>
-void mergePer( T* const dest, const T* const src)
+void mergePercent( T* const dest, const T* const src)
 {
   dest->setPercentComplete( src->percentComplete() );
 }
@@ -376,7 +389,9 @@ void mergeDtEnd( T* const dest, const T* src)
   dest->setDtEnd( src->dtEnd() );
 }
 
-template<class Todo> void mergeStartFloat( Todo* const dest, const Todo* const src ) {
+/* merge time attribute */
+template<class Todo>
+void mergeStartDateFloat( Todo* const dest,  const Todo* const src ) {
   /*
    * merge the start Time of the src into dest!
    * Merge only if both have startDates and finally
@@ -392,7 +407,8 @@ template<class Todo> void mergeStartFloat( Todo* const dest, const Todo* const s
 /*
  * same as mergeStartFloat
  */
-template<class Todo> void mergeDueFloat( Todo* const dest, const Todo* const src ) {
+template<class Todo>
+void mergeDueDateFloat( Todo* const dest, const Todo* const src ) {
   /*
    * merge the due Time of the src into dest!
    * Merge only if both have dueDates and finally
@@ -457,7 +473,7 @@ bool CalendarMerger::merge( SyncEntry* _entry, SyncEntry* _other )
 
   CalendarMergerInternal::init();
   if ( entry->incidence()->type() == "Event" )
-    mergeCal ( entry, other );
+    mergeEvent( entry, other );
   else
     mergeTodo( entry, other );
 
@@ -483,7 +499,7 @@ void CalendarMerger::mergeTodo( CalendarSyncEntry* entry, CalendarSyncEntry* oth
 
 }
 
-void CalendarMerger::mergeCal( CalendarSyncEntry* entry, CalendarSyncEntry* other ) {
+void CalendarMerger::mergeEvent( CalendarSyncEntry* entry, CalendarSyncEntry* other ) {
   QBitArray otherSup;
   if ( other->syncee() && other->syncee()->merger() )
     otherSup = otherMerger<CalendarMerger>( other )->mEvent;

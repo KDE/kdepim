@@ -25,30 +25,30 @@
 #include <kdebug.h>
 
 namespace KSPlucker {
-ProcessHandler::ProcessHandler( enum Mode m, bool forget,
+PluckerProcessHandler::PluckerProcessHandler( enum Mode m, bool forget,
                                 const QString& file, QObject* p )
   : QObject( p ), m_mode( m ), m_forget( forget ),
     m_file( file ), m_useList( false )
 {}
 
-ProcessHandler::ProcessHandler( enum Mode m, bool forget,
+PluckerProcessHandler::PluckerProcessHandler( enum Mode m, bool forget,
                                 const QStringList& file, const QString& dest,
                                 QObject* p )
   : QObject( p ), m_mode( m ), m_forget( forget ),  m_dir( dest ),
     m_files( file ), m_useList( true )
 {}
 
-ProcessHandler::~ProcessHandler()
+PluckerProcessHandler::~PluckerProcessHandler()
 {}
 
-void ProcessHandler::runConfig( KProcess* proc )
+void PluckerProcessHandler::runConfig( KProcess* proc )
 {
   PluckerConfig *conf = PluckerConfig::self();
   *proc << conf->javaPath();
   *proc << "-jar" << conf->pluckerPath()+"/jpluckx.jar" << m_file;
 }
 
-void ProcessHandler::runConvert( KProcess* proc )
+void PluckerProcessHandler::runConvert( KProcess* proc )
 {
   PluckerConfig *conf = PluckerConfig::self();
   *proc << conf->javaPath();
@@ -56,7 +56,7 @@ void ProcessHandler::runConvert( KProcess* proc )
         << "-destination" << m_dir << m_file;
 }
 
-void ProcessHandler::run()
+void PluckerProcessHandler::run()
 {
   if ( m_useList )
     popFirst();
@@ -85,7 +85,7 @@ void ProcessHandler::run()
 
 }
 
-void ProcessHandler::slotExited( KProcess* proc )
+void PluckerProcessHandler::slotExited( KProcess* proc )
 {
   proc->deleteLater();
 
@@ -96,7 +96,7 @@ void ProcessHandler::slotExited( KProcess* proc )
 
 }
 
-void ProcessHandler::slotStdOutput( KProcess* ,
+void PluckerProcessHandler::slotStdOutput( KProcess* ,
                                     char* buffer, int buflen ) {
   QString str = QString::fromLatin1( buffer, buflen );
   emit sigProgress( str );
@@ -107,7 +107,7 @@ void ProcessHandler::slotStdOutput( KProcess* ,
  * a series of documents. So once one
  * Document is Finished we will continue with the next one
  */
-void ProcessHandler::popFirst()
+void PluckerProcessHandler::popFirst()
 {
   m_file = m_files.first();
   m_files.remove( m_file );

@@ -164,7 +164,7 @@ bool ToDo::toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee 
     return false;
   }
 
-  QStringList attr = attributes();
+  QStringList attr = supportedAttributes();
   QDomElement docElem = doc.documentElement();
   KCal::Todo *todo;
   QDomNode n = docElem.firstChild();
@@ -306,7 +306,7 @@ QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
     return text;
 }
 
-QStringList ToDo::attributes()const {
+QStringList ToDo::supportedAttributes() {
     QStringList lst;
     lst << "Categories";
     lst << "Completed";

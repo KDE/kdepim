@@ -41,16 +41,6 @@ Engine::~Engine()
 {
 }
 
-void Engine::slotProgress( Konnector *k, const Progress &p )
-{
-  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( p.text() ) );
-}
-
-void Engine::slotError( Konnector *k, const Error &e )
-{
-  logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( e.text() ) );
-}
-
 void Engine::logMessage( const QString &message )
 {
   QString text = QTime::currentTime().toString() + ": ";

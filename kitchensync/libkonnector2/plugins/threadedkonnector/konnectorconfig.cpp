@@ -23,7 +23,6 @@
 #include <klocale.h>
 #include <kgenericfactory.h>
 #include <kconfig.h>
-#include <kapabilities.h>
 #include <konnectorinfo.h>
 
 #include "clientmanager.h"

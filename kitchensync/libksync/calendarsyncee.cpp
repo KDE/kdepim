@@ -281,6 +281,6 @@ bool CalendarSyncee::restoreBackup( const QString &filename )
   return ok;
 }
 
-QString CalendarSyncee::newId() const {
+QString CalendarSyncee::generateNewId() const {
     return KCal::CalFormat::createUniqueId();
 }

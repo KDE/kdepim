@@ -212,7 +212,7 @@ bool DateBook::toKDE( const QString& fileName, ExtraMap& extraMap, KSync::Calend
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
     QString dummy;
-    QStringList attr = attributes();
+    QStringList attr = supportedAttributes();
     while (!n.isNull() ) {
         QDomElement el = n.toElement();
         if (!el.isNull() ) {
@@ -400,7 +400,7 @@ QString DateBook::event2string( KCal::Event *event, ExtraMap& map )
 /*
  * A list of attributes we handle
  */
-QStringList DateBook::attributes()const{
+QStringList DateBook::supportedAttributes(){
     QStringList lst;
     lst << "description";
     lst << "location";

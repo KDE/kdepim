@@ -65,7 +65,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 
   QDomElement docElem = doc.documentElement( );
   QDomNode n =  docElem.firstChild();
-  QStringList attr = attributes();
+  QStringList attr = supportedAttributes();
   while ( !n.isNull() ) {
     QDomElement e = n.toElement();
     if ( !e.isNull() ) {
@@ -388,7 +388,7 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map
     return tempFile;
 }
 
-QStringList AddressBook::attributes()const {
+QStringList AddressBook::supportedAttributes() {
     QStringList lst;
     lst << "FirstName";
     lst << "MiddleName";

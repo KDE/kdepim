@@ -26,7 +26,6 @@
 #include <kparts/componentfactory.h>
 #include <kstandarddirs.h>
 
-#include "configpart.h"
 #include "konnectorinfo.h"
 
 #include "konnectormanager.h"
@@ -54,31 +53,10 @@ KonnectorManager* KonnectorManager::self()
   return m_self;
 }
 
-void KonnectorManager::slotSync( Konnector *k, const SynceeList & list )
-{
-
-    emit sync( k, list );
-}
-
-void KonnectorManager::slotProgress( Konnector *k, const Progress &pro )
-{
-    emit progress( k, pro );
-}
-
-void KonnectorManager::slotError( Konnector *k, const Error &err )
-{
-    emit error( k, err );
-}
-
-void KonnectorManager::slotDownloaded( Konnector *k, const SynceeList & list)
-{
-    emit downloaded( k, list );
-}
-
 void KonnectorManager::connectSignals()
 {
   Iterator it;
-  for( it = begin(); it != end(); ++it ) {
+  for ( it = begin(); it != end(); ++it ) {
     connect( *it, SIGNAL( synceesRead( Konnector * ) ),
              SIGNAL( synceesRead( Konnector * ) ) );
     connect( *it, SIGNAL( synceeReadError( Konnector * ) ),

@@ -67,10 +67,6 @@ class SyncerPart : public ActionPart
 
     void executeAction();
 
-  protected slots:
-    void slotProgress( Konnector *, const Progress & );
-    void slotError( Konnector *, const Error & );
-
   private:
     QPixmap m_pixmap;
     QWidget *m_widget;

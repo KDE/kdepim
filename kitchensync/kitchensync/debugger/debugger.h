@@ -76,8 +76,6 @@ class Debugger : public ActionPart
     void disconnectDevice();
 
     void slotReceiveData( Konnector * );
-    void slotProgress( Konnector *, const Progress & );
-    void slotError( Konnector *, const Error & );
 
   private:
     QPixmap m_pixmap;

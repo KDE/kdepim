@@ -40,58 +40,11 @@ namespace OpieHelper {
         KSync::AddressBookSyncee * toKDE( const QString &fileName, ExtraMap& );
         KTempFile* fromKDE(KSync::AddressBookSyncee* syncee, ExtraMap& );
     private:
-        QStringList attributes()const;
-        QDate fromString( const QString& );
+        static QStringList supportedAttributes();
+        static QDate fromString( const QString& );
         // from OConversion
-        QDate dateFromString( const QString& );
-        QString dateToString( const QDate& );
-    private:
-        enum Fields {
-            Uid = 0,
-            Category,
-            Title,
-            FirstName,
-            MiddleName,
-            LastName,
-            Suffix,
-            FileAs,
-            JobTitle,
-            Department,
-            Company,
-            BusinessPhone,
-            BusinessFax,
-            BusinessMobile,
-            DefaultEmail,
-            Emails,
-            HomePhone,
-            HomeFax,
-            HomeMobile,
-            BusinessStreet,
-            BusinessCity,
-            BusinessState,
-            BusinessZip,
-            BusinessCountry,
-            BusinessPager,
-            BusinessWebPage,
-            Office,
-            Profession,
-            Assistant,
-            Manager,
-            HomeStreet,
-            HomeCity,
-            HomeState,
-            HomeZip,
-            HomeCountry,
-            HomeWebPage,
-            Spouse,
-            Gender,
-            Birthday,
-            Anniversary,
-            Nickname,
-            Children,
-            Notes,
-            Groups
-        };
+        static QDate dateFromString( const QString& );
+        static QString dateToString( const QDate& );
     };
 }
 

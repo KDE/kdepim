@@ -6,9 +6,6 @@
 #include <syncee.h>
 #include <synceelist.h>
 
-#include <stderror.h>
-#include <stdprogress.h>
-
 namespace KSync {
     class AgendaSocket : public QObject {
         Q_OBJECT

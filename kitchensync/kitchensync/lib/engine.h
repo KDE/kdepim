@@ -78,8 +78,6 @@ class Engine : public QObject
     void slotSynceesWritten( Konnector * );
     void slotSynceeWriteError( Konnector * );
 
-    void slotProgress( Konnector *, const Progress & );
-    void slotError( Konnector *, const Error & );
   signals:
     void doneSync();
 

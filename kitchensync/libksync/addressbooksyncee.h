@@ -86,7 +86,7 @@ class AddressBookSyncee : public Syncee
     void removeEntry( SyncEntry * );
 
     QString type() const;
-    QString newId() const;
+    QString generateNewId() const;
 
     bool writeBackup( const QString & ) { return false; }
     bool restoreBackup( const QString & ) { return false; }

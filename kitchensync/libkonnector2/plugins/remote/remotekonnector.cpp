@@ -34,7 +34,6 @@
 #include <libkdepim/kpimprefs.h>
 
 #include <konnectorinfo.h>
-#include <kapabilities.h>
 
 #include <kconfig.h>
 #include <kgenericfactory.h>
@@ -88,28 +87,6 @@ void RemoteKonnector::writeConfig( KConfig *config )
   config->writePathEntry( "CalendarUrl", mCalendarUrl );
   config->writeEntry( "AddressBookUrl", mAddressBookUrl );
   config->writeEntry( "BookmarkFile", mAddressBookUrl );
-}
-
-KSync::Kapabilities RemoteKonnector::capabilities()
-{
-  KSync::Kapabilities caps;
-
-  caps.setSupportMetaSyncing( false ); // we can meta sync
-  caps.setSupportsPushSync( false ); // we can initialize the sync from here
-  caps.setNeedsConnection( false ); // we need to have pppd running
-  caps.setSupportsListDir( false ); // we will support that once there is API for it...
-  caps.setNeedsIPs( false ); // we need the IP
-  caps.setNeedsSrcIP( false ); // we do not bind to any address...
-  caps.setNeedsDestIP( false ); // we need to know where to connect
-  caps.setAutoHandle( false ); // we currently do not support auto handling
-  caps.setNeedAuthentication( false ); // HennevL says we do not need that
-  caps.setNeedsModelName( false ); // we need a name for our meta path!
-
-  return caps;
-}
-
-void RemoteKonnector::setCapabilities( const KSync::Kapabilities& )
-{
 }
 
 bool RemoteKonnector::readSyncees()

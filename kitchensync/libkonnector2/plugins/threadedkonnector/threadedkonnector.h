@@ -43,15 +43,6 @@ namespace Threaded {
     ThreadedPlugin( const KConfig *config );
     ~ThreadedPlugin();
 
-    /** return our capabilities() */
-    KSync::Kapabilities capabilities();
-
-    /**
-     * the user configured this konnector
-     * apply his preferecnes
-     */
-    void setCapabilities( const KSync::Kapabilities& );
-
     SynceeList syncees();
 
     bool readSyncees();

@@ -89,7 +89,7 @@ private:
      * @param the SupportArray
      */
     void mergeTodo( CalendarSyncEntry *entry, CalendarSyncEntry* other);
-    void mergeCal ( CalendarSyncEntry *entry, CalendarSyncEntry* other);
+    void mergeEvent( CalendarSyncEntry *entry, CalendarSyncEntry* other);
     QBitArray mEvent, mTodo;
 };
 }

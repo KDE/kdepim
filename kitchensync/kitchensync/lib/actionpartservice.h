@@ -52,14 +52,14 @@ class ActionPartService
     QString id() const;
     QString name() const;
     QString comment() const;
-    QString libname() const;
-    QString icon() const;
+    QString libraryName() const;
+    QString iconName() const;
 
     void setId( const QString & );
     void setName( const QString & );
     void setComment( const QString & );
-    void setLibname( const QString & );
-    void setIcon( const QString & );
+    void setLibraryName( const QString & );
+    void setIconName( const QString & );
 
     ActionPartService &operator=( const ActionPartService & );
 
@@ -70,8 +70,8 @@ class ActionPartService
     QString m_id;
     QString m_name;
     QString m_comment;
-    QString m_icon;
-    QString m_lib;
+    QString m_iconName;
+    QString m_libName;
 
     static bool mAvailablePartsRead;
     static ActionPartService::List mAvailableParts;

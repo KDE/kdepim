@@ -131,13 +131,8 @@ class KitchenSync : public Core
 
     /* slots for the KonnectorManager */
   private slots:
-    void slotKonnectorProg( Konnector *, const Progress & );
-    void slotKonnectorErr( Konnector *, const Error & );
-
     /* slots for the ActionParts */
     void slotPartProg( ActionPart *, int );
-    void slotPartProg( ActionPart *, const Progress & );
-    void slotPartErr( ActionPart *, const Error & );
     void slotPartSyncStatus( ActionPart *, int );
 
   private:

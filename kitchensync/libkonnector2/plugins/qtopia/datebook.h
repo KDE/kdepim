@@ -50,7 +50,7 @@ namespace OpieHelper {
         KTempFile* fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& map );
 
     private:
-        QStringList attributes()const;
+        static QStringList supportedAttributes();
         QString endDate( const QDateTime& time, bool allDay );
         QString startDate( const QDateTime& time, bool allDay );
         QString event2string( KCal::Event *event, ExtraMap& );

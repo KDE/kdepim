@@ -56,11 +56,7 @@ class OverviewPart : public ActionPart
 
   private slots:
     void slotPartChanged( ActionPart * );
-    void slotPartProgress( ActionPart *part, const Progress & );
-    void slotPartError( ActionPart *, const Error & );
     void slotSyncProgress( ActionPart *, int, int );
-    void slotKonnectorProgress( Konnector *, const Progress & );
-    void slotKonnectorError( Konnector *, const Error & );
     void slotProfileChanged( const Profile & );
     void slotStartSync();
     void slotDoneSync();

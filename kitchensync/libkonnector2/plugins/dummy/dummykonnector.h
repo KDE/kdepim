@@ -43,15 +43,6 @@ class DummyKonnector : public KSync::Konnector
     DummyKonnector( const KConfig *config );
     ~DummyKonnector();
 
-    /** return our capabilities() */
-    KSync::Kapabilities capabilities();
-
-    /**
-     * the user configured this konnector
-     * apply his preferecnes
-     */
-    void setCapabilities( const KSync::Kapabilities& );
-
     SynceeList syncees();
 
     bool readSyncees();
@@ -62,13 +53,6 @@ class DummyKonnector : public KSync::Konnector
 
     /** the state and some informations */
     KSync::KonnectorInfo info()const;
-
-    /** download a resource/url/foobar */
-    void download( const QString& );
-
-    /** configuration widgets */
-    KSync::ConfigWidget* configWidget( const KSync::Kapabilities&, QWidget* parent, const char* name );
-    KSync::ConfigWidget* configWidget( QWidget* parent, const char* name );
 
   private:
     KCal::CalendarLocal mCalendar;

@@ -238,7 +238,7 @@ AddressBookSyncEntry *AddressBookSyncee::createEntry( const KABC::Addressee &a )
 }
 
 
-QString AddressBookSyncee::newId() const
+QString AddressBookSyncee::generateNewId() const
 {
     return KApplication::randomString( 10 );
 }

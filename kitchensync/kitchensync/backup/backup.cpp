@@ -25,7 +25,6 @@
 #include "backupview.h"
 
 #include <konnector.h>
-#include <configwidget.h>
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
 #include <mainwindow.h>
@@ -60,9 +59,9 @@ K_EXPORT_COMPONENT_FACTORY( libksync_backup, BackupFactory )
 
 Backup::Backup( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
-  : ActionPart( parent, name ), m_widget( 0 ), mActive( false )
+  : ActionPart( parent, name ), mWidget( 0 ), mActive( false )
 {
-  m_pixmap = KGlobal::iconLoader()->loadIcon("kcmdrkonqi", KIcon::Desktop, 48 );
+  mPixmap = KGlobal::iconLoader()->loadIcon("kcmdrkonqi", KIcon::Desktop, 48 );
 }
 
 KAboutData *Backup::createAboutData()
@@ -72,7 +71,7 @@ KAboutData *Backup::createAboutData()
 
 Backup::~Backup()
 {
-  delete m_widget;
+  delete mWidget;
 }
 
 QString Backup::type() const
@@ -92,7 +91,7 @@ QString Backup::description() const
 
 QPixmap *Backup::pixmap()
 {
-  return &m_pixmap;
+  return &mPixmap;
 }
 
 QString Backup::iconName() const
@@ -107,32 +106,32 @@ bool Backup::hasGui() const
 
 QWidget *Backup::widget()
 {
-  if( !m_widget ) {
-    m_widget = new QWidget;
-    QBoxLayout *topLayout = new QVBoxLayout( m_widget );
+  if( !mWidget ) {
+    mWidget = new QWidget;
+    QBoxLayout *topLayout = new QVBoxLayout( mWidget );
     topLayout->setSpacing( KDialog::spacingHint() );
     
     QBoxLayout *konnectorLayout = new QHBoxLayout( topLayout );
 
-    mKonnectorList = new KonnectorView( m_widget );
+    mKonnectorList = new KonnectorView( mWidget );
     konnectorLayout->addWidget( mKonnectorList, 1 );
 
     mKonnectorList->updateKonnectorList();
 
-    mBackupView = new BackupView( m_widget );
+    mBackupView = new BackupView( mWidget );
     konnectorLayout->addWidget( mBackupView );
     connect( mBackupView, SIGNAL( backupDeleted( const QString & ) ),
              SLOT( slotBackupDeleted( const QString & ) ) );
     
     mBackupView->updateBackupList();
 
-    mLogView = new QTextView( m_widget );
+    mLogView = new QTextView( mWidget );
     mLogView->setTextFormat( LogText );
     topLayout->addWidget( mLogView );
 
     logMessage( i18n("Ready.") );
   }
-  return m_widget;
+  return mWidget;
 }
 
 void Backup::logMessage( const QString &message )

@@ -156,13 +156,13 @@ void PluckerPart::executeAction()
 
 
   m_temp = new KTempDir();
-  ProcessHandler *handler = new ProcessHandler( ProcessHandler::Convert,
+  PluckerProcessHandler *handler = new PluckerProcessHandler( PluckerProcessHandler::Convert,
                                                 false, lst, m_temp->name(), this );
 
   connect(handler, SIGNAL(sigProgress(const QString&)),
           m_edit, SLOT(append(const QString&)));
-  connect(handler, SIGNAL(sigFinished(ProcessHandler*)),
-          this, SLOT(slotFinished(ProcessHandler*)));
+  connect(handler, SIGNAL(sigFinished(PluckerProcessHandler*)),
+          this, SLOT(slotFinished(PluckerProcessHandler*)));
 
   handler->run();
   /*
@@ -255,7 +255,7 @@ void PluckerPart::slotCleanUp()
   m_temp = 0l;
 }
 
-void PluckerPart::slotFinished( ProcessHandler* handle )
+void PluckerPart::slotFinished( PluckerProcessHandler* handle )
 {
   handle->deleteLater();
   m_done = true;
