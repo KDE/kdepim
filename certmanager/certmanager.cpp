@@ -46,6 +46,7 @@
 #include <cryptplugfactory.h>
 #include <kleo/downloadjob.h>
 #include <kleo/importjob.h>
+#include <kleo/multideletejob.h>
 #include <kleo/deletejob.h>
 #include <kleo/keylistjob.h>
 #include <kleo/dn.h>
@@ -137,6 +138,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
 
   // Main Window --------------------------------------------------
   mKeyListView = new Kleo::KeyListView( new ColumnStrategy(), this, "mKeyListView" );
+  mKeyListView->setSelectionMode( QListView::Extended );
   setCentralWidget( mKeyListView );
 
   connect( mKeyListView, SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
@@ -551,37 +553,56 @@ void CertManager::slotViewCRLs() {
 static void showDeleteError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n("<qt><p>An error occured while trying to delete "
-			   "the certificate:</p>"
+			   "the certificates:</p>"
 			   "<p><b>%1</b></p></qt>")
     .arg( QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n("Certificate Deletion Failed") );
 }
 
 void CertManager::slotDeleteCertificate() {
-  const Kleo::KeyListViewItem * item = mKeyListView->selectedItem();
-  if ( !item || item->key().isNull() )
+  mItemsToDelete = mKeyListView->selectedItems();
+  if ( mItemsToDelete.isEmpty() )
+    return;
+  std::vector<GpgME::Key> keys;
+  keys.reserve( mItemsToDelete.count() );
+  for ( QPtrListIterator<Kleo::KeyListViewItem> it( mItemsToDelete ) ; it.current() ; ++it )
+    if ( !it.current()->key().isNull() )
+      keys.push_back( it.current()->key() );
+  if ( keys.empty() )
     return;
 
-  Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob();
+  if ( Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob() )
+    job->slotCancel();
+  else
+    KMessageBox::error( this,
+			i18n("<qt><p>An error occured while trying to delete "
+			     "the certificate:</p>"
+			     "<p><b>%1</b><p></qt>",
+			     "<qt><p>An error occured while trying to delete "
+			     "the certificates:</p>"
+			     "<p><b>%1</b><p></qt>", keys.size() )
+			.arg( i18n("Operation not supported by the backend.") ),
+			i18n("Certificates Deletion Failed") );
+  Kleo::MultiDeleteJob * job = new Kleo::MultiDeleteJob( Kleo::CryptPlugFactory::instance()->smime() );
   assert( job );
 
-  connect( job, SIGNAL(result(const GpgME::Error&)),
-	   SLOT(slotDeleteResult(const GpgME::Error&)) );
+  connect( job, SIGNAL(result(const GpgME::Error&,const GpgME::Key&)),
+	   SLOT(slotDeleteResult(const GpgME::Error&,const GpgME::Key&)) );
 
-  const GpgME::Error err = job->start( item->key(), true );
+  const GpgME::Error err = job->start( keys, true );
   if ( err )
     showDeleteError( this, err );
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Deleting key"), this );
+    (void)new Kleo::ProgressDialog( job, i18n("Deleting keys"), this );
 }
 
-void CertManager::slotDeleteResult( const GpgME::Error & err ) {
+void CertManager::slotDeleteResult( const GpgME::Error & err, const GpgME::Key & ) {
   if ( err )
     return showDeleteError( this, err );
 
-  // We should make sure that the selectedItem doesn't change between
-  // slotDeleteCertificate() and this slot:
-  delete mKeyListView->selectedItem();
+  mItemsToDelete.setAutoDelete( true );
+  mItemsToDelete.clear();
+  mItemsToDelete.setAutoDelete( false );
   updateStatusBarLabels();
 }
 

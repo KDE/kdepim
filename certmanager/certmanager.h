@@ -39,6 +39,7 @@
 
 #include <qstring.h>
 #include <qcstring.h>
+#include <qptrlist.h>
 
 namespace Kleo {
   class KeyListView;
@@ -92,7 +93,7 @@ private slots:
     void slotCertificateImportResult( const GpgME::ImportResult & result );
     void slotCertificateDownloadResult( const GpgME::Error & error, const QByteArray & keyData );
     void slotKeyListResult( const GpgME::KeyListResult & result );
-    void slotDeleteResult( const GpgME::Error & error );
+    void slotDeleteResult( const GpgME::Error & error, const GpgME::Key & );
 
     void importCRLFromFile();
     void importCRLFromLDAP();
@@ -124,6 +125,7 @@ private:
 
     KProcess * mDirmngrProc;
     QString mErrorbuffer;
+    QPtrList<Kleo::KeyListViewItem> mItemsToDelete;
 
     LineEditAction * mLineEditAction;
     ComboAction * mComboAction;
