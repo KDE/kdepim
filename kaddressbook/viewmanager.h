@@ -100,7 +100,7 @@ class ViewManager : public QWidget
 
     /**
       Used to enable or disable the jump button bar.
-    
+
       @param visible True for the widget to be visible, false otherwise
      */
     void setJumpButtonBarVisible( bool visible );
@@ -176,6 +176,12 @@ class ViewManager : public QWidget
      */
     void sendMail( const QString& email );
 
+    /** Open a composer with the selected contact's vcard attached. */
+    void mailVCard();
+
+    /** Open a composer with those contacts' vcards attached. */
+    void mailVCard(const QStringList& uids);
+
     /**
       Open a browser window displaying the URL given.
      */
@@ -212,7 +218,7 @@ class ViewManager : public QWidget
 
     /**
       Refreshes the active view.
-     
+
       @param uid Only refresh the selected uid. If it is QStrign::null, the
                  entire view will be refreshed.
      */
@@ -306,7 +312,7 @@ class ViewManager : public QWidget
     /**
       Emitted whenever the view configuration changes. This can happen
       if a user adds a new view or removes a view.
-    
+
       @param newActive This is the view that should be made active. If this
                        is QString::null, than the current active can remain
                        that way.
@@ -322,7 +328,7 @@ class ViewManager : public QWidget
     /**
       Emitted whenever the filter combo bar should change its
       current filter.
-      
+
       @param name Is the name of the new filter.
                   name.isEmpty() for no filter.
      */

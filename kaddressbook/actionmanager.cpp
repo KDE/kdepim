@@ -127,6 +127,11 @@ void ActionManager::initReadOnlyActions()
   else
     mActionMail = KStdAction::mail( mViewManager, SLOT( sendMail() ), mACollection );
 
+  mActionMailVCard = new KAction(i18n("Mail &vCard..."), "mail_post_to", 0,
+                                 mViewManager, SLOT(mailVCard()),
+                                 mACollection, "file_mail_vcard");
+
+
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
                                       mWidget, SLOT( editAddressee() ),
                                       mACollection, "file_properties" );
@@ -306,6 +311,7 @@ void ActionManager::addresseeSelected( bool selected )
   mActionDelete->setEnabled( selected );
   mActionEditAddressee->setEnabled( selected );
   mActionMail->setEnabled( selected );
+  mActionMailVCard->setEnabled( selected );
 }
 
 void ActionManager::modified(bool mod)

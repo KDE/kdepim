@@ -50,6 +50,9 @@
 #include <libkdepim/kvcarddrag.h>
 #include <kstandarddirs.h>
 #include <kurldrag.h>
+#include <errno.h>
+#include <ktempfile.h>
+#include <qdir.h>
 
 #include "addresseeeditorwidget.h"
 #include "addresseeutil.h"
@@ -159,13 +162,68 @@ QStringList ViewManager::selectedUids() const
 
 void ViewManager::sendMail()
 {
-  QString emailAddrs = mActiveView->selectedEmails();
-  kapp->invokeMailer( emailAddrs, "" );
+  sendMail( mActiveView->selectedEmails() );
 }
 
 void ViewManager::sendMail( const QString& email )
 {
   kapp->invokeMailer( email, "" );
+}
+
+void ViewManager::mailVCard()
+{
+  QStringList uids = mActiveView->selectedUids();
+  if ( !uids.isEmpty() )
+    mailVCard( uids );
+}
+
+void ViewManager::mailVCard(const QStringList& uids)
+{
+  QStringList urls;
+  // Create a temp dir, so that we can put the files in it with proper names
+  KTempFile tempDir;
+  if ( tempDir.status() != 0 ) {
+    kdWarning() << strerror( tempDir.status() ) << endl;
+    return;
+  }
+
+  QString dirName = tempDir.name();
+  tempDir.unlink();
+  QDir().mkdir(dirName,true);
+
+  for( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
+    KABC::Addressee a = mAddressBook->findByUid( (*it) );
+
+    if ( a.isEmpty() )
+      continue;
+
+    QString name = a.givenName() + "_" + a.familyName() + ".vcf";
+
+    QString fileName = dirName + "/" + name;
+
+    QFile outFile(fileName);
+    if ( outFile.open(IO_WriteOnly) )
+    {    // file opened successfully
+      KABC::VCardConverter converter;
+      QString vcard;
+
+      converter.addresseeToVCard( a, vcard );
+
+      QTextStream t( &outFile );        // use a text stream
+      t.setEncoding( QTextStream::UnicodeUTF8 );
+      t << vcard;
+
+      outFile.close();
+
+      urls.append( fileName );
+    }
+  }
+
+  kapp->invokeMailer(QString::null, QString::null, QString::null,
+                     QString::null, // subject
+                     QString::null, // body
+                     QString::null,
+                     urls); // attachments
 }
 
 void ViewManager::browse( const QString& url )
@@ -585,7 +643,7 @@ void ViewManager::dropped( QDropEvent *e )
     if ( c > 1 ) {
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
-        for ( ; it != urls.end(); ++it ) 
+        for ( ; it != urls.end(); ++it )
           emit importVCard( *it, false );
       }
     } else if ( c == 1 )

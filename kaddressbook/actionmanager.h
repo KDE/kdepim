@@ -142,6 +142,7 @@ class ActionManager : public QObject
     KAction *mActionCopy;
     KAction *mActionEditAddressee;
     KAction *mActionMail;
+    KAction *mActionMailVCard;
     KAction *mActionUndo;
     KAction *mActionRedo;
     KAction *mActionSave;
