@@ -40,6 +40,7 @@
 #include <kresources/resource.h>
 #include <kresources/manager.h>
 #include <kabc/lock.h>
+#include <kdepimmacros.h>
 
 namespace KCal {
 
@@ -52,7 +53,7 @@ class CalFormat;
   \warning This code is still under heavy development. Don't expect source or
   binary compatibility in future versions.
 */
-class ResourceCalendar : public KRES::Resource
+class KDE_EXPORT ResourceCalendar : public KRES::Resource
 {
     Q_OBJECT
   public:

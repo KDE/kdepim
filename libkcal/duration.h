@@ -23,12 +23,14 @@
 
 #include <qdatetime.h>
 
+#include <kdepimmacros.h>
+
 namespace KCal {
 
 /**
   This class represents a duration.
 */
-class Duration
+class KDE_EXPORT Duration
 {
   public:
     Duration();

@@ -27,6 +27,7 @@
 #include <qbitarray.h>
 #include <qptrlist.h>
 
+#include <kdepimmacros.h>
 namespace KCal {
 
 class Incidence;
@@ -34,7 +35,7 @@ class Incidence;
 /**
   This class represents a recurrence rule for a calendar incidence.
 */
-class Recurrence
+class KDE_EXPORT Recurrence
 {
   public:
     /** enumeration for describing how an event recurs, if at all. */

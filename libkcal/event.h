@@ -22,13 +22,14 @@
 #define KCAL_EVENT_H
 
 #include "incidence.h"
+#include <kdepimmacros.h>
 
 namespace KCal {
 
 /**
   This class provides an Event in the sense of RFC2445.
 */
-class Event : public Incidence
+class KDE_EXPORT Event : public Incidence
 {
   public:
     /**

@@ -31,6 +31,7 @@
 #include "attachment.h"
 
 #include "incidencebase.h"
+#include <kdepimmacros.h>
 
 namespace KCal {
 
@@ -38,7 +39,7 @@ namespace KCal {
 /**
   This class provides the base class common to all calendar components.
 */
-class Incidence : public IncidenceBase
+class KDE_EXPORT Incidence : public IncidenceBase
 {
   public:
     /**

@@ -29,6 +29,7 @@
 #include <kurl.h>
 #include <kconfig.h>
 #include <kdirwatch.h>
+#include <kdepimmacros.h>
 
 #include "incidence.h"
 #include "calendarlocal.h"
@@ -40,7 +41,7 @@ namespace KCal {
 /**
   This class provides a calendar resource stored as a local file.
 */
-class ResourceLocal : public ResourceCached
+class KDE_EXPORT ResourceLocal : public ResourceCached
 {
     Q_OBJECT
 

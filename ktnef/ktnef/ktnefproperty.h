@@ -20,8 +20,9 @@
 
 #include <qvariant.h>
 #include <qstring.h>
+#include <kdepimmacros.h>
 
-class KTNEFProperty
+class KDE_EXPORT KTNEFProperty
 {
 public:
 	enum MAPIType

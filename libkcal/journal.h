@@ -23,13 +23,14 @@
 #define KCAL_JOURNAL_H
 
 #include "incidence.h"
+#include <kdepimmacros.h>
 
 namespace KCal {
 
 /**
   This class provides a Journal in the sense of RFC2445.
 */
-class Journal : public Incidence
+class KDE_EXPORT Journal : public Incidence
 {
   public:
     typedef ListBase<Journal> List;

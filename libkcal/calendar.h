@@ -28,6 +28,7 @@
 #include <qdatetime.h>
 #include <qptrlist.h>
 #include <qdict.h>
+#include <kdepimmacros.h>
 
 #include "customproperties.h"
 #include "event.h"
@@ -99,7 +100,7 @@ class CalFilter;
   visible in the Calendar. You shouldn't delete any Event object you get from
   Calendar.
 */
-class Calendar : public QObject, public CustomProperties,
+class KDE_EXPORT Calendar : public QObject, public CustomProperties,
                  public IncidenceBase::Observer
 {
     Q_OBJECT

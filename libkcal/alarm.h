@@ -31,6 +31,8 @@
 #include "person.h"
 #include "listbase.h"
 
+#include <kdepimmacros.h>
+
 namespace KCal {
 
 class Incidence;
@@ -38,7 +40,7 @@ class Incidence;
 /**
   This class represents an alarm notification.
 */
-class Alarm : public CustomProperties
+class KDE_EXPORT Alarm : public CustomProperties
 {
   public:
     enum Type { Invalid, Display, Procedure, Email, Audio };

@@ -33,6 +33,8 @@
 
 #include "resourcecalendar.h"
 
+#include <kdepimmacros.h>
+
 namespace KIO {
 class FileCopyJob;
 class Job;
@@ -43,7 +45,7 @@ namespace KCal {
 /**
   Resource providing birthdays and anniversaries as events.
 */
-class ResourceKABC : public ResourceCalendar
+class KDE_EXPORT ResourceKABC : public ResourceCalendar
 {
     Q_OBJECT
 

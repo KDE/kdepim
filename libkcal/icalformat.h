@@ -26,6 +26,7 @@
 #include "scheduler.h"
 
 #include "calformat.h"
+#include <kdepimmacros.h>
 
 namespace KCal {
 
@@ -39,7 +40,7 @@ class FreeBusy;
 
   @short iCalendar format implementation
 */
-class ICalFormat : public CalFormat
+class KDE_EXPORT ICalFormat : public CalFormat
 {
   public:
     ICalFormat();

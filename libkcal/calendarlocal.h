@@ -24,6 +24,7 @@
 
 #include "calendar.h"
 #include <qdict.h>
+#include <kdepimmacros.h>
 
 namespace KCal {
 
@@ -32,7 +33,7 @@ class CalFormat;
 /**
   This class provides a calendar stored as a local file.
 */
-class CalendarLocal : public Calendar
+class KDE_EXPORT CalendarLocal : public Calendar
 {
   public:
     /**
