@@ -124,7 +124,7 @@ public:
 	void setID(recordid_t id) { fId = id; }
 	void setAttrib(int attrib) { fAttrs = attrib; }
 
-	virtual QString getTextRepresentation(bool richText=false) {return i18n("Unknown record type");};
+	virtual QString getTextRepresentation(bool=false) {return i18n("Unknown record type");};
 
 public:
 	bool isSecret() const { return fAttrs & dlpRecAttrSecret ; } ;
