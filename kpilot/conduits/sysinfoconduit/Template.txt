@@ -54,7 +54,7 @@ KPilot System Information Page
 <!--#ifpcversion#
 -) Version Information (Desktop)
      Operating System:   #os#
-     Hostname:           #hostname##
+     Hostname:           #hostname#
      Qt Version:         #qt#
      KDE Version:        #kde#
      KPilot Version:     #kpilot#
