@@ -35,8 +35,7 @@ ADCalendar::ADCalendar(const QString& url, const QCString& appname, Type type)
   loadFile();
 }
 
-ADCalendar *ADCalendarFactory::create(const QString& url, const QCString& appname,
-                                      ADCalendarBase::Type type)
+ADCalendar *ADCalendarFactory::create(const QString& url, const QCString& appname, ADCalendarBase::Type type)
 {
   return new ADCalendar(url, appname, type);
 }
@@ -104,35 +103,4 @@ void ADCalendar::clearEventsHandled(const QString& calendarURL)
     else
       ++it;
   }
-}
-
-/*
- * Note that the event with the given ID is pending
- * (i.e. waiting until the client can be notified).
- */
-void ADCalendar::setEventPending(const QString& ID)
-{
-  if (!eventsPending_.contains(ID)) //actionType() == KALARM  &&
-  {
-    eventsPending_.append(ID);
-    kdDebug(5900) << "ADCalendar::setEventPending(): " << ID << endl;
-  }
-}
-
-/*
- * Get an event from the pending list, and remove it from the list.
- */
-bool ADCalendar::getEventPending(QString& ID)
-{
-  //if (actionType() == KALARM)
-  //{
-    QValueListIterator<QString> it = eventsPending_.begin();
-    if (it != eventsPending_.end())
-    {
-      ID = *it;
-      eventsPending_.remove(it);
-      return true;
-  }
-  //}
-  return false;
 }

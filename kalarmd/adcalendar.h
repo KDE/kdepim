@@ -44,26 +44,19 @@ class ADCalendar : public ADCalendarBase
     bool           eventHandled(const Event*, const QValueList<QDateTime> &);
     void           setEventHandled(const Event*,
                                    const QValueList<QDateTime> &);
-
-    void           setEventPending(const QString& ID);
-    bool           getEventPending(QString& ID);
-
     static void    clearEventsHandled(const QString& calendarURL);
 
     bool           loadFile()          { return loadFile_(""); }
 
   public:
-    bool              available_;
-    bool              enabled_;       // events are currently manually enabled
-  private:
-    QValueList<QString> eventsPending_; // IDs of pending KALARM type events
+    bool           available_;
+    bool           enabled_;       // events are currently manually enabled
 };
 
 class ADCalendarFactory : public ADCalendarBaseFactory
 {
   public:
-    ADCalendar *create(const QString& url, const QCString& appname,
-                       ADCalendarBase::Type);
+    ADCalendar *create(const QString& url, const QCString& appname, ADCalendarBase::Type);
 };
 
 #endif
