@@ -794,13 +794,15 @@ you can share events with other users using one of these clients.</para>
 
 <sect1 id="as-organizer">
 <title>Acting in Group Scheduling as Organizer</title>
-<para>In day- and weekview a little icon showing a tux is placed in the
+
+<para>In day and week views a little icon showing a tux is placed in the
 event if you are the organizer of an group scheduling event.</para>
 
 <sect2 id="publish">
 <title>Publishing an Event</title>
+
 <para>If you simply want to send some other people an event, then click on
-<guibutton>publish</guibutton>
+<guimenuitem>publish</guimenuitem>
 in the schedule menu when the event is marked. Then a dialog appears, asking
 you for the emails you want to send this event.
 </para>
