@@ -5,7 +5,6 @@ AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.
 
 AC_CONFIG_SUBDIRS(libical)
 KDE_NEED_FLEX
-KDE_CHECK_STRLCPY
 
 if test "$x_includes" != "NONE"; then
   AC_DEFINE(HAVE_X11_HEADERS,1,Define if you have X11 header files)
