@@ -330,9 +330,11 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
   extractAddress( node, addressee, Address::Home,
     "homeStreet", "homepostofficebox", "homeCity", "homePostalCode", 
     "homeState", "homeCountry", "homeCountrycode" );
-  extractAddress( node, addressee, Address::Postal,
+  // Exchange doesn't support writing/changing the mailing address fields,
+  // so don't download it. It's equal to either the home or work address anyway
+/*  extractAddress( node, addressee, Address::Postal,
     "mailingstreet", "mailingpostofficebox", "mailingcity", "mailingpostalcode", 
-    "mailingstate", "mailingcountry", "mailingcountrycode" );
+    "mailingstate", "mailingcountry", "mailingcountrycode" );*/
   extractAddress( node, addressee, 0,
     "otherstreet", "otherpostofficebox", "othercity", "otherpostalcode", 
     "otherstate", "othercountry", "othercountrycode" );
@@ -541,7 +543,8 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   }
   
   // mailing address:
-  Address mailingaddr = addr.address( Address::Postal );
+  // Exchange doesn't support writing/changing the mailing address fields
+/*  Address mailingaddr = addr.address( Address::Postal );
   if ( !mailingaddr.isEmpty() ) {
     domContactProperty( "mailingstreet", mailingaddr.street() );
     domContactProperty( "mailingpostofficebox", mailingaddr.postOfficeBox() );
@@ -550,8 +553,8 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
     domContactProperty( "mailingstate", mailingaddr.region() );
     domContactProperty( "mailingcountry", mailingaddr.country() );
     // domContactProperty( "mailingcountrycode", mailingaddr.countryCode() );
-  }
-  
+  }*/
+
   // other address:
   Address otheraddr = addr.address( 0 );
   if ( !otheraddr.isEmpty() ) {
@@ -568,23 +571,25 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   domContactProperty( "nickname", addr.nickName() );
   domContactProperty( "spousecn", addr.custom( "KADDRESSBOOK", "X-SpousesName" ) );
 
- // TODO: Birthday and Anniversary:
- QDate dt = addr.birthday().date();
- QString str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
- QDomElement el = domContactProperty( "bday", str );
- el.setAttribute( "b:dt", "date" );
- 
- dt = QDate::fromString( addr.custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
- str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
- el = domContactProperty( "weddinganniversary", str );
- el.setAttribute( "b:dt", "date" );
-/*  if ( WebdavHandler::extractDateTime( node, "bday", tmpdt ) ) 
-    addressee.setBirthday( tmpdt.date() );
-  if ( WebdavHandler::extractString( node, "weddinganniversary", tmpstr ) ) 
-    addressee.insertCustom( "KADDRESSBOOK", "X-Anniversary", tmpstr );*/
+  // TODO: Birthday and Anniversary:
+  // FIXME: Exchange uses the date in the form 8/13, i.e. possibly without a
+  // year! How shall I deal with this?
+/*  QDate dt = addr.birthday().date();
+  QString str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
+  if ( !str.isEmpty() ) {
+    QDomElement el = domContactProperty( "bday", str );
+    el.setAttribute( "b:dt", "date" );
+  }
+  // FIXME: Enable these again after checking that it really works!
+  dt = QDate::fromString( addr.custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+  str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
+  if ( !str.isEmpty() ) {
+    QDomElement el = domContactProperty( "weddinganniversary", str );
+    el.setAttribute( "b:dt", "date" );
+  }*/
 
 // ? TODO: timeZone()
-
+/*
   KABC::Geo geo = addr.geo();
   if ( geo.isValid() ) {
     // TODO: Do we need to set any other attribute to make it a float?
@@ -596,7 +601,7 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
     el = domCalendarProperty( "geolongitude", QString::number( geo.longitude() ) );
     el.setAttribute( "b:dt", "float" );
   }
-
+*/
   domContactProperty( "textdescription", addr.note() );
 
   // TODO:usercertificate
