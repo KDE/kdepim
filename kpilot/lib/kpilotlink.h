@@ -233,6 +233,7 @@ protected:
 	enum { OpenMessage=1, OpenFailMessage=2 } ;
 	int messages;
 	int messagesMask;
+	static const int messagesType;
 	
 	void shouldPrint(int,const QString &);
 

@@ -296,6 +296,9 @@ bool KPilotDeviceLink::open()
 			e = 0;
 			goto errInit;
 		}
+#ifdef DEBUG
+		DEBUGDAEMON << fname << ": Typing to open " << fPilotPath << endl;
+#endif
 
 #if PILOT_LINK_NUMBER < 10
 		fPilotMasterSocket = pi_socket(PI_AF_SLP,
@@ -382,7 +385,7 @@ bool KPilotDeviceLink::open()
 errInit:
 	close();
 
-	if (msg.contains('%'))
+	if (msg.find('%'))
 	{
 		if (fPilotPath.isEmpty())
 		{
@@ -819,11 +822,14 @@ unsigned long KPilotDeviceLink::minorVersion() const
 	return (((rom >> 20) & 0xf) * 10)+ ((rom >> 16) & 0xf);
 }
 
+/* static */ const int KPilotDeviceLink::messagesType= (int)OpenFailMessage ;
+	
 void KPilotDeviceLink::shouldPrint(int m,const QString &s)
 {
 	if (!(messages & m))
 	{
-		emit logError(s);
+		if (messagesType & m) { emit logError(s); }
+		else { emit logMessage(s); }
 		messages |= (m & messagesMask);
 	}
 }
