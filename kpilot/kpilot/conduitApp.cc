@@ -349,19 +349,16 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 		}
 	}
 
-	// init the conduit after DCOP is setup
-	fConduit->init();
-
+	// Handle modes where we don't need any local databases
+	// first, and return. Remaining cases will be dealt with
+	// later.
+	//
+	bool keepRunning=true;
 	switch(fMode)
 	{
-	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
-	case BaseConduit::HotSync : fConduit->doSync(); break;
-	case BaseConduit::Backup : fConduit->doBackup(); break;
-	case BaseConduit::Test : 
-#ifdef DEBUG
-		debug_level=-1; 
-#endif
-		fConduit->doTest(); 
+	case BaseConduit::DBInfo : 
+		cout << fConduit->dbInfo(); 
+		keepRunning=false;
 		break;
 	case BaseConduit::Setup :
 		{
@@ -375,9 +372,46 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 		return fApp->exec();
 		}
+		/* NOTREACHED */
+		keepRunning=false;
+		break;
+	case BaseConduit::HotSync :
+	case BaseConduit::Backup :
+	case BaseConduit::Test : 
+		// These three modes need to continue
+		// processing after getting a link to
+		// the pilot's serial database.
+		//
+		//
+		keepRunning=true;
+		break;
 	case BaseConduit::Error :
 		kdError() << __FUNCTION__ << ": ConduitApp is in Error state."
 			<< endl;
+		keepRunning=false;
+		break;
+	default :
+		kdWarning() << __FUNCTION__ << ": ConduitApp has state " 
+			<< (int) fMode 
+			<< ": where it is strange to call me."
+			<< endl;
+		keepRunning=false;
+	}
+
+	if (!keepRunning) return 0;
+
+	// init the conduit after DCOP is setup
+	fConduit->init();
+
+	switch(fMode)
+	{
+	case BaseConduit::HotSync : fConduit->doSync(); break;
+	case BaseConduit::Backup : fConduit->doBackup(); break;
+	case BaseConduit::Test : 
+#ifdef DEBUG
+		debug_level=-1; 
+#endif
+		fConduit->doTest(); 
 		break;
 	default :
 		kdWarning() << __FUNCTION__ << ": ConduitApp has state " 
@@ -394,6 +428,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.23  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.22  2001/03/30 17:11:31  stern
 // Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
 //
