@@ -33,6 +33,10 @@ Konnector::Konnector( QObject *object, const char *name ) : QObject( object, nam
 }
 Konnector::~Konnector()
 {
+    QMap<QString,  KonnectorPlugin*>::Iterator it;
+    for ( it = d->m_konnectors.begin(); it != d->m_konnectors.end(); ++it ) {
+        delete it.data();
+    }
   delete d;
 };
 QValueList<KDevice> Konnector::query(const QString &category )

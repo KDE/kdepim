@@ -223,7 +223,9 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
     //url.setPath( path );
     for ( entry = lis.first(); entry != 0; entry = lis.next() ) {
         // convert to XML
+        kdDebug(5202) << entry->type() << endl;
         if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
+            kdDebug(5202) << "KAlendarSyncEntry " << endl;
             KAlendarSyncEntry* cal = (KAlendarSyncEntry*) entry;
             OpieHelper::DateBook dateb( d->edit,  d->helper,  d->meta );
             OpieHelper::ToDo todo( d->edit,  d->helper, d->meta );
@@ -246,6 +248,7 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
             // wrote the todos and events to a tempfile and upload
             // Events + Todo
             if ( d->meta ) { // save the bytearray
+                kdDebug(5202) << "TodoList Meta Informations" << endl;
                 QFile aFile(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/todolist.xml" );
                 if ( aFile.open(IO_WriteOnly) ) {
                     aFile.writeBlock(todos);
@@ -254,8 +257,9 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
                 if ( bFile.open(IO_WriteOnly) ) {
                     bFile.writeBlock( events );
                 }
-            }
-        }else if ( entry->type() == QString::fromLatin1("AddressbookSyncEntry") ) {
+            }else
+                kdDebug( 5202 ) << "No Metasyncing" << endl;
+        }else if ( entry->type() == QString::fromLatin1("KAddressbookSyncEntry") ) {
             KAddressbookSyncEntry* ab = (KAddressbookSyncEntry*) entry;
             OpieHelper::AddressBook abook( d->edit,  d->helper,  d->meta );
             QByteArray book = abook.fromKDE( ab );
@@ -267,11 +271,15 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
             KIO::NetAccess::upload(file.name(), url);
             file.unlink();
             if ( d->meta ) {
-                QFile file2(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/addressbook.xml");
+                kdDebug( 5202 ) << "Meta" << endl;
+                QString str = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId;
+                kdDebug(5202) << "Partner " << str << endl;
+                QFile file2( str + "/addressbook.xml");
                 if ( file2.open(IO_WriteOnly ) ) {
                     file2.writeBlock(book);
                 }
-            }
+            }else
+                kdDebug(5202) << "No meta " << endl;
         }else if ( entry->type() == QString::fromLatin1("KUnknownSyncEntry") ) {
             KUnknownSyncEntry* un = (KUnknownSyncEntry*) entry;
             KTempFile file(locateLocal("tmp", "opie-konn-unknown"), "new" );
@@ -284,6 +292,7 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
         }
     }
     // OpieHelper::CategoryEdit write back
+    writeCategory();
     QTextStream stream( d->socket );
     stream << "call QPE/System stopSync()" << endl;
     d->isSyncing = false; // do it in the write back later on
@@ -439,7 +448,7 @@ void OpieSocket::manageCall(const QString &line )
 	    url.setPass( d->pass );
 	    url.setHost( d->dest );
 	    url.setPort( 4242 );
-	    url.setPath(d->path + "/Settings/Categories.xml " );
+	    url.setPath(d->path + "/Settings/Categories.xml" );
 	    //tmpFileName = QString::fromLatin1("/home/ich/categories.xml")
             kdDebug(5202) << "Fetching categories" << endl;;
 	    KIO::NetAccess::download( url, tmpFileName );
@@ -589,4 +598,14 @@ QString OpieSocket::metaId() const{
 KSyncEntry* retrEntry( const QString& )
 {
     return 0l;
+}
+void OpieSocket::writeCategory()
+{
+    KURL url;
+    url.setProtocol("ftp" );
+    url.setUser( d->user );
+    url.setPass( d->pass );
+    url.setHost( d->dest );
+    url.setPort( 4242 );
+    url.setPath( d->path + "/Settings/Categories.xml" );
 }

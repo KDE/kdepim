@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
    Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -22,6 +22,9 @@
 KAddressbookSyncEntry::KAddressbookSyncEntry()
 {
     m_addressb = 0;
+    m_del = 0;
+    m_add = 0;
+    m_mod = 0;
     setSyncMode(SYNC_NORMAL );
 }
 KAddressbookSyncEntry::~KAddressbookSyncEntry()
@@ -101,12 +104,21 @@ KSyncEntry* KAddressbookSyncEntry::clone()
   entry->setAddressbook( adr );
   for(KABC::AddressBook::Iterator it = m_addressb->begin(); it != m_addressb->end(); ++it ){
     adr->insertAddressee((*it) );
-  } 
+  }
+  // FIXME cloning of others add, mod, ...
   return entry;
 }
-
-
-
-
+void KAddressbookSyncEntry::setModified(KABC::AddressBook* entry)
+{
+    m_mod = entry;
+}
+void KAddressbookSyncEntry::setAdded(KABC::AddressBook* entry)
+{
+    m_add = entry;
+}
+void KAddressbookSyncEntry::setDeleted(KABC::AddressBook* entry)
+{
+    m_del = entry;
+}
 
 

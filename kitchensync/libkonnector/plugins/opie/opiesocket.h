@@ -40,6 +40,7 @@ signals:
   void stateChanged( bool );
 
  private:
+    void writeCategory();
     void newPartner();
     void readPartner( const QString & );
     QString randomString( int len );

@@ -44,6 +44,16 @@ class KAddressbookSyncEntry : public KSyncEntry{
 
     void setAddressbook(KABC::AddressBook *adr );
     virtual QString type() { return QString::fromLatin1("KAddressbookSyncEntry" ); };
+
+    KABC::AddressBook* modified() { return m_mod; };
+    void setModified( KABC::AddressBook* );
+
+    KABC::AddressBook* added() { return m_add; };
+    void setAdded( KABC::AddressBook* );
+
+    KABC::AddressBook* deleted() { return m_del; }
+    void setDeleted( KABC::AddressBook* );
+
     virtual QString name();
     virtual void setName(const QString & );
     virtual QString id();
@@ -57,6 +67,9 @@ class KAddressbookSyncEntry : public KSyncEntry{
     virtual KSyncEntry* clone();
   private:
     KABC::AddressBook* m_addressb;
+    KABC::AddressBook* m_mod;
+    KABC::AddressBook* m_del;
+    KABC::AddressBook* m_add;
     class AddressbookSyncEntryPrivate;
     AddressbookSyncEntryPrivate *d;
     QString m_name;
