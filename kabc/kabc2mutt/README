@@ -5,7 +5,7 @@ kabc2mutt is a small programm to make the email addresses, stored in
 kaddressbook, available in mutt.
 You only have to add the following line to your .muttrc
 
-    source kabc2mutt|
+    source "kabc2mutt -read|"
 
 Have fun with it
 Ciao,
