@@ -35,7 +35,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-06-14</date>
+<date>2002-06-15</date>
 <releaseinfo>0.07.00</releaseinfo>
 
 <abstract>
@@ -494,16 +494,18 @@ which use the <application>alarm daemon</application>.</para></note>
 </sect2>
 
 <sect2>
-<title>Resetting the <application>alarm daemon</application></title>
+<title>Refreshing alarms</title>
 
-<para>To reset the <application>alarm daemon</application>, select
+<para>If in the unlikely event that any alarm was not triggered when
+it should have been, you can refresh the alarm list and trigger any
+missed alarms by selecting
 <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
+<guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
 </menuchoice>.</para>
 
-<para>See the <link linkend="daemon-reset">Alarm daemon</link> section
-for a discussion about resetting the <application>alarm
-daemon</application>.</para>
+<para>&kalarm; retriggers missed alarms by resetting the
+<application>alarm daemon</application>, which is discussed in the
+<link linkend="daemon-reset">Alarm daemon</link> section.</para>
 
 </sect2>
 
@@ -1010,7 +1012,7 @@ daemon</application> if it is not currently running.</para></tip>
 
 <para>To reset the <application>alarm daemon</application>, either use
 the menu command <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
+<guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
 </menuchoice> or type the following command:</para>
 
 <screen width="40">
