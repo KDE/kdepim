@@ -11,5 +11,5 @@ kde_module_LTLIBRARIES = libJPilotAPI.la
 
 libJPilotAPI_la_SOURCES = libplugin.c APIEmulation.c
 libJPilotAPI_la_LDFLAGS = $(KDE_RPATH) -Wl,-export-dynamic
-libJPilotAPI_la_LIBADD = -lc -lgtk -lgdk -l../../../lib/libkpilot.la
+libJPilotAPI_la_LIBADD = -lc -lgtk -lgdk 
 
