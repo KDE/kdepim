@@ -60,7 +60,8 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knlistview.cpp \
                   knode.cpp \
                   knapplication.cpp \
-                  main.cpp 
+                  main.cpp \
+		  knodecomposeriface.skel
 
 noinst_HEADERS =  knconfigmanager.h \
                   knconfig.h \

@@ -34,7 +34,7 @@
 #endif
 
 #include <kabc/addresslineedit.h>
-
+#include <knodecomposeriface.h>
 
 class QGroupBox;
 
@@ -55,7 +55,7 @@ namespace Syntaxhighlighter {
 
 
 
-class KNComposer : public KMainWindow  {
+class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
   Q_OBJECT
 
