@@ -8,6 +8,8 @@ for details on how an issue is resolved, since resolved issues are
 
 Essential
 =========
+*(8)  Find out what's the reason of the "Invalid unique ID" crashes in
+    the calendar conduits (and the addresssbook conduit) (bug #51216)
 3a) Implement the CopyToPC and CopyToHH directions in the addressbook conduit (bug #59220)
 3b) Implement reset to last sync and ignore conflict resolution options in
     vcal conduits (bug #59221)
@@ -17,7 +19,7 @@ Essential
     file will be changed again, but the changes from the sync are lost (i.e.
     after a sync, kpilot needs to reload the config). (seems connected to bug #56115)
 4b) Conduits should not use the backup databases, otherwise a backup run will
-    screw up the sync. (bug #59219)
+    screw up the conduit's mechanism to detect changes. (bug #59219)
 4c) Need to find a better way to detect runs without a conduit, and switch to
     full sync in that case to prevent data loss.
 4d) Need to find a good way to avoid a mess when implementing new features
@@ -34,8 +36,6 @@ Important (hight priority)
     phone number of each type. I need to find a way to sync two email
     addresses to and from the handheld. (Bug #56364)
 7)  Check the first-time syncing behavior of all the conduits.
-8)  Find out what's the reason of the "Invalid unique ID" crashes in
-    the calendar conduits (and the addresssbook conduit) (bug #51216)
 12) ABook conduit: Check all fields for differences before asking
     for conflict resolution. (i.e. don't ask for conflict resolution
     of single fields, just for the whole record) (bug #59222)
@@ -98,7 +98,13 @@ FINISHED TODO jobs
     calendar) doesn't work for some (unknown) reason. Every sync
     happens with the filename given in the setup dialog. Probably
     very easy to fix.
-+(2)  Redesign the config dialog of kpilot (get rid of deprecated
++(2) 4d) Need to find a good way to avoid a mess when implementing new features
+    (e.g. after implementing the correct category sync, how do I ensure that
+    no category settings are lost?)
+5)  After the special sync is done, ask if the next sync should again be the
+    same special sync, a fast or a hot sync. (wish #59218)
+
+ Redesign the config dialog of kpilot (get rid of deprecated
     options, include conflict resolution, etc.)
 +(3)  Fix all conduits to use the new global options: conflict resolution,
     emergency sync, sync mode etc.
