@@ -1,6 +1,8 @@
 #ifndef FIELD_FORMAT_H
 #define FIELD_FORMAT_H
 
+#include <qstring.h>
+
 class FieldFormat
 {
   public:

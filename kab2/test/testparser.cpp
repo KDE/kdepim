@@ -1,7 +1,7 @@
 #include <kapp.h>
 #include <kcmdlineargs.h>
 
-#include "FormatHandler.h"
+#include "DefinitionReader.h"
 
   int
 main(int argc, char ** argv)
@@ -10,44 +10,30 @@ main(int argc, char ** argv)
 
   new KApplication;
 
-  FormatHandler handler;
+  DefinitionReader reader("test_kab_definition");
 
-  QFile f("testing.kabformat");
+  reader.parse();
 
-  QXmlInputSource source(f);
+  bool success = reader.success();
 
-  QXmlSimpleReader reader;
-
-  reader.setContentHandler(&handler);
-
-  bool ok = reader.parse(source);
-
-  f.close();
-
-  if (!ok)
+  if (!success)
   {
-    qWarning("Parse error");
+    qDebug("Parsing failed");
     return 1;
   }
-  else
+
+  qDebug("Parsing succeded");
+
+  FormatSpec spec = reader.spec();
+
+  for (FormatSpec::ConstIterator it(spec.begin()); it != spec.end(); ++it)
   {
-    qDebug("Parsing ok");
+    FieldFormat ff(*it);
 
-    FormatSpec spec(handler.spec());
-
-    for (FormatSpec::ConstIterator it(spec.begin()); it != spec.end(); ++it)
-    {
-      FieldFormat ff(*it);
-
-      qDebug
-        (
-         "Field: name=`%s' unique=%s type=`%s' subType=`%s'",
-         ff.name().latin1(),
-         ff.unique() ? "true" : "false",
-         ff.type().latin1(),
-         ff.subType().latin1()
-        );
-    }
+    qDebug("------------------------ Field def --------------------------");
+    qDebug("Name: %s", ff.name().ascii());
+    qDebug("Mime type: %s/%s", ff.type().ascii(), ff.subType().ascii());
+    qDebug("Unique: %s", ff.unique() ? "true" : "false");
   }
 }
 

@@ -67,10 +67,10 @@ class Entity
 
     void touch();
 
-    bool isNull() const;
-
     friend QDataStream & operator << (QDataStream &, const Entity &);
     friend QDataStream & operator >> (QDataStream &, Entity &);
+
+    bool isNull() const;
 
   private:
 

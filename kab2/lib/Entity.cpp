@@ -187,6 +187,28 @@ Entity::memberList() const
   return memberList_;
 }
 
+#if 0
+  QString
+Entity::toXML() const
+{
+  QString ret;
+
+  ret += QString("<entity id=\"%1\" name=\"%2\">\n").arg(id_).arg(name_);
+
+  FieldList::ConstIterator fit = fieldList_.begin();
+
+  for (; fit != fieldList_.end(); ++fit)
+    ret += QString("  %1\n").arg((*fit).toXML());
+ 
+  QStringList::ConstIterator it(memberList_.begin())
+
+  for (; it != memberList_.end(); ++it)
+    ret += QString("  <member id=\"%1\" />\n").arg(*it);
+
+  ret += "</entity>\n";
+}
+#endif
+
   QDataStream &
 operator << (QDataStream & str, const Entity & e)
 {

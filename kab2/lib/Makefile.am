@@ -6,5 +6,5 @@ libKAddressBook_la_SOURCES  = \
   KAddressBook.cpp \
   KAddressBookInterface.skel \
   KAddressBookInterface.stub \
-  FormatHandler.cpp
+  DefinitionReader.cpp
 

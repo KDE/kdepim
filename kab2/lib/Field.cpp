@@ -156,7 +156,20 @@ Field::setValue(const QString & s)
   QDataStream str(value_, IO_WriteOnly);
   str << s;
 }
-  
+
+#if 0
+ QString
+Field::toXML() const
+{
+  return QString
+    ("  <field name=\"%1\" mimetype=\"%2/%3\">%4</field>\n")
+    .arg(name_)
+    .arg(type_)
+    .arg(subType_)
+    .arg(value_);
+}
+#endif
+
   QDataStream &
 operator << (QDataStream & str, const Field & f)
 {
