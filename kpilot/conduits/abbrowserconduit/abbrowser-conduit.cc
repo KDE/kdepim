@@ -409,7 +409,7 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 		case AbbrowserSettings::eCustomBirthdate: {
 			QDate bdate;
 			bool ok=false;
-			if (!AbbrowserSettings::customDateFormat().isEmpty())
+			if (AbbrowserSettings::customDateFormat().isEmpty())
 			{
 				// empty format means use locale setting
 				bdate=KGlobal::locale()->readDate(cust, &ok);
