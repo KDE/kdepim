@@ -172,10 +172,17 @@ void MainWindow::startStatusBar()
   statusBar()->insertItem( i18n("Total" ), 1, 0, true );
 }
 
-void MainWindow::saveProperties( KConfig* )
+void MainWindow::saveProperties( KConfig* cfg )
 {
   _taskView->stopAllTimers();
   _taskView->save();
+  cfg->writeEntry( "WindowShown", isVisible());
+}
+
+void MainWindow::readProperties( KConfig* cfg )
+{
+  if( cfg->readBoolEntry( "WindowShown", true ))
+    show();
 }
 
 void MainWindow::keyBindings()
