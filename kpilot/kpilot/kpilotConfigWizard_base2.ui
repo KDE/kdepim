@@ -74,9 +74,6 @@ Please enter the user name exactly as set on the handheld. The device means a sy
                     <property name="text">
                         <string>&amp;Automatically detect the handheld and the user name...</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+A</string>
-                    </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
                     <property name="name">
@@ -110,9 +107,6 @@ Please enter the user name exactly as set on the handheld. The device means a sy
             </property>
             <property name="text">
                 <string>KPilot should be &amp;running all the time</string>
-            </property>
-            <property name="accel">
-                <string>Alt+R</string>
             </property>
             <property name="checked">
                 <bool>true</bool>

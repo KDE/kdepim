@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>593</width>
-            <height>324</height>
+            <height>326</height>
         </rect>
     </property>
     <property name="caption">
@@ -54,9 +54,6 @@
                     <property name="name">
                         <cstring>fSpecialSync</cstring>
                     </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
                 </widget>
                 <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
                     <property name="name">
@@ -98,9 +95,6 @@
             </property>
             <property name="text">
                 <string>&amp;Do full backup when changing PCs</string>
-            </property>
-            <property name="accel">
-                <string>Alt+D</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>We really do not know what this does.</string>
@@ -179,7 +173,5 @@
         </spacer>
     </grid>
 </widget>
-<tabstops>
-</tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

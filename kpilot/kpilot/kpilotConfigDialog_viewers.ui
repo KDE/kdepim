@@ -54,9 +54,6 @@ KPilot's settings.</comment>
                     <property name="text">
                         <string>Show as "&amp;Company, last"</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+C</string>
-                    </property>
                     <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
                     </property>
@@ -95,9 +92,6 @@ KPilot's settings.</comment>
             <property name="text">
                 <string>&amp;Show private records</string>
             </property>
-            <property name="accel">
-                <string>Alt+S</string>
-            </property>
             <property name="whatsThis" stdset="0">
                 <string>&lt;qt&gt;Records that are marked &amp;quot;Private&amp;quot; in the Pilot are displayed by KPilot only when this box is checked.&lt;/qt&gt;</string>
             </property>
@@ -111,9 +105,6 @@ KPilot's settings.</comment>
             </property>
             <property name="text">
                 <string>Make internal viewers &amp;editable</string>
-            </property>
-            <property name="accel">
-                <string>Alt+E</string>
             </property>
             <property name="checked">
                 <bool>false</bool>

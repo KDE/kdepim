@@ -98,9 +98,6 @@
             <property name="text">
                 <string>Run &amp;conduits during a backup</string>
             </property>
-            <property name="accel">
-                <string>Alt+C</string>
-            </property>
         </widget>
         <spacer row="2" column="0">
             <property name="name">

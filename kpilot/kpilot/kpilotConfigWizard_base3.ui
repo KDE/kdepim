@@ -50,9 +50,6 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                     <property name="text">
                         <string>General &amp;KDE-PIM suite</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+K</string>
-                    </property>
                     <property name="checked">
                         <bool>true</bool>
                     </property>
@@ -64,9 +61,6 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                     <property name="text">
                         <string>Konta&amp;ct</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+C</string>
-                    </property>
                 </widget>
                 <widget class="QRadioButton">
                     <property name="name">
@@ -74,9 +68,6 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                     </property>
                     <property name="text">
                         <string>&amp;Evolution</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+E</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton">
