@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Name=KPilot Abbrowser Conduit
+Name[de]=Leitung nach Abbrowser für KPilot
+Name[nl]=Abbrowser Synchronisatie voor KPilot
+Implemented=file
+ServiceTypes=KPilotConduit
+Exec=abbrowser_conduit
