@@ -1,3 +1,57 @@
+KPilot Developer's notes for september 5th 2001
+===============================================
+
+It's tough keeping this ChangeLog up-to-date, since I'm doing
+lots of work but not committing much to CVS. But I'll try to
+keep things documented nonetheless.
+
+
+2001-09-05  Adriaan de Groot
+
+A new application, kpilotTest, has been added. It does a very basic
+test of the pilot-link library and some device handling for KPilot.
+It is *not* installed by default, since it's pretty much useless for
+normal use, but useful to get some feedback about whether the
+new architecture works as expected.
+
+A new widget, LogWidget (logWidget.{h,cc}) is now included for, yup,
+logging stuff. It's used to long things during a sync.
+
+pilotListener is no longer built or needed.
+
+A new application, kpilotConfig, has been added. It is not installed
+by default. It just calls up a config dialog for KPilot, much like
+kpilot --config does. It's useful mostly because it exercises a clear
+subset of the code.
+
+I've tooltipified (?) the whole hardware setup dialog. I think it really
+needs more work, since the distribution of options is really unclear.
+And why are exactly *these* things grouped together? The "Address" tab
+really should go.
+
+The compilation of everything besides kpilotTest and kpilotConfig 
+is now seriously broken (tm).
+
+KPilot Developer's notes for september 3rd 2001
+===============================================
+
+Hoo doggies. This is a *big* set of changes. I finally sat down
+to do some of the serious rework that KPilot has been needing for
+a long time. In essence:
+
+* Use DCOP for as much communication as possible, and
+* Support USB devices and other transient device nodes.
+
+Basically PilotDaemon and KPilotLink have been completely rewritten.
+
+What more is there to say? Almost every file has changed, even the
+coding guidelines have been relaxed (I'm not going to put #ifdefs 
+around #include anymore, not since it turns out that the gnu cpp
+handles this situation efficiently anyway).
+
+Comments and documentation in most files have been vastly improved.
+
+
 KPilot Developer's notes for august 27th 2001
 =============================================
 
