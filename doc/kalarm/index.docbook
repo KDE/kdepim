@@ -22,9 +22,16 @@
 <address><email>software@astrojar.org.uk</email></address>
 </affiliation>
 </author>
-</authorgroup>
+
+<othercredit role="developer">
+<firstname>David</firstname>
+<surname>Jarvie</surname>
+<affiliation><address><email>software@astrojar.org.uk</email></address></affiliation>
+<contrib>Developer</contrib>
+</othercredit>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
 
 <copyright>
 <year>2001</year><year>2002</year><year>2003</year>
@@ -1056,8 +1063,9 @@ time.</para>
   subsequent command parameters and options  are interpreted as
   forming the command line to execute. <option>--file</option> and
   <option>--mail</option> cannot be specified with this option.
-  <option>--ack-confirm</option>, <option>--beep</option> and
-  <option>--color</option> are ignored with this option.</entry>
+  <option>--ack-confirm</option>, <option>--beep</option>,
+  <option>--color</option> and <option>--colorfg</option> are ignored
+  with this option.</entry>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
@@ -1100,8 +1108,9 @@ time.</para>
   <entry>Send an email to the specified address. This option may be
   repeated as necessary.  <option>--exec</option> and
   <option>--file</option> cannot be specified with this option.
-  <option>--ack-confirm</option>, <option>--beep</option> and
-  <option>--color</option> are ignored with this option.</entry>
+  <option>--ack-confirm</option>, <option>--beep</option>,
+  <option>--color</option> and <option>--colorfg</option> are ignored
+  with this option.</entry>
 </row>
 <row>
   <entry><option>--recurrence
@@ -1428,6 +1437,9 @@ personal preferences, select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
 This displays the configuration dialog.</para>
 
+<sect2 id="preferences-general">
+<title>General</title>
+
 <para>The <guilabel>General</guilabel> section lets you control
 &kalarm;'s overall behavior:</para>
 
@@ -1528,6 +1540,10 @@ stored according to the selected options.</para>
 </itemizedlist>
 </listitem>
 </itemizedlist>
+</sect2>
+
+<sect2 id="preferences-email">
+<title>Email</title>
 
 <para>The <guilabel>Email</guilabel> section lets you choose options
 for sending and addressing email alarms:</para>
@@ -1586,6 +1602,10 @@ ensure that you do whatever is needed to actually transmit
 the email.</para>
 </listitem>
 </itemizedlist>
+</sect2>
+
+<sect2 id="preferences-view">
+<title>View</title>
 
 <para>The <guilabel>View</guilabel> section lets you control some
 aspects of &kalarm;'s appearance:</para>
@@ -1673,6 +1693,10 @@ checking whether the <application>alarm daemon</application> is
 running.</para>
 </listitem>
 </itemizedlist>
+</sect2>
+
+<sect2 id="preferences-appearance">
+<title>Appearance</title>
 
 <para>The <guilabel>Appearance</guilabel> section lets you set the
 default appearance of alarm messages:</para>
@@ -1701,6 +1725,10 @@ the list, and when it is displayed, this button is disabled.</para>
 </listitem>
 
 </itemizedlist>
+</sect2>
+
+<sect2 id="preferences-edit">
+<title>Edit</title>
 
 <para>The <guilabel>Edit</guilabel> section lets you choose
 default values for the options in the alarm edit dialog:</para>
@@ -1726,6 +1754,7 @@ late</guilabel>, <guilabel>Confirm acknowledgment</guilabel> and
 </listitem>
 
 </itemizedlist>
+</sect2>
 
 </chapter>
 
@@ -1942,16 +1971,16 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, const QColor&amp; <replaceable>fg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, const QFont&amp; <replaceable>font</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, const QColor&amp; <replaceable>fg</replaceable>, const QFont&amp; <replaceable>font</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, const QColor&amp; <replaceable>fg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, const QColor&amp; <replaceable>fg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1980,6 +2009,13 @@ should be displayed.</para>
 </varlistentry>
 
 <varlistentry>
+<term><parameter>fg</parameter></term>
+<listitem>
+<para>Specifies the foreground color for displaying the message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><parameter>font</parameter></term>
 <listitem>
 <para>Specifies the font for displaying the message.</para>
@@ -1991,7 +2027,7 @@ should be displayed.</para>
 <listitem>
 <para>Specifies the logical OR of the desired alarm message flags. The
 flag bits are those defined in class KAlarmEvent in
-<filename>msgevent.h</filename></para>
+<filename>alarmevent.h</filename></para>
 </listitem>
 </varlistentry>
 
@@ -2029,7 +2065,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
 are defined in class KAlarmEvent in
-<filename>msgevent.h</filename>.</para>
+<filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
 
@@ -2057,9 +2093,13 @@ displayed. Specify -1 to repeat the alarm indefinitely.</para>
 <title>Description</title>
 <para><function>scheduleMessage()</function> is a &DCOP; call to
 schedule the specified alarm message for display at the specified date
-and time. It has three forms: one for a non-repeating alarm, one
-for a repeating alarm with a repetition count, and one for a
-repeating alarm with an end time.</para>
+and time. It has several forms. The two most general forms allow an
+arbitrary recurrence to be specified - use these also for non-repeating
+alarms. Either specify a font parameter, or none to use
+&kalarm;'s default font. The other forms provide convenient access to a
+restricted set of alarm recurrence types, one specifying a repetition
+count and the other an end time; both of these use the default
+font.</para>
 
 <para>If the scheduled time (including any repetitions) has already
 passed, &kalarm; immediately displays the message or, if the
@@ -2076,7 +2116,7 @@ recurrence:</para>
 <screen>
 QString message, audioFile, recurrence;
 QDateTime dateTime;
-QColor bgColor;
+QColor bgColor, fgColor;
 Q_UINT32 flags;
 Q_INT32 reminder;
 . . .
@@ -2085,6 +2125,7 @@ QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColor, sizeof(QColor));
+arg.writeRawBytes((char*)&amp;fgColor, sizeof(QColor));
 arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; recurrence;
 </screen>
 
@@ -2096,7 +2137,7 @@ without using iCalendar syntax:</para>
 <screen>
 QString message, audioFile;
 QDateTime dateTime;
-QColor bgColor;
+QColor bgColor, fgColor;
 Q_UINT32 flags;
 Q_INT32 reminder, repeatType, repeatCount, repeatInterval;
 . . .
@@ -2105,6 +2146,7 @@ QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColor, sizeof(QColor));
+arg.writeRawBytes((char*)&amp;fgColor, sizeof(QColor));
 arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
 </screen>
 </refsect1>
@@ -2161,7 +2203,7 @@ should be displayed.</para>
 <listitem>
 <para>Specifies the logical OR of the desired alarm flags. The flag
 bits are those defined in class KAlarmEvent in
-<filename>msgevent.h</filename></para>
+<filename>alarmevent.h</filename></para>
 </listitem>
 </varlistentry>
 
@@ -2199,7 +2241,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
 are defined in class KAlarmEvent in
-<filename>msgevent.h</filename>.</para>
+<filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
 
@@ -2227,8 +2269,8 @@ Specify -1 to repeat the alarm indefinitely.</para>
 <title>Description</title>
 <para><function>scheduleFile()</function> is a &DCOP; call to schedule
 the specified text or image file for display at the specified date and
-time. Apart from specifying a file name or &URL;, its usage is
-identical to
+time. Apart from specifying a file name or &URL; and omitting the
+foreground color, its usage is identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
 </refsect1>
@@ -2279,7 +2321,7 @@ should be executed.</para>
 <listitem>
 <para>Specifies the logical OR of the desired alarm flags. The flag
 bits are those defined in class KAlarmEvent in
-<filename>msgevent.h</filename> except that the BEEP flag bit is
+<filename>alarmevent.h</filename> except that the BEEP flag bit is
 ignored.</para>
 </listitem>
 </varlistentry>
@@ -2301,7 +2343,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
 are defined in class KAlarmEvent in
-<filename>msgevent.h</filename>.</para>
+<filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
 
@@ -2403,7 +2445,7 @@ should be sent.</para>
 <listitem>
 <para>Specifies the logical OR of the desired alarm flags. The flag
 bits are those defined in class KAlarmEvent in
-<filename>msgevent.h</filename></para>
+<filename>alarmevent.h</filename></para>
 </listitem>
 </varlistentry>
 
@@ -2424,7 +2466,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
 are defined in class KAlarmEvent in
-<filename>msgevent.h</filename>.</para>
+<filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
 
@@ -2452,7 +2494,8 @@ Specify -1 to repeat the alarm indefinitely.</para>
 <title>Description</title>
 <para><function>scheduleEmail()</function> is a &DCOP; call to schedule
 the specified email for sending at the specified date and time.
-Apart from specifying the email header and contents, its usage is identical to
+Apart from specifying the email header and contents and omitting the
+message color and audio file parameters, its usage is identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
 </refsect1>
@@ -2556,7 +2599,9 @@ holds your &kalarm; preferences.</para>
 
 <para>The calendar file which stores your pending alarms is
 <filename>$KDEHOME/share/apps/kalarm/calendar.ics</filename>, unless
-a different calendar file is specified in the preferences file.</para>
+a different calendar file is specified in the preferences file by a
+<parameter>Calendar</parameter> entry in the
+<parameter>General</parameter> section.</para>
 
 <note><para>If you change this calendar file in the preferences file,
 you should also edit the <application>alarm daemon</application>'s
