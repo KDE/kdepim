@@ -45,3 +45,4 @@ QWidget* OverviewPart::configWidget() {
   return m_config;
 };
 
+#include "ksync_overviewpart.moc"

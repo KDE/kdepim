@@ -207,7 +207,4 @@ PartBarItem * PartBar::currentItem() const {
   }
 }
 
-
-//#include "partbar.moc"
-
-
+#include "partbar.moc"

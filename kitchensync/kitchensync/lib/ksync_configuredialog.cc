@@ -101,3 +101,4 @@ void ConfigureDialog::unload() {
 void ConfigureDialog::apply(bool apply) {
 
 }
+#include "ksync_configuredialog.moc"

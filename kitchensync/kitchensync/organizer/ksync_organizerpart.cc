@@ -119,7 +119,7 @@ KAboutData *OrganizerPart::createAboutData()
 {
   return new KAboutData("KSyncOrganizerPart", I18N_NOOP("Sync organizer part"), "0.0" );
 }
-//#include "ksync_organizerpart.moc"
+
 void OrganizerPart::slotConfigOk()
 {
     Profile prof = core()->currentProfile();
@@ -353,3 +353,4 @@ KAlendarSyncEntry* OrganizerPart::meta()
         entry->setSyncMode(KSyncEntry::SYNC_NORMAL);
     return entry;
 }
+#include "ksync_organizerpart.moc"

@@ -45,3 +45,4 @@ QWidget* FileviewPart::configWidget() {
     return m_config;
 }
 
+#include "ksync_fileviewpart.moc"

@@ -55,5 +55,4 @@ ManipulatorPart::ManipulatorPart(QWidget *parent, const char *name )
     }
 }
 
-
-//#include "manipulatorpart.moc"
+#include "manipulatorpart.moc"

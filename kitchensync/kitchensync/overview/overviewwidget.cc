@@ -166,3 +166,4 @@ NewProgress::~NewProgress() {
 OverviewWidget::~OverviewWidget() {
 }
 
+#include "overviewwidget.moc"

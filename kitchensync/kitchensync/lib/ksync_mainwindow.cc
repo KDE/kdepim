@@ -377,4 +377,4 @@ void KSyncMainWindow::saveCurrentProfile()
     cfg->writeEntry( "push",  cap.supportsPushSync() );
 
 }
-//#include "ksync_mainwindow.moc"
+#include "ksync_mainwindow.moc"

@@ -12,3 +12,4 @@ SyncPlugin::~SyncPlugin()
 {
 
 }
+#include "ksync_plugin.moc"

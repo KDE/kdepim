@@ -165,3 +165,4 @@ extern "C" {
     return new KShareFileModule(obj);
   }
 };
+#include "kdedsharedfile.moc"

@@ -73,3 +73,4 @@ void KSyncSystemTray::slotPixmap() {
 
 KSyncSystemTray::~KSyncSystemTray() {
 }
+#include "ksync_systemtray.moc"

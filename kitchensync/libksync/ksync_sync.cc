@@ -70,3 +70,4 @@ void SyncManager::doneSync(const SyncReturn& ret)
 {
     emit done( ret );
 }
+#include "ksync_sync.moc"
