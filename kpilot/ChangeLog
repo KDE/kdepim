@@ -1,4 +1,4 @@
-KPilot Developer's notes for march 11th 2001
+KPilot Developer's notes for march 10th 2001
 ============================================
 
 This weeks "cleanup" action is to normalize the #ifdef thingies in
@@ -10,14 +10,41 @@ it's worth it in compile time. (See Documentation/HOWTO-CODE.txt for info).
 * Removed yet another silly struct tm issue. [4-3]
 * Added FileInstaller to KPilotDaemon. [4-3]
 * Added DCOP to KPilot. Files dropped on daemon show up in KPilot. [4-3]
-* Fixed double-sync, I think. [5-3]
 * Added a #define KPILOT_VERSION to unify all the version strings. [5-3]
 * Added Documentation/HOWTO-CODE.txt for the source code conventions. [5-3]
 * Fixed a bunch of Solaris compile issues. [5-3]
+* Factored out a bunch of generic vcal code from the vcal conduit into
+  a new base class VCalBaseConduit; the todo conduit also inherits from
+  there. [10-3]
+* Yet another stab at the "latin1 chars munged in KOrganizer" bug. [10-3]
 
 The double-sync problem still exists though, which is bad. I suspect that
 some extra bytes are left waiting in the serial port queue after slotEndSync
 but I haven't got that sorted out yet.
+
+The web-site has been updated, finally, which means you can finally check
+for new releases and info there again:
+
+	http://www.slac.com/~pilone/kpilot_home/
+	
+And, I've started to use KDevelop 1.4 for maintaining KPilot. I'm still
+making the transition from vi / make / 4 konsole windows, but so far I've
+been mostly pleased by the effect it has.
+
+Bugs that are still open in the bug database: (Dan? you bored?)
+
+* Todo conduit doesn't take due dates into account
+* Double sync
+* Address edit window doesn't follow addressDB custom fields & layout
+
+Things to think about:
+
+* Usability. I've swept all the menu items into one "File" menu that
+  contains two configure wrenches, 4 actions, and a quit button. I'm
+  wondering whether this is the right way to go or whether separate
+  "file", "sync" and "conduit" menu items would be better.
+
+
 
 KPilot Developer's notes for march 4th 2001
 ===========================================
