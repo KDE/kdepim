@@ -577,10 +577,9 @@ namespace GpgME {
   }
 
 
-  void Context::cancelPendingOperation() {
+  Error Context::cancelPendingOperation() {
 #ifdef HAVE_GPGME_CANCEL
-    // missing in gpgme 0.4.x so far :/
-    gpgme_cancel( d->ctx );
+    return gpgme_cancel( d->ctx );
 #endif
   }
 

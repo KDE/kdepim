@@ -247,7 +247,7 @@ namespace GpgME {
     bool poll();
     GpgME::Error wait();
     GpgME::Error lastError() const;
-    void cancelPendingOperation();
+    GpgME::Error cancelPendingOperation();
 
     class Private;
     Private * impl() const { return d; }
