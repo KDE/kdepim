@@ -69,6 +69,8 @@ protected slots:
   void slotServiceSelected( QListViewItem* );
   void slotAddService();
   void slotDeleteService();
+  void slotMoveUp();
+  void slotMoveDown();
 
 private:
   Kleo::CryptoConfigEntry* mConfigEntry;

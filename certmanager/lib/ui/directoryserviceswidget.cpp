@@ -38,9 +38,11 @@
 
 #include <klineedit.h>
 #include <kleo/cryptoconfig.h>
+#include <kiconloader.h>
 #include <kdebug.h>
 
 #include <qbuttongroup.h>
+#include <qtoolbutton.h>
 #include <qlistview.h>
 #include <qpushbutton.h>
 
@@ -66,6 +68,24 @@ public:
 
   const QString& password() const { return mPassword; }
 
+  void setData( const QString& serverName,
+                const QString& portNumber,
+                const QString& dn,
+                const QString& username,
+                const QString& password ) {
+    setText( 0, serverName );
+    setText( 1, portNumber );
+    setText( 2, dn );
+    setText( 3, username );
+    setPassword( password );
+  }
+
+  void copyItem( QX500ListViewItem* item ) {
+    for ( unsigned int i = 0; i < 4 ; ++i )
+      setText( i, item->text( i ) );
+    setPassword( item->password() );
+  }
+
 private:
   QString mPassword;
 };
@@ -77,6 +97,13 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
       mConfigEntry( configEntry )
 {
     x500LV->setSorting( -1 );
+
+    // taken from kmail's configuredialog.cpp
+    upButton->setPixmap( BarIcon( "up", KIcon::SizeSmall ) );
+    upButton->setEnabled( false ); // b/c no item is selected yet
+
+    downButton->setPixmap( BarIcon( "down", KIcon::SizeSmall ) );
+    downButton->setEnabled( false ); // b/c no item is selected yet
 }
 
 
@@ -103,7 +130,7 @@ void DirectoryServicesWidget::enableDisable( CryptPlugWrapper* cryptPlug ) // un
 
 
 /*
- * protected slot
+ * protected slot, connected to selectionChanged()
  */
 void DirectoryServicesWidget::slotServiceChanged( QListViewItem* item )
 {
@@ -111,11 +138,13 @@ void DirectoryServicesWidget::slotServiceChanged( QListViewItem* item )
         removeServicePB->setEnabled( true );
     else
         removeServicePB->setEnabled( false );
+    downButton->setEnabled( item && item->itemBelow() );
+    upButton->setEnabled( item && item->itemAbove() );
 }
 
 
 /*
- * protected slot
+ * protected slot, connected to returnPressed/doubleClicked
  */
 void DirectoryServicesWidget::slotServiceSelected( QListViewItem* item )
 {
@@ -168,7 +197,9 @@ void DirectoryServicesWidget::slotDeleteService()
     else
         delete item;
     x500LV->triggerUpdate();
-    slotServiceChanged( x500LV->selectedItem() );
+    item = x500LV->currentItem();
+    x500LV->setCurrentItem( item ); // seems necessary...
+    x500LV->setSelected( item, true );
     emit changed();
 }
 
@@ -235,6 +266,39 @@ void DirectoryServicesWidget::defaults()
     //load();
     clear(); // the default is an empty list.
   }
+}
+
+static void swapItems( QX500ListViewItem *item, QX500ListViewItem *other )
+{
+  QString serverName = item->text( 0 );
+  QString portNumber = item->text( 1 );
+  QString dn = item->text( 2 );
+  QString username = item->text( 3 );
+  QString password = item->password();
+  item->copyItem( other );
+  other->setData( serverName, portNumber, dn, username, password );
+}
+
+void Kleo::DirectoryServicesWidget::slotMoveUp()
+{
+  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( x500LV->selectedItem() );
+  if ( !item ) return;
+  QX500ListViewItem *above = static_cast<QX500ListViewItem *>( item->itemAbove() );
+  if ( !above ) return;
+  swapItems( item, above );
+  x500LV->setCurrentItem( above );
+  x500LV->setSelected( above, true );
+}
+
+void Kleo::DirectoryServicesWidget::slotMoveDown()
+{
+  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( x500LV->selectedItem() );
+  if ( !item ) return;
+  QX500ListViewItem *below = static_cast<QX500ListViewItem *>( item->itemBelow() );
+  if ( !below ) return;
+  swapItems( item, below );
+  x500LV->setCurrentItem( below );
+  x500LV->setSelected( below, true );
 }
 
 #include "directoryserviceswidget.moc"
