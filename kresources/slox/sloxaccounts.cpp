@@ -22,14 +22,16 @@
 
 #include <kabc/stdaddressbook.h>
 
+#include <kstaticdeleter.h>
 #include <kdebug.h>
 
 SloxAccounts *SloxAccounts::mSelf = 0;
+KStaticDeleter<SloxAccounts> selfDeleter;
 
 SloxAccounts *SloxAccounts::self()
 {
   if ( !mSelf ) {
-    mSelf = new SloxAccounts;
+    selfDeleter.setObject( mSelf, new SloxAccounts );
   }
   return mSelf;
 }
