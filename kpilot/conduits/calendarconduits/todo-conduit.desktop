@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the to-do list from your handheld to KOrganizer.
 Comment[bg]=Синхронизация на списъка със задачи на мобилно устройство с организатора в КДЕ.
+Comment[ca]=Aquest conducte sincronitza la llista de pendents de la vostra agenda electrònica amb KOrganizer.
 Comment[da]=Denne kanal synkroniserer din gøremålsliste fra din håndholdte til KOrganizer.
 Comment[es]=Este conducto sincroniza la lista de tareas pendientes de su agenda electrónica con KOrganizer.
 Comment[et]=See kanal sünkroniseerib pihuarvuti ja KOrganizeri ülesannete nimekirja.
