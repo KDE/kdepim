@@ -15,6 +15,52 @@ Base::~Base()
 {
 
 }
+QDateTime Base::fromUTC( time_t time )
+{
+   struct tm *lt;
+
+#if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
+    _tzset();
+#else
+    tzset();
+#endif
+    lt = localtime( &time );
+    QDateTime dt;
+    dt.setDate( QDate( lt->tm_year + 1900, lt->tm_mon + 1, lt->tm_mday ) );
+    dt.setTime( QTime( lt->tm_hour, lt->tm_min, lt->tm_sec ) );
+    return dt;
+}
+time_t Base::toUTC( const QDateTime& dt )
+{
+    time_t tmp;
+    struct tm *lt;
+
+#if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
+    _tzset();
+#else
+    tzset();
+#endif
+
+    // get a tm structure from the system to get the correct tz_name
+    tmp = time( 0 );
+    lt = localtime( &tmp );
+
+    lt->tm_sec = dt.time().second();
+    lt->tm_min = dt.time().minute();
+    lt->tm_hour = dt.time().hour();
+    lt->tm_mday = dt.date().day();
+    lt->tm_mon = dt.date().month() - 1; // 0-11 instead of 1-12
+    lt->tm_year = dt.date().year() - 1900; // year - 1900
+    //lt->tm_wday = dt.date().dayOfWeek(); ignored anyway
+    //lt->tm_yday = dt.date().dayOfYear(); ignored anyway
+    lt->tm_wday = -1;
+    lt->tm_yday = -1;
+    // tm_isdst negative -> mktime will find out about DST
+    lt->tm_isdst = -1;
+    // keep tm_zone and tm_gmtoff
+    tmp = mktime( lt );
+    return tmp;
+}
 bool Base::isMetaSyncingEnabled()const
 {
     return m_metaSyncing;

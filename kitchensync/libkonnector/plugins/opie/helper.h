@@ -1,4 +1,9 @@
 
+#include <sys/types.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include <qdatetime.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
@@ -16,6 +21,10 @@ namespace OpieHelper {
               bool metaSyncing = FALSE);
         virtual ~Base();
     protected:
+        // from tt GPLed
+        time_t toUTC( const QDateTime& dt );
+        QDateTime fromUTC( time_t time );
+        // off tt code
         CategoryEdit* edit() { return m_edit; };
         KonnectorUIDHelper* helper() { return m_helper; };
         bool isMetaSyncingEnabled()const;
