@@ -127,11 +127,11 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
 
 void KMailConnection::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
-                                             const QString& xml )
+                                             const QString& uid )
 {
 //   kdDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
-  mResource->fromKMailDelIncidence( type, folder, xml );
+  mResource->fromKMailDelIncidence( type, folder, uid );
 }
 
 void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )
