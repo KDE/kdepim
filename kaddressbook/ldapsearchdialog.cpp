@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <qheader.h>
@@ -34,7 +35,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include "kabcore.h"
 #include "ldapsearchdialog.h"
+#include "kablock.h"
 
 static QString asUtf8( const QByteArray &val )
 {
@@ -108,11 +111,11 @@ class ContactListItem : public QListViewItem
     }
 };
 
-LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
-                                            const char* name )
+LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
+                                    QWidget* parent, const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
     User2 | User3 | Cancel, Default, parent, name, false, true ),
-    mAddressBook( ab )
+    mAddressBook( ab ), mCore( core )
 {
   setButtonCancel( KStdGuiItem::close() );
   QFrame *page = plainPage();
@@ -435,6 +438,11 @@ void LDAPSearchDialog::slotUser2()
 
 void LDAPSearchDialog::slotUser3()
 {
+  
+  KABC::Resource *resource = mCore->requestResource( this );
+  if ( !resource ) return;
+  KABLock::self( mAddressBook )->lock( resource );
+
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
     if ( cli->isSelected() ) {
@@ -492,13 +500,15 @@ void LDAPSearchDialog::slotUser3()
       pagerNr.setType( KABC::PhoneNumber::Pager );
       addr.insertPhoneNumber( pagerNr );
 
-      if ( mAddressBook )
+      if ( mAddressBook ) {
+        addr.setResource( resource );
         mAddressBook->insertAddressee( addr );
+      }
     }
-
     cli = static_cast<ContactListItem*>( cli->nextSibling() );
   }
 
+  KABLock::self( mAddressBook )->unlock( resource );
   emit addresseesAdded();
 }
 
