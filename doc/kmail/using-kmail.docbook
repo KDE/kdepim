@@ -600,8 +600,8 @@ list.</para>
 	  The currently active &acl; is shown in the list. It consists
 	  of pairs of <guilabel>User Id</guilabel>s and the
 	  <guilabel>Permissions</guilabel> granted to users identified
-	  by that <guilabel>User Id</guilabel>.<!--
-	  --><footnote>
+	  by that <guilabel>User Id</guilabel>.
+	  <footnote>
 	    <para>
 	      Note that a single <guilabel>User Id</guilabel> might
 	      refer to more than one user. Depending on the &imap;
