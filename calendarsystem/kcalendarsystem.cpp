@@ -24,7 +24,7 @@ KCalendarSystemGregorian::~KCalendarSystemGregorian()
 {
 }
 
-QString KCalendarSystemGregorian::getMonth(const QDate& date)
+QString KCalendarSystemGregorian::monthName(const QDate& date)
 {
   kdDebug(5400) << "Gregorian month..." << endl;
   QString q = KGlobal::locale()->monthName(date.month(),false) ;
@@ -32,7 +32,7 @@ QString KCalendarSystemGregorian::getMonth(const QDate& date)
   return q;
 }
 
-QString KCalendarSystemGregorian::getFormatDate(const QDate& date)
+QString KCalendarSystemGregorian::formatDate(const QDate& date)
 {
   kdDebug(5400) << "Gregorian format date..." << endl;
   QString q = KGlobal::locale()->formatDate(date,true) ;
@@ -40,13 +40,13 @@ QString KCalendarSystemGregorian::getFormatDate(const QDate& date)
   return q;
 }
 
-int KCalendarSystemGregorian::getYear(const QDate& date)
+int KCalendarSystemGregorian::year(const QDate& date)
 {
   kdDebug(5400) << "Gregorian year..." <<  endl;
   return date.year();
 }
 
-void KCalendarSystemGregorian::getNextMonthDate(QDate& temp)
+void KCalendarSystemGregorian::nextMonthDate(QDate& temp)
 {
   kdDebug(5400) << "Gregorian next month date..." << endl;
   int day = temp.day();
@@ -62,7 +62,7 @@ void KCalendarSystemGregorian::getNextMonthDate(QDate& temp)
   }
 }
 
-void KCalendarSystemGregorian::getPreviousMonthDate(QDate& temp)
+void KCalendarSystemGregorian::previousMonthDate(QDate& temp)
 {
   kdDebug(5400) << "Gregorian previous month date..." << endl;
   
@@ -81,7 +81,7 @@ void KCalendarSystemGregorian::getPreviousMonthDate(QDate& temp)
 }
 
 
-void KCalendarSystemGregorian::getNextYearDate(QDate& temp)
+void KCalendarSystemGregorian::nextYearDate(QDate& temp)
 {
   kdDebug(5400) << "Gregorian next year date..." << endl;
   int day = temp.day();
@@ -94,7 +94,7 @@ void KCalendarSystemGregorian::getNextYearDate(QDate& temp)
 }
 
 
-void KCalendarSystemGregorian::getPreviousYearDate(QDate& temp)
+void KCalendarSystemGregorian::previousYearDate(QDate& temp)
 {
   kdDebug(5400) << "Gregorian previous year date..." << endl;
   int day = temp.day();
@@ -114,7 +114,7 @@ int KCalendarSystemGregorian::monthsInYear( int )
   return 12;
 }
 
-QString KCalendarSystemGregorian::getMonthName(int month)
+QString KCalendarSystemGregorian::monthName(int month)
 {
   kdDebug(5400) << "Gregorian getMonthName" << endl;
 
@@ -183,12 +183,12 @@ int KCalendarSystemGregorian::numberOfDaysPrevMonth(const QDate& date)
   return temp.daysInMonth();
 }
 
-int KCalendarSystemGregorian::getMaxValidYear()
+int KCalendarSystemGregorian::maxValidYear()
 {
   return 8000; // QDate limit
 }
 
-int KCalendarSystemGregorian::getDay(const QDate& date)
+int KCalendarSystemGregorian::day(const QDate& date)
 {
   return date.day();
 }

@@ -187,7 +187,7 @@ KDateTable::paintCell(QPainter *painter, int row, int col)
       pen=painter->pen();
 
       // CALSYS
-      if(firstday + calendarSystem->getDay(date) -1 == pos)
+      if(firstday + calendarSystem->day(date) -1 == pos)
       //if(firstday+date.day()-1==pos)
         {
           if(hasFocus())
@@ -247,7 +247,7 @@ KDateTable::keyPressEvent( QKeyEvent *e )
     int pos = temp;
 
     // CALSYS virtual pos in defined calendar system
-    int defPos = firstday + calendarSystem->getDay(date) - dayoff;
+    int defPos = firstday + calendarSystem->day(date) - dayoff;
 
 
     if ( e->key() == Qt::Key_Up ) {
@@ -348,7 +348,7 @@ KDateTable::contentsMousePressEvent(QMouseEvent *e)
   QPoint mouseCoord;
 
   // CALSYS
-  int initday = calendarSystem->getDay(date);
+  int initday = calendarSystem->day(date);
 
   // -----
   mouseCoord = e->pos();
@@ -371,7 +371,7 @@ KDateTable::contentsMousePressEvent(QMouseEvent *e)
     }
 
   // CALSYS temp=firstday+date.day()-dayoff-1;
-  temp = firstday + calendarSystem->getDay(date) - dayoff;
+  temp = firstday + calendarSystem->day(date) - dayoff;
   int difdays = (pos-firstday+dayoff) - initday;
 
   // CALSYS setDate(QDate(date.year(), date.month(), pos-firstday+dayoff));
@@ -492,7 +492,7 @@ KDateInternalMonthPicker::KDateInternalMonthPicker
   for(int i=1; i <= calendarSystem->monthsInYear(year) ; ++i)
     {
       // CALSYS rect=metrics.boundingRect(KGlobal::locale()->monthName(i, false));
-      rect=metrics.boundingRect(calendarSystem->getMonthName(i));
+      rect=metrics.boundingRect(calendarSystem->monthName(i));
       if(max.width()<rect.width()) max.setWidth(rect.width());
       if(max.height()<rect.height()) max.setHeight(rect.height());
     }
@@ -533,7 +533,7 @@ KDateInternalMonthPicker::paintCell(QPainter* painter, int row, int col)
   // ----- find the number of the cell:
   index=3*row+col+1;
   // CALSYS text=KGlobal::locale()->monthName(index, false);
-  text = calendarSystem->getMonthName(index);
+  text = calendarSystem->monthName(index);
 
   painter->drawText(0, 0, cellWidth(), cellHeight(), AlignCenter, text);
   if ( activeCol == col && activeRow == row )
@@ -647,7 +647,7 @@ KDateInternalYearSelector::KDateInternalYearSelector
   setFrameStyle(QFrame::NoFrame);
   // we have to respect the limits of QDate here, I fear:
   // CALSYS val->setRange(0, 8000);
-  val->setRange(0, calendarSystem->getMaxValidYear());
+  val->setRange(0, calendarSystem->maxValidYear());
 
 
   setValidator(val);

@@ -16,97 +16,219 @@
 */
 class KCalendarSystem
 {
-  public:
-    KCalendarSystem() {}
-    virtual ~KCalendarSystem() {}
-    
-    // Gets month name for date
-    virtual QString getMonth(const QDate& date) = 0 ;
-    // Gets year of date
-    virtual int getYear(const QDate& date) = 0;
-    // Gets day/month/year formatted date
-    virtual QString getFormatDate(const QDate& date) = 0 ;
-    // date + 1 month
-    virtual void getNextMonthDate(QDate& date) = 0;
-    // date -1 month
-    virtual void getPreviousMonthDate(QDate& date) = 0;
-    // date +1 year
-    virtual void getNextYearDate(QDate& date) = 0;
-    // date -1 year
-    virtual void getPreviousYearDate(QDate& date) = 0;
-    // Number of months in this year
-    virtual int monthsInYear(int year) = 0;
-    // Month name
-    virtual QString getMonthName(int month) = 0;
-    // Given a month for date in date's year, construct a valid date
-    virtual void constructDateInMonth(QDate& date, int month) = 0;
-    // Given a year, construct a valid date
-    virtual void constructDateInYear(QDate& date, int year) = 0;
-    // Convert day/month/year string to a valid date
-    virtual QDate parseDate(QString text) = 0;
-    // Short week day name
-    virtual QString weekDayName(int col, bool shortName = false ) = 0;
-    // Day of week number of date
-    virtual int dayOfTheWeek(const QDate& date) = 0;
-    // Lenght of the month
-    virtual int numberOfDaysInMonth(const QDate& date) = 0;
-    // Lenght of previous month
-    virtual int numberOfDaysPrevMonth(const QDate& date) = 0;
-    // Max limit of valid year supported (QDate, 8000)
-    virtual int getMaxValidYear() = 0;
-    // Get day for date
-    virtual int getDay(const QDate& date) = 0;
-    // Number of day in year
-    virtual int numberOfDayInYear(const QDate& date) = 0;
-    // Just for debug
-    virtual void printType() = 0;
+public:
+  KCalendarSystem ()
+  {
+  }
+  virtual ~ KCalendarSystem ()
+  {
+  }
+
+    /**
+     Gets specific calendar type month name for a given gregorian date
+
+     @param date gregorian date
+     @return month name 
+    */
+  virtual QString monthName (const QDate & date) = 0;
+
+    /**
+     Gets specific calendar type year for a given gregorian date
+
+     @param date gregorian date
+     @return year 
+    */
+  virtual int year (const QDate & date) = 0;
+
+    /**
+     Gets specific calendar type day/month/year formatted text date for a given gregorian date
+
+     @param date gregorian date
+     @return  formatted text date
+    */
+  virtual QString formatDate (const QDate & date) = 0;
+
+    /**
+     Gets specific calendar type (its gregorian equivalent) next month date for a given gregorian date
+
+     @param date date to be +1 month updated
+    */
+  virtual void nextMonthDate (QDate & date) = 0;
+
+    /**
+     Gets specific calendar type (its gregorian equivalent) previous month date for a given gregorian date
+     @param date date to be -1 month updated
+    */
+  virtual void previousMonthDate (QDate & date) = 0;
+
+    /**
+     Gets specific calendar type next year date (its gregorian equivalent) for a given gregorian date
+     @param date date to be +1 year updated
+    */
+  virtual void nextYearDate (QDate & date) = 0;
+
+    /**
+     Gets specific calendar type (its gregorian equivalent) previous year date for a given gregorian date
+
+     @param date date to be -1 year updated
+    */
+  virtual void previousYearDate (QDate & date) = 0;
+
+    /**
+     Gets specific calendar type number of month for a given year
+
+     @param year the year year
+     @return  number of months in that year
+    */
+  virtual int monthsInYear (int year) = 0;
+
+    /**
+     Gets specific calendar type month name
+
+     @param month number of month in year
+     @return  month name 
+    */
+  virtual QString monthName (int month) = 0;
+
+    /**
+     Given a month, construct a valid date in given date's year
+
+     @param date date that indicates the year and whose value is updated
+     @param  month month number which resulting date belongs to
+    */
+  virtual void constructDateInMonth (QDate & date, int month) = 0;
+
+    /**
+     Given a year, construct a valid date 
+
+     @param date date whose value is updated
+     @param  year year of the new date
+    */
+  virtual void constructDateInYear (QDate & date, int year) = 0;
+
+    /**
+     Convert a formatted day/month/year string to a valid date object
+
+     @param text day/month/year string
+     @return valid parsed date object
+    */
+  virtual QDate parseDate (QString text) = 0;
+
+    /**
+     Gets specific calendar type week day name
+
+     @param col number of day in week (1 -> Monday)
+     @param shortName short or complete day name
+     @return day name
+    */
+  virtual QString weekDayName (int col, bool shortName = false) = 0;
+
+    /**
+     Gets specific calendar type number of day of week number for a given date
+
+     @param date gregorian date
+     @return day of week
+    */
+  virtual int dayOfTheWeek (const QDate & date) = 0;
+
+    /**
+     Gets specific calendar type number of days in month for a given date
+
+     @param date gregorian date 
+     @return number of days for month in date
+    */
+  virtual int numberOfDaysInMonth (const QDate & date) = 0;
+
+    /**
+     Gets specific calendar type number of days in previous month for a given date
+
+     @param date gregorian date
+     @return number of days for previous month of date
+    */
+  virtual int numberOfDaysPrevMonth (const QDate & date) = 0;
+
+    /**
+     Gets the maximum year value supported by specific calendar type algorithms (QDate, 8000)
+
+     @return maximum year supported
+    */
+  virtual int maxValidYear () = 0;
+
+    /**
+     Gets specific calendar type day number in month for a given date
+
+     @param date gregorian date equivalent to the specific one
+     @return day number 
+    */
+  virtual int day (const QDate & date) = 0;
+
+    /**
+     Gets specific calendar type day number in year for a given date
+
+     @param date gregorian date equivalent to the specific one
+     @return day number 
+    */
+  virtual int numberOfDayInYear (const QDate & date) = 0;
+
+    /**
+     Just a small debugging test ;)
+    */
+  virtual void printType () = 0;
 };
 
 /**
   Default derived, gregorian calendar class
 */
-class KCalendarSystemGregorian : public KCalendarSystem
+class KCalendarSystemGregorian:public KCalendarSystem
 {
-  public:
-    KCalendarSystemGregorian();
-    virtual ~KCalendarSystemGregorian();
+public:
+  KCalendarSystemGregorian ();
+  virtual ~ KCalendarSystemGregorian ();
 
-    QString getMonth(const QDate& date) ;
-    int getYear(const QDate& date);
-    QString getFormatDate(const QDate& date) ;
-    void getNextMonthDate(QDate& date);
-    void getPreviousMonthDate(QDate& date);
-    void getNextYearDate(QDate& date);
-    void getPreviousYearDate(QDate& date);
-    int monthsInYear(int year);
-    QString getMonthName(int month);
-    void constructDateInMonth(QDate& date, int month);
-    void constructDateInYear(QDate& date, int year);
-    QDate parseDate(QString text);
-    QString weekDayName(int col, bool shortName);
-    int dayOfTheWeek(const QDate& date);
-    int numberOfDaysInMonth(const QDate& date);
-    int numberOfDaysPrevMonth(const QDate& date);
-    int getMaxValidYear();
-    int getDay(const QDate& date);
-    int numberOfDayInYear(const QDate& date);
-    void printType();
+  QString monthName (const QDate & date);
+  int year (const QDate & date);
+  QString formatDate (const QDate & date);
+  void nextMonthDate (QDate & date);
+  void previousMonthDate (QDate & date);
+  void nextYearDate (QDate & date);
+  void previousYearDate (QDate & date);
+  int monthsInYear (int year);
+  QString monthName (int month);
+  void constructDateInMonth (QDate & date, int month);
+  void constructDateInYear (QDate & date, int year);
+  QDate parseDate (QString text);
+  QString weekDayName (int col, bool shortName);
+  int dayOfTheWeek (const QDate & date);
+  int numberOfDaysInMonth (const QDate & date);
+  int numberOfDaysPrevMonth (const QDate & date);
+  int maxValidYear ();
+  int day (const QDate & date);
+  int numberOfDayInYear (const QDate & date);
+  void printType ();
 };
 
 /**
   Factory class for calendar types
 */
-class KCalendarSystemFactory {
-  public:
-    KCalendarSystemFactory();
-    ~KCalendarSystemFactory();
+class KCalendarSystemFactory
+{
+public:
+  KCalendarSystemFactory ();
+  ~KCalendarSystemFactory ();
 
-    /** Factory method for creating specific CalendarSystem objects. */
-    static KCalendarSystem *create( const QString &calType = "gregorian");
+    /**
+     Gets specific calendar type number of days in previous month for a given date
 
-  private:
-    // Supported calendar types
-    static QString calTy[];
+     @param calType string identification of the specific calendar type to be constructed
+     @return a KCalendarSystem object
+    */
+  static KCalendarSystem *create (const QString & calType = "gregorian");
+
+private:
+    /**
+     Supported calendar types (its names)
+    */
+  static QString calTy[];
 };
 
 #endif

@@ -25,7 +25,7 @@ KCalendarSystemHijri::~KCalendarSystemHijri()
 {
 }
 
-QString KCalendarSystemHijri::getMonth(const QDate& date)
+QString KCalendarSystemHijri::monthName(const QDate& date)
 {
   kdDebug(5400) << "Arabic month..." <<  endl;
   // firstly, get hijri date from gregorian one
@@ -34,7 +34,7 @@ QString KCalendarSystemHijri::getMonth(const QDate& date)
   return QString(hmname[sd->mon-1]);
 }
 
-int KCalendarSystemHijri::getYear(const QDate& date)
+int KCalendarSystemHijri::year(const QDate& date)
 {
   kdDebug(5400) << "Arabic year..." <<  endl;
   // firstly, get hijri date from gregorian one
@@ -46,7 +46,7 @@ int KCalendarSystemHijri::getYear(const QDate& date)
     return (-sd->year);
 }
 
-QString KCalendarSystemHijri::getFormatDate(const QDate& date)
+QString KCalendarSystemHijri::formatDate(const QDate& date)
 {
   kdDebug(5400) << "Arabic format date..." << endl;
   // firstly, get hijri date from gregorian one
@@ -57,7 +57,7 @@ QString KCalendarSystemHijri::getFormatDate(const QDate& date)
     QString::number(sd->year);
 }
 
-void KCalendarSystemHijri::getNextMonthDate(QDate& date)
+void KCalendarSystemHijri::nextMonthDate(QDate& date)
 {
   // firstly, get hijri date from gregorian one
   SDATE  *sd, *gd;
@@ -86,7 +86,7 @@ void KCalendarSystemHijri::getNextMonthDate(QDate& date)
   kdDebug(5400) << "Arabic next month date..." << endl;
 }
 
-void KCalendarSystemHijri::getPreviousMonthDate(QDate& date)
+void KCalendarSystemHijri::previousMonthDate(QDate& date)
 {
   kdDebug(5400) << "Arabic previous month date..." << endl;
   // firstly, get hijri date from gregorian one
@@ -117,7 +117,7 @@ void KCalendarSystemHijri::getPreviousMonthDate(QDate& date)
   date.setYMD(gd->year, gd->mon, gd->day);
 }
 
-void KCalendarSystemHijri::getNextYearDate(QDate& date)
+void KCalendarSystemHijri::nextYearDate(QDate& date)
 {
   kdDebug(5400) << "Arabic next year date..." << endl;
   // firstly, get hijri date from gregorian one
@@ -139,7 +139,7 @@ void KCalendarSystemHijri::getNextYearDate(QDate& date)
   date.setYMD(gd->year, gd->mon, gd->day);
 }
 
-void KCalendarSystemHijri::getPreviousYearDate(QDate& date)
+void KCalendarSystemHijri::previousYearDate(QDate& date)
 {
   kdDebug(5400) << "Arabic previous year date..." << endl;
   // firstly, get hijri date from gregorian one
@@ -167,7 +167,7 @@ int KCalendarSystemHijri::monthsInYear( int )
   return 12;
 }
 
-QString KCalendarSystemHijri::getMonthName(int month)
+QString KCalendarSystemHijri::monthName(int month)
 {
   kdDebug(5400) << "Arabic getMonthName " << hmname[month-1] <<endl;
   //return KGlobal::locale()->monthName(month, false);
@@ -276,7 +276,6 @@ int KCalendarSystemHijri::numberOfDaysInMonth(const QDate& date)
   return hndays(sd->mon, sd->year);
 }
 
-// Not overloaded, just in this calendar system class
 int KCalendarSystemHijri::hndays(int mon,int year)
 {
   SDATE fd, ld;
@@ -311,7 +310,7 @@ int KCalendarSystemHijri::numberOfDaysPrevMonth(const QDate& date)
 }
 
 // Max valid year that may be converted to QDate
-int KCalendarSystemHijri::getMaxValidYear()
+int KCalendarSystemHijri::maxValidYear()
 {
   QDate date(8000, 1, 1);
 
@@ -322,7 +321,7 @@ int KCalendarSystemHijri::getMaxValidYear()
   return sd->year;
 }
 
-int KCalendarSystemHijri::getDay(const QDate& date)
+int KCalendarSystemHijri::day(const QDate& date)
 {
   SDATE  *sd;
   // firstly, we get hijri date from actual gregorian date

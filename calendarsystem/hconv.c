@@ -21,30 +21,26 @@
 
 #define RPD     (0.01745329251994329577) /* radians per degree (pi/180) */
 
-
-char	*dow[]= {
+const char	*dow[]= {
 	"Yaumul Ithnain", " Yaumu Zulatha", " Yaumul Arbi'a",
 	"Yaumul Khamees", "Yaumul Jumma", "Yaumu Sabt", "Yaumul Ahad"
 };
 
-char *sdow[] = {
+const char *sdow[] = {
 	 "Ith", "Zul", "Arb", "Kha", "Jum", "Sab", "Ahd"
 };
 
-char	*mname[]= {
+const char	*mname[]= {
 	"January", "February", "March", "April",
 	"May", "June", "July", "August",
 	"September", "October", "November", "December"
 };
 
-char  *hmname[] = {
+const char  *hmname[] = {
 	"Muharram", "Safar", "Rabi` al-Awal", "Rabi` al-Thaani",
 	"Jumaada al-Awal", "Jumaada al-Thaani", "Rajab", "Sha`ban",
 	"Ramadan", "Shawwal", "Zul al-Qi`dah", "Zul al-Hijjah"
 };
-
-
-
 /*
  * Given an integer _n_ and a phase selector (nph=0,1,2,3 for
  * new,first,full,last quarters respectively, function returns the
@@ -98,7 +94,7 @@ tmoonphase( n, nph)
 		else
 			xtra = xtra -0.0028 +0.0004*cos(sa) -0.0003*cos(ma);
 	} else {
-		printf("tmoonphase: illegal phase number\n");
+		/*printf("tmoonphase: illegal phase number\n"); */
 		exit(1);
 	}
 	/* convert from Ephemeris Time (ET) to (approximate) 
@@ -143,9 +139,7 @@ visible(n, rjd)
  * Positive year signifies A.D.; negative, B.C.
  */
 double
-julianday( year, month, day, time)
-	int year, month, day;
-	float time;
+julianday( int year, int month, int day, float time)
 {
 	double jul;
 	long m,y,ja;

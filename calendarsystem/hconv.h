@@ -1,7 +1,13 @@
 #ifndef KCALENDARSYSTEM_HCONV_H
 #define KCALENDARSYSTEM_HCONV_H
 
-extern char	*mname[], *hmname[], *dow[], *sdow[];
+
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+extern const char	*mname[], *hmname[], *dow[], *sdow[];
 
 typedef struct sdate {
 	float time;
@@ -12,13 +18,13 @@ typedef struct sdate {
 	double nmtime;
 } SDATE;
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
 extern SDATE *caldate(double), *hdate(int,int,int), *gdate(int,int,int);
 
 extern double tmoonphase(long,int), julianday(int,int,int,float);
 extern int ndays(int,int);
+
+extern double visible(long, double*);
+
 #ifdef __cplusplus
 	}
 #endif

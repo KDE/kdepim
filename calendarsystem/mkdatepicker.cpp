@@ -137,7 +137,7 @@ KDatePicker::dateChangedSlot(QDate date)
 {
     kdDebug(5400) << "KDatePicker::dateChangedSlot: date changed (" << date.year() << "/" << date.month() << "/" << date.day() << ")." << endl;
     // CALSYS line->setText(KGlobal::locale()->formatDate(date, true));
-    line->setText(calendarSystem->getFormatDate(date));
+    line->setText(calendarSystem->formatDate(date));
     emit(dateChanged(date));
 }
 
@@ -172,13 +172,13 @@ KDatePicker::setDate(const QDate& date)
 	// CALSYS
 	//selectMonth->setText(KGlobal::locale()->monthName(date.month(), false));
 	//temp.setNum(date.year());
-	selectMonth->setText(calendarSystem->getMonth(date));
-	temp.setNum(calendarSystem->getYear(date));
+	selectMonth->setText(calendarSystem->monthName(date));
+	temp.setNum(calendarSystem->year(date));
 
 	selectYear->setText(temp);
 
 	// CALSYS line->setText(KGlobal::locale()->formatDate(date, true));
-	line->setText(calendarSystem->getFormatDate(date));
+	line->setText(calendarSystem->formatDate(date));
 
 	return true;
     } else {
@@ -205,7 +205,7 @@ KDatePicker::monthForwardClicked()
 	// temp.setYMD(temp.year(), temp.month(), day);
     // }
     // assert(temp.isValid());
-    calendarSystem->getNextMonthDate(temp);
+    calendarSystem->nextMonthDate(temp);
 
     setDate(temp);
 }
@@ -231,7 +231,7 @@ KDatePicker::monthBackwardClicked()
       //temp.setYMD(temp.year(), temp.month(), day);
     //}
   // assert(temp.isValid());
-  calendarSystem->getPreviousMonthDate(temp);
+  calendarSystem->previousMonthDate(temp);
 
   setDate(temp);
 }
@@ -251,7 +251,7 @@ KDatePicker::yearForwardClicked()
       //temp.setYMD(temp.year(), temp.month(), day);
     //}
   // assert(temp.isValid());
-  calendarSystem->getNextYearDate(temp);
+  calendarSystem->nextYearDate(temp);
 
   setDate(temp);
 }
@@ -271,7 +271,7 @@ KDatePicker::yearBackwardClicked()
       //temp.setYMD(temp.year(), temp.month(), day);
     //}
   // assert(temp.isValid());
-  calendarSystem->getPreviousYearDate(temp);
+  calendarSystem->previousYearDate(temp);
 
   setDate(temp);
 }
@@ -283,7 +283,7 @@ KDatePicker::selectMonthClicked()
 
   //CALSYS
   QDate temp = table->getDate();
-  int year = calendarSystem->getYear(temp);
+  int year = calendarSystem->year(temp);
 
   KPopupFrame* popup = new KPopupFrame(this);
 
@@ -298,7 +298,7 @@ KDatePicker::selectMonthClicked()
   if(popup->exec(selectMonth->mapToGlobal(QPoint(0, selectMonth->height()))))
     {
       QDate date;
-      int day;
+     // int day;
       // -----
       month=picker->getResult();
       date=table->getDate();
@@ -449,7 +449,7 @@ KDatePicker::setFontSize(int s)
   for(int i=1; i <= 12; ++i)
     { // maxMonthRect is used by sizeHint()
       // CALSYS r=metrics.boundingRect(KGlobal::locale()->monthName(i, false));
-      r = metrics.boundingRect( calendarSystem->getMonthName(i) );
+      r = metrics.boundingRect( calendarSystem->monthName(i) );
       maxMonthRect.setWidth(QMAX(r.width(), maxMonthRect.width()));
       maxMonthRect.setHeight(QMAX(r.height(),  maxMonthRect.height()));
     }
