@@ -58,13 +58,16 @@ static KCmdLineOptions kpilotoptions[] = {
 	{"port <device>",
 		I18N_NOOP("Path to Pilot device node"),
 		"/dev/pilot"},
-	{"test", I18N_NOOP("List DBs (default)"), 0},
+	{"list", I18N_NOOP("List DBs (default)"), 0},
 	{"backup", I18N_NOOP("Backup instead of list DBs"), 0},
 	{"restore", I18N_NOOP("Restore Pilot from backup"), 0},
 	{ "list-conduits", I18N_NOOP("List available conduits"), 0},
 	{ "exec-conduit <filename>",
 		I18N_NOOP("Run conduit from desktop file <filename>"),
 		0 },
+	{ "notest",
+		I18N_NOOP("*Really* run the conduit, not in test mode."),
+		0 } ,
 	{0, 0, 0}
 };
 
@@ -216,7 +219,10 @@ int execConduit(KCmdLineArgs *p)
 	SyncAction *head = 0L;
 
 	QStringList l;
-	l.append("test");
+	if (p->isSet("test"))
+	{
+		l.append("test");
+	}
 	QObject *object = f->create(t,0L,"SyncAction",l);
 
 	if (!object)
@@ -279,7 +285,7 @@ int main(int argc, char **argv)
 
 	KPilotConfig::getDebugLevel(p);
 
-	if (p->isSet("backup") || p->isSet("restore") || p->isSet("test"))
+	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
 	{
 		return syncTest(p);
 	}
@@ -299,6 +305,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.9  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.8  2001/09/29 16:26:18  adridg
 // The big layout change
 //
