@@ -44,7 +44,7 @@ DummyScheduler::~DummyScheduler()
 {
 }
 
-bool DummyScheduler::publish (IncidenceBase *incidence,const QString &recipients)
+bool DummyScheduler::publish (IncidenceBase *incidence,const QString &/*recipients*/)
 {
   QString messageText = mFormat->createScheduleMessage(incidence,
                                                        Scheduler::Publish);
@@ -52,7 +52,7 @@ bool DummyScheduler::publish (IncidenceBase *incidence,const QString &recipients
   return saveMessage(messageText);
 }
 
-bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method,const QString &recipients)
+bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method,const QString &/*recipients*/)
 {
   QString messageText = mFormat->createScheduleMessage(incidence,method);
 

@@ -38,7 +38,7 @@ IMIPScheduler::~IMIPScheduler()
 {
 }
 
-bool IMIPScheduler::publish (IncidenceBase *incidence,const QString &recipients)
+bool IMIPScheduler::publish (IncidenceBase * /*incidence*/,const QString &/*recipients*/)
 {
   return false;
 }
