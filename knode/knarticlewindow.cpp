@@ -28,6 +28,7 @@
 #include "knglobals.h"
 #include "knode.h"
 #include "knarticlewindow.h"
+#include <qpopupmenu.h>
 
 QPtrList<KNArticleWindow> KNArticleWindow::instances;
 

@@ -27,6 +27,7 @@ class KLineEdit;
 class QCheckBox;
 class QLayout;
 class QLabel;
+class QGridLayout;
 
 class KNNntpAccount;
 

@@ -48,6 +48,7 @@
 #include "utilities.h"
 #include "knpgp.h"
 #include "knode.h"
+#include <kpopupmenu.h>
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000

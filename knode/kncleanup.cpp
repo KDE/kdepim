@@ -33,6 +33,7 @@
 #include "knfoldermanager.h"
 #include "kngroupmanager.h"
 #include "knarticlemanager.h"
+#include <qlabel.h>
 
 
 KNCleanUp::KNCleanUp(KNConfig::Cleanup *cfg) :  d_lg(0) , c_onfig(cfg)

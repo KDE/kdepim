@@ -27,6 +27,7 @@
 #include "utilities.h"
 #include "kngroup.h"
 #include "kngrouppropdlg.h"
+#include <qlabel.h>
 
 
 KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name )

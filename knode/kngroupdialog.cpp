@@ -31,6 +31,7 @@
 #include "knnntpaccount.h"
 #include "kngroupdialog.h"
 #include "knglobals.h"
+#include <qpushbutton.h>
 
 
 KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :

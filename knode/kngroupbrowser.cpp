@@ -35,6 +35,8 @@
 #include "knconfigmanager.h"
 #include "knnntpaccount.h"
 #include "kngroupbrowser.h"
+#include <qlabel.h>
+#include <qpushbutton.h>
 
 
 KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a,

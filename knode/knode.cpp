@@ -49,6 +49,8 @@
 #include "knscoring.h"
 #include "knpgp.h"
 #include "knmemorymanager.h"
+#include <kstatusbar.h>
+#include <klocale.h>
 
 
 KNGlobals knGlobals;

@@ -45,6 +45,9 @@
 #include "knnntpaccount.h"
 #include "knpgp.h"
 #include "knarticlefactory.h"
+#include <kstatusbar.h>
+#include <klocale.h>
+#include <qpopupmenu.h>
 
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)

@@ -32,6 +32,7 @@
 class QRadioButton;
 class QMultiLineEdit;
 class QCheckBox;
+class QButtonGroup;
 
 class KScoringRule;
 class KScoringEditorWidget;

@@ -24,6 +24,7 @@
 
 #include "utilities.h"
 #include "kngroupselectdialog.h"
+#include <qpushbutton.h>
 
 
 KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act) :

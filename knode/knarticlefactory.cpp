@@ -33,6 +33,8 @@
 #include "knnntpaccount.h"
 #include "utilities.h"
 #include "resource.h"
+#include <qlabel.h>
+#include <qpushbutton.h>
 
 
 KNArticleFactory::KNArticleFactory(QObject *p, const char *n)

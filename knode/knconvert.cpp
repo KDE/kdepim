@@ -31,6 +31,7 @@
 
 #include "knconvert.h"
 #include "resource.h"
+#include <qpushbutton.h>
 
 
 bool KNConvert::needToConvert(const QString &oldVersion)

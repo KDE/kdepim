@@ -27,6 +27,7 @@
 #include "knfilterdialog.h"
 #include "knfiltermanager.h"
 #include "knconfig.h"
+#include <kpopupmenu.h>
 
 
 KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
