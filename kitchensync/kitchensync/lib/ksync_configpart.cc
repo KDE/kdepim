@@ -248,7 +248,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
 
     QMap<QString, QString> specs = kaps.extras();
     if ( !specs.isEmpty() ) {
-        m_grpDevice = new QGroupBox( i18n("Device specefic"),  this );
+        m_grpDevice = new QGroupBox( i18n("Device Specific"),  this );
         m_devLay = new QGridLayout(m_grpDevice, specs.count()+1, 2);
         QSpacerItem *iti1d = new QSpacerItem(4, 14, QSizePolicy::Fixed,
                                              QSizePolicy::Fixed );
