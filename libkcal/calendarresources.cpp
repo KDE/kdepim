@@ -62,6 +62,7 @@ void CalendarResources::init()
   kdDebug(5800) << "CalendarResources::init" << endl;
 
   mManager = new CalendarResourceManager( "calendar" );
+  mManager->load();
 
 #if 0
   if ( mManager->isEmpty() ) {
