@@ -42,7 +42,7 @@ Incidence::Incidence(const Incidence &i) : QObject()
   mOrganizer = i.mOrganizer;
   mVUID = i.mVUID;
   mRevision = i.mRevision;
-//  QList<Attendee> mAttendees;     QList<Attendee> mAttendees;
+//  QPtrList<Attendee> mAttendees;     QPtrList<Attendee> mAttendees;
   mLastModified = i.mLastModified;
   mCreated = i.mCreated;
   mDescription = i.mDescription;
@@ -51,7 +51,7 @@ Incidence::Incidence(const Incidence &i) : QObject()
 //  Incidence *mRelatedTo;          Incidence *mRelatedTo;
   mRelatedTo = 0;
   mRelatedToVUID = i.mRelatedToVUID;
-//  QList<Incidence> mRelations;    QList<Incidence> mRelations;
+//  QPtrList<Incidence> mRelations;    QPtrList<Incidence> mRelations;
   mExDates = i.mExDates;
   mAttachments = i.mAttachments;
   mResources = i.mResources;
@@ -252,7 +252,7 @@ void Incidence::clearAttendees()
 #if 0
 Attendee *Incidence::getAttendee(const char *n) const
 {
-  QListIterator<Attendee> qli(mAttendees);
+  QPtrListIterator<Attendee> qli(mAttendees);
 
   qli.toFirst();
   while (qli) {
@@ -350,7 +350,7 @@ Incidence *Incidence::relatedTo() const
   return mRelatedTo;
 }
 
-QList<Incidence> Incidence::relations() const
+QPtrList<Incidence> Incidence::relations() const
 {
   return mRelations;
 }

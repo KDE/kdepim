@@ -3,7 +3,7 @@
 // $Id$
 
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 class KSimpleConfig;
 
@@ -251,7 +251,7 @@ class KSyncer
     void syncToTarget(KSyncee *syncee, KSyncee *target, bool override=false);
     
   private:
-    QList<KSyncee> mSyncees;
+    QPtrList<KSyncee> mSyncees;
     KSyncUi *mUi;
 };
 

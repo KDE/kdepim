@@ -56,7 +56,7 @@ class BookmarkSyncee : public KSyncee
     KBookmarkManager *mBookmarkManager;
     QValueList<QDomElement> mBookmarks;
     QValueList<QDomElement>::ConstIterator mBookmarkIterator;
-    QList<BookmarkSyncEntry> mEntries;
+    QPtrList<BookmarkSyncEntry> mEntries;
 };
 
 #endif

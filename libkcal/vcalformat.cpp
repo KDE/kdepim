@@ -4,7 +4,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qdialog.h>
@@ -83,15 +83,15 @@ bool VCalFormat::save(const QString &fileName)
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   // TODO STUFF
-  QList<Todo> todoList = mCalendar->getTodoList();
-  QListIterator<Todo> qlt(todoList);
+  QPtrList<Todo> todoList = mCalendar->getTodoList();
+  QPtrListIterator<Todo> qlt(todoList);
   for (; qlt.current(); ++qlt) {
     vo = eventToVTodo(qlt.current());
     addVObjectProp(vcal, vo);
   }
 
   // EVENT STUFF
-  QList<Event> events = mCalendar->getAllEvents();
+  QPtrList<Event> events = mCalendar->getAllEvents();
   Event *ev;
   for(ev=events.first();ev;ev=events.next()) {
     vo = eventToVEvent(ev);
@@ -99,15 +99,15 @@ bool VCalFormat::save(const QString &fileName)
   }
 
 #if 0  
-  QIntDictIterator<QList<Event> > dictIt(*calDict);
+  QIntDictIterator<QPtrList<Event> > dictIt(*calDict);
 
   while (dictIt.current()) {
-    QListIterator<Event> listIt(*dictIt.current());
+    QPtrListIterator<Event> listIt(*dictIt.current());
     while (listIt.current()) {
       // if the event is multi-day, we only want to save the
       // first instance that is in the dictionary
       if (listIt.current()->isMultiDay()) {
-	QList<Event> *tmpList = calDict->find(makeKey(listIt.current()->dtStart().date()));
+	QPtrList<Event> *tmpList = calDict->find(makeKey(listIt.current()->dtStart().date()));
 	if (dictIt.current() == tmpList) {
 	  vo = eventToVEvent(listIt.current());
 	  addVObjectProp(vcal, vo);
@@ -122,7 +122,7 @@ bool VCalFormat::save(const QString &fileName)
   }
 
   // put in events that recurs
-  QListIterator<Event> qli(recursList);
+  QPtrListIterator<Event> qli(recursList);
   for (; qli.current(); ++qli) {
     vo = eventToVEvent(qli.current());
     addVObjectProp(vcal, vo);
@@ -406,8 +406,8 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   // attendees
   if (anEvent->attendeeCount() != 0) {
-    QList<Attendee> al = anEvent->attendees();
-    QListIterator<Attendee> ai(al);
+    QPtrList<Attendee> al = anEvent->attendees();
+    QPtrListIterator<Attendee> ai(al);
     Attendee *curAttendee;
     
     for (; ai.current(); ++ai) {
@@ -560,8 +560,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	       tmpStr.utf8());
 
   if (anEvent->attendeeCount() != 0) {
-    QList<Attendee> al = anEvent->attendees();
-    QListIterator<Attendee> ai(al);
+    QPtrList<Attendee> al = anEvent->attendees();
+    QPtrListIterator<Attendee> ai(al);
     Attendee *curAttendee;
     
     // TODO: Put this functionality into Attendee class
@@ -587,8 +587,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // recurrence rule stuff
   if (anEvent->recurrence()->doesRecur()) {
     // some more variables
-    QList<KORecurrence::rMonthPos> tmpPositions;
-    QList<int> tmpDays;
+    QPtrList<KORecurrence::rMonthPos> tmpPositions;
+    QPtrList<int> tmpDays;
     int *tmpDay;
     KORecurrence::rMonthPos *tmpPos;
     QString tmpStr2;

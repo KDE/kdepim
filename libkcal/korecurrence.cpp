@@ -120,7 +120,7 @@ bool KORecurrence::recursMonthlyByDay(const QDate &qd) const
   QDate dStart = mRecurStart.date();
   int monthsAhead = 0;
   int i = 0;
-  QListIterator<int> qlid(rMonthDays);
+  QPtrListIterator<int> qlid(rMonthDays);
   // calculate how many months ahead this date is from the original
   // event's date
   
@@ -163,7 +163,7 @@ bool KORecurrence::recursMonthlyByPos(const QDate &qd) const
   QDate dStart = mRecurStart.date();
   int monthsAhead = 0;
   int i = 0;
-  QListIterator<rMonthPos> qlip(rMonthPositions);
+  QPtrListIterator<rMonthPos> qlip(rMonthPositions);
 
   // calculate how many months ahead this date is from the original
   // event's date
@@ -217,7 +217,7 @@ bool KORecurrence::recursYearlyByMonth(const QDate &qd) const
   QDate dStart = mRecurStart.date();
   int yearsAhead = 0;
   int  i = 0;
-  QListIterator<int> qlin(rYearNums);
+  QPtrListIterator<int> qlin(rYearNums);
 
   // calculate how many years ahead this date is from the original
   // event's date
@@ -251,7 +251,7 @@ bool KORecurrence::recursYearlyByDay(const QDate &qd) const
   QDate dStart = mRecurStart.date();
   int yearsAhead = 0;
   int i = 0;
-  QListIterator<int> qlin(rYearNums);
+  QPtrListIterator<int> qlin(rYearNums);
 
   // calculate how many years ahead this date is from the original
   // event's date
@@ -350,12 +350,12 @@ const QBitArray &KORecurrence::days() const
   return rDays;
 }
 
-const QList<KORecurrence::rMonthPos> &KORecurrence::monthPositions() const
+const QPtrList<KORecurrence::rMonthPos> &KORecurrence::monthPositions() const
 {
   return rMonthPositions;
 }
 
-const QList<int> &KORecurrence::monthDays() const
+const QPtrList<int> &KORecurrence::monthDays() const
 {
   return rMonthDays;
 }
@@ -463,7 +463,7 @@ void KORecurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
   mParent->emitEventUpdated(mParent);
 }
 
-const QList<int> &KORecurrence::yearNums() const
+const QPtrList<int> &KORecurrence::yearNums() const
 {
   return rYearNums;
 }

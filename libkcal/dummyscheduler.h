@@ -20,7 +20,7 @@ class DummyScheduler : public Scheduler {
     
     bool publish (Event *incidence,const QString &recipients);
     bool performTransaction(Event *incidence,Method method);
-    QList<ScheduleMessage> retrieveTransactions();
+    QPtrList<ScheduleMessage> retrieveTransactions();
 
   protected:
     bool saveMessage(const QString &);

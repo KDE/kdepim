@@ -8,7 +8,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <stdlib.h>
 #include <qregexp.h>
 #include <qclipboard.h>
@@ -58,7 +58,7 @@ void CalendarLocal::init()
   // solves the leak?
   mTodoList.setAutoDelete(TRUE);
 
-  mCalDict = new QIntDict<QList<Event> > (BIGPRIME);
+  mCalDict = new QIntDict<QPtrList<Event> > (BIGPRIME);
   mCalDict->setAutoDelete(TRUE);
 }
 
@@ -121,8 +121,8 @@ bool CalendarLocal::save(const QString &fileName,CalFormat *format)
 
 void CalendarLocal::close()
 {
-  QIntDictIterator<QList<Event> > qdi(*mCalDict);
-  QList<Event> *tmpList;
+  QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
+  QPtrList<Event> *tmpList;
 
   // Delete non-recurring events
   qdi.toFirst();
@@ -180,7 +180,7 @@ void CalendarLocal::deleteEvent(Event *event)
   
   QDate date(event->dtStart().date());
 
-  QList<Event> *tmpList;
+  QPtrList<Event> *tmpList;
   Event *anEvent;
   int extraDays, dayOffset;
   QDate startDate, tmpDate;
@@ -275,8 +275,8 @@ void CalendarLocal::deleteEvent(Event *event)
 
 Event *CalendarLocal::getEvent(const QString &UniqueStr)
 {
-  QList<Event> *eventList;
-  QIntDictIterator<QList<Event> > dictIt(*mCalDict);
+  QPtrList<Event> *eventList;
+  QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
   Event *anEvent;
 
   while (dictIt.current()) {
@@ -315,7 +315,7 @@ void CalendarLocal::deleteTodo(Todo *todo)
 }
 
 
-const QList<Todo> &CalendarLocal::getTodoList() const
+const QPtrList<Todo> &CalendarLocal::getTodoList() const
 {
   return mTodoList;
 }
@@ -331,9 +331,9 @@ Todo *CalendarLocal::getTodo(const QString &UniqueStr)
   return 0;
 }
 
-QList<Todo> CalendarLocal::getTodosForDate(const QDate & date)
+QPtrList<Todo> CalendarLocal::getTodosForDate(const QDate & date)
 {
-  QList<Todo> todos;
+  QPtrList<Todo> todos;
 
   Todo *aTodo;
   for (aTodo = mTodoList.first();aTodo;aTodo = mTodoList.next()) {
@@ -347,7 +347,7 @@ QList<Todo> CalendarLocal::getTodosForDate(const QDate & date)
 
 int CalendarLocal::numEvents(const QDate &qd)
 {
-  QList<Event> *tmpList;
+  QPtrList<Event> *tmpList;
   Event *anEvent;
   int count = 0;
   int extraDays, i;
@@ -378,20 +378,20 @@ int CalendarLocal::numEvents(const QDate &qd)
 
 void CalendarLocal::checkAlarms()
 {
-  QList<Event> alarmEvents;
+  QPtrList<Event> alarmEvents;
   if (checkNonRecurringAlarms(alarmEvents)
   ||  checkRecurringAlarms(alarmEvents, true))
     emit alarmSignal(alarmEvents);
 
-  QList<Todo> alarmTodos;
+  QPtrList<Todo> alarmTodos;
   if (checkTodos(alarmTodos))
     emit alarmSignal(alarmTodos);
 }
 
-bool CalendarLocal::checkNonRecurringAlarms(QList<Event>& alarmEvents, bool append)
+bool CalendarLocal::checkNonRecurringAlarms(QPtrList<Event>& alarmEvents, bool append)
 {
-  QIntDictIterator<QList<Event> > dictIt(*mCalDict);
-  QList<Event> *tmpList;
+  QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
+  QPtrList<Event> *tmpList;
   Event *anEvent;
   QDateTime tmpDT;
   
@@ -421,7 +421,7 @@ bool CalendarLocal::checkNonRecurringAlarms(QList<Event>& alarmEvents, bool appe
   return alarmEvents.count() != origSize;
 }
 
-bool CalendarLocal::checkTodos(QList<Todo>& alarmTodos, bool append)
+bool CalendarLocal::checkTodos(QPtrList<Todo>& alarmTodos, bool append)
 {
   Todo *aTodo;
   QDateTime tmpDT;
@@ -445,10 +445,10 @@ bool CalendarLocal::checkTodos(QList<Todo>& alarmTodos, bool append)
   return alarmTodos.count() != origSize;
 }
   
-bool CalendarLocal::checkAlarmsPast(QList<Event>& alarmEvents, bool append)
+bool CalendarLocal::checkAlarmsPast(QPtrList<Event>& alarmEvents, bool append)
 {
-  QIntDictIterator<QList<Event> > dictIt(*mCalDict);
-  QList<Event> *tmpList;
+  QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
+  QPtrList<Event> *tmpList;
   Event *anEvent;
 
   if (!append)
@@ -472,7 +472,7 @@ bool CalendarLocal::checkAlarmsPast(QList<Event>& alarmEvents, bool append)
   return alarmEvents.count() != origSize;
 }
 
-bool CalendarLocal::checkRecurringAlarms(QList<Event>& alarmEvents, bool append)
+bool CalendarLocal::checkRecurringAlarms(QPtrList<Event>& alarmEvents, bool append)
 {
   Event *anEvent;
   QDateTime tmpDT;
@@ -509,7 +509,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
   // handle sending the event to those attendees that need it.
   // mostly broken right now.
   if (incidence->attendeeCount()) {
-    QList<Attendee> al;
+    QPtrList<Attendee> al;
     Attendee *a;
     
     al = incidence->attendees();
@@ -528,8 +528,8 @@ void CalendarLocal::updateEvent(Incidence *incidence)
   } else {
     // we don't need to do anything to Todo events.
  
-    QIntDictIterator<QList<Event> > qdi(*mCalDict);
-    QList<Event> *tmpList;
+    QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
+    QPtrList<Event> *tmpList;
 
     // the first thing we do is REMOVE all occurances of the event from 
     // both the dictionary and the recurrence list.  Then we reinsert it.
@@ -557,7 +557,7 @@ void CalendarLocal::insertEvent(const Event *anEvent)
 {
   long tmpKey;
   QString tmpDateStr;
-  QList<Event> *eventList;
+  QPtrList<Event> *eventList;
   int extraDays, dayCount;
 
   // initialize if they haven't been allocated yet;
@@ -588,7 +588,7 @@ void CalendarLocal::insertEvent(const Event *anEvent)
 	eventList->append(anEvent);
       } else {
 	// no items under that date yet
-	eventList = new QList<Event>;
+	eventList = new QPtrList<Event>;
 	eventList->append(anEvent);
 	mCalDict->insert(tmpKey, eventList);
       }
@@ -633,11 +633,11 @@ QDate CalendarLocal::keyToDate(long int key)
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
 // BL: an the returned list should be deleted!!!
-QList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
+QPtrList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 {
   // Search non-recurring events
-  QList<Event> eventList;
-  QList<Event> *tmpList;
+  QPtrList<Event> eventList;
+  QPtrList<Event> *tmpList;
   Event *anEvent;
   tmpList = mCalDict->find(makeKey(qd));
   if (tmpList) {
@@ -669,7 +669,7 @@ QList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 
   //  kdDebug() << "Sorting getEvents for date\n" << endl;
   // now, we have to sort it based on getDtStart.time()
-  QList<Event> eventListSorted;
+  QPtrList<Event> eventListSorted;
   for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
     if (!eventListSorted.isEmpty() &&
 	anEvent->dtStart().time() < eventListSorted.at(0)->dtStart().time()) {
@@ -691,11 +691,11 @@ QList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 }
 
 
-QList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
+QPtrList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
                                     bool inclusive)
 {
-  QIntDictIterator<QList<Event> > qdi(*mCalDict);
-  QList<Event> matchList, *tmpList, tmpList2;
+  QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
+  QPtrList<Event> matchList, *tmpList, tmpList2;
   Event *ev = 0;
 
   qdi.toFirst();
@@ -777,7 +777,7 @@ QList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
   return matchList;
 }
 
-QList<Event> CalendarLocal::getAllEvents()
+QPtrList<Event> CalendarLocal::getAllEvents()
 {
   return events(*mOldestDate,*mNewestDate);
 }
@@ -786,7 +786,7 @@ QList<Event> CalendarLocal::getAllEvents()
 // taking a QDateTime, this function will look for an eventlist in the dict
 // with that date attached.
 // this list is dynamically allocated and SHOULD BE DELETED when done with!
-QList<Event> CalendarLocal::eventsForDate(const QDateTime &qdt)
+QPtrList<Event> CalendarLocal::eventsForDate(const QDateTime &qdt)
 {
   return eventsForDate(qdt.date());
 }
@@ -823,9 +823,9 @@ Journal *CalendarLocal::journal(const QString &UID)
   return 0;
 }
 
-QList<Journal> CalendarLocal::journalList()
+QPtrList<Journal> CalendarLocal::journalList()
 {
-  QList<Journal> list;
+  QPtrList<Journal> list;
   
   QMap<QDate,Journal *>::Iterator it;
   for( it = mJournalMap.begin(); it != mJournalMap.end(); ++it ) {

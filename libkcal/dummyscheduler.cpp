@@ -52,9 +52,9 @@ bool DummyScheduler::saveMessage(const QString &message)
   }
 }
 
-QList<ScheduleMessage> DummyScheduler::retrieveTransactions()
+QPtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
 {
-  QList<ScheduleMessage> messageList;
+  QPtrList<ScheduleMessage> messageList;
 
   QFile f("dummyscheduler.store");
   if (!f.open(IO_ReadOnly)) {

@@ -1,7 +1,7 @@
 #ifndef KSYNCVIEW_H
 #define KSYNCVIEW_H
 
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qwidget.h>
 
 #include <ktempfile.h>
@@ -75,7 +75,7 @@ class KSyncView : public QWidget
     
     KSyncer *mSyncer;
     KSyncee *mTarget;
-    QList<KTempFile> mTmpFiles;
+    QPtrList<KTempFile> mTmpFiles;
     int mLoadCount;
     bool mLoadError;
 };

@@ -24,7 +24,7 @@ CalFilter::~CalFilter()
 {
 }
 
-void CalFilter::apply(QList<Event> *eventlist)
+void CalFilter::apply(QPtrList<Event> *eventlist)
 {
   if (!mEnabled) return;
 
@@ -44,7 +44,7 @@ void CalFilter::apply(QList<Event> *eventlist)
 }
 
 // TODO: avoid duplicating apply() code
-void CalFilter::apply(QList<Todo> *eventlist)
+void CalFilter::apply(QPtrList<Todo> *eventlist)
 {
   if (!mEnabled) return;
 

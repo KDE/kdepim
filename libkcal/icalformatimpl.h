@@ -57,8 +57,8 @@ class ICalFormatImpl {
     ICalFormat *mParent;
     Calendar *mCalendar;
   
-    QList<Event> mEventsRelate;           // events with relations
-    QList<Todo> mTodosRelate;             // todos with relations
+    QPtrList<Event> mEventsRelate;           // events with relations
+    QPtrList<Todo> mTodosRelate;             // todos with relations
     
     static const int mSecondsPerWeek;
     static const int mSecondsPerDay;

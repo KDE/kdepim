@@ -7,7 +7,7 @@
 #define _CALFILTER_H
 
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "event.h"
 #include "todo.h"
@@ -39,13 +39,13 @@ class CalFilter {
       Apply filter to eventlist, all events not matching filter criterias are
       removed from the list.
     */
-    void apply(QList<Event> *eventlist);
+    void apply(QPtrList<Event> *eventlist);
     
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply(QList<Todo> *todolist);
+    void apply(QPtrList<Todo> *todolist);
     
     /**
       Apply filter criteria on the specified event. Return true, if event passes

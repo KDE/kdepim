@@ -5,7 +5,7 @@
 #include <qobject.h>
 #include <qstring.h>
 #include <qdatetime.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "event.h"
 #include "todo.h"
@@ -107,23 +107,23 @@ class Calendar : public QObject {
       date specified. useful for dayView, etc. etc.
       The calendar filter is applied.
     */
-    QList<Event> getEventsForDate(const QDate &date,bool sorted=false);
+    QPtrList<Event> getEventsForDate(const QDate &date,bool sorted=false);
     /**
       Get events, which occur on the given date.
       The calendar filter is applied.
     */
-    QList<Event> getEventsForDate(const QDateTime &qdt);
+    QPtrList<Event> getEventsForDate(const QDateTime &qdt);
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.
       The calendar filter is applied.
     */
-    QList<Event> getEvents(const QDate &start,const QDate &end,
+    QPtrList<Event> getEvents(const QDate &start,const QDate &end,
                              bool inclusive=false);
     /**
       Return all events in calendar
     */
-    virtual QList<Event> getAllEvents() = 0;
+    virtual QPtrList<Event> getAllEvents() = 0;
   
     /**
       Set calendar filter, which filters events for the getEvents* functions.
@@ -142,13 +142,13 @@ class Calendar : public QObject {
     virtual void addTodo(Todo *todo) = 0;
     /** remove a todo from the todolist. */
     virtual void deleteTodo(Todo *) = 0;
-    QList<Todo> getFilteredTodoList();
-    virtual const QList<Todo> &getTodoList() const = 0;
+    QPtrList<Todo> getFilteredTodoList();
+    virtual const QPtrList<Todo> &getTodoList() const = 0;
     /** searches todolist for an event with this unique string identifier,
       returns a pointer or null. */
     virtual Todo *getTodo(const QString &UniqueStr) = 0;
     /** Returns list of todos due on the specified date */
-    virtual QList<Todo> getTodosForDate(const QDate & date) = 0;
+    virtual QPtrList<Todo> getTodosForDate(const QDate & date) = 0;
 
     /** Add a Journal entry to calendar */
     virtual void addJournal(Journal *) = 0;
@@ -157,7 +157,7 @@ class Calendar : public QObject {
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID) = 0;
     /** Return list of all Journal entries */
-    virtual QList<Journal> journalList() = 0;
+    virtual QPtrList<Journal> journalList() = 0;
 
     /** Add an incidence to calendar. */
     void addIncidence(Incidence *);
@@ -168,7 +168,7 @@ class Calendar : public QObject {
   signals:
     /** emitted at regular intervals to indicate that the events in the
       list have triggered an alarm. */
-    void alarmSignal(QList<Event> &);
+    void alarmSignal(QPtrList<Event> &);
     /** emitted whenever an event in the calendar changes.  Emits a pointer
       to the changed event. */
     void calUpdated(Incidence *);
@@ -184,17 +184,17 @@ class Calendar : public QObject {
     /**
       Get events, which occur on the given date.
     */
-    virtual QList<Event> eventsForDate(const QDate &date,
+    virtual QPtrList<Event> eventsForDate(const QDate &date,
                                          bool sorted=false) = 0;
     /**
       Get events, which occur on the given date.
     */
-    virtual QList<Event> eventsForDate(const QDateTime &qdt) = 0;
+    virtual QPtrList<Event> eventsForDate(const QDateTime &qdt) = 0;
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.
     */
-    virtual QList<Event> events(const QDate &start,const QDate &end,
+    virtual QPtrList<Event> events(const QDate &start,const QDate &end,
                                   bool inclusive=false) = 0;
   
     CalFormat *mFormat;

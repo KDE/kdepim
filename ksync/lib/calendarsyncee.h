@@ -50,10 +50,10 @@ class CalendarSyncee : public KSyncee
     CalendarSyncEntry *createEntry(Incidence *);
   
     Calendar *mCalendar;
-    QList<Event> mEvents;
+    QPtrList<Event> mEvents;
     Event *mCurrentEvent;
     
-    QList<CalendarSyncEntry> mEntries;
+    QPtrList<CalendarSyncEntry> mEntries;
 };
 
 #endif

@@ -11,6 +11,7 @@
 #include <kstdaction.h>
 
 #include "ksync.h"
+#include "ksync.moc"
 #include "ksyncview.h"
 
 #define ID_STATUS_MSG 1

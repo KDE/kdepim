@@ -359,24 +359,24 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
-QList<Event> Calendar::getEventsForDate(const QDate &date,bool sorted)
+QPtrList<Event> Calendar::getEventsForDate(const QDate &date,bool sorted)
 {
-  QList<Event> el = eventsForDate(date,sorted);
+  QPtrList<Event> el = eventsForDate(date,sorted);
   mFilter->apply(&el);
   return el;
 }
 
-QList<Event> Calendar::getEventsForDate(const QDateTime &qdt)
+QPtrList<Event> Calendar::getEventsForDate(const QDateTime &qdt)
 {
-  QList<Event> el = eventsForDate(qdt);
+  QPtrList<Event> el = eventsForDate(qdt);
   mFilter->apply(&el);
   return el;
 }
 
-QList<Event> Calendar::getEvents(const QDate &start,const QDate &end,
+QPtrList<Event> Calendar::getEvents(const QDate &start,const QDate &end,
                                     bool inclusive)
 {
-  QList<Event> el = events(start,end,inclusive);
+  QPtrList<Event> el = events(start,end,inclusive);
   mFilter->apply(&el);
   return el;
 }
@@ -389,9 +389,9 @@ void Calendar::addIncidence(Incidence *i)
   i->accept(v);
 }
 
-QList<Todo> Calendar::getFilteredTodoList()
+QPtrList<Todo> Calendar::getFilteredTodoList()
 {
-  QList<Todo> tl = getTodoList();
+  QPtrList<Todo> tl = getTodoList();
   mFilter->apply(&tl);
   return tl;
 }

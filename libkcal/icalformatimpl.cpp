@@ -4,7 +4,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qdialog.h>
@@ -194,8 +194,8 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // attendees
   if (incidence->attendeeCount() != 0) {
-    QList<Attendee> al = incidence->attendees();
-    QListIterator<Attendee> ai(al);
+    QPtrList<Attendee> al = incidence->attendees();
+    QPtrListIterator<Attendee> ai(al);
     for (; ai.current(); ++ai) {
       icalcomponent_add_property(parent,writeAttendee(ai.current()));
     }
@@ -385,8 +385,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
   int index = 0;
   int index2 = 0;
 
-  QList<KORecurrence::rMonthPos> tmpPositions;
-  QList<int> tmpDays;
+  QPtrList<KORecurrence::rMonthPos> tmpPositions;
+  QPtrList<int> tmpDays;
   int *tmpDay;
   KORecurrence::rMonthPos *tmpPos;
   int day;
@@ -546,8 +546,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
 
 #if 0
     // some more variables
-    QList<Event::rMonthPos> tmpPositions;
-    QList<int> tmpDays;
+    QPtrList<Event::rMonthPos> tmpPositions;
+    QPtrList<int> tmpDays;
     int *tmpDay;
     Event::rMonthPos *tmpPos;
     QString tmpStr2;

@@ -49,28 +49,28 @@ class CalendarLocal : public Calendar {
     Event *getEvent(const QString &UniqueStr);
     /** builds and then returns a list of all events that match for the
      * date specified. useful for dayView, etc. etc. */
-    QList<Event> eventsForDate(const QDate &date, bool sorted = FALSE);
+    QPtrList<Event> eventsForDate(const QDate &date, bool sorted = FALSE);
     /** Get events for date \a qdt. */
-    QList<Event> eventsForDate(const QDateTime &qdt);
+    QPtrList<Event> eventsForDate(const QDateTime &qdt);
     /** Get events in a range of dates. If inclusive is set to true, only events
      * are returned, which are completely included in the range. */
-    QList<Event> events(const QDate &start,const QDate &end,
+    QPtrList<Event> events(const QDate &start,const QDate &end,
                              bool inclusive=false);
     /** Return all events in calendar */
-    QList<Event> getAllEvents();
+    QPtrList<Event> getAllEvents();
     /** checks to see if any todos are due now, and if so, returns the list
      * of those todos that have alarms. */
-    bool checkTodos(QList<Todo> &, bool append = false);
+    bool checkTodos(QPtrList<Todo> &, bool append = false);
     /** checks to see if any non-recurring alarms are due now, and if so,
      * returns the list of those events that have alarms. */
-    bool checkNonRecurringAlarms(QList<Event> &, bool append = false);
+    bool checkNonRecurringAlarms(QPtrList<Event> &, bool append = false);
     /** checks to see if any recurring alarms are due now, and if so,
      * returns the list of those events that have alarms. */
-    bool checkRecurringAlarms(QList<Event> &, bool append = false);
+    bool checkRecurringAlarms(QPtrList<Event> &, bool append = false);
     /** checks to see if any alarms are due now or have already passed, and
      * if so, returns the list of those events that have alarms.
      * Does not return recurring events. */
-    bool checkAlarmsPast(QList<Event> &, bool append = false);
+    bool checkAlarmsPast(QPtrList<Event> &, bool append = false);
   
     /*
       Returns a QString with the text of the holiday (if any) that falls
@@ -85,12 +85,12 @@ class CalendarLocal : public Calendar {
     void addTodo(Todo *todo);
     /** remove a todo from the todolist. */
     void deleteTodo(Todo *);
-    const QList<Todo> &getTodoList() const;
+    const QPtrList<Todo> &getTodoList() const;
     /** searches todolist for an event with this unique string identifier,
       returns a pointer or null. */
     Todo *getTodo(const QString &UniqueStr);
     /** Returns list of todos due on the specified date */
-    QList<Todo> getTodosForDate(const QDate & date);
+    QPtrList<Todo> getTodosForDate(const QDate & date);
 
     /** Add a Journal entry to calendar */
     virtual void addJournal(Journal *);
@@ -99,14 +99,14 @@ class CalendarLocal : public Calendar {
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
-    QList<Journal> journalList();
+    QPtrList<Journal> journalList();
 
   signals:
     /** emitted at regular intervals to indicate that the events in the
       list have triggered an alarm. */
-    //void alarmSignal(QList<Incidence> &);
-    void alarmSignal(QList<Event> &);
-    void alarmSignal(QList<Todo> &);
+    //void alarmSignal(QPtrList<Incidence> &);
+    void alarmSignal(QPtrList<Event> &);
+    void alarmSignal(QPtrList<Todo> &);
     /** emitted whenever an event in the calendar changes.  Emits a pointer
       to the changed event. */
     void calUpdated(Incidence *);
@@ -136,10 +136,10 @@ class CalendarLocal : public Calendar {
   private:
     void init();
   
-    QIntDict<QList<Event> > *mCalDict;    // dictionary of lists of events.
-    QList<Event> mRecursList;             // list of repeating events.
+    QIntDict<QPtrList<Event> > *mCalDict;    // dictionary of lists of events.
+    QPtrList<Event> mRecursList;             // list of repeating events.
 
-    QList<Todo> mTodoList;               // list of todo items.
+    QPtrList<Todo> mTodoList;               // list of todo items.
 
     QMap<QDate,Journal *> mJournalMap;
   

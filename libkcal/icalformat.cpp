@@ -4,7 +4,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qdialog.h>
@@ -103,15 +103,15 @@ bool ICalFormat::save(const QString &fileName)
   icalcomponent *component;
 
   // todos
-  QList<Todo> todoList = mCalendar->getTodoList();
-  QListIterator<Todo> qlt(todoList);
+  QPtrList<Todo> todoList = mCalendar->getTodoList();
+  QPtrListIterator<Todo> qlt(todoList);
   for (; qlt.current(); ++qlt) {
     component = mImpl->writeTodo(qlt.current());
     icalcomponent_add_component(calendar,component);
   }
 
   // events
-  QList<Event> events = mCalendar->getAllEvents();
+  QPtrList<Event> events = mCalendar->getAllEvents();
   Event *ev;
   for(ev=events.first();ev;ev=events.next()) {
     component = mImpl->writeEvent(ev);
@@ -119,7 +119,7 @@ bool ICalFormat::save(const QString &fileName)
   }
 
   // journals
-  QList<Journal> journals = mCalendar->journalList();
+  QPtrList<Journal> journals = mCalendar->journalList();
   Journal *j;
   for(j=journals.first();j;j=journals.next()) {
     component = mImpl->writeJournal(j);

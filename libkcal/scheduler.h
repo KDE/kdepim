@@ -5,7 +5,7 @@
 // iTIP transactions base class
 
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 namespace KCal {
 
@@ -73,7 +73,7 @@ class Scheduler {
     method argumanet and can be any valid iTIP method. */
     virtual bool performTransaction(Event *incidence,Method method) = 0;
     /** Retrieve incoming iTIP transactions */
-    virtual QList<ScheduleMessage> retrieveTransactions() = 0;
+    virtual QPtrList<ScheduleMessage> retrieveTransactions() = 0;
 
     /**
       Accept transaction. The incidence argument specifies the iCal compoennt

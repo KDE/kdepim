@@ -5,7 +5,7 @@
 // iMIP implementation of iTIP methods
 //
 
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "scheduler.h"
 
@@ -22,7 +22,7 @@ class IMIPScheduler : public Scheduler {
     
     bool publish (Event *incidence,const QString &recipients);
     bool performTransaction(Event *incidence,Method method);
-    QList<ScheduleMessage> retrieveTransactions();
+    QPtrList<ScheduleMessage> retrieveTransactions();
 };
 
 }

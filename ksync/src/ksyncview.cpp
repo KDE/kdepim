@@ -110,8 +110,8 @@ void KSyncView::print(QPrinter *pPrinter)
 void KSyncView::addSource()
 {
   KURL url = KFileDialog::getOpenURL();
-  
-  new SynceeListItem(mSourceListView,url);
+  if(!url.path().isEmpty())
+    new SynceeListItem(mSourceListView,url);
 }
 
 void KSyncView::removeSource()

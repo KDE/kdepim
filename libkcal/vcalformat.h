@@ -90,8 +90,8 @@ class VCalFormat : public CalFormat {
     QCString writeStatus(Attendee::PartStat status) const;
   
   private:
-    QList<Event> mEventsRelate;           // events with relations
-    QList<Todo> mTodosRelate;             // todos with relations
+    QPtrList<Event> mEventsRelate;           // events with relations
+    QPtrList<Todo> mTodosRelate;             // todos with relations
 };
 
 }

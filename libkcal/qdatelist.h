@@ -2,15 +2,15 @@
 #define _QDATELIST_H
 
 #include <qdatetime.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 namespace KCal {
 
-typedef QList<QDate>                    QDateListBase;
-typedef QListIterator<QDate>            QDateListIterator;
+typedef QPtrList<QDate>                    QDateListBase;
+typedef QPtrListIterator<QDate>            QDateListIterator;
 
 /**
- * This class is a QList<QDate> instance.  It has the ability to make 
+ * This class is a QPtrList<QDate> instance.  It has the ability to make 
  * deep or shallow copies, and compareItems() is re-implemented. 
  *
  * @internal

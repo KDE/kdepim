@@ -5,7 +5,7 @@
 
 #include <qstring.h>
 #include <qbitarray.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "qdatelist.h"
 
@@ -78,9 +78,9 @@ class KORecurrence {
     const QBitArray &days() const;
     struct rMonthPos;
     /** Return list of day positions in months. */
-    const QList<rMonthPos> &monthPositions() const;
+    const QPtrList<rMonthPos> &monthPositions() const;
     /** Return list of day numbers of a  month. */
-    const QList<int> &monthDays() const;
+    const QPtrList<int> &monthDays() const;
   
     /** set an event to recur weekly.
      * @var _rFreq the frequency to recur, i.e every other week etc.
@@ -123,7 +123,7 @@ class KORecurrence {
     /** Add position of day in year. */
     void addYearlyNum(short _rNum);
     /** Return positions of days in year. */
-    const QList<int> &yearNums() const;
+    const QPtrList<int> &yearNums() const;
   
   protected:
     bool recursDaily(const QDate &) const;
@@ -141,13 +141,13 @@ class KORecurrence {
   
     QBitArray rDays;                     // array of days during week it recurs
   
-    QList<rMonthPos> rMonthPositions;    // list of positions during a month
+    QPtrList<rMonthPos> rMonthPositions;    // list of positions during a month
                                          // on which an event recurs
   
-    QList<int> rMonthDays;               // list of days during a month on
+    QPtrList<int> rMonthDays;               // list of days during a month on
                                          // which the event recurs
   
-    QList<int> rYearNums;                // either months/days to recur on
+    QPtrList<int> rYearNums;                // either months/days to recur on
                                          // for rYearly
   
     int rFreq;                           // frequency of period

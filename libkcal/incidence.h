@@ -105,7 +105,7 @@ class Incidence : public QObject
     /** Remove all Attendees. */
     void clearAttendees();
     /** Return list of attendees. */
-    QList<Attendee> attendees() const { return mAttendees; };
+    QPtrList<Attendee> attendees() const { return mAttendees; };
     /** Return number of attendees. */
     int attendeeCount() const { return mAttendees.count(); };
 
@@ -141,7 +141,7 @@ class Incidence : public QObject
     /** what event does this one relate to? */
     Incidence *relatedTo() const;
     /** All events that are related to this event */
-    QList<Incidence> relations() const;
+    QPtrList<Incidence> relations() const;
     /** Add an event which is related to this event */
     void addRelation(Incidence *);
     /** Remove event that is related to this event */
@@ -227,7 +227,7 @@ class Incidence : public QObject
     QString mOrganizer;
     QString mVUID;
     int mRevision;
-    QList<Attendee> mAttendees;
+    QPtrList<Attendee> mAttendees;
 
     // base components of jounal, event and todo
     QDateTime mLastModified;
@@ -237,7 +237,7 @@ class Incidence : public QObject
     QStringList mCategories;
     Incidence *mRelatedTo;      
     QString mRelatedToVUID;   
-    QList<Incidence> mRelations;
+    QPtrList<Incidence> mRelations;
     QDateList mExDates;
     QStringList mAttachments;
     QStringList mResources;  

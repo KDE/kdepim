@@ -89,8 +89,8 @@ class CalFormat {
     Calendar *mCalendar;
   
   private:
-    QList<Event> mEventsRelate;           // events with relations
-    QList<Event> mTodosRelate;            // todos with relations
+    QPtrList<Event> mEventsRelate;           // events with relations
+    QPtrList<Event> mTodosRelate;            // todos with relations
     
     KOErrorFormat *mException;
 };
