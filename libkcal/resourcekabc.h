@@ -150,6 +150,8 @@ class ResourceKABC : public ResourceCalendar
 
     void dump() const;
 
+    void setTimeZoneId( const QString& tzid );
+
   protected:
 
     /** clears out the current calendar, freeing all used memory etc. etc. */

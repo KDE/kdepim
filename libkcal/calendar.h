@@ -307,6 +307,10 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                    bool inclusive = false ) = 0;
+    /**
+      let the subclasses of KCal::Calendar set the time zone
+    */
+    virtual void doSetTimeZoneId( const QString & ) {}
 
   private:
     void init();

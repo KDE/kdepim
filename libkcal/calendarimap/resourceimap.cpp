@@ -587,5 +587,10 @@ void ResourceIMAP::unregisteredFromDCOP( const QCString& appId )
 }
 
 
+void ResourceIMAP::setTimeZoneId( const QString& tzid )
+{
+  mCalendar.setTimeZoneId( tzid );
+}
+
 #include "resourceimap.moc"
 

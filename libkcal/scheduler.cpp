@@ -63,6 +63,7 @@ Scheduler::Scheduler(Calendar *calendar)
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
+  mFormat->setTimeZone( calendar->timeZoneId(), !calendar->isLocalTime() );
 }
 
 Scheduler::~Scheduler()
@@ -72,7 +73,7 @@ Scheduler::~Scheduler()
 
 bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
 {
-  kdDebug() << "Scheduler::acceptTransaction " << endl;
+  kdDebug(5800) << "Scheduler::acceptTransaction " << endl;
   switch (method) {
     case Publish:
       return acceptPublish(incidence, status, method);

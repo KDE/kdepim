@@ -209,6 +209,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 //                       const QDateTime &from, const QDateTime &to );
 
     void uploadEvent( Event* event );
+		
+		void setTimeZoneId( const QString &tzid );
 
   protected slots:
     void slotMonitorNotify( const QValueList<long>& IDs, const QValueList<KURL>& urls);

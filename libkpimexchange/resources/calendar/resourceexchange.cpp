@@ -467,4 +467,8 @@ Journal::List ResourceExchange::journals()
   return mCache->journals();
 }
 
+void ResourceExchange::setTimeZoneId( const QString &tzid )
+{
+  if (mCache) mCache->setTimeZoneId( tzid );
+}
 #include "resourceexchange.moc"

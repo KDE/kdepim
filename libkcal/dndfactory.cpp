@@ -139,7 +139,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
 {
 //  kdDebug() << "DnDFactory::pasteEvent()" << endl;
 
-  CalendarLocal cal;
+  CalendarLocal cal( mCalendar->timeZoneId() );
 
   Event *anEvent = 0;
 

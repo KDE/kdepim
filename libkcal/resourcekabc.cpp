@@ -335,4 +335,9 @@ void ResourceKABC::reload()
   load();
 }
 
+void ResourceKABC::setTimeZoneId( const QString& tzid )
+{
+  mCalendar.setTimeZoneId( tzid );
+}
+
 #include "resourcekabc.moc"

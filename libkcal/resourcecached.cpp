@@ -152,3 +152,9 @@ Alarm::List ResourceCached::alarms( const QDateTime &from, const QDateTime &to )
 
   return mCalendar.alarms( from, to );
 }
+
+
+void ResourceCached::setTimeZoneId( const QString& tzid )
+{
+  mCalendar.setTimeZoneId( tzid );
+}

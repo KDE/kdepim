@@ -146,7 +146,7 @@ bool ResourceLocalDir::load()
 
     QString fileName = dirName + "/" + *it;
     kdDebug() << " read '" << fileName << "'" << endl;
-    CalendarLocal cal;
+    CalendarLocal cal( mCalendar.timeZoneId() );
     cal.load( fileName );
     Incidence::List incidences = cal.rawIncidences();
     Incidence *i = incidences.first();
@@ -170,7 +170,7 @@ bool ResourceLocalDir::save()
     QString fileName = mURL.path() + "/" + i->uid();
     kdDebug() << "writing '" << fileName << "'" << endl;
 
-    CalendarLocal cal;
+    CalendarLocal cal( mCalendar.timeZoneId() );
     cal.addIncidence( i->clone() );
     cal.save( fileName );
   }

@@ -41,7 +41,9 @@ class Compat
     virtual ~Compat() {};
 
     virtual void fixRecurrence( Incidence * );
+    virtual void fixEmptySummary( Incidence * );
     virtual void fixFloatingEnd( QDate & ) {}
+    virtual bool useTimeZoneShift() { return true; }
 };
 
 class CompatPre32 : public Compat
@@ -54,6 +56,12 @@ class CompatPre31 : public CompatPre32
 {
   public:
     virtual void fixFloatingEnd( QDate & );
+};
+
+class Compat32PrereleaseVersions : public Compat
+{
+  public:
+    virtual bool useTimeZoneShift() { return false; }
 };
 
 }

@@ -218,6 +218,8 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     void resourceModified( ResourceCalendar *resource );
     void resourceDeleted( ResourceCalendar *resource );
 
+    virtual void doSetTimeZoneId( const QString& tzid );
+
   private:
     void init();
 

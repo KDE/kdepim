@@ -222,6 +222,8 @@ class ResourceCalendar : public KRES::Resource
 
     /** Returns a list of all incideces */
     Incidence::List rawIncidences();
+    
+    virtual void setTimeZoneId( const QString &tzid ) = 0;
 
   protected:
 

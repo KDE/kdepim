@@ -392,7 +392,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   for ( alarmIt = incidence->alarms().begin();
         alarmIt != incidence->alarms().end(); ++alarmIt ) {
     if ( (*alarmIt)->enabled() ) {
-      kdDebug(5800) << "WralarmIte alarm for " << incidence->summary() << endl;
+      kdDebug(5800) << "Write alarm for " << incidence->summary() << endl;
       icalcomponent_add_component( parent, writeAlarm( *alarmIt ) );
     }
   }
@@ -838,6 +838,8 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
     p = icalcomponent_get_next_property(vtodo,ICAL_ANY_PROPERTY);
   }
 
+  mCompat->fixEmptySummary( todo );
+
   return todo;
 }
 
@@ -958,14 +960,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
     }
   }
 
-  // some stupid vCal exporters ignore the standard and use Description
-  // instead of Summary for the default field.  Correct for this.
-  if (event->summary().isEmpty() &&
-      !(event->description().isEmpty())) {
-    QString tmpStr = event->description().simplifyWhiteSpace();
-    event->setDescription("");
-    event->setSummary(tmpStr);
-  }
+  mCompat->fixEmptySummary( event );
 
   return event;
 }
@@ -1706,16 +1701,17 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
   kdDebug(5800) << "--- isDate: " << t.is_date << endl;
 */
 
-  if (t.is_utc) {
+  if ( t.is_utc && mCompat->useTimeZoneShift() ) {
 //    kdDebug(5800) << "--- Converting time to zone '" << cal->timeZoneId() << "'." << endl;
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_as_zone(t, 0);
     else
       t = icaltime_as_zone(t,mParent->timeZoneId().local8Bit());
   }
-
-  return QDateTime(QDate(t.year,t.month,t.day),
+  QDateTime result(QDate(t.year,t.month,t.day),
                    QTime(t.hour,t.minute,t.second));
+  
+  return result;
 }
 
 QDate ICalFormatImpl::readICalDate(icaltimetype t)

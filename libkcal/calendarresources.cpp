@@ -91,6 +91,12 @@ void CalendarResources::init()
   if ( !mManager->standardResource() ) {
     kdDebug() << "Warning! No standard resource yet." << endl;
   }
+	
+	// set the timezone for all resources. Otherwise we'll have those terrible tz troubles ;-((
+	CalendarResourceManager::Iterator i1;
+	for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
+		(*i1)->setTimeZoneId( timeZoneId() );
+	}
 
   // Open all active resources
   CalendarResourceManager::ActiveIterator it;
@@ -612,6 +618,15 @@ void CalendarResources::resourceDeleted( ResourceCalendar *resource )
     old_it = it;
   }
 
+}
+
+void CalendarResources::doSetTimeZoneId( const QString& tzid )
+{
+	// set the timezone for all resources. Otherwise we'll have those terrible tz troubles ;-((
+	CalendarResourceManager::Iterator i1;
+	for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
+		(*i1)->setTimeZoneId( tzid );
+	}
 }
 
 #include "calendarresources.moc"

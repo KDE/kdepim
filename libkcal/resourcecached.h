@@ -113,6 +113,8 @@ class ResourceCached : public ResourceCalendar
     /** Return all alarms, which ocur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
 
+    void setTimeZoneId( const QString& tzid );
+  
   protected:
     CalendarLocal mCalendar;
 };

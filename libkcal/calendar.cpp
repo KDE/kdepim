@@ -132,6 +132,7 @@ void Calendar::setTimeZoneId(const QString &id)
   mLocalTime = false;
 
   setModified( true );
+  doSetTimeZoneId( id );
 }
 
 QString Calendar::timeZoneId() const

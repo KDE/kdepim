@@ -154,6 +154,9 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
     // Public because needed in MultiCalendar::load()
     bool doOpen();
 
+
+    void setTimeZoneId( const QString& tzid );
+  
   protected:
     /** Notification function of IncidenceBase::Observer. */
     virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }

@@ -48,6 +48,12 @@ Compat *CompatFactory::createCompat( const QString &productId )
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
                          version.section( ".", 1, 1 ).toInt() * 100 +
                          version.section( ".", 2, 2 ).toInt();
+        int releaseStop = productId.find( "/", versionStop );
+        QString release;
+        if ( releaseStop > versionStop ) {
+          release = productId.mid( versionStop+1, releaseStop-versionStop-1 );
+        }
+        kdDebug(5800) << "KOrganizer release: \"" << release << "\"" << endl;
                          
         kdDebug(5800) << "Numerical version: " << versionNum << endl;
         
@@ -56,6 +62,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
         }
         else if ( versionNum < 30200 ) {
           compat = new CompatPre32;
+        } else if ( versionNum == 30200 && release == "pre" ) {
+          kdDebug(5800) << "Generating compat for KOrganizer 3.2 pre " << endl;
+          compat = new Compat32PrereleaseVersions;
         }
       }
     }
@@ -64,6 +73,23 @@ Compat *CompatFactory::createCompat( const QString &productId )
   if ( !compat ) compat = new Compat;
 
   return compat;
+}
+
+void Compat::fixEmptySummary( Incidence *incidence )
+{
+  // some stupid vCal exporters ignore the standard and use Description
+  // instead of Summary for the default field. Correct for this: Copy the 
+  // first line of the description to the summary (if summary is just one
+  // line, move it)
+  if (incidence->summary().isEmpty() &&
+      !(incidence->description().isEmpty())) {
+    QString oldDescription = incidence->description().stripWhiteSpace();
+    QString newSummary( oldDescription );
+    newSummary.remove( QRegExp("\n.*") );
+    incidence->setSummary( newSummary );
+    if ( oldDescription == newSummary )
+      incidence->setDescription("");
+  }
 }
 
 void Compat::fixRecurrence( Incidence *incidence )
