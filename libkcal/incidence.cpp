@@ -379,14 +379,17 @@ bool Incidence::isException(const QDate &date) const
 
 bool Incidence::isException(const QDateTime &dateTime) const
 {
+  // FIXME: How are exceptions handled for events with a given time. If the
+  //        EXDATE contains only a date but no time, does that mean the event
+  //        doesn't happen on that day at all? Or is EXDATE without a time only
+  //        allowed for all-day events?
   DateTimeList::ConstIterator it;
   for( it = mExDateTimes.begin(); it != mExDateTimes.end(); ++it ) {
     if ( (*it) == dateTime ) {
       return true;
     }
   }
-
-  return false;
+  return isException( dateTime.date() );
 }
 
 void Incidence::addAttachment(Attachment *attachment)

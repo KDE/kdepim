@@ -298,7 +298,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 
         // Adjust the 'from' date/time and find the next recurrence at or after it
         qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
-        if ( !qdt.isValid() || incidence->isException(qdt.date())
+        if ( !qdt.isValid() || incidence->isException( qdt )
         ||   (qdt = qdt.addSecs( offset )) > to )    // remove the adjustment to get the alarm time
         {
           // The next recurrence is too late.
@@ -309,7 +309,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
           bool found = false;
           qdt = from.addSecs( -offset );
           while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
-            if ( !incidence->isException(qdt.date()) ) {
+            if ( !incidence->isException( qdt ) ) {
               int toFrom = qdt.secsTo( from ) - offset;
               if ( toFrom > alarm->duration() )
                 break;     // this recurrence's last repetition is too early, so give up
