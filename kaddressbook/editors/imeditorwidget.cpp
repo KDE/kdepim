@@ -170,6 +170,21 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, con
   mPreferred = preferredIM;
   mPreferred = mPreferred.replace( " on ", QString( QChar( 0xE120 ) ), true );
   mProtocols = KPluginInfo::fromServices( KTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
+
+  // order the protocols by putting them in a qmap, then sorting the set of keys and recreating the list
+  QMap<QString, KPluginInfo *> protocolMap;
+  QValueList<KPluginInfo *>::ConstIterator it;
+  QValueList<KPluginInfo *> sorted;
+  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
+      protocolMap.insert( (*it)->name(), (*it) );
+
+  QStringList keys = protocolMap.keys();
+  keys.sort();
+  QStringList::ConstIterator keyIt = keys.begin();	
+  QStringList::ConstIterator end = keys.end();
+  for ( ; keyIt != end; ++keyIt )
+      sorted.append( protocolMap[*keyIt] );
+  mProtocols = sorted;
 }
 
 QValueList<KPluginInfo *> IMEditorWidget::availableProtocols() const
@@ -334,7 +349,10 @@ void IMEditorWidget::slotAdd()
 
     // If it's a new address, set is as preferred.
     if ( mPreferred.isEmpty() )
+    {
       imaddresslvi->setPreferred( true );
+      mPreferred = addressWid->address();
+    }
 
     if ( mChangedProtocols.find( addressWid->protocol() ) == mChangedProtocols.end() )
       mChangedProtocols.append( addressWid->protocol() );

@@ -53,7 +53,7 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
   mProtocols = protocols;
   populateProtocols();
   cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
-  
+
   edtAddress->setText( address.section( QChar( 0xE120 ), 0, 0 ) );
   edtNetwork->setText( address.section( QChar( 0xE120 ), 1 ) );
 
@@ -87,7 +87,7 @@ IMContext IMAddressWidget::context() const
   IMContext context = Any;
 /*  if ( cmbContext->currentItem() )
   {
-    
+
     int contextIndex = cmbContext->currentItem();
     switch ( contextIndex )
     {
