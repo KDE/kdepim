@@ -1342,7 +1342,8 @@ void KNComposer::slotToBtnClicked()
   AddressesDialog dlg( this );
   QString txt;
   QString to = v_iew->t_o->text();
-
+  dlg.setShowBCC(false);
+  dlg.setShowCC(false);
 #if 0
   QStringList lst;
 
