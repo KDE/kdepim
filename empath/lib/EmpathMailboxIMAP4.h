@@ -31,6 +31,10 @@
 // Local includes
 #include "EmpathMailbox.h"
 
+/**
+ * @short IMAP4 mailbox
+ * @author Rikkus
+ */
 class EmpathMailboxIMAP4 : public EmpathMailbox
 {
     Q_OBJECT
@@ -57,46 +61,52 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
         
         // Set methods
         
+        /**
+         * Set the server address to connect to.
+         */
         void setServerAddress            (const QString &);
-        void setServerPort                (Q_UINT32);
+        /**
+         * Set the server port to connect to.
+         */
+        void setServerPort               (Q_UINT32);
+        /**
+         * Set the username to use when logging in to the server.
+         */
         void setUsername                (const QString &);
+        /**
+         * Set the password to use when logging in to the server.
+         */
         void setPassword                (const QString &);
-        void setPasswordSavePolicy        (SavePolicy);
-        void setLoggingPolicy            (bool);
-        void setLogFilePath                (const QString &);
-        void setLogFileDisposalPolicy    (bool);
-        void setMaxLogFileSize            (Q_UINT32);
-        void setMessageSizeThreshold    (Q_UINT32);
-        void setCheckForNewMail            (bool);
-        void setMailCheckInterval        (Q_UINT32);
-        void setDeleteFromServer        (bool);
-        void setAutoGetNewMail            (bool);
-        void setSaveAllAddresses        (bool);
-        void setNotify                    (bool);
-        void setRetrieveIfHave            (bool);
+        /**
+         * Set how to store (or not) the password.
+         */
+        void setPasswordSavePolicy      (SavePolicy);
+        /**
+         * Set whether to check for new mail at intervals.
+         */
+        void setCheckForNewMail         (bool);
+        /**
+         * Set the interval to check for new mail.
+         */
+        void setMailCheckInterval       (Q_UINT32);
 
         // Get methods
         
         QString        serverAddress();
-        Q_UINT32    serverPort();
+        Q_UINT32       serverPort();
         QString        username();
         QString        password();
-        bool        loggingPolicy();
-        QString        logFilePath();
-        bool        logFileDisposalPolicy();
-        Q_UINT32    maxLogFileSize();
-        Q_UINT32    messageSizeThreshold();
-        SavePolicy    passwordSavePolicy();
+        SavePolicy     passwordSavePolicy();
     
     private:
 
-        QString                serverAddress_;
+        QString             serverAddress_;
         Q_UINT32            serverPort_;
-        QString                username_;
-        QString                password_;
-        SavePolicy            passwordSavePolicy_;
+        QString             username_;
+        QString             password_;
+        SavePolicy          passwordSavePolicy_;
         bool                loggingPolicy_;
-        QString                logFilePath_;
+        QString             logFilePath_;
         bool                logFileDisposalPolicy_;
         unsigned            int maxLogFileSize_;
 };

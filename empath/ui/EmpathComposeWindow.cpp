@@ -81,15 +81,31 @@ EmpathComposeWindow::EmpathComposeWindow(const QString & recipient)
     void
 EmpathComposeWindow::_init()
 {
-    hide();
+    QObject::connect(
+        this,            SIGNAL(cut()),
+        composeWidget_,  SLOT(s_cut()));
+
+    QObject::connect(
+        this,            SIGNAL(copy()),
+        composeWidget_,  SLOT(s_copy()));
+
+    QObject::connect(
+        this,            SIGNAL(paste()),
+        composeWidget_,  SLOT(s_paste()));
+
+    QObject::connect(
+        this,            SIGNAL(selectAll()),
+        composeWidget_,  SLOT(s_selectAll()));
+ 
     setupMenuBar();
     setupToolBar();
     setupStatusBar();
+    setView(composeWidget_, false);
     composeWidget_->init();
     setCaption(i18n("Compose Message - ") + kapp->getCaption());
-    setView(composeWidget_, false);
     updateRects();
 
+    /*
     // Resize to main window size for now.
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
@@ -97,24 +113,8 @@ EmpathComposeWindow::_init()
     int x = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, 600);
     int y = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_Y_SIZE, 400);
     resize(x, y);
-    
-    QObject::connect(
-        this,            SIGNAL(cut()),
-        composeWidget_,    SLOT(s_cut()));
-
-    QObject::connect(
-        this,            SIGNAL(copy()),
-        composeWidget_,    SLOT(s_copy()));
-
-    QObject::connect(
-        this,            SIGNAL(paste()),
-        composeWidget_,    SLOT(s_paste()));
-
-    QObject::connect(
-        this,            SIGNAL(selectAll()),
-        composeWidget_,    SLOT(s_selectAll()));
-    
-    show();
+*/
+  //  show();
 }
 
 EmpathComposeWindow::~EmpathComposeWindow()

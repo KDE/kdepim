@@ -443,35 +443,27 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 EmpathSendingSettingsDialog::saveData()
 {
     KConfig * c    = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
+
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_SENDING);
     
 #define CWE c->writeEntry
 
     // Get server type
     int servType = (int)(
-        (rb_sendmail_->isChecked()    ? EmpathMailSender::Sendmail    : 0) |
-        (rb_qmail_->isChecked()        ? EmpathMailSender::Qmail        : 0) |
-        (rb_smtp_->isChecked()        ? EmpathMailSender::SMTP        : 0));
+        (rb_sendmail_->isChecked()  ? EmpathMailSender::Sendmail    : 0) |
+        (rb_qmail_->isChecked()     ? EmpathMailSender::Qmail       : 0) |
+        (rb_smtp_->isChecked()      ? EmpathMailSender::SMTP        : 0));
     
-    CWE( EmpathConfig::KEY_OUTGOING_SERVER_TYPE,servType); 
-    
-    CWE( EmpathConfig::KEY_SENDMAIL_LOCATION,    le_sendmail_->text());
-    
-    CWE( EmpathConfig::KEY_QMAIL_LOCATION,        le_qmail_->text());
-    
-    CWE( EmpathConfig::KEY_SMTP_SERVER_LOCATION,le_smtpServer_->text());
-
-    CWE( EmpathConfig::KEY_SMTP_SERVER_PORT,    sb_smtpPort_->value());
-    
-    CWE( EmpathConfig::KEY_CC_OTHER,            cb_copyOther_->isChecked());
-    
-    CWE( EmpathConfig::KEY_CC_OTHER_ADDRESS,asw_copyOther_->selectedAddress());
-    
-    CWE( EmpathConfig::KEY_QUEUE_FOLDER,
-        fcw_queueFolder_->selectedURL().asString());
-    
-    CWE( EmpathConfig::KEY_SENT_FOLDER,
-        fcw_sentFolder_->selectedURL().asString());
+    CWE(KEY_OUTGOING_SERVER_TYPE,   servType); 
+    CWE(KEY_SENDMAIL_LOCATION,      le_sendmail_->text());
+    CWE(KEY_QMAIL_LOCATION,         le_qmail_->text());
+    CWE(KEY_SMTP_SERVER_LOCATION,   le_smtpServer_->text());
+    CWE(KEY_SMTP_SERVER_PORT,       sb_smtpPort_->value());
+    CWE(KEY_CC_OTHER,               cb_copyOther_->isChecked());
+    CWE(KEY_CC_OTHER_ADDRESS,       asw_copyOther_->selectedAddress());
+    CWE(KEY_QUEUE_FOLDER,           fcw_queueFolder_->selectedURL().asString());
+    CWE(KEY_SENT_FOLDER,            fcw_sentFolder_->selectedURL().asString());
     
     empath->updateOutgoingServer();
     
@@ -482,39 +474,26 @@ EmpathSendingSettingsDialog::saveData()
 EmpathSendingSettingsDialog::loadData()
 {
     KConfig * c    = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
+
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_SENDING);
     
     EmpathMailSender::OutgoingServerType t =
         (EmpathMailSender::OutgoingServerType)
-        (c->readNumEntry(EmpathConfig::KEY_OUTGOING_SERVER_TYPE));
+        (c->readNumEntry(KEY_OUTGOING_SERVER_TYPE));
     
-    rb_sendmail_->setChecked(    t == EmpathMailSender::Sendmail);
-    rb_qmail_->setChecked(        t == EmpathMailSender::Qmail);
-    rb_smtp_->setChecked(        t == EmpathMailSender::SMTP);
+    rb_sendmail_    ->setChecked(t == EmpathMailSender::Sendmail);
+    rb_qmail_       ->setChecked(t == EmpathMailSender::Qmail);
+    rb_smtp_        ->setChecked(t == EmpathMailSender::SMTP);
     
-    le_sendmail_->setText(
-        c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION));
-    
-    le_qmail_->setText(
-        c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION));
-    
-    le_smtpServer_->setText(
-        c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION));
-    
-    sb_smtpPort_->setValue(
-        c->readNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT));
-    
-    cb_copyOther_->setChecked(
-        c->readBoolEntry(EmpathConfig::KEY_CC_OTHER));
-    
-    asw_copyOther_->setAddress(
-        c->readEntry(EmpathConfig::KEY_CC_OTHER_ADDRESS));
-    
-    fcw_queueFolder_->setURL(
-        c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
-    
-    fcw_sentFolder_->setURL(
-        c->readEntry(EmpathConfig::KEY_SENT_FOLDER));
+    le_sendmail_    ->setText       (c->readEntry   (KEY_SENDMAIL_LOCATION));
+    le_qmail_       ->setText       (c->readEntry   (KEY_QMAIL_LOCATION));
+    le_smtpServer_  ->setText       (c->readEntry   (KEY_SMTP_SERVER_LOCATION));
+    sb_smtpPort_    ->setValue      (c->readNumEntry    (KEY_SMTP_SERVER_PORT));
+    cb_copyOther_   ->setChecked    (c->readBoolEntry   (KEY_CC_OTHER));
+    asw_copyOther_  ->setAddress    (c->readEntry   (KEY_CC_OTHER_ADDRESS));
+    fcw_queueFolder_->setURL        (c->readEntry   (KEY_QUEUE_FOLDER));
+    fcw_sentFolder_ ->setURL        (c->readEntry   (KEY_SENT_FOLDER));
     
     empath->updateOutgoingServer();
 }
@@ -555,14 +534,14 @@ EmpathSendingSettingsDialog::s_apply()
     void
 EmpathSendingSettingsDialog::s_default()
 {
-    le_sendmail_->setText("/usr/lib/sendmail");
-    le_qmail_->setText("/var/qmail/bin/qmail-inject");
-    cb_copyOther_->setChecked(false);
-    rb_smtp_->setChecked(false);
-    rb_qmail_->setChecked(false);
-    rb_sendmail_->setChecked(true);
-    le_smtpServer_->setText("localhost");
-    sb_smtpPort_->setValue(25);
+    le_sendmail_    ->setText("/usr/lib/sendmail");
+    le_qmail_       ->setText("/var/qmail/bin/qmail-inject");
+    cb_copyOther_   ->setChecked(false);
+    rb_smtp_        ->setChecked(false);
+    rb_qmail_       ->setChecked(false);
+    rb_sendmail_    ->setChecked(true);
+    le_smtpServer_  ->setText("localhost");
+    sb_smtpPort_    ->setValue(25);
 }
     
     void

@@ -28,6 +28,9 @@
 #include <kapp.h>
 
 // Local includes
+#include "RMM_Message.h"
+#include "RMM_Mailbox.h"
+#include "RMM_Envelope.h"
 #include "EmpathMailSenderSMTP.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -35,23 +38,53 @@
 EmpathMailSenderSMTP::EmpathMailSenderSMTP()
     :    EmpathMailSender()
 {
+    job_ = new KIOJob;
+    CHECK_PTR(job_);
 }
 
 EmpathMailSenderSMTP::~EmpathMailSenderSMTP()
 {
+    delete job_;
+    job_ = 0;
 }
 
     void
-EmpathMailSenderSMTP::setServer(const QString & name, const Q_UINT32 port)
+EmpathMailSenderSMTP::setServer(const QString & _name, const Q_UINT32 _port)
 {
-    serverName_ = name;
-    serverPort_ = port;
+    serverName_ = _name;
+    serverPort_ = _port;
 }
 
-    bool
-EmpathMailSenderSMTP::sendOne(RMM::RMessage &)
+   void
+EmpathMailSenderSMTP::sendOne(RMM::RMessage & m)
 {
-    return false;
+    QString sender = KGlobal::config()->readEntry(EmpathConfig::KEY_EMAIL);
+
+    QString recipient;
+
+    RMM::RAddress * address = m.envelope().to().at(0);
+    if (address == 0) {
+        // XXX: We're not sending to anyone ?
+        return;
+    }
+    
+    RMM::RMailbox * mailbox = address->mailbox();
+    
+    if (mailbox == 0) {
+        // FIXME: Handle sending to a group.
+        return;
+    }
+    
+    recipient = mailbox->localPart();
+    recipient += '@';
+    recipient += mailbox->domain();
+
+    QString putStr = "smtp://" +
+        serverName_ + ':' + QString().setNum(serverPort_) +
+        '/' +
+        sender + ',' + recipient;
+    
+    job_->put(putStr, 0, false, false, 0);
 }
 
     void
@@ -68,7 +101,8 @@ EmpathMailSenderSMTP::readConfig()
 {
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_SENDING);
-    serverName_ = c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION, "localhost");
+    serverName_ = c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION,
+        "localhost");
     serverPort_ = c->readUnsignedNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT, 25);
 }
 

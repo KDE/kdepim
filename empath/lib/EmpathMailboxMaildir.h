@@ -37,6 +37,10 @@
 #include "EmpathMaildir.h"
 #include "EmpathMailbox.h"
 
+/**
+ * @short Maildir mailbox
+ * @author Rikkus
+ */
 class EmpathMailboxMaildir : public EmpathMailbox
 {
     Q_OBJECT
@@ -48,7 +52,14 @@ class EmpathMailboxMaildir : public EmpathMailbox
         
         virtual ~EmpathMailboxMaildir();
     
+        /**
+         * Set the path to the Maildir.
+         */
         void setPath(const QString & path);
+        
+        /**
+         * @return The path to the Maildir.
+         */
         const QString & path() const { return path_; }
         
 #include "EmpathMailboxAbstract.h"
@@ -57,12 +68,12 @@ class EmpathMailboxMaildir : public EmpathMailbox
     
         bool                    _recursiveRemove(const QString &);
         void                    _recursiveReadFolders(const QString &);
-        EmpathMaildir *            _box(const EmpathURL & id);
+        EmpathMaildir *         _box(const EmpathURL & id);
         void                    _setupDefaultFolders();
         
-        QString                    path_;
-        QString                    canonName_;
-        EmpathMaildirList        boxList_;
+        QString                 path_;
+        QString                 canonName_;
+        EmpathMaildirList       boxList_;
 };
 
 #endif

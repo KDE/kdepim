@@ -55,8 +55,6 @@ Highest priority first.
 
 Bugs in Qt/KDE (possibly)
 
-* KTMainWindow layout fixes my toplevels' size (wrongly) sometimes.
-
 * KHTMLWidget crashes on some valid html. ** Found out it's trying desperately
   to parse stuff in <PRE> and failing.
 

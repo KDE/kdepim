@@ -34,24 +34,47 @@
 #include "EmpathDefines.h"
 #include "EmpathConfig.h"
 
+/**
+ * An external editor process.
+ * @author Rikkus
+ */
 class EmpathEditorProcess : public QObject
 {
     Q_OBJECT
     
     public:
         
+        /**
+         * Create an editor process that works on the given text.
+         */
         EmpathEditorProcess(const QCString &);
         ~EmpathEditorProcess();
+        /**
+         * Start editing.
+         */
         void go();
         
     protected slots:
 
+        /**
+         * Called when the external process has finished.
+         */
         void s_composeFinished(KProcess *);
+        
+        /**
+         * Use this to look at the output of the external editor
+         * if it's not working as expected.
+         */
         void s_debugExternalEditorOutput(KProcess *, char *, int);
         
     signals:
         
-        void done(bool, QCString);
+        /**
+         * Signals that the external process ended. If the editor
+         * returned with a positive response, ok is true. editedText
+         * is the edited text.
+         */
+        void done(bool ok, QCString editedText);
         
     private:
         

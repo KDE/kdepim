@@ -55,10 +55,36 @@
 #include "EmpathTaskTimer.h"
 
 Empath * Empath::EMPATH = 0;
+bool Empath::started_ = false;
+
+    void
+Empath::start()
+{
+    if (!started_) {
+        started_ = true;
+        new Empath;
+    }
+}
+        
+    void
+Empath::shutdown()
+{
+    empathDebug("dtor");
+
+    filterList_.save();
+    mailboxList_.saveConfig();
+    KGlobal::config()->sync();
+
+    delete mailSender_;
+    mailSender_ = 0;
+
+    delete this;
+}
 
 Empath::Empath()
-    :    QObject(),
-        mailSender_(0)
+    :   QObject(),
+        mailSender_(0),
+        seq_(0)
 {
     empathDebug("ctor");
     EMPATH = this;
@@ -71,6 +97,7 @@ Empath::init()
 {
     empathDebug("init() called");
     processID_ = getpid();
+    pidStr_.setNum(processID_);
     _saveHostName();
     _setStartTime();
     mailboxList_.init();
@@ -79,16 +106,6 @@ Empath::init()
 
 Empath::~Empath()
 {
-    empathDebug("dtor");
-    
-    filterList_.save();
-    mailboxList_.saveConfig();
-    KGlobal::config()->sync();
-    
-    delete mailSender_;
-    mailSender_ = 0;
-    
-    empathDebug("Empath is dead. Long live Empath.");
 }
 
     void
@@ -239,7 +256,7 @@ Empath::mark(const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
     if (f == 0)
         return false;
 
-    return f->mark(url, l, s);
+    return f->mark(l, s);
 }
 
     EmpathTask *
@@ -262,6 +279,7 @@ Empath::_setStartTime()
     
     gettimeofday(&timeVal, &timeZone);
     startupSeconds_ = timeVal.tv_sec;
+    startupSecondsStr_.setNum(startupSeconds_);
 }
     void
 Empath::_saveHostName()
@@ -269,6 +287,25 @@ Empath::_saveHostName()
     struct utsname utsName;
     if (uname(&utsName) == 0)
         hostName_ = utsName.nodename;
+}
+
+    QString
+Empath::generateUnique()
+{
+    QString unique;
+
+    unique =
+        startupSecondsStr_ +
+        '.' +
+        pidStr_ +
+        '_' +
+        QString().setNum(seq_) +
+        '.' +
+        hostName_;
+
+    ++seq_;
+
+    return unique;
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -84,8 +84,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
     
     headerBodyWidget_->setFocus();
     
-    int h = headerBodyWidget_->sizeHint().height();
-    setFixedHeight(h);
+    setFixedHeight(headerBodyWidget_->minimumSizeHint().height());
 }
 
 EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()

@@ -28,7 +28,6 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstring.h>
-#include <qpngio.h>
 
 // KDE includes
 #include <klocale.h>
@@ -55,8 +54,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 {
     empathDebug("ctor");
 
-    qInitPngIO();
-    
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET);
@@ -72,7 +69,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
     write(QColorToHTML(
             kapp->palette().color(QPalette::Normal, QColorGroup::Text)));
     write("\">");
-    write (i18n("Welcome to Empath").ascii());
+    write (i18n("Welcome to Empath"));
     write ("</FONT></TT></HTML>");
     // End welcome message
     parse();
@@ -89,7 +86,7 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 }
 
     bool
-EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
+EmpathMessageHTMLWidget::show(const QString & s, bool markup)
 {
     empathDebug("show() called");
     
@@ -107,14 +104,14 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
         config->readFontEntry(
             EmpathConfig::KEY_FIXED_FONT, &defaultFixed);
 
-    setFixedFont(f.family().ascii());
+    setFixedFont(f.family());
     
     int fs = f.pointSize();
     
     int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
     setFontSizes(fsizes);
     
-    setStandardFont(KGlobal::generalFont().family().ascii());
+    setStandardFont(KGlobal::generalFont().family());
 
     setURLCursor(KCursor::handCursor());
     setFocusPolicy(QWidget::StrongFocus);
@@ -137,7 +134,7 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
             QColorToHTML(
                 kapp->palette().color(QPalette::Normal, QColorGroup::Base)) +
             "><PRE>" +
-            i18n("This part is empty").ascii() +
+            i18n("This part is empty") +
             "</PRE></BODY></HTML>");
         setCursor(arrowCursor);
         parse();
@@ -149,7 +146,7 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 
     if (markup) {
         
-        QCString html(s);
+        QString html(s);
         toHTML(html);
         write(
             "<HTML><BODY BGCOLOR=" +
@@ -173,8 +170,9 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 }
 
     void
-EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
+EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
 {
+    QCString str(_str.ascii());
     KConfig * config(KGlobal::config());
     config->setGroup(EmpathConfig::GROUP_DISPLAY);
 
@@ -188,8 +186,8 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
     quote2 = config->readColorEntry(
         EmpathConfig::KEY_QUOTE_COLOUR_TWO, &color2);
 
-    QCString quoteOne = QColorToHTML(quote1);
-    QCString quoteTwo = QColorToHTML(quote2);
+    QString quoteOne = QColorToHTML(quote1).ascii();
+    QString quoteTwo = QColorToHTML(quote2).ascii();
     
     // Will this work with Qt-2.0's QString ?
     register char * buf = new char[32768]; // 32k buffer. Will be reused.
@@ -531,7 +529,7 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
     ASSERT(buf != 0);
     delete [] buf;
     buf = 0;
-    str = outStr.data();
+    str = outStr;
 }
 
     void
@@ -564,11 +562,12 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
     popup_.exec(QCursor::pos());
 }
 
-    QCString
+    QString
 EmpathMessageHTMLWidget::QColorToHTML(const QColor & c)
 {
-    static QCString s(6);
-    return s.sprintf("%02X%02X%02X", c.red(), c.green(), c.blue());
+    QString s;
+    s.sprintf("%02X%02X%02X", c.red(), c.green(), c.blue());
+    return s;
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -36,6 +36,10 @@
 
 typedef QListIterator<EmpathMailbox> EmpathMailboxListIterator;
 
+/**
+ * @short The internal mailbox list
+ * @author Rikkus
+ */
 class EmpathMailboxList : public QObject, public QList<EmpathMailbox>
 {
     Q_OBJECT
@@ -45,26 +49,53 @@ class EmpathMailboxList : public QObject, public QList<EmpathMailbox>
         EmpathMailboxList();
         ~EmpathMailboxList();
         
+        /**
+         * Must be called before use.
+         */
         void init();
         
+        /**
+         * @internal
+         */
         void readConfig();
+        /**
+         * @internal
+         */
         void saveConfig() const;
         
-        EmpathMailbox & operator [] (Q_UINT32 i);
-
+        /**
+         * Append the given mailbox to the list.
+         */
         void append(EmpathMailbox * mailbox);
     
+        /**
+         * Remove the given mailbox from the list.
+         */
         bool remove(EmpathMailbox * mailbox);
 
+        /**
+         * @return the mailbox with the given name, unless not found, in which
+         * case 0.
+         */
         EmpathMailbox * find(const QString & name) const;
+        /**
+         * @return the folder with the given url, unless not found, in which
+         * case 0.
+         */
         EmpathFolder * folder(const EmpathURL & folderURL) const;
 
+        /**
+         * Go get new mail now.
+         */
         void getNewMail();
 
     signals:
         
+        /**
+         * Emitted when the on-screen folder lists are out of sync and need to
+         * be updated.
+         */
         void updateFolderLists();
-
 };
 
 #endif

@@ -44,6 +44,10 @@
 
 class EmpathFolder;
 
+/**
+ * @internal
+ * @author Rikkus
+ */
 class EmpathMaildir : public QObject
 {
     Q_OBJECT
@@ -89,29 +93,27 @@ class EmpathMaildir : public QObject
         
     private:
         
-        QString        _write(RMM::RMessage &);
+        QString     _write(RMM::RMessage &);
         QCString    _messageData(const QString &);
         void        _markNewMailAsSeen();
-        void         _markAsSeen(const QString &);
+        void        _markAsSeen(const QString &);
         void        _clearTmp();
         bool        _setupDirs();
-        QString        _generateUnique();
-        QString        _generateFlagsString(RMM::MessageStatus);
+        QString     _generateFlagsString(RMM::MessageStatus);
         void        _readIndex();
         void        _writeIndex();
         
         // Order dependency
-        Q_UINT32    seq_;
-        QString        path_;
+        QString      path_;
         EmpathURL    url_;
-        QString        basePath_;
+        QString      basePath_;
         // End order dependency
         
         QDir d;
         
         QDateTime    mtime_;
         
-        QTimer        timer_; // Check for modification every so often.
+        QTimer       timer_; // Check for modification every so often.
 };
 
 typedef QList<EmpathMaildir> EmpathMaildirList;

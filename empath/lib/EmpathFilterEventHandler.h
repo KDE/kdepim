@@ -31,6 +31,15 @@
 // Local includes
 #include "EmpathURL.h"
 
+/**
+ * @short Used to do the actual message processing for a filter
+ * 
+ * When an EmpathFilterEventHandler is passed an URL, it gets the message
+ * pointed to and then performs the defined action.
+ * 
+ * This may be 'move to folder', 'delete', 'ignore', etc.
+ * @author Rikkus
+ */
 class EmpathFilterEventHandler : public QObject
 {
     Q_OBJECT
@@ -38,26 +47,50 @@ class EmpathFilterEventHandler : public QObject
     public:
         
         enum ActionType { MoveFolder, CopyFolder, Delete, Ignore, Forward };
-        
+    
         EmpathFilterEventHandler();
         
         virtual ~EmpathFilterEventHandler();
 
+        /**
+         * Set this handler to move messages to the given folder.
+         */
         void setMoveFolder(const EmpathURL &);
+        /**
+         * Set this handler to copy messages to the given folder.
+         */
         void setCopyFolder(const EmpathURL &);
+        /**
+         * Set this handler to delete all messages.
+         */
         void setDelete();
+        /**
+         * Set this handler to ignore all messages.
+         */
         void setIgnore();
+        /**
+         * Set this handler to forward all messages to the given address.
+         */
         void setForward(const QString &);
 
+        /**
+         * Handle the given message now !
+         */
         void handleMessage    (const EmpathURL &);
         
+        /**
+         * Load settings. Called by the containing filter.
+         */
         bool load            (const QString &);
+        /**
+         * Save settings. Called by the containing filter.
+         */
         void save            (const QString &);
 
         QString        description()        const;
-        ActionType    actionType()        const;
-        EmpathURL    moveOrCopyFolder()    const;
-        QString        forwardAddress()    const;
+        ActionType     actionType()         const;
+        EmpathURL      moveOrCopyFolder()   const;
+        QString        forwardAddress()     const;
 
     private:
 

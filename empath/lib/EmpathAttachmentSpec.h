@@ -28,15 +28,25 @@
 #include "EmpathDefines.h"
 #include "RMM_Enum.h"
 
+/**
+ * Attachment information.
+ * @author Rikkus
+ */
 class EmpathAttachmentSpec
 {
     public:
         
+        /**
+         * Default ctor. Not much use until you fill in the fields.
+         */
         EmpathAttachmentSpec()
         {
             empathDebug("ctor");
         }
 
+        /**
+         * Construct with all the fields filled in.
+         */
         EmpathAttachmentSpec(
                 const QString & filename,
                 const QString & description,
@@ -103,6 +113,9 @@ class EmpathAttachmentSpec
         void setSubType        (const QString & s) { subType_        = s; }
         void setCharset        (const QString & s) { charset_        = s; }
         
+        /**
+         * @internal
+         */
         const char * className() const { return "EmpathAttachmentSpec"; }
         
     private:

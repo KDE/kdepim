@@ -40,6 +40,19 @@ class EmpathIndexRecord;
 class EmpathIndex;
 class EmpathIndexAllocator;
 
+/**
+ * @short Mail folder
+ * 
+ * An EmpathMailbox creates these on startup. It generally looks for existing
+ * folders and creates a matching EmpathFolder for each. Of course, it may
+ * know exactly what folders it has - e.g. an EmpathMailboxPOP3 only has one
+ * folder, Inbox.
+ * 
+ * When indexing a real mail folder, an EmpathMailbox will update the related
+ * EmpathFolder's index.
+ * 
+ * @author Rikkus
+ */
 class EmpathFolder : public QObject
 {
     Q_OBJECT
@@ -48,37 +61,89 @@ class EmpathFolder : public QObject
 
         EmpathFolder();
 
+        /**
+         * Create and set the URL this maps to.
+         */
         EmpathFolder(const EmpathURL & url);
         
+        /**
+         * Use this to allocate index records.
+         * @see KZoneAllocator
+         */
         EmpathIndexAllocator * indexAllocator() { return indexAllocator_; }
 
         virtual ~EmpathFolder();
 
+        /**
+         * Compares URLs.
+         */
         bool operator == (const EmpathFolder & other) const;
 
+        /**
+         * Pointer to parent folder, or 0 if this is a toplevel folder.
+         */
         EmpathFolder * parent() const;
 
+        /**
+         * Set the name of a pixmap to use in the GUI.
+         */
         void setPixmap(const QString &);
 
-        const QString &        pixmapName()    const { return pixmapName_;    }
+        /**
+         * Get the name of the pixmap used in the GUI.
+         */
+        const QString &      pixmapName()    const { return pixmapName_;    }
+        
+        /**
+         * The URL to the folder, e.g. empath://Mailbox1/Folder1/Folder2
+         */
         const EmpathURL &    url()            const { return url_;    }
 
+        /**
+         * How many messages in total are stored here ?
+         */
         Q_UINT32    messageCount()            const
         { return messageList_.count(); }
 
+        /**
+         * How many messages stored are unread ?
+         */
         Q_UINT32    unreadMessageCount()    const
         { return messageList_.countUnread(); }
 
+        /**
+         * @internal
+         * Unique id.
+         */
         Q_UINT32 id() const { return id_; }
 
+        /**
+         * The index.
+         */
         EmpathIndex & messageList() { return messageList_; }
 
+        /**
+         * Get an index record given an ID.
+         * @return 0 if couldn't be found.
+         */ 
         const EmpathIndexRecord *
             messageDescription(RMM::RMessageID & messageID) const;
 
+        /**
+         * Write a new message and pass back an unique id.
+         */
         QString writeMessage(RMM::RMessage & message);
+        
+        /**
+         * Attempt to remove a message.
+         * @return false on failure.
+         */
         bool removeMessage(const EmpathURL &);
 
+        /**
+         * Call this when you want to sync with the mailbox and update any
+         * on-screen lists.
+         */
         void update();
 
         /**
@@ -86,25 +151,55 @@ class EmpathFolder : public QObject
          * This message is allocated with new. It is your responsibility to
          * delete it.
          */
-
         RMM::RMessage * message(const EmpathURL & url);
 
+        /**
+         * Mark a message with the given status.
+         */
         bool mark(const EmpathURL &, RMM::MessageStatus);
-        bool mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
+        /**
+         * Mark many messages with the given status.
+         * The string list gives the message IDs to mark.
+         */
+        bool mark(const QStringList &, RMM::MessageStatus);
         
+        /**
+         * Drop the index. Why ? Dunno.
+         */
         void dropIndex();
         
+        /**
+         * Call this when an item has disappeared from the index.
+         */
         void itemGone(const QString & s) { emit(itemLeft(s));        }
+        /**
+         * Call this when a new item appears in the index.
+         */
         void itemCome(const QString & s) { emit(itemArrived(s));    }
         
     protected slots:
         
+        /**
+         * Connected to update()
+         */
         void s_update() { update(); }
 
     signals:
 
-        void countUpdated(int, int);
+        /**
+         * The message counts have been updated.
+         * @arg c Total message count.
+         * @arg uc Unread message count.
+         */
+        void countUpdated(int c, int uc);
+        /**
+         * Signals a new message has arrived with given id.
+         */
         void itemArrived(const QString &);
+        
+        /**
+         * Signals a message has gone away (with given id).
+         */
         void itemLeft    (const QString &);
 
     private:

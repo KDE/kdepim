@@ -28,6 +28,12 @@
 #include <qstring.h>
 #include <qobject.h>
 
+/**
+ * @short Task progress notifier
+ * Create one of these using empath->addTask().
+ * Call the methods at appropriate times during your task.
+ * @author Rikkus
+ */
 class EmpathTask : public QObject
 {
     Q_OBJECT
@@ -37,9 +43,25 @@ class EmpathTask : public QObject
         EmpathTask(const QString &);
         ~EmpathTask();
         
+        /**
+         * Set the maximum number of steps this task will take to complete.
+         */
         void setMax(int);
+        
+        /**
+         * Set the current number of steps this task has taken.
+         */
         void setPos(int);
+        
+        /**
+         * Signal that another item has been processed (increment the
+         * position).
+         */
         void doneOne();
+        
+        /**
+         * Signal that the task has completed. You may go away now.
+         */
         void done();
         
         int max() { return max_; }

@@ -53,6 +53,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 {
     empathDebug("ctor");
 
+    setFrameStyle(QFrame::NoFrame);
     setAcceptDrops(true);
     viewport()->setAcceptDrops(true);
     
@@ -490,9 +491,10 @@ EmpathFolderWidget::s_openChanged()
     }
     
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_DISPLAY);
     
-    c->writeEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN, l, ',');
+    c->writeEntry(KEY_FOLDER_ITEMS_OPEN, l, ',');
 }
 #if 0
     void

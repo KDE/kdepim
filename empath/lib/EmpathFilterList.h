@@ -35,26 +35,62 @@
 
 typedef QListIterator<EmpathFilter> EmpathFilterListIterator;
 
+/**
+ * @short The internal filter list
+ * 
+ * Empath always has exactly one of these. Don't construct it.
+ * @author Rikkus
+ */
 class EmpathFilterList : public QList<EmpathFilter>
 {
     public:
     
+        /**
+         * @internal
+         */
         EmpathFilterList();
+        /**
+         * @internal
+         */
         virtual ~EmpathFilterList();
 
+        /**
+         * Load settings.
+         * Called by Empath on startup.
+         */
         void load();
+        /**
+         * Save settings.
+         * Called by Empath on startup.
+         */
         void save();
+        
+        /**
+         * Filter the given message.
+         * Goes through the list and asks each filter to look at the given
+         * URL.
+         */
         void filter(const EmpathURL &);
+        
+        /**
+         * Raise the priority of a filter by one.
+         */
         void raisePriority(EmpathFilter *);
+        /**
+         * Lower the priority of a filter by one.
+         */
         void lowerPriority(EmpathFilter *);
+        
+        /**
+         * Remove the given filter, if it exists.
+         */
         void remove(EmpathFilter *);
+        /**
+         * Append the given filter.
+         */
         void append(EmpathFilter *);
             
         const char * className() const { return "EmpathFilterList"; }
-        
-    
-    private:
-
 };
 
 #endif

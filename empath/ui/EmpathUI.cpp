@@ -23,10 +23,10 @@
 #endif
 
 // Qt includes
-#include <qmessagebox.h>
 #include <qstring.h>
 #include <qwidgetlist.h>
 #include <qapplication.h>
+#include <qpngio.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -36,10 +36,12 @@
 #include <kstddirs.h>
 #include <klocale.h>
 #include <ktmainwindow.h>
+#include <kaboutdialog.h>
 
 // Local includes
 #include "Empath.h"
 #include "EmpathUI.h"
+#include "EmpathUIUtils.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathDisplaySettingsDialog.h"
@@ -59,10 +61,15 @@ EmpathUI::EmpathUI()
 {
     empathDebug("ctor");
     
-    KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    qInitPngIO();
     
-    QString iconSetPath(c->readEntry(EmpathConfig::KEY_ICON_SET, "standard"));
+    KConfig * c(KGlobal::config());
+    
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_DISPLAY);
+    
+    QString iconSetPath(c->readEntry(KEY_ICON_SET, "standard"));
+    using namespace std;
     
     QObject::connect(
         empath,    SIGNAL(infoMessage(const QString &)),
@@ -191,24 +198,19 @@ EmpathUI::s_setupFilters()
     void
 EmpathUI::s_about()
 {
-    static const QString EmpathAbout = QString::fromLatin1(
-        "<h3>Empath</h3>"
-        "<p>Version %1</p>"
-        "<p>A sophisticated mail client for <b>KDE</b></p>"
-        "<p>Maintainer contact address: <b>&lt;rik@kde.org&gt;</b></p>"
-        "<hr>"
-        "<p>Compiled with KDE libraries version: %2</p>"
-        "<p>Compiled with Qt library version: %3</p>"
-        "<p>Empath is licensed under the <em>GNU Public License</em></p>");
-
-    QString kdeVersion        = QString::fromLatin1(KDE_VERSION_STRING);
-    QString qtVersion        = QString::fromLatin1(QT_VERSION_STR);
-
-    QMessageBox::about(0, i18n("About Empath"),
-        i18n(EmpathAbout.ascii())
-        .arg(EMPATH_VERSION_STRING)
-        .arg(kdeVersion)
-        .arg(qtVersion));
+    KAboutDialog * about = new KAboutDialog;
+    about->setLogo(KGlobal::iconLoader()->loadIcon("empath.png"));
+    about->setAuthor(
+        "Rik Hemsley", "rik@kde.org", "http://without.netpedia.net", "");
+    about->addContributor("Dirk A. Mueller",    "", "", "");
+    about->addContributor("Tybollt",            "", "", "");
+    about->addContributor("Torsten Rahn",       "", "", "");
+    about->addContributor("Stephen Pitts",      "", "", "");
+    about->setVersion(EMPATH_VERSION_STRING);
+    QObject::connect(
+        about,  SIGNAL(sendEmail(const QString &, const QString &)),
+        this,   SLOT(s_sendEmail(const QString &, const QString &)));
+    about->show();
 }
 
     void
@@ -234,6 +236,12 @@ EmpathUI::s_infoMessage(const QString & s)
     }
     
     delete l;
+}
+
+    void
+EmpathUI::s_sendEmail(const QString & name, const QString & email)
+{
+    empath->compose(name + " " + email);
 }
 
 // vim:ts=4:sw=4:tw=78

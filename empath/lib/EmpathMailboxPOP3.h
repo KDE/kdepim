@@ -42,6 +42,10 @@ class EmpathConfig;
 class Empath;
 class KIOJob;
 
+/**
+ * @internal
+ * @author Rikkus
+ */
 class EmpathPOPCommand
 {
     public:
@@ -63,6 +67,9 @@ class EmpathPOPCommand
         int        msgNo_;
 };
 
+/**
+ * @internal
+ */
 class EmpathPOPIndexEntry
 {
     public:
@@ -81,6 +88,9 @@ class EmpathPOPIndexEntry
         QString    id_;
 };
 
+/**
+ * @internal
+ */
 class EmpathPOPIndex : public QList<EmpathPOPIndexEntry>
 {
     public:
@@ -96,6 +106,10 @@ typedef QListIterator<EmpathPOPIndexEntry>    EmpathPOPIndexIterator;
 
 typedef QQueue<EmpathPOPCommand>            EmpathPOPQueue;
 
+/**
+ * @short POP3 mailbox
+ * @author Rikkus
+ */
 class EmpathMailboxPOP3 : public EmpathMailbox
 {
     Q_OBJECT

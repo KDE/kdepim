@@ -116,7 +116,7 @@ EmpathMainWindow::_setupToolBar()
     
     KToolBar::BarPosition pos =
         (KToolBar::BarPosition)
-        c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POSITION);
+        c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POS);
 
     if    (    pos != KToolBar::Top    ||
             pos != KToolBar::Left    ||
@@ -447,7 +447,7 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 {
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
-    c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POSITION, (int)pos);
+    c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POS, (int)pos);
 }
 
     void

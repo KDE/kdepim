@@ -6,6 +6,10 @@
 #include "Empath.h"
 #include "EmpathTask.h"
 
+/**
+ * @internal
+ * @author Rikkus
+ */
 class EmpathTaskTimer : public QObject
 {
     Q_OBJECT

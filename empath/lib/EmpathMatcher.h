@@ -28,6 +28,10 @@
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 
+/**
+ * @short Match expression, used by filters
+ * @author Rikkus
+ */
 class EmpathMatcher
 {
     public:
@@ -42,25 +46,71 @@ class EmpathMatcher
     
         EmpathMatcher();
         virtual ~EmpathMatcher();
+        
+        /**
+         * Called by containing filter to request config load.
+         */
         void load(const QString & parentName, Q_UINT32 id);
+        /**
+         * Called by containing filter to request config save.
+         */
         void save(const QString & parentName, Q_UINT32 id);
 
+        /**
+         * Attempt to match the given message.
+         */
         bool match(const EmpathURL &);
+        
+        /**
+         * Nice description of this matcher.
+         */
         QString description() const;
         
-        const char * className() const { return "EmpathMatcher"; }
-        
+        /**
+         * Type of this expression.
+         */
         MatchExprType type() const { return type_; }
+        
+        /**
+         * Change the type of this expression.
+         */
         void setType(MatchExprType t) { type_ = t; }
 
+        /**
+         * Maximum size (used when set to match on size).
+         */
         Q_UINT32 size() { return size_; }
+        
+        /**
+         * Header to match on (used when set to match on header).
+         */
         const QString & matchHeader() { return matchHeader_; }
+        
+        /**
+         * Match expression (used when set to match using an expression)
+         */
         const QString & matchExpr() { return matchExpr_; }
         
+        /**
+         * Set the size of messages to match (> size).
+         */
         void setSize(Q_UINT32 s) { size_ = s; }
+        
+        /**
+         * Set the header name to match upon.
+         */
         void setMatchHeader(const QString & s) { matchHeader_ = s; }
+        
+        /**
+         * Set the match expression to use.
+         */
         void setMatchExpr(const QString & s) { matchExpr_ = s; }
     
+        /**
+         * @internal
+         */
+        const char * className() const { return "EmpathMatcher"; }
+        
     private:
         
         MatchExprType type_;

@@ -28,6 +28,9 @@
 // Qt includes
 #include <qobject.h>
 
+// KDE includes
+#include <kio_job.h>
+
 // Local includes
 #include "RMM_Message.h"
 #include "EmpathDefines.h"
@@ -35,11 +38,13 @@
 #include "EmpathMailSender.h"
 
 /**
+ * @short SMTP sender
  * The SMTP sender is pretty cool in that we don't need to be running
  * on your typical server-like host so we can run on 'embedded' devices
  * that don't have the capability to run a local mail server.
+ * 
+ * @author Rikkus
  */
-
 class EmpathMailSenderSMTP : public EmpathMailSender
 {
     Q_OBJECT
@@ -49,16 +54,25 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         EmpathMailSenderSMTP();
         ~EmpathMailSenderSMTP();
 
+        /**
+         * Set the server name and port to connect to.
+         */
         void setServer(const QString & name, const Q_UINT32 port);
-        bool sendOne(RMM::RMessage & message);
+        
+        /**
+         * Send one message.
+         */
+        void sendOne(RMM::RMessage & message);
         
         virtual void saveConfig();
         virtual void readConfig();
 
     private:
 
-        QString            serverName_;
-        Q_UINT32        serverPort_;
+        QString     serverName_;
+        Q_UINT32    serverPort_;
+        
+        KIOJob  * job_;
 };
 
 #endif

@@ -89,36 +89,6 @@ EmpathMailboxIMAP4::setPassword(const QString & password)
     password_ = password;
 }
 
-    void
-EmpathMailboxIMAP4::setPasswordSavePolicy(SavePolicy policy)
-{
-    passwordSavePolicy_ = policy;
-}
-
-    void
-EmpathMailboxIMAP4::setLoggingPolicy(bool policy)
-{
-    loggingPolicy_ = policy;
-}
-
-    void
-EmpathMailboxIMAP4::setLogFilePath(const QString & logPath)
-{
-    logFilePath_ = logPath;
-}
-
-    void
-EmpathMailboxIMAP4::setLogFileDisposalPolicy(bool policy)
-{
-    logFileDisposalPolicy_ = policy;
-}
-
-    void
-EmpathMailboxIMAP4::setMaxLogFileSize(Q_UINT32 maxSize)
-{
-    maxLogFileSize_ = maxSize;
-}
-
 // Get methods
         
     QString
@@ -149,30 +119,6 @@ EmpathMailboxIMAP4::password()
 EmpathMailboxIMAP4::passwordSavePolicy()
 {
     return passwordSavePolicy_;
-}
-
-    bool
-EmpathMailboxIMAP4::loggingPolicy()
-{
-    return loggingPolicy_;
-}
-
-    QString
-EmpathMailboxIMAP4::logFilePath()
-{
-    return logFilePath_;
-}
-
-    bool
-EmpathMailboxIMAP4::logFileDisposalPolicy()
-{
-    return logFileDisposalPolicy_;
-}
-
-    Q_UINT32
-EmpathMailboxIMAP4::maxLogFileSize()
-{
-    return maxLogFileSize_;
 }
 
     QString

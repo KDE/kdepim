@@ -61,7 +61,7 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
     qmailLocation_ = location;
 }
 
-    bool
+    void
 EmpathMailSenderQmail::sendOne(RMM::RMessage & message)
 {
     empathDebug("sendOne() called");
@@ -85,24 +85,13 @@ EmpathMailSenderQmail::sendOne(RMM::RMessage & message)
     empathDebug("Starting qmail process");
     if (!qmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start qmail process");
-        return false;
+        return;
     }
     
     empathDebug("Starting piping message to qmail process");
 
     messagePos_ = 0;
     wroteStdin(&qmailProcess_);
-
-    while (!written_ && !error_) {
-        kapp->processEvents();    
-    }
-
-    if (error_) {
-        empathDebug("Error !" + errorStr_);
-        return false;
-    }
-
-    return true;
 }
 
     void

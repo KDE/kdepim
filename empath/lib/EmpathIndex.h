@@ -37,6 +37,10 @@ class EmpathMessageList;
 
 typedef QDictIterator<EmpathIndexRecord> EmpathIndexIterator;
 
+/**
+ * Dictionary of index records
+ * @author Rikkus
+ */
 class EmpathIndex : public QDict<EmpathIndexRecord>
 {
     public:
@@ -44,22 +48,29 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
         EmpathIndex();
         ~EmpathIndex();
 
+        /**
+         * Get the index record using the given RMM::RMessageID.
+         */
         EmpathIndexRecord * messageDescription(RMM::RMessageID & id) const;
         
+        /**
+         * Set the index to talk to the given folder.
+         */
         void setFolder(EmpathFolder * parent) { folder_ = parent; }
 
         /**
          * Count the number of messages stored.
          */
-
         Q_UINT32 countUnread() const;
 
         /**
          * Sync up the message list with the mailbox.
          */
-
         void sync();
 
+        /**
+         * @return Pointer to the related folder.
+         */
         EmpathFolder * folder() { return folder_; }
 
         const char * className() const { return "EmpathMessageList"; }

@@ -61,7 +61,7 @@ EmpathMailSenderSendmail::setSendmailLocation(const QString & location)
     sendmailLocation_ = location;
 }
 
-    bool
+    void
 EmpathMailSenderSendmail::sendOne(RMM::RMessage & message)
 {
     empathDebug("sendOne() called");
@@ -81,7 +81,7 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage & message)
     
     if (sendmailLocation.isEmpty()) {
         empathDebug("No location configured for sendmail");
-        return false;
+        return;
     }
 
     empathDebug("sendmail location is" + sendmailLocation);
@@ -97,7 +97,7 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage & message)
     empathDebug("Starting sendmail process");
     if (!sendmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start sendmail process");
-        return false;
+        return;
     }
 
     empathDebug("Starting piping message to sendmail process");
@@ -105,17 +105,6 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage & message)
     // Start at first byte of message
     messagePos_ = 0;
     wroteStdin(&sendmailProcess_);
-
-    while (!written_ && !error_) {
-        kapp->processEvents();
-    }
-
-    if (error_) {
-        empathDebug("Error: " + errorStr_);
-        return false;
-    }
-
-    return true;
 }
 
     void

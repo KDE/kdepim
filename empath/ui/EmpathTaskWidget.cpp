@@ -23,12 +23,13 @@
 #endif
 
 // Qt includes
-#include <qpixmap.h>
+#include <qapplication.h>
 
 // KDE includes
 #include <kapp.h>
 #include <klocale.h>
 #include <kpixmap.h>
+#include <kpixmapeffect.h>
 
 // Local includes
 #include "Empath.h"
@@ -43,9 +44,11 @@ EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
 
     KPixmap px;
     px.resize(width(), 20);
-    px.gradientFill(
-        kapp->palette().color(QPalette::Normal, QColorGroup::Background),
-        kapp->palette().color(QPalette::Normal, QColorGroup::Base), KPixmap::Vertical);
+
+    KPixmapEffect::gradient(px,
+        QApplication::palette().normal().background(),
+        QApplication::palette().normal().base(),
+        KPixmapEffect::VerticalGradient);
     
     l = new QLabel(this);
     CHECK_PTR(l);
@@ -79,9 +82,10 @@ EmpathTaskWidget::resizeEvent(QResizeEvent *)
     
     KPixmap px;
     px.resize(width(), 20);
-    px.gradientFill(
-        kapp->palette().color(QPalette::Normal, QColorGroup::Background),
-        kapp->palette().color(QPalette::Normal, QColorGroup::Base), KPixmap::Vertical);
+    KPixmapEffect::gradient(px,
+        QApplication::palette().normal().background(),
+        QApplication::palette().normal().base(),
+        KPixmapEffect::VerticalGradient);
     l->setPixmap(px);
     l->resize(width(), 20);
 }

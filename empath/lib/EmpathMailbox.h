@@ -40,6 +40,10 @@
 
 class EmpathFolder;
 
+/**
+ * @short Mailbox base class
+ * @author Rikkus
+ */
 class EmpathMailbox : public QObject
 {
     Q_OBJECT
@@ -47,12 +51,18 @@ class EmpathMailbox : public QObject
     public:
         
         enum AccountType    { Local, Maildir, POP3, IMAP4 };
-        enum SavePolicy        { Forever, ThisSession, Never };
+        enum SavePolicy     { Forever, ThisSession, Never };
         
         EmpathMailbox();
     
+        /**
+         * Create a mailbox with the specified name.
+         */
         EmpathMailbox(const QString & name);
 
+        /**
+         * Copy ctor.
+         */
         EmpathMailbox(const EmpathMailbox &);
 
         EmpathMailbox & operator = (const EmpathMailbox &);

@@ -66,6 +66,7 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
 {
     empathDebug("dtor");
     delete job;
+    job = 0;
 }
 
     void
@@ -133,10 +134,8 @@ EmpathMailboxPOP3::_nextCommand()
     
     empathDebug("command == " + command);
     
-    if(job->get(command)) 
-        empathDebug("job->get() returned TRUE");
-    else 
-        empathDebug("job->get() returned FALSE");
+    ASSERT(job);
+    job->get(command);
 }
 
     bool
@@ -174,8 +173,8 @@ EmpathMailboxPOP3::newMail() const
     void
 EmpathMailboxPOP3::syncIndex(const EmpathURL &)
 {
-    index_.clear();
-    _enqueue(EmpathPOPCommand::UIDL);
+//    index_.clear();
+//    _enqueue(EmpathPOPCommand::UIDL);
 }
 
     Q_UINT32
@@ -249,7 +248,7 @@ EmpathMailboxPOP3::message(const EmpathURL & url)
 
 
     bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList & l)
+EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList &)
 {
 //    QStringList::ConstIterator it(l.begin());
     
@@ -261,7 +260,7 @@ EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList & l)
 }
 
     bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL & url)
+EmpathMailboxPOP3::removeMessage(const EmpathURL &)
 {
 //    _enqueue(EmpathPOPCommand::Remove, url.messageID());
     return false;
@@ -406,22 +405,23 @@ EmpathMailboxPOP3::saveConfig()
 {
     empathDebug("Saving config");
     KConfig * config_ = KGlobal::config();
-    config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
+    using namespace EmpathConfig;
+    config_->setGroup(GROUP_MAILBOX + url_.mailboxName());
 #define CWE config_->writeEntry
-    CWE(EmpathConfig::KEY_MAILBOX_TYPE,                    (int)type_);
-    CWE(EmpathConfig::KEY_POP3_SERVER_ADDRESS,            serverAddress_);
-    CWE(EmpathConfig::KEY_POP3_SERVER_PORT,                serverPort_);
-    CWE(EmpathConfig::KEY_POP3_USERNAME,                username_);
-    CWE(EmpathConfig::KEY_POP3_PASSWORD,                password_);
-    CWE(EmpathConfig::KEY_POP3_APOP,                    useAPOP_);
-    CWE(EmpathConfig::KEY_POP3_SAVE_POLICY,                (int)passwordSavePolicy_);
-    CWE(EmpathConfig::KEY_POP3_LOGGING_POLICY,            logging_);
-    CWE(EmpathConfig::KEY_POP3_LOG_FILE_PATH,            logFilePath_);
-    CWE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY,logFileDisposalPolicy_);
-    CWE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,        maxLogFileSize_);
-    CWE(EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL,        checkMail_);
-    CWE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL,        checkMailInterval_);
-    CWE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE,        retrieveIfHave_);
+    CWE(KEY_MAILBOX_TYPE,                   (unsigned long)type_);
+    CWE(KEY_POP3_SERVER_ADDRESS,            serverAddress_);
+    CWE(KEY_POP3_SERVER_PORT,               serverPort_);
+    CWE(KEY_POP3_USERNAME,                  username_);
+    CWE(KEY_POP3_PASSWORD,                  password_);
+    CWE(KEY_POP3_APOP,                       useAPOP_);
+    CWE(KEY_POP3_SAVE_POLICY,               (unsigned long)passwordSavePolicy_);
+    CWE(KEY_POP3_LOGGING_POLICY,            logging_);
+    CWE(KEY_POP3_LOG_FILE_PATH,             logFilePath_);
+    CWE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY,  logFileDisposalPolicy_);
+    CWE(KEY_POP3_MAX_LOG_FILE_SIZE,         maxLogFileSize_);
+    CWE(KEY_POP3_CHECK_FOR_NEW_MAIL,        checkMail_);
+    CWE(KEY_POP3_MAIL_CHECK_INTERVAL,       checkMailInterval_);
+    CWE(KEY_POP3_RETRIEVE_IF_HAVE,          retrieveIfHave_);
 #undef CWE
     config_->sync();
 }
@@ -431,7 +431,8 @@ EmpathMailboxPOP3::readConfig()
 {
     empathDebug("Reading config");
     KConfig * config_ = KGlobal::config();
-    config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
+    using namespace EmpathConfig;
+    config_->setGroup(GROUP_MAILBOX + url_.mailboxName());
     
 #define CRE config_->readEntry
 #define CRUNE config_->readUnsignedNumEntry
@@ -439,48 +440,22 @@ EmpathMailboxPOP3::readConfig()
     
     empathDebug("Config group is now \"" + QString(config_->group()) + "\"");
 
-    serverAddress_ =
-        CRE(EmpathConfig::KEY_POP3_SERVER_ADDRESS, i18n("<unknown>"));
-    
-    serverPort_ =
-        CRUNE(EmpathConfig::KEY_POP3_SERVER_PORT, 110);
-    
+    serverAddress_          = CRE(KEY_POP3_SERVER_ADDRESS, i18n("<unknown>"));
+    serverPort_             = CRUNE(KEY_POP3_SERVER_PORT, 110);
     config_->setDollarExpansion(true);
-    username_ =
-        CRE(EmpathConfig::KEY_POP3_USERNAME, "$USER");
+    username_               = CRE(KEY_POP3_USERNAME, "$USER");
     config_->setDollarExpansion(false);
-    
-    password_ =
-        CRE(EmpathConfig::KEY_POP3_PASSWORD, "");
-    
-    useAPOP_ =
-        CRBE(EmpathConfig::KEY_POP3_APOP, true);
-    
-    passwordSavePolicy_ =
-        (SavePolicy)
-        CRUNE(EmpathConfig::KEY_POP3_SAVE_POLICY, Never);
-    
-    logging_ =
-        CRBE(EmpathConfig::KEY_POP3_LOGGING_POLICY,    false);
-    
-    logFilePath_ =
-        CRE(EmpathConfig::KEY_POP3_LOG_FILE_PATH,
-        QDir::homeDirPath() + "/.kde/share/apps/empath/log/");
-    
-    logFileDisposalPolicy_    =
-        CRBE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY, false);
-    
-    maxLogFileSize_ =
-        CRUNE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,    10);
-    
-    checkMail_ =
-        CRBE(EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL, true);
-    
-    checkMailInterval_ =
-        CRUNE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL, 5);
-    
-    retrieveIfHave_ =
-        CRBE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE, false);
+    password_               = CRE(KEY_POP3_PASSWORD, "");
+    useAPOP_                = CRBE(KEY_POP3_APOP, true);
+    passwordSavePolicy_     = (SavePolicy) CRUNE(KEY_POP3_SAVE_POLICY, Never);
+    logging_                = CRBE(KEY_POP3_LOGGING_POLICY,    false);
+    // FIXME: Use KStdDirs to get apps/empath/ and append log.
+    logFilePath_            = CRE(KEY_POP3_LOG_FILE_PATH, "");
+    logFileDisposalPolicy_  = CRBE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY, false);
+    maxLogFileSize_         = CRUNE(KEY_POP3_MAX_LOG_FILE_SIZE,    10);
+    checkMail_              = CRBE(KEY_POP3_CHECK_FOR_NEW_MAIL, true);
+    checkMailInterval_      = CRUNE(KEY_POP3_MAIL_CHECK_INTERVAL, 5);
+    retrieveIfHave_         = CRBE(KEY_POP3_RETRIEVE_IF_HAVE, false);
     
 #undef CRE
 #undef CRUNE
@@ -647,10 +622,10 @@ EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
 
     switch (t) {
         
-        case Stat:        command_ = "stat";        break;
-        case List:        command_ = "index";        break;
-        case UIDL:        command_ = "uidl";        break;
-        case Get:        command_ = "download";    break;
+        case Stat:      command_ = "stat";      break;
+        case List:      command_ = "index";     break;
+        case UIDL:      command_ = "uidl";      break;
+        case Get:       command_ = "download";  break;
         case Remove:    command_ = "remove";    break;
         default:                                break;
     }
@@ -658,7 +633,7 @@ EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
     command_ += '/';
 
     if (n != -1)
-        command_ + QString().setNum(n);
+        command_ += QString().setNum(n);
 }
 
 EmpathPOPCommand::~EmpathPOPCommand()

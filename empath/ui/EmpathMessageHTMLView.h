@@ -55,8 +55,8 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
         /**
          * Do the parsing and print to the widget
          */
-        void toHTML(QCString &);
-        bool show(const QCString & s, bool markup = true);
+        void toHTML(QString &);
+        bool show(const QString & s, bool markup = true);
         
     protected slots:
         
@@ -66,7 +66,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
         
         bool busy_;
         QPopupMenu popup_;
-        QCString QColorToHTML(const QColor &);
+        QString QColorToHTML(const QColor &);
 };
 
 #endif

@@ -3,13 +3,14 @@
 #include <qstrlist.h>
 #include <qlabel.h>
 #include <qpainter.h>
+#include <qapplication.h>
 
 // KDE includes
 #include <kconfig.h>
 #include <klocale.h>
-#include <kapp.h>
 #include <kglobal.h>
 #include <kpixmap.h>
+#include <kpixmapeffect.h>
 
 // Local includes
 #include "EmpathHeaderViewWidget.h"
@@ -90,9 +91,10 @@ EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
 
     KPixmap px;
     px.resize(width(), height());
-    px.gradientFill(
-        kapp->palette().color(QPalette::Normal, QColorGroup::Base),
-        kapp->palette().color(QPalette::Normal, QColorGroup::Background), KPixmap::Vertical);
+    KPixmapEffect::gradient(px,
+        QApplication::palette().normal().background(),
+        QApplication::palette().normal().base(),
+        KPixmapEffect::VerticalGradient);
     
     int th = QFontMetrics(KGlobal::generalFont()).height();
     
@@ -160,9 +162,10 @@ EmpathHeaderViewWidget::mouseMoveEvent(QMouseEvent * e)
     
         KPixmap px;
         px.resize(30, height());
-        px.gradientFill(
-            kapp->palette().color(QPalette::Normal, QColorGroup::Base),
-            kapp->palette().color(QPalette::Normal, QColorGroup::Background), KPixmap::Vertical);        
+        KPixmapEffect::gradient(px,
+        QApplication::palette().normal().background(),
+        QApplication::palette().normal().base(),
+        KPixmapEffect::VerticalGradient);
         p.drawPixmap(width() - 30, 0, px);
         p.drawPixmap(width() - 26, 2, clipIcon_);
         glowing_ = false;

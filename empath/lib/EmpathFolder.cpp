@@ -172,8 +172,7 @@ EmpathFolder::mark(const EmpathURL & message, RMM::MessageStatus s)
 }
 
     bool
-EmpathFolder::mark(
-    const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+EmpathFolder::mark(const QStringList & l, RMM::MessageStatus s)
 {
     empathDebug("mark called");
     
@@ -184,7 +183,7 @@ EmpathFolder::mark(
     if (m == 0)
         return false;
     
-    retval = m->mark(url, l, s);
+    retval = m->mark(url_, l, s);
     
     QStringList::ConstIterator it(l.begin());
     

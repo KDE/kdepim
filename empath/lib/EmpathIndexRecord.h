@@ -39,56 +39,131 @@
 #include <RMM_DateTime.h>
 
 
+/**
+ * @short An index record
+ * 
+ * @author Rikkus
+ */
 class EmpathIndexRecord
 {
     public:
         
+        /**
+         * @internal
+         */
         static void * operator new(size_t _size, EmpathIndexAllocator *a)
         { return a->allocate(_size); }
         
+        /**
+         * @internal
+         */
         static void operator delete(void *) { /* nothing */ }
         
+        /**
+         * @internal
+         */
         EmpathIndexRecord();
             
+        /**
+         * Create a new index record using the given id and the given message.
+         */
         EmpathIndexRecord(const QString & id, RMM::RMessage &);
+        
+        /**
+         * Copy ctor.
+         */
         EmpathIndexRecord(const EmpathIndexRecord &);
 
+        /**
+         * The big mega-ctor.
+         */
         EmpathIndexRecord(
-                const QString &        id,
-                const QString &        subject,
-                RMM::RMailbox &        sender,
+                const QString &     id,
+                const QString &     subject,
+                RMM::RMailbox &     sender,
                 RMM::RDateTime &    date,
-                RMM::MessageStatus    status,
+                RMM::MessageStatus  status,
                 Q_UINT32            size,
-                RMM::RMessageID &    messageID,
-                RMM::RMessageID &    parentMessageID);
+                RMM::RMessageID &   messageID,
+                RMM::RMessageID &   parentMessageID);
 
         ~EmpathIndexRecord();
         
+        /**
+         * Stream the index record out to a QDataStream.
+         */
         friend QDataStream &
             operator << (QDataStream &, EmpathIndexRecord &);
         
+        /**
+         * Stream the index record in from a QDataStream.
+         */
         friend QDataStream &
             operator >> (QDataStream &, EmpathIndexRecord &);
 
-        const char * className() const { return "EmpathIndexRecord"; }
-
-        const QString &     id()        const    { return id_;                }
-        const QString &        subject()    const    { return subject_;            }
-        RMM::RMailbox &        sender()            { return sender_;            }
-        RMM::RDateTime &    date()                { return date_;                }
-        RMM::MessageStatus    status()    const    { return status_;            }
-        Q_UINT32            size()        const    { return size_;                }
-        RMM::RMessageID &    messageID()            { return messageId_;        }
-        RMM::RMessageID &    parentID()            { return parentMessageId_;    }
+        /**
+         * The unique id of this record.
+         */
+        const QString &     id()        const   { return id_;               }
+        /**
+         * The subject of the related message.
+         */
+        const QString &     subject()   const   { return subject_;          }
+        /**
+         * The sender of the related message. This is usually the first
+         * sender mentioned in 'From:' but may be that referenced in 'Sender:'
+         * if there's no 'From:' header.
+         */
+        RMM::RMailbox &     sender()            { return sender_;           }
+        /**
+         * The date of sending of the related message.
+         */
+        RMM::RDateTime &    date()              { return date_;             }
+        /**
+         * The status of the related message (Read, Marked, ...).
+         */
+        RMM::MessageStatus  status()    const   { return status_;           }
+        /**
+         * The size of the related message.
+         */
+        Q_UINT32            size()      const   { return size_;             }
+        /**
+         * The message-id of the related message.
+         */
+        RMM::RMessageID &   messageID()         { return messageId_;        }
+        /**
+         * The message-id of the previous message (for threading).
+         */
+        RMM::RMessageID &   parentID()          { return parentMessageId_;  }
         
+        /**
+         * Find out if there's a previous message (for threading).
+         */
         bool                hasParent();
-        QString                niceDate(bool twelveHour);
+        
+        /**
+         * Nice date representation. FIXME: Locale dependent.
+         */
+        QString             niceDate(bool twelveHour);
 
+        /**
+         * Change the status of this record.
+         */
         void setStatus(RMM::MessageStatus s);
         
-        void tag(bool b){ tagged_ = b; }
-        bool isTagged()    { return tagged_; }
+        /**
+         * @internal
+         */
+        void tag(bool b)    { tagged_ = b; }
+        /**
+         * @internal
+         */
+        bool isTagged()     { return tagged_; }
+        
+        /**
+         * @internal
+         */
+        const char * className() const { return "EmpathIndexRecord"; }
         
     private:
         
@@ -105,6 +180,10 @@ class EmpathIndexRecord
         bool                tagged_;
 };
 
+/**
+ * @internal
+ * @author Rikkus
+ */
 class EmpathIndexRecordList : public QList<EmpathIndexRecord>
 {
     public:

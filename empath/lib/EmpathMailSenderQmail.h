@@ -35,6 +35,10 @@
 // Local includes
 #include "EmpathMailSender.h"
 
+/**
+ * QMail sender
+ * @author Rikkus
+ */
 class EmpathMailSenderQmail : public EmpathMailSender
 {
     Q_OBJECT
@@ -44,8 +48,15 @@ class EmpathMailSenderQmail : public EmpathMailSender
         EmpathMailSenderQmail();
         ~EmpathMailSenderQmail();
 
-        bool sendOne(RMM::RMessage & message);
+        /**
+         * Send one message.
+         */
+        void sendOne(RMM::RMessage & message);
 
+        /**
+         * Set the location of the qmail-inject binary.
+         * On my system, it's /var/qmail/bin/qmail-inject
+         */
         void setQmailLocation(const QString & qmailLocation);
         
         virtual void saveConfig();
@@ -53,8 +64,17 @@ class EmpathMailSenderQmail : public EmpathMailSender
 
     protected slots:
 
+        /**
+         * @internal
+         */
         void wroteStdin(KProcess *);
+        /**
+         * @internal
+         */
         void qmailExited(KProcess *);
+        /**
+         * @internal
+         */
         void qmailReceivedStderr(KProcess *, char * buf, int buflen);
 
     private:

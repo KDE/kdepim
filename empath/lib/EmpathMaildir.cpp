@@ -50,8 +50,7 @@
 #include "EmpathMailbox.h"
 
 EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
-    :    QObject(),
-        seq_(0),
+    :   QObject(),
         url_(url),
         basePath_(basePath)
 {
@@ -643,7 +642,7 @@ EmpathMaildir::_write(RMM::RMessage & msg)
     
 
     // Generate a unique filename for this file.
-    QString canonName = _generateUnique();
+    QString canonName = empath->generateUnique();
 
     // Generate the flags for this filename
     QString flags = _generateFlagsString(msg.status());
@@ -756,24 +755,6 @@ EmpathMaildir::_write(RMM::RMessage & msg)
 
     // Hand back the filename. The path to the file is not relevant.
     return canonName;
-}
-
-    QString
-EmpathMaildir::_generateUnique()
-{
-    QString unique;
-
-    unique = QString().setNum(empath->startTime());
-    unique += '.';
-    unique += QString().setNum(empath->processID());
-    unique += '_';
-    unique += QString().setNum(seq_);
-    unique += '.';
-    unique += empath->hostName();
-
-    ++seq_;
-
-    return unique;
 }
 
     QString

@@ -22,24 +22,23 @@
 # pragma implementation "EmpathEditorProcess.h"
 #endif
 
-// System includes
-#include <sys/stat.h>
-#include <unistd.h>
-
 // Qt includes
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qmessagebox.h>
 
 // KDE includes
 #include <kapp.h>
 #include <kglobal.h>
+#include <klocale.h>
 #include <kconfig.h>
 
 // Local includes
+#include "Empath.h"
 #include "EmpathEditorProcess.h"
 
 EmpathEditorProcess::EmpathEditorProcess(const QCString & text)
-    :    QObject(),
+    :   QObject(),
         text_(text)
 {
     empathDebug("ctor");
@@ -65,56 +64,50 @@ EmpathEditorProcess::go()
 {    
     empathDebug("run() called");
 
-    QCString tempComposeFilename = "/tmp/empathCompose_XXXXXX";
-    char * tn = new char[strlen(tempComposeFilename)];
-    strcpy(tn, tempComposeFilename);
-
-    empathDebug("tempName = \"" + QCString(tn) + "\"");
-    empathDebug("running mkstemp");
-
-    int fd = mkstemp(tn);
-    QCString tempName(tn);
-    delete [] tn;
+    QString tempName("/tmp/" + empath->generateUnique());
 
     empathDebug("Opening file " + QString(tempName));
-    QFile f;
+    QFile f(tempName);
 
-    if (!f.open(IO_WriteOnly, fd)) {
+    if (!f.open(IO_WriteOnly)) {
         empathDebug("Couldn't open the temporary file " + tempName);
+        QMessageBox::warning(
+            (QWidget *)0, "Empath",
+            i18n("Couldn't open the temporary file") + " " + tempName,
+            i18n("OK"));
         return;
     }
     
-    fileName = QString(tempName);
-
     f.writeBlock(text_.data(), text_.length());
     f.flush();
     f.close();
-
-    // Hold mtime for the file.
-    // FIXME: Will this work over NFS ?
-    struct stat statbuf;
-    fstat(fd, &statbuf);
-
+    
+    if (f.status() != IO_Ok) {
+        
+        empathDebug("Couldn't write to the temporary file " + tempName);
+        
+        QMessageBox::warning(
+            (QWidget *)0, "Empath",
+            i18n("Couldn't write to the temporary file") + " " + tempName,
+            i18n("OK"));
+    }
+    
+    QFileInfo fi(f);
+    myModTime_ = fi.lastModified();
+    
     KConfig * config = KGlobal::config();
-    config->setGroup(EmpathConfig::GROUP_COMPOSE);
-    QString externalEditor =
-        config->readEntry(EmpathConfig::KEY_EXTERNAL_EDITOR);
+    
+    using namespace EmpathConfig;
+    
+    config->setGroup(GROUP_COMPOSE);
+    QString externalEditor = config->readEntry(KEY_EXTERNAL_EDITOR);
 
-    p    << externalEditor
-        << tempName;
+    p << externalEditor << tempName;
 
     if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start process");
         return;
     }
-    
-    kapp->processEvents();
-
-    myModTime_.setTime_t(statbuf.st_mtime);
-    
-    // f doesn't own the file so I must ::close().
-    if (close(fd) != 0) 
-        empathDebug("Couldn't successfully close the file.");
 }
 
     void

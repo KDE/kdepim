@@ -6,7 +6,6 @@ libempath_a_METASOURCES = USE_AUTOMOC
 
 libempath_a_SOURCES = \
 Empath.cpp \
-EmpathConfig.cpp \
 EmpathEditorProcess.cpp \
 EmpathFilter.cpp \
 EmpathFilterEventHandler.cpp \

@@ -30,13 +30,14 @@
 #include <kprocess.h>
 
 /**
+ * @internal
  * This is a temporary wrapper for PGP 5.0
  * It will disappear when PGP 5.5 is out and we can link to a library.
  * If there's an usable API for doing this within KDE already, we'll
  * just scrap this.
  * 
  * @short PGP 5.0 wrapper
- * @author Rik Hemsley <rik@kde.org>
+ * @author Rikkus
  */
 class EmpathSecurityProcess : public QObject
 {

@@ -32,6 +32,8 @@
 #include <klocale.h>
 
 // Local includes
+#include "Empath.h"
+#include "EmpathConfig.h"
 #include "EmpathMailbox.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailboxPOP3.h"
@@ -39,8 +41,6 @@
 #include "EmpathMailboxMaildir.h"
 #include "EmpathDefines.h"
 #include "EmpathMessageList.h"
-#include "EmpathConfig.h"
-#include "Empath.h"
 
 EmpathMailboxList::EmpathMailboxList()
 { 
@@ -64,10 +64,11 @@ EmpathMailboxList::append(EmpathMailbox * mailbox)
     // Save the number of mailboxes into the config.
     KConfig * config_ = KGlobal::config();
     
+    using namespace EmpathConfig;
     // Save the config group.
-    KConfigGroupSaver cgs(config_, EmpathConfig::GROUP_GENERAL);
+    KConfigGroupSaver cgs(config_, GROUP_GENERAL);
     
-    QObject::QObject::connect(mailbox, SIGNAL(newMailArrived()),
+    QObject::connect(mailbox, SIGNAL(newMailArrived()),
         empath, SLOT(s_newMailArrived()));
     
     saveConfig();
@@ -138,10 +139,11 @@ EmpathMailboxList::init()
 EmpathMailboxList::readConfig()
 {
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_GENERAL);
     
     QStringList l;
-    l = c->readListEntry(EmpathConfig::KEY_MAILBOX_LIST);
+    l = c->readListEntry(KEY_MAILBOX_LIST);
     
     QObject::connect(this, SIGNAL(updateFolderLists()),
         empath, SLOT(s_updateFolderLists()));
@@ -156,11 +158,11 @@ EmpathMailboxList::readConfig()
     
     for (; it != l.end() ; ++it) {
         
-        c->setGroup(EmpathConfig::GROUP_MAILBOX + *it);
+        c->setGroup(GROUP_MAILBOX + *it);
         
         mailboxType =
             (EmpathMailbox::AccountType)
-            c->readUnsignedNumEntry(EmpathConfig::KEY_MAILBOX_TYPE);
+            c->readUnsignedNumEntry(KEY_MAILBOX_TYPE);
 
         EmpathMailbox * m = 0;
 
@@ -221,8 +223,9 @@ EmpathMailboxList::saveConfig() const
     
     KConfig * c = KGlobal::config();
     
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
-    c->writeEntry(EmpathConfig::KEY_MAILBOX_LIST, l);
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_GENERAL);
+    c->writeEntry(KEY_MAILBOX_LIST, l);
     c->sync();
 }
 

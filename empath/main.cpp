@@ -29,16 +29,6 @@
 #include <kconfig.h>
 #include <kstartparams.h>
 
-#include <opApplication.h>
-#include <komApplication.h>
-#include <komBase.h>
-#include <kservices.h>
-#include <kregistry.h>
-#include <kregfactories.h>
-#include <kio_cache.h>
-#include <kded_instance.h>
-#include <ktrader.h> //for KTraderServiceProvider
-
 // Local includes
 #include "Empath.h"
 #include "EmpathDefines.h"
@@ -88,8 +78,7 @@ EmpathMain(int argc, char * argv[])
     KGlobal::config()->setDollarExpansion(false);    
 
     // Create the kernel.
-    Empath * e = new Empath;
-    CHECK_PTR(e);
+    Empath::start();
     
     EmpathUI * ui(0);
 
@@ -104,15 +93,14 @@ EmpathMain(int argc, char * argv[])
     }
 
     // Initialise the kernel.
-    e->init();
+    empath->init();
 
     // Enter the event loop.
     int retval = app->exec();
     
     delete ui;
     ui = 0;
-    delete e;
-    e = 0;
+    empath->shutdown();
 
     return retval;
 }

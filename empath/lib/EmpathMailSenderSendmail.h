@@ -36,7 +36,7 @@
 #include "EmpathMailSender.h"
 
 /**
- * Sendmail sender
+ * @short Sendmail sender
  *
  * Note: Options should probably be -oem -oi -t by default.
  * Option -t means 'Get recipient list from To:, Cc: and Bcc: fields'
@@ -47,6 +47,8 @@
  *
  * Option -oem means 'Mail back errors, don't tell me now'
  * Option -oi  means 'Ignore dots'.
+ * 
+ * @author Rikkus
  */
 
 class EmpathMailSenderSendmail : public EmpathMailSender
@@ -58,7 +60,7 @@ class EmpathMailSenderSendmail : public EmpathMailSender
         EmpathMailSenderSendmail();
         ~EmpathMailSenderSendmail();
 
-        bool sendOne(RMM::RMessage & message);
+        void sendOne(RMM::RMessage & message);
 
         void setSendmailLocation(const QString & location);
         

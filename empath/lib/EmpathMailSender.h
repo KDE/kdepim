@@ -35,9 +35,10 @@
 #include <RMM_Message.h>
 
 /**
- * Base class for any 'real' sender. This one's only responsibility
- * is to queue messages in a local spool for later delivery by a
- * derived class. (well _that_ makes sense ;)
+ * @short Sender base class
+ * Responsibility is to queue messages in a local spool for later delivery
+ * by a derived class.
+ * @author Rikkus
  */
 
 class EmpathMailSender : public QObject
@@ -46,10 +47,16 @@ class EmpathMailSender : public QObject
 
     public:
 
+        enum OutgoingServerType    { Sendmail, Qmail, SMTP };
+        enum SendPolicy            { SendNow, SendLater };
+
         EmpathMailSender();
 
         virtual ~EmpathMailSender() = 0L;
         
+        /**
+         * Queue up a message for sending.
+         */
         void queue(RMM::RMessage &);
 
         /**
@@ -59,29 +66,28 @@ class EmpathMailSender : public QObject
          *
          * Message will be returned to user on failure. FIXME: How ?
          */
-
-        bool send(RMM::RMessage &);
-
-        virtual bool sendOne(RMM::RMessage & message) = 0L;
-        
+        void send(RMM::RMessage &);
 
         /**
-         * Send a batch of messages. This could be useful if there's
-         * some sorting logic put into the derived classes. i.e. if you're
-         * sending to an SMTP host, you can sometimes send all messages
-         * in one connection, saving time and bandwidth. This is certainly
-         * the case for people with a dedicated mail server (er - the world ?)
-         * that stores and despatches mail on their behalf. I know my old isp
-         * did this, so I presume a lot of other peoples' isps do it too.
+         * Send one message.
          */
+        virtual void sendOne(RMM::RMessage & message) = 0L;
 
+        /**
+         * Kick off a send using all queued messages.
+         */
         void sendQueued();
 
+        /**
+         * Save your config now !
+         * Called by Empath when settings have changed.
+         */
         virtual void saveConfig() = 0;
+        /**
+         * Load your config now !
+         * Called by Empath on startup.
+         */
         virtual void readConfig() = 0;
-        
-        enum OutgoingServerType    { Sendmail, Qmail, SMTP };
-        enum SendPolicy            { SendNow, SendLater };
         
     private:
         

@@ -64,6 +64,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(
         filling_            (false)
 {
     empathDebug("ctor");
+    
+    setFrameStyle(QFrame::NoFrame);
 
     setUpdatesEnabled(false);
     
@@ -83,10 +85,10 @@ EmpathMessageListWidget::EmpathMessageListWidget(
     
     setSorting(-1);
 
-    addColumn("Subject");
-    addColumn("Sender");
-    addColumn("Date");
-    addColumn("Size");
+    addColumn(i18n("Subject"));
+    addColumn(i18n("Sender"));
+    addColumn(i18n("Date"));
+    addColumn(i18n("Size"));
     
     px_xxx_    = empathIcon("tree.png");
     px_Sxx_    = empathIcon("tree-read.png");

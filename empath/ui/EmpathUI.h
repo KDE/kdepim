@@ -55,6 +55,7 @@ class EmpathUI : public QObject
         
         void s_newComposer(Empath::ComposeType, const EmpathURL &);
         void s_newComposer(const QString &);
+        void s_sendEmail(const QString &, const QString &);
         
     private:
     

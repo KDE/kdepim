@@ -32,20 +32,22 @@
 #include "EmpathIndexRecord.h"
 
 /**
+ * @short URL holding mailbox, folder and message id
  * This class will soon be renamed to something like KEmailURL.
  * It provides for referencing a mailbox, folder, subfolders, and a message id.
  * 
  * The form is like this:
  * empath://<mailbox>/[folder/][subfolder/][subsubfolder/][MessageID]
  * 
- * A single message may be referenced by giving the full path to it. In this way,
- * you get the location of the message.
+ * A single message may be referenced by giving the full path to it. In this
+ * way, you get the location of the message.
  * 
  * If you're referring to a mailbox only, you may omit a trailing slash.
- * If you're referring to a folder, you must have a trailing slash, lest the last
- * folder is confused with a message ID.
+ * If you're referring to a folder, you must have a trailing slash, lest the
+ * last folder is confused with a message ID.
  * 
  * There may NOT be a slash in the name of a mailbox, folder or message ID.
+ * @author Rikkus
  */
 class EmpathURL
 {

@@ -89,34 +89,16 @@ EmpathComposeWidget::EmpathComposeWidget(
 EmpathComposeWidget::_init()
 {    
     maxSizeColOne_ = 0;
-    
     invisibleHeaders_.setAutoDelete(true);
-
-    // Get the layouts sorted out first.
-    layout_    = new QGridLayout(this, 2, 2, 4, 4, "layout_");
-    CHECK_PTR(layout_);
-
-    headerLayout_ = new QGridLayout(0, 1, 4);
-    CHECK_PTR(headerLayout_);
-    
-    layout_->addLayout(headerLayout_, 0, 0);
-    
-    extraLayout_ = new QGridLayout(2, 2, 4);
-    CHECK_PTR(extraLayout_);
-    
+   
+    // Create widgets.
     attachmentWidget_ =
         new EmpathAttachmentListWidget(this);
     
-    layout_->addLayout(extraLayout_, 0, 1);
-    
-    l_priority_            =
-        new QLabel(i18n("Priority:"), this, "l_priority_");
+    l_priority_ = new QLabel(i18n("Priority:"), this, "l_priority_");
     CHECK_PTR(l_priority_);
 
-    l_priority_->setFixedWidth(l_priority_->sizeHint().width());
-
-    cmb_priority_        =
-        new QComboBox(this, "cmb_priority_");
+    cmb_priority_ = new QComboBox(this, "cmb_priority_");
     CHECK_PTR(cmb_priority_);
 
     cmb_priority_->insertItem("Highest");
@@ -128,21 +110,40 @@ EmpathComposeWidget::_init()
     cmb_priority_->setFixedWidth(cmb_priority_->sizeHint().width());
     cmb_priority_->setCurrentItem(2);
 
-    editorWidget_            =
-        new QMultiLineEdit(this, "editorWidget");
+    editorWidget_ = new QMultiLineEdit(this, "editorWidget");
     CHECK_PTR(editorWidget_);
     
-    KConfig * c(KGlobal::config());
+//    editorWidget_->setFillColumnMode(76, true);
+//    editorWidget_->setWordWrap(true);
 
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
+    editorWidget_->setFont(
+        KGlobal::config()->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
+ 
+    // Layouts.
+    QVBoxLayout     *layout_            = new QVBoxLayout(this, 4);
+    QHBoxLayout     *topLayout_         = new QHBoxLayout(this, 4);
+    headerLayout_                       = new QVBoxLayout(this, 4);
+    QVBoxLayout     *extraLayout_       = new QVBoxLayout(this, 4);
+    QHBoxLayout     *priorityLayout_    = new QHBoxLayout(this, 4);
     
-    editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
+    layout_     ->addLayout(topLayout_,     0);
+    layout_     ->addWidget(editorWidget_,  9);
+    
+    topLayout_  ->addLayout(headerLayout_,  9);
+    topLayout_  ->addLayout(extraLayout_,   2); 
 
-    extraLayout_->addMultiCellWidget(attachmentWidget_,        0, 0, 0, 1);
-    extraLayout_->addWidget(l_priority_,                    1, 0);
-    extraLayout_->addWidget(cmb_priority_,                    1, 1);
+    extraLayout_->addWidget(attachmentWidget_);
+    extraLayout_->addLayout(priorityLayout_);
 
-    layout_->addMultiCellWidget(editorWidget_,                1, 1, 0, 1);
+    priorityLayout_->addWidget(l_priority_,     0, AlignRight);
+    priorityLayout_->addWidget(cmb_priority_,   0, AlignRight);
+ 
+    layout_->activate();
+    topLayout_->activate();
+    headerLayout_->activate();
+    extraLayout_->activate();
+    priorityLayout_->activate();
 
     _addHeader("To");
     _addHeader("Cc");
@@ -151,13 +152,6 @@ EmpathComposeWidget::_init()
     _addHeader("Subject");
 
     _lineUpHeaders();
-    
-    layout_->setRowStretch(0, 0);
-    layout_->setRowStretch(1, 10);
-    layout_->setColStretch(0, 7);
-    layout_->setColStretch(0, 3);
-    extraLayout_->activate();
-    layout_->activate();
 
     switch (composeType_) {
 
@@ -175,9 +169,10 @@ EmpathComposeWidget::_init()
     if (!recipient_.isEmpty())
         _set("To", recipient_);
     
-    c->setGroup(EmpathConfig::GROUP_COMPOSE);
+    KGlobal::config()->setGroup(EmpathConfig::GROUP_COMPOSE);
 
-    if (c->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false)) {
+    if (KGlobal::config()->readBoolEntry(
+            EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false)) {
 
         editorWidget_->setEnabled(false);
         _spawnExternalEditor(editorWidget_->text().ascii());
@@ -443,7 +438,7 @@ EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
     
     newHsw->show();
 
-    headerLayout_->addWidget(newHsw, headerLayout_->numRows(), 1);
+    headerLayout_->addWidget(newHsw);
         
     headerSpecList_.append(newHsw);
         
