@@ -44,7 +44,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
     QSplitter * hSplit = new QSplitter(this, "hSplit");
     (new QVBoxLayout(this))->addWidget(hSplit);
 
-    EmpathFolderWidget * folderWidget = new EmpathFolderWidget(hSplit);
+    folderWidget_ = new EmpathFolderWidget(hSplit);
 
     QSplitter * vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
 
@@ -62,6 +62,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
     } else {
         
+        empathDebug("Argh. Can't load a message list part.");
         return;
     }
 
@@ -73,65 +74,13 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
     } else {
         
+        empathDebug("Argh. Can't load a message viewing part.");
         return;
     }
 
+    _connectUp();
 
-    QObject::connect(
-        folderWidget,       SIGNAL(showFolder(const EmpathURL &)),
-        this,               SLOT(s_showFolder(const EmpathURL &)));
-   
-    QObject::connect(
-        messageListWidget_, SIGNAL(changeView(const QString &)),
-        this,               SLOT(s_changeView(const QString &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(compose()),
-        empath,             SLOT(s_compose()));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(reply(const QString &)),
-        this,               SLOT(s_reply(const QString &)));
-    
-    QObject::connect(
-        messageListWidget_, SIGNAL(replyAll(const QString &)),
-        this,               SLOT(s_replyAll(const QString &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(forward(const QString &)),
-        this,               SLOT(s_forward(const QString &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(bounce(const QString &)),
-        this,               SLOT(s_bounce(const QString &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(remove(const QStringList &)),
-        this,               SLOT(s_remove(const QStringList &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(save(const QString &)),
-        this,               SLOT(s_save(const QString &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(copy(const QStringList &)),
-        this,               SLOT(s_copy(const QStringList &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(move(const QStringList &)),
-        this,               SLOT(s_move(const QStringList &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(print(const QStringList &)),
-        this,               SLOT(s_print(const QStringList &)));
-
-    QObject::connect(
-        messageListWidget_, SIGNAL(filter(const QStringList &)),
-        this,               SLOT(s_filter(const QStringList &)));
-    
-    QObject::connect(
-        messageListWidget_, SIGNAL(view(const QString &)),
-        this,               SLOT(s_view(const QString &)));
+    folderWidget_->setFocus();
 }
 
 EmpathMainWidget::~EmpathMainWidget()
@@ -150,25 +99,32 @@ EmpathMainWidget::s_showFolder(const EmpathURL & url)
         empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
         return;
     }
-
-    KConfig * c(KGlobal::config());
-
-    c->setGroup("Display");
-
-    // TODO
-//    messageListWidget_->s_setThread(c->readBoolEntry("ThreadMessages"));
-//    messageListWidget_->s_setHideRead(c->readBoolEntry("HideReadMessages"));
-//    messageListWidget_->s_setIndex(f->index()->dict());
+    
+    QDict<EmpathIndexRecord> d(f->index()->dict());
+    emit(setIndex(d));
 }
 
     void
 EmpathMainWidget::s_changeView(const QString & id)
 {
+    empathDebug("s_changeView(" + id + ")");
     EmpathURL u(currentFolder_);
     u.setMessageID(id);
+    empath->retrieve(u, this, SLOT(s_retrieveJobComplete(EmpathRetrieveJob)));
+}
 
-    // TODO
-    //messageViewWidget_->s_setMessage(u);
+    void
+EmpathMainWidget::s_retrieveJobComplete(EmpathRetrieveJob j)
+{
+    if (!j.success()) {
+        qDebug("!j.success()");
+        return;
+    }
+    qDebug("RetrievalComplete");
+
+    RMM::RMessage m(j.message());
+
+    emit(changeView(m));
 }
 
     void
@@ -254,16 +210,7 @@ EmpathMainWidget::s_view(const QString &)
     void
 EmpathMainWidget::s_toggleHideRead()
 {
-    KConfig * c(KGlobal::config());
-
-    c->setGroup("Display");
-
-    bool hideRead = c->readBoolEntry("HideReadMessages");
-
-    c->writeEntry("HideReadMessages", !hideRead);
-
-    // TODO
-    //messageListWidget_->s_setHideRead(!hideRead);
+    emit(toggleHideRead());
 
     EmpathFolder * f(empath->folder(currentFolder_));
 
@@ -272,22 +219,13 @@ EmpathMainWidget::s_toggleHideRead()
         return;
     }
 
-    // TODO
-//    messageListWidget_->s_setIndex(f->index()->dict());
+    emit(setIndex(f->index()->dict()));
 }
 
     void
 EmpathMainWidget::s_toggleThread()
 {
-    KConfig * c(KGlobal::config());
-
-    c->setGroup("Display");
-
-    bool thread = c->readBoolEntry("ThreadMessages");
-
-    c->writeEntry("ThreadMessages", !thread);
-    // TODO
-    //messageListWidget_->s_setThread(!thread);
+    emit(toggleThread());
 
     EmpathFolder * f(empath->folder(currentFolder_));
 
@@ -296,8 +234,84 @@ EmpathMainWidget::s_toggleThread()
         return;
     }
 
-    // TODO
-    //messageListWidget_->s_setIndex(f->index()->dict());
+    emit(setIndex(f->index()->dict()));
 }
+
+    void
+EmpathMainWidget::_connectUp()
+{
+    QObject::connect(
+        folderWidget_,      SIGNAL(showFolder(const EmpathURL &)),
+        this,               SLOT(s_showFolder(const EmpathURL &)));
+   
+    QObject::connect(
+        messageListWidget_, SIGNAL(messageActivated(const QString &)),
+        this,               SLOT(s_changeView(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(compose()),
+        empath,             SLOT(s_compose()));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(reply(const QString &)),
+        this,               SLOT(s_reply(const QString &)));
+    
+    QObject::connect(
+        messageListWidget_, SIGNAL(replyAll(const QString &)),
+        this,               SLOT(s_replyAll(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(forward(const QString &)),
+        this,               SLOT(s_forward(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(bounce(const QString &)),
+        this,               SLOT(s_bounce(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(remove(const QStringList &)),
+        this,               SLOT(s_remove(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(save(const QString &)),
+        this,               SLOT(s_save(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(copy(const QStringList &)),
+        this,               SLOT(s_copy(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(move(const QStringList &)),
+        this,               SLOT(s_move(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(print(const QStringList &)),
+        this,               SLOT(s_print(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(filter(const QStringList &)),
+        this,               SLOT(s_filter(const QStringList &)));
+    
+    QObject::connect(
+        messageListWidget_, SIGNAL(view(const QString &)),
+        this,               SLOT(s_view(const QString &)));
+
+    QObject::connect(
+        this,               SIGNAL(changeView(RMM::RMessage &)),
+        messageViewWidget_, SLOT(s_setMessage(RMM::RMessage &)));
+
+    QObject::connect(
+        this,               SIGNAL(setIndex(const QDict<EmpathIndexRecord> &)),
+        messageListWidget_, SLOT(s_setIndex(const QDict<EmpathIndexRecord> &)));
+
+    QObject::connect(
+        this,               SIGNAL(toggleHideRead()),
+        messageListWidget_, SLOT(s_toggleHideRead()));
+    
+    QObject::connect(
+        this,               SIGNAL(toggleThread()),
+        messageListWidget_, SLOT(s_toggleThread()));
+}
+
 
 // vim:ts=4:sw=4:tw=78

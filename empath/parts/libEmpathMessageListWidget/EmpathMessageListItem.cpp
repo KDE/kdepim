@@ -272,15 +272,11 @@ EmpathMessageListItem::paintCell(
     void
 EmpathMessageListItem::initStatic()
 {
-#define BOLLOX(a) new QPixmap(KGlobal::iconLoader()->loadIcon((a)))
-
-    px_unread_              = BOLLOX("tree");
-    px_read_                = BOLLOX("tree-read");
-    px_marked_              = BOLLOX("tree-marked");
-    px_replied_             = BOLLOX("tree-replied");
-    px_attachments_         = BOLLOX("tree-attachments");
-
-#undef BOLLOX
+    px_unread_      = new QPixmap(BarIcon("tree"));
+    px_read_        = new QPixmap(BarIcon("tree-read"));
+    px_marked_      = new QPixmap(BarIcon("tree-marked"));
+    px_replied_     = new QPixmap(BarIcon("tree-replied"));
+    px_attachments_ = new QPixmap(BarIcon("tree-attachments"));
 
     KConfig * c(KGlobal::config());
     c->setGroup("EmpathMessageListWidget");

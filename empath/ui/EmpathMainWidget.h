@@ -31,6 +31,9 @@
 
 // Local includes
 #include "EmpathURL.h"
+#include "EmpathJob.h"
+
+class EmpathFolderWidget;
 
 class EmpathMainWidget : public QWidget
 {
@@ -66,10 +69,22 @@ class EmpathMainWidget : public QWidget
         void s_toggleHideRead();
         void s_toggleThread();
 
+        void s_retrieveJobComplete(EmpathRetrieveJob);
+
+    signals:
+
+        void changeView(RMM::RMessage &);
+        void setIndex(const QDict<EmpathIndexRecord> &);
+        void toggleHideRead();
+        void toggleThread();
+
     private:
+
+        void _connectUp();
 
         EmpathURL currentFolder_;
 
+        EmpathFolderWidget * folderWidget_;
         KParts::ReadWritePart * messageListWidget_;
         KParts::ReadOnlyPart * messageViewWidget_;
 };

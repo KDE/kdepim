@@ -50,11 +50,6 @@ class EmpathMessageViewWidget : public QWidget
         EmpathMessageViewWidget(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathMessageViewWidget();
 
-        void compose();
-        void reply();
-        void replyAll();
-        void forward();
-        
         void setMessage(RMM::RMessage &);
 
     private:
@@ -95,6 +90,12 @@ class EmpathMessageViewPart : public KParts::ReadOnlyPart
         EmpathMessageViewPart(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathMessageViewPart();
 
+    protected slots:
+
+        void s_setMessage(RMM::RMessage &);
+
+    signals:
+
         void compose();
         void reply();
         void replyAll();
@@ -131,7 +132,7 @@ class EmpathMessageViewBrowserExtension : public KParts::BrowserExtension
         EmpathMessageViewBrowserExtension(EmpathMessageViewPart *);
         virtual ~EmpathMessageViewBrowserExtension() {}
 
-    public slots:
+    signals:
 
         void compose();
         void reply();

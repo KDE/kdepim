@@ -50,6 +50,7 @@ KInstance * EmpathMessageListPartFactory::instance_ = 0L;
 
 EmpathMessageListPartFactory::EmpathMessageListPartFactory()
 {
+    // Empty.
 }
 
 EmpathMessageListPartFactory::~EmpathMessageListPartFactory()
@@ -90,56 +91,15 @@ EmpathMessageListPart::EmpathMessageListPart(
 {
     setInstance(EmpathMessageListPartFactory::instance());
 
-    w = new EmpathMessageListWidget(parent);
-    w->setFocusPolicy(QWidget::StrongFocus);
-    setWidget(w);
+    widget_ = new EmpathMessageListWidget(parent, this);
+    widget_->setFocusPolicy(QWidget::StrongFocus);
+    setWidget(widget_);
 
-    messageCompose_ =
-        new KAction(
-            i18n("Compose"),
-            QIconSet(BarIcon("messageCompose",
-                    EmpathMessageListPartFactory::instance())),
-            0,
-            w,
-            SLOT(compose()),
-            actionCollection(),
-            "messageCompose");
-
-    messageReply_ =
-        new KAction(
-            i18n("Reply"),
-            QIconSet(BarIcon("messageReply",
-                    EmpathMessageListPartFactory::instance())),
-            0,
-            w,
-            SLOT(reply()),
-            actionCollection(),
-            "messageReply");
-
-    messageReplyAll_ =
-        new KAction(
-            i18n("ReplyAll"),
-            QIconSet(BarIcon("messageReplyAll",
-                    EmpathMessageListPartFactory::instance())),
-            0,
-            w,
-            SLOT(replyAll()),
-            actionCollection(),
-            "messageReplyAll");
-
-    messageForward_ =
-        new KAction(
-            i18n("Forward"),
-            QIconSet(BarIcon("messageForward",
-                    EmpathMessageListPartFactory::instance())),
-            0,
-            w,
-            SLOT(forward()),
-            actionCollection(),
-            "messageForward");
+    QObject::connect(
+        widget_,    SIGNAL(messageActivated(const QString &)),
+        this,       SIGNAL(messageActivated(const QString &)));
 
     setXMLFile("EmpathMessageListWidget.rc");
-
     enableAllActions(false);
 }
 
@@ -154,11 +114,64 @@ EmpathMessageListPart::enableAllActions(bool)
     // STUB
 }
 
+    void
+EmpathMessageListPart::_initActions()
+{
+#define CA(visibleName, name, key, slot) \
+    new KAction(visibleName, name, key, \
+        widget_, slot, actionCollection(), name);
+
+CA(i18n("&View"),       "messageView", CTRL+Key_Return, SLOT(s_messageView()));
+CA(i18n("&Compose"),    "messageCompose",   Key_M,  SLOT(s_messageCompose()));
+CA(i18n("&Reply"),      "messageReply",     Key_R,  SLOT(s_messageReply()));
+CA(i18n("Reply to &All"),"messageReplyAll", Key_G,  SLOT(s_messageReplyAll()));
+CA(i18n("&Forward"),    "messageForward",   Key_F,  SLOT(s_messageForward()));
+CA(i18n("&Delete"),     "messageDelete",    Key_D,  SLOT(s_messageDelete()));
+CA(i18n("&Bounce"),     "messageBounce",    0,      SLOT(s_messageBounce()));
+CA(i18n("Save &As..."), "messageSaveAs",    0,      SLOT(s_messageSaveAs()));
+CA(i18n("&Copy To..."), "messageCopyTo",    Key_C,  SLOT(s_messageCopyTo()));
+CA(i18n("&Move To..."), "messageMoveTo",    0,      SLOT(s_messageMoveTo()));
+CA(i18n("Mark..."),     "messageMarkMany",  0,      SLOT(s_messageMarkMany()));
+CA(i18n("&Print"),      "messagePrint",     0,      SLOT(s_messagePrint()));
+CA(i18n("&Filter"),     "messageFilter",    0,      SLOT(s_messageFilter()));
+CA(i18n("&Expand"),     "threadExpand",     0,      SLOT(s_threadExpand()));
+CA(i18n("&Collapse"),   "threadCollapse",   0,      SLOT(s_threadCollapse()));
+CA(i18n("&Previous"),   "goPrevious",  CTRL+Key_P,  SLOT(s_goPrevious()));
+CA(i18n("&Next"),       "goNext",      CTRL+Key_N,  SLOT(s_goNext()));
+CA(i18n("Next &Unread"),"goNextUnread",     Key_N,  SLOT(s_goNextUnread()));
+
+#undef CA
+
+#define CTA(visibleName, name, key, slot) \
+    new KToggleAction(visibleName, QIconSet(BarIcon(name)), key, \
+        widget_, slot, actionCollection(), name);
+
+CTA(i18n("&Tag"), "messageTag", 0, SLOT(s_messageMark()));
+CTA(i18n("&Mark as read"), "messageMarkRead", 0, SLOT(s_messageMarkRead()));
+CTA(i18n("Mark as replied"), "messageMarkReplied", 0, SLOT(s_messageMarkReplied()));
+CTA(i18n("Hide Read"), "hideRead", 0, SLOT(s_toggleHideRead()));
+CTA(i18n("Thread Messages"), "thread", 0, SLOT(s_toggleThread()));
+
+#undef CTA
+}
+
+    void
+EmpathMessageListPart::s_setIndex(const QDict<EmpathIndexRecord> & l)
+{ 
+    qDebug("EmpathMessageListPart::setIndex");
+    widget_->setIndex(l);
+}
+
+
 // -------------------------------------------------------------------------
 
    
-EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
+EmpathMessageListWidget::EmpathMessageListWidget(
+    QWidget * parent,
+    EmpathMessageListPart * part
+)
     :   EmpathListView      (parent, "EmpathMessageListWidget"),
+        part_               (part),
         filling_            (false),
         lastHeaderClicked_  (-1),
         hideRead_           (false)
@@ -180,9 +193,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     addColumn(i18n("Date"));
     addColumn(i18n("Size"));
     
-    _initActions();
-    _setupMessageMenu();
-    _setupThreadMenu();
     _connectUp();
 
     _restoreColumnSizes();
@@ -196,6 +206,8 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
     void
 EmpathMessageListWidget::_init()
 {
+    EmpathMessageListItem::initStatic();
+
     px_unread_      = BarIcon("tree-unread");
     px_read_        = BarIcon("tree-read");
     px_marked_      = BarIcon("tree-marked");
@@ -425,47 +437,49 @@ EmpathMessageListWidget::s_rightButtonPressed(QListViewItem *,
     void
 EmpathMessageListWidget::s_updateActions(QListViewItem * item)
 {
+#if 0
     QStringList affectedActions;
 
     affectedActions
         << "messageView"    << "messageReply"   << "messageReplyAll"
         << "messageForward" << "messageDelete"  << "messageSaveAs"
         << "messageCopyTo"  << "messageMoveTo"  << "messagePrint"
-        << "messageFilter"  << "messageTag"     << "messageMarkRead"
-        << "messageMarkReplied";
+        << "messageFilter"; // TODO: The rest
 
     QStringList::ConstIterator it(affectedActions.begin());
 
     for (; it != affectedActions.end(); ++it)
-        actionCollection()->action((*it).utf8())->setEnabled(0 != item);
+        part_->actionCollection()->action((*it).utf8())->setEnabled(0 != item);
 
+    // XXX Decide who owns which actions.
     if (0 != item) {
 
         EmpathMessageListItem * i = static_cast<EmpathMessageListItem *>(item);
 
-        actionCollection()->action("messageMarkRead")->setText(
+        part_->actionCollection()->action("messageMarkRead")->setText(
             i->status() & EmpathIndexRecord::Read ?
             i18n("Mark as unread") : i18n("Mark as read"));
 
-        actionCollection()->action("messageMarkReplied")->setText(
+        part_->actionCollection()->action("messageMarkReplied")->setText(
             i->status() & EmpathIndexRecord::Replied ?
             i18n("Mark as not replied to") : i18n("Mark as replied to"));
 
-        actionCollection()->action("messageTag")->setText(
+        part_->actionCollection()->action("messageTag")->setText(
             i->status() & EmpathIndexRecord::Marked ?
             i18n("Untag") : i18n("Tag"));
     }
+#endif
 }
 
     void
 EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
-{
-    s_messageView();
-}
+{ emit(messageActivated(firstSelected())); }
 
     void
 EmpathMessageListWidget::s_linkChanged(QListViewItem * item)
 {
+    qDebug("linkChanged");
+
     if (0 == item)
         return;
 
@@ -482,24 +496,38 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem * item)
 
     triggerUpdate();
 
-    emit(changeView(firstSelected()));
+    qDebug("emitting messageActivated()");
+    emit(messageActivated(firstSelected()));
 }
 
     void
-EmpathMessageListWidget::s_setHideRead(bool b)
+EmpathMessageListWidget::s_toggleHideRead()
 {
-    hideRead_ = b;
+    hideRead_ = !hideRead_;
+
+    KConfig * c = KGlobal::config();
+    
+    c->setGroup("EmpathMessageListWidget");
+ 
+    c->writeEntry("HideRead", hideRead_);
 }
 
     void
-EmpathMessageListWidget::s_setThread(bool b)
+EmpathMessageListWidget::s_toggleThread()
 {
-    thread_ = b;
+    thread_ = !thread_;
+
+    KConfig * c = KGlobal::config();
+    
+    c->setGroup("EmpathMessageListWidget");
+ 
+    c->writeEntry("Thread", thread_);
 }
 
     void
-EmpathMessageListWidget::s_setIndex(const QDict<EmpathIndexRecord> & l)
+EmpathMessageListWidget::setIndex(const QDict<EmpathIndexRecord> & l)
 {
+    qDebug("EmpathMessageListWidget::setIndex");
     filling_ = false;
     index_ = l;
     _fillDisplay();
@@ -520,96 +548,6 @@ EmpathMessageListWidget::s_headerClicked(int i)
     
     lastHeaderClicked_ = i;
 }
-
-    void
-EmpathMessageListWidget::_initActions()
-{
-    actionCollection_ = new QActionCollection(this, "actionCollection");
-
-#define CA(visibleName, name, key, slot) \
-    new KAction(visibleName, name, key, \
-        this, slot, actionCollection(), name);
-
-
-CA(i18n("&View"),       "messageView", CTRL+Key_Return, SLOT(s_messageView()));
-CA(i18n("&Compose"),    "messageCompose",   Key_M,  SLOT(s_messageCompose()));
-CA(i18n("&Reply"),      "messageReply",     Key_R,  SLOT(s_messageReply()));
-CA(i18n("Reply to &All"),"messageReplyAll", Key_G,  SLOT(s_messageReplyAll()));
-CA(i18n("&Forward"),    "messageForward",   Key_F,  SLOT(s_messageForward()));
-CA(i18n("&Delete"),     "messageDelete",    Key_D,  SLOT(s_messageDelete()));
-CA(i18n("&Bounce"),     "messageBounce",    0,      SLOT(s_messageBounce()));
-CA(i18n("Save &As..."), "messageSaveAs",    0,      SLOT(s_messageSaveAs()));
-CA(i18n("&Copy To..."), "messageCopyTo",    Key_C,  SLOT(s_messageCopyTo()));
-CA(i18n("&Move To..."), "messageMoveTo",    0,      SLOT(s_messageMoveTo()));
-CA(i18n("Mark..."),     "messageMarkMany",  0,      SLOT(s_messageMarkMany()));
-CA(i18n("&Print"),      "messagePrint",     0,      SLOT(s_messagePrint()));
-CA(i18n("&Filter"),     "messageFilter",    0,      SLOT(s_messageFilter()));
-CA(i18n("&Expand"),     "threadExpand",     0,      SLOT(s_threadExpand()));
-CA(i18n("&Collapse"),   "threadCollapse",   0,      SLOT(s_threadCollapse()));
-CA(i18n("&Previous"),   "goPrevious",  CTRL+Key_P,  SLOT(s_goPrevious()));
-CA(i18n("&Next"),       "goNext",      CTRL+Key_N,  SLOT(s_goNext()));
-CA(i18n("Next &Unread"),"goNextUnread",     Key_N,  SLOT(s_goNextUnread()));
-
-#undef CA
-
-#define CTA(visibleName, name, key, slot) \
-    new KToggleAction(visibleName, QIconSet(BarIcon(name)), \
-        key, this, slot, actionCollection(), name);
-
-CTA(i18n("&Tag"), "messageTag", 0, SLOT(s_messageMark()));
-CTA(i18n("&Mark as read"), "messageMarkRead", 0, SLOT(s_messageMarkRead()));
-CTA(i18n("Mark as replied"), "messageMarkReplied", 0, SLOT(s_messageMarkReplied()));
-                
-#undef CTA
-
-    s_updateActions(static_cast<QListViewItem *>(0));
-}
-
-    void
-EmpathMessageListWidget::_setupMessageMenu()
-{
-#define PLUGMM(a) actionCollection()->action(a)->plug(&messageMenu_)
-PLUGMM("messageView");
-PLUGMM("messageCompose");
-PLUGMM("messageReply");
-PLUGMM("messageReplyAll");
-PLUGMM("messageForward");
-PLUGMM("messageDelete");
-PLUGMM("messageBounce");
-PLUGMM("messageSaveAs");
-PLUGMM("messageCopyTo");
-PLUGMM("messageMoveTo");
-PLUGMM("messagePrint");
-PLUGMM("messageFilter");
-PLUGMM("messageTag");
-PLUGMM("messageMarkRead");
-PLUGMM("messageMarkReplied");
-#undef PLUGMM
-
-#define PLUGMMM(a) actionCollection()->action(a)->plug(&multipleMessageMenu_)
-PLUGMMM("messageView");
-PLUGMMM("messageCompose");
-PLUGMMM("messageForward");
-PLUGMMM("messageDelete");
-PLUGMMM("messageBounce");
-PLUGMMM("messageSaveAs");
-PLUGMMM("messageCopyTo");
-PLUGMMM("messageMoveTo");
-PLUGMMM("messagePrint");
-PLUGMMM("messageFilter");
-PLUGMMM("messageMarkMany");
-#undef PLUGMMM
-}
-
-    void
-EmpathMessageListWidget::_setupThreadMenu()
-{
-#define PLUGTM(a) actionCollection()->action(a)->plug(&threadMenu_)
-PLUGTM("threadExpand");
-PLUGTM("threadCollapse");
-#undef PLUGTM
-}
-
     void 
 EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
 {
@@ -773,7 +711,7 @@ EmpathMessageListWidget::_fillDisplay()
         filling_ = false;
     }
 
-    s_updateActions(static_cast<QListViewItem *>(0));
+    s_updateActions(static_cast<QListViewItem *>(0L));
 }
 
     void
@@ -782,7 +720,6 @@ EmpathMessageListWidget::_fillThreading()
     setRootIsDecorated(true);
 
     unsigned int numMsgs = index_.count();
-    qDebug("Number of msgs to show: %d", numMsgs);
 
     unsigned int dictSize = 101;
 
@@ -793,18 +730,18 @@ EmpathMessageListWidget::_fillThreading()
     else if (numMsgs < 5000)
         dictSize = 5003;
     else if (numMsgs < 10000)
-        dictSize = 1007;
+        dictSize = 10007;
+
+    // Anyone noticed that any even number is the sum of two primes ?
 
     QDict<ThreadNode> allDict(dictSize);
 
     // Put all index records into thread nodes, and the nodes into allDict.
     // Two versions, one for unread only.
 
-    QDictIterator<EmpathIndexRecord> it(index_);
-
     if (hideRead_) {
 
-        for (; it.current(); ++it)
+        for (QDictIterator<EmpathIndexRecord> it(index_); it.current(); ++it)
             if (!(it.current()->status() & EmpathIndexRecord::Read))
                 allDict.insert(
                     it.current()->messageID(),
@@ -812,13 +749,12 @@ EmpathMessageListWidget::_fillThreading()
 
     } else {
 
-        for (; it.current(); ++it)
+        for (QDictIterator<EmpathIndexRecord> it(index_); it.current(); ++it)
             allDict.insert(
                 it.current()->messageID(),
                 new ThreadNode(it.current()));
     }
     
-    qDebug("Number of msgs in allDict: %d", allDict.count());
 
     QDict<ThreadNode> rootDict(dictSize);
 
@@ -828,29 +764,23 @@ EmpathMessageListWidget::_fillThreading()
     // If not, add this item to rootDict.
     for (QDictIterator<ThreadNode> allIt(allDict); allIt.current(); ++allIt) {
 
-        if (allIt.current()->data()->hasParent()) {
-    
-            ThreadNode * parentNode =
-                allDict[allIt.current()->data()->parentID()];
+        ThreadNode * i = allIt.current();
 
-            if (parentNode != 0)
-                parentNode->addChild(allIt.current());
+        if (!(i->data()->hasParent()))
+            rootDict.insert(i->data()->messageID(), i);
+
+        else {
+    
+            ThreadNode * parentNode = allDict[i->data()->parentID()];
+
+            if (0 != parentNode)
+                parentNode->addChild(i);
             else
-                rootDict.insert(
-                    allIt.current()->data()->messageID(),
-                    allIt.current());
+                rootDict.insert(i->data()->messageID(), i);
         
-        } else {
-            
-            rootDict.insert(
-                allIt.current()->data()->messageID(),
-                allIt.current()
-            );
         }
     }
     
-    qDebug("Number of msgs in rootDict: %d", rootDict.count());
-
     // Now go through every node in rootDict, adding the threads below it.
     for (QDictIterator<ThreadNode> rootIt(rootDict); rootIt.current(); ++rootIt)
         _createThreads(rootIt.current());
@@ -862,10 +792,10 @@ EmpathMessageListWidget::_createThreads(
     EmpathMessageListItem * parent
 )
 {
-    _createListItem(*root->data());
+    _createListItem(*(root->data()));
 
     for (QListIterator<ThreadNode> it(root->childList()); it.current(); ++it)
-        _createThreads(it.current(), _createListItem((*root->data()), parent));
+        _createThreads(it.current(), _createListItem(*(root->data()), parent));
 }
 
     EmpathMessageListItem *
@@ -885,12 +815,12 @@ EmpathMessageListWidget::_fillNormal()
 {
     setRootIsDecorated(false);
 
-    qDebug("Number of msgs to show: %d", index_.count());
     QDictIterator<EmpathIndexRecord> it(index_);
 
     if (hideRead_) {
         for (; it.current(); ++it)
-            if (!hideRead_ || !(it.current()->status() & EmpathIndexRecord::Read))
+            if (!hideRead_ ||
+                !(it.current()->status() & EmpathIndexRecord::Read))
                 _createListItem(*it.current());
     } else
         for (; it.current(); ++it)
@@ -953,24 +883,18 @@ EmpathMessageListWidget::s_messageMarkMany()
     void
 EmpathMessageListWidget::s_threadExpand()
 {
-    QList<QListViewItem> threadList;
+    QList<QListViewItem> threadList(subThread(currentItem()));
     
-    threadList = subThread(currentItem());
-    
-    QListIterator<QListViewItem> it(threadList);
-    for (; it.current(); ++it)
+    for (QListIterator<QListViewItem> it(threadList); it.current(); ++it)
         setOpen(it.current(), true);
 }
 
     void
 EmpathMessageListWidget::s_threadCollapse()
 {
-    QList<QListViewItem> threadList;
+    QList<QListViewItem> threadList(subThread(currentItem()));
     
-    threadList = subThread(currentItem());
-    
-    QListIterator<QListViewItem> it(threadList);
-    for (; it.current(); ++it)
+    for (QListIterator<QListViewItem> it(threadList); it.current(); ++it)
         setOpen(it.current(), false);
 }
 
@@ -1018,61 +942,52 @@ EmpathMessageListWidget::s_messageMarkReplied()
 { _markOne(EmpathIndexRecord::Replied); }
 
     void
-EmpathMessageListWidget::s_messageCompose()
+EmpathMessageListPart::s_messageCompose()
 { emit(compose()); }
 
     void
-EmpathMessageListWidget::s_messageReply()
-{ emit(reply(firstSelected())); }
+EmpathMessageListPart::s_messageReply()
+{ emit(reply(widget_->firstSelected())); }
 
     void
-EmpathMessageListWidget::s_messageReplyAll()
-{ emit(replyAll(firstSelected())); }
+EmpathMessageListPart::s_messageReplyAll()
+{ emit(replyAll(widget_->firstSelected())); }
 
     void
-EmpathMessageListWidget::s_messageForward()
-{ emit(forward(firstSelected())); }
+EmpathMessageListPart::s_messageForward()
+{ emit(forward(widget_->firstSelected())); }
 
     void
-EmpathMessageListWidget::s_messageBounce()
-{ emit(bounce(firstSelected())); }
+EmpathMessageListPart::s_messageBounce()
+{ emit(bounce(widget_->firstSelected())); }
 
     void
-EmpathMessageListWidget::s_messageDelete()
-{
-    QStringList condemned;
-
-    EmpathMessageListItemIterator it(selected_);
-    
-    for (; it.current(); ++it)
-        condemned.append(it.current()->id());
-
-    emit(remove(condemned));
-}
+EmpathMessageListPart::s_messageDelete()
+{ emit(remove(widget_->selection())); }
 
     void
-EmpathMessageListWidget::s_messageSaveAs()
-{ emit(save(firstSelected())); }
+EmpathMessageListPart::s_messageSaveAs()
+{ emit(save(widget_->firstSelected())); }
 
     void
-EmpathMessageListWidget::s_messageCopyTo()
-{ emit(copy(selection())); }
+EmpathMessageListPart::s_messageCopyTo()
+{ emit(copy(widget_->selection())); }
 
     void
-EmpathMessageListWidget::s_messageMoveTo()
-{ emit(move(selection())); }
+EmpathMessageListPart::s_messageMoveTo()
+{ emit(move(widget_->selection())); }
 
     void
-EmpathMessageListWidget::s_messagePrint()
-{ emit(print(selection())); }
+EmpathMessageListPart::s_messagePrint()
+{ emit(print(widget_->selection())); }
 
     void
-EmpathMessageListWidget::s_messageFilter()
-{ emit(filter(selection())); }
+EmpathMessageListPart::s_messageFilter()
+{ emit(filter(widget_->selection())); }
 
     void
-EmpathMessageListWidget::s_messageView()
-{ emit(view(firstSelected())); }
+EmpathMessageListPart::s_messageView()
+{ emit(view(widget_->firstSelected())); }
 
     QStringList
 EmpathMessageListWidget::selection()

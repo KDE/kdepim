@@ -71,11 +71,8 @@ EmpathMessageViewPartFactory::create(
     const QStringList &
 )
 {
-    qDebug("create...");
     QObject * o = new EmpathMessageViewPart((QWidget *)parent, name);
-    qDebug("emitting objectCreated...");
     emit objectCreated(o);
-    qDebug("create done");
     return o;
 }
 
@@ -96,16 +93,11 @@ EmpathMessageViewPart::EmpathMessageViewPart(
 )
     :   KParts::ReadOnlyPart(parent, name)
 {
-    qDebug("part ctor ...");
     setInstance(EmpathMessageViewPartFactory::instance());
-    qDebug("instance set");
 
     w = new EmpathMessageViewWidget(parent);
-    qDebug("widget created");
     w->setFocusPolicy(QWidget::StrongFocus);
-    qDebug("focus set");
     setWidget(w);
-    qDebug("setWidget() done. Creating actions");
 
     messageCompose_ =
         new KAction(
@@ -151,15 +143,11 @@ EmpathMessageViewPart::EmpathMessageViewPart(
             actionCollection(),
             "messageForward");
 
-    qDebug("Actions created. Creating browser extension");
     extension_ = new EmpathMessageViewBrowserExtension(this);
 
-    qDebug("Browser extension created. Setting XML file");
     setXMLFile("EmpathMessageViewWidget.rc");
 
-    qDebug("Disabling actions");
     enableAllActions(false);
-    qDebug("Part ctor done");
 }
 
 EmpathMessageViewPart::~EmpathMessageViewPart()
@@ -175,16 +163,13 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 )
     :   QWidget(parent, name)
 {
-    qDebug("Widget ctor");
     (new QVBoxLayout(this))->setAutoAdd(true);
-    qDebug("Layout created");
     
     headerView_     = new EmpathMessageHeaderViewWidget(this);
     textView_       = new EmpathMessageTextViewWidget(this);
     attachmentView_ = new EmpathMessageAttachmentViewWidget(this);
 
     attachmentView_->hide();
-    qDebug("Widget ctor done");
 }
 
 EmpathMessageViewWidget::~EmpathMessageViewWidget()
@@ -195,8 +180,6 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
     void
 EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
 {
-    qDebug("setMessage()");
-
     if (!m) {
       qDebug("Message is null");
       return;
@@ -305,25 +288,6 @@ EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
     textView_->setXML(s);
 }
 
-    void
-EmpathMessageViewWidget::compose()
-{
-}
-
-    void
-EmpathMessageViewWidget::reply()
-{
-}
-
-    void
-EmpathMessageViewWidget::replyAll()
-{
-}
-    void
-EmpathMessageViewWidget::forward()
-{
-}
-
 // -------------------------------------------------------------------------
 
     void
@@ -338,18 +302,22 @@ EmpathMessageViewPart::enableAllActions(bool enable)
     bool
 EmpathMessageViewPart::openFile()
 {
-    qDebug("openFile `" + QCString(m_file.ascii()) + "'");
     QFile f(m_file);
     f.open(IO_ReadOnly);
     QCString s = QCString(f.readAll());
+
     RMM::RMessage m(s);
-    qDebug("File read and message created");
     w->setMessage(m);
 
-    qDebug("Enabling actions");
     enableAllActions(true);
-    qDebug("done");
     return true;
+}
+
+    void
+EmpathMessageViewPart::s_setMessage(RMM::RMessage & m)
+{
+    w->setMessage(m);
+    enableAllActions(true);
 }
 
 // -------------------------------------------------------------------------
@@ -360,22 +328,6 @@ EmpathMessageViewBrowserExtension::EmpathMessageViewBrowserExtension(
     :   KParts::BrowserExtension(parent, "EmpathMessageViewBrowserExtension")
 {
 }
-
-    void
-EmpathMessageViewBrowserExtension::compose()
-{ ((EmpathMessageViewWidget *)parent())->compose(); }
-
-    void
-EmpathMessageViewBrowserExtension::reply()
-{ ((EmpathMessageViewWidget *)parent())->reply(); }
-
-    void
-EmpathMessageViewBrowserExtension::replyAll()
-{ ((EmpathMessageViewWidget *)parent())->replyAll(); }
-
-    void
-EmpathMessageViewBrowserExtension::forward()
-{ ((EmpathMessageViewWidget *)parent())->forward(); }
 
 #if 0
     void

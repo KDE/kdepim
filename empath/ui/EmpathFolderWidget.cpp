@@ -186,19 +186,27 @@ EmpathFolderWidget::_addChildren(
     void
 EmpathFolderWidget::s_linkChanged(QListViewItem * item)
 {
-    EmpathFolderListItem * i = (EmpathFolderListItem *)item;
+    empathDebug("linkchanged");
+    EmpathFolderListItem * i = static_cast<EmpathFolderListItem *>(item);
     
-    if (!i->url().isFolder())
+    if (!i->url().isFolder()) {
+        empathDebug("!folder");
         return;
+    }
     
     EmpathFolder * f = empath->folder(i->url());
    
-    if (f == 0)
+    if (f == 0) {
+        empathDebug("Cannot find folder");
         return;
+    }
     
-    if (f->isContainer())
+    if (f->isContainer()) {
+        empathDebug("Folder is container");
         return;
+    }
 
+    empathDebug("emitting showFolder");
     emit(showFolder(i->url()));
 }
 

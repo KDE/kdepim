@@ -215,6 +215,8 @@ EmpathIndex::_read()
         return true;
 
     killTimers();
+
+    dict_.clear();
     
     count_ = unreadCount_ = 0;
 
@@ -234,6 +236,8 @@ EmpathIndex::_read()
     d >> savedVersion;
 
     if (savedVersion != EmpathIndexVersion) {
+        empathDebug("Version is " + QString::number(savedVersion) +
+            " but I want version " + QString::number(EmpathIndexVersion));
         read_ = false;
         return false;
     }
