@@ -590,15 +590,6 @@ void KPilotInstaller::initMenu()
 		"should be a FullSync (check data on both sides)."));
 	syncPopup->insert(a);
 
-#ifdef DEBUG
-	a = new KAction(i18n("&List only"),CSL1("list"),0,
-		this,SLOT(slotListSyncRequested()),
-		actionCollection(), "file_list");
-	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-		"should just list the files on the Handheld and do nothing "
-		"else."));
-	syncPopup->insert(a);
-#endif
 	a = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
@@ -612,6 +603,16 @@ void KPilotInstaller::initMenu()
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should restore the Handheld from data on the PC."));
 	syncPopup->insert(a);
+
+	a = new KAction(i18n("&List only"),CSL1("list"),0,
+		this,SLOT(slotListSyncRequested()),
+		actionCollection(), "file_list");
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should just list the files on the Handheld and do nothing "
+		"else."));
+	syncPopup->insert(a);
+
+
 
 	a = new KAction(i18n("Rese&t Link"),CSL1("reload"), 0,
 		this, SLOT(slotResetLink()),
