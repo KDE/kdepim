@@ -1,5 +1,8 @@
 KAlarm
 
+=== Version 1.0.3 --- 1 Feb 2004 ===
+Fix memory leaks displaying dialogs.
+
 === Version 1.0.2 --- 11 Jan 2004 ===
 Prevent editing alarm and saving without changes from deleting the alarm.
 
