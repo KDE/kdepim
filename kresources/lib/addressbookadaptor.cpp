@@ -86,11 +86,9 @@ void AddressBookAdaptor::deleteItem( const QString &localId )
 void AddressBookAdaptor::addItem( KABC::Addressee addr )
 {
   if ( !addr.isEmpty() ) {
-//     mResource->disableChangeNotification();
     addr.setResource( mResource );
     mResource->insertAddressee( addr );
     clearChange( addr.uid() );
-//     mResource->enableChangeNotification();
   }
 }
 
