@@ -35,15 +35,6 @@ ResourceExchange::ResourceExchange( const KConfig *config )
   if ( config ) readConfig( config );
 }
 
-/*ResourceExchange::ResourceExchange( const KURL &url, const QString &user,
-   const QString &password ) : ResourceGroupwareBase( url, user, password )
-{
-  init();
-  prefs()->setUrl( url.url() );
-  prefs()->setUser( user );
-  prefs()->setPassword( password );
-}
-*/
 void ResourceExchange::init()
 {
   setType( "ResourceExchange" );

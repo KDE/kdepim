@@ -34,15 +34,6 @@ ResourceGroupDav::ResourceGroupDav( const KConfig *config )
   if ( config ) readConfig( config );
 }
 
-/*ResourceGroupDav::ResourceGroupDav( const KURL &url, const QString &user, 
-   const QString &password ) : ResourceGroupwareBase( url, user, password )
-{
-  init();
-  prefs()->setUrl( url.url() );
-  prefs()->setUser( user );
-  prefs()->setPassword( password );
-}*/
-
 void ResourceGroupDav::init()
 {
   setType( "ResourceGroupDav" );
