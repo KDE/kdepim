@@ -82,6 +82,8 @@ class EmailWidget : public QWidget
 // NameEditDialog
 class NameEditDialog : public KDialogBase
 {
+  Q_OBJECT
+
   public:
     NameEditDialog(const QString &familyName, const QString &givenName,
                    const QString &prefix, const QString &suffix,
@@ -95,12 +97,16 @@ class NameEditDialog : public KDialogBase
     QString suffix() const;
     QString additionalName() const;
    
+  protected slots:
+    void parseBoxChanged(bool);
+
   private:
     KComboBox *mSuffixCombo;
     KComboBox *mPrefixCombo;
     KLineEdit *mFamilyNameEdit;
     KLineEdit *mGivenNameEdit;
     KLineEdit *mAdditionalNameEdit;
+    QCheckBox *mParseBox;
 };
 
 ////////////////////////////////////

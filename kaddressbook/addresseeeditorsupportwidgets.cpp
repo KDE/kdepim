@@ -35,7 +35,9 @@
 #include <qcheckbox.h>
 #include <qstring.h>
 
+#include <kapplication.h>
 #include <kbuttonbox.h>
+#include <kconfig.h>
 #include <klineedit.h>
 #include <klistview.h>
 #include <kcombobox.h>
@@ -216,6 +218,10 @@ NameEditDialog::NameEditDialog(const QString &familyName,
   mSuffixCombo->setDuplicatesEnabled(false);
   mSuffixCombo->setEditable(true);
   layout->addWidget(mSuffixCombo, 4, 1);
+
+  mParseBox = new QCheckBox( i18n( "Parse name automatically" ), page );
+  connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseBoxChanged(bool) ) );
+  layout->addMultiCellWidget( mParseBox, 5, 5, 0, 1 );
   
   // Fill in the values
   mFamilyNameEdit->setText(familyName);
@@ -246,6 +252,10 @@ NameEditDialog::NameEditDialog(const QString &familyName,
   
   mPrefixCombo->setCurrentText(prefix);
   mSuffixCombo->setCurrentText(suffix);
+
+  KConfig *config = kapp->config();
+  config->setGroup( "General" );
+  mParseBox->setChecked( config->readBoolEntry( "AutomaticNameParsing", true ) );
 }
     
 NameEditDialog::~NameEditDialog() 
@@ -277,6 +287,12 @@ QString NameEditDialog::additionalName() const
   return mAdditionalNameEdit->text();
 }
 
+void NameEditDialog::parseBoxChanged( bool value )
+{
+  KConfig *config = kapp->config();
+  config->setGroup( "General" );
+  config->writeEntry( "AutomaticNameParsing", value );
+}
 
 ///////////////////////////////////////////
 // AddressEditWidget

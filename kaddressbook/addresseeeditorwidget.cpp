@@ -123,19 +123,13 @@ void AddresseeEditorWidget::setupTab1()
   // First name
   button = new QPushButton( i18n("Name..."), tab1 );
   QToolTip::add(button, i18n("Edit the contact's name"));
-  QHBoxLayout *nameLayout = new QHBoxLayout;
   mNameEdit = new KLineEdit( tab1, "mNameEdit" );
   connect( mNameEdit, SIGNAL( textChanged(const QString & )), 
            SLOT( nameTextChanged(const QString & )));
   connect( button, SIGNAL( clicked()), this, SLOT( nameButtonClicked()));
-  mParseBox = new QCheckBox( i18n( "Parse name automatically" ), tab1 );
-  connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseNameChanged() ) );
-  nameLayout->addWidget( mNameEdit );
-  nameLayout->addWidget( mParseBox );
-  nameLayout->setStretchFactor( mNameEdit, 1 );
   layout->addWidget( button, 0, 1 );
-  layout->addLayout( nameLayout, 0, 2 );
-  
+  layout->addWidget( mNameEdit, 0, 2 );
+
   label = new QLabel( i18n("Role:"), tab1 );
   mRoleEdit = new KLineEdit( tab1, "mRoleEdit" );
   connect(mRoleEdit, SIGNAL( textChanged(const QString &) ),
@@ -164,6 +158,8 @@ void AddresseeEditorWidget::setupTab1()
           SLOT(textChanged(const QString &)));
   connect(mFormattedNameBox, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  connect(mFormattedNameBox, SIGNAL(textChanged(const QString &)),
+          SLOT(formattedNameChanged(const QString &)));
   layout->addWidget( label, 3, 1 );
   layout->addWidget( mFormattedNameBox, 3, 2 );
   
@@ -407,10 +403,6 @@ void AddresseeEditorWidget::load()
   mOfficeEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Office"));
   mProfessionEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Profession"));
   
-  KConfig *config = kapp->config();
-  config->setGroup( "General" );
-  mParseBox->setChecked( config->readBoolEntry( "AutomaticNameParsing", true ) );
-  
   blockSignals(block);
 
   mDirty = false;
@@ -506,7 +498,8 @@ bool AddresseeEditorWidget::dirty()
 void AddresseeEditorWidget::nameTextChanged(const QString &text)
 {
   // use the addressee class to parse the name for us
-  if ( mParseBox->isChecked() ) {
+  KConfig *config = kapp->config();
+  if ( config->readBoolEntry( "AutomaticNameParsing" ) ) {
     if ( !mAddressee.formattedName().isEmpty() ) {
       QString fn = mAddressee.formattedName();
       mAddressee.setNameFromString(text);
@@ -529,6 +522,9 @@ void AddresseeEditorWidget::nameBoxChanged()
   KABC::Addressee addr;
   addr.setNameFromString( mNameEdit->text() );
 
+  bool block = mFormattedNameBox->signalsBlocked();
+  mFormattedNameBox->blockSignals( true );
+
   int pos = mFormattedNameBox->currentItem();
   mFormattedNameBox->clear();
   QStringList options;
@@ -538,6 +534,8 @@ void AddresseeEditorWidget::nameBoxChanged()
           << addr.familyName() + QString(", ") + addr.givenName();
   mFormattedNameBox->insertStringList(options);
   mFormattedNameBox->setCurrentItem( pos );
+
+  mFormattedNameBox->blockSignals( block );
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
@@ -618,11 +616,11 @@ void AddresseeEditorWidget::dateChanged(QDate)
   emitModified();
 }
 
-void AddresseeEditorWidget::parseNameChanged()
+void AddresseeEditorWidget::formattedNameChanged(const QString &fn)
 {
-  KConfig *config = kapp->config();
-  config->setGroup( "General" );
-  config->writeEntry( "AutomaticNameParsing", mParseBox->isChecked() );
+  mAddressee.setFormattedName( fn );
+  mFormattedNameBox->setCurrentText( fn );
+  nameBoxChanged();
 }
 
 #include "addresseeeditorwidget.moc"

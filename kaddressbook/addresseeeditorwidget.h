@@ -83,7 +83,7 @@ class AddresseeEditorWidget : public QWidget
     void nameBoxChanged();
     void nameButtonClicked();
     void categoryButtonClicked();
-    void parseNameChanged();
+    void formattedNameChanged(const QString &);
     
     /** Called whenever the categories change in the categories dialog.
     */
@@ -109,7 +109,6 @@ class AddresseeEditorWidget : public QWidget
     
     // Tab1
     KLineEdit *mNameEdit;
-    QCheckBox *mParseBox;
     KLineEdit *mRoleEdit;
     KLineEdit *mOrgEdit;
     KComboBox *mFormattedNameBox;
