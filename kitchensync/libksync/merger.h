@@ -22,11 +22,13 @@
 #ifndef KITCHENSYNC_KSYNC_MERGER_H
 #define KITCHENSYNC_KSYNC_MERGER_H
 
+#include "syncentry.h"
+
 #include <qbitarray.h>
 #include <qstring.h>
 
 namespace KSync{
-class SyncEntry;
+
 /**
  * \brief Small class to help in not losing attributes
  *
