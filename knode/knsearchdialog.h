@@ -37,6 +37,8 @@ class KNSearchDialog : public QDialog {
     KNArticleFilter* filter() const  { return f_ilter; }
 
   protected:
+    void closeEvent( QCloseEvent* e );
+
     KNFilterConfigWidget *fcw;
     QPushButton *startBtn, *newBtn,  *closeBtn;
     QCheckBox *completeThreads;

@@ -111,6 +111,11 @@ void KNSearchDialog::slotCloseClicked()
 }
 
 
+void KNSearchDialog::closeEvent( QCloseEvent * )
+{
+  emit dialogDone();
+}
+
 //--------------------------------
 
 #include "knsearchdialog.moc"
