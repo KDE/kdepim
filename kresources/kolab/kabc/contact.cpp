@@ -450,7 +450,7 @@ void Contact::savePhoneAttributes( QDomElement& element ) const
 {
   QValueList<PhoneNumber>::ConstIterator it = mPhoneNumbers.begin();
   for ( ; it != mPhoneNumbers.end(); ++it ) {
-    QDomElement e = element.ownerDocument().createElement( "phone-number" );
+    QDomElement e = element.ownerDocument().createElement( "phone" );
     element.appendChild( e );
     const PhoneNumber& p = *it;
     writeString( e, "type", p.type );
@@ -600,7 +600,7 @@ bool Contact::loadAttribute( QDomElement& element )
     setGender( element.text() );
   else if ( tagName == "language" )
     setLanguage( element.text() );
-  else if ( tagName == "phone-number" )
+  else if ( tagName == "phone" )
     return loadPhoneAttribute( element );
   else if ( tagName == "email" ) {
     Email email;
