@@ -1,3 +1,79 @@
+KPilot Developer's notes for december 23rd 2001
+===============================================
+
+HoHoHo. Let's look back in the ChangeLog to see where we were one year ago.
+Struggling with the vcal conduit (it's *still* wonky); missing the 2.1
+release deadine (was it that long ago?); cleaning up code.
+
+In these complex modern final days, (to quote Pogo), what's up?
+
+2001-12-18  Adriaan de Groot
+* conduits/expense/*
+* conduits/null/*
+  - These two conduits now have a full configure dialog that's sized
+  correctly (afaict without messing around with font settings), that
+  saves the settings, and have a working sync action. Whee!
+
+2001-12-20  Adriaan de Groot
+* conduits/abbrowser/*
+  - This conduit now has a working config dialog and does a sync, although
+  I haven't really looked at the sync code itself to check for bugs.
+* conduits/knotes/*
+  - Ditto; it configures and syncs, although the sync is rather sparse.
+  I discovered that const char * const is a useful type, though. It saves
+  an accessor function for KConfig entry keys.
+
+The bad conduits:
+
+* conduits/popmail/*
+  - Still no .ui file and not many tooltips, but you *can* configure
+  this conduit. No sync though.
+* conduits/todoconduit/
+  - This one is seriously deprecated and I'll try to remove it soon.
+* conduits/vcalconduit/*
+  - It's got a .ui file which is used badly and which is missing layouts.
+  Not a hint of saving configurations though.
+
+OPEN JOBS:
+
+Are you bored? Is your love life lackluster? Do you want to MAKE MONEY FAST?
+Do you want to FIND OUT WHAT MICROSOFT DOESNT WANT YOU to KNOW? ... um ...
+back to reality: If you'd like to help out with KPilot but don't really know
+where to start, and would like to get a little acquainted with the code,
+the coding style, and some of the conventions used in KPilot, read on!
+If you have grep and a text editor, read on!
+
+The code, and particularly the debugging code, has gone though a number
+of phases. For a while, there was that --debug 1023 stuff. I've decided
+that that's actually kinda cumbersome for a GUI program, and debugging
+has switched back to an all-or-nothing kinda thing. So some things need
+to be changed all over the source code, and that's just the kind of
+exploratory job for someone with grep and vi. In particular:
+
+* kdDebug() everywhere needs to change into DEBUGCONDUIT, DEBUGKPILOT,
+  or one of the other DEBUG* macros defined in kpilot/lib/options.h.
+  This will send the debugging output to the sensible debug area.
+  Which one you choose depends on where the file lives -- choose wisely.
+
+* DEBUG* calls everywhere need to be surrounded by #ifdef DEBUG #endif.
+  This is because some compilers don't optimize away unused strings,
+  leading to big bulky (well, sorta) executables. Adding the #ifdefs 
+  makes sure that there's nothing at all left over from the debugging code
+  when debugging is turned off.
+
+* __FUNCTION__ needs to be replaced by k_funcinfo. The popmail conduit is
+  bad for that one, at the very least.
+
+* if (debug_level) and its cousin if (debug_level & SOMETHING) need to be
+  removed, along with the set of brackets they introduce. The debugging
+  statement (usually just a kdDebug() << whatever << endl;) needs to be
+  out-dented one tabstop, to line it up properly.
+
+These are, in one sense, rotten little jobs. But they'll take you to all
+the corners of the KPilot code, show you some ugly (and some not-so-ugly)
+code, and give you a feel for "the lay of the land." After that, fixing
+all the remaining off-by-one bugs in the vcal conduit should be a breeze.
+
 KPilot Developer's notes for december 16th 2001
 ===============================================
 
