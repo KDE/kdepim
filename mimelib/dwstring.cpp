@@ -43,6 +43,22 @@
 /* In some locales (such as tr_TR.UTF-8, az_AZ) using tolower() can cause
    unexpected results. Keywords must be compared in a
    locale-independent manner */
+static char dw_asciitolower( const char c )
+{
+  if ( c >= 'A' && c <= 'Z' )
+    return c - 'A' + 'a';
+  else
+    return c;
+}
+
+static char dw_asciitoupper( const char c )
+{
+  if ( c >= 'a' && c <= 'z' )
+    return c - 'a' + 'A';
+  else
+    return c;
+}
+
 static int dw_strasciicasecmp(const char* s1, size_t len1, const char* s2,
     size_t len2)
 {
@@ -50,12 +66,8 @@ static int dw_strasciicasecmp(const char* s1, size_t len1, const char* s2,
     assert(s2 != 0);
     size_t len = DW_MIN(len1, len2);
     for (size_t i=0; i < len; ++i) {
-        int c1 = s1[i];
-        int c2 = s2[i];
-        if ( c1 >= 'A' && c1 <= 'Z' )
-            c1 += 'a' - 'A';
-        if ( c2 >= 'A' && c2 <= 'Z' )
-            c2 += 'a' - 'A';
+        int c1 = dw_asciitolower( s1[i] );
+        int c2 = dw_asciitolower( s2[i] );
 
         if ( c1 < c2 )
             return -1;
@@ -1074,7 +1086,7 @@ void DwString::ConvertToLowerCase()
     }
     char* buf = mRep->mBuffer + mStart;
     for (size_t i=0; i < mLength; ++i) {
-        buf[i] = (char) tolower(buf[i]);
+        buf[i] = (char) dw_asciitolower(buf[i]);
     }
 }
 
@@ -1086,7 +1098,7 @@ void DwString::ConvertToUpperCase()
     }
     char* buf = mRep->mBuffer + mStart;
     for (size_t i=0; i < mLength; ++i) {
-        buf[i] = (char) toupper(buf[i]);
+        buf[i] = (char) dw_asciitoupper(buf[i]);
     }
 }
 
