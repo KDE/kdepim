@@ -22,5 +22,5 @@ libaddressconduit_la_SOURCES = \
 	abbrowser-setup.cc \
 	abbrowser-conduit.cc \
 	kaddressbookConduit.ui
-libaddressconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib 
+libaddressconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib $(all_libraries)
 libaddressconduit_la_LIBADD = -lkpilot -lkabc
