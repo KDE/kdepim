@@ -5,25 +5,29 @@ INCLUDES = -I$(top_srcdir)/libical/src/libical \
            -I$(srcdir)/versit -I$(top_srcdir)/ \
            $(all_includes)
 
-noinst_HEADERS = kcal_resourcexmlrpcconfig.h kabc_resourcexmlrpcconfig.h
+noinst_HEADERS = kabc_resourcexmlrpcconfig.h kcal_resourcexmlrpcconfig.h
 
-lib_LTLIBRARIES = libkabc_xmlrpc.la
+lib_LTLIBRARIES = libkabc_xmlrpc.la libkcal_xmlrpc.la
 libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc
 
+libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp
+libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
+libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la
+
 kabcincludedir = $(includedir)/kabc
-kabcinclude_HEADERS = kabc_resourcexmlrpc.h
+kabcinclude_HEADERS = kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h
 
-kde_module_LTLIBRARIES = kcal_xmlrpc.la kabc_xmlrpc.la
-
-kcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp
-kcal_xmlrpc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la
+kde_module_LTLIBRARIES = kabc_xmlrpc.la kcal_xmlrpc.la
 
 kabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpcplugin.cpp
 kabc_xmlrpc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kabc_xmlrpc_la_LIBADD	= libkabc_xmlrpc.la
+
+kcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpcplugin.cpp
+kcal_xmlrpc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+kcal_xmlrpc_la_LIBADD = libkcal_xmlrpc.la
 
 kcal_servicedir = $(kde_servicesdir)/kresources/kcal
 kcal_service_DATA = kcal_xmlrpc.desktop

@@ -27,6 +27,7 @@
 #include <qstring.h>
 
 #include <kconfig.h>
+#include <kurl.h>
 
 #include "libkcal/calendarlocal.h"
 #include "libkcal/incidence.h"

@@ -62,6 +62,8 @@ ResourceXMLRPC::ResourceXMLRPC( const KURL &url, const QString &domain,
 void ResourceXMLRPC::init( const KURL &url, const QString &domain,
                            const QString &user, const QString &password )
 {
+  setType( "xmlrpc" );
+
   mSyncComm = false;
 
   mURL = url;
