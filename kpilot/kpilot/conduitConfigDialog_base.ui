@@ -31,31 +31,16 @@
                     <bool>false</bool>
                 </property>
             </column>
-            <column>
-                <property name="text">
-                    <string>Description</string>
-                </property>
-                <property name="clickable">
-                    <bool>false</bool>
-                </property>
-                <property name="resizable">
-                    <bool>false</bool>
-                </property>
-            </column>
             <property name="name">
                 <cstring>fConduitList</cstring>
             </property>
-            <property name="minimumSize">
-                <size>
-                    <width>150</width>
-                    <height>0</height>
-                </size>
-            </property>
-            <property name="maximumSize">
-                <size>
-                    <width>200</width>
-                    <height>32767</height>
-                </size>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>1</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
             <property name="frameShape">
                 <enum>StyledPanel</enum>
@@ -64,23 +49,9 @@
                 <enum>Sunken</enum>
             </property>
         </widget>
-        <widget class="QWidgetStack" row="0" column="1">
+        <widget class="QWidgetStack" row="0" column="1" rowspan="2" colspan="1">
             <property name="name">
                 <cstring>fStack</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>402</width>
-                    <height>162</height>
-                </size>
             </property>
             <widget class="QWidget">
                 <property name="name">
@@ -110,7 +81,7 @@
                             <enum>Box</enum>
                         </property>
                         <property name="text">
-                            <string>Select a conduit in the list to the left to configure it. Checked conduits will be run during a HotSync.</string>
+                            <string></string>
                         </property>
                         <property name="textFormat">
                             <enum>RichText</enum>
@@ -196,26 +167,37 @@ configure button below.</string>
                 <attribute name="id">
                     <number>2</number>
                 </attribute>
-                <widget class="QLabel">
+                <grid>
                     <property name="name">
-                        <cstring>textLabel1_3</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>15</x>
-                            <y>59</y>
-                            <width>346</width>
-                            <height>30</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>&lt;p align="center"&gt;This conduit appears to be broken and cannot be configured.&lt;/p&gt;</string>
-                    </property>
-                    <property name="alignment">
-                        <set>WordBreak|AlignCenter</set>
-                    </property>
-                </widget>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_3</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>Box</enum>
+                        </property>
+                        <property name="text">
+                            <string>&lt;p align="center"&gt;This conduit appears to be broken and cannot be configured.&lt;/p&gt;</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignCenter</set>
+                        </property>
+                    </widget>
+                </grid>
             </widget>
+        </widget>
+        <widget class="QLabel" row="1" column="0">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="text">
+                <string>Select a conduit in the list above to configure it. Checked conduits will be run during a HotSync.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignCenter</set>
+            </property>
         </widget>
     </grid>
 </widget>

@@ -55,7 +55,7 @@ protected:
 	void warnNoLibrary(const QListViewItem *);
 
 	void loadAndConfigure(QListViewItem *); // ,bool);
-	void release();
+	bool release();
 public slots:
 	void commitChanges();
 

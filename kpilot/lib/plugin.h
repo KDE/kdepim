@@ -72,6 +72,9 @@ public:
 	* in maybeSave(). Override it to change the text.
 	*/
 	virtual QString maybeSaveText() const;
+
+	virtual QString conduitName() const;
+
 protected slots:
 	void modified();
 
@@ -103,6 +106,10 @@ public:
 	virtual void readSettings() = 0 ;
 	/* and commit changes, too! */
 
+	// User-readable name of the conduit. Should match
+	// the other conduitName() methods in other classes
+	// in this file.
+	virtual QString conduitName() const;
 protected:
 	KConfig *fConfig;
 } ;
@@ -128,6 +135,7 @@ public:
 
 	void setConfig(KConfig *c) { fConfig=c; } ;
 
+	virtual QString conduitName() const;
 protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;

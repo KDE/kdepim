@@ -51,15 +51,28 @@ void *init_libnullconduit()
 
 } ;
 
+static QString nullname()
+{
+	FUNCTIONSETUP;
+	return i18n("Null");
+}
+
 class NullConduitConfig : public ConduitConfigBase
 {
 public:
 	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
 	virtual void commit(KConfig *);
 	virtual void load(KConfig *);
+	virtual QString conduitName() const;
 protected:
 	NullWidget *fConfigWidget;
 } ;
+
+QString NullConduitConfig::conduitName() const
+{
+	FUNCTIONSETUP;
+	return nullname();
+}
 
 NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	ConduitConfigBase(p,n),

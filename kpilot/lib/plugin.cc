@@ -47,6 +47,10 @@
 
 #include "plugin.moc"
 
+static QString unnamed()
+{
+	return i18n("Unnamed");
+}
 
 ConduitConfigBase::ConduitConfigBase(QWidget *parent,
 	const char *name) :
@@ -83,8 +87,8 @@ void ConduitConfigBase::load(KConfig *)
 {
 	FUNCTIONSETUP;
 	
-	return i18n("The <i>%1</i> conduit's settings have been changed. Do you "
-		"want to save the changes before continuing?").arg(name());
+	return i18n("<qt>The <i>%1</i> conduit's settings have been changed. Do you "
+		"want to save the changes before continuing?</qt>").arg(this->conduitName());
 }
 
 /* virtual */ bool ConduitConfigBase::maybeSave(KConfig *c)
@@ -95,10 +99,16 @@ void ConduitConfigBase::load(KConfig *)
 	
 	int r = KMessageBox::questionYesNoCancel(fWidget,
 		maybeSaveText(),
-		i18n("%1 Conduit").arg(name()));
+		i18n("%1 Conduit").arg(this->conduitName()));
 	if (r == KMessageBox::Cancel) return false;
 	if (r == KMessageBox::Yes) commit(c);
 	return true;
+}
+
+/* virtual */ QString ConduitConfigBase::conduitName() const
+{
+	FUNCTIONSETUP;
+	return unnamed();
 }
 
 ConduitConfig::ConduitConfig(QWidget *parent,
@@ -114,6 +124,11 @@ ConduitConfig::ConduitConfig(QWidget *parent,
 /* virtual */ ConduitConfig::~ConduitConfig()
 {
 	FUNCTIONSETUP;
+}
+
+/* virtual */ QString ConduitConfig::conduitName() const
+{
+	return unnamed();
 }
 
 ConduitAction::ConduitAction(KPilotDeviceLink *p,
@@ -325,6 +340,11 @@ bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 	{
 		return openDatabases_(dbName, retrieved);
 	}
+}
+
+/* virtual */ QString ConduitAction::conduitName() const
+{
+	return unnamed();
 }
 
 int PluginUtility::findHandle(const QStringList &a)

@@ -6,6 +6,8 @@ KPilot Developer's notes for May 15th, 2003
 
 2003-5-9  Adriaan de Groot
 * Fixed up some config issues in the NULL conduit.
+* Added conduitName() to conduit config things and their actions,
+  to provide a user-readable name for the conduit.
 
 2003-5-5  Adriaan de Groot
 * plugin.{h,cc} Added a maybeSave() function for the new conduit config

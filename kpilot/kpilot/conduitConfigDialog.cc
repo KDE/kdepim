@@ -166,7 +166,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 {
 	FUNCTIONSETUP;
 
-	fConduitList->removeColumn(CONDUIT_COMMENT);
+	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
 	fConduitList->adjustSize();
 	fConduitList->show();
@@ -345,6 +345,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 				.arg(p->text(CONDUIT_NAME)));
 
 		fCurrentOldStyle=d;
+		d->setConfig(&KPilotConfig::getConfig());
 	}
 	else
 	{
@@ -372,6 +373,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		}
 		else
 		{
+			d->load(&KPilotConfig::getConfig());
 			fStack->erase();
 			fStack->raiseWidget(NEW_CONDUIT);
 			d->widget()->show();
@@ -383,13 +385,16 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 			adjustSize();
 		}
 	}
+	fConduitList->repaint();
 }
 
-void ConduitConfigWidget::release()
+bool ConduitConfigWidget::release()
 {
 	FUNCTIONSETUP;
 	if (fCurrentConfig)
 	{
+		if (!fCurrentConfig->maybeSave(&KPilotConfig::getConfig()))
+			return false;
 		fStack->raiseWidget(0);
 		delete fCurrentConfig;
 	}
@@ -406,6 +411,7 @@ void ConduitConfigWidget::release()
 	fCurrentConduit=0L;
 	fCurrentConfig=0L;
 	fCurrentOldStyle=0L;
+	return true;
 }
 
 void ConduitConfigWidget::selected(QListViewItem *p)
@@ -418,12 +424,17 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 #endif
 	if (p!=fCurrentConduit)
 	{
-		release();
+		if (!release())
+		{
+			p->setSelected(false);
+			fCurrentConduit->setSelected(true);
+		}
 	}
 	fCurrentConduit=p;
 	loadAndConfigure(p);
 	// Workaround for repaint problems
 	p->repaint();
+	fConduitList->repaint();
 }
 
 void ConduitConfigWidget::configure()
