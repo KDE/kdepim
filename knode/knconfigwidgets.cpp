@@ -1961,10 +1961,10 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=message-id, %GROUP=group name"), replyB),3,3,0,1);
 
   r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);
-  replyL->addMultiCellWidget(r_ewrapCB, 5,5,0,1);
+  replyL->addMultiCellWidget(r_ewrapCB, 4,4,0,1);
 
   a_uthSigCB=new QCheckBox(i18n("Include the a&uthors signature"), replyB);
-  replyL->addMultiCellWidget(a_uthSigCB, 6,6,0,1);
+  replyL->addMultiCellWidget(a_uthSigCB, 5,5,0,1);
 
   c_ursorOnTopCB=new QCheckBox(i18n("Put the cursor &below the introduction phrase"), replyB);
   replyL->addMultiCellWidget(c_ursorOnTopCB, 6,6,0,1);
