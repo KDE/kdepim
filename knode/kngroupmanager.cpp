@@ -232,31 +232,25 @@ void KNGroupManager::readConfig()
 
 bool KNGroupManager::timeToExpire()
 {
-	bool doExpire;
-	QDate today=QDate::currentDate();
-	QDate lastExpDate;
-	int y, m, d, interval;
+  KConfig *c=KGlobal::config();
+  c->setGroup("EXPIRE");
+	
+  if (!c->readBoolEntry("doExpire", true))
+    return false;
 
-	KConfig *c=KGlobal::config();
-	c->setGroup("EXPIRE");
-	doExpire=c->readBoolEntry("doExpire", true);
+	QDate today=QDate::currentDate();
+	QDate lastExpDate=c->readDateTimeEntry("lastExpire").date();
+	int interval=c->readNumEntry("expInterval", 5);
 	
-	if(!doExpire) return false;
-	
-	y=c->readNumEntry("lastExpY", 0);
-	m=c->readNumEntry("lastExpM", 0);
-	d=c->readNumEntry("lastExpD", 0);
-	interval=c->readNumEntry("expInterval", 5);
-  lastExpDate.setYMD(y,m,d);
-	if(!lastExpDate.isValid()) {
-		c->writeEntry("lastExpY", today.year());
-		c->writeEntry("lastExpM", today.month());
-		c->writeEntry("lastExpD", today.day());
-		return false;
-	}
-	if(lastExpDate==today) return false;
-	if(lastExpDate.daysTo(today) >= interval) return true;
-	else return false;
+	if (lastExpDate==today) {
+    c->writeEntry("lastExpire", QDateTime::currentDateTime());  // important! otherwise lastExpDate will be at its default value (current date) forever
+    return false;
+  }
+
+  if(lastExpDate.daysTo(today) >= interval)
+		return true;
+	else
+	  return false;
 }
 
 
@@ -331,8 +325,6 @@ KNGroup* KNGroupManager::group(const QCString &gName, const KNServerInfo *s)
 void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 {
 	KNCleanUp cup;
-	QDate today=QDate::currentDate();
-	KConfig *c=KGlobal::config();
 	
 	if(dlg) dlg->init(i18n("Deleting expired articles ..."), gList->count());
 	
@@ -347,10 +339,9 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 	}
 	if(dlg) kapp->processEvents();
 	
-	c->setGroup("EXPIRE");
-	c->writeEntry("lastExpY", today.year());
-	c->writeEntry("lastExpM", today.month());
-	c->writeEntry("lastExpD", today.day());
+	KConfig *c=KGlobal::config();
+  c->setGroup("EXPIRE");
+  c->writeEntry("lastExpire", QDateTime::currentDateTime());
 }
 
 

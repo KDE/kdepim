@@ -43,8 +43,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   n_ame = conf.readEntry("name");
   u_nsentCount = conf.readNumEntry("unsentCnt", 0);
   f_etchDescriptions = conf.readBoolEntry("fetchDescriptions", true);
-  QDateTime dt = conf.readDateTimeEntry("lastNewFetch");
-  l_astNewFetch = dt.date();
+  l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
 
   KNServerInfo::readConf(&conf);
   return true;

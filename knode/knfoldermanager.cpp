@@ -64,23 +64,25 @@ KNFolderManager::~KNFolderManager()
 
 bool KNFolderManager::timeToCompact()
 {
-	QDate today=QDate::currentDate();
-	QDate lastComDate;
-	int y, m, d, interval;
-
-	KConfig *c=KGlobal::config();
-	c->setGroup("EXPIRE");
+  KConfig *c=KGlobal::config();
+  c->setGroup("EXPIRE");
 	
-	if(!c->readBoolEntry("doCompact", true)) return false;
-	y=c->readNumEntry("lastComY", 0);
-	m=c->readNumEntry("lastComM", 0);
-	d=c->readNumEntry("lastComD", 0);
-	interval=c->readNumEntry("comInterval", 5);
-  lastComDate.setYMD(y,m,d);
-	if(lastComDate==today) return false;
-	if(lastComDate.isValid() && lastComDate.daysTo(today) >= interval)
+  if (!c->readBoolEntry("doCompact", true))
+    return false;
+
+	QDate today=QDate::currentDate();
+	QDate lastComDate=c->readDateTimeEntry("lastCompact").date();
+	int interval=c->readNumEntry("comInterval", 5);
+	
+	if (lastComDate==today) {
+    c->writeEntry("lastCompact", QDateTime::currentDateTime());  // important! otherwise lastComDate will be at its default value (current date) forever
+    return false;
+  }
+
+  if(lastComDate.daysTo(today) >= interval)
 		return true;
-	else return false;
+	else
+	  return false;
 }
 
 
@@ -262,27 +264,24 @@ void KNFolderManager::compactFolder(KNFolder *f)
 
 void KNFolderManager::compactAll(KNPurgeProgressDialog *dlg)
 {
-	QDate today=QDate::currentDate();
-	KConfig *c=KGlobal::config();
-	KNCleanUp cup;
+  KNCleanUp cup;
 	
-	if(dlg) dlg->init(i18n("Compacting folders ..."), fList->count());
+  if(dlg) dlg->init(i18n("Compacting folders ..."), fList->count());
 	
-	for(KNFolder *var=fList->first(); var; var=fList->next()) {
-		if(dlg) {
-			dlg->setInfo(var->name());
-			kapp->processEvents();
-		}
-		cup.folder(var);
-		qDebug("%s => %d deleted , %d left", var->name().latin1(), cup.deleted(), cup.left());
-		if(dlg) dlg->progress();
-	}
-	if(dlg) kapp->processEvents();
+  for(KNFolder *var=fList->first(); var; var=fList->next()) {
+    if(dlg) {
+      dlg->setInfo(var->name());
+      kapp->processEvents();
+    }
+    cup.folder(var);
+    qDebug("%s => %d deleted , %d left", var->name().latin1(), cup.deleted(), cup.left());
+    if(dlg) dlg->progress();
+  }
+  if(dlg) kapp->processEvents();
 	
-	c->setGroup("EXPIRE");
-	c->writeEntry("lastComY", today.year());
-	c->writeEntry("lastComM", today.month());
-	c->writeEntry("lastComD", today.day());
+  KConfig *c=KGlobal::config();
+  c->setGroup("EXPIRE");
+  c->writeEntry("lastCompact", QDateTime::currentDateTime());
 }
 
 //--------------------------------
