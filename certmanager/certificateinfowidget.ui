@@ -18,9 +18,6 @@
             <height>0</height>
         </size>
     </property>
-    <property name="caption">
-        <string>CertificateInfoWidget</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
