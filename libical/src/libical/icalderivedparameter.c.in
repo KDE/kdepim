@@ -52,7 +52,7 @@ struct icalparameter_kind_map {
     
 };
 
-static struct icalparameter_kind_map parameter_map[];
+static struct icalparameter_kind_map parameter_map[1];
 
 
 const char* icalparameter_kind_to_string(icalparameter_kind kind)
@@ -97,7 +97,7 @@ struct icalparameter_value_kind_map {
     icalvalue_kind kind; 
 };
 
-static struct icalparameter_value_kind_map value_kind_map[];
+static struct icalparameter_value_kind_map value_kind_map[1];
 
 
 icalvalue_kind icalparameter_value_to_value_kind(icalparameter_value value)
@@ -122,7 +122,7 @@ struct icalparameter_map {
 };
 
 
-static struct icalparameter_map icalparameter_map[];
+static struct icalparameter_map icalparameter_map[1];
 
 const char* icalparameter_enum_to_string(int e) 
 {

@@ -1664,7 +1664,7 @@ pvl_list expand_by_day(struct icalrecur_iterator_impl* impl,short year)
                 first = dow - start_dow + 8;
             }
             
-            pvl_push(days_list,(void*)first+  (pos-1) * 7);
+            pvl_push(days_list,(char*)first+  (pos-1) * 7);
             
         } else { /* pos < 0 */ 
             assert(0);

@@ -55,7 +55,7 @@ struct  icalproperty_map {
 
 };
 
-static struct icalproperty_map property_map[];
+static struct icalproperty_map property_map[1];
 
 const char* icalproperty_kind_to_string(icalproperty_kind kind)
 {
@@ -116,7 +116,7 @@ struct icalproperty_enum_map {
     const char* str;
 }; 
 
-static struct icalproperty_enum_map enum_map[];
+static struct icalproperty_enum_map enum_map[1];
 
 const char* icalproperty_method_to_string(icalproperty_method method)
 {
