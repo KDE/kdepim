@@ -1,10 +1,16 @@
-kdepim (2.0-20000831-0) unstable; urgency=low
+kdepim (2.0-20000905-0) unstable; urgency=low
+
+  * upstream fixes
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 05 Sep 2000 17:00:02 -0700
+
+kdepim (2.0-20000901-0) unstable; urgency=low
  
   * Build fixes
   * upstream fixes 
   * merging build fixes with upstream cvs
  
- -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 31 Aug 2000 22:30:02 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Fri, 01 Sep 2000 17:00:02 -0700
                                                                                
 kdepim (2.0-20000825-0) experimental; urgency=low
  
