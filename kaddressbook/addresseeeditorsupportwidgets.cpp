@@ -449,7 +449,7 @@ const KABC::Address::List &AddressEditWidget::addresses()
 
 PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber &phoneNumber,
                                QWidget *parent, const char *name)
-  : KDialogBase( KDialogBase::Plain, i18n( "Edit PhoneNumber" ),
+  : KDialogBase( KDialogBase::Plain, i18n( "Edit Phone Number" ),
                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
                 parent, name, true), mPhoneNumber( phoneNumber )
 {
