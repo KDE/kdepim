@@ -35,7 +35,7 @@
 //
 //
 static const char *perl_conduit_id=
-	"$Id:$";
+	"$Id$";
 
 #include "perl-conduit.h"
 
@@ -105,7 +105,7 @@ PerlConduit::~PerlConduit()
 	else return ConduitAction::event(e);
 }
 
-static char *perl_args[] = { "", "-e", "0" } ;
+static const char *perl_args[] = { "", "-e", "0" } ;
 
 void PerlThread::run()
 {
@@ -117,7 +117,7 @@ void PerlThread::run()
 
 	fPerl = perl_alloc();
 	perl_construct(fPerl);
-	perl_parse(fPerl, NULL, 3, perl_args, NULL);
+	perl_parse(fPerl, NULL, 3, const_cast<char **>(perl_args), NULL);
 	perl_run(fPerl);
 
 	eval_pv("$a=3; $a **=2; $a+=7;",TRUE);
