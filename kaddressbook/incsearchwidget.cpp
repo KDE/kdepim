@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qapplication.h>
 #include <qcombobox.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -42,7 +43,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 
   QToolButton *button = new QToolButton( this );
   button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-  button->setPixmap( SmallIcon( "locationbar_erase" ) );
+  button->setPixmap( SmallIcon( QApplication::reverseLayout() ? "clear_left" : "locationbar_erase" ) );
   QToolTip::add( button, i18n( "Reset" ) );
   layout->addWidget( button );
 
@@ -59,7 +60,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   label = new QLabel( i18n( "as in 'Search in:'", "&in:" ), this, "kde toolbar widget" );
   label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
   layout->addWidget( label );
- 
+
   mFieldCombo = new QComboBox( false, this );
   layout->addWidget( mFieldCombo );
   label->setBuddy(mFieldCombo);
