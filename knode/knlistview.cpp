@@ -383,7 +383,7 @@ void KNListView::contentsDragMoveEvent(QDragMoveEvent *e)
 }
 
 
-void KNListView::contentsDragLeaveEvent(QDragLeaveEvent *e)
+void KNListView::contentsDragLeaveEvent(QDragLeaveEvent *)
 {
   if(d_ragHoverItem) {
     d_ragHoverItem->hover(false);

@@ -931,7 +931,7 @@ void KNodeView::slotCollectionViewDrop(const char *type, QListViewItem *i)
 }
 
 
-void KNodeView::slotHeaderViewDrop(const char *type, QListViewItem *i)
+void KNodeView::slotHeaderViewDrop(const char *type, QListViewItem *)
 {
   kdDebug(5003) << "KNodeView::slotHeaderViewDrop() : type = " << type << endl;
 }
