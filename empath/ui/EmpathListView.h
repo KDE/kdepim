@@ -70,9 +70,9 @@ class EmpathListView : public KListView
             { return QListView::itemAt(screenPos); };
         QListViewItem * itemAt(const QPoint & screenPos, 
             Area & areaAtPos) const;
-        
-        void expand(QListViewItem *);
-        void collapse(QListViewItem *);
+       
+        QList<QListViewItem> thread(QListViewItem *);
+        QList<QListViewItem> subThread(QListViewItem *);
         
     protected slots:
 

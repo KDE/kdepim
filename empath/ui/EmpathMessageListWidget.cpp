@@ -69,13 +69,13 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     lastHeaderClicked_ = -1;
 
     setAllColumnsShowFocus(true);
-    setRootIsDecorated(true);
     
     setSorting(-1);
 
     setSelectionMode(QListView::Extended);
 
     addColumn(i18n("Subject"));
+    addColumn(i18n("F"));
     addColumn(i18n("Sender"));
     addColumn(i18n("Date"));
     addColumn(i18n("Size"));
@@ -93,6 +93,10 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     
     using namespace EmpathConfig;
     
+    c->setGroup(GROUP_DISPLAY);
+    
+    setRootIsDecorated(c->readBoolEntry(UI_THREAD));
+
     c->setGroup(GROUP_GENERAL);
     
     for (int i = 0 ; i < 4 ; i++) {
@@ -103,6 +107,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
 
     _initActions();
     _setupMessageMenu();
+    _setupThreadMenu();
    
     QObject::connect(
             this, SIGNAL(linkChanged(QListViewItem *)),
@@ -113,7 +118,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
             this, SLOT(s_startDrag(const QList<QListViewItem> &)));
     
     QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
-            this, SLOT(s_updateMarkActions(QListViewItem *)));
+            this, SLOT(s_updateActions(QListViewItem *)));
 
     // Connect return press to view.
     QObject::connect(this, SIGNAL(returnPressed(QListViewItem *)),
@@ -223,10 +228,14 @@ EmpathMessageListWidget::_threadItem(EmpathIndexRecord & rec)
             }
         }
 
-    if (parentItem == 0)
-        return _addItem(this, rec);
+    EmpathMessageListItem * newItem;
+
+    if (parentItem == 0) 
+        newItem = new EmpathMessageListItem(this, rec);
     else
-        return _addItem(parentItem, rec);
+        newItem = new EmpathMessageListItem(parentItem, rec);
+
+    return newItem;
 }
 
     EmpathURL
@@ -291,35 +300,35 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
     void
 EmpathMessageListWidget::s_goPrevious()
 {    
-    QListViewItem * i = currentItem()->itemAbove();
+    QListViewItem * i = currentItem();
     
     if (!i) 
         i = firstChild();
+    else if (i->itemAbove())
+        i = i->itemAbove();
     
-    if (i) {
-        setDelayedLink(true);
-        clearSelection();
-        setCurrentItem(i);
-        setSelected(i, true);
-        ensureItemVisible(i);
-    }
+    setDelayedLink(true);
+    clearSelection();
+    setCurrentItem(i);
+    setSelected(i, true);
+    ensureItemVisible(i);
 }
 
     void
 EmpathMessageListWidget::s_goNext()
 {
-    QListViewItem * i = currentItem()->itemBelow();
+    QListViewItem * i = currentItem();
     
     if (!i) 
-        i = currentItem();
-    
-    if (i) {
-        setDelayedLink(true);
-        clearSelection();
-        setCurrentItem(i);
-        setSelected(i, true);
-        ensureItemVisible(i);
-    }
+        i = firstChild();
+    else if (i->itemBelow())
+        i = i->itemBelow();
+        
+    setDelayedLink(true);
+    clearSelection();
+    setCurrentItem(i);
+    setSelected(i, true);
+    ensureItemVisible(i);
 }
 
     void
@@ -344,7 +353,7 @@ EmpathMessageListWidget::s_goNextUnread()
         }
     }
    
-    // If there isn't one below the current item, start again at the top.
+    // If there isn't one below the current item, start again on top.
     
     for (it=firstChild(); it.current()!=currentItem(); ++it) {
         
@@ -488,8 +497,15 @@ EmpathMessageListWidget::s_rightButtonPressed(QListViewItem *,
 }
 
     void
-EmpathMessageListWidget::s_updateMarkActions(QListViewItem * item)
+EmpathMessageListWidget::s_updateActions(QListViewItem * item)
 {
+    if (!item) {
+        actionCollection()->action("messageReply")->setEnabled(false);
+        return;
+    }
+        
+    actionCollection()->action("messageReply")->setEnabled(true);
+
     EmpathMessageListItem * i =
         static_cast<EmpathMessageListItem *>(item);
 
@@ -527,8 +543,10 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
     markAsReadTimer_->cancel();
 
     // Make sure we highlight the current item.
+    clearSelection();
+    setSelected(currentItem(), true);
     kapp->processEvents();
-
+    
     emit(changeView(firstSelectedMessage()));
     markAsReadTimer_->go(static_cast<EmpathMessageListItem *>(i));
 }
@@ -540,43 +558,6 @@ EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
     // XXX RETVAL ?
     empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read));
     setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
-}
-
-    void
-EmpathMessageListWidget::setStatus(
-        EmpathMessageListItem * item, RMM::MessageStatus status)
-{
-    item->setStatus(status);
-    setStatusPixmap(item, status);
-    s_updateMarkActions(item);
-}
-
-    void
-EmpathMessageListWidget::setStatusPixmap(
-        EmpathMessageListItem * item, RMM::MessageStatus status)
-{
-    if (status & RMM::Read)
-        if (status & RMM::Marked)
-            if (status & RMM::Replied)
-                item->setPixmap(0, px_SMR_);
-            else
-                item->setPixmap(0, px_SMx_);
-        else
-            if (status & RMM::Replied)
-                item->setPixmap(0, px_SxR_);
-            else
-                item->setPixmap(0, px_Sxx_);
-    else
-        if (status & RMM::Marked)
-            if (status & RMM::Replied)
-                item->setPixmap(0, px_xMR_);
-            else
-                item->setPixmap(0, px_xMx_);
-        else
-            if (status & RMM::Replied)
-                item->setPixmap(0, px_xxR_);
-            else
-                item->setPixmap(0, px_xxx_);
 }
 
     void
@@ -665,11 +646,11 @@ EmpathMessageListWidget::_initActions()
 {
     actionCollection_ = new QActionCollection(this, "actionCollection");
 
-    ac_goPrevious_ = new KAction(i18n("&Previous"), QIconSet(BarIcon("up")), CTRL+Key_P, 
+    ac_goPrevious_ = new KAction(i18n("&Previous"), QIconSet(BarIcon("prev")), CTRL+Key_P, 
                     this, SLOT(s_goPrevious()), actionCollection(), "goPrevious");
-    ac_goNext_ = new KAction(i18n("&Next"), QIconSet(BarIcon("down")), CTRL+Key_N,
+    ac_goNext_ = new KAction(i18n("&Next"), QIconSet(BarIcon("next")), CTRL+Key_N,
                     this, SLOT(s_goNext()), actionCollection(), "goNext");
-    ac_goNextUnread_ = new KAction(i18n("Next &Unread"), QIconSet(BarIcon("forward")), 0, 
+    ac_goNextUnread_ = new KAction(i18n("Next &Unread"), QIconSet(BarIcon("down")), 0, 
                     this, SLOT(s_goNextUnread()), actionCollection(), "goNextUnread");
     
     ac_messageTag_ = new KToggleAction(i18n("Tag"), QIconSet(px_xMx_), 0, 
@@ -688,6 +669,7 @@ EmpathMessageListWidget::_initActions()
                     this, SLOT(s_messageCompose()), actionCollection(), "messageCompose");
     ac_messageReply_ = new KAction(i18n("&Reply"), empathIconSet("reply"), Key_R,
                     this, SLOT(s_messageReply()), actionCollection(), "messageReply");
+    ac_messageReply_->setEnabled(false);
     ac_messageReplyAll_ = new KAction(i18n("Reply to &All"), empathIconSet("reply"), Key_G,
                     this, SLOT(s_messageReplyAll()), actionCollection(), "messageReplyAll");
     ac_messageForward_ = new KAction(i18n("&Forward"), empathIconSet("forward"), Key_F,
@@ -704,6 +686,11 @@ EmpathMessageListWidget::_initActions()
                     this, SLOT(s_messagePrint()), actionCollection(), "messagePrint");
     ac_messageFilter_ = new KAction(i18n("&Filter"), empathIconSet("filter"), 0,
                     this, SLOT(s_messageFilter()), actionCollection(), "messageFilter");
+
+    ac_threadExpand_ = new KAction(i18n("&Expand"), 0,
+                    this, SLOT(s_threadExpand()), actionCollection(), "threadExpand");
+    ac_threadCollapse_ = new KAction(i18n("&Collapse"), 0,
+                    this, SLOT(s_threadCollapse()), actionCollection(), "threadCollapse");
 }
 
     void
@@ -729,12 +716,13 @@ EmpathMessageListWidget::_setupMessageMenu()
     actionCollection()->action("messageForward")->plug(&multipleMessageMenu_);
     actionCollection()->action("messageDelete")->plug(&multipleMessageMenu_);
     actionCollection()->action("messageSaveAs")->plug(&multipleMessageMenu_);
+}
 
-    threadMenu_.insertItem(i18n("Expand"),
-        this, SLOT(s_expandThread()));
-        
-    threadMenu_.insertItem(i18n("Collapse"),
-        this, SLOT(s_collapseThread()));
+    void
+EmpathMessageListWidget::_setupThreadMenu()
+{
+    actionCollection()->action("threadExpand")->plug(&threadMenu_);
+    actionCollection()->action("threadCollapse")->plug(&threadMenu_);
 }
 
 EmpathMarkAsReadTimer::EmpathMarkAsReadTimer(EmpathMessageListWidget * parent)
@@ -925,10 +913,16 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
         return;
     }
     
-    if (KGlobal::config()->readBoolEntry(EmpathConfig::UI_THREAD))
+    KConfig * c(KGlobal::config());
+    
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
+ 
+    if (c->readBoolEntry(UI_THREAD))
         _threadItem(rec);
     else
-        _addItem(this, rec);
+        new EmpathMessageListItem(this, rec);
 }
 
     void
@@ -993,7 +987,7 @@ EmpathMessageListWidget::_fillDisplay(bool unreadOnly)
             }
             
             if (!(unreadOnly && (rec.status() & RMM::Read)))
-                _addItem(this, rec);
+                new EmpathMessageListItem(this, rec);
 
             t.doneOne();
         }
@@ -1069,15 +1063,27 @@ EmpathMessageListWidget::s_messageMarkMany()
 }
 
     void
-EmpathMessageListWidget::s_expandThread()
+EmpathMessageListWidget::s_threadExpand()
 {
-    expand(currentItem());   
+    QList<QListViewItem> threadList;
+    
+    threadList = subThread(currentItem());
+    
+    QListIterator<QListViewItem> it(threadList);
+    for (; it.current(); ++it)
+        setOpen(it.current(), true);
 }
 
     void
-EmpathMessageListWidget::s_collapseThread()
+EmpathMessageListWidget::s_threadCollapse()
 {
-    collapse(currentItem());
+    QList<QListViewItem> threadList;
+    
+    threadList = subThread(currentItem());
+    
+    QListIterator<QListViewItem> it(threadList);
+    for (; it.current(); ++it)
+        setOpen(it.current(), false);
 }
 
     void
@@ -1117,24 +1123,6 @@ EmpathMessageListWidget::_setSelected(EmpathMessageListItem * item, bool b)
 EmpathMessageListWidget::_nSelected()
 {
     return selected_.count();
-}
-
-    EmpathMessageListItem *
-EmpathMessageListWidget::_addItem(
-    EmpathMessageListItem * prt, EmpathIndexRecord & rec)
-{
-    EmpathMessageListItem * newItem = new EmpathMessageListItem(prt, rec);
-    setStatusPixmap(newItem, rec.status());
-    return newItem;
-}
-
-    EmpathMessageListItem *
-EmpathMessageListWidget::_addItem(
-    EmpathMessageListWidget * prt, EmpathIndexRecord & rec)
-{
-    EmpathMessageListItem * newItem = new EmpathMessageListItem(prt, rec);
-    setStatusPixmap(newItem, rec.status());
-    return newItem;
 }
 
     void

@@ -91,34 +91,42 @@ EmpathListView::itemAt(const QPoint & screenPos,
     return i;
 }
 
-    void
-EmpathListView::expand(QListViewItem * item)
+    QList<QListViewItem>
+EmpathListView::thread(QListViewItem * item)
 {
-    if (!item)
-        return;
+    // find the topmost item of this thread.
+    QListViewItem * top = item;
 
-    setOpen(item, true);
+    while (top->parent())
+        top = top->parent();
     
-    QListViewItem * child = item->firstChild();
-    while (child) {
-        expand(child);
-        child = child->nextSibling();
-    }
+    return subThread(top);
 }
 
-    void
-EmpathListView::collapse(QListViewItem * item)
+    QList<QListViewItem>
+EmpathListView::subThread(QListViewItem * item)
 {
+    QList<QListViewItem> subThreadList;
+    QList<QListViewItem> childThreadList;
+    
     if (!item)
-        return;
-        
+        return subThreadList;
+    
+    subThreadList.append(item);
+    
     QListViewItem * child = item->firstChild();
+    
     while (child) {
-        collapse(child);
+        childThreadList = subThread(child);
+        
+        QListIterator<QListViewItem> it(childThreadList);
+        for (; it.current(); ++it) 
+            subThreadList.append(it.current());
+        
         child = child->nextSibling();
     }
-    
-    setOpen(item, false);
+
+    return subThreadList;
 }
 
     void
@@ -180,7 +188,7 @@ EmpathListView::contentsMousePressEvent(QMouseEvent *e)
         return;
 
     if (pressArea_ == OpenClose) {
-        setCurrentItem(pressItem_);
+        // setCurrentItem(pressItem_);
         setOpen(pressItem_, !pressItem_->isOpen());
         return;
     }
@@ -208,6 +216,8 @@ EmpathListView::contentsMousePressEvent(QMouseEvent *e)
     void
 EmpathListView::contentsMouseReleaseEvent(QMouseEvent *e)
 { 
+    maybeDrag_ = false;
+    
     if (!e || pressArea_ != Item) 
         return;
     
@@ -254,15 +264,13 @@ EmpathListView::contentsMouseReleaseEvent(QMouseEvent *e)
         setSelected(pressItem_, true);
         setLinkItem(pressItem_);
     }
-
-    maybeDrag_ = false;
 }
 
     void
 EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 {
     // FIXME: Disable for the moment. Qt crashes !
-    return;
+    // return;
     
     if (!maybeDrag_)
         return;

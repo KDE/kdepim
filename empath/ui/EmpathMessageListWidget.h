@@ -106,6 +106,9 @@ class EmpathMessageListWidget : public EmpathListView
         virtual void setSelected(QListViewItem *, bool);
         virtual void clearSelection();
 
+        void setStatus(EmpathMessageListItem * item, RMM::MessageStatus s)
+                { item->setStatus(s); }
+ 
         void listenTo(unsigned int);
 
         QActionCollection * actionCollection() { return actionCollection_; }
@@ -136,8 +139,8 @@ class EmpathMessageListWidget : public EmpathListView
         void s_messagePrint();
         void s_messageFilter();
 
-        void s_expandThread();
-        void s_collapseThread();
+        void s_threadExpand();
+        void s_threadCollapse();
         
         void s_rightButtonPressed   (QListViewItem *, const QPoint &, int, Area);
         void s_doubleClicked        (QListViewItem *);
@@ -151,7 +154,7 @@ class EmpathMessageListWidget : public EmpathListView
     
         void s_hideRead();
 
-        void s_updateMarkActions    (QListViewItem *);
+        void s_updateActions        (QListViewItem *);
 
     signals:
         
@@ -167,18 +170,13 @@ class EmpathMessageListWidget : public EmpathListView
         void _initActions();
         
         void _setupMessageMenu();
+        void _setupThreadMenu();
         
         void _setSelected(EmpathMessageListItem *, bool);
         Q_UINT32 _nSelected();
         
         EmpathMessageListItem *
             _threadItem(EmpathIndexRecord & item);
-        
-        EmpathMessageListItem *
-            _addItem(EmpathMessageListItem *, EmpathIndexRecord &);
-        
-        EmpathMessageListItem *
-            _addItem(EmpathMessageListWidget *, EmpathIndexRecord &);
         
         void _removeItem(EmpathMessageListItem *);
         
@@ -219,22 +217,19 @@ class EmpathMessageListWidget : public EmpathListView
         KAction	* ac_messageMoveTo_;
         KAction	* ac_messagePrint_;
         KAction	* ac_messageFilter_;
+
+        // Thread related actions
+        KAction * ac_threadExpand_;
+        KAction * ac_threadCollapse_;
        
         QPixmap px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
                 px_SMx_, px_SxR_, px_xMR_, px_SMR_;
         
-        void setStatus(EmpathMessageListItem *, RMM::MessageStatus);
-        void setStatusPixmap(EmpathMessageListItem *, RMM::MessageStatus);
-
         EmpathURL url_;
 
         int lastHeaderClicked_;
         bool sortType_; // Ascending, Descending
         
-        int messageMenuItemMark;
-        int messageMenuItemMarkRead;
-        int messageMenuItemMarkReplied;
-
         int sortColumn_;
         bool sortAscending_;
         

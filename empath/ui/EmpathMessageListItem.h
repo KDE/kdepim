@@ -42,7 +42,8 @@
 class EmpathMessageListWidget;
 
 /**
- * @internal
+ * Encapsulation of an EmpathIndexRecord in a QListViewItem, which is can be
+ * shown in EmpathMessageListWidget.
  */
 class EmpathMessageListItem : public QListViewItem
 {
@@ -62,18 +63,18 @@ class EmpathMessageListItem : public QListViewItem
 
         QString key(int, bool) const;
 
-        QString             id()        const   { return m.id();        }
-        RMM::RMessageID &   messageID()         { return m.messageID(); }
-        RMM::RMessageID &   parentID()          { return m.parentID();  }
-        QString             subject()   const   { return m.subject();   }
-        RMM::RAddress &     sender()            { return m.sender();    }
-        RMM::RDateTime &    date()              { return m.date();      }
-        RMM::MessageStatus  status()    const   { return m.status();    }
-        Q_UINT32            size()      const   { return m.size();      }
-        
-        const char * className() const { return "EmpathMessageListItem"; }
+        QString             id()        const   { return m_.id();        }
+        RMM::RMessageID &   messageID()         { return m_.messageID(); }
+        RMM::RMessageID &   parentID()          { return m_.parentID();  }
+        QString             subject()   const   { return m_.subject();   }
+        RMM::RAddress &     sender()            { return m_.sender();    }
+        RMM::RDateTime &    date()              { return m_.date();      }
+        RMM::MessageStatus  status()    const   { return m_.status();    }
+        Q_UINT32            size()      const   { return m_.size();      }
         
         void setStatus(RMM::MessageStatus);
+        
+        const char * className() const { return "EmpathMessageListItem"; }
         
     protected:
 
@@ -83,11 +84,12 @@ class EmpathMessageListItem : public QListViewItem
 
         void _init();
 
-        EmpathIndexRecord    m;
+        QPixmap _statusIcon(RMM::MessageStatus);
+
+        EmpathIndexRecord m_;
         
-        QString                niceDate_;
-        QString                dateStr_;
-        QString                sizeStr_;
+        QString dateStr_;
+        QString sizeStr_;
 };
 
 typedef QList<EmpathMessageListItem> EmpathMessageListItemList;

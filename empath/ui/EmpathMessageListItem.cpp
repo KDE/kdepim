@@ -43,7 +43,7 @@ EmpathMessageListItem::EmpathMessageListItem(
         EmpathIndexRecord rec)
     :    
         QListViewItem(parent),
-        m(rec)
+        m_(rec)
 {
     _init();
 }
@@ -53,7 +53,7 @@ EmpathMessageListItem::EmpathMessageListItem(
         EmpathIndexRecord rec)
     :    
         QListViewItem(parent),
-        m(rec)
+        m_(rec)
 {
     _init();
 }
@@ -64,18 +64,44 @@ EmpathMessageListItem::~EmpathMessageListItem()
 
     void
 EmpathMessageListItem::_init()
-{    
-    niceDate_ = KGlobal::locale()->formatDateTime(m.date().qdt());
-    setText(0, m.subject());
-    setText(2, niceDate_);
-    
+{  
+    // Subject
+    setText(0, m_.subject());
+ 
+    // Status
+    setPixmap(1, _statusIcon(m_.status()));
+ 
+    // Sender
+    RMM::RAddress sender_(m_.sender());
+
+    if (sender_.phrase().isEmpty())
+        setText(2, sender_.asString());
+        
+    else {
+
+        QString s = sender_.phrase();
+
+        if (s.left(1) == "\"") {
+            s.remove(0, 1);
+            if (s.right(1) == "\"")
+                s.remove(s.length() - 1, 1);
+        }
+
+        setText(2, s);
+    }
+
+    // Date 
+    QString niceDate = KGlobal::locale()->formatDateTime(m_.date().qdt());
+    setText(3, niceDate);
+   
+    // Size
     QString sizeStr;
     
     // Why does using floats not work ?
     // Anyway, this should handle up to 9999 Mb (nearly 10G).
     // I hope that 10G mail messages won't exist during my lifetime ;)
     
-    Q_UINT32 size_(m.size());
+    Q_UINT32 size_(m_.size());
 
     if (size_ < 1024) {
         
@@ -96,28 +122,10 @@ EmpathMessageListItem::_init()
         }
     }
     
-    setText(3, sizeStr);
-    
-    RMM::RAddress sender_(m.sender());
+    setText(4, sizeStr);
 
-    if (sender_.phrase().isEmpty())
-        setText(1, sender_.asString());
-        
-    else {
-
-        QString s = sender_.phrase();
-
-        if (s.left(1) == "\"") {
-            s.remove(0, 1);
-            if (s.right(1) == "\"")
-                s.remove(s.length() - 1, 1);
-        }
-
-        setText(1, s);
-    }
-    
-    dateStr_.sprintf("%016x", m.date().asUnixTime());
-    
+   // These are used only for sorting.
+    dateStr_.sprintf("%016x", m_.date().asUnixTime());
     sizeStr_.sprintf("%016x", size_);
 }
 
@@ -125,7 +133,7 @@ EmpathMessageListItem::_init()
 EmpathMessageListItem::setup()
 {
     widthChanged();
-    int ph = pixmap(0) ? pixmap(0)->height() : 0;
+    int ph = pixmap(1) ? pixmap(1)->height() : 0;
     int th = QFontMetrics(KGlobal::generalFont()).height();
     setHeight(QMAX(ph, th));
 }
@@ -142,14 +150,18 @@ EmpathMessageListItem::key(int column, bool) const
             break;
             
         case 1:
-            s = text(1);
+            s = text(0); // TODO: sort on status
             break;
-            
+        
         case 2:
-            s = dateStr_;
+            s = text(2);
             break;
             
         case 3:
+            s = dateStr_;
+            break;
+            
+        case 4:
             s = sizeStr_;
             break;
             
@@ -161,16 +173,30 @@ EmpathMessageListItem::key(int column, bool) const
 }
 
     void
-EmpathMessageListItem::setStatus(RMM::MessageStatus s)
+EmpathMessageListItem::setStatus(RMM::MessageStatus status)
 {
-    m.setStatus(s);
+    m_.setStatus(status);
+    setPixmap(1, _statusIcon(status));
+}
+
+    QPixmap
+EmpathMessageListItem::_statusIcon(RMM::MessageStatus status)
+{
+    QString iconName = "tree-";
+    
+    if (status & RMM::Read)    iconName += "read-";
+    if (status & RMM::Marked)  iconName += "marked-";
+    if (status & RMM::Replied) iconName += "replied-";
+    iconName.truncate(iconName.length() - 1); // Remove trailing '-';
+    
+    return empathIcon(iconName);
 }
 
     void
 EmpathMessageListItem::paintCell(
     QPainter * p, const QColorGroup & cg, int column, int width, int align)
 {
-    if (m.status() & RMM::Read)
+    if (m_.status() & RMM::Read)
         QListViewItem::paintCell(p, cg, column, width, align);
 
     else {
