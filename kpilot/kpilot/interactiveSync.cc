@@ -107,7 +107,7 @@ CheckUser::~CheckUser()
 				"(<i>%1</i>)?</qt>").arg(defaultUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserNone" */) ==
-				KDialogBase::Yes)
+				KMessageBox::Yes)
 			{
 				KPilotSettings::setUserName(defaultUserName);
 				fHandle->getPilotUser()->
@@ -125,7 +125,7 @@ CheckUser::~CheckUser()
 				arg(pilotUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */ ) ==
-				KDialogBase::Yes)
+				KMessageBox::Yes)
 			{
 				KPilotSettings::setUserName(pilotUserName);
 				guiUserName=pilotUserName;
@@ -142,7 +142,7 @@ CheckUser::~CheckUser()
 				"Pilot as well?").arg(guiUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */) ==
-				KDialogBase::Yes)
+				KMessageBox::Yes)
 			{
 #ifdef DEBUG
 				DEBUGDAEMON << fname
@@ -191,7 +191,7 @@ CheckUser::~CheckUser()
 					KPilotSettings::setUserName(pilotUserName);
 					guiUserName=pilotUserName;
 					break;
-				case KDialogBase::Cancel:
+				case KMessageBox::Cancel:
 				default:
 					// TODO: cancel the sync... Or just don't change any user name?
 					break;
