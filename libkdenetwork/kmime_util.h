@@ -37,16 +37,16 @@ namespace KMime {
   /** checks whether @p s contains any non-us-ascii characters */
   extern bool isUsAscii(const QString &s);
 
-  inline bool isOfSet(uchar map[16], unsigned char ch) {
+  inline bool isOfSet(const uchar map[16], unsigned char ch) {
     Q_ASSERT( ch < 128 );
     return ( map[ ch/8 ] & 0x80 >> ch%8 );
   }
 
-  extern uchar specialsMap[16];
-  extern uchar tSpecialsMap[16];
-  extern uchar aTextMap[16];
-  extern uchar tTextMap[16];
-  extern uchar eTextMap[16];
+  extern const uchar specialsMap[16];
+  extern const uchar tSpecialsMap[16];
+  extern const uchar aTextMap[16];
+  extern const uchar tTextMap[16];
+  extern const uchar eTextMap[16];
 
   inline bool isSpecial(char ch) {
     return isOfSet( specialsMap, ch );
