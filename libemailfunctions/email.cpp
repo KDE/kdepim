@@ -456,7 +456,7 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
                 "contains an unexpected comma.");
     case UnexpectedEnd :
       return i18n("The email address you entered is not valid because it ended "
-                "unexpectadly, this probably means you have used an escaping type "
+                "unexpectedly, this probably means you have used an escaping type "
                 "character like an \\  as the last character in your email "
                 "address.");
     case UnbalancedQuote :
@@ -550,7 +550,7 @@ QCString KPIM::getFirstEmailAddress( const QCString & addresses )
                           true /* allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QCString();
-    kdDebug() // << k_funcinfo << "\n" 
+    kdDebug() // << k_funcinfo << "\n"
               << "Input: aStr\nError:"
               << emailParseResultToString( result ) << endl;
   }
