@@ -101,8 +101,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const c
   boxLayout->setRowStretch( 2, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
-  mImageLabel->setFixedSize( 50, 70 );
-  mImageLabel->setScaledContents( true );
+  mImageLabel->setFixedSize( 100, 140 );
   mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   boxLayout->addMultiCellWidget( mImageLabel, 0, 2, 0, 0, AlignTop );
 
@@ -158,7 +157,16 @@ void ImageBaseWidget::setImage( const KABC::Picture &photo )
   blockSignals( true );
 
   if ( photo.isIntern() ) {
-    mImageLabel->setPixmap( photo.data() );
+    QPixmap px = photo.data();
+
+    if ( px.height() != 140 || px.width() != 100 ) {
+      if ( px.height() > px.width() )
+        px = px.convertToImage().scaleHeight( 140 );
+      else
+        px = px.convertToImage().scaleWidth( 100 );
+    }
+
+    mImageLabel->setPixmap( px );
     mUseImageUrl->setChecked( false );
   } else {
     mImageUrl->setURL( photo.url() );
@@ -179,15 +187,8 @@ KABC::Picture ImageBaseWidget::image() const
   if ( mUseImageUrl->isChecked() )
     photo.setUrl( mImageUrl->url() );
   else {
-    QPixmap *px = mImageLabel->pixmap();
-    if ( px ) {
-      if ( px->height() > px->width() )
-        photo.setData( px->convertToImage().scaleHeight( 140 ) );
-      else
-        photo.setData( px->convertToImage().scaleWidth( 100 ) );
-
-      photo.setType( "PNG" );
-    }
+    if ( mImageLabel->pixmap() )
+      photo.setData( mImageLabel->pixmap()->convertToImage() );
   }
 
   return photo;
@@ -237,6 +238,13 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
   else if ( KIO::NetAccess::download( url, tempFile, this ) ) {
     pixmap = QPixmap( tempFile );
     KIO::NetAccess::removeTempFile( tempFile );
+  }
+
+  if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
+    if ( pixmap.height() > pixmap.width() )
+      pixmap = pixmap.convertToImage().scaleHeight( 140 );
+    else
+      pixmap = pixmap.convertToImage().scaleWidth( 100 );
   }
 
   return pixmap;
