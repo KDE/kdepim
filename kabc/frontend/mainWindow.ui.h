@@ -32,8 +32,7 @@ class AddresseeItem : public QListViewItem
 
 void MainWindow::init()
 {
-  mAddressBook = new KABC::AddressBook;
-  mResourceFile = new ResourceFile( mAddressBook, QString::null );
+  mAddressBook = KABC::StdAddressBook::self();
   
   mCurrentItem = 0;
 
@@ -57,20 +56,7 @@ void MainWindow::fileSave()
 {
   updateAddressee( mAddresseeList->selectedItem() );
 
-  if ( mResourceFile->fileName().isEmpty() ) {
-    QString fn = QFileDialog::getSaveFileName();
-    if ( fn.isEmpty() ) return;
-    mResourceFile->setFileName( fn );
-  }
-    
-  Ticket *ticket = mAddressBook->requestSaveTicket();
-  if ( !ticket ) {
-    QMessageBox::critical( this, i18n("Save Error"), i18n("Can't save file '%1'.\n"
-      "File is locked by another process."), QMessageBox::Ok, QMessageBox::NoButton,
-      QMessageBox::NoButton );
-    return;
-  }
-  mAddressBook->save( ticket );
+  StdAddressBook::save();
 }
 
 void MainWindow::fileOpen()
@@ -83,13 +69,6 @@ void MainWindow::fileOpen()
 void MainWindow::loadAddressBook( const QString &fileName )
 {
   kdDebug() << "loadAddressBook(): '" << fileName << "'" << endl;
-
-  mResourceFile->setFileName( fileName );
-
-  if ( !mAddressBook->load() ) {
-    kdDebug() << "MainWindow::loadAddressBook() failed." << endl;
-    return;
-  }
 
   mAddresseeList->clear();
   mCurrentItem = 0;
@@ -659,7 +638,7 @@ void MainWindow::addressBookChanged()
   QMessageBox::warning( this, i18n("Address Book Changed"),
                         i18n("The address book has changed on disk"),
                         i18n("Reload") );
-  loadAddressBook( mResourceFile->fileName() );
+  loadAddressBook( "dummy" );
 }
 
 void MainWindow::addressBookLocked()
