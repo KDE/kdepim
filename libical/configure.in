@@ -41,16 +41,16 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS(strdup)
 
 AC_OUTPUT(\
+Makefile \
+src/Makefile \
 src/libical/icalversion.h \
 src/libical/Makefile \
 src/libicalss/Makefile \
 src/libicalvcal/Makefile \
 src/test/Makefile \
-src/Makefile \
 design-data/Makefile \
 examples/Makefile \
 doc/Makefile \
 scripts/Makefile \
 test-data/Makefile \
-src/Makefile \
-Makefile )
+)
