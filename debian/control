@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: automake, autoconf, libtool, kdelibs3-dev (>= 4:2.1-final-0), debhelper, gettext, bison | byacc, libpisock-dev, flex
+Build-Depends: automake, autoconf, libtool, kdelibs-dev (>= 4:2.1-final-0), debhelper, gettext, bison | byacc, libpisock-dev, flex
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
@@ -62,7 +62,7 @@ Package: kdepim-dev
 Architecture: any
 Section: devel
 Replaces: korganizer (<< 4:2.1-20010116-0)
-Depends: kdepim-libs (= ${Source-Version}), kdelibs3-dev, libc6-dev
+Depends: kdepim-libs (= ${Source-Version}), kdelibs-dev
 Description: KDE PIM applications (development files)
  KDE PIM application development files
  You need these files to compile some PIM related KDE apps.
