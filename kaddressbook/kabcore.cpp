@@ -467,7 +467,7 @@ void KABCore::mergeContacts()
 
   KABC::Addressee::List::Iterator it = list.begin();
   KABC::Addressee origAddr = *it;
-  QString uids;
+  QStringList uids;
   ++it;
   while ( it != list.end() ) {
     uids.append( (*it).uid() );
