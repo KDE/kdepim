@@ -248,6 +248,8 @@ void LDAPSearchDialog::restoreSettings()
 
       for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
         attrs << *it;
+        
+      attrs << "objectClass"; // via objectClass we detect distribution lists
 
       ldapClient->setAttrs( attrs );
 
