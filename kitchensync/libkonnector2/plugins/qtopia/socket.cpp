@@ -27,6 +27,7 @@
 #include <klocale.h>
 #include <kio/netaccess.h>
 #include <libkcal/calendarlocal.h>
+#include <libkdepim/kpimprefs.h>
 
 #include <addressbooksyncee.h>
 #include <calendarsyncee.h>
@@ -523,10 +524,14 @@ CalendarSyncee *QtopiaSocket::defaultCalendarSyncee()
 {
   CalendarSyncee* syncee = d->m_sync.calendarSyncee();
   if ( syncee == 0 ) {
-    syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
+    syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal(KPimPrefs::timezone()) );
 
     /* if we've a device lets set the merger */
     syncee->setMerger( d->device ? d->device->merger( OpieHelper::Device::Calendar ) : 0);
+
+    /*  Set title */
+    syncee->setTitle( i18n("Opie") );
+    syncee->setIdentifier( "Opie Todolist and Datebook" );
   }
 
   return syncee;
@@ -850,9 +855,10 @@ QString QtopiaSocket::partnerIdPath() const
  */
 void QtopiaSocket::readTimeZones()
 {
-    KConfig conf("korganizerrc");
-    conf.setGroup("Time & Date");
-    d->tz = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
+    QString pref = KPimPrefs::timezone();
+    d->tz = pref.isEmpty() ?
+            QString::fromLatin1("Europe/London") : pref;
+    kdDebug() << "TimeZone is " << d->tz << endl;
 }
 
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest )

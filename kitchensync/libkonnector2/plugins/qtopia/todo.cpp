@@ -154,10 +154,6 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
 
 bool ToDo::toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee *syncee )
 {
-  syncee->setTitle( i18n("OpieTodo") );
-  syncee->setIdentifier( "Opie" );
-
-
   QFile file( fileName );
   if ( !file.open( IO_ReadOnly ) ) {
     return false;

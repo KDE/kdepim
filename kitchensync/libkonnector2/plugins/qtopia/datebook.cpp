@@ -200,9 +200,6 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
 
 bool DateBook::toKDE( const QString& fileName, ExtraMap& extraMap, KSync::CalendarSyncee *syncee )
 {
-    syncee->setTitle( i18n("Opie") );
-    syncee->setIdentifier( "Opie" );
-
     QFile file( fileName );
     if ( !file.open( IO_ReadOnly ) ) {
         return false;

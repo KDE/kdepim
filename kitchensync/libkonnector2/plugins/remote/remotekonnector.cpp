@@ -31,6 +31,7 @@
 #include <kabc/vcardconverter.h>
 #include <libkcal/icalformat.h>
 #include <libkdepim/kabcresourcenull.h>
+#include <libkdepim/kpimprefs.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
@@ -52,7 +53,8 @@ extern "C"
 
 
 RemoteKonnector::RemoteKonnector( const KConfig *config )
-    : Konnector( config ), mConfigWidget( 0 )
+    : Konnector( config ), mConfigWidget( 0 ),
+    mCalendar( KPimPrefs::timezone() )
 {
   mAddressBook.addResource( new KABC::ResourceNull() );
   if ( config ) {

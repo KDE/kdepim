@@ -28,6 +28,8 @@
 #include <bookmarksyncee.h>
 #include <synchistory.h>
 
+#include <libkdepim/kpimprefs.h>
+
 #include <kabc/resourcefile.h>
 
 #include <konnectorinfo.h>
@@ -48,7 +50,8 @@ extern "C"
 
 
 LocalKonnector::LocalKonnector( const KConfig *config )
-    : Konnector( config ), mConfigWidget( 0 )
+    : Konnector( config ), mConfigWidget( 0 ), 
+    mCalendar( KPimPrefs::timezone() )
 {
   if ( config ) {
     mCalendarFile = config->readPathEntry( "CalendarFile" );
