@@ -351,7 +351,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
           html += meetingDetails( incidence, event );
         } else {
           html += i18n("<h2>This task has been published</h2>");
-          html += meetingDetails( incidence, event );
+          html += taskDetails( incidence );
         }
       } else {
         html += i18n("Error: iMIP message with unknown method: '%1'")
