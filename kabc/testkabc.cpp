@@ -26,7 +26,7 @@ int main(int argc,char **argv)
   
   Addressee a;
   a.setName( "Hans Speck" );
-  a.setEmail( "hw@abc.de" );
+  a.insertEmail( "hw@abc.de" );
   ab.insertAddressee( a );
 
 //  ab.dump();
@@ -34,14 +34,14 @@ int main(int argc,char **argv)
   Addressee b;
 //  b = a;
   b.setName( "Hilde Wurst" );
-  b.insertPhoneNumber( PhoneNumber( "12345", PhoneNumber::Mobile ) );
+  b.insertPhoneNumber( PhoneNumber( "12345", PhoneNumber::Cell ) );
   ab.insertAddressee( b );
 
 //  ab.dump();
   
   Addressee c( b );
   c.setName( "Klara Klossbruehe" );
-  c.insertPhoneNumber( PhoneNumber( "00000", PhoneNumber::Mobile ) );
+  c.insertPhoneNumber( PhoneNumber( "00000", PhoneNumber::Cell ) );
   c.insertPhoneNumber( PhoneNumber( "4711", PhoneNumber::Fax ) );
   c.setNickName( "Klaerchen" );
   ab.insertAddressee( c );
@@ -49,7 +49,7 @@ int main(int argc,char **argv)
 //  ab.dump();
   
   AddressBook::Iterator it = ab.find( c );
-  (*it).setEmail( "neueemail@woauchimmer" );
+  (*it).insertEmail( "neueemail@woauchimmer" );
   
   kdDebug() << "Write addressbook to: " << ab.fileName() << endl;
   ab.dump();

@@ -40,7 +40,11 @@ class Addressee
     Addressee( const Addressee & );
     Addressee &operator=( const Addressee & );
 
+    bool isEmpty();
+
     --DECLARATIONS--
+    QString realName() const;
+    
     void insertEmail( const QString &email, bool prefered=false );
     void removeEmail( const QString &email );
     QString preferredEmail() const;

@@ -43,7 +43,6 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
       if ( n.startsWith( "X-" ) ) {
         n = n.mid( 2 );
         int posDash = n.find( "-" );
-        kdDebug() << "---n: " << n << " posDash: " << posDash << endl;        
         a.insertCustom( QString::fromUtf8( n.left( posDash ) ),
                         QString::fromUtf8( n.mid( posDash + 1 ) ),
                         QString::fromUtf8( cl->value()->asString() ) );
@@ -98,7 +97,6 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
           break;
 
         case EntityNote:
-          kdDebug() << "----Read note: " << cl->asString() << endl;
           a.setNote( readTextValue( cl ) );
           break;
 
@@ -124,6 +122,9 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
 
         case EntityCategories:
           a.setCategories( QStringList::split( ",", readTextValue( cl ) ) );
+          break;
+
+        case EntityVersion:
           break;
           
         default:
@@ -155,8 +156,6 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
 
 bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
 {
-  kdDebug() << "VCardFormat::save(): " << fileName << endl;
-
   VCardEntity vcards;
   VCardList vcardlist;
   vcardlist.setAutoDelete( true );
@@ -252,9 +251,6 @@ void VCardFormatImpl::addTextValue( VCard *v, EntityType type, const QString &tx
 
 void VCardFormatImpl::addAddressValue( VCard *vcard, const Address &a )
 {
-  kdDebug() << "VCardFormatImpl::addAddressValue() " << endl;
-  a.dump();
-
   ContentLine cl;
   cl.setName( EntityTypeToParamName( EntityAddress ) );
 
@@ -271,8 +267,6 @@ void VCardFormatImpl::addAddressValue( VCard *vcard, const Address &a )
   addAddressParam( &cl, a.type() );
 
   vcard->add( cl );
-
-  kdDebug() << "VCardFormatImpl::addAddressValue() done" << endl;
 }
 
 void VCardFormatImpl::addLabelValue( VCard *vcard, const Address &a )
@@ -423,6 +417,5 @@ PhoneNumber VCardFormatImpl::readTelephoneValue( ContentLine *cl )
 
 QString VCardFormatImpl::readTextValue( ContentLine *cl )
 {
-  kdDebug() << "VCardFormatImpl::readTextValue(): " << cl->value()->asString() << endl;
   return QString::fromUtf8( cl->value()->asString() );
 }

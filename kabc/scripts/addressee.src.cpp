@@ -43,7 +43,28 @@ void Addressee::detach()
   *this = copy();
 }
 
+bool Addressee::isEmpty()
+{
+  if ( mData->name.isEmpty() && mData->formattedName.isEmpty() &&
+       mData->emails.isEmpty() ) return true;
+       
+  return false;
+}
+
 --DEFINITIONS--
+
+QString Addressee::realName() const
+{
+  if ( !formattedName().isEmpty() ) return formattedName();
+
+  QString n = prefix() + " " + givenName() + " " + additionalName() + " " +
+              familyName() + " " + suffix();
+  n = n.simplifyWhiteSpace();             
+
+  if ( n.isEmpty() ) n = name();
+  
+  return n;
+}
 
 void Addressee::insertEmail( const QString &email, bool preferred )
 {

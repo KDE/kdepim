@@ -61,6 +61,8 @@ class Addressee
     Addressee( const Addressee & );
     Addressee &operator=( const Addressee & );
 
+    bool isEmpty();
+
     void setUid( const QString &uid );
     QString uid() const;
 
@@ -124,6 +126,8 @@ class Addressee
     void setUrl( const KURL &url );
     KURL url() const;
 
+    QString realName() const;
+    
     void insertEmail( const QString &email, bool prefered=false );
     void removeEmail( const QString &email );
     QString preferredEmail() const;
