@@ -6,7 +6,7 @@ noinst_LTLIBRARIES = libkopengroupware.la
 
 libkgroupwarebase_la_SOURCES = folderlister.cpp folderconfig.cpp \
   webdavhandler.cpp groupwaredataadaptor.cpp groupwaredownloadjob.cpp \
-  calendaradaptor.cpp addressbookadaptor.cpp groupwarejob.cpp \
+  calendaradaptor.cpp addressbookadaptor.cpp groupwareresourcejob.cpp \
   groupwareuploadjob.cpp kcal_resourcegroupwarebase.cpp kabc_resourcegroupwarebase.cpp \
   kcal_groupwareprefs.kcfgc kabc_groupwareprefs.kcfgc \
 	kcal_resourcegroupwarebaseconfig.cpp kabc_resourcegroupwarebaseconfig.cpp \

@@ -28,7 +28,7 @@
 
 #include <kio/job.h>
 
-KIO::TransferJob *OGoGlobals::createDownloadItemJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url )
+KIO::TransferJob *OGoGlobals::createDownloadItemJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
 {
   KIO::TransferJob *job = KIO::get( url, false, false );
   job->addMetaData( "accept", adaptor->mimeType() );
@@ -36,14 +36,14 @@ KIO::TransferJob *OGoGlobals::createDownloadItemJob( KPIM::GroupwareDataAdaptor 
   return job;
 }
 
-QString OGoGlobals::extractFingerprint( KIO::TransferJob *job, 
-          const QString &/*rawText*/ ) 
+QString OGoGlobals::extractFingerprint( KIO::TransferJob *job,
+          const QString &/*rawText*/ )
 {
   const QString& headers = job->queryMetaData( "HTTP-Headers" );
   return WebdavHandler::getEtagFromHeaders( headers );
 }
 
-void OGoGlobals::updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor, 
+void OGoGlobals::updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor,
          KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
 {
   Q_ASSERT( item && trfjob );
@@ -66,7 +66,7 @@ void OGoGlobals::updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor,
 */
 }
 
-KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl, 
+KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems )
 {
   QStringList urls;

@@ -21,6 +21,7 @@
 */
 
 #include "folderlister.h"
+#include "webdavhandler.h"
 
 #include <kio/davjob.h>
 #include <kio/job.h>
@@ -35,6 +36,15 @@ using namespace KPIM;
 FolderLister::FolderLister( Type type )
   : mType( type )
 {
+}
+
+KURL FolderLister::adjustUrl( const KURL &u )
+{
+kdDebug()<<"FolderLister::adjustUrl( url="<<u.url()<<")"<<endl;
+  KURL url( u );
+  url.setPass( mPassword );
+  url.setUser( mUser );
+  return WebdavHandler::toDAV( url );
 }
 
 void FolderLister::setFolders( const FolderLister::Entry::List &folders )
@@ -115,19 +125,58 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
+KIO::DavJob *FolderLister::createJob( const KURL &url )
+{
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
+  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
+  WebdavHandler::addDavElement( doc, prop, "displayname" );
+  WebdavHandler::addDavElement( doc, prop, "resourcetype" );
+  WebdavHandler::addDavElement( doc, prop, "hassubs" );
+  
+  kdDebug(7000) << "props: " << doc.toString() << endl;
+  return KIO::davPropFind( url, doc, "1", false );
+}
+
+
 void FolderLister::retrieveFolders( const KURL &u )
 {
-  mUrl = u;
+kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
+  mUrls.clear();
+  mProcessedUrls.clear();
+  bool firstRetrieve = mFolders.isEmpty();
+  mFolders = defaultFolders();
 
-  kdDebug(7000) << "FolderLister::retrieveFolders: " << getUrl().prettyURL() << endl;
+  for ( Entry::List::Iterator it = mFolders.begin(); it != mFolders.end(); ++it ) {
+    if ( firstRetrieve ) {
+      (*it).active = true;
+    } else {
+      (*it).active = isActive( (*it).id );
+    }
+  }
+  
+  mUser = u.user();
+  mPassword = u.pass();
+  
+  doRetrieveFolder( u );
+}
 
-  KURL url( adjustUrl( getUrl() ) );
+void FolderLister::doRetrieveFolder( const KURL &u )
+{
+  kdDebug(7000) << "FolderLister::retrieveFolders: " << u.prettyURL() << endl;
 
-  mListEventsJob = createJob( url );
+  if ( mUrls.contains( u.path(-1) ) || mProcessedUrls.contains( u.path(-1) ) ) {
+    kdDebug()<<"Item "<<u.path(-1)<<" is already being downloaded "<<endl;
+  } else {
+    KURL url( adjustUrl( u ) );
+    mUrls.append( url.path(-1) );
 
-  kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" << url.prettyURL() << endl;
-  connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotListJobResult( KIO::Job * ) ) );
+    KIO::Job *listjob = createJob( url );
+
+    kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" << url.prettyURL() << endl;
+    connect( listjob, SIGNAL( result( KIO::Job * ) ),
+             SLOT( slotListJobResult( KIO::Job * ) ) );
+  }
 }
 
 FolderLister::Entry::List FolderLister::defaultFolders()
@@ -137,74 +186,79 @@ FolderLister::Entry::List FolderLister::defaultFolders()
   return newFolders;
 }
 
-void FolderLister::slotListJobResult( KIO::Job *job )
+void FolderLister::interpretFolderResult( KIO::Job *job )
 {
-  kdDebug(7000) << "OpenGroupware::slotListJobResult(): " << endl;
+  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
+  Q_ASSERT( davjob );
+  if ( !davjob ) return;
+  
+  QDomDocument doc = davjob->response();
+  kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
-  if ( job->error() ) {
-    kdError() << "Unable to retrieve folders." << endl;
-  } else {
-    QDomDocument doc = mListEventsJob->response();
+  QDomElement docElement = doc.documentElement();
+  QDomNode n;
+  for( n = docElement.firstChild(); !n.isNull();
+    n = n.nextSibling() ) {
 
-    kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    QDomElement ee1 = n.toElement();
 
-    bool firstRetrieve = mFolders.isEmpty();
+    QDomNode n2 = n.namedItem( "propstat" );
+    QDomNode n3 = n2.namedItem( "prop" );
 
-    Entry::List newFolders( defaultFolders() );
-
-    for ( Entry::List::Iterator it = newFolders.begin(); it != newFolders.end(); ++it ) {
-      if ( firstRetrieve ) {
-        (*it).active = true;
-      } else {
-        (*it).active = isActive( (*it).id );
-      }
-    }
-
-    QDomElement docElement = doc.documentElement();
-    QDomNode n;
-    for( n = docElement.firstChild(); !n.isNull();
-      n = n.nextSibling() ) {
-
-      QDomElement ee1 = n.toElement();
-
-      QDomNode n2 = n.namedItem( "propstat" );
-      QDomNode n3 = n2.namedItem( "prop" );
-
-      QString displayName;
-      
-      FolderType type = getFolderType( n3 );
-
-      QDomNode n4;
-      for( n4 = n3.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
-        QDomElement e = n4.toElement();
-        if ( e.tagName() == "displayname" ) displayName = e.text();
-      }
-
-      if ( ( mType == Calendar && 
-              ( type == CalendarFolder || type == TasksFolder || 
-                type == JournalsFolder ) ) ||
-           ( type == ContactsFolder && mType == AddressBook ) ) {
-        QDomNode n6 = n.namedItem( "href" );
-        QDomElement e2 = n6.toElement();
-        QString href = e2.text();
-        
+    QString href = n.namedItem( "href" ).toElement().text();
+    QString displayName = n3.namedItem( "displayname" ).toElement().text();
+    
+    FolderType type = getFolderType( n3 );
+    
+    if ( ( mType == Calendar && 
+            ( type == CalendarFolder || type == TasksFolder || 
+              type == JournalsFolder ) ) ||
+         ( type == ContactsFolder && mType == AddressBook ) ) {
+         
+      if ( !href.isEmpty() && !displayName.isEmpty() ) {
         Entry entry;
         entry.id = href;
         entry.name = displayName;
         entry.active = isActive( entry.id );
-        
-        newFolders.append( entry );
-      
-        kdDebug(7000) << "FOLDER: " << displayName << endl;
+
+        mFolders.append( entry );
       }
+      kdDebug(7000) << "FOLDER: " << displayName << endl;
     }
+    QString hassubs = n3.namedItem( "hassubs" ).toElement().text();
+kdDebug()<<"hassubs="<<hassubs<<endl;
+    if ( hassubs == "1" ) {
+      doRetrieveFolder( href );
+    } else {
+      KURL u( href );
+kdDebug()<<"Not descending into "<< href<<", adding path "<<u.path(-1)<<" to the list of processed URLS"<<endl;
+      mProcessedUrls.append( u.path(-1) );
+    }
+  }
+}
 
-    mFolders = newFolders;
-
-    emit foldersRead();
+void FolderLister::slotListJobResult( KIO::Job *job )
+{
+  kdDebug(7000) << "OpenGroupware::slotListJobResult(): " << endl;
+  kdDebug()<<"URLS ("<<mUrls.count()<<"): "<<mUrls.join(" | ") << endl;
+  kdDebug()<<"Processed URLS ("<<mProcessedUrls.count()<<"): "<<mProcessedUrls.join(" | ") << endl;
+  KIO::SimpleJob *j = dynamic_cast<KIO::SimpleJob*>(job);
+  if ( j ) {
+    mUrls.remove( j->url().path(-1) );
+    mProcessedUrls.append( j->url().path(-1) );
   }
 
-  mListEventsJob = 0;
+  if ( job->error() ) {
+    kdError() << "Unable to retrieve folders." << endl;
+  } else {
+    interpretFolderResult( job );
+  }
+  kdDebug()<<"After URLS ("<<mUrls.count()<<"): "<<mUrls.join(" | ") << endl;
+  kdDebug()<<"After Processed URLS ("<<mProcessedUrls.count()<<"): "<<mProcessedUrls.join(" | ") << endl;
+  if ( mUrls.isEmpty() ) {
+    kdDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
+    emit foldersRead();
+  }
 }
 
 #include "folderlister.moc"

@@ -133,6 +133,11 @@ QString CalendarAdaptor::addItem( KIO::TransferJob *job,
   }
   
   mResource->disableChangeNotification();
+  // TODO: Remove existing incidence. Make sure it was not changed meanwhile!
+  Incidence *inc = mResource->incidence( localId );
+  if ( inc ) 
+    mResource->deleteIncidence( inc );
+  
   KCal::Incidence *i = (incidences.front())->clone();
   if ( !localId.isEmpty() ) i->setUid( localId );
   i->setCustomProperty( identifier(), "storagelocation", storageLocation );

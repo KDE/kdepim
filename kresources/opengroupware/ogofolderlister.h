@@ -33,10 +33,7 @@ class OGoFolderLister : public FolderLister
     OGoFolderLister( FolderLister::Type );
   
   protected:
-    virtual KURL adjustUrl( const KURL &u );
-    virtual KIO::DavJob *createJob( const KURL &url );
     virtual FolderType getFolderType( const QDomNode &folderNode );
-    virtual Entry::List defaultFolders();
 };
 
 }

@@ -22,7 +22,9 @@
 #ifndef DAVGROUPWAREGLOBALS_H
 #define DAVGROUPWAREGLOBALS_H
 
+#include "groupwareresourcejob.h"
 #include <kurl.h>
+#include <qstring.h>
 
 namespace KIO {
 class Job;
@@ -40,8 +42,11 @@ class DAVGroupwareGlobals
     DAVGroupwareGlobals() {}
 
     static KIO::TransferJob *createListItemsJob( const KURL &url );
-    static bool itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor, 
-        KIO::Job *job, QStringList &currentlyOnServer, QStringList &itemsForDownload );
+
+    static KPIM::GroupwareJob::ContentType contentClass( const QString &contentclass );
+    static bool itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor,
+        KIO::Job *job, QStringList &currentlyOnServer,
+        QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
 };
 
 #endif

@@ -22,7 +22,7 @@
 #ifndef KPIM_GROUPWAREDOWNLOADJOB_H
 #define KPIM_GROUPWAREDOWNLOADJOB_H
 
-#include "groupwarejob.h"
+#include "groupwareresourcejob.h"
 #include <qstringlist.h>
 
 namespace KIO {
@@ -41,7 +41,7 @@ class ProgressItem;
 class GroupwareDownloadJob : public GroupwareJob
 {
     Q_OBJECT
-  public:  
+  public:
     GroupwareDownloadJob( GroupwareDataAdaptor *adaptor );
 
     void kill();
@@ -59,12 +59,12 @@ class GroupwareDownloadJob : public GroupwareJob
     void slotListJobResult( KIO::Job * );
     void slotJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
-  
+
   private:
     QStringList mFoldersForDownload;
     QStringList mCurrentlyOnServer;
 
-    QStringList mItemsForDownload;
+    QMap<QString,ContentType> mItemsForDownload;
 
     KPIM::ProgressItem *mProgress;
 

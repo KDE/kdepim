@@ -69,15 +69,15 @@ KABC::Addressee::List OGoAddressBookAdaptor::parseData( KIO::TransferJob */*job*
   return conv.parseVCards( rawText );
 }
 
-QString OGoAddressBookAdaptor::extractFingerprint( KIO::TransferJob *job, 
-                                                   const QString &rawText ) 
+QString OGoAddressBookAdaptor::extractFingerprint( KIO::TransferJob *job,
+                                                   const QString &rawText )
 {
   return OGoGlobals::extractFingerprint( job, rawText );
 }
 
-KIO::TransferJob *OGoAddressBookAdaptor::createDownloadItemJob( const KURL &url )
+KIO::TransferJob *OGoAddressBookAdaptor::createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
 {
-  return OGoGlobals::createDownloadItemJob( this, url );
+  return OGoGlobals::createDownloadItemJob( this, url, ctype );
 }
 
 KIO::TransferJob *OGoAddressBookAdaptor::createListItemsJob( const KURL &url )
@@ -85,7 +85,7 @@ KIO::TransferJob *OGoAddressBookAdaptor::createListItemsJob( const KURL &url )
   return DAVGroupwareGlobals::createListItemsJob( url );
 }
 
-bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QStringList &itemsForDownload )
+bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
 {
   return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
 }
@@ -95,7 +95,7 @@ void OGoAddressBookAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM:
   OGoGlobals::updateFingerprintId( this, trfjob, item );
   Addressee addr( resource()->findByUid( item->uid() ) );
   if ( !addr.isEmpty() ) {
-    addr.insertCustom( identifier(), "storagelocation", 
+    addr.insertCustom( identifier(), "storagelocation",
                idMapper()->remoteId( item->uid() ) );
   }
 }

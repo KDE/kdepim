@@ -32,46 +32,6 @@ OGoFolderLister::OGoFolderLister( FolderLister::Type type ) : FolderLister( type
 {
 }
 
-KURL OGoFolderLister::adjustUrl( const KURL &u )
-{
-  KURL url = u;
-  if ( getType() == Calendar ) {
-//    url.addPath( "Groups" );
-  } else {
-    url.addPath( "public" );
-  }
-  return url;
-}
-
-KIO::DavJob *OGoFolderLister::createJob( const KURL &url )
-{
-  QDomDocument props = WebdavHandler::createAllPropsRequest();
-  kdDebug(7000) << "props: " << props.toString() << endl;
-  return KIO::davPropFind( url, props, "1", false );
-}
-
-FolderLister::Entry::List OGoFolderLister::defaultFolders()
-{
-  Entry::List newFolders;
-
-  // Personal calendar/addressbook
-/*  Entry personal;
-  KURL url = getUrl();
-  url.setUser( QString::null );
-  url.setPass( QString::null );
-  if ( getType() == Calendar ) {
-    personal.name = i18n("Personal Calendar");
-    personal.id = url.url();
-    newFolders.append( personal );
-  } else {
-    personal.name = i18n("Personal Addressbook");
-    url.addPath( "Contacts" );
-    personal.id = url.url();
-    newFolders.append( personal );
-  }*/
-  return newFolders;
-}
-
 FolderLister::FolderType OGoFolderLister::getFolderType( const QDomNode &folderNode )
 {
   QDomNode n4;

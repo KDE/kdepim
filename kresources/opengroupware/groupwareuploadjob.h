@@ -22,7 +22,7 @@
 #ifndef KPIM_GROUPWAREUPLOADJOB_H
 #define KPIM_GROUPWAREUPLOADJOB_H
 
-#include "groupwarejob.h"
+#include "groupwareresourcejob.h"
 
 #include <kurl.h>
 #include <qstringlist.h>
@@ -46,7 +46,7 @@ class ProgressItem;
 class GroupwareUploadJob : public GroupwareJob
 {
     Q_OBJECT
-  public:  
+  public:
     GroupwareUploadJob( GroupwareDataAdaptor *adaptor );
 
     KPIM::GroupwareUploadItem::List addedItems() const { return mAddedItems; }
@@ -55,7 +55,7 @@ class GroupwareUploadJob : public GroupwareJob
     void setChangedItems( KPIM::GroupwareUploadItem::List items ) { mChangedItems = items; }
     KPIM::GroupwareUploadItem::List deletedItems() const { return mDeletedItems; }
     void setDeletedItems( KPIM::GroupwareUploadItem::List items ) { mDeletedItems = items; }
-    
+
     /**
       Set base URL.
     */
@@ -86,12 +86,12 @@ class GroupwareUploadJob : public GroupwareJob
     void slotDeletionResult( KIO::Job *job );
     void slotUploadJobResult( KIO::Job *job );
     void slotUploadNewJobResult( KIO::Job *job );
-  
+
   private:
     KPIM::GroupwareUploadItem::List mAddedItems;
     KPIM::GroupwareUploadItem::List mChangedItems;
     KPIM::GroupwareUploadItem::List mDeletedItems;
-    
+
     KURL mBaseUrl;
 
     KIO::TransferJob *mUploadJob;

@@ -38,12 +38,24 @@ KIO::TransferJob *DAVGroupwareGlobals::createListItemsJob( const KURL &url )
   return KIO::davPropFind( url, props, "1", false );
 }
 
+KPIM::GroupwareJob::ContentType DAVGroupwareGlobals::contentClass( const QString &contentclass )
+{
+  if ( contentclass == "urn:content-classes:appointment" )
+    return KPIM::GroupwareJob::Appointment;
+  if ( contentclass == "urn:content-classes:task" )
+    return KPIM::GroupwareJob::Task;
+  if ( contentclass == "urn:content-classes:message" )
+    return KPIM::GroupwareJob::Message;
+  if ( contentclass == "urn:content-classes:person" )
+    return KPIM::GroupwareJob::Contact;
+  return KPIM::GroupwareJob::Unknown;
+}
 
-bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor, 
-    KIO::Job *job, QStringList &currentlyOnServer, QStringList &itemsForDownload )
+bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor,
+    KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
-  
+
   if ( !davjob ) {
     return false;
   }
@@ -54,22 +66,24 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
 
   QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
   QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
+  QDomNodeList ctypes = doc.elementsByTagNameNS( "DAV:", "contentclass" );
   int c = entries.count();
   int i = 0;
   while ( i < c ) {
-    QDomNode node = entries.item( i );
-    QDomElement e = node.toElement();
+    QDomElement e = entries.item( i ).toElement();
     const QString &entry = e.text();
-    node = fingerprints.item( i );
-    e = node.toElement();
+    e = fingerprints.item( i ).toElement();
     const QString &newFingerprint = e.text();
+    e = ctypes.item( i ).toElement();
+    const QString &newContentClass = e.text();
     i++;
 
-    // If the fingerprint is empty, this item does not have an etag, 
+    // If the fingerprint is empty, this item does not have an etag,
     // like for example in exchange the folder itself (which is also returned!)
     if ( newFingerprint.isEmpty() )
       continue;
 
+    KPIM::GroupwareJob::ContentType type = contentClass( newContentClass );
 
     bool download = false;
     KURL url ( entry );
@@ -102,11 +116,11 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
       }
     }
     if ( download ) {
-      itemsForDownload << entry;
+      itemsForDownload[ entry ] = type;
     }
   }
 
   kdDebug(5800)<<"currentlyOnServer="<<currentlyOnServer.join(", ")<<endl;
-  kdDebug(5800)<<"itemsForDownload="<<itemsForDownload.join(", ")<<endl;
+  kdDebug(5800)<<"itemsForDownload="<<QStringList( itemsForDownload.keys() ).join(", ")<<endl;
   return true;
 }

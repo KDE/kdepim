@@ -49,15 +49,15 @@ void OGoCalendarAdaptor::adaptUploadUrl( KURL &url )
   url.setPath( url.path() + "/new.ics" );
 }
 
-QString OGoCalendarAdaptor::extractFingerprint( KIO::TransferJob *job, 
-                                             const QString &rawText ) 
+QString OGoCalendarAdaptor::extractFingerprint( KIO::TransferJob *job,
+                                             const QString &rawText )
 {
   return OGoGlobals::extractFingerprint( job, rawText );
 }
 
-KIO::TransferJob *OGoCalendarAdaptor::createDownloadItemJob( const KURL &url )
+KIO::TransferJob *OGoCalendarAdaptor::createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
 {
-  return OGoGlobals::createDownloadItemJob( this, url );
+  return OGoGlobals::createDownloadItemJob( this, url,ctype );
 }
 
 KIO::TransferJob *OGoCalendarAdaptor::createListItemsJob( const KURL &url )
@@ -65,7 +65,7 @@ KIO::TransferJob *OGoCalendarAdaptor::createListItemsJob( const KURL &url )
   return DAVGroupwareGlobals::createListItemsJob( url );
 }
 
-bool OGoCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QStringList &itemsForDownload )
+bool OGoCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
 {
   return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
 }
@@ -77,11 +77,11 @@ void OGoCalendarAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::Gr
   Incidence *inc = resource()->incidence( item->uid() );
   if ( inc ) {
     resource()->disableChangeNotification();
-    inc->setCustomProperty( identifier(), "storagelocation", 
+    inc->setCustomProperty( identifier(), "storagelocation",
                idMapper()->remoteId( item->uid() ) );
-    resource()->addIncidence( inc );
+//    resource()->addIncidence( inc );
     resource()->enableChangeNotification();
-  }  
+  }
 }
 
 KIO::Job *OGoCalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )

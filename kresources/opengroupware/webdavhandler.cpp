@@ -76,7 +76,8 @@ QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
-  WebdavHandler::addDavElement(  doc, prop, "getetag" );
+  WebdavHandler::addDavElement( doc, prop, "getetag" );
+  WebdavHandler::addDavElement( doc, prop, "contentclass" );
   return doc;
 }
 

@@ -129,18 +129,21 @@ void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
 void GroupwareDownloadJob::downloadItem()
 {
   kdDebug(7000) << " downloadItem " << endl;
-  if ( !mItemsForDownload.isEmpty() ) {
-    const QString entry = mItemsForDownload.front();
-    mItemsForDownload.pop_front();
+  QMap<QString,ContentType>::Iterator it = mItemsForDownload.begin();
+  if ( it != mItemsForDownload.end() ) {
+    const QString href( it.key() );
+    ContentType ctype = it.data();
+    
+    mItemsForDownload.remove( it.key() );
 
-    KURL url( entry );
+    KURL url( href );
 //    url.setProtocol( "webdav" );
     adaptor()->setUserPassword( url );
     adaptor()->adaptDownloadUrl( url );
 
     mJobData = QString::null;
 
-    mDownloadJob = adaptor()->createDownloadItemJob( url );
+    mDownloadJob = adaptor()->createDownloadItemJob( url, ctype );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),

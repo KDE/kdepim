@@ -26,6 +26,7 @@
 
 #include <qvaluelist.h>
 #include <qstring.h>
+#include <qstringlist.h>
 #include <qdom.h>
 #include <qobject.h>
 
@@ -44,7 +45,8 @@ class FolderLister : public QObject
   public:
     enum Type { AddressBook, Calendar };
     enum FolderType { ContactsFolder, CalendarFolder, TasksFolder, 
-                      JournalsFolder, AllIncidencesFolder, Folder, Unknown };
+                      JournalsFolder, AllIncidencesFolder, 
+                      MailFolder, MemoFolder, Folder, Unknown };
   
     class Entry
     {
@@ -61,6 +63,7 @@ class FolderLister : public QObject
 
     FolderLister( Type );
   
+    /** Initialize the retrieval with given root URL */
     virtual void retrieveFolders( const KURL & );
   
     void setFolders( const Entry::List & );
@@ -82,19 +85,39 @@ class FolderLister : public QObject
     void slotListJobResult( KIO::Job * );
 
   protected:
-    virtual KURL adjustUrl( const KURL &u ) = 0;
-    virtual KIO::DavJob *createJob( const KURL &url ) = 0;
+    /** Retrieve information about the folder u. If it has sub-folders, it
+        descends into the hierarchy */
+    virtual void doRetrieveFolder( const KURL &u );
+    /** Adjusts the given url, e.g. changes http:// -> webdav://, etc. */
+    virtual KURL adjustUrl( const KURL &u );
+    /** Creates the job to retrieve information about the folder at the given
+        url. It is expected that the job retrieves at least the following props:
+          DAV:displayname, DAV:resourcetype, DAV:hassubs
+    */
+    virtual KIO::DavJob *createJob( const KURL &url );
+    /** Returns the type of folder retrieved in the dom node. Typically, you'll
+        compare the DAV:resourcetype property with some values. */
     virtual FolderType getFolderType( const QDomNode &folderNode ) = 0;
+    /** Interprets the results returned by the liste job (created by 
+        createJob(url) ). Typically, this adds an Entry to the mFolders list if
+        the job describes a folder of the appropriate type. If the folder has 
+        subfolders, just call doRetrieveFolder(url) recursively. */
+    virtual void interpretFolderResult( KIO::Job *job );
+    /** List of folders that will always be included (subfolders won't!). Usually
+        this is not needed as you should traverse the whole folder tree starting
+        from the user's root dir. */
     virtual Entry::List defaultFolders();
-    KURL getUrl() const { return mUrl; }
+    /** Type of this folder lister (i.e. AddressBook or Calendar) */
     Type getType() const { return mType; }
 
   private:
     Type mType;
-    KURL mUrl;
+    QStringList mUrls;
+    QStringList mProcessedUrls;
     Entry::List mFolders;
     QString mWriteDestinationId;
-    KIO::DavJob *mListEventsJob;
+    QString mUser;
+    QString mPassword;
 };
 
 }

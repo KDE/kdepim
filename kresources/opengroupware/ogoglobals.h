@@ -38,13 +38,13 @@ class OGoGlobals
 {
   public:
     OGoGlobals() {}
-    static KIO::TransferJob *createDownloadItemJob( 
-          KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
+    static KIO::TransferJob *createDownloadItemJob(
+          KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType ctype );
 
     static QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
-    static void updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor, 
+    static void updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor,
            KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
-    static KIO::Job *createRemoveItemsJob( const KURL &uploadurl, 
+    static KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
 };
 
