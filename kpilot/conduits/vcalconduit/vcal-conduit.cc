@@ -29,10 +29,12 @@
 static const char *vcalconduit_id = "$Id$";
 
 #include <options.h>
+#include <unistd.h>
 
 #include <qdatetime.h>
 #include <qtimer.h>
 
+#include <pilotUser.h>
 #include <kconfig.h>
 
 #include <calendar.h>
@@ -254,7 +256,8 @@ there are two special cases a full and a first sync.
 	FUNCTIONSETUP;
 
 	bool loadSuccesful = true;
-
+	KPilotUser*usr;
+	
 	if (!fConfig)
 	{
 		kdWarning() << k_funcinfo
@@ -274,14 +277,14 @@ there are two special cases a full and a first sync.
 
 	fCalendarFile = fConfig->readEntry(VCalConduitFactory::calendarFile);
 	fDeleteOnPilot = fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot, false);
-	// don't do a fisr sync by default, only when explicitely requested, or the backup
+	// don't do a fist sync by default, only when explicitely requested, or the backup
 	// database or the calendar are empty.
 	fFirstTime = fConfig->readBoolEntry(VCalConduitFactory::firstTime, false);
-	KPilotUser*usr=fHandle->getPilotUser();
+	usr=fHandle->getPilotUser();
 	// changing the PC or using a different Palm Desktop app causes a full sync
 	// User gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0)) 
 	// as PC_ID
-	fFullSync = (usr->getLastSyncPC()!=gethostid()) && fConfig->readBoolEntry(VCalConduitFactory::fullSyncOnPCChange, true);
+	fFullSync = (usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(VCalConduitFactory::fullSyncOnPCChange, true);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -1032,6 +1035,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.56  2002/04/19 19:10:29  kainhofe
+// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
+//
 // Revision 1.55  2002/04/17 20:47:04  kainhofe
 // Implemented the alarm sync
 //

@@ -47,7 +47,7 @@ public:
 	static const char * const group;
 	static const char * const calendarFile,
 		* const firstTime,
-		* const deleteOnPilot;
+		* const deleteOnPilot, *const fullSyncOnPCChange;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -67,6 +67,9 @@ void *init_libvcalconduit();
 } ;
 
 // $Log$
+// Revision 1.4  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.3  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //
