@@ -37,7 +37,7 @@ namespace KSync {
     QString description()const;
     QString iconName()const;
     QPixmap *pixmap();
-    bool partIsVisible()const;
+    bool hasGui()const;
     bool configIsVisible()const;
     QWidget* configWidget();
     void sync( const SynceeList&, SynceeList& );

@@ -110,7 +110,7 @@ QString SyncerPart::iconName() const
   return QString::fromLatin1("kcmsystem");
 }
 
-bool SyncerPart::partIsVisible() const
+bool SyncerPart::hasGui() const
 {
   return true;
 }

@@ -54,7 +54,7 @@ QString OrganizerPart::name()const {
 QString OrganizerPart::description()const {
     return i18n("This part is responsible for syncing your Calendar.");
 }
-bool OrganizerPart::partIsVisible()const {
+bool OrganizerPart::hasGui()const {
     return false;
 }
 bool OrganizerPart::configIsVisible()const {

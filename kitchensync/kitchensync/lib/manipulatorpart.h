@@ -101,9 +101,9 @@ class ManipulatorPart : public KParts::Part
     virtual QString iconName() const = 0;
 
     /**
-     * if the partIsVisible
-     */
-    virtual bool partIsVisible() const;
+      Return if the part has a GUI.
+    */
+    virtual bool hasGui() const;
 
     /**
      * if the config part is visible

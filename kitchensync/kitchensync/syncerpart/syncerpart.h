@@ -54,7 +54,7 @@ class SyncerPart : public ManipulatorPart
     QString type() const;
     QString name() const;
     QString description() const;
-    bool partIsVisible() const;
+    bool hasGui() const;
     QPixmap *pixmap();
     QString iconName() const;
     QWidget *widget();

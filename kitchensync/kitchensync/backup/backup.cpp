@@ -134,7 +134,7 @@ QString Backup::iconName() const
   return QString::fromLatin1("kcmsystem");
 }
 
-bool Backup::partIsVisible() const
+bool Backup::hasGui() const
 {
   return true;
 }

@@ -51,7 +51,7 @@ int ManipulatorPart::syncStatus() const
     return m_stat;
 }
 
-bool ManipulatorPart::partIsVisible() const
+bool ManipulatorPart::hasGui() const
 {
     return false;
 }

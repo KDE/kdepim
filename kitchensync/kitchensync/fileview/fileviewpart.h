@@ -22,7 +22,7 @@ namespace KitchenSync {
         QString name()const { return i18n("Fileview" ); };
         QString description()const { return i18n("This part is responsible for syncing your\n Files."); };
         QPixmap *pixmap();
-        bool partIsVisible()const { return true; };
+        bool hasGui()const { return true; };
         bool configIsVisible()const { return true; };
         QWidget* widget();
         QWidget* configWidget();

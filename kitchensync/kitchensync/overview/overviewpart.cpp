@@ -85,7 +85,7 @@ QString OverviewPart::iconName() const
     return QString::fromLatin1("kcmsystem");
 }
 
-bool OverviewPart::partIsVisible() const
+bool OverviewPart::hasGui() const
 {
     return true;
 }

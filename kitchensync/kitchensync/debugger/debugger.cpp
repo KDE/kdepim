@@ -119,7 +119,7 @@ QString Debugger::iconName() const
   return QString::fromLatin1("kcmsystem");
 }
 
-bool Debugger::partIsVisible() const
+bool Debugger::hasGui() const
 {
   return true;
 }

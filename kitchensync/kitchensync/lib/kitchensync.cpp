@@ -199,8 +199,8 @@ void KitchenSync::addModPart( ManipulatorPart *part )
     connect( m, SIGNAL( synceeWriteError( Konnector * ) ),
              part, SLOT( slotSynceeWriteError( Konnector * ) ) );
 
-    if ( part->partIsVisible() )  {
-        kdDebug(5210) << "Part is Visible " << part->name() << endl;
+    if ( part->hasGui() )  {
+        kdDebug(5210) << "Part has GUI (" << part->name() << ")" << endl;
         int pos = -1;
         m_stack->addWidget( part->widget() );
 
