@@ -36,10 +36,13 @@ class AddressBook;
 class Ticket;
 }
 
+namespace KSettings {
+class Dialog;
+}
+
 class KAboutData;
 class KAction;
 class KActionCollection;
-class KCMultiDialog;
 class KConfig;
 class KToggleAction;
 class KXMLGUIClient;
@@ -333,7 +336,7 @@ class KABCore : public KAB::Core
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 
-    KCMultiDialog *mConfigureDialog;
+    KSettings::Dialog *mConfigureDialog;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
     QMap<KABC::Resource*, ResourceMapEntry> mResourceMap;

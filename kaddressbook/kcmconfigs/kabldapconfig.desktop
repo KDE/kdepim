@@ -1,14 +1,14 @@
 [Desktop Entry]
 Encoding=UTF-8
-Exec=kcmshell kabldapconfig
 Icon=find
-Type=Application
-Terminal=0
+Type=Service
+ServiceTypes=KCModule
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kabldapconfig
 X-KDE-FactoryName=kabldapconfig
-X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kaddressbook
+X-KDE-ParentComponents=kaddressbook,kaddressbookpart
 
 Name=LDAP Lookup
 Name[ca]=Recerca LDAP

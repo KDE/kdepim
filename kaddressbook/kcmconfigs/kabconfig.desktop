@@ -1,14 +1,15 @@
 [Desktop Entry]
 Encoding=UTF-8
-Exec=kcmshell kabconfig
 Icon=kaddressbook
-Type=Application
-Terminal=0
+Type=Service
+ServiceTypes=KCModule
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kabconfig
 X-KDE-FactoryName=kabconfig
 X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kaddressbook
+X-KDE-ParentComponents=kaddressbook,kaddressbookpart
 
 Name=Address Book
 Name[ar]=دفتر العناوين
@@ -24,6 +25,7 @@ Name[es]=Libreta de direcciones
 Name[fi]=Osoitekirja
 Name[fr]=Carnet d'adresses
 Name[gl]=Libro de Enderezos
+Name[hr]=Adresar
 Name[hu]=Címjegyzék
 Name[id]=Buku Alamat
 Name[is]=SÃ­maskrÃ¡

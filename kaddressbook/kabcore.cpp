@@ -33,6 +33,7 @@
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardtool.h>
+#include <kaboutdata.h>
 #include <kapplication.h>
 #include <kactionclasses.h>
 #include <kcmultidialog.h>
@@ -44,10 +45,11 @@
 #include <kprinter.h>
 #include <kprotocolinfo.h>
 #include <kresources/selectdialog.h>
+#include <ksettings/dialog.h>
+#include <ksettings/dispatcher.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
-#include <kaboutdata.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "addresseeutil.h"
@@ -820,21 +822,17 @@ QString KABCore::getNameByPhone( const QString &phone )
 
 void KABCore::openConfigDialog()
 {
-  if ( !mConfigureDialog ) {
-    mConfigureDialog = new KCMultiDialog( "PIM", mWidget );
-    mConfigureDialog->addModule( "PIM/kabconfig.desktop" );
-    mConfigureDialog->addModule( "PIM/kabldapconfig.desktop" );
-    connect( mConfigureDialog, SIGNAL( applyClicked() ),
-             this, SLOT( configurationChanged() ) );
-    connect( mConfigureDialog, SIGNAL( okClicked() ),
-             this, SLOT( configurationChanged() ) );
-  }
-
   // Save the current config so we do not loose anything if the user accepts
   saveSettings();
 
+  if ( !mConfigureDialog ) {
+    mConfigureDialog = new KSettings::Dialog( mWidget );
+
+    KSettings::Dispatcher::self()->registerInstance( KGlobal::instance(), this,
+                                                     SLOT( configurationChanged() ) );
+  }
+
   mConfigureDialog->show();
-  mConfigureDialog->raise();
 }
 
 void KABCore::openLDAPDialog()
