@@ -59,11 +59,13 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
 void ResourceCachedReloadConfig::loadSettings( ResourceCached *resource )
 {
   mGroup->setButton( resource->reloadPolicy() );
+  mIntervalSpin->setValue( resource->reloadInterval() );
 }
 
 void ResourceCachedReloadConfig::saveSettings( ResourceCached *resource )
 {
   resource->setReloadPolicy( mGroup->selectedId() );
+  resource->setReloadInterval( mIntervalSpin->value() );
 }
 
 void ResourceCachedReloadConfig::slotIntervalStateChanged( int state )
@@ -100,11 +102,13 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
 void ResourceCachedSaveConfig::loadSettings( ResourceCached *resource )
 {
   mGroup->setButton( resource->savePolicy() );
+  mIntervalSpin->setValue( resource->saveInterval() );
 }
 
 void ResourceCachedSaveConfig::saveSettings( ResourceCached *resource )
 {
   resource->setSavePolicy( mGroup->selectedId() );
+  resource->setSaveInterval( mIntervalSpin->value() );
 }
 
 void ResourceCachedSaveConfig::slotIntervalStateChanged( int state )
