@@ -221,8 +221,8 @@ bool Scheduler::acceptPublish( IncidenceBase *incidence,
   }
 }
 
-bool Scheduler::acceptRequest( IncidenceBase *incidence, 
-                               ScheduleMessage::Status /* status */,
+bool Scheduler::acceptRequest( IncidenceBase *incidence,
+                               ScheduleMessage::Status status,
                                const QString &attendee )
 {
   Incidence *inc = static_cast<Incidence *>(incidence);
@@ -231,16 +231,46 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     return true;
   }
 
-  Incidence* i = mCalendar->incidenceFromSchedulingID( inc->uid() );
-  if ( i ) {
-    if ( i->revision()<=inc->revision() ) {
-      if ( i->revision()==inc->revision() &&
-           i->lastModified()>inc->lastModified()) {
+  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  kdDebug(5800) << "Scheduler::acceptRequest: found " << existingIncidences.count() << " incidences with schedulingID " << inc->schedulingID() << endl;
+  Incidence::List::ConstIterator incit = existingIncidences.begin();
+  for ( ; incit != existingIncidences.end() ; ++incit ) {
+    Incidence* const i = *incit;
+    if ( i->revision() <= inc->revision() ) {
+      if ( i->revision() == inc->revision() &&
+           i->lastModified() > inc->lastModified() ) {
+        // This isn't an update - the found incidence was modified more recently
         deleteTransaction(incidence);
         return false;
       }
-      mCalendar->deleteIncidence( i );
+      //kdDebug(5800) << "Considering this found event:" << mFormat->toString( i ) << endl;
+      // The new incidence might be an update for the found one
+      if ( !i->isReadOnly() ) {
+        bool isUpdate = true;
+        if ( status == ScheduleMessage::RequestNew ) {
+          // This is supposed to be a new request - however we want to update
+          // the existing one to handle the "clicking more than once on the invitation" case.
+          // So check the attendee status of the attendee.
+          const KCal::Attendee::List attendees = i->attendees();
+          KCal::Attendee::List::ConstIterator ait;
+          for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
+            if( (*ait)->email() == attendee && (*ait)->status() == Attendee::NeedsAction ) {
+              // This incidence wasn't created by me - it's probably in a shared folder
+              // and meant for someone else, ignore it.
+              kdDebug(5800) << "ignoring " << i->uid() << " since I'm still NeedsAction there" << endl;
+              isUpdate = false;
+              break;
+            }
+          }
+        }
+        if ( isUpdate ) {
+          kdDebug(5800) << "replacing existing incidence " << i->uid() << endl;
+          mCalendar->deleteIncidence( i );
+          break; // replacing one is enough
+        }
+      }
     } else {
+      // This isn't an update - the found incidence has a bigger revision number
       deleteTransaction(incidence);
       return false;
     }
