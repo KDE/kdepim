@@ -90,8 +90,10 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
   fi
   kde_safe_LIBS="$LIBS"
   kde_safe_CFLAGS="$CFLAGS"
+  kde_safe_CXXFLAGS="$CXXFLAGS"
   LIBS="$LIBS $MAL_LIBS -ldl"
   CFLAGS="$CFLAGS $MAL_INCS"
+  CXXFLAGS="$CXXFLAGS $MAL_INCS"
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   AC_TRY_LINK(dnl
@@ -105,6 +107,7 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
   )
   AC_LANG_RESTORE
   CFLAGS=$kde_safe_CFLAGS
+  CXXFLAGS=$kde_safe_CXXFLAGS
   LIBS=$kde_safe_LIBS
   if test "$with_mal" = "no" ; then
     MAL_INCS=
