@@ -530,7 +530,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( incidence->organizer(), msg, subject );
     }
 
-    bool saveFile( const QString& iCal, const QString& type ) const
+    bool saveFile( const QString& receiver, const QString& iCal,
+                   const QString& type ) const
     {
       QString location = locateLocal( "data", "korganizer/income." + type,
                                       true );
@@ -546,7 +547,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                             .arg( file ) );
         return false;
       } else {
-        QByteArray msgArray = iCal.utf8();
+        const QString message = receiver + '\n' + iCal;
+        QByteArray msgArray = message.utf8();
         f.writeBlock( msgArray, msgArray.size() );
         f.close();
       }
@@ -555,14 +557,19 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
     {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        // Must be some error. Still return true though, since we did handle it
+        return true;
+
       // First, save it for KOrganizer to handle
-      saveFile( iCal, "accepted" );
+      saveFile( receiver, iCal, "accepted" );
 
       // Now produce the return message
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Accepted, callback.receiver() );
+      setStatusOnMyself( incidence, Attendee::Accepted, receiver );
       return mail( incidence, callback );
     }
 
@@ -587,7 +594,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return handleDecline( iCal, c );
       if ( path == "reply" || path == "cancel" )
         // These should just be saved with their type as the dir
-        return saveFile( iCal, path );
+        return saveFile( "Reciever Not Searched", iCal, path );
 
       return false;
     }
