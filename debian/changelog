@@ -1,3 +1,34 @@
+kdepim (4:3.3.2-3) unstable; urgency=medium
+
+  * KDE_3_3_BRANCH update.
+  * Move kleopatra to main, now that gnupg2 is in the archive.
+    Closes: #281689, #300499.
+  * Update kmail/kleopatra dependencies accordingly.
+  * Set urgency to medium to hopefully get these changes into sarge.
+  * Add Recommends on procmail to kmail, which is needed for fetching
+    mbox mail.
+  * Tighten libtool build dependency.  This closes half of #285882,
+    while the other half is really a kdelibs issue.
+  * Include the GFDL in debian/copyright, since the handbooks are
+    licensed under it.
+  * Update the list of licenses.
+
+ -- Daniel Schepler <schepler@debian.org>  Sun,  3 Apr 2005 20:23:43 -0700
+
+kdepim (4:3.3.2-2) unstable; urgency=low
+
+  * Disable gnokii support again until bug #266566 is resolved.
+  * Update from KDE_3_3_BRANCH.
+  * Fixed the kmailcvt description to refer to mail folders instead of
+    address books.  Closes: #252668.
+    Also expanded the description a bit to list some supported import
+    formats.
+  * Kontact conflicts with obsolete kontact-plugins package.
+    Closes: #292997.
+  * Add Build-Depends on graphviz to get class hierarchy graphs.
+
+ -- Daniel Schepler <schepler@debian.org>  Tue,  1 Mar 2005 05:20:08 -0800
+
 kdepim (4:3.3.2-1) unstable; urgency=low
 
   * Uploading to unstable.
