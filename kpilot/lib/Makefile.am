@@ -5,7 +5,7 @@
 
 METASOURCES = AUTO
 
-INCLUDES = $(all_includes) 
+INCLUDES = $(all_includes) $(PISOCK_INCLUDE)
 
 ### If you must get debugging output on a platform where
 ### the libs are built without debugging support, define
@@ -24,7 +24,7 @@ libkpilot_la_SOURCES = options.cc uiDialog.cc plugin.cc syncAction.cc \
 	pilotDateEntry.cc pilotTodoEntry.cc
 
 libkpilot_la_LDFLAGS = $(all_libraries)
-libkpilot_la_LIBADD = -lpisock $(LIBPISOCK) $(KDE_EXTRA_RPATH)
+libkpilot_la_LIBADD = $(PISOCK_LIB) $(KDE_EXTRA_RPATH)
 
 oldincludedir = $(includedir)/kpilot
 oldinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \
