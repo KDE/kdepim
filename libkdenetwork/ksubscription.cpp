@@ -448,7 +448,10 @@ void KSubscription::changeItemState( GroupItem* item, bool on )
 //------------------------------------------------------------------------------
 void KSubscription::filterChanged( QListViewItem* item, const QString & text )
 {
-  if (!item) item = groupView->firstChild();
+  if ( !item && groupView ) 
+    item = groupView->firstChild();
+  if ( !item ) 
+    return;
 
   do
   {
