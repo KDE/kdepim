@@ -435,6 +435,7 @@ void KNodeView::configChanged()
 
   QPalette p = palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
+  p.setColor(QColorGroup::Text, app->textColor());
   c_olView->setPalette(p);
   h_drView->setPalette(p);
 
@@ -844,7 +845,7 @@ void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
 }
 
 
-void KNodeView::slotArticleMousePressed(int button, QListViewItem *item, const QPoint &p, int)
+void KNodeView::slotArticleMousePressed(int button, QListViewItem *item, const QPoint &, int)
 {
   if(b_lockui)
     return;
