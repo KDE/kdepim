@@ -21,3 +21,8 @@ knotes_kolab_la_LIBADD = libknoteskolab.la
 
 servicedir = $(kde_servicesdir)/kresources/knotes
 service_DATA = kolabresource.desktop
+
+install-data-local: $(srcdir)/../uninstall.desktop
+	$(mkinstalldirs) $(servicedir)
+	$(INSTALL_DATA) $(srcdir)/../uninstall.desktop $(servicedir)/imap.desktop
+

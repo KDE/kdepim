@@ -21,3 +21,7 @@ kcal_kolab_la_LIBADD = libkcalkolab.la
 servicedir = $(kde_servicesdir)/kresources/kcal
 service_DATA = kolab.desktop
 
+install-data-local: $(srcdir)/../uninstall.desktop
+	$(mkinstalldirs) $(servicedir)
+	$(INSTALL_DATA) $(srcdir)/../uninstall.desktop $(servicedir)/imap.desktop
+
