@@ -27,8 +27,22 @@
 
 #include <kdepimmacros.h>
 
+/** @file */
+
+/**
+    \brief KPIM holds all kinds of functions specific to KDE PIM.
+
+    The KPIM namespace hides away functions, enums, and other things
+    that are KDE PIM specific and that we don't want to have polluting
+    the global namespace.
+*/
 namespace KPIM {
 
+/**
+    An Id Mapper maps Ids. What to or what for is not entirely
+    clear, but maps have categories. This is probably an
+    adjoint functor, since adjoint functors are everywhere.
+*/
 class KDE_EXPORT IdMapper
 {
   public:
