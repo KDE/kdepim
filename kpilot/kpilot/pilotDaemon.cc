@@ -64,12 +64,14 @@ static const char *id="$Id$";
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
+#include <kprocess.h>
 
 #include "pilotDaemon.moc"
 #include "hotsync.h"
 #include "busysync.h"
 #include "statusMessages.h"
-#include "kpilot.h"
+#include "kpilotlink.h"
+#include "kpilotConfig.h"
 
 
 
@@ -210,7 +212,9 @@ void PilotDaemonTray::changeIcon(IconShape i)
 
 static KCmdLineOptions kpilotoptions[] =
 {
+#ifdef DEBUG
 	{ "debug <level>", I18N_NOOP(""),"0" },
+#endif
 	{ 0,0,0 }
 } ;
 
@@ -281,7 +285,7 @@ PilotDaemon::PilotDaemon() :
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig();
+	KConfig& config = KPilotConfig::getConfig();
   
 	fPilotDevice = config.readEntry("PilotDevice");
 
@@ -350,7 +354,7 @@ PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig();
+	KConfig& config = KPilotConfig::getConfig();
   
 	fPilotDevice = config.readEntry("PilotDevice");
 	getPilotSpeed(config);
@@ -630,7 +634,7 @@ PilotDaemon::slotDBBackupFinished()
 	}
 #endif
 
-	KConfig& config = KPilotLink::getConfig();
+	KConfig& config = KPilotConfig::getConfig();
 	if(config.readNumEntry("SyncFiles"))
 	{
 	  getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", 
@@ -1147,11 +1151,11 @@ int main(int argc, char* argv[])
 	//
 	//
 	{
-	KConfig& c=KPilotLink::getConfig();
+	KConfig& c=KPilotConfig::getConfig();
 	c.setReadOnly(true);
 	int v = c.readNumEntry("Configured",0);
 
-	if (v < KPilotLink::ConfigurationVersion)
+	if (v < KPilotConfig::ConfigurationVersion)
 	{
 		kdError() << __FUNCTION__ 
 			<< ": Is still not configured for use."
@@ -1201,6 +1205,11 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.29  2001/02/08 13:17:19  adridg
+// Fixed crash when conduits run during a backup and exit after the
+// end of that backup (because the event loop is blocked by the backup
+// itself). Added better debugging error exit message (no i18n needed).
+//
 // Revision 1.28  2001/02/05 21:01:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

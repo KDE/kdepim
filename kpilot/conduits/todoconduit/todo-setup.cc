@@ -45,7 +45,7 @@ static const char *id="$Id$";
 #include <kdebug.h>
 #include "todo-conduit.h"
 #include "todo-setup.moc"
-#include "kpilot.h"
+#include "kpilotConfig.h"
 
 
 /* static */ const QString TodoSetup::TodoGroup("todoOptions");
@@ -54,7 +54,7 @@ TodoSetup::TodoSetup(QWidget *parent)
   : setupDialog(parent,TodoGroup,TodoConduit::version())
 {
 	FUNCTIONSETUP;
-	KConfig& config=KPilotLink::getConfig(TodoGroup);
+	KConfig& config=KPilotConfig::getConfig(TodoGroup);
 	addPage(new TodoSetupPage(this,config));
 	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
@@ -120,4 +120,7 @@ TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.10  2001/02/07 15:46:32  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

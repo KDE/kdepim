@@ -28,23 +28,24 @@
 #ifndef __MEMO_WIDGET_H
 #define __MEMO_WIDGET_H
 
-#include "pilotComponent.h"
 #include <qmlined.h>
 #include <qcombo.h>
 #include <time.h>
 #include <pi-memo.h>
-#include "pilotMemo.h"
-#include "kpilotlink.h"
 
 class KPilotInstaller;
 class QListBox;
+
+
+#include "pilotMemo.h"
+#include "pilotComponent.h"
 
 class MemoWidget : public PilotComponent
 {
   Q_OBJECT
   
 public:
-  MemoWidget(KPilotInstaller* installer, QWidget* parent);
+	MemoWidget(QWidget* parent, const QString& dbpath);
   ~MemoWidget();
   
     // Pilot Component Methods:
@@ -94,6 +95,10 @@ private:
 
 
 // $Log$
+// Revision 1.8  2001/02/07 14:21:45  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.7  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

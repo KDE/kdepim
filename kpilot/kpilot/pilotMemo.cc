@@ -31,6 +31,9 @@
 #include <pi-memo.h>
 #include <pilotMemo.h>
 
+static const char *pilotMemo_id =
+	"$Id:$";
+
 PilotMemo::PilotMemo(PilotRecord* rec)
   : PilotAppCategory(rec)
     {
@@ -110,6 +113,10 @@ PilotMemo::sensibleTitle() const
 
 
 // $Log$
+// Revision 1.7  2001/02/07 14:21:54  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.6  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

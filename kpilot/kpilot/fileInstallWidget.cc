@@ -47,20 +47,20 @@ static const char *fileinstallwidget_id="$Id$";
 #include <qdragobject.h>
 
 #include <kstddirs.h>
+#include <klocale.h>
 #include <kurl.h>
 #include <kmessagebox.h>
-#include <kwin.h>
-#include <kapp.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
 #include <kio/netaccess.h>
 
-#include "kpilot.h"
 #include "kpilotlink.h"
 #include "fileInstallWidget.moc"
 
-FileInstallWidget::FileInstallWidget(KPilotInstaller* installer, QWidget* parent)//, QList<KURL>* fileList);
-  : PilotComponent(parent), fSaveFileList(false), fKPilotInstaller(installer)//, fHotSyncEnabled(true)
+FileInstallWidget::FileInstallWidget( QWidget* parent,
+	const QString& path) : 
+	PilotComponent(parent,path), 
+	fSaveFileList(false) 
     {
     setGeometry(0, 0, parent->geometry().width(), parent->geometry().height());
     QLabel* label = new QLabel(i18n("Files To Install:"), this);
@@ -74,7 +74,6 @@ FileInstallWidget::FileInstallWidget(KPilotInstaller* installer, QWidget* parent
     fListBox = new QListBox(this);
     fListBox->setGeometry(140, 10, 350, 300);
     setAcceptDrops(true);
-    installer->addComponentPage(this, i18n("File Installer"));
     }
 
 /**
@@ -214,6 +213,9 @@ FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.11  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.10  2001/02/05 20:55:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -44,7 +44,7 @@
 #include <kdebug.h>
 
 #include "conduitApp.h"
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "null-conduit.h"
 #include "setupDialog.h"
 
@@ -111,7 +111,7 @@ NullConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig();
+	KConfig& config = KPilotConfig::getConfig();
 	config.setGroup(NullOptions::NullGroup);
 
 	QString m=config.readEntry("Text");
@@ -137,7 +137,7 @@ NullConduit::aboutAndSetup()
 const char *
 NullConduit::dbInfo()
 {
-	KConfig& config = KPilotLink::getConfig(NullOptions::NullGroup);
+	KConfig& config = KPilotConfig::getConfig(NullOptions::NullGroup);
 
 	QString m = config.readEntry("DB");
 	if (m.isNull())
@@ -152,6 +152,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.14  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.13  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

@@ -1,3 +1,22 @@
+KPilot Developer's notes for february 19th 2001
+===============================================
+
+Yay! KDE 2.1 is out. Which means we can commit all kinds of changes
+to KPilot again, not just well-thought-out bugfixes. That means that
+we can get to work on cleaning up the code base again.
+
+* Split all the config-file stuff out of KPilotLink into a new class
+  KPilotConfig. Fixed all the resulting include dependencies.
+* The function fixed() in KPilotInstaller obviously belongs to KPilotConfig.
+* The {address,memo,fileInstall} widgets all had unnecessary dependencies
+  on KPilotInstaller. Removed. KPilotInstaller now adds the widgets it
+  creates itself.
+* Removed as many dependencies on kpilot.h and kpilotlink.h as possible.
+* Removed a bunch of char[] buffer stupidities from pilotLocalDatabase &c.
+* Removed the database open and close functions from kpilotlink.
+
+All the sensible fixes, like those listed under feb. 4th, will come later.
+
 KPilot Developer's notes for february 4th 2001
 ==============================================
 
@@ -12,7 +31,7 @@ This is why the todo-immediately-after-freeze list exists:
 * Make KPilot and KPilotDaemon communicate only through DCOP.
 * Add an extra message concerning NULL user on hotsync.
 * Sort out all the icon issues.
-* Make the progress bar show something uring a conduit sync.
+* Make the progress bar show something during a conduit sync.
 
 
 

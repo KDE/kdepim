@@ -33,10 +33,10 @@
 #include <pi-macros.h> /* for recordid_t */
 #include "pilotRecord.h"
 
-class KPilotLink;
-
 /**
- * Methods to access a database on the pilot.  NOTE:  It is the users responsibility
+ * Methods to access a database on the pilot.  
+ *
+ * NOTE:  It is the users responsibility
  * to delete the PilotRecord return when finished with it!!
  */
 
@@ -69,7 +69,7 @@ class PilotDatabase
     /** Purges all Archived/Deleted records from Palm Pilot database */
     virtual int cleanUpDatabase() = 0;
 
-    bool isDBOpen() { return fDBOpen; }
+    bool isDBOpen() const { return fDBOpen; }
 
     protected:
     virtual void openDatabase() = 0;
@@ -85,6 +85,10 @@ class PilotDatabase
 
 
 // $Log$
+// Revision 1.5  2001/02/07 14:21:49  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.4  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

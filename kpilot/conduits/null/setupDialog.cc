@@ -38,7 +38,7 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "setupDialog.moc"
 
 // Something to allow us to check what revision
@@ -55,7 +55,7 @@ NullOptions::NullOptions(QWidget *parent) :
 	setupDialog(parent, NullGroup,0L)
 {
 	FUNCTIONSETUP;
-	KConfig& config=KPilotLink::getConfig(NullGroup);
+	KConfig& config=KPilotConfig::getConfig(NullGroup);
 
 	addPage(new NullPage(this,config));
 	/*
@@ -130,6 +130,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.13  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.12  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

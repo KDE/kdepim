@@ -41,17 +41,14 @@ class FileInstallWidget : public PilotComponent
     Q_OBJECT
     
     public:
-    FileInstallWidget(KPilotInstaller* installer, QWidget* parent);//, QList<KURL>* fileList);
+    FileInstallWidget(QWidget* parent, const QString& dbPath);
     ~FileInstallWidget() { }
 
     // Pilot Component Methods:
       void initialize();
       void preHotSync(char* command);
       void postHotSync();
-//     bool doHotSync(KPilotLink* pilotLink);
     bool saveData();
-//     bool hotSyncNeeded();
-    //    void enableHotSync(bool yesno) { fHotSyncEnabled = yesno; }
 
 
     void refreshFileInstallList();
@@ -85,4 +82,7 @@ class FileInstallWidget : public PilotComponent
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.7  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

@@ -53,7 +53,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 #include "pilotDateEntry.h"
@@ -61,7 +61,6 @@
 #include "vcal-conduit.h"
 #include "vcal-setup.h"
 #include "conduitApp.h"
-#include "kpilot.h"
 
 static const char *id=
 	"$Id$";
@@ -119,7 +118,7 @@ void VCalConduit::getCalendar()
 		return;
 	}
 
-	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	KConfig& config = KPilotConfig::getConfig(VCalSetup::VCalGroup);
 	(void) getDebugLevel(config);
 	QString calName = config.readEntry("CalFile");
 	first = getFirstTime(config);
@@ -897,7 +896,7 @@ void VCalConduit::saveVCal()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	KConfig& config = KPilotConfig::getConfig(VCalSetup::VCalGroup);
 	QString calName = config.readEntry("CalFile");
 	if (fCalendar)
 	{
@@ -1011,7 +1010,7 @@ void VCalConduit::doLocalSync()
 		// We need one of KPilot's global 
 		// settings.
 		//
-		KConfig& config=KPilotLink::getConfig();
+		KConfig& config=KPilotConfig::getConfig();
 		LocalOverridesPilot=config.readNumEntry("OverwriteRemote",0);
 	}
 
@@ -1678,7 +1677,7 @@ void VCalConduit::doLocalSync()
 
 	deletedList.clear();
   
-	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	KConfig& config = KPilotConfig::getConfig(VCalSetup::VCalGroup);
 	setFirstTime(config,false);
 }
 
@@ -1826,6 +1825,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.24  2001/02/05 19:16:28  adridg
+// Removing calls to exit() from internal functions
+//
 // Revision 1.23  2001/02/02 17:31:57  adridg
 // Reduced debugging message overload
 //

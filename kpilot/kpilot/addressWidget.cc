@@ -35,10 +35,6 @@ static const char *addresswidget_id="$Id$";
 #include <iostream.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
-#include <pi-macros.h>
-#include <pi-dlp.h>
-#include <pi-address.h>
 
 #include <qlist.h>
 #include <qlistbox.h>
@@ -46,6 +42,9 @@ static const char *addresswidget_id="$Id$";
 #include <qpushbt.h>
 #include <qtextstream.h>
 #include <qlayout.h>
+#include <qlabel.h>
+#include <qmultilineedit.h>
+#include <qcombobox.h>
 
 #include <kapp.h>
 #include <kmessagebox.h>
@@ -53,12 +52,12 @@ static const char *addresswidget_id="$Id$";
 #include <kfiledialog.h>
 
 #include "strToken.h"
-#include "kpilot.h"
 #include "addressEditor.h"
+#include "kpilotConfig.h"
 #include "kpilotOptions.h"
+#include "pilotLocalDatabase.h"
 
 #include "addressWidget.moc"
-
 
 // This is the size of several (automatic) buffers,
 // used to retrieve data from the database. 
@@ -67,8 +66,9 @@ static const char *addresswidget_id="$Id$";
 //
 #define BUFFERSIZE	(0xffff)
 
-AddressWidget::AddressWidget(KPilotInstaller* installer, QWidget* parent)
-  : PilotComponent(parent), fTextWidget(0L)
+AddressWidget::AddressWidget(QWidget* parent, const QString& path) :
+	PilotComponent(parent,path), 
+	fTextWidget(0L)
 {
 	FUNCTIONSETUP;
 
@@ -76,8 +76,7 @@ AddressWidget::AddressWidget(KPilotInstaller* installer, QWidget* parent)
 		parent->geometry().width(), parent->geometry().height());
 	setupWidget();
 	fAddressList.setAutoDelete(true);
-	fTextWidget->setFont(installer->fixed());
-	installer->addComponentPage(this, i18n("Address Book"));
+	fTextWidget->setFont(KPilotConfig::fixed());
 }
 
 AddressWidget::~AddressWidget()
@@ -117,7 +116,7 @@ void AddressWidget::setupCategories()
 	}
 }
 
-int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
+int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 {
 	FUNCTIONSETUP;
 
@@ -126,8 +125,8 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 	PilotAddress* address;
 	bool showSecrets=0;
 
-	config->setGroup(QString());
-	showSecrets = (bool) config->readNumEntry("ShowSecrets");
+	config.setGroup(QString::null);
+	showSecrets = (bool) config.readNumEntry("ShowSecrets");
 
 
 
@@ -178,12 +177,11 @@ AddressWidget::initialize()
 {
     	FUNCTIONSETUP;
 
-	PilotDatabase* addressDB = 
-		KPilotLink::getPilotLink()->openLocalDatabase("AddressDB");
+	PilotDatabase* addressDB = new PilotLocalDatabase(dbPath(),"AddressDB");
 	unsigned char buffer[BUFFERSIZE];
 	int appLen;
 
-	KConfig* config = KGlobal::config();
+	KConfig& config = KPilotConfig::getConfig();
 
 	fAddressList.clear();
 
@@ -195,7 +193,6 @@ AddressWidget::initialize()
 		populateCategories(fCatList,&fAddressAppInfo.category);
 		getAllAddresses(addressDB,config);
 
-		KPilotLink::getPilotLink()->closeDatabase(addressDB);
 	}
 	else
 	{
@@ -204,6 +201,7 @@ AddressWidget::initialize()
 			<< ": Could not open local AddressDB" << endl;
 	}
 
+	delete addressDB;
 
 	updateWidget();
 }
@@ -290,7 +288,7 @@ AddressWidget::updateWidget()
 	FUNCTIONSETUP;
 
 	int addressDisplayMode = KPilotOptionsAddress::getDisplayMode(
-		KPilotLink::getConfig());
+		KPilotConfig::getConfig());
 	int listIndex = 0;
 	int currentEntry = 0;
 
@@ -478,8 +476,7 @@ AddressWidget::slotCreateNewRecord()
 	// since we don't have the DBInfo stuff to deal with it.
 	//
 	//
-	PilotDatabase *myDB= KPilotLink::getPilotLink()->
-		openLocalDatabase("AddressDB");
+	PilotDatabase *myDB = new PilotLocalDatabase(dbPath(),"AddressDB");
 	if (!myDB || !myDB->isDBOpen())
 	{
 		KMessageBox::sorry(this,
@@ -487,6 +484,9 @@ AddressWidget::slotCreateNewRecord()
 			     "until you have done a HotSync at least once\n"
 			     "to retrieve the database layout from your Palm."),
 			i18n("Can't add new address"));
+
+		if (myDB) delete myDB;
+		return;
 	}
 
   AddressEditor* editor = new AddressEditor(0L);
@@ -842,8 +842,7 @@ AddressWidget::writeAddress(PilotAddress* which,PilotDatabase *addressDB)
 
 	if (myDB==0L || !myDB->isDBOpen())
 	{
-		myDB=KPilotLink::getPilotLink()->
-			openLocalDatabase("AddressDB");
+		myDB = new PilotLocalDatabase(dbPath(),"AddressWidget");
 		usemyDB=true;
 	}
 
@@ -867,7 +866,7 @@ AddressWidget::writeAddress(PilotAddress* which,PilotDatabase *addressDB)
 	//
 	if (usemyDB)
 	{
-		KPilotLink::getPilotLink()->closeDatabase(myDB);
+		delete myDB;
 	}
 }
 
@@ -919,6 +918,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.26  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.25  2001/02/07 14:21:37  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

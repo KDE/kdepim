@@ -33,7 +33,7 @@
 #include <qlayout.h>
 #include <kconfig.h>
 #include <kdebug.h>
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "setupDialog.moc"
 
 // Something to allow us to check what revision
@@ -78,7 +78,7 @@ KNotesOptions::KNotesOptions(QWidget *parent) :
 	setupDialog(parent,KNotesGroup,0L)
 {
 	FUNCTIONSETUP;
-	KConfig& c = KPilotLink::getConfig(KNotesGroup);
+	KConfig& c = KPilotConfig::getConfig(KNotesGroup);
 
 	addPage(new KNotesGeneralPage(this,c));
 	addPage(new setupInfoPage(this));
@@ -89,6 +89,9 @@ KNotesOptions::KNotesOptions(QWidget *parent) :
 
   
 // $Log$
+// Revision 1.4  2001/02/09 15:59:28  habenich
+// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
+//
 // Revision 1.3  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

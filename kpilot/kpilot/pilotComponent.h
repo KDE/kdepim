@@ -32,26 +32,42 @@
   * Base class for any module to KPilot
   */
 #include <qwidget.h>
+#include <qstring.h>
 
 struct CategoryAppInfo;
 class QComboBox;
-class KPilotLink;
 
 class PilotComponent : public QWidget
-    {
-    Q_OBJECT
+{
+Q_OBJECT
 
-    public:
-    PilotComponent(QWidget* parent);
-      
-      virtual void initialize() = 0; // Load data from files, etc.
-      //    virtual bool doHotSync(KPilotLink*) = 0; // True if successful
-      virtual void preHotSync(char* ) { } // Prepare for hotsync
-      // and append any commands to send to the pilot onto the char* array
-      virtual void postHotSync() { } // Reload data, etc, etc
-    virtual bool saveData() = 0; // true if everything is saved
-//     virtual bool hotSyncNeeded() = 0; // True if component wants to hot-sync
-//     virtual void enableHotSync(bool) = 0; // If false, hotSyncNeeded() will always be false.
+public:
+	PilotComponent(QWidget* parent, 
+		const QString& dbPath);
+
+	/**
+	* Load data from files, etc. Always called
+	* before the component is made visible the first time.
+	*/
+	virtual void initialize() = 0;
+
+	/**
+	* Get ready for a hotsync -- write any unflushed records
+	* to disk, close windows, whatever. Append commands to send
+	* to the pilot onto the char * array.
+	*/
+	virtual void preHotSync(char* ) { } ;
+
+	/**
+	* Reload data (possibly changed by the hotsync) etc. etc.
+	*/
+	virtual void postHotSync() { } ;
+
+	/**
+	* Save data to local disk (?), return true if succesful.
+	*/
+	virtual bool saveData() = 0;
+
 
 protected:
 	/**
@@ -84,10 +100,17 @@ protected:
 	void populateCategories(QComboBox *,
 		CategoryAppInfo *info=0);
 
-    };
+	const QString& dbPath() const { return fDBPath; } ;
+
+private:
+	QString fDBPath;
+} ;
 
 #endif
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

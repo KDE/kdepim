@@ -42,9 +42,9 @@
 #include <kdebug.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
+#include "kpilotConfig.h"
 #include "vcal-conduit.h"
 #include "vcal-setup.moc"
-#include "kpilot.h"
 
 VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig& config) :
 	setupDialogPage(i18n("Calendar"),parent)
@@ -117,7 +117,7 @@ VCalSetup::VCalSetup(QWidget *parent) :
 	setupDialog(parent,VCalGroup)
 {
 	FUNCTIONSETUP;
-	KConfig& config=KPilotLink::getConfig(VCalGroup);
+	KConfig& config=KPilotConfig::getConfig(VCalGroup);
 	addPage(new VCalSetupPage(this,config));
 	addPage(new setupInfoPage(this));
 
@@ -125,4 +125,7 @@ VCalSetup::VCalSetup(QWidget *parent) :
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.11  2001/02/07 15:46:32  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

@@ -66,9 +66,11 @@ static const char *kpilot_id="$Id$";
 
 #include "kpilotOptions.h"
 #include "kpilot.moc"
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "messageDialog.h"
 #include "addressWidget.h"
+#include "memoWidget.h"
+#include "fileInstallWidget.h"
 #include "kpilot_on_pp.h"
 #include "statusMessages.h"
 #include "conduitSetup.h"
@@ -83,7 +85,7 @@ KPilotInstaller::KPilotInstaller()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig();
+	KConfig& config = KPilotConfig::getConfig();
 	// Log a warning if the config file is too old.
 	//
 	//
@@ -98,14 +100,6 @@ KPilotInstaller::KPilotInstaller()
 	config.sync();
       }
 
-	// Just a block to isolate the config file.
-	//
-	//
-	{
-	KConfig KDEGlobalConfig(QString::null);
-	KDEGlobalConfig.setGroup("General");
-	fixedFont = KDEGlobalConfig.readFontEntry("fixed");
-	}
 
     initPilotLink();
 	if (!fPilotCommandSocket)
@@ -183,29 +177,28 @@ KPilotInstaller::setupWidget()
 
 void
 KPilotInstaller::initComponents()
-    {
+{
 	FUNCTIONSETUP;
 
-    PilotComponent* aComponent;
-    
-    QLabel* titleScreen = new QLabel(getManagingWidget());
-    titleScreen->setPixmap(QPixmap(kpilot_on_pp));
-    titleScreen->setAlignment(AlignCenter);
-    titleScreen->setBackgroundColor(QColor("black"));
-    titleScreen->setGeometry(0, 0, getManagingWidget()->geometry().width(), 
-			           getManagingWidget()->geometry().height());
-    fVisibleWidgetList.append(titleScreen);
-    
-    aComponent = new MemoWidget(this, getManagingWidget());
-    aComponent->initialize();
-    fPilotComponentList.append(aComponent);
-    aComponent = new AddressWidget(this, getManagingWidget());
-    aComponent->initialize();
-    fPilotComponentList.append(aComponent);
-    aComponent = new FileInstallWidget(this, getManagingWidget());
-    aComponent->initialize();
-    fPilotComponentList.append(aComponent);
-    }
+	QLabel* titleScreen = new QLabel(getManagingWidget());
+	titleScreen->setPixmap(QPixmap(kpilot_on_pp));
+	titleScreen->setAlignment(AlignCenter);
+	titleScreen->setBackgroundColor(QColor("black"));
+	titleScreen->setGeometry(0, 0, 
+		getManagingWidget()->geometry().width(), 
+		getManagingWidget()->geometry().height());
+	fVisibleWidgetList.append(titleScreen);
+
+	KConfig& config = KPilotConfig::getConfig();
+	QString lastUser = config.readEntry("UserName");
+	QString dbsubpath = "kpilot/DBBackup/";
+	QString defaultDBPath = KGlobal::dirs()->
+		saveLocation("data", dbsubpath + lastUser + "/");
+
+	addComponentPage(new MemoWidget(getManagingWidget(),defaultDBPath));
+	addComponentPage(new AddressWidget(getManagingWidget(),defaultDBPath));
+	addComponentPage(new FileInstallWidget(getManagingWidget(),defaultDBPath));
+}
 
 void
 KPilotInstaller::initStatusBar()
@@ -257,7 +250,7 @@ KPilotInstaller::initToolBar()
 
 	fToolBar = new KToolBar(this, "toolbar");
 
-	KConfig& c = KPilotLink::getConfig();
+	KConfig& c = KPilotConfig::getConfig();
 	QStringList s = c.readListEntry("ToolbarIcons");
 
 
@@ -737,7 +730,7 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 			// us to sync based on a button push.
 			//
 			//
-			KConfig& c = KPilotLink::getConfig();
+			KConfig& c = KPilotConfig::getConfig();
 
 			// Either doFastSync() or doHotSync() sets up
 			// fLinkCommand to actually contain the bytes
@@ -949,6 +942,29 @@ KPilotInstaller::addComponentPage(QWidget* widget, QString name)
 	fVisibleWidgetList.append(widget);
 }
 
+void
+KPilotInstaller::addComponentPage(PilotComponent *p)
+{
+	FUNCTIONSETUP;
+
+	if (!p)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Adding NULL component?"
+			<< endl;
+		return;
+	}
+
+	DEBUGKPILOT << fname
+		<< ": Adding component @"
+		<< (int) p
+		<< endl;
+
+	addComponentPage(p,p->name());
+	p->initialize();
+	fPilotComponentList.append(p);
+}
+
 void KPilotInstaller::menuCallback(int item)
 {
 	FUNCTIONSETUP;
@@ -1026,7 +1042,7 @@ void KPilotInstaller::menuCallback(int item)
 			}
 #endif
 
-			readConfig(KPilotLink::getConfig());
+			readConfig(KPilotConfig::getConfig());
 
 			// Update the link to reflect new settings.
 			//
@@ -1190,9 +1206,9 @@ int main(int argc, char** argv)
 
 	KApplication a(true,true);
 
-	KConfig& c=KPilotLink::getConfig();
-	(void)KPilotLink::getDebugLevel(c);
-	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
+	KConfig& c=KPilotConfig::getConfig();
+	(void)KPilotConfig::getDebugLevel(c);
+	if (KPilotConfig::getConfigVersion(c)<KPilotConfig::ConfigurationVersion)
 	{
 		run_mode='S';
 	}
@@ -1247,7 +1263,7 @@ int main(int argc, char** argv)
 		c.setGroup(QString::null);
 	}
 
-	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
+	if (KPilotConfig::getConfigVersion(c)<KPilotConfig::ConfigurationVersion)
 	{
 		kdWarning() << __FUNCTION__ << ": Is still not configured for use."
 			<< endl;
@@ -1270,6 +1286,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.36  2001/02/08 17:59:34  adridg
+// Removed spurious #ifdefs, and the #define that goes with it. Make KPilot exit consistently after user-requested setup actions.
+//
 // Revision 1.35  2001/02/08 13:17:19  adridg
 // Fixed crash when conduits run during a backup and exit after the
 // end of that backup (because the event loop is blocked by the backup

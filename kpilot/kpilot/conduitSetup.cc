@@ -48,7 +48,7 @@
 
 #include "conduitSetup.moc"
 
-#include "kpilot.h"
+#include "kpilotConfig.h"
 
 static const char *conduitsetup_id="$Id$";
 
@@ -186,7 +186,7 @@ CConduitSetup::fillLists()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig("Conduit Names");
+	KConfig& config = KPilotConfig::getConfig("Conduit Names");
 	QStringList potentiallyInstalled =
 		config.readListEntry("InstalledConduits");
 	KServiceTypeProfile::OfferList offers = 
@@ -304,7 +304,7 @@ void CConduitSetup::writeInstalledConduits()
 	char dbName[255];
 	int len = 0;
 
-	KConfig& config = KPilotLink::getConfig("Conduit Names");
+	KConfig& config = KPilotConfig::getConfig("Conduit Names");
 	config.writeEntry("InstalledConduits", 
 		categories->listSiblings(active->firstChild(),CONDUIT_DESKTOP));
 	config.setGroup("Database Names");
@@ -441,6 +441,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.20  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.19  2001/02/05 20:55:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -32,19 +32,21 @@
 class QMultiLineEdit;
 class QListBox;
 class QComboBox;
-#include "pilotComponent.h"
-#include "pilotAddress.h"
-#include "kpilotlink.h"
 
-class KPilotInstaller;
 class KConfig;
 
-class AddressWidget : public PilotComponent
-    {
-    Q_OBJECT
+class PilotDatabase;
 
-    public:
-    AddressWidget(KPilotInstaller* installer, QWidget* parent);
+
+#include "pilotComponent.h"
+#include "pilotAddress.h"
+
+class AddressWidget : public PilotComponent
+{
+Q_OBJECT
+
+public:
+	AddressWidget(QWidget* parent,const QString& dbpath);
     ~AddressWidget();
 
     // Pilot Component Methods:
@@ -91,7 +93,7 @@ private:
 	* in memory --- not the list on the screen.
 	* @see fAddressList
 	*/
-	int getAllAddresses(PilotDatabase *addressDB,KConfig *);
+	int getAllAddresses(PilotDatabase *addressDB,KConfig& );
 	char *createTitle(PilotAddress *,int displayMode);
 
       QComboBox*            fCatList;
@@ -109,4 +111,7 @@ public:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.9  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

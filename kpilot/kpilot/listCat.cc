@@ -32,6 +32,9 @@
 #include <klocale.h>
 #include "listCat.moc"
 
+static const char *listCat_id =
+	"$Id:$";
+
 ListCategorizer::ListCategorizer(QWidget *parent, const char *name) :
 	KListView(parent,name),
 	fStartOpen(false)
@@ -162,4 +165,7 @@ QListViewItem *ListCategorizer::addItem(const QString& category,
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.2  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

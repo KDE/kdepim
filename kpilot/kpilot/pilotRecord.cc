@@ -30,6 +30,10 @@
 #include <string.h>
 #include "pilotRecord.h"
 
+static const char *pilotRecord_id =
+	"$Id:$";
+
+
 PilotRecord::PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid)
   : fData(0L), fLen(len), fAttrib(attrib), fCat(cat), fID(uid)
     {
@@ -93,4 +97,7 @@ void PilotRecord::makeSecret()
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

@@ -31,11 +31,11 @@
 #ifndef __KPILOT_LINK
 #define __KPILOT_LINK
 
+
 #include <qobject.h>
 
 class QWidget;
 class KStatusBar;
-class KConfig;
 class KSocket;
 class KServerSocket;
 class KProgress;
@@ -76,14 +76,6 @@ class KPilotLink : public QObject
   friend class PilotSerialDatabase;
 
 public:
-	/**
-	* This number can be changed every time a new
-	* KPilot version is released that absolutely requires
-	* the user to take a look at the configuration of
-	* KPilot.
-	*/
-	static const int ConfigurationVersion;
-
   /**
    * Used for opening local databases only.
    */
@@ -188,30 +180,6 @@ public:
    */
   bool syncDatabase(DBInfo* database);
   
-	/**
-	* Returns a (new) pointer to the KPilot configuration object.
-	* This is used to put all the KPilot configuration --
-	* including conduits and such -- into one rc file and
-	* not spread out among config files for each conduit.
-	*
-	* Callers should delete this object when no longer needed.
-	*/
-	static KConfig& getConfig(const QString &group=QString::null);
-
-	/**
-	* Reads the configuration version from a standard location.
-	*/
-	static int getConfigVersion(KConfig *);
-	static int getConfigVersion(KConfig&);
-
-	/**
-	* We might have an additional Debug= line in their
-	* config which may be read and ORed with the user-specified
-	* debug level. This function does that. 
-	*
-	* @ret resulting debug level
-	*/
-	static int getDebugLevel(KConfig&,const QString& group=QString::null);
 
 private:
 	/**
@@ -273,6 +241,7 @@ private:
 	enum { None = 0 , Running, Connected, Done } fConduitRunStatus ;
 
 public:
+#if 0
   /**
    * Opens database "database" on Pilot and returns the id to reference it:
    */
@@ -293,7 +262,8 @@ public:
    * Closes database 'database'.
    */
   void closeDatabase(PilotDatabase* database) { delete database; }
-  
+#endif
+
   /**
    * Write a log entry to the pilot. Note that the library
    * function takes a char *, not const char * (which is
@@ -367,6 +337,7 @@ private:
   MessageDialog* fMessageDialog;    // The dialog showing current status
 
 	Status fStatus;
+	QString fDatabaseDir;
 
 signals:
   void databaseSyncComplete();
@@ -377,8 +348,6 @@ signals:
 
 #endif
 
+#undef REALLY_KPILOTLINK
 
-// $Log$
-// Revision 1.17  2001/02/06 08:05:19  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
+// $Log: $

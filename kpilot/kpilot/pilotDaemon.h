@@ -33,13 +33,15 @@
 #include <ktmainwindow.h>
 #include <ksystemtray.h>
 
-#include "kpilotlink.h"
 #include "pilotDaemonDCOP.h"
 
 class KConfig;
 class KSocket;
 class KProcess;
 class KAboutApplication;
+
+class PilotRecord;
+class KPilotLink;
 
 #define PILOTDAEMON_COMMAND_PORT	31509
 #define PILOTDAEMON_STATUS_PORT		31510
@@ -205,6 +207,9 @@ private slots:
 #endif
 
 // $Log$
+// Revision 1.15  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
 // Revision 1.14  2001/01/04 22:19:38  adridg
 // Stuff for Chris and Bug 18072
 //

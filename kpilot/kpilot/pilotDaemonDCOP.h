@@ -1,4 +1,4 @@
-/* pilotDaemonDCOP.c			KPilotDaemon
+/* pilotDaemonDCOP.h			KPilotDaemon
 **
 ** Copyright (C) 2000 by Adriaan de Groot
 **
@@ -52,4 +52,7 @@ k_dcop:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.2  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

@@ -40,6 +40,8 @@ static const char *setupDialog_id=
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdlib.h>
+
 #include <kconfig.h>
 #include <kapp.h>
 #include <qlabel.h>
@@ -58,7 +60,7 @@ static const char *setupDialog_id=
 #include <stream.h>
 #include "popmail-conduit.h"
 #include "setupDialog.moc"
-#include "kpilot.h"
+#include "kpilotConfig.h"
 
 PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	setupDialogPage(i18n("Sending Mail"),parent)
@@ -561,7 +563,7 @@ PopMailOptions::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig();
+	KConfig& config = KPilotConfig::getConfig();
 	config.setGroup(PopGroup);
 
 
@@ -572,6 +574,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.13  2001/02/09 15:59:28  habenich
+// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
+//
 // Revision 1.12  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

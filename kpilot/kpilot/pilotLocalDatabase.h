@@ -30,17 +30,17 @@
 
 // Database class for a local (file based) pilot datbase.
 
-#include <time.h>
-#include <pi-macros.h> /* for recordid_t */
-#include <pi-file.h>
+#include <time.h>	/* for broken pilot-link libraries */
+#include <pi-macros.h>	/* for recordid_t */
+// #include <pi-file.h>
 #include <pilotDatabase.h>
-#include <pilotRecord.h>
+// #include <pilotRecord.h>
 
 class PilotLocalDatabase : public PilotDatabase
-    {
-    public:
-    PilotLocalDatabase(const char* path, const char* dbName);
-    virtual ~PilotLocalDatabase();
+{
+public:
+	PilotLocalDatabase(const QString& path, const QString& name);
+	virtual ~PilotLocalDatabase();
 
     // Changes any forward slahses to underscores
     void checkDBName();
@@ -67,7 +67,7 @@ class PilotLocalDatabase : public PilotDatabase
     // Purges all Archived/Deleted records from Palm Pilot database
     virtual int cleanUpDatabase();
 
-    char* getDBName() { return fDBName; }
+    const QString& getDBName() const { return fDBName; }
 
     protected:
     void openDatabase();
@@ -75,8 +75,7 @@ class PilotLocalDatabase : public PilotDatabase
 
     private:
     struct DBInfo fDBInfo;
-    char*       fPathName;
-    char*       fDBName;
+	QString fPathName,fDBName;
     char*       fAppInfo;
     int         fAppLen;
     int         fNumRecords;
@@ -89,6 +88,10 @@ class PilotLocalDatabase : public PilotDatabase
 
 
 // $Log$
+// Revision 1.5  2001/02/07 14:21:51  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.4  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

@@ -25,8 +25,10 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+
 #ifndef __KPILOT_H
 #define __KPILOT_H
+
 
 #include <qapp.h>
 #include <qmenubar.h>
@@ -38,16 +40,14 @@
 #include <klocale.h>
 #include <kmainwindow.h>
 #include <kprogress.h>
-#include <kprocess.h>
 
 class QPopupMenu;
 class QComboBox;
+class KProcess;
 
-#include "fileInstallWidget.h"
-#include "memoWidget.h"
+class PilotComponent;
 
-
-#include "options.h"
+#include "kpilotlink.h"
 
 
 
@@ -76,15 +76,11 @@ class KPilotInstaller : public KMainWindow
 	void showTitlePage(const QString& statusMsg=QString::null,
 		bool force=false);
 
-	/**
-	* Returns the user's preference for the system-wide
-	* fixed font.
-	*/
-	const QFont& fixed() const { return fixedFont; }  ;
 
     bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
     // Adds 'name' to the pull down menu of components
     void addComponentPage(QWidget* widget, QString name);
+	void addComponentPage(PilotComponent *);
 
 
 	typedef enum { Normal,
@@ -196,7 +192,6 @@ private:
 
 	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore,
 		icon_quit;
-	QFont fixedFont;
 
  protected slots:
       void menuCallback(int);
@@ -215,5 +210,10 @@ private:
  
 #endif
 
+#undef REALLY_KPILOT
 
-// $Log:$
+
+// $Log$
+// Revision 1.16  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

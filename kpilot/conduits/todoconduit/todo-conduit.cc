@@ -49,7 +49,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 #include "pilotTodoEntry.h"
@@ -101,7 +101,7 @@ void TodoConduit::getCalendar()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
 
 	calName = config.readEntry("CalFile");
 	first = getFirstTime(config);
@@ -355,7 +355,7 @@ void TodoConduit::saveTodo()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
 	QString calName = config.readEntry("CalFile");
 
 	if (fCalendar)
@@ -590,7 +590,7 @@ void TodoConduit::doLocalSync()
    }
    deletedList.clear();
 
-	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
 	setFirstTime(config,false);
 }
 
@@ -691,4 +691,7 @@ int TodoConduit::numFromDay(const QString &day)
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.11  2001/02/07 15:46:32  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

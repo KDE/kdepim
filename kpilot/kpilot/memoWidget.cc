@@ -32,6 +32,7 @@ static const char *memowidget_id="$Id$";
 #include <time.h>
 #include <iostream.h>
 #include <pi-macros.h>
+#include <pi-dlp.h>
 
 #include <qdir.h>
 #include <qlist.h>
@@ -44,8 +45,8 @@ static const char *memowidget_id="$Id$";
 #include <kfiledialog.h>
 
 #include "kpilot.h"
+#include "kpilotConfig.h"
 #include "memoWidget.moc"
-#include <pi-dlp.h>
 
 // QADE: Is this a Pilot limitation, or is it a KPilot limitation?
 int MemoWidget::MAX_MEMO_LEN = 8192;
@@ -61,8 +62,9 @@ int MemoWidget::MAX_MEMO_LEN = 8192;
 
 
 
-MemoWidget::MemoWidget(KPilotInstaller* installer, QWidget* parent)
-  : PilotComponent(parent), fTextWidget(0L)
+MemoWidget::MemoWidget( QWidget* parent, const QString& path) : 
+	PilotComponent(parent,path), 
+	fTextWidget(0L)
 {
 	FUNCTIONSETUP;
 
@@ -71,8 +73,7 @@ MemoWidget::MemoWidget(KPilotInstaller* installer, QWidget* parent)
 	setupWidget();
 	initialize();
 	fMemoList.setAutoDelete(true);
-	fTextWidget->setFont(installer->fixed());
-	installer->addComponentPage(this, "Memos");
+	fTextWidget->setFont(KPilotConfig::fixed());
 	slotUpdateButtons();
 }
 
@@ -97,10 +98,9 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 	// ShowSecrets tells us to also list memos with an attribute of "Secret"
 	// or "Private"
 	//
-	KConfig* config = KGlobal::config();
+	KConfig& config = KPilotConfig::getConfig();
 	bool showSecrets=false;
-	config->setGroup(QString());
-	showSecrets = (bool) config->readNumEntry("ShowSecrets");
+	showSecrets = config.readBoolEntry("ShowSecrets");
 
 	fMemoList.clear();
 
@@ -171,7 +171,7 @@ MemoWidget::initialize()
 	//
 	//
 	PilotDatabase* memoDB = 
-		KPilotLink::getPilotLink()->openLocalDatabase("MemoDB");
+		new PilotLocalDatabase(dbPath(),"MemoDB");
 	if (memoDB==NULL || !memoDB->isDBOpen())
 	{
 		kdWarning() << __FUNCTION__ << 
@@ -192,7 +192,7 @@ MemoWidget::initialize()
 	populateCategories(fCatList,&fMemoAppInfo.category);
 	initializeMemos(memoDB);
 
-	KPilotLink::getPilotLink()->closeDatabase(memoDB);
+	delete memoDB;
 	updateWidget();
 }
 
@@ -441,11 +441,11 @@ MemoWidget::writeMemo(PilotMemo* which)
 {
 	FUNCTIONSETUP;
 	PilotDatabase* memoDB = 
-		KPilotLink::getPilotLink()->openLocalDatabase("MemoDB");
+		new PilotLocalDatabase(dbPath(),"MemoDB");
 	PilotRecord* pilotRec = which->pack();
 	memoDB->writeRecord(pilotRec);
 	delete pilotRec;
-	KPilotLink::getPilotLink()->closeDatabase(memoDB);
+	delete memoDB;
 }
     
 void
@@ -528,6 +528,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.23  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.22  2001/02/07 14:21:43  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

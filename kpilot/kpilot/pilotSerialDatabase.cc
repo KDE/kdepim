@@ -38,12 +38,17 @@
 #include "pilotSerialDatabase.h"
 #include "kpilotlink.h"
 
+static const char *pilotSerialDatabase_id =
+	"$Id:$";
+
 PilotSerialDatabase::PilotSerialDatabase(KPilotLink* pilotLink, const char* dbName)
   : PilotDatabase(), fDBName(0L), fDBHandle(-1), fPilotLink(pilotLink)
     {
     fDBName = new char[strlen(dbName) + 1];
     strcpy(fDBName, dbName);
     openDatabase();
+    /* NOTREACHED */
+    (void) pilotSerialDatabase_id;
     }
 
 PilotSerialDatabase::~PilotSerialDatabase()
@@ -231,4 +236,7 @@ void PilotSerialDatabase::closeDatabase()
     }
 
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

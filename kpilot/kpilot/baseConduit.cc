@@ -39,7 +39,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 
 #include "baseConduit.moc"
 #include "statusMessages.h"
@@ -96,7 +96,7 @@ BaseConduit::~BaseConduit()
 
 int BaseConduit::getDebugLevel(KConfig& c)
 {
-	return KPilotLink::getDebugLevel(c);
+	return KPilotConfig::getDebugLevel(c);
 	/* NOTREACHED */
 	(void) baseconduit_id;
 }
@@ -352,6 +352,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.15  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.14  2001/02/05 20:55:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

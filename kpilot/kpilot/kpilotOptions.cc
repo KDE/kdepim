@@ -64,7 +64,7 @@
 #include <kdebug.h>
 
 #ifndef STANDALONE
-#include <kpilotlink.h>
+#include "kpilotConfig.h"
 #endif
 
 
@@ -646,7 +646,7 @@ KPilotOptions::KPilotOptions(QWidget* parent) :
 #ifdef STANDALONE
 	KConfig& config = *(KGlobal::config());
 #else
-	KConfig& config=KPilotLink::getConfig();
+	KConfig& config=KPilotConfig::getConfig();
 #endif
 
 	addPage(new KPilotOptionsGeneral(this,config));
@@ -713,6 +713,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.21  2001/02/19 12:31:23  adridg
+// Removed broken bug-reporting address
+//
 // Revision 1.20  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

@@ -62,7 +62,7 @@ static const char *popmail_conduit_id=
 #include "passworddialog.h"
 #include "popmail-conduit.h"
 #include "setupDialog.h"
-#include "kpilot.h"
+#include "kpilotConfig.h"
 
 extern "C" {
 extern time_t parsedate(char * p);
@@ -273,7 +273,7 @@ PopMailConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+	KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup);
 	int mode=0;
 	int sent_count=0,received_count=0;
 
@@ -409,7 +409,7 @@ int PopMailConduit::sendViaSMTP()
   char buffer[0xffff];
   int ret;
   
-  KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+  KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup);
   smtpSrv = config.readEntry("SMTPServer","localhost");
   smtpPort = config.readNumEntry("SMTPPort",25);
   
@@ -632,7 +632,7 @@ int PopMailConduit::sendViaSendmail()
   QString currentDest;
   PilotRecord* pilotRec;
   
-  KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+  KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup);
 
   sendmailCmd = config.readEntry("SendmailCmd");
   
@@ -724,7 +724,7 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
 {
 	FUNCTIONSETUP;
 
-	KConfig& config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
+	KConfig& config=KPilotConfig::getConfig(PopMailOptions::PopGroup); 
   QTextStream mailPipe(sendf, IO_WriteOnly);
   
   QString fromAddress = config.readEntry("EmailAddress");
@@ -1061,7 +1061,7 @@ int PopMailConduit::doPopQuery()
 	FUNCTIONSETUP;
 
 	KSocket* popSocket;
-	KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup); 
+	KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup); 
 	char buffer[0xffff];
 	int offset;
 	int flags=0;
@@ -1519,7 +1519,7 @@ int PopMailConduit::doUnixStyle()
 	PilotRecord *pilotRec=0L;
 
 	{
-		KConfig& config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
+		KConfig& config=KPilotConfig::getConfig(PopMailOptions::PopGroup); 
 	
 		filename=config.readEntry("UNIX Mailbox");
 		if (filename.isEmpty()) return 0;
@@ -1623,6 +1623,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.15  2001/02/09 15:59:28  habenich
+// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
+//
 // Revision 1.14  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

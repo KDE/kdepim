@@ -28,6 +28,9 @@
 #include <stdlib.h>
 #include "pilotTodoEntry.h"
 
+static const char *pilotTodoEntry_id =
+	"$Id:$";
+
 PilotTodoEntry::PilotTodoEntry(PilotRecord* rec)
   : PilotAppCategory(rec)
 {
@@ -70,4 +73,7 @@ void PilotTodoEntry::setNote(const char* note)
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

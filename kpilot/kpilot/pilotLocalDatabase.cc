@@ -34,29 +34,35 @@ static const char *pilotlocaldatabase_id="$Id$";
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream.h>
-#include <string.h>
-#include "pilotLocalDatabase.h"
+
+#include <qstring.h>
+#include <qfile.h>
 #include <kdebug.h>
 
-PilotLocalDatabase::PilotLocalDatabase(const char* path, const char* dbName)
-  : PilotDatabase(), fPathName(0L), fDBName(0L), fAppInfo(0L), fAppLen(0), 
-    fNumRecords(0), fCurrentRecord(0), fPendingRec(-1)
-    {
-    fPathName = new char[strlen(path) + 1];
-    strcpy(fPathName, path);
-    fDBName = new char[strlen(dbName) + 1];
-    strcpy(fDBName, dbName);
-    checkDBName();
-    openDatabase();
-    }
+
+
+#include "pilotLocalDatabase.h"
+
+PilotLocalDatabase::PilotLocalDatabase(const QString& path, 
+	const QString& dbName) : PilotDatabase(), 
+	fPathName(path),
+	fDBName(dbName), 
+	fAppInfo(0L), 
+	fAppLen(0), 
+	fNumRecords(0), 
+	fCurrentRecord(0), 
+	fPendingRec(-1)
+{
+	checkDBName();
+	openDatabase();
+}
+
 
 PilotLocalDatabase::~PilotLocalDatabase()
     {
     int i;
 
     closeDatabase();
-    delete [] fPathName;
-    delete [] fDBName;
     delete [] fAppInfo;
     for(i = 0; i < fNumRecords; i++)
 	delete fRecords[i];
@@ -64,11 +70,15 @@ PilotLocalDatabase::~PilotLocalDatabase()
 
 // Changes any forward slashes to underscores
 void PilotLocalDatabase::checkDBName()
-    {
+{
+	fDBName = fDBName.replace( QRegExp("/"), "_" );
+    
+#if 0
     int i = -1;
     while(fDBName[++i])
 	if(fDBName[i] == '/')
 	    fDBName[i] = '_';
+#endif
     }
 
 // Reads the application block info
@@ -312,19 +322,17 @@ int PilotLocalDatabase::cleanUpDatabase()
     }
 
 void PilotLocalDatabase::openDatabase()
-    {
+{
 	FUNCTIONSETUP;
     void* tmpBuffer;
     pi_file* dbFile;
-    char tempName[256];
     int size, attr, cat;
     pi_uid_t id;
     
-    strcpy(tempName, fPathName);
-    strcat(tempName, "/");
-    strcat(tempName, getDBName());
-    strcat(tempName, ".pdb");
-    dbFile = pi_file_open(tempName);
+	QString tempName(fPathName);
+	tempName.append("/" + getDBName() + ".pdb");
+
+    dbFile = pi_file_open((const char *)QFile::encodeName(tempName));
     if(dbFile == 0L)
 	{
 	kdError() << __FUNCTION__ << ": Failed to open " << tempName << endl;
@@ -347,36 +355,44 @@ void PilotLocalDatabase::openDatabase()
     }
 
 void PilotLocalDatabase::closeDatabase()
-    {
-    pi_file* dbFile;
-    char tempName[256];
-    char newName[256];
-    int i;
+{
+	pi_file* dbFile;
+	int i;
 
-    if(isDBOpen() == false)
-	return;
-    strcpy(tempName, fPathName);
-    strcat(tempName, "/");
-    strcat(tempName, getDBName());
-    strcat(tempName, ".pdb");
-    strcpy(newName, tempName);
-    strcat(newName, ".bak");
-    dbFile = pi_file_create(newName, &fDBInfo);
-    pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
-    for(i = 0; i < fNumRecords; i++)
+	if(isDBOpen() == false) return;
+
+	QString tempName,newName;
+	tempName=fPathName;
+	tempName.append("/" + getDBName() + ".pdb");
+	newName=tempName + ".bak";
+
+	dbFile = pi_file_create((const char *)QFile::encodeName(newName), 
+		&fDBInfo);
+	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
+
+	for(i = 0; i < fNumRecords; i++)
 	{
-	  //	if(!(fRecords[i]->getAttrib() & dlpRecAttrDeleted))
-	    pi_file_append_record(dbFile, fRecords[i]->getData(), fRecords[i]->getLen(),
-				  fRecords[i]->getAttrib(), fRecords[i]->getCat(),
-				  fRecords[i]->getID());
+		pi_file_append_record(dbFile, 
+			fRecords[i]->getData(), 
+			fRecords[i]->getLen(),
+			fRecords[i]->getAttrib(), fRecords[i]->getCat(),
+			fRecords[i]->getID());
 	}
-    pi_file_close(dbFile);
-    unlink(tempName);
-    rename(newName, tempName);
-    }
+
+	pi_file_close(dbFile);
+
+
+
+	unlink((const char *)QFile::encodeName(tempName));
+	rename((const char *)QFile::encodeName(newName), 
+		(const char *)QFile::encodeName(tempName));
+}
 
 
 // $Log$
+// Revision 1.9  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.8  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

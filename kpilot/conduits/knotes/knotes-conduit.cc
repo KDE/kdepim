@@ -47,7 +47,7 @@
 #include <kdebug.h>
 
 #include "conduitApp.h"
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
 #include "knotes-conduit.h"
 #include "setupDialog.h"
 #include "pilotMemo.h"
@@ -326,7 +326,7 @@ KNotesConduit::readConfig()
 {
 	FUNCTIONSETUP;
 
-	KConfig& c = KPilotLink::getConfig(KNotesOptions::KNotesGroup);
+	KConfig& c = KPilotConfig::getConfig(KNotesOptions::KNotesGroup);
 	getDebugLevel(c);
 	fDeleteNoteForMemo = c.readBoolEntry("DeleteNoteForMemo",false);
 #ifdef DEBUG
@@ -823,6 +823,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.11  2001/02/09 15:59:28  habenich
+// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
+//
 // Revision 1.10  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

@@ -55,9 +55,9 @@ static const char *gsetupdialog_id="$Id$";
 #include <kdebug.h>
 
 #include "gsetupDialog.moc"
-#include "kpilotlink.h"
+#include "kpilotConfig.h"
  
-#define CONFIG	KPilotLink::getConfig()
+#define CONFIG	KPilotConfig::getConfig()
 
 
 //---------------------------------------------------
@@ -432,6 +432,9 @@ setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 
 
 // $Log$
+// Revision 1.15  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.14  2001/02/05 20:55:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -29,11 +29,17 @@
 #include <stdlib.h>
 #include "pilotDateEntry.h"
 
-PilotDateEntry::PilotDateEntry(PilotRecord* rec)
-  : PilotAppCategory(rec)
-    {
-    unpack_Appointment(&fAppointmentInfo, (unsigned char*)rec->getData(), rec->getLen());
-    }
+static const char *pilotDateEntry_id =
+	"$Id:$";
+
+PilotDateEntry::PilotDateEntry(PilotRecord* rec) : PilotAppCategory(rec)
+{
+	unpack_Appointment(&fAppointmentInfo, 
+		(unsigned char*)rec->getData(), 
+		rec->getLen());
+
+	(void) pilotDateEntry_id;
+}
 
 void*
 PilotDateEntry::pack(void *buf, int *len)
@@ -74,4 +80,7 @@ PilotDateEntry::setNote(const char* note)
 
 
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

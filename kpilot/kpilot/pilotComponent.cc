@@ -37,12 +37,17 @@
 #include <qcombobox.h>
 #include <kdebug.h>
 #include "pilotComponent.moc"
-#include "kpilot.h"
+
+static const char *pilotComponent_id =
+	"$Id:$";
 
 inline
-PilotComponent::PilotComponent(QWidget* parent)
-  : QWidget(parent)
+PilotComponent::PilotComponent(QWidget* parent,
+	const QString &path) : 
+	QWidget(parent),
+	fDBPath(path)
     {
+    (void) pilotComponent_id;
     }
 
 
@@ -186,6 +191,21 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.8  2001/02/19 04:04:52  rkrusty
+// [IEM] fix for compiling with glibc 2.2.2
+//
+// --- pilotComponent.cc   Sun Feb 18 19:27:29 2001
+// +++ pilotComponent.cc.new       Sun Feb 18 19:27:18 2001
+// @@ -30,7 +30,7 @@
+//
+//
+//  #include "options.h"
+// -#include <sys/time.h>
+// +#include <time.h>
+//  #include <stream.h>
+//  #include <pi-appinfo.h>
+//  #include <qwidget.h>
+//
 // Revision 1.7  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

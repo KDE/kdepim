@@ -32,6 +32,9 @@
 #include "strToken.h"
 #include <string.h>
 
+static const char *strToken_id =
+	"$Id:$";
+
 StrTokenizer::StrTokenizer(const char* string, const char* delims)
     {
     fOrigString = fString = new char[strlen(string) + 1];
@@ -58,4 +61,7 @@ StrTokenizer::getNextField()
     }
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

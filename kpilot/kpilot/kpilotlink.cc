@@ -32,9 +32,6 @@ static const char *kpilotlink_id="$Id$";
 
 #include "options.h"
 
-#include "statusMessages.h"
-#include "kpilotlink.h"
-#include "messageDialog.h"
 #include <pi-source.h>
 #include <pi-socket.h>
 #include <pi-dlp.h>
@@ -61,91 +58,15 @@ static const char *kpilotlink_id="$Id$";
 #include <kservice.h>
 #include <kdebug.h>
 
+#include "kpilotConfig.h"
 #include "kpilotlink.moc"
+#include "statusMessages.h"
+#include "messageDialog.h"
 
 KPilotLink* KPilotLink::fKPilotLink = 0L;
 
 // const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
-
-
-// This is a number indicating what configuration version
-// we're dealing with. Whenever new configuration options are
-// added that make it imperative for the user to take a
-// look at the configuration of KPilot (for example the
-// skipDB setting really needs user attention) we can change
-// (increase) this number.
-//
-//
-/* static */ const int KPilotLink::ConfigurationVersion = 401;
-
-/* static */ int KPilotLink::getConfigVersion(KConfig *config)
-{
-
-	if (!config)	return 0;
-	else		return getConfigVersion(*config);
-	/* NOTREACHED */
-	(void) kpilotlink_id;
-}
-
-/* static */ int KPilotLink::getConfigVersion(KConfig& config)
-{
-	FUNCTIONSETUP;
-
-	config.setGroup(QString::null);
-	int version=config.readNumEntry("Configured",0);
-	if (version<ConfigurationVersion)
-	{
-		kdWarning() << __FUNCTION__ << ": Config file has old version "
-			<< version
-			<< endl;
-	}
-	else
-	{
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname
-				<< ": Config file has version "
-				<< version
-				<< endl;
-		}
-#endif
-	}
-
-	return version;
-}
-
-#ifdef DEBUG
-/* static */ int KPilotLink::getDebugLevel(KConfig& c,const QString& group)
-#else
-/* static */ int KPilotLink::getDebugLevel(KConfig&, const QString&)
-#endif
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	if (!group.isNull())
-	{
-		c.setGroup(group);
-	}
-
-	int d=c.readNumEntry("Debug",0);
-	debug_level |= d;
-
-	if (debug_level)
-	{
-		kdDebug() << fname 
-			<< ": Debug level set to "
-			<< debug_level
-			<< endl;
-	}
-
-	return debug_level ;
-#else
-	return 0;
-#endif
-}
 
 void KPilotLink::readConfig()
 {
@@ -155,9 +76,16 @@ void KPilotLink::readConfig()
 	// the last synced users data.
 	//
 	//
-	KConfig& config = getConfig();
-	// int version = getConfigVersion(config);
+	KConfig& config = KPilotConfig::getConfig();
 	getPilotUser().setUserName(config.readEntry("UserName").latin1());
+
+	fDatabaseDir = KGlobal::dirs()->saveLocation("data", 
+		QString("kpilot/DBBackup/")); 
+
+	DEBUGDAEMON << fname
+		<< ": Databases saved locally under " 
+		<< fDatabaseDir
+		<< endl;
 }
 
 KPilotLink::KPilotLink()
@@ -584,7 +512,7 @@ void KPilotLink::resumeDB()
 		return;
 	}
 
-  closeDatabase(fCurrentDB);
+	delete fCurrentDB;
 
   // Get our backup copy.
   if(slowSyncRequired()) // We are in the middle of backing up, continue
@@ -604,7 +532,7 @@ KPilotLink::registeredConduit(const QString &dbName)
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = getConfig("Database Names");
+	KConfig& config = KPilotConfig::getConfig("Database Names");
 
 #ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
@@ -1224,7 +1152,7 @@ KPilotLink::startHotSync()
   updateProgressBar(7);
 	if(fPilotUser.getLastSyncPC() != (unsigned long)gethostid())
 	{
-		KConfig& c = KPilotLink::getConfig();
+		KConfig& c = KPilotConfig::getConfig();
 		if (c.readNumEntry("SyncLastPC",1))
 		{
 			setSlowSyncRequired(true);
@@ -1297,7 +1225,7 @@ KPilotLink::doConduitBackup()
   displaymessage=i18n("%1: Running conduit").arg(info.name);
   fMessageDialog->setMessage(displaymessage);
   fCurrentDBInfo = info;
-  fCurrentDB = openDatabase(info.name);
+	fCurrentDB = new PilotSerialDatabase(this,info.name);
   fCurrentDB->resetDBIndex();
   if(fConduitProcess->isRunning())
     {
@@ -1340,7 +1268,7 @@ int KPilotLink::findNextDB(DBInfo *info)
 			fNextDBIndex, info) < 0)
 	{
 		setSlowSyncRequired(false);
-		KConfig& config = getConfig();
+		KConfig& config = KPilotConfig::getConfig();
 		setFastSyncRequired(
 			config.readBoolEntry("PreferFastSync",false));
 	  fMessageDialog->hide();
@@ -1386,7 +1314,7 @@ KPilotLink::syncNextDB()
 
   // Confine config reads to a local block
   {
-    KConfig& c = getConfig();
+    KConfig& c = KPilotConfig::getConfig();
     skip=c.readEntry("SkipSync");
     backupOnly=c.readEntry("BackupForSync");
   }
@@ -1511,7 +1439,7 @@ KPilotLink::syncNextDB()
 #endif
 
 
-  fCurrentDB = openDatabase(info.name);
+	fCurrentDB = new PilotSerialDatabase(this,info.name);
   fCurrentDB->resetDBIndex();
   if(fConduitProcess->isRunning())
     {
@@ -1548,93 +1476,107 @@ KPilotLink::syncNextDB()
 bool 
 KPilotLink::syncDatabase(DBInfo* database)
 {
-  unsigned char buffer[0xffff];
-  
-  PilotDatabase* firstDB;
-  PilotDatabase* secondDB;
+	unsigned char buffer[0xffff];
 
-  firstDB = openDatabase(database->name);
-  secondDB = openLocalDatabase(database->name);
-  PilotRecord* pilotRec;
+	PilotDatabase* firstDB;
+	PilotDatabase* secondDB;
+	PilotRecord* pilotRec;
 
-  if(firstDB->isDBOpen() && (secondDB->isDBOpen() == false))
-    {
-      // Must be a new Database...
-      showMessage(i18n("No previous copy.  Copying data from pilot..."));
-      closeDatabase(firstDB); // So we can reopen it to copy it
-      closeDatabase(secondDB);
-      if(createLocalDatabase(database) == false)
+	QString currentDBPath = fDatabaseDir + 
+		getPilotUser().getUserName() + "/";
+
+	firstDB = new PilotSerialDatabase(this,database->name);
+	secondDB = new PilotLocalDatabase(currentDBPath,database->name);
+
+	if(firstDB->isDBOpen() && (secondDB->isDBOpen() == false))
 	{
-	  KMessageBox::error(fOwningWidget,
-			     i18n("Could not create local copy of database "
-				  "&quot;%1&quot;").arg(database->name),
-			     i18n("Backup"));
+		// Must be a new Database...
+		showMessage(i18n("No previous copy.  Copying data from pilot..."));
 
-	  // Why continue here? The database isn't open, so
-	  // we'll just get another error message shortly.
-	  //
-	  //
-	  return false;
+		delete firstDB;
+		delete secondDB;
+		firstDB = secondDB = 0L;
+
+		if(createLocalDatabase(database) == false)
+		{
+			KMessageBox::error(fOwningWidget,
+				i18n("Could not create local copy of database "
+				"&quot;%1&quot;").arg(database->name),
+				i18n("Backup"));
+
+			// Why continue here? The database isn't open, so
+			// we'll just get another error message shortly.
+			//
+			//
+			return false;
+		}
+
+		firstDB = new PilotSerialDatabase(this,database->name);
+		secondDB = new PilotLocalDatabase(currentDBPath,database->name);
+
+		showMessage(i18n("Hot-Syncing Pilot. Looking for modified data..."));
 	}
-      firstDB = openDatabase(database->name);
-      secondDB = openLocalDatabase(database->name);
-      showMessage(i18n("Hot-Syncing Pilot. Looking for modified data..."));
-    }
-  if((secondDB->isDBOpen() == false) || (firstDB->isDBOpen() == false))
-    {
-      closeDatabase(firstDB);
-      closeDatabase(secondDB);
-      QString message(i18n("Cannot find database &quot;%1&quot;")
-		      .arg(database->name));
-      KMessageBox::error(fOwningWidget,
-			 message,
-			 i18n("Error Syncing Database"));
-      return false;
-    }
+
+	if((secondDB->isDBOpen() == false) || (firstDB->isDBOpen() == false))
+	{
+		delete firstDB;
+		delete secondDB;
+		firstDB = secondDB = 0L;
+
+		QString message(i18n("Cannot find database &quot;%1&quot;")
+			.arg(database->name));
+		KMessageBox::error(fOwningWidget,
+			message,
+			i18n("Error Syncing Database"));
+		return false;
+	}
 
 
-  // Move this functionality into mode ...
-  //
-  //
-  KConfig& config = getConfig();
-  config.setGroup(QString());
-  // If local changes should modify pilot changes, switch the order.
-  int localOverride = config.readNumEntry("OverwriteRemote");
+	// Move this functionality into mode ...
+	//
+	//
+	KConfig& config = KPilotConfig::getConfig();
+	config.setGroup(QString());
+	// If local changes should modify pilot changes, switch the order.
+	int localOverride = config.readNumEntry("OverwriteRemote");
 
-  if(localOverride)
-    {
-      PilotDatabase* tmp = firstDB;
-      firstDB = secondDB;
-      secondDB = tmp;
-    }
+	if(localOverride)
+	{
+		PilotDatabase* tmp = firstDB;
+		firstDB = secondDB;
+		secondDB = tmp;
+	}
 
-  int len = firstDB->readAppBlock(buffer, 0xffff);
-  if(len > 0)
-    {
-      secondDB->writeAppBlock(buffer, len);
-    }
+	int len = firstDB->readAppBlock(buffer, 0xffff);
+	if(len > 0)
+	{
+		secondDB->writeAppBlock(buffer, len);
+	}
 
-  firstDB->resetDBIndex();
-  while((pilotRec = firstDB->readNextModifiedRec()) != 0L)
-    {
-      secondDB->writeRecord(pilotRec);
-      firstDB->writeID(pilotRec);
-      delete pilotRec;
-    }
-  secondDB->resetDBIndex();
-  while((pilotRec = secondDB->readNextModifiedRec()) != 0L)
-    {
-      firstDB->writeRecord(pilotRec);
-      secondDB->writeID(pilotRec);
-      delete pilotRec;
-    }
-  firstDB->resetSyncFlags();
-  firstDB->cleanUpDatabase(); // Purge deleted entries
-  secondDB->resetSyncFlags();
-  secondDB->cleanUpDatabase();
-  closeDatabase(firstDB);
-  closeDatabase(secondDB);
-  return true;
+	firstDB->resetDBIndex();
+	while((pilotRec = firstDB->readNextModifiedRec()) != 0L)
+	{
+		secondDB->writeRecord(pilotRec);
+		firstDB->writeID(pilotRec);
+		delete pilotRec;
+	}
+
+	secondDB->resetDBIndex();
+	while((pilotRec = secondDB->readNextModifiedRec()) != 0L)
+	{
+		firstDB->writeRecord(pilotRec);
+		secondDB->writeID(pilotRec);
+		delete pilotRec;
+	}
+
+	firstDB->resetSyncFlags();
+	firstDB->cleanUpDatabase(); // Purge deleted entries
+	secondDB->resetSyncFlags();
+	secondDB->cleanUpDatabase();
+	delete firstDB;
+	delete secondDB;
+	firstDB = secondDB = 0L;
+	return true;
 }
 
 void KPilotLink::endHotSync()
@@ -1657,7 +1599,7 @@ void KPilotLink::checkPilotUser()
 {
 	FUNCTIONSETUP;
 
-  KConfig& config = getConfig();
+  KConfig& config = KPilotConfig::getConfig();
   if (config.readBoolEntry("AlwaysTrustPilotUser"))
     {
       return;
@@ -1698,61 +1640,21 @@ void KPilotLink::checkPilotUser()
 }
 
 
-static KConfig *theconfig = 0L;
-KConfig& KPilotLink::getConfig(const QString &s)
-{
-	FUNCTIONSETUP;
 
-	if (theconfig)
-	{
-		theconfig->setGroup(s);
-		return *theconfig;
-	}
-
-	/**
-	* This causes a crash if no instance has been created
-	* yet. A standard KDE error message reports this fact.
-	* It is a grave programming error, so we will let that
-	* stand.
-	*/
-	QString existingConfig=
-		KGlobal::dirs()->findResource("config", "kpilotrc");
-
-	
-	if (existingConfig.isNull())
-	{
-#ifdef DEBUG
-		if (debug_level & UI_MAJOR)
-		{
-			kdDebug() << fname 
-				<< ": Making a new config file"
-				<< endl;
-		}
-#endif
-		theconfig=new KConfig("kpilotrc",false,false);
-	}
-	else
-	{
-		theconfig=new KConfig(existingConfig,false,false);
-	}
-
-	if (theconfig == 0L)
-	{
-		kdWarning() << __FUNCTION__ << ": No configuration was found."
-			<< endl;
-	}
-
-	theconfig->setGroup(s);
-	return *theconfig;
-}
-
+#if 0
 PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 {
   QString pathName = KGlobal::dirs()->saveLocation("data", QString("kpilot/DBBackup/") + getPilotUser().getUserName() + "/");
   return new PilotLocalDatabase(pathName.latin1(), database.latin1());
 }
+#endif
 
 // $Log$
+// Revision 1.36  2001/02/08 13:17:19  adridg
+// Fixed crash when conduits run during a backup and exit after the
+// end of that backup (because the event loop is blocked by the backup
+// itself). Added better debugging error exit message (no i18n needed).
+//
 // Revision 1.35  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
@@ -1775,41 +1677,8 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 // Revision 1.29  2001/01/04 22:19:37  adridg
 // Stuff for Chris and Bug 18072
 //
-// Revision 1.28  2001/01/03 00:02:45  adridg
-// Added Heiko's FastSync
-//
-// Revision 1.27  2001/01/01 18:05:35  adridg
-// i18n stuff in Backup and Restore
-//
-// Revision 1.26  2000/12/31 16:44:00  adridg
-// Patched up the debugging stuff again
-//
-// Revision 1.25  2000/12/21 00:42:50  adridg
-// Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
-//
 // Revision 1.24  2000/12/20 19:42:18  bero
 // Fix build with -DNDEBUG
-//
-// Revision 1.23  2000/12/13 16:59:27  adridg
-// Removed dead code, i18n stupidities
-//
-// Revision 1.22  2000/11/27 02:20:20  adridg
-// Internal cleanup
-//
-// Revision 1.21  2000/11/26 01:44:54  adridg
-// Last of Heiko's patches
-//
-// Revision 1.20  2000/11/17 08:37:43  adridg
-// Config changes; kill-daemon-on-exit
-//
-// Revision 1.19  2000/11/14 23:06:53  adridg
-// SyncLastPC implemented
-//
-// Revision 1.18  2000/11/14 06:32:26  adridg
-// Ditched KDE1 stuff
-//
-// Revision 1.17  2000/11/13 08:52:31  adridg
-// Much getConfig() grief averted
 //
 // Revision 1.16  2000/11/10 13:22:00  adridg
 // Failed to catch all the changed getConfig() calls

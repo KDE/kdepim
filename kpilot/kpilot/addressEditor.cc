@@ -36,6 +36,9 @@
 #include "pilotAddress.h"
 #include "addressEditor.moc"
 
+static const char *addressEditor_id =
+	"$Id:$";
+
 AddressEditor::AddressEditor(PilotAddress *p,
 	QWidget *parent,
 	const char *name) :
@@ -56,6 +59,8 @@ AddressEditor::AddressEditor(PilotAddress *p,
 
 	connect(parent,SIGNAL(recordChanged(PilotAddress *)),
 		this,SLOT(updateRecord(PilotAddress *)));
+
+	(void) addressEditor_id;
 }
 
 AddressEditor::~AddressEditor()
@@ -212,4 +217,7 @@ void AddressEditor::initLayout()
 	}
 }
 
-// $Log:$
+// $Log$
+// Revision 1.2  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//

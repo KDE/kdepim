@@ -11,7 +11,9 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 
 #SUBDIRS = doc
 
-kpilot_SOURCES	= kpilot.cc kpilotlink.cc fileInstallWidget.cc pilotMemo.cc memoWidget.cc pilotComponent.cc \
+kpilot_SOURCES	= kpilot.cc \
+	kpilotConfig.cc kpilotlink.cc \
+	fileInstallWidget.cc pilotMemo.cc memoWidget.cc pilotComponent.cc \
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
 	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc pilotAddress.cc \
 	addressWidget.cc addressEditor.cc \
@@ -19,7 +21,9 @@ kpilot_SOURCES	= kpilot.cc kpilotlink.cc fileInstallWidget.cc pilotMemo.cc memoW
 	conduitSetup.cc listCat.cc pilotTodoEntry.cc \
 	options.cc 
 
-kpilotDaemon_SOURCES = pilotDaemon.cc kpilotlink.cc pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
+kpilotDaemon_SOURCES = pilotDaemon.cc \
+	kpilotConfig.cc kpilotlink.cc \
+	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
 	messageDialog.cc \
 	pilotDaemonDCOP.skel \
 	options.cc
@@ -29,7 +33,7 @@ pilotListener_SOURCES = pilotListener.cc
 libconduit_a_SOURCES = baseConduit.cc conduitApp.cc \
 	pilotRecord.cc pilotSerialDatabase.cc pilotLocalDatabase.cc \
 	messageDialog.cc gsetupDialog.cc \
-	kpilotlink.cc options.cc
+	kpilotConfig.cc kpilotlink.cc options.cc
 
 kpilot_LDFLAGS = @all_libraries@ -L/usr/local/lib $(KDE_RPATH)
 kpilotDaemon_LDFLAGS = @all_libraries@ -L/usr/local/lib $(KDE_RPATH)
@@ -44,3 +48,5 @@ appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kpilot.desktop kpilotdaemon.desktop
 servicetype_DATA = kpilotconduit.desktop
 servicetypedir = $(kde_servicetypesdir)
+kpiloticondir = $(kde_datadir)/kpilot
+kpiloticon_ICON = AUTO
