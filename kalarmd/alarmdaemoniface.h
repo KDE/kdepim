@@ -45,6 +45,7 @@ class AlarmDaemonIface : virtual public DCOPObject
                               const QCString& dcopObject, int notificationType,
                               bool displayCalendarName) = 0;
     virtual ASYNC registerGui(const QCString& appName, const QCString& dcopObject) = 0;
+    virtual ASYNC readConfig() = 0;
     virtual ASYNC quit() = 0;
 
     virtual ASYNC forceAlarmCheck() = 0;

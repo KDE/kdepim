@@ -99,12 +99,12 @@ void AlarmDaemon::quit()
 void AlarmDaemon::dumpDebug()
 {
   kdDebug(5900) << "AlarmDaemon::dumpDebug()" << endl;
-  
+
   for( ADCalendarBase *cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
     cal->dump();
   }
-  
-  kdDebug(5900) << "AlarmDaemon::dumpDebug() done" << endl;  
+
+  kdDebug(5900) << "AlarmDaemon::dumpDebug() done" << endl;
 }
 
 /*
@@ -289,6 +289,23 @@ void AlarmDaemon::enableAutoStart(bool on)
 }
 
 /*
+ * DCOP call to tell the daemon to re-read its config file.
+ */
+void AlarmDaemon::readConfig()
+{
+  kdDebug(5900) << "AlarmDaemon::readConfig()\n";
+  kapp->config()->reparseConfiguration();
+  int oldCheckInterval = mCheckInterval;
+  readCheckInterval();
+  if (mCheckInterval != oldCheckInterval) {
+    mAlarmTimer->disconnect();
+    mAlarmTimer->stop();
+    setTimerStatus();     // change the alarm timer's interval
+    notifyGui(CHANGE_STATUS);
+  }
+}
+
+/*
  * Read the alarm check interval from the config file.
  */
 void AlarmDaemon::readCheckInterval()
@@ -334,7 +351,7 @@ void AlarmDaemon::checkAlarms()
   for( cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
     checkAlarms( cal, mLastCheck.addSecs( 1 ), now );
   }
-  
+
   mLastCheck = now;
 }
 
@@ -363,7 +380,7 @@ void AlarmDaemon::checkAlarms(const QCString& appName)
 void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const QDateTime &to)
 {
   kdDebug(5901) << "AlarmDaemons::checkAlarms(): '" << cal->urlString() << "'" << endl;
-  
+
   if ( !mEnabled  ||  !cal->loaded()  ||  !cal->enabled() ) return;
 
   kdDebug(5901) << "  From: " << from.toString() << "  To: " << to.toString() << endl;
@@ -439,7 +456,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
     else
     {
       kdDebug() << "  appName: " << calendar->appName() << endl;
-    
+
       if (client.waitForRegistration)
       {
         // Don't start the client application if the session manager is still
@@ -455,14 +472,14 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
         Event *event = calendar->getEvent( eventID );
         if (!event) return false;
-        
+
         kdDebug() << "--- DCOP send: handleEvent(): " << event->summary() << endl;
 
         CalendarLocal cal;
         cal.addEvent( new Event( *event ) );
-        
+
         ICalFormat format( &cal );
-        
+
         AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
         stub.handleEvent( format.toString() );
         if ( !stub.ok() ) {
@@ -503,7 +520,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
                       << QFile::encodeName(execStr) << endl;
       }
-      
+
       AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
       stub.handleEvent( calendar->urlString(), eventID );
       if ( !stub.ok() ) {
@@ -582,11 +599,12 @@ void AlarmDaemon::setTimerStatus()
   // Start or stop the alarm timer if necessary
   if (!mAlarmTimer->isActive() && nLoaded)
   {
-    // Timeout every minute.
+    // Timeout every mCheckInterval minutes.
     // But first synchronise to one second after the minute boundary.
-    int firstInterval = 61 - QTime::currentTime().second();
+    int checkInterval = mCheckInterval * 60;
+    int firstInterval = checkInterval + 1 - QTime::currentTime().second();
     mAlarmTimer->start(1000 * firstInterval);
-    mAlarmTimerSyncing = (firstInterval != 60);
+    mAlarmTimerSyncing = (firstInterval != checkInterval);
     connect(mAlarmTimer, SIGNAL(timeout()), SLOT(checkAlarmsSlot()));
     kdDebug(5900) << "Started alarm timer" << endl;
   }
