@@ -2,11 +2,18 @@
                        | K   O R G A N I Z E R |
                        +-----------------------+
 
-                            version 3.1
+                            version 3.1.1
 
                        http://korganizer.kde.org
 
 QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
+
+* Official 3.1.1 release (March 2003)
+  
+  - Bug fixes:
+    - Use correct default duration for events crossing a day boundary (#53477).
+    - Correctly save category colors (#54913).
+
 
 * Official 3.1 release (January 2003)
 
