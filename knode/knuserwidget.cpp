@@ -170,13 +170,16 @@ void KNUserWidget::slotSignatureEdit()
   }
 
   KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", true);
-  KURL::List  lst(fileName);
+  KURL::List lst;
+  KURL url;
+  url.setPath(fileName);
+  lst.append(url);
 
   if (offer)
     KRun::run(*offer, lst);
   else {
-    KFileOpenWithHandler *openhandler = new KFileOpenWithHandler();
-    openhandler->displayOpenWithDialog(lst);
+    KFileOpenWithHandler openhandler;
+    openhandler.displayOpenWithDialog(lst);
   }
 }
 

@@ -196,7 +196,10 @@ void KNArticleManager::openContent(KNMimeContent *c)
   if(path.isNull()) return;
 
   KService::Ptr offer = KServiceTypeProfile::preferredService(c->ctMimeType(), true);
-  KURL::List  lst(path);
+  KURL::List lst;
+  KURL url;
+  url.setPath(path);
+  lst.append(url);
 
   if (offer)
     KRun::run(*offer, lst);
