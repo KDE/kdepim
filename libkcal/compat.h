@@ -49,6 +49,7 @@ class Compat
 
     virtual void fixRecurrence( Incidence * );
     virtual void fixEmptySummary( Incidence * );
+    virtual void fixAlarms( Incidence * ) {}
     virtual void fixFloatingEnd( QDate & ) {}
     virtual bool useTimeZoneShift() { return true; }
 
@@ -81,6 +82,16 @@ class Compat32PrereleaseVersions : public Compat
 {
   public:
     virtual bool useTimeZoneShift() { return false; }
+
+  private:
+    class Private;
+    Private *d;
+};
+
+class CompatOutlook9 : public Compat
+{
+  public:
+    virtual void fixAlarms( Incidence * );
 
   private:
     class Private;

@@ -36,6 +36,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
   Compat *compat = 0;
 
   int korg = productId.find( "KOrganizer" );
+  int outl9 = productId.find( "Outlook 9.0" );
   if ( korg >= 0 ) {
     int versionStart = productId.find( " ", korg );
     if ( versionStart >= 0 ) {
@@ -68,6 +69,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
         }
       }
     }
+  } else if ( outl9 >= 0 ) {
+    kdDebug(5800) << "Generating compat for Outlook < 2000 (Outlook 9.0)" << endl;
+    compat = new CompatOutlook9;
   }
   
   if ( !compat ) compat = new Compat;
@@ -113,4 +117,21 @@ void CompatPre32::fixRecurrence( Incidence *incidence )
 void CompatPre31::fixFloatingEnd( QDate &endDate )
 {
   endDate = endDate.addDays( 1 );
+}
+
+void CompatOutlook9::fixAlarms( Incidence *incidence )
+{
+  if ( !incidence ) return;
+  Alarm::List alarms = incidence->alarms();
+  Alarm::List::Iterator it;
+  for ( it = alarms.begin(); it != alarms.end(); ++it ) {
+    Alarm *al = *it;
+    if ( al && al->hasStartOffset() ) {
+      Duration offsetDuration = al->startOffset();
+      int offs = offsetDuration.asSeconds();
+      if ( offs>0 ) 
+        offsetDuration = Duration( -offs );
+      al->setStartOffset( offsetDuration );
+    }
+  }
 }
