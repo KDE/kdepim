@@ -31,8 +31,12 @@
 */
 #include "kcal_resourceblogging.h"
 
-#include "api_blogger.h"
-#include "bloginterface.h"
+#include <libkblog/api_blogger.h>
+#include <libkblog/api_file.h>
+#include <libkblog/api_drupal.h>
+#include <libkblog/api_metaweblog.h>
+#include <libkblog/api_movabletype.h>
+
 
 #include <qdatetime.h>
 #include <klocale.h>
@@ -42,6 +46,8 @@
 
 
 using namespace KCal;
+using namespace KBlog;
+
 
 QString ResourceBlogging::mAppID = QString("20ffffffd7ffffffc5ffffffbdffffff87ffffffb72d39fffffffe5c4bffffffcfffffff80ffffffd4665cfffffff375ffffff88ffffff871a0cffffff8029");
 
@@ -81,10 +87,10 @@ void ResourceBlogging::readConfig( const KConfig *config )
   mUrl = KURL( url );
   
   mServerAPI = config->readNumEntry( "ServerAPI" );
-  mTemplate.categoryTagOpen = config->readEntry( "CategoryTagOpen", "<CATEGORY>" );
-  mTemplate.categoryTagClose = config->readEntry( "CategoryTagClose", "</CATEGORY>" );
-  mTemplate.titleTagOpen = config->readEntry( "TitleTagOpen", "<TITLE>" );
-  mTemplate.titleTagClose = config->readEntry( "TitleTagClose", "</TITLE>" );
+  mTemplate.setCategoryTagOpen( config->readEntry( "CategoryTagOpen", "<CATEGORY>" ) ); 
+  mTemplate.setCategoryTagClose( config->readEntry( "CategoryTagClose", "</CATEGORY>" ) );
+  mTemplate.setTitleTagOpen( config->readEntry( "TitleTagOpen", "<TITLE>" ) );
+  mTemplate.setTitleTagClose( config->readEntry( "TitleTagClose", "</TITLE>" ) );
 
   ResourceCached::readConfig( config );
 }
@@ -97,10 +103,10 @@ void ResourceBlogging::writeConfig( KConfig *config )
 
   config->writeEntry( "URL", mUrl.url() );
   config->writeEntry( "ServerAPI", mServerAPI );
-  config->writeEntry( "CategoryTagOpen", mTemplate.categoryTagOpen );
-  config->writeEntry( "CategoryTagClose", mTemplate.categoryTagClose );
-  config->writeEntry( "TitleTagOpen", mTemplate.titleTagOpen );
-  config->writeEntry( "TitleTagClose", mTemplate.titleTagClose );
+  config->writeEntry( "CategoryTagOpen", mTemplate.categoryTagOpen() );
+  config->writeEntry( "CategoryTagClose", mTemplate.categoryTagClose() );
+  config->writeEntry( "TitleTagOpen", mTemplate.titleTagOpen() );
+  config->writeEntry( "TitleTagClose", mTemplate.titleTagClose() );
 
   ResourceCached::writeConfig( config );
 }
@@ -124,37 +130,13 @@ int ResourceBlogging::serverAPI() const
   return mServerAPI;
 }
 
-void ResourceBlogging::setTitleOpen( const QString &tag )
+void ResourceBlogging::setTemplate( const BlogTemplate &templ )
 {
-  mTemplate.categoryTagOpen = tag;
+  mTemplate = templ;
 }
-QString ResourceBlogging::titleOpen() const
+BlogTemplate ResourceBlogging::getTemplate() const
 {
-  return mTemplate.categoryTagOpen;
-}
-void ResourceBlogging::setTitleClose( const QString &tag )
-{
-  mTemplate.categoryTagClose = tag;
-}
-QString ResourceBlogging::titleClose() const
-{
-  return mTemplate.categoryTagClose;
-}
-void ResourceBlogging::setCategoryOpen( const QString &tag )
-{
-  mTemplate.titleTagOpen = tag;
-}
-QString ResourceBlogging::categoryOpen() const
-{
-  return mTemplate.titleTagOpen;
-}
-void ResourceBlogging::setCategoryClose( const QString &tag )
-{
-  mTemplate.titleTagClose = tag;
-}
-QString ResourceBlogging::categoryClose() const
-{
-  return mTemplate.titleTagClose;
+  return mTemplate;
 }
 
 blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QObject*parent ) 
@@ -165,13 +147,16 @@ blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QO
 // TODO:      blogIf =
       break;
     case blogAPIFile:
-// TODO:      blogIf = new fileAPI( url, parent, "FileAPI" );
+      blogIf = new fileAPI( url, parent, "FileAPI" );
       break;
     case blogAPIDrupal:
-// TODO:      blogIf = 
+      blogIf = new drupalAPI( url, parent, "DrupalAPI" );
       break;
-    case blogAPIKDEDevelopers:
-// TODO:      blogIf = 
+    case blogAPIMetaWeblog:
+      blogIf = new metaweblogAPI( url, parent, "MetaWeblogAPI" );
+      break;
+    case blogAPIMovableType:
+      blogIf = new movabletypeAPI( url, parent, "MovableTypeAPI" );
       break;
     case blogAPIBlogger:
     default:
@@ -184,26 +169,26 @@ blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QO
   blogIf->setUsername( url.user() );
   blogIf->setPassword( url.pass() );
   
-  connect( blogIf, SIGNAL( serverInfo( const QString &, const QString &, const QString & ) ),
+  connect( blogIf, SIGNAL( serverInfoSignal( const QString &, const QString &, const QString & ) ),
            this, SLOT( serverInfo( const QString &, const QString &, const QString & ) ) );
-  connect( blogIf, SIGNAL( blogList( QValueList<blogListItem> ) ),
-           this, SLOT( blogList( QValueList<blogListItem> ) ) );
-//  connect( blogIf, SIGNAL( recentPosts( QStringList ) ),
+  connect( blogIf, SIGNAL( blogListSignal( QValueList<BlogListItem> ) ),
+           this, SLOT( blogList( QValueList<BlogListItem> ) ) );
+//  connect( blogIf, SIGNAL( recentPostsSignal( QStringList ) ),
 //           this, SLOT( recentPosts( QStringList ) ) ) ;
-  connect( blogIf, SIGNAL( recentPosts( const QValueList<blogPost> & ) ),
-           this, SLOT( recentPosts( const QValueList<blogPost> & ) ) );
+  connect( blogIf, SIGNAL( recentPostsSignal( const QValueList<BlogPosting> & ) ),
+           this, SLOT( recentPosts( const QValueList<BlogPosting> & ) ) );
   
 
-  connect( blogIf, SIGNAL( postFinished( bool ) ),
+  connect( blogIf, SIGNAL( postFinishedSignal( bool ) ),
            this, SLOT( postFinished( bool ) ) );
-  connect( blogIf, SIGNAL( publishFinished( bool ) ),
+  connect( blogIf, SIGNAL( publishFinishedSignal( bool ) ),
            this, SLOT( publishFinished( bool ) ) );
-  connect( blogIf, SIGNAL( editFinished( bool ) ),
+  connect( blogIf, SIGNAL( editFinishedSignal( bool ) ),
            this, SLOT( editFinished( bool ) ) );
-  connect( blogIf, SIGNAL( deleteFinished( bool ) ),
+  connect( blogIf, SIGNAL( deleteFinishedSignal( bool ) ),
            this, SLOT( deleteFinished( bool ) ) );
-  connect( blogIf, SIGNAL( newPost( const blogPost & ) ),
-           this, SLOT( newPost( const blogPost & ) ) );
+  connect( blogIf, SIGNAL( newPostSignal( const BlogPosting & ) ),
+           this, SLOT( newPost( const BlogPosting & ) ) );
 
   // Error message
   connect( blogIf, SIGNAL( error( const QString & ) ),
@@ -246,12 +231,12 @@ void ResourceBlogging::decrementUploadCount()
   }
 }
 
-void ResourceBlogging::newPost( const blogPost &newblog )
+void ResourceBlogging::newPost( const BlogPosting &newblog )
 {
 kdDebug() << "ResourceBlogging::newPost(): Downloaded post with ID " << 
-newblog.postInfo.postID << endl;
+newblog.postID() << endl;
   if ( mProgress )
-    mProgress->setStatus( i18n("Received blog #%1").arg( newblog.postInfo.postID ) );
+    mProgress->setStatus( i18n("Received blog #%1").arg( newblog.postID() ) );
   Journal *j = journalFromBlog( newblog );
   if ( j ) addJournal( j );
   decrementDownloadCount();
@@ -318,53 +303,56 @@ kdDebug(5800) << "ResourceBlogging::load()" << endl;
 
 //    void serverInfo( const QString &nickname, const QString & m_userid, const QString & email );
 
-Journal *ResourceBlogging::journalFromBlog( const blogPost &blog ) 
+Journal *ResourceBlogging::journalFromBlog( const BlogPosting &blog ) 
 {
+  // FIXME:
   Journal *j = new Journal();
-  j->setDtStart( blog.postInfo.date );
-kdDebug()<<"Date for blog "<<blog.postInfo.title<<" is "<< blog.postInfo.date.toString()<<endl;
-  j->setSummary( blog.postInfo.title );
-  j->setDescription( blog.postInfo.description );
-  j->setCategories( QStringList( blog.category ) );
-  j->setOrganizer( blog.postInfo.userID );
-  j->setCustomProperty( "KCalBloggerRes", "UserID", blog.postInfo.userID );
-  j->setCustomProperty( "KCalBloggerRes", "BlogID", blog.postInfo.blogID );
-  j->setCustomProperty( "KCalBloggerRes", "PostID", blog.postInfo.postID );
+  j->setDtStart( blog.dateTime() );
+  kdDebug() << "Date for blog " << blog.title() << " is " 
+            << blog.dateTime().toString()<<endl;
+  j->setSummary( blog.title() );
+  j->setDescription( blog.content() );
+  j->setCategories( QStringList( blog.category() ) );
+  j->setOrganizer( blog.userID() );
+  j->setCustomProperty( "KCalBloggerRes", "UserID", blog.userID() );
+  j->setCustomProperty( "KCalBloggerRes", "BlogID", blog.blogID() );
+  j->setCustomProperty( "KCalBloggerRes", "PostID", blog.postID() );
   
   return j;
 }
 
-blogPost ResourceBlogging::blogFromJournal( Journal *journal ) 
+BlogPosting ResourceBlogging::blogFromJournal( Journal *journal ) 
 {
-  blogPost item;
+  BlogPosting item;
   if ( journal ) {
-    item.content = journal->description();
-    item.category = journal->categories().first();
-    item.postInfo.date = journal->dtStart();
-    item.postInfo.userID = journal->customProperty( "KCalBloggerRes", "UserID" );
-    item.postInfo.blogID = journal->customProperty( "KCalBloggerRes", "BlogID" );
-    item.postInfo.postID = journal->customProperty( "KCalBloggerRes", "PostID" );
+    item.setContent( journal->description() );
+    item.setTitle( journal->summary() );
+    item.setCategory( journal->categories().first() );
+    item.setDateTime( journal->dtStart() );
+    item.setUserID( journal->customProperty( "KCalBloggerRes", "UserID" ) );
+    item.setBlogID( journal->customProperty( "KCalBloggerRes", "BlogID" ) );
+    item.setPostID( journal->customProperty( "KCalBloggerRes", "PostID" ) );
   }
   return item;
 }
 
-void ResourceBlogging::blogList( QValueList<blogListItem> blogs )
+void ResourceBlogging::blogList( QValueList<BlogListItem> blogs )
 {
   kdDebug(5800) << "ResourceBlogging::blogList() success" << endl;
 
   mCalendar.close();
   mBlogList = blogs;
   disableChangeNotification();
-  // read in the blogs from the list of blogPostItems
+  // read in the blogs from the list of BlogPosting's
   
   if ( mProgress )
     mProgress->setTotalItems( mProgress->totalItems() + blogs.count() );
   mDownloading += blogs.count();
-  QValueList<blogListItem>::Iterator it;
+  QValueList<BlogListItem>::Iterator it;
   for ( it = blogs.begin(); it != blogs.end(); ++it ) {
-kdDebug()<<"Fetching List of posts for blog with ID="<<(*it).ID<<endl;
+kdDebug()<<"Fetching List of posts for blog with ID="<<(*it).id()<<endl;
     // FIXME: Implement "last N blogs":
-    mBlogInterface->fetchPosts( (*it).ID, 50 );
+    mBlogInterface->fetchPosts( (*it).id(), 50 );
 //    mBlogInterface->fetchPost( (*it).ID );
   }
   enableChangeNotification();
@@ -433,7 +421,7 @@ kdDebug()<<"resourceBlogging::serverInfo( nickname="<<nickname<<", m_userid="<<m
   doDownLoad();
 }
 
-void ResourceBlogging::recentPosts( const QValueList<blogPost> &blogs )
+void ResourceBlogging::recentPosts( const QValueList<BlogPosting> &blogs )
 {
 kdDebug() << "resourceBlogging::recentPosts(), #=" << blogs.count() << endl;
   disableChangeNotification();
@@ -443,9 +431,9 @@ kdDebug() << "resourceBlogging::recentPosts(), #=" << blogs.count() << endl;
   }
   mDownloading += blogs.count();
   --mDownloading; 
-  QValueList<blogPost>::ConstIterator it;
+  QValueList<BlogPosting>::ConstIterator it;
   for ( it = blogs.constBegin(); it != blogs.constEnd(); ++it ) {
-kdDebug()<<"Fetching blog with ID=" << (*it).postInfo.postID << endl;
+kdDebug()<<"Fetching blog with ID=" << (*it).postID() << endl;
     newPost( *it );
 //    mBlogInterface->fetchPost( *it );
   }
@@ -458,7 +446,7 @@ kdDebug()<<"Fetching blog with ID=" << (*it).postInfo.postID << endl;
 }
 
 
-//void ResourceBlogging::post( const blogPost &post );
+//void ResourceBlogging::post( const BlogPosting &post );
 void ResourceBlogging::handleUploadResult( bool success )
 {
 kdDebug()<<"resourceBlogging::handleUploadResult( success="<<success<<")"<<endl;

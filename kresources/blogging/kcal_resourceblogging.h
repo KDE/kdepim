@@ -23,31 +23,16 @@
 #ifndef KCAL_RESOURCEBLOGGING_H
 #define KCAL_RESOURCEBLOGGING_H
 
-#include "bloginterface.h"
+#include <libkblog/bloginterface.h>
 
 #include <libkdepim/progressmanager.h>
 #include <libkcal/incidence.h>
 #include <libkcal/resourcecached.h>
 
+using namespace KBlog;
 namespace KCal {
 
 class Journal;
-
-enum blogAPITypes {
-  blogAPIBlogger = 1,
-  blogAPIBlogger2,
-  blogAPIFile,
-  blogAPIDrupal,
-  blogAPIKDEDevelopers,
-  blogAPIUnknown
-};
-
-enum ConnectionStatus {
-  blogConnecting = 1,
-  blogConnected = 2,
-  blogLoading = 4,
-  blogSaving = 8
-};
 
 /**
   This class provides journals stored as blogs on a bloggin server.
@@ -74,14 +59,8 @@ class ResourceBlogging : public ResourceCached
     void setServerAPI( int );
     int serverAPI() const;
     
-    void setTitleOpen( const QString & );
-    QString titleOpen() const;
-    void setTitleClose( const QString & );
-    QString titleClose() const;
-    void setCategoryOpen( const QString & );
-    QString categoryOpen() const;
-    void setCategoryClose( const QString & );
-    QString categoryClose() const;
+    void setTemplate( const BlogTemplate &templ );
+    BlogTemplate getTemplate() const;
 
     KABC::Lock *lock();
 
@@ -94,14 +73,14 @@ class ResourceBlogging : public ResourceCached
     
   protected slots:
     void serverInfo( const QString &nickname, const QString & m_userid, const QString & email );
-    void blogList( QValueList<blogListItem> blogs );
-    void recentPosts( const QValueList<blogPost> &blogs );
+    void blogList( QValueList<BlogListItem> blogs );
+    void recentPosts( const QValueList<BlogPosting> &blogs );
     //void post( const blogPost &post );
     void postFinished( bool success );
     void publishFinished( bool success );
     void editFinished( bool success );
     void deleteFinished( bool success );
-    void newPost( const blogPost& post );
+    void newPost( const BlogPosting& post );
 
     // Error message
     void error( const QString &faultMessage );
@@ -113,8 +92,8 @@ class ResourceBlogging : public ResourceCached
 
     void addInfoText( QString & ) const;
     
-    Journal *journalFromBlog( const blogPost &blog );
-    blogPost blogFromJournal( Journal *journal );
+    Journal *journalFromBlog( const KBlog::BlogPosting &blog );
+    KBlog::BlogPosting blogFromJournal( Journal *journal );
 
   private:
     void init();
@@ -125,13 +104,19 @@ class ResourceBlogging : public ResourceCached
 
     KURL mUrl;
     int mServerAPI;
-    blogTemplate mTemplate;
+    BlogTemplate mTemplate;
 
     KPIM::ProgressItem *mProgress;
 
     KABC::Lock *mLock;
-    blogInterface* mBlogInterface;
+    KBlog::blogInterface* mBlogInterface;
     static QString mAppID;
+    enum ConnectionStatus {
+      blogConnecting = 1,
+      blogConnected = 2,
+      blogLoading = 4,
+      blogSaving = 8
+    };
     int mConnectionStatus;
 
     QString mNick;
@@ -140,7 +125,7 @@ class ResourceBlogging : public ResourceCached
     int mDownloading;
     int mUploading;
     
-    QValueList<blogListItem> mBlogList;
+    QValueList<KBlog::BlogListItem> mBlogList;
 
     class Private;
     Private *d;

@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-		Based on the remote resource:
+    Based on the remote resource:
     Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -29,14 +29,6 @@
 
 #include <libkcal/resourcecachedconfig.h>
 
-// #include <typeinfo>
-
-// #include <qlabel.h>
-
-// #include <klocale.h>
-// #include <kdebug.h>
-// #include <kmessagebox.h>
-// #include <kstandarddirs.h>
 #include <kdialog.h>
 #include <kurl.h>
 #include <kurlrequester.h>
@@ -47,6 +39,7 @@
 
 
 using namespace KCal;
+using namespace KBlog;
 
 ResourceBloggingConfig::ResourceBloggingConfig( QWidget* parent,  const char* name )
     : KRES::ConfigWidget( parent, name )
@@ -55,7 +48,7 @@ ResourceBloggingConfig::ResourceBloggingConfig( QWidget* parent,  const char* na
   mainLayout->setSpacing( KDialog::spacingHint() );
 
   mPage = new ResourceBloggingSettings( this );
-	mainLayout->addMultiCellWidget( mPage, 1, 1, 0, 1 );
+  mainLayout->addMultiCellWidget( mPage, 1, 1, 0, 1 );
 
   mReloadConfig = new ResourceCachedReloadConfig( this );
   mainLayout->addMultiCellWidget( mReloadConfig, 2, 2, 0, 1 );
@@ -68,22 +61,23 @@ void ResourceBloggingConfig::loadSettings( KRES::Resource *resource )
 {
   ResourceBlogging *res = static_cast<ResourceBlogging *>( resource );
   if ( res && mPage ) {
-	  KURL url( res->url() );
-		
-		mPage->mUser->setText( url.user() );
-		mPage->mPassword->setText( url.pass() );
-		
-		url.setUser( QString::null ) ;
-		url.setPass( QString::null );
-	  mPage->mURL->setURL( url.url() );
-		
-		mPage->mServerAPI->setCurrentItem( res->serverAPI() );
-		
-		mPage->mOpenTitle->setText( res->titleOpen() );
-		mPage->mCloseTitle->setText( res->titleClose() );
-		mPage->mOpenCategory->setText( res->categoryOpen() );
-		mPage->mCloseCategory->setText( res->categoryClose() );
-		
+    KURL url( res->url() );
+    
+    mPage->mUser->setText( url.user() );
+    mPage->mPassword->setText( url.pass() );
+    
+    url.setUser( QString::null ) ;
+    url.setPass( QString::null );
+    mPage->mURL->setURL( url.url() );
+    
+    mPage->mServerAPI->setCurrentItem( res->serverAPI() );
+    
+    const BlogTemplate templ( res->getTemplate() );
+    mPage->mOpenTitle->setText( templ.titleTagOpen() );
+    mPage->mCloseTitle->setText( templ.titleTagClose() );
+    mPage->mOpenCategory->setText( templ.categoryTagOpen() );
+    mPage->mCloseCategory->setText( templ.categoryTagClose() );
+    
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
   } else {
@@ -95,20 +89,22 @@ void ResourceBloggingConfig::saveSettings( KRES::Resource *resource )
 {
   ResourceBlogging* res = static_cast<ResourceBlogging*>( resource );
   if ( res && mPage ) {
-	  KURL url( mPage->mURL->url() );
-		QString user( mPage->mUser->text() );
-		if ( !user.isEmpty() ) url.setUser( user );
-		QString pw( mPage->mPassword->text() );
-		if ( !pw.isEmpty() ) url.setPass( pw );
+    KURL url( mPage->mURL->url() );
+    QString user( mPage->mUser->text() );
+    if ( !user.isEmpty() ) url.setUser( user );
+    QString pw( mPage->mPassword->text() );
+    if ( !pw.isEmpty() ) url.setPass( pw );
 
     res->setURL( url );
-		
-		res->setServerAPI( mPage->mServerAPI->currentItem() );
-		
-		res->setTitleOpen( mPage->mOpenTitle->text() );
-		res->setTitleClose( mPage->mCloseTitle->text() );
-		res->setCategoryOpen( mPage->mOpenCategory->text() );
-		res->setCategoryClose( mPage->mCloseCategory->text() );
+    
+    res->setServerAPI( mPage->mServerAPI->currentItem() );
+    
+    BlogTemplate templ;
+    templ.setTitleTagOpen( mPage->mOpenTitle->text() );
+    templ.setTitleTagClose( mPage->mCloseTitle->text() );
+    templ.setCategoryTagOpen( mPage->mOpenCategory->text() );
+    templ.setCategoryTagClose( mPage->mCloseCategory->text() );
+    res->setTemplate( templ );
 
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );

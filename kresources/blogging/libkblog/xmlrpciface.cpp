@@ -283,7 +283,7 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
     QString text( typeElement.text() );
     if ( text.find( QRegExp("^[0-9]{8,8}T") ) >= 0 ) {
       // It's in the format 20041120T...., so adjust it to correct 
-      // ISO 8601 Format 2004-11-20T...:
+      // ISO 8601 Format 2004-11-20T..., else QDateTime::fromString won't work:
       text = text.insert( 6, '-' );
       text = text.insert( 4, '-' );
     }

@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-		Based on the remote resource:
+    Based on the remote resource:
     Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
@@ -50,7 +50,7 @@ class ResourceBloggingConfig : public KRES::ConfigWidget
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
-	  ResourceBloggingSettings *mPage;
+    ResourceBloggingSettings *mPage;
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;

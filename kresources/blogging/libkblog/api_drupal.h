@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com         *
+*   Copyright (C) 2004 by Reinhold Kainhofer <reinhold@kainhofer.com>     *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -11,6 +11,8 @@
 
 #include <api_blogger.h>
 
+namespace KBlog {
+
 /**
 Implementation for DrupalAPI, should be the same as the BloggerAPI, but just in case...
 
@@ -18,10 +20,12 @@ Implementation for DrupalAPI, should be the same as the BloggerAPI, but just in 
 */
 class drupalAPI : public bloggerAPI
 {
-		Q_OBJECT
-	public:
-		drupalAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
-		~drupalAPI();
+  Q_OBJECT
+public:
+  drupalAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
+  ~drupalAPI();
+  QString interfaceName() { return "Drupal API"; }
 };
 
+};
 #endif

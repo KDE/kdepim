@@ -9,48 +9,51 @@
 ***************************************************************************/
 #include "bloginterface.h"
 
-blogInterface::blogInterface( const KURL &url, QObject *parent, const char *name ) :
-		QObject( parent, name ),
-		serverURL( url )
-{}
+using namespace KBlog;
 
+// That terribly long app key was generated at http://www.blogger.com/developers/api/1_docs/register.html
+// for the "KDE-Pim libkcal blogging resource".
+blogInterface::blogInterface( const KURL &url, QObject *parent, const char *name ) :
+    QObject( parent, name ),
+    mServerURL( url ), mAppID( "ffffffa65412fffffff42c2d452cffffff8e340b6b135337ffffffcfffffffd01affffffb9ffffffff26ffffffb61fffffffc2" )
+{}
 
 blogInterface::~blogInterface()
 {}
 
 void blogInterface::setPassword( const QString &pass )
 {
-	m_password = pass;
+  mPassword = pass;
 }
-QString blogInterface::password()
+QString blogInterface::password() const 
 {
-	return m_password;
+  return mPassword;
 }
 
 void blogInterface::setUsername( const QString &uname )
 {
-	m_username = uname;
+  mUsername = uname;
 }
-QString blogInterface::username()
+QString blogInterface::username() const 
 {
-	return m_username;
+  return mUsername;
 }
 
 void blogInterface::setURL( const KURL& url )
 {
-	serverURL = url;
+  mServerURL = url;
 }
-KURL blogInterface::url()
+KURL blogInterface::url() const 
 {
-	return serverURL;
+  return mServerURL;
 }
 
-void blogInterface::setTemplateTags( const blogTemplate& Template )
+void blogInterface::setTemplateTags( const BlogTemplate& Template )
 {
-	m_template = Template;
+  mTemplate = Template;
 }
-blogTemplate blogInterface::templateTags()
+BlogTemplate blogInterface::templateTags() const 
 {
-	return m_template;
+  return mTemplate;
 }
 #include "bloginterface.moc"
