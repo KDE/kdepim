@@ -93,6 +93,10 @@ static const char *popmail_conduit_id=
 #include <dcopclient.h>
 #endif
 
+#ifndef _KSIMPLECONFIG_H
+#include <ksimpleconfig.h>
+#endif
+
 #ifndef _PILOT_SOURCE_H_
 #include <pi-source.h>
 #endif
@@ -812,6 +816,18 @@ int PopMailConduit::sendViaSendmail()
 
 
 
+QString PopMailConduit::getKMailOutbox() const
+{
+	FUNCTIONSETUP;
+	// Read-only config file. This is code
+	// suggested by Don Sanders. It must be
+	// kept up-to-date with what KMail does.
+	//
+	KSimpleConfig c("kmailrc",true);
+	c.setGroup("General");
+	return c.readEntry("outboxFolder","outbox");
+}
+
 /*
  * This function uses KMail's DCOP interface to put all the
  * outgoing mail into the outbox.
@@ -821,13 +837,12 @@ int PopMailConduit::sendViaKMail()
 	FUNCTIONSETUP;
 	int count=0;
 	bool sendImmediate = true;
+	QString kmailOutboxName = getKMailOutbox();
 
 	{
 	KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup);
 	sendImmediate = config.readBoolEntry("SendImmediate",true);
 	}
-
-
 
 	DCOPClient *dcopptr = KApplication::kApplication()->
 		dcopClient();
@@ -899,7 +914,7 @@ int PopMailConduit::sendViaKMail()
 		QCString returnType;
 		QDataStream arg(data,IO_WriteOnly);
 
-		arg << QString("outbox")
+		arg << kmailOutboxName
 			<< t.name();
 
 		if (dcopptr->call("kmail",
@@ -1841,6 +1856,19 @@ int PopMailConduit::doUnixStyle()
 	return p;
 }
 
+/* virtual */ void PopMailConduit::doTest()
+{
+	FUNCTIONSETUP;
+
+
+	QString outbox = getKMailOutbox();
+
+	DEBUGCONDUIT << fname
+		<< ": KMail's outbox is "
+		<< outbox
+		<< endl;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -1862,6 +1890,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.20  2001/04/23 21:08:42  adridg
+// Extra debugging for bug #24522
+//
 // Revision 1.19  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //

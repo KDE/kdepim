@@ -58,6 +58,7 @@ public:
   virtual ~PopMailConduit();
   
   virtual void doSync();
+  virtual void doTest();
   virtual QWidget* aboutAndSetup();
 
   virtual const char* dbInfo() { return "MailDB"; }
@@ -96,6 +97,7 @@ protected:
 	int sendViaKMail();
 	int sendViaSMTP();
 	void writeMessageToFile(FILE* sendf, struct Mail& theMail);
+	QString getKMailOutbox() const;
 
 
 	// Local mail -> Pilot
@@ -158,6 +160,9 @@ private:
 
 
 // $Log$
+// Revision 1.11  2001/04/23 21:18:36  adridg
+// Some i18n() fixups and KMail sending
+//
 // Revision 1.10  2001/03/29 22:06:14  stern
 // Must include ksock.h since it was taken out of baseConduit.h
 //
