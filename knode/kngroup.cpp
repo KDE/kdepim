@@ -493,10 +493,6 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClien
   saveStaticData(added_cnt);
   saveDynamicData(added_cnt);
 
-#ifndef NDEBUG
-  qDebug("knode: %d headers wrote to file",count);
-#endif
-
   // update group-info
   c_ount=length();
   n_ewCount+=new_cnt;
