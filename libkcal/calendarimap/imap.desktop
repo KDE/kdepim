@@ -4,6 +4,11 @@ Type=Service
 [Misc]
 Encoding=UTF-8
 Name=Calendar on IMAP-server via kmail
+Name[es]=Calendario en un servidor IMAP vía kmail
+Name[hu]=IMAP-kiszolgálón tárolt naptár a KMailen keresztül
+Name[sk]=Kalendár na IMAP-servry cez kmail
+Name[sv]=Kalender på en IMAP-server via Kmail
+Name[zh_CN]=在 IMAP 服务器上用 kmail 访问的日历
 
 [Plugin]
 Type=imap

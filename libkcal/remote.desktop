@@ -4,12 +4,10 @@ Type=Service
 [Misc]
 Encoding=UTF-8
 Name=Calendar in remote file
-Name[da]=Kalender i lokal fil
-Name[es]=Calendario en archivo local
-Name[hu]=Helyi fájlban tárolt naptár
-Name[ru]=Календарь в локальном файле
-Name[sv]=Kalender i lokal fil
-Name[zh_CN]=本地文件中的日历
+Name[es]=Calendario en un archivo remoto
+Name[hu]=Távoli fájlban tárolt naptár
+Name[sk]=Kalendár vo vzdialenom súbore
+Name[sv]=Kalender i fjärrfil
 
 [Plugin]
 Type=remote

@@ -11,8 +11,13 @@ X-KDE-FactoryName=kcalendars
 X-KDE-HasReadOnlyMode=false
 
 Name=Calendar Configuration
+Name[be]=Канфігурацыя календара
 Name[da]=Kalender-indstilling
 Name[es]=Configuración del calendario
 Name[hu]=Naptárbeállítások
+Name[ru]=Настройка календаря
+Name[sk]=Nastavenie kalendára
 Name[sv]=Kalenderinställning
+Name[tr]=Takvim Yapılandırması
+Name[zh_CN]=日历配置
 

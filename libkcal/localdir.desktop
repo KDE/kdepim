@@ -4,12 +4,11 @@ Type=Service
 [Misc]
 Encoding=UTF-8
 Name=Calendar in local directory
-Name[da]=Kalender i lokal fil
-Name[es]=Calendario en archivo local
+Name[be]=Каляндар у лякальным каталёгу
+Name[es]=Calendario en el directorio local
 Name[hu]=Helyi fájlban tárolt naptár
-Name[ru]=Календарь в локальном файле
-Name[sv]=Kalender i lokal fil
-Name[zh_CN]=本地文件中的日历
+Name[sk]=Kalendár v lokálnom priečinku
+Name[sv]=Kalender i lokal katalog
 
 [Plugin]
 Type=dir

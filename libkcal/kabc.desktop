@@ -4,6 +4,9 @@ Type=Service
 [Misc]
 Encoding=UTF-8
 Name=Birthdays from KAddressBook
+Name[be]=Дні нараджэньня з K Адраснай кнігі
+Name[es]=Cumpleaños desde KAddressBook
+Name[sk]=Dátumy narodenia z KAddressBook
 Name[sv]=Födelsedagar från adressboken
 
 [Plugin]
