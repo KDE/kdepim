@@ -11,7 +11,7 @@ Section: x11
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}, kdepim-libs, kdebase-libs
 Suggests: kdebase, abbrowser, kpilot
-Conflicts: kdepim
+Conflicts: kdepim, task-kdepim
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
@@ -38,7 +38,7 @@ Section: utils
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}, kdepim-libs, kdebase-libs
 Suggests: kdebase, korganizer
-Conflicts: kdepim
+Conflicts: kdepim, task-kdepim
 Description: Address book reader
  Address book reader for KDE
 
