@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libviews.la
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/kaddressbook
+INCLUDES = $(all_includes) -I$(top_srcdir) -I$(top_srcdir)/kaddressbook
 
 libviews_la_METASOURCES = AUTO
 
