@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
  <!ENTITY appname "&korn;" >
- <!ENTITY package "kdenetwork">
+ <!ENTITY package "kdepim">
  <!ENTITY % English "INCLUDE">
  <!ENTITY % addindex "IGNORE">
 ]>

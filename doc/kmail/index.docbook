@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kmail;">
-  <!ENTITY package "kdenetwork">
+  <!ENTITY package "kdepim">
   <!ENTITY kmail-intro SYSTEM "intro.docbook">
   <!ENTITY kmail-getting-started SYSTEM "getting-started.docbook">
   <!ENTITY kmail-using-kmail SYSTEM "using-kmail.docbook">
