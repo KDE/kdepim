@@ -20,8 +20,8 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef SIMPLEKALARMD_H
-#define SIMPLEKALARMD_H
+#ifndef SIMPLEALARMDAEMON_H
+#define SIMPLEALARMDAEMON_H
 
 #include <ksystemtray.h>
 
@@ -35,13 +35,13 @@ namespace KCal {
 
 class AlarmDialog;
 
-class SimpleKalarmd : public KSystemTray
+class SimpleAlarmDaemon : public KSystemTray
 {
     Q_OBJECT
   public:
-    SimpleKalarmd();
+    SimpleAlarmDaemon();
     
-    ~SimpleKalarmd();
+    ~SimpleAlarmDaemon();
 
   public slots:
     void checkAlarms();

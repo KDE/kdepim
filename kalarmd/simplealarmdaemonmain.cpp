@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "simplekalarmd.h"
+#include "simplealarmdaemon.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -45,14 +45,14 @@ class MyApp : public KUniqueApplication
 
 //      KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-      mClient = new SimpleKalarmd;
+      mClient = new SimpleAlarmDaemon;
       mClient->show();
 
       return 0;
     }
     
   private:
-    SimpleKalarmd *mClient;
+    SimpleAlarmDaemon *mClient;
 };
 
 

@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "simplekalarmd.h"
+#include "simplealarmdaemon.h"
 
 #include "alarmdialog.h"
 
@@ -42,7 +42,7 @@
 
 using namespace KCal;
 
-SimpleKalarmd::SimpleKalarmd()
+SimpleAlarmDaemon::SimpleAlarmDaemon()
 {
   mAlarmDialog = new AlarmDialog( 0 );
 
@@ -56,24 +56,24 @@ SimpleKalarmd::SimpleKalarmd()
   KConfig *cfg = KGlobal::config();
   cfg->setGroup( "Check" );
   int interval = cfg->readNumEntry( "Interval", 60 );
-  kdDebug() << "simplekalarmd check interval: " << interval << " seconds."
+  kdDebug() << "SimpleAlarmDaemon check interval: " << interval << " seconds."
             << endl;
 
   mTimer->start( 1000 * interval );  // interval in seconds
 }
 
-SimpleKalarmd::~SimpleKalarmd()
+SimpleAlarmDaemon::~SimpleAlarmDaemon()
 {
 }
 
-void SimpleKalarmd::closeEvent( QCloseEvent * )
+void SimpleAlarmDaemon::closeEvent( QCloseEvent * )
 {
   qApp->quit();
 }
 
-void SimpleKalarmd::checkAlarms()
+void SimpleAlarmDaemon::checkAlarms()
 {
-  kdDebug() << "SimpleKalarmd::checkAlarms()" << endl;
+  kdDebug() << "SimpleAlarmDaemon::checkAlarms()" << endl;
 
   QString calFile = locateLocal( "appdata", "calendars" );
 
@@ -94,7 +94,7 @@ void SimpleKalarmd::checkAlarms()
   file.close();
 }
 
-void SimpleKalarmd::checkCalendar( const QString &calFile )
+void SimpleAlarmDaemon::checkCalendar( const QString &calFile )
 {
   kdDebug() << "checkCalendar(): '" << calFile << "'" << endl;
 
@@ -165,4 +165,4 @@ void SimpleKalarmd::checkCalendar( const QString &calFile )
   cfg->writeEntry( calFile, to );
 }
 
-#include "simplekalarmd.moc"
+#include "simplealarmdaemon.moc"

@@ -17,7 +17,7 @@ testalarmdlg_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testalarmdlg_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
 testalarmdlg_SOURCES = testalarmdlg.cpp alarmdialog.cpp koeventviewer.cpp
 
-bin_PROGRAMS = kalarmd korgac simplekalarmd
+bin_PROGRAMS = kalarmd korgac simplealarmdaemon
 
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
@@ -33,17 +33,17 @@ korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
 	koeventviewer.cpp koalarmclient.cpp \
         alarmguiiface.skel
 
-simplekalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-simplekalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
-simplekalarmd_SOURCES = simplekalarmd.cpp alarmdialog.cpp koeventviewer.cpp  \
-  simplekalarmdmain.cpp
+simplealarmdaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+simplealarmdaemon_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
+simplealarmdaemon_SOURCES = simplealarmdaemon.cpp alarmdialog.cpp koeventviewer.cpp  \
+  simplealarmdaemonmain.cpp
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h \
         adcalendarbase.h adcalendar.h adcalendar_gui.h \
 	adconfigdatabase.h adconfigdatarw.h clientinfo.h compat.h \
-        simplekalarmd.h
+        simplealarmdaemon.h
 
 METASOURCES = AUTO
 
