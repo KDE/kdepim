@@ -225,7 +225,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 
   do {
     result = sasl_client_start(conn, aAuth.latin1(), &client_interact,
-                       &out, &outlen, &mechusing);
+                       hasCapability("SASL-IR") ? &out : 0, &outlen, &mechusing);
 
     if ( result == SASL_INTERACT )
       if ( !sasl_interact( slave, ai, client_interact ) ) {
@@ -253,10 +253,11 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   }
   cmd = sendCommand (new imapCommand ("AUTHENTICATE", firstCommand.latin1()));
 
-  while (!cmd->isComplete ())
+  while ( true )
   {
     //read the next line
     while (parseLoop() == 0);
+    if ( cmd->isComplete() ) break;
 
     if (!continuation.isEmpty())
     {
