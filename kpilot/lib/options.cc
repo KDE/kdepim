@@ -96,7 +96,7 @@ kdbgstream & operator << (kdbgstream & o, const QSize & s)
 	return o;
 }
 
-kndbgstream & operator << (kndbgstream & o, const QSize & s)
+kndbgstream & operator << (kndbgstream & o, const QSize &)
 {
 	return o;
 }
@@ -113,6 +113,9 @@ int const fname = ((int) options_id);
 
 
 // $Log$
+// Revision 1.5  2002/05/23 17:08:32  adridg
+// Some compile fixes for non-debug mode, and KNotes syncing fixes
+//
 // Revision 1.4  2002/02/02 11:46:03  adridg
 // Abstracting away pilot-link stuff
 //
