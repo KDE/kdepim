@@ -38,6 +38,8 @@
 #include <klocale.h>
 
 #include <assert.h>
+#include <ktempfile.h>
+#include <qfile.h>
 
 // TODO: runtime changes from other apps? Is that possible to support (other than manual clear()?)
 
@@ -70,7 +72,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( KProcess::Block, KProcess::Stdout ) )
+  if ( !proc.start( KProcess::Block ) )
     rc = -1;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
@@ -103,7 +105,7 @@ QStringList QGpgMECryptoConfig::componentList() const
 {
   if ( !mParsed )
     const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( false );
-  QDictIterator<Kleo::CryptoConfigComponent> it( mComponents );
+  QDictIterator<QGpgMECryptoConfigComponent> it( mComponents );
   QStringList names;
   for( ; it.current(); ++it )
     names.push_back( it.currentKey() );
@@ -117,6 +119,13 @@ Kleo::CryptoConfigComponent* QGpgMECryptoConfig::component( const QString& name 
   return mComponents.find( name );
 }
 
+void QGpgMECryptoConfig::sync( bool runtime )
+{
+  QDictIterator<QGpgMECryptoConfigComponent> it( mComponents );
+  for( ; it.current(); ++it )
+    it.current()->sync( runtime );
+}
+
 void QGpgMECryptoConfig::clear()
 {
   mComponents.clear();
@@ -126,24 +135,24 @@ void QGpgMECryptoConfig::clear()
 ////
 
 QGpgMECryptoConfigComponent::QGpgMECryptoConfigComponent( QGpgMECryptoConfig*, const QString& name, const QString& description )
-  : mGroups( 7 ), mDescription( description )
+  : mGroups( 7 ), mName( name ), mDescription( description )
 {
   mGroups.setAutoDelete( true );
-  runGpgConf( name );
+  runGpgConf();
 }
 
 QGpgMECryptoConfigComponent::~QGpgMECryptoConfigComponent()
 {
 }
 
-void QGpgMECryptoConfigComponent::runGpgConf( const QString& name )
+void QGpgMECryptoConfigComponent::runGpgConf()
 {
   // Run gpgconf --list-options <component>, and create all groups and entries for that component
 
   KProcIO proc;
   proc << "gpgconf"; // must be in the PATH
   proc << "--list-options";
-  proc << name;
+  proc << mName;
 
   QObject::connect( &proc, SIGNAL( readReady(KProcIO*) ),
                     this, SLOT( slotCollectStdOut(KProcIO*) ) );
@@ -151,7 +160,7 @@ void QGpgMECryptoConfigComponent::runGpgConf( const QString& name )
 
   // run the process:
   int rc = 0;
-  if ( !proc.start( KProcess::Block, KProcess::Stdout ) )
+  if ( !proc.start( KProcess::Block ) )
     rc = -1;
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
@@ -193,7 +202,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
 
 QStringList QGpgMECryptoConfigComponent::groupList() const
 {
-  QDictIterator<Kleo::CryptoConfigGroup> it( mGroups );
+  QDictIterator<QGpgMECryptoConfigGroup> it( mGroups );
   QStringList names;
   for( ; it.current(); ++it )
     names.push_back( it.currentKey() );
@@ -203,6 +212,58 @@ QStringList QGpgMECryptoConfigComponent::groupList() const
 Kleo::CryptoConfigGroup* QGpgMECryptoConfigComponent::group(const QString& name ) const
 {
   return mGroups.find( name );
+}
+
+void QGpgMECryptoConfigComponent::sync( bool runtime )
+{
+  KTempFile tmpFile;
+  tmpFile.setAutoDelete( true );
+
+  // Collect all dirty entries
+  QDictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
+  for( ; groupit.current(); ++groupit ) {
+    QDictIterator<QGpgMECryptoConfigEntry> it( groupit.current()->mEntries );
+    for( ; it.current(); ++it ) {
+      if ( it.current()->isDirty() ) {
+        // OK, we can set it.currentKey() to it.current()->outputString()
+        QString line = it.currentKey();
+        line += ':';
+        line += it.current()->outputString();
+        line += '\n';
+        QCString line8bit = line.latin1(); // latin1 is correct here, it's all escaped (and KProcIO uses latin1 when reading).
+        tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
+        it.current()->setDirty( false ); // ### move to after running gpgconf, on success only?
+      }
+    }
+  }
+  tmpFile.close();
+
+  // Call gpgconf --change-options <component>
+  QString commandLine = "gpgconf";
+#if 0 // not implemented in gpgconf yet (mentionned in aegypten issue89)
+  if ( runtime )
+    commandLine += " --runtime";
+#else
+  (void)runtime;
+#endif
+  commandLine += " --change-options ";
+  commandLine += mName;
+  commandLine += " < ";
+  commandLine += tmpFile.name();
+
+  KProcess proc;
+  proc.setUseShell( true );
+  proc << commandLine;
+
+  // run the process:
+  int rc = 0;
+  if ( !proc.start( KProcess::Block ) )
+    rc = -1;
+  else
+    rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
+
+  if( rc != 0 ) // Can it really be non-0, when gpg-config --list-components worked?
+    kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
 }
 
 ////
@@ -217,7 +278,7 @@ QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( const QString& description, in
 
 QStringList QGpgMECryptoConfigGroup::entryList() const
 {
-  QDictIterator<Kleo::CryptoConfigEntry> it( mEntries );
+  QDictIterator<QGpgMECryptoConfigEntry> it( mEntries );
   QStringList names;
   for( ; it.current(); ++it )
     names.push_back( it.currentKey() );
@@ -235,6 +296,12 @@ static QString gpgconf_unescape( const QString& str )
 {
   // Looks like it's the same rules as KURL.
   return KURL::decode_string( str );
+}
+
+static QString gpgconf_escape( const QString& str )
+{
+  // ####### FIXME: this should escape ":" and "," in lists, but not much more?
+  return KURL::encode_string( str );
 }
 
 QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine )
@@ -278,7 +345,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
     if ( isList() ) {
       QValueList<QVariant> lst;
       QStringList items = QStringList::split( ',', value );
-      for( QStringList::Iterator valit = items.begin(); valit != items.end(); ++valit ) {
+      for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
         lst << QVariant( gpgconf_unescape( *valit ) );
       }
       mValue = lst;
@@ -286,10 +353,12 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
     else
       mValue = QVariant( gpgconf_unescape( value ) );
   }
+  mDirty = false;
 }
 
 QGpgMECryptoConfigEntry::~QGpgMECryptoConfigEntry()
 {
+  Q_ASSERT( !mDirty ); // forgot to call sync()? :)
 }
 
 bool QGpgMECryptoConfigEntry::isOptional() const
@@ -353,7 +422,7 @@ QValueList<bool> QGpgMECryptoConfigEntry::boolValueList() const
   Q_ASSERT( isList() );
   QValueList<bool> ret;
   QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret.append( (*it).toBool() );
   }
   return ret;
@@ -372,7 +441,7 @@ QValueList<int> QGpgMECryptoConfigEntry::intValueList() const
   Q_ASSERT( isList() );
   QValueList<int> ret;
   QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret.append( (*it).toInt() );
   }
   return ret;
@@ -384,7 +453,7 @@ QValueList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
   Q_ASSERT( isList() );
   QValueList<unsigned int> ret;
   QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret.append( (*it).toUInt() );
   }
   return ret;
@@ -399,7 +468,7 @@ KURL::List QGpgMECryptoConfigEntry::urlValueList() const
     return KURL::List( lst );
 
   KURL::List ret;
-  for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QStringList::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     KURL url;
     url.setPath( *it );
     ret << url;
@@ -407,54 +476,109 @@ KURL::List QGpgMECryptoConfigEntry::urlValueList() const
   return ret;
 }
 
-void QGpgMECryptoConfigEntry::setBoolValue( bool, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setBoolValue( bool b )
 {
-
+  mValue = b;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setStringValue( const QString&, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setStringValue( const QString& str )
 {
-
+  mValue = str;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setIntValue( int, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setIntValue( int i )
 {
-
+  mValue = i;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setUIntValue( unsigned int, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setUIntValue( unsigned int i )
 {
-
+  mValue = i;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setURLValue( const KURL&, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setURLValue( const KURL& url )
 {
-
+  mValue = url.url();
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setBoolValueList( QValueList<bool>, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setBoolValueList( QValueList<bool> lst )
 {
-
+  QValueList<QVariant> ret;
+  for( QValueList<bool>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret << QVariant( *it );
+  }
+  mValue = ret;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setStringValueList( const QStringList&, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
 {
-
+  mValue = lst;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setIntValueList( const QValueList<int>&, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setIntValueList( const QValueList<int>& lst )
 {
-
+  QValueList<QVariant> ret;
+  for( QValueList<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret << QVariant( *it );
+  }
+  mValue = ret;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setUIntValueList( const QValueList<unsigned int>&, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setUIntValueList( const QValueList<unsigned int>& lst )
 {
-
+  QValueList<QVariant> ret;
+  for( QValueList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret << QVariant( *it );
+  }
+  mValue = ret;
+  mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List&, bool /*runtime*/ )
+void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List& lst )
 {
+  mValue = lst.toStringList();
+  mDirty = true;
+}
 
+QString QGpgMECryptoConfigEntry::outputString() const
+{
+  // Basically the opposite of the constructor
+  bool isString = ( mDataType == Kleo::CryptoConfigEntry::DataType_String
+                    || mDataType == Kleo::CryptoConfigEntry::DataType_Path
+                    || mDataType == Kleo::CryptoConfigEntry::DataType_URL );
+  if ( isString ) {
+    if ( mValue.isNull() )
+      return QString::null;
+    else if ( isList() ) { // string list
+      QStringList lst = mValue.toStringList();
+      for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
+        *it = gpgconf_escape( *it );
+      }
+      return lst.join( "," ).prepend( "\"" );
+    } else // normal string
+      return gpgconf_escape( mValue.toString() ).prepend( "\"" );
+  }
+  if ( !isList() )
+    return mValue.toString(); // works for ints and bools
+
+  // Lists
+  QStringList ret;
+  QValueList<QVariant> lst = mValue.toList();
+  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    if ( mDataType == DataType_Bool )
+      ret << ( (*it).toBool() ? QString::fromLatin1( "1" ) : QString::null ); // 1 or Y? (issue89)
+    else // DataType_Int or DataType_UInt
+      ret << (*it).toString(); // QVariant does the conversion
+  }
+  return ret.join( "," );
 }
 
 #include "qgpgmecryptoconfig.moc"

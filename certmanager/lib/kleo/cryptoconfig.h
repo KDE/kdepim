@@ -169,7 +169,7 @@ public:
      * far as this is possible.  Otherwise, they will take effect at the next
      * start of the respective backend programs.
      */
-    virtual void setBoolValue( bool, bool /*runtime*/ = true ) = 0;
+    virtual void setBoolValue( bool ) = 0;
 
     /**
      * Set string value (only allowed for String, Path and URL datatypes)
@@ -178,7 +178,7 @@ public:
      * far as this is possible.  Otherwise, they will take effect at the next
      * start of the respective backend programs.
      */
-    virtual void setStringValue( const QString&, bool /*runtime*/ = true ) = 0;
+    virtual void setStringValue( const QString& ) = 0;
 
     /**
      * Set a new signed int value
@@ -187,7 +187,7 @@ public:
      * far as this is possible.  Otherwise, they will take effect at the next
      * start of the respective backend programs.
      */
-    virtual void setIntValue( int, bool /*runtime*/ = true ) = 0;
+    virtual void setIntValue( int ) = 0;
 
     /**
      * Set a new unsigned int value
@@ -196,7 +196,7 @@ public:
      * far as this is possible.  Otherwise, they will take effect at the next
      * start of the respective backend programs.
      */
-    virtual void setUIntValue( unsigned int, bool /*runtime*/ = true ) = 0;
+    virtual void setUIntValue( unsigned int ) = 0;
 
     /**
      * Set value as a URL (only meaningful for Path (if local) and URL datatypes)
@@ -205,32 +205,37 @@ public:
      * far as this is possible.  Otherwise, they will take effect at the next
      * start of the respective backend programs.
      */
-    virtual void setURLValue( const KURL&, bool /*runtime*/ = true ) = 0;
+    virtual void setURLValue( const KURL& ) = 0;
 
     /**
      * Set a new list of boolean values (only valid for Bool datatype, if isList())
      */
-    virtual void setBoolValueList( QValueList<bool>, bool /*runtime*/ = true ) = 0;
+    virtual void setBoolValueList( QValueList<bool> ) = 0;
 
     /**
      * Set a new string-list value (only allowed for String, Path and URL datatypes, if isList())
      */
-    virtual void setStringValueList( const QStringList&, bool /*runtime*/ = true ) = 0;
+    virtual void setStringValueList( const QStringList& ) = 0;
 
     /**
      * Set a new list of signed int values
      */
-    virtual void setIntValueList( const QValueList<int>&, bool /*runtime*/ = true ) = 0;
+    virtual void setIntValueList( const QValueList<int>& ) = 0;
 
     /**
      * Set a new list of unsigned int values
      */
-    virtual void setUIntValueList( const QValueList<unsigned int>&, bool /*runtime*/ = true ) = 0;
+    virtual void setUIntValueList( const QValueList<unsigned int>& ) = 0;
 
     /**
      * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL datatypes, if isList())
      */
-    virtual void setURLValueList( const KURL::List&, bool /*runtime*/ = true ) = 0;
+    virtual void setURLValueList( const KURL::List& ) = 0;
+
+    /**
+     * @return true if the value was changed
+     */
+    virtual bool isDirty() const = 0;
 };
 
 /**
@@ -329,6 +334,11 @@ public:
         const Kleo::CryptoConfigGroup* group = comp ? comp->group( groupName ) : 0;
         return group ? group->entry( entryName ) : 0;
     }
+
+    /**
+     * Write back changes
+     */
+    virtual void sync( bool runtime ) = 0;
 
     /**
      * Tells the CryptoConfig to discard any cached information.

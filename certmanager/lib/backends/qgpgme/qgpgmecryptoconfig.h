@@ -40,6 +40,8 @@
 #include <qvariant.h>
 class KProcIO;
 
+class QGpgMECryptoConfigComponent;
+class QGpgMECryptoConfigEntry;
 /**
  * CryptoConfig implementation around the gpgconf command-line tool
  * For method docu, see kleo/cryptoconfig.h
@@ -60,6 +62,7 @@ public:
   virtual Kleo::CryptoConfigComponent* component( const QString& name ) const;
 
   virtual void clear();
+  virtual void sync( bool runtime );
 
 private slots:
   void slotCollectStdOut( KProcIO* proc );
@@ -67,7 +70,7 @@ private:
   void runGpgConf( bool showErrors );
 
 private:
-  QDict<Kleo::CryptoConfigComponent> mComponents;
+  QDict<QGpgMECryptoConfigComponent> mComponents;
   bool mParsed;
 };
 
@@ -85,13 +88,16 @@ public:
   virtual QStringList groupList() const;
   virtual Kleo::CryptoConfigGroup* group( const QString& name ) const;
 
+  void sync( bool runtime );
+
 private slots:
   void slotCollectStdOut( KProcIO* proc );
 private:
-  void runGpgConf( const QString& name );
+  void runGpgConf();
 
 private:
-  QDict<Kleo::CryptoConfigGroup> mGroups;
+  QDict<QGpgMECryptoConfigGroup> mGroups;
+  QString mName;
   QString mDescription;
   QGpgMECryptoConfigGroup* mCurrentGroup; // during parsing
 };
@@ -109,7 +115,7 @@ public:
 
 private:
   friend class QGpgMECryptoConfigComponent; // it adds the entries
-  QDict<Kleo::CryptoConfigEntry> mEntries;
+  QDict<QGpgMECryptoConfigEntry> mEntries;
   QString mDescription;
   Kleo::CryptoConfigEntry::Level mLevel;
 };
@@ -135,23 +141,27 @@ public:
   virtual QValueList<int> intValueList() const;
   virtual QValueList<unsigned int> uintValueList() const;
   virtual KURL::List urlValueList() const;
-  virtual void setBoolValue( bool, bool /*runtime*/ = true );
-  virtual void setStringValue( const QString&, bool /*runtime*/ = true );
-  virtual void setIntValue( int, bool /*runtime*/ = true );
-  virtual void setUIntValue( unsigned int, bool /*runtime*/ = true );
-  virtual void setURLValue( const KURL&, bool /*runtime*/ = true );
-  virtual void setBoolValueList( QValueList<bool>, bool /*runtime*/ = true );
-  virtual void setStringValueList( const QStringList&, bool /*runtime*/ = true );
-  virtual void setIntValueList( const QValueList<int>&, bool /*runtime*/ = true );
-  virtual void setUIntValueList( const QValueList<unsigned int>&, bool /*runtime*/ = true );
-  virtual void setURLValueList( const KURL::List&, bool /*runtime*/ = true );
+  virtual void setBoolValue( bool );
+  virtual void setStringValue( const QString& );
+  virtual void setIntValue( int );
+  virtual void setUIntValue( unsigned int );
+  virtual void setURLValue( const KURL& );
+  virtual void setBoolValueList( QValueList<bool> );
+  virtual void setStringValueList( const QStringList& );
+  virtual void setIntValueList( const QValueList<int>& );
+  virtual void setUIntValueList( const QValueList<unsigned int>& );
+  virtual void setURLValueList( const KURL::List& );
+  virtual bool isDirty() const { return mDirty; }
+  void setDirty( bool b ) { mDirty = b; }
+  QString outputString() const;
+
 private:
   QString mDescription;
   QVariant mValue;
   uint mFlags : 4; // bitfield with 4 bits
   uint mLevel : 3; // max is 4 -> 3 bits
   uint mDataType : 3; // max is 5 -> 3 bits
-
+  uint mDirty : 1;
 };
 
 #endif /* KLEO_QGPGMECRYPTOCONFIG_H */

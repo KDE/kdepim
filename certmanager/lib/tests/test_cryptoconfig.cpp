@@ -43,7 +43,7 @@ int main( int argc, char** argv ) {
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app( false, false );
 
-  const Kleo::CryptoConfig * config = new QGpgMECryptoConfig();
+  Kleo::CryptoConfig * config = new QGpgMECryptoConfig();
 
   // Dynamic querying of the options
   cout << "Components:" << endl;
@@ -133,19 +133,21 @@ int main( int argc, char** argv ) {
 
   {
     // Static querying of a single boolean option
-    const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
     if ( entry ) {
       assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_UInt );
       uint val = entry->uintValue();
       cout << "LDAP timeout: " << val << " seconds." << endl;
 
       // Test setting the option directly, then querying again
-      system( "echo 'ldaptimeout:101' | gpgconf --change-options dirmngr" );
+      //system( "echo 'ldaptimeout:101' | gpgconf --change-options dirmngr" );
+      // Now let's do it with the C++ API instead
+      entry->setUIntValue( 101 );
+      assert( entry->isDirty() );
+      config->sync( true );
 
       // Clear cached values!
-      // Hmm, should clear() be const? It sounds strange, but since it's only about discarding cached data...
-      // Bah, I guess config shouldn't be a const pointer.
-      const_cast<Kleo::CryptoConfig*>( config )->clear();
+      config->clear();
 
       // Check new value
       const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
@@ -167,26 +169,32 @@ int main( int argc, char** argv ) {
 
   {
     // Static querying of a single string option
-    const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
     if ( entry ) {
       assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
       QString val = entry->stringValue();
       cout << "Log-file: " << val.local8Bit() << endl;
 
       // Test setting the option directly, then querying again
-      system( "echo 'log-file:\"/tmp/log' | gpgconf --change-options dirmngr" );
+      system( "echo 'log-file:\"/tmp/test%3a%e5ä' | gpgconf --change-options dirmngr" );
+      // Now let's do it with the C++ API instead
+      entry->setStringValue( "/tmp/test:%e5ä" );
+      assert( entry->isDirty() );
+      config->sync( true );
+
+      // Let's see how it prints it
+      system( "gpgconf --list-options dirmngr | grep log-file" );
 
       // Clear cached values!
-      // Hmm, should clear() be const? It sounds strange, but since it's only about discarding cached data...
-      // Bah, I guess config shouldn't be a const pointer.
-      const_cast<Kleo::CryptoConfig*>( config )->clear();
+      config->clear();
 
       // Check new value
       const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
       assert( entry );
       assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
       cout << "Log-file: " << entry->stringValue().local8Bit() << endl;
-      assert( entry->stringValue() == "/tmp/log" );
+      // This is what it should be, but gpgconf escapes wrongly the arguments (aegypten issue90)
+      //assert( entry->stringValue() == "/tmp/test:%e5ä" ); // (or even with %e5 decoded)
 
       // Reset old value
       QString arg( val );
