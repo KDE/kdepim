@@ -210,6 +210,23 @@ int Base::newId()
 const Device* Base::device() {
     return m_device;
 }
-QString Base::escape( const QString& string ) {
-    return QStyleSheet::escape( string );
+
+// FROM TT QStyleSheet and StringUtil it's GPLed
+// we also need to escape '\"' for our xml files
+QString Base::escape( const QString& plain ) {
+    QString rich;
+
+    for ( int i = 0; i < int(plain.length()); ++i ) {
+	if ( plain[i] == '<' )
+	    rich +="&lt;";
+	else if ( plain[i] == '>' )
+	    rich +="&gt;";
+	else if ( plain[i] == '&' )
+	    rich +="&amp;";
+        else if ( plain[i] == '\"' )
+            rich += "&quot;";
+	else
+	    rich += plain[i];
+    }
+    return rich;
 }
