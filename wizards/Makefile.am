@@ -4,12 +4,12 @@ INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
            $(all_includes)
 
-bin_PROGRAMS = groupwarewizard kolabwizard egroupwarewizard sloxwizard
-kde_module_LTLIBRARIES = libegroupwarewizard.la libkolabwizard.la
+bin_PROGRAMS = groupwarewizard egroupwarewizard kolabwizard sloxwizard
+kde_module_LTLIBRARIES = libegroupwarewizard.la libkolabwizard.la libsloxwizard.la
 
 
 groupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-groupwarewizard_LDADD = libegroupwarewizard.la libkolabwizard.la $(LIB_KDEUI)
+groupwarewizard_LDADD = libegroupwarewizard.la libkolabwizard.la libsloxwizard.la $(LIB_KDEUI)
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
@@ -38,13 +38,16 @@ egroupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 egroupwarewizard_SOURCES = egroupwaremain.cpp
 
 # SLOX
-sloxwizard_LDADD = ../kresources/slox/libkcal_slox.la \
-                   ../kresources/slox/libkabc_slox.la \
-                   ../libkdepim/libkdepim.la
+libsloxwizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+libsloxwizard_la_SOURCES = sloxwizard.cpp sloxconfig.kcfgc
+libsloxwizard_la_LIBADD = $(top_builddir)/kresources/slox/libkcal_slox.la \
+                          $(top_builddir)/kresources/slox/libkabc_slox.la \
+                          $(top_builddir)/libkdepim/libkdepim.la \
+
+sloxwizard_LDADD = libsloxwizard.la
 sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-sloxwizard_SOURCES = sloxmain.cpp sloxwizard.cpp sloxconfig.kcfgc
+sloxwizard_SOURCES = sloxmain.cpp 
 
-
-noinst_HEADERS = kmailchanges.h kolabwizard.h egroupwarewizard.h
+noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h
 
 kde_kcfg_DATA = egroupware.kcfg kolab.kcfg slox.kcfg
