@@ -63,36 +63,61 @@ VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
 
 bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString &data )
 {
-  QString name;
+  KABC::VCardTool tool;
+  KURL url;
 
-  if ( list.count() == 1 )
-    name = list[ 0 ].givenName() + "_" + list[ 0 ].familyName() + ".vcf";
-  else
-    name = "addressbook.vcf";
+  bool ok = true;
+  if ( list.count() == 1 ) {
+    url = KFileDialog::getSaveURL( list[ 0 ].givenName() + "_" + list[ 0 ].familyName() + ".vcf" );
+    if ( url.isEmpty() )
+      return true;
 
-  QString fileName = KFileDialog::getSaveFileName( name );
-  if ( fileName.isEmpty() )
-    return true;
+    if ( data == "v21" )
+      ok = doExport( url, tool.createVCards( list, KABC::VCard::v2_1 ) );
+    else
+      ok = doExport( url, tool.createVCards( list, KABC::VCard::v3_0 ) );
+  } else {
+    QString msg = i18n( "You have selected a list of contacts, shall they be"
+                        "exported to several files?" );
 
-  QFile outFile( fileName );
-  if ( !outFile.open( IO_WriteOnly ) ) {
-    QString text = i18n( "<qt>Unable to open file <b>%1</b> for export.</qt>" );
-    KMessageBox::error( parentWidget(), text.arg( fileName ) );
-    return false;
+    switch ( KMessageBox::questionYesNo( parentWidget(), msg ) ) {
+      case KMessageBox::Yes: {
+        KURL baseUrl = KFileDialog::getExistingURL();
+        if ( baseUrl.isEmpty() )
+          return true;
+
+        KABC::AddresseeList::ConstIterator it;
+        for ( it = list.begin(); it != list.end(); ++it ) {
+          url = baseUrl.url() + "/" + (*it).givenName() + "_" + (*it).familyName() + ".vcf";
+
+          bool tmpOk;
+          KABC::AddresseeList tmpList;
+          tmpList.append( *it );
+
+          if ( data == "v21" )
+            tmpOk = doExport( url, tool.createVCards( tmpList, KABC::VCard::v2_1 ) );
+          else
+            tmpOk = doExport( url, tool.createVCards( tmpList, KABC::VCard::v3_0 ) );
+
+          ok = ok && tmpOk;
+        }
+        break;
+      }
+      case KMessageBox::No:
+      default: {
+        url = KFileDialog::getSaveURL( "addressbook.vcf" );
+        if ( url.isEmpty() )
+          return true;
+
+        if ( data == "v21" )
+          ok = doExport( url, tool.createVCards( list, KABC::VCard::v2_1 ) );
+        else
+          ok = doExport( url, tool.createVCards( list, KABC::VCard::v3_0 ) );
+      }
+    }
   }
 
-  QTextStream t( &outFile );
-  t.setEncoding( QTextStream::UnicodeUTF8 );
-
-  KABC::VCardTool tool;
-  if ( data == "v21" )
-    t << tool.createVCards( list, KABC::VCard::v2_1 );
-  else
-    t << tool.createVCards( list, KABC::VCard::v3_0 );
-
-  outFile.close();
-
-  return true;
+  return ok;
 }
 
 KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
@@ -127,9 +152,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
         QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
         addrList += parseVCard( data );
 
-        if ( !(*it).isLocalFile() )
-          KIO::NetAccess::removeTempFile( fileName );
-
+        KIO::NetAccess::removeTempFile( fileName );
       } else {
         QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
         KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
@@ -145,6 +168,20 @@ KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
   KABC::VCardTool tool;
 
   return tool.parseVCards( data );
+}
+
+bool VCardXXPort::doExport( const KURL &url, const QString &data )
+{
+  KTempFile tmpFile;
+  tmpFile.setAutoDelete( true );
+
+  QTextStream stream( tmpFile.file() );
+  stream.setEncoding( QTextStream::UnicodeUTF8 );
+
+  stream << data;
+  tmpFile.close();
+
+  return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
 }
 
 #include "vcard_xxport.moc"
