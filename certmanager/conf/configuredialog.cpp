@@ -36,7 +36,7 @@
 #include <kwin.h>
 #include <kapplication.h>
 #include <kconfig.h>
-
+#include <klocale.h>
 
 ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
   : KCMultiDialog( KDialogBase::IconList, i18n( "Configure" ), parent, name, modal )
