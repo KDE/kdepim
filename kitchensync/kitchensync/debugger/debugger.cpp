@@ -29,6 +29,8 @@
 #include <kparts/genericfactory.h>
 
 #include <qlabel.h>
+#include <qlistview.h>
+#include <qhbox.h>
 
 typedef KParts::GenericFactory< KSync::Debugger> DebuggerFactory;
 K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
@@ -85,7 +87,18 @@ bool Debugger::partIsVisible() const
 QWidget *Debugger::widget()
 {
   if( !m_widget ) {
-    m_widget = new QLabel( "Hallo", 0 );
+    m_widget = new QHBox();
+
+    QListView *konnectorList = new QListView( m_widget );
+    konnectorList->addColumn( i18n("Konnector") );
+    
+    KonnectorProfile::ValueList konnectors =
+        core()->konnectorProfileManager()->list();
+
+    KonnectorProfile::ValueList::ConstIterator it;
+    for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
+      new QListViewItem( konnectorList, (*it).name() );
+    }
   }
   return m_widget;
 }

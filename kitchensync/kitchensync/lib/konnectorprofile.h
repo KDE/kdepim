@@ -55,9 +55,9 @@ class KonnectorProfile
      * @param icon A user supplied icon
      * @param Device the device
      */
-    KonnectorProfile(const QString& name,
-                     const QString& icon,
-                     const Device& dev);
+    KonnectorProfile( const QString &name,
+                      const QString &icon,
+                      const Device &dev );
 
     /**
      * A simple copy constructor
@@ -113,7 +113,7 @@ class KonnectorProfile
      * set the uid of the KonnectorProfile
      * @param uid The uid of the KonnectorProfile
      */
-    void setUid( const QString& uid);
+    void setUid( const QString& uid );
 
     /**
      * set the name of the KonnectorProfile
@@ -144,7 +144,7 @@ class KonnectorProfile
      * set the Kapabilities for the KonnectorProfile
      * @param caps The Kapabilities
      */
-    void setKapabilities( const Kapabilities& caps);
+    void setKapabilities( const Kapabilities& caps );
 
     /**
      * @return if this KonnectorProfile is valid
@@ -155,16 +155,16 @@ class KonnectorProfile
     /**
      * @internal used for storing to a KConfig
      */
-    void saveToConfig( KConfig* ) const;
+    void saveToConfig( KConfig * ) const;
 
     /**
      * @internal loading from a Kconfig
      */
-    void loadFromConfig( KConfig* );
+    void loadFromConfig( KConfig * );
 
   private:
-    void saveKaps( KConfig* ) const;
-    Kapabilities readKaps( KConfig* );
+    void saveKaps( KConfig * ) const;
+    Kapabilities readKaps( KConfig * );
 
     bool m_wasLoaded :1;
     QString m_name;
