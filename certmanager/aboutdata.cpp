@@ -54,6 +54,9 @@ static const about_data authors[] = {
 };
 
 static const about_data credits[] = {
+  { "David Faure",
+    I18N_NOOP("Backend configuration framework, KIO integration"),
+    "faure@kd.eorg", 0 }
   { "Daniel Molkentin",
     I18N_NOOP("Certificate Wizard KIOSK integration, infrastructure"),
     "molkentin@kde.org", 0 },
