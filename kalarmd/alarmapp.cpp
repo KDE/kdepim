@@ -33,7 +33,7 @@
 
 
 AlarmApp::AlarmApp() :
-  KUniqueApplication(),
+  KUniqueApplication(/*false,false*/),
   mAd(0L)
 {
 }
