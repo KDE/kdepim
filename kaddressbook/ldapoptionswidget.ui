@@ -109,6 +109,20 @@
                 </spacer>
                 <widget class="QPushButton">
                     <property name="name">
+                        <cstring>addHostPB</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>90</width>
+                            <height>30</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Add Host...</string>
+                    </property>
+                </widget>
+                 <widget class="QPushButton">
+                    <property name="name">
                         <cstring>editHostPB</cstring>
                     </property>
                     <property name="enabled">
@@ -124,21 +138,7 @@
                         <string>&amp;Edit Host...</string>
                     </property>
                 </widget>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>addHostPB</cstring>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>90</width>
-                            <height>30</height>
-                        </size>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Add Host...</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton">
+               <widget class="QPushButton">
                     <property name="name">
                         <cstring>removeHostPB</cstring>
                     </property>

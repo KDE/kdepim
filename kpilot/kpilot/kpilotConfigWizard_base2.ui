@@ -46,10 +46,10 @@
                 <cstring>groupBox2</cstring>
             </property>
             <property name="title">
-                <string>Handheld and User Name</string>
+                <string>Handheld &amp;&amp; User Name</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt; 
+                <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt;
 &lt;p&gt;Please enter the user name exactly as set on the handheld. &lt;/p&gt;
 &lt;p&gt;If setting the device type manually (i.e., if automatic detection did not work for you), please look below for tips on choosing the right device name.  {0...n} means a number from 0 up to a very large number, though usually just 255.
 &lt;p&gt;
@@ -84,7 +84,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Automatically detect the handheld and the user name...</string>
+                        <string>&amp;Automatically Detect Handheld &amp;&amp; User Name...</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">

@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Color and Font Configuration</string>
+        <string>Color &amp; Font Configuration</string>
     </property>
     <hbox>
         <property name="name">
