@@ -409,7 +409,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 	if (!fConfig)
 	{
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		emit logError(i18n("Could not load configuration of the addressbook conduit."));
+		emit logError(i18n("Unable to load configuration of the addressbook conduit."));
 		return false;
 	}
 
@@ -425,13 +425,13 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 	fFirstTime=false;
 	if (!openDatabases("AddressDB", &fFirstTime) ) 
 	{
-		emit logError(i18n("Couldn't open the addressbook databases on the handheld."));
+		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
 	}
 	_setAppInfo();
 	if (!_loadAddressBook() )
 	{
-		emit logError(i18n("Couldn't open the addressbook."));
+		emit logError(i18n("Unable to open the addressbook."));
 		return false;
 	}
 	fFirstTime |= (aBook->begin() == aBook->end() );
@@ -1842,6 +1842,9 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 // $Log$
+// Revision 1.46  2002/08/23 22:59:29  kainhofe
+// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
+//
 // Revision 1.45  2002/08/20 20:29:42  kainhofe
 // The conduit now seems to work in most cases
 //

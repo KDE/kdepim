@@ -180,7 +180,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	{
 		emit logError(i18n("KNotes is not running. The conduit must "
 			"be able to make a DCOP connection to KNotes "
-			"for synchronisation to take place. "
+			"for synchronization to take place. "
 			"Please start KNotes and try again."));
 		return false;
 	}
@@ -620,6 +620,9 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.13  2002/08/23 22:03:20  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.12  2002/05/23 17:08:32  adridg
 // Some compile fixes for non-debug mode, and KNotes syncing fixes
 //
