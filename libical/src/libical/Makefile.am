@@ -99,29 +99,29 @@ libicalinclude_HEADERS =  ical.h
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 # is required to make the combined header ical.h properly
 COMBINEDHEADERS =					\
-	$(top_builddir)/src/libical/icalversion.h	\
-	$(top_srcdir)/src/libical/icaltime.h		\
-	$(top_srcdir)/src/libical/icalduration.h	\
-	$(top_srcdir)/src/libical/icalperiod.h		\
-	$(top_srcdir)/src/libical/icalenums.h		\
-	$(top_srcdir)/src/libical/icaltypes.h		\
-	$(top_srcdir)/src/libical/icalrecur.h		\
+	$(srcdir)/icalversion.h	\
+	$(srcdir)/icaltime.h		\
+	$(srcdir)/icalduration.h	\
+	$(srcdir)/icalperiod.h		\
+	$(srcdir)/icalenums.h		\
+	$(srcdir)/icaltypes.h		\
+	$(srcdir)/icalrecur.h		\
 	icalderivedvalue.h				\
 	icalderivedparameter.h				\
 	icalvalue.h					\
 	icalparameter.h					\
 	icalderivedproperty.h				\
 	icalproperty.h					\
-	$(top_srcdir)/src/libical/icalattendee.h	\
-	$(top_srcdir)/src/libical/pvl.h			\
-	$(top_srcdir)/src/libical/icalcomponent.h	\
-	$(top_srcdir)/src/libical/icalparser.h		\
-	$(top_srcdir)/src/libical/icalmemory.h		\
-	$(top_srcdir)/src/libical/icalerror.h		\
-	$(top_srcdir)/src/libical/icalrestriction.h	\
-	$(top_srcdir)/src/libical/sspm.h		\
-	$(top_srcdir)/src/libical/icalmime.h 		\
-	$(top_srcdir)/src/libical/icallangbind.h	
+	$(srcdir)/icalattendee.h	\
+	$(srcdir)/pvl.h			\
+	$(srcdir)/icalcomponent.h	\
+	$(srcdir)/icalparser.h		\
+	$(srcdir)/icalmemory.h		\
+	$(srcdir)/icalerror.h		\
+	$(srcdir)/icalrestriction.h	\
+	$(srcdir)/sspm.h		\
+	$(srcdir)/icalmime.h 		\
+	$(srcdir)/icallangbind.h	
 
 BUILT_SOURCES =			\
 	ical.h			\
