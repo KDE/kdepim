@@ -33,12 +33,12 @@
 	  </entry>
 		<entry name="DefaultDestinations" type="StringList">
 		  <label>Default destinations for the various types</label>
-			<whatsthis>These are the default destinations for the different data 
+			<whatsthis>These are the default destinations for the different data
 types in the following order:
-Event, Todo, Journal, Contact, All, Unknown 
-I tried using a parametrized entry using an enum, but the config 
-compiler from 3.3 is severely broken in that respect...</whatsthis>
-</entry>	 
+Event, Todo, Journal, Contact, All, Unknown</whatsthis>
+<!-- I tried using a parametrized entry using an enum, but the config
+compiler from 3.3 is severely broken in that respect... -->
+</entry>
     <!--entry name="DefaultDestination$(Type)" type="String">
       <parameter name="Type" type="Enum">
         <values>
