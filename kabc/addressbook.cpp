@@ -159,6 +159,20 @@ Addressee::List AddressBook::findByEmail( const QString &email )
   return results;
 }
 
+Addressee::List AddressBook::findByCategory( const QString &category )
+{
+  Addressee::List results;
+
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
+    if ( (*it).hasCategory( category) ) {
+      results.append( *it );
+    }
+  }
+
+  return results;
+}
+
 bool AddressBook::lock( const QString &fileName )
 {
   kdDebug() << "AddressBook::lock()" << endl;

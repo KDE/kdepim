@@ -191,6 +191,7 @@ class AddressBook : public QObject
       Returns an empty list, if no entries couldn't be found.
     */
     Addressee::List findByEmail( const QString & );
+    Addressee::List findByCategory( const QString & );
 
     /**
       Set name of file to be used for saving.
