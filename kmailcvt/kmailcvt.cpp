@@ -51,9 +51,9 @@ Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name)
 	setFinishEnabled(QWizard::page(2), false);
 
 	selfilterpage->addFilter(new filter_oe5);
+	selfilterpage->addFilter(new filter_oe4);
 	selfilterpage->addFilter(new filter_pmail);
 	selfilterpage->addFilter(new filter_plain);
-	selfilterpage->addFilter(new filter_oe4);
 	selfilterpage->addFilter(new filter_pab);
 	selfilterpage->addFilter(new filter_ldif);
 	selfilterpage->addFilter(new filter_eudora_ab);
