@@ -200,7 +200,7 @@ EmpathComposer::s_retrieveComplete(
             _reply(id, m);       
             break; 
         case EmpathComposer::ComposeReplyAll:   
-            _reply(id, m, true);
+            _reply(id, m);
             break;
         case EmpathComposer::ComposeForward:    
             _forward(id, m);
@@ -245,13 +245,14 @@ EmpathComposer::_initVisibleHeaders(EmpathComposer::Form & composeForm)
 }
 
    void
-EmpathComposer::_reply(int id, RMM::RMessage * m, bool toAll)
+EmpathComposer::_reply(int id, RMM::RMessage * m)
 {
     empathDebug("Replying");
  
     EmpathComposer::Form composeForm(jobs_[id]);
     RMM::RMessage message(*m);
     QCString to, cc;
+    KConfig * c(KGlobal::config());
     
     referenceHeaders_ = _referenceHeaders(m);
     
@@ -267,7 +268,7 @@ EmpathComposer::_reply(int id, RMM::RMessage * m, bool toAll)
 
     composeForm.invisibleHeaders.set("To", to);
 
-    if (toAll) {
+    if (composeForm.composeType == EmpathComposer::ComposeReplyAll) {
         
         if (message.envelope().has(RMM::HeaderCc)) 
 
@@ -277,7 +278,6 @@ EmpathComposer::_reply(int id, RMM::RMessage * m, bool toAll)
                 cc += message.envelope().cc().at(i)->asString();
             }
     
-        KConfig * c(KGlobal::config());
         c->setGroup("UserInfo");
         
         RMM::RAddress me(c->readEntry("EmailAddress").ascii());
@@ -304,42 +304,46 @@ EmpathComposer::_reply(int id, RMM::RMessage * m, bool toAll)
 
     // Now quote original message if we need to.
     
-    KConfig * c(KGlobal::config());
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
     
     empathDebug("Quoting original if necessary");
 
     // Add the 'On (date) (name) wrote' bit
         
-    if (!c->readBoolEntry(EmpathConfig::C_AUTO_QUOTE))
-        return;
+    if (c->readBoolEntry(EmpathConfig::C_AUTO_QUOTE)) {
 
-    s = message.data();
+        s = message.data();
 
-    // Quoting. hack ? Naah :)
-    s.replace(QRegExp("\\n"), "\n> ");
-    
-    QString thingyWrote = c->readEntry( 
-        toAll   ? EmpathConfig::C_PHRASE_REPLY_ALL
-                : EmpathConfig::C_PHRASE_REPLY_SENDER 
-        , "");
-    
-    // Be careful here. We don't want to reveal people's
-    // email addresses.
-    if (message.envelope().has(RMM::HeaderFrom) &&
-        !message.envelope().from().at(0)->phrase().isEmpty()) {
+        // Remove the signature
+        int sigpos = s.find("\n-- \n");
+        if (sigpos != -1)
+            s.truncate(sigpos);
         
-        thingyWrote.replace(QRegExp("\\%s"),
-            message.envelope().from().at(0)->phrase());
+        _quote(s); 
+        
+        QString thingyWrote = c->readEntry(
+            composeForm.composeType == EmpathComposer::ComposeReplyAll
+                    ? EmpathConfig::C_PHRASE_REPLY_ALL
+                    : EmpathConfig::C_PHRASE_REPLY_SENDER 
+            , "");
+        
+        // Be careful here. We don't want to reveal people's
+        // email addresses.
+        if (message.envelope().has(RMM::HeaderFrom) &&
+            !message.envelope().from().at(0)->phrase().isEmpty()) {
+            
+            thingyWrote.replace(QRegExp("\\%s"),
+                message.envelope().from().at(0)->phrase());
 
-        if (message.envelope().has(RMM::HeaderDate))
-            thingyWrote.replace(QRegExp("\\%d"),
-                message.envelope().date().qdt().date().toString());
-        else
-            thingyWrote.replace(QRegExp("\\%d"),
-                i18n("An unknown date and time"));
-    
-        composeForm.body = '\n' + thingyWrote.local8Bit() + s;
+            if (message.envelope().has(RMM::HeaderDate))
+                thingyWrote.replace(QRegExp("\\%d"),
+                    message.envelope().date().qdt().date().toString());
+            else
+                thingyWrote.replace(QRegExp("\\%d"),
+                    i18n("An unknown date and time"));
+        
+            composeForm.body = '\n' + thingyWrote.local8Bit() + '\n' + s;
+        }
     }
 
     jobs_.replace(id, composeForm);
@@ -383,26 +387,6 @@ EmpathComposer::_bounce(int, RMM::RMessage * /* m */)
 {
     // TODO
 }
-
-#if 0
-    QCString
-EmpathComposer::_envelope()
-{
-    // Rikkus: Is this going to be used ?
-
-    // Copy the visible headers first.
-    RMM::REnvelope e = composeForm.visibleHeaders_;
-
-    // Now add the invisible headers. Should really implement
-    // REnvelope::operator +, but for now this will do.
-    RMM::RHeaderListIterator it(f.invisibleHeaders_);
-
-    for (; it.current(); ++it)
-        e.addHeader(*it.current());
-    
-    return e.asString();
-}
-#endif
 
     QCString
 EmpathComposer::_referenceHeaders(RMM::RMessage * m)
@@ -507,6 +491,14 @@ EmpathComposer::_signature()
     }
     
     return s;
+}
+
+    void
+EmpathComposer::_quote(QCString & s)
+{
+    // Quoting. hack ? Naah :)
+    s.replace(QRegExp("\\n"), "\n> ");
+    s.prepend("> ");
 }
 
 // vim:ts=4:sw=4:tw=78

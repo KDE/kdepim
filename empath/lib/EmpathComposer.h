@@ -115,7 +115,7 @@ class EmpathComposer : public QObject
    
     private:
         
-        void _reply     (int id, RMM::RMessage * m, bool toAll = false);
+        void _reply     (int id, RMM::RMessage * m);
         void _forward   (int id, RMM::RMessage * m);
         void _bounce    (int id, RMM::RMessage * m);
 
@@ -129,6 +129,8 @@ class EmpathComposer : public QObject
         QMap<int, Form> jobs_;
        
         QCString referenceHeaders_;
+
+        void _quote(QCString &);
 };
 
 #endif
