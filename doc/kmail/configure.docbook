@@ -1532,7 +1532,7 @@ messages.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
+<varlistentry id="configure-misc-folders-go-unread">
 <term><guilabel>When trying to find unread messages</guilabel></term>
 <listitem>
 <para>This option controls what happens if you press one of the shortcuts to
