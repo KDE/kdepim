@@ -21,13 +21,6 @@
 
 // $Id$
 
-#include "config.h"
-
-#include <pwd.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <time.h>
 #include <stdlib.h>
 
 #include <kdebug.h>
@@ -83,62 +76,15 @@ void Calendar::init()
   mFilter = new CalFilter;
   mFilter->setEnabled(false);
 
-  struct passwd *pwent;
-  uid_t userId;
-  QString tmpStr;
-
   mDialogsOn = true;
 
   // initialize random numbers.  This is a hack, and not
   // even that good of one at that.
 //  srandom(time(0L));
 
-  // TODO: Fix the user information part.
-
   // user information...
-  userId = getuid();
-  pwent = getpwuid(userId);
-  tmpStr = i18n("Unknown Name");
-//  tmpStr = KOPrefs::instance()->mName;
-  if (tmpStr.isEmpty()) {    
-    if (strlen(pwent->pw_gecos) > 0)
-      setOwner(pwent->pw_gecos);
-    else
-      setOwner(pwent->pw_name);
-//      KOPrefs::instance()->mName = getOwner();
-  } else {
-    setOwner(tmpStr);
-  }
-
-  tmpStr = i18n("unknown@nowhere");
-//  tmpStr = KOPrefs::instance()->mEmail;
-  if (tmpStr.isEmpty()) {
-    tmpStr = pwent->pw_name;
-    tmpStr += "@";
-
-#ifdef HAVE_GETHOSTNAME
-    char cbuf[80];
-    if (gethostname(cbuf, 79)) {
-      // error getting hostname
-      tmpStr += "localhost";
-    } else {
-      hostent he;
-      if (gethostbyname(cbuf)) {
-	  he = *gethostbyname(cbuf);
-	  tmpStr += he.h_name;
-      } else {
-	// error getting hostname
-	tmpStr += "localhost";
-      }
-    }
-#else
-    tmpStr += "localhost";
-#endif
-    setEmail(tmpStr);
-//    KOPrefs::instance()->mEmail = tmpStr;
-  } else {
-    setEmail(tmpStr);
-  }
+  setOwner(i18n("Unknown Name"));
+  setEmail(i18n("unknown@nowhere"));
 
 #if 0
   tmpStr = KOPrefs::instance()->mTimeZone;

@@ -408,6 +408,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
   int *tmpDay;
   Recurrence::rMonthPos *tmpPos;
   int day;
+  int i;
 
   switch(recur->doesRecur()) {
     case Recurrence::rDaily:
@@ -420,7 +421,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       break;
     case Recurrence::rWeekly:
       r.freq = ICAL_WEEKLY_RECURRENCE;
-      for (int i = 0; i < 7; i++) {
+      for (i = 0; i < 7; i++) {
 	if (recur->days().testBit(i)) {
           if (i == 6) day = 1;
           else day = i + 2;
@@ -430,7 +431,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
 #if 0
       tmpStr.sprintf("W%i ",anEvent->rFreq);
-      for (int i = 0; i < 7; i++) {
+      for (i = 0; i < 7; i++) {
 	if (anEvent->rDays.testBit(i))
 	  tmpStr += dayFromNum(i);
       }
@@ -442,7 +443,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       tmpPositions = recur->monthPositions();
       tmpPos = tmpPositions.first();
       r.by_set_pos[index2++] = tmpPos->rPos;
-      for (int i = 0; i < 7; i++) {
+      for (i = 0; i < 7; i++) {
 	if (tmpPos->rDays.testBit(i)) {
           if (i == 6) day = 1;
           else day = i + 2;
@@ -464,7 +465,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 	else
 	  tmpStr2 += "+ ";
 	tmpStr += tmpStr2;
-	for (int i = 0; i < 7; i++) {
+	for (i = 0; i < 7; i++) {
 	  if (tmpPos->rDays.testBit(i))
 	    tmpStr += dayFromNum(i);
 	}

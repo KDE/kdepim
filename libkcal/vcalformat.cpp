@@ -65,7 +65,7 @@ bool VCalFormat::load(const QString &fileName)
 
   // this is not necessarily only 1 vcal.  Could be many vcals, or include
   // a vcard...
-  vcal = Parse_MIME_FromFileName((const char *)QFile::encodeName(fileName));
+  vcal = Parse_MIME_FromFileName(const_cast<char *>(QFile::encodeName(fileName).data()));
 
   if (!vcal) {
     setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
@@ -614,6 +614,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     int *tmpDay;
     Recurrence::rMonthPos *tmpPos;
     QString tmpStr2;
+    int i;
 
     switch(anEvent->recurrence()->doesRecur()) {
     case Recurrence::rDaily:
@@ -623,7 +624,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       break;
     case Recurrence::rWeekly:
       tmpStr.sprintf("W%i ",anEvent->recurrence()->frequency());
-      for (int i = 0; i < 7; i++) {
+      for (i = 0; i < 7; i++) {
 	if (anEvent->recurrence()->days().testBit(i))
 	  tmpStr += dayFromNum(i);
       }
@@ -642,7 +643,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	else
 	  tmpStr2 += "+ ";
 	tmpStr += tmpStr2;
-	for (int i = 0; i < 7; i++) {
+	for (i = 0; i < 7; i++) {
 	  if (tmpPos->rDays.testBit(i))
 	    tmpStr += dayFromNum(i);
 	}
@@ -1610,7 +1611,7 @@ QDateTime VCalFormat::ISOToQDateTime(const QString & dtStr)
   ASSERT(tmpTime.isValid());
   QDateTime tmpDT(tmpDate, tmpTime);
   // correct for GMT if string is in Zulu format
-  if (dtStr[dtStr.length()-1] == 'Z')
+  if (dtStr.at(dtStr.length()-1) == 'Z')
     tmpDT = tmpDT.addSecs(60*mCalendar->getTimeZone());
   return tmpDT;
 }
