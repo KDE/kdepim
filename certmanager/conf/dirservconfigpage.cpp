@@ -163,10 +163,11 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget 
   stretch = new QWidget( box );
   box->setStretchFactor( stretch, 2 );
 
-  // 'Add new servers' checkbox
+#ifdef NOT_USEFUL_CURRENTLY
   mAddNewServersCB = new QCheckBox( i18n( "Automatically add &new servers discovered in CRL distribution points" ), this );
   connect( mAddNewServersCB, SIGNAL( clicked() ), this, SLOT( slotChanged() ) );
   lay->addWidget( mAddNewServersCB );
+#endif
 }
 
 void DirectoryServicesConfigurationPage::load()
@@ -187,10 +188,12 @@ void DirectoryServicesConfigurationPage::load()
     mMaxItems->blockSignals( false );
   }
 
+#ifdef NOT_USEFUL_CURRENTLY
   mAddNewServersConfigEntry = configEntry( s_addnewservers_componentName, s_addnewservers_groupName, s_addnewservers_entryName, Kleo::CryptoConfigEntry::ArgType_None, false );
   if ( mAddNewServersConfigEntry ) {
     mAddNewServersCB->setChecked( mAddNewServersConfigEntry->boolValue() );
   }
+#endif
 }
 
 void DirectoryServicesConfigurationPage::save()
@@ -203,8 +206,10 @@ void DirectoryServicesConfigurationPage::save()
     mTimeoutConfigEntry->setUIntValue( timeout );
   if ( mMaxItemsConfigEntry && mMaxItemsConfigEntry->uintValue() != (uint)mMaxItems->value() )
     mMaxItemsConfigEntry->setUIntValue( mMaxItems->value() );
+#ifdef NOT_USEFUL_CURRENTLY
   if ( mAddNewServersConfigEntry && mAddNewServersConfigEntry->boolValue() != mAddNewServersCB->isChecked() )
     mAddNewServersConfigEntry->setBoolValue( mAddNewServersCB->isChecked() );
+#endif
 
   mConfig->sync( true );
 
@@ -231,8 +236,10 @@ void DirectoryServicesConfigurationPage::defaults()
     mTimeoutConfigEntry->resetToDefault();
   if ( mMaxItemsConfigEntry )
     mMaxItemsConfigEntry->resetToDefault();
+#ifdef NOT_USEFUL_CURRENTLY
   if ( mAddNewServersConfigEntry )
     mAddNewServersConfigEntry->resetToDefault();
+#endif
   load();
 }
 
