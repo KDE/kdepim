@@ -1644,14 +1644,16 @@ void KPilotLink::checkPilotUser()
   
   if (guiUserName != getPilotUser().getUserName())
     {
-      QString message(i18n(
+      QString imessage(i18n(
 			   "The Palm Pilot thinks the user name is %1, "
 			   "however KPilot says you are %2.\n"
 			   "Should I assume the Pilot is right and set the "
 			   "user name for KPilot to %1? "
 			   "(Otherwise I'll use %2 for now)"));
-	message=message.arg(getPilotUser().getUserName());
-	message=message.arg(guiUserName);
+	QString message = imessage.arg(getPilotUser().getUserName())
+		.arg(getPilotUser().getUserName())
+		.arg(guiUserName)
+		.arg(guiUserName);
 
       if (KMessageBox::warningYesNo(0L,
 				    message,
@@ -1727,6 +1729,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.29  2001/01/04 22:19:37  adridg
+// Stuff for Chris and Bug 18072
+//
 // Revision 1.28  2001/01/03 00:02:45  adridg
 // Added Heiko's FastSync
 //
