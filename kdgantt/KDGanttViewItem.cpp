@@ -280,19 +280,23 @@ KDGanttViewItem::~KDGanttViewItem()
   Generates a unique name if necessary and inserts it into the item
   dictionary.
 */
-void KDGanttViewItem::generateAndInsertName( const QString& /*name*/ )
+void KDGanttViewItem::generateAndInsertName( const QString& name )
 {
     // First check if we already had a name. This can be the case if
     // the item was reconstructed from an XML file.
     if( !_name.isEmpty() )
         // We had a name, remove it
         sItemDict.remove( _name );
+    
     QString newName;
-    // create unique name
-    newName.sprintf( "%p", (void* )this );
-
-    while( sItemDict.find( newName ) ) {
-      newName += "_0";
+    if ( name.isEmpty() || sItemDict.find( name ) ) {
+        // create unique name
+        newName.sprintf( "%p", (void* )this );
+        while( sItemDict.find( newName ) ) {
+            newName += "_0";
+        }
+    } else {
+        newName = name;
     }
     sItemDict.insert( newName, this );
     _name = newName;

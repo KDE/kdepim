@@ -626,7 +626,15 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
         if( item )
             toItemList.append( item );
     }
-
+    // safeguard aginst incorrect names
+    if (fromItemList.isEmpty()) {
+        qDebug("Cannot create link: fromItemList is empty");
+        return 0;
+    }
+    if (toItemList.isEmpty()) {
+        qDebug("Cannot create link: toItemList is empty");
+        return 0;
+    }
     KDGanttViewTaskLink* tl = new KDGanttViewTaskLink( fromItemList,
                                                        toItemList );
     tl->setVisible( visible );
