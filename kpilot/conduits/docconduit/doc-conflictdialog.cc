@@ -35,7 +35,8 @@
 #include <kmessagebox.h>
 #include <qtimer.h>
 #include <qtable.h>
-
+#include <qcombobox.h>
+#include <qscrollview.h>
 
 
 ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syncInfoList*sinfo, KPilotDeviceLink*lnk )
@@ -43,11 +44,11 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 	FUNCTIONSETUP;
 	syncInfo=sinfo;
 	hasConflicts=false;
-	
+
 	QWidget *page = new QWidget( this );
 	setMainWidget(page);
 	QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
-	
+
 	// First, insert the texts on top:
 	textLabel1 = new QLabel(i18n("Here is a list of all text files and DOC databases the conduit found. The conduit tried to determine the correct sync direction, but for databases in bold red letters a conflict occurred (i.e. the text was changed both on the desktop and on the handheld). For these databases please specify which version is the current one."), page);
 	textLabel1->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
@@ -56,91 +57,23 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 	textLabel2 = new QLabel(i18n("You can also change the sync direction for databases without a conflict." ),  page );
 	textLabel2->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
 	topLayout->addWidget(textLabel2);
-	
-#ifdef SCROLL_TABLE
-	if (syncInfo) {
-		resolutionTable = new QTable(syncInfo->size(), 3, page);
-		resolutionTable->setSelectionMode(QTable::NoSelection);
-		resolutionTable->setRowMovingEnabled(false);
-		resolutionTable->setColumnMovingEnabled(false);
-		resolutionTable->setDragEnabled(false);
-		resolutionTable->setColumnReadOnly(0, true);
-		for (int i=0; i<3; i++) {
-			resolutionTable->adjustColumn(i);
-//			resolutionTable->setColumnStretchable(i, true);
-		}
-		QStringList headers;
-		headers<<i18n("Database name")<<i18n("Resolution")<<QString();
-		resolutionTable->setColumnLabels(headers);
-		resolutionTable->setSorting(false);
-		
-		
-		QButtonGroup *bgroup = new QButtonGroup(page);
-		bgroup->hide();
-		QObject::connect(bgroup, SIGNAL(clicked(int)), this, SLOT(slotInfo(int)));
-		
-		
-		DEBUGCONDUIT<<"Adding resolution options for the databases "<<endl;
-		syncInfoList::Iterator it;
-		int nr=0;
-		DEBUGCONDUIT<<"We're having "<<(*syncInfo).size()<<" entries in the database list"<<endl;
-		for (it=syncInfo->begin(); it!=syncInfo->end(); it++) {
-			docSyncInfo si=(*it);
-			conflictEntry cE;
-			cE.index=nr;
-			cE.conflict=(si.direction==eSyncConflict);
-			DEBUGCONDUIT<<"Adding "<<si.handheldDB<<" to the conflict resolution dialog"<<endl;
-			
-			QString text=si.handheldDB;
-			if  (cE.conflict) {
-				text=CSL1("<qt><b><font color=red>")
-					+ text
-					+ CSL1("</font></b></qt>");
-#ifdef DEBUG
-				DEBUGCONDUIT<<"We have a conflict for database "<<si.handheldDB<<endl;
-#endif
-				hasConflicts=true;
-			}
-			cE.dbname=text;
-			resolutionTable->setText(cE.index, 0, text);
-			
-			QStringList entries;
-			entries<< i18n( "No Sync" ) << i18n( "Sync handheld to PC" ) << i18n( "Sync PC to handheld" ) << i18n( "Delete both databases" );
-			cE.resolution=new QComboTableItem(resolutionTable, entries);
-			cE.resolution->setCurrentItem((int)si.direction);
-			resolutionTable->setItem( cE.index, 1, cE.resolution);
-			
-			cE.info = new QPushButton( i18n("More information..."), resolutionTable );
-			resolutionTable->setCellWidget(cE.index, 2, cE.info);
-			bgroup->insert(cE.info);
-			
-			conflictEntries.append(cE);
-			nr++;
-		}
 
-	} else {
-		kdWarning()<<"The list of text files is not available to the resolution dialog. Something must have gone wrong ..."<<endl;
-		new QLabel(i18n("<qt><b>Error</b>: Could not get list of DOC databases!</qt>"), page );
-	}
-	topLayout->addWidget(resolutionTable);
-
-#else
-	
 	resolutionGroupBox = new QGroupBox(i18n("DOC databases"), page );
+	QVBoxLayout*playout = new QVBoxLayout(resolutionGroupBox);
 	QScrollView* sv = new QScrollView(resolutionGroupBox);
-//	QVBox* big_box = new QVBox(sv->viewport());
-//        sv->addChild(big_box);
-    
-// You can go on to add arbitrary child widgets to the single child in the scrollview as you would with any widget: 
-//        QLabel* child1 = new QLabel("CHILD", big_box);
-//        QLabel* child2 = new QLabel("CHILD", big_box);
-//        QLabel* child3 = new QLabel	resolutionGroupBox->setColumnLayout(0, Qt::Vertical );
-	
-	resolutionGroupBoxLayout = new QGridLayout( sv->viewport() );
+	playout->addWidget(sv);
+	sv->setResizePolicy(QScrollView::AutoOneFit);
+	sv->setHScrollBarMode(QScrollView::AlwaysOff);
+	sv->setMargin(5);
+	QFrame* big_box = new QFrame(sv->viewport());
+	sv->addChild(big_box);
+
+
+	resolutionGroupBoxLayout = new QGridLayout( big_box, syncInfo->size(), 3 );
 	resolutionGroupBoxLayout->setAlignment( Qt::AlignTop );
-	
+
 	// Invisible button group for the information buttons to use the same slot for all of them (see Dallheimer's book, page 309f)
-	QButtonGroup *bgroup = new QButtonGroup(page);
+	QButtonGroup *bgroup = new QButtonGroup( this );
 	bgroup->hide();
 	QObject::connect(bgroup, SIGNAL(clicked(int)), this, SLOT(slotInfo(int)));
 
@@ -155,18 +88,20 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			cE.index=nr;
 			cE.conflict=(si.direction==eSyncConflict);
 			DEBUGCONDUIT<<"Adding "<<si.handheldDB<<" to the conflict resolution dialog"<<endl;
-			
+
 			QString text=si.handheldDB;
 			if  (cE.conflict) {
 				text="<qt><b><font color=red>"+text+"</font></b></qt>";
 				DEBUGCONDUIT<<"We have a conflict for database "<<si.handheldDB<<endl;
 				hasConflicts=true;
 			}
-			cE.dbname=new QLabel(text, sv->viewport());
+			cE.dbname=new QLabel(text, big_box);
 			resolutionGroupBoxLayout->addWidget( cE.dbname, cE.index, 0 );
-			
-			cE.resolution=new QComboBox( FALSE, sv->viewport());
-			cE.resolution->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, cE.resolution->sizePolicy().hasHeightForWidth() ) );
+
+			cE.resolution=new QComboBox( FALSE, big_box);
+			cE.resolution->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7,
+				(QSizePolicy::SizeType)0, 0, 0,
+				cE.resolution->sizePolicy().hasHeightForWidth() ) );
 			cE.resolution->clear();
 			cE.resolution->insertItem( i18n( "No Sync" ) );
 			cE.resolution->insertItem( i18n( "Sync handheld to PC" ) );
@@ -174,32 +109,28 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			cE.resolution->insertItem( i18n( "Delete both databases" ) );
 			cE.resolution->setCurrentItem((int)si.direction);
 			resolutionGroupBoxLayout->addWidget( cE.resolution, cE.index, 1);
-			
-			cE.info = new QPushButton( i18n("More information..."), sv->viewport() );
+
+			cE.info = new QPushButton( i18n("More infos..."), big_box );
 			resolutionGroupBoxLayout->addWidget(cE.info, cE.index, 2);
 			bgroup->insert(cE.info);
-			
+
 			conflictEntries.append(cE);
 			nr++;
 		}
 	} else {
-		kdWarning()<<"The list of text files is not available to the resolution dialog. Something must have gone wrong ..."<<endl;
+		kdWarning()<<"The list of text files is not available to the resolution "
+			"dialog. Something must have gone wrong ..."<<endl;
 	}
 
 
 	topLayout->addWidget( resolutionGroupBox );
-	
-#endif
-	
-/*	topLayout->addStretch(10);*/
-
+	resize( QSize(600, 480).expandedTo(minimumSizeHint()) );
 
 	if (fHandle) tickleTimer=new QTimer(this, "TickleTimer");
 	if (tickleTimer) {
 		connect( tickleTimer, SIGNAL(timeout()), this, SLOT(_tickle()) );
 		tickleTimer->start( 10000 ); // tickle the palm every 10 seconds to prevent a timeout until the sync is really finished.
 	}
-
 
 }
 
@@ -241,7 +172,7 @@ void ResolutionDialog::slotInfo(int index) {
 	QString text=i18n("Status of the database %1:\n\n").arg(si.handheldDB);
 	text+=i18n("Handheld: %1\n").arg(eTextStatusToString(si.fPalmStatus));
 	text+=i18n("Desktop: %1\n").arg(eTextStatusToString(si.fPCStatus));
-	
+
 	KMessageBox::information(this, text, i18n("Database information"));
 }
 

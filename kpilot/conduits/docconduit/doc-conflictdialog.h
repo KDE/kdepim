@@ -32,16 +32,9 @@
 #include "doc-conduit.h"
 
 
-#define SCROLL_TABLE
-
-#ifdef SCROLL_TABLE
-class QComboTableItem;
-class QTable;
-#else
 class QComboBox;
 class QGridLayout;
 class QGroupBox;
-#endif
 
 class QLabel;
 class QPushButton;
@@ -50,13 +43,8 @@ class KPilotDeviceLink;
 
 
 typedef struct conflictEntry {
-#ifdef SCROLL_TABLE
-	QString dbname;
-	QComboTableItem*resolution;
-#else
 	QLabel*dbname;
 	QComboBox* resolution;
-#endif
 	QPushButton*info;
 	int index;
 	bool conflict;
@@ -70,7 +58,7 @@ class ResolutionDialog : public KDialogBase
 public:
 	ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotDeviceLink*lnk=0L);
 	~ResolutionDialog();
-	
+
 	bool hasConflicts;
 public slots:
 	void _tickle();
@@ -79,15 +67,10 @@ protected:
 	KPilotDeviceLink* fHandle;
 
 protected:
-	syncInfoList*syncInfo;
-	
-#ifdef SCROLL_TABLE
-	QTable* resolutionTable;
-#else
 	QGroupBox* resolutionGroupBox;
 	QGridLayout*resolutionGroupBoxLayout;
-#endif
 
+	syncInfoList*syncInfo;
 	QValueList<conflictEntry> conflictEntries;
 	QLabel *textLabel1,*textLabel2;
 
