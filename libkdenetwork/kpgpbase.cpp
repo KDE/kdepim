@@ -16,9 +16,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include "kpgpbase.h"
 #include "kpgp.h"
@@ -89,14 +87,14 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     // tell pgp which fd to use for the passphrase
     QCString tmp;
     tmp.sprintf("%d",ppass[0]);
-    setenv("PGPPASSFD",tmp.data(),1);
+    ::setenv("PGPPASSFD",tmp.data(),1);
 
     //Uncomment these lines for testing only! Doing so will decrease security!
     //kdDebug(5100) << "pgp PGPPASSFD = " << tmp << endl;
     //kdDebug(5100) << "pgp pass = " << passphrase << endl;
   }
   else
-    unsetenv("PGPPASSFD");
+    ::unsetenv("PGPPASSFD");
 
   //Uncomment these lines for testing only! Doing so will decrease security!
   kdDebug(5100) << "pgp cmd = " << cmd << endl;
