@@ -30,34 +30,24 @@
     your version.
 */
 
-#ifndef KWATCHGNUPGMAINWIN_H
-#define KWATCHGNUPGMAINWIN_H
+#include "tray.h"
+#include "kwatchgnupgmainwin.h"
 
-#include <kmainwindow.h>
+#include <kdebug.h>
+#include <klocale.h>
+#include <qtooltip.h>
 
-class KProcess;
-class KSystemTray;
-class QTextEdit;
+KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
+  : KSystemTray( mainwin, "KWatchGnuPG Tray Window" )
+{
+  kdDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
+  setPixmap( loadIcon("unknown") );
 
-class KWatchGnuPGMainWindow : public KMainWindow {
-  Q_OBJECT
-public:
-  KWatchGnuPGMainWindow( QWidget* parent = 0, const char* name = 0 );
-public slots:
-  void slotWatcherExited( KProcess* proc );
-  void slotReceivedStdout( KProcess *proc, char *buffer, int buflen);
-  void slotQuit();
-protected:
-  virtual bool queryClose();
-private:
-  void startWatcher();
-  void setGnuPGConfig();
+  QToolTip::add( this, i18n("KWatchGnuPG Log Viewer") );
+}
 
-  KProcess* mWatcher;
+KWatchGnuPGTray::~KWatchGnuPGTray()
+{
+}
 
-  QTextEdit* mCentralWidget;
-  KSystemTray* mSysTray;
-};
-
-#endif /* KWATCHGNUPGMAINWIN_H */
-
+#include "tray.moc"

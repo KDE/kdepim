@@ -7,6 +7,7 @@ bin_PROGRAMS = kwatchgnupg
 kwatchgnupg_SOURCES = \
 	kwatchgnupgmainwin.cpp \
 	aboutdata.cpp \
+	tray.cpp \
 	main.cpp
 
 METASOURCES = AUTO

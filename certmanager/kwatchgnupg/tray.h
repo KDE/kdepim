@@ -30,34 +30,19 @@
     your version.
 */
 
-#ifndef KWATCHGNUPGMAINWIN_H
-#define KWATCHGNUPGMAINWIN_H
+#ifndef TRAY_H
+#define TRAY_H
 
-#include <kmainwindow.h>
+#include <ksystemtray.h>
 
-class KProcess;
-class KSystemTray;
-class QTextEdit;
+class KWatchGnuPGMainWindow;
 
-class KWatchGnuPGMainWindow : public KMainWindow {
+class KWatchGnuPGTray : public KSystemTray {
   Q_OBJECT
 public:
-  KWatchGnuPGMainWindow( QWidget* parent = 0, const char* name = 0 );
-public slots:
-  void slotWatcherExited( KProcess* proc );
-  void slotReceivedStdout( KProcess *proc, char *buffer, int buflen);
-  void slotQuit();
-protected:
-  virtual bool queryClose();
-private:
-  void startWatcher();
-  void setGnuPGConfig();
-
-  KProcess* mWatcher;
-
-  QTextEdit* mCentralWidget;
-  KSystemTray* mSysTray;
+  KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
+  virtual ~KWatchGnuPGTray();
 };
 
-#endif /* KWATCHGNUPGMAINWIN_H */
+#endif /* TRAY_H */
 

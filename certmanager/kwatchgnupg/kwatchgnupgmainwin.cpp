@@ -31,6 +31,7 @@
 */
 
 #include "kwatchgnupgmainwin.h"
+#include "tray.h"
 
 #include <cryptplugfactory.h>
 #include <kleo/cryptoconfig.h>
@@ -39,6 +40,7 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kapplication.h>
 
 #include <qtextedit.h>
 #include <qdir.h>
@@ -49,9 +51,12 @@
 KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name )
   : KMainWindow( parent, name, WType_TopLevel )
 {
+  createGUI();
+
   mCentralWidget = new QTextEdit( this, "central log view" );
   mCentralWidget->setTextFormat( QTextEdit::LogText );
   mCentralWidget->setWordWrap( QTextEdit::NoWrap );
+  mCentralWidget->setMaxLogLines( 10000 ); // PENDING(steffen): make configurable
   setCentralWidget( mCentralWidget );
   
   mWatcher = new KProcess(this);
@@ -62,6 +67,12 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
   
   startWatcher();
   setGnuPGConfig();
+
+  mSysTray = new KWatchGnuPGTray( this );
+  mSysTray->show();
+  connect( mSysTray, SIGNAL( quitSelected() ),
+		   this, SLOT( slotQuit() ) );
+  setAutoSaveSettings();
 }
 
 void KWatchGnuPGMainWindow::startWatcher()
@@ -107,6 +118,26 @@ void KWatchGnuPGMainWindow::slotWatcherExited( KProcess* /*proc*/ )
 void KWatchGnuPGMainWindow::slotReceivedStdout( KProcess* /*proc*/, char* buf, int buflen )
 {
   mCentralWidget->append( QString::fromUtf8( buf, buflen ) );
+  if( !isVisible() ) {
+	// Change tray icon to show something happened
+	// PENDING(steffen) 
+  }
 }
+
+void KWatchGnuPGMainWindow::slotQuit()
+{
+  mWatcher->kill();
+  kapp->quit();
+}
+
+bool KWatchGnuPGMainWindow::queryClose()
+{
+  if ( !kapp->sessionSaving() ) {
+    hide();
+    return false;
+  }
+  return KMainWindow::queryClose();
+}
+
 
 #include "kwatchgnupgmainwin.moc"
