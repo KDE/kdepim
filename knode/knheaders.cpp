@@ -917,10 +917,10 @@ void KNHeaders::ContentType::from7BitString(const QCString &s)
   int pos=s.find(';');
 
   if(pos==-1)
-    m_imeType=s;
+    m_imeType=s.simplifyWhiteSpace();
   else {
-    m_imeType=s.left(pos);
-    p_arams=s.mid(pos, s.length()-pos);
+    m_imeType=s.left(pos).simplifyWhiteSpace();
+    p_arams=s.mid(pos, s.length()-pos).simplifyWhiteSpace();
   }
 
   if(isMultipart())
@@ -1188,9 +1188,10 @@ static const encTableType encTable[] = {  { "7Bit", KNHeaders::CE7Bit },
 
 void KNHeaders::CTEncoding::from7BitString(const QCString &s)
 {
+  QCString stripped(s.simplifyWhiteSpace());
   c_te=CE7Bit;
   for(int i=0; encTable[i].s!=0; i++)
-    if(strcasecmp(s.data(), encTable[i].s)==0) {
+    if(strcasecmp(stripped.data(), encTable[i].s)==0) {
       c_te=(contentEncoding)encTable[i].e;
       break;
     }
