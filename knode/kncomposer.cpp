@@ -1000,7 +1000,8 @@ void KNComposer::slotExternalEditor()
        tmp+="\n";
   }
 
-  e_ditorTempfile->file()->writeBlock(codec->fromUnicode(tmp));
+  QCString local = codec->fromUnicode(tmp);
+  e_ditorTempfile->file()->writeBlock(local.data(),local.length());
   e_ditorTempfile->file()->flush();
 
   if(e_ditorTempfile->status()!=0) {
@@ -1235,7 +1236,8 @@ void KNComposer::slotGroupsBtnClicked()
 void KNComposer::slotEditorFinished(KProcess *)
 {
   if(e_xternalEditor->normalExit()) {
-    e_ditorTempfile->file()->at(0);
+    e_ditorTempfile->file()->close();
+    e_ditorTempfile->file()->open(IO_ReadOnly);
     insertFile(e_ditorTempfile->file(), true);
     e_xternalEdited=true;
   }
