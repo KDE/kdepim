@@ -641,6 +641,7 @@ KNConfig::PostNewsComposer::PostNewsComposer()
   KConfig *conf=KGlobal::config();
   conf->setGroup("POSTNEWS");
 
+  w_ordWrap=conf->readBoolEntry("wordWrap",true);
   m_axLen=conf->readNumEntry("maxLength", 76);
   a_ppSig=conf->readBoolEntry("appSig",true);
   r_ewrap=conf->readBoolEntry("rewrap",true);
@@ -663,6 +664,7 @@ void KNConfig::PostNewsComposer::save()
   KConfig *conf=KGlobal::config();
   conf->setGroup("POSTNEWS");
 
+  conf->writeEntry("wordWrap", w_ordWrap);
   conf->writeEntry("maxLength", m_axLen);
   conf->writeEntry("appSig", a_ppSig);
   conf->writeEntry("rewrap",r_ewrap);

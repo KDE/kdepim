@@ -1699,9 +1699,11 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  generalL->addWidget(new QLabel(i18n("word wrap at column:"), generalB),1,0);
+  w_ordWrapCB=new QCheckBox(i18n("word warp at column:"), generalB);
+  generalL->addWidget(w_ordWrapCB,1,0);
   m_axLen=new KIntSpinBox(20, 100, 1, 20, 10, generalB);
   generalL->addWidget(m_axLen,1,2);
+  connect(w_ordWrapCB, SIGNAL(toggled(bool)), m_axLen, SLOT(setEnabled(bool)));
 
   o_wnSigCB=new QCheckBox(i18n("append signature automatically"), generalB);
   generalL->addMultiCellWidget(o_wnSigCB,2,2,0,1);
@@ -1754,6 +1756,8 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   topL->addStretch(1);
 
   //init
+  w_ordWrapCB->setChecked(d->w_ordWrap);
+  m_axLen->setEnabled(d->w_ordWrap);
   a_uthSigCB->setChecked(d->i_ncSig);
   e_xternCB->setChecked(d->u_seExtEditor);
   o_wnSigCB->setChecked(d->a_ppSig);
@@ -1776,6 +1780,7 @@ void KNConfig::PostNewsComposerWidget::apply()
   if(!d_irty)
     return;
 
+  d_ata->w_ordWrap=w_ordWrapCB->isChecked();
   d_ata->m_axLen=m_axLen->value();
   d_ata->r_ewrap=r_ewrapCB->isChecked();
   d_ata->a_ppSig=o_wnSigCB->isChecked();

@@ -166,17 +166,11 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
   fName.replace(QRegExp("[\\s/]"),"_");
   KNSaveHelper helper(fName);
   QFile *file = helper.getFile(i18n("Save Article"));
-  KNMimeContent *text=0;
 
   if (file) {
     QCString tmp=a->head().copy();
-    tmp+="\n";
-    text=a->textContent();
-    if(text) {
-    	QString body;
-    	a->decodedText(body);
-      tmp+=body.local8Bit();
-    }
+    tmp+="\n\n";
+    tmp+=a->decodedContent();     // just use the orginal 8-Bit encoding, don't mess with local8Bit
     file->writeBlock(tmp.data(), tmp.size());
   }
 }

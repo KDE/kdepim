@@ -746,6 +746,7 @@ class PostNewsComposer : public Base {
 
     void save();
 
+    bool wordWrap()             { return w_ordWrap; }
     int maxLineLength()         { return m_axLen; }
     bool appendOwnSignature()   { return a_ppSig; }
 
@@ -759,7 +760,8 @@ class PostNewsComposer : public Base {
 
   protected:
     int     m_axLen;
-    bool    a_ppSig,
+    bool    w_ordWrap,
+            a_ppSig,
             r_ewrap,
             i_ncSig,
             u_seExtEditor;
@@ -782,7 +784,8 @@ class PostNewsComposerWidget : public BaseWidget {
 
   protected:
     KIntSpinBox *m_axLen;
-    QCheckBox   *o_wnSigCB,
+    QCheckBox   *w_ordWrapCB,
+                *o_wnSigCB,
                 *a_uthSigCB,
                 *r_ewrapCB,
                 *e_xternCB;

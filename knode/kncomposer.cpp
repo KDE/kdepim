@@ -20,6 +20,7 @@
 #include <qvgroupbox.h>
 #include <qheader.h>
 #include <qvbox.h>
+#include <qtextcodec.h>
 
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -57,6 +58,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //init v_iew
   v_iew=new ComposerView(this);
   setCentralWidget(v_iew);
+
+  //statusbar
+  KStatusBar *sb=statusBar();
+  sb->insertItem(QString::null, 1,1);
+  sb->setItemAlignment (1,AlignLeft | AlignVCenter);
+  sb->insertItem(QString::null, 2,0);
+  sb->setItemAlignment (2,AlignCenter | AlignVCenter);
+  sb->insertItem(QString::null,3,0);
+  sb->setItemAlignment (3,AlignCenter | AlignVCenter);
+  connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateStatusBar()));
 
   //------------------------------- <Actions> --------------------------------------
 
@@ -131,6 +142,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //settings menu
   a_ctShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  a_ctShowStatusbar = KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
 
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
@@ -170,6 +182,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   resize(535,450);    // default optimized for 800x600
   applyMainWindowSettings(conf);
   a_ctShowToolbar->setChecked(!toolBar()->isHidden());
+  a_ctShowStatusbar->setChecked(!statusBar()->isHidden());
 
   if(knGlobals.cfgManager->postNewsComposer()->useExternalEditor())
     slotExternalEditor();
@@ -192,7 +205,8 @@ KNComposer::~KNComposer()
 
 void KNComposer::setConfig()
 {
-  v_iew->e_dit->setWordWrap(QMultiLineEdit::FixedColumnWidth);
+  v_iew->e_dit->setWordWrap(knGlobals.cfgManager->postNewsComposer()->wordWrap()?
+                            QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
   v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
@@ -203,6 +217,8 @@ void KNComposer::setConfig()
   KGlobal::charsets()->setQFont(fnt, c_harset);
   v_iew->s_ubject->setFont(fnt);
   v_iew->t_o->setFont(fnt);
+
+  slotUpdateStatusBar();
 }
 
 
@@ -307,13 +323,8 @@ void KNComposer::applyChanges()
     a_rticle->addContent(text, true);
   }
 
-  QString tmp;
-  for(int i=0; i < v_iew->e_dit->numLines(); i++)
-    tmp+=v_iew->e_dit->textLine(i)+"\n";
-
   text->contentType()->setCharset(c_harset);
-  text->fromUnicodeString(tmp);
-
+  text->fromUnicodeString(v_iew->e_dit->text());
 
   //text is set and all attached contents have been assembled => now set lines
   a_rticle->lines()->setNumberOfLines(a_rticle->lineCount());
@@ -422,7 +433,11 @@ void KNComposer::insertFile(QString fileName, bool clear)
 {
   QString temp;
   QFile file(fileName);
+  bool ok=true;
+  QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+  if(!ok) codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
   QTextStream ts(&file);
+  ts.setCodec(codec);
 
   if(!file.open(IO_ReadOnly)) {
     if(clear)                // ok, not pretty, assuming that we load a tempfile when clear==true (external editor)
@@ -432,7 +447,7 @@ void KNComposer::insertFile(QString fileName, bool clear)
   }
   else {
     while(!file.atEnd())
-      temp=ts.readLine()+"\n";
+      temp+=ts.readLine()+"\n";
   }
 
   if(clear) {
@@ -531,7 +546,12 @@ void KNComposer::slotExternalEditor()
     return;
   }
 
-  e_ditorTempfile->file()->writeBlock(v_iew->e_dit->text().local8Bit());
+  bool ok=true;
+  QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+
+  if(!ok) codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
+
+  e_ditorTempfile->file()->writeBlock(codec->fromUnicode(v_iew->e_dit->text()));
   e_ditorTempfile->close();
 
   if(e_ditorTempfile->status()!=0) {
@@ -695,6 +715,23 @@ void KNComposer::slotToggleToolBar()
     toolBar()->hide();
   else
     toolBar()->show();
+}
+
+
+void KNComposer::slotToggleStatusBar()
+{
+  if (statusBar()->isVisible())
+    statusBar()->hide();
+  else
+    statusBar()->show();
+}
+
+
+void KNComposer::slotUpdateStatusBar()
+{
+  statusBar()->changeItem(i18n(" Charset: %1 ").arg(c_harset), 1);
+  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 2);
+  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 3);
 }
 
 

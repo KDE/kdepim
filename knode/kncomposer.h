@@ -103,7 +103,7 @@ class KNComposer : public KMainWindow  {
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties;
-    KToggleAction *a_ctShowToolbar;
+    KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar;
     KSelectAction *a_ctSetCharset;
     
 
@@ -124,6 +124,8 @@ class KNComposer : public KMainWindow  {
     void slotRemoveAttachment();
     void slotAttachmentProperties();    
     void slotToggleToolBar();
+    void slotToggleStatusBar();
+    void slotUpdateStatusBar();
     void slotConfKeys();
     void slotConfToolbar();
 
