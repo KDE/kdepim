@@ -1,6 +1,6 @@
 INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
 
-check_PROGRAMS = testtostring testincidence testcalendar readandwrite
+check_PROGRAMS = testtostring testincidence testcalendar readandwrite testresource
 
 METASOURCES = AUTO
 
@@ -19,6 +19,10 @@ testtostring_LDADD = ../libkcal.la
 readandwrite_SOURCES = readandwrite.cpp
 readandwrite_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 readandwrite_LDADD = ../libkcal.la
+
+testresource_SOURCES = testresource.cpp
+testresource_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testresource_LDADD = ../libkcal.la
 
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
