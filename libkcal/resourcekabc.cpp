@@ -172,6 +172,7 @@ bool ResourceKABC::load()
       // insert category
       ev->setCategories(i18n("Birthday"));
 
+      ev->setReadOnly( true );
       mCalendar.addEvent(ev);
       kdDebug() << "imported " << birthdate.toString() << endl;
     }
