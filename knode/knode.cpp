@@ -45,6 +45,8 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
   KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()),
                                 actionCollection(), "knode_configure_toolbars" );
+  KStdAction::keyBindings(this, SLOT(slotConfKeys()), 
+                          actionCollection(), "knode_configure_shortcuts");
 
   m_mainWidget = new KNMainWidget( this, true, this, 0 );
   connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
@@ -80,6 +82,11 @@ void KNMainWindow::slotNewToolbarConfig()
   createGUI("knodeui.rc");
   //initPopups();
   applyMainWindowSettings(knGlobals.config(),"mainWindow_options");
+}
+
+void KNMainWindow::slotConfKeys()
+{
+  KKeyDialog::configure(actionCollection(), true);
 }
 
 bool KNMainWindow::queryClose()

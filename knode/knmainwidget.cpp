@@ -21,7 +21,6 @@
 #include <kxmlguiclient.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
-#include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kstdaction.h>
 #include <kdebug.h>
@@ -662,10 +661,6 @@ void KNMainWidget::initActions()
                        "configure", 0, this,
                        SLOT(slotSettings()), actionCollection(),
                        "knode_configure_knode" );
-   (void) new KAction( i18n("Configure S&hortcuts..."),
-                       "configure_shortcuts", 0, this,
-                       SLOT(slotConfKeys()), actionCollection(),
-                       "knode_configure_shortcuts" );
 
   //collection-view - folder
   a_ctFolNew                = new KAction(i18n("&New Folder"), "folder_new", 0, this,
@@ -2266,14 +2261,6 @@ void KNMainWidget::slotSwitchToArticleViewer()
   a_rtView->setFocus();
 }
 
-
-void KNMainWidget::slotConfKeys()
-{
-  //KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
-  KKeyDialog::configure( actionCollection(),
-			 true /*allow one-letter shortcuts*/
-    );
-}
 
 void KNMainWidget::slotSettings()
 {
