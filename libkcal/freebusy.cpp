@@ -43,7 +43,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
   setDtEnd(end);
 
   // Get all the events in the calendar
-  Event::List eventList = mCalendar->events();
+  Event::List eventList = mCalendar->rawEvents( start, end );
 
   int extraDays, i, x, duration;
   duration = start.daysTo(end);
@@ -55,7 +55,30 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
   for( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *event = *it;
 
-    // This whole for loop is for recurring events, it loops through 
+    // The code below can not handle floating events. Fixing this resulted
+    // in a lot of duplicated code. Instead, make a copy of the event and
+    // set the period to the full day(s). This trick works for recurring,
+    // multiday, and single day floating events.
+    Event *floatingEvent = 0;
+    if ( event->doesFloat() ) {
+      // Floating event. Do the hack
+      kdDebug(5800) << "Floating event\n";
+      floatingEvent = new Event( *event );
+
+      // Set the start and end times to be on midnight
+      QDateTime start( floatingEvent->dtStart().date(), QTime( 0, 0 ) );
+      QDateTime end( floatingEvent->dtEnd().date(), QTime( 23, 59, 59, 999 ) );
+      floatingEvent->setFloats( false );
+      floatingEvent->setDtStart( start );
+      floatingEvent->setDtEnd( end );
+
+      kdDebug(5800) << "Use: " << start.toString() << " to " << end.toString()
+                    << endl;
+      // Finally, use this event for the setting below
+      event = floatingEvent;
+    }
+
+    // This whole for loop is for recurring events, it loops through
     // each of the days of the freebusy request
 
     // First check if this is transparent. If it is, it shouldn't be in the
@@ -91,10 +114,13 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
           }
         }
       }
-    
+
     }
     // Non-recurring events
     addLocalPeriod(event->dtStart(), event->dtEnd());
+
+    // Clean up
+    delete floatingEvent;
   }
 
   sortList();
@@ -126,7 +152,7 @@ bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &even
 
   //Check to see if the start *or* end of the event is
   //between the start and end of the freebusy dates.
-  if (!((((this->dtStart()).secsTo(eventStart)>=0)&&(eventStart.secsTo(this->dtEnd())>=0)) 
+  if (!((((this->dtStart()).secsTo(eventStart)>=0)&&(eventStart.secsTo(this->dtEnd())>=0))
     ||(((this->dtStart()).secsTo(eventEnd) >= 0)&&(eventEnd.secsTo(this->dtEnd()) >= 0))))
     return false;
 
@@ -140,9 +166,9 @@ bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &even
     tmpEnd = this->dtEnd();
   } else {
     tmpEnd = eventEnd;
-  }  
+  }
 
-  Period p(tmpStart, tmpEnd);  
+  Period p(tmpStart, tmpEnd);
   mBusyPeriods.append( p );
 
   return true;
@@ -168,7 +194,7 @@ void FreeBusy::sortList()
         earlyTime=(*tmpPeriod).start();
         earlyPeriod=tmpPeriod;
       }
-    } 
+    }
     //Move tmpPeriod to sortedList
     Period tmpPeriod( (*earlyPeriod).start(), (*earlyPeriod).end() );
     sortedList.append( tmpPeriod );
