@@ -329,6 +329,7 @@ void CertManager::slotEditKeybindings() {
 
 void CertManager::slotShowConfigurationDialog() {
   ConfigureDialog dlg( this );
+  connect( &dlg, SIGNAL( configCommitted() ), SLOT( slotStartCertificateListing() ) );
   dlg.exec();
 }
 

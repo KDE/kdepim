@@ -146,10 +146,6 @@ private:
   bool mStrikeOut;
 };
 
-static inline QFont adapt( QFont font, bool it, bool b ) {
-  return font;
-}
-
 void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   QColorGroup _cg = cg;
   QFont font = p->font();

@@ -44,13 +44,11 @@ AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget * parent, cons
   mWidget = new Kleo::AppearanceConfigWidget( this );
   lay->addWidget( mWidget );
   connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
-  kdDebug() << k_funcinfo << endl;
 }
 
 
 void AppearanceConfigurationPage::load()
 {
-  kdDebug() << k_funcinfo << endl;
   mWidget->load();
 }
 
