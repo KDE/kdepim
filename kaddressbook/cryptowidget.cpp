@@ -101,8 +101,8 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   l = new QLabel( i18n("Sign"), hbox );
 
   mSignPref = new QComboBox( false, hbox );
-  mSignPref->insertItem( i18n("Always sign") );
   mSignPref->insertItem( i18n("Ask") );
+  mSignPref->insertItem( i18n("Always sign") );
   mSignPref->insertItem( i18n("Never sign") );
 
   //send preferences/encrypt: always encrypt, ask, never encrypt
@@ -111,23 +111,56 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   l = new QLabel( i18n("Encrypt"), hbox );
 
   mCryptPref = new QComboBox( false, hbox );
-  mCryptPref->insertItem( i18n("Always encrypt") );
   mCryptPref->insertItem( i18n("Ask") );
+  mCryptPref->insertItem( i18n("Always encrypt") );
   mCryptPref->insertItem( i18n("Never encrypt") );
 
   // Emit "changed()" signal
-  connect( mProtocol, SIGNAL( activated(int) ), this, SIGNAL( changed() ) );
-  connect( mSignPref, SIGNAL( activated(int) ), this, SIGNAL( changed() ) );
-  connect( mCryptPref, SIGNAL( activated(int) ), this, SIGNAL( changed() ) );
+  connect( mProtocol, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
+  connect( mSignPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
+  connect( mCryptPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
   // Not optimal, but KeyRequester doesn't emit any signals when the key changes
-  connect( mPgpKey->eraseButton(), SIGNAL( clicked() ), this, SIGNAL( changed() ) );
-  connect( mPgpKey->dialogButton(), SIGNAL( clicked() ), this, SIGNAL( changed() ) );
-  connect( mSmimeCert->eraseButton(), SIGNAL( clicked() ), this, SIGNAL( changed() ) );
-  connect( mSmimeCert->dialogButton(), SIGNAL( clicked() ), this, SIGNAL( changed() ) );
+  connect( mPgpKey->eraseButton(), SIGNAL( clicked() ), this, SLOT( setModified() ) );
+  connect( mPgpKey->dialogButton(), SIGNAL( clicked() ), this, SLOT( setModified() ) );
+  connect( mSmimeCert->eraseButton(), SIGNAL( clicked() ), this, SLOT( setModified() ) );
+  connect( mSmimeCert->dialogButton(), SIGNAL( clicked() ), this, SLOT( setModified() ) );
 }
 
 CryptoWidget::~CryptoWidget()
 {
+}
+
+static int proto_string_to_int( const QString& _str )
+{
+  QString str = _str.lower();
+  if( str == "openpgp(inline)" ) return 0;
+  if( str == "openpgp/mime" )    return 1;
+  if( str == "s/mime" )          return 2;
+  if( str == "s/mime(opaque)" )  return 3;
+  return 0; // default
+}
+
+static QString proto_int_to_string( int i )
+{
+  static QString str[4] = { "openpgp(inline)", "openpgp/mime", "s/mime", "s/mime(opaque)" };
+  if( i >= 0 && i < 4 ) return str[i];
+  else return QString::null;
+}
+
+static int pref_string_to_int( const QString& _str )
+{
+  QString str = _str.lower();
+  if( str == "ask" ) return 0;
+  if( str == "always" ) return 1;
+  if( str == "never" ) return 2;
+  else return 0; // default
+}
+
+static QString pref_int_to_string( int i )
+{
+  static QString str[3] = { "ask", "always", "never" };
+  if( i >= 0 && i < 3 ) return str[i];
+  else return QString::null;
 }
 
 void CryptoWidget::loadContact( KABC::Addressee *addr )
@@ -135,11 +168,12 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  kdDebug() << "CryptoWidget::loadContact()" << endl;
-  
-  mProtocol->setCurrentItem( addr->custom( "KADDRESSBOOK", "CRYPTOPROTOPREF" ).toInt() );
-  mSignPref->setCurrentItem( addr->custom( "KADDRESSBOOK", "CRYPTOSIGNPREF" ).toInt() );
-  mCryptPref->setCurrentItem( addr->custom( "KADDRESSBOOK", "CRYPTOCRYPTPREF" ).toInt() );
+  mProtocol->setCurrentItem( proto_string_to_int(addr->custom( "KADDRESSBOOK", 
+															   "CRYPTOPROTOPREF" )) );
+  mSignPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK", 
+															  "CRYPTOSIGNPREF" )) );
+  mCryptPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK", 
+															   "CRYPTOCRYPTPREF" )) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
@@ -152,9 +186,12 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
 
 void CryptoWidget::storeContact( KABC::Addressee *addr )
 {
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", QString::number(mProtocol->currentItem()) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", QString::number(mSignPref->currentItem()) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOCRYPTPREF", QString::number(mCryptPref->currentItem()) );
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", 
+					  proto_int_to_string(mProtocol->currentItem()) );
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", 
+					  pref_int_to_string(mSignPref->currentItem()) );
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOCRYPTPREF", 
+					  pref_int_to_string(mCryptPref->currentItem()) );
 
   QString pfp = mPgpKey->fingerprint();
   QString sfp = mSmimeCert->fingerprint();
