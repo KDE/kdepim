@@ -81,6 +81,37 @@ int malconduit_logf(const char *format, ...)
 	return rval;
 }
  
+#ifndef LIBMAL20
+int32 cbTask (void * /*out*/,
+        int32 * /*returnErrorCode*/,
+        char *currentTask,
+        AGBool /*bufferable*/)
+{
+    if (currentTask) {
+        malconduit_logf ("%s\n", currentTask);
+    }
+
+    return AGCLIENT_CONTINUE;
+}
+
+static int32 cbItem (void */*out*/,
+        int32 * /*returnErrorCode*/,
+        int32   /*currentItemNumber*/,
+        int32   /*totalItemCount*/,
+        char *  /*currentItem*/)
+{
+//	The log widget only supports writing out whole lines. You just can't add a single character 
+//	to the last line. Thus I completely remove the pseudo-percentbar.
+/*    malconduit_logf (".");
+
+    if (currentItemNumber == totalItemCount) {
+        malconduit_logf ("\n");
+    }
+*/
+    return AGCLIENT_CONTINUE;
+}
+#endif
+
  
 MALConduit::MALConduit(KPilotDeviceLink * o,
 	const char *n, 
@@ -174,7 +205,6 @@ bool MALConduit::skip()
 		return true;
 	}
 	
-	
 	// Now initiate the sync.
 	PalmSyncInfo* pInfo=syncInfoNew();
 	if (!pInfo) {
@@ -247,11 +277,9 @@ bool MALConduit::skip()
 #ifdef LIBMAL20
 	malsync( pilotSocket(), pInfo);
 #else
-// TODO:
-//	register_printStatusHook(malconduit_logf);
-//	register_printErrorHook(malconduit_logf);
-
-	pInfo->pilot_rHandle = pilotSocket();
+	pInfo->sd = pilotSocket();
+	pInfo->taskFunc = cbTask;
+	pInfo->itemFunc = cbItem;
 	malsync( pInfo );
 	delete[] pInfo->httpProxy;
 	delete[] pInfo->proxyUsername;
