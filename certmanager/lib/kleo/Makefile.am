@@ -6,9 +6,9 @@ noinst_LTLIBRARIES = libkleopatra_core.la
 
 libkleopatra_core_la_SOURCES = \
 	dn.cpp \
-	job.cpp
-
-#libkleopatra_core_la_LIBADD = ../../../libkdenetwork/qgpgme/libqgpgme.la
+	job.cpp \
+	\
+	multideletejob.cpp
 
 kleodir = $(includedir)/kleo
 kleo_HEADERS = \
@@ -18,6 +18,7 @@ kleo_HEADERS = \
 	job.h \
 	keylistjob.h keygenerationjob.h importjob.h exportjob.h downloadjob.h deletejob.h \
 	encryptjob.h decryptjob.h signjob.h verifydetachedjob.h verifyopaquejob.h \
-	decryptverifyjob.h signencryptjob.h
+	decryptverifyjob.h signencryptjob.h \
+	multideletejob.h
 
 METASOURCES = AUTO
