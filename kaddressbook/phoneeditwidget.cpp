@@ -230,7 +230,9 @@ void PhoneEditWidget::updateEdit( PhoneTypeCombo *combo )
 
   PhoneNumber::List::Iterator it = combo->selectedElement();
   if ( it != mPhoneList.end() ) {
+    int pos = edit->cursorPosition();
     edit->setText( (*it).number() );
+    edit->setCursorPosition( pos );
   } else {
     kdDebug(5720) << "PhoneEditWidget::updateEdit(): no selected element" << endl;
   }
