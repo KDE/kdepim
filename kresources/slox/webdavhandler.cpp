@@ -119,7 +119,7 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
 
 QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt )
 {
-  uint ticks = dt.toTime_t();
+  uint ticks = -dt.secsTo( QDateTime( QDate( 1970, 1, 1 ), QTime( 0, 0 ) ) );
 
   return QString::number( ticks ) + "000";
 }
@@ -129,7 +129,7 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
 {
   QDateTime utc = KPimPrefs::localTimeToUtc( dt, timeZoneId );
 
-  uint ticks = utc.toTime_t();
+  uint ticks = -utc.secsTo( QDateTime( QDate( 1970, 1, 1 ), QTime( 0, 0 ) ) );
 
   return QString::number( ticks ) + "000";
 }
