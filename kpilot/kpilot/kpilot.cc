@@ -896,7 +896,7 @@ static KCmdLineOptions kpilotoptions[] = {
 // kpilot still does a setup the first time it is run.
 //
 //
-int run_mode = 0;
+enum { Normal, ConfigureKPilot, ConfigureConduits, ConfigureAndContinue } run_mode = Normal;
 
 
 int main(int argc, char **argv)
@@ -939,11 +939,11 @@ int main(int argc, char **argv)
 
 	if (p->isSet("setup"))
 	{
-		run_mode = 's';
+		run_mode = ConfigureKPilot;
 	}
 	if (p->isSet("conduit-setup"))
 	{
-		run_mode = 'c';
+		run_mode = ConfigureConduits;
 	}
 
 	if (!KUniqueApplication::start())
@@ -957,10 +957,17 @@ int main(int argc, char **argv)
 	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		run_mode = 'S';
+		kdWarning() << ": KPilot configuration version "
+			<< KPilotConfig::ConfigurationVersion
+			<< " newer than stored version "
+			<< c.getVersion() << endl;
+		// Only force a reconfigure and continue if the
+		// user is expecting normal startup. Otherwise,
+		// do the configuration they're explicitly asking for.
+		if (Normal==run_mode) run_mode = ConfigureAndContinue;
 	}
 
-	if (run_mode == 'c')
+	if (run_mode == ConfigureConduits)
 	{
 		ConduitConfigDialog *cs = new ConduitConfigDialog(0L,0L,true);
 		int r = cs->exec();
@@ -975,7 +982,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if ((run_mode == 's') || (run_mode == 'S'))
+	if ((run_mode == ConfigureKPilot) || (run_mode == ConfigureAndContinue))
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
@@ -987,7 +994,7 @@ int main(int argc, char **argv)
 			"configDialog", true);
 		int r = options->exec();
 
-		if (run_mode == 's')
+		if (run_mode == ConfigureKPilot)
 		{
 			if (!r)
 			{
