@@ -403,7 +403,7 @@ void KNArticleManager::verifyPGPSignature(KNArticle* a)
   if (pgp->goodSignature()) {
     QString signer = pgp->signedBy();
     QString key = pgp->signedByKey();
-    KMessageBox::sorry(knGlobals.topWidget,i18n("The signature is valid.\nThe message was signed by %1.").arg(signer));
+    KMessageBox::information(knGlobals.topWidget,i18n("The signature is valid.\nThe message was signed by %1.").arg(signer));
   }
   else {
     KMessageBox::error(knGlobals.topWidget,i18n("This signature is invalid!"));
