@@ -84,7 +84,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
 
     // alarm
     KCal::Alarm *al = new KCal::Alarm( event );
-    al->setOffset( e.attribute("alarm").toInt() * -60 );
+    al->setStartOffset( e.attribute("alarm").toInt() * -60 );
     al->setAudioAlarm( e.attribute("sound") );
     event->addAlarm( al );
 

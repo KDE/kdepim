@@ -60,7 +60,7 @@ QString MetaDatebook::string( KSync::EventSyncEntry* ev) {
     /* Alarms here */
 /*    KCal::Alarm* al = event->alarms().first();
     if ( al != 0 ) {
-        int sec = al->offset().asSeconds();
+        int sec = al->startOffset().asSeconds();
         string += QString::number( sec );
         string += al->audioFile();
     }

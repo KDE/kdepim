@@ -84,11 +84,11 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     /* there is an alarm */
     if (!alarm.isEmpty() ) {
         KCal::Alarm *al = new KCal::Alarm( event );
-        al->setOffset( alarm.toInt() * -60 );
+        al->setStartOffset( alarm.toInt() * -60 );
         al->setAudioAlarm( e.attribute("sound") );
         event->addAlarm( al );
 
-        kdDebug(5229) << "Alarm offset " << al->offset().asSeconds() << endl;
+        kdDebug(5229) << "Alarm offset " << al->startOffset().asSeconds() << endl;
         kdDebug(5229) << "Alarm " << e.attribute("alarm") << " " << e.attribute("sound") << endl;
     }
 
@@ -336,7 +336,7 @@ QString DateBook::event2string( KCal::Event *event )
     // alarm
     KCal::Alarm *al = event->alarms().first();
     if ( al != 0 ) {
-        int sec = al->offset().asSeconds();
+        int sec = al->startOffset().asSeconds();
         sec = sec > 0 ? sec % 60 : sec % -60; // as minutes now
 	if( sec != 0 ){
             str.append( "alarm=\"" +QString::number( sec )  + "\" ");

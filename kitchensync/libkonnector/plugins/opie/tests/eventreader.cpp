@@ -73,7 +73,7 @@ int main(int argc, char *argv[] )
       KCal::Alarm* alE;
       for ( alE = al.first(); alE != 0; alE = al.next() ) {
           kdDebug() << "Alarm Text: " << alE->text() << endl;
-          kdDebug() << "Alarm Offset: " << (alE->offset().asSeconds() / -60 ) << endl;
+          kdDebug() << "Alarm Offset: " << (alE->startOffset().asSeconds() / -60 ) << endl;
           kdDebug() << "Alarm File: " << alE->audioFile() << endl;
       }
       KCal::Recurrence* rec = entry->incidence()->recurrence();
