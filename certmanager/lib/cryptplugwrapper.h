@@ -41,8 +41,11 @@
  *  for sources and binaries goto http://www.doxygen.org/index.html       *
  *                                                                        *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
                                                                           *
                                                                           */
+#include <kdemacros.h>
+
 #include <kleo/cryptobackend.h>
 #include "cryptplug.h"
 
@@ -1065,14 +1068,14 @@ public:
       also be encrypted using the sender's certificate to enable her/him
       to read these messages later.
     */
-    void setAlwaysEncryptToSelf( bool );
+    void setAlwaysEncryptToSelf( bool ) KDE_DEPRECATED;
 
     /*! \ingroup groupConfigCrypt
       \brief Returns whether messages outgoing in encrypted form should
       also be encrypted using the sender's certificate to enable her/him
       to read these messages later.
     */
-    bool alwaysEncryptToSelf();
+    bool alwaysEncryptToSelf() KDE_DEPRECATED;
 
 
     /*! \ingroup groupConfigCrypt
