@@ -1,30 +1,29 @@
+#include <iostream>
+
 #include <sys/time.h>
 #include <sys/utsname.h>
 #include <unistd.h>
 
-#include "KabEntity.h"
-#include "KabAddressBook.h"
-#include "KabBackend.h"
+#include <KabEntity.h>
+#include <KabAddressBook.h>
+#include <KabBackend.h>
 
 using namespace KAB;
 
-bool Entity::initialised_ = false;
-unsigned long int Entity::SEQ = 0;
+bool      Entity::initialised_  (false);
+Q_UINT32  Entity::SEQ           (0);
+QString   Entity::hostName_;
+QString   Entity::timeStr_;
+QString   Entity::pidStr_;
 
-QString Entity::hostName_;
-QString Entity::timeStr_;
-QString Entity::pidStr_;
-
-Entity::Entity(EntityType type, AddressBook & ab, const QString & name)
+Entity::Entity(EntityType type, const QString & name)
   : name_(name),
-    addressBook_(&ab),
     type_(type),
     dirty_(false),
     seq_(SEQ++)
 {
   if (!initialised_) { _init(); initialised_ = true; }
   _generateID();
-  addressBook_->add(this);
 }
 
   void
@@ -56,16 +55,17 @@ Entity::_generateID()
 }
 
   bool
-Entity::write(const QCString & key, backendWrite * writer) const
+Entity::write(const QCString & key, backendWrite * writer)
 {
   QByteArray a;
   
   QDataStream str(a, IO_WriteOnly);
-  str << *this;
+  save(str);
   
   bool retval =
   (*writer)(key, a);
   
+  dirty_ = false;
   return retval;
 }
 
@@ -79,28 +79,38 @@ Entity::read(const QCString & key, backendRead * reader)
     return false;
   
   QDataStream str(a, IO_ReadOnly);
-  str >> *this;
+  load(str);
   
   return true;
 }
 
-  QDataStream &
-KAB::operator << (QDataStream & str, const Entity & e)
+  void
+Entity::save(QDataStream & str)
 {
-  str << e.name_ << e.xValues_ << (int)e.type_ << (int)(e.seq_);
-  return str;
+  str << name_;
+  str << xValues_.count();
+  XValueList::Iterator it(xValues_.begin());
+  for (; it != xValues_.end(); ++it)
+    (*it).save(str);
+  str << (int)type_ << (int)(seq_);
 }
  
-  QDataStream &
-KAB::operator >> (QDataStream & str, Entity & e)
+  void
+Entity::load(QDataStream & str)
 {
-  str >> e.name_ >> e.xValues_;
+  str >> name_;
+  int xValCount;
+  str >> xValCount;
+  for (int i = 0; i < xValCount; i++) {
+    XValue x;
+    x.load(str);
+    xValues_.append(x);
+  }
   int i;
   str >> i;
-  e.type_ = (EntityType)i;
+  type_ = (EntityType)i;
   str >> i;
-  e.seq_ = i;
-  return str;
+  seq_ = i;
 }
 
 

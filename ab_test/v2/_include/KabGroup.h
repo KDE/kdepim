@@ -16,10 +16,8 @@ class Group : public Member
     {
     }
  
-    Group(AddressBook & pab,
-      const QString & name, const QString & parentID = QString::null)
-      : Member(EntityTypeGroup, pab, name),
-        parentGroup_(parentID)
+    Group(const QString & name)
+      : Member(EntityTypeGroup, name)
     {
       // Empty.
     }
@@ -27,9 +25,7 @@ class Group : public Member
     Group(const Group & o)
       : Member            (o),
         subGroupRefList_  (o.subGroupRefList_),
-        members_          (o.members_   ),
-        parentGroup_      (o.parentGroup_)
- 
+        members_          (o.members_)
     {
       // Empty.
     }
@@ -45,7 +41,6 @@ class Group : public Member
       
       subGroupRefList_  = o.subGroupRefList_;
       members_          = o.members_;
-      parentGroup_      = o.parentGroup_;
 
       Entity::operator = (o);
       
@@ -59,23 +54,8 @@ class Group : public Member
         (xValues_         == o.xValues_         ));
     }
     
-    Group * parent() const
-    {
-      if (!parentGroup_)
-        return 0;
-      Entity * e = addressBook()->entity(parentGroup_);
-      return e ? (Group *)e : 0;
-    }
-    GroupRefList   subGroupList() const { return subGroupRefList_;  }
-    MemberRefList  members()      const { return members_;          }
-    MemberRefList  allMembers()   const
-    {
-      MemberRefList l(members_);
-      GroupRefList::ConstIterator it(subGroupRefList_.begin());
-      for (; it != subGroupRefList_.end(); ++it)
-        l += ((Group *)(addressBook_->entity(*it)))->allMembers();
-      return l;
-    }
+    GroupRefList    subGroupList()  const { return subGroupRefList_;  }
+    MemberRefList   members()       const { return members_;          }
     
     void setMembers       (const MemberRefList    & l)
     { touch(); members_ = l; }
@@ -95,32 +75,27 @@ class Group : public Member
     void addSubGroup(const Group & g)
     { touch(); subGroupRefList_.append(g.id()); }
     
-    friend QDataStream & operator << (QDataStream &, const Group &);
-    friend QDataStream & operator >> (QDataStream &, Group &);
+    virtual void save(QDataStream & str);
+    virtual void load(QDataStream & str);
     
-    bool isTopLevel() { return parentGroup_.isEmpty(); }
-
   private:
     
     GroupRefList  subGroupRefList_;
     MemberRefList members_;
-    GroupRef      parentGroup_;
 };
     
-  QDataStream &
-operator << (QDataStream & str, const Group & g)
+  void
+Group::save(QDataStream & str)
 {
-  str << g.subGroupRefList_ << g.members_ << g.parentGroup_;
-  operator << (str, *((Member *)&g));
-  return str;
+  Member::save(str);
+  str << subGroupRefList_ << members_;
 }
     
-  QDataStream &
-operator >> (QDataStream & str, Group & g)
+  void
+Group::load(QDataStream & str)
 {
-  str >> g.subGroupRefList_ >> g.members_ >> g.parentGroup_;
-  operator >> (str, *((Member *)&g));
-  return str;
+  Member::load(str);
+  str >> subGroupRefList_ >> members_;
 }
 
 } // End namespace KAB

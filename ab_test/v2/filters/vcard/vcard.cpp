@@ -38,7 +38,7 @@ int import(const char * _str, KAB::AddressBook * ab)
     
     VCard & v = *it.current();
     
-    KAB::Person * p = new KAB::Person(*ab, "As yet undefined");
+    KAB::Person * p = new KAB::Person("As yet undefined");
       
     KAB::PersonalName pn;
     
@@ -149,14 +149,14 @@ int import(const char * _str, KAB::AddressBook * ab)
       }
       
       if (!found) {
-        KAB::Group * g = new KAB::Group(*ab, orgStr);
+        KAB::Group * g = new KAB::Group(orgStr);
         ((KAB::Group *)g)->addMember(*p);
-        ab->update(g);
+        ab->write(g);
       }
       
     }
     
-    ab->update(p);
+    ab->write(p);
     
     ++imported;
   }

@@ -68,8 +68,8 @@ class Comms
     void setTalk    (const TalkAddress  & a) { talk_      = a; }
     void setXValues (const XValueList   & l) { xValues_   = l; }
 
-    friend QDataStream & operator << (QDataStream &, const Comms &);
-    friend QDataStream & operator >> (QDataStream &, Comms &);
+    virtual void save(QDataStream &);
+    virtual void load(QDataStream &);
 
   private:
     
@@ -80,20 +80,6 @@ class Comms
     XValueList    xValues_;
 };
 
-
-  QDataStream &
-operator << (QDataStream & str, const Comms & c)
-{
-  str << c.email_ << c.tel_ << c.fax_ << c.talk_ << c.xValues_;
-  return str;
-}
-  
-  QDataStream &
-operator >> (QDataStream & str, Comms & c)
-{
-  str >> c.email_ >> c.tel_ >> c.fax_ >> c.talk_ >> c.xValues_;
-  return str;
-}
 
 } // End namespace KAB
 

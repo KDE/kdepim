@@ -84,8 +84,8 @@ class PersonalName
     void  setSuffixes     (const QStringList & l) { suffixes_     = l; }
     void  setXValues      (const XValueList  & l) { xValues_      = l; }
     
-    friend QDataStream & operator << (QDataStream &, const PersonalName &);
-    friend QDataStream & operator >> (QDataStream &, PersonalName &);
+    virtual void save(QDataStream & str);
+    virtual void load(QDataStream & str);
 
   private:
     
@@ -98,23 +98,6 @@ class PersonalName
     QStringList   suffixes_;
     XValueList    xValues_;
 };
-
-  QDataStream &
-operator << (QDataStream & str, const PersonalName & n)
-{
-  str << n.displayName_ << n.firstName_ << n.lastName_ << n.otherNames_
-    << n.nickName_ << n.prefixes_ << n.suffixes_ << n.xValues_;
-  return str;
-}
-
-  QDataStream &
-operator >> (QDataStream & str, PersonalName & n)
-{
-  str >> n.displayName_ >> n.firstName_ >> n.lastName_ >> n.otherNames_
-    >> n.nickName_ >> n.prefixes_ >> n.suffixes_ >> n.xValues_;
-  return str;
-}
-
 
 } // End namespace KAB
 

@@ -21,7 +21,6 @@ class Entity
     
     Entity()
       : name_         ("unknown"),
-        addressBook_  (0),
         type_         (EntityTypeEntity),
         dirty_        (false),
         seq_          (SEQ++)
@@ -35,12 +34,11 @@ class Entity
     {
     }
     
-    Entity(EntityType type, AddressBook & parentAB, const QString & name);
+    Entity(EntityType type, const QString & name);
     
     Entity(const Entity & e)
       : id_           (e.id_          ),
         name_         (e.name_        ),
-        addressBook_  (e.addressBook_ ),
         xValues_      (e.xValues_     ),
         dirty_        (e.dirty_       ),
         seq_          (SEQ++          )
@@ -57,7 +55,6 @@ class Entity
     {
       if (this == &e) return *this;
       id_           = e.id_;
-      addressBook_  = e.addressBook_;
       xValues_      = e.xValues_;
       type_         = e.type_;
       dirty_        = e.dirty_;
@@ -67,39 +64,27 @@ class Entity
     }
     
     bool operator == (const Entity & e) const
-    {
-      return (
-        (id_      == e.id_      ) &&
-        (xValues_ == e.xValues_ ));
-    }
+    { return ((id_ == e.id_) && (xValues_ == e.xValues_)); }
     
-    UniqueID  id() const { return id_; }
+    UniqueID      id          () const                { return id_;           }
+    QString       name        () const                { return name_;         }
+    EntityType    type        () const                { return type_;         }
     
-    void setID(const UniqueID & id)
-    { touch(); id_ = id; }
+    void          setID       (const UniqueID & id)   { touch(); id_ = id;    }
+    void          setName     (const QString & s)     { touch(); name_ = s;   }
     
-    QString   name() const { return name_; }
+    XValueList    xValues     () const                { return xValues_;      }
+    void          setXValues  (const XValueList & l)  { touch(); xValues_ = l;} 
     
-    void setName(const QString & name)
-    { touch(); name_ = name; }
+    bool          isDirty()                           { return dirty_;        }
+    void          setClean()                          { dirty_ = false;       }
+    void          touch()                             { dirty_ = true;        }
     
-    EntityType type() const { return type_; }
+    bool          write       (const QCString &, backendWrite *);
+    bool          read        (const QCString &, backendRead *);
     
-    bool isDirty()  { return dirty_; }
-    void setClean() { dirty_ = false;}
-    void touch()    { dirty_ = true; }
-    
-    AddressBook * addressBook() const { return addressBook_; }
-    
-    XValueList    xValues()       const { return xValues_;      }
-    void setXValues       (const XValueList     & l)
-    { touch(); xValues_ = l; } 
-    
-    bool write(const QCString &, backendWrite *) const;
-    bool read(const QCString &, backendRead *);
-
-    friend QDataStream & operator << (QDataStream &, const Entity &);
-    friend QDataStream & operator >> (QDataStream &, Entity &);
+    virtual void save(QDataStream &);
+    virtual void load(QDataStream &);
 
   protected:
     
@@ -107,7 +92,6 @@ class Entity
 
     // Order dependency
     QString       name_;
-    AddressBook   * addressBook_;
     XValueList    xValues_;
     
   private:
@@ -117,15 +101,15 @@ class Entity
     unsigned long int seq_;
     // End order dependency
 
-    void _init();
-    void _generateID();
+    static bool     initialised_;
+    static Q_UINT32 SEQ;
     
-    static bool               initialised_;
-    static unsigned long int  SEQ;
+    static QString  hostName_;
+    static QString  timeStr_;
+    static QString  pidStr_;
     
-    static QString hostName_;
-    static QString timeStr_;
-    static QString pidStr_;
+    void            _init();
+    void            _generateID();
 };
 
 typedef QDict<Entity> EntityDict;

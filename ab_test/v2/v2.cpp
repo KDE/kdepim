@@ -1,3 +1,4 @@
+#include <iostream>
 #include <qfile.h>
 
 #include "KabEnum.h"
@@ -66,8 +67,8 @@ create(KAB::AddressBook & ab)
 
  // Create some people.
 
-  Person rik(ab, "It's Rik Hemsley");
-  Person don(ab, "It's Don Sanders");
+  Person rik("It's Rik Hemsley");
+  Person don("It's Don Sanders");
   
   // Create personal names for these people and assign them to the 'Person'
   // objects.
@@ -116,12 +117,12 @@ create(KAB::AddressBook & ab)
   // Create two groups. One is the KDE Organisation, the other
   // is a fictional company called [[without]] software.
 
-  Group theKDEOrganisation(ab, "The KDE Organisation");
-  Group withoutSoftware   (ab, "[[without]] software");
+  Group theKDEOrganisation("The KDE Organisation");
+  Group withoutSoftware   ("[[without]] software");
 
   // Create a subgroup for each group.
-  Group PIMTeam           (ab, "The PIM team", theKDEOrganisation.id());
-  Group withoutDirectors  (ab, "Directors", withoutSoftware.id());
+  Group PIMTeam           ("The PIM team");
+  Group withoutDirectors  ("Directors");
   
   // Add persons to subgroups.
   PIMTeam.addMember         (rik);
@@ -134,13 +135,17 @@ create(KAB::AddressBook & ab)
   // Add the withoutDirectors subgroup to the withoutSoftware group.
   withoutSoftware   .addSubGroup(withoutDirectors.id());
   
-  cerr << "Finished creating database" << endl;
+  ab.write(&theKDEOrganisation);
+  ab.write(&withoutSoftware);
+  ab.write(&PIMTeam);
+  ab.write(&withoutDirectors);
+  ab.write(&rik);
+  ab.write(&don);
 }
   void
 print(KAB::AddressBook & ab)
 {
   using namespace KAB;
-  cerr << "Printing database" << endl;
 
   // First let's show the names of all entities.
   
@@ -148,73 +153,48 @@ print(KAB::AddressBook & ab)
   cerr << "List of all entities" << endl;
   cerr << "----------------------------------------------------------" << endl;
 
-  QStrList l = ab.allKeys();
+  QStrList allKeys = ab.allKeys();
   
-  cerr << "There are " << l.count() << " keys in the db" << endl;
-  
-  QStrListIterator it(l);
+  QStrListIterator allIt(allKeys);
  
-  for (; it.current(); ++it) {
-    Entity * e = ab.entity(it.current());
-    cerr << "Entity: " << e->name() << endl;
+  for (; allIt.current(); ++allIt) {
+    Entity * e = ab.entity(allIt.current());
+    cerr << "* " << e->name() << endl;
     delete e;
     e = 0;
   }
   
   cerr << "----------------------------------------------------------" << endl;
-  cerr << "List of all toplevel groups and their members (recursive)" << endl;
+  cerr << "List of all toplevel groups and their members to one level" << endl;
   cerr << "----------------------------------------------------------" << endl;
   
   // Now let's try to do a little tree view of group, member.
   // To start with, we want all toplevel groups.
-  // Instead of traversing the tree of groups and subgroups ourselves
-  // we'll simply ask each toplevel group for all members. The group
-  // will recurse through its subgroups and get references to all members.
-  // 
-  // What we're getting here is the names of each toplevel group and then
-  // the names of every member of that group and its subgroups.
-  // 
-  // Note: There isn't actually a recursive function in the code :)
 
-  QStrList l2 = ab.keysOfType(EntityTypeGroup);
+  QStrList topLevels = ab.topLevelGroups();
   
-  QStrListIterator it2(l2);
+  QStrListIterator topLevelIt(topLevels);
   
-  for (; it2.current(); ++it2) {
+  for (; topLevelIt.current(); ++topLevelIt) {
     
-    // Safe to cast here as we've been told that we're looking at groups only.
+    Group * g = ab.group(topLevelIt.current());
+    
+    if (g == 0) continue;
+    
+    cerr << "* " << g->name() << endl;
 
-    Entity * e = ab.entity(it2.current());
-    
-    ASSERT(e != 0);
-    
-    Group * g = (Group *)e;
-    
-    // We don't want non-toplevel groups.
-    if (!g->isTopLevel()) {
-      delete e;
-      e = 0;
-      continue;
-    }
-    
-    cerr << "Toplevel group: " << g->name() << endl;
-
-    // Now get the list of all members of this group and its subgroups.    
-    MemberRefList members = g->allMembers();
-    
-    cerr << "This group has " << members.count() << " members" << endl;
+    // Now get the list of all members of this group.    
+    MemberRefList members = g->subGroupList();
     
     MemberRefList::ConstIterator mit(members.begin());
     
     for (; mit != members.end(); ++mit) {
       
-      Entity * e2 = ab.entity(*mit);
+      Member * m = ab.member(*mit);
       
-      ASSERT (e2 != 0);
+      if (m == 0) continue;
       
-      Member * m = (Member *)e2;
-      
-      cerr << "  Member: " << m->name() << endl;
+      cerr << "|-> " << m->name() << endl;
       
       XValueList xValues = m->xValues();
       
@@ -224,15 +204,14 @@ print(KAB::AddressBook & ab)
         cerr << "    XValue: " << (*xit).name() << ": " <<
           (*xit).data() << endl;
      
-      delete e2;
-      e2 = 0; 
+      delete m;
+      m = 0;
     }
     
-    delete e;
-    e = 0;
+    delete g;
+    g = 0;
   }
-  
-  cerr << "Finished printing database" << endl;
+  cerr << "----------------------------------------------------------" << endl;
 }
 
   void
@@ -274,7 +253,9 @@ testImport(KAB::AddressBook & ab)
     Entity * e = ab.entity(it.current());
     ASSERT(e != 0);
     
-    if (e->type() == "person") {
+    cerr << "This entity is of type " << e->type() << endl;
+    
+    if (e->type() == EntityTypePerson) {
    
       // Name of the entity.
       
@@ -312,49 +293,32 @@ testImport(KAB::AddressBook & ab)
       cerr << "  Email address: name: '" << p->contactInfo().email().name()
         << "' domain: '" << p->contactInfo().email().domain() << "'" << endl;
       
-    } else if (e->type() == "group") {
+    } else if (e->type() == EntityTypeGroup) {
       
-      QStrList l = ab.keysOfType(EntityTypeGroup);
-  
-      QStrListIterator it(l);
+      Group * g = (Group *)e;
       
-      for (; it.current(); ++it) {
-        
-        Entity * e = ab.entity(it.current());
-        
-        ASSERT(e != 0);
-        
-        Group * g = (Group *)e;
-        
-        // We don't want non-toplevel groups.
-        if (!g->isTopLevel())
-          continue;
-        
-        cerr << "Toplevel group: " << g->name() << endl;
-        cerr << "Group's parent: " << g->parent()->name() << endl;
+      cerr << "Toplevel group: " << g->name() << endl;
 
-        // Now get the list of all members of this group and its subgroups.    
-        MemberRefList members = g->allMembers();
+      // Now get the list of all members of this group and its subgroups.    
+      MemberRefList members = g->subGroupList();
+      
+      MemberRefList::ConstIterator mit(members.begin());
+      
+      for (; mit != members.end(); ++mit) {
         
-        MemberRefList::ConstIterator mit(members.begin());
+        Member * m = ab.member(*mit);
+
+        if (m == 0) continue;
         
-        for (; mit != members.end(); ++mit) {
-          
-          Entity * xe = ab.entity(*mit);
-          ASSERT(xe != 0);
-          
-          Member * m = (Member *)xe;
-          
-          cerr << "  Member: " << m->name() << endl;
-          
-          XValueList xValues = m->xValues();
-          
-          XValueList::ConstIterator xit(xValues.begin());
-          
-          for (; xit != xValues.end(); ++xit)
-            cerr << "    XValue: " << (*xit).name() << ": " <<
-              (*xit).data() << endl; 
-        }
+        cerr << "  Member: " << m->name() << endl;
+        
+        XValueList xValues = m->xValues();
+        
+        XValueList::ConstIterator xit(xValues.begin());
+        
+        for (; xit != xValues.end(); ++xit)
+          cerr << "    XValue: " << (*xit).name() << ": " <<
+            (*xit).data() << endl; 
       }
     }
     

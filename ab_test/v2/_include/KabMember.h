@@ -17,8 +17,8 @@ class Member : public Entity
     {
     }
     
-    Member(EntityType type, AddressBook & pab, const QString & name)
-      : Entity(type, pab, name)
+    Member(EntityType type, const QString & name)
+      : Entity(type, name)
     {
       // Empty.
     }
@@ -58,30 +58,13 @@ class Member : public Entity
     void setContactInfo   (const Comms & c)
     { touch(); contactInfo_ = c; }
 
-    friend QDataStream & operator << (QDataStream &, const Member &);
-    friend QDataStream & operator >> (QDataStream &, Member &);
+    virtual void save(QDataStream & str);
+    virtual void load(QDataStream & str);
     
   protected:
     
     Comms         contactInfo_;
 };
-
-  QDataStream &
-operator << (QDataStream & str, const Member & m)
-{
-  str << m.contactInfo_;
-  operator << (str, *((Entity *)&m));
-  return str;
-}
-
-  QDataStream &
-operator >> (QDataStream & str, Member & m)
-{
-  str >> m.contactInfo_;
-  operator >> (str, *((Entity *)&m));
-  return str;
-}
-
 } // End namespace KAB
 
 #endif

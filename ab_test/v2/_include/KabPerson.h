@@ -19,8 +19,8 @@ class Person : public Member
     {
     }
 
-    Person(AddressBook & pab, const QString & name)
-      : Member(EntityTypePerson, pab, name)
+    Person(const QString & name)
+      : Member(EntityTypePerson, name)
     {
       // Empty.
     }
@@ -81,9 +81,9 @@ class Person : public Member
     void setNotes       (const QString        & s)
     { touch(); notes_ = s; }
     
-    friend QDataStream & operator << (QDataStream &, const Person &);
-    friend QDataStream & operator >> (QDataStream &, Person &);
-
+    virtual void save(QDataStream & str);
+    virtual void load(QDataStream & str);
+    
   private:
  
     PersonalName    pname_;
@@ -91,26 +91,6 @@ class Person : public Member
     Gender          gender_;
     QString         notes_;
 };
-
-  QDataStream &
-operator << (QDataStream & str, const Person & p)
-{
-  str << p.pname_ << p.comms_ << (int)p.gender_ << p.notes_;
-  operator << (str, *((Member *)&p));
-  return str;
-}
-
-  QDataStream &
-operator >> (QDataStream & str, Person & p)
-{
-  str >> p.pname_ >> p.comms_;
-  int i;
-  str >> i;
-  p.gender_ = (Gender)i;
-  str >> p.notes_;
-  operator >> (str, *((Member *)&p));
-  return str;
-}
 
 
 } // End namespace KAB

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "KabGDBMBackend.h"
 
 extern "C" {
@@ -14,7 +13,6 @@ KabGDBMBackend * backend = 0;
   void
 KabBackendInit(const KURL & url)
 {
-  cerr << "KabBackendInit" << endl;
   backend = new KabGDBMBackend;
   backend->init(url);
 }

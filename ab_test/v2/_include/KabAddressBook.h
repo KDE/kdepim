@@ -10,6 +10,11 @@
 namespace KAB
 {
  
+class Person;
+class Location;
+class Member;
+class Group;
+    
 class AddressBook
 {
   public:
@@ -37,15 +42,38 @@ class AddressBook
      */
     ~AddressBook();
     /**
-     *  Find the entity with the specified id.
-     *  @returns 0 if not found, else a pointer to the found entity.
+     *  Find the Entity with the specified key.
+     *  @returns 0 if not found, else a pointer to the found Entity.
      */
-    Entity * entity(const QString &);
+    Entity    * entity    (const QString & key);
+    /**
+     *  Find the Person with the specified id.
+     *  @returns 0 if not found, else a pointer to the found Person.
+     */
+    Person    * person    (const QString & key);
+    /**
+     *  Find the Location with the specified key.
+     *  @returns 0 if not found, else a pointer to the found Location.
+     */
+    Location  * location  (const QString & key);
+    /**
+     *  Find the Member with the specified key.
+     *  @returns 0 if not found, else a pointer to the found Member.
+     */
+    Member    * member    (const QString & key);
+    /**
+     *  Find the Group with the specified key.
+     *  @returns 0 if not found, else a pointer to the found Group.
+     */
+    Group     * group     (const QString & key);
+    
     QStrList keysOfType(EntityType);
+
+    QStrList topLevelGroups();
     /**
      * Add a new entity. The entity will be copied so you may delete it.
      */
-    void add(const Entity *);
+    void write(Entity *);
     /**
      * Delete an entity.
      * @returns true if the entity existed, false if not.
@@ -55,6 +83,10 @@ class AddressBook
      * Replace an entity.
      */
     void update(Entity *);
+    /**
+     * Write any touched entities.
+     */
+    void write();
     /**
      * Import entries from another addressbook.
      * @arg format the format the addressbook is stored in. Currently only

@@ -1,4 +1,5 @@
 #include <qstring.h>
+#include <qdatastream.h>
 
 #ifndef KAB_LOCATION_H
 #define KAB_LOCATION_H
@@ -15,8 +16,8 @@ class Location : public Entity
     {
     }
 
-    Location(AddressBook & pab, const QString & name)
-      : Entity(EntityTypeLocation, pab, name)
+    Location(const QString & name)
+      : Entity(EntityTypeLocation, name)
     {
       // Empty.
     }
@@ -92,9 +93,9 @@ class Location : public Entity
     void  setPostCode         (const QString       & s)
     { touch(); postCode_ = s; }
     
-    friend QDataStream & operator << (QDataStream &, const Location &);
-    friend QDataStream & operator >> (QDataStream &, Location &);
-    
+    virtual void save(QDataStream & str);
+    virtual void load(QDataStream & str);
+
   private:
     
     LocationType  type_;
@@ -105,32 +106,6 @@ class Location : public Entity
     QString       postCode_;
     PersonRefList connectedPersons_;
 };
-
-  QDataStream &
-operator << (QDataStream & str, const Location & l)
-{  
-  str << (int)l.type_ << l.typeName_ << l.streetAddress_ << l.area_ 
-    << l.country_ << l.postCode_ << l.connectedPersons_;
-  
-  operator << (str, *((Entity *)&l));
-  
-  return str;
-}
-
-  QDataStream &
-operator >> (QDataStream & str, Location & l)
-{
-  int i;
-  str >> i;
-  l.type_ = (LocationType)i;
-
-  str >> l.typeName_ >> l.streetAddress_ >> l.area_ >> l.country_
-      >> l.postCode_ >> l.connectedPersons_;
- 
-  operator >> (str, *((Entity *)&l));
-  
-  return str;
-}
 
 } // End namespace KAB
 
