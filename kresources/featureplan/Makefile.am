@@ -31,12 +31,12 @@ check_PROGRAMS = dumpfeaturelist benchmarkfeaturelist
 dumpfeaturelist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 dumpfeaturelist_LDADD   = libfeatureplancommon.la $(LIB_KDECORE)
 dumpfeaturelist_SOURCES = dumpfeaturelist.cpp
-dumpfeatuelist_COMPILE_FIRST = kde-features.h
+dumpfeaturelist_COMPILE_FIRST = kde-features.h
 
 benchmarkfeaturelist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 benchmarkfeaturelist_LDADD   = libfeatureplancommon.la $(LIB_KDECORE)
 benchmarkfeaturelist_SOURCES = benchmarkfeaturelist.cpp
-benchmarkfeatuelist_COMPILE_FIRST = kde-features.h
+benchmarkfeaturelist_COMPILE_FIRST = kde-features.h
 
 kde-features.cpp: kde-features.h
 kde-features_parser.h kde-features_parser.cpp: kde-features.h
