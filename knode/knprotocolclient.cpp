@@ -223,7 +223,6 @@ bool KNProtocolClient::openConnection()
     struct hostent* hostData = gethostbyname(account.server().local8Bit().data());
 
     if (NULL==hostData) {
-      perror("connect(): ");
       job->setErrorString(i18n("Unable to resolve hostname"));
       closeSocket();
       return false;
