@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "konsolekalendarvariables.h"
+namespace KCal
+{
 
 class KonsoleKalendarAdd
 {
@@ -33,4 +35,5 @@ private:
    
 };
 
+}
 #endif
