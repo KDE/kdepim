@@ -78,9 +78,7 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
       return false;
     }
     ::fcntl( d->statusFD[0], F_SETFD, FD_CLOEXEC );
-    // don't ask me why we don't need this.
-    // "gpgme doesn't do it and it doesn't work otherwise" would be my answer :)
-    //::fcntl( d->statusFD[1], F_SETFD, FD_CLOEXEC );
+    ::fcntl( d->statusFD[1], F_SETFD, FD_CLOEXEC );
     if ( !arguments.empty() ) {
       QValueList<QCString>::iterator it = arguments.begin();
       ++it;
@@ -118,7 +116,7 @@ int Kleo::GnuPGProcessBase::commSetupDoneP() {
 
 int Kleo::GnuPGProcessBase::commSetupDoneC() {
   if ( d->useStatusFD )
-    ::close( d->statusFD[0] ); // close the output end of the pipe, we're the writer
+    ::fcntl( d->statusFD[1], F_SETFD, 0 );
   return KProcess::commSetupDoneC();
 }
 
