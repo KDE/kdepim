@@ -2211,7 +2211,6 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   memL->setColStretch(0,1);
 
 
-  /*
   // disk
   QGroupBox *diskGB=new QGroupBox(i18n("Disk cache"), this);
   topL->addWidget(diskGB);
@@ -2238,7 +2237,7 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   // init
   m_emMaxArt->setValue(d->memoryMaxArticles());
   m_emMaxKB->setValue(d->memoryMaxKBytes());
-  /*d_iskMaxArt->setValue(d->diskMaxArticles());
+  d_iskMaxArt->setValue(d->diskMaxArticles());
   d_iskMaxKB->setValue(d->diskMaxKBytes());
 }
 
@@ -2253,7 +2252,7 @@ void KNConfig::CacheWidget::apply()
   d_ata->m_emMaxArt=m_emMaxArt->value();
   d_ata->m_emMaxKB=m_emMaxKB->value();
 
-  /*d_ata->d_iskMaxArt=d_iskMaxArt->value();
+  d_ata->d_iskMaxArt=d_iskMaxArt->value();
   d_ata->d_iskMaxKB=d_iskMaxKB->value();
 
   d_ata->save();
