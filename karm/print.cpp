@@ -39,7 +39,7 @@ void MyPrinter::print()
     // totals are increased together with its children.
     int totalTotal = 0;
     int sessionTotal = 0;
-    for (Task* task = _taskView->first_child();
+    for (Task* task = static_cast<Task *>(_taskView->first_child());
                task;
                task = static_cast<Task *>(task->nextSibling())) {
       totalTotal += task->time();
@@ -56,9 +56,9 @@ void MyPrinter::print()
     
     int maxReqNameFieldWidth= metrics.width(i18n("Task Name "));
     
-    for ( Task* task = _taskView->first_child();
+    for ( Task* task = static_cast<Task *>(_taskView->first_child());
           task;
-          task = task->nextSibling())
+          task = static_cast<Task *>(task->nextSibling()))
     {
       int width = calculateReqNameWidth(task, metrics, 0);
       maxReqNameFieldWidth = QMAX(maxReqNameFieldWidth, width);
@@ -92,9 +92,9 @@ void MyPrinter::print()
     yoff += 2;
     
     // Now print the actual content
-    for ( Task* task = _taskView->first_child();
+    for ( Task* task = static_cast<Task *>(_taskView->first_child());
                 task;
-                task = task->nextSibling() )
+                task = static_cast<Task *>(task->nextSibling()) )
     {
       printTask(task, painter, 0);
     }
