@@ -19,17 +19,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qdatetime.h>
-
-#include <kapp.h>
-#include <kstddirs.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <ksimpleconfig.h>
-#include <kio/netaccess.h>
-
-#include <libkcal/calendarlocal.h>
-
 #include "clientinfo.h"
 
 ClientInfo::ClientInfo(const QCString &_appName, const QString& titl,

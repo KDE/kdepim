@@ -20,21 +20,11 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <unistd.h>
-#include <stdlib.h>
-
-#include <qdatetime.h>
-
-#include <kapp.h>
 #include <kstddirs.h>
-#include <kdebug.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
 #include <knotifyclient.h>
-#include <kio/netaccess.h>
-#include <dcopclient.h>
-
-#include <libkcal/calendarlocal.h>
+#include <kdebug.h>
 
 #include "dockwindow.h"
 #include "alarmdialog.h"

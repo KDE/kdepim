@@ -1,9 +1,8 @@
 /*
-    Alarm Daemon config and client data file access.
+    Alarm Daemon client data file access.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
-    Based on the original, (c) 1998, 1999 Preston Brown
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,16 +19,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qdatetime.h>
-
-#include <kapp.h>
 #include <kstddirs.h>
 #include <kdebug.h>
-#include <klocale.h>
 #include <ksimpleconfig.h>
-#include <kio/netaccess.h>
-
-#include <libkcal/calendarlocal.h>
 
 #include "adconfigdatabase.h"
 

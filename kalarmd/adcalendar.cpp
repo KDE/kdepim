@@ -19,21 +19,7 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <unistd.h>
-#include <stdlib.h>
-
-#include <qtimer.h>
-#include <qdatetime.h>
-
-#include <kapp.h>
-#include <kstddirs.h>
 #include <kdebug.h>
-#include <klocale.h>
-#include <ksimpleconfig.h>
-#include <kio/netaccess.h>
-#include <dcopclient.h>
-
-#include <libkcal/event.h>
 
 #include "adcalendar.h"
 
