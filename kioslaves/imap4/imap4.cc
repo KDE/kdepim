@@ -66,6 +66,7 @@
 
 #include <qbuffer.h>
 #include <qdatetime.h>
+#include <qregexp.h>
 #include <kprotocolmanager.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
@@ -1782,6 +1783,10 @@ bool IMAP4Protocol::makeLogin ()
         "supported by the server.").arg(myAuth));
       closeConnection();
       return false;
+    }
+
+    if (  greeting.contains(  QRegExp(  "Cyrus IMAP4 v2.1" ) ) ) {
+      removeCapability( "ANNOTATEMORE" );
     }
 
     kdDebug(7116) << "IMAP4::makeLogin - attempting login" << endl;
