@@ -29,7 +29,7 @@ libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterface
 lib_LTLIBRARIES = libkaddressbook.la
 libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     addresseeeditorwidget.cpp addresseeutil.cpp addresseditwidget.cpp \
-    addresseditwidget.cpp addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp \
+    addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp \
     filter.cpp filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp \
     imagewidget.cpp incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp \
     kaddressbookiface.skel kaddressbookmain.cpp kaddressbookservice.cpp \
