@@ -104,6 +104,11 @@ class Todo : public Incidence
     /// Return true, if todo has a date associated with completion.
     bool hasCompletedDate() const;
     
+    /// set the todo's location
+    void setLocation(const QString &location);
+    /// return the todo's location 
+    QString location() const;
+
   private:
     bool accept(Visitor &v) { return v.visit(this); }
 
@@ -118,6 +123,8 @@ class Todo : public Incidence
     bool mHasCompletedDate;
 
     int mPercentComplete;
+    
+    QString mLocation;
 };
 
 }

@@ -68,6 +68,11 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 
   writeIncidence(vtodo,todo);
 
+  if (!todo->location().isEmpty()) {
+    icalcomponent_add_property(vtodo,icalproperty_new_location(
+        todo->location().local8Bit()));
+  }
+  
   // due date
   if (todo->hasDueDate()) {
     icaltimetype due;
@@ -121,6 +126,11 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 
   writeIncidence(vevent,event);
 
+  if (!event->location().isEmpty()) {
+    icalcomponent_add_property(vevent,icalproperty_new_location(
+        event->location().local8Bit()));
+  }
+  
   // start time
   icaltimetype start;
   if (event->doesFloat()) {
@@ -809,6 +819,11 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 	todo->setHasStartDate(true);
         break;
 
+      case ICAL_LOCATION_PROPERTY:  // location
+        text = icalproperty_get_location(p);
+        todo->setLocation(QString::fromLocal8Bit(text));
+        break;
+
       default:
 //        kdDebug(5800) << "ICALFormat::readTodo(): Unknown property: " << kind
 //                  << endl;
@@ -850,6 +865,11 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
         }
         break;
 
+      case ICAL_LOCATION_PROPERTY:  // location
+        text = icalproperty_get_location(p);
+        event->setLocation(QString::fromLocal8Bit(text));
+        break;
+        
 // TODO:
   // at this point, there should be at least a start or end time.
   // fix up for events that take up no time but have a time associated

@@ -68,6 +68,11 @@ class Event : public Incidence
     int transparency() const;
 
     void setDuration(int seconds);
+    
+    /// set the todo's location
+    void setLocation(const QString &location);
+    /// return the todo's location 
+    QString location() const;
 
   private:
     bool accept(Visitor &v) { return v.visit(this); }
@@ -75,6 +80,7 @@ class Event : public Incidence
     QDateTime mDtEnd;
     bool mHasEndDate;
     int mTransparency;
+    QString mLocation;
 };
 
 }
