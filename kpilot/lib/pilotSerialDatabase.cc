@@ -143,6 +143,12 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+	if (id>0xFFFFFF)
+	{
+		kdError() << k_funcinfo <<  " Encountered an invalid record id "
+			<<id<<endl;;
+		return 0L;
+	}
 	if (dlp_ReadRecordById(fDBSocket, getDBHandle(), id, buffer, &index,
 			&size, &attr, &category) >= 0)
 		return new PilotRecord(buffer, size, attr, category, id);
@@ -209,7 +215,7 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 	return 0L;
 }
 
-// Writes a new record to database (if 'id' == 0, one will be assigned and returned in 'newid')
+// Writes a new record to database (if 'id' == 0 or id>0xFFFFFF, one will be assigned and returned in 'newid')
 recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 {
 	FUNCTIONSETUP;
@@ -221,12 +227,22 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0;
 	}
+	// Do some sanity checking to prevent invalid UniqueIDs from being written
+	// to the handheld (RecordIDs are only 3 bytes!!!). Under normal conditions
+	// this check should never yield true, so write out an error to indicate
+	// someone messed up full time...
+	if (newRecord->getID()>0xFFFFFF)
+	{
+		kdError() << k_funcinfo << "Encountered an invalid record id "
+			<<newRecord->getID()<<", resetting it to zero.";
+		newRecord->setID(0);
+	}
 	success =
 		dlp_WriteRecord(fDBSocket, getDBHandle(),
 		newRecord->getAttrib(), newRecord->getID(),
 		newRecord->getCat(), newRecord->getData(),
 		newRecord->getLen(), &newid);
-	if (newRecord->getID() == 0)
+	if (newRecord->getID() != newid)
 		newRecord->setID(newid);
 	return newid;
 }
