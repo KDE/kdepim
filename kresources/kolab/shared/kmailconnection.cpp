@@ -89,8 +89,8 @@ bool KMailConnection::connectToKMail()
                                                    dcopService, dcopObjectId );
 
     // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString,Q_UINT32,QString)",
-                              "fromKMailAddIncidence(QString,QString,Q_UINT32,QString)" ) )
+    if ( !connectKMailSignal( "incidenceAdded(QString,QString,Q_UINT32,int,QString)",
+                              "fromKMailAddIncidence(QString,QString,Q_UINT32,int,QString)" ) )
       kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
     if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
                               "fromKMailDelIncidence(QString,QString,QString)" ) )
@@ -112,8 +112,11 @@ bool KMailConnection::connectToKMail()
 bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              const QString& folder,
                                              Q_UINT32 sernum,
+                                             int format,
                                              const QString& xml )
 {
+  if ( format != KMailICalIface::StorageXML )
+    return false;
 //   kdDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
   return mResource->fromKMailAddIncidence( type, folder, sernum, xml );

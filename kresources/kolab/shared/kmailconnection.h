@@ -55,7 +55,7 @@ class KMailConnection : public QObject, public DCOPObject {
   // These are the methods called by KMail when the resource changes
 k_dcop:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, const QString& xml );
+                              Q_UINT32 sernum, int format, const QString& xml );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void slotRefresh( const QString& type, const QString& resource );
