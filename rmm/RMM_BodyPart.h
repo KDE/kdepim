@@ -71,7 +71,7 @@ class RBodyPart : public REntity {
         
         void                _update();
         void                _init();
-        void                _replacePartList(QList<RBodyPart> &);
+        void                _replacePartList(const QList<RBodyPart> &);
 
         REnvelope           envelope_;
         QCString            data_;

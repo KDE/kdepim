@@ -84,7 +84,7 @@ RBodyPart::operator = (const RBodyPart & part)
     epilogue_           = part.epilogue_.copy();
     charset_            = part.charset_.copy();
 
-    _replacePartList(part_.body_);
+    _replacePartList(part.body_);
 
     status_ = part.status_;
 
@@ -519,7 +519,8 @@ RBodyPart::_init()
     body_.setAutoDelete(true);
 }
 
-RBodyPart::_replacePartList(QList<RBodyPart> & l)
+    void
+RBodyPart::_replacePartList(const QList<RBodyPart> & l)
 {
     body_.clear();
 
