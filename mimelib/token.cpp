@@ -261,7 +261,7 @@ void DwTokenizer::PrintToken(std::ostream* aOut)
 }
 
 
-static inline bool isspecialorspaceorcntrl( char c ) 
+static inline bool isspecialorspaceorcntrl( int c ) 
 {
   switch ( c ) {
      case '(':
@@ -291,7 +291,7 @@ static inline bool isspecialorspaceorcntrl( char c )
   }
 }
 
-static inline bool isnotspaceorcntrl( char c ) 
+static inline bool isnotspaceorcntrl( int c ) 
 {
   switch ( c ) {
      // isspace()
@@ -419,7 +419,7 @@ void DwRfc822Tokenizer::ParseAtom()
     }
 }
 
-static inline bool istspecialorspaceorcntrl( char c ) 
+static inline bool istspecialorspaceorcntrl( int c ) 
 {
   switch ( c ) {
      case '(':
