@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN"
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
  "dtd/kdex.dtd" [
   <!ENTITY kappname "&korganizer;">
   <!ENTITY package "kdepim">
@@ -67,6 +67,11 @@
 <date>2001-07-29</date>
 <releaseinfo>2.20.00</releaseinfo>
 
+<abstract><para>&korganizer; is an easy to use personal information manager
+(<acronym>PIM</acronym>). You can schedule appointments, events, and to-do
+tasks. &korganizer; will remind you about pending tasks, and help you keep your
+schedule. </para></abstract>
+
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>KOrganizer</keyword>
@@ -77,11 +82,6 @@
 <keyword>alarm</keyword>
 <keyword>appointment</keyword>
 </keywordset>
-
-<abstract><para>&korganizer; is an easy to use personal information manager
-(<acronym>PIM</acronym>). You can schedule appointments, events, and to-do
-tasks. &korganizer; will remind you about pending tasks, and help you keep your
-schedule. </para></abstract>
 
 </bookinfo>
 
