@@ -63,7 +63,7 @@ using Syntaxhighlighter::SpellChecker;
 #include <klocale.h>
 #include <qpopupmenu.h>
 #include <spellingfilter.h>
-
+#include <qcursor.h>
 
 KNLineEdit::KNLineEdit(bool useCompletion,
                        QWidget *parent, const char *name)
@@ -350,7 +350,6 @@ KNComposer::~KNComposer()
 int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
 {
     createGUI("kncomposerui.rc",  false);
-
     unplugActionList("spell_result" );
     m_listAction.clear();
     if ( !lst.contains( selectWord ) )
@@ -2104,7 +2103,54 @@ void KNComposer::Editor::dropEvent(QDropEvent *ev)
     KEdit::dropEvent(ev);
 }
 
-#include <qcursor.h>
+void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
+{
+    if ( e->key()==Key_Return )
+    {
+        int line, col;
+        bool quote =false;
+        getCursorPosition(&line,&col);
+        QString lineText = text(line);
+        QString simplified = lineText;
+        simplified = simplified.replace( QRegExp( "\\s" ), "" ).replace( "|", ">" );
+        if ( simplified.at(0).isSpace() ||simplified.at(0)=='|' || simplified.at(0)=='>')
+            quote = true;
+        if ( quote )
+        {
+            unsigned int i = 0;
+            for ( i = 0; i < lineText.length(); i ++ )
+            {
+                if (!( lineText.at(i).isSpace() || lineText.at(i)=='|' || lineText.at(i)=='>'))
+                    break;
+            }
+
+            //execute kedit::keyPressevent
+            KEdit::keyPressEvent ( e);
+
+
+            //insert quotes when we found quote before end of line
+            // quote + text
+            if ( i != lineText.length())
+            {
+                insertAt( lineText.left( i ) , line+1, 0 );
+                setCursorPosition( line+1 , i );
+            }
+            else
+            {
+                //typographic => remove previous quote when we have 2 enter.
+                removeParagraph( line );
+                insertParagraph( "", line );
+                setCursorPosition( line+1 , 0 );
+            }
+        }
+        else
+            KEdit::keyPressEvent ( e);
+    }
+    else
+        KEdit::keyPressEvent ( e);
+}
+
+
 void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
 {
     QString selectWord = selectWordUnderCursor();

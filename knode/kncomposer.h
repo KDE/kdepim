@@ -311,6 +311,7 @@ protected slots:
     virtual void dragEnterEvent(QDragEnterEvent *);
     virtual void dropEvent(QDropEvent *);
     virtual void contentsContextMenuEvent( QContextMenuEvent *e );
+    virtual void keyPressEvent ( QKeyEvent *e);
 private:
     KNComposer *m_composer;
     KSpell *spell;
