@@ -85,6 +85,10 @@ void KNAppManager::readOptions()
   colors.append(c->readColorEntry("unreadArticleColor",&defCol));
   colorNames.append(i18n("Unread Article"));
 
+  defCol = QColor("black");
+  colors.append(c->readColorEntry("readArticleColor",&defCol));
+  colorNames.append(i18n("Read Article"));
+
   u_seFonts = c->readBoolEntry("customFonts", false);
 
   QFont defFont = KGlobalSettings::generalFont();
@@ -119,7 +123,7 @@ void KNAppManager::saveOptions()
   c->writeEntry("URLColor", colors[url]);
   c->writeEntry("followedURLColor", colors[followedUrl]);
   c->writeEntry("newArticleColor", colors[newArticle]);
-  c->writeEntry("unreadArticleColor", colors[unreadArticle]);
+  c->writeEntry("readArticleColor", colors[readArticle]);
 
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", fonts[article]);

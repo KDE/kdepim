@@ -231,7 +231,32 @@ void KNComposer::initData()
 
 bool KNComposer::hasValidData()
 {
-  return ( (!view->subject->text().isEmpty()) && (!d_estination.isEmpty()) );
+  if (view->subject->text().isEmpty() || d_estination.isEmpty()) {
+    KMessageBox::sorry(this, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
+    return false;
+  }
+  bool empty = true;
+  bool longLine = false;
+  QString line;
+  for (int i=0;i<view->edit->numLines();i++) {
+    line = view->edit->textLine(i);
+    if (line == "-- ")
+      break;
+    if (!line.isEmpty())
+      empty = false;
+    if (line.length()>80) {
+      longLine = true;
+      break;
+    }
+  }
+  if (empty) {
+    KMessageBox::sorry(this, i18n("You can't post an empty message!"));
+    return false;
+  }
+  if (longLine)
+    return  (KMessageBox::warningYesNo( this, i18n("Your article contains lines longer than 80 characters.\nDo you want to re-edit the article or send it anyway?"),
+                                              QString::null, i18n("&Send"),i18n("&Edit")) == KMessageBox::Yes);
+  return true;
 }
 
 
@@ -330,42 +355,27 @@ void KNComposer::applyChanges()
 
 void KNComposer::slotDestinationChanged(const QString &t)
 {
-  KNStringSplitter split;
-  bool splitOk;
-    
   d_estination=t.local8Bit();
   
   if(!a_rticle->isMail()) {
+    KNStringSplitter split;
+    bool splitOk;
+    QString currText = view->fup2->currentText();
+
     view->fup2->clear();
     split.init(d_estination, ",");
     splitOk=split.first();
-    view->fupCheck->setEnabled(splitOk);
-    view->fupCheck->setChecked(splitOk);
-    view->fup2->setEnabled(splitOk);
+    if (splitOk)
+      view->fupCheck->setChecked(true);
     while(splitOk) {
       view->fup2->insertItem(QString(split.string()));
       splitOk=split.next();
     }
+    if (!currText.isEmpty())
+      view->fup2->lineEdit()->setText(currText);
   }
 }
 
-
-/*void KNComposer::slotDestComboActivated(int idx)
-{
-  if(idx==0 && s_tatus!=KNArticleBase::AStoPost) {
-    s_tatus=KNArticleBase::AStoPost;
-    view->dest->clear();
-    view->fupCheck->setEnabled(true);
-    view->fup2->setEnabled(view->fupCheck->isChecked());
-  }
-  else if(idx==1 && s_tatus!=KNArticleBase::AStoMail) {
-    s_tatus=KNArticleBase::AStoMail;
-    view->dest->clear();
-    view->fup2->clear();
-    view->fupCheck->setChecked(false);
-    view->fupCheck->setEnabled(false);
-  }       
-} */
 
 
 void KNComposer::slotDestButtonClicked()
@@ -808,6 +818,7 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
     fupCheck->setMinimumSize(fupCheck->sizeHint());
     fup2=new QComboBox(true, fr1);
     fup2->setMinimumSize(fup2->sizeHint());
+    fup2->setEnabled(false);
     frameLines=3;
   }
   

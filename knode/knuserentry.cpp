@@ -84,6 +84,16 @@ void KNUserEntry::save(KConfigBase *c)
 
 
 
+bool KNUserEntry::isValid()
+{
+  if (e_mail.isEmpty() || n_ame.isEmpty())
+    return false;
+  else
+    return e_mail.contains(QRegExp("?*@?*.??*",true,true));
+}
+
+
+
 bool KNUserEntry::isEmpty()
 {
   return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&

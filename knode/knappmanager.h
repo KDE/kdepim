@@ -28,7 +28,8 @@ class KNAppManager {
 
   public:
     enum ColorCode { background=0, header=1, normalText=2, Quoted1=3, Quoted2=4,
-                     Quoted3=5, url=6, followedUrl=7, newArticle=8, unreadArticle=9 };
+                     Quoted3=5, url=6, followedUrl=7, newArticle=8, unreadArticle=9,
+                     readArticle=10 };
 
     enum FontCode  { article=0, composer=1, groupList=2, articleList=3 };
 

@@ -54,7 +54,7 @@ class KNUserEntry {
     bool hasEmail()       { return (!e_mail.isEmpty()); }
     bool hasReplyTo()     { return (!r_eplyTo.isEmpty()); }
     bool hasOrga()        { return (!o_rga.isEmpty()); }
-    bool isValid()        { return (!e_mail.isEmpty() && !n_ame.isEmpty()); }
+    bool isValid();
     bool isEmpty();
     
   protected:

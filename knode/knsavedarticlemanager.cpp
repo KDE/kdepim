@@ -206,7 +206,7 @@ void KNSavedArticleManager::post(KNNntpAccount *acc)
     if(!art) return;
     openInComposer(art);
   }
-  else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and email first."));
+  else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
 }
 
 
@@ -220,7 +220,7 @@ void KNSavedArticleManager::post(KNGroup *g)
     art->setDestination(g->name().utf8().copy());
     openInComposer(art);
   }
-  else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and email first."));
+  else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
 }
 
 
@@ -236,7 +236,7 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
   if(!a) return;
 
   if (!defaultUser->isValid()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and email first."));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
     return;
   }
 
@@ -615,11 +615,9 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   KNGroup *g=0;
   QCString tmp;
 
-  if(!c->hasValidData()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
+  if(!c->hasValidData())
     return false;
-  }
-  
+
   //composer
   c->applyChanges();
   
