@@ -84,6 +84,9 @@ class REnvelope : public RMessageComponent
 		 * Set the specified header to the string value.
 		 */
 		void set(RMM::HeaderType t, const QCString & s);
+		void set(const QCString headerName, const QCString & s);
+		void addHeader(RHeader);
+		void addHeader(const QCString &);
 		void _createDefault(RMM::HeaderType t);
 		void createDefault();
 		

@@ -21,6 +21,7 @@
 // KDE includes
 #include <kfiledialog.h>
 #include <klocale.h>
+#include <kapp.h>
 
 // Local includes
 #include "EmpathConfigMaildirDialog.h"
@@ -34,6 +35,9 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 		mailbox_(mailbox)
 {
 	empathDebug("ctor");
+	
+	setCaption(i18n("Settings for mailbox") + "\"" + mailbox->name() + "\"" +
+		kapp->getCaption());
 
 	buttonBox_				= new KButtonBox(this);
 	CHECK_PTR(buttonBox_);
@@ -84,7 +88,8 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 		new QPushButton("...", w_server_, "pb_browseMailboxPath");
 	CHECK_PTR(pb_browseMailboxPath_);
 	
-	pb_browseMailboxPath_->setFixedSize(pb_browseMailboxPath_->sizeHint());
+	pb_browseMailboxPath_->setFixedWidth(pb_browseMailboxPath_->sizeHint().height());
+	pb_browseMailboxPath_->setFixedHeight(pb_browseMailboxPath_->sizeHint().height());
 
 	QObject::connect(pb_browseMailboxPath_, SIGNAL(clicked()),
 			this, SLOT(s_browseMailboxPath()));
@@ -138,9 +143,9 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 	
 	fillInSavedData();
 
-	setMinimumSize(460, 200);
-
-	resize(460, 200);
+	rgb_server_->setMinimumSize(rgb_server_->minimumSizeHint());
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
 }
 
 	void

@@ -22,6 +22,7 @@
 #include <qregexp.h>
 
 // Local includes
+#include <RMM_Utility.h>
 #include <RMM_Body.h>
 #include <RMM_BodyPart.h>
 #include <RMM_Envelope.h>
@@ -215,7 +216,7 @@ RBodyPart::parse()
 			return;
 		}
 
-		preamble_ = strRep_.mid(endOfHeaders, i - endOfHeaders);
+		preamble_ = strRep_.mid(endOfHeaders + 2, i - endOfHeaders);
 		rmmDebug("preamble == \"" + preamble_ + "\"");
 
 		int oldi(i + boundary_.length());
@@ -333,6 +334,64 @@ RBodyPart::data()
 	RMM::DispType
 RBodyPart::disposition()
 {
+	parse();
 	return disposition_;
+}
+
+	void
+RBodyPart::setEnvelope(REnvelope e)
+{
+	rmmDebug("setEnvelope() called");
+	parse();
+	envelope_ = e;
+	assembled_ = false;
+}	
+	void
+RBodyPart::setBody(QList<RBodyPart> & b)
+{
+	rmmDebug("setBody() called");
+	parse();
+	body_ = b;
+	assembled_ = false;
+}
+
+	RBodyPart
+RBodyPart::decode()
+{
+	rmmDebug("decode()");
+	return *this;
+	REnvelope e;
+	RBodyPart x;
+	
+	if (envelope_.has(RMM::Cte)) {
+	
+		switch (envelope_.contentTransferEncoding().mechanism()) {
+			
+			case RMM::CteTypeBase64:
+				e = envelope_;
+				e.set(RMM::HeaderContentTransferEncoding, "");
+				x = e.asString() + RDecodeBase64(data_);
+				break;
+
+			case RMM::CteTypeQuotedPrintable:
+				e = envelope_;
+				e.set(RMM::HeaderContentTransferEncoding, "");
+				x = e.asString() + RDecodeQuotedPrintable(data_);
+				break;
+				
+			case RMM::CteType7bit:
+			case RMM::CteType8bit:
+			case RMM::CteTypeBinary:
+			case RMM::CteTypeXtension:
+			default:
+				return *this;
+				break;
+		}
+
+	} else {
+		return *this;
+	}
+
+	return x;
 }
 

@@ -21,59 +21,59 @@
 #include <RMM_Utility.h>
 
 	QCString
-RToCrLfEol(const QCString &)
+RToCrLfEol(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-RToLfEol(const QCString &)
+RToLfEol(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-RToCrEol(const QCString &)
+RToCrEol(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-RToLocalEol(const QCString &)
+RToLocalEol(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-REncodeBase64(const QCString &)
+REncodeBase64(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-RDecodeBase64(const QCString &)
+RDecodeBase64(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-REncodeQuotedPrintable(const QCString &)
+REncodeQuotedPrintable(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 	QCString
-RDecodeQuotedPrintable(const QCString &)
+RDecodeQuotedPrintable(const QCString & in)
 {
 	QCString s;
-	return s;
+	return in;
 }
 
 

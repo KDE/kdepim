@@ -57,7 +57,9 @@ class RBodyPart : public REntity {
 		RMM::MimeSubType mimeSubType();
 		
 		REnvelope &			envelope();
+		void	setEnvelope(REnvelope);
 		QList<RBodyPart> &	body();
+		void	setBody(QList<RBodyPart> &);
 		
 		void addPart(RBodyPart *);
 		void removePart(RBodyPart *);
@@ -78,6 +80,8 @@ class RBodyPart : public REntity {
 		Q_UINT32	size();
 		
 		PartType	type();
+		
+		RBodyPart	decode();
 		
 		const char * className() const { return "RBodyPart"; }
 

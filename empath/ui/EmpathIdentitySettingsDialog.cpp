@@ -295,6 +295,8 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	
 	topLevelLayout_->activate();
 	
+	rgb_main_->setMinimumSize(rgb_main_->minimumSizeHint());
+	rgb_sigPreview_->setMinimumSize(rgb_sigPreview_->minimumSizeHint());
 	setMinimumSize(minimumSizeHint());
 	resize(minimumSizeHint());
 }

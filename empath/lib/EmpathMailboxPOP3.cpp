@@ -72,14 +72,21 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 		numMessages_		(0),
 		mailboxSize_		(0),
 		logFileOpen_		(false),
-		state_				(Disconnected),
 		authenticationTries_(8)
 {
-	/*
+#if 0
 	empathDebug("ctor");
 	type_ = POP3;
+	job = new KIOJob();
+	CHECK_PTR(job);
 	
-	errorStr	= "Unknown Error!";
+	QObject::connect(
+		job, SIGNAL(sigFinished(int)),
+		this, SLOT(s_jobFinished(int)));
+	
+	QObject::connect(
+		job, SIGNAL(sigData(int, const char *, int)),
+		this, SLOT(s_data(int, const char *, int)));
 	
 	QString folderPixmapName = "mini-folder-inbox.png";
 	QString inboxName = i18n("Inbox");
@@ -89,168 +96,13 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	EmpathFolder * folder_inbox = new EmpathFolder(url);
 	
 	folderList_.append(*folder_inbox);
-	*/
+#endif
 }
 
 EmpathMailboxPOP3::~EmpathMailboxPOP3()
 {
-	/*
 	empathDebug("dtor");
-	_changeState(Disconnected);
-	*/
-}
-
-	bool
-EmpathMailboxPOP3::_supportsAPOP()
-{
-	/*
-	empathDebug("_supportsAPOP() called");
-
-	empathDebug("greeting string was: \"" + greeting_ + "\"");
-
-	if (!state_ == Authorisation) return false;
-	
-	QRegExp rfc822ish("<.*@.*>");
-	
-	return (greeting_.find(rfc822ish) != -1);
-	*/
-}
-
-	int
-EmpathMailboxPOP3::_write(const QString & str)
-{
-	/*
-	if (state_ == Disconnected) return false;
-	_log("To POP    <- \"" + str + "\"");
-	return write(sock_fd, str + "\r\n", str.length() + 2);
-	*/
-}
-
-	QCString
-EmpathMailboxPOP3::_getLine()
-{
-	/*
-	QCString s;
-	char ch;
-	
-	while (::read(sock_fd, &ch, 1) > 0) {
-		s += ch;
-		if (ch == '\n') {
-			s[s.length()] = '\0';
-			return s;
-		}
-	}
-	return QCString::null;
-	*/
-}
-
-	bool
-EmpathMailboxPOP3::_connectToServer()
-{
-	/*
-	empathDebug("_connectToServer() called");
-	if (!state_ == Disconnected) return true;
-	struct sockaddr_in sin;
-	struct hostent * he;
-	u_int32_t n;
-
-	sock_fd = socket (AF_INET, SOCK_STREAM, IPPROTO_IP);
-
-	memset ((char *) &sin, 0, sizeof(sin));
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons (serverPort_);
-
-	if ((n = inet_addr(serverAddress_)) == (Q_UINT32)-1) {
-		if ((he = gethostbyname (serverAddress_)) == 0) {
-			errorStr = "Sorry I couldn't find the address for " + serverAddress_;
-			return false;
-    }
-		memcpy ((void *)&sin.sin_addr, *(he->h_addr_list), he->h_length);
-	} else
-		memcpy ((void *)&sin.sin_addr, (void *)&n, sizeof(n));
-
-	empathDebug(QString("Connecting to ") + inet_ntoa (sin.sin_addr));
-	
-	if (::connect(sock_fd, (struct sockaddr *)&sin, ksize_t(sizeof(struct sockaddr_in)))
-			== -1) {
-		
-		errorStr = "Sorry I couldn't connect to your POP3 server";
-		return false;
-	}
-	
-	empathDebug("Connected");
-	state_ = Authorisation;
-	greeting_ = _getLine();
-	return true;
-	*/
-}
-
-	bool
-EmpathMailboxPOP3::_loginAPOP()
-{
-	/*
-	empathDebug("_loginAPOP() called");
-	if (!state_ == Authorisation) return false;
-	QCString tempStr;
-	
-	for (	Q_UINT32 authTries = 0 ;
-			authTries < authenticationTries_ ;
-			authTries++) {
-	
-		empathDebug("Authentication attempt #" + QString().setNum(authTries));
-	
-		timeStamp_ = tempStr.right(tempStr.length() - tempStr.findRev("<"));
-		timeStamp_ = timeStamp_.left(timeStamp_.find(">") + 1);
-	
-		MD5_CTX md5context;
-	
-		unsigned char msgdigest[16];
-		QString inp = timeStamp_ + password_;
-		unsigned char * md5input_TimeStamp = (unsigned char *)timeStamp_.ascii();
-		unsigned char * md5input_Password = (unsigned char *)password_.ascii();
-	
-		MD5Init(&md5context);
-		
-		MD5Update(
-				&md5context,
-				md5input_TimeStamp,
-				strlen((char *)md5input_TimeStamp));
-		
-		MD5Update(
-				&md5context,
-				md5input_Password,
-				strlen((char *)md5input_Password));
-		
-		MD5Final(msgdigest, &md5context);
-		
-		char t[2];
-	
-		QString digest;
-		
-		for (int i = 0 ; i < 16; i++) {
-			sprintf(t, "%0x", msgdigest[i]);
-			digest += t;
-		}
-	
-		digest += "\0";
-	
-		_write (COMMAND_APOP + " " + username_ + " " + digest);
-	
-		if (_positiveResponse())  {
-			empathDebug("APOP authorisation successful");
-			state_ = Transaction;
-			return true;
-		}
-
-		else empathDebug("APOP authorisation UNSUCCESSFUL");
-	}
-
-	// Drop connection and reconnect, so we can get back to auth state.
-	_changeState(Disconnected);
-	_changeState(Authorisation);
-	errorStr = "Ran out of authentication attempts. Giving up.";	
-	return false;
-	*/
+//	delete job;
 }
 
 	bool
@@ -349,33 +201,6 @@ EmpathMailboxPOP3::_getSizeList()
 EmpathMailboxPOP3::alreadyHave()
 {
 	return false;
-}
-
-	bool
-EmpathMailboxPOP3::_login()
-{
-	/*
-	empathDebug("_login() called");
-	if (state_ != Authorisation) return false;
-
-	// Try to login with APOP if it is supported. If not, try the normal method.
-//	if (_supportsAPOP()) {
-//		return _loginAPOP();
-//	} else empathDebug("Server does not support APOP");
-
-	QCString tempStr;
-	
-	_write (COMMAND_USER + " " + username_);
-	
-	if (!_positiveResponse()) return false;
-
-	_write(COMMAND_PASS + " " + password_);
- 
-	if (!_positiveResponse()) return false;
-	
-	state_ = Transaction;
-	return true;
-	*/
 }
 
 	Q_UINT32
@@ -912,12 +737,12 @@ EmpathMailboxPOP3::retrieveIfHave()
 {
 	return retrieveIfHave_;
 }
-
+#if 0
 	void
 EmpathMailboxPOP3::s_serverRead()
 {
 }
-
+#endif
 	bool
 EmpathMailboxPOP3::logging()
 {
@@ -990,7 +815,7 @@ EmpathMailboxPOP3::newMail() const
 EmpathMailboxPOP3::syncIndex(const EmpathURL & url)
 {
 }
-
+#if 0
 	bool
 EmpathMailboxPOP3::_changeState(State newState)
 {
@@ -1028,7 +853,7 @@ EmpathMailboxPOP3::_changeState(State newState)
 	}
 	*/
 }
-
+#endif
 	bool
 EmpathMailboxPOP3::_positiveResponse()
 {
@@ -1181,5 +1006,37 @@ EmpathMailboxPOP3::removeFolder(const EmpathURL & id)
 EmpathMailboxPOP3::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
 	return false;
+}
+
+	void
+EmpathMailboxPOP3::s_data(int i, const char * c, int l)
+{
+#if 0
+	switch (state_) {
+		
+		case WaitForList:
+			int i = 0;
+			int x = 0;
+			while ((x = s.find(QRegExp("\n"), i)) != -1) {
+				dict[].setSize(
+			}
+			break;
+			
+		case WaitForUIDL:
+			break;
+		
+		case WaitForData:
+			break;
+		
+		case NoWait:
+		default:
+			break;
+	}
+#endif
+}
+
+	void
+EmpathMailboxPOP3::s_jobFinished(int)
+{
 }
 

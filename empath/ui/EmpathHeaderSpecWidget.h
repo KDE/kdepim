@@ -31,6 +31,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include <RMM_Header.h>
 
 class EmpathHeaderNameWidget;
 class EmpathHeaderBodyWidget;
@@ -45,7 +46,7 @@ class EmpathHeaderSpecWidget : public QWidget
 			int headerIndex, QWidget * parent = 0, const char * name = 0);
 		~EmpathHeaderSpecWidget();
 
-		QString		getHeader() const;
+		RHeader		header();
 		void		setHeaderList(const QStrList & headerList);
 		void		setHeaderName(const QString & headerName);
 		void		setHeaderBody(const QString & headerBody);

@@ -50,11 +50,8 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		/**
 		 * Do the parsing and print to the widget
 		 */
-		void go();
 		void toHTML(QCString &);
-		void use(REnvelope &, RBodyPart &);
-		void use(RBodyPart &);
-//		void s_imageRequest(KHTMLWidget * view, const char *url);
+		void show(const QCString & s, bool isHTML = false);
 
 	protected slots:
 

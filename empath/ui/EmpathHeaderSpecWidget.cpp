@@ -92,16 +92,17 @@ EmpathHeaderSpecWidget::setHeaderName(const QString & headerName)
 	headerNameWidget_->setHeaderName(headerName);
 }
 
-	QString
-EmpathHeaderSpecWidget::getHeader() const
+	RHeader
+EmpathHeaderSpecWidget::header()
 {
-	QString s;
-
-	s += headerNameWidget_->headerName();
+	QCString s;
+	s = headerNameWidget_->headerName().ascii();
 	s += " ";
-	s += headerBodyWidget_->getHeaderBody();
+	s += headerBodyWidget_->headerBody().ascii();
+	
+	RHeader h(s);
 
-	return s;
+	return h;
 }
 
 	void
@@ -129,7 +130,7 @@ EmpathHeaderSpecWidget::s_headerNameAccepted()
 EmpathHeaderSpecWidget::s_headerBodyChanged()
 {
 	empathDebug("s_headerBodyChanged() called");
-	empathDebug("header body text: \"" + headerBodyWidget_->getHeaderBody() + "\""); 
+	empathDebug("header body text: \"" + headerBodyWidget_->headerBody() + "\""); 
 	emit(_empath_textChanged(0));
 }
 
@@ -137,7 +138,7 @@ EmpathHeaderSpecWidget::s_headerBodyChanged()
 EmpathHeaderSpecWidget::s_headerBodyAccepted()
 {
 	empathDebug("s_headerBodyAccepted() called");
-	empathDebug("header body text: \"" + headerBodyWidget_->getHeaderBody() + "\""); 
+	empathDebug("header body text: \"" + headerBodyWidget_->headerBody() + "\""); 
 	emit(_empath_returnPressed(0));
 }
 

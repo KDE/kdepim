@@ -34,6 +34,7 @@
 
 class EmpathConfig;
 class Empath;
+class KIOJob;
 
 class EmpathMailboxPOP3 : public EmpathMailbox
 {
@@ -55,7 +56,8 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 
 	protected slots:
 
-		void s_serverRead();
+		void s_data(int, const char *, int);
+		void s_jobFinished(int);
 	
 	public:
 
@@ -100,8 +102,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		// It can either be in the Transaction or Authorisation state.
 		// We, on the other hand, have another state - Not connected to the server.
 	
-		enum State { Disconnected, Authorisation, Transaction };
-
 		QCString			_getLine();
 		bool				_connectToServer();
 		bool				_loginAPOP();
@@ -115,7 +115,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		void				_openLog(const QString &);
 		bool				_getSizeList();
 		bool				_getUidlList();
-		bool				_changeState(State newState);
 		bool				_positiveResponse();
 		void				_log(QCString text);
 		bool				_supportsAPOP();
@@ -130,7 +129,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		Q_UINT32			numMessages_;
 		Q_UINT32			mailboxSize_;
 		bool				logFileOpen_;
-		State				state_;
 		Q_UINT32			authenticationTries_;
 		// End order dependency
 		
@@ -167,6 +165,14 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		static QString		COMMAND_QUIT;
 		static QString		COMMAND_NOOP;
 		static QString		COMMAND_TOP;
+		
+		KIOJob * job;
+		
+		enum State {
+			NoWait,
+			WaitForList,
+			WaitForUIDL,
+			WaitForData };
 };
 
 

@@ -2,11 +2,13 @@
 // Qt includes
 #include <qstrlist.h>
 #include <qlabel.h>
+#include <qpainter.h>
 
 // KDE includes
 #include <kconfig.h>
 #include <klocale.h>
 #include <kapp.h>
+#include <kpixmap.h>
 
 // Local includes
 #include "EmpathHeaderViewWidget.h"
@@ -18,9 +20,13 @@
 EmpathHeaderViewWidget::EmpathHeaderViewWidget(
 		QWidget * parent, const char * name)
 	:	QWidget(parent, name),
-		layout_(0)
+		glowing_(false)
 {
 	empathDebug("ctor");
+	clipIcon_ = empathIcon("clip.png");
+	clipGlow_ = empathIcon("clip-glow.png");
+	setMouseTracking(true);
+	setFixedHeight(0);
 }
 
 EmpathHeaderViewWidget::~EmpathHeaderViewWidget()
@@ -31,67 +37,127 @@ EmpathHeaderViewWidget::~EmpathHeaderViewWidget()
 	void
 EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 {
-	if (layout_ != 0) {
-		
-		QLayoutIterator lit(layout_->iterator());
-		QLayoutItem * i;
-		while (i = lit.current())
-			delete i->widget();
-		
-		delete layout_;
-		layout_ = 0;
-	}
-
-	layout_ = new QGridLayout(this, 0, 3);
-	CHECK_PTR(layout_);
-	
-	layout_->setColStretch(0, 0);
-	layout_->setColStretch(1, 10);
-	layout_->setColStretch(2, 0);
-	
+	empathDebug("useEnvelope()");
+	headerList_.clear();
 	KConfig * c(kapp->getConfig());
+	// FIXME Must be QStringList when available.
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	// FIXME Must be QStringList when available.
 	QStrList l;
 	c->readListEntry(EmpathConfig::KEY_SHOW_HEADERS, l);
 	
 	QStrListIterator it(l);
 	
-	for (; it.current(); ++it) {
-		
+	for (; it.current() ; ++it) {	
+	
 		RHeader * h(e.get(it.current()));
+		if (h == 0) continue;
 		
-		if (h == 0)
-			continue;
-		
-		layout_->expand(layout_->numRows() + 1, 3);
-		
-		QLabel * label = new QLabel(QString(h->headerName()) + ":", this);
-		label->show();
-		
-		QLabel * urlLabel =
-			new QLabel(QString(h->headerBody()->asString()), this);
-		urlLabel->show();
-		
-		layout_->addWidget(label, layout_->numRows() - 1, 0);
-		layout_->addWidget(urlLabel, layout_->numRows() - 1, 1);
+		headerList_.append(h->headerName() + ":");
+		headerList_.append(h->headerBody()->asString());
 	}
 	
-	QPixmap clipIcon(empathIcon("clip.png"));
+	int th = QFontMetrics(empathGeneralFont()).height();
+	setFixedHeight(th * l.count() + 4);
 	
-	clipButton_ =
-		new KToolBarButton(clipIcon, 0,
-		this, "clipButton_", 26, i18n("Message Structure"));
-	
-	clipButton_->setFixedSize(clipIcon.width() + 2, clipIcon.height() + 2);
-	
-	clipButton_->show();
-	
-	layout_->addMultiCellWidget(clipButton_, 0, layout_->numRows() - 1, 2, 2);
-	
-	QObject::connect(clipButton_, SIGNAL(clicked()),
-		parent(), SLOT(s_clipClicked()));
-		
-	layout_->activate();
+	paintEvent(0);
 }
+	
+	void
+EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
+{
+	empathDebug("paintEvent()");
+	
+	QPixmap buf;
+	buf.resize(width(), height());
+
+	KPixmap px;
+	px.resize(width(), height());
+	px.gradientFill(
+		qApp->palette()->color(QPalette::Normal, QColorGroup::Base),
+		qApp->palette()->color(QPalette::Normal, QColorGroup::Background));
+	
+	int th = QFontMetrics(empathGeneralFont()).height();
+	
+	int i(0);
+	
+	QPainter p;
+	p.begin(&buf);
+	
+	p.drawPixmap(0, 0, px);
+	
+	
+	p.drawPixmap(width() - 26, 2, clipIcon_);
+	
+	QRect brect;
+	
+	int maxWidth(0);
+	
+	QStrListIterator it(headerList_);
+	for (; it.current(); ++it) {
+		
+		p.drawText(6, i * th + 4, 100, th,
+			QPainter::AlignLeft | QPainter::AlignTop | QPainter::SingleLine,
+			it.current(),
+			-1, &brect);
+		
+		maxWidth = (maxWidth > brect.width() ? maxWidth : brect.width());
+		++it;
+		++i;
+	}
+	
+	i = 0;
+	it.toFirst();
+	
+	for (; it.current(); ++it) {
+
+		++it;
+
+		p.drawText(maxWidth + 10, i * th + 4, width() - 30, th,
+			QPainter::AlignLeft | QPainter::AlignTop | QPainter::SingleLine,
+			it.current(),
+			-1, &brect);
+		
+		++i;
+	}
+	
+	bitBlt(this, 0, 0, &buf);
+	p.end();
+}
+
+	void
+EmpathHeaderViewWidget::mouseMoveEvent(QMouseEvent * e)
+{
+	QPainter p;
+	p.begin(this);
+	
+	if (e != 0 && e->x() > width() - 26 && e->x() < width() - 2 &&
+		e->y() > 2 && e->y() < 26) {
+		
+		if (!glowing_) {
+			p.drawPixmap(width() - 26, 2, clipGlow_);
+			glowing_ = true;
+		}
+
+	} else if (glowing_) {
+	
+		KPixmap px;
+		px.resize(30, height());
+		px.gradientFill(
+			qApp->palette()->color(QPalette::Normal, QColorGroup::Base),
+			qApp->palette()->color(QPalette::Normal, QColorGroup::Background));		
+		p.drawPixmap(width() - 30, 0, px);
+		p.drawPixmap(width() - 26, 2, clipIcon_);
+		glowing_ = false;
+	}
+	p.end();
+}
+
+	void
+EmpathHeaderViewWidget::mousePressEvent(QMouseEvent * e)
+{
+	if (e != 0 && e->x() > width() - 26 && e->x() < width() - 2 &&
+		e->y() > 2 && e->y() < 26)
+		emit(clipClicked());
+}
+

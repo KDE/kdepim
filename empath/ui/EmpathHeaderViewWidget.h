@@ -3,10 +3,8 @@
 
 // Qt includes
 #include <qwidget.h>
-#include <qlayout.h>
-
-// KDE includes
-#include <ktoolbar.h>
+#include <qstrlist.h>
+#include <qpixmap.h>
 
 // Local includes
 #include <RMM_Envelope.h>
@@ -22,10 +20,22 @@ class EmpathHeaderViewWidget : public QWidget
 	
 		void useEnvelope(REnvelope &);
 		
+		void paintEvent(QPaintEvent *);
+		void mouseMoveEvent(QMouseEvent *);
+		void leaveEvent(QEvent * e) { mouseMoveEvent(0); }
+		void mousePressEvent(QMouseEvent * e);
+		
+	signals:
+	
+		void clipClicked();
+		
 	private:
 		
-		QGridLayout		* layout_;
-		KToolBarButton	* clipButton_;
+		QPixmap			underClip_;
+		QStrList		headerList_;
+		QPixmap			clipIcon_;
+		QPixmap			clipGlow_;
+		bool			glowing_;
 };
 
 #endif

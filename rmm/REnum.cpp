@@ -847,23 +847,23 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 
 			case MimeSubTypeNone:
-				s = "unknown.xpm";
+				s = "unknown.png";
 				break;
 
 			case MimeSubTypePlain:
-				s = "text.xpm";
+				s = "text.png";
 				break;
 
 			case MimeSubTypeRichtext:
-				s = "richtext.xpm";
+				s = "richtext.png";
 				break;
 
 			case MimeSubTypeEnriched:
-				s = "enriched.xpm";
+				s = "enriched.png";
 				break;
 
 			case MimeSubTypeHTML:
-				s = "html.xpm";
+				s = "html.png";
 				break;
 			}
 
@@ -874,19 +874,19 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 
 				case MimeSubTypeMixed:
-					s = "mixed.xpm";
+					s = "mixed.png";
 					break;
 
 				case MimeSubTypeAlternative:
-					s = "alternative.xpm";
+					s = "alternative.png";
 					break;
 
 				case MimeSubTypeDigest:
-					s = "digest.xpm";
+					s = "digest.png";
 					break;
 
 				case MimeSubTypeParallel:
-					s = "parallel.xpm";
+					s = "parallel.png";
 					break;
 			}
 				
@@ -897,15 +897,15 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 
 				case MimeSubTypeRFC822:
-					s = "rfc822.xpm";
+					s = "rfc822.png";
 					break;
 
 				case MimeSubTypePartial:
-					s = "partial.xpm";
+					s = "partial.png";
 					break;
 
 				case MimeSubTypeExternalBody:
-					s = "external-body.xpm";
+					s = "external-body.png";
 					break;
 			}
 
@@ -916,51 +916,51 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 			
 				case MimeSubTypeJpeg:
-					s = "jpeg.xpm";
+					s = "jpeg.png";
 					break;
 
 				case MimeSubTypeGIF:
-					s = "gif.xpm";
+					s = "gif.png";
 					break;
 		
 				case MimeSubTypePNG:
-					s = "png.xpm";
+					s = "png.png";
 					break;
 
 				case MimeSubTypeTIFF:
-					s = "tiff.xpm";
+					s = "tiff.png";
 					break;
 				
 				case MimeSubTypeXras:
-					s = "x-cmu-raster.xpm";
+					s = "x-cmu-raster.png";
 					break;
 
 				case MimeSubTypeXpnm:
-					s = "x-portable-anymap.xpm";
+					s = "x-portable-anymap.png";
 					break;
 
 				case MimeSubTypeXpbm:
-					s = "x-portable-bitmap.xpm";
+					s = "x-portable-bitmap.png";
 					break;
 
 				case MimeSubTypeXpgm:
-					s = "x-portable-graymap.xpm";
+					s = "x-portable-graymap.png";
 					break;
 
 				case MimeSubTypeXppm:
-					s = "x-portable-pixmap.xpm";
+					s = "x-portable-pixmap.png";
 					break;
 
 				case MimeSubTypeXrgb:
-					s = "x-rgb.xpm";
+					s = "x-rgb.png";
 					break;
 
 				case MimeSubTypeXxbm:
-					s = "x-xbitmap.xpm";
+					s = "x-xbitmap.png";
 					break;
 
 				case MimeSubTypeXxpm:
-					s = "x-xpixmap.xpm";
+					s = "x-xpixmap.png";
 					break;
 			}
 
@@ -971,67 +971,67 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 
 				case MimeSubTypeXcpio:
-					s = "x-cpio.xpm";
+					s = "x-cpio.png";
 					break;
 
 				case MimeSubTypeXdvi:
-					s = "x-dvi.xpm";
+					s = "x-dvi.png";
 					break;
 
 				case MimeSubTypePostScript:
-					s = "postscript.xpm";
+					s = "postscript.png";
 					break;
 
 				case MimeSubTypeOctetStream:
-					s = "octet-stream.xpm";
+					s = "octet-stream.png";
 					break;
 					
 				case MimeSubTypeXperl:
-					s = "x-perl.xpm";
+					s = "x-perl.png";
 					break;
 
 				case MimeSubTypeXtar:
-					s = "x-tar.xpm";
+					s = "x-tar.png";
 					break;
 
 				case MimeSubTypeXdeb:
-					s = "x-deb.xpm";
+					s = "x-deb.png";
 					break;
 
 				case MimeSubTypeXrar:
-					s = "x-rar-compressed.xpm";
+					s = "x-rar-compressed.png";
 					break;
 
 				case MimeSubTypeXlatex:
-					s = "x-latex.xpm";
+					s = "x-latex.png";
 					break;
 
 				case MimeSubTypeXsh:
-					s = "x-sh.xpm";
+					s = "x-sh.png";
 					break;
 
 				case MimeSubTypeXshar:
-					s = "x-shar.xpm";
+					s = "x-shar.png";
 					break;
 
 				case MimeSubTypeXtgz:
-					s = "x-tar-gz.xpm";
+					s = "x-tar-gz.png";
 					break;
 
 				case MimeSubTypeXtcl:
-					s = "x-tcl.xpm";
+					s = "x-tcl.png";
 					break;
 
 				case MimeSubTypeXtex:
-					s = "x-tex.xpm";
+					s = "x-tex.png";
 					break;
 
 				case MimeSubTypeXtroff:
-					s = "x-troff.xpm";
+					s = "x-troff.png";
 					break;
 
 				case MimeSubTypeXzip:
-					s = "x-zip.xpm";
+					s = "x-zip.png";
 					break;
 			}
 
@@ -1042,23 +1042,23 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 			
 				case MimeSubTypeBasic:
-					s = "basic.xpm";
+					s = "basic.png";
 					break;
 
 				case MimeSubTypeMIDI:
-					s = "midi.xpm";
+					s = "midi.png";
 					break;
 
 				case MimeSubTypeULAW:
-					s = "ulaw.xpm";
+					s = "ulaw.png";
 					break;
 
 				case MimeSubTypeXaiff:
-					s = "x-aiff.xpm";
+					s = "x-aiff.png";
 					break;
 
 				case MimeSubTypeXwav:
-					s = "x-wav.xpm";
+					s = "x-wav.png";
 					break;
 			}
 	
@@ -1069,27 +1069,27 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 		
 				case MimeSubTypeMPEG:
-					s = "mpeg.xpm";
+					s = "mpeg.png";
 					break;
 			
 				case MimeSubTypeXavi:
-					s = "x-msvideo.xpm";
+					s = "x-msvideo.png";
 					break;
 
 				case MimeSubTypeXsgi:
-					s = "x-sgi-movie.xpm";
+					s = "x-sgi-movie.png";
 					break;
 					
 				case MimeSubTypeGL:
-					s = "gl.xpm";
+					s = "gl.png";
 					break;
 
 				case MimeSubTypeFLI:
-					s = "fli.xpm";
+					s = "fli.png";
 					break;
 
 				case MimeSubTypeQuickTime:
-					s = "quicktime.xpm";
+					s = "quicktime.png";
 					break;
 			}
 
@@ -1101,7 +1101,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			switch (st) {
 			
 				case MimeSubTypeXvrml:
-					s = "x-vrml.xpm";
+					s = "x-vrml.png";
 					break;
 			}
 			
@@ -1110,7 +1110,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 		case MimeTypeNone:
 		case MimeTypeUnknown:
 		default:
-			s = "unknown.xpm";
+			s = "unknown.png";
 			break;
 	}
 	

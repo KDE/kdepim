@@ -107,32 +107,18 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 }
 
 	void
-EmpathMessageHTMLWidget::use(RBodyPart & bp)
+EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 {
-	useEnvelope_ = false;
-	bodyPart_ = bp;
-}
-
-
-	void
-EmpathMessageHTMLWidget::use(REnvelope & e, RBodyPart & bp)
-{
-	empathDebug("use() called");
-	useEnvelope_ = true;
-	envelope_ = e;
-	empathDebug("envelope:");
-	empathDebug(envelope_.asString());
-	bodyPart_ = bp;
-	empathDebug("body:");
-	empathDebug(bodyPart_.data());
-}
-
-	void
-EmpathMessageHTMLWidget::go()
-{
-	empathDebug("go() called");
+	empathDebug("show() called");
 
 	setCursor(waitCursor);
+	
+	if (isHTML) {
+		begin();
+		write(s);
+		setCursor(arrowCursor);
+		parse();
+	}
 
 	// FIXME Remove ascii()
 	setStandardFont(empathGeneralFont().family().ascii());
@@ -174,36 +160,12 @@ EmpathMessageHTMLWidget::go()
 	htmlTemplate.replace(QRegExp("@_TTEND_"), "</PRE>");
 	int bodyTagPos = htmlTemplate.find("@_MESSAGE_BODY_");
 	
-	begin();
+	replaceBodyTagsByData(s, htmlTemplate);
 	
-	// Envelope
-	if (useEnvelope_) {
-		QCString messageHeaders(envelope_.asString());
-		empathDebug("envelope:");
-		empathDebug(messageHeaders);
-		replaceHeaderTagsByData(messageHeaders, htmlTemplate);
-		write(htmlTemplate.left(bodyTagPos - 1)); // catch the last char
-		parse();
-	}
-
-	// Body
-	QCString messageBody(bodyPart_.data());
-		empathDebug("body");
-		empathDebug(messageBody);
-	replaceBodyTagsByData(messageBody, htmlTemplate);
-	write(htmlTemplate.right(htmlTemplate.length() - bodyTagPos + 1));
+	begin();
+	write(htmlTemplate);
 	setCursor(arrowCursor);
 	parse();
-	
-#if 0
-	empathDebug("Writing message as html to message.html");
-	QFile f("message.html");
-	if (f.open(IO_WriteOnly)) {
-		QTextStream t(&f);
-		t << htmlTemplate;
-		f.close();
-	}
-#endif
 }
 
 	bool

@@ -25,6 +25,7 @@
 #include <qlist.h>
 
 #include <RMM_Defines.h>
+#include <RMM_Enum.h>
 #include <RMM_Parameter.h>
 #include <RMM_HeaderBody.h>
 
@@ -51,14 +52,14 @@ class RCte : public RHeaderBody {
 		
 		void createDefault();
 		
-		QCString mechanism();
-		void setMechanism(const QCString &);
+		RMM::CteType mechanism();
+		void setMechanism(RMM::CteType);
 		
 		const char * className() const { return "RCte"; }
 
 	private:
 
-		QCString mechanism_;
+		RMM::CteType mechanism_;
 };
 
 #endif

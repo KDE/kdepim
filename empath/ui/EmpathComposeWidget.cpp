@@ -234,19 +234,14 @@ EmpathComposeWidget::~EmpathComposeWidget()
 	RMessage
 EmpathComposeWidget::message()
 {
-	empathDebug("messageAsString() called");
+	empathDebug("message called");
 
 	RMessage msg;
-	return msg;
-#if 0	
+	msg.envelope() = headerEditWidget_->envelope();
+
 	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
 		
 		RMessage * m(empath->message(url_));
-		
-		if (m == 0) {
-			msgData = "";
-			return msgData;
-		}
 		
 		RMessage message(*m);
 		
@@ -254,21 +249,22 @@ EmpathComposeWidget::message()
 		// we add the message id of that message to the references list.
 		if (message.envelope().has(RMM::HeaderReferences)) {
 			
-			msg.envelope().RMM::headerNames[RMM::HeaderReferences];
-			msgData += ": ";
-			msgData += message.envelope().references().asString();
-			msgData += " ";
-			msgData += message.envelope().messageID().asString();
-			msgData += "\n";
+			QCString references = message.envelope().references().asString();
+			references += ": ";
+			references += message.envelope().references().asString();
+			references += " ";
+			references += message.envelope().messageID().asString();
+			msg.envelope().set(RMM::HeaderReferences, references);
 			
 		} else {
 			
 			// No references field. In that case, we just make an In-Reply-To
 			// header.
-			msgData += RMM::headerNames[RMM::HeaderInReplyTo];
-			msgData += ": ";
-			msgData += message.envelope().messageID().asString();
-			msgData += "\n";
+			QCString inReplyTo = message.envelope().inReplyTo().asString();
+			inReplyTo += RMM::headerNames[RMM::HeaderInReplyTo];
+			inReplyTo += ": ";
+			inReplyTo += message.envelope().messageID().asString();
+			msg.envelope().set(RMM::HeaderInReplyTo, inReplyTo);
 		}
 	}
 
@@ -276,20 +272,10 @@ EmpathComposeWidget::message()
 	// be important, and it's easier to see them when they're near to the
 	// message body text.
 	
-	// FIXME Remove these asciis
-	msgData += headerEditWidget_->headersAsText().ascii();
-	msgData += RMM::headerNames[RMM::HeaderSubject];
-	msgData += ": ";
-	msgData += subjectSpecWidget_->getSubject().ascii();
-	msgData += "\n";
-	msgData += "X-Mailer: Empath\n";
-	msgData += "\n\n";
-
 	// Header / body separator
-	msgData +=	editorWidget_->text().ascii();
+//	msg.body() = editorWidget_->text().ascii();
 
-	return msgData;
-#endif
+	return msg;
 }
 
 	bool

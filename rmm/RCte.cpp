@@ -74,7 +74,20 @@ RCte::parse()
 	if (parsed_) return;
 	rmmDebug("strRep_ = " + strRep_);
 	
-	mechanism_	= strRep_.stripWhiteSpace();
+	strRep_		= strRep_.stripWhiteSpace();
+	
+	if (!stricmp(strRep_, "7bit"))
+		mechanism_ = RMM::CteType7bit;
+	else if (!stricmp(strRep_, "8bit"))
+		mechanism_ = RMM::CteType8bit;
+	else if (!stricmp(strRep_, "base64"))
+		mechanism_ = RMM::CteTypeBase64;
+	else if (!stricmp(strRep_, "quoted-printable"))
+		mechanism_ = RMM::CteTypeQuotedPrintable;
+	else if (!strnicmp(strRep_, "x", 1))
+		mechanism_ = RMM::CteTypeXtension;
+	else 
+		mechanism_ = RMM::CteTypeBinary;
 	
 	parsed_		= true;
 	assembled_	= false;
@@ -86,7 +99,32 @@ RCte::assemble()
 	parse();
 	if (assembled_) return;
 	rmmDebug("assemble() called");
-	strRep_ = mechanism_;
+	switch (mechanism_) {
+
+		case RMM::CteType7bit:
+			strRep_ = "7bit";
+			break;
+			
+		case RMM::CteType8bit:
+			strRep_ = "8bit";
+			break;
+		
+		case RMM::CteTypeBase64:
+			strRep_ = "Base64";
+			break;
+		
+		case RMM::CteTypeQuotedPrintable:
+			strRep_ = "Quoted-Printable";
+			break;
+		
+		case RMM::CteTypeXtension:
+			break;
+		
+		case RMM::CteTypeBinary:
+		default:
+			strRep_ = "binary";
+			break;
+	}
 	assembled_ = true;
 }
 
@@ -94,23 +132,22 @@ RCte::assemble()
 RCte::createDefault()
 {
 	rmmDebug("createDefault() called");
-	mechanism_	= "base64";
+	mechanism_	= RMM::CteTypeBase64;
 	parsed_		= true;
 	assembled_	= false;
 }
 
 
-	QCString
-RCte::mechanism()	
+	RMM::CteType
+RCte::mechanism()
 {
 	parse();
 	return mechanism_;
 }
 
 	void
-RCte::setMechanism(const QCString & m)
+RCte::setMechanism(RMM::CteType t)
 {
-	mechanism_ = m;
+	mechanism_ = t;
 	assembled_	= false;
 }
-

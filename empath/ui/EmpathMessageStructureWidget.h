@@ -43,7 +43,7 @@ class EmpathMessageStructureWidget : public QListView
 
 		~EmpathMessageStructureWidget() { empathDebug("dtor"); }
 		
-		void setMessage(RMessage & m);
+		void setMessage(RBodyPart & m);
 		
 	protected slots:
 		

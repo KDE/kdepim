@@ -55,7 +55,7 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
 }
 
 	void
-EmpathMessageStructureWidget::setMessage(RMessage & m)
+EmpathMessageStructureWidget::setMessage(RBodyPart & m)
 {
 	clear();
 	

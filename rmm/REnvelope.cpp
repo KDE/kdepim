@@ -31,9 +31,10 @@ REnvelope::REnvelope()
 }
 
 REnvelope::REnvelope(const REnvelope & e)
-	:	RMessageComponent(e)
+	:	RMessageComponent(e),
+		headerList_(e.headerList_)
 {
-	rmmDebug("ctor");
+	rmmDebug("copy ctor");
 //	headerList_.setAutoDelete(true);
 }
 
@@ -56,9 +57,9 @@ REnvelope::~REnvelope()
 	void
 REnvelope::parse()
 {
-	if (parsed_) return;
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ : " + strRep_);
+	if (parsed_) return;
 
 	const char * c = strRep_.data();
 	const char * start = c;
@@ -120,8 +121,8 @@ REnvelope::parse()
 REnvelope::assemble()
 {
 	parse();
-	if (assembled_) return;
 	rmmDebug("assemble() called");
+	if (assembled_) return;
 
 	strRep_ = "";
 
@@ -134,7 +135,6 @@ REnvelope::assemble()
 
 	for (; it.current(); ++it) {
 		strRep_ += it.current()->asString();
-		strRep_ += '\r';
 		strRep_ += '\n';
 	}
 	assembled_ = true;
@@ -637,3 +637,90 @@ REnvelope::parentMessageId()
 	return m;
 }
 
+	void
+REnvelope::set(RMM::HeaderType t, const QCString & s)
+{
+	parse();
+	RHeaderListIterator it(headerList_);
+
+	for (; it.current(); ++it)
+		if (it.current()->headerType() == t)
+			headerList_.remove(it.current());
+
+	RMM::HeaderDataType hdt = RMM::headerTypesTable[t];
+
+	RHeaderBody * d;
+
+	switch (hdt) {
+		case RMM::Address:
+			d = new RAddress;
+			break;
+		case RMM::AddressList:
+			d = new RAddressList;
+			break;
+		case RMM::DateTime:
+			d = new RDateTime;
+			break;
+		case RMM::DispositionType:
+			d = new RDispositionType;
+			break;
+		case RMM::Mailbox:
+			d = new RMailbox;
+			break;
+		case RMM::MailboxList:
+			d = new RMailboxList;
+			break;
+		case RMM::Mechanism:
+			d = new RMechanism;
+			break;
+		case RMM::MessageID:
+			d = new RMessageID;
+			break;
+		case RMM::Text:
+		default:
+			d = new RText;
+			break;
+	}
+	
+	CHECK_PTR(d);
+
+	RHeader * hdr = new RHeader;
+
+	hdr->setType(t);
+	hdr->setBody(d);
+
+	headerList_.append(hdr);
+	assembled_ = false;
+}
+
+#if 0
+	void
+REnvelope::set(const QCString & headerName, const QCString & s)
+{
+	RHeaderListIterator it(headerList_);
+
+	for (; it.current(); ++it)
+		if (!stricmp(it.current()->headerName(), headerName))
+			headerList_.remove(it.current());
+	
+
+}
+#endif
+
+	void
+REnvelope::addHeader(RHeader h)
+{
+	parse();
+	RHeader * newHeader = new RHeader(h);
+	headerList_.append(newHeader);
+	assembled_ = false;
+}
+
+	void
+REnvelope::addHeader(const QCString & s)
+{
+	parse();
+	RHeader * newHeader = new RHeader(s);
+	headerList_.append(newHeader);
+	assembled_ = false;
+}

@@ -42,6 +42,15 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 {
 	empathDebug("ctor");
 	
+	structureWidget_ =
+		new EmpathMessageStructureWidget(0, "structureWidget");
+	CHECK_PTR(structureWidget_);
+	
+	connect(
+		structureWidget_,	SIGNAL(partChanged(RBodyPart *)),
+		this,				SLOT(s_partChanged(RBodyPart *)));
+
+
 	mainLayout_ = new QGridLayout(this, 3, 2, 0, 0);
 	CHECK_PTR(mainLayout_);
 	
@@ -72,6 +81,10 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	
 	headerViewWidget_ =
 		new EmpathHeaderViewWidget(this, "headerViewWidget");
+	
+	QObject::connect(
+		headerViewWidget_,	SIGNAL(clipClicked()),
+		this,				SLOT(s_clipClicked()));
 	
 
 	empathDebug("Adding widgets to layout");
@@ -107,6 +120,7 @@ EmpathMessageViewWidget::go()
 {
 	empathDebug("go() called");
 
+	QCString s;
 	RMessage * m(empath->message(url_));
 	
 	if (m == 0) {
@@ -114,7 +128,8 @@ EmpathMessageViewWidget::go()
 		return;
 	}
 	
-	RMessage message(*m);
+	RBodyPart message(m->decode());
+	structureWidget_->setMessage(message);
 	
 	// Ok I'm going to try and get the viewable body parts now.
 	// To start with, I'll see if there's only one part. If so, I'll show it,
@@ -128,10 +143,10 @@ EmpathMessageViewWidget::go()
 	empathDebug(message.envelope().asString());
 	
 	if (message.body().count() == 0)
-		messageWidget_->use(message.envelope(), message);
+		s = message.data();
 	
 	else if (message.body().count() == 1)
-		messageWidget_->use(message.envelope(), *(message.body().at(0)));
+		s = message.body().at(0)->decode().data();
 	
 	else {
 		
@@ -160,19 +175,34 @@ EmpathMessageViewWidget::go()
 				empathDebug("   Type of this part is \"" + t.type() + "\"");
 				empathDebug("SubType of this part is \"" + t.subType() + "\"");
 
-				if (
-					(!stricmp(
-								t.type(),
-								RMM::mimeTypeEnum2Str(RMM::MimeTypeText))) &&
-					(!stricmp(
-								t.subType(),
-								RMM::mimeSubTypeEnum2Str(RMM::MimeSubTypePlain)))) {
+				if (!stricmp(t.type(),
+							RMM::mimeTypeEnum2Str(RMM::MimeTypeText))) {
 					
-					empathDebug("Using this part as body");
+					if (!stricmp(t.subType(),
+							RMM::mimeSubTypeEnum2Str(RMM::MimeSubTypeHTML))) {
 
-//						messageBody = it.current()->data();
-				
+						empathDebug("Using this part as body");
+
+						RBodyPart p(*it.current());
+					
+						s = p.decode().data();
+						messageWidget_->show(s, true);
+						return;
+	
+					} else if (!stricmp(t.subType(),
+							RMM::mimeSubTypeEnum2Str(RMM::MimeSubTypePlain))) {
+					
+						empathDebug("Using this part as body");
+
+						RBodyPart p(*it.current());
+					
+						s = p.decode().data();
+						messageWidget_->show(s);
+						return;
+					}
+					
 				} else {
+
 					empathDebug("Haven't decided what to do with this part yet");
 				}
 			}
@@ -182,7 +212,7 @@ EmpathMessageViewWidget::go()
 		empathDebug("=================== END MULTIPART =====================");
 	}
 
-	messageWidget_->go();
+	messageWidget_->show(s);
 }
 
 	void
@@ -195,6 +225,7 @@ EmpathMessageViewWidget::s_print()
 EmpathMessageViewWidget::~EmpathMessageViewWidget()
 {
 	empathDebug("dtor");
+	delete structureWidget_;
 }
 
 	void
@@ -289,25 +320,7 @@ EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
 	void
 EmpathMessageViewWidget::s_clipClicked()
 {
-	EmpathMessageStructureWidget * w =
-		new EmpathMessageStructureWidget(0, "structureWidget");
-	CHECK_PTR(w);
-	
-	connect(
-		w,		SIGNAL(partChanged(RBodyPart *)),
-		this,	SLOT(s_partChanged(RBodyPart *)));
-
-	RMessage * m(empath->message(url_));
-	
-	if (m == 0) {
-		empathDebug("Can't load message from \"" + url_.asString() + "\"");
-		return;
-	}
-	
-	RMessage message(*m);
-	
-	w->setMessage(message);
-	w->show();
+	structureWidget_->show();
 }
 
 	void
@@ -315,7 +328,6 @@ EmpathMessageViewWidget::s_partChanged(RBodyPart * part)
 {
 	empathDebug("s_partChanged() called");
 	RBodyPart p(*part);
-	messageWidget_->use(p);
-	messageWidget_->go();
+	messageWidget_->show(p.data());
 }
 
