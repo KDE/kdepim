@@ -38,7 +38,6 @@
 #include <kconfig.h>
 #include <kurlrequester.h>
 
-#include "korganizerConduit.h"
 #include "vcal-factory.h"
 #include "vcal-setup.h"
 #include "vcalconduitSettings.h"

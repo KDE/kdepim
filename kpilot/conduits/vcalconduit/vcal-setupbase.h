@@ -31,6 +31,7 @@
 
 #include "plugin.h"
 #include "vcal-factorybase.h"
+#include "korganizerConduit.h"
 
 class VCalWidget;
 class VCalConduitSettings;
