@@ -77,8 +77,7 @@ binary-arch: build
 		usr/share/man/man1/korganizer* usr/lib/*korganizer* \
 		usr/share/man/man1/alarmd* \
 		usr/share/man/man1/ical2vcal*
-	install -d  debian/korganizer/usr/lib/mime/packages/
-	-mv debian/tmp/usr/lib/mime/packages/kdepim debian/korganizer/usr/lib/mime/packages/korganizer
+	-rm -rf debian/tmp/usr debian/tmp/etc
 	dh_installdocs
 	dh_installmenu
 	dh_installmime
