@@ -77,6 +77,9 @@
 #include <qpopupmenu.h>
 #include <qregexp.h>
 
+#include <algorithm>
+#include <iterator>
+
 #include <string.h>
 #include <assert.h>
 
@@ -262,6 +265,10 @@ namespace {
   const QPixmap * ColumnStrategy::pixmap( const GpgME::Key & key, int col ) const {
     if ( col != 0 )
       return 0;
+    // this key did not undergo a validating keylisting yet:
+    if ( !( key.keyListMode() & GpgME::Context::Validate ) )
+      return &mKeyUnknownPix;
+
     if ( !checkKeyUsage( key, mKeyUsage ) )
       return &mKeyBadPix;
 
@@ -297,12 +304,47 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      QWidget * parent, const char * name,
 					      bool modal )
   : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
-    mBackend( backend ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
     mSelectedKeys( selectedKeys ),
     mKeyUsage( keyUsage ),
     mCurrentContextMenuItem( 0 )
 {
+  if ( backend )
+    if ( backend->name() == "openpgp" )
+      mOpenPGPBackend = backend;
+    else
+      mSMIMEBackend = backend;
+  else {
+    mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
+    mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
+  }
+  init( text, extendedSelection, rememberChoice );
+}
+
+Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
+					      const QString & text,
+					      const CryptoBackend::Protocol * openpgp,
+					      const CryptoBackend::Protocol * smime,
+					      const std::vector<GpgME::Key> & selectedKeys,
+					      unsigned int keyUsage,
+					      bool extendedSelection,
+					      bool rememberChoice,
+					      QWidget * parent, const char * name,
+					      bool modal )
+  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
+    mOpenPGPBackend( openpgp ),
+    mSMIMEBackend( smime ),
+    mRememberCB( 0 ),
+    mSelectedKeys( selectedKeys ),
+    mKeyUsage( keyUsage ),
+    mCurrentContextMenuItem( 0 )
+{
+  init( text, extendedSelection, rememberChoice );
+}
+
+void Kleo::KeySelectionDialog::init( const QString & text, bool extendedSelection, bool rememberChoice ) {
   QSize dialogSize( 580, 400 );
   if ( kapp ) {
     KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
@@ -335,7 +377,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
   connect( mHideInvalidKeys, SIGNAL(toggled(bool)), SLOT(slotSearch()) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
-  mKeyListView = new KeyListView( new ColumnStrategy( keyUsage ), page, "mKeyListView" );
+  mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), page, "mKeyListView" );
   mKeyListView->setResizeMode( QListView::LastColumn );
   mKeyListView->setRootIsDecorated( true );
   mKeyListView->setShowSortIndicator( true );
@@ -426,20 +468,16 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   this->setEnabled( false );
 
   // FIXME: save current selection
-  if ( mBackend )
-    startKeyListJobForBackend( mBackend );
-  else
-    for ( unsigned int i = 0 ; const CryptoBackend * b = CryptPlugFactory::instance()->backend( i ) ; ++i ) {
-      if ( const CryptoBackend::Protocol * p = b->openpgp() )
-	startKeyListJobForBackend( p );
-      if ( const CryptoBackend::Protocol * p = b->smime() )
-	startKeyListJobForBackend( p );
-    }
+  if ( mOpenPGPBackend )
+    startKeyListJobForBackend( mOpenPGPBackend, std::vector<GpgME::Key>(), false /*non-validating*/ );
+  if ( mSMIMEBackend )
+    startKeyListJobForBackend( mSMIMEBackend, std::vector<GpgME::Key>(), false /*non-validating*/ );
 
   if ( mListJobCount == 0 ) {
     this->setEnabled( true );
     KMessageBox::information( this,
-			      i18n("No backends found for listing keys. Check your installation."),
+			      i18n("No backends found for listing keys. "
+				   "Check your installation."),
 			      i18n("Key Listing Failed") );
     connectSignals();
   }
@@ -455,24 +493,36 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
 }
 
-void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::Protocol * backend ) {
+namespace {
+  struct ExtractFingerprint {
+    QString operator()( const GpgME::Key & key ) {
+      return key.subkey(0).fingerprint();
+    }
+  };
+}
+
+void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::Protocol * backend, const std::vector<GpgME::Key> & keys, bool validate ) {
   assert( backend );
-  KeyListJob * job = backend->keyListJob( false, false, false ); // local, w/o sigs, no validation
+  KeyListJob * job = backend->keyListJob( false, false, validate ); // local, w/o sigs, validation as givem
   if ( !job )
     return;
 
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
 	   SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	   mKeyListView, SLOT(slotAddKey(const GpgME::Key&)) );
+	   mKeyListView, validate ?
+	   SLOT(slotRefreshKey(const GpgME::Key&)) :
+	   SLOT(slotAddKey(const GpgME::Key&)) );
 
-  const GpgME::Error err = job->start( QStringList(), mKeyUsage & SecretKeys && !( mKeyUsage & PublicKeys ) );
+  QStringList fprs;
+  std::transform( keys.begin(), keys.end(), std::back_inserter( fprs ), ExtractFingerprint() );
+  const GpgME::Error err = job->start( fprs, mKeyUsage & SecretKeys && !( mKeyUsage & PublicKeys ) );
 
   if ( err )
     return showKeyListError( this, err );
 
   // FIXME: create a MultiProgressDialog:
-  (void)new ProgressDialog( job, i18n( "Fetching keys for %1" ).arg( backend->name() ), this );
+  (void)new ProgressDialog( job, validate ? i18n( "Checking selected keys..." ) : i18n( "Fetching keys..." ), this );
   ++mListJobCount;
 }
 
@@ -511,6 +561,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 			      i18n("Key List Result") );
   this->setEnabled( true );
   mListJobCount = mTruncated = 0;
+  mKeysToCheck.clear();
 
   selectKeys( mKeyListView, mSelectedKeys );
 
@@ -533,26 +584,72 @@ void Kleo::KeySelectionDialog::slotSelectionChanged() {
   mCheckSelectionTimer->start( sCheckSelectionDelay );
 }
 
+namespace {
+  struct AlreadyChecked {
+    bool operator()( const GpgME::Key & key ) const {
+      return key.keyListMode() & GpgME::Context::Validate ;
+    }
+  };
+}
+
 void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
   kdDebug(5150) << "KeySelectionDialog::slotCheckSelection()\n";
+
+  mCheckSelectionTimer->stop();
 
   mSelectedKeys.clear();
 
   if ( !mKeyListView->isMultiSelection() ) {
     if ( item )
       mSelectedKeys.push_back( item->key() );
-    enableButtonOK( item && checkKeyUsage( item->key(), mKeyUsage ) );
-    return;
   }
-
-  mCheckSelectionTimer->stop();
 
   for ( KeyListViewItem * it = mKeyListView->firstChild() ; it ; it = it->nextSibling() )
     if ( it->isSelected() )
       mSelectedKeys.push_back( it->key() );
 
-  enableButtonOK( !mSelectedKeys.empty() &&
-		  checkKeyUsage( mSelectedKeys, mKeyUsage ) );
+  mKeysToCheck.clear();
+  std::remove_copy_if( mSelectedKeys.begin(), mSelectedKeys.end(),
+		       std::back_inserter( mKeysToCheck ),
+		       AlreadyChecked() );
+  if ( mKeysToCheck.empty() ) {
+    enableButtonOK( !mSelectedKeys.empty() &&
+		    checkKeyUsage( mSelectedKeys, mKeyUsage ) );
+    return;
+  }
+
+  // performed all fast checks - now for validating key listing:
+  startValidatingKeyListing();
+}
+
+void Kleo::KeySelectionDialog::startValidatingKeyListing() {
+  if ( mKeysToCheck.empty() )
+    return;
+
+  mListJobCount = 0;
+  mTruncated = 0;
+  mSavedOffsetY = mKeyListView->contentsY();
+
+  disconnectSignals();
+  this->setEnabled( false );
+
+  std::vector<GpgME::Key> smime, openpgp;
+  for ( std::vector<GpgME::Key>::const_iterator it = mKeysToCheck.begin() ; it != mKeysToCheck.end() ; ++it )
+    if ( it->protocol() == GpgME::Context::OpenPGP )
+      openpgp.push_back( *it );
+    else
+      smime.push_back( *it );
+
+  if ( !openpgp.empty() ) {
+    assert( mOpenPGPBackend );
+    startKeyListJobForBackend( mOpenPGPBackend, openpgp, true /*validate*/ );
+  }
+  if ( !smime.empty() ) {
+    assert( mSMIMEBackend );
+    startKeyListJobForBackend( mSMIMEBackend, smime, true /*validate*/ );
+  }
+
+  assert( mListJobCount > 0 );
 }
 
 bool Kleo::KeySelectionDialog::rememberSelection() const {
@@ -570,15 +667,11 @@ void Kleo::KeySelectionDialog::slotRMB( Kleo::KeyListViewItem * item, const QPoi
 }
 
 void Kleo::KeySelectionDialog::slotRecheckKey() {
-  if ( !mCurrentContextMenuItem )
+  if ( !mCurrentContextMenuItem || mCurrentContextMenuItem->key().isNull() )
     return;
 
-#ifdef TEMPORARILY_REMOVED
-  // force rereading the key
-  keyAdmissibility( mCurrentContextMenuItem, ForceTrustCheck );
-  // recheck the selection
-  slotCheckSelection( mCurrentContextMenuItem );
-#endif
+  mKeysToCheck.clear();
+  mKeysToCheck.push_back( mCurrentContextMenuItem->key() );
 }
 
 void Kleo::KeySelectionDialog::slotOk() {

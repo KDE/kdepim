@@ -188,6 +188,7 @@ namespace Kleo {
 
   public slots:
     virtual void slotAddKey( const GpgME::Key & key );
+    virtual void slotRefreshKey( const GpgME::Key & key );
 
     //
     // Only boring stuff below:

@@ -79,8 +79,18 @@ namespace Kleo {
     };
 
     KeySelectionDialog( const QString & title,
-                        const QString & text=QString::null,
-                        const Kleo::CryptoBackend::Protocol * backend=0,
+                        const QString & text,
+                        const Kleo::CryptoBackend::Protocol * backend,
+			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
+                        unsigned int keyUsage=AllKeys,
+                        bool extendedSelection=false,
+			bool rememberChoice=false,
+                        QWidget * parent=0, const char * name=0,
+                        bool modal=true );
+    KeySelectionDialog( const QString & title,
+                        const QString & text,
+                        const Kleo::CryptoBackend::Protocol * openpgp,
+                        const Kleo::CryptoBackend::Protocol * smime,
 			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
@@ -121,6 +131,7 @@ namespace Kleo {
     void slotFilter();
 
   private:
+    void init( const QString &, bool, bool );
     void filterByKeyID( const QString & keyID );
     void filterByKeyIDOrUID( const QString & keyID );
     void filterByUID( const QString & uid );
@@ -130,20 +141,22 @@ namespace Kleo {
     void connectSignals();
     void disconnectSignals();
 
-    void startKeyListJobForBackend( const Kleo::CryptoBackend::Protocol * );
+    void startKeyListJobForBackend( const Kleo::CryptoBackend::Protocol *, const std::vector<GpgME::Key> &, bool );
+    void startValidatingKeyListing();
 
   private:
     Kleo::KeyListView * mKeyListView;
-    const Kleo::CryptoBackend::Protocol * mBackend;
+    const Kleo::CryptoBackend::Protocol * mOpenPGPBackend;
+    const Kleo::CryptoBackend::Protocol * mSMIMEBackend;
     QCheckBox * mRememberCB;
     QCheckBox * mHideInvalidKeys;
-    std::vector<GpgME::Key> mSelectedKeys;
+    std::vector<GpgME::Key> mSelectedKeys, mKeysToCheck;
     unsigned int mKeyUsage;
     QTimer * mCheckSelectionTimer;
     QTimer * mStartSearchTimer;
     // cross-eventloop temporaries:
     QString mSearchText;
-    QListViewItem * mCurrentContextMenuItem;
+    Kleo::KeyListViewItem * mCurrentContextMenuItem;
     int mTruncated, mListJobCount, mSavedOffsetY;
   };
 

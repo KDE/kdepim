@@ -153,6 +153,17 @@ void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
     (void)new KeyListViewItem( this, key );
 }
 
+void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
+  const char * fpr = key.subkey(0).fingerprint();
+  if ( !fpr )
+    return;
+  for ( KeyListViewItem * item = firstChild() ; item ; item = item->nextSibling() )
+    if ( qstrcmp( fpr, item->key().subkey(0).fingerprint() ) == 0 ) {
+      item->setKey ( key );
+      return;
+    }
+}
+
 // slots for the emission of covariant signals:
 
 void Kleo::KeyListView::slotEmitDoubleClicked( QListViewItem * item, const QPoint & p, int col ) {
