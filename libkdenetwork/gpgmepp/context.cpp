@@ -580,6 +580,8 @@ namespace GpgME {
   Error Context::cancelPendingOperation() {
 #ifdef HAVE_GPGME_CANCEL
     return gpgme_cancel( d->ctx );
+#else
+    return 0;
 #endif
   }
 
