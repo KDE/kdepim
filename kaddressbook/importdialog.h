@@ -47,6 +47,7 @@ class ContactImportDialog : public KImportDialog
     KImportColumn *mAdditionalName;
     KImportColumn *mNamePrefix;
     KImportColumn *mNameSuffix;
+	KImportColumn *mFormattedName;
     KImportColumn *mNickName;
     KImportColumn *mBirthday;
     KImportColumn *mEmail;

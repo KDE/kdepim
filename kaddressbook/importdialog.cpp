@@ -38,6 +38,7 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
     mAdditionalName = new KImportColumn(this, KABC::Addressee::additionalNameLabel());
     mNamePrefix = new KImportColumn(this, KABC::Addressee::prefixLabel());
     mNameSuffix = new KImportColumn(this, KABC::Addressee::suffixLabel());
+    mFormattedName = new KImportColumn(this, KABC::Addressee::formattedNameLabel());
     mNickName = new KImportColumn(this, KABC::Addressee::nickNameLabel());
     mBirthday = new KImportColumn(this, KABC::Addressee::birthdayLabel());
     mEmail = new KImportColumn(this, KABC::Addressee::emailLabel());
@@ -70,6 +71,7 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
 void ContactImportDialog::convertRow()
 {
   KABC::Addressee a;
+  a.setFormattedName(mFormattedName->convert());
   a.setGivenName(mFirstName->convert());
   a.setFamilyName(mLastName->convert());
   a.setAdditionalName(mAdditionalName->convert());
