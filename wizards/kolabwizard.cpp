@@ -66,11 +66,11 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
 
 };
 
-class CreateCalenderImapResource : public KConfigPropagator::Change
+class CreateCalendarImapResource : public KConfigPropagator::Change
 {
   public:
-    CreateCalenderImapResource()
-      : KConfigPropagator::Change( i18n("Create Calender IMAP Resource") )
+    CreateCalendarImapResource()
+      : KConfigPropagator::Change( i18n("Create Calendar IMAP Resource") )
     {
     }
 
@@ -176,7 +176,7 @@ class KolabPropagator : public KConfigPropagator
         if ( (*it)->type() == "imap" ) break;
       }
       if ( it == m.end() ) {
-        changes.append( new CreateCalenderImapResource );
+        changes.append( new CreateCalendarImapResource );
         changes.append( new CreateContactImapResource );
         changes.append( new CreateNotesImapResource );
       }
