@@ -355,9 +355,7 @@ EmpathIndex::setStatus(const QString & key, EmpathIndexRecord::Status status)
         return false;
     }
     
-    unsigned int oldStatus = rec->status();
-
-    if (oldStatus != status) {
+    if (rec->status() != status) {
 
         rec->setStatus(status);
         _setDirty();
