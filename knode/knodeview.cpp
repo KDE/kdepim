@@ -407,6 +407,7 @@ void KNodeView::prepareShutdown()
   f_olManager->syncFolders();
   f_ilManager->prepareShutdown();
   a_ccManager->prepareShutdown();
+  s_coreManager->save();
 }
 
 
