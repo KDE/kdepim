@@ -248,6 +248,14 @@ namespace GpgME {
       return 0;
   }
 
+  const char * Key::primaryFingerprint() const {
+#ifdef HAVE_GPGME_KEY_T_FPR
+    return d->key ? d->key->fpr : 0 ;
+#else
+    return d->key && d->key->subkeys ? d->key->subkeys->fpr : 0 ;
+#endif
+  }
+
   unsigned int Key::keyListMode() const {
     return d ? d->mode : 0 ;
   }

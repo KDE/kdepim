@@ -94,6 +94,7 @@ namespace GpgME {
 
     const char * keyID() const;
     const char * shortKeyID() const;
+    const char * primaryFingerprint() const;
 
     typedef Context::KeyListMode KeyListMode;
     unsigned int keyListMode() const;
