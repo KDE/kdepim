@@ -23,7 +23,10 @@
 * <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
 * fix my adverb vs. adjective mistakes
 * <guiicon> vs. <guibutton>
+* spelling: homepage vs. home page, popup vs pop up, frontend vs front end
+
 * in KMail: kmail vs. KMail
+
 -->
 
 <authorgroup>
@@ -520,7 +523,7 @@ a different completion mode.</para>
 recipient in one of the fields, use a comma to separate each address
 from the next one. You may need to specify fully qualified addresses
 (&ie; <userinput>user@domain.com</userinput>) even for local
-users, depending on your sysetm configuration.</para>
+users, depending on your system configuration.</para>
 
 <para>When you are finished with your
 message, click the <guiicon>Send</guiicon> icon (the envelope) to send
@@ -1459,7 +1462,7 @@ identity cannot be renamed and removed.</para>
 
 <para>To add a new identity to the identity list, click on the
 <guibutton>New...</guibutton> button. A dialog will come up that
-allows you to select certain defaults for your new idenity.</para>
+allows you to select certain defaults for your new identity.</para>
 
 <!-- TODO?: s/dialog/form(ular)/? since it's not really a dialog (see iface hall of shame) -->
 <sect2 id="configure-identity-newidentitydialog">
@@ -1652,7 +1655,7 @@ keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
 
 <para>Check the <guilabel>Enable Signature</guilabel> option if you
-want to append signatures when using this idenity.</para>
+want to append signatures when using this identity.</para>
 
 <!-- fixme: move
 <para>Check the <guilabel>Automatically append signature</guilabel>
@@ -1795,7 +1798,7 @@ is activated for at least one account:</para>
 <!-- fixme in kmail: why "line"??? -->
 <term><guilabel>Execute command line</guilabel></term>
 <listitem>
-<para>Will excute the command you enter in the line edit below.</para> 
+<para>Will execute the command you enter in the line edit below.</para> 
 </listitem>
 </varlistentry>
 
@@ -1976,7 +1979,7 @@ represented using that charset.</para>
 
 <para>The <guilabel>Use custom Message-Id suffix</guilabel> checkbox lets you define
 how your messages' Message-Id field will be generated. The Message-Id
-must have a suffix that's world-wide unique. Depeding on your setup,
+must have a suffix that's world-wide unique. Depending on your setup,
 this might already be the case. You should send yourself a message and
 look at its headers. If it contains a Message-Id that ends in
 <quote>localhost</quote> or any other string that's not guaranteed to
@@ -2087,7 +2090,7 @@ Folder</link> dialog.</para>
 
 </variablelist>
 
-<para><guilabel>On program exit, perfom the following tasks</guilabel>:</para>
+<para><guilabel>On program exit, perform the following tasks</guilabel>:</para>
 
 <variablelist>
 
@@ -3802,7 +3805,7 @@ Cc&gt;</guilabel> <guilabel>doesn't contain</guilabel>
 <guilabel> doesn't contain</guilabel> <userinput>xxx</userinput>
 <emphasis>or</emphasis> <guilabel>Cc</guilabel> <guilabel>doesn't
 contain</guilabel> <userinput>xxx</userinput></quote>.</para>
-<para>You can emulate the other behaviour by using two rules: One for
+<para>You can emulate the other behavior by using two rules: One for
 <guilabel>To</guilabel> and one for <guilabel>Cc</guilabel>. One of
 the next versions of &kmail; will include an overhaul of the search
 criteria, which will make it possible to easily use the above
@@ -4228,7 +4231,7 @@ with the <literal>From:</literal> header that contains the message's sender).
 For many &UNIX; mail programs, all you must do is move your mailboxes to <filename
 class="directory">~/Mail</filename> (or make <filename
 class="symlink">Mail</filename> a symbolic link to the folder containing your
-mailboxes), make sure they are writeable by your user, and launch &kmail;. The
+mailboxes), make sure they are writable by your user, and launch &kmail;. The
 mailboxes should now show up correctly in &kmail;.</para>
 
 <para>Please have a look at the
@@ -4334,7 +4337,7 @@ there.</para>
 <listitem>
 <para>Copy your &Netscape; mail files from <filename
 class="directory">~/nsmail/</filename> to <filename
-class="directory">~/Mail</filename> and make sure they are writeable (only by
+class="directory">~/Mail</filename> and make sure they are writable (only by
 your user, of course).  The mailboxes will show up in &kmail; the next time you
 start it.</para>
 </listitem>
