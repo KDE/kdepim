@@ -1,3 +1,7 @@
 - http result code handling (404, 200, etc.)
+- handling of errors returned in a valid dav response (Exchange)
 - conflict resolution
-- folder type detection for calendar folders, remove hardcoded "/Calendar"
+- Error handling in the folder lister (cannot connect to host, timeout, etc.)
+- turn the flat folder list into a folder tree
+- correctly remove an uploaded item. The subsequent folder refresh needs to re-download it anyway.
+- Restore folder subscriptions on folder list refresh
