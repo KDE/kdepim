@@ -480,8 +480,10 @@ void AddresseeEditorWidget::load()
   blockSignals( true ); 
   mBlockSignals = true; // used for internal signal blocking
 
+  mNameEdit->blockSignals( true );
   mNameEdit->setText( mAddressee.assembledName() );
-  
+  mNameEdit->blockSignals( false );
+
   if ( mAddressee.formattedName().isEmpty() ) {
     KConfig config( "kaddressbookrc" );
     config.setGroup( "General" );
