@@ -92,9 +92,11 @@ an archive of the developer's mailing list is at <ulink url="http://lists.kde.or
 <chapter id="secgettingstarted">
 <title>Getting Started</title>
 
-<para>This is a short introduction to &kmail; and its usage so you can start
-working with it right away. For more in-depth information see the 
-<link linkend="secUsingKmail">Using &kmail;</link> section.</para>
+<para>This is a short introduction to &kmail; and its usage so you can
+start working with it right away. For more in-depth information see the 
+<link linkend="secUsingKmail">Using &kmail;</link> section. Note that
+&kmail;'s installation is not described in this documentation. If you
+have problems with that, see our <link linkend="faq">FAQ</link>.</para>
 
 <para>Invoking &kmail; for the first time creates a directory called <filename class="directory">Mail</filename> containing the initial
 files (<filename>inbox</filename>, <filename>outbox</filename>, <filename>sent-mail</filename> and 
@@ -1888,6 +1890,16 @@ the following entry:
    </para></listitem>
    <listitem><para>Check your mail</para></listitem>
  </itemizedlist>
+ </para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I install &kmail;?</para></question>
+ <answer><para>&kmail; is part of KDE's kdenetwork package, it requires
+ the packages kdelibs, kdesupport and kdebase. If you have problems
+ installing any of these packages, we suggest you visit the FAQ at 
+ the <ulink url="http://www.kde.org">KDE  homepage</ulink> or search 
+ the <ulink url="http://lists.kde.org">mailing list archives</ulink>.
  </para></answer>
 </qandaentry>
 
