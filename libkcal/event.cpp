@@ -42,7 +42,7 @@ void Event::setDtEnd(const QDateTime &dtEnd)
   emit eventUpdated(this);
 }
 
-const QDateTime &Event::dtEnd() const
+QDateTime Event::dtEnd() const
 {
   if (hasEndDate()) return mDtEnd;
   if (hasDuration()) return dtStart().addSecs(duration());

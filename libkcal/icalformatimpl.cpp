@@ -196,38 +196,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   if (incidence->attendeeCount() != 0) {
     QList<Attendee> al = incidence->attendees();
     QListIterator<Attendee> ai(al);
-    Attendee *curAttendee;
-    
-    QString attendee;
     for (; ai.current(); ++ai) {
-      curAttendee = ai.current();
-      if (!curAttendee->email().isEmpty() &&
-          !curAttendee->name().isEmpty()) {
-        attendee = curAttendee->name() + " <" + curAttendee->email() +
-                   ">";
-      } else if (curAttendee->name().isEmpty()) {
-        attendee = curAttendee->email();
-      } else if (curAttendee->email().isEmpty()) {
-        attendee = curAttendee->name();
-      } else if (curAttendee->name().isEmpty() && 
-	         curAttendee->email().isEmpty()) {
-        attendee = "";
-	kdDebug() << "warning! this Event has an attendee w/o name or email!"
-                  << endl;
-      } else {
-        attendee = "";
-      }
-      
-      icalproperty *p = icalproperty_new_attendee(
-          ("MAILTO:" + attendee).utf8());
-      icalproperty_add_parameter(p,icalparameter_new_rsvp(
-          curAttendee->RSVP() ? ICAL_RSVP_TRUE : ICAL_RSVP_FALSE ));
-// TODO: attendee status
-//      addPropValue(aProp, VCStatusProp, curAttendee->getStatusStr().ascii());
-
-      icalcomponent_add_property(parent,p);
+      icalcomponent_add_property(parent,writeAttendee(ai.current()));
     }
   }
+
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_description(
@@ -340,6 +313,65 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     duration = writeICalDuration(incidence->duration());
     icalcomponent_add_property(parent,icalproperty_new_duration(duration));
   }
+}
+
+icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
+{
+  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
+
+  if (!attendee->name().isEmpty()) {
+    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name()));
+  }
+
+  icalproperty_add_parameter(p,icalparameter_new_rsvp(
+          attendee->RSVP() ? ICAL_RSVP_TRUE : ICAL_RSVP_FALSE ));
+
+  icalparameter_partstat status = ICAL_PARTSTAT_NEEDSACTION;
+  switch (attendee->status()) {
+    default:
+    case Attendee::NeedsAction:
+      status = ICAL_PARTSTAT_NEEDSACTION;
+      break;
+    case Attendee::Accepted:
+      status = ICAL_PARTSTAT_ACCEPTED;
+      break;
+    case Attendee::Declined:
+      status = ICAL_PARTSTAT_DECLINED;
+      break;
+    case Attendee::Tentative:
+      status = ICAL_PARTSTAT_TENTATIVE;
+      break;
+    case Attendee::Delegated:
+      status = ICAL_PARTSTAT_DELEGATED;
+      break;
+    case Attendee::Completed:
+      status = ICAL_PARTSTAT_COMPLETED;
+      break;
+    case Attendee::InProcess:
+      status = ICAL_PARTSTAT_INPROCESS;
+      break;
+  }
+  icalproperty_add_parameter(p,icalparameter_new_partstat(status));
+
+  icalparameter_role role = ICAL_ROLE_REQPARTICIPANT;
+  switch (attendee->role()) {
+    case Attendee::Chair:
+      role = ICAL_ROLE_CHAIR;
+      break;
+    default:
+    case Attendee::ReqParticipant:
+      role = ICAL_ROLE_REQPARTICIPANT;
+      break;
+    case Attendee::OptParticipant:
+      role = ICAL_ROLE_OPTPARTICIPANT;
+      break;
+    case Attendee::NonParticipant:
+      role = ICAL_ROLE_NONPARTICIPANT;
+      break;
+  }
+  icalproperty_add_parameter(p,icalparameter_new_role(role));
+
+  return p;
 }
 
 icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
@@ -849,40 +881,76 @@ Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
 
 Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 {
-  Attendee *a;
-
-  QString text = QString::fromUtf8(icalproperty_get_attendee(attendee));
+  icalparameter *p = 0;
   
-  text = text.simplifyWhiteSpace();
-  int emailPos1, emailPos2;
-  if ((emailPos1 = text.find('<')) > 0) {
-    // both email address and name
-    emailPos2 = text.find('>');
-    a = new Attendee(text.left(emailPos1 - 1),
-                     text.mid(emailPos1 + 1, 
-                     emailPos2 - (emailPos1 + 1)));
-  } else if (text.find('@') > 0) {
-    // just an email address
-    a = new Attendee(0, text);
-  } else {
-    // just a name
-    a = new Attendee(text);
-  }
+  QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
 
-  icalparameter *p = icalproperty_get_first_parameter(attendee,
-                                                      ICAL_RSVP_PARAMETER);
+  QString name;
+  p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
   if (p) {
-    a->setRSVP(icalparameter_get_rsvp(p));
+    name = icalparameter_get_cn(p);
+  } else {
   }
 
-// TODO: attendee status
-#if 0  
-      // is there a status property?
-      if ((vp = isAPropertyOf(vo, VCStatusProp)) != 0)
-	a->setStatus(vObjectStringZValue(vp));
-#endif
+  bool rsvp=false;
+  p = icalproperty_get_first_parameter(attendee,ICAL_RSVP_PARAMETER);
+  if (p) {
+    icalparameter_rsvp rsvpParameter = icalparameter_get_rsvp(p);
+    if (rsvpParameter == ICAL_RSVP_TRUE) rsvp = true;
+  }
 
-  return a;
+  Attendee::PartStat status = Attendee::NeedsAction;
+  p = icalproperty_get_first_parameter(attendee,ICAL_PARTSTAT_PARAMETER);
+  if (p) {
+    icalparameter_partstat partStatParameter = icalparameter_get_partstat(p);
+    switch(partStatParameter) {
+      default:
+      case ICAL_PARTSTAT_NEEDSACTION:
+        status = Attendee::NeedsAction;
+        break;
+      case ICAL_PARTSTAT_ACCEPTED:
+        status = Attendee::Accepted;
+        break;
+      case ICAL_PARTSTAT_DECLINED:
+        status = Attendee::Declined;
+        break;
+      case ICAL_PARTSTAT_TENTATIVE:
+        status = Attendee::Tentative;
+        break;
+      case ICAL_PARTSTAT_DELEGATED:
+        status = Attendee::Delegated;
+        break;
+      case ICAL_PARTSTAT_COMPLETED:
+        status = Attendee::Completed;
+        break;
+      case ICAL_PARTSTAT_INPROCESS:
+        status = Attendee::InProcess;
+        break;
+    }
+  }
+
+  Attendee::Role role = Attendee::ReqParticipant;
+  p = icalproperty_get_first_parameter(attendee,ICAL_ROLE_PARAMETER);
+  if (p) {
+    icalparameter_role roleParameter = icalparameter_get_role(p);
+    switch(roleParameter) {
+      case ICAL_ROLE_CHAIR:
+        role = Attendee::Chair;
+        break;
+      default:
+      case ICAL_ROLE_REQPARTICIPANT:
+        role = Attendee::ReqParticipant;
+        break;
+      case ICAL_ROLE_OPTPARTICIPANT:
+        role = Attendee::OptParticipant;
+        break;
+      case ICAL_ROLE_NONPARTICIPANT:
+        role = Attendee::NonParticipant;
+        break;
+    }
+  }
+
+  return new Attendee( name, email, rsvp, status, role );
 }
 
 void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)

@@ -103,7 +103,7 @@ void Incidence::setLastModified(const QDateTime &lm)
   mLastModified = lm;
 }
 
-const QDateTime &Incidence::lastModified() const
+QDateTime Incidence::lastModified() const
 {
   return mLastModified;
 }
@@ -125,7 +125,7 @@ void Incidence::setVUID(const QString &VUID)
   emit eventUpdated(this);
 }
 
-const QString &Incidence::VUID() const
+QString Incidence::VUID() const
 {
   return mVUID;
 }
@@ -154,7 +154,7 @@ void Incidence::setOrganizer(const QString &o)
   emit eventUpdated(this);
 }
 
-const QString &Incidence::organizer() const
+QString Incidence::organizer() const
 {
   return mOrganizer;
 }
@@ -176,7 +176,7 @@ void Incidence::setDtStart(const QDateTime &dtStart)
   emit eventUpdated(this);
 }
 
-const QDateTime &Incidence::dtStart() const
+QDateTime Incidence::dtStart() const
 {
   return mDtStart;
 }
@@ -271,7 +271,7 @@ void Incidence::setDescription(const QString &description)
   emit eventUpdated(this);
 }
 
-const QString &Incidence::description() const
+QString Incidence::description() const
 {
   return mDescription;
 }
@@ -284,7 +284,7 @@ void Incidence::setSummary(const QString &summary)
   emit eventUpdated(this);
 }
 
-const QString &Incidence::summary() const
+QString Incidence::summary() const
 {
   return mSummary;
 }
@@ -313,7 +313,7 @@ void Incidence::setCategories(const QString &catStr)
   emit eventUpdated(this);
 }
 
-const QStringList &Incidence::categories() const
+QStringList Incidence::categories() const
 {
   return mCategories;
 }
@@ -329,7 +329,7 @@ void Incidence::setRelatedToVUID(const QString &relatedToVUID)
   mRelatedToVUID = relatedToVUID;
 }
 
-const QString &Incidence::relatedToVUID() const
+QString Incidence::relatedToVUID() const
 {
   return mRelatedToVUID;
 }
@@ -350,7 +350,7 @@ Incidence *Incidence::relatedTo() const
   return mRelatedTo;
 }
 
-const QList<Incidence> &Incidence::relations() const
+QList<Incidence> Incidence::relations() const
 {
   return mRelations;
 }
@@ -419,7 +419,7 @@ void Incidence::addExDate(const QDate &date)
   emit eventUpdated(this);
 }
 
-const QDateList &Incidence::exDates() const
+QDateList Incidence::exDates() const
 {
   return mExDates;
 }
@@ -447,7 +447,7 @@ void Incidence::setAttachments(const QStringList &attachments)
   emit eventUpdated(this);
 }
 
-const QStringList &Incidence::attachments() const
+QStringList Incidence::attachments() const
 {
   return mAttachments;
 }
@@ -459,7 +459,7 @@ void Incidence::setResources(const QStringList &resources)
   emit eventUpdated(this);
 }
 
-const QStringList &Incidence::resources() const
+QStringList Incidence::resources() const
 {
   return mResources;
 }

@@ -424,8 +424,8 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 	       curAttendee->email().isEmpty())
 	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vtodo, VCAttendeeProp, (const char *)tmpStr.utf8());
-      addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;
-      addPropValue(aProp, VCStatusProp, curAttendee->statusStr().latin1());
+      addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");
+      addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
     }
   }
 
@@ -580,7 +580,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vevent, VCAttendeeProp, (const char *)tmpStr.utf8());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;
-      addPropValue(aProp, VCStatusProp, curAttendee->statusStr().latin1());
+      addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
     }
   }
 
@@ -869,7 +869,8 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
 	a = new Attendee(0, tmpStr);
       } else {
 	// just a name
-	a = new Attendee(tmpStr);
+        QString email = tmpStr.replace( QRegExp(" "), "." );
+	a = new Attendee(tmpStr,email);
       }
 
       // is there an RSVP property?
@@ -877,7 +878,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
 	a->setRSVP(vObjectStringZValue(vp));
       // is there a status property?
       if ((vp = isAPropertyOf(vo, VCStatusProp)) != 0)
-	a->setStatus(vObjectStringZValue(vp));
+	a->setStatus(readStatus(vObjectStringZValue(vp)));
       // add the attendee
       anEvent->addAttendee(a);
     }
@@ -1088,7 +1089,8 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 	a = new Attendee(0, tmpStr);
       } else {
 	// just a name
-	a = new Attendee(tmpStr);
+        QString email = tmpStr.replace( QRegExp(" "), "." );
+	a = new Attendee(tmpStr,email);
       }
 
       // is there an RSVP property?
@@ -1096,7 +1098,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 	a->setRSVP(vObjectStringZValue(vp));
       // is there a status property?
       if ((vp = isAPropertyOf(vo, VCStatusProp)) != 0)
-	a->setStatus(vObjectStringZValue(vp));
+	a->setStatus(readStatus(vObjectStringZValue(vp)));
       // add the attendee
       anEvent->addAttendee(a);
     }
@@ -1771,4 +1773,64 @@ int VCalFormat::numFromDay(const QString &day)
   if (day == "SU ") return 6;
 
   return -1; // something bad happened. :)
+}
+
+Attendee::PartStat VCalFormat::readStatus(const char *s) const
+{
+  QString statStr = s;
+  statStr = statStr.upper();
+  Attendee::PartStat status;
+
+  if (statStr == "X-ACTION")
+    status = Attendee::NeedsAction;
+  else if (statStr == "NEEDS ACTION")
+    status = Attendee::NeedsAction;
+  else if (statStr== "ACCEPTED")
+    status = Attendee::Accepted;
+  else if (statStr== "SENT")
+    status = Attendee::NeedsAction;
+  else if (statStr== "TENTATIVE")
+    status = Attendee::Tentative;
+  else if (statStr== "CONFIRMED")
+    status = Attendee::Accepted;
+  else if (statStr== "DECLINED")
+    status = Attendee::Declined;
+  else if (statStr== "COMPLETED")
+    status = Attendee::Completed;
+  else if (statStr== "DELEGATED")
+    status = Attendee::Delegated;
+  else {
+    kdDebug() << "error setting attendee mStatus, unknown mStatus!" << endl;
+    status = Attendee::NeedsAction;
+  }
+
+  return status;
+}
+
+QCString VCalFormat::writeStatus(Attendee::PartStat status) const
+{
+  switch(status) {
+    default:
+    case Attendee::NeedsAction:
+      return "NEEDS ACTION";
+      break;
+    case Attendee::Accepted:
+      return "ACCEPTED";
+      break;
+    case Attendee::Declined:
+      return "DECLINED";
+      break;
+    case Attendee::Tentative:
+      return "TENTATIVE";
+      break;
+    case Attendee::Delegated:
+      return "DELEGATED";
+      break;
+    case Attendee::Completed:
+      return "COMPLETED";
+      break;
+    case Attendee::InProcess:
+      return "NEEDS ACTION";
+      break;
+  }
 }

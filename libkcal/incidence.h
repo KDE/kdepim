@@ -51,7 +51,7 @@ class Incidence : public QObject
     /** Sets the time the incidence was last modified. */
     void setLastModified(const QDateTime &lm);
     /** Return the time the incidence was last modified. */
-    const QDateTime &lastModified() const;
+    QDateTime lastModified() const;
 
     /** set creation date */
     void setCreated(QDateTime);
@@ -61,7 +61,7 @@ class Incidence : public QObject
     /** set the unique text string for the event */
     void setVUID(const QString &);
     /** get the unique text string for the event */
-    const QString &VUID() const;
+    QString VUID() const;
 
     /** set the number of revisions this event has seen */
     void setRevision(int rev);
@@ -70,12 +70,12 @@ class Incidence : public QObject
 
     /** sets the organizer for the event */
     void setOrganizer(const QString &o);
-    const QString &organizer() const;
+    QString organizer() const;
 
     /** for setting the event's starting date/time with a QDateTime. */
     void setDtStart(const QDateTime &dtStart);
     /** returns an event's starting date/time as a QDateTime. */
-    const QDateTime &dtStart() const;
+    QDateTime dtStart() const;
     /** returns an event's starting time as a string formatted according to the
      users locale settings */
     QString dtStartTimeStr() const;
@@ -104,26 +104,26 @@ class Incidence : public QObject
     /** Remove all Attendees. */
     void clearAttendees();
     /** Return list of attendees. */
-    const QList<Attendee> &attendees() const { return mAttendees; };
+    QList<Attendee> attendees() const { return mAttendees; };
     /** Return number of attendees. */
     int attendeeCount() const { return mAttendees.count(); };
 
     /** sets the event's lengthy description. */
     void setDescription(const QString &description);
     /** returns a reference to the event's description. */
-    const QString &description() const;
+    QString description() const;
 
     /** sets the event's short summary. */
     void setSummary(const QString &summary);
     /** returns a reference to the event's summary. */
-    const QString &summary() const;
+    QString summary() const;
 
     /** set event's applicable categories */
     void setCategories(const QStringList &categories);
     /** set event's categories based on a comma delimited string */
     void setCategories(const QString &catStr);
     /** return categories in a list */
-    const QStringList &categories() const;
+    QStringList categories() const;
     /** return categories as a comma separated string */
     QString categoriesStr();
 
@@ -134,20 +134,20 @@ class Incidence : public QObject
     /** what event does this one relate to? This function should
      *  only be used when constructing a calendar before the related Event
      *  exists. */
-    const QString &relatedToVUID() const;
+    QString relatedToVUID() const;
     /** point at some other event to which the event relates */
     void setRelatedTo(Incidence *relatedTo);
     /** what event does this one relate to? */
     Incidence *relatedTo() const;
     /** All events that are related to this event */
-    const QList<Incidence> &relations() const;
+    QList<Incidence> relations() const;
     /** Add an event which is related to this event */
     void addRelation(Incidence *);
     /** Remove event that is related to this event */
     void removeRelation(Incidence *);
 
     /** returns the list of dates which are exceptions to the recurrence rule */
-    const QDateList &exDates() const;
+    QDateList exDates() const;
     /** sets the list of dates which are exceptions to the recurrence rule */
     void setExDates(const QDateList &_exDates);
     void setExDates(const char *dates);
@@ -161,7 +161,7 @@ class Incidence : public QObject
     /** set the list of attachments/associated files for this event */
     void setAttachments(const QStringList &attachments);
     /** return list of associated files */
-    const QStringList &attachments() const;
+    QStringList attachments() const;
 
     /** sets the event's status the value specified.  See the enumeration
      * above for possible values. */
@@ -199,7 +199,7 @@ class Incidence : public QObject
     /** set resources used, such as Office, Car, etc. */
     void setResources(const QStringList &resources);
     /** return list of current resources */
-    const QStringList &resources() const;
+    QStringList resources() const;
 
     /** set the event's priority, 0 is undefined, 1 highest (decreasing order) */
     void setPriority(int priority);

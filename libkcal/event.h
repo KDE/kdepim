@@ -24,7 +24,7 @@ class Event : public Incidence
     /** for setting an event's ending date/time with a QDateTime. */
     void setDtEnd(const QDateTime &dtEnd);
     /** returns an event's ending date/time as a QDateTime. */
-    const QDateTime &dtEnd() const;
+    QDateTime dtEnd() const;
     /** returns an event's end time as a string formatted according to the
      users locale settings */
     QString dtEndTimeStr() const;

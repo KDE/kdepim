@@ -28,6 +28,7 @@ class ICalFormatImpl {
     icalcomponent *writeEvent(Event *event);
     icalcomponent *writeJournal(Journal *journal);
     void writeIncidence(icalcomponent *parent,Incidence *incidence);
+    icalproperty *writeAttendee(Attendee *attendee);
     icalproperty *writeRecurrenceRule(KORecurrence *);
     icalproperty *writeAlarm(KOAlarm *alarm);
 

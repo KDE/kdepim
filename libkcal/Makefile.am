@@ -19,7 +19,8 @@ libkcal_la_SOURCES = \
         koexceptions.cpp \
         scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
         calfilter.cpp \
-        scanholiday.c parseholiday.c
+        scanholiday.c parseholiday.c \
+        person.cpp
 
 METASOURCES = AUTO
 

@@ -25,7 +25,7 @@ class Todo : public Incidence
     /** for setting the todo's due date/time with a QDateTime. */
     void setDtDue(const QDateTime &dtDue);
     /** returns an event's Due date/time as a QDateTime. */
-    const QDateTime &dtDue() const;
+    QDateTime dtDue() const;
     /** returns an event's due time as a string formatted according to the
      users locale settings */
     QString dtDueTimeStr() const;

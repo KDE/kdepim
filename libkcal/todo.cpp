@@ -55,7 +55,7 @@ void Todo::setDtDue(const QDateTime &dtDue)
   emit eventUpdated(this);
 }
 
-const QDateTime &Todo::dtDue() const
+QDateTime Todo::dtDue() const
 {
   return mDtDue;
 }

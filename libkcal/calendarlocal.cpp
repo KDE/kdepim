@@ -401,7 +401,7 @@ bool CalendarLocal::checkNonRecurringAlarms(QList<Event>& alarmEvents, bool appe
   // this function has to look at every event in the whole database
   // and find if any have an alarm pending.
 
-  int origSize = alarmEvents.count();
+  uint origSize = alarmEvents.count();
   while (dictIt.current()) {
     tmpList = dictIt.current();
     for (anEvent = tmpList->first(); anEvent;
@@ -429,7 +429,7 @@ bool CalendarLocal::checkTodos(QList<Todo>& alarmTodos, bool append)
   if (!append)
     alarmTodos.clear();
 
-  int origSize = alarmTodos.count();
+  uint origSize = alarmTodos.count();
   for(aTodo = mTodoList.first(); aTodo; aTodo = mTodoList.next()) {
     if (aTodo->alarm()->enabled()) {
       tmpDT = aTodo->alarm()->time();
@@ -450,7 +450,6 @@ bool CalendarLocal::checkAlarmsPast(QList<Event>& alarmEvents, bool append)
   QIntDictIterator<QList<Event> > dictIt(*mCalDict);
   QList<Event> *tmpList;
   Event *anEvent;
-  QDateTime tmpDT;
 
   if (!append)
     alarmEvents.clear();
@@ -458,7 +457,7 @@ bool CalendarLocal::checkAlarmsPast(QList<Event>& alarmEvents, bool append)
   // this function has to look at every event in the whole database
   // and find if any have an alarm pending.
 
-  int origSize = alarmEvents.count();
+  uint origSize = alarmEvents.count();
   while (dictIt.current()) {
     tmpList = dictIt.current();
     for (anEvent = tmpList->first(); anEvent;
@@ -481,7 +480,7 @@ bool CalendarLocal::checkRecurringAlarms(QList<Event>& alarmEvents, bool append)
   if (!append)
     alarmEvents.clear();
 
-  int origSize = alarmEvents.count();
+  uint origSize = alarmEvents.count();
   for (anEvent = mRecursList.first(); anEvent;
        anEvent = mRecursList.next()) {
     if (anEvent->alarm()->enabled()

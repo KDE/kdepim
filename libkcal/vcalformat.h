@@ -85,6 +85,9 @@ class VCalFormat : public CalFormat {
     const char *dayFromNum(int day);
     /** the reverse of the above function. */
     int numFromDay(const QString &day);
+
+    Attendee::PartStat readStatus(const char *s) const;
+    QCString writeStatus(Attendee::PartStat status) const;
   
   private:
     QList<Event> mEventsRelate;           // events with relations
