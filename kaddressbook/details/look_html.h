@@ -53,6 +53,7 @@ class KABHtmlView : public KABBasicLook
 
   private slots:
     void phoneNumberClicked( const QString &number );
+    void faxNumberClicked( const QString &number );
 
   private:
     KPIM::AddresseeView *mView;

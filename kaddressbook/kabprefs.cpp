@@ -40,6 +40,7 @@ KABPrefs::KABPrefs()
   addItemBool( "AutomaticNameParsing", mAutomaticNameParsing, true );
   addItemInt( "CurrentIncSearchField", mCurrentIncSearchField, 0 );
   addItemString( "PhoneHookApplication", mPhoneHookApplication, "" );
+  addItemString( "FaxHookApplication", mPhoneHookApplication, "" );
 
   KPrefs::setCurrentGroup( "MainWindow" );
   addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );

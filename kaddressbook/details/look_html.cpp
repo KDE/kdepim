@@ -36,6 +36,9 @@ KABHtmlView::KABHtmlView( QWidget *parent, const char *name )
 
   connect( mView, SIGNAL( phoneNumberClicked( const QString& ) ),
            this, SLOT( phoneNumberClicked( const QString& ) ) );
+
+  connect( mView, SIGNAL( faxNumberClicked( const QString& ) ),
+           this, SLOT( faxNumberClicked( const QString& ) ) );
 }
 
 KABHtmlView::~KABHtmlView()
@@ -50,6 +53,17 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
 void KABHtmlView::phoneNumberClicked( const QString &number )
 {
   QString commandLine = KABPrefs::instance()->mPhoneHookApplication;
+  commandLine.replace( "%N", number );
+
+  QStringList tokens = KShell::splitArgs( commandLine, KShell::TildeExpand );
+
+  if ( tokens.count() != 0 )
+    KApplication::kdeinitExec( tokens[ 0 ], tokens );
+}
+
+void KABHtmlView::faxNumberClicked( const QString &number )
+{
+  QString commandLine = KABPrefs::instance()->mFaxHookApplication;
   commandLine.replace( "%N", number );
 
   QStringList tokens = KShell::splitArgs( commandLine, KShell::TildeExpand );

@@ -88,14 +88,22 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
-  boxLayout = new QHBoxLayout( groupBox->layout(), KDialog::spacingHint() );
+  QGridLayout *grid = new QGridLayout( groupBox->layout(), 2, 2,
+                                       KDialog::spacingHint() );
   QLabel *label = new QLabel( i18n( "Phone:" ), groupBox );
-  boxLayout->addWidget( label );
+  grid->addWidget( label, 0, 0 );
 
   mPhoneHook = new QLineEdit( groupBox );
   QToolTip::add( mPhoneHook, i18n( "<ul><li>%N: Phone Number</li></ul>" ) );
-  boxLayout->addWidget( mPhoneHook );
-  boxLayout->setStretchFactor( mPhoneHook, 1 );
+  grid->addWidget( mPhoneHook, 0, 1 );
+
+  label = new QLabel( i18n( "Fax:" ), groupBox );
+  grid->addWidget( label, 1, 0 );
+
+  mFaxHook = new QLineEdit( groupBox );
+  QToolTip::add( mFaxHook, i18n( "<ul><li>%N: Fax Number</li></ul>" ) );
+  grid->addWidget( mFaxHook, 1, 1 );
+  grid->setColStretch( 1, 1 );
 
   layout->addWidget( groupBox );
 
@@ -118,6 +126,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   connect( mNameParsing, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
+  connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
   connect( mExtensionView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( selectionChanged( QListViewItem* ) ) );
   connect( mExtensionView, SIGNAL( clicked( QListViewItem* ) ),
@@ -141,6 +150,7 @@ void KABConfigWidget::restoreSettings()
   mNameParsing->setChecked( KABPrefs::instance()->mAutomaticNameParsing );
   mViewsSingleClickBox->setChecked( KABPrefs::instance()->mHonorSingleClick );
   mPhoneHook->setText( KABPrefs::instance()->mPhoneHookApplication );
+  mFaxHook->setText( KABPrefs::instance()->mFaxHookApplication );
   mAddresseeWidget->restoreSettings();
 
   restoreExtensionSettings();
@@ -155,6 +165,7 @@ void KABConfigWidget::saveSettings()
   KABPrefs::instance()->mAutomaticNameParsing = mNameParsing->isChecked();
   KABPrefs::instance()->mHonorSingleClick = mViewsSingleClickBox->isChecked();
   KABPrefs::instance()->mPhoneHookApplication = mPhoneHook->text();
+  KABPrefs::instance()->mFaxHookApplication = mFaxHook->text();
   mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();

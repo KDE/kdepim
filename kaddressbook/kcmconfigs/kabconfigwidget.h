@@ -67,6 +67,7 @@ class KABConfigWidget : public QWidget
     QCheckBox *mViewsSingleClickBox;
     QPushButton *mConfigureButton;
     QLineEdit *mPhoneHook;
+    QLineEdit *mFaxHook;
 
     AddresseeWidget *mAddresseeWidget;
 };
