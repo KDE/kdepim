@@ -1,6 +1,6 @@
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST -DKPARTS_VERSION
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/rmm
+INCLUDES = -I$(top_srcdir)/rmm $(all_includes)
 
 lib_LTLIBRARIES = libEmpathMessageViewWidget.la
 

@@ -1,9 +1,9 @@
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
 
 INCLUDES = \
-  $(all_includes) \
   -I$(top_srcdir)/empath/lib \
-  -I$(top_srcdir)/rmm/
+  -I$(top_srcdir)/rmm/ \
+  $(all_includes)
 
 lib_LTLIBRARIES = libtwisterkernel.la
 
