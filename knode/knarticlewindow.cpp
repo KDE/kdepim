@@ -1,3 +1,4 @@
+// -*- c-basic-offset: 2 -*-
 /*
     knarticlewindow.cpp
 
@@ -38,7 +39,7 @@ bool KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col, boo
 {
   QPtrList<KNArticleWindow> list=instances;
   for(KNArticleWindow *i=list.first(); i; i=list.next())
-    if(i->artW->article()->collection()==col) {
+    if(i->artW->article() && i->artW->article()->collection()==col) {
       if (force)
         i->close();
       else
@@ -52,7 +53,7 @@ bool KNArticleWindow::closeAllWindowsForArticle(KNArticle *art, bool force)
 {
   QPtrList<KNArticleWindow> list=instances;
   for(KNArticleWindow *i=list.first(); i; i=list.next())
-    if(i->artW->article()==art) {
+    if(i->artW->article() && i->artW->article() == art) {
       if (force)
         i->close();
       else
@@ -64,27 +65,24 @@ bool KNArticleWindow::closeAllWindowsForArticle(KNArticle *art, bool force)
 
 bool KNArticleWindow::raiseWindowForArticle(KNArticle *art)
 {
-  bool ret=false;
   for(KNArticleWindow *i=instances.first(); i; i=instances.next())
-    if(i->artW->article()==art) {
+    if(i->artW->article() && i->artW->article() ==art) {
       KWin::setActiveWindow(i->winId());
-      ret = true;
-      break;
+      return true;
     }
-  return ret;
+  return false;
 }
 
 
 bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
 {
-  bool ret=false;
   for(KNArticleWindow *i=instances.first(); i; i=instances.next())
-    if(i->artW->article()->messageID()->as7BitString(false)==mid) {
+    if(i->artW->article() && i->artW->article()->messageID()->as7BitString(false)==mid) {
       KWin::setActiveWindow(i->winId());
-      ret = true;
-      break;
+      return true;
     }
-  return ret;
+
+  return false;
 }
 
 
@@ -93,14 +91,14 @@ bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
 KNArticleWindow::KNArticleWindow(KNArticle *art)
   : KMainWindow(0, "articleWindow")
 {
-  instances.append(this);
-
   if(art)
     setCaption(art->subject()->asUnicodeString());
 
   artW=new KNArticleWidget(actionCollection(),this);
   artW->setArticle(art);
   setCentralWidget(artW);
+
+  instances.append(this);
 
   // file menu
   KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
@@ -156,7 +154,7 @@ void KNArticleWindow::slotConfKeys()
   KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
 
-    
+
 void KNArticleWindow::slotConfToolbar()
 {
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
