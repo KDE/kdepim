@@ -201,6 +201,10 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	QString e;
 	if (!fP || !fP->fDCOP)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< "No DCOP connection." << endl;
+#endif
 		emit logError(i18n("No DCOP connection could be made. The "
 			"conduit cannot function without DCOP."));
 		return false;
@@ -208,6 +212,10 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	}
 	if (!PluginUtility::isRunning("knotes"))
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< "KNotes not running." << endl;
+#endif
 		emit logError(i18n("KNotes is not running. The conduit must "
 			"be able to make a DCOP connection to KNotes "
 			"for synchronization to take place. "
@@ -220,6 +228,10 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	fP->fNotes = fP->fKNotes->notes();
 	if (fP->fKNotes->status() != DCOPStub::CallSucceeded)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< "Can not get list of notes from KNotes.." << endl;
+#endif
 		emit logError(i18n("Could not retrieve list of notes from KNotes. "
 			"The KNotes conduit will not be run."));
 		return false;
