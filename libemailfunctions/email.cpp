@@ -213,14 +213,14 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
             break;
           }
           break;
-      case '\\' : // quoted character
-        ++index; // skip the '\'
-        if ( ++index > strlen )
-          return UnexpectedEnd;
+        case '\\' : // quoted character
+          ++index; // skip the '\'
+          if ( ++index > strlen )
+            return UnexpectedEnd;
           break;
-        }
-      break;
-    }
+          }
+        break;
+      }
     }
   }
   if ( context == InComment )
