@@ -940,12 +940,12 @@ bool KNHeaders::ContentType::isMediatype(const char *s)
 
 bool KNHeaders::ContentType::isSubtype(const char *s)
 {
-  char *c=strchr(m_imeType.data(), '/')+1;
+  char *c=strchr(m_imeType.data(), '/');
 
-  if( (c==0) || (*c)=='\0' )
+  if( (c==0) || (*(c+1)=='\0') )
     return false;
   else
-    return ( strcasecmp(c, s)==0 );
+    return ( strcasecmp(c+1, s)==0 );
 }
 
 
