@@ -75,14 +75,14 @@ KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	QObject(parent, name),
-	fPilotPath(QString::null),
+	fStatus(Init),
+        fPilotPath(QString::null),
 	fDeviceType(None),
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
-	fCurrentPilotSocket(-1), 
 	fPilotMasterSocket(-1), 
-	fStatus(Init)
+	fCurrentPilotSocket(-1)
 {
 	FUNCTIONSETUP;
 
@@ -552,6 +552,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.60  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.59  2001/09/29 16:26:18  adridg
 // The big layout change
 //

@@ -30,7 +30,6 @@
 
 
 #include <qpixmap.h>
-#include <ktmainwindow.h>
 #include <ksystemtray.h>
 
 #include "kpilotlink.h"
@@ -211,6 +210,9 @@ private:
 
 
 // $Log$
+// Revision 1.28  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.27  2001/09/24 22:24:07  adridg
 // Use new SyncActions
 //

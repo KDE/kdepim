@@ -311,11 +311,11 @@ const QString & PilotDaemonTray::installDir()
 PilotDaemon::PilotDaemon() :
 	DCOPObject("KPilotDaemonIface"),
 	fStatus(INIT),
+	fPilotLink(0L),
 	fPilotDevice(QString::null),
 	fNextSyncType(0),
-	fPilotLink(0L),
-	fTray(0L), 
 	fP(0L), 
+	fTray(0L), 
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
@@ -897,6 +897,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.50  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.49  2001/09/30 16:58:08  adridg
 // Daemon reports name in statusString
 //
