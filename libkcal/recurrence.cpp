@@ -97,23 +97,43 @@ Recurrence::~Recurrence()
 }
 
 
-bool KCal::operator==( const Recurrence& r1, const Recurrence& r2 )
+bool Recurrence::operator==( const Recurrence& r2 ) const
 {
-    return( r1.doesRecur() == r2.doesRecur() &&
-            r1.weekStart() == r2.weekStart() &&
-            r1.days() == r2.days() &&
-            r1.monthPositions() == r2.monthPositions() &&
-            r1.monthDays() == r2.monthDays() &&
-            r1.yearNums() == r2.yearNums() &&
-            r1.frequency() == r2.frequency() &&
-            r1.duration() == r2.duration() &&
-            r1.recurStart() == r2.recurStart() &&
-            r1.doesFloat() == r2.doesFloat() &&
-            r1.recurReadOnly() == r2.recurReadOnly() &&
-            r1.recurExDatesCount() == r2.recurExDatesCount() &&
-            r1.feb29YearlyType() == r2.feb29YearlyType()  );
-            // no need to compare mCompat* and mParent
-            // OK to compare the pointers
+  if ( recurs != r2.recurs
+  ||   rFreq != r2.rFreq
+  ||   rDuration != r2.rDuration
+  ||   !rDuration && rEndDateTime != r2.rEndDateTime
+  ||   mRecurStart != r2.mRecurStart
+  ||   mFloats != r2.mFloats
+  ||   mRecurReadOnly != r2.mRecurReadOnly
+  ||   mRecurExDatesCount != r2.mRecurExDatesCount )
+    return false;
+  // no need to compare mCompat* and mParent
+  // OK to compare the pointers
+  switch ( recurs )
+  {
+    case rWeekly:
+      return rDays == r2.rDays
+      &&     rWeekStart == r2.rWeekStart;
+    case rMonthlyPos:
+      return rMonthPositions == r2.rMonthPositions;
+    case rMonthlyDay:
+      return rMonthDays == r2.rMonthDays;
+    case rYearlyPos:
+      return rYearNums == r2.rYearNums
+      &&     rMonthPositions == r2.rMonthPositions;
+    case rYearlyMonth:
+      return rYearNums == r2.rYearNums
+      &&     mFeb29YearlyType == r2.mFeb29YearlyType;
+    case rYearlyDay:
+      return rYearNums == r2.rYearNums;
+    case rNone:
+    case rMinutely:
+    case rHourly:
+    case rDaily:
+    default:
+      return true;
+  }
 }
 
 

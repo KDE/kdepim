@@ -60,6 +60,9 @@ class Recurrence
     Recurrence(const Recurrence&, Incidence *parent);
     ~Recurrence();
 
+    bool operator==( const Recurrence& ) const;
+    bool operator!=( const Recurrence& r ) const  { return !operator==(r); }
+
     Incidence *parent() { return mParent; }
 
     /** Return the start of the recurrence */
@@ -387,7 +390,6 @@ class Recurrence
     Incidence *mParent;
 };
 
-    bool operator==( const Recurrence&, const Recurrence& );
 }
 
 #endif
