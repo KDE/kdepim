@@ -345,7 +345,68 @@ view and drop it over the distribution list manager.</para></listitem>
 
 <sect1 id="import-and-export">
 <title>Import and Export</title>
-<para>Not implemented yet, documentation will follow later.</para>
+<para>With the new import/export framework &kaddressbook; offers
+a dialog where you can select which contacts shall be exported.</para>
+
+<screenshot>
+<screeninfo>The export selection dialog.</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="exportdlg.png" format="PNG"/></imageobject>
+<textobject><phrase>The export selection dialog.</phrase></textobject>
+<caption><para>The export selection dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>The following import and export plugins are available at the
+moment</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>vCard</guilabel></term>
+<listitem><para>The vCard format is standardized format (RFC 2426)
+that is supported by most addressbook applications.
+&kaddressbook; can import and export version 2.1 and 3.0.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mobile Phone</guilabel></term>
+<listitem><para>This plugin can import contacts from Nokia mobile
+phones via the gnokii library.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Eudora Addressbook</guilabel></term>
+<listitem><para>With this plugin you can import your contacts from
+Eudora mail client.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>CSV</guilabel></term>
+<listitem><para>CSV (comma separated value) is a format that's used
+by many (addressbook) applications. You can import and export your
+contacts with this format.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>KDE2</guilabel></term>
+<listitem><para>To import your old addressbook data from KDE 2.X you
+can use this item.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>LDIF</guilabel></term>
+<listitem><para>LDIF is a plain text representation of LDAP data.
+Netscape and Mozzila use this format to store their addressbook
+data. &kaddressbook; supports import and export of this format.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Bookmarks</guilabel></term>
+<listitem><para>This is a pseudo export plugin, that makes the web urls
+of your contacts available in the bookmark menu of konqueror.</para></listitem>
+</varlistentry>
+</variablelist>
 </sect1>
 
 <sect1 id="ldap-queries">
