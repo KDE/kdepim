@@ -163,7 +163,7 @@ bool Recurrence::recursMonthlyByDay(const QDate &qd) const
       i = qd.day();
       for (; qlid.current(); ++qlid) {
 	if (*qlid.current() < 0) {
-	  if (i == (qd.daysInMonth()-*qlid.current()+1))
+	  if (i == (qd.daysInMonth()+*qlid.current()+1))
 	    return TRUE;
 	} else { 
 	  if (i == *qlid.current())
