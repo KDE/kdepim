@@ -23,95 +23,37 @@
 
 #include "typecombo.h"
 
-void TypeCombo::TypeList::addType( int type, const QString &label )
-{
-  mTypes.append( type );
-  mTypeLabels.append( label );
-}
-
-void TypeCombo::TypeList::clear()
-{
-  mTypes.clear();
-  mTypeLabels.clear();
-}
-
-uint TypeCombo::TypeList::count()
-{
-  return mTypes.count();
-}
-
-int TypeCombo::TypeList::type( int index )
-{
-  return mTypes[ index ];
-}
-
-QString TypeCombo::TypeList::label( int index )
-{
-  return mTypeLabels[ index ];
-}
-
-
-TypeCombo::TypeCombo( QWidget *parent, const char *name )
-  : KComboBox( parent, name ),
-    mTypeList( 0 )
-{
-}
-
-TypeCombo::TypeCombo( TypeCombo::TypeList *typeList, QWidget *parent,
+TypeCombo::TypeCombo( KABC::PhoneNumber::List &list, QWidget *parent,
                       const char *name )
   : KComboBox( parent, name ),
-    mTypeList( typeList )
+    mTypeList( list )
 {
-  updateTypes();
-}
-
-void TypeCombo::setTypeList( TypeCombo::TypeList *typeList )
-{
-  mTypeList = typeList;
-  updateTypes();
 }
 
 void TypeCombo::updateTypes()
 {
   clear();
 
-  if ( !mTypeList ) return;
-
   uint i;
-  for( i = 0; i< mTypeList->count(); ++i ) {
-    insertItem( mTypeList->label( i ) );
+  for( i = 0; i < mTypeList.count(); ++i ) {
+    insertItem( mTypeList[ i ].label() );
   }
 }
 
 void TypeCombo::selectType( int type )
 {
   uint i;
-  for( i = 0; i < mTypeList->count(); ++i ) {
-    if ( mTypeList->type( i ) == type ) {
+  for( i = 0; i < mTypeList.count(); ++i ) {
+    if ( mTypeList[ i ].type() == type ) {
       setCurrentItem( i );
       break;
     }
   }
 }
 
-int TypeCombo::selectedType()
+KABC::PhoneNumber::List::Iterator TypeCombo::selectedElement()
 {
-  return mTypeList->type( currentItem() );
-}
-
-KABC::PhoneNumber::List::Iterator
-TypeCombo::selectedElement( KABC::PhoneNumber::List &list )
-{
-  int selected = selectedType();
-
-  KABC::PhoneNumber::List::Iterator it;
-  for( it = list.begin(); it != list.end(); ++it ) {
-    if ( (*it).type() == selected ) {
-      return it;
-    }
-  }
-
-  return list.end();
+  return mTypeList.at( currentItem() );
 }
 
 #include "typecombo.moc"

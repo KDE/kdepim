@@ -34,29 +34,7 @@ class TypeCombo : public KComboBox
 {
     Q_OBJECT
   public:
-
-    class TypeList
-    {
-      public:
-        void addType( int type, const QString &label );
-
-        void clear();
-
-        uint count();
-
-        int type( int index );
-        QString label( int index );
-
-      private:
-        QValueList<int> mTypes;
-        QStringList mTypeLabels;
-    };
-
-    TypeCombo( QWidget *parent, const char *name = 0 );
-    TypeCombo( TypeList *, QWidget *parent, const char *name = 0 );
-
-    void setTypeList( TypeList *typeList );
-    TypeList *typeList() const { return mTypeList; }
+    TypeCombo( KABC::PhoneNumber::List &list, QWidget *parent, const char *name = 0 );
 
     void setLineEdit( QLineEdit *edit ) { mLineEdit = edit; }
     QLineEdit *lineEdit() const { return mLineEdit; }
@@ -67,10 +45,10 @@ class TypeCombo : public KComboBox
 
     int selectedType();
 
-    KABC::PhoneNumber::List::Iterator selectedElement( KABC::PhoneNumber::List & );
+    KABC::PhoneNumber::List::Iterator selectedElement();
 
   private:
-    TypeList *mTypeList;
+    KABC::PhoneNumber::List &mTypeList;
     QLineEdit *mLineEdit;
 };
 

@@ -69,6 +69,7 @@ class PhoneEditWidget : public QWidget
   
   protected:
     void updateLineEdits();
+    void updateCombos();
 
   private:
     void updateEdit( TypeCombo *combo );
@@ -87,10 +88,6 @@ class PhoneEditWidget : public QWidget
     KLineEdit *mFourthEdit;
 
     KABC::PhoneNumber::List mPhoneList;
-
-    QValueList<int> mTypes;
-    QStringList mTypeLabels;
-    TypeCombo::TypeList *mTypeList;
 };
   
 /**
