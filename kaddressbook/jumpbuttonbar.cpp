@@ -162,7 +162,7 @@ void JumpButtonBar::updateButtons()
         button->show();
         current++;      
       } else {
-        int pos = ( current + offset >= characters.count() ?
+        int pos = ( current + offset >= (int)characters.count() ?
                     characters.count() - 1 : current + offset - 1 );
         JumpButton *button = new JumpButton( characters[ current ],
 			                     characters[ pos ], this );

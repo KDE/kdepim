@@ -76,7 +76,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mWidget = new QWidget( parent, name );
 
   mAddressBook = KABC::StdAddressBook::self();
-  KABC::StdAddressBook::setAutomaticSave( false );
   mAddressBook->setErrorHandler( new KABC::GUIErrorHandler );
 
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook * ) ),
@@ -111,7 +110,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( setModified() ) );
   connect( mViewManager, SIGNAL( urlDropped( const KURL& ) ),
            mXXPortManager, SLOT( importVCard( const KURL& ) ) );
-
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
 
@@ -610,6 +608,23 @@ void KABCore::newContact()
   if ( resource ) {
     KABC::Addressee addr;
     addr.setResource( resource );
+
+
+    if ( mResourceMap.find( addr.resource() ) != mResourceMap.end() ) {
+      ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
+      entry.counter++;
+    } else {
+      KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
+      if ( !ticket ) {
+        KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
+        return;
+      } else {
+        ResourceMapEntry entry;
+        entry.ticket = ticket;
+        entry.counter = 1;
+        mResourceMap.insert( addr.resource(), entry );
+      }
+    }
     dialog = createAddresseeEditorDialog( mWidget );
     dialog->setAddressee( addr );
   } else
@@ -677,6 +692,22 @@ void KABCore::editContact( const QString &uid )
   if ( !addr.isEmpty() ) {
     AddresseeEditorDialog *dialog = mEditorDict.find( addr.uid() );
     if ( !dialog ) {
+      if ( mResourceMap.find( addr.resource() ) != mResourceMap.end() ) {
+        ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
+        entry.counter++;
+      } else {
+        KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
+        if ( !ticket ) {
+          KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
+          return;
+        } else {
+          ResourceMapEntry entry;
+          entry.ticket = ticket;
+          entry.counter = 1;
+          mResourceMap.insert( addr.resource(), entry );
+        }
+      }
+
       dialog = createAddresseeEditorDialog( mWidget );
 
       mEditorDict.insert( addr.uid(), dialog );
@@ -829,17 +860,6 @@ void KABCore::configurationChanged()
 
 void KABCore::addressBookChanged()
 {
-  QDictIterator<AddresseeEditorDialog> it( mEditorDict );
-  while ( it.current() ) {
-    if ( it.current()->dirty() ) {
-      QString text = i18n( "Data has been changed externally. Unsaved "
-                           "changes will be lost." );
-      KMessageBox::information( mWidget, text );
-    }
-    it.current()->setAddressee( mAddressBook->findByUid( it.currentKey() ) );
-    ++it;
-  }
-
   mViewManager->refreshView();
 }
 
@@ -859,6 +879,25 @@ AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
 void KABCore::slotEditorDestroyed( const QString &uid )
 {
   mEditorDict.remove( uid );
+
+  KABC::Addressee addr = mAddressBook->findByUid( uid );
+
+  if ( mResourceMap.find( addr.resource() ) == mResourceMap.end() ) {
+    KMessageBox::error( mWidget, i18n( "You have no permission for accessing the address book!" ) );
+    return;
+  } else {
+    ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
+
+    entry.counter--;
+    if ( entry.counter == 0 ) {
+      if ( !mAddressBook->save( entry.ticket ) )
+        KMessageBox::error( mWidget, i18n( "Saving contact failed!" ) );
+
+      mAddressBook->releaseSaveTicket( entry.ticket );
+
+      mResourceMap.remove( addr.resource() );
+    }
+  }
 }
 
 void KABCore::initGUI()

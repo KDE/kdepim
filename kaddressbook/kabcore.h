@@ -33,6 +33,7 @@
 
 namespace KABC {
 class AddressBook;
+class Ticket;
 }
 
 class KAboutData;
@@ -55,6 +56,12 @@ class LDAPSearchDialog;
 class ViewContainer;
 class ViewManager;
 class XXPortManager;
+
+typedef struct {
+  KABC::Ticket *ticket;
+  int counter;
+} ResourceMapEntry;
+
 
 class KABCore : public KAB::Core
 {
@@ -329,6 +336,7 @@ class KABCore : public KAB::Core
     KCMultiDialog *mConfigureDialog;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
+    QMap<KABC::Resource*, ResourceMapEntry> mResourceMap;
 
     bool mReadWrite;
     bool mModified;
