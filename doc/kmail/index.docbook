@@ -1258,7 +1258,7 @@ the pull-down menus: <guilabel>From</guilabel>,
 </procedure>
 
 <para>You now have a filter that transfers all &kde; List messages
-that are from fj@anywhere.com.</para>
+that are from <userinput>fj@anywhere.com</userinput>.</para>
 <!-- fixme: trigger with ctrl-j or whenever new mail arrives (unless
 <guilabel>Advanced Options</guilabel> are changed. -->
 </sect2>
@@ -1602,7 +1602,7 @@ Message</guibutton> button in the toolbar of the composer window. Note
 that you might not have to check the button if <guilabel>Automatically
 encrypt messages whenever possible</guilabel> is selected in
 &kmail;'s configuration (see <link linkend="pgp-sign-your-messages">above</link>).
-Then send the message.</para> <!-- fixme 3.1? -->
+Then send the message.</para>
 
 <para>
 If you checked the <guilabel>Encrypt Message</guilabel> button and &kmail;
@@ -2092,8 +2092,10 @@ the composer.<!-- TODO --></para>
 <title>Layout</title>
 
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
-pane that tells you if a message is HTML or not.</para>
-<!-- ###fixme: important b/c security! -->
+pane that tells you if a message is HTML or not. This is important because
+HTML messages might imitate the look of a signed and encrypted message, so
+you should be aware of the fact that you are reading a HTML message. The HTML
+status bar itself cannot be influenced by the HTML code of the message.</para>
 
 <para>The <guilabel>Window Layout</guilabel> section lets choose between
 several layouts of the main window that differ with regard to the size
@@ -2156,7 +2158,7 @@ one of the offered profiles will override your current layout settings.</para></
 
 </sect2>
 
-<!-- fixme?: date + less than/greater than broken in kmail -->
+<!-- fixme?: date + less than/greater than broken in kmail? -->
 <!-- fixme?: "group" wording in program -->
 
 </sect1>
@@ -3066,7 +3068,6 @@ they reply to.</para>
 </menuchoice>
 </term>
 <listitem>
-<!-- fixme: link to special section?! -->
 <para>Opens up the <link linkend="folders-properties-window">Properties dialog</link> which lets you
 change the settings for the selected folder.</para> 
 </listitem>
@@ -3175,51 +3176,23 @@ text of the original message.</para>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycap>F</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Forward...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<!-- fixme: submenu! -->
-<para>Forwards the message to a new recipient. The message's text and some
-important header fields will be copied to the body of the new message 
-with a text marking the forwarded part. Attachments will be forwarded, too.</para>
-</listitem>
-</varlistentry>
-
-<!-- fixme: see above 
-<varlistentry>
-<term><menuchoice>
-<shortcut><keycombo action="simul">&Shift;<keycap>F</keycap></keycombo>
-</shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Forward as Attachment</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Forwards the message to a new recipient as an attachment. The original message
-headers will be included in the forwarded message, too. Attachments
-in the original message will also be in the forwarded message's attachment.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>E</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Redirect...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Works like forward, except that the message stays the same (even
-the <guilabel>From</guilabel> field). The user who redirected the message is
-added in special header fields (<literal>Redirect-From</literal>,
-<literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
+<para>Forwards the message to a new recipient. Using <guimenuitem>Inline</guimenuitem>,
+the message's text and some important header fields will be copied to the body of the new message 
+with a text marking the forwarded part. Attachments will be forwarded
+as attachments of the new message. Using <guimenuitem>As Attachment</guimenuitem>
+the message and its attachments will become an attachment of the new message. The original message
+headers will be included in the forwarded message, too.
+<guimenuitem>Redirect</guimenuitem> works like forward, except that the message stays the same (even
+the <guilabel>From:</guilabel> field). The user who redirected the message is added in special
+header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
 &etc;).</para> 
 </listitem>
 </varlistentry>
--->
 
 <varlistentry>
 <term>
