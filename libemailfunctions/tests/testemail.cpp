@@ -245,6 +245,7 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "matt@123.123.123.123]", "false" );
   checkIsValidSimpleEmailAddress( "\"matt@fruitsalad.org", "false" );
   checkIsValidSimpleEmailAddress( "matt\"@fruitsalad.org", "false" );
+  checkIsValidSimpleEmailAddress( "QString::null", "false" );
 
   // and here some insane but still valid cases
   checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );
