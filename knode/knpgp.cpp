@@ -419,7 +419,10 @@ KNPgp::encryptFor(const QStrList& aPers, bool sign)
     pgp->clearOutput();
     return true;
   }
-  if( !(status & KNPgpBase::ERROR) ) return true;
+  if( !(status & KNPgpBase::ERROR) ) {
+    kdDebug(5003) << "encryptFor finished successfull with status" << status << endl;
+    return true;
+  }
 
   // in case of other errors we end up here.
   errMsg = pgp->lastErrorMessage();

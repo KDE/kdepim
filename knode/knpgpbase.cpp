@@ -260,11 +260,15 @@ KNPgpBase::run(const char *cmd, const char *passphrase)
   // we don't want a zombie, do we?  ;-)
   rc = waitpid(0/*child_pid*/, &status, 0);
   if (rc==-1) printf("waitpid: %s\n", strerror(errno));
+  if (status) {
+    status = ERROR;
+    errMsg.sprintf(info.latin1());
+  }
 
   // remove the temporary file from "stdin"
   rename(tmpname,"stdin");
 
-  return OK;
+  return status;
 }
 
 int
@@ -400,8 +404,13 @@ KNPgpBase::runGpg(const char *cmd, const char *passphrase)
   // we don't want a zombie, do we?  ;-)
   rc = waitpid(0/*child_pid*/, &status, 0);
   if (rc==-1) printf("waitpid: %s\n", strerror(errno));
+  kdDebug(5003) << "child returned with exit code " << status << endl;
   
-  return OK;
+  if (status) {
+    status = ERROR;
+    errMsg.sprintf(info.latin1());
+  }
+  return status;
 }
 
 QString
@@ -515,7 +524,8 @@ KNPgpBaseG::encsign(const QStrList *_recipients, const char *passphrase,
   kdDebug(5003) << "KNPgpBaseG::encsign runs gpg as: " << cmd << endl;
 
   status = runGpg(cmd.latin1(), passphrase);
-  if(status == RUN_ERR) return status;
+  kdDebug(5003) << "runGpg returns to encsign error code " << status << endl;
+  if(status != OK) return status;
 
   if(_recipients != 0)
   {
@@ -579,6 +589,12 @@ KNPgpBaseG::decrypt(const char *passphrase)
 
   status = runGpg(cmd.latin1(), passphrase);
 
+  if(status != OK)
+  {
+    //errMsg = i18n("error running gpg");
+    return status;
+  }
+
   // pgp2.6 has sometimes problems with the ascii armor pgp5.0 produces
   // this hack can solve parts of the problem
   if(info.find("ASCII armor corrupted.") != -1)
@@ -595,12 +611,6 @@ KNPgpBaseG::decrypt(const char *passphrase)
     status = runGpg(cmd.latin1(), passphrase);
   }
  
-  if(status == RUN_ERR)
-  {
-    errMsg = i18n("error running gpg");
-    return status;
-  }
-
   if( info.find("File contains key") != -1)
   {
     // FIXME: should do something with it...
@@ -712,7 +722,7 @@ KNPgpBaseG::pubKeys()
 
   cmd = "--batch --list-keys";
   status = runGpg(cmd.latin1());
-  if(status == RUN_ERR) return 0;
+  if(status != OK) return 0;
 
   // now we need to parse the output
   QStrList publicKeys;
@@ -767,7 +777,7 @@ QString KNPgpBaseG::getAsciiPublicKey(QString _person) {
   toexec.sprintf("--batch --armor --export \"%s\"", _person.latin1());
 
   status = runGpg(toexec.latin1());
-  if(status == RUN_ERR) return 0;
+  if(status != OK) return 0;
 
   return output;
 }
@@ -838,7 +848,7 @@ KNPgpBase2::encsign(const QStrList *_recipients, const char *passphrase,
   cmd += " -f";
 
   status = run(cmd.latin1(), passphrase);
-  if(status == RUN_ERR) return status;
+  if(status != OK) return status;
 
   if(_recipients != 0)
   {
@@ -947,6 +957,12 @@ KNPgpBase2::decrypt(const char *passphrase)
 
   status = run(cmd.latin1(), passphrase);
 
+  if(status != OK)
+  {
+    //errMsg = i18n("error running pgp");
+    return status;
+  }
+
   // pgp2.6 has sometimes problems with the ascii armor pgp5.0 produces
   // this hack can solve parts of the problem
   if(info.find("ASCII armor corrupted.") != -1)
@@ -963,12 +979,6 @@ KNPgpBase2::decrypt(const char *passphrase)
     status = run(cmd, passphrase);
   }
  
-  if(status == RUN_ERR)
-  {
-    errMsg = i18n("error running pgp");
-    return status;
-  }
-
   if( info.find("File contains key") != -1)
   {
     // FIXME: should do something with it...
@@ -1063,7 +1073,7 @@ KNPgpBase2::pubKeys()
 
   cmd = "+batchmode +language=C -kv -f";
   status = run(cmd);
-  if(status == RUN_ERR) return 0;
+  if(status != OK) return 0;
 
   //truncate trailing "\n"
   if (output.length() > 1) output.truncate(output.length()-1);
@@ -1129,7 +1139,7 @@ QString KNPgpBase2::getAsciiPublicKey(QString _person) {
   toexec.sprintf("+language=C -kxaf \"%s\"", _person.latin1());
 
   status = run(toexec.latin1());
-  if(status == RUN_ERR) return QString::null;
+  if(status != OK) return QString::null;
 
   return output;
 }
@@ -1217,7 +1227,7 @@ KNPgpBase5::encsign(const QStrList *_recipients, const char *passphrase,
 
 
   status = run(cmd, passphrase);
-  if(status == RUN_ERR) return status;
+  if(status != OK) return status;
   
   // now parse the returned info
   if(info.find("Cannot unlock private key") != -1)
@@ -1282,7 +1292,7 @@ KNPgpBase5::decrypt(const char *passphrase)
   output = "";
 
   status = run("-f +batchmode=1", passphrase);
-  if(status == RUN_ERR) return status;
+  if(status != OK) return status;
 
   // lets parse the returned information.
   int index;
@@ -1387,7 +1397,7 @@ KNPgpBase5::pubKeys()
   int index,index2;
 	
   status = run("-l");
-  if(status == RUN_ERR) return 0;
+  if(status != OK) return 0;
 
   // now we need to parse the output
   QStrList publicKeys;
@@ -1424,7 +1434,7 @@ QString KNPgpBase5::getAsciiPublicKey(QString _person) {
   toexec.sprintf("-xa \"%s\"", _person.latin1());
 
   status = run(toexec.latin1());
-  if(status == RUN_ERR) return QString::null;
+  if(status != OK) return QString::null;
 
   return output;
 }
@@ -1469,7 +1479,7 @@ KNPgpBase6::decrypt(const char *passphrase)
 
   if(status != OK)
   {
-    errMsg = i18n("error running pgp");
+    //errMsg = i18n("error running pgp");
     return status;
   }
 
@@ -1646,7 +1656,7 @@ KNPgpBase6::isVersion6()
 
   if(status != OK)
   {
-    errMsg = i18n("error running pgp");
+    //errMsg = i18n("error running pgp");
     return 0;
   }
 
