@@ -1,6 +1,6 @@
 METASOURCES = AUTO
 
-INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkcal \
+INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes $(all_includes)
 
@@ -13,12 +13,13 @@ groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) lib
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
-libkolabwizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+libkolabwizard_la_LDFLAGS = $(all_libraries) -no-undefined
 libkolabwizard_la_LIBADD = $(top_builddir)/kresources/kolab/kcal/libkcalkolab.la \
                            $(top_builddir)/kresources/kolab/kabc/libkabckolab.la \
                            $(top_builddir)/kresources/kolab/knotes/libknoteskolab.la \
                            $(top_builddir)/libkcal/libkcal.la \
-                           $(top_builddir)/libkdepim/libkdepim.la
+                           $(top_builddir)/libkdepim/libkdepim.la \
+                           $(top_builddir)/libkpimidentities/libkpimidentities.la
 libkolabwizard_la_SOURCES = kolabwizard.cpp kmailchanges.cpp kolabconfig.kcfgc
 
 kolabwizard_LDADD = libkolabwizard.la $(LIB_KDEUI)
@@ -26,7 +27,7 @@ kolabwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kolabwizard_SOURCES = kolabmain.cpp
 
 # eGroupware
-libegroupwarewizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+libegroupwarewizard_la_LDFLAGS = $(all_libraries) -no-undefined
 libegroupwarewizard_la_SOURCES = egroupwarewizard.cpp egroupwareconfig.kcfgc
 libegroupwarewizard_la_LIBADD = $(top_builddir)/kresources/egroupware/libkabc_xmlrpc.la \
                                 $(top_builddir)/kresources/egroupware/libkcal_xmlrpc.la \
@@ -40,7 +41,7 @@ egroupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 egroupwarewizard_SOURCES = egroupwaremain.cpp
 
 # SLOX
-libsloxwizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+libsloxwizard_la_LDFLAGS = $(all_libraries) -no-undefined
 libsloxwizard_la_SOURCES = sloxwizard.cpp sloxconfig.kcfgc
 libsloxwizard_la_LIBADD = $(top_builddir)/kresources/slox/libkcal_slox.la \
                           $(top_builddir)/kresources/slox/libkabc_slox.la \
