@@ -52,7 +52,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //factory methods
     void createPosting(KNNntpAccount *a);
     void createPosting(KNGroup *g);
-    void createReply(KNRemoteArticle *a, bool post=true, bool mail=false);
+    void createReply(KNRemoteArticle *a, QString selectedText=QString::null, bool post=true, bool mail=false);
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);

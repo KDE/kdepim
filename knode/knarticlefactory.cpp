@@ -95,7 +95,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
 }
 
 
-void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
+void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, bool post, bool mail)
 {
   if(!a)
     return;
@@ -183,7 +183,10 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   QStringList::Iterator line;
   bool incSig=knGlobals.cfgManager->postNewsComposer()->includeSignature();
 
-  a->decodedText(text);
+  if (selectedText.isEmpty())
+    a->decodedText(text);
+  else
+    text = QStringList::split('\n',selectedText);
 
   for(line=text.begin(); line!=text.end(); ++line) {
     if(!incSig && (*line)=="-- ")

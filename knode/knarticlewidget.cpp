@@ -1045,7 +1045,7 @@ void KNArticleWidget::slotReply()
 {
   kdDebug(5003) << "KNArticleWidget::slotReply()" << endl;
   if(a_rticle && a_rticle->type()==KNMimeBase::ATremote)
-    knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), true, false);
+    knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), selectedText(), true, false);
 }
 
 
@@ -1054,7 +1054,7 @@ void KNArticleWidget::slotRemail()
 {
   kdDebug(5003) << "KNArticleWidget::slotRemail()" << endl;
   if(a_rticle && a_rticle->type()==KNMimeBase::ATremote)
-    knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), false, true);
+    knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), selectedText(), false, true);
 }
 
 
