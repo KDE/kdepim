@@ -112,9 +112,6 @@ void SysInfoWidgetConfig::commit()
 
 	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
 	QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
-	{ // group this to make the group saver go away before saving
-	KConfig*fConfig=SysinfoSettings::self()->config();
-	KConfigGroupSaver s(fConfig, "SysInfo-conduit");
 	while(ci)
 	{
 #ifdef DEBUG
@@ -131,7 +128,6 @@ void SysInfoWidgetConfig::commit()
 		i=i->nextSibling();
 		ci = dynamic_cast<QCheckListItem *>(i);
 	}
-	}
 	SysinfoSettings::self()->writeConfig();
 	unmodified();
 }
@@ -143,9 +139,6 @@ void SysInfoWidgetConfig::load()
 
 	const sysinfoEntry_t *p = sysinfoEntries;
 	QCheckListItem *i = 0L;
-	{ // group this to make the group saver go away before doing all the other stuff
-	KConfig*fConfig=SysinfoSettings::self()->config();
-	KConfigGroupSaver s(fConfig, "SysInfo-conduit");
 	while (p && p->name)
 	{
 		i = new QCheckListItem(fConfigWidget->fPartsList,i18n(p->name),QCheckListItem::CheckBox);
@@ -160,7 +153,9 @@ void SysInfoWidgetConfig::load()
 
 		p++;
 	}
-	}
+  fConfigWidget->fOutputFile->setURL( SysinfoSettings::outputFile() );
+	fConfigWidget->fTemplateFile->setURL( SysinfoSettings::templateFile() );
+	fConfigWidget->fOutputType->setButton( SysinfoSettings::outputFormat() );
 	unmodified();
 }
 
