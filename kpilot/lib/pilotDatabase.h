@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -57,10 +57,10 @@
 
 
 /**
- * Methods to access a database on the pilot.  
+ * Methods to access a database on the pilot.
  *
  * NOTE:  It is the users responsibility
- * to delete PilotRecords returned by 
+ * to delete PilotRecords returned by
  * PilotDatabase methods when finished with them!!
  */
 
@@ -71,24 +71,24 @@ public:
 	PilotDatabase(QObject *,const char *);
 	virtual ~PilotDatabase();
 
-	enum { MAX_APPINFO_SIZE=8192 
+	enum { MAX_APPINFO_SIZE=8192
 		} Constants;
 
-	/** 
-	* Creates the database with the given creator, type and flags 
-	* on the given card (default is RAM). If the database already 
-	* exists, this function does nothing. 
+	/**
+	* Creates the database with the given creator, type and flags
+	* on the given card (default is RAM). If the database already
+	* exists, this function does nothing.
 	*/
-	virtual bool createDatabase(long creator=0, long type=0, 
+	virtual bool createDatabase(long creator=0, long type=0,
 		int cardno=0, int flags=0, int version=0) = 0;
-	
-	/** 
-	* Deletes the database (by name, as given in the constructor, 
-	* the database name is stored depending on the implementation 
-	* of PilotLocalDatabase and PilotSerialDatabas) 
+
+	/**
+	* Deletes the database (by name, as given in the constructor,
+	* the database name is stored depending on the implementation
+	* of PilotLocalDatabase and PilotSerialDatabas)
 	*/
 	virtual int deleteDatabase()=0;
-	
+
 	/** Reads the application block info, returns size. */
 	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
 
@@ -97,7 +97,7 @@ public:
 
 	/** returns the number of records in the database */
 	virtual int recordCount()=0;
-	
+
 	/** Returns a QValueList of all record ids in the database.  */
 	 virtual QValueList<recordid_t> idList()=0;
 
@@ -110,29 +110,29 @@ public:
 	/** Reads the next record from database in category 'category' */
 	virtual PilotRecord* readNextRecInCategory(int category) = 0;
 
-	/** 
-	* Reads the next record from database that has the dirty flag set. 
+	/**
+	* Reads the next record from database that has the dirty flag set.
 	* If @p ind is non-NULL, *ind is set to the index of the current
 	* record (i.e. before the record pointer moves to the next
 	* modified record).
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL) = 0;
 
-	/** 
-	* Writes a new record to database (if 'id' == 0, one will be 
-	* assigned to newRecord) 
+	/**
+	* Writes a new record to database (if 'id' == 0, one will be
+	* assigned to newRecord)
 	*/
 	virtual recordid_t writeRecord(PilotRecord* newRecord) = 0;
 
-	/** 
-	* Deletes a record with the given recordid_t from the database, 
-	* or all records, if @p all is set to true. The recordid_t will 
+	/**
+	* Deletes a record with the given recordid_t from the database,
+	* or all records, if @p all is set to true. The recordid_t will
 	* be ignored in this case.
 	*
 	* Return value is negative on error, 0 otherwise.
 	*/
 	virtual int deleteRecord(recordid_t id, bool all=false) = 0;
-	
+
 	/** Resets all records in the database to not dirty. */
 	virtual int resetSyncFlags() = 0;
 
@@ -155,7 +155,12 @@ public:
 	* meant for debugging, and it dumps an appinfo block to stdout.
 	*/
 	static void listAppInfo(const struct CategoryAppInfo *);
-	
+
+	static inline bool isResource(struct DBInfo *info)
+	{
+		return (info->flags & dlpDBFlagResource);
+	}
+
 protected:
 	virtual void openDatabase() = 0;
 	virtual void closeDatabase() = 0;
