@@ -208,6 +208,11 @@ imapParser::parseUntagged (parseString & result)
     else if (qstrncmp(what, "BYE", what.size()) == 0)
     {
       parseResult (what, result);
+      if ( sentQueue.count() ) {
+        // BYE that interrupts a command -> copy the reason for it
+        imapCommand *current = sentQueue.at (0);
+        current->setResultInfo(result.cstr());
+      }
       currentState = ISTATE_NO;
     }
     break;

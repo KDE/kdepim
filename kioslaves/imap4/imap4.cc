@@ -804,8 +804,14 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
       // Wait until cmd is complete, or connection breaks.
       while (!cmd->isComplete () && getState() != ISTATE_NO)
         parseLoop ();
-      if (cmd->result () != "OK")
-        error (ERR_SLAVE_DEFINED, cmd->resultInfo());
+      if ( getState() == ISTATE_NO ) {
+        // TODO KDE4: pass cmd->resultInfo() as third argument.
+        // ERR_CONNECTION_BROKEN expects a host, no way to pass details about the problem.
+        error( ERR_CONNECTION_BROKEN, myHost );
+      }
+      else if (cmd->result () != "OK") {
+        error( ERR_SLAVE_DEFINED, cmd->resultInfo() );
+      }
       else
       {
         if (hasCapability("UIDPLUS"))
