@@ -378,7 +378,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
     a_ccount(a)
 {
   QFrame* page=addPage(i18n("Ser&ver"));
-  QGridLayout *topL=new QGridLayout(page, 12, 3, 5);
+  QGridLayout *topL=new QGridLayout(page, 11, 3, 5);
 
   n_ame=new QLineEdit(page);
   QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
@@ -421,23 +421,22 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   u_seDiskCache->setChecked(a->useDiskCache());
   topL->addMultiCellWidget(u_seDiskCache, 6,6, 0,3);*/
 
-
   a_uth=new QCheckBox(i18n("Server requires &authentication"), page);
   connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
-  topL->addMultiCellWidget(a_uth, 7,7, 0,3);
+  topL->addMultiCellWidget(a_uth, 6,6, 0,3);
 
   u_ser=new QLineEdit(page);
   u_serLabel=new QLabel(u_ser,i18n("&User:"), page);
   u_ser->setText(a->user());
-  topL->addWidget(u_serLabel, 8,0);
-  topL->addMultiCellWidget(u_ser, 8,8, 1,2);
+  topL->addWidget(u_serLabel, 7,0);
+  topL->addMultiCellWidget(u_ser, 7,7, 1,2);
 
   p_ass=new QLineEdit(page);
   p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
   p_ass->setEchoMode(QLineEdit::Password);
   p_ass->setText(a->pass());
-  topL->addWidget(p_assLabel, 9,0);
-  topL->addMultiCellWidget(p_ass, 9,9, 1,2);
+  topL->addWidget(p_assLabel, 8,0);
+  topL->addMultiCellWidget(p_ass, 8,8, 1,2);
 
   slotAuthChecked(a->needsLogon());
 
