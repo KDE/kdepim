@@ -51,7 +51,7 @@ using namespace KCal;
 ICalFormat::ICalFormat()
 {
   mImpl = new ICalFormatImpl( this );
-  
+
   mTimeZoneId = "UTC";
   mUtc = true;
 }
@@ -138,11 +138,12 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
         setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
       }
       success = false;
-    }
+    } else
+      mLoadedProductId = mImpl->loadedProductId();
   }
 
   icalcomponent_free( calendar );
-  
+
   return success;
 }
 
@@ -151,7 +152,7 @@ QString ICalFormat::toString( Calendar *cal )
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 
   icalcomponent *calendar = mImpl->createCalendarComponent();
-  
+
   icalcomponent *component;
 
   // todos
@@ -188,19 +189,19 @@ QString ICalFormat::toString( Calendar *cal )
     return QString::null;
   }
 
-  return QString::fromLocal8Bit( text );  
+  return QString::fromLocal8Bit( text );
 }
 
 QString ICalFormat::toString( Incidence *incidence )
 {
   icalcomponent *component;
-  
+
   component = mImpl->writeIncidence( incidence );
-  
+
   const char *text = icalcomponent_as_ical_string( component );
-  
+
   icalcomponent_free( component );
-  
+
   return QString::fromLocal8Bit( text );
 }
 
@@ -229,22 +230,22 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalcomponent *message;
   message = icalparser_parse_string(messageText.local8Bit());
-  
+
   if (!message) return 0;
-  
+
   icalproperty *m = icalcomponent_get_first_property(message,
                                                      ICAL_METHOD_PROPERTY);
-                                                          
+
   if (!m) return 0;
-  
+
   icalcomponent *c;
-  
+
   IncidenceBase *incidence = 0;
   c = icalcomponent_get_first_component(message,ICAL_VEVENT_COMPONENT);
   if (c) {
     incidence = mImpl->readEvent(c);
-  } 
-  
+  }
+
   c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
   if (c) {
     incidence = mImpl->readTodo(c);
@@ -264,7 +265,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalproperty_method icalmethod = icalproperty_get_method(m);
   Scheduler::Method method;
-  
+
   switch (icalmethod) {
     case ICAL_METHOD_PUBLISH:
       method = Scheduler::Publish;
@@ -304,7 +305,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                                    mImpl->extractErrorProperty(c)));
     return 0;
   }
-  
+
   icalcomponent *calendarComponent = mImpl->createCalendarComponent();
 
   Incidence *existingIncidence = cal->getEvent(incidence->uid());
@@ -315,7 +316,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeTodo(todo));
     }
-    if (existingIncidence->type() == "Event") {    
+    if (existingIncidence->type() == "Event") {
       Event *event = static_cast<Event *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeEvent(event));
@@ -327,7 +328,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() classify..." << endl;
 
   icalclass result = icalclassify(message,calendarComponent,(char *)"");
-  
+
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
 
   ScheduleMessage::Status status;
@@ -350,7 +351,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       status = ScheduleMessage::Unknown;
       break;
   }
-  
+
   return new ScheduleMessage(incidence,method,status);
 }
 
@@ -365,7 +366,7 @@ QString ICalFormat::timeZoneId() const
   return mTimeZoneId;
 }
 
-bool ICalFormat::utc() const 
+bool ICalFormat::utc() const
 {
   return mUtc;
 }
