@@ -597,6 +597,12 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 
   //open composer
   com=new KNComposer(a, QString::null, id->getSignature());
+  if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
+  KMessageBox::information(knGlobals.topWidget,
+                            i18n("<qt>The signature generator program produced the "
+                                "following output:<br><br>%1</qt>")
+                                .arg(id->getSigGeneratorStdErr()));
+
   c_ompList.append(com);
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();
@@ -888,7 +894,14 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
 
   //Signature
   if(id->hasSignature())
+  {
     sig=id->getSignature();
+    if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
+      KMessageBox::information(knGlobals.topWidget,
+                               i18n("<qt>The signature generator program produced the "
+                                   "following output:<br><br>%1</qt>")
+                                   .arg(id->getSigGeneratorStdErr()));
+  }
   else
     sig=QString::null;
 

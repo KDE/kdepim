@@ -142,6 +142,8 @@ Q_OBJECT
     QString sigPath()const         { return s_igPath; }
     QString sigText()const         { return s_igText; }
     QString getSignature();
+    QString getSigGeneratorStdErr() { return s_igStdErr; }
+
 
   protected slots:
     void slotReceiveStdout(KProcess *proc, char *buffer, int buflen);
@@ -155,6 +157,7 @@ Q_OBJECT
               m_ailCopiesTo,
               s_igText,
               s_igContents,
+              s_igStdErr,
               s_igPath;
     QCString  s_igningKey;
     bool      u_seSigFile,

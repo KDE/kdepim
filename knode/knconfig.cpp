@@ -116,6 +116,7 @@ bool KNConfig::Identity::emailIsValid()
 QString KNConfig::Identity::getSignature()
 {
   s_igContents = QString::null;      // don't cache file contents
+  s_igStdErr = QString::null;
 
   if (u_seSigFile) {
     if(!s_igPath.isEmpty()) {
@@ -166,7 +167,7 @@ void KNConfig::Identity::slotReceiveStdout(KProcess *, char *buffer, int buflen)
 
 void KNConfig::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
 {
-  s_igContents.append(QString::fromLocal8Bit(buffer,buflen));
+  s_igStdErr.append(QString::fromLocal8Bit(buffer,buflen));
 }
 
 
