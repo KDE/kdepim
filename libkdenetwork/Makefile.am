@@ -46,12 +46,13 @@ libkdenetwork_la_SOURCES = kscoring.cpp \
 			  kaccount.cpp \
 			  syntaxhighlighter.cpp \
 			  spellingfilter.cpp \
-			  linklocator.cpp
+			  linklocator.cpp \
+			  recentaddresses.cpp
 
 libkdenetwork_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 4:0:2
 noinst_HEADERS = kpgpbase.h
 
-libkdenetwork_la_LIBADD = $(LIB_KDEUI) $(LIB_KSPELL)
+libkdenetwork_la_LIBADD = $(LIB_KDEUI) $(LIB_KSPELL) $(LIB_KABC)
 
 METASOURCES = AUTO
 
