@@ -44,6 +44,8 @@ extern "C" {
 #include "icalformatimpl.h"
 #include <ksavefile.h>
 
+#include <stdio.h>
+
 #define _ICAL_VERSION "2.0"
 
 using namespace KCal;
@@ -104,9 +106,11 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   KSaveFile::backupFile( fileName );
 
   KSaveFile file( fileName );
-  if (file.status() != 0) {
-    setException(new ErrorFormat(ErrorFormat::SaveError,
-                i18n( "Error saving to '%1'." ).arg(fileName)));
+  if ( file.status() != 0 ) {
+    kdDebug() << "ICalFormat::save() errno: " << strerror( file.status() )
+              << endl;
+    setException( new ErrorFormat( ErrorFormat::SaveError,
+                  i18n( "Error saving to '%1'." ).arg( fileName ) ) );
     return false;
   }
   QTextStream* ts = file.textStream();

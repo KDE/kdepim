@@ -27,7 +27,7 @@
 using namespace KCal;
 
 QString CalFormat::mApplication = QString::fromLatin1("libkcal");
-QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal 3.1//EN");
+QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal 3.2//EN");
 
 // An array containing the PRODID strings indexed against the calendar file format version used.
 // Every time the calendar file format is changed, add an entry/entries to this list.
@@ -39,6 +39,7 @@ static CalVersion prodIds[] = {
   { 220, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 2.2//EN") },
   { 300, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.0//EN") },
   { 310, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.1//EN") },
+  { 320, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.2//EN") },
   { 0 , QString() }
 };
 
