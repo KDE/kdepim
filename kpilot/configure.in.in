@@ -45,7 +45,7 @@ dnl calls, and NOTE the yuckiness when assigning values to PISOCK_LIB.
 dnl
 if  test "$HAVE_PISOCK" = "0" ; then
 	AC_MSG_CHECKING([for pi-file.h alternate])
-	for i in /usr/local/pilot/include /usr/local/include /vol/kde/support/include ; do
+	for i in /usr/local/pilot/include /usr/local/include /vol/kde/support/include /usr/include/libpisock ; do
 		test -f $i/pi-file.h && HAVE_PISOCK=1
 		test -f $i/pi-file.h && PISOCK_INCLUDE="-I$i"
 	done
@@ -97,23 +97,23 @@ dnl
 dnl
 for i in /usr/local/pilot/lib /usr/local/lib /vol/kde/support/lib ; do
 	if test "$HAVE_PISOCK" = "0" ; then
-		CPPFLAGS="$kpilot_save_cflags  $all_includes -I$i"
+		CPPFLAGS="$kpilot_save_cflags  $all_includes $PISOCK_INCLUDE"
 		LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$i -R$i"
 
 		unset ac_cv_lib_pisock_pi_accept
 		AC_CHECK_LIB(pisock,pi_accept,
 			[PISOCK_LIB="-L$i -R$i -lpisock"
-			HAVE_PISOCK=1],[],)
+			HAVE_PISOCK=1],[],[])
 	fi
 done
 
 if test "$HAVE_PISOCK" = "0" ; then
 	AC_MSG_WARN([KPILOT: pisock library not found])
 	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
-else
-	AC_SUBST(PISOCK_LIB)
-	AC_SUBST(PISOCK_INCLUDE)
 fi
+
+AC_SUBST(PISOCK_LIB)
+AC_SUBST(PISOCK_INCLUDE)
 
 
 CPPFLAGS="$kpilot_save_cflags"

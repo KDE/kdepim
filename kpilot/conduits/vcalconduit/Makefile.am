@@ -3,8 +3,8 @@
 ### so it seems logical to put them in one place.
 ###
 
-INCLUDES= $(PISOCK_INCLUDE) \
-	-I$(top_srcdir)/kpilot/lib -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES= -I$(top_srcdir)/kpilot/lib -I$(top_srcdir)/libkcal \
+	$(PISOCK_INCLUDE) $(all_includes)
 
 METASOURCES = AUTO
 

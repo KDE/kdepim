@@ -5,14 +5,14 @@
 
 METASOURCES = AUTO
 
-INCLUDES = $(all_includes) 
+INCLUDES = $(all_includes) $(PISOCK_INCLUDE)
 
 ### If you must get debugging output on a platform where
 ### the libs are built without debugging support, define
 ### DEBUG_CERR. Define DEBUG to get debugging support anywhere.
 ###
 ### KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
-KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR $(PISOCK_INCLUDE)
+KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR 
 
 lib_LTLIBRARIES = libkpilot.la
 

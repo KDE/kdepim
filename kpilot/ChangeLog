@@ -1,5 +1,17 @@
+KPilot Developer's notes for april 21st 2002
+============================================
+
+2002-04-16  Adriaan de Groot
+* Finally committed all of David B's patches and things. [HEAD]
+* More modification of configure.in.in and the Makefile.am's to
+  make pilot-link more easily found (I hope). [BRANCH]
+
+2002-04-15  Adriaan de Groot
+* Cosmetic fix: center splash image under KDE3 as well.
+* Fixed misleading debug statement when KPilot starts the daemon.
+
 KPilot Developer's notes for mid-april 2002
-========================================================
+===========================================
 
 2002-04-13  Adriaan de Groot
 * Received a patch from Carlo Perassi for handling cases where there
