@@ -9,6 +9,7 @@
 #include <kstdguiitem.h>
 
 #include "crlview.h"
+#include "crlview.moc"
 
 CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   : QDialog( parent, name, modal ), _process(0)
@@ -20,15 +21,15 @@ CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   _textView = new QTextView( this );
   _textView->setWordWrap( QTextEdit::NoWrap );
   topLayout->addWidget( _textView );
-  
+
   QHBoxLayout* hbLayout = new QHBoxLayout( topLayout );
-  
-  _updateButton = new KPushButton( i18n("&Update"), this );  
+
+  _updateButton = new KPushButton( i18n("&Update"), this );
   _closeButton = new KPushButton( KStdGuiItem::close(), this );
-  
+
   hbLayout->addWidget( _updateButton );
   hbLayout->addStretch();
-  hbLayout->addWidget( _closeButton );  
+  hbLayout->addWidget( _closeButton );
 
   // connections:
   connect( _updateButton, SIGNAL( clicked() ),
