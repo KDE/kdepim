@@ -139,6 +139,9 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
 #endif
     mGroupGUIs.append( gg );
   }
+#ifndef USE_TABS
+  vlay->addStretch( 1 );
+#endif
 }
 
 
