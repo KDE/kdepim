@@ -298,7 +298,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 			if (retval == 1) {
 				ksDebug() << "TLS enabled successfully." << endl;
 				// reparse capabilities:
-				parseCapabilities();
+				parseCapabilities(true);
 			} else {
 				ksDebug() << "TLS initiation failed, code " << retval << endl;
 				disconnect(true);
