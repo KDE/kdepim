@@ -49,6 +49,8 @@
 #include <kmessagebox.h>
 #include <kapplication.h>
 
+#include <assert.h>
+
 Kleo::CryptPlugFactory * Kleo::CryptPlugFactory::mSelf = 0;
 KMail::CryptPlugFactory * KMail::CryptPlugFactory::mSelf = 0;
 
