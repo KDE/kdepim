@@ -123,20 +123,20 @@ void KSharedFileDevice::close(  )
     QCString replyType;
     QDataStream arg(data, IO_WriteOnly );
     arg << name();
-    if(kapp->dcopClient()->call( "kded", "ksharedfile",
+    kapp->dcopClient()->call( "kded", "ksharedfile",
 				 "writeUnlockFile(QString)",
 				 data,
-				 replyType, replyData ) );
+				 replyType, replyData );
   }else{
     QByteArray data;
     QByteArray replyData;
     QCString replyType;
     QDataStream arg(data, IO_WriteOnly );
     arg << name();
-    if(kapp->dcopClient()->call( "kded", "ksharedfile",
+    kapp->dcopClient()->call( "kded", "ksharedfile",
 				 "readUnshareFile(QString)",
 				 data,
-				 replyType, replyData ) );
+				 replyType, replyData );
   }
 }
 
