@@ -287,7 +287,10 @@ the following option:</para>
 <listitem>
 <para>Check the <guilabel>Copy email to self</guilabel> checkbox to
 send a blind copy of the email to yourself when the alarm is
-triggered. The copy will be addressed to your user name.</para>
+triggered. The email address to which the copy will be sent may be
+set in the <link linkend="preferences">Preferences dialog</link>, the
+default being your email address set in the &kde; Control
+Centre.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -843,6 +846,16 @@ such alarms will be output at the earliest opportunity during the
 24 hours starting from the start-of-day time.</para>
 </listitem>
 
+<listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
+whether you should be prompted for confirmation each time you delete
+an alarm.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Email Alarms</guilabel> group box: These options
+control the sending and addressing of email alarms.</para>
+
+<itemizedlist>
 <listitem>
 <para><guilabel>Email client</guilabel>: Specify the email
 client to be used to send email alarms:</para>
@@ -863,9 +876,16 @@ or <application>mail</application>.</para>
 </itemizedlist>
 </listitem>
 
-<listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
-whether you should be prompted for confirmation each time you delete
-an alarm.</para>
+<listitem>
+<para><guilabel>Use email address from Control Center</guilabel>:
+Check this option to use the email address which is configured in the
+&kde; Control Centre for sending blind copies of email alarms to
+yourself when the <guilabel>Copy email to self</guilabel> option is
+selected. To specify a different email address, uncheck it and enter
+the address in the <guilabel>Email address</guilabel> edit box
+below.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
 <listitem><para><guilabel>Expired Alarms</guilabel> group box: These
