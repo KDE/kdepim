@@ -92,21 +92,21 @@ void ExchangeClient::remove( KCal::Event* event )
 void ExchangeClient::slotDownloadFinished( ExchangeDownload* worker ) 
 {
   emit downloadFinished( ResultOK );
-  delete worker;
+  worker->deleteLater();
 }
 
 void ExchangeClient::slotUploadFinished( ExchangeUpload* worker ) 
 {
   kdDebug() << "ExchangeClient::slotUploadFinished()" << endl;
   emit uploadFinished( ResultOK );
-  delete worker;
+  worker->deleteLater();
 }
 
 void ExchangeClient::slotRemoveFinished( ExchangeDelete* worker ) 
 {
   kdDebug() << "ExchangeClient::slotRemoveFinished()" << endl;
   emit removeFinished( ResultOK );
-  delete worker;
+  worker->deleteLater();
 }
 
 int ExchangeClient::downloadSynchronous( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress)

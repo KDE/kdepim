@@ -28,9 +28,6 @@
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 
-class DwString;
-class DwEntity;
-
 namespace KPIM {
 
 class ExchangeAccount;

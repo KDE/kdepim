@@ -27,9 +27,7 @@
 #include <kio/job.h>
 
 #include <libkcal/calendar.h>
-
-class DwString;
-class DwEntity;
+#include <libkcal/icalformat.h>
 
 namespace KPIM {
 	
@@ -54,13 +52,12 @@ class ExchangeDownload : public QObject {
   private slots:
     void slotSearchResult( KIO::Job *job );
     void slotMasterResult( KIO::Job* job );
-    void slotData( KIO::Job *job, const QByteArray &data );
-    void slotTransferResult( KIO::Job *job );
+    void slotPropFindResult( KIO::Job * );
 
   private:
     void handleAppointments( const QDomDocument &, bool recurrence );
+    void readAppointment( const KURL& url );
     void handleRecurrence( QString uid );
-    void handlePart( DwEntity *part );
 
     void increaseDownloads();
     void decreaseDownloads();
@@ -68,6 +65,7 @@ class ExchangeDownload : public QObject {
     QString dateSelectQuery( const QDate& start, const QDate& end );
     
     KCal::Calendar *mCalendar;
+    KCal::ICalFormat *mFormat;
     QPtrList<KCal::Event> mEvents;
     ExchangeAccount *mAccount;
     ExchangeProgress *mProgress;
@@ -76,7 +74,6 @@ class ExchangeDownload : public QObject {
 
     QMap<QString,int> m_uids; // This keeps track of uids we already covered. Especially useful for
     	// recurring events.
-    QMap<QString,DwString *> m_transferJobs; // keys are URLs
     QWidget* mWindow;
 };
 

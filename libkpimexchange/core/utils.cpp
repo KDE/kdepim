@@ -18,6 +18,12 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include <qdatetime.h>
+
+extern "C" {
+  #include <ical.h>
+}
+
 #include "utils.h"
 
 /** In a document doc with node node, add an element with name ns and tagname tag. Return the new element 
@@ -42,3 +48,12 @@ QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, co
   return el;
 }
 
+QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId )
+{
+  QDateTime epoch;
+  epoch.setTime_t( 0 );
+  time_t v = epoch.secsTo( utc );
+  struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
+  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  return utc.addSecs( offset );
+}
