@@ -950,7 +950,15 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
 
   c_harset=conf->readEntry("Charset").latin1();
   if (c_harset.isEmpty()) {
-    c_harset=findComposerCharset(QTextCodec::codecForLocale()->mimeName());
+    QCString localeCharset(QTextCodec::codecForLocale()->mimeName());
+
+    // special logic for japanese users:
+    // "euc-jp" is default encoding for them, but in the news
+    // "iso-2022-jp" is used
+    if (localeCharset.lower() == "euc-jp")
+      localeCharset = "iso-2022-jp";
+
+    c_harset=findComposerCharset(localeCharset);
     if (c_harset.isEmpty())
       c_harset="iso-8859-1";  // shit
   }
