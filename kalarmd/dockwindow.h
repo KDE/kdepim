@@ -24,20 +24,20 @@
 #include <ksystemtray.h>
 #include <kpopupmenu.h>
 
-#include "daemongui.h"
+#include "alarmgui.h"
 
 class AlarmDockWindow : public KSystemTray
 {
     Q_OBJECT
   public:
-    AlarmDockWindow(AlarmGui&, QWidget *parent = 0L, const char *name = 0L);
+    AlarmDockWindow(AlarmGui *, QWidget *parent = 0L, const char *name = 0L);
     virtual ~AlarmDockWindow();
 
-    bool alarmsOn()        { return contextMenu()->isItemChecked(alarmsEnabledId); }
-    bool autostartGuiOn()  { return contextMenu()->isItemChecked(autostartGuiId); }
+    bool alarmsOn()        { return contextMenu()->isItemChecked(mAlarmsEnabledId); }
+    bool autostartGuiOn()  { return contextMenu()->isItemChecked(mAutostartGuiId); }
 
     void setGuiAutostart(bool on);
-    void setDaemonAutostart(bool on)   { contextMenu()->setItemChecked(autostartDaemonId, on); }
+    void setDaemonAutostart(bool on)   { contextMenu()->setItemChecked(mAutostartDaemonId, on); }
     void updateMenuClients();
     void updateMenuCalendars(bool recreate);
     void setDaemonStatus(bool running);
@@ -56,20 +56,20 @@ class AlarmDockWindow : public KSystemTray
     void selectCal(int menuIndex);
 
   protected:
-    QPixmap    dPixmapEnabled, dPixmapDisabled;
-    int        alarmsEnabledId;     // alarms enabled item in menu
-    int        autostartGuiId;      // GUI autostart item in menu
-    int        autostartDaemonId;   // daemon autostart item in menu
+    QPixmap    mPixmapEnabled, mPixmapDisabled;
+    int        mAlarmsEnabledId;     // alarms enabled item in menu
+    int        mAutostartGuiId;      // GUI autostart item in menu
+    int        mAutostartDaemonId;   // daemon autostart item in menu
 
   private:
     // DCOP interface
     void       handleEvent(const QString& calendarURL, const QString& eventID);
 
-    AlarmGui&  alarmGui;
-    QString    defaultClient;    // default application name
-    int        clientIndex;      // menu index to client names separator
-    int        nClientIds;       // number of client names + 1 in menu
-    int        nCalendarIds;     // number of calendar URLs + 1 in menu
+    AlarmGui   *mAlarmGui;
+    QString    mDefaultClient;    // default application name
+    int        mClientIndex;      // menu index to client names separator
+    int        mNumClientIds;       // number of client names + 1 in menu
+    int        mNumCalendarIds;     // number of calendar URLs + 1 in menu
 };
 
 #endif

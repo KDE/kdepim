@@ -44,8 +44,13 @@ struct ClientInfo
       COMMAND_LINE_NOTIFY = 2   // start client and use command line arguments to notify about events
     };
     ClientInfo() { }
-    ClientInfo(const QString& title, const QString& dcopObj, int notifyType, bool disp, bool wait=false);
+    ClientInfo(const QString &appName, const QString& title,
+               const QString& dcopObj, int notifyType, bool disp,
+               bool wait=false);
+
     void             setNotificationType(int type);
+
+    QString          appName;
     QString          title;             // application title for display purposes
     QString          dcopObject;        // object to receive DCOP messages (if applicable)
     NotificationType notificationType;  // whether and how to notify events if client app isn't running
@@ -55,6 +60,8 @@ struct ClientInfo
     int      menuIndex;           // context menu index to this client's entry
 };
 
-typedef QMap<QString, ClientInfo> ClientMap;   // maps client names against client data
+//typedef QMap<QString, ClientInfo> ClientMap;   // maps client names against client data
+
+typedef QValueList<ClientInfo> ClientList;
 
 #endif

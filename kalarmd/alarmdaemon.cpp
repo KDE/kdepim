@@ -244,10 +244,10 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
           if (cal->appName() == appName)
             cal->setUnregistered( true );
         }
-        mClients.remove(appName);
+        removeClientInfo(appName);
       }
-      ClientInfo cinfo(appTitle, dcopObject, notificationType, displayCalendarName);
-      mClients.insert(appName, cinfo);
+      ClientInfo cinfo(appName, appTitle, dcopObject, notificationType, displayCalendarName);
+      mClients.append(cinfo);
 
       writeConfigClient(appName, cinfo);
 
@@ -487,12 +487,12 @@ void AlarmDaemon::checkIfSessionStarted()
     delete mSessionStartTimer;
 
     // Notify clients which are not yet running of pending alarms
-    for (ClientMap::Iterator client = mClients.begin();  client != mClients.end();  ++client)
+    for (ClientList::Iterator client = mClients.begin();  client != mClients.end();  ++client)
     {
-      if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(client.key())))
+      if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName)))
       {
-        client.data().waitForRegistration = false;
-        notifyPendingEvents(client.key());
+        (*client).waitForRegistration = false;
+        notifyPendingEvents((*client).appName);
       }
     }
 

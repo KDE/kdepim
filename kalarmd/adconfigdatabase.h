@@ -32,10 +32,13 @@ class ADConfigDataBase
   public:
     explicit ADConfigDataBase(bool daemon);
     virtual ~ADConfigDataBase() {}
-    const ClientInfo* getClientInfo(const QString& appName) const;
-    int               clientCount() const     { return mClients.count(); }
 
-    CalendarList calendars() { return mCalendars; }
+    ClientInfo* getClientInfo(const QString& appName) const;
+    void        removeClientInfo( const QString &appName );
+    ClientList  clients() const { return mClients; }
+    int         clientCount() const     { return mClients.count(); }
+
+    CalendarList calendars() const { return mCalendars; }
     int calendarCount() const { return mCalendars.count(); }
 
   protected:
@@ -54,7 +57,7 @@ class ADConfigDataBase
     static const QString CALENDAR_KEY;
 
   
-    ClientMap         mClients;             // client application names and data
+    ClientList        mClients;             // client application names and data
     CalendarList      mCalendars;           // the calendars being monitored
 
   private:

@@ -78,11 +78,11 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
   QStringList clients = QStringList::split(',', clientConfig.readEntry(CLIENTS_KEY), true);
 
   // Delete any clients which are no longer in the config file
-  for (ClientMap::Iterator cl = mClients.begin();  cl != mClients.end();  )
+  for (ClientList::Iterator cl = mClients.begin();  cl != mClients.end();  )
   {
     bool found = false;
     for (unsigned int i = 0;  i < clients.count();  ++i)
-      if (clients[i] == cl.key())
+      if (clients[i] == (*cl).appName)
       {
         found = true;
         break;
@@ -92,13 +92,13 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       // This client has disappeared. Remove it and its calendars
       for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
       {
-        if (cal->appName() == cl.key())
+        if (cal->appName() == (*cl).appName)
         {
           mCalendars.remove(cal);
           deletedCalendars = true;
         }
       }
-      ClientMap::Iterator c = cl;
+      ClientList::Iterator c = cl;
       ++cl;                      // prevent iterator becoming invalid with remove()
       mClients.remove(c);
       deletedClients = true;
@@ -126,10 +126,10 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
     else
     {
       // Get this client's details from its own config section
-      ClientMap::Iterator c = mClients.find(clients[i]);
-      bool found = (c != mClients.end());
+      ClientInfo *info = getClientInfo( clients[i] );
+      bool found = ( !info );
       ClientInfo newinfo;
-      ClientInfo* info = found ? &c.data() : &newinfo;
+      if ( !found ) info = &newinfo;
       QString groupKey = QString(CLIENT_KEY) + clients[i];
       clientConfig.setGroup(groupKey);
       info->title             = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
@@ -139,7 +139,8 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       if (!found)
       {
         info->waitForRegistration = sessionStarting;
-        mClients.insert(clients[i], newinfo);
+        newinfo.appName = clients[i];
+        mClients.append( newinfo );
       }
 
       // Get the client's calendar files
@@ -196,15 +197,23 @@ void ADConfigDataBase::deleteConfigCalendar(const ADCalendarBase*)
 }
 
 /* Return the ClientInfo structure for the specified client application */
-const ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
+ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
 {
-  if (!appName.isEmpty())
-  {
-    ClientMap::ConstIterator c = mClients.find(appName);
-    if (c != mClients.end())
-      return &c.data();
+  ClientList::ConstIterator it;
+  for( it = mClients.begin(); it != mClients.end(); ++it ) {
+    if ( (*it).appName == appName ) return &(*it);
+    break;
   }
-  return 0L;
+  return 0;
+}
+
+void ADConfigDataBase::removeClientInfo( const QString &appName )
+{
+  ClientList::Iterator it;
+  for( it = mClients.begin(); it != mClients.end(); ++it ) {
+    if ( (*it).appName == appName ) mClients.remove(it);
+    break;
+  }
 }
 
 /* Return the ADCalendarBase structure for the specified full calendar URL */

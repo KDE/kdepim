@@ -12,12 +12,13 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
 kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
-	dockwindow.cpp daemonguiiface.skel daemonguiiface.stub \
-	koeventviewer.cpp daemongui.cpp adconfigdatabase.cpp \
+	dockwindow.cpp alarmguiiface.skel alarmguiiface.stub \
+	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp \
+        alarmdaemoniface.stub \
         adcalendarbase.cpp adcalendar_gui.cpp
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
-	guiapp.h daemongui.h daemonguiiface.h alarmdialog.h \
+	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h \
         adcalendarbase.h adcalendar.h adcalendar_gui.h adconfigdatabase.h
 

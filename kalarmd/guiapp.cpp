@@ -26,7 +26,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
-#include "daemongui.h"
+#include "alarmgui.h"
 
 #include "guiapp.h"
 #include "guiapp.moc"
