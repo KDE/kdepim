@@ -158,7 +158,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 
 	if (aboutbutton)
 	{
-		QPushButton *but = new QPushButton(i18n("More About..."),
+		QPushButton *but = new QPushButton(i18n("More About"),
 			w);
 
 		connect(but, SIGNAL(clicked()), this, SLOT(showAbout()));
@@ -285,6 +285,9 @@ void UIDialog::setTabWidget(QTabWidget * w)
 }
 
 // $Log$
+// Revision 1.6  2002/04/20 13:03:31  binner
+// CVS_SILENT Capitalisation fixes.
+//
 // Revision 1.5  2002/01/18 12:47:21  adridg
 // CVS_SILENT: More compile fixes
 //
