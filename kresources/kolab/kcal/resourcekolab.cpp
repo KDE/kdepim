@@ -462,7 +462,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
     return false;
 
  /* check the noop case */
-  if ( mUidMap.contains( journal->uid() ) && mUidMap[ journal->uid() ].resource() == subResource )
+  if ( mUidMap.contains( todo->uid() ) && mUidMap[ todo->uid() ].resource() == subResource )
     return false;
 
   if ( !mSilent ) {
