@@ -6,10 +6,12 @@ X-KDE-Library=libpvkonnector
 
 Name=PV Konnector
 Name[cs]=PV konektor
-Name[es]=Konnector PV
-Name[lv]=PV Konnektors
-Name[pt_BR]=Konnector
-Name[sl]=Povezovalnik PV
+Name[da]=PV-Konnector
+Name[hu]=PV konnektor
+Name[nso]=Mokgomaganyi wa PV
+Name[pl]=Łącznik PV
+Name[pt]=Konnector para o PV
+Name[sv]=PV-konnector
 Group= PDA
 Vendor = Maurus Erni
 Id=Pocket Viewer
