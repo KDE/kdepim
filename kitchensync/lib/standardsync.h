@@ -1,7 +1,7 @@
 // the actual implementation is from Cornelius Schumacher for now.
 
 
-// $Id:
+// $Id$
 
 #ifndef KSYNC_STANDARD_SYNC_H
 #define KSYNC_STANDARD_SYNC_H

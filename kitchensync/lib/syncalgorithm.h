@@ -2,7 +2,7 @@
 #ifndef KSYNC_SYNC_ALGORITHM_H
 #define KSYNC_SYNC_ALGORITHM_H
 
-// $Id
+// $Id$
 
 namespace KSync {
 

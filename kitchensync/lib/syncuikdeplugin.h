@@ -1,5 +1,5 @@
 
-// $Id:
+// $Id$
 
 #ifndef SYNC_UI_KDE_PLUGIN_H
 #define SYNC_UI_KDE_PLUGIN_H

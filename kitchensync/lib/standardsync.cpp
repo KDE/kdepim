@@ -1,5 +1,5 @@
 
-// $Id:
+// $Id$
 
 #include <kdebug.h>
 #include "syncer.h"
