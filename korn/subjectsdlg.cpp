@@ -150,9 +150,8 @@ void KornSubjectsDlg::deleteMessage()
 	QPtrList<QListViewItem> messages = _list->selectedItems();
 	if (!messages.count())
 		return;
-	QString confirmation = i18n("Do you really want to delete one message?");
-	if (messages.count() > 1)
-		confirmation = i18n("Do you really want to delete %1 messages?").arg(messages.count());
+	QString confirmation = i18n("Do you really want to delete %n message?",
+				    "Do you really want to delete %n messages?", messages.count());
 	if (KMessageBox::questionYesNo(this, confirmation, i18n("Confirmation")) != KMessageBox::Yes)
 		return;
 
