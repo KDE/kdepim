@@ -167,7 +167,7 @@ bool KMailConnection::kmailSubresources( QMap<QString, bool>& lst,
   return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailIncidences( QMap<QString, QString>& lst,
+bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
                                        const QString& mimetype,
                                        const QString& resource )
 {
@@ -180,7 +180,7 @@ bool KMailConnection::kmailIncidences( QMap<QString, QString>& lst,
 
 bool KMailConnection::kmailGetAttachment( KURL& url,
                                           const QString& resource,
-                                          const QString& sernum,
+                                          Q_UINT32 sernum,
                                           const QString& filename )
 {
   if ( !connectToKMail() )
@@ -191,7 +191,7 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
-                                            const QString& sernum )
+                                            Q_UINT32 sernum )
 {
   return connectToKMail()
     && mKMailIcalIfaceStub->deleteIncidenceKolab( resource, sernum )
@@ -199,7 +199,7 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
 }
 
 bool KMailConnection::kmailUpdate( const QString& resource,
-                                   const QString& sernum,
+                                   Q_UINT32 sernum,
                                    const QStringList& attachments,
                                    const QStringList& deletedAttachments )
 {

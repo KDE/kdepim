@@ -62,7 +62,7 @@ bool ResourceKolabBase::kmailSubresources( QMap<QString, bool>& lst,
   return mConnection->kmailSubresources( lst, annotation );
 }
 
-bool ResourceKolabBase::kmailIncidences( QMap<QString, QString>& lst,
+bool ResourceKolabBase::kmailIncidences( QMap<Q_UINT32, QString>& lst,
                                          const QString& mimetype,
                                          const QString& resource ) const
 {
@@ -70,7 +70,7 @@ bool ResourceKolabBase::kmailIncidences( QMap<QString, QString>& lst,
 }
 
 bool ResourceKolabBase::kmailGetAttachment( KURL& url, const QString& resource,
-                                            const QString& sernum,
+                                            Q_UINT32 sernum,
                                             const QString& filename ) const
 {
   return mConnection->kmailGetAttachment( url, resource, sernum, filename );
@@ -80,18 +80,18 @@ bool ResourceKolabBase::kmailAddIncidence( const QString& resource,
                                            const QString& xml,
                                            const QStringList& attachments )
 {
-  return kmailUpdate( resource, QString::null, xml, attachments,
+  return kmailUpdate( resource, 0, xml, attachments,
                       QStringList() );
 }
 
 bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
-                                              const QString& sernum )
+                                              Q_UINT32 sernum )
 {
   return mSilent || mConnection->kmailDeleteIncidence( resource, sernum );
 }
 
 bool ResourceKolabBase::kmailUpdate( const QString& resource,
-                                     const QString& sernum,
+                                     Q_UINT32 sernum,
                                      const QString& xml,
                                      const QStringList& attachments,
                                      const QStringList& deletedAttachments )

@@ -78,14 +78,14 @@ public:
   // Call the DCOP methods
   bool kmailSubresources( QMap<QString, bool>& lst,
                           const QString& annotation );
-  bool kmailIncidences( QMap<QString, QString>& lst,
+  bool kmailIncidences( QMap<Q_UINT32, QString>& lst,
                         const QString& mimetype,
                         const QString& resource );
   bool kmailGetAttachment( KURL& url, const QString& resource,
-                           const QString& sernum,
+                           Q_UINT32 sernum,
                            const QString& filename );
-  bool kmailDeleteIncidence( const QString& resource, const QString& sernum );
-  bool kmailUpdate( const QString& resource, const QString& sernum,
+  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
+  bool kmailUpdate( const QString& resource, Q_UINT32 sernum,
                     const QStringList& attachments,
                     const QStringList& deletedAttachments );
 

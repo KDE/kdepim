@@ -102,14 +102,14 @@ protected:
 
   /// Get the mimetype attachments from this folder. Returns a
   /// QMap with serialNumber/attachment pairs.
-  bool kmailIncidences( QMap<QString, QString>& lst, const QString& mimetype,
+  bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
                         const QString& resource ) const;
 
   /// Get an attachment from a mail. Returns a URL to it. This can
   /// be called by the resource after obtaining the incidence.
   /// The resource must delete the temp file.
   bool kmailGetAttachment( KURL& url, const QString& resource,
-                           const QString& sernum,
+                           Q_UINT32 sernum,
                            const QString& filename ) const;
 
   /// Add a new incidence. The list of attachments are URLs.
@@ -117,10 +117,10 @@ protected:
                           const QStringList& attachments );
 
   /// Delete an incidence.
-  bool kmailDeleteIncidence( const QString& resource, const QString& sernum );
+  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
 
   /// Update an incidence. The list of attachments are URLs.
-  bool kmailUpdate( const QString& resource, const QString& sernum,
+  bool kmailUpdate( const QString& resource, Q_UINT32 sernum,
                     const QString& xml, const QStringList& attachments,
                     const QStringList& deletedAttachments );
 
