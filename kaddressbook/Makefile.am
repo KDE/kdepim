@@ -42,7 +42,9 @@ libkaddressbook_la_SOURCES = xxportobject.cpp xxportmanager.cpp kabcore.cpp \
 libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkaddressbook_la_LIBADD = details/libdetails.la printing/libprinter.la \
         libkabcommon.la $(top_builddir)/libkdepim/libkdepim.la \
-	$(LIB_KABC) $(LIB_KPARTS) $(LIB_KHTML) -lkdeprint
+	$(LIB_KABC) $(LIB_KHTML) -lkdeprint
+libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
+	$(top_srcdir)/libkdepim/categoryeditdialog.h
 
 kaddressbookincludedir = $(includedir)/kaddressbook
 kaddressbookinclude_HEADERS = extensionwidget.h kabcore.h xxportobject.h
