@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>06/08/2000</date>
+<date>10/08/2000</date>
 <releaseinfo>1.01.63</releaseinfo>
 
 <abstract>
@@ -622,6 +622,11 @@ give some hints on the use of pgp too. It's written for people who are
 beginners in this area. If you are familiar with the use of pgp, you
 can skip most of the steps. (Note that working with GnuPG is generally
 the same, but some command line parameters may be different.)</para>
+
+<warning><para>You can encrypt your messages sent with
+&kmail;, but this does not mean that the attachments are encrypted. You have to encrypt
+your attachments manually, using a shell command or some other tool before you attach
+them.</para></warning>
 
 <para>To setup and use pgp support in &kmail; it is necessary to have pgp installed
 and set up properly. Of course we cannot give you a full introduction of
@@ -1794,6 +1799,15 @@ too. This will remove all the messages in the trash folder whenever you exit &km
  </para></answer>
 </qandaentry>
 -->
+
+<qandaentry>
+ <question><para>What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
+ <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
+ programs. Still you should understand how these programs work and what might make them
+ insecure. Just one example: Trusting a foreign public key without checking it is no good idea.
+ Another issue are attachments: As most other mail clients, &kmail; can encrypt your messages,
+ but not your attachments. You have to encrypt them manually before you attach them.</para></answer>
+</qandaentry>
 
 <qandaentry>
  <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
