@@ -14,6 +14,7 @@
 
 #include <qcursor.h>
 #include <qheader.h>
+#include <qstylesheet.h>
 #include <qtimer.h>
 
 #include <klocale.h>
@@ -609,7 +610,8 @@ void KNHeaderViewToolTip::maybeTip( const QPoint &p )
   if ( !headerRect.isValid() )
     return;
 
-  tip( QRect( headerRect.left(), itemRect.top(), headerRect.width(), itemRect.height() ), item->text( column ) );
+  tip( QRect( headerRect.left(), itemRect.top(), headerRect.width(), itemRect.height() ),
+       QStyleSheet::escape( item->text( column ) ) );
 }
 
 //END: KNHeaderViewToolTip ====================================================
