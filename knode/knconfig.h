@@ -171,6 +171,7 @@ class IdentityWidget : public BaseWidget {
     QPushButton     *c_hooseBtn,
                     *e_ditBtn;
     QMultiLineEdit  *s_igEditor;
+    QButtonGroup    *b_uttonGroup;
 
     Identity        *d_ata;
 

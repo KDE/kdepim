@@ -91,13 +91,14 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addMultiCellWidget(m_ailCopiesTo, 4,4, 1,2);
   m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
 
-  QButtonGroup *buttonGroup = new QButtonGroup(this);
-  connect( buttonGroup, SIGNAL(clicked(int)),
+  b_uttonGroup = new QButtonGroup(this);
+  connect( b_uttonGroup, SIGNAL(clicked(int)),
            this, SLOT(slotSignatureType(int)) );
-  buttonGroup->hide();
+  b_uttonGroup->setExclusive(true);
+  b_uttonGroup->hide();
 
   s_igFile = new QRadioButton( i18n("&Use a signature from file"), this );
-  buttonGroup->insert(s_igFile);
+  b_uttonGroup->insert(s_igFile, 0);
   topL->addMultiCellWidget(s_igFile, 5, 5, 0, 2);
 
   s_ig = new KLineEdit(this);
@@ -120,7 +121,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   s_igGenerator->setChecked(d_ata->useSigGenerator());
 
   s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
-  buttonGroup->insert(s_igEdit);
+  b_uttonGroup->insert(s_igEdit, 1);
   topL->addMultiCellWidget(s_igEdit, 8, 8, 0, 2);
 
   s_igEditor = new QMultiLineEdit(this);
@@ -164,13 +165,12 @@ void KNConfig::IdentityWidget::slotSignatureType(int type)
 {
   bool sigFromFile = (type==0);
 
-  s_igFile->setChecked(sigFromFile);
+  b_uttonGroup->setButton(type);
   f_ileName->setEnabled(sigFromFile);
   s_ig->setEnabled(sigFromFile);
   c_hooseBtn->setEnabled(sigFromFile);
   e_ditBtn->setEnabled(sigFromFile);
   s_igGenerator->setEnabled(sigFromFile);
-  s_igEdit->setChecked(!sigFromFile);
   s_igEditor->setEnabled(!sigFromFile);
 
   if (sigFromFile)
