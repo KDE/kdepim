@@ -63,15 +63,12 @@ int KAddressBookApp::newInstance()
 
     QCString addrStr = args->getOption( "addr" );
     QCString uidStr = args->getOption( "uid" );
-    QCString vcardStr = args->getOption( "vcard" );
 
     QString addr, uid, vcard;
     if ( !addrStr.isEmpty() )
       addr = QString::fromLocal8Bit( addrStr );
     if ( !uidStr.isEmpty() )
       uid = QString::fromLocal8Bit( uidStr );
-    if ( !vcardStr.isEmpty() )
-      vcard = QString::fromLocal8Bit( vcardStr );
 
     if ( args->isSet( "editor-only" ) ) {
       if ( !mMainWin )
@@ -88,18 +85,22 @@ int KAddressBookApp::newInstance()
         mMainWin->show();
       }
     }
+
     // Can not see why anyone would pass both a uid and an email address, so I'll leave it that two contact editors will show if they do
     if ( !addr.isEmpty() )
       mMainWin->addEmail( addr );
 
-    if ( !vcard.isEmpty() )
-      mMainWin->importVCard( vcard );
-
     if ( !uid.isEmpty() )
       mMainWin->showContactEditor( uid );
-    if ( args->isSet( "new-contact" ) ) {
+
+    if ( args->isSet( "new-contact" ) )
       mMainWin->newContact();
+
+    if ( args->count() >= 1 ) {
+      for ( int i = 0; i < args->count(); ++i )
+        mMainWin->importVCard( args->url( i ).url() );
     }
+
   }
 
   return 0;
@@ -114,8 +115,7 @@ static KCmdLineOptions kmoptions[] =
   { "uid <uid>", I18N_NOOP( "Shows contact editor with given uid" ), 0 },
   { "editor-only", I18N_NOOP( "Launches in editor only mode" ), 0 },
   { "new-contact", I18N_NOOP( "Launches editor for the new contact" ), 0 },
-  { "vcard <vcard>", I18N_NOOP( "Import the given vCard" ), 0 },
-  { "+[argument]", I18N_NOOP( "dummy argument" ), 0 },
+  { "+[URL]", I18N_NOOP( "Import the given vCard" ), 0 },
   KCmdLineLastOption
 };
 
