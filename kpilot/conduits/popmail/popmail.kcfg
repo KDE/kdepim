@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilot_mailconduitrc"/> 
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+<kcfgfile name="kpilot_mailconduitrc"/> 
 <group name="General">
   <entry name="SyncOutgoing" type="UInt">
     <label>Selects the way in which mail is sent: none (0), kmail (1).</label>
