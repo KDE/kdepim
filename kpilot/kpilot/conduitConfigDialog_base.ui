@@ -152,7 +152,7 @@ configure button below.</string>
                                 <cstring>fConfigureButton</cstring>
                             </property>
                             <property name="text">
-                                <string>Configure ...</string>
+                                <string>Configure...</string>
                             </property>
                         </widget>
                         <spacer row="1" column="2">
