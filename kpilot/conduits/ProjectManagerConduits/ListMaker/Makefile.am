@@ -21,10 +21,10 @@ service_DATA = ListMaker-conduit.desktop
 
 
 ###SUBDIRS = ListMaker
-###   Bonsai \
-###          BrainForest \
-###          ListMaker \
-###          Progect \
+###   Bonsai 
+###          BrainForest 
+###          ListMaker 
+###          Progect 
 ###          ShadowPlan
 
 

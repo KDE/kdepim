@@ -21,17 +21,17 @@ SendingSettingsForm.ui \
 EmpathSettingsDialog.cpp \
 EmpathSetupWizard.cpp
 
-#EmpathFilterActionDialog.cpp \
-#EmpathFilterEditDialog.cpp \
-#EmpathFilterListItem.cpp \
-#EmpathFilterManagerDialog.cpp \
-#EmpathMatchPropertiesDialog.cpp \
-#EmpathAccountsSettingsDialog.cpp \
-#EmpathConfigIMAP4Dialog.cpp \
-#EmpathConfigMaildirDialog.cpp \
-#EmpathConfigPOP3Widget.cpp \
-#EmpathConfigPOP3Dialog.cpp \
-#EmpathConfigPOP3Logging.cpp \
-#EmpathConfigPOP3Server.cpp \
-#EmpathPasswordEditWidget.cpp \
-#EmpathPathSelectWidget.cpp \
+#EmpathFilterActionDialog.cpp 
+#EmpathFilterEditDialog.cpp 
+#EmpathFilterListItem.cpp 
+#EmpathFilterManagerDialog.cpp 
+#EmpathMatchPropertiesDialog.cpp 
+#EmpathAccountsSettingsDialog.cpp 
+#EmpathConfigIMAP4Dialog.cpp 
+#EmpathConfigMaildirDialog.cpp 
+#EmpathConfigPOP3Widget.cpp 
+#EmpathConfigPOP3Dialog.cpp 
+#EmpathConfigPOP3Logging.cpp 
+#EmpathConfigPOP3Server.cpp 
+#EmpathPasswordEditWidget.cpp 
+#EmpathPathSelectWidget.cpp 

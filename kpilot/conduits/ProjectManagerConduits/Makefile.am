@@ -9,10 +9,10 @@
 METASOURCES = AUTO
 
 SUBDIRS = lib ListMaker
-### Bonsai \
-###          BrainForest \
-###          ListMaker \
-###          Progect \
+### Bonsai 
+###          BrainForest 
+###          ListMaker 
+###          Progect 
 ###          ShadowPlan
 
 

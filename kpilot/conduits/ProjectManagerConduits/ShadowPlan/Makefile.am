@@ -21,17 +21,17 @@
 
 
 ###SUBDIRS = ListMaker
-### Bonsai \
-###          BrainForest \
-###          ListMaker \
-###          Progect \
+### Bonsai 
+###          BrainForest 
+###          ListMaker 
+###          Progect 
 ###          ShadowPlan
 
 
 #lib_LTLIBRARIES = libProjectsConduit.la 
 #
-#libListMakerConduit_la_SOURCES = $(libGenericProjectsConduit_la_SOURCES) \
-#   ListMaker-conduit.cc  pilotListMakerEntry.cc ListMaker-factory.cc \
+#libListMakerConduit_la_SOURCES = $(libGenericProjectsConduit_la_SOURCES) 
+#   ListMaker-conduit.cc  pilotListMakerEntry.cc ListMaker-factory.cc 
 #   ListMaker-setup.cc GenericMultiDB-conduitDialog.cc GenericDatabaseActionDialog.cc
 #libListMakerConduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib -L../../../libkcal
 #libListMakerConduit_la_LIBADD = -lkpilot -lkcal
