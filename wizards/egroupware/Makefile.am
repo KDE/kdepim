@@ -8,5 +8,5 @@ libegroupwarewizard_la_LIBADD = $(top_builddir)/kresources/egroupware/libkabc_xm
                                 $(top_builddir)/kresources/egroupware/libkcal_xmlrpc.la \
                                 $(top_builddir)/libkcal/libkcal.la \
                                 $(top_builddir)/libkdepim/libkdepim.la \
-                                $(LIB_KDEUID)
+                                $(LIB_KDEUI)
 libegroupwarewizard_la_SOURCES = editdialog.cpp egroupwarewizard.cpp
