@@ -305,16 +305,16 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
     if ( per.hasDuration() ) {
       int dur = per.duration().asSeconds();
       QString cont;
-      if ( dur > 3600 ) {
-        cont += i18n("%1 hours ").arg( dur / 3600 );
+      if ( dur >= 3600 ) {
+        cont += i18n("1 hour ", "%n hours ", dur / 3600 );
         dur %= 3600;
       }
-      if ( dur > 60 ) {
-        cont += i18n("%1 minutes ").arg( dur / 60 );
+      if ( dur >= 60 ) {
+        cont += i18n("1 minute ", "%n minutes ", dur / 60);
         dur %= 60;
       }
       if ( dur > 0 ) {
-        cont += i18n("%1 seconds").arg( dur );
+        cont += i18n("1 second", "%n seconds", dur);
       }
       text += i18n("startDate for duration", "%1 for %2")
           .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
@@ -542,16 +542,16 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
     if ( per.hasDuration() ) {
       int dur = per.duration().asSeconds();
       QString cont;
-      if ( dur > 3600 ) {
-        cont += i18n("%1 hours ").arg( dur / 3600 );
+      if ( dur >= 3600 ) {
+        cont += i18n("1 hour ", "%n hours ", dur / 3600);
         dur %= 3600;
       }
-      if ( dur > 60 ) {
-        cont += i18n("%1 minutes ").arg( dur / 60 );
+      if ( dur >= 60 ) {
+        cont += i18n("1 minute", "%n minutes ", dur / 60);
         dur %= 60;
       }
       if ( dur > 0 ) {
-        cont += i18n("%1 seconds").arg( dur );
+        cont += i18n("1 second", "%n seconds", dur);
       }
       html += invitationRow( QString::null, i18n("startDate for duration", "%1 for %2")
           .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
@@ -661,7 +661,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
          
         switch( attendee->status() ) {
           case Attendee::NeedsAction:
-              return i18n( "Sender incidates this task assignment still needs some action" );
+              return i18n( "Sender indicates this task assignment still needs some action" );
           case Attendee::Accepted:
               return i18n( "Sender accepts this task" );
           case Attendee::Tentative:
