@@ -32,7 +32,7 @@ Splash::Splash()
   : QWidget( 0, "splash", WStyle_Splash | WStyle_Customize | WDestructiveClose )
 {
   QPixmap splash;
-  splash.load(locate("appdata", "pics/startlogo.png") );
+  splash.load(locate("appdata", "pics/kitchensync.png") );
   setBackgroundPixmap(splash  );
 
   QRect desk = KGlobalSettings::splashScreenDesktopGeometry();
