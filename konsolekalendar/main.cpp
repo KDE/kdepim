@@ -778,19 +778,31 @@ int main( int argc, char *argv[] )
               << endl;
   }
 
-  // Float check (for adding/changing)
-  // Events float if time AND end-time AND epoch times are UNspecified
-  if ( ! args->isSet( "time" )        && ! args->isSet( "end-time" ) &&
-       ! args->isSet( "epoch-start" ) && ! args->isSet( "epoch-end" ) ) {
-    variables.setFloating( true );
-    kdDebug() << "main | floatingcheck | "
-              << "turn-on floating event"
-              << endl;
+  // Float check for add mode:
+  //   Events float if time AND end-time AND epoch times are UNspecified
+  if ( add ) {
+    if ( ! args->isSet( "time" )        && ! args->isSet( "end-time" ) &&
+         ! args->isSet( "epoch-start" ) && ! args->isSet( "epoch-end" ) ) {
+      variables.setFloating( true );
+      kdDebug() << "main | floatingcheck | "
+                << "turn-on floating event"
+                << endl;
+    }
   }
 
-  // Finally!
-  variables.setStartDateTime( startdatetime );
-  variables.setEndDateTime( enddatetime );
+  // Finally! Set the start/end date times
+  if ( ! change ) {
+    variables.setStartDateTime( startdatetime );
+    variables.setEndDateTime( enddatetime );
+  } else {
+    // Do NOT set start/end datetimes in change mode,
+    //   unless they were specified on commandline
+    if ( args->isSet( "time" )     || args->isSet( "epoch-start" ) ||
+         args->isSet( "end-time" ) || args->isSet( "epoch-end" ) ) {
+      variables.setStartDateTime( startdatetime );
+      variables.setEndDateTime( enddatetime );
+    }
+  }
 
   // Some more debug prints
   kdDebug() << "main | datetimestamp | StartDate="
