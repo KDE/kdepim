@@ -1989,11 +1989,13 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 {
   gpgme_ctx_t ctx;
   gpgme_error_t err;
+  gpgme_decrypt_result_t decryptresult;
   gpgme_data_t gCiphertext, gPlaintext;
   gpgme_sig_stat_t sigstatus = GPGME_SIG_STAT_NONE;
   size_t rCLen = 0;
   char*  rCiph = 0;
   bool bOk = false;
+  bool bWrongKeyUsage = false;
 
   if( !ciphertext )
     return false;
@@ -2018,6 +2020,11 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 
   err = gpgme_op_decrypt_verify( ctx, gCiphertext, gPlaintext );
   gpgme_data_release( gCiphertext );
+  
+  decryptresult = gpgme_op_decrypt_result( ctx );
+  if( decryptresult->wrong_key_usage )
+    bWrongKeyUsage = true;
+  
   if( err ) {
     fprintf( stderr, "\ngpgme_op_decrypt_verify() returned this error code:  %i\n\n", err );
     if( errId )
@@ -2032,7 +2039,12 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
     gpgme_release( ctx );
     return bOk;
   }
-
+  
+  if( bWrongKeyUsage ) {
+    if( errId )   // do *not* report that decrypting was wrong
+      *errId = 1; // but also report the error (due to wrong key usage)
+  }  
+  
   rCiph = gpgme_data_release_and_get_mem( gPlaintext,  &rCLen );
 
   *cleartext = (char*)malloc( rCLen + 1 );
