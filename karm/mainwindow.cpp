@@ -173,7 +173,7 @@ void MainWindow::saveProperties( KConfig* )
 
 void MainWindow::keyBindings()
 {
-  KKeyDialog::configureKeys( actionCollection(), xmlFile());
+  KKeyDialog::configure( actionCollection(), this );
 }
 
 void MainWindow::startNewSession()
