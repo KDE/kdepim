@@ -36,7 +36,7 @@
 #include "kncleanup.h"
 #include "knconfig.h"
 #include "knarticlewidget.h"
-#include "knarticlemanager.h"
+#include "knmemorymanager.h"
 
 
 
@@ -89,14 +89,24 @@ void KNCleanUp::reset()
 
 void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 {
-  int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr();
-  bool unavailable=false, alreadyLoaded=true;
+  int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr(), firstNew=-1;
+  bool unavailable=false; //, alreadyLoaded=true;
   KNRemoteArticle *art, *ref;
+  bool tmpLoad = false;
 
-  alreadyLoaded = g->isLoaded();
+
+  if( !g->isLoaded() ) {
+    if( !g->loadHdrs() )
+      return;
+    else
+      tmpLoad = true;
+  }
+
+  /*alreadyLoaded = g->isLoaded();
+
 
   if (!alreadyLoaded && !g->loadHdrs())
-    return;
+    return; */
 
   //find all expired
   for(int i=0; i<g->length(); i++) {
@@ -153,29 +163,35 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
       art->clear();
       KNArticleWidget::articleRemoved(art);
     }
-    else if(art->isNew())
+    else if(art->isNew() && !art->isRead()) {
+      if(firstNew==-1)
+        firstNew=i;
       newCnt++;
+    }
   }
 
   if(delCnt>0) {
     g->saveStaticData(g->length(), true);
     g->saveDynamicData(g->length(), true);
     g->decCount(delCnt);
-    g->setNewCount(0);
-    //g->setNewCount(newCnt);
-    knGlobals.artManager->cache()->remove(g);
+    g->setNewCount(newCnt);
+    g->setFirstNewIndex(firstNew);
+    knGlobals.memManager->removeCacheEntry(g);
     g->clear();
   }
-  else
+  else {
     g->syncDynamicData();
+    if( tmpLoad )
+      g->clear();
+  }
 
   g->saveInfo();
   leftCnt=g->count();
 
-  if (!alreadyLoaded) {    // free allocated memory...
+/*  if (!alreadyLoaded) {    // free allocated memory...
     g->clear();
     g->clearSearchIndex();
-  }
+  }    */
 
   kdDebug(5003) << "KNCleanUp::expireGroup() : " << g->groupname() << ": "
     << delCnt << " deleted , " << leftCnt << " left" << endl;
@@ -189,17 +205,26 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 void KNCleanUp::compactFolder(KNFolder *f)
 {
   KNLocalArticle *art;
-  bool alreadyLoaded=true;
+  //bool alreadyLoaded=true;
 
   QDir dir(f->path());
+  bool tmpLoad = false;
 
   if(!dir.exists())
     return;
 
-  alreadyLoaded = f->isLoaded();
+
+  if( !f->isLoaded() ) {
+    if( !f->loadHdrs() )
+      return;
+    else
+      tmpLoad = true;
+  }
+
+/*  alreadyLoaded = f->isLoaded();
 
   if (!alreadyLoaded && !f->loadHdrs())
-    return;
+    return; */
 
   f->closeFiles();
   QFileInfo info(f->m_boxFile);
@@ -227,12 +252,16 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
     dir.remove(oldName);
     dir.rename(newName, oldName);
+  }
 
-    if (!alreadyLoaded) {    // free allocated memory...
+  if( tmpLoad )
+    f->clear();
+
+/*    if (!alreadyLoaded) {    // free allocated memory...
       f->clear();
       f->clearSearchIndex();
-    }
-  }
+    } */
+
 }
 
 

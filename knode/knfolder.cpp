@@ -332,7 +332,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
 
 bool KNFolder::saveArticles(KNLocalArticle::List *l)
 {
-  if(!loadHdrs())
+  if(!isLoaded())  // loading should not be done here - keep the StorageManager in sync !!
     return false;
 
   if(!m_boxFile.open(IO_WriteOnly | IO_Append)) {
@@ -430,7 +430,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
 void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
 {
-  if(l->isEmpty())
+  if(!isLoaded() || l->isEmpty())
     return;
 
   int idx=0, delCnt=0, *positions;
@@ -528,7 +528,7 @@ void KNFolder::killYourself()
   knGlobals.top->setCursorBusy(false);
 }
 
-
+/*
 void KNFolder::importMBoxFile()
 {
   KNLoadHelper helper(knGlobals.topWidget);
@@ -654,7 +654,7 @@ void KNFolder::exportMBoxFile()
     knGlobals.top->setCursorBusy(false);
   }
 }
-
+*/
 
 void KNFolder::syncIndex(bool force)
 {

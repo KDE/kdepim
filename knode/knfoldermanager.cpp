@@ -36,6 +36,8 @@
 #include "knfoldermanager.h"
 #include "knarticlemanager.h"
 #include "kncleanup.h"
+#include "knmemorymanager.h"
+#include "knode.h"
 
 
 KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v), a_rtManager(a)
@@ -83,11 +85,22 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
   kdDebug(5003) << "KNFolderManager::setCurrentFolder() : folder changed" << endl;
 
   if(f) {
-    if(f->loadHdrs())
+    if( loadHeaders(f) )
       a_rtManager->showHdrs();
     else
       KMessageBox::error(knGlobals.topWidget, i18n("Cannot load index-file!"));
   }
+}
+
+
+bool KNFolderManager::loadHeaders(KNFolder *f)
+{
+  if( f && ( f->isLoaded() || f->loadHdrs() ) ) {
+    knGlobals.memManager->updateCacheEntry( f );
+    return true;
+  }
+
+  return false;
 }
 
 
@@ -135,7 +148,7 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   for(fol=del.first(); fol; fol=del.next()) {
     if(c_urrentFolder==fol)
       c_urrentFolder=0;
-    knGlobals.artManager->cache()->remove(fol);
+    knGlobals.memManager->removeCacheEntry(fol, false);
     fol->killYourself();
     f_List.removeRef(fol); // deletes fol
   }
@@ -148,8 +161,7 @@ void KNFolderManager::emptyFolder(KNFolder *f)
 {
   if(!f)
     return;
-
-  knGlobals.artManager->cache()->remove(f);
+  knGlobals.memManager->removeCacheEntry(f);
   f->deleteAll();
 }
 
@@ -254,6 +266,155 @@ void KNFolderManager::compactAll(KNCleanUp *cup)
   for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
     if(f->lockedArticles()==0)
       cup->appendCollection(f);
+  }
+}
+
+
+void KNFolderManager::importFromMBox(KNFolder *f)
+{
+  if(!f)
+    return;
+
+  KNLoadHelper helper(knGlobals.topWidget);
+  KNFile *file = helper.getFile(i18n("Import MBox Folder"));
+  KNLocalArticle::List list;
+  KNLocalArticle *art;
+  QString s;
+  int artStart=0, artEnd=0;
+  bool done=true;
+
+  if (file) {
+    knGlobals.top->setCursorBusy(true);
+    knGlobals.top->setStatusMsg(i18n(" Importing articles..."));
+    knGlobals.top->secureProcessEvents();
+
+    if (!file->atEnd()) {                // search for the first article...
+      s = file->readLine();
+      if (s.left(5) == "From ") {
+        artStart = file->at();
+        done = false;
+      } else {
+        artStart = file->findString("\nFrom ");
+        if (artStart != -1) {
+          file->at(artStart+1);
+          s = file->readLine();
+          artStart = file->at();
+          done = false;
+        }
+      }
+    }
+
+    knGlobals.top->secureProcessEvents();
+
+    if (!done) {
+      while (!file->atEnd()) {
+        artEnd = file->findString("\nFrom ");
+
+        if (artEnd != -1) {
+          file->at(artStart);    // seek the first character of the article
+          int size=artEnd-artStart;
+          QCString buff(size+10);
+          int readBytes=file->readBlock(buff.data(), size);
+
+          if (readBytes != -1) {
+            buff.at(readBytes)='\0'; //terminate string
+            art = new KNLocalArticle(0);
+            art->setEditDisabled(true);
+            art->setContent(buff);
+            art->parse();
+            list.append(art);
+          }
+
+          file->at(artEnd+1);
+          s = file->readLine();
+          artStart = file->at();
+        } else {
+          if ((int)file->size() > artStart) {
+            file->at(artStart);    // seek the first character of the article
+            int size=file->size()-artStart;
+            QCString buff(size+10);
+            int readBytes=file->readBlock(buff.data(), size);
+
+            if (readBytes != -1) {
+              buff.at(readBytes)='\0'; //terminate string
+              art = new KNLocalArticle(0);
+              art->setEditDisabled(true);
+              art->setContent(buff);
+              art->parse();
+              list.append(art);
+            }
+          }
+        }
+
+        if (list.count()%75 == 0)
+          knGlobals.top->secureProcessEvents();
+      }
+    }
+
+    knGlobals.top->setStatusMsg(i18n(" Storing articles..."));
+    knGlobals.top->secureProcessEvents();
+
+    if (!list.isEmpty())
+      knGlobals.artManager->saveInFolder(list, f);
+
+    knGlobals.top->setStatusMsg(QString::null);
+    knGlobals.top->setCursorBusy(false);
+  }
+}
+
+
+void KNFolderManager::exportToMBox(KNFolder *f)
+{
+  if(!f)
+    return;
+
+
+  bool tmpLoadFol = false;
+  bool tmpLoadArt = false;
+
+  if (!f->isLoaded()) {
+    if (f->loadHdrs())
+      tmpLoadFol = true;
+    else
+      return;
+  }
+
+  KNSaveHelper helper(f->name()+".mbox", knGlobals.topWidget);
+  QFile *file = helper.getFile(i18n("Export Folder"));
+
+  if (file) {
+    knGlobals.top->setCursorBusy(true);
+    knGlobals.top->setStatusMsg(i18n(" Exporting articles..."));
+    knGlobals.top->secureProcessEvents();
+
+    QTextStream ts(file);
+    ts.setEncoding(QTextStream::Latin1);
+    KNLocalArticle *a;
+
+    for(int idx=0; idx<f->length(); idx++) {
+      tmpLoadArt = false;
+      a=f->at(idx);
+      if (!a->hasContent()) {
+        f->loadArticle(a);
+        tmpLoadArt = true;
+      }
+
+      ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
+      a->toStream(ts);
+      ts << "\n";
+
+      if (tmpLoadArt)
+        a->KNMimeContent::clear();
+
+      if (idx%75 == 0)
+        knGlobals.top->secureProcessEvents();
+    }
+
+    if (tmpLoadFol)
+      f->clear();
+
+    knGlobals.top->setStatusMsg(QString::null);
+    knGlobals.top->setCursorBusy(false);
   }
 }
 

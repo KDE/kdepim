@@ -649,13 +649,14 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
 void KNArticleFactory::sendOutbox()
 {
   KNLocalArticle::List lst;
-  KNFolder *ob=knGlobals.folManager->outbox();
+  KNFolder *ob=0;
 
-  if(!ob->loadHdrs()) {
+  if(!knGlobals.folManager->loadOutbox()) {
     KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder!"));
     return;
   }
 
+  ob=knGlobals.folManager->outbox();
   for(int i=0; i< ob->length(); i++)
     lst.append(ob->at(i));
 

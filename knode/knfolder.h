@@ -67,9 +67,11 @@ class KNFolder : public KNArticleCollection  {
     void deleteAll();
     void killYourself();
 
+    /*
     // import & export
     void importMBoxFile();
     void exportMBoxFile();
+    */
 
     //index synchronization
     void syncIndex(bool force=false);

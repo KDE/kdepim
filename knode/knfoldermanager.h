@@ -44,7 +44,12 @@ class KNFolderManager
     KNFolder* outbox()                    { return f_List.at(1); }
     KNFolder* sent()                      { return f_List.at(2); }
 
-    //folder handling
+    //header loading
+    bool loadHeaders(KNFolder *f);
+    bool loadDrafts()   { return loadHeaders(drafts()); }
+    bool loadOutbox()   { return loadHeaders(outbox()); }
+    bool loadSent()     { return loadHeaders(sent()); }
+
     void newFolder(KNFolder *p);
     bool deleteFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
@@ -57,6 +62,10 @@ class KNFolderManager
     //compacting
     void compactFolder(KNFolder *f);
     void compactAll(KNCleanUp *cup);
+
+    // import + export
+    void importFromMBox(KNFolder *f);
+    void exportToMBox(KNFolder *f);
 
     //synchronization
     void syncFolders();   

@@ -30,6 +30,7 @@ class KNFilterManager;
 class KNMainWindow;
 class KNodeView;
 class KNScoringManager;
+class KNMemoryManager;
 
 // idea: Previously the manager classes were available
 //       via KNodeApp. Now they can be accessed directly,
@@ -52,6 +53,7 @@ class KNGlobals {
     KNFilterManager       *filManager;
     KNodeView             *view;
     KNScoringManager      *scoreManager;
+    KNMemoryManager       *memManager;
 };
 
 

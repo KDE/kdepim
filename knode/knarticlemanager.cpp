@@ -50,9 +50,10 @@
 #include "knpgp.h"
 #include "knnntpaccount.h"
 #include "knscoring.h"
+#include "knmemorymanager.h"
 
 
-KNArticleCache::KNArticleCache()
+/*KNArticleCache::KNArticleCache()
 {
   m_emCacheSize=0;
 }
@@ -65,9 +66,9 @@ KNArticleCache::~KNArticleCache()
 
 void KNArticleCache::add(KNArticle *a)
 {
-  KNConfig::Cache *c=knGlobals.cfgManager->cache();
-  int ma=c->memoryMaxArticles();
-  int mkb=c->memoryMaxKBytes();
+  //KNConfig::Cache *c=knGlobals.cfgManager->cache();
+  int ma=1000; //c->memoryMaxArticles();
+  int mkb=4096; //c->memoryMaxKBytes();
 
   m_emCache.append(a);
   m_emCacheSize+=a->storageSize();
@@ -118,7 +119,7 @@ void KNArticleCache::clearMemoryCache()
 
 void KNArticleCache::clearDiskCache()
 {
-}
+} */
 
 
 //===============================================================================
@@ -497,7 +498,7 @@ bool KNArticleManager::load(KNArticle *a)
   if(a->type()==KNMimeBase::ATlocal) {
     KNFolder *f=static_cast<KNFolder*>(a->collection());
     if( f && f->loadArticle( static_cast<KNLocalArticle*>(a) ) )
-      c_ache.add(a);
+      knGlobals.memManager->updateCacheEntry(a); //c_ache.add(a);
     else
       return false;
   }
@@ -522,7 +523,7 @@ void KNArticleManager::loadForDisplay(KNArticle *a)
     if( !f || !f->loadArticle( static_cast<KNLocalArticle*>(a) ) )
       KNArticleWidget::articleLoadError( a, i18n("Cannot load the article(s) from the mbox-file!") );
     else {
-      c_ache.add(a);
+      knGlobals.memManager->updateCacheEntry(a); //c_ache.add(a);
       KNArticleWidget::articleChanged(a);
     }
   }
@@ -548,6 +549,18 @@ void KNArticleManager::saveInFolder(KNRemoteArticle::List &l, KNFolder *f)
   }
 
   if(!l2.isEmpty()) {
+
+    bool tmpLoad=false;
+    if( !f->isLoaded() )
+    if( f->loadHdrs() )
+      tmpLoad=true;
+    else {
+      l2.setAutoDelete(true);
+      l2.clear();
+      return;
+    }
+
+
     if(!f->saveArticles(&l2)) {
       for(KNLocalArticle *a=l2.first(); a; a=l2.next()) {
         if(a->isOrphant())
@@ -558,8 +571,13 @@ void KNArticleManager::saveInFolder(KNRemoteArticle::List &l, KNFolder *f)
       KNHelper::displayInternalFileError();
     }
     else {
-      for(KNLocalArticle *a=l2.first(); a; a=l2.next())
-        a->KNMimeContent::clear(); // no need to keep them in memory
+      if( !tmpLoad ) {
+        for(KNLocalArticle *a=l2.first(); a; a=l2.next())
+          a->KNMimeContent::clear(); // no need to keep them in memory
+        knGlobals.memManager->updateCacheEntry(f);
+      }
+      else
+        f->clear();  // folder has only been loaded temporarily
     }
   }
 }
@@ -568,12 +586,25 @@ void KNArticleManager::saveInFolder(KNRemoteArticle::List &l, KNFolder *f)
 void KNArticleManager::saveInFolder(KNLocalArticle::List &l, KNFolder *f)
 {
   if(!f) return;
-  for(KNLocalArticle *a=l.first(); a; a=l.next()) {
-    if(a->hasContent() && a->isOrphant())
-      c_ache.add(a); // this is a new article
+
+  bool tmpLoad=false;
+  if( !f->isLoaded() ) {
+    if( f->loadHdrs() )
+      tmpLoad=true;
+    else
+      return;
   }
 
-  if(!f->saveArticles(&l)) {
+  if(f->saveArticles(&l)) {
+    if( !tmpLoad ) {
+      for(KNLocalArticle *a=l.first(); a; a=l.next())
+        knGlobals.memManager->updateCacheEntry( a );
+      knGlobals.memManager->updateCacheEntry(f);
+    }
+    else
+      f->clear(); // folder has only been loaded temporarily
+  }
+  else {
     for(KNLocalArticle *a=l.first(); a; a=l.next())
       if(a->isOrphant())
         delete a; // ok, this is ugly; we simply delete orphant articles
@@ -600,11 +631,13 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
   }
 
   for(KNLocalArticle *a=l.first(); a; a=l.next())
-    c_ache.remove(a);
+    knGlobals.memManager->removeCacheEntry(a); //c_ache.remove(a);
 
   KNFolder *f=static_cast<KNFolder*>(l.first()->collection());
-  if(f)
+  if(f) {
     f->removeArticles(&l, true);
+    knGlobals.memManager->updateCacheEntry( f );
+  }
   else {
     for(KNLocalArticle *a=l.first(); a; a=l.next())
       delete a;
@@ -794,7 +827,7 @@ void KNArticleManager::processJob(KNJobData *j)
       KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
       KNArticleWidget::articleChanged(a);
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
-        c_ache.add(a);
+        knGlobals.memManager->updateCacheEntry(a); //c_ache.add(a);
       if(a->listItem())
         a->updateListItem();
     }

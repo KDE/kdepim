@@ -38,7 +38,7 @@ class KNConfigManager : QObject {
     KNConfig::PostNewsTechnical*    postNewsTechnical()   { return p_ostNewsTechnical; }
     KNConfig::PostNewsComposer*     postNewsComposer()    { return p_ostNewsCompose; }
     KNConfig::Cleanup*              cleanup()             { return c_leanup; }
-    KNConfig::Cache*                cache()               { return c_ache; }
+    //KNConfig::Cache*                cache()               { return c_ache; }
 
     void configure();
 
@@ -52,7 +52,7 @@ class KNConfigManager : QObject {
     KNConfig::PostNewsTechnical    *p_ostNewsTechnical;
     KNConfig::PostNewsComposer     *p_ostNewsCompose;
     KNConfig::Cleanup              *c_leanup;
-    KNConfig::Cache                *c_ache;
+    //KNConfig::Cache                *c_ache;
 
     KNConfigDialog  *d_ialog;
 

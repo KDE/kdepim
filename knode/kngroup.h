@@ -61,6 +61,9 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void setNewCount(int i)       { n_ewCount=i; }
     void incNewCount(int i=1)     { n_ewCount+=i; }
     void decNewCount(int i=1)     { n_ewCount-=i; }
+    int firstNewIndex()           { return f_irstNew; }
+    void setFirstNewIndex(int i)  { f_irstNew=i; }
+
 
     int readCount()               { return r_eadCount; }
     void setReadCount(int i)      { r_eadCount=i; }
@@ -126,7 +129,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
               f_irstNr,
               l_astNr,
               m_axFetch,
-              d_ynDataFormat;
+              d_ynDataFormat,
+              f_irstNew;
 
     QCString  d_efaultChSet;
     QString   g_roupname,

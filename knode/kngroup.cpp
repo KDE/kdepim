@@ -44,7 +44,7 @@
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
-    l_astNr(0), m_axFetch(0), d_ynDataFormat(1), l_ocked(false),
+    l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
 }
@@ -335,6 +335,13 @@ bool KNGroup::loadHdrs()
     d_ynDataFormat=1;
   }
 
+  // restore "New" - flags
+  if( f_irstNew > -1 ) {
+    for( int i = f_irstNew; i < length(); i++ ) {
+      at(i)->setNew(true);
+    }
+  }
+
   updateThreadInfo();
   processXPostBuffer(false);
   return true;
@@ -361,6 +368,10 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 
   // recreate msg-ID index
   syncSearchIndex();
+
+  // remember index of first new
+  if(f_irstNew == -1)
+    f_irstNew = length(); // index of last + 1
 
   for(char *line=hdrs->first(); line; line=hdrs->next()) {
     split.init(line, "\t");

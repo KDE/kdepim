@@ -40,6 +40,7 @@ class KNArticleManager;
 class KNArticleFactory;
 class KNFilterManager;
 class KNScoringManager;
+class KNMemoryManager;
 class KNFilterSelectAction;
 class KNNetAccess;
 class KNRemoteArticle;
@@ -106,6 +107,7 @@ class KNodeView : public QSplitter
     KNFolderManager   *f_olManager;
     KNFilterManager   *f_ilManager;
     KNScoringManager  *s_coreManager;
+    KNMemoryManager   *m_emManager;
 
 
   protected slots:

@@ -35,7 +35,7 @@ class KNFilterManager;
 class KNSearchDialog;
 
 
-class KNArticleCache {
+/*class KNArticleCache {
 
   public:
     KNArticleCache();
@@ -52,7 +52,7 @@ class KNArticleCache {
     QList<KNArticle> m_emCache;
     int m_emCacheSize;
 
-};
+}; */
 
 
 class KNArticleManager : public QObject, public KNJobConsumer {
@@ -103,7 +103,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
 
     //cache
-    KNArticleCache* cache()   { return &c_ache; }
+    //KNArticleCache* cache()   { return &c_ache; }
 
     //article handling
     void setAllRead(bool r=true);
@@ -128,7 +128,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     QList<KTempFile> t_empFiles;
     bool s_howThreads;
 
-    KNArticleCache c_ache;
+    //KNArticleCache c_ache;
 
 
   public slots:

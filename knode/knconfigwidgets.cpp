@@ -867,7 +867,8 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
 {
   QGroupBox *hgb=new QGroupBox(i18n("Article Handling"), this);
   QGroupBox *lgb=new QGroupBox(i18n("Article List"), this);
-  QLabel *l1;
+  QGroupBox *cgb=new QGroupBox(i18n("Article Caching"), this);
+  QLabel *l1, *l2;
 
   a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
   m_axFetch=new KIntSpinBox(0, 100000, 1, 0, 10, hgb);
@@ -882,12 +883,19 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
   l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
 
+  m_emCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
+  l2=new QLabel(m_emCacheSize, i18n("Memory cache &size"), cgb);
+  m_emCacheSize->setSuffix(" KB");
+
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
   QGridLayout *hgbL=new QGridLayout(hgb, 5,2, 8,5);
   QVBoxLayout *lgbL=new QVBoxLayout(lgb, 8, 5);
+  QGridLayout *cgbL=new QGridLayout(cgb, 2,2, 8,5);
+
 
   topL->addWidget(hgb);
   topL->addWidget(lgb);
+  topL->addWidget(cgb);
   topL->addStretch(1);
 
   hgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
@@ -904,6 +912,12 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   lgbL->addWidget(s_coreCB);
   lgbL->addWidget(l_inesCB);
 
+  cgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  cgbL->addWidget(l2, 1,0);
+  cgbL->addWidget(m_emCacheSize, 1,1);
+  cgbL->setColStretch(0,1);
+
+
   topL->setResizeMode(QLayout::Minimum);
 
   //init
@@ -916,6 +930,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   e_xpThrCB->setChecked(d->t_otalExpand);
   l_inesCB->setChecked(d->s_howLines);
   s_coreCB->setChecked(d->s_howScore);
+  m_emCacheSize->setValue(d->m_emCacheSize);
 }
 
 
@@ -937,6 +952,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->s_howLines=l_inesCB->isChecked();
   d_ata->s_howScore=s_coreCB->isChecked();
+  d_ata->m_emCacheSize=m_emCacheSize->value();
 
   d_ata->save();
 }
@@ -2171,7 +2187,7 @@ void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
 
 //==============================================================================================================
 
-
+/*
 KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   : BaseWidget(p, n), d_ata(d)
 {
@@ -2214,7 +2230,7 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   diskL->addWidget(d_iskMaxKB, 3,1);
 
   diskL->setColStretch(0,1);
-  */
+  7
 
   topL->addStretch(1);
 
@@ -2223,7 +2239,7 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   m_emMaxArt->setValue(d->memoryMaxArticles());
   m_emMaxKB->setValue(d->memoryMaxKBytes());
   /*d_iskMaxArt->setValue(d->diskMaxArticles());
-  d_iskMaxKB->setValue(d->diskMaxKBytes());*/
+  d_iskMaxKB->setValue(d->diskMaxKBytes());
 }
 
 
@@ -2238,11 +2254,11 @@ void KNConfig::CacheWidget::apply()
   d_ata->m_emMaxKB=m_emMaxKB->value();
 
   /*d_ata->d_iskMaxArt=d_iskMaxArt->value();
-  d_ata->d_iskMaxKB=d_iskMaxKB->value(); */
+  d_ata->d_iskMaxKB=d_iskMaxKB->value();
 
   d_ata->save();
 }
-
+*/
 
 
 //------------------------

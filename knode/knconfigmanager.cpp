@@ -41,7 +41,7 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_i
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
   p_ostNewsCompose    = new KNConfig::PostNewsComposer();
   c_leanup            = new KNConfig::Cleanup();
-  c_ache              = new KNConfig::Cache();
+  //c_ache              = new KNConfig::Cache();
 }
 
 
@@ -56,7 +56,7 @@ KNConfigManager::~KNConfigManager()
   delete p_ostNewsTechnical;
   delete p_ostNewsCompose;
   delete c_leanup;
-  delete c_ache;
+  //delete c_ache;
 }
 
 
@@ -179,9 +179,9 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   frame = addHBoxPage(QString(" ")+i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("wizard"));
   w_idgets.append(new KNConfig::CleanupWidget(m->cleanup(), frame));
 
-  // Cache
+  /*/ Cache
   frame = addHBoxPage(QString(" ")+i18n("Cache"),i18n("Caching of articles"), BarIcon("queue"));
-  w_idgets.append(new KNConfig::CacheWidget(m->cache(), frame));
+  w_idgets.append(new KNConfig::CacheWidget(m->cache(), frame)); */
 
 
   KNHelper::restoreWindowSize("settingsDlg", this, QSize(508,424));

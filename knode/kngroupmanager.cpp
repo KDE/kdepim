@@ -46,6 +46,7 @@
 #include "knarticlewidget.h"
 #include "kngroupmanager.h"
 #include "knstringsplitter.h"
+#include "knmemorymanager.h"
 
 
 //=================================================================================
@@ -316,6 +317,17 @@ void KNGroupManager::getAllGroups(QList<KNGroup> *l)
 }
 
 
+bool KNGroupManager::loadHeaders(KNGroup *g)
+{
+  if( g && ( g->isLoaded() || g->loadHdrs() ) ) {
+    knGlobals.memManager->updateCacheEntry( g );
+    return true;
+  }
+
+  return false;
+}
+
+
 KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 {
   for(KNGroup *var=g_List->first(); var; var=g_List->next())
@@ -427,6 +439,7 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
       a_rticleMgr->updateStatusString();
     }
 
+    knGlobals.memManager->removeCacheEntry( g );
     g_List->removeRef(g);
   }
 }
@@ -473,7 +486,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
 
   g->updateListItem();
   if(g==c_urrentGroup) {
-    if(g->loadHdrs())
+    if( loadHeaders(g) )
       a_rticleMgr->showHdrs();
     else
       a_rticleMgr->setGroup(0);
@@ -495,18 +508,16 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 {
   c_urrentGroup=g;
   a_rticleMgr->setGroup(g);
-  bool loaded;
   kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group changed" << endl;
 
-  if (g) {
-    loaded=g->loadHdrs();
-    if (loaded) {
-      a_rticleMgr->showHdrs();
-      if(knGlobals.cfgManager->readNewsGeneral()->autoCheckGroups())
-        checkGroupForNewHeaders(g);
+  if(g) {
+    if( !loadHeaders(g) ) {
+      //KMessageBox::error(knGlobals.topWidget, i18n("Cannot load saved headers"));
+      return;
     }
-    else
-      KMessageBox::error(knGlobals.topWidget, i18n("Cannot load saved headers"));
+    a_rticleMgr->showHdrs();
+    if(knGlobals.cfgManager->readNewsGeneral()->autoCheckGroups())
+      checkGroupForNewHeaders(g);
   }
 }
 
@@ -516,11 +527,15 @@ void KNGroupManager::checkAll(KNNntpAccount *a)
 {
   if(!a) return;
 
+  KNJobData *j=0;
   for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
     if(g->account()==a) {
       g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
-      if(g->loadHdrs())
-        emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, a, g) );
+      j=new KNJobData(KNJobData::JTfetchNewHeaders, this, a, g);  // lock "g"
+      if( loadHeaders( g ) )
+        emitJob(j);
+      else
+        delete j; // unlock "g"
     }
   }
 }
@@ -543,7 +558,7 @@ void KNGroupManager::processJob(KNJobData *j)
                   var->setDescription(inf->description);
                   var->setStatus(inf->status);
                   break;
-                }             
+                }
             }
           }
         }
@@ -558,10 +573,10 @@ void KNGroupManager::processJob(KNJobData *j)
     delete j;
     delete d;
 
-  
+
   } else {               //KNJobData::JTfetchNewHeaders
     KNGroup *group=static_cast<KNGroup*>(j->data());
-    
+
     if (!j->canceled()) {
       if (j->success()) {
         if(group->newCount()>0) {
@@ -569,6 +584,7 @@ void KNGroupManager::processJob(KNJobData *j)
           group->processXPostBuffer(true);
           group->updateListItem();
           group->saveInfo();
+          knGlobals.memManager->updateCacheEntry(group);
         }
       } else
         KMessageBox::error(knGlobals.topWidget, j->errorString());

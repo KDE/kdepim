@@ -53,6 +53,7 @@
 #include "utilities.h"
 #include "knscoring.h"
 #include "knpgp.h"
+#include "knmemorymanager.h"
 
 
 KNodeView::KNodeView(KNMainWindow *w, const char * name)
@@ -175,6 +176,10 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   s_coreManager = new KNScoringManager();
   knGlobals.scoreManager = s_coreManager;
 
+  // Memory Manager
+  m_emManager = new KNMemoryManager();
+  knGlobals.memManager = m_emManager;
+
   // create a global pgp instance
   new KNpgp();
 
@@ -229,6 +234,9 @@ KNodeView::~KNodeView()
 
   delete s_coreManager;
   kdDebug(5003) << "KNodeView::~KNodeView() : Score Manager deleted" << endl;
+
+  delete m_emManager;
+  kdDebug(5003) << "KNodeView::~KNodeView() : Memory Manager deleted" << endl;
 }
 
 
@@ -1354,7 +1362,7 @@ void KNodeView::slotFolMBoxImport()
 {
   kdDebug(5003) << "KNodeView::slotFolMBoxImport()" << endl;
   if(f_olManager->currentFolder()) {
-     f_olManager->currentFolder()->importMBoxFile();
+     f_olManager->importFromMBox(f_olManager->currentFolder());
   }
 }
 
@@ -1363,7 +1371,7 @@ void KNodeView::slotFolMBoxExport()
 {
   kdDebug(5003) << "KNodeView::slotFolMBoxExport()" << endl;
   if(f_olManager->currentFolder()) {
-    f_olManager->currentFolder()->exportMBoxFile();
+    f_olManager->exportToMBox(f_olManager->currentFolder());
   }
 }
 

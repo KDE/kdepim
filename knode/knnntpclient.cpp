@@ -328,15 +328,27 @@ void KNNntpClient::doFetchNewHeaders()
   char* s;
   int first=0, last=0, oldlast=0, toFetch=0;
   QCString cmd;
-  
+  //bool tmpLoad = false;
+
   sendSignal(TSdownloadNew);
   errorPrefix=i18n("No new articles could have been retrieved for\n%1/%2!\nThe following error ocurred:\n")
               .arg(account.server()).arg(target->groupname());
-  
+
+  /*if( !target->isLoaded() ) {
+    if( !( tmpLoad = target->loadHdrs() ) ) {
+      QString tmp=errorPrefix + i18n("Cannot load saved headers !");
+      job->setErrorString(tmp);
+      return;
+    }
+  }*/
+
+
   cmd="GROUP ";
   cmd+=target->groupname().utf8();
-  if (!sendCommandWCheck(cmd,211))       // 211 n f l s group selected
+  if (!sendCommandWCheck(cmd,211)) {       // 211 n f l s group selected
+    //if( tmpLoad ) target->clear();
     return;
+  }
 
   currentGroup = target->groupname();
     
@@ -360,6 +372,7 @@ void KNNntpClient::doFetchNewHeaders()
     tmp+=getCurrentLine();
     job->setErrorString(tmp);
     closeConnection();
+    //if( tmpLoad ) target->clear();
     return;
   }
   
@@ -377,6 +390,7 @@ void KNNntpClient::doFetchNewHeaders()
   if(toFetch<=0) {
     //qDebug("knode: No new Articles in group\n");
     target->setLastNr(last);     // don't get stuck when the article numbers wrap
+    //if( tmpLoad ) target->clear();
     return;
   }
   
@@ -390,12 +404,16 @@ void KNNntpClient::doFetchNewHeaders()
     
   //qDebug("knode: KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
-  if (!sendCommandWCheck(cmd,224))       // 224 success
+  if (!sendCommandWCheck(cmd,224)) {       // 224 success
+    //if( tmpLoad ) target->clear();
     return;
+  }
     
   QStrList headers;
-  if (!getMsg(headers))
+  if (!getMsg(headers)) {
+    //if( tmpLoad ) target->clear();
     return;
+  }
   
   progressValue = 1000;   
   sendSignal(TSprogressUpdate);
@@ -415,6 +433,8 @@ void KNNntpClient::doFetchNewHeaders()
     qDebug("knode: failed to lock nntp mutex");
 #endif
   }
+
+  //if( tmpLoad ) target->clear();
 }
 
 

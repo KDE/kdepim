@@ -465,6 +465,8 @@ class ReadNewsGeneral : public Base {
     bool showLines()                 { return s_howLines; }
     bool showScore()                 { return s_howScore; }
 
+    int memCacheSize()               { return m_emCacheSize; }
+
   protected:
     bool  a_utoCheck,
           a_utoMark,
@@ -474,7 +476,8 @@ class ReadNewsGeneral : public Base {
           s_howScore;
 
     int   m_axFetch,
-          m_arkSecs;
+          m_arkSecs,
+          m_emCacheSize;
 
 };
 
@@ -495,7 +498,8 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *l_inesCB,
                 *s_coreCB;
     KIntSpinBox *m_arkSecs,
-                *m_axFetch;
+                *m_axFetch,
+                *m_emCacheSize;
 
     ReadNewsGeneral *d_ata;
 
@@ -1056,7 +1060,7 @@ class CleanupWidget : public BaseWidget {
 };
 
 
-class Cache : public Base {
+/*class Cache : public Base {
 
   friend class CacheWidget;
 
@@ -1108,7 +1112,7 @@ class CacheWidget : public BaseWidget  {
     Cache *d_ata;
 
 
-};
+}; */
 
 
 }; //KNConfig

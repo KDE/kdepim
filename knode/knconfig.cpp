@@ -567,6 +567,10 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
   s_howLines=conf->readBoolEntry("showLines3", true);
   s_howScore=conf->readBoolEntry("showScore3", true);
+
+  conf->setGroup("CACHE");
+  m_emCacheSize=conf->readNumEntry("memSize", 2048);
+
 }
 
 
@@ -590,6 +594,10 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("totalExpand", t_otalExpand);
   conf->writeEntry("showLines3", s_howLines);
   conf->writeEntry("showScore3", s_howScore);
+
+  conf->setGroup("CACHE");
+  conf->writeEntry("memSize", m_emCacheSize);
+
 }
 
 
@@ -1155,7 +1163,7 @@ void KNConfig::Cleanup::setLastCompactDate()
 
 
 
-KNConfig::Cache::Cache()
+/*KNConfig::Cache::Cache()
 {
   KConfig *conf=KGlobal::config();
   conf->setGroup("CACHE");
@@ -1187,4 +1195,4 @@ void KNConfig::Cache::save()
   conf->writeEntry("diskMaxKB", d_iskMaxKB);
 
 }
-
+*/
