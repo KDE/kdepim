@@ -27,10 +27,10 @@ class KLineEdit;
 
 namespace KPIM {
 class FolderConfig;
-};
+}
 namespace KRES {
 class Resource;
-};
+}
 
 namespace KCal {
 

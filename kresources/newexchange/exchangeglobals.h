@@ -29,12 +29,12 @@
 namespace KIO {
 class Job;
 class TransferJob;
-};
+}
 
 namespace KPIM {
 class GroupwareDataAdaptor;
 class GroupwareUploadItem;
-};
+}
 
 class ExchangeGlobals
 {

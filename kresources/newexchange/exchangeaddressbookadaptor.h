@@ -69,6 +69,6 @@ class ExchangeAddressBookAdaptor : public AddressBookAdaptor
     QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
 };
 
-};
+}
 
 #endif

@@ -28,4 +28,4 @@
 using namespace KCal;
 
 typedef KRES::PluginFactory< ResourceExchange, ResourceGroupwareBaseConfig > ExchangeFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_newexchange, ExchangeFactory );
+K_EXPORT_COMPONENT_FACTORY( kcal_newexchange, ExchangeFactory )

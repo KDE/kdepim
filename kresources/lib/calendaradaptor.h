@@ -31,7 +31,7 @@
 
 namespace KPIM {
 class GroupwareUploadItem;
-};
+}
 
 namespace KCal {
 class ResourceCached;
@@ -92,6 +92,6 @@ class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
     QStringList mDeletedItems;
 };
 
-};
+}
 
 #endif

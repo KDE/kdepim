@@ -28,11 +28,11 @@
 namespace KPIM {
 class GroupwareDataAdaptor;
 class GroupwareUploadItem;
-};
+}
 namespace KIO {
 class TransferJob;
 class Job;
-};
+}
 
 class OGoGlobals
 {

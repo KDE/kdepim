@@ -73,6 +73,6 @@ class ExchangeCalendarAdaptor : public CalendarAdaptor
     QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
 };
 
-};
+}
 
 #endif

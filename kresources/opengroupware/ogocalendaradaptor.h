@@ -28,7 +28,7 @@
 
 namespace KIO {
 class Job;
-};
+}
 
 namespace KCal {
 
@@ -51,9 +51,9 @@ class OGoCalendarAdaptor : public CalendarAdaptor
       QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
     KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
-    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
+    QString defaultNewItemName( KPIM::GroupwareUploadItem* /*item*/ ) { return "new.ics"; }
 };
 
-};
+}
 
 #endif
