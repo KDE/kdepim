@@ -36,9 +36,9 @@
 
 CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, bool external,
 						      QWidget* parent, const char* name )
-  : CertificateInfoWidget( parent, name ), _manager(manager)
+  : CertificateInfoWidget( parent, name ), _manager(manager), _external( external )
 {
-  if( !external ) importButton->hide();
+  if( !external ) importButton->setEnabled(false);
   listView->setColumnWidthMode( 1, QListView::Manual );
   listView->setResizeMode( QListView::LastColumn );
   QFontMetrics fm = fontMetrics();
@@ -67,6 +67,12 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   pathView->clear();
   _info = info;
 
+  /* Check if we already have the cert in question */
+  if( _manager ) {
+    importButton->setEnabled( !_manager->haveCertificate( info.fingerprint ) );
+  } else { 
+    importButton->setEnabled( false );
+  }
   // These will show in the opposite order
   new QListViewItem( listView, i18n("Fingerprint"), info.fingerprint );
   new QListViewItem( listView, i18n("Can be used for certification"), 

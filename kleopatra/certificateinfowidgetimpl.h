@@ -43,6 +43,7 @@ protected slots:
 private:
   CertManager* _manager;
   CryptPlugWrapper::CertificateInfo _info;
+  bool _external;
 };
 
 #endif // CERTIFICATEINFOWIDGETIMPL_H

@@ -387,4 +387,11 @@ int CertManager::importCertificateWithFingerprint( const QString& fingerprint )
   return retval;
 }
 
+bool CertManager::haveCertificate( const QString& fingerprint ) 
+{
+  bool truncated;
+  CryptPlugWrapper::CertificateInfoList lst = pWrapper->listKeys( fingerprint, false, &truncated );
+  return !lst.isEmpty();
+}
+
 #include "certmanager.moc"

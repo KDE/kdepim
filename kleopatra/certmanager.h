@@ -22,6 +22,8 @@ public:
 
     int importCertificateWithFingerprint( const QString& fingerprint );
 
+    bool haveCertificate( const QString &fingerprint );
+
 protected slots:
     void loadCertificates();
     void newCertificate();
