@@ -608,6 +608,12 @@ FileInstallAction::~FileInstallAction()
 
 	fDBIndex=0;
 
+	DEBUGDAEMON << fname
+		<< ": Installing "
+		<< fList.count()
+		<< " files"
+		<< endl;
+
 	// Possibly no files to install?
 	if (!fList.count()) 
 	{
@@ -639,6 +645,15 @@ FileInstallAction::~FileInstallAction()
 		<< fList.count()
 		<< ")"
 		<< endl;
+
+	if ((!fList.count()) || (fDBIndex>=fList.count()))
+	{
+		DEBUGDAEMON << fname
+			<< ": Peculiar file index, bailing out."
+			<< endl;
+		if (fTimer) fTimer->stop();
+		emit syncDone(this);
+	}
 
 	const QString &s = fList[fDBIndex];
 	fDBIndex++;
