@@ -275,8 +275,6 @@ int SyncAction::questionYesNoCancel(const QString & text,
 	r = KDialogBase::Cancel;
 #endif
 
-	KPILOT_DELETE(dialog);
-
 	switch(r)
 	{
 	case KDialogBase::Yes : result=KMessageBox::Yes ; break;
