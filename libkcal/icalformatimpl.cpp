@@ -322,7 +322,7 @@ ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
 
 ICalFormatImpl::~ICalFormatImpl()
 {
-  if ( mCompat ) delete mCompat;
+  delete mCompat;
 }
 
 class ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
