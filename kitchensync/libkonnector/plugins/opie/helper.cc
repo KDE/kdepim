@@ -34,10 +34,10 @@ QDateTime Base::fromUTC( time_t time )
 #endif
     lt = localtime( &time );
     QDateTime dt;
-    kdDebug() << "tz " << m_tz << " year " << lt->tm_year  << " month " << lt->tm_mon << " day " << lt->tm_mday << endl;
+//    kdDebug() << "tz " << m_tz << " year " << lt->tm_year  << " month " << lt->tm_mon << " day " << lt->tm_mday << endl;
     dt.setDate( QDate( lt->tm_year + 1900, lt->tm_mon + 1, lt->tm_mday ) );
     dt.setTime( QTime( lt->tm_hour, lt->tm_min, lt->tm_sec ) );
-    kdDebug() << "From " << time << " To " << dt.toString() << endl;
+//    kdDebug() << "From " << time << " To " << dt.toString() << endl;
     // unset tz
     if (!m_tz.isEmpty() ) {
         unsetenv("TZ");
@@ -97,12 +97,15 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
     for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
         for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
             if ( (*catIt).name() == (*listIt) ) { // the same name
+	        kdDebug() << "Found " << (*listIt) << endl;
                 found= true;
                 dummy.append( (*catIt).id() + ";");
             }
         }
-        if ( !found )
+        if ( !found ){
+	 kdDebug() << "Not Found category " << (*listIt) << endl;
          dummy.append( QString::number(m_edit->addCategory( app, (*listIt) ) ) + ";" );  // generate a new category
+	}
     }
     if ( !dummy.isEmpty() )
         dummy.remove(dummy.length() -1,  1 ); //remove the last ;

@@ -319,9 +319,9 @@ void OrganizerPart::writeMeta( EventSyncee* evSyncee,
     if (!QFile::exists( str ) ) {
         KonnectorProfile kon = core()->konnectorProfile();
         QDir dir;
-        dir.mkdir( str + "/.kitchensync");
-        dir.mkdir( str + "/.kitchensync/meta");
-        dir.mkdir( str + "/.kitchensync/meta/konnector-" + kon.uid() );
+        dir.mkdir( QDir::homeDirPath() + "/.kitchensync");
+        dir.mkdir( QDir::homeDirPath() + "/.kitchensync/meta");
+        dir.mkdir( QDir::homeDirPath() + "/.kitchensync/meta/konnector-" + kon.uid() );
     }
     KSimpleConfig conf( str );
     /* clear config before */

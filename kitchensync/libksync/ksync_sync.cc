@@ -21,7 +21,7 @@ SyncReturn SyncManager::sync( int mode,
                               const KSyncEntry::List& first,
                               const KSyncEntry::List& out )
 {
-kdDebug() << "SyncManager" << endl;
+//kdDebug() << "SyncManager" << endl;
     // HACK
     KSyncEntry* entry1;
     KSyncEntry* entry2;
@@ -32,7 +32,7 @@ kdDebug() << "SyncManager" << endl;
         for ( ; it2.current(); ++it2 ) {
             entry2 = it2.current();
             if ( entry2->type() == entry1->type() ) {
-                kdDebug() << "Type match " << entry1->type() << endl;
+//                kdDebug() << "Type match " << entry1->type() << endl;
                 if ( entry1->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
                     SyncKalendar cal(this, "cal");
                     return cal.sync( mode,  entry1,  entry2 );
@@ -49,7 +49,7 @@ void SyncManager::syncAsync( int mode,
                              const KSyncEntry::List& first,
                              const KSyncEntry::List& out )
 {
-    kdDebug() << "SyncManager" << endl;
+//    kdDebug() << "SyncManager" << endl;
     // HACK
     KSyncEntry* entry1;
     KSyncEntry* entry2;
@@ -60,7 +60,7 @@ void SyncManager::syncAsync( int mode,
         for ( ; it2.current(); ++it2 ) {
             entry2 = it2.current();
             if ( entry2->type() == entry1->type() ) {
-                kdDebug() << "Type match " << entry1->type() << endl;
+//                kdDebug() << "Type match " << entry1->type() << endl;
                 if ( entry1->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
                     SyncKalendar cal(this, "cal");
                     SyncReturn ret = cal.sync( mode,  entry1,  entry2 );

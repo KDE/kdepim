@@ -335,9 +335,9 @@ void KSyncMainWindow::initKonnector()
  * we're now initializing the ordinary profiles
  */
 void KSyncMainWindow::initProfiles() {
-    kdDebug(5210) << "Init profiles " << endl;
+//    kdDebug(5210) << "Init profiles " << endl;
     m_konprof = new KonnectorProfileManager();
-    kdDebug(5210) << "About to Load" << endl;
+//    kdDebug(5210) << "About to Load" << endl;
     m_konprof->load();
     /* now load the wasLoaded() items */
     KonnectorProfile::ValueList list = m_konprof->list();
@@ -458,7 +458,7 @@ void KSyncMainWindow::slotConfigProf() {
     }
 }
 void KSyncMainWindow::switchProfile( const Profile& prof ) {
-    kdDebug() << "switch profile" << endl;
+//    kdDebug() << "switch profile" << endl;
     m_bar->clear();
     m_parts.setAutoDelete( true );
     m_parts.clear();
@@ -532,7 +532,7 @@ void KSyncMainWindow::slotProfile() {
     if (item == -1) item = 0; // for initialisation
     if ( m_prof->count() == 0 )  return;
 
-    kdDebug() << "Changing profile " << item << endl;
+//    kdDebug() << "Changing profile " << item << endl;
     Profile cur = m_prof->profile( item );
 
     switchProfile( cur );

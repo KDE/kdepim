@@ -51,7 +51,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
     while(!n.isNull() ){
 	QDomElement e = n.toElement();
 	if(!e.isNull() ){
-	    kdDebug(5202) << e.tagName() << endl;
+	    kdDebug(5202) << "Tage Name" << e.tagName() << endl;
 	    if( e.tagName() == QString::fromLatin1("Contacts" ) ){ // we're looking for them
 		QDomNode no = e.firstChild();
 		while(!no.isNull() ){
@@ -147,6 +147,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 }
 QByteArray AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
 {
+    kdDebug(5210 ) << "From KDE " << endl;
     //  ok lets write back the changes from the Konnector
     m_kde2opie.clear(); // clear the reference first
     Kontainer::ValueList newIds = syncee->ids( "AddressBookSyncEntry");
@@ -174,7 +175,11 @@ QByteArray AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             stream << "MiddleName=\"" << ab.additionalName() << "\" ";
             stream << "LastName=\"" << ab.familyName() << "\" ";
             stream << "Suffix=\"" << ab.suffix() << "\" ";
-            stream << "FileAs=\"" << ab.sortString() << "\" ";
+            QString sortStr;
+            sortStr = ab.sortString();
+            if (sortStr.isEmpty() )
+                sortStr = ab.formattedName();
+            stream << "FileAs=\"" << sortStr << "\" ";
             stream << "JobTitle=\"" << ab.role() << "\" ";
             stream << "Department=\"" << ab.custom( "opie", "Department" ) << "\" ";
             stream << "Company=\"" << ab.organization() << "\" ";

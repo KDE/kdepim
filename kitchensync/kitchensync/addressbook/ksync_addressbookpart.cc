@@ -33,6 +33,7 @@ K_EXPORT_COMPONENT_FACTORY( libaddressbookpart,  AddressBookPartFactory );
 using namespace KSync;
 
 
+
 AddressBookPart::AddressBookPart( QWidget* parent,  const char* name,
                                   QObject* obj,  const char* name2,
                                   const QStringList & )
@@ -88,6 +89,7 @@ QWidget* AddressBookPart::configWidget()
 void AddressBookPart::processEntry( const Syncee::PtrList& in,
                                     Syncee::PtrList& out )
 {
+    kdDebug() << "processEntry in AddressBookPart aye" << endl;
     /* 1. */
     Profile prof = core()->currentProfile();
     KonnectorProfile kon = core()->konnectorProfile();
@@ -96,6 +98,7 @@ void AddressBookPart::processEntry( const Syncee::PtrList& in,
     QString path = prof.path("AddressBook");
     QString meta = kon.uid() + "/" + prof.uid() + "addressbook.rc";
     bool met = kon.kapabilities().isMetaSyncingEnabled();
+    kdDebug() << "Is meta syncing enabled? " << met << endl;
 
     /* 3. */
     Syncee* syncee = 0l;
@@ -104,6 +107,7 @@ void AddressBookPart::processEntry( const Syncee::PtrList& in,
     for ( ; syncIt.current(); ++syncIt ) {
         syncee = syncIt.current();
         if (syncee->type() == QString::fromLatin1("AddressBookSyncee") ) {
+	    kdDebug() << "Found our syncee" << endl;
             aBook = (AddressBookSyncee*) syncee;
             break;
         }
@@ -174,9 +178,12 @@ AddressBookSyncee* AddressBookPart::load( const QString& path ) {
     }
 }
 void AddressBookPart::doMeta( Syncee* syncee, const QString& path ) {
+    kdDebug() << "Do Meta" << endl;
     QString str = QDir::homeDirPath();
     str += "/.kitchensync/meta/konnector-" + path;
     if (!QFile::exists( str ) ) {
+        kdDebug() << "Path does not exist ->First Sync" << endl;
+	kdDebug() << "Path was " << str << "  " << path << endl;
         syncee->setFirstSync( true );
         syncee->setSyncMode( Syncee::MetaMode );
         return;
@@ -191,14 +198,18 @@ void AddressBookPart::doMeta( Syncee* syncee, const QString& path ) {
     /* mod + added */
     for (entry= syncee->firstEntry(); entry; entry = syncee->nextEntry() ) {
         ids << entry->id();
+	kdDebug() << "Entry " << entry->name() << endl << "Entry id" << entry->id() << endl;
         if ( conf.hasGroup( entry->id() )  ) {
             conf.setGroup( entry->id() );
             timestmp = conf.readEntry("time");
+	    kdDebug() << "Timestamp Old" << timestmp << endl;
+	    kdDebug() << "Timestamp New" << entry->timestamp() << endl;
             if ( timestmp != entry->timestamp() )
                 entry->setState( SyncEntry::Modified );
         }
         /* added */
         else {
+	    kdDebug() << "Entry added" << endl;
             entry->setState( SyncEntry::Added );
         }
     }
@@ -208,6 +219,7 @@ void AddressBookPart::doMeta( Syncee* syncee, const QString& path ) {
     for (it = groups.begin(); it != groups.end(); ++it ) {
         // removed items if ids is not present
         if (!ids.contains( (*it) ) ) {
+	    kdDebug() << "Entry removed from abook" << (*it) << endl;
             KABC::Addressee adr;
             adr.setUid( (*it) );
             AddressBookSyncEntry* entry;
@@ -222,44 +234,64 @@ void AddressBookPart::writeMeta( Syncee* syncee, const QString& path ) {
     QString str = QDir::homeDirPath();
     str += "/.kitchensync/meta/konnector-" + path;
     if (!QFile::exists( str ) ) {
+        kdDebug() << "Path does not exist " << endl;
+	kdDebug() << "Path = " << str << endl;
         KonnectorProfile kon = core()->konnectorProfile();
         QDir dir;
-        dir.mkdir( str + "/.kitchensync");
-        dir.mkdir( str + "/.kitchensync/meta");
-        dir.mkdir( str + "/.kitchensync/meta/konnector-" + kon.uid() );
+        dir.mkdir( dir.homeDirPath() + "/.kitchensync");
+        dir.mkdir( dir.homeDirPath() + "/.kitchensync/meta");
+        dir.mkdir( dir.homeDirPath() + "/.kitchensync/meta/konnector-" + kon.uid() );
+	kdDebug() << "Kon UID " << kon.uid() << endl;
     }
     KSimpleConfig conf( str );
-    QStringList groups = conf.groupList();
+    QStringList grpList = conf.groupList();
     QStringList::Iterator it;
-    for (it = groups.begin(); it != groups.end(); ++it ) {
+    for ( it = grpList.begin(); it != grpList.end(); ++it ) {
         conf.deleteGroup( (*it) );
     }
     SyncEntry* entry;
     for (entry = syncee->firstEntry(); entry; entry= syncee->nextEntry() ) {
+        if ( entry->state() == SyncEntry::Removed )
+            continue;
+        kdDebug() << "Name " << entry->name() << endl;
+        kdDebug() << "UID  " << entry->id() << endl;
+        kdDebug() << "Timestamp " << entry->timestamp() << endl;
         conf.setGroup( entry->id() );
         conf.writeEntry( "time", entry->timestamp() );
     }
 }
 void AddressBookPart::save( AddressBookSyncee* sync, const QString& path) {
     AddressBookSyncEntry* entry;
+    kdDebug() << "save" << endl;
     if ( pathIsDefault( path ) ) { // save to the std. addressbook
-        KABC::AddressBook *book =KABC::StdAddressBook::self();
+        KABC::AddressBook *book = KABC::StdAddressBook::self();
         book->clear();
         for ( entry = (AddressBookSyncEntry*)sync->firstEntry();
               entry;
               entry= (AddressBookSyncEntry*) sync->nextEntry() ) {
-            kdDebug() << "Writing addresse " << endl;;
-            book->insertAddressee( entry->addressee() );
+            kdDebug() << "Writing addresse " << endl;
+	    if( entry->state() != SyncEntry::Removed )
+                book->insertAddressee( entry->addressee() );
         }
-        KABC::StdAddressBook::save();
+	kdDebug() << "dumping abook " << endl;
+	book->dump();
+        book->saveAll();
+	kdDebug() << "dumped abook " << endl;
     }else {
+        kdDebug() << "non default save" << endl;
         KABC::AddressBook book;
         KABC::ResourceFile *file = new KABC::ResourceFile(&book, path );
         book.addResource(file );
+	/* work around */
+	/*book.load();
+	book.clear();*/
+	/* work around end */
         for ( entry = (AddressBookSyncEntry*)sync->firstEntry();
               entry;
               entry= (AddressBookSyncEntry*) sync->nextEntry() ) {
-            book.insertAddressee( entry->addressee() );
+	    kdDebug() << "Entry" << entry->name() << endl;
+	    if( entry->state() != SyncEntry::Removed )
+                book.insertAddressee( entry->addressee() );
         }
         KABC::Ticket* ticket = book.requestSaveTicket(file);
         book.save(ticket );
@@ -271,6 +303,7 @@ bool AddressBookPart::pathIsDefault( const QString& path ) {
     if ( path.stripWhiteSpace() == QString::fromLatin1("default") )
         return true;
 
+    kdDebug() << "Path is not default" << endl;
     return false;
 }
 AddressBookSyncee* AddressBookPart::book2syncee( KABC::AddressBook* book) {

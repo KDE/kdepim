@@ -55,7 +55,9 @@ int CategoryEdit::addCategory( const QString &name, int id )
 }
 int CategoryEdit::addCategory( const QString &appName,  const QString &name,  int id )
 {
+    kdDebug() << "add Category " << appName << " " << name << " " << id << endl;
     if ( id == 0 ) {
+        kdDebug() << "need to generate one " << endl;
         // code from tt
         //generate uid
         int id = -1 * (int) ::time(NULL );
@@ -69,20 +71,21 @@ int CategoryEdit::addCategory( const QString &appName,  const QString &name,  in
     OpieCategories categories(QString::number(id),  name,  appName);
     m_categories.remove( categories);
     m_categories.append( categories);
+    kdDebug() << "new id is " << id << endl;
     return id;
 }
 void CategoryEdit::parse( const QString &tempFile )
 {
     clear();
-    kdDebug(5202) << "parsing the categories" << endl;
+//    kdDebug(5202) << "parsing the categories" << endl;
     QDomDocument doc( "mydocument" );
     QFile f( tempFile );
     if ( !f.open( IO_ReadOnly ) ){
-	kdDebug(5202) << "can not open " <<tempFile << endl;
+//	kdDebug(5202) << "can not open " <<tempFile << endl;
 	return;
     }
     if ( !doc.setContent( &f ) ) {
-	kdDebug(5202) << "can not setContent" << endl;
+//	kdDebug(5202) << "can not setContent" << endl;
 	f.close();
 	return;
     }
@@ -122,7 +125,7 @@ QString CategoryEdit::categoryById( const QString &id,  const QString &app )cons
     QString category;
     QString fallback;
     for( it = m_categories.begin(); it != m_categories.end(); ++it ){
-	kdDebug(5202) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
+//	kdDebug(5202) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
 	if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
 	    if( app == (*it).app() ){
 	    //kdDebug(5202) << "found category" << endl;

@@ -56,8 +56,8 @@ SyncReturn SyncKalendar::sync( int mode,
     KAlendarSyncEntry* entry1= (KAlendarSyncEntry*) in;
     KAlendarSyncEntry* entry2= (KAlendarSyncEntry*) out;
 
-    kdDebug() << "Entry1 " << entry1->syncMode() << endl;
-    kdDebug() << "Entry2 " << entry2->syncMode() << endl;
+//    kdDebug() << "Entry1 " << entry1->syncMode() << endl;
+//    kdDebug() << "Entry2 " << entry2->syncMode() << endl;
     KCal::CalendarLocal *cal = new KCal::CalendarLocal();
     m_entry = new KAlendarSyncEntry();
     m_entry->setCalendar( cal );
@@ -378,15 +378,15 @@ void SyncKalendar::syncNormal( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* en
     // first go through entry1 and then through entry2
     for ( ; oneIt.current(); ++oneIt ) {
         one = oneIt.current();
-        kdDebug() << "ADD one " << one->uid() << endl;
+//        kdDebug() << "ADD one " << one->uid() << endl;
         if ( one->uid().startsWith("Konnector-") ) { // really new one
             QString id = KCal::CalFormat::createUniqueId();
-            kdDebug() << "UID " << one->uid() << endl;
+//            kdDebug() << "UID " << one->uid() << endl;
             m_entry->insertId( "event", one->uid(),  id );
             //one->setUid( id );
             KCal::Event* clone = (KCal::Event*) one->clone();
-            if ( clone == 0 )
-                kdDebug() << "Clone == 0 "<< endl;
+            if ( clone == 0 ) ;
+//                kdDebug() << "Clone == 0 "<< endl;
             clone->setUid( id );
             m_entry->calendar()->addEvent( clone );
             continue;
@@ -413,7 +413,7 @@ void SyncKalendar::syncNormal( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* en
                     break;
                 case SYNC_INTERACTIVE:
                 default: {
-                    kdDebug() << "FIXME" << endl;
+//                    kdDebug() << "FIXME" << endl;
                     QString text = i18n("Which entry fo you want to take precedence?\n");
                     text += i18n("Entry 1: '%1'\n").arg( one->summary() );
                     text += i18n("Entry 2: '%1'\n").arg( two->summary() );
@@ -458,15 +458,15 @@ void SyncKalendar::syncTodo( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* entr
     // first go through entry1 and then through entry2
     for ( ; oneIt.current(); ++oneIt ) {
         one = oneIt.current();
-        kdDebug() << "Adding todo " << one->uid();
+//        kdDebug() << "Adding todo " << one->uid();
         if ( one->uid().startsWith("Konnector-") ) { // really new one
-            kdDebug() << "UID Todo " << one->uid();
+//            kdDebug() << "UID Todo " << one->uid();
             QString id = KCal::CalFormat::createUniqueId();
             m_entry->insertId( "todo", one->uid(),  id );
             //one->setUid( id );
             KCal::Todo* clone = (KCal::Todo*) one->clone();
-            if ( clone == 0 )
-                kdDebug() << "Clone == 0 "<< endl;
+            if ( clone == 0 ) ;
+//                kdDebug() << "Clone == 0 "<< endl;
             clone->setUid( id );
             m_entry->calendar()->addTodo( clone );
             continue;
