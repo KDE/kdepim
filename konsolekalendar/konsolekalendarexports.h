@@ -38,7 +38,6 @@ public:
    
 
   bool exportAsTxt( QTextStream *ts, Event *event );
-  bool exportAsTxtKorganizer( QTextStream *ts, Event *event );
   bool exportAsCSV( QTextStream *ts, Event *event );
    
 

@@ -33,12 +33,11 @@
     */
   #define   NONE                     0
   #define   TEXT_KONSOLEKALENDAR     1
-  #define   TEXT_KORGANIZER          2
-  #define   HTML                     3
-  #define   XHTML                    4
-  #define   XML                      5
-  #define   CSV                      6
-  #define   VCARD                    7
+  #define   HTML                     2
+  #define   XHTML                    3
+  #define   XML                      4
+  #define   CSV                      5
+  #define   VCARD                    6
 
 
 namespace KCal {
