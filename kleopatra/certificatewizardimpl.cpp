@@ -1,9 +1,16 @@
 #include "certificatewizardimpl.h"
-#include "cryptplugwrapper.h"
-#include <qlineedit.h>
-#include <qtextedit.h>
+
+// kdenetwork
+#include <cryptplugwrapper.h>
+
+// KDE
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kapplication.h>
+
+// Qt
+#include <qlineedit.h>
+#include <qtextedit.h>
 #include <qpushbutton.h>
 
 extern CryptPlugWrapper* pWrapper;

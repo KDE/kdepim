@@ -1,24 +1,31 @@
 #include "certmanager.h"
-#include <qtextedit.h>
-#include <kmenubar.h>
-#include <kaction.h>
-#include <qapplication.h>
-#include <klocale.h>
+
 #include "certbox.h"
 #include "certitem.h"
 #include "agent.h"
-#include <qwizard.h>
-#include <qgrid.h>
 #include "certificatewizardimpl.h"
+
+// kdenetwork
 #include <cryptplugwrapper.h>
-#include <kmessagebox.h>
-#include <ktempfile.h>
-#include <dcopclient.h>
-#include <qlineedit.h>
-#include <qradiobutton.h>
+
+// KDE
+#include <kmenubar.h>
 #include <kurlrequester.h>
 #include <kfiledialog.h>
 #include <kprocess.h>
+#include <kaction.h>
+#include <kapplication.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <ktempfile.h>
+#include <dcopclient.h>
+
+// Qt
+#include <qtextedit.h>
+#include <qlineedit.h>
+#include <qradiobutton.h>
+#include <qwizard.h>
+#include <qgrid.h>
 
 extern CryptPlugWrapper* pWrapper;
 
