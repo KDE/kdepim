@@ -17,13 +17,6 @@
     Overview
     --------
 
-    Libgcrypt is a general purpose crypto library based on the code
-    used in GnuPG.  We can't start with a new version number because
-    libgcrypt was part of gnupg 1.1 and some applications already used
-    it and tested for the version number. We believe that the API can
-    stay as it is, except that new functions may be added in the
-    future.
-
     GpgME++ is a C++ wrapper (or C++ bindings) for the GnuPG project's
     gpgme (GnuPG Made Easy) library, version 0.4.4 and later.
 
@@ -55,7 +48,7 @@
     enough to be universally applicable (e.g. a pivotal design
     decision was to not use exceptions to wrap gpgme_error_t).
 
-    GpgME++ depends on gpgme, which in turn depends libgpg-error, both
+    GpgME++ depends on gpgme, which in turn depends on libgpg-error, both
     of which must be installed correctly before GpgME++ is to be
     built. Furthermore, GpgME++ should be recompiled if the underlying
     gpgme is changed. This is to allow closer integration and to
@@ -75,7 +68,7 @@
     ------------
 
     Discussion of this library and questions regarding it's use and
-    design should happen on gpa-dev@gnupg.org.
+    design should happen on gpa-dev@gnupg.org or gnupg-devel@gnupg.org.
 
 
     License
@@ -87,10 +80,3 @@
     relicense this library to the GNU Lesser General Public License
     (LGPL) should gpgme itself be made available under this license at
     any time in the future.
-
-    Please note that in many cases it is better for a library to be
-    licensed under the GPL, so that it provides an advantage for free
-    software projects.  The Lesser GPL is so named because it does
-    less to protect the freedom of the users of the code that it
-    covers.  See http://www.gnu.org/philosophy/why-not-lgpl.html for
-    more explanation.
