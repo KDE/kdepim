@@ -67,12 +67,7 @@ class Core : public QWidget
     /**
      * @return a SyncUi
      */
-    virtual SyncUi *syncUi() = 0;
-
-    /**
-     * @return the preferred syncAlgorithm of KitchenSync
-     */
-    virtual SyncAlgorithm *syncAlgorithm() = 0;
+    virtual SyncUi *syncUi() = 0;    
 
     /**
      * @return the all loaded ActionParts

@@ -48,7 +48,6 @@
 #include "profiledialog.h"
 #include "engine.h"
 #include "konnectorbar.h"
-#include "syncalgo.h"
 #include "mainwindow.h"
 #include "actionmanager.h"
 
@@ -85,7 +84,6 @@ kdbgstream operator<<( kdbgstream str, const Notify& no )
 KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
   : Core( parent ), mActionManager( actionManager ), m_profileManager( 0 )
 {
-  m_syncAlg = 0;
   m_syncUi = 0;
 
   m_partsIt = 0;
@@ -159,7 +157,7 @@ void KitchenSync::writeProfileConfig()
   config->setGroup( "Layout_" + currentProfile().uid() );
   if ( m_bar->currentItem() && m_bar->currentItem()->part() ) {
     config->writeEntry( "CurrentPart", m_bar->currentItem()->part()->name() );
-  
+
     config->sync();
   }
 }
@@ -171,7 +169,7 @@ void KitchenSync::addPart( const ActionPartService &service )
     ActionPart *part = KParts::ComponentFactory
       ::createInstanceFromLibrary<ActionPart>( service.libname().local8Bit(),
                                                this );
-  
+
     if ( !part ) {
       kdError() << "Unable to create part '" << service.name() << "'"
                 << endl;
@@ -204,7 +202,7 @@ void KitchenSync::addPart( const ActionPartService &service )
     if ( part->hasGui() )  {
         kdDebug(5210) << "Part has GUI (" << part->name() << ")" << endl;
         int pos = -1;
-        
+
         QWidget *topWidget = new QWidget( m_stack );
 
         QBoxLayout *frameLayout = new QHBoxLayout( topWidget );
@@ -220,7 +218,7 @@ void KitchenSync::addPart( const ActionPartService &service )
         QWidget *partWidget = part->widget();
         partWidget->reparent( topWidget, 0, QPoint( 0, 0 ) );
         topLayout->addWidget( partWidget );
-        
+
         m_stack->addWidget( topWidget );
 
         mActionWidgetMap.insert( part, topWidget );
@@ -432,13 +430,6 @@ SyncUi *KitchenSync::syncUi()
 {
     m_syncUi = new SyncUiKde( this, currentProfile().confirmDelete(), true );
     return m_syncUi;
-}
-
-SyncAlgorithm *KitchenSync::syncAlgorithm()
-{
-    m_syncAlg = new PIMSyncAlg( syncUi() );
-
-    return m_syncAlg;
 }
 
 const QPtrList<ActionPart> KitchenSync::parts() const

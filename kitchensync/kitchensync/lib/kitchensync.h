@@ -97,11 +97,6 @@ class KitchenSync : public Core
     SyncUi *syncUi();
 
     /**
-      @return the preferred syncAlgorithm of KitchenSync
-    */
-    SyncAlgorithm *syncAlgorithm();
-
-    /**
       @return the all loaded ActionParts
     */
     const QPtrList<ActionPart> parts() const;
@@ -160,8 +155,7 @@ class KitchenSync : public Core
     KSyncSystemTray *m_tray;
 
     ProfileManager *m_profileManager;
-    SyncUi *m_syncUi;
-    SyncAlgorithm *m_syncAlg;
+    SyncUi *m_syncUi;    
 
     Engine *mEngine;
     QMap<ActionPart *, QWidget *> mActionWidgetMap;
