@@ -117,7 +117,7 @@
                     </property>
                     <property>
                         <name>toolTip</name>
-                        <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well. Use Carefully!&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well. Use carefully!&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <spacer row="3"  column="1" >
