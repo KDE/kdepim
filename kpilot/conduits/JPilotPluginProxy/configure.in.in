@@ -17,7 +17,7 @@ dnl
 dnl Check for gtk-config
 AC_PATH_PROG(GTK_CONFIG, gtk-config, no)
 
-if test "$GLIB_CONFIG" = "no"; then
+if test "$GTK_CONFIG" = "no"; then
   AC_MSG_ERROR([
 *** GTK+ 1.2 is required to build the JPilotPluginProxy conduit. Please
 *** make sure you have the GTK+ development headers installed. The
