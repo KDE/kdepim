@@ -468,8 +468,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return dynamic_cast<Incidence*>( message->event() );
     }
 
-    void setStatusOnMyself( Incidence* incidence, Attendee::PartStat status,
-                            const QString& receiver ) const
+
+    Attendee *findMyself( Incidence* incidence, const QString& receiver ) const
     {
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
@@ -487,20 +487,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             myself = (*it);
             break;
           }
-
-#if 0
-          // This is postponed until we have shared identities.
-          // And then it might be unnecessary
-          if ( (*it)->email() == KOPrefs::instance()->email() ) {
-            // If we are the current one, note that. Still continue to
-            // search in case we find the receiver himself.
-            myself = (*it);
-          }
-#endif
         }
         // TODO: If still not found, ask about it
       }
+      return myself;
+    }
 
+    void setStatusOnMyself( Incidence* incidence, Attendee* myself, 
+                            Attendee::PartStat status, const QString &receiver ) const
+    {
       Q_ASSERT( myself );
       Attendee* newMyself = 0;
       if( myself ) {
@@ -566,8 +561,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Accepted, receiver );
-      return mail( incidence, callback );
+      Attendee *myself = findMyself( incidence, receiver );
+      if ( myself && myself->RSVP() ) {
+        setStatusOnMyself( incidence, myself, Attendee::Accepted, receiver );
+        return mail( incidence, callback );
+      } else {
+        ( new KMDeleteMsgCommand( callback.getMsg()->parent(), 
+                                  callback.getMsg() ) )->start();
+        return true;
+      }
     }
 
     bool handleAcceptConditionally( const QString& iCal, KMail::Callback& callback ) const
@@ -584,18 +586,38 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Tentative, receiver );
-      return mail( incidence, callback );
+      Attendee *myself = findMyself( incidence, receiver );
+      if ( myself && myself->RSVP() ) {
+        setStatusOnMyself( incidence, myself, Attendee::Tentative, receiver );
+        return mail( incidence, callback );
+      } else {
+        ( new KMDeleteMsgCommand( callback.getMsg()->parent(), 
+                                  callback.getMsg() ) )->start();
+        return true;
+      }
+
     }
 
     bool handleDecline( const QString& iCal, KMail::Callback& callback ) const
     {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        // Must be some error. Still return true though, since we did handle it
+        return true;
+
       // Produce a decline message
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Declined, callback.receiver() );
-      return mail( incidence, callback );
+      Attendee *myself = findMyself( incidence, receiver );
+      if ( myself && myself->RSVP() ) {
+        setStatusOnMyself( incidence, myself, Attendee::Declined, receiver );
+        return mail( incidence, callback );
+      } else {
+        ( new KMDeleteMsgCommand( callback.getMsg()->parent(), 
+                                  callback.getMsg() ) )->start();
+        return true;
+      }
     }
 
     bool handleIgnore( const QString&, KMail::Callback& c ) const
