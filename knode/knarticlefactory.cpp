@@ -824,7 +824,12 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   if(id->hasEmail()&&id->emailIsValid())
     from->setEmail(id->email().latin1());
   else {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Please enter a valid email address."));
+    if ( id->hasEmail() )
+      KMessageBox::sorry(knGlobals.topWidget,
+	i18n("Please enter a valid email address at the identity tab of the account configuration dialog."));
+    else
+      KMessageBox::sorry(knGlobals.topWidget, 
+         i18n("Please enter a valid email address at the identity section of the configuration dialog."));
     delete art;
     return 0;
   }
