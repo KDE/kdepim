@@ -663,7 +663,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 
         switch( attendee->status() ) {
           case Attendee::NeedsAction:
-              return i18n( "Sender incidates this invitation still needs some action" );
+              return i18n( "Sender indicates this invitation still needs some action" );
           case Attendee::Accepted:
               return i18n( "Sender accepts this meeting invitation" );
           case Attendee::Tentative:
