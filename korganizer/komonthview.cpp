@@ -596,7 +596,6 @@ KOMonthView::KOMonthView(Calendar *calendar, QWidget *parent, const char *name)
   }
 
   mEventContextMenu = eventPopup();
-  mGeneralContextMenu = 0;
 
   updateConfig();
 
@@ -606,7 +605,6 @@ KOMonthView::KOMonthView(Calendar *calendar, QWidget *parent, const char *name)
 KOMonthView::~KOMonthView()
 {
   if (mEventContextMenu) delete mEventContextMenu;
-  if (mGeneralContextMenu) delete mGeneralContextMenu;
 }
 
 int KOMonthView::maxDatesHint()
@@ -776,11 +774,10 @@ void KOMonthView::showEventContextMenu( Incidence *incidence )
 
 void KOMonthView::showGeneralContextMenu()
 {
-  if ( !mGeneralContextMenu )
-    mGeneralContextMenu = newEventPopup();
+  QPopupMenu *menu = newEventPopup();
 
-  if (mGeneralContextMenu)
-    mGeneralContextMenu->popup(QCursor::pos());
+  if ( menu )
+    menu->popup( QCursor::pos() );
 }
 
 void KOMonthView::setSelectedCell( MonthViewCell *cell )
