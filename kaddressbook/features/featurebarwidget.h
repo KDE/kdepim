@@ -40,6 +40,10 @@ class FeatureBarWidget : public QWidget
     ~FeatureBarWidget();
 
     KABC::AddressBook *addressBook() const;
+    /**
+      @return A pointer to the view manager
+    */
+    ViewManager *viewManager() const;
 
     /**
       Returns whether there are selected contacts in the view.

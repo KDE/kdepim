@@ -38,6 +38,11 @@ KABC::AddressBook *FeatureBarWidget::addressBook() const
   return mAddressBook;
 }
 
+ViewManager *FeatureBarWidget::viewManager() const
+{
+  return mViewManager;
+}
+
 bool FeatureBarWidget::addresseesSelected() const
 {
   return mViewManager->selectedUids().count() != 0;
