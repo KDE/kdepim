@@ -273,6 +273,8 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     sernum = mUidMap[ uid ].serialNumber();
   } else {
     subResource = findWritableResource( mSubResources );
+    if ( subResource.isEmpty() )
+      return false;
     sernum = 0;
   }
 

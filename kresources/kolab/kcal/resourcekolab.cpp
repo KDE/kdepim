@@ -213,6 +213,8 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
     if ( !map )
       return;
     subResource = findWritableResource( *map );
+    if ( subResource.isEmpty() )
+      return;
     sernum = 0;
   }
 
@@ -279,7 +281,8 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
 
   QString subResource =
     newEvent ? findWritableResource( mEventSubResources ) : _subresource;
-  Q_ASSERT( !subResource.isEmpty() );
+  if ( subResource.isEmpty() )
+    return false;
 
   if ( !mSilent ) {
     QString xml = Kolab::Event::eventToXML( event );
@@ -364,7 +367,8 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
 
   QString subResource =
     newTodo ? findWritableResource( mTodoSubResources ) : _subresource;
-  Q_ASSERT( !subResource.isEmpty() );
+  if ( subResource.isEmpty() )
+    return false;
 
   if ( !mSilent ) {
     QString xml = Kolab::Task::taskToXML( todo );
@@ -436,7 +440,8 @@ bool ResourceKolab::addJournal( KCal::Journal* journal,
 
   QString subResource =
     newJournal ? findWritableResource( mJournalSubResources ) : _subresource;
-  Q_ASSERT( !subResource.isEmpty() );
+  if ( subResource.isEmpty() )
+    return false;
 
   if ( !mSilent ) {
     QString xml = Kolab::Journal::journalToXML( journal );
