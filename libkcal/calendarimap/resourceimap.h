@@ -164,11 +164,12 @@ namespace KCal {
 
   private:
     void init();
-    QStringList getIncidenceList( const QString& type );
+    bool getIncidenceList( QStringList& lst, const QString& type );
     bool connectKMailSignal( const QCString&, const QCString& ) const;
 
     bool loadAllEvents();
     bool loadAllTasks();
+    bool loadAllJournals();
 
     bool connectToKMail() const;
 
