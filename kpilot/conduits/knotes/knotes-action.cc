@@ -1,6 +1,6 @@
 /* knotes-action.cc                      KPilot
 **
-** Copyright (C) 2001,2002 by Dan Pilone
+** Copyright (C) 2001,2002,2003 by Dan Pilone
 **
 ** This file defines the SyncAction for the knotes-conduit plugin.
 */
@@ -27,6 +27,7 @@
 */
 
 #include "options.h"
+
 
 #include <qmap.h>
 #include <qtimer.h>
@@ -110,6 +111,11 @@ public:
 		// fDatabase(0L),
 		fCounter(0)
 	{ } ;
+	~KNotesActionPrivate()
+	{
+		KPILOT_DELETE(fKNotes);
+		KPILOT_DELETE(fTimer);
+	}
 
 	// This is the collection of  notes held by KNotes and
         // returned by the notes() DCOP call.
@@ -126,7 +132,7 @@ public:
 	// The database we're working with (MemoDB)
 	// PilotSerialDatabase *fDatabase;
 	// Some counter that needs to be preserved between calls to
-	// process(). Typically used to note hom much work is done.
+	// process(). Typically used to note how much work is done.
 	int fCounter;
 
 	// We need to translate between the ids that KNotes uses and
@@ -162,12 +168,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 {
 	FUNCTIONSETUP;
 
-	if (fP)
-	{
-		KPILOT_DELETE(fP->fTimer);
-		KPILOT_DELETE(fP->fKNotes);
-		KPILOT_DELETE(fP);
-	}
+	KPILOT_DELETE(fP);
 }
 
 /* virtual */ bool KNotesAction::exec()
@@ -632,3 +633,6 @@ void KNotesAction::cleanupMemos()
 		return CSL1("Unknown (%1)").arg(fStatus);
 	}
 }
+
+
+

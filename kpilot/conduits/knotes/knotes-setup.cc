@@ -1,10 +1,10 @@
 /* knotes-setup.cc                      KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001,2003 by Dan Pilone
 **
 ** This file defines the setup dialog for the knotes-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -70,33 +70,8 @@ void KNotesConfigBase::load(KConfig *fConfig)
 		fConfig->readBoolEntry(KNotesConduitFactory::matchDeletes,false));
 }
 
-KNotesWidgetSetup::KNotesWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
+/* static */ ConduitConfigBase *KNotesConfigBase::create(QWidget *w, const char *n)
 {
-	FUNCTIONSETUP;
-	fConfigBase = new KNotesConfigBase(widget(),"KNotesConfig");
-	fConduitName=i18n("KNotes");
-}
-
-KNotesWidgetSetup::~KNotesWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void KNotesWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	fConfigBase->commit(fConfig);
-}
-
-/* virtual */ void KNotesWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	fConfigBase->load(fConfig);
+	return new KNotesConfigBase(w,n);
 }
 

@@ -2,11 +2,11 @@
 #define _KPILOT_KNOTES_ACTION_H
 /* knotes-action.h                      KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001,2003 by Dan Pilone
 **
 ** This file defines the SyncAction that the KNotes conduit performs.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -83,6 +83,5 @@ private:
 	class KNotesActionPrivate;
 	KNotesActionPrivate *fP;
 } ;
-
 
 #endif
