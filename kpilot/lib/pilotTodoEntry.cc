@@ -97,6 +97,11 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 bool PilotTodoEntry::setCategory(const QString &label)
 {
 	FUNCTIONSETUP;
+	if (label.isEmpty()) 
+	{
+		setCat(0);
+		return true;
+	}
 	for (int catId = 0; catId < 16; catId++)
 	{
 		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);

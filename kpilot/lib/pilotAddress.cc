@@ -140,6 +140,11 @@ PilotAddress::~PilotAddress()
 bool PilotAddress::setCategory(const QString &label)
 {
 	FUNCTIONSETUPL(4);
+	if (label.isEmpty()) 
+	{
+		setCat(0);
+		return true;
+	}
 	for (int catId = 0; catId < 16; catId++)
 	{
 		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
