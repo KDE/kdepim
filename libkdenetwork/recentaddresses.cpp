@@ -148,7 +148,7 @@ QStringList RecentAddresses::addresses() const
 }
 
 RecentAddressDialog::RecentAddressDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Edit recent addresses" ), Ok | Cancel, Ok,
+  : KDialogBase( Plain, i18n( "Edit Recent Addresses" ), Ok | Cancel, Ok,
                  parent, name, true, true )
 {
   QWidget *page = plainPage();
