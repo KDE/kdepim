@@ -1,11 +1,15 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces \
            -I$(top_srcdir)/kaddressbook $(all_includes) 
 
+if compile_GNOKIIXXPORT
+  gnokii_MODULE = libkaddrbk_gnokii_xxport.la
+  gnokii_RCFILE = gnokii_xxportui.rc 
+endif
+
 kde_module_LTLIBRARIES = libkaddrbk_csv_xxport.la libkaddrbk_vcard_xxport.la \
                          libkaddrbk_kde2_xxport.la libkaddrbk_bookmark_xxport.la \
                          libkaddrbk_eudora_xxport.la libkaddrbk_ldif_xxport.la \
-                         libkaddrbk_gnokii_xxport.la libkaddrbk_opera_xxport.la \
-                         libkaddrbk_pab_xxport.la 
+                         libkaddrbk_opera_xxport.la libkaddrbk_pab_xxport.la $(gnokii_MODULE)
 
 AM_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
 
@@ -52,4 +56,4 @@ service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop \
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc \
           bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc \
-          gnokii_xxportui.rc opera_xxportui.rc pab_xxportui.rc
+          opera_xxportui.rc pab_xxportui.rc $(gnokii_RCFILE)
