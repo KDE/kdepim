@@ -3501,10 +3501,7 @@ together with details of the &kalarm; client application.</para>
 <answer>
 <para>&kalarm;'s application name is <application>kalarm</application>,
 and the <application>alarm daemon</application>'s application name is
-<application>kalarmd</application>. In addition, in &kde; versions
-previous to 3.1, there is a small application
-<application>kalarmautostart</application> whose function is to start
-&kalarm;'s system tray icon at login.</para>
+<application>kalarmd</application>.</para>
 </answer>
 </qandaentry>
 
