@@ -159,6 +159,19 @@ bool VCalFormat::save(const QString &fileName)
   }
 }
 
+bool VCalFormat::fromString( const QString &text )
+{
+  // TODO: Factor out VCalFormat::fromString()
+  
+  return false;
+}
+
+QString VCalFormat::toString()
+{
+  // TODO: Factor out VCalFormat::asString()
+
+  return QString::null;
+}
 
 VCalDrag *VCalFormat::createDrag(Event *selectedEv, QWidget *owner)
 {

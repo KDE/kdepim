@@ -36,6 +36,7 @@
 #include <dcopclient.h>
 
 #include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
 
 #include "alarmguiiface_stub.h"
 #include "alarmapp.h"
@@ -230,7 +231,8 @@ void AlarmDaemon::registerApp(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, int notificationType,
                               bool displayCalendarName)
 {
-  kdDebug(5900) << "AlarmDaemon::registerApp(" << appName << ", " << appTitle << ")\n";
+  kdDebug(5900) << "AlarmDaemon::registerApp(" << appName << ", " << appTitle << ", "
+                <<  dcopObject << ", " << notificationType << ")" << endl;
   if (!appName.isEmpty())
   {
     if (KStandardDirs::findExe(appName) == QString::null)
@@ -398,13 +400,14 @@ void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& al
  * Reply = false if the event should be held pending until the client
  *         application can be started.
  */
-bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eventID)
+bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
 {
   kdDebug(5900) << "AlarmDaemon::notifyEvent(" << eventID << ")\n";
   if (calendar)
   {
     ClientInfo client = getClientInfo(calendar->appName());
-kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->appName()<<endl;
+    kdDebug(5900) << "Notification type=" << client.notificationType << ": "
+                  << calendar->appName() << endl;
     if (!client.isValid())
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): unknown client" << endl;
     else
@@ -422,6 +425,26 @@ kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->ap
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
         return false;
       }
+
+      if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
+        Event *event = calendar->getEvent( eventID );
+        if (!event) return false;
+        
+        kdDebug() << "--- DCOP send: handleEvent(): " << event->summary() << endl;
+
+        CalendarLocal cal;
+        cal.addEvent( new Event( *event ) );
+        
+        ICalFormat format( &cal );
+        
+        AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
+        stub.handleEvent( format.toString() );
+        if ( !stub.ok() ) {
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
+        }
+        return true;
+      }
+
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
       {
         // The client application is not running
@@ -435,7 +458,8 @@ kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->ap
         QString execStr = locate("exe", calendar->appName());
         if (execStr.isEmpty())
         {
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found\n";
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): '"
+                        << calendar->appName() << "' not found" << endl;
           return true;
         }
         if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
@@ -446,11 +470,12 @@ kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->ap
           execStr += " --calendarURL ";
           execStr += calendar->urlString();
           system(QFile::encodeName(execStr));
-          kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line\n";
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
           return true;
         }
         system(QFile::encodeName(execStr));
-        kdDebug(5900) << "AlarmDaemon::notifyEvent(): started " << QFile::encodeName(execStr) << endl;
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
+                      << QFile::encodeName(execStr) << endl;
       }
       
       AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
@@ -466,11 +491,12 @@ kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->ap
 /* Notify the specified client of any pending alarms */
 void AlarmDaemon::notifyPendingEvents(const QCString& appname)
 {
-  kdDebug(5900) << "AlarmDaemon::notifyPendingEvents(" << appname << ")\n";
+  kdDebug(5900) << "AlarmDaemon::notifyPendingEvents(" << appname
+                << ")" << endl;
   for (ADCalendarBase* cal = mCalendars.first(); cal; cal = mCalendars.next())
   {
-    if (cal->appName() == appname
-    &&  cal->actionType() == ADCalendar::KALARM)
+    if (cal->appName() == appname &&
+        cal->actionType() == ADCalendar::KALARM)
     {
       QString eventID;
       while (cal->getEventPending(eventID))

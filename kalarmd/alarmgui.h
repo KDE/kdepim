@@ -81,6 +81,7 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
                                         const QCString& appName);
     void              handleEvent(const QString& calendarURL,
                                   const QString& eventID);
+    void              handleEvent( const QString & ) {}
 
   private:
     void              checkDefaultClient();

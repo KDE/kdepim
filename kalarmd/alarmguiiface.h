@@ -35,6 +35,7 @@ class AlarmGuiIface : virtual public DCOPObject
                                     const QCString& appName) = 0;
     virtual ASYNC handleEvent(const QString& calendarURL,
                               const QString& eventID) = 0;
+    virtual ASYNC handleEvent( const QString &iCalendarString ) = 0;
 };
 
 #endif

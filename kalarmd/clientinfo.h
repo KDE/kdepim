@@ -41,7 +41,8 @@ struct ClientInfo
     {
       NO_START_NOTIFY     = 0,  // don't start client if it isn't running
       DCOP_NOTIFY         = 1,  // start client and use DCOP to notify about events
-      COMMAND_LINE_NOTIFY = 2   // start client and use command line arguments to notify about events
+      COMMAND_LINE_NOTIFY = 2,  // start client and use command line arguments to notify about events
+      DCOP_SIMPLE_NOTIFY  = 3   // Use simple DCOP call to notify about events
     };
     ClientInfo() : mValid( false ) { }
     ClientInfo(const QCString &appName, const QString &title,

@@ -103,7 +103,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        checkAlarms(const QCString& appName);
     void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
     void        notifyPendingEvents(const QCString& appname);
-    bool        notifyEvent(const ADCalendarBase*, const QString& eventID);
+    bool        notifyEvent(ADCalendarBase*, const QString& eventID);
     void        notifyGuiCalStatus(const ADCalendarBase*);
     void        notifyGui(AlarmGuiChangeType, const QString& calendarURL = QString::null);
     void        notifyGui(AlarmGuiChangeType, const QString& calendarURL, const QCString &appname);

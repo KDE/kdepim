@@ -55,6 +55,15 @@ class VCalFormat : public CalFormat {
      */
     bool save(const QString &fileName);
   
+    /**
+      Parse string and populate calendar with that information.
+    */
+    bool fromString( const QString & );  
+    /**
+      Return calendar information as string.
+    */
+    QString toString();
+
     /** create an object to be used with the Xdnd Drag And Drop protocol. */
     VCalDrag *createDrag(Event *selectedEv, QWidget *owner);
     /** create an object to be used with the Xdnd Drag And Drop protocol. */

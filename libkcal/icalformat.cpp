@@ -76,6 +76,38 @@ bool ICalFormat::load(const QString &fileName)
   QString text = ts.read();
   file.close();
 
+  return fromString( text );
+}
+
+
+bool ICalFormat::save(const QString &fileName)
+{
+  kdDebug(5800) << "ICalFormat::save(): " << fileName << endl;
+
+  clearException();
+
+  QString text = toString();
+
+  if ( text.isNull() ) return false;
+
+  // TODO: write backup file
+
+  QFile file( fileName );
+  if (!file.open( IO_WriteOnly ) ) {
+    setException(new ErrorFormat(ErrorFormat::SaveError,
+                 i18n("Could not open file '%1'").arg(fileName)));
+    return false;    
+  }
+  QTextStream ts( &file );
+  ts.setEncoding(QTextStream::UnicodeUTF8);
+  ts << text;
+  file.close();
+
+  return true;
+}
+
+bool ICalFormat::fromString( const QString &text )
+{
   // Get first VCALENDAR component.
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
@@ -104,13 +136,8 @@ bool ICalFormat::load(const QString &fileName)
   return true;
 }
 
-
-bool ICalFormat::save(const QString &fileName)
+QString ICalFormat::toString()
 {
-  kdDebug(5800) << "ICalFormat::save(): " << fileName << endl;
-
-  clearException();
-
   icalcomponent *calendar = mImpl->createCalendarComponent();
   
   icalcomponent *component;
@@ -139,27 +166,15 @@ bool ICalFormat::save(const QString &fileName)
     icalcomponent_add_component(calendar,component);
   }
 
-  // TODO: write backup file
-
-  QFile file( fileName );
-  if (!file.open( IO_WriteOnly ) ) {
-    setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("Could not open file '%1'").arg(fileName)));
-    return false;    
-  }
-  QTextStream ts( &file );
-  ts.setEncoding(QTextStream::UnicodeUTF8);
   const char *text = icalcomponent_as_ical_string( calendar );
+
   if (!text) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("libical error")));
-    file.close();
-    return false;
+    return QString::null;
   }
-  ts << QString::fromLocal8Bit(text);
-  file.close();
 
-  return true;
+  return QString::fromLocal8Bit( text );  
 }
 
 // Disabled until iCalendar drag and drop is implemented

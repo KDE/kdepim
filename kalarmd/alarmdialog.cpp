@@ -64,37 +64,17 @@ AlarmDialog::~AlarmDialog()
 {
 }
 
-void AlarmDialog::appendEvent(const Calendar* calendar, Event *event)
+void AlarmDialog::appendEvent(Event *event)
 {
   mEventViewer->appendEvent(event);
-  mEvents.append(new EventData(calendar, event));
+  mEvents.append(event);
 }
 
-int AlarmDialog::clearEvents(const Calendar* calendar)
+void AlarmDialog::clearEvents()
 {
-  int remaining = 0;
   mEventViewer->clearEvents();
 
-  if (calendar)
-  {
-    // Remove all events belonging to the specified calendar,
-    // and redisplay remaining events in other calendars
-    for (EventData* evdata = mEvents.first();  evdata;  )
-    {
-      if (evdata->calendar == calendar) {
-        mEvents.remove();
-        evdata = mEvents.current();
-      } else {
-        mEventViewer->appendEvent(evdata->event);
-        evdata = mEvents.next();
-        ++remaining;
-      }
-    }
-  }
-  else {
-    mEvents.clear();
-  }
-  return remaining;
+  mEvents.clear();
 }
 
 void AlarmDialog::slotOk()
@@ -111,12 +91,11 @@ void AlarmDialog::slotUser1()
 
 void AlarmDialog::eventNotification()
 {
-  EventData *evdata;
-
-  for (EventData *evdata = mEvents.first();  evdata;  evdata = mEvents.next()) {
+  Event *ev;
+  for (ev = mEvents.first(); ev; ev = mEvents.next()) {
+    QPtrList<Alarm> alarms = ev->alarms();
     const Alarm* alarm;
-    for (QPtrListIterator<Alarm> it(evdata->event->alarms());
-         (alarm = it.current()) != 0;  ++it) {
+    for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
 // TODO: Check whether this should be done for all multiple alarms
       if (!alarm->programFile().isEmpty()) {
         KProcess proc;

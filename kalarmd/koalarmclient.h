@@ -1,6 +1,8 @@
 /*
+    KOrganizer Alarm Daemon Client.
+
     This file is part of KOrganizer.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 Cornelius Schumacher
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,44 +18,40 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#ifndef KOEVENTVIEWER_H
-#define KOEVENTVIEWER_H
+#ifndef KOALARMCLIENT_H
+#define KOALARMCLIENT_H
 // $Id$
-//
-// Viewer widget for events.
-//
 
-#include <qtextview.h>
+#include <qtimer.h>
 
-#include <libkcal/event.h>
+#include "alarmguiiface.h"
 
-using namespace KCal;
+class AlarmDialog;
+class AlarmDockWindow;
 
-class KOEventViewer : public QTextView {
+class KOAlarmClient : public QObject, virtual public AlarmGuiIface
+{
     Q_OBJECT
   public:
-    KOEventViewer(QWidget *parent=0,const char *name=0);
-    virtual ~KOEventViewer();
+    KOAlarmClient( QObject *parent = 0, const char *name = 0 );
+    virtual ~KOAlarmClient();
 
-    void setEvent(Event *event);
-    void setTodo(Todo *event);
-    
-    void appendEvent(Event *event);
-    void appendTodo(Todo *event);
-    
-    void clearEvents(bool now=false);
-    
-  protected:
-    void addTag(const QString & tag,const QString & text);
+  public slots:
+    void suspend(int minutes);
 
-    void formatCategories(Incidence *event);
-    void formatAttendees(Incidence *event);
-    void formatReadOnly(Incidence *event);
+  private slots:
+    void showAlarmDialog();
 
   private:
-    QTextView *mEventTextView;
+    // DCOP interface
+    void alarmDaemonUpdate( int, const QString &, const QCString & ) {}
+    void handleEvent( const QString &, const QString & ) {}
+    void handleEvent( const QString &iCalendarString );
 
-    QString mText;
+  private:
+    AlarmDockWindow *mDocker;  // the panel icon
+    AlarmDialog *mAlarmDialog;
+    QTimer mSuspendTimer;
 };
 
 #endif

@@ -40,6 +40,7 @@ void ClientInfo::setNotificationType(int type)
   switch (type)
   {
     case DCOP_NOTIFY:
+    case DCOP_SIMPLE_NOTIFY:
     case COMMAND_LINE_NOTIFY:
       notificationType = (ClientInfo::NotificationType)type;
       break;

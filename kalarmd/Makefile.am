@@ -12,7 +12,8 @@ dummy.cpp:
 	touch dummy.cpp
 
 
-bin_PROGRAMS = kalarmd kalarmdgui
+bin_PROGRAMS = kalarmd korgac
+#bin_PROGRAMS = kalarmd kalarmdgui korgac
 
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
@@ -21,13 +22,20 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
         adconfigdatarw.cpp \
         alarmdaemoniface.skel
 
-kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
-kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
-	dockwindow.cpp \
-	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp \
-        clientinfo.cpp \
-        adcalendarbase.cpp adcalendar_gui.cpp \
+#kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+#kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
+#kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
+#	dockwindow.cpp \
+#	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp \
+#        clientinfo.cpp \
+#        adcalendarbase.cpp adcalendar_gui.cpp \
+#        alarmguiiface.skel
+
+korgac_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+korgac_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
+korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
+	alarmdockwindow.cpp \
+	koeventviewer.cpp koalarmclient.cpp \
         alarmguiiface.skel
 
 

@@ -35,24 +35,17 @@ using namespace KCal;
 class KOEventViewer;
 class QSpinBox;
 
-struct EventData
-{
-    EventData(const Calendar* cal, Event* ev)  : calendar(cal), event(ev) { }
-    const Calendar* calendar;
-    Event*          event;
-};
-
 class AlarmDialog : public KDialogBase {
     Q_OBJECT
   public:
     AlarmDialog(QWidget *parent=0L, const char *name=0L);
     virtual ~AlarmDialog();
 
-    void appendEvent(const Calendar*, Event *event);
+    void appendEvent(Event *event);
+
+    void clearEvents();
 
     void eventNotification();
-
-    int  clearEvents(const Calendar* = 0L);
 
   public slots:
     void slotOk();
@@ -64,7 +57,7 @@ class AlarmDialog : public KDialogBase {
   private:
     KOEventViewer *mEventViewer;
 
-    QPtrList<EventData> mEvents;
+    QPtrList<Event> mEvents;
 
     QSpinBox *mSuspendSpin;
 };
