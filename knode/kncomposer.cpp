@@ -1745,8 +1745,8 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   mSpellChecker = new KDictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
                                        /*spellColor*/ config->readColorEntry("NewMessage", &c),
                                        /*colorQuoting*/ true, col1, col2, col3, col4);
-  connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)),
-           SLOT(addSuggestion(const QString&, const QStringList&, unsigned int)) );
+  connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)), e_dit,
+           SLOT(slotAddSuggestion(const QString&, const QStringList&, unsigned int)) );
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
