@@ -30,6 +30,7 @@ class IncidenceBase;
 class Event;
 class Calendar;
 class ICalFormat;
+class FreeBusyCache;
 
 /**
   This class provides an encapsulation of a scheduling message. It associates an
@@ -153,6 +154,15 @@ class Scheduler
       Returns the directory where the free-busy information is stored.
     */
     virtual QString freeBusyDir() = 0;
+
+    /**
+      Set free/busy cache used to store free/busy information.
+    */
+    void setFreeBusyCache( FreeBusyCache * );
+    /**
+      Return free/busy cache.
+    */
+    FreeBusyCache *freeBusyCache() const;
 
   protected:
     bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status,

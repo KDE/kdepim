@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -31,6 +32,7 @@
 #include "freebusy.h"
 #include "icalformat.h"
 #include "calendar.h"
+#include "freebusycache.h"
 
 #include "scheduler.h"
 
@@ -62,16 +64,37 @@ QString ScheduleMessage::statusName(ScheduleMessage::Status status)
   }
 }
 
+struct Scheduler::Private
+{
+  Private() : mFreeBusyCache( 0 ) {}
+
+  FreeBusyCache *mFreeBusyCache;
+};
+
 Scheduler::Scheduler(Calendar *calendar)
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
   mFormat->setTimeZone( calendar->timeZoneId(), !calendar->isLocalTime() );
+
+  d = new Private;
 }
 
 Scheduler::~Scheduler()
 {
+  delete d;
+
   delete mFormat;
+}
+
+void Scheduler::setFreeBusyCache( FreeBusyCache *c )
+{
+  d->mFreeBusyCache = c;
+}
+
+FreeBusyCache *Scheduler::freeBusyCache() const
+{
+  return d->mFreeBusyCache;
 }
 
 bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
@@ -326,6 +349,11 @@ bool Scheduler::acceptCounter(IncidenceBase *incidence,ScheduleMessage::Status /
 
 bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 {
+  if ( !d->mFreeBusyCache ) {
+    kdError() << "KCal::Scheduler: no FreeBusyCache." << endl;
+    return false;
+  }
+
   FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
 
   kdDebug() << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
@@ -339,39 +367,8 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
     from = attendee->email();
   }
 
-  QDir freeBusyDirectory(freeBusyDir());
-  if (!freeBusyDirectory.exists()) {
-    kdDebug() << "Directory " << freeBusyDir() << " does not exist!" << endl;
-    kdDebug() << "Creating directory: " << freeBusyDir() << endl;
-    
-    if(!freeBusyDirectory.mkdir(freeBusyDir(), true)) {
-      kdDebug() << "Could not create directory: " << freeBusyDir() << endl;
-      return false;
-    }
-  }
-
-  QString filename(freeBusyDir());
-  filename += "/";
-  filename += from;
-  filename += ".ifb";
-  QFile f(filename);
-
-  kdDebug() << "acceptFreeBusy: filename" << filename << endl;
-
-  freebusy->clearAttendees();
-  freebusy->setOrganizer(from);
-
-  QString messageText = mFormat->createScheduleMessage(freebusy, Publish);
-
-  if (!f.open(IO_ReadWrite)) {
-   kdDebug() << "acceptFreeBusy: Can't open:" << filename << " for writing" << endl;
-   return false;
-  }
-  QTextStream t(&f);
-  t << messageText;
-  f.close();
+  if ( !d->mFreeBusyCache->storeFreeBusy( freebusy, from ) ) return false;
 
   deleteTransaction(incidence);
   return true;
 }
-
