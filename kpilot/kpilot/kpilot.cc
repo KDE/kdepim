@@ -234,7 +234,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 		fDaemonWasRunning = true;
 	}
 
-	if (KApplication::startServiceByDesktopName(
+	if (!fDaemonWasRunning && KApplication::startServiceByDesktopName(
 		"kpilotdaemon",
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
 #if (KDE_VERSION >= 220)
@@ -856,6 +856,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.71  2002/01/26 15:00:01  adridg
+// An icon for the address viewer
+//
 // Revision 1.70  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
