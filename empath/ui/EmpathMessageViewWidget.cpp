@@ -30,6 +30,7 @@
 #include "EmpathMessageViewWidget.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathUtilities.h"
+#include "Empath.h"
 	
 EmpathMessageViewWidget::EmpathMessageViewWidget(
 		const EmpathURL & url,
@@ -125,7 +126,8 @@ EmpathMessageViewWidget::s_docChanged()
 {
 	// Hide scrollbars if they're not necessary
 
-	if (messageWidget_->docHeight() > messageWidget_->height()) {
+	if (messageWidget_->docHeight() > messageWidget_->height() ||
+		verticalScrollBar_->value() != 0) {
 		verticalScrollBar_->show();
 		verticalScrollBar_->setFixedWidth(scrollbarSize_);
 	} else {
@@ -133,7 +135,8 @@ EmpathMessageViewWidget::s_docChanged()
 		verticalScrollBar_->setFixedWidth(0);
 	}
 	
-	if (messageWidget_->docWidth() > messageWidget_->width()) {
+	if (messageWidget_->docWidth() > messageWidget_->width() ||
+		horizontalScrollBar_->value() != 0) {
 		horizontalScrollBar_->show();
 		horizontalScrollBar_->setFixedHeight(scrollbarSize_);
 	} else {
@@ -179,16 +182,16 @@ EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
 	empathDebug("URL \" " + QString(url) + "\" clicked with button " +
 			QString().setNum(button));
 
-	QString fixedURL = url;
-	fixedURL.stripWhiteSpace();
+	QString fixedURL(url);
+
+	fixedURL = fixedURL.stripWhiteSpace();
 
 	if (fixedURL.left(7) == "mailto:") {
 		
 		fixedURL = fixedURL.right(fixedURL.length() - 7);
 
 		if (button == 1) {
-			EmpathComposeWindow * ncw = new EmpathComposeWindow(ComposeNormal);
-			ncw->show();
+			empath->s_compose();
 		}
 	
 	} else {

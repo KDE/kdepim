@@ -21,188 +21,135 @@
 #ifndef EMPATHCONFIG_H
 #define EMPATHCONFIG_H
 
-// Groups
+#include <qstring.h>
 
-// Stuff that is not set by the user
-#define GROUP_GENERAL			"General"
+class EmpathConfig
+{
+	public:
+		static const QString		GROUP_GENERAL;
+		static const QString		GROUP_MAILBOX;
+		static const QString		GROUP_FILTER;
+		static const QString		GROUP_ACTION;
+		static const QString		GROUP_EXPR;
+		static const QString		GROUP_DISPLAY;
+		static const QString		GROUP_COMPOSE;
+		static const QString		GROUP_IDENTITY;
+		static const QString		GROUP_SENDING;
+		static const QString		GROUP_ACCOUNT;
 
-// Not a real group - we append a number to make a canonical group name
-// for each mailbox
-#define GROUP_MAILBOX			"Mailbox_"
+		static const QString		KEY_MAIN_WINDOW_TOOLBAR_POSITION;
+		static const QString		KEY_COMPOSE_WINDOW_TOOLBAR_POSITION;
+		static const QString		KEY_NUM_MAILBOXES;
+		static const QString		KEY_TIP_OF_THE_DAY_AT_STARTUP;
+		static const QString		KEY_MESSAGE_LIST_SIZE_COLUMN;
+		static const QString		KEY_MESSAGE_LIST_POS_COLUMN;
+		static const QString		KEY_MAILBOX_TYPE;
+		static const QString		KEY_MAILBOX_NAME;
+		static const QString		KEY_MAILBOX_LIST;
+		static const QString		KEY_FOLDER_LIST;
+		static const QString		KEY_VARIABLE_FONT;
+		static const QString		KEY_FIXED_FONT;
+		static const QString		KEY_QUOTED_FONT;
+		static const QString		KEY_UNDERLINE_LINKS;
+		static const QString		KEY_FONT_STYLE;
+		static const QString		KEY_BACKGROUND_COLOUR;
+		static const QString		KEY_TEXT_COLOUR;
+		static const QString		KEY_LINK_COLOUR;
+		static const QString		KEY_VISITED_LINK_COLOUR;
+		static const QString		KEY_USE_DEFAULT_FONTS;
+		static const QString		KEY_USE_DEFAULT_COLOURS;
+		static const QString		KEY_ICON_SET;
+		static const QString		KEY_NAME;
+		static const QString		KEY_EMAIL;
+		static const QString		KEY_REPLY_TO;
+		static const QString		KEY_ORGANISATION;
+		static const QString		KEY_SIG_PATH;
+		static const QString		KEY_PHRASE_REPLY_SENDER;
+		static const QString		KEY_PHRASE_REPLY_ALL;
+		static const QString		KEY_PHRASE_FORWARD;
+		static const QString		KEY_AUTO_QUOTE;
+		static const QString		KEY_ADD_SIG;
+		static const QString		KEY_ADD_DIG_SIG;
+		static const QString		KEY_WRAP_LINES;
+		static const QString		KEY_WRAP_COLUMN;
+		static const QString		KEY_CC_ME;
+		static const QString		KEY_CC_OTHER;
+		static const QString		KEY_CC_OTHER_ADDRESS;
+		static const QString		KEY_COPY_FOLDER;
+		static const QString		KEY_COPY_FOLDER_NAME;
+		static const QString		KEY_SEND_POLICY;
+		static const QString		KEY_USE_EXTERNAL_EDITOR;
+		static const QString		KEY_EXTERNAL_EDITOR;
+		static const QString		KEY_ACCOUNT_TYPE;
+		static const QString		KEY_SERVER_ADDRESS;
+		static const QString		KEY_SERVER_PORT;
+		static const QString		KEY_SERVER_UNAME;
+		static const QString		KEY_SERVER_PASSWORD;
+		static const QString		KEY_STAR_PASSWORD;
+		static const QString		KEY_CHECK_MAIL;
+		static const QString		KEY_CHECK_MAIL_INTERVAL;
+		static const QString		KEY_INTERNAL_MAIL_FILE;
+		static const QString		KEY_OUTGOING_SERVER_TYPE;
+		static const QString		KEY_SENDMAIL_LOCATION;
+		static const QString		KEY_QMAIL_LOCATION;
+		static const QString		KEY_SMTP_SERVER_LOCATION;
+		static const QString		KEY_SMTP_SERVER_PORT;
+		static const QString		KEY_QMTP_SERVER_LOCATION;
+		static const QString		KEY_QMTP_SERVER_PORT;
+		static const QString		KEY_LOCAL_MAILBOX_PATH;
+		static const QString		KEY_LOCAL_CHECK_FOR_NEW_MAIL;
+		static const QString		KEY_LOCAL_MAIL_CHECK_INTERVAL;
+		static const QString		KEY_LOCAL_AUTO_GET_NEW_MAIL;
+		static const QString		KEY_LOCAL_SAVE_ALL_ADDRESSES;
+		static const QString		KEY_LOCAL_NOTIFY;
+		static const QString		KEY_POP3_SERVER_ADDRESS;
+		static const QString		KEY_POP3_SERVER_PORT;
+		static const QString		KEY_POP3_USERNAME;
+		static const QString		KEY_POP3_PASSWORD;
+		static const QString		KEY_POP3_APOP;
+		static const QString		KEY_POP3_SAVE_POLICY;
+		static const QString		KEY_POP3_LOGGING_POLICY;
+		static const QString		KEY_POP3_LOG_FILE_PATH;
+		static const QString		KEY_POP3_LOG_FILE_DISPOSAL_POLICY;
+		static const QString		KEY_POP3_MAX_LOG_FILE_SIZE;
+		static const QString		KEY_POP3_MESSAGE_SIZE_THRESHOLD;
+		static const QString		KEY_POP3_LARGE_MESSAGE_POLICY;
+		static const QString		KEY_POP3_CHECK_FOR_NEW_MAIL;
+		static const QString		KEY_POP3_MAIL_CHECK_INTERVAL;
+		static const QString		KEY_POP3_DELETE_FROM_SERVER;
+		static const QString		KEY_POP3_AUTO_GET_NEW_MAIL;
+		static const QString		KEY_POP3_SAVE_ALL_ADDRESSES;
+		static const QString		KEY_POP3_NOTIFY;
+		static const QString		KEY_POP3_RETRIEVE_IF_HAVE;
+		static const QString		KEY_NUMBER_OF_FILTERS;
+		static const QString		KEY_NUM_MATCH_EXPRS_FOR_FILTER;
+		static const QString		KEY_MATCH_EXPR_TYPE;
+		static const QString		KEY_MATCH_SIZE;
+		static const QString		KEY_MATCH_EXPR;
+		static const QString		KEY_MATCH_HEADER;
+		static const QString		KEY_FILTER_EVENT_HANDLER_TYPE;
+		static const QString		KEY_FILTER_EVENT_HANDLER_FOLDER;
+		static const QString		KEY_FILTER_EVENT_HANDLER_ADDRESS;
+		static const QString		KEY_FILTER_FOLDER;
 
-// Similar
-#define GROUP_FILTER			"Filter_"
-#define GROUP_ACTION			"Action_"
-#define GROUP_EXPR				"Expr_"
-
-// User defined stuff - from the Settings dialog
-#define GROUP_DISPLAY			"Display"
-#define GROUP_COMPOSE			"Compose"
-#define GROUP_IDENTITY			"Identity"
-#define GROUP_SENDING			"Sending"
-#define GROUP_ACCOUNT			"Account"
-
-// Keys
-
-// General
-#define KEY_MAIN_WINDOW_TOOLBAR_POS		"MainWindowToolbarPosition"
-#define KEY_COMPOSE_WINDOW_TOOLBAR_POS	"ComposeWindowToolbarPosition"
-#define KEY_NUM_MAILBOXES				"NumberOfMailboxes"
-#define KEY_TIP_OF_THE_DAY_AT_STARTUP	"TipOfTheDayAtStartup"
-
-// Message list
-#define KEY_MESSAGE_LIST_SIZE_COL		"MessageListSizeOfColumn"
-
-#define KEY_MESSAGE_LIST_POS_COL		"MessageListPositionOfColumn"
-
-
-// Mailbox
-#define	KEY_MAILBOX_TYPE		"MailboxType"
-#define	KEY_MAILBOX_NAME		"MailboxName"
-#define KEY_MAILBOX_LIST		"MailboxList"
-#define KEY_FOLDER_LIST			"FolderList"
-
-// Display
-
-#define KEY_VARIABLE_FONT		"VariableWidthFont"
-#define KEY_FIXED_FONT			"FixedWidthFont"
-#define KEY_QUOTED_FONT			"QuotedFont"
-
-#define KEY_UNDERLINE_LINKS		"UnderlineLinks"
-
-#define KEY_FONT_STYLE			"FontStyle"
-
-#define KEY_BACKGROUND_COLOUR	"BackgroundColour"
-#define KEY_TEXT_COLOUR			"TextColour"
-#define KEY_LINK_COLOUR			"LinkColour"
-#define KEY_VISITED_LINK_COLOUR	"VisitedLinkColour"
-
-#define KEY_USE_DEFAULT_FONTS	"UseDefaultFonts"
-#define KEY_USE_DEFAULT_COLOURS	"UseDefaultColours"
-
-#define KEY_ICON_SET			"IconSet"
-
-// Identity
-
-#define KEY_NAME				"Name"
-#define KEY_EMAIL				"Email"
-#define KEY_REPLY_TO			"ReplyTo"
-#define KEY_ORGANISATION		"Organisation"
-#define KEY_SIG_PATH			"Signature"
-
-#define KEY_PHRASE_REPLY_SENDER	"PhraseReplySender"
-#define KEY_PHRASE_REPLY_ALL	"PhraseReplyAll"
-#define KEY_PHRASE_FORWARD		"PhraseForward"
-
-// Sending
-
-#define KEY_AUTO_QUOTE			"AutoQuoteOnReply"
-#define KEY_ADD_SIG				"AddSignature"
-#define KEY_ADD_DIG_SIG			"AddDigitalSignature"
-#define KEY_WRAP_LINES			"WrapLongLines"
-#define KEY_WRAP_COLUMN			"WrapColumn"
-
-#define KEY_CC_ME				"CCToMe"
-#define KEY_CC_OTHER			"CCToOther"
-#define KEY_CC_OTHER_ADDRESS	"CCOtherAddress"
-#define KEY_COPY_FOLDER			"CopyFolder"
-#define KEY_COPY_FOLDER_NAME	"CopyFolderName"
-
-#define KEY_SEND_POLICY			"SendWhen"
-
-#define KEY_USE_EXTERNAL_EDITOR	"UseExternalEditor"
-#define KEY_EXTERNAL_EDITOR		"ExternalEditor"
-
-#define KEY_ACCOUNT_TYPE		"AccountType"
-#define KEY_SERVER_ADDRESS		"ServerAddress"
-#define KEY_SERVER_PORT			"ServerPort"
-#define KEY_SERVER_UNAME		"ServerUsername"
-#define KEY_SERVER_PASSWORD		"ServerPassword"
-#define KEY_STAR_PASSWORD		"StarPassword"
-#define KEY_CHECK_MAIL			"CheckMailAtIntervals"
-#define KEY_CHECK_MAIL_INTERVAL	"CheckMailInterval"
-
-#define KEY_INTERNAL_MAIL_FILE	"EmpathMaildir"
-
-// Outgoing server
-
-#define KEY_OUTGOING_SERVER_TYPE	"OutgoingServerType"
-#define KEY_SENDMAIL_LOCATION		"SendmailLocation"
-#define KEY_QMAIL_LOCATION			"QmailLocation"
-#define KEY_SMTP_SERVER_LOCATION	"SMTPServerLocation"
-#define KEY_SMTP_SERVER_PORT		"SMTPServerPort"
-#define KEY_QMTP_SERVER_LOCATION	"QMTPServerLocation"
-#define KEY_QMTP_SERVER_PORT		"QMTPServerPort"
-
-// Local
-
-#define KEY_LOCAL_MAILBOX_PATH				"MailboxPath"
-#define KEY_LOCAL_CHECK_FOR_NEW_MAIL		"CheckForNewMail"
-#define KEY_LOCAL_MAIL_CHECK_INTERVAL		"MailCheckInterval"
-#define KEY_LOCAL_AUTO_GET_NEW_MAIL			"AutoGetNewMail"
-#define KEY_LOCAL_SAVE_ALL_ADDRESSES		"SaveAllAddresses"
-#define KEY_LOCAL_NOTIFY					"Notify"
-
-// POP3
-
-#define KEY_POP3_SERVER_ADDRESS				"ServerAddress"
-#define KEY_POP3_SERVER_PORT				"ServerPort"
-#define KEY_POP3_USERNAME					"Username"
-#define KEY_POP3_PASSWORD					"Password"
-#define KEY_POP3_APOP						"UseAPOP"
-#define KEY_POP3_SAVE_POLICY				"SavePolicy"
-#define KEY_POP3_LOGGING_POLICY				"LoggingPolicy"
-#define KEY_POP3_LOG_FILE_PATH				"LogFilePath"
-#define KEY_POP3_LOG_FILE_DISPOSAL_POLICY	"LogFileDisposalPolicy"
-#define KEY_POP3_MAX_LOG_FILE_SIZE			"MaxLogFileSize"
-#define KEY_POP3_MESSAGE_SIZE_THRESHOLD		"MessageSizeThreshold"
-#define KEY_POP3_LARGE_MESSAGE_POLICY		"LargeMessagePolicy"
-#define KEY_POP3_CHECK_FOR_NEW_MAIL			"CheckForNewMail"
-#define KEY_POP3_MAIL_CHECK_INTERVAL		"MailCheckInterval"
-#define KEY_POP3_DELETE_FROM_SERVER			"DeleteFromServer"
-#define KEY_POP3_AUTO_GET_NEW_MAIL			"AutoGetNewMail"
-#define KEY_POP3_SAVE_ALL_ADDRESSES			"SaveAllAddresses"
-#define KEY_POP3_NOTIFY						"Notify"
-#define KEY_POP3_RETRIEVE_IF_HAVE			"RetrieveIfHave"
-
-#define KEY_NUMBER_OF_FILTERS				"NumberOfFilters"
-#define KEY_NUM_MATCH_EXPRS_FOR_FILTER		"NumberOfMatchExpressions"
-#define KEY_MATCH_EXPR_TYPE					"MatchExpressionType"
-#define KEY_MATCH_SIZE						"MatchSize"
-#define KEY_MATCH_EXPR						"MatchExpr"
-#define KEY_MATCH_HEADER					"MatchHeaderExpr"
-#define KEY_FILTER_EVENT_HANDLER_TYPE		"FilterEventHandlerType"
-#define KEY_FILTER_EVENT_HANDLER_FOLDER		"FilterEventHandlerFolder"
-#define KEY_FILTER_EVENT_HANDLER_ADDRESS	"FilterEventHandlerAddress"
-#define KEY_FILTER_FOLDER					"FilterSourceFolder"
-
-// Defaults
-
-#define DEFAULT_UNDERLINE_LINKS		true
-#define DEFAULT_FIXED_OR_VARIABLE	"fixed"
-
-#define DEFAULT_SIG_FILE	"~/.signature"
-
-#define	DEFAULT_PHRASE_REPLY_TO_SENDER	"On %d, you wrote:"
-#define	DEFAULT_PHRASE_REPLY_TO_ALL		"On %d, %n wrote:"
-#define	DEFAULT_PHRASE_FORWARD			"Forwarded message from %n"
-
-#define DEFAULT_AUTO_QUOTE_WHEN_REPLY	true
-#define DEFAULT_APPEND_SIG				true
-#define DEFAULT_APPEND_DIG_SIG			false
-#define DEFAULT_WRAP_COLUMN				80
-
-#define DEFAULT_CC_ME		false
-#define DEFAULT_CC_OTHER	false
-#define DEFAULT_COPY_FOLDER	"outbox"
-
-#define DEFAULT_SEND_NOW	true
-
-#define	DEFAULT_OUT_SERVER_PORT		25
-
-#define DEFAULT_CHECK_FOR_NEW_MAIL	true
-#define DEFAULT_CHECK_NEW_INTERVAL	10
-
-#define DEFAULT_MAIL_SAVE_FOLDER	"~/.empath"
+		static const bool			DEFAULT_UNDERLINE_LINKS;
+		static const QString		DEFAULT_FIXED_OR_VARIABLE;
+		static const QString		DEFAULT_SIG_FILE;
+		static const QString		DEFAULT_PHRASE_REPLY_TO_SEND;
+		static const QString		DEFAULT_PHRASE_REPLY_TO_ALL;
+		static const QString		DEFAULT_PHRASE_FORWARD;
+		static const bool			DEFAULT_AUTO_QUOTE_WHEN_REPLY;
+		static const bool			DEFAULT_APPEND_SIG;
+		static const bool			DEFAULT_APPEND_DIG_SIG;
+		static const unsigned int 	DEFAULT_WRAP_COLUMN;
+		static const bool			DEFAULT_CC_ME;
+		static const bool			DEFAULT_CC_OTHER;
+		static const QString		DEFAULT_COPY_FOLDER;
+		static const bool			DEFAULT_SEND_NOW;
+		static const unsigned int 	DEFAULT_OUT_SERVER_PORT;
+		static const bool			DEFAULT_CHECK_FOR_NEW_MAIL;
+		static const unsigned int 	DEFAULT_CHECK_NEW_INTERVAL;
+		static const QString		DEFAULT_MAIL_SAVE_FOLDER;
+};
 
 #endif

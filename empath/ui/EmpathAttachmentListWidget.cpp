@@ -47,19 +47,19 @@ EmpathAttachmentListWidget::EmpathAttachmentListWidget(
 	lv_attachments_	= new QListView(this, "lv_attachments");
 	CHECK_PTR(lv_attachments_);
 
-	lv_attachments_->addColumn("");
+	lv_attachments_->addColumn(QString::null);
 	lv_attachments_->addColumn(i18n("Filename"));
 	lv_attachments_->addColumn(i18n("Type"));
 	lv_attachments_->addColumn(i18n("Encoding"));
 
 	KConfig * config = kapp->getConfig();
-	config->setGroup(GROUP_COMPOSE);
+	config->setGroup(EmpathConfig::GROUP_COMPOSE);
 
-	bool addSig = config->readBoolEntry(KEY_ADD_SIG);
-	QString sigPath = config->readEntry(KEY_SIG_PATH);
+	bool addSig = config->readBoolEntry(EmpathConfig::KEY_ADD_SIG);
+	QString sigPath = config->readEntry(EmpathConfig::KEY_SIG_PATH);
 	if (addSig && sigPath.length() != 0)
 		new QListViewItem(lv_attachments_,
-				"", baseName(sigPath), "Signature", "7bit");
+			QString::null, baseName(sigPath), "Signature", "7bit");
 	
 	setupToolbar();
 

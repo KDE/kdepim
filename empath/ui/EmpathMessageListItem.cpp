@@ -28,72 +28,40 @@
 
 EmpathMessageListItem::EmpathMessageListItem(
 		EmpathMessageListWidget * parent,
-		EmpathIndexRecord * msgDesc)
+		const EmpathIndexRecord & msgDesc)
 	:	
 		QListViewItem(parent),
-		msgDesc_(msgDesc)
+		id_			(msgDesc.id()),
+		messageID_	(msgDesc.messageID()),
+		parentID_	(msgDesc.parentID()),
+		subject_	(msgDesc.subject()),
+		sender_		(msgDesc.sender()),
+		date_		(msgDesc.date()),
+		status_		(msgDesc.status()),
+		size_		(msgDesc.size())
 {
 	empathDebug("ctor");
-	
-	setText(0, msgDesc_->subject());
-	setText(2, msgDesc_->niceDate(true)); // XXX HARDCODED true
-	
-	int sz = msgDesc_->size();
-	QString sizeStr;
-	
-	if (sz < 1024)
-		sizeStr.sprintf("%8i bytes", sz);
-	else if (sz < 1048576)
-		sizeStr.sprintf("%8.2f Kb", sz / 1024.0);
-	else
-		sizeStr.sprintf("%8.2f Mb", sz / 1048576.0);
-
-	setText(4, sizeStr);
-	
-	if (!msgDesc_->sender().phrase().isEmpty()) {
-		
-		QString s = msgDesc_->sender().phrase();
-		if (s.at(0) == '"') s.remove(0, 1);
-		if (s.at(s.length()) == '"') s.remove(s.length(), 1);
-		setText(1, s);
-		
-	} else
-		setText(1, msgDesc_->sender().asString());
+	niceDate_ = msgDesc.niceDate(true);
+	_init();
 }
 
 EmpathMessageListItem::EmpathMessageListItem(
 		EmpathMessageListItem * parent,
-		EmpathIndexRecord * msgDesc)
+		const EmpathIndexRecord & msgDesc)
 	:	
 		QListViewItem(parent),
-		msgDesc_(msgDesc)
+		id_			(msgDesc.id()),
+		messageID_	(msgDesc.messageID()),
+		parentID_	(msgDesc.parentID()),
+		subject_	(msgDesc.subject()),
+		sender_		(msgDesc.sender()),
+		date_		(msgDesc.date()),
+		status_		(msgDesc.status()),
+		size_		(msgDesc.size())
 {
 	empathDebug("ctor");
-	
-	setText(0, msgDesc_->subject());
-	setText(2, msgDesc_->niceDate(true)); // XXX HARDCODED true
-	
-	int sz = msgDesc_->size();
-	QString sizeStr;
-	
-	if (sz < 1024)
-		sizeStr.sprintf("%8i bytes", sz);
-	else if (sz < 1048576)
-		sizeStr.sprintf("%8.2f Kb", sz / 1024.0);
-	else
-		sizeStr.sprintf("%8.2f Mb", sz / 1048576.0);
-
-	setText(4, sizeStr);
-	
-	if (!msgDesc_->sender().phrase().isEmpty()) {
-		
-		QString s = msgDesc_->sender().phrase();
-		if (s.at(0) == '"') s.remove(0, 1);
-		if (s.at(s.length()) == '"') s.remove(s.length(), 1);
-		setText(1, s);
-		
-	} else
-		setText(1, msgDesc_->sender().asString());
+	niceDate_ = msgDesc.niceDate(true);
+	_init();
 }
 
 EmpathMessageListItem::~EmpathMessageListItem()
@@ -101,12 +69,34 @@ EmpathMessageListItem::~EmpathMessageListItem()
 	empathDebug("dtor");
 }
 
-	QString
-EmpathMessageListItem::size() const
-{
-	QString s;
-	s.setNum(msgDesc_->size());
-	return s;
+	void
+EmpathMessageListItem::_init()
+{	
+	setText(0, subject_);
+	setText(2, niceDate_);
+	
+	QString sizeStr;
+	
+	if (size_ < 1024)
+		sizeStr.sprintf("%8i bytes", size_);
+	else
+		if (size_ < 1048576)
+			sizeStr.sprintf("%8.2f Kb", size_ / 1024.0);
+	else
+		sizeStr.sprintf("%8.2f Mb", size_ / 1048576.0);
+
+	setText(4, sizeStr);
+	
+	if (sender_.phrase().isEmpty())
+		setText(1, sender_.asString());
+		
+	else {
+
+		QString s = sender_.phrase();
+		if (s.left(1)	== "\"") s.remove(0, 1);
+		if (s.right(1)	== "\"") s.remove(s.length(), 1);
+		setText(1, s);
+	}
 }
 
 	void
@@ -137,9 +127,9 @@ EmpathMessageListItem::key(int column, bool b) const
 			
 		case 2:
 			if (b)
-				s.sprintf("%016ul", msgDesc_->date().asUnixTime());
+				s.sprintf("%016ul", date_.asUnixTime());
 			else
-				s.sprintf("%016l", -msgDesc_->date().asUnixTime());
+				s.sprintf("%016l", -date_.asUnixTime());
 			break;
 			
 		case 3:
@@ -148,9 +138,9 @@ EmpathMessageListItem::key(int column, bool b) const
 		
 		case 4:
 			if (b)
-				s.sprintf("%08ul", msgDesc_->size());
+				s.sprintf("%08ul", size_);
 			else
-				s.sprintf("%08l", -msgDesc_->size());
+				s.sprintf("%08l", -size_);
 			break;
 			
 		default:

@@ -323,7 +323,7 @@ EmpathDisplaySettingsDialog::s_chooseVariableFont()
 {
 	QFont fnt = l_sampleVariable_->font();
 	fontDialog_->setFont(fnt);
-	if (fontDialog_->getFont(fnt) != 0)
+	if (fontDialog_->getFont(fnt) == QDialog::Accepted)
 		l_sampleVariable_->setFont(fnt);
 }
 
@@ -332,7 +332,7 @@ EmpathDisplaySettingsDialog::s_chooseFixedFont()
 {
 	QFont fnt = l_sampleFixed_->font();
 	fontDialog_->setFont(fnt);
-	if (fontDialog_->getFont(fnt) != 0)
+	if (fontDialog_->getFont(fnt) == QDialog::Accepted)
 		l_sampleFixed_->setFont(fnt);
 }
 
@@ -341,7 +341,7 @@ EmpathDisplaySettingsDialog::s_chooseQuotedFont()
 {
 	QFont fnt = l_sampleQuoted_->font();
 	fontDialog_->setFont(fnt);
-	if (fontDialog_->getFont(fnt) != 0)
+	if (fontDialog_->getFont(fnt) == QDialog::Accepted)
 		l_sampleQuoted_->setFont(fnt);
 }
 
@@ -370,21 +370,21 @@ EmpathDisplaySettingsDialog::s_useDefaultFonts(bool yn)
 EmpathDisplaySettingsDialog::saveData()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 #define CWE c->writeEntry
-	CWE( KEY_VARIABLE_FONT,			l_sampleVariable_->font()			);
-	CWE( KEY_FIXED_FONT,			l_sampleFixed_->font()				);
-	CWE( KEY_QUOTED_FONT,			l_sampleQuoted_->font()				);
-	CWE( KEY_UNDERLINE_LINKS,		cb_underlineLinks_->isChecked()		);
-	CWE( KEY_FONT_STYLE,
+	CWE( EmpathConfig::KEY_VARIABLE_FONT,			l_sampleVariable_->font()			);
+	CWE( EmpathConfig::KEY_FIXED_FONT,			l_sampleFixed_->font()				);
+	CWE( EmpathConfig::KEY_QUOTED_FONT,			l_sampleQuoted_->font()				);
+	CWE( EmpathConfig::KEY_UNDERLINE_LINKS,		cb_underlineLinks_->isChecked()		);
+	CWE( EmpathConfig::KEY_FONT_STYLE,
 		(unsigned long)(rb_messageFontFixed_->isChecked() ? Fixed : Variable));
-	CWE( KEY_USE_DEFAULT_FONTS,		cb_useDefaultFonts_->isChecked()	);
-	CWE( KEY_USE_DEFAULT_COLOURS,	cb_useDefaultColours_->isChecked()	);
-	CWE( KEY_BACKGROUND_COLOUR,		kcb_backgroundColour_->color()		);
-	CWE( KEY_TEXT_COLOUR,			kcb_textColour_->color()			);
-	CWE( KEY_LINK_COLOUR,			kcb_linkColour_->color()			);
-	CWE( KEY_VISITED_LINK_COLOUR,	kcb_visitedLinkColour_->color()		);
-	CWE( KEY_ICON_SET,				cb_iconSet_->currentText()			);
+	CWE( EmpathConfig::KEY_USE_DEFAULT_FONTS,		cb_useDefaultFonts_->isChecked()	);
+	CWE( EmpathConfig::KEY_USE_DEFAULT_COLOURS,	cb_useDefaultColours_->isChecked()	);
+	CWE( EmpathConfig::KEY_BACKGROUND_COLOUR,		kcb_backgroundColour_->color()		);
+	CWE( EmpathConfig::KEY_TEXT_COLOUR,			kcb_textColour_->color()			);
+	CWE( EmpathConfig::KEY_LINK_COLOUR,			kcb_linkColour_->color()			);
+	CWE( EmpathConfig::KEY_VISITED_LINK_COLOUR,	kcb_visitedLinkColour_->color()		);
+	CWE( EmpathConfig::KEY_ICON_SET,				cb_iconSet_->currentText()			);
 #undef CWE
 }
 
@@ -392,35 +392,35 @@ EmpathDisplaySettingsDialog::saveData()
 EmpathDisplaySettingsDialog::loadData()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QFont font; QColor col;
 
 	font = empathGeneralFont();
 	
 	l_sampleVariable_->setFont(
-		c->readFontEntry(KEY_VARIABLE_FONT, &font));
+		c->readFontEntry(EmpathConfig::KEY_VARIABLE_FONT, &font));
 	
 	font = empathFixedFont();
 	
 	l_sampleFixed_->setFont(
-		c->readFontEntry(KEY_FIXED_FONT, &font));
+		c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &font));
 	
 	l_sampleQuoted_->setFont(
-		c->readFontEntry(KEY_QUOTED_FONT, &font));
+		c->readFontEntry(EmpathConfig::KEY_QUOTED_FONT, &font));
 	
-	cb_underlineLinks_->setChecked(c->readBoolEntry(KEY_UNDERLINE_LINKS, true));
+	cb_underlineLinks_->setChecked(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
 	
 	rb_messageFontVariable_->setChecked(
-		((FontStyle)c->readNumEntry(KEY_FONT_STYLE, Fixed)) == Variable);
+		((FontStyle)c->readNumEntry(EmpathConfig::KEY_FONT_STYLE, Fixed)) == Variable);
 
 	rb_messageFontFixed_->setChecked(!rb_messageFontVariable_->isChecked());
 	
 	cb_useDefaultFonts_->setChecked(
-		c->readBoolEntry(KEY_USE_DEFAULT_FONTS, true));
+		c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_FONTS, true));
 	
 	cb_useDefaultColours_->setChecked(
-		c->readBoolEntry(KEY_USE_DEFAULT_COLOURS, true));
+		c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS, true));
 
 	s_useDefaultFonts(		cb_useDefaultFonts_->isChecked());
 	s_useDefaultColours(	cb_useDefaultColours_->isChecked());
@@ -428,22 +428,22 @@ EmpathDisplaySettingsDialog::loadData()
 	col = empathWindowColour();
 	
 	kcb_backgroundColour_->setColor(
-		c->readColorEntry(KEY_BACKGROUND_COLOUR, &col));
+		c->readColorEntry(EmpathConfig::KEY_BACKGROUND_COLOUR, &col));
 	
 	col = empathTextColour();
 	
 	kcb_textColour_->setColor(
-		c->readColorEntry(KEY_TEXT_COLOUR, &col));
+		c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR, &col));
 	
 	col = Qt::darkBlue;
 
 	kcb_linkColour_->setColor(
-		c->readColorEntry(KEY_LINK_COLOUR, &col));
+		c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR, &col));
 
 	col = Qt::darkCyan;
 	
 	kcb_visitedLinkColour_->setColor(
-		c->readColorEntry(KEY_VISITED_LINK_COLOUR, &col));
+		c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR, &col));
 	
 	// Fill in the icon set combo.
 	QDir d(empathDir() + "/pics/");
@@ -451,7 +451,7 @@ EmpathDisplaySettingsDialog::loadData()
 	d.setFilter(QDir::Dirs | QDir::Readable);
 	cb_iconSet_->clear();
 	
-	QString s = c->readEntry(KEY_ICON_SET, "standard");
+	QString s = c->readEntry(EmpathConfig::KEY_ICON_SET, "standard");
 	empathDebug("Saved icon set was \"" + s + "\"");
 
 	bool found = false;

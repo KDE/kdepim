@@ -21,145 +21,152 @@
 #ifndef RMM_ENUM_H
 #define RMM_ENUM_H
 
-#include <qstring.h>
+#include <qcstring.h>
 
-enum MessageStatus {
-	Read		= 1 << 0,
-	Marked		= 1 << 1,
-	Trashed		= 1 << 2,
-	Replied		= 1 << 3
+class RMM
+{
+	public:
+
+		enum MessageStatus {
+			Read		= 1 << 0,
+			Marked		= 1 << 1,
+			Trashed		= 1 << 2,
+			Replied		= 1 << 3
+		};
+
+		static const char * monthNames[];
+
+		static const char * headerNames[];
+
+		enum HeaderType {
+			HeaderApproved,
+			HeaderBcc,
+			HeaderCc,
+			HeaderComments,
+			HeaderContentDescription,
+			HeaderContentDisposition,
+			HeaderContentID,
+			HeaderContentMD5,
+			HeaderContentType,
+			HeaderControl,
+			HeaderContentTransferEncoding,
+			HeaderDate,
+			HeaderDistribution,
+			HeaderEncrypted,
+			HeaderExpires,
+			HeaderFollowupTo,
+			HeaderFrom,
+			HeaderInReplyTo,
+			HeaderKeywords,
+			HeaderLines,
+			HeaderMessageID,
+			HeaderMimeVersion,
+			HeaderNewsgroups,
+			HeaderOrganization,
+			HeaderPath,
+			HeaderReceived,
+			HeaderReferences,
+			HeaderReplyTo,
+			HeaderResentBcc,
+			HeaderResentCc,
+			HeaderResentDate,
+			HeaderResentFrom,
+			HeaderResentMessageID,
+			HeaderResentReplyTo,
+			HeaderResentSender,
+			HeaderResentTo,
+			HeaderReturnPath,
+			HeaderSender,
+			HeaderSubject,
+			HeaderSummary,
+			HeaderTo,
+			HeaderXref,
+			HeaderUnknown
+		};
+
+		enum HeaderDataType {
+			Address,
+			AddressList,
+			DateTime,
+			DispositionType,
+			Mailbox,
+			MailboxList,
+			Mechanism,
+			MessageID,
+			Text
+		};
+
+		static const HeaderDataType headerTypesTable[];
+
+		enum CteType {
+			CteType7bit,
+			CteType8bit,
+			CteTypeBinary,
+			CteTypeQuotedPrintable,
+			CteTypeBase64,
+			CteTypeXtension
+		};
+
+		enum MimeType {
+			MimeTypeNone,
+			MimeTypeUnknown,
+			MimeTypeText,
+			MimeTypeMultiPart,
+			MimeTypeMessage,
+			MimeTypeApplication,
+			MimeTypeImage,
+			MimeTypeAudio,
+			MimeTypeVideo,
+			MimeTypeModel
+		};
+
+		enum MimeSubType {
+			MimeSubTypeNone,
+			MimeSubTypeUnknown,
+			MimeSubTypePlain,
+			MimeSubTypeRichtext,
+			MimeSubTypeEnriched,
+			MimeSubTypeHTML,
+			MimeSubTypeMixed,
+			MimeSubTypeAlternative,
+			MimeSubTypeDigest,
+			MimeSubTypeParallel,
+			MimeSubTypeRFC822,
+			MimeSubTypePartial,
+			MimeSubTypeExternalBody,
+			MimeSubTypePostScript,
+			MimeSubTypeOctetStream,
+			MimeSubTypeJpeg,
+			MimeSubTypeGIF,
+			MimeSubTypeBasic,
+			MimeSubTypeMPEG,
+		};
+
+		enum DispType {
+			DispositionTypeInline,
+			DispositionTypeAttachment
+		};
+
+		enum DayOfWeek {
+			DayNone,
+			DayMon, DayTue, DayWed, DayThu, DayFri, DaySat, DaySun
+		};
+
+		// DayOfWeek strToDayOfWeek(const QCString & s);
+
+		enum Month {
+			MonthJan, MonthFeb, MonthMar, MonthApr, MonthMay, MonthJun,
+			MonthJul, MonthAug, MonthSep, MonthOct, MonthNov, MonthDec
+		};
+
+		static	Month		strToMonth(const QCString & s);
+
+		static	MimeType	mimeTypeStr2Enum(const QCString & s);
+		static	QCString	mimeTypeEnum2Str(MimeType m);
+		static	MimeSubType	mimeSubTypeStr2Enum(const QCString & s);
+		static	QCString	mimeSubTypeEnum2Str(MimeSubType t);
+		static	CteType		RCteStr2Enum(const QCString & s);
+		static 	QCString	cteTypeEnumToStr(CteType t);
 };
-
-extern char* headerNames[];
-
-enum HeaderType {
-	HeaderApproved,
-	HeaderBcc,
-	HeaderCc,
-	HeaderComments,
-	HeaderContentDescription,
-	HeaderContentDisposition,
-	HeaderContentID,
-	HeaderContentMD5,
-	HeaderContentType,
-	HeaderControl,
-	HeaderContentTransferEncoding,
-	HeaderDate,
-	HeaderDistribution,
-	HeaderEncrypted,
-	HeaderExpires,
-	HeaderFollowupTo,
-	HeaderFrom,
-	HeaderInReplyTo,
-	HeaderKeywords,
-	HeaderLines,
-	HeaderMessageID,
-	HeaderMimeVersion,
-	HeaderNewsgroups,
-	HeaderOrganization,
-	HeaderPath,
-	HeaderReceived,
-	HeaderReferences,
-	HeaderReplyTo,
-	HeaderResentBcc,
-	HeaderResentCc,
-	HeaderResentDate,
-	HeaderResentFrom,
-	HeaderResentMessageID,
-	HeaderResentReplyTo,
-	HeaderResentSender,
-	HeaderResentTo,
-	HeaderReturnPath,
-	HeaderSender,
-	HeaderSubject,
-	HeaderSummary,
-	HeaderTo,
-	HeaderXref,
-	HeaderUnknown
-};
-
-enum HeaderDataType {
-	Address,
-	AddressList,
-	DateTime,
-	DispositionType,
-	Mailbox,
-	MailboxList,
-	Mechanism,
-	MessageID,
-	Text
-};
-
-extern HeaderDataType headerTypesTable[];
-
-enum CteType {
-	CteType7bit,
-	CteType8bit,
-	CteTypeBinary,
-	CteTypeQuotedPrintable,
-	CteTypeBase64,
-	CteTypeXtension
-};
-
-enum MimeType {
-	MimeTypeNone,
-	MimeTypeUnknown,
-	MimeTypeText,
-	MimeTypeMultiPart,
-	MimeTypeMessage,
-	MimeTypeApplication,
-	MimeTypeImage,
-	MimeTypeAudio,
-	MimeTypeVideo,
-	MimeTypeModel
-};
-
-enum MimeSubType {
-	MimeSubTypeNone,
-	MimeSubTypeUnknown,
-	MimeSubTypePlain,
-	MimeSubTypeRichtext,
-	MimeSubTypeEnriched,
-	MimeSubTypeHTML,
-	MimeSubTypeMixed,
-	MimeSubTypeAlternative,
-	MimeSubTypeDigest,
-	MimeSubTypeParallel,
-	MimeSubTypeRFC822,
-	MimeSubTypePartial,
-	MimeSubTypeExternalBody,
-	MimeSubTypePostScript,
-	MimeSubTypeOctetStream,
-	MimeSubTypeJpeg,
-	MimeSubTypeGIF,
-	MimeSubTypeBasic,
-	MimeSubTypeMPEG,
-};
-
-enum DispType {
-	DispositionTypeInline,
-	DispositionTypeAttachment
-};
-
-enum DayOfWeek {
-	DayNone,
-	DayMon, DayTue, DayWed, DayThu, DayFri, DaySat, DaySun
-};
-
-DayOfWeek strToDayOfWeek(const QCString & s);
-
-enum Month {
-	MonthJan, MonthFeb, MonthMar, MonthApr, MonthMay, MonthJun,
-	MonthJul, MonthAug, MonthSep, MonthOct, MonthNov, MonthDec
-};
-
-Month strToMonth(const QCString & s);
-
-MimeType	mimeTypeStr2Enum(const QCString & s);
-QCString		mimeTypeEnum2Str(MimeType m);
-MimeSubType	mimeSubTypeStr2Enum(const QCString & s);
-QCString		mimeSubTypeEnum2Str(MimeSubType t);
-CteType		RCteStr2Enum(const QCString & s);
-QCString		cteTypeEnumToStr(CteType t);
 
 #endif

@@ -35,6 +35,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class EmpathHeaderEditWidget;
 class EmpathAttachmentListWidget;
@@ -55,7 +56,7 @@ class EmpathComposeWidget : public QWidget
 		 * Standard ctor
 		 */
 		EmpathComposeWidget(
-			ComposeType t, RMessage * message,
+			ComposeType t, const EmpathURL &,
 			QWidget * parent = 0, const char * name = 0);
 		
 		/**

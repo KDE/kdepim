@@ -160,7 +160,7 @@ EmpathMaildir::sync(const EmpathURL & url)
 }
 
 	void
-EmpathMaildir::mark(const EmpathURL & message, MessageStatus msgStat)
+EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 {
 	
 }
@@ -189,7 +189,7 @@ EmpathMaildir::sizeOfMessage(const QString & id)
 	QString
 EmpathMaildir::plainBodyOfMessage(const QString & id)
 {
-	return "";
+	return QString::null;
 }
 
 	REnvelope *
@@ -516,12 +516,12 @@ EmpathMaildir::_write(const RMessage & msg)
 		// FIXME: We need to tell the user that we couldn't write their file.
 
 		if (f.exists())
-			return "";
+			return QString::null;
 	}
 
 	if (!f.open(IO_WriteOnly)) {
 		empathDebug("Couldn't open mail file in ~/Maildir/tmp/ for writing. This is odd, since we could stat it as being ENOENT - must be permissions problem");
-		return "";
+		return QString::null;
 	}
 
 	empathDebug(
@@ -546,7 +546,7 @@ EmpathMaildir::_write(const RMessage & msg)
 		empathDebug("Couldn't flush() file");
 		f.close();
 		f.remove();
-		return "";
+		return QString::null;
 	}
 
 	// Try to close the file. Should close OK since we fsync()ed it,
@@ -559,7 +559,7 @@ EmpathMaildir::_write(const RMessage & msg)
 		empathDebug("Couldn't close() file");
 		f.close();
 		f.remove();
-		return "";
+		return QString::null;
 	}
 
 	empathDebug("Trying to link \"" + path_ + "/tmp/" + canonName +
@@ -572,7 +572,7 @@ EmpathMaildir::_write(const RMessage & msg)
 		empathDebug("Couldn't successfully link mail file - giving up");
 		f.close();
 		f.remove();
-		return "";
+		return QString::null;
 	}
 	
 	// Got here = DELIVERED ! Wow.
@@ -606,14 +606,14 @@ EmpathMaildir::_generateUnique()
 }
 
 	QString
-EmpathMaildir::_generateFlagsString(MessageStatus s)
+EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
 {
 	QString flags;
 	
-	flags += s & Read		? "S" : "";
-	flags += s & Marked		? "F" : "";
-	flags += s & Trashed	? "T" : "";
-	flags += s & Replied	? "R" : "";
+	flags += s & RMM::Read		? "S" : "";
+	flags += s & RMM::Marked	? "F" : "";
+	flags += s & RMM::Trashed	? "T" : "";
+	flags += s & RMM::Replied	? "R" : "";
 	
 	return flags;
 }
@@ -656,9 +656,10 @@ EmpathMaildir::_readIndex()
 		QString flags = r->id().right(r->id().length() - flagsStart + 3);
 	
 		r->setStatus(
-		  flags.contains('S') ? Read	: (MessageStatus)0
-		| flags.contains('T') ? Trashed	: (MessageStatus)0
-		| flags.contains('R') ? Replied	: (MessageStatus)0);
+		  flags.contains('S') ? RMM::Read		: (RMM::MessageStatus)0
+		| flags.contains('F') ? RMM::Marked		: (RMM::MessageStatus)0
+		| flags.contains('T') ? RMM::Trashed	: (RMM::MessageStatus)0
+		| flags.contains('R') ? RMM::Replied	: (RMM::MessageStatus)0);
 		
 		empathDebug("Inserting the new index record.");
 		

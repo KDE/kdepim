@@ -41,7 +41,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 {
 	empathDebug("ctor");
 	
-	rgb_main_	= new RikGroupBox("", 8, this, "rgb_font");
+	rgb_main_	= new RikGroupBox(QString::null, 8, this, "rgb_font");
 	CHECK_PTR(rgb_main_);
 	
 	w_main_		= new QWidget(rgb_main_, "w_main");
@@ -233,14 +233,14 @@ EmpathIdentitySettingsDialog::saveData()
 {
 	empathDebug("saveData() called");
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_IDENTITY);
+	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 
 #define CWE c->writeEntry
-	CWE( KEY_NAME,				le_chooseName_->text()		);
-	CWE( KEY_EMAIL,				le_chooseEmail_->text()		);
-	CWE( KEY_REPLY_TO,			le_chooseReplyTo_->text()	);
-	CWE( KEY_ORGANISATION,		le_chooseOrg_->text()		);
-	CWE( KEY_SIG_PATH,			le_chooseSig_->text()		);
+	CWE( EmpathConfig::KEY_NAME,				le_chooseName_->text()		);
+	CWE( EmpathConfig::KEY_EMAIL,				le_chooseEmail_->text()		);
+	CWE( EmpathConfig::KEY_REPLY_TO,			le_chooseReplyTo_->text()	);
+	CWE( EmpathConfig::KEY_ORGANISATION,		le_chooseOrg_->text()		);
+	CWE( EmpathConfig::KEY_SIG_PATH,			le_chooseSig_->text()		);
 #undef CWE
 }
 
@@ -249,13 +249,13 @@ EmpathIdentitySettingsDialog::loadData()
 {
 	empathDebug("loadData() called");
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_IDENTITY);
+	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 	
-	le_chooseName_->setText(c->readEntry(KEY_NAME));
-	le_chooseEmail_->setText(c->readEntry(KEY_EMAIL));
-	le_chooseReplyTo_->setText(c->readEntry(KEY_REPLY_TO));
-	le_chooseOrg_->setText(c->readEntry(KEY_ORGANISATION));
-	le_chooseSig_->setText(c->readEntry(KEY_SIG_PATH));
+	le_chooseName_->setText(c->readEntry(EmpathConfig::KEY_NAME));
+	le_chooseEmail_->setText(c->readEntry(EmpathConfig::KEY_EMAIL));
+	le_chooseReplyTo_->setText(c->readEntry(EmpathConfig::KEY_REPLY_TO));
+	le_chooseOrg_->setText(c->readEntry(EmpathConfig::KEY_ORGANISATION));
+	le_chooseSig_->setText(c->readEntry(EmpathConfig::KEY_SIG_PATH));
 
 	if (QString(le_chooseSig_->text()).length() != 0) {
 		// Preview the sig

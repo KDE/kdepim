@@ -31,6 +31,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class EmpathComposeWidget;
 class EmpathSettingsDialog;
@@ -45,7 +46,7 @@ class EmpathComposeWindow : public KTMainWindow
 
 	public:
 		
-		EmpathComposeWindow(ComposeType t, RMessage * message = 0);
+		EmpathComposeWindow(ComposeType t, const EmpathURL &);
 		~EmpathComposeWindow();
 
 	protected slots:

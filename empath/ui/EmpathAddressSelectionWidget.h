@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATH_ADDRESS_SELECTION_WIDGET_H
+#define EMPATH_ADDRESS_SELECTION_WIDGET_H
+
 // Qt includes
 #include <qwidget.h>
 #include <qlineedit.h>
@@ -53,4 +56,6 @@ class EmpathAddressSelectionWidget : public QWidget
 		QLineEdit		* le_address_;
 		QPushButton		* pb_browse_;
 };
+
+#endif
 

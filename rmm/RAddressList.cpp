@@ -135,7 +135,7 @@ RAddressList::assemble()
 	
 	RAddressListIterator it(*this);
 
-	strRep_ = "";
+	strRep_ = QString::null;
 	
 	for (; it.current(); ++it) {
 		

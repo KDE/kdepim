@@ -19,39 +19,36 @@
 */
 
 // Qt includes
-// Something's broken in Qt 1.40 and I can't find it.
-// This include solves the problem.
-#include <qdir.h>
 #include <qdatetime.h>
+#include <qdatastream.h>
 
 // Local includes
 #include "Empath.h"
 #include "EmpathIndexRecord.h"
-#include "EmpathMessageDataCache.h"
 
 EmpathIndexRecord::EmpathIndexRecord()
-	:	id_(""),
-		subject_(""),
-		sender_(""),
-		date_(""),
-		status_(MessageStatus(0)),
-		size_(0),
-		messageId_(""),
-		parentMessageId_("")
+	:	id_					(QString::null),
+		subject_			(""),
+		sender_				(""),
+		date_				(""),
+		status_				(RMM::MessageStatus(0)),
+		size_				(0),
+		messageId_			(""),
+		parentMessageId_	("")
 {
 	empathDebug("default ctor");
 }
 
 
 EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
-	:	id_(id),
-		subject_(m.envelope().subject().asString()),
-		sender_(m.envelope().firstSender()),
-		date_(m.envelope().date()),
-		status_(m.status()),
-		size_(m.size()),
-		messageId_(m.envelope().messageID()),
-		parentMessageId_(m.envelope().parentMessageId())
+	:	id_					(id),
+		subject_			(m.envelope().subject().asString()),
+		sender_				(m.envelope().firstSender()),
+		date_				(m.envelope().date()),
+		status_				(m.status()),
+		size_				(m.size()),
+		messageId_			(m.envelope().messageID()),
+		parentMessageId_	(m.envelope().parentMessageId())
 {
 	empathDebug("ctor w/ an RMessage - my id == " + id_);
 }
@@ -61,22 +58,21 @@ EmpathIndexRecord::EmpathIndexRecord(
 		const QString &		subject,
 		const RMailbox &	sender,
 		const RDateTime &	date,
-		MessageStatus		status,
+		RMM::MessageStatus	status,
 		Q_UINT32			size,
 		const RMessageID &	messageId,
 		const RMessageID &	parentMessageId)
-	:	id_(id),
-		subject_(subject),
-		sender_(sender),
-		date_(date),
-		status_(status),
-		size_(size),
-		messageId_(messageId),
-		parentMessageId_(parentMessageId)
+	:
+		id_					(id),
+		subject_			(subject),
+		sender_				(sender),
+		date_				(date),
+		status_				(status),
+		size_				(size),
+		messageId_			(messageId),
+		parentMessageId_	(parentMessageId)
 {
 	empathDebug("ctor - my id == " + id_);
-	empathDebug("I was given sender == " + QString(sender.asString()));
-	empathDebug("My sender == " + QString(sender_.asString()));
 }
 
 EmpathIndexRecord::~EmpathIndexRecord()
@@ -97,8 +93,8 @@ EmpathIndexRecord::niceDate(bool twelveHour) const
 	now = QDateTime::currentDateTime();
 	then = date_;
 	
-	// Use difference between times to work out how old a message is, and see if we
-	// can represent it in a more concise fashion.
+	// Use difference between times to work out how old a message is, and see
+	// if we can represent it in a more concise fashion.
 
 	QString dts;
 	
@@ -107,29 +103,18 @@ EmpathIndexRecord::niceDate(bool twelveHour) const
 		dts += then.date().dayName(then.date().dayOfWeek());
 		dts += " ";
 	}
-
 	
 	// If the months differ, print day of month and month name
 	if (then.date().month() != now.date().month()) {
 		
 		dts += QString().setNum(then.date().day());
 		
-		char endDigit = *(dts.right(1));
+		QString endDigit = dts.right(1);
 		
-		switch (endDigit) {
-			case 1:
-				dts += "st";
-				break;
-			case 2:
-				dts += "nd";
-				break;
-			case 3:
-				dts += "rd";
-				break;
-			default:
-				dts += "th";
-				break;
-		}
+		if		((endDigit) == "1")	dts += "st";
+		else if ((endDigit) == "2")	dts += "nd";
+		else if ((endDigit) == "3")	dts += "rd";
+		else						dts += "th";
 		
 		dts += " ";
 		
@@ -207,7 +192,7 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
 		>> rec.messageId_
 		>> rec.parentMessageId_;
 
-	rec.status_ = (MessageStatus)i;
+	rec.status_ = (RMM::MessageStatus)i;
 	
 	return s;
 }

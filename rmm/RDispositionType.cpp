@@ -57,14 +57,14 @@ RDispositionType::~RDispositionType()
 	rmmDebug("dtor");
 }
 
-	DispType
+	RMM::DispType
 RDispositionType::type() const
 {
     return dispType_;
 }
 
 	void
-RDispositionType::set(DispType t)
+RDispositionType::set(RMM::DispType t)
 {
 }
 

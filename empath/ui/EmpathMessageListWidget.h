@@ -55,7 +55,7 @@ class EmpathMessageListWidget : public QListView
 		EmpathMessageListItem * findRecursive(
 				EmpathMessageListItem * initialItem, const RMessageID & msgId);
 		
-		void addItem(EmpathIndexRecord * item);
+		void addItem(const EmpathIndexRecord & item);
 		EmpathURL firstSelectedMessage() const;
 		
 		void setSignalUpdates(bool yn);
@@ -63,8 +63,10 @@ class EmpathMessageListWidget : public QListView
 		
 	protected slots:
 	
+		void s_messageMark();
+		void s_messageMarkRead();
+		void s_messageMarkReplied();
 		void s_messageView();
-		void s_messageNew();
 		void s_messageReply();
 		void s_messageReplyAll();
 		void s_messageForward();
@@ -86,6 +88,8 @@ class EmpathMessageListWidget : public QListView
 		void changeView(const EmpathURL &);
 		
 	private:
+		
+		void	_setupMessageMenu();
 
 		void getDescendants(
 			EmpathMessageListItem * initialItem,
@@ -94,7 +98,8 @@ class EmpathMessageListWidget : public QListView
 		void append(EmpathMessageListItem * item);
 
 		EmpathMainWindow	* parent_;
-		QPopupMenu			* messageMenu_;
+		QPopupMenu			messageMenu_;
+		QPopupMenu			messageMarkMenu_;
 		
 		QList<EmpathIndexRecord> masterList_;
 		QList<EmpathMessageListItem> threadItemList_;
@@ -105,13 +110,16 @@ class EmpathMessageListWidget : public QListView
 		QPixmap px_unread_unmarked;
 		bool wantScreenUpdates_;
 		
-		void setStatus(EmpathMessageListItem * item, MessageStatus status);
+		void setStatus(EmpathMessageListItem * item, RMM::MessageStatus status);
 
 		EmpathURL url_;
 
 		int lastHeaderClicked_;
 		bool sortType_; // Ascending, Descending
 		
+		int messageMenuItemMark;
+		int messageMenuItemMarkRead;
+		int messageMenuItemMarkReplied;
 };
 
 #endif

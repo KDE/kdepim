@@ -69,14 +69,14 @@ operator >> (QDataStream & s, RDateTime & dt)
 {
 	s >> (QDateTime &)dt;
 	s >> dt.zone_;
-	cerr << " >> gave me : " << dt.toString() << endl;
+	//cerr << " >> gave me : " << dt.toString() << endl;
 	return s;
 }
 
 	QDataStream &
 operator << (QDataStream & s, const RDateTime & dt)
 {
-	cerr << " << is getting : " << dt.toString() << endl;
+	//cerr << " << is getting : " << dt.toString() << endl;
 	s << (QDateTime)dt;
 	s << dt.zone_;
 	return s;
@@ -119,7 +119,7 @@ RDateTime::parse()
 		dayOfMonth_ = atoi(tokens.at(i++));
 
 	rmmDebug("Day of month = " + QCString().setNum(dayOfMonth_));
-	month_ = strToMonth(tokens.at(i++)) + 1;
+	month_ = RMM::strToMonth(tokens.at(i++)) + 1;
 	rmmDebug("Month = " + QCString().setNum(month_));
 
 	if (strlen(tokens.at(i)) == 2)

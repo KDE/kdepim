@@ -37,6 +37,12 @@ class RGroup : public RAddress {
 		RGroup(const QCString & s) : RAddress(s) { }
 		const RGroup & operator = (const RGroup & group);
 
+		friend QDataStream & operator >> (
+			QDataStream & s, RGroup & group);
+		
+		friend QDataStream & operator << (
+			QDataStream & s, const RGroup & group);
+
 		virtual ~RGroup();
 
 		void parse();

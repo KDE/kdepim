@@ -30,10 +30,10 @@ RMailbox::RMailbox()
 
 RMailbox::RMailbox(const RMailbox & mailbox)
 	:	RAddress(),
-		phrase_(mailbox.phrase_),
-		route_(mailbox.route_),
-		localPart_(mailbox.localPart_),
-		domain_(mailbox.domain_)
+		phrase_		(mailbox.phrase_),
+		route_		(mailbox.route_),
+		localPart_	(mailbox.localPart_),
+		domain_		(mailbox.domain_)
 {
 	rmmDebug("copy ctor");
 }
@@ -61,20 +61,20 @@ const RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 	QDataStream &
 operator >> (QDataStream & s, RMailbox & mailbox)
 {
-	s >> mailbox.phrase_;
-	s >> mailbox.route_;
-	s >> mailbox.localPart_;
-	s >> mailbox.domain_;
+	s	>> mailbox.phrase_
+		>> mailbox.route_
+		>> mailbox.localPart_
+		>> mailbox.domain_;
 	return s;
 }
 	
 	QDataStream &
 operator << (QDataStream & s, const RMailbox & mailbox)
 {
-	s << mailbox.phrase_;
-	s << mailbox.route_;
-	s << mailbox.localPart_;
-	s << mailbox.domain_;
+	s	<< mailbox.phrase_
+		<< mailbox.route_
+		<< mailbox.localPart_
+		<< mailbox.domain_;
 	return s;
 }
 
@@ -144,10 +144,13 @@ void RMailbox::parse()
 	QStrList l;
 	RTokenise(strRep_, " \n", l, true);
 
+	bool hasRouteAddress(false);
+
 	QStrListIterator it(l);
-	bool hasRouteAddress = false;
+
 	for (; it.current(); ++it) {
-		if (*(it.current()) == '<') hasRouteAddress = true;
+		rmmDebug("TOKEN: " + QString(it.current()));
+		hasRouteAddress = (*(it.current()) == '<');
 	}
 	
 	if (hasRouteAddress) { // It's phrase route-addr
@@ -161,6 +164,7 @@ void RMailbox::parse()
 		// We're guaranteed to hit '<' since hasRouteAddress == true.
 		while (s.at(0) != '<') {
 			phrase_ += s;
+			rmmDebug("Phrase now: " + phrase_);
 			s = l.at(i++);
 			if (s.at(0) != '<')
 				phrase_ += ' ';
@@ -202,10 +206,10 @@ void RMailbox::parse()
 		// Easy, eh ?
 	}
 	dirty_ = true;
-	rmmDebug("phrase: \"" + phrase_ + "\"");
-	rmmDebug("route: \"" + route_ + "\"");
-	rmmDebug("localpart: \"" + localPart_ + "\"");
-	rmmDebug("domain: \"" + domain_ + "\"");
+	rmmDebug("phrase:    \""	+ phrase_		+ "\"");
+	rmmDebug("route:     \""	+ route_		+ "\"");
+	rmmDebug("localpart: \""	+ localPart_	+ "\"");
+	rmmDebug("domain:    \""	+ domain_		+ "\"");
 }
 
 
@@ -230,10 +234,10 @@ RMailbox::isValid() const
 RMailbox::createDefault()
 {
 	rmmDebug("createDefault() called");
-	phrase_ = "";
-	route_ = "";
-	localPart_ = "foo";
-	domain_ = "bar";
-	strRep_ = "<foo@bar>";
+	phrase_		= "";
+	route_		= "";
+	localPart_	= "foo";
+	domain_		= "bar";
+	strRep_		= "<foo@bar>";
 }
 

@@ -69,12 +69,12 @@ EmpathMailSenderQmail::sendOne(const RMessage & message)
 	qmailProcess_.clearArguments();
 
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_SENDING);
+	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
 	empathDebug("qmail location is" +
-		QString(c->readEntry(KEY_QMAIL_LOCATION)));
+		QString(c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION)));
 
-	qmailProcess_ << c->readEntry(KEY_QMAIL_LOCATION);
+	qmailProcess_ << c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION);
 
 	empathDebug("Starting qmail process");
 	if (!qmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
@@ -152,7 +152,7 @@ EmpathMailSenderQmail::qmailExited(KProcess * p)
 	
 	written_ = !error_;
 	
-	messageAsString_ = "";
+	messageAsString_ = QString::null;
 }
 
 	void
@@ -171,16 +171,16 @@ EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int buflen)
 EmpathMailSenderQmail::saveConfig()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_SENDING);
-	c->writeEntry(KEY_QMAIL_LOCATION, qmailLocation_);
+	c->setGroup(EmpathConfig::GROUP_SENDING);
+	c->writeEntry(EmpathConfig::KEY_QMAIL_LOCATION, qmailLocation_);
 }
 
 	void
 EmpathMailSenderQmail::readConfig()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_SENDING);
+	c->setGroup(EmpathConfig::GROUP_SENDING);
 	qmailLocation_ =
-		c->readEntry(KEY_QMAIL_LOCATION, "/var/qmail/bin/qmail-inject");
+		c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION, "/var/qmail/bin/qmail-inject");
 }
 

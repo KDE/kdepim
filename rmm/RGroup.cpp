@@ -55,6 +55,24 @@ RGroup::operator = (const RGroup & g)
 	return *this;
 }
 
+	QDataStream &
+operator >> (QDataStream & s, RGroup & group)
+{
+	s	>> group.name_
+		>> group.phrase_;
+	return s;
+}
+	
+	QDataStream &
+operator << (QDataStream & s, const RGroup & group)
+{
+	s	<< group.name_
+		<< group.phrase_;
+	return s;
+}
+
+
+
 	const QCString &
 RGroup::name() const
 {

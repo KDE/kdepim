@@ -18,9 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// Implementation note: This was in separate classes but I think the extra hassle
-// to manage them was too much of a pain in the arse.
-
 // Qt includes
 #include <qregexp.h>
 
@@ -52,26 +49,26 @@ EmpathMatcher::save(Q_UINT32 parentid, Q_UINT32 id)
 	
 	KConfig * c = kapp->getConfig();
 	
-	c->setGroup(GROUP_EXPR +
+	c->setGroup(EmpathConfig::GROUP_EXPR +
 		QString().setNum(parentid) +
 		"_" +
 		QString().setNum(id));
 	
-	c->writeEntry(KEY_MATCH_EXPR_TYPE, type_);
+	c->writeEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE, type_);
 	
 	switch (type_) {
 		
 		case Size:
-			c->writeEntry(KEY_MATCH_SIZE, size_);
+			c->writeEntry(EmpathConfig::KEY_MATCH_SIZE, size_);
 			break;
 			
 		case BodyExpr:
-			c->writeEntry(KEY_MATCH_EXPR, matchExpr_);
+			c->writeEntry(EmpathConfig::KEY_MATCH_EXPR, matchExpr_);
 			break;
 			
 		case HeaderExpr:
-			c->writeEntry(KEY_MATCH_HEADER, matchHeader_);
-			c->writeEntry(KEY_MATCH_EXPR, matchExpr_);
+			c->writeEntry(EmpathConfig::KEY_MATCH_HEADER, matchHeader_);
+			c->writeEntry(EmpathConfig::KEY_MATCH_EXPR, matchExpr_);
 			break;
 			
 		case HasAttachments:
@@ -90,12 +87,12 @@ EmpathMatcher::load(Q_UINT32 parentid, Q_UINT32 id)
 	
 	KConfig * c = kapp->getConfig();
 	
-	c->setGroup(GROUP_EXPR +
+	c->setGroup(EmpathConfig::GROUP_EXPR +
 		QString().setNum(parentid) +
 		"_" +
 		QString().setNum(id));
 	
-	MatchExprType t = (MatchExprType)(c->readNumEntry(KEY_MATCH_EXPR_TYPE));
+	MatchExprType t = (MatchExprType)(c->readNumEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE));
 	empathDebug("I'm of type " + QString().setNum((int)t));
 	
 	setType(t);
@@ -103,16 +100,16 @@ EmpathMatcher::load(Q_UINT32 parentid, Q_UINT32 id)
 	switch (t) {
 
 		case Size:
-			size_ = c->readNumEntry(KEY_MATCH_SIZE);
+			size_ = c->readNumEntry(EmpathConfig::KEY_MATCH_SIZE);
 			break;
 
 		case BodyExpr:
-			matchExpr_ = c->readEntry(KEY_MATCH_EXPR);
+			matchExpr_ = c->readEntry(EmpathConfig::KEY_MATCH_EXPR);
 			break;
 
 		case HeaderExpr:
-			matchExpr_ = c->readEntry(KEY_MATCH_EXPR);
-			matchHeader_ = c->readEntry(KEY_MATCH_HEADER);
+			matchExpr_ = c->readEntry(EmpathConfig::KEY_MATCH_EXPR);
+			matchHeader_ = c->readEntry(EmpathConfig::KEY_MATCH_HEADER);
 			break;
 
 		case HasAttachments:
@@ -139,25 +136,27 @@ EmpathMatcher::match(const EmpathURL & id)
 				empathDebug("Matching message by size > " +
 					QString().setNum(size_));
 
-				Q_UINT32 sizeOfMessage =
-					empath->sizeOfMessage(id);
+				RMessage * m(empath->message(id));
+				if (m == 0) return false;
+				
+				Q_UINT32 sizeOfMessage = m->size();
 
 				empathDebug("size of message is " +
 					QString().setNum(sizeOfMessage));
 
 				// Size * 1024 as it's specified in Kb.
-				if (sizeOfMessage > (size_ * 1024)) {
-					empathDebug("Matched");
-					return true;
-				}
+				return (sizeOfMessage > (size_ * 1024));
 			}
 			break;
 			
 		case BodyExpr:
 			{
 				empathDebug("Matching message by body expr \"" + matchExpr_ + "\"");
-				QString s =
-					empath->plainBodyOfMessage(id);
+				RMessage * m(empath->message(id));
+				if (m == 0) return false;
+				
+				QString s; // FIXME -- = m->firstPlainBodyPart ?
+				
 				QRegExp r(matchExpr_);
 				if (!r.isValid()) return false;
 				return (s.find(r) != -1);
@@ -167,10 +166,11 @@ EmpathMatcher::match(const EmpathURL & id)
 		case HeaderExpr:
 			{
 				empathDebug("Matching message by header expr \"" + matchExpr_ + "\"");
-				REnvelope * e = empath->envelopeOfMessage(id);
-				if (e == 0) return false;
 				
-				QString s = e->asString();
+				RMessage * m(empath->message(id));
+				if (m == 0) return false;
+				
+				QString s = m->envelope().asString();
 				QRegExp r(matchExpr_);
 				if (!r.isValid()) return false;
 				return (s.find(r) != -1);
@@ -179,9 +179,11 @@ EmpathMatcher::match(const EmpathURL & id)
 			
 		case HasAttachments:	
 			empathDebug("Matching message by attachments");
-			if (empath->typeOfMessage(id) ==
-				RMessage::MimeMessage)
-			return true;
+			{
+				RMessage * m(empath->message(id));
+				if (m == 0) return false;
+				return (m->type() == RMessage::MimeMessage);
+			}
 			break;
 			
 		case AnyMessage:

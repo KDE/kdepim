@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATH_MAILDIR_H
+#define EMPATH_MAILDIR_H 
+
 // Qt includes
 #include <qdir.h>
 #include <qstring.h>
@@ -49,7 +52,7 @@ class EmpathMaildir
 		const EmpathURL &	url()		const { return url_; }
 		const QString &		path()		const { return path_; }
 		
-		void		mark(const EmpathURL & message, MessageStatus msgStat);
+		void		mark(const EmpathURL & message, RMM::MessageStatus msgStat);
 		
 		bool		writeMessage(const RMessage & msg);
 		
@@ -74,7 +77,7 @@ class EmpathMaildir
 		void		_clearTmp();
 		bool		_setupDirs();
 		QString		_generateUnique();
-		QString		_generateFlagsString(MessageStatus s);
+		QString		_generateFlagsString(RMM::MessageStatus s);
 		void		_readIndex();
 		void		_writeIndex();
 		
@@ -92,4 +95,6 @@ class EmpathMaildir
 
 typedef QList<EmpathMaildir> EmpathMaildirList;
 typedef QListIterator<EmpathMaildir> EmpathMaildirListIterator;
+
+#endif
 

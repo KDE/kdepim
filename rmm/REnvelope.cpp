@@ -171,10 +171,10 @@ REnvelope::assemble()
 
 	strRep_ = "";
 
-	if (!has(HeaderTo))			_createDefault(HeaderTo);
-	if (!has(HeaderMessageID))	_createDefault(HeaderMessageID);
-	if (!has(HeaderFrom))		_createDefault(HeaderFrom);
-	if (!has(HeaderDate))		_createDefault(HeaderDate);
+	if (!has(RMM::HeaderTo))		_createDefault(RMM::HeaderTo);
+	if (!has(RMM::HeaderMessageID))	_createDefault(RMM::HeaderMessageID);
+	if (!has(RMM::HeaderFrom))		_createDefault(RMM::HeaderFrom);
+	if (!has(RMM::HeaderDate))		_createDefault(RMM::HeaderDate);
 
 	RHeaderListIterator it(headerList_);
 
@@ -188,48 +188,48 @@ REnvelope::assemble()
 }
 
 	void
-REnvelope::_createDefault(HeaderType t)
+REnvelope::_createDefault(RMM::HeaderType t)
 {
 	rmmDebug("Creating default of type " + QCString(headerNames[t]));
 	RHeader * h = new RHeader;
 	h->setName(headerNames[t]);
 
 	RHeaderBody * b;
-	switch (headerTypesTable[t]) {
+	switch (RMM::headerTypesTable[t]) {
 
-		case Address:
+		case RMM::Address:
 			b = new RAddress;
 			break;
 
-		case AddressList:
+		case RMM::AddressList:
 			b = new RAddressList;
 			break;
 
-		case DateTime:
+		case RMM::DateTime:
 			b = new RDateTime;
 			break;
 
-		case DispositionType:
+		case RMM::DispositionType:
 			b = new RDispositionType;
 			break;
 
-		case Mailbox:
+		case RMM::Mailbox:
 			b = new RMailbox;
 			break;
 
-		case MailboxList:
+		case RMM::MailboxList:
 			b = new RMailboxList;
 			break;
 
-		case Mechanism:
+		case RMM::Mechanism:
 			b = new RMechanism;
 			break;
 
-		case MessageID:
+		case RMM::MessageID:
 			b = new RMessageID;
 			break;
 
-		case Text:
+		case RMM::Text:
 		default:
 			b = new RText;
 			break;
@@ -244,17 +244,17 @@ REnvelope::_createDefault(HeaderType t)
 REnvelope::createDefault()
 {
 	rmmDebug("****** CREATING DEFAULT TO ******");
-	_createDefault(HeaderTo);
+	_createDefault(RMM::HeaderTo);
 	rmmDebug("****** CREATING DEFAULT MESSAGE ID ******");
-	_createDefault(HeaderMessageID);
+	_createDefault(RMM::HeaderMessageID);
 	rmmDebug("****** CREATING DEFAULT FROM ******");
-	_createDefault(HeaderFrom);
+	_createDefault(RMM::HeaderFrom);
 	rmmDebug("****** CREATING DEFAULT DATE ******");
-	_createDefault(HeaderDate);
+	_createDefault(RMM::HeaderDate);
 }
 
 	bool
-REnvelope::has(HeaderType t) const
+REnvelope::has(RMM::HeaderType t) const
 {
 	RHeaderListIterator it(headerList_);
 
@@ -277,7 +277,7 @@ REnvelope::has(const QCString & headerName) const
 
 template <class T>
 	T
-REnvelope::get(HeaderType h, T t)
+REnvelope::get(RMM::HeaderType h, T t)
 {
 	rmmDebug("get " + QCString(headerNames[h]));
 	// See if we can find this header in the list.
@@ -294,36 +294,36 @@ REnvelope::get(HeaderType h, T t)
 	// else make a new one, set it to default values, and return that.
 
 	rmmDebug("Creating a new item as there wasn't one existing.");
-	HeaderDataType hdt = headerTypesTable[h];
+	RMM::HeaderDataType hdt = RMM::headerTypesTable[h];
 
 	RHeaderBody * d;
 
 	switch (hdt) {
-		case Address:
+		case RMM::Address:
 			d = new RAddress;
 			break;
-		case AddressList:
+		case RMM::AddressList:
 			d = new RAddressList;
 			break;
-		case DateTime:
+		case RMM::DateTime:
 			d = new RDateTime;
 			break;
-		case DispositionType:
+		case RMM::DispositionType:
 			d = new RDispositionType;
 			break;
-		case Mailbox:
+		case RMM::Mailbox:
 			d = new RMailbox;
 			break;
-		case MailboxList:
+		case RMM::MailboxList:
 			d = new RMailboxList;
 			break;
-		case Mechanism:
+		case RMM::Mechanism:
 			d = new RMechanism;
 			break;
-		case MessageID:
+		case RMM::MessageID:
 			d = new RMessageID;
 			break;
-		case Text:
+		case RMM::Text:
 		default:
 			d = new RText;
 			break;
@@ -350,119 +350,119 @@ REnvelope::get(HeaderType h, T t)
 REnvelope::approved()
 {
 	RText * t = 0;
-	return *get(HeaderApproved, t);
+	return *get(RMM::HeaderApproved, t);
 }
 
 	RAddressList &
 REnvelope::bcc()
 {
 	RAddressList * t = 0;
-	return *get(HeaderBcc, t);
+	return *get(RMM::HeaderBcc, t);
 }
 
 	RMailboxList &
 REnvelope::cc()
 {
 	RMailboxList * t = 0;
-	return *get(HeaderCc, t);
+	return *get(RMM::HeaderCc, t);
 }
 
 	RText &
 REnvelope::comments()
 {
 	RText * t = 0;
-	return *get(HeaderComments, t);
+	return *get(RMM::HeaderComments, t);
 }
 
 	RText &
 REnvelope::contentDescription()
 {
 	RText * t = 0;
-	return *get(HeaderContentDescription, t);
+	return *get(RMM::HeaderContentDescription, t);
 }
 
 	RDispositionType &
 REnvelope::contentDisposition()
 {
 	RDispositionType * t = 0;
-	return *get(HeaderContentDisposition, t);
+	return *get(RMM::HeaderContentDisposition, t);
 }
 
 	RMessageID &
 REnvelope::contentID()
 {
 	RMessageID * t = 0;
-	return *get(HeaderContentID, t);
+	return *get(RMM::HeaderContentID, t);
 }
 
 	RText &
 REnvelope::contentMD5()
 {
 	RText * t = 0;
-	return *get(HeaderContentMD5, t);
+	return *get(RMM::HeaderContentMD5, t);
 }
 
 	RText &
 REnvelope::contentType()
 {
 	RText * t = 0;
-	return *get(HeaderContentType, t);
+	return *get(RMM::HeaderContentType, t);
 }
 
 	RText &
 REnvelope::control()
 {
 	RText * t = 0;
-	return *get(HeaderControl, t);
+	return *get(RMM::HeaderControl, t);
 }
 
 	RText &
 REnvelope::contentTransferEncoding()
 {
 	RText * t = 0;
-	return *get(HeaderContentTransferEncoding, t);
+	return *get(RMM::HeaderContentTransferEncoding, t);
 }
 
 	RDateTime &
 REnvelope::date()
 {
 	RDateTime * t = 0;
-	return *get(HeaderDate, t);
+	return *get(RMM::HeaderDate, t);
 }
 
 	RText &
 REnvelope::distribution()
 {
 	RText * t = 0;
-	return *get(HeaderDistribution, t);
+	return *get(RMM::HeaderDistribution, t);
 }
 
 	RText &
 REnvelope::encrypted()
 {
 	RText * t = 0;
-	return *get(HeaderEncrypted, t);
+	return *get(RMM::HeaderEncrypted, t);
 }
 
 	RDateTime &
 REnvelope::expires()
 {
 	RDateTime * t = 0;
-	return *get(HeaderExpires, t);
+	return *get(RMM::HeaderExpires, t);
 }
 
 	RText &
 REnvelope::followupTo()
 {
 	RText * t = 0;
-	return *get(HeaderFollowupTo, t);
+	return *get(RMM::HeaderFollowupTo, t);
 }
 
 	RMailboxList &
 REnvelope::from()
 {
 	RMailboxList * t = 0;
-	return *get(HeaderFrom, t);
+	return *get(RMM::HeaderFrom, t);
 }
 
 	RText &
@@ -470,7 +470,7 @@ REnvelope::inReplyTo()
 {
 	rmmDebug("inReplyTo() called");
 	RText * t = 0;
-	t = get(HeaderInReplyTo, t);
+	t = get(RMM::HeaderInReplyTo, t);
 	rmmDebug("Returning from inReplyTo()");
 	return *t;
 }
@@ -479,168 +479,168 @@ REnvelope::inReplyTo()
 REnvelope::keywords()
 {
 	RText * t = 0;
-	return *get(HeaderKeywords, t);
+	return *get(RMM::HeaderKeywords, t);
 }
 
 	RText &
 REnvelope::lines()
 {
 	RText * t = 0;
-	return *get(HeaderLines, t);
+	return *get(RMM::HeaderLines, t);
 }
 
 	RMessageID &
 REnvelope::messageID()
 {
 	RMessageID * t = 0;
-	return *get(HeaderMessageID, t);
+	return *get(RMM::HeaderMessageID, t);
 }
 
 	RText &
 REnvelope::mimeVersion()
 {
 	RText * t = 0;
-	return *get(HeaderMimeVersion, t);
+	return *get(RMM::HeaderMimeVersion, t);
 }
 
 	RText &
 REnvelope::newsgroups()
 {
 	RText * t = 0;
-	return *get(HeaderNewsgroups, t);
+	return *get(RMM::HeaderNewsgroups, t);
 }
 
 	RText &
 REnvelope::organization()
 {
 	RText * t = 0;
-	return *get(HeaderOrganization, t);
+	return *get(RMM::HeaderOrganization, t);
 }
 
 	RText &
 REnvelope::path()
 {
 	RText * t = 0;
-	return *get(HeaderPath, t);
+	return *get(RMM::HeaderPath, t);
 }
 
 	RText &
 REnvelope::received()
 {
 	RText * t = 0;
-	return *get(HeaderReceived, t);
+	return *get(RMM::HeaderReceived, t);
 }
 
 	RText &
 REnvelope::references()
 {
 	RText * t = 0;
-	return *get(HeaderReferences, t);
+	return *get(RMM::HeaderReferences, t);
 }
 
 	RAddressList &
 REnvelope::replyTo()
 {
 	RAddressList * t = 0;
-	return *get(HeaderReplyTo, t);
+	return *get(RMM::HeaderReplyTo, t);
 }
 
 	RAddressList &
 REnvelope::resentBcc()
 {
 	RAddressList * t = 0;
-	return *get(HeaderResentBcc, t);
+	return *get(RMM::HeaderResentBcc, t);
 }
 
 	RAddressList &
 REnvelope::resentCc()
 {
 	RAddressList * t = 0;
-	return *get(HeaderResentCc, t);
+	return *get(RMM::HeaderResentCc, t);
 }
 
 	RDateTime &
 REnvelope::resentDate()
 {
 	RDateTime * t = 0;
-	return *get(HeaderResentDate, t);
+	return *get(RMM::HeaderResentDate, t);
 }
 
 	RMailboxList &
 REnvelope::resentFrom()
 {
 	RMailboxList * t = 0;
-	return *get(HeaderResentFrom, t);
+	return *get(RMM::HeaderResentFrom, t);
 }
 
 	RMessageID &
 REnvelope::resentMessageID()
 {
 	RMessageID * t = 0;
-	return *get(HeaderResentMessageID, t);
+	return *get(RMM::HeaderResentMessageID, t);
 }
 
 	RAddressList &
 REnvelope::resentReplyTo()
 {
 	RAddressList * t = 0;
-	return *get(HeaderResentReplyTo, t);
+	return *get(RMM::HeaderResentReplyTo, t);
 }
 
 	RMailbox &
 REnvelope::resentSender()
 {
 	RMailbox * t = 0;
-	return *get(HeaderResentSender, t);
+	return *get(RMM::HeaderResentSender, t);
 }
 
 	RAddressList &
 REnvelope::resentTo()
 {
 	RAddressList * t = 0;
-	return *get(HeaderResentTo, t);
+	return *get(RMM::HeaderResentTo, t);
 }
 
 	RText &
 REnvelope::returnPath()
 {
 	RText * t = 0;
-	return *get(HeaderReturnPath, t);
+	return *get(RMM::HeaderReturnPath, t);
 }
 
 	RMailbox &
 REnvelope::sender()
 {
 	RMailbox * t = 0;
-	return *get(HeaderSender, t);
+	return *get(RMM::HeaderSender, t);
 }
 
 	RText &
 REnvelope::subject()
 {
 	RText * t = 0;
-	return *get(HeaderSubject, t);
+	return *get(RMM::HeaderSubject, t);
 }
 
 	RText &
 REnvelope::summary()
 {
 	RText * t = 0;
-	return *get(HeaderSummary, t);
+	return *get(RMM::HeaderSummary, t);
 }
 
 	RAddressList &
 REnvelope::to()
 {
 	RAddressList * t = 0;
-	return *get(HeaderTo, t);
+	return *get(RMM::HeaderTo, t);
 }
 
 	RText &
 REnvelope::xref()
 {
 	RText * t = 0;
-	return *get(HeaderXref, t);
+	return *get(RMM::HeaderXref, t);
 }
 
 	RText &
@@ -671,7 +671,7 @@ REnvelope::firstSender()
 {
 	rmmDebug("firstSender() called");
 
-	if (has(HeaderFrom)) {
+	if (has(RMM::HeaderFrom)) {
 
 		RMailboxList & m = from();
 		rmmDebug("Number of mailboxes in from field : " +
@@ -706,7 +706,7 @@ REnvelope::parentMessageId()
 
 	RMessageID m;
 
-	if (has(HeaderReferences)) {
+	if (has(RMM::HeaderReferences)) {
 
 		rmmDebug("Has header references");
 
@@ -716,7 +716,7 @@ REnvelope::parentMessageId()
 		s = s.right(s.length() - s.findRev('<'));
 		m.set(s);
 
-	} else if (has(HeaderInReplyTo)) {
+	} else if (has(RMM::HeaderInReplyTo)) {
 
 		rmmDebug("Has header in reply to");
 

@@ -5,6 +5,8 @@ noinst_LIBRARIES = libempath.a
 libempath_a_METASOURCES = USE_AUTOMOC
 
 libempath_a_SOURCES = \
+	md5.cpp \
+	EmpathConfig.cpp \
 	EmpathFilter.cpp \
 	EmpathFilterEventHandler.cpp \
 	EmpathFilterList.cpp \
@@ -30,5 +32,4 @@ libempath_a_SOURCES = \
 	EmpathMessageList.cpp \
 	EmpathURL.cpp \
 	EmpathUtilities.cpp \
-	Empath.cpp \
-	md5.cpp
+	Empath.cpp

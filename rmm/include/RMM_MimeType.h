@@ -48,12 +48,12 @@ class RMimeType : public RHeaderBody {
 		const QCString & boundary() const;
 		const QCString & name() const;
 
-		MimeType type() const;
-		MimeSubType subType() const;
+		RMM::MimeType type() const;
+		RMM::MimeSubType subType() const;
 
-		void setType(MimeType);
+		void setType(RMM::MimeType);
 		void setType(const QCString &);
-		void setSubType(MimeSubType);
+		void setSubType(RMM::MimeSubType);
 		void setSubType(const QCString &);
 
 		void setBoundary(const QCString & boundary);
@@ -66,8 +66,8 @@ class RMimeType : public RHeaderBody {
 		QCString boundary_;
 		QCString name_;
 		
-		MimeType type_;
-		MimeSubType subType_;
+		RMM::MimeType type_;
+		RMM::MimeSubType subType_;
 		
 		RParameterList	parameterList_;
 

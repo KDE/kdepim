@@ -20,6 +20,7 @@
 
 #include <qstring.h>
 #include <qstrlist.h>
+#include <qregexp.h>
 
 #include <RMM_Token.h>
 #include <RMM_Defines.h>
@@ -97,13 +98,11 @@ RMessage::parse()
 {
 	rmmDebug("parse() called - data follows:\n" + strRep_);
 
-//	int endOfHeaders = strRep_.find("\n[ \t]*[\r]\n");
-//	int endOfHeaders = strRep_.find(QRegExp("^$"));
 	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
 	
 	if (endOfHeaders == -1) {
 		rmmDebug("No end of headers ! - message is " +
-			QCString().setNum(strRep_.length()) + " bytes long");
+			QString().setNum(strRep_.length()) + " bytes long");
 		return;
 	}
 	

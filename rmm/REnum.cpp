@@ -23,34 +23,119 @@
 #include <iostream>
 #include <RMM_Enum.h>
 
-static char * dayNames[] = {
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-        "Sun"
+	const char *
+RMM::monthNames [] = {
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec"
+};
+
+	const char *
+RMM::headerNames [] = {
+	"Approved",
+	"Bcc",
+	"Cc",
+	"Comments",
+	"Content-Description",
+	"Content-Disposition",
+	"Content-ID",
+	"Content-MD5",
+	"Content-Type",
+	"Control",
+	"Content-Transfer-Encoding",
+	"Date",
+	"Distribution",
+	"Encrypted",
+	"Expires",
+	"Followup-To",
+	"From",
+	"In-Reply-To",
+	"Keywords",
+	"Lines",
+	"Message-ID",
+	"Mime-Version",
+	"Newsgroups",
+	"Organization",
+	"Path",
+	"Received",
+	"References",
+	"Reply-To",
+	"Resent-Bcc",
+	"Resent-Cc",
+	"Resent-Date",
+	"Resent-From",
+	"Resent-MessageID",
+	"Resent-ReplyTo",
+	"Resent-Sender",
+	"Resent-To",
+	"Return-Path",
+	"Sender",
+	"Subject",
+	"Summary",
+	"To",
+	"Xref",
+	"" // HeaderUnknown
 };
 
 
-static char * monthNames[] = {
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
+	const RMM::HeaderDataType
+RMM::headerTypesTable [] = {
+	Text,				// HeaderApproved
+	AddressList,		// HeaderBcc
+	MailboxList,		// HeaderCc
+	Text,				// HeaderComments
+	Text,				// HeaderContentDescription
+	DispositionType,	// HeaderContentDisposition
+	MessageID,			// HeaderContentID
+	Text,				// HeaderContentMD5
+	Text,				// HeaderContentType
+	Text,				// HeaderControl
+	Text,				// HeaderContentTransferEncoding
+	DateTime,			// HeaderDate
+	Text,				// HeaderDistribution
+	Text,				// HeaderEncrypted
+	DateTime,			// HeaderExpires
+	Text,				// HeaderFollowupTo
+	MailboxList,		// HeaderFrom
+	Text,				// HeaderInReplyTo
+	Text,				// HeaderKeywords
+	Text,				// HeaderLines
+	MessageID,			// HeaderMessageID
+	Text,				// HeaderMimeVersion
+	Text,				// HeaderNewsgroups
+	Text,				// HeaderOrganization
+	Text,				// HeaderPath
+	Text,				// HeaderReceived
+	Text,				// HeaderReferences
+	AddressList,		// HeaderReplyTo
+	AddressList,		// HeaderResentBcc
+	AddressList,		// HeaderResentCc
+	DateTime,			// HeaderResentDate
+	MailboxList,		// HeaderResentFrom
+	MessageID,			// HeaderResentMessageID
+	AddressList,		// HeaderResentReplyTo
+	Mailbox,			// HeaderResentSender
+	AddressList,		// HeaderResentTo
+	Text,				// HeaderReturnPath
+	Mailbox,			// HeaderSender
+	Text,				// HeaderSubject
+	Text,				// HeaderSummary
+	AddressList,		// HeaderTo
+	Text,				// HeaderXref
+	Text				// HeaderUnknown
 };
 
-	Month
-strToMonth(const QCString & s)
+	RMM::Month
+RMM::strToMonth(const QCString & s)
 {
 	if (s.isEmpty()) return MonthJan;
 
@@ -61,19 +146,8 @@ strToMonth(const QCString & s)
 
 }
 
-	DayOfWeek
-strToDayOfWeek(const QCString & s)
-{
-	if (s.isEmpty()) return DayNone;
-
-	for (int i = 0; i < 7; i++)
-		if (stricmp(s, dayNames[i])) return (DayOfWeek)++i;
-
-	return DayNone;
-}
-
-	MimeType
-mimeTypeStr2Enum(const QCString & s)
+	RMM::MimeType
+RMM::mimeTypeStr2Enum(const QCString & s)
 {
 	if (s.isEmpty()) return MimeTypeNone;
 
@@ -140,7 +214,7 @@ mimeTypeStr2Enum(const QCString & s)
 }
 
 	QCString
-mimeTypeEnum2Str(MimeType m)
+RMM::mimeTypeEnum2Str(MimeType m)
 {
 	QCString s;
 
@@ -155,43 +229,43 @@ mimeTypeEnum2Str(MimeType m)
 			break;
 
 		case MimeTypeText:
-			s =  "Text";
+			s =	"Text";
 			break;
 
 		case MimeTypeMultiPart:
-			s =  "Multipart";
+			s =	"Multipart";
 			break;
 
 		case MimeTypeMessage:
-			s =  "Message";
+			s =	"Message";
 			break;
 
 		case MimeTypeImage:
-			s =  "Image";
+			s =	"Image";
 			break;
 
 		case MimeTypeApplication:
-			s =  "Application";
+			s =	"Application";
 			break;
 
 		case MimeTypeAudio:
-			s =  "Audio";
+			s =	"Audio";
 			break;
 
 		case MimeTypeVideo:
-			s =  "Video";
+			s =	"Video";
 			break;
 
 		case MimeTypeModel:
-			s =  "Model";
+			s =	"Model";
 			break;
 	}
 
 	return s;
 }
 
-	MimeSubType
-mimeSubTypeStr2Enum(const QCString & s)
+	RMM::MimeSubType
+RMM::mimeSubTypeStr2Enum(const QCString & s)
 {
 	if (s.isEmpty()) return MimeSubTypeNone;
 
@@ -314,7 +388,7 @@ mimeSubTypeStr2Enum(const QCString & s)
 }
 
 	QCString
-mimeSubTypeEnum2Str(MimeSubType t)
+RMM::mimeSubTypeEnum2Str(MimeSubType t)
 {
 	QCString s;
 
@@ -402,8 +476,8 @@ mimeSubTypeEnum2Str(MimeSubType t)
 	return s;
 }
 
-	CteType
-RCteStr2Enum(const QCString & s)
+	RMM::CteType
+RMM::RCteStr2Enum(const QCString & s)
 {
 	CteType cte = CteType7bit;
 
@@ -451,7 +525,7 @@ RCteStr2Enum(const QCString & s)
 }
 
 	QCString
-cteTypeEnumToStr(CteType t)
+RMM::cteTypeEnumToStr(CteType t)
 {
 	QCString s;
 

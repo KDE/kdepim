@@ -44,14 +44,14 @@ class RDispositionType : public RHeaderBody {
 
 		bool isValid() const;
 
-		void set(DispType);
+		void set(RMM::DispType);
 		void set(const QCString & s) { RHeaderBody::set(s); }
 
 		const QCString & filename() const;
 		void setFilename(const QCString &);
 		void addParameter(const RParameter & p);
 		const QList<RParameter> parameterList();
-		DispType type()const;
+		RMM::DispType type()const;
 		
 		void createDefault();
 		
@@ -60,7 +60,7 @@ class RDispositionType : public RHeaderBody {
 	private:
 
 		RParameterList parameterList_;
-		DispType dispType_;
+		RMM::DispType dispType_;
 		QCString filename_;
 		bool isValid_;
 };

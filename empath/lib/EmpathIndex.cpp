@@ -69,7 +69,7 @@ EmpathIndex::countUnread() const
 	Q_UINT32 unread = 0;
 	EmpathIndexIterator it(*this);
 	for (; it.current(); ++it)
-		if (it.current()->status() ^ Read) ++unread;
+		if (it.current()->status() ^ RMM::Read) ++unread;
 	return unread;
 }
 

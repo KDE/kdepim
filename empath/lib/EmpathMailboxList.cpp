@@ -65,10 +65,10 @@ EmpathMailboxList::append(EmpathMailbox * mailbox)
 	KConfig * config_ = kapp->getConfig();
 	
 	// Save the config group.
-	KConfigGroupSaver cgs(config_, GROUP_GENERAL);
+	KConfigGroupSaver cgs(config_, EmpathConfig::GROUP_GENERAL);
 	
 	// Save how many mailboxes we have.
-	config_->writeEntry(KEY_NUM_MAILBOXES, count());
+	config_->writeEntry(EmpathConfig::KEY_NUM_MAILBOXES, count());
 
 	QObject::QObject::connect(mailbox, SIGNAL(newMailArrived()),
 		empath, SLOT(s_newMailArrived()));
@@ -96,10 +96,10 @@ EmpathMailboxList::remove(EmpathMailbox * mailbox)
 			KConfig * config_ = kapp->getConfig();
 			
 			// Save the config group.
-			KConfigGroupSaver cgs(config_, GROUP_GENERAL);
+			KConfigGroupSaver cgs(config_, EmpathConfig::GROUP_GENERAL);
 			
 			// Save how many mailboxes we have.
-			config_->writeEntry(KEY_NUM_MAILBOXES, count());
+			config_->writeEntry(EmpathConfig::KEY_NUM_MAILBOXES, count());
 		}
 
 		emit(updateFolderLists());
@@ -155,10 +155,10 @@ EmpathMailboxList::init()
 EmpathMailboxList::readConfig()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_GENERAL);
+	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	QStrList l;
-	c->readListEntry(KEY_MAILBOX_LIST, l);
+	c->readListEntry(EmpathConfig::KEY_MAILBOX_LIST, l);
 	
 	QObject::connect(this, SIGNAL(updateFolderLists()),
 		empath, SLOT(s_updateFolderLists()));
@@ -174,7 +174,7 @@ EmpathMailboxList::readConfig()
 		
 		c->setGroup(it.current());
 		
-		mailboxType = (AccountType)c->readUnsignedNumEntry(KEY_MAILBOX_TYPE);
+		mailboxType = (AccountType)c->readUnsignedNumEntry(EmpathConfig::KEY_MAILBOX_TYPE);
 
 		EmpathMailbox * m = 0;
 
@@ -248,7 +248,7 @@ EmpathMailboxList::saveConfig() const
 	
 	KConfig * c = kapp->getConfig();
 	
-	c->setGroup(GROUP_GENERAL);
-	c->writeEntry(KEY_MAILBOX_LIST, l);
+	c->setGroup(EmpathConfig::GROUP_GENERAL);
+	c->writeEntry(EmpathConfig::KEY_MAILBOX_LIST, l);
 }
 

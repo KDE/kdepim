@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATH_STATUS_WIDGET_H
+#define EMPATH_STATUS_WIDGET_H
+
 // Qt includes
 #include <qwidget.h>
 #include <qlist.h>
@@ -39,4 +42,6 @@ class EmpathStatusWidget : public QWidget
 		int bottom_;
 		QList<QWidget> widgetList_;
 };
+
+#endif
 

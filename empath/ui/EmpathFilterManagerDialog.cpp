@@ -42,7 +42,7 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	QPushButton	tempButton((QWidget *)0);
 	Q_UINT32 h	= tempButton.sizeHint().height();
 
-	rgb_filters_ = new RikGroupBox("", 8, this, "rgb_filters");
+	rgb_filters_ = new RikGroupBox(QString::null, 8, this, "rgb_filters");
 	CHECK_PTR(rgb_filters_);
 	
 	w_filters_ = new QWidget(rgb_filters_, "w_filters");

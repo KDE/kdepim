@@ -232,7 +232,7 @@ class EmpathMailbox : public QObject
 		
 	public slots:
 
-		void s_countUpdated(EmpathFolder *, int, int);
+		void s_countUpdated(int, int);
 		
 	protected:
 		

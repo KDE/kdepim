@@ -42,33 +42,33 @@ class RBodyPart : public REntity {
 		void assemble();
 		void createDefault();
 		
-		MimeType mimeType() const;
-		MimeSubType mimeSubType() const;
+		RMM::MimeType mimeType() const;
+		RMM::MimeSubType mimeSubType() const;
 		
-		void setMimeType(MimeType t);
+		void setMimeType(RMM::MimeType t);
 		void setMimeType(const QCString & s);
-		void setMimeSubType(MimeSubType st);
+		void setMimeSubType(RMM::MimeSubType st);
 		void setMimeSubType(const QCString & s);
 
 		const QCString & description() const;
-		DispType disposition() const;
+		RMM::DispType disposition() const;
 		
 		void setDescription(const QCString & s);
-		void setDisposition(DispType d);
+		void setDisposition(RMM::DispType d);
 		
-		CteType encoding() const;
-		void setEncoding(CteType e);
+		RMM::CteType encoding() const;
+		void setEncoding(RMM::CteType e);
 		
 		const char * className() const { return "RBodyPart"; }
-    
+
 	protected:
-    
+
 		QByteArray body_;
-		CteType encoding_;
-		MimeType mimeType_;
-		MimeSubType mimeSubType_;
+		RMM::CteType encoding_;
+		RMM::MimeType mimeType_;
+		RMM::MimeSubType mimeSubType_;
 		QCString contentDescription_;
-		DispType disposition_;
+		RMM::DispType disposition_;
 
 };
 

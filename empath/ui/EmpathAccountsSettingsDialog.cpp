@@ -287,7 +287,11 @@ EmpathAccountsSettingsDialog::s_editAccount()
 	empathDebug("s_editAccount called");
 
 	EmpathMailbox * m =
-		empath->mailboxList().find(lv_accts_->currentItem()->text(0));
+		empath->mailbox(
+			EmpathURL(
+				lv_accts_->currentItem()->text(0),
+				QString::null,
+				QString::null));
 
 	if (m == 0) {
 		empathDebug("Ouch ! couldn't find mailbox !");
@@ -375,11 +379,9 @@ EmpathAccountsSettingsDialog::updateMailboxList()
 
 		empathDebug("Reading timer value from mailbox");
 
-		if (m->usesTimer())
-			timerInterval = QString().setNum(m->timerInterval());
-
 		if (m->checkMail())
 			timerInterval = QString().setNum(m->checkMailInterval());
+
 		QString accType;
 
 		switch (m->type()) {

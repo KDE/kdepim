@@ -39,7 +39,7 @@
 
 EmpathComposeWindow::EmpathComposeWindow(
 	ComposeType t,
-	RMessage * message)
+	const EmpathURL & m)
 	: KTMainWindow()
 {
 	empathDebug("ctor");
@@ -51,7 +51,7 @@ EmpathComposeWindow::EmpathComposeWindow(
 	CHECK_PTR(status);
 
 	composeWidget_	=
-		new EmpathComposeWidget(t, message,this, "composeWidget");
+		new EmpathComposeWidget(t, m, this, "composeWidget");
 	CHECK_PTR(composeWidget_);
 	
 	setView(composeWidget_, false);
@@ -93,15 +93,15 @@ EmpathComposeWindow::setupMenuBar()
 	// File menu
 	empathDebug("setting up file menu");
 	
-	fileMenu_->insertItem(i18n("&Send Message"),
+	fileMenu_->insertItem(empathIcon("mini-send.xpm"), i18n("&Send Message"),
 		this, SLOT(s_fileSendMessage()));
 	
-	fileMenu_->insertItem(i18n("Send &Later"),
+	fileMenu_->insertItem(empathIcon("mini-sendlater.xpm"), i18n("Send &Later"),
 		this, SLOT(s_fileSendLater()));
 	
 	fileMenu_->insertSeparator();
 
-	fileMenu_->insertItem(i18n("Save &As"),
+	fileMenu_->insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
 		this, SLOT(s_fileSaveAs()));
 	
 	fileMenu_->insertSeparator();
@@ -111,17 +111,12 @@ EmpathComposeWindow::setupMenuBar()
 	
 	fileMenu_->insertSeparator();
 
-	fileMenu_->insertItem(i18n("&Print"),
+	fileMenu_->insertItem(empathIcon("empath-print.xpm"), i18n("&Print"),
 		this, SLOT(s_filePrint()));
 	
 	fileMenu_->insertSeparator();
-	
-	fileMenu_->insertItem(i18n("Se&ttings..."),
-		this, SLOT(s_fileSettings()));
 
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(i18n("&Close"),
+	fileMenu_->insertItem(empathIcon("blank.xpm"), i18n("&Close"),
 		this, SLOT(s_fileClose()));
 
 	// Edit menu
@@ -136,46 +131,46 @@ EmpathComposeWindow::setupMenuBar()
 	
 	editMenu_->insertSeparator();
 
-	editMenu_->insertItem(i18n("Cu&t"),
+	editMenu_->insertItem(empathIcon("empath-cut.xpm"), i18n("Cu&t"),
 		this, SLOT(s_editCut()));
 	
-	editMenu_->insertItem(i18n("&Copy"),
+	editMenu_->insertItem(empathIcon("empath-copy.xpm"), i18n("&Copy"),
 		this, SLOT(s_editCopy()));
 	
-	editMenu_->insertItem(i18n("&Paste"),
+	editMenu_->insertItem(empathIcon("empath-paste.xpm"), i18n("&Paste"),
 		this, SLOT(s_editPaste()));
 	
-	editMenu_->insertItem(i18n("&Delete"),
+	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("&Delete"),
 		this, SLOT(s_editDelete()));
 
 	editMenu_->insertSeparator();
 	
-	editMenu_->insertItem(i18n("&Select All"),
+	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("&Select All"),
 		this, SLOT(s_editSelectAll()));
 	
 	editMenu_->insertSeparator();
 	
-	editMenu_->insertItem(i18n("Find..."),
+	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("Find..."),
 		this, SLOT(s_editFind()));
 	
-	editMenu_->insertItem(i18n("Find &Again"),
+	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("Find &Again"),
 		this, SLOT(s_editFindAgain()));
 	
 	// Message Menu
 	empathDebug("setting up message menu");
 
-	messageMenu_->insertItem(i18n("&New"),
+	messageMenu_->insertItem(empathIcon("mini-compose.xpm"), i18n("&New"),
 		this, SLOT(s_messageNew()));
 
-	messageMenu_->insertItem(i18n("Save &As"),
+	messageMenu_->insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
 		this, SLOT(s_messageSaveAs()));
 
-	messageMenu_->insertItem(i18n("&Copy to..."),
+	messageMenu_->insertItem(empathIcon("mini-copy.xpm"), i18n("&Copy to..."),
 		this, SLOT(s_messageCopyTo()));
 	
 	messageMenu_->insertSeparator();
 		
-	messageMenu_->insertItem(i18n("&View source"),
+	messageMenu_->insertItem(empathIcon("blank.xpm"), i18n("&View source"),
 		this, SLOT(s_messageViewSource()));
 
 	setupHelpMenu(this, 0, helpMenu_);

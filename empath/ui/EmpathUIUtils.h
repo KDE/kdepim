@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATHUIUTILS_H
+#define EMPATHUIUTILS_H
+
 // Qt includes
 #include <qstring.h>
 #include <qfont.h>
@@ -25,9 +28,6 @@
 
 // Local includes
 #include "EmpathUtilities.h"
-
-#ifndef EMPATHUIUTILS_H
-#define EMPATHUIUTILS_H
 
 QPixmap empathIcon(const QString & name);
 QFont	empathFixedFont();

@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATH_TASK_WIDGET_H
+#define EMPATH_TASK_WIDGET_H
+
 // Qt includes
 #include <qwidget.h>
 #include <qpushbutton.h>
@@ -45,4 +48,6 @@ class EmpathTaskWidget : public QWidget
 		QPushButton		* stopButton_;
 		QLabel			* tickLabel_;
 };
+
+#endif
 

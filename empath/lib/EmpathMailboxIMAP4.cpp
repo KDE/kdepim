@@ -22,11 +22,11 @@
 #include "EmpathMailboxIMAP4.h"
 
 EmpathMailboxIMAP4::EmpathMailboxIMAP4(const QString & name)
-	:	EmpathMailbox(name),
-		serverAddress_(""),
-		serverPort_(110),
-		username_(""),
-		password_("")
+	:	EmpathMailbox	(name),
+		serverAddress_	(QString::null),
+		serverPort_		(110),
+		username_		(QString::null),
+		password_		(QString::null)
 {
 	empathDebug("ctor");
 	type_	= IMAP4;
@@ -310,7 +310,7 @@ EmpathMailboxIMAP4::sizeOfMessage(const EmpathURL & id)
 	QString
 EmpathMailboxIMAP4::plainBodyOfMessage(const EmpathURL & id)
 {
-	return "";
+	return QString::null;
 }
 
 	REnvelope *

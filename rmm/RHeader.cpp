@@ -30,56 +30,8 @@
 #include <RMM_MessageID.h>
 #include <RMM_Text.h>
 
-HeaderDataType
-headerTypesTable[] = {
-        Text,                   // HeaderApproved
-        AddressList,    // HeaderBcc
-        MailboxList,    // HeaderCc
-        Text,                   // HeaderComments
-        Text,                   // HeaderContentDescription
-        DispositionType,// HeaderContentDisposition
-        MessageID,              // HeaderContentID
-        Text,                   // HeaderContentMD5
-        Text,                   // HeaderContentType
-        Text,                   // HeaderControl
-        Text,                   // HeaderContentTransferEncoding
-        DateTime,               // HeaderDate
-        Text,                   // HeaderDistribution
-        Text,                   // HeaderEncrypted
-        DateTime,               // HeaderExpires
-        Text,                   // HeaderFollowupTo
-        MailboxList,    // HeaderFrom
-        Text,                   // HeaderInReplyTo
-        Text,                   // HeaderKeywords
-        Text,                   // HeaderLines
-        MessageID,              // HeaderMessageID
-        Text,                   // HeaderMimeVersion
-        Text,                   // HeaderNewsgroups
-        Text,                   // HeaderOrganization
-        Text,                   // HeaderPath
-        Text,                   // HeaderReceived
-        Text,                   // HeaderReferences
-        AddressList,    // HeaderReplyTo
-        AddressList,    // HeaderResentBcc
-        AddressList,    // HeaderResentCc
-        DateTime,               // HeaderResentDate
-        MailboxList,    // HeaderResentFrom
-        MessageID,              // HeaderResentMessageID
-        AddressList,    // HeaderResentReplyTo
-        Mailbox,                // HeaderResentSender
-        AddressList,    // HeaderResentTo
-        Text,                   // HeaderReturnPath
-        Mailbox,                // HeaderSender
-        Text,                   // HeaderSubject
-        Text,                   // HeaderSummary
-        AddressList,    // HeaderTo
-        Text,                   // HeaderXref
-        Text                    // HeaderUnknown
-};
-
-
 RHeader::RHeader()
-	:	headerType_(HeaderUnknown),
+	:	headerType_(RMM::HeaderUnknown),
 		headerBody_(0)
 {
 	rmmDebug("ctor");
@@ -90,7 +42,7 @@ RHeader::RHeader(const QCString & name, RHeaderBody * b)
 	rmmDebug("ctor");
 }
 
-RHeader::RHeader(HeaderType t, RHeaderBody * b)
+RHeader::RHeader(RMM::HeaderType t, RHeaderBody * b)
 {
 	rmmDebug("ctor");
 }
@@ -123,7 +75,7 @@ RHeader::headerName() const
 	return headerName_;
 }
 
-	HeaderType
+	RMM::HeaderType
 RHeader::headerType() const
 {
 	return headerType_;
@@ -142,7 +94,7 @@ RHeader::setName(const QCString & name)
 }
 
 	void
-RHeader::setType(HeaderType t)
+RHeader::setType(RMM::HeaderType t)
 {
 	headerType_ = t;
 }
@@ -160,7 +112,7 @@ RHeader::parse()
 	int split = strRep_.find(':');
 
 	if (headerBody_ != 0) delete headerBody_;
-	headerType_ = HeaderUnknown;
+	headerType_ = RMM::HeaderUnknown;
 
 	if (split == -1) return;
 
@@ -168,57 +120,27 @@ RHeader::parse()
 	headerName_ = headerName_.stripWhiteSpace();
 
 	for (int i = 0; i < 42; i++) {
-		if (!stricmp((headerName_), headerNames[i])) {
-			headerType_ = (HeaderType)i;
-			rmmDebug("I'm of type " + QCString(headerNames[i]));
+		if (!stricmp((headerName_), RMM::headerNames[i])) {
+			headerType_ = (RMM::HeaderType)i;
+			rmmDebug("I'm of type " + QCString(RMM::headerNames[i]));
 		}
 	}
 
-	if (headerType_ == HeaderUnknown) {
+	if (headerType_ == RMM::HeaderUnknown) {
 		rmmDebug("I'm an unknown header, \"" + headerName_ + "\"");
 	}
 
 	RHeaderBody * b;
-	switch (headerTypesTable[headerType_]) {
-
-		case Address:
-			rmmDebug("b = new RAddress");
-			b = new RAddress;
-			break;
-
-		case AddressList:
-			b = new RAddressList;
-			break;
-
-		case DateTime:
-			b = new RDateTime;
-			break;
-
-		case DispositionType:
-			b = new RDispositionType;
-			break;
-
-		case Mailbox:
-			b = new RMailbox;
-			break;
-
-		case MailboxList:
-			b = new RMailboxList;
-			break;
-
-		case Mechanism:
-			b = new RMechanism;
-			break;
-
-		case MessageID:
-			b = new RMessageID;
-			break;
-
-		case Text:
-		default:
-			rmmDebug("b = new RText");
-			b = new RText;
-			break;
+	switch (RMM::headerTypesTable[headerType_]) {
+		case RMM::Address:			b = new RAddress;			break;
+		case RMM::AddressList:		b = new RAddressList;		break;
+		case RMM::DateTime:			b = new RDateTime;			break;
+		case RMM::DispositionType:	b = new RDispositionType;	break;
+		case RMM::Mailbox:			b = new RMailbox;			break;
+		case RMM::MailboxList:		b = new RMailboxList;		break;
+		case RMM::Mechanism:		b = new RMechanism;			break;
+		case RMM::MessageID:		b = new RMessageID;			break;
+		case RMM::Text: default:	b = new RText;				break;
 	}
 
 	QCString hb = strRep_.right(strRep_.length() - split - 1);
@@ -235,8 +157,8 @@ RHeader::assemble()
 {
 	rmmDebug("assemble() called");
 
-	if (headerType_ != HeaderUnknown)
-		headerName_ = headerNames[headerType_];
+	if (headerType_ != RMM::HeaderUnknown)
+		headerName_ = RMM::headerNames[headerType_];
 
 	strRep_ = headerName_;
 	strRep_ += ':';

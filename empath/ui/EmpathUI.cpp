@@ -22,6 +22,7 @@
 #include <kapp.h>
 
 // Local includes
+#include "Empath.h"
 #include "EmpathUI.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
@@ -33,6 +34,10 @@ EmpathUI::EmpathUI()
 	: QObject()
 {
 	empathDebug("ctor");
+	
+	connect(empath,	SIGNAL(newComposer(ComposeType, const EmpathURL &)),
+			this,	SLOT(s_newComposer(ComposeType, const EmpathURL &)));
+	
 	EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
 	kapp->setMainWidget(mainWindow);
 }
@@ -43,9 +48,14 @@ EmpathUI::~EmpathUI()
 }
 
 	void	
-EmpathUI::s_newComposer(ComposeType t, RMessage * m)
+EmpathUI::s_newComposer(ComposeType t, const EmpathURL & m)
 {
+	empathDebug("s_newComposer(" +
+		QString().setNum(t) + ", " + m.asString() + ") called");
+
 	EmpathComposeWindow * c = new EmpathComposeWindow(t, m);
+	CHECK_PTR(c);
+	c->show();
 }
 
 	void
@@ -53,15 +63,15 @@ EmpathUI::_showTipOfTheDay() const
 {
 	KConfig * c = kapp->getConfig();
 
-	c->setGroup(GROUP_GENERAL);
+	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	if (!c->readBoolEntry(KEY_TIP_OF_THE_DAY_AT_STARTUP, false)) return;
+	if (!c->readBoolEntry(EmpathConfig::KEY_TIP_OF_THE_DAY_AT_STARTUP, false)) return;
 
 	EmpathTipOfTheDay totd(
 			(QWidget *)0L,
 			"tipWidget",
 			kapp->kde_datadir() + "/empath/tips/EmpathTips",
-			"",
+			QString::null,
 			0);
 	totd.exec();
 }

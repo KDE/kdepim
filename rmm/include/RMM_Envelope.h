@@ -55,13 +55,17 @@ class REnvelope : public RMessageComponent
 		void parse();
 		void assemble();
 
-		bool has(HeaderType t) const;
+		bool has(RMM::HeaderType t) const;
 		bool has(const QCString & headerName) const;
 
-		void set(const QCString & s) { RMessageComponent::set(s); }
-		const QCString & asString() const { return RMessageComponent::asString(); }
-		void set(HeaderType t, const QCString & s);
-		void _createDefault(HeaderType t);
+		void set(const QCString & s)
+		{ RMessageComponent::set(s); }
+		
+		const QCString & asString() const
+		{ return RMessageComponent::asString(); }
+		
+		void set(RMM::HeaderType t, const QCString & s);
+		void _createDefault(RMM::HeaderType t);
 		void createDefault();
 		
 		const RMailbox & firstSender();
@@ -69,7 +73,7 @@ class REnvelope : public RMessageComponent
 
 		RText &				get(const QCString & headerName);
 
-		template <class T> T get(HeaderType h, T t);
+		template <class T> T get(RMM::HeaderType h, T t);
 
 		RText &				approved();
 		RAddressList &		bcc();

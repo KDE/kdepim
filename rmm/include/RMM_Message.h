@@ -77,8 +77,8 @@ class RMessage : public REntity {
 //		void addAttachmentList(const QList<EmpathAttachmentSpec> & attList);
 		bool hasParentMessageID() const;
 
-		void setStatus(MessageStatus status)		{ status_ = status; }
-		MessageStatus status() const				{ return status_; }
+		void setStatus(RMM::MessageStatus status)	{ status_ = status; }
+		RMM::MessageStatus status() const			{ return status_; }
 		void setFolder(const QCString & folderName)	{ folder_ = folderName.data();}
 		const QCString & folder() const				{ return folder_; }
 
@@ -96,8 +96,8 @@ class RMessage : public REntity {
 		REnvelope			envelope_;
 		RBody				body_;
 		
-		MessageStatus		status_;
-		QCString				folder_;	
+		RMM::MessageStatus	status_;
+		QCString			folder_;	
 		unsigned long int	id_;
 };
 

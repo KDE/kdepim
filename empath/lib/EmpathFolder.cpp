@@ -32,8 +32,7 @@ uID EmpathFolder::ID = 0;
 EmpathFolder::EmpathFolder()
 	:	QObject(),
 		messageCount_(0),
-		unreadMessageCount_(0),
-		url_("")
+		unreadMessageCount_(0)
 {
 	empathDebug("default ctor !");
 	id_ = ID++;
@@ -125,7 +124,7 @@ EmpathFolder::parent() const
 	f = f.left(f.length() - f.findRev("/") + 1);
 	f += "/";
 	empathDebug("Parent folder path is \"" + f + "\"");
-	EmpathURL u(m, f, "");
+	EmpathURL u(m, f, QString::null);
 	return empath->folder(u);
 }
 

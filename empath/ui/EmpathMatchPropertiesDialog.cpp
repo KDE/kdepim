@@ -31,7 +31,7 @@
 EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 		QWidget * parent,
 		EmpathMatcher * matcher)
-	:	QDialog(parent, "", true),
+	:	QDialog(parent, "matchPropertiesDialog", true),
 		matcher_(matcher)
 {
 	empathDebug("ctor");

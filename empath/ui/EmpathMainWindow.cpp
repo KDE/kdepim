@@ -80,7 +80,7 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 	setupToolBar();
 	setupStatusBar();
 	
-	setCaption("Empath "VERSION);
+	setCaption(kapp->getCaption());
 	
 	updateRects();
 
@@ -120,13 +120,7 @@ EmpathMainWindow::setupMenuBar()
 
 	// File menu
 	
-	fileMenu_->insertItem(empathIcon("mini-compose.xpm"), i18n("&New Message"),
-		this, SLOT(s_fileNewMessage()));
-	
-	fileMenu_->insertItem(empathIcon("mini/folder.xpm"), i18n("New &Folder"),
-		this, SLOT(s_fileNewFolder()));
-	
-	fileMenu_->insertItem(empathIcon("empath-save.xpm"), i18n("Save &As"),
+	fileMenu_->insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
 		this, SLOT(s_messageSaveAs()));
 	
 	fileMenu_->insertSeparator();
@@ -141,9 +135,6 @@ EmpathMainWindow::setupMenuBar()
 	
 	fileMenu_->insertSeparator();
 
-//	fileMenu_->insertItem(empathIcon("ftin.xpm"), i18n("&Get New Mail"),
-//		this, SLOT(s_fileGetNew()));
-	
 	fileMenu_->insertItem(empathIcon("send.xpm"), i18n("&Send Pending Mail"),
 		this, SLOT(s_fileSendNew()));
 
@@ -159,14 +150,6 @@ EmpathMainWindow::setupMenuBar()
 
 	// Edit menu
 	
-//	editMenu_->insertItem(empathIcon("up.xpm"), i18n("&Undo"),
-//		this, SLOT(s_editUndo()));
-	
-//	editMenu_->insertItem(empathIcon("down.xpm"), i18n("&Redo"),
-//		this, SLOT(s_editRedo()));
-	
-//	editMenu_->insertSeparator();
-
 	editMenu_->insertItem(empathIcon("empath-cut.xpm"), i18n("Cu&t"),
 		this, SLOT(s_editCut()));
 	
@@ -176,7 +159,7 @@ EmpathMainWindow::setupMenuBar()
 	editMenu_->insertItem(empathIcon("empath-paste.xpm"), i18n("&Paste"),
 		this, SLOT(s_editPaste()));
 	
-	editMenu_->insertItem(empathIcon("mini/mini-cross.xpm"), i18n("&Delete"),
+	editMenu_->insertItem(empathIcon("mini-cross.xpm"), i18n("&Delete"),
 		this, SLOT(s_editDelete()));
 
 	editMenu_->insertSeparator();
@@ -197,16 +180,16 @@ EmpathMainWindow::setupMenuBar()
 	
 	// Folder menu
 
-	folderMenu_->insertItem(empathIcon("mini/folder.xpm"), i18n("&New..."),
+	folderMenu_->insertItem(empathIcon("mini-folder-grey.xpm"), i18n("&New..."),
 		this, SLOT(s_folderNew()));
 
 	folderMenu_->insertItem(empathIcon("openbook.xpm"), i18n("&Edit..."),
 		this, SLOT(s_folderEdit()));
 
-	folderMenu_->insertItem(empathIcon("mini/folder_green.xpm"), i18n("&Clear..."),
+	folderMenu_->insertItem(empathIcon("mini-folder-outbox.xpm"), i18n("&Clear..."),
 		this, SLOT(s_folderClear()));
 
-	folderMenu_->insertItem(empathIcon("mini/mini-cross.xpm"), i18n("Delete..."),
+	folderMenu_->insertItem(empathIcon("mini-cross.xpm"), i18n("Delete..."),
 		this, SLOT(s_folderDelete()));
 
 	// Message Menu
@@ -239,10 +222,11 @@ EmpathMainWindow::setupToolBar()
 	CHECK_PTR(tb);
 
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_GENERAL);
+	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	KToolBar::BarPosition pos =
-		(KToolBar::BarPosition)c->readNumEntry(KEY_MAIN_WINDOW_TOOLBAR_POS);
+		(KToolBar::BarPosition)
+		c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POSITION);
 
 	if (pos == KToolBar::Floating) pos = KToolBar::Top;
 	tb->setBarPos(pos);
@@ -253,7 +237,7 @@ EmpathMainWindow::setupToolBar()
 			this, SLOT(s_toolbarMoved(BarPosition)));
 
 	tb->insertButton(empathIcon("compose.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_fileNewMessage()), true, i18n("Compose"));
+			this, SLOT(s_messageNew()), true, i18n("Compose"));
 	
 	tb->insertButton(empathIcon("reply.xpm"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageReply()), true, i18n("Reply"));
@@ -295,25 +279,6 @@ EmpathMainWindow::queryExit()
 // File menu slots
 
 	void
-EmpathMainWindow::s_fileNewMessage()
-{
-	empathDebug("s_fileNewMessage called");
-	empath->compose();
-}
-
-	void
-EmpathMainWindow::s_fileNewFolder()
-{
-	empathDebug("s_fileNewFolder called");
-}
-
-	void
-EmpathMainWindow::s_fileViewMessage()
-{
-	empathDebug("s_fileViewMessage called");
-}
-
-	void
 EmpathMainWindow::s_fileEmptyTrash()
 {
 	empathDebug("s_fileEmptyTrash called");
@@ -327,27 +292,10 @@ EmpathMainWindow::s_filePrint()
 }
 
 	void
-EmpathMainWindow::s_fileGetNew()
-{
-	empathDebug("s_fileGetNew called");
-	status_->message("Getting new mail", 6000);
-	empath->mailboxList().getNewMail();
-}
-
-	void
 EmpathMainWindow::s_fileSendNew()
 {
 	empathDebug("s_fileSendNew called");
 
-}
-
-	void
-EmpathMainWindow::s_fileSettings()
-{
-	empathDebug("s_fileSettings called");
-//	EmpathSettingsDialog settingsDialog(
-//			AllSettings, (QWidget *)0L, "settingsDialog");
-//	settingsDialog.exec();
 }
 
 	void
@@ -469,42 +417,42 @@ EmpathMainWindow::s_folderDelete()
 EmpathMainWindow::s_messageNew()
 {
 	empathDebug("s_messageNew called");
-
+	empath->s_compose();
 }
 
 	void
 EmpathMainWindow::s_messageReply()
 {
 	empathDebug("s_messageReply called");
-
+	empath->s_reply(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageReplyAll()
 {
 	empathDebug("s_messageReplyAll called");
-
+	empath->s_replyAll(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageForward()
 {
 	empathDebug("s_messageForward called");
-
+	empath->s_forward(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageBounce()
 {
 	empathDebug("s_messageBounce called");
-
+	empath->s_bounce(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageDelete()
 {
 	empathDebug("s_messageDelete called");
-
+	empath->s_remove(messageListWidget_->firstSelectedMessage());
 }
 
 	void
@@ -519,10 +467,12 @@ EmpathMainWindow::s_messageSaveAs()
 		return;
 	}
 
-	QString saveFilePath = KFileDialog::getSaveFileName("", "", this, i18n("Empath: Save Message"));
+	QString saveFilePath =
+		KFileDialog::getSaveFileName(
+			QString::null, QString::null, this, i18n("Empath: Save Message"));
 	empathDebug(saveFilePath);
 	
-	if (saveFilePath == "") {
+	if (saveFilePath.isEmpty()) {
 		empathDebug("No filename given");
 		delete message; message = 0;
 		return;
@@ -705,8 +655,8 @@ EmpathMainWindow::clearStatusMessage()
 EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_GENERAL);
-	c->writeEntry(KEY_MAIN_WINDOW_TOOLBAR_POS, (int)pos);
+	c->setGroup(EmpathConfig::GROUP_GENERAL);
+	c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POSITION, (int)pos);
 }
 
 	void
@@ -730,7 +680,6 @@ EmpathMainWindow::messageListWidget()
 	void
 EmpathMainWindow::s_optionsSettingsDisplay()
 {
-	empathDebug("s_fileSettings called");
 	EmpathSettingsDialog settingsDialog(DisplaySettings,
 			(QWidget *)0L, "settingsDialog");
 	settingsDialog.exec();
@@ -739,7 +688,6 @@ EmpathMainWindow::s_optionsSettingsDisplay()
 	void
 EmpathMainWindow::s_optionsSettingsIdentity()
 {
-	empathDebug("s_fileSettings called");
 	EmpathSettingsDialog settingsDialog(IdentitySettings,
 			(QWidget *)0L, "settingsDialog");
 	settingsDialog.exec();
@@ -748,7 +696,6 @@ EmpathMainWindow::s_optionsSettingsIdentity()
 	void
 EmpathMainWindow::s_optionsSettingsCompose()
 {
-	empathDebug("s_fileSettings called");
 	EmpathSettingsDialog settingsDialog(ComposeSettings,
 			(QWidget *)0L, "settingsDialog");
 	settingsDialog.exec();
@@ -757,7 +704,6 @@ EmpathMainWindow::s_optionsSettingsCompose()
 	void
 EmpathMainWindow::s_optionsSettingsSending()
 {
-	empathDebug("s_fileSettings called");
 	EmpathSettingsDialog settingsDialog(SendingSettings,
 			(QWidget *)0L, "settingsDialog");
 	settingsDialog.exec();
@@ -766,7 +712,6 @@ EmpathMainWindow::s_optionsSettingsSending()
 	void
 EmpathMainWindow::s_optionsSettingsAccounts()
 {
-	empathDebug("s_fileSettings called");
 	EmpathSettingsDialog settingsDialog(AccountsSettings,
 			(QWidget *)0L, "settingsDialog");
 	settingsDialog.exec();
@@ -775,20 +720,17 @@ EmpathMainWindow::s_optionsSettingsAccounts()
 	void
 EmpathMainWindow::s_optionsSettingsFilters()
 {
-	empathDebug("s_fileSettings called");
 	EmpathSettingsDialog settingsDialog(FilterSettings,
 			(QWidget *)0L, "settingsDialog");
 	settingsDialog.exec();
 }
 
-#ifndef NDEBUG
 	void
 EmpathMainWindow::s_dumpWidgetList()
 {
 	EmpathDebugDialog d(this, "debugDialog");
 	d.exec();
 }
-#endif
 
 	RMessage *
 EmpathMainWindow::_getFirstSelectedMessage() const

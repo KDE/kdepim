@@ -391,7 +391,7 @@ EmpathFolderWidget::s_update()
 	void
 EmpathFolderWidget::s_newFolder()
 {
-	KLineEditDlg led(i18n("Folder name"), "", this, false);
+	KLineEditDlg led(i18n("Folder name"), QString::null, this, false);
 	led.exec();
 
 	QString name = led.text();

@@ -59,17 +59,17 @@ EmpathMailSenderSMTP::send(EmpathMessageList & messageList)
 EmpathMailSenderSMTP::saveConfig()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_SENDING);
-	c->writeEntry(KEY_SMTP_SERVER_LOCATION, serverName_);
-	c->writeEntry(KEY_SMTP_SERVER_PORT, serverPort_);
+	c->setGroup(EmpathConfig::GROUP_SENDING);
+	c->writeEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION, serverName_);
+	c->writeEntry(EmpathConfig::KEY_SMTP_SERVER_PORT, serverPort_);
 }
 
 	void
 EmpathMailSenderSMTP::readConfig()
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_SENDING);
-	serverName_ = c->readEntry(KEY_SMTP_SERVER_LOCATION, "localhost");
-	serverPort_ = c->readUnsignedNumEntry(KEY_SMTP_SERVER_PORT, 25);
+	c->setGroup(EmpathConfig::GROUP_SENDING);
+	serverName_ = c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION, "localhost");
+	serverPort_ = c->readUnsignedNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT, 25);
 }
 

@@ -76,26 +76,26 @@ RBodyPart::operator = (const RBodyPart & part)
 	return *this;
 }
 
-	MimeType
+	RMM::MimeType
 RBodyPart::mimeType() const
 {
 	return mimeType_;
 }
 
-	MimeSubType
+	RMM::MimeSubType
 RBodyPart::mimeSubType() const
 {
 	return mimeSubType_;
 }
 
 	void
-RBodyPart::setMimeType(MimeType t)
+RBodyPart::setMimeType(RMM::MimeType t)
 {
 	mimeType_ = t;
 }
 
 	void
-RBodyPart::setMimeSubType(MimeSubType st)
+RBodyPart::setMimeSubType(RMM::MimeSubType st)
 {
 	mimeSubType_ = st;
 }
@@ -103,13 +103,13 @@ RBodyPart::setMimeSubType(MimeSubType st)
 	void
 RBodyPart::setMimeType(const QCString & s)
 {
-	mimeType_ = mimeTypeStr2Enum(s);
+	mimeType_ = RMM::mimeTypeStr2Enum(s);
 }
 
 	void
 RBodyPart::setMimeSubType(const QCString & s)
 {
-	mimeSubType_ = mimeSubTypeStr2Enum(s);
+	mimeSubType_ = RMM::mimeSubTypeStr2Enum(s);
 }
 
 	void

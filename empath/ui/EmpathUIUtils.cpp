@@ -31,8 +31,8 @@
 empathIcon(const QString & name)
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
-	QString iconSet = c->readEntry(KEY_ICON_SET, "8bit");
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET, "8bit");
 	
 	QPixmap p;
 	p = Icon(iconSet + "/" + name);

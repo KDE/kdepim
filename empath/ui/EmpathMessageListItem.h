@@ -28,6 +28,10 @@
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
+#include "RMM_MessageID.h"
+#include "RMM_Mailbox.h"
+#include "RMM_DateTime.h"
+#include "RMM_Enum.h"
 
 class EmpathMessageListWidget;
 
@@ -40,11 +44,11 @@ class EmpathMessageListItem : public QListViewItem
 	
 		EmpathMessageListItem(
 			EmpathMessageListWidget * parent,
-			EmpathIndexRecord * msgDesc);
+			const EmpathIndexRecord & msgDesc);
 
 		EmpathMessageListItem(
 			EmpathMessageListItem * parent,
-			EmpathIndexRecord * msgDesc);
+			const EmpathIndexRecord & msgDesc);
 
 		~EmpathMessageListItem();
 		
@@ -52,28 +56,30 @@ class EmpathMessageListItem : public QListViewItem
 
 		QString key(int, bool) const;
 
-		EmpathIndexRecord * msgDesc() const { return msgDesc_; }
+		const QString &		id()		const	{ return id_;			}
+		const RMessageID &	messageID() const	{ return messageID_;	}
+		const RMessageID &	parentID()	const	{ return parentID_;		}
+		const QString &		subject()	const	{ return subject_;		}
+		const RMailbox &	sender()	const	{ return sender_;		}
+		const RDateTime &	date()		const	{ return date_;			}
+		RMM::MessageStatus	status()	const	{ return status_;		}
+		Q_UINT32			size()		const	{ return size_;			}
 
-		const RMessageID & messageID() const	{ return msgDesc_->messageID(); }
-		
-		const RMessageID & parentID() const		{ return msgDesc_->parentID(); }
-
-		QString subject() const					{ return msgDesc_->subject(); }
-		
-		const RMailbox & sender() const			{ return msgDesc_->sender(); }
-		
-		const RDateTime & date() const			{ return msgDesc_->date(); }
-		
-		MessageStatus status() const			{ return msgDesc_->status(); }
-
-		QString size() const;
-
-		const char * className()				{ return "EmpathMessageListItem"; }
+		const char * className() const { return "EmpathMessageListItem"; }
 		
 	private:
 
-		EmpathIndexRecord * msgDesc_;
-
+		void _init();
+		
+		QString				id_;
+		RMessageID			messageID_;
+		RMessageID			parentID_;
+		QString				subject_;
+		RMailbox			sender_;
+		RDateTime			date_;
+		RMM::MessageStatus	status_;
+		QString				niceDate_;
+		Q_UINT32			size_;
 };
 
 #endif

@@ -243,21 +243,21 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 EmpathComposeSettingsDialog::saveData()
 {
 	KConfig * c	= kapp->getConfig();
-	c->setGroup(GROUP_COMPOSE);
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 #define CWE c->writeEntry
-	CWE( KEY_PHRASE_REPLY_SENDER,		le_reply_->text()					);
-	CWE( KEY_PHRASE_REPLY_ALL,			le_replyAll_->text()				);
-	CWE( KEY_PHRASE_FORWARD,			le_forward_->text()					);
-	CWE( KEY_AUTO_QUOTE,				cb_quote_->isChecked()				);
-	CWE( KEY_ADD_SIG,					cb_addSig_->isChecked()				);
-	CWE( KEY_ADD_DIG_SIG,				cb_digSign_->isChecked()			);
-	CWE( KEY_WRAP_LINES,				cb_wrap_->isChecked()				);
-	CWE( KEY_WRAP_COLUMN,				QString(sb_wrap_->text()).toInt()	);
-	CWE( KEY_SEND_POLICY,
+	CWE( EmpathConfig::KEY_PHRASE_REPLY_SENDER,		le_reply_->text()					);
+	CWE( EmpathConfig::KEY_PHRASE_REPLY_ALL,			le_replyAll_->text()				);
+	CWE( EmpathConfig::KEY_PHRASE_FORWARD,			le_forward_->text()					);
+	CWE( EmpathConfig::KEY_AUTO_QUOTE,				cb_quote_->isChecked()				);
+	CWE( EmpathConfig::KEY_ADD_SIG,					cb_addSig_->isChecked()				);
+	CWE( EmpathConfig::KEY_ADD_DIG_SIG,				cb_digSign_->isChecked()			);
+	CWE( EmpathConfig::KEY_WRAP_LINES,				cb_wrap_->isChecked()				);
+	CWE( EmpathConfig::KEY_WRAP_COLUMN,				QString(sb_wrap_->text()).toInt()	);
+	CWE( EmpathConfig::KEY_SEND_POLICY,
 		(unsigned long)(rb_sendNow_->isChecked() ? SendNow : SendLater));
 	
-	CWE( KEY_USE_EXTERNAL_EDITOR,		cb_externalEditor_->isChecked()		);
-	CWE( KEY_EXTERNAL_EDITOR,			le_externalEditor_->text()			);
+	CWE( EmpathConfig::KEY_USE_EXTERNAL_EDITOR,		cb_externalEditor_->isChecked()		);
+	CWE( EmpathConfig::KEY_EXTERNAL_EDITOR,			le_externalEditor_->text()			);
 #undef CWE
 }
 
@@ -265,27 +265,27 @@ EmpathComposeSettingsDialog::saveData()
 EmpathComposeSettingsDialog::loadData()
 {
 	KConfig * c	= kapp->getConfig();
-	c->setGroup(GROUP_COMPOSE);
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 	
-	le_reply_->setText(c->readEntry(KEY_PHRASE_REPLY_SENDER, i18n("%s wrote:")));
-	le_replyAll_->setText(c->readEntry(KEY_PHRASE_REPLY_ALL, i18n("%s wrote:")));
-	le_forward_->setText(c->readEntry(KEY_PHRASE_FORWARD,
+	le_reply_->setText(c->readEntry(EmpathConfig::KEY_PHRASE_REPLY_SENDER, i18n("%s wrote:")));
+	le_replyAll_->setText(c->readEntry(EmpathConfig::KEY_PHRASE_REPLY_ALL, i18n("%s wrote:")));
+	le_forward_->setText(c->readEntry(EmpathConfig::KEY_PHRASE_FORWARD,
 		i18n("Forwarded message from %s")));
 
-	cb_quote_->setChecked(c->readBoolEntry(KEY_AUTO_QUOTE, true));
-	cb_addSig_->setChecked(c->readBoolEntry(KEY_ADD_SIG, true));
-	cb_digSign_->setChecked(c->readBoolEntry(KEY_ADD_DIG_SIG, false));
-	cb_wrap_->setChecked(c->readBoolEntry(KEY_WRAP_LINES, true));
-	sb_wrap_->setValue(c->readNumEntry(KEY_WRAP_COLUMN, 76));
+	cb_quote_->setChecked(c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE, true));
+	cb_addSig_->setChecked(c->readBoolEntry(EmpathConfig::KEY_ADD_SIG, true));
+	cb_digSign_->setChecked(c->readBoolEntry(EmpathConfig::KEY_ADD_DIG_SIG, false));
+	cb_wrap_->setChecked(c->readBoolEntry(EmpathConfig::KEY_WRAP_LINES, true));
+	sb_wrap_->setValue(c->readNumEntry(EmpathConfig::KEY_WRAP_COLUMN, 76));
 	
 	rb_sendNow_->setChecked(
-		((SendPolicy)c->readNumEntry(KEY_SEND_POLICY, SendNow)) == SendNow);
+		((SendPolicy)c->readNumEntry(EmpathConfig::KEY_SEND_POLICY, SendNow)) == SendNow);
 
 	rb_sendLater_->setChecked(!rb_sendNow_->isChecked());
 	
 	cb_externalEditor_->setChecked(
-		c->readBoolEntry(KEY_USE_EXTERNAL_EDITOR, false));
+		c->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false));
 	
-	le_externalEditor_->setText(c->readEntry(KEY_EXTERNAL_EDITOR, "gvim"));
+	le_externalEditor_->setText(c->readEntry(EmpathConfig::KEY_EXTERNAL_EDITOR, "gvim"));
 }
 

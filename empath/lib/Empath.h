@@ -41,7 +41,6 @@
 
 class EmpathFolder;
 class EmpathMailSender;
-class EmpathMessageDataCache;
 class EmpathIndexRecord;
 class RMessage;
 
@@ -78,20 +77,14 @@ class Empath : public QObject
 		 * @short quick ref to controller class
 		 * @return pointer to the controller class' single object
 		 */
-		static Empath * getEmpath();
+		static Empath * getEmpath() { return EMPATH; }
 		
 		/**
-		 * This are used by EmpathMailboxMaildir and should go into that class.
+		 * These are used by EmpathMailboxMaildir and should go into that class.
 		 */
-		Q_UINT32 startTime() const;
-		/**
-		 * This are used by EmpathMailboxMaildir and should go into that class.
-		 */
-		pid_t processID() const;
-		/**
-		 * This are used by EmpathMailboxMaildir and should go into that class.
-		 */
-		QString hostName() const;
+		Q_UINT32	startTime()	const { return startupSeconds_; }
+		pid_t		processID()	const { return processID_; }
+		QString		hostName()	const { return hostName_; }
 		
 		/**
 		 * Apply filters to message given as messageDesc.
@@ -111,88 +104,29 @@ class Empath : public QObject
 		 * @short shortcut to mailbox list
 		 * @return pointer to mailbox list
 		 */
-		EmpathMailboxList & mailboxList();
+		EmpathMailboxList & mailboxList() { return mailboxList_; }
 		
-		/**
-		 * Gets a message description given id - deprecated ?
-		 */
-		const EmpathIndexRecord *
-			messageDescription(const RMessageID & id) const;
-
-		/**
-		 * Search for a message. Necessary ?
-		 */
-		const RMessage * findMessage(int id);
-		
-		/**
-		 * Call this to create a new composer
-		 */
-		void newComposer() const;
-
 		/**
 		 * Pointer to the system-wide sender - be it Sendmail, SMTP or whatever
 		 */
-		EmpathMailSender & mailSender() const;
+		EmpathMailSender & mailSender() const
+		{ ASSERT(mailSender_); return *mailSender_; }
 
 		/**
 		 * The filters
 		 */
-		EmpathFilterList & filterList();
+		EmpathFilterList & filterList() { return filterList_; }
 		
 		void statusMessage(const QString & message) const;
 		void updateOutgoingServer();
-		
+	
 		/**
-		 * Reply to the given message. Brings up the appropriate window and sets
-		 * the bits to what they should be.
-		 */
-		void reply(RMessage * message);
-		/**
-		 * Reply to the given message. Brings up the appropriate window and sets
-		 * the bits to what they should be.
-		 */
-		void replyAll(RMessage * message);
-		/**
-		 * Forward given message. Brings up the appropriate window and sets
-		 * the bits to what they should be.
-		 */
-		void forward(RMessage * m);
-		/**
-		 * Compose a new message.
-		 */
-		void compose();
-		
-		/**
-		 * Get the size in octets of the message
-		 */
-		Q_UINT32 sizeOfMessage(const EmpathURL &);
-
-		/**
-		 * Get the first plain body part of the message, if there is one. Should
-		 * really return preamble if there isn't.
-		 */
-		QString plainBodyOfMessage(const EmpathURL &);
-
-		/**
-		 * Gets the envelope of the message.
-		 */
-		REnvelope * envelopeOfMessage(const EmpathURL &);
-		
-		/**
-		 * Gets the type of the message, be it plain or mime.
-		 */
-		RMessage::MessageType typeOfMessage(const EmpathURL &);
-		
-		/**
-		 * Gets the message specified. Allocated with new, so delete it.
+		 * Gets the message specified. The message is placed in the cache, so
+		 * you can forget about it as it will be deleted later.
+		 * If the message can't be retrieved, returns 0.
 		 */
 		RMessage * message(const EmpathURL &);
 		
-		/**
-		 * Removes the message specified from the containing mailbox.
-		 */
-		bool removeMessage(const EmpathURL &);
-
 		/**
 		 * Gets a pointer to the folder specified in the url, or 0.
 		 */
@@ -212,9 +146,48 @@ class Empath : public QObject
 		/**
 		 * Used when folders have changed and any displayed lists need updating.
 		 */
-		void s_updateFolderLists();
+		void s_updateFolderLists() { emit(updateFolderLists()); }
 		
 		void s_saveConfig();
+			
+		/**
+		 * Compose a new message.
+		 */
+		void s_compose()
+		{ emit(newComposer(ComposeNormal, EmpathURL())); }
+		
+		/**
+		 * @short Reply to the given message.
+		 */
+		void s_reply(const EmpathURL & url)
+		{ emit(newComposer(ComposeReply, url)); }
+		
+		/**
+		 * @short Reply to the given message.
+		 */
+		void s_replyAll(const EmpathURL & url)
+		{ emit(newComposer(ComposeReplyAll, url)); }
+		
+		/**
+		 * @short Forward given message.
+		 */
+		void s_forward(const EmpathURL & url)
+		{ emit(newComposer(ComposeForward, url)); }
+		
+		/**
+		 * @short Remove given message.
+		 */
+		void s_remove(const EmpathURL &);
+		
+		/**
+		 * Bounce a message.
+		 */
+		void s_bounce(const EmpathURL &) {}
+		
+		/**
+		 * Mark a message with a given status.
+		 */
+		void s_mark(const EmpathURL &, RMM::MessageStatus);
 	
 	signals:
 	
@@ -224,28 +197,26 @@ class Empath : public QObject
 		 */
 		void updateFolderLists();
 		void newMailArrived();
-		void newComposer(ComposeType, RMessage *);
-		
+		void newComposer(ComposeType, const EmpathURL &);
 		
 	private:
 	
 		// General
 
-		void _initFilters();
 		void _saveHostName();
 		void _setStartTime();
 		
 		// These objects will be contructed before the code in our contructor
 		// is run. That means they must NOT access anything 'global', including
-		// KApplication stuff when they are constructed. They will be told when to
-		// 'init' themselves and will do what would normally be in their
+		// KApplication stuff when they are constructed. They will be told when
+		// to init themselves and will do what would normally be in their
 		// respective constructors at that point instead.
 		
 		EmpathMailboxList		mailboxList_;
 		EmpathFilterList		filterList_;
 		
 		EmpathMailSender		* mailSender_;
-		EmpathMessageDataCache	messageDataCache_;
+		EmpathMessageDataCache	cache_;
 		QString					hostName_;
 		pid_t					processID_;
 		Q_UINT32				startupSeconds_;

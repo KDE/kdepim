@@ -55,8 +55,8 @@ EmpathFilterList::save()
 	
 	empathDebug("Saving number of filters");
 	KConfig * config = kapp->getConfig();
-	config->setGroup(GROUP_GENERAL);
-	config->writeEntry(KEY_NUMBER_OF_FILTERS, count());
+	config->setGroup(EmpathConfig::EmpathConfig::GROUP_GENERAL);
+	config->writeEntry(EmpathConfig::EmpathConfig::KEY_NUMBER_OF_FILTERS, count());
 }
 
 	void
@@ -65,9 +65,10 @@ EmpathFilterList::load()
 	empathDebug("load() called");
 	
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_GENERAL);
+	c->setGroup(EmpathConfig::EmpathConfig::GROUP_GENERAL);
 	
-	Q_UINT32 numberOfFilters = c->readUnsignedNumEntry(KEY_NUMBER_OF_FILTERS);
+	Q_UINT32 numberOfFilters =
+		c->readUnsignedNumEntry(EmpathConfig::EmpathConfig::KEY_NUMBER_OF_FILTERS);
 	
 	empathDebug("Number of filters == " + QString().setNum(numberOfFilters));
 

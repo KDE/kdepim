@@ -181,7 +181,7 @@ EmpathConfigMaildirDialog::s_Help()
 EmpathConfigMaildirDialog::s_browseMailboxPath()
 {
 	QString temp_path =
-		KFileDialog::getOpenFileName("", "*", this, "getPath");
+		KFileDialog::getOpenFileName(QString::null, "*", this, "getPath");
 
 	if (temp_path.length() != 0) le_mailboxPath_->setText(temp_path);
 }

@@ -65,7 +65,7 @@ EmpathFolderChooserWidget::selectedURL() const
 			folder_->url().asString());
 		return folder_->url();
 	}
-	else return EmpathURL("");
+	else return EmpathURL(QString::null);
 }
 
 	void

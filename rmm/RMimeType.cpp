@@ -62,14 +62,14 @@ RMimeType::operator = (const RMimeType & t)
 	return *this;
 }
 
-	MimeType
+	RMM::MimeType
 RMimeType::type() const
 {
 	return type_;
 }
 
 	void
-RMimeType::setType(MimeType t)
+RMimeType::setType(RMM::MimeType t)
 {
 	type_ = t;
 }
@@ -79,14 +79,14 @@ RMimeType::setType(const QCString & s)
 {
 }
 
-	MimeSubType
+	RMM::MimeSubType
 RMimeType::subType() const
 {
 	return subType_;
 }
 
 	void
-RMimeType::setSubType(MimeSubType t)
+RMimeType::setSubType(RMM::MimeSubType t)
 {
 }
 

@@ -40,7 +40,7 @@
 
 EmpathComposeWidget::EmpathComposeWidget(
 	ComposeType t,
-	RMessage * message,
+	const EmpathURL & m,
 	QWidget * parent,
 	const char * name)
 	: QWidget(parent, name)
@@ -116,8 +116,8 @@ EmpathComposeWidget::EmpathComposeWidget(
 		case ComposeReply:
 			{
 				KConfig * config = kapp->getConfig();
-				config->setGroup(GROUP_COMPOSE);
-				if (!config->readBoolEntry(KEY_USE_EXTERNAL_EDITOR)) {
+				config->setGroup(EmpathConfig::GROUP_COMPOSE);
+				if (!config->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR)) {
 					//	editorWidget_->setText(message->firstPlainBody());
 					return;
 				}
@@ -129,6 +129,8 @@ EmpathComposeWidget::EmpathComposeWidget(
 
 		case ComposeForward:
 			{
+				RMessage * message(empath->message(m));
+				if (message == 0) return;
 				QCString s = message->envelope().to().asString();
 				headerEditWidget_->setToText(s);
 				if (!s.isEmpty())
@@ -214,9 +216,8 @@ EmpathComposeWidget::spawnExternalEditor(const QCString & text)
 	fstat(fd, &statbuf);
 
 	KConfig * config = kapp->getConfig();
-	config->setGroup(GROUP_COMPOSE);
-	QString externalEditor = config->readEntry(KEY_EXTERNAL_EDITOR);
-
+	config->setGroup(EmpathConfig::GROUP_COMPOSE);
+	QString externalEditor = config->readEntry(EmpathConfig::KEY_EXTERNAL_EDITOR);
 	KProcess * p = new KProcess;
 	empathDebug("p << " + externalEditor);
 	*p << externalEditor;

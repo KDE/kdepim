@@ -58,7 +58,7 @@ static char * replaceTagsBody[] = {
 	"@_SIGNATURE_"
 };
 
-// const int fsizes[7] = { 6, 9, 11, 13, 15, 20, 24 };
+const int fsizes[7] = { 14, 14, 14, 14, 14, 14, 14 };
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 		const EmpathURL &	url,
@@ -69,10 +69,10 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 {
 	empathDebug("ctor");
 	
-//	setFontSizes(fsizes);
+	setFontSizes(fsizes);
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
-	QString iconSet = c->readEntry(KEY_ICON_SET);
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET);
 	
 	begin();
 	// Begin welcome message
@@ -123,17 +123,17 @@ EmpathMessageHTMLWidget::go()
 	setFocusPolicy(QWidget::StrongFocus);
 	
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	if (!c->readBoolEntry(KEY_USE_DEFAULT_COLOURS)) {
+	if (!c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS)) {
 		setDefaultTextColors(
-				c->readColorEntry(KEY_TEXT_COLOUR),
-				c->readColorEntry(KEY_LINK_COLOUR),
-				c->readColorEntry(KEY_VISITED_LINK_COLOUR));
+				c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR),
+				c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
+				c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
 	} else
 		setDefaultTextColors(empathTextColour(), Qt::blue, Qt::darkCyan);
 	
-	setUnderlineLinks(c->readBoolEntry(KEY_UNDERLINE_LINKS));
+	setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
 	
 	// Implementation Note:
 	// Get template to htmlTemplate
@@ -210,7 +210,7 @@ EmpathMessageHTMLWidget::loadTemplate(const QString & templateFilename)
 	empathDebug("loadTemplate");
 	QFile f(templateFilename);
 	
-	htmlTemplate = "";
+	htmlTemplate = QString::null;
 	
 	if (!f.open(IO_ReadOnly)) {
 		
@@ -242,9 +242,9 @@ EmpathMessageHTMLWidget::markupBackgroundColour(QCString & html)
 	QCString bgcol;
 	
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	if (c->readBoolEntry(KEY_USE_DEFAULT_COLOURS)) {
+	if (c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS)) {
 	
 		bgcol = "BGCOLOR=\"#" +
 		QColorToHTML(empathWindowColour()) +
@@ -253,7 +253,7 @@ EmpathMessageHTMLWidget::markupBackgroundColour(QCString & html)
 	} else {
 	
 		bgcol = "BGCOLOR=\"#" +
-		QColorToHTML(c->readColorEntry(KEY_BACKGROUND_COLOUR)) +
+		QColorToHTML(c->readColorEntry(EmpathConfig::KEY_BACKGROUND_COLOUR)) +
 		"\"";
 	}
 	
@@ -267,10 +267,10 @@ EmpathMessageHTMLWidget::markupTextColour(QCString & html)
 	empathDebug("markupTextColour");
 	
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QCString textcol;
-	if (c->readBoolEntry(KEY_USE_DEFAULT_COLOURS)) {
+	if (c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS)) {
 	
 		textcol = "\"#" +
 		QColorToHTML(empathTextColour()) +
@@ -279,7 +279,7 @@ EmpathMessageHTMLWidget::markupTextColour(QCString & html)
 	} else {
 	
 		textcol = "\"#" +
-		QColorToHTML(c->readColorEntry(KEY_TEXT_COLOUR)) +
+		QColorToHTML(c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR)) +
 		"\"";
 	}
 	
@@ -311,13 +311,13 @@ EmpathMessageHTMLWidget::replaceBodyTagsByData(
 	// Handle condition where there's no sig.	
 	if (i != -1) {
 		
-		sigOnly = body.right(body.length() - i - 4);
-		bodyOnly = body.left(i);
+		sigOnly		= body.right(body.length() - i - 4);
+		bodyOnly	= body.left(i);
 
 	} else {
 
-		sigOnly = "";
-		bodyOnly = body;
+		sigOnly		= QString::null;
+		bodyOnly	= body;
 	}
 	toHTML(bodyOnly);
 	toHTML(sigOnly);
@@ -394,7 +394,7 @@ EmpathMessageHTMLWidget::markupHeaderBodies(
 		// Didn't find the field in the message header ? Replace the tag in the
 		// html with nothing.
 		if (headerPos == -1) {
-			html.replace(fieldToReplace, "");
+			html.replace(fieldToReplace, QString::null);
 			continue;
 		}
 

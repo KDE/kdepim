@@ -26,7 +26,7 @@
 #include "Empath.h"
 
 EmpathMailbox::EmpathMailbox(const QString & name)
-	:	url_(name, "", "")
+	:	url_(name, QString::null, QString::null)
 {
 	empathDebug("ctor - url == \"" + url_.asString() + "\"");
 	pixmapName_ = "mailbox.xpm";
@@ -105,7 +105,7 @@ EmpathMailbox::unreadMessageCount() const
 }
 
 	void
-EmpathMailbox::s_countUpdated(EmpathFolder * f, int unread, int read)
+EmpathMailbox::s_countUpdated(int unread, int read)
 {
 	emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
 }

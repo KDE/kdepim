@@ -72,7 +72,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 		return;
 	}
 
-	QString s = url.folderPath();
+	QString s = url_.folderPath();
 	if (s.right(1) == "/")
 		s = s.remove(s.length(), 1);
 	s = s.left(s.length() - s.findRev("/") + 1);

@@ -18,11 +18,16 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATH_UI_H
+#define EMPATH_UI_H
+
 // Qt includes
 #include <qobject.h>
 
 // Local includes
+#include "EmpathEnum.h"
 #include "EmpathUIUtils.h"
+#include "EmpathURL.h"
 
 class RMessage;
 
@@ -37,10 +42,12 @@ class EmpathUI : public QObject
 		
 	protected slots:
 		
-		void s_newComposer(ComposeType, RMessage *);
+		void s_newComposer(ComposeType, const EmpathURL &);
 	
 	private:
 	
 		void _showTipOfTheDay() const;
 };
+
+#endif
 

@@ -34,7 +34,7 @@ class RHeader : public RMessageComponent
 		RHeader();
 		RHeader(const QCString & name, RHeaderBody * b);
 		RHeader(const QCString & s) : RMessageComponent(s), headerBody_(0) { }
-		RHeader(HeaderType t, RHeaderBody * b);
+		RHeader(RMM::HeaderType t, RHeaderBody * b);
 		const RHeader & operator = (const RHeader & h);
 
 		virtual ~RHeader();
@@ -44,20 +44,20 @@ class RHeader : public RMessageComponent
 		void createDefault();
 		
 		const QCString & headerName() const;
-		HeaderType headerType() const;
+		RMM::HeaderType headerType() const;
 		RHeaderBody * headerBody() const;
 
 		void setName(const QCString & name);
-		void setType(HeaderType t);
+		void setType(RMM::HeaderType t);
 		void setBody(RHeaderBody * b);
 
 		const char * className() const { return "RHeader"; }
 
 	private:
 		
-		QCString headerName_;
-		HeaderType headerType_;
-		RHeaderBody * headerBody_;
+		QCString		headerName_;
+		RMM::HeaderType	headerType_;
+		RHeaderBody *	headerBody_;
 };
 
 typedef QListIterator<RHeader> RHeaderListIterator;

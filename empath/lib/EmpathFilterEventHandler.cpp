@@ -125,7 +125,7 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 				
 				if (!mcf->writeMessage(*m)) return;
 				
-				empath->removeMessage(id);
+				empath->s_remove(id);
 			}
 			
 			break;
@@ -152,41 +152,21 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 			break;
 
 		case Forward:
-			{
-				empathDebug("Forwarding message " + QString(id.asString()));
-				
-				RMessage * m(empath->message(id));
-				
-				if (m == 0) return;
-				
-				empath->forward(m);
-			}
-			
+			empathDebug("Forwarding message " + QString(id.asString()));
+			empath->s_forward(id);
 			break;
 			
 		case Delete:
-			
 			empathDebug("Deleting message " + QString(id.asString()));
-
-			if (!empath->removeMessage(id)) {
-
-				empathDebug("Couldn't remove message " +
-					id.asString());
-			}
-			
+			empath->s_remove(id);
 			break;
 	
 		case Ignore:
-			
 			empathDebug("Ignoring message " + id.asString());
-
 			break;
 			
 		default:
-			
-			empathDebug("Don't know what to do with " +
-				id.asString());
-			
+			empathDebug("Don't know what to do with " + id.asString());
 			break;
 	}
 }
@@ -195,26 +175,29 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 EmpathFilterEventHandler::load(Q_UINT32 filterID)
 {
 	KConfig * config = kapp->getConfig();
-	config->setGroup(GROUP_FILTER + QString().setNum(filterID));
-	actionType_ = (ActionType)config->readNumEntry(KEY_FILTER_EVENT_HANDLER_TYPE);
+	config->setGroup(EmpathConfig::EmpathConfig::GROUP_FILTER + QString().setNum(filterID));
+	actionType_ = (ActionType)config->readNumEntry(EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE);
 
 	switch (actionType_) {
 
 		case MoveFolder:
 
 			setMoveFolder(
-					EmpathURL(config->readEntry(KEY_FILTER_EVENT_HANDLER_FOLDER)));
+					EmpathURL(config->readEntry(
+							EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER)));
 			break;
 			
 		case CopyFolder:
 
 			setCopyFolder(
-					EmpathURL(config->readEntry(KEY_FILTER_EVENT_HANDLER_FOLDER)));
+					EmpathURL(config->readEntry(
+							EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER)));
 			break;
 
 		case Forward:
 
-			setForward(config->readEntry(KEY_FILTER_EVENT_HANDLER_FOLDER));
+			setForward(config->readEntry(
+					EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER));
 			break;
 
 		case Delete:
@@ -232,22 +215,23 @@ EmpathFilterEventHandler::save(Q_UINT32 filterID)
 {
 	empathDebug("save(" + QString().setNum(filterID) + ") called");
 	KConfig * config = kapp->getConfig();
-	config->setGroup(GROUP_FILTER + QString().setNum(filterID));
-	config->writeEntry(KEY_FILTER_EVENT_HANDLER_TYPE, (int)actionType_);
+	config->setGroup(EmpathConfig::EmpathConfig::GROUP_FILTER + QString().setNum(filterID));
+	config->writeEntry(
+		EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE, (int)actionType_);
 
 	switch (actionType_) {
 
 		case MoveFolder:
 		case CopyFolder:
 			
-			config->writeEntry(KEY_FILTER_EVENT_HANDLER_FOLDER,
+			config->writeEntry(EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER,
 				moveCopyFolder_.asString());
 			
 			break;
 		
 		case Forward:
 		
-			config->writeEntry(KEY_FILTER_EVENT_HANDLER_ADDRESS, forwardAddress_);
+			config->writeEntry(EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_ADDRESS, forwardAddress_);
 		
 			break;
 		

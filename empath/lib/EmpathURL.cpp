@@ -28,10 +28,10 @@
 #include "EmpathURL.h"
 
 EmpathURL::EmpathURL()
-	:	mailboxName_(""),
-		folderPath_(""),
-		messageID_(""),
-		strRep_("")
+	:	mailboxName_	(QString::null),
+		folderPath_		(QString::null),
+		messageID_		(QString::null),
+		strRep_			(QString::null)
 {
 	empathDebug("ctor");
 }
@@ -41,10 +41,10 @@ EmpathURL::EmpathURL(
 		const QString & folderPath,
 		const QString & messageID)
 	:
-		mailboxName_(mailboxName),
-		folderPath_(folderPath),
-		messageID_(messageID),
-		strRep_("")
+		mailboxName_	(mailboxName),
+		folderPath_		(folderPath),
+		messageID_		(messageID),
+		strRep_			(QString::null)
 {
 	empathDebug("ctor with \"" +
 		mailboxName_ + "\", \"" + folderPath_ + "\", \"" + messageID_ + "\"");
@@ -84,37 +84,37 @@ EmpathURL::_parse()
 	
 	// Case 1: No slashes, therefore it's just got a mailbox name.
 	if (slashes == 0) {
-		mailboxName_ = s;
-		folderPath_	= "";
-		messageID_ = "";
+		mailboxName_	= s;
+		folderPath_		= QString::null;
+		messageID_		= QString::null;
 		return;
 	}
 	
 	// Case 2: Only one slash. Just a mailbox name again,
 	// ignore the trailing slash.
 	if (slashes == 1) {
-		mailboxName_ = s.left(s.length() - 1);
-		folderPath_	= "";
-		messageID_ = "";
+		mailboxName_	= s.left(s.length() - 1);
+		folderPath_		= QString::null;
+		messageID_		= QString::null;
 		return;
 	}
 	
 	// Case 3: Not a mailbox (because the above didn't match), but has a
 	// trailing slash. Therefore it's a mailbox + a folder path.
 	if (s.right(1) == '/') {
-		unsigned int i = s.find('/');
-		mailboxName_ = s.left(i);
-		folderPath_ = s.right(s.length() - i);
-		messageID_ = "";
+		unsigned int i	= s.find('/');
+		mailboxName_	= s.left(i);
+		folderPath_		= s.right(s.length() - i);
+		messageID_		= QString::null;
 		return;
 	}
 	
 	// Case 4: We have a mailbox, a folder path, and a message id.
-	unsigned int i = s.find('/');
-	mailboxName_ = s.left(i);
-	unsigned int j = s.findRev('/');
-	folderPath_ = s.mid(i + 1, j);
-	messageID_ = s.right(s.length() - j);
+	unsigned int i	= s.find('/');
+	mailboxName_	= s.left(i);
+	unsigned int j	= s.findRev('/');
+	folderPath_		= s.mid(i + 1, j);
+	messageID_		= s.right(s.length() - j);
 }
 
 EmpathURL::~EmpathURL()
@@ -217,7 +217,7 @@ EmpathURL::folderPathList()
 	EmpathURL
 EmpathURL::withoutMessageID() const
 {
-	EmpathURL url(mailboxName_, folderPath_, "");
+	EmpathURL url(mailboxName_, folderPath_, QString::null);
 	return url;
 }
 

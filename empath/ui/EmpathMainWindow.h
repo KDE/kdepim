@@ -67,13 +67,8 @@ class EmpathMainWindow : public KTMainWindow
 		void s_toolbarMoved(BarPosition);
 		
 		// File menu slots
-		void s_fileNewMessage();
-		void s_fileNewFolder();
-		void s_fileViewMessage();
 		void s_fileEmptyTrash();
-		void s_fileGetNew();
 		void s_fileSendNew();
-		void s_fileSettings();
 		void s_fileAddressBook();
 		void s_filePrint();
 		void s_fileQuit();
@@ -125,10 +120,8 @@ class EmpathMainWindow : public KTMainWindow
 		void s_aboutEmpath();
 		void s_aboutQt();
 		
-#ifndef NDEBUG
 		// Debugging
 		void s_dumpWidgetList();
-#endif
 
 	private:
 	

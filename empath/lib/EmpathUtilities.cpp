@@ -35,7 +35,8 @@
 	QString
 token(const char * str, const char * delim, Q_UINT32 pos)
 {
-	if (!delim || !str || strlen(delim) == 0 || strlen(str) == 0) return "";
+	if (!delim || !str || strlen(delim) == 0 || strlen(str) == 0)
+		return QString::null;
 
 	char * s = new char[strlen(str)];
 	CHECK_PTR(s);
@@ -51,8 +52,8 @@ token(const char * str, const char * delim, Q_UINT32 pos)
 	}
 
 	delete [] s;
-
-	return ret ? ret : QString("");
+	
+	return ret ? ret : QString::null;
 }
 
 QString baseName(const QString & filename)
