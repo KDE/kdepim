@@ -882,3 +882,16 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
   return normalizedAddressList.join( ", " );
 }
 
+
+QString KPIM::quoteNameIfNecessary( const QString &str )
+{
+  QString quoted = str;
+
+  QRegExp needQuotes(  "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
+  if ( quoted.find( needQuotes ) != -1 ) {
+    quoted = "\"" + quoted + "\"";
+  }
+
+  return quoted;
+}
+

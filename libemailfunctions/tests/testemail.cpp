@@ -148,6 +148,14 @@ static bool checkNormalizeAddressesAndEncodeIDNs( const QString& input, const QS
   return true;
 }
 
+static bool checkQuoteIfNecessary( const QString& input, const QString& expResult )
+{
+  QString result = quoteNameIfNecessary( input );
+  check( "quoteNameIfNecessary " + input + " result ", result, expResult );
+  return true;
+}
+
+
 int main(int argc, char *argv[])
 {
   KApplication::disableAutoDcopRegistration();
@@ -330,6 +338,10 @@ int main(int argc, char *argv[])
   checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>", "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>" );
   checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (jongel,fibbel)", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
   checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (\"jongel,fibbel\")", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
+
+  // check the "quote if necessary" method
+  checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan");
+  checkQuoteIfNecessary( "Douhan, Matt", "\"Douhan, Matt\"");
 
   printf("\nTest OK !\n");
 
