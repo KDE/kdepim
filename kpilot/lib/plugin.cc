@@ -194,8 +194,21 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
 		if (!KStandardDirs::exists(path))
 		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Trying to create path for database: <"
+				<< path << ">" << endl;
+#endif
 			KStandardDirs::makeDir(path);
 		}
+		if (!KStandardDirs::exists(path))
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Database directory does not exist." << endl;
+#endif
+			if (retrieved) *retrieved = false;
+			return false;
+		}
+
 		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
 		{
 #ifdef DEBUG

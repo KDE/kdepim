@@ -928,18 +928,16 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 		<< " to " << fullBackupName << endl;
 #endif
 
-	// The casts here look funny because:
-	//
-	// fullBackupName is a QString
-	// QFile::encodeName() gives us a QCString
-	// which needs an explicit cast to become a const char *
-	// which needs a const cast to become a char *
-	//
-	//
 	struct pi_file *f;
-	f = pi_file_create(const_cast < char *>
-		((const char *) (QFile::encodeName(fullBackupName))),
-		info);
+	if (fullBackupName.isEmpty())
+	{
+		// Don't even bother trying to convert or retrieve.
+		return false;
+	}
+	QCString encodedName = QFile::encodeName(fullBackupName);
+	char filenameBuf[PATH_MAX];
+	strncpy(filenameBuf,(const char *)encodedName,encodedName.length());
+	f = pi_file_create(filenameBuf,info);
 
 	if (f == 0)
 	{
