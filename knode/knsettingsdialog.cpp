@@ -71,12 +71,15 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
   list.clear();
   list << i18n("Post News");
   setFolderIcon(list, BarIcon("arrow_right"));
-  
+
+  // Identity
+  QFrame *frame = addHBoxPage(i18n("Identity"),i18n("Personal Information"), BarIcon("arrow_right"));
+  widgets.append(new KNUserSettings(frame));
 
   // Accounts / News
   list.clear();
   list << i18n("Accounts") << i18n("News"); 
-  QFrame *frame = addHBoxPage(list, i18n("News"), BarIcon("arrow_right"));
+  frame = addHBoxPage(list, i18n("News"), BarIcon("arrow_right"));
   
   widgets.append(new  KNAccNewsSettings(frame, knGlobals.accManager));
   
@@ -86,11 +89,6 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
   frame = addHBoxPage(list, i18n("Mail"), BarIcon("arrow_right"));
   widgets.append(new KNAccMailSettings(frame));
   
-
-  // User
-  frame = addHBoxPage(i18n("User"),i18n("User"), BarIcon("arrow_right"));
-  widgets.append(new KNUserSettings(frame));
-
   // Read News / General
   list.clear();
   list << i18n("Read News") << i18n("General");
@@ -142,12 +140,6 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
 KNSettingsDialog::~KNSettingsDialog()
 {
   saveWindowSize("settingsDlg", this->size());
-}
-
-
-void KNSettingsDialog::slotHelp()
-{
-  qDebug("Remember to implement the help facilities");
 }
 
 

@@ -33,7 +33,7 @@ class KNGroup;
 class KNGroupPropDlg : public QTabDialog  {
 
 	public:
-		KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
+		KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *n=0);
 		~KNGroupPropDlg();
 		
 		void apply();

@@ -15,8 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <klocale.h>
 #include <kconfig.h>
+#include <kmessagebox.h>
 
+#include "knarticlecollection.h"   // KNFile
 #include "knuserentry.h"
 
 
@@ -32,13 +35,37 @@ KNUserEntry::~KNUserEntry()
 
 
 
+const QCString& KNUserEntry::getSignature()
+{
+  s_igContents = "";      // don't cache file contents
+
+  if (u_seSigFile) {
+    if(!s_igPath.isEmpty()) {
+  	  KNFile sigFile(s_igPath);	
+  		if(sigFile.open(IO_ReadOnly)) {
+  			s_igContents=sigFile.readLineWnewLine();
+  			while(!sigFile.atEnd())
+  			  s_igContents += sigFile.readLineWnewLine();
+    		}
+  		else KMessageBox::error(0, i18n("Cannot open the signature file!"));
+  	}
+  } else
+    s_igContents = s_igText;
+	
+	return s_igContents;
+}
+
+
+
 void KNUserEntry::load(KConfigBase *c)
 {
-	n_ame=c->readEntry("Name").local8Bit();
-	e_mail=c->readEntry("Email").local8Bit();
-	r_eplyTo=c->readEntry("Reply-To").local8Bit();
-	o_rga=c->readEntry("Org").local8Bit();
-	s_igPath=c->readEntry("sigFile").local8Bit();
+  n_ame=c->readEntry("Name").local8Bit();
+  e_mail=c->readEntry("Email").local8Bit();
+  r_eplyTo=c->readEntry("Reply-To").local8Bit();
+  o_rga=c->readEntry("Org").local8Bit();
+  u_seSigFile=c->readBoolEntry("UseSigFile",false);
+  s_igPath=c->readEntry("sigFile");
+	s_igText=c->readEntry("sigText").local8Bit();	
 }
 
 
@@ -49,7 +76,9 @@ void KNUserEntry::save(KConfigBase *c)
 	c->writeEntry("Email", e_mail.data());
 	c->writeEntry("Reply-To", r_eplyTo.data());
 	c->writeEntry("Org", o_rga.data());
-	c->writeEntry("sigFile", s_igPath.data());
+	c->writeEntry("UseSigFile", u_seSigFile);
+	c->writeEntry("sigFile", s_igPath);
+	c->writeEntry("sigText", s_igText.data());
 }
 
 

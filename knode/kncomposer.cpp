@@ -601,8 +601,11 @@ void KNComposer::slotSpellFinished()
 
 void KNComposer::slotEditorFinished(KProcess *)
 {
-  insertFile(editorTempfile->name(),true);
-  externalEdited = true;
+  if (externalEditor->normalExit()) {
+    insertFile(editorTempfile->name(),true);
+    externalEdited = true;
+  }
+
   slotCancelEditor();   // cleanup...
 }
 

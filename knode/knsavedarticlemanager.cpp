@@ -573,31 +573,21 @@ KNNntpAccount* KNSavedArticleManager::getAccount(KNSavedArticle *a)
 
 void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
 {
-	QCString sigPath, sig, tmp;
-	KNNntpAccount *acc=getAccount(a);
-	
 	if(!a->hasContent() && a->folder())
 		if(!a->folder()->loadArticle(a)) {
 			KMessageBox::error(0, i18n("Cannot load the article"));
 			return;
 		}
+	
+	KNNntpAccount *acc=getAccount(a);
+	KNUserEntry *user = defaultUser;
 	if(!a->isMail() && a->hasDestination()) {
 		KNGroup *g=knGlobals.gManager->group(a->firstDestination(), acc);
-		if(g && g->user() && g->user()->hasSigPath()) sigPath=g->user()->sigPath();
+		if  (g && g->user())
+		  user = g->user();
 	}
-	if(sigPath.isEmpty()) sigPath=defaultUser->sigPath();			
-	
-	if(!sigPath.isEmpty()) {
-	  KNFile sigFile(sigPath);	
-		if(sigFile.open(IO_ReadOnly)) {
-			sig=sigFile.readLineWnewLine();
-			while(!sigFile.atEnd())
-			  sig += sigFile.readLineWnewLine();
-		}
-		else KMessageBox::error(0, i18n("Cannot open the signature-file"));
-	}	
-	
-	KNComposer *com=new KNComposer(a, sig, acc);
+
+	KNComposer *com=new KNComposer(a, user->getSignature(), acc);
   com->show();
   connect(com, SIGNAL(composerDone(KNComposer*)),
   	this, SLOT(slotComposerDone(KNComposer*)));

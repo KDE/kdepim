@@ -23,29 +23,35 @@
 
 class QLineEdit;
 class QPushButton;
+class QRadioButton;
+class QMultiLineEdit;
 
 class KNUserEntry;
 
 
-class KNUserWidget : public QGroupBox  {
+class KNUserWidget : public QWidget  {
 	
 	Q_OBJECT
 
 	public:
-		KNUserWidget(QString title=QString::null, QWidget *parent=0, const char *n=0);
+		KNUserWidget(QWidget *parent=0, const char *name=0);
 		~KNUserWidget();
 		
 		void setData(KNUserEntry *user);
 		void applyData();
 		
 	protected:
-		QLineEdit *name, *email, *replyTo, *orga, *sig;
-		QPushButton *sigBtn;
+		QLineEdit *name, *orga, *email, *replyTo, *sig;
+		QRadioButton *sigFile, *sigEdit;
+		QPushButton *chooseBtn, *editBtn;
+		QMultiLineEdit *sigEditor;
 		KNUserEntry *entry;
 
 	protected slots:
-		void slotSigButton();
-	
+	  void slotSignatureType(int type);
+		void slotSignatureChoose();
+		void slotSignatureEdit();
+
 };
 
 #endif

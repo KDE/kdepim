@@ -143,16 +143,20 @@ KNGroupPropDlg::settings::settings(QWidget *parent, const char *name)
 		
 	QLabel *l1=new QLabel(i18n("name:"), ngb);
 	nick=new QLineEdit(ngb);
-	uw=new KNUserWidget(i18n("specific Identity"), this);
+	QGroupBox *uwGb=new QGroupBox(i18n("specific Identity"), this);
+	uw=new KNUserWidget(uwGb);
 		
 	QVBoxLayout *topL=new QVBoxLayout(this, 10);
 	QHBoxLayout *nicL=new QHBoxLayout(ngb, 20);
+	QVBoxLayout *userL=new QVBoxLayout(uwGb, 20);
 	
 	nicL->addWidget(l1);
 	nicL->addWidget(nick, 1);
 	
+	userL->addWidget(uw);
+	
 	topL->addWidget(ngb);
-	topL->addWidget(uw, 1);
+	topL->addWidget(uwGb, 1);
 	topL->activate();
 }
 

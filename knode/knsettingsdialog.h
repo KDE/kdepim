@@ -35,7 +35,6 @@ class KNSettingsDialog : public KDialogBase  {
 	protected:
     QList<KNSettingsWidget> widgets;
 
-    virtual void slotHelp();
     virtual void slotOk();
     virtual void slotApply();
 

@@ -25,21 +25,26 @@
 #include "knuserentry.h"
 #include "knusersettings.h"
 
+
 KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)
 {
   user=new KNUserEntry();
   QHBoxLayout *layout = new QHBoxLayout(this);
-  uw=new KNUserWidget(i18n("Identity"), this, 0);
+  uw=new KNUserWidget(this);
   layout->addWidget(uw);
   init();
 
 	layout->setResizeMode(QLayout::Minimum);
 }
 
+
+
 KNUserSettings::~KNUserSettings()
 {
 	delete user;
 }
+
+
 
 void KNUserSettings::init()
 {
