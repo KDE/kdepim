@@ -44,7 +44,6 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
     mUrl( url ), mUser( user ), mPassword( password )
 {
   mSoap = new soap;
-qDebug("XXXXXXX %sI", url.latin1() );
   mWeaver = new KPIM::ThreadWeaver::Weaver( this );
   KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
   weaverLogger->attach( mWeaver );
