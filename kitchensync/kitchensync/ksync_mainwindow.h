@@ -2,6 +2,8 @@
 
 #include <kparts/mainwindow.h>
 
+class PartBar;
+class QHBoxLayout;
 
 namespace KitchenSync {
   // no idea why we have this window
@@ -12,9 +14,9 @@ namespace KitchenSync {
       KSyncMainWindow(QWidget *widget =0l, const char *name = 0l, WFlags f = WType_TopLevel );
       ~KSyncMainWindow();
 
-
+    private:
+      virtual void initActions();
+      PartBar *m_bar;
+      QHBoxLayout *m_lay;
     };
-
-
-
 };
