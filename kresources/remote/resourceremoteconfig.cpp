@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -27,6 +27,9 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
+#include <kdialog.h>
+
+#include <libkcal/resourcecachedconfig.h>
 
 #include "resourceremote.h"
 
@@ -39,6 +42,7 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
 {
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  mainLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Download from:" ), this );
 
@@ -53,12 +57,11 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
   mainLayout->addWidget( label, 2, 0 );
   mainLayout->addWidget( mUploadUrl, 2, 1 );
 
-  mReloadGroup = new QButtonGroup( 1, Horizontal, i18n("Reload"), this );
-  mainLayout->addMultiCellWidget( mReloadGroup, 3, 3, 0, 1 );
-  new QRadioButton( i18n("Never"), mReloadGroup );
-  new QRadioButton( i18n("On startup"), mReloadGroup );
-  new QRadioButton( i18n("Once a day"), mReloadGroup );
-  new QRadioButton( i18n("Always"), mReloadGroup );
+  mReloadConfig = new ResourceCachedReloadConfig( this );
+  mainLayout->addMultiCellWidget( mReloadConfig, 3, 3, 0, 1 );
+
+  mSaveConfig = new ResourceCachedSaveConfig( this );
+  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 0, 1 );
 }
 
 void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
@@ -67,8 +70,7 @@ void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
   if ( res ) {
     mDownloadUrl->setURL( res->downloadUrl().url() );
     mUploadUrl->setURL( res->uploadUrl().url() );
-    kdDebug(5800) << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
-    mReloadGroup->setButton( res->reloadPolicy() );
+    mReloadConfig->loadSettings( res );
   } else {
     kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
   }
@@ -80,7 +82,7 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
   if ( res ) {
     res->setDownloadUrl( KURL( mDownloadUrl->url() ) );
     res->setUploadUrl( KURL( mUploadUrl->url() ) );
-    res->setReloadPolicy( mReloadGroup->selectedId() );
+    mReloadConfig->saveSettings( res );
   } else {
     kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
   }

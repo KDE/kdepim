@@ -3,6 +3,7 @@
 
     Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -31,6 +32,9 @@
 
 namespace KCal {
 
+class ResourceCachedReloadConfig;
+class ResourceCachedSaveConfig;
+
 /**
   Configuration widget for remote resource.
   
@@ -50,7 +54,8 @@ class ResourceRemoteConfig : public KRES::ConfigWidget
     KURLRequester *mDownloadUrl;
     KURLRequester *mUploadUrl;
 
-    QButtonGroup *mReloadGroup;
+    ResourceCachedReloadConfig *mReloadConfig;
+    ResourceCachedSaveConfig *mSaveConfig;
 
     class Private;
     Private *d;
