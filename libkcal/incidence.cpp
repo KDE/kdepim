@@ -486,5 +486,5 @@ QString Incidence::location() const
 ushort Incidence::doesRecur() const
 {
   if ( mRecurrence ) return mRecurrence->doesRecur();
-  else return 0;
+  else return Recurrence::rNone;
 }
