@@ -33,7 +33,7 @@
 #include <kdebug.h>
 
 #include "time-factory.h"
-#include "time-conduit.moc"
+#include "time-conduit.h"
 #include "timeConduitSettings.h"
 
 
@@ -83,38 +83,10 @@ void TimeConduit::readConfig()
 
 	readConfig();
 
-	switch (TimeConduitSettings::direction())
-	{
-		case TimeConduitSettings::eSetHHfromPC:
-			emit logMessage(i18n("Setting the clock on the handheld"));
-//			fHandle->addSyncLogEntry(i18n("Setting the clock on the handheld"));
-			syncHHfromPC();
-			break;
-		case TimeConduitSettings::eSetPCfromHH:
-			emit logMessage(i18n("Setting the clock on the PC from the time on the handheld"));
-//			fHandle->addSyncLogEntry(i18n("Setting the clock on the PC from the time on the handheld"));
-			syncPCfromHH();
-			break;
-		default:
-			emit logError(i18n("Unknown setting for time synchronization."));
-			kdWarning() << k_funcinfo << ": unknown sync direction "<<TimeConduitSettings::direction()<<endl;
-			return false;
-	}
-	emit syncDone(this);
-	return true;
+	emit logMessage(i18n("Setting the clock on the handheld"));
+	syncHHfromPC();
+	return delayDone();
 }
-
-void TimeConduit::syncPCfromHH()
-{
-	FUNCTIONSETUP;
-	QDateTime pdaTime=fHandle->getTime();
-#ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": syncing time "<<pdaTime.toString()<<" to the PC"<<endl;
-#endif
-	emit logError(i18n("The system clock was not adjusted to %1 (not implemented)").arg(pdaTime.toString()));
-	// TODO: Set the system time from this QDateTime
-}
-
 
 
 void TimeConduit::syncHHfromPC()
@@ -132,7 +104,6 @@ void TimeConduit::syncHHfromPC()
 		return;
 	}
 
-//	fHandle->setTime(QDateTime::currentDateTime());
 	fHandle->setTime(ltime);
 #ifdef DEBUG
 	time.setTime_t(ltime);

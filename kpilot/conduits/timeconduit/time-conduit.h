@@ -32,7 +32,6 @@
 
 class TimeConduit : public ConduitAction
 {
-Q_OBJECT
 public:
 	TimeConduit(
 		KPilotDeviceLink *o,
@@ -41,9 +40,7 @@ public:
 	virtual ~TimeConduit();
 	virtual bool exec();
 
-public slots:
 	void syncHHfromPC();
-	void syncPCfromHH();
 
 protected:
 	void readConfig();
