@@ -65,7 +65,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
   KABC::AddresseeList addrList;
 
   // sanity checks
-  QFile file( QDir::homeDirPath() + "/.opera/contacts.adr" );
+  QFile file( QDir::homeDirPath() + QString::fromLatin1( "/.opera/contacts.adr" ) );
   if ( !file.open( IO_ReadOnly ) )
     return addrList;
 
@@ -73,21 +73,21 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
   stream.setEncoding( QTextStream::UnicodeUTF8 );
   QString line, key, value;
   bool parseContact = false;
-  KABC::Addressee *addr = 0L;
-	
+  KABC::Addressee addr;
+
+  QRegExp seperator( "\x02\x02" );
+
   while ( !stream.atEnd() ) {
     line = stream.readLine();
     line = line.stripWhiteSpace();
     if ( line == QString::fromLatin1( "#CONTACT" ) ) {
       parseContact = true;
-      addr = new KABC::Addressee;
+      addr = KABC::Addressee();
       continue;
     } else if ( line.isEmpty() ) {
       parseContact = false;
-      if ( addr && !addr->isEmpty() )
-        addrList.append( *addr );
-      delete addr;
-      addr = 0L;
+      if ( !addr.isEmpty() )
+        addrList.append( addr );
       continue;
     }
 
@@ -96,32 +96,32 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
       key = line.left( sep ).lower();
       value = line.mid( sep + 1 );
       if ( key == QString::fromLatin1( "name" ) )
-        addr->setNameFromString( value );
+        addr.setNameFromString( value );
       else if ( key == QString::fromLatin1( "mail" ) ) {
-        QStringList emails = QStringList::split( ",", value );
+        QStringList emails = QStringList::split( seperator, value );
 
         QStringList::Iterator it = emails.begin();
         bool preferred = true;
         for ( ; it != emails.end(); ++it ) {
-          addr->insertEmail( *it, preferred );
+          addr.insertEmail( *it, preferred );
           preferred = false;
         }
       } else if ( key == QString::fromLatin1( "phone" ) )
-        addr->insertPhoneNumber( KABC::PhoneNumber( value ) );
+        addr.insertPhoneNumber( KABC::PhoneNumber( value ) );
       else if ( key == QString::fromLatin1( "fax" ) )
-        addr->insertPhoneNumber( KABC::PhoneNumber( value, 
+        addr.insertPhoneNumber( KABC::PhoneNumber( value, 
                               KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home ) );
       else if ( key == QString::fromLatin1( "postaladdress" ) ) {
         KABC::Address address( KABC::Address::Home );
-        address.setLabel( value.replace( QRegExp( "\x02\x02" ), "\n" ) );
-        addr->insertAddress( address );
+        address.setLabel( value.replace( seperator, "\n" ) );
+        addr.insertAddress( address );
       } else if ( key == QString::fromLatin1( "description" ) )
-        addr->setNote( value.replace( QRegExp( "\x02\x02" ), "\n" ) );
+        addr.setNote( value.replace( seperator, "\n" ) );
       else if ( key == QString::fromLatin1( "url" ) )
-        addr->setUrl( value );
+        addr.setUrl( value );
       else if ( key == QString::fromLatin1( "pictureurl" ) ) {
         KABC::Picture pic( value );
-        addr->setPhoto( pic );
+        addr.setPhoto( pic );
       }
     }
   }
