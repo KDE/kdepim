@@ -16,7 +16,7 @@ kde_module_LTLIBRARIES = kcm_kpilot.la
 
 METASOURCES = AUTO
 
-INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
+INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes) -I$(top_srcdir)/libkdepim
 
 libconfiguration_la_SOURCES = kpilotConfig.cc kpilotSettings.kcfgc
 libconfiguration_la_LDFLAGS = $(all_libraries)
