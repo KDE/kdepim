@@ -192,7 +192,15 @@ void LogWidget::addProgress(const QString &s,int i)
 
 	if ((i >= 0) && (i <= 100))
 	{
+		// setValue seems to be in both KDE2 and
+		// KDE3, but is marked deprecated in KDE3.
+		//
+		//
+#ifdef KDE2
 		fProgress->setValue(i);
+#else
+		fProgress->setProgress(i);
+#endif
 	}
 }
 
@@ -318,6 +326,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.13  2002/01/22 19:42:25  bero
+// Fix build with current kdelibs
+//
 // Revision 1.12  2002/01/21 23:58:55  aseigo
 // KProgress updates
 //
