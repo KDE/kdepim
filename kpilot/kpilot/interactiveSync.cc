@@ -294,14 +294,20 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			continue;
 		}
 
-		pi_file_get_info(f, &info);
+		if (!pi_file_get_info(f, &info))
+		{
+			dbi.creator = info.creator;
+			dbi.type = info.type;
+			dbi.flags = info.flags;
+			dbi.maxblock = 0;
 
-		dbi.creator = info.creator;
-		dbi.type = info.type;
-		dbi.flags = info.flags;
-		dbi.maxblock = 0;
-
-		fP->fDBList.append(dbi);
+			fP->fDBList.append(dbi);
+		}
+		else
+		{
+			kdWarning() << k_funcinfo
+				<< ": Can't open " << dbi.name << endl;
+		}
 
 		pi_file_close(f);
 		f = 0L;
@@ -478,6 +484,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.10  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.9  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
