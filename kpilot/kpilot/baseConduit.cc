@@ -42,7 +42,7 @@ static const char *id="$Id$";
 BaseConduit::BaseConduit(eConduitMode mode)
   : QObject(), fMode(mode), fDaemonSocket(0L)//, fReportData(false)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	if((mode == BaseConduit::HotSync) || 
 		(mode == BaseConduit::Backup))
@@ -156,7 +156,7 @@ int BaseConduit::addSyncLogMessage(const char *s)
 PilotRecord* 
 BaseConduit::readNextModifiedRecord()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
   int result = 0;
 
@@ -311,7 +311,7 @@ BaseConduit::getRecord(KSocket* in)
 
 /* virtual */ QPixmap BaseConduit::icon() const
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir("kpilot");
 	QPixmap p = KGlobal::iconLoader()->loadIcon("conduit",
@@ -345,6 +345,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.11  2000/12/06 22:22:51  adridg
+// Debug updates
+//
 // Revision 1.10  2000/11/27 02:20:20  adridg
 // Internal cleanup
 //

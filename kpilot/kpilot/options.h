@@ -31,6 +31,20 @@
 
 #include <klocale.h>
 
+#ifdef NDEBUG
+#undef DEBUG
+#endif
+
+// KPilot will move towards the *standard* way of doing
+// debug messages soon. This means that we need some
+// debug areas.
+//
+//
+#define KPILOTUIDEBUG	kdDebug(5010)
+#define KPILOTDBDEBUG	kdDebug(5011)
+#define KPILOTSCDEBUG	kdDebug(5012)
+
+
 #ifdef DEBUG
 // These are three-bit fields, basically we're defining
 // 1<<n; 3<<n; 7<<n for some n.
@@ -51,11 +65,12 @@
 #define SYNC_MINOR	(256+512)
 #define SYNC_TEDIOUS	(512)
 
-#define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
+#define EFUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level & DEBUG_FUNCTIONS) { kdDebug() << \
 			fname << tabs+(strlen(fname)>>3) \
 				<< "(" << __FILE__ << ':' << \
 				__LINE__ << ")\n"; } 
+#define FUNCTIONSETUP	EFUNCTIONSETUP
 
 // Debug level is set to some bit pattern; if any 
 // bit in one of the debug masks (SYNC_MAJOR, for
@@ -75,6 +90,14 @@ class KConfig;
 //
 void listConfig(kdbgstream&,KConfig&);
 void listStrList(kdbgstream&,const QStringList&);
+#else
+// This is used to define fname in functions that actually
+// produce error messages and that need the name of the function.
+// For debugging purposes it's also used by FUNCTIONSETUP.
+//
+//
+#define EFUNCTIONSETUP static const char *fname=__FUNCTION__
+#define FUNCTIONSETUP
 #endif
 
 

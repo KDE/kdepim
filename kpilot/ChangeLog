@@ -1,3 +1,50 @@
+KPilot Developer's notes for december 18th 2000
+===============================================
+
+It looks like kdepim and KPilot aren't going to make the 2.1 release.
+Darn. This does give us more time to deal with docs and bugfixes.
+Every time I get something done though I find I've discovered two
+new things to do :(. I hope Lukas will help out with a lot of the
+i18n stuff though.
+
+Done:
+
+* Moved all the (english) docs to the correct place.
+* More doc fixes: use &kpilot; and &pilot; properly, added screen shots for
+  various conduit setups. The docs still aren't complete but they're a 
+  darn sight better than they were.
+* Modal dialogs need exec() instead of show()
+* Changes in kdelibs caused some dialogs to hang in slotCancel()
+* Changes in includes means we have to include kdebug.h ourselves
+* Get rid of cerr and use kdDebug or kdWarning or kdError as appropriate.
+  There are still a very few cerrs left in places where we can't rely on
+  kdDebug().
+* Added #ifdef DEBUG to the debug sections of code. So KPilot now compiles
+  without debugging stuff. I realise now that I should have stuck to the
+  KDE kdDebug() guidelines, but, um, I didn't know they existed when the
+  port from KDE1 to KDE2 started. Darn.
+
+ToDo:
+
+* More vcal work
+* Clean up more of the butt-ugly parts of the code base
+* Detect memo-too-large in knotes conduit
+* Try to reduce number of updates in knotes conduit
+* Figure out a nice DCOP interface with Wynn (KNotes)
+* Finally take a look at kab or whatever for the address book conduit. 
+  Should probably talk to Greg about this one too.
+* Tell the KOrganizer docs people about KPilot
+* Fix the button-enabling in the address app
+* KPilot is an i18n nightmare
+  - The const char *s in the pilot databases can be addressed most
+    easily, I think.
+  - KPilotLink::doFullBackup should cause i18n people to run away
+  - get rid of most of the strcpy, strcat, etc. But not all!
+    We're stuck with pilot-link, after all.
+* The messages need validation - Pilot vs pilot, HotSync vs whatever
+* The password dialog in the popmail conduit is probably a very bad idea
+
+
 KPilot Developer's notes for december 10th 2000
 ===============================================
 

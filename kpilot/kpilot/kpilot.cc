@@ -31,6 +31,7 @@ static const char *id="$Id$";
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <qfile.h>
 #include <qlist.h>
@@ -69,21 +70,13 @@ KPilotInstaller::KPilotInstaller()
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false)
 {
-	FUNCTIONSETUP;
-
-	int cfg_version;
+	EFUNCTIONSETUP;
 
 	KConfig& config = KPilotLink::getConfig();
-	cfg_version=config.readNumEntry("Configured", 0);
-
-	if(cfg_version < KPilotLink::ConfigurationVersion)
-	{
-		kdDebug() << fname << ": Old configuration "
-			<< cfg_version
-			<< " shouldn't be used."
-			<< endl;
-
-	}
+	// Log a warning if the config file is too old.
+	//
+	//
+	(void) KPilotOptions::isNewer(config);
 
 	readConfig(config);
 
@@ -344,17 +337,10 @@ KPilotInstaller::initToolBar()
 	//	TRUE, i18n("Quit"));
 
 	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
-	conduitCombo->insertItem(i18n("Pilot Application"));
+	conduitCombo->insertItem(version(0));
 	fToolBar->insertWidget(KPilotInstaller::ID_COMBO,140,conduitCombo,0);
 	connect(conduitCombo,SIGNAL(activated(int)),
 		this,SLOT(slotModeSelected(int)));
-	/*
-	fToolBar->insertCombo(i18n("Pilot Application"), 
-		KPilotInstaller::ID_COMBO, false,
-		SIGNAL(activated(int)), this, 
-		SLOT(slotModeSelected(int)), true,
-		i18n("KPilot Mode"), 140, 0);
-	*/
 
   fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
   addToolBar(fToolBar);
@@ -364,7 +350,7 @@ KPilotInstaller::initToolBar()
 void
 KPilotInstaller::slotModeSelected(int selected)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 	int current = 0 ;
 
 #ifdef DEBUG
@@ -377,7 +363,7 @@ KPilotInstaller::slotModeSelected(int selected)
 
 	if((unsigned int)selected >= fVisibleWidgetList.count())
 	{
-		kdDebug() << fname << ": Illegal component #" 
+		kdWarning() << fname << ": Illegal component #" 
 			<< selected << " selected.\n" << endl;
 		return;
 	}
@@ -427,7 +413,7 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 void
 KPilotInstaller::initPilotLink()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	if(fPilotLink)
 	{
@@ -469,7 +455,7 @@ KPilotInstaller::initPilotLink()
 
 void KPilotInstaller::initCommandSocket()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	MessageDialog *messageDialog=0L;
 
@@ -550,6 +536,7 @@ void KPilotInstaller::initCommandSocket()
 
 		KProcess pilotDaemon;
 		pilotDaemon << "kpilotDaemon";
+#ifdef DEBUG
 		if (debug_level)
 		{
 			QString s;
@@ -558,6 +545,7 @@ void KPilotInstaller::initCommandSocket()
 			pilotDaemon << "--debug";
 			pilotDaemon << s;
 		}
+#endif
 			
 		kapp->processEvents();
 
@@ -691,7 +679,7 @@ void KPilotInstaller::initCommandSocket()
 
 int KPilotInstaller::testSocket(KSocket *s)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	char buf[12];
 	int r=0;
@@ -708,7 +696,10 @@ int KPilotInstaller::testSocket(KSocket *s)
 	r=write(fd,buf,strlen(buf));
 	if (r<0)
 	{
-		perror(fname);
+		int e=errno;
+		kdError() << fname  
+			<< ": (" << strerror(e) << ")" 
+			<< endl;
 	}
 	signal(SIGPIPE,SIG_DFL);
 	
@@ -719,7 +710,7 @@ int KPilotInstaller::testSocket(KSocket *s)
 void
 KPilotInstaller::initStatusLink()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	fPilotStatusSocket = new KSocket("localhost", 
 		PILOTDAEMON_STATUS_PORT);
@@ -751,7 +742,7 @@ KPilotInstaller::initStatusLink()
 void
 KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	ifstream in(daemon->socket());
 	int status;
@@ -806,7 +797,7 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 		}
 		break;
 	default :
-		kdDebug() << fname
+		kdWarning() << fname
 			<< ": Unknown command "
 			<< status
 			<< " received."
@@ -970,7 +961,7 @@ KPilotInstaller::addComponentPage(QWidget* widget, QString name)
 
 void KPilotInstaller::menuCallback(int item)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	KPilotOptions* options = 0L;
 	CConduitSetup* conSetup = 0L;
@@ -1135,22 +1126,13 @@ KPilotInstaller::slotSyncDone(KProcess*)
   //
   //
   if (kind) 
+  {
     return ::id;
+    }
   else 
-    return "KPilot v4.0b";
-}
-
-static char authorsbuf[256]={0};
-/* static */ const char *KPilotInstaller::authors()
-{
-	if (!authorsbuf[0])
-	{
-		sprintf(authorsbuf,"%s%s",
-			"Dan Pilone, Adriaan de Groot\n",
-			i18n("and many others.").latin1());
-	}
-
-	return authorsbuf;
+  {
+    return "KPilot v4.0.1";
+    }
 }
 
 // Command line options descriptions.
@@ -1164,7 +1146,9 @@ static KCmdLineOptions kpilotoptions[] =
 #ifdef ENABLE_CMD_CS
 	{ "cs", I18N_NOOP("Run conduit setup"),0L },
 #endif
+#ifdef DEBUG
 	{ "debug <level>", I18N_NOOP("Set debug level to <level> (try 1023)"),"0" },
+#endif
 	{ 0,0,0 }
 } ;
 
@@ -1183,7 +1167,7 @@ int run_mode=0;
 
 int main(int argc, char** argv)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
                          "4.0b",
@@ -1208,7 +1192,9 @@ int main(int argc, char** argv)
 	KApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
+#ifdef DEBUG
 	debug_level=atoi(p->getOption("debug"));
+#endif
 	if (p->isSet("setup")) { run_mode='s'; } 
 #ifdef ENABLE_CMD_CS
 	if (p->isSet("cs")) { run_mode='c'; }
@@ -1234,12 +1220,14 @@ int main(int argc, char** argv)
 
 	if (run_mode=='s')
 	{
+#ifdef DEBUG
 		if (debug_level & UI_MAJOR)
 		{
 			kdDebug() << fname << ": Running setup first."
 				<< " (mode " << run_mode << ")"
 				<< endl ;
 		}
+#endif
 
 		KPilotOptions* options = new KPilotOptions(0L);
 		options->exec();

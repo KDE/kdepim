@@ -219,14 +219,16 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 		speedname="PILOTRATE=9600";
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
-		cerr << fname
+		kdDebug() << fname
 			<< ": Speed set to "
 			<< speedname << " ("
 			<< speed << ')'
 			<< endl;
 	}
+#endif
 
 	putenv((char *)speedname);
 
@@ -317,8 +319,10 @@ PilotDaemon::reloadSettings()
 	}
 	else
 	{
-		cerr << fname << ": No listener to kill (which is OK)."
+#ifdef DEBUG
+		kdDebug() << fname << ": No listener to kill (which is OK)."
 			<< endl;
+#endif
 	}
 
 	fPilotLink->changePilotPath(QFile::encodeName(fPilotDevice));
@@ -392,7 +396,7 @@ PilotDaemon::setupSubProcesses()
 	}
 	else
 	{
-		cerr << fname << ": Can't start new listener process."
+		kdWarning() << fname << ": Can't start new listener process."
 			<< endl;
 	}
 }
@@ -440,41 +444,49 @@ PilotDaemon::startHotSync()
   // issuing commands before KPilotLink is ready.
   getPilotLink()->startHotSync();
   sendStatus(CStatusMessages::SYNC_STARTING);
+#ifdef DEBUG
 	if (debug_level &  SYNC_MAJOR)
 	{
-		cerr << fname 
+		kdDebug() << fname 
 			<< ": Requesting KPilotLink::startHotSync()" << endl;
 	}
+#endif
 
   if(fCurrentSocket == 0L)
     {
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
-		cerr << fname  <<
+		kdDebug() << fname  <<
 			": No KPilot running." << endl;
 	}
+#endif
 		
       if(fStartKPilot) // We are supposed to start up kpilot..
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
-			cerr << fname << ": Starting KPilot GUI." << endl;
+			kdDebug() << fname << ": Starting KPilot GUI." << endl;
 		}
+#endif
 
 	  fWaitingForKPilot = true;
 	  if (fork()==0)
 	    {
 	      execlp("kpilot", "kpilot", 0);
-		cerr << fname << ": Failed to start KPilot." << endl;
+		kdError() << fname << ": Failed to start KPilot." << endl;
 	      exit(1);
 	    }
 	}
       else
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
-			cerr  << fname << ": Starting quick sync." << endl;
+			kdDebug()  << fname << ": Starting quick sync." << endl;
 		}
+#endif
 	  getPilotLink()->quickHotSync();
 	}
     }
@@ -486,15 +498,18 @@ PilotDaemon::slotDBBackupFinished()
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
-		cerr << fname << ": DB Syncing finished." << endl;
+		kdDebug() << fname << ": DB Syncing finished." << endl;
 	}
+#endif
 
 	KConfig& config = KPilotLink::getConfig();
 	if(config.readNumEntry("SyncFiles"))
 	{
-	  getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/")));
+	  getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", 
+		QString("kpilot/pending_install/")));
 	}
 	emit(endHotSync());
 }
@@ -518,18 +533,20 @@ PilotDaemon::slotEndHotSync()
 
 	if (p)
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
-			cerr << fname
+			kdDebug() << fname
 				<< ": Ending hot-sync now"
 				<< endl;
 		}
+#endif
 
 		p->endHotSync();
 	}
 	else
 	{
-		cerr << fname
+		kdError() << fname
 			<< ": No link to pilot!"
 			<< endl;
 	}
@@ -559,13 +576,15 @@ PilotDaemon::slotAccepted(KSocket* connection)
 		return;
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
-		cerr << fname 
+		kdDebug() << fname 
 			<< ": Accepted command connection "
 			<< (int) connection
 			<< endl;
 	}
+#endif
 
   fCurrentSocket = connection;
   connect(fCurrentSocket, SIGNAL(closeEvent(KSocket*)),
@@ -625,23 +644,27 @@ PilotDaemon::slotCommandReceived(KSocket*)
       getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/")));
       break;
 	case KPilotLink::TestConnection :
+#ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
-			cerr  << fname
+			kdDebug()  << fname
 				<< ": Connection tests OK"
 				<< endl ;
 		}
+#endif
 		break;
     default:
-      cerr << fname << ": Unknown command!" << command << endl;
+      kdWarning() << fname << ": Unknown command!" << command << endl;
       break;
     }
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname
+		kdDebug() << fname
 			<< ": Done reading." << endl;
 	}
+#endif
 }
 
 void
@@ -652,20 +675,22 @@ PilotDaemon::slotConnectionClosed(KSocket* connection)
 	delete connection;
 	if (fCurrentSocket != connection)
 	{
-		cerr << fname 
+		kdWarning() << fname 
 			<< ": Connection other than current was closed?"
 			<< endl;
 	}
 	else
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
-			cerr << fname 
+			kdDebug() << fname 
 				<< ": Connection "
 				<< (int) connection
 				<< " closed"
 				<< endl;
 		}
+#endif
 
 		fCurrentSocket = 0L;
 		if (tray) { tray->enableRunKPilot(true); } 
@@ -678,13 +703,15 @@ PilotDaemon::slotAddStatusConnection(KSocket* connection)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
-		cerr << fname 
+		kdDebug() << fname 
 			<< ": Accepted status connection "
 			<< (int) connection
 			<< endl;
 	}
+#endif
   fStatusConnections.append(connection);
   connect(connection, SIGNAL(closeEvent(KSocket*)),
 	  this, SLOT(slotRemoveStatusConnection(KSocket*)));
@@ -701,14 +728,16 @@ PilotDaemon::slotRemoveStatusConnection(KSocket* connection)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname 
+		kdDebug() << fname 
 			<< ": Connection "
 			<< (int) connection
 			<< " closed"
 			<< endl;
 	}
+#endif
 
 	fStatusConnections.remove(connection); // will be deleted by list.
 }
@@ -758,9 +787,13 @@ PilotDaemon::sendStatus(const int status)
 	KSocket *c;
 	int updateCount=0;
 
+#ifdef DEBUG
+	// Large debugging block
+	//
+	//
 	if (debug_level & SYNC_MINOR)
 	{
-		cerr << fname 
+		kdDebug() << fname 
 			<< ": Sending status " << status
 			<< endl;
 	}
@@ -771,27 +804,30 @@ PilotDaemon::sendStatus(const int status)
 			(c=fStatusConnections.current()) ; 
 			fStatusConnections.next())
 		{
-			cerr << fname << ": Will send to connection "
+			kdDebug() << fname << ": Will send to connection "
 				<< (int) c
 				<< endl;
 		}
 	}
+#endif
 
 	for(fStatusConnections.first() ; 
 		(c=fStatusConnections.current()) ; 
 		fStatusConnections.next())
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
-			cerr << fname
+			kdDebug() << fname
 				<< ": Sending to connection "
 				<< (int) c
 				<< endl;
 		}
+#endif
 
 		if (c->socket()<0)
 		{
-			cerr << fname
+			kdWarning() << fname
 				<< ": Connection "
 				<< (int) c 
 				<< " has no valid socket"
@@ -805,14 +841,16 @@ PilotDaemon::sendStatus(const int status)
 		}
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
-		cerr << fname
+		kdDebug() << fname
 			<< ": Completed status update for "
 			<< updateCount
 			<< " connections"
 			<< endl;
 	}
+#endif
 }
 
 void
@@ -877,6 +915,11 @@ void signalHandler(int s)
 
 	if (debug_level)
 	{
+		// In (crashed) cases like this I think we
+		// can't use kdError() safely, so this is
+		// the one instance of cerr left ...
+		//	
+		//
 		cerr << fname << ": Caught signal " << s << endl;
 	}
 
@@ -963,7 +1006,7 @@ int main(int argc, char* argv[])
 
 	if (c.readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
 	{
-		cerr << fname << ": Is still not configured for use."
+		kdWarning() << fname << ": Is still not configured for use."
 			<< endl;
 		return 1;
 	}

@@ -16,6 +16,7 @@ static const char *id="$Id$";
 #include <iostream.h>
 #include <string.h>
 #include "pilotLocalDatabase.h"
+#include <kdebug.h>
 
 PilotLocalDatabase::PilotLocalDatabase(const char* path, const char* dbName)
   : PilotDatabase(), fPathName(0L), fDBName(0L), fAppInfo(0L), fAppLen(0), 
@@ -53,9 +54,10 @@ void PilotLocalDatabase::checkDBName()
 // Reads the application block info
 int PilotLocalDatabase::readAppBlock(unsigned char* buffer, int )
     {
+	EFUNCTIONSETUP;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::readAppBlock() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return -1;
 	}
     memcpy((void*)buffer, fAppInfo, fAppLen);
@@ -69,9 +71,11 @@ int PilotLocalDatabase::readAppBlock(unsigned char* buffer, int )
 // Writes the application block info.
 int PilotLocalDatabase::writeAppBlock(unsigned char* buffer, int len)
 {
+	EFUNCTIONSETUP;
+
   if(isDBOpen() == false)
     {
-      cerr << "PilotLocalDatabase::writeAppBlock() - Error: DB not open!" << endl;
+      kdError() << fname << ": DB not open!" << endl;
       return -1;
     }
   delete [] fAppInfo;
@@ -84,12 +88,14 @@ int PilotLocalDatabase::writeAppBlock(unsigned char* buffer, int len)
 // Reads a record from database by id, returns record length
 PilotRecord* PilotLocalDatabase::readRecordById(recordid_t id)
     {
+	EFUNCTIONSETUP;
+
     int i;
 
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::readRecordById() - Error: DB not open!" << endl;
+	kdDebug() << fname << ": DB not open!" << endl;
 	return 0L;
 	}
     for(i = 0; i < fNumRecords; i++)
@@ -104,10 +110,11 @@ PilotRecord* PilotLocalDatabase::readRecordById(recordid_t id)
 // Reads a record from database, returns the record length
 PilotRecord* PilotLocalDatabase::readRecordByIndex(int index)
     {
+	EFUNCTIONSETUP;
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::readRecordByIndex() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return 0L;
 	}
     if(index >= fNumRecords)
@@ -119,10 +126,11 @@ PilotRecord* PilotLocalDatabase::readRecordByIndex(int index)
 // Reads the next record from database in category 'category'
 PilotRecord* PilotLocalDatabase::readNextRecInCategory(int category)
     {
+	EFUNCTIONSETUP;
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::readNextRecInCategory() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return 0L;
 	}
     while((fCurrentRecord < fNumRecords) && (fRecords[fCurrentRecord]->getCat() != category))
@@ -137,9 +145,11 @@ PilotRecord* PilotLocalDatabase::readNextRecInCategory(int category)
 // Reads the next record from database that has the dirty flag set.
 PilotRecord* PilotLocalDatabase::readNextModifiedRec()
     {
+	EFUNCTIONSETUP;
+
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::readNextModifiedRec() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return 0L;
 	}
     // Should this also check for deleted?
@@ -156,14 +166,16 @@ PilotRecord* PilotLocalDatabase::readNextModifiedRec()
 // Writes a new ID to the record specified the index.  Not supported on Serial connections
 int PilotLocalDatabase::writeID(PilotRecord* rec)
 {
+	EFUNCTIONSETUP;
+
   if(isDBOpen() == false)
     {
-      cerr << "PilotLocalDatabase::writeID() - Error: DB not open!" << endl;
+      kdError() << fname << ": DB not open!" << endl;
       return -1;
     }
   if(fPendingRec == -1)
     {
-      cerr << "PilotLocalDatabase::writeID() - Error: Last call was _NOT_ readNextModifiedRec()" << endl;
+      kdError() << fname << ": Last call was _NOT_ readNextModifiedRec()" << endl;
       return -1;
     }
   fRecords[fPendingRec]->setID(rec->getID());
@@ -174,12 +186,13 @@ int PilotLocalDatabase::writeID(PilotRecord* rec)
 // Writes a new record to database (if 'id' == 0, it is assumed that this is a new record to be installed on pilot)
 int PilotLocalDatabase::writeRecord(PilotRecord* newRecord)
     {
+	EFUNCTIONSETUP;
     int i;
 
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::writeRecord() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return -1;
 	}
     // We can't do this since it's possible the local apps need to rewrite a record
@@ -218,12 +231,14 @@ int PilotLocalDatabase::writeRecord(PilotRecord* newRecord)
 // Resets all records in the database to not dirty.
 int PilotLocalDatabase::resetSyncFlags()
     {
+	EFUNCTIONSETUP;
+
     int i;
 
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::readRecordByIndex() - Error.DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return -1;
 	}
     for(i = 0; i < fNumRecords; i++)
@@ -234,10 +249,11 @@ int PilotLocalDatabase::resetSyncFlags()
 // Resets next record index to beginning
 int PilotLocalDatabase::resetDBIndex()
     {
+	EFUNCTIONSETUP;
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::resetDBIndex() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return -1;
 	}
     fCurrentRecord = 0;
@@ -247,10 +263,11 @@ int PilotLocalDatabase::resetDBIndex()
 // Purges all Archived/Deleted records from Palm Pilot database
 int PilotLocalDatabase::cleanUpDatabase()
     {
+	EFUNCTIONSETUP;
     fPendingRec = -1;
     if(isDBOpen() == false)
 	{
-	cerr << "PilotLocalDatabase::cleanUpDatabase() - Error: DB not open!" << endl;
+	kdError() << fname << ": DB not open!" << endl;
 	return -1;
 	}
     int i,j;
@@ -274,6 +291,7 @@ int PilotLocalDatabase::cleanUpDatabase()
 
 void PilotLocalDatabase::openDatabase()
     {
+	EFUNCTIONSETUP;
     void* tmpBuffer;
     pi_file* dbFile;
     char tempName[256];
@@ -287,7 +305,7 @@ void PilotLocalDatabase::openDatabase()
     dbFile = pi_file_open(tempName);
     if(dbFile == 0L)
 	{
-	cerr << "Failed to open " << tempName << endl;
+	kdError() << fname << ": Failed to open " << tempName << endl;
 	return;
 	}
     pi_file_get_info(dbFile, &fDBInfo);

@@ -106,10 +106,12 @@ setupDialog::setupDialog(QWidget *parent,
 	FUNCTIONSETUP;
 
 	const KAboutData *p=KGlobal::instance()->aboutData();
+#ifdef DEBUG
 	if (modal && debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": This is a modal dialog." << endl;
+		kdDebug() << fname << ": This is a modal dialog." << endl;
 	}
+#endif
 
 	setCancelButton();
 	setCaption(p->programName() + QString(" ") +
@@ -215,7 +217,7 @@ void setupDialog::cancelChanges()
 
 void setupDialog::setupWidget()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 	int x=0;
 	int y=0;
 	QListIterator<setupDialogPage> i(pages);
@@ -224,16 +226,18 @@ void setupDialog::setupWidget()
 
 	if (pages.count()==0)
 	{
-		cerr << fname << ": setupDialog doesn't "
+		kdWarning() << fname << ": setupDialog doesn't "
 			"have any pages." << endl;
 		return;
 	}
 
+#ifdef DEBUG
 	if (debug_level & UI_MINOR)
 	{
-		cerr << fname << ": setupDialog has " << pages.count()
+		kdDebug() << fname << ": setupDialog has " << pages.count()
 			<< " pages." << endl;
 	}
+#endif
 
 	for (i.toFirst(); i.current(); ++i)
 	{
@@ -244,11 +248,13 @@ void setupDialog::setupWidget()
 		if (p->height() > y) y=p->height();
 	}
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": setupDialog has size "
+		kdDebug() << fname << ": setupDialog has size "
 			<< x << 'x' << y << endl;
 	}
+#endif
 
 	resize(x+2*SPACING,y+8*SPACING);
 }
@@ -256,11 +262,11 @@ void setupDialog::setupWidget()
 
 int setupDialog::addPage(setupDialogPage *p)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	if (p==0L) 
 	{
-		cerr << fname << ": NULL page passed to addPage"
+		kdError() << fname << ": NULL page passed to addPage"
 			<< endl;
 		return -1;
 	}
@@ -283,11 +289,13 @@ int setupDialog::addPage(setupDialogPage *p)
 	if (filename.isNull()) return QueryNull;
 	if (filename.length()<1) return QueryNull;
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Checking for existence of "
+		kdDebug() << fname << ": Checking for existence of "
 			<< filelabel.latin1() << ' ' << filename.latin1() << endl;
 	}
+#endif
 
 	QFileInfo info(filename);
 	if (!info.exists())
@@ -296,22 +304,26 @@ int setupDialog::addPage(setupDialogPage *p)
 		msg+='\n';
 		msg+=i18n("Really use this file?");
 
-		if (debug_level)
+#ifdef DEBUG
+		if (debug_level & UI_MAJOR)
 		{
-			cerr << fname << ": " << msg.latin1() << endl;
+			kdDebug() << fname << ": " << msg.latin1() << endl;
 		}
+#endif
 
 
 		int rc=KMessageBox::questionYesNo(parent,
 			msg,
 			i18n("Missing file?"));
 		
+#ifdef DEBUG
 		if (debug_level)
 		{
-			cerr << fname << ": User said "
+			kdDebug() << fname << ": User said "
 				<< rc << " about using "
 				"nonexistent file." << endl;
 		}
+#endif
 
 		return rc;
 	}

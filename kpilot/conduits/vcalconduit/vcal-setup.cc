@@ -20,6 +20,7 @@
 #include <qlayout.h>
 #include <kapp.h>
 #include <klocale.h>
+#include <kdebug.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
 #include "vcal-conduit.h"

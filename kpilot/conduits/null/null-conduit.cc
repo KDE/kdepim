@@ -35,6 +35,7 @@
 #include "null-conduit.h"
 #include "setupDialog.h"
 
+
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
 //
@@ -50,7 +51,6 @@ static const char *id=
 //
 int main(int argc, char* argv[])
 {
-#ifdef KDE2
 	ConduitApp a(argc,argv,"null-conduit",
 		I18N_NOOP("NULL Conduit"),
 		"4.0b");
@@ -58,15 +58,14 @@ int main(int argc, char* argv[])
 	a.addAuthor("Adriaan de Groot",
 		"NULL Conduit author",
 		"adridg@sci.kun.nl");
-#else
-	ConduitApp a(argc, argv, "null-conduit",
-		"\t\tNull-Conduit -- A conduit for KPilot\n"
-		"Copyright (C) 2000 Adriaan de Groot");
-#endif
 
 	NullConduit conduit(a.getMode());
 	a.setConduit(&conduit);
 	return a.exec();
+
+	/* NOTREACHED */
+	/* Avoid const char *id not used warnings */
+	(void) id;
 }
 
 // A conduit that does nothing has a very
@@ -140,6 +139,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.11  2000/11/17 08:30:16  adridg
+// Handle setup properly
+//
 // Revision 1.10  2000/11/13 08:52:31  adridg
 // Much getConfig() grief averted
 //

@@ -141,7 +141,9 @@ KCmdLineArgs *ConduitApp::getOptions()
 
 	p=KCmdLineArgs::parsedArgs();
 
+#ifdef DEBUG
 	debug_level = atoi(p->getOption("debug"));
+#endif
 
 	return p;
 #ifdef DEBUG
@@ -172,13 +174,14 @@ ConduitApp::setConduit(BaseConduit* conduit)
 #define CheckArg(s,m)	if (args->isSet(s)) \
 		{ if (fMode==BaseConduit::None) \
 		{ fMode=BaseConduit::m; } else \
-		{ cerr << fname << ": More than one mode given (mode now " \
+		{ kdError() << fname \
+			<< ": More than one mode given (mode now " \
 			<< (int)fMode << ')' << endl; \
 			fMode=BaseConduit::Error; } }
 
 BaseConduit::eConduitMode ConduitApp::getMode()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	if (fMode!=BaseConduit::None) return fMode;
 
@@ -187,17 +190,20 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	CheckArg("setup",Setup);
 	CheckArg("hotsync",HotSync);
 	CheckArg("backup",Backup);
+#ifdef DEBUG
 	CheckArg("test",Test);
+#endif
 
 	if (fMode==BaseConduit::None)
 	{
-		cerr << fname 
+		kdError() << fname 
 			<< ": You must specify a mode for the conduit."
 			<< endl;
 		fMode=BaseConduit::Error;
 	}
 	else
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname 
@@ -205,6 +211,7 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 				<< (int) fMode
 				<< endl;
 		}
+#endif
 	}
 
 	return fMode;
@@ -212,7 +219,7 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 
 int ConduitApp::exec()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	QWidget *widget = 0L;
 
@@ -229,7 +236,9 @@ int ConduitApp::exec()
 	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
 	case BaseConduit::HotSync : fConduit->doSync(); break;
 	case BaseConduit::Backup : fConduit->doBackup(); break;
+#ifdef DEBUG
 	case BaseConduit::Test : debug_level=-1; fConduit->doTest(); break;
+#endif
 	case BaseConduit::Setup :
 		{
 		QPixmap icon = fConduit->icon();
@@ -243,11 +252,11 @@ int ConduitApp::exec()
 		return fApp->exec();
 		}
 	case BaseConduit::Error :
-		cerr << fname << ": ConduitApp is in Error state."
+		kdError() << fname << ": ConduitApp is in Error state."
 			<< endl;
 		break;
 	default :
-		cerr << fname << ": ConduitApp has state " 
+		kdWarning() << fname << ": ConduitApp has state " 
 			<< (int) fMode  << endl 
 			<< fname << ": where it is strange to call me."
 			<< endl;
@@ -261,6 +270,9 @@ int ConduitApp::exec()
 
 
 // $Log$
+// Revision 1.13  2000/12/06 22:22:51  adridg
+// Debug updates
+//
 // Revision 1.12  2000/11/20 00:24:27  adridg
 // Added --test
 //

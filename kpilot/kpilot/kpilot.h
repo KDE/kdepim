@@ -51,12 +51,6 @@ class KPilotInstaller : public KTMainWindow
 	* id of kpilot.o
 	*/
 	static const char *version(int kind);
-	/**
-	* Return a string with names of KPilot authors.
-	* @see version
-	*/
-	static const char *authors();
-
 
 	/**
 	* Set the main widget to showing the kpilot

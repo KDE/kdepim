@@ -235,8 +235,14 @@ int KPilotOptionsAddress::commitChanges(KConfig& c)
 	c.setGroup(fGroupName);
 
 	c.writeEntry("AddressDisplay",getRadio());
-	if (debug_level & UI_TEDIOUS) { cerr << fname << 
-		": Selected display mode " << getRadio() << '\n' ; }
+#ifdef DEBUG
+	if (debug_level & UI_TEDIOUS) 
+	{ 
+		kdDebug() << fname 
+			<< ": Selected display mode " 
+			<< getRadio() << endl ; 
+	}
+#endif
 
 	c.writeEntry("IncomingFormat", fIncomingFormat->text());
 	c.writeEntry("OutgoingFormat", fOutgoingFormat->text());
@@ -327,7 +333,6 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	  //else if (strncmp(envPilotRate, "9600", 4)) {
 	  //  pilotRate = 0;
 	  //}
-	  //cerr << "env: " << envPilotRate << " found " << pilotRate << endl;
 	}
 	QCString pilotPort;
 	// this construct is only for security
@@ -388,12 +393,13 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	fPilotSpeed->insertItem("115200");
 	value=config.readNumEntry("PilotSpeed", pilotRate);
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Read pilot speed "
+		kdDebug() << fname << ": Read pilot speed "
 			<< value << " from config." << endl;
 	}
-	//cerr << "inserting combo nr " << value << endl;
+#endif
 	fPilotSpeed->setCurrentItem(value);
 	grid->addWidget(currentLabel,0,labelCol+2);
 	grid->addWidget(fPilotSpeed,0,fieldCol+2);
@@ -589,7 +595,16 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 
 /* static */ bool KPilotOptions::isNewer(KConfig& c)
 {
+	EFUNCTIONSETUP;
+
 	int r=setupDialog::getConfigurationVersion(c);
+	if (r<fConfigVersion)
+	{
+		kdWarning() << fname
+			<< ": Old configuration file (version "
+			<< r
+			<< ") found." << endl;
+	}
 	return r < fConfigVersion ;
 }
 
@@ -680,6 +695,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.16  2000/11/26 18:17:03  adridg
+// Groundwork for FastSync
+//
 // Revision 1.15  2000/11/17 08:31:59  adridg
 // Minor changes
 //

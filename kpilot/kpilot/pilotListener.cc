@@ -21,6 +21,11 @@ static const char *id="$Id$";
 #include <stdio.h>
 #include <stdlib.h>
 
+// pilotListener is such a small program -- and not even a real
+// KDE app -- that it doesn't use kdDebug() &c. So the use of
+// cerr is acceptable here.
+//
+//
 int main(int argc, char* argv[])
 {  
   if(argc < 2)

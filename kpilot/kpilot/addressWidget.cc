@@ -573,6 +573,9 @@ AddressWidget::slotShowAddress(int which)
 	    strcat(text, "\n"); // So there's no return after note, it fits nicer.
 	}
     fTextWidget->setText(text);
+
+
+	slotUpdateButtons();
     }
 
 void
@@ -883,6 +886,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.20  2000/12/13 16:59:27  adridg
+// Removed dead code, i18n stupidities
+//
 // Revision 1.19  2000/12/05 07:43:28  adridg
 // Fixed UI weirdness?
 //
