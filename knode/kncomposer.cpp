@@ -180,18 +180,17 @@ void KNComposer::initData()
 	if(!a_rticle->isMail()) slotDestinationChanged(d_estination);
 	
 	if(body) {
-		for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine())
+	  int cnt = 0;
+		for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
 			view->edit->insertLine(line);
-	} else {
-	  if (appSig) {
+			cnt++;
+		}
+		if (appSig && (cnt==0))
   	  view->edit->insertLine("");
-  	  view->edit->insertLine("");
-  	}
-	}	
+	}
 		
 	if(a_rticle->subject().isEmpty()) slotSubjectChanged(QString::null);
 	else view->subject->setText(a_rticle->subject());
-//	view->edit->toggleModified(false);		
 }
 
 

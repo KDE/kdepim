@@ -615,7 +615,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	QCString tmp;
 
 	if(!c->hasValidData()) {
-		KMessageBox::information(0, i18n("Please set a subject and at least one newsgroup\nor mail-address!"));
+		KMessageBox::information(0, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
 		return false;
 	}
 	

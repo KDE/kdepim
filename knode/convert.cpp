@@ -84,7 +84,7 @@ void convert011()
 	
 	if(!d.cd("Filters")) {
 		d.mkdir("Filters");
-	  QCString cmd="cp " + kapp->kde_datadir() + "/knode/filters/* ";
+	  QCString cmd="cp " + kapp->kde_datadir() + "/knode/filters/ ";
 		cmd+=knDir()+"Filters/";
 		
 		system(cmd);
