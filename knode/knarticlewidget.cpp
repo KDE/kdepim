@@ -664,9 +664,8 @@ void KNArticleWidget::createHtmlPage()
 
   html+="</headerblock></td></tr>";
 
-
   if(text && !codec.charsetAvailable())
-      html+=QString("<tr><td colspan=3 bgcolor=red><font color=black>%1</font></td></tr>")
+      html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
               .arg(i18n("Unknown charset! Default charset is used instead."));
 
   html+="</table>";
