@@ -1,1 +1,1 @@
-SUBDIRS = frontend
+SUBDIRS = frontend kabc2mutt
