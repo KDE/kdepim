@@ -35,7 +35,7 @@
 #define attATTACHRENDDATA 0x9002
 #define attMAPIPROPS      0x9003
 #define attRECIPTABLE     0x9004
-#define attATTACHMENT	  0x9005	/* Attachment properties (???) */
+#define attATTACHMENT	  0x9005	/* Attachment properties (?) */
 #define attTNEFVERSION    0x9006
 #define attOEMCODEPAGE    0x9007
 
