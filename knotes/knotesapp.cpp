@@ -64,7 +64,7 @@ KNotesApp::KNotesApp()
     KStdAction::preferences( this, SLOT(slotPreferences()), actionCollection() );
     KStdAction::keyBindings( this, SLOT(slotConfigureAccels()), actionCollection() );
     KStdAction::quit( this, SLOT(slotQuit()), actionCollection() )->setShortcut( 0 );
-    
+
     setXMLFile( QString( instance()->instanceName() + "ui.rc" ) );
     factory = new KXMLGUIFactory( this, this, "guifactory" );
     factory->addClient( this );
@@ -74,7 +74,7 @@ KNotesApp::KNotesApp()
     
     // create accels for global shortcuts
     globalAccel = new KGlobalAccel( this, "global accel" );
-    globalAccel->insert( "global_new_note", i18n("New Note"), "", 
+    globalAccel->insert( "global_new_note", i18n("New Note"), "",
                          ALT+SHIFT+Key_N, ALT+SHIFT+Key_N , 
                          this, SLOT(slotNewNote()), true, true );
     globalAccel->insert( "global_new_note_clipboard", i18n("New Note from Clipboard"), "",
@@ -598,7 +598,7 @@ void KNotesApp::updateNoteActions()
 
     for ( QDictIterator<KNote> it( m_noteList ); it.current(); ++it )
     {
-        KAction *action = new KAction( it.currentKey(), 0, 0, it.currentKey().utf8() );
+        KAction *action = new KAction( it.currentKey().replace( "&", "&&"), 0, 0, it.currentKey().utf8() );
         QPixmap pix( 16, 16 );
         pix.fill( it.current()->paletteBackgroundColor() );
         action->setIconSet( pix );

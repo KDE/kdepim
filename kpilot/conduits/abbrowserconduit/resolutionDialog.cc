@@ -18,24 +18,24 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "resolutionDialog.h"
+
+#include "options.h"
 #include "resolutionDialog.moc"
 
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qvbuttongroup.h>
-#include <qlabel.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
+#include <qlayout.h>
+#include <qvbuttongroup.h>
+#include <qlabel.h>
+#include <qradiobutton.h>
 
-#include <kdialogbase.h>
 #include <kpilotlink.h>
 
 ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString caption, QString Text, QStringList lst, QString remember) :

@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -37,41 +37,19 @@ static const char *fileinstallwidget_id =
 
 #include <unistd.h>
 
-
-
-#ifndef QLISTBOX_H
 #include <qlistbox.h>
-#endif
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-#ifndef QPUSHBT_H
-#include <qpushbt.h>
-#endif
-#ifndef QDRAGOBJECT_H
+#include <qpushbutton.h>
 #include <qdragobject.h>
-#endif
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
 #include <qwhatsthis.h>
-#ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
-#endif
 
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
-#endif
 
 
 #include "fileInstallWidget.moc"
@@ -79,7 +57,8 @@ static const char *fileinstallwidget_id =
 FileInstallWidget::FileInstallWidget(QWidget * parent, 
 	const QString & path) :
 	PilotComponent(parent, "component_files", path),
-	fSaveFileList(false)
+	fSaveFileList(false),
+	fInstaller(0L)
 {
 	FUNCTIONSETUP;
 
@@ -89,7 +68,9 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	grid->addWidget(label, 1, 1);
 
-	QPushButton *abutton = new QPushButton(i18n("Clear List"), this);
+	QPushButton *abutton;
+	 
+	 abutton = clearButton= new QPushButton(i18n("Clear List"), this);
 
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
 	grid->addWidget(abutton, 3, 1);
@@ -97,7 +78,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		i18n
 		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
-	abutton = new QPushButton(i18n("Add File"), this);
+	abutton = addButton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 4, 1);
 	QWhatsThis::add(abutton,
@@ -123,6 +104,11 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	setAcceptDrops(true);
 
 	(void) fileinstallwidget_id;
+}
+
+FileInstallWidget::~FileInstallWidget()
+{
+	KPILOT_DELETE(fInstaller);
 }
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
@@ -166,17 +152,33 @@ void FileInstallWidget::slotAddFile()
 {
 	FUNCTIONSETUP;
 
-	QString fileName = KFileDialog::getOpenFileName();
+	QStringList fileNames = KFileDialog::getOpenFileNames();
 
-	if (!fileName.isEmpty())
+	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
-		fInstaller->addFile(fileName);
+		fInstaller->addFile(*fileName);
 	}
+}
+
+bool FileInstallWidget::preHotSync(QString &)
+{
+	FUNCTIONSETUP;
+	
+	fListBox->setEnabled(false);
+	fInstaller->setEnabled(false);
+	addButton->setEnabled(false);
+	clearButton->setEnabled(false);
+	
+	return true;
 }
 
 void FileInstallWidget::postHotSync()
 {
 	FUNCTIONSETUP;
+	fInstaller->setEnabled(true);
+	fListBox->setEnabled(true);
+	addButton->setEnabled(true);
+	clearButton->setEnabled(true);
 	refreshFileInstallList();
 }
 
@@ -190,49 +192,3 @@ void FileInstallWidget::refreshFileInstallList()
 }
 
 
-// $Log$
-// Revision 1.24  2002/07/03 12:22:08  binner
-// CVS_SILENT Style guide fixes
-//
-// Revision 1.23  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.22  2001/12/02 15:28:45  mhunter
-// Corrected typographical errors
-//
-// Revision 1.21  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.20  2001/09/30 16:59:22  adridg
-// Cleaned up preHotSync
-//
-// Revision 1.19  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.18  2001/09/06 22:33:43  adridg
-// Cruft cleanup
-//
-// Revision 1.17  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.16  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.15  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.14  2001/03/04 13:11:58  adridg
-// Actually use the fileInstaller object
-//
-// Revision 1.13  2001/02/26 22:12:24  adridg
-// Use Qt layout classes
-//
-// Revision 1.12  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.11  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.10  2001/02/05 20:55:07  adridg
-// Fixed copyright headers for source releases. No code changed
-//

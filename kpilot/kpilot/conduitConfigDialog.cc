@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -43,7 +43,7 @@ static const char *conduitconfigdialog_id =
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klibloader.h>
 
 #include "plugin.h"
@@ -104,10 +104,10 @@ ConduitTip::~ConduitTip()
 	QString s = l->text(CONDUIT_COMMENT);
 
 	if (s.isEmpty()) return;
-	if (s.find("<qt>",0,false) == -1)
+	if (s.find(CSL1("<qt>"),0,false) == -1)
 	{
-		s.prepend("<qt>");
-		s.append("</qt>");
+		s.prepend(CSL1("<qt>"));
+		s.append(CSL1("</qt>"));
 	}
 
 	tip(fListView->itemRect(l),s);
@@ -180,7 +180,7 @@ void ConduitConfigDialog::fillLists()
 		KPilotConfig::getConfig().setConduitGroup().
 		getInstalledConduits();
 	KServiceTypeProfile::OfferList offers =
-		KServiceTypeProfile::offers("KPilotConduit");
+		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
 	// Now actually fill the two list boxes, just make
 	// sure that nothing gets listed in both.
@@ -315,7 +315,7 @@ void ConduitConfigDialog::configureConduit()
 		return;
 	}
 
-	const char *library = p->text(CONDUIT_LIBRARY);
+	QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
 
 	KLibFactory *f = KLibLoader::self()->
 		factory(library);
@@ -333,7 +333,7 @@ void ConduitConfigDialog::configureConduit()
 	}
 
 	QStringList a;
-	a.append("modal");
+	a.append(CSL1("modal"));
 
 	QObject *o = f->create(this, 0L, "ConduitConfig",a);
 
@@ -429,28 +429,3 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 
-// $Log$
-// Revision 1.8  2002/04/16 18:18:13  adridg
-// Minor debugging fixups by David B
-//
-// Revision 1.7  2002/01/26 15:00:11  adridg
-// Dblclick to configure
-//
-// Revision 1.6  2002/01/02 11:42:19  bero
-// Fix build.
-//
-// Revision 1.5  2001/12/31 09:26:15  adridg
-// Removed support for old-style Exec= conduits
-//
-// Revision 1.4  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.3  2001/10/19 14:03:04  adridg
-// Qt3 include fixes
-//
-// Revision 1.2  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.1  2001/10/04 16:53:57  adridg
-// New files for newstyle config
-//

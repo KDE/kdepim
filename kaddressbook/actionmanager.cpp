@@ -186,7 +186,7 @@ void ActionManager::initReadOnlyActions()
     if( KProtocolInfo::isKnownProtocol( KURL("ldap://localhost") )) {
         // LDAP button on toolbar
         new KAction(i18n("&Lookup addresses in directory"),
-                    "ldap_lookup", 0, mWidget, SLOT(slotOpenLDAPDialog()),
+                    "find", 0, mWidget, SLOT(slotOpenLDAPDialog()),
                     mACollection,"ldap_lookup");
     }
 

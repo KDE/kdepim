@@ -23,8 +23,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -68,19 +68,5 @@ private:
 	QWidget *fMainWidget;
 	QTabWidget *fP;
 } ;
-
-// $Log$
-// Revision 1.2  2001/11/11 22:10:02  adridg
-// Added validate()
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.2  2001/09/24 19:45:44  adridg
-// Minor changes to get the dialog to size correctly when other fonts / settings are used. This solves David's complaint about ugly dialogs.
-//
-// Revision 1.1  2001/09/23 18:34:12  adridg
-// New dialog base class for .ui files
-//
 
 #endif

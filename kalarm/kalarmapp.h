@@ -121,7 +121,7 @@ class KAlarmApp : public KUniqueApplication
 		bool              stopDaemon();
 		void              startDaemon();
 		void              reloadDaemon();
-		void              registerWithDaemon();
+		void              registerWithDaemon(bool reregister);
 		void              handleEvent(const QString& calendarFile, const QString& eventID, EventFunc);
 		bool              handleEvent(const QString& eventID, EventFunc);
 		void              handleAlarm(KAlarmEvent&, KAlarmAlarm&, AlarmFunc, bool updateCalAndDisplay);

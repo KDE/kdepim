@@ -135,7 +135,9 @@ void DaemonGuiHandler::registerGuiWithDaemon()
 */
 bool DaemonGuiHandler::monitoringAlarms()
 {
-	return !mCalendarDisabled  &&  theApp()->isDaemonRunning();
+	bool ok = !mCalendarDisabled  &&  theApp()->isDaemonRunning();
+	theApp()->actionAlarmEnable()->setAlarmsEnabled(ok);
+	return ok;
 }
 
 /******************************************************************************

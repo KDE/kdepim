@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -44,90 +44,49 @@ static const char *pilotdaemon_id =
 #include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <iostream.h>
-#include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <errno.h>
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-#ifndef QCURSOR_H
+#include <qptrlist.h>
 #include <qcursor.h>
-#endif
-#ifndef QDRAGOBJECT_H
 #include <qdragobject.h>
-#endif
-#include <qstack.h>
+#include <qptrstack.h>
 #include <qtimer.h>
 #include <qtooltip.h>
 
-
-#ifndef _KUNIQUEAPP_H
-#include <kuniqueapp.h>
-#endif
-#ifndef _KABOUTDATA_H
+#include <kuniqueapplication.h>
 #include <kaboutdata.h>
-#endif
-#ifndef _KABOUTAPPLICATION_H
 #include <kaboutapplication.h>
-#endif
-#ifndef _KCMDLINEARGS_H
 #include <kcmdlineargs.h>
-#endif
-#ifndef _KWIN_H
 #include <kwin.h>
-#endif
-#ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
-#endif
-#ifndef _KURL_H
 #include <kurl.h>
-#endif
-#ifndef _KSOCK_H
 #include <ksock.h>
-#endif
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-#ifndef _KPOPUPMENU_H
+#include <kstandarddirs.h>
 #include <kpopupmenu.h>
-#endif
-#ifndef _KICONLOADER_H
 #include <kiconloader.h>
-#endif
-#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
-#endif
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
-#ifndef _KPROCESS_H
+#include <ktempfile.h>
 #include <kprocess.h>
-#endif
-#ifndef _DCOPCLIENT_H
 #include <dcopclient.h>
-#endif
 
+#include "pilotAppCategory.h"
 
-#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
-#endif
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
 
+#include "hotSync.h"
+#include "interactiveSync.h"
 #include "syncStack.h"
 
 #include "kpilotDCOP_stub.h"
+#include "kpilotDCOP.h"
+#include "logWidgetDCOP_stub.h"
 
 #include "pilotDaemon.moc"
 
@@ -188,17 +147,17 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 /* virtual */ void PilotDaemonTray::closeEvent(QCloseEvent *)
 {
 	FUNCTIONSETUP;
-	kapp->quit();
+	daemon->quitNow();
 }
 
 void PilotDaemonTray::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	KGlobal::iconLoader()->addAppDir("kpilot");
-	icon = KGlobal::iconLoader()->loadIcon("hotsync", KIcon::Toolbar,
+	KGlobal::iconLoader()->addAppDir(CSL1("kpilot"));
+	icon = KGlobal::iconLoader()->loadIcon(CSL1("hotsync"), KIcon::Toolbar,
 		0, KIcon::DefaultState, 0, false);
-	busyicon = KGlobal::iconLoader()->loadIcon("busysync", KIcon::Toolbar,
+	busyicon = KGlobal::iconLoader()->loadIcon(CSL1("busysync"), KIcon::Toolbar,
 		0, KIcon::DefaultState, 0, false);
 
 	slotShowBusy();
@@ -287,6 +246,7 @@ PilotDaemon::PilotDaemon() :
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
+	fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
@@ -428,6 +388,8 @@ void PilotDaemon::showTray()
 	fPilotDevice = config.getPilotDevice();
 	fPilotType = KPilotDeviceLink::None;
 	int t = config.getPilotType();
+	
+	(void) PilotAppCategory::setupPilotCodec(config.getEncoding());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -507,39 +469,39 @@ void PilotDaemon::showTray()
 {
 	FUNCTIONSETUP;
 
-	QString s("PilotDaemon=");
+	QString s = CSL1("PilotDaemon=");
 
 	switch (status())
 	{
 	case INIT:
-		s.append(QString("Initializing"));
+		s.append(QString(CSL1("Initializing")));
 		break;
 	case READY:
-		s.append(QString("Found device"));
+		s.append(QString(CSL1("Found device")));
 		break;
 	case ERROR:
-		s.append(QString("Error"));
+		s.append(QString(CSL1("Error")));
 		break;
 	case FILE_INSTALL_REQ:
-		s.append(QString("Installing File"));
+		s.append(QString(CSL1("Installing File")));
 		break;
 	case HOTSYNC_END:
-		s.append(QString("End of Hotsync"));
+		s.append(QString(CSL1("End of Hotsync")));
 		break;
 	case HOTSYNC_START:
-		s.append(QString("Syncing"));
+		s.append(QString(CSL1("Syncing")));
 		break;
 	}
 
-	s.append(" NextSync=");
+	s.append(CSL1(" NextSync="));
 	s.append(syncTypeString(fNextSyncType));
 
-	s.append(" (");
+	s.append(CSL1(" ("));
 	if (fPilotLink)
 	{
 		s.append(fPilotLink->statusString());
 	}
-	s.append(")");
+	s.append(CSL1(")"));
 
 	return s;
 }
@@ -592,6 +554,7 @@ bool PilotDaemon::setupPilotLink()
 	case INIT:
 	case HOTSYNC_END:
 	case ERROR:
+		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 		break;
 	case READY:
@@ -640,17 +603,17 @@ QString PilotDaemon::syncTypeString(int i) const
 	switch (i)
 	{
 	case PilotDaemonDCOP::Test:
-		return QString("Test");
+		return QString(CSL1("Test"));
 	case PilotDaemonDCOP::HotSync:
-		return QString("HotSync");
+		return QString(CSL1("HotSync"));
 	case PilotDaemonDCOP::FastSync:
-		return QString("FastSync");
+		return QString(CSL1("FastSync"));
 	case PilotDaemonDCOP::Backup:
-		return QString("Backup");
+		return QString(CSL1("Backup"));
 	case PilotDaemonDCOP::Restore:
-		return QString("Restore");
+		return QString(CSL1("Restore"));
 	default:
-		return QString("<unknown>");
+		return QString(CSL1("<unknown>"));
 	}
 }
 
@@ -668,6 +631,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
+	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
+	
 	fStatus = HOTSYNC_START ;
 
 #ifdef DEBUG
@@ -689,31 +654,38 @@ QString PilotDaemon::syncTypeString(int i) const
 		installFiles = c.getSyncFiles();
 	}
 
-	fSyncStack = new SyncStack(fPilotLink,
-		&KPilotConfig::getConfig(),
-		conduits,
-		(fInstaller && installFiles) ? fInstaller->dir() : QString::null,
-		(fInstaller && installFiles) ? fInstaller->fileNames() : QString::null );
-
+	fSyncStack = new ActionQueue(fPilotLink);
+	fSyncStack->queueInit(ActionQueue::WithUserCheck);
+	
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test:
-		fSyncStack->prepare(SyncStack::Test);
+		fSyncStack->addAction(new TestLink(fPilotLink));
+		// No conduits, nothing.
 		break;
 	case PilotDaemonDCOP::Backup:
-		fSyncStack->prepareBackup();
+		if (conduits.count() > 0)
+		{
+			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
+				conduits,
+				ActionQueue::Backup);
+		}
+		fSyncStack->addAction(new BackupAction(fPilotLink));
 		break;
 	case PilotDaemonDCOP::Restore:
-		fSyncStack->prepareRestore();
+		fSyncStack->addAction(new RestoreAction(fPilotLink));
 		break;
 	case PilotDaemonDCOP::HotSync:
-		if (installFiles)
+		if (conduits.count() > 0)
 		{
-			fSyncStack->prepare(SyncStack::HotSyncMode | SyncStack::WithInstaller);
+			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
+				conduits,
+				ActionQueue::HotSync);
 		}
-		else
+		if (installFiles && fInstaller)
 		{
-			fSyncStack->prepare(SyncStack::HotSyncMode);
+			fSyncStack->queueInstaller(fInstaller->dir(),
+				fInstaller->fileNames());
 		}
 		break;
 	default:
@@ -725,6 +697,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		break;
 	}
 
+	fSyncStack->queueCleanup();
+	
 	QObject::connect(fSyncStack, SIGNAL(logError(const QString &)),
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
@@ -743,37 +717,27 @@ QString PilotDaemon::syncTypeString(int i) const
 
 /* slot */ void PilotDaemon::logMessage(const QString & s)
 {
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << s << endl;
-#endif
+	FUNCTIONSETUPL(2);
 
-	getKPilot().logMessage(s);
+	getLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
 /* slot */ void PilotDaemon::logError(const QString & s)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << s << endl;
-#endif
 
-	getKPilot().logMessage(s);
+	getLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
 /* slot */ void PilotDaemon::logProgress(const QString & s, int i)
 {
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << s << " (" << i << "%)" << endl;
-#endif
+	FUNCTIONSETUPL(2);
 
-	getKPilot().logProgress(s, i);
+	getLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
 }
-
 /* slot */ void PilotDaemon::endHotSync()
 {
 	FUNCTIONSETUP;
@@ -786,12 +750,14 @@ QString PilotDaemon::syncTypeString(int i) const
 	KPILOT_DELETE(fSyncStack);
 	fPilotLink->close();
 
-	getKPilot().logProgress(i18n("HotSync Completed.<br>"), 100);
-
+	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
+	getKPilot().daemonStatus(KPilotDCOP::EndOfHotSync);
+	
 	fStatus = HOTSYNC_END;
 
 	if (fPostSyncAction & Quit)
 	{
+		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 	}
 	if (fPostSyncAction & ReloadSettings)
@@ -822,7 +788,7 @@ void PilotDaemon::slotRunKPilot()
 	QCString kpilotDCOP;
 	int kpilotPID;
 
-	if (KApplication::startServiceByDesktopName("kpilot",
+	if (KApplication::startServiceByDesktopName(CSL1("kpilot"),
 			QString::null, &kpilotError, &kpilotDCOP, &kpilotPID
 #if (KDE_VERSION >= 220)
 			// Startup notification added in 2.2
@@ -873,12 +839,8 @@ int main(int argc, char **argv)
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-#ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug");
-#endif
 	KUniqueApplication::addCmdLineOptions();
-
-
+	
 	if (!KUniqueApplication::start())
 	{
 		return 0;
@@ -886,7 +848,7 @@ int main(int argc, char **argv)
 	KUniqueApplication a(true, true);
 
 	// No options besides debug
-	KPilotConfig::getDebugLevel(false);
+	// KPilotConfig::getDebugLevel(false);
 
 	// A block just to keep variables local.
 	//
@@ -935,154 +897,3 @@ int main(int argc, char **argv)
 
 
 
-// $Log$
-// Revision 1.65  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.64  2002/08/15 21:51:00  kainhofe
-// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
-//
-// Revision 1.63  2002/07/25 15:44:03  kainhofe
-// LMB on tray icon starts kpilot, settings are reloaded when kpilot changes them
-//
-// Revision 1.62  2002/06/24 19:29:11  adridg
-// Allow daemon RW access to config file
-//
-// Revision 1.61  2002/06/08 09:17:07  adridg
-// Added tooltip for daemon
-//
-// Revision 1.60  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.59.2.3  2002/05/09 22:29:33  adridg
-// Various small things not important for the release
-//
-// Revision 1.59.2.2  2002/04/16 19:41:05  adridg
-// Make default sync a HotSync instead of Test
-//
-// Revision 1.59.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.59  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.58  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.57  2002/01/23 08:35:54  adridg
-// Remove K-menu dependency
-//
-// Revision 1.56  2002/01/20 13:53:52  adridg
-// Added new sync types
-//
-// Revision 1.55  2001/12/29 15:49:01  adridg
-// SyncStack changes
-//
-// Revision 1.54  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.53  2001/10/10 13:40:07  cschumac
-// Compile fixes.
-//
-// Revision 1.52  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.51  2001/10/08 12:49:11  cschumac
-// kde3 compile fixes.
-//
-// Revision 1.50  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.49  2001/09/30 16:58:08  adridg
-// Daemon reports name in statusString
-//
-// Revision 1.48  2001/09/29 16:23:31  adridg
-// Layout + icons changed
-//
-// Revision 1.47  2001/09/24 22:24:06  adridg
-// Use new SyncActions
-//
-// Revision 1.46  2001/09/23 21:44:56  adridg
-// Myriad small changes
-//
-// Revision 1.45  2001/09/23 18:46:11  adridg
-// Oops .. needed some extra work on the QStack part
-//
-// Revision 1.44  2001/09/23 18:24:59  adridg
-// New syncing architecture
-//
-// Revision 1.43  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.42  2001/08/27 22:54:27  adridg
-// Decruftifying; improve DCOP link between daemon & viewer
-//
-// Revision 1.41  2001/08/19 19:25:57  adridg
-// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
-//
-// Revision 1.40  2001/08/01 20:20:57  adridg
-// Fix for bug #29764
-//
-// Revision 1.39  2001/06/11 07:36:10  adridg
-// Cleanup char constant in <<
-//
-// Revision 1.38  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.37  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.36  2001/04/01 17:32:52  adridg
-// I really don't remember
-//
-// Revision 1.35  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.34  2001/03/05 23:44:39  adridg
-// KPILOT_VERSION added. Fixed double-sync (maybe). Extra monitor debugging.
-//
-// Revision 1.33  2001/03/04 21:22:00  adridg
-// Added drag 'n drop file install to daemon
-//
-// Revision 1.32  2001/03/04 11:23:04  adridg
-// Changed for bug 21392
-//
-// Revision 1.31  2001/02/26 22:09:49  adridg
-// Fixed some exit() calls; extra listener process debugging
-//
-// Revision 1.30  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.29  2001/02/08 13:17:19  adridg
-// Fixed crash when conduits run during a backup and exit after the
-// end of that backup (because the event loop is blocked by the backup
-// itself). Added better debugging error exit message (no i18n needed).
-//
-// Revision 1.28  2001/02/05 21:01:07  adridg
-// Fixed copyright headers for source releases. No code changed
-//
-// Revision 1.27  2001/02/05 19:16:32  adridg
-// Removing calls to exit() from internal functions
-//
-// Revision 1.26  2001/01/06 13:20:23  adridg
-// Cleaned up DCOP; changed version number
-//
-// Revision 1.25  2001/01/04 22:19:37  adridg
-// Stuff for Chris and Bug 18072
-//
-// Revision 1.24  2001/01/04 11:33:20  bero
-// Fix build
-//
-// Revision 1.23  2001/01/03 00:02:45  adridg
-// Added Heiko's FastSync
-//
-// Revision 1.22  2001/01/02 15:02:59  bero
-// Fix build
-//
-// Revision 1.21  2000/12/31 16:44:00  adridg
-// Patched up the debugging stuff again
-//

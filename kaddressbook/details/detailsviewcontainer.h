@@ -1,7 +1,7 @@
 #ifndef KAB3_VIEWCONTAINER_H
 #define KAB3_VIEWCONTAINER_H
 
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "look_basic.h"
 

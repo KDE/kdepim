@@ -25,7 +25,6 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
 ### you want any debugging at all.
 ###
-### KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
 ### KDE_CXXFLAGS=-DNDEBUG -UDEBUG
 
 ###
@@ -33,18 +32,19 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ###
 
 kpilot_SOURCES	= \
-	pilotDaemonDCOP.stub kpilotDCOP.skel \
+	pilotDaemonDCOP.stub kpilotDCOP.skel logWidgetDCOP.skel \
 	kpilot.cc kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog.cc conduitConfigDialog_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
-	conduitSetup.cc listCat.cc listItems.cc
+	listItems.cc
+
 
 
 kpilotDaemon_SOURCES = \
-	pilotDaemonDCOP.skel kpilotDCOP.stub \
+	pilotDaemonDCOP.skel kpilotDCOP.stub logWidgetDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
 	hotSync.cc interactiveSync.cc syncStack.cc \
 	fileInstaller.cc
@@ -52,20 +52,20 @@ kpilotDaemon_SOURCES = \
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
 	hotSync.cc interactiveSync.cc \
-	kpilotDCOP.skel \
+	logWidgetDCOP.skel \
 	syncStack.cc \
 	main-test.cc
 
 kpilotConfig_SOURCES = kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog_base.ui conduitConfigDialog.cc \
-	listCat.cc conduitSetup.cc main-config.cc
+	listCat.cc main-config.cc
 
 
-kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
-kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
-kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
-kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
+kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.

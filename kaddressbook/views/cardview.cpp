@@ -48,7 +48,7 @@ class CardViewItemList : public QPtrList<CardViewItem>
 
       if ( cItem1 == cItem2 )
           return 0;
-      
+
       if ((cItem1 == 0) || (cItem2 == 0))
           return cItem1 ? -1 : 1;
 
@@ -62,7 +62,6 @@ class CardViewItemList : public QPtrList<CardViewItem>
     }
 
   private:
-    int find( const CardViewItem * ) { qDebug("DON'T USE CardViewItemList::find( item )! Use findRef( item )!"); }
 };
 
 //////////////////////////////////////
@@ -410,6 +409,8 @@ CardView::CardView(QWidget *parent, const char *name)
 
 CardView::~CardView()
 {
+    delete d->mFm;
+    delete d->mBFm;
   delete d;
 }
 

@@ -43,7 +43,7 @@ extern "C"
   {
     return new KOrganizerFactory;
   }
-};
+}
 
 /**
 * We need one static instance of the factory for our C 'main'

@@ -189,7 +189,9 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, const QString& fil
         if ( note_state & NET::StaysOnTop )
             m_alwaysOnTop->setChecked( true );
 
-        if ( position != default_position )
+        // let KWin do the placement if the position is illegal
+        if ( position != default_position &&
+               kapp->desktop()->rect().contains( position.x()+width, position.y()+height ) )
             move( position );           // do before calling show() to avoid flicker
 
         // read configuration settings...

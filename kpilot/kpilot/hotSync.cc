@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -45,12 +45,14 @@ static const char *hotsync_id =
 #include <qdir.h>
 #include <qvaluelist.h>
 #include <qregexp.h>
+#include <qtextcodec.h>
 
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kapplication.h>
 
 #include "pilotUser.h"
+#include "pilotAppCategory.h"
 
 #include "hotSync.moc"
 
@@ -97,7 +99,9 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		// Let the Pilot User know what's happening
 		openConduit();
 		// Let the KDE User know what's happening
-		emit logMessage(i18n("Syncing database %1...").arg(db.name));
+		// Pretty sure all database names are in latin1.
+		emit logMessage(i18n("Syncing database %1...")
+			.arg(QString::fromLatin1(db.name)));
 
 		kapp->processEvents();
 	}
@@ -113,32 +117,32 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 	FUNCTIONSETUP;
 
 	fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
+		CSL1("kpilot/DBBackup/"));
 }
 
 /* virtual */ QString BackupAction::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s("BackupAction=");
+	QString s(CSL1("BackupAction="));
 
 	switch (status())
 	{
 	case Init:
-		s.append("Init");
+		s.append(CSL1("Init"));
 		break;
 	case Error:
-		s.append("Error");
+		s.append(CSL1("Error"));
 		break;
 	case FullBackup:
-		s.append("FullBackup");
+		s.append(CSL1("FullBackup"));
 		break;
 	case BackupEnded:
-		s.append("BackupEnded");
+		s.append(CSL1("BackupEnded"));
 		break;
 	default:
-		s.append("(unknown ");
+		s.append(CSL1("(unknown "));
 		s.append(QString::number(status()));
-		s.append(")");
+		s.append(CSL1(")"));
 	}
 
 	return s;
@@ -157,7 +161,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	addSyncLogEntry(i18n("Full backup started."));
 
-	ASSERT(!fTimer);
+	// ASSERT(!fTimer);
 
 	fTimer = new QTimer(this);
 	QObject::connect(fTimer, SIGNAL(timeout()),
@@ -205,20 +209,22 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	fDBIndex = info.index + 1;
 
-	QString s = i18n("Backing up: %1").arg(info.name);
+	// Pretty sure all database names are latin1.
+	QString s = i18n("Backing up: %1")
+		.arg(QString::fromLatin1(info.name));
 	addSyncLogEntry(s);
-	emit logMessage(s);
 
 	if (!createLocalDatabase(&info))
 	{
 		kdError() << k_funcinfo
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
-		addSyncLogEntry(i18n("Backup of %1 failed.\n").arg(info.name));
+		addSyncLogEntry(i18n("Backup of %1 failed.\n")
+			.arg(QString::fromLatin1(info.name)));
 	}
 	else
 	{
-		addSyncLogEntry(i18n(" .. OK\n"));
+		addSyncLogEntry(i18n(" .. OK\n"),false); // Not in kpilot log.
 	}
 }
 
@@ -227,7 +233,9 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	FUNCTIONSETUP;
 
 	QString fullBackupDir =
-		fDatabaseDir + fHandle->getPilotUser()->getUserName() + "/";
+		fDatabaseDir + 
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
+		CSL1("/");
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -264,19 +272,23 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 		}
 	}
 
-	QString databaseName(info->name);
+	QString databaseName(QString::fromLatin1(info->name));
 
-	databaseName.replace(QRegExp("/"), "_");
+#if QT_VERSION < 0x30100
+	databaseName.replace(QRegExp(CSL1("/")), CSL1("_"));
+#else
+	databaseName.replace('/', CSL1("_"));
+#endif
 
 	QString fullBackupName = fullBackupDir + databaseName;
 
 	if (info->flags & dlpDBFlagResource)
 	{
-		fullBackupName.append(".prc");
+		fullBackupName.append(CSL1(".prc"));
 	}
 	else
 	{
-		fullBackupName.append(".pdb");
+		fullBackupName.append(CSL1(".pdb"));
 	}
 
 #ifdef DEBUG
@@ -367,7 +379,7 @@ FileInstallAction::~FileInstallAction()
 	FUNCTIONSETUP;
 
 	ASSERT(fDBIndex >= 0);
-	ASSERT((unsigned) fDBIndex < fList.count());
+	ASSERT((unsigned) fDBIndex <= fList.count());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -381,36 +393,32 @@ FileInstallAction::~FileInstallAction()
 		DEBUGDAEMON << fname
 			<< ": Peculiar file index, bailing out." << endl;
 #endif
-		if (fTimer)
-			fTimer->stop();
+		KPILOT_DELETE(fTimer);
+		fDBIndex = (-1);
+		emit logProgress(i18n("Done Installing Files"), 100);
 		emit syncDone(this);
+		return;
 	}
 
-	const QString s = fDir + fList[fDBIndex];
+	const QString filePath = fDir + fList[fDBIndex];
+	const QString fileName = fList[fDBIndex];
 
 	fDBIndex++;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Installing file " << s << endl;
+	DEBUGDAEMON << fname << ": Installing file " << filePath << endl;
 #endif
 
-	if ((unsigned) fDBIndex >= fList.count())
-	{
-		fDBIndex = (-1);
-		fTimer->stop();
-		emit logProgress(i18n("Done Installing Files"), 100);
-	}
-	else
-	{
-		emit logProgress(i18n("Installing %1").arg(s),
-			(100 * fDBIndex) / fList.count());
-	}
+	QString m = i18n("Installing %1").arg(fileName);
+	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
+	m+=QString::fromLatin1("\n");
+	emit addSyncLogEntry(m,true /* Don't print in KPilot's log. */ );
 
 
 	struct pi_file *f = 0L;
 
 	f = pi_file_open(const_cast <char *>
-		((const char *) QFile::encodeName(s)));
+		((const char *) QFile::encodeName(filePath)));
 
 	if (!f)
 	{
@@ -418,7 +426,7 @@ FileInstallAction::~FileInstallAction()
 			<< ": Unable to open file." << endl;
 
 		emit logError(i18n("Unable to open file &quot;%1&quot;!").
-			arg(s));
+			arg(fileName));
 		goto nextFile;
 	}
 
@@ -428,11 +436,11 @@ FileInstallAction::~FileInstallAction()
 
 
 		emit logError(i18n("Cannot install file &quot;%1&quot;!").
-			arg(s));
+			arg(fileName));
 	}
 	else
 	{
-		QFile::remove(s);
+		QFile::remove(filePath);
 	}
 
 
@@ -449,17 +457,17 @@ nextFile:
 	FUNCTIONSETUP;
 	if (fDBIndex < 0)
 	{
-		return QString("Idle");
+		return QString(CSL1("Idle"));
 	}
 	else
 	{
 		if ((unsigned) fDBIndex >= fList.count())
 		{
-			return QString("Index out of range");
+			return QString(CSL1("Index out of range"));
 		}
 		else
 		{
-			return QString("Installing %1").arg(fList[fDBIndex]);
+			return QString(CSL1("Installing %1")).arg(fList[fDBIndex]);
 		}
 	}
 }
@@ -488,58 +496,3 @@ CleanupAction::~CleanupAction()
 }
 
 
-// $Log$
-// Revision 1.17  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.16  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.15  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.14.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.14  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.13  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.12  2002/01/23 02:56:23  mhunter
-// CVS_SILENT Removed extra space after full-stop
-//
-// Revision 1.11  2001/12/29 15:45:02  adridg
-// Lots of little changes for the syncstack
-//
-// Revision 1.10  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.9  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.8  2001/09/30 17:11:10  adridg
-// fname unknown with DEBUG turned off
-//
-// Revision 1.7  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.6  2001/09/24 22:17:41  adridg
-// () Removed lots of commented out code from previous incarnations.
-// () Added a cleanup action.
-// () Removed a heap-corruption bug caused by using QStringList & and
-//    then deleting what it points to in FileInstallAction.
-// () Removed deadlock when last file to install couldn't be read.
-// () Moved RestoreAction to interactiveSync.{h,cc}, since I feel it
-//    needs to ask "Are you sure?" at the very least.
-//

@@ -24,6 +24,8 @@
 #include <qstring.h>
 #include <qdom.h>
 
+#include <kurl.h>
+
 /** In a document doc with node node, add an element with name ns and tagname tag. Return the new element 
  */
 QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, const QString& tag );
@@ -43,6 +45,12 @@ QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId );
  * Return the UTC representation of local time in the time zone indicated by timeZoneId 
  */
 QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId );
+
+/**
+ * Convert http:// url to webdav:// and https:// to webdavs://
+ */
+KURL toDAV( const KURL& url );
+KURL* toDAV( const KURL* url );
 
 #endif
 

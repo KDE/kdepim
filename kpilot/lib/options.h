@@ -2,7 +2,7 @@
 #define _KPILOT_OPTIONS_H
 /* options.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001,2002,2003 by Dan Pilone
 **
 ** This file defines some global constants and macros for KPilot.
 ** In particular, KDE2 is defined when KDE2 seems to be the environment
@@ -25,8 +25,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -35,6 +35,8 @@
 
 
 
+// #define QT_NO_ASCII_CAST		(1)
+// #define QT_NO_CAST_ASCII		(1)
 
 
 #ifdef HAVE_CONFIG_H
@@ -50,7 +52,7 @@
 #endif
 
 #ifndef KDE_VERSION
-#include <kapplication.h>
+#include <kdeversion.h>
 #endif
 
 #if KDE_VERSION > 289
@@ -73,12 +75,16 @@
 #define DEBUGFUNC	kdDebug()
 #endif
 
-#include <iostream.h>
+// For ostream
+#include <iostream>
+// For QString, and everything else needs it anyway.
 #include <qstring.h>
-#include <qstrlist.h>
+// Dunno, really. Probably because everything needs it.
 #include <klocale.h>
+// For the debug stuff.
 #include <kdebug.h>
 
+using namespace std;
 
 // KPilot will move towards the *standard* way of doing
 // debug messages soon. This means that we need some
@@ -104,7 +110,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.4 (head)"
+#define KPILOT_VERSION	"4.3.10 (BRANCH)"
 
 // * KPilot debugging code looks like:
 //
@@ -132,7 +138,7 @@ extern KCmdLineOptions *debug_options;
 //
 #ifdef __GNUC__
 #define KPILOT_FNAMEDEF	static const char *fname=__FUNCTION__
-#define KPILOT_LOCNDEF	debug_spaces+(strlen(fname)) \
+#define KPILOT_LOCNDEF	debug_spaces+(::strlen(fname)) \
 				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"
 #else
@@ -155,10 +161,6 @@ class KConfig;
 //
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
-
-class QSize;
-ostream& operator << (ostream&,const QSize &) ;
-kdbgstream& operator << (kdbgstream&,const QSize &);
 
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -190,11 +192,6 @@ class KConfig;
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
-class QSize;
-ostream& operator << (ostream&,const QSize &) ;
-kdbgstream& operator << (kdbgstream&,const QSize &);
-kndbgstream& operator << (kndbgstream&,const QSize &);
-
 // class QStringList;
 // ostream& operator <<(ostream&,const QStringList &);
 // kdbgstream& operator <<(kdbgstream&,const QStringList &);
@@ -216,116 +213,23 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 #define KPILOT_DELETE(a) { if (a) { delete a; a=0L; } }
 
 
-// $Log$
-// Revision 1.16  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
+// This marks strings that need to be i18n()ed in future,
+// but cannot be done now due to message freeze.
 //
-// Revision 1.15  2002/08/20 20:47:43  adridg
-// (re)Introduce suppressing the function-name debug output for certain uninteresting functions
 //
-// Revision 1.14  2002/06/10 21:20:47  adridg
-// Adjust version numbers in anticipation of release
+#define TODO_I18N(a)	QString::fromLatin1(a)
+
+// Handle some cases for QT_NO_CAST_ASCII and NO_ASCII_CAST.
+// Where possible in the source, known constant strings in
+// latin1 encoding are marked with CSL1(), to avoid gobs
+// of latin1() or fromlatin1() calls which might obscure
+// those places where the code really is translating
+// user data from latin1.
 //
-// Revision 1.13  2002/05/23 17:08:32  adridg
-// Some compile fixes for non-debug mode, and KNotes syncing fixes
+// The extra "" in CSL1 is to enforce that it's only called
+// with constant strings.
 //
-// Revision 1.12  2002/05/22 20:55:17  adridg
-// Allow debug and non-debug code to mix a little
 //
-// Revision 1.11  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.10  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.9.2.1  2002/05/09 22:29:33  adridg
-// Various small things not important for the release
-//
-// Revision 1.9  2002/02/02 20:53:10  leitner
-// __LINE__ is an integer and not a string and thus, requires the quotes
-//
-// Revision 1.8  2002/02/02 11:46:03  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.7  2002/01/18 10:08:00  adridg
-// CVS_SILENT: Fixing my compile fixes again
-//
-// Revision 1.6  2002/01/16 22:24:16  adridg
-// Avoid lib incompatibility crashes
-//
-// Revision 1.5  2002/01/15 22:43:35  adridg
-// Backport to 2.2.2
-//
-// Revision 1.4  2002/01/14 12:49:27  adridg
-// CVS_SILENT: Avoid compile warnings
-//
-// Revision 1.3  2001/11/25 22:01:31  adridg
-// CVS_SILENT: administrative
-//
-// Revision 1.2  2001/10/16 21:45:21  adridg
-// Version number change.
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.36  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.35  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.34  2001/09/24 22:23:28  adridg
-// More generalized debugging handling, even on broken platforms
-//
-// Revision 1.33  2001/09/23 21:42:35  adridg
-// Factored out debugging options
-//
-// Revision 1.32  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.31  2001/09/08 14:31:54  cschumac
-// qt3 include fix
-//
-// Revision 1.30  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-// Revision 1.29  2001/08/26 13:17:47  zander
-// added includes to make it compile
-//
-// Revision 1.28  2001/06/13 22:51:38  cschumac
-// Minor fixes reviewed on the mailing list.
-//
-// Revision 1.27  2001/05/24 10:31:38  adridg
-// Philipp Hullmann's extensive memory-leak hunting patches
-//
-// Revision 1.26  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.25  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.24  2001/04/11 21:33:06  adridg
-// Make version number consistent across KPilot applications
-//
-// Revision 1.23  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.22  2001/03/05 23:57:53  adridg
-// Added KPILOT_VERSION
-//
-// Revision 1.21  2001/03/01 20:43:24  adridg
-// Some new (and harmless) debug functions
-//
-// Revision 1.20  2001/02/06 08:05:19  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
+#define CSL1(a)		QString::fromLatin1(a "")
+
 #endif

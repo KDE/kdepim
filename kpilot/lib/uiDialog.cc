@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -88,7 +88,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #endif
 
 	QPixmap applicationIcon =
-		l->loadIcon(p->appName(),
+		l->loadIcon(QString::fromLatin1(p->appName()),
 		KIcon::Desktop,
 		0, KIcon::DefaultState, 0L,
 		true);
@@ -101,7 +101,8 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 			<< "kpilot"
 			<< endl;
 #endif
-		applicationIcon = l->loadIcon("kpilot", KIcon::Desktop);
+		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"), 
+			KIcon::Desktop);
 	}
 
 	text = new QLabel(w);
@@ -134,7 +135,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Text size "
-		<< text->size()
+		<< text->size().width()
+		<< ","
+		<< text->size().height()
 		<< endl;
 #endif
 	grid->addColSpacing(2,SPACING+text->size().width()/2);
@@ -144,12 +147,12 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 	if (!p->homepage().isEmpty())
 	{
 		s += p->homepage();
-		s += "<br>";
+		s += CSL1("<br>");
 	}
 	s += i18n("Send questions and comments to <i>kde-pim@kde.org</i>");
-	s += "<br>";
+	s += CSL1("<br>");
 	s += i18n("Send bug reports to <i>%1</i>").arg(p->bugAddress());
-	s += "</qt>";
+	s += CSL1("</qt>");
 
 	text->setText(s);
 	grid->addMultiCellWidget(text, 2, 2, 2, 3);
@@ -172,13 +175,15 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		QValueList<KAboutPerson>::ConstIterator i;
 		s = i18n("<qt><b>Authors:</b> ");
 
+		QString comma = CSL1(", ");
+		
 		unsigned int count=1;
 		for (i=l.begin(); i!=l.end(); ++i)
 		{
-			s.append(QString("%1 (<i>%2</i>)%3")
+			s.append(CSL1("%1 (<i>%2</i>)%3")
 				.arg((*i).name())
 				.arg((*i).task())
-				.arg(count<l.count() ? ", " : "")
+				.arg(count<l.count() ? comma : QString::null)
 				);
 			count++;
 		}
@@ -190,17 +195,17 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 			s.append(i18n("<br><b>Credits:</b> "));
 			for (i=l.begin(); i!=l.end(); ++i)
 			{
-				s.append(QString("%1 (<i>%2</i>)%3")
+				s.append(CSL1("%1 (<i>%2</i>)%3")
 					.arg((*i).name())
 					.arg((*i).task())
-					.arg(count<l.count() ? ", " : "")
+					.arg(count<l.count() ? comma : QString::null)
 					);
 				count++;
 			}
 		}
 
 
-		s.append("</qt>");
+		s.append(CSL1("</qt>"));
 
 		text = new QLabel(w);
 		text->setText(s);
@@ -218,7 +223,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Size "
-		<< w->size()
+		<< w->size().width()
+		<< ","
+		<< w->size().height()
 		<< endl;
 #endif
 
@@ -226,7 +233,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Adjusted size "
-		<< w->size()
+		<< w->size().width()
+		<< ","
+		<< w->size().height()
 		<< endl;
 #endif
 
@@ -244,7 +253,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Final size "
-		<< sz
+		<< sz.width()
+		<< ","
+		<< sz.height()
 		<< endl;
 #endif
 
@@ -283,40 +294,3 @@ void UIDialog::setTabWidget(QTabWidget * w)
 		KDialogBase::slotOk();
 	}
 }
-
-// $Log$
-// Revision 1.8  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.7  2002/07/08 15:33:52  binner
-// CVS_SILENT Style guide fix
-//
-// Revision 1.6  2002/04/20 13:03:31  binner
-// CVS_SILENT Capitalisation fixes.
-//
-// Revision 1.5  2002/01/18 12:47:21  adridg
-// CVS_SILENT: More compile fixes
-//
-// Revision 1.4  2001/11/11 22:10:02  adridg
-// Added validate()
-//
-// Revision 1.3  2001/10/19 08:48:30  adridg
-// Build fixes for qt3 and stupid typos
-//
-// Revision 1.2  2001/10/10 22:39:49  adridg
-// Some UI/Credits/About page patches
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.3  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.2  2001/09/24 19:45:44  adridg
-// Minor changes to get the dialog to size correctly when other fonts / settings are used. This solves David's complaint about ugly dialogs.
-//
-// Revision 1.1  2001/09/23 18:34:12  adridg
-// New dialog base class for .ui files
-//

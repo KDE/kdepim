@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -34,15 +34,16 @@
 #endif
 
 #include <qobject.h>
+#include <qvaluelist.h>
 
 // Handle all time.h variations properly.
 // Required because pi-macros.h sometimes forgets it.
 //
-#if TIME_WITH_SYS_TIME
+#ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
 #else
-# if HAVE_SYS_TIME_H
+# ifdef HAVE_SYS_TIME_H
 #  include <sys/time.h>
 # else
 #  include <time.h>
@@ -73,6 +74,21 @@ public:
 	enum { MAX_APPINFO_SIZE=8192 
 		} Constants;
 
+	/** 
+	* Creates the database with the given creator, type and flags 
+	* on the given card (default is RAM). If the database already 
+	* exists, this function does nothing. 
+	*/
+	virtual bool createDatabase(long creator=0, long type=0, 
+		int cardno=0, int flags=0, int version=0) = 0;
+	
+	/** 
+	* Deletes the database (by name, as given in the constructor, 
+	* the database name is stored depending on the implementation 
+	* of PilotLocalDatabase and PilotSerialDatabas) 
+	*/
+	virtual int deleteDatabase()=0;
+	
 	/** Reads the application block info, returns size. */
 	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
 
@@ -94,12 +110,29 @@ public:
 	/** Reads the next record from database in category 'category' */
 	virtual PilotRecord* readNextRecInCategory(int category) = 0;
 
-	/** Reads the next record from database that has the dirty flag set. */
-	virtual PilotRecord* readNextModifiedRec() = 0;
+	/** 
+	* Reads the next record from database that has the dirty flag set. 
+	* If @p ind is non-NULL, *ind is set to the index of the current
+	* record (i.e. before the record pointer moves to the next
+	* modified record).
+	*/
+	virtual PilotRecord* readNextModifiedRec(int *ind=NULL) = 0;
 
-	/** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
+	/** 
+	* Writes a new record to database (if 'id' == 0, one will be 
+	* assigned to newRecord) 
+	*/
 	virtual recordid_t writeRecord(PilotRecord* newRecord) = 0;
 
+	/** 
+	* Deletes a record with the given recordid_t from the database, 
+	* or all records, if @p all is set to true. The recordid_t will 
+	* be ignored in this case.
+	*
+	* Return value is negative on error, 0 otherwise.
+	*/
+	virtual int deleteRecord(recordid_t id, bool all=false) = 0;
+	
 	/** Resets all records in the database to not dirty. */
 	virtual int resetSyncFlags() = 0;
 
@@ -133,51 +166,4 @@ private:
 	bool fDBOpen;
 };
 
-
-
-// $Log$
-// Revision 1.7  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.6  2002/06/07 07:13:25  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.5  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.4  2002/01/17 16:24:10  adridg
-// Compile fixes on Solaris
-//
-// Revision 1.3  2002/01/08 01:25:48  cschumac
-// Compile fixes.
-//
-// Revision 1.2  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.8  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.5  2001/02/07 14:21:49  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.4  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

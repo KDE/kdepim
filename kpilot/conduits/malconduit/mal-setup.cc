@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 **
 **
 ** Specific permission is granted for this code to be linked to libmal
@@ -126,7 +126,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	
 	// Proxy settings
 	fConfigWidget->proxyType->setButton(fConfig->readNumEntry(MALConduitFactory::proxyType(), 0));
-	fConfigWidget->proxyServerName->setEditText(fConfig->readEntry(MALConduitFactory::proxyServer(), ""));
+	fConfigWidget->proxyServerName->setEditText(fConfig->readEntry(MALConduitFactory::proxyServer(), QString()));
 	
 	int proxyPortNr=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
 	if (proxyPortNr>0 && proxyPortNr<65536) 
@@ -135,8 +135,8 @@ MALWidgetSetup::~MALWidgetSetup()
 		fConfigWidget->proxyCustomPort->setEnabled(true);
 		fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
 	}
-	fConfigWidget->proxyUserName->setText(fConfig->readEntry(MALConduitFactory::proxyUser(), ""));
-	fConfigWidget->proxyPassword->setText(fConfig->readEntry(MALConduitFactory::proxyPassword(), ""));
+	fConfigWidget->proxyUserName->setText(fConfig->readEntry(MALConduitFactory::proxyUser(), QString()));
+	fConfigWidget->proxyPassword->setText(fConfig->readEntry(MALConduitFactory::proxyPassword(), QString()));
 
 	// MAL Server settings (not yet possible!!!)
 	fConfigWidget->malServerName->setEditText(fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com"));
@@ -148,12 +148,7 @@ MALWidgetSetup::~MALWidgetSetup()
 		fConfigWidget->malCustomPort->setEnabled(true);
 		fConfigWidget->malCustomPort->setValue(proxyPortNr);
 	}
-	fConfigWidget->malUserName->setText(fConfig->readEntry(MALConduitFactory::malUser(), ""));
-	fConfigWidget->malPassword->setText(fConfig->readEntry(MALConduitFactory::malPassword(), ""));
+	fConfigWidget->malUserName->setText(fConfig->readEntry(MALConduitFactory::malUser(), QString()));
+	fConfigWidget->malPassword->setText(fConfig->readEntry(MALConduitFactory::malPassword(), QString()));
 }
 
-
-// $Log$
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//
