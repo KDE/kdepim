@@ -2003,7 +2003,7 @@ void KNAttachment::attach(KNMimeContent *c)
     }
     else {
       txt[readBytes]='\0'; //terminate string
-      c_ontent->b_ody=txt;
+      c_ontent->b_ody=txt+'\n';
       c_ontent->contentTransferEncoding()->setDecoded(true);
     }
   }

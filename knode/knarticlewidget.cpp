@@ -1057,6 +1057,10 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   if(a.left(15)=="internal:author") {
     type=ATauthor;
   }
+  else if(a.left(13)=="internal:att=") {
+    target=a.mid(13, a.length()-13);
+    type=ATattachment;
+  }
   else if(a.left(7).lower()=="http://" ||a.left(6).lower()=="ftp://") {
     target=a;
     type=ATurl;
