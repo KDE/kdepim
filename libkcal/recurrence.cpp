@@ -1150,10 +1150,9 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       if (!notThisWeek)
         weekday = getFirstDayInWeek(earliestDayOfWeek);
       // Check for a day in the next scheduled week
-      if (!weekday  &&  earliestDayOfWeek > 1)
+      if (!weekday  &&  earliestDayOfWeek >= 1)
         weekday = getFirstDayInWeek(rWeekStart) + rFreq*7;
-      if (weekday)
-        nextDate = start.addDays(weeksAhead*7 + weekday - 1);
+      nextDate = start.addDays(weeksAhead*7 + weekday - 1);
       break;
     }
     case rMonthlyDay:
