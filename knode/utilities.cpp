@@ -16,6 +16,7 @@
 
 #include <qlayout.h>
 #include <qregexp.h>
+#include <qapplication.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -301,7 +302,7 @@ void KNHelper::saveWindowSize(const QString &name, const QSize &s)
 {
   KConfig *c=KGlobal::config();
   c->setGroup("WINDOW_SIZES");
-  c->writeEntry(name, s); 
+  c->writeEntry(name, s);
 }
 
 
@@ -309,10 +310,15 @@ void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &d
 {
   KConfig *c=KGlobal::config();
   c->setGroup("WINDOW_SIZES");
-  
+
   QSize s=c->readSizeEntry(name,&defaultSize);
-  
-  if(s.isValid()) d->resize(s); 
+
+  if(s.isValid()) {
+    QSize max = QApplication::desktop()->size();
+    if ( s.width() > max.width() ) s.setWidth( max.width()-5 );
+    if ( s.height() > max.height() ) s.setHeight( max.height()-5 );
+    d->resize(s);
+  }
 }
 
 // **** scramble password strings **********************************************
@@ -352,7 +358,7 @@ QString KNHelper::rot13(const QString &s)
       if  ( r[i] >= QChar('N') && r[i] <= QChar('Z') ||
             r[i] >= QChar('n') && r[i] <= QChar('z') )
         r[i] = (char)((int)QChar(r[i]) - 13);
-  }   
+  }
 
   return r;
 }
