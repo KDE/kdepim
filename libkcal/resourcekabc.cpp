@@ -135,6 +135,9 @@ bool ResourceKABC::load()
   // import from kabc
   QString summary;
 
+  KABC::Addressee::List anniversaries;
+  KABC::Addressee::List::Iterator addrIt;
+
   KABC::AddressBook::Iterator it;
   for ( it = mAddressbook->begin(); it != mAddressbook->end(); ++it ) {
 
@@ -182,47 +185,74 @@ bool ResourceKABC::load()
     }
 
     QDateTime anniversary = QDate::fromString( (*it).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
-    if ( anniversary.isValid() ) {
-      kdDebug() << "found a anniversary " << anniversary.toString() << endl;
+    if ( !anniversary.isValid() )
+      continue;
 
-      QString name = (*it).nickName();
-      if (name.isEmpty()) name = (*it).realName();
-      summary = i18n("%1's anniversary").arg( name );
-
-      Event *ev = new Event();
-
-      ev->setDtStart(anniversary);
-      ev->setDtEnd(anniversary);
-      ev->setHasEndDate(true);
-      ev->setFloats(true);
-
-      ev->setSummary(summary);
-
-      // Set the recurrence
-      Recurrence *vRecurrence = ev->recurrence();
-      vRecurrence->setRecurStart(anniversary);
-      vRecurrence->setYearly(Recurrence::rYearlyMonth,1,-1);
-      vRecurrence->addYearlyNum(anniversary.date().month());
-
-      ev->clearAlarms();
-
-      if ( mAlarm ) {
-        // Set the alarm
-        Alarm* vAlarm = ev->newAlarm();
-        vAlarm->setText(summary);
-        vAlarm->setTime(anniversary);
-        // 24 hours before
-        vAlarm->setStartOffset( -1440 * mAlarmDays );
-        vAlarm->setEnabled(true);
+    QString name = (*it).custom( "KADDRESSBOOK", "X-SpousesName" );
+    if ( name.isEmpty() )
+      anniversaries.append( *it );
+    else {
+      bool found = false;
+      for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
+        if ( name == (*addrIt).realName() ) {
+          found = true;
+          break;
+        }
       }
 
-      // insert category
-      ev->setCategories(i18n("Anniversary"));
-
-      ev->setReadOnly( true );
-      mCalendar.addEvent(ev);
-      kdDebug() << "imported " << anniversary.toString() << endl;
+      if ( !found )
+        anniversaries.append( *it );
     }
+  }
+
+  for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
+    QDateTime anniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+    kdDebug() << "found a anniversary " << anniversary.toString() << endl;
+
+    QString name = (*addrIt).nickName();
+    QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
+    if ( name.isEmpty() )
+      name = (*addrIt).givenName();
+    if ( !spouseName.isEmpty() ) {
+      KABC::Addressee spouse;
+      spouse.setNameFromString( spouseName );
+      name += " & " + spouse.givenName();
+    }
+    summary = i18n("%1's anniversary").arg( name );
+
+    Event *ev = new Event();
+
+    ev->setDtStart(anniversary);
+    ev->setDtEnd(anniversary);
+    ev->setHasEndDate(true);
+    ev->setFloats(true);
+
+    ev->setSummary(summary);
+
+    // Set the recurrence
+    Recurrence *vRecurrence = ev->recurrence();
+    vRecurrence->setRecurStart(anniversary);
+    vRecurrence->setYearly(Recurrence::rYearlyMonth,1,-1);
+    vRecurrence->addYearlyNum(anniversary.date().month());
+
+    ev->clearAlarms();
+
+    if ( mAlarm ) {
+      // Set the alarm
+      Alarm* vAlarm = ev->newAlarm();
+      vAlarm->setText(summary);
+      vAlarm->setTime(anniversary);
+      // 24 hours before
+      vAlarm->setStartOffset( -1440 * mAlarmDays );
+      vAlarm->setEnabled(true);
+    }
+
+    // insert category
+    ev->setCategories(i18n("Anniversary"));
+
+    ev->setReadOnly( true );
+    mCalendar.addEvent(ev);
+    kdDebug() << "imported " << anniversary.toString() << endl;
   }
 
   emit resourceChanged( this );
