@@ -134,7 +134,6 @@ Calendar::~Calendar()
   delete mICalFormat;
   delete mDndFormat;
   delete mFormat;
-  delete mFilter;
 }
 
 ICalFormat *Calendar::iCalFormat()
