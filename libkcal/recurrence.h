@@ -309,9 +309,13 @@ class Recurrence
     enum PeriodFunc { END_DATE_AND_COUNT, COUNT_TO_DATE, NEXT_AFTER_DATE };
 
     class MonthlyData;
+    friend class Recurrence::MonthlyData;
     class YearlyMonthData;
+    friend class Recurrence::YearlyMonthData;
     class YearlyPosData;
+    friend class Recurrence::YearlyPosData;
     class YearlyDayData;
+    friend class Recurrence::YearlyDayData;
 
     bool recursSecondly(const QDate &, int secondFreq) const;
     bool recursMinutelyAt(const QDateTime &dt, int minuteFreq) const;
