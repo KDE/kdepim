@@ -165,7 +165,7 @@ Todo *CalendarLocal::todo( const QString &uid )
   return 0;
 }
 
-Todo::List CalendarLocal::todos( const QDate &date )
+Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
 {
   Todo::List todos;
 

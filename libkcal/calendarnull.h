@@ -55,7 +55,7 @@ class CalendarNull : public Calendar
     bool addTodo( Todo * ) { return false; }
     void deleteTodo( Todo * ) {}
     Todo *todo( const QString & ) { return 0; }
-    Todo::List todos( const QDate & ) { return Todo::List(); }
+    Todo::List rawTodosForDate( const QDate & ) { return Todo::List(); }
     Todo::List rawTodos() { return Todo::List(); }
 
     bool addJournal( Journal * ) { return false; }

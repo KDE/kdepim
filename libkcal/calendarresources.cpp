@@ -343,15 +343,15 @@ Todo *CalendarResources::todo( const QString &uid )
   return 0;
 }
 
-Todo::List CalendarResources::todos( const QDate &date )
+Todo::List CalendarResources::rawTodosForDate( const QDate &date )
 {
-//  kdDebug(5800) << "CalendarResources::todos(date)" << endl;
+//  kdDebug(5800) << "CalendarResources::rawTodosforDate(date)" << endl;
 
   Todo::List result;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Todo::List todos = (*it)->todos( date );
+    Todo::List todos = (*it)->rawTodosForDate( date );
     Todo::List::ConstIterator it2;
     for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
       result.append( *it2 );

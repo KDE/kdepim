@@ -318,9 +318,9 @@ Todo *ResourceIMAP::todo( const QString &uid )
   return mCalendar.todo(uid);
 }
 
-Todo::List ResourceIMAP::todos( const QDate &date )
+Todo::List ResourceIMAP::rawTodosForDate( const QDate &date )
 {
-  return mCalendar.todos(date);
+  return mCalendar.rawTodosForDate(date);
 }
 
 /***********************************************

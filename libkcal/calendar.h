@@ -200,11 +200,15 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Returns list of todos due on the specified date.
     */
-    virtual Todo::List todos( const QDate &date ) = 0;
+    virtual Todo::List todos( const QDate &date );
     /**
       Return unfiltered list of todos.
     */
     virtual Todo::List rawTodos() = 0;
+    /**
+      Return unfiltered list of todos.
+    */
+    virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
 
     /**
       Add a Journal entry to calendar.

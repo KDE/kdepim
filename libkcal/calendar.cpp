@@ -257,6 +257,16 @@ Todo::List Calendar::todos()
   return tl;
 }
 
+Todo::List Calendar::todos( const QDate &date )
+{
+  Todo::List el = rawTodosForDate( date );
+
+  mFilter->apply(&el);
+
+  return el;
+}
+
+
 // When this is called, the todo have already been added to the calendar.
 // This method is only about linking related todos
 void Calendar::setupRelations( Incidence *incidence )

@@ -416,9 +416,9 @@ Todo *ResourceXMLRPC::todo( const QString& uid )
   return mCalendar.todo( uid );
 }
 
-Todo::List ResourceXMLRPC::todos( const QDate& date )
+Todo::List ResourceXMLRPC::rawTodosForDate( const QDate& date )
 {
-  return mCalendar.todos( date );
+  return mCalendar.rawTodosForDate( date );
 }
 
 void ResourceXMLRPC::changeIncidence( Incidence *incedence )

@@ -101,7 +101,7 @@ class ResourceCached : public ResourceCalendar
     /**
       Returns list of todos due on the specified date.
     */
-    Todo::List todos( const QDate &date );
+    Todo::List rawTodosForDate( const QDate &date );
     /**
       Add a Journal entry to calendar
     */

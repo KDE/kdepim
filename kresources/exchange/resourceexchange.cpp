@@ -362,9 +362,9 @@ Todo *ResourceExchange::todo( const QString &uid )
   return mCache->todo( uid );
 }
 
-Todo::List ResourceExchange::todos( const QDate &date )
+Todo::List ResourceExchange::rawTodosForDate( const QDate &date )
 {
-  return mCache->todos( date );
+  return mCache->rawTodosForDate( date );
 }
 
 Alarm::List ResourceExchange::alarmsTo( const QDateTime &to )

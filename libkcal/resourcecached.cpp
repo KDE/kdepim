@@ -115,9 +115,9 @@ Todo *ResourceCached::todo( const QString &uid )
   return mCalendar.todo( uid );
 }
 
-Todo::List ResourceCached::todos( const QDate &date )
+Todo::List ResourceCached::rawTodosForDate( const QDate &date )
 {
-  return mCalendar.todos( date );
+  return mCalendar.rawTodosForDate( date );
 }
 
 

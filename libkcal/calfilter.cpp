@@ -82,9 +82,10 @@ bool CalFilter::filterIncidence(Incidence *incidence)
 
   if ( !mEnabled ) return true;
 
-  if ( mCriteria & HideCompleted && incidence->type() == "Todo" )
-     if ( static_cast<Todo *>(incidence)->isCompleted() )
+  if ( (mCriteria & HideCompleted) && (incidence->type() == "Todo") ) {
+     if ( (static_cast<Todo *>(incidence))->isCompleted() ) 
        return false;
+  }
   
   if (mCriteria & HideRecurring) {
     if (incidence->doesRecur()) return false;

@@ -186,7 +186,7 @@ class ResourceCalendar : public KRES::Resource
     /**
       Returns list of todos due on the specified date.
     */
-    virtual Todo::List todos( const QDate &date ) = 0;
+    virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
 
 
     /**

@@ -121,13 +121,7 @@ class CalendarLocal : public Calendar
     /**
       Returns list of todos due on the specified date.
     */
-    Todo::List todos( const QDate &date );
-    /**
-      Return list of all todos.
-
-      Workaround because compiler does not recognize function of base class.
-    */
-    Todo::List todos() { return Calendar::todos(); }
+    Todo::List rawTodosForDate( const QDate &date );
 
     /**
       Add a Journal entry to calendar.

@@ -371,9 +371,9 @@ Todo *ResourceKABC::todo( const QString &uid )
   return mCalendar.todo( uid );
 }
 
-Todo::List ResourceKABC::todos( const QDate &date )
+Todo::List ResourceKABC::rawTodosForDate( const QDate &date )
 {
-  return mCalendar.todos( date );
+  return mCalendar.rawTodosForDate( date );
 }
 
 
