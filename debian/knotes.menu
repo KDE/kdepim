@@ -1,6 +1,6 @@
 ?package(knotes):\
-	needs=X11\
-	section=Apps/Tools\
+	needs="X11"\
+	section="Apps/Tools"\
 	hints="KDE"\
 	kderemove="y"\
 	title="KNotes"\

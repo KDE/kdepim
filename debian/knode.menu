@@ -1,6 +1,6 @@
 ?package(knode):\
-	needs=X11\
-	section=Apps/Net\
+	needs="X11"\
+	section="Apps/Net"\
 	hints="KDE,News"\
 	kderemove="y"\
 	title="KNode"\

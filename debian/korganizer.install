@@ -1,3 +1,4 @@
+debian/tmp/etc/kde3/khotnewstuffrc
 debian/tmp/usr/bin/ghns
 debian/tmp/usr/bin/ical2vcal
 debian/tmp/usr/bin/khotnewstuff
@@ -160,7 +161,6 @@ debian/tmp/usr/share/apps/korganizer/sounds/spinout.wav
 debian/tmp/usr/share/apps/korganizer/tips
 debian/tmp/usr/share/autostart/korgac.desktop
 debian/tmp/usr/share/config.kcfg/korganizer.kcfg
-debian/tmp/usr/share/config/khotnewstuffrc
 debian/tmp/usr/share/doc/kde/HTML/en/korganizer/common
 debian/tmp/usr/share/doc/kde/HTML/en/korganizer/ep_config.png
 debian/tmp/usr/share/doc/kde/HTML/en/korganizer/ep_download.png

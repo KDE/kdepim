@@ -1,3 +1,11 @@
+kdepim (4:3.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added Danish and Japanese po-debconf translations. (Closes: #233579)
+  * Added Brazilian Portuguese po-debconf translations. (Closes: #235461)
+
+ -- Christopher L Cheney <ccheney@debian.org>  Sat,  6 Mar 2004 17:00:00 -0600
+
 kdepim (4:3.2.0-0pre1v1) experimental; urgency=low
 
   * New upstream release.

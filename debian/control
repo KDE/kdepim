@@ -3,7 +3,7 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>
-Build-Depends: automake1.7, bison, byacc, debhelper (>> 4.0.18), docbook-to-man, flex, gawk, gettext, gnokii, kdelibs4-dev, libbluetooth1-dev, libgtk1.2-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, sharutils, texinfo
+Build-Depends: automake1.8, bison, byacc, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, gnokii, kdelibs4-dev (>> 4:3.2.1), libbluetooth1-dev, libgtk1.2-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc
 Standards-Version: 3.6.1.0
 
