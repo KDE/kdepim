@@ -71,9 +71,10 @@ BUILT_SOURCES =			\
 	icalvalue.c		\
 	icalvalue.h
 
-ical.h: $(COMBINEDHEADERS) $(BUILT_SOURCES)
-	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \
-		| egrep -v "#include.*\"pvl\.h\"" > ical.h
+#This is not srcdir!=builddir safe, and ical.h is in CVS anyway
+#ical.h: $(COMBINEDHEADERS) $(BUILT_SOURCES)
+#	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \
+#		| egrep -v "#include.*\"pvl\.h\"" > ical.h
 
 icallexer.c : icalyacc.h
 
