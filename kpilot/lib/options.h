@@ -220,4 +220,10 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 #define KPILOT_DELETE(a) { if (a) { delete a; a=0L; } }
 
 
+// This marks strings that need to be i18n()ed in future,
+// but cannot be done now due to message freeze.
+//
+//
+#define TODO_I18N(a)	QString::fromLatin1(a)
+
 #endif
