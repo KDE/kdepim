@@ -10,7 +10,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/common \
           -I$(top_srcdir)/kaddressbook/editors \
           -I$(top_builddir)/kaddressbook/common \
-          -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
+          -I$(top_srcdir) -I$(top_builddir)/libkdepim \
           -I$(top_buildir)/kaddressbook/editors \
           -I$(top_srcdir)/akregator/src \
           $(all_includes)
@@ -51,8 +51,8 @@ libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la 
                             $(top_builddir)/kaddressbook/editors/libkabim.la \
                             ../akregator/src/librss/librsslocal.la \
                             -lkdeprint
-libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
-                                   $(top_srcdir)/libkdepim/categoryeditdialog.h \
+libkaddressbook_la_COMPILE_FIRST = $(top_builddir)/libkdepim/categoryselectdialog.h \
+                                   $(top_builddir)/libkdepim/categoryeditdialog.h \
                                    $(top_builddir)/kaddressbook/common/kabprefs_base.h
 
 

@@ -1,5 +1,5 @@
-INCLUDES = -I$(top_srcdir)/libkdenetwork -I$(top_srcdir)/libkdepim \
-	-I$(top_srcdir)/certmanager/lib -I$(top_builddir)/libkdepim \
+INCLUDES = -I$(top_srcdir)/libkdenetwork -I$(top_builddir)/libkdepim \
+	-I$(top_srcdir)/certmanager/lib \
 	$(GPGME_CFLAGS) $(all_includes)
 
 noinst_LTLIBRARIES = libkleopatra_core.la

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
+INCLUDES = -I$(top_srcdir) -I$(top_builddir)/libkdepim \
            -I$(top_srcdir)/kresources/lib \
 					 -I$(top_builddir)/kresources/lib $(all_includes)
 

@@ -1,7 +1,7 @@
 SUBDIRS = pixmaps
 
 INCLUDES= -I$(top_srcdir)/libkcal \
-          -I$(top_srcdir)/libkdepim \
+          -I$(top_builddir)/libkdepim \
           -I$(top_srcdir)/libemailfunctions \
           -I$(top_srcdir) $(all_includes)
 

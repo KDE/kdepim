@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) $(all_includes) -I$(top_srcdir)/libkdepim
+INCLUDES = -I$(top_srcdir) $(all_includes) -I$(top_builddir)/libkdepim
 
 lib_LTLIBRARIES   = libkcal_resourceremote.la
 libkcal_resourceremote_la_LDFLAGS = $(all_libraries) -no-undefined \

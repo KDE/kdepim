@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir) $(all_includes) -I$(top_builddir)/libkdepim
 
 lib_LTLIBRARIES = libkcal_resourcefeatureplan.la
 

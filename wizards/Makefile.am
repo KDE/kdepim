@@ -1,6 +1,6 @@
 METASOURCES = AUTO
 
-INCLUDES = -I$(top_srcdir)/libkdepim \
+INCLUDES = -I$(top_builddir)/libkdepim \
            -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/kolab/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \

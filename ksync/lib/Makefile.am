@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal -I$(top_builddir)/libkdepim $(all_includes)
 
 lib_LTLIBRARIES   = libksync.la
 libksync_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0

@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libkcalkonnector.la
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/libksync \
+INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/libksync -I$(top_builddir)/libkdepim \
            -I$(top_srcdir)/kitchensync/libkonnector2 $(all_includes)
 
 libkcalkonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/libksync -I../../   $(all_includes)

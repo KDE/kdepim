@@ -1,5 +1,5 @@
 INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
-          -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
+          -I$(top_srcdir) -I$(top_builddir)/libkdepim \
           $(all_includes)
 
 METASOURCES = AUTO

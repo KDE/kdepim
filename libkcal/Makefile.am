@@ -4,7 +4,7 @@ INCLUDES = -I$(srcdir)/libical/src/libical \
   -I$(srcdir)/libical/src/libicalss -I./libical/src/libical \
   -I./libical/src/libicalss -I$(srcdir)/versit -I$(top_srcdir)/ \
   -I$(top_srcdir)/ktnef \
-  -I$(top_srcdir)/libkdepim \
+  -I$(top_builddir)/libkdepim \
   -I$(top_srcdir)/libemailfunctions \
   $(all_includes)
 

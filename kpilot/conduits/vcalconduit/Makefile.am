@@ -4,7 +4,7 @@
 ###
 
 INCLUDES= -I$(top_srcdir)/kpilot/lib -I$(top_srcdir) \
-	$(PISOCK_INCLUDE) $(all_includes) -I$(top_srcdir)/libkdepim
+	$(PISOCK_INCLUDE) $(all_includes) -I$(top_builddir)/libkdepim
 
 METASOURCES = AUTO
 

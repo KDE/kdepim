@@ -4,12 +4,12 @@ SUBDIRS=
 
 METASOURCES = AUTO
 
-INCLUDES = -I$(top_srcdir)/korganizer/interfaces -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
+INCLUDES = -I$(top_srcdir)/korganizer/interfaces -I$(top_srcdir) -I$(top_builddir)/libkdepim \
     -I$(top_srcdir)/libkcal/libical/src/libical -I$(top_srcdir)/libkcal/libical/src/libicalss \
     -I$(top_builddir)/libkcal/libical/src/libical -I$(top_builddir)/libkcal/libical/src/libicalss \
     $(all_includes)
 
-#     -I$(top_srcdir)/libkdepim/resources -I$(top_srcdir)/libkdepim/resources/calendar
+#     -I$(top_builddir)/libkdepim/resources -I$(top_builddir)/libkdepim/resources/calendar
 
 noinst_LTLIBRARIES = libkpimexchangecore.la
 

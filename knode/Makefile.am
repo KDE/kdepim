@@ -1,7 +1,7 @@
 KDE_CXXFLAGS = $(USE_THREADS)
 
 INCLUDES=	-I$(top_srcdir)/libkmime \
-		-I$(top_srcdir)/libkdepim \
+		-I$(top_builddir)/libkdepim \
 		-I$(top_srcdir)/libkpgp \
 		-I$(top_builddir)/libkdepim \
 		-I$(top_srcdir) \
