@@ -346,12 +346,17 @@ void ViewManager::setActiveView(const QString &name)
 
 void ViewManager::refresh(QString uid)
 {
-    mActiveView->refresh(uid);
-    addresseeSelected(uid);
+    if ( mActiveView )
+    {
+        mActiveView->refresh(uid);
+        addresseeSelected(uid);
+    }
 }
 
 void ViewManager::modifyView()
 {
+    if ( !mActiveView )
+        return;
   // Find the wrapper for the type they are modifying
   ViewWrapper *wrapper;
   ConfigureViewDialog *dialog = 0;
