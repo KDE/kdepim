@@ -128,7 +128,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			currentCatID=0;
 			while(strcmp(info->name[currentCatID],
 				selectedCategory.latin1()) &&
-				((currentCatID < fCatList->count()))
+				(currentCatID < fCatList->count()))
 			{
 				currentCatID++;
 			}
@@ -139,7 +139,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			currentCatID=0;
 			while(strcmp(info->name[currentCatID],
 				selectedCategory.ascii()) &&
-				((currentCatID < fCatList->count()))
+				(currentCatID < fCatList->count()))
 			{
 				currentCatID++;
 			}
@@ -208,6 +208,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.10  2001/03/04 21:20:55  adridg
+// Attempt to fix poor matching of category names
+//
 // Revision 1.9  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
