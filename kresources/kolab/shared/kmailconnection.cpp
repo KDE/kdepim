@@ -158,12 +158,12 @@ bool KMailConnection::connectKMailSignal( const QCString& signal,
 }
 
 bool KMailConnection::kmailSubresources( QMap<QString, bool>& lst,
-                                         const QString& annotation )
+                                         const QString& contentsType )
 {
   if ( !connectToKMail() )
     return false;
 
-  lst = mKMailIcalIfaceStub->subresourcesKolab( annotation );
+  lst = mKMailIcalIfaceStub->subresourcesKolab( contentsType );
   return mKMailIcalIfaceStub->ok();
 }
 

@@ -57,9 +57,9 @@ ResourceKolabBase::~ResourceKolabBase()
 
 
 bool ResourceKolabBase::kmailSubresources( QMap<QString, bool>& lst,
-                                           const QString& annotation ) const
+                                           const QString& contentsType ) const
 {
-  return mConnection->kmailSubresources( lst, annotation );
+  return mConnection->kmailSubresources( lst, contentsType );
 }
 
 bool ResourceKolabBase::kmailIncidences( QMap<Q_UINT32, QString>& lst,

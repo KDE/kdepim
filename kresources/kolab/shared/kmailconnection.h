@@ -77,7 +77,7 @@ public:
 
   // Call the DCOP methods
   bool kmailSubresources( QMap<QString, bool>& lst,
-                          const QString& annotation );
+                          const QString& contentsType );
   bool kmailIncidences( QMap<Q_UINT32, QString>& lst,
                         const QString& mimetype,
                         const QString& resource );

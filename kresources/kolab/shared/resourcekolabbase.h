@@ -95,10 +95,10 @@ protected:
   // These are the KMail dcop function connections. The docs here say
   // "Get", which here means that the first argument is the return arg
 
-  /// List all folders with a certain annotation. Returns a QMap with
+  /// List all folders with a certain contentsType. Returns a QMap with
   /// resourcename/writable pairs
   bool kmailSubresources( QMap<QString, bool>& lst,
-                          const QString& annotation ) const;
+                          const QString& contentsType ) const;
 
   /// Get the mimetype attachments from this folder. Returns a
   /// QMap with serialNumber/attachment pairs.
