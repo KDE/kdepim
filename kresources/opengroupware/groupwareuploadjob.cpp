@@ -50,7 +50,7 @@ void GroupwareUploadJob::run()
 
 void GroupwareUploadJob::deleteItem()
 {
-kdDebug()<<"GroupwareUploadJob::deleteItem()"<<endl;
+  kdDebug(5800)<<"GroupwareUploadJob::deleteItem()"<<endl;
   if ( mDeletedItems.isEmpty() ) {
     QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
   } else {
@@ -91,7 +91,7 @@ void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
 
 void GroupwareUploadJob::uploadItem()
 {
-kdDebug()<<"GroupwareUploadJob::uploadItem()"<<endl;
+  kdDebug(5800)<<"GroupwareUploadJob::uploadItem()"<<endl;
   if ( mChangedItems.isEmpty() ) {
     uploadNewItem();
   } else {
@@ -148,7 +148,7 @@ void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
 
 void GroupwareUploadJob::uploadNewItem()
 {
-kdDebug()<<"GroupwareUploadJob::uploadNewItem()"<<endl;
+  kdDebug(5800)<<"GroupwareUploadJob::uploadNewItem()"<<endl;
   if ( !mAddedItems.isEmpty() ) {
     GroupwareUploadItem *item = mAddedItems.front();
     if ( !item ) {
@@ -161,7 +161,7 @@ kdDebug()<<"GroupwareUploadJob::uploadNewItem()"<<endl;
     
     KURL url( adaptor()->folderLister()->writeDestinationId() );
     adaptor()->adaptUploadUrl( url );
-    kdDebug() << "Put new URL: " << url.url() << endl;
+    kdDebug(5800) << "Put new URL: " << url.url() << endl;
     
     mUploadJob = adaptor()->createUploadNewJob( url, item );
     

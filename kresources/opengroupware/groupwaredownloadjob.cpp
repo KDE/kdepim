@@ -42,7 +42,7 @@ GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
 
 void GroupwareDownloadJob::run()
 {
-  kdDebug() << "GroupwareDownloadJob::run()" << endl;
+  kdDebug(5800) << "GroupwareDownloadJob::run()" << endl;
 
   mFoldersForDownload = adaptor()->folderLister()->activeFolderIds();
 
@@ -77,13 +77,13 @@ void GroupwareDownloadJob::listItems()
 
     KURL url = mFoldersForDownload.front();
     mFoldersForDownload.pop_front();
-    kdDebug(7000) << "listItems: " << url.url() << endl;
+    kdDebug(5800) << "listItems: " << url.url() << endl;
 
     adaptor()->setUserPassword( url );
     adaptor()->adaptDownloadUrl( url );
-    kdDebug(7000) << "listItems, after setUserPassword: " << url.url() << endl;
+    kdDebug(5800) << "listItems, after setUserPassword: " << url.url() << endl;
 
-    kdDebug() << "OpenGroupware::listIncidences(): " << url << endl;
+    kdDebug(5800) << "OpenGroupware::listIncidences(): " << url << endl;
 
     mListEventsJob = adaptor()->createListItemsJob( url );
 
@@ -94,7 +94,7 @@ void GroupwareDownloadJob::listItems()
 
 void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
 {
-  kdDebug() << "GroupwareDownloadJob::slotListJobResult(): " << endl;
+  kdDebug(5800) << "GroupwareDownloadJob::slotListJobResult(): " << endl;
 
   if ( job->error() ) {
     if ( mProgress ) {
@@ -153,7 +153,7 @@ void GroupwareDownloadJob::downloadItem()
 
 void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
 {
-  kdDebug() << "OpenGroupware::slotJobResult(): " << endl;
+  kdDebug(5800) << "OpenGroupware::slotJobResult(): " << endl;
 
   KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
   if ( !trfjob ) return;
@@ -193,10 +193,9 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
 
 void GroupwareDownloadJob::slotJobData( KIO::Job *, const QByteArray &data )
 {
-  kdDebug() << "OpenGroupware::slotJobData()" << endl;
+  kdDebug(5800) << "OpenGroupware::slotJobData()" << endl;
 
   mJobData.append( data.data() );
-kdDebug()<<"Job data: "<<endl<<mJobData<<endl<<endl;
 }
 
 void GroupwareDownloadJob::kill()

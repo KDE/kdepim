@@ -72,7 +72,7 @@ bool FolderLister::isActive( const QString &id ) const
 
 void FolderLister::readConfig( const KConfig *config )
 {
-  kdDebug() << "FolderLister::readConfig()" << endl;
+  kdDebug(7000) << "FolderLister::readConfig()" << endl;
 
   QStringList ids = config->readListEntry( "FolderIds" );
   QStringList names = config->readListEntry( "FolderNames" );
@@ -139,14 +139,14 @@ FolderLister::Entry::List FolderLister::defaultFolders()
 
 void FolderLister::slotListJobResult( KIO::Job *job )
 {
-  kdDebug() << "OpenGroupware::slotListJobResult(): " << endl;
+  kdDebug(7000) << "OpenGroupware::slotListJobResult(): " << endl;
 
   if ( job->error() ) {
     kdError() << "Unable to retrieve folders." << endl;
   } else {
     QDomDocument doc = mListEventsJob->response();
 
-    kdDebug() << " Doc: " << doc.toString() << endl;
+    kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
     bool firstRetrieve = mFolders.isEmpty();
 
@@ -195,7 +195,7 @@ void FolderLister::slotListJobResult( KIO::Job *job )
         
         newFolders.append( entry );
       
-        kdDebug() << "FOLDER: " << displayName << endl;
+        kdDebug(7000) << "FOLDER: " << displayName << endl;
       }
     }
 

@@ -80,7 +80,7 @@ OpenGroupwareConfig::OpenGroupwareConfig( QWidget* parent,  const char* name )
 
 void OpenGroupwareConfig::loadSettings( KRES::Resource *resource )
 {
-  kdDebug() << "KCal::OpenGroupwareConfig::loadSettings()" << endl;
+  kdDebug(5800) << "KCal::OpenGroupwareConfig::loadSettings()" << endl;
 
   OpenGroupware *res = static_cast<OpenGroupware *>( resource );
   if ( res ) {
@@ -98,7 +98,7 @@ void OpenGroupwareConfig::loadSettings( KRES::Resource *resource )
     mFolderConfig->setFolderLister( res->folderLister() );
     mFolderConfig->updateFolderList();
   } else {
-    kdError(5700) << "KCalOpenGroupwareConfig::loadSettings(): no KCalOpenGroupware, cast failed" << endl;
+    kdError(5800) << "KCalOpenGroupwareConfig::loadSettings(): no KCalOpenGroupware, cast failed" << endl;
   }
 }
 

@@ -152,7 +152,7 @@ bool ResourceGroupwareBase::doOpen()
 
 void ResourceGroupwareBase::doClose()
 {
-  kdDebug() << "ResourceGroupwareBase::doClose()" << endl;
+  kdDebug(5800) << "ResourceGroupwareBase::doClose()" << endl;
 
   if ( mDownloadJob ) mDownloadJob->kill();
 }
@@ -181,7 +181,7 @@ bool ResourceGroupwareBase::asyncLoad()
 
 void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug() << "ResourceGroupwareBase::slotJobResult(): " << endl;
+  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     kdError() << "job failed: " << job->errorString() << endl;
@@ -238,7 +238,7 @@ bool ResourceGroupwareBase::asyncSave( Ticket* )
 
 void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug() << "::slotJobResult(): " << endl;
+  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     kdError() << "job failed: " << job->errorString() << endl;

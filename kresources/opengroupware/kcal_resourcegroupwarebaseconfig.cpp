@@ -76,7 +76,7 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  cons
 
 void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *resource )
 {
-  kdDebug() << "KCal::ResourceGroupwareBaseConfig::loadSettings()" << endl;
+  kdDebug(7000) << "KCal::ResourceGroupwareBaseConfig::loadSettings()" << endl;
 
   ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>( resource );
   if ( res ) {

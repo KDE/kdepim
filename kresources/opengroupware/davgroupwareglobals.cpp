@@ -34,7 +34,7 @@
 KIO::TransferJob *DAVGroupwareGlobals::createListItemsJob( const KURL &url )
 {
   QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
-  kdDebug() << "props = "<< props.toString() << endl;
+  kdDebug(5800) << "props = "<< props.toString() << endl;
   return KIO::davPropFind( url, props, "1", false );
 }
 
@@ -78,27 +78,27 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
     currentlyOnServer << location;
     /* if not locally present, download */
     const QString &localId = adaptor->idMapper()->localId( location );
-    kdDebug(5006) << "Looking up remote: " << location << " found: " << localId << endl;
+    kdDebug(5800) << "Looking up remote: " << location << " found: " << localId << endl;
     if ( localId.isEmpty() || !adaptor->localItemExists( localId ) ) {
       //kdDebug(7000) << "Not locally present, download: " << location << endl;
       download = true;
     } else {
-      kdDebug(7000) << "Locally present " << endl;
+      kdDebug(5800) << "Locally present " << endl;
       /* locally present, let's check if it's newer than what we have */
       const QString &oldFingerprint = adaptor->idMapper()->fingerprint( localId );
       if ( oldFingerprint != newFingerprint ) {
-        kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint <<
+        kdDebug(5800) << "Fingerprint changed old: " << oldFingerprint <<
           " new: " << newFingerprint << endl;
         // something changed on the server, let's see if we also changed it locally
         if ( adaptor->localItemHasChanged( localId ) ) {
           // TODO conflict resolution
-          kdDebug(7000) << "TODO conflict resolution" << endl;
+          kdDebug(5800) << "TODO conflict resolution" << endl;
           download = true;
         } else {
           download = true;
         }
       } else {
-        kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
+        kdDebug(5800) << "Fingerprint did not change, don't download this one " << endl;
       }
     }
     if ( download ) {
@@ -106,7 +106,7 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
     }
   }
 
-  kdDebug()<<"currentlyOnServer="<<currentlyOnServer.join(", ")<<endl;
-  kdDebug()<<"itemsForDownload="<<itemsForDownload.join(", ")<<endl;
+  kdDebug(5800)<<"currentlyOnServer="<<currentlyOnServer.join(", ")<<endl;
+  kdDebug(5800)<<"itemsForDownload="<<itemsForDownload.join(", ")<<endl;
   return true;
 }

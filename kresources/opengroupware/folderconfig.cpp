@@ -93,7 +93,7 @@ void FolderConfig::setFolderLister( FolderLister *f )
 
 void FolderConfig::retrieveFolderList( const KURL &url )
 {
-  kdDebug() << "FolderConfig::retrieveFolderList()" << endl;
+  kdDebug(7000) << "FolderConfig::retrieveFolderList()" << endl;
 
   mFolderLister->retrieveFolders( url );
 }

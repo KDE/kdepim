@@ -56,7 +56,7 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 
 void GroupwareDataAdaptor::setUserPassword( KURL &url )
 {
-kdDebug()<<"GroupwareDataAdaptor::setUserPassword, mUser="<<mUser<<", mPassword="<<mPassword<<endl<<endl<<endl;
+  kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser=" << mUser << endl;
   url.setUser( mUser );
   url.setPass( mPassword );
 }

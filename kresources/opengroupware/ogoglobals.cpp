@@ -59,9 +59,9 @@ void OGoGlobals::updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor,
   adaptor->idMapper()->setRemoteId( uid, remoteId );
   adaptor->idMapper()->setFingerprint( uid, etag );
 /*
-  kdDebug() << "Setting remoteID for: " << uid << " to: " << remoteId << endl;
-  kdDebug() << "Setting etag for: " << uid << " to: " << etag << endl;
-  kdDebug() << adaptor()->idMapper()->asString() << endl;
+  kdDebug(5800) << "Setting remoteID for: " << uid << " to: " << remoteId << endl;
+  kdDebug(5800) << "Setting etag for: " << uid << " to: " << etag << endl;
+  kdDebug(5800) << adaptor()->idMapper()->asString() << endl;
 */
 }
 

@@ -95,7 +95,6 @@ void ResourceGroupwareBase::setAdaptor( CalendarAdaptor *adaptor )
   mAdaptor->setFolderLister( mFolderLister );
   mAdaptor->setDownloadProgressMessage( i18n("Downloading calendar") );
   mAdaptor->setUploadProgressMessage( i18n("Uploading calendar") );
-kdDebug()<<"prefs()->user()="<<prefs()->user()<<", pw="<<prefs()->password()<<endl;
   if ( prefs() ) {
     mAdaptor->setUser( prefs()->user() );
     mAdaptor->setPassword( prefs()->password() );
@@ -119,18 +118,16 @@ GroupwarePrefsBase *ResourceGroupwareBase::prefs()
 
 void ResourceGroupwareBase::readConfig( const KConfig *config )
 {
-  kdDebug() << "KCal::ResourceGroupwareBase::readConfig()" << endl;
+  kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
   // FIXME: Something doesn't seem right here: Why don't we read everything from *config?
 
-kdDebug()<<" mPrefs = "<<mPrefs<<", prefs()="<<prefs()<<endl;
   if ( mPrefs ) {
-kdDebug()<<"prefs()->user()="<<prefs()->user()<<", pw="<<prefs()->password()<<endl;
     mPrefs->readConfig();
     mBaseUrl = KURL( prefs()->url() );
     mBaseUrl.setUser( prefs()->user() );
     mBaseUrl.setPass( prefs()->password() );
   }
-kdDebug()<<"mBaseUrl="<<mBaseUrl.prettyURL() << endl << endl << endl << endl;
+  kdDebug(5800)<<"mBaseUrl="<<mBaseUrl.prettyURL() << endl;
 
   ResourceCached::readConfig( config );
 
@@ -142,7 +139,7 @@ kdDebug()<<"mBaseUrl="<<mBaseUrl.prettyURL() << endl << endl << endl << endl;
 
 void ResourceGroupwareBase::writeConfig( KConfig *config )
 {
-  kdDebug() << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
+  kdDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -166,10 +163,10 @@ void ResourceGroupwareBase::doClose()
 
 bool ResourceGroupwareBase::doLoad()
 {
-  kdDebug() << "ResourceGroupwareBase::load()" << endl;
+  kdDebug(5800) << "ResourceGroupwareBase::load()" << endl;
 
   if ( mIsShowingError ) {
-    kdDebug() << "Still showing error" << endl;
+    kdDebug(5800) << "Still showing error" << endl;
     return true;
   }
 
@@ -194,14 +191,14 @@ bool ResourceGroupwareBase::doLoad()
 
 void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug() << "ResourceGroupwareBase::slotJobResult(): " << endl;
+  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
     loadError( job->errorString() );
     mIsShowingError = false;
   } else {
-    kdDebug() << "Successfully downloaded data" << endl;
+    kdDebug(5800) << "Successfully downloaded data" << endl;
   
     clearChanges();
     saveCache();
@@ -216,12 +213,12 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
 
 bool ResourceGroupwareBase::doSave()
 {
-  kdDebug() << "KCal::ResourceGroupwareBase::doSave()" << endl;
+  kdDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
 
   saveCache();
 
   if ( !hasChanges() ) {
-    kdDebug() << "No changes" << endl;
+    kdDebug(5800) << "No changes" << endl;
     return true;
   }
   if ( !confirmSave() ) return false;
@@ -260,14 +257,14 @@ bool ResourceGroupwareBase::doSave()
 
 void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug() << "ResourceGroupwareBase::slotUploadJobResult(): " << endl;
+  kdDebug(5800) << "ResourceGroupwareBase::slotUploadJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
     loadError( job->errorString() );
     mIsShowingError = false;
   } else {
-    kdDebug() << "Successfully uploaded data" << endl;
+    kdDebug(5800) << "Successfully uploaded data" << endl;
     /* 
      * After the put the server might have expanded recurring events and will
      * also change the uids of the uploaded events. Remove them from the cache
