@@ -39,6 +39,7 @@
 namespace KABC {
   class Addressee;
   class ResourceKolab;
+  class Picture;
 }
 
 namespace Kolab {
@@ -135,9 +136,13 @@ public:
   void setAnniversary( const QDate& date );
   QDate anniversary() const;
 
-  void loadPicture( KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
-  void setPicture( const QImage& image );
+  void setPicture( const QImage& image);
+  QString pictureAttachmentName() const { return mPictureAttachmentName; }
   QImage picture() const;
+
+  void setLogo( const QImage& image );
+  QString logoAttachmentName() const { return mLogoAttachmentName; }
+  QImage logo() const;
 
   void setChildren( const QString& children );
   QString children() const;
@@ -176,8 +181,6 @@ public:
   // Serialize this note to an XML string
   QString saveXML() const;
 
-  static const char* s_pictureAttachmentName;
-
 protected:
   void setFields( const KABC::Addressee* );
 
@@ -192,6 +195,9 @@ private:
 
   bool loadAddressAttribute( QDomElement& element );
   void saveAddressAttributes( QDomElement& element ) const;
+
+  QImage loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
+  QImage loadPictureFromAddressee( const KABC::Picture& picture );
 
   QString mGivenName;
   QString mMiddleNames;
@@ -216,7 +222,9 @@ private:
   QDate mBirthday;
   QDate mAnniversary;
   QImage mPicture;
+  QImage mLogo;
   QString mPictureAttachmentName; // only used when loading
+  QString mLogoAttachmentName; // only used when loading
   QString mChildren;
   QString mGender;
   QString mLanguage;

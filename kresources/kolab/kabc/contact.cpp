@@ -40,7 +40,8 @@
 
 using namespace Kolab;
 
-const char* Contact::s_pictureAttachmentName = "kolab-picture.png";
+static const char* s_pictureAttachmentName = "kolab-picture.png";
+static const char* s_logoAttachmentName = "kolab-logo.png";
 
 // saving (addressee->xml)
 Contact::Contact( const KABC::Addressee* addr )
@@ -53,7 +54,9 @@ Contact::Contact( const QString& xml, KABC::ResourceKolab* resource, const QStri
 {
   load( xml );
   if ( !mPictureAttachmentName.isEmpty() )
-    loadPicture( resource, subResource, sernum );
+    mPicture = loadPictureFromKMail( mPictureAttachmentName, resource, subResource, sernum );
+  if ( !mLogoAttachmentName.isEmpty() )
+    mLogo = loadPictureFromKMail( mLogoAttachmentName, resource, subResource, sernum );
 }
 
 Contact::~Contact()
@@ -288,6 +291,16 @@ void Contact::setPicture( const QImage& picture )
 QImage Contact::picture() const
 {
   return mPicture;
+}
+
+void Contact::setLogo( const QImage& logo )
+{
+  mLogo = logo;
+}
+
+QImage Contact::logo() const
+{
+  return mLogo;
 }
 
 void Contact::setChildren( const QString& children )
@@ -549,12 +562,20 @@ bool Contact::loadAttribute( QDomElement& element )
     setNickName( element.text() );
   else if ( tagName == "spouse-name" )
     setSpouseName( element.text() );
-  else if ( tagName == "birthday" )
-    setBirthday( stringToDate( element.text() ) );
-  else if ( tagName == "anniversary" )
-    setAnniversary( stringToDate( element.text() ) );
-  else if ( tagName == "picture" )
-    mPictureAttachmentName = ( element.text() );
+  else if ( tagName == "birthday" ) {
+    if ( !element.text().isEmpty() )
+      setBirthday( stringToDate( element.text() ) );
+  }
+  else if ( tagName == "anniversary" ) {
+    if ( !element.text().isEmpty() )
+      setAnniversary( stringToDate( element.text() ) );
+  }
+  else if ( tagName == "picture" ) {
+    mPictureAttachmentName = element.text();
+  }
+  else if ( tagName == "x-logo" ) {
+    mLogoAttachmentName = element.text();
+  }
   else if ( tagName == "children" )
     setChildren( element.text() );
   else if ( tagName == "gender" )
@@ -602,7 +623,10 @@ bool Contact::saveAttributes( QDomElement& element ) const
   writeString( element, "spouse-name", spouseName() );
   writeString( element, "birthday", dateToString( birthday() ) );
   writeString( element, "anniversary", dateToString( anniversary() ) );
-  writeString( element, "picture", s_pictureAttachmentName );
+  if ( !picture().isNull() )
+    writeString( element, "picture", mPictureAttachmentName );
+  if ( !logo().isNull() )
+    writeString( element, "x-logo", mLogoAttachmentName );
   writeString( element, "children", children() );
   writeString( element, "gender", gender() );
   writeString( element, "language", language() );
@@ -753,6 +777,18 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
   return KABC::PhoneNumber::Home; // whatever
 }
 
+static const char* s_knownCustomFields[] = {
+  "X-IMAddress",
+  "X-Department",
+  "X-Office",
+  "X-Profession",
+  "X-ManagersName",
+  "X-AssistantsName",
+  "X-SpousesName",
+  "X-Anniversary"
+};
+
+// The loading is addressee -> Contact -> xml, this is the first part
 void Contact::setFields( const KABC::Addressee* addressee )
 {
   KolabBase::setFields( addressee );
@@ -800,7 +836,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
     address.region = (*it).region();
     address.postalCode = (*it).postalCode();
     address.country = (*it).country();
-    // ## not in the XML format: post-office-box and extended address info.
+    // ## TODO not in the XML format: post-office-box and extended address info.
     // ## KDE-specific tags? Or hiding those fields? Or adding a warning?
     addAddress( address );
     if ( (*it).type() & KABC::Address::Pref ) {
@@ -821,31 +857,36 @@ void Contact::setFields( const KABC::Addressee* addressee )
     }
   }
 
-  QImage photo;
-  if ( !addressee->photo().isIntern() ) {
-    QString tmpFile;
-    if ( KIO::NetAccess::download( addressee->photo().url(), tmpFile, 0 /*no widget known*/ ) ) {
-      photo.load( tmpFile );
-      KIO::NetAccess::removeTempFile( tmpFile );
-    }
-  } else
-    photo = addressee->photo().data();
+  setPicture( loadPictureFromAddressee( addressee->photo() ) );
+  mPictureAttachmentName = addressee->custom( "KOLAB", "PictureAttachmentName" );
+  if ( mPictureAttachmentName.isEmpty() )
+    mPictureAttachmentName = s_pictureAttachmentName;
 
-  setPicture( photo );
+  setLogo( loadPictureFromAddressee( addressee->logo() ) );
+  mLogoAttachmentName = addressee->custom( "KOLAB", "LogoAttachmentName" );
+  if ( mLogoAttachmentName.isEmpty() )
+    mLogoAttachmentName = s_logoAttachmentName;
+
+  // Those fields, although defined in Addressee, are not used in KDE
+  // (e.g. not visible in kaddressbook/addresseeeditorwidget.cpp)
+  // So it doesn't matter much if we don't have them in the XML.
+  // mailer, timezone, productId, sortString, agent, rfc2426 name()
 
   // TODO: Unhandled Addressee fields:
-  // mailer, timezone, geo, productId, sortString, logo, sound
-  // agent
-  // extra custom fields, name(), preferred phone number,
-  // extra im addresses, crypto settings
+  // geo, logo, sound
+  // other KADDRESSBOOK custom fields than those already handled
+  //    (includes IM address, crypto settings)
+  // extra im addresses (X-messaging/*)
 
   // TODO: Things KAddressBook can't handle:
   // initials, children, gender, language
+  // Well, so that's part of the "unhandled" tag thing.
 
   // TODO: Free/Busy URL. This is done rather awkward in KAddressBook -
   // it stores it in a local file through a korganizer file :-(
 }
 
+// The loading is: xml -> Contact -> addressee, this is the second part
 void Contact::saveTo( KABC::Addressee* addressee )
 {
   // TODO: This needs the same set of TODOs as the setFields method
@@ -869,7 +910,8 @@ void Contact::saveTo( KABC::Addressee* addressee )
   addressee->insertCustom( "KADDRESSBOOK", "X-AssistantsName", assistant() );
   addressee->setNickName( nickName() );
   addressee->insertCustom( "KADDRESSBOOK", "X-SpousesName", spouseName() );
-  addressee->setBirthday( QDateTime( birthday() ) );
+  if ( birthday().isValid() )
+    addressee->setBirthday( QDateTime( birthday() ) );
 
   if ( anniversary().isValid() )
     addressee->insertCustom( "KADDRESSBOOK", "X-Anniversary",
@@ -877,7 +919,16 @@ void Contact::saveTo( KABC::Addressee* addressee )
   else
     addressee->removeCustom( "KADDRESSBOOK", "X-Anniversary" );
 
-  addressee->setPhoto( KABC::Picture( mPicture ) );
+  // We need to store both the original attachment name and the picture data into the addressee.
+  // This is important, otherwise we would save the image under another attachment name w/o deleting the original one!
+  if ( !mPicture.isNull() )
+    addressee->setPhoto( KABC::Picture( mPicture ) );
+  // Note that we must save the filename in all cases, so that removing the picture
+  // actually deletes the attachment.
+  addressee->insertCustom( "KOLAB", "PictureAttachmentName", mPictureAttachmentName );
+  if ( !mLogo.isNull() )
+    addressee->setLogo( KABC::Picture( mLogo ) );
+  addressee->insertCustom( "KOLAB", "LogoAttachmentName", mLogoAttachmentName );
 
   QStringList emailAddresses;
   for ( QValueList<Email>::ConstIterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
@@ -908,12 +959,28 @@ void Contact::saveTo( KABC::Addressee* addressee )
   }
 }
 
-void Contact::loadPicture( KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
 {
+  QImage img;
   KURL url;
-  if ( resource->kmailGetAttachment( url, subResource, sernum, mPictureAttachmentName ) ) {
+  if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
     const QString path = url.path();
-    mPicture.load( path );
+    img.load( path );
     QFile::remove(path);
   }
+  return img;
+}
+
+QImage Contact::loadPictureFromAddressee( const KABC::Picture& picture )
+{
+  QImage img;
+  if ( !picture.isIntern() ) {
+    QString tmpFile;
+    if ( KIO::NetAccess::download( picture.url(), tmpFile, 0 /*no widget known*/ ) ) {
+      img.load( tmpFile );
+      KIO::NetAccess::removeTempFile( tmpFile );
+    }
+  } else
+    img = picture.data();
+  return img;
 }

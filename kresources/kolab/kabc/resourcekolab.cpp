@@ -148,6 +148,7 @@ void KABC::ResourceKolab::loadContact( const QString& contactXML, const QString&
   addr.setChanged( false );
   KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
   mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
+  kdDebug(5650) << "Loaded contact uid=" << addr.uid() << " sernum=" << sernum << " fullName=" << contact.fullName() << endl;
 }
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
@@ -199,32 +200,49 @@ bool KABC::ResourceKolab::save( Ticket* )
   return rc;
 }
 
+namespace Kolab {
+struct AttachmentList {
+  QStringList attachmentURLs;
+  QStringList attachmentNames;
+  QStringList attachmentMimeTypes;
+  QStringList deletedAttachments;
+  QValueList<KTempFile *> tempFiles;
+
+  void addAttachment( const QString& url, const QString& name, const QString& mimetype ) {
+    attachmentURLs.append( url );
+    attachmentNames.append( name );
+    attachmentMimeTypes.append( mimetype );
+  }
+
+  void updatePictureAttachment( const QImage& image, const QString& name );
+};
+} // namespace
+
+void AttachmentList::updatePictureAttachment( const QImage& image, const QString& name )
+{
+  assert( !name.isEmpty() );
+  if ( !image.isNull() ) {
+    KTempFile* tempFile = new KTempFile;
+    image.save( tempFile->file(), "PNG" );
+    tempFile->close();
+    KURL url;
+    url.setPath( tempFile->name() );
+    kdDebug(5650) << "picture saved to " << url.path() << endl;
+    addAttachment( url.url(), name, "image/png" );
+  } else {
+    deletedAttachments.append( name );
+  }
+}
+
 bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 {
   Contact contact( &addr );
   const QString uid = addr.uid();
   // The addressee is converted to: 1) the xml  2) the optional picture
   const QString xml = contact.saveXML();
-  QStringList attachmentURLs;
-  QStringList attachmentNames;
-  QStringList attachmentMimeTypes;
-  QStringList deletedAttachments;
-  QValueList<KTempFile *> tempFiles;
-  QImage pic = contact.picture();
-
-  if ( !pic.isNull() ) {
-    KTempFile* tempFile = new KTempFile;
-    pic.save( tempFile->file(), "PNG" );
-    tempFile->close();
-    KURL url;
-    url.setPath( tempFile->name() );
-    kdDebug(5650) << "picture saved to " << url.path() << endl;
-    attachmentURLs.append( url.url() );
-    attachmentMimeTypes.append( "image/png" );
-    attachmentNames.append( Contact::s_pictureAttachmentName );
-  } else {
-    deletedAttachments.append( Contact::s_pictureAttachmentName );
-  }
+  AttachmentList att;
+  att.updatePictureAttachment( contact.picture(), contact.pictureAttachmentName() );
+  att.updatePictureAttachment( contact.logo(), contact.logoAttachmentName() );
 
   QString subResource;
   Q_UINT32 sernum;
@@ -237,8 +255,8 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   }
 
   bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, addr.assembledName(),
-                         attachmentURLs, attachmentMimeTypes, attachmentNames,
-                         deletedAttachments );
+                         att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
+                         att.deletedAttachments );
   if ( !rc )
     kdDebug(5650) << "kmailUpdate returned false!" << endl;
   if ( rc ) {
@@ -250,7 +268,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     const_cast<Addressee&>(addr).setChanged( false );
   }
 
-  for( QValueList<KTempFile *>::Iterator it = tempFiles.begin(); it != tempFiles.end(); ++it ) {
+  for( QValueList<KTempFile *>::Iterator it = att.tempFiles.begin(); it != att.tempFiles.end(); ++it ) {
     (*it)->setAutoDelete( true );
     delete (*it);
   }
