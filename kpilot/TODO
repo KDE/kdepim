@@ -16,10 +16,17 @@ Essential
     options, include conflict resolution, etc.)
 3)  Fix all conduits to use the new global options: conflict resolution,
     emergency sync, sync mode etc.
-4)  VCal conduit: Fields not supported on the handheld are erased
+-(4)  VCal conduit: Fields not supported on the handheld are erased
     in the calendar (e.g. categories). I need to get the Event
     before I copy all fields over, and only overwrite the fields
     from the handheld, so the others remain unchanged.
+	 RESOLUTION: Found out that this is not true any longer, and everything
+	 works just fine!
+4a) Config troubles: Start kpilotDaemon and then kpilot. Configure a conduit 
+    in kpilot, then do a sync (which writes something to the  config, e.g. 
+	 run the docconduit). Now configure another conduit in kpilot. The config
+	 file will be changed again, but the changes from the sync are lost (i.e.
+	 after a sync, kpilot needs to reload the config).
 
 
 Important (hight priority)
@@ -44,7 +51,6 @@ Important (hight priority)
     RESOLUTION: This is not possible in a QTextEdit in LogText mode.
     However, I got rid of the pseudoo-progressbar, so this i no longer
     needed.
-
 11) Merge between HEAD and BRANCH (again).
 12) ABook conduit: Check all fields for differences before asking
     for conflict resolution. (i.e.. don't ask for conflict resolution
@@ -69,7 +75,7 @@ Medium (nice to have, but not essential)
     down problems.
 21) GJJ: Hunt down and kill printfs. Hunt down bad i18n.
 22) Update README, TODO, NEWS, AUTHORS in HEAD.
-23) GJJ: Move the conduit configuration dialog (for the umpteenth time)
++(23) GJJ: Move the conduit configuration dialog (for the umpteenth time)
     to a list of QCheckBoxes, like noatun's plain playlist or
     kdebugdialog
 24) PalmDOC conduit: choosing the bookmark type of the pdb->txt
