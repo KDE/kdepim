@@ -168,6 +168,7 @@ public:
 	virtual int nextSyncType() const;
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
+	virtual ASYNC setTempDevice(QString d);
 
 	virtual void stopListening();
 	virtual void startListening();
@@ -260,6 +261,7 @@ private:
 	LoggerDCOP_stub *fLogStub;
 	LoggerDCOP_stub *fLogFileStub;
 	KPilotDCOP_stub *fKPilotStub;
+	QString fTempDevice;
 };
 
 

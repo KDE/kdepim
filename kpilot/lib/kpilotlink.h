@@ -97,7 +97,7 @@ public:
 	*
 	* Call reset() on it to start looking for a device.
 	*/
-	KPilotDeviceLink( QObject *parent = 0, const char *name = 0 );
+	KPilotDeviceLink( QObject *parent = 0, const char *name = 0, const QString &tempDevice = QString::null );
 	virtual ~KPilotDeviceLink();
 //	bool init(QObject *parent=0L,const char *n=0L);
 
@@ -158,6 +158,12 @@ public:
 	*/
 	void reset(const QString &pilotPath);
 
+	/**
+	* sets an additional device, which should be tried as fallback
+	* usefull for hotplug enviroments
+	*/
+	void setTempDevice( const QString &device );
+
 
 public slots:
 	/**
@@ -191,7 +197,7 @@ protected:
 	* Does the low-level opening of the device and handles the
 	* pilot-link library initialisation.
 	*/
-	bool open();
+	bool open( QString device = QString::null );
 
 	/**
 	* Check for device permissions and existence, emitting
@@ -252,6 +258,7 @@ private:
 	*/
 	int fPilotMasterSocket;
 	int fCurrentPilotSocket;
+	QString fTempDevice;
 
 	/**
 	* Handle cases where we can't accept or open the device,

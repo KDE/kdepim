@@ -57,6 +57,7 @@ k_dcop:
 	*/
 	virtual ASYNC quitNow() = 0;
 	virtual ASYNC reloadSettings() = 0; // Indicate changed config file.
+	virtual ASYNC setTempDevice(QString d) =0; // use this device
 	virtual void stopListening() = 0;
 	virtual void startListening() = 0;
 	virtual bool isListening() =0 ;

@@ -305,7 +305,8 @@ PilotDaemon::PilotDaemon() :
 	fLogFile(0L),
 	fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
 	fLogFileStub(new LoggerDCOP_stub("kpilotDaemon", "LogIface")),
-	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
+	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface")),
+	fTempDevice(QString::null)
 {
 	FUNCTIONSETUP;
 
@@ -420,6 +421,16 @@ void PilotDaemon::showTray()
 #endif
 
 	updateTrayStatus();
+}
+
+/* DCOP ASYNC */ void PilotDaemon::setTempDevice(QString d)
+{
+	if ( !d.isEmpty() ){
+		fTempDevice = d;
+		if (fPilotLink)
+			fPilotLink->setTempDevice( fTempDevice );
+		reloadSettings();
+	}
 }
 
 /* DCOP ASYNC */ void PilotDaemon::reloadSettings()
@@ -581,7 +592,7 @@ bool PilotDaemon::setupPilotLink()
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fPilotLink);
-	fPilotLink = new KPilotDeviceLink();
+	fPilotLink = new KPilotDeviceLink( 0, 0, fTempDevice );
 	if (!fPilotLink)
 	{
 		kdWarning() << k_funcinfo
@@ -1318,6 +1329,7 @@ static KCmdLineOptions daemonoptions[] = {
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
+	{ "device <device>", I18N_NOOP("device to try first."), ""},
 	{"fail-silently", /* TODO_I18N */ ("Exit instead of complaining "
 		"about bad configuration files."), 0},
 	KCmdLineLastOption
@@ -1359,9 +1371,21 @@ int main(int argc, char **argv)
 #ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
 #endif
-
 	if (!KUniqueApplication::start())
 	{
+		if (p->isSet("device")){
+			// tell the running kpilotDaemon to use
+			// this device now
+			DCOPClient d;
+			QString dev(p->getOption("device"));
+			QByteArray data;
+			QDataStream arg(data, IO_WriteOnly);
+			arg << dev;
+			if (d.attach()){
+				d.send("kpilotDaemon", "KPilotDaemonIface", "setTempDevice(QString)", data );
+				d.detach();
+			}
+		}
 		return 0;
 	}
 	KUniqueApplication a(true, true);
@@ -1393,6 +1417,9 @@ int main(int argc, char **argv)
 
 
 	PilotDaemon *gPilotDaemon = new PilotDaemon();
+
+	if (p->isSet("device"))
+		gPilotDaemon->setTempDevice(p->getOption("device"));
 
 	if (gPilotDaemon->status() == PilotDaemon::ERROR)
 	{

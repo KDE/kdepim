@@ -112,7 +112,7 @@ private:
 KPilotDeviceLink::KPilotDeviceLinkPrivate *KPilotDeviceLink::KPilotDeviceLinkPrivate::mThis = 0L;
 
 
-KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
+KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QString &tempDevice) :
 	QObject(parent, name),
 	fLinkStatus(Init),
 	fPilotPath(QString::null),
@@ -122,6 +122,7 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1),
+	fTempDevice(tempDevice),
 	fPilotUser(0L),
 	fPilotSysInfo(0L)
 {
@@ -192,6 +193,8 @@ void KPilotDeviceLink::reset(const QString & dP)
 
 	fPilotPath = dP;
 	if (fPilotPath.isEmpty())
+	   fPilotPath = fTempDevice;
+	if (fPilotPath.isEmpty())
 		return;
 
 	reset();
@@ -242,6 +245,11 @@ void KPilotDeviceLink::checkDevice()
 	}
 }
 
+void KPilotDeviceLink::setTempDevice( const QString &d )
+{
+	fTempDevice = d;
+	KPilotDeviceLinkPrivate::self()->bindDevice( fTempDevice );
+}
 
 void KPilotDeviceLink::openDevice()
 {
@@ -262,6 +270,10 @@ void KPilotDeviceLink::openDevice()
 	{
 		emit logMessage(i18n("Device link ready."));
 	}
+	else if (open(fTempDevice))
+	{
+		emit logMessage(i18n("Device link ready."));
+	}
 	else
 	{
 		shouldPrint(OpenFailMessage,i18n("Could not open device: %1 "
@@ -270,12 +282,17 @@ void KPilotDeviceLink::openDevice()
 
 		if (fLinkStatus != PilotLinkError)
 		{
+			if ( !fOpenTimer ){
+				fOpenTimer = new QTimer(this);
+				QObject::connect(fOpenTimer, SIGNAL(timeout()),
+					this, SLOT(openDevice()));
+			}
 			fOpenTimer->start(1000, false);
 		}
 	}
 }
 
-bool KPilotDeviceLink::open()
+bool KPilotDeviceLink::open(QString device)
 {
 	FUNCTIONSETUPL(2);
 
@@ -292,7 +309,9 @@ bool KPilotDeviceLink::open()
 	}
 	fCurrentPilotSocket = (-1);
 
-	fRealPilotPath = KStandardDirs::realPath ( pilotPath() );
+	if ( device.isEmpty() )
+		device = pilotPath();
+	fRealPilotPath = KStandardDirs::realPath ( device );
 //	if ( dv.exists() && dv.isSymLink() ) {
 //		fRealPilotPath = dv.readLink();
 //	}
@@ -307,7 +326,7 @@ bool KPilotDeviceLink::open()
 
 	if (fPilotMasterSocket == -1)
 	{
-		if (fPilotPath.isEmpty())
+		if (device.isEmpty())
 		{
 			kdWarning() << k_funcinfo
 				<< ": No point in trying empty device."
@@ -318,7 +337,7 @@ bool KPilotDeviceLink::open()
 			goto errInit;
 		}
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Typing to open " << fPilotPath << endl;
+		DEBUGDAEMON << fname << ": Typing to open " << fRealPilotPath << endl;
 #endif
 
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
@@ -356,8 +375,7 @@ bool KPilotDeviceLink::open()
 #else
 	addr.pi_family = PI_AF_PILOT;
 #endif
-	strncpy(addr.pi_device, QFile::encodeName(fPilotPath),sizeof(addr.pi_device));
-
+	strncpy(addr.pi_device, QFile::encodeName(device),sizeof(addr.pi_device));
 
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
