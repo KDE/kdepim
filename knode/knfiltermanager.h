@@ -31,12 +31,40 @@
 
 class KNFilterSettings;
 
-class KNFilterManager : public QObject{
 
+class KNFilterSelectAction : public KAction
+{
+  Q_OBJECT
+
+  public:
+    KNFilterSelectAction( const QString& text, const QString& pix,
+                          int accel, QObject* parent, const char* name );
+    ~KNFilterSelectAction();
+
+    virtual int plug( QWidget* widget, int index = -1 );
+    KPopupMenu* popupMenu()    { return p_opup; }
+    void setCurrentItem(int id);
+
+  protected slots:
+    void slotMenuActivated(int id);
+
+  signals:
+    void activated(int id);
+
+  private:
+    QPixmap p_ixmap;
+    KPopupMenu *p_opup;
+    int currentItem;
+};
+
+
+
+class KNFilterManager : public QObject
+{
 	Q_OBJECT
 
 	public:
-	  KNFilterManager(KSelectAction *filterMenu);
+	  KNFilterManager(KNFilterSelectAction *filterMenu);
 		KNFilterManager();
 		~KNFilterManager();
 		
@@ -60,7 +88,7 @@ class KNFilterManager : public QObject{
 		QList<KNArticleFilter> fList;
 		KNFilterSettings *fset;
 	  KNArticleFilter *currFilter;
-		KSelectAction *menu;
+		KNFilterSelectAction *menu;
 		QValueList<int> menuOrder;		
 	
 	protected slots:

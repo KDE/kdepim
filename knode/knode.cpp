@@ -114,6 +114,8 @@ KNodeApp::~KNodeApp()
 {
  	KNLVItemBase::clearIcons();
  	
+  delete acc;
+ 	
  	delete NAcc;
  	qDebug("Net deleted\n");
  	
@@ -518,8 +520,10 @@ void KNodeApp::initActions()
               actionCollection(), "go_nextGroup");
   new KAction(i18n("Pre&vious group"), Key_Minus , this, SLOT(slotGotoPrevGroup()),
               actionCollection(), "go_prevGroup");
-  new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
-              actionCollection(), "go_readThrough");
+  KAction *readthrough = new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
+                                     actionCollection(), "go_readThrough");
+  acc=new KAccel(this);
+  readthrough->plugAccel(acc);
 
   // settings menu
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
@@ -538,15 +542,15 @@ void KNodeApp::initActions()
   actSetShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
                                         actionCollection(), "settings_showAllHdrs");
   actSetShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
-  actSetFilters = new KSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "settings_Filter");
-  actSetSort = new KSelectAction(i18n("&Sort"), 0 , actionCollection(), "settings_Sort");
+  actSetFilters = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "settings_Filter");
+  actSetSort = new KSelectAction(i18n("&Sort"), 0 , this, SLOT(slotViewSort (int)),
+                                 actionCollection(), "settings_Sort");
   QStringList items;
   items += i18n("By &Subject");
   items += i18n("By S&ender");
   items += i18n("By S&core");
   items += i18n("By &Date");
   actSetSort->setItems(items);
-  connect(actSetSort, SIGNAL(activated (int)), this, SLOT(slotViewSort (int)));
 
   createGUI( "knodeui.rc" );
 }

@@ -129,13 +129,15 @@ class KNodeApp : public KTMainWindow
              *actThreadRead, *actThreadUnread, *actThreadSetScore, *actThreadWatch,
              *actThreadIgnore, *actThreadToggle,
              *actSetExpandAll,*actSetCollapseAll;
-    KSelectAction *actSetFilters, *actSetSort;
+    KSelectAction *actSetSort;
+    KNFilterSelectAction *actSetFilters;
     KToggleAction *actSetShowThreads, *actSetShowAllHdrs;
 
    	//popups
    	QPopupMenu 	*accPopup, *groupPopup, *folderPopup,
    							*fetchPopup, *savedPopup;
 
+   	KAccel *acc;
    	KNodeView *view;
     KNProgress *progBar;
    	int progr;

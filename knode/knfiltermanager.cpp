@@ -16,13 +16,16 @@
  ***************************************************************************/
 
 
-#include <qlayout.h>
 #include <stdlib.h>
+#include <qlayout.h>
+#include <qwhatsthis.h>
 
 #include <ktabctl.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstddirs.h>
+#include <kpopupmenu.h>
+#include <ktoolbarbutton.h>
 
 #include "knfiltermanager.h"
 #include "knfilterdialog.h"
@@ -32,7 +35,93 @@
 #include "knfiltersettings.h"
 
 
-KNFilterManager::KNFilterManager(KSelectAction *filterMenu)
+//==========================================================================================
+
+
+
+KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
+                                            int accel, QObject* parent, const char* name )
+ : KAction(text,pix,accel,parent,name), currentItem(-42)
+{
+  if (!pix.isEmpty())
+    p_ixmap = BarIcon(pix);
+  p_opup = new KPopupMenu;
+  p_opup->setCheckable(true);
+  connect(p_opup,SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
+}
+
+
+
+KNFilterSelectAction::~KNFilterSelectAction()
+{
+  delete p_opup;
+}
+
+
+
+int KNFilterSelectAction::plug(QWidget* widget, int index = -1 )
+{
+  if ( widget->inherits("QPopupMenu") ) {
+    QPopupMenu* menu = static_cast<QPopupMenu*>( widget );
+    int id;
+    if ( !pixmap().isNull() ) {
+      id = menu->insertItem( pixmap(), p_opup, -1, index );
+    } else {
+      if ( hasIconSet() )
+        id = menu->insertItem( iconSet(), text(), p_opup, -1, index );
+      else
+        id = menu->insertItem( text(), p_opup, -1, index );
+    }
+
+    menu->setItemEnabled( id, isEnabled() );
+    menu->setWhatsThis( id, whatsThis() );
+
+    addContainer( menu, id );
+    connect( menu, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
+    return containerCount() - 1;
+  }
+  else if ( widget->inherits("KToolBar"))  {
+    KToolBar *bar = static_cast<KToolBar *>( widget );
+
+    int id_ = getToolButtonID();
+    bar->insertButton( p_ixmap, id_, p_opup, isEnabled(), plainText(), index);
+
+    QWhatsThis::add( bar->getButton(id_), whatsThis() );
+    addContainer( bar, id_ );
+
+    connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
+
+    return containerCount() - 1;
+  }
+
+  qDebug("Can not plug KFilterSelectAction in %s", widget->className() );
+  return -1;
+}
+
+
+
+void KNFilterSelectAction::setCurrentItem(int id)
+{
+  p_opup->setItemChecked(currentItem, false);
+  p_opup->setItemChecked(id, true);
+  currentItem = id;
+}
+
+
+
+void KNFilterSelectAction::slotMenuActivated(int id)
+{
+  setCurrentItem(id);
+  emit(activated(id));
+}
+
+
+
+//=========================================================================================
+
+
+
+KNFilterManager::KNFilterManager(KNFilterSelectAction *filterMenu)
  : fset(0), currFilter(0), menu(filterMenu)
 {
 	fList.setAutoDelete(true);
@@ -229,7 +318,7 @@ KNArticleFilter* KNFilterManager::setFilter(const int id)
 
 void KNFilterManager::updateMenu()
 {
-	menu->clear();
+	menu->popupMenu()->clear();
 	KNArticleFilter *f=0;
 	
 	QValueList<int>::Iterator it = menuOrder.begin();
