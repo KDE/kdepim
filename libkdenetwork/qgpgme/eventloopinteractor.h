@@ -48,6 +48,8 @@ namespace QGpgME {
     void nextKeyEventSignal( GpgME::Context * context, const GpgME::Key & key );
     void operationDoneEventSignal( GpgME::Context * context, const GpgME::Error & e );
 
+    void aboutToDestroy();
+
   protected slots:
     void slotWriteActivity( int socket );
     void slotReadActivity( int socket );

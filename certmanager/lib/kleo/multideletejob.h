@@ -36,6 +36,8 @@
 #include <kleo/job.h>
 #include <kleo/cryptobackend.h>
 
+#include <qguardedptr.h>
+
 #include <vector>
 
 namespace GpgME {
@@ -87,7 +89,7 @@ namespace Kleo {
 
   private:
     const CryptoBackend::Protocol * mProtocol;
-    DeleteJob * mJob;
+    QGuardedPtr<DeleteJob> mJob;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key>::const_iterator mIt;
     bool mAllowSecretKeyDeletion;

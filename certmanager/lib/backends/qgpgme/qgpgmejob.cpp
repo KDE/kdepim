@@ -62,6 +62,8 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
     mOutDataDataProvider( 0 )
 {
   assert( context );
+  QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(aboutToDestroy()),
+		    _this, SLOT(slotCancel()) );
 }
 
 Kleo::QGpgMEJob::~QGpgMEJob() {

@@ -36,12 +36,15 @@ QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent, const char *
  : QObject( parent, name ), GpgME::EventLoopInteractor()
 {
   if ( !parent )
-    if ( qApp )
+    if ( qApp ) {
       connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
+      connect( qApp, SIGNAL(aboutToQuit()), SIGNAL(aboutToDestroy()) );
+    }
   mSelf = this;
 }
 
 QGpgME::EventLoopInteractor::~EventLoopInteractor() {
+  emit aboutToDestroy();
   mSelf = 0;
 }
 
