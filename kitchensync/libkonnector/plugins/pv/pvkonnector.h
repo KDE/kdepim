@@ -74,8 +74,8 @@ namespace KSync {
         virtual Kapabilities capabilities( );
         
         /**
-          * Starts the synchronisation procedure of the Plugin
-          * @return bool Starting of synchronisation successful (yes / no)
+          * Starts the synchronization procedure of the Plugin
+          * @return bool Starting of synchronization successful (yes / no)
           */
         virtual bool startSync();
         
@@ -227,7 +227,7 @@ namespace KSync {
         
         /**
           * This will write a List of Syncee to the PV. Is called from
-          * KitchenSync after synchronisation.
+          * KitchenSync after synchronization.
           * @param lis The list of Syncee
           */
         virtual void slotWrite(Syncee::PtrList lis);

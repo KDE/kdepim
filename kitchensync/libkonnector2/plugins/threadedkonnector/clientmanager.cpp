@@ -42,7 +42,7 @@ ClientManager::ClientManager( QObject* parent, const char* name )
 }
 
 /**
-   Destructor, make shure that the thread terminated.
+   Destructor, make sure that the thread terminated.
 */
 ClientManager::~ClientManager()
 {
@@ -171,7 +171,7 @@ bool ClientManager::terminateThread()
 
 /**
    Sets a flag in the client thread. We hope, that the worker thread
-   regularily reads that flag ...
+   regularly reads that flag ...
 */
 void ClientManager::cancelJob()
 {
@@ -206,7 +206,7 @@ void ClientManager::customEvent( QCustomEvent* ce )
     emit signalFinished();
 
   } else if ( ce->type() == QEvent::Type( ClientThread::TerminatedEvent ) ) {
-    // Make shure that we are really done ...
+    // Make sure that we are really done ...
     wait();
     // ...
     emit signalTerminated();

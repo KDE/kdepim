@@ -319,7 +319,7 @@ void CasioPV::PVContactUntitled::setFieldData( datapacket& packet )
    * Checks if this instance of reminder is sendable.
    * The field name have to be set if this have the modecode private contact.
    * If this have the modecode for a business contacte the field employer have to be set, too.
-   * @return bool true if all nessecary fields are filled else false.
+   * @return bool true if all necessary fields are filled else false.
    */
 bool CasioPV::PVContactUntitled::isSendable(){
   return ( m_data[FIELD_1] != "" );

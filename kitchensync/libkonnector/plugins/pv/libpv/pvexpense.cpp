@@ -207,7 +207,7 @@ void CasioPV::PVExpense::setFieldData( datapacket& packet )
 /**
    * Checks if this instance of expense is sendable.
    * The fields date and amount have to be set.
-   * @return bool true if all nessecary fields are filled else false.
+   * @return bool true if all necessary fields are filled else false.
    */
 bool CasioPV::PVExpense::isSendable(){
   return ( m_data[EX_DATE] != "" && m_data[EX_AMOUNT] != "" );

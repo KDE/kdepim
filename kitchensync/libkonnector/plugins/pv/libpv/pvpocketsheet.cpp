@@ -156,7 +156,7 @@ void CasioPV::PVPocketSheet::setFieldData( datapacket& packet )
 /**
    * Checks if this instance of  pocketsheet is sendable.
    * The fields xxxxxxxxxxxxxx have to be set.
-   * @return bool true if all nessecary fields are filled else false.
+   * @return bool true if all necessary fields are filled else false.
    */
 bool CasioPV::PVPocketSheet::isSendable(){
   return true;

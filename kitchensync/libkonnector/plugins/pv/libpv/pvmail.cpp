@@ -148,7 +148,7 @@ void CasioPV::PVMail::setFieldData( datapacket& packet )
 /**
    * Checks if this instance of sms is sendable.
    * The field mail data have to be set.
-   * @return bool true if all nessecary fields are filled else false.
+   * @return bool true if all necessary fields are filled else false.
    */
 bool CasioPV::PVMail::isSendable(){
   return ( m_data[MAIL_DATA] !=  "" );

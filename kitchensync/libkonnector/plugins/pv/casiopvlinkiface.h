@@ -48,7 +48,7 @@ class CasioPVLinkIface : virtual public DCOPObject
     /**
        * Belongs to the DCOP interface of the PV Plugin.
        * This method is called when all changes were written to the PV
-       * after synchronisation.
+       * after synchronization.
        * @param ok Writing successful (yes / no)
        */
     virtual void setChangesDone(const bool ok) = 0;
@@ -56,7 +56,7 @@ class CasioPVLinkIface : virtual public DCOPObject
     /**
        * Belongs to the DCOP interface of the PV Plugin.
        * This method is called when all data was written to the PV
-       * after synchronisation.
+       * after synchronization.
        * @param ok Writing successful (yes / no)
        */
     virtual void setAllEntriesDone(const bool ok) = 0;

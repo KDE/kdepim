@@ -87,7 +87,7 @@ class PVDataEntry
 
     /**
        * Checks if a dataentry is sendable.
-       * @return bool true if all nessecary fields are filled else false.
+       * @return bool true if all necessary fields are filled else false.
        */
     virtual bool isSendable() = 0;
 
@@ -119,13 +119,13 @@ class PVDataEntry
     enum State {
       // The state of the data entry is undefined -> state is set to UNDEFINED in constructor
       UNDEFINED,
-      // The data entry was 1. added since the last synchronisation
+      // The data entry was 1. added since the last synchronization
       //                    2. added on desktop -> has to be added on PV
       ADDED,
-      // The data entry was 1. modified since the last synchronisation
+      // The data entry was 1. modified since the last synchronization
       //                    2. modified on desktop -> has to be modified on PV
       MODIFIED,
-      // The data entry was 1. removed since the last synchronisation
+      // The data entry was 1. removed since the last synchronization
       //                    2. removed on desktop -> has to be removed on PV
       REMOVED
     };

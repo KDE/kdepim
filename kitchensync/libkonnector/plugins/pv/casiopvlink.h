@@ -57,8 +57,8 @@ namespace KSync
       ~CasioPVLink();
 
       /**
-         * Signals that the synchronisation has to be started.
-         * @return bool Starting of synchronisation successful (yes / no)
+         * Signals that the synchronization has to be started.
+         * @return bool Starting of synchronization successful (yes / no)
          */
       bool startSync();
 
@@ -93,7 +93,7 @@ namespace KSync
       /**
          * Sets the meta syncing depending on kapabilities chosen in
          * configuration. Meta syncing can be enabled or disabled.
-         * @param meta Meta synchronisation enabled (true) or disabled (false)
+         * @param meta Meta synchronization enabled (true) or disabled (false)
          */
       void setMetaSyncing(const bool meta);
 
@@ -104,7 +104,7 @@ namespace KSync
       bool isConnected();
 
       /**
-         * Signals that the synchronisation was done and the synchronized data
+         * Signals that the synchronization was done and the synchronized data
          * can be written to the PV.
          * @param lis A Syncee::PtrList of the synchronized date
          */
@@ -136,7 +136,7 @@ namespace KSync
       /**
          * Belongs to the DCOP interface of the PV Plugin.
          * This method is called when all changes were written to the PV
-         * after synchronisation.
+         * after synchronization.
          * @param ok Writing successful (yes / no)
          */
       void setChangesDone(const bool ok);
@@ -144,7 +144,7 @@ namespace KSync
       /**
          * Belongs to the DCOP interface of the PV Plugin.
          * This method is called when all data was written to the PV
-         * after synchronisation.
+         * after synchronization.
          * @param ok Writing successful (yes / no)
          */
       void setAllEntriesDone(const bool ok);
@@ -180,7 +180,7 @@ namespace KSync
       QString m_model;
 
       /**
-         * Meta synchronisation enabled?
+         * Meta synchronization enabled?
          */
       bool m_meta;
 
@@ -224,7 +224,7 @@ namespace KSync
       QString m_metaPath;
 
       /**
-         * bool First synchronisation? This flag is set, when the connected
+         * bool First synchronization? This flag is set, when the connected
          * PV was never synchronized before
          */
       bool m_firstSync;
@@ -258,7 +258,7 @@ namespace KSync
     signals:
       /**
          * Signals that all data of the PV are available and the
-         * synchronisation process can be started
+         * synchronization process can be started
          * @param lis The data of the PV as a Syncee::PtrList
          */
         void sync(Syncee::PtrList lis);

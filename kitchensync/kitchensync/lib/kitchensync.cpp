@@ -398,7 +398,7 @@ void KitchenSync::slotConfigCur()
 void KitchenSync::slotProfile()
 {
     int item = mActionManager->currentProfile();
-    if ( item < 0 ) item = 0; // for initialisation
+    if ( item < 0 ) item = 0; // for initialization
     if ( m_prof->count() == 0 ) return;
 
     Profile cur = m_prof->profile( item );

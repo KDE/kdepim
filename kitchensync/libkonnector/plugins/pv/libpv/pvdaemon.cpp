@@ -138,7 +138,7 @@ bool pvDaemon::disconnectPV( void )
 /**
    * Belongs to the DCOP interface of the PV Daemon.
    * This method is called to get the changes on the PV since the last
-   * synchronisation.
+   * synchronization.
    * @param categories List of categories to fetch data
    */
 void pvDaemon::getChanges(const QStringList& categories)
@@ -343,7 +343,7 @@ void pvDaemon::getAllEntries(const QStringList& categories)
 
 /**
    * Belongs to the DCOP interface of the PV Daemon.
-   * This method is called when the changes after synchronisation have
+   * This method is called when the changes after synchronization have
    * to be written to the PV.
    * @param optionalCode The optional code to be stored on the PV
    * @param array The changed data as QByteArray
@@ -405,7 +405,7 @@ void pvDaemon::setChanges(const QString& optionalCode, const QByteArray& array)
 /**
    * Belongs to the DCOP interface of the PV Daemon.
    * This method is called when all entries have to be written to the
-   * PV (restore, first synchronisation).
+   * PV (restore, first synchronization).
    * @param array The changed data as QByteArray
    */
 void pvDaemon::setAllEntries(const QByteArray& array)

@@ -50,7 +50,7 @@ namespace Threaded {
      */
     ClientManager( QObject* = 0, const char* = 0 );
     /**
-       Destructor, make shure that the thread terminated.
+       Destructor, make sure that the thread terminated.
      */
     ~ClientManager();
     
@@ -99,7 +99,7 @@ namespace Threaded {
     
     /**
        Sets a flag in the client thread. We hope, that the worker thread
-       regularily reads that flag ...
+       regularly reads that flag ...
      */
     void cancelJob();
     

@@ -176,7 +176,7 @@ void CasioPV::PVSchedule::setFieldData( datapacket& packet )
 /**
    * Checks if this instance of schedule is sendable.
    * The fields date, start time and description have to be set.
-   * @return bool true if all nessecary fields are filled else false.
+   * @return bool true if all necessary fields are filled else false.
    */
 bool CasioPV::PVSchedule::isSendable(){
   return ( m_data[DATE] != "" && m_data[START_TIME] != "" && m_data[DESCRIPTION] != "" );

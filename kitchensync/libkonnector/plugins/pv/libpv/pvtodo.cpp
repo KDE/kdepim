@@ -224,7 +224,7 @@ void CasioPV::PVTodo::setFieldData( datapacket& packet )
 /**
    * Checks if this instance of todo is sendable.
    * The fields due date and description have to be set.
-   * @return bool true if all nessecary fields are filled. false else
+   * @return bool true if all necessary fields are filled. false else
    */
 bool CasioPV::PVTodo::isSendable(){
   return ( m_data[DUE_DATE] != "" && m_data[DESCRIPTION] != "" );

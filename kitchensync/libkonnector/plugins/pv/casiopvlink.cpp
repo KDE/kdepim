@@ -71,8 +71,8 @@ CasioPVLink::~CasioPVLink()
 }
 
 /**
-   * Signals that the synchronisation has to be started.
-   * @return bool Starting of synchronisation successful (yes / no)
+   * Signals that the synchronization has to be started.
+   * @return bool Starting of synchronization successful (yes / no)
    */
 bool CasioPVLink::startSync()
 {
@@ -96,7 +96,7 @@ bool CasioPVLink::startSync()
     dataStream << strList;
     if (m_firstSync)
     {
-      // Get all entries from PV if first synchronisation
+      // Get all entries from PV if first synchronization
       kdDebug(5205) << "DCOP send getAllEntries()" << endl;
       if (!kapp->dcopClient()->send("pvDaemon", "PVDaemonIface",
                                      "getAllEntries(QStringList)", data))
@@ -225,7 +225,7 @@ void CasioPVLink::setConnectionMode(const QString& connectionMode)
 /**
    * Sets the meta syncing depending on kapabilities chosen in
    * configuration. Meta syncing can be enabled or disabled.
-   * @param meta Meta synchronisation enabled (true) or disabled (false)
+   * @param meta Meta synchronization enabled (true) or disabled (false)
    */
 void CasioPVLink::setMetaSyncing(const bool meta)
 {
@@ -249,7 +249,7 @@ bool CasioPVLink::isConnected()
 }
 
 /**
-   * Signals that the synchronisation was done and the synchronized data
+   * Signals that the synchronization was done and the synchronized data
    * can be written to the PV.
    * @param lis A Syncee::PtrList of the synchronized date
    */
@@ -651,7 +651,7 @@ void CasioPVLink::getAllEntriesDone(const QByteArray& array)
 /**
    * Belongs to the DCOP interface of the PV Plugin.
    * This method is called when all changes were written to the PV
-   * after synchronisation.
+   * after synchronization.
    * @param ok Writing successful (yes / no)
    */
 void CasioPVLink::setChangesDone(const bool ok)
@@ -683,7 +683,7 @@ void CasioPVLink::setChangesDone(const bool ok)
 /**
    * Belongs to the DCOP interface of the PV Plugin.
    * This method is called when all data was written to the PV
-   * after synchronisation.
+   * after synchronization.
    * @param ok Writing successful (yes / no)
    */
 void CasioPVLink::setAllEntriesDone(const bool ok)

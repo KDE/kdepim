@@ -13,7 +13,7 @@ namespace KSync {
 class KOperations {
  public:
    /**
-    * Typedef for convinience
+    * Typedef for convenience
     */
     typedef QValueList<KOperations> ValueList;
 	

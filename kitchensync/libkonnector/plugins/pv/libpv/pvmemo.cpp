@@ -142,7 +142,7 @@ void CasioPV::PVMemo::setFieldData( datapacket& packet )
 /**
    * Checks if this instance of memo is sendable.
    * The field memo have to be set.
-   * @return bool true if all nessecary fields are filled else false.
+   * @return bool true if all necessary fields are filled else false.
    */
 bool CasioPV::PVMemo::isSendable(){
   return ( m_data[MEMO] !=  "" );

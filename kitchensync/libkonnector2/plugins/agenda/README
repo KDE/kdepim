@@ -32,7 +32,7 @@ some icon names if possible....
 
 add() and remove() are meant to be used by custom ManipulatorParts which need to download
 stuff during a sync operation. res can be anything from a simple url
-to an action. The behaviour can be implemented as wished.
+to an action. The behavior can be implemented as wished.
 
 download() is called to immediately download a resource. In any case it should emit
 a signal on failure or success

@@ -100,7 +100,7 @@ public:
     /**
        * Checks if this instance of memo is sendable.
        * The field memo have to be set.
-       * @return bool true if all nessecary fields are filled else false.
+       * @return bool true if all necessary fields are filled else false.
        */
     virtual bool isSendable();
 

@@ -113,7 +113,7 @@ public:
     /**
        * Checks if this instance of quickmemo is sendable.
        * The field bitmapdata have to be set.
-       * @return bool true if all nessecary fields are filled else false.
+       * @return bool true if all necessary fields are filled else false.
        */
     virtual bool isSendable();
 

@@ -87,7 +87,7 @@ void KShareFileModule::removeInterestIn(const QString &fileName )
   d->mutex.unlock();
 }
 /*
- Look if its inside the modul
+ Look if its inside the module
 
  */
 bool KShareFileModule::readShareFile(const QString &fileName )

@@ -94,7 +94,7 @@ K_DCOP
    * @param resource The resource name
    * @return success or failure
    */
-  bool writeUnlockFile(const QString &resoure );
+  bool writeUnlockFile(const QString &resource );
 
  private:
   class KShareFileModulePrivate;

@@ -302,7 +302,7 @@ void SyncerPart::disconnectDevice( Konnector *k )
 void SyncerPart::tryFinishSync()
 {
   if ( mKonnectorCount == mProcessedKonnectors.count() ) {
-    logMessage( i18n("Synchronisation finished.") );
+    logMessage( i18n("Synchronization finished.") );
   }
 }
 
