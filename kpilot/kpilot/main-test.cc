@@ -82,7 +82,7 @@ static KCmdLineOptions kpilotoptions[] = {
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
-	{0, 0, 0}
+	KCmdLineLastOption
 };
 
 

@@ -45,7 +45,7 @@ static const KCmdLineOptions options[] =
   {"o", 0, 0},
   {"output <file>", I18N_NOOP("Output file"), 0 },
   {"+input", I18N_NOOP("Input file"), 0 },
-  {0,0,0}
+  KCmdLineLastOption
 };
 
 int main(int argc,char **argv)

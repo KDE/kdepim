@@ -121,7 +121,7 @@ static KCmdLineOptions kmoptions[] =
   { "editor-only", I18N_NOOP( "Launches in editor only mode" ), 0 },
   { "new-contact", I18N_NOOP( "Launches editor for the new contact" ), 0 },
   { "+[argument]", I18N_NOOP( "dummy argument" ), 0},
-  { 0, 0, 0}
+  KCmdLineLastOption
 };
 
 int main( int argc, char *argv[] )

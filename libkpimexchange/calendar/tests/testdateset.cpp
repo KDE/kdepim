@@ -10,7 +10,7 @@
 static const KCmdLineOptions options[] =
 {
   {"verbose", "Verbose output", 0},
-  {0,0,0}
+  KCmdLineLastOption
 };
 
 void check( DateSet& dates, QMap<QDate,int> &map) 
