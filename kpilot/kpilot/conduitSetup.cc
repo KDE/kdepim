@@ -24,11 +24,10 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_OPTIONS_H
+
 #include "options.h"
-#endif
 
 
 #include <stdio.h>
@@ -80,7 +79,8 @@
 #include "conduitSetup.moc"
 
 
-static const char *conduitsetup_id="$Id$";
+static const char *conduitsetup_id =
+	"$Id$";
 
 #include "listCat.h"
 
@@ -98,27 +98,24 @@ static const char *conduitsetup_id="$Id$";
 #define CONDUIT_DESKTOP	(2)
 #define CONDUIT_EXEC	(3)
 
-CConduitSetup::CConduitSetup(QWidget *parent, const char *name) :
-	KDialogBase(parent,name,true,
-		i18n("External Conduit Setup"),
-		Ok | Cancel,Cancel),
-	conduitSetup(0L)
+CConduitSetup::CConduitSetup(QWidget * parent,
+	const char *name):KDialogBase(parent, name, true,
+	i18n("External Conduit Setup"), Ok | Cancel, Cancel), conduitSetup(0L)
 {
 	FUNCTIONSETUP;
 
 	QHBox *top = makeHBoxMainWidget();
 
-	categories = new ListCategorizer(top,"conduits");
+	categories = new ListCategorizer(top, "conduits");
 	categories->setStartOpen(true);
 
-	active=categories->addCategory(i18n("Active"),
+	active = categories->addCategory(i18n("Active"),
 		i18n("Conduits that will run when a hot-sync is done"));
-	available=categories->addCategory(i18n("Available"),
+	available = categories->addCategory(i18n("Available"),
 		i18n("Conduits installed on your system but not active"));
 
-	connect(categories,SIGNAL(executed(QListViewItem *)),
-		this,
-		SLOT(conduitExecuted(QListViewItem *)));
+	connect(categories, SIGNAL(executed(QListViewItem *)),
+		this, SLOT(conduitExecuted(QListViewItem *)));
 	QToolTip::add(categories,
 		i18n("You can drag and drop conduits between the\n"
 			"active and available groups. Only the conduits\n"
@@ -136,34 +133,28 @@ CConduitSetup::CConduitSetup(QWidget *parent, const char *name) :
 	FUNCTIONSETUP;
 }
 
-void CConduitSetup::conduitExecuted(QListViewItem *p)
+void CConduitSetup::conduitExecuted(QListViewItem * p)
 {
 	FUNCTIONSETUP;
 	if (!p)
 	{
-		kdDebug() << fname << ": Executed NULL conduit?" << endl;
+		DEBUGKPILOT << fname << ": Executed NULL conduit?" << endl;
 		return;
 	}
 
 	if (!p->parent())
 	{
-		kdDebug() << fname << ": Executed a category?" << endl;
+		DEBUGKPILOT << fname << ": Executed a category?" << endl;
 		return;
 	}
 
-	DEBUGKPILOT << fname
-		<< ": Executing conduit "
-		<< p->text(0)
-		<< endl;
+	DEBUGKPILOT << fname << ": Executing conduit " << p->text(0) << endl;
 
 	QString execPath = findExecPath(p);
 
-	DEBUGKPILOT << fname
-		<< ": Exec path="
-		<< execPath
-		<< endl;
+	DEBUGKPILOT << fname << ": Exec path=" << execPath << endl;
 
-	if (execPath.isNull()) 
+	if (execPath.isNull())
 	{
 		warnNoExec(p);
 		return;
@@ -176,9 +167,9 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 	}
 
 	conduitSetup = new KProcess;
-	*conduitSetup << execPath << "--setup" ;
+	*conduitSetup << execPath << "--setup";
 	*conduitSetup << "-geometry"
-		<< QString("+%1+%2").arg(x()+20).arg(y()+20);
+		<< QString("+%1+%2").arg(x() + 20).arg(y() + 20);
 #ifdef DEBUG
 	if (debug_level)
 	{
@@ -188,9 +179,7 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 
 	connect(conduitSetup,
 		SIGNAL(processExited(KProcess *)),
-		this,
-		SLOT(setupDone(KProcess *))
-		);
+		this, SLOT(setupDone(KProcess *)));
 	if (!conduitSetup->start(KProcess::NotifyOnExit))
 	{
 		kdWarning() << __FUNCTION__
@@ -198,15 +187,16 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 			<< endl;
 		warnNoExec(p);
 		delete conduitSetup;
-		conduitSetup=0L;
+
+		conduitSetup = 0L;
 	}
 }
 
-/* slot */ void CConduitSetup::setupDone(KProcess *p)
+/* slot */ void CConduitSetup::setupDone(KProcess * p)
 {
 	FUNCTIONSETUP;
 
-	if (p!=conduitSetup)
+	if (p != conduitSetup)
 	{
 		DEBUGKPILOT << fname << ": Process other than setup exited?"
 			<< endl;
@@ -214,7 +204,8 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 	}
 
 	delete p;
-	conduitSetup=0L;
+
+	conduitSetup = 0L;
 }
 
 void CConduitSetup::slotOk()
@@ -224,15 +215,14 @@ void CConduitSetup::slotOk()
 	KDialogBase::slotOk();
 }
 
-void
-CConduitSetup::fillLists()
+void CConduitSetup::fillLists()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotConfig::getConfig("Conduit Names");
 	QStringList potentiallyInstalled =
-		config.readListEntry("InstalledConduits");
-	KServiceTypeProfile::OfferList offers = 
+		KPilotConfig::getConfig().setConduitGroup().
+		getInstalledConduits();
+	KServiceTypeProfile::OfferList offers =
 		KServiceTypeProfile::offers("KPilotConduit");
 
 #ifdef DEBUG
@@ -240,19 +230,17 @@ CConduitSetup::fillLists()
 		QStringList::Iterator i = potentiallyInstalled.begin();
 
 
-		kdDebug() << fname << ": Currently active conduits are:"
-			<< endl;
+		DEBUGKPILOT << fname
+			<< ": Currently active conduits are:" << endl;
 
-		while(i != potentiallyInstalled.end())
+		while (i != potentiallyInstalled.end())
 		{
-			kdDebug() << fname << ": "
-				<< (*i)
-				<< endl;
+			DEBUGKPILOT << fname << ": " << (*i) << endl;
 			++i;
 		}
 
-		kdDebug() << fname << ": Currently installed conduits are:"
-			<< endl;
+		DEBUGKPILOT << fname
+			<< ": Currently installed conduits are:" << endl;
 	}
 #endif
 
@@ -260,35 +248,31 @@ CConduitSetup::fillLists()
 	// sure that nothing gets listed in both.
 	//
 	//
-	QValueListIterator<KServiceOffer> availList(offers.begin());
-	while(availList != offers.end())
+	QValueListIterator < KServiceOffer > availList(offers.begin());
+	while (availList != offers.end())
 	{
-		KSharedPtr<KService> o = (*availList).service();
+		KSharedPtr < KService > o = (*availList).service();
 
 #ifdef DEBUG
 		{
 			kdDebug() << fname << ": "
 				<< o->desktopEntryName()
-				<< " = "
-				<< o->name()
-				<< endl;
+				<< " = " << o->name() << endl;
 		}
 #endif
-		if(potentiallyInstalled.contains(o->desktopEntryName()) == 0)
+		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
 		{
 			(void) new QListViewItem(available,
 				o->name(),
 				o->comment(),
-				o->desktopEntryName(),
-				o->exec());
+				o->desktopEntryName(), o->exec());
 		}
 		else
 		{
 			(void) new QListViewItem(active,
 				o->name(),
 				o->comment(),
-				o->desktopEntryName(),
-				o->exec());
+				o->desktopEntryName(), o->exec());
 		}
 
 		++availList;
@@ -296,7 +280,7 @@ CConduitSetup::fillLists()
 }
 
 
-QString CConduitSetup::findExecPath(const QListViewItem *p) const
+QString CConduitSetup::findExecPath(const QListViewItem * p) const
 {
 	FUNCTIONSETUP;
 
@@ -304,11 +288,11 @@ QString CConduitSetup::findExecPath(const QListViewItem *p) const
 
 	if (conduitPaths.isEmpty())
 	{
-		currentConduit=KGlobal::dirs()->findResource("exe",
+		currentConduit = KGlobal::dirs()->findResource("exe",
 			p->text(CONDUIT_EXEC));
 		if (currentConduit.isNull())
 		{
-			currentConduit=p->text(CONDUIT_EXEC);
+			currentConduit = p->text(CONDUIT_EXEC);
 		}
 	}
 	else
@@ -319,16 +303,13 @@ QString CConduitSetup::findExecPath(const QListViewItem *p) const
 		//
 		QStringList::ConstIterator i;
 
-		currentConduit=QString::null;
-		for (i=conduitPaths.begin();
-			i!=conduitPaths.end();
-			++i)
+		currentConduit = QString::null;
+		for (i = conduitPaths.begin(); i != conduitPaths.end(); ++i)
 		{
-			if (QFile::exists(
-				(*i)+'/'+p->text(CONDUIT_EXEC)))
+			if (QFile::exists((*i) + '/' + p->text(CONDUIT_EXEC)))
 			{
-				currentConduit=
-				(*i)+'/'+p->text(CONDUIT_EXEC);
+				currentConduit =
+					(*i) + '/' + p->text(CONDUIT_EXEC);
 				break;
 			}
 		}
@@ -345,33 +326,27 @@ void CConduitSetup::writeInstalledConduits()
 	char dbName[255];
 	int len = 0;
 
-	KConfig& config = KPilotConfig::getConfig("Conduit Names");
-	config.writeEntry("InstalledConduits", 
-		categories->listSiblings(active->firstChild(),CONDUIT_DESKTOP));
-	config.setGroup("Database Names");
+	KPilotConfigSettings & config = KPilotConfig::getConfig();
 
-	const QListViewItem *p=active->firstChild();
+	config.setConduitGroup().setInstalledConduits(categories->
+		listSiblings(active->firstChild(), CONDUIT_DESKTOP));
+	config.setDatabaseGroup();
+
+	const QListViewItem *p = active->firstChild();
+
 	while (p)
 	{
 		FILE *conduitpipe;
 
-#ifdef DEBUG
-		{
-			kdDebug() << fname << ": Current conduit = "
-				<< p->text(CONDUIT_NAME)
-				<< endl;
-		}
-#endif
+		DEBUGKPILOT << fname
+			<< ": Current conduit = "
+			<< p->text(CONDUIT_NAME) << endl;
 
-#ifdef DEBUG
-		{
-			kdDebug() << fname << ": Current conduit service from "
-				<< p->text(CONDUIT_DESKTOP)
-				<< " says exec="
-				<< p->text(CONDUIT_EXEC)
-				<< endl;
-		}
-#endif
+		DEBUGKPILOT << fname
+			<< ": Current conduit service from "
+			<< p->text(CONDUIT_DESKTOP)
+			<< " says exec=" << p->text(CONDUIT_EXEC) << endl;
+
 		QString currentConduit = findExecPath(p);
 
 		if (currentConduit.isNull())
@@ -382,81 +357,83 @@ void CConduitSetup::writeInstalledConduits()
 
 
 
-		currentConduit+=" --info";
+		currentConduit += " --info";
 #ifdef DEBUG
 		if (debug_level)
 		{
-			currentConduit+=" --debug ";
-			currentConduit+=QString().setNum(debug_level);
+			currentConduit += " --debug ";
+			currentConduit += QString().setNum(debug_level);
 		}
-		{
-			kdDebug() << fname << ": Conduit startup command line is:\n"
-				<< fname << ": " << currentConduit << endl;
-		}
+
+		DEBUGKPILOT << fname
+			<< ": Conduit startup command line is: "
+			<< currentConduit << endl;
 #endif
 
-	      len=0;
-	      conduitpipe = popen(currentConduit.local8Bit(), "r");
-	      if(conduitpipe)
+		len = 0;
+		conduitpipe = popen(currentConduit.local8Bit(), "r");
+		if (conduitpipe)
 		{
 			len = fread(dbName, 1, 255, conduitpipe);
-		      pclose(conduitpipe);
+			pclose(conduitpipe);
 		}
-	      conduitpipe=0;
-	      dbName[len] = 0L;
-	      if (len == 0)
+		conduitpipe = 0;
+		dbName[len] = 0L;
+		if (len == 0)
 		{
-		  QString tmpMessage = i18n("The conduit %1 did not identify "
-					"what database it supports. "
-					"\nPlease check with the conduits "
-					"author to correct it.")
-				.arg(p->text(CONDUIT_NAME));
+			QString tmpMessage =
+				i18n("The conduit %1 did not identify "
+				"what database it supports. "
+				"\nPlease check with the conduits "
+				"author to correct it.").arg(p->
+				text(CONDUIT_NAME));
 
-		  KMessageBox::error(this, tmpMessage, i18n("Conduit error."));
+			KMessageBox::error(this, tmpMessage,
+				i18n("Conduit error."));
 		}
-	      else if (strcmp(dbName,"<none>")==0)
-	      {
+		else if (strcmp(dbName, "<none>") == 0)
+		{
 #ifdef DEBUG
 			{
 				kdDebug() << fname
 					<< ": Conduit "
 					<< p->text(0)
-					<< " supports no databases."
-					<< endl;
+					<< " supports no databases." << endl;
 			}
 #endif
 		}
-	      else
+		else
 		{
-			QStringList l=QStringList::split(QChar(','),
+			QStringList l = QStringList::split(QChar(','),
 				QString(dbName));
-			QStringList::Iterator i;
-			const QString &m=p->text(CONDUIT_DESKTOP);
 
-			for (i=l.begin(); i!=l.end(); ++i)
+			QStringList::Iterator i;
+			const QString & m = p->text(CONDUIT_DESKTOP);
+
+			for (i = l.begin(); i != l.end(); ++i)
 			{
-				config.writeEntry((*i).stripWhiteSpace(),m);
+				config.setDatabaseConduit((*i).
+					stripWhiteSpace(), m);
 			}
 		}
 nextConduit:
-		p=p->nextSibling();
+		p = p->nextSibling();
 	}
 	config.sync();
 }
 
 
 
-void CConduitSetup::warnNoExec(const QListViewItem *p)
+void CConduitSetup::warnNoExec(const QListViewItem * p)
 {
 	FUNCTIONSETUP;
 
 	QString msg = i18n("No executable could be "
-		"found for the conduit %1.")
-		.arg(p->text(CONDUIT_NAME));
-#ifdef DEBUG
-	kdDebug() << fname << ": " << msg << endl;
-#endif
-	KMessageBox::error(this,msg,i18n("Conduit error"));
+		"found for the conduit %1.").arg(p->text(CONDUIT_NAME));
+
+	DEBUGKPILOT << fname << ": " << msg << endl;
+
+	KMessageBox::error(this, msg, i18n("Conduit error"));
 }
 
 void CConduitSetup::warnSetupRunning()
@@ -467,10 +444,9 @@ void CConduitSetup::warnSetupRunning()
 		"Please complete that action before setting "
 		"up another conduit.");
 
-#ifdef DEBUG
-	kdDebug() << fname << ": " << msg << endl;
-#endif
-	KMessageBox::error(this,msg,i18n("Conduit Setup error"));
+	DEBUGKPILOT << fname << ": " << msg << endl;
+
+	KMessageBox::error(this, msg, i18n("Conduit Setup error"));
 
 	/* NOTREACHED */
 	(void) conduitsetup_id;
@@ -478,6 +454,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.25  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.24  2001/04/23 21:30:20  adridg
 // Betteer support of missing conduit executables
 //

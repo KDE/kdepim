@@ -125,17 +125,8 @@ static const char *kpilot_id="$Id$";
 #endif
 
 
-#ifndef _KPILOT_KPILOTOPTIONS_H
-#include "kpilotOptions.h"
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
+#include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
-#endif
-
-#ifndef _KPILOT_MESSAGEDIALOG_H
-#include "messageDialog.h"
-#endif
 
 #ifndef _KPILOT_ADDRESSWIDGET_H
 #include "addressWidget.h"
@@ -151,10 +142,6 @@ static const char *kpilot_id="$Id$";
 
 #ifndef _KPILOT_LOGWIDGET_H
 #include "logWidget.h"
-#endif
-
-#ifndef _KPILOT_STATUSMESSAGES_H
-#include "statusMessages.h"
 #endif
 
 #ifndef _KPILOT_CONDUITSETUP_H
@@ -193,22 +180,7 @@ KPilotInstaller::KPilotInstaller() :
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotConfig::getConfig();
-	// Log a warning if the config file is too old.
-	//
-	//
-	(void) KPilotOptions::isNewer(config);
-
-	readConfig(config);
-
-	if(config.readNumEntry("NextUniqueID", 0) == 0)
-	{
-		// Is this an ok value to use??
-		config.writeEntry("NextUniqueID", 0xf000);
-		config.sync();
-	}
-
-
+	readConfig();
 	setupWidget();
 	showTitlePage(QString::null,true);
 }
@@ -233,10 +205,12 @@ void KPilotInstaller::killDaemonIfNeeded()
 	}
 }
 
-void KPilotInstaller::readConfig(KConfig& config)
+void KPilotInstaller::readConfig()
 {
-	config.setGroup(QString::null);
-	fKillDaemonOnExit = config.readBoolEntry("StopDaemonAtExit",false);
+	FUNCTIONSETUP;
+
+	KPilotConfigSettings &c = KPilotConfig::getConfig();
+	fKillDaemonOnExit = c.getKillDaemonOnExit();
 }
 
 
@@ -377,7 +351,7 @@ KPilotInstaller::slotBackupRequested()
 		i18n("Please press the hot-sync button."), 
 		0);
 
-	getDaemon().startHotSync(PilotDaemonDCOP::Backup);
+	getDaemon().requestSync(PilotDaemonDCOP::Backup);
 }
 
 void
@@ -390,7 +364,7 @@ KPilotInstaller::slotRestoreRequested()
 	fStatusBar->changeItem(
 		i18n("Restoring pilot. ")+
 		i18n("Please press the hot-sync button."), 0);
-	getDaemon().startHotSync(PilotDaemonDCOP::Restore);
+	getDaemon().requestSync(PilotDaemonDCOP::Restore);
 }
 
 void KPilotInstaller::slotHotSyncRequested() 
@@ -437,7 +411,7 @@ void KPilotInstaller::setupSync(int kind,const QString& message)
 
 	showTitlePage(message);
 	componentPreSync(false);
-	getDaemon().startHotSync(kind);
+	getDaemon().requestSync(kind);
 }
 
 
@@ -631,32 +605,30 @@ KPilotInstaller::slotConfigureKPilot()
 {
 	FUNCTIONSETUP;
 
-	KPilotOptions* options = 0L;
-
 	// Display the (modal) options page.
 	//
 	//
 	showTitlePage();
-	options = new KPilotOptions(this);
-	if (options==NULL)
+
+	KPilotConfigDialog *options = new KPilotConfigDialog(this,
+		"configDialog",true);
+
+	if (!options)
 	{
-		kdError() << __FUNCTION__ << 
-			": Can't allocate KPilotOptions object\n";
+		kdError() << __FUNCTION__ 
+			<< ": Can't allocate KPilotOptions object"
+			<< endl;
 		return;
 	}
 
-		kdDebug() << fname << ": Running options dialog." 
-			<< endl;
 	options->exec();
-		kdDebug() << fname << ": dialog result "
-			<< options->result() << endl;
 
 	if (options->result())
 	{
-			kdDebug() << fname 
-				<< ": Updating link." << endl;
+		DEBUGKPILOT << fname 
+			<< ": Updating link." << endl;
 
-		readConfig(KPilotConfig::getConfig());
+		readConfig();
 
 		// Update the daemon to reflect new settings.
 		//
@@ -670,10 +642,6 @@ KPilotInstaller::slotConfigureKPilot()
 		fPilotComponentList.current();
 		fPilotComponentList.next())
 		{
-				kdDebug() << fname 
-					<< ": Updating components." 
-					<< endl;
-
 			fPilotComponentList.current()->initialize();
 		}
 	}
@@ -841,9 +809,9 @@ int main(int argc, char** argv)
 	}
 	KUniqueApplication a(true,true);
 
-	KConfig& c=KPilotConfig::getConfig();
+	KPilotConfigSettings &c = KPilotConfig::getConfig();
 	(void)KPilotConfig::getDebugLevel(c);
-	if (KPilotConfig::getConfigVersion(c)<KPilotConfig::ConfigurationVersion)
+	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		run_mode='S';
 	}
@@ -870,7 +838,8 @@ int main(int argc, char** argv)
 				<< endl ;
 #endif
 
-		KPilotOptions* options = new KPilotOptions(0L);
+		KPilotConfigDialog * options = new KPilotConfigDialog (0L,
+			"configDialog",true);
 		int r = options->exec();
 
 		if (run_mode=='s')
@@ -892,10 +861,10 @@ int main(int argc, char** argv)
 		// while reading or writing settings (still a
 		// bad idea, actually).
 		//
-		c.setGroup(QString::null);
+		c.resetGroup();
 	}
 
-	if (KPilotConfig::getConfigVersion(c)<KPilotConfig::ConfigurationVersion)
+	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		kdWarning() << __FUNCTION__ << ": Is still not configured for use."
 			<< endl;
@@ -941,6 +910,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.58  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.57  2001/09/07 20:48:13  adridg
 // Stripped away last crufty IPC, added logWidget
 //

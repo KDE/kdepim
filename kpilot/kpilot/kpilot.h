@@ -184,7 +184,7 @@ public slots:
 protected:
 	// int testSocket(KSocket *);
 
-	void readConfig(KConfig&);
+	void readConfig();
 
 
 	/**
@@ -285,6 +285,9 @@ private:
 
 
 // $Log$
+// Revision 1.29  2001/09/07 20:48:13  adridg
+// Stripped away last crufty IPC, added logWidget
+//
 // Revision 1.28  2001/08/27 22:54:27  adridg
 // Decruftifying; improve DCOP link between daemon & viewer
 //

@@ -26,9 +26,13 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
+
+#include <stdlib.h>
+
+#include <qlineedit.h>
+#include <qcombobox.h>
+#include <qcheckbox.h>
 
 #ifndef _KLOCALE_H
 #include <klocale.h>
@@ -41,6 +45,11 @@
 #endif
 #ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+#include <ksimpleconfig.h>
+
+#ifdef DEBUG
+#include <kcmdlineargs.h>
 #endif
 
 #ifndef _KPILOT_KPILOTCONFIG_H
@@ -97,22 +106,21 @@ static const char *kpilotconfig_id =
 {
 	FUNCTIONSETUP;
 
-	KConfig &config = getConfig();
-	config.writeEntry("Configured",ConfigurationVersion);
+	KPilotConfigSettings &config = getConfig();
+	config.setVersion(ConfigurationVersion);
 }
 
 /* static */ QString KPilotConfig::getDefaultDBPath()
-    {
-    KConfig& config = getConfig();
-    QString lastUser = config.readEntry("UserName");
-    QString dbsubpath = "kpilot/DBBackup/";
-    QString defaultDBPath = KGlobal::dirs()->
-	saveLocation("data", dbsubpath + lastUser + "/");
-    return defaultDBPath;
-    }
+{
+	QString lastUser = getConfig().getUser();
+	QString dbsubpath = "kpilot/DBBackup/";
+	QString defaultDBPath = KGlobal::dirs()->
+		saveLocation("data", dbsubpath + lastUser + "/");
+	return defaultDBPath;
+}
 
-#ifdef DEBUG
-/* static */ int KPilotConfig::getDebugLevel(KConfig& c,const QString& group)
+#ifndef DEBUG
+/* static */ int KPilotConfig::getDebugLevel(KConfig&)
 {
 	return 0;
 }
@@ -122,16 +130,11 @@ static const char *kpilotconfig_id =
 	return 0;
 }
 #else
-/* static */ int KPilotConfig::getDebugLevel(KConfig&, const QString&)
+/* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings &c)
 {
 	FUNCTIONSETUP;
 
-	if (!group.isNull())
-	{
-		c.setGroup(group);
-	}
-
-	int d=c.readNumEntry("Debug",0);
+	int d=c.getDebug();
 	debug_level |= d;
 
 	if (debug_level)
@@ -163,14 +166,13 @@ static const char *kpilotconfig_id =
 }
 #endif
 
-static KConfig *theconfig = 0L;
-KConfig& KPilotConfig::getConfig(const QString &s)
+static KPilotConfigSettings *theconfig = 0L;
+KPilotConfigSettings &KPilotConfig::getConfig()
 {
 	FUNCTIONSETUP;
 
 	if (theconfig)
 	{
-		theconfig->setGroup(s);
 		return *theconfig;
 	}
 
@@ -189,20 +191,32 @@ KConfig& KPilotConfig::getConfig(const QString &s)
 		DEBUGDB << fname 
 			<< ": Making a new config file"
 			<< endl;
-		theconfig=new KConfig("kpilotrc",false,false);
+		KSimpleConfig *c=new KSimpleConfig("kpilotrc",false);
+
+		c->writeEntry("Configured",ConfigurationVersion);
+		c->writeEntry("NextUniqueID",61440);
+		c->sync();
+		delete c;
+
+		theconfig=new KPilotConfigSettings("kpilotrc");
 	}
 	else
 	{
-		theconfig=new KConfig(existingConfig,false,false);
+		DEBUGDB << fname
+			<< ": Re-using existing config file "
+			<< existingConfig
+			<< endl;
+
+		theconfig=new KPilotConfigSettings(existingConfig);
 	}
 
 	if (theconfig == 0L)
 	{
-		kdWarning() << __FUNCTION__ << ": No configuration was found."
+		kdWarning() << __FUNCTION__ 
+			<< ": No configuration was found."
 			<< endl;
 	}
 
-	theconfig->setGroup(s);
 	return *theconfig;
 }
 
@@ -240,7 +254,106 @@ static QFont *thefont=0L;
 	return *thefont;
 }
 
+KPilotConfigSettings::KPilotConfigSettings(const QString &f,bool b) :
+	KSimpleConfig(f,b)
+{
+}
+
+KPilotConfigSettings::~KPilotConfigSettings()
+{
+}
+
+
+
+#define IntProperty_(a,key,defl,m) \
+	int KPilotConfigSettings::get##a(QComboBox *p) { \
+	int i = readNumEntry(key,defl); \
+	if ((i<0) || (i>m)) i=0; \
+	if (p) p->setCurrentItem(i); \
+	return i; } \
+	void KPilotConfigSettings::set##a(QComboBox *p) { \
+	set##a(p->currentItem()); } \
+	void KPilotConfigSettings::set##a(int i) { \
+	if ((i<0) || (i>m)) i=0; writeEntry(key,i); }
+
+IntProperty_(PilotType,"PilotType",0,3)
+IntProperty_(PilotSpeed,"PilotSpeed",0,4)
+IntProperty_(AddressDisplayMode,"AddressDisplay",0,1)
+IntProperty_(Version,"Configured",0,100000)
+IntProperty_(Debug,"Debug",0,1023)
+
+#define BoolProperty_(a,key,defl) \
+	bool KPilotConfigSettings::get##a(QCheckBox *p) { \
+	bool b = readBoolEntry(key,defl); if (p) p->setChecked(b); return b; } \
+	void KPilotConfigSettings::set##a(QCheckBox *p) { \
+	set##a(p->isChecked()); } \
+	void KPilotConfigSettings::set##a(bool b) { \
+	writeEntry(key,b); }
+
+BoolProperty_(DockDaemon,"DockDaemon",true)
+BoolProperty_(KillDaemonOnExit,"StopDaemonAtExit",false)
+BoolProperty_(StartDaemonAtLogin,"StartDaemonAtLogin",true)
+BoolProperty_(ShowSecrets,"ShowSecrets",false)
+BoolProperty_(SyncFiles,"SyncFiles",true)
+BoolProperty_(UseKeyField,"UseKeyField",false)
+
+
+#define StringProperty_(a,key,defl) \
+	QString KPilotConfigSettings::get##a(QLineEdit *p) { \
+	QString s = readEntry(key,defl); if (p) p->setText(s); return s; } \
+	void  KPilotConfigSettings::set##a(QLineEdit *p) { \
+	set##a(p->text()); } \
+	void  KPilotConfigSettings::set##a(const QString &s) { \
+	writeEntry(key,s); }
+
+
+StringProperty_(PilotDevice,"PilotDevice","/dev/pilot")
+StringProperty_(User,"UserName",QString::null)
+StringProperty_(BackupOnly,"BackupForSync","Arng,PmDB,lnch")
+StringProperty_(Skip,"SkipSync","AvGo")
+
+
+KPilotConfigSettings & KPilotConfigSettings::setAddressGroup()
+{
+	setGroup("Address Widget");
+	return *this;
+}
+
+KPilotConfigSettings &KPilotConfigSettings::setConduitGroup()
+{
+	setGroup("Conduit Names");
+	return *this;
+}
+
+KPilotConfigSettings &KPilotConfigSettings::setDatabaseGroup()
+{
+	setGroup("Database Names");
+	return *this;
+}
+
+QStringList KPilotConfigSettings::getInstalledConduits()
+{
+	return readListEntry("InstalledConduits");
+}
+
+void KPilotConfigSettings::setInstalledConduits(const QStringList &l)
+{
+	writeEntry("InstalledConduits",l);
+}
+
+void KPilotConfigSettings::setDatabaseConduit(const QString &database,const QString &conduit)
+{
+	setDatabaseGroup();
+	writeEntry(database,conduit);
+}
+
+
 // $Log$
+// Revision 1.6  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
 // Revision 1.5  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
