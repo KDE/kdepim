@@ -972,7 +972,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
 
     }
   }
-  if (sType == ITYPE_MSG || sType == ITYPE_BOX)
+  if (sType == ITYPE_MSG || sType == ITYPE_BOX || sType == ITYPE_DIR_AND_BOX)
   {
     //select the source box
     if (!assureBox(sBox, true)) return;
@@ -983,6 +983,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
       doCommand (imapCommand::clientCopy (dBox, sSequence));
     if (cmd->result () != "OK")
     {
+      kdError(5006) << "IMAP4::copy - " << cmd->resultInfo() << endl;
       error (ERR_COULD_NOT_WRITE, dest.prettyURL());
     } else {
       if (hasCapability("UIDPLUS"))
