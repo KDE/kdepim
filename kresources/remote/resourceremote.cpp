@@ -96,6 +96,8 @@ void ResourceRemote::init()
   mOpen = false;
 
   mLock = new KABC::LockNull( true );
+
+  enableChangeNotification();
 }
 
 void ResourceRemote::readConfig( const KConfig *config )
@@ -197,8 +199,12 @@ bool ResourceRemote::doLoad()
   mCalendar.close();
 
   if ( mUseCacheFile ) {
+    disableChangeNotification();
     mCalendar.load( cacheFile() );
+    enableChangeNotification();
   }
+
+  clearChanges();
 
   emit resourceChanged( this );
 
@@ -235,7 +241,9 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
     kdDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
 
     mCalendar.close();
+    disableChangeNotification();
     mCalendar.load( cacheFile() );
+    enableChangeNotification();
 
     emit resourceChanged( this );
   }
@@ -255,7 +263,7 @@ bool ResourceRemote::doSave()
 
   if ( !mOpen ) return true;
 
-  if ( readOnly() ) {
+  if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
   }
@@ -270,6 +278,8 @@ bool ResourceRemote::doSave()
                 << endl;
     return false;
   }
+
+  mChangedIncidences = allChanges();
 
   mCalendar.save( cacheFile() );
 
@@ -291,6 +301,13 @@ void ResourceRemote::slotSaveJobResult( KIO::Job *job )
     job->showErrorDialog( 0 );
   } else {
     kdDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
+  
+    Incidence::List::ConstIterator it;
+    for( it = mChangedIncidences.begin(); it != mChangedIncidences.end();
+         ++it ) {
+      clearChange( *it );
+    }
+    mChangedIncidences.clear();
   }
   
   mUploadJob = 0;

@@ -124,6 +124,8 @@ class ResourceRemote : public ResourceCached
     KIO::FileCopyJob *mUploadJob;
     
     KPIM::ProgressItem *mProgress;
+
+    Incidence::List mChangedIncidences;
     
     KABC::Lock *mLock;
 
