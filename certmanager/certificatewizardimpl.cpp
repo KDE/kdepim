@@ -156,6 +156,9 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
     const QString filter = QString("*.p10|") + i18n("SMIME Certification Request (*.p10)");
     storeUR->setFilter( filter );
 
+    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    caEmailED->setText( config.readEntry( "CAEmailAddress" ) );
+
     connect( this, SIGNAL( helpClicked() ),
 	     this, SLOT( slotHelpClicked() ) );
     connect( insertAddressButton, SIGNAL( clicked() ),
