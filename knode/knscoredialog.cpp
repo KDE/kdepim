@@ -98,3 +98,9 @@ short KNScoreDialog::score()
 
 
 
+//--------------------------------
+
+#include "knscoredialog.moc"
+
+
+

@@ -378,6 +378,12 @@ void KNFilterManager::slotMenuActivated(int id)
 
 
 
+
+//--------------------------------
+
+#include "knfiltermanager.moc"
+
+
 /*/==============================================================================
 
 

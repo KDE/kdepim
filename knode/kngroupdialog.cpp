@@ -114,3 +114,9 @@ void KNGroupDialog::slotNewList()
 {
 	emit getNewList(glw->account());
 }
+
+
+
+//--------------------------------
+
+#include "kngroupdialog.moc"

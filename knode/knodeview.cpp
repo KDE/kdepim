@@ -363,6 +363,11 @@ void KNodeView::toggleThread()
 
 
 
+//--------------------------------
+
+#include "knodeview.moc"
+
+
 
 
 

@@ -323,3 +323,9 @@ void KNNetAccess::slotThreadSignal(int i)
   	}
   }
 }
+
+
+
+//--------------------------------
+
+#include "knnetaccess.moc"

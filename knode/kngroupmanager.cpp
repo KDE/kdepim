@@ -452,3 +452,9 @@ void KNGroupManager::slotDialogDone(bool accepted)
 }
 
 
+
+
+//--------------------------------
+
+#include "kngroupmanager.moc"
+

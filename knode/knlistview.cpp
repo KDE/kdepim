@@ -213,3 +213,9 @@ void KNListView::focusOutEvent(QFocusEvent *e)
 
 	emit focusChanged(e);
 }
+
+
+
+//--------------------------------
+
+#include "knlistview.moc"

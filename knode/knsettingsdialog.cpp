@@ -225,3 +225,9 @@ KNSettingsDialog::lvItem::lvItem(QListViewItem *p, const QString& t, int i)
 	id=i;
 }
 
+
+
+
+//--------------------------------
+
+#include "knsettingsdialog.moc"

@@ -27,3 +27,9 @@ KNSettingsWidget::KNSettingsWidget(QWidget *parent) : QWidget(parent)
 KNSettingsWidget::~KNSettingsWidget()
 {
 }
+
+
+
+//--------------------------------
+
+#include "knsettingswidget.moc"

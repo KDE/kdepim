@@ -118,3 +118,10 @@ void KNArticleWindow::closeEvent(QCloseEvent *)
 {
 	delete this;
 }
+
+
+
+
+//--------------------------------
+
+#include "knarticlewindow.moc"

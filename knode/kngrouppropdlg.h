@@ -40,7 +40,6 @@ class KNGroupPropDlg : public QTabDialog  {
 		
 	protected:
 	
-//================================================================	
 		class statistics : public QWidget {
 		
 			public:
@@ -64,8 +63,6 @@ class KNGroupPropDlg : public QTabDialog  {
 				QLineEdit *nick;
 				
 		};
-//================================================================		
-		
 		
 		settings *set;
 		statistics *sta;

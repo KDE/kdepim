@@ -261,3 +261,6 @@ void KNFilterSettings::slotItemSelected(int i)
 
 
 
+//--------------------------------
+
+#include "knfiltersettings.moc"

@@ -256,3 +256,8 @@ void KNPostTechSettings::slotItemSelected(int i)
 }	
 
 
+
+//--------------------------------
+
+#include "knposttechsettings.moc"
+

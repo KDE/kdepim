@@ -73,3 +73,9 @@ void KNFocusWidget::slotFocusChanged(QFocusEvent *e)
 	}		
 }
 
+
+
+//--------------------------------
+
+#include "knfocuswidget.moc"
+

@@ -814,3 +814,9 @@ void KNArticleWidget::slotPopup(const QString &url, const QPoint &p)
     }
   }
 }
+
+
+
+//--------------------------------
+
+#include "knarticlewidget.moc"

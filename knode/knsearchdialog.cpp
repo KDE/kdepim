@@ -104,3 +104,8 @@ void KNSearchDialog::slotCloseClicked()
 }
 
 
+
+//--------------------------------
+
+#include "knsearchdialog.moc"
+

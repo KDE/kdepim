@@ -152,3 +152,10 @@ void KNFilterDialog::slotHelp()
 {
 	kapp->invokeHTMLHelp("working-1.html", "4.5");
 }
+
+
+
+
+//--------------------------------
+
+#include "knfilterdialog.moc"

@@ -1261,3 +1261,9 @@ void KNodeApp::jobDone(KNJobData *j)
 		break;	
 	};	
 }
+
+
+
+//--------------------------------
+
+#include "knode.moc"

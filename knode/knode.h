@@ -44,24 +44,22 @@
 
 class KNProgress : public KProgress    // Ok, this is just a hack to adjust the sizeHint of the progress bar
 {
-Q_OBJECT
+  Q_OBJECT
 
-public:
+  public:
+    KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0);
+    ~KNProgress();
 
-  KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0);
-  ~KNProgress();
+    virtual QSize sizeHint() const;
 
-  virtual QSize sizeHint() const;
-
-private:
-
-  int desHeight;
+  private:
+    int desHeight;
 };
 
 
 class KNodeApp : public KTMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 	public:
   				

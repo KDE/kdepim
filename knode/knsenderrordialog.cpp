@@ -80,3 +80,9 @@ void KNSendErrorDialog::slotCloseBtnClicked()
 {
 	emit dialogDone();
 }
+
+
+
+//--------------------------------
+
+#include "knsenderrordialog.moc"

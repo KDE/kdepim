@@ -298,3 +298,9 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 	}
 	return true;			
 }
+
+
+
+//--------------------------------
+
+#include "knnntpclient.moc"

@@ -149,5 +149,10 @@ void KNReadAppSettings::slotColorChanged(const QColor &col)
 
 
 
+//--------------------------------
+
+#include "knreadappsettings.moc"
+
+
 
 

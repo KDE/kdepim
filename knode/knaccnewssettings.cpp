@@ -218,42 +218,6 @@ void KNAccNewsSettings::slotLogonChecked(bool b)
 	p_ass->setEnabled(b);
 }
 
+//--------------------------------
 
-
-
-/*void KNAccNewsSettings::init()
-{
-	KConfig *conf=CONF();
-	char tmp[5];
-	conf->setGroup("SERVER");
-	
-	server->setText(conf->readEntry("Nntp", "localhost"));
-	sprintf(tmp,"%d",conf->readNumEntry("nPort",119));
-	port->setText(tmp);
-	logonCB->setChecked(conf->readBoolEntry("needsLogon", false));
-	slotLogonChecked(logonCB->isChecked());
-	user->setText(conf->readEntry("user",""));
-	pass->setText(decryptStr(conf->readEntry("pass","")));
-}
-
-
-
-void KNAccNewsSettings::apply()
-{
-	KConfig *conf=CONF();
-	
-	conf->setGroup("SERVER");
-	
-	conf->writeEntry("Nntp",server->text());
-	if(strlen(port->text())>0)
-		conf->writeEntry("nPort",atoi(port->text()));
-	conf->writeEntry("needsLogon", logonCB->isChecked());
-	conf->writeEntry("user", user->text());
-	conf->writeEntry("pass", encryptStr(pass->text()));
-} */
-
-
-
-
-
-
+#include "knaccnewssettings.moc"

@@ -124,4 +124,9 @@ void KNCleanupSettings::slotFolderCBtoggled(bool b)
 }
 
 
+
+//--------------------------------
+
+#include "kncleanupsettings.moc"
+
 		

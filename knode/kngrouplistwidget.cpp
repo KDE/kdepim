@@ -187,3 +187,9 @@ void KNGroupListWidget::slotFilter(const QString& filter)
     }
   }
 }
+
+
+
+//--------------------------------
+
+#include "kngrouplistwidget.moc"

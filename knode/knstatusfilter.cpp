@@ -210,6 +210,11 @@ KNStatusFilterWidget::TFCombo::~TFCombo()
 
 
 
+//--------------------------------
+
+#include "knstatusfilter.moc"
+
+
 
 
 

@@ -107,3 +107,9 @@ bool KNSmtpClient::openConnection()
 	
 	return true;
 }
+
+
+
+//--------------------------------
+
+#include "knsmtpclient.moc"

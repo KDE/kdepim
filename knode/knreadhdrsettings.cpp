@@ -272,3 +272,8 @@ void KNReadHdrSettings::slotOkBtnClicked()
 	enableEdit(false);		
 }
 
+
+
+//--------------------------------
+
+#include "knreadhdrsettings.moc"

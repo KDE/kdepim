@@ -441,3 +441,9 @@ void KNComposer::readConfig()
 	fntFam=conf->readEntry("family", "helvetica");
 }
 
+
+
+
+//--------------------------------
+
+#include "kncomposer.moc"
