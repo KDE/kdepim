@@ -1203,9 +1203,6 @@ from the context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>Use of the system tray icon is described
-<link linkend="system-tray">below</link>.</para>
-
 </sect2>
 </sect1>
 
@@ -2227,20 +2224,20 @@ below.</para>
 
 <para>The <application>alarm daemon</application> is normally started
 at &kde; session login (unless you disable auto start in the
-<link linkend="preferences">Preferences dialog</link>), and runs
-continuously until logout. If for any reason it is not running, alarm
-monitoring will not occur and &kalarm; will not display or execute any
-alarms.</para>
+<link linkend="preferences">Preferences dialog</link> and then cease
+to use &kalarm;), and runs continuously until logout. If for any
+reason it is not running, alarm monitoring will not occur and &kalarm;
+will not display or execute any alarms.</para>
 
 <sect2>
 <title>Starting the <application>alarm daemon</application></title>
 
 <para>To start the <application>alarm daemon</application>, you can
 either run &kalarm; in its default graphical mode (&ie; without any
-command line parameters), enable alarms using &kalarm;'s system tray
-icon menu, reset the daemon as described
-<link linkend="daemon-reset">below</link>, or you can run the
-<application>alarm daemon</application> directly from the command
+command line parameters other than <option>--tray</option>), enable
+alarms using &kalarm;'s system tray icon menu, reset the daemon as
+described <link linkend="daemon-reset">below</link>, or you can run
+the <application>alarm daemon</application> directly from the command
 line:</para>
 
 <screen width="40">
