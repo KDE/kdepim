@@ -38,7 +38,6 @@ debian/tmp/usr/share/services/kcmkontactknt.desktop
 debian/tmp/usr/share/services/kcmkontactsummary.desktop
 debian/tmp/usr/share/services/kcmkorgsummary.desktop
 debian/tmp/usr/share/services/kontact
-debian/tmp/usr/share/services/kontactconfig.desktop
 debian/tmp/usr/share/servicetypes/kontactplugin.desktop
 debian/icons/kontact.xpm /usr/share/pixmaps
 debian/icons/kontact-16.xpm /usr/share/pixmaps
