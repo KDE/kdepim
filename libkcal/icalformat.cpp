@@ -278,6 +278,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
 ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                                                    const QString &messageText )
 {
+  setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
   clearException();
 
   if (messageText.isEmpty()) return 0;
