@@ -895,9 +895,9 @@ void PabWidget::clear()
   qDebug( "clear" );
   QListViewItem *item = listView->currentItem();
   PabListViewItem *lvi = dynamic_cast< PabListViewItem* >(item);
-  QString entryKey = lvi->entryKey();
-  ContactEntry *ce = lvi->getEntry();
   if (lvi) {
+    QString entryKey = lvi->entryKey();
+    ContactEntry *ce = lvi->getEntry();
     PwDeleteCommand *command = new PwDeleteCommand( this, entryKey, ce );
     UndoStack::instance()->push( command );
     RedoStack::instance()->clear();
