@@ -117,7 +117,11 @@ namespace KABPrinting {
         // created as children of the wizard, that is, they are not
         // deleted when the print style object is:
         delete mPageAppearance;
-        if(mEPntr!=0) delete mEPntr;
+        mPageAppearance = 0;
+
+        if( mEPntr != 0 )
+          delete mEPntr;
+        mEPntr = 0;
     }
 
     void DetailledPrintStyle::print(QStringList contacts, PrintProgress *progress)
