@@ -206,7 +206,7 @@ bool KNProtocolClient::openConnection()
  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
  #ifdef HAVE_INET_ADDR
   address.s_addr = inet_addr(account.server());
-  if ( address.s_addr != (in_addr_t)-1 )
+  if ( address.s_addr != (in_addr_t)-1 ) {
  #else
   #error You must have either inet_aton or inet_addr !
  #endif
