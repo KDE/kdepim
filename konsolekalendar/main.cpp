@@ -48,7 +48,8 @@ static KCmdLineOptions options[] =
   { "date", I18N_NOOP("Date for which the calendar is shown."), 0},
   { "startdate", I18N_NOOP("Starting date."), 0},
   { "enddate", I18N_NOOP("Ending date."), 0},
-  { "file", I18N_NOOP("Location of your calendar file."), 0}
+  { "file", I18N_NOOP("Location of your calendar file."), 0},
+  KCmdLineLastOption
 };
 
 int main(int argc, char *argv[])
