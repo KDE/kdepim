@@ -70,18 +70,49 @@ static const char *kpilotlink_id = "$Id$";
 class KPilotDeviceLink::KPilotDeviceLinkPrivate
 {
 public:
-	static KPilotDeviceLinkPrivate*self() { if (!mThis) mThis = new KPilotDeviceLinkPrivate(); return mThis; }
-	bool canBind( QString device ) { FUNCTIONSETUP; DEBUGDAEMON<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; return !mBoundDevices.contains( device ); }
-	void bindDevice( QString device ) { FUNCTIONSETUP; mBoundDevices.append( device ); DEBUGDAEMON<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; }
-	void unbindDevice( QString device ) { FUNCTIONSETUP; mBoundDevices.remove( device ); DEBUGDAEMON<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; }
+	static KPilotDeviceLinkPrivate*self()
+	{
+		if (!mThis) mThis = new KPilotDeviceLinkPrivate();
+		return mThis;
+	}
+
+	bool canBind( QString device )
+	{
+		FUNCTIONSETUP;
+		showList();
+		return !mBoundDevices.contains( device );
+	}
+
+	void bindDevice( QString device )
+	{
+		FUNCTIONSETUP;
+		mBoundDevices.append( device );
+		showList();
+	}
+
+	void unbindDevice( QString device )
+	{
+		FUNCTIONSETUP;
+		mBoundDevices.remove( device );
+		showList();
+	}
+
 protected:
 	KPilotDeviceLinkPrivate() {}
 	~KPilotDeviceLinkPrivate() {}
 
 	QStringList mBoundDevices;
 	static KPilotDeviceLinkPrivate*mThis;
-};
-KPilotDeviceLink::KPilotDeviceLinkPrivate*KPilotDeviceLink::KPilotDeviceLinkPrivate::mThis = 0L;
+
+private:
+	inline void showList() const
+	{
+		DEBUGDAEMON << "Bound devices: "
+			<< mBoundDevices.join(", ").latin1() << endl;
+	}
+} ;
+
+KPilotDeviceLink::KPilotDeviceLinkPrivate *KPilotDeviceLink::KPilotDeviceLinkPrivate::mThis = 0L;
 
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
