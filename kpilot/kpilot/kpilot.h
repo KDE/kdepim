@@ -46,12 +46,14 @@ class QComboBox;
 class KProcess;
 
 class PilotComponent;
+class FileInstallWidget;
 
 #include "kpilotlink.h"
+#include "kpilotDCOP.h"
 
 
 
-class KPilotInstaller : public KMainWindow
+class KPilotInstaller : public KMainWindow, public KPilotDCOP
     {
     Q_OBJECT
 
@@ -91,6 +93,12 @@ class KPilotInstaller : public KMainWindow
 		Error } Status ;
 
 	Status status() const { return fStatus; } ;
+
+public:
+	/**
+	* DCOP interface.
+	*/
+	virtual ASYNC filesChanged();
 
     protected:
       void closeEvent(QCloseEvent *e);
@@ -191,6 +199,8 @@ private:
 	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore,
 		icon_quit;
 
+	FileInstallWidget *fFileInstallWidget;
+
  protected slots:
       void menuCallback(int);
       void quit();
@@ -214,6 +224,9 @@ private:
 
 
 // $Log$
+// Revision 1.20  2001/03/02 13:07:18  adridg
+// Completed switch to KAction
+//
 // Revision 1.19  2001/03/01 01:02:48  adridg
 // Started changing to KAction
 //

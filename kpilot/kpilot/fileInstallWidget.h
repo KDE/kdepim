@@ -70,13 +70,17 @@ private:
  protected slots:
     void slotClearButton();
     void slotAddFile();
-    void refreshFileInstallList();
+public slots:
+	void refreshFileInstallList();
     };
 
 #endif
 
 
 // $Log$
+// Revision 1.9  2001/03/04 13:11:58  adridg
+// Actually use the fileInstaller object
+//
 // Revision 1.8  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

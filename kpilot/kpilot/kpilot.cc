@@ -64,6 +64,7 @@ static const char *kpilot_id="$Id$";
 #include <kdebug.h>
 #include <kaction.h>
 #include <kstdaction.h>
+#include <kuniqueapp.h>
 
 #include "kpilotOptions.h"
 #include "kpilot.moc"
@@ -78,11 +79,14 @@ static const char *kpilot_id="$Id$";
 #include "pilotDaemon.h"
 
 
-KPilotInstaller::KPilotInstaller()
-  : KMainWindow(0), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
+KPilotInstaller::KPilotInstaller() : 
+	KMainWindow(0), 
+	DCOPObject("KPilotIface"),
+	fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false),
-    fStatus(Startup)
+    fStatus(Startup),
+	fFileInstallWidget(0L)
 {
 	FUNCTIONSETUP;
 
@@ -200,8 +204,10 @@ KPilotInstaller::initComponents()
 		i18n("Memo Viewer"));
 	addComponentPage(new AddressWidget(getManagingWidget(),defaultDBPath),
 		i18n("Address Viewer"));
-	addComponentPage(new FileInstallWidget(getManagingWidget(),
-			defaultDBPath),
+
+	fFileInstallWidget = new FileInstallWidget(getManagingWidget(),
+			defaultDBPath);
+	addComponentPage(fFileInstallWidget,
 		i18n("File Installer"));
 }
 
@@ -1117,6 +1123,13 @@ KPilotInstaller::slotSyncDone(KProcess*)
   fStatusBar->changeItem(i18n("Hot-Sync complete."),0);
 }
 
+/* virtual */ ASYNC KPilotInstaller::filesChanged()
+{
+	FUNCTIONSETUP;
+
+	fFileInstallWidget->refreshFileInstallList();
+}
+
  
 /* static */ const char *KPilotInstaller::version(int kind)
 {
@@ -1187,7 +1200,7 @@ int main(int argc, char** argv)
 
         KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
-	KApplication::addCmdLineOptions();
+	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
@@ -1196,7 +1209,11 @@ int main(int argc, char** argv)
 	if (p->isSet("setup")) { run_mode='s'; } 
 	if (p->isSet("cs")) { run_mode='c'; }
 
-	KApplication a(true,true);
+	if (!KUniqueApplication::start())
+	{
+		return 0;
+	}
+	KUniqueApplication a(true,true);
 
 	KConfig& c=KPilotConfig::getConfig();
 	(void)KPilotConfig::getDebugLevel(c);
@@ -1278,6 +1295,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.41  2001/03/02 13:07:18  adridg
+// Completed switch to KAction
+//
 // Revision 1.40  2001/03/01 01:02:48  adridg
 // Started changing to KAction
 //
