@@ -51,6 +51,7 @@
 #include <qdir.h>
 #include <qeventloop.h>
 #include <qtimer.h>
+#include <kkeydialog.h>
 
 #define WATCHGNUPGBINARY "watchgnupg"
 #define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
@@ -99,7 +100,7 @@ void KWatchGnuPGMainWindow::createActions()
   (void)KStdAction::close( this, SLOT(close()), actionCollection() );
   (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );
   (void)KStdAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
-  ( void )KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
+  ( void )KStdAction::keyBindings(this, SLOT(configureShortcuts()), actionCollection());
   ( void )KStdAction::configureToolbars(this, SLOT(slotConfigureToolbars()), actionCollection());
 
 #if 0
@@ -108,6 +109,11 @@ void KWatchGnuPGMainWindow::createActions()
 					 actionCollection(), "configure" );
 #endif
 
+}
+
+void KWatchGnuPGMainWindow::configureShortcuts()
+{
+  KKeyDialog::configure( actionCollection(), this );
 }
 
 void KWatchGnuPGMainWindow::slotConfigureToolbars()
