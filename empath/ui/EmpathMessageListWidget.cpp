@@ -26,6 +26,7 @@
 
 // System includes
 #include <stdlib.h>
+#include <stdio.h>
 
 // Qt includes
 #include <qheader.h>
@@ -624,6 +625,8 @@ EmpathMessageListWidget::_reconnectToFolder(const EmpathURL & url)
     
     EmpathFolder * f = empath->folder(url_);
     
+    f->index()->sync();
+    
     QObject::connect(
         f,       SIGNAL(itemLeft(const QString &)),
         this,    SLOT(s_itemGone(const QString &)));
@@ -636,8 +639,6 @@ EmpathMessageListWidget::_reconnectToFolder(const EmpathURL & url)
         empathDebug("Can't find folder !");
         return;
     }
-
-    f->index()->sync();
 }
 
     void
@@ -1027,7 +1028,7 @@ EmpathMessageListWidget::_fillDisplay()
     if (filling_) {
  
         c->setGroup("Folder_" + url_.mailboxName() + "/" + url_.folderPath());
-   
+  
         setSorting(
             c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
             c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
@@ -1070,7 +1071,7 @@ EmpathMessageListWidget::_fillThreading()
 
         allDict.insert(rec->messageID(), new ThreadNode(rec));
     }
-    
+
     QDict<ThreadNode> rootDict;
 
     // Go through every node in allDict.
@@ -1079,11 +1080,17 @@ EmpathMessageListWidget::_fillThreading()
     // If not, add this item to rootDict.
     for (QDictIterator<ThreadNode> it(allDict); it.current(); ++it) {
 
-        ThreadNode * parentNode = allDict[it.current()->data()->parentID()];
+        if (it.current()->data()->hasParent()) {
+    
+            ThreadNode * parentNode = allDict[it.current()->data()->parentID()];
 
-        if (0 != parentNode)
-            parentNode->addChild(it.current());
-        else
+            if (parentNode != 0)
+                parentNode->addChild(it.current());
+            else
+                rootDict.insert(it.current()->data()->messageID(), it.current());
+        
+        } else 
+            
             rootDict.insert(it.current()->data()->messageID(), it.current());
     }
 
@@ -1100,7 +1107,7 @@ EmpathMessageListWidget::_createThreads(
 )
 {
     EmpathMessageListItem * i = _createListItem(*(root->data()), t, parent);
-
+   
     for (QListIterator<ThreadNode> it(root->childList()); it.current(); ++it)
         _createThreads(it.current(), t, i);
 }
@@ -1112,7 +1119,7 @@ EmpathMessageListWidget::_createListItem(
     EmpathMessageListItem * parent
 )
 {
-    if (0 != t)
+    if (t != 0)
         t->doneOne();
 
     return _pool(rec, parent);
