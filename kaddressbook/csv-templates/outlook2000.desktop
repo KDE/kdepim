@@ -8,6 +8,7 @@ QuoteType=0
 Name=Outlook 2000
 Name[eo]=Redmondo 2000
 Name[nso]=Bokantle 2000
+Name[xx]=xxOutlook 2000xx
 
 [csv column map]
 0=5

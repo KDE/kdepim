@@ -6,6 +6,7 @@ X-KDE-Library=libphonekonnector
 
 Name=Opie Konnector
 Name[cs]=Opie konektor
+Name[de]=Opie-Konnector
 Name[eo]=Opie konektilo
 Name[es]=Konnector Opie
 Name[hu]=Opie konnektor
@@ -16,6 +17,7 @@ Name[nso]=Mokgomaganyi wa Opie
 Name[pl]=Łącznik Opie
 Name[pt]=Konnector para o Opie
 Name[sl]=Povezovalnik Opie
+Name[xx]=xxOpie Konnectorxx
 Group=Cell Phone 
 Vendor=Daniel Molkentin
 Id=Phone
