@@ -67,10 +67,6 @@
 #include <kprogress.h>
 #endif
 
-#ifndef _KPILOT_KPILOTLINK_H
-#include "kpilotlink.h"
-#endif
-
 #ifndef _KPILOT_KPILOTDCOP_H
 #include "kpilotDCOP.h"
 #endif
@@ -78,13 +74,15 @@
 class QPopupMenu;
 class QComboBox;
 class QWidgetStack;
-class KProcess;
+// class KProcess;
 class KAction;
 class KToggleAction;
+class KProgress;
 
 class PilotDaemonDCOP_stub;
 class PilotComponent;
 class FileInstallWidget;
+class LogWidget;
 
 
 
@@ -137,6 +135,8 @@ public:
 	* DCOP interface.
 	*/
 	virtual ASYNC filesChanged();
+	virtual ASYNC daemonStatus(QString);
+	virtual ASYNC daemonProgress(QString,int);
 
     protected:
       void closeEvent(QCloseEvent *e);
@@ -225,6 +225,7 @@ private:
       
       KMenuBar*       fMenuBar;
       KStatusBar*     fStatusBar;
+      KProgress       *fProgress;
       KToolBar*       fToolBar;
       bool            fQuitAfterCopyComplete; // Used for GUI-less interface
       QWidgetStack    *fManagingWidget;
@@ -239,6 +240,7 @@ private:
       Status fStatus;
 
 	FileInstallWidget *fFileInstallWidget;
+	LogWidget *fLogWidget;
 
 	/**
 	 * toggle action from Options menu
@@ -252,7 +254,7 @@ private:
 	void slotConfigureKPilot();
 	void slotConfigureConduits();
       void fileInstalled(int which);
-      void slotSyncDone(KProcess* which);
+      // void slotSyncDone(KProcess* which);
       // void slotDaemonStatus(KSocket*);
 
 	/**
@@ -283,6 +285,9 @@ private:
 
 
 // $Log$
+// Revision 1.28  2001/08/27 22:54:27  adridg
+// Decruftifying; improve DCOP link between daemon & viewer
+//
 // Revision 1.27  2001/08/19 19:25:57  adridg
 // Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
 //

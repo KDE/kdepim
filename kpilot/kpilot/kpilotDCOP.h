@@ -37,6 +37,8 @@ class KPilotDCOP : virtual public DCOPObject
 	K_DCOP
 k_dcop:
 	virtual ASYNC filesChanged() = 0;
+	virtual ASYNC daemonStatus(QString) = 0;
+	virtual ASYNC daemonProgress(QString,int) = 0;
 } ;
 
 #else
@@ -47,6 +49,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.3  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.2  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

@@ -150,8 +150,8 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog * p, KConfig & c) :
 	grid->addWidget(fuseSecret, 0, fieldCol);
 	fuseSecret->setChecked(c.readBoolEntry("ShowSecrets"));
 	QToolTip::add(fuseSecret,
-		i18n("Records that are marked `Private' in the Pilot are\n"
-			"displayed by KPilot only when this box is checked."));
+		i18n("<qt>Records that are marked `Private' in the Pilot are<br>"
+			"displayed by KPilot only when this box is checked.<qt>"));
 
 
 	l1 = new QLabel(i18n("Backup Only:"), this);
@@ -161,7 +161,9 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog * p, KConfig & c) :
 	grid->addWidget(l1, 1, labelCol);
 	grid->addWidget(fBackupOnly, 1, fieldCol);
 	QToolTip::add(fBackupOnly,
-		i18n("Databases listed here are only backed up, not synced."));
+		i18n("<qt>Databases listed here are only backed up, not synced.<br>"
+			"The four-letter codes identify databases. For example,<br>"
+			"<i>lnch</i> identifies the Launcher database.</qt>"));
 
 	l2 = new QLabel(i18n("Skip:"), this);
 	fSkipDB = new QLineEdit(this);
@@ -403,7 +405,7 @@ fPilotPort(QString::null), fFullUserName(QString::null)
 	grid->addWidget(currentLabel, 0, labelCol);
 	grid->addWidget(fPilotDevice, 0, fieldCol);
 	QToolTip::add(fPilotDevice,
-		i18n("Enter the serial port the Pilot is attached to.\n"
+		i18n("Enter the serial port the Pilot is attached to.<br>"
 			"You can also enter a USB port device."));
 
 	currentLabel = new QLabel(i18n("Speed: "), this);
@@ -422,10 +424,10 @@ fPilotPort(QString::null), fFullUserName(QString::null)
 	grid->addWidget(currentLabel, 0, labelCol + 2);
 	grid->addWidget(fPilotSpeed, 0, fieldCol + 2);
 	QToolTip::add(fPilotSpeed,
-		i18n("Select the speed you want HotSyncs to run at.\n"
-			"Faster is better, but the Palm documentation\n"
-			"recommends you use 9600 and try faster speeds\n"
-			"carefully."));
+		i18n("<qt>Select the speed you want HotSyncs to run at.<br>"
+			"Faster is better, but the Palm documentation<br>"
+			"recommends you use 9600 and try faster speeds<br>"
+			"carefully.</qt>"));
 
 	currentLabel = new QLabel(i18n("Pilot User: "), this);
 	currentLabel->adjustSize();
@@ -450,10 +452,10 @@ fPilotPort(QString::null), fFullUserName(QString::null)
 	grid->addMultiCellWidget(fStartDaemonAtLogin, 2, 2, fieldCol,
 		fieldCol + 2);
 	QToolTip::add(fStartDaemonAtLogin,
-		i18n("If you enable this, the KPilot daemon will\n"
-			"start up every time you login to KDE, so you\n"
-			"can just press the HotSync button on your Palm\n"
-			"to start a HotSync."));
+		i18n("<qt>If you enable this, the KPilot daemon will<br>"
+			"start up every time you login to KDE, so you<br>"
+			"can just press the HotSync button on your Palm<br>"
+			"to start a HotSync.</qt>"));
 
 	t = locate("apps", daemondesktop);
 	if (t.isNull())
@@ -467,9 +469,9 @@ fPilotPort(QString::null), fFullUserName(QString::null)
 	fDockDaemon->setChecked(config.readBoolEntry("DockDaemon", false));
 	grid->addMultiCellWidget(fDockDaemon, 4, 4, fieldCol, fieldCol + 2);
 	QToolTip::add(fDockDaemon,
-		i18n("If you enable this, the KPilot daemon will be\n"
-			"visible in the system tray in Kicker. You can\n"
-			"then right-click on it to control the daemon."));
+		i18n("<qt>If you enable this, the KPilot daemon will be<br>"
+			"visible in the system tray in Kicker. You can<br>"
+			"then right-click on it to control the daemon.</qt>"));
 
 	fKillDaemonOnExit = new QCheckBox(i18n("Stop Daemon on exit"), this);
 	fKillDaemonOnExit->setChecked(config.readBoolEntry("StopDaemonAtExit",
@@ -477,9 +479,9 @@ fPilotPort(QString::null), fFullUserName(QString::null)
 	grid->addMultiCellWidget(fKillDaemonOnExit, 5, 5, fieldCol,
 		fieldCol + 2);
 	QToolTip::add(fKillDaemonOnExit,
-		i18n("If you enable this, KPilot will stop the daemon\n"
-			"when you exit KPilot (but only if the daemon was\n"
-			"started by KPilot, too)."));
+		i18n("<qt>If you enable this, KPilot will stop the daemon<br>"
+			"when you exit KPilot (but only if the daemon was<br>"
+			"started by KPilot, too).</qt>"));
 
 	grid->activate();
 }
@@ -510,9 +512,9 @@ int KPilotOptionsGeneral::commitChanges(KConfig & config)
 			fStartDaemonAtLogin->isChecked())
 		{
 			KMessageBox::sorry(this,
-				i18n("Can't find the KPilotDaemon link file\n"
-					"needed to autostart the daemon.\n"
-					"Autostart has been disabled."));
+				i18n("<qt>Can't find the KPilotDaemon link file<br>"
+					"needed to autostart the daemon.<br>"
+					"Autostart has been disabled.</qt>"));
 			fStartDaemonAtLogin->setChecked(false);
 		}
 	}
@@ -649,11 +651,11 @@ setupDialogPage(i18n("Sync"), s)
 	QGridLayout *grid = new QGridLayout(this, 5, 3, SPACING);
 
 	fSyncFiles = new QCheckBox(i18n("Sync &Files"), this);
-	fSyncFiles->setChecked(config.readBoolEntry("SyncFiles", false));
+	fSyncFiles->setChecked(config.readBoolEntry("SyncFiles", true));
 	grid->addWidget(fSyncFiles, 0, 1);
 	QToolTip::add(fSyncFiles,
-		i18n("Install files that are dragged onto the KPilot\n"
-			"file installer onto the Palm."));
+		i18n("<qt>Install files that are dragged onto the KPilot<br>"
+			"file installer onto the Pilot.</qt>"));
 
 	fOverwriteRemote =
 		new QCheckBox(i18n("Local &overrides Pilot."), this);
@@ -684,10 +686,10 @@ setupDialogPage(i18n("Sync"), s)
 			false));
 	grid->addWidget(fPreferFastSync, 4, 1);
 	QToolTip::add(fPreferFastSync,
-		i18n("If you select this, KPilot will do a FastSync (that\n"
-			"is, only run installed conduits) instead of a\n"
-			"HotSync (backup all databases and run\n" 
-			"conduits) when you press the HotSync button."));
+		i18n("<qt>If you select this, KPilot will do a FastSync (that<br>"
+			"is, only run installed conduits) instead of a<br>"
+			"HotSync (backup all databases <i>and</i> run<br>" 
+			"conduits) when you press the HotSync button.</qt>"));
 
 	grid->setRowStretch(5, 100);
 	grid->setColStretch(2, 100);
@@ -816,6 +818,11 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.32  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
 // Revision 1.31  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

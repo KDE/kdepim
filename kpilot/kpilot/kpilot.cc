@@ -42,6 +42,7 @@ static const char *kpilot_id="$Id$";
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <errno.h>
 
 #ifndef QFILE_H
@@ -148,6 +149,10 @@ static const char *kpilot_id="$Id$";
 #include "fileInstallWidget.h"
 #endif
 
+#ifndef _KPILOT_LOGWIDGET_H
+#include "logWidget.h"
+#endif
+
 #ifndef _KPILOT_STATUSMESSAGES_H
 #include "statusMessages.h"
 #endif
@@ -177,14 +182,14 @@ KPilotInstaller::KPilotInstaller() :
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface")),
 	fMenuBar(0L), 
 	fStatusBar(0L), 
+	fProgress(0L),
 	fToolBar(0L),
 	fQuitAfterCopyComplete(false), 
 	fManagingWidget(0L), 
-	// fPilotCommandSocket(0L), 
-	// fPilotStatusSocket(0L), 
 	fKillDaemonOnExit(false),
 	fStatus(Startup),
-	fFileInstallWidget(0L)
+	fFileInstallWidget(0L),
+	fLogWidget(0L)
 {
 	FUNCTIONSETUP;
 
@@ -301,6 +306,9 @@ KPilotInstaller::initComponents()
 			defaultDBPath);
 	addComponentPage(fFileInstallWidget,
 		i18n("File Installer"));
+
+	fLogWidget = new LogWidget(getManagingWidget());
+	addComponentPage(fLogWidget,i18n("Sync Log"));
 }
 
 void
@@ -315,6 +323,15 @@ KPilotInstaller::initStatusBar()
 	fStatusBar = statusBar();
 	fStatusBar->insertItem(welcomeMessage,0);
 	fStatusBar->show();
+
+	fProgress = new KProgress(0,100,0,KProgress::Horizontal,fStatusBar);
+	fProgress->adjustSize();
+	fProgress->resize(100,fProgress->height());
+	fProgress->show();
+
+	fStatusBar->addWidget(fProgress,0,true);
+
+	fStatusBar->message(i18n("Initializing"),500);
 }
 
 
@@ -360,7 +377,7 @@ KPilotInstaller::slotBackupRequested()
 		i18n("Please press the hot-sync button."), 
 		0);
 
-	sprintf(fLinkCommand, "%d\n", KPilotLink::Backup);
+	getDaemon().startHotSync(PilotDaemonDCOP::Backup);
 }
 
 void
@@ -373,19 +390,19 @@ KPilotInstaller::slotRestoreRequested()
 	fStatusBar->changeItem(
 		i18n("Restoring pilot. ")+
 		i18n("Please press the hot-sync button."), 0);
-	sprintf(fLinkCommand, "%d\n", KPilotLink::Restore);
+	getDaemon().startHotSync(PilotDaemonDCOP::Restore);
 }
 
 void KPilotInstaller::slotHotSyncRequested() 
 { 
-	setupSync(KPilotLink::HotSync,
+	setupSync(PilotDaemonDCOP::HotSync,
 		i18n("HotSyncing. ")+
 		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotFastSyncRequested()
 { 
-	setupSync(KPilotLink::FastSync,
+	setupSync(PilotDaemonDCOP::FastSync,
 		i18n("FastSyncing. ")+
 		i18n("Please press the HotSync button."));
 }
@@ -419,12 +436,8 @@ void KPilotInstaller::setupSync(int kind,const QString& message)
 	FUNCTIONSETUP;
 
 	showTitlePage(message);
-
-	if (fLinkCommand[0] == 0)
-	{
-		sprintf(fLinkCommand, "%d\n",kind);
-		componentPreSync(false);
-	}
+	componentPreSync(false);
+	getDaemon().startHotSync(kind);
 }
 
 
@@ -496,13 +509,6 @@ void
 KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
-
-	for(fPilotComponentList.first(); 
-		fPilotComponentList.current(); 
-		fPilotComponentList.next())
-	{
-		fPilotComponentList.current()->saveData();
-	}
 
 	killDaemonIfNeeded();
 	kapp->quit();
@@ -673,8 +679,10 @@ KPilotInstaller::slotConfigureKPilot()
 	}
 
 	delete options;
-	options=NULL;
-		kdDebug() << fname << ": Done with options." << endl;
+	options=0L;
+	DEBUGKPILOT << fname 
+		<< ": Done with options." 
+		<< endl;
 }
 
 void
@@ -691,25 +699,52 @@ KPilotInstaller::slotConfigureConduits()
 }
 
 
-void 
-KPilotInstaller::slotSyncDone(KProcess*)
-{
-	FUNCTIONSETUP;
-
-  fStatusBar->changeItem(i18n("Updating display..."), 0);
-  kapp->processEvents();
-  for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())
-    fPilotComponentList.current()->postHotSync();
-  fStatusBar->changeItem(i18n("Hot-Sync complete."),0);
-}
-
-/* virtual */ ASYNC KPilotInstaller::filesChanged()
+/* DCOP */ ASYNC KPilotInstaller::filesChanged()
 {
 	FUNCTIONSETUP;
 
 	fFileInstallWidget->refreshFileInstallList();
 }
 
+/* DCOP */ ASYNC KPilotInstaller::daemonStatus(QString s)
+{
+	if (fStatusBar)
+	{
+		fStatusBar->changeItem(s,0);
+	}
+
+	if (fLogWidget)
+	{
+		QTime t = QTime::currentTime();
+		QString s1 = t.toString();
+		s1.append("  ");
+		s1.append(s);
+		fLogWidget->addMessage(s1);
+	}
+}
+
+/* DCOP */ ASYNC KPilotInstaller::daemonProgress(QString s,int i)
+{
+	if (!s.isEmpty())
+	{
+		fStatusBar->message(s,2000 /* ms */);
+	}
+
+	if (!fProgress) return;
+
+	if (i == -1)
+	{
+		fProgress->hide();
+	}
+	else if (i == -2)
+	{
+		fProgress->show();
+	}
+	else if ((i>=0) && (i<=100))
+	{
+		fProgress->setValue(i);
+	}
+}
  
 /* static */ const char *KPilotInstaller::version(int kind)
 {
@@ -840,7 +875,7 @@ int main(int argc, char** argv)
 
 		if (run_mode=='s')
 		{
-			if (r)
+			if (!r)
 			{
 				return 1;
 			}
@@ -850,7 +885,7 @@ int main(int argc, char** argv)
 			}
 		}
 
-		if (r) return 1;
+		if (!r) return 1;
 			
 
 		// The options dialog may have changed the group
@@ -900,6 +935,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.56  2001/08/29 08:50:56  cschumac
+// Make KPilot compile.
+//
 // Revision 1.55  2001/08/27 22:54:27  adridg
 // Decruftifying; improve DCOP link between daemon & viewer
 //
