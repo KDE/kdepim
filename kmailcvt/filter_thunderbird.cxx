@@ -25,7 +25,7 @@
 
 /** Default constructor. */
 FilterThunderbird::FilterThunderbird(void) : 
-  Filter(i18n("Import Thunderbird local Mails and Folder Structure"),
+  Filter(i18n("Import Thunderbird Local Mails and Folder Structure"),
 	 "Danny Kukawka",
 	 i18n("<p><b>Thunderbird import filter</b></p>"
               "<p>Select your base Thunderbird mailfolder"
