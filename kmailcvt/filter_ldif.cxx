@@ -48,7 +48,7 @@ void filter_ldif::import(filterInfo *info) {
 
 	 QString from=i18n("Source: "),to=i18n("Destination: ");
    from+="\t"; from+=file;
-   to+="\t"; to+=i18n("the K Address Book");
+   to+="\t"; to+=i18n("the KAddressBook");
    info->from(from);
    info->to(to);
    info->current(i18n("Currently converting .LDIF address file to Kab"));

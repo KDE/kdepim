@@ -57,7 +57,7 @@ Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name) : QWidget(parent, name)
   grid1->addMultiCellWidget(imports, 0,0,0,5);
   doFilters();
 
-  import=new QPushButton(i18n("&Import"),this);
+  import=new QPushButton(i18n("&Import..."),this);
   grid1->addWidget(import, 0,6);
 
   quit=new QPushButton(i18n("&Quit"),this);
@@ -123,7 +123,7 @@ KAboutDialog dlg(KAboutDialog::AbtAppStandard,
                 );
   dlg.setImage();
   dlg.addTextPage("Description",
-                  "Converts various formats to Kmail and K Addressbook\n\n"
+                  "Converts various formats to KMail and KAddressBook\n\n"
                   "Currently supported:\n\n"
                   "  - MS Outlook Express 5.0 .DBX format\n"
                   "  - MS Exchange Personal Addressbook .PAB format\n"
@@ -139,7 +139,7 @@ KAboutDialog dlg(this,"KmailCvt2");
            email="kmailcvt@hum.org",
            url="http://www.hum.org/kmailcvt.html",
            work=i18n("\n"
-                "Converts various import formats to KMail and KAddressbook\n"
+                "Converts various import formats to KMail and KAddressBook\n"
                 "Currently supported formats:\n\n"
                 );
            work+=imports->getFilters();

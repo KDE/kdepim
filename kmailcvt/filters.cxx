@@ -357,7 +357,7 @@ return false;
 
 //////////////////////////////////////////////////////////////////////////////////
 //
-// This is the kab class, it provides the interface to K AddressBook.
+// This is the kab class, it provides the interface to KAddressBook.
 // This one uses kabAPI 10
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -365,7 +365,7 @@ return false;
 kab::kab()
 {
   mAddressBook = 0;
-  cap=i18n("Kmailcvt - K Address Book API");
+  cap=i18n("Kmailcvt - KAddressBook API");
 }
 
 kab::~kab()

@@ -46,7 +46,7 @@ QWidget *parent=info->parent();
       from+="\t";
       from+=file;
       to+="\t";
-      to+=i18n("the K Addressbook");
+      to+=i18n("the KAddressBook");
       info->from(from);
       info->to(to);
       info->current(i18n("Currently converting .PAB addresses to Kab"));
