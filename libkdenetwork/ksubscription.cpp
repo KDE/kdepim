@@ -17,6 +17,7 @@
 #include <qtimer.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
+#include <qheader.h>
 
 #include <kseparator.h>
 #include <kiconloader.h>
@@ -243,6 +244,8 @@ KSubscription::KSubscription( QWidget *parent, const QString &caption,
   groupView->setAllColumnsShowFocus(true);
   if (descriptionColumn)
     groupView->addColumn(i18n("Description"));
+  else
+    groupView->header()->setStretchEnabled(true, 0);
 
   // layout
   QGridLayout *topL = new QGridLayout(page,3,1,0,5);
@@ -274,8 +277,10 @@ KSubscription::KSubscription( QWidget *parent, const QString &caption,
   // listviews
   subView = new QListView(page);
   subView->addColumn(i18n("Subscribe To"));
+  subView->header()->setStretchEnabled(true, 0);
   unsubView = new QListView(page);
   unsubView->addColumn(i18n("Unsubscribe From"));
+  unsubView->header()->setStretchEnabled(true, 0);
 
   QVBoxLayout *protL = new QVBoxLayout(3);
   listL->addLayout(protL, 1,2);
