@@ -58,7 +58,7 @@ void FilterPlain::import(FilterInfo *info)
       info->setFrom(*mailFile);
       info->setTo(dir.dirName());
       info->setCurrent(0);
-      if( ! addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile)) ) info->addLog( i18n("Couldn't import %1").arg( *mailFile ) );
+      if( ! addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile)) ) info->addLog( i18n("Could not import %1").arg( *mailFile ) );
       info->setCurrent(100);
       info->setOverall(100 * ++currentFile/ totalFiles);
       if ( info->shouldTerminate() ) return;
