@@ -1540,7 +1540,7 @@ KNConfig::ScoringWidget::ScoringWidget(Scoring *d, QWidget *p, const char *n)
   : BaseWidget(p,n), d_ata(d)
 {
   QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
-  ksc = new KScoringEditorWidget(knGlobals.scoreManager,this);
+  ksc = new KScoringEditorWidget(knGlobals.scoringManager(), this);
   topL->addMultiCellWidget(ksc, 0,0, 0,1);
 
   topL->addRowSpacing(1, 10);

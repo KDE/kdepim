@@ -100,10 +100,10 @@ bool KNFolderManager::loadHeaders(KNFolder *f)
     return true;
 
   // we want to delete old stuff first => reduce vm fragmentation
-  knGlobals.memManager->prepareLoad(f);
+  knGlobals.memoryManager()->prepareLoad(f);
 
   if (f->loadHdrs()) {
-    knGlobals.memManager->updateCacheEntry( f );
+    knGlobals.memoryManager()->updateCacheEntry( f );
     return true;
   }
 
@@ -120,7 +120,7 @@ bool KNFolderManager::unloadHeaders(KNFolder *f, bool force)
     return false;
 
   if (f->unloadHdrs(force))
-    knGlobals.memManager->removeCacheEntry(f);
+    knGlobals.memoryManager()->removeCacheEntry(f);
   else
     return false;
 
@@ -193,7 +193,7 @@ void KNFolderManager::emptyFolder(KNFolder *f)
 {
   if(!f || f->isRootFolder())
     return;
-  knGlobals.memManager->removeCacheEntry(f);
+  knGlobals.memoryManager()->removeCacheEntry(f);
   f->deleteAll();
 }
 

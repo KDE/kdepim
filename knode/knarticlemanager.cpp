@@ -446,7 +446,7 @@ bool KNArticleManager::loadArticle(KNArticle *a)
   else { // local article
     KNFolder *f=static_cast<KNFolder*>(a->collection());
    if( f && f->loadArticle( static_cast<KNLocalArticle*>(a) ) )
-      knGlobals.memManager->updateCacheEntry(a);
+      knGlobals.memoryManager()->updateCacheEntry(a);
     else
       return false;
   }
@@ -480,7 +480,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
     knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
   a->KMime::Content::clear();
   a->updateListItem();
-  knGlobals.memManager->removeCacheEntry(a);
+  knGlobals.memoryManager()->removeCacheEntry(a);
 
   return true;
 }
@@ -526,7 +526,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
     } else {
       for(KNLocalArticle *a=l2.first(); a; a=l2.next())
         a->KMime::Content::clear(); // no need to keep them in memory
-      knGlobals.memManager->updateCacheEntry(f);
+      knGlobals.memoryManager()->updateCacheEntry(f);
     }
 
     f->setNotUnloadable(false);
@@ -547,8 +547,8 @@ void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
 
   if(f->saveArticles(&l)) {
     for(KNLocalArticle *a=l.first(); a; a=l.next())
-      knGlobals.memManager->updateCacheEntry( a );
-    knGlobals.memManager->updateCacheEntry(f);
+      knGlobals.memoryManager()->updateCacheEntry( a );
+    knGlobals.memoryManager()->updateCacheEntry(f);
   } else {
     for(KNLocalArticle *a=l.first(); a; a=l.next())
       if(a->isOrphant())
@@ -578,12 +578,12 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
   }
 
   for(KNLocalArticle *a=l.first(); a; a=l.next())
-    knGlobals.memManager->removeCacheEntry(a);
+    knGlobals.memoryManager()->removeCacheEntry(a);
 
   KNFolder *f=static_cast<KNFolder*>(l.first()->collection());
   if(f) {
     f->removeArticles(&l, true);
-    knGlobals.memManager->updateCacheEntry( f );
+    knGlobals.memoryManager()->updateCacheEntry( f );
   }
   else {
     for(KNLocalArticle *a=l.first(); a; a=l.next())
@@ -880,7 +880,7 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
 
   if (a) {
     KNGroup *g=static_cast<KNGroup*>(a->collection());
-    KScoringManager *sm = knGlobals.scoreManager;
+    KScoringManager *sm = knGlobals.scoringManager();
     sm->initCache(g->groupname());
 
     for(; a; a=l.next()) {
@@ -907,7 +907,7 @@ void KNArticleManager::processJob(KNJobData *j)
       KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
       KNArticleWidget::articleChanged(a);
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
-        knGlobals.memManager->updateCacheEntry(a);
+        knGlobals.memoryManager()->updateCacheEntry(a);
       if(a->listItem())
         a->updateListItem();
     }

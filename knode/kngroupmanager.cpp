@@ -308,10 +308,10 @@ bool KNGroupManager::loadHeaders(KNGroup *g)
     return true;
 
   // we want to delete old stuff first => reduce vm fragmentation
-  knGlobals.memManager->prepareLoad(g);
+  knGlobals.memoryManager()->prepareLoad(g);
 
   if (g->loadHdrs()) {
-    knGlobals.memManager->updateCacheEntry( g );
+    knGlobals.memoryManager()->updateCacheEntry( g );
     return true;
   }
 
@@ -331,7 +331,7 @@ bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
     return false;
 
   if (g->unloadHdrs(force))
-    knGlobals.memManager->removeCacheEntry(g);
+    knGlobals.memoryManager()->removeCacheEntry(g);
   else
     return false;
 
@@ -629,7 +629,7 @@ void KNGroupManager::processJob(KNJobData *j)
           group->processXPostBuffer(true);
           emit groupUpdated(group);
           group->saveInfo();
-          knGlobals.memManager->updateCacheEntry(group);
+          knGlobals.memoryManager()->updateCacheEntry(group);
         }
       } else {
         // ok, hack (?):

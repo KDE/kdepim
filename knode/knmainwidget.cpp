@@ -247,14 +247,12 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   knGlobals.artFactory=a_rtFactory;
 
   // Score Manager
-  s_coreManager = new KNScoringManager();
-  knGlobals.scoreManager = s_coreManager;
+  s_coreManager = knGlobals.scoringManager();
   //connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotReScore()));
   connect(s_coreManager, SIGNAL(finishedEditing()), SLOT(slotReScore()));
 
   // Memory Manager
-  m_emManager = new KNMemoryManager();
-  knGlobals.memManager = m_emManager;
+  m_emManager = knGlobals.memoryManager();
 
   // create a global pgp instance
   p_gp = new Kpgp::Module();

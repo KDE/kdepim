@@ -2,7 +2,7 @@
     knglobals.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 #include "knarticlemanager.h"
 #include "knfiltermanager.h"
 #include "knfoldermanager.h"
+#include "knscoring.h"
+#include "knmemorymanager.h"
 
 KConfig* KNGlobals::config()
 {
@@ -66,4 +68,18 @@ KNFolderManager* KNGlobals::folderManager()
   if(!mFolManager)
     mFolManager = new KNFolderManager(articleManager());
   return mFolManager;
+}
+
+KNScoringManager* KNGlobals::scoringManager()
+{
+  if (!mScoreManager)
+    mScoreManager = new KNScoringManager();
+  return mScoreManager;
+}
+
+KNMemoryManager* KNGlobals::memoryManager()
+{
+  if(!mMemManager)
+    mMemManager = new KNMemoryManager();
+  return mMemManager;
 }

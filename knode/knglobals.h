@@ -2,7 +2,7 @@
     knglobals.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -56,8 +56,6 @@ class KNGlobals {
     KNNetAccess           *netAccess;
     KNProgress            *progressBar;
     KNArticleFactory      *artFactory;
-    KNScoringManager      *scoreManager;
-    KNMemoryManager       *memManager;
     Kpgp::Module          *pgp;
     KConfig               *config();
     KInstance             *instance;
@@ -67,6 +65,8 @@ class KNGlobals {
     KNArticleManager      *articleManager();
     KNFilterManager       *filterManager();
     KNFolderManager       *folderManager();
+    KNScoringManager      *scoringManager();
+    KNMemoryManager       *memoryManager();
 
 private:
     KSharedConfig::Ptr c_onfig;
@@ -76,6 +76,8 @@ private:
     KNArticleManager      *mArtManager;
     KNFilterManager       *mFilManager;
     KNFolderManager       *mFolManager;
+    KNScoringManager      *mScoreManager;
+    KNMemoryManager       *mMemManager;
 };
 
 

@@ -849,7 +849,7 @@ void KNGroup::scoreArticles(bool onlynew)
     knGlobals.top->setStatusMsg(i18n(" Scoring..."));
 
     int defScore;
-    KScoringManager *sm = knGlobals.scoreManager;
+    KScoringManager *sm = knGlobals.scoringManager();
     sm->initCache(groupname());
     for(int idx=0; idx<todo; idx++) {
       KNRemoteArticle *a = at(len-idx-1);
