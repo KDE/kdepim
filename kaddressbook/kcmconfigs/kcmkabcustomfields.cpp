@@ -318,16 +318,21 @@ void KCMKabCustomFields::initGUI()
   hbox->addStretch( 1 );
 
   mDeleteButton = new QPushButton( i18n( "Delete Page" ), this);
+  mDeleteButton->setEnabled( false );
   hbox->addWidget( mDeleteButton );
   mImportButton = new QPushButton( i18n( "Import Page" ), this);
   hbox->addWidget( mImportButton );
   mDesignerButton = new QPushButton( i18n( "Edit with Qt Designer..." ), this );
   hbox->addWidget( mDesignerButton );
-  if ( noDesigner ) mDesignerButton->setEnabled( false );
+
+  if ( noDesigner )
+    mDesignerButton->setEnabled( false );
 }
 
 void KCMKabCustomFields::updatePreview( QListViewItem *item )
 {
+  bool widgetItemSelected = false;
+
   if ( item ) {
     if ( item->parent() ) {
       QString details = QString( "<qt><table>"
@@ -354,13 +359,18 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
 
       PageItem *pageItem = static_cast<PageItem*>( item );
       mPagePreview->setPixmap( pageItem->preview() );
+
+      widgetItemSelected = true;
     }
+
     mPagePreview->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   } else {
     mPagePreview->setPixmap( QPixmap() );
     mPagePreview->setFrameStyle( 0 );
     mPageDetails->setText( QString::null );
   }
+
+  mDeleteButton->setEnabled( widgetItemSelected );
 }
 
 void KCMKabCustomFields::itemClicked( QListViewItem *item )
