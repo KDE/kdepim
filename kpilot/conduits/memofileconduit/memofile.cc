@@ -100,7 +100,7 @@ bool Memofile::load()
 		DEBUGCONDUIT << fname
 		<< ": text of your memofile: [" << filename()
  		<< "] didn't include the filename as the first line.  fixing it..." << endl;
-#endif		
+#endif
 		text = title + CSL1("\n") + body;
 	}
 	setText( text );
@@ -183,6 +183,7 @@ bool Memofile::saveFile()
 
 bool Memofile::isModified(void)
 {
+	FUNCTIONSETUP;
 	// first, check to see if this file is deleted....
 	if (!fileExists()) {
 #ifdef DEBUG
@@ -190,7 +191,7 @@ bool Memofile::isModified(void)
 #endif
 		return true;
 	}
-	
+
 	bool modByTimestamp = false;
 	bool modBySize = false;
 
@@ -215,6 +216,7 @@ bool Memofile::isModified(void)
 
 bool Memofile::isModifiedByTimestamp()
 {
+	FUNCTIONSETUP;
 
 	if (_lastModified <=0) {
 #ifdef DEBUG
@@ -239,6 +241,7 @@ bool Memofile::isModifiedByTimestamp()
 
 bool Memofile::isModifiedBySize()
 {
+	FUNCTIONSETUP;
 
 	if (_size <=0) {
 #ifdef DEBUG

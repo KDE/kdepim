@@ -678,6 +678,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	PilotAddress *palmAddr)
 {
 #ifdef DEBUG
+	FUNCTIONSETUP;
 	DEBUGCONDUIT << "abEntry:" << endl;
 	showAddressee(pcAddr);
 	DEBUGCONDUIT << "pilotAddress:" << endl;

@@ -102,7 +102,7 @@ CheckUser::~CheckUser()
 				i18n("A common name", "John Doe");
 
 			QString q = i18n("<qt>Neither KPilot nor the "
-				"Pilot have a username set. "
+				"handheld have a username set. "
 				"They <i>should</i> be set. "
 				"Should KPilot set them to a default value "
 				"(<i>%1</i>)?</qt>").arg(defaultUserName);
@@ -120,7 +120,7 @@ CheckUser::~CheckUser()
 		}
 		else
 		{
-			QString q = i18n("<qt>The Pilot has a username set "
+			QString q = i18n("<qt>The handheld has a username set "
 				"(<i>%1</i>) but KPilot does not. Should "
 				"KPilot use this username in future?").
 				arg(pilotUserName);
@@ -138,9 +138,9 @@ CheckUser::~CheckUser()
 		if (pilotUserEmpty)
 		{
 			QString q = i18n("<qt>KPilot has a username set "
-				"(<i>%1</i>) but the Pilot does not. "
+				"(<i>%1</i>) but the handheld does not. "
 				"Should KPilot's username be set in the "
-				"Pilot as well?").arg(guiUserName);
+				"handheld as well?").arg(guiUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */) ==
 				KMessageBox::Yes)
@@ -282,7 +282,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	{
 		emit logError(i18n("Restore <i>not</i> performed."));
 
-		addSyncLogEntry(i18n("Canceled by user.") + CSL1(" ") + 
+		addSyncLogEntry(i18n("Canceled by user.") + CSL1(" ") +
 			i18n("Restore not performed."));
 		emit syncDone(this);
 
@@ -431,7 +431,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	char * fileName = qstrdup( dbi->path.utf8() );
 	pi_file *f  = pi_file_open( fileName );
 	delete fileName;
-	
+
 	if (!f)
 	{
 		kdWarning() << k_funcinfo

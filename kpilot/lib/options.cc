@@ -122,3 +122,22 @@ struct tm writeTm(const QDate &dt)
 }
 
 
+KPilotDepthCount::KPilotDepthCount() :
+	fDepth(depth)
+{
+	depth++;
+}
+
+KPilotDepthCount::~KPilotDepthCount()
+{
+	depth--;
+}
+
+QString KPilotDepthCount::string() const
+{
+	QString s;
+	s.fill(' ',fDepth);
+	return s+s;
+}
+
+int KPilotDepthCount::depth = 0;

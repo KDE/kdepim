@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
+Comment=Send mail from your handheld through KMail.
 Name=Mail
 Name[be]=Пошта
 Name[br]=Lizher

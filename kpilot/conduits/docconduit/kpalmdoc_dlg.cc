@@ -143,6 +143,7 @@ void ConverterDlg::slotClose()
 
 void ConverterDlg::slotToText()
 {
+	FUNCTIONSETUP;
 	// First, get the settings from the controls and initialize
 	// the converter object
 	int bmks=dlg->fPCBookmarks->id(dlg->fPCBookmarks->selected());
@@ -288,6 +289,7 @@ void ConverterDlg::slotToText()
 
 void ConverterDlg::slotToPDB()
 {
+	FUNCTIONSETUP;
 	// First, get the settings from the controls and initialize
 	// the converter object
 	bool compress=dlg->fCompress->isChecked();
@@ -426,6 +428,7 @@ void ConverterDlg::slotUser1()
 
 void ConverterDlg::slotDirectories(bool dir)
 {
+	FUNCTIONSETUP;
 	DEBUGCONDUIT<<"Slot Directories: "<<dir<<endl;
 	if (dir)
 	{
@@ -444,6 +447,7 @@ void ConverterDlg::slotDirectories(bool dir)
 bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 		QString pdbdir, QString pdbfile, DOCConverter*conv)
 {
+	FUNCTIONSETUP;
 	bool res=false;
 	QFileInfo dbfileinfo(pdbdir, pdbfile);
 	DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
@@ -488,6 +492,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 		QString txtdir, QString txtfile, DOCConverter*conv)
 {
+	FUNCTIONSETUP;
 	bool res=false;
 	QFileInfo txtfileinfo(txtdir, txtfile);
 	DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;

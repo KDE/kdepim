@@ -1,6 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-12-07  Adriaan de Groot
+* Tried to make conduit descriptions more consistent. Remember: "handheld",
+  not "Pilot". Removed ugly const_cast. Added depth indication to the
+  call trace -- this is a pretty big change, it makes the output from
+  kpilot with --debug 1 more tree-ish, so it's easier to see what is being
+  called from where.
+
 2004-12-06  Adriaan de Groot
 * Imported memofile from vanRijn.
 

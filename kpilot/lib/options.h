@@ -41,8 +41,8 @@
 
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)
-// #define DEBUG			(1)
-// #define DEBUG_CERR			(1)
+#define DEBUG			(1)
+#define DEBUG_CERR			(1)
 
 #include "config.h"
 #include <unistd.h>     /* For size_t for pilot-link */
@@ -112,20 +112,20 @@ using namespace std;
 // For ostream
 #include <iostream>
 #define DEBUGSTREAM	std::ostream
-#define DEBUGKPILOT	std::cerr
-#define DEBUGDAEMON	std::cerr
-#define DEBUGCONDUIT	std::cerr
-#define DEBUGDB		std::cerr
+#define DEBUGKPILOT	std::cerr << fname_.string()
+#define DEBUGDAEMON	std::cerr << fname_.string()
+#define DEBUGCONDUIT	std::cerr << fname_.string()
+#define DEBUGDB		std::cerr << fname_.string()
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s) { if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
 inline std::ostream& operator <<(std::ostream &o, const QCString &s) { if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
 
 #else
 #define DEBUGSTREAM	kdbgstream
-#define DEBUGKPILOT	kdDebug(KPILOT_AREA)
-#define DEBUGDAEMON	kdDebug(DAEMON_AREA)
-#define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
-#define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
+#define DEBUGKPILOT	kdDebug(KPILOT_AREA) << fname_.string()
+#define DEBUGDAEMON	kdDebug(DAEMON_AREA) << fname_.string()
+#define DEBUGCONDUIT	kdDebug(CONDUIT_AREA) << fname_.string()
+#define DEBUGDB         kdDebug(LIBPILOTDB_AREA) << fname_.string()
 #endif
 
 #define KPILOT_VERSION	"4.4.7 (baby)"
@@ -155,18 +155,21 @@ QString rtExpand(const QString &s, bool richText=true);
 // which outputs function and line information on every call.
 //
 //
+class KPilotDepthCount { public: KPilotDepthCount(); ~KPilotDepthCount(); QString string() const; static int depth; protected: int fDepth; } ;
+
 #ifdef __GNUC__
-#define KPILOT_FNAMEDEF	static const char *fname=__FUNCTION__
-#define KPILOT_LOCNDEF __FILE__ << ":" << __LINE__
+#define KPILOT_FNAMEDEF	KPilotDepthCount fname_; static const char *fname=__FUNCTION__
+// #define KPILOT_LOCNDEF __FILE__ << ":" << __LINE__
+#define KPILOT_LOCNDEF ""
 #else
-#define	KPILOT_FNAMEDEF	static const char *fname=__FILE__ ":" "__LINE__"
+#define	KPILOT_FNAMEDEF	KPilotDepthCount fname_; static const char *fname=__FILE__ ":" "__LINE__"
 #define KPILOT_LOCNDEF	""
 #endif
 
 #define FUNCTIONSETUP	KPILOT_FNAMEDEF; \
-			if (debug_level) { DEBUGFUNC << KPILOT_LOCNDEF << ":" << fname << endl; }
+			if (debug_level) { DEBUGFUNC << fname_.string() << KPILOT_LOCNDEF << ":" << fname << endl; }
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF; \
-				if (debug_level>l) { DEBUGFUNC << KPILOT_LOCNDEF << fname << endl; }
+				if (debug_level>l) { DEBUGFUNC << fname_.string() << KPILOT_LOCNDEF << fname << endl; }
 
 
 #else

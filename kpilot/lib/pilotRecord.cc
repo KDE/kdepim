@@ -71,7 +71,8 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	fLen(len),
 	fAttrib(attrib),
 	fCat(cat),
-	fID(uid)
+	fID(uid),
+	fBuffer(0L)
 {
 	FUNCTIONSETUP;
 	fData = new char[len];
@@ -82,7 +83,8 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	(void) pilotRecord_id;
 }
 
-PilotRecord::PilotRecord(PilotRecord * orig)
+PilotRecord::PilotRecord(PilotRecord * orig) :
+	fBuffer(0L)
 {
 	FUNCTIONSETUP;
 	fData = new char[orig->getLen()];
@@ -99,6 +101,17 @@ PilotRecord::PilotRecord(PilotRecord * orig)
 PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 {
 	FUNCTIONSETUP;
+	if (fBuffer)
+	{
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+		kdWarning() << kde_funcinfo << ": Uninitialized pi_buffer" << endl;
+#else
+		pi_buffer_free(fBuffer);
+		fBuffer=0L;
+		fData=0L;
+#endif
+	}
+
 	if (fData)
 		delete[]fData;
 	fData = new char[orig.getLen()];

@@ -466,6 +466,7 @@ void ConduitConfigWidget::fillLists()
 static void dumpConduitInfo(const KLibrary *lib)
 {
 #ifdef DEBUG
+	FUNCTIONSETUP;
 	DEBUGKPILOT << "Plugin version = " << PluginUtility::pluginVersion(lib) << endl;
 	DEBUGKPILOT << "Plugin id      = " << PluginUtility::pluginVersionString(lib) << endl;
 #endif

@@ -109,6 +109,7 @@ private:
 	inline void showList() const
 	{
 #ifdef DEBUG
+		FUNCTIONSETUP;
 		DEBUGDAEMON << "Bound devices: "
 			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(", ") : CSL1("<none>")) << endl;
 #endif

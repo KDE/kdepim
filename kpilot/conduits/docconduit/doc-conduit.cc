@@ -151,6 +151,7 @@ void DOCConduit::readConfig()
 
 bool DOCConduit::pcTextChanged(QString txtfn)
 {
+	FUNCTIONSETUP;
 	// How do I find out if a text file has changed shince we last synced it??
 	// Use KMD5 for now. If I realize it is too slow, then I have to go back to comparing modification times
 	// if there is no config setting yet, assume the file has been changed. the md5 sum will be written to the config file after the sync.
@@ -184,6 +185,7 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 
 bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 {
+	FUNCTIONSETUP;
 	if (!docdb) return false;
 
 	PilotRecord *firstRec = docdb->readRecordByIndex(0);
@@ -282,7 +284,9 @@ QString DOCConduit::constructTXTFileName(QString name) {
 
 
 
-bool DOCConduit::doSync(docSyncInfo &sinfo) {
+bool DOCConduit::doSync(docSyncInfo &sinfo)
+{
+	FUNCTIONSETUP;
 	bool res=false;
 
 	if (sinfo.direction==eSyncDelete) {

@@ -124,6 +124,7 @@ PilotLocalDatabase::~PilotLocalDatabase()
 	delete[]fAppInfo;
 	for (i = 0; i < fNumRecords; i++)
 	{
+		DEBUGCONDUIT << fname << ": Deleting record " << i << endl;
 		delete fRecords[i];
 	}
 }
@@ -732,12 +733,15 @@ void PilotLocalDatabase::closeDatabase()
 	QCString tempName = QFile::encodeName(tempName_);
 	QCString newName = QFile::encodeName(newName_);
 
-	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
-		&fDBInfo);
+	char *buf = new char[newName.length()+2];
+	strncpy(buf,newName.data(),newName.length());
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Created temp file "<<newName<<" for the database file "<<dbPathName()<<endl;
+	DEBUGCONDUIT << fname
+		<< ": Creating temp file " << buf
+		<< " for the database file " << dbPathName() << endl;
 #endif
 
+	dbFile = pi_file_create(buf,&fDBInfo);
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)
 	{
@@ -756,6 +760,7 @@ void PilotLocalDatabase::closeDatabase()
 	}
 
 	pi_file_close(dbFile);
+	delete[] buf;
 	unlink((const char *) QFile::encodeName(tempName));
 	rename((const char *) QFile::encodeName(newName),
 		(const char *) QFile::encodeName(tempName));
