@@ -32,6 +32,7 @@
 */
 
 #include "resourcekolab.h"
+#include "note.h"
 
 #include <knotes/resourcemanager.h>
 
@@ -65,9 +66,11 @@ extern "C"
   }
 }
 
+static QString configGroupName = "Note";
+static QString kmailResourceType = "Kolab/Note";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
-  : ResourceNotes( config ), ResourceKolabBase( "ResourceIMAP-KNotes" )
+  : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" )
 {
 }
 
@@ -78,12 +81,14 @@ ResourceKolab::~ResourceKolab()
 bool ResourceKolab::doOpen()
 {
   KConfig config( configFile() );
+  config.setGroup( configGroupName );
 
-  // Read the calendar entries
+  // Get the list of Notes folders from KMail
   QMap<QString, bool> resources;
-  if ( !kmailSubresources( resources, "Kolab/Note" ) )
+  if ( !kmailSubresources( resources, kmailResourceType ) )
     return false;
-  config.setGroup( "Note" );
+
+  // Make the resource map from the folder list
   QMap<QString, bool>::ConstIterator it;
   mResources.clear();
   for ( it = resources.begin(); it != resources.end(); ++it ) {
@@ -99,7 +104,7 @@ bool ResourceKolab::doOpen()
 void ResourceKolab::doClose()
 {
   KConfig config( configFile() );
-  config.setGroup( "Note" );
+  config.setGroup( configGroupName );
   Kolab::ResourceMap::ConstIterator it;
   for ( it = mResources.begin(); it != mResources.end(); ++it )
     config.writeEntry( it.key(), it.data().active() );
@@ -109,20 +114,18 @@ bool ResourceKolab::loadResource( const QString& resource )
 {
   // Get the list of journals
   QMap<Q_UINT32, QString> lst;
-  if( !kmailIncidences( lst, "Kolab/Note", resource ) ) {
+  if( !kmailIncidences( lst, kmailResourceType, resource ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
     return false;
   }
 
-  // Populate the calendar with the new entries
+  // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
   QMap<Q_UINT32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = parseJournal( *it );
-    if( journal )
-      addNote( journal, resource );
+    addNote( it.data(), resource, it.key() );
   }
   mSilent = silent;
 
@@ -155,34 +158,46 @@ bool ResourceKolab::save()
 
 bool ResourceKolab::addNote( KCal::Journal* journal )
 {
-  return addNote( journal, QString::null );
+  return addNote( journal, QString::null, 0 );
+}
+
+bool ResourceKolab::addNote( const QString xml, const QString& subresource,
+                             Q_UINT32 sernum )
+{
+  KCal::Journal* journal = Note::xmlToJournal( xml );
+  if( journal && !mUidMap.contains( journal->uid() ) )
+    return addNote( journal, subresource, sernum );
+
+  // Register in the UID map
+  mUidMap[ journal->uid() ] = StorageReference( subresource, sernum );
+  return true;
 }
 
 bool ResourceKolab::addNote( KCal::Journal* journal,
-                             const QString& subresource )
+                             const QString& subresource, Q_UINT32 sernum )
 {
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal* )\n";
+
+  // Find out if this note was previously stored in KMail
+  bool newNote = subresource.isEmpty();
 
   mCalendar.addJournal( journal );
   manager()->registerNote( this, journal );
   journal->registerObserver( this );
 
-  QString resource = subresource;
-  if ( subresource.isEmpty() )
-    resource = findWritableResource( mResources );
+  QString resource =
+    newNote ? findWritableResource( mResources ) : subresource;
 
-  if ( mSilent ) return true;
+  if ( !mSilent ) {
+    QString xml = Note::journalToXML( journal );
 
-#if 0
-  // TODO: Enable saving
-  KCal::ICalFormat format;
-  QString note = format.toICalString( journal );
-  if( !kmailAddIncidence( "Kolab/Note", resource, journal->uid(), note ) ) {
-    kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
-    return false;
+    if( !kmailUpdate( resource, sernum, xml ) ) {
+      kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
+      return false;
+    }
   }
+
   mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
-#endif
 
   return true;
 }
@@ -227,7 +242,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 
   const bool silent = mSilent;
   mSilent = true;
-  addNote( journal, resource );
+  addNote( journal, resource, sernum );
   mSilent = silent;
 
   return true;
