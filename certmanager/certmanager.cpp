@@ -283,8 +283,10 @@ void CertManager::slotStartCertificateListing()
 	   this, SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
 
   const GpgME::Error err = job->start( query );
-  if ( err )
+  if ( err ) {
     showKeyListError( this, err );
+    return;
+  }
 
   mProgressBar->setProgress( 0, 0 ); // enable busy indicator
 }
