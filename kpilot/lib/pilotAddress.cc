@@ -137,6 +137,111 @@ PilotAddress::~PilotAddress()
 	free_Address(&fAddressInfo);
 }
 
+QString PilotAddress::getTextRepresentation(bool richText)
+{
+	QString text, tmp;
+
+	QString par = richText?CSL1("<p>"):CSL1("");
+	QString ps = richText?CSL1("</p>"):CSL1("\n");
+	QString br = richText?CSL1("<br/>"):CSL1("\n");
+
+	// title + name
+	text += par;
+	if (!getField(entryTitle).isEmpty())
+	{
+		text += getField(entryTitle);
+		text += CSL1(" ");
+	}
+
+	tmp = richText?CSL1("<b><big>%1%2%3</big></b>"):CSL1("%1%2%3");
+	if (!getField(entryFirstname).isEmpty())
+		tmp=tmp.arg(getField(entryFirstname)).arg(CSL1(" "));
+	else
+		tmp=tmp.arg(CSL1(" ")).arg(CSL1(" "));
+	tmp=tmp.arg(getField(entryLastname));
+	text += tmp;
+	text += ps;
+
+	// company
+	if (!getField(entryCompany).isEmpty())
+	{
+		text += par;
+		text += getField(entryCompany);
+		text += ps;
+	}
+
+	// phone numbers (+ labels)
+	text += par;
+	for (int i = entryPhone1; i <= entryPhone5; i++)
+		if (!getField(i).isEmpty())
+		{
+			if (richText)
+			{
+				if (getShownPhone() == i - entryPhone1)
+					tmp=CSL1("<small>%1: </small><b>%2</b>");
+				else
+					tmp=CSL1("<small>%1: </small>%2");
+			}
+			else
+				tmp=CSL1("%1: %2");
+			tmp=tmp.arg(PilotAppCategory::codec()->toUnicode(
+				fAppInfo.phoneLabels[getPhoneLabelIndex(i-entryPhone1)]));
+			tmp=tmp.arg(getField(i));
+			text += tmp;
+			text += br;
+		}
+	text += ps;
+
+	// address, city, state, country
+	text += par;
+	if (!getField(entryAddress).isEmpty())
+	{
+		text += getField(entryAddress);
+		text += br;
+	}
+	if (!getField(entryCity).isEmpty())
+	{
+		text += getField(entryCity);
+		text += CSL1(" ");
+	}
+	if (!getField(entryState).isEmpty())
+	{
+		text += getField(entryState);
+		text += CSL1(" ");
+	}
+	if (!getField(entryZip).isEmpty())
+	{
+		text += getField(entryZip);
+	}
+	text += br;
+	if (!getField(entryCountry).isEmpty())
+	{
+		text += getField(entryCountry);
+		text += br;
+	}
+	text += ps;
+
+	// custom fields
+	text += par;
+	for (int i = entryCustom1; i <= entryCustom4; i++)
+		if (!getField(i).isEmpty())
+		{
+			text += getField(i);
+			text += br;
+		}
+	text += ps;
+
+	// note
+	if (!getField(entryNote).isEmpty())
+	{
+		text += richText?CSL1("<hr/>"):CSL1("-----------------------------\n");
+		text += par;
+		text += getField(entryNote);
+		text += ps;
+	}
+	return text;
+}
+
 bool PilotAddress::setCategory(const QString &label)
 {
 	FUNCTIONSETUPL(4);

@@ -30,6 +30,10 @@
 
 #include <qtimer.h>
 #include <kmessagebox.h>
+#include <kdialog.h>
+#include <qlayout.h>
+#include <qlabel.h>
+#include <ktextedit.h>
 
 #include <pilotRecord.h>
 #include <pilotLocalDatabase.h>
@@ -37,6 +41,14 @@
 #include <pilotSerialDatabase.h>
 #include "kpilotConfig.h"
 #include "internalEditorAction.h"
+
+#include <pilotAddress.h>
+#include <pilotMemo.h>
+#include <pilotDateEntry.h>
+#include <pilotTodoEntry.h>
+#include "ownkhexedit.h"
+
+using namespace KHE;
 
 InternalEditorAction::InternalEditorAction(KPilotDeviceLink * p, int mode) :
 	SyncAction(p, "internalSync")
@@ -102,23 +114,14 @@ void InternalEditorAction::syncDirtyDB()
 			PilotRecord*serrec=serialDB->readRecordById(id);
 			if (serrec && (serrec->getAttrib() & dlpRecAttrDirty))
 			{
-				// TODO: Treat the special databases different (i.e. for
-				// Addresses, Todos, Events and notes display the contents
-				// of the record.
-				int res=KMessageBox::questionYesNo(0L, i18n("The record with ID %1 of the database \"%2\" was changed on the handheld and in the internal editor. Which version is the current one?").arg(id).arg(*dbIter), i18n("Conflict in %1").arg(*dbIter), i18n("&Internal Editor"), i18n("&Handheld"));
-				if (res==KMessageBox::Ok)
-				{
+				bool kpilotOverrides=queryUseKPilotChanges(*dbIter, id, rec, serrec, localDB);
+				if (kpilotOverrides)
 					serialDB->writeRecord(rec);
-				}
 				else
-				{
 					localDB->writeRecord(serrec);
-				}
 			}
 			else
-			{
 				serialDB->writeRecord(rec);
-			}
 		}
 		else
 		{
@@ -145,6 +148,129 @@ nextDB:
 	KPILOT_DELETE(serialDB);
 	QTimer::singleShot(0, this, SLOT(syncDirtyDB()));
 }
+
+bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, PilotRecord*localrec, PilotRecord*serialrec, PilotDatabase*db)
+{
+	FUNCTIONSETUP;
+	bool knownDB=true;
+	QString localEntry, serialEntry, recType(i18n("record"));
+
+
+	if (dbName=="AddressDB" && db)
+	{
+		struct AddressAppInfo fAppInfo;
+		unsigned char *buffer = new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
+		int appLen = db->readAppBlock(buffer, PilotTodoEntry::APP_BUFFER_SIZE);
+		unpack_AddressAppInfo(&fAppInfo, buffer, appLen);
+		delete[] buffer;
+
+		PilotAddress localAddr(fAppInfo, localrec);
+		PilotAddress serialAddr(fAppInfo, serialrec);
+		localEntry=localAddr.getTextRepresentation(true);
+		serialEntry=serialAddr.getTextRepresentation(true);
+		recType=i18n("address");
+	}
+	else
+	if (dbName=="ToDoDB" && db)
+	{
+		struct ToDoAppInfo fAppInfo;
+		unsigned char *buffer = new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
+		int appLen = db->readAppBlock(buffer, PilotTodoEntry::APP_BUFFER_SIZE);
+		unpack_ToDoAppInfo(&fAppInfo, buffer, appLen);
+		delete[] buffer;
+
+		PilotTodoEntry localTodo(fAppInfo, localrec);
+		PilotTodoEntry serialTodo(fAppInfo, serialrec);
+		localEntry=localTodo.getTextRepresentation(true);
+		serialEntry=serialTodo.getTextRepresentation(true);
+		recType=i18n("todo entry");
+	}
+	else
+	if (dbName=="MemoDB")
+	{
+		PilotMemo localMemo(localrec);
+		PilotMemo serialMemo(serialrec);
+		localEntry=localMemo.getTextRepresentation(true);
+		serialEntry=serialMemo.getTextRepresentation(true);
+		recType=i18n("memo");
+	}
+	else
+	if (dbName=="DatebookDB")
+	{
+		PilotDateEntry localEvent(localrec);
+		PilotDateEntry serialEvent(serialrec);
+		localEntry=localEvent.getTextRepresentation(true);
+		serialEntry=serialEvent.getTextRepresentation(true);
+		recType=i18n("calendar entry");
+	}
+	else
+		knownDB=false;
+
+	QString dialogText(i18n("The %1 with ID %2 of the database \"%3\" was changed "
+		"on the handheld and in the internal editor. Shall the changes in KPilot be copied to the handheld, and so override the changes there?").
+		arg(recType).arg(id).arg(dbName));
+
+	KDialogBase*resdlg=new KDialogBase(0L, "internalresolutiondialog", true,
+		i18n("Conflict in database  %1").arg(*dbIter),
+		KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok, true,
+		i18n("Use KPilot"), i18n("Use Handheld") );
+	resdlg->setButtonText(KDialogBase::Ok,  i18n("Use &KPilot"));
+	resdlg->setButtonText(KDialogBase::Cancel, i18n("Use &Handheld"));
+
+	QWidget*page=new QWidget(resdlg);
+	resdlg->setMainWidget(page);
+	QGridLayout*layout = new QGridLayout( page, 1, 1);
+
+	QLabel *label=new QLabel(dialogText, page);
+	label->setAlignment( QLabel::WordBreak );
+	layout->addMultiCellWidget( label,  0,0, 0,1 );
+
+ 	layout->addItem( new QSpacerItem( 20, 10, QSizePolicy::Minimum,
+		QSizePolicy::Fixed ), 1, 0 );
+
+	KHE::KWrappingROBuffer*localbuf=0L, *serialbuf=0L;
+
+	if (knownDB)
+	{
+		label=new QLabel(i18n("Entry in KPilot"), page);
+		layout->addWidget( label, 2,0);
+
+		KTextEdit*textBrowser = new KTextEdit("<qt>"+localEntry+"</qt>", QString::null, page);
+		textBrowser->setReadOnly(true);
+		layout->addWidget( textBrowser, 3,0);
+
+		label=new QLabel(i18n("Entry on Handheld"), page);
+		layout->addWidget( label, 2,1);
+
+		textBrowser = new KTextEdit("<qt>"+serialEntry+"</qt>", QString::null, page);
+		textBrowser->setReadOnly(true);
+		layout->addWidget( textBrowser, 3,1);
+	}
+	else
+	{
+		label=new QLabel(i18n("Entry in KPilot"), page);
+		layout->addMultiCellWidget( label, 2,2,0,1);
+
+		localbuf=new KWrappingROBuffer(localrec->getData(), localrec->getLen());
+		KHexEdit*hexEdit = new KHE::KHexEdit( localbuf, page );
+		layout->addMultiCellWidget( hexEdit, 3,3,0,1);
+
+		label=new QLabel(i18n("Entry on Handheld"), page);
+		layout->addMultiCellWidget( label, 4,4,0,1);
+
+		serialbuf=new KWrappingROBuffer(serialrec->getData(), serialrec->getLen());
+		hexEdit = new KHE::KHexEdit( serialbuf, page );
+		layout->addMultiCellWidget( hexEdit, 5,5,0,1);
+	}
+
+	int res=resdlg->exec();
+	KPILOT_DELETE(localbuf);
+	KPILOT_DELETE(serialbuf);
+	KPILOT_DELETE(resdlg);
+
+	return res==KDialogBase::Accepted;
+}
+
 
 void InternalEditorAction::syncFlagsChangedDB()
 {

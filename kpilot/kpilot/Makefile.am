@@ -14,7 +14,6 @@
 # KHEX_LIB = -lkhexedit
 # KDE_CXXFLAGS = -DUSE_KHEXEDIT
 
-
 SUBDIRS = Icons
 
 ### Fairly large changes to allow enable final and make life easier for
@@ -86,8 +85,8 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(KHEX_LIB)
-kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
-kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(KHEX_LIB)
+kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(KHEX_LIB)
 kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 
 appsdir = $(kde_appsdir)/Utilities

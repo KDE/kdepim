@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -44,18 +44,19 @@ class PilotTodoEntry : public PilotAppCategory
 public:
 	PilotTodoEntry(struct ToDoAppInfo &appInfo);
 	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
-  
+
   PilotTodoEntry(const PilotTodoEntry &e);
   ~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
+	virtual QString getTextRepresentation(bool richText=false);
 
   PilotTodoEntry& operator=(const PilotTodoEntry &e);
-  
+
   PilotRecord* pack() { return PilotAppCategory::pack(); }
-  
+
   struct tm getDueDate() const { return fTodoInfo.due; }
   void setDueDate(struct tm& d) { fTodoInfo.due = d; }
-  const struct tm *getDueDate_p() const { return &fTodoInfo.due; } 
-  
+  const struct tm *getDueDate_p() const { return &fTodoInfo.due; }
+
   int getIndefinite() const { return fTodoInfo.indefinite; }
   void setIndefinite(int i) { fTodoInfo.indefinite = i; }
 
@@ -70,7 +71,7 @@ public:
 
   void  setNote(const QString &note);
   QString getNote() const; // { return fTodoInfo.note; }
-  
+
 	QString getCategoryLabel() const;
 		// { return fAppInfo.category.name[getCat()]; }
 	/** If the label already exists, uses the id; if not, adds the label
@@ -84,12 +85,12 @@ public:
 protected:
 	void *pack(void *, int *);
 	void unpack(const void *, int = 0) { } ;
-	
+
 	const char *getDescriptionP() const { return fTodoInfo.description; } ;
 	void setDescriptionP(const char *, int len=-1) ;
 	const char *getNoteP() const { return fTodoInfo.note; } ;
 	void setNoteP(const char *, int len=-1) ;
-  
+
 private:
   struct ToDo fTodoInfo;
 	struct ToDoAppInfo &fAppInfo;

@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -31,6 +31,7 @@
 #include <stdlib.h>
 
 #include <qtextcodec.h>
+#include <qdatetime.h>
 
 #ifndef _KDEBUG_H_
 #include <kdebug.h>
@@ -67,14 +68,14 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 {
 	if (e.fAppointmentInfo.exceptions > 0)
 	{
-		size_t blocksize = e.fAppointmentInfo.exceptions * 
+		size_t blocksize = e.fAppointmentInfo.exceptions *
 			sizeof(struct tm);
 
 		fAppointmentInfo.exception = (struct tm *)::malloc(blocksize);
 
 		if (fAppointmentInfo.exception)
 		{
-			fAppointmentInfo.exceptions = 
+			fAppointmentInfo.exceptions =
 				e.fAppointmentInfo.exceptions;
 			::memcpy(fAppointmentInfo.exception,
 				e.fAppointmentInfo.exception, blocksize);
@@ -120,7 +121,7 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 		::memcpy(&fAppointmentInfo, &e.fAppointmentInfo,
 			sizeof(fAppointmentInfo));
 
-		// The original pointers were already freed; since we're now 
+		// The original pointers were already freed; since we're now
 		// got the pointers from the new structure and we're going
 		// to use the standard set functions make sure that
 		// we don't free() the copies-of-pointers from e, which
@@ -140,6 +141,129 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 }				// end of assignment operator
 
 
+QString PilotDateEntry::getTextRepresentation(bool richText)
+{
+	QString text, tmp;
+	QString par = richText?CSL1("<p>"):CSL1("");
+	QString ps = richText?CSL1("</p>"):CSL1("\n");
+	QString br = richText?CSL1("<br/>"):CSL1("\n");
+
+	// title + name
+	text += par;
+	tmp=richText?CSL1("<b><big>%1</big></b>"):CSL1("%1");
+	text += tmp.arg(getDescription());
+	text += ps;
+
+	QDateTime dt(readTm(getEventStart()));
+	QString startDate(dt.toString(Qt::LocalDate));
+	text+=par;
+	text+=i18n("Start date: %1").arg(startDate);
+	text+=ps;
+
+	if (isEvent())
+	{
+		text+=par;
+		text+=i18n("Whole-day event");
+		text+=ps;
+	}
+	else
+	{
+		dt=readTm(getEventEnd());
+		QString endDate(dt.toString(Qt::LocalDate));
+		text+=par;
+		text+=i18n("End date: %1").arg(endDate);
+		text+=ps;
+	}
+
+	if (getAlarm())
+	{
+		text+=par;
+		tmp=i18n("%1 is the duration, %2 is the time unit", "Alarm: %1 %2 before event starts").
+			arg(getAdvance());
+		switch (getAdvanceUnits())
+		{
+			case advMinutes: tmp=tmp.arg(i18n("minutes")); break;
+			case advHours: tmp=tmp.arg(i18n("hours")); break;
+			case advDays: tmp=tmp.arg(i18n("days")); break;
+			default: tmp=tmp.arg(CSL1("")); break;;
+		}
+		text+=tmp;
+		text+=ps;
+	}
+
+	if (getRepeatType() != repeatNone)
+	{
+		text+=par;
+		tmp=i18n("Recurrence: every %1 %2");
+		int freq = getRepeatFrequency();
+		tmp=tmp.arg(freq);
+
+		switch(getRepeatType())
+		{
+			case repeatDaily: tmp=tmp.arg(i18n("day(s)")); break;
+			case repeatWeekly: tmp=tmp.arg(i18n("week(s)")); break;
+			case repeatMonthlyByDay:
+			case repeatMonthlyByDate: tmp=tmp.arg(i18n("month(s)")); break;
+			case repeatYearly: tmp=tmp.arg(i18n("year(s)")); break;
+			default: tmp=tmp.arg(i18n("")); break;
+		}
+		text+=tmp;
+		text+=br;
+
+		bool repeatsForever = getRepeatForever();
+		if (repeatsForever)
+		{
+			text+=i18n("Repeats indefinitely");
+		}
+		else
+		{
+			dt = readTm(getRepeatEnd()).date();
+			text+=i18n("Until %1").arg(dt.toString(Qt::LocalDate));
+		}
+		text+=br;
+
+		if (getRepeatType()==repeatMonthlyByDay) text+=i18n("Repeating on the i-th day of week j")+br;
+		if (getRepeatType()==repeatMonthlyByDate) text+=i18n("Repeating on the n-th day of the month")+br;
+		// TODO: show the dayArray when repeating weekly
+		/*QBitArray dayArray(7);
+		if (getRepeatType()==repeatWeekly) text+=i18n("Repeat day flags: %1").arg(getRepeatDays
+		const int *days = dateEntry->getRepeatDays();
+		// Rotate the days of the week, since day numbers on the Pilot and
+		// in vCal / Events are different.
+		if (days[0]) dayArray.setBit(6);
+		for (int i = 1; i < 7; i++)
+		{
+			if (days[i]) dayArray.setBit(i-1);
+		}*/
+		text+=ps;
+	}
+
+	if (getExceptionCount()>0 )
+	{
+		text+=par;
+		text+=i18n("Exceptions:")+br;
+		for (int i = 0; i < getExceptionCount(); i++)
+		{
+			QDate exdt=readTm(getExceptions()[i]).date();
+			text+=exdt.toString(Qt::LocalDate);
+			text+=br;
+		}
+		text+=ps;
+	}
+
+	if (!getNote().isEmpty())
+	{
+		text += richText?CSL1("<hr/>"):CSL1("-------------------------\n");
+		text+=par;
+		text+=richText?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
+		text+=getNote();
+		text+=ps;
+	}
+
+	return text;
+}
+
+
 void *PilotDateEntry::pack(void *buf, int *len)
 {
 	int i;
@@ -149,7 +273,7 @@ void *PilotDateEntry::pack(void *buf, int *len)
 	return buf;
 }
 
-/* setExceptions sets a new set of exceptions. Note that 
+/* setExceptions sets a new set of exceptions. Note that
 	PilotDateEntry assumes ownership of the array and will
 	delete the old one. */
 void PilotDateEntry::setExceptions(struct tm *e) {

@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -30,7 +30,7 @@
 #include <stdlib.h>
 
 #include <qtextcodec.h>
-
+#include <qdatetime.h>
 #include <kdebug.h>
 
 
@@ -51,7 +51,7 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo):PilotAppCategory(), 
 PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):PilotAppCategory(rec), fAppInfo(appInfo)
 {
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
-	if (rec) 
+	if (rec)
 	{
 		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
 			rec->getLen());
@@ -94,10 +94,58 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 	return *this;
 }				// end of assignment operator
 
+QString PilotTodoEntry::getTextRepresentation(bool richText)
+{
+	QString text, tmp;
+	QString par = richText?CSL1("<p>"):CSL1("");
+	QString ps = richText?CSL1("</p>"):CSL1("\n");
+	QString br = richText?CSL1("<br/>"):CSL1("\n");
+
+	// title + name
+	text += par;
+	tmp=richText?CSL1("<b><big>%1</big></b>"):CSL1("%1");
+	text += tmp.arg(getDescription());;
+	text += ps;
+
+	text += par;
+	if (getComplete())
+		text += i18n("Completed");
+	else
+		text += i18n("Not completed");
+	text += ps;
+
+	if (!getIndefinite())
+	{
+		QDate dt(readTm(getDueDate()).date());
+		QString dueDate(dt.toString(Qt::LocalDate));
+		text+=par;
+		text+=i18n("Due date: %1").arg(dueDate);
+		text+=ps;
+	}
+
+	text+=par;
+	text+=ps;
+
+	text+=par;
+	text+=i18n("Priority: %1").arg(getPriority());
+	text+=ps;
+
+	if (!getNote().isEmpty())
+	{
+		text += richText?CSL1("<hr/>"):CSL1("-------------------------\n");
+		text+=par;
+		text+=richText?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
+		text+=getNote();
+		text+=ps;
+	}
+
+	return text;
+}
+
 bool PilotTodoEntry::setCategory(const QString &label)
 {
 	FUNCTIONSETUP;
-	if (label.isEmpty()) 
+	if (label.isEmpty())
 	{
 		setCat(0);
 		return true;
@@ -112,10 +160,10 @@ bool PilotTodoEntry::setCategory(const QString &label)
 			return true;
 		}
 		else
-			// if empty, then no more labels; add it 
+			// if empty, then no more labels; add it
 		if (aCat.isEmpty())
 		{
-			qstrncpy(fAppInfo.category.name[catId], 
+			qstrncpy(fAppInfo.category.name[catId],
 				codec()->fromUnicode(label), 16);
 			setCat(catId);
 			return true;

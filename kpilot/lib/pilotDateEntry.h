@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -63,13 +63,14 @@ public:
   PilotDateEntry(const PilotDateEntry &e);
 
   PilotDateEntry& operator=(const PilotDateEntry &e);
-  
+	virtual QString getTextRepresentation(bool richText=false);
+
   PilotRecord* pack() { return PilotAppCategory::pack(); }
-  
+
   bool isEvent() const { return fAppointmentInfo.event; }
   int getEvent() const { return fAppointmentInfo.event; }
   void setEvent(int event) { fAppointmentInfo.event = event; }
-  
+
   struct tm getEventStart() const { return fAppointmentInfo.begin; }
   const struct tm *getEventStart_p() const { return &fAppointmentInfo.begin; }
   void setEventStart(struct tm& start) { fAppointmentInfo.begin = start; }
@@ -80,7 +81,7 @@ public:
 
   int getAlarm() const { return fAppointmentInfo.alarm; }
   void setAlarm(int alarm) { fAppointmentInfo.alarm = alarm; }
-  
+
   int getAdvance() const { return fAppointmentInfo.advance; }
   void setAdvance(int advance) { fAppointmentInfo.advance = advance; }
 
@@ -121,10 +122,10 @@ public:
 
 	void setDescription(const QString &);
 	QString getDescription() const;
-	
+
 	void setNote(const QString &);
 	QString getNote() const;
-	
+
 protected:
 	void  setDescriptionP(const char* desc, int l=-1);
 	const char* getDescriptionP() const { return fAppointmentInfo.description; }

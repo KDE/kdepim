@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -70,10 +70,20 @@ void *PilotMemo::pack(void *buf, int *len)
 }
 
 
+QString PilotMemo::getTextRepresentation(bool richText)
+{
+	if (richText)
+		return i18n("<i>Title:</i> %1<br><i>MemoText:</i><br>%2").
+			arg(getTitle()).arg(text());
+	else
+		return i18n("Title: %1\nMemoText:\n%2").arg(getTitle()).arg(text());
+}
+
+
 QString PilotMemo::getTitle() const
 {
 	if (fText.isEmpty()) return QString::null;
-	
+
 	int memoTitleLen = fText.find('\n');
 	if (-1 == memoTitleLen) memoTitleLen=fText.length();
 	return fText.left(memoTitleLen);

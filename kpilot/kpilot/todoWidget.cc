@@ -511,49 +511,7 @@ void TodoWidget::slotShowTodo(QListViewItem*item)
 #endif
 
 	QString text(CSL1("<qt>"));
-
-	QString par = CSL1("<p>");
-	QString ps = CSL1("</p>");
-
-	// title + name
-	text += par;
-	text+=CSL1("<b><big>");
-	text+=todo->getDescription();
-	text+=CSL1("</big></b>");
-	text+=ps;
-
-	text+=par;
-	if (todo->getComplete())
-		text+=i18n("Completed");
-	else
-		text+=i18n("Not completed");
-	text+=ps;
-
-	if (!todo->getIndefinite())
-	{
-		QDate dt(readTm(todo->getDueDate()).date());
-		QString dueDate(dt.toString(Qt::LocalDate));
-		text+=par;
-		text+=i18n("Due date: %1").arg(dueDate);
-		text+=ps;
-	}
-
-	text+=par;
-	text+=ps;
-
-	text+=par;
-	text+=i18n("Priority: %1").arg(todo->getPriority());
-	text+=ps;
-
-	if (!todo->getNote().isEmpty())
-	{
-		text += CSL1("<hr/>");
-		text+=par;
-		text+=i18n("<b><em>Note:</em></b><br>");
-		text+=todo->getNote();
-		text+=ps;
-	}
-
+	text += todo->getTextRepresentation(true);
 	text += CSL1("</qt>\n");
 	fTodoInfo->setText(text);
 

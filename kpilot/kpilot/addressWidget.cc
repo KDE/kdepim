@@ -564,7 +564,6 @@ void AddressWidget::slotShowAddress(int which)
 
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotAddress *addr = (PilotAddress *) p->rec();
-	int i;
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -575,115 +574,8 @@ void AddressWidget::slotShowAddress(int which)
 		<< endl;
 #endif
 
-	/*
-	 * enum values from pi-address.h
-	 *
-	 * entryLastname, entryFirstname,
-	 * entryCompany, entryPhone1, entryPhone2, entryPhone3,
-	 * entryPhone4, entryPhone5, entryAddress, entryCity, entryState,
-	 * entryZip, entryCountry, entryTitle, entryCustom1, entryCustom2,
-	 * entryCustom3, entryCustom4, entryNote
-	 */
-
-	QString text;
-
-	text += CSL1("<qt>");
-
-	QString par = CSL1("<p>");
-	QString ps = CSL1("</p>");
-
-	// title + name
-	text += par;
-	if (!addr->getField(entryTitle).isEmpty())
-	{
-		text += addr->getField(entryTitle);
-		text += CSL1(" ");
-	}
-	text += CSL1("<b><big>");
-	if (!addr->getField(entryFirstname).isEmpty())
-	{
-		text += addr->getField(entryFirstname);
-		text += CSL1(" ");
-	}
-	text += addr->getField(entryLastname);
-	text += CSL1("</big></b>");
-	text += ps;
-
-	// company
-	if (!addr->getField(entryCompany).isEmpty())
-	{
-		text += par;
-		text += addr->getField(entryCompany);
-		text += ps;
-	}
-
-	// phone numbers (+ labels)
-	text += par;
-	for (i = entryPhone1; i <= entryPhone5; i++)
-		if (!addr->getField(i).isEmpty())
-		{
-			text += CSL1("<small>");
-			text += PilotAppCategory::codec()->toUnicode(
-				fAddressAppInfo.phoneLabels[addr->
-				getPhoneLabelIndex(i - entryPhone1)]);
-			text += CSL1(": </small>");
-			if (addr->getShownPhone() == i - entryPhone1)
-				text += CSL1("<b>");
-			text += addr->getField(i);
-			if (addr->getShownPhone() == i - entryPhone1)
-				text += CSL1("</b>");
-			text += CSL1("<br/>");
-		}
-	text += ps;
-
-	// address, city, state, country
-	text += par;
-	if (!addr->getField(entryAddress).isEmpty())
-	{
-		text += addr->getField(entryAddress);
-		text += CSL1("<br/>");
-	}
-	if (!addr->getField(entryCity).isEmpty())
-	{
-		text += addr->getField(entryCity);
-		text += CSL1(" ");
-	}
-	if (!addr->getField(entryState).isEmpty())
-	{
-		text += addr->getField(entryState);
-		text += CSL1(" ");
-	}
-	if (!addr->getField(entryZip).isEmpty())
-	{
-		text += addr->getField(entryZip);
-	}
-	text += CSL1("<br/>");
-	if (!addr->getField(entryCountry).isEmpty())
-	{
-		text += addr->getField(entryCountry);
-		text += CSL1("<br/>");
-	}
-	text += ps;
-
-	// custom fields
-	text += par;
-	for (i = entryCustom1; i <= entryCustom4; i++)
-		if (!addr->getField(i).isEmpty())
-		{
-			text += addr->getField(i);
-			text += CSL1("<br/>");
-		}
-	text += ps;
-
-	// note
-	if (!addr->getField(entryNote).isEmpty())
-	{
-		text += CSL1("<hr/>");
-		text += par;
-		text += addr->getField(entryNote);
-		text += ps;
-	}
-
+	QString text(CSL1("<qt>"));
+	text += addr->getTextRepresentation(true);
 	text += CSL1("</qt>\n");
 	fAddrInfo->setText(text);
 

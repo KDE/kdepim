@@ -47,8 +47,7 @@ static const char *todoEditor_id =
 
 TodoEditor::TodoEditor(PilotTodoEntry * p, struct ToDoAppInfo *appInfo,
 	QWidget * parent, const char *name) :
-	KDialogBase(parent, "TodoEditor", false, i18n("Todo Editor"),
-		Ok | Cancel/*, Cancel, parent, name, false*/ /* non-modal */ ),
+	KDialogBase(parent, name, false, i18n("Todo Editor"), Ok|Cancel),
 	fDeleteOnCancel(p == 0L),
 	fTodo(p),
 	fAppInfo(appInfo)

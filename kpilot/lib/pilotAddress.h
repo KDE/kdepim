@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -69,7 +69,7 @@
  * <li> phone[2] = Fax
  * <li> phone[3] = Other
  * <li> phone[4] = E-mail
- * <li> phone[5] = Main 
+ * <li> phone[5] = Main
  * <li> phone[6] = Pager
  * <li> phone[7] = Mobile
  *
@@ -81,9 +81,9 @@
 class PilotAddress : public PilotAppCategory
 {
 public:
-	enum EPhoneType { 
+	enum EPhoneType {
 		eWork=0, eHome, eFax, eOther, eEmail, eMain,
-		ePager, eMobile 
+		ePager, eMobile
 		};
 
 	PilotAddress(struct AddressAppInfo &appInfo);
@@ -94,6 +94,11 @@ public:
 
 	~PilotAddress();
 
+	/** Returns a text representation of the address. If richText is true, the
+	 *  text is allowed to contain Qt-HTML tags.
+	 */
+	virtual QString getTextRepresentation(bool richText=false);
+
 	/** Zeros the internal address info structure, in effect clearing
 	*  out all prior set values
 	*/
@@ -102,7 +107,7 @@ public:
 	/** @param field int values associated with the enum defined in
 	*  pi-address.h.
 	*  The copied possible enum's are: (copied from pi-address.h on 1/12/01)
-	*  enum { entryLastname, entryFirstname, entryCompany, 
+	*  enum { entryLastname, entryFirstname, entryCompany,
 	*  entryPhone1, entryPhone2, entryPhone3, entryPhone4, entryPhone5,
 	*  entryAddress, entryCity, entryState, entryZip, entryCountry,
 	*  entryTitle, entryCustom1, entryCustom2, entryCustom3, entryCustom4,
@@ -112,7 +117,7 @@ public:
 	QString getField(int field) const;
 
 	QString getCategoryLabel() const;
-	
+
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list
 	*  @return false if category labels are full
