@@ -184,7 +184,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiC
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
   a_ctVerify            = new KAction(i18n("&Verify PGP Signature"), 0, this,
                           SLOT(slotVerify()), a_ctions, "article_verify");
-  a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", Key_V , this,
+  a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
 #if KDE_IS_VERSION(3,2,90)
   a_ctToggleFullHdrs->setCheckedState(i18n("Hide &All Headers"));
@@ -195,7 +195,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiC
   a_ctToggleFixedFont   = new KToggleAction(i18n("U&se Fixed Font"),  Key_X , this,
                           SLOT(slotToggleFixedFont()), a_ctions, "view_useFixedFont");
   a_ctToggleFixedFont->setChecked(knGlobals.configManager()->readNewsViewer()->useFixedFont());
-  a_ctViewSource        = new KAction(i18n("&View Source"),  0 , this,
+  a_ctViewSource        = new KAction(i18n("&View Source"),  Key_V , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
