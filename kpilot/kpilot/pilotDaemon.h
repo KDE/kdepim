@@ -147,7 +147,7 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
-	void addInstallFiles(const QStringList &);
+	virtual void addInstallFiles(const QStringList &);
 
 	// The next few functions are the DCOP interface.
 	// Some are also slots.
