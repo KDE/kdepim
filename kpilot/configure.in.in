@@ -13,22 +13,27 @@ dnl
 dnl Questions and comments can be sent to groot@kde.org
 dnl
 
-AC_MSG_CHECKING(for pilot-link headers)
-
-
 dnl Check for the headers first. The first test is the somewhat-
 dnl sophisticated one AC uses, and incorporates all the extra-includes
 dnl and whatnot stuff.
 dnl
+dnl We need to explicitly use the --with-extra-includes passed in,
+dnl since AC_CHECK_HEADER does not do so.
+dnl
 HAVE_PISOCK=0
 
+kpilot_save_cflags="$CPPFLAGS"
+
 if test -n "$kde_extra_includes" ; then
-	kpilot_save_cflags="$CPPFLAGS"
 	# they're passed in with no leading -I (??)
-	CPPFLAGS="$kpilot_save_cflags -I$kde_extra_includes"
+	CPPFLAGS="$CPPFLAGS -I$kde_extra_includes"
 fi
-AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1
-	AC_MSG_RESULT(found)], )
+
+if test -n "$kde_extra_libs" ; then
+	CPPFLAGS="$CPPFLAGS -L$kde_extra_libs"
+fi
+
+AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1], )
 
 
 dnl Warn if no headers found. Maybe this should be collected at the end
@@ -40,28 +45,24 @@ dnl -lsocket -lxnet. That leads us to some deeply nested AC_CHECK_LIB
 dnl calls, and NOTE the yuckiness when assigning values to LIBPISOCK.
 dnl
 if  test "$HAVE_PISOCK" = "0" ; then
-	AC_MSG_WARN($ac_cpp)
-	AC_MSG_WARN($CPPFLAGS)
 	AC_MSG_WARN([KPILOT: no pilot-link headers found.])
 else
 	HAVE_PISOCK=0
-	if test -n "$kde_extra_includes" ] ; then
-		kpilot_save_cflags="$CPPFLAGS"
-		# they're passed in with no leading -I (??)
-		CPPFLAGS="$kpilot_save_cflags -L$kde_extra_libs"
-	fi
+
 	AC_CHECK_LIB(pisock,
 		pi_accept,
 		[LIBPISOCK="-lpisock"
 		HAVE_PISOCK=1
 		],
 		[
+		unset ac_cv_lib_pisock_pi_accept
 		AC_CHECK_LIB(pisock,
 			pi_accept,
 			[LIBPISOCK="-lpisock -lsocket"
 			HAVE_PISOCK=1
 			],
 			[
+			unset ac_cv_lib_pisock_pi_accept
 			AC_CHECK_LIB(pisock,
 				pi_accept,
 				[LIBPISOCK="-lpisock -lsocket -lxnet"
@@ -85,6 +86,5 @@ else
 	AC_SUBST(LIBPISOCK)
 fi
 
-if test -n "$kde_extra_includes" ; then
-	CPPFLAGS="$kpilot_save_cflags"
-fi
+CPPFLAGS="$kpilot_save_cflags"
+unset kpilot_save_cflags
