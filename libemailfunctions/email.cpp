@@ -95,7 +95,7 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 }
 
 //-----------------------------------------------------------------------------
-KPIM::emailParseResult KPIM::isValidEmailAddress( const QString& aStr )
+KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 {
   // If we are passed an empty string bail right away no need to process further 
   // and waste resources
@@ -239,7 +239,7 @@ KPIM::emailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 } 
 
 //-----------------------------------------------------------------------------
-QString KPIM::emailParseResultToString( emailParseResult errorCode )
+QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 {
   switch ( errorCode ) {
     case TooManyAts : 
@@ -274,7 +274,7 @@ QString KPIM::emailParseResultToString( emailParseResult errorCode )
     case UnexpectedEnd : 
       return i18n("The email address you entered is not valid because it ended "
                 "unexpectadly, this probably means you have used an escaping type "
-                "character like an <emph>\</emph> as the last character in your email "
+                "character like an \\  as the last character in your email "
                 "address.");
   }
   return i18n("Unknown problem with email address");

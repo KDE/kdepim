@@ -52,7 +52,7 @@ static bool checkGetNameAndEmail(const QString& input, const QString& expName, c
 }
 
 // convert this to a switch instead but hey, nothing speedy in here is needed but still.. it would be nice
-static QString emailTestParseResultToString( emailParseResult errorCode )
+static QString emailTestParseResultToString( EmailParseResult errorCode )
 {
   if( errorCode == TooManyAts ) { 
     return "TooManyAts";
@@ -80,7 +80,7 @@ static QString emailTestParseResultToString( emailParseResult errorCode )
 
 static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
 {
-  emailParseResult errorCode = KPIM::isValidEmailAddress( input );
+  EmailParseResult errorCode = KPIM::isValidEmailAddress( input );
   QString errorC = emailTestParseResultToString( errorCode );
   check( "isValidEmailAddress " + input + " errorCode ", errorC , expErrorCode );
   return true;
