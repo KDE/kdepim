@@ -31,12 +31,34 @@
 #include <kimageio.h>
 
 #include <qcheckbox.h>
+#include <qdragobject.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpixmap.h>
 
 #include "imagewidget.h"
+
+ImageLabel::ImageLabel( const QString &title, bool readOnly, QWidget *parent )
+  : QLabel( title, parent ), mReadOnly( readOnly )
+{
+  setAcceptDrops( true );
+}
+
+void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
+{
+  event->accept( QImageDrag::canDecode( event ) );
+}
+
+void ImageLabel::dropEvent( QDropEvent *event )
+{
+  QPixmap pm;
+  if ( QImageDrag::decode( event, pm ) && !mReadOnly ) {
+    setPixmap( pm );
+    emit changed();
+  }
+}
+
 
 ImageWidget::ImageWidget( const QString &title, bool readOnly,
                           QWidget *parent, const char *name )
@@ -45,11 +67,11 @@ ImageWidget::ImageWidget( const QString &title, bool readOnly,
   QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
   QGroupBox *box = new QGroupBox( 0, Qt::Vertical, title, this );
-  QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 2,
+  QGridLayout *boxLayout = new QGridLayout( box->layout(), 4, 2,
                                             KDialog::spacingHint() );
-  boxLayout->setRowStretch( 2, 1 );
+  boxLayout->setRowStretch( 3, 1 );
 
-  mImageLabel = new QLabel( i18n( "Picture" ), box );
+  mImageLabel = new ImageLabel( i18n( "Picture" ), mReadOnly, box );
   mImageLabel->setFixedSize( 50, 70 );
   mImageLabel->setScaledContents( true );
   mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
@@ -64,8 +86,14 @@ ImageWidget::ImageWidget( const QString &title, bool readOnly,
   mUseImageUrl->setEnabled( false );
   boxLayout->addWidget( mUseImageUrl, 1, 1 );
 
+  mClearButton = new QPushButton( i18n( "Clear" ), box );
+  mClearButton->setEnabled( false );
+  boxLayout->addMultiCellWidget( mClearButton, 3, 3, 0, 1 );
+
   topLayout->addWidget( box );
 
+  connect( mImageLabel, SIGNAL( changed() ),
+           SLOT( imageChanged() ) );
   connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
   connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
@@ -76,6 +104,8 @@ ImageWidget::ImageWidget( const QString &title, bool readOnly,
            SLOT( updateGUI() ) );
   connect( mUseImageUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
+  connect( mClearButton, SIGNAL( clicked() ),
+           SLOT( clear() ) );
 }
 
 ImageWidget::~ImageWidget()
@@ -98,6 +128,8 @@ void ImageWidget::setImage( const KABC::Picture &photo )
   }
 
   blockSignals( blocked );
+
+  updateGUI();
 }
 
 KABC::Picture ImageWidget::image() const
@@ -128,8 +160,28 @@ void ImageWidget::loadImage()
 
 void ImageWidget::updateGUI()
 {
-  if ( !mReadOnly )
-    mUseImageUrl->setEnabled( true );
+  if ( !mReadOnly ) {
+    mUseImageUrl->setEnabled( !mImageUrl->url().isEmpty() );
+    mClearButton->setEnabled( !mImageUrl->url().isEmpty() || ( mImageLabel->pixmap() && !mImageLabel->pixmap()->isNull() ) );
+  }
+}
+
+void ImageWidget::clear()
+{
+  mImageLabel->clear();
+  mImageUrl->clear();
+  mUseImageUrl->setChecked( false );
+
+  updateGUI();
+
+  emit changed();
+}
+
+void ImageWidget::imageChanged()
+{
+  updateGUI();
+  
+  emit changed();
 }
 
 QPixmap ImageWidget::loadPixmap( const KURL &url )

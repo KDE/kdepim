@@ -24,15 +24,34 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <qwidget.h>
+#include <qlabel.h>
 
 #include <kabc/picture.h>
 #include <kdialogbase.h>
 
 class KURLRequester;
-
 class QCheckBox;
-class QLabel;
+
+/**
+  Small helper class
+ */
+class ImageLabel : public QLabel
+{
+  Q_OBJECT
+
+  public:
+    ImageLabel( const QString &title, bool readOnly, QWidget *parent );
+
+  signals:
+    void changed();
+
+  protected:
+    virtual void dragEnterEvent( QDragEnterEvent *event );
+    virtual void dropEvent( QDropEvent *event );
+
+  private:
+    bool mReadOnly;
+};
 
 class ImageWidget : public QWidget
 {
@@ -59,14 +78,17 @@ class ImageWidget : public QWidget
   private slots:
     void loadImage();
     void updateGUI();
+    void clear();
+    void imageChanged();
 
   private:
     QPixmap loadPixmap( const KURL &url );
 
+    ImageLabel *mImageLabel;
     KURLRequester *mImageUrl;
 
     QCheckBox *mUseImageUrl;
-    QLabel *mImageLabel;
+    QPushButton *mClearButton;
 
     bool mReadOnly;
 };
