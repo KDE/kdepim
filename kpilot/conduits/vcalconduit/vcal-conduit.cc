@@ -532,17 +532,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
     alarmDT = alarmDT.addSecs(60*advanceUnits*-(dateEntry.getAdvance()));
 
-    dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-		       alarmDT.date().year(),
-		       alarmDT.date().month(),
-		       alarmDT.date().day(),
-		       alarmDT.time().hour(), 
-		       alarmDT.time().minute(),
-		       alarmDT.time().second());
     if (vo) {
       vo = isAPropertyOf(vo, VCRunTimeProp);
       setDateProperty(vo,alarmDT);
-      // setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
     } else {
       vo = addProp(vevent, VCDAlarmProp);
       addDateProperty(vo, VCRunTimeProp, alarmDT);
@@ -1465,6 +1457,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.33  2001/04/01 17:32:05  adridg
+// Fiddling around with date properties
+//
 // Revision 1.32  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

@@ -108,31 +108,27 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 	else
 	{
 		QString selectedCategory=fCatList->text(fCatList->currentItem());
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname << 
-				": List item " << fCatList->currentItem() <<
-				" selected, text=" <<
-				selectedCategory << endl ;
-		}
-#endif
+		DEBUGKPILOT << fname
+			<< ": List item " 
+			<< fCatList->currentItem()
+			<< " (of "
+			<< fCatList->count()
+			<< ") "
+			<< " selected, text="
+			<< selectedCategory 
+			<< endl ;
 
 		currentCatID=0;
 		while(strcmp(info->name[currentCatID], 
 		       selectedCategory.local8Bit()) && 
 			(currentCatID < fCatList->count()))
 		{
-#ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
-			{
-				kdDebug() << fname <<
-					": Didn't match category " <<
-					currentCatID << '=' <<
-					info->name[currentCatID]
-					<< endl ;
-			}
-#endif
+			DEBUGKPILOT << fname
+				<< ": Didn't match category "
+				<< currentCatID 
+				<< "="
+				<< info->name[currentCatID]
+				<< endl ;
 
 			currentCatID++;
 		}
@@ -168,6 +164,11 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 				if (selectedCategory ==
 					QString::fromLatin1(info->name[currentCatID]))
 				{
+					DEBUGKPILOT << fname
+						<< ": Matched "
+						<< currentCatID
+						<< endl;
+
 					break;
 				}
 				currentCatID++;
@@ -176,10 +177,11 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 
 		if (currentCatID < fCatList->count())
 		{
-			DEBUGKPILOT << fname << 
-				": Matched category " <<
-				currentCatID << '=' <<
-				info->name[currentCatID]
+			DEBUGKPILOT << fname 
+				<< ": Matched category "
+				<< currentCatID 
+				<< "=" 
+				<< info->name[currentCatID]
 				<< endl ;
 		}
 		else
@@ -263,6 +265,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.15  2001/04/01 17:32:20  adridg
+// Fix infinie loop when changing categories
+//
 // Revision 1.14  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.
