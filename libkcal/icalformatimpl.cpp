@@ -1107,9 +1107,10 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
   // add categories
   incidence->setCategories(categories);
 
-  icalcomponent *alarm;
-  alarm = icalcomponent_get_first_component(parent,ICAL_VALARM_COMPONENT);
-  if (alarm) {
+  // iterate through all alarms
+  for (icalcomponent *alarm = icalcomponent_get_first_component(parent,ICAL_VALARM_COMPONENT);
+       alarm;
+       alarm = icalcomponent_get_next_component(parent,ICAL_VALARM_COMPONENT)) {
     readAlarm(alarm,incidence);
   }
 }
