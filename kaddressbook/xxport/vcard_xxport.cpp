@@ -217,24 +217,26 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
           KIO::NetAccess::removeTempFile( fileName );
         } else {
           QString text = i18n( "<qt>When trying to read the vCard, there was an error opening the file '%1': %2</qt>" );
-	  text = text.arg( (*it).url());
-	  text = text.arg(kapp->translate("QFile",file.errorString().latin1()));
-	  KMessageBox::error( parentWidget(), text, caption );
-	  anyFailures = true;
+          text = text.arg( (*it).url() );
+          text = text.arg( kapp->translate( "QFile",
+                                            file.errorString().latin1() ) );
+          KMessageBox::error( parentWidget(), text, caption );
+          anyFailures = true;
         }
       } else {
         QString text = i18n( "<qt>Unable to access vCard: %1</qt>" );
-	text = text.arg(KIO::NetAccess::lastErrorString());
+        text = text.arg( KIO::NetAccess::lastErrorString() );
         KMessageBox::error( parentWidget(), text, caption );
-	anyFailures = true;
+        anyFailures = true;
       }
     }
 
     if ( !XXPortManager::importURL.isEmpty() ) { // a vcard was passed via cmd
       if ( addrList.isEmpty() ) {
-	if(anyFailures && urls.count() > 1)
-	  KMessageBox::information( parentWidget(), i18n( "No contacts were imported, due to errors with the vcards."));
-	else if(!anyFailures)
+        if ( anyFailures && urls.count() > 1 )
+          KMessageBox::information( parentWidget(),
+                                    i18n( "No contacts were imported, due to errors with the vcards." ) );
+        else if ( !anyFailures )
           KMessageBox::information( parentWidget(), i18n( "The vCard does not contain any contacts." ) );
       } else {
         VCardViewerDialog dlg( addrList, parentWidget() );
