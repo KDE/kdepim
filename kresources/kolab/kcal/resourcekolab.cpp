@@ -285,7 +285,6 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
     sernum = mUidMap[ uid ].serialNumber();
     mUidsPendingUpdate.append( uid );
   }
-
   sendKMailUpdate( incidencebase, subResource, sernum );
 }
 
@@ -404,7 +403,10 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   if ( incidence->schedulingID() != incidence->uid() )
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
 
-  return kmailUpdate( subresource, sernum, data, mimetype, incidencebase->uid(), customHeaders );
+  QString subject = incidencebase->uid();
+  if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
+
+  return kmailUpdate( subresource, sernum, data, mimetype, subject, customHeaders );
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
