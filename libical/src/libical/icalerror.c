@@ -53,41 +53,127 @@ void icalerror_clear_errno() {
     icalerrno = ICAL_NO_ERROR;
 }
 
-void icalerror_set_errno(icalerrorenum e) {
-
 #ifdef ICAL_ERRORS_ARE_FATAL
-    fprintf(stderr,"libical: icalerrno_set_error: %s\n",icalerror_strerror(e));
-#ifdef NDEBUG
-	icalerror_crash_here();
+int icalerror_errors_are_fatal = 1;
 #else
-	assert(0);
-#endif 
-
+int icalerror_errors_are_fatal = 0;
 #endif
 
-    icalerror_stop_here();
-    icalerrno = e;
-}
+struct icalerror_state {
+    icalerrorenum error;
+    icalerrorstate state; 
+};
 
+struct icalerror_state error_state_map[] = 
+{ 
+    { ICAL_BADARG_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_NEWFAILED_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_DEFAULT}, 
+    { ICAL_PARSE_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_INTERNAL_ERROR,ICAL_ERROR_DEFAULT}, 
+    { ICAL_FILE_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_USAGE_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_UNIMPLEMENTED_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_UNKNOWN_ERROR,ICAL_ERROR_DEFAULT},
+    { ICAL_NO_ERROR,ICAL_ERROR_DEFAULT}
+
+};
 
 struct icalerror_string_map {
-	icalerrorenum error;
-	char name[160];
+    const char* str;
+    icalerrorenum error;
+    char name[160];
 };
 
 static struct icalerror_string_map string_map[] = 
 {
-    {ICAL_BADARG_ERROR,"Bad argument to function"},
-    {ICAL_NEWFAILED_ERROR,"Failed to create a new object via a *_new() routine"},
-    {ICAL_MALFORMEDDATA_ERROR,"An input string was not correctly formed or a component has missing or extra properties"},
-    {ICAL_PARSE_ERROR,"Failed to parse a part of an iCal componet"},
-    {ICAL_INTERNAL_ERROR,"Random internal error. This indicates an error in the library code, not an error in use"}, 
-    {ICAL_FILE_ERROR,"An operation on a file failed. Check errno for more detail."},
-    {ICAL_ALLOCATION_ERROR,"Failed to allocate memory"},
-    {ICAL_USAGE_ERROR,"The caller failed to properly sequence called to an object's interface"},
-    {ICAL_NO_ERROR,"No error"},
-    {ICAL_UNKNOWN_ERROR,"Unknown error type -- icalerror_strerror() was probably given bad input"}
+    {"BADARG",ICAL_BADARG_ERROR,"BADARG: Bad argument to function"},
+    { "NEWFAILED",ICAL_NEWFAILED_ERROR,"NEWFAILED: Failed to create a new object via a *_new() routine"},
+    {"MALFORMEDDATA",ICAL_MALFORMEDDATA_ERROR,"MALFORMEDDATA: An input string was not correctly formed or a component has missing or extra properties"},
+    { "PARSE",ICAL_PARSE_ERROR,"PARSE: Failed to parse a part of an iCal component"},
+    {"INTERNAL",ICAL_INTERNAL_ERROR,"INTERNAL: Random internal error. This indicates an error in the library code, not an error in use"}, 
+    { "FILE",ICAL_FILE_ERROR,"FILE: An operation on a file failed. Check errno for more detail."},
+    { "USAGE",ICAL_USAGE_ERROR,"USAGE: Failed to propertyl sequence calls to a set of interfaces"},
+    { "UNIMPLEMENTED",ICAL_UNIMPLEMENTED_ERROR,"UNIMPLEMENTED: This feature has not been implemented"},
+    { "NO",ICAL_NO_ERROR,"NO: No error"},
+    {"UNKNOWN",ICAL_UNKNOWN_ERROR,"UNKNOWN: Unknown error type -- icalerror_strerror() was probably given bad input"}
 };
+
+
+icalerrorenum icalerror_error_from_string(const char* str){
+ 
+    icalerrorenum e;
+    int i = 0;
+
+    for( i = 0; string_map[i].error != ICAL_NO_ERROR; i++){
+        if (strcmp(string_map[i].str,str) == 0){
+            e = string_map[i].error;
+        }
+    }
+
+    return e;
+}
+
+icalerrorstate icalerror_supress(const char* error){
+
+    icalerrorenum e = icalerror_error_from_string(error);
+    icalerrorstate es;
+
+     if (e == ICAL_NO_ERROR){
+        return ICAL_ERROR_UNKNOWN;
+    }
+
+
+    es = icalerror_get_error_state(e);
+    icalerror_set_error_state(e,ICAL_ERROR_NONFATAL);
+
+    return es;
+}
+
+char* icalerror_perror()
+{
+    return icalerror_strerror(icalerrno);
+}
+
+void icalerror_restore(const char* error, icalerrorstate es){
+
+
+    icalerrorenum e = icalerror_error_from_string(error);
+
+    if (e != ICAL_NO_ERROR){
+        icalerror_set_error_state(e,es);
+    }
+
+}
+
+
+
+void icalerror_set_error_state( icalerrorenum error, 
+				icalerrorstate state)
+{
+    int i;
+
+    for(i = ICAL_BADARG_ERROR; error_state_map[i].error!= ICAL_NO_ERROR;i++){
+	if(error_state_map[i].error == error){
+	    error_state_map[i].state = state; 	
+	}
+    }
+}
+
+icalerrorstate icalerror_get_error_state( icalerrorenum error)
+{
+    int i;
+
+    for(i = ICAL_BADARG_ERROR; error_state_map[i].error!= ICAL_NO_ERROR;i++){
+	if(error_state_map[i].error == error){
+	    return error_state_map[i].state; 	
+	}
+    }
+
+    return ICAL_ERROR_UNKNOWN;	
+}
+
+
 
 
 char* icalerror_strerror(icalerrorenum e) {

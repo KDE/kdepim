@@ -30,10 +30,13 @@
 #define ICALFILESET_H
 
 #include "ical.h"
+#include "icalset.h"
 #include "icalgauge.h"
 #include <sys/types.h> /* For open() flags and mode */
 #include <sys/stat.h> /* For open() flags and mode */
 #include <fcntl.h> /* For open() flags and mode */
+
+extern int icalfileset_safe_saves;
 
 typedef void icalfileset;
 

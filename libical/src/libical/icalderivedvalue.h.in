@@ -26,33 +26,17 @@
 
   ======================================================================*/
 
-#ifndef ICALVALUE_H
-#define ICALVALUE_H
+#ifndef ICALDERIVEDVALUE_H
+#define ICALDERIVEDVALUE_H
 
-#include <time.h>
-#include "icalenums.h"
 #include "icaltypes.h"
 #include "icalrecur.h"
-                          
+#include "icaltime.h"
+#include "icalduration.h"
+#include "icalperiod.h"
+     
 typedef void icalvalue;
 
-icalvalue* icalvalue_new(icalvalue_kind kind);
 
-icalvalue* icalvalue_new_clone(icalvalue* value);
-
-icalvalue* icalvalue_new_from_string(icalvalue_kind kind, const char* str);
-
-void icalvalue_free(icalvalue* value);
-
-int icalvalue_is_valid(icalvalue* value);
-
-const char* icalvalue_as_ical_string(icalvalue* value);
-
-icalvalue_kind icalvalue_isa(icalvalue* value);
-
-int icalvalue_isa_value(void*);
-
-icalparameter_xliccomparetype
-icalvalue_compare(icalvalue* a, icalvalue *b);
 
 /* Everything below this line is machine generated. Do not edit. */

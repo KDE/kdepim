@@ -1,11 +1,13 @@
 /* -*- Mode: C -*- */
 /*======================================================================
- FILE: icalssutil.h
- CREATOR: eric 21 Aug 2000
+  FILE: icalparam.h
+  CREATOR: eric 20 March 1999
 
 
- $Id$
- $Locker:  $
+  $Id$
+  $Locker:  $
+
+  
 
  (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
 
@@ -20,8 +22,16 @@
     The Mozilla Public License Version 1.0. You may obtain a copy of
     the License at http://www.mozilla.org/MPL/
 
+  The original code is icalparam.h
 
- =========================================================================*/
+  ======================================================================*/
 
-#include "ical.h"
+#ifndef ICALDERIVEDPARAMETER_H
+#define ICALDERIVEDPARAMETER_H
+
+
+typedef void icalparameter;
+
+const char* icalparameter_enum_to_string(int e);
+int icalparameter_string_to_enum(const char* str); 
 

@@ -247,9 +247,9 @@ char* icalrestriction_no_dtend(icalrestriction_property_record *rec,
 			       icalcomponent* comp, 
 			       icalproperty* prop){
 
-    if( icalcomponent_get_first_property(comp,ICAL_DTEND_PROPERTY)){
+    if( !icalcomponent_get_first_property(comp,ICAL_DTEND_PROPERTY)){
 
-	return "Failed iTIP restrictions for DTEND property. The component must not have both DURATION and DTEND";
+	return "Failed iTIP restrictions for STATUS property. The component must not have both DURATION and DTEND";
 
     }
 
@@ -271,6 +271,7 @@ int icalrestriction_check_component(icalproperty_method method,
     icalcomponent_kind comp_kind;
     icalrestriction_kind restr;
     icalrestriction_property_record *prop_record;
+    icalrestriction_component_record *comp_record;
     char* funcr = 0;
     icalproperty *prop;
 
@@ -337,7 +338,6 @@ int icalrestriction_check_component(icalproperty_method method,
 		     0));   
 
 	    compare = 0;
-	    funcr = 0;
 	}
 
 	valid = valid && compare;
@@ -428,7 +428,7 @@ icalrestriction_get_component_restriction(icalproperty_method method,
 					  icalcomponent_kind component,
 					  icalcomponent_kind subcomponent)
 {
- 
+
     int i;
 
     for(i = 0;

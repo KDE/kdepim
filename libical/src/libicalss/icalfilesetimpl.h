@@ -39,12 +39,11 @@
 
 struct icalfileset_impl {
 
-	char id[5]; /*fset*/
-	char *path;
-	icalcomponent* cluster;
-	icalgauge* gauge;
-	int changed;
-	FILE* stream;
-	int fd; /* fd is the file descriptor in stream */
+  char id[5]; /*fset*/
+  char *path;
+  icalcomponent* cluster;
+  icalgauge* gauge;
+  int changed;
+  int fd; /* file descriptor */
 };
 

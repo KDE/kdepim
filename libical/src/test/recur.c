@@ -31,9 +31,16 @@
 #include <stdlib.h> /* for malloc */
 #include <stdio.h> /* for printf */
 #include <time.h> /* for time() */
+#include <signal.h> /* for signal */
+#include <unistd.h> /* for alarm */
 #include "icalmemory.h"
 #include "icaldirset.h"
 #include "icalfileset.h"
+
+static void sig_alrm(int i){
+    fprintf(stderr,"Could not get lock on file\n");
+    exit(1);
+}
 
 int main(int argc, char *argv[])
 {
@@ -46,6 +53,11 @@ int main(int argc, char *argv[])
     time_t tt;
     char* file; 
 
+    icalerror_set_error_state(ICAL_PARSE_ERROR, ICAL_ERROR_NONFATAL);
+
+    signal(SIGALRM,sig_alrm);
+
+
     if (argc <= 1){
 	file = "../../test-data/recur.txt";
     } else if (argc == 2){
@@ -55,8 +67,10 @@ int main(int argc, char *argv[])
 	exit(1);
     }
 
+    alarm(300); /* to get file lock */
     cin = icalfileset_new(file);
-
+    alarm(0);
+    
     if(cin == 0){
 	fprintf(stderr,"recur: can't open file %s\n",file);
 	exit(1);
@@ -66,7 +80,6 @@ int main(int argc, char *argv[])
     for (itr = icalfileset_get_first_component(cin);
          itr != 0;
          itr = icalfileset_get_next_component(cin)){
-	int error = 0;
 
 	desc = icalcomponent_get_first_property(itr,ICAL_DESCRIPTION_PROPERTY);
 	dtstart = icalcomponent_get_first_property(itr,ICAL_DTSTART_PROPERTY);
@@ -79,6 +92,8 @@ int main(int argc, char *argv[])
 	    continue;
 	}
 
+	printf("\n\n#### %s\n",icalproperty_get_description(desc));
+	printf("#### %s\n",icalvalue_as_ical_string(icalproperty_get_value(rrule)));
 	recur = icalproperty_get_rrule(rrule);
 	start = icalproperty_get_dtstart(dtstart);
 	
@@ -86,8 +101,6 @@ int main(int argc, char *argv[])
 	
 	tt = icaltime_as_timet(start);
 
-	printf("\n\n#### %s\n",icalproperty_get_description(desc));
-	printf("#### %s\n",icalvalue_as_ical_string(icalproperty_get_value(rrule)));
 	printf("#### %s\n",ctime(&tt ));
 
 	for(ritr = icalrecur_iterator_new(recur,start),
