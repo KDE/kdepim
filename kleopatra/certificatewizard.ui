@@ -230,7 +230,7 @@ The certificates can either be generated in a centralized or a non-centralized m
                     <cstring>ButtonGroup7</cstring>
                 </property>
                 <property name="title">
-                    <string>Certificate &amp;generation</string>
+                    <string>Certificate &amp;Generation</string>
                 </property>
                 <grid>
                     <property name="name">
@@ -318,7 +318,7 @@ The certificates can either be generated in a centralized or a non-centralized m
                             </size>
                         </property>
                         <property name="text">
-                            <string>&amp;Generate certificate</string>
+                            <string>&amp;Generate Certificate</string>
                         </property>
                     </widget>
                     <spacer>
