@@ -57,7 +57,8 @@ libkdenetwork_la_LIBADD = $(LIB_KDEUI) $(LIB_KSPELL) $(LIB_KABC) $(LIB_POLL)
 METASOURCES = AUTO
 
 updatedir = $(kde_datadir)/kconf_update
-update_DATA = kpgp.upd kpgp-3.1-upgrade-address-data.pl
+update_DATA = kpgp.upd
+update_SCRIPTS = kpgp-3.1-upgrade-address-data.pl
 
 messages: 
 	$(XGETTEXT) *.cpp *.h -o $(podir)/libkdenetwork.pot
