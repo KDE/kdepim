@@ -1,0 +1,11 @@
+Kandy 0.1
+Cornelius Schumacher <schumacher@kde.org>
+----------------------------------------------------------------------
+Kandy provides access to your mobile phone.
+
+At the moment Kandy is more or less a terminal program with some special
+features to store commands and their parameters, but is also has a simple GUI to
+access the phone-book of a mobile phone and it is able to save this phonebook to
+the KDE address book.
+
+Kandy is aimed at mobile phone with integrated (GSM) modems.

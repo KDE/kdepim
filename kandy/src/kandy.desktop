@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kandy
+Exec=kandy %i %m -caption "%c"
+Icon=kandy
+Type=Application
+DocPath=kandy/kandy.html
+Comment=Communicating with your mobile phone
+Terminal=0
