@@ -3,8 +3,7 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 lib_LTLIBRARIES = libkcal_resourcefeatureplan.la
 
 noinst_LTLIBRARIES = libfeatureplancommon.la
-libfeatureplancommon_SOURCES = kde-features.cpp
-
+libfeatureplancommon_la_SOURCES = kde-features.cpp
 
 libkcal_resourcefeatureplan_la_SOURCES = kcal_resourcefeatureplan.cpp \
                                          kcal_resourcefeatureplanconfig.cpp \
