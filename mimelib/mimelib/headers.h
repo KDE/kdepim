@@ -413,6 +413,7 @@ protected:
     //. Add field but don't set the is-modified flag
 
     DwField* mFirstField;
+    DwField* mLastField;
 
 protected:
 

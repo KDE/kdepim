@@ -120,6 +120,7 @@ DwHeaders* DwHeaders::NewHeaders(const DwString& aStr,
 DwHeaders::DwHeaders()
 {
     mFirstField = 0;
+    mLastField = 0;
     mClassId = kCidHeaders;
     mClassName = sClassName;
 }
@@ -129,6 +130,7 @@ DwHeaders::DwHeaders(const DwHeaders& aHeader)
   : DwMessageComponent(aHeader)
 {
     mFirstField = 0;
+    mLastField = 0;
     if (aHeader.mFirstField) {
         CopyFields(aHeader.mFirstField);
     }
@@ -141,6 +143,7 @@ DwHeaders::DwHeaders(const DwString& aStr, DwMessageComponent* aParent)
   : DwMessageComponent(aStr, aParent)
 {
     mFirstField = 0;
+    mLastField = 0;
     mClassId = kCidHeaders;
     mClassName = sClassName;
 }
@@ -177,7 +180,7 @@ void DwHeaders::Parse()
     DwHeadersParser parser(mString);
     DwString str;
     parser.NextField(&str);
-    while (str != "") {
+    while (!str.empty()) {
         DwField* field = DwField::NewField(str, this);
         field->Parse();
         _AddField(field);
@@ -211,7 +214,7 @@ DwMessageComponent* DwHeaders::Clone() const
 
 DwFieldBody& DwHeaders::FieldBody(const DwString& aFieldName)
 {
-    assert(aFieldName != "");
+    assert(!aFieldName.empty());
     // First, search for field
     DwField* field = FindField(aFieldName);
     // If the field is not found, create the field and its field body
@@ -237,7 +240,7 @@ DwFieldBody& DwHeaders::FieldBody(const DwString& aFieldName)
 
 std::vector<DwFieldBody*> DwHeaders::AllFieldBodies(const DwString& aFieldName)
 {
-    assert(aFieldName != "");
+    assert(!aFieldName.empty());
     // First, search for field
     DwField* field = FindField(aFieldName);
     // If the field is not found, create the field and its field body
@@ -335,6 +338,9 @@ void DwHeaders::AddOrReplaceField(DwField* aField)
             mFirstField = aField;
         }
         aField->SetNext(field->Next());
+        // Check whether we've replaced the last field
+        if ( !aField->Next() )
+            mLastField = aField;
         delete field;
     }
 }
@@ -358,6 +364,7 @@ void DwHeaders::AddFieldAt(int aPos, DwField* aField)
     if (mFirstField == 0) {
         aField->SetNext(0);
         mFirstField = aField;
+        mLastField = aField;
         return;
     }
     // Special case: aPos == 1 --> add at beginning
@@ -379,6 +386,9 @@ void DwHeaders::AddFieldAt(int aPos, DwField* aField)
     }
     aField->SetNext(field->Next());
     field->SetNext(aField);
+    // Check whether we've a new last field
+    if ( !aField->Next() )
+        mLastField = aField;
 }
 
 
@@ -401,6 +411,9 @@ void DwHeaders::RemoveField(DwField* aField)
         else {
             prevField->SetNext(field->Next());
         }
+        // Check whether we've removed the last field
+        if ( field == mLastField )
+            mLastField = prevField;
         field->SetNext(0);
         SetModified();
     }
@@ -416,6 +429,7 @@ void DwHeaders::DeleteAllFields()
         field = nextField;
     }
     mFirstField = 0;
+    mLastField = 0;
 }
 
 
@@ -427,13 +441,11 @@ void DwHeaders::_AddField(DwField* aField)
     // Special case: empty list
     if (mFirstField == 0) {
         mFirstField = aField;
+        mLastField = aField;
         return;
     }
-    DwField* field = mFirstField;
-    while (field->Next()) {
-        field = field->Next();
-    }
-    field->SetNext(aField);
+    mLastField->SetNext(aField);
+    mLastField = aField;
 }
 
 
