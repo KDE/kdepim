@@ -42,7 +42,7 @@ class ICalFormat;
 class ScheduleMessage {
   public:
     /** Message status. */
-    enum Status { PublishNew, Obsolete, RequestNew, RequestUpdate, Unknown };
+    enum Status { PublishNew, PublishUpdate, Obsolete, RequestNew, RequestUpdate, Unknown };
   
     /**
       Create a scheduling message with method as defined in Scheduler::Method

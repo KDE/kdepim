@@ -421,12 +421,16 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   icalclass result = icalclassify(message,calendarComponent,(char *)"");
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
+  kdDebug(5800) << "ICalFormat::parseScheduleMessage(), result = " << result << endl;
 
   ScheduleMessage::Status status;
 
   switch (result) {
     case ICAL_PUBLISH_NEW_CLASS:
       status = ScheduleMessage::PublishNew;
+      break;
+    case ICAL_PUBLISH_UPDATE_CLASS:
+      status = ScheduleMessage::PublishUpdate;
       break;
     case ICAL_OBSOLETE_CLASS:
       status = ScheduleMessage::Obsolete;
@@ -442,6 +446,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       status = ScheduleMessage::Unknown;
       break;
   }
+
+  kdDebug(5800) << "ICalFormat::parseScheduleMessage(), status = " << status << endl;
 
   return new ScheduleMessage(incidence,method,status);
 }

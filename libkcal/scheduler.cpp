@@ -46,6 +46,9 @@ ScheduleMessage::ScheduleMessage(IncidenceBase *incidence,int method,ScheduleMes
 QString ScheduleMessage::statusName(ScheduleMessage::Status status)
 {
   switch (status) {
+    case PublishUpdate:
+// TODO: Add string when i18n freeze is over.
+//      return i18n("Updated Publish");
     case PublishNew:
       return i18n("Publish");
     case Obsolete:
@@ -73,7 +76,9 @@ Scheduler::~Scheduler()
 
 bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
 {
-  kdDebug(5800) << "Scheduler::acceptTransaction " << endl;
+  kdDebug(5800) << "Scheduler::acceptTransaction, method="
+                << methodName( method ) << endl;
+
   switch (method) {
     case Publish:
       return acceptPublish(incidence, status, method);
@@ -152,28 +157,42 @@ bool Scheduler::deleteTransaction(IncidenceBase *)
   return true;
 }
 
-bool Scheduler::acceptPublish(IncidenceBase *incidence,ScheduleMessage::Status status, Method method)
+bool Scheduler::acceptPublish( IncidenceBase *incidence,
+                               ScheduleMessage::Status status, Method method )
 {
-  if(incidence->type()=="FreeBusy") {
-    return acceptFreeBusy(incidence, method);
+  if( incidence->type() == "FreeBusy" ) {
+    return acceptFreeBusy( incidence, method );
   }
-  switch (status) {
+  kdDebug() << "Scheduler::acceptPublish, status="
+            << ScheduleMessage::statusName( status ) << endl;
+  Incidence *inc = static_cast<Incidence *>( incidence );
+  Event *even = mCalendar->event( incidence->uid() );
+  switch ( status ) {
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
-      if (!mCalendar->event(incidence->uid())) {
-	Incidence *inc = static_cast<Incidence *>(incidence);
-        mCalendar->addIncidence(inc);
-        deleteTransaction(incidence);
+    case ScheduleMessage::PublishUpdate:
+      if ( even ) {
+      	if ( even->revision() <= inc->revision() ) {
+	  if ( even->revision() == inc->revision() &&
+	      even->lastModified() > inc->lastModified() ) {
+	    deleteTransaction( incidence );
+	    return false;
+	  }
+	  mCalendar->deleteEvent( even );
+	} else {
+	  deleteTransaction( incidence );
+	  return false;
+	}
       }
+      mCalendar->addIncidence( inc );
+      deleteTransaction( incidence );
       return true;
     case ScheduleMessage::Obsolete:
       return true;
     default:
-      deleteTransaction(incidence);
+      deleteTransaction( incidence );
       return false;
   }
-  deleteTransaction(incidence);
-  return false;
 }
 
 bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
