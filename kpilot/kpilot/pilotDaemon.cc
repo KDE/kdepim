@@ -472,6 +472,7 @@ void PilotDaemon::showTray()
 	}
 
 	updateTrayStatus();
+	logProgress(QString::null,0);
 }
 
 /* DCOP */ void PilotDaemon::stopListening()
