@@ -7,7 +7,7 @@ Standards-Version: 3.5.6.0
 
 Package: kdepim
 Architecture: all
-Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kaddressbook (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
+Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kaddressbook (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version})
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for
  the K Desktop Enviromnent (KDE).
@@ -15,7 +15,7 @@ Description: KDE Personal Information Management metapackage
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
+Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), kdepim-libs (= ${Source-Version}) 
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
 
@@ -24,13 +24,6 @@ Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE NG addressbook application
- KDE next generation addressbook application.
-
-Package: kaddressbook-dev
-Section: devel
-Architecture: any
-Depends: kaddressbook (= ${Source-Version})
-Description: KDE NG addressbook application (development files)
  KDE next generation addressbook application.
 
 Package: kalarm
@@ -187,13 +180,6 @@ Depends: ${shlibs:Depends}
 Description: KDE TNEF viewer
  Viewer for Microsoft's TNEF format
 
-Package: libkcal2
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: iCalendar and vCalendar library
- iCalendar and vCalendar library
-
 Package: libkdenetwork2
 Section: libs
 Architecture: any
@@ -234,23 +220,3 @@ Conflicts: libmimelib-dev
 Description: KDE network mime library (development files)
  This library is used by several KDE applications to handle mime types.
 
-Package: libkgantt0
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: library to display and manage Gantt diagrams
- library to display and manage Gantt diagrams
-
-Package: kitchensync
-Section: kde
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: KDE Sync framework  
- Kitchensync provides connectors to all kinds of mobile
- devices and the interfaces to certain KDE components.
-
-Package: kitchensync-dev
-Section: devel
-Architecture: any
-Depends: kitchensync (=${Source-Version})
-Description: KDE Sync framework (development files)

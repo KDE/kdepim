@@ -16,6 +16,7 @@ debian/tmp/usr/include/kde/korganizer
 debian/tmp/usr/include/kde/kontact
 debian/tmp/usr/include/kde/knewstuff
 debian/tmp/usr/include/kde/ksieve
+debian/tmp/usr/include/kde/kaddressbook
 debian/tmp/usr/lib/libkalarmd.so
 debian/tmp/usr/lib/libkcal.so
 debian/tmp/usr/lib/libkgantt.so
@@ -31,3 +32,6 @@ debian/tmp/usr/lib/libktnef.la
 debian/tmp/usr/lib/libktnef.so
 debian/tmp/usr/lib/libkdgantt.so
 debian/tmp/usr/lib/libksieve.so
+debian/tmp/usr/lib/libkaddressbook.so
+debian/tmp/usr/lib/libkabinterfaces.so
+debian/tmp/usr/lib/libkabinterfaces.la
