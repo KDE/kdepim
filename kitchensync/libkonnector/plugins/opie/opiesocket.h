@@ -47,6 +47,7 @@ signals:
  private slots:
   void slotError(int );
   void slotConnected( );
+  void slotDis();
   void slotClosed();
   void process(); // ready read
   void slotNOOP();

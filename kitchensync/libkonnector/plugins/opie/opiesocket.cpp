@@ -190,7 +190,10 @@ void OpieSocket::slotConnected()
 }
 void OpieSocket::slotClosed()
 {
-
+    d->connected = false;
+    d->isConnecting = false;
+    d->isSyncing = false;
+    emit stateChanged( false );
 }
 void OpieSocket::process()
 {

@@ -284,7 +284,7 @@ void KSyncMainWindow::initKonnector()
 void KSyncMainWindow::slotSync( const QString &udi,
                                 QPtrList<KSyncEntry> )
 {
-    kdDebug() << "Some data arrived" << endl;
+    kdDebug() << "Some data arrived Yeah baby" << endl;
 }
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
