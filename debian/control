@@ -74,12 +74,54 @@ Depends: ${shlibs:Depends}
 Description: KDE PIM libraries
  KDE PIM libraries used by the other programs in kdepim 
 
+Package: kgpgcertmanager
+Section: net
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE Certificate Manager
+ Certificate manager used by kdenetwork for encrypted email
+
+Package: kmail
+Section: mail
+Architecture: any
+Depends: ${shlibs:Depends}, kdebase-kio-plugins
+Suggests: gnupg
+Provides: mail-reader
+Description: KDE Email client
+ Mail Client based on QT and KDE
+ .
+ Supports imap, mbox, maildir, pop3, pop3s, and OpenPGP
+
+Package: kmailcvt
+Section: mail
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: kmail (<< 4:3.0.0)
+Replaces: kmail (<< 4:3.0.0)
+Description: KDE KMail addressbook converter
+ Converts addressbooks to KMail format.
+
+Package: knode
+Section: news
+Architecture: any
+Depends: ${shlibs:Depends}
+Provides: news-reader
+Description: KDE news reader
+ News reader for KDE
+
 Package: knotes
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE Notes
  Sticky notes for KDE.
+
+Package: kontact
+Section: mail
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE pim application
+ KDE next generation pim application.
 
 Package: korganizer
 Section: x11
@@ -106,6 +148,13 @@ Description: KDE personal organizer
  KOrganizer also offers full synchronization with your Palm Pilot, if you
  have kpilot installed.
 
+Package: korn
+Section: mail
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE mail checker
+ Mail notifier for KDE
+
 Package: kpilot
 Section: utils
 Architecture: any
@@ -124,12 +173,59 @@ Description: KDE Sync
  the libksync interfaces exist. It is able to sync data across networks by using
  the KDE ioslaves.
 
+Package: ktnef
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE TNEF viewer
+ Viewer for Microsoft's TNEF format
+
 Package: libkcal2
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: iCalendar and vCalendar library
  iCalendar and vCalendar library
+
+Package: libkdenetwork2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: libkdenetwork
+Provides: libkdenetwork
+Description: KDE Network (common libraries)
+ This package contains libraries needed for network based KDE applications.
+ This is mainly any common code that could be shared between apps.
+
+Package: libkdenetwork2-dev
+Section: devel
+Architecture: any
+Depends: libkdenetwork2 (=${Source-Version})
+Conflicts: libkdenetwork-dev, libkdenetwork1
+Provides: libkdenetwork-dev
+Replaces: libkdenetwork1
+Description: KDE Network (development files)
+ This package contains development files needed for network based KDE
+ applications. This is mainly any common code that could be shared between
+ apps.
+
+Package: libmimelib1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Provides: libmimelib
+Conflicts: libmimelib
+Description: KDE network mime library
+ This library is used by several KDE applications to handle mime types.
+
+Package: libmimelib1-dev
+Section: devel
+Architecture: any
+Depends: libmimelib1 (=${Source-Version})
+Provides: libmimelib-dev
+Conflicts: libmimelib-dev
+Description: KDE network mime library (development files)
+ This library is used by several KDE applications to handle mime types.
 
 Package: libkgantt0
 Section: libs
