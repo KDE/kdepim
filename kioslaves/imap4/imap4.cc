@@ -1694,7 +1694,7 @@ IMAP4Protocol::getMimeType (enum IMAP_TYPE aType)
     break;
 
   case ITYPE_MSG:
-    return "message/rfc822-imap";
+    return "message/rfc822";
     break;
 
   case ITYPE_UNKNOWN:
@@ -1752,7 +1752,7 @@ IMAP4Protocol::doListEntry (const KURL & _url, int stretch, imapCache * cache,
     entry.append (atom);
 
     atom.m_uds = UDS_MIME_TYPE;
-    atom.m_str = "message/rfc822-imap";
+    atom.m_str = "message/rfc822";
     atom.m_long = 0;
     entry.append (atom);
 
