@@ -143,6 +143,9 @@ ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
 	QObject::connect(fConfigWidget->available,
 		SIGNAL(selectionChanged(QListViewItem *)),
 		this,SLOT(selected(QListViewItem *)));
+	QObject::connect(fConfigWidget->active,
+		SIGNAL(doubleClicked(QListViewItem *)),
+		this,SLOT(configureConduit()));
 
 	QObject::connect(fConfigWidget->enableButton,
 		SIGNAL(clicked()),
@@ -420,6 +423,9 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 // $Log$
+// Revision 1.6  2002/01/02 11:42:19  bero
+// Fix build.
+//
 // Revision 1.5  2001/12/31 09:26:15  adridg
 // Removed support for old-style Exec= conduits
 //
