@@ -22,6 +22,7 @@
 */
 
 #include <qdir.h>
+#include <qfileinfo.h>
 
 #include "RDatabase.h"
 
@@ -41,8 +42,8 @@ Database::Database(const QString & filename)
   dataFile_.setName(filename + ".rdb");
 
   index_.setAutoDelete(true);
-  _open();
   touched_ = QDateTime::currentDateTime();
+  _open();
 }
 
 Database::~Database()
@@ -92,6 +93,8 @@ Database::_open()
     return;
   }
 
+  touched_ = QFileInfo(dataFile_).lastModified();
+
   // Remember where the end of the data file is.
   dataFileSize_   = dataFile_.size();
 
@@ -122,7 +125,6 @@ Database::_loadIndex()
     index_.insert(key, new Q_UINT32(ofs));
   }
 
-  touched_ = QDateTime::currentDateTime();
   indexDirty_ = false;
   indexLoaded_ = true;
 }
