@@ -86,7 +86,7 @@ void CalendarAdaptor::deleteItem( const QString &localId )
   mResource->disableChangeNotification();
   KCal::Incidence *i = mResource->incidence( localId );
   if ( i ) {
-//    mResource->deleteIncidence( i );
+    mResource->deleteIncidence( i );
     mResource->clearChange( i );
   }
   mResource->enableChangeNotification();
@@ -96,6 +96,10 @@ void CalendarAdaptor::addItem( KCal::Incidence *i)
 {
   if ( i ) {
     mResource->disableChangeNotification();
+    Incidence *existing = mResource->incidence( i->uid() );
+    if ( existing ) {
+      mResource->deleteIncidence( i );
+    }
     mResource->addIncidence( i );
     mResource->clearChange( i );
     mResource->enableChangeNotification();
