@@ -675,7 +675,7 @@ void CardView::setCurrentItem( CardViewItem *item )
     return;
   else if ( item->cardView() != this )
   {
-    kdDebug()<<"CardView::setCurrentItem: Item ("<<item<<") not owned! Backing out.."<<endl;
+    kdDebug(5720)<<"CardView::setCurrentItem: Item ("<<item<<") not owned! Backing out.."<<endl;
     return;
   }
   else if ( item == currentItem() )
@@ -1062,14 +1062,14 @@ void CardView::setItemSpacing( uint spacing )
   setLayoutDirty( true );
 }
 
-void CardView::mousePressEvent(QMouseEvent *e)
+void CardView::contentsMousePressEvent(QMouseEvent *e)
 {
-  QScrollView::mousePressEvent(e);
+  QScrollView::contentsMousePressEvent(e);
 
   QPoint pos = e->pos();
   d->mLastClickPos = pos;
 
-  CardViewItem *item = itemAt(viewportToContents(pos));
+  CardViewItem *item = itemAt(pos);
 
   if (item == 0)
   {
@@ -1180,14 +1180,14 @@ void CardView::mousePressEvent(QMouseEvent *e)
 
 }
 
-void CardView::mouseReleaseEvent(QMouseEvent *e)
+void CardView::contentsMouseReleaseEvent(QMouseEvent *e)
 {
-  QScrollView::mouseReleaseEvent(e);
+  QScrollView::contentsMouseReleaseEvent(e);
 
   if ( d->mResizeAnchor )
   {
     // finish the resizing:
-    setCursor( QCursor( ArrowCursor ) );
+	unsetCursor();
     // hide rubber bands
     int newiw = d->mItemWidth - ((d->mResizeAnchor - d->mRubberBandAnchor)/d->span);
     drawRubberBands( 0 );
@@ -1210,7 +1210,7 @@ void CardView::mouseReleaseEvent(QMouseEvent *e)
     return;
 
   // Get the item at this position
-  CardViewItem *item = itemAt(viewportToContents(e->pos()));
+  CardViewItem *item = itemAt(e->pos());
 
   if (item && KGlobalSettings::singleClick())
   {
@@ -1218,11 +1218,11 @@ void CardView::mouseReleaseEvent(QMouseEvent *e)
   }
 }
 
-void CardView::mouseDoubleClickEvent(QMouseEvent *e)
+void CardView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
-  QScrollView::mouseDoubleClickEvent(e);
+  QScrollView::contentsMouseDoubleClickEvent(e);
 
-  CardViewItem *item = itemAt(viewportToContents(e->pos()));
+  CardViewItem *item = itemAt(e->pos());
 
   if (item)
   {
@@ -1236,19 +1236,6 @@ void CardView::mouseDoubleClickEvent(QMouseEvent *e)
   emit doubleClicked(item);
 }
 
-void CardView::mouseMoveEvent(QMouseEvent *e)
-{
-
-  if (d->mLastClickOnItem && (e->state() & Qt::LeftButton) &&
-     ((e->pos() - d->mLastClickPos).manhattanLength() > 4))
-     startDrag();
-
-}
-
-void CardView::contentsMousePressEvent( QMouseEvent * )
-{
-}
-
 void CardView::contentsMouseMoveEvent( QMouseEvent *e )
 {
   // resizing
@@ -1258,6 +1245,13 @@ void CardView::contentsMouseMoveEvent( QMouseEvent *e )
     if ( x != d->mRubberBandAnchor )
       drawRubberBands( x );
       return;
+  }
+	
+  if (d->mLastClickOnItem && (e->state() & Qt::LeftButton) &&
+     ((e->pos() - d->mLastClickPos).manhattanLength() > 4)) {
+	  
+     startDrag();
+	 return;
   }
 
   d->mTimer->start( 500 );
@@ -1271,12 +1265,12 @@ void CardView::contentsMouseMoveEvent( QMouseEvent *e )
     int m = e->x()%colw;
     if ( m >= colcontentw && m > 0 )
     {
-      setCursor( QCursor( Qt::SplitVCursor ) );
+      setCursor( SplitVCursor ); // Why does this fail sometimes?
       d->mOnSeparator = true;
     }
     else
     {
-      setCursor( QCursor( Qt::ArrowCursor ) );
+      setCursor( ArrowCursor );
       d->mOnSeparator = false;
     }
   }
@@ -1293,7 +1287,7 @@ void CardView::leaveEvent( QEvent * )
   if (d->mOnSeparator)
   {
     d->mOnSeparator = false;
-    setCursor( QCursor( Qt::ArrowCursor ) );
+    setCursor( ArrowCursor );
    }
 }
 
