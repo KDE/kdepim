@@ -61,7 +61,7 @@ static const char *pilotRecord_id =
 	FUNCTIONSETUP;
 	DEBUGKPILOT << fname
 		<< ": Allocated " << fAllocated
-		<< "  Deleted " << fDeleted;
+		<< "  Deleted " << fDeleted << endl;
 #endif
 }
 
