@@ -156,6 +156,10 @@ KPilotInstaller::KPilotInstaller() :
 	readConfig();
 	setupWidget();
 
+#ifdef DEBUG
+	PilotRecord::allocationInfo();
+#endif
+
 	/* NOTREACHED */
 	(void) kpilot_id;
 }
@@ -165,6 +169,9 @@ KPilotInstaller::~KPilotInstaller()
 	FUNCTIONSETUP;
 	killDaemonIfNeeded();
 	delete fDaemonStub;
+#ifdef DEBUG
+	PilotRecord::allocationInfo();
+#endif
 }
 
 void KPilotInstaller::killDaemonIfNeeded()
