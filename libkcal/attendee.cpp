@@ -2,6 +2,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <qstringlist.h>
 
 #include "attendee.h"
 
