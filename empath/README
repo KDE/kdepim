@@ -1,0 +1,70 @@
+OI !
+
+Note: All things are now separate. Message parsing lib is in rmm, kernel is in lib,
+ui is in ui.
+
+Currently working on: Making Maildir work properly, using a single dir as the base,
+i.e. ~/Maildir, and using separate Maildir type dirs for folders. This is the
+way it was meant to be. EmpathMailboxMaildir will now contain many EmpathMaildir,
+which will all have their own indices.
+
+QCString stuff seems to be going ok now.
+
+Also started using QValueLists where appropriate, including QStringList.
+
+Potential developers:
+
+Please mail me to let me know what you're interested in helping with.
+This doesn't have to be coding, it can be providing input for the design of
+the system, drawing icons, writing docs, translating, testing, etc. The more the
+merrier.
+
+Obviously the more coders the faster this will stabilise, but I consider the
+system as a whole to be important - users will need docs to read, and to be
+able to use Empath in their native language.
+
+* COMPILING WITH DIFFERENT QT VERSIONS *
+
+You can't now. Qt 2 has almost stabilised enough to be blameless when Empath dies.
+Also, there's extra stuff like QValueList, which is damn useful.
+Please use Qt 2pre !
+
+* GETTING STARTED *
+
+You need:
+a) A Maildir, with some mail in it.
+b) (optional) A POP host to receive from.
+
+Since I started porting to KDE/Qt 2, things have gone a little awry.
+
+You will find that popping may have undesirable effects, and that YOU WON'T SEE
+WHAT'S HAPPENING unless you watch stdout. I do empath &> log and read it later as
+the speed crashes konsole.
+
+You can just try whacking some mail into your Maildir. Empath might create your
+Maildir for you when you first run it. You need to put new mail into ~/Maildir/cur.
+
+Now, the filenames have to be in the canonical format (though Empath should handle
+non-canonical names properly). I suggest this:
+
+Get mutt, send mail to some test user, send some replies to that. Pop the mail for that user. Not forgetting to tell mutt your local mailbox is ~/Maildir.
+
+This way you avoid killing your own mail, as you just pop from a test box and write
+to a different box.
+
+Of course, Empath might pop your mail and write it to your Maildir, but I doubt it.
+It did before the big port started.
+
+Oh, the BeOS style is just there because I started pissing about with Qt2's styles
+and wanted to see if it worked. It does.
+
+FOR INFORMATION ON THE DESIGN:
+
+Read Changelog and design_docs/*
+
+Note that the ChangeLog is now a little out of date, and the design_docs are too.
+The design_docs stuff is basically me just writing stuff down so that I understand
+what I'm doing.
+
+Rik Hemsley <rik@kde.org>
+
