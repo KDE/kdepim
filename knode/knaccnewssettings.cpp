@@ -183,6 +183,8 @@ void KNAccNewsSettings::slotAddBtnClicked()
 
 void KNAccNewsSettings::slotDelBtnClicked()
 {
+	if (currentItem < 0)
+		return;
 	KNNntpAccount *a;
 	a=(KNNntpAccount*)(lb->itemAt(currentItem)->data());
 	aManager->removeAccount(a);
