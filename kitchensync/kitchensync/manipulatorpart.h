@@ -14,19 +14,21 @@ namespace KitchenSync {
   class ManipulatorPart : public KParts::Part {
     Q_OBJECT
     public:
-     ManipulatorPart(const QString &name = QString::null, QWidget *parent = 0, const char *name  = 0 );
+     ManipulatorPart(QWidget *parent = 0, const char *name  = 0, const QStringList &= QStringList() );
      virtual ~ManipulatorPart() {};
      // the Type this Part understands/ is able to interpret
      virtual QString type()const {return QString::null; };
 
      virtual int progress()const { return 0; };
-     virtual QString identifier()const { return QString::null; };
+     //virtual QString identifier()const { return QString::null; };
      virtual QString name()const { return QString::null; };
 
      virtual QString description()const { return QString::null; };
      virtual QPixmap *pixmap()const { return 0l; };
      virtual bool partIsVisible()const { return false; }
+     virtual QWidget *configWidget() const;
     public slots:
+     virtual void slotConfigOk();
      virtual void syncEntries( const QPtrList<KSyncEntry> & ){ };     
 
   };

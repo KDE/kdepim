@@ -11,6 +11,8 @@
 #include <kabc/phonenumber.h>
 #include <kabc/address.h>
 
+#include <todo.h>
+
 #include "opiehelper.h"
 
 namespace {
@@ -106,16 +108,92 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
     entry->append( entr );
 }
 
- void OpieHelper::toCalendar(const QString &todo, const QString &calendar, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> & )
+ void OpieHelper::toCalendar(const QString &timestamp, const QString &todo, const QString &calendar, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &cat )
 {
   KAlendarSyncEntry *entry = new KAlendarSyncEntry();
   list->append( entry );
   KCal::CalendarLocal *cal = new KCal::CalendarLocal();
   entry->setCalendar( cal );
+  QFile file( todo );
+  if( !file.open(IO_ReadOnly ) ){
+    return;
+  }
+  QDomDocument doc("mydocument" );
+  if( !doc.setContent( &file ) ){
+    file.close();
+  }else{
+    QDomElement docElem = doc.documentElement( );
+    kdDebug( ) << docElem.tagName() ;
+    QDomNode n =  docElem.firstChild();
+    KCal::Todo *todo;
+    QString dummy;
+    int Int;
+    bool ok;
+    while(!n.isNull() ){
+      QDomElement e =n.toElement();
+      if(!e.isNull() ){
+	kdDebug() << e.tagName() << endl;
+	if(e.tagName() == "Task" ){
+	  todo = new KCal::Todo();
+	  QStringList list = QStringList::split(";", e.attribute("Categories") );
+	  QStringList categories;
+	  for(int i=0; i< list.count(); i++ ){
+	    categories.append( categoryById(list[i], QString::null, cat ) );
+	  };
+	  if( !categories.isEmpty() ){
+	    todo->setCategories( categories );
+	  }
+	  todo->setDescription(e.attribute("Description" ) );
+	  todo->setSummary( e.attribute("Description").left(15) );
+	  todo->setUid(e.attribute("Uid")  );
+	  dummy = e.attribute("Completed");
+	  Int = dummy.toInt(&ok);
+	  if(ok ){
+	    bool status = Int;
+	    if( status ){
+	      todo->setCompleted(true); 
+	    }else
+	      todo->setCompleted( false );
+	  }else
+	    todo->setCompleted( false );
+	  dummy = e.attribute("Priority" );
+	  todo->setPriority(dummy.toInt(&ok )  );
+	  dummy = e.attribute("HasDate" );
+	  bool status = dummy.toInt(&ok );
+	  if(status){
+	    todo->setHasDueDate(true );
+	    QDateTime time = QDateTime::currentDateTime();
+	    QDate date;
+	    dummy = e.attribute("DateDay" );
+	    int day= dummy.toInt(&ok );
+	    int month = e.attribute("DateMonth").toInt(&ok );
+	    int year = e.attribute("DateYear").toInt(&ok );
+	    date.setYMD(year, month, day);
+	    time.setDate( date );
+	    todo->setDtDue( time );
+	  }else{
+	    todo->setHasDueDate( false );
+	  }
+	  cal->addTodo( todo );
+	}
+      }
+      n = n.nextSibling();
+    };
+  }
   // now parese the files :(
     //return entry;
+  QFile file2( todo );
+  if( !file2.open(IO_ReadOnly ) ){
+    return;
+  }
+  QDomDocument doc("mydocument" );
+  if( !doc.setContent( &file2 ) ){
+    file2.close();
+  }else{
+    // start reading
+  }
 }
-void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &vals)
+void OpieHelper::toAddressbook(const QString &timeStamp, const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &vals)
 {
     KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
     list->append( entry );

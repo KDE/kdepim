@@ -1,4 +1,6 @@
 
+SUBDIRS = organizer
+
 INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector $(all_includes)
 
 kitchensyncdatadir = $(kde_datadir)/kitchensync

@@ -15,16 +15,18 @@ class OpieHelper {
  public:
   OpieHelper() {};
   ~OpieHelper();
-  void toOpieDesktopEntry( const QString &,
+  void toOpieDesktopEntry(  const QString &,
 			   QPtrList<KSyncEntry> *list,
 			   const QValueList<OpieCategories> & );
 
-  void toCalendar(const QString &todo, 
+  void toCalendar(const QString &timeStamp,
+		  const QString &todo, 
 		  const QString &calendar ,
 		  QPtrList<KSyncEntry> *list,
 		  const QValueList<OpieCategories> &);
 
-  void toAddressbook( const QString &fileName,
+  void toAddressbook( const QString &timeStamp,
+		      const QString &fileName,
 		      QPtrList<KSyncEntry> *list,
 		      const QValueList<OpieCategories> & );
   static OpieHelper *self();

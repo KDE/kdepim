@@ -267,7 +267,7 @@ void OpieSocket::manageCall(const QString &line )
 	    kdDebug() << list[3] << endl;
 	    d->path = list[3];
 	    d->getMode = d->DESKTOPS;
-	    stream << "call QPE/System startSync(QString) KitchenSync"; 
+	    stream << "call QPE/System startSync(QString) KitchenSync\r\n"; 
 	    break;
 	}
 	case d->ABOOK:{
@@ -289,14 +289,14 @@ void OpieSocket::manageCall(const QString &line )
 	    tmpFileName = QString::null;
 	    //tmpFileName = "/home/ich/addressbook.xml";
 	    KIO::NetAccess::download( url, tmpFileName );
-	    OpieHelper::self()->toAddressbook( tmpFileName, &d->m_sync, d->m_categories  );
+	    OpieHelper::self()->toAddressbook(QString::null, tmpFileName, &d->m_sync, d->m_categories  );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 	    QString todo;
 	    url.setPath(d->path + "/Applications/todolist/todolist.xml" );
 	    KIO::NetAccess::download(url, todo );
 	    url.setPath(d->path + "/Applications/datebook/datebook.xml" );
 	    KIO::NetAccess::download(url, tmpFileName );
-	    OpieHelper::self()->toCalendar(todo, tmpFileName, &d->m_sync, d->m_categories );
+	    OpieHelper::self()->toCalendar(QString::null, todo, tmpFileName, &d->m_sync, d->m_categories );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 	    KIO::NetAccess::removeTempFile( todo );
 	    // done with fetching
