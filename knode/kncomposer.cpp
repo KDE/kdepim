@@ -483,6 +483,37 @@ bool KNComposer::hasValidData()
        KMessageBox::information(this, i18n("Your signature exceeds the widely accepted limit of 4 lines.\nPlease consider shortening your signature.\nOtherwise, you will probably annoy your readers"),
                                 QString::null,"longSignatureWarning");
 
+  // check if article can be signed
+  if ( a_ctPGPsign->isChecked() ) {
+    // try to get the signing key
+    QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
+    KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
+    if ( acc ) {
+      KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
+      KNGroup *grp = knGlobals.grpManager->group( grps->firstGroup(), acc );
+      if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
+        signingKey = grp->identity()->signingKey();
+      else if ( acc->identity() && acc->identity()->hasSigningKey() )
+        signingKey = acc->identity()->signingKey();
+    }
+    
+    // the article can only be signed if we have a key  
+    if (signingKey.isEmpty()) {    
+          if ( KMessageBox::warningContinueCancel( this, 
+                   i18n("You haven't configured your preferred "
+                        "signing key yet.\n"
+                        "Please specify it in the global "
+                        "identity configuration,\n"
+                        "in the account properties or in the "
+                        "group properties!\n"
+                        "The article will be sent unsigned." ),
+                   QString::null, i18n( "Send Unsigned" ),
+                   "sendUnsignedDialog" ) 
+               == KMessageBox::Cancel )
+             return false;
+    }
+  }      
+
   v_alidated=true;
   return true;
 }
@@ -622,21 +653,7 @@ bool KNComposer::applyChanges()
 	      QCString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           }
-      }
-      else {
-          if ( KMessageBox::warningContinueCancel( this, 
-                   i18n("You haven't configured your preferred "
-                        "signing key yet.\n"
-                        "Please specify it in the global "
-                        "identity configuration,\n"
-                        "in the account properties or in the "
-                        "group properties!\n"
-                        "The article will be sent unsigned." ),
-                   QString::null, i18n( "Send Unsigned" ),
-                   "sendUnsignedDialog" ) 
-               == KMessageBox::Cancel )
-	      return false;
-      }
+      }     
   }
 
   text->fromUnicodeString(tmp);
