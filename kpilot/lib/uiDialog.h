@@ -64,6 +64,11 @@ protected slots:
 	virtual void slotOk();
 
 protected:
+	/**
+	* validate() is called when the user OK's the dialog.
+	* If any checking needs to be done, then this is the place
+	* to do it, to provide the user with a chance to cancel the OK.
+	*/
 	virtual bool validate() { return true; } ;
 	virtual void commitChanges() = 0;
 

@@ -55,6 +55,15 @@ protected:
 	void warnNoLibrary(const QListViewItem *);
 
 	void loadAndConfigure(QListViewItem *); // ,bool);
+
+public:
+	/**
+	* Get rid of the current conduit configuration widget,
+	* saving changes if necessary. Returns false if the user
+	* selects cancel for the action that is supposed to 
+	* release the conduit (ie. selecting a different one,
+	* or closing the dialog.)
+	*/
 	bool release();
 public slots:
 	void commitChanges();
@@ -82,6 +91,7 @@ public:
 
 protected:
 	virtual void commitChanges();
+	virtual bool validate();
 
 protected slots:
 	void selected(QListViewItem *);

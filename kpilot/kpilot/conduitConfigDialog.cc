@@ -141,6 +141,11 @@ ConduitConfigDialog::~ConduitConfigDialog()
 	FUNCTIONSETUP;
 }
 
+/* virtual */ bool ConduitConfigDialog::validate()
+{
+	return fConfigWidget->release();
+}
+
 /* virtual */ void ConduitConfigDialog::commitChanges()
 {
 	fConfigWidget->commitChanges();
