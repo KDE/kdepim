@@ -171,7 +171,13 @@ QWidget *KAddressBookView::viewWidget()
 void KAddressBookView::updateView()
 {
   refresh();
-
+// PENDING(tokoe): Review this.
+// If the code below is enabled, the contact editors can't
+// be used as extension bar. Whenever something is changed 
+// by the user, it reverts to the old setting right away.
+//
+// /steffen
+#if 0
   KABC::Addressee::List contacts = mCore->searchManager()->contacts();
   if ( contacts.count() > 0 )
     setSelected( contacts.first().uid(), true );
@@ -179,6 +185,7 @@ void KAddressBookView::updateView()
     setSelected( QString::null, false );
     emit selected( QString::null );
   }
+#endif
 }
 
 ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,
