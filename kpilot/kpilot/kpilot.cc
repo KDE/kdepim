@@ -62,6 +62,8 @@ static const char *kpilot_id="$Id$";
 #include <kcmdlineargs.h>
 #include <kiconloader.h>
 #include <kdebug.h>
+#include <kaction.h>
+#include <kstdaction.h>
 
 #include "kpilotOptions.h"
 #include "kpilot.moc"
@@ -229,6 +231,7 @@ void KPilotInstaller::initIcons()
 {
 	FUNCTIONSETUP;
 
+#if 0
 	KIconLoader *il = KGlobal::iconLoader();
 
 	icon_quit = il->loadIcon("exit",
@@ -243,6 +246,7 @@ void KPilotInstaller::initIcons()
 	icon_hotsync = QPixmap((const char **)hotsync_icon);
 	icon_backup = QPixmap((const char **)toolbar_backup);
 	icon_restore = QPixmap((const char **)toolbar_restore);
+#endif
 }
 
 
@@ -257,6 +261,7 @@ KPilotInstaller::initToolBar()
 	QStringList s = c.readListEntry("ToolbarIcons");
 
 
+#if 0
 	// We allow some kind of toolbar customisation,
 	// and we should switch to the real KDE2 configurable
 	// toolbars soon (after KDE 2.1 / KPilot 4.0.0)
@@ -306,6 +311,7 @@ KPilotInstaller::initToolBar()
 	// fToolBar->insertButton( icon, 0, 
 	//	SIGNAL(clicked()), this, SLOT(quit()),
 	//	TRUE, i18n("Quit"));
+#endif
 
 	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
 	conduitCombo->insertItem(version(0));
@@ -850,41 +856,59 @@ KPilotInstaller::closeEvent(QCloseEvent *e)
 
 void
 KPilotInstaller::initMenu()
-    {
+{
 	FUNCTIONSETUP;
 
-    QPopupMenu* fileMenu = new QPopupMenu;
-    fileMenu->insertItem(i18n("&Settings"), KPilotInstaller::ID_FILE_SETTINGS);
-    fileMenu->insertSeparator(-1);
-	fileMenu->insertItem(icon_hotsync,
+	QPopupMenu* fileMenu = new QPopupMenu;
+	fileMenu->insertItem(i18n("&Settings"), 
+		KPilotInstaller::ID_FILE_SETTINGS);
+	fileMenu->insertSeparator(-1);
+	fileMenu->insertItem(// icon_hotsync,
 		i18n("&Hot-Sync"),KPilotInstaller::ID_FILE_HOTSYNC);
-	fileMenu->insertItem(icon_fastsync,
+	fileMenu->insertItem(// icon_fastsync,
 		i18n("&Fast-Sync"),KPilotInstaller::ID_FILE_FASTSYNC);
-	fileMenu->insertItem(icon_backup,
+	fileMenu->insertItem(// icon_backup,
 		i18n("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
-	fileMenu->insertItem(icon_restore,
+	fileMenu->insertItem(// icon_restore,
 		i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
-    fileMenu->insertSeparator(-1);
+	fileMenu->insertSeparator(-1);
+
+	KAction *p;
+
+	p = KStdAction::preferences(this,
+		SLOT(slotConfigureKPilot()));
+	p->plug(fileMenu);
+	p = new KAction(i18n("Configure Conduits..."),
+		"configure",
+		0,
+		this,
+		SLOT(slotConfigureConduits()),
+		this);
+	p->plug(fileMenu);
+	p = KStdAction::quit(this,SLOT(quit()));
+	p->plug(fileMenu);
+#if 0
 	fileMenu->insertItem(icon_quit,
 		i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
-    connect(fileMenu, SIGNAL (activated(int)), SLOT (menuCallback(int)));
-    
+#endif
+	connect(fileMenu, SIGNAL (activated(int)), SLOT (menuCallback(int)));
+
 	conduitMenu = new QPopupMenu;
 	conduitMenu->insertItem(i18n("&External"), 
-		KPilotInstaller::ID_CONDUITS_SETUP);
+	KPilotInstaller::ID_CONDUITS_SETUP);
 	conduitMenu->insertSeparator(-1);
 	connect(conduitMenu, SIGNAL(activated(int)),
-		SLOT(menuCallback(int)));
+	SLOT(menuCallback(int)));
 
 	KPopupMenu *theHelpMenu = helpMenu();
-    
+
 	fMenuBar = menuBar();
 	fMenuBar->insertItem(i18n("&File"), fileMenu);
 	fMenuBar->insertItem(i18n("&Conduits"), conduitMenu);
 	fMenuBar->insertSeparator();
 	fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
 	fMenuBar->show();
-    }
+}
 
 void
 KPilotInstaller::fileInstalled(int )
@@ -960,8 +984,6 @@ void KPilotInstaller::menuCallback(int item)
 {
 	FUNCTIONSETUP;
 
-	KPilotOptions* options = 0L;
-	CConduitSetup* conSetup = 0L;
 
 #ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
@@ -995,80 +1017,7 @@ void KPilotInstaller::menuCallback(int item)
 		quit();
 		break;
 	case KPilotInstaller::ID_FILE_SETTINGS:
-		// Display the (modal) options page.
-		//
-		//
-		showTitlePage();
-		options = new KPilotOptions(this);
-		if (options==NULL)
-		{
-			kdError() << __FUNCTION__ << 
-				": Can't allocate KPilotOptions object\n";
-			break;
-		}
-
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname << ": Running options dialog." 
-				<< endl;
-		}
-#endif
-		options->exec();
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname << ": dialog result "
-				<< options->result() << endl;
-		}
-#endif
-
-		if (options->result())
-		{
-#ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
-			{
-				kdDebug() << fname 
-					<< ": Updating link." << endl;
-			}
-#endif
-
-			readConfig(KPilotConfig::getConfig());
-
-			// Update the link to reflect new settings.
-			//
-			//
-			destroyPilotLink(); // Get rid of the old one
-			initPilotLink(); // make a new one..
-
-			// Update each installed component.
-			//
-			//
-			for(fPilotComponentList.first(); 
-			fPilotComponentList.current();
-			fPilotComponentList.next())
-			{
-#ifdef DEBUG
-				if (debug_level & UI_TEDIOUS)
-				{
-					kdDebug() << fname 
-						<< ": Updating components." 
-						<< endl;
-				}
-#endif
-
-				fPilotComponentList.current()->initialize();
-			}
-		}
-
-		delete options;
-		options=NULL;
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname << ": Done with options." << endl;
-		}
-#endif
+		slotConfigureKPilot();
 		break;
 
 	case KPilotInstaller::ID_FILE_BACKUP:
@@ -1088,10 +1037,7 @@ void KPilotInstaller::menuCallback(int item)
 		doFastSync();
 		break;
 	case KPilotInstaller::ID_CONDUITS_SETUP:
-		showTitlePage();
-		conSetup = new CConduitSetup(this);
-		conSetup->exec();
-		delete conSetup;
+		slotConfigureConduits();
 		break;
 	}
 
@@ -1103,6 +1049,103 @@ void KPilotInstaller::menuCallback(int item)
 	}
 #endif
 }
+
+void
+KPilotInstaller::slotConfigureKPilot()
+{
+	FUNCTIONSETUP;
+
+	KPilotOptions* options = 0L;
+
+	// Display the (modal) options page.
+	//
+	//
+	showTitlePage();
+	options = new KPilotOptions(this);
+	if (options==NULL)
+	{
+		kdError() << __FUNCTION__ << 
+			": Can't allocate KPilotOptions object\n";
+		return;
+	}
+
+#ifdef DEBUG
+	if (debug_level & UI_MINOR)
+	{
+		kdDebug() << fname << ": Running options dialog." 
+			<< endl;
+	}
+#endif
+	options->exec();
+#ifdef DEBUG
+	if (debug_level & UI_MINOR)
+	{
+		kdDebug() << fname << ": dialog result "
+			<< options->result() << endl;
+	}
+#endif
+
+	if (options->result())
+	{
+#ifdef DEBUG
+		if (debug_level & UI_TEDIOUS)
+		{
+			kdDebug() << fname 
+				<< ": Updating link." << endl;
+		}
+#endif
+
+		readConfig(KPilotConfig::getConfig());
+
+		// Update the link to reflect new settings.
+		//
+		//
+		destroyPilotLink(); // Get rid of the old one
+		initPilotLink(); // make a new one..
+
+		// Update each installed component.
+		//
+		//
+		for(fPilotComponentList.first(); 
+		fPilotComponentList.current();
+		fPilotComponentList.next())
+		{
+#ifdef DEBUG
+			if (debug_level & UI_TEDIOUS)
+			{
+				kdDebug() << fname 
+					<< ": Updating components." 
+					<< endl;
+			}
+#endif
+
+			fPilotComponentList.current()->initialize();
+		}
+	}
+
+	delete options;
+	options=NULL;
+#ifdef DEBUG
+	if (debug_level & UI_MINOR)
+	{
+		kdDebug() << fname << ": Done with options." << endl;
+	}
+#endif
+}
+
+void
+KPilotInstaller::slotConfigureConduits()
+{
+	FUNCTIONSETUP;
+
+	CConduitSetup* conSetup = 0L;
+
+	showTitlePage();
+	conSetup = new CConduitSetup(this);
+	conSetup->exec();
+	delete conSetup;
+}
+
 
 void 
 KPilotInstaller::slotSyncDone(KProcess*)
@@ -1277,6 +1320,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.39  2001/02/26 22:11:40  adridg
+// Removed useless getopt.h; fixes compile prob on Solaris
+//
 // Revision 1.38  2001/02/25 12:39:35  adridg
 // Fixed component names (src incompatible)
 //

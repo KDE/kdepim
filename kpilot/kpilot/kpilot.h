@@ -197,6 +197,8 @@ private:
  protected slots:
       void menuCallback(int);
       void quit();
+	void slotConfigureKPilot();
+	void slotConfigureConduits();
       void fileInstalled(int which);
       void slotModeSelected(int selected);
       void slotSyncDone(KProcess* which);
@@ -215,6 +217,9 @@ private:
 
 
 // $Log$
+// Revision 1.18  2001/02/25 12:39:35  adridg
+// Fixed component names (src incompatible)
+//
 // Revision 1.17  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
