@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -83,7 +83,7 @@ bool Filter::filterAddressee( const KABC::Addressee &a )
     if ( a.hasCategory( *iter ) )
       return ( mMatchRule == Matching );
   }
-  
+
   return !( mMatchRule == Matching );
 }
 
@@ -101,7 +101,7 @@ void Filter::setCategories( const QStringList &list )
 {
   mCategoryList = list;
 }
-    
+
 const QStringList &Filter::categories() const
 {
   return mCategoryList;
@@ -123,7 +123,7 @@ void Filter::restore( KConfig *config )
   mMatchRule = (MatchRule)config->readNumEntry( "MatchRule", Matching );
 }
 
-void Filter::save( KConfig *config, QString baseGroup, Filter::List &list )
+void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list )
 {
   {
     KConfigGroupSaver s( config, baseGroup );
@@ -149,18 +149,18 @@ void Filter::save( KConfig *config, QString baseGroup, Filter::List &list )
   KConfigGroupSaver s( config, baseGroup );
   config->writeEntry( "Count", index );
 }
-                     
-Filter::List Filter::restore( KConfig *config, QString baseGroup )
+
+Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
 {
   Filter::List list;
   int count = 0;
   Filter f;
-  
+
   {
     KConfigGroupSaver s( config, baseGroup );
     count = config->readNumEntry( "Count", 0 );
   }
-  
+
   for ( int i = 0; i < count; i++ ) {
     {
       KConfigGroupSaver s( config, QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
@@ -188,7 +188,7 @@ void Filter::setMatchRule( MatchRule rule )
 {
   mMatchRule = rule;
 }
-    
+
 Filter::MatchRule Filter::matchRule() const
 {
   return mMatchRule;
