@@ -5,6 +5,7 @@
 #include <qpainter.h>
 #include <qapplication.h>
 #include <qheader.h>
+#include <qstyle.h>
 
 //-----------------------------------------------------------------------------
 KFolderTreeItem::KFolderTreeItem( KFolderTree *parent, const QString & label,
@@ -221,7 +222,11 @@ KFolderTree::KFolderTree( QWidget *parent, const char* name )
   : KListView( parent, name ), mUnreadIndex(-1), mTotalIndex(-1)
 {
   // GUI-options
-  setLineWidth(0);
+  // determine a reasonable line width for the frame
+  int frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  if ( frameWidth < 0 )
+    frameWidth = 0;
+  setLineWidth( frameWidth );
   setAcceptDrops(true);
   setDropVisualizer(false);  
   setAllColumnsShowFocus(true);
