@@ -336,7 +336,7 @@ bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
 
   QString desktopList = incident->customProperty( kapp->instanceName(),
       QCString( "desktopList" ) );
-  QStringList desktopStrList = QStringList::split(QString::fromLatin1("\\,"),
+  QStringList desktopStrList = QStringList::split( QString::fromLatin1(","),
       desktopList );
   desktops.clear();
 
