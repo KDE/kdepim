@@ -59,12 +59,20 @@ void *init_libabbrowserconduit()
 } ;
 
 
-/* static */ KAboutData *AbbrowserConduitFactory::fAbout = 0L;
-/* static */ const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
-/* static */ const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
-/* static */ const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
-/* static */ const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
-/* static */ const char *AbbrowserConduitFactory::fOtherMap = "PilotOther";
+// A number of static variables; except for fAbout, they're 
+// all KConfig group or entry keys.
+//
+//
+KAboutData *AbbrowserConduitFactory::fAbout = 0L;
+const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
+
+const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
+const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
+const char *AbbrowserConduitFactory::fOtherMap = "PilotOther";
+const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
+const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
+const char *AbbrowserConduitFactory::fCloseAbbrowser = "CloseAbbrowser";
+const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
 
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
@@ -150,6 +158,9 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 
 // $Log$
+// Revision 1.2  2001/12/10 22:10:17  adridg
+// Make the conduit compile, for Danimo, but it may not work
+//
 // Revision 1.1  2001/10/31 23:54:45  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

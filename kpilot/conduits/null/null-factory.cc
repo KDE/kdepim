@@ -36,7 +36,7 @@
 #include <kaboutdata.h>
 
 #include "setup_base.h"
-
+#include "null-conduit.h"
 #include "null-factory.moc"
 
 
@@ -108,6 +108,22 @@ NullConduitFactory::~NullConduitFactory()
 				<< ": Couldn't cast parent to widget."
 				<< endl;
 #endif
+			return 0L;
+		}
+	}
+	else if (qstrcmp(c,"SyncAction")==0)
+	{
+		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+
+		if (d)
+		{
+			return new NullConduit(d,n,a);
+		}
+		else
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't cast to KPilotDeviceLink"
+				<< endl;
 			return 0L;
 		}
 	}
@@ -184,6 +200,9 @@ NullWidgetSetup::~NullWidgetSetup()
 
 
 // $Log$
+// Revision 1.3  2001/12/18 07:43:25  adridg
+// Actually do a (null) sync
+//
 // Revision 1.2  2001/10/08 22:25:41  adridg
 // Moved to libkpilot and lib-based conduits
 //

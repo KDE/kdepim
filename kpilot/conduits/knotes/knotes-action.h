@@ -70,6 +70,9 @@ protected:
 
 	void resetIndexes();
 
+	static const char * const noteIdsKey;
+	static const char * const memoIdsKey;
+
 protected slots:
 	void process();
 
@@ -79,6 +82,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.2  2001/10/31 23:46:51  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 // Revision 1.1  2001/10/16 21:44:53  adridg
 // Split up some files, added behavior
 //

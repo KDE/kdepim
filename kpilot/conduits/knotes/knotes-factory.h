@@ -43,17 +43,26 @@ public:
 	virtual ~KNotesConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
-	static const char *group() { return fGroup; } ;
+
+	// The KNotes instance, unlike previous conduits (alphabetically)
+	// has const char * const members. The extra const prevents people
+	// from assigning to this variable, so you have to work hard to
+	// break its value. We store group and entry keys in here.
+	//
+	// Typical usage is KConfig::setGroup(KNotesConduitFactory::group).
+	//
+	//
+	static const char * const group ;
+	static const char * const matchDeletes ; // delete note when memo is deleted
 
 protected:
-	virtual QObject* createObject( QObject* parent = 0, 
-		const char* name = 0, 
-		const char* classname = "QObject", 
+	virtual QObject* createObject( QObject* parent = 0,
+		const char* name = 0,
+		const char* classname = "QObject",
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	static const char *fGroup;
 } ;
 
 extern "C"
@@ -64,6 +73,9 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.4  2001/10/31 23:46:51  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 // Revision 1.3  2001/10/16 21:44:53  adridg
 // Split up some files, added behavior
 //

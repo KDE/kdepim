@@ -60,7 +60,9 @@ void *init_libknotesconduit()
 
 
 /* static */ KAboutData *KNotesConduitFactory::fAbout = 0L;
-/* static */ const char *KNotesConduitFactory::fGroup = "KNotes-conduit";
+
+const char * const KNotesConduitFactory::group = "KNotes-conduit";
+const char * const KNotesConduitFactory::matchDeletes = "DeleteNoteForMemo";
 
 KNotesConduitFactory::KNotesConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
@@ -112,7 +114,7 @@ KNotesConduitFactory::~KNotesConduitFactory()
 		{
 			return new KNotesWidgetSetup(w,n,a);
 		}
-		else 
+		else
 		{
 			kdError() << k_funcinfo
 				<< ": Couldn't cast parent to widget."
@@ -143,6 +145,9 @@ KNotesConduitFactory::~KNotesConduitFactory()
 
 
 // $Log$
+// Revision 1.7  2001/10/31 23:46:51  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 // Revision 1.6  2001/10/16 21:44:53  adridg
 // Split up some files, added behavior
 //

@@ -45,7 +45,7 @@
 #include "abbrowser-setup.moc"
 
 
-AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n, 
+AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
 	ConduitConfig(w,n,a)
 {
@@ -72,19 +72,19 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
-	fConfig->writeEntry("FirstSync",
+	fConfig->writeEntry(AbbrowserConduitFactory::firstSync(),
 		fConfigWidget->fFirstTimeSync->isChecked());
-	fConfig->writeEntry("CloseAbbrowser",
+	fConfig->writeEntry(AbbrowserConduitFactory::closeAbbrowser(),
 		fConfigWidget->fCloseKab->isChecked());
-	fConfig->writeEntry("SmartMerge",
+	fConfig->writeEntry(AbbrowserConduitFactory::smartMerge(),
 		fConfigWidget->fSmartMerge->isChecked());
-	fConfig->writeEntry("ConflictResolve",
+	fConfig->writeEntry(AbbrowserConduitFactory::conflictResolution(),
 		fConfigWidget->fConflictStrategy->currentItem());
-	fConfig->writeEntry("PilotOther",
+	fConfig->writeEntry(AbbrowserConduitFactory::mapOther(),
 		fConfigWidget->fOtherPhone->currentItem());
-	fConfig->writeEntry("PilotStreet",
+	fConfig->writeEntry(AbbrowserConduitFactory::streetType(),
 		fConfigWidget->fAddress->currentItem());
-	fConfig->writeEntry("PilotFax",
+	fConfig->writeEntry(AbbrowserConduitFactory::faxType(),
 		fConfigWidget->fFax->currentItem());
 }
 
@@ -97,20 +97,23 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
 	fConfigWidget->fFirstTimeSync->setChecked(
-		fConfig->readBoolEntry("FirstSync",false));
+		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
 	fConfigWidget->fCloseKab->setChecked(
-		fConfig->readBoolEntry("CloseAbbrowser",false));
+		fConfig->readBoolEntry(AbbrowserConduitFactory::closeAbbrowser(),false));
 	fConfigWidget->fSmartMerge->setChecked(
-		fConfig->readBoolEntry("SmartMerge",true));
+		fConfig->readBoolEntry(AbbrowserConduitFactory::smartMerge(),true));
 	fConfigWidget->fConflictStrategy->setCurrentItem(
-		fConfig->readBoolEntry("ConflictResolve",0));
+		fConfig->readNumEntry(AbbrowserConduitFactory::conflictResolution(),0));
 	fConfigWidget->fOtherPhone->setCurrentItem(
-		fConfig->readBoolEntry("PilotOther",0));
+		fConfig->readNumEntry(AbbrowserConduitFactory::mapOther(),0));
 	fConfigWidget->fAddress->setCurrentItem(
-		fConfig->readBoolEntry("PilotStreet",0));
+		fConfig->readNumEntry(AbbrowserConduitFactory::streetType(),0));
 	fConfigWidget->fFax->setCurrentItem(
-		fConfig->readBoolEntry("PilotFax",0));
+		fConfig->readNumEntry(AbbrowserConduitFactory::faxType(),0));
 }
 
 
 // $Log$
+// Revision 1.1  2001/10/31 23:54:45  adridg
+// CVS_SILENT: Ongoing conduits ports
+//

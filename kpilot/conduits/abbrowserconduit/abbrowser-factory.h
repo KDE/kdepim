@@ -48,17 +48,29 @@ public:
 	static const char *smartMerge() { return fSmartMerge; } ;
 	static const char *mapOther() { return fOtherMap; } ;
 	static const char *conflictResolution() { return fResolution; } ;
+	static const char *firstSync() { return fFirstSync; } ;
+	static const char *closeAbbrowser() { return fCloseAbbrowser; } ;
 
 protected:
-	virtual QObject* createObject( QObject* parent = 0, 
-		const char* name = 0, 
-		const char* classname = "QObject", 
+	virtual QObject* createObject( QObject* parent = 0,
+		const char* name = 0,
+		const char* classname = "QObject",
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	static const char *fGroup,*fStreetType,*fSmartMerge,*fResolution,
-		*fOtherMap,*fFaxType;
+	static const char *fGroup;
+
+	// KConfig entry keys.
+	//
+	//
+	static const char *fStreetType,
+		*fSmartMerge,
+		*fResolution,
+		*fOtherMap,
+		*fFaxType,
+		*fCloseAbbrowser,
+		*fFirstSync;
 } ;
 
 extern "C"
@@ -69,6 +81,9 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.2  2001/12/10 22:10:17  adridg
+// Make the conduit compile, for Danimo, but it may not work
+//
 // Revision 1.1  2001/10/31 23:54:45  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

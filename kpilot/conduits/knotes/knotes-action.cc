@@ -107,6 +107,11 @@ public:
 	QValueList<NoteAndMemo> fIdList;
 } ;
 
+
+/* static */ const char * const KNotesAction::noteIdsKey="NoteIds";
+/* static */ const char * const KNotesAction::memoIdsKey="MemoIds";
+
+
 KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	const char *n, const QStringList &a) :
 	ConduitAction(o,n,a),
@@ -216,20 +221,21 @@ void KNotesAction::listNotes()
 	}
 }
 
+
 void KNotesAction::getConfigInfo()
 {
 	FUNCTIONSETUP;
 
 	if (fConfig)
 	{
-		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group());
+		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
 
 		QValueList<int> notes;
 		QValueList<int> memos;
 
 
-		notes=fConfig->readIntListEntry("NoteIds");
-		memos=fConfig->readIntListEntry("MemoIds");
+		notes=fConfig->readIntListEntry(noteIdsKey);
+		memos=fConfig->readIntListEntry(memoIdsKey);
 
 		if (notes.count() != memos.count())
 		{
@@ -397,7 +403,7 @@ void KNotesAction::cleanupMemos()
 
 	if (fConfig)
 	{
-		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group());
+		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
 
 		QValueList<int> notes;
 		QValueList<int> memos;
@@ -411,8 +417,8 @@ void KNotesAction::cleanupMemos()
 			memos.append((*i).memo());
 		}
 
-		fConfig->writeEntry("NoteIds",notes);
-		fConfig->writeEntry("MemoIds",memos);
+		fConfig->writeEntry(noteIdsKey,notes);
+		fConfig->writeEntry(memoIdsKey,memos);
 	}
 
 	fStatus=Done;
@@ -443,6 +449,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.4  2001/12/02 22:08:24  adridg
+// CVS_SILENT: I forget
+//
 // Revision 1.3  2001/10/31 23:46:51  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

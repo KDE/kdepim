@@ -46,7 +46,7 @@
 #include "knotes-setup.moc"
 
 
-KNotesWidgetSetup::KNotesWidgetSetup(QWidget *w, const char *n, 
+KNotesWidgetSetup::KNotesWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
 	ConduitConfig(w,n,a)
 {
@@ -71,9 +71,10 @@ KNotesWidgetSetup::~KNotesWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,"KNotes-conduit");
+	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
 
-	fConfig->writeEntry("DeleteNoteForMemo",fConfigWidget->fDeleteNoteForMemo->isChecked());
+	fConfig->writeEntry(KNotesConduitFactory::matchDeletes,
+		fConfigWidget->fDeleteNoteForMemo->isChecked());
 }
 
 /* virtual */ void KNotesWidgetSetup::readSettings()
@@ -82,14 +83,17 @@ KNotesWidgetSetup::~KNotesWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,"KNotes-conduit");
+	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
 
 	fConfigWidget->fDeleteNoteForMemo->setChecked(
-		fConfig->readBoolEntry("DeleteNoteForMemo",false));
+		fConfig->readBoolEntry(KNotesConduitFactory::matchDeletes,false));
 }
 
 
 // $Log$
+// Revision 1.1  2001/10/16 21:44:53  adridg
+// Split up some files, added behavior
+//
 // Revision 1.4  2001/10/10 22:39:49  adridg
 // Some UI/Credits/About page patches
 //
