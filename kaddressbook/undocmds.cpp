@@ -39,9 +39,9 @@
 /////////////////////////////////
 // PwDelete Methods
 
-PwDeleteCommand::PwDeleteCommand(KABC::AddressBook *doc, 
-                                 const QStringList &uidList)
-  : Command(), mDocument(doc), mAddresseeList(), mUidList(uidList)
+PwDeleteCommand::PwDeleteCommand( KABC::AddressBook *ab, 
+                                  const QStringList &uidList)
+  : Command( ab ), mAddresseeList(), mUIDList( uidList )
 {
   redo();
 }
@@ -58,12 +58,11 @@ QString PwDeleteCommand::name()
 void PwDeleteCommand::undo()
 {
   // Put it back in the document
-  KABC::Addressee::List::Iterator iter;
-  for (iter = mAddresseeList.begin(); iter != mAddresseeList.end(); ++iter)
-  {
-    mDocument->insertAddressee(*iter);
+  KABC::Addressee::List::Iterator it;
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+    addressBook()->insertAddressee( *it );
   }
-  
+
   mAddresseeList.clear();
 }
 
@@ -71,14 +70,13 @@ void PwDeleteCommand::redo()
 {
   // Just remove it from the document. This is enough to make the user
   // Think the item has been deleted
-  KABC::Addressee a;
-  QStringList::Iterator iter;
-  for (iter = mUidList.begin(); iter != mUidList.end(); ++iter)
-  {
-    a = mDocument->findByUid(*iter);
-    mDocument->removeAddressee(a);
-    mAddresseeList.append(a);
-    AddresseeConfig cfg(a);
+  KABC::Addressee addr;
+  QStringList::Iterator it;
+  for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
+    addr = addressBook()->findByUid( *it );
+    addressBook()->removeAddressee( addr );
+    mAddresseeList.append( addr );
+    AddresseeConfig cfg( addr );
     cfg.remove();
   }
 }
@@ -86,8 +84,9 @@ void PwDeleteCommand::redo()
 /////////////////////////////////
 // PwPaste Methods
 
-PwPasteCommand::PwPasteCommand( KAB::Core *core, const KABC::Addressee::List &list )
-  : Command(), mCore( core ), mAddresseeList( list )
+PwPasteCommand::PwPasteCommand( KAB::Core *core,
+                                const KABC::Addressee::List &list )
+  : Command( core->addressBook() ), mCore( core ), mAddresseeList( list )
 {
   redo();
 }
@@ -101,7 +100,7 @@ void PwPasteCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) 
-    mCore->addressBook()->removeAddressee( *it );
+    addressBook()->removeAddressee( *it );
 }
 
 void PwPasteCommand::redo()
@@ -114,7 +113,7 @@ void PwPasteCommand::redo()
      */ 
     (*it).setUid( KApplication::randomString( 10 ) );
     uids.append( (*it).uid() );
-    mCore->addressBook()->insertAddressee( *it );
+    addressBook()->insertAddressee( *it );
   }
 
   QStringList::Iterator uidIt;
@@ -125,10 +124,10 @@ void PwPasteCommand::redo()
 /////////////////////////////////
 // PwNew Methods
 
-PwNewCommand::PwNewCommand( KABC::AddressBook *doc, const KABC::Addressee &a )
-  : Command(), mDocument( doc ), mA( a )
+PwNewCommand::PwNewCommand( KABC::AddressBook *ab, const KABC::Addressee &addr )
+  : Command( ab ), mAddr( addr )
 {
-  mDocument->insertAddressee(mA);
+  redo();
 }
 
 PwNewCommand::~PwNewCommand()
@@ -142,21 +141,21 @@ QString PwNewCommand::name()
 
 void PwNewCommand::undo()
 {
-  mDocument->removeAddressee( mA );
+  addressBook()->removeAddressee( mAddr );
 }
 
 void PwNewCommand::redo()
 {
-  mDocument->insertAddressee( mA );
+  addressBook()->insertAddressee( mAddr );
 }
 
 /////////////////////////////////
 // PwEdit Methods
 
-PwEditCommand::PwEditCommand(KABC::AddressBook *doc,
-                             const KABC::Addressee &oldA,
-                             const KABC::Addressee &newA )
-     : Command(), mDocument(doc), mOldA(oldA), mNewA(newA)
+PwEditCommand::PwEditCommand( KABC::AddressBook *ab,
+                              const KABC::Addressee &oldAddr,
+                              const KABC::Addressee &newAddr )
+     : Command( ab ), mOldAddr( oldAddr ), mNewAddr( newAddr )
 {
   redo();
 }
@@ -172,20 +171,19 @@ QString PwEditCommand::name()
 
 void PwEditCommand::undo()
 {
-  mDocument->insertAddressee(mOldA);
+  addressBook()->insertAddressee( mOldAddr );
 }
 
 void PwEditCommand::redo()
 {
-  mDocument->insertAddressee(mNewA);
+  addressBook()->insertAddressee( mNewAddr );
 }
 
 /////////////////////////////////
 // PwCut Methods
 
-PwCutCommand::PwCutCommand(KABC::AddressBook *doc, const QStringList &uidList)
-    : Command(), mDocument(doc), mAddresseeList(), mUidList(uidList), 
-      mClipText(), mOldText()
+PwCutCommand::PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList )
+    : Command( ab ), mUIDList( uidList )
 {
   redo();
 }
@@ -197,11 +195,11 @@ QString PwCutCommand::name()
 
 void PwCutCommand::undo()
 {
-  KABC::Addressee::List::Iterator iter;
-  for (iter = mAddresseeList.begin(); iter != mAddresseeList.end(); ++iter)
-  {
-    mDocument->insertAddressee(*iter);
+  KABC::Addressee::List::Iterator it;
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+    addressBook()->insertAddressee( *it );
   }
+
   mAddresseeList.clear();
   
   QClipboard *cb = QApplication::clipboard();
@@ -211,18 +209,17 @@ void PwCutCommand::undo()
 
 void PwCutCommand::redo()
 {
-  KABC::Addressee a;
-  QStringList::Iterator iter;
-  for (iter = mUidList.begin(); iter != mUidList.end(); ++iter)
-  {
-    a = mDocument->findByUid(*iter);
-    mDocument->removeAddressee(a);
-    mAddresseeList.append(a);
+  KABC::Addressee addr;
+  QStringList::Iterator it;
+  for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
+    addr = addressBook()->findByUid( *it );
+    addressBook()->removeAddressee( addr );
+    mAddresseeList.append( addr );
   }
-  
+
   // Convert to clipboard
-  mClipText = AddresseeUtil::addresseesToClipboard(mAddresseeList);
-  
+  mClipText = AddresseeUtil::addresseesToClipboard( mAddresseeList );
+
   QClipboard *cb = QApplication::clipboard();
   mOldText = cb->text();
   kapp->processEvents();

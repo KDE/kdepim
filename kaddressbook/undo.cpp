@@ -26,9 +26,9 @@
 ///////////////////////////////
 // StackBase
 
-void StackBase::push(Command *c)
+void StackBase::push( Command *c )
 {
-  mCommandStack.push(c);
+  mCommandStack.push( c );
   emit changed();
 }
 
@@ -51,9 +51,9 @@ void StackBase::clear()
 Command *StackBase::pop()
 {
   Command *c = mCommandStack.pop();
-  if (c)
+  if ( c )
     emit changed();
-    
+
   return c;
 }
 
@@ -70,19 +70,19 @@ UndoStack::UndoStack()
 
 UndoStack* UndoStack::instance()
 {
-  if (!instance_)
+  if ( !instance_ )
     instance_ = new UndoStack();
   return instance_;
 }
 
 void UndoStack::undo()
 {
-  if (isEmpty())
+  if ( isEmpty() )
     return;
-    
+
   Command *command = pop();
   command->undo();
-  
+
   RedoStack::instance()->push( command );
 }
 
@@ -98,7 +98,7 @@ RedoStack::RedoStack()
 
 RedoStack* RedoStack::instance()
 {
-  if (!instance_)
+  if ( !instance_ )
     instance_ = new RedoStack();
   return instance_;
 }
@@ -106,9 +106,9 @@ RedoStack* RedoStack::instance()
 void RedoStack::redo()
 {
   Command *command;
-  if (isEmpty())
+  if ( isEmpty() )
     return;
-    
+
   command = pop();
   command->redo();
   UndoStack::instance()->push( command );
