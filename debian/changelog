@@ -1,9 +1,8 @@
-kdepim (4:3.0.8-gcc3.2.cvs200210101116) unstable; urgency=low
+kdepim (4:3.1.90+cvs20030130-1) unstable; urgency=low
 
-  * Updated *.install files.
-  * Added ksync application.
+  * HEAD Build 
 
- -- Stefan Schimanski <schimmi@kde.org>  Thu, 10 Oct 2002 11:15:26 +0200
+ -- David Pashley <david@davidpashley.com>  Thu, 30 Jan 2003 00:31:56 +0000
 
 kdepim (4:3.0.8-1) unstable; urgency=low
 
