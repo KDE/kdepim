@@ -147,12 +147,12 @@ void ViewManager::sendMail()
 
 void ViewManager::sendMail(const QString& addressee)
 {
-    kapp->invokeMailer(addressee, "");
+  kapp->invokeMailer(addressee, "");
 }
 
 void ViewManager::browse(const QString& url)
 {
-    kapp->invokeBrowser(url);
+  kapp->invokeBrowser(url);
 }
 
 void ViewManager::deleteAddressee()
@@ -188,16 +188,16 @@ void ViewManager::paste()
 
 void ViewManager::copy()
 {
-    QStringList uidList = mActiveView->selectedUids();
-    KABC::Addressee::List aList;
-    KABC::Addressee a;
-    QString clipText;
+  QStringList uidList = mActiveView->selectedUids();
+  KABC::Addressee::List aList;
+  KABC::Addressee a;
+  QString clipText;
 
-    QStringList::Iterator iter;
-    for (iter = uidList.begin(); iter != uidList.end(); ++iter)
-    {
-        aList.append(mDocument->findByUid(*iter));
-    }
+  QStringList::Iterator iter;
+  for ( iter = uidList.begin(); iter != uidList.end(); ++iter ) {
+    aList.append(mDocument->findByUid(*iter));
+  }
+
   clipText = AddresseeUtil::addresseesToClipboard(aList);
   kdDebug() << "ViewManager::copy: " << clipText << endl;
   QClipboard *cb = QApplication::clipboard();
