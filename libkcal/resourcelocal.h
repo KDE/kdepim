@@ -152,7 +152,9 @@ class ResourceLocal : public ResourceCalendar
 
     KURL mURL;
     CalFormat* mFormat;
-};  
+
+    bool mOpen;
+};
 
 }
 

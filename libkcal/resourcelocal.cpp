@@ -107,6 +107,7 @@ void ResourceLocal::writeConfig( KConfig* config ) const
 
 void ResourceLocal::init()
 {
+  mOpen = false;
 }
 
 
@@ -119,17 +120,26 @@ bool ResourceLocal::doOpen()
 {
   kdDebug(5800) << "Opening resource " << resourceName() << " with URL " << mURL.prettyURL() << endl;
 
-  return mCalendar.load( mURL.path() );
+  if ( mOpen ) return true;
+
+  mOpen = mCalendar.load( mURL.path() );
+
+  return mOpen;
 }
 
 bool ResourceLocal::sync()
 {
+  if ( !mOpen ) return true;
+
   return mCalendar.save( mURL.path() );
 }
 
 void ResourceLocal::doClose()
 {
+  if ( !mOpen ) return;
+
   mCalendar.close();
+  mOpen = false;
 }
 
 
