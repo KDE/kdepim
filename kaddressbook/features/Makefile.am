@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libfeatures.la
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/kaddressbook
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes) 
 
 libfeatures_la_METASOURCES = AUTO
 
