@@ -33,6 +33,10 @@
 #include <kurlrequester.h>
 #include <libkdepim/kpixmapregionselectordialog.h>
 
+#include <librss/loader.h>
+#include <librss/document.h>
+#include <librss/image.h>
+
 #include <qcheckbox.h>
 #include <qdragobject.h>
 #include <qgroupbox.h>
@@ -92,20 +96,21 @@ void ImageLabel::mouseMoveEvent( QMouseEvent *event )
 }
 
 
-ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( false )
+ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
+                                  const char *name )
+  : QWidget( parent, name ), mReadOnly( false ), mRssLoader( 0 )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
   QGroupBox *box = new QGroupBox( 0, Qt::Vertical, title, this );
   QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 3,
                                             KDialog::spacingHint() );
-  boxLayout->setRowStretch( 2, 1 );
+  boxLayout->setRowStretch( 3, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 100, 140 );
   mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addMultiCellWidget( mImageLabel, 0, 2, 0, 0, AlignTop );
+  boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, AlignTop );
 
   mImageUrl = new KURLRequester( box );
   mImageUrl->setFilter( KImageIO::pattern() );
@@ -118,9 +123,14 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const c
   mClearButton->setEnabled( false );
   boxLayout->addWidget( mClearButton, 0, 2 );
 
+  mBlogButton = new QPushButton( i18n("Get From Blog"), box );
+  boxLayout->addMultiCellWidget( mBlogButton, 1, 1, 1, 2 );
+  connect( mBlogButton, SIGNAL( clicked() ), SLOT( getPictureFromBlog() ) );
+  showBlogButton( false );
+
   mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
   mUseImageUrl->setEnabled( false );
-  boxLayout->addMultiCellWidget( mUseImageUrl, 1, 1, 1, 2 );
+  boxLayout->addMultiCellWidget( mUseImageUrl, 2, 2, 1, 2 );
 
   topLayout->addWidget( box );
 
@@ -138,6 +148,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const c
            SLOT( updateGUI() ) );
   connect( mUseImageUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
+  // FIXME: Is there really no race condition with all these mImageUrl signals?
   connect( mClearButton, SIGNAL( clicked() ),
            SLOT( clear() ) );
 }
@@ -151,6 +162,19 @@ void ImageBaseWidget::setReadOnly( bool readOnly )
   mReadOnly = readOnly;
   mImageLabel->setReadOnly( mReadOnly );
   mImageUrl->setEnabled( !mReadOnly );
+  if ( !mBlogFeed.isEmpty() ) mBlogButton->setEnabled( !readOnly );
+}
+
+void ImageBaseWidget::showBlogButton( bool show )
+{
+  if ( show ) mBlogButton->show();
+  else mBlogButton->hide();
+}
+
+void ImageBaseWidget::setBlogFeed( const QString &feed )
+{
+  mBlogFeed = feed;
+  mBlogButton->setEnabled( !feed.isEmpty() );
 }
 
 void ImageBaseWidget::setImage( const KABC::Picture &photo )
@@ -189,8 +213,9 @@ KABC::Picture ImageBaseWidget::image() const
   if ( mUseImageUrl->isChecked() )
     photo.setUrl( mImageUrl->url() );
   else {
-    if ( mImageLabel->pixmap() )
+    if ( mImageLabel->pixmap() ) {
       photo.setData( mImageLabel->pixmap()->convertToImage() );
+    }
   }
 
   return photo;
@@ -264,6 +289,46 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
   return pixmap;
 }
 
+void ImageBaseWidget::getPictureFromBlog()
+{
+  if ( mRssLoader ) {
+    return;
+  }
+  
+  mRssLoader = RSS::Loader::create();
+  connect( mRssLoader, SIGNAL( loadingComplete( Loader *, Document,
+    Status ) ),
+    SLOT( slotLoadingComplete( Loader *, Document, Status ) ) );
+  mRssLoader->loadFrom( mBlogFeed, new RSS::FileRetriever );
+
+  // TODO: Show progress for fetching image from blog.
+}
+
+void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
+  RSS::Document doc, RSS::Status status )
+{
+  if ( status != RSS::Success ) {
+    KMessageBox::sorry( this,
+      i18n("Unable to retrieve blog feed from '%1': %2").arg( mBlogFeed )
+      .arg( loader->errorCode() ) );
+    return;
+  }
+
+  if ( !doc.image() ) {
+    KMessageBox::sorry( this,
+      i18n("Blog feed at '%1' doesn't contain an image.").arg( mBlogFeed ) );
+    return;
+  }
+
+  blockSignals( true );  
+  mImageUrl->setURL( doc.image()->url().url() );  
+  loadImage();
+  blockSignals( false );
+  imageChanged();
+  
+  mRssLoader = 0;
+}
+
 ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::ContactEditorWidget( ab, parent, name )
 {
@@ -272,6 +337,7 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
 
   mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
   layout->addWidget( mPhotoWidget );
+  mPhotoWidget->showBlogButton( true );
 
   mLogoWidget = new ImageBaseWidget( KABC::Addressee::logoLabel(), this );
   layout->addWidget( mLogoWidget );
@@ -283,6 +349,7 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
 void ImageWidget::loadContact( KABC::Addressee *addr )
 {
   mPhotoWidget->setImage( addr->photo() );
+  mPhotoWidget->setBlogFeed( addr->custom( "KADDRESSBOOK", "BlogFeed" ) );
   mLogoWidget->setImage( addr->logo() );
 }
 

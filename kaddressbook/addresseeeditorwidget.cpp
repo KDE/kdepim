@@ -253,9 +253,19 @@ void AddresseeEditorWidget::setupTab1()
   homePageLayout->addWidget( mURLEdit );
   layout->addMultiCellLayout( homePageLayout, 8, 8, 3, 6 );
 
+  QHBoxLayout *blogLayout = new QHBoxLayout( 0, 11, 7 );
+  label = new QLabel( i18n("Blog Feed:"), tab1 );
+  blogLayout->addWidget( label );
+  mBlogEdit = new KLineEdit( tab1 );
+  blogLayout->addWidget( mBlogEdit );
+  connect( mBlogEdit, SIGNAL( textChanged( const QString & ) ),
+           SLOT( textChanged( const QString & ) ) );
+  label->setBuddy( mBlogEdit );
+  layout->addMultiCellLayout( blogLayout, 9, 9, 4, 6 );
+
   mIMWidget = new IMEditWidget( tab1, mAddressee );
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mIMWidget, 9, 10, 4, 6 );
+  layout->addMultiCellWidget( mIMWidget, 10, 10, 4, 6 );
 
   layout->addColSpacing( 6, 50 );
   
@@ -514,6 +524,7 @@ void AddresseeEditorWidget::load()
   mOrgEdit->setText( mAddressee.organization() );
   mURLEdit->setURL( mAddressee.url() );
   mURLEdit->home( false );
+  mBlogEdit->setURL( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
   mNoteEdit->setText( mAddressee.note() );
   mEmailWidget->setEmails( mAddressee.emails() );
   mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
@@ -552,6 +563,7 @@ void AddresseeEditorWidget::save()
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
   mAddressee.setUrl( KURL( mURLEdit->text().stripWhiteSpace() ) );
+  mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
   mAddressee.setNote( mNoteEdit->text() );
   if ( mBirthdayPicker->date().isValid() )
     mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
@@ -824,6 +836,7 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
   mAddressEditWidget->setReadOnly( readOnly );
   mEmailWidget->setReadOnly( readOnly );
   mURLEdit->setReadOnly( readOnly );
+  mBlogEdit->setReadOnly( readOnly );
   mIMWidget->setReadOnly( readOnly );
   mCategoryButton->setEnabled( !readOnly );
   mSecrecyWidget->setReadOnly( readOnly );

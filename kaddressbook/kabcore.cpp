@@ -118,6 +118,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                                 "X-IMAddress", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Anniversary" ), KABC::Field::Personal,
                                 "X-Anniversary", "KADDRESSBOOK" );
+  mAddressBook->addCustomField( i18n( " Blog" ), KABC::Field::Personal,
+                                "Blog", "KADDRESSBOOK" );
 
   mSearchManager = new KAB::SearchManager( mAddressBook, parent );
 

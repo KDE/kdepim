@@ -144,6 +144,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     IMEditWidget *mIMWidget;
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
+    KLineEdit *mBlogEdit;
 //    KLineEdit *mIMAddressEdit;
     QPushButton *mCategoryButton;
     KLineEdit *mCategoryEdit;

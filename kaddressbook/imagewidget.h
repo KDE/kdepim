@@ -34,6 +34,15 @@
 class KURLRequester;
 class QCheckBox;
 
+#include <librss/global.h>
+
+namespace RSS {
+class Loader;
+class Document;
+}
+
+using namespace RSS;
+
 /**
   Small helper class
  */
@@ -71,6 +80,16 @@ class ImageBaseWidget : public QWidget
     ~ImageBaseWidget();
 
     /**
+      Show/hide button for getting image from blog feed.
+    */
+    void showBlogButton( bool show );
+
+    /**
+      Set URL of blog feed for getting the image.
+    */
+    void setBlogFeed( const QString & );
+
+    /**
       Sets the photo object.
      */
     void setImage( const KABC::Picture &photo );
@@ -90,6 +109,8 @@ class ImageBaseWidget : public QWidget
     void updateGUI();
     void clear();
     void imageChanged();
+    void getPictureFromBlog();
+    void slotLoadingComplete( Loader *loader, Document doc, Status status );
 
   private:
     QPixmap loadPixmap( const KURL &url );
@@ -100,7 +121,12 @@ class ImageBaseWidget : public QWidget
     QCheckBox *mUseImageUrl;
     QPushButton *mClearButton;
 
+    QPushButton *mBlogButton;
+    QString mBlogFeed;
+
     bool mReadOnly;
+
+    RSS::Loader *mRssLoader;
 };
 
 class ImageWidget : public KAB::ContactEditorWidget
