@@ -3,6 +3,23 @@ TODO LIST (Moved again to the file TODO)
 KPilot Developer's notes for June 15th, 2003
 ============================================
 
+2003-6-1   Reinhold Kainhofer
+* Fixed several (possible  and really occuring) null pointer crashes 
+* Submited most of the items in our TODO list as bugs or wishes on 
+  bugs.kde.org
+
+2003-5-31  Reinhold Kainhofer
+* Restructured the setup dialog of KPilot. Several per-conduit
+  settings were moved to global settings. The conduits now have
+	isFullSync(), isFirstSync(), getSyncDirection(), and 
+	getConflictResolution() members for these settings. I think I fixed 
+	all conduits to use these new settings and didn't miss anything.
+* The Backup works again (fast sync doesn't do a backup, hot sync
+  does conduits and a fast backup, full sync does a full backup where
+	the modified flags are ignored). Also added a fast backup where 
+	only modified records are retrieved.
+
+
 2003-6-1  Adriaan de Groot
 * pilotComponent.cc Another fix for 52138 - I'd missed the category
   drop-down box.
@@ -19,6 +36,7 @@ KPilot Developer's notes for June 15th, 2003
 * Talked to lioux about conduits and categories on IRC. It seems
   that PC->Palm syncs usually respect categories and such, but Palm->PC
   doesn't, among other little tidbits. He'll file bug reports.
+
 
 KPilot Developer's notes for May 30th, 2003
 ===========================================

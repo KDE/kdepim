@@ -8,20 +8,23 @@ for details on how an issue is resolved, since resolved issues are
 
 Essential
 =========
-3)  Fix all conduits to use the new global options: conflict resolution,
-    emergency sync, sync mode etc.
+3a) Implement the CopyToPC and CopyToHH directions in the addressbook conduit (bug #59220)
+3b) Implement reset to last sync and ignore conflict resolution options in
+    vcal conduits (bug #59221)
 4a) Config troubles: Start kpilotDaemon and then kpilot. Configure a conduit
     in kpilot, then do a sync (which writes something to the  config, e.g.
     run the docconduit). Now configure another conduit in kpilot. The config
     file will be changed again, but the changes from the sync are lost (i.e.
     after a sync, kpilot needs to reload the config). (seems connected to bug #56115)
 4b) Conduits should not use the backup databases, otherwise a backup run will
-    screw up the sync.
+    screw up the sync. (bug #59219)
 4c) Need to find a better way to detect runs without a conduit, and switch to
-    full (or first) sync in that case to prevent data loss.
+    full sync in that case to prevent data loss.
 4d) Need to find a good way to avoid a mess when implementing new features
     (e.g. after implementing the correct category sync, how do I ensure that
-	 no category settings are lost?)
+    no category settings are lost?)
+5)  After the special sync is done, ask if the next sync should again be the
+    same special sync, a fast or a hot sync. (wish #59218)
 
 
 Important (hight priority)
@@ -34,20 +37,21 @@ Important (hight priority)
 8)  Find out what's the reason of the "Invalid unique ID" crashes in
     the calendar conduits (and the addresssbook conduit)
 12) ABook conduit: Check all fields for differences before asking
-    for conflict resolution. (i.e.. don't ask for conflict resolution
-    of single fields, just for the whole record)
+    for conflict resolution. (i.e. don't ask for conflict resolution
+    of single fields, just for the whole record) (bug #59222)
 13) ABook conduit: custom field sync doesn't work with birthdate
     (how do I convert a date to a string and back in an arbitrary
     format???) (Bug #50871)
 15) Add force-first-time to the KNotes conduit.
 16) Remove the edit capabilities from the built-in viewers. (fixes bug #54765)
+    Or write a SyncAction childclass that merges  the changes from the internal
+    editors to the databases on the handheld before the sync takes place
 17) Include a calendar viewer, or get rid of the internal viewers
     altogether.
 18) VCal conduit: events going over midnight need to be split up
-    on the handheld
+    on the handheld (bug #59223)
 19) GJJ: Replace newlines in TODO summaries (not allowed in libkcal),
     also do the same for phone numbers etc. (bug #56379)
-19a)When syncing, also backup the databases (if option is set)
 
 
 Medium (nice to have, but not essential)
@@ -59,8 +63,6 @@ Medium (nice to have, but not essential)
 26) ABook conduit: sync with preferred address (not home or work address)
 27) Update the conduit programming howto (some changes in the database
     and record classes)
-29) Fix the NULL conduit's tooltip - OR - make it actually do what the
-    current tooltip says.
 31) GJJ: Extend all conduits to allow arbitrary URLs instead of local
     files.
 32) JPilot conduit: fix the configure.in.in checks for gtk/glibc
@@ -98,6 +100,8 @@ FINISHED TODO jobs
     very easy to fix.
 +(2)  Redesign the config dialog of kpilot (get rid of deprecated
     options, include conflict resolution, etc.)
++(3)  Fix all conduits to use the new global options: conflict resolution,
+    emergency sync, sync mode etc.
 +(4)  VCal conduit: Fields not supported on the handheld are erased
     in the calendar (e.g. categories). I need to get the Event
     before I copy all fields over, and only overwrite the fields
@@ -120,6 +124,7 @@ FINISHED TODO jobs
 +(11) Merge between HEAD and BRANCH (again).
 +(14) ABook conduit: Fix categories sync
     RESOLUTION: Fixed for the abook and the todo conduit
++(19a)When syncing, also backup the databases (if option is set)
 +(19b)Add all codecs that are supported by Qt, automatically fill the
     combobox in the config dialog. Change the combobox to an editable
 	 Combobox so that the user can also give other encodings (if he
@@ -138,6 +143,10 @@ FINISHED TODO jobs
     match isn't very intuitive. It should be changed to a yes/no/cancel
     with "Use KPilot name" "Use Pilot name" "Cancel". This is in
     interactiveSync.cc.
+-(29) Fix the NULL conduit's tooltip - OR - make it actually do what the
+    current tooltip says.
+    RESOLUTION: The NULL conduit is no longer needed at all, so I disabled
+    it completely
 -(30) GJJ: Create good icons for the kpalmdoc converter application.
 +(38) Should interactiveSync and syncStack be moved to lib/ ?
 
