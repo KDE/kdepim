@@ -68,7 +68,7 @@ ActionManager::ActionManager(KXMLGUIClient *client, KAddressBook *widget,
     mActiveViewName = config->readEntry("Active");
     config->setGroup("MainWindow");
     mActionJumpBar->setChecked(config->readBoolEntry("JumpBar", false));
-    mActionFeatures->setCurrentItem(config->readBoolEntry("Features", 0));
+    mActionFeatures->setCurrentItem(config->readNumEntry("Features", 0));
     mActionDetails->setChecked(config->readBoolEntry("Details", true));
     // Set the defaults
     addresseeSelected(false);
