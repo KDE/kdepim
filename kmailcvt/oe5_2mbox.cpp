@@ -66,8 +66,7 @@ char s[1024];
     switch (result->errcode) {
       case OE_CANNOTREAD :
         {QString msg;
-           msg.sprintf(" '%s'",folderIn);
-           msg=i18n("Cannot read mailbox")+msg;
+           msg=i18n("Cannot read mailbox %1").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
@@ -79,17 +78,14 @@ char s[1024];
       break;
       default:
         {QString msg;
-           msg.sprintf(" '%s'",folderIn);
-           msg=i18n("Unrecoverable error while reading")+msg;
+           msg=i18n("Unrecoverable error while reading %1").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
     }
   }
-  else {QString msg,m,a;
-    m.sprintf("%lu ",mails);
-    a.sprintf("%lu ",added);
-    msg=m+i18n("mails read, ")+a+i18n("were new to kmail folder");
+  else {QString msg;
+    msg=i18n("%1 mails read, %2 were new kmail folder").arg(mails).arg(added);
     info->log(msg);
   }
 

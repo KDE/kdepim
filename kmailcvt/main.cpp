@@ -39,6 +39,7 @@ static KApplication *app;
 
 int main(int argc, char *argv[])
 {
+  KLocale::setMainCatalogue("kmailcvt");
 
   KAboutData aboutData( "kmailcvt2", I18N_NOOP("Kmailcvt2"),
     VERSION, description, KAboutData::License_GPL,
