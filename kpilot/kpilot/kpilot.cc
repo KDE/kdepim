@@ -3,6 +3,8 @@
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
 ** This is the main program in KPilot.
+**
+** kátë, this is ÜTF-èïght-éncõdéd.
 */
 
 /*
@@ -909,7 +911,7 @@ int main(int argc, char **argv)
 	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
 	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
 	about.addCredit("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
-	about.addCredit("Joerg Habenicht", I18N_NOOP("Bugfixer"));
+	about.addCredit("Jörg Habenicht", I18N_NOOP("Bugfixer"));
 	about.addCredit("Martin Junius",
 		I18N_NOOP("XML GUI"),
 		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
@@ -917,7 +919,8 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
-
+	about.addCredit("Jörn Ahrens",
+		I18N_NOOP("Visual improvements"));
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
