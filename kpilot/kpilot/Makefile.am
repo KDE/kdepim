@@ -40,7 +40,8 @@ kpilot_SOURCES	= \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
-	conduitSetup.cc listCat.cc listItems.cc
+	conduitSetup.cc listCat.cc listItems.cc \
+	kroupware.cc
 
 
 kpilotDaemon_SOURCES = \

@@ -112,7 +112,7 @@ void createLink()
 		logWidget, SLOT(addProgress(const QString &,int)));
 }
 
-static SyncStack *syncStack = 0L;
+static ActionQueue *syncStack = 0L;
 
 void connectStack()
 {
@@ -159,11 +159,11 @@ int syncTest(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig());
+	syncStack = new ActionQueue(deviceLink,&KPilotConfig::getConfig());
 
 	if (p->isSet("backup"))
 	{
-		syncStack->prepare(SyncStack::Backup | SyncStack::WithUserCheck);
+		syncStack->prepare(ActionQueue::Backup | ActionQueue::WithUserCheck);
 	}
 	else if (p->isSet("restore"))
 	{
@@ -171,7 +171,7 @@ int syncTest(KCmdLineArgs *p)
 	}
 	else
 	{
-		syncStack->prepare(SyncStack::Test);
+		syncStack->prepare(ActionQueue::Test);
 	}
 
 	connectStack();
@@ -192,11 +192,11 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig(),l);
+	syncStack = new ActionQueue(deviceLink,&KPilotConfig::getConfig(),l);
 
 	if (p->isSet("test"))
 	{
-		syncStack->prepare(SyncStack::HotSyncMode| SyncStack::TestMode);
+		syncStack->prepare(ActionQueue::HotSyncMode| ActionQueue::TestMode);
 	}
 	else
 	{
@@ -292,6 +292,11 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.22  2003/01/18 00:30:18  kainhofe
+// Removed the Log: tags from the conduits I maintain.
+// Cleanup of the includes.
+// Started implementing the other field sync of the addressbookconduit. Still have trouble converting a string to a QDate using a custom format
+//
 // Revision 1.21  2002/08/30 22:24:55  adridg
 // - Improved logging, connected the right signals now
 // - Try to handle dlp_ReadUserInfo failures sensibly

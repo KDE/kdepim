@@ -51,7 +51,7 @@ class LoggerDCOP_stub;
 
 class PilotDaemon;
 class FileInstaller;
-class SyncStack;
+class ActionQueue;
 
 class PilotDaemonTray : public KSystemTray
 {
@@ -175,17 +175,8 @@ private:
 	KPilotDeviceLink::DeviceType fPilotType;
 	int fNextSyncType;
 
-	SyncStack *fSyncStack;
-	// KMail related stuff
-	bool _syncWithKMail;
-
-	void cleanupConfig();
-	void start_syncCal_TodosWithKMail( bool cal, bool todos);
-	void start_syncAddWithKMail();
-	void start_syncNotesWithKMail();
-	void end_syncCal_TodosWithKMail( bool cal, bool todos);
-	void end_syncAddWithKMail();
-	void end_syncNotesWithKMail();
+	ActionQueue *fSyncStack;
+	
 	/**
 	* This is a pointer to the (optional) docked
 	* system tray icon for the daemon.
@@ -228,6 +219,9 @@ private:
 
 
 // $Log$
+// Revision 1.38  2002/12/04 10:55:37  thorsen
+// Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
+//
 // Revision 1.36.2.3  2002/11/29 11:12:10  thorsen
 // Merged from head
 //
