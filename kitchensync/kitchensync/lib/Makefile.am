@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kitchensync/lib $(all_includes)
+INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector $(all_includes)
 
 lib_LTLIBRARIES = libkitchensync.la
 
