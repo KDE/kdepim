@@ -54,7 +54,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addWidget( label, 1, 0 );
   layout->setRowSpacing( 1, 20 );
 
-  label = new QLabel( i18n( "Select the type of server you want connect your KDE to" ), this );
+  label = new QLabel( i18n( "Select the type of server you want connect your KDE to:" ), this );
   layout->addMultiCellWidget( label, 2, 2, 0, 3 );
 
   QPushButton *button = new QPushButton( i18n("eGroupware"), this );
@@ -71,7 +71,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   layout->addMultiCellWidget( frame, 5, 5, 0, 3 );
 
-  QPushButton *cancelButton = new QPushButton( i18n( "Cancel" ), this );
+  QPushButton *cancelButton = new QPushButton( SmallIcon("button_cancel"), i18n( "Cancel" ), this );
   layout->addWidget( cancelButton, 7, 3 );
 
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );

@@ -41,7 +41,7 @@ class CreateImapResource : public KConfigPropagator::Change
       : KConfigPropagator::Change( i18n("Create IMAP Resource") )
     {
     }
-    
+
     void apply()
     {
       kdDebug() << "Create IMAP Resource" << endl;
@@ -112,23 +112,23 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
 
-  QLabel *label = new QLabel( i18n("Server Name"), page );
+  QLabel *label = new QLabel( i18n("Server name:"), page );
   topLayout->addWidget( label, 0, 0 );
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("User Name"), page );
+  label = new QLabel( i18n("User name:"), page );
   topLayout->addWidget( label, 1, 0 );
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 1, 1 );
 
-  label = new QLabel( i18n("Password"), page );
+  label = new QLabel( i18n("Password:"), page );
   topLayout->addWidget( label, 2, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
   topLayout->addWidget( mPasswordEdit, 2, 1 );
 
-  mSavePasswordCheck = new QCheckBox( i18n("Save Password"), page );
+  mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
   topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
 
   topLayout->setRowStretch( 4, 1 );
@@ -156,5 +156,5 @@ void KolabWizard::usrWriteConfig()
   KolabConfig::self()->setServer( mServerEdit->text() );
   KolabConfig::self()->setUser( mUserEdit->text() );
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
-  KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );    
+  KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
 }

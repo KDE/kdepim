@@ -46,7 +46,7 @@ ActionPage::ActionPage( QWidget *parent, const char *name )
 
   mConnectionBox = new QListBox( this );
 
-  mAddButton = new QPushButton( i18n( "New" ), this );
+  mAddButton = new QPushButton( i18n( "New..." ), this );
   mEditButton = new QPushButton( i18n( "Edit..." ), this );
   mEditButton->setEnabled( false );
   mDeleteButton = new QPushButton( i18n( "Delete" ), this );

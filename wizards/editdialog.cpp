@@ -38,27 +38,27 @@ EditDialog::EditDialog( QWidget *parent, const char *name )
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Name" ), page );
+  QLabel *label = new QLabel( i18n( "Name:" ), page );
   topLayout->addWidget( label, 0, 0 );
   mResourceNameEdit = new KLineEdit( page );
   topLayout->addWidget( mResourceNameEdit, 0, 1 );
 
-  label = new QLabel( i18n( "Server Name" ), page );
+  label = new QLabel( i18n( "Server name:" ), page );
   topLayout->addWidget( label, 1, 0 );
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 1, 1 );
 
-  label = new QLabel( i18n( "Domain" ), page );
+  label = new QLabel( i18n( "Domain:" ), page );
   topLayout->addWidget( label, 2, 0 );
   mDomainEdit = new KLineEdit( page );
   topLayout->addWidget( mDomainEdit, 2, 1 );
 
-  label = new QLabel( i18n( "User Name" ), page );
+  label = new QLabel( i18n( "User name:" ), page );
   topLayout->addWidget( label, 3, 0 );
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 3, 1 );
 
-  label = new QLabel( i18n( "Password" ), page );
+  label = new QLabel( i18n( "Password:" ), page );
   topLayout->addWidget( label, 4, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
