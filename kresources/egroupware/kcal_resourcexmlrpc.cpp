@@ -972,17 +972,17 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
       int weekMask = 0;
       if ( rec->days().testBit( 0 ) )
         weekMask += CAL_MONDAY;
-      else if ( rec->days().testBit( 1 ) )
+      if ( rec->days().testBit( 1 ) )
         weekMask += CAL_TUESDAY;
-      else if ( rec->days().testBit( 2 ) )
+      if ( rec->days().testBit( 2 ) )
         weekMask += CAL_WEDNESDAY;
-      else if ( rec->days().testBit( 3 ) )
+      if ( rec->days().testBit( 3 ) )
         weekMask += CAL_THURSDAY;
-      else if ( rec->days().testBit( 4 ) )
+      if ( rec->days().testBit( 4 ) )
         weekMask += CAL_FRIDAY;
-      else if ( rec->days().testBit( 5 ) )
+      if ( rec->days().testBit( 5 ) )
         weekMask += CAL_SATURDAY;
-      else if ( rec->days().testBit( 6 ) )
+      if ( rec->days().testBit( 6 ) )
         weekMask += CAL_SUNDAY;
 
       args.insert( "recur_data", weekMask );
