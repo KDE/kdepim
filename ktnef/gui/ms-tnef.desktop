@@ -4,3 +4,7 @@ MimeType=application/ms-tnef
 Icon=tar
 Patterns=*.tnf;
 Comment=TNEF File
+Comment[be]=TNEF файл
+Comment[es]=Archivo TNEF
+Comment[hu]=TNEF fájl
+Comment[sv]=TNEF-fil
