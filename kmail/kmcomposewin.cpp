@@ -4929,6 +4929,16 @@ bool KMComposeWin::doSend(int aSendNow, bool saveInDrafts)
         draftsFolder = kmkernel->imapFolderMgr()->findIdString( mMsg->drafts() );
       if ( draftsFolder == 0 )
         imapDraftsFolder = kmkernel->imapFolderMgr()->findIdString( mMsg->drafts() );
+      if ( !draftsFolder && !imapDraftsFolder )
+      {
+        const KMIdentity & id = kmkernel->identityManager()
+          ->identityForUoidOrDefault( mMsg->headerField( "X-KMail-Identity" ).stripWhiteSpace().toUInt() );
+        KMessageBox::information(0, i18n("The custom drafts folder for identity "
+              "\"%1\" doesn't exist (anymore). "
+              "Therefore the default drafts folder "
+              "will be used.")
+            .arg( id.identityName() ) );
+      }
     }
     if (imapDraftsFolder && imapDraftsFolder->noContent())
       imapDraftsFolder = 0;

@@ -266,6 +266,7 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
 
     const KMIdentity & id = kmkernel->identityManager()
       ->identityForUoidOrDefault( mCurrentMsg->headerField( "X-KMail-Identity" ).stripWhiteSpace().toUInt() );
+    bool folderGone = false;
     if ( !mCurrentMsg->fcc().isEmpty() )
     {
       sentFolder = kmkernel->folderMgr()->findIdString( mCurrentMsg->fcc() );
@@ -276,6 +277,8 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
       if ( sentFolder == 0 )
         imapSentFolder =
           kmkernel->imapFolderMgr()->findIdString( mCurrentMsg->fcc() );
+      if ( !sentFolder && !imapSentFolder )
+        folderGone = true;
     }
     else if ( !id.fcc().isEmpty() )
     {
@@ -285,10 +288,17 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
         sentFolder = kmkernel->dimapFolderMgr()->findIdString( id.fcc() );
       if ( sentFolder == 0 )
         imapSentFolder = kmkernel->imapFolderMgr()->findIdString( id.fcc() );
+      if ( !sentFolder && !imapSentFolder )
+        folderGone = true;
     }
     if (imapSentFolder && imapSentFolder->noContent()) imapSentFolder = 0;
+    if (folderGone)
+      KMessageBox::information(0, i18n("The custom sent-mail folder for identity "
+            "\"%1\" doesn't exist (anymore). "
+            "Therefore the default sent-mail folder "
+            "will be used.").arg( id.identityName() ) );
 
-    if ( sentFolder == 0 )
+    if ( sentFolder == 0 ) 
       sentFolder = kmkernel->sentFolder();
 
     if ( sentFolder ) {
