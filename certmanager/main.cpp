@@ -1,38 +1,52 @@
-/**
-   KDE Certificate Manager
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    main.cpp
 
-   by Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>, Jesper
-   K. Pedersen <blackie@klaralvdalens-datakonsult.se> and
-   Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
+    This file is part of Kleopatra, the KDE keymanager
+    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
 
-   Copyright (C) 2002 by Klarälvdalens Datakonsult AB
+    Kleopatra is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-   This software is licensed under the GPL.
+    Kleopatra is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
 */
 
-#include <kapplication.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include "aboutdata.h"
 #include "certmanager.h"
+
+#include <cryptplugfactory.h>
+
+#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <kaboutdata.h>
-#include <cryptplugwrapper.h>
-
-CryptPlugWrapper* pWrapper;
-
-static const char KGPGCERTMANAGER_VERSION[] = I18N_NOOP("0.9");
-static const char DESCRIPTION[]             = I18N_NOOP("Certificate Manager");
 
 int main( int argc, char** argv )
 {
-  KAboutData aboutData( "kgpgcertmanager", I18N_NOOP("KGpgCertManager"),
-			KGPGCERTMANAGER_VERSION, DESCRIPTION, KAboutData::License_GPL,
-			"(c) 2002, Steffen Hansen, Jesper Pedersen,\n"
-			"Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB");
-  aboutData.addAuthor( "Steffen Hansen",    I18N_NOOP("Current Maintainer"),
-		       "hansen@kde.org" );
-  aboutData.addAuthor( "Kalle Dalheimer",   0, "kalle@kde.org" );
-  aboutData.addAuthor( "Jesper Pedersen",   0, "blackie@kde.org" );
+  AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);
   static const KCmdLineOptions options[] = {
@@ -40,41 +54,29 @@ int main( int argc, char** argv )
             { "+lib" , I18N_NOOP("The library of the plugin"), 0 },
             { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
             { "query " , I18N_NOOP("Initial query string"), 0 },
-             KCmdLineLastOption// End of options.
+	    { "import-certificate ", I18N_NOOP("Name of certificte file to import"), 0 },
+	    KCmdLineLastOption// End of options.
   };
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  if( args->count() < 2 ) {
-    KMessageBox::error( 0,
-			i18n( "<qt>Certificate Manager called incorrectly.<br>Usage: certmanager <em>plugin-name</em> <em>plugin-lib</em><br>Certificate Manager will terminate now.</qt>" ),
-			i18n( "Certificate Manager Error" ) );
-    return -1;
-  }
 
-  QString pluginName = QString::fromLocal8Bit( args->arg( 0 ) );
-  QString pluginLib = QString::fromLocal8Bit( args->arg( 1 ) );
-
-  pWrapper = new CryptPlugWrapper( 0, pluginName, pluginLib,
-				   QString::null, true );
-  CryptPlugWrapper::InitStatus initStatus;
-  QString errorText;
-  if( !pWrapper->initialize( &initStatus, &errorText ) ) {
-    KMessageBox::error( 0,
-			i18n( "<qt>The crypto plugin could not be initialized; the error message was %1.<br>Certificate Manager will terminate now.</qt>" ).arg( errorText ),
-			i18n( "Certificate Manager Error" ) );
+  if( !Kleo::CryptPlugFactory::instance()->smime() ) {
+    KMessageBox::error(0,
+			i18n( "<qt>The crypto plugin could not be initialized.<br>"
+			      "Certificate Manager will terminate now.</qt>") );
     return -2;
   }
+
   CertManager* manager = new CertManager( args->isSet("external"),
-					  QString::fromLocal8Bit(args->getOption("query")) );
+					  QString::fromLocal8Bit(args->getOption("query")),
+					  QString::fromLocal8Bit(args->getOption("import-certificate")) );
+
   args->clear();
   manager->show();
 
   QObject::connect( qApp, SIGNAL( lastWindowClosed() ), qApp, SLOT( quit() ) );
-  int ret = app.exec();
-  delete pWrapper;
-
-  return ret;
+  return app.exec();
 }

@@ -10,13 +10,14 @@
 		<Action name="viewCRLs" />
 	</Menu>
 	<Menu name="certMenu" >
-		<text>Certificates</text>
+		<text>&amp;Certificates</text>
 		<Action name="newCert" />
 		<Action name="revokeCert" />
 		<Action name="extendCert" />
+		<Action name="delCert" />
 	</Menu>
 	<Menu name="importMenu">
-	        <text>Import</text>
+	        <text>&amp;Import</text>
 		<Action name="importCertFromFile" />		        
 		<Action name="importCRLFromFile" />
 	</Menu>

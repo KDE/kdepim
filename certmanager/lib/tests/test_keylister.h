@@ -1,15 +1,14 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    crlview.h
+    test_keylister.h
 
-    This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    This file is part of libkleopatra's test suite.
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
-    Kleopatra is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    Libkleopatra is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License,
+    version 2, as published by the Free Software Foundation.
 
-    Kleopatra is distributed in the hope that it will be useful,
+    Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -30,32 +29,24 @@
     your version.
 */
 
-#ifndef CRLVIEW_H
-#define CRLVIEW_H
+#ifndef __KLEO_TEST_KEYLISTER_H__
+#define __KLEO_TEST_KEYLISTER_H__
 
-#include <qdialog.h>
+#include <ui/keylistview.h>
 
-class QTextView;
-class QPushButton;
-class KProcess;
+namespace GpgME {
+  class Key;
+  class KeyListResult;
+}
 
-class CRLView : public QDialog {
+class CertListView : public Kleo::KeyListView {
   Q_OBJECT
 public:
-  CRLView( QWidget* parent = 0, const char* name = 0, bool modal = false );
-  ~CRLView();
+  CertListView( QWidget * parent=0, const char * name=0, WFlags f=0 );
+
 public slots:
-  void slotUpdateView();
-
-protected slots:
-  void slotReadStdout( KProcess*, char* buf, int len);
-  void slotProcessExited();
-
-private:  
-  QTextView*   _textView;
-  QPushButton* _updateButton;
-  QPushButton* _closeButton;
-  KProcess*    _process;
+  void slotResult( const GpgME::KeyListResult & result );
+  void slotStart();
 };
 
-#endif // CRLVIEW_H
+#endif // __KLEO_TEST_KEYLISTER_H__

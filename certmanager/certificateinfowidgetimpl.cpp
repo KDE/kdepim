@@ -1,47 +1,81 @@
-/* -*- Mode: C -*-
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    certificateinfowidgetimpl.cpp
 
-  $Id$
+    This file is part of Kleopatra, the KDE keymanager
+    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
 
-  Copyright (C) 2001 by Klarälvdalens Datakonsult AB
+    Kleopatra is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-  GPGMEPLUG is free software; you can redistribute it and/or modify
-  it under the terms of GNU General Public License as published by
-  the Free Software Foundation; version 2 of the License.
+    Kleopatra is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
 
-  GPGMEPLUG is distributed in the hope that it will be useful,
-  it under the terms of GNU General Public License as published by
-  the Free Software Foundation; version 2 of the License
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include "certificateinfowidgetimpl.h"
+
+// libkleopatra
+#include <kleo/keylister.h>
+#include <kleo/dn.h>
+
+#include <ui/progressdialog.h>
+
+#include <cryptplugfactory.h>
+#include <cryptplugwrapper.h>
+
+// gpgme++
+#include <gpgmepp/keylistresult.h>
+
+// KDE
+#include <klocale.h>
+#include <kdialogbase.h>
+#include <kmessagebox.h>
+#include <kdebug.h>
+
+// Qt
 #include <qlistview.h>
 #include <qtextedit.h>
 #include <qheader.h>
 #include <qpushbutton.h>
 #include <qcursor.h>
 #include <qapplication.h>
+#include <qdatetime.h>
 
-#include <klocale.h>
-#include <kdialogbase.h>
-#include <kmessagebox.h>
-#include <kdebug.h>
+// other
+#include <assert.h>
 
-#include "certificateinfowidgetimpl.h"
-#include "certmanager.h"
-
-CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, bool external,
-						      QWidget* parent, const char* name )
-  : CertificateInfoWidget( parent, name ), _manager(manager), _external( external )
+CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
+						      QWidget * parent, const char * name )
+  : CertificateInfoWidget( parent, name ),
+    mExternal( external ),
+    mFoundIssuer( true ),
+    mHaveKeyLocally( false )
 {
-  if( !external ) importButton->setEnabled(false);
-  listView->setColumnWidthMode( 1, QListView::Manual );
-  listView->setResizeMode( QListView::LastColumn );
+  importButton->setEnabled( false );
+
+  listView->setColumnWidthMode( 1, QListView::Maximum );
   QFontMetrics fm = fontMetrics();
   listView->setColumnWidth( 1, fm.width( i18n("Information") ) * 5 );
 
@@ -50,8 +84,7 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, bool
 
   connect( listView, SIGNAL( selectionChanged( QListViewItem* ) ),
 	   this, SLOT( slotShowInfo( QListViewItem* ) ) );
-  pathView->setColumnWidthMode( 0, QListView::Manual );
-  pathView->setResizeMode( QListView::LastColumn );
+  pathView->setColumnWidthMode( 0, QListView::Maximum );
   pathView->header()->hide();
 
   connect( pathView, SIGNAL( doubleClicked( QListViewItem* ) ),
@@ -60,162 +93,276 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, bool
 	   this, SLOT( slotShowCertPathDetails( QListViewItem* ) ) );
   connect( importButton, SIGNAL( clicked() ),
 	   this, SLOT( slotImportCertificate() ) );
+
+  if ( !key.isNull() )
+    setKey( key );
 }
 
-void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo& info )
-{
+static QString time_t2string( time_t t ) {
+  QDateTime dt;
+  dt.setTime_t( t );
+  return dt.toString();
+}
+
+void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
+  mChain.clear();
+  mFoundIssuer = true;
+  mHaveKeyLocally = false;
+
   listView->clear();
   pathView->clear();
-  _info = info;
+  importButton->setEnabled( false );
 
-  /* Check if we already have the cert in question */
-  if( _manager ) {
-    importButton->setEnabled( !_manager->haveCertificate( info.fingerprint ) );
-  } else { 
-    importButton->setEnabled( false );
+  if ( key.isNull() )
+    return;
+
+  mChain.push_front( key );
+  startKeyExistanceCheck(); // starts a local keylisting to enable the
+			    // importButton if needed
+
+  QListViewItem * item = 0;
+  item = new QListViewItem( listView, item, i18n("Valid"), QString("From %1 to %2")
+			    .arg( time_t2string( key.subkey(0).creationTime() ),
+				  time_t2string( key.subkey(0).expirationTime() ) ) );
+  item = new QListViewItem( listView, item, i18n("Can be used for signing"), 
+			    key.canSign() ? i18n("Yes") : i18n("No") );
+  item = new QListViewItem( listView, item, i18n("Can be used for encryption"), 
+			    key.canEncrypt() ? i18n("Yes") : i18n("No") );
+  item = new QListViewItem( listView, item, i18n("Can be used for certification"), 
+			    key.canCertify() ? i18n("Yes") : i18n("No") );
+  item = new QListViewItem( listView, item, i18n("Can be used for authentication"),
+			    key.canAuthenticate() ? i18n("Yes") : i18n("No" ) );
+  item = new QListViewItem( listView, item, i18n("Fingerprint"), key.subkey(0).fingerprint() );
+  item = new QListViewItem( listView, item, i18n("Issuer"), Kleo::DN( key.issuerName() ).prettyDN() );
+  item = new QListViewItem( listView, item, i18n("Serial Number"), key.issuerSerial() );
+
+  const Kleo::DN dn = key.userID(0).id();
+
+  // FIXME: use the attributeLabelMap from certificatewizardimpl.cpp:
+  static QMap<QString,QString> dnComponentNames;
+  if ( dnComponentNames.isEmpty() ) {
+	dnComponentNames["C"] = i18n("Country");
+	dnComponentNames["OU"] = i18n("Organizational Unit");
+	dnComponentNames["O"] = i18n("Organization");
+	dnComponentNames["L"] = i18n("Location");
+	dnComponentNames["CN"] = i18n("Common Name");
+	dnComponentNames["EMAIL"] = i18n("Email");
   }
-  // These will show in the opposite order
-  // disabled until supported
-  //new QListViewItem( listView, i18n("CRL Dist. Point"), info.crl );
-  new QListViewItem( listView, i18n("Fingerprint"), info.fingerprint );
-  new QListViewItem( listView, i18n("Can be used for certification"), 
-		     info.certify?i18n("Yes"):i18n("No") );
-  new QListViewItem( listView, i18n("Can be used for encryption"), 
-		     info.encrypt?i18n("Yes"):i18n("No") );
-  new QListViewItem( listView, i18n("Can be used for signing"), 
-		     info.sign?i18n("Yes"):i18n("No") );
 
-  new QListViewItem( listView, i18n("Valid"), QString("From %1 to %2")
-		     .arg( info.created.toString() ).arg(info.expire.toString()) );
+  for ( Kleo::DN::const_iterator dnit = dn.begin() ; dnit != dn.end() ; ++dnit ) {
+	QString displayName = (*dnit).name();
+	if( dnComponentNames.contains(displayName) ) displayName = dnComponentNames[displayName];
+	item = new QListViewItem( listView, item, displayName, (*dnit).value() );
+  }
 
-
-  //new QListViewItem( listView, i18n("Email"), info.dn["1.2.840.113549.1.9.1"] );
-  new QListViewItem( listView, i18n("Country"), info.dn["C"] );
-  new QListViewItem( listView, i18n("Organizational Unit"), info.dn["OU"] );
-  new QListViewItem( listView, i18n("Organization"), info.dn["O"] );
-  new QListViewItem( listView, i18n("Location"), info.dn["L"] );
-  new QListViewItem( listView, i18n("Serial Number"), info.serial );
-  new QListViewItem( listView, i18n("Name"), info.dn["CN"] );
-  new QListViewItem( listView, i18n("Issuer"), info.issuer.stripWhiteSpace() );
-
-  QStringList::ConstIterator it = info.userid.begin();
-  QListViewItem* item = new QListViewItem( listView, i18n("Subject"), 
-			    (*it).stripWhiteSpace() );
-  ++it;
-  while( it != info.userid.end() ) {
-    if( (*it)[0] == '<' ) {
-      item = new QListViewItem( listView, item, i18n("Email"), (*it).mid(1,(*it).length()-2));
-    } else {
-      item = new QListViewItem( listView, item, i18n("Aka"), (*it).stripWhiteSpace() );
+  const std::vector<GpgME::UserID> uids = key.userIDs();
+  if ( !uids.empty() ) {
+    item = new QListViewItem( listView, item, i18n("Subject"),
+			      Kleo::DN( uids.front().id() ).prettyDN() );
+    for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() + 1 ; it != uids.end() ; ++it ) {
+      if ( !(*it).id() )
+	continue;
+      const QString email = QString::fromUtf8( (*it).id() ).stripWhiteSpace();
+      if ( email.isEmpty() )
+	continue;
+      if ( email.startsWith( "<" ) )
+	item = new QListViewItem( listView, item, i18n("EMail"),
+				  email.mid( 1, email.length()-2 ) );
+      else
+	item = new QListViewItem( listView, item, i18n("A.k.a."), email );
     }
-    ++it;  
-  } 
+  }
 
-  // Set up cert. path
-  if( !_manager ) return;
-  const CryptPlugWrapper::CertificateInfoList& lst = _manager->certList();
-  QString issuer = info.issuer;
-  QStringList items;
-  items << info.userid[0];
-  bool root_found = false;
-  while( true ) {
-    bool found = false;
-    CryptPlugWrapper::CertificateInfo info;
-    for( CryptPlugWrapper::CertificateInfoList::ConstIterator it = lst.begin();
-	 it != lst.end(); ++it ) {
-      if( (*it).userid[0] == issuer && !items.contains( info.userid[0] ) ) {
-	info = (*it);
-	found = true;
-	break;
-      }
-    }
-    if( found ) {
-      items.prepend( info.userid[0] );
-      issuer = info.issuer;
-      // FIXME(steffen): Use real DN comparison
-      if( info.userid[0] == info.issuer ) {
-	// Root item
-	root_found = true;
-	break;
-      } 
-    } else break;
+  updateChainView();
+  startCertificateChainListing();
+}
+
+static void showChainListError( QWidget * parent, const GpgME::Error & err, const char * subject ) {
+  assert( err );
+  const QString msg = i18n("<qt><p>An error occured while fetching "
+			   "the certificate <b>%1</b> from the backend:</p>"
+			   "<p><b>%2</b></p></qt>")
+    .arg( subject ? QString::fromUtf8( subject ) : QString::null,
+	  QString::fromLocal8Bit( err.asString() ) );
+  KMessageBox::error( parent, msg, i18n("Certificate Listing Failed" ) );
+}
+
+void CertificateInfoWidgetImpl::startCertificateChainListing() {
+  kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing()" << endl;
+
+  if ( mChain.empty() ) {
+    // we need a seed...
+    kdWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): mChain is empty!" << endl;
+    return;
   }
-  item = 0;
-  if( !root_found ) {
-    if( items.count() > 0 ) items.prepend( i18n("Root certificate not found (%1)").arg( issuer ) );
-    else items.prepend( i18n("Root certificate not found") );
+  if ( !mChain.front().chainID() || !*mChain.front().chainID() ) {
+    // already a root item...
+    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): empty chain ID - probably the root" << endl;
+    return;
   }
-  for( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
-    if( item ) item = new QListViewItem( item, (*it) );
-    else item = new QListViewItem( pathView, (*it) );
+  if ( mChain.size() > 100 ) {
+    // safe guard against certificate loops (paranoia factor 8 out of 10)...
+    kdWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): maximum chain length of 100 exceeded!" << endl;
+    return;
+  }
+  if ( !mFoundIssuer ) {
+    // key listing failed. Don't end up in endless loop
+    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): issuer not found - giving up" << endl;
+    return;
+  }
+
+  mFoundIssuer = false;
+
+  Kleo::KeyListJob * job =
+    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mExternal );
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
+	   SLOT(slotCertificateChainListingResult(const GpgME::KeyListResult&)) );
+  connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+	   SLOT(slotNextKey(const GpgME::Key&)) );
+
+  kdDebug() << "Going to fetch" << endl
+	    << "  issuer  : \"" << mChain.front().issuerName() << "\"" << endl
+	    << "  chain id: " << mChain.front().chainID() << endl
+	    << "for" << endl
+	    << "  subject : \"" << mChain.front().userID(0).id() << "\"" << endl
+	    << "  subj.fpr: " << mChain.front().subkey(0).fingerprint() << endl;
+
+  const GpgME::Error err = job->start( mChain.front().chainID() );
+
+  if ( err )
+    showChainListError( this, err, mChain.front().issuerName() );
+  else
+    (void)new Kleo::ProgressDialog( job, i18n("Fetching Certificate Chain"), this );
+}
+
+void CertificateInfoWidgetImpl::slotNextKey( const GpgME::Key & key ) {
+  kdDebug() << "CertificateInfoWidgetImpl::slotNextKey( \""
+	    << key.userID(0).id() << "\" )" << endl;
+  if ( key.isNull() )
+    return;
+
+  mFoundIssuer = true;
+  mChain.push_front( key );
+  updateChainView();
+  // FIXME: cancel the keylisting. We're only interested in _one_ key.
+}
+
+void CertificateInfoWidgetImpl::updateChainView() {
+  pathView->clear();
+  if ( mChain.empty() )
+    return;
+  QListViewItem * item = 0;
+
+  QValueList<GpgME::Key>::const_iterator it = mChain.begin();
+  // root item:
+  if ( (*it).chainID() )
+    item = new QListViewItem( pathView, i18n("Issuer certificate not found ( %1)")
+			      .arg( Kleo::DN( (*it).issuerName() ).prettyDN() ) );
+  else
+    item = new QListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
+  item->setOpen( true );
+
+  // subsequent items:
+  while ( it != mChain.end() ) {
+    item = new QListViewItem( item, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
     item->setOpen( true );
   }
 }
 
-void CertificateInfoWidgetImpl::slotShowInfo( QListViewItem* item )
-{
+void CertificateInfoWidgetImpl::slotCertificateChainListingResult( const GpgME::KeyListResult & res ) {
+  if ( res.error() )
+    return showChainListError( this, res.error(), mChain.front().issuerName() );
+  else
+    startCertificateChainListing();
+}
+
+void CertificateInfoWidgetImpl::slotShowInfo( QListViewItem * item ) {
   textView->setText( item->text(1) );
 }
 
-void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem* item )
-{
-  if( !_manager ) return;
-  const CryptPlugWrapper::CertificateInfoList& lst = _manager->certList();
-  for( CryptPlugWrapper::CertificateInfoList::ConstIterator it = lst.begin();
-       it != lst.end(); ++it ) {
-    if( (*it).userid[0] == item->text(0) ) {
-      KDialogBase* dialog = new KDialogBase( this, "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
+void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem * item ) {
+  if ( !item )
+    return;
 
-      CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, _manager->isRemote(), dialog );
-      dialog->setMainWidget( top );
-      top->setCert( *it ); 
-      dialog->exec();
-      delete dialog;
-    }
+  // find the key corresponding to "item". This hack would not be
+  // necessary if pathView was a Kleo::KeyListView, but it's
+  // Qt-Designer-generated and I don't feel like creating a custom
+  // widget spec for Kleo::KeyListView.
+  unsigned int totalCount = 0;
+  int itemIndex = -1;
+  for ( const QListViewItem * i = pathView->firstChild() ; i ; i = i->firstChild() ) {
+    if ( i == item )
+      itemIndex = totalCount;
+    ++totalCount;
   }
+
+  assert( totalCount == mChain.size() || totalCount == mChain.size() + 1 );
+
+  // skip pseudo root item with "not found message":
+  if ( totalCount == mChain.size() + 1 )
+    --itemIndex;
+
+  assert( itemIndex >= 0 );
+
+  KDialogBase * dialog =
+    new KDialogBase( this, "dialog", false, i18n("Additional Information for Key"),
+		     KDialogBase::Close, KDialogBase::Close );
+  CertificateInfoWidgetImpl * top =
+    new CertificateInfoWidgetImpl( mChain[itemIndex], mExternal, dialog );
+  dialog->setMainWidget( top );
+  // proxy the signal to our receiver:
+  connect( top, SIGNAL(requestCertificateDownload(const QString&)),
+	   SIGNAL(requestCertificateDownload(const QString&)) );
+  dialog->show();
 }
 
-
-static QString parseXMLInfo( const QString& info )
-{
-  QString result;
-  QDomDocument doc;
-  if( !doc.setContent( info ) ) {
-    kdDebug() << "xml parser error in CertificateInfoWidgetImpl::slotImportCertificate()" << endl;
-  }
-  QDomNode importinfo = doc.documentElement().namedItem("importResult");
-  result = i18n("<p align=\"center\"><table border=\"1\"><tr><th>Name</th><th>Value</th></tr>");
-  for( QDomNode n = importinfo.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    if( n.isElement() ) {
-      QDomElement elem = n.toElement();
-      if( elem.tagName() == "count" || elem.text().toInt() != 0 ) {
-	result += "<tr><td>"+ elem.tagName() + "</td><td>" 
-	  + elem.text().stripWhiteSpace() + "</td></tr>";
-      }
-    }
-  }
-  result += "</table></p>";
-  return result;
-}
 
 void CertificateInfoWidgetImpl::slotImportCertificate()
 {
-  if( !_manager ) return;
-  QApplication::setOverrideCursor( QCursor::WaitCursor );
-  QString info;
-  int retval = _manager->importCertificateWithFingerprint( _info.fingerprint, &info );
-  info = parseXMLInfo( info );
-  
-  QApplication::restoreOverrideCursor();
-
-  if( retval == -42 ) {
-    KMessageBox::error( this, i18n("<qml>CryptPlug returned success, but no certificate was imported.<br>You may need to import the issuer certificate <b>%1</b> first.<br>Additional info:<br>%2</qml>").arg( _info.issuer ).arg(info),
-			i18n("Import Error") );    
-  } else if( retval ) {
-    KMessageBox::error( this, i18n("<qml>Error importing certificate.<br>CryptPlug returned %1. Additional info:<br>%2</qml>").arg(retval).arg( info ), i18n("Import Error") );
-  } else {
-    KMessageBox::information( this, i18n("<qml>Certificate %1 with fingerprint <b>%2</b> is imported to the local database.<br>Additional info:<br>%3</qml>").arg(_info.userid[0]).arg(_info.fingerprint).arg( info ), i18n("Certificate Imported") );
-    importButton->setEnabled( false );
-  }
+  if ( mChain.empty() || mChain.back().isNull() )
+    return;
+  emit requestCertificateDownload( mChain.back().subkey(0).fingerprint() );
+  importButton->setEnabled( false );
 }
+
+void CertificateInfoWidgetImpl::startKeyExistanceCheck() {
+  if ( !mExternal )
+    // we already have it if it's from a local keylisting :)
+    return;
+  if ( mChain.empty() || mChain.back().isNull() )
+    // need a key to look for
+    return;
+  const QString fingerprint = mChain.back().subkey(0).fingerprint();
+  if ( fingerprint.isEmpty() )
+    // empty pattern means list all keys. We don't want that
+    return;
+
+  // start _local_ keylistjob (no progressdialog needed here):
+  Kleo::KeyListJob * job =
+    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( false );
+  assert( job );
+
+  connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+	   SLOT(slotKeyExistanceCheckNextCandidate(const GpgME::Key&)) );
+  connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
+	   SLOT(slotKeyExistanceCheckFinished()) );
+  // nor to check for errors:
+  job->start( fingerprint );
+}
+
+void CertificateInfoWidgetImpl::slotKeyExistanceCheckNextCandidate( const GpgME::Key & key ) {
+  if ( key.isNull() || mChain.empty() || !key.subkey(0).fingerprint() )
+    return;
+
+  if ( qstrcmp( key.subkey(0).fingerprint(),
+		mChain.back().subkey(0).fingerprint() ) == 0 )
+    mHaveKeyLocally = true;
+}
+
+void CertificateInfoWidgetImpl::slotKeyExistanceCheckFinished() {
+  importButton->setEnabled( !mHaveKeyLocally );
+}
+
 #include "certificateinfowidgetimpl.moc"

@@ -1,15 +1,14 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    crlview.h
+    oidmap.h
 
-    This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    This file is part of libkleopatra, the KDE keymanagement library
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
-    Kleopatra is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    Libkleopatra is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License,
+    version 2, as published by the Free Software Foundation.
 
-    Kleopatra is distributed in the hope that it will be useful,
+    Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -30,32 +29,21 @@
     your version.
 */
 
-#ifndef CRLVIEW_H
-#define CRLVIEW_H
+#ifndef __KLEO_OIDMAP_H__
+#define __KLEO_OIDMAP_H__
 
-#include <qdialog.h>
-
-class QTextView;
-class QPushButton;
-class KProcess;
-
-class CRLView : public QDialog {
-  Q_OBJECT
-public:
-  CRLView( QWidget* parent = 0, const char* name = 0, bool modal = false );
-  ~CRLView();
-public slots:
-  void slotUpdateView();
-
-protected slots:
-  void slotReadStdout( KProcess*, char* buf, int len);
-  void slotProcessExited();
-
-private:  
-  QTextView*   _textView;
-  QPushButton* _updateButton;
-  QPushButton* _closeButton;
-  KProcess*    _process;
+static struct {
+  const char * name;
+  const char * oid;
+} oidmap[] = {
+  // keep them ordered by oid:
+  { "SP", "ST" }, // hack to show the Sphinx-required/desired SP for
+		  // StateOrProvince, otherwise known as ST or even S
+  { "EMAIL", "1.2.840.113549.1.9.1" },
+  { "SN", "2.5.4.4" },
+  { "BC", "2.5.4.15" },
+  { "GN", "2.5.4.42" }
 };
+static const unsigned int numOidMaps = sizeof oidmap / sizeof *oidmap;
 
-#endif // CRLVIEW_H
+#endif // __KLEO_OIDMAP_H__

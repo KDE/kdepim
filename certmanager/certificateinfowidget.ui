@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>423</width>
-            <height>399</height>
+            <height>403</height>
         </rect>
     </property>
     <property name="minimumSize">
@@ -86,9 +86,6 @@
                         <property name="showSortIndicator">
                             <bool>false</bool>
                         </property>
-                        <property name="resizeMode">
-                            <enum>AllColumns</enum>
-                        </property>
                     </widget>
                     <widget class="QTextEdit" row="1" column="0">
                         <property name="name">
@@ -108,7 +105,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>&amp;Path</string>
+                    <string>&amp;Chain</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -134,9 +131,6 @@
                         </property>
                         <property name="rootIsDecorated">
                             <bool>true</bool>
-                        </property>
-                        <property name="resizeMode">
-                            <enum>AllColumns</enum>
                         </property>
                     </widget>
                 </grid>

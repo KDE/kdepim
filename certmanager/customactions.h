@@ -1,5 +1,5 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    certificatewizardimpl.h
+    customactions.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
@@ -30,49 +30,55 @@
     your version.
 */
 
-#ifndef CERTIFICATEWIZARDIMPL_H
-#define CERTIFICATEWIZARDIMPL_H
-#include "certificatewizard.h"
+#ifndef __CUSTOMACTIONS_H__
+#define __CUSTOMACTIONS_H__
 
-#include <qcstring.h>
-#include <qvaluevector.h>
-#include <qlineedit.h>
+#include <kaction.h>
 
-namespace GpgME {
-  class KeyGenerationResult;
-}
+#include <qstringlist.h>
 
-class CertificateWizardImpl : public CertificateWizard
-{
-    Q_OBJECT
+class QLineEdit;
 
+class LabelAction : public KAction {
+  Q_OBJECT
 public:
-    CertificateWizardImpl( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~CertificateWizardImpl();
+  LabelAction( const QString & text, KActionCollection * parent,
+	       const char* name );
 
-    const QByteArray & keyData() const { return _keyData; }
-
-    bool sendToCA() const;
-    QString caEMailAddress() const;
-    QString saveFileUrl() const;
-
-    typedef QPair<QString, QLineEdit*> StringLEPair;
-    typedef QValueVector< StringLEPair > AttrPairList; 
-
-private slots:
-    void slotGenerateCertificate();
-    void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
-    void slotSetValuesFromWhoAmI();
-    void slotEnablePersonalDataPageExit();
-
-    void slotHelpClicked();
-
-private:
-    void createPersonalDataPage();
-
-private:
-    AttrPairList _attrPairList;
-    QByteArray _keyData;
+  int plug( QWidget * widget, int index=-1 );
 };
 
-#endif // CERTIFICATEWIZARDIMPL_H
+class LineEditAction : public KAction {
+  Q_OBJECT
+public:
+  LineEditAction( const QString & text, KActionCollection * parent,
+		  QObject * receiver, const char * member, const char * name );
+
+  int plug( QWidget * widget, int index=-1 );
+  void clear();
+  void focusAll();
+  QString text() const;
+  void setText( const QString & txt );
+private:
+  QLineEdit* _le;
+  QObject * _receiver;
+  const char * _member;
+};
+
+class ComboAction : public KAction {
+  Q_OBJECT
+public:
+  ComboAction( const QStringList & lst,  KActionCollection * parent,
+	       QObject * receiver, const char * member, const char * name );
+
+  int plug( QWidget * widget, int index=-1 );
+
+private:
+  QStringList _lst;
+  QObject * _receiver;
+  const char * _member;
+};
+
+
+
+#endif // __CUSTOMACTIONS_H__

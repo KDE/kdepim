@@ -1,5 +1,5 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    certificatewizardimpl.h
+    aboutdata.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
@@ -30,49 +30,14 @@
     your version.
 */
 
-#ifndef CERTIFICATEWIZARDIMPL_H
-#define CERTIFICATEWIZARDIMPL_H
-#include "certificatewizard.h"
+#ifndef __ABOUTDATA_H__
+#define __ABOUTDATA_H__
 
-#include <qcstring.h>
-#include <qvaluevector.h>
-#include <qlineedit.h>
+#include <kaboutdata.h>
 
-namespace GpgME {
-  class KeyGenerationResult;
-}
-
-class CertificateWizardImpl : public CertificateWizard
-{
-    Q_OBJECT
-
+class AboutData : public KAboutData {
 public:
-    CertificateWizardImpl( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~CertificateWizardImpl();
-
-    const QByteArray & keyData() const { return _keyData; }
-
-    bool sendToCA() const;
-    QString caEMailAddress() const;
-    QString saveFileUrl() const;
-
-    typedef QPair<QString, QLineEdit*> StringLEPair;
-    typedef QValueVector< StringLEPair > AttrPairList; 
-
-private slots:
-    void slotGenerateCertificate();
-    void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
-    void slotSetValuesFromWhoAmI();
-    void slotEnablePersonalDataPageExit();
-
-    void slotHelpClicked();
-
-private:
-    void createPersonalDataPage();
-
-private:
-    AttrPairList _attrPairList;
-    QByteArray _keyData;
+  AboutData();
 };
 
-#endif // CERTIFICATEWIZARDIMPL_H
+#endif // __ABOUTDATA_H__

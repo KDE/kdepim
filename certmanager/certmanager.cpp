@@ -1,152 +1,173 @@
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    certmanager.cpp
+
+    This file is part of Kleopatra, the KDE keymanager
+    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+
+    Kleopatra is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Kleopatra is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
+*/
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "certmanager.h"
 
-#include "certbox.h"
-#include "certitem.h"
-#include "agent.h"
 #include "certificatewizardimpl.h"
+#include "certificateinfowidgetimpl.h"
 #include "crlview.h"
+#include "customactions.h"
 
-// kdenetwork
+// libkleopatra
 #include <cryptplugwrapper.h>
+#include <cryptplugfactory.h>
+#include <kleo/downloadjob.h>
+#include <kleo/importjob.h>
+#include <kleo/deletejob.h>
+#include <kleo/keylister.h>
+#include <kleo/dn.h>
+
+#include <ui/progressdialog.h>
+#include <ui/progressbar.h>
+#include <ui/keylistview.h>
+
+// GPGME++
+#include <gpgmepp/importresult.h>
+#include <gpgmepp/keylistresult.h>
+#include <gpgmepp/key.h>
 
 // KDE
-#include <kmenubar.h>
-#include <kurlrequester.h>
 #include <kfiledialog.h>
 #include <kprocess.h>
 #include <kaction.h>
 #include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktempfile.h>
 #include <dcopclient.h>
 #include <ktoolbar.h>
-#include <klineedit.h>
 #include <kstatusbar.h>
-#include <kcombobox.h>
 #include <kstandarddirs.h>
+#include <kdebug.h>
+#include <kdialogbase.h>
+#include <kkeydialog.h>
 
 // Qt
-#include <qtextedit.h>
-#include <qlineedit.h>
-#include <qradiobutton.h>
-#include <qwizard.h>
-#include <qgrid.h>
-#include <qcursor.h>
+#include <qfontmetrics.h>
 
-extern CryptPlugWrapper* pWrapper;
+// other
+#include <assert.h>
 
-/*
-static const int ID_LINEEDIT = 1;
-static const int ID_BUTTON   = 2;
-static const int ID_COMBO    = 3;
-static const int ID_LABEL    = 10;
-*/
+namespace {
+  class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
+  public:
+    ~ColumnStrategy() {}
 
-class LabelAction : public KAction {
-public:
-  LabelAction( const QString& text,  KActionCollection* parent, const char* name )
-    : KAction( text, QIconSet(), KShortcut(), 0, 0, parent, name ) {}
-  virtual int plug( QWidget *widget, int index = -1 ) {
-    if (kapp && !kapp->authorizeKAction(name()))
-      return -1;
-    if ( widget->inherits( "KToolBar" ) ) {
-      KToolBar *bar = (KToolBar *)widget;      
-      int id_ = getToolButtonID();      
-      QLabel* label = new QLabel( text(), bar, "kde toolbar widget" );
-      bar->insertWidget( id_, label->width(), label, index );      
-      addContainer( bar, id_ );      
-      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
-      return containerCount() - 1;
+    QString title( int col ) const;
+    QString text( const GpgME::Key & key, int col ) const;
+    int width( int col, const QFontMetrics & fm ) const;
+  };
+
+  QString ColumnStrategy::title( int col ) const {
+    switch ( col ) {
+    case 0: return i18n("Subject");
+    case 1: return i18n("Issuer");
+    case 2: return i18n("Serial");
+    default: return QString::null;
     }
-    
-    int containerId = KAction::plug( widget, index );
-    
-    return containerId;
-  }
-};
-
-class LineEditAction : public KAction {
-public:
-  LineEditAction( const QString& text,  KActionCollection* parent, QObject* receiver, 
-		  const char* member, const char* name )
-    : KAction( text, QIconSet(), KShortcut(), 0, 0, parent, name ), 
-      _le(0), _receiver(receiver),_member(member) {}
-  virtual int plug( QWidget *widget, int index = -1 ) {
-    if (kapp && !kapp->authorizeKAction(name()))
-      return -1;
-    if ( widget->inherits( "KToolBar" ) ) {
-      KToolBar *bar = (KToolBar *)widget;      
-      int id_ = getToolButtonID();      
-      // The toolbar trick doesn't seem to work for lineedits
-      //_le = new QLineEdit( bar, "kde toolbar widget" );
-      _le = new QLineEdit( bar );
-      bar->insertWidget( id_, _le->width(), _le, index );      
-      bar->setStretchableWidget( _le );
-      addContainer( bar, id_ );      
-      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
-      connect( _le, SIGNAL( returnPressed() ), _receiver, _member );      
-      return containerCount() - 1;
-    }
-    
-    int containerId = KAction::plug( widget, index );
-    
-    return containerId;
   }
 
-  void clear() { _le->setText(""); }  
-  void focusAll() { _le->selectAll(); _le->setFocus(); }
-  QString text() { return _le->text(); }
-  void setText( const QString& txt ) { _le->setText(txt); }
-
-private:
-  QLineEdit* _le;
-  QObject* _receiver;
-  const char* _member;
-};
-
-class ComboAction : public KAction {
-public:
-  ComboAction( const QStringList& lst,  KActionCollection* parent, QObject* receiver, 
-		  const char* member, const char* name )
-    : KAction( QString::null, QIconSet(), KShortcut(), 0, 0, parent, name ), 
-      _lst(lst), _receiver(receiver), _member(member) {}
-  virtual int plug( QWidget *widget, int index = -1 ) {
-    if (kapp && !kapp->authorizeKAction(name()))
-      return -1;
-    if ( widget->inherits( "KToolBar" ) ) {
-      KToolBar *bar = (KToolBar *)widget;      
-      int id_ = getToolButtonID();   
-      bar->insertCombo( _lst, id_, false, SIGNAL( highlighted(int) ), _receiver, _member ); 
-      addContainer( bar, id_ );      
-      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
-      return containerCount() - 1;
+  QString ColumnStrategy::text( const GpgME::Key & key, int col ) const {
+    switch ( col ) {
+    case 0: return Kleo::DN( key.userID(0).id() ).prettyDN();
+    case 1: return Kleo::DN( key.issuerName() ).prettyDN();
+    case 2: return key.issuerSerial() ? QString::fromUtf8( key.issuerSerial() ) : QString::null ;
+    default: return QString::null;
     }
-    
-    int containerId = KAction::plug( widget, index );
-    
-    return containerId;
   }
-private:
-  QStringList _lst;
-  QObject* _receiver;
-  const char* _member;
-};
 
+  int ColumnStrategy::width( int col, const QFontMetrics & fm ) const {
+    int factor = -1;
+    switch ( col ) {
+    case 0: factor = 6; break;
+    case 1: factor = 4; break;
+    default: return -1;
+    }
+    return fm.width( title( col ) ) * factor;
+  }
+} // anon namespace
 
-CertManager::CertManager( bool remote, const QString& query, 
+CertManager::CertManager( bool remote, const QString& query, const QString & import,
 			  QWidget* parent, const char* name )
   : KMainWindow( parent, name ),
-    dirmngrProc(0),
-    _crlView(0),
-    _toolbar(0),
-    _leAction(0),
-    _comboAction(0),
-    _findAction(0),
-    _certBox(0),
-    _remote( remote )
+    mCrlView( 0 ),
+    mDirmngrProc( 0 ),
+    mLineEditAction( 0 ),
+    mComboAction( 0 ),
+    mFindAction( 0 ),
+    mRemote( remote )
 {
-  (void)KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
+  createStatusBar();
+  createActions();
+
+  createGUI();
+  setAutoSaveSettings();
+
+  // Main Window --------------------------------------------------
+  mKeyListView = new Kleo::KeyListView( new ColumnStrategy(), this, "mKeyListView" );
+  setCentralWidget( mKeyListView );
+
+  connect( mKeyListView, SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
+	   SLOT(slotListViewItemActivated(Kleo::KeyListViewItem*)) );
+  connect( mKeyListView, SIGNAL(returnPressed(Kleo::KeyListViewItem*)),
+	   SLOT(slotListViewItemActivated(Kleo::KeyListViewItem*)) );
+
+  mLineEditAction->setText(query);
+  if ( !mRemote || !query.isEmpty() )
+    slotStartCertificateListing();
+
+  if ( !import.isEmpty() )
+    slotImportCertFromFile( import );
+
+  updateStatusBarLabels();
+}
+
+void CertManager::createStatusBar() {
+  KStatusBar * bar = statusBar();
+  mProgressBar = new Kleo::ProgressBar( bar, "mProgressBar" );
+  mProgressBar->reset();
+  mProgressBar->setFixedSize( QSize( 100, mProgressBar->height() * 3 / 5 ) );
+  bar->addWidget( mProgressBar, 0, true );
+  mStatusLabel = new QLabel( bar, "mStatusLabel" );
+  bar->addWidget( mStatusLabel, 1, false );
+}
+
+
+void CertManager::createActions() {
+  (void)KStdAction::redisplay( this, SLOT(slotStartCertificateListing()),
+			       actionCollection() );
   (void)KStdAction::quit( this, SLOT( quit() ), actionCollection());
 
   // New Certificate
@@ -162,11 +183,15 @@ CertManager::CertManager( bool remote, const QString& query,
                                      actionCollection(), "extendCert" );
   extendCert->setEnabled( false );
 
+  // Delete Certificate
+  (void)new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete, this, 
+                     SLOT(slotDeleteCertificate()), actionCollection(), "delCert" );
+
   // Import Certificates
   // Import from file
   (void)new KAction( i18n("Certificate..."), QIconSet(),
                                              0, this,
-                                             SLOT( importCertFromFile() ),
+                                             SLOT(slotImportCertFromFile()),
                                              actionCollection(),
                                              "importCertFromFile" );
   // CRLs
@@ -174,9 +199,9 @@ CertManager::CertManager( bool remote, const QString& query,
   KAction* importCRLFromFile = new KAction( i18n("CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
 
-   QString dirmngr = KStandardDirs::findExe( "dirmngr" );
-   bool dirMngrFound = !dirmngr.isEmpty();
-   importCRLFromFile->setEnabled( dirMngrFound );
+  QString dirmngr = KStandardDirs::findExe( "gpgsm" );
+  bool dirMngrFound = !dirmngr.isEmpty();
+  importCRLFromFile->setEnabled( dirMngrFound );
 
   // View CRLs
   KAction* viewCRLs = new KAction( i18n("CRL Cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
@@ -184,128 +209,123 @@ CertManager::CertManager( bool remote, const QString& query,
   viewCRLs->setEnabled( dirMngrFound ); // we also need dirmngr for this
 
   // Toolbar
-  _toolbar = toolBar( "mainToolBar" );
+  KToolBar * _toolbar = toolBar( "mainToolBar" );
 
-  (new LabelAction( i18n("Look For"), actionCollection(), "label_action"))->plug( _toolbar );
-  _leAction = new LineEditAction( QString::null, actionCollection(), this, 
-				  SLOT( loadCertificates() ), 
-				  "query_lineedit_action");
-  _leAction->plug( _toolbar );
+  (new LabelAction( i18n("Search:"), actionCollection(), "label_action"))->plug( _toolbar );
+  mLineEditAction = new LineEditAction( QString::null, actionCollection(), this, 
+					SLOT(slotStartCertificateListing()), 
+					"query_lineedit_action");
+  mLineEditAction->plug( _toolbar );
 
   QStringList lst;
   lst << i18n("in local certificates") << i18n("in external certificates");
-  _comboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ), 
+  mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ), 
 		       "location_combo_action");
-  _comboAction->plug( _toolbar );
+  mComboAction->plug( _toolbar );
 
-  _findAction = new KAction( i18n("Find"), "find", 0, this, SLOT( loadCertificates() ),
-                                            actionCollection(), "find" );
-  _findAction->plug( _toolbar );
+  mFindAction = new KAction( i18n("Find"), "find", 0, this, SLOT(slotStartCertificateListing()),
+			     actionCollection(), "find" );
+  mFindAction->plug( _toolbar );
 
-  createGUI();
-
-  // Main Window --------------------------------------------------
-  _certBox = new CertBox( this, "certBox" );
-  setCentralWidget( _certBox );
-
-  _leAction->setText(query);
-  if ( !_remote || !query.isEmpty() )
-    loadCertificates();
+  KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
+  createStandardStatusBarAction();
 }
 
-bool CertManager::checkExec( const QStringList& args )
-{
-  KProcess testProc;
-  testProc << args;
-  return testProc.start( KProcess::DontCare );
+void CertManager::slotEditKeybindings() {
+  KKeyDialog::configure( actionCollection(), true );
 }
 
-CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
-				      const CryptPlugWrapper::CertificateInfo& info )
-{
-  if( parent ) {
-    //qDebug("New with parent");
-    return new CertItem( info,
-			 0, this, parent );  
-  } else {
-    //qDebug("New root");
-    return new CertItem( info,			
-			 0, this, lv );
-  }
+void CertManager::slotToggleRemote( int idx ) {
+  mRemote = idx != 0;
 }
 
-void CertManager::slotToggleRemote( int idx )
-{
-  _remote = idx==0?false:true;
+
+//
+//
+// Key Listing:
+//
+//
+
+
+static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
+  assert( err );
+  const QString msg = i18n( "<qt><p>An error occurred while fetching "
+			    "the certificates from the backend:</p>"
+			    "<p><b>%1</b></p></qt>" )
+    .arg( QString::fromLocal8Bit( err.asString() ) );
+
+  KMessageBox::error( parent, msg, i18n( "Certificate Listing Failed" ) );
 }
 
-/**
-   This is an internal function, which loads the certificates that 
-   match the current query, local or remote.
-*/
-void CertManager::loadCertificates()
+void CertManager::slotStartCertificateListing()
 {
-  // These are just some demonstration data
-  /*
-  Agent* root = new Agent( "Root Agent", 0, this );
-  Agent* sub = new Agent( "Sub Agent", root, this );
-  Agent* subsub = new Agent( "SubSub Agent", sub, this );
-  */
-
-  QApplication::setOverrideCursor( QCursor::WaitCursor );
-  _leAction->setEnabled( false );
-  _comboAction->setEnabled( false );
-  _findAction->setEnabled( false );
+  mLineEditAction->setEnabled( false );
+  mComboAction->setEnabled( false );
+  mFindAction->setEnabled( false );
 
   // Clear display
-  _certBox->clear();
+  mKeyListView->clear();
 
-  QString text = _leAction->text();
+  const QString query = mLineEditAction->text();
 
-  //qDebug("About to query plugin");
-  bool truncated;
-  if( text.isEmpty() ) {
-    _certList = pWrapper->listKeys(QString::null, _remote, &truncated );
-  } else {
-    _certList = pWrapper->listKeys(text, _remote, &truncated );
-  }
-  //qDebug("Done");
-  
-  if( truncated ) {
-    //statusBar()->message();
-    KMessageBox::information( this, i18n("The server returned truncated output.\nPlease use a more specific search string to get all results.") );
-  } else {
-    //statusBar()->message( i18n("Query OK") );
-  }
+  Kleo::KeyListJob * job =
+    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote );
+  assert( job );
 
-  //lst = fillInListView( _certBox, 0, lst );
-  
-  for( CryptPlugWrapper::CertificateInfoList::Iterator it = _certList.begin(); 
-       it != _certList.end(); ++it ) {
-    //qDebug("New CertItem %s", (*it).userid.latin1() );
-    fillInOneItem( _certBox, 0, *it );
-  }
-  _leAction->setEnabled( true );
-  _comboAction->setEnabled( true );
-  _findAction->setEnabled( true );
+  statusBar()->message( i18n("Fetching keys...") );
 
-  _leAction->focusAll();
-  QApplication::restoreOverrideCursor();
+  connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+	   mKeyListView, SLOT(slotAddKey(const GpgME::Key&)) );
+  connect( job, SIGNAL(progress(const QString&,int,int,int)),
+	   mProgressBar, SLOT(slotProgress(const QString&,int,int,int)) );
+  connect( job, SIGNAL(done()), mProgressBar, SLOT(reset()) );
+  connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
+	   this, SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+
+  const GpgME::Error err = job->start( query );
+  if ( err )
+    showKeyListError( this, err );
+
+  mProgressBar->setProgress( 0, 0 ); // enable busy indicator
+}
+
+
+void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {  
+  if ( res.error() )
+    showKeyListError( this, res.error() );
+  else if ( res.isTruncated() )
+    KMessageBox::information( this,
+			      i18n("The server returned truncated output.\n"
+				   "Please use a more specific search string "
+				   "to get all results.") );
+
+  mLineEditAction->setEnabled( true );
+  mComboAction->setEnabled( true );
+  mFindAction->setEnabled( true );
+
+  mLineEditAction->focusAll();
+  updateStatusBarLabels();
+  statusBar()->message( i18n("Done."), 4000 );
+}
+
+void CertManager::updateStatusBarLabels() {
+  mStatusLabel->setText( i18n( "%n Key.",
+			       "%n Keys.", mKeyListView->childCount() ) );
 }
 
 /**
-   This slot is invoked when the user selects "New certificate"
-*/
+  This slot is invoked when the user selects "New certificate"
+ */
 void CertManager::newCertificate()
 {
   CertificateWizardImpl* wizard = new CertificateWizardImpl( this );
   if( wizard->exec() == QDialog::Accepted ) {
-      if( wizard->sendToCARB->isChecked() ) {
+    if( wizard->sendToCA() ) {
           // Ask KMail to send this key to the CA.
           DCOPClient* dcopClient = kapp->dcopClient();
           QByteArray data;
           QDataStream arg( data, IO_WriteOnly );
-          arg << wizard->caEmailED->text();
+          arg << wizard->caEMailAddress();
           arg << wizard->keyData();
           if( !dcopClient->send( "kmail*", "KMailIface",
                                  "sendCertificate(QString,QByteArray)", data ) ) {
@@ -315,7 +335,7 @@ void CertManager::newCertificate()
           }
       } else {
           // Store in file
-          QFile file( wizard->storeUR->url() );
+          QFile file( wizard->saveFileUrl() );
           if( file.open( IO_WriteOnly ) ) {
               file.writeBlock( wizard->keyData().data(),
                                wizard->keyData().count() );
@@ -358,75 +378,155 @@ void CertManager::extendCertificate()
 }
 
 
+//
+//
+// Downloading / Importing Certificates
+//
+//
+
+
 /**
    This slot is invoke dwhen the user selects Certificates/Import/From File.
 */
-void CertManager::importCertFromFile()
+void CertManager::slotImportCertFromFile()
 {
-    QString certFilename = KFileDialog::getOpenFileName( QString::null,
-                                                         QString::null,
-                                                         this,
-                                                         i18n( "Select Certificate File" ) );
-
-    if( !certFilename.isEmpty() ) {
-	QString info;
-	int retval = importCertificateFromFile( certFilename, &info );
-	if( retval ) {
-	  KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The error code from CryptPlug was %1 and output was: %2" ).arg(retval).arg(info), i18n( "Certificate Manager Error" ) );	  
-	} else {
-	  KMessageBox::information( this, i18n( "Certificate file imported successfully. Additional info: %1" ).arg(info), i18n( "Certificate Imported" ) );	  
-	}
-    }
+  slotImportCertFromFile( KFileDialog::getOpenFileName( QString::null, QString::null, this,
+							i18n( "Select Certificate File" ) ) );
 }
+
+void CertManager::slotImportCertFromFile( const QString & certFilename )
+{
+  if ( certFilename.isEmpty() )
+    return;
+
+  QFile f( certFilename );
+  if( !f.open( IO_ReadOnly ) ) {
+    KMessageBox::error( this,
+			i18n( "<qt><p>An error occurred while trying to import "
+			      "certificate file <b>%1</b>:</p>"
+			      "<p><b>%1</b></p></qt>" ).arg( certFilename ).arg( i18n("File does not exist or can't be read") ),
+			i18n( "Certificate Manager Error" ) );
+    return;
+  }
+
+  startCertificateImport( f.readAll() );
+}
+
+static void showCertificateDownloadError( QWidget * parent, const GpgME::Error & err ) {
+  assert( err );
+  const QString msg = i18n( "<qt><p>An error occurred while trying "
+			    "to download the certificate:</p>"
+			    "<p><b>%1</b></p></qt>" )
+    .arg( QString::fromLocal8Bit( err.asString() ) );
+
+  KMessageBox::error( parent, msg, i18n( "Certificate Download Failed" ) );
+}
+
+void CertManager::slotStartCertificateDownload( const QString & fingerprint ) {
+  if ( fingerprint.isEmpty() )
+    return;
+
+  Kleo::DownloadJob * job =
+    Kleo::CryptPlugFactory::instance()->smime()->downloadJob( false /* no armor */ );
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
+	   SLOT(slotCertificateDownloadResult(const GpgME::Error&,const QByteArray&)) );
+
+  const GpgME::Error err = job->start( fingerprint );
+  if ( err )
+    showCertificateDownloadError( this, err );
+  else
+    (void)new Kleo::ProgressDialog( job, i18n("Fetching certificate from server"), this );
+}
+
+void CertManager::slotCertificateDownloadResult( const GpgME::Error & err, const QByteArray & keyData ) {
+  if ( err )
+    showCertificateDownloadError( this, err );
+  else
+    startCertificateImport( keyData );
+}
+
+static void showCertificateImportError( QWidget * parent, const GpgME::Error & err ) {
+  assert( err );
+  const QString msg = i18n( "<qt><p>An error occurred while trying "
+			    "to import the certificate:</p>"
+			    "<p><b>%2</b></p></qt>" )
+    .arg( QString::fromLocal8Bit( err.asString() ) );
+  KMessageBox::error( parent, msg, i18n( "Certificate Import Failed" ) );
+}
+
+void CertManager::startCertificateImport( const QByteArray & keyData ) {
+  Kleo::ImportJob * job = Kleo::CryptPlugFactory::instance()->smime()->importJob();
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::ImportResult&)),
+	   SLOT(slotCertificateImportResult(const GpgME::ImportResult&)) );
+
+  const GpgME::Error err = job->start( keyData );
+  if ( err )
+    showCertificateImportError( this, err );
+  else
+    (void)new Kleo::ProgressDialog( job, i18n("Importing Certificate"), this );
+}
+
+void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res ) {
+  if ( res.error() ) {
+    showCertificateImportError( this, res.error() );
+    return;
+  }
+
+  KMessageBox::information( this,
+			    i18n( "<qt><p>Certificate imported successfully.</p>"
+				  "<p>Additional info: %1</p></qt>" ).arg("FIXME"),
+			    i18n( "Certificate Imported" ) );
+  if ( !isRemote() )
+    slotStartCertificateListing();
+}
+
 
 
 /**
    This slot is called when the dirmngr process that imports a
    certificate file exists.
 */
-void CertManager::slotDirmngrExited()
-{
-    if( !dirmngrProc->normalExit() )
-        KMessageBox::error( this, i18n( "The Dirmngr process that tried to import the CRL file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
+void CertManager::slotDirmngrExited() {
+    if ( !mDirmngrProc->normalExit() )
+        KMessageBox::error( this, i18n( "The GpgSM process that tried to import the CRL file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
+    else if ( mDirmngrProc->exitStatus() )
+      KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from GpgSM was: ") + mErrorbuffer, i18n( "Certificate Manager Error" ) );
     else
-        if( dirmngrProc->exitStatus() )
-            KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from Dirmngr was: ") + errorbuffer, i18n( "Certificate Manager Error" ) );
-        else
-            KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Error" ) );
+      KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Error" ) );
 
-    delete dirmngrProc; dirmngrProc = 0;
+    delete mDirmngrProc; mDirmngrProc = 0;
 }
 
 /**
    This slot will import CRLs from a file.
 */
-void CertManager::importCRLFromFile()
-{
+void CertManager::importCRLFromFile() {
   QString filename = KFileDialog::getOpenFileName( QString::null,
 						       QString::null,
 						       this,
 						       i18n( "Select CRL File" ) );
   
-  if( !filename.isEmpty() ) {
-    dirmngrProc = new KProcess();
-    *dirmngrProc << "dirmngr";
-    *dirmngrProc << "--load-crl" << filename;
-    errorbuffer = "";
-    connect( dirmngrProc, SIGNAL( processExited( KProcess* ) ),
-	     this, SLOT( slotDirmngrExited() ) );
-    connect( dirmngrProc, SIGNAL( receivedStderr(KProcess*, char*, int)  ),
-	     this, SLOT( slotStderr( KProcess*, char*, int ) ) );
-    if( !dirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
-      KMessageBox::error( this, i18n( "Unable to start dirmngr process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
-      delete dirmngrProc;
-      dirmngrProc = 0;
+  if ( !filename.isEmpty() ) {
+    mDirmngrProc = new KProcess();
+    *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
+    mErrorbuffer = QString::null;
+    connect( mDirmngrProc, SIGNAL(processExited(KProcess*)),
+	     this, SLOT(slotDirmngrExited()) );
+    connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
+	     this, SLOT(slotStderr(KProcess*,char*,int)) );
+    if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
+      KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
+      delete mDirmngrProc; mDirmngrProc = 0;
     }
   }
 }
 
-void CertManager::slotStderr( KProcess*, char* buf, int len )
-{
-  errorbuffer += QString::fromLocal8Bit( buf, len );
+void CertManager::slotStderr( KProcess*, char* buf, int len ) {
+  mErrorbuffer += QString::fromLocal8Bit( buf, len );
 }
 
 /**
@@ -437,56 +537,67 @@ void CertManager::importCRLFromLDAP()
   qDebug("Not Yet Implemented");
 }
 
-void CertManager::slotViewCRLs()
-{
-  if( _crlView == 0 ) {
-    _crlView = new CRLView( this );
-  }
-  _crlView->show();
-  _crlView->slotUpdateView();
+void CertManager::slotViewCRLs() {
+  if ( !mCrlView )
+    mCrlView = new CRLView( this );
+
+  mCrlView->show();
+  mCrlView->slotUpdateView();
 }
 
-int CertManager::importCertificateWithFingerprint( const QString& fingerprint, QString* info )
-{
-  qDebug("Importing certificate with fpr %s", fingerprint.latin1() );
-  int retval = pWrapper->importCertificate( fingerprint, info );
 
-  qDebug("importCertificate() returned %d", retval );
-
-  // values > 0 are "real" GPGME errors
-  if( retval > 0 ) return retval;
-  if( haveCertificate( fingerprint ) ) {
-    // It seems everyting went OK!
-  } else {
-    // Everything went OK, but the certificate wasn't imported
-    // retval was probably -1 here (= GPGME_EOF)
-    retval = -42;
-  }
-  if( !isRemote() ) loadCertificates();
-  return retval;
+static void showDeleteError( QWidget * parent, const GpgME::Error & err ) {
+  assert( err );
+  const QString msg = i18n("<qt><p>An error occured while trying to delete "
+			   "the certificate:</p>"
+			   "<p><b>%1</b></p></qt>")
+    .arg( QString::fromLocal8Bit( err.asString() ) );
+  KMessageBox::error( parent, msg, i18n("Certificate Deletion Failed") );
 }
 
-bool CertManager::haveCertificate( const QString& fingerprint ) 
-{
-  bool truncated;
-  CryptPlugWrapper::CertificateInfoList lst = pWrapper->listKeys( fingerprint, false, &truncated );
-  return !lst.isEmpty();
+void CertManager::slotDeleteCertificate() {
+  const Kleo::KeyListViewItem * item = mKeyListView->selectedItem();
+  if ( !item || item->key().isNull() )
+    return;
+
+  Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob();
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::Error&)),
+	   SLOT(slotDeleteResult(const GpgME::Error&)) );
+
+  const GpgME::Error err = job->start( item->key(), true );
+  if ( err )
+    showDeleteError( this, err );
+  else
+    (void)new Kleo::ProgressDialog( job, i18n("Deleting key"), this );
 }
 
-int CertManager::importCertificateFromFile( const QString& filename, QString* info )
-{
-  QFile f( filename );
-  if( !f.open( IO_ReadOnly ) ) {
-    if( info ) *info = i18n( "Error opening file %1" ).arg( filename );
-    return -1;
-  }
-  QByteArray data = f.readAll();
+void CertManager::slotDeleteResult( const GpgME::Error & err ) {
+  if ( err )
+    return showDeleteError( this, err );
 
-  int retval = pWrapper->importCertificate( data.data(), data.size(), info );
-
-  qDebug("importCertificate() returned %d", retval );
-
-  return retval;
+  // We should make sure that the selectedItem doesn't change between
+  // slotDeleteCertificate() and this slot:
+  delete mKeyListView->selectedItem();
+  updateStatusBarLabels();
 }
+
+
+void CertManager::slotListViewItemActivated( Kleo::KeyListViewItem * item ) {
+  if ( !item || item->key().isNull() )
+    return;
+
+  // <UGH>
+  KDialogBase * dialog = new KDialogBase( this, "dialog", false, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
+
+  CertificateInfoWidgetImpl * top = new CertificateInfoWidgetImpl( item->key(), isRemote(), dialog );
+  dialog->setMainWidget( top );
+  // </UGH>
+  connect( top, SIGNAL(requestCertificateDownload(const QString&)),
+	   SLOT(slotStartCertificateDownload(const QString&)) );
+  dialog->show();
+}
+
 
 #include "certmanager.moc"
