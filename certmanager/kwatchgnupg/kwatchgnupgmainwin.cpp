@@ -47,11 +47,13 @@
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kedittoolbar.h>
+#include <kkeydialog.h>
+
 #include <qtextedit.h>
 #include <qdir.h>
 #include <qeventloop.h>
 #include <qtimer.h>
-#include <kkeydialog.h>
+#include <qtextcodec.h>
 
 #define WATCHGNUPGBINARY "watchgnupg"
 #define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
@@ -66,7 +68,7 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
   mCentralWidget->setTextFormat( QTextEdit::LogText );
   setCentralWidget( mCentralWidget );
 
-  mWatcher = new KProcIO();
+  mWatcher = new KProcIO( QTextCodec::codecForMib( 106 /*utf-8*/ ) );
   connect( mWatcher, SIGNAL( processExited(KProcess*) ),
 		   this, SLOT( slotWatcherExited() ) );
   connect( mWatcher, SIGNAL( readReady(KProcIO*) ),
