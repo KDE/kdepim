@@ -231,7 +231,7 @@ void ExchangeDownload::readAppointment( const KURL& url )
   QDomDocument doc;
   QDomElement root = addElement( doc, doc, "DAV:", "propfind" );
   QDomElement prop = addElement( doc, root, "DAV:", "prop" );
-  addElement( doc, prop, "DAV:", "uid" );
+  addElement( doc, prop, "urn:schemas:calendar:", "uid" );
   addElement( doc, prop, "urn:schemas:calendar:", "timezoneid" );
   addElement( doc, prop, "urn:schemas:calendar:", "timezone" );
   addElement( doc, prop, "urn:schemas:calendar:", "lastmodified" );

@@ -74,6 +74,7 @@ void ExchangeUpload::findUid( QString const& uid )
         "WHERE \"urn:schemas:calendar:uid\" = '" + uid + "'\r\n";
 
 //  kdDebug() << "Find uid query: " << endl << query << endl;
+  kdDebug() << "Looking for uid " << uid << endl;
   
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
   job->setWindow( mWindow );
@@ -104,7 +105,7 @@ void ExchangeUpload::slotFindUidResult( KIO::Job * job )
   QString href = hrefElement.text();
   KURL url(href);
   url.setProtocol("webdav");
-  kdDebug() << "Found URL with identical uid: " << url.prettyURL() << ", deleting that one" << endl;
+  kdDebug() << "Found URL with identical uid: " << url.prettyURL() << ", overwriting that one" << endl;
 
   startUpload( url );  
 }  
