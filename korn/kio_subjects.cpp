@@ -142,3 +142,5 @@ void KIO_Subjects::slotFinished( KIO_Single_Subject* item )
 	
 	disConnect( true ); //Only works when all jobs are finished.
 }
+
+#include "kio_subjects.moc"

@@ -530,3 +530,5 @@ const char *KKioDrop::PassConfigKey = "pass";
 const char *KKioDrop::MailboxConfigKey = "mailbox";
 const char *KKioDrop::SavePassConfigKey = "savepass";
 const char *KKioDrop::AuthConfigKey = "auth";
+
+#include "kio.moc"

@@ -283,3 +283,5 @@ void KKioCfg::protoChange(int index)
 	_savePass->setText( _this_protocol->savePasswordName() );
 }
 
+
+#include "kiocfg.moc"

@@ -181,3 +181,5 @@ void KIO_Delete::slotResult( KIO::Job* job )
 	}
 }
 
+
+#include "kio_delete.moc"

@@ -75,3 +75,5 @@ void KIO_Read::slotData( KIO::Job* job, const QByteArray & data )
 	if( !data.isEmpty() )
 		_message->append( data );
 }
+
+#include "kio_read.moc"

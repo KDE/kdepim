@@ -124,3 +124,5 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 	
 	emit finished( this );
 }
+
+#include "kio_single_subject.moc"

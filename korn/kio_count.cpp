@@ -246,3 +246,5 @@ void KIO_Count::deleteSingleSubject( KIO_Single_Subject* single_subject )
 {
 	delete single_subject;
 }
+
+#include "kio_count.moc"
