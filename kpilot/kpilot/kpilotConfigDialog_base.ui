@@ -78,7 +78,7 @@ KPilot's settings.!</comment>
                                     <cstring>fStartDaemonAtLogin</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Start HotSync daemon at login</string>
+                                    <string>&amp;Start daemon at login</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
