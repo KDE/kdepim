@@ -11,18 +11,17 @@
 
 #include <math.h>
 
+KGanttItem* xQGanttBarViewPort::_currentItem;
 
-KGanttItem* xQGanttBarViewPort::_currentItem = NULL;
 
+static int _currentMButton;
+static bool _Mousemoved;
+static bool _selectItem;
 
-int _currentMButton = 0;
-bool _Mousemoved = FALSE;
-bool _selectItem = false;
+static int _timediff;
 
-int _timediff;
-
-bool _changeEnd = false, _changeStart = false;
-int oldw = -1, oldx = -1;
+static bool _changeEnd, _changeStart;
+static int oldw = -1, oldx = -1;
 
 QDateTime _tmpStartDateTime, _tmpEndDateTime;
 
