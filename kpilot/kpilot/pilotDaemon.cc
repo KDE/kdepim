@@ -113,6 +113,10 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 	putenv((char *)speedname);
 
 	return speed;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
 /* virtual */ void PilotDaemon::mousePressEvent(QMouseEvent *e)
@@ -161,6 +165,16 @@ PilotDaemon::PilotDaemon() :
 	setupConnections();
 	if (fStatus == ERROR) return;
 	setupSubProcesses();
+
+#ifdef DEBUG
+	if (debug_level & UI_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": The daemon is ready with status "
+			<< (int)fStatus
+			<< endl;
+	}
+#endif
 }
 
 
@@ -208,35 +222,61 @@ void
 PilotDaemon::setupConnections()
 {
 	FUNCTIONSETUP;
+	int e=0;
+
+	fPilotLink = 0L;
+	fCommandSocket = 0L;
+	fStatusSocket = 0L;
 
 	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.latin1());
+	fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
+	if (fCommandSocket && (fCommandSocket->socket() < 0 )) 
+	{
+		e = errno ; 
+		goto ErrConn;
+	}
+	fStatusSocket = new KServerSocket(PilotDaemon::STATUS_PORT);
+	if (fStatusSocket && (fStatusSocket->socket() < 0 )) 
+	{
+		e = errno ;
+		goto ErrConn;
+	}
+
+	if (!(fPilotLink && fCommandSocket && fStatusSocket)) goto ErrConn;
+
 	connect(fPilotLink, SIGNAL(databaseSyncComplete()),
 		this, SLOT(slotDBBackupFinished()));
 	connect(this, SIGNAL(endHotSync()), this, SLOT(slotEndHotSync()));
-
-
-	fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
 	connect(fCommandSocket, SIGNAL(accepted(KSocket*)), 
 		this, SLOT(slotAccepted(KSocket*)));
-	fStatusSocket = new KServerSocket(PilotDaemon::STATUS_PORT);
 	connect(fStatusSocket, SIGNAL(accepted(KSocket*)),
 		this, SLOT(slotAddStatusConnection(KSocket*)));
 
-	if ((fCommandSocket == 0L) || (fStatusSocket == 0L) ||
-		(fCommandSocket->socket() < 0 ) ||
-		(fStatusSocket->socket() < 0))
+	return;
+
+ErrConn:
+	if (e)
 	{
-		cerr << fname
+		kdDebug() << fname
+			<< ": Error connecting to daemon: "
+			<< strerror(e)
+			<< endl;
+	}
+	else
+	{
+		kdDebug() << fname
 			<< ": Couldn't create sockets for daemon"
 			<< endl;
-		if (fCommandSocket) delete fCommandSocket;
-		if (fStatusSocket) delete fStatusSocket;
-		fCommandSocket=0L;
-		fStatusSocket=0L;
-
-		fStatus=ERROR;
-		return;
 	}
+
+	if (fPilotLink) delete fPilotLink;
+	if (fCommandSocket) delete fCommandSocket;
+	if (fStatusSocket) delete fStatusSocket;
+	fPilotLink=0L;
+	fCommandSocket=0L;
+	fStatusSocket=0L;
+
+	fStatus=ERROR;
 }
 
 void
@@ -288,6 +328,15 @@ PilotDaemon::setupWidget()
 	menu->insertItem(i18n("&About"), this, SLOT(slotShowAbout()));
 	menuKPilotItem=menu->insertItem(i18n("Start &KPilot"),this,
 		SLOT(slotRunKPilot()));
+
+#ifdef DEBUG
+	if (debug_level & UI_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Finished getting icons"
+			<< endl;
+	}
+#endif
 }
 
 void PilotDaemon::slotShowAbout()

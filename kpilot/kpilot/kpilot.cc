@@ -103,6 +103,9 @@ KPilotInstaller::KPilotInstaller()
 			<< endl;
 
 	}
+
+	fKillDaemonOnExit = config.readBoolEntry("StopDaemonAtExit",false);
+
     if(config.readNumEntry("NextUniqueID", 0) == 0)
       {
 	// Is this an ok value to use??
@@ -141,6 +144,15 @@ KPilotInstaller::~KPilotInstaller()
 	if(fKillDaemonOnExit && fPilotCommandSocket &&
 		(fPilotCommandSocket->socket()>=0))
 	{
+#ifdef DEBUG
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname
+				<< ": Killing daemon."
+				<< endl;
+		}
+#endif
+
 		ofstream out(fPilotCommandSocket->socket());
 		out << -3 << endl;
 	}
@@ -731,6 +743,23 @@ KPilotInstaller::quit()
 		fPilotComponentList.current()->saveData();
 	}
 
+	if(fKillDaemonOnExit && fPilotCommandSocket &&
+		(fPilotCommandSocket->socket()>=0))
+	{
+#ifdef DEBUG
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname
+				<< ": Killing daemon."
+				<< endl;
+		}
+#endif
+
+		ofstream out(fPilotCommandSocket->socket());
+		out << -3 << endl;
+	}
+
+
 	if (fPilotStatusSocket) delete fPilotStatusSocket;
 	fPilotStatusSocket=0L;
 
@@ -990,6 +1019,7 @@ int main(int argc, char** argv)
 	KApplication a(true,true);
 
 	KConfig& c=KPilotLink::getConfig();
+	(void)KPilotLink::getDebugLevel(c);
 	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
 		run_mode='s';

@@ -98,14 +98,18 @@ const int CStatusMessages::LOG_MESSAGE = 17;
 //
 /* static */ const int KPilotLink::ConfigurationVersion = 401;
 
-int KPilotLink::getConfigVersion(KConfig *config)
+/* static */ int KPilotLink::getConfigVersion(KConfig *config)
 {
 
 	if (!config)	return 0;
 	else		return getConfigVersion(*config);
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
-int KPilotLink::getConfigVersion(KConfig& config)
+/* static */ int KPilotLink::getConfigVersion(KConfig& config)
 {
 	FUNCTIONSETUP;
 
@@ -129,6 +133,29 @@ int KPilotLink::getConfigVersion(KConfig& config)
 	}
 
 	return version;
+}
+
+/* static */ int KPilotLink::getDebugLevel(KConfig& c,const QString& group)
+{
+	FUNCTIONSETUP;
+
+	if (!group.isNull())
+	{
+		c.setGroup(group);
+	}
+
+	int d=c.readNumEntry("Debug",0);
+	debug_level |= d;
+
+	if (debug_level)
+	{
+		kdDebug() << fname 
+			<< ": Debug level set to "
+			<< debug_level
+			<< endl;
+	}
+
+	return debug_level ;
 }
 
 void KPilotLink::readConfig()
@@ -1540,6 +1567,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.19  2000/11/14 23:06:53  adridg
+// SyncLastPC implemented
+//
 // Revision 1.18  2000/11/14 06:32:26  adridg
 // Ditched KDE1 stuff
 //

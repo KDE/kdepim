@@ -180,6 +180,15 @@ public:
 	static int getConfigVersion(KConfig *);
 	static int getConfigVersion(KConfig&);
 
+	/**
+	* We might have an additional Debug= line in their
+	* config which may be read and ORed with the user-specified
+	* debug level. This function does that. 
+	*
+	* @ret resulting debug level
+	*/
+	static int getDebugLevel(KConfig&,const QString& group=QString::null);
+
 private:
 	/**
 	* For initializing the link: read the configuration
