@@ -139,6 +139,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mAddressBookService = new KAddressBookService( this );
 
+  SearchManager::self()->reload();
+
   setModified( false );
 
   KAcceleratorManager::manage( mWidget );
