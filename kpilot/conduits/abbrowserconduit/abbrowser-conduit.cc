@@ -1260,8 +1260,9 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	QString category;
 	if (0 < cat && cat <= 15) category = fAddressAppInfo.category.name[cat];
 	_setCategory(toAbEntry, category);
-
+#ifdef DEBUG
 	showAddressee(toAbEntry);
+#endif
 }
 
 
@@ -2008,6 +2009,9 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 
 // $Log$
+// Revision 1.55  2002/12/13 16:27:22  kainhofe
+// Some bugfixes
+//
 // Revision 1.54  2002/10/10 13:44:41  kainhofe
 // This fixes several bugs:
 // -) conflict resolution now also works if you chose ignore on the last sync
