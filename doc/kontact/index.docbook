@@ -6,6 +6,8 @@
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
+  <!ENTITY akregator "<application>aKregator</application>">
+  <!ENTITY kitchensync "<application>KitchenSync</application>">
 ]>
 
 <book id="kontact" lang="&language;">
