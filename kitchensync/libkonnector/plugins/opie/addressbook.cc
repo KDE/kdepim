@@ -56,7 +56,7 @@ KAddressbookSyncEntry* AddressBook::toKDE( const QString &fileName )
 		    if(!el.isNull() ){
 			kdDebug() << "Contacts: " << el.tagName() << endl;
 			KABC::Addressee adr;
-			adr.setUid( kdeId( "contacts",  el.attribute("Uid" ) ) );
+			adr.setUid( kdeId( "addressbook",  el.attribute("Uid" ) ) );
 			adr.setFamilyName(el.attribute("LastName" ) );
 			adr.setGivenName(el.attribute("FirstName" ) );
 			adr.setAdditionalName(el.attribute("MiddleName" )  );
@@ -146,6 +146,12 @@ KAddressbookSyncEntry* AddressBook::toKDE( const QString &fileName )
 }
 QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )
 {
+    //  ok lets write back the changes from the Konnector
+    m_kde2opie.clear(); // clear the reference first
+    QValueList<Kontainer> newIds = entry->ids( "addressbook");
+    for ( QValueList<Kontainer>::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+        m_helper->addId("addressbook",  (*idIt).first(),  (*idIt).second() );
+    }
     QByteArray array;
     QBuffer buffer( array );
     if ( buffer.open( IO_WriteOnly) ) {
@@ -218,10 +224,12 @@ QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )
             stream << "Children=\"" << (*it).custom("opie", "Children" ) << "\" ";
             stream << "Notes=\"" << (*it).note() << "\" ";
             stream << "Categories=\"" << categoriesToNumber( (*it).categories(),  "Contacts") << "\" ";
-            stream << "Uid=\"" << konnectorId( "Contacts", (*it).uid() ) << "\" ";
+            stream << "Uid=\"" << konnectorId( "addressbook", (*it).uid() ) << "\" ";
         } // off for
         stream << "</Contacts>" << endl;
         stream << "</AddressBook>" << endl;
     }
+    // now replace the UIDs for us
+    m_helper->replaceIds( "addressbook",  m_kde2opie ); // to keep the use small
     return array;
 }

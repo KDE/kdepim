@@ -119,6 +119,10 @@ class KSyncEntry
        @param  type The type of the id for example todo, kalendar...
        @param  konnectorId The original id of the Entry on konnector side
        @param  kdeId Is the id KDE native classes are assigning
+       Example:
+       type = todo
+       konnector id  = -1345678
+       KDE ID = KORG-234575464
     */
     void insertId( const QString &type,
                    const QString &konnectorId,

@@ -96,6 +96,12 @@ QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName )
 }
 QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry )
 {
+    // KDE ID clear bit first
+    m_kde2opie.clear();
+    QValueList<Kontainer> newIds = entry->ids( "todo");
+    for ( QValueList<Kontainer>::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+        m_helper->addId("todo",  (*idIt).first(),  (*idIt).second() );
+    }
     // update m_helper first;
     QByteArray array;
     QBuffer buffer( array );
@@ -113,6 +119,7 @@ QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry )
         stream << "</Tasks>" << endl;
         buffer.close();
     }
+    m_helper->replaceIds( "todo",  m_kde2opie );
     return array;
 }
 void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
@@ -142,7 +149,8 @@ QString ToDo::todo2String( KCal::Todo* todo )
     // id hacking We don't want to have the ids growing and growing
     // when an id is used again it will be put to the used list and after done
     // with syncing we will replace the former
-    QString dummy = konnectorId("todo", todo->uid()  );
+    text.append("Uid=\"" +konnectorId("todo", todo->uid() )+ "\" "  );
+
     text.append(" />");
     return text;
 }
