@@ -1,3 +1,12 @@
+kdepim (4:3.1.4-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added patch to update autotools files.
+  * Added patch to remove pedantic-errors from KDE_CHECK_FUNC_EXT since it
+    causes configure checks to fail due to #line numbers being > 32767.
+
+ -- Christopher L Cheney <ccheney@debian.org>  Sat, 18 Oct 2003 02:00:00 -0500
+
 kdepim (4:3.1.3-1) unstable; urgency=low
 
   * New upstream release.

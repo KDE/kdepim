@@ -1,4 +1,5 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 # Sample debian/rules that uses debhelper.
 # GNU copyright 1997 to 1999 by Joey Hess.
 #
@@ -42,11 +43,21 @@ configure-stamp:
 	dh_testdir
 
 	# Apply Debian specific patches
-	if test ! -f patch-stamp; then \
-		for patch in $(CURDIR)/debian/patches/*.diff ;\
+	if test -d $(CURDIR)/debian/patches ;\
+	then \
+		for i in $(CURDIR)/debian/patches/*.diff.uu ;\
 		do \
-			echo APPLYING PATCH\: $${patch##*/};\
-			patch -p1 < $$patch ;\
+			cd $(CURDIR)/debian/patches ;\
+			uudecode "$$i" ;\
+			cd $(CURDIR) ;\
+		done ;\
+		patches=$$(find $(CURDIR)/debian/patches -name *.diff | sort);\
+	fi ;\
+	if test ! -f patch-stamp; then \
+		for patch in $$patches ;\
+		do \
+			echo APPLYING PATCH\: "$${patch##*/}" ;\
+			patch -p1 < "$$patch" ;\
 		done ;\
 		touch patch-stamp ;\
 	fi
@@ -72,21 +83,29 @@ configure-stamp:
 
 	touch configure-stamp
 
-#Architecture 
+#Architecture
 build: build-arch build-indep
 
 build-arch: build-arch-stamp
-build-arch-stamp: configure-stamp 
+build-arch-stamp: configure-stamp
 	dh_testdir
 
 	cd $(objdir) && \
 	$(MAKE)
 
+	# generate manpages
+	for i in debian/*.sgml; do \
+		docbook-to-man $$i > `dirname $$i`/`basename $$i .sgml`.1 ;\
+	done
+
 	touch build-arch-stamp
 
 build-indep: build-indep-stamp
-build-indep-stamp: configure-stamp 
+build-indep-stamp: configure-stamp
 	dh_testdir
+
+	cd $(objdir) && \
+	$(MAKE)
 
 	cd $(objdir) && \
 	$(MAKE) apidox
@@ -102,14 +121,23 @@ debian-clean:
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-arch-stamp build-indep-stamp configure-stamp debian/debiandirs
+	rm -f build-arch-stamp build-indep-stamp configure-stamp \
+		debian/debiandirs debian/*.1
 
 	# Remove Debian specific patches
+	if test -d $(CURDIR)/debian/patches ;\
+	then \
+		patches=$$(find $(CURDIR)/debian/patches -name *.diff | sort -r);\
+	fi ;\
 	if test -f patch-stamp; then \
-		for patch in $(CURDIR)/debian/patches/*.diff ;\
+		for patch in $$patches ;\
 		do \
-			echo REMOVING PATCH\: $${patch##*/};\
-			patch -p1 -R < $$patch ;\
+			echo REMOVING PATCH\: "$${patch##*/}" ;\
+			patch -p1 -R < "$$patch" ;\
+		done ;\
+		for i in $(CURDIR)/debian/patches/*.diff.uu ;\
+		do \
+			 rm -f "$${i%%.uu}" ;\
 		done ;\
 		rm -f patch-stamp ;\
 	fi
@@ -128,17 +156,7 @@ clean:
 
 	dh_clean
 
-install: install-indep install-arch
-install-indep:
-	dh_testdir
-	dh_testroot
-	#dh_clean -k -i
-	dh_installdirs -i
-
-	cd $(objdir) && \
-	$(MAKE) install-apidox DESTDIR=$(CURDIR)/debian/tmp
-
-	dh_install -i --list-missing
+install: install-arch install-indep
 
 install-arch:
 	dh_testdir
@@ -151,8 +169,22 @@ install-arch:
 
 	dh_install -s --list-missing
 
+install-indep:
+	dh_testdir
+	dh_testroot
+	dh_clean -k -i
+	dh_installdirs -i
+
+	cd $(objdir) && \
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+
+	cd $(objdir) && \
+	$(MAKE) install-apidox DESTDIR=$(CURDIR)/debian/tmp
+
+	dh_install -i --list-missing
+
 # Must not depend on anything. This is to be called by
-# binary-arch/binary-multi
+# binary-arch/binary-indep
 # in another 'make' thread.
 binary-common:
 	dh_testdir
