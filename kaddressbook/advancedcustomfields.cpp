@@ -22,6 +22,7 @@
 */
 
 #include <qcheckbox.h>
+#include <qcombobox.h>
 #include <qdatetimeedit.h>
 #include <qlayout.h>
 #include <qobjectlist.h>
@@ -76,6 +77,9 @@ void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
         } else if ( it.data()->isA( "KDatePicker" ) ) {
           KDatePicker *wdg = static_cast<KDatePicker*>( it.data() );
           wdg->setDate( QDate::fromString( value, Qt::ISODate ) );
+        } else if ( it.data()->isA( "QComboBox" ) ) {
+          QComboBox *wdg = static_cast<QComboBox*>( it.data() );
+          wdg->setCurrentText( value );
         }
       }
     }
@@ -105,6 +109,9 @@ void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
     } else if ( it.data()->isA( "KDatePicker" ) ) {
       KDatePicker *wdg = static_cast<KDatePicker*>( it.data() );
       value = wdg->date().toString( Qt::ISODate );
+    } else if ( it.data()->isA( "QComboBox" ) ) {
+      QComboBox *wdg = static_cast<QComboBox*>( it.data() );
+      value = wdg->currentText();
     }
 
     addr->insertCustom( "KADDRESSBOOK", it.key(), value );
@@ -139,10 +146,11 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
 
   QStringList allowedTypes;
   allowedTypes << "QLineEdit"
-               << "KLineEdit"
                << "QSpinBox"
                << "QCheckBox"
+               << "QComboBox"
                << "QDateTimeEdit"
+               << "KLineEdit"
                << "KDateTimeWidget"
                << "KDatePicker";
 
@@ -154,7 +162,8 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
         if ( !name.isEmpty() )
           mWidgets.insert( name, static_cast<QWidget*>( it.current() ) );
 
-        if ( it.current()->isA( "QLineEdit" ) || it.current()->isA( "KLineEdit" ) )
+        if ( it.current()->isA( "QLineEdit" ) ||
+             it.current()->isA( "KLineEdit" ) )
           connect( it.current(), SIGNAL( textChanged( const QString& ) ),
                    this, SIGNAL( changed() ) );
         else if ( it.current()->isA( "QSpinBox" ) )
@@ -162,6 +171,9 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
                    this, SIGNAL( changed() ) );
         else if ( it.current()->isA( "QCheckBox" ) )
           connect( it.current(), SIGNAL( toggled( bool ) ),
+                   this, SIGNAL( changed() ) );
+        else if ( it.current()->isA( "QComboBox" ) )
+          connect( it.current(), SIGNAL( activated( const QString& ) ),
                    this, SIGNAL( changed() ) );
         else if ( it.current()->isA( "QDateTimeEdit" ) )
           connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),

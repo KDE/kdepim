@@ -459,6 +459,8 @@ void AddresseeEditorWidget::setupCustomFieldsTabs()
 
       page->addWidget( wdg );
       page->updateLayout();
+
+      connect( page, SIGNAL( changed() ), SLOT( emitModified() ) );
     } else
       delete page;
   }
