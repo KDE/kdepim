@@ -237,7 +237,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Combo box @"
-		<< (int) c << " and info @" << (int) info << endl;
+		<< (long) c << " and info @" << (long) info << endl;
 #endif
 
 	c->clear();
@@ -276,7 +276,7 @@ void PilotComponent::slotShowComponent()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Showing component @" << (int) this << endl;
+	DEBUGKPILOT << fname << ": Showing component @" << (long) this << endl;
 #endif
 
 	emit showComponent(this);
