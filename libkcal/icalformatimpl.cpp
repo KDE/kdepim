@@ -1684,7 +1684,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_as_utc(t, 0);
     else
-      t = icaltime_as_utc(t,mParent->timeZoneId().local8Bit());
+      t = icaltime_as_utc(t,mParent->timeZoneId().utf8());
   }
 
   return t;
@@ -1706,7 +1706,7 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_as_zone(t, 0);
     else
-      t = icaltime_as_zone(t,mParent->timeZoneId().local8Bit());
+      t = icaltime_as_zone(t,mParent->timeZoneId().utf8());
   }
   QDateTime result(QDate(t.year,t.month,t.day),
                    QTime(t.hour,t.minute,t.second));

@@ -67,7 +67,7 @@ bool HtmlExport::save(QTextStream *ts)
   *ts << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=";
   *ts << "UTF-8\" />\n";
   if (!mTitle.isEmpty())
-    *ts << "  <title>" << mTitle.local8Bit() << "</title>\n";
+    *ts << "  <title>" << mTitle << "</title>\n";
   *ts << "  <style type=\"text/css\">\n";
   *ts << styleSheet();
   *ts << "  </style>\n";
@@ -78,7 +78,7 @@ bool HtmlExport::save(QTextStream *ts)
 
   if (eventsEnabled() || monthViewEnabled()) {
     if (!mTitle.isEmpty())
-      *ts << "<h1>" << mTitle.local8Bit() << "</h1>\n";
+      *ts << "<h1>" << mTitle << "</h1>\n";
   }
 
   // Write Month View
@@ -95,7 +95,7 @@ bool HtmlExport::save(QTextStream *ts)
   // Write Todo List
   if (todosEnabled()) {
     if (!mTitleTodo.isEmpty())
-      *ts << "<h1>" << mTitleTodo.local8Bit() << "</h1>\n";
+      *ts << "<h1>" << mTitleTodo << "</h1>\n";
 
     // Write HTML page content
     createHtmlTodoList(ts);

@@ -74,7 +74,13 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
     return false;
   }
   QTextStream ts( &file );
+  // We need to do the unfolding (removing the "\n " in the ics file)
+  // before interpreting the contents as UTF-8. So, first read in the
+  // file as latin1, unfold, and only then convert to UTF-8.
+  ts.setEncoding( QTextStream::Latin1 );
   QString text = ts.read();
+  text.replace( QRegExp("\n[ \t]"), "");
+  text = QString::fromUtf8( text.latin1() );
   file.close();
 
   if ( text.stripWhiteSpace().isEmpty() ) // empty files are valid
@@ -104,6 +110,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
     return false;
   }
   QTextStream ts( &file );
+  ts.setEncoding( QTextStream::UnicodeUTF8 );
   ts << text;
   file.close();
 
@@ -118,7 +125,7 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
 
-  calendar = icalcomponent_new_from_string( text.utf8().data());
+  calendar = icalcomponent_new_from_string( text.utf8().data() );
   //  kdDebug(5800) << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
     kdDebug(5800) << "ICalFormat::load() parse error" << endl;
@@ -218,8 +225,8 @@ QString ICalFormat::toString( Calendar *cal )
   Journal::List journals = cal->journals();
   Journal::List::ConstIterator it3;
   for( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
-//    kdDebug(5800) << "ICalFormat::toString() write journal "
-//                  << (*it3)->uid() << endl;
+    kdDebug(5800) << "ICalFormat::toString() write journal "
+                  << (*it3)->uid() << endl;
     component = mImpl->writeJournal( *it3 );
     icalcomponent_add_component( calendar, component );
   }
@@ -309,7 +316,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   if (messageText.isEmpty()) return 0;
 
   icalcomponent *message;
-  message = icalparser_parse_string(messageText.local8Bit());
+  message = icalparser_parse_string(messageText.utf8());
 
   if (!message) return 0;
 

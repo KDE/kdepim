@@ -656,8 +656,13 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
     if (str_p == 0){
       return 0;
     }
-
     for(p=((struct icalvalue_impl*)value)->data.v_string; *p!=0; p++){
+      /* If length>=68, check for beginning of a unicode char. */
+        if ( ( line_length >= 65 && *p == ' ') || (line_length >= 75) || 
+       ( line_length >= 68 && ((unsigned char)(*p)>=192 || (unsigned char)(*p)<64) ) ) {
+            icalmemory_append_string(&str,&str_p,&buf_sz,"\n ");
+            line_length=0;
+        }
 
 	switch(*p){
 	    case '\n': {
@@ -699,17 +704,6 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
 		icalmemory_append_char(&str,&str_p,&buf_sz,*p);
 		line_length++;
 	    }
-	}
-
-	if (line_length > 65 && *p == ' '){
-	    icalmemory_append_string(&str,&str_p,&buf_sz,"\n ");
-	    line_length=0;
-	}
-
-
-	if (line_length > 75){
-	    icalmemory_append_string(&str,&str_p,&buf_sz,"\n ");
-	    line_length=0;
 	}
 
     }

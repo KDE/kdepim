@@ -91,7 +91,7 @@ QString CalFormat::createUniqueId()
 int CalFormat::calendarVersion(const char* prodId)
 {
   for (const CalVersion* cv = prodIds;  cv->version;  ++cv) {
-    if (!strcmp(prodId, cv->prodId.local8Bit()))
+    if (!strcmp(prodId, cv->prodId.utf8()))
       return cv->version;
   }
   return 0;
