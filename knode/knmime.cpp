@@ -292,17 +292,21 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
   int pos1=src.find(n, 0, false), pos2=0, len=src.length()-1;
 
   if(pos1>-1 && (pos1==0 || src[pos1-1]=='\n')) {    //there is a header with the given name
-    QCString tmp=src.mid(pos1, src.length()-pos1);
-
     pos1+=n.length(); //skip the name
     pos2=pos1;
-    while(1) {
-      pos2=src.find("\n", pos2+1);
-      if(pos2==-1 || pos2==len || ( src[pos2+1]!=' ' && src[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
-        break;
+
+    if (src[pos2]!='\n') {  // check if the header is not empty
+      while(1) {
+        pos2=src.find("\n", pos2+1);
+        if(pos2==-1 || pos2==len || ( src[pos2+1]!=' ' && src[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
+          break;
+      }
     }
 
     if(pos2<0) pos2=len+1; //take the rest of the string
+
+    //*** FIXME: using simplifyWhiteSpace() is the easiest solution,
+    //***        but not the correct one
     return src.mid(pos1, pos2-pos1).simplifyWhiteSpace();
   }
   else
