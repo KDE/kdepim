@@ -75,7 +75,8 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
     RedoStack::instance()->clear();
   }
 
-  emit modified();
+  if ( list.count() > 0 )
+    emit modified();
 }
 
 void XXPortManager::slotExport( const QString &identifier, const QString &data )
