@@ -2,6 +2,7 @@ KAlarm
 
 === Version 1.0.4 --- 21 Feb 2004 ===
 Fix hangup at login when multiple alarms trigger.
+Make sound file chooser dialogue show all audio file types.
 
 === Version 1.0.3 --- 15 Feb 2004 ===
 Prevent email alarms from being sent if no 'From' address is configured.
