@@ -34,7 +34,7 @@
 #define RESOURCEIMAP_H
 
 #include <kabc/vcardconverter.h>
-#include <kabc/resource.h>
+#include <libkdepim/resourceabc.h>
 #include <dcopobject.h>
 #include <resourceimapshared.h>
 
@@ -48,8 +48,8 @@ namespace KABC {
  * addresses in an IMAP folder in KMail (or other conforming email
  * clients).
  */
-  class ResourceIMAP : public Resource,
-                       public ResourceIMAPBase::ResourceIMAPShared
+class ResourceIMAP : public KPIM::ResourceABC,
+                     public ResourceIMAPBase::ResourceIMAPShared
 {
   Q_OBJECT
 
@@ -114,11 +114,26 @@ public:
                         const QString& uid );
   void slotRefresh( const QString& type, const QString& resource );
 
-  /** Return the list of subresources. */
+  /// Return the list of subresources.
   QStringList subresources() const;
 
-  /** Is this subresource active? */
+  /// Return the list of active subresources.
+  QStringList activeSubresources() const;
+
+  /// Is this subresource active?
   bool subresourceActive( const QString& ) const;
+
+  // ############ TODO
+  virtual void setSubresourceActive( const QString &, bool ) {}
+
+  /// Completion weight for a given subresource
+  virtual int subresourceCompletionWeight( const QString& ) const;
+
+  /// Set completion weight for a given subresource
+  virtual void setSubresourceCompletionWeight( const QString&, int );
+
+  /// Give the uidmap. Used for ordered searching
+  QMap<QString, QString> uidToResourceMap() const { return mUidmap; }
 
 signals:
   void signalSubresourceAdded( Resource*, const QString&, const QString& );
@@ -128,6 +143,7 @@ protected:
   void insertAddressee( const Addressee&, const QString& resource );
   void doClose();
 
+  void loadSubResourceConfig( KConfig& config, const QString& name );
   bool loadResource( const QString& resource );
 
   QString configFile() const {
@@ -140,8 +156,17 @@ protected:
 
   KABC::VCardConverter mConverter;
 
+  struct SubResource {
+    SubResource() : active(false) {} // for qmap
+    SubResource( bool _active, int _completionWeight )
+      : active( _active ), completionWeight( _completionWeight ) {}
+    bool active;
+    int completionWeight;
+  };
+
   // The list of subresources
-  QMap<QString, bool> mResources;
+  typedef QMap<QString, SubResource> ResourceMap;
+  ResourceMap mResources;
   // Mapping from uid to resource
   QMap<QString, QString> mUidmap;
 };

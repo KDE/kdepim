@@ -66,7 +66,7 @@ extern "C"
 
 
 KABC::ResourceIMAP::ResourceIMAP( const KConfig *config )
-  : KABC::Resource( config ),
+  : KPIM::ResourceABC( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KABC" )
 {
   FormatFactory *factory = FormatFactory::self();
@@ -75,22 +75,34 @@ KABC::ResourceIMAP::ResourceIMAP( const KConfig *config )
 
 KABC::ResourceIMAP::~ResourceIMAP()
 {
+  // The resource is deleted on exit (StdAddressBook's KStaticDeleter),
+  // and it wasn't closed before that, so close here to save the config.
+  if ( isOpen() ) {
+    close();
+  }
   delete mFormat;
+}
+
+void KABC::ResourceIMAP::loadSubResourceConfig( KConfig& config, const QString& name )
+{
+  KConfigGroup group( &config, name );
+  bool active = group.readBoolEntry( "Active", true );
+  int completionWeight = group.readNumEntry( "CompletionWeight", 80 );
+  mResources.insert( name, SubResource( active, completionWeight ) );
 }
 
 bool KABC::ResourceIMAP::doOpen()
 {
   KConfig config( configFile() );
-  config.setGroup( "Contact" );
 
   // Read the calendar entries
   QStringList resources;
   if ( !kmailSubresources( resources, "Contact" ) )
     return false;
-  QStringList::ConstIterator it;
   mResources.clear();
+  QStringList::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it )
-    mResources[ *it ] = config.readBoolEntry( *it, true );
+    loadSubResourceConfig( config, *it );
 
   return true;
 }
@@ -98,11 +110,13 @@ bool KABC::ResourceIMAP::doOpen()
 void KABC::ResourceIMAP::doClose()
 {
   KConfig config( configFile() );
-  config.setGroup( "Contact" );
 
-  QMap<QString, bool>::ConstIterator it;
-  for ( it = mResources.begin(); it != mResources.end(); ++it )
-    config.writeEntry( it.key(), it.data() );
+  ResourceMap::ConstIterator it;
+  for ( it = mResources.begin(); it != mResources.end(); ++it ) {
+    config.setGroup( it.key() );
+    config.writeEntry( "Active", it.data().active );
+    config.writeEntry( "CompletionWeight", it.data().completionWeight );
+  }
 }
 
 KABC::Ticket * KABC::ResourceIMAP::requestSaveTicket()
@@ -145,9 +159,9 @@ bool KABC::ResourceIMAP::load()
   mAddrMap.clear();
 
   bool rc = true;
-  QMap<QString, bool>::ConstIterator itR;
+  ResourceMap::ConstIterator itR;
   for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
-    if ( !itR.data() )
+    if ( !itR.data().active )
       // This resource is disabled
       continue;
 
@@ -198,7 +212,7 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
     bool rc;
     if( !update ) {
       // Save the new addressee
-      const QString resource = findWritableResource( mResources, "Contact" );
+      const QString resource = findWritableResource( activeSubresources(), "Contact" );
       rc = kmailAddIncidence( "Contact", resource, uid, vCard );
       mUidmap[ uid ] = resource;
     } else
@@ -294,8 +308,7 @@ void KABC::ResourceIMAP::subresourceAdded( const QString& type,
 
   KConfig config( configFile() );
   config.setGroup( "Contact" );
-
-  mResources[ resource ] = config.readBoolEntry( resource, true );
+  loadSubResourceConfig( config, resource );
   loadResource( resource );
   addressBook()->emitAddressBookChanged();
   emit signalSubresourceAdded( this, type, resource );
@@ -316,8 +329,7 @@ void KABC::ResourceIMAP::subresourceDeleted( const QString& type,
   mResources.erase( resource );
 
   KConfig config( configFile() );
-  config.setGroup( "Contact" );
-  config.deleteEntry( resource );
+  config.deleteGroup( resource );
   config.sync();
 
   // Make a list of all uids to remove
@@ -347,10 +359,21 @@ QStringList KABC::ResourceIMAP::subresources() const
   return mResources.keys();
 }
 
+QStringList KABC::ResourceIMAP::activeSubresources() const
+{
+  QStringList lst;
+  ResourceMap::ConstIterator itR;
+  for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
+    if ( itR.data().active )
+      lst << itR.key();
+  }
+  return lst;
+}
+
 bool KABC::ResourceIMAP::subresourceActive( const QString& subresource ) const
 {
   if ( mResources.contains( subresource ) ) {
-    return mResources[ subresource ];
+    return mResources[ subresource ].active;
   }
 
   // Safe default bet:
@@ -359,5 +382,24 @@ bool KABC::ResourceIMAP::subresourceActive( const QString& subresource ) const
   return true;
 }
 
+int KABC::ResourceIMAP::subresourceCompletionWeight( const QString& subresource ) const
+{
+  if ( mResources.contains( subresource ) ) {
+    return mResources[ subresource ].completionWeight;
+  }
+
+  kdDebug(5650) << "subresourceCompletionWeight( " << subresource << " ): not found, using default\n";
+
+  return 80;
+}
+
+void KABC::ResourceIMAP::setSubresourceCompletionWeight( const QString& subresource, int completionWeight )
+{
+  if ( mResources.contains( subresource ) ) {
+    mResources[ subresource ].completionWeight = completionWeight;
+  } else {
+    kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
+  }
+}
 
 #include "resourceimap.moc"
