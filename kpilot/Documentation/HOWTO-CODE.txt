@@ -1,0 +1,57 @@
+Coding Guidelines for KPilot
+============================
+
+Of course we can wage war about what constitutes "good programming
+practice". And agreeing on indentation style is difficult as well.
+Below you can find the guidelines I try to stick to when writing
+KPilot, split into "C++ Source Code" and "Header Files".
+
+
+
+C++ Source Code
+===============
+
+There are coding guidelines for KDE somewhere. I think they say 
+indent with 4 spaces, { on same line, } on separate line. I disagree,
+so code I write -- and code I maintain -- slowly mutates to
+
+	* Indent with tabs
+	* { and } on separate lines
+	* C comments only for the GPL header and KDoc stuff
+	* C++ before the stuff they document, same indent level,
+	  with possibly two extra lines with just // to set the
+	  comment off from the code.
+
+Whether or not anyone else follows is irrelevant, and I do try to
+avoid gratuitous reformatting. Honest.
+
+
+
+
+Header Files
+============
+
+One thing we *do* need to agree on is how to protect
+.h files from double-inclusion. In Qt and KDE there's:
+
+	#ifndef QTCLASS_H
+	#ifndef _KDECLASS_H
+
+so for KPilot the convention will be
+
+	#ifndef _KPILOT_FILENAME_H
+
+where KPILOT is literal, ie. options.h is _KPILOT_OPTIONS_H and,
+unfortunately, kpilotOptions.h is _KPILOT_KPILOTOPTIONS_H. This is
+because the filename and the class don't always match up and not
+every file contains a class of interest.
+
+I'm going to try to wrap all the #includes with the right #ifndef
+to reduce the number of includes (for the preprocessor) and speed
+up compilation just a little bit.
+
+
+
+
+	Adriaan de Groot
+	March 5th 2001

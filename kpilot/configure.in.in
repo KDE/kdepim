@@ -25,6 +25,8 @@ else
     CPPFLAGS="$ac_save_cppflags"
 fi
 
+ac_save_cppflags="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS -L/usr/local/lib"
 AC_CHECK_LIB(pisock,
 	pi_accept,
 	[LIBPISOCK="-lpisock"], 
@@ -33,6 +35,7 @@ AC_CHECK_LIB(pisock,
 		[LIBPISOCK="-lpisock -lxnet"],
 		[AC_MSG_WARN([KPILOT: pisock library not found])
 		HAVE_PISOCK=0])])
+CPPFLAGS="$ac_save_cppflags"
 AC_SUBST(LIBPISOCK)
 
 if test "$HAVE_PISOCK" = "0" ; then

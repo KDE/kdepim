@@ -15,6 +15,10 @@ it's worth it in compile time. (See Documentation/HOWTO-CODE.txt for info).
 * Added Documentation/HOWTO-CODE.txt for the source code conventions. [5-3]
 * Fixed a bunch of Solaris compile issues. [5-3]
 
+The double-sync problem still exists though, which is bad. I suspect that
+some extra bytes are left waiting in the serial port queue after slotEndSync
+but I haven't got that sorted out yet.
+
 KPilot Developer's notes for march 4th 2001
 ===========================================
 
