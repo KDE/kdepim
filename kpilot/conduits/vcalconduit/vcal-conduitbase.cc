@@ -277,7 +277,7 @@ error:
 				return false;
 			}
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Calendar's timezone: "<<fCalendar->getTimeZoneStr()<<endl;
+			DEBUGCONDUIT<<"Calendar's timezone: "<<fCalendar->timeZoneId()<<endl;
 			DEBUGCONDUIT<<"Calendar is local time: "<<fCalendar->isLocalTime()<<endl;
 #endif
 
