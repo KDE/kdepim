@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Konnector
+X-KDE-Library=libphonekonnector
+
+Name=Opie Konnector
+Group=Cell Phone 
+Vendor=Daniel Molkentin
+Id=Phone
