@@ -76,31 +76,6 @@ def test( goal, actual ):
     path, scriptname = os.path.split( sys.argv[0] )
     raise KarmTestError( "%s: expected '%s', got '%s'" % ( scriptname, goal, actual ) )
 
-def addtodo( filename, todoname ):
-  '''Open ical file and add todo to bottom.'''
-  created = modified = current_time_in_ical_format()
-  uid = new_uid()
-  todo = TODO_TEMPLATE % ( created, created, uid, modified, todoname )
-
-  _filename = os.path.expanduser( filename )
-
-  f = open( _filename, "r" )
-  lines = f.readlines()
-  f.close()
-
-  f = open( _filename, "w" )
-  if not lines:
-    f.write( ICAL_HEADER )
-  else:
-    for l in lines: 
-      if l.strip() != "END:VCALENDAR": 
-        f.write( l )
-  f.write( todo )
-  f.write( "END:VCALENDAR" )
-  f.close()
-
-  return uid
-
 def current_time_in_ical_format():
   '''Example: 20041205T162914Z'''
   return time.strftime( "%Y%m%dT%H%M%SZ", time.gmtime() )
