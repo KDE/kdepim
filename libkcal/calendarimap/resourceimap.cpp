@@ -174,11 +174,16 @@ void ResourceIMAP::addEvent(Event *anEvent)
   // Kind of strange way to store the event
   // but it seems to work, and should be compatible
   // with kroupware_branch
-  arg << mFormat.createScheduleMessage(anEvent, Scheduler::Request);
-  if( !mDCOPClient->send( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
-				      data )) {
+  arg << mFormat.createScheduleMessage( anEvent, Scheduler::Request );
+  //arg << mFormat.toString(anEvent);
+  mCurrentUID = anEvent->uid();
+  QCString replyType;
+  QByteArray replyData;
+  if( !mDCOPClient->call( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
+			  data, replyType, replyData )) {
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
+  mCurrentUID = QString::null;
 }
 
 // probably not really efficient, but...it works for now.
@@ -191,12 +196,16 @@ void ResourceIMAP::deleteEvent(Event *event)
     QDataStream arg(data, IO_WriteOnly);
     arg << QString::fromLatin1("Calendar");
     arg << event->uid();
-    if( !mDCOPClient->send( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
-			    data )) {
+    mCurrentUID = event->uid();
+    QCString replyType;
+    QByteArray replyData;
+    if( !mDCOPClient->call( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
+			    data, replyType, replyData )) {
       kdError() << "DCOP error during deleteIncidence(QString)" << endl;
     }
   }
   mCalendar.deleteEvent(event);
+  mCurrentUID = QString::null;
 }
 
 
@@ -259,11 +268,16 @@ void ResourceIMAP::addTodo(Todo *todo)
   // Kind of strange way to store the event
   // but it seems to work, and should be compatible
   // with kroupware_branch
-  arg << mFormat.createScheduleMessage(todo, Scheduler::Request);
-  if( !mDCOPClient->send( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
-				      data )) {
+  arg << mFormat.createScheduleMessage( todo, Scheduler::Request );
+  //arg << mFormat.toString(todo);
+  mCurrentUID = todo->uid();
+  QCString replyType;
+  QByteArray replyData;
+  if( !mDCOPClient->call( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
+			  data, replyType, replyData )) {
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
+  mCurrentUID = QString::null;
 }
 
 void ResourceIMAP::deleteTodo(Todo *todo)
@@ -274,10 +288,14 @@ void ResourceIMAP::deleteTodo(Todo *todo)
     QDataStream arg(data, IO_WriteOnly);
     arg << QString::fromLatin1("Task");
     arg << todo->uid();
-    if( !mDCOPClient->send( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
-			    data )) {
+    QCString replyType;
+    QByteArray replyData;
+    mCurrentUID = todo->uid();
+    if( !mDCOPClient->call( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
+			    data, replyType, replyData )) {
       kdError() << "DCOP error during deleteIncidence(QString)" << endl;
     }
+    mCurrentUID = QString::null;
   }
   mCalendar.deleteTodo(todo);
 }
@@ -322,11 +340,16 @@ void ResourceIMAP::addJournal(Journal *journal)
   // Kind of strange way to store the event
   // but it seems to work, and should be compatible
   // with kroupware_branch
-  arg << mFormat.createScheduleMessage(journal, Scheduler::Request);
-  if( !mDCOPClient->send( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
-				      data )) {
+  arg << mFormat.createScheduleMessage( journal, Scheduler::Request );
+  //arg << mFormat.toString(journal);
+  mCurrentUID = journal->uid();
+  QCString replyType;
+  QByteArray replyData;
+  if( !mDCOPClient->call( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
+			  data, replyType, replyData )) {
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
+  mCurrentUID = QString::null;
 }
 
 void ResourceIMAP::deleteJournal(Journal *journal)
@@ -336,10 +359,14 @@ void ResourceIMAP::deleteJournal(Journal *journal)
     QDataStream arg(data, IO_WriteOnly);
     arg << QString::fromLatin1("Journal");
     arg << journal->uid();
-    if( !mDCOPClient->send( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
-			    data )) {
+    mCurrentUID = journal->uid();
+    QCString replyType;
+    QByteArray replyData;
+    if( !mDCOPClient->call( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
+			    data, replyType, replyData )) {
       kdError() << "DCOP error during deleteIncidence(QString)" << endl;
     }
+    mCurrentUID = QString::null;
   }
 
   mCalendar.deleteJournal(journal);
@@ -381,68 +408,75 @@ Alarm::List ResourceIMAP::alarms( const QDateTime &from, const QDateTime &to )
  */
 
 // after changes are made to an event, this should be called.
-void ResourceIMAP::update(IncidenceBase *incidence)
+void ResourceIMAP::update(IncidenceBase *incidencebase)
 {
-  incidence->setSyncStatus(Event::SYNCMOD);
-  incidence->setLastModified(QDateTime::currentDateTime());
+  incidencebase->setSyncStatus(Event::SYNCMOD);
+  incidencebase->setLastModified(QDateTime::currentDateTime());
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
 
-  if ( incidence->type() == "Event" ) {
-    {
-      // delete event
-      QByteArray data;
-      QDataStream arg(data, IO_WriteOnly);
-      arg << QString::fromLatin1("Calendar");
-      arg << incidence->uid();
-      if( !mDCOPClient->send( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
-			      data )) {
-	kdError() << "DCOP error during deleteIncidence(QString)" << endl;
-      }      
-    }
-    {
-      // add event again
-      QByteArray data;
-      QDataStream arg(data, IO_WriteOnly);
-      arg << QString::fromLatin1("Calendar");
-      arg << incidence->uid();
-      // Kind of strange way to store the event
-      // but it seems to work, and should be compatible
-      // with kroupware_branch
-      arg << mFormat.createScheduleMessage(incidence, Scheduler::Request);
-      if( !mDCOPClient->send( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
-			      data )) {
-	kdError() << "DCOP error during addIncidence(QString)" << endl;
-      }
-    }
-  }
+  QString type;
+  if ( incidencebase->type() == "Event" ) {
+    type = "Calendar";
+  } else if( incidencebase->type() == "Todo" ) {
+    type = "Task";
+  } else if( incidencebase->type() == "Journal" ) {
+    type = "Journal";
+  } else return;
 
+  Incidence* incidence = static_cast<Incidence*>(incidencebase);
+
+  {
+    // delete event
+    QByteArray data;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << type;
+    arg << incidence->uid();
+    mCurrentUID = incidence->uid();
+    QCString replyType;
+    QByteArray replyData;
+    if( !mDCOPClient->call( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
+			    data, replyType, replyData )) {
+      kdError() << "DCOP error during deleteIncidence(QString)" << endl;
+    }      
+  }
+  {
+    // add event again
+    QByteArray data;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << type;
+    arg << incidence->uid();
+    // Kind of strange way to store the event
+    // but it seems to work, and should be compatible
+    // with kroupware_branch
+    arg << mFormat.createScheduleMessage(incidence, Scheduler::Request);
+    //arg << mFormat.toString( incidence );
+    QCString replyType;
+    QByteArray replyData;
+    if( !mDCOPClient->call( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
+			    data, replyType, replyData )) {
+      kdError() << "DCOP error during addIncidence(QString)" << endl;
+    }
+    mCurrentUID = QString::null;
+  }
 }
 
 KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
 {
-  KCal::ScheduleMessage *message = mFormat.parseScheduleMessage( &mCalendar,
-								 str );
-  if( message ) {
-    return dynamic_cast<KCal::Incidence*>( message->event() );
-  } else {
-    QString errorMessage;
-    if( mFormat.exception() ) {
-      errorMessage = mFormat.exception()->message();
-    }
-    kdDebug() << "ResourceIMAP::parseIncidence( " << str << ") Error parsing \""
-	      << str << "\""
-	      << "Message: " << errorMessage << endl;
-    return 0;
-  }
+ Incidence* i = mFormat.fromString( str );
+ return i;
 }
 
 void ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 {
   kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << /*ical*/"..." << " )" << endl;
+  Incidence* i = parseIncidence( ical );
+  if( !i ) return;
+  // Ignore events that come from us
+  if( !mCurrentUID.isNull() && mCurrentUID == i->uid() ) return;
+
   if( type == "Calendar" ) {
-    Incidence* i = parseIncidence( ical );
     if( i && i->type() == "Event" ) {
       mSilent = true;
       addEvent( static_cast<Event*>(i) );
@@ -454,6 +488,9 @@ void ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
 {
   kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid << " )" << endl;
+  // Ignore events that come from us
+  if( !mCurrentUID.isNull() && mCurrentUID == uid ) return;
+
   mSilent = true;
   if( type == "Calendar" ) {
     Event* e = event(uid);

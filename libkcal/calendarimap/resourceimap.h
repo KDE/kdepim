@@ -168,6 +168,7 @@ namespace KCal {
     CalendarLocal mCalendar;
     DCOPClient* mDCOPClient;
     bool mSilent;
+    QString mCurrentUID;
 };  
 
 }

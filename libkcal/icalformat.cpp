@@ -143,6 +143,40 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
   return success;
 }
 
+Incidence *ICalFormat::fromString( const QString &text )
+{
+  icalcomponent *calendar;
+
+  calendar = icalcomponent_new_from_string( text.local8Bit().data());
+  if (!calendar) {
+    kdDebug() << "ICalFormat::fromString(const QString) parse error" << endl;
+    setException(new ErrorFormat(ErrorFormat::ParseErrorIcal));
+    return false;
+  }
+
+  Incidence *ical=0;
+  
+  icalcomponent *c;
+  c = icalcomponent_get_first_component(calendar,ICAL_VEVENT_COMPONENT);
+  if (c) {
+    ical = mImpl->readEvent(c);
+  } else {
+    c = icalcomponent_get_first_component(calendar,ICAL_VTODO_COMPONENT);
+    if (c) {
+      ical = mImpl->readTodo(c);
+    } else {
+      c = icalcomponent_get_first_component(calendar,ICAL_VJOURNAL_COMPONENT);
+      if (c) {
+        ical = mImpl->readJournal(c);
+      }
+    }
+  }
+  
+  icalcomponent_free( calendar );
+  return ical;
+}
+
+
 QString ICalFormat::toString( Calendar *cal )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );

@@ -65,6 +65,10 @@ class ICalFormat : public CalFormat {
     */
     bool fromString( Calendar *, const QString & );  
     /**
+      Parse string and return first ical component.
+    */
+    Incidence *fromString( const QString & );  
+    /**
       Return calendar information as string.
     */
     QString toString( Calendar * );
