@@ -59,13 +59,11 @@ DwBodyPart* DwBodyPart::NewBodyPart(const DwString& aStr,
     }
 }
 
-
 DwBodyPart::DwBodyPart()
 {
     mNext = 0;
     mClassId = kCidBodyPart;
     mClassName = sClassName;
-    mHeaders = 0;
 }
 
 
