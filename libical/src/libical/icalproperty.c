@@ -305,8 +305,9 @@ icalproperty_as_ical_string (icalproperty* prop)
 
 
     icalmemory_append_string(&buf, &buf_ptr, &buf_size, property_name);
+#ifdef KCAL_ADDLINEBREAKS
     icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
-
+#endif
 
 
     /* Determine what VALUE parameter to include. The VALUE parameters
@@ -353,10 +354,16 @@ icalproperty_as_ical_string (icalproperty* prop)
 	}
 
 	if(kind_string!=0){
+#ifdef KCAL_ADDLINEBREAKS
 	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, " ;");
+#else
+	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, ";");
+#endif
 	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, "VALUE=");
 	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, kind_string);
+#ifdef KCAL_ADDLINEBREAKS
 	    icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
+#endif
 	}
 	
 
@@ -381,15 +388,25 @@ icalproperty_as_ical_string (icalproperty* prop)
 	    continue;
 	}
 
+#ifdef KCAL_ADDLINEBREAKS
 	icalmemory_append_string(&buf, &buf_ptr, &buf_size, " ;");
+#else
+	icalmemory_append_string(&buf, &buf_ptr, &buf_size, ";");
+#endif
     	icalmemory_append_string(&buf, &buf_ptr, &buf_size, kind_string);
+#ifdef KCAL_ADDLINEBREAKS
  	icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
+#endif
 
     }    
 
     /* Append value */
 
+#ifdef KCAL_ADDLINEBREAKS
     icalmemory_append_string(&buf, &buf_ptr, &buf_size, " :");
+#else
+    icalmemory_append_string(&buf, &buf_ptr, &buf_size, ":");
+#endif
 
     value = icalproperty_get_value(prop);
 
