@@ -5,6 +5,7 @@ DONE:
 - fix mimetypes and their location under /share/mimelnk
 - kioslaves: cellphone:/, organizer:/, pda:/, (camera:/ not activated)
 - system tray plugin
+- serial/IRDA/(USB?) locking features (acording to standards - done, but untested !!)
 
 TODO:
 -----
@@ -12,7 +13,13 @@ TODO:
 - kitchensync driver/plugin (starting...)
 - a plugin for the left side of the "Open File Dialog". ->
   makes direct access to mobile devices really easy
-- more drivers
+- make the daemon a KDED (KDE Meta Daemon) module (kdelibs/kded/HOWTO, README.kded)
+- more drivers (always)
+
+General Interface TODO:
+-----------------------
+- automatic logoff timers
+- Authentication
 
 
 TODO (lower priority):

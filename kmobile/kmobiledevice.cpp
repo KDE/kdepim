@@ -19,13 +19,16 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <sys/types.h>
 #include <unistd.h>
 #include <time.h>
+#include <errno.h>
+#include <signal.h>
+#include <fcntl.h>
 
 #include <qstring.h>
 #include <qstringlist.h>
+#include <qfile.h>
 
 #include <klibloader.h>
 #include <kstandarddirs.h>
@@ -323,6 +326,92 @@ void KMobileDevice::mimetype( const QString & )
 void KMobileDevice::special( const QByteArray & )
 {
   emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
+}
+
+
+
+
+/* 
+ * device locking/unlocking functions
+ */
+
+#define DEVICE_LOCK_PATH_PREFIX "/var/lock/LCK.."
+
+bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
+{
+  int pid = -1;
+  QStringList all = QStringList::split('/', device);
+  if (!all.count()) {
+	err_reason = i18n("Invalid device (%1)").arg(device);
+	return false;
+  }
+  QString lockName = DEVICE_LOCK_PATH_PREFIX + all[all.count()-1];
+  QFile file(lockName);
+  if (file.exists() && file.open(IO_ReadOnly)) {
+     if (file.size() == 0) {
+	err_reason = i18n("Unable to read lockfile %s. Please check for reason and "
+		"remove the lockfile by hand.").arg(lockName);
+	PRINT_DEBUG << err_reason;
+	return false;
+     }
+     if (file.size() == 4 && sizeof(int)==4) {
+        file.readLine((char *)(&pid), 4); /* Kermit-style lockfile */
+     } else {
+        QTextStream ts(&file);
+        ts >> pid; /* Ascii lockfile */
+     }
+     file.close();
+
+     if (pid > 0 && kill((pid_t)pid, 0) < 0 && errno == ESRCH) {
+	PRINT_DEBUG << QString("Lockfile %1 is stale. Overriding it..\n").arg(lockName);
+	sleep(1);
+	if (!file.remove()) {
+		PRINT_DEBUG << QString("Overriding failed, please check the permissions\n");
+		PRINT_DEBUG << QString("Cannot lock device %1\n").arg(device);
+		err_reason = i18n("Lockfile %1 is stale. Please check permissions.").arg(lockName);
+		return false;
+	} 
+     } else {
+	err_reason = i18n("Device %1 already locked.").arg(device);
+	return false;
+    }
+  }
+
+  /* Try to create a new file, with 0644 mode */
+  int fd = open(lockName.local8Bit(), O_CREAT | O_EXCL | O_WRONLY, 0644);
+  if (fd == -1) {
+	if (errno == EEXIST)
+		err_reason = i18n("Device %1 seems to be locked by unknown process.").arg(device);
+	else if (errno == EACCES)
+		err_reason = i18n("Please check permission on lock directory.");
+	else if (errno == ENOENT)
+		err_reason = i18n("Cannot create lockfile %1. Please check for existence of path.").arg(lockName);
+	else
+		err_reason = i18n("Could not create lockfile %1. Error-Code is %2.").arg(lockName).arg(errno);
+	return false;
+  }
+  QString lockText;
+  lockText = QString("%1 kmobile\n").arg(getpid(),10);
+  write(fd, lockText.utf8(), lockText.utf8().length());
+  close(fd);
+
+  PRINT_DEBUG << QString("%1: Device %2 locked with lockfile %3.\n")
+	.arg(deviceName()).arg(device).arg(lockName);
+
+  err_reason = QString::null;
+
+  return true;
+}
+
+bool KMobileDevice::unlockDevice(const QString &device)
+{
+  QStringList all = QStringList::split('/', device);
+  if (!all.count()) return false;
+  QString lockName = DEVICE_LOCK_PATH_PREFIX + all[all.count()-1];
+  QFile file(lockName);
+  if (!file.exists())
+	return true;
+  return file.remove();
 }
 
 #include "kmobiledevice.moc"

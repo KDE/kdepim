@@ -1,4 +1,4 @@
-/*  This file is part of the KDE kmobile library.
+/*  This file is part of the KDE KMobile library.
     Copyright (C) 2003 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or

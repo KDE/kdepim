@@ -38,6 +38,9 @@ KMobileClient::KMobileClient()
   bool ok = attach();
   PRINT_DEBUG << QString("attached to DCOP server %1\n").arg(ok?"sucessful.":"failed.");
 
+//  m_clientAppId = registerAs("kmobileclient");
+//  PRINT_DEBUG << QString("registered as DCOP client %1\n").arg(m_clientAppId);
+
   isKMobileAvailable();
 }
 
@@ -76,11 +79,11 @@ bool KMobileClient::startKMobileApplication()
 
 
 /**
- * DCOP - USAGE
+ * DCOP - IMPLEMENTATION
  */
 
-#define USE_EVENTLOOP true
-#define TIMEOUT (-1)
+#define KMOBILECLIENT_USE_EVENTLOOP true
+#define KMOBILECLIENT_TIMEOUT (4*1000) // 4 seconds
 
 
 #define PREPARE( FUNC, PARAMS ) \
@@ -89,8 +92,8 @@ bool KMobileClient::startKMobileApplication()
   arg << PARAMS; \
   QCString replyType; \
   QByteArray replyData; \
-  bool ok = call(m_kmobileApp, m_kmobileObj, FUNC, data, replyType, replyData, USE_EVENTLOOP, TIMEOUT); \
-  PRINT_DEBUG << QString("DCOP-CALL to %1: %2\n").arg(FUNC).arg(ok?"ok.":"failed.")
+  bool ok = call(m_kmobileApp, m_kmobileObj, FUNC, data, replyType, replyData, KMOBILECLIENT_USE_EVENTLOOP, KMOBILECLIENT_TIMEOUT); \
+  PRINT_DEBUG << QString("DCOP-CALL to %1: %2\n").arg(FUNC).arg(ok?"ok.":"FAILED.")
   
 #define RETURN_TYPE( FUNC, PARAMS, RETURN_TYPE ) \
   PREPARE( FUNC, PARAMS ); \
@@ -121,6 +124,8 @@ bool KMobileClient::startKMobileApplication()
 
 QStringList KMobileClient::deviceNames()
 {
+  if (!isKMobileAvailable())
+	return QStringList();
   RETURN_TYPE( "deviceNames()", QString::fromLatin1(""), QStringList );
 }
 
@@ -223,5 +228,8 @@ bool KMobileClient::storeNote( QString deviceName, int index, QString note )
   RETURN_BOOL( "storeNote(QString,int,QString)", deviceName << index << note );
 }
 
+
+
+#undef PRINT_DEBUG
 
 #include "kmobileclient.moc"

@@ -1,4 +1,5 @@
 /*
+ * Test program for the KDE KMobile Library
  * Copyright (C) 2003 Helge Deller <deller@kde.org>
  */
 
@@ -18,7 +19,6 @@ int main(int argc, char **argv)
     DCOPClient *client = app.dcopClient();
     client->attach();
 
-    // do a 'send' for now
     QByteArray data;
     QDataStream ds(data, IO_WriteOnly);
 //     ds << QString("a");
@@ -28,11 +28,13 @@ int main(int argc, char **argv)
     ok = client->call("kmobile", "kmobileIface", "deviceNames()", data, replyType, replyData);
 
     QDataStream reply(replyData, IO_ReadOnly); 
-    QStringList ret; 
-    reply >> ret;
+    QStringList deviceNames; 
+    reply >> deviceNames;
 
-    kdDebug() << QString("Ergebnis=%1\n").arg(ok);
-    kdDebug() << QString("Ergebnis-Liste=%1\n").arg(ret[0]);
+    kdDebug() << QString("%1\n").arg(ok?"Ok":"Failure");
+    kdDebug() << QString("Number of currently registered drivers: %1\n").arg(deviceNames.count());
+    for (int i=0; i<deviceNames.count(); i++)
+      kdDebug() << QString("Device %1: %2\n").arg(i+1).arg(deviceNames[i]);
 
   //  return app.exec();
 }

@@ -38,7 +38,8 @@ a) The low-level device driver (libkmobile_xxxx.so)
 The low-level driver has to be derived from the KMobileDevice class
 (#include <kmobiledevice.h>). The drivers should be located below the
 directory /device, and you can find a sample implementation in
-/device/skeleton-directory. 
+/device/skeleton-directory. See below for some hints on how to
+write such a device driver.
 
 
 b) The mid-layer (kmobile)
@@ -67,4 +68,29 @@ by giving "mobile:/" as the URL.
 
 
 
+
+
+HINTS FOR DRIVER DEVELOPERS:
+----------------------------
+- KMobile device drivers are very similiar to kioslaves. Refer
+  at the kioslave documentation if needed.
+
+- derive your driver only from the KMobileDevice class (#include <kmobiledevice.h>)
+  and reimplement the functions which you really need
+
+- remember to set the classtype and capatibilities as soon as possible
+
+- your driver will be loaded only once in the whole KDE system
+
+- you don't need to worry about syncronisation - KMobile syncronizes
+  all calls to your driver, so you always will have a clean state
+
+- use lockDevice("/dev/ttyS1") and unlockDevice("/dev/ttyS1") to
+  lock those devices system-wide (creates /var/lock/LCK..<devname> files),
+  and to prevent other applications to access the same physical ports/devices
+
+- use the helper functions createDirEntry() and createFileEntry() to
+  create the right UDSEntries for listEntries(), stat(), ...
+
+- never fork() your driver !!
 

@@ -34,12 +34,10 @@
 #include <kio/authinfo.h>
 
 
-#define KMOBILE_MIMETYPE_DEVICE	"kdedevice/mobiledevice"
-#define KMOBILE_MIMETYPE_DEVICE_KONQUEROR(name) \
-			  QString("kdedevice/kmobile_%1").arg(name)
-#define KMOBILE_MIMETYPE_INODE	"inode/"
-
-#define KMOBILE_ICON_UNKNOWN	"mobile_unknown"
+#define KMOBILE_MIMETYPE_DEVICE			"kdedevice/mobiledevice"
+#define KMOBILE_MIMETYPE_DEVICE_KONQUEROR(name) QString("kdedevice/kmobile_%1").arg(name)
+#define KMOBILE_MIMETYPE_INODE			"inode/"
+#define KMOBILE_ICON_UNKNOWN			"mobile_unknown"
 
 /**
  * @short Represents the base class for dynamically loaded mobile device drivers.
@@ -53,7 +51,7 @@
  * QObject *KMobileSomeDevice::createObject( QObject *parent, const char *name,
  *      const char *, const QStringList &args )
  * {
- *    return new KMobileSkeleton( parent, name, args );
+ *    return new KMobileSomeDevice( parent, name, args );
  * }
  * </pre>
  *
@@ -460,7 +458,7 @@ signals:
 
 
 signals:
-    virtual void connectionChanged( bool conn_established );
+    void connectionChanged( bool conn_established );
 
 protected:
     // only available to sub-classed device drivers:
@@ -468,6 +466,15 @@ protected:
     void setCapabilities( int caps );
     KConfig *config() const { return m_config; };
     QString configFileName() const { return m_configFileName; };
+
+   
+    /**
+     * Lock/Unlock serial ports and other devices
+     * @param device Name of a device port (e.g. /dev/ttyS1, ttyS1, /dev/ircomm0)
+     * Returns true, if device could be locked or unlocked
+     */
+    bool lockDevice(const QString &device, QString &err_reason);
+    bool unlockDevice(const QString &device);
 
 protected:
     QMutex  m_mutex;		// mutex to syncronize DCOP accesses to this device

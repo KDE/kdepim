@@ -14,6 +14,8 @@ public:
     KMobileClient();
     virtual ~KMobileClient();
 
+    QCString appId() { return m_clientAppId; };
+
     bool isKMobileAvailable();
     bool startKMobileApplication();
 
@@ -50,6 +52,7 @@ public:
     bool storeNote( QString deviceName, int index, QString note );
 
 private:
+    QCString m_clientAppId;
     QCString m_kmobileApp;
     QCString m_kmobileObj;
 

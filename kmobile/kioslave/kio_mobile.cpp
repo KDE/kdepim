@@ -1,4 +1,21 @@
-// $Id$
+/*  This file is part of the KDE KMobile library
+    Copyright (C) 2003 Helge Deller <deller@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2 as published by the Free Software Foundation.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+
+*/
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -119,6 +136,8 @@ void createDirEntry(KIO::UDSEntry& entry, const QString& name, const QString& ur
 	addAtom(entry, KIO::UDS_ACCESS, 0500);
 	addAtom(entry, KIO::UDS_MIME_TYPE, 0, mime);
 	addAtom(entry, KIO::UDS_URL, 0, url);
+	addAtom(entry, KIO::UDS_USER, 0, getenv("USER"));
+	addAtom(entry, KIO::UDS_GROUP, 0, getenv("USER"));
 	PRINT_DEBUG << QString("createDirEntry: File: %1  MIME: %2  URL: %3\n").arg(name).arg(mime).arg(url);
 //	addAtom(entry, KIO::UDS_SIZE, 0);
 	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
@@ -133,6 +152,8 @@ void createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& u
 	addAtom(entry, KIO::UDS_FILE_TYPE, S_IFREG);
 	addAtom(entry, KIO::UDS_URL, 0, url);
 	addAtom(entry, KIO::UDS_ACCESS, 0400);
+	addAtom(entry, KIO::UDS_USER, 0, getenv("USER"));
+	addAtom(entry, KIO::UDS_GROUP, 0, getenv("USER"));
 	addAtom(entry, KIO::UDS_MIME_TYPE, 0, mime);
 	if (size) addAtom(entry, KIO::UDS_SIZE, size);
 	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
