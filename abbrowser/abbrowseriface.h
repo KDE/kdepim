@@ -26,6 +26,7 @@ class AbBrowserIface : virtual public DCOPObject
     virtual void removeEntry( QString key ) = 0;
   /** Save changes to the address book files */
     virtual void save() = 0;
+    virtual void exit() = 0;
 };
 
 #endif

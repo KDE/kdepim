@@ -242,6 +242,11 @@ void Pab::redo()
   RedoStack::instance()->redo();
 }
 
+void Pab::exit()
+    {
+    kapp->quit();
+    }
+
 void Pab::updateEditMenu()
 {
   kdDebug() << "UpdateEditMenu()" << endl;

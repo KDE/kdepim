@@ -66,7 +66,7 @@ public slots:
 	void updateEditMenu();
         /** Export comma-seperated list of all addressbook entries. */
         void exportCSV();
- 
+        void exit();
 protected:
 	/**
 	 * This function is called when it is time for the app to save its
