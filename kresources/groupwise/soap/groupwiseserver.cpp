@@ -277,7 +277,7 @@ bool GroupwiseServer::login()
   mSoap->userid = strdup( mUser.utf8() );
   mSoap->passwd = strdup( mPassword.utf8() );
 
-  mSession.clear();
+  mSession = "";
 
 //  cout << "Login" << endl;
 
