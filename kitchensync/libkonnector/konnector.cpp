@@ -33,6 +33,10 @@ QByteArray Konnector::file(const QString &udi, const QString &path )
 {
   return QByteArray();
 }
+void Konnector::retrieveFile(const QString &udi, const QString &file )
+{
+
+}
 void Konnector::write( const QString &udi, QPtrList<KSyncEntry> )
 {
 

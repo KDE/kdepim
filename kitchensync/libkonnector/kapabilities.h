@@ -43,8 +43,10 @@ class Kapabilities {
 
   QStringList ports()const;
   void setPorts(const QStringList & );
-  QString currentPort()const;
-  void setCurrentPort(const QString & );
+
+  int currentPort()const;
+  void setCurrentPort(int );
+
   bool needsIPs()const;
   bool needsSrcIP()const;
   bool needsDestIP()const;
@@ -55,10 +57,20 @@ class Kapabilities {
   QHostAddress srcIP()const;
   void setDestIP(const QHostAddress &);
   QHostAddress destIP()const;
+
   bool canAutoHandle() const;
   void setAutoHandle(bool);
   QValueList< QPair<QHostAddress, QHostAddress > > ipProposals() const;
   void setIpProposals( QValueList< QPair<QHostAddress, QHostAddress> >);
+
+  bool needAuthentication();
+  void setUser(const QString &);
+  QString user();
+  void setPassword(const QString & );
+  QString password();
+
+  QPair<QString, QString> userProposals();
+  void setUserProposals( const QPair<QString, QString>& );
   Kapabilities &operator=(const Kapabilities & );
 
  private:
@@ -67,4 +79,5 @@ class Kapabilities {
   void copy(const Kapabilities &);
 };
 #endif
+
 

@@ -21,7 +21,8 @@
 #define konnectorplugin_h
 
 #include <qcstring.h>
-#include <qobject.h>
+#include <qwidget.h>
+#include <qstringlist.h>
 #include <ksyncentry.h>
 #include <qptrlist.h>
 
@@ -29,9 +30,12 @@ class Kapabilities;
 class KSyncEntry;
 class KonnectorPlugin : public QObject
 {
+Q_OBJECT
  public:
-  KonnectorPlugin(const QString &udi, QObject *obj, const char *name );
-  virtual ~KonnectorPlugin();
+  KonnectorPlugin(QWidget *obj, const char *name, const QStringList &args=QStringList() );
+  virtual ~KonnectorPlugin() = 0;
+  virtual void setUDI(const QString & ) = 0;
+  virtual QString udi()const = 0;
   virtual Kapabilities capabilities( ) const = 0 ;
   virtual void setCapabilities( const Kapabilities &kaps ) = 0;
   virtual bool startSync() = 0;

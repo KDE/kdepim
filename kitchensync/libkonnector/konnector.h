@@ -35,12 +35,13 @@ class Konnector : public QObject{
 Q_OBJECT
  public:
   Konnector(QObject *, const char*);
- ~Konnector();
+  ~Konnector();
   QValueList<KDevice> query(const QString &category= QString::null );
   QString /*runtime unique-dev-id*/ registerKonnector(const QString &DeviceIdentification );
   Kapabilities capabilities( const QString &udi ) const;
   void setCapabilities( const QString &udi, const Kapabilities& );
   QByteArray file( const QString &udi, const QString &path ); // this would allow some post processing
+  void retrieveFile(const QString &udi, const QString &);
 
  public slots:
   void write(const QString &udi, QPtrList<KSyncEntry> );
@@ -56,3 +57,4 @@ Q_OBJECT
 };
 
 #endif
+

@@ -30,6 +30,7 @@ public:
     m_needsSrcIp = false;
     m_needsDestIp = false;
     m_canHandle = false;
+    m_needsAuthent=false;
   };
   bool m_push:1;
   bool m_needConnection:1;
@@ -37,12 +38,16 @@ public:
   bool m_needsIp:1;
   bool m_needsSrcIp:1;
   bool m_needsDestIp:1;
+  bool m_needsAuthent:1;
   QHostAddress m_src;
   QHostAddress m_dest;
-  QPair<QValueList<QHostAddress>, QValueList<QHostAddress> > m_propsIPs;
+  QValueList< QPair<QHostAddress,QHostAddress> > m_propsIPs; 
+  QPair<QString, QString> m_propAuth;
   bool m_canHandle;
-  QStringList ports;
-  QString current;
+  QStringList m_ports;
+  int m_current;
+  QString m_user;
+  QString m_pass;
 };
 
 Kapabilities::Kapabilities()
@@ -65,97 +70,129 @@ Kapabilities::~Kapabilities()
 }
 bool Kapabilities::supportsPushSync() const
 {
-
+  return d->m_push;
 }
 void Kapabilities::setSupportsPushSync(bool push)
 {
-
+  d->m_push = push;
 }
 bool Kapabilities::needsConnection() const
 {
-
+  return d->m_needConnection;
 }
 void Kapabilities::setNeedsConnection(bool connection)
 {
-
+  d->m_needConnection = connection;
 }
 bool Kapabilities::supportsListDir() const
 {
-
+  return d->m_listdir;
 }
 void Kapabilities::setSupportsListDir(bool listDir)
 {
-
+  d->m_listdir = listDir;
 }
 QStringList Kapabilities::ports()const
 {
-
+  return d->m_ports;
 }
-void Kapabilities::setPorts(const QStringList& )
+void Kapabilities::setPorts(const QStringList& ports)
 {
-
+  d->m_ports = ports;
 }
-QString Kapabilities::currentPort() const
+int Kapabilities::currentPort() const
 {
-
+  return d->m_current;
 }
-void setCurrentPort(const QString & )
+void Kapabilities::setCurrentPort(int port )
 {
-
+  d->m_current = port;
 }
 bool Kapabilities::needsIPs() const
 {
-
+  return d->m_needsIp;
 }
 bool Kapabilities::needsSrcIP() const
 {
-
+  return d->m_needsSrcIp;
 }
 bool Kapabilities::needsDestIP() const
 {
-
+  return d->m_needsDestIp;
 }
 void Kapabilities::setNeedsIPs(bool needs)
 {
-
+  d->m_needsIp = needs;
 }
 void Kapabilities::setNeedsSrcIP(bool needs)
 {
-
+  d->m_needsSrcIp = needs;
 }
 void Kapabilities::setNeedsDestIp(bool needs)
 {
-
+  d->m_needsDestIp = needs;
 }
 void Kapabilities::setSrcIP(const QHostAddress &addr)
 {
-
+  d->m_src = addr;
 }
 void Kapabilities::setDestIP(const QHostAddress &addr)
 {
-
+  d->m_dest = addr;
 }
 QHostAddress Kapabilities::srcIP() const
 {
-
+  return d->m_src;
 }
 QHostAddress Kapabilities::destIP() const
 {
-
+  return d->m_dest;
 }
 bool Kapabilities::canAutoHandle()const
 {
-
+  return d->m_canHandle;
 }
 void Kapabilities::setAutoHandle(bool handle)
 {
-
+  d->m_canHandle = handle;
 }
 QValueList< QPair<QHostAddress, QHostAddress > >  Kapabilities::ipProposals() const
 {
-
+  return d->m_propsIPs;
 }
-void Kapabilities::setIpProposals( QValueList<QPair<QHostAddress,QHostAddress> > )
+void Kapabilities::setIpProposals( QValueList<QPair<QHostAddress,QHostAddress> > ips )
 {
-
+  d->m_propsIPs = ips;
 }
+bool Kapabilities::needAuthentication()
+{
+  return d->m_needsAuthent;
+}
+void Kapabilities::setUser(const QString &user )
+{
+  d->m_user = user;
+}
+void Kapabilities::setPassword(const QString &pass )
+{
+  d->m_pass = pass;
+}
+QString Kapabilities::password()
+{
+  return d->m_pass;
+}
+QString Kapabilities::user()
+{
+  return d->m_user;
+}
+QPair<QString,QString> Kapabilities::userProposals()
+{
+  return d->m_propAuth;
+}
+void Kapabilities::setUserProposals(const QPair<QString, QString> &auth )
+{
+  d->m_propAuth = auth;
+}
+
+
+
+
