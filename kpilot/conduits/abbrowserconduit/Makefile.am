@@ -1,8 +1,8 @@
 INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/abbrowser
 METASOURCES = AUTO
 
-# servicedir = $(kde_servicesdir)
-# service_DATA = abbrowser-conduit.desktop
+servicedir = $(kde_servicesdir)
+service_DATA = abbrowser-conduit.desktop
 
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed
