@@ -35,7 +35,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <ktempfile.h>
-#include <kstandarddirs.h>
 
 #include <qstring.h>
 
@@ -81,9 +80,7 @@ KABC::ResourceIMAP::~ResourceIMAP()
 
 bool KABC::ResourceIMAP::doOpen()
 {
-  // Get the config file
-  QString configFile = locateLocal( "config", "kresources/imap/kabcrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   // Read the calendar entries
   QStringList resources;
@@ -100,9 +97,7 @@ bool KABC::ResourceIMAP::doOpen()
 
 void KABC::ResourceIMAP::doClose()
 {
-  // Get the config file
-  QString configFile = locateLocal( "config", "kresources/imap/kabcrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   config.setGroup( "Contact" );
   QMap<QString, bool>::ConstIterator it;

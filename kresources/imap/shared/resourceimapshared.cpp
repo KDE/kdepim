@@ -20,6 +20,7 @@
 */
 
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include "resourceimapshared.h"
 #include "kmailconnection.h"
@@ -81,6 +82,12 @@ bool ResourceIMAPShared::kmailUpdate( const QString& type,
                                       const QString& incidence )
 {
   return mSilent || mConnection->kmailUpdate( type, resource, uid, incidence );
+}
+
+QString ResourceIMAPShared::configFile( const QString& type ) const
+{
+  return locateLocal( "config",
+                      QString( "kresources/imap/%1rc" ).arg( type ) );
 }
 
 bool ResourceIMAPShared::connectToKMail() const

@@ -21,7 +21,6 @@
 */
 
 #include <kabc/locknull.h>
-#include <kstandarddirs.h>
 
 #include "resourceimap.h"
 
@@ -71,9 +70,7 @@ bool ResourceIMAP::doOpen()
 
   mOpen = true;
 
-  // Get the config file
-  const QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   // Read the calendar entries
   QStringList resources;
@@ -112,9 +109,7 @@ void ResourceIMAP::doClose()
 
   mOpen = false;
 
-  // Get the config file
-  const QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   config.setGroup( "Calendar" );
   QMap<QString, bool>::ConstIterator it;
@@ -581,9 +576,7 @@ void ResourceIMAP::setSubresourceActive( const QString& subresource,
 {
   kdDebug(5650) << "setSubresourceActive( " << subresource << ", "
                 << active << " )\n";
-  // Get the config file
-  const QString configFile = locateLocal( "config", "kresources/imaprc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   if ( mEventResources.contains( subresource ) ) {
     kdDebug(5650) << "Calendar\n";
@@ -610,9 +603,7 @@ void ResourceIMAP::setSubresourceActive( const QString& subresource,
 void ResourceIMAP::subresourceAdded( const QString& type,
                                      const QString& subresource )
 {
-  // Get the config file
-  const QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
   config.setGroup( type );
 
   if ( type == "Calendar" ) {
@@ -664,9 +655,7 @@ void ResourceIMAP::subresourceDeleted( const QString& type,
     // Unknown type
     return;
 
-  // Remove this from the config file
-  const QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
   config.setGroup( type );
   config.deleteEntry( subresource );
   config.sync();

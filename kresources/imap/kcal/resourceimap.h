@@ -193,6 +193,10 @@ private:
 
   KCal::Incidence* parseIncidence( const QString& str );
 
+  QString configFile() const {
+    return ResourceIMAPBase::ResourceIMAPShared::configFile( "kcal" );
+  }
+
   QString mServer;
   ICalFormat mFormat;
   bool mSilent;

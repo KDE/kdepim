@@ -34,45 +34,47 @@ namespace ResourceIMAPBase {
   This class provides the kmail connectivity for IMAP resources.
 */
 class ResourceIMAPShared {
-  public:
-    ResourceIMAPShared( const QCString& objId );
-    virtual ~ResourceIMAPShared();
+public:
+  ResourceIMAPShared( const QCString& objId );
+  virtual ~ResourceIMAPShared();
 
-    // These are the methods called by KMail when the resource changes
-    virtual bool addIncidence( const QString& type, const QString& resource,
-                               const QString& ical ) = 0;
-    virtual void deleteIncidence( const QString& type, const QString& resource,
-                                  const QString& uid ) = 0;
-    virtual void slotRefresh( const QString& type,
-                              const QString& resource ) = 0;
-    virtual void subresourceAdded( const QString& type,
+  // These are the methods called by KMail when the resource changes
+  virtual bool addIncidence( const QString& type, const QString& resource,
+                             const QString& ical ) = 0;
+  virtual void deleteIncidence( const QString& type, const QString& resource,
+                                const QString& uid ) = 0;
+  virtual void slotRefresh( const QString& type,
+                            const QString& resource ) = 0;
+  virtual void subresourceAdded( const QString& type,
+                                 const QString& resource ) = 0;
+  virtual void subresourceDeleted( const QString& type,
                                    const QString& resource ) = 0;
-    virtual void subresourceDeleted( const QString& type,
-                                     const QString& resource ) = 0;
 
-  protected:
-    /**
-     * Do the connection to KMail.
-     */
-    bool connectToKMail() const;
+protected:
+  /**
+   * Do the connection to KMail.
+   */
+  bool connectToKMail() const;
 
-    // These are the KMail dcop functions
-    bool kmailIncidences( QStringList& lst, const QString& type,
-                          const QString& resource ) const;
-    bool kmailSubresources( QStringList& lst, const QString& type ) const;
-    bool kmailAddIncidence( const QString& type, const QString& resource,
-                            const QString& uid, const QString& incidence );
-    bool kmailDeleteIncidence( const QString& type, const QString& resource,
-                               const QString& uid );
-    bool kmailUpdate( const QString& type, const QString& resource,
-                      const QStringList& lst );
-    bool kmailUpdate( const QString& type, const QString& resource,
-                      const QString& uid, const QString& incidence );
+  // These are the KMail dcop functions
+  bool kmailIncidences( QStringList& lst, const QString& type,
+                        const QString& resource ) const;
+  bool kmailSubresources( QStringList& lst, const QString& type ) const;
+  bool kmailAddIncidence( const QString& type, const QString& resource,
+                          const QString& uid, const QString& incidence );
+  bool kmailDeleteIncidence( const QString& type, const QString& resource,
+                             const QString& uid );
+  bool kmailUpdate( const QString& type, const QString& resource,
+                    const QStringList& lst );
+  bool kmailUpdate( const QString& type, const QString& resource,
+                    const QString& uid, const QString& incidence );
 
-    bool mSilent;
+  QString configFile( const QString& type ) const;
 
-  private:
-    mutable KMailConnection* mConnection;
+  bool mSilent;
+
+private:
+  mutable KMailConnection* mConnection;
 };
 
 }

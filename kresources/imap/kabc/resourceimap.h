@@ -118,6 +118,10 @@ protected:
   void insertAddressee( const Addressee&, const QString& resource );
   void doClose();
 
+  QString configFile() const {
+    return ResourceIMAPBase::ResourceIMAPShared::configFile( "kabc" );
+  }
+
   FormatPlugin* mFormat;
   QStringList mDeletedAddressees;
   QCString mAppId;

@@ -37,7 +37,6 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kstandarddirs.h>
 
 class IMAPFactory : public KRES::PluginFactoryBase
 {
@@ -74,9 +73,7 @@ KNotesIMAP::ResourceIMAP::~ResourceIMAP()
 
 bool KNotesIMAP::ResourceIMAP::doOpen()
 {
-  // Get the config file
-  QString configFile = locateLocal( "config", "kresources/imap/knotesrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   // Read the calendar entries
   QStringList resources;
@@ -93,9 +90,7 @@ bool KNotesIMAP::ResourceIMAP::doOpen()
 
 void KNotesIMAP::ResourceIMAP::doClose()
 {
-  // Get the config file
-  QString configFile = locateLocal( "config", "kresources/imap/kabcrc" );
-  KConfig config( configFile );
+  KConfig config( configFile() );
 
   config.setGroup( "Note" );
   QMap<QString, bool>::ConstIterator it;

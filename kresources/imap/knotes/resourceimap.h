@@ -86,6 +86,10 @@ public:
 private:
   bool addNote( KCal::Journal* journal, const QString& resource );
 
+  QString configFile() const {
+    return ResourceIMAPBase::ResourceIMAPShared::configFile( "knotes" );
+  }
+
   // Parse a journal from a string
   KCal::Journal* parseJournal( const QString& str );
   KCal::CalendarLocal mCalendar;
