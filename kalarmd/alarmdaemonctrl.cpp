@@ -52,21 +52,25 @@ AlarmDaemonCtrl::AlarmDaemonCtrl(QWidget *parent, const char *name) :
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setMargin( KDialog::marginHint() );
+  topLayout->setSpacing( KDialog::spacingHint() );
 
   mAutoStartCheck = new QCheckBox(
-      i18n("Start alarm daemon automatically at login"), this );
+      i18n("Start alarm client automatically at login"), this );
   connect( mAutoStartCheck, SIGNAL( clicked() ), SLOT( changed() ) );
   QWhatsThis::add( mAutoStartCheck,
-      i18n("Check to start the alarm daemon whenever you start a KDE session."));
+      i18n("Check to start the alarm client whenever you start a KDE session."));
   topLayout->addWidget( mAutoStartCheck );
   
   QBoxLayout *intervalLayout = new QHBoxLayout( topLayout );
  
-  QLabel *intervalLabel = new QLabel( i18n("Check interval [minutes]"), this );
+  QLabel *intervalLabel = new QLabel( i18n("Check interval: "), this );
   intervalLayout->addWidget( intervalLabel );
 
   mIntervalSpin = new QSpinBox( this );
   mIntervalSpin->setMinValue( 1 );
+  mIntervalSpin->setSuffix( i18n(" minutes") );
+  mIntervalSpin->setSpecialValueText( i18n("1 minute") );
+
   connect( mIntervalSpin, SIGNAL( valueChanged( int ) ), SLOT( changed() ) );
   QWhatsThis::add( mIntervalSpin,
       i18n("How often (in minutes) the alarm daemon should check for alarms becoming due."));
