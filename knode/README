@@ -1,7 +1,7 @@
 KNode is a newsreader for the K Desktop Environment.
 
-It is mostly GNKSA compliant (we will soon apply for
-a review), and has support for MIME and multiple servers.
+It is GNKSA compliant (unfortunally a review is still
+pending), and has support for MIME and multiple servers.
 
 It is a online-reader, but in combination with a
 local newsserver like leafnode also usable with dial-up

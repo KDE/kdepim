@@ -7,6 +7,9 @@ changes between 0.4 and 0.6
    scoring and filter conditions.
 + Reduced memory consumption. Its now configurable how much RAM
   is used to cache article bodies and headers.
++ KNode now uses dock widgets for its views, the user can
+  arrange them in any way he wants. Added the shortcuts
+  'g', 'h' and 'j' to switch to group, header and article view.
 + Improved article handling:
  - User-defined folders
  - DnD between folders and groups
@@ -18,14 +21,21 @@ changes between 0.4 and 0.6
    aren't available on the server
  - Implemented "Smart Scrolling" (TM) in the listviews and in
    the groupbrowser
+ - added option to expand all threads by default
+ - a new tab "Navigation" in the configuration dialog:
+   + its possible emulate cursor key behaviour of KMail
+   + "mark all read", "mark thread as read" and "ignore thread"
+      can now trigger additional actions. (close thread, go to
+      next thread/group)
 + Reading news articles:
  - Proper handling of crossposted articles, they are marked
    as read simutaneously in all groups.
+ - ignored articles are now automatically marked as read
  - Added option to retreive the article source
  - New menu option: fetch an article by message-id
  - Added option to retreive an article from groups.google.com
    if it's unavailable on the local server
- - Trailing empty lines can be stripped from incoming articles
+ - empty lines can be stripped from incoming articles
  - Highlighting of "news:" and "mailto:" urls, all email-addresses
    and msgids
  - Its now configurable what characters are recognized as quote signs
@@ -33,6 +43,9 @@ changes between 0.4 and 0.6
    saves space on small displays
  - The word wrap behaviour of the article widget is
    now configurable
+ - added a menuoption and a keyboard shortcut that switches
+   from proportional to fixed font in the article viewer
+ - its now possible to deactivate the tree view in the group subscription dialog.
 + Enhancements of the article composer
  - Optional integration of KMail and other external
    mail programs
@@ -49,6 +62,7 @@ changes between 0.4 and 0.6
    "x > value", not just ranges.
  - Its now possible to filter on the message-id and references header
  - The search function can show complete threads now (optionally)
+ - Its now possible to search folders
 + Network related improvements:
  - Articles are no fetched via article number instead of article-id
    to avoid problems with broken newsservers
