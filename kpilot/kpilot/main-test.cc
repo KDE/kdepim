@@ -1,6 +1,7 @@
 /* main-test.cc                         KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001,2002,2003,2004 by Adriaan de Groot
 **
 ** This is the main program for kpilotTest, which shows a SyncLog and
 ** exercises the KPilotDeviceLink class. It's intended to test if the
@@ -215,12 +216,10 @@ int execConduit(KCmdLineArgs *p)
 	if (p->isSet("test")) syncMode |= ActionQueue::TestMode;
 	if (p->isSet("HHtoPC")) syncMode |= ActionQueue::FlagHHToPC;
 	if (p->isSet("PCtoHH")) syncMode |= ActionQueue::FlagPCToHH;
-	
-	syncStack = new ActionQueue(deviceLink); 
+
+	syncStack = new ActionQueue(deviceLink);
 	syncStack->queueInit();
-	syncStack->queueConduits(l,
-		p->isSet("test") ? (ActionQueue::HotSyncMode|ActionQueue::TestMode) :
-			ActionQueue::HotSyncMode);
+	syncStack->queueConduits(l,syncMode);
 	syncStack->queueCleanup();
 
 	connectStack();
@@ -291,7 +290,7 @@ int main(int argc, char **argv)
 		I18N_NOOP("KPilotTest"),
 		KPILOT_VERSION,
 		"KPilot Tester",
-		KAboutData::License_GPL, "(C) 2001, Adriaan de Groot");
+		KAboutData::License_GPL, "(C) 2001-2004, Adriaan de Groot");
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("KPilot Maintainer"),
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
