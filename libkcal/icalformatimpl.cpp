@@ -2529,10 +2529,24 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
-  // TODO: check, if dynamic cast is required
   if(incidence->type() == "Todo") {
     Todo *todo = static_cast<Todo *>(incidence);
-    icalcomponent_add_component(message,writeTodo(todo));
+    icalcomponent *vtodo = writeTodo(todo);
+    /*
+     * RFC 2446 states in section 3.4.3 ( REPLY to a VTODO ), that
+     * a REQUEST-STATUS property has to be present. Until we do more 
+     * fine grained handling, assume all is well. Note that this is the 
+     * status of the _request_, not the attendee. Just to avoid confusion.
+     * - till
+     */
+    if ( icalmethod == ICAL_METHOD_REPLY ) {
+      struct icalreqstattype rst;
+      rst.code = ICAL_2_0_SUCCESS_STATUS;
+      rst.desc = 0;
+      rst.debug = 0;
+      icalcomponent_add_property( vtodo, icalproperty_new_requeststatus( rst ) );
+    }
+    icalcomponent_add_component(message,vtodo);
   }
   if(incidence->type() == "Event") {
     Event *event = static_cast<Event *>(incidence);
