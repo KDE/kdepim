@@ -628,7 +628,7 @@ void KNMainWindow::initActions()
   items += i18n("By &Date");
   a_ctArtSortHeaders->setItems(items);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
-  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), 0, Key_F7 , this,
+  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString::null, Key_F7 , this,
                              SLOT(slotArtSortHeadersKeyb()), actionCollection(), "view_Sort_Keyb");
   a_ctArtSortHeadersKeyb->plugAccel(a_ccel);
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
