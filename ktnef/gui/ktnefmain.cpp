@@ -40,6 +40,7 @@
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kdialogbase.h>
+#include <ktempfile.h>
 #ifdef KDE_NO_COMPAT
 #undef KDE_NO_COMPAT
 #endif
@@ -101,6 +102,7 @@ void KTNEFMain::setupActions()
 	new KAction(i18n("Extract All To..."), QString("ktnef_extract_all_to"), 0, this, SLOT(extractAllFiles()), actionCollection(), "extract_all_files");
 	new KAction( i18n( "Message Properties..." ), "help", 0, this, SLOT( slotShowMessageProperties() ), actionCollection(), "msg_properties" );
 	new KAction(i18n("Properties..."), QString("contents"), 0, this, SLOT(propertiesFile()), actionCollection(), "properties_file");
+	new KAction( i18n( "Message Text..." ), "mail_generic", 0, this, SLOT( slotShowMessageText() ), actionCollection(), "msg_text" );
 	actionCollection()->action("view_file")->setEnabled(false);
 	actionCollection()->action("view_file_as")->setEnabled(false);
 	actionCollection()->action("extract_file")->setEnabled(false);
@@ -359,6 +361,17 @@ void KTNEFMain::slotShowMessageProperties()
 	dlg.setMainWidget( lv );
 	formatPropertySet( parser_->message(), lv );
 	dlg.exec();
+}
+
+void KTNEFMain::slotShowMessageText()
+{
+	QString rtf = parser_->message()->rtfString();
+	qDebug( "%s", rtf.latin1() );
+	KTempFile tmpFile( KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/", "rtf");
+	*( tmpFile.textStream() ) << rtf;
+	tmpFile.close();
+
+	KRun::runURL( tmpFile.name(), "text/rtf", true );
 }
 
 #include "ktnefmain.moc"

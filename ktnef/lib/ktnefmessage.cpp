@@ -18,6 +18,9 @@
 #include "ktnef/ktnefmessage.h"
 #include "ktnef/ktnefattach.h"
 
+#include "lzfu.h"
+#include <qbuffer.h>
+
 class KTNEFMessage::MessagePrivate
 {
 public:
@@ -61,4 +64,19 @@ void KTNEFMessage::addAttachment( KTNEFAttach *attach )
 void KTNEFMessage::clearAttachments()
 {
 	d->attachments_.clear();
+}
+
+QString KTNEFMessage::rtfString()
+{
+	QVariant prop = property( 0x1009 );
+	if ( prop.isNull() || prop.type() != QVariant::ByteArray)
+		return QString::null;
+	else
+	{
+		QByteArray rtf;
+		QBuffer input( prop.asByteArray() ), output( rtf );
+		if ( input.open( IO_ReadOnly ) && output.open( IO_WriteOnly ) )
+			lzfu_decompress( &input, &output );
+		return QString( rtf );
+	}
 }

@@ -49,6 +49,7 @@ protected slots:
 	void slotEditToolbars();
 	void slotNewToolbarConfig();
 	void slotShowMessageProperties();
+	void slotShowMessageText();
 
 	void viewSelectionChanged();
 	void viewRightButtonPressed(QListViewItem *item, const QPoint& p, int c);
