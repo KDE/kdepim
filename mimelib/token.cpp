@@ -261,10 +261,56 @@ void DwTokenizer::PrintToken(std::ostream* aOut)
 }
 
 
-#define isspecial(c) ((c)=='('||(c)==')'||(c)=='<'||(c)=='>'||(c)=='@'\
-    ||(c)==','||(c)==';'||(c)==':'||(c)=='\\'||(c)=='"'||(c)=='.'\
-    ||(c)=='['||(c)==']')
+static inline bool isspecialorspaceorcntrl( char c ) 
+{
+  switch ( c ) {
+     case '(':
+     case ')':
+     case '<':
+     case '>':
+     case '@':
+     case ',':
+     case ';':
+     case ':':
+     case '\\':
+     case '"':
+     case '.':
+     case '[':
+     case ']':
+     // isspace()
+     case ' ':
+     //case '\r': included in iscntrl()
+     //case '\f': included in iscntrl()
+     //case '\t': included in iscntrl()
+     //case '\n': included in iscntrl()
+     //case '\v': included in iscntrl()
+     // iscntrl()
+     case 0 ... 15:
+     case 17 ... 31:
+        return true;
+     default:
+        return false;
+  }
+}
 
+static inline bool isnotspaceorcntrl( char c ) 
+{
+  switch ( c ) {
+     // isspace()
+     case ' ':
+     //case '\r': included in iscntrl()
+     //case '\f': included in iscntrl()
+     //case '\t': included in iscntrl()
+     //case '\n': included in iscntrl()
+     //case '\v': included in iscntrl()
+     // iscntrl()
+     case 0 ... 15:
+     case 17 ... 31:
+        return false;
+     default:
+        return true;
+  }
+}
 
 DwRfc822Tokenizer::DwRfc822Tokenizer(const DwString& aStr)
   : DwTokenizer(aStr)
@@ -308,46 +354,53 @@ void DwRfc822Tokenizer::ParseToken()
     mTokenStart = mNextStart;
     mTokenLength = 0;
     mTkType = eTkNull;
-    if (mTokenStart >= mString.length()) {
-        return;
-    }
     // Skip leading space.  Also, since control chars are not permitted
     // in atoms, skip these, too.
     while (1) {
         if (mTokenStart >= mString.length()) {
             return;
         }
-        if (!isspace(mString[mTokenStart]) && !iscntrl(mString[mTokenStart]))
+        if (isnotspaceorcntrl(mString[mTokenStart]))
             break;
         ++mTokenStart;
     }
     char ch = mString[mTokenStart];
-    // Quoted string
-    if (ch == '"') {
-        mTkType = eTkQuotedString;
-        ParseQuotedString();
-    }
-    // Comment
-    else if (ch == '(') {
-        mTkType = eTkComment;
-        ParseComment();
-    }
-    // Domain literal
-    else if (ch == '[') {
-        mTkType = eTkDomainLiteral;
-        ParseDomainLiteral();
-    }
-    // Special
-    else if (isspecial(ch)) {
-        mTkType = eTkSpecial;
-        mTokenLength = 1;
-        mToken = mString.substr(mTokenStart, 1);
-        mNextStart = mTokenStart + 1;
-    }
-    // Atom
-    else {
-        mTkType = eTkAtom;
-        ParseAtom();
+    switch (ch) {
+        // Quoted string
+        case '"':
+            mTkType = eTkQuotedString;
+            ParseQuotedString();
+        break;
+        // Comment
+        case '(':
+            mTkType = eTkComment;
+            ParseComment();
+        break;
+        // Domain literal
+        case '[':
+            mTkType = eTkDomainLiteral;
+            ParseDomainLiteral();
+        break;
+        // Special
+        case ')':
+        case '<':
+        case '>':
+        case '@':
+        case ',':
+        case ';':
+        case ':':
+        case '\\':
+        case '.':
+        case ']':
+            mTkType = eTkSpecial;
+            mTokenLength = 1;
+            mToken = mString.substr(mTokenStart, 1);
+            mNextStart = mTokenStart + 1;
+        break;
+        default:
+            mTkType = eTkAtom;
+            ParseAtom();
+        break;
     }
     if (mDebugOut) PrintToken(mDebugOut);
 }
@@ -360,9 +413,7 @@ void DwRfc822Tokenizer::ParseAtom()
         ++pos;
         char ch = (pos < mString.length()) ? mString[pos] : (char) 0;
         if (pos >= mString.length()
-            || isspace(ch)
-            || iscntrl(ch)
-            || isspecial(ch)) {
+            || isspecialorspaceorcntrl(ch)) {
 
             mTokenLength = pos - mTokenStart;
             mToken = mString.substr(mTokenStart, mTokenLength);
@@ -372,7 +423,7 @@ void DwRfc822Tokenizer::ParseAtom()
     }
 }
 
-static inline bool istspecial( char c ) 
+static inline bool istspecialorspaceorcntrl( char c ) 
 {
   switch ( c ) {
      case '(':
@@ -390,6 +441,16 @@ static inline bool istspecial( char c )
      case ']':
      case '?':
      case '=':
+     // isspace()
+     case ' ':
+     //case '\r': included in iscntrl()
+     //case '\f': included in iscntrl()
+     //case '\t': included in iscntrl()
+     //case '\n': included in iscntrl()
+     //case '\v': included in iscntrl()
+     // iscntrl()
+     case 0 ... 15:
+     case 17 ... 31:
         return true;
      default:
         return false;
@@ -438,46 +499,55 @@ void DwRfc1521Tokenizer::ParseToken()
     mTokenStart = mNextStart;
     mTokenLength = 0;
     mTkType = eTkNull;
-    if (mTokenStart >= mString.length()) {
-        return;
-    }
     // Skip leading space.  Also, since control chars are not permitted
     // in atoms, skip these, too.
     while (1) {
         if (mTokenStart >= mString.length()) {
             return;
         }
-        if (!isspace(mString[mTokenStart]) && !iscntrl(mString[mTokenStart]))
+        if (isnotspaceorcntrl(mString[mTokenStart]))
             break;
         ++mTokenStart;
     }
     char ch = mString[mTokenStart];
-    // Quoted string
-    if (ch == '"') {
-        mTkType = eTkQuotedString;
-        ParseQuotedString();
-    }
-    // Comment
-    else if (ch == '(') {
-        mTkType = eTkComment;
-        ParseComment();
-    }
-    // Domain literal
-    else if (ch == '[') {
-        mTkType = eTkDomainLiteral;
-        ParseDomainLiteral();
-    }
-    // Special
-    else if (istspecial(ch)) {
-        mTkType = eTkTspecial;
-        mTokenLength = 1;
-        mToken = mString.substr(mTokenStart, 1);
-        mNextStart = mTokenStart + 1;
-    }
-    // Atom
-    else {
-        mTkType = eTkToken;
-        ParseAtom();
+    switch (ch) {
+        // Quoted string
+        case '"':
+            mTkType = eTkQuotedString;
+            ParseQuotedString();
+        break;
+        // Comment
+        case '(':
+            mTkType = eTkComment;
+            ParseComment();
+        break;
+        // Domain literal
+        case '[':
+            mTkType = eTkDomainLiteral;
+            ParseDomainLiteral();
+        break;
+        // Special
+        case ')':
+        case '<':
+        case '>':
+        case '@':
+        case ',':
+        case ';':
+        case ':':
+        case '\\':
+        case '/':
+        case ']':
+        case '?':
+        case '=':
+            mTkType = eTkTspecial;
+            mTokenLength = 1;
+            mToken = mString.substr(mTokenStart, 1);
+            mNextStart = mTokenStart + 1;
+        break;
+        default:
+            mTkType = eTkToken;
+            ParseAtom();
+        break;
     }
     if (mDebugOut) PrintToken(mDebugOut);
 }
@@ -490,9 +560,7 @@ void DwRfc1521Tokenizer::ParseAtom()
         ++pos;
         char ch = (pos < mString.length()) ? mString[pos] : (char) 0;
         if (pos >= mString.length()
-            || isspace(ch)
-            || iscntrl(ch)
-            || istspecial(ch)) {
+            || istspecialorspaceorcntrl(ch)) {
 
             mTokenLength = pos - mTokenStart;
             mToken = mString.substr(mTokenStart, mTokenLength);
