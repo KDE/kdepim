@@ -388,6 +388,8 @@ void KABCore::mailVCard( const QStringList& uids )
       continue;
 
     QString name = a.givenName().utf8() + "_" + a.familyName().utf8() + ".vcf";
+    name.replace( ' ', '_' );
+    name.replace( '/', '_' );
 
     QString fileName = dirName + "/" + name;
 
