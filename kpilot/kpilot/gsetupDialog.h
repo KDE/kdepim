@@ -14,6 +14,8 @@
 // $Id$
 
 
+#ifndef _GSETUPDIALOG_H
+#define _GSETUPDIALOG_H
 
 #ifndef __OPTIONS_H
 #include "options.h"
@@ -307,6 +309,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.4  2000/11/10 08:32:33  adridg
+// Fixed spurious config new() and delete()
+//
 // Revision 1.3  2000/07/30 10:01:55  adridg
 // Completed KDE2 layout
 //
@@ -316,3 +321,7 @@ private:
 // Revision 1.4  2000/07/16 12:17:16  adridg
 // Moved partway to KDE2
 //
+
+
+#endif /* _GSETUPDIALOG_H */
+
