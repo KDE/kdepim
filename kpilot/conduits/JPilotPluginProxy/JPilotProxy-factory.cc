@@ -53,9 +53,9 @@ void *init_libJPilotProxy() {
 
 
 bool JPilotProxyConduitFactory::pluginsloaded=false;
-QString JPilotProxyConduitFactory::settingsGroup="JPilotPluginProxy";
-QString JPilotProxyConduitFactory::PluginPathes="PluginPathes";
-QString JPilotProxyConduitFactory::LoadedPlugins="LoadedPlugins";
+QString JPilotProxyConduitFactory::settingsGroup=CSL1("JPilotPluginProxy");
+QString JPilotProxyConduitFactory::PluginPathes=CSL1("PluginPathes");
+QString JPilotProxyConduitFactory::LoadedPlugins=CSL1("LoadedPlugins");
 
 KAboutData *JPilotProxyConduitFactory::fAbout = 0L;
 PluginList_t *JPilotProxyConduitFactory::plugins=0L;
@@ -67,10 +67,20 @@ JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) 
 	plugins=new PluginList_t();
 	// load the library containing the JPilot API functions. If this fails, any plugin will probably crash KPilot, so just exit!!!
 	apilib=KLibLoader::self()->globalLibrary("libJPilotAPI");
-		#ifdef DEBUG
-	if (!apilib) DEBUGCONDUIT << fname << ": JPilotAPI library could not be loaded\n  error ["<<KLibLoader::self()->lastErrorMessage()<<"]" << endl;
-	else DEBUGCONDUIT << fname << ": loaded JPilotAPI library" << endl;
- 	#endif
+
+#ifdef DEBUG
+	if (!apilib) 
+	{
+		DEBUGCONDUIT << fname 
+			<< ": JPilotAPI library could not be loaded\n  error ["
+			<< KLibLoader::self()->lastErrorMessage()<<"]" << endl;
+	}
+	else 
+	{
+		DEBUGCONDUIT << fname << ": loaded JPilotAPI library" << endl;
+	}
+#endif
+
   jp_logf(4, "testing...");
 
 	fInstance = new KInstance(n);
@@ -91,9 +101,12 @@ JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
 
 	PluginIterator_t it(*plugins); // iterator for plugin list
 	for ( ; it.current(); ++it ) {
-		#ifdef DEBUG
-		DEBUGCONDUIT<<"unloading library "<< it.current()->info.fullpath<<" ("<<it.current()->info.name<<"), address="<<it.current()->lib<<endl;
-		#endif
+#ifdef DEBUG
+		DEBUGCONDUIT << "unloading library "
+			<< it.current()->info.fullpath
+			<< " (" << it.current()->info.name
+			<< "), address=" << it.current()->lib << endl;
+#endif
 		it.current()->exit_cleanup();
 	}
 	if (apilib) KLibLoader::self()->unloadLibrary(apilib->fileName());
@@ -106,9 +119,9 @@ JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
 	const char *n, const char *c, const QStringList &a) {
 	FUNCTIONSETUP;
 
-		#ifdef DEBUG
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Creating object of class "	<< c << endl;
-		#endif
+#endif
 
 	if (qstrcmp(c,"ConduitConfig")==0) {
 		QWidget *w = dynamic_cast<QWidget *>(p);
@@ -116,9 +129,9 @@ JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
 		if (w) {
 			return createSetupWidget(w,n,a);
 		} else {
-				#ifdef DEBUG
+#ifdef DEBUG
 			DEBUGCONDUIT << fname << ": Couldn't cast parent to widget." << endl;
-				#endif
+#endif
 			return 0L;
 		}
 	}
@@ -142,14 +155,14 @@ JPlugin*JPilotProxyConduitFactory::addPlugin( QString path, bool on) {
 	FUNCTIONSETUP;
 	// TODO: search the plugin list if the plugin was already loaded
 	JPlugin*newplugin=new JPlugin( path );
-	#ifdef DEBUG
+#ifdef DEBUG
 	DEBUGCONDUIT<<"successfully created a JPlugin instance for "<<path<<endl;
-	#endif
+#endif
 	if (newplugin->loaded) {
 		newplugin->info.sync_on=on;
-		#ifdef DEBUG
+#ifdef DEBUG
 		DEBUGCONDUIT<<"loading "<<path<<" was successful"<<endl;
-		#endif
+#endif
 		// if the plugin was loaded successfully, insert it into the list of plugins
 		plugins->append(newplugin);
 		jp_startup_info si;
@@ -186,9 +199,9 @@ int JPilotProxyConduitFactory::addPluginPath(QString path, KConfig*fC) {
 	QStringList plugs=dir.entryList("*.so");
 
 	for (QStringList::Iterator it = plugs.begin(); it != plugs.end(); ++it ) {
-		#ifdef DEBUG
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Load plugin "<<(*it)<<endl;
-		#endif
+#endif
 		bool on=false;
 		if (fC) {
 			KConfigGroupSaver cfgs(fC, settingsGroup);
