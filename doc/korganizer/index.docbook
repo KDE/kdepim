@@ -541,7 +541,7 @@ on.</para></listitem>
 <term><guilabel>Yearly</guilabel></term>
 <listitem>
 <para>This is similar to Monthly.  You need to choose whether or not you
-are indicating a calendar day of the year (&ie;, the 250th day of the
+are indicating a calendar day of the year (&eg;, the 250th day of the
 year) - <guilabel>Recur on this day</guilabel>, or this day of the month
 in a particular month of the year - <guilabel>Recur in the month
 of</guilabel>.  By default, &korganizer; assumes you mean the actual day
