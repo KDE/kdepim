@@ -49,7 +49,7 @@ namespace KSieve {
   class Parser::Impl {
     friend class Parser;
   private:
-    Impl( const char * scursor, const char * const send );
+    Impl( const char * scursor, const char * const send, int options=0 );
 
     void setScriptBuilder( ScriptBuilder * builder ) {
       mBuilder = builder;

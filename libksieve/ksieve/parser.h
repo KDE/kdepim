@@ -46,7 +46,7 @@ namespace KSieve {
   class Parser {
   public:
 
-    Parser( const char * scursor, const char * const send );
+    Parser( const char * scursor, const char * const send, int options=0 );
     ~Parser();
 
     void setScriptBuilder( ScriptBuilder * builder );

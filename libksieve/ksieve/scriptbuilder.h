@@ -44,11 +44,11 @@ namespace KSieve {
     virtual ~ScriptBuilder() {}
 
     virtual void taggedArgument( const QString & tag ) = 0;
-    virtual void stringArgument( const QString & string, bool multiLine ) = 0;
+    virtual void stringArgument( const QString & string, bool multiLine, const QString & embeddedHashComment ) = 0;
     virtual void numberArgument( unsigned long number, char quantifier ) = 0;
 
     virtual void stringListArgumentStart() = 0;
-    virtual void stringListEntry( const QString & string, bool multiLine ) = 0;
+    virtual void stringListEntry( const QString & string, bool multiLine, const QString & embeddedHashComment ) = 0;
     virtual void stringListArgumentEnd() = 0;
 
     virtual void commandStart( const QString & identifier ) = 0;
@@ -63,8 +63,12 @@ namespace KSieve {
     virtual void blockStart() = 0;
     virtual void blockEnd() = 0;
 
+    /** A hash comment always includes an implicit lineFeed() at it's end. */
     virtual void hashComment( const QString & comment ) = 0;
+    /** Bracket comments inclde explicit lineFeed()s in their content */
     virtual void bracketComment( const QString & comment ) = 0;
+
+    virtual void lineFeed() = 0;
 
     virtual void error( const Error & error ) = 0;
 

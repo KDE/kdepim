@@ -51,10 +51,10 @@ namespace KSieve {
   //
   //
 
-  Parser::Parser( const char * scursor, const char * const send )
+  Parser::Parser( const char * scursor, const char * const send, int options )
     : i( 0 )
   {
-    i = new Impl( scursor, send );
+    i = new Impl( scursor, send, options );
   }
 
   Parser::~Parser() {
@@ -83,32 +83,28 @@ namespace KSieve {
 
 }
 
-namespace {
-
-  inline unsigned long factorForQuantifier( char ch ) {
-    switch ( ch ) {
-    case 'g':
-    case 'G':
-      return 1024*1024*1024;
-    case 'm':
-    case 'M':
-      return 1024*1024;
-    case 'k':
-    case 'K':
-      return 1024;
-    default:
-      assert( 0 ); // lexer should prohibit this
-      return 1; // make compiler happy
-    }
+static inline unsigned long factorForQuantifier( char ch ) {
+  switch ( ch ) {
+  case 'g':
+  case 'G':
+    return 1024*1024*1024;
+  case 'm':
+  case 'M':
+    return 1024*1024;
+  case 'k':
+  case 'K':
+    return 1024;
+  default:
+    assert( 0 ); // lexer should prohibit this
+    return 1; // make compiler happy
   }
+}
 
-  inline bool willOverflowULong( unsigned long result, unsigned long add ) {
-    const unsigned long maxULongByTen =
-      (unsigned long)( double(ULONG_MAX) / 10.0 );
-    return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
-  }
-
-} // anon namespace
+static inline bool willOverflowULong( unsigned long result, unsigned long add ) {
+  static const unsigned long maxULongByTen =
+    (unsigned long)( double(ULONG_MAX) / 10.0 );
+  return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
+}
 
 namespace KSieve {
 
@@ -118,9 +114,9 @@ namespace KSieve {
   //
   //
 
-  Parser::Impl::Impl( const char * scursor, const char * const send )
+  Parser::Impl::Impl( const char * scursor, const char * const send, int options )
     : mToken( Lexer::None ),
-      lexer( scursor, send, Lexer::IncludeComments ),
+      lexer( scursor, send, options ),
       mBuilder( 0 )
   {
 
@@ -144,16 +140,28 @@ namespace KSieve {
       mToken = lexer.nextToken( mTokenValue );
       if ( lexer.error() )
 	break;
-      // comments are semantically invisible and may appear anywhere,
-      // so we handle them here centrally:
-      if ( token() == Lexer::HashComment ) {
+      // comments and line feeds are semantically invisible and may
+      // appear anywhere, so we handle them here centrally:
+      switch ( token() ) {
+      case Lexer::HashComment:
 	if ( scriptBuilder() )
 	  scriptBuilder()->hashComment( tokenValue() );
 	consumeToken();
-      } else if ( token() == Lexer::BracketComment ) {
+	break;
+      case Lexer::BracketComment:
 	if ( scriptBuilder() )
 	  scriptBuilder()->bracketComment( tokenValue() );
 	consumeToken();
+	break;
+      case Lexer::LineFeeds:
+	for ( unsigned int i = tokenValue().toUInt() ; i > 0 ; --i )
+	  if ( scriptBuilder() ) // better check every iteration, b/c
+				 // we call out to ScriptBuilder,
+				 // where nasty things might happen!
+	    scriptBuilder()->lineFeed();
+	consumeToken();
+	break;
+      default: ; // make compiler happy
       }
     }
     if ( lexer.error() && scriptBuilder() )
@@ -325,7 +333,7 @@ namespace KSieve {
       return true;
     } else if ( isStringToken() ) {
       if ( scriptBuilder() )
-	scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString );
+	scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString, QString::null );
       consumeToken();
       return true;
     } else if ( token() == Lexer::Special && tokenValue() == "[" ) {
@@ -583,7 +591,7 @@ namespace KSieve {
 	}
 	lastWasComma = false;
 	if ( scriptBuilder() )
-	  scriptBuilder()->stringListEntry( tokenValue(), token() == Lexer::MultiLineString );
+	  scriptBuilder()->stringListEntry( tokenValue(), token() == Lexer::MultiLineString, QString::null );
 	consumeToken();
 	break;
 

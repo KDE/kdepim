@@ -390,7 +390,7 @@ public:
   void taggedArgument( const QString & tag ) {
     write( "tag", tag );
   }
-  void stringArgument( const QString & string, bool multiLine ) {
+  void stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ ) {
     write( multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string );
   }
   void numberArgument( unsigned long number, char quantifier ) {
@@ -439,14 +439,18 @@ public:
     --indent;
     write( "</stringlist>" );
   }
-  void stringListEntry( const QString & string, bool multiline ) {
-    stringArgument( string, multiline );
+  void stringListEntry( const QString & string, bool multiline, const QString & hashComment ) {
+    stringArgument( string, multiline, hashComment );
   }
   void hashComment( const QString & comment ) {
     write( "comment type=\"hash\"", comment );
   }
   void bracketComment( const QString & comment ) {
     write( "comment type=\"bracket\"", comment );
+  }
+
+  void lineFeed() {
+    write( "<crlf/>" );
   }
 
   void error( const KSieve::Error & error ) {
@@ -497,7 +501,7 @@ public:
     checkEquals( tag );
     ++mNextResponse;
   }
-  void stringArgument( const QString & string, bool multiline ) {
+  void stringArgument( const QString & string, bool multiline, const QString & /*fixme*/ ) {
     checkIs( StringArgument );
     checkEquals( string );
     checkEquals( multiline );
@@ -546,7 +550,7 @@ public:
     checkIs( StringListArgumentStart );
     ++mNextResponse;
   }
-  void stringListEntry( const QString & string, bool multiLine ) {
+  void stringListEntry( const QString & string, bool multiLine, const QString & /*fixme*/ ) {
     checkIs( StringListEntry );
     checkEquals( string );
     checkEquals( multiLine );
@@ -565,6 +569,9 @@ public:
     checkIs( BracketComment );
     checkEquals( comment );
     ++mNextResponse;
+  }
+  void lineFeed() {
+    // FIXME
   }
   void error( const KSieve::Error & error ) {
     checkIs( Error );

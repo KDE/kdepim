@@ -184,7 +184,8 @@ namespace KSieve {
   Lexer::Impl::Impl( const char * scursor, const char * send, int options )
     : mState( scursor ? scursor : send ),
       mEnd( send ? send : scursor ),
-      mIgnoreComments( options & IgnoreComments )
+      mIgnoreComments( options & IgnoreComments ),
+      mIgnoreLF( options & IgnoreLineFeeds )
   {
     if ( !scursor || !send )
       assert( atEnd() );
@@ -195,14 +196,18 @@ namespace KSieve {
     result = QString::null;
     //clearErrors();
 
-    if ( ignoreComments() ) {
-      if ( !eatCWS() )
-	return None;
-    } else {
-      if ( !eatWS() )
-	return None;
+    const int oldLine = line();
+
+    const bool eatingWSSucceeded = ignoreComments() ? eatCWS() : eatWS() ;
+
+    if ( !ignoreLineFeeds() && oldLine != line() ) {
+      result.setNum( line() - oldLine ); // return number of linefeeds encountered
+      return LineFeeds;
     }
-	
+
+    if ( !eatingWSSucceeded )
+      return None;
+
     if ( atEnd() )
       return None;
 
@@ -347,7 +352,7 @@ namespace KSieve {
     if ( commentEnd == commentStart ) return true; // # was last char in script...
 
     if ( atEnd() || eatCRLF() ) {
-      int commentLength = commentEnd - commentStart + 1;
+      const int commentLength = commentEnd - commentStart + 1;
       if ( commentLength > 0 ) {
 	if ( !isValidUtf8( commentStart, commentLength ) ) {
 	  makeError( Error::InvalidUTF8 );

@@ -43,7 +43,9 @@ namespace KSieve {
   public:
     enum Options {
       IncludeComments = 0,
-      IgnoreComments = 1
+      IgnoreComments = 1,
+      IncludeLineFeeds = 0,
+      IgnoreLineFeeds = 2,
     };
 
     Lexer( const char * scursor, const char * send, int options=0 );
@@ -52,11 +54,19 @@ namespace KSieve {
     /** Return whether comments are returned by @ref
 	nextToken. Default is to not ignore comments. Ignoring them
 	can speed up script parsing a bit, and can be used when the
-	internal representation of the scipt won't be serialized into
+	internal representation of the script won't be serialized into
 	string form again (or if you simply want to delete all
 	comments)
     **/
     bool ignoreComments() const;
+
+    /** Return whether line feeds are returned by @ref
+	nextToken. Default is to not ignore line feeds. Ignoring them
+	can speed up script parsing a bit, and can be used when the
+	internal representation of the script won't be serialized into
+	string form again.
+    **/
+    bool ignoreLineFeeds() const;
 
     const Error & error() const;
 
@@ -73,7 +83,8 @@ namespace KSieve {
       QuotedString,    // "foo\"bar" -> foo"bar
       MultiLineString, // text: \nfoo\n. -> foo
       HashComment,     // # foo
-      BracketComment   // /* foo */
+      BracketComment,  // /* foo */
+      LineFeeds        // the number of line feeds encountered
     };
 
     /** Parse the next token and return it's type. @p result will contain

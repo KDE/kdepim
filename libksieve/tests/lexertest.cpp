@@ -56,6 +56,7 @@ static const char * token2string( Lexer::Token t ) {
     CASE( MultiLineString );
     CASE( QuotedString );
     CASE( Special );
+    CASE( LineFeeds );
   }
   return "";
 #undef CASE
@@ -88,7 +89,7 @@ static const TestCase testcases[] = {
   },
 
   { "Whitespace-only script", " \t\n\t \n",
-    { { Lexer::None, 0 } },
+    { { Lexer::LineFeeds, "2" }, { Lexer::None, 0 } },
     Error::None, 0, 0
   },
 
@@ -103,7 +104,7 @@ static const TestCase testcases[] = {
   },
 
   { "CRLF alone", "\r\n",
-    { { Lexer::None, 0 } },
+    { { Lexer::LineFeeds, "1" }, { Lexer::None, 0 } },
     Error::None, 0, 0
   },
 
@@ -363,11 +364,20 @@ static const TestCase testcases[] = {
   { "Invalid UTF-8 in quoted string", "\"foo\xC0\xA0" "foo\"",
     { { Lexer::QuotedString, "foo" } },
     Error::InvalidUTF8, 0, 4
-  }
+  },
 
   //
   // Whitespace / token separation: valid
   //
+
+  { "Two identifiers with linebreaks", "foo\nbar\n",
+    { { Lexer::Identifier, "foo" },
+      { Lexer::LineFeeds, "1" },
+      { Lexer::Identifier, "bar" },
+      { Lexer::LineFeeds, "1" },
+      { Lexer::None, 0 } },
+    Error::None, 0, 0
+  },
 
   //
   // Whitespace / token separation: invalid

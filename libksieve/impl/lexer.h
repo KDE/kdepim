@@ -51,6 +51,10 @@ namespace KSieve {
       return mIgnoreComments;
     }
 
+    bool ignoreLineFeeds() const {
+      return mIgnoreLF;
+    }
+
     const Error & error() const {
       return mState.error;
     }
@@ -123,7 +127,8 @@ namespace KSieve {
     } mState;
 
     const char * const mEnd;
-    const bool mIgnoreComments;
+    const bool mIgnoreComments : 1;
+    const bool mIgnoreLF : 1;
     QValueStack<State> mStateStack;
 
     const char * beginOfLine() const { return mState.beginOfLine; }
