@@ -480,8 +480,7 @@ void PilotDaemon::showTray()
 	}
 }
 
-/* DCOP */ QString
-	PilotDaemon::statusString()
+/* DCOP */ QString PilotDaemon::statusString()
 {
 	FUNCTIONSETUP;
 
@@ -510,7 +509,7 @@ void PilotDaemon::showTray()
 	}
 
 	s.append(" NextSync=");
-	s.append(QString::number(fNextSyncType));
+	s.append(syncTypeString(fNextSyncType));
 
 	s.append(" (");
 	if (fPilotLink)
@@ -899,6 +898,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.48  2001/09/29 16:23:31  adridg
+// Layout + icons changed
+//
 // Revision 1.47  2001/09/24 22:24:06  adridg
 // Use new SyncActions
 //
