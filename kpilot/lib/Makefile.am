@@ -18,7 +18,7 @@ INCLUDES = $(all_includes) $(PISOCK_INCLUDE)
 lib_LTLIBRARIES = libkpilot.la
 
 libkpilot_la_SOURCES = kpilotlibSettings.kcfgc options.cc uiDialog.cc plugin.cc syncAction.cc \
-	kpilotlink.cc \
+	kpilotlink.cc recordConduit.cc \
 	pilotRecord.cc pilotDatabase.cc \
 	pilotLocalDatabase.cc pilotSerialDatabase.cc \
 	pilotMemo.cc pilotAddress.cc \
@@ -28,7 +28,7 @@ libkpilot_la_LDFLAGS = $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
 libkpilot_la_LIBADD = $(PISOCK_LIB)
 
 kpilotincludedir = $(includedir)/kpilot
-kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \
+kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h recordConduit.h \
 	pilotRecord.h pilotDatabase.h \
 	pilotLocalDatabase.h pilotSerialDatabase.h
 
