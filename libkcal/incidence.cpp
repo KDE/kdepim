@@ -33,7 +33,6 @@ Incidence::Incidence() :
   mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3)
 {
   mRecurrence = new Recurrence(this);
-  mLocation = ""; // avoid failures in comparison
 
   recreate();
 
@@ -85,28 +84,39 @@ Incidence::~Incidence()
   delete mRecurrence;
 }
 
+// A string comparison that considers that null and empty are the same
+static bool stringCompare( const QString& s1, const QString& s2 )
+{
+    if ( s1.isEmpty() && s2.isEmpty() )
+        return true;
+    return s1 == s2;
+}
 
 bool KCal::operator==( const Incidence& i1, const Incidence& i2 )
 {
     if( i1.alarms().count() != i2.alarms().count() ) {
         return false; // no need to check further
     }
-    
-    for( Alarm* a1 = i1.alarms().first(), *a2 = i2.alarms().first();
-         a1; a1 = i1.alarms().next(), a2 = i2.alarms().next() )
-        if( *a1 == *a2 ) {
+
+    QPtrListIterator<Alarm> a1( i1.alarms() );
+    QPtrListIterator<Alarm> a2( i2.alarms() );
+    for( ; a1.current() && a2.current(); ++a1, ++a2 )
+        if( *a1.current() == *a2.current() )
             continue;
-        } else {
+        else {
             return false;
         }
 
-    return operator==( (const IncidenceBase&)i1, (const IncidenceBase&)i2 ) &&
+    if ( ! operator==( (const IncidenceBase&)i1, (const IncidenceBase&)i2 ) )
+        return false;
+
+    return
         i1.created() == i2.created() &&
-        i1.description() == i2.description() &&
-        i1.summary() == i2.summary() &&
+        stringCompare( i1.description(), i2.description() ) &&
+        stringCompare( i1.summary(), i2.summary() ) &&
         i1.categories() == i2.categories() &&
         // no need to compare mRelatedTo
-        i1.relatedToUid() == i2.relatedToUid() &&
+        stringCompare( i1.relatedToUid(), i2.relatedToUid() ) &&
         i1.relations() == i2.relations() &&
         i1.exDates() == i2.exDates() &&
         i1.attachments() == i2.attachments() &&
@@ -114,7 +124,7 @@ bool KCal::operator==( const Incidence& i1, const Incidence& i2 )
         i1.secrecy() == i2.secrecy() &&
         i1.priority() == i2.priority() &&
         *i1.recurrence() == *i2.recurrence() &&
-        i1.location() == i2.location();
+        stringCompare( i1.location(), i2.location() );
 }
 
 
@@ -150,7 +160,7 @@ void Incidence::setRevision(int rev)
 {
   if (mReadOnly) return;
   mRevision = rev;
-  
+
   updated();
 }
 
@@ -350,7 +360,7 @@ QPtrList<Attachment> Incidence::attachments(const QString& mime) const
       attachments.append(at);
     ++it;
   }
- 
+
   return attachments;
 }
 
