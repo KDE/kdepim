@@ -80,11 +80,10 @@ KMobileGnokii::KMobileGnokii(QObject *obj, const char *name, const QStringList &
 	: KMobileDevice(obj, name, args)
 {
   // set initial device info
-  m_deviceClassName = i18n("Gnokii Device");
+  setClassType( Phone );
   m_deviceName = i18n("Mobile Phone accessed via GNOKII");
   m_deviceRevision = "";
   m_connectionName = "/dev/ircomm0";
-  setClassType( Organizer );
   setCapabilities( hasAddressBook | hasNotes );
 
   m_numAddresses = -1;

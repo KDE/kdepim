@@ -50,10 +50,9 @@ KMobileSkeleton::KMobileSkeleton(QObject *obj, const char *name, const QStringLi
 	: KMobileDevice(obj, name, args)
 {
   // set initial device info
-  m_deviceClassName = i18n("Skeleton Device");
+  setClassType( Phone );
   m_deviceName = i18n("LX-50-Moohoo Addressbook (Skeleton)");
   m_deviceRevision = "0.1";
-  setClassType( Organizer );
   setCapabilities( hasAddressBook | hasNotes );
 }
 
