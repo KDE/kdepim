@@ -1261,7 +1261,7 @@ void imapParser::parseBody (parseString & inWords)
       // << QCString(label.data(), label.size()+1) << endl;
       if (qstrncmp(label, "REFERENCES", label.size()) == 0)
       {
-       mailHeader *envelope = NULL;
+       mailHeader *envelope = 0;
        if (lastHandled)
          envelope = lastHandled->getHeader ();
 
@@ -1292,7 +1292,7 @@ void imapParser::parseBody (parseString & inWords)
       if (spec.find(".MIME") != -1)
       {
         mailHeader *envelope = new mailHeader;
-        QString theHeader = parseLiteralC(inWords, true);
+        QString theHeader = parseLiteralC(inWords, false);
         mimeIOQString myIO;
         myIO.setString (theHeader);
         envelope->parseHeader (myIO);
