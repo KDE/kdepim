@@ -44,9 +44,11 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
+#include <kapplication.h>
 
 #include <qurl.h>
-#include <qapplication.h>
+#include <qfile.h>
 
 using namespace KCal;
 
@@ -261,8 +263,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       // First make the text of the message
       QString html;
 
-      html += "<b>This iCalendar attachement was formatted by the new "
-              "bodypartformatter plugin.</b><br>";
+      html += "<em>Hint for kdepim developers: This iCalendar attachement was "
+              "formatted by the new bodypartformatter plugin.</em><br>";
 
       if( sMethod == "request" ) {
         // FIXME: All these "if (event) ... else ..." constructions are ugly.
@@ -346,6 +348,12 @@ class Formatter : public KMail::Interface::BodyPartFormatter
                 .arg( sMethod );        
       }
 
+      html += "<br>";
+      html += "<a href=\"" + bodyPart->makeLink( "accept" ) + "\"><b>";
+      html += i18n("[Enter this into my calendar]");
+      html += "</b></a>";
+
+#if 0
       // Add the groupware URLs
       html += "<br>&nbsp;<br>&nbsp;<br>";
       html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
@@ -353,30 +361,30 @@ class Formatter : public KMail::Interface::BodyPartFormatter
           sMethod == "publish" ) {
         // Accept
         html += "<a href=\"" +
-                bodyPart->makeLink( "groupware_request_accept" ) + "\"><b>";
+                bodyPart->makeLink( "accept" ) + "\"><b>";
         html += i18n( "[Accept]" );
         html += "</b></a></td><td> &nbsp; </td><td>";
         // Accept conditionally
         html += "<a href=\"" +
-                bodyPart->makeLink( "groupware_request_accept conditionally" ) +
+                bodyPart->makeLink( "accept_conditionally" ) +
                 "\"><b>";
         html += i18n( "Accept conditionally", "[Accept cond.]" );
         html += "</b></a></td><td> &nbsp; </td><td>";
         // Decline
         html += "<a href=\"" +
-                bodyPart->makeLink( "groupware_request_decline" ) + "\"><b>";
+                bodyPart->makeLink( "decline" ) + "\"><b>";
         html += i18n( "[Decline]" );
         if( event ) {
           // Check my calendar...
           html += "</b></a></td><td> &nbsp; </td><td>";
           html += "<a href=\"" +
-                  bodyPart->makeLink( "groupware_request_check" ) + "\"><b>";
+                  bodyPart->makeLink( "check_calendar" ) + "\"><b>";
           html += i18n("[Check my calendar...]" );
         }
       } else if( sMethod == "reply" ) {
         // Enter this into my calendar
         html += "<a href=\"" +
-                bodyPart->makeLink( "groupware_reply" ) + "\"><b>";
+                bodyPart->makeLink( "reply" ) + "\"><b>";
         if( event )
           html += i18n( "[Enter this into my calendar]" );
         else
@@ -384,13 +392,15 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       } else if( sMethod == "cancel" ) {
         // Cancel event from my calendar
         html += "<a href=\"" +
-                bodyPart->makeLink( "groupware_cancel" ) + "\"><b>";
+                bodyPart->makeLink( "cancel" ) + "\"><b>";
         html += i18n( "[Remove this from my calendar]" );
       }
       html += "</b></a></td></tr></table>";
+#endif
 
       QString sDescr = incidence->description();
-      if( ( sMethod == "request" || sMethod == "cancel" ) && !sDescr.isEmpty() ) {
+      if( ( sMethod == "request" || sMethod == "cancel" ) &&
+          !sDescr.isEmpty() ) {
         string2HTML( sDescr );
         html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
           + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
@@ -416,26 +426,40 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path ) const
     {
-      KMessageBox::information( 0, i18n("URI clicked: %1").arg( path ),
-                                i18n("iCalendar URL Handler") );
+      if ( path == "accept" ) {
+        QString location = locateLocal( "data", "korganizer/income/", true );
+        QString file = location + KApplication::randomString( 10 );
+        QFile f( file );
+        if ( !f.open( IO_WriteOnly ) ) {
+          KMessageBox::error( 0, i18n("Could not open file for writing:\n%1")
+		                 .arg( file ) );
+        } else {
+          QByteArray msgArray = part->asText().utf8();
+          f.writeBlock( msgArray, msgArray.size() );
+          f.close();
+        }
+      } else {
+        return false;
+      }
+
       return true;
     }
 
-    bool handleContextMenuRequest( KMail::Interface::BodyPart *part,
-                                   const QString &path,
-                                   const QPoint &p ) const
+    bool handleContextMenuRequest( KMail::Interface::BodyPart *,
+                                   const QString &,
+                                   const QPoint & ) const
     {
       return false;
     }
 
-    QString statusBarMessage( KMail::Interface::BodyPart *part,
+    QString statusBarMessage( KMail::Interface::BodyPart *,
                               const QString &path ) const
     {
       if ( !path.isEmpty() ) {
-        return "statusBarMessage: path=" + path;
-      } else {
-        return QString::null;
+        if ( path == "accept" ) return i18n("Accept Incidence");
       }
+
+      return QString::null;
     }
 };
 
