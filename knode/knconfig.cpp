@@ -575,7 +575,7 @@ KNDisplayedHeader* KNConfig::DisplayedHeaders::createNewHeader()
 void KNConfig::DisplayedHeaders::remove(KNDisplayedHeader *h)
 {
   if (!h_drList.remove(h))
-    kdDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list !!" << endl;
+    kdDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list!" << endl;
 
 }
 

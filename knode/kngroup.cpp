@@ -768,7 +768,7 @@ void KNGroup::updateThreadInfo()
   }
 
   if(brokenThread) {
-    kdWarning(5003) << "KNGroup::updateThreadInfo() : Found broken threading infos !! Restoring ..." << endl;
+    kdWarning(5003) << "KNGroup::updateThreadInfo() : Found broken threading infos! Restoring ..." << endl;
     resort();
     updateThreadInfo();
   }

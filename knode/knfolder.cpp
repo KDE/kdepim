@@ -117,13 +117,13 @@ bool KNFolder::loadHdrs()
   }
 
   if(!i_ndexFile.open(IO_ReadOnly)) {
-    kdError(5003) << "KNFolder::loadHdrs() : cannot open index-file !!" << endl;
+    kdError(5003) << "KNFolder::loadHdrs() : cannot open index-file!" << endl;
     closeFiles();
     return false;
   }
 
   if(!m_boxFile.open(IO_ReadOnly)) {
-    kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file !!" << endl;
+    kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
   }
@@ -174,7 +174,7 @@ bool KNFolder::loadHdrs()
 
     //read overview
     if(!m_boxFile.at(art->startOffset())) {
-      kdError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer !!" << endl;
+      kdError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer!" << endl;
       closeFiles();
       clearList();
       return false;
@@ -187,7 +187,7 @@ bool KNFolder::loadHdrs()
         continue;
       }
       else {
-        kdError(5003) << "KNFolder::loadHdrs() : corrupted mbox-file, IO-error !!"<< endl;
+        kdError(5003) << "KNFolder::loadHdrs() : corrupted mbox-file, IO-error!"<< endl;
         closeFiles();
         clearList();
         return false;
@@ -206,7 +206,7 @@ bool KNFolder::loadHdrs()
     art->to()->from7BitString(tmp.mid(pos1,pos2-pos1));
 
     if(!append(art)) {
-      kdError(5003) << "KNFolder::loadHdrs() : cannot append article !!"<< endl;
+      kdError(5003) << "KNFolder::loadHdrs() : cannot append article!"<< endl;
       delete art;
       clearList();
       closeFiles();
@@ -239,7 +239,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
 
   //set file-pointer
   if(!m_boxFile.at(a->startOffset())) {
-    kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot set mbox file-pointer !!" << endl;
+    kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot set mbox file-pointer!" << endl;
     closeFiles();
     return false;
   }
@@ -271,7 +271,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
     return false;
 
   if(!m_boxFile.open(IO_WriteOnly | IO_Append)) {
-    kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file !!" << endl;
+    kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
   }
@@ -297,7 +297,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
         oldFolder->removeArticles(&l, false);
       }
       if(!append(a)) {
-        kdError(5003) << "KNFolder::saveArticle(KNLocalArticle::List *l) : cannot append article !!" << endl;
+        kdError(5003) << "KNFolder::saveArticle(KNLocalArticle::List *l) : cannot append article!" << endl;
         ret=false;
         continue;
         a->setCollection(0);
@@ -341,7 +341,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
     }
     else {
-      kdError(5003) << "KNFolder::saveArticle() : article not in folder !!" << endl;
+      kdError(5003) << "KNFolder::saveArticle() : article not in folder!" << endl;
       ret=false;
     }
   }
@@ -418,7 +418,7 @@ void KNFolder::syncIndex(bool force)
     return;
 
   if(!i_ndexFile.open(IO_WriteOnly)) {
-    kdError(5003) << "KNFolder::syncIndex(bool force) : cannot open index-file !!" << endl;
+    kdError(5003) << "KNFolder::syncIndex(bool force) : cannot open index-file!" << endl;
     closeFiles();
     return;
   }

@@ -530,7 +530,7 @@ void KNArticleWidget::setArticle(KNArticle *a)
     	  KNLocalArticle *la=static_cast<KNLocalArticle*>(a_rticle);
     	  KNFolder *f=static_cast<KNFolder*>(a_rticle->collection());
     	  if(!f || !f->loadArticle(la))
-    	    showErrorMessage(i18n("Cannot load the article from the mbox-file !!"));
+    	    showErrorMessage(i18n("Cannot load the article from the mbox-file!"));
     	  else
     	    createHtmlPage();
     	}
@@ -658,7 +658,7 @@ void KNArticleWidget::createHtmlPage()
 	  if(!text->canDecode8BitText()) {
   	  html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
         .arg(i18n("Unknown charset! Default charset is used instead."));
-		  kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available !!" << endl;
+		  kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
 	    setFont(app->articleFont());
 	  }
 	  else {
@@ -697,10 +697,7 @@ void KNArticleWidget::createHtmlPage()
 
   //Partial message
   if(ct->isPartial()) {
-
-    html+=i18n("<br><bodyblock><b>This article has the Mime-Type &quot;message/partial&quot;, \
-             which KNode cannot handle yet.<br>Meanwhile you can save the \
-             article as a text-file and reassemble it by hand.</b></bodyblock></qt>");
+    html+=i18n("<br><bodyblock><b>This article has the Mime-Type &quot;message/partial&quot;,\nwhich KNode cannot handle yet.<br>Meanwhile you can save the\narticle as a text-file and reassemble it by hand.</b></bodyblock></qt>");
     setText(html);
     h_tmlDone=true;
 

@@ -1724,7 +1724,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  w_ordWrapCB=new QCheckBox(i18n("Word &warp at column:"), generalB);
+  w_ordWrapCB=new QCheckBox(i18n("Word &wrap at column:"), generalB);
   generalL->addWidget(w_ordWrapCB,1,0);
   m_axLen=new KIntSpinBox(20, 200, 1, 20, 10, generalB);
   generalL->addWidget(m_axLen,1,2);
