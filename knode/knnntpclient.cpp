@@ -335,7 +335,7 @@ void KNNntpClient::doFetchNewHeaders()
   target->setLastFetchCount(0);
 
   sendSignal(TSdownloadNew);
-  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2!\nThe following error ocurred:\n")
+  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2!\nThe following error occurred:\n")
               .arg(account.server()).arg(target->groupname());
 
   cmd="GROUP ";
@@ -468,7 +468,7 @@ void KNNntpClient::doFetchArticle()
     if ((code == 430) || (code == 423))  // 430 no such article found || 423 no such article number in this group
       job->setErrorString(
              errorPrefix + getCurrentLine() +
-             i18n("<br><br>The article you requested isn't available on your newsserver.<br>You can try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
+             i18n("<br><br>The article you requested isn't available on your news server.<br>You can try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
                   .arg(target->messageID()->as7BitString(false)));
     return;
   }
@@ -558,7 +558,7 @@ bool KNNntpClient::openConnection()
   currentGroup = QString::null;
 
   QString oldPrefix = errorPrefix;
-  errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
+  errorPrefix=i18n("Unable to connect.\nThe following error occurred:\n");
 
   if (!KNProtocolClient::openConnection())
     return false;

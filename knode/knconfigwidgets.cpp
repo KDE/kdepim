@@ -1008,7 +1008,7 @@ KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation 
   topL->addWidget(gb);
 
   gbL->addSpacing(fontMetrics().lineSpacing()-4);
-  e_muKMailCB=new QCheckBox(i18n("Emulate the &keyboard behaviour of KMail"), gb);
+  e_muKMailCB=new QCheckBox(i18n("Emulate the &keyboard behavior of KMail"), gb);
   gbL->addWidget(e_muKMailCB);
 
   // ==== Mark All as Read ====================================================
@@ -2059,7 +2059,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);
   replyL->addMultiCellWidget(r_ewrapCB, 4,4,0,1);
 
-  a_uthSigCB=new QCheckBox(i18n("Include the a&uthors signature"), replyB);
+  a_uthSigCB=new QCheckBox(i18n("Include the a&uthor's signature"), replyB);
   replyL->addMultiCellWidget(a_uthSigCB, 5,5,0,1);
 
   c_ursorOnTopCB=new QCheckBox(i18n("Put the cursor &below the introduction phrase"), replyB);

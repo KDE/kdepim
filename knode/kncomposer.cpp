@@ -187,7 +187,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Re&move Box"), 0, v_iew->e_dit,
               SLOT(slotRemoveBox()), actionCollection(), "tools_unbox");
 
-  KAction *undoRewrap = new KAction(i18n("Get &Original Text (not rewraped)"), 0, this,
+  KAction *undoRewrap = new KAction(i18n("Get &Original Text (not re-wrapped)"), 0, this,
                                     SLOT(slotUndoRewrap()), actionCollection(), "tools_undoRewrap");
   undoRewrap->setEnabled(u_nwraped!=QString::null);
 

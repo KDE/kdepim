@@ -277,7 +277,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   bool incAtt = ( !knGlobals.cfgManager->postNewsTechnical()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
-                  i18n("This article contains attachments. Do you want them to be forwarded too?"))
+                  i18n("This article contains attachments. Do you want them to be forwarded aswell?"))
                 );
 
   if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset())

@@ -464,7 +464,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
   if(!g) return false;
 
   if((g->isLocked()) || (g->lockedArticles()>0)) {
-    KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe it at the moment.")).arg(g->groupname()));
+    KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe from it at the moment.")).arg(g->groupname()));
     return false;
   }
 

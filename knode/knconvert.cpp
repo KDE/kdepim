@@ -132,7 +132,7 @@ void KNConvert::convert()
 
   if(errors>0)
     r_esultLabel->setText(i18n(
-"<b>Some errors occured during the conversion!</b>\
+"<b>Some errors occurred during the conversion.</b>\
 <br>You should now examine the log to find out what went wrong."));
   else
     r_esultLabel->setText(i18n(

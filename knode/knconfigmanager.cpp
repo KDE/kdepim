@@ -125,7 +125,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Accounts / News
   list.clear();
   list << QString(" ")+i18n("Accounts") << i18n(" News");
-  frame = addHBoxPage(list, i18n("Newsgroups Servers"), UserIcon("group_big"));
+  frame = addHBoxPage(list, i18n("Newsgroup Servers"), UserIcon("group_big"));
   w_idgets.append(new  KNConfig::NntpAccountListWidget(frame));
 
   // Accounts / Mail
@@ -171,7 +171,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Read News / Viewer
   list.clear();
   list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Viewer");
-  frame = addHBoxPage(list, i18n("Customize article viewer behaviour"), BarIcon("contents"));
+  frame = addHBoxPage(list, i18n("Customize article viewer behavior"), BarIcon("contents"));
   w_idgets.append(new KNConfig::ReadNewsViewerWidget(m->readNewsViewer(), frame));
 
   // Post News / Technical
@@ -183,7 +183,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Post News / Composer
   list.clear();
   list << QString(" ")+i18n("Posting News") << QString(" ")+i18n("Composer");
-  frame = addHBoxPage(list, i18n("Customize composer behaviour"), BarIcon("signature"));
+  frame = addHBoxPage(list, i18n("Customize composer behavior"), BarIcon("signature"));
   w_idgets.append(new KNConfig::PostNewsComposerWidget(m->postNewsComposer(), frame));
 
   // Post News / Spelling

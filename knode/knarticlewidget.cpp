@@ -933,7 +933,7 @@ void KNArticleWidget::processJob(KNJobData *j)
     if(!j->canceled()) {
       QString html;
       if (!j->success())
-        html= i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+j->errorString();
+        html= i18n("<b><font size=+1 color=red>An error occurred!</font></b><hr><br>")+j->errorString();
       else
         html= QString("%1<br>%2").arg(toHtmlString(a->head(),false,false)).arg(toHtmlString(a->body(),false,false));
 
@@ -1193,7 +1193,7 @@ void KNArticleWidget::createHtmlPage()
 
   //Partial message
   if(ct->isPartial()) {
-    html+=i18n("<br><bodyblock><b>This article has the Mime-Type &quot;message/partial&quot;, which KNode cannot handle yet.<br>Meanwhile you can save the article as a text-file and reassemble it by hand.</b></bodyblock></qt>");
+    html+=i18n("<br><bodyblock><b>This article has the MIME type &quot;message/partial&quot;, which KNode cannot handle yet.<br>Meanwhile you can save the article as a text file and reassemble it by hand.</b></bodyblock></qt>");
     setText(html);
     h_tmlDone=true;
 

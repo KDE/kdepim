@@ -192,7 +192,7 @@ bool KNProtocolClient::openConnection()
     } else if (ks.status() == IO_ConnectError) {
       job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
     } else if (ks.status() == IO_TimeOutError)
-      job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+      job->setErrorString(i18n("A delay occurred which exceeded the\ncurrent timeout limit."));
     else
       job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
 
@@ -421,7 +421,7 @@ bool KNProtocolClient::checkNextResponse(int code)
 void KNProtocolClient::handleErrors()
 {
   if (errorPrefix.isEmpty())
-    job->setErrorString(i18n("An error occured:\n%1").arg(thisLine));
+    job->setErrorString(i18n("An error occurred:\n%1").arg(thisLine));
   else
     job->setErrorString(errorPrefix + thisLine);
 
@@ -467,7 +467,7 @@ bool KNProtocolClient::waitForRead()
   }
   if (ret == 0) {      // Nothing happend, timeout
     if (job)
-      job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+      job->setErrorString(i18n("A delay occurred which exceeded the\ncurrent timeout limit."));
     closeConnection();
     return false;
   }
@@ -529,7 +529,7 @@ bool KNProtocolClient::waitForWrite()
   }
   if (ret == 0) {      // nothing happend, timeout
     if (job)
-      job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+      job->setErrorString(i18n("A delay occurred which exceeded the\ncurrent timeout limit."));
     closeConnection();
     return false;
   }
