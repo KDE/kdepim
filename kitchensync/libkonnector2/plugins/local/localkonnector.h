@@ -82,6 +82,10 @@ class LocalKonnector : public KSync::Konnector
     void setBookmarkFile( const QString &f ) { mBookmarkFile = f; }
     QString bookmarkFile() const { return mBookmarkFile; }
 
+  protected slots:
+    void loadingAddressBookFinished();
+    void checkLoaded();
+
   private:
     LocalKonnectorConfig *mConfigWidget;
     QString mCalendarFile;
@@ -91,6 +95,8 @@ class LocalKonnector : public KSync::Konnector
     KCal::CalendarLocal mCalendar;
     KABC::AddressBook mAddressBook;
     bool mUseStdAddressBook;
+    bool mAddressBookLoaded;
+    bool mCalendarLoaded;
     KABC::ResourceFile *mAddressBookResourceFile;
     
     KSync::AddressBookSyncee *mAddressBookSyncee;

@@ -23,6 +23,8 @@
 
 #include "localkonnectorconfig.h"
 
+#include <qtimer.h>
+
 #include <calendarsyncee.h>
 #include <addressbooksyncee.h>
 #include <bookmarksyncee.h>
@@ -49,7 +51,8 @@ extern "C"
 
 
 LocalKonnector::LocalKonnector( const KConfig *config )
-    : Konnector( config ), mConfigWidget( 0 ), mUseStdAddressBook( false )
+    : Konnector( config ), mConfigWidget( 0 ), mUseStdAddressBook( false ),
+      mAddressBookLoaded( false ), mCalendarLoaded( false )
 {
   if ( config ) {
     mCalendarFile = config->readPathEntry( "CalendarFile" );
@@ -58,9 +61,11 @@ LocalKonnector::LocalKonnector( const KConfig *config )
     mUseStdAddressBook = config->readBoolEntry( "UseStdAddressBook", false );
   }
 
-  if ( mUseStdAddressBook )
-    mAddressBookSyncee = new AddressBookSyncee( KABC::StdAddressBook::self() );
-  else
+  if ( mUseStdAddressBook ) {
+    mAddressBookSyncee = new AddressBookSyncee( KABC::StdAddressBook::self( true ) );
+    connect( KABC::StdAddressBook::self( true ), SIGNAL( addressBookChanged( AddressBook* ) ),
+             SLOT( loadingAddressBookFinished() ) );
+  } else
     mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
 
   mAddressBookSyncee->setSource( i18n( "Local" ) );
@@ -158,7 +163,9 @@ bool LocalKonnector::readSyncees()
 
   // TODO: Read Bookmarks
 
-  emit synceesRead( this );
+  mCalendarLoaded = true;
+
+  QTimer::singleShot( 1000, this, SLOT( checkLoaded() ) );
 
   return true;
 }
@@ -232,5 +239,26 @@ bool LocalKonnector::writeSyncees()
   return true;
 }
 
+void LocalKonnector::loadingAddressBookFinished()
+{
+  mAddressBookLoaded = true;
+
+  mAddressBookSyncee->reset();
+  
+  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
+  KABC::AddressBook::Iterator it;
+  for ( it = ab->begin(); it != ab->end(); ++it ) {
+    KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
+    mAddressBookSyncee->addEntry( &entry );
+  }
+}
+
+void LocalKonnector::checkLoaded()
+{
+  if ( mAddressBookLoaded && mCalendarLoaded )
+    emit synceesRead( this );
+  else
+    QTimer::singleShot( 1000, this, SLOT( checkLoaded() ) );
+}
 
 #include "localkonnector.moc"
