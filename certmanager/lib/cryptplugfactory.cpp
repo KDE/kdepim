@@ -108,12 +108,12 @@ void Kleo::CryptPlugFactory::scanForBackends() {
   } cryptPlugs[] = {
     { "S/MIME", "smime",
       I18N_NOOP("GpgSM not found. "
-		"S/MIME cryptographic backend has beed disabled."),
+		"S/MIME cryptographic backend has been disabled."),
       true
     },
     { "OpenPGP", "openpgp",
       I18N_NOOP("GnuPG not found. "
-		"OpenPGP/MIME cryptographic backend has beed disabled."),
+		"OpenPGP/MIME cryptographic backend has been disabled."),
       false
     }
   };
