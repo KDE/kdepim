@@ -183,25 +183,12 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     KCal::ICalFormat *form = new KCal::ICalFormat();
     if ( cap.isMetaSyncingEnabled() ) {
         // TEST to avoid a crash
-        KCal::CalendarLocal *cal2 = new KCal::CalendarLocal();
-        QPtrList<KCal::Event> events;
-        KCal::Event *eve1;
-        for ( eve1 = events.first(); eve1 != 0; eve1 = events.next() ) {
-            cal2->addEvent( (KCal::Event*) eve1->clone() );
-        }
-        QPtrList<KCal::Todo> todos;
-        QPtrListIterator<KCal::Todo> it1( todos );
-        for ( ; it.current(); ++it ) {
-            cal2->addTodo( (KCal::Todo*) (it.current()->clone()) );
-        }
-        //
         m_conf->setGroup( prof.name() );
         m_conf->writeEntry("time", time );
         QString metaPath = m_conf->readEntry("metaPath" );
-        cal2->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf");
+        calendar->calendar()->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf", form);
         kdDebug() << "Dumping Opie " << endl;
         kdDebug() << "Sync mode == " << entry2->syncMode() << " first sync = " << entry2->firstSync() << endl;
-        delete cal2;
     }
     KURL url(m_path );
     QString newPath;

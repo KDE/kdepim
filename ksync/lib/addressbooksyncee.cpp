@@ -56,8 +56,7 @@ AddressBookSyncee::~AddressBookSyncee()
 
 bool AddressBookSyncee::read()
 {
-  mAddressBook->addResource( new KABC::ResourceFile( mAddressBook,
-                                                     filename() ) );
+  ( void * ) new KABC::ResourceFile( mAddressBook, filename() );
   return mAddressBook->load();
 }
 

@@ -231,10 +231,10 @@ KAddressbookSyncEntry* AddressBookPart::meta()
                     found = false;
                     for ( itOld = bookMeta.begin(); itOld != bookMeta.end(); ++itOld ) {
                         if ( (*itOld).uid() == (*itNew).uid() ) {
-                            if ( date < (*itNew).revision() ) // modified broken use the one down
-                            /*                if ( (*itOld) == (*itNew) ) {
-                                ;
-                                }else*/
+                            //if ( date < (*itNew).revision() ) // modified broken use the one down
+                            if ( (*itOld) == (*itNew) ) {
+                                ; // FIXMER
+                    	    }else
                                 mod.append( (*itNew) );
                             found = true;
                             break;
