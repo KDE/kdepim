@@ -173,8 +173,9 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir(CSL1("kpilot"));
-	icon = SmallIcon(CSL1("hotsync"));
-	busyicon = SmallIcon(CSL1("busysync"));
+	icons[Normal] = SmallIcon(CSL1("hotsync"));
+	icons[Busy] = SmallIcon(CSL1("busysync"));
+	icons[NotListening] = SmallIcon(CSL1("nosync"));
 
 	slotShowBusy();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
@@ -217,29 +218,12 @@ void PilotDaemonTray::enableRunKPilot(bool b)
 void PilotDaemonTray::changeIcon(IconShape i)
 {
 	FUNCTIONSETUP;
-
-	switch (i)
+	if (icons[i].isNull())
 	{
-	case Normal:
-		if (icon.isNull())
-		{
-			kdWarning() << k_funcinfo
-				<< ": Regular icon is NULL!" << endl;
-		}
-		setPixmap(icon);
-		break;
-	case Busy:
-		if (busyicon.isNull())
-		{
-			kdWarning() << k_funcinfo
-				<< ": Busy icon is NULL!" << endl;
-		}
-		setPixmap(busyicon);
-		break;
-	default:
 		kdWarning() << k_funcinfo
-			<< ": Bad icon number " << (int) i << endl;
+			<< ": Icon #"<<i<<" is NULL!" << endl;
 	}
+	setPixmap(icons[i]);
 }
 
 void PilotDaemonTray::slotShowNormal()
@@ -252,6 +236,12 @@ void PilotDaemonTray::slotShowBusy()
 {
 	FUNCTIONSETUP;
 	changeIcon(Busy);
+}
+
+void PilotDaemonTray::slotShowNotListening()
+{
+	FUNCTIONSETUP;
+	changeIcon( NotListening );
 }
 
 
@@ -392,6 +382,7 @@ void PilotDaemon::showTray()
 	case HOTSYNC_END:
 	case ERROR:
 	case READY:
+	case NOT_LISTENING:
 		// It's OK to reload settings in these states.
 		break;
 	case HOTSYNC_START:
@@ -477,14 +468,18 @@ void PilotDaemon::showTray()
 
 /* DCOP */ void PilotDaemon::stopListening()
 {
-// TODO
 	fIsListening=false;
+	fTray->changeIcon(PilotDaemonTray::NotListening);
+	fDaemonStatus=NOT_LISTENING;
+	fPilotLink->close();
 }
 
 /* DCOP */ void PilotDaemon::startListening()
 {
-// TODO
 	fIsListening=true;
+	fTray->changeIcon(PilotDaemonTray::Normal);
+	fDaemonStatus=INIT;
+	fPilotLink->reset();
 }
 
 /* DCOP */ QString PilotDaemon::statusString()
@@ -492,28 +487,7 @@ void PilotDaemon::showTray()
 	FUNCTIONSETUP;
 
 	QString s = CSL1("PilotDaemon=");
-
-	switch (status())
-	{
-	case INIT:
-		s.append(CSL1("Initializing"));
-		break;
-	case READY:
-		s.append(CSL1("Found device"));
-		break;
-	case ERROR:
-		s.append(CSL1("Error"));
-		break;
-	case FILE_INSTALL_REQ:
-		s.append(CSL1("Installing File"));
-		break;
-	case HOTSYNC_END:
-		s.append(CSL1("End of Hotsync"));
-		break;
-	case HOTSYNC_START:
-		s.append(CSL1("Syncing"));
-		break;
-	}
+	s.append(shortStatusString());
 
 	s.append(CSL1(" NextSync="));
 	s.append(syncTypeString(fNextSyncType));
@@ -537,8 +511,10 @@ void PilotDaemon::showTray()
 	switch (status())
 	{
 	case INIT:
+		s.append(CSL1("Waiting for sync"));
+		break;
 	case READY:
-		s=CSL1("Waiting for sync");
+		s.append(CSL1("Listening on device"));
 		break;
 	case ERROR:
 		s=CSL1("Error");
@@ -551,6 +527,9 @@ void PilotDaemon::showTray()
 		break;
 	case HOTSYNC_START:
 		s=CSL1("Syncing");
+		break;
+	case NOT_LISTENING:
+		s.append(CSL1("Not Listening (stopped manually)"));
 		break;
 	}
 
@@ -605,6 +584,7 @@ bool PilotDaemon::setupPilotLink()
 	case INIT:
 	case HOTSYNC_END:
 	case ERROR:
+	case NOT_LISTENING:
 		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 		break;

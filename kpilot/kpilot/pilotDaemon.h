@@ -61,7 +61,7 @@ class PilotDaemonTray : public KSystemTray
 public:
 	PilotDaemonTray(PilotDaemon *p);
 
-	typedef enum { Normal,Busy } IconShape ;
+	typedef enum { Normal, Busy, NotListening } IconShape ;
 	void changeIcon(IconShape);
 
 	void enableRunKPilot(bool);
@@ -77,6 +77,7 @@ protected slots:
 	void slotShowAbout();
 	void slotShowBusy();
 	void slotShowNormal();
+	void slotShowNotListening();
 
 	// "Regular" QT actions
 	//
@@ -85,7 +86,7 @@ protected slots:
 	virtual void closeEvent(QCloseEvent *e);
 
 private:
-	QPixmap icon,busyicon;
+	QPixmap icons[3];
 	PilotDaemon *daemon;
 
 	/**
@@ -128,7 +129,8 @@ public:
 		FILE_INSTALL_REQ, // A file is being saved for installation
 		ERROR,
 		READY,            // Connected to device and ready for Sync
-		INIT
+		INIT,
+		NOT_LISTENING
 	};
 
 	DaemonStatus status() const { return fDaemonStatus; } ;
