@@ -33,7 +33,6 @@ Name[ta]=KAB ஓப்பெரா ஏற்றுமதி சொருகு�
 Name[tg]=Мубодилаи иттилоот бо Opera
 Name[tr]=KAB Opera XXPort Eklentisi
 Name[uk]=Name=Втулок KAB для обміну з Opera
-Name[xx]=xxKAB Opera XXPort Pluginxx
 Name[zh_CN]=KAB Opera XXPort 插件
 Comment=Plugin to import Opera contacts
 Comment[be]=Дапаўненьне для імпарту кантактаў Opera
@@ -71,7 +70,6 @@ Comment[ta]=ஓப்பெரா தொடர்புகளை இறக்க
 Comment[tg]=Модул барои воридоти алоқаи Opera
 Comment[tr]=Opera bağlantılarını alma eklentisi
 Comment[uk]=Втулок для імпорту контактів Opera
-Comment[xx]=xxPlugin to import Opera contactsxx
 Comment[zh_CN]=导入 Opera 联系人的插件
 Type=Service
 ServiceTypes=KAddressBook/XXPort

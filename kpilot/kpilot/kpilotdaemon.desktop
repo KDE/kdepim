@@ -29,7 +29,6 @@ Name[sv]=Kpilotdemon
 Name[ta]=கேபைலட் டெமன்
 Name[tg]=Демони KPilot
 Name[ven]=Daemon ya Mureili wa K
-Name[xx]=xxKPilotDaemonxx
 Name[zu]=KUmshayeli webhanoyi Daemon
 Exec=kpilotDaemon
 NoDisplay=true
