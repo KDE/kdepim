@@ -123,6 +123,15 @@ QStringList KNScoringManager::getGroups() const
 }
 
 
+QStringList KNScoringManager::getDefaultHeaders() const
+{
+  QStringList l = KScoringManager::getDefaultHeaders();
+  l << "Lines";
+  l << "Newsgroups";
+  return l;
+}
+
+
 void KNScoringManager::configure()
 {
   KScoringEditor *dlg = KScoringEditor::createEditor(this, knGlobals.topWidget);

@@ -67,6 +67,7 @@ public:
   KNScoringManager();
   virtual ~KNScoringManager();
   virtual QStringList getGroups() const;
+  virtual QStringList getDefaultHeaders() const;
 
   void configure();
   bool canColors() { return true; }
