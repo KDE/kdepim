@@ -13,7 +13,7 @@
 #include <kwin.h>
 
 #include "kaddressbookmain.h"
-#include "kaddressbook_part.h"
+#include "kabcore.h"
 
 extern "C" {
 
@@ -105,7 +105,7 @@ int main( int argc, char *argv[] )
 {
   KLocale::setMainCatalogue( "kaddressbook" );
 
-  KCmdLineArgs::init( argc, argv, KAddressbookPart::createAboutData() );
+  KCmdLineArgs::init( argc, argv, KABCore::createAboutData() );
   KCmdLineArgs::addCmdLineOptions( kmoptions );
   KUniqueApplication::addCmdLineOptions();
 

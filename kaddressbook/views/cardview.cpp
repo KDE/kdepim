@@ -1403,7 +1403,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
       int cw = columnWidth();
       int theCol = ( (( contentsX() + visibleWidth() )/cw) * cw ) + d->mItemSpacing + 1;
       // if separators are on, we may need to we may be one column further right if only the spacing/sep is hidden
-      if ( d->mDrawSeparators && cw - (( contentsX() + visibleWidth() )%cw) <= d->mItemSpacing + d->mSepWidth )
+      if ( d->mDrawSeparators && cw - (( contentsX() + visibleWidth() )%cw) <= int( d->mItemSpacing + d->mSepWidth ) )
         theCol += cw;
 
       // make sure this is not too far right

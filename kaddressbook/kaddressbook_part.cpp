@@ -23,7 +23,6 @@
 
 #include <qlayout.h>
 
-#include <kaboutdata.h>
 #include <kaction.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -43,7 +42,7 @@ K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory );
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetName,
                                     QObject *parent, const char *name,
                                     const QStringList & )
-  : KParts::ReadOnlyPart( parent, name ), DCOPObject( "KAddressBookIface" )
+  : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent, name )
 {
   kdDebug(5720) << "KAddressbookPart()" << endl;
   kdDebug(5720) << "  InstanceName: " << kapp->instanceName() << endl;
@@ -79,25 +78,7 @@ KAddressbookPart::~KAddressbookPart()
 
 KAboutData *KAddressbookPart::createAboutData()
 {
-  KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
-                                      "3.1", I18N_NOOP( "The KDE Address Book" ),
-                                      KAboutData::License_BSD,
-                                      I18N_NOOP( "(c) 1997-2003, The KDE PIM Team" ) );
-  about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
-  about->addAuthor( "Don Sanders", I18N_NOOP( "Original author" ) );
-  about->addAuthor( "Cornelius Schumacher",
-                    I18N_NOOP( "Co-maintainer, libkabc port, CSV import/export" ),
-                    "schumacher@kde.org" );
-  about->addAuthor( "Mike Pilone", I18N_NOOP( "GUI and framework redesign" ),
-                    "mpilone@slac.com" );
-  about->addAuthor( "Greg Stern", I18N_NOOP( "DCOP interface" ) );
-  about->addAuthor( "Mark Westcott", I18N_NOOP( "Contact pinning" ) );
-  about->addAuthor( "Mischel Boyer de la Giroday", I18N_NOOP( "LDAP Lookup" ),
-                    "michel@klaralvdalens-datakonsult.se" );
-  about->addAuthor( "Steffen Hansen", I18N_NOOP( "LDAP Lookup" ),
-                    "hansen@kde.org" );
-
-  return about;
+  return KABCore::createAboutData();
 }
 
 void KAddressbookPart::addEmail( QString addr )

@@ -33,6 +33,7 @@ namespace KABC {
 class AddressBook;
 }
 
+class KAboutData;
 class KAction;
 class KActionCollection;
 class KCMultiDialog;
@@ -102,6 +103,8 @@ class KABCore : public QWidget
       the user.
      */
     KABC::Resource *requestResource( QWidget *parent );
+
+    static KAboutData *createAboutData();
 
   public slots:
     /**

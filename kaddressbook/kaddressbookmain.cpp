@@ -32,7 +32,7 @@
 #include "kaddressbookmain.h"
 
 KAddressBookMain::KAddressBookMain()
-  : KMainWindow( 0 ), DCOPObject( "KAddressBookIface" )
+  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 ) 
 {
   setCaption( i18n( "Address Book Browser" ) );
 
