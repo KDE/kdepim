@@ -1,9 +1,8 @@
 KDE_CXXFLAGS=$(USE_RTTI)
-INCLUDES= -I$(top_srcdir)/empath/rmm/include $(all_includes)
 
-noinst_LIBRARIES = librmm.a
+lib_LTLIBRARIES = librmm.la
 
-librmm_a_SOURCES = \
+librmm_la_SOURCES = \
 RAddress.cpp \
 RAddressList.cpp \
 RBodyPart.cpp \
