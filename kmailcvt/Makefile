@@ -368,7 +368,7 @@ mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
-	-rm -rf .libs _libs
+	-rm -rf .libs _libs .deps
 
 distclean-libtool:
 
