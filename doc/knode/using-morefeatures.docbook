@@ -1,6 +1,3 @@
-<!-- <?xml version="1.0" ?>
-<!DOCTYPE sect1 PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd">
--->
 <sect1 id="more-knode-features">
 <title>The Advanced &knode; Features</title>
 
@@ -12,6 +9,13 @@ the configuration of &knode;. We were talking about the built-in
 filters provided by &knode; there. You can configure the built-in
 filters like all the others. The screenshot shows the Dialog Box for
 configuring the Filters.</para>
+
+<tip><para>While filters and scoring are very powerful and have many
+uses, one of the most common requirements is simply to add all posts
+written by someone you don't wish to read to a
+<quote>killfile</quote>.  At the <link linkend="killfiles">end of this
+section</link> is a quick guide to using filters and scores to create
+such a killfile.</para></tip>
 
 <screenshot>
 <screeninfo>The dialog <guilabel>New Filter</guilabel></screeninfo>
@@ -160,6 +164,70 @@ in menu</guilabel>.</para>
 containing <emphasis>knode</emphasis> in the subject.</para> 
 </step> 
 </procedure> 
+
+<sect3 id="killfiles">
+<title>Creating a Killfile</title>
+
+<para>&knode; offers viewing filters (<guilabel>all</guilable>,
+<guilabel>unread only</guilabel>, <guilabel>my posts</guilabel>,
+&etc;) and scoring filters (threads and articles start with a score of
+zero and can be adjusted according to author, thread, &etc;).</para>
+
+<para>Using viewing filters you could hide articles according to
+poster, but this is not really suitable when you want to kill several
+posters universally.</para>
+
+<para>Using the scoring gives lots of control but appears to filter
+only at the thread level: you can set watch and ignore (threads). Not
+good because you lose otherwise useful threads just because of one
+poster.</para>
+
+<para>Solution is to use these in combination.</para>
+
+<procedure>
+<title>Creating a Killfile</title>
+<step>
+<para>Go to
+<menuchioce><guimenu>Settings</guimenu><guimenuitem>Configure
+KNode</guimenuitem><guilabel>Reading
+News</guilabel><guilabel>Filters</guilabel>.</para>
+</step>
+
+<step>
+<para>Create a new filter below <guilabel>unread</guilabel>, called
+<userinput>killfile on</userinput>. Be sure that <guilabel>Apply to single
+articles</guilabel> is set and then click on the
+<guilabel>Additional</guilabel> tab. Set score <quote>equal to or less than
+zero</quote> (<guilabel><=</guilabel>); then click the
+<guibutton<OK</guibutton> until you have exited the dialog.</para>
+</step>
+
+<step>
+<para>Open an article whose author should be killed and just type
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>(or
+select from <guimenu>Scoring</guimenu> menu <guimenuitem>Lower Score
+for Author</guimenuitem>).  This opens the Rule Editor (a part of
+scoring). You can optionally give the rule a name that matches your
+author (<userinput>Kook</userinput>, for example.) and then if this is
+to be permanent, uncheck the <guilabel>expire automatically</guilabel>
+box. You'll see that this rule will change the author's score to minus
+ten (or as you wish). Save.</para>
+</step>
+
+<step>
+<para>Go to the menu item
+<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>killfile on.</guimenuitem></para>
+</step>
+</procedure>
+
+<para>This will cause any articles with scores less than zero will
+disappear. To kill additional authors you only need repeat the
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> part of
+these instructions.</para>
+
+</procedure>
+</sect3>
+
 </sect2> 
 
 <sect2 id="knode-editor-advanced"> 
@@ -508,7 +576,7 @@ honor supersede messages, nor do they pass them on.</para>
 
 </sect3> 
 </sect2> 
-
+§
 <sect2 id="score-watch-ignore"> 
 <title>Score, watch, ignore</title>
  
@@ -765,3 +833,13 @@ PGP-signature</guimenuitem></menuchoice>.</para>
 </sect2>
 
 </sect1> 
+<!--
+Local Variables:
+mode: sgml
+sgml-omittag: nil
+sgml-shorttag: t
+sgml-minimize-attributes: nil
+sgml-general-insert-case: lower
+sgml-parent-document:("index.docbook" "chapter" "sect1")
+End:
+-->
