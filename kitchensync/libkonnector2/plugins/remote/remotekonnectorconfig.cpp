@@ -32,7 +32,6 @@
 #include <kinputdialog.h>
 #include <klineedit.h>
 
-#include <qinputdialog.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -89,14 +88,14 @@ void RemoteKonnectorConfig::setupStandard()
 {
   bool ok = false;
 
-  QString hostname = QInputDialog::getText( i18n( "Remote Host" ), i18n( "Enter remote host name" ),
-                                            QLineEdit::Normal, QString::null, &ok, this );
+  QString hostname = KInputDialog::getText( i18n( "Remote Host" ), i18n( "Enter remote host name:" ),
+                                            QString::null, &ok, this );
 
   if ( hostname.isEmpty() || !ok )
     return;
 
-  QString username = QInputDialog::getText( i18n( "Remote User" ), i18n( "Enter remote user name" ),
-                                            QLineEdit::Normal, QString::null, &ok, this );
+  QString username = KInputDialog::getText( i18n( "Remote User" ), i18n( "Enter remote user name:" ),
+                                            QString::null, &ok, this );
 
   if ( username.isEmpty() || !ok )
     return;
