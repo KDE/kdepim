@@ -244,3 +244,9 @@ Alarm::List ResourceLocal::alarms( const QDateTime &from, const QDateTime &to )
 void ResourceLocal::update(IncidenceBase *)
 {
 }
+
+void ResourceLocal::dump()
+{
+  ResourceCalendar::dump();
+  kdDebug(5800) << "  Url: " << mURL.url() << endl;
+}

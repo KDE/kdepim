@@ -63,6 +63,7 @@ void CalendarResources::init()
 
   mManager = new KRES::ResourceManager<ResourceCalendar>( "calendar" );
 
+#if 0
   if ( mManager->isEmpty() ) {
     QString fileName = locateLocal( "data", "kcal/std.ics" );
 
@@ -74,10 +75,10 @@ void CalendarResources::init()
     mManager->add( defaultResource );
     mManager->setStandardResource( defaultResource );
   }
+#endif
 
   if ( !mManager->standardResource() ) {
-    kdDebug() << "FIXME: We don't have a standard resource. "
-              << "Adding events isn't going to work" << endl;
+    kdDebug() << "Warning! No standard resource yet." << endl;
   }
 
   // Open all active resources
@@ -197,13 +198,14 @@ void CalendarResources::deleteTodo(Todo *todo)
 
 QPtrList<Todo> CalendarResources::rawTodos() const
 {
-  kdDebug(5800) << "CalendarResources::rawTodos" << endl;
+  kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
 
   QPtrList<Todo> result;
 
   KRES::ResourceManager<ResourceCalendar>::Iterator it;
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
-    kdDebug(5800) << "Getting raw todos from " << (*it)->resourceName() << endl;
+    kdDebug(5800) << "Getting raw todos from '" << (*it)->resourceName()
+                  << "'" << endl;
     QPtrList<Todo> todos = (*it)->rawTodos();
     Todo *todo;
     for ( todo = todos.first(); todo; todo = todos.next() ) {
@@ -296,12 +298,13 @@ Alarm::List CalendarResources::alarms( const QDateTime &from, const QDateTime &t
 // with that date attached -
 QPtrList<Event> CalendarResources::rawEventsForDate(const QDate &qd, bool sorted)
 {
-  // kdDebug(5800) << "CalendarResources::rawEventsForDate" << endl;
+//  kdDebug(5800) << "CalendarResources::rawEventsForDate()" << endl;
 
   QPtrList<Event> result;
   KRES::ResourceManager<ResourceCalendar>::Iterator it;
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
-    // kdDebug() << "Getting events from " << resource->resourceName() << endl;
+//    kdDebug() << "Getting events from '" << (*it)->resourceName() << "'"
+//              << endl;
     QPtrList<Event> list = (*it)->rawEventsForDate( qd, sorted );
     if ( sorted ) {
       Event* item;
@@ -322,8 +325,9 @@ QPtrList<Event> CalendarResources::rawEventsForDate(const QDate &qd, bool sorted
   return result;
 }
 
-QPtrList<Event> CalendarResources::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
+QPtrList<Event> CalendarResources::rawEvents( const QDate &start,
+                                              const QDate &end,
+                                              bool inclusive )
 {
   kdDebug(5800) << "CalendarResources::rawEvents(start,end,inclusive)" << endl;
 

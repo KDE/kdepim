@@ -133,6 +133,8 @@ class ResourceLocal : public ResourceCalendar
     // Public because needed in MultiCalendar::load()
     bool doOpen();
 
+    void dump();
+
   protected:
 
     /** clears out the current calendar, freeing all used memory etc. etc. */

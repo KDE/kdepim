@@ -36,7 +36,7 @@ libkcm_kcalendars_la_LIBADD = libkcal.la -lkderesources
 datadir = $(kde_appsdir)/Settings/Components
 data_DATA = kcalendars.desktop
 
-linkdir= $(kde_datadir)/resources/calendar
+linkdir= $(kde_datadir)/kresources/calendar
 link_DATA = local.desktop
 
 METASOURCES = AUTO
