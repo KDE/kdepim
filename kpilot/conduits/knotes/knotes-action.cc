@@ -75,7 +75,7 @@ public:
 
 	int memo() const { return memoId; } ;
 	KNoteID_t note() const { return noteId; } ;
-	bool valid() const { return (!noteId.isEmpty()) && (memoId>0); } ;
+	inline bool valid() const { return (memoId>0) && (!noteId.isEmpty()) ; } ;
 	QString toString() const { return CSL1("<%1,%2>").arg(noteId).arg(memoId); } ;
 
 	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,KNoteID_pt note);
@@ -202,7 +202,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	if (!fP || !fP->fDCOP)
 	{
 		emit logError(i18n("No DCOP connection could be made. The "
-			"conduit cannot function like this."));
+			"conduit cannot function without DCOP."));
 		return false;
 
 	}
@@ -223,7 +223,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		emit logError(i18n("Could not retrieve list of notes from KNotes. "
 			"The KNotes conduit will not be run."));
 		return false;
-		
+
 	}
 
 	// Database names seem to be latin1
