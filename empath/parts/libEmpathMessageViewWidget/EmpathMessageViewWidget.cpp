@@ -206,8 +206,8 @@ EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
 
     config->setGroup("EmpathMessageViewWidget");
     
-    QColor defaultQuoteColour1 = Qt::darkBlue;
-    QColor defaultQuoteColour2 = Qt::darkCyan;
+//    QColor defaultQuoteColour1 = Qt::darkBlue;
+//    QColor defaultQuoteColour2 = Qt::darkCyan;
 
     QColor quote1 = Qt::darkBlue; // FIXME (config->readColorEntry(UI_QUOTE_ONE, &defaultQuoteColour1));
     QColor quote2 = Qt::darkCyan; // FIXME (config->readColorEntry(UI_QUOTE_TWO, &defaultQuoteColour2));
@@ -305,6 +305,25 @@ EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
     textView_->setXML(s);
 }
 
+    void
+EmpathMessageViewWidget::compose()
+{
+}
+
+    void
+EmpathMessageViewWidget::reply()
+{
+}
+
+    void
+EmpathMessageViewWidget::replyAll()
+{
+}
+    void
+EmpathMessageViewWidget::forward()
+{
+}
+
 // -------------------------------------------------------------------------
 
     void
@@ -388,9 +407,7 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart part)
 
     KConfig * config(KGlobal::config());
 
-    using namespace EmpathConfig;
-
-    config->setGroup(GROUP_DISPLAY);
+    config->setGroup("EmpathMessageViewWidget");
 
     QColor defaultQuoteColour1 = Qt::darkBlue;
     QColor defaultQuoteColour2 = Qt::darkCyan;

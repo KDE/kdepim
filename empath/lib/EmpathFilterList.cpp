@@ -30,7 +30,6 @@
 
 // Local includes
 #include "Empath.h"
-#include "EmpathConfig.h"
 #include "EmpathFilter.h"
 #include "EmpathFilterList.h"
 
@@ -58,11 +57,9 @@ EmpathFilterList::saveConfig()
     
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_GENERAL);
+    c->setGroup("General");
     
-    c->writeEntry(F_LIST, list, ',');
+    c->writeEntry("FilterList", list, ',');
 }
 
     void
@@ -70,12 +67,10 @@ EmpathFilterList::loadConfig()
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_GENERAL);
+    c->setGroup("General");
     
     QStrList list;
-    c->readListEntry(F_LIST, list, ',');
+    c->readListEntry("FilterList", list, ',');
     
     EmpathFilter * filter;
     

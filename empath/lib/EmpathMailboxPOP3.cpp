@@ -38,7 +38,6 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathFolderList.h"
 #include "Empath.h"
-#include "EmpathConfig.h"
 #include "EmpathUtilities.h"
 
 EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
@@ -364,45 +363,43 @@ EmpathMailboxPOP3::removeFolder(const EmpathURL &)
 EmpathMailboxPOP3::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    using namespace EmpathConfig;
     
-    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
+    c->setGroup("Mailbox_" + url_.mailboxName());
 
-    c->writeEntry(M_TYPE,           (unsigned long)type_);
-    c->writeEntry(M_ADDRESS,        serverAddress_);
-    c->writeEntry(M_PORT,           serverPort_);
-    c->writeEntry(M_USERNAME,       username_);
-    c->writeEntry(M_PASSWORD,       password_);
-    c->writeEntry(M_LOGGING,        logging_);
-    c->writeEntry(M_LOG_PATH,       logFilePath_);
-    c->writeEntry(M_LOG_DISPOSAL,   logFileDisposalPolicy_);
-    c->writeEntry(M_MAX_LOG_SIZE,   maxLogFileSize_);
-    c->writeEntry(M_CHECK,          autoCheck_);
-    c->writeEntry(M_CHECK_INT,      autoCheckInterval_);
+    c->writeEntry("Type",           (unsigned long)type_);
+    c->writeEntry("Address",        serverAddress_);
+    c->writeEntry("Port",           serverPort_);
+    c->writeEntry("Username",       username_);
+    c->writeEntry("Password",       password_);
+    c->writeEntry("LoggingPolicy",  logging_);
+    c->writeEntry("LogFilePath",    logFilePath_);
+    c->writeEntry("LogDisposal",    logFileDisposalPolicy_);
+    c->writeEntry("MaxLogSize",     maxLogFileSize_);
+    c->writeEntry("Check",          autoCheck_);
+    c->writeEntry("CheckInterval",  autoCheckInterval_);
 }
 
     void
 EmpathMailboxPOP3::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    using namespace EmpathConfig;
     
-    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
+    c->setGroup("Mailbox_" + url_.mailboxName());
 
-    serverAddress_          = c->readEntry              (M_ADDRESS);
-    serverPort_             = c->readUnsignedNumEntry   (M_PORT, 110);
+    serverAddress_          = c->readEntry              ("Address");
+    serverPort_             = c->readUnsignedNumEntry   ("Port", 110);
     
     c->setDollarExpansion(true);
-    username_               = c->readEntry              (M_USERNAME, "$USER");
+    username_               = c->readEntry              ("Username", "$USER");
     c->setDollarExpansion(false);
     
-    password_               = c->readEntry              (M_PASSWORD, "");
-    logging_                = c->readBoolEntry          (M_LOGGING,false);
-    logFilePath_            = c->readEntry              (M_LOG_PATH, "");
-    logFileDisposalPolicy_  = c->readBoolEntry          (M_LOG_DISPOSAL, false);
-    maxLogFileSize_         = c->readUnsignedNumEntry   (M_MAX_LOG_SIZE,    10);
-    autoCheck_              = c->readBoolEntry          (M_CHECK, true);
-    autoCheckInterval_      = c->readUnsignedNumEntry   (M_CHECK_INT, 5);
+    password_               = c->readEntry              ("Password", "");
+    logging_                = c->readBoolEntry          ("LoggingPolicy",false);
+    logFilePath_            = c->readEntry              ("LogFilePath", "");
+    logFileDisposalPolicy_  = c->readBoolEntry          ("LogDisposal", false);
+    maxLogFileSize_         = c->readUnsignedNumEntry   ("LogMaxSize",    10);
+    autoCheck_              = c->readBoolEntry          ("Check", true);
+    autoCheckInterval_      = c->readUnsignedNumEntry   ("CheckInterval", 5);
 }
 
 // Set methods

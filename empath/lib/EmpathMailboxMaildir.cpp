@@ -40,7 +40,6 @@
 // Local includes
 #include "EmpathMailboxMaildir.h"
 #include "EmpathFolderList.h"
-#include "EmpathConfig.h"
 #include "EmpathTask.h"
 #include "Empath.h"
 
@@ -87,9 +86,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 {
     KConfig * c(KGlobal::config());
 
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_FOLDERS);
+    c->setGroup("Folders");
     
     QStringList folders;
 
@@ -138,14 +135,13 @@ EmpathMailboxMaildir::saveConfig()
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
-    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
+    c->setGroup("Mailbox_" + url_.mailboxName());
     
-    c->writeEntry(M_TYPE, (unsigned int)type_);
-    c->writeEntry(M_PATH, path_);
+    c->writeEntry("Type", (unsigned int)type_);
+    c->writeEntry("Path", path_);
     
-    c->writeEntry(M_CHECK,      autoCheck_);
-    c->writeEntry(M_CHECK_INT,  autoCheckInterval_);
+    c->writeEntry("Check",     autoCheck_);
+    c->writeEntry("CheckInterval",  autoCheckInterval_);
 }
 
     void
@@ -153,17 +149,15 @@ EmpathMailboxMaildir::loadConfig()
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
+    c->setGroup("Mailbox_" + url_.mailboxName());
     
-    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
-    
-    autoCheck_          = c->readUnsignedNumEntry(M_CHECK);
-    autoCheckInterval_  = c->readUnsignedNumEntry(M_CHECK_INT);
+    autoCheck_          = c->readUnsignedNumEntry("Check");
+    autoCheckInterval_  = c->readUnsignedNumEntry("CheckInterval");
     
     folderList_.clear();
     boxList_.clear();
     
-    path_ = c->readEntry(M_PATH);
+    path_ = c->readEntry("Path");
     
     while (path_.at(path_.length() - 1) == '/')
         path_.truncate(path_.length() - 1);
@@ -181,8 +175,8 @@ EmpathMailboxMaildir::loadConfig()
             return;
         }
 
-    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
-    QStringList folderList = c->readListEntry(M_FOLDER_LIST);
+    c->setGroup("Mailbox_" + url_.mailboxName());
+    QStringList folderList = c->readListEntry("FolderList");
 
     QStringList::ConstIterator it(folderList.begin());
 
@@ -217,8 +211,8 @@ EmpathMailboxMaildir::loadConfig()
     for (EmpathFolderListIterator it(folderList_); it.current(); ++it)
         folderList << it.current()->url().asString();
 
-    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
-    c->writeEntry(M_FOLDER_LIST, folderList);
+    c->setGroup("Mailbox_" + url_.mailboxName());
+    c->writeEntry("FolderList", folderList);
 
     // Initialise all maildir objects.
 

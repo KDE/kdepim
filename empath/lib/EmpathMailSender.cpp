@@ -37,7 +37,6 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathEnum.h"
-#include "EmpathConfig.h"
 #include "EmpathTask.h"
 #include "EmpathFolder.h"
 #include "EmpathURL.h"
@@ -225,13 +224,11 @@ EmpathMailSender::update()
     
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_GENERAL);
+    c->setGroup("General");
     
     OutgoingServerType st =
         (OutgoingServerType)
-        (c->readUnsignedNumEntry(S_TYPE));
+        (c->readUnsignedNumEntry("OutgoingServerType"));
     
     switch (st) {
         

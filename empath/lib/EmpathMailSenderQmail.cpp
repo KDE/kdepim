@@ -34,7 +34,6 @@
 
 // Local includes
 #include "EmpathMailSenderQmail.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
 
 EmpathMailSenderQmail::EmpathMailSenderQmail()
@@ -77,11 +76,9 @@ EmpathMailSenderQmail::sendOne(RMM::RMessage message, const QString & id)
 
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_SENDING);
+    c->setGroup("Sending");
     
-    qmailProcess_ << c->readEntry(S_QMAIL);
+    qmailProcess_ << c->readEntry("QmailLocation");
 
     if (!qmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start qmail process");
@@ -151,20 +148,16 @@ EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int)
 EmpathMailSenderQmail::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    using namespace EmpathConfig;
-    c->setGroup(GROUP_SENDING);
-    c->writeEntry(S_QMAIL, qmailLocation_);
+    c->setGroup("Sending");
+    c->writeEntry("QmailLocation", qmailLocation_);
 }
 
     void
 EmpathMailSenderQmail::loadConfig()
 {
     KConfig * c = KGlobal::config();
-
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_SENDING);
-    qmailLocation_ = c->readEntry(S_QMAIL, "/var/qmail/bin/qmail-inject");
+    c->setGroup("Sending");
+    qmailLocation_ = c->readEntry("QmailLocation", "/var/qmail/bin/qmail-inject");
 }
 
 // vim:ts=4:sw=4:tw=78

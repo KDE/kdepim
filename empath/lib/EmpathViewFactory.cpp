@@ -36,7 +36,6 @@
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathViewFactory.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
 #include <RMM_BodyPart.h>
     
@@ -165,12 +164,10 @@ EmpathXMLMessage::_encode()
 
     KConfig * config(KGlobal::config());
 
-    using namespace EmpathConfig;
+    config->setGroup("Display");
 
-    config->setGroup(GROUP_DISPLAY);
-
-    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, DFLT_Q_1));
-    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, DFLT_Q_2));
+    QColor quote1(config->readColorEntry("QuoteColourOne"));
+    QColor quote2(config->readColorEntry("QuoteColourTwo"));
 
     QString col;
 

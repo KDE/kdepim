@@ -34,7 +34,6 @@
 #include <kiconloader.h>
 
 // Local includes
-#include "EmpathConfig.h"
 #include "EmpathFolderWidget.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFolderList.h"
@@ -331,10 +330,9 @@ EmpathFolderWidget::s_openChanged()
         l.append(it.current()->url().asString());
     
     KConfig * c(KGlobal::config());
-    using namespace EmpathConfig;
-    c->setGroup(GROUP_DISPLAY);
-    
-    c->writeEntry(UI_FOLDERS_OPEN, l);
+
+    c->setGroup("Display");
+    c->writeEntry("FolderListItemsOpen", l);
 }
 
     void 

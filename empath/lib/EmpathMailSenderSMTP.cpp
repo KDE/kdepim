@@ -35,7 +35,6 @@
 #include "RMM_Address.h"
 #include "RMM_Envelope.h"
 #include "EmpathMailSenderSMTP.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
 
 EmpathMailSenderSMTP::EmpathMailSenderSMTP()
@@ -99,11 +98,9 @@ EmpathMailSenderSMTP::saveConfig()
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_SENDING);
-    c->writeEntry(S_SMTP, serverName_);
-    c->writeEntry(S_SMTP_PORT, serverPort_);
+    c->setGroup("Sending");
+    c->writeEntry("SMTPServerLocation", serverName_);
+    c->writeEntry("SMTPServerPort", serverPort_);
 }
 
     void
@@ -111,11 +108,9 @@ EmpathMailSenderSMTP::loadConfig()
 {
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_SENDING);
-    serverName_ = c->readEntry(S_SMTP, "localhost");
-    serverPort_ = c->readUnsignedNumEntry(S_SMTP_PORT, 25);
+    c->setGroup("Sending");
+    serverName_ = c->readEntry("SMTPServerLocation", "localhost");
+    serverPort_ = c->readUnsignedNumEntry("SMTPServerPort", 25);
 }
 
     void

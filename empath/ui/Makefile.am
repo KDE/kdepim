@@ -1,7 +1,7 @@
 KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
 
 INCLUDES = \
-	-I$(top_srcdir)/empath/ui/libEmpathListView \
+	-I$(top_srcdir)/empath/parts/libEmpathListView \
 	-I$(top_srcdir)/empath/lib \
 	-I$(top_srcdir)/rmm \
 	$(all_includes)
@@ -17,7 +17,7 @@ rc_DATA = EmpathMainWindow.rc
 
 libempathui_la_LIBADD = \
   $(LIB_KPARTS) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KIO) $(LIB_KDECORE) \
-  $(top_builddir)/empath/ui/libEmpathListView/libEmpathListView.la \
+  $(top_builddir)/empath/parts/libEmpathListView/libEmpathListView.la \
 	$(top_builddir)/empath/lib/libempathkernel.la
 
 METASOURCES = AUTO

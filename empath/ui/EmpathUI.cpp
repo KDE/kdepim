@@ -38,7 +38,6 @@
 
 // Local includes
 #include "Empath.h"
-#include "EmpathConfig.h"
 #include "EmpathUI.h"
 #include "EmpathMainWindow.h"
 #include "EmpathMailbox.h"
@@ -59,14 +58,14 @@ EmpathUI::~EmpathUI()
 }
 
     void    
-EmpathUI::s_newComposer(EmpathComposeForm composeForm)
+EmpathUI::s_newComposer(EmpathComposeForm)
 {
     empathDebug("STUB");
 //    (new EmpathComposeWindow(composeForm))->show();
 }
 
     void
-EmpathUI::s_setup(Empath::SetupType t, QWidget * parent)
+EmpathUI::s_setup(Empath::SetupType t, QWidget * /* parent */)
 {
     switch (t) {
 
@@ -77,19 +76,21 @@ EmpathUI::s_setup(Empath::SetupType t, QWidget * parent)
 }
 
     void
-EmpathUI::s_getSaveName(const EmpathURL & url, QWidget * parent)
+EmpathUI::s_getSaveName(const EmpathURL & /* url */, QWidget * /* parent */)
 {
+#if 0
     KURL saveFilePath =
         KFileDialog::getSaveURL(QString::null, QString::null, parent);
     
     if (saveFilePath.isEmpty())
         return;
    
-//    empath->s_saveNameReady(url, saveFilePath);
+    empath->s_saveNameReady(url, saveFilePath);
+#endif
 }
 
     void
-EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
+EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * /* w */)
 {
     EmpathMailbox * mailbox = empath->mailbox(url);
 
@@ -121,11 +122,9 @@ EmpathUI::_showWizardIfNeeded()
 
     KConfig * c(KGlobal::config());
     
-    using namespace EmpathConfig;
+    c->setGroup("General");
     
-    c->setGroup(GROUP_GENERAL);
-    
-    if (c->readListEntry(GEN_MAILBOX_LIST).isEmpty())
+    if (c->readListEntry("MailboxList").isEmpty())
         s_setup(Empath::SetupWizard, static_cast<QWidget *>(0L));
 }
 

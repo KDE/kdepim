@@ -36,7 +36,6 @@
 // Local includes
 #include "EmpathJobScheduler.h"
 #include "EmpathComposer.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathQuotedText.h"
 #include <RMM_DateTime.h>
@@ -181,13 +180,11 @@ EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
 { 
     KConfig * config(KGlobal::config());
 
-    using namespace EmpathConfig;
-
-    config->setGroup(QString::fromUtf8(GROUP_COMPOSE));
+    config->setGroup(QString::fromUtf8("Compose"));
     
     QStrList l;
 
-    config->readListEntry(QString::fromUtf8(C_EXTRA_HEADERS), l, ',');
+    config->readListEntry(QString::fromUtf8("ExtraHeaders"), l, ',');
 
     // Standard headers
     l.prepend("Bcc");
@@ -263,13 +260,11 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
 
     // Now quote original message if we need to.
     
-    using namespace EmpathConfig;
-
-    config->setGroup(QString::fromUtf8(GROUP_COMPOSE));
+    config->setGroup(QString::fromUtf8("Compose"));
     
     // Add the 'On (date) (name) wrote' bit
         
-    if (config->readBoolEntry(QString::fromUtf8(C_AUTO_QUOTE), false)) {
+    if (config->readBoolEntry(QString::fromUtf8("AutoQuoteOnReply"), false)) {
 
         s = message.data();
 
@@ -284,10 +279,10 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
        
         if (composeForm.composeType() == EmpathComposeForm::ReplyAll)
             thingyWrote =
-                config->readEntry(QString::fromUtf8(C_PHRASE_REPLY_ALL));
+                config->readEntry(QString::fromUtf8("PhraseReplyAll"));
         else
             thingyWrote =
-                config->readEntry(QString::fromUtf8(C_PHRASE_REPLY_SENDER));
+                config->readEntry(QString::fromUtf8("PhraseReplySender"));
         
         // Be careful here. We don't want to reveal people's
         // email addresses.
@@ -480,13 +475,11 @@ EmpathComposer::_signature()
 
     KConfig * config(KGlobal::config());
 
-    using namespace EmpathConfig;
-
-    config->setGroup(QString::fromUtf8(GROUP_COMPOSE));
+    config->setGroup(QString::fromUtf8("Compose"));
     
-    if (config->readBoolEntry(QString::fromUtf8(C_ADD_SIG), false)) {
+    if (config->readBoolEntry(QString::fromUtf8("AddSignature"), false)) {
 
-        QFile f(config->readEntry(QString::fromUtf8(C_SIG_PATH)));
+        QFile f(config->readEntry(QString::fromUtf8("Signature")));
         
         if (f.open(IO_ReadOnly)) {    
             QTextStream t(&f);

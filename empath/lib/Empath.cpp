@@ -39,7 +39,6 @@
 
 // Local includes
 #include "Empath.h"
-#include "EmpathConfig.h"
 #include "EmpathJobScheduler.h"
 #include "EmpathCachedMessage.h"
 #include "EmpathComposer.h"
@@ -83,8 +82,6 @@ Empath::Empath()
     (void)new QpInit;
 #endif
     
-    using namespace EmpathConfig;
-
     // Don't do dollar expansion by default.
     // Possible security hole.
     KGlobal::config()->setDollarExpansion(false);    
@@ -121,24 +118,22 @@ Empath::init()
     
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
-
-    c->setGroup(QString::fromUtf8(GROUP_FOLDERS));
+    c->setGroup(QString::fromUtf8("Folders"));
 
     inbox_  .setFolderPath
-        (c->readEntry(QString::fromUtf8(FOLDER_INBOX),   i18n("Inbox")));
+        (c->readEntry(QString::fromUtf8("Inbox"),   i18n("Inbox")));
 
     outbox_ .setFolderPath
-        (c->readEntry(QString::fromUtf8(FOLDER_OUTBOX),  i18n("Outbox")));
+        (c->readEntry(QString::fromUtf8("Outbox"),  i18n("Outbox")));
 
     sent_   .setFolderPath
-        (c->readEntry(QString::fromUtf8(FOLDER_SENT),    i18n("Sent")));
+        (c->readEntry(QString::fromUtf8("Sent"),    i18n("Sent")));
 
     drafts_ .setFolderPath
-        (c->readEntry(QString::fromUtf8(FOLDER_DRAFTS),  i18n("Drafts")));
+        (c->readEntry(QString::fromUtf8("Drafts"),  i18n("Drafts")));
 
     trash_  .setFolderPath
-        (c->readEntry(QString::fromUtf8(FOLDER_TRASH),   i18n("Trash")));
+        (c->readEntry(QString::fromUtf8("Trash"),   i18n("Trash")));
    
     mailboxList()->loadConfig();
 }

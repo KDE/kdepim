@@ -42,7 +42,6 @@
 #include "EmpathIndexRecord.h"
 #include "EmpathIndex.h"
 #include "EmpathFolder.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
 
 // Increment this if you change the index format.

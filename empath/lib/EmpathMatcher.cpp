@@ -36,7 +36,6 @@
 #include "Empath.h"
 #include "EmpathDefines.h"
 #include "EmpathMatcher.h"
-#include "EmpathConfig.h"
 
 EmpathMatcher::EmpathMatcher()
 {
@@ -53,25 +52,23 @@ EmpathMatcher::save(const QString & parentid, Q_UINT32 id)
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
+    c->setGroup("Expr_" + parentid + "_" + QString().setNum(id));
     
-    c->setGroup(GROUP_EXPR + parentid + "_" + QString().setNum(id));
-    
-    c->writeEntry(F_MATCH_TYPE, (unsigned int)type_);
+    c->writeEntry("Type", (unsigned int)type_);
     
     switch (type_) {
         
         case Size:
-            c->writeEntry(F_MATCH_SIZE, size_);
+            c->writeEntry("Size", size_);
             break;
             
         case BodyExpr:
-            c->writeEntry(F_MATCH_EXPR, matchExpr_);
+            c->writeEntry("Expr", matchExpr_);
             break;
             
         case HeaderExpr:
-            c->writeEntry(F_MATCH_HEADER, matchHeader_);
-            c->writeEntry(F_MATCH_EXPR, matchExpr_);
+            c->writeEntry("Header", matchHeader_);
+            c->writeEntry("Expr", matchExpr_);
             break;
             
         case HasAttachments:
@@ -87,27 +84,25 @@ EmpathMatcher::load(const QString & parentName, Q_UINT32 id)
 {
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
+    c->setGroup("Expr_" + parentName + "_" + QString().setNum(id));
     
-    c->setGroup(GROUP_EXPR + parentName + "_" + QString().setNum(id));
-    
-    MatchExprType t = (MatchExprType)(c->readNumEntry(F_MATCH_TYPE));
+    MatchExprType t = (MatchExprType)(c->readNumEntry("Type"));
     
     setType(t);
     
     switch (t) {
 
         case Size:
-            size_ = c->readNumEntry(F_MATCH_SIZE);
+            size_ = c->readNumEntry("Size");
             break;
 
         case BodyExpr:
-            matchExpr_ = c->readEntry(F_MATCH_EXPR);
+            matchExpr_ = c->readEntry("Expr");
             break;
 
         case HeaderExpr:
-            matchExpr_ = c->readEntry(F_MATCH_EXPR);
-            matchHeader_ = c->readEntry(F_MATCH_HEADER);
+            matchExpr_ = c->readEntry("Expr");
+            matchHeader_ = c->readEntry("Header");
             break;
 
         case HasAttachments:

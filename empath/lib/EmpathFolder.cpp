@@ -34,7 +34,6 @@
 
 // Local includes
 #include "Empath.h"
-#include "EmpathConfig.h"
 #include "EmpathFolderList.h"
 #include "EmpathFolder.h"
 #include "EmpathDefines.h"

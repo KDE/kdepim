@@ -26,6 +26,7 @@
 // Qt includes
 #include <qstring.h>
 #include <qdatetime.h>
+#include <qdatastream.h>
 
 /**
  * @short An index record
@@ -158,17 +159,17 @@ class EmpathIndexRecord
         )
         {
             s   << rec.id_
-                << (Q_INT8)(rec.tagged_)
+                << static_cast<Q_INT32>(rec.tagged_)
                 << rec.subject_
                 << rec.senderName_
                 << rec.senderAddress_
                 << rec.date_
-                << rec.timeZone_
-                << (Q_INT8)(rec.status_)
-                << rec.size_
+                << static_cast<Q_INT32>(rec.timeZone_)
+                << static_cast<Q_INT32>(rec.status_)
+                << static_cast<Q_INT32>(rec.size_)
                 << rec.messageID_
                 << rec.parentID_
-                << (Q_INT8)(rec.hasAttachments_);
+                << static_cast<Q_INT32>(rec.hasAttachments_);
 
             return s;
         }
@@ -181,9 +182,11 @@ class EmpathIndexRecord
              EmpathIndexRecord & rec
         )
         {
-            Q_INT8 statusAsInt;
-            Q_INT8 taggedAsInt;
-            Q_INT8 hasAttachmentsAsInt;
+            Q_INT32 statusAsInt;
+            Q_INT32 taggedAsInt;
+            Q_INT32 hasAttachmentsAsInt;
+            Q_INT32 sizeAsInt;
+            Q_INT32 timeZoneAsInt;
 
             s   >> rec.id_
                 >> taggedAsInt
@@ -191,16 +194,18 @@ class EmpathIndexRecord
                 >> rec.senderName_
                 >> rec.senderAddress_
                 >> rec.date_
-                >> rec.timeZone_
+                >> timeZoneAsInt
                 >> statusAsInt
-                >> rec.size_
+                >> sizeAsInt
                 >> rec.messageID_
                 >> rec.parentID_
                 >> hasAttachmentsAsInt;
 
             rec.status_ = static_cast<EmpathIndexRecord::Status>(statusAsInt);
-            rec.tagged_ = static_cast<bool>(taggedAsInt);
+            rec.tagged_         = static_cast<bool>(taggedAsInt);
             rec.hasAttachments_ = static_cast<bool>(hasAttachmentsAsInt);
+            rec.timeZone_       = static_cast<int>(timeZoneAsInt);
+            rec.size_           = static_cast<unsigned int>(sizeAsInt);
             
             return s;
         }

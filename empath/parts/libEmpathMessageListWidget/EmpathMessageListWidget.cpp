@@ -148,6 +148,12 @@ EmpathMessageListPart::~EmpathMessageListPart()
     // Empty.
 }
 
+    void
+EmpathMessageListPart::enableAllActions(bool)
+{
+    // STUB
+}
+
 // -------------------------------------------------------------------------
 
    

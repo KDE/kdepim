@@ -34,7 +34,6 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathURL.h"
-#include "EmpathConfig.h"
 #include "EmpathMainWidget.h"
 #include "EmpathFolderWidget.h"
 #include "EmpathIndex.h"
@@ -59,7 +58,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
         messageListWidget_ =
             (KParts::ReadWritePart *)
-            listFactory->create(this, "list part", "KParts::ReadWritePart");
+            listFactory->create(vSplit, "list part", "KParts::ReadWritePart");
 
     } else {
         
@@ -70,7 +69,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
         messageViewWidget_ =
             (KParts::ReadOnlyPart *)
-            viewFactory->create(this, "view part", "KParts::ReadOnlyPart");
+            viewFactory->create(vSplit, "view part", "KParts::ReadOnlyPart");
 
     } else {
         
@@ -154,9 +153,7 @@ EmpathMainWidget::s_showFolder(const EmpathURL & url)
 
     KConfig * c(KGlobal::config());
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_DISPLAY);
+    c->setGroup("Display");
 
     // TODO
 //    messageListWidget_->s_setThread(c->readBoolEntry("ThreadMessages"));
@@ -225,7 +222,7 @@ EmpathMainWidget::s_save(const QString & id)
 }
 
     void
-EmpathMainWidget::s_copy(const QStringList & IDList)
+EmpathMainWidget::s_copy(const QStringList &)
 {
     empathDebug("STUB");
 }
@@ -259,9 +256,7 @@ EmpathMainWidget::s_toggleHideRead()
 {
     KConfig * c(KGlobal::config());
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_DISPLAY);
+    c->setGroup("Display");
 
     bool hideRead = c->readBoolEntry("HideReadMessages");
 
@@ -286,9 +281,7 @@ EmpathMainWidget::s_toggleThread()
 {
     KConfig * c(KGlobal::config());
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_DISPLAY);
+    c->setGroup("Display");
 
     bool thread = c->readBoolEntry("ThreadMessages");
 

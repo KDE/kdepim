@@ -35,7 +35,6 @@
 #include "EmpathMainWindow.h"
 #include "EmpathMainWidget.h"
 #include "EmpathProgressIndicator.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
 
 EmpathMainWindow::EmpathMainWindow()
@@ -45,12 +44,10 @@ EmpathMainWindow::EmpathMainWindow()
    
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_DISPLAY);
+    c->setGroup("Display");
     
-    int x = c->readNumEntry(UI_MAIN_WIN_X, 600);
-    int y = c->readNumEntry(UI_MAIN_WIN_Y, 400);
+    int x = c->readNumEntry("MainWindowWidth", 600);
+    int y = c->readNumEntry("MainWindowHeight", 400);
 
     resize(x, y);
     
@@ -81,12 +78,10 @@ EmpathMainWindow::~EmpathMainWindow()
 {
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
+    c->setGroup("Display");
     
-    c->setGroup(GROUP_DISPLAY);
-    
-    c->writeEntry(UI_MAIN_WIN_X, width());
-    c->writeEntry(UI_MAIN_WIN_Y, height());
+    c->writeEntry("MainWindowWidth", width());
+    c->writeEntry("MainWindowHeight", height());
 }
 
     void
@@ -101,10 +96,8 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_DISPLAY);
-    c->writeEntry(UI_MAIN_WIN_TOOL, (int)pos);
+    c->setGroup("Display");
+    c->writeEntry("MainWindowToolbarPos", (int)pos);
 }
 
     void

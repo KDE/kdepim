@@ -33,7 +33,6 @@
 #include <kiconloader.h>
 
 // Local includes
-#include "EmpathConfig.h"
 #include "EmpathFolderListItem.h"
 #include "EmpathIndex.h"
 #include "EmpathFolder.h"
@@ -51,11 +50,9 @@ EmpathFolderListItem::EmpathFolderListItem(
 {
     KConfig * c(KGlobal::config());
     
-    using namespace EmpathConfig;
+    c->setGroup("Display");
     
-    c->setGroup(GROUP_DISPLAY);
-    
-    QStringList l = c->readListEntry(UI_FOLDERS_OPEN, ',');
+    QStringList l = c->readListEntry("FolderListItemsOpen", ',');
     
     if (l.find(url_.asString()) != l.end())
         setOpen(true);
@@ -87,11 +84,9 @@ EmpathFolderListItem::EmpathFolderListItem(
 {
     KConfig * c(KGlobal::config());
     
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_DISPLAY);
+    c->setGroup("Display");
 
-    QStringList l = c->readListEntry(UI_FOLDERS_OPEN, ',');
+    QStringList l = c->readListEntry("FolderListItemsOpen", ',');
     
     if (l.find(url_.asString()) != l.end())
         setOpen(true);
@@ -161,9 +156,8 @@ EmpathFolderListItem::paintCell(
     else {
 
         KConfig * c(KGlobal::config());
-        using namespace EmpathConfig;
-        c->setGroup(GROUP_DISPLAY);
-        QColor defaultNewColour = Qt::darkRed;
+        c->setGroup("Display");
+//        QColor defaultNewColour = Qt::darkRed;
         QColor col = Qt::darkRed; // FIXME c->readColorEntry(UI_NEW, &defaultNewColour);
         QColorGroup modified(cg);
         modified.setColor(QColorGroup::Text, col);

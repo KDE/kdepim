@@ -35,7 +35,6 @@
 
 // Local includes
 #include "Empath.h"
-#include "EmpathConfig.h"
 #include "EmpathMailbox.h"
 #include "EmpathMailboxList.h"
 //#include "EmpathMailboxPOP3.h"
@@ -86,11 +85,10 @@ EmpathMailboxList::loadConfig()
 
     KConfig * c(KGlobal::config());
     
-    using namespace EmpathConfig;
-    c->setGroup(GROUP_GENERAL);
+    c->setGroup("General");
     
     QStringList l;
-    l = c->readListEntry(GEN_MAILBOX_LIST);
+    l = c->readListEntry("MailboxList");
     
     EmpathMailbox::Type mailboxType = EmpathMailbox::Maildir;
     
@@ -98,10 +96,10 @@ EmpathMailboxList::loadConfig()
     
     for (; it != l.end() ; ++it) {
         
-        c->setGroup(GROUP_MAILBOX + *it);
+        c->setGroup("Mailbox_" + *it);
         
         mailboxType =
-            static_cast<EmpathMailbox::Type>(c->readUnsignedNumEntry(M_TYPE));
+            static_cast<EmpathMailbox::Type>(c->readUnsignedNumEntry("Type"));
 
         EmpathMailbox * m = createNew(mailboxType);
 
@@ -130,9 +128,8 @@ EmpathMailboxList::saveConfig() const
     
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
-    c->setGroup(GROUP_GENERAL);
-    c->writeEntry(GEN_MAILBOX_LIST, l);
+    c->setGroup("General");
+    c->writeEntry("MailboxList", l);
     c->sync();
 }
 

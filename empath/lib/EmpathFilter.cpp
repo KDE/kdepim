@@ -33,7 +33,6 @@
 #include "EmpathMatcher.h"
 #include "EmpathFilter.h"
 #include "EmpathDefines.h"
-#include "EmpathConfig.h"
 
 EmpathFilter::EmpathFilter(const QString & name)
     :    priority_(0),
@@ -53,13 +52,11 @@ EmpathFilter::save()
 {
     KConfig * config = KGlobal::config();
     
-    using namespace EmpathConfig;
+    config->setGroup(QString::fromUtf8("Filter_") + name_);
 
-    config->setGroup(QString::fromUtf8(GROUP_FILTER) + name_);
-
-    config->writeEntry(QString::fromUtf8(F_EXPRS),     matchExprs_.count());
-    config->writeEntry(QString::fromUtf8(F_FOLDER),    url_.asString());
-    config->writeEntry(QString::fromUtf8(F_PRIORITY),  priority_);
+    config->writeEntry(QString::fromUtf8("MatchExpressions"), matchExprs_.count());
+    config->writeEntry(QString::fromUtf8("SourceFolder"),    url_.asString());
+    config->writeEntry(QString::fromUtf8("Priority"),  priority_);
     
     EmpathMatcherListIterator it(matchExprs_);
     
@@ -79,14 +76,12 @@ EmpathFilter::load()
 {
     KConfig * config = KGlobal::config();
     
-    using namespace EmpathConfig;
+    config->setGroup(QString::fromUtf8("Filter_") + name_);
     
-    config->setGroup(QString::fromUtf8(GROUP_FILTER) + name_);
-    
-    url_ = config->readEntry(QString::fromUtf8(F_FOLDER));
+    url_ = config->readEntry(QString::fromUtf8("SourceFolder"));
     
     Q_UINT32 numMatchExprs =
-        config->readUnsignedNumEntry(QString::fromUtf8(F_EXPRS));
+        config->readUnsignedNumEntry(QString::fromUtf8("MatchExpressions"));
     
     for (Q_UINT32 i = 0 ; i < numMatchExprs ; ++i)
         loadMatchExpr(i);
@@ -94,7 +89,7 @@ EmpathFilter::load()
     loadEventHandler();
     
     priority_ =
-        config->readUnsignedNumEntry(QString::fromUtf8(F_PRIORITY), 100);
+        config->readUnsignedNumEntry(QString::fromUtf8("Priority"), 100);
 }
 
     void

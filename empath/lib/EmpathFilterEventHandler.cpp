@@ -31,7 +31,6 @@
 
 // Local includes
 #include "EmpathFilterEventHandler.h"
-#include "EmpathConfig.h"
 #include "EmpathDefines.h"
 #include "Empath.h"
 
@@ -134,26 +133,24 @@ EmpathFilterEventHandler::load(const QString & filterID)
 {
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
+    c->setGroup("Filter_" + filterID);
 
-    c->setGroup(GROUP_FILTER + filterID);
-
-    actionType_ = (ActionType)c->readNumEntry(F_ACTION_TYPE);
+    actionType_ = (ActionType)c->readNumEntry("Type");
 
     switch (actionType_) {
 
         case MoveFolder:
-            setMoveFolder(EmpathURL(c->readEntry(F_ACTION_FOLDER)));
+            setMoveFolder(EmpathURL(c->readEntry("Folder")));
             break;
             
         case CopyFolder:
 
-            setCopyFolder(EmpathURL(c->readEntry(F_ACTION_FOLDER)));
+            setCopyFolder(EmpathURL(c->readEntry("Folder")));
             break;
 
         case Forward:
 
-            setForward(c->readEntry(F_ACTION_ADDRESS));
+            setForward(c->readEntry("Address"));
             break;
 
         case Delete:
@@ -171,23 +168,21 @@ EmpathFilterEventHandler::save(const QString & filterID)
 {
     KConfig * c = KGlobal::config();
 
-    using namespace EmpathConfig;
+    c->setGroup("Filter_" + filterID);
 
-    c->setGroup(GROUP_FILTER + filterID);
-
-    c->writeEntry(F_ACTION_TYPE, (int)actionType_);
+    c->writeEntry("Type", (int)actionType_);
 
     switch (actionType_) {
 
         case MoveFolder:
         case CopyFolder:
             
-            c->writeEntry(F_ACTION_FOLDER, moveCopyFolder_.asString());
+            c->writeEntry("Folder", moveCopyFolder_.asString());
             break;
         
         case Forward:
         
-            c->writeEntry(F_ACTION_ADDRESS, forwardAddress_);
+            c->writeEntry("Address", forwardAddress_);
         
             break;
         

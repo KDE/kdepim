@@ -67,8 +67,6 @@ class EmpathMessageListWidget : public EmpathListView
         virtual void setSelected(QListViewItem *, bool);
         virtual void clearSelection();
 
-        virtual bool openFile() { return false; }
- 
     public slots:
 
         void s_setHideRead(bool);
@@ -245,15 +243,14 @@ class EmpathMessageListWidget : public EmpathListView
         QList<EmpathMessageListItem> selected_;
         QDict<EmpathIndexRecord> index_;
         
-        int lastHeaderClicked_;
         int sortColumn_;
         bool sortAscending_;
-        bool hideRead_;
         bool thread_;
  
         // Order dependency
-        bool                filling_;
-        Q_UINT32            itemListCount_;
+        bool filling_;
+        int lastHeaderClicked_;
+        bool hideRead_;
         // End order dependency
 };
 
@@ -295,7 +292,7 @@ class EmpathMessageListPart : public KParts::ReadOnlyPart
 
     protected:
 
-        virtual bool openFile();
+        virtual bool openFile() { return false; }
 
         void enableAllActions(bool);
 
