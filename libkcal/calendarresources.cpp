@@ -74,23 +74,17 @@ ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidenc
   return static_cast<ResourceCalendar *>( r );
 }
 
-CalendarResources::CalendarResources()
-  : Calendar()
+CalendarResources::CalendarResources( const QString &timeZoneId, const QString &family )
+  : Calendar( timeZoneId )
 {
-  init();
+  init( family );
 }
 
-CalendarResources::CalendarResources(const QString &timeZoneId)
-  : Calendar(timeZoneId)
+void CalendarResources::init( const QString &family )
 {
-  init();
-}
+  kdDebug(5800) << "CalendarResources::init( " << family << " )" << endl;
 
-void CalendarResources::init()
-{
-  kdDebug(5800) << "CalendarResources::init" << endl;
-
-  mManager = new CalendarResourceManager( "calendar" );
+  mManager = new CalendarResourceManager( family );
   mManager->addObserver( this );
 
   mStandardPolicy = new StandardDestinationPolicy( mManager );
@@ -681,7 +675,7 @@ bool CalendarResources::save( Ticket *ticket, Incidence *incidence )
 
   kdDebug(5800) << "tick " << ticket->resource()->resourceName() << endl;
 
-	// @TODO: Check if the resource was changed at all. If not, don't save.
+    // @TODO: Check if the resource was changed at all. If not, don't save.
   if ( ticket->resource()->save(incidence) ) {
     releaseSaveTicket( ticket );
     return true;

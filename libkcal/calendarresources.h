@@ -103,10 +103,9 @@ class LIBKCAL_EXPORT CalendarResources : public Calendar,
         Private *d;
     };
 
-    /** constructs a new calendar that uses the ResourceManager for "calendar" */
-    CalendarResources();
     /** constructs a new calendar, with variables initialized to sane values. */
-    CalendarResources( const QString &timeZoneId );
+    CalendarResources( const QString &timeZoneId = QString::fromLatin1( "UTC" ),
+                       const QString &family = "calendar" );
     ~CalendarResources();
 
     /**
@@ -293,7 +292,7 @@ class LIBKCAL_EXPORT CalendarResources : public Calendar,
     void slotSaveError( ResourceCalendar *r, const QString &err );
 
   private:
-    void init();
+    void init( const QString &family );
 
     bool mOpen;
 
