@@ -1,13 +1,10 @@
-<!DOCTYPE UI><UI>
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>KandyView_base</class>
-<widget>
-    <class>QWidget</class>
-    <property stdset="1">
-        <name>name</name>
+<widget class="QWidget">
+    <property name="name">
         <cstring>KandyView_base</cstring>
     </property>
-    <property stdset="1">
-        <name>geometry</name>
+    <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
@@ -15,219 +12,173 @@
             <height>441</height>
         </rect>
     </property>
-    <property stdset="1">
-        <name>caption</name>
+    <property name="caption">
         <string>Form1</string>
     </property>
-    <property>
-        <name>layoutMargin</name>
+    <property name="layoutMargin" stdset="0">
     </property>
-    <property>
-        <name>layoutSpacing</name>
+    <property name="layoutSpacing" stdset="0">
     </property>
     <grid>
-        <property stdset="1">
-            <name>margin</name>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
             <number>11</number>
         </property>
-        <property stdset="1">
-            <name>spacing</name>
+        <property name="spacing">
             <number>6</number>
         </property>
-        <widget row="0"  column="3"  rowspan="3"  colspan="1" >
-            <class>QLayoutWidget</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QLayoutWidget" row="0" column="3" rowspan="3" colspan="1">
+            <property name="name">
                 <cstring>Layout3</cstring>
             </property>
             <vbox>
-                <property stdset="1">
-                    <name>margin</name>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
                     <number>0</number>
                 </property>
-                <property stdset="1">
-                    <name>spacing</name>
+                <property name="spacing">
                     <number>6</number>
                 </property>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel">
+                    <property name="name">
                         <cstring>TextLabel3</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>Result:</string>
                     </property>
                 </widget>
-                <widget>
-                    <class>QMultiLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QMultiLineEdit">
+                    <property name="name">
                         <cstring>mResultView</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>frameShape</name>
+                    <property name="frameShape">
                         <enum>Box</enum>
                     </property>
-                    <property stdset="1">
-                        <name>frameShadow</name>
+                    <property name="frameShadow">
                         <enum>Plain</enum>
                     </property>
-                    <property stdset="1">
-                        <name>readOnly</name>
+                    <property name="readOnly">
                         <bool>true</bool>
                     </property>
                 </widget>
             </vbox>
         </widget>
-        <widget row="0"  column="2"  rowspan="3"  colspan="1" >
-            <class>QLayoutWidget</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QLayoutWidget" row="0" column="2" rowspan="3" colspan="1">
+            <property name="name">
                 <cstring>Layout4</cstring>
             </property>
             <vbox>
-                <property stdset="1">
-                    <name>margin</name>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
                     <number>0</number>
                 </property>
-                <property stdset="1">
-                    <name>spacing</name>
+                <property name="spacing">
                     <number>6</number>
                 </property>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel">
+                    <property name="name">
                         <cstring>TextLabel1</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>Input:</string>
                     </property>
                 </widget>
-                <widget>
-                    <class>QMultiLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QMultiLineEdit">
+                    <property name="name">
                         <cstring>mInput</cstring>
                     </property>
                 </widget>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QLabel">
+                    <property name="name">
                         <cstring>TextLabel2</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
+                    <property name="text">
                         <string>Output:</string>
                     </property>
                 </widget>
-                <widget>
-                    <class>QMultiLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
+                <widget class="QMultiLineEdit">
+                    <property name="name">
                         <cstring>mOutput</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>readOnly</name>
+                    <property name="readOnly">
                         <bool>true</bool>
                     </property>
                 </widget>
             </vbox>
         </widget>
-        <widget row="1"  column="0" >
-            <class>QPushButton</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QPushButton" row="1" column="0">
+            <property name="name">
                 <cstring>mButtonAdd</cstring>
             </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Add</string>
+            <property name="text">
+                <string>Add...</string>
             </property>
         </widget>
-        <widget row="1"  column="1" >
-            <class>QPushButton</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QPushButton" row="1" column="1">
+            <property name="name">
                 <cstring>mButtonEdit</cstring>
             </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Edit</string>
+            <property name="text">
+                <string>Edit...</string>
             </property>
         </widget>
-        <widget row="2"  column="0" >
-            <class>QPushButton</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QPushButton" row="2" column="0">
+            <property name="name">
                 <cstring>mButtonDelete</cstring>
             </property>
-            <property stdset="1">
-                <name>text</name>
+            <property name="text">
                 <string>Delete</string>
             </property>
         </widget>
-        <widget row="2"  column="1" >
-            <class>QPushButton</class>
-            <property stdset="1">
-                <name>name</name>
+        <widget class="QPushButton" row="2" column="1">
+            <property name="name">
                 <cstring>mButtonExecute</cstring>
             </property>
-            <property stdset="1">
-                <name>text</name>
+            <property name="text">
                 <string>Execute</string>
             </property>
         </widget>
-        <widget row="0"  column="0"  rowspan="1"  colspan="2" >
-            <class>QListView</class>
+        <widget class="QListView" row="0" column="0" rowspan="1" colspan="2">
             <column>
-                <property>
-                    <name>text</name>
+                <property name="text">
                     <string>Name</string>
                 </property>
-                <property>
-                    <name>clickable</name>
+                <property name="clickable">
                     <bool>true</bool>
                 </property>
-                <property>
-                    <name>resizeable</name>
+                <property name="resizeable">
                     <bool>true</bool>
                 </property>
             </column>
             <column>
-                <property>
-                    <name>text</name>
+                <property name="text">
                     <string>Command</string>
                 </property>
-                <property>
-                    <name>clickable</name>
+                <property name="clickable">
                     <bool>true</bool>
                 </property>
-                <property>
-                    <name>resizeable</name>
+                <property name="resizeable">
                     <bool>true</bool>
                 </property>
             </column>
             <column>
-                <property>
-                    <name>text</name>
+                <property name="text">
                     <string>Hex</string>
                 </property>
-                <property>
-                    <name>clickable</name>
+                <property name="clickable">
                     <bool>true</bool>
                 </property>
-                <property>
-                    <name>resizeable</name>
+                <property name="resizeable">
                     <bool>true</bool>
                 </property>
             </column>
-            <property stdset="1">
-                <name>name</name>
+            <property name="name">
                 <cstring>mCommandList</cstring>
             </property>
         </widget>
@@ -264,11 +215,6 @@
         <receiver>KandyView_base</receiver>
         <slot>editCommand()</slot>
     </connection>
-    <slot access="public">deleteCommand()</slot>
-    <slot access="public">editCommand()</slot>
-    <slot access="public">executeCommand()</slot>
-    <slot access="public">addCommand()</slot>
-    <slot access="public">showMobileGui()</slot>
 </connections>
 <tabstops>
     <tabstop>mCommandList</tabstop>
@@ -280,4 +226,12 @@
     <tabstop>mButtonDelete</tabstop>
     <tabstop>mButtonExecute</tabstop>
 </tabstops>
+<slots>
+    <slot>deleteCommand()</slot>
+    <slot>editCommand()</slot>
+    <slot>executeCommand()</slot>
+    <slot>addCommand()</slot>
+    <slot>showMobileGui()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -69,7 +69,7 @@
                     <number>6</number>
                 </property>
                 <spacer>
-                    <property name="name" stdset="0">
+                    <property name="name">
                         <cstring>Horizontal Spacing2</cstring>
                     </property>
                     <property name="orientation">
@@ -77,12 +77,6 @@
                     </property>
                     <property name="sizeType">
                         <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
                     </property>
                 </spacer>
                 <widget class="QPushButton">
@@ -117,7 +111,7 @@
                 <cstring>mHexCheck</cstring>
             </property>
             <property name="text">
-                <string>Hex Result</string>
+                <string>Hex result</string>
             </property>
         </widget>
         <widget class="QListView" row="2" column="0" rowspan="1" colspan="2">
