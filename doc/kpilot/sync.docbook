@@ -2,7 +2,11 @@
 <title>Synchronization</title>
 
 <para>
-Thong.
+This chapter describes the synchronization process
+that &kpilot; uses. It is a good idea to make a <link linkend="backup">backup</link>
+of your &handheld; regularly. Other than making backups, it should rarely be necessary
+to do anything other than drop your &handheld; in the cradle and press
+the &HotSync; button.
 </para>
 
 <sect1 id="backup">

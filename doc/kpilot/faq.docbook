@@ -365,4 +365,26 @@ Maybe later.
 </qandaset>
 
 </sect1>
+
+
+<sect1>
+<title>&kpilot;'s &DCOP; interface</title>
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>What does &kpilot; use &DCOP; for?</para>
+</question>
+<answer><para>
+The daemon and &kpilot; communicate using &DCOP;
+for several purposes: logging messages, changing the &HotSync;
+type, and exchanging configuration information.
+</para></answer>
+</qandaentry>
+
+</qandaset>
+
+</sect1>
+
 </chapter>
