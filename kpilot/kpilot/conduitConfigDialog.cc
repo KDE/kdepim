@@ -319,8 +319,8 @@ void ConduitConfigWidget::fillLists()
 	QCheckListItem *p = 0L;
 #define IC(a,b,c) p = new QCheckListItem(fConduitList,i18n(a),QCheckListItem::CheckBox); \
 	p->setText(CONDUIT_COMMENT,i18n(c)); \
-	p->setText(CONDUIT_LIBRARY,"internal_" ## b); \
-	p->setText(CONDUIT_DESKTOP,"internal_" ## b); \
+	p->setText(CONDUIT_LIBRARY,"internal_" b); \
+	p->setText(CONDUIT_DESKTOP,"internal_" b); \
 	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
 		p->setOn(true);
 
