@@ -420,9 +420,6 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
                 <property name="text">
                     <string>&amp;Generate Key Pair and Certificate Request</string>
                 </property>
-                <property name="accel">
-                    <string>Alt+G</string>
-                </property>
             </widget>
             <spacer row="3" column="2">
                 <property name="name">
