@@ -280,9 +280,8 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
-  } else if ( tagName == "start-date" ) {
+  } else if ( tagName == "start-date" )
     setStartDate( element.text() );
-  }
   else if ( tagName == "recurrence" )
     loadRecurrence( element );
   else if ( tagName == "attendee" ) {
@@ -292,9 +291,9 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
-  } else if ( tagName == "alarm" ) {
-    setAlarm( element.text().toFloat() );
-  }
+  } else if ( tagName == "alarm" )
+    // Alarms should be minutes before. Libkcal uses event time + alarm time
+    setAlarm( - element.text().toInt() );
   else
     return KolabBase::loadAttribute( element );
 
@@ -317,8 +316,11 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   if ( !mRecurrence.cycle.isEmpty() )
     saveRecurrence( element );
   saveAttendees( element );
-  if ( mHasAlarm )
-    writeString( element, "alarm", QString::number( alarm() ) );
+  if ( mHasAlarm ) {
+    // Alarms should be minutes before. Libkcal uses event time + alarm time
+    int alarmTime = ( int )( ( -alarm() ) + 0.5f );
+    writeString( element, "alarm", QString::number( alarmTime ) );
+  }
   return true;
 }
 
