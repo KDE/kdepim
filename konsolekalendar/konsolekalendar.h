@@ -5,7 +5,8 @@
         konsolekalendar.h  -  description
            -------------------
     begin                : Sun Jan  6 11:50:14 EET 2002
-    copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2002-2003 by Tuukka Pasanen
+    copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
  ***************************************************************************/
 
@@ -23,10 +24,11 @@
 
 #include <kapplication.h>
 
+#include <libkcal/calendarlocal.h>
+#include <libkcal/event.h>
+
 #include "konsolekalendar.h"
 #include "konsolekalendarvariables.h"
-#include "calendarlocal.h"
-#include "event.h"
 
 namespace KCal {
 
@@ -75,7 +77,13 @@ class KonsoleKalendar
 
    void deleteEvent();
 
-  void createCalendar();
+   /*
+    * Detect if event already exists
+    */
+
+   bool isEvent( QDateTime startdate, QDateTime enddate, QString summary );
+
+   bool createCalendar();
 
   private:
     void printEventList( Event::List *eventList );
