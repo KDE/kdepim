@@ -180,8 +180,8 @@ QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
 KNListView::KNListView(QWidget *parent, const char *name)
   : QListView(parent,name), sAsc(true), sCol(-1), activeItem(0)
 {
-  connect(header(), SIGNAL(sectionClicked(int)),
-          this, SLOT(slotSectionClicked(int)));
+  connect(header(), SIGNAL(clicked(int)),
+          this, SLOT(slotSortList(int)));
   disconnect(header(), SIGNAL(sizeChange(int,int,int)));
   connect(header(), SIGNAL(sizeChange(int,int,int)),
           this, SLOT(slotSizeChanged(int,int,int)));
@@ -226,13 +226,6 @@ void KNListView::clear()
 {
   activeItem=0;
   QListView::clear();
-}
-
-
-void KNListView::slotSectionClicked(int section)
-{
-  int col = header()->mapToIndex(section);
-  slotSortList(col);
 }
 
 

@@ -423,19 +423,19 @@ void KNodeView::configChanged()
   if (knGlobals.cfgManager->readNewsGeneral()->showScore()) {
     if (!h_drView->header()->isResizeEnabled(2)) {
       h_drView->header()->setResizeEnabled(true,2);
-      h_drView->header()->resizeSection(2,42);
+      h_drView->header()->setLabel(2,i18n("Score"),42);
     }
   } else {
-    h_drView->header()->resizeSection(2,0);
+    h_drView->header()->setLabel(2,QString::null,0);
     h_drView->header()->setResizeEnabled(false,2);
   }
   if (knGlobals.cfgManager->readNewsGeneral()->showLines()) {
     if (!h_drView->header()->isResizeEnabled(3)) {
       h_drView->header()->setResizeEnabled(true,3);
-      h_drView->header()->resizeSection(3,42);
+      h_drView->header()->setLabel(3,i18n("Lines"),42);
     }
   } else {
-    h_drView->header()->resizeSection(3,0);
+    h_drView->header()->setLabel(3,QString::null,0);
     h_drView->header()->setResizeEnabled(false,3);
   }
 
