@@ -63,6 +63,9 @@ ExchangeUpload::ExchangeUpload( KCal::Event *event, ExchangeAccount *account,
 
 //  kdDebug() << "Trying to add appointment " << m_currentUpload->summary() << endl;
 
+  // TODO: For exisiting events the URL for the uid should already be known.
+  // Store it after downloading and keep the mapping
+
   findUid( m_currentUpload->uid() );
 }
 
@@ -72,7 +75,7 @@ ExchangeUpload::~ExchangeUpload()
   kdDebug() << "Finished ExchangeUpload destructor" << endl;
 }
 
-void ExchangeUpload::findUid( QString const& uid )
+void ExchangeUpload::findUid( QString const &uid )
 {
   QString query = 
         "SELECT \"DAV:href\", \"urn:schemas:calendar:uid\"\r\n"
@@ -323,6 +326,8 @@ void ExchangeUpload::startUpload( const KURL &url )
   kdDebug() << "Uploading event: " << endl;
   kdDebug() << doc.toString() << endl;
 
+  kdDebug() << "Upload url: " << url << endl;
+
   KIO::DavJob *job = KIO::davPropPatch( url, doc, false );
   job->setWindow( mWindow );
   connect( job, SIGNAL( result( KIO::Job * ) ),
@@ -340,20 +345,23 @@ void ExchangeUpload::slotPatchResult( KIO::Job *job )
                    job->errorString() );
     return;
   }
-//  kdDebug() << "Patch result" << endl;
   QDomDocument response = static_cast<KIO::DavJob *>( job )->response();
-//  kdDebug() << response.toString() << endl;
+  kdDebug() << "Patch result: " << response.toString() << endl;
 
   // Either we have a "201 Created" (if a new event has been created) or 
-  // we have a "200 OK" (if an existing event has been altered), 
+  // we have a "200 OK" (if an existing event has been altered),
   // or else an error has occurred ;)
-  QDomElement status = response.documentElement().namedItem( "response" ).namedItem( "status" ).toElement();
-  QDomElement propstat = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "status" ).toElement();
+  QDomElement status = response.documentElement().namedItem( "response" )
+                       .namedItem( "status" ).toElement();
+  QDomElement propstat = response.documentElement().namedItem( "response" )
+                         .namedItem( "propstat" ).namedItem( "status" )
+                         .toElement();
   kdDebug() << "status: " << status.text() << endl;
   kdDebug() << "propstat: " << propstat.text() << endl;
   if ( ! ( status.text().contains( "201" ) || 
            propstat.text().contains( "200" ) ) )
-    emit finished( this, ExchangeClient::EventWriteError, "Upload error response: \n" + response.toString() ); 
+    emit finished( this, ExchangeClient::EventWriteError,
+                   "Upload error response: \n" + response.toString() ); 
   else 
     emit finished( this, ExchangeClient::ResultOK, QString::null );
 }
