@@ -241,28 +241,6 @@ private:
 	enum { None = 0 , Running, Connected, Done } fConduitRunStatus ;
 
 public:
-#if 0
-  /**
-   * Opens database "database" on Pilot and returns the id to reference it:
-   */
-  PilotSerialDatabase* openDatabase(char* database) { return new PilotSerialDatabase(this, database); }
-
-  /**
-   * Opens database "database" locally and returns the handle to it:
-   */
-  PilotLocalDatabase* openLocalDatabase(const QString &database);
-	// { 
-	//	return new PilotLocalDatabase(kapp->localkdedir() +  
-	//		BACKUP_DIR + 
-	//		getPilotUser().getUserName() + 
-	//		"/", database); 
-	// }
-
-  /**
-   * Closes database 'database'.
-   */
-  void closeDatabase(PilotDatabase* database) { delete database; }
-#endif
 
   /**
    * Write a log entry to the pilot. Note that the library
@@ -350,4 +328,7 @@ signals:
 
 #undef REALLY_KPILOTLINK
 
-// $Log: $
+// $Log$
+// Revision 1.19  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
