@@ -218,7 +218,14 @@ void CertificateWizardImpl::slotGenerateCertificate()
     certParms += "<GnupgKeyParms format=\"internal\">\n";
     certParms += "Key-Type: RSA\n";
     certParms += "Key-Length: 1024\n"; // PENDING(NN) Might want to make this user-configurable
-    certParms += "Key-Usage: Sign, Encrypt\n"; // PENDING(NN) Might want to make this user-configurable
+    certParms += "Key-Usage: ";
+    if ( signOnlyCB->isChecked() )
+      certParms += "Sign";
+    else if ( encryptOnlyCB->isChecked() )
+      certParms += "Encrypt";
+    else
+      certParms += "Sign, Encrypt";
+    certParms += "\n";
     certParms += "name-dn: ";
 
     QString email;
