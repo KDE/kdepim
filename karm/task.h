@@ -8,9 +8,11 @@
 #include <qptrvector.h>
 #include <qpixmap.h>
 #include "karm.h"
+#include "loging.h"
 
 class QFile;
 class QTimer;
+class Loging;
 
 /**
 	Encapsulates a task.
@@ -27,6 +29,7 @@ private:
   QTimer *_timer;
   int _i;
   static QPtrVector<QPixmap> *icons;
+     Loging *_loging;
 
 public:
 	/** constructor */

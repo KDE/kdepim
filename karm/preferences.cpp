@@ -30,8 +30,20 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
   _saveFileW = new KURLRequester(box3, "_saveFileW");
 
   _doAutoSaveW = new QCheckBox(i18n("Automatically save tasks"), autoSaveMenu, "_doAutoSaveW");
+
   connect(_doAutoSaveW, SIGNAL(clicked()),
           this, SLOT(autoSaveCheckBoxChanged()));
+
+   _doTimeLogingW = new QCheckBox(i18n("Do time loging"), autoSaveMenu,
+   								 "_doTimeLogingW");
+   connect(_doTimeLogingW, SIGNAL(clicked()),
+ 		  this, SLOT(timeLogingCheckBoxChanged()));
+   
+   QHBox *box4 = new QHBox(autoSaveMenu);
+   _timeLogingLabelW = new QLabel(i18n("File to log the times to"), box4,
+                               "save label");
+   _timeLogW = new KURLRequester(box4, "_timeLogW");
+
 
   QHBox *box2 = new QHBox(autoSaveMenu);
   _autoSaveLabelW = new QLabel(i18n("Minutes between each auto save:"), box2,
@@ -78,6 +90,9 @@ void Preferences::showDialog()
   // set all widgets
   _saveFileW->lineEdit()->setText(_saveFileV);
 
+  _doTimeLogingW->setChecked(_doTimeLogingV);
+  _timeLogW->lineEdit()->setText(_timeLogV);
+
   _doIdleDetectionW->setChecked(_doIdleDetectionV);
   _idleDetectValueW->setValue(_idleDetectValueV);
 
@@ -91,6 +106,8 @@ void Preferences::showDialog()
 void Preferences::slotOk()
 {
   _saveFileV = _saveFileW->lineEdit()->text();
+  _timeLogV = _timeLogW->lineEdit()->text();
+  _doTimeLogingV    = _doTimeLogingW->isChecked();
   _doIdleDetectionV = _doIdleDetectionW->isChecked();
   _idleDetectValueV = _idleDetectValueW->value();
   _doAutoSaveV    = _doAutoSaveW->isChecked();
@@ -120,9 +137,18 @@ void Preferences::autoSaveCheckBoxChanged()
   _autoSaveValueW->setEnabled(enabled);
 }
 
+void Preferences::timeLogingCheckBoxChanged()
+{
+  bool enabled = _doTimeLogingW->isChecked();
+  _timeLogingLabelW->setEnabled(enabled);
+  _timeLogW->setEnabled(enabled);
+}
+
 void Preferences::emitSignals()
 {
   emit(saveFile(_saveFileV));
+  emit(timeLoging(_doTimeLogingV));
+  emit(timeLog(_timeLogV));
   emit(detectIdleness(_doIdleDetectionV));
   emit(idlenessTimeout(_idleDetectValueV));
   emit(autoSave(_doAutoSaveV));
@@ -133,6 +159,11 @@ void Preferences::emitSignals()
 QString Preferences::saveFile()
 {
   return _saveFileV;
+}
+
+QString Preferences::timeLog()
+{
+  return _timeLogV;
 }
 
 bool Preferences::detectIdleness()
@@ -148,6 +179,11 @@ int Preferences::idlenessTimeout()
 bool Preferences::autoSave()
 {
   return _doAutoSaveV;
+}
+
+bool Preferences::timeLoging() 
+{
+  return _doTimeLogingV;
 }
 
 int Preferences::autoSavePeriod()
@@ -171,6 +207,11 @@ void Preferences::load()
   _saveFileV      = config.readEntry(QString::fromLatin1("file"),
                                      locateLocal("appdata",
                                                  QString::fromLatin1("karmdata.txt")));
+  _doTimeLogingV  = config.readBoolEntry(QString::fromLatin1("time loging"),
+  false);
+  _timeLogV   = config.readEntry(QString::fromLatin1("time log file"),
+  								 locateLocal("appdata",
+                                             QString::fromLatin1("karmlog.txt")));
   _doAutoSaveV    = config.readBoolEntry(QString::fromLatin1("auto save"), true);
   _autoSaveValueV = config.readNumEntry(QString::fromLatin1("auto save period"), 5);
 
@@ -187,6 +228,8 @@ void Preferences::save()
 
   config.setGroup( QString::fromLatin1("Saving"));
   config.writeEntry( QString::fromLatin1("file"), _saveFileV);
+  config.writeEntry( QString::fromLatin1("time loging"), _doTimeLogingV);
+  config.writeEntry( QString::fromLatin1("time log file"), _timeLogV);
   config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
   config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
 

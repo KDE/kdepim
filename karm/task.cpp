@@ -5,6 +5,7 @@
 #include <kiconloader.h>
 #include <qtimer.h>
 #include"task.h"
+#include"loging.h"
 
 
 QPtrVector<QPixmap> *Task::icons = 0;
@@ -34,6 +35,9 @@ void Task::init(const QString& taskName, long minutes, long sessionTime)
     }
   }
 
+  // is this the right place?
+  _loging = Loging::instance();
+
   _name = taskName.stripWhiteSpace();
   _totalTime = minutes;
   _sessionTime = sessionTime;
@@ -50,6 +54,7 @@ void Task::setRunning(bool on)
   if (on) {
     if (!_timer->isActive()) {
       _timer->start(1000);
+	  _loging->start(this);
       _i=7;
       updateActiveIcon();
     }
@@ -57,6 +62,7 @@ void Task::setRunning(bool on)
   else {
     if (_timer->isActive()) {
       _timer->stop();
+	  _loging->stop(this);
       setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
     }
   }
@@ -71,12 +77,14 @@ void Task::setName( const QString& name )
 void Task::setTotalTime ( long minutes )
 {
   _totalTime = minutes;
+  _loging->newTotalTime( this, minutes);
   update();
 }
 
 void Task::setSessionTime ( long minutes )
 {
   _sessionTime = minutes;
+  _loging->newSessionTime( this, minutes);
   update();
 }
 

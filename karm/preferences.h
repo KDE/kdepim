@@ -20,6 +20,8 @@ public:
   bool detectIdleness();
   int idlenessTimeout();
   QString saveFile();
+  bool timeLoging();
+  QString timeLog();
   bool autoSave();
   int autoSavePeriod();
 
@@ -33,6 +35,8 @@ signals:
   void detectIdleness(bool on);
   void idlenessTimeout(int minutes);
   void saveFile(QString);
+  void timeLoging(bool on);
+  void timeLog(QString);
   void autoSave(bool on);
   void autoSavePeriod(int minutes);
   void setupChanged();
@@ -42,6 +46,7 @@ protected slots:
   virtual void slotCancel();
   void idleDetectCheckBoxChanged();
   void autoSaveCheckBoxChanged();
+  void timeLogingCheckBoxChanged();
   
 protected:
   void emitSignals();
@@ -52,16 +57,16 @@ private:
   bool _unsavedChanges;
 
   // Widgets in the dialog (All variables ends in W to indicate that they are Widgets)
-  QCheckBox *_doIdleDetectionW, *_doAutoSaveW;
-  QLabel    *_idleDetectLabelW, *_autoSaveLabelW;
+  QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_doTimeLogingW;
+  QLabel    *_idleDetectLabelW, *_autoSaveLabelW, *_timeLogingLabelW;
   QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
-  KURLRequester *_saveFileW;
+  KURLRequester *_saveFileW, *_timeLogW;
   QVBox *idleMenu;
   
   // Values for the preferences. (All variables in in V to indicate they are Values)
-  bool _doIdleDetectionV, _doAutoSaveV;
+  bool _doIdleDetectionV, _doAutoSaveV, _doTimeLogingV;
   int  _idleDetectValueV, _autoSaveValueV;
-  QString _saveFileV;
+  QString _saveFileV, _timeLogV;
   
 };
 

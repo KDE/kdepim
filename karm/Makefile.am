@@ -13,9 +13,9 @@ METASOURCES = AUTO
 
 karm_SOURCES =  adddlg.cpp main.cpp \
 		task.cpp top.cpp kaccelmenuwatch.cpp print.cpp \
-		preferences.cpp ktimewidget.cpp karm.cpp idle.cpp
+		preferences.cpp ktimewidget.cpp karm.cpp idle.cpp loging.cpp
 noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h \
-		 version.h print.h idle.h preferences.h ktimewidget.h
+		 version.h print.h idle.h preferences.h ktimewidget.h loging.h
 
 KDE_ICON = karm
 
