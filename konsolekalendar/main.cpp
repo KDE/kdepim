@@ -65,9 +65,9 @@ using namespace std;
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
 static const char progVersion[] = "1.1.1";
-static const char desc[] = I18N_NOOP(
-  "A command line interface to KDE calendars"
-  );
+static const char progDesc[] = "A command line interface to KDE calendars";
+static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
+
 
 static KCmdLineOptions options[] =
 {
@@ -81,7 +81,7 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "Specify which calendar you want to use" ), 0 },
 
   { ":",
-    I18N_NOOP( " Major operation modes:" ), 0 },
+    I18N_NOOP( "Major operation modes:" ), 0 },
   { "view",
     I18N_NOOP( "  Print calendar events in specified export format" ), 0 },
     { "add",
@@ -96,7 +96,7 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "  Import this calendar to main calendar" ), 0 },
 
   { ":",
-    I18N_NOOP( " Operation modifiers:" ), 0 },
+    I18N_NOOP( "Operation modifiers:" ), 0 },
   { "all",
     I18N_NOOP( "  View all calendar entries" ), 0 },
   { "next",
@@ -124,7 +124,7 @@ static KCmdLineOptions options[] =
   { "location <location>",
     I18N_NOOP( "  Add location to event (for add/change modes)" ), 0 },
 
-  { ":", I18N_NOOP( " Export options:" ), 0 },
+  { ":", I18N_NOOP( "Export options:" ), 0 },
   { "export-type <export-type>",
     I18N_NOOP( "Export file type (Default: text)" ), 0 },
   { "export-file <export-file>",
@@ -141,6 +141,10 @@ static KCmdLineOptions options[] =
                "--description \"Get My Head Examined\"\n"
                "  konsolekalendar --delete --uid KOrganizer-1740326.803" ), 0 },
 
+  { "",
+    I18N_NOOP( "For more information visit the program home page at:\n"
+               "  http://pim.kde.org/components/konsolekalendar.php" ), 0 },
+
   KCmdLineLastOption
 };
 
@@ -150,11 +154,11 @@ int main( int argc, char *argv[] )
     progName,                        // internal program name
     I18N_NOOP( progDisplay ),        // displayable program name.
     progVersion,                     // version string
-    desc,                            // short porgram description
-    KAboutData::License_GPL,         // license type
+    I18N_NOOP( progDesc ),           // short porgram description
+    KAboutData::License_LGPL,        // license type
     "(c) 2002-2004, Tuukka Pasanen and Allen Winter", // copyright statement
     0,                               // any free form text
-    "http://pim.kde.org",            // program home page address
+    progURL,                         // program home page address
     "bugs.kde.org"                   // bug report email address
     );
 
