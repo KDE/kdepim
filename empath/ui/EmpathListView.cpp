@@ -18,8 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// TODO: Make shift key work, make dragging of multiple items work.
-//       document this class
+// TODO: Make shift key work, document this class, have an indicator
+// to show when the mouse pointer is over an item. For the latter I 
+// think of a different text color like in qiconview, but that's not
+// easy to implement.
 
 #ifdef __GNUG__
 # pragma implementation "EmpathListView.h"
@@ -34,7 +36,6 @@
 EmpathListView::EmpathListView(
     QWidget * parent, const char * name)
     :    QListView(parent, name),
-        updateLink_(false),
         delayedLink_(false),
         waitForLink_(false),
         dragEnabled_(true),
@@ -42,15 +43,15 @@ EmpathListView::EmpathListView(
 {
     empathDebug("ctor");
 
-    linkedItem_ = 0;
+    linkItem_ = 0;
 
-    delayedLinkTimer_ = new QTimer(this); 
+    delayedLinkTimer_ = new QTimer(this);
 
     QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
             this, SLOT(s_currentChanged(QListViewItem *)));
 
     QObject::connect(delayedLinkTimer_, SIGNAL(timeout()),
-            this, SLOT(s_updateLink()));
+            this, SLOT(s_delayedLinkTimeout()));
 }
 
 EmpathListView::~EmpathListView()
@@ -58,137 +59,212 @@ EmpathListView::~EmpathListView()
 }
 
     void
-EmpathListView::setUpdateLink(bool flag, UpdateAction actionOnUpdate )
+EmpathListView::setLinkItem(QListViewItem * i)
+{ 
+    delayedLinkTimer_->stop();
+    if (i != linkItem_) {
+        linkItem_ = i;
+        emit linkChanged(i);
+    }
+}
+
+    QListViewItem *
+EmpathListView::itemAt(const QPoint & screenPos, 
+    EmpathListView::Area & areaAtPos) const
 {
-    empathDebug("");
-    updateLink_ = flag;
-    if (actionOnUpdate == Revert && linkedItem_) 
-        setCurrentItem(linkedItem_);
-    else if (actionOnUpdate == Update && currentItem())
-        s_updateLink(currentItem());
+    QListViewItem * i = itemAt(screenPos);
+    if (!i) { 
+        areaAtPos = Void;
+        return i;
+    }
+
+    int xrel = screenPos.x() - ( i->depth() - !rootIsDecorated() ) * treeStepSize();
+
+    if (xrel >= treeStepSize()) 
+        areaAtPos = Item;
+    else if (xrel >= 0 && i->childCount() > 0)
+        areaAtPos = OpenClose;
+    else 
+        areaAtPos = Void;
+
+    return i;
 }
 
     void
-EmpathListView::s_currentChanged(QListViewItem * item)
+EmpathListView::expand(QListViewItem * item)
 {
-    // The current item should always be selected in
-    // single selection mode.
-    if (!isMultiSelection()) setSelected(item, true);
+    if (!item)
+        return;
+
+    setOpen(item, true);
     
-    if (updateLink_) { 
-    
-        if (delayedLink_) {
-            delayedLinkTimer_->start(400); // XXX: hardcoded
-            empathDebug("delayedLinkTimer started");
-            delayedLink_ = false;
-            return;
-        } else
-            s_updateLink(item);
+    QListViewItem * child = item->firstChild();
+    while (child) {
+        expand(child);
+        child = child->nextSibling();
     }
 }
 
     void
-EmpathListView::s_updateLink()
+EmpathListView::collapse(QListViewItem * item)
 {
-    s_updateLink(currentItem());
+    if (!item)
+        return;
+        
+    QListViewItem * child = item->firstChild();
+    while (child) {
+        collapse(child);
+        child = child->nextSibling();
+    }
+    
+    setOpen(item, false);
 }
 
     void
-EmpathListView::s_updateLink(QListViewItem *item)
+EmpathListView::s_currentChanged(QListViewItem *)
+{
+    if (delayedLink_) {
+        delayedLinkTimer_->start(400); // XXX: hardcoded
+        delayedLink_ = false;
+    }
+}
+
+    void
+EmpathListView::s_delayedLinkTimeout()
 {
     delayedLinkTimer_->stop();
-    if (item && item != linkedItem_) {
-        if (waitForLink_) {
-            setEnabled(false);
-        }
-        // setCursor(waitCursor);
-        s_showLink(item);
-        linkedItem_ = item;
-    }
+    setLinkItem(currentItem());
 }
 
-    void
-EmpathListView::s_showing()
-{
-    setCursor(arrowCursor);
-    setEnabled(true);
-}
-
-    void
-EmpathListView::s_showLink(QListViewItem * i)
-{
-    s_showing();
-}
-
-    void 
-EmpathListView::startDrag(QListViewItem *i)
-{
-}
- 
     void
 EmpathListView::contentsMousePressEvent(QMouseEvent *e)
 {
-    if (!e) return;
-    
-    updateLink_ = false;
-            
+    // Unfortunately there is a lot of duplicated code here.
+    if (!e) 
+        return;
+
+    delayedLink_ = false;
+
+    pressPos_ = e->pos();
+    QPoint vp = contentsToViewport(pressPos_);
+    pressItem_ = itemAt(vp, pressArea_);
+
     if (e->button() == RightButton) {
-        QListView::contentsMousePressEvent(e);
+
+        if ( !pressItem_ ) {
+            clearSelection();
+            emit rightButtonPressed( 0, viewport()->mapToGlobal( vp ), -1);
+            emit rightButtonPressed( 0, viewport()->mapToGlobal( vp ), 
+                -1, pressArea_ );
+            return;
+        }
+      
+        setCurrentItem(pressItem_);
+      
+        int c = 0;
+        int cumColumnWidth = columnWidth(c);
+        while (vp.x() > cumColumnWidth) 
+            cumColumnWidth += columnWidth(++c);
+        
+        emit rightButtonPressed( pressItem_, viewport()->mapToGlobal( vp ), c );
+        emit rightButtonPressed( pressItem_, viewport()->mapToGlobal( vp ), c, pressArea_ );
+
         return;
     } 
 
-    if (e->button() != LeftButton) return;
-            
-    if (!isMultiSelection()) {
-        maybeDrag_ = (true & dragEnabled_);
-        pressPos_ = e->pos();
-        QListView::contentsMousePressEvent(e);
+    if (e->button() != LeftButton) 
+        return;
+
+    if (pressArea_ == Void)
+        return;
+
+    if (pressArea_ == OpenClose) {
+        setCurrentItem(pressItem_);
+        setOpen(pressItem_, !pressItem_->isOpen());
         return;
     }
-            
+
     // No modifier key pressed
     if (e->state() == 0) { 
-
         maybeDrag_ = (true & dragEnabled_);
-        pressPos_ = e->pos();
-                
-        // Behaviour in multiple selection mode should be the
-        // same as in single selection mode:
-        clearSelection();
-        setMultiSelection(false);
-                
-        QListView::contentsMousePressEvent(e);
-
-        setMultiSelection(true);                
-                
+        setCurrentItem(pressItem_);
+        if (!pressItem_->isSelected()) {
+            clearSelection();
+            setSelected(pressItem_, true);
+        }
         return;
     }
             
-    if (e->state() & ControlButton ) {
-        QListView::contentsMousePressEvent(e);
+    if (e->state() & ControlButton) {
+        return;
+    }
+
+    if (e->state() & ShiftButton) {
         return;
     }
 }
 
     void
 EmpathListView::contentsMouseReleaseEvent(QMouseEvent *e)
-{  
-    if (!e) return;
+{ 
+    if (!e || pressArea_ != Item) 
+        return;
     
-    if (!( e->button() == LeftButton && e->state() & ControlButton ))
-        setUpdateLink(true, Update);
+    if (e->state() & ShiftButton) {
+
+        if (!(e->state() & ControlButton))
+            clearSelection();
+
+        if (!currentItem()) {
+            setCurrentItem(pressItem_);
+            setSelected(pressItem_, true);
+            return;
+        }
+    
+        QListViewItem * i1 = 0;
+        QListViewItem * i2 = 0;
+   
+        if (currentItem()->itemPos() < pressItem_->itemPos()) {
+            i1 = currentItem();
+            i2 = pressItem_;
+        } else {
+            i1 = pressItem_;
+            i2 = currentItem();
+        }
+        
+        while (i1 != i2) {
+            setSelected(i1, true);
+            i1 = i1->itemBelow();
+        }
+        setSelected(i2, true);
+
+        setCurrentItem(pressItem_);
+        return;
+    }
+ 
+    if (e->state() & ControlButton) {
+        setCurrentItem(pressItem_);
+        setSelected(pressItem_, !isSelected(pressItem_));
+        return;
+    }
+
+    if (e->button() == LeftButton) {
+        clearSelection();
+        setSelected(pressItem_, true);
+        setLinkItem(pressItem_);
+    }
 
     maybeDrag_ = false;
-    
-    QListView::contentsMouseReleaseEvent(e);
 }
 
     void
 EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 {   
-    if (!maybeDrag_) return;
+    if (!maybeDrag_) 
+        return;
 
-    if (!e) return;
+    if (!e) 
+        return;
 
     empathDebug("We may be dragging");
 
@@ -204,22 +280,37 @@ EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 
     maybeDrag_ = false;
 
-    QListViewItem * item = itemAt(contentsToViewport(pressPos_));
-
-    if (!item) {
+    if (!pressItem_) {
         empathDebug("Not over anything to drag");
         // QListView::contentsMouseMoveEvent(e);
         return;
     }
     
-    // It's up to the children what to do with it.
-    startDrag(item);
+    QList<QListViewItem> selected;   
+    
+    if (isMultiSelection()) {
+        QListViewItemIterator it(this);
+        while (it.current()) {
+            if (it.current()->isSelected())
+                selected.append(it.current());
+            ++it;
+        }
+    } else
+        selected.append(selectedItem());
+        
+    emit startDrag(selected);
 }
 
     void
 EmpathListView::keyPressEvent(QKeyEvent *e)
 {  
     delayedLink_ = true;
+
+    if (e->key() == Key_Escape && isMultiSelection()) {
+        clearSelection();
+        return;
+    }
+    
     QListView::keyPressEvent(e);
 }
 

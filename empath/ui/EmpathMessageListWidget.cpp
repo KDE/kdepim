@@ -103,8 +103,13 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 
     _setupMessageMenu();
    
-    QObject::connect(this, SIGNAL(showLink(QListViewItem *)),
-            this, SLOT(s_showLink(QListViewItem *)));
+    QObject::connect(
+            this, SIGNAL(linkChanged(QListViewItem *)),
+            this, SLOT(s_linkChanged(QListViewItem *)));
+
+     QObject::connect(
+            this, SIGNAL(startDrag(const QList<QListViewItem> &)),
+            this, SLOT(s_startDrag(const QList<QListViewItem> &)));
     
     // QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
     //         this, SLOT(s_currentChanged(QListViewItem *)));
@@ -115,8 +120,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(
     
     // Connect right button up so we can produce the popup context menu.
     QObject::connect(
-        this, SIGNAL(rightButtonPressed(QListViewItem *, const QPoint &, int)),
-        this, SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int)));
+        this, SIGNAL(rightButtonPressed(QListViewItem *, const QPoint &, int, Area)),
+        this, SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int, Area)));
     
     // Connect the header's section clicked signal so we can sort properly
     QObject::connect(header(), SIGNAL(sectionClicked(int)),
@@ -392,18 +397,17 @@ EmpathMessageListWidget::s_messageView()
 }
 
     void
-EmpathMessageListWidget::s_rightButtonPressed(
-        QListViewItem * item, const QPoint & pos, int)
+EmpathMessageListWidget::s_rightButtonPressed(QListViewItem * item, 
+        const QPoint & pos, int, EmpathListView::Area area)
 {
-    if (item == 0) return;
+    if (area == Void) return;
 
-    if (!item->isSelected()) {
-        clearSelection();
-        setSelected(item, true);
+    if (area == OpenClose) {
+        threadMenu_.exec(pos);
+        wantScreenUpdates_ = true;
+        return;
     }
 
-    setCurrentItem(item);
-   
     if (_nSelected() > 1) {
         multipleMessageMenu_.exec(pos);
         wantScreenUpdates_ = true;
@@ -444,7 +448,7 @@ EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 }
 
     void
-EmpathMessageListWidget::s_showLink(QListViewItem *i)
+EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
 {
     empathDebug("Current message changed - updating message widget");
     markAsReadTimer_->cancel();
@@ -639,6 +643,12 @@ EmpathMessageListWidget::_setupMessageMenu()
     multipleMessageMenu_.insertItem(
         empathIcon("mini-save"), i18n("Save As"),
         this, SLOT(s_messageSaveAs()));
+
+    threadMenu_.insertItem(i18n("Expand"),
+        this, SLOT(s_expandThread()));
+        
+    threadMenu_.insertItem(i18n("Collapse"),
+        this, SLOT(s_collapseThread()));
 }
 
 EmpathMarkAsReadTimer::EmpathMarkAsReadTimer(EmpathMessageListWidget * parent)
@@ -685,17 +695,18 @@ EmpathMarkAsReadTimer::s_timeout()
 }
 
     void 
-EmpathMessageListWidget::startDrag(QListViewItem * item)
+EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
 {
-    EmpathMessageListItem * i = (EmpathMessageListItem *)item;
-
-    EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());
-
     empathDebug("Starting a drag");
-
     QStrList uriList;
-
-    uriList.append(messageURL.asString());
+    
+    QListIterator<QListViewItem> it(items);
+    while (it.current()) {
+        EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
+        EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());
+        uriList.append(messageURL.asString());
+        ++it;
+    }
 
     // char * c = new char[i->id().length() + 1];
     // strcpy(c, i->id().ascii());
@@ -705,7 +716,6 @@ EmpathMessageListWidget::startDrag(QListViewItem * item)
 
     u->setPixmap(empathIcon("tree"));
 
-    empathDebug("Starting the drag copy: " + i->id());
     u->drag();
 }
 
@@ -1020,6 +1030,18 @@ EmpathMessageListWidget::s_messageMarkMany()
         default:
             break;
     }
+}
+
+    void
+EmpathMessageListWidget::s_expandThread()
+{
+    expand(currentItem());   
+}
+
+    void
+EmpathMessageListWidget::s_collapseThread()
+{
+    collapse(currentItem());
 }
 
     void

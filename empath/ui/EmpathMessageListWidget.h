@@ -120,15 +120,19 @@ class EmpathMessageListWidget : public EmpathListView
         void s_messageCopyTo();
         void s_messagePrint();
         void s_messageFilter();
+
+        void s_expandThread();
+        void s_collapseThread();
         
-        void s_rightButtonPressed    (QListViewItem *, const QPoint &, int);
+        void s_rightButtonPressed   (QListViewItem *, const QPoint &, int, Area);
         void s_doubleClicked        (QListViewItem *);
-        void s_showLink             (QListViewItem *);
+        void s_linkChanged          (QListViewItem *);
+        void s_startDrag            (const QList<QListViewItem> &);
         
-        void s_showFolder        (const EmpathURL &);
-        void s_headerClicked    (int);
-        void s_itemGone            (const QString &);
-        void s_itemCome            (const QString &);
+        void s_showFolder           (const EmpathURL &);
+        void s_headerClicked        (int);
+        void s_itemGone             (const QString &);
+        void s_itemCome             (const QString &);
     
     signals:
         
@@ -137,11 +141,10 @@ class EmpathMessageListWidget : public EmpathListView
         
     private:
         
-        void _fillDisplay        (EmpathFolder *);
-        void _fillThreading        (EmpathFolder *);
-        void _fillNonThreading    (EmpathFolder *);
+        void _fillDisplay       (EmpathFolder *);
+        void _fillThreading     (EmpathFolder *);
+        void _fillNonThreading  (EmpathFolder *);
 
-        void startDrag(QListViewItem *);
         
         void _setupMessageMenu();
         
@@ -162,9 +165,10 @@ class EmpathMessageListWidget : public EmpathListView
 
         void append(EmpathMessageListItem * item);
 
-        QPopupMenu    messageMenu_;
-        QPopupMenu    multipleMessageMenu_;
-        QPopupMenu    messageMarkMenu_;
+        QPopupMenu  messageMenu_;
+        QPopupMenu  multipleMessageMenu_;
+        QPopupMenu  messageMarkMenu_;
+        QPopupMenu  threadMenu_;
         
         EmpathIndexRecordList masterList_;
         EmpathMessageListItemList itemList_;

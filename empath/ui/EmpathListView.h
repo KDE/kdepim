@@ -27,6 +27,7 @@
 
 // Qt includes
 #include <qlistview.h>
+#include <qlist.h>
 
 // Local includes
 #include "Empath.h"
@@ -50,10 +51,7 @@ class EmpathListView : public QListView
 
         virtual ~EmpathListView();
 
-        enum UpdateAction { DoNothing, Revert, Update };
-
-        void setUpdateLink(bool flag, UpdateAction actionOnUpdate = DoNothing ); 
-        bool isUpdateLink() { return updateLink_; };
+        enum Area { Item, OpenClose, Void };
 
         /**
          * When set TRUE the link isn't shown immediately when the cursor is
@@ -62,22 +60,34 @@ class EmpathListView : public QListView
         void setDelayedLink(bool flag) { delayedLink_ = flag; };
         bool isDelayedLink() { return delayedLink_; };
 
+        virtual void setLinkItem(QListViewItem *);
+        QListViewItem * linkItem() const
+            { return linkItem_; };
+        
+        QListViewItem * itemAt(const QPoint & screenPos) const 
+            { return QListView::itemAt(screenPos); };
+        QListViewItem * itemAt(const QPoint & screenPos, 
+            Area & areaAtPos) const;
+        
+        void expand(QListViewItem *);
+        void collapse(QListViewItem *);
+        
     protected slots:
 
-        void s_currentChanged   (QListViewItem *);
-        void s_updateLink       ();
-        void s_updateLink       (QListViewItem *);
-        virtual void s_showLink (QListViewItem *);
-        virtual void s_showing  ();          
+        void s_currentChanged       (QListViewItem *);
+        void s_delayedLinkTimeout   ();
 
     signals:
+      
+        void rightButtonPressed(QListViewItem *, const QPoint &, int);
+        void rightButtonPressed(QListViewItem *, const QPoint &, int, Area);
         
+        void linkChanged(QListViewItem *);
         void showLink(QListViewItem *);
+        void startDrag(const QList<QListViewItem> &); // Add another one for single selection(?)
 
     protected:
 
-        virtual void startDrag (QListViewItem *);
-        
         virtual void contentsMousePressEvent    (QMouseEvent *);
         virtual void contentsMouseReleaseEvent  (QMouseEvent *);
         virtual void contentsMouseMoveEvent     (QMouseEvent *);
@@ -85,8 +95,7 @@ class EmpathListView : public QListView
 
     private:
 
-        bool updateLink_;
-        QListViewItem * linkedItem_;
+        QListViewItem * linkItem_;
 
         bool delayedLink_;
         QTimer * delayedLinkTimer_;
@@ -95,6 +104,8 @@ class EmpathListView : public QListView
 
         // DnD stuff
         QPoint pressPos_;
+        QListViewItem * pressItem_;
+        Area pressArea_;
         bool dragEnabled_;
         bool maybeDrag_;
 

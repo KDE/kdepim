@@ -59,7 +59,8 @@ class EmpathFolderWidget : public EmpathListView
 
     protected slots:
 
-        void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
+        void s_rightButtonPressed(QListViewItem *, const QPoint &, 
+            int, Area);
         void s_folderProperties();
         void s_mailboxCheck();
         void s_mailboxProperties();
@@ -69,7 +70,8 @@ class EmpathFolderWidget : public EmpathListView
         void s_setUpAccounts();
         void s_openChanged();
         void s_openCurrent();
-        void s_showLink(QListViewItem *);
+        void s_linkChanged(QListViewItem *);
+        void s_startDrag(const QList<QListViewItem> &);
         
     signals:
 
@@ -77,8 +79,6 @@ class EmpathFolderWidget : public EmpathListView
 
     protected:
 
-        void startDrag(QListViewItem *);
-        
         void contentsDragMoveEvent      (QDragMoveEvent *);
         void contentsDragEnterEvent     (QDragEnterEvent *);
         void contentsDragLeaveEvent     (QDragLeaveEvent *);

@@ -47,7 +47,7 @@
 #include "EmpathMailboxIMAP4.h"
 
 EmpathFolderWidget::EmpathFolderWidget(
-    QWidget * parent, const char * name, bool wait)
+    QWidget * parent, const char * name, bool /* wait */)
     :    EmpathListView(parent, name)
 {
     setFrameStyle(QFrame::NoFrame);
@@ -69,16 +69,24 @@ EmpathFolderWidget::EmpathFolderWidget(
     autoscrollMargin = 5;
     
     QObject::connect(
-        this,
-        SIGNAL(rightButtonPressed(QListViewItem *, const QPoint &, int)),
-        this,
-        SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int)));
+        this, SIGNAL(rightButtonPressed(QListViewItem *, 
+            const QPoint &, int, Area)),
+        this, SLOT(s_rightButtonPressed(QListViewItem *, 
+            const QPoint &, int, Area)));
     
+    QObject::connect(
+        this, SIGNAL(linkChanged(QListViewItem *)),
+        this, SLOT(s_linkChanged(QListViewItem *)));
+
     QObject::connect(
         empath, SIGNAL(updateFolderLists()), this, SLOT(s_update()));
 
     QObject::connect(autoOpenTimer, SIGNAL(timeout()),
             this, SLOT(s_openCurrent()));
+
+    QObject::connect(
+        this, SIGNAL(startDrag(const QList<QListViewItem> &)),
+        this, SLOT(s_startDrag(const QList<QListViewItem> &)));
 
     ////////
     
@@ -216,7 +224,7 @@ EmpathFolderWidget::_addChildren(
 }
 
     void
-EmpathFolderWidget::s_showLink(QListViewItem * item)
+EmpathFolderWidget::s_linkChanged(QListViewItem * item)
 {
     EmpathFolderListItem * i = (EmpathFolderListItem *)item;
     
@@ -240,14 +248,14 @@ EmpathFolderWidget::selected() const
 
     void
 EmpathFolderWidget::s_rightButtonPressed(
-    QListViewItem * item, const QPoint &, int)
+    QListViewItem * item, const QPoint &, int, EmpathListView::Area area)
 {
-    if (item == 0) {
+    if (area == Void) {
         otherPopup_.exec(QCursor::pos());
         return;
     }
 
-    setSelected(item, true);
+    // setSelected(item, true);
     
     EmpathFolderListItem * i = (EmpathFolderListItem *)item;
     
@@ -415,9 +423,9 @@ EmpathFolderWidget::s_openCurrent()
 }
 
     void
-EmpathFolderWidget::startDrag(QListViewItem * item)
+EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
 {
-    EmpathFolderListItem * i = (EmpathFolderListItem *)item;
+    EmpathFolderListItem * i = (EmpathFolderListItem *)items.getFirst();
     
     // We don't want to drag Mailboxes.
     if (!i->url().hasFolder()) return;
@@ -439,7 +447,6 @@ EmpathFolderWidget::startDrag(QListViewItem * item)
 EmpathFolderWidget::contentsDragEnterEvent(QDragEnterEvent * e)
 {
     empathDebug("");
-    setUpdateLink(false);
     
     if (!QUriDrag::canDecode(e)) {
         e->ignore(); 
@@ -473,9 +480,7 @@ EmpathFolderWidget::contentsDragMoveEvent(QDragMoveEvent * e)
         dropItem = 0;
         return;
     }
-    
-    setSelected(i, true);
-    
+   
     if (!insideMargin.contains(vp)) {
         startAutoScroll();
         e->accept(QRect(0,0,0,0));
@@ -514,8 +519,8 @@ EmpathFolderWidget::contentsDragLeaveEvent(QDragLeaveEvent *)
     empathDebug("");
     autoOpenTimer->stop();
     stopAutoScroll();
+    setCurrentItem(linkItem());
     dropItem = 0;
-    setUpdateLink(true, Revert);
 }
 
     void
@@ -560,12 +565,16 @@ EmpathFolderWidget::contentsDropEvent(QDropEvent * e)
     }
     
     // str += "\n\n";
-   
-    empathDebug("Got: " + QString(l.first()) + " " + s );
+    QStrListIterator it(l);
+    while (it.current()) {
+        empathDebug("Got: " + QString(it.current()) + " " + s );
+        // empath->move(it.current(), selected());
+        ++it;
+    }
     
     e->accept();
 
-    setUpdateLink(true, Revert);
+    setCurrentItem(linkItem());
 }
 
     void
