@@ -9,9 +9,9 @@ apidox-am-yes:
 		echo "IMAGE_PATH             = $(top_srcdir)/doc/api" >> Doxyfile ;\
 		echo "OUTPUT_DIRECTORY       = $(top_builddir)/apidocs" >> Doxyfile; \
 		echo "HTML_OUTPUT            = $(subdir)/html" >> Doxyfile; \
-		echo "HTML_HEADER            = $(top_srcdir)/doc/api/header.html" >> Doxyfile;\
-		echo "HTML_FOOTER            = $(top_srcdir)/doc/api/footer.html" >> Doxyfile;\
-		echo "HTML_STYLESHEET        = $(top_srcdir)/doc/api/doxygen.css" >> Doxyfile;\
+		echo "HTML_HEADER            = $(top_srcdir)/doc/api/header.html" >> Doxyfile; \
+		echo "HTML_FOOTER            = $(top_srcdir)/doc/api/footer.html" >> Doxyfile; \
+		echo "HTML_STYLESHEET        = $(top_builddir)/apidocs/doxygen.css" >> Doxyfile; \
 		echo "LATEX_OUTPUT           = $(subdir)/latex" >> Doxyfile; \
 		echo "RTF_OUTPUT             = $(subdir)/rtf" >> Doxyfile; \
 		echo "MAN_OUTPUT             = $(subdir)/man" >> Doxyfile; \
@@ -103,9 +103,9 @@ apidox-am-toplevel-yes:
 	echo "SOURCE_BROWSER         = NO" >> Doxyfile ; \
 	echo "ALPHABETICAL_INDEX     = NO" >> Doxyfile ; \
 	echo "HTML_OUTPUT            = ." >> Doxyfile ; \
-	echo "HTML_HEADER            = apidocs/common/mainheader.html" >> Doxyfile ; \
-	echo "HTML_FOOTER            = apidocs/common/mainfooter.html" >> Doxyfile ; \
-	echo "HTML_STYLESHEET        = apidocs/common/doxygen.css" >> Doxyfile ; \
+	echo "HTML_HEADER            = $(top_srcdir)/doc/api/mainheader.html" >> Doxyfile ; \
+	echo "HTML_FOOTER            = $(top_srcdir)/doc/api/mainfooter.html" >> Doxyfile ; \
+	echo "HTML_STYLESHEET        = $(top_builddir)/apidocs/common/doxygen.css" >> Doxyfile ; \
 	echo "GENERATE_LATEX         = NO" >> Doxyfile ; \
 	echo "GENERATE_RTF           = NO" >> Doxyfile ; \
 	echo "GENERATE_MAN           = NO" >> Doxyfile ; \
