@@ -2,11 +2,11 @@ This file describes issues that need to be resolved with the KDE 2.0
 port of KPilot:
 
 _ FileInstallerWidget is totally hosed
-_ Docking
+x Docking (Dan - 7/26/00)
 _ Drag and drop all over the place
 _ VERION constant was removed from text strings.  I hate to do this,
   but I didn't feel like tracking the problem down...
 _ pilotDaemon.cc drag and drop issues
-_ pilotDaemon.cc docking issues
+x pilotDaemon.cc docking issues (Dan - 7/26/00)
 _ pilotDaemon.cc KFM issues
-_ Add pilotInstalls, pilotdbs, and conduits to resource dirs
+x Add pilotInstalls, pilotdbs, and conduits to resource dirs (Dan - 7/26/00 removed)
