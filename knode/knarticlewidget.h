@@ -115,7 +115,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool eventFilter(QObject *, QEvent *);
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
     bool canDecode8BitText(const QCString &charset);
-    QString toHtmlString(const QString &line, bool parseURLs=false, bool beautification=false, bool allowRot13=false);
+    QString toHtmlString(const QString &line, bool parseURLs=false, bool beautification=false, bool allowRot13=false, bool strictURLparsing=false);
     void openURL(const QString &url);
     void saveAttachment(int id);
     void openAttachment(int id);
@@ -129,7 +129,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool h_tmlDone, r_ot13;
     QTimer *t_imer;
     QCString o_verrideCS;
-    bool f_orceCS, emuKMail;
+    bool f_orceCS, emuKMail;    
 
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
