@@ -8,8 +8,8 @@
 
 #include "identity.h"
 
-#include "kfileio.h"
-#include "collectingprocess.h"
+#include <libkdepim/kfileio.h>
+#include <libkdepim/collectingprocess.h>
 
 #include <kdebug.h>
 #include <klocale.h>

@@ -31,7 +31,7 @@
 #ifndef _KPIM_IDENTITYMANAGER_H_
 #define _KPIM_IDENTITYMANAGER_H_
 
-#include "configmanager.h"
+#include <libkdepim/configmanager.h>
 
 #include <qvaluelist.h>
 #include <dcopobject.h>

@@ -12,6 +12,7 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      $(top_builddir)/libical/src/libical/libical.la \
                      $(top_builddir)/libical/src/libicalss/libicalss.la \
                      $(top_builddir)/ktnef/lib/libktnef.la \
+                     ../libemailfunctions/libemailfunctions.la \
                      -lkresources -lkabc
 
 libkcal_la_COMPILE_FIRST = $(top_builddir)/libical/src/libical/ical.h $(top_builddir)/libical/src/libicalss/icalss.h
