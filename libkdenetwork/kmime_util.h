@@ -64,9 +64,6 @@ namespace KMime {
     return isOfSet( eTextMap, ch );
   }
 
-  extern QCString decodeBase64( const QCString & src, int & pos,
-				const char * delimiters = 0 );
-
   /** Decode string @p src according to RFC2047 (ie. the
       =?charset?[qb]?encoded?= construct).
       @param src       source string.
