@@ -2079,17 +2079,17 @@ void KNConfig::PostNewsSpellingWidget::apply()
 KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   : BaseWidget(p,n)
 {
-  //QGridLayout *topLayout = new QGridLayout(this,1,1);
-  QBoxLayout *topLayout = new QVBoxLayout(this, KDialog::spacingHint());
+  QBoxLayout *topLayout = new QVBoxLayout(this, 5);
   c_onf = new KpgpConfig(this,"knode pgp config",false);
   topLayout->addWidget(c_onf);
   QGroupBox *optBox = new QGroupBox(i18n("KNode specific options"), this);
   topLayout->addWidget(optBox);
   QBoxLayout *groupL = new QVBoxLayout(optBox, KDialog::spacingHint());
   groupL->addSpacing(fontMetrics().lineSpacing());
-  a_utoCheckSigCB = new QCheckBox(i18n("Automatic check signed articles"),optBox);
+  a_utoCheckSigCB = new QCheckBox(i18n("Ch&eck signatures automatically"),optBox);
   groupL->addWidget(a_utoCheckSigCB);
   a_utoCheckSigCB->setChecked(knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs());
+  topLayout->addStretch(1);
 }
 
 
