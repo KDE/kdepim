@@ -567,6 +567,9 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 			      i18n("%n backends returned truncated output.\n"
 				   "Not all available keys are shown"),
 			      i18n("Key List Result") );
+
+  mKeyListView->flushKeys();
+
   this->setEnabled( true );
   mListJobCount = mTruncated = 0;
   mKeysToCheck.clear();
