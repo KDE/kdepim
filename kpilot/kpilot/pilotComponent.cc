@@ -56,6 +56,11 @@
 static const char *pilotComponent_id =
 	"$Id$";
 
+// This is a pilot constant and should probably be defined
+// in a more sensible place but I'm lazy right now.
+//
+#define MAX_CATEGORIES	(15)
+
 PilotComponent::PilotComponent(QWidget* parent,
 	const QString &path) : 
 	QWidget(parent),
@@ -121,7 +126,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 		currentCatID=0;
 		while(strcmp(info->name[currentCatID], 
 		       selectedCategory.local8Bit()) && 
-			(currentCatID < fCatList->count()))
+			(currentCatID < MAX_CATEGORIES))
 		{
 			DEBUGKPILOT << fname
 				<< ": Didn't match category "
@@ -133,33 +138,33 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			currentCatID++;
 		}
 
-		if (!(currentCatID < fCatList->count()))
+		if (!(currentCatID < MAX_CATEGORIES))
 		{
 			currentCatID=0;
 			while(strcmp(info->name[currentCatID],
 				selectedCategory.latin1()) &&
-				(currentCatID < fCatList->count()))
+				(currentCatID < MAX_CATEGORIES))
 			{
 				currentCatID++;
 			}
 		}
 
-		if (!(currentCatID < fCatList->count()))
+		if (!(currentCatID < MAX_CATEGORIES))
 		{
 			currentCatID=0;
 			while(strcmp(info->name[currentCatID],
 				selectedCategory.ascii()) &&
-				(currentCatID < fCatList->count()))
+				(currentCatID < MAX_CATEGORIES))
 			{
 				currentCatID++;
 			}
 		}
 
-		if (!(currentCatID < fCatList->count()))
+		if (!(currentCatID < MAX_CATEGORIES))
 		{
 			currentCatID=0;
 			while((info->name[currentCatID][0]) &&
-				(currentCatID < fCatList->count()))
+				(currentCatID < MAX_CATEGORIES))
 			{
 				if (selectedCategory ==
 					QString::fromLatin1(info->name[currentCatID]))
@@ -175,7 +180,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			}
 		}
 
-		if (currentCatID < fCatList->count())
+		if (currentCatID < MAX_CATEGORIES)
 		{
 			DEBUGKPILOT << fname 
 				<< ": Matched category "
@@ -206,7 +211,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 #endif
 			currentCatID=0;
 			while((info->name[currentCatID][0]) &&
-				(currentCatID < fCatList->count()))
+				(currentCatID < MAX_CATEGORIES))
 			{
 #ifdef DEBUG
 				kdWarning() << __FUNCTION__
@@ -265,6 +270,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.16  2001/04/03 09:55:13  adridg
+// Administrative, cleanup
+//
 // Revision 1.15  2001/04/01 17:32:20  adridg
 // Fix infinie loop when changing categories
 //
