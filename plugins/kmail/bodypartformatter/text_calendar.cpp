@@ -341,19 +341,20 @@ class Formatter : public KMail::Interface::BodyPartFormatter
           html += meetingDetails( incidence, event );
         } else {
           html += i18n("<h2>This task has been published</h2>");
-          html += meetingDetails( incidence, event );        
+          html += meetingDetails( incidence, event );
         }
       } else {
         html += i18n("Error: iMIP message with unknown method: '%1'")
-                .arg( sMethod );        
+                .arg( sMethod );
       }
 
+#if 0
       html += "<br>";
       html += "<a href=\"" + bodyPart->makeLink( "accept" ) + "\"><b>";
       html += i18n("[Enter this into my calendar]");
       html += "</b></a>";
+#endif
 
-#if 0
       // Add the groupware URLs
       html += "<br>&nbsp;<br>&nbsp;<br>";
       html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
@@ -396,7 +397,6 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         html += i18n( "[Remove this from my calendar]" );
       }
       html += "</b></a></td></tr></table>";
-#endif
 
       QString sDescr = incidence->description();
       if( ( sMethod == "request" || sMethod == "cancel" ) &&
@@ -410,7 +410,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       writer->begin( "" );
       writer->write( html );
       writer->end();
-    
+
       return Ok;
     }
 };
@@ -456,7 +456,18 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                               const QString &path ) const
     {
       if ( !path.isEmpty() ) {
-        if ( path == "accept" ) return i18n("Accept Incidence");
+        if ( path == "accept" )
+          return i18n("Accept incidence");
+        if ( path == "accept_conditionally" )
+          return i18n( "Accept incidence conditionally" );
+        if ( path == "decline" )
+          return i18n( "Decline incidence" );
+        if ( path == "check_calendar" )
+          return i18n("Check my calendar..." );
+        if ( path == "reply" )
+          return i18n( "Enter incidence into my calendar" );
+        if ( path == "cancel" )
+          return i18n( "Remove incidence from my calendar" );
       }
 
       return QString::null;
