@@ -253,7 +253,7 @@ class ResourceCalendar : public KRES::Resource
     /**
       (De-)activate a subresource.
     */
-    virtual void setSubresourceActive( const QString& subresource, bool active ) {}
+    virtual void setSubresourceActive( const QString &, bool active );
 
   private:
     class Private;

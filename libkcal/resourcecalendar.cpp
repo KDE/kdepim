@@ -56,4 +56,8 @@ Incidence::List ResourceCalendar::rawIncidences()
   return Calendar::mergeIncidenceList( rawEvents(), rawTodos(), journals() );
 }
 
+void ResourceCalendar::setSubresourceActive( const QString &, bool )
+{
+}
+
 #include "resourcecalendar.moc"
