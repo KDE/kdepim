@@ -1093,7 +1093,7 @@ void KNArticleWidget::createHtmlPage()
   if ( !xfhead.isEmpty() )
   {
     KPIM::KXFace xf;
-    xf.toBitmap(xfhead).convertToImage().save(t_mpFile->name(), "PNG");
+    xf.toImage(xfhead).save(t_mpFile->name(), "PNG");
     xface = QString::fromLatin1(
         "<td rowspan=\"4\" width=\"48\" height=\"48\"><img border=\"1\" src=\"%1\"></td>")
         .arg(t_mpFile->name());
