@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -30,25 +30,38 @@
 
 #include <qdatetime.h>
 
-namespace KCal {
+/**
+ * @file konsolekalendarepoch.h
+ * Provides the KonsoleKalendarEpoch class definition.
+ */
 
+namespace KCal
+{
+  /**
+   * Class for timestamps expressed as epochs.
+   * @author Allen Winter
+   */
   class KonsoleKalendarEpoch
   {
   public:
+    /**
+     * Constructor.
+     */
     KonsoleKalendarEpoch();
+    /**
+     * Destructor
+     */
     ~KonsoleKalendarEpoch();
 
     /**
-     * Converts epoxh time to QT DateTime format
-     *
-     * @param epoch epoch time
+     * Converts epoch time to QDateTime format.
+     * @param epoch epoch time.
      */
     static QDateTime epoch2QDateTime( uint epoch );
 
     /**
-     * Converts QT DateTime to epoch format
-     *
-     * @param epoch epoch time
+     * Converts QT DateTime to epoch format.
+     * @param dt is a QDateTime to convert to an epoch.
      */
     static uint QDateTime2epoch( QDateTime dt );
 

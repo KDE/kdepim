@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -24,13 +24,17 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendarvariables.cpp
+ * Provides the KonsoleKalendarVariables class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <klocale.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
-#include <kglobalsettings.h>
 #include <kpimprefs.h>
 
 #include <qdatetime.h>
@@ -72,58 +76,6 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bIsCalendarResources = false;
 }
 
-void KonsoleKalendarVariables::addEvent( QDateTime start,
-                                         QDateTime end,
-                                         QString summary,
-                                         QString description,
-                                         QString location,
-                                         bool floating ) {
-
-    Event *event = new Event();
-
-
-    kdDebug() << "konsolekalendarvariables.cpp::addEvent | adding event | "
-              << start.toString() << ", " << end.toString() << ", " << summary
-	      << ", " <<description << ", " << location
-              << endl;
-
-
-    event->setDtStart( start );
-    event->setDtEnd( end );
-    event->setSummary( summary );
-    event->setDescription( description );
-    event->setLocation(location );
-    event->setFloats(floating);
-
-    m_eventList.append( event );
-
-}
-
-void KonsoleKalendarVariables::addTodo( QDateTime start,
-                                        QDateTime due,
-                                        QString summary,
-                                        QString description,
-                                        QString location ) {
-
-    Todo *todo = new Todo();
-
-    todo->setDtStart( start );
-    todo->setDtDue( due );
-    todo->setDescription( description );
-    todo->setSummary( summary );
-    todo->setLocation( location );
-
-    m_todoList.append( todo );
-}
-
-Event::List *KonsoleKalendarVariables::getEvent(){
-  return &m_eventList;
-}
-
-Todo::List *KonsoleKalendarVariables::getTodo(){
-  return &m_todoList;
-}
-
 void KonsoleKalendarVariables::setTimeZoneId()
 {
   m_bIsTimeZoneId = true;
@@ -145,7 +97,7 @@ KonsoleKalendarVariables::~KonsoleKalendarVariables()
   // delete m_resource;
 }
 
-void KonsoleKalendarVariables::setUID(QString uid)
+void KonsoleKalendarVariables::setUID( QString uid )
 {
   m_bIsUID = true;
   m_UID = uid;
@@ -161,7 +113,7 @@ bool KonsoleKalendarVariables::isUID()
   return m_bIsUID;
 }
 
-void KonsoleKalendarVariables::setStartDateTime(QDateTime start)
+void KonsoleKalendarVariables::setStartDateTime( QDateTime start )
 {
   m_bIsStartDateTime = true;
   m_startDateTime = start;
@@ -177,7 +129,7 @@ bool KonsoleKalendarVariables::isStartDateTime()
   return m_bIsStartDateTime;
 }
 
-void KonsoleKalendarVariables::setEndDateTime(QDateTime end)
+void KonsoleKalendarVariables::setEndDateTime( QDateTime end )
 {
   m_bIsEndDateTime = true;
   m_endDateTime = end;
@@ -193,7 +145,7 @@ bool KonsoleKalendarVariables::isEndDateTime()
   return m_bIsEndDateTime;
 }
 
-void KonsoleKalendarVariables::setNext(bool next)
+void KonsoleKalendarVariables::setNext( bool next )
 {
   m_bNext = next;
 }
@@ -203,7 +155,7 @@ bool KonsoleKalendarVariables::isNext()
   return m_bNext;
 }
 
-void KonsoleKalendarVariables::setVerbose(bool verbose)
+void KonsoleKalendarVariables::setVerbose( bool verbose )
 {
   m_bVerbose = verbose;
 }
@@ -213,7 +165,7 @@ bool KonsoleKalendarVariables::isVerbose()
   return m_bVerbose;
 }
 
-void KonsoleKalendarVariables::setDryRun(bool dryrun)
+void KonsoleKalendarVariables::setDryRun( bool dryrun )
 {
   m_bDryRun = dryrun;
 }
@@ -253,7 +205,7 @@ bool KonsoleKalendarVariables::getUseJournals()
   return( m_bUseJournals );
 }
 
-void KonsoleKalendarVariables::setCalendarFile(QString calendar)
+void KonsoleKalendarVariables::setCalendarFile( QString calendar )
 {
   m_calendar = calendar;
 }
@@ -263,7 +215,7 @@ QString KonsoleKalendarVariables::getCalendarFile()
   return m_calendar;
 }
 
-void KonsoleKalendarVariables::setImportFile(QString calendar)
+void KonsoleKalendarVariables::setImportFile( QString calendar )
 {
   m_import = calendar;
 }
@@ -314,7 +266,7 @@ bool KonsoleKalendarVariables::isAll()
   return m_bAll;
 }
 
-void KonsoleKalendarVariables::setAll( bool all)
+void KonsoleKalendarVariables::setAll( bool all )
 {
   m_bAll = all;
 }
@@ -334,7 +286,7 @@ bool KonsoleKalendarVariables::isDefault()
   return m_bIsDefault;
 }
 
-void KonsoleKalendarVariables::setDescription(QString description)
+void KonsoleKalendarVariables::setDescription( QString description )
 {
   m_bDescription = true;
   m_description = description;
@@ -350,7 +302,7 @@ bool KonsoleKalendarVariables::isDescription()
   return m_bDescription;
 }
 
-void KonsoleKalendarVariables::setLocation(QString location)
+void KonsoleKalendarVariables::setLocation( QString location )
 {
   m_bLocation = true;
   m_location = location;
@@ -366,7 +318,7 @@ bool KonsoleKalendarVariables::isLocation()
   return m_bLocation;
 }
 
-void KonsoleKalendarVariables::setSummary(QString summary)
+void KonsoleKalendarVariables::setSummary( QString summary )
 {
   m_bSummary = true;
   m_summary = summary;
@@ -382,7 +334,7 @@ bool KonsoleKalendarVariables::isSummary()
   return m_bSummary;
 }
 
-void KonsoleKalendarVariables::setFloating(bool floating)
+void KonsoleKalendarVariables::setFloating( bool floating )
 {
   m_bFloating = floating;
 }
@@ -392,20 +344,24 @@ bool KonsoleKalendarVariables::getFloating()
   return m_bFloating;
 }
 
-void KonsoleKalendarVariables::setDaysCount( int count ) {
+void KonsoleKalendarVariables::setDaysCount( int count )
+{
   m_daysCount = count;
   m_bDaysCount = true;
 }
 
-int KonsoleKalendarVariables::getDaysCount() {
+int KonsoleKalendarVariables::getDaysCount()
+{
   return m_daysCount;
 }
 
-bool KonsoleKalendarVariables::isDaysCount() {
+bool KonsoleKalendarVariables::isDaysCount()
+{
   return m_bDaysCount;
 }
 
-bool KonsoleKalendarVariables::addCalendarResources(ResourceCalendar *resource)
+bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar
+                                                     *resource )
 {
   if ( m_resource ) {
     // In current state we support only one calendar
@@ -456,7 +412,8 @@ bool KonsoleKalendarVariables::isCalendarResources()
   return m_bIsCalendarResources;
 }
 
-void KonsoleKalendarVariables::setCalendarResources(CalendarResources *resource)
+void KonsoleKalendarVariables::setCalendarResources( CalendarResources
+                                                     *resource )
 {
   m_resource = resource;
   setCalendar( (CalendarLocal *) m_resource );
@@ -473,62 +430,6 @@ CalendarResourceManager *KonsoleKalendarVariables::getCalendarResourceManager( )
   return m_resource->resourceManager();
 }
 
-
-void KonsoleKalendarVariables::setParseString( QString parsestring ){
-  QString option;
-  QString temp;
-
-  // Default values for start date/time (today at 07:00)
-  QDate startdate = QDate::currentDate();
-  QTime starttime( 7 ,0 );
-  // Default values for end date/time (today at 17:00)
-  QDate enddate = QDate::currentDate();
-  QTime endtime( 17, 0 );
-
-  QString summary;
-  QString description;
-  QString location;
-  // bool floating;
-  int a = 0;
-
-  m_bParseString = true;
-  m_parseString = parsestring;
-
-  for( a=0; a < (m_parseString.contains(',')+1); a++){
-     option=m_parseString.section(",",a,a);
-     cout << option.local8Bit() << endl;
-
-     if( a == 0 ){
-       startdate = QDate::fromString( option,  Qt::ISODate );
-     } else if ( a == 1 ) {
-       starttime = QTime::fromString( option,  Qt::ISODate );
-     } else if( a == 2 ){
-       enddate = QDate::fromString( option,  Qt::ISODate );
-     } else if ( a == 3 ) {
-       endtime = QTime::fromString( option,  Qt::ISODate );
-     } else if( a == 4 ){
-       summary = option;
-     } else if ( a == 5 ) {
-       description = option;
-     } else if ( a == 6 ) {
-       location = option;
-     }
-
-  }
-
-  addEvent(QDateTime(startdate,starttime),QDateTime(enddate,endtime),summary,description,location,false);
-}
-
-
-QString KonsoleKalendarVariables::getParseString(){
-  return m_parseString;
-}
-
-
-bool KonsoleKalendarVariables::isParseString(){
-  return m_bParseString;
-}
-
 bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 {
 
@@ -541,15 +442,15 @@ bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 
     if ( manager->isEmpty() == true ) {
 
-      config->setGroup("General");
+      config->setGroup( "General" );
       QString fileName = config->readPathEntry( "Active Calendar" );
 
       QString resourceName;
       if ( fileName.isEmpty() ) {
         fileName = locateLocal( "appdata", "std.ics" );
-        resourceName = i18n("Default KOrganizer resource");
+        resourceName = i18n( "Default KOrganizer resource" );
       } else {
-        resourceName = i18n("Active Calendar");
+        resourceName = i18n( "Active Calendar" );
       }
 
       kdDebug() << "konsolekalendarvariables.cpp::loadCalendarResources() | "

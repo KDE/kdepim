@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file main.cpp
+ * KonsoleKalendar main program.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -45,7 +50,6 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kstandarddirs.h>
 #include <kdebug.h>
 
 #include <libkcal/calformat.h>
@@ -105,8 +109,6 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "  Create new calendar file if one does not exist" ), 0 },
   { "import <import-file>",
     I18N_NOOP( "  Import this calendar to main calendar" ), 0 },
-//  { "parse-string <entries>",  this has not been fully implemented
-//    I18N_NOOP( "  Parses many entries in same line [YYYY-MM-DD,HH:MM:SS,description,location]" ), 0 },
   { ":",
     I18N_NOOP( "Operation modifiers:" ), 0 },
   { "all",
@@ -209,7 +211,7 @@ int main( int argc, char *argv[] )
 
   // Default values for start date/time (today at 07:00)
   QDate startdate = QDate::currentDate();
-  QTime starttime( 7 ,0 );
+  QTime starttime( 7, 0 );
 
   // Default values for end date/time (today at 17:00)
   QDate enddate = QDate::currentDate();
@@ -240,8 +242,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on export list
-   *
+   * Switch on export list
    */
   if ( args->isSet( "export-list" ) ) {
     cout << i18n(
@@ -257,8 +258,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Set incidence type(s)
-   *
+   * Set incidence type(s)
    */
   if ( args->isSet( "event" ) ) {
     variables.setUseEvents( true );
@@ -287,8 +287,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on exporting
-   *
+   * Switch on exporting
    */
   variables.setExportType( ExportTypeText );
   if ( args->isSet( "export-type" ) ) {
@@ -318,23 +317,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   * If we like to use new Parsing system
-   */
-/* TODO: not fully implemented yet
-  if ( args->isSet( "parse-string" ) ) {
-    option = args->getOption( "parse-string" );
-
-    kdDebug() << "main | parse options | "
-              << "Parse String: "
-              << "(" << option << ")"
-              << endl;
-
-    variables.setParseString( option );
-  }
-*/
-  /*
-   *  Switch on export file name
-   *
+   * Switch on export file name
    */
   if ( args->isSet( "export-file" ) ) {
     option = args->getOption( "export-file" );
@@ -348,11 +331,10 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on View (Print Entries).  This is the default mode of operation.
-   *
+   * Switch on View (Print Entries).  This is the default mode of operation.
    */
   if ( args->isSet( "view" ) ) {
-    view=true;
+    view = true;
 
     kdDebug() << "main | parse options | "
               << "Mode: (Print incidences)"
@@ -360,12 +342,11 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on Add (Insert Entry)
-   *
+   * Switch on Add (Insert Entry)
    */
   if ( args->isSet( "add" ) ) {
-    view=false;
-    add=true;
+    view = false;
+    add = true;
 
     kdDebug() << "main | parse options | "
               << "Mode: (Add incidence)"
@@ -373,12 +354,11 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on Change (Modify Entry)
-   *
+   * Switch on Change (Modify Entry)
    */
   if ( args->isSet( "change" ) ) {
-    view=false;
-    change=true;
+    view = false;
+    change = true;
 
     kdDebug() << "main | parse options | "
               << "Mode: (Change incidence)"
@@ -386,12 +366,11 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on Delete (Remove Entry)
-   *
+   * Switch on Delete (Remove Entry)
    */
   if ( args->isSet( "delete" ) ) {
-    view=false;
-    del=true;
+    view = false;
+    del = true;
 
     kdDebug() << "main | parse options | "
               << "Mode: (Delete incidence)"
@@ -399,22 +378,19 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on Create
-   *
+   * Switch on Create
    */
   if ( args->isSet( "create" ) ) {
-    view=false;
-    create=true;
+    view = false;
+    create = true;
 
     kdDebug() << "main | parse options | "
               << "Calendar File: (Create)"
               << endl;
   }
 
-
   /*
-   *  If there is summary attached.
-   *
+   * If there is summary attached.
    */
   if ( args->isSet( "summary" ) ) {
     option = args->getOption( "summary" );
@@ -428,8 +404,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  If there is description attached.
-   *
+   * If there is description attached.
    */
   if ( args->isSet( "description" ) ) {
     option = args->getOption( "description" );
@@ -443,8 +418,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  If there is location information
-   *
+   * If there is location information
    */
   if ( args->isSet( "location" ) ) {
     option = args->getOption( "location" );
@@ -458,11 +432,9 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Show next happening and exit
-   *
+   * Show next happening and exit
    */
-  if ( args->isSet( "next" ) )
-  {
+  if ( args->isSet( "next" ) ) {
     kdDebug() << "main | parse options | "
               << "Show next incidence only"
               << endl;
@@ -470,12 +442,10 @@ int main( int argc, char *argv[] )
     variables.setNext( true );
   }
 
-
   /*
-   *  Set incidence unique string identifier
-   *
+   * Set incidence unique string identifier
    */
-  if (args->isSet( "uid" ) ) {
+  if ( args->isSet( "uid" ) ) {
     option = args->getOption( "uid" );
 
     kdDebug() << "main | parse options | "
@@ -487,8 +457,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Set starting date for calendar
-   *
+   * Set starting date for calendar
    */
   if ( args->isSet( "date" ) ) {
     option = args->getOption( "date" );
@@ -498,8 +467,8 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    startdate = QDate::fromString( option,  Qt::ISODate );
-    if ( ! startdate.isValid() ) {
+    startdate = QDate::fromString( option, Qt::ISODate );
+    if ( !startdate.isValid() ) {
       cout << i18n( "Invalid Start Date Specified: %1" ).
         arg( option ).local8Bit()
            << endl;
@@ -512,8 +481,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Set starting time
-   *
+   * Set starting time
    */
   if ( args->isSet( "time" ) ) {
     option = args->getOption( "time" );
@@ -524,8 +492,8 @@ int main( int argc, char *argv[] )
               << endl;
 
     if ( option.upper() != "FLOAT" ) {
-      starttime = QTime::fromString( option,  Qt::ISODate );
-      if ( ! starttime.isValid() ) {
+      starttime = QTime::fromString( option, Qt::ISODate );
+      if ( !starttime.isValid() ) {
         cout << i18n( "Invalid Start Time Specified: %1" ).
           arg( option ).local8Bit()
              << endl;
@@ -544,8 +512,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Set end date for calendar
-   *
+   * Set end date for calendar
    */
   if ( args->isSet( "end-date" ) ) {
     QString option = args->getOption( "end-date" );
@@ -555,8 +522,8 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    enddate = QDate::fromString( option,  Qt::ISODate );
-    if ( ! enddate.isValid() ) {
+    enddate = QDate::fromString( option, Qt::ISODate );
+    if ( !enddate.isValid() ) {
       cout << i18n( "Invalid End Date Specified: %1" ).
         arg( option ).local8Bit()
            << endl;
@@ -569,11 +536,9 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Show next # days and exit
-   *
+   * Show next # days and exit
    */
-  if ( args->isSet( "show-next" ) )
-  {
+  if ( args->isSet( "show-next" ) ) {
     bool ok;
 
     option = args->getOption( "show-next" );
@@ -582,7 +547,7 @@ int main( int argc, char *argv[] )
               << endl;
     variables.setDaysCount( option.toInt( &ok, 10 ) );
 
-    if ( ! ok ) {
+    if ( !ok ) {
       cout << i18n( "Invalid Date Count Specified: %1" ).
         arg( option ).local8Bit()
            << endl;
@@ -598,8 +563,7 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Set ending time
-   *
+   * Set ending time
    */
   if ( args->isSet( "end-time" ) ) {
     option = args->getOption( "end-time" );
@@ -610,8 +574,8 @@ int main( int argc, char *argv[] )
               << endl;
 
     if ( option.upper() != "FLOAT" ) {
-      endtime = QTime::fromString( option,  Qt::ISODate );
-      if ( ! endtime.isValid() ) {
+      endtime = QTime::fromString( option, Qt::ISODate );
+      if ( !endtime.isValid() ) {
         cout << i18n( "Invalid End Time Specified: %1" ).
           arg( option ).local8Bit()
              << endl;
@@ -631,10 +595,9 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Set start date/time from epoch
-   *
+   * Set start date/time from epoch
    */
-  time_t epochstart=0;
+  time_t epochstart = 0;
   if ( args->isSet( "epoch-start" ) ) {
     option = args->getOption( "epoch-start" );
 
@@ -643,14 +606,13 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    epochstart = (time_t) option.toULong( 0, 10 );
+    epochstart = ( time_t ) option.toULong( 0, 10 );
   }
 
   /*
-   *  Set end date/time from epoch
-   *
+   * Set end date/time from epoch
    */
-  time_t epochend=0;
+  time_t epochend = 0;
   if ( args->isSet( "epoch-end" ) ) {
     option = args->getOption( "epoch-end" );
 
@@ -659,7 +621,7 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    epochend = (time_t) option.toULong( 0, 10 );
+    epochend = ( time_t ) option.toULong( 0, 10 );
   }
 
   if ( args->isSet( "all" ) ) {
@@ -718,7 +680,7 @@ int main( int argc, char *argv[] )
       }
     }
 
-    if ( ! exists ) {
+    if ( !exists ) {
       cout << i18n( "Calendar file not found %1" ).
         arg( option ).local8Bit()
            << endl;
@@ -738,7 +700,7 @@ int main( int argc, char *argv[] )
   if ( args->isSet( "file" ) ) {
     localCalendar = new CalendarLocal( variables.getTimeZoneId() );
     localCalendar->load( variables.getCalendarFile() );
-    variables.setCalendar( localCalendar  );
+    variables.setCalendar( localCalendar );
   } else {
     calendarResource = new CalendarResources( variables.getTimeZoneId() );
     calendarResource->readConfig();
@@ -752,13 +714,13 @@ int main( int argc, char *argv[] )
   QDateTime startdatetime, enddatetime;
 
   // Handle case with either date or end-date unspecified
-  if ( ! args->isSet( "end-date" ) && ! args->isSet( "show-next" ) &&
+  if ( !args->isSet( "end-date" ) && !args->isSet( "show-next" ) &&
        args->isSet( "date" ) ) {
     enddate = startdate;
     kdDebug() << "main | datetimestamp | "
               << "setting enddate to startdate"
               << endl;
-  } else if ( args->isSet( "end-date" ) && ! args->isSet( "date" ) ) {
+  } else if ( args->isSet( "end-date" ) && !args->isSet( "date" ) ) {
     startdate = enddate;
     kdDebug() << "main | datetimestamp | "
               << "setting startdate to enddate"
@@ -770,15 +732,15 @@ int main( int argc, char *argv[] )
   // Case:
   //   End time (or epoch) unspecified, and start time (or epoch) IS specified.
   //   In this case, set the ending to 1 hour after starting.
-  if ( ! args->isSet( "end-time" ) && ! args->isSet( "epoch-end" ) ) {
+  if ( !args->isSet( "end-time" ) && !args->isSet( "epoch-end" ) ) {
     if ( args->isSet( "time" ) ) {
-      endtime = starttime.addSecs( 60*60 );  // end is 1 hour after start
+      endtime = starttime.addSecs( 60 * 60 );  // end is 1 hour after start
       kdDebug() << "main | datetimestamp | "
                 << "setting endtime 1 hour after starttime"
                 << endl;
     } else if ( args->isSet( "epoch-start" ) ) {
       startdatetime = epochs.epoch2QDateTime( epochstart );
-      enddatetime = startdatetime.addSecs( 60*60 );
+      enddatetime = startdatetime.addSecs( 60 * 60 );
       kdDebug() << "main | datetimestamp | "
                 << "setting endtime 1 hour after epochstart"
                 << endl;
@@ -788,15 +750,15 @@ int main( int argc, char *argv[] )
   // Case:
   //   Time (or epoch) unspecified, and end-time (or epoch) IS specified.
   //   In this case, set the starting to 1 hour before ending.
-  if ( ! args->isSet( "time" ) && ! args->isSet( "epoch-start" ) ) {
+  if ( !args->isSet( "time" ) && !args->isSet( "epoch-start" ) ) {
     if ( args->isSet( "end-time" ) ) {
-      starttime = endtime.addSecs( -60*60 );  // start is 1 hour before end
+      starttime = endtime.addSecs( -60 * 60 );  // start is 1 hour before end
       kdDebug() << "main | datetimestamp | "
                 << "setting starttime 1 hour before endtime"
                 << endl;
     } else if ( args->isSet( "epoch-end" ) ) {
       enddatetime = epochs.epoch2QDateTime( epochend );
-      startdatetime = enddatetime.addSecs( -60*60 );
+      startdatetime = enddatetime.addSecs( -60 * 60 );
       kdDebug() << "main | datetimestamp | "
                 << "setting starttime 1 before after epochend"
                 << endl;
@@ -805,8 +767,8 @@ int main( int argc, char *argv[] )
 
   // Case:
   //   Time (or epoch) unspecified, and end-time (or epoch) unspecified.
-  if ( ! args->isSet( "time" )     && ! args->isSet( "epoch-start" ) &&
-       ! args->isSet( "end-time" ) && ! args->isSet( "epoch-end" ) ) {
+  if ( !args->isSet( "time" )     && !args->isSet( "epoch-start" ) &&
+       !args->isSet( "end-time" ) && !args->isSet( "epoch-end" ) ) {
     // set default start date/time
     startdatetime = QDateTime::QDateTime( startdate, starttime );
     kdDebug() << "main | datetimestamp | "
@@ -838,8 +800,8 @@ int main( int argc, char *argv[] )
   // Float check for add mode:
   //   Events float if time AND end-time AND epoch times are UNspecified
   if ( add ) {
-    if ( ! args->isSet( "time" )        && ! args->isSet( "end-time" ) &&
-         ! args->isSet( "epoch-start" ) && ! args->isSet( "epoch-end" ) ) {
+    if ( !args->isSet( "time" )        && !args->isSet( "end-time" ) &&
+         !args->isSet( "epoch-start" ) && !args->isSet( "epoch-end" ) ) {
       variables.setFloating( true );
       kdDebug() << "main | floatingcheck | "
                 << "turn-on floating event"
@@ -848,7 +810,7 @@ int main( int argc, char *argv[] )
   }
 
   // Finally! Set the start/end date times
-  if ( ! change ) {
+  if ( !change ) {
     variables.setStartDateTime( startdatetime );
     variables.setEndDateTime( enddatetime );
   } else {
@@ -903,7 +865,7 @@ int main( int argc, char *argv[] )
    */
   QString prodId = "-//K Desktop Environment//NONSGML %1 %2//EN";
   CalFormat::setApplication( progDisplay,
-                             prodId.arg( progDisplay).arg( progVersion ) );
+                             prodId.arg( progDisplay ).arg( progVersion ) );
 
   if ( importFile ) {
     if ( konsolekalendar->importCalendar() ) {
@@ -920,7 +882,7 @@ int main( int argc, char *argv[] )
   }
 
   if ( add ) {
-    if ( ! konsolekalendar->isEvent( startdatetime, enddatetime,
+    if ( !konsolekalendar->isEvent( startdatetime, enddatetime,
                                      variables.getSummary() ) ) {
       kdDebug() << "main | modework | "
                 << "calling addEvent()"
@@ -938,7 +900,7 @@ int main( int argc, char *argv[] )
     kdDebug() << "main | modework | "
               << "calling changeEvent()"
               << endl;
-    if ( ! variables.isUID() ) {
+    if ( !variables.isUID() ) {
       cout << i18n( "Missing event UID: "
                     "use --uid command line option" ).local8Bit()
            << endl;
@@ -958,7 +920,7 @@ int main( int argc, char *argv[] )
     kdDebug() << "main | modework | "
               << "calling deleteEvent()"
               << endl;
-    if ( ! variables.isUID() ) {
+    if ( !variables.isUID() ) {
       cout << i18n( "Missing event UID: "
                     "use --uid command line option" ).local8Bit()
            << endl;
@@ -978,7 +940,7 @@ int main( int argc, char *argv[] )
     kdDebug() << "main | modework | "
               << "calling showInstance() to view events"
               << endl;
-    if ( ! konsolekalendar->showInstance() ) {
+    if ( !konsolekalendar->showInstance() ) {
       cout << i18n( "Cannot open specified export file: %1" ).
         arg( variables.getExportFile() ).local8Bit()
            << endl;

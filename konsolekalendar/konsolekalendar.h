@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -38,19 +38,31 @@
 
 #include "konsolekalendarvariables.h"
 
-namespace KCal {
-
 /**
- * KonsoleKalendar is the base class of the project
+ * @file konsolekalendar.h
+ * Provides the KonsoleKalendar class definition.
+ */
+
+namespace KCal
+{
+/**
+ * The base class of the project.
+ * @author Tuukka Pasanen
  */
   class KonsoleKalendar
   {
   public:
-    KonsoleKalendar(KonsoleKalendarVariables *variables);
+    /**
+     * Constructs a KonsoleKalendar object from command line arguments.
+     */
+    KonsoleKalendar( KonsoleKalendarVariables *variables );
+    /**
+     * Destructor
+     */
     ~KonsoleKalendar();
 
     /**
-     * Visualisez what we need
+     * Visualize what we need.
      */
     bool showInstance();
 

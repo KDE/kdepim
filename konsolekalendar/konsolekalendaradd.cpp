@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendaradd.cpp
+ * Provides the KonsoleKalendarAdd class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <stdlib.h>
 #include <iostream>
 
@@ -63,12 +68,12 @@ bool KonsoleKalendarAdd::addEvent()
   kdDebug() << "konsolekalendaradd.cpp::addEvent()" << endl;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n("Insert Event <Dry Run>:").local8Bit()
+    cout << i18n( "Insert Event <Dry Run>:" ).local8Bit()
          << endl;
     printSpecs();
   } else {
     if ( m_variables->isVerbose() ) {
-      cout << i18n("Insert Event <Verbose>:").local8Bit()
+      cout << i18n( "Insert Event <Verbose>:" ).local8Bit()
            << endl;
       printSpecs();
     }
@@ -83,11 +88,11 @@ bool KonsoleKalendarAdd::addEvent()
     event->setLocation( m_variables->getLocation() );
 
     if ( m_variables->getCalendar()->addEvent( event ) ) {
-      cout << i18n("Success: \"%1\" inserted").
+      cout << i18n( "Success: \"%1\" inserted" ).
         arg( m_variables->getSummary() ).local8Bit()
            << endl;
 
-      if ( ! m_variables->isCalendarResources() ) {
+      if ( !m_variables->isCalendarResources() ) {
         status =
           m_variables->getCalendar()->save( m_variables->getCalendarFile() );
       } else {
@@ -95,7 +100,7 @@ bool KonsoleKalendarAdd::addEvent()
       }
 
     } else {
-      cout << i18n("Failure: \"%1\" not inserted").
+      cout << i18n( "Failure: \"%1\" not inserted" ).
         arg( m_variables->getSummary() ).local8Bit()
            << endl;
       status = false;
@@ -111,7 +116,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 
   // TODO: reimplement this please..
 
-  /*if ( ! m_variables->getCalendar()->load( m_variables->getImportFile() ) ) {
+  /*if ( !m_variables->getCalendar()->load( m_variables->getImportFile() ) ) {
     kdDebug()
       << "konsolekalendaradd.cpp::importCalendar() | "
       << "Can't import file: "
@@ -126,7 +131,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
       << endl;
   }
 
-  if ( ! m_variables->isCalendarResources() ) {
+  if ( !m_variables->isCalendarResources() ) {
     m_variables->getCalendar()->save( m_variables->getCalendarFile() );
   } else {
     m_variables->getCalendar()->save();
@@ -137,28 +142,28 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 
 void KonsoleKalendarAdd::printSpecs()
 {
-  cout << i18n("  What:  %1").
+  cout << i18n( "  What:  %1" ).
     arg( m_variables->getSummary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: %1").
-    arg( m_variables->getStartDateTime().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  Begin: %1" ).
+    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   %1").
-    arg( m_variables->getEndDateTime().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  End:   %1" ).
+    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
-    cout << i18n("  No Time Associated with Event").local8Bit()
+    cout << i18n( "  No Time Associated with Event" ).local8Bit()
          << endl;
   }
 
-  cout << i18n("  Desc:  %1").
+  cout << i18n( "  Desc:  %1" ).
     arg( m_variables->getDescription() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  %1").
+  cout << i18n( "  Location:  %1" ).
     arg( m_variables->getLocation() ).local8Bit()
        << endl;
 }

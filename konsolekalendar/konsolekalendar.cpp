@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendar.cpp
+ * Provides the KonsoleKalendar class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -35,8 +40,6 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
-#include <kmacroexpander.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/resourcecalendar.h>
@@ -54,7 +57,7 @@
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendar::KonsoleKalendar(KonsoleKalendarVariables *variables)
+KonsoleKalendar::KonsoleKalendar( KonsoleKalendarVariables *variables )
 {
   m_variables = variables;
   // m_Calendar =  new ResourceCalendar;
@@ -79,7 +82,7 @@ bool KonsoleKalendar::createCalendar()
   CalendarLocal newCalendar;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n("Create Calendar <Dry Run>: %1").
+    cout << i18n( "Create Calendar <Dry Run>: %1" ).
       arg( m_variables->getCalendarFile() ).local8Bit()
          << endl;
   } else {
@@ -89,7 +92,7 @@ bool KonsoleKalendar::createCalendar()
               << endl;
 
     if ( m_variables->isVerbose() ) {
-      cout << i18n("Create Calendar <Verbose>: %1").
+      cout << i18n( "Create Calendar <Verbose>: %1" ).
         arg( m_variables->getCalendarFile() ).local8Bit()
            << endl;
     }
@@ -111,7 +114,7 @@ bool KonsoleKalendar::showInstance()
   Event *event;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n("View Events <Dry Run>:").local8Bit()
+    cout << i18n( "View Events <Dry Run>:" ).local8Bit()
          << endl;
     printSpecs();
   } else {
@@ -119,7 +122,6 @@ bool KonsoleKalendar::showInstance()
     kdDebug() << "konsolekalendar.cpp::showInstance() | "
               << "open export file"
               << endl;
-
 
     if ( m_variables->isExportFile() ) {
       f.setName( m_variables->getExportFile() );
@@ -140,7 +142,7 @@ bool KonsoleKalendar::showInstance()
                 << endl;
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n("View Event <Verbose>:").local8Bit()
+	cout << i18n( "View Event <Verbose>:" ).local8Bit()
              << endl;
 	printSpecs();
       }
@@ -161,9 +163,9 @@ bool KonsoleKalendar::showInstance()
           QDate dt, firstdate, lastdate;
           firstdate = sortedList.first()->dtStart().date();
           lastdate = sortedList.last()->dtStart().date();
-          for ( dt=firstdate;
-                dt<=lastdate && status != false;
-                dt=dt.addDays(1) ) {
+          for ( dt = firstdate;
+                dt <= lastdate && status != false;
+                dt = dt.addDays(1) ) {
             Event::List events = m_variables->getCalendar()->events( dt, true );
             status = printEventList( &ts, &events, dt );
           }
@@ -187,9 +189,9 @@ bool KonsoleKalendar::showInstance()
           datetime = datetime.addDays( 720 );
 
 	  QDate dt;
-	  for ( dt=m_variables->getStartDateTime().date();
-                dt<=datetime.date() && status != false;
-                dt=dt.addDays(1) ) {
+	  for ( dt = m_variables->getStartDateTime().date();
+                dt <= datetime.date() && status != false;
+                dt = dt.addDays(1) ) {
 	    Event::List events = m_variables->getCalendar()->events( dt, true );
 	    status = printEventList( &ts, &events, dt );
 
@@ -207,9 +209,9 @@ bool KonsoleKalendar::showInstance()
                     << endl;
 
 	  QDate dt;
-	  for ( dt=m_variables->getStartDateTime().date();
-                dt<=m_variables->getEndDateTime().date() && status != false;
-                dt=dt.addDays(1) ) {
+	  for ( dt = m_variables->getStartDateTime().date();
+                dt <= m_variables->getEndDateTime().date() && status != false;
+                dt = dt.addDays(1) ) {
 	    Event::List events = m_variables->getCalendar()->events( dt, true );
 	    status = printEventList( &ts, &events, dt );
 	  }
@@ -301,7 +303,6 @@ bool KonsoleKalendar::showInstance()
 bool KonsoleKalendar::printEventList( QTextStream *ts,
                                       Event::List *eventList, QDate date )
 {
-
   bool status = true;
 
   if ( eventList->count() ) {
@@ -322,50 +323,11 @@ bool KonsoleKalendar::printEventList( QTextStream *ts,
 
 bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 {
-  /* This has not been finished
-  bool status = false;
-  QString output;
-  QString floating = "location %location, summary %summary\r\n";
-  QString sameday = "time is %starttime, location %location, summary %summary\r\n";
-  QString newday = "date is %startdate, time is %starttime, location %location, summary %summary\r\n";
-
-  QMap<QString, QString> macros;
-
-
-  macros["startdate"] = KGlobal::locale()->formatDate( event->dtStart().date() );
-  macros["enddate"] = KGlobal::locale()->formatDate( event->dtEnd().date() );
-
-  if ( !event->doesFloat() ) {
-   macros["starttime"] = KGlobal::locale()->formatTime( event->dtStart().time() );
-   macros["endtime"] = KGlobal::locale()->formatTime( event->dtEnd().time() );
-  } // if
-
-  macros["summary"] = event->summary();
-  macros["description"] = event->description();
-  macros["location"] = event->location();
-  macros["UID"] = event->uid();
-
-  if ( event->doesFloat() ) {
-        output = KMacroExpander::expandMacros( floating, macros, '%' );
-  } else {
-      if ( dt.daysTo( m_saveDate ) ) {
-        output = KMacroExpander::expandMacros( newday, macros, '%' );
-      } else {
-        output = KMacroExpander::expandMacros( sameday, macros, '%' );
-      }
-  }
-
-  *ts << output ;
-
-  return( status );
-  */
-
   bool status = false;
   bool sameDay = true;
   KonsoleKalendarExports exports;
 
-  if ( event )
-  {
+  if ( event ) {
     switch ( m_variables->getExportType() ) {
 
     case ExportTypeCSV:
@@ -451,9 +413,9 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 
   Event::List eventList( m_variables->getCalendar()->
                          rawEventsForDate( startdate.date(), true ) );
-  for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
+  for ( it = eventList.begin(); it != eventList.end(); ++it ) {
     event = *it;
-    if ( event->dtEnd()==enddate && event->summary()==summary ) {
+    if ( event->dtEnd() == enddate && event->summary() == summary ) {
       found = true;
       break;
     }
@@ -463,28 +425,28 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 
 void KonsoleKalendar::printSpecs()
 {
-  cout << i18n("  What:  %1").
+  cout << i18n( "  What:  %1" ).
     arg( m_variables->getSummary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: %1").
-    arg( m_variables->getStartDateTime().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  Begin: %1" ).
+    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   %1").
-    arg( m_variables->getEndDateTime().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  End:   %1" ).
+    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
-    cout << i18n("  No Time Associated with Event").local8Bit()
+    cout << i18n( "  No Time Associated with Event" ).local8Bit()
          << endl;
   }
 
-  cout << i18n("  Desc:  %1").
+  cout << i18n( "  Desc:  %1" ).
     arg( m_variables->getDescription() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  %1").
+  cout << i18n( "  Location:  %1" ).
     arg( m_variables->getLocation() ).local8Bit()
        << endl;
 }

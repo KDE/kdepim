@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendarepoch.cpp
+ * Provides the KonsoleKalendarEpoch class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <stdlib.h>
 #include <iostream>
 
@@ -34,7 +39,7 @@
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendarEpoch::KonsoleKalendarEpoch( )
+KonsoleKalendarEpoch::KonsoleKalendarEpoch()
 {
 }
 
@@ -48,8 +53,8 @@ KonsoleKalendarEpoch::~KonsoleKalendarEpoch()
 QDateTime KonsoleKalendarEpoch::epoch2QDateTime( uint epoch )
 {
   QDateTime dt;
-  dt.setTime_t (epoch,Qt::UTC);
-  return (dt);
+  dt.setTime_t( epoch, Qt::UTC );
+  return( dt );
 }
 
 // Function to convert a QDateTime value into an epoch
@@ -59,9 +64,9 @@ uint KonsoleKalendarEpoch::QDateTime2epoch( QDateTime dt )
   // SORRY QT DOESN'T HANDLE DAYLIGHT SAVINGS TIME.
 
   // Compute #seconds to subtract for local timezone difference from UTC.
-  int offset = QDateTime::currentDateTime(Qt::UTC).toTime_t()
-               - QDateTime::currentDateTime(Qt::LocalTime).toTime_t();
-  return(dt.toTime_t()-offset);
+  int offset = QDateTime::currentDateTime( Qt::UTC ).toTime_t()
+             - QDateTime::currentDateTime( Qt::LocalTime ).toTime_t();
+  return( dt.toTime_t() - offset );
 }
 
 #if defined (TEST)
@@ -79,90 +84,90 @@ main()
        << endl << endl;
 
   // Test1
-  epoch=0;
-  dt = KonsoleKalendarEpoch::epoch2QDateTime(epoch);
+  epoch = 0;
+  dt = KonsoleKalendarEpoch::epoch2QDateTime( epoch );
   cout << "TEST 1:" << endl;
   cout << "epoch="
        << epoch
        << " converts to "
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << endl;
 
-  epoch = KonsoleKalendarEpoch::QDateTime2epoch(dt);
+  epoch = KonsoleKalendarEpoch::QDateTime2epoch( dt );
   cout << "date="
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << " converts to "
        << "epoch="
        << epoch
        << endl;
 
   // Test2
-  epoch=100000;
-  dt = KonsoleKalendarEpoch::epoch2QDateTime(epoch);
+  epoch = 100000;
+  dt = KonsoleKalendarEpoch::epoch2QDateTime( epoch );
   cout << "TEST 2:" << endl;
   cout << "epoch="
        << epoch
        << " converts to "
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << endl;
 
-  epoch = KonsoleKalendarEpoch::QDateTime2epoch(dt);
+  epoch = KonsoleKalendarEpoch::QDateTime2epoch( dt );
   cout << "date="
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << " converts to "
        << "epoch="
        << epoch
        << endl;
 
   // Test3
-  epoch=10000000;
-  dt = KonsoleKalendarEpoch::epoch2QDateTime(epoch);
+  epoch = 10000000;
+  dt = KonsoleKalendarEpoch::epoch2QDateTime( epoch );
   cout << "TEST 3:" << endl;
   cout << "epoch="
        << epoch
        << " converts to "
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << endl;
 
-  epoch = KonsoleKalendarEpoch::QDateTime2epoch(dt);
+  epoch = KonsoleKalendarEpoch::QDateTime2epoch( dt );
   cout << "date="
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << " converts to "
        << "epoch="
        << epoch
        << endl;
 
   // Test4
-  epoch=1000000000;
-  dt = KonsoleKalendarEpoch::epoch2QDateTime(epoch);
+  epoch = 1000000000;
+  dt = KonsoleKalendarEpoch::epoch2QDateTime( epoch );
   cout << "TEST 4:" << endl;
   cout << "epoch="
        << epoch
        << " converts to "
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << endl;
 
-  epoch = KonsoleKalendarEpoch::QDateTime2epoch(dt);
+  epoch = KonsoleKalendarEpoch::QDateTime2epoch( dt );
   cout << "date="
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << " converts to "
        << "epoch="
        << epoch
        << endl;
 
   // Test5
-  epoch=10000000000;
-  dt = KonsoleKalendarEpoch::epoch2QDateTime(epoch);
+  epoch = 10000000000;
+  dt = KonsoleKalendarEpoch::epoch2QDateTime( epoch );
   cout << "TEST 5:" << endl;
   cout << "epoch="
        << epoch
        << " converts to "
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << endl;
 
-  epoch = KonsoleKalendarEpoch::QDateTime2epoch(dt);
+  epoch = KonsoleKalendarEpoch::QDateTime2epoch( dt );
   cout << "date="
-       << dt.toString(Qt::TextDate)
+       << dt.toString( Qt::TextDate )
        << " converts to "
        << "epoch="
        << epoch

@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendardelete.cpp
+ * Provides the KonsoleKalendarDelete class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <stdlib.h>
 #include <iostream>
 
@@ -51,11 +56,13 @@ bool KonsoleKalendarDelete::deleteEvent()
 
   kdDebug() << "konsolekalendardelete.cpp::deleteEvent()" << endl;
 
-  /* Retrieve event on the basis of the unique string ID */
+  /*
+   * Retrieve event on the basis of the unique string ID
+   */
   Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
-      cout << i18n("Delete Event <Dry Run>:").local8Bit()
+      cout << i18n( "Delete Event <Dry Run>:" ).local8Bit()
            << endl;
       printSpecs( event );
     } else {
@@ -64,13 +71,13 @@ bool KonsoleKalendarDelete::deleteEvent()
                 << endl;
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n("Delete Event <Verbose>:").local8Bit()
+	cout << i18n( "Delete Event <Verbose>:" ).local8Bit()
              << endl;
 	printSpecs( event );
       }
 
       m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n("Success: \"%1\" deleted")
+      cout << i18n( "Success: \"%1\" deleted" )
         .arg( event->summary() ).local8Bit()
            << endl;
 
@@ -90,27 +97,27 @@ bool KonsoleKalendarDelete::deleteEvent()
 
 void KonsoleKalendarDelete::printSpecs( Event *event )
 {
-  cout << i18n("  UID:   %1").
+  cout << i18n( "  UID:   %1" ).
     arg( m_variables->getUID() ).local8Bit()
        << endl;
 
-  cout << i18n("  What:  %1").
+  cout << i18n( "  What:  %1" ).
     arg( event->summary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: %1").
-    arg( event->dtStart().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  Begin: %1" ).
+    arg( event->dtStart().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   %1").
-    arg( event->dtEnd().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  End:   %1" ).
+    arg( event->dtEnd().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  Desc:  %1").
+  cout << i18n( "  Desc:  %1" ).
     arg( event->description() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  %1").
+  cout << i18n( "  Location:  %1" ).
     arg( event->location() ).local8Bit()
        << endl;
 }

@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -30,25 +30,40 @@
 
 #include "konsolekalendarvariables.h"
 
+/**
+ * @file konsolekalendaradd.h
+ * Provides the KonsoleKalendarAdd class definition.
+ */
+
 namespace KCal
 {
-
+  /**
+   * Class to manage the Event insertion capability.
+   * @author Tuukka Pasanen
+   * @author Allen Winter
+   */
   class KonsoleKalendarAdd
   {
   public:
+    /**
+     * Constructs a KonsoleKalendarAdd object from command line arguments.
+     * @param vars is a KonsoleKalendarVariable object with Event information.
+     */
     KonsoleKalendarAdd( KonsoleKalendarVariables *vars );
+    /**
+     * Destructor
+     */
     ~KonsoleKalendarAdd();
 
     /**
-     * Adds one event
+     * Add the Event.
      */
     bool addEvent();
 
     /**
-     * Imports calendar file to Current calendar
+     * Imports calendar file to current Calendar.
      */
     bool addImportedCalendar();
-
 
   private:
 

@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendarchange.cpp
+ * Provides the KonsoleKalendarChange class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <stdlib.h>
 #include <iostream>
 
@@ -51,15 +56,17 @@ bool KonsoleKalendarChange::changeEvent()
 
   kdDebug() << "konsolekalendarchange.cpp::changeEvent()" << endl;
 
-  /* Retrieve event on the basis of the unique string ID */
+  /*
+   * Retrieve event on the basis of the unique string ID
+   */
   Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
-      cout << i18n("Change Event <Dry Run>:").local8Bit()
+      cout << i18n( "Change Event <Dry Run>:" ).local8Bit()
            << endl;
       printSpecs( event );
 
-      cout << i18n("To Event <Dry Run>:").local8Bit()
+      cout << i18n( "To Event <Dry Run>:" ).local8Bit()
            << endl;
       printSpecs();
     } else {
@@ -68,11 +75,11 @@ bool KonsoleKalendarChange::changeEvent()
                 << endl;
 
       if ( m_variables->isVerbose() ) {
-        cout << i18n("Change Event <Verbose>:").local8Bit()
+        cout << i18n( "Change Event <Verbose>:" ).local8Bit()
              << endl;
         printSpecs( event );
 
-        cout << i18n("To Event <Dry Run>:").local8Bit()
+        cout << i18n( "To Event <Dry Run>:" ).local8Bit()
              << endl;
         printSpecs();
       }
@@ -100,7 +107,7 @@ bool KonsoleKalendarChange::changeEvent()
       }
 
       if ( m_variables->getCalendar()->addEvent( event ) ) {
-        cout << i18n("Success: \"%1\" changed")
+        cout << i18n( "Success: \"%1\" changed" )
           .arg( event->summary() ).local8Bit()
              << endl;
 
@@ -112,7 +119,7 @@ bool KonsoleKalendarChange::changeEvent()
           status = true;
         }
       } else {
-        cout << i18n("Failure: \"%1\" not changed")
+        cout << i18n( "Failure: \"%1\" not changed" )
           .arg( event->summary() ).local8Bit()
              << endl;
       }
@@ -125,54 +132,54 @@ bool KonsoleKalendarChange::changeEvent()
 
 void KonsoleKalendarChange::printSpecs( Event *event )
 {
-  cout << i18n("  UID:   %1").
+  cout << i18n( "  UID:   %1" ).
     arg( event->uid() ).local8Bit()
        << endl;
 
-  cout << i18n("  What:  %1").
+  cout << i18n( "  What:  %1" ).
     arg( event->summary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: %1").
-    arg( event->dtStart().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  Begin: %1" ).
+    arg( event->dtStart().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   %1").
-    arg( event->dtEnd().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  End:   %1" ).
+    arg( event->dtEnd().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  Desc:  %1").
+  cout << i18n( "  Desc:  %1" ).
     arg( event->description() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  %1").
+  cout << i18n( "  Location:  %1" ).
     arg( event->location() ).local8Bit()
        << endl;
 }
 
-void KonsoleKalendarChange::printSpecs( )
+void KonsoleKalendarChange::printSpecs()
 {
-  cout << i18n("  UID:   %1").
+  cout << i18n( "  UID:   %1" ).
     arg( m_variables->getUID() ).local8Bit()
        << endl;
 
-  cout << i18n("  What:  %1").
+  cout << i18n( "  What:  %1" ).
     arg( m_variables->getSummary() ).local8Bit()
        << endl;
 
-  cout << i18n("  Begin: %1").
-    arg( m_variables->getStartDateTime().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  Begin: %1" ).
+    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  End:   %1").
-    arg( m_variables->getEndDateTime().toString(Qt::TextDate) ).local8Bit()
+  cout << i18n( "  End:   %1" ).
+    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).local8Bit()
        << endl;
 
-  cout << i18n("  Desc:  %1").
+  cout << i18n( "  Desc:  %1" ).
     arg( m_variables->getDescription() ).local8Bit()
        << endl;
 
-  cout << i18n("  Location:  %1").
+  cout << i18n( "  Location:  %1" ).
     arg( m_variables->getLocation() ).local8Bit()
        << endl;
 }

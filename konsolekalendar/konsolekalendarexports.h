@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -32,30 +32,67 @@
 
 #include "konsolekalendarvariables.h"
 
+/**
+ * @file konsolekalendarexports.h
+ * Provides the KonsoleKalendarExports class definition.
+ */
+
 namespace KCal
 {
-
+  /**
+   * Class to manage the Export functionality.
+   * @author Tuukka Pasanen
+   * @author Allen Winter
+   */
   class KonsoleKalendarExports
   {
   public:
-    KonsoleKalendarExports( KonsoleKalendarVariables *variables  = 0);
+
+    /**
+     * Constructs a KonsoleKalendarChange object from command line arguments.
+     * @param vars is a KonsoleKalendarVariable object with Event information.
+     */
+    KonsoleKalendarExports( KonsoleKalendarVariables *vars = 0 );
+    /**
+     * Destructor
+     */
     ~KonsoleKalendarExports();
 
-    /*
-     * These can be changed at anytime;)
-     * without a notice
+    /**
+     * Export the Event in Text Mode.
+     * @param ts pointer to the output QTextStream.
+     * @param event pointer to the Event to export.
+     * @param date is the QDate to be exported for.
      */
-
-
     bool exportAsTxt( QTextStream *ts, Event *event, QDate date );
+    /**
+     * Export the Event in Short Text Mode.
+     * @param ts pointer to the output QTextStream.
+     * @param event pointer to the Event to export.
+     * @param date is the QDate to be exported for.
+     * @param sameday flags that this Event is on the same date as the
+     * previously exported Event.
+     */
     bool exportAsTxtShort( QTextStream *ts, Event *event, QDate date,
-                           bool sameday  );
+                           bool sameday );
+    /**
+     * Export the Event in Comma-Separated Values (CSV) Mode.
+     * @param ts pointer to the output QTextStream.
+     * @param event pointer to the Event to export.
+     * @param date is the QDate to be exported for.
+     */
     bool exportAsCSV( QTextStream *ts, Event *event, QDate date );
-
 
   private:
     KonsoleKalendarVariables *m_variables;
     bool m_firstEntry;
+    /**
+     * Processes a field for Comma-Separated Value (CSV) compliance:
+     *   1. Replaces double quotes by a pair of consecutive double quotes
+     *   2. Surrounds field with double quotes
+     * @param field is the field value to be processed.
+     * @param dquote is a QString containing the double quote character.
+     */
     QString processField( QString field, QString dquote );
 
   };

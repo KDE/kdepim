@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -24,7 +24,12 @@
  * without including the source code for Qt in the source distribution.        *
  *                                                                             *
  ******************************************************************************/
-
+/**
+ * @file konsolekalendarexports.cpp
+ * Provides the KonsoleKalendarExports class definition.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
 #include <stdlib.h>
 #include <iostream>
 
@@ -42,18 +47,20 @@
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables
-                                                *variables ) {
-  m_variables = variables;
+KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables *vars )
+{
+  m_variables = vars;
   m_firstEntry = true;
 }
 
 
-KonsoleKalendarExports::~KonsoleKalendarExports() {
+KonsoleKalendarExports::~KonsoleKalendarExports()
+{
 }
 
 bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
-                                          Event *event, QDate date ) {
+                                          Event *event, QDate date )
+{
 
   // Export "Text" Format:
   //
@@ -139,7 +146,8 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
 
 bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
                                                Event *event, QDate date,
-                                               bool sameday ) {
+                                               bool sameday )
+{
 
   // Export "Text-Short" Format:
   //
@@ -189,8 +197,8 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   return true;
 }
 
-QString KonsoleKalendarExports::processField( QString field, QString dquote ) {
-
+QString KonsoleKalendarExports::processField( QString field, QString dquote )
+{
   // little function that processes a field for CSV compliance:
   //   1. Replaces double quotes by a pair of consecutive double quotes
   //   2. Surrounds field with double quotes
@@ -203,7 +211,8 @@ QString KonsoleKalendarExports::processField( QString field, QString dquote ) {
 #define pF( x )  processField( ( x ), dquote )
 
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
-                                          Event *event, QDate date ) {
+                                          Event *event, QDate date )
+{
 
   // Export "CSV" Format:
   //
