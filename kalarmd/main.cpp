@@ -20,7 +20,6 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char **argv)
 {
-  KLocale::setMainCatalogue("korganizer");
   KAboutData aboutData("kalarmd",I18N_NOOP("AlarmDaemon"),
       kalarmdVersion,I18N_NOOP("KOrganizer/KAlarm Alarm Daemon"),KAboutData::License_GPL,
       "(c) 1997-1999 Preston Brown\n(c) 2000-2001 Cornelius Schumacher\n(c) 2001 David Jarvie",0,

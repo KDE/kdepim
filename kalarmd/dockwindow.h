@@ -7,8 +7,6 @@
 
 #include "alarmdaemon.h"
 
-using namespace KCal;
-
 
 class AlarmDockWindow : public KSystemTray
 {
@@ -18,8 +16,10 @@ class AlarmDockWindow : public KSystemTray
                     QWidget *parent = 0, const char *name = 0);
     virtual ~AlarmDockWindow();
 
-    bool alarmsOn()  { return contextMenu()->isItemChecked(itemId); }
+    bool alarmsOn()     { return contextMenu()->isItemChecked(alarmsEnabledId); }
+    bool autostartOn()  { return contextMenu()->isItemChecked(autostartId); }
 
+    void setAutostart(bool on)   { contextMenu()->setItemChecked(autostartId, on); }
     void updateMenuClients();
     void updateMenuCalendars(bool recreate);
     void addToolTip(const QString&);
@@ -31,23 +31,24 @@ class AlarmDockWindow : public KSystemTray
   public slots:
     void toggleAlarmsEnabled()
     {
-      contextMenu()->setItemChecked(itemId,
-              !contextMenu()->isItemChecked(itemId));
-      setPixmap(contextMenu()->isItemChecked(itemId) ? dPixmap1 : dPixmap2);
+      contextMenu()->setItemChecked(alarmsEnabledId,
+              !contextMenu()->isItemChecked(alarmsEnabledId));
+      setPixmap(contextMenu()->isItemChecked(alarmsEnabledId) ? dPixmap1 : dPixmap2);
     }
     void select(int menuIndex);
     void selectCal(int menuIndex);
 
   protected:
     QPixmap       dPixmap1, dPixmap2;
-    int           itemId;
+    int           alarmsEnabledId;  // alarms enabled item in menu
+    int           autostartId;      // autostart item in menu
 
   private:
     AlarmDaemon&  alarmDaemon;
-    QString       defaultClient;  // default application name
-    int           clientIndex;    // menu index to client names separator
-    int           nClientIds;     // number of client names + 1 in menu
-    int           nCalendarIds;   // number of calendar URLs + 1 in menu
+    QString       defaultClient;    // default application name
+    int           clientIndex;      // menu index to client names separator
+    int           nClientIds;       // number of client names + 1 in menu
+    int           nCalendarIds;     // number of calendar URLs + 1 in menu
 };
 
 #endif

@@ -516,6 +516,19 @@ no alarm monitoring is performed, and &kappname; will not display any alarms.</p
 </listitem>
 </varlistentry>
 <varlistentry>
+<term><menuchoice><guimenuitem>Auto start at login</guimenuitem></menuchoice></term>
+<listitem><para><action>Toggles on / off automatically running the alarm daemon at login.</action></para>
+<para>When auto start is enabled, the alarm daemon will automatically run whenever you log on. This
+is the normal mode which ensures that alarms are monitored. If you want to disable alarm monitoring after you next log off,
+deselect this option; the alarm daemon will no longer be started at login.</para>
+<note><para>Whenever the alarm daemon is started up, and whenever &kappname; or any other application which uses the daemon
+is started up,
+auto start is re-enabled. The facility to disable auto start is provided primarily to allow you to disable the alarm daemon if you
+do not expect to use &kappname; or any other client application for a while.
+</para></note>
+</listitem>
+</varlistentry>
+<varlistentry>
 <term><menuchoice><guimenuitem>Click starts <replaceable>application</replaceable></guimenuitem></menuchoice></term>
 <listitem><para><action>Selects the application to be activated when the panel icon is left-clicked.</action></para>
 <note><para>There is one menu entry for each application registered with the alarm daemon.
@@ -548,7 +561,8 @@ other applications which use the alarm daemon.
 <sect2>
 <title>Starting, resetting and stopping the alarm daemon</title>
 
-<para>The alarm daemon is normally started at KDE session login, and runs continuously until logout.
+<para>The alarm daemon is normally started at KDE session login (unless you use the context menu to
+disable auto start), and runs continuously until logout.
 If for any reason it is not running, alarm monitoring will not occur and &kappname; will not display any
 alarms.
 </para>
@@ -563,8 +577,6 @@ or you can run the alarm daemon directly from the command line:
 <prompt>%</prompt> <command>kalarmd</command>
 </screen>
 
-<para>How to start the alarm daemon at KDE session login ????
-</para>
 </sect3>
 
 <sect3 id="daemon-reset">
@@ -917,7 +929,7 @@ providing the necessary parameter information can be supplied.
 <para>Examples are:</para>
 <informalexample><screen>
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--displayEvent <replaceable>KAlarm-387486299.702</replaceable></option> <option>--calendarURL <replaceable>file:/home/zaphod/hydra.ics</replaceable></option></userinput>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--cancelEvent <replaceable>KAlarm-388886299.793</replaceable></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--cancelEvent <replaceable>KAlarm-388886299.793</replaceable></option></userinput>
 </screen>
 </informalexample>
 
@@ -940,7 +952,7 @@ providing the necessary parameter information can be supplied.
 <para>The file <filename>~/.kde2/share/config/kalarmrc</filename> holds your &kappname; preferences.
 </para>
 <para>The default calendar file which stores your scheduled alarm messages is
-<filename>~/.kde2/share/apps/kalarm/calendar.vcs</filename>, unless
+<filename>~/.kde2/share/apps/kalarm/calendar.ics</filename>, unless
 a different calendar file is specified in the preferences file.
 </para>
 </answer>
@@ -984,7 +996,7 @@ application name is <application>kalarmd</application>.
 Program copyright 2001 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
-Contributors (calendar handling libraries and original KOrganizer alarm daemon):
+Contributors (original KOrganizer alarm daemon):
 <itemizedlist>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
@@ -1000,7 +1012,7 @@ Documentation copyright 2001 David Jarvie <email>software@astrojar.org.uk</email
 Translations done by:
 <itemizedlist>
 <listitem>
-<para>Babel D. Fish <email>babelfish@kde.org</email> (Sanskrit)</para>
+<para>Babel D. Fish <email>babelfish@kde.org</email> (Gobbledegook)</para>
 </listitem>
 </itemizedlist>
 </para> -->
@@ -1029,41 +1041,26 @@ allow the name KAlarm to be used by this KDE2 application.
 <ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
 main ftp site of the KDE project.
 </para>
-<para>&kappname; is also available as a separate package from
-<ulink url="http://www.kalarm.org">http://www.kalarm.org</ulink>
+<para>&kappname; is available as a standalone package from
+<ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
 </para>
 </sect1>
 
 <sect1 id="requirements">
 <title>Requirements</title>
 
-<!--
-List any special requirements for your application here. This should include:
-.Libraries or other software that is not included in kdesupport,
-kdelibs, or kdebase.
-.Hardware requirements like amount of RAM, disk space, graphics card
-capabilities, screen resolution, special expansion cards, etc.
-.Operating systems the app will run on. If your app is designed only for a
-specific OS, (you wrote a graphical LILO configurator for example) put this
-information here.
--->
+<para>In order to use &kappname;, you need to run KDE 2.0 or later. &kappname; uses the libraries
+<filename>libkcal</filename>, <filename>libical</filename> and <filename>libicalss</filename>
+from the KDE package kdepim. Copies of these are included in the standalone &kappname; package.
+</para>
 
-<para>
-In order to successfully use &kappname;, you need KDE 2.1 or later. libkcal.lib is required
-in order to support the advanced &kappname; features. &kappname; uses about 5 megs of
+<para>&kappname; uses about 5 Mb of
 memory to run, but this may vary depending on your platform and configuration.
 </para>
 
 <para>
-All required libraries as well as &kappname; itself can be found
-on <ulink url="ftp://ftp.kalarm.org">The &kappname; home page</ulink>.
-</para>
-
-<!-- For a list of updates, you may refer to the application web site
-or the ChangeLog file, or ... -->
-<para>
-You can find a list of changes at <ulink
-url="http://apps.kde.org/kalarm">http://apps.kde.org/kalarm</ulink>.
+You can find a list of changes in the <filename>ChangeLog</filename> file, or at <ulink
+url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>.
 </para>
 </sect1>
 
@@ -1076,11 +1073,11 @@ your best bet is to use a precompiled binary file.</para>
 <itemizedlist>
 
 <listitem><para>If your system understands the RPM binary package format, you should
-get a file "<filename>kalarm.i386.rpm</filename>" or "<filename>kdepim2.i386.rpm</filename>"
-(or similar), depending on whether you want to install kdepim or just &kappname;. The correct
-installation command is: <command>rpm <option>-i
-<replaceable>package.i386.rpm</replaceable></option></command>, and the correct
-upgrade command is: <command>rpm <option>-U
+get a file "<filename>kdepim2.i386.rpm</filename>" or "<filename>kalarm.i386.rpm</filename>"
+(or similar), depending on whether you want to install kdepim or just &kappname;. The
+command to install is: <command>rpm <option>-i
+<replaceable>package.i386.rpm</replaceable></option></command>, and the command to
+upgrade is: <command>rpm <option>-U
 <replaceable>package.i386.rpm</replaceable></option></command></para></listitem>
 
 <listitem><para>If your system uses a different binary package format, you need to
@@ -1090,7 +1087,7 @@ read the instructions that came with your system.</para></listitem>
 
 <para>If you cannot obtain a suitable precompiled binary package, you will need to
 compile &kappname; yourself from source files. Find the source package file
-"<filename>kalarm.tar.gz</filename>" or "<filename>kdepim2.tar.gz</filename>"
+"<filename>kdepim2.tar.gz</filename>" or "<filename>kalarm.tar.gz</filename>"
 (or similar), depending on whether you want to install kdepim or just &kappname;.
 Unpack it in a new directory, change to that directory and enter the following:</para>
 
@@ -1116,8 +1113,9 @@ it. Should you run into problems please report them to the <ulink
 <sect1 id="configuration">
 <title>Configuration</title>
 
-<para>Don't forget to tell your system to start the <filename>dtd</filename>
-dicer-toaster daemon first, or &kappname; won't work !</para>
+<para>No special configuration is required to set up &kappname;. Once you have run &kappname;
+for the first time, the alarm daemon will start every time you log in, in order to
+monitor scheduled alarms.</para>
 
 </sect1>
 

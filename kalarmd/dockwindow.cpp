@@ -9,6 +9,7 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kprocess.h>
+#include <kconfig.h>
 #include <kmessagebox.h>
 
 #include "dockwindow.h"
@@ -32,9 +33,12 @@ AlarmDockWindow::AlarmDockWindow(AlarmDaemon& ad, const QString& defltClient,
   }
   setPixmap(dPixmap1);
 
-  itemId = contextMenu()->insertItem(i18n("Alarms Enabled"),
+  alarmsEnabledId = contextMenu()->insertItem(i18n("Alarms Enabled"),
                this, SLOT(toggleAlarmsEnabled()));
-  contextMenu()->setItemChecked(itemId, TRUE);
+  autostartId = contextMenu()->insertItem(i18n("Auto start at login"),
+               &alarmDaemon, SLOT(toggleAutostart()));
+  contextMenu()->setItemChecked(alarmsEnabledId, true);
+  contextMenu()->setItemChecked(autostartId, true);
   clientIndex = contextMenu()->count();
   updateMenuClients();
   updateMenuCalendars(true);
