@@ -101,15 +101,13 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	clearWState( WState_Polished );
 	enableButtonOK(false);
 
-	mDevicesToProbe //<< "/dev/pilot"
+	mDevicesToProbe << "/dev/pilot"
 	                <<"/dev/ttyS0"<<"/dev/ttyS1"<<"/dev/ttyS2"<<"/dev/ttyS3"
-//	                <<"/dev/tts/0"<<"/dev/tts/1"<<"/dev/tts/2"<<"/dev/tts/3"
+	                <<"/dev/tts/0"<<"/dev/tts/1"<<"/dev/tts/2"<<"/dev/tts/3"
 	                <<"/dev/ttyUSB0"<<"/dev/ttyUSB1"<<"/dev/ttyUSB2"<<"/dev/ttyUSB3"
-//	                <<"/dev/usb/tts/0"<<"/dev/usb/tts/1"<<"/dev/usb/tts/2"<<"/dev/usb/tts/3"
+	               <<"/dev/usb/tts/0"<<"/dev/usb/tts/1"<<"/dev/usb/tts/2"<<"/dev/usb/tts/3"
 	                <<"/dev/cuaa0"<<"/dev/cuaa1"<<"/dev/cuaa2"<<"/dev/cuaa3"
-	                <<"/dev/ucom0"<<"/dev/ucom1"<<"/dev/ucom2"<<"/dev/ucom3";
-;
-
+	                <<"/dev/ucom0"<<"/dev/ucom1"<<"/dev/ucom2"<<"/dev/ucom3"
 	fProcessEventsTimer = new QTimer( this );
 	fTimeoutTimer = new QTimer( this );
 	fProgressTimer = new QTimer( this );
@@ -126,8 +124,6 @@ ProbeDialog::~ProbeDialog()
 void ProbeDialog::processEvents()
 {
 	FUNCTIONSETUP;
-//kdDebug()<<"processEvents"<<endl;
-//QTimer::singleShot(500, this, SLOT(processEvents()));
 	KApplication::kApplication()->processEvents();
 }
 
@@ -145,11 +141,6 @@ int ProbeDialog::exec()
 	QTimer::singleShot( 0, this, SLOT( startDetection() ) );
 	return KDialogBase::exec();
 }
-
-// Devices to probe:
-// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs),
-//        /dev/ttyUSB*, /dev/usb/tts/[012345...]
-// *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
 void ProbeDialog::startDetection()
 {
@@ -184,8 +175,6 @@ void ProbeDialog::startDetection()
 		connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
 	}
 	fStatus->setText( i18n("Waiting for handheld to connect...") );
-
-	QTimer::singleShot(0, this, SLOT(processEvents()));
 }
 
 void ProbeDialog::timeout()
@@ -200,7 +189,6 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 	if (!lnk) return;
 	KPilotUser*usr( lnk->getPilotUser() );
-//	KPilotSysInfo*sysInfo( lnk->getSysInfo() );
 
 	mUserName = usr->getUserName();
 	mUID = usr->getUserID();
@@ -231,6 +219,7 @@ void ProbeDialog::disconnectDevices()
 		PilotLinkList::iterator end(mDeviceLinks.end());
 		for (PilotLinkList::iterator it=mDeviceLinks.begin(); it!=end; ++it)
 		{
+			(*it)->close();
 			KPILOT_DELETE(*it);
 		}
 		mDeviceLinks.clear();
