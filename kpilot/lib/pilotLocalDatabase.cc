@@ -473,6 +473,13 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Setting default DB path to "
+		<< s
+		<< endl;
+#endif
+
 	if (!fPathBase)
 	{
 		fPathBase = new QString(s);
@@ -484,6 +491,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.2.2.1  2002/04/11 12:48:23  adridg
+// Handle special case where no Pilot user name is set properly
+//
 // Revision 1.2  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //
