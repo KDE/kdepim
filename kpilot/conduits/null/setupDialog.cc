@@ -38,8 +38,14 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
+#ifndef _NULL_SETUPDIALOG_H
 #include "setupDialog.moc"
+#endif
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -130,6 +136,10 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.15  2001/03/27 11:10:38  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.14  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

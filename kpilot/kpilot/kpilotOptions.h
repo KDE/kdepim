@@ -26,10 +26,13 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __KPILOT_OPTIONS_H
-#define __KPILOT_OPTIONS_H
+#ifndef _KPILOT_KPILOTOPTIONS_H
+#define _KPILOT_KPILOTOPTIONS_H
 
+#ifndef _KPILOT_GSETUPDIALOG_H
 #include "gsetupDialog.h"
+#endif
+
 class QLabel;
 class QCheckBox;
 class QLineEdit;
@@ -153,6 +156,9 @@ private:
 
 
 // $Log$
+// Revision 1.14  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.13  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

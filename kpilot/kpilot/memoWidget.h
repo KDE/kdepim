@@ -25,8 +25,8 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __MEMO_WIDGET_H
-#define __MEMO_WIDGET_H
+#ifndef _KPILOT_MEMOWIDGET_H
+#define _KPILOT_MEMOWIDGET_H
 
 #ifndef QMLINED_H
 #include <qmlined.h>
@@ -68,7 +68,9 @@ public:
   void postHotSync();
   bool saveData();
   
-  static int MAX_MEMO_LEN;
+	typedef enum { 
+		MAX_MEMO_LEN = 8192 
+		} Constants ;
 
 	// int findSelectedCategory(bool AllIsUnfiled=false);
 
@@ -110,6 +112,9 @@ private:
 
 
 // $Log$
+// Revision 1.11  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.10  2001/03/04 13:11:49  adridg
 // More response to bug 21392
 //

@@ -61,11 +61,11 @@
 #include "kpilotConfig.h"
 #endif
 
-#ifndef _KPILOT_NULL_CONDUIT_H
+#ifndef _NULL_NULL_CONDUIT_H
 #include "null-conduit.h"
 #endif
 
-#ifndef _KPILOT_SETUPDIALOG_H
+#ifndef _NULL_SETUPDIALOG_H
 #include "setupDialog.h"
 #endif
 
@@ -174,6 +174,10 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.18  2001/03/27 11:10:38  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.17  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //

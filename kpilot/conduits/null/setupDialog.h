@@ -28,13 +28,15 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef __NULL_SETUP_H
-#define __NULL_SETUP_H
+#ifndef _NULL_SETUPDIALOG_H
+#define _NULL_SETUPDIALOG_H
 
 class QLabel;
 class QLineEdit;
 
+#ifndef _KPILOT_GSETUPDIALOG_H
 #include "gsetupDialog.h"
+#endif
 
 
 class NullPage : public setupDialogPage
@@ -69,4 +71,7 @@ protected:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

@@ -28,8 +28,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_NULL_CONDUIT_H
-#define _KPILOT_NULL_CONDUIT_H
+#ifndef _NULL_NULL_CONDUIT_H
+#define _NULL_NULL_CONDUIT_H
 
 #ifndef _KPILOT_BASECONDUIT_H
 #include "baseConduit.h"
@@ -51,6 +51,9 @@ public:
 #endif
 
 // $Log$
+// Revision 1.7  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.6  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
