@@ -4,9 +4,5 @@
   <Menu name="show"><text>&amp;Show</text>
     <Action name="show_terminal" />
   </Menu>
-  <Menu name="modem"><text>&amp;Modem</text>
-    <Action name="modem_connect" />
-    <Action name="modem_disconnect" />
-  </Menu>
 </MenuBar>
 </kpartgui>
