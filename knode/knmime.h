@@ -1,0 +1,480 @@
+#ifndef KNMIME_H
+#define KNMIME_H
+
+#include "knheaders.h"
+#include "knjobdata.h"
+#include <qlist.h>
+#include <qstringlist.h>
+#include <qfile.h>
+#include <qfont.h>
+
+class KNMimeContent;
+typedef QValueList<QCString> QCStringList;
+
+/* Base class for messages in mime format
+   It contains all the enums, static functions
+   and parser-classes, that are needed for
+   mime handling */
+
+class KNMimeBase {
+
+  public:
+
+    //enums
+    enum articleType    { ATmimeContent,
+                          ATremote,
+                          ATlocal };
+
+    //encode and decode
+    static QString decodeRFC2047String(const QCString &src);
+    static QCString encodeRFC2047String(const QString &src);
+
+    //generation of message-ids and boundaries
+    static QCString uniqueString();
+    static QCString multiPartBoundary();
+
+    //string handling
+    static QCString CRLFtoLF(const QCString &s);
+    static QCString CRLFtoLF(const char *s);
+    static QCString LFtoCRLF(const QCString &s);
+    static void stripCRLF(char *str);
+    static void removeQuots(QCString &str);
+    static void removeQuots(QString &str);
+
+    /* Helper-class: splits a multipart-message into single
+       parts as described in RFC 2046 */
+    class MultiPartParser {
+
+      public:
+        MultiPartParser(const QCString &src, const QCString &boundary);
+        ~MultiPartParser();
+
+        bool parse();
+        QCStringList parts()    { return p_arts; }
+        QCString preamble()     { return p_reamble; }
+        QCString epilouge()     { return e_pilouge; }
+
+      protected:
+        QCString s_rc, b_oundary, p_reamble, e_pilouge;
+        QCStringList p_arts;
+
+    };
+
+    /* Helper-class: trys to extract the data from a possibly
+       uuencoded message */
+    class UUParser {
+
+      public:
+        UUParser(const QCString &src, const QCString &subject);
+        ~UUParser();
+
+        bool parse();
+        bool isPartial()            { return (p_artNr>-1 && t_otalNr>-1); }
+        int partialNumber()         { return p_artNr; }
+        int partialCount()          { return t_otalNr; }
+        bool hasTextPart()          { return (t_ext.length()>1); }
+        QCString textPart()         { return t_ext; }
+        QCString binaryPart()       { return b_in; }
+        QCString filename()         { return f_ilename; }
+        QCString mimeType()         { return m_imeType; }
+
+      protected:
+        QCString s_rc, t_ext, b_in, f_ilename, m_imeType, s_ubject;
+        int p_artNr, t_otalNr;
+
+    };
+
+    /* This class stores boolean values in single bytes.
+       It provides a similiar functionality as QBitArray
+       but requires much less memory.
+       We use it to store the flags of an article */
+    class BoolFlags {
+
+      public:
+        BoolFlags()       { clear(); }
+        ~BoolFlags()      {}
+
+        void set(unsigned int i, bool b=true);
+        bool get(unsigned int i);
+        void clear()            { bits[0]=0; bits[1]=0; }
+        unsigned char *data()   { return bits; }
+
+      protected:
+        unsigned char bits[2];  //space for 16 flags
+    };
+
+};
+
+
+
+/* This class encapsulates a mime-encoded content.
+   It parses the given data and creates a tree-like
+   structure, that represents the structure of the
+   message */
+
+class KNMimeContent : public KNMimeBase {
+
+  friend class KNAttachment;
+
+  public:
+    typedef QList<KNMimeContent> List;
+
+    KNMimeContent();
+    virtual ~KNMimeContent();
+
+    //type
+    virtual articleType type()      { return ATmimeContent; }
+
+    //content handling
+    bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || (c_ontents && !c_ontents->isEmpty())) ); }
+    void setContent(QStrList *l);
+    void setContent(const QCString &s);
+    virtual void parse();
+    virtual void assemble();
+    virtual void clear();
+
+    //header access
+		QCString head()				{ return h_ead; }
+    virtual KNHeaders::Base* getHeaderByType(const char *type);
+		virtual void setHeader(KNHeaders::Base *h);
+		virtual bool removeHeader(const char *type);
+    bool hasHeader(const char *type)                                  { return (getHeaderByType(type)!=0); }
+    KNHeaders::ContentType* contentType(bool create=true)             { KNHeaders::ContentType *p=0; return getHeaderInstance(p, create); }
+    KNHeaders::CTEncoding* contentTransferEncoding(bool create=true)  { KNHeaders::CTEncoding *p=0; return getHeaderInstance(p, create); }
+    KNHeaders::CDisposition* contentDisposition(bool create=true)     { KNHeaders::CDisposition *p=0; return getHeaderInstance(p, create); }
+    KNHeaders::CDescription* contentDescription(bool create=true)     { KNHeaders::CDescription *p=0; return getHeaderInstance(p, create); }
+
+    //content access
+		int size()            { return b_ody.length(); }
+		int lineCount();
+		QCString body()				{ return b_ody; }
+    QCString encodedContent(bool useCrLf=false);
+    QByteArray decodedContent();
+    void decodedText(QString &s);
+    void decodedText(QStringList &s);
+    bool canDecode8BitText();
+    void setFontForContent(QFont &f);
+    void fromUnicodeString(const QString &s);
+
+
+    KNMimeContent* textContent();
+    void attachments(List *dst, bool incAlternatives=false);
+    void addContent(KNMimeContent *c, bool prepend=false);
+    void removeContent(KNMimeContent *c, bool del=false);
+    void changeEncoding(KNHeaders::contentEncoding e);
+
+    //saves the encoded content to the given textstream
+    void toStream(QTextStream &ts);
+
+  protected:
+    QCString rawHeader(const char *name);
+    bool decodeText();
+    template <class T> T* getHeaderInstance(T *ptr, bool create);
+
+    QCString  h_ead,
+              b_ody;
+    List *c_ontents;
+    KNHeaders::List *h_eaders;
+};
+
+
+class KNHdrViewItem; //forward declaration
+class KNArticleCollection;
+
+/* This class encapsulates a generic article. It provides
+   all the usual headers of a RFC822-message. Further more
+   it contains an unique id and can store a pointer to a
+   QListViewItem. It is used as a base class for all visible
+   articles. */
+
+class KNArticle : public KNMimeContent, public KNJobItem {
+
+  public:
+	  typedef QList<KNArticle> List;	
+
+		KNArticle(KNArticleCollection *c);
+   	~KNArticle();
+
+   	//content handling
+   	void parse();
+   	void assemble();
+   	void clear();
+
+   	//header access
+   	KNHeaders::Base* getHeaderByType(const char *type);
+		void setHeader(KNHeaders::Base *h);
+		bool removeHeader(const char *type);
+   	virtual KNHeaders::MessageID* messageID(bool create=true)        { KNHeaders::MessageID *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::Control* control(bool create=true)            { KNHeaders::Control *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::Supersedes* supersedes(bool create=true)      { KNHeaders::Supersedes *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::Subject* subject(bool create=true)            { if(!create && s_ubject.isEmpty()) return 0; return &s_ubject; }
+   	virtual KNHeaders::Date* date(bool create=true)                  { if(!create && d_ate.isEmpty()) return 0;return &d_ate; }
+   	virtual KNHeaders::From* from(bool create=true)                  { KNHeaders::From *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::Organization* organization(bool create=true)  { KNHeaders::Organization *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::ReplyTo* replyTo(bool create=true)            { KNHeaders::ReplyTo *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::To* to(bool create=true)                      { KNHeaders::To *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::CC* cc(bool create=true)                      { KNHeaders::CC *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::BCC* bcc(bool create=true)                    { KNHeaders::BCC *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::Newsgroups* newsgroups(bool create=true)      { KNHeaders::Newsgroups *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::FollowUpTo* followUpTo(bool create=true)      { KNHeaders::FollowUpTo *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::References* references(bool create=true)      { KNHeaders::References *p=0; return getHeaderInstance(p, create); }
+   	virtual KNHeaders::Lines* lines(bool create=true)                { if(!create && l_ines.isEmpty()) return 0; return &l_ines; }
+    virtual KNHeaders::UserAgent* userAgent(bool create=true)        { KNHeaders::UserAgent *p=0; return getHeaderInstance(p, create); }
+   	
+   	//id
+   	int id()             { return i_d; }
+   	void setId(int i)    { i_d=i; }
+
+   	//list item handling
+   	KNHdrViewItem* listItem()            { return i_tem; }
+   	void setListItem(KNHdrViewItem *i);
+   	virtual void updateListItem() {}
+       	
+   	//network lock (reimplemented from KNJobItem)
+   	bool isLocked()                      { return f_lags.get(0); }
+   	void setLocked(bool b=true);
+
+   	//article-collection
+   	KNArticleCollection* collection()           { return c_ol; }
+   	void setCollection(KNArticleCollection *c)  { c_ol=c; }
+   	
+
+  protected:
+    //hardcoded headers
+    KNHeaders::Subject s_ubject;
+    KNHeaders::Date d_ate;
+    KNHeaders::Lines l_ines;
+
+    int i_d; //unique in the given collection
+    KNArticleCollection *c_ol;
+    KNHdrViewItem *i_tem;
+    BoolFlags f_lags; // some status info
+
+
+}; // KNArticle
+
+
+/* KNRemoteArticle represents an article, whos body has to be
+   retrieved from a remote host or from the local cache.
+   All articles in a newsgroup are stored in instances
+   of this class. */
+
+class KNRemoteArticle : public KNArticle {
+
+  public:
+    typedef QList<KNRemoteArticle> List;
+
+    KNRemoteArticle(KNArticleCollection *c);
+    ~KNRemoteArticle();
+
+    // type
+    articleType type() { return ATremote; }
+
+    // content handling
+    void parse();
+    void assemble() {} //assembling is disabled for remote articles
+    void clear();
+
+    // header access
+    KNHeaders::Base* getHeaderByType(const char *type);
+		void setHeader(KNHeaders::Base *h);
+		bool removeHeader(const char *type);
+    KNHeaders::MessageID* messageID(bool create=true) { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
+    KNHeaders::From* from(bool create=true)           { if(!create && f_rom.isEmpty()) return 0; return &f_rom; }
+
+    // status
+    bool isNew()                         { return f_lags.get(1); }
+    void setNew(bool b=true)             { f_lags.set(1, b); }
+    bool isRead()                        { return f_lags.get(2); }
+    void setRead(bool b=true)            { f_lags.set(2, b); }
+    bool isExpired()                     { return f_lags.get(3); }
+    void setExpired(bool b=true)         { f_lags.set(3, b); }
+    bool isKept()                        { return f_lags.get(4); }
+    void setKept(bool b=true)            { f_lags.set(4, b); }
+    bool hasChanged()                    { return f_lags.get(5); }
+    void setChanged(bool b=true)         { f_lags.set(5, b); }
+
+    // thread info
+    int idRef()                                   { return i_dRef; }
+    void setIdRef(int i)                          { i_dRef=i; }
+    bool threadMode()                             { return f_lags.get(6); }
+    void setThreadMode(bool b=true)               { f_lags.set(6, b); }
+		unsigned char threadingLevel()                { return t_hrLevel; }
+		void setThreadingLevel(unsigned char l)				{ t_hrLevel=l; }
+    unsigned char score()                         { return s_core; }
+    void setScore(unsigned char s)								{ s_core=s; }
+		unsigned short newFollowUps()                 { return n_ewFups; }
+    bool hasNewFollowUps()                        { return (n_ewFups>0); }
+    void setNewFollowUps(unsigned short s)        { n_ewFups=s; }
+    void incNewFollowUps(unsigned short s=1)      { n_ewFups+=s; }
+    void decNewFollowUps(unsigned short s=1)      { n_ewFups-=s; }
+    unsigned short unreadFollowUps()              { return u_nreadFups; }
+    bool hasUnreadFollowUps()                     { return (u_nreadFups>0); }
+    void setUnreadFollowUps(unsigned short s)     { u_nreadFups=s; }
+    void incUnreadFollowUps(unsigned short s=1)   { u_nreadFups+=s; }
+    void decUnreadFollowUps(unsigned short s=1)   { u_nreadFups-=s; }
+    void thread(List *f);
+
+		//filtering
+		bool filterResult()                  		{ return f_lags.get(7); }
+    void setFilterResult(bool b=true)    		{ f_lags.set(7, b); }
+    bool isFiltered()                    		{ return f_lags.get(8); }
+    void setFiltered(bool b=true)        		{ f_lags.set(8, b); }
+		bool hasVisibleFollowUps()							{ return f_lags.get(9); }
+		void setVisibleFollowUps(bool b=true)		{ f_lags.set(9, b); }
+
+		// list item handling
+    void initListItem();
+    void updateListItem();
+
+
+  protected:
+    // hardcoded headers
+    KNHeaders::MessageID m_essageID;
+    KNHeaders::From f_rom;
+
+    int i_dRef; // id of a possible reference-article
+    unsigned char t_hrLevel, // quality of threading
+                  s_core; // guess what ;-)
+    unsigned short u_nreadFups, // number of the article's unread follow-ups
+                   n_ewFups; // number of the article's new follow-ups
+
+
+}; // KNRemoteArticle
+
+
+
+/* This class encapsulates an article, that is
+   stored locally in an MBOX-file. All own and
+   saved articles are represented by instances
+   of this class. */
+
+
+class KNLocalArticle : public KNArticle {
+
+  public:
+    typedef QList<KNLocalArticle> List;
+
+    KNLocalArticle(KNArticleCollection *c=0);
+    ~KNLocalArticle();
+
+    //type
+    articleType type()      { return ATlocal; }
+
+    //content handling
+    void parse();
+    void clear();
+
+    // header access
+    KNHeaders::Base* getHeaderByType(const char *type);
+		void setHeader(KNHeaders::Base *h);
+		bool removeHeader(const char *type);
+		KNHeaders::Newsgroups* newsgroups(bool create=true)     { if( (!create && n_ewsgroups.isEmpty()) || (!create && !doPost()) )
+		                                                            return 0;
+		                                                          return &n_ewsgroups; }
+		KNHeaders::To* to(bool create=true)                     { if( (!create && t_o.isEmpty()) || (!create && !doMail()) )
+		                                                            return 0;
+		                                                          return &t_o; }
+		
+		//send article as mail
+		bool doMail()                 { return f_lags.get(1); }
+		void setDoMail(bool b=true)   { f_lags.set(1, b); }
+		bool mailed()                 { return f_lags.get(2); }
+		void setMailed(bool b=true)   { f_lags.set(2, b); }
+		
+		//post article to a newsgroup
+		bool doPost()                 { return f_lags.get(3); }
+		void setDoPost(bool b=true)   { f_lags.set(3, b); }
+		bool posted()                 { return f_lags.get(4); }
+		void setPosted(bool b=true)   { f_lags.set(4, b); }
+		bool canceled()               { return f_lags.get(5); }
+		void setCanceled(bool b=true) { f_lags.set(5, b); }
+		
+		//sending status
+		bool pending()                { return ( (doPost() && !posted()) || (doMail() && !mailed()) ); }
+		
+		//edit
+		bool editDisabled()               { return f_lags.get(6); }
+		void setEditDisabled(bool b=true) { f_lags.set(6, b); }
+				
+		//MBOX infos
+		int startOffset()             { return s_Offset; }
+		void setStartOffset(int so)   { s_Offset=so; }
+		int endOffset()               { return e_Offset; }
+		void setEndOffset(int eo)     { e_Offset=eo; }
+				
+		//nntp-server id
+		int serverId()                { if(!doPost()) return -1; else return s_erverId; }
+		void setServerId(int i)       { s_erverId=i; }
+		
+		//list item handling
+		void updateListItem();
+		
+		
+		protected:
+		  //hardcoded headers
+		  KNHeaders::Newsgroups n_ewsgroups;
+		  KNHeaders::To t_o;
+		  int s_Offset, //position in mbox-file : start
+		      e_Offset, //position in mbox-file : end
+		      s_erverId; //id of the nntp-server this article is posted to
+};
+
+
+/* KNAttachment represents a file that is
+   or will be attached to an article. */
+
+class KNAttachment {
+
+  public:
+    KNAttachment(KNMimeContent *c);
+    KNAttachment(const QString &path);
+    ~KNAttachment();
+
+    //name (used as a Content-Type parameter and as filename)
+    const QString& name()           { return n_ame; }
+    void setName(const QString &s)  { n_ame=s; h_asChanged=true; }
+
+    //mime type
+    const QCString& mimeType()            { return m_imeType; }
+    void setMimeType(const QString &s);
+
+    //Content-Description
+    const QString& description()          { return d_escription; }
+    void setDescription(const QString &s) { d_escription=s; h_asChanged=true; }
+
+    //Encoding
+    int cte()                             { return e_ncoding.cte(); }
+    void setCte(int e)                    { e_ncoding.setCte( (KNHeaders::contentEncoding)(e) );
+                                            h_asChanged=true; }
+    bool isFixedBase64()                  { return f_b64; }
+    QString encoding()                    { return e_ncoding.asUnicodeString(); }
+
+    //content handling
+    KNMimeContent* content()              { return c_ontent; }
+    QString contentSize();
+    bool isAttached()                     { return i_sAttached; }
+    bool hasChanged()                     { return h_asChanged; }
+    void updateContentInfo();
+    void attach(KNMimeContent *c);
+    void detach(KNMimeContent *c);
+
+
+  protected:
+    KNMimeContent *c_ontent;
+    QCString m_imeType;
+    QString n_ame,
+            d_escription;
+    KNHeaders::CTEncoding e_ncoding;
+    QFile f_ile;
+    bool  i_sAttached,
+          h_asChanged,
+          f_b64;
+};		
+		
+		
+				
+		
+
+
+#endif //KNMIME_H

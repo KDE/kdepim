@@ -1,0 +1,1937 @@
+#include "knconfig.h"
+
+#include <qlayout.h>
+#include <qbuttongroup.h>
+
+#include <klocale.h>
+#include <knumvalidator.h>
+#include <kmessagebox.h>
+#include <kglobal.h>
+#include <kconfig.h>
+#include <kcolordialog.h>
+#include <kfontdialog.h>
+#include <kiconloader.h>
+#include <kfiledialog.h>
+#include <krun.h>
+#include <kuserprofile.h>
+#include <kopenwith.h>
+#include <kcharsets.h>
+
+#include "knaccountmanager.h"
+#include "kngroupmanager.h"
+#include "knglobals.h"
+#include "knnntpaccount.h"
+#include "utilities.h"
+#include "knviewheader.h"
+#include "knfiltermanager.h"
+#include "knarticlefilter.h"
+
+KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
+{
+  QGridLayout *topL=new QGridLayout(this,  9, 3, 5,5);
+
+  QLabel *l=new QLabel(i18n("Name:"), this);
+  topL->addWidget(l, 0,0);
+  n_ame=new QLineEdit(this);
+  topL->addMultiCellWidget(n_ame, 0,0, 1,2);
+  n_ame->setText(d_ata->n_ame);
+
+  l=new QLabel(i18n("Organization:"), this);
+  topL->addWidget(l, 1,0);
+  o_rga=new QLineEdit(this);
+  topL->addMultiCellWidget(o_rga, 1,1, 1,2);
+  o_rga->setText(d_ata->o_rga);
+
+  l=new QLabel(i18n("Email Address:"), this);
+  topL->addWidget(l, 2,0);
+  e_mail=new QLineEdit(this);
+  topL->addMultiCellWidget(e_mail, 2,2, 1,2);
+  e_mail->setText(QString(d_ata->e_mail));
+
+  l=new QLabel(i18n("Reply-To Address:"), this);
+  topL->addWidget(l, 3,0);
+  r_eplyTo=new QLineEdit(this);
+  topL->addMultiCellWidget(r_eplyTo, 3,3, 1,2);
+  r_eplyTo->setText(d_ata->r_eplyTo);
+
+  QButtonGroup *buttonGroup = new QButtonGroup(this);
+  connect( buttonGroup, SIGNAL(clicked(int)),
+           this, SLOT(slotSignatureType(int)) );
+  buttonGroup->hide();
+
+  s_igFile = new QRadioButton( i18n("Use a signature from file"), this );
+  buttonGroup->insert(s_igFile);
+  topL->addMultiCellWidget(s_igFile, 4, 4, 0, 2);
+
+  f_ileName = new QLabel(i18n("Signature File:"), this);
+  topL->addWidget(f_ileName, 5, 0 );
+  s_ig = new QLineEdit(this);
+  topL->addWidget(s_ig, 5, 1 );
+  s_ig->setText(d_ata->s_igPath);
+
+  c_hooseBtn = new QPushButton( i18n("Ch&oose..."), this);
+  connect(c_hooseBtn, SIGNAL(clicked()),
+          this, SLOT(slotSignatureChoose()));
+  topL->addWidget(c_hooseBtn, 5, 2 );
+  e_ditBtn = new QPushButton( i18n("&Edit File"), this);
+  connect(e_ditBtn, SIGNAL(clicked()),
+          this, SLOT(slotSignatureEdit()));
+  topL->addWidget(e_ditBtn, 6, 2);
+
+  s_igEdit = new QRadioButton( i18n("Specify signature below"), this);
+  buttonGroup->insert(s_igEdit);
+  topL->addMultiCellWidget(s_igEdit, 7, 7, 0, 2);
+
+  s_igEditor = new QMultiLineEdit(this);
+  topL->addMultiCellWidget(s_igEditor, 8, 8, 0, 2);
+  s_igEditor->setText(d_ata->s_igText);
+
+  topL->setColStretch(1,1);
+  topL->setRowStretch(5,1);
+  topL->setResizeMode(QLayout::Minimum);
+
+  slotSignatureType(d_ata->useSigFile()? 0:1);
+}
+
+
+KNConfig::IdentityWidget::~IdentityWidget()
+{
+}
+
+
+void KNConfig::IdentityWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->n_ame=n_ame->text();
+  d_ata->o_rga=o_rga->text();
+  d_ata->e_mail=e_mail->text().latin1();
+  d_ata->r_eplyTo=r_eplyTo->text();
+  d_ata->u_seSigFile=s_igFile->isChecked();
+  d_ata->s_igPath=s_ig->text();
+  d_ata->s_igText=s_igEditor->text();
+
+  if(d_ata->isGlobal())
+    d_ata->save();
+}
+
+
+void KNConfig::IdentityWidget::slotSignatureType(int type)
+{
+  bool sigFromFile = (type==0);
+
+  s_igFile->setChecked(sigFromFile);
+  f_ileName->setEnabled(sigFromFile);
+  s_ig->setEnabled(sigFromFile);
+  c_hooseBtn->setEnabled(sigFromFile);
+  e_ditBtn->setEnabled(sigFromFile);
+  s_igEdit->setChecked(!sigFromFile);
+  s_igEditor->setEnabled(!sigFromFile);
+}
+
+
+void KNConfig::IdentityWidget::slotSignatureChoose()
+{
+  QString tmp=KFileDialog::getOpenFileName(s_ig->text(),QString::null,this,i18n("Choose Signature"));
+  if(!tmp.isEmpty()) s_ig->setText(tmp);
+}
+
+
+void KNConfig::IdentityWidget::slotSignatureEdit()
+{
+  QString fileName = s_ig->text().stripWhiteSpace();
+
+  if (fileName.isEmpty()) {
+    KMessageBox::sorry(this, i18n("You must specify a filename!"));
+    return;
+  }
+
+  QFileInfo fileInfo( fileName );
+  if (fileInfo.isDir()) {
+    KMessageBox::sorry(this, i18n("You have specified a directory!"));
+    return;
+  }
+
+  KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", true);
+  KURL::List  lst(fileName);
+
+  if (offer)
+    KRun::run(*offer, lst);
+  else {
+    KFileOpenWithHandler *openhandler = new KFileOpenWithHandler();
+    openhandler->displayOpenWithDialog(lst);
+  }
+}
+
+
+
+//==========================================================================================
+
+
+KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
+  : BaseWidget(p, n), p_ixmap(UserIcon("server")), a_ccManager(knGlobals.accManager)
+{
+  QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
+
+  // account listbox
+  l_box=new QListBox(this);
+  connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
+  connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+  topL->addMultiCellWidget(l_box, 0,4, 0,0);
+
+  // info box
+  QGroupBox *gb = new QGroupBox(2,Qt::Horizontal,QString::null,this);
+  topL->addWidget(gb,5,0);
+
+  s_erverInfo = new QLabel(gb);
+  p_ortInfo = new QLabel(gb);
+
+  // buttons
+  a_ddBtn=new QPushButton(i18n("&Add"), this);
+  connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
+  topL->addWidget(a_ddBtn, 0,1);
+
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(d_elBtn, 1,1);
+
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), this);
+  connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
+  topL->addWidget(e_ditBtn, 2,1);
+
+  s_ubBtn=new QPushButton(i18n("&Subscribe"), this);
+  connect(s_ubBtn, SIGNAL(clicked()), this, SLOT(slotSubBtnClicked()));
+  topL->addWidget(s_ubBtn, 3,1);
+
+  topL->setRowStretch(4,1);   // stretch the server listbox
+
+
+  for(KNNntpAccount *a=a_ccManager->first(); a; a=a_ccManager->next())
+    slotAddItem(a);
+
+  // the settings dialog is non-modal, so we have to react to changes
+  // made outside of the dialog
+  connect(a_ccManager, SIGNAL(accountAdded(KNNntpAccount*)), this, SLOT(slotAddItem(KNNntpAccount*)));
+  connect(a_ccManager, SIGNAL(accountRemoved(KNNntpAccount*)), this, SLOT(slotRemoveItem(KNNntpAccount*)));
+  connect(a_ccManager, SIGNAL(accountModified(KNNntpAccount*)), this, SLOT(slotUpdateItem(KNNntpAccount*)));
+
+  slotSelectionChanged();     // disable Delete & Edit initially
+}
+
+
+KNConfig::NntpAccountListWidget::~NntpAccountListWidget()
+{
+}
+
+
+void KNConfig::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
+{
+  LBoxItem *it;
+  it=new LBoxItem(a, a->name(), &p_ixmap);
+  l_box->insertItem(it);
+}
+
+
+void KNConfig::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
+{
+  LBoxItem *it;
+  for(uint i=0; i<l_box->count(); i++) {
+    it=static_cast<LBoxItem*>(l_box->item(i));
+    if(it && it->account==a) {
+      l_box->removeItem(i);
+      break;
+    }
+  }
+  slotSelectionChanged();
+}
+
+
+void KNConfig::NntpAccountListWidget::slotUpdateItem(KNNntpAccount *a)
+{
+  LBoxItem *it;
+  for(uint i=0; i<l_box->count(); i++) {
+    it=static_cast<LBoxItem*>(l_box->item(i));
+    if(it && it->account==a) {
+      it=new LBoxItem(a, a->name(), &p_ixmap);
+      l_box->changeItem(it, i);
+      break;
+    }
+  }
+  slotSelectionChanged();
+}
+
+
+
+void KNConfig::NntpAccountListWidget::slotSelectionChanged()
+{
+  int curr=l_box->currentItem();
+  d_elBtn->setEnabled(curr!=-1);
+  e_ditBtn->setEnabled(curr!=-1);
+  s_ubBtn->setEnabled(curr!=-1);
+
+  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(curr));
+  if(it) {
+    s_erverInfo->setText(i18n("Server: %1").arg(it->account->server()));
+    p_ortInfo->setText(i18n("Port: %1").arg(it->account->port()));
+  }
+  else {
+    s_erverInfo->setText(i18n("Server: "));
+    p_ortInfo->setText(i18n("Port: "));
+  }
+}
+
+
+
+void KNConfig::NntpAccountListWidget::slotItemSelected(int)
+{
+  slotEditBtnClicked();
+}
+
+
+
+void KNConfig::NntpAccountListWidget::slotAddBtnClicked()
+{
+  KNNntpAccount *acc = new KNNntpAccount();
+  NntpAccountConfDialog *confDlg = new NntpAccountConfDialog(acc, this);
+
+  if(confDlg->exec())
+    a_ccManager->newAccount(acc);
+  else
+    delete acc;
+
+  delete confDlg;
+}
+
+
+
+void KNConfig::NntpAccountListWidget::slotDelBtnClicked()
+{
+  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
+
+  if(it)
+    a_ccManager->removeAccount(it->account);
+}
+
+
+
+void KNConfig::NntpAccountListWidget::slotEditBtnClicked()
+{
+  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
+
+  if(it) {
+    NntpAccountConfDialog *confDlg = new NntpAccountConfDialog(it->account, this);
+
+    if(confDlg->exec())
+      a_ccManager->applySettings(it->account);   // the account manager will emit accountModified()...
+
+    delete confDlg;
+  }
+}
+
+
+void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
+{
+  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
+
+  if(it)
+    knGlobals.grpManager->showGroupDialog(it->account, this);
+}
+
+
+//=======================================================================================
+
+
+KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget *p, const char *n)
+  : KDialogBase(Plain, (a->id()!=-1)? i18n("Properties of %1").arg(a->name()):i18n("New Account"),
+                Ok|Cancel|Help, Ok, p, n),
+    a_ccount(a)
+{
+  QFrame* page=plainPage();
+  QGridLayout *topL=new QGridLayout(page, 10, 3, 5);
+
+  QLabel *l=new QLabel(i18n("Name:"),page);
+  topL->addWidget(l, 0,0);
+  n_ame=new QLineEdit(page);
+  n_ame->setText(a->name());
+  topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);
+
+  l=new QLabel(i18n("Server:"), page);
+  topL->addWidget(l, 1,0);
+  if (a->id()!=-1) l->setEnabled(false);
+  s_erver=new QLineEdit(page);
+  s_erver->setText(a->server());
+  if (a->id()!=-1) s_erver->setEnabled(false);
+  topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
+
+  l=new QLabel(i18n("Port:"), page);
+  topL->addWidget(l, 2,0);
+  p_ort=new QLineEdit(page);
+  p_ort->setValidator(new KIntValidator(0,65536,this));
+  p_ort->setText(QString::number(a->port()));
+  topL->addWidget(p_ort, 2,1);
+
+  l = new QLabel(i18n("Hold connection for:"), page);
+  topL->addWidget(l,3,0);
+  h_old = new KIntSpinBox(5,1800,5,5,10,page);
+  h_old->setSuffix(i18n(" sec"));
+  h_old->setValue(a->hold());
+  topL->addWidget(h_old,3,1);
+
+  l = new QLabel(i18n("Timeout:"), page);
+  topL->addWidget(l,4,0);
+  t_imeout = new KIntSpinBox(15,600,5,15,10,page);
+  t_imeout->setValue(a->timeout());
+  t_imeout->setSuffix(i18n(" sec"));
+  topL->addWidget(t_imeout,4,1);
+
+  f_etchDes=new QCheckBox(i18n("&Fetch group descriptions"), page);
+  f_etchDes->setChecked(a->fetchDescriptions());
+  topL->addMultiCellWidget(f_etchDes, 5,5, 0,3);
+
+  a_uth=new QCheckBox(i18n("Server requires &authentication"), page);
+  connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
+  topL->addMultiCellWidget(a_uth, 6,6, 0,3);
+
+  u_serLabel=new QLabel(i18n("User:"), page);
+  topL->addWidget(u_serLabel, 7,0);
+  u_ser=new QLineEdit(page);
+  u_ser->setText(a->user());
+  topL->addMultiCellWidget(u_ser, 7,7, 1,2);
+
+  p_assLabel=new QLabel(i18n("Password:"), page);
+  topL->addWidget(p_assLabel, 8,0);
+  p_ass=new QLineEdit(page);
+  p_ass->setEchoMode(QLineEdit::Password);
+  p_ass->setText(a->pass());
+  topL->addMultiCellWidget(p_ass, 8,8, 1,2);
+
+  slotAuthChecked(a->needsLogon());
+
+  topL->setColStretch(1, 1);
+  topL->setColStretch(2, 1);
+
+  setFixedHeight(sizeHint().height());
+  restoreWindowSize("accNewsPropDLG", this, sizeHint());
+
+  setHelp("anc-setting-the-news-account");
+}
+
+
+
+KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
+{
+  saveWindowSize("accNewsPropDLG", size());
+}
+
+
+void KNConfig::NntpAccountConfDialog::slotOk()
+{
+  if (n_ame->text().isEmpty() || s_erver->text().isEmpty()) {
+    KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
+    return;
+  }
+
+  a_ccount->setName(n_ame->text());
+  a_ccount->setServer(s_erver->text());
+  a_ccount->setPort(p_ort->text().toInt());
+  a_ccount->setHold(h_old->value());
+  a_ccount->setTimeout(t_imeout->value());
+  a_ccount->setFetchDescriptions(f_etchDes->isChecked());
+  a_ccount->setNeedsLogon(a_uth->isChecked());
+  a_ccount->setUser(u_ser->text());
+  a_ccount->setPass(p_ass->text());
+
+  accept();
+}
+
+
+void KNConfig::NntpAccountConfDialog::slotAuthChecked(bool b)
+{
+  a_uth->setChecked(b);
+  u_ser->setEnabled(b);
+  u_serLabel->setEnabled(b);
+  p_ass->setEnabled(b);
+  p_assLabel->setEnabled(b);
+}
+
+
+//=============================================================================================
+
+
+KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : BaseWidget(p, n)
+{
+  QGridLayout *topL=new QGridLayout(this, 5, 3, 5);
+
+  QLabel *l=new QLabel(i18n("Server:"), this);
+  topL->addWidget(l, 0,0);
+  s_erver=new QLineEdit(this);
+  topL->addMultiCellWidget(s_erver, 0, 0, 1, 2);
+
+  l=new QLabel(i18n("Port:"), this);
+  topL->addWidget(l, 1,0);
+  p_ort=new QLineEdit(this);
+  p_ort->setValidator(new KIntValidator(0,65536,this));
+  topL->addWidget(p_ort, 1,1);
+
+  l = new QLabel(i18n("Hold connection for:"), this);
+  topL->addWidget(l,2,0);
+  h_old = new KIntSpinBox(0,300,5,0,10,this);
+  h_old->setSuffix(i18n(" sec"));
+  topL->addWidget(h_old,2,1);
+
+  l = new QLabel(i18n("Timeout:"), this);
+  topL->addWidget(l,3,0);
+  t_imeout = new KIntSpinBox(15,300,5,15,10,this);
+  t_imeout->setSuffix(i18n(" sec"));
+  topL->addWidget(t_imeout,3,1);
+
+  topL->setColStretch(1,1);
+  topL->setColStretch(2,1);
+
+  s_erverInfo=knGlobals.accManager->smtp();
+
+  s_erver->setText(s_erverInfo->server());
+  p_ort->setText(QString::number(s_erverInfo->port()));
+  h_old->setValue(s_erverInfo->hold());
+  t_imeout->setValue(s_erverInfo->timeout());
+
+}
+
+
+
+KNConfig::SmtpAccountWidget::~SmtpAccountWidget()
+{
+}
+
+
+void KNConfig::SmtpAccountWidget::apply()
+{
+  s_erverInfo->setServer(s_erver->text());
+  s_erverInfo->setPort(p_ort->text().toInt());
+  s_erverInfo->setHold(h_old->value());
+  s_erverInfo->setTimeout(t_imeout->value());
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("MAILSERVER");
+  s_erverInfo->saveConf(conf);
+}
+
+
+//=============================================================================================
+
+
+//===================================================================================
+// code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
+
+KNConfig::AppearanceWidget::ColorListItem::ColorListItem( const QString &text, const QColor &color )
+  : QListBoxText(text), mColor( color )
+{
+}
+
+
+KNConfig::AppearanceWidget::ColorListItem::~ColorListItem()
+{
+}
+
+
+void KNConfig::AppearanceWidget::ColorListItem::paint( QPainter *p )
+{
+  QFontMetrics fm = p->fontMetrics();
+  int h = fm.height();
+
+  p->drawText( 30+3*2, fm.ascent() + fm.leading()/2, text() );
+
+  p->setPen( Qt::black );
+  p->drawRect( 3, 1, 30, h-1 );
+  p->fillRect( 4, 2, 28, h-3, mColor );
+}
+
+
+int KNConfig::AppearanceWidget::ColorListItem::height(const QListBox *lb ) const
+{
+  return( lb->fontMetrics().lineSpacing()+1 );
+}
+
+
+int KNConfig::AppearanceWidget::ColorListItem::width(const QListBox *lb ) const
+{
+  return( 30 + lb->fontMetrics().width( text() ) + 6 );
+}
+
+
+//===================================================================================
+
+
+KNConfig::AppearanceWidget::FontListItem::FontListItem( const QString &name, const QFont &font )
+  : QListBoxText(name), f_ont(font)
+{
+  fontInfo = QString("[%1 %2]").arg(f_ont.family()).arg(f_ont.pointSize());
+}
+
+
+KNConfig::AppearanceWidget::FontListItem::~FontListItem()
+{
+}
+
+
+void KNConfig::AppearanceWidget::FontListItem::setFont(const QFont &font)
+{
+  f_ont = font;
+  fontInfo = QString("[%1 %2]").arg(f_ont.family()).arg(f_ont.pointSize());
+}
+
+
+void KNConfig::AppearanceWidget::FontListItem::paint( QPainter *p )
+{
+  QFont fnt = p->font();
+  fnt.setWeight(QFont::Bold);
+  p->setFont(fnt);
+  int fontInfoWidth = p->fontMetrics().width(fontInfo);
+  int h = p->fontMetrics().ascent() + p->fontMetrics().leading()/2;
+  p->drawText(2, h, fontInfo );
+  fnt.setWeight(QFont::Normal);
+  p->setFont(fnt);
+  p->drawText(5 + fontInfoWidth, h, text() );
+}
+
+
+int KNConfig::AppearanceWidget::FontListItem::width(const QListBox *lb ) const
+{
+  return( lb->fontMetrics().width(fontInfo) + lb->fontMetrics().width(text()) + 20 );
+}
+
+
+//===================================================================================
+
+
+KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QGridLayout *topL=new QGridLayout(this, 9,2, 5,5);
+
+  //long group list
+  l_ongCB = new QCheckBox(i18n("Show long group list"),this);
+  topL->addWidget(l_ongCB,0,0);
+
+
+  //color-list
+  c_List = new QListBox(this);
+  topL->addMultiCellWidget(c_List,2,4,0,0);
+  connect(c_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
+  connect(c_List, SIGNAL(selectionChanged()), SLOT(slotColSelectionChanged()));
+
+  c_olorCB = new QCheckBox(i18n("Use custom colors"),this);
+  topL->addWidget(c_olorCB,1,0);
+  connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
+
+  c_olChngBtn=new QPushButton(i18n("Cha&nge"), this);
+  connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
+  topL->addWidget(c_olChngBtn,2,1);
+
+  c_olDefBtn=new QPushButton(i18n("&Defaults"), this);
+  connect(c_olDefBtn, SIGNAL(clicked()), this, SLOT(slotColDefaultBtnClicked()));
+  topL->addWidget(c_olDefBtn,3,1);
+
+
+  //font-list
+  f_List = new QListBox(this);
+  topL->addMultiCellWidget(f_List,6,8,0,0);
+  connect(f_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
+  connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
+
+  f_ontCB = new QCheckBox(i18n("Use custom fonts"),this);
+  topL->addWidget(f_ontCB,5,0);
+  connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
+
+  f_ntChngBtn=new QPushButton(i18n("Chan&ge"), this);
+  connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
+  topL->addWidget(f_ntChngBtn,6,1);
+
+  f_ntDefBtn=new QPushButton(i18n("D&efaults"), this);
+  connect(f_ntDefBtn, SIGNAL(clicked()), this, SLOT(slotFontDefaultBtnClicked()));
+  topL->addWidget(f_ntDefBtn,7,1);
+
+  //init
+  l_ongCB->setChecked(d->l_ongGroupList);
+
+  c_olorCB->setChecked(d->u_seColors);
+  slotColCheckBoxToggled(d->u_seColors);
+  for(int i=0; i<d->colorCount(); i++)
+    c_List->insertItem(new ColorListItem(d->c_olorNames[i], d->c_olors[i]));
+
+  f_ontCB->setChecked(d->u_seFonts);
+  slotFontCheckBoxToggled(d->u_seFonts);
+  for(int i=0; i<d->fontCount(); i++)
+    f_List->insertItem(new FontListItem(d->f_ontNames[i], d->f_onts[i]));
+
+}
+
+
+
+KNConfig::AppearanceWidget::~AppearanceWidget()
+{
+}
+
+
+void KNConfig::AppearanceWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->l_ongGroupList=l_ongCB->isChecked();
+
+  d_ata->u_seColors=c_olorCB->isChecked();
+  for(int i=0; i<d_ata->colorCount(); i++)
+    d_ata->c_olors[i] = (static_cast<ColorListItem*>(c_List->item(i)))->color();
+
+  d_ata->u_seFonts=f_ontCB->isChecked();
+  for(int i=0; i<d_ata->fontCount(); i++)
+    d_ata->f_onts[i] = (static_cast<FontListItem*>(f_List->item(i)))->font();
+
+  d_ata->save();
+}
+
+
+void KNConfig::AppearanceWidget::slotColCheckBoxToggled(bool b)
+{
+  c_List->setEnabled(b);
+  c_olDefBtn->setEnabled(b);
+  c_olChngBtn->setEnabled(b && (c_List->currentItem()!=-1));
+}
+
+
+// show color dialog for the entry
+void KNConfig::AppearanceWidget::slotColItemSelected(QListBoxItem *it)
+{
+  if (it) {
+    ColorListItem *colorItem = static_cast<ColorListItem*>(it);
+    QColor col = colorItem->color();
+    int result = KColorDialog::getColor(col,this);
+
+    if (result == KColorDialog::Accepted) {
+      colorItem->setColor(col);
+      c_List->triggerUpdate(false);
+    }
+  }
+}
+
+
+void KNConfig::AppearanceWidget::slotColDefaultBtnClicked()
+{
+
+}
+
+
+void KNConfig::AppearanceWidget::slotColChangeBtnClicked()
+{
+  if(c_List->currentItem()!=-1)
+    slotColItemSelected(c_List->item(c_List->currentItem()));
+}
+
+
+void KNConfig::AppearanceWidget::slotColSelectionChanged()
+{
+  c_olChngBtn->setEnabled(c_List->currentItem()!=-1);
+}
+
+
+void KNConfig::AppearanceWidget::slotFontCheckBoxToggled(bool b)
+{
+  f_List->setEnabled(b);
+  f_ntDefBtn->setEnabled(b);
+  f_ntChngBtn->setEnabled(b && (f_List->currentItem()!=-1));
+}
+
+
+// show font dialog for the entry
+void KNConfig::AppearanceWidget::slotFontItemSelected(QListBoxItem *it)
+{
+  if (it) {
+    FontListItem *fontItem = static_cast<FontListItem*>(it);
+    QFont font = fontItem->font();
+    int result = KFontDialog::getFont(font,false,this);
+
+    if (result == KFontDialog::Accepted) {
+      fontItem->setFont(font);
+      f_List->triggerUpdate(false);
+    }
+  }
+}
+
+
+void KNConfig::AppearanceWidget::slotFontDefaultBtnClicked()
+{
+}
+
+
+void KNConfig::AppearanceWidget::slotFontChangeBtnClicked()
+{
+  if(f_List->currentItem()!=-1)
+    slotFontItemSelected(f_List->item(f_List->currentItem()));
+}
+
+
+void KNConfig::AppearanceWidget::slotFontSelectionChanged()
+{
+  f_ntChngBtn->setEnabled(f_List->currentItem()!=-1);
+}
+
+
+//=============================================================================================
+
+
+KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QGroupBox *mgb=new QGroupBox(i18n("Misc"), this);
+  QGroupBox *vgb=new QGroupBox(i18n("View"), this);
+  QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
+  QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
+  QLabel *l1,*l3;
+
+  a_utoCB=new QCheckBox(i18n("check for new articles automatically"), mgb);
+  l1=new QLabel(i18n("max to fetch"), mgb);
+  m_axFetch=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
+  m_arkCB=new QCheckBox(i18n("mark article as read after"), mgb);
+  m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
+  connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
+  m_arkSecs->setSuffix(i18n(" sec"));
+  l3=new QLabel(i18n("Open links with"), bgb);
+  b_rowser=new QComboBox(bgb);
+  b_rowser->insertItem("Konqueror");
+  b_rowser->insertItem("Netscape");
+  s_howThrCB=new QCheckBox(i18n("thread articles by default"), vgb);
+  e_xpThrCB=new QCheckBox(i18n("show whole thread on expanding"), vgb);
+  connect(s_howThrCB, SIGNAL(toggled(bool)), e_xpThrCB, SLOT(setEnabled(bool)));
+  f_ullHdrsCB=new QCheckBox(i18n("show all headers by default"), vgb);
+  s_igCB=new QCheckBox(i18n("show signature"), vgb);
+  i_nlineCB=new QCheckBox(i18n("show attachments inline if possible"), agb);
+  o_penAttCB=new QCheckBox(i18n("open attachments on click"), agb);
+  a_ltAttCB=new QCheckBox(i18n("show alternative contents as attachments"), agb);
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+  QGridLayout *mgbL=new QGridLayout(mgb, 4,2, 8,5);
+  QVBoxLayout *vgbL=new QVBoxLayout(vgb, 8, 5);
+  QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
+  QGridLayout *bgbL=new QGridLayout(bgb, 2,2, 8,5);
+
+  topL->addWidget(mgb);
+  topL->addWidget(vgb);
+  topL->addWidget(agb);
+  topL->addWidget(bgb);
+  topL->addStretch(1);
+  mgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  mgbL->addWidget(a_utoCB, 1,0);
+  mgbL->addWidget(l1, 2, 0);
+  mgbL->addWidget(m_axFetch, 2,1);
+  mgbL->addWidget(m_arkCB, 3,0);
+  mgbL->addWidget(m_arkSecs, 3,1);
+  mgbL->setColStretch(0,1);
+  vgbL->addSpacing(fontMetrics().lineSpacing()-4);
+  vgbL->addWidget(s_howThrCB);
+  vgbL->addWidget(e_xpThrCB);
+  vgbL->addWidget(f_ullHdrsCB);
+  vgbL->addWidget(s_igCB);
+  agbL->addSpacing(fontMetrics().lineSpacing()-4);
+  agbL->addWidget(i_nlineCB);
+  agbL->addWidget(o_penAttCB);
+  agbL->addWidget(a_ltAttCB);
+  bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  bgbL->addWidget(l3, 1,0);
+  bgbL->addWidget(b_rowser, 1,1);
+  topL->setResizeMode(QLayout::Minimum);
+
+  //init
+  a_utoCB->setChecked(d->a_utoCheck);
+  m_arkCB->setChecked(d->a_utoMark);
+  b_rowser->setCurrentItem((int)(d->b_rowser));
+  i_nlineCB->setChecked(d->i_nlineAtt);
+  o_penAttCB->setChecked(d->o_penAtt);
+  a_ltAttCB->setChecked(d->s_howAlts);
+  f_ullHdrsCB->setChecked(d->s_howFullHdrs);
+  s_igCB->setChecked(d->s_howSig);
+  s_howThrCB->setChecked(d->s_howThreads);
+  e_xpThrCB->setChecked(d->t_otalExpand);
+  m_axFetch->setValue(d->m_axFetch);
+  m_arkSecs->setValue(d->m_arkSecs);
+
+}
+
+
+
+KNConfig::ReadNewsGeneralWidget::~ReadNewsGeneralWidget()
+{
+}
+
+
+void KNConfig::ReadNewsGeneralWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->a_utoCheck=a_utoCB->isChecked();
+  d_ata->s_howFullHdrs=f_ullHdrsCB->isChecked();
+  d_ata->s_howSig=s_igCB->isChecked();
+  d_ata->s_howThreads=s_howThrCB->isChecked();
+  d_ata->t_otalExpand=e_xpThrCB->isChecked();
+  d_ata->m_axFetch=m_axFetch->value();
+  d_ata->a_utoMark=m_arkCB->isChecked();
+  d_ata->m_arkSecs=m_arkSecs->value();
+  d_ata->i_nlineAtt=i_nlineCB->isChecked();
+  d_ata->o_penAtt=o_penAttCB->isChecked();
+  d_ata->s_howAlts=a_ltAttCB->isChecked();
+  d_ata->b_rowser=(ReadNewsGeneral::browserType)(b_rowser->currentItem());
+
+  d_ata->save();
+}
+
+
+//=============================================================================================
+
+
+KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), s_ave(false), d_ata(d)
+{
+  QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
+
+  //listbox
+  l_box=new QListBox(this);
+  connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
+  connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+  topL->addMultiCellWidget(l_box, 0,6, 0,0);
+
+  // buttons
+  a_ddBtn=new QPushButton(i18n("&Add"), this);
+  connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
+  topL->addWidget(a_ddBtn, 0,1);
+
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(d_elBtn, 1,1);
+
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), this);
+  connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
+  topL->addWidget(e_ditBtn, 2,1);
+
+  u_pBtn=new QPushButton(i18n("&Up"), this);
+  connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
+  topL->addWidget(u_pBtn, 4,1);
+
+  d_ownBtn=new QPushButton(i18n("D&own"), this);
+  connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
+  topL->addWidget(d_ownBtn, 5,1);
+
+  topL->addRowSpacing(3,20);        // separate up/down buttons
+  topL->setRowStretch(6,1);         // stretch the listbox
+
+  for(KNViewHeader *h=d->i_nstances.first(); h; h=d->i_nstances.next())
+    l_box->insertItem(generateItem(h));
+
+  slotSelectionChanged();     // disable buttons initially
+}
+
+
+
+KNConfig::DisplayedHeadersWidget::~DisplayedHeadersWidget()
+{
+  if(s_ave)
+    d_ata->save();
+}
+
+
+
+KNConfig::DisplayedHeadersWidget::HdrItem* KNConfig::DisplayedHeadersWidget::generateItem(KNViewHeader *h)
+{
+  QString text;
+  if(h->hasName()) {
+    text=h->translatedName();
+    text+=": <";
+  } else
+    text="<";
+  text+=h->header();
+  text+=">";
+  return new HdrItem(text,h);
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotItemSelected(int)
+{
+  slotEditBtnClicked();
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotSelectionChanged()
+{
+  int curr = l_box->currentItem();
+  d_elBtn->setEnabled(curr!=-1);
+  e_ditBtn->setEnabled(curr!=-1);
+  u_pBtn->setEnabled(curr>0);
+  d_ownBtn->setEnabled((curr!=-1)&&(curr+1!=(int)(l_box->count())));
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotAddBtnClicked()
+{
+  KNViewHeader *h=d_ata->createNewHeader();
+
+  DisplayedHeaderConfDialog* dlg=new DisplayedHeaderConfDialog(h, this);
+  if(dlg->exec()) {
+    l_box->insertItem(generateItem(h));
+    h->createTags();
+    s_ave=true;
+  } else
+    d_ata->remove(h);
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
+{
+  if(l_box->currentItem()==-1)
+    return;
+
+  if(KMessageBox::questionYesNo(this, i18n("Really delete this header?"))==KMessageBox::Yes) {
+    KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
+    d_ata->remove(h);
+    l_box->removeItem(l_box->currentItem());
+    s_ave=true;
+  }
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotEditBtnClicked()
+{
+  if (l_box->currentItem()==-1) return;
+  KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
+
+  DisplayedHeaderConfDialog* dlg=new DisplayedHeaderConfDialog(h, this);
+  if(dlg->exec()) {
+    l_box->changeItem(generateItem(h), l_box->currentItem());
+    h->createTags();
+    s_ave=true;
+  }
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotUpBtnClicked()
+{
+  int c=l_box->currentItem();
+  if(c==0 || c==-1) return;
+
+  KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
+
+  d_ata->up(h);
+  l_box->insertItem(generateItem(h), c-1);
+  l_box->removeItem(c+1);
+  l_box->setCurrentItem(c-1);
+  s_ave=true;
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::slotDownBtnClicked()
+{
+  int c=l_box->currentItem();
+  if(c==-1 || c==(int) l_box->count()-1) return;
+
+  KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
+
+  d_ata->down(h);
+  l_box->insertItem(generateItem(h), c+2);
+  l_box->removeItem(c);
+  l_box->setCurrentItem(c+1);
+  s_ave=true;
+}
+
+
+//=============================================================================================
+
+
+KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNViewHeader *h, QWidget *p, char *n)
+  : KDialogBase(Plain, i18n("Header Properties"),Ok|Cancel|Help, Ok, p, n),
+    h_dr(h)
+{
+  QFrame* page=plainPage();
+  QGridLayout *topL=new QGridLayout(page, 2, 2, 0, 5);
+
+  QWidget *nameW = new QWidget(page);
+  QGridLayout *nameL=new QGridLayout(nameW, 2, 2, 5);
+
+  nameL->addWidget(new QLabel(i18n("Header:"),nameW),0,0);
+  h_drC=new QComboBox(true, nameW);
+  h_drC->lineEdit()->setMaxLength(64);
+  connect(h_drC, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
+  nameL->addWidget(h_drC,0,1);
+
+  nameL->addWidget(new QLabel(i18n("Displayed Name:"),nameW),1,0);
+  n_ameE=new QLineEdit(nameW);
+  connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
+  n_ameE->setMaxLength(64);
+  nameL->addWidget(n_ameE,1,1);
+  nameL->setColStretch(1,1);
+
+  topL->addMultiCellWidget(nameW,0,0,0,1);
+
+  QGroupBox *ngb=new QGroupBox(i18n("Name"), page);
+  QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
+  ngbL->setAutoAdd(true);
+  ngbL->addSpacing(fontMetrics().lineSpacing()-4);
+  n_ameCB[0]=new QCheckBox(i18n("large"), ngb);
+  n_ameCB[1]=new QCheckBox(i18n("bold"), ngb);
+  n_ameCB[2]=new QCheckBox(i18n("italic"), ngb);
+  n_ameCB[3]=new QCheckBox(i18n("underlined"), ngb);
+  topL->addWidget(ngb,1,0);
+
+  QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
+  QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
+  vgbL->setAutoAdd(true);
+  vgbL->addSpacing(fontMetrics().lineSpacing()-4);
+  v_alueCB[0]=new QCheckBox(i18n("large"), vgb);
+  v_alueCB[1]=new QCheckBox(i18n("bold"), vgb);
+  v_alueCB[2]=new QCheckBox(i18n("italic"), vgb);
+  v_alueCB[3]=new QCheckBox(i18n("underlined"), vgb);
+  topL->addWidget(vgb,1,1);
+
+  topL->setColStretch(0,1);
+  topL->setColStretch(1,1);
+
+  // preset values...
+  h_drC->insertStrList(KNViewHeader::predefs());
+  h_drC->lineEdit()->setText(h->header());
+  n_ameE->setText(h->translatedName());
+  for(int i=0; i<4; i++) {
+    n_ameCB[i]->setChecked(h->flag(i));
+    v_alueCB[i]->setChecked(h->flag(i+4));
+  }
+
+  setFixedHeight(sizeHint().height());
+  restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
+
+  setHelp("anc-knode-headers");
+}
+
+
+KNConfig::DisplayedHeaderConfDialog::~DisplayedHeaderConfDialog()
+{
+  saveWindowSize("accReadHdrPropDLG", size());
+}
+
+
+void KNConfig::DisplayedHeaderConfDialog::slotOk()
+{
+  h_dr->setHeader(h_drC->currentText());
+  h_dr->setTranslatedName(n_ameE->text());
+  for(int i=0; i<4; i++) {
+    if(h_dr->hasName())
+      h_dr->setFlag(i, n_ameCB[i]->isChecked());
+    else
+      h_dr->setFlag(i,false);
+    h_dr->setFlag(i+4, v_alueCB[i]->isChecked());
+  }
+  accept();
+}
+
+
+// the user selected one of the presets, insert the *translated* string as display name:
+void KNConfig::DisplayedHeaderConfDialog::slotActivated(int pos)
+{
+  n_ameE->setText(i18n(h_drC->text(pos).local8Bit()));  // I think it's save here, the combobox has only english defaults
+}
+
+
+// disable the name format options when the name is empty
+void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
+{
+  for(int i=0; i<4; i++)
+    n_ameCB[i]->setEnabled(!str.isEmpty());
+}
+
+
+//=============================================================================================
+
+
+KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
+ : BaseWidget(p,n), f_ilManager(knGlobals.filManager)
+{
+  QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
+
+  // == Filters =================================================
+
+  topL->addWidget(new QLabel(i18n("<b>Filters:</b>"),this),0,0);
+
+  f_lb=new QListBox(this);
+  connect(f_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedFilter()));
+  connect(f_lb, SIGNAL(selected(int)), SLOT(slotItemSelectedFilter(int)));
+  topL->addMultiCellWidget(f_lb,1,5,0,0);
+
+  a_ddBtn=new QPushButton(i18n("&Add"), this);
+  connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
+  topL->addWidget(a_ddBtn,1,1);
+
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(d_elBtn,2,1);
+
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), this);
+  connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
+  topL->addWidget(e_ditBtn,3,1);
+
+  c_opyBtn=new QPushButton(i18n("C&opy"), this);
+  connect(c_opyBtn, SIGNAL(clicked()), this, SLOT(slotCopyBtnClicked()));
+  topL->addWidget(c_opyBtn,4,1);
+
+  // == Menu ====================================================
+
+  topL->addWidget(new QLabel(i18n("<b>Menu:</b>"),this),6,0);
+
+  m_lb=new QListBox(this);
+  connect(m_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedMenu()));
+  topL->addMultiCellWidget(m_lb,7,11,0,0);
+
+  u_pBtn=new QPushButton(i18n("&Up"), this);
+  connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
+  topL->addWidget(u_pBtn,7,1);
+
+  d_ownBtn=new QPushButton(i18n("D&own"), this);
+  connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
+  topL->addWidget(d_ownBtn,8,1);
+
+  s_epAddBtn=new QPushButton(i18n("Add\n&Separator"), this);
+  connect(s_epAddBtn, SIGNAL(clicked()), this, SLOT(slotSepAddBtnClicked()));
+  topL->addWidget(s_epAddBtn,9,1);
+
+  s_epRemBtn=new QPushButton(i18n("&Remove\nSeparator"), this);
+  connect(s_epRemBtn, SIGNAL(clicked()), this, SLOT(slotSepRemBtnClicked()));
+  topL->addWidget(s_epRemBtn,10,1);
+
+  topL->setRowStretch(5,1);
+  topL->setRowStretch(11,1);
+
+  a_ctive = SmallIcon("filter",16);
+  d_isabled = SmallIcon("filter",16,KIcon::DisabledState);
+
+  f_ilManager->startConfig(this);
+
+  slotSelectionChangedFilter();
+  slotSelectionChangedMenu();
+}
+
+
+KNConfig::FilterListWidget::~FilterListWidget()
+{
+  f_ilManager->endConfig();
+}
+
+
+
+void KNConfig::FilterListWidget::apply()
+{
+  if(d_irty)
+    f_ilManager->commitChanges();
+}
+
+
+void KNConfig::FilterListWidget::addItem(KNArticleFilter *f)
+{
+  if(f->isEnabled())
+    f_lb->insertItem(new LBoxItem(f, f->translatedName(), &a_ctive));
+  else
+    f_lb->insertItem(new LBoxItem(f, f->translatedName(), &d_isabled));
+  slotSelectionChangedFilter();
+}
+
+
+void KNConfig::FilterListWidget::removeItem(KNArticleFilter *f)
+{
+  int i=findItem(f_lb, f);
+  if (i!=-1) f_lb->removeItem(i);
+  slotSelectionChangedFilter();
+}
+
+
+void KNConfig::FilterListWidget::updateItem(KNArticleFilter *f)
+{
+  int i=findItem(f_lb, f);
+
+  if(i!=-1) {
+    if(f->isEnabled()) {
+      f_lb->changeItem(new LBoxItem(f, f->translatedName(), &a_ctive), i);
+      m_lb->changeItem(new LBoxItem(f, f->translatedName()), findItem(m_lb, f));
+    } else
+      f_lb->changeItem(new LBoxItem(f, f->translatedName(), &d_isabled), i);
+  }
+  slotSelectionChangedFilter();
+}
+
+
+void KNConfig::FilterListWidget::addMenuItem(KNArticleFilter *f)
+{
+  if (f) {
+    if (findItem(m_lb, f)==-1)
+      m_lb->insertItem(new LBoxItem(f, f->translatedName()));
+  } else   // separator
+    m_lb->insertItem(new LBoxItem(0, "==="));
+  slotSelectionChangedMenu();
+}
+
+
+void KNConfig::FilterListWidget::removeMenuItem(KNArticleFilter *f)
+{
+  int i=findItem(m_lb, f);
+  if(i!=-1) m_lb->removeItem(i);
+  slotSelectionChangedMenu();
+}
+
+
+QValueList<int> KNConfig::FilterListWidget::menuOrder()
+{
+  KNArticleFilter *f;
+  QValueList<int> lst;
+
+  for(uint i=0; i<m_lb->count(); i++) {
+    f= (static_cast<LBoxItem*>(m_lb->item(i)))->filter;
+    if(f)
+      lst << f->id();
+    else
+      lst << -1;
+  }
+ return lst;
+}
+
+
+int KNConfig::FilterListWidget::findItem(QListBox *l, KNArticleFilter *f)
+{
+  int idx=0;
+  bool found=false;
+  while(!found && idx < (int) l->count()) {
+    found=( (static_cast<LBoxItem*>(l->item(idx)))->filter==f );
+    if(!found) idx++;
+  }
+  if(found) return idx;
+  else return -1;
+}
+
+
+void KNConfig::FilterListWidget::slotAddBtnClicked()
+{
+  f_ilManager->newFilter();
+}
+
+
+void KNConfig::FilterListWidget::slotDelBtnClicked()
+{
+  if (f_lb->currentItem()!=-1)
+    f_ilManager->deleteFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
+}
+
+
+void KNConfig::FilterListWidget::slotEditBtnClicked()
+{
+  if (f_lb->currentItem()!=-1)
+    f_ilManager->editFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
+}
+
+
+void KNConfig::FilterListWidget::slotCopyBtnClicked()
+{
+  if (f_lb->currentItem()!=-1)
+    f_ilManager->copyFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
+}
+
+
+void KNConfig::FilterListWidget::slotUpBtnClicked()
+{
+  int c=m_lb->currentItem();
+  KNArticleFilter *f=0;
+
+  if(c==0 || c==-1) return;
+  f=(static_cast<LBoxItem*>(m_lb->item(c)))->filter;
+  if(f)
+    m_lb->insertItem(new LBoxItem(f, f->translatedName()), c-1);
+  else
+    m_lb->insertItem(new LBoxItem(0, "==="), c-1);
+  m_lb->removeItem(c+1);
+  m_lb->setCurrentItem(c-1);
+}
+
+
+void KNConfig::FilterListWidget::slotDownBtnClicked()
+{
+  int c=m_lb->currentItem();
+  KNArticleFilter *f=0;
+
+  if(c==-1 || c+1==(int)m_lb->count()) return;
+  f=(static_cast<LBoxItem*>(m_lb->item(c)))->filter;
+  if(f)
+    m_lb->insertItem(new LBoxItem(f, f->translatedName()), c+2);
+  else
+    m_lb->insertItem(new LBoxItem(0, "==="), c+2);
+  m_lb->removeItem(c);
+  m_lb->setCurrentItem(c+1);
+}
+
+
+void KNConfig::FilterListWidget::slotSepAddBtnClicked()
+{
+  m_lb->insertItem(new LBoxItem(0, "==="), m_lb->currentItem());
+  slotSelectionChangedMenu();
+}
+
+
+void KNConfig::FilterListWidget::slotSepRemBtnClicked()
+{
+  int c=m_lb->currentItem();
+
+  if( (c!=-1) && ( (static_cast<LBoxItem*>(m_lb->item(c)))->filter==0 ) )
+     m_lb->removeItem(c);
+  slotSelectionChangedMenu();
+}
+
+
+void KNConfig::FilterListWidget::slotItemSelectedFilter(int)
+{
+  slotEditBtnClicked();
+}
+
+
+void KNConfig::FilterListWidget::slotSelectionChangedFilter()
+{
+  int curr = f_lb->currentItem();
+
+  d_elBtn->setEnabled(curr!=-1);
+  e_ditBtn->setEnabled(curr!=-1);
+  c_opyBtn->setEnabled(curr!=-1);
+}
+
+
+void KNConfig::FilterListWidget::slotSelectionChangedMenu()
+{
+  int curr = m_lb->currentItem();
+
+  u_pBtn->setEnabled(curr>0);
+  d_ownBtn->setEnabled((curr!=-1)&&(curr+1!=(int)m_lb->count()));
+  s_epRemBtn->setEnabled((curr!=-1) && ( (static_cast<LBoxItem*>(m_lb->item(curr)))->filter==0 ) );
+}
+
+
+//=============================================================================================
+
+
+KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // ==== General =============================================================
+
+  QGroupBox *ggb=new QGroupBox(i18n("General"), this);
+  QGridLayout *ggbL=new QGridLayout(ggb, 6,2, 8,5);
+  topL->addWidget(ggb);
+
+  ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  ggbL->addWidget(new QLabel(i18n("Charset"), ggb), 1,0);
+  c_harset=new QComboBox(ggb);
+  c_harset->insertItem("US-ASCII");      // availableCharsetNames() returns the wrong format and
+  c_harset->insertItem("ISO-8859-1");    // posting of non-iso-8859 is currently broken...
+  c_harset->insertItem("ISO-8859-2");
+  c_harset->insertItem("ISO-8859-3");
+  c_harset->insertItem("ISO-8859-4");
+  c_harset->insertItem("ISO-8859-5");
+  c_harset->insertItem("ISO-8859-6");
+  c_harset->insertItem("ISO-8859-7");
+  c_harset->insertItem("ISO-8859-8");
+  c_harset->insertItem("ISO-8859-9");
+  c_harset->insertItem("ISO-8859-10");
+  c_harset->insertItem("ISO-8859-13");
+  c_harset->insertItem("ISO-8859-14");
+  c_harset->insertItem("ISO-8859-15");
+  //c_harset->insertStringList(KGlobal::charsets()->availableCharsetNames());
+  ggbL->addWidget(c_harset, 1,1);
+
+  ggbL->addWidget(new QLabel(i18n("Encoding"), ggb), 2,0);
+  e_ncoding=new QComboBox(ggb);
+  e_ncoding->insertItem("7 bit");
+  e_ncoding->insertItem("8 bit");
+  e_ncoding->insertItem("quoted-printable");
+  ggbL->addWidget(e_ncoding, 2,1);
+
+  a_llow8bitCB=new QCheckBox(i18n("don't encode 8-bit characters in the header"), ggb);
+  connect(a_llow8bitCB, SIGNAL(toggled(bool)), this, SLOT(slotHeadEncToggled(bool)));
+  ggbL->addMultiCellWidget(a_llow8bitCB, 3,3, 0,1);
+
+  g_enMIdCB=new QCheckBox(i18n("generate Message-Id"), ggb);
+  connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
+  ggbL->addMultiCellWidget(g_enMIdCB, 4,4, 0,1);
+  h_ostL=new QLabel(i18n("Hostname"), ggb);
+  h_ostL->setEnabled(false);
+  ggbL->addWidget(h_ostL, 5,0);
+  h_ost=new QLineEdit(ggb);
+  h_ost->setEnabled(false);
+  ggbL->addWidget(h_ost, 5,1);
+
+  ggbL->setColStretch(1,1);
+
+  // ==== X-Headers =============================================================
+
+  QGroupBox *xgb=new QGroupBox(i18n("X-Headers"), this);
+  topL->addWidget(xgb, 1);
+  QGridLayout *xgbL=new QGridLayout(xgb, 6,2, 8,5);
+
+  xgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  l_box=new QListBox(xgb);
+  connect(l_box, SIGNAL(selected(int)), SLOT(slotItemSelected(int)));
+  connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
+  xgbL->addMultiCellWidget(l_box, 1,4, 0,0);
+
+  a_ddBtn=new QPushButton(i18n("&Add"), xgb);
+  connect(a_ddBtn, SIGNAL(clicked()), SLOT(slotAddBtnClicked()));
+  xgbL->addWidget(a_ddBtn, 1,1);
+
+  d_elBtn=new QPushButton(i18n("&Delete"), xgb);
+  connect(d_elBtn, SIGNAL(clicked()), SLOT(slotDelBtnClicked()));
+  xgbL->addWidget(d_elBtn, 2,1);
+
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), xgb);
+  connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
+  xgbL->addWidget(e_ditBtn, 3,1);
+
+  i_ncUaCB=new QCheckBox(i18n("don't add the \"User-Agent\" identification header"), xgb);
+  xgbL->addMultiCellWidget(i_ncUaCB, 5,5, 0,1);
+
+  xgbL->setRowStretch(4,1);
+  xgbL->setColStretch(0,1);
+
+
+  //init
+  a_llow8bitCB->blockSignals(true); //avoid warning message on startup
+  a_llow8bitCB->setChecked(d->a_llow8Bit);
+  a_llow8bitCB->blockSignals(false);
+  i_ncUaCB->setChecked(d->d_ontIncludeUA);
+  g_enMIdCB->setChecked(d->g_enerateMID);
+
+  for(int i=0; i < c_harset->count(); i++)
+    if(c_harset->text(i).latin1() == d->c_harset) {
+      c_harset->setCurrentItem(i);
+      break;
+    }
+
+  e_ncoding->setCurrentItem(d->e_ncoding);
+  h_ost->setText(d->h_ostname);
+
+  for(XHeaders::Iterator it=d->x_headers.begin(); it!=d->x_headers.end(); ++it)
+    l_box->insertItem((*it).header());
+
+  slotSelectionChanged();
+
+
+}
+
+
+KNConfig::PostNewsTechnicalWidget::~PostNewsTechnicalWidget()
+{
+}
+
+
+void KNConfig::PostNewsTechnicalWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->e_ncoding=e_ncoding->currentItem();
+  d_ata->c_harset=c_harset->currentText().upper().latin1();
+  d_ata->a_llow8Bit=a_llow8bitCB->isChecked();
+  d_ata->g_enerateMID=g_enMIdCB->isChecked();
+  d_ata->h_ostname=h_ost->text().latin1();
+  d_ata->d_ontIncludeUA=i_ncUaCB->isChecked();
+  d_ata->x_headers.clear();
+  for(unsigned int idx=0; idx<l_box->count(); idx++)
+    d_ata->x_headers.append( XHeader(l_box->text(idx)) );
+
+  d_ata->save();
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotHeadEncToggled(bool b)
+{
+  if (b)
+    KMessageBox::information(this,i18n("Please be aware that unencoded 8-bit characters\nare illegal in the header of a usenet message.\nUse this feature with extreme care!"));
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotGenMIdCBToggled(bool b)
+{
+  h_ost->setEnabled(b);
+  h_ostL->setEnabled(b);
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotSelectionChanged()
+{
+  d_elBtn->setEnabled(l_box->currentItem()!=-1);
+  e_ditBtn->setEnabled(l_box->currentItem()!=-1);
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotItemSelected(int)
+{
+  slotEditBtnClicked();
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotAddBtnClicked()
+{
+  XHeaderConfDialog *dlg=new XHeaderConfDialog(QString::null, this);
+  if (dlg->exec())
+    l_box->insertItem(dlg->result());
+
+  delete dlg;
+
+  slotSelectionChanged();
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotDelBtnClicked()
+{
+  int c=l_box->currentItem();
+  if (c == -1)
+    return;
+
+  l_box->removeItem(c);
+  slotSelectionChanged();
+}
+
+
+
+void KNConfig::PostNewsTechnicalWidget::slotEditBtnClicked()
+{
+  int c=l_box->currentItem();
+  if (c == -1)
+    return;
+
+  XHeaderConfDialog *dlg=new XHeaderConfDialog(l_box->text(c), this);
+  if (dlg->exec())
+    l_box->changeItem(dlg->result(),c);
+
+  delete dlg;
+
+  slotSelectionChanged();
+}
+
+
+//===================================================================================================
+
+
+KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, const char *n)
+  : KDialogBase(Plain, i18n("X-Headers"),Ok|Cancel, Ok, p, n)
+{
+  QFrame* page=plainPage();
+  QHBoxLayout *topL=new QHBoxLayout(page, 5,8);
+  topL->setAutoAdd(true);
+
+  new QLabel("X-", page);
+  n_ame=new QLineEdit(page);
+  new QLabel(":", page);
+  v_alue=new QLineEdit(page);
+
+  int pos=h.find(": ", 2);
+  if(pos!=-1) {
+    n_ame->setText(h.mid(2, pos-2));
+    pos+=2;
+    v_alue->setText(h.mid(pos, h.length()-pos));
+  }
+
+  setFixedHeight(sizeHint().height());
+  restoreWindowSize("XHeaderDlg", this, sizeHint());
+}
+
+
+
+KNConfig::XHeaderConfDialog::~XHeaderConfDialog()
+{
+  saveWindowSize("XHeaderDlg", size());
+}
+
+
+
+QString KNConfig::XHeaderConfDialog::result()
+{
+  return QString("X-%1: %2").arg(n_ame->text()).arg(v_alue->text());
+}
+
+
+//===================================================================================================
+
+
+KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // === general ===========================================================
+
+  QGroupBox *generalB=new QGroupBox(i18n("General"), this);
+  topL->addWidget(generalB);
+  QGridLayout *generalL=new QGridLayout(generalB, 3,3, 8,5);
+
+  generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  generalL->addWidget(new QLabel(i18n("word wrap at column:"), generalB),1,0);
+  m_axLen=new KIntSpinBox(20, 100, 1, 20, 10, generalB);
+  generalL->addWidget(m_axLen,1,2);
+
+  o_wnSigCB=new QCheckBox(i18n("append signature automatically"), generalB);
+  generalL->addMultiCellWidget(o_wnSigCB,2,2,0,1);
+
+  generalL->setColStretch(1,1);
+
+  // === reply =============================================================
+
+  QGroupBox *replyB=new QGroupBox(i18n("Reply"), this);
+  topL->addWidget(replyB);
+  QGridLayout *replyL=new QGridLayout(replyB, 6,2, 8,5);
+
+  replyL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  replyL->addMultiCellWidget(new QLabel(i18n("Introduction Phrase:"), replyB),1,1,0,1);
+  i_ntro=new QLineEdit(replyB);
+  replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
+  replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=msgid"), replyB),3,3,0,1);
+
+  r_ewrapCB=new QCheckBox(i18n("rewrap quoted text automatically"), replyB);
+  replyL->addMultiCellWidget(r_ewrapCB, 5,5,0,1);
+
+  a_uthSigCB=new QCheckBox(i18n("include the authors signature"), replyB);
+  replyL->addMultiCellWidget(a_uthSigCB, 6,6,0,1);
+
+  replyL->setColStretch(1,1);
+
+  // === external editor ========================================================
+
+  QGroupBox *editorB=new QGroupBox(i18n("External Editor"), this);
+  topL->addWidget(editorB);
+  QGridLayout *editorL=new QGridLayout(editorB, 6,3, 8,5);
+
+  editorL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  editorL->addWidget(new QLabel(i18n("Specify Editor:"), editorB),1,0);
+  e_ditor=new QLineEdit(editorB);
+  editorL->addWidget(e_ditor,1,1);
+  QPushButton *btn = new QPushButton(i18n("Ch&oose..."),editorB);
+  connect(btn, SIGNAL(clicked()), SLOT(slotChooseEditor()));
+  editorL->addWidget(btn,1,2);
+
+  editorL->addMultiCellWidget(new QLabel(i18n("%f will be replaced with the filename to edit."), editorB),2,2,0,2);
+
+  e_xternCB=new QCheckBox(i18n("start external editor automatically"), editorB);
+  editorL->addMultiCellWidget(e_xternCB, 3,3,0,2);
+
+  editorL->setColStretch(1,1);
+
+  topL->addStretch(1);
+
+  //init
+  a_uthSigCB->setChecked(d->i_ncSig);
+  e_xternCB->setChecked(d->u_seExtEditor);
+  o_wnSigCB->setChecked(d->a_ppSig);
+  r_ewrapCB->setChecked(d->r_ewrap);
+  m_axLen->setValue(d->m_axLen);
+  i_ntro->setText(d->i_ntro);
+  e_ditor->setText(d->e_xternalEditor);
+
+}
+
+
+
+KNConfig::PostNewsComposerWidget::~PostNewsComposerWidget()
+{
+}
+
+
+void KNConfig::PostNewsComposerWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->m_axLen=m_axLen->value();
+  d_ata->r_ewrap=r_ewrapCB->isChecked();
+  d_ata->a_ppSig=o_wnSigCB->isChecked();
+  d_ata->i_ntro=i_ntro->text();
+  d_ata->i_ncSig=a_uthSigCB->isChecked();
+  d_ata->e_xternalEditor=e_ditor->text();
+  d_ata->u_seExtEditor=e_xternCB->isChecked();
+
+  d_ata->save();
+}
+
+
+void KNConfig::PostNewsComposerWidget::slotChooseEditor()
+{
+  QString path=e_ditor->text().simplifyWhiteSpace();
+  if (path.right(3) == " %f")
+    path.truncate(path.length()-3);
+
+  path=KFileDialog::getOpenFileName(path, QString::null, this, i18n("Choose Editor"));
+
+  if (!path.isEmpty())
+    e_ditor->setText(path+" %f");
+}
+
+
+//===================================================================================================
+
+
+KNConfig::PostNewsSpellingWidget::PostNewsSpellingWidget(QWidget *p, const char *n)
+  : BaseWidget(p, n)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  c_onf = new KSpellConfig( this, "spell", 0, false );
+  topL->addWidget(c_onf);
+
+  topL->addStretch(1);
+}
+
+
+KNConfig::PostNewsSpellingWidget::~PostNewsSpellingWidget()
+{
+}
+
+
+void KNConfig::PostNewsSpellingWidget::apply()
+{
+  if(d_irty)
+     c_onf->writeGlobalSettings();
+}
+
+
+//===================================================================================================
+
+
+KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // === groups ===========================================================
+
+  QGroupBox *groupsB=new QGroupBox(i18n("Groups"), this);
+  topL->addWidget(groupsB);
+  QGridLayout *groupsL=new QGridLayout(groupsB, 6,2, 8,5);
+
+  groupsL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  g_roupCB=new QCheckBox(i18n("remove old articles from newsgroups"), groupsB);
+  connect(g_roupCB, SIGNAL(toggled(bool)), this, SLOT(slotGroupCBtoggled(bool)));
+  groupsL->addMultiCellWidget(g_roupCB,1,1,0,1);
+
+  g_roupDaysL=new QLabel(i18n("purge groups every"), groupsB);
+  groupsL->addWidget(g_roupDaysL,2,0);
+  g_roupDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
+  g_roupDays->setSuffix(i18n(" days"));
+  groupsL->addWidget(g_roupDays,2,1,Qt::AlignRight);
+
+  r_eadDaysL=new QLabel(i18n("keep read articles"), groupsB);
+  groupsL->addWidget(r_eadDaysL,3,0);
+  r_eadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
+  r_eadDays->setSuffix(i18n(" days"));
+  groupsL->addWidget(r_eadDays,3,1,Qt::AlignRight);
+
+  u_nreadDaysL=new QLabel(i18n("keep unread articles"), groupsB);
+  groupsL->addWidget(u_nreadDaysL,4,0);
+  u_nreadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
+  u_nreadDays->setSuffix(i18n(" days"));
+  groupsL->addWidget(u_nreadDays,4,1,Qt::AlignRight);
+
+  t_hrCB=new QCheckBox(i18n("preserve threads"), groupsB);
+  groupsL->addWidget(t_hrCB,5,0);
+
+  groupsL->setColStretch(1,1);
+
+  // === folders =========================================================
+
+  QGroupBox *foldersB=new QGroupBox(i18n("Folders"), this);
+  topL->addWidget(foldersB);
+  QGridLayout *foldersL=new QGridLayout(foldersB, 3,2, 8,5);
+
+  foldersL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  f_olderCB=new QCheckBox(i18n("compact folders"), foldersB);
+  connect(f_olderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));
+  foldersL->addMultiCellWidget(f_olderCB,1,1,0,1);
+
+  f_olderDaysL=new QLabel(i18n("purge folders every"), foldersB);
+  foldersL->addWidget(f_olderDaysL,2,0);
+  f_olderDays=new KIntSpinBox(0, 999, 1, 0, 10, foldersB);
+  f_olderDays->setSuffix(i18n(" days"));
+  foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
+
+  foldersL->setColStretch(1,1);
+
+  topL->addStretch(1);
+
+  //init
+  f_olderCB->setChecked(d->d_oCompact);
+  g_roupCB->setChecked(d->d_oExpire);
+  t_hrCB->setChecked(d->p_reserveThr);
+  f_olderDays->setValue(d->c_ompactInterval);
+  g_roupDays->setValue(d->e_xpireInterval);
+  r_eadDays->setValue(d->r_eadMaxAge);
+  u_nreadDays->setValue(d->u_nreadMaxAge);
+
+}
+
+
+KNConfig::CleanupWidget::~CleanupWidget()
+{
+}
+
+
+void KNConfig::CleanupWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->d_oExpire=g_roupCB->isChecked();
+  d_ata->e_xpireInterval=g_roupDays->value();
+  d_ata->u_nreadMaxAge=u_nreadDays->value();
+  d_ata->r_eadMaxAge=r_eadDays->value();
+  d_ata->p_reserveThr=t_hrCB->isChecked();
+  d_ata->d_oCompact=f_olderCB->isChecked();
+  d_ata->c_ompactInterval=f_olderDays->value();
+
+  d_ata->save();
+}
+
+
+void KNConfig::CleanupWidget::slotGroupCBtoggled(bool b)
+{
+  g_roupDaysL->setEnabled(b);
+  g_roupDays->setEnabled(b);
+  r_eadDaysL->setEnabled(b);
+  r_eadDays->setEnabled(b);
+  u_nreadDaysL->setEnabled(b);
+  u_nreadDays->setEnabled(b);
+  t_hrCB->setEnabled(b);
+}
+
+
+void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
+{
+  f_olderDaysL->setEnabled(b);
+  f_olderDays->setEnabled(b);
+}
+
+
+//------------------------
+#include "knconfig.moc"
