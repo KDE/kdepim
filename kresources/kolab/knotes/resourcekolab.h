@@ -74,6 +74,8 @@ public:
 
   bool deleteNote( KCal::Journal* );
 
+  KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
+
   /// Reimplemented from IncidenceBase::Observer to know when a note was changed
   void incidenceUpdated( KCal::IncidenceBase* );
 
