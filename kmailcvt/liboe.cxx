@@ -48,6 +48,8 @@
 #endif
 #include <sys/stat.h>
 
+typedef int FPOS_TYPE;
+
 #define OE_CANNOTREAD 1
 #define OE_NOTOEBOX   2
 #define OE_POSITION   3
@@ -79,7 +81,7 @@ struct oe_table_node { /* Actual table entries */
 typedef struct oe_table_node oe_table_node;
 
 struct oe_list { /* Internal use only */
-  fpos_t pos;
+  FPOS_TYPE pos;
   struct oe_list *next;
 };
 typedef struct oe_list oe_list;
@@ -119,14 +121,14 @@ typedef struct oe_internaldata oe_data;
 
 /* LIST OF USED TABLES */
 
-void oe_posused(oe_data *data, fpos_t pos) {
+void oe_posused(oe_data *data, FPOS_TYPE pos) {
   oe_list *n = (oe_list *) malloc(sizeof(oe_list));
   n->pos = pos;
   n->next = data->used;
   data->used = n;
 }
 
-int oe_isposused(oe_data *data, fpos_t pos) {
+int oe_isposused(oe_data *data, FPOS_TYPE pos) {
   oe_list *n = data->used;
   while (n!=NULL) {
     if (pos==n->pos) return 1;
@@ -144,13 +146,14 @@ void oe_freeposused(oe_data *data) {
 /* ACTUAL MESSAGE PARSER */
 
 int oe_readmessage(oe_data *data,
-		   fpos_t pos,
+		   FPOS_TYPE pos,
 		   int /*newsarticle*/) {
   int segheadsize = sizeof(oe_msg_segmentheader)-4; /*+(newsarticle<<2);*/
   oe_msg_segmentheader *sgm = (oe_msg_segmentheader *) malloc(sizeof(oe_msg_segmentheader));
   char buff[16], *ss = (char *) malloc(2048), *s = ss;
   int nextsegment, endofsegment, i, headerwritten = 0;
-  fsetpos(data->oe,&pos);
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos);
   while (1) {
     fread(sgm,segheadsize,1,data->oe);
     if (pos!=sgm->self) { /* No body found*/
@@ -180,7 +183,8 @@ int oe_readmessage(oe_data *data,
 	  if (buff[i]==0x0a) { *s='\0'; data->oput(ss,2); s=ss; }
 	}
     }
-    fsetpos(data->oe,(fpos_t *) &sgm->next);
+    fseek(data->oe,sgm->next,SEEK_SET);
+    //fsetpos(data->oe,(FPOS_TYPE *) &sgm->next);
     pos = sgm->next;
     if (pos==0) break;
   }
@@ -199,13 +203,14 @@ int oe_readmessage(oe_data *data,
 
 /* PARSES MESSAGE HEADERS */
 
-int oe_readmessageheader(oe_data *data, fpos_t pos) {
+int oe_readmessageheader(oe_data *data, FPOS_TYPE pos) {
   int segheadsize = sizeof(oe_msg_segmentheader)-4;
   oe_msg_segmentheader *sgm;
   int self=1, msgpos = 0, newsarticle = 0;
 
   if (oe_isposused(data,pos)) return 0; else oe_posused(data,pos);
-  fsetpos(data->oe,&pos);
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos);
   sgm = (oe_msg_segmentheader *) malloc(sizeof(oe_msg_segmentheader));
   fread(sgm,segheadsize,1,data->oe);
   if (pos!=sgm->self) { free(sgm); return OE_POSITION; /* ERROR */ }
@@ -236,14 +241,15 @@ int oe_readmessageheader(oe_data *data, fpos_t pos) {
 
 /* PARSES MAILBOX TABLES */
 
-int oe_readtable(oe_data *data, fpos_t pos) {
+int oe_readtable(oe_data *data, FPOS_TYPE pos) {
   oe_table_header thead;
   oe_table_node tnode;
   int quit = 0;
 
   if (oe_isposused(data,pos)) return 0;
 
-  fsetpos(data->oe,&pos);
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos);
 
   fread(&thead,sizeof(oe_table_header),1,data->oe);
   if (thead.self != pos) return OE_POSITION;
@@ -252,7 +258,8 @@ int oe_readtable(oe_data *data, fpos_t pos) {
 
   oe_readtable(data,thead.next);
   oe_readtable(data,thead.list);
-  fsetpos(data->oe,&pos); 
+  fseek(data->oe,pos,SEEK_SET);  
+  //fsetpos(data->oe,&pos); 
 
   while (!quit) {
     fread(&tnode,sizeof(oe_table_node),1,data->oe);
@@ -265,7 +272,8 @@ int oe_readtable(oe_data *data, fpos_t pos) {
 	   oe_readmessageheader(data,tnode.message);
 	   oe_readtable(data,tnode.list);
 	 }
-    fsetpos(data->oe,&pos);
+    fseek(data->oe,pos,SEEK_SET);
+    //fsetpos(data->oe,&pos);
   }
 
   return 0;
@@ -275,21 +283,24 @@ void oe_readdamaged(oe_data *data) {
   /* If nothing else works (needed this to get some mailboxes 
      that even OE couldn't read to work. Should generally not 
      be needed, but is nice to have in here */
-  fpos_t pos = 0x7C;
+  FPOS_TYPE pos = 0x7C;
   int i,check, lastID;
 #ifdef DEBUG
   printf("  Trying to construct internal mailbox structure\n");
 #endif
-  fsetpos(data->oe,&pos);
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos);
   fread(&pos,sizeof(int),1,data->oe); 
   if (pos==0) return; /* No, sorry, didn't work */
-  fsetpos(data->oe,&pos);
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos);
   fread(&i,sizeof(int),1,data->oe);
   if (i!=pos) return; /* Sorry */
   fread(&pos,sizeof(int),1,data->oe);
   i+=pos+8;
   pos = i+4;
-  fsetpos(data->oe,&pos);
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos);
 #ifdef DEBUG
   printf("  Searching for %.8x\n",i);
 #endif
@@ -304,18 +315,21 @@ void oe_readdamaged(oe_data *data) {
       printf("Trying possible table at %.8x\n",lastID);
 #endif
       oe_readtable(data,lastID);
-      fsetpos(data->oe,&pos);
+      fseek(data->oe,pos,SEEK_SET);
+      //fsetpos(data->oe,&pos);
     }
   }
 }
 
 void oe_readbox_oe4(oe_data *data) {
-  fpos_t pos = 0x54, endpos=0, i;
+  FPOS_TYPE pos = 0x54, endpos=0, i;
   oe_msg_segmentheader *header=(oe_msg_segmentheader *) malloc(sizeof(oe_msg_segmentheader));
   char *cb = (char *) malloc(4), *sfull = (char *) malloc(65536), *s = sfull;
-  fsetpos(data->oe,&pos); 
+  fseek(data->oe,pos,SEEK_SET);
+  //fsetpos(data->oe,&pos); 
   while (pos<data->stat->st_size) {
-    fsetpos(data->oe,&pos);
+    fseek(data->oe,pos,SEEK_SET);
+    //fsetpos(data->oe,&pos);
     fread(header,16,1,data->oe);
     data->oput("From liboe@linux  Sat Jun 17 01:08:25 2000\n",1);
     endpos = pos + header->include;
@@ -383,7 +397,8 @@ oe_data* oe_readbox(char*  filename,void (*oput)(const char*,int)) {
 
   /* ACTUAL WORK */
   i = 0x30;
-  fsetpos(data->oe,(fpos_t *) &i);
+  fseek(data->oe,i,SEEK_SET);
+  //fsetpos(data->oe,(FPOS_TYPE *) &i);
   fread(&i,4,1,data->oe);
   if (!i) i=0x1e254;
   i = oe_readtable(data,i); /* Reads the box */
