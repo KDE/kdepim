@@ -1,4 +1,7 @@
-    void
+#include <kmenubar.h>
+
+
+void
 EmpathMainWindow::_setupMenuBar()
 {
     fileMenu_        = new QPopupMenu;

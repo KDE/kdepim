@@ -29,6 +29,7 @@
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
+#include <kmenubar.h>
 #include <kfiledialog.h>
 
 // Local includes

@@ -26,6 +26,7 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qpixmap.h>
+#include <qwhatsthis.h>
 
 // KDE includes
 #include <klocale.h>
@@ -33,7 +34,6 @@
 #include <kapp.h>
 #include <kglobal.h>
 #include <kfiledialog.h>
-#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathIdentitySettingsDialog.h"
@@ -96,7 +96,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         new QLineEdit(w_main_, "le_chooseName");
     CHECK_PTR(le_chooseName_);
 
-    KQuickHelp::add(le_chooseName_, i18n(
+    QWhatsThis::add(le_chooseName_, i18n(
             "This should contain your real name,\n"
             "unless you don't like people to know\n"
             "your identity, in which case you're\n"
@@ -115,7 +115,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         new QLineEdit(w_main_, "le_chooseEmail");
     CHECK_PTR(le_chooseEmail_);
     
-    KQuickHelp::add(le_chooseEmail_, i18n(
+    QWhatsThis::add(le_chooseEmail_, i18n(
             "This should contain your email address.\n"
             "Type it correctly !"));
 
@@ -132,7 +132,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         new QLineEdit(w_main_, "le_chooseReplyTo");
     CHECK_PTR(le_chooseReplyTo_);
     
-    KQuickHelp::add(le_chooseReplyTo_, i18n(
+    QWhatsThis::add(le_chooseReplyTo_, i18n(
             "If your 'real' email address isn't the\n"
             "address you want people to reply to,\n"
             "then simply fill this in."));
@@ -149,7 +149,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         new QLineEdit(w_main_, "le_chooseOrg");
     CHECK_PTR(le_chooseOrg_);
     
-    KQuickHelp::add(le_chooseOrg_, i18n(
+    QWhatsThis::add(le_chooseOrg_, i18n(
             "This is supposed to contain the name of\n"
             "the organisation you belong to. You can\n"
             "type anything, or nothing. It doesn't\n"
@@ -167,7 +167,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         new QLineEdit(w_main_, "le_chooseSig");
     CHECK_PTR(le_chooseSig_);
     
-    KQuickHelp::add(le_chooseSig_, i18n(
+    QWhatsThis::add(le_chooseSig_, i18n(
             "The name of a file containing your 'signature'.\n"
             "Your signature can be appended to the end of\n"
             "each message you send. People generally like to\n"
@@ -191,7 +191,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         new QPushButton(w_main_, "pb_editSig");
     CHECK_PTR(pb_editSig_);
 
-    KQuickHelp::add(pb_chooseSig_, i18n(
+    QWhatsThis::add(pb_chooseSig_, i18n(
             "Press this to edit your signature.\n"
             "Note that you just use the box below !\n"
             "When you're done, press the button again\n"

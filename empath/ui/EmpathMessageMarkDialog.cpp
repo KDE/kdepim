@@ -22,10 +22,12 @@
 # pragma implementation "EmpathMessageMarkDialog.h"
 #endif
 
+// Qt includes
+#include <qwhatsthis.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
-#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathMessageMarkDialog.h"
@@ -74,7 +76,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Tagged"), w_type_, "rb_tagged");
     CHECK_PTR(rb_tagged_);
     
-    KQuickHelp::add(rb_tagged_, i18n(
+    QWhatsThis::add(rb_tagged_, i18n(
             "Tagging messages is for your own\n"
             "benefit. You can use this to simply\n"
             "remember which messages you are interested\n"
@@ -87,7 +89,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Replied"), w_type_, "rb_replied");
     CHECK_PTR(rb_replied_);
     
-    KQuickHelp::add(rb_replied_, i18n(
+    QWhatsThis::add(rb_replied_, i18n(
             "You can mark a message as replied to\n"
             "if you wish. Why you'd want to is your\n"
             "business."));
@@ -96,7 +98,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Read"), w_type_, "rb_read");
     CHECK_PTR(rb_read_);
     
-    KQuickHelp::add(rb_read_, i18n(
+    QWhatsThis::add(rb_read_, i18n(
             "Marking messages as read is useful when\n"
             "you know you're not interested in some messages\n"
             "and don't want to read them. They'll henceforth\n"
@@ -115,7 +117,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("On"), w_state_, "rb_on");
     CHECK_PTR(rb_on_);
     
-    KQuickHelp::add(rb_on_, i18n(
+    QWhatsThis::add(rb_on_, i18n(
             "If you select this then every selected message\n"
             "will have its state switched on. For example,\n"
             "if you select 'Tag' and 'On' then untagged messages\n"
@@ -125,7 +127,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Off"), w_state_, "rb_off");
     CHECK_PTR(rb_off_);
     
-    KQuickHelp::add(rb_off_, i18n(
+    QWhatsThis::add(rb_off_, i18n(
             "If you select this then every selected message\n"
             "will have its state switched off. For example,\n"
             "if you select 'Tag' and 'Off' then tagged messages\n"
@@ -135,7 +137,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Toggle"), w_state_, "rb_toggle");
     CHECK_PTR(rb_toggle_);
     
-    KQuickHelp::add(rb_toggle_, i18n(
+    QWhatsThis::add(rb_toggle_, i18n(
             "If you select this then every selected message\n"
             "will have its state toggled. For example, if you\n"
             "select 'Tag' and 'Toggle' then tagged messages\n"

@@ -22,9 +22,10 @@
 # pragma implementation "EmpathAttachmentEditDialog.h"
 #endif
 
+#include <qwhatsthis.h>
+
 // KDE includes
 #include <kfiledialog.h>
-#include <kquickhelp.h>
 #include <klocale.h>
 #include <kapp.h>
 
@@ -199,13 +200,13 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     le_filename_    = new QLineEdit(w_main_, "le_filename");
     CHECK_PTR(le_filename_);
     
-    KQuickHelp::add(le_filename_, i18n(
+    QWhatsThis::add(le_filename_, i18n(
             "Pick a file to attach !"));
     
     le_description_    = new QLineEdit(w_main_, "le_description");
     CHECK_PTR(le_description_);
     
-    KQuickHelp::add(le_description_, i18n(
+    QWhatsThis::add(le_description_, i18n(
             "Write your own description of the attachment here.\n"
             "For example, ``Here's that file you didn't want''"));
     
@@ -230,7 +231,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         new QRadioButton(i18n("Base 64"), w_encoding_, "rb_base64_");
     CHECK_PTR(rb_base64_);
     
-    KQuickHelp::add(rb_base64_, i18n(
+    QWhatsThis::add(rb_base64_, i18n(
             "Encode the attachment using base 64.\n"
             "This is generally the best encoding type to use"));
 
@@ -238,7 +239,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         new QRadioButton(i18n("Quoted printable"), w_encoding_, "rb_qp");
     CHECK_PTR(rb_qp_);
     
-    KQuickHelp::add(rb_qp_, i18n(
+    QWhatsThis::add(rb_qp_, i18n(
             "Encode the attachment as quoted-printable.\n"
             "This is useful when you're not sure if your\n"
             "recipient is able to read 8 bit or base64 messages\n"
@@ -248,7 +249,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         new QRadioButton(i18n("8 Bit"), w_encoding_, "rb_8bit_");
     CHECK_PTR(rb_8bit_);
     
-    KQuickHelp::add(rb_8bit_, i18n(
+    QWhatsThis::add(rb_8bit_, i18n(
             "Encode the attachment using 8 bit.\n"
             "Actually, this doesn't do anything much\n"
             "and it's fine for just sending text."));
@@ -257,7 +258,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         new QRadioButton(i18n("7 bit"), w_encoding_, "rb_7bit_");
     CHECK_PTR(rb_7bit_);
     
-    KQuickHelp::add(rb_7bit_, i18n(
+    QWhatsThis::add(rb_7bit_, i18n(
             "Encode the attachment as 7 bit.\n"
             "This is only useful if you want to strip\n"
             "any 8 bit characters as the message will\n"
@@ -293,7 +294,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     cb_type_        = new QComboBox(w_main_, "cb_type");
     CHECK_PTR(cb_type_);
     
-    KQuickHelp::add(cb_type_, i18n(
+    QWhatsThis::add(cb_type_, i18n(
             "Specify the major type of the attachment."));
     
     cb_type_->insertItem("text",        0);
@@ -306,7 +307,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     cb_subType_        = new QComboBox(true, w_main_, "cb_subType");
     CHECK_PTR(cb_subType_);
     
-    KQuickHelp::add(cb_subType_, i18n(
+    QWhatsThis::add(cb_subType_, i18n(
             "Specify the minor type of the attachment.\n"
             "You may make up your own here, but precede\n"
             "it with 'X-'."));
@@ -317,7 +318,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     cb_charset_        = new QComboBox(w_main_, "cb_charset");
     CHECK_PTR(cb_charset_);
     
-    KQuickHelp::add(cb_charset_, i18n(
+    QWhatsThis::add(cb_charset_, i18n(
             "Choose the character set that this attachment\n"
             "will be specified to be using."));
     

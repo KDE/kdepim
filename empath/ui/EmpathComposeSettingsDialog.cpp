@@ -26,12 +26,13 @@
 # pragma implementation ""
 #endif
 
+#include <qwhatsthis.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kapp.h>
-#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathComposeSettingsDialog.h"
@@ -104,7 +105,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         new QLineEdit(w_phrases_, "le_reply");
     CHECK_PTR(le_reply_);
     
-    KQuickHelp::add(le_reply_, i18n(
+    QWhatsThis::add(le_reply_, i18n(
             "Choose the phrase that will be added\n"
             "before a message when you reply.\n"
             "%s will be replaced by the name of the\n"
@@ -122,7 +123,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         new QLineEdit(w_phrases_, "le_replyAll");
     CHECK_PTR(le_replyAll_);
     
-    KQuickHelp::add(le_replyAll_, i18n(
+    QWhatsThis::add(le_replyAll_, i18n(
             "Choose the phrase that will be added\n"
             "before a message when you reply.\n"
             "%s will be replaced by the name of the\n"
@@ -140,7 +141,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         new QLineEdit(w_phrases_, "le_forward");
     CHECK_PTR(le_forward_);
     
-    KQuickHelp::add(le_forward_, i18n(
+    QWhatsThis::add(le_forward_, i18n(
             "Choose the phrase that will be added\n"
             "before a message when you forward the\n"
             "message elsewhere.\n"
@@ -158,7 +159,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
                 w_msg_, "cb_quote");
     CHECK_PTR(cb_quote_);
     
-    KQuickHelp::add(cb_quote_, i18n(
+    QWhatsThis::add(cb_quote_, i18n(
             "With this selected, when you reply to a\n"
             "message, you'll get the text of the message\n"
             "you're replying to in the compose window.\n"
@@ -171,7 +172,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         new QCheckBox(i18n("Add &signature"), w_msg_, "l_addSig");
     CHECK_PTR(cb_addSig_);
     
-    KQuickHelp::add(cb_addSig_, i18n(
+    QWhatsThis::add(cb_addSig_, i18n(
             "With this selected, your signature will be\n"
             "automatically added to the end of all messages\n"
             "you send. If you don't have a signature, use\n"
@@ -187,7 +188,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         new QCheckBox(i18n("Add &digital Signature"), w_msg_, "cb_digSign");
     CHECK_PTR(cb_digSign_);
     
-    KQuickHelp::add(cb_digSign_, i18n(
+    QWhatsThis::add(cb_digSign_, i18n(
             "Adding a digital signature to a message is\n"
             "a bit like adding your real signature, a\n"
             "photograph, your fingerprint, and some hair\n"
@@ -202,7 +203,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
                 "cb_wrap");
     CHECK_PTR(cb_wrap_);
     
-    KQuickHelp::add(cb_wrap_, i18n(
+    QWhatsThis::add(cb_wrap_, i18n(
             "When you type a reply, you probably don't\n"
             "press <b>Return</b> at the end of each line.\n"
             "Internet mail messages are supposed to be read\n"
@@ -244,7 +245,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
                 "rb_sendNow");
     CHECK_PTR(rb_sendNow_);
     
-    KQuickHelp::add(rb_sendNow_, i18n(
+    QWhatsThis::add(rb_sendNow_, i18n(
             "If you choose this option, Empath will\n"
             "try to send your message immediately when\n"
             "you press send. Note that you won't have to\n"
@@ -261,7 +262,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         new QRadioButton(i18n("Send messages &later"), w_when_, "rb_sendLater");
     CHECK_PTR(rb_sendLater_);
     
-    KQuickHelp::add(rb_sendLater_, i18n(
+    QWhatsThis::add(rb_sendLater_, i18n(
             "By choosing this option, when you press\n"
             "'send' while composing a message, the\n"
             "message will be placed in a queue, and\n"
@@ -277,7 +278,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
     cb_externalEditor_ = new QCheckBox(i18n("Use external editor"),
         this, "cb_useExternalEditor");
     
-    KQuickHelp::add(cb_externalEditor_, i18n(
+    QWhatsThis::add(cb_externalEditor_, i18n(
             "By selecting this option, you allow the use\n"
             "of your favourite text editor to type messages.\n"
             "The internal editor, while useful, is not incredibly\n"
@@ -292,7 +293,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
     le_externalEditor_ = new QLineEdit(this, "le_externalEditor");
     le_externalEditor_->setFixedHeight(h);
 
-    KQuickHelp::add(cb_externalEditor_, i18n(
+    QWhatsThis::add(cb_externalEditor_, i18n(
             "Type here the command line to run your editor.\n"
             "This may be, for example, <b>gvim</b> or <b>emacs</b>"));
 

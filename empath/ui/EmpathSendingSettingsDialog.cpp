@@ -23,13 +23,13 @@
 #endif
 
 #include <qpixmap.h>
+#include <qwhatsthis.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kapp.h>
-#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathSendingSettingsDialog.h"
@@ -127,7 +127,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
                 "rb_sendmail");
     CHECK_PTR(rb_sendmail_);
 
-    KQuickHelp::add(rb_sendmail_, i18n(
+    QWhatsThis::add(rb_sendmail_, i18n(
             "Here you may elect to use sendmail to send\n"
             "all outgoing mail. You must fill in the full\n"
             "path to the sendmail program.\n"
@@ -141,7 +141,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
         new QLineEdit(w_server_, "le_sendmail");
     CHECK_PTR(le_sendmail_);
     
-    KQuickHelp::add(le_sendmail_, i18n(
+    QWhatsThis::add(le_sendmail_, i18n(
             "Here you may elect to use qmail to send\n"
             "all outgoing mail. You must fill in the full\n"
             "path to the qmail program.\n"));
@@ -167,7 +167,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
                 "rb_qmail");
     CHECK_PTR(rb_qmail_);
     
-    KQuickHelp::add(rb_qmail_, i18n(
+    QWhatsThis::add(rb_qmail_, i18n(
             "Here you may elect to use sendmail to send\n"
             "all outgoing mail. You must fill in the full\n"
             "path to the sendmail program.\n"
@@ -184,7 +184,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
         new QLineEdit(w_server_, "le_qmail");
     CHECK_PTR(le_qmail_);
     
-    KQuickHelp::add(le_qmail_, i18n(
+    QWhatsThis::add(le_qmail_, i18n(
             "Here you may elect to use sendmail to send\n"
             "all outgoing mail. You must fill in the full\n"
             "path to the sendmail program.\n"
@@ -217,7 +217,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     
     rb_smtp_->setFixedHeight(h);
 
-    KQuickHelp::add(rb_smtp_, i18n(
+    QWhatsThis::add(rb_smtp_, i18n(
             "Here you may elect to use SMTP to send\n"
             "all outgoing mail. This generally means\n"
             "that mail is sent over a network (or via\n"
@@ -237,7 +237,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
         new QLineEdit(w_server_, "le_smtp");
     CHECK_PTR(le_smtpServer_);
     
-    KQuickHelp::add(le_smtpServer_, i18n(
+    QWhatsThis::add(le_smtpServer_, i18n(
             "Here you may elect to use SMTP to send\n"
             "all outgoing mail. This generally means\n"
             "that mail is sent over a network (or via\n"
@@ -259,7 +259,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
         new QLabel(i18n("Port:"), w_server_, "l_smtpServerPort");
     CHECK_PTR(l_smtpServerPort_);
     
-    KQuickHelp::add(l_smtpServerPort_, i18n(
+    QWhatsThis::add(l_smtpServerPort_, i18n(
             "Here you may elect to use SMTP to send\n"
             "all outgoing mail. This generally means\n"
             "that mail is sent over a network (or via\n"
@@ -314,7 +314,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
                 "cb_copyOther");
     CHECK_PTR(cb_copyOther_);
     
-    KQuickHelp::add(cb_copyOther_, i18n(
+    QWhatsThis::add(cb_copyOther_, i18n(
             "If you choose this option, all outgoing messages\n"
             "are also sent to the address you type."));
     
@@ -325,7 +325,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
         new EmpathAddressSelectionWidget(w_copies_, "asw_copyOther");
     CHECK_PTR(asw_copyOther_);
     
-    KQuickHelp::add(asw_copyOther_, i18n(
+    QWhatsThis::add(asw_copyOther_, i18n(
             "If you choose this option, all outgoing messages\n"
             "are also sent to the address you type."));
     

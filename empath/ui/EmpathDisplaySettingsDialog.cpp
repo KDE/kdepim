@@ -25,13 +25,13 @@
 // Qt includes
 #include <qimage.h>
 #include <qdir.h>
+#include <qwhatsthis.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kapp.h>
-#include <kquickhelp.h>
 #include <kfontdialog.h>
 #include <kstddirs.h>
 
@@ -97,7 +97,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     
     le_displayHeaders_->setFixedHeight(h);
     
-    KQuickHelp::add(le_displayHeaders_, i18n(
+    QWhatsThis::add(le_displayHeaders_, i18n(
             "Here you may enter the headers that you\n"
             "want to appear in the block above the message\n"
             "you are reading. The default is:\n"
@@ -128,7 +128,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     QObject::connect(pb_chooseFixedFont_, SIGNAL(clicked()),
             this, SLOT(s_chooseFixedFont()));
     
-    KQuickHelp::add(pb_chooseFixedFont_, i18n(
+    QWhatsThis::add(pb_chooseFixedFont_, i18n(
             "Here you may set the font to use for displaying\n"
             "messages. It's best to use a fixed-width font\n"
             "as the rest of the world expects that. Doing\n"
@@ -142,7 +142,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     
     cb_underlineLinks_->setFixedHeight(h);
     
-    KQuickHelp::add(cb_underlineLinks_, i18n(
+    QWhatsThis::add(cb_underlineLinks_, i18n(
             "Choose whether to have links underlined.\n"
             "Links are email addresses, http:// type\n"
             "addresses, etc. If you're colour blind,\n"
@@ -163,7 +163,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
         new KColorButton(w_view_, "kcb_quoteColourOne");
     CHECK_PTR(kcb_quoteColourOne_);
 
-    KQuickHelp::add(kcb_quoteColourOne_, i18n(
+    QWhatsThis::add(kcb_quoteColourOne_, i18n(
             "Choose the primary colour for quoted text.\n"
             "Text can be quoted to multiple depths.\n"
             "Text that's quoted to an odd number, e.g.\n"
@@ -183,7 +183,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
         new KColorButton(w_view_, "kcb_quoteColourTwo");
     CHECK_PTR(kcb_quoteColourTwo_);
 
-    KQuickHelp::add(kcb_quoteColourTwo_, i18n(
+    QWhatsThis::add(kcb_quoteColourTwo_, i18n(
             "Choose the secondary colour for quoted text.\n"
             "Text can be quoted to multiple depths.\n"
             "Text that's quoted to an even number, e.g.\n"
@@ -202,7 +202,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
         new KColorButton(w_view_, "kcb_linkColour");
     CHECK_PTR(kcb_linkColour_);
             
-    KQuickHelp::add(kcb_linkColour_, i18n(
+    QWhatsThis::add(kcb_linkColour_, i18n(
             "Choose the colour that links in messages\n"
             "are shown in. Links means URLs, including\n"
             "mailto: URLs."));
@@ -219,7 +219,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
         new KColorButton(w_view_, "kcb_visitedColour");
     CHECK_PTR(kcb_visitedLinkColour_);
         
-    KQuickHelp::add(kcb_visitedLinkColour_, i18n(
+    QWhatsThis::add(kcb_visitedLinkColour_, i18n(
             "Choose the colour that visited links in messages\n"
             "are shown in. Links means URLs, including\n"
             "mailto: URLs."));
@@ -231,7 +231,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
         new QCheckBox(i18n("Thread messages"), w_list_, "cb_threadMessages");
     CHECK_PTR(cb_threadMessages_);
     
-    KQuickHelp::add(cb_threadMessages_, i18n(
+    QWhatsThis::add(cb_threadMessages_, i18n(
             "If you select this, messages will be 'threaded'\n"
             "this means that when one message is a reply to\n"
             "another, it will be placed in a tree, where it\n"
@@ -257,7 +257,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     cb_sortColumn_->insertItem(i18n("Date"),    2);
     cb_sortColumn_->insertItem(i18n("Size"),    3);
 
-    KQuickHelp::add(cb_sortColumn_, i18n(
+    QWhatsThis::add(cb_sortColumn_, i18n(
             "Here you can specify which column the message\n"
             "list will be sorted by, when you start the\n"
             "program."));
@@ -268,7 +268,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     
     cb_sortAscending_->setFixedHeight(h);
     
-    KQuickHelp::add(cb_sortAscending_, i18n(
+    QWhatsThis::add(cb_sortAscending_, i18n(
             "If you select this, the column you specified\n"
             "above will be sorted ascending.\n"
             "Guess what happens if you don't."));
@@ -279,7 +279,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     
     cb_timer_->setFixedHeight(h);
     
-    KQuickHelp::add(cb_timer_, i18n(
+    QWhatsThis::add(cb_timer_, i18n(
             "If you check this, messages will be marked\n"
             "as read after you've been looking at them for\n"
             "the time specified"));
@@ -291,7 +291,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     sb_timer_->setFixedHeight(h);
     sb_timer_->setSuffix(" " + i18n("seconds"));
     
-    KQuickHelp::add(sb_timer_, i18n(
+    QWhatsThis::add(sb_timer_, i18n(
             "If you check this, messages will be marked\n"
             "as read after you've been looking at them for\n"
             "the time specified"));
@@ -303,7 +303,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     
     l_iconSet_->setFixedHeight(h);
     
-    KQuickHelp::add(l_iconSet_, i18n(
+    QWhatsThis::add(l_iconSet_, i18n(
             "Here you get to choose the icon set\n"
             "that will be used by Empath. This covers\n"
             "the toolbars, the icons on menus, and\n"

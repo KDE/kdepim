@@ -22,10 +22,11 @@
 # pragma implementation "EmpathServerTypeDialog.h"
 #endif
 
+#include <qwhatsthis.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
-#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathServerTypeDialog.h"
@@ -59,7 +60,7 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
         new QRadioButton(i18n("Maildir"), w_type_, "rb_serverTypeMaildir");
     CHECK_PTR(rb_serverTypeMaildir_);
     
-    KQuickHelp::add(rb_serverTypeMaildir_, i18n(
+    QWhatsThis::add(rb_serverTypeMaildir_, i18n(
             "This type of mailbox is stored on your machine.\n"
             "A Maildir is fast, safe, and easy to use from\n"
             "other programs. Each message is stored as a\n"
@@ -71,7 +72,7 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
         new QRadioButton(i18n("POP3"), w_type_, "rb_serverTypePOP3");
     CHECK_PTR(rb_serverTypePOP3_);
     
-    KQuickHelp::add(rb_serverTypePOP3_, i18n(
+    QWhatsThis::add(rb_serverTypePOP3_, i18n(
             "A POP3 mailbox is accessed over a network.\n"
             "You can access one on your own machine if\n"
             "you have a POP3 server program. POP3 mailboxes\n"
@@ -89,7 +90,7 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
         new QRadioButton(i18n("IMAP4"), w_type_, "rb_serverTypeIMAP4");
     CHECK_PTR(rb_serverTypeIMAP4_);
     
-    KQuickHelp::add(rb_serverTypeIMAP4_, i18n(
+    QWhatsThis::add(rb_serverTypeIMAP4_, i18n(
             "An IMAP4 mailbox is accessed over a network.\n"
             "You can access one on your own machine if you\n"
             "have an IMAP4 server program."));
