@@ -154,7 +154,7 @@ void KAddressBookMain::configureToolbars()
 
   KEditToolbar edit( factory() );
   connect( &edit, SIGNAL( newToolbarConfig() ),
-           this, SLOT( slotNewToolbarConfig() ) );
+           this, SLOT( newToolbarConfig() ) );
 
   edit.exec();
 }
