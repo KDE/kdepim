@@ -312,9 +312,6 @@ KNMainWidget::~KNMainWidget()
   delete c_fgManager;
   kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Config deleted" << endl;
 
-  delete s_coreManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Score Manager deleted" << endl;
-
   delete m_emManager;
   kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Memory Manager deleted" << endl;
 

@@ -18,6 +18,7 @@
 
 
 #include <kconfig.h>
+#include <kstaticdeleter.h>
 
 #include "knconfigmanager.h"
 #include "knnetaccess.h"
@@ -88,10 +89,13 @@ KNFolderManager* KNGlobals::folderManager()
   return mFolManager;
 }
 
+KNScoringManager* KNGlobals::mScoreManager = 0;
+
 KNScoringManager* KNGlobals::scoringManager()
 {
+  static  KStaticDeleter<KNScoringManager> sd;
   if (!mScoreManager)
-    mScoreManager = new KNScoringManager();
+    sd.setObject(mScoreManager, new KNScoringManager());
   return mScoreManager;
 }
 

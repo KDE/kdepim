@@ -84,7 +84,7 @@ private:
     KNArticleManager      *mArtManager;
     KNFilterManager       *mFilManager;
     KNFolderManager       *mFolManager;
-    KNScoringManager      *mScoreManager;
+    static KNScoringManager  *mScoreManager;
     KNMemoryManager       *mMemManager;
 };
 
