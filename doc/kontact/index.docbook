@@ -6,7 +6,7 @@
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
-  <!ENTITY akregator "<application>aKregator</application>">
+  <!ENTITY akregator "<application>Akregator</application>">
   <!ENTITY kitchensync "<application>KitchenSync</application>">
 ]>
 
@@ -160,6 +160,11 @@ memory for components you don't use.</para>
 operations. For example, you can drag a mail from the mail part and
 drop it on the icon of the todo list or the calendar to create a todo
 or event associated with this mail.</para>
+
+<para>Finally, you can change the size of the icons in the side pane.
+Right-clicking on the side pane will give you the option to use Large,
+Normal, or Small icons, as well as the option to use text only
+instead of icons.</para>
 
 </sect1>
 
