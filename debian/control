@@ -70,6 +70,7 @@ Package: kalarm
 Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: kmix (>= 4:3.1.0)
 Description: KDE alarm message and command scheduler
  KAlarm is a personal alarm message, command and email scheduler. It lets you
  set up personal alarm messages which pop up on the screen at the chosen
