@@ -20,51 +20,24 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-
 #ifndef KCMKABCUSTOMFIELDS_H
 #define KCMKABCUSTOMFIELDS_H
 
-#include <kcmodule.h>
+#include <libkdepim/kcmdesignerfields.h>
 
-class KListView;
-
-class QLabel;
-
-class KCMKabCustomFields : public KCModule
+class KCMKabCustomFields : public KPIM::KCMDesignerFields
 {
-  Q_OBJECT
-
   public:
     KCMKabCustomFields( QWidget *parent = 0, const char *name = 0 );
 
-    virtual void load();
-    virtual void save();
-    virtual void defaults();
-
   protected:
-    void        loadUiFiles();
-    void        loadActivePages(const QStringList&);
-    QStringList saveActivePages();
-    QString     kabLocalDir();
+    QString localUiDir();
+    QString uiPath();
+    void writeActivePages( const QStringList & );
+    QStringList readActivePages();
+    QString applicationName();
 
-  private slots:
-    void updatePreview( QListViewItem* );
-    void itemClicked( QListViewItem* );
-    void startDesigner();
-    void rebuildList();
-    void deleteFile();
-    void importFile();
-
-    
-  private:
-    void initGUI();
-
-    KListView *mPageView;
-    QLabel *mPagePreview;
-    QLabel *mPageDetails;
-    QPushButton *mDeleteButton;    
-    QPushButton *mImportButton;
-    QPushButton *mDesignerButton;
+    QString kabLocalDir();
 };
 
 #endif
