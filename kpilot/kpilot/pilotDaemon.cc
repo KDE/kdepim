@@ -259,7 +259,6 @@ PilotDaemon::PilotDaemon() :
 	fDaemonStatus(INIT),
 	fPostSyncAction(None),
 	fPilotLink(0L),
-//	fPilotDevice(QString::null),
 	fNextSyncType(PilotDaemonDCOP::HotSync),
 	fSyncStack(0L),
 	fTray(0L),
@@ -667,7 +666,7 @@ QString PilotDaemon::syncTypeString(int i) const
 }
 
 /**
-* DCOP Functions reporting same status data, e.g. for the kontact plugin.
+* DCOP Functions reporting some status data, e.g. for the kontact plugin.
 */
 QDateTime PilotDaemon::lastSyncDate()
 {
@@ -828,6 +827,7 @@ QString PilotDaemon::pilotDevice()
 				fInstaller->fileNames());
 		}
 		break;
+	case PilotDaemonDCOP::FastSync:
 	case PilotDaemonDCOP::HotSync:
 		// first install the files, and only then do the conduits
 		// (conduits might want to sync a database that will be installed
@@ -837,6 +837,9 @@ QString PilotDaemon::pilotDevice()
 			fSyncStack->queueInstaller(fInstaller->dir(),
 				fInstaller->fileNames());
 		}
+
+		if (PilotDaemonDCOP::FastSync == fNextSyncType) goto skipExtraSyncSettings;
+
 		switch (KPilotSettings::syncType())
 		{
 		case SyncAction::eFastSync:
@@ -854,6 +857,8 @@ QString PilotDaemon::pilotDevice()
 			mode |= ActionQueue::FlagHHToPC;
 			break;
 		}
+skipExtraSyncSettings:
+
 		if (KPilotSettings::internalEditors() && !(mode & ActionQueue::FlagHHToPC) )
 		{
 			fSyncStack->addAction(new InternalEditorAction(fPilotLink, mode));
@@ -983,6 +988,7 @@ launch:
 	}
 
 	fPostSyncAction = None;
+	requestRegularSyncNext();
 
 	updateTrayStatus();
 }

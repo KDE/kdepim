@@ -228,7 +228,7 @@ void ConduitProxy::execDone(SyncAction *p)
 	{
 		kdError() << k_funcinfo
 			<< ": Unknown conduit @"
-			<< (int) p
+			<< (long) p
 			<< " finished."
 			<< endl;
 		emit syncDone(this);
@@ -236,6 +236,7 @@ void ConduitProxy::execDone(SyncAction *p)
 	}
 
 	delete p;
+	addSyncLogEntry(CSL1("\n"),false); // Put bits of the conduit logs on separate lines
 	emit syncDone(this);
 }
 
