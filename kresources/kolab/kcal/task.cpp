@@ -274,7 +274,10 @@ void Task::setFields( const KCal::Todo* task )
     setDueDate( localToUTC( task->dtDue() ) );
   else
     mHasDueDate = false;
-  setParent( QString::null );
+  if ( task->relatedTo() )
+    setParent( task->relatedTo()->uid() );
+  else 
+    setParent( QString::null );
 
   if ( task->hasCompletedDate() )
     setCompletedDate( localToUTC( task->completed() ) );
