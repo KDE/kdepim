@@ -85,7 +85,7 @@ public :
  */
 
 /////////////////////////////////////////
-class xQGanttBarViewPort : public QFrame
+class KDE_EXPORT xQGanttBarViewPort : public QFrame
 ////////////////////////////////////////
 {
 

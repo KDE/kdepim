@@ -23,12 +23,13 @@
 #define KOLABWIZARD_H
 
 #include <kconfigwizard.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class QCheckBox;
 class QRadioButton;
 
-class KolabWizard : public KConfigWizard
+class KDE_EXPORT KolabWizard : public KConfigWizard
 {
   public:
     KolabWizard();

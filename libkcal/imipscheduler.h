@@ -22,6 +22,7 @@
 #define KCAL_IMIPSCHEDULER_H
 
 #include <qptrlist.h>
+#include "libkcal_export.h"
 
 #include "scheduler.h"
 
@@ -33,7 +34,7 @@ namespace KCal {
   This class implements the iTIP interface using the email interface specified
   as iMIP.
 */
-class IMIPScheduler : public Scheduler
+class KDE_EXPORT IMIPScheduler : public Scheduler
 {
   public:
     IMIPScheduler( Calendar * );

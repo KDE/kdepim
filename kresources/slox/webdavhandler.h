@@ -25,6 +25,7 @@
 #include <qdatetime.h>
 #include <qdom.h>
 
+#include <kdepimmacros.h>
 #include <kabc/addressee.h>
 
 namespace KCal {
@@ -37,19 +38,19 @@ namespace KCal {
 class Incidence;
 }
 
-class SloxItem
+class KDE_EXPORT SloxItem
 {
   public:
     enum Status { Invalid, Delete, Create };
-    
+
     SloxItem();
-    
+
     QDomNode domNode;
     QString sloxId;
     Status status;
 };
 
-class WebdavHandler
+class KDE_EXPORT WebdavHandler
 {
   public:
     WebdavHandler();

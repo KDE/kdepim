@@ -22,6 +22,7 @@
 #define KCAL_CALENDARNULL_H
 
 #include "calendar.h"
+#include "libkcal_export.h"
 
 class KConfig;
 
@@ -34,7 +35,7 @@ namespace KCal {
   pattern. Instead of passing a 0 pointer and checking for 0 with each access
   a CalendarNull object can be passed.
 */
-class CalendarNull : public Calendar
+class LIBKCAL_EXPORT CalendarNull : public Calendar
 {
   public:
     CalendarNull() {}

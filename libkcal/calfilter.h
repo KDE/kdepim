@@ -28,13 +28,14 @@
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
+#include "libkcal_export.h"
 
 namespace KCal {
 
 /**
   Filter for calendar objects.
 */
-class CalFilter
+class LIBKCAL_EXPORT CalFilter
 {
   public:
     /** Construct filter. */

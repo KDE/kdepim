@@ -24,6 +24,8 @@
 #include <qstring.h>
 #include <qptrlist.h>
 
+#include "libkcal_export.h"
+
 namespace KCal {
 
 class IncidenceBase;
@@ -92,7 +94,7 @@ class ScheduleMessage
   base class for inheritance by implementations of the iTIP scheme like iMIP or
   iRIP.
 */
-class Scheduler
+class LIBKCAL_EXPORT Scheduler
 {
   public:
     /**

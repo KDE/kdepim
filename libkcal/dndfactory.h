@@ -24,6 +24,8 @@
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 
+#include "libkcal_export.h"
+
 namespace KCal {
 
 class ICalDrag;
@@ -37,7 +39,7 @@ class Calendar;
 
   @short vCalendar/iCalendar Drag-and-Drop object factory.
 */
-class DndFactory
+class LIBKCAL_EXPORT DndFactory
 {
   public:
     DndFactory( Calendar * );

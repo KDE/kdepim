@@ -38,6 +38,7 @@
 #include <qptrlist.h> 
 #include <qpainter.h>
 
+#include <kdepimmacros.h>
 
 #include "KGanttRelation.h"
 
@@ -50,7 +51,7 @@
  *   in a gantt diagramm.
  */
 //////////////////////////////////
-class KGanttItem : public QObject
+class KDE_EXPORT KGanttItem : public QObject
 //////////////////////////////////
 {
 

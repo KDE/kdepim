@@ -26,6 +26,7 @@
 
 #include "todo.h"
 #include "event.h"
+#include "libkcal_export.h"
 
 #define _VCAL_VERSION "1.0"
 
@@ -40,7 +41,7 @@ namespace KCal {
 
   @short vCalendar format implementation
 */
-class VCalFormat : public CalFormat
+class LIBKCAL_EXPORT VCalFormat : public CalFormat
 {
   public:
     VCalFormat();

@@ -38,6 +38,7 @@
 #include <qsplitter.h> 
 
 #include <kpopupmenu.h>
+#include <kdepimmacros.h>
 
 #include "KGanttItem.h"
 #include "xQGanttListView.h"
@@ -86,7 +87,7 @@
  *   bar view.
  */
 ////////////////////////////////
-class KGantt : public QWidget
+class KDE_EXPORT KGantt : public QWidget
 ////////////////////////////////
 {
 

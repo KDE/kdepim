@@ -21,14 +21,14 @@
 #define SLOXACCOUNTS_H
 
 #include <kabc/addressee.h>
-
+#include <kdepimmacros.h>
 #include <qobject.h>
 
 namespace KIO {
 class Job;
 }
 
-class SloxAccounts : public QObject
+class KDE_EXPORT SloxAccounts : public QObject
 {
     Q_OBJECT
   public:

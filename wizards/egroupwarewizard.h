@@ -22,11 +22,12 @@
 #define EGROUPWAREWIZARD_H
 
 #include <kconfigwizard.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class QCheckBox;
 
-class EGroupwareWizard : public KConfigWizard
+class KDE_EXPORT EGroupwareWizard : public KConfigWizard
 {
   public:
     EGroupwareWizard();

@@ -21,13 +21,14 @@
 #define GROUPWISEWIZARD_H
 
 #include <kconfigwizard.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class QCheckBox;
 class QSpinBox;
 class QGroupBox;
 
-class GroupwiseWizard : public KConfigWizard
+class KDE_EXPORT GroupwiseWizard : public KConfigWizard
 {
     Q_OBJECT
   public:

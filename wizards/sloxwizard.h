@@ -21,11 +21,12 @@
 #define SLOXWIZARD_H
 
 #include <kconfigwizard.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class QCheckBox;
 
-class SloxWizard : public KConfigWizard
+class KDE_EXPORT SloxWizard : public KConfigWizard
 {
   public:
     SloxWizard();

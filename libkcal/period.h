@@ -22,6 +22,7 @@
 #define KCAL_PERIOD_H
 
 #include <qdatetime.h>
+#include "libkcal_export.h"
 
 #include "duration.h"
 
@@ -31,7 +32,7 @@ namespace KCal {
   This class represents a period of time. The period can be defined by either a
   start time and an end time or by a start time and a duration.
 */
-class Period
+class KDE_EXPORT Period
 {
   public:
     Period();

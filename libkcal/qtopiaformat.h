@@ -25,6 +25,7 @@
 
 #include "scheduler.h"
 
+#include "libkcal_export.h"
 #include "calformat.h"
 
 namespace KCal {
@@ -32,7 +33,7 @@ namespace KCal {
 /**
   This class implements the calendar format used by Qtopia.
 */
-class QtopiaFormat : public CalFormat
+class LIBKCAL_EXPORT QtopiaFormat : public CalFormat
 {
   public:
     QtopiaFormat();

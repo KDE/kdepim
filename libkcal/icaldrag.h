@@ -25,13 +25,14 @@
 
 #include <qdragobject.h>
 #include "calendar.h"
+#include "libkcal_export.h"
 
 namespace KCal {
 
 /**
   iCalendar drag&drop class.
 */
-class ICalDrag : public QStoredDrag
+class LIBKCAL_EXPORT ICalDrag : public QStoredDrag
 {
   public:
     /**

@@ -23,6 +23,7 @@
 #define KCAL_VCALDRAG_H
 
 #include <qdragobject.h>
+#include "libkcal_export.h"
 
 namespace KCal {
 
@@ -31,7 +32,7 @@ class Calendar;
 /**
   vCalendar drag&drop class.
 */
-class VCalDrag : public QStoredDrag
+class KDE_EXPORT VCalDrag : public QStoredDrag
 {
   public:
     /**
