@@ -386,7 +386,7 @@ gpg_new (void **engine, const char *lc_ctype, const char *lc_messages)
 
   {
     char buf[25];
-    sprintf (buf, "%d", gpg->status.fd[1]);
+    snprintf (buf, sizeof(buf), "%d", gpg->status.fd[1]);
     rc = add_arg (gpg, buf);
     if (rc)
       goto leave;
@@ -693,7 +693,8 @@ build_argv (engine_gpg_t gpg)
 	  fd_data_map[datac].dup_to = a->dup_to;
 	  if (a->dup_to == -1)
 	    {
-	      argv[argc] = malloc (25);
+	      const int ARGV_SIZE = 25;
+	      argv[argc] = malloc (ARGV_SIZE);
 	      if (!argv[argc])
 		{
 		  int saved_errno = errno;
@@ -701,7 +702,7 @@ build_argv (engine_gpg_t gpg)
 		  free_argv (argv);
 		  return gpg_error_from_errno (saved_errno);
                 }
-	      sprintf (argv[argc], 
+	      snprintf (argv[argc], ARGV_SIZE,
 		       a->print_fd ? "%d" : "-&%d",
 		       fd_data_map[datac].peer_fd);
 	      argc++;

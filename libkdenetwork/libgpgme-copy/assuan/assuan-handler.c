@@ -487,13 +487,13 @@ process_request (ASSUAN_CONTEXT ctx)
       char errline[256];
 
       if (rc < 100)
-        sprintf (errline, "ERR %d server fault (%.50s)",
+        snprintf (errline, sizeof(errline), "ERR %d server fault (%.50s)",
                  ASSUAN_Server_Fault, assuan_strerror (rc));
       else
         {
           const char *text = ctx->err_no == rc? ctx->err_str:NULL;
 
-          sprintf (errline, "ERR %d %.50s%s%.100s",
+          snprintf (errline, sizeof(errline),"ERR %d %.50s%s%.100s",
                    rc, assuan_strerror (rc), text? " - ":"", text?text:"");
         }
       rc = assuan_write_line (ctx, errline);
