@@ -1,0 +1,5 @@
+Format for the todo-list: * indicates new entry; change this to a - when
+the todo is finished and add the date finished in [] behind the description.
+
+* The creation of pilot local databases from their serial counterparts 
+  isn't done yet.
