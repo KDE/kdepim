@@ -1912,7 +1912,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
         if (cache && mHierarchyDelim.contains(myNamespace))
         {
           _hierarchyDelimiter = mHierarchyDelim[myNamespace];
-          retVal = ITYPE_DIR;
+          retVal = ITYPE_DIR_AND_BOX;
           kdDebug(7116) << "IMAP4::parseURL - got delimiter from cache:" << _hierarchyDelimiter << endl;
         } else
         {
