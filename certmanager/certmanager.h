@@ -109,6 +109,7 @@ private slots:
     void slotDeleteResult( const GpgME::Error & error, const GpgME::Key & );
     void slotSecretKeyExportResult( const GpgME::Error & error, const QByteArray & keyData );
     void slotCertificateExportResult( const GpgME::Error & error, const QByteArray & keyData );
+    void slotClearCRLsResult();
 
     void importCRLFromFile();
     void importCRLFromLDAP();
@@ -161,8 +162,10 @@ private:
     void startKeyListing( bool, bool, const std::set<std::string> & );
     void startCertificateImport( const QByteArray & keyData, const QString& certDisplayName );
     void startImportCRL( const QString& fileName, bool isTempFile );
+    void startClearCRLs();
     void startSecretKeyExport( const QString & fingerprint );
     void startCertificateExport( const QStringList & fingerprints );
+    bool connectAndStartDirmngr( const char*, const char* );
     void connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText );
     void disconnectJobFromStatusBarProgress( const GpgME::Error & err );
     void importNextURLOrRedisplay();

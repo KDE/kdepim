@@ -839,9 +839,9 @@ void CertManager::slotDirmngrExited() {
     if ( !mDirmngrProc->normalExit() )
         KMessageBox::error( this, i18n( "The GpgSM process that tried to import the CRL file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
     else if ( mDirmngrProc->exitStatus() )
-      KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from GpgSM was: ") + mErrorbuffer, i18n( "Certificate Manager Error" ) );
+      KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from GpgSM was:\n%1").arg( mErrorbuffer ), i18n( "Certificate Manager Error" ) );
     else
-      KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Error" ) );
+      KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Information" ) );
 
     delete mDirmngrProc; mDirmngrProc = 0;
     if ( !mImportCRLTempFile.isEmpty() )
@@ -888,23 +888,41 @@ void CertManager::slotImportCRLJobFinished( KIO::Job *job )
   startImportCRL( tempFilePath, true );
 }
 
-void CertManager::startImportCRL( const QString& filename, bool isTempFile )
-{
-  mImportCRLTempFile = isTempFile ? filename : QString::null;
-  mDirmngrProc = new KProcess();
-  *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
+bool CertManager::connectAndStartDirmngr( const char * slot, const char * processname ) {
+  assert( slot );
+  assert( processname );
+  assert( mDirmngrProc );
   mErrorbuffer = QString::null;
-  connect( mDirmngrProc, SIGNAL(processExited(KProcess*)),
-           this, SLOT(slotDirmngrExited()) );
+  connect( mDirmngrProc, SIGNAL(processExited(KProcess*)), slot );
   connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
            this, SLOT(slotStderr(KProcess*,char*,int)) );
   if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
-    KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
     delete mDirmngrProc; mDirmngrProc = 0;
+    KMessageBox::error( this, i18n( "Unable to start %1 process. Please check your installation." ).arg( processname ), i18n( "Certificate Manager Error" ) );
+    return false;
+  }
+  return true;
+}
+
+void CertManager::startImportCRL( const QString& filename, bool isTempFile )
+{
+  assert( !mDirmngrProc );
+  mImportCRLTempFile = isTempFile ? filename : QString::null;
+  mDirmngrProc = new KProcess();
+  *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
+  if ( !connectAndStartDirmngr( SLOT(slotDirmngrExited()), "gpgsm" ) ) {
     updateImportActions( true );
     if ( isTempFile )
       QFile::remove( mImportCRLTempFile ); // unlink tempfile
   }
+}
+
+void CertManager::startClearCRLs() {
+  assert( !mDirmngrProc );
+  mDirmngrProc = new KProcess();
+  *mDirmngrProc << "dirmngr" << "--flush";
+  //*mDirmngrProc << "gpgsm" << "--call-dimngr" << "flush"; // use this once it's implemented!
+  connectAndStartDirmngr( SLOT(slotClearCRLsResult()), "dirmngr" );
 }
 
 void CertManager::slotStderr( KProcess*, char* buf, int len ) {
@@ -929,12 +947,19 @@ void CertManager::slotViewCRLs() {
 
 
 void CertManager::slotClearCRLs() {
-  // FIXME: report errors
-  KProcess p;
-  p << "dirmngr" << "--flush";
-  p.start( KProcess::DontCare );
+  startClearCRLs();
 }
 
+void CertManager::slotClearCRLsResult() {
+  assert( mDirmngrProc );
+  if ( !mDirmngrProc->normalExit() )
+    KMessageBox::error( this, i18n( "The DirMngr process that tried to clear the CRL cache ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
+  else if ( mDirmngrProc->exitStatus() )
+    KMessageBox::error( this, i18n( "An error occurred when trying to clear the CRL cache. The output from DirMngr was:\n%1").arg( mErrorbuffer ), i18n( "Certificate Manager Error" ) );
+  else
+    KMessageBox::information( this, i18n( "CRL cache cleared successfully." ), i18n( "Certificate Manager Information" ) );
+  delete mDirmngrProc; mDirmngrProc = 0;
+}
 
 static void showDeleteError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
