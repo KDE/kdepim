@@ -577,7 +577,7 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   m_axFetch=conf->readNumEntry("maxFetch", 1000);
   if (m_axFetch<0) m_axFetch = 0;
   a_utoMark=conf->readBoolEntry("autoMark", true);
-  m_arkSecs=conf->readNumEntry("markSecs", 5);
+  m_arkSecs=conf->readNumEntry("markSecs", 0);
   if (m_arkSecs<0) m_arkSecs = 0;
   m_arkCrossposts=conf->readBoolEntry("markCrossposts", true);
   s_martScrolling=conf->readBoolEntry("smartScrolling", true);
