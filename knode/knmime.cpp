@@ -458,82 +458,115 @@ KNMimeBase::UUParser::~UUParser()
 
 bool KNMimeBase::UUParser::parse()
 {
-  int beginPos=0, uuStart=0, endPos=0, lineCount=0, MCount=0, pos=0, len=0;
-  bool containsBegin=false, containsEnd=false;
-  QCString tmp;
+  int currentPos=0;
+  bool success=true, firstIteration=true;
 
-  if( (beginPos=s_rc.find(QRegExp("begin [0-9][0-9][0-9]")))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
-    containsBegin=true;
-    uuStart=s_rc.find('\n', beginPos);
-    if(uuStart==-1) //no more line breaks found, we give up
-      return false;
+  while (success) {
+    int beginPos=currentPos, uuStart=currentPos, endPos=0, lineCount=0, MCount=0, pos=0, len=0;
+    bool containsBegin=false, containsEnd=false;
+    QCString tmp,fileName,mimeType;
+
+    if( (beginPos=s_rc.find(QRegExp("begin [0-9][0-9][0-9]"),currentPos))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
+      containsBegin=true;
+      uuStart=s_rc.find('\n', beginPos);
+      if(uuStart==-1) {//no more line breaks found, we give up
+        success = false;
+        break;
+      } else
+        uuStart++; //points now at the beginning of the next line
+    }
+      else beginPos=currentPos;
+
+    if ( (endPos=s_rc.find("\nend",(uuStart>0)? uuStart-1:0))==-1 )
+      endPos=s_rc.length(); //no end found
     else
-      uuStart++; //points now at the beginning of the next line
-  }
-  else beginPos=0;
+      containsEnd=true;
 
-  if( (endPos=s_rc.findRev("\nend"))==-1 )
-    endPos=s_rc.length(); //no end found
-  else
-    containsEnd=true;
+    if ((containsBegin && containsEnd) || firstIteration) {
 
-  //printf("beginPos=%d , uuStart=%d , endPos=%d\n", beginPos, uuStart, endPos);
-  //all lines in a uuencoded text start with 'M'
-  for(int idx=uuStart; idx<endPos; idx++)
-    if(s_rc[idx]=='\n') {
-      lineCount++;
-      if(idx+1<endPos && s_rc[idx+1]=='M') {
-        idx++;
-        MCount++;
+      //printf("beginPos=%d , uuStart=%d , endPos=%d\n", beginPos, uuStart, endPos);
+      //all lines in a uuencoded text start with 'M'
+      for(int idx=uuStart; idx<endPos; idx++)
+        if(s_rc[idx]=='\n') {
+          lineCount++;
+          if(idx+1<endPos && s_rc[idx+1]=='M') {
+            idx++;
+            MCount++;
+          }
+        }
+
+      //printf("lineCount=%d , MCount=%d\n", lineCount, MCount);
+      if( MCount==0 || (lineCount-MCount)>10 ) {
+        success = false;
+        break; //too many "non-M-Lines" found, we give up
       }
-    }
 
-  //printf("lineCount=%d , MCount=%d\n", lineCount, MCount);
-  if( MCount==0 || (lineCount-MCount)>10 ) return false; //too many "non-M-Lines" found, we give up
+      if( (!containsBegin || !containsEnd) && s_ubject) {  // message may be split up => parse subject
+        pos=QRegExp("[0-9]+/[0-9]+").match(QString(s_ubject), 0, &len);
+        if(pos!=-1) {
+          tmp=s_ubject.mid(pos, len);
+          pos=tmp.find('/');
+          p_artNr=tmp.left(pos).toInt();
+          t_otalNr=tmp.right(tmp.length()-pos-1).toInt();
+        } else {
+          success = false;
+          break; //no "part-numbers" found in the subject, we give up
+        }
+      }
 
-  if( (!containsBegin || !containsEnd) && s_ubject) {  // message may be split up => parse subject
-    pos=QRegExp("[0-9]+/[0-9]+").match(QString(s_ubject), 0, &len);
-    if(pos!=-1) {
-      tmp=s_ubject.mid(pos, len);
-      pos=tmp.find('/');
-      p_artNr=tmp.left(pos).toInt();
-      t_otalNr=tmp.right(tmp.length()-pos-1).toInt();
+      //everything before "begin" is text
+      if(beginPos>0)
+        t_ext.append(s_rc.mid(currentPos,beginPos-currentPos));
+
+      if(containsBegin)
+        fileName = s_rc.mid(beginPos+10, uuStart-beginPos-11); //everything between "begin ### " and the next LF is considered as the filename
+      else
+        fileName = "";
+      f_ilenames.append(fileName);
+      b_ins.append(s_rc.mid(beginPos, endPos-beginPos+1)); //everything beetween "begin" and "end" is uuencoded
+
+      //try to guess the mimetype from the file-extension
+      if(!fileName.isEmpty()) {
+        pos=fileName.findRev('.');
+        if(pos++ != -1) {
+          tmp=fileName.mid(pos, fileName.length()-pos).upper();
+          if(tmp=="JPG" || tmp=="JPEG")       mimeType="image/jpeg";
+          else if(tmp=="GIF")                 mimeType="image/gif";
+          else if(tmp=="PNG")                 mimeType="image/png";
+          else if(tmp=="TIFF" || tmp=="TIF")  mimeType="image/tiff";
+          else if(tmp=="XPM")                 mimeType="image/x-xpm";
+          else if(tmp=="XBM")                 mimeType="image/x-xbm";
+          else if(tmp=="BMP")                 mimeType="image/x-bmp";
+          else if(tmp=="TXT" ||
+                  tmp=="ASC" ||
+                  tmp=="H" ||
+                  tmp=="C" ||
+                  tmp=="CC" ||
+                  tmp=="CPP")                 mimeType="text/plain";
+          else if(tmp=="HTML" || tmp=="HTM")  mimeType="text/html";
+          else                                mimeType="application/octet-stream";
+        }
+      }
+      m_imeTypes.append(mimeType);
+      firstIteration=false;
+
+      int next = s_rc.find('\n', endPos+1);
+      if(next==-1) { //no more line breaks found, we give up
+        success = false;
+        break;
+      } else
+        next++; //points now at the beginning of the next line
+      currentPos = next;
+
+    } else {
+      success = false;
     }
-    else
-      return false; //no "part-numbers" found in the subject, we give up
   }
 
-  //everything before "begin" is text
-  if(beginPos>0)
-    t_ext=s_rc.left(beginPos);
-  if(containsBegin)
-    f_ilename=s_rc.mid(beginPos+10, uuStart-beginPos-11); //everything between "begin ### " and the next LF is considered as the filename
-  b_in=s_rc.mid(beginPos, endPos-beginPos+1); //everything beetween "begin" and "end" is uuencoded
+  // append trailing text part of the article
+  t_ext.append(s_rc.right(s_rc.length()-currentPos));
 
-  //try to guess the mimetype from the file-extension
-  if(!f_ilename.isEmpty()) {
-    pos=f_ilename.findRev('.');
-    if(pos++ != -1) {
-      tmp=f_ilename.mid(pos, f_ilename.length()-pos).upper();
-      if(tmp=="JPG" || tmp=="JPEG")       m_imeType="image/jpeg";
-      else if(tmp=="GIF")                 m_imeType="image/gif";
-      else if(tmp=="PNG")                 m_imeType="image/png";
-      else if(tmp=="TIFF" || tmp=="TIF")  m_imeType="image/tiff";
-      else if(tmp=="XPM")                 m_imeType="image/x-xpm";
-      else if(tmp=="XBM")                 m_imeType="image/x-xbm";
-      else if(tmp=="BMP")                 m_imeType="image/x-bmp";
-      else if(tmp=="TXT" ||
-              tmp=="ASC" ||
-              tmp=="H" ||
-              tmp=="C" ||
-              tmp=="CC" ||
-              tmp=="CPP")                 m_imeType="text/plain";
-      else if(tmp=="HTML" || tmp=="HTM")  m_imeType="text/html";
-      else                                m_imeType="application/octet-stream";
-    }
-  }
-
-  return true;
+  return ((b_ins.count()>0) || isPartial());
 }
 
 
@@ -698,7 +731,7 @@ void KNMimeContent::parse()
       }
     }
   }
-  else if(!isMimeCompliant()) { //non-mime body => check for uuencoded content
+  else if (ct->mimeType()=="invalid/invalid") { //non-mime body => check for uuencoded content
     UUParser uup(b_ody, rawHeader("Subject"));
 
     if(uup.parse()) { // yep, it is uuencoded
@@ -726,14 +759,20 @@ void KNMimeContent::parse()
           c_ontents->append(c);
         }
 
-        //binary part
-        c=new KNMimeContent();
-        //generate content with mime-compliant headers
-        tmp="Content-Type: "+uup.mimeType()+"; name=\""+uup.filename()+
-          "\"\nContent-Transfer-Encoding: x-uuencode\nContent-Disposition: attachment\n\n"+uup.binaryPart();
-        c->setContent(tmp);
-        c->contentType()->setCategory(cat);
-        c_ontents->append(c);
+        //binary parts
+        for (unsigned int i=0;i<uup.binaryParts().count();i++) {
+          c=new KNMimeContent();
+          //generate content with mime-compliant headers
+          tmp="Content-Type: ";
+          tmp += uup.mimeTypes().at(i);
+          tmp += "; name=\"";
+          tmp += uup.filenames().at(i);
+          tmp += "\"\nContent-Transfer-Encoding: x-uuencode\nContent-Disposition: attachment\n\n";
+          tmp += uup.binaryParts().at(i);
+          c->setContent(tmp);
+          c->contentType()->setCategory(cat);
+          c_ontents->append(c);
+        }
 
         //the whole content is now split into single parts, so it's safe to delete the message-body
         b_ody.resize(0);
@@ -744,11 +783,6 @@ void KNMimeContent::parse()
       //ct->setCharset("US-ASCII");
       contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
     }
-  }
-
-  if (ct->mimeType()=="invalid/invalid") { // this article is broken, treat it as text/plain
-    ct->setMimeType("text/plain");
-    contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
   }
 
   //qDebug("void KNMimeContent::parse() : finished");
@@ -1193,13 +1227,6 @@ bool KNMimeContent::removeHeader(const char *type)
         return h_eaders->remove();
 
   return false;
-}
-
-
-bool KNMimeContent::isMimeCompliant()
-{
-  return (  (h_ead.find("\nMIME-Version: ", 0, false) > -1) ||
-            (h_ead.find("\nContent-", 0, false) > -1) );
 }
 
 

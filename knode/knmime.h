@@ -98,12 +98,13 @@ class KNMimeBase {
         int partialCount()          { return t_otalNr; }
         bool hasTextPart()          { return (t_ext.length()>1); }
         QCString textPart()         { return t_ext; }
-        QCString binaryPart()       { return b_in; }
-        QCString filename()         { return f_ilename; }
-        QCString mimeType()         { return m_imeType; }
+        QStrList binaryParts()       { return b_ins; }
+        QStrList filenames()         { return f_ilenames; }
+        QStrList mimeTypes()         { return m_imeTypes; }
 
       protected:
-        QCString s_rc, t_ext, b_in, f_ilename, m_imeType, s_ubject;
+        QCString s_rc, t_ext, s_ubject;
+        QStrList b_ins, f_ilenames, m_imeTypes;
         int p_artNr, t_otalNr;
 
     };
@@ -161,7 +162,6 @@ class KNMimeContent : public KNMimeBase {
     virtual KNHeaders::Base* getHeaderByType(const char *type);
     virtual void setHeader(KNHeaders::Base *h);
     virtual bool removeHeader(const char *type);
-    bool isMimeCompliant();
     bool hasHeader(const char *type)                                  { return (getHeaderByType(type)!=0); }
     KNHeaders::ContentType* contentType(bool create=true)             { KNHeaders::ContentType *p=0; return getHeaderInstance(p, create); }
     KNHeaders::CTEncoding* contentTransferEncoding(bool create=true)  { KNHeaders::CTEncoding *p=0; return getHeaderInstance(p, create); }
