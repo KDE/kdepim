@@ -54,7 +54,7 @@ if  test "$HAVE_PISOCK" = "0" ; then
 	if test "$HAVE_PISOCK" = "0" ; then
 		AC_MSG_WARN([KPILOT: no pilot-link headers found.])
 	else
-		AC_MSG_RESULT([found])
+		AC_MSG_RESULT([found $PISOCK_INCLUDE])
 	fi
 fi
 
