@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
   KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
     "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
-    "(c) 2000-3, The KMailCVT developers");
+    "(c) 2000-2003, The KMailCVT developers");
   aboutData.addAuthor("Hans Dijkema","Original author", "kmailcvt@hum.org", "http://www.hum.org/kmailcvt.html");
   aboutData.addAuthor("Laurence Anderson","New GUI & cleanups", "l.d.anderson@warwick.ac.uk");
 
