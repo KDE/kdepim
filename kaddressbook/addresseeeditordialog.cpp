@@ -100,6 +100,9 @@ bool AddresseeEditorDialog::dirty()
 
 void AddresseeEditorDialog::slotApply()
 {
+  if ( !mEditorWidget->readyToClose() )
+    return;
+
   if ( mEditorWidget->dirty() ) {
     QApplication::setOverrideCursor( Qt::waitCursor );
     mEditorWidget->save();
@@ -114,6 +117,9 @@ void AddresseeEditorDialog::slotApply()
 
 void AddresseeEditorDialog::slotOk()
 {
+  if ( !mEditorWidget->readyToClose() )
+    return;
+
   slotApply();
 
   KDialogBase::slotOk();

@@ -85,6 +85,8 @@ class AddresseeEditorWidget : public AddresseeEditorBase
 
     void setInitialFocus();
 
+    bool readyToClose();
+
   protected slots:
     void textChanged( const QString& );
     void pageChanged( QWidget *wdg );

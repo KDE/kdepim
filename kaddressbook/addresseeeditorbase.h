@@ -61,6 +61,8 @@ class AddresseeEditorBase : public KAB::ExtensionWidget
 
     bool isExtension() { return mIsExtension; }
 
+    virtual bool readyToClose() { return true; }
+
   private:
     bool mIsExtension;
 };

@@ -825,6 +825,25 @@ void AddresseeEditorWidget::setInitialFocus()
   mNameEdit->setFocus();
 }
 
+bool AddresseeEditorWidget::readyToClose()
+{
+  bool ok = true;
+
+  QDate date = mBirthdayPicker->date();
+  if ( !date.isValid() && !mBirthdayPicker->currentText().isEmpty() ) {
+    KMessageBox::error( this, i18n( "You have to enter a valid birthdate." ) );
+    ok = false;
+  }
+
+  date = mAnniversaryPicker->date();
+  if ( !date.isValid() && !mAnniversaryPicker->currentText().isEmpty() ) {
+    KMessageBox::error( this, i18n( "You have to enter a valid anniversary." ) );
+    ok = false;
+  }
+
+  return ok;
+}
+
 void AddresseeEditorWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
