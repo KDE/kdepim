@@ -343,12 +343,14 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       mSilent = false;
       deleteIncidence( local ); // remove local from kmail
       kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-      mSilent = true;
-      deleteIncidence( local ); // remove local from calendar and from the uid map
-      mSilent = false; // now we can add the new ones
-      if ( localIncidence ) addIncidence( localIncidence, subresource, 0  );
-      if ( addedIncidence  ) addIncidence( addedIncidence, subresource, 0  );
-
+      if ( localIncidence ) { 
+        addIncidence( localIncidence, subresource, 0  );
+        mUidsPendingAdding.remove( localIncidence->uid() ); // we do want to inform KOrg also
+      }
+      if ( addedIncidence  ) {
+        addIncidence( addedIncidence, subresource, 0  );
+        mUidsPendingAdding.remove( addedIncidence->uid() ); // we do want to inform KOrg also
+      }
       mSilent = silent;
   }
 }
@@ -495,7 +497,6 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !mUidsPendingAdding.contains( uid ) ) {
         mCalendar.addIncidence( incidence );
         incidence->registerObserver( this );
-        kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
       }
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
@@ -516,7 +517,6 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         mUidsPendingAdding.remove( uid );
       }
     }
-
   }
   return true;
 }
