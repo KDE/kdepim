@@ -28,48 +28,48 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c->file = "kmailrc";
   c->group = "Groupware";
   c->name = "Enabled";
-  c->label = "true";
+  c->value = "true";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "Groupware";
   c->name = "AutoAccept";
-  c->label = "false";
+  c->value = "false";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "Groupware";
   c->name = "AutoDeclConflict";
-  c->label = "false";
+  c->value = "false";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "Groupware";
   c->name = "LegacyMangleFromToHeaders";
-  c->label = "false";
+  c->value = "false";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "IMAP Resource";
   c->name = "Enabled";
-  c->label = "true";
+  c->value = "true";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "IMAP Resource";
   c->name = "Folder Language";
-  c->label = "0"; // TODO: Fix the language
+  c->value = "0"; // TODO: Fix the language
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "IMAP Resource";
   c->name = "Folder Parent";
-  c->label = ""; // TODO
+  c->value = ""; // TODO
   changes.append( c );
 }
