@@ -26,7 +26,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 
-#include <kabc/vcardtool.h>
+#include <kabc/vcardconverter.h>
 #include <kdialogbase.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
@@ -75,7 +75,7 @@ VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
 
 bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString &data )
 {
-  KABC::VCardTool tool;
+  KABC::VCardConverter converter;
   KURL url;
 
   bool ok = true;
@@ -85,9 +85,9 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
       return true;
 
     if ( data == "v21" )
-      ok = doExport( url, tool.createVCards( list, KABC::VCard::v2_1 ) );
+      ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
     else
-      ok = doExport( url, tool.createVCards( list, KABC::VCard::v3_0 ) );
+      ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
   } else {
     QString msg = i18n( "You have selected a list of contacts, shall they be "
                         "exported to several files?" );
@@ -107,9 +107,9 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
           tmpList.append( *it );
 
           if ( data == "v21" )
-            tmpOk = doExport( url, tool.createVCards( tmpList, KABC::VCard::v2_1 ) );
+            tmpOk = doExport( url, converter.createVCards( tmpList, KABC::VCardConverter::v2_1 ) );
           else
-            tmpOk = doExport( url, tool.createVCards( tmpList, KABC::VCard::v3_0 ) );
+            tmpOk = doExport( url, converter.createVCards( tmpList, KABC::VCardConverter::v3_0 ) );
 
           ok = ok && tmpOk;
         }
@@ -122,9 +122,9 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
           return true;
 
         if ( data == "v21" )
-          ok = doExport( url, tool.createVCards( list, KABC::VCard::v2_1 ) );
+          ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
         else
-          ok = doExport( url, tool.createVCards( list, KABC::VCard::v3_0 ) );
+          ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
       }
     }
   }
@@ -188,9 +188,9 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
 KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
 {
-  KABC::VCardTool tool;
+  KABC::VCardConverter converter;
 
-  return tool.parseVCards( data );
+  return converter.parseVCards( data );
 }
 
 bool VCardXXPort::doExport( const KURL &url, const QString &data )

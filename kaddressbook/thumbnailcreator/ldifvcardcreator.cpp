@@ -36,7 +36,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kabc/ldifconverter.h>
-#include <kabc/vcardtool.h>
+#include <kabc/vcardconverter.h>
 #include <kpixmapsplitter.h>
 #include <kstandarddirs.h>
 #include <kglobalsettings.h>
@@ -81,9 +81,9 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   // convert the file contents to a KABC::Addressee address
   KABC::AddresseeList addrList;
   KABC::Addressee addr;
-  KABC::VCardTool tool;
+  KABC::VCardConverter converter;
 
-  addrList = tool.parseVCards( contents );
+  addrList = converter.parseVCards( contents );
   if ( addrList.count() == 0 )
     if ( !KABC::LDIFConverter::LDIFToAddressee( contents, addrList ) )
 	return false;

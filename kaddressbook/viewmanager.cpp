@@ -26,7 +26,7 @@
 
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
-#include <kabc/vcardtool.h>
+#include <kabc/vcardconverter.h>
 #include <kactionclasses.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -391,9 +391,9 @@ void ViewManager::dropped( QDropEvent *e )
     } else if ( c == 1 )
       emit urlDropped( *it );
   } else if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardTool tool;
+    KABC::VCardConverter converter;
 
-    KABC::Addressee::List list = tool.parseVCards( vcards );
+    KABC::Addressee::List list = converter.parseVCards( vcards );
     KABC::Addressee::List::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );
@@ -423,8 +423,8 @@ void ViewManager::startDrag()
   KMultipleDrag *drag = new KMultipleDrag( this );
   drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
 
-  KABC::VCardTool tool;
-  QString vcards = tool.createVCards( addrList );
+  KABC::VCardConverter converter;
+  QString vcards = converter.createVCards( addrList );
   drag->addDragObject( new KVCardDrag( vcards, this ) );
 
   drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );

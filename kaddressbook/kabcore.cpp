@@ -33,7 +33,7 @@
 #include <kabc/errorhandler.h>
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
-#include <kabc/vcardtool.h>
+#include <kabc/vcardconverter.h>
 #include <kaboutdata.h>
 #include <kaccelmanager.h>
 #include <kapplication.h>
@@ -352,10 +352,10 @@ void KABCore::mailVCard( const QStringList& uids )
 
     QFile outFile(fileName);
     if ( outFile.open( IO_WriteOnly ) ) {  // file opened successfully
-      KABC::VCardTool tool;
+      KABC::VCardConverter converter;
       KABC::Addressee::List list;
       list.append( a );
-      QString vcard = tool.createVCards( list, KABC::VCard::v3_0 );
+      QString vcard = converter.createVCards( list, KABC::VCardConverter::v3_0 );
 
       QTextStream t( &outFile );  // use a text stream
       t.setEncoding( QTextStream::UnicodeUTF8 );

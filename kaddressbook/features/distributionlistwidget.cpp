@@ -37,7 +37,7 @@
 #include <kabc/addresseedialog.h>
 #include <kabc/distributionlist.h>
 #include <kabc/stdaddressbook.h>
-#include <kabc/vcardtool.h>
+#include <kabc/vcardconverter.h>
 #include <libkdepim/kvcarddrag.h>
 
 #include "core.h"
@@ -356,8 +356,8 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
 
   QString vcards;
   if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardTool tool;
-    KABC::Addressee::List list = tool.parseVCards( vcards );
+    KABC::VCardConverter converter;
+    KABC::Addressee::List list = converter.parseVCards( vcards );
     KABC::Addressee::List::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it )
       distributionList->insertEntry( *it );

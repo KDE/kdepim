@@ -22,7 +22,7 @@
 */                                                                      
 
 #include <kabc/stdaddressbook.h>
-#include <kabc/vcardtool.h>
+#include <kabc/vcardconverter.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -31,16 +31,16 @@
 
 QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
 {
-  KABC::VCardTool tool;
+  KABC::VCardConverter converter;
 
-  return tool.createVCards( list );
+  return converter.createVCards( list );
 }
 
 KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data )
 {
-  KABC::VCardTool tool;
+  KABC::VCardConverter converter;
 
-  return tool.parseVCards( data );
+  return converter.parseVCards( data );
 }
 
 QString AddresseeUtil::addresseesToEmails( const KABC::Addressee::List &addrList )
