@@ -19,9 +19,7 @@
 
 // -*- c++ -*-
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include <qgpgme/dataprovider.h>
 
@@ -47,7 +45,9 @@ QGpgME::QByteArrayDataProvider::QByteArrayDataProvider( const QByteArray & initi
 QGpgME::QByteArrayDataProvider::~QByteArrayDataProvider() {}
 
 ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
+#ifndef NDEBUG
   qDebug( "QGpgME::QByteArrayDataProvider::read( %p, %d )", buffer, bufSize );
+#endif
   if ( bufSize == 0 )
     return 0;
   if ( mOff >= mArray.size() )
@@ -60,7 +60,9 @@ ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 }
 
 ssize_t QGpgME::QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
+#ifndef NDEBUG
   qDebug( "QGpgME::QByteArrayDataProvider::write( %p, %d )", buffer, bufSize );
+#endif
   if ( bufSize == 0 )
     return 0;
   if ( mOff >= mArray.size() )
@@ -76,7 +78,9 @@ ssize_t QGpgME::QByteArrayDataProvider::write( const void * buffer, size_t bufSi
 }
 
 off_t QGpgME::QByteArrayDataProvider::seek( off_t offset, int whence ) {
+#ifndef NDEBUG
   qDebug( "QGpgME::QByteArrayDataProvider::seek( %d, %d )", int(offset), whence );
+#endif
   int newOffset = mOff;
   switch ( whence ) {
   case SEEK_SET:
@@ -96,6 +100,8 @@ off_t QGpgME::QByteArrayDataProvider::seek( off_t offset, int whence ) {
 }
 
 void QGpgME::QByteArrayDataProvider::release() {
+#ifndef NDEBUG
   qDebug( "QGpgME::QByteArrayDataProvider::release()" );
+#endif
   mArray = QByteArray();
 }
