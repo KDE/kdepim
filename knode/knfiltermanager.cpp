@@ -140,6 +140,7 @@ KNFilterManager::KNFilterManager( QObject * parent, const char * name)
 
 KNFilterManager::~KNFilterManager()
 {
+  actFilter->unplugAll();
 }
 
 
