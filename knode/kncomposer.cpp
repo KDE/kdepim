@@ -233,7 +233,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   slotAttachmentSelected(0);
 
   //init
-  initData(text,firstEdit);
+  initData(text);
 
   //apply configuration
   setConfig(false);
@@ -605,7 +605,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
 }
 
 
-void KNComposer::initData(const QString &text, bool firstEdit)
+void KNComposer::initData(const QString &text)
 {
   //Subject
   if(a_rticle->subject()->isEmpty())
