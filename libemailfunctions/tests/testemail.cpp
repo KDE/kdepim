@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+using namespace KPIM;
+
 static bool check(const QString& txt, const QString& a, const QString& b)
 {
   if (a == b) {
@@ -46,6 +48,41 @@ static bool checkGetNameAndEmail(const QString& input, const QString& expName, c
   check( "getNameAndMail " + input + " retVal", retVal?"true":"false", expRetVal?"true":"false" );
   check( "getNameAndMail " + input + " name", name, expName );
   check( "getNameAndMail " + input + " email", email, expEmail );
+  return true;
+}
+
+// convert this to a switch instead but hey, nothing speedy in here is needed but still.. it would be nice
+static QString emailTestParseResultToString( emailParseResult errorCode )
+{
+  if( errorCode == TooManyAts ) { 
+    return "TooManyAts";
+  } else if( errorCode == TooFewAts ) {
+    return "TooFewAts";
+  } else if( errorCode == AddressEmpty ) {
+    return "AddressEmpty";
+  } else if( errorCode == MissingLocalPart ) {
+    return "MissingLocalPart";
+  } else if( errorCode == MissingDomainPart ) {
+    return "MissingDomainPart";
+  } else if( errorCode == UnbalancedParens ) {
+    return "UnbalancedParens";
+  } else if( errorCode == AddressOk ) {
+    return "AddressOk";
+  } else if( errorCode == UnclosedAngleAddr ) {
+    return "UnclosedAngleAddr";
+  } else if( errorCode == UnexpectedEnd ) {
+    return "UnexpectedEnd";
+  } else if( errorCode == UnopenedAngleAddr ) {
+    return "UnopenedAngleAddr";
+  }
+  return "unknown errror code";
+}
+
+static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
+{
+  emailParseResult errorCode = KPIM::isValidEmailAddress( input );
+  QString errorC = emailTestParseResultToString( errorCode );
+  check( "isValidEmailAddress " + input + " errorCode ", errorC , expErrorCode );
   return true;
 }
 
@@ -99,6 +136,72 @@ int main(int argc, char *argv[])
 
   // No '@'
   checkGetNameAndEmail(  "foo <distlist>", "foo", "distlist", true );
+
+  // To many @'s
+  checkIsValidEmailAddress( "matt@@fruitsalad.org", "TooManyAts" );
+
+  // To few @'s
+  checkIsValidEmailAddress( "mattfruitsalad.org", "TooFewAts" );
+
+  // An empty string
+  checkIsValidEmailAddress( QString::null , "AddressEmpty" );
+
+  // email address starting with a @
+  checkIsValidEmailAddress( "@mattfruitsalad.org", "MissingLocalPart" );
+
+  // make sure that starting @ and an additional @ in the same email address don't conflict
+  // trap the starting @ first and break
+  checkIsValidEmailAddress( "@matt@fruitsalad.org", "MissingLocalPart" );
+
+  // email address ending with a @
+  checkIsValidEmailAddress( "mattfruitsalad.org@", "MissingDomainPart" );
+
+  // make sure that ending with@ and an additional @ in the email address don't conflict
+  checkIsValidEmailAddress( "matt@fruitsalad.org@", "MissingDomainPart" );
+
+  // unbalanced Parens
+  checkIsValidEmailAddress( "mattjongel)@fruitsalad.org", "UnbalancedParens" );
+
+  // unbalanced Parens the other way around
+  checkIsValidEmailAddress( "mattjongel(@fruitsalad.org", "UnbalancedParens" );
+
+  // Correct parens just to make sure it works
+  checkIsValidEmailAddress( "matt(jongel)@fruitsalad.org", "AddressOk" );
+
+  // Check that anglebrackets are closed
+  checkIsValidEmailAddress( "matt douhan<matt@fruitsalad.org", "UnclosedAngleAddr" );
+
+  // Check that angle brackets are closed the other way around
+  checkIsValidEmailAddress( "matt douhan>matt@fruitsalad.org", "UnopenedAngleAddr" );
+
+  // Check that angle brackets are closed the other way around, and anglebrackets in domainpart
+  // instead of local part
+  // checkIsValidEmailAddress( "matt douhanmatt@<fruitsalad.org", "UnclosedAngleAddr" );
+ 
+  // check that a properly formated anglebrackets situation is OK
+  checkIsValidEmailAddress( "matt douhan<matt@fruitsalad.org>", "AddressOk" );
+
+  // a full email address with comments angle brackets and the works should be valid too
+  checkIsValidEmailAddress( "Matt (jongel) Douhan <matt@fruitsalad.org>", "AddressOk" );
+
+  // Double quotes        
+  checkIsValidEmailAddress( "\"Matt Douhan\" <matt@fruitsalad.org>", "AddressOk" );
+
+  // Double quotes inside parens
+  checkIsValidEmailAddress( "Matt (\"jongel\") Douhan <matt@fruitsalad.org>", "AddressOk" );
+
+  // Parens inside double quotes
+  checkIsValidEmailAddress( "Matt \"(jongel)\" Douhan <matt@fruitsalad.org>", "AddressOk" );
+
+  // Space in email
+  checkIsValidEmailAddress( "Matt Douhan < matt@fruitsalad.org >", "AddressOk" );
+
+  // @ is allowed inisde doublequotes
+  checkIsValidEmailAddress( "\"matt@jongel\" <matt@fruitsalad.org>", "AddressOk" );
+
+  // a , inside a double quoted string is OK, how do I know this? well Ingo says so
+  // and it makes sense since it is also a seperator of email addresses
+  checkIsValidEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "AddressOk" );
 
   printf("\nTest OK !\n");
 
