@@ -929,7 +929,7 @@ QCString KNMimeContent::encodedContent(bool useCrLf)
     //add all (encoded) contents separated by boundaries
     for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next()) {
       e+=boundary+"\n";
-      e+=c->encodedContent(useCrLf);
+      e+=c->encodedContent(false);  // don't convert LFs here, we do that later!!!!!
     }
     //finally append the closing boundary
     e+=boundary+"--\n";
