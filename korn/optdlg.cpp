@@ -23,7 +23,7 @@ KornOptDlg::KornOptDlg( KDropManager *man, QWidget *parent )
 	:
 	KDialogBase(
 	  Tabbed,
-	  i18n("Options"),
+	  i18n("Configure"),
 	  Close,
 	  Close,
 	  parent,
