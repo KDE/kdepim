@@ -67,8 +67,11 @@ void KAddressBookTableView::reconstructListView()
   // Add the columns
   KABC::Field::List fieldList = fields();
   KABC::Field::List::ConstIterator it;
+
+  int c = 0;
   for( it = fieldList.begin(); it != fieldList.end(); ++it ) {
       mListView->addColumn( (*it)->label() );
+      mListView->setColumnWidthMode(c++, QListView::Manual);
   }
  
   connect(mListView, SIGNAL(selectionChanged()),
@@ -101,11 +104,16 @@ void KAddressBookTableView::writeConfig(KConfig *config)
 
 void KAddressBookTableView::readConfig(KConfig *config)
 {
+  QString group = config->group();
+
   KAddressBookView::readConfig(config);
   
   // The config could have changed the fields, so we need to reconstruct
   // the listview.
   reconstructListView();
+
+  // reconstructListView modifies config-group
+  config->setGroup( group );
   
   // Set the list view options
   mListView->setAlternateBackgroundEnabled(config->readBoolEntry("ABackground",

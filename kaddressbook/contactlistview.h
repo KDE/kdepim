@@ -101,12 +101,6 @@ protected slots:
   void itemDropped(QDropEvent *e);
   
 public slots:
-  //void incSearch( const QString &value );
-  //void setSorting( int column, bool ascending );
-  //void setSorting( int column );
-  //void loadBackground();
-  //void readConfig();
-  //void saveConfig();
 
 signals:
   void startAddresseeDrag();
@@ -124,13 +118,6 @@ private:
 
   QColor mAlternateColor;
   
-//  bool backPixmapOn;
-//  QString backPixmap;
-//  QPixmap background;
-//  QPixmap iBackground;
-//  bool underline;
-//  bool autUnderline;
-//  bool tooltips_;
   QPoint presspos;
 };
 

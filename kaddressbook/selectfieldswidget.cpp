@@ -93,7 +93,6 @@ void SelectFieldsWidget::initGUI( KABC::AddressBook *doc )
   cbUnselected->insertItem( KABC::Field::categoryLabel( KABC::Field::CustomCategory ) );
 
   gl->addWidget( cbUnselected, 0, 0 );
-  //  lUnselected->setAlignment( QLabel::AlignTop | QLabel::AlignLeft );
   QLabel *lSelected = new QLabel( i18n( "&Selected fields:" ), this );
   gl->addWidget( lSelected, 0, 2 );
   lSelected->setAlignment( QLabel::AlignBottom | QLabel::AlignLeft );
@@ -109,12 +108,12 @@ void SelectFieldsWidget::initGUI( KABC::AddressBook *doc )
 
   QBoxLayout *vb1 = new QBoxLayout( QBoxLayout::TopToBottom, spacing );
   vb1->addStretch();
-  //pbAdd = new QPushButton( i18n( "&Add >>" ), this );
+
   pbAdd = new QToolButton( this );
   pbAdd->setIconSet( SmallIconSet( "forward" ) );
   QObject::connect( pbAdd, SIGNAL( clicked() ), this, SLOT( select() ));
   vb1->addWidget( pbAdd );
-  //pbRemove = new QPushButton( i18n( "<< &Remove" ), this );
+
   pbRemove = new QToolButton( this );
   pbRemove->setIconSet( SmallIconSet( "back" ) );
   QObject::connect( pbRemove, SIGNAL( clicked() ), this, SLOT( unselect() ));
@@ -153,10 +152,14 @@ void SelectFieldsWidget::initGUI( KABC::AddressBook *doc )
 
   gl->addMultiCell( hb1, 2, 2, 0, 2, QGridLayout::AlignRight );
 
-  // was here
-  
   QSize lbSizeHint = lbUnSelected->sizeHint();
+
+  // make sure we fill the list with all items, so that we can
+  // get the maxItemWidth we need to not truncate the view
+  showFields( 0 );
+
   lbSizeHint = lbSizeHint.expandedTo( lbSelected->sizeHint() );
+  lbSizeHint.setWidth( lbUnSelected->maxItemWidth() );
   lbUnSelected->setMinimumSize( lbSizeHint );
   lbSelected->setMinimumSize( lbSizeHint );
 
