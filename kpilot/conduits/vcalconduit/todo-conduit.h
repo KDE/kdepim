@@ -36,8 +36,8 @@
 #include <plugin.h>
 #include <kconfig.h>
 
-#include <todo.h>
-#include <calendarlocal.h>
+#include <libkcal/todo.h>
+#include <libkcal/calendarlocal.h>
 #include <pilotTodoEntry.h>
 #include "todo-factory.h"
 #include "vcal-conduitbase.h"
@@ -119,6 +119,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.14  2002/08/24 18:06:51  kainhofe
+// First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
+//
 // Revision 1.13  2002/08/15 10:47:56  kainhofe
 // Finished categories syncing for the todo conduit
 //

@@ -42,9 +42,9 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <kconfig.h>
 #include <kmessagebox.h>
 
-#include <calendar.h>
-#include <calendarlocal.h>
-#include <incidence.h>
+#include <libkcal/calendar.h>
+#include <libkcal/calendarlocal.h>
+#include <libkcal/incidence.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 
@@ -58,7 +58,7 @@ static const char *vcalconduitbase_id = "$Id$";
 #define DateList_t QDateList
 #define DateListIterator_t QDateListIterator
 #else
-#include <recurrence.h>
+#include <libkcal/recurrence.h>
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
@@ -729,6 +729,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.22  2002/08/24 18:06:51  kainhofe
+// First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
+//
 // Revision 1.21  2002/08/23 22:59:30  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //

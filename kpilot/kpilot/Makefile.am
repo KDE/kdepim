@@ -33,7 +33,7 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ###
 
 kpilot_SOURCES	= \
-	pilotDaemonDCOP.stub kpilotDCOP.skel \
+	pilotDaemonDCOP.stub kpilotDCOP.skel logWidgetDCOP.skel \
 	kpilot.cc kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog.cc conduitConfigDialog_base.ui \
@@ -44,7 +44,7 @@ kpilot_SOURCES	= \
 
 
 kpilotDaemon_SOURCES = \
-	pilotDaemonDCOP.skel kpilotDCOP.stub \
+	pilotDaemonDCOP.skel kpilotDCOP.stub logWidgetDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
 	hotSync.cc interactiveSync.cc syncStack.cc \
 	fileInstaller.cc
@@ -52,7 +52,7 @@ kpilotDaemon_SOURCES = \
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
 	hotSync.cc interactiveSync.cc \
-	kpilotDCOP.skel \
+	logWidgetDCOP.skel \
 	syncStack.cc \
 	main-test.cc
 

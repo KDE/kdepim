@@ -43,8 +43,8 @@ static const char *TodoConduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-#include <calendarlocal.h>
-#include <todo.h>
+#include <libkcal/calendarlocal.h>
+#include <libkcal/todo.h>
 
 
 /*
@@ -439,6 +439,9 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 
 
 // $Log$
+// Revision 1.24  2002/08/24 18:06:51  kainhofe
+// First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
+//
 // Revision 1.23  2002/08/23 11:13:28  adridg
 // Trying to be KDE 3.0.x compatible is hopeless
 //

@@ -29,7 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include "kpilotDCOP.h"
+#include "logWidgetDCOP.h"
 #include "pilotComponent.h"
 
 class QLabel;
@@ -37,7 +37,7 @@ class QTextView;
 class QHBox;
 class KProgress;
 
-class LogWidget : public PilotComponent , public KPilotDCOP
+class LogWidget : public PilotComponent , public LoggerDCOP
 {
 Q_OBJECT
 
@@ -88,6 +88,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.9  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.8  2002/05/23 20:19:40  adridg
 // Add support for extra buttons to the logwidget; use it for reset in kpilottest
 //

@@ -66,12 +66,14 @@ protected:
 
 public slots:
 	void copyCompleted();
-
+	void setEnabled(bool);
+	
 signals:
 	void filesChanged();
 private:
 	QString fDirName;
 	int fPendingCopies;
+	bool enabled;
 } ;
 
 #else
@@ -81,6 +83,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.6  2001/10/10 22:13:01  adridg
+// Added important method docs
+//
 // Revision 1.5  2001/09/29 16:26:18  adridg
 // The big layout change
 //

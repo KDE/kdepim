@@ -5,6 +5,7 @@
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_hotsync" />
     <Action name="file_fastsync" />
+    <Action name="file_list" />
     <Action name="file_backup" />
     <Action name="file_restore" />
     <Separator />

@@ -163,6 +163,7 @@ public:
 	
 KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0),
+	DCOPObject("KPilotIface"),
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
@@ -197,12 +198,12 @@ void KPilotInstaller::killDaemonIfNeeded()
 	FUNCTIONSETUP;
 	if (fKillDaemonOnExit)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << ": Killing daemon." << endl;
-#endif
-
 		if (!fDaemonWasRunning)
 		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname << ": Killing daemon." << endl;
+#endif
+
 			getDaemon().quitNow();
 		}
 	}
@@ -399,12 +400,41 @@ void KPilotInstaller::slotHotSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
+#if 0
 void KPilotInstaller::slotFastSyncRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(PilotDaemonDCOP::FastSync,
 		i18n("FastSyncing. ") +
 		i18n("Please press the HotSync button."));
+}
+#endif
+
+#ifdef DEBUG
+void KPilotInstaller::slotListSyncRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(PilotDaemonDCOP::Test,
+		QString::fromLatin1("Listing Pilot databases."));
+}
+#endif
+
+/* virtual DCOP */ ASYNC KPilotInstaller::daemonStatus(int i)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Received daemon message " << i << endl;
+#endif
+
+	switch(i)
+	{
+	case KPilotDCOP::EndOfHotSync : 
+		componentPostSync();
+		break;
+	default :
+		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
+		break;
+	}	
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -436,6 +466,22 @@ bool KPilotInstaller::componentPreSync()
 	return true;
 }
 
+void KPilotInstaller::componentPostSync()
+{
+	FUNCTIONSETUP;
+	
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Post-sync for builtin "
+			<< fP->list().current()->name() << endl;
+#endif
+		fP->list().current()->postHotSync();
+	}
+}
+	
 void KPilotInstaller::setupSync(int kind, const QString & message)
 {
 	FUNCTIONSETUP;
@@ -474,9 +520,16 @@ void KPilotInstaller::initMenu()
 	p = new KAction(i18n("&HotSync"), "hotsync", 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
+#if 0
 	p = new KAction(i18n("&FastSync"), "fastsync", 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_fastsync");
+#endif
+#ifdef DEBUG
+	p = new KAction(QString::fromLatin1("List only"),"list",0,
+		this,SLOT(slotListSyncRequested()),
+		actionCollection(), "file_list");
+#endif
 	p = new KAction(i18n("&Backup"), "backup", 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
@@ -510,6 +563,19 @@ void KPilotInstaller::fileInstalled(int)
 void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
+
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
+	{
+		QString reason;
+		if (!fP->list().current()->preHotSync(reason))
+		{
+			kdWarning() << k_funcinfo
+				<< ": Couldn't save " 
+				<< fP->list().current()->name()
+				<< endl;
+		}
+	}
 
 	killDaemonIfNeeded();
 	kapp->quit();
@@ -876,6 +942,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.80  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.79  2002/08/15 21:51:00  kainhofe
 // Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
 //

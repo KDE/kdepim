@@ -35,15 +35,28 @@
 class KPilotDCOP : virtual public DCOPObject
 {
 	K_DCOP
+
+public:
+	enum DaemonMessages {
+		None=0,
+		StartOfHotSync=1,
+		EndOfHotSync=2,
+		DaemonQuit=4 } ;
+
 k_dcop:
-	virtual ASYNC logMessage(QString) = 0;
-	virtual ASYNC logError(QString)=0;
-	virtual ASYNC logProgress(QString,int) = 0;
+	/**
+	* This is the method the daemon uses to report
+	* changes in its state.
+	*/
+	virtual ASYNC daemonStatus(int) = 0;
 } ;
 
 
 
 // $Log$
+// Revision 1.7  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.6  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //

@@ -104,7 +104,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.4 (head)"
+#define KPILOT_VERSION	"4.3.5"
 
 // * KPilot debugging code looks like:
 //
@@ -215,8 +215,13 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 #define KPILOT_FREE(a)	{ if (a) { ::free(a); a=0L; } }
 #define KPILOT_DELETE(a) { if (a) { delete a; a=0L; } }
 
+#define TODO_I18N(a) a
+
 
 // $Log$
+// Revision 1.17  2002/08/21 17:20:24  adridg
+// Forgot the non-debugging crowd
+//
 // Revision 1.16  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

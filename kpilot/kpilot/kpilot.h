@@ -44,10 +44,11 @@ class FileInstallWidget;
 class LogWidget;
 
 
+#include "kpilotDCOP.h"
 
 
 
-class KPilotInstaller : public KMainWindow
+class KPilotInstaller : public KMainWindow, public KPilotDCOP
 {
 Q_OBJECT
 
@@ -108,11 +109,28 @@ public slots:
 	void slotRestoreRequested();
 	void slotBackupRequested();
 	void slotHotSyncRequested();
-	void slotFastSyncRequested();
+#if 0
+	// void slotFastSyncRequested();
+#endif
+#ifdef DEBUG
+	void slotListSyncRequested();
+#endif
+
+
+	/**
+	* These are slots for the standard Configure ...
+	* actions and not interesting. 
+	*/
 	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
 	
+
+public:
+	/**
+	* This is the DCOP interface from the daemon to KPilot.
+	*/
+	virtual ASYNC daemonStatus(int);
 
 protected:
 	void readConfig();
@@ -123,34 +141,12 @@ protected:
 	*/
 	bool componentPreSync();
 	void setupSync(int kind,const QString& msg);
+	void componentPostSync();
 
 	void initIcons();
 	void initMenu();
 	void setupWidget();
 	void initComponents();
-
-	/**
-	* These are constants used in the KPilotInstaller code.
-	* Most of them are IDs for UI elements. ID_FILE_QUIT is a big
-	* number (compared to ID_COMBO) because elements that are
-	* inserted into the combo box get numbers counting from
-	* ID_COMBO+1, so we need room for all those numbers. 998
-	* internal conduits seems like plenty.
-	*/
-	typedef enum { 
-		ID_COMBO=1,
-		ID_FILE_QUIT=1000,
-		ID_FILE_SETTINGS,
-		ID_FILE_BACKUP,
-		ID_FILE_RESTORE,
-		ID_FILE_HOTSYNC,
-		ID_FILE_FASTSYNC,
-		ID_HELP_ABOUT,
-		ID_HELP_HELP,
-		ID_CONDUITS_ENABLE,
-		ID_CONDUITS_SETUP 
-		} Constants ;
- 
 
 	/**
 	* This is the private-d-pointer, KPilot style. Not everything 
@@ -205,6 +201,9 @@ signals:
  
 
 // $Log$
+// Revision 1.35  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.34  2001/11/11 22:10:38  adridg
 // Switched to KJanuswidget
 //

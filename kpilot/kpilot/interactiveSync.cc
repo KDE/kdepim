@@ -269,6 +269,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return false;
 	}
 
+	emit logProgress(i18n("Restoring %1...").arg(QString::null),1);
+	
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
@@ -429,8 +431,12 @@ nextFile:
 		return;
 	}
 
-	addSyncLogEntry(i18n("Restoring %1...").arg(dbi.name));
-
+	// addSyncLogEntry(i18n("Restoring %1...").arg(dbi.name));
+	QFileInfo databaseInfo(dbi.name);
+	addSyncLogEntry(databaseInfo.fileName());
+	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
+		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
+	
 	pi_file *f =
 		pi_file_open(const_cast <
 		char *>((const char *)QFile::encodeName(dbi.name)));
@@ -484,6 +490,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.14  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.13  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

@@ -67,7 +67,8 @@ public:
 	virtual ~MemoWidget();
   
 	// Pilot Component Methods:
-	void initialize();
+	/* virtual */ void initialize();
+	bool preHotSync(QString &);
 	void postHotSync();
 
 	// Added by David Bishop, please move to correct location!
@@ -81,6 +82,8 @@ public:
 protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);
+
+	void saveChangedMemo();
   
 public slots:
 	/**
@@ -90,7 +93,6 @@ public slots:
 	*/
 	void slotUpdateButtons();
 	void slotShowMemo(int);
-	void slotTextChanged();
 	void slotImportMemo();
 	void slotExportMemo();
 	void slotDeleteMemo(); // Delets the currently selected memo
@@ -106,12 +108,22 @@ private:
 	struct MemoAppInfo fMemoAppInfo;
 	QList<PilotMemo>   fMemoList;
 	QListBox *          fListBox;
+	
+	/**
+	* Stores the previously selected memo (or -1 if there was none)
+	* so that on change we can write out any modifications.
+	*/
+	int lastSelectedMemo;
+
 
 	QPushButton *fExportButton,*fDeleteButton;
 };
 
 
 // $Log$
+// Revision 1.19  2002/04/16 18:14:18  adridg
+// David Bishop's XML export patches
+//
 // Revision 1.18  2001/09/30 16:59:22  adridg
 // Cleaned up preHotSync
 //

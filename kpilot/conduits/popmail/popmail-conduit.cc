@@ -1,3 +1,4 @@
+
 /* popmail-conduit.cc			KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone
@@ -17,7 +18,8 @@
 ** (at your option) any later version.
 **
 ** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** but WITHOUT ANY WARRANTY; without even the implied warranty of 
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ** GNU General Public License for more details.
 **
 ** You should have received a copy of the GNU General Public License
@@ -327,6 +329,7 @@ PopMailConduit::doSync()
 		char buffer[128];
 		if ((sent_count>0) && (received_count>0))
 		{
+			/* TODO_I18N */
 			sprintf(buffer,"[ Sent %d message%c",
 				sent_count,(sent_count>1) ? 's' : 0);
 			addSyncLogEntry(buffer);
@@ -336,6 +339,7 @@ PopMailConduit::doSync()
 		}
 		if ((sent_count>0) && !(received_count>0))
 		{
+			/* TODO_I18N */
 			sprintf(buffer,"[ Sent %d message%c",
 				sent_count,(sent_count>1) ? 's' : 0);
 			addSyncLogEntry(buffer);
@@ -378,6 +382,7 @@ int PopMailConduit::sendPendingMail(int mode)
 		kdWarning() << k_funcinfo
 			<< ": Mail was not sent at all!"
 			<< endl;
+		emit logError(TODO_I18N("[ No mail could be sent. ]"));
 	}
 	else
 	{
@@ -925,13 +930,21 @@ int PopMailConduit::sendViaSendmail()
 QString PopMailConduit::getKMailOutbox() const
 {
 	FUNCTIONSETUP;
+	QString outbox;
+	
 	// Read-only config file. This is code
 	// suggested by Don Sanders. It must be
 	// kept up-to-date with what KMail does.
 	//
 	KSimpleConfig c("kmailrc",true);
 	c.setGroup("General");
-	return c.readEntry("outboxFolder","outbox");
+	outbox = c.readEntry("outboxFolder",QString::null);
+	if (outbox.isEmpty())
+	{
+		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
+		outbox = fConfig->readEntry("outboxFolder");
+	}
+	return outbox;
 }
 
 /*
@@ -1972,6 +1985,7 @@ int PopMailConduit::doUnixStyle()
 	}
 	else if (isBackup())
 	{
+		emit logError(TODO_I18N("Cannot perform backup on mail database"));
 	}
 	else
 	{
@@ -1986,6 +2000,11 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.44  2002/08/25 13:28:28  mhunter
+// CVS_SILENT Corrected typographical errors
+//
+// When replying, please CC me - I'm not subscribed
+//
 // Revision 1.43  2002/08/23 22:59:30  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //

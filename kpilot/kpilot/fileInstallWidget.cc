@@ -79,7 +79,8 @@ static const char *fileinstallwidget_id =
 FileInstallWidget::FileInstallWidget(QWidget * parent, 
 	const QString & path) :
 	PilotComponent(parent, "component_files", path),
-	fSaveFileList(false)
+	fSaveFileList(false),
+	fInstaller(0L)
 {
 	FUNCTIONSETUP;
 
@@ -89,7 +90,9 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	grid->addWidget(label, 1, 1);
 
-	QPushButton *abutton = new QPushButton(i18n("Clear List"), this);
+	QPushButton *abutton;
+	 
+	 abutton = clearButton= new QPushButton(i18n("Clear List"), this);
 
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
 	grid->addWidget(abutton, 3, 1);
@@ -97,7 +100,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		i18n
 		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
-	abutton = new QPushButton(i18n("Add File"), this);
+	abutton = addButton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 4, 1);
 	QWhatsThis::add(abutton,
@@ -123,6 +126,11 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	setAcceptDrops(true);
 
 	(void) fileinstallwidget_id;
+}
+
+FileInstallWidget::~FileInstallWidget()
+{
+	KPILOT_DELETE(fInstaller);
 }
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
@@ -174,9 +182,25 @@ void FileInstallWidget::slotAddFile()
 	}
 }
 
+bool FileInstallWidget::preHotSync(QString &)
+{
+	FUNCTIONSETUP;
+	
+	fListBox->setEnabled(false);
+	fInstaller->setEnabled(false);
+	addButton->setEnabled(false);
+	clearButton->setEnabled(false);
+	
+	return true;
+}
+
 void FileInstallWidget::postHotSync()
 {
 	FUNCTIONSETUP;
+	fInstaller->setEnabled(true);
+	fListBox->setEnabled(true);
+	addButton->setEnabled(true);
+	clearButton->setEnabled(true);
 	refreshFileInstallList();
 }
 
@@ -191,6 +215,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.25  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.24  2002/07/03 12:22:08  binner
 // CVS_SILENT Style guide fixes
 //

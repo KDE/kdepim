@@ -46,6 +46,7 @@ class KAboutApplication;
 
 class PilotRecord;
 class KPilotDCOP_stub;
+class LoggerDCOP_stub;
 
 
 class PilotDaemon;
@@ -209,13 +210,19 @@ protected slots:
 	* Provide access to KPilot's DCOP interface through a stub.
 	*/
 protected:
+	LoggerDCOP_stub &getLogger() { return *fLogStub; } ;
 	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
+	
 private:
+	LoggerDCOP_stub *fLogStub;
 	KPilotDCOP_stub *fKPilotStub;
 };
 
 
 // $Log$
+// Revision 1.36  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.35  2002/06/24 19:29:11  adridg
 // Allow daemon RW access to config file
 //

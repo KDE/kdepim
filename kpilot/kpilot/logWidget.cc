@@ -60,7 +60,7 @@ static const char *logw_id =
 
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
-	DCOPObject("KPilotIface"),
+	DCOPObject("LogIface"),
 	fLog(0L),
 	fShowTime(false),
 	fSplash(0L),
@@ -360,6 +360,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.28  2002/10/11 19:56:11  rnolden
+// ooops
+//
 // Revision 1.27  2002/10/11 19:09:31  rnolden
 // fix scrolling of the log messages so the user can actually see what's going on without scrolling down
 //

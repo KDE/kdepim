@@ -38,7 +38,7 @@ static const char *vcalconduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-#include <calendarlocal.h>
+#include <libkcal/calendarlocal.h>
 //#include <event.h>
 
 
@@ -51,7 +51,7 @@ static const char *vcalconduit_id = "$Id$";
 #define DateList_t QDateList
 #define DateListIterator_t QDateListIterator
 #else
-#include <recurrence.h>
+#include <libkcal/recurrence.h>
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
@@ -705,6 +705,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.78  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.77  2002/08/24 18:06:51  kainhofe
 // First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
 //

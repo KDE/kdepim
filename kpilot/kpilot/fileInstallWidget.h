@@ -37,6 +37,7 @@
 #endif
 
 class QMultiLineEdit;
+class QPushButton;
 
 class KPilotInstaller;
 class FileInstaller;
@@ -47,10 +48,11 @@ Q_OBJECT
 
 public:
 	FileInstallWidget(QWidget* parent, const QString& dbPath);
-	~FileInstallWidget() { }
+	virtual ~FileInstallWidget();
 
 	// Pilot Component Methods:
 	void initialize();
+	virtual bool preHotSync(QString &);
 	void postHotSync();
 
 
@@ -72,6 +74,7 @@ private:
 
 	KPilotInstaller* fKPilotInstaller;
 	FileInstaller *fInstaller;
+	QPushButton *clearButton,*addButton;
 
 protected slots:
 	void slotClearButton();
@@ -84,6 +87,9 @@ public slots:
 
 
 // $Log$
+// Revision 1.17  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.16  2001/09/30 16:59:22  adridg
 // Cleaned up preHotSync
 //

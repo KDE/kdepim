@@ -1,9 +1,77 @@
- TODO
+TODO LIST (Ignore the file TODO)
 
+* GJJ: Make the log widget tail properly.
+* GJJ: move the file install widget to an iconview.
+* GJJ: lose the QMultiLineEdit in MemoWidget.
+* Good junior job: move the conduit configuration dialog (for the
+  umpteenth time) to a list of QCheckBoxes, like noatun's plain
+  playlist or kdebugdialog.
+* Good junior job: the question asked when kpilot and the pilot's
+  usernames don't match isn't very intuitive. It should be changed
+  to a yes/no/cancel with "Use KPilot name" "Use Pilot name" "Cancel". 
+  This is in interactiveSync.cc.
 * Should interactiveSync and syncStack be moved to lib/ ?
 * Really need to do something about all the disabled options in the
   config dialog. Some of them might make sense.
 * Add force-first-time to the KNotes conduit.
+
+KPilot Developer's notes for november 10th, 2002
+=======================================
+
+2002-11-10  Adriaan de Groot
+* Is kate acting up? I would have sworn I did some ChangeLog
+  editing last night. Anyway:
+* Expanded the DCOP interface so the daemon can signal KPilot
+  when the HotSync is done. This causes postHotSync things to
+  be called and unfreezes the FileInstaller.
+* Adjusted the progress bar during installing files.
+* Daemon->Quit now still waits til lthe end of the sync.
+* Display some form of progress during a restore. Reduce verbosity a little.
+
+2002-11-08  Adriaan de Groot
+* Clear the file installer list after a HotSync. Disable dropping files
+  on the installer during a Sync.
+* When installing files, the "done" message was printed at the
+  beginning of the last file to be installed. Fixed.
+    
+2002-11-07  Adriaan de Groot
+* only call slotTextChanged() in the MemoWidget
+  when switching memos, and only if the memo is changed.
+  This saves rewriting the database every time you hit a 
+  key in the memo edit box. 
+
+2002-11-06  Adriaan de Groot
+* Fix the KNotes conduit's name.
+
+2002-11-05  Adriaan de Groot
+* Patched up the website again a bit.
+* Mucking about in libkcal to make it useful for KPilot.
+* Lots of includes changed in the vcalconduit to reflect that.
+
+2002-11-02  Adriaan de Groot
+* Regarding the "Hidden config feature", it's in the group for the
+  popmail conduit, called "outboxFolder". Set it to the i18n'ed name
+  of KMail's outbox. Damn KMail's DCOP interface / config. This
+  should make it possible to send mail with KMail again.
+* Finally got a separate build tree of KPilot working. Can distribute 
+  sources again, now, assuming SLAC can suffer the bandwidth penalty.
+* Most of libkcal's header files aren't installed. Why? Is it really intended
+  to be totally internal to the kdepim module in KDE's CVS?
+
+2002-10-31  Adriaan de Groot
+* Happy Hallowe'en, eh.
+
+2002-10-27  Adriaan de Groot
+* Don't you hate code / feature freezes? It always stops KPilot development
+  in it's tracks, if only because fixing the bug related to KMail's outbox
+  requires a new string. Bitch bitch, moan moan.
+* Added new TODO_I18N macro to flag I18N todos. The popmail
+  conduit is a big candidate for fixups.
+* Thought of a new starter project: moving the popmail conduit config
+  dialog to Qt Designer. Another one would be to fixup the capitalization
+  of popmail in that conduit.
+* Added extra undocumented configuration option to the popmail
+  conduit in an effort to save KMail sending capability.
 
 KPilot Developer's notes for september 19th, 2002
 =================================================

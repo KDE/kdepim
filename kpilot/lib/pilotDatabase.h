@@ -38,11 +38,11 @@
 // Handle all time.h variations properly.
 // Required because pi-macros.h sometimes forgets it.
 //
-#if TIME_WITH_SYS_TIME
+#ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
 #else
-# if HAVE_SYS_TIME_H
+# ifdef HAVE_SYS_TIME_H
 #  include <sys/time.h>
 # else
 #  include <time.h>
@@ -136,6 +136,11 @@ private:
 
 
 // $Log$
+// Revision 1.8  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.7  2002/06/30 14:49:53  kainhofe
 // added a function idList, some minor bug fixes
 //

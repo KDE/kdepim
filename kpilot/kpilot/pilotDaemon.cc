@@ -128,6 +128,8 @@ static const char *pilotdaemon_id =
 #include "syncStack.h"
 
 #include "kpilotDCOP_stub.h"
+#include "kpilotDCOP.h"
+#include "logWidgetDCOP_stub.h"
 
 #include "pilotDaemon.moc"
 
@@ -188,7 +190,7 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 /* virtual */ void PilotDaemonTray::closeEvent(QCloseEvent *)
 {
 	FUNCTIONSETUP;
-	kapp->quit();
+	daemon->quitNow();
 }
 
 void PilotDaemonTray::setupWidget()
@@ -287,6 +289,7 @@ PilotDaemon::PilotDaemon() :
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
+	fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
@@ -592,6 +595,7 @@ bool PilotDaemon::setupPilotLink()
 	case INIT:
 	case HOTSYNC_END:
 	case ERROR:
+		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 		break;
 	case READY:
@@ -668,6 +672,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
+	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
+	
 	fStatus = HOTSYNC_START ;
 
 #ifdef DEBUG
@@ -748,7 +754,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	DEBUGDAEMON << fname << ": " << s << endl;
 #endif
 
-	getKPilot().logMessage(s);
+	getLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
@@ -759,7 +765,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	DEBUGDAEMON << fname << ": " << s << endl;
 #endif
 
-	getKPilot().logMessage(s);
+	getLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
@@ -770,7 +776,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	DEBUGDAEMON << fname << ": " << s << " (" << i << "%)" << endl;
 #endif
 
-	getKPilot().logProgress(s, i);
+	getLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
 }
 
@@ -786,12 +792,14 @@ QString PilotDaemon::syncTypeString(int i) const
 	KPILOT_DELETE(fSyncStack);
 	fPilotLink->close();
 
-	getKPilot().logProgress(i18n("HotSync Completed.<br>"), 100);
-
+	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
+	getKPilot().daemonStatus(KPilotDCOP::EndOfHotSync);
+	
 	fStatus = HOTSYNC_END;
 
 	if (fPostSyncAction & Quit)
 	{
+		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 	}
 	if (fPostSyncAction & ReloadSettings)
@@ -936,6 +944,11 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.66  2002/08/30 22:24:55  adridg
+// - Improved logging, connected the right signals now
+// - Try to handle dlp_ReadUserInfo failures sensibly
+// - Trying to sort out failures reading the database list.
+//
 // Revision 1.65  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

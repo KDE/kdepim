@@ -329,7 +329,7 @@ FileInstallAction::~FileInstallAction()
 {
 	FUNCTIONSETUP;
 
-	KPILOT_DELETE(fTimer);
+	// KPILOT_DELETE(fTimer);
 }
 
 /* virtual */ bool FileInstallAction::exec()
@@ -367,7 +367,7 @@ FileInstallAction::~FileInstallAction()
 	FUNCTIONSETUP;
 
 	ASSERT(fDBIndex >= 0);
-	ASSERT((unsigned) fDBIndex < fList.count());
+	ASSERT((unsigned) fDBIndex <= fList.count());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -381,36 +381,32 @@ FileInstallAction::~FileInstallAction()
 		DEBUGDAEMON << fname
 			<< ": Peculiar file index, bailing out." << endl;
 #endif
-		if (fTimer)
-			fTimer->stop();
+		KPILOT_DELETE(fTimer);
+		fDBIndex = (-1);
+		emit logProgress(i18n("Done Installing Files"), 100);
 		emit syncDone(this);
+		return;
 	}
 
-	const QString s = fDir + fList[fDBIndex];
+	const QString filePath = fDir + fList[fDBIndex];
+	const QString fileName = fList[fDBIndex];
 
 	fDBIndex++;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Installing file " << s << endl;
+	DEBUGDAEMON << fname << ": Installing file " << filePath << endl;
 #endif
 
-	if ((unsigned) fDBIndex >= fList.count())
-	{
-		fDBIndex = (-1);
-		fTimer->stop();
-		emit logProgress(i18n("Done Installing Files"), 100);
-	}
-	else
-	{
-		emit logProgress(i18n("Installing %1").arg(s),
-			(100 * fDBIndex) / fList.count());
-	}
+	QString m = i18n("Installing %1").arg(fileName);
+	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
+	m+=QString::fromLatin1("\n");
+	emit addSyncLogEntry(m,true /* Don't print in KPilot's log. */ );
 
 
 	struct pi_file *f = 0L;
 
 	f = pi_file_open(const_cast <char *>
-		((const char *) QFile::encodeName(s)));
+		((const char *) QFile::encodeName(filePath)));
 
 	if (!f)
 	{
@@ -418,7 +414,7 @@ FileInstallAction::~FileInstallAction()
 			<< ": Unable to open file." << endl;
 
 		emit logError(i18n("Unable to open file &quot;%1&quot;!").
-			arg(s));
+			arg(fileName));
 		goto nextFile;
 	}
 
@@ -428,11 +424,11 @@ FileInstallAction::~FileInstallAction()
 
 
 		emit logError(i18n("Cannot install file &quot;%1&quot;!").
-			arg(s));
+			arg(fileName));
 	}
 	else
 	{
-		QFile::remove(s);
+		QFile::remove(filePath);
 	}
 
 
@@ -489,6 +485,11 @@ CleanupAction::~CleanupAction()
 
 
 // $Log$
+// Revision 1.18  2002/08/30 22:24:55  adridg
+// - Improved logging, connected the right signals now
+// - Try to handle dlp_ReadUserInfo failures sensibly
+// - Trying to sort out failures reading the database list.
+//
 // Revision 1.17  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

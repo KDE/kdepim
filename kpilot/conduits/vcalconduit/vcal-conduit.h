@@ -31,8 +31,8 @@
 
 #include <plugin.h>
 
-#include <event.h>
-#include <calendarlocal.h>
+#include <libkcal/event.h>
+#include <libkcal/calendarlocal.h>
 #include "vcal-factory.h"
 #include "vcal-conduitbase.h"
 #include <pilotDateEntry.h>
@@ -115,6 +115,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.28  2002/08/24 18:06:51  kainhofe
+// First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
+//
 // Revision 1.27  2002/07/28 17:27:54  cschumac
 // Move file loading/saving code from CalendarLocal to own class.
 //

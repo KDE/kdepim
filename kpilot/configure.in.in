@@ -90,15 +90,15 @@ if test "$HAVE_PISOCK" = "1" ; then
 	#include <pi-version.h>
 	int main()
 	{ if (PILOT_LINK_VERSION==0) {
-	    if ((PILOT_LINK_MAJOR==9) && (PILOT_LINK_MINOR>=5)) exit(0);
-	    if ((PILOT_LINK_MAJOR==10) || (PILOT_LINK_MAJOR==11)) exit(0);
+	    if ((PILOT_LINK_MAJOR==9) && (PILOT_LINK_MINOR>=5)) return (0);
+	    if ((PILOT_LINK_MAJOR==10) || (PILOT_LINK_MAJOR==11)) return (0);
 	  }
-	  exit(1);
+	  return (1);
 	}
 	]
 	,
 	[AC_MSG_RESULT([pilot-link version 0.10 or 0.11 found])],
-	AC_MSG_RESULT([Your version of pilot-link won't work with KPilot])
+	[AC_MSG_RESULT([Your version of pilot-link won't work with KPilot])]
 	HAVE_PISOCK="0"
 	,
 	[AC_MSG_RESULT([Cross-compiling KPilot is doomed])
@@ -176,4 +176,11 @@ LDFLAGS="$kpilot_save_ldflags"
 unset kpilot_save_cflags
 unset kpilot_save_ldflags
 
+
 AC_LANG_POP(C++)
+
+dnl Remainder is for standalone use
+AC_HEADER_TIME
+AC_CHECK_GETDOMAINNAME
+
+
