@@ -240,6 +240,8 @@ class ResourceCached : public ResourceCalendar,
     void clearChanges();
 
     bool hasChanges() const;
+  
+    Incidence::List allChanges() const;
 
     Incidence::List addedIncidences() const;
     Incidence::List changedIncidences() const;

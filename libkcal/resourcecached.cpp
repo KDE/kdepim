@@ -351,6 +351,22 @@ Incidence::List ResourceCached::deletedIncidences() const
   return deleted;
 }
 
+Incidence::List ResourceCached::allChanges() const
+{
+  Incidence::List changes;
+  QMap<Incidence *,bool>::ConstIterator it;
+  for( it = mAddedIncidences.begin(); it != mAddedIncidences.end(); ++it ) {
+    changes.append( it.key() );
+  }
+  for( it = mChangedIncidences.begin(); it != mChangedIncidences.end(); ++it ) {
+    changes.append( it.key() );
+  }
+  for( it = mDeletedIncidences.begin(); it != mDeletedIncidences.end(); ++it ) {
+    changes.append( it.key() );
+  }
+  return changes;
+}
+
 bool ResourceCached::hasChanges() const
 {
   return !( mAddedIncidences.isEmpty() && mChangedIncidences.isEmpty() &&
