@@ -226,14 +226,13 @@ void SysInfoConduit::hardwareInfo()
      * - #manufactorer#
      * - #devicetype#
      */
-    //fValues["deviceid"] = fHandle->getSysInfo()->getProductID();
-    fValues["deviceid"] = i18n("unknown");
+    fValues["deviceid"] = QString(fHandle->getSysInfo()->getProductID());
     KPilotCard*device = fHandle->getCardInfo();
-    //fValues["devicename"] = device->getCardName();
-    fValues["devicename"] = i18n("unknown");
+    fValues["devicename"] = QString(device->getCardName());
     fValues["devicemodel"] = i18n("unknown");  // TODO
-    fValues["manufacturer"] = device->getCardManufacturer();
-    fValues["devicetype"] = fHandle->deviceTypeString(fHandle->deviceType());
+    fValues["manufacturer"] = QString(device->getCardManufacturer());
+    fValues["devicetype"] = QString(
+      fHandle->deviceTypeString(fHandle->deviceType()));
     KPILOT_DELETE(device);
     keepParts.append("hardware");
   } else removeParts.append("hardware");
