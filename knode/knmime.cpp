@@ -807,8 +807,6 @@ void KNMimeContent::parse()
     }
     else { //no, this doesn't look like uuencoded stuff => we treat it as "text/plain"
       ct->setMimeType("text/plain");
-      //ct->setCharset("US-ASCII");
-      contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
     }
   }
 
@@ -1299,8 +1297,12 @@ bool KNMimeContent::decodeText()
 
   if(enc->cte()==KNHeaders::CEquPr)
     DwDecodeQuotedPrintable(dwsrc, dwdest);
-  else
-    DwDecodeBase64(dwsrc, dwdest);
+  else {
+    if (enc->cte()==KNHeaders::CEbase64)
+      DwDecodeBase64(dwsrc, dwdest);
+    else
+      dwdest = dwsrc;           // something has gone wrong...
+  }
 
   b_ody=dwdest.c_str();
 
