@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// System includes
+#include <stdlib.h>             // setenv()
+
 // KDE includes
 #include <klineeditdlg.h>
 #include <klocale.h>

@@ -44,7 +44,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	
 	headerNameWidget_->setText(headerName_ + ":");
 	
-	RMM::HeaderType t(RMM::headerNameToEnum(headerName_.ascii()));
+	RMM::HeaderDataType t(RMM::headerNameToType(headerName_.ascii()));
 	
 	if (t == RMM::AddressList	||
 		t == RMM::Address		||

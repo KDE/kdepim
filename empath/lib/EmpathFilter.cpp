@@ -31,9 +31,9 @@
 #include "Empath.h"
 
 EmpathFilter::EmpathFilter(const QString & name)
-	:	fEventHandler_(0),
-		name_(name),
-		priority_(0)
+	:	priority_(0),
+                fEventHandler_(0),
+		name_(name)
 {
 	empathDebug("ctor");
 }

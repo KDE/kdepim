@@ -53,8 +53,8 @@ RDateTime::RDateTime(const QCString & s)
 
 RDateTime::RDateTime(const RDateTime & t)
 	:	RHeaderBody(t),
+                zone_           (t.zone_),
 		qdate_		(t.qdate_),
-		zone_		(t.zone_),
 		parsed_		(t.parsed_),
 		assembled_	(t.assembled_)
 {

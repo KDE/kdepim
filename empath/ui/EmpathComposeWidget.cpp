@@ -70,8 +70,9 @@ EmpathComposeWidget::EmpathComposeWidget(
 		const char *		name)
 	:
 		QWidget(parent, name),
-		recipient_(recipient),
-		composeType_(ComposeNormal)
+                composeType_(ComposeNormal),
+                //url_ needs to be initialized ?! (Dirk)
+		recipient_(recipient)
 {
 	empathDebug("ctor");
 }
