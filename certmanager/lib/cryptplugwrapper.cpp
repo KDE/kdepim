@@ -1379,9 +1379,7 @@ GpgME::ImportResult CryptPlugWrapper::importCertificate( const char* data, size_
    return _cp->importCertificateFromMem( data, length );
 }
 
-Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs ) const {
-  kdWarning( 5150, includeSigs ) << "CryptPlugWrapper::keyListJob(): includeSigs not yet implemented!" << endl;
-
+Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs, bool validate ) const {
   if ( !_cp )
     return 0;
 
@@ -1389,7 +1387,10 @@ Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs )
   if ( !context )
     return 0;
 
-  context->setKeyListMode( remote ? GpgME::Context::Extern : GpgME::Context::Local );
+  unsigned int mode = remote ? GpgME::Context::Extern : GpgME::Context::Local;
+  if ( includeSigs ) mode |= GpgME::Context::Signatures;
+  if ( validate ) mode |= GpgME::Context::Validate;
+  context->addKeyListMode( mode );
   return new Kleo::QGpgMEKeyListJob( context );
 }
 

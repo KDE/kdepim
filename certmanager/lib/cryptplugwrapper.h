@@ -1531,7 +1531,7 @@ public:
                                  bool *truncated = 0 );
 #endif // LIBKLEOPATRA_NO_COMPAT
 
-    Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false ) const;
+    Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false, bool validate=true ) const;
     Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
     Kleo::DecryptJob * decryptJob() const;
     Kleo::SignJob * signJob( int includedCerts=0, bool armor=false, bool textMode=false ) const;

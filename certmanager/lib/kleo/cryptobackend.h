@@ -59,7 +59,7 @@ namespace Kleo {
 
     virtual QString protocol() const = 0;
 
-    virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false ) const = 0;
+    virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
     virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;
     virtual DecryptJob        * decryptJob() const = 0;
     virtual SignJob           * signJob( int includedCerts=0, bool armor=false, bool textMode=false ) const = 0;
