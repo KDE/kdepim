@@ -99,6 +99,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	NullConduitSettings::setDatabases( fConfigWidget->fDatabases->text() );
 	NullConduitSettings::setFailImmediately( fConfigWidget->fFailImmediately->isChecked());
 	NullConduitSettings::self()->writeConfig();
+	unmodified();
 }
 
 /* virtual */ void NullConduitConfig::load()
@@ -121,7 +122,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		<< endl;
 #endif
 
-	fModified=false;
+	unmodified();
 }
 
 KAboutData *NullConduitFactory::fAbout = 0L;
