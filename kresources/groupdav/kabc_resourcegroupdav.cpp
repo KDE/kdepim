@@ -21,7 +21,7 @@
 */
 
 #include "groupdavaddressbookadaptor.h"
-#include "kabc_groupwareprefs.h"
+#include "kresources_groupwareprefs.h"
 
 #include "kabc_resourcegroupdav.h"
 

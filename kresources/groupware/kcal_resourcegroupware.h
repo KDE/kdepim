@@ -29,9 +29,11 @@
 #include <kio/job.h>
 #include <kconfig.h>
 
-namespace KCal {
-
+namespace KPIM {
 class GroupwarePrefsBase;
+}
+
+namespace KCal {
 
 /**
   This class provides a resource for accessing a Groupware kioslave-based

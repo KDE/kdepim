@@ -24,6 +24,8 @@
 #include "folderconfig.h"
 
 #include "folderlister.h"
+#include "groupwaredataadaptor.h"
+#include "folderlistview.h"
 
 #include <klistview.h>
 #include <klocale.h>
@@ -39,25 +41,6 @@
 
 using namespace KPIM;
 
-class FolderItem : public QCheckListItem
-{
-  public:
-    FolderItem( KListView *listView, const FolderLister::Entry &folder )
-      : QCheckListItem( listView, folder.name,
-          QCheckListItem::CheckBoxController ), mFolder( folder )
-    {
-      setOn( mFolder.active );
-    }
-
-    FolderLister::Entry folder() const
-    {
-      return mFolder;
-    }
-  
-  private:
-    FolderLister::Entry mFolder;
-};
-
 FolderConfig::FolderConfig( QWidget *parent )
   : QWidget( parent ), mFolderLister( 0 )
 {
@@ -71,15 +54,13 @@ FolderConfig::FolderConfig( QWidget *parent )
   QPushButton *button = new QPushButton( i18n("Update Folder List"), topBox );
   connect( button, SIGNAL( clicked() ), SIGNAL( updateFoldersClicked() ) );
   
-  mFolderList = new KListView( topBox );
-  mFolderList->addColumn( i18n("Folder") );
-  mFolderList->setFullWidth( true );
+  mFolderList = new FolderListView( topBox );
 
-  QHBox *writeBox = new QHBox( topBox );
+/*  QHBox *writeBox = new QHBox( topBox );
 
   new QLabel( i18n("Write to:"), writeBox );
   
-  mWriteCombo = new QComboBox( writeBox );
+  mWriteCombo = new QComboBox( writeBox );*/
 }
 
 FolderConfig::~FolderConfig()
@@ -89,30 +70,64 @@ FolderConfig::~FolderConfig()
 void FolderConfig::setFolderLister( FolderLister *f )
 {
   mFolderLister = f;
+  
+  QValueList<FolderListView::Property> types;
+  QValueList<FolderLister::ContentType> suptypes( mFolderLister->supportedTypes() );
+  if ( suptypes.contains( FolderLister::Event ) ) types << FolderListView::Event;
+  if ( suptypes.contains( FolderLister::Todo ) ) types << FolderListView::Todo;
+  if ( suptypes.contains( FolderLister::Journal ) ) types << FolderListView::Journal;
+  if ( suptypes.contains( FolderLister::Contact ) ) types << FolderListView::Contact;
+  if ( suptypes.contains( FolderLister::All ) ) types << FolderListView::All;
+  if ( suptypes.contains( FolderLister::Unknown ) ) types << FolderListView::Unknown;
+
+  mFolderList->setEnabledTypes( types );
   connect( mFolderLister, SIGNAL( foldersRead() ), SLOT( updateFolderList() ) );
 }
 
 void FolderConfig::retrieveFolderList( const KURL &url )
 {
   kdDebug(7000) << "FolderConfig::retrieveFolderList()" << endl;
+  if ( !mOldFolderListerURL.isEmpty() ) return;
 
+  if ( mFolderLister->adaptor() ) {
+    mOldFolderListerURL = mFolderLister->adaptor()->baseURL();
+    mFolderLister->adaptor()->setBaseURL( url );
+  }
   mFolderLister->retrieveFolders( url );
 }
 
 void FolderConfig::updateFolderList()
 {
   mFolderList->clear();
-  mWriteCombo->clear();
 
   QStringList write;
+
+  if ( !mOldFolderListerURL.isEmpty() && mFolderLister->adaptor() ) {
+    mFolderLister->adaptor()->setBaseURL( mOldFolderListerURL );
+    mOldFolderListerURL = KURL();
+  }
 
   FolderLister::Entry::List folders = mFolderLister->folders();
   FolderLister::Entry::List::ConstIterator it;
   for( it = folders.begin(); it != folders.end(); ++it ) {
-    new FolderItem( mFolderList, (*it) );
-    mWriteCombo->insertItem( (*it).name );
-    if ( mFolderLister->writeDestinationId() == (*it).id ) {
-      mWriteCombo->setCurrentItem( mWriteCombo->count() - 1 );
+    FolderListItem *item = new FolderListItem( mFolderList, (*it) );
+    if ( mFolderLister->writeDestinationId( FolderLister::Event ) == (*it).id ) {
+      item->setDefault( FolderListView::Event );
+    }
+    if ( mFolderLister->writeDestinationId( FolderLister::Todo ) == (*it).id ) {
+      item->setDefault( FolderListView::Todo );
+    }
+    if ( mFolderLister->writeDestinationId( FolderLister::Journal ) == (*it).id ) {
+      item->setDefault( FolderListView::Journal );
+    }
+    if ( mFolderLister->writeDestinationId( FolderLister::Contact ) == (*it).id ) {
+      item->setDefault( FolderListView::Contact );
+    }
+    if ( mFolderLister->writeDestinationId( FolderLister::All ) == (*it).id ) {
+      item->setDefault( FolderListView::All );
+    }
+    if ( mFolderLister->writeDestinationId( FolderLister::Unknown ) == (*it).id ) {
+      item->setDefault( FolderListView::Unknown );
     }
   }
 }
@@ -125,15 +140,30 @@ void FolderConfig::saveSettings()
 
   QListViewItemIterator it( mFolderList );
   while ( it.current() ) {
-    FolderItem *item = static_cast<FolderItem *>( it.current() );
-    FolderLister::Entry folder = item->folder();
-    folder.active = item->isOn();
-    folders.append( folder );
-
-    if ( folder.name == mWriteCombo->currentText() ) {
-      mFolderLister->setWriteDestinationId( folder.id );
+    FolderListItem *item = dynamic_cast<FolderListItem *>( it.current() );
+    if ( item ) {
+      FolderLister::Entry folder = item->folder();
+      folder.active = item->isOn();
+      folders.append( folder );
+      if ( item->isDefault( FolderListView::Event ) ) {
+        mFolderLister->setWriteDestinationId( FolderLister::Event, folder.id );
+      }
+      if ( item->isDefault( FolderListView::Todo ) ) {
+        mFolderLister->setWriteDestinationId( FolderLister::Todo, folder.id );
+      }
+      if ( item->isDefault( FolderListView::Journal ) ) {
+        mFolderLister->setWriteDestinationId( FolderLister::Journal, folder.id );
+      }
+      if ( item->isDefault( FolderListView::Contact ) ) {
+        mFolderLister->setWriteDestinationId( FolderLister::Contact, folder.id );
+      }
+      if ( item->isDefault( FolderListView::All ) ) {
+        mFolderLister->setWriteDestinationId( FolderLister::All, folder.id );
+      }
+      if ( item->isDefault( FolderListView::Unknown ) ) {
+        mFolderLister->setWriteDestinationId( FolderLister::Unknown, folder.id );
+      }
     }
-
     ++it;
   }
 

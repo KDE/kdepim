@@ -25,6 +25,7 @@
 
 #include <qobject.h>
 #include <qstring.h>
+#include "folderlister.h"
 
 namespace KPIM {
 
@@ -45,10 +46,6 @@ class GroupwareJob : public QObject
 
     virtual void kill() = 0;
     
-    enum ContentType {
-      Contact, Appointment, Task, Journal, Message, Memo, Folder, Unknown
-    };
-
   signals:
     void result( KPIM::GroupwareJob * );
 

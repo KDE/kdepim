@@ -37,12 +37,13 @@ class GroupwareJob;
 class GroupwareDownloadJob;
 class GroupwareUploadJob;
 class FolderLister;
+class GroupwarePrefsBase;
 }
+
 
 namespace KCal {
 
 class CalendarAdaptor;
-class GroupwarePrefsBase;
 
 /**
   This class provides a resource for accessing a Groupware kioslave-based
@@ -60,7 +61,7 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
 
-    GroupwarePrefsBase *prefs();
+    KPIM::GroupwarePrefsBase *prefs();
     KPIM::FolderLister *folderLister() { return mFolderLister; }
 
     bool doOpen();
@@ -70,14 +71,18 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     bool doSave();
 
     KABC::Lock *lock();
+    
+    bool addEvent( Event *event );
+    bool addTodo( Todo *todo );
+    bool addJournal( Journal *journal );
 
   protected:
     void init();
     
     bool confirmSave();
     
-    GroupwarePrefsBase *createPrefs();
-    void setPrefs( GroupwarePrefsBase *prefs );
+    KPIM::GroupwarePrefsBase *createPrefs();
+    void setPrefs( KPIM::GroupwarePrefsBase *prefs );
     void setFolderLister( KPIM::FolderLister *folderLister );
     void setAdaptor( CalendarAdaptor *adaptor );
     CalendarAdaptor *adaptor() const { return mAdaptor; }
@@ -94,7 +99,7 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
   private:
     void enter_loop();
     
-    GroupwarePrefsBase *mPrefs;
+    KPIM::GroupwarePrefsBase *mPrefs;
     KPIM::FolderLister *mFolderLister;
     KABC::LockNull mLock;
     CalendarAdaptor *mAdaptor;

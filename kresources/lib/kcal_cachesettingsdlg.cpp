@@ -23,7 +23,7 @@
 #include "kcal_cachesettingsdlg.h"
 
 #include "kcal_resourcegroupwarebase.h"
-#include "kcal_groupwareprefs.h"
+#include "kresources_groupwareprefs.h"
 
 #include <libkcal/resourcecachedconfig.h>
 

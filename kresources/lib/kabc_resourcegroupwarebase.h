@@ -33,12 +33,12 @@ class GroupwareJob;
 class GroupwareDownloadJob;
 class GroupwareUploadJob;
 class FolderLister;
+class GroupwarePrefsBase;
 }
 
 namespace KABC {
 
 class AddressBookAdaptor;
-class GroupwarePrefsBase;
 
 class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
 {
@@ -51,8 +51,8 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
 
-    GroupwarePrefsBase *prefs() const { return mPrefs; }
-    void setPrefs( GroupwarePrefsBase *prefs );
+    KPIM::GroupwarePrefsBase *prefs() const { return mPrefs; }
+    void setPrefs( KPIM::GroupwarePrefsBase *prefs );
 
     KPIM::FolderLister *folderLister() const { return mFolderLister; }
     void setFolderLister( KPIM::FolderLister *folderLister );
@@ -74,7 +74,7 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
   protected:
     void init();
 
-    GroupwarePrefsBase *createPrefs();
+    KPIM::GroupwarePrefsBase *createPrefs();
     virtual KPIM::GroupwareDownloadJob *createDownloadJob(
                                                   AddressBookAdaptor *adaptor );
     virtual KPIM::GroupwareUploadJob *createUploadJob(
@@ -85,7 +85,7 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     void slotUploadJobResult( KPIM::GroupwareJob * );
 
   private:
-    GroupwarePrefsBase *mPrefs;
+    KPIM::GroupwarePrefsBase *mPrefs;
     KPIM::FolderLister *mFolderLister;
     AddressBookAdaptor *mAdaptor;
 

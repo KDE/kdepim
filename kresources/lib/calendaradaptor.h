@@ -55,6 +55,15 @@ class KDE_EXPORT CalendarAdaptor : public KPIM::GroupwareDataAdaptor
   public:
     CalendarAdaptor();
 
+    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    {
+      QValueList<KPIM::FolderLister::ContentType> types;
+      types << KPIM::FolderLister::Event;
+      types << KPIM::FolderLister::Todo;
+      types << KPIM::FolderLister::Journal;
+      return types;
+    }
+    
     /**
       Set resource.
     */

@@ -41,7 +41,9 @@ class APIBlogger : public APIBlog
     KIO::Job *createListFoldersJob();
     KIO::TransferJob *createListItemsJob( const KURL &url );
     KIO::TransferJob *createDownloadJob( const KURL &url );
-//     KIO::Job *createRemoveJob ( const KURL &url, const KPIM::GroupwareUploadItem::List &deletedItems );
+    KIO::TransferJob *createUploadJob( const KURL &url, KBlog::BlogPosting *posting );
+    KIO::TransferJob *createUploadNewJob( KBlog::BlogPosting *posting );
+    KIO::Job *createRemoveJob( const KURL &url, const QString &postid );
 
     bool interpretUserInfoJob( KIO::Job *job );
     void interpretListFoldersJob( KIO::Job *job );

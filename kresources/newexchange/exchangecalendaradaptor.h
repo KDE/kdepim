@@ -67,7 +67,7 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
         { return ExchangeGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return ExchangeGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::FolderLister::ContentType ctype )
         { return ExchangeGlobals::createDownloadJob( this, url, ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
         { return ExchangeGlobals::createRemoveJob( uploadurl, deletedItems ); }
@@ -90,8 +90,8 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
 
     bool getFolderHasSubs( const QDomNode &folderNode )
         { return ExchangeGlobals::getFolderHasSubs( folderNode ); }
-    KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode )
-        { return ExchangeGlobals::getFolderType( folderNode ); }
+    KPIM::FolderLister::ContentType getContentType( const QDomNode &folderNode )
+        { return ExchangeGlobals::getContentType( folderNode ); }
 };
 
 }

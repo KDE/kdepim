@@ -48,6 +48,13 @@ class KDE_EXPORT AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
   public:
     AddressBookAdaptor();
 
+    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    {
+      QValueList<KPIM::FolderLister::ContentType> types;
+      types << KPIM::FolderLister::Contact;
+      return types;
+    }
+    
     /**
       Set resource.
     */

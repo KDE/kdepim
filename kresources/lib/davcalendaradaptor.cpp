@@ -48,7 +48,7 @@ void DavCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLis
 
     QString href = n.namedItem( "href" ).toElement().text();
     QString displayName = n3.namedItem( "displayname" ).toElement().text();
-    KPIM::FolderLister::FolderType type = getFolderType( n3 );
+    KPIM::FolderLister::ContentType type = getContentType( n3 );
     // TODO: Only emit these for folders, not for ordinary files!
 
     emit folderInfoRetrieved( href, displayName, type );

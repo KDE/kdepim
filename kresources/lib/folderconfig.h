@@ -27,8 +27,9 @@
 #include <kdepimmacros.h>
 #include <qwidget.h>
 
-class KListView;
+// class KListView;
 class QComboBox;
+class FolderListView;
 
 namespace KPIM {
 
@@ -53,10 +54,10 @@ class KDE_EXPORT FolderConfig : public QWidget
     void updateFoldersClicked();
 
   private:
-    KListView *mFolderList;
-    QComboBox *mWriteCombo;
+    FolderListView *mFolderList;
 
     FolderLister *mFolderLister;
+    KURL mOldFolderListerURL;
 };
 
 }

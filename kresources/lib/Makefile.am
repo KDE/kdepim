@@ -2,11 +2,11 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 
 lib_LTLIBRARIES = libkgroupwarebase.la libkgroupwaredav.la
 
-libkgroupwarebase_la_SOURCES = folderlister.cpp folderconfig.cpp \
+libkgroupwarebase_la_SOURCES = folderlister.cpp folderconfig.cpp folderlistview.cpp \
   groupwaredataadaptor.cpp groupwaredownloadjob.cpp \
   calendaradaptor.cpp addressbookadaptor.cpp groupwareresourcejob.cpp \
   groupwareuploadjob.cpp kcal_resourcegroupwarebase.cpp kabc_resourcegroupwarebase.cpp \
-  kcal_groupwareprefs.kcfgc kabc_groupwareprefs.kcfgc \
+  kresources_groupwareprefs.kcfgc \
   kcal_resourcegroupwarebaseconfig.cpp kabc_resourcegroupwarebaseconfig.cpp \
 	kcal_cachesettingsdlg.cpp
 libkgroupwarebase_la_LDFLAGS = $(all_libraries) -no-undefined

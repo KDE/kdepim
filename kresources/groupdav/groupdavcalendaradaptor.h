@@ -41,6 +41,13 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
   public:
     GroupDavCalendarAdaptor();
 
+    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    {
+      QValueList<KPIM::FolderLister::ContentType> types;
+      types << KPIM::FolderLister::Event;
+      types << KPIM::FolderLister::Todo;
+      return types;
+    }
     void customAdaptDownloadUrl( KURL &url );
     void customAdaptUploadUrl( KURL &url );
     QCString identifier() const { return "KCalResourceGroupDAV"; }
@@ -53,7 +60,7 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
         { return GroupDavGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return GroupDavGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::FolderLister::ContentType ctype )
         { return GroupDavGlobals::createDownloadJob( this, url,ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
         { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItems ); }
@@ -68,8 +75,8 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
 
     bool getFolderHasSubs( const QDomNode &folderNode )
         { return GroupDavGlobals::getFolderHasSubs( folderNode ); }
-    KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode )
-        { return GroupDavGlobals::getFolderType( folderNode ); }
+    KPIM::FolderLister::ContentType getContentType( const QDomNode &folderNode )
+        { return GroupDavGlobals::getContentType( folderNode ); }
 };
 }
 

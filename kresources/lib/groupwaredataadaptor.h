@@ -71,6 +71,9 @@ class KDE_EXPORT GroupwareUploadItem
                                GroupwareDataAdaptor *adaptor, const KURL &url );
     virtual KIO::TransferJob *createUploadJob( GroupwareDataAdaptor *adaptor, 
                                                const KURL &url );
+    virtual KPIM::FolderLister::ContentType itemType() { return mItemType; }
+  protected:
+    KPIM::FolderLister::ContentType mItemType;
   private:
     KURL mUrl;
     QString mUid;
@@ -227,6 +230,10 @@ Q_OBJECT
     virtual void clearChange( const QString &uid ) = 0;
 
     virtual FolderLister::Entry::List defaultFolders();
+    virtual QValueList<FolderLister::ContentType> supportedTypes() = 0;
+    virtual bool supports( FolderLister::ContentType type ) {
+      return supportedTypes().contains( type );
+    }
 
 
     // Creating jobs
@@ -246,9 +253,9 @@ Q_OBJECT
     virtual KIO::TransferJob *createListItemsJob( const KURL & ) = 0;
     /** Creates the KIO::TransferJob for downloading one given item. */
     virtual KIO::TransferJob *createDownloadJob( const KURL &,
-                                          GroupwareJob::ContentType ) = 0;
+                                          FolderLister::ContentType ) = 0;
     /** Creates the KIO::TransferJob for downloading a list of items items. */
-    virtual KIO::TransferJob *createDownloadJob( const QMap<QString,GroupwareJob::ContentType> & ) { return 0; }
+    virtual KIO::TransferJob *createDownloadJob( const QMap<QString,FolderLister::ContentType> & ) { return 0; }
     /** Create the job to remove the deletedItems from the server. The base
         URL of the server is passed as uploadurl.  */
     virtual KIO::Job *createRemoveJob( const KURL &,
@@ -290,7 +297,7 @@ Q_OBJECT
     virtual bool interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ );
 
     virtual void processDownloadListItem(  const QString &entry,
-        const QString &newFingerprint, KPIM::GroupwareJob::ContentType type );
+        const QString &newFingerprint, KPIM::FolderLister::ContentType type );
     /** Return the default file name for a new item. */
     virtual QString defaultNewItemName( GroupwareUploadItem * )
     {
@@ -314,10 +321,10 @@ Q_OBJECT
 
   signals:
     void folderInfoRetrieved( const QString &href, const QString &name,
-                                     KPIM::FolderLister::FolderType );
+                                     KPIM::FolderLister::ContentType );
     void folderSubitemRetrieved( const KURL &, bool isFolder );
 
-    void itemToDownload( const QString &remoteURL, KPIM::GroupwareJob::ContentType type );
+    void itemToDownload( const QString &remoteURL, KPIM::FolderLister::ContentType type );
     void itemOnServer( const QString &remoteURL );
     
     void itemDownloaded( const QString &localID, const QString &remoteURL,

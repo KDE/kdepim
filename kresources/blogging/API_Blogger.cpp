@@ -90,7 +90,54 @@ KIO::TransferJob *APIBlogger::createDownloadJob( const KURL &url )
 //   }
 }
 
+KIO::TransferJob *APIBlogger::createUploadJob( const KURL &url, KBlog::BlogPosting *posting )
+{
+  if ( !posting ) {
+    kdDebug() << "APIBlogger::createUploadJob: posting=0" << endl;
+    return 0;
+  }
+//   if ( isValid() ){
+    kdDebug() << "Uploading Posting with url " << url.url() << endl;
+    QValueList<QVariant> args( defaultArgs( posting->postID() ) );
+    args << QVariant( posting->content() );
+    args << QVariant( /*publish=*/true, 0 );
+    return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerEditPost ), args, false );
+//   } else {
+//     warningNotInitialized();
+//     return 0;
+//   }
+}
 
+KIO::TransferJob *APIBlogger::createUploadNewJob( KBlog::BlogPosting *posting )
+{
+  if ( !posting ) {
+    kdDebug() << "APIBlogger::createUploadNewJob: posting=0" << endl;
+    return 0;
+  }
+//   if ( isValid() ){
+    kdDebug() << "Creating new Posting with blogid " << posting->blogID() << " at url " << mServerURL << endl;
+    QValueList<QVariant> args( defaultArgs( posting->blogID() ) );
+    args << QVariant( posting->content() );
+    args << QVariant( /*publish=*/true, 0 );
+    return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerNewPost ), args, false );
+//   } else {
+//     warningNotInitialized();
+//     return 0;
+//   }
+}
+
+KIO::Job *APIBlogger::createRemoveJob( const KURL &/*url*/, const QString &postid )
+{
+kdDebug() << "APIBlogger::createRemoveJob: postid=" << postid << endl;
+//   if ( isValid() ){
+    QValueList<QVariant> args( defaultArgs( postid ) );
+    args << QVariant( /*publish=*/true, 0 );
+    return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerDeletePost ), args, false );
+//   } else {
+//     warningNotInitialized();
+//     return 0;
+//   }
+}
 
 
 

@@ -23,7 +23,7 @@
 #include "kabc_resourcegroupwarebaseconfig.h"
 
 #include "kabc_resourcegroupwarebase.h"
-#include "kabc_groupwareprefs.h"
+#include "kresources_groupwareprefs.h"
 #include "folderconfig.h"
 
 #include <kdebug.h>

@@ -48,15 +48,15 @@ class GroupDavGlobals
   public:
     GroupDavGlobals() {}
     static QString extractFingerprint( KIO::Job *job, const QString &/*jobData*/ );
-    static KPIM::GroupwareJob::ContentType getContentType( const QDomElement &prop );
-    static KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode );
+    static KPIM::FolderLister::ContentType getContentType( const QDomElement &prop );
+    static KPIM::FolderLister::ContentType getContentType( const QDomNode &folderNode );
     static bool getFolderHasSubs( const QDomNode &folderNode );
 
 
     static KIO::Job *createListFoldersJob( const KURL &url );
     static KIO::TransferJob *createListItemsJob( const KURL &url );
     static KIO::TransferJob *createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
-                       const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+                       const KURL &url, KPIM::FolderLister::ContentType ctype );
     static KIO::Job *createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
                           const KPIM::GroupwareUploadItem::List &deletedItems );
 

@@ -35,6 +35,11 @@ ExchangeCalendarUploadItem::ExchangeCalendarUploadItem( CalendarAdaptor *adaptor
     : GroupwareUploadItem( type )
 {
   if ( incidence && adaptor ) {
+    if ( incidence->type() == "Event" ) mItemType = KPIM::FolderLister::Event;
+    else if ( incidence->type() == "Todo" ) mItemType = KPIM::FolderLister::Todo;
+    else if ( incidence->type() == "Journal" ) mItemType = KPIM::FolderLister::Journal;
+kdDebug()<<"mItemType=="<<mItemType<<endl;
+
     setUrl( incidence->customProperty( adaptor->identifier(), "storagelocation" ) );
     setUid( incidence->uid() );
 
@@ -47,6 +52,7 @@ ExchangeCalendarUploadItem::ExchangeCalendarUploadItem( CalendarAdaptor *adaptor
 KIO::TransferJob *ExchangeCalendarUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseUrl )
 {
 kdDebug()<<"ExchangeCalendarUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseUrl.url()<<endl;
+kdDebug()<<"mItemType=="<<mItemType<<endl;
   Q_ASSERT( adaptor );
 kdDebug()<<"After Q_ASSERT"<<endl;
   if ( !adaptor ) return 0;
@@ -61,6 +67,7 @@ kdDebug()<<"After (!adaptor) check"<<endl;
 KIO::TransferJob *ExchangeCalendarUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
 {
 kdDebug()<<"ExchangeCalendarUploadItem::createUploadNewJob"<<endl;
+kdDebug()<<"mItemType=="<<mItemType<<endl;
   KURL url( baseurl );
   // TODO: Check if this URL doesn't exist yet!
   url.addPath( uid() + ".EML" );

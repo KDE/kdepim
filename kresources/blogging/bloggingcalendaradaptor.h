@@ -32,47 +32,71 @@ class Job;
 
 namespace KCal {
 
+class BloggingUploadItem : public KPIM::GroupwareUploadItem
+{
+  public:
+    BloggingUploadItem( KBlog::APIBlog *api, CalendarAdaptor *adaptor, KCal::Incidence *incidence, UploadType type );
+    virtual ~BloggingUploadItem();
+    virtual KIO::TransferJob *createUploadNewJob(
+            KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl );
+    virtual KIO::TransferJob *createUploadJob(
+            KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
+
+  protected:
+    BloggingUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}
+    KBlog::BlogPosting *mPosting;
+    KBlog::APIBlog *mAPI;
+};
+
 class BloggingCalendarAdaptor : public CalendarAdaptor
 {
 Q_OBJECT
   public:
     BloggingCalendarAdaptor();
+    QValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    {
+      QValueList<KPIM::FolderLister::ContentType> types;
+      types << KPIM::FolderLister::Journal;
+      return types;
+    }
 
-/**/    QCString identifier() const { return "KCalResourceBlogging"; }
-/**/    long flags() const { return GWResNeedsLogon; }
-/**/
-/**/    void setBaseUrl( const KURL &url );
-/**/    void setUser( const QString &user );
-/**/    void setPassword( const QString &password );
-/**/    // We don't want to set the username / pw for the URL!
-/**/    void setUserPassword( KURL &url );
-/**/
-/**/    KBlog::APIBlog *api() const;
-/**/    void setAPI( KBlog::APIBlog *api );
-/**/
-/**/    KIO::Job *createLoginJob( const KURL &url, const QString &user,
-/**/                              const QString &password  );
-/**/    KIO::Job *createListFoldersJob( const KURL &url );
-/**/    KIO::TransferJob *createListItemsJob( const KURL &url );
-/**/    KIO::TransferJob *createDownloadJob( const KURL &url,
-/**/                                    KPIM::GroupwareJob::ContentType ctype );
-    KIO::Job *createRemoveJob( const KURL &url,
-                          const KPIM::GroupwareUploadItem::List &deleteItems );
+    QCString identifier() const { return "KCalResourceBlogging"; }
+    long flags() const { return GWResNeedsLogon; }
 
-/**/    bool interpretLoginJob( KIO::Job *job );
-/**/    void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * );
-/**/    bool interpretListItemsJob( KIO::Job *job, const QString &jobData );
-/**/    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData );
+    void setBaseURL( const KURL &url );
+    void setUser( const QString &user );
+    void setPassword( const QString &password );
+    // We don't want to set the username / pw for the URL!
+    void setUserPassword( KURL &url );
 
-/**/  public slots:
-/**/    void slotFolderInfoRetrieved( const QString &id, const QString &name );
-/**/    void slotUserInfoRetrieved( const QString &nick, const QString &user,
-/**/                            const QString &email );
-/**/
-/**/  protected:
-/**/    KBlog::APIBlog *mAPI;
-/**/    bool mAuthenticated;
-/**/    static QString mAppID;
+    KBlog::APIBlog *api() const;
+    void setAPI( KBlog::APIBlog *api );
+
+    KIO::Job *createLoginJob( const KURL &url, const QString &user,
+                              const QString &password  );
+    KIO::Job *createListFoldersJob( const KURL &url );
+    KIO::TransferJob *createListItemsJob( const KURL &url );
+    KIO::TransferJob *createDownloadJob( const KURL &url,
+                                    KPIM::FolderLister::ContentType ctype );
+    KIO::Job *createRemoveJob( const KURL &url, KPIM::GroupwareUploadItem *deleteItem );
+
+    bool interpretLoginJob( KIO::Job *job );
+    void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * );
+    bool interpretListItemsJob( KIO::Job *job, const QString &jobData );
+    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData );
+
+  public slots:
+    void slotFolderInfoRetrieved( const QString &id, const QString &name );
+    void slotUserInfoRetrieved( const QString &nick, const QString &user,
+                            const QString &email );
+
+  protected:
+    KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
+                                  KPIM::GroupwareUploadItem::UploadType type );
+
+    KBlog::APIBlog *mAPI;
+    bool mAuthenticated;
+    static QString mAppID;
 };
 
 }

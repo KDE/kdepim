@@ -146,9 +146,9 @@ void ExchangeConverterCalendar::createRequestTask( QDomDocument &doc, QDomElemen
   root.setAttributeNode( att_t2 );
 
   // TODO: Insert the correct namespaces here:
-// FIXME:  propertyTask1( TaskProp_UID );
-// FIXME:  propertyDAV( "creationdate" );
-// FIXME:  propertyDAV( "getlastmodified" );
+//  propertyTask1( TaskProp_UID );
+  propertyDAV( "creationdate" );
+  propertyDAV( "getlastmodified" );
   propertyTask1( TaskProp_Owner );
   propertyTask2( TaskProp_ContactNames );
   propertyTask1( TaskProp_DtStart );
@@ -171,9 +171,9 @@ void ExchangeConverterCalendar::createRequestTask( QDomDocument &doc, QDomElemen
 void ExchangeConverterCalendar::createRequestJournal( QDomDocument &doc, QDomElement &root )
 {
   createRequestIncidence( doc, root );
-// FIXME:  propertyDAV( "uid" );
-// FIXME:  propertyDAV( "creationdate" );
-// FIXME:  propertyDAV( "getlastmodified" );
+  propertyDAV( "uid" );
+  propertyDAV( "creationdate" );
+  propertyDAV( "getlastmodified" );
 }
 #undef propertyDAV
 #undef propertyNS
@@ -194,6 +194,7 @@ bool ExchangeConverterCalendar::readTZ( const QDomElement &node, Incidence */*in
     // kdDebug() << "DEBUG: timezone = " << timezone << endl;
   }
 
+  // TODO:
 /*  // mFormat is used for parsing recurrence rules.
   QString localTimeZoneId;
   if ( mCalendar ) {

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kresources_groupwarerc"/>
+  <group name="General" >
+    <entry key="Url" type="String" >
+      <label>Server URL</label>
+    </entry>
+    <entry key="User" type="String" >
+      <label>User Name</label>
+    </entry>
+    <entry key="Password" type="String" >
+      <label>Password</label>
+    </entry>
+  </group>
+	<group name="Folders">
+    <!--entry key="FolderIds" type="StringList">
+		  <label>All folder IDs on the server</label>
+	  </entry>
+		<entry key="FolderNames" type="StringList">
+		  <label>All folder names on the server</label>
+	  </entry-->
+		<entry key="ActiveFolders" type="StringList">
+		  <label>All active folders from the server</label>
+		</entry>
+		<entry key="FolderNumber" type="UInt">
+		  <label>Number of folders on the server and in the config file</label>
+		</entry>
+		<entry name="Folder$(nr)" type="StringList">
+		  <parameter name="nr" type="Int" max="100"/>
+	  </entry>
+		<entry name="DefaultDestinations" type="StringList">
+		  <label>Default destinations for the various types</label>
+			<whatsthis>These are the default destinations for the different data 
+			   types in the following order:
+           Event, Todo, Journal, Contact, All, Unknown
+         I tried using a parametrized entry using an enum, but the config 
+         compiler from 3.3 is severly broken in that respect...</whatsthis>
+    </entry>	 
+    <!--entry name="DefaultDestination$(Type)" type="String">
+      <parameter name="Type" type="Enum">
+        <values>
+				  <value>Event</value>
+					<value>Todo</value>
+					<value>Journal</value>
+					<value>Contact</value>
+					<value>All</value>
+					<value>Unknown</value>
+        </values>
+      </parameter>
+      <default></default>
+    </entry-->
+	</group>
+</kcfg>

@@ -21,7 +21,7 @@
 */
 
 #include "kabc_resourcegroupwarebase.h"
-#include "kabc_groupwareprefs.h"
+#include "kresources_groupwareprefs.h"
 
 #include "folderlister.h"
 #include "addressbookadaptor.h"
@@ -59,7 +59,7 @@ KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob(
   return new KPIM::GroupwareUploadJob( adaptor );
 }
 
-void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs )
+void ResourceGroupwareBase::setPrefs( KPIM::GroupwarePrefsBase *newprefs )
 {
   if ( !newprefs ) return;
   if ( mPrefs ) delete mPrefs;
@@ -67,6 +67,7 @@ void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs )
   mPrefs->addGroupPrefix( identifier() );
 
   mPrefs->readConfig();
+  if ( mFolderLister ) mFolderLister->readConfig( mPrefs );
 }
 
 void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
@@ -74,6 +75,7 @@ void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
   if ( !folderLister ) return;
   if ( mFolderLister ) delete mFolderLister;
   mFolderLister = folderLister;
+  if ( mPrefs ) mFolderLister->readConfig( mPrefs );
   if ( mAdaptor ) {
     mAdaptor->setFolderLister( mFolderLister );
     mFolderLister->setAdaptor( mAdaptor );
@@ -103,19 +105,21 @@ void ResourceGroupwareBase::init()
   mDownloadJob = 0;
 }
 
-GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
+KPIM::GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 {
-  return new GroupwarePrefsBase();
+  return new KPIM::GroupwarePrefsBase();
 }
 
 
 
-void ResourceGroupwareBase::readConfig( const KConfig *config )
+void ResourceGroupwareBase::readConfig( const KConfig */*config*/ )
 {
   kdDebug(5700) << "KABC::ResourceGroupwareBase::readConfig()" << endl;
 //   ResourceCached::readConfig( config );
-  if ( mFolderLister ) {
-    mFolderLister->readConfig( config );
+  if ( mPrefs ) {
+    mPrefs->readConfig();
+    if ( mFolderLister )
+      mFolderLister->readConfig( mPrefs );
   }
 }
 
@@ -123,9 +127,11 @@ void ResourceGroupwareBase::writeConfig( KConfig *config )
 {
   Resource::writeConfig( config );
 
-  mPrefs->writeConfig();
-
-  mFolderLister->writeConfig( config );
+  if ( mPrefs ) {
+    if ( mFolderLister )
+      mFolderLister->writeConfig( mPrefs );
+    mPrefs->writeConfig();
+  }
 }
 
 Ticket *ResourceGroupwareBase::requestSaveTicket()

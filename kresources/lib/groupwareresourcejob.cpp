@@ -55,4 +55,5 @@ void GroupwareJob::error( const QString &errorString )
   emit( result( this ) );
 }
 
+
 #include "groupwareresourcejob.moc"

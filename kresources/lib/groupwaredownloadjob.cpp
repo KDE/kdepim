@@ -59,8 +59,8 @@ void GroupwareDownloadJob::run()
 
   mItemsForDownload.clear();
   mCurrentlyOnServer.clear();
-  connect( adaptor(), SIGNAL( itemToDownload( const QString &, KPIM::GroupwareJob::ContentType ) ),
-           SLOT( slotItemToDownload( const QString &, KPIM::GroupwareJob::ContentType ) ) );
+  connect( adaptor(), SIGNAL( itemToDownload( const QString &, KPIM::FolderLister::ContentType ) ),
+           SLOT( slotItemToDownload( const QString &, KPIM::FolderLister::ContentType ) ) );
   connect( adaptor(), SIGNAL( itemOnServer( const QString & ) ),
            SLOT( slotItemOnServer( const QString & ) ) );
   connect( adaptor(), SIGNAL( itemDownloaded( const QString &, const QString &, const QString & ) ),
@@ -176,9 +176,9 @@ void GroupwareDownloadJob::downloadItem()
       mItemsForDownload.clear();
     } else {
       // Download the first item of the list
-      QMap<QString,ContentType>::Iterator it = mItemsForDownload.begin();
+      QMap<QString,KPIM::FolderLister::ContentType>::Iterator it = mItemsForDownload.begin();
       const QString href( it.key() );
-      ContentType ctype = it.data();
+      KPIM::FolderLister::ContentType ctype = it.data();
       mItemsDownloading.insert( it.key(), it.data() );
       mItemsForDownload.remove( it.key() );
  
@@ -226,7 +226,7 @@ void GroupwareDownloadJob::slotDownloadItemData( KIO::Job *, const QByteArray &d
 }
 
 void GroupwareDownloadJob::slotItemToDownload( const QString &remoteURL,
-                         KPIM::GroupwareJob::ContentType type )
+                         KPIM::FolderLister::ContentType type )
 {
   if ( !mItemsForDownload.contains( remoteURL ) &&
        !mItemsDownloading.contains( remoteURL ) && 
@@ -269,7 +269,7 @@ kdDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << re
     mItemsDownloading.remove( remoteURL );
   }
   if ( !mItemsDownloaded.contains( remoteURL ) ) {
-    mItemsDownloaded[ remoteURL ] = Unknown;
+    mItemsDownloaded[ remoteURL ] = KPIM::FolderLister::Unknown;
   }
   adaptor()->idMapper()->setRemoteId( localID, remoteURL );
   adaptor()->idMapper()->setFingerprint( localID, fingerprint );

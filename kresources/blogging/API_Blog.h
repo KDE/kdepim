@@ -129,12 +129,17 @@ class APIBlog : public QObject
     virtual KIO::Job *createListFoldersJob() = 0;
     virtual KIO::TransferJob *createListItemsJob( const KURL &url ) = 0;
     virtual KIO::TransferJob *createDownloadJob( const KURL &url ) = 0;
-//     virtual KIO::Job *createRemoveJob( const KURL &url, const KPIM::GroupwareUploadItem::List &deletedItems ) = 0;
+    virtual KIO::TransferJob *createUploadJob( const KURL &url, KBlog::BlogPosting *posting ) = 0;
+    virtual KIO::TransferJob *createUploadNewJob( KBlog::BlogPosting *posting ) = 0;
+    virtual KIO::Job *createRemoveJob( const KURL &url, const QString &postid ) = 0;
 
     virtual bool interpretUserInfoJob( KIO::Job *job ) = 0;
     virtual void interpretListFoldersJob( KIO::Job *job ) = 0;
     virtual bool interpretListItemsJob( KIO::Job *job ) = 0;
     virtual bool interpretDownloadItemsJob( KIO::Job *job ) = 0;
+    
+    static KCal::Journal *journalFromPosting( KBlog::BlogPosting *post );
+    static KBlog::BlogPosting *postingFromJournal( KCal::Journal *journal );
 
   signals:
     // TODO: Connect these
@@ -148,8 +153,6 @@ class APIBlog : public QObject
     
 
   protected:
-    KCal::Journal *journalFromPosting( KBlog::BlogPosting *post );
-    KBlog::BlogPosting *postingFromJournal( KCal::Journal *journal );
 
     KURL mServerURL;
     QString mPassword;

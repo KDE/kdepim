@@ -33,6 +33,8 @@ ExchangeAddressBookUploadItem::ExchangeAddressBookUploadItem( AddressBookAdaptor
     : GroupwareUploadItem( type )
 {
   if ( adaptor && !addr.isEmpty() ) {
+    mItemType = KPIM::FolderLister::Contact;
+
     setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
     setUid( addr.uid() );
 

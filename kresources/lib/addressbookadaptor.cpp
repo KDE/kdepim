@@ -38,6 +38,7 @@ AddressBookUploadItem::AddressBookUploadItem(
                                         GroupwareUploadItem::UploadType type )
     : GroupwareUploadItem( type )
 {
+  mItemType = KPIM::FolderLister::Contact;
   setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
   setUid( addr.uid() );
   KABC::VCardConverter vcard;

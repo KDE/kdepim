@@ -39,6 +39,10 @@ CalendarUploadItem::CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidenc
     : GroupwareUploadItem( type )
 {
   if ( incidence && adaptor ) {
+    if ( incidence->type() == "Event" ) mItemType = KPIM::FolderLister::Event;
+    else if ( incidence->type() == "Todo" ) mItemType = KPIM::FolderLister::Todo;
+    else if ( incidence->type() == "Journal" ) mItemType = KPIM::FolderLister::Journal;
+
     setUrl( incidence->customProperty( adaptor->identifier(), "storagelocation" ) );
     setUid( incidence->uid() );
 

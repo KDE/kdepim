@@ -27,7 +27,6 @@
 
 namespace KCal {
 
-class GroupwarePrefsBase;
 
 /**
   This class provides a resource for accessing an GroupDav.org server

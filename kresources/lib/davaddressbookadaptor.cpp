@@ -53,7 +53,7 @@ void DavAddressBookAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::Folder
     
     QString href = n.namedItem( "href" ).toElement().text();
     QString displayName = n3.namedItem( "displayname" ).toElement().text();
-    KPIM::FolderLister::FolderType type = getFolderType( n3 );
+    KPIM::FolderLister::ContentType type = getContentType( n3 );
 
     emit folderInfoRetrieved( href, displayName, type );
     emit folderSubitemRetrieved( href, getFolderHasSubs( n3 ) );

@@ -195,20 +195,23 @@ void GroupwareUploadJob::uploadNewItem()
 {
   kdDebug(5800)<<"GroupwareUploadJob::uploadNewItem()"<<endl;
   if ( !mAddedItems.isEmpty() ) {
-    // TODO: Use the baseURL here or the default destination folder?
-//     KURL url( adaptor()->baseURL() );
-    KURL url( adaptor()->folderLister()->writeDestinationId() );
-    adaptor()->adaptUploadUrl( url );
+    
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchCreate ) {
+      KURL url( adaptor()->folderLister()->writeDestinationId( FolderLister::All ) );
+      adaptor()->adaptUploadUrl( url );
 kdDebug() << "Using batch create to " << url.url() << endl;
       mUploadJob = adaptor()->createUploadNewJob( url, mAddedItems );
       mItemsUploading += mAddedItems;
       mAddedItems.clear();
     } else {
-kdDebug() << "Not using batch create to " << url.url() << endl;
       KPIM::GroupwareUploadItem *item = mAddedItems.front();
-      mUploadJob = adaptor()->createUploadNewJob( url, item );
-      mItemsUploading.append( mAddedItems.front() );
+      KURL url( adaptor()->folderLister()->writeDestinationId( item->itemType() ) );
+      adaptor()->adaptUploadUrl( url );
+kdDebug() << "Not using batch create to " << url.url() << " for item of type " << item->itemType() << endl;
+      if ( !url.isEmpty() ) {
+        mUploadJob = adaptor()->createUploadNewJob( url, item );
+        mItemsUploading.append( mAddedItems.front() );
+      }
       mAddedItems.pop_front();
     }
 

@@ -28,7 +28,7 @@
 
 using namespace KPIM;
 
-GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mType( type )
+GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mItemType( KPIM::FolderLister::Unknown ), mType( type )
 {
 }
 
@@ -121,7 +121,7 @@ kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl
 }
 
 void GroupwareDataAdaptor::processDownloadListItem( const QString &entry,
-        const QString &newFingerprint, KPIM::GroupwareJob::ContentType type )
+        const QString &newFingerprint, KPIM::FolderLister::ContentType type )
 {
   bool download = false;
   KURL url ( entry );

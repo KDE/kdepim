@@ -24,7 +24,7 @@
 #include "kcal_resourceexchange.h"
 #include <groupwaredownloadjob.h>
 #include <groupwareuploadjob.h>
-#include <kcal_groupwareprefs.h>
+#include <kresources_groupwareprefs.h>
 
 using namespace KCal;
 

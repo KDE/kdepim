@@ -33,30 +33,30 @@
 #include <kio/davjob.h>
 #include <kdebug.h>
 
-KPIM::GroupwareJob::ContentType ExchangeGlobals::getContentType( const QDomElement &prop )
+KPIM::FolderLister::ContentType ExchangeGlobals::getContentType( const QDomElement &prop )
 {
   const QString &contentclass = prop.namedItem("contentclass").toElement().text();
 kdDebug()<<"contentclass: "<<contentclass<<endl;
   return getContentType( contentclass );
 }
 
-KPIM::GroupwareJob::ContentType ExchangeGlobals::getContentType( const QString &contentclass )
+KPIM::FolderLister::ContentType ExchangeGlobals::getContentType( const QString &contentclass )
 {
   if ( contentclass == "urn:content-classes:appointment" )
-    return KPIM::GroupwareJob::Appointment;
+    return KPIM::FolderLister::Event;
   if ( contentclass == "urn:content-classes:task" )
-    return KPIM::GroupwareJob::Task;
+    return KPIM::FolderLister::Todo;
   if ( contentclass == "urn:content-classes:message" )
-    return KPIM::GroupwareJob::Message;
+    return KPIM::FolderLister::Message;
   if ( contentclass == "urn:content-classes:person" )
-    return KPIM::GroupwareJob::Contact;
-  return KPIM::GroupwareJob::Unknown;
+    return KPIM::FolderLister::Contact;
+  return KPIM::FolderLister::Unknown;
 }
 
 
-KPIM::FolderLister::FolderType ExchangeGlobals::getFolderType( const QDomNode &folderNode )
+KPIM::FolderLister::ContentType ExchangeGlobals::getContentType( const QDomNode &folderNode )
 {
-kdDebug()<<"ExchangeGlobals::getFolderType(...)"<<endl;
+kdDebug()<<"ExchangeGlobals::getContentType(...)"<<endl;
   QDomNode n4;
   for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
     QDomElement e = n4.toElement();
@@ -64,13 +64,13 @@ kdDebug()<<"ExchangeGlobals::getFolderType(...)"<<endl;
     if ( e.tagName() == "contentclass" ) {
       QString contentclass( e.text() );
       if ( contentclass == "urn:content-classes:contactfolder" )
-        return KPIM::FolderLister::ContactsFolder;
+        return KPIM::FolderLister::Contact;
       if ( contentclass == "urn:content-classes:calendarfolder" )
-        return KPIM::FolderLister::CalendarFolder;
+        return KPIM::FolderLister::Event;
       if ( contentclass == "urn:content-classes:taskfolder" )
-        return KPIM::FolderLister::TasksFolder;
+        return KPIM::FolderLister::Todo;
       if ( contentclass == "urn:content-classes:journalfolder" )
-        return KPIM::FolderLister::JournalsFolder;
+        return KPIM::FolderLister::Journal;
       if ( contentclass == "urn:content-classes:folder" )
         return KPIM::FolderLister::Folder;
     }
@@ -114,11 +114,15 @@ KIO::TransferJob *ExchangeGlobals::createListItemsJob( const KURL &url )
 
 
 KIO::TransferJob *ExchangeGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor */*adaptor*/,
-                        const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+                        const KURL &url, KPIM::FolderLister::ContentType ctype )
 {
-kdDebug()<<"ExchangeGlobals::createDownloadJob()"<<endl;
-kdDebug()<<"ctype="<<ctype<<endl;
-kdDebug()<<"Person="<<KPIM::GroupwareJob::Contact << ", Appointment="<<KPIM::GroupwareJob::Appointment<<", Task="<<KPIM::GroupwareJob::Task<<", Journal="<<KPIM::GroupwareJob::Journal<<", Message="<<KPIM::GroupwareJob::Message<<endl;
+kdDebug() << "ExchangeGlobals::createDownloadJob()" << endl;
+kdDebug() << "ctype=" << ctype << endl;
+kdDebug() << "Person=" << KPIM::FolderLister::Contact << ", "
+          << "Appointment=" << KPIM::FolderLister::Event << ", "
+          << "Task=" << KPIM::FolderLister::Todo << ", "
+          << "Journal=" << KPIM::FolderLister::Journal << ", "
+          << "Message=" << KPIM::FolderLister::Message << endl;
   // Don't use an <allprop/> request!
 
   QDomDocument doc;
@@ -133,17 +137,17 @@ kdDebug()<<"Person="<<KPIM::GroupwareJob::Contact << ", Appointment="<<KPIM::Gro
   root.setAttributeNode( att_m );
 
   switch ( ctype ) {
-    case KPIM::GroupwareJob::Appointment:
+    case KPIM::FolderLister::Event:
         KCal::ExchangeConverterCalendar::createRequestAppointment( doc, prop );
         break;
-    case KPIM::GroupwareJob::Task:
+    case KPIM::FolderLister::Todo:
         KCal::ExchangeConverterCalendar::createRequestTask( doc, prop );
         break;
-    case KPIM::GroupwareJob::Journal:
-    case KPIM::GroupwareJob::Message:
+    case KPIM::FolderLister::Journal:
+    case KPIM::FolderLister::Message:
         KCal::ExchangeConverterCalendar::createRequestJournal( doc, prop );
         break;
-    case KPIM::GroupwareJob::Contact:
+    case KPIM::FolderLister::Contact:
         KABC::ExchangeConverterContact::createRequest( doc, prop );
         break;
     default:
@@ -214,7 +218,7 @@ kdDebug()<<"ExchangeGlobals::interpretListItemsJob"<<endl;
     if ( elem.isNull() || newFingerprint.isEmpty() )
       continue;
 
-    KPIM::GroupwareJob::ContentType type = getContentType( prop );
+    KPIM::FolderLister::ContentType type = getContentType( prop );
 
     adaptor->processDownloadListItem( entry, newFingerprint, type );
   }

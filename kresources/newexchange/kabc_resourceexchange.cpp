@@ -24,7 +24,7 @@
 #include "kabc_resourceexchange.h"
 #include "groupwaredownloadjob.h"
 #include "groupwareuploadjob.h"
-#include "kabc_groupwareprefs.h"
+#include "kresources_groupwareprefs.h"
 
 using namespace KABC;
 

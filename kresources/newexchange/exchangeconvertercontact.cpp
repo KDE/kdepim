@@ -580,7 +580,6 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
     QDomElement el = domContactProperty( "bday", str );
     el.setAttribute( "b:dt", "date" );
   }
-  // FIXME: Enable these again after checking that it really works!
   dt = QDate::fromString( addr.custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
   str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
   if ( !str.isEmpty() ) {

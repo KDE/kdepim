@@ -41,7 +41,7 @@ class KDE_EXPORT DavAddressBookAdaptor : public AddressBookAdaptor
     virtual void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister *folderLister );
     /** Returns the type of folder retrieved in the dom node. Typically, you'll
         compare the DAV:resourcetype property with some values. */
-    virtual KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode ) = 0;
+    virtual KPIM::FolderLister::ContentType getContentType( const QDomNode &folderNode ) = 0;
     /** Extract from the dav response whether the folder has subitems that need
         to be examined */
     virtual bool getFolderHasSubs( const QDomNode &folderNode ) = 0;

@@ -44,38 +44,40 @@ QString GroupDavGlobals::extractFingerprint( KIO::Job *job, const QString &/*job
 }
 
 
-KPIM::GroupwareJob::ContentType GroupDavGlobals::getContentType( const QDomElement &prop )
+KPIM::FolderLister::ContentType GroupDavGlobals::getContentType( const QDomElement &prop )
 {
   QDomElement ctype = prop.namedItem("getcontenttype").toElement();
-  if ( ctype.isNull() ) return KPIM::GroupwareJob::Unknown;
+  if ( ctype.isNull() ) return KPIM::FolderLister::Unknown;
   const QString &type = ctype.text();
 kdDebug()<<"Found content type: "<<type<<endl;
   /// TODO: Not yet implemented in GroupDav!
-  return KPIM::GroupwareJob::Unknown;
+  return KPIM::FolderLister::Unknown;
 }
 
 
-KPIM::FolderLister::FolderType GroupDavGlobals::getFolderType( const QDomNode &folderNode )
+KPIM::FolderLister::ContentType GroupDavGlobals::getContentType( const QDomNode &folderNode )
 {
   QDomNode n4;
-kdDebug()<<"GroupDavGlobals::getFolderType(...)"<<endl;
+kdDebug()<<"GroupDavGlobals::getContentType(...)"<<endl;
+  int type = KPIM::FolderLister::Unknown;
   for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
     QDomElement e = n4.toElement();
 
     if ( e.tagName() == "resourcetype" ) {
       if ( !e.namedItem( "vevent-collection" ).isNull() )
-        return KPIM::FolderLister::CalendarFolder;
+        type |= KPIM::FolderLister::Event;
       if ( !e.namedItem( "vtodo-collection" ).isNull() )
-        return KPIM::FolderLister::TasksFolder;
+        type |= KPIM::FolderLister::Todo;
       if ( !e.namedItem( "vjournal-collection" ).isNull() )
-        return KPIM::FolderLister::JournalsFolder;
+        type |= KPIM::FolderLister::Journal;
       if ( !e.namedItem( "vcard-collection" ).isNull() )
-        return KPIM::FolderLister::ContactsFolder;
-      if ( !e.namedItem( "collection" ).isNull() )
-        return KPIM::FolderLister::Folder;
+        type |= KPIM::FolderLister::Contact;
+      if ( (type == KPIM::FolderLister::Unknown) &&
+           !( e.namedItem( "collection" ).isNull() ) )
+        type |= KPIM::FolderLister::Folder;
     }
   }
-  return KPIM::FolderLister::Unknown;
+  return (KPIM::FolderLister::ContentType)type;
 }
 
 bool GroupDavGlobals::getFolderHasSubs( const QDomNode &folderNode )
@@ -118,7 +120,7 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KURL &url )
 
 
 KIO::TransferJob *GroupDavGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
-                    const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
+                    const KURL &url, KPIM::FolderLister::ContentType /*ctype*/ )
 {
 kdDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
   KIO::TransferJob *job = KIO::get( url, false, false );
@@ -191,7 +193,7 @@ bool GroupDavGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor
     if ( elem.isNull() || newFingerprint.isEmpty() )
       continue;
 
-    KPIM::GroupwareJob::ContentType type = getContentType( prop );
+    KPIM::FolderLister::ContentType type = getContentType( prop );
 
     adaptor->processDownloadListItem( entry, newFingerprint, type );
   }

@@ -22,7 +22,7 @@
 #include "API_Blogger.h"
 
 #include "kcal_resourceblogging.h"
-#include <kcal_groupwareprefs.h>
+#include <kresources_groupwareprefs.h>
 
 using namespace KCal;
     

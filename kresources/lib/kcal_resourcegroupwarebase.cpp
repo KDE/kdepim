@@ -22,8 +22,8 @@
 */
 
 #include "kcal_resourcegroupwarebase.h"
+#include "kresources_groupwareprefs.h"
 
-#include "kcal_groupwareprefs.h"
 #include "libkcal/confirmsavedialog.h"
 #include "folderlister.h"
 #include "calendaradaptor.h"
@@ -59,9 +59,31 @@ ResourceGroupwareBase::~ResourceGroupwareBase()
   mPrefs = 0;
 }
 
-GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
+KPIM::GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 {
-  return new GroupwarePrefsBase();
+  return new KPIM::GroupwarePrefsBase();
+}
+
+bool ResourceGroupwareBase::addEvent( Event *event )
+{
+  if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Event ) ||
+                      adaptor()->supports( KPIM::FolderLister::All ) ) ) {
+    return ResourceCached::addEvent( event );
+  } else return false;
+}
+bool ResourceGroupwareBase::addTodo( Todo *todo )
+{
+  if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Todo ) ||
+                      adaptor()->supports( KPIM::FolderLister::All ) ) ) {
+    return ResourceCached::addTodo( todo );
+  } else return false;
+}
+bool ResourceGroupwareBase::addJournal( Journal *journal )
+{
+  if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Journal ) ||
+                      adaptor()->supports( KPIM::FolderLister::All ) ) ) {
+    return ResourceCached::addJournal( journal );
+  } else return false;
 }
 
 
@@ -78,7 +100,7 @@ KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob(
   return new KPIM::GroupwareUploadJob( adaptor );
 }
 
-void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs ) 
+void ResourceGroupwareBase::setPrefs( KPIM::GroupwarePrefsBase *newprefs ) 
 {
   if ( !newprefs ) return;
   if ( mPrefs ) delete mPrefs;
@@ -86,6 +108,7 @@ void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs )
   mPrefs->addGroupPrefix( identifier() );
   
   mPrefs->readConfig();
+  if ( mFolderLister ) mFolderLister->readConfig( mPrefs );
 }
 
 void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
@@ -93,6 +116,7 @@ void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
   if ( !folderLister ) return;
   if ( mFolderLister ) delete mFolderLister;
   mFolderLister = folderLister;
+  if ( mPrefs ) mFolderLister->readConfig( mPrefs );
   if ( adaptor() ) {
     adaptor()->setFolderLister( mFolderLister );
     mFolderLister->setAdaptor( adaptor() );
@@ -129,7 +153,7 @@ void ResourceGroupwareBase::init()
   enableChangeNotification();
 }
 
-GroupwarePrefsBase *ResourceGroupwareBase::prefs()
+KPIM::GroupwarePrefsBase *ResourceGroupwareBase::prefs()
 {
   return mPrefs;
 }
@@ -138,8 +162,11 @@ void ResourceGroupwareBase::readConfig( const KConfig *config )
 {
   kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
   ResourceCached::readConfig( config );
-  if ( mPrefs ) mPrefs->readConfig();
-  if ( mFolderLister ) mFolderLister->readConfig( config );
+  if ( mPrefs ) {
+    mPrefs->readConfig();
+    if ( mFolderLister )
+      mFolderLister->readConfig( mPrefs );
+  }
 }
 
 void ResourceGroupwareBase::writeConfig( KConfig *config )
@@ -149,8 +176,11 @@ void ResourceGroupwareBase::writeConfig( KConfig *config )
   ResourceCalendar::writeConfig( config );
   ResourceCached::writeConfig( config );
 
-  if ( mPrefs ) mPrefs->writeConfig();
-  if ( mFolderLister ) mFolderLister->writeConfig( config );
+  if ( mPrefs ) {
+    if ( mFolderLister )
+      mFolderLister->writeConfig( mPrefs );
+    mPrefs->writeConfig();
+  }
 }
 
 bool ResourceGroupwareBase::doOpen()

@@ -10,13 +10,13 @@ kresources/lib (general):
 -) if there's an item in the local cache that cannot be bound on the server and
    in the idMapper, mark it as added and try to upload it on save!
 -) reload libkcal resources in korganizer when config changes
--) When download is finished, make new contacts appear in kaddressbook
 -) Use the username / password entered into the config dlg. For some reason 
    each ioslave asks again with a password dialog...
 -) If upload fails, mark the item as changed/added/deleted again
 -) Don't ask immediately for uploading in korganizer, wait at least a 
    QTimer::singleShot
 -) Better progress bar messages
+-) Different default location for each incidence type
 
 
 kresources/newexchange:

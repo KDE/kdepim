@@ -23,6 +23,8 @@
 #ifndef KPIM_FOLDERLISTER_H
 #define KPIM_FOLDERLISTER_H
 
+// #include "kresources_groupwareprefs.h"
+/*#include "groupwareresourcejob.h"*/
 #include <kurl.h>
 #include <kdepimmacros.h>
 
@@ -40,15 +42,20 @@ class KConfig;
 namespace KPIM {
 
 class GroupwareDataAdaptor;
+class GroupwarePrefsBase;
+
 
 class KDE_EXPORT FolderLister : public QObject
 {
     Q_OBJECT
   public:
     enum Type { AddressBook, Calendar };
-    enum FolderType { ContactsFolder, CalendarFolder, TasksFolder,
-                      JournalsFolder, AllIncidencesFolder,
-                      MailFolder, MemoFolder, Folder, Unknown };
+    enum ContentType {
+      Contact=0x1, Event=0x2, Todo=0x4, Journal=0x8,
+      Message=0x10, Memo=0x20, Folder=0x40,
+      Incidences=Event|Todo|Journal, All=Contact|Incidences,
+      Unknown=0x000
+    };
 
     class Entry
     {
@@ -59,9 +66,13 @@ class KDE_EXPORT FolderLister : public QObject
 
         QString id;
         QString name;
-        FolderType type;
+        ContentType type;
         bool active;
     };
+    static QStringList contentTypeToStrings( ContentType );
+    ContentType contentTypeFromString( const QString &type );
+
+    QValueList<ContentType> supportedTypes();
 
     FolderLister( Type );
 
@@ -77,11 +88,11 @@ class KDE_EXPORT FolderLister : public QObject
     QStringList activeFolderIds() const;
     bool isActive( const QString &id ) const;
 
-    void setWriteDestinationId( /*const QString &type, */const QString & );
-    QString writeDestinationId( /*const QString &type*/ ) const { return mWriteDestinationId/*[type]*/; }
-
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void setWriteDestinationId( KPIM::FolderLister::ContentType type, const QString &dest );
+    QString writeDestinationId( KPIM::FolderLister::ContentType type ) const;
+    
+    void readConfig( KPIM::GroupwarePrefsBase *newprefs );
+    void writeConfig( KPIM::GroupwarePrefsBase *newprefs );
 
 
   signals:
@@ -93,7 +104,7 @@ class KDE_EXPORT FolderLister : public QObject
      *  tree (if is has an appropriate type) */
     virtual void processFolderResult( const QString &href,
                                       const QString &displayName,
-                                      KPIM::FolderLister::FolderType  type );
+                                      KPIM::FolderLister::ContentType  type );
     /** Retrieve information about the folder u. If it has sub-folders, it
         descends into the hierarchy */
     virtual void doRetrieveFolder( const KURL &u );
@@ -130,8 +141,8 @@ class KDE_EXPORT FolderLister : public QObject
     GroupwareDataAdaptor *mAdaptor;
   private:
     // TODO: We need multiple destinations for Events, Tasks and Journals
-//     QMap<QString, QString> mWriteDestinationId;
-    QString mWriteDestinationId;
+    QMap<KPIM::FolderLister::ContentType, QString> mWriteDestinationId;
+    KURL mOldURL;
 };
 
 }
