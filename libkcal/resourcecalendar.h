@@ -116,6 +116,8 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual void deleteEvent( Event * ) = 0;
 
+    virtual void changeIncidence( Incidence * ) {};
+
     /**
       Retrieves an event on the basis of the unique string ID.
     */
