@@ -1,0 +1,21 @@
+Test design + implementation for KabII
+
+Look in the doc directory for related documentation. Note that some of
+this documentation may be incorrect and/or out of date. The design is
+changing rapidly !
+
+Source documentation (for lib/) is not complete yet, but there's some in
+there you may find useful.
+
+Note that source documentation doesn't work right using kdoc because it doesn't
+support namespaces. There's a doxygen config file in lib which you can use
+instead if you have doxygen.
+
+Documentation generated with kdoc goes in doc/srcdoc (but is currently useless).
+Documentation generated with doxygen goes in doc/srcdox.
+
+Use 'make doc' in lib/ to generate kdoc documentation.
+Use 'make dox' in lib/ to generate doxygen documentation.
+
+Contact Rik <rik@kde.org> with any questions, comments etc.
+

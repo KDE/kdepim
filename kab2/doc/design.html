@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<TITLE>KabII Design</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+
+<H1>KabII Design</H1>
+<H2>Rik Hemsley &lt;<A HREF="mailto:rik@kde.org">rik@kde.org</A>&gt;</H2>
+<H3>Jul 31 1999</H3>
+
+</CENTER>
+
+<H4>Introduction</H4>
+<P>
+The addressbook provided with KDE 1 was useful and provided enough features
+to please most users. The design of KAB 1 was, however, too simple to provide
+for features such as multiple addressbooks, remote addressbooks and filter
+plugins (for importing from other formats).
+</P>
+<P>
+The design of KAB 2 is intended to make use of the advanced mechanisms provided
+by KDE 2. This includes CORBA communication, which gives excellent network
+transparency while preserving a useful programmers' API.
+</P>
+
+<H4>Description</H4>
+<P>
+KAB 2 will be a distributed system. A simple shared library will provide the
+API for applications. This library will know about the addressbooks that the
+user wishes to access. The library will contact the addressbooks upon startup
+and query them to discover whether they are usable at that time. Any usable
+addressbooks will appear in the user interface, and be accessible through
+the API.
+</P>
+<P>
+Addressbooks will be communicated with via CORBA. A standard idl will be
+used that provides a consistent interface and allows for accessing entities
+within each addressbook. This interface will not be visible to the user nor
+the application programmer as it will be hidden behind the API.
+</P>
+<P>
+An addressbook will know what format it is stored in. At initialisation it
+will attempt to load a plugin to handle storage for its format type. If this
+attempt is unsuccessful - either the plugin cannot be loaded or the plugin
+cannot access its data store, the addressbook will be considered unusable
+and ignored by the API library.
+</P>
+<P>
+At any point in time, on user request, an addressbook object may attempt to
+import records from an unknown format. To accomplish this, it will attempt
+to load a 'filter' plugin. If the plugin is available for the format, and
+the data to be imported is available, the plugin will be asked to import
+all records from its data source. The plugin will then attempt to create
+records within the addressbook by reading its data source and constructing
+new records as best as it can.
+</P>
+
+<H4>References</H4>
+<P>
+The API documentation for kab is available <A HREF="../../ab_test/v3/include/doc/index.html">here</A>
+</P>
+<P>
+The IDL for kab is available <A HREF="../../corba/kab/server/addressbook.idl">here</A>
+</P>
+
+<H4>Diagrammatic representation of the structure of KAB 2</H4>
+<CENTER>
+<IMG SRC="kab.gif" ALT="KAB structure diagram goes here">
+</CENTER>
+
+<H4>Contacts</H4>
+<TABLE>
+<TR>
+  <TD>
+    <EM>Responsibility</EM>
+  </TD>
+  <TD>
+    <EM>Name</EM>
+  </TD>
+  <TD>
+    <EM>Email address</EM>
+  </TD>
+</TR>
+<TR>
+  <TD>
+    KAB 2 designer and coder
+  </TD>
+  <TD>
+    Rik Hemsley
+  </TD>
+  <TD>
+    <A HREF="mailto:rik@kde.org">rik@kde.org</A>
+  </TD>
+</TR>
+<TR>
+  <TD>
+    KAB 2 UI designer and coder
+  </TD>
+  <TD>
+    Don Sanders
+  </TD>
+  <TD>
+    <A HREF="dsanders@cch.com.au">dsanders@cch.com.au</A>
+  </TD>
+</TR>
+<TR>
+  <TD>
+    KAB 1 designer and coder
+  </TD>
+  <TD>
+    Mirko Sucker
+  </TD>
+  <TD>
+    <A HREF="mirko@kde.org">mirko@kde.org</A>
+  </TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
