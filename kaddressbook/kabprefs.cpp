@@ -56,10 +56,7 @@ KABPrefs::KABPrefs()
   addItemIntList( "DetailsSplitter", mDetailsSplitter );
 
   KConfigSkeleton::setCurrentGroup( "Extensions_General" );
-  QStringList defaultExtensions;
-  defaultExtensions << "distribution_list_editor";
-  addItemInt( "CurrentExtension", mCurrentExtension, 0 );
-  addItemStringList( "ActiveExtensions", mActiveExtensions, defaultExtensions );
+  addItemString( "CurrentExtension", mCurrentExtension, "resourceselection" );
 
   KConfigSkeleton::setCurrentGroup( "Views" );
   QString defaultView = i18n( "Default Table View" );

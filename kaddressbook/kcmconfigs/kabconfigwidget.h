@@ -53,22 +53,11 @@ class KABConfigWidget : public QWidget
   public slots:
     void modified();
 
-  private slots:
-    void configureExtension();
-    void selectionChanged( QListViewItem* );
-    void itemClicked( QListViewItem* );
-    void configureExtension(QListViewItem *);
   private:
-    void restoreExtensionSettings();
-    void saveExtensionSettings();
-
-    KListView *mExtensionView;
-
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
     QCheckBox *mTradeAsFamilyName;
     QComboBox *mEditorCombo;
-    QPushButton *mConfigureButton;
     QLineEdit *mPhoneHook;
     QLineEdit *mFaxHook;
     QCheckBox *mLimitContactDisplay;

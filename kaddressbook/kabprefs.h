@@ -58,8 +58,7 @@ class KABPrefs : public KPimPrefs
     QStringList mAdvancedCustomFields;
 
     // Extensions stuff
-    int mCurrentExtension;
-    QStringList mActiveExtensions;
+    QString mCurrentExtension;
 
     // Views stuff
     QString mCurrentView;

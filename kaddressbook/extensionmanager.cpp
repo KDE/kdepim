@@ -54,13 +54,27 @@ ExtensionManager::~ExtensionManager()
 
 void ExtensionManager::restoreSettings()
 {
-  mActionExtensions->setCurrentItem( KABPrefs::instance()->mCurrentExtension );
-  setActiveExtension( mActionExtensions->currentItem() );
+  int index = 0;
+  for ( int index = 0; index < mExtensionList.size(); ++index ) {
+    ExtensionData data = mExtensionList[ index ];
+    if ( data.identifier == KABPrefs::instance()->mCurrentExtension ) {
+      mActionExtensions->setCurrentItem( index );
+      setActiveExtension( index );
+      return;
+    }
+  }
+
+  mActionExtensions->setCurrentItem( 0 );
+  setActiveExtension( 0 );
 }
 
 void ExtensionManager::saveSettings()
 {
-  KABPrefs::instance()->mCurrentExtension = mActionExtensions->currentItem();
+  int index = mActionExtensions->currentItem();
+
+  Q_ASSERT( index < mExtensionList.size() );
+
+  KABPrefs::instance()->mCurrentExtension = mExtensionList[ index ].identifier;
 }
 
 void ExtensionManager::reconfigure()
@@ -93,7 +107,7 @@ void ExtensionManager::setActiveExtension( int id )
     if ( mCurrentExtensionWidget )
       mCurrentExtensionWidget->hide();
 
-    mCurrentExtensionWidget = mExtensionWidgetList.at( id - 1 );
+    mCurrentExtensionWidget = mExtensionList[ id ].widget;
     if ( mCurrentExtensionWidget ) {
       show();
       mCurrentExtensionWidget->show();
@@ -107,32 +121,43 @@ void ExtensionManager::setActiveExtension( int id )
 
 void ExtensionManager::createExtensionWidgets()
 {
-  // clear extension widget list
-  mExtensionWidgetList.setAutoDelete( true );
-  QPtrListIterator<KAB::ExtensionWidget> wdgIt( mExtensionWidgetList );
+  // clean up
+  ExtensionData::List::Iterator dataIt;
+  for ( dataIt = mExtensionList.begin(); dataIt != mExtensionList.end(); ++dataIt )
+    delete (*dataIt).widget;
+  mExtensionList.clear();
+
   KAB::ExtensionWidget *wdg = 0;
-  while ( ( wdg = wdgIt.current() ) != 0 )
-    mExtensionWidgetList.remove( wdg );
 
-  mExtensionWidgetList.setAutoDelete( false );
-
-  QStringList extensionNames( i18n( "None" ) );
-
-  // add addressee editor as default
-  if ( KABPrefs::instance()->mEditorType == KABPrefs::SimpleEditor ) {
-    wdg = new SimpleAddresseeEditor( mCore, true, this );
-  } else {
-    wdg = new AddresseeEditorWidget( mCore, true, this );
+  {
+    // add 'None' entry
+    ExtensionData data;
+    data.identifier = "none";
+    data.title = i18n( "None" );
+    data.widget = 0;
+    mExtensionList.append( data );
   }
-  wdg->hide();
-  connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
-           SIGNAL( modified( const KABC::Addressee::List& ) ) );
-  mExtensionWidgetList.append( wdg );
-  extensionNames.append( wdg->title() );
+
+  {
+    // add addressee editor as default
+    if ( KABPrefs::instance()->mEditorType == KABPrefs::SimpleEditor ) {
+      wdg = new SimpleAddresseeEditor( mCore, true, this );
+    } else {
+      wdg = new AddresseeEditorWidget( mCore, true, this );
+    }
+    wdg->hide();
+
+    connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
+             SIGNAL( modified( const KABC::Addressee::List& ) ) );
+
+    ExtensionData data;
+    data.identifier = wdg->identifier();
+    data.title = wdg->title();
+    data.widget = wdg;
+    mExtensionList.append( data );
+  }
 
   // load the other extensions
-  QStringList activeExtensions = KABPrefs::instance()->mActiveExtensions;
-
   KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );
   KTrader::OfferList::ConstIterator it;
 
@@ -150,20 +175,25 @@ void ExtensionManager::createExtensionWidgets()
       continue;
     }
 
-    if ( !activeExtensions.contains( extensionFactory->identifier() ) )
-      continue;
-
     wdg = extensionFactory->extension( mCore, this );
     if ( wdg ) {
       wdg->hide();
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );
-      mExtensionWidgetList.append( wdg );
-      extensionNames.append( wdg->title() );
+
+      ExtensionData data;
+      data.identifier = wdg->identifier();
+      data.title = wdg->title();
+      data.widget = wdg;
+      mExtensionList.append( data );
     }
   }
 
-  mActionExtensions->setItems( extensionNames );
+  QStringList extensionTitles;
+  for ( dataIt = mExtensionList.begin(); dataIt != mExtensionList.end(); ++dataIt )
+    extensionTitles.append( (*dataIt).title );
+
+  mActionExtensions->setItems( extensionTitles );
   mCurrentExtensionWidget = 0;
 }
 
