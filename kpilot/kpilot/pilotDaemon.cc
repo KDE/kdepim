@@ -1134,6 +1134,8 @@ int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
+	KLocale::setMainCatalogue("kpilot");
+
 	KAboutData about("kpilotDaemon",
 		I18N_NOOP("KPilot Daemon"),
 		KPILOT_VERSION,
@@ -1152,6 +1154,7 @@ int main(int argc, char **argv)
 	about.addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(daemonoptions,"kpilotconfig");
