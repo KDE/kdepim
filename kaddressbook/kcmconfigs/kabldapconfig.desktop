@@ -13,6 +13,7 @@ X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
 X-KDE-CfgDlgHierarchy=KAB
 
 Name=LDAP Lookup
+Name[ar]=البحث في LDAP
 Name[bg]=Търсене в LDAP
 Name[bs]=LDAP pretraga
 Name[ca]=Recerca LDAP
@@ -90,6 +91,7 @@ Comment[zh_CN]=配置地址簿 LDAP 设置
 Keywords=kaddressbook, configure, settings, LDAP
 Keywords[be]=K Адрасная кніга, настроіць, настройкі, kaddressbook, configure, settings, LDAP
 Keywords[bg]=адресник,адрес,адресна,книга,сървър,всички,kaddressbook, configure, settings, LDAP
+Keywords[br]=kaddressbook, kefluniañ, dibarzhoù, LDAP
 Keywords[bs]=kaddressbook, configure, settings, LDAP, podesi, postavke, podesite, konfiguracija
 Keywords[ca]=llibreta d'adreces, configura, opcions, LDAP
 Keywords[cs]=kniha adres,nastavení,LDAP

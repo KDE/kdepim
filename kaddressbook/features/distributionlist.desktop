@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_distributionlist
 Name=KAB Distribution List Plugin
+Name[ar]=ملحق قائمة توزيع KAB
 Name[be]=Дапаўненьне KAB "Сьпіс распаўсюджваньня"
 Name[bs]=KAB dodatak za distribucione liste
 Name[ca]=Connector KAB de llista de distribució
@@ -39,6 +40,7 @@ Name[uk]=Втулок списку розповсюдження KAB
 Name[uz]=Тарқатиш рўйхат плагини
 Name[zh_CN]=KAB 分发列表插件
 Comment=Plugin for managing distribution lists
+Comment[ar]=ملحق لإدارة قوائم التوزيع
 Comment[be]=Дапаўненьне для кіраваньня сьпісамі распаўсюджваньня
 Comment[bg]=Приставка за управление на списъци
 Comment[bs]=Dodatak za upravljanje distribucionim listama

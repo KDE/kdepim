@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=Service
 Name=Mail
 Name[be]=Пошта
+Name[br]=Lizher
 Name[ca]=Correu
 Name[cs]=Pošta
 Name[cy]=Ebost

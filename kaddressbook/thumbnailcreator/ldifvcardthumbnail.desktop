@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Electronic Business Card Files
+Name[ar]=ملفّات بطاقة الأعمال الإلكترونيّة
 Name[bg]=Файлове за електронна визитка
 Name[bs]=Datoteke elektronskih vizit karti
 Name[ca]=Fitxers targeta de visita electrònica
