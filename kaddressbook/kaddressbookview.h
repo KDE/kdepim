@@ -96,7 +96,7 @@ class KAddressBookView : public QWidget
     virtual void writeConfig( KConfig *config );
 
     /**
-      Returns a QString with all the selected email addresses contactenated
+      Returns a QString with all the selected email addresses concatenated
       together with a ',' seperator.
      */
     virtual QString selectedEmails();
