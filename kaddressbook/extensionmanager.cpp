@@ -127,10 +127,8 @@ void ExtensionManager::createExtensionWidgets()
 
   KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );
   KTrader::OfferList::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    if ( !(*it)->hasServiceType( "KAddressBook/Extension" ) )
-      continue;
 
+  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
     if ( !factory ) {
       kdDebug(5720) << "ExtensionManager::loadExtensions(): Factory creation failed" << endl;
