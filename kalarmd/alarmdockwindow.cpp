@@ -68,9 +68,9 @@ AlarmDockWindow::AlarmDockWindow(KOAlarmClient *client, QWidget *parent,
   // Set up the context menu
   mAlarmsEnabledId = contextMenu()->insertItem(i18n("Alarms Enabled"),
                                               this, SLOT(toggleAlarmsEnabled()));
-  mAutostartGuiId = contextMenu()->insertItem(i18n("Display this tray icon at login"),
+  mAutostartGuiId = contextMenu()->insertItem(i18n("Display This Tray Icon at Login"),
                                               this, SLOT(toggleGuiAutostart()));
-  contextMenu()->insertItem( i18n("Configure Alarm Daemon.."), this,
+  contextMenu()->insertItem( i18n("Configure Alarm Daemon..."), this,
                              SLOT( configureAlarmDaemon() ) );
   
   contextMenu()->setItemChecked(mAutostartGuiId, autostartGui);
