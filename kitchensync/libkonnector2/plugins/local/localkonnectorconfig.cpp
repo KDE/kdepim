@@ -62,9 +62,13 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   mAddressBookFile->setMode( KFile::File | KFile::LocalOnly );
   topLayout->addWidget( mAddressBookFile );
 
-  button = new QPushButton( i18n("Select From Existing Resources..."), this );
-  connect( button, SIGNAL( clicked() ), SLOT( selectAddressBookResource() ) );
-  topLayout->addWidget( button );
+  mAddressBookFileButton = new QPushButton( i18n("Select From Existing Resources..."), this );
+  connect( mAddressBookFileButton, SIGNAL( clicked() ), SLOT( selectAddressBookResource() ) );
+  topLayout->addWidget( mAddressBookFileButton );
+
+  mUseStdAddressBook = new QCheckBox( i18n( "Use personal address book" ), this );
+  connect( mUseStdAddressBook, SIGNAL( toggled( bool ) ), SLOT( useStdAddressBook( bool ) ) );
+  topLayout->addWidget( mUseStdAddressBook );
 }
 
 LocalKonnectorConfig::~LocalKonnectorConfig()
@@ -77,6 +81,8 @@ void LocalKonnectorConfig::loadSettings( KRES::Resource *r )
   if ( konnector ) {
     mCalendarFile->setURL( konnector->calendarFile() );
     mAddressBookFile->setURL( konnector->addressBookFile() );
+    mUseStdAddressBook->setChecked( konnector->useStdAddressBook() );
+    useStdAddressBook( konnector->useStdAddressBook() );
   }
 }
 
@@ -86,6 +92,7 @@ void LocalKonnectorConfig::saveSettings( KRES::Resource *r )
   if ( konnector ) {
     konnector->setCalendarFile( mCalendarFile->url() );
     konnector->setAddressBookFile( mAddressBookFile->url() );
+    konnector->setUseStdAddressBook( mUseStdAddressBook->isChecked() );
   }
 }
 
@@ -139,6 +146,12 @@ void LocalKonnectorConfig::selectCalendarResource()
       mCalendarFile->lineEdit()->setText( file );
     }
   }
+}
+
+void LocalKonnectorConfig::useStdAddressBook( bool state )
+{
+  mAddressBookFile->setEnabled( !state );
+  mAddressBookFileButton->setEnabled( !state );
 }
 
 #include "localkonnectorconfig.moc"

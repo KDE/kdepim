@@ -28,6 +28,7 @@
 #include <bookmarksyncee.h>
 
 #include <kabc/resourcefile.h>
+#include <kabc/stdaddressbook.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
@@ -47,15 +48,20 @@ extern "C"
 
 
 LocalKonnector::LocalKonnector( const KConfig *config )
-    : Konnector( config ), mConfigWidget( 0 )
+    : Konnector( config ), mConfigWidget( 0 ), mUseStdAddressBook( false )
 {
   if ( config ) {
     mCalendarFile = config->readPathEntry( "CalendarFile" );
     mAddressBookFile = config->readPathEntry( "AddressBookFile" );
     mBookmarkFile = config->readPathEntry( "BookmarkFile" );
+    mUseStdAddressBook = config->readBoolEntry( "UseStdAddressBook", false );
   }
 
-  mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
+  if ( mUseStdAddressBook )
+    mAddressBookSyncee = new AddressBookSyncee( KABC::StdAddressBook::self() );
+  else
+    mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
+
   mAddressBookSyncee->setSource( i18n( "Local" ) );
   mCalendarSyncee = new CalendarSyncee( &mCalendar );
   mCalendarSyncee->setSource( i18n( "Local" ) );
@@ -79,6 +85,7 @@ void LocalKonnector::writeConfig( KConfig *config )
   config->writePathEntry( "CalendarFile", mCalendarFile );
   config->writeEntry( "AddressBookFile", mAddressBookFile );
   config->writeEntry( "BookmarkFile", mAddressBookFile );
+  config->writeEntry( "UseStdAddressBook", mUseStdAddressBook );
 }
 
 KSync::Kapabilities LocalKonnector::capabilities()
@@ -122,25 +129,29 @@ bool LocalKonnector::readSyncees()
     }
   }
 
-  if ( !mAddressBookFile.isEmpty() ) {
-    kdDebug() << "LocalKonnector::readSyncee(): addressbook: "
-              << mAddressBookFile << endl;
+  if ( mUseStdAddressBook ) {
+    mAddressBookSyncee->setIdentifier( KABC::StdAddressBook::self()->identifier() );
+  } else {
+    if ( !mAddressBookFile.isEmpty() ) {
+      kdDebug() << "LocalKonnector::readSyncee(): addressbook: "
+                << mAddressBookFile << endl;
 
-    mAddressBookResourceFile->setFileName( mAddressBookFile );
-    if ( !mAddressBook.load() ) {
-      kdDebug() << "Read failed." << endl;
-      return false;
-    }
+      mAddressBookResourceFile->setFileName( mAddressBookFile );
+      if ( !mAddressBook.load() ) {
+        kdDebug() << "Read failed." << endl;
+        return false;
+      }
 
-    kdDebug() << "Read succeeded." << endl;
+      kdDebug() << "Read succeeded." << endl;
 
-    mAddressBookSyncee->reset();
-    mAddressBookSyncee->setIdentifier( mAddressBook.identifier() );
+      mAddressBookSyncee->reset();
+      mAddressBookSyncee->setIdentifier( mAddressBook.identifier() );
   
-    KABC::AddressBook::Iterator it;
-    for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
-      KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
-      mAddressBookSyncee->addEntry( &entry );
+      KABC::AddressBook::Iterator it;
+      for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
+        KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
+        mAddressBookSyncee->addEntry( &entry );
+      }
     }
   }
 
@@ -179,18 +190,23 @@ void LocalKonnector::download( const QString& )
 bool LocalKonnector::writeSyncees()
 {
   if ( !mCalendarFile.isEmpty() ) {
-    if ( !mCalendar.save( mCalendarFile ) ) return false;
+    if ( !mCalendar.save( mCalendarFile ) )
+      return false;
   }
 
-  if ( !mAddressBookFile.isEmpty() ) {
-    KABC::Ticket *ticket;
-    ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
-    if ( !ticket ) {
-      kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
-                  << "addressbook." << endl;
-      return false; 
+  if ( mUseStdAddressBook ) {
+    KABC::StdAddressBook::save();
+  } else {
+    if ( !mAddressBookFile.isEmpty() ) {
+      KABC::Ticket *ticket;
+      ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
+      if ( !ticket ) {
+        kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
+                    << "addressbook." << endl;
+        return false; 
+      }
+      if ( !mAddressBook.save( ticket ) ) return false;
     }
-    if ( !mAddressBook.save( ticket ) ) return false;
   }
 
   // TODO: Write Bookmarks

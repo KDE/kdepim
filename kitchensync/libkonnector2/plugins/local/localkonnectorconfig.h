@@ -24,6 +24,8 @@
 #include <kurlrequester.h>
 #include <kresources/configwidget.h>
 
+#include <qcheckbox.h>
+#include <qpushbutton.h>
 #include <qwidget.h>
 
 namespace KSync {
@@ -41,11 +43,14 @@ class LocalKonnectorConfig : public KRES::ConfigWidget
   protected slots:
     void selectAddressBookResource();
     void selectCalendarResource();
+    void useStdAddressBook( bool );
 
   private:
     KURLRequester *mCalendarFile;
     KURLRequester *mAddressBookFile;
     KURLRequester *mBookmarkFile;
+    QCheckBox *mUseStdAddressBook;
+    QPushButton *mAddressBookFileButton;
 };
 
 }

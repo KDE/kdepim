@@ -76,6 +76,9 @@ class LocalKonnector : public KSync::Konnector
     void setAddressBookFile( const QString &f ) { mAddressBookFile = f; }
     QString addressBookFile() const { return mAddressBookFile; }
 
+    void setUseStdAddressBook( bool value ) { mUseStdAddressBook = value; }
+    bool useStdAddressBook() const { return mUseStdAddressBook; }
+
     void setBookmarkFile( const QString &f ) { mBookmarkFile = f; }
     QString bookmarkFile() const { return mBookmarkFile; }
 
@@ -87,6 +90,7 @@ class LocalKonnector : public KSync::Konnector
 
     KCal::CalendarLocal mCalendar;
     KABC::AddressBook mAddressBook;
+    bool mUseStdAddressBook;
     KABC::ResourceFile *mAddressBookResourceFile;
     
     KSync::AddressBookSyncee *mAddressBookSyncee;
