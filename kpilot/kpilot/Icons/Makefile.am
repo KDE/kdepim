@@ -4,7 +4,7 @@ kpilotDaemonicondir = $(kde_datadir)/kpilot/icons
 kpilotDaemonicon_ICON = hotsync busysync nosync
 
 kpiloticondir = $(kde_datadir)/kpilot/icons
-kpiloticon_ICON = backup fastsync restore
+kpiloticon_ICON = backup fastsync fullsync listsync restore
 
 KDE_ICON = kpilot kpilotDaemon
 
