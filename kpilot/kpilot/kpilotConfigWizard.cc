@@ -158,7 +158,7 @@ void ConfigWizard::accept()
 			todoConfig->setCalendarFile( "$HOME/evolution/local/Tasks/tasks.ics" );
 			todoConfig->setConduitVersion( version );
 
-			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or todo list using KPilot please quit Evolution before the sync, otherwise you will lose data."), i18n("Restrictions with Evolution"));
+			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or to-do list using KPilot please quit Evolution before the sync, otherwise you will lose data."), i18n("Restrictions with Evolution"));
 			break;
 		case eAppNone:
 			conduits.clear();

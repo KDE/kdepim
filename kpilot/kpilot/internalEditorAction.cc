@@ -184,7 +184,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		PilotTodoEntry serialTodo(fAppInfo, serialrec);
 		localEntry=localTodo.getTextRepresentation(true);
 		serialEntry=serialTodo.getTextRepresentation(true);
-		recType=i18n("todo entry");
+		recType=i18n("to-do entry");
 	}
 	else
 	if (dbName=="MemoDB")

@@ -55,9 +55,9 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 
 	fInstance = new KInstance("todoconduit");
 	fAbout = new KAboutData("todoConduit",
-		I18N_NOOP("ToDo Conduit for KPilot"),
+		I18N_NOOP("To-do Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the ToDo Conduit for KPilot"),
+		I18N_NOOP("Configures the To-do Conduit for KPilot"),
 		KAboutData::License_GPL,
 		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
 	fAbout->addAuthor("Dan Pilone",

@@ -41,10 +41,10 @@ ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
 {
 	FUNCTIONSETUP;
-	fConduitName = i18n("ToDo");
+	fConduitName = i18n("To-do");
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,VCalConduitFactoryBase::about());
 
-	fConfigWidget->fSyncDestination->setTitle(i18n("ToDo Destination"));
+	fConfigWidget->fSyncDestination->setTitle(i18n("To-do Destination"));
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()

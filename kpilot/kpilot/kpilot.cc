@@ -305,9 +305,9 @@ void KPilotInstaller::initComponents()
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-	ADDICONPAGE(i18n("Todo Viewer"),CSL1("kpilot/kpilot-todo.png"));
+	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilot/kpilot-todo.png"));
 	addComponentPage(new TodoWidget(w,defaultDBPath),
-		i18n("Todo Viewer"));
+		i18n("To-do Viewer"));
 
 	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),

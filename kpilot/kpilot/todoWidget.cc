@@ -181,11 +181,11 @@ void TodoWidget::showComponent()
 #endif
 
 #if KDE_VERSION<220
-		s = i18n("There are still %1 todo editing windows open.")
+		s = i18n("There are still %1 to-do editing windows open.")
 			.arg(QString::number(fPendingTodos));
 #else
-		s = i18n("There is still an todo editing window open.",
-			"There are still %n todo editing windows open.",
+		s = i18n("There is still a to-do editing window open.",
+			"There are still %n to-do editing windows open.",
 			fPendingTodos);
 #endif
 		return false;
@@ -225,14 +225,14 @@ void TodoWidget::setupWidget()
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
 	QWhatsThis::add(fCatList,
-		i18n("<qt>Select the category of todos to display here.</qt>"));
+		i18n("<qt>Select the category of to-dos to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
 	label->setBuddy(fCatList);
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new TodoListView(this);
-	fListBox->addColumn( i18n( "Todo Item" ) );
+	fListBox->addColumn( i18n( "To-do Item" ) );
 	fListBox->setAllColumnsShowFocus( TRUE );
 	fListBox->setResizeMode( KListView::LastColumn );
 	fListBox->setFullWidth( TRUE );
@@ -250,11 +250,11 @@ void TodoWidget::setupWidget()
 	connect(fListBox, SIGNAL(itemRenamed(QListViewItem*, const QString &, int)),
 		this, SLOT(slotItemRenamed(QListViewItem*, const QString &, int)));
 	QWhatsThis::add(fListBox,
-		i18n("<qt>This list displays all the todos "
+		i18n("<qt>This list displays all the to-dos "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
 
-	label = new QLabel(i18n("Todo info:"), this);
+	label = new QLabel(i18n("To-do info:"), this);
 	grid->addWidget(label, 0, 2);
 
 	// todo info text view
@@ -269,7 +269,7 @@ void TodoWidget::setupWidget()
 	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
 
 	wt = KPilotSettings::internalEditors() ?
-		i18n("<qt>You can edit a todo when it is selected.</qt>") :
+		i18n("<qt>You can edit a to-do when it is selected.</qt>") :
 		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
 	QWhatsThis::add(fEditButton,wt);
 
@@ -277,8 +277,8 @@ void TodoWidget::setupWidget()
 	grid->addWidget(button, 2, 1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
 	wt = KPilotSettings::internalEditors() ?
-		i18n("<qt>Add a new todo to the todo list.</qt>") :
-		i18n("<qt><i>Adding new todos is disabled by the 'internal editors' setting.</i></qt>");
+		i18n("<qt>Add a new to-do to the to-do list.</qt>") :
+		i18n("<qt><i>Adding new to-dos is disabled by the 'internal editors' setting.</i></qt>");
 	QWhatsThis::add(button, wt);
 	button->setEnabled(KPilotSettings::internalEditors());
 
@@ -287,7 +287,7 @@ void TodoWidget::setupWidget()
 	connect(fDeleteButton, SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
 	wt = KPilotSettings::internalEditors() ?
-		i18n("<qt>Delete the selected todo from the todo list.</qt>") :
+		i18n("<qt>Delete the selected to-do from the to-do list.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
 	QWhatsThis::add(fDeleteButton,wt);
 }
@@ -415,10 +415,10 @@ void TodoWidget::slotCreateNewRecord()
 #endif
 
 		KMessageBox::sorry(this,
-			i18n("You cannot add todos to the todo list "
+			i18n("You cannot add to-dos to the to-do list "
 				"until you have done a HotSync at least once "
 				"to retrieve the database layout from your Pilot."),
-			i18n("Cannot Add New Todo"));
+			i18n("Cannot Add New To-do"));
 
 		if (myDB)
 			KPILOT_DELETE( myDB );

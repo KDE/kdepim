@@ -126,7 +126,7 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
     // now prepare for syncing
     _syncWithKMail = true;
     if ( todos ) {
-      logMessage( i18n("Syncing todos with KMail" ));
+      logMessage( i18n("Syncing to-dos with KMail" ));
       c->setGroup("todoOptions");
       QString fn = c->readPathEntry( "CalFile" );
       c->writePathEntry( "CalFileBackup" ,fn );
@@ -188,7 +188,7 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
  QString filename;
  KConfig*c=KPilotSettings::self()->config();
  if ( todos ) {
-   logMessage( i18n("Rewriting Todos to KMail..." ));
+   logMessage( i18n("Rewriting to-dos to KMail..." ));
    c->setGroup("todoOptions");
    filename = c->readPathEntry( "CalFile" );
    c->writePathEntry( "CalFile", c->readPathEntry( "CalFileBackup" ) );
