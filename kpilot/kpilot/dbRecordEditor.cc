@@ -47,8 +47,8 @@
 
 #ifdef USE_KHEXEDIT
 #include <khexedit/byteseditinterface.h>
-#include <khexedit/hexcolumninterface.h>
-#include <khexedit/textcolumninterface.h>
+#include <khexedit/valuecolumninterface.h>
+#include <khexedit/charcolumninterface.h>
 using namespace KHE;
 #endif
 
@@ -180,22 +180,22 @@ void DBRecordEditor::initWidgets()
 		fRecordDataIf = KHE::bytesEditInterface( fRecordData );
 		Q_ASSERT( fRecordDataIf ); // This should not fail!
 
-		KHE::HexColumnInterface *HexColumn = hexColumnInterface( fRecordData );
-		if( HexColumn )
+		KHE::ValueColumnInterface *ValueColumn = valueColumnInterface( fRecordData );
+		if( ValueColumn )
 		{
-			HexColumn->setNoOfBytesPerLine( 16 );
-			HexColumn->setResizeStyle( KHE::HexColumnInterface::LockGrouping );
-//			HexColumn->setCoding( HexColumnInterface::HexadecimalCoding );
-//			HexColumn->setByteSpacingWidth( 2 );
-			HexColumn->setNoOfGroupedBytes( 4 );
-			HexColumn->setGroupSpacingWidth( 8 );
+			ValueColumn->setNoOfBytesPerLine( 16 );
+			ValueColumn->setResizeStyle( KHE::ValueColumnInterface::LockGrouping );
+//			ValueColumn->setCoding( ValueColumnInterface::HexadecimalCoding );
+//			ValueColumn->setByteSpacingWidth( 2 );
+			ValueColumn->setNoOfGroupedBytes( 4 );
+			ValueColumn->setGroupSpacingWidth( 8 );
 		}
 
-		KHE::TextColumnInterface *TextColumn = textColumnInterface( fRecordData );
-		if( TextColumn )
+		KHE::CharColumnInterface *CharColumn = charColumnInterface( fRecordData );
+		if( CharColumn )
 		{
-			TextColumn->setShowUnprintable( false );
-//			TextColumn->setSubstituteChar( '*' );
+			CharColumn->setShowUnprintable( false );
+//			CharColumn->setSubstituteChar( '*' );
 		}
 	}
 	else
