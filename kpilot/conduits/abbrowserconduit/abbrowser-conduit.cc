@@ -65,17 +65,25 @@ int main(int argc, char* argv[])
 		"Abbrowser Conduit author",
 		"stern@enews.nrl.navy.mil");
     
-    AbbrowserConduit conduit(a.getMode());
+    AbbrowserConduit conduit(a.getMode(), a.getDBSource());
     a.setConduit(&conduit);
     cout << "AbbrowserConduit about to call exec" << endl;
     return a.exec(true /* with DCOP support */, false);
     }
 
-AbbrowserConduit::AbbrowserConduit(BaseConduit::eConduitMode mode)
-      : BaseConduit(mode),
+AbbrowserConduit::AbbrowserConduit(BaseConduit::eConduitMode mode,
+				   BaseConduit::DatabaseSource source)
+      : BaseConduit(mode, source),
 	fDcop(NULL),
 	fAddressAppInfo()
     {
+    if (source == Local)
+	qDebug("AbbrowserConduit::AbbrowserConduit use local");
+    else if (source == ConduitSocket)
+	qDebug("AbbrowserConduit::AbbrowserConduit conduit socket");
+    else
+	qDebug("AbbrowserConduit::AbbrowserConduit undefined source");
+      
     }
 
 AbbrowserConduit::~AbbrowserConduit()
@@ -362,6 +370,7 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry)
     // this marks that this field has been synced
     abEntry.setModified(false);
 
+    showContactEntry(abEntry);
     // save over kdcop to abbrowser
     }
 
@@ -374,17 +383,152 @@ void AbbrowserConduit::_savePilotAddress(PilotAddress &address,
     // and save the ab entry
     }
 
-void AbbrowserConduit::doSync()
+void AbbrowserConduit::_setAppInfo()
     {
-    fDcop = KApplication::kApplication()->dcopClient();
-    _startAbbrowser();
-    
     // get the address application header information
     unsigned char * buffer = new unsigned char [PilotAddress::APP_BUFFER_SIZE];
     int appLen = readAppInfo(buffer);
     unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
     delete []buffer;
     buffer = NULL;
+    }
+
+bool AbbrowserConduit::_equal(const PilotAddress &piAddress,
+			      const ContactEntry &abEntry) const
+    {
+    if (piAddress.getField(entryLastname) != abEntry.getLastName())
+	return false;
+    if (piAddress.getField(entryFirstname) != abEntry.getFirstName())
+	return false;
+    if (piAddress.getField(entryTitle) != abEntry.getJobTitle())
+	return false;
+    if (piAddress.getField(entryCompany) != abEntry.getCompany())
+	return false;
+    if (piAddress.getField(entryNote) != abEntry.getNote())
+	return false;
+    if (piAddress.getPhoneField(PilotAddress::eWork) !=
+	abEntry.getBusinessPhone())
+	return false;
+    if (piAddress.getPhoneField(PilotAddress::eHome) != abEntry.getHomePhone())
+	return false;
+    if (piAddress.getPhoneField(PilotAddress::eEmail) != abEntry.getEmail())
+	return false;
+    if (piAddress.getPhoneField(PilotAddress::eFax) !=abEntry.getBusinessFax())
+	return false;
+    if (piAddress.getPhoneField(PilotAddress::eMobile)
+	!= abEntry.getMobilePhone())
+	return false;
+    ContactEntry::Address *address = abEntry.getHomeAddress();
+    if (piAddress.getField(entryAddress) != address->getStreet())
+	{
+	delete address;
+	address = abEntry.getBusinessAddress();
+	if (piAddress.getField(entryAddress) != address->getStreet())
+	    {
+	    delete address;
+	    return false;
+	    }
+	}
+    if (piAddress.getField(entryCity) != address->getCity())
+	{
+	delete address;
+	return false;
+	}
+    if (piAddress.getField(entryState) != address->getState())
+	{
+	delete address;
+	return false;
+	}
+    if (piAddress.getField(entryZip) != address->getZip())
+	{
+	delete address;
+	return false;
+	}
+    if (piAddress.getField(entryCountry) != address->getCountry())
+	{
+	delete address;
+	return false;
+	}
+    
+    delete address;
+    return true;
+    }
+
+ContactEntry *
+AbbrowserConduit::_findMatch(const QDict<ContactEntry> entries,
+			     const PilotAddress &pilotAddress) const
+    {
+    return NULL;
+    }
+
+
+void AbbrowserConduit::doBackup()
+    {
+    qDebug("AbbrowserConduit::doBackup()");
+    
+    if (!fDcop)
+	fDcop = KApplication::kApplication()->dcopClient();
+    _startAbbrowser();
+    _setAppInfo();
+    
+    // get the contacts from abbrowser
+    QDict<ContactEntry> abbrowserContacts;
+    if (!_getAbbrowserContacts(abbrowserContacts))
+	{
+	qDebug("AbbrowserConduit::doBackup() unable to get contacts");
+	return;
+	}
+
+    // get the idContactMap and the newContacts
+    // - the idContactMap maps Pilot unique record (address) id's to
+    //   a Abbrowser ContactEntry; allows for easy lookup and comparisons
+    // - created from the list of Abbrowser Contacts
+    QMap<recordid_t, ContactEntry *> idContactMap;
+    QList<ContactEntry> newContacts;
+    _mapContactsToPilot(abbrowserContacts, idContactMap, newContacts);
+
+    // iterate through all records in palm pilot
+    int recIndex=0;
+    for (PilotRecord *record = readRecordByIndex(recIndex); record != NULL; 
+	 recIndex++, record = readRecordByIndex(recIndex))
+	{
+	PilotAddress pilotAddress(fAddressAppInfo, record);
+	
+	// if already stored in the abbrowser
+	if (idContactMap.contains( pilotAddress.id() ))
+	    {
+	    ContactEntry *abEntry = idContactMap[pilotAddress.id()];
+	    assert(abEntry != NULL);
+
+	    // if equal, do nothing since it is already there
+	    if (!_equal(pilotAddress, *abEntry))
+		// if not equal, let the user choose what to do
+		_handleConflict( &pilotAddress, abEntry);
+	    }
+	else
+	    {
+	    // look for the possible match of names
+	    ContactEntry *abEntry =
+		_findMatch(abbrowserContacts, pilotAddress);
+	    if (abEntry)
+		_handleConflict(&pilotAddress, abEntry);
+	    else  // if not found in the abbrowser contacts, add it
+		{
+		ContactEntry newEntry;
+		_copy(newEntry, pilotAddress);
+		_saveAbEntry(newEntry);
+		}
+	    }
+	}
+    }
+
+void AbbrowserConduit::doSync()
+    {
+    if (!fDcop)
+	fDcop = KApplication::kApplication()->dcopClient();
+    _startAbbrowser();
+    _setAppInfo();
+    
     
     // get the contacts from abbrowser
     QDict<ContactEntry> abbrowserContacts;

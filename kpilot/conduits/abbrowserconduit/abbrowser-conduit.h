@@ -23,9 +23,12 @@ class AbbrowserConduit : public BaseConduit
     {
     public:
       AbbrowserConduit(BaseConduit::eConduitMode mode);
+      AbbrowserConduit(BaseConduit::eConduitMode mode,
+		       BaseConduit::DatabaseSource dbSource);
       virtual ~AbbrowserConduit();
       
       virtual void doSync();
+      virtual void doBackup();
       virtual QWidget* aboutAndSetup();
       
       virtual const char* dbInfo() ; // { return NULL; }
@@ -39,6 +42,7 @@ class AbbrowserConduit : public BaseConduit
       void readConfig();
       /** Start the Abbrowser application */
       void _startAbbrowser();
+      void _setAppInfo();
       void _addToAbbrowser(const PilotAddress &address);
       void _addToPalm(ContactEntry &entry);
       void _handleConflict(PilotAddress *piAddress, ContactEntry *abEntry);
@@ -51,7 +55,10 @@ class AbbrowserConduit : public BaseConduit
       void _copy(ContactEntry &toAbEntry, const PilotAddress &fromPilotAddr);
       void _setPilotAddress(PilotAddress &toPilotAddr,
 			    const ContactEntry::Address &abAddress);
-      
+      bool _equal(const PilotAddress &piAddress,
+		  const ContactEntry &abEntry) const;
+      ContactEntry *_findMatch(const QDict<ContactEntry> entries,
+			       const PilotAddress &pilotAddress) const;
       /** Given a list of contacts, creates the pilot id to contact map
        *  and a list of new contacts in O(n) time
        */
