@@ -1551,3 +1551,5 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
   QString pathName = KGlobal::dirs()->saveLocation("data", QString("kpilot/DBBackup/") + getPilotUser().getUserName() + "/");
   return new PilotLocalDatabase(pathName.latin1(), database.latin1());
 }
+
+// $Log:$

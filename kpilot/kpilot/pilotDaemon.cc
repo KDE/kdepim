@@ -18,6 +18,8 @@
 
 static const char *id="$Id$";
 
+#include "options.h"
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -55,7 +57,6 @@ static const char *id="$Id$";
 #include "hotsync.h"
 #include "busysync.h"
 #include "statusMessages.h"
-#include "options.h"
 #include "kpilot.h"
 
 static KCmdLineOptions kpilotoptions[] =
@@ -66,11 +67,11 @@ static KCmdLineOptions kpilotoptions[] =
 
 
 
-int PilotDaemon::getPilotSpeed(KConfig *config)
+int PilotDaemon::getPilotSpeed(KConfig& config)
 {
 	FUNCTIONSETUP;
 
-	int speed = config->readNumEntry("PilotSpeed", 0);
+	int speed = config.readNumEntry("PilotSpeed", 0);
 
 	// Translate the speed entry in the
 	// config file to something we can
@@ -132,6 +133,7 @@ int PilotDaemon::getPilotSpeed(KConfig *config)
 /* virtual */ void PilotDaemon::closeEvent(QCloseEvent *e)
 {
 	FUNCTIONSETUP;
+	(void) e;
 	quitImmediately();
 }
 
@@ -145,22 +147,20 @@ PilotDaemon::PilotDaemon() :
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig();
-	config->setGroup(QString());
+	KConfig& config = KPilotLink::getConfig();
   
-  fPilotDevice = config->readEntry("PilotDevice");
+	fPilotDevice = config.readEntry("PilotDevice");
 
 
 	getPilotSpeed(config);
 
-  fStartKPilot = (bool) config->readNumEntry("StartKPilotAtHotSync", 0);
-  delete config;
-  fStatusConnections.setAutoDelete(true);
+	fStartKPilot = (bool) config.readNumEntry("StartKPilotAtHotSync", 0);
+	fStatusConnections.setAutoDelete(true);
 
 	setupWidget();
 	setupConnections();
 	if (fStatus == ERROR) return;
-  setupSubProcesses();
+	setupSubProcesses();
 }
 
 
@@ -182,12 +182,11 @@ PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
 
-  KConfig* config = KPilotLink::getConfig();
+	KConfig& config = KPilotLink::getConfig();
   
-  fPilotDevice = config->readEntry("PilotDevice");
+	fPilotDevice = config.readEntry("PilotDevice");
 	getPilotSpeed(config);
-  fStartKPilot = (bool) config->readNumEntry("StartKPilotAtHotSync", 0);
-  delete config;
+  fStartKPilot = (bool) config.readNumEntry("StartKPilotAtHotSync", 0);
 
 	if (fMonitorProcess)
 	{
@@ -428,13 +427,11 @@ PilotDaemon::slotDBBackupFinished()
 		cerr << fname << ": DB Syncing finished." << endl;
 	}
 
-	KConfig* config = KPilotLink::getConfig();
-	config->setGroup(QString());
-	if(config->readNumEntry("SyncFiles"))
+	KConfig& config = KPilotLink::getConfig();
+	if(config.readNumEntry("SyncFiles"))
 	{
 	  getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/")));
 	}
-	delete config;
 	emit(endHotSync());
 }
 
@@ -752,7 +749,7 @@ PilotDaemon::sendStatus(const int status)
 }
 
 void
-PilotDaemon::saveProperties(KConfig*)
+PilotDaemon::saveProperties(KConfig&)
 {
 	FUNCTIONSETUP;
 
@@ -872,14 +869,14 @@ int main(int argc, char* argv[])
 
 	KApplication a(true,true);
 
-	KConfig *c=KPilotLink::getConfig();
+	KConfig& c=KPilotLink::getConfig();
 #else
 	KApplication a(argc,argv,"pilotDaemon");
 	handleOptions(argc,argv);
 #endif
 
 #ifdef KDE2
-	if (c->readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	if (c.readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
 	{
 		cerr << fname << ": Is still not configured for use."
 			<< endl;

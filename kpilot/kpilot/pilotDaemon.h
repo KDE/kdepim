@@ -70,7 +70,7 @@ signals:
   void endHotSync();
 
 private:
-	int getPilotSpeed(KConfig *);
+	int getPilotSpeed(KConfig&);
 
   void setupWidget();
   void setupSubProcesses();
@@ -78,7 +78,7 @@ private:
   void startHotSync();
   void sendStatus(const int status);
   void reloadSettings();
-  void saveProperties(KConfig*);
+  void saveProperties(KConfig&);
   void sendRecord(PilotRecord* rec);
   void testDir(QString name);
   bool quit() { return fQuit; }
