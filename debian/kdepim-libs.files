@@ -1,0 +1,16 @@
+usr/lib/libkimap.so.0.0.0
+usr/lib/libkimap.so.0
+usr/lib/libkimap.la
+usr/lib/librmm.so.1.0.0
+usr/lib/librmm.so.1
+usr/lib/librmm.la
+usr/lib/libvcard.so.0.0.0
+usr/lib/libvcard.so.0
+usr/lib/libvcard.la
+usr/lib/libkgantt.so.0.0.2
+usr/lib/libkgantt.so.0
+usr/lib/libkgantt.la
+usr/lib/libkcal.so.1.0.0
+usr/lib/libkcal.so.1
+usr/lib/libkcal.la
+usr/share/apps/kgantt/*

@@ -1,14 +1,104 @@
-kdepim-cvs (3.0-0.alpha1-1) unstable; urgency=low
+kdepim (4:2.9.9+cvs.20020110-1) unstable; urgency=low
 
-  * new upstream version
+  * Update to HEAD, at the request of the maintainer (Adrian de Groot).
+    - The version in KDE_2_2_BRANCH is buggy and no longer being maintained,
+      so I stepped into sync with HEAD (which will be released with KDE3) at
+      [ade]'s request. Enjoy.
 
- -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 10 Nov 2001 00:01:00 -0700
+ -- Daniel Stone <daniel@sfarc.net>  Fri, 11 Jan 2002 09:47:46 +1100
+
+kdepim (4:2.2.2-4) unstable; urgency=low
+
+  * libical/src/libical/icalyacc.y:
+    - Fix bison errors; thanks, Andrew Suffield. (closes: #124383)
+  * debian/control:
+    - Fix spelling errors. (closes: #124778)
+  * debian/{alarmd,ical2vcal}.sgml, debian/korganizer.manpages, debian/rules:
+    - New manpages.
+  * debian/rules:
+    - Clean up *-stamp in debian-clean.
+  * debian/control:
+    - automake1.5 stuffs up our automake Build-Depend, GAH.
+  * debian/control, debian/rules:
+    - Remove all index.cache.bz2 files in the debian-clean target.
+    - Get rid of other crap while I'm here.
+
+ -- Daniel Stone <daniel@sfarc.net>  Tue, 18 Dec 2001 13:45:28 +1100
+
+kdepim (4:2.2.2-3) unstable; urgency=low
+
+  * New maintainer. (closes: #114106) 
+  * libdif/ldif.c:
+    - Kowtow to gcc3 (well, g++-3)'s fascist sticking to standards, add "using
+    namespace std;" - enable building on hppa.
+  * debian/korganizer.sgml, debian/kpilot.sgml, debian/kandy.sgml:
+    - New manpages.
+  * debian/rules:
+    - Be sure to clean up auto* crap.
+
+ -- Daniel Stone <daniel@sfarc.net>  Fri, 30 Nov 2001 21:53:31 +1100
+
+kdepim (4:2.2.2-2) unstable; urgency=low
+
+  * Sync with upstream
+  * Cleanup documentation for freeze
+  * Update Build-Depends, deps, etc.
+  * Cleanup build process
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 29 Nov 2001 04:10:00 -0700
+
+kdepim (4:2.2.2-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 07 Nov 2001 19:38:00 -0700
+
+kdepim (4:2.2.1-1.5) unstable; urgency=low
+
+  * Don't search for auto* as it hoses things
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 08 Oct 2001 19:38:00 -0700
+
+kdepim (4:2.2.1-1.4) unstable; urgency=low
+
+  * fix configure
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Fri, 05 Oct 2001 01:11:00 -0700
+
+kdepim (4:2.2.1-1.3) unstable; urgency=low
+
+  * Don't use automake since it's hosed
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 03 Oct 2001 01:11:00 -0700
+
+kdepim (4:2.2.1-1.2) unstable; urgency=low
+
+  * Remove libical (Closes: #113668)
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 27 Sep 2001 01:11:00 -0700
+
+kdepim (4:2.2.1-1.1) unstable; urgency=low
+
+  * Fix overwrite (Closes: #112974)
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sun, 23 Sep 2001 18:18:00 -0700
+
+kdepim (4:2.2.1-1) unstable; urgency=low
+ 
+  * new upstream version 2.2.1
+  * Change maintainer
+  * Lintian fixes
+  * Break out libical packages again
+  * Provide undocumented link (Closes: #110361)
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Fri, 07 Sep 2001 12:07:00 -0700
 
 kdepim (4:2.2.0-final-1) unstable; urgency=low
  
   * new upstream version 2.2
+  * Hack build for hppa (Closes: #108273)
  
- -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 30 Jul 2001 00:01:00 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sun, 12 Aug 2001 01:55:00 -0700
 
 kdepim (4:2.2.0-0beta1-5) unstable; urgency=low
  
@@ -251,8 +341,3 @@ kdepim-cvs (2.0-20000516-1.0) experimental; urgency=low
   * Initial Release.
 
  -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 16 May 2000 20:40:02 -0700
-
-Local variables:
-mode: debian-changelog
-add-log-mailing-address: "coolo@kde.org"
-End:

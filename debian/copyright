@@ -4,7 +4,8 @@ It was downloaded via cvs from cvs.kde.org
 
 Copyright:
 
-All programs in this package are released under GPL or the LGPL
+All programs in this package are released under GPL or the LGPL except
+libical which is under the MPL.
 
 ***
     Requires the Qt widget libraries, available at no cost at

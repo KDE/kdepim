@@ -1,0 +1,5 @@
+libkimap 0 kdepim-libs (>= 4:2.2.2-1)
+librmm 1 kdepim-libs (>= 4:2.2.2-1)
+libvcard 0 kdepim-libs (>= 4:2.2.2-1)
+libkgantt 0 kdepim-libs (>= 4:2.2.2-1)
+libkcal 1 kdepim-libs (>= 4:2.2.2-1)
