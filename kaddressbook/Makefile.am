@@ -1,6 +1,7 @@
 INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/features\
 	 -I$(top_srcdir)/kaddressbook/printing -I$(top_srcdir)/kaddressbook/views  \
-	-I$(top_srcdir) $(all_includes)
+	-I$(top_srcdir) -I$(top_builddir)/kaddressbook/printing \
+	-I$(top_builddir)/kaddressbook/details $(all_includes) 
 
 SUBDIRS = details features printing views . pics csv-templates
 
@@ -9,8 +10,8 @@ SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 bin_PROGRAMS = kaddressbook
 
 kaddressbook_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kaddressbook_LDADD   = libkaddressbookpart.la 
-kaddressbook_SOURCES = main.cpp 
+kaddressbook_LDADD   = libkaddressbookpart.la
+kaddressbook_SOURCES = main.cpp
 
 kde_module_LTLIBRARIES = libkaddressbookpart.la
 
