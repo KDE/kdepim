@@ -489,13 +489,24 @@ void AddressEditWidget::typeHighlighted(int index)
           
   if ( !a.isEmpty() ) {
     QString text;
-    text += a.street() + "\n";
+    if ( !a.street().isEmpty() )
+      text += a.street() + "\n";
+
     if ( !a.postOfficeBox().isEmpty() )
       text += a.postOfficeBox() + "\n";
-    text += a.locality() + QString(" ") + a.region() + QString(", ");
-    text += a.postalCode() + "\n";
-    text += a.country() + "\n";
+
+    text += a.locality() + QString(" ") + a.region();
+
+    if ( !a.postalCode().isEmpty() )
+      text += QString(", ") + a.postalCode();
+
+    text += "\n";
+
+    if ( !a.country().isEmpty() )
+      text += a.country() + "\n";
+
     text += a.extended();
+
     mAddressTextEdit->setText(text);
   } else
     mAddressTextEdit->setText("");
