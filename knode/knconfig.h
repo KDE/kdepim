@@ -28,6 +28,7 @@
 #include <qpixmap.h>
 #include <qlist.h>
 #include <qstringlist.h>
+#include <qasciidict.h>
 
 #include <knuminput.h>
 #include <kspell.h>

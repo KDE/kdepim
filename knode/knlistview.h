@@ -30,7 +30,9 @@ class KNLVItemBase : public QListViewItem  {
     KNLVItemBase(KNListView *view);      // restricted to KNListView to prevent that the
     KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails. (single selection in multi-mode hack)
     ~KNLVItemBase();
-    
+
+    void setSelected(bool select);
+
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
     void paintFocus(QPainter *, const QColorGroup & cg, const QRect & r);
@@ -47,22 +49,22 @@ class KNListView : public QListView  {
 
   Q_OBJECT
 
+  friend class KNLVItemBase;
+
   public:
     KNListView(QWidget *parent, const char *name=0);
     ~KNListView();
-    
+
     int sortColumn()                { return sCol; }
     bool ascending()                { return sAsc; }
     void setColAsc(int c, bool a)   { sCol=c; sAsc=a; }
-    
-    virtual void setSelected(QListViewItem *item, bool select);
-    void selectedRemoved()          { exclusiveSelectedItem = 0; }
-    void clear();
-    
+
   public slots:
     void slotSortList(int col);     
       
   protected:
+    void selectedRemoved()          { s_elCount--; }
+    void itemToggled(QListViewItem *i, bool selected);
     void keyPressEvent(QKeyEvent *e);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
@@ -70,13 +72,10 @@ class KNListView : public QListView  {
     int sCol; 
       
   signals:
-    void exSelectionChanged(QListViewItem *);
+    void itemSelected(QListViewItem*);
     void sortingChanged(int);
-    void focusChanged(QFocusEvent*);  
-    
-  private:
-    QListViewItem* exclusiveSelectedItem;     // single selection in multi mode hack... 
-  
+    void focusChanged(QFocusEvent*);
+    int s_elCount;
 };
 
 

@@ -287,6 +287,11 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
     if(a->id()==-1 || a->collection()!=this) {
       if(a->id()!=-1) {
         KNFolder *oldFolder=static_cast<KNFolder*>(a->collection());
+        if(!a->hasContent())
+          if(!oldFolder->loadArticle(a)) {
+            ret=false;
+            continue;
+          }
         KNLocalArticle::List l;
         l.append(a);
         oldFolder->removeArticles(&l, false);
@@ -305,14 +310,6 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
     idx=findId(a->id());
     if(idx!=-1 && at(idx)==a) {
-
-      if(!a->hasContent()) {
-        KNFolder *f=static_cast<KNFolder*>(a->collection());
-        if(!f->loadArticle(a)) {
-          ret=false;
-          continue;
-        }
-      }
 
       //MBox
       ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";

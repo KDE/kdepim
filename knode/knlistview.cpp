@@ -42,8 +42,20 @@ KNLVItemBase::KNLVItemBase(KNListView *view) : QListViewItem(view)
 
 KNLVItemBase::~KNLVItemBase()
 {
-  if ((isSelected())&&(listView()))
-    static_cast<KNListView*>(listView())->selectedRemoved();
+  if(isSelected()) {
+    QListView *lv=listView();
+    if(lv && lv->isA("KNListView"))
+      (static_cast<KNListView*>(lv))->selectedRemoved();
+  }
+}
+
+
+void KNLVItemBase::setSelected(bool select)
+{
+  QListViewItem::setSelected(select);
+  QListView *lv=listView();
+  if(lv && lv->isA("KNListView"))
+    (static_cast<KNListView*>(lv))->itemToggled(this, select);
 }
 
 
@@ -157,16 +169,14 @@ void KNLVItemBase::expandChildren()
 
 
 KNListView::KNListView(QWidget *parent, const char *name)
-  : QListView(parent,name), sAsc(true), sCol(-1), exclusiveSelectedItem(0)
+  : QListView(parent,name), sAsc(true), sCol(-1), s_elCount(0)
 {
   connect(header(), SIGNAL(sectionClicked(int)),
     this, SLOT(slotSortList(int)));
     
   header()->setMovingEnabled(false);
   setFrameStyle(NoFrame);
-  setSelectionMode(QListView::Multi);
-  
-  //setAllColumnsShowFocus(true);
+  setSelectionMode(QListView::Extended);
 }
 
 
@@ -175,23 +185,13 @@ KNListView::~KNListView()
 }
 
 
-void KNListView::setSelected(QListViewItem *item, bool select)
+/*void KNListView::setSelected(QListViewItem *i, bool select)
 {
-  if ((select) && (item)) {         // ignore unselect, like in single selection mode
-    if (exclusiveSelectedItem)
-      QListView::setSelected(exclusiveSelectedItem,false);
-    QListView::setSelected(item,true);
-    exclusiveSelectedItem = item;
-    emit(selectionChanged(item));
-  }
-}
-
-
-void KNListView::clear()
-{
-  exclusiveSelectedItem=0;
-  QListView::clear();
-}
+  kdDebug(5003) << "KNListView::setSelected(QListViewItem *i, bool select)" << endl;
+  QListView::setSelected(i, select);
+  if(i && select)
+    emit( itemSelected(i) );
+}*/
 
 
 void KNListView::slotSortList(int col)
@@ -208,22 +208,81 @@ void KNListView::slotSortList(int col)
 }
 
 
+void KNListView::itemToggled(QListViewItem *i, bool selected)
+{
+  if(selected) {
+    if(++s_elCount==1)
+      emit( itemSelected(i) );
+  }
+  else
+    s_elCount--;
+}
+
+
 void KNListView::keyPressEvent(QKeyEvent *e)
 {
   if ( !e )       return; // subclass bug
 
-  if (e->state() & ShiftButton) {  // lame workaround to avoid multiselection in multiselection mode ;-)
+  /*if (e->state() & ShiftButton) {  // lame workaround to avoid multiselection in multiselection mode ;-)
     e->ignore();
     return;
-  }
-
+  }*/
+  QListViewItem *i=currentItem();
   switch(e->key()) {
-   case Key_Enter:
-   case Key_Return:
-     if (currentItem()) setSelected(currentItem(),true);
-   break;
-   default:
-     QListView::keyPressEvent(e);
+
+    case Key_PageDown:
+      verticalScrollBar()->addPage();
+    break;
+
+    case Key_PageUp:
+      verticalScrollBar()->subtractPage();
+    break;
+
+    case Key_Up:
+      if(i)
+        i=i->itemAbove();
+      if(i) {
+        if(e->state() & ShiftButton)
+          setSelected(i, true);
+        setCurrentItem(i);
+        ensureItemVisible(i);
+      }
+    break;
+
+    case Key_Down:
+      if(i)
+        i=i->itemBelow();
+      if(i) {
+        if(e->state() & ShiftButton)
+          setSelected(i, true);
+        setCurrentItem(i);
+        ensureItemVisible(i);
+      }
+    break;
+
+    case Key_Right:
+      if(i && !i->isOpen() && i->isExpandable())
+        i->setOpen(true);
+    break;
+
+    case Key_Left:
+      if(i && i->isOpen())
+        i->setOpen(false);
+    break;
+
+    case Key_Enter:
+    case Key_Return:
+      if( !(e->state() & ControlButton) )
+        clearSelection();
+      setSelected(i, true);
+    break;
+
+    case Key_Escape:
+      clearSelection();
+    break;
+
+    default:
+      e->ignore();
   }
 }
 
@@ -240,14 +299,13 @@ void KNListView::focusOutEvent(QFocusEvent *e)
 {
   if ( currentItem() ) repaintItem(currentItem());   // hide cursor marker
 
-  if (exclusiveSelectedItem) {
+  /*if (exclusiveSelectedItem) {
     setCurrentItem(exclusiveSelectedItem);
     ensureItemVisible(exclusiveSelectedItem);
-  }
+  } */
 
   emit focusChanged(e);
 }
-
 
 
 //--------------------------------

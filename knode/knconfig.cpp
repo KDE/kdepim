@@ -29,6 +29,7 @@
 #include <kstddirs.h>
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kcharsets.h>
 
 #include "knglobals.h"
 #include "knnntpaccount.h"

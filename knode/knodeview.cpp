@@ -81,7 +81,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   c_olView->setColumnAlignment(1,AlignCenter);
   c_olView->setColumnAlignment(2,AlignCenter);
 
-  connect(c_olView, SIGNAL(selectionChanged(QListViewItem*)),
+  connect(c_olView, SIGNAL(itemSelected(QListViewItem*)),
     this, SLOT(slotCollectionSelected(QListViewItem*)));
   connect(c_olView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotCollectionRMB(QListViewItem*, const QPoint&, int)));
@@ -105,7 +105,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   h_drView->addColumn(i18n("Date (Time)"),102);
   h_drView->setColumnAlignment(2, AlignCenter);
 
-	connect(h_drView, SIGNAL(selectionChanged(QListViewItem*)),
+	connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
 	  this, SLOT(slotArticleSelected(QListViewItem*)));
 	connect(h_drView, SIGNAL(doubleClicked(QListViewItem*)),
 	  this, SLOT(slotArticleDoubleClicked(QListViewItem*)));
@@ -338,7 +338,6 @@ bool KNodeView::cleanup()
 void KNodeView::configChanged()
 {
   KNConfig::Appearance *app=c_fgManager->appearance();
-  KNConfig::ReadNewsGeneral *rng=c_fgManager->readNewsGeneral();
 
   if(l_ongView != app->longGroupList()) {
     l_ongView = app->longGroupList();
@@ -478,8 +477,9 @@ void KNodeView::initActions()
 	                            SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
 	a_ctArtSetThreadUnread    = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this,
 	                            SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
-	a_ctSetArtScore           =0;
-	a_ctArtSetThreadScore     = new KAction(i18n("Set &Score..."), "rotate", Key_S , this,
+	a_ctSetArtScore           = new KAction(i18n("Set &Score"), "rotate", Key_S , this,
+	                            SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
+	a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread"), "rotate", CTRL+Key_S , this,
 	                            SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
 	a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
 	                            SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
@@ -564,7 +564,7 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
   	a_ctArtSetArtUnread->setEnabled(enabled);
   	a_ctArtSetThreadRead->setEnabled(enabled);
   	a_ctArtSetThreadUnread->setEnabled(enabled);
-  	//a_ctSetArtScore->setEnabled(enabled);
+  	a_ctSetArtScore->setEnabled(enabled);
   	a_ctArtSetThreadScore->setEnabled(enabled);
   	a_ctArtToggleIgnored->setEnabled(enabled);
   	a_ctArtToggleWatched->setEnabled(enabled);
@@ -744,6 +744,7 @@ void KNodeView::slotNavNextArt()
   else it=h_drView->firstChild();
 
   if(it) {
+    h_drView->clearSelection();
     h_drView->setSelected(it, true);
     h_drView->setCurrentItem(it);
     h_drView->ensureItemVisible(it);
@@ -761,6 +762,7 @@ void KNodeView::slotNavPrevArt()
   else it=h_drView->firstChild();
 
   if(it) {
+    h_drView->clearSelection();
     h_drView->setSelected(it, true);
     h_drView->setCurrentItem(it);
     h_drView->ensureItemVisible(it);
@@ -809,6 +811,7 @@ void KNodeView::slotNavNextUnreadArt()
   }
 
   if(next) {
+    h_drView->clearSelection();
     h_drView->setSelected(next, true);
     h_drView->setCurrentItem(next);
     h_drView->ensureItemVisible(next);
@@ -860,6 +863,7 @@ void KNodeView::slotNavNextUnreadThread()
     h_drView->setCurrentItem(next);
     if(art->isRead()) slotNavNextUnreadArt();
     else {
+      h_drView->clearSelection();
       h_drView->setSelected(next, true);
       h_drView->ensureItemVisible(next);
     }
@@ -893,6 +897,7 @@ void KNodeView::slotNavNextGroup()
   }
 
   if(next) {
+    c_olView->clearSelection();
     c_olView->setCurrentItem(next);
     c_olView->ensureItemVisible(next);
     c_olView->setSelected(next, true);
@@ -918,6 +923,7 @@ void KNodeView::slotNavPrevGroup()
   }
 
   if(prev) {
+    c_olView->clearSelection();
     c_olView->setCurrentItem(prev);
     c_olView->ensureItemVisible(prev);
     c_olView->setSelected(prev, true);
@@ -1179,6 +1185,25 @@ void KNodeView::slotArtSetThreadUnread()
 void KNodeView::slotArtSetArtScore()
 {
   kdDebug(5003) << "KNodeView::slotArtSetArtScore()" << endl;
+
+  KNRemoteArticle::List l;
+
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected())
+      l.append( static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+
+  if(l.isEmpty())
+    return;
+
+  int score=l.first()->score();
+  KNScoreDialog *sd=new KNScoreDialog(score, knGlobals.topWidget);
+  if(sd->exec()) {
+    score=sd->score();
+    delete sd;
+    a_rtManager->setScore(&l, score);
+  }
+  else
+    delete sd;
 }
 
 
@@ -1252,11 +1277,13 @@ void KNodeView::slotArtDelete()
 {
   kdDebug(5003) << "KNodeView::slotArtDelete()" << endl;
 
-  if(s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal) {
-    KNLocalArticle::List lst;
-    lst.append(static_cast<KNLocalArticle*>(s_electedArticle));
+  KNLocalArticle::List lst;
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected())
+      lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+
+  if(!lst.isEmpty())
     a_rtFactory->deleteArticles(&lst);
-  }
 }
 
 
@@ -1264,11 +1291,13 @@ void KNodeView::slotArtSendNow()
 {
   kdDebug(5003) << "KNodeView::slotArtSendNow()" << endl;
 
-  if(s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal) {
-    KNLocalArticle::List lst;
-    lst.append(static_cast<KNLocalArticle*>(s_electedArticle));
+  KNLocalArticle::List lst;
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected())
+      lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+
+  if(!lst.isEmpty())
     a_rtFactory->sendArticles(&lst, true);
-  }
 }
 
 
@@ -1276,11 +1305,13 @@ void KNodeView::slotArtSendLater()
 {
   kdDebug(5003) << "KNodeView::slotArtSendLater()" << endl;
 
-  if(s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal) {
-    KNLocalArticle::List lst;
-    lst.append(static_cast<KNLocalArticle*>(s_electedArticle));
+  KNLocalArticle::List lst;
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected())
+      lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+
+  if(!lst.isEmpty())
     a_rtFactory->sendArticles(&lst, false);
-  }
 }
 
 
