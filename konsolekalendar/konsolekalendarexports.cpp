@@ -53,7 +53,6 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 
 bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event, QDate date ){
 
-
   // Print Date (in our standard format)
   *ts << I18N_NOOP("Date:") << "\t" <<  date.toString("yyyy-MM-dd") << endl;
 
