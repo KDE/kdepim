@@ -175,6 +175,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
         break;
     }
     mail = aStr.mid( i+1 );
+    if ( mail.endsWith( ">" ) )
+       mail.truncate( mail.length() - 1 );
 
   }else{
 
