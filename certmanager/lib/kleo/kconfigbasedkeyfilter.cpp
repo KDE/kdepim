@@ -77,6 +77,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     mRevoked( DoesNotMatter ),
     mExpired( DoesNotMatter ),
     mDisabled( DoesNotMatter ),
+    mRoot( DoesNotMatter ),
     mCanEncrypt( DoesNotMatter ),
     mCanSign( DoesNotMatter ),
     mCanCertify( DoesNotMatter ),
@@ -112,6 +113,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
   SET( mRevoked, "is-revoked" );
   SET( mExpired, "is-expired" );
   SET( mDisabled, "is-disabled" );
+  SET( mRoot, "is-root-certificate" );
   SET( mCanEncrypt, "can-encrypt" );
   SET( mCanSign, "can-sign" );
   SET( mCanCertify, "can-certify" );
@@ -165,6 +167,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   IS_MATCH( Revoked );
   IS_MATCH( Expired );
   IS_MATCH( Disabled );
+  IS_MATCH( Root );
   CAN_MATCH( Encrypt );
   CAN_MATCH( Sign );
   CAN_MATCH( Certify );
@@ -177,8 +180,6 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   if ( mWasValidated != DoesNotMatter &&
        bool( key.keyListMode() & GpgME::Context::Validate ) != bool( mWasValidated == Set ) )
     return false;
-  if ( key.protocol() == GpgME::Context::CMS )
-    return true; // X.509 doesn't have validity and ownertrust
   switch ( mOwnerTrust ) {
   default:
   case LevelDoesNotMatter:

@@ -43,6 +43,18 @@ Name[xx]=xxRevoked keyxx
 
 [Key Filter #3]
 was-validated=true
+is-root-certificate=true
+is-validity=ultimate
+Name=Trusted root certificate
+
+[Key Filter #4]
+was-validated=true
+is-root-certificate=true
+is-not-validity=ultimate
+Name=Not trusted root certificate
+
+[Key Filter #5]
+was-validated=true
 Name=Other keys
 Name[be]=Іншыя ключы
 Name[da]=Andre nøgler

@@ -78,6 +78,7 @@ namespace Kleo {
     TriState mRevoked;
     TriState mExpired;
     TriState mDisabled;
+    TriState mRoot;
     TriState mCanEncrypt;
     TriState mCanSign;
     TriState mCanCertify;
