@@ -339,13 +339,14 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
   // now, we have to sort it based on dtStart.time()
   Event::List eventListSorted;
   Event::List::Iterator sortIt;
-  for( it.toFirst(); it.current(); ++it ) {
+  Event::List::Iterator eit;
+  for ( eit = eventList.begin(); eit != eventList.end(); ++eit ) {
     sortIt = eventListSorted.begin();
     while ( sortIt != eventListSorted.end() &&
             (*it)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
       ++sortIt;
     }
-    eventListSorted.insert( sortIt, *it );
+    eventListSorted.insert( sortIt, *eit );
   }
   return eventListSorted;
 }
