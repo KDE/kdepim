@@ -59,14 +59,16 @@ bool CalendarAdaptor::localItemHasChanged( const QString &localId )
   KCal::Incidence *i = mResource->incidence( localId );
   if ( !i ) return false;
 
-  if ( mResource->deletedIncidences().find( i ) !=
-    mResource->deletedIncidences().end()
-    || mResource->changedIncidences().find( i ) !=
-    mResource->changedIncidences().end() ) {
+  if ( !mResource->deletedIncidences().isEmpty() && 
+      mResource->deletedIncidences().find( i ) 
+   != mResource->deletedIncidences().end() )
     return true;
-  } else {
-    return false;
-  }
+  if ( !mResource->changedIncidences().isEmpty() &&
+       mResource->changedIncidences().find( i ) 
+    != mResource->changedIncidences().end() )
+    return true;
+    
+  return false;
 }
 
 void CalendarAdaptor::deleteItem( const QString &localId )
