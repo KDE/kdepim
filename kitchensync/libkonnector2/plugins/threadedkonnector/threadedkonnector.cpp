@@ -27,7 +27,7 @@
 
 #include "clientmanager.h"
 
-#include "konnector.h"
+#include "threadedkonnector.h"
 #include "konnectorconfig.h"
 
 using namespace KSync;
@@ -53,6 +53,12 @@ ThreadedPlugin::ThreadedPlugin( const KConfig *config )
 	   SLOT(slotError(const KSync::Error&)) );
   connect( &mClientManager, SIGNAL(signalFinished()),
 	   SLOT(slotFinished()) );
+}
+
+SynceeList ThreadedPlugin::syncees()
+{
+  // TODO: Make this return something useful
+  return SynceeList;
 }
 
 ThreadedPlugin::~ThreadedPlugin() {
@@ -114,4 +120,4 @@ void ThreadedPlugin::slotProgress( const KSync::Progress& p ) {
   progress( p );
 }
 
-#include "konnector.moc"
+#include "threadedkonnector.moc"

@@ -28,7 +28,7 @@
 
 #include "clientmanager.h"
 
-#include "konnector.h"
+#include "threadedkonnector.h"
 #include "konnectorconfig.h"
 
 using namespace Threaded;

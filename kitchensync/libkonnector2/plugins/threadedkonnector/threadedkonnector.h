@@ -56,6 +56,8 @@ namespace Threaded {
      * apply his preferecnes
      */
     void setCapabilities( const KSync::Kapabilities& );
+
+    SynceeList syncees();
     
     bool readSyncees();
     bool writeSyncees();

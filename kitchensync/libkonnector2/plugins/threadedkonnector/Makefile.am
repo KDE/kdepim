@@ -24,7 +24,7 @@ libthreadedkonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$
 
 libthreadedkonnector_la_LIBADD = ../../libkonnector.la
 libthreadedkonnector_la_LDFLAGS = -module $(KDE_PLUGIN)
-libthreadedkonnector_la_SOURCES = konnector.cpp konnectorconfig.cpp \
+libthreadedkonnector_la_SOURCES = threadedkonnector.cpp konnectorconfig.cpp \
   clientmanager.cpp clientthread.cpp
 threadedkonnectordatadir = $(kde_servicesdir)/kresources/konnector
 threadedkonnectordata_DATA = threadedkonnector.desktop
