@@ -1321,6 +1321,9 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
     p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
   }
 
+  // Cancel backwards compatibility mode for subsequent changes by the application
+  incidence->recurrence()->setCompatVersion();
+
   // add categories
   incidence->setCategories(categories);
 
@@ -1337,6 +1340,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 //  kdDebug(5800) << "Read recurrence for " << incidence->summary() << endl;
 
   Recurrence *recur = incidence->recurrence();
+  recur->setCompatVersion(mCalendarVersion);
   recur->unsetRecurs();
 
   struct icalrecurrencetype r = icalproperty_get_rrule(rrule);
