@@ -154,6 +154,12 @@ static bool checkKeyUsage( const std::vector<GpgME::Key> & keys, unsigned int ke
   return true;
 }
 
+static inline QString time_t2string( time_t t ) {
+  QDateTime dt;
+  dt.setTime_t( t );
+  return dt.toString();
+}
+
 namespace {
 
   class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
@@ -230,16 +236,27 @@ namespace {
     const char * uid = key.userID(0).id();
     const char * fpr = key.subkey(0).fingerprint();
     const char * issuer = key.issuerName();
+    const GpgME::Subkey subkey = key.subkey(0);
+    const QString expiry = subkey.neverExpires() ? i18n("never") : time_t2string( subkey.expirationTime() ) ;
+    const QString creation = time_t2string( subkey.creationTime() );
     if ( key.protocol() == GpgME::Context::OpenPGP )
       return i18n( "OpenPGP key for %1\n"
-		   "Fingerprint: %2" ).arg( uid ? QString::fromUtf8( uid ) : i18n("unknown"),
-					    fpr ? QString::fromLatin1( fpr ) : i18n("unknown") );
+		   "Created: %2\n"
+		   "Expiry: %3\n"
+		   "Fingerprint: %4" )
+	.arg( uid ? QString::fromUtf8( uid ) : i18n("unknown"),
+	      creation, expiry,
+	      fpr ? QString::fromLatin1( fpr ) : i18n("unknown") );
     else
       return i18n( "S/MIME key for %1\n"
-		   "Fingerprint: %2\n"
-		   "Issuer: %3" ).arg( uid ? Kleo::DN( uid ).prettyDN() : i18n("unknown"),
-				       fpr ? QString::fromLatin1( fpr ) : i18n("unknown"),
-				       issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
+		   "Created: %2\n"
+		   "Expiry: %3\n"
+		   "Fingerprint: %4\n"
+		   "Issuer: %5" )
+	.arg( uid ? Kleo::DN( uid ).prettyDN() : i18n("unknown"),
+	      creation, expiry,
+	      fpr ? QString::fromLatin1( fpr ) : i18n("unknown") )
+	.arg( issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
   }
 
   const QPixmap * ColumnStrategy::pixmap( const GpgME::Key & key, int col ) const {
