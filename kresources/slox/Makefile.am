@@ -1,17 +1,20 @@
 INCLUDES = -I$(top_srcdir) $(all_includes)
 
 
-lib_LTLIBRARIES = libkabc_slox.la libkcal_slox.la
+lib_LTLIBRARIES = libkslox.la libkabc_slox.la libkcal_slox.la
+
+libkslox_la_SOURCES = sloxaccounts.cpp webdavhandler.cpp
+libkslox_la_LDFLAGS = $(all_libraries)
+libkslox_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la
 
 libkcal_slox_la_SOURCES = kcalresourceslox.cpp kcalresourcesloxconfig.cpp \
-                          webdavhandler.cpp kcalsloxprefs.kcfgc
+                          kcalsloxprefs.kcfgc
 libkcal_slox_la_LDFLAGS = $(all_libraries)
-libkcal_slox_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la
+libkcal_slox_la_LIBADD  = libkslox.la $(top_builddir)/libkcal/libkcal.la
 
-libkabc_slox_la_SOURCES = kabcresourceslox.cpp kabcresourcesloxconfig.cpp \
-                          webdavhandler.cpp
+libkabc_slox_la_SOURCES = kabcresourceslox.cpp kabcresourcesloxconfig.cpp
 libkabc_slox_la_LDFLAGS = $(all_libraries)
-libkabc_slox_la_LIBADD  = -lkabc
+libkabc_slox_la_LIBADD  = libkslox.la  -lkabc
 
 
 kde_module_LTLIBRARIES = kcal_slox.la kabc_slox.la

@@ -32,6 +32,7 @@
 #include <kio/davjob.h>
 
 #include "webdavhandler.h"
+#include "sloxaccounts.h"
 
 #include "kabcresourceslox.h"
 
@@ -59,6 +60,8 @@ ResourceSlox::ResourceSlox( const KURL &url,
 void ResourceSlox::init( const KURL &url,
                          const QString &user, const QString &password )
 {
+  kdDebug() << "KABC::ResourceSlox::init()" << endl;
+
   setType( "slox" );
 
   mURL = url;
@@ -105,11 +108,15 @@ void ResourceSlox::doClose()
 
 bool ResourceSlox::load()
 {
+  kdDebug() << "KABC::ResourceSlox::load()" << endl;
+
   return true;
 }
 
 bool ResourceSlox::asyncLoad()
 {
+  kdDebug() << "KABC::ResourceSlox::asyncLoad()" << endl;
+
   QString url = mURL.url() + "/servlet/webdav.contacts/";
 
   QDomDocument doc;
@@ -119,7 +126,7 @@ bool ResourceSlox::asyncLoad()
   WebdavHandler::addSloxElement( doc, prop, "folderid" );
   WebdavHandler::addSloxElement( doc, prop, "objecttype", "all" );
 
-//  kdDebug() << "REQUEST CONTACTS: \n" << doc.toString( 2 ) << endl;
+  kdDebug() << "REQUEST CONTACTS: \n" << doc.toString( 2 ) << endl;
 
   mDownloadJob = KIO::davPropFind( url, doc, "0" );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
@@ -159,16 +166,24 @@ void ResourceSlox::slotResult( KIO::Job *job )
         Addressee a;
         a.setUid( item.uid );
 
+        QString userId;
+
         QDomNode n;
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
-          parseContactAttribute( e, a );
+          parseContactAttribute( e, a, userId );
         }
 
         a.setResource( this );
         a.setChanged( false );
 
         mAddrMap.replace( a.uid(), a );
+
+        if ( userId.isEmpty() ) {
+          kdWarning() << "Empty user id for contact " << item.uid << endl;
+        } else {
+          SloxAccounts::self()->insertUser( userId, a );
+        }
 
         changed = true;
       }
@@ -180,7 +195,8 @@ void ResourceSlox::slotResult( KIO::Job *job )
   emit loadingFinished( this );
 }
 
-void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
+void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a,
+                                          QString &userId )
 {
   // FIXME: Why is the text still UTF8 encoded?
   QString text = QString::fromUtf8( e.text().latin1() );
@@ -204,6 +220,8 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
     a.setGivenName( text );
   } else if ( tag == "email" ) {
     a.insertEmail( text, true );
+    int pos = text.find( "@" );
+    if ( pos > 0 ) userId = text.left( pos );
   } else if ( tag == "phone" || tag == "phone2" ) {
     a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Work ) );
   } else if ( tag == "mobile" || tag == "mobile2" ) {

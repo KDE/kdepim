@@ -49,6 +49,7 @@
 
 #include "webdavhandler.h"
 #include "kcalsloxprefs.h"
+#include "sloxaccounts.h"
 
 #include "kcalresourceslox.h"
 
@@ -235,17 +236,32 @@ void KCalResourceSlox::requestTodos()
 void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
                                               Incidence *incidence )
 {
-  incidence->clearAttendees();
   QDomNode n;
   for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement memberElement = n.toElement();
     if ( memberElement.tagName() == "member" ) {
       QString member = memberElement.text();
-      
-      QString email = member + "@" + KURL( mPrefs->url() ).host();
-      Attendee *a = new Attendee( member, email );
-      a->setUid( member );
-      incidence->addAttendee( a );
+      KABC::Addressee account = SloxAccounts::self()->lookupUser( member );
+      QString name;
+      QString email;
+      Attendee *a = incidence->attendeeByUid( member );
+      if ( account.isEmpty() ) {
+        if ( a ) continue;
+
+        name = member;
+        email = member + "@" + KURL( mPrefs->url() ).host();
+      } else {
+        name = account.realName();
+        email = account.preferredEmail();
+      }
+      if ( a ) {
+        a->setName( name );
+        a->setEmail( email );
+      } else {
+        a = new Attendee( name, email );
+        a->setUid( member );
+        incidence->addAttendee( a );
+      }
     } else {
       kdDebug() << "Unknown tag in members attribute: "
                 << memberElement.tagName() << endl;
@@ -483,7 +499,12 @@ void KCalResourceSlox::emitEndProgress()
 
 void KCalResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
 {
-//  kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
+#if 0
+  kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
+#else
+  Q_UNUSED( job );
+  Q_UNUSED( percent );
+#endif
   emit progress( this, "sloxkcal", -1 );
 }
 

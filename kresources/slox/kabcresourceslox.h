@@ -74,7 +74,8 @@ class ResourceSlox : public Resource
     void init( const KURL &url,
                const QString &user, const QString &password );
 
-    void parseContactAttribute( const QDomElement &e, Addressee &a );
+    void parseContactAttribute( const QDomElement &e, Addressee &a,
+                                QString &userId );
 
   protected slots:
     void slotResult( KIO::Job *job );
