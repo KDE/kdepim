@@ -90,6 +90,9 @@ class ExtensionFactory : public KLibFactory
 
     virtual ConfigureWidget *configureWidget( QWidget *parent,
                                               const char *name = 0 );
+
+    virtual bool configureWidgetAvailable() { return false; }
+
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,
                                    const QStringList & )

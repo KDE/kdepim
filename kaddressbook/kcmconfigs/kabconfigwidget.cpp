@@ -46,6 +46,7 @@ class ExtensionItem : public QCheckListItem
     ExtensionItem( QListView *parent, const QString &text );
 
     void setService( const KService::Ptr &ptr );
+    bool configWidgetAvailable() const;
     ConfigureWidget *configWidget( QWidget *parent ) const;
     QString libraryName() const;
 
@@ -198,9 +199,13 @@ void KABConfigWidget::configureExtension()
   }
 }
 
-void KABConfigWidget::selectionChanged( QListViewItem *item )
+void KABConfigWidget::selectionChanged( QListViewItem *i )
 {
-  mConfigureButton->setEnabled( item != 0 );
+  ExtensionItem *item = static_cast<ExtensionItem*>( i );
+  if ( !item )
+    return;
+
+  mConfigureButton->setEnabled( item->configWidgetAvailable() );
 }
 
 void KABConfigWidget::itemClicked( QListViewItem *item )
@@ -219,6 +224,19 @@ ExtensionItem::ExtensionItem( QListView *parent, const QString &text )
 void ExtensionItem::setService( const KService::Ptr &ptr )
 {
   mPtr = ptr;
+}
+
+bool ExtensionItem::configWidgetAvailable() const
+{
+  KLibFactory *factory = KLibLoader::self()->factory( mPtr->library() );
+  if ( !factory )
+    return false;
+
+  ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
+  if ( !extensionFactory )
+    return false;
+
+  return extensionFactory->configureWidgetAvailable();
 }
 
 ConfigureWidget *ExtensionItem::configWidget( QWidget *parent ) const
