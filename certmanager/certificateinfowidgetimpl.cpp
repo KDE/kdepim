@@ -142,8 +142,8 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   }
   item = 0;
   if( !root_found ) {
-    if( items.count() > 0 ) items.prepend( QString::fromUtf8("Root certificate not found (%1)").arg( issuer ) );
-    else items.prepend( "Root certificate not found" );
+    if( items.count() > 0 ) items.prepend( i18n("Root certificate not found (%1)").arg( issuer ) );
+    else items.prepend( i18n("Root certificate not found") );
   }
   for( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
     if( item ) item = new QListViewItem( item, (*it) );
