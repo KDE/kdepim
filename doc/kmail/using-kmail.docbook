@@ -614,11 +614,21 @@ list.</para>
 	  &acl;s are settable per-folder.
 	</para>
 
+	<note>
+	  <para>
+	    As with everything else when using <emphasis>disconnected
+	    &imap;</emphasis>, you need to sync with the server for
+	    the changes to be transferred to the server.
+	  </para>
+	</note>
+
 	<para>
-	  &imap; defines a lot of fine-grained permissions that you
-	  can grant or deny other users. For the sake of clarity,
+	  &imap; &acl;s define a lot of fine-grained permissions that
+	  you can grant or deny other users. For the sake of clarity,
 	  &kmail; will present them as the following five categories
-	  that you can choose from:
+	  that you can choose from (see <xref
+	  linkend="table-acl-summary"/> for the details if you already
+	  know &imap; &acl;s).
 	</para>
 
 	<variablelist>
