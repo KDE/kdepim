@@ -192,8 +192,8 @@ class CalendarLocal : public Calendar
 
     QPtrList<Journal> mJournalList;
   
-    QDate *mOldestDate;
-    QDate *mNewestDate;
+    QDate mOldestDate;
+    QDate mNewestDate;
 };  
 
 }

@@ -53,8 +53,7 @@ CalendarLocal::CalendarLocal(const QString &timeZoneId)
 
 void CalendarLocal::init()
 {
-  mOldestDate = 0;
-  mNewestDate = 0;
+  mOldestDate = mNewestDate = QDate();
 
   mRecursList.setAutoDelete(true);
   // solves the leak?
@@ -62,7 +61,7 @@ void CalendarLocal::init()
 
   mCalDict = new QIntDict<QPtrList<Event> > (BIGPRIME);
   mCalDict->setAutoDelete(true);
-  
+
   mJournalList.setAutoDelete(true);
 }
 
@@ -71,8 +70,6 @@ CalendarLocal::~CalendarLocal()
 {
   close();
   delete mCalDict;
-  delete mNewestDate;
-  delete mOldestDate;
 }
 
 bool CalendarLocal::load( const QString &fileName )
@@ -122,10 +119,7 @@ void CalendarLocal::close()
   mTodoList.clear();
 
   // reset oldest/newest date markers
-  delete mOldestDate;
-  mOldestDate = 0;
-  delete mNewestDate;
-  mNewestDate = 0;
+  mOldestDate = mNewestDate = QDate();
 
   setModified( false );
 }
@@ -212,31 +206,33 @@ void CalendarLocal::deleteEvent(Event *event)
   // we are assured to have the new oldest date.
   //
   // the newest date is analogous, but sort of opposite.
-  if (date == (*mOldestDate)) {
-    for (; !mCalDict->find(makeKey((*mOldestDate))) &&
-	   (*mOldestDate != *mNewestDate);
-	 (*mOldestDate) = mOldestDate->addDays(1));
-    mRecursList.first();
-    while ((anEvent = mRecursList.current())) {
-      if (anEvent->dtStart().date() < (*mOldestDate)) {
-	(*mOldestDate) = anEvent->dtStart().date();
-	mRecursList.first();
+  if (mOldestDate.isValid() && mNewestDate.isValid()) {
+    if (date == mOldestDate) {
+      for (; !mCalDict->find(makeKey(mOldestDate)) &&
+           (mOldestDate != mNewestDate);
+           mOldestDate = mOldestDate.addDays(1));
+      mRecursList.first();
+      while ((anEvent = mRecursList.current())) {
+        if (anEvent->dtStart().date() < mOldestDate) {
+          mOldestDate = anEvent->dtStart().date();
+          mRecursList.first();
+        }
+        anEvent = mRecursList.next();
       }
-      anEvent = mRecursList.next();
     }
-  }
 
-  if (date == (*mNewestDate)) {
-    for (; !mCalDict->find(makeKey((*mNewestDate))) &&
-	   (*mNewestDate != *mOldestDate);
-	 (*mNewestDate) = mNewestDate->addDays(-1));
-    mRecursList.first();
-    while ((anEvent = mRecursList.current())) {
-      if (anEvent->dtStart().date() > (*mNewestDate)) {
-	(*mNewestDate) = anEvent->dtStart().date();
-	mRecursList.first();
+    if (date == mNewestDate) {
+      for (; !mCalDict->find(makeKey(mNewestDate)) &&
+           (mNewestDate != mOldestDate);
+           mNewestDate = mNewestDate.addDays(-1));
+      mRecursList.first();
+      while ((anEvent = mRecursList.current())) {
+        if (anEvent->dtStart().date() > mNewestDate) {
+          mNewestDate = anEvent->dtStart().date();
+          mRecursList.first();
+        }
+        anEvent = mRecursList.next();
       }
-      anEvent = mRecursList.next();
     }
   }
 
@@ -353,8 +349,8 @@ int CalendarLocal::numEvents(const QDate &qd)
 
 Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 {
-  if( mOldestDate )
-    return alarms( *mOldestDate, to );
+  if( mOldestDate.isValid() )
+    return alarms( mOldestDate, to );
   else
     return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
 }
@@ -479,20 +475,21 @@ void CalendarLocal::insertEvent(const Event *anEvent)
   int extraDays, dayCount;
 
   // initialize if they haven't been allocated yet;
-  if (!mOldestDate) {
-    mOldestDate = new QDate();
-    (*mOldestDate) = anEvent->dtStart().date();
-  }
-  if (!mNewestDate) {
-    mNewestDate = new QDate();
-    (*mNewestDate) = anEvent->dtStart().date();
-  }
+  QDate dtStart = anEvent->dtStart().date();
+  if (dtStart.isValid()) {
+    if (!mOldestDate.isValid()) {
+      mOldestDate = dtStart;
+    }
+    if (!mNewestDate.isValid()) {
+      mNewestDate = dtStart;
+    }
 
-  // update oldest and newest dates if necessary.
-  if (anEvent->dtStart().date() < (*mOldestDate))
-    (*mOldestDate) = anEvent->dtStart().date();
-  if (anEvent->dtStart().date() > (*mNewestDate))
-    (*mNewestDate) = anEvent->dtStart().date();
+    // update oldest and newest dates if necessary.
+    if (dtStart < mOldestDate)
+      mOldestDate = dtStart;
+    if (dtStart > mNewestDate)
+      mNewestDate = dtStart;
+  }
 
   if (anEvent->recurrence()->doesRecur()) {
     mRecursList.append(anEvent);
@@ -703,8 +700,8 @@ QPtrList<Event> CalendarLocal::rawEvents()
 {
   QPtrList<Event> eventList;
 
-  if( mOldestDate && mNewestDate )
-    eventList = rawEvents(*mOldestDate,*mNewestDate);
+  if( mOldestDate.isValid() && mNewestDate.isValid() )
+    eventList = rawEvents(mOldestDate, mNewestDate);
 
   return eventList;
 }
@@ -712,7 +709,8 @@ QPtrList<Event> CalendarLocal::rawEvents()
 void CalendarLocal::addJournal(Journal *journal)
 {
   if (journal->dtStart().isValid())
-    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << en
+dl;
   else
     kdDebug(5800) << "Adding Journal without a DTSTART" << endl;
 
@@ -755,3 +753,4 @@ QPtrList<Journal> CalendarLocal::journals()
 {
   return mJournalList;
 }
+
