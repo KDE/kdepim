@@ -1,15 +1,23 @@
-#include "abbrowser.h"
+#include <stdlib.h>
+
 #include <qstring.h>
 
-#include <kapp.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kaboutdata.h>
+#include <kdebug.h>
+
+#include "abbrowser.h"
+#include "abbrowserapp.h"
+
+// the dummy argument is required, because KMail apparently sends an empty
+// argument.
 
 static KCmdLineOptions kmoptions[] =
 {
   { "a", 0 , 0 },
-  { "addr <email>",	I18N_NOOP("Update entry with given email address"), 0 },
+  { "addr <email>", I18N_NOOP("Update entry with given email address"), 0 },
+  { "+[argument]", I18N_NOOP("dummy argument"), 0},
   { 0, 0, 0}
 };
 
@@ -23,31 +31,12 @@ int main(int argc, char *argv[])
                    "(c) 1997-2000, The KDE PIM Team" );
 
   KCmdLineArgs::init(argc, argv, &about);
-  KCmdLineArgs::addCmdLineOptions( kmoptions ); // Add kmail options
+  KCmdLineArgs::addCmdLineOptions( kmoptions ); // Add abbrowser options
+  KUniqueApplication::addCmdLineOptions();
   
-  KApplication app("Abbrowser");
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  if (!AbBrowserApp::start()) exit(0);
 
-  // All session management is handled in the RESTORE macro
-  if (app.isRestored())
-  {
-    RESTORE(Pab)
-  }
-  else
-  {
-    QString addr;
-
-    QCString addrStr = args->getOption("addr");
-    if (!addrStr.isEmpty())
-      addr = QString::fromLocal8Bit( addrStr );
-    
-    args->clear();
-    Pab *widget = new Pab;
-    widget->show();
-    
-    if (!addr.isEmpty())
-      widget->addEmail( addr );
-  }
+  AbBrowserApp app;
 
   return app.exec();
 }
