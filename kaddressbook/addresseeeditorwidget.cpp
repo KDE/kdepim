@@ -568,15 +568,37 @@ void AddresseeEditorWidget::save()
   mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
 
   mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
-
   // save custom fields
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text() );
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", mSpouseEdit->text() );
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", mManagerEdit->text() );
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", mAssistantEdit->text() );
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-Department", mDepartmentEdit->text() );
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", mOfficeEdit->text() );
-  mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
+  if(!mIMAddressEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text());
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-IMAddress");
+  if(!mSpouseEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", mSpouseEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-SpousesName");
+  if(!mManagerEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", mManagerEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-ManagersName");
+  if(!mAssistantEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", mAssistantEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-AssistantsName");
+  
+  if(!mDepartmentEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Department", mDepartmentEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Department");
+  if(!mOfficeEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", mOfficeEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Office");
+  if(!mProfessionEdit->text().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Profession");
+
   if ( mAnniversaryPicker->inputIsValid() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
                              mAnniversaryPicker->date().toString( Qt::ISODate ) );
