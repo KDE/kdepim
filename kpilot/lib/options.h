@@ -128,13 +128,19 @@ extern KDE_EXPORT int debug_level;
 
 #ifdef DEBUG
 #ifdef __GNUC__
-#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FUNCTION__)
+#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FUNCTION__)
 #else
-#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(l,__FILE__ ":" "__LINE__")
+#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FILE__ ":" "__LINE__")
 #endif
 
-#define FUNCTIONSETUP	KPILOT_FNAMEDEF(1)
+#define FUNCTIONSETUP		KPILOT_FNAMEDEF(1)
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
+#define DEBUGAREA 		0
+
+#define DEBUGAREA_KPILOT	5510
+#define DEBUGAREA_DAEMON	5511
+#define DEBUGAREA_CONDUIT	5512
+#define DEBUGAREA_DB		5513
 
 #ifdef DEBUG_CERR
 #include <iostream>
@@ -143,7 +149,7 @@ extern KDE_EXPORT int debug_level;
 class KPilotDepthCount 
 { 
 public: 
-	KPilotDepthCount(int level, const char *s); 
+	KPilotDepthCount(int area, int level, const char *s); 
 	~KPilotDepthCount(); 
 	QString indent() const; 
 	const char *name() const { return fName; } ;
@@ -188,10 +194,10 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 // kddebug based debugging
 //
 //
-#define DEBUGKPILOT	fname.debug(5510)
-#define DEBUGDAEMON	fname.debug(5511)
-#define DEBUGCONDUIT	fname.debug(5512)
-#define DEBUGDB         fname.debug(5513)
+#define DEBUGKPILOT	fname.debug(DEBUGAREA_KPILOT)
+#define DEBUGDAEMON	fname.debug(DEBUGAREA_DAEMON)
+#define DEBUGCONDUIT	fname.debug(DEBUGAREA_CONDUIT)
+#define DEBUGDB         fname.debug(DEBUGAREA_DB)
 
 inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d) 
 	{ return o << d.indent() ; }

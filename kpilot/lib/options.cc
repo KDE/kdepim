@@ -122,7 +122,7 @@ struct tm writeTm(const QDate &dt)
 }
 
 #ifdef DEBUG
-KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
+KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
 	fDepth(depth),
 	fLevel(level),
 	fName(s)
@@ -132,7 +132,7 @@ KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
 #ifdef DEBUG_CERR
 		DEBUGKPILOT 
 #else
-		debug(5510)
+		debug(area)
 #endif
 		<< indent() << ">" << name() << endl; 
 	}
@@ -153,3 +153,4 @@ QString KPilotDepthCount::indent() const
 
 int KPilotDepthCount::depth = 0;
 #endif
+
