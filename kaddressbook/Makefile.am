@@ -1,6 +1,6 @@
 INCLUDES= -I./printing -I$(top_srcdir) $(all_includes)
 
-SUBDIRS = detailledview printing . pics
+SUBDIRS = detailledview printing . pics csv-templates
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 

@@ -347,7 +347,7 @@ void KAddressBook::importVCard( KABC::VCardConverter::Version version )
     file.open( IO_ReadOnly );
     QByteArray rawData = file.readAll();
     QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
-    bool ok = converter.VCardToAddressee( data, a, version );
+    bool ok = converter.vCardToAddressee( data, a, version );
 
     if (!a.isEmpty() && ok) {
       // Add it to the document, then let the user edit it. We use a
@@ -444,7 +444,7 @@ void KAddressBook::exportVCard( KABC::VCardConverter::Version )
     KABC::VCardConverter converter;
     QString vcard;
 
-    converter.AddresseeToVCard( a, vcard );
+    converter.addresseeToVCard( a, vcard );
 
     QTextStream t( &outFile );        // use a text stream
     t.setEncoding( QTextStream::UnicodeUTF8 );

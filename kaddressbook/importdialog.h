@@ -56,10 +56,14 @@ class ContactImportDialog : public KImportDialog
     KImportColumn *mPhoneBusiness;
     KImportColumn *mPhoneHome;
     KImportColumn *mPhoneMobile;
-    KImportColumn *mFaxBusiness;
     KImportColumn *mFaxHome;
-    KImportColumn *mCompany;
+    KImportColumn *mFaxBusiness;
+    KImportColumn *mCarPhone;
+    KImportColumn *mIsdn;
+    KImportColumn *mPager;
     KImportColumn *mMailClient;
+    KImportColumn *mCompany;
+    KImportColumn *mNote;
     KImportColumn *mUrl;
 
     KImportColumn *mAddressHomeStreet;
@@ -67,12 +71,14 @@ class ContactImportDialog : public KImportDialog
     KImportColumn *mAddressHomeState;
     KImportColumn *mAddressHomeZip;
     KImportColumn *mAddressHomeCountry;
+    KImportColumn *mAddressHomeLabel;
 
     KImportColumn *mAddressBusinessStreet;
     KImportColumn *mAddressBusinessCity;
     KImportColumn *mAddressBusinessState;
     KImportColumn *mAddressBusinessZip;
     KImportColumn *mAddressBusinessCountry;
+    KImportColumn *mAddressBusinessLabel;
 
     QPtrList<KImportColumn> mCustomList;
 
