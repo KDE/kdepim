@@ -315,6 +315,20 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         }
       }
     }
+    if ( !ret ) {
+      // No attendees found so far, so accept them as new optional attendees
+      for ( inIt = attendeesIn.begin(); inIt != attendeesIn.end(); ++inIt ) {
+        Attendee* old = (*inIt);
+        Attendee* a = new Attendee( old->name(), old->email(), false,
+                                    old->status(), Attendee::OptParticipant );
+        if ( ev )
+          ev->addAttendee( a, false );
+        else
+          to->addAttendee( a, false );
+        ret = true;
+      }
+    }
+
     if ( ret ) {
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
