@@ -481,14 +481,19 @@ QString getFQDomainName (const KConfig& config)
 {
 	QString fqDomainName;
 
-	// Has the user given an explicit domain name? If so, we should get "1".
-	int useExplicitDomainName = config.readEntry("useExplicitDomainName", "0").toInt ();
+	// Has the user given an explicit domain name?
+	int useExplicitDomainName = 0;
+	if (!config.readEntry("explicitDomainName", "").isEmpty())
+		useExplicitDomainName = 1;
 
 	// Or was it given in the MAILDOMAIN environment variable?
 	if (!useExplicitDomainName && getenv ("MAILDOMAIN"))
 		useExplicitDomainName = 2;
 
-	if (useExplicitDomainName) {
+	DEBUGCONDUIT << __FUNCTION__ << ": EDN=" << config.readEntry("explicitDomainName", "") << endl;
+	DEBUGCONDUIT << __FUNCTION__ << ": useEDN=" << useExplicitDomainName << endl;
+
+	if (useExplicitDomainName > 0) {
 		// User has provided the FQDN either in config or in environment.
 
 		if (useExplicitDomainName == 2) {
@@ -497,22 +502,27 @@ QString getFQDomainName (const KConfig& config)
 			// Use explicitly configured FQDN.
 			// The domain name can also be the name of an environment variable.
 			fqDomainName = config.readEntry("explicitDomainName", "$MAILDOMAIN");
+			DEBUGCONDUIT << __FUNCTION__ << ": got from config" << endl;
 		}
 
 		// Get FQDN from environment, from given variable.
 		if (fqDomainName.left(1) == "$") {
 			QString envVar = fqDomainName.mid (1);
 			char* envDomain = getenv (envVar.latin1());
-			if (envDomain)
+			if (envDomain) {
 				fqDomainName = envDomain;
-			else {
+				DEBUGCONDUIT << __FUNCTION__ << ": got from env" << endl;
+			} else {
 				// Ummh... It didn't exist, fall back to using system domain name
 				useExplicitDomainName = false;
+
+				DEBUGCONDUIT << __FUNCTION__ << ": Promised domain name environment variable "
+							 << fqDomainName << " wasn't available." << endl;
 			}
 		}
 	}
 
-	if (!useExplicitDomainName) {
+	if (useExplicitDomainName == 0) {
 		// We trust in the system FQDN domain name
 
 #ifdef HAVE_GETDOMAINNAME
@@ -686,10 +696,10 @@ int PopMailConduit::sendViaSMTP ()
 		return -1;
 	}
 
-	// Send EHLO, expect "Hello"
+	// Send EHLO, expect "250- ... Hello"
 	sendBuffer.sprintf ("EHLO %s\r\n", domainName.latin1());
 	if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-						 QRegExp("Hello"),
+						 QRegExp("^250"),
 						 i18n("Couldn't EHLO to SMTP server")))
 		return -1;
 
@@ -1995,6 +2005,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.26  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.25  2001/05/17 08:12:06  adridg
 // Nasty POP3 retrieval bug fixed (Jay Summett)
 //

@@ -87,6 +87,7 @@ private:
 	QLineEdit* fSendmailCmd;
 	QLineEdit* fSMTPServer;
 	QLineEdit* fSMTPPort;
+	QLineEdit* fFirewallFQDN;
 	QCheckBox *fKMailSendImmediate;
 } ;
 
@@ -153,6 +154,9 @@ protected:
 
 
 // $Log$
+// Revision 1.8  2001/04/23 21:18:43  adridg
+// Some i18n() fixups and KMail sending
+//
 // Revision 1.7  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

@@ -216,13 +216,23 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	grid->addWidget(currentLabel,7,0);
 	grid->addWidget(fSMTPPort,7,1);
 
+	currentLabel = new QLabel(i18n("Firewall:"), this);
+	currentLabel->adjustSize();
+	
+	fFirewallFQDN = new QLineEdit(this);
+	fFirewallFQDN->setText(config.readEntry("explicitDomainName", "$MAILDOMAIN"));
+	fFirewallFQDN->resize(200, fSendmailCmd->height());
+
+	grid->addWidget(currentLabel,9,0);
+	grid->addWidget(fFirewallFQDN,9,1);
+
 	fKMailSendImmediate = new QCheckBox(
 		i18n("Send mail through KMail immediately"),
 		this);
 	fKMailSendImmediate->setChecked(config.readBoolEntry("SendImmediate",
 		true));
-	grid->addRowSpacing(8,SPACING);
-	grid->addWidget(fKMailSendImmediate,9,1);
+	grid->addRowSpacing(10,SPACING);
+	grid->addWidget(fKMailSendImmediate,11,1);
 	QToolTip::add(fKMailSendImmediate,
 		i18n("Check this box if you want the conduit\n"
 			"to send all items in the outbox as soon\n"
@@ -253,6 +263,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	config.writeEntry("SendmailCmd", fSendmailCmd->text());
 	config.writeEntry("SMTPServer", fSMTPServer->text());
 	config.writeEntry("SMTPPort", fSMTPPort->text());
+	config.writeEntry("explicitDomainName", fFirewallFQDN->text());
 
 	config.writeEntry("SyncOutgoing", (int)getMode());
 
@@ -664,6 +675,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.18  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.17  2001/04/23 21:18:36  adridg
 // Some i18n() fixups and KMail sending
 //
