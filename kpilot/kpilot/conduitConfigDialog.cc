@@ -76,6 +76,11 @@ extern "C"
   {
     return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
   }
+
+  ConfigWizard *create_wizard(QWidget *parent, int m)
+  {
+    return new ConfigWizard(parent,"Wizard", m);
+  }
 }
 
 

@@ -60,10 +60,12 @@ static const char *kpilot_id =
 #include <kedittoolbar.h>
 #include <kcmultidialog.h>
 #include <kprogress.h>
+#include <klibloader.h>
 
 
 #include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
+#include "kpilotConfigWizard.h"
 
 #include "pilotComponent.h"
 
@@ -621,6 +623,12 @@ void KPilotInstaller::initMenu()
 		actionCollection());
 	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
+
+	a = new KAction(i18n("Configuration &Wizard ..."), CSL1("wizard"), 0,
+		this, SLOT(slotConfigureWizard()),
+		actionCollection(), "options_configure_wizard");
+	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
+
 }
 
 void KPilotInstaller::fileInstalled(int)
@@ -835,6 +843,55 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 #endif
 
 	return ret;
+}
+
+void KPilotInstaller::slotConfigureWizard()
+{
+	FUNCTIONSETUP;
+
+	// Declarations at top because of goto's in this function
+	ConfigWizard *(* f) (QWidget *, int) = 0L ;
+	ConfigWizard *w = 0L;
+	KLibrary *l = KLibLoader::self()->library("kcm_kpilot");
+
+	if (!l)
+	{
+		kdWarning() << k_funcinfo << ": Couldn't load library!" << endl;
+		goto sorry;
+	}
+
+	if (l->hasSymbol("create_wizard"))
+	{
+		f = ( ConfigWizard * (*) (QWidget *, int) ) (l->symbol("create_wizard")) ;
+	}
+
+	if (!f)
+	{
+		kdWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
+		goto sorry;
+	}
+
+	w = f(this,ConfigWizard::Standalone);
+	if (!w)
+	{
+		kdWarning() << k_funcinfo << ": Can't create wizard." << endl;
+		goto sorry;
+	}
+
+	if (w->exec())
+	{
+		KPilotSettings::self()->readConfig();
+	}
+	KPILOT_DELETE(w);
+
+	// Leave the library loaded, we might need it for the config dialog anyway.
+	return;
+
+sorry:
+	KMessageBox::sorry(this,i18n("Wizard Not Available"),
+		i18n("The library containing the configuration wizard for KPilot "
+			"could not be loaded, and the wizard is not available. "
+			"Please try to use the regular configuration dialog."));
 }
 
 void KPilotInstaller::slotConfigureKPilot()

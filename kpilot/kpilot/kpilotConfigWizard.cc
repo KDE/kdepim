@@ -53,8 +53,9 @@ static const char *conduitconfigdialog_id =
 #include "kpilotProbeDialog.h"
 
 
-ConfigWizard::ConfigWizard(QWidget *parent, const char *n) :
-	KWizard(parent, n)
+ConfigWizard::ConfigWizard(QWidget *parent, const char *n, int m) :
+	KWizard(parent, n),
+	fMode(m ? Standalone : InDialog)
 {
 	page1=new ConfigWizard_base1(this);
 	addPage( page1, i18n("Select Connection Type") );
@@ -133,9 +134,17 @@ void ConfigWizard::accept()
 	KPilotSettings::setInstalledConduits( conduits );
 #undef APPEND_CONDUIT
 
-	KMessageBox::information(this, i18n("KPilot is now configured to sync with %1.\n"
-		"The remaining options in the config dialog are advanced options and can "
-		"be used to fine-tune KPilot.").arg(applicationName), i18n("Automatic Configuration Finished"));
+	QString finishMessage = i18n("KPilot is now configured to sync with %1.").arg(applicationName);
+	if (fMode == InDialog)
+	{
+		finishMessage.append(CSL1("\n"));
+		finishMessage.append(i18n(
+			"The remaining options in the config dialog are advanced options and can "
+			"be used to fine-tune KPilot."));
+	}
+
+	KMessageBox::information(this, finishMessage,
+		i18n("Automatic Configuration Finished"));
 	KPilotSettings::self()->writeConfig();
 	QDialog::accept();
 }

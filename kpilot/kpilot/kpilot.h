@@ -166,6 +166,7 @@ private:
 protected slots:
 	void quit();
 	void slotConfigureKPilot();
+	void slotConfigureWizard();
 	void fileInstalled(int which);
 	void slotNewToolbarConfig();
 
