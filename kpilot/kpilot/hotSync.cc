@@ -28,7 +28,7 @@
 ** Bug reports and questions can be sent to groot@kde.org
 */
 
-static const char *hotsync_id = "$Id: $";
+static const char *hotsync_id = "$Id$";
 
 #include "options.h"
 
@@ -36,89 +36,88 @@ static const char *hotsync_id = "$Id: $";
 
 #include <qtimer.h>
 #include <qfile.h>
+#include <qfileinfo.h>
+#include <qdir.h>
+#include <qvaluelist.h>
+#include <qtl.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>
+#include <kapp.h>
 
 #include "pilotUser.h"
 
 #include "hotSync.moc"
 
-KPilotHotSyncLink *KPilotHotSyncLink::fLink = 0L;
+static const char *hotSync_id="$Id:$";
 
-KPilotHotSyncLink::KPilotHotSyncLink() :
-	KPilotDeviceLink(),
-	fSyncType(HotSync)
+TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
+{
+	FUNCTIONSETUP;
+	
+	(void) hotSync_id;
+}
+
+/* virtual slot */ void TestLink::exec()
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fLink==0L);
+	int i;
+	int dbindex=0;
+	int count=0;
+	struct DBInfo db;
 
-	fLink=this;
+	addSyncLogEntry(i18n("Performing a TestSync."));
+
+	while ((i=dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,
+		dbindex,&db)) > 0)
+	{
+		count++;
+		dbindex=db.index+1;
+
+		DEBUGKPILOT << fname
+			<< ": Read database "
+			<< db.name
+			<< endl;
+
+		emit logMessage(i18n("Syncing database %1...").arg(db.name));
+
+		kapp->processEvents();
+	}
+
+	emit logMessage(i18n("HotSync finished."));
+	emit syncDone(this);
+}
+
+BackupAction::BackupAction(KPilotDeviceLink *p) :
+	SyncAction(p)
+{
+	FUNCTIONSETUP;
 
 	fDatabaseDir = KGlobal::dirs()->saveLocation("data",
 		QString("kpilot/DBBackup/"));
-
-	QObject::connect(this,SIGNAL(deviceReady()),
-		this,SLOT(startHotSync()));
 }
 
-KPilotHotSyncLink *KPilotHotSyncLink::getLink()
+/* virtual */ QString BackupAction::statusString() const
 {
-	if (fLink) return fLink;
-
-	fLink = new KPilotHotSyncLink;
-	return fLink;
-}
-
-/* virtual */ QString KPilotHotSyncLink::statusString() const
-{
-	QString s("KPilotSyncLink=");
+	QString s("BackupAction=");
 
 	switch(status())
 	{
 	case Init : s.append("Init"); break;
 	case Error : s.append("Error"); break;
+	case FullBackup : s.append("FullBackup"); break;
 	case BackupEnded : s.append("BackupEnded"); break;
+	default : s.append("(unknown ");
+		s.append(QString::number(status()));
+		s.append(")");
 	}
-
-	s.append("(");
-	s.append(KPilotDeviceLink::statusString());
-	s.append(")");
 
 	return s;
 }
 
-/* slot */ void KPilotHotSyncLink::startHotSync()
-{
-	FUNCTIONSETUP;
 
-	emit syncStarted();
-
-	switch(fSyncType)
-	{
-	case Backup : this->doFullBackup(); break;
-	case Restore : this->doFullRestore(); break;
-	case HotSync : this->doHotSync(); break;
-	case FastSync : this->doFastSync(); break;
-	}
-}
-
-/* virtual */ void KPilotHotSyncLink::doHotSync()
-{
-	FUNCTIONSETUP;
-
-	emit syncEnded();
-}
-
-/* virtual */ void KPilotHotSyncLink::doFastSync()
-{
-	FUNCTIONSETUP;
-
-	emit syncEnded();
-}
-
-/* virtual */ void KPilotHotSyncLink::doFullBackup()
+/* virtual */ void BackupAction::exec()
 {
 	FUNCTIONSETUP;
 
@@ -136,7 +135,7 @@ KPilotHotSyncLink *KPilotHotSyncLink::getLink()
 	fTimer->start(0,false);
 }
 
-/* slot */ void KPilotHotSyncLink::backupOneDB()
+/* slot */ void BackupAction::backupOneDB()
 {
 	FUNCTIONSETUP;
 
@@ -149,7 +148,7 @@ KPilotHotSyncLink *KPilotHotSyncLink::getLink()
 			<< endl;
 
 		addSyncLogEntry(i18n("Exiting on cancel."));
-		endFullBackup();
+		endBackup();
 		fStatus=BackupIncomplete;
 		return;
 	}
@@ -162,7 +161,7 @@ KPilotHotSyncLink *KPilotHotSyncLink::getLink()
 			<< endl;
 
 		addSyncLogEntry(i18n("Full backup complete."));
-		endFullBackup();
+		endBackup();
 		fStatus=BackupComplete;
 		return;
 	}
@@ -185,7 +184,7 @@ KPilotHotSyncLink *KPilotHotSyncLink::getLink()
 	}
 }
 
-bool KPilotHotSyncLink::createLocalDatabase(DBInfo * info)
+bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
@@ -193,7 +192,39 @@ bool KPilotHotSyncLink::createLocalDatabase(DBInfo * info)
 	struct pi_file *f;
 
 	QString fullBackupDir =
-		fDatabaseDir + getPilotUser()->getUserName() + "/";
+		fDatabaseDir + fHandle->getPilotUser()->getUserName() + "/";
+
+	DEBUGDAEMON << fname
+		<< ": Looking in directory "
+		<< fullBackupDir
+		<< endl;
+
+	QFileInfo fi(fullBackupDir);
+	if (!(fi.exists() && fi.isDir()))
+	{
+		DEBUGDAEMON << fname
+			<< ": Need to create backup directory for user "
+			<< fHandle->getPilotUser()->getUserName()
+			<< endl;
+
+		fi=QFileInfo(fDatabaseDir);
+		if (!(fi.exists() && fi.isDir()))
+		{
+			kdError() << fname
+				<< ": Database backup directory doesn't exist."
+				<< endl;
+			return false;
+		}
+
+		QDir databaseDir(fDatabaseDir);
+		if (!databaseDir.mkdir(fullBackupDir,true))
+		{
+			kdError() << fname
+				<< ": Can't create backup directory."
+				<< endl;
+			return false;
+		}
+	}
 
 	QString databaseName(info->name);
 	databaseName.replace(QRegExp("/"),"_");
@@ -249,20 +280,407 @@ bool KPilotHotSyncLink::createLocalDatabase(DBInfo * info)
 	return true;
 }
 
-void KPilotHotSyncLink::endFullBackup()
+void BackupAction::endBackup()
 {
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fTimer);
 	fDBIndex=-1;
 	fStatus=BackupEnded;
+
+	emit syncDone(this);
 }
 
-/* virtual */ void KPilotHotSyncLink::doFullRestore()
+class RestoreAction::RestoreActionPrivate
+{
+public:
+	QString fDatabaseDir;
+	QValueList<struct db> fDBList;
+	QTimer fTimer;
+	int fDBIndex;
+} ;
+
+bool operator<(const db &a, const db &b)
+{
+	if (a.creator == b.creator)
+	{
+		if (a.type != b.type)
+		{
+			if (a.type == pi_mktag('a','p','p','l'))
+				return false;
+			else
+				return true;
+		}
+	}
+
+	return a.maxblock < b.maxblock;
+}
+
+RestoreAction::RestoreAction(KPilotDeviceLink *p) :
+	SyncAction(p)
+{
+	FUNCTIONSETUP;
+
+	fP = new RestoreActionPrivate;
+	fP->fDatabaseDir = KGlobal::dirs()->saveLocation("data",
+		QString("kpilot/DBBackup/"));
+}
+
+/* virtual */ void RestoreAction::exec()
+{
+	FUNCTIONSETUP;
+
+	DEBUGDAEMON << fname
+		<< ": Restoring from base directory "
+		<< fP->fDatabaseDir
+		<< endl;
+	
+	QString dirname = fP->fDatabaseDir +
+		// fHandle->getPilotUser()->getUserName() 
+		"ade" +
+		"/";
+
+	DEBUGDAEMON << fname
+		<< ": Restoring user " 
+		<< dirname
+		<< endl;
+
+	QDir dir(dirname,QString::null,QDir::Name,
+		QDir::Files | QDir::Readable | QDir::NoSymLinks);
+
+	if (!dir.exists())
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Restore directory "
+			<< dirname
+			<< " does not exist."
+			<< endl;
+		fStatus=Error;
+		return;
+	}
+
+	for (int i=0; i<dir.count(); i++)
+	{
+		QString s; 
+		struct db dbi;
+		struct DBInfo info;
+		struct pi_file *f;
+
+		s = dir[i];
+
+		DEBUGDAEMON << fname
+			<< ": Adding "
+			<< s 
+			<< " to restore list."
+			<< endl;
+
+		qstrcpy(dbi.name,QFile::encodeName(dirname + s));
+		
+		f=pi_file_open(dbi.name);
+		if (!f)
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Can't open "
+				<< dbi.name
+				<< endl;
+			continue;
+		}
+
+		pi_file_get_info(f,&info);
+
+		dbi.creator=info.creator;
+		dbi.type=info.type;
+		dbi.flags=info.flags;
+		dbi.maxblock=0;
+
+		fP->fDBList.append(dbi);
+
+		pi_file_close(f);
+		f=0L;
+	}
+
+	fP->fDBIndex=0;
+	fStatus=GettingFileInfo;
+
+	QObject::connect(&(fP->fTimer),SIGNAL(timeout()),
+		this,SLOT(getNextFileInfo()));
+
+	fP->fTimer.start(0,false);
+}
+
+/* slot */ void RestoreAction::getNextFileInfo()
+{
+	FUNCTIONSETUP;
+
+	ASSERT(fStatus==GettingFileInfo);
+	ASSERT(fP->fDBIndex < fP->fDBList.count());
+
+	struct db &dbi = fP->fDBList[fP->fDBIndex];
+	pi_file *f;
+
+	if (fP->fDBIndex >= fP->fDBList.count()-1)
+	{
+		QObject::disconnect(&(fP->fTimer),SIGNAL(timeout()),
+			this,SLOT(getNextFileInfo()));
+		fP->fTimer.stop();
+
+		qBubbleSort(fP->fDBList);
+
+		fP->fDBIndex=0;
+		fStatus=InstallingFiles;
+
+		QObject::connect(&(fP->fTimer),SIGNAL(timeout()),
+			this,SLOT(installNextFile()));
+		fP->fTimer.start(0,false);
+	}
+	fP->fDBIndex++;
+
+	DEBUGDAEMON << fname
+		<< ": Getting info on "
+		<< dbi.name
+		<< endl;
+
+	f = pi_file_open(dbi.name);
+	if (!f)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Can't open "
+			<< dbi.name
+			<< endl;
+		return;
+	}
+
+	int max;
+	pi_file_get_entries(f,&max);
+
+	for (int i=0; i<max; i++)
+	{
+		int size;
+
+		if (dbi.flags & dlpDBFlagResource)
+		{
+			pi_file_read_resource(f,i,0,&size,0,0);
+		}
+		else
+		{
+			pi_file_read_record(f,i,0,&size,0,0,0);
+		}
+
+		if (size>dbi.maxblock)
+		{
+			dbi.maxblock=size;
+		}
+	}
+
+	DEBUGDAEMON << fname
+		<< ": Read " 
+		<< max
+		<< " entries for this database."
+		<< endl;
+
+	pi_file_close(f);
+}
+
+/* slot */ void RestoreAction::installNextFile()
+{
+	FUNCTIONSETUP;
+
+	ASSERT(fStatus==InstallingFiles);
+	ASSERT(fP->fDBIndex < fP->fDBList.count());
+
+	struct db &dbi = fP->fDBList[fP->fDBIndex];
+	fP->fDBIndex++;
+
+	DEBUGDAEMON << fname
+		<< ": Trying to install "
+		<< dbi.name
+		<< endl;
+
+	if (fP->fDBIndex >= fP->fDBList.count()-1)
+	{
+		QObject::disconnect(&(fP->fTimer),SIGNAL(timeout()),
+			this,SLOT(getNextFileInfo()));
+		fP->fTimer.stop();
+
+		fStatus=Done;
+	}
+
+	if (dlp_OpenConduit(pilotSocket()) < 0)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Restore apparently cancelled."
+			<< endl;
+		fStatus=Done;
+		emit syncDone(this);
+		return;
+	}
+
+	addSyncLogEntry(i18n("Restoring %1 ...").arg(dbi.name));
+
+	pi_file *f = pi_file_open(const_cast<char *>((const char *)QFile::encodeName(dbi.name)));
+	if (!f)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Can't open "
+			<< dbi.name
+			<< " for restore."
+			<< endl;
+		return;
+	}
+
+	if (pi_file_install(f,pilotSocket(),0) < 0)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Couldn't  restore "
+			<< dbi.name
+			<< endl;
+	}
+
+	pi_file_close(f);
+
+
+	if (fStatus==Done)
+	{
+		addSyncLogEntry(i18n("OK."));
+		emit syncDone(this);
+	}
+}
+
+/* virtual */ QString RestoreAction::statusString() const
+{
+	QString s;
+
+	switch(status())
+	{
+	case InstallingFiles : s.append("Installing Files (");
+		s.append(QString::number(fP->fDBIndex));
+		s.append(")");
+		break;
+	case GettingFileInfo : s.append("Getting File Info (");
+		s.append(QString::number(fP->fDBIndex));
+		s.append(")");
+		break;
+	default:
+		return SyncAction::statusString();
+	}
+
+	return s;
+}
+
+FileInstallAction::FileInstallAction(KPilotDeviceLink *p,
+	const QStringList &l) :
+	SyncAction(p),
+	fList(l),
+	fDBIndex(-1),
+	fTimer(0L)
 {
 	FUNCTIONSETUP;
 }
 
+FileInstallAction::~FileInstallAction()
+{
+	FUNCTIONSETUP;
+
+	KPILOT_DELETE(fTimer);
+}
+
+/* slot */ void FileInstallAction::exec()
+{
+	FUNCTIONSETUP;
+
+	fDBIndex=0;
+
+	// Possibly no files to install?
+	if (!fList.count()) return;
+
+	fTimer = new QTimer(this);
+	QObject::connect(fTimer,SIGNAL(timeout()),
+		this,SLOT(installNextFile()));
+
+	fTimer->start(0,false);
+
+	emit logProgress(i18n("Installing Files"),0);
+}
+
+/* slot */ void FileInstallAction::installNextFile()
+{
+	FUNCTIONSETUP;
+
+	ASSERT(fDBIndex >= 0);
+	ASSERT(fDBIndex < fList.count());
+
+	const QString &s = fList[fDBIndex];
+	fDBIndex++;
+
+	if (fDBIndex>= fList.count())
+	{
+		fDBIndex=-1;
+		fTimer->stop();
+	}
+
+	
+	struct pi_file *f;
+
+
+	DEBUGDAEMON << fname 
+		<< ": Installing file "
+		<< s 
+		<< endl;
+
+	emit logProgress(QString::null,
+		(100 * fDBIndex) / fList.count());
+
+	f = pi_file_open(const_cast<char *>((const char *)QFile::encodeName(s)));
+
+	if (!f)
+	{
+		kdWarning() << __FUNCTION__ 
+			<< ": Unable to open file." 
+			<< endl;
+
+		emit logError(
+			i18n("Unable to open file &quot;%1&quot;!").
+			arg(s));
+		return;
+	}
+
+	if (pi_file_install(f, pilotSocket(), 0) < 0)
+	{
+		kdWarning() << __FUNCTION__ 
+			<< ": failed to install." 
+			<< endl;
+
+
+		emit logError(
+			i18n("Cannot install file &quot;%1&quot;!").
+			arg(s));
+	}
+	else
+	{
+		QFile::remove(s);
+	}
+
+	pi_file_close(f);
+}
+
+/* virtual */ QString FileInstallAction::statusString() const
+{
+	if (fDBIndex<0)
+	{
+		return QString("Idle");
+	}
+	else
+	{
+		if (fDBIndex>=fList.count())
+		{
+			return QString("Index out of range");
+		}
+		else
+		{
+			return QString("Installing %1").arg(fList[fDBIndex]);
+		}
+	}
+}
 
 #if 0
 // Something for readConfig of subclasses:

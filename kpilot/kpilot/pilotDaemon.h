@@ -102,6 +102,7 @@ private:
 	FileInstaller *fInstaller;
 } ;
 
+class SyncActionStack;
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
 {
@@ -127,9 +128,7 @@ public:
 
 	DaemonStatus status() const { return fStatus; } ;
 	/* DCOP */ virtual QString statusString();
-
-  void quit(bool yesno) { fQuit = yesno; }
-  bool quit() { return fQuit; }
+	QString  syncTypeString(int i) const;
 
 	/**
 	* Display the daemon's system tray icon
@@ -141,7 +140,7 @@ public:
 	// The next few functions are the DCOP interface
 	//
 	//
-	virtual ASYNC startHotSync(int);
+	virtual ASYNC requestSync(int);
 	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();
 	virtual ASYNC quitNow();
@@ -149,43 +148,34 @@ public:
 
 protected:
 	DaemonStatus fStatus;
+	bool fQuitAfterSync;
 
-signals:
-  void endHotSync();
+protected slots:
+	void startHotSync();
+	void nextSyncAction(SyncAction *);
+	void endHotSync();
+
+	void logMessage(const QString &);
 
 private:
-	int getPilotSpeed(KConfig&);
+	int getPilotSpeed(KPilotConfigSettings &);
 
 	bool setupPilotLink();
-
-  void startHotSync();
 
 	KPilotDeviceLink &getPilotLink() { return *fPilotLink; }
 	KPilotDeviceLink *fPilotLink;
 
-  bool fQuit;
 	QString fPilotDevice;
 	KPilotDeviceLink::DeviceType fPilotType;
-
+	int fNextSyncType;
+	SyncActionStack *fSyncStack;
 
 
 	/**
 	* This is a pointer to the (optional) docked
 	* system tray icon for the daemon.
 	*/
-	PilotDaemonTray *tray;
-
-private slots:
-  void slotEndHotSync();
-  void quitImmediately();
-  void slotDBBackupFinished();
-
-	/**
-	* Called when the daemon begins syncing database @p dbName.
-	* This notifies the KPilot UI as well.
-	*/
-	void slotSyncingDatabase(char *dbName);
-
+	PilotDaemonTray *fTray;
 
 protected slots:
 	/**
@@ -213,6 +203,9 @@ private:
 
 
 // $Log$
+// Revision 1.24  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.23  2001/08/27 22:54:27  adridg
 // Decruftifying; improve DCOP link between daemon & viewer
 //

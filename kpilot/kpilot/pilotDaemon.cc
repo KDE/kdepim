@@ -62,6 +62,7 @@ static const char *id="$Id$";
 #ifndef QDRAGOBJECT_H
 #include <qdragobject.h>
 #endif
+#include <qstack.h>
 
 #ifndef _KUNIQUEAPP_H
 #include <kuniqueapp.h>
@@ -117,24 +118,21 @@ static const char *id="$Id$";
 #include "busysync.h"
 
 
-#ifndef _KPILOT_STATUSMESSAGES_H
-#include "statusMessages.h"
-#endif
 #ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
 #endif
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
 
 #include "hotSync.h"
 
 #include "kpilotDCOP_stub.h"
 
+typedef QStack<SyncAction> SyncActionStack;
+
 #include "pilotDaemon.moc"
+
 
 
 PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
@@ -189,7 +187,7 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
 /* virtual */ void PilotDaemonTray::closeEvent(QCloseEvent *)
 {
 	FUNCTIONSETUP;
-	daemon->quitImmediately();
+	kapp->quit();
 }
 
 void
@@ -292,10 +290,10 @@ void PilotDaemonTray::changeIcon(IconShape i)
 PilotDaemon::PilotDaemon() : 
 	DCOPObject("KPilotDaemonIface"),
 	fStatus(INIT),
-	fQuit(false), 
 	fPilotDevice(QString::null),
+	fNextSyncType(0),
 	fPilotLink(0L),
-	tray(0L),
+	fTray(0L),
 	fKPilotStub(new KPilotDCOP_stub("kpilot","KPilotIface"))
 {
 	FUNCTIONSETUP;
@@ -314,7 +312,10 @@ PilotDaemon::PilotDaemon() :
 
 	DEBUGDAEMON << fname
 		<< ": The daemon is ready with status "
+		<< statusString()
+		<< " ("
 		<< (int)fStatus
+		<< ")"
 		<< endl;
 }
 
@@ -325,11 +326,11 @@ PilotDaemon::~PilotDaemon()
 	delete fPilotLink;
 }
 
-int PilotDaemon::getPilotSpeed(KConfig& config)
+int PilotDaemon::getPilotSpeed(KPilotConfigSettings &config)
 {
 	FUNCTIONSETUP;
 
-	int speed = config.readNumEntry("PilotSpeed", 0);
+	int speed = config.getPilotSpeed();
 
 	// Translate the speed entry in the
 	// config file to something we can
@@ -361,7 +362,8 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 
 	DEBUGDAEMON << fname
 		<< ": Speed set to "
-		<< speedname << " ("
+		<< speedname 
+		<< " ("
 		<< speed << ")"
 		<< endl;
 
@@ -375,7 +377,7 @@ void PilotDaemon::showTray()
 {
 	FUNCTIONSETUP;
 
-	if (!tray) 
+	if (!fTray) 
 	{
 		DEBUGDAEMON << fname
 			<< ": No tray icon to display!"
@@ -385,9 +387,9 @@ void PilotDaemon::showTray()
 	}
 
 	// Copied from Klipper
-	KWin::setSystemTrayWindowFor( tray->winId(), 0 );
-	tray->setGeometry(-100, -100, 42, 42 );
-	tray->show();
+	KWin::setSystemTrayWindowFor( fTray->winId(), 0 );
+	fTray->setGeometry(-100, -100, 42, 42 );
+	fTray->show();
 
 	DEBUGDAEMON << fname
 		<< ": Tray icon displayed."
@@ -399,34 +401,53 @@ PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotConfig::getConfig();
-  
+	KPilotConfigSettings &config = KPilotConfig::getConfig();
+
 	getPilotSpeed(config);
 
-	fPilotDevice = config.readEntry("PilotDevice");
-	fPilotType = (KPilotDeviceLink::DeviceType) 
-		config.readNumEntry("PilotType", KPilotDeviceLink::None);
+	fPilotDevice = config.getPilotDevice();
+	fPilotType = KPilotDeviceLink::None;
+	int t = config.getPilotType();
+
+	switch(t)
+	{
+	case 0 : fPilotType = KPilotDeviceLink::Serial; break;
+	case 1 : fPilotType = KPilotDeviceLink::OldStyleUSB; break;
+	case 2 : fPilotType = KPilotDeviceLink::DevFSUSB; break;
+	default:
+		DEBUGDAEMON << fname
+			<< ": Unknown device type "
+			<< t
+			<< endl;
+	}
 
 	if (fPilotLink)
 	{
+		DEBUGDAEMON << fname
+			<< ": Resetting with device "
+			<< fPilotDevice 
+			<< " and type "
+			<< fPilotLink->deviceTypeString(fPilotType)
+			<< endl;
+
 		fPilotLink->reset(fPilotType,fPilotDevice);
 	}
 
-	if (config.readBoolEntry("DockDaemon",false))
+	if (config.getDockDaemon())
 	{
-		if (!tray)
+		if (!fTray)
 		{
-			tray = new PilotDaemonTray(this);
-			tray->show();
+			fTray = new PilotDaemonTray(this);
+			fTray->show();
 		}
 	}
 	else
 	{
-		if (tray)
+		if (fTray)
 		{
-			tray->hide();
-			delete tray;
-			tray=0L;
+			fTray->hide();
+			delete fTray;
+			fTray=0L;
 		}
 	}
 }
@@ -447,6 +468,9 @@ PilotDaemon::statusString()
 	case HOTSYNC_END : s.append(QString("End of Hotsync")); break;
 	case HOTSYNC_START : s.append(QString("Syncing")); break;
 	}
+
+	s.append(" NextSync=");
+	s.append(QString::number(fNextSyncType));
 
 	s.append(" (");
 	if (fPilotLink)
@@ -470,7 +494,7 @@ bool PilotDaemon::setupPilotLink()
 		fPilotLink=0;
 	}
 
-	fPilotLink = KPilotHotSyncLink::getLink();
+	fPilotLink = KPilotDeviceLink::init();
 	if (!fPilotLink)
 	{
 		kdWarning() << __FUNCTION__ 
@@ -479,20 +503,13 @@ bool PilotDaemon::setupPilotLink()
 		return false;
 	}
 
-	connect(fPilotLink, SIGNAL(deviceReady()),
-		this, SLOT(startHotSync()));
-	connect(fPilotLink, SIGNAL(databaseSyncComplete()),
-		this, SLOT(slotDBBackupFinished()));
+	QObject::connect(fPilotLink,SIGNAL(deviceReady()),
+		this,SLOT(startHotSync()));
+
 	return true;
 }
 
 
-void PilotDaemon::quitImmediately()
-{
-	FUNCTIONSETUP;
-	quit(true);
-	kapp->quit();
-} 
 /* DCOP ASYNC */ void
 PilotDaemon::quitNow()
 {
@@ -502,14 +519,14 @@ PilotDaemon::quitNow()
 	switch(fStatus)
 	{
 	case INIT :
-	case READY :
 	case HOTSYNC_END :
 	case ERROR : 
-		quitImmediately();
+		kapp->quit();
 		break;
+	case READY :
 	case HOTSYNC_START :
 	case FILE_INSTALL_REQ :
-		quit(true);
+		fQuitAfterSync = true;
 		break;
 	}
 }
@@ -518,35 +535,40 @@ PilotDaemon::quitNow()
 PilotDaemon::requestRegularSyncNext()
 {
 	// TODO: do something sensible here.
-	startHotSync(1);
+	requestSync(1);
 }
 
 /* DCOP ASYNC */ void
 PilotDaemon::requestFastSyncNext()
 {
 	// TODO: do something sensible here.
-	startHotSync(2);
+	requestSync(2);
 }
 
 
 /* DCOP ASYNC */ void
-PilotDaemon::startHotSync(int mode)
+PilotDaemon::requestSync(int mode)
 {
 	FUNCTIONSETUP;
 
 	switch(mode)
 	{
-	case 1:
+	case PilotDaemonDCOP::Test :
+		DEBUGDAEMON << fname
+			<< ": Starting a test Sync"
+			<< endl;
+		break;
+	case PilotDaemonDCOP::HotSync :
 		DEBUGDAEMON << fname
 			<< ": Starting a normal HotSync"
 			<< endl;
 		break;
-	case 2: 
+	case PilotDaemonDCOP::FastSync : 
 		DEBUGDAEMON << fname
 			<< ": Starting a FastSync"
 			<< endl;
 		break;
-	case 3:
+	case PilotDaemonDCOP::Backup :
 		DEBUGDAEMON << fname
 			<< ": Starting a full Backup"
 			<< endl;
@@ -555,68 +577,137 @@ PilotDaemon::startHotSync(int mode)
 		kdWarning() << __FUNCTION__
 			<< ": Unknown mode "
 			<< mode
-			<< " passed to startHotSync()"
 			<< endl;
 		return;
 	}
 
-	kdWarning() << __FUNCTION__
-		<< ": Unimplemented right now."
-		<< endl;
+	fNextSyncType=mode;
 }
 
-void
-PilotDaemon::startHotSync()
+QString  PilotDaemon::syncTypeString(int i) const
+{
+	switch(i)
+	{
+	case PilotDaemonDCOP::Test : return QString("Test");
+	case PilotDaemonDCOP::HotSync : return QString("HotSync");
+	case PilotDaemonDCOP::FastSync : return QString("FastSync");
+	case PilotDaemonDCOP::Backup : return QString("Backup");
+	case PilotDaemonDCOP::Restore : return QString("Restore");
+	default : return QString("<unknown>");
+	}
+}
+
+/* slot */ void PilotDaemon::startHotSync()
 {
 	FUNCTIONSETUP;
 
 
-	if (tray) 
+	if (fTray) 
 	{
 		DEBUGKPILOT << fname
 			<< ": Changing tray icon."
 			<< endl;
 
-		tray->changeIcon(PilotDaemonTray::Busy);
+		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
-	// FIXME
-	// getPilotLink().startHotSync();
 	getKPilot().daemonStatus(
 		i18n("Starting HotSync ..."));
-}
 
-void
-PilotDaemon::slotDBBackupFinished()
-{
-	FUNCTIONSETUP;
+	DEBUGDAEMON << fname
+		<< ": Starting Sync with type "
+		<< syncTypeString(fNextSyncType)
+		<< " ("
+		<< fNextSyncType
+		<< ")"
+		<< endl;
 
-	DEBUGDAEMON << fname << ": DB Syncing finished." << endl;
+	SyncAction *a=0L;
+	fSyncStack->clear();
 
-	KConfig& config = KPilotConfig::getConfig();
-	if(config.readBoolEntry("SyncFiles"))
+	if (KPilotConfig::getConfig().resetGroup().getSyncFiles())
 	{
-		FileInstaller fi;
-
-		fStatus = FILE_INSTALL_REQ;
-
-		getPilotLink().installFiles(fi.fileNames());
+		a = new FileInstallAction(fPilotLink,
+			fTray->installFiles());
+		fSyncStack->push(a);
 	}
 
-	emit(endHotSync());
+	switch (fNextSyncType)
+	{
+	case PilotDaemonDCOP::Test :
+		a = new TestLink(fPilotLink);
+		fSyncStack->push(a);
+		break;
+	case PilotDaemonDCOP::Backup :
+		a = new BackupAction(fPilotLink);
+		fSyncStack->push(a);
+		break;
+	default :
+		DEBUGDAEMON << fname
+			<< ": Can't handle sync type "
+			<< syncTypeString(fNextSyncType)
+			<< endl;
+	}
+
+	nextSyncAction(0L);
 }
 
-void
-PilotDaemon::slotEndHotSync()
+/* slot */ void PilotDaemon::logMessage(const QString &s)
+{
+	DEBUGDAEMON << __FUNCTION__ << ": " << s << endl;
+
+	getKPilot().daemonStatus(s);
+}
+
+/* slot */ void PilotDaemon::logProgress(const QString &s, int i)
+{
+	DEBUGDAEMON << __FUNCTION__ << ": " << s << " (" << i << "%)" << endl;
+
+	getKPilot().daemonProgress(s,i);
+}
+
+/* slot */ void PilotDaemon::nextSyncAction(SyncAction *b)
 {
 	FUNCTIONSETUP;
 
-	if (tray) { tray -> changeIcon(PilotDaemonTray::Normal); } 
+	if (b) delete b;
+
+	if (fSyncStack->isEmpty()) 
+	{ 
+		endHotSync(); 
+		return;
+	}
+
+	a = fSyncStack->pop();
+	if (!a) return;
+
+	QObject::connect(a,SIGNAL(logMessage(const QString &)),
+		this,SLOT(logMessage(const QString &)));
+	QObject::connect(a,SIGNAL(logError(const QString &)),
+		this,SLOT(logMessage(const QString &)));
+	QObject::connect(a,SIGNAL(logProgress(const QString &,int)),
+		this,SLOT(logProgress(const QString &,int)));
+	QObject::connect(a,SIGNAL(syncDone(SyncAction *)),
+		this,SLOT(nextSyncAction(SyncAction *)));
+
+	a->exec();
+}
+
+
+/* slot */ void PilotDaemon::endHotSync()
+{
+	FUNCTIONSETUP;
+
+	ASSERT(fSyncStack->isEmpty());
+
+	if (fTray) { fTray -> changeIcon(PilotDaemonTray::Normal); } 
+
+	fPilotLink->close();
 
 	getKPilot().daemonStatus(
 		i18n("HotSync Completed."));
 
-	if(!quit())
+	if(!fQuitAfterSync)
 	{
 		fStatus = HOTSYNC_END;
 	}
@@ -624,18 +715,6 @@ PilotDaemon::slotEndHotSync()
 	{
 		kapp->quit();
 	}
-}
-
-
-void 
-PilotDaemon::slotSyncingDatabase(char *dbName)
-{
-	FUNCTIONSETUP;
-
-	getKPilot().daemonStatus(
-		i18n("Syncing database %1 ...").arg(dbName));
-
-	fStatus = HOTSYNC_START;
 }
 
 
@@ -740,11 +819,9 @@ int main(int argc, char* argv[])
 	//
 	//
 	{
-	KConfig& c=KPilotConfig::getConfig();
-	c.setReadOnly(true);
-	int v = c.readNumEntry("Configured",0);
+	KPilotConfigSettings & c=KPilotConfig::getConfig();
 
-	if (v < KPilotConfig::ConfigurationVersion)
+	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		kdError() << __FUNCTION__ 
 			<< ": Is still not configured for use."
@@ -754,7 +831,7 @@ int main(int argc, char* argv[])
 
 	DEBUGDAEMON << fname
 		<< ": Configuration version "
-		<< v
+		<< c.getVersion()
 		<< endl;
 	}
 
@@ -785,6 +862,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.43  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.42  2001/08/27 22:54:27  adridg
 // Decruftifying; improve DCOP link between daemon & viewer
 //

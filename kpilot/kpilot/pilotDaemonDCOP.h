@@ -40,7 +40,7 @@ class PilotDaemonDCOP : virtual public DCOPObject
 {
 	K_DCOP
 public:
-	enum HotSyncTypes { Default=0,
+	enum HotSyncTypes { Test=0,
 		HotSync,
 		FastSync,
 		Backup,
@@ -56,7 +56,7 @@ k_dcop:
 	* 3 FullBackup -> backup, no conduits
 	* 4 FullRestore -> restore from local databases
 	*/
-	virtual ASYNC startHotSync(int) = 0;
+	virtual ASYNC requestSync(int) = 0;
 	virtual ASYNC requestFastSyncNext() = 0;
 	virtual ASYNC requestRegularSyncNext() = 0;
 
@@ -76,6 +76,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.9  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.8  2001/09/07 20:48:44  adridg
 // New methods, moved #ifdefs. The KPilot Daemon is still broken, though.
 //

@@ -37,71 +37,41 @@ class QTimer;
 
 #include "kpilotlink.h"
 
-
-class KPilotHotSyncLink : public KPilotDeviceLink
+class TestLink : public SyncAction
 {
 Q_OBJECT
 
-/*
-** Enforcing the singleton pattern, as always.
-*/
-
-protected:
-	KPilotHotSyncLink();
 public:
-	static KPilotHotSyncLink *getLink();
-private:
-	static KPilotHotSyncLink *fLink;
+	TestLink(KPilotDeviceLink *);
 
+public slots:
+	virtual void exec();
+} ;
 
-/*
-** The actually useful functions of this class.
-*/
-protected slots:
-	/**
-	* Something for deviceReady() to attach to. This calls the
-	* appropriate do...() function to do the actual work.
-	*/
-	void startHotSync();
-protected:
-	virtual void doFullBackup();
-	virtual void doFullRestore();
-	virtual void doHotSync(); // A no-op in this class
-	virtual void doFastSync(); // A no-op in this class
+class BackupAction : public SyncAction
+{
+Q_OBJECT
 
-signals:
-	/**
-	* Emitted at the beginning of a sync.
-	*/
-	void syncStarted();
-
-	/**
-	* Emitted when the sync is done.
-	*/
-	void syncEnded();
-
-
-/*
-** Status information.
-*/
 public:
-	enum SyncType { Backup,
-		Restore,
-		HotSync,
-		FastSync } ;
+	BackupAction(KPilotDeviceLink *);
 
-	SyncType getSyncType() const { return fSyncType; } ;
-	void setSyncType(SyncType t) { fSyncType = t; } ;
+	enum Status { Init,
+		Error,
+		FullBackup,
+		BackupIncomplete,
+		BackupEnded,
+		BackupComplete 
+		} ;
+	virtual QString statusString() const;
 
-private:
-	SyncType fSyncType;
-
+public slots:
+	virtual void exec();
 
 private:
 	/**
 	* All manner of support functions for full backup.
 	*/
-	void endFullBackup();
+	void endBackup();
 	bool createLocalDatabase(DBInfo *);
 
 private slots:
@@ -110,95 +80,56 @@ private slots:
 private:
 	QTimer *fTimer;
 	int fDBIndex;
-
-public:
-	enum Status { Init,
-		Error,
-		FullBackup,
-		BackupIncomplete,
-		BackupEnded,
-		BackupComplete 
-		} ;
-	Status status() const { return fStatus; } ;
-	virtual QString statusString() const;
-
-private:
-	Status fStatus;
 	QString fDatabaseDir;
 } ;
 
-// #if 0
-// class KPilotSyncLink : public KPilotDeviceLink
-// {
-// Q_OBJECT
-// /*
-// ** Other stuff.
-// */
-// public:
-// 	/**
-// 	* End a HotSync session with a Palm Pilot.
-// 	*/
-// 	void endHotSync();
-// 
-// 	/**
-// 	* Backups all databases to BACKUP_DIR/username.
-// 	*/
-// 	void doFullBackup();  
-// 
-// 	/**
-// 	* Restores all databases to the Pilot from BACKUP_DIR/username.
-// 	*/
-// 	bool doFullRestore(); 
-// 
-// 	/**
-// 	* Installs all files found in installPath on the Pilot.
-// 	*/
-// 	void installFiles(const QString &installPath);
-// 
-// 
-// 
-// 
-// /*
-// ** Sync Mode methods
-// */
-// 
-// 	/*
-// 	** KPilotLink currently uses two boolean variables to indicate
-// 	** what kind of a sync is running. This is utterly moot since
-// 	** the internal conduits no longer sync any DBs themselves.
-// 	** We want to move to a situation where the kind of HotSync is:
-// 	** 
-// 	** * FullBackup - copy all DBs to disk
-// 	** * HotSync    - copy all DBs to disk and run conduits
-// 	** * FastSync   - copy DBs with conduits to disk and run conduits
-// 	*/
-// 
-// 	/**
-// 	* This is merely a flag for any widget that should run.  
-// 	* Will be set by KPilot when doing a full backup, then 
-// 	* reset after that.  Mostly obsolete since conduits are 
-// 	* being used.
-// 	*/
-// 	void setSlowSyncRequired(bool yesno) 
-// 		{ fSlowSyncRequired = yesno; }
-// 
-// 	/** 
-// 	* Returns the whether the widget should do a full or partial backup.  
-// 	* Mostly obsolete now that conduits are being used.
-// 	*/
-// 	bool slowSyncRequired() const 
-// 		{ return fSlowSyncRequired; }
-// 
-// 	/**
-// 	* Here we have another boolean variable with set and get
-// 	* methods, meant to indicate a FastSync like Heiko Purnhagen
-// 	* wanted. I have no idea, really, whether it's implemented.
-// 	*/
-// 	void setFastSyncRequired(bool yesno) 
-// 		{ fFastSyncRequired = yesno; } 
-// 	bool fastSyncRequired() const 
-// 		{ return fFastSyncRequired; } 
-// 
+class RestoreAction : public SyncAction
+{
+Q_OBJECT
+public:
+	RestoreAction(KPilotDeviceLink *);
+
+	typedef enum { InstallingFiles, GettingFileInfo,Done } Status;
+	virtual QString statusString() const;
+
+public slots:
+	virtual void exec();
+
+protected slots:
+	void getNextFileInfo();
+	void installNextFile();
+
+private:
+	// Use a private-d pointer for once (well, in KPilot
+	// parlance it'd be fd, which is confusing, so it's
+	// become a private fP) since we need QList or QPtrList.
+	//
+	//
+	class RestoreActionPrivate;
+	RestoreActionPrivate *fP;
+} ;
+
+class FileInstallAction : public SyncAction
+{
+Q_OBJECT
+public:
+	FileInstallAction(KPilotDeviceLink *,const QStringList &);
+	virtual ~FileInstallAction();
+
+	virtual QString statusString() const;
+
+public slots:
+	virtual void exec();
+
+protected slots:
+	void installNextFile();
+
+private:
+	const QStringList &fList;
+	int fDBIndex;
+	QTimer *fTimer;
+} ;
+
 // 
 // /* CONDUIT SYNCING SUPPORT */
 // 
@@ -433,5 +364,8 @@ private:
 // };
 // #endif
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/09/16 13:43:18  adridg
+// Subclasses for hotSyncing
+//
 #endif

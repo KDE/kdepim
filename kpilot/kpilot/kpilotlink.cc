@@ -53,10 +53,36 @@ static const char *kpilotlink_id =
 
 #include "kpilotlink.moc"
 
+
+SyncAction::SyncAction(KPilotDeviceLink *p,
+	QObject *parent,
+	const char *name) :
+	QObject(parent,name),
+	fHandle(p)
+{
+	FUNCTIONSETUP;
+}
+
+/* virtual */ void SyncAction::exec()
+{
+	FUNCTIONSETUP;
+
+	DEBUGDAEMON << fname
+		<< ": NULL action executed."
+		<< endl;
+}
+
+/* virtual */ QString SyncAction::statusString() const
+{
+	QString s("status=");
+	s.append(QString::number(status()));
+	return s;
+}
+
 KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 
-KPilotDeviceLink::KPilotDeviceLink() :
-	KPilotLink("deviceLink"),
+KPilotDeviceLink::KPilotDeviceLink(QObject *parent,const char *name) :
+	QObject(parent,name),
 	fPilotPath(QString::null),
 	fDeviceType(None),
 	fRetries(0),
@@ -76,8 +102,19 @@ KPilotDeviceLink::~KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
 	close();
+	fDeviceLink=0L;
 }
 
+KPilotDeviceLink *KPilotDeviceLink::init(QObject *parent,
+	const char *name)
+{
+	FUNCTIONSETUP;
+
+	ASSERT(!fDeviceLink);
+
+	return new KPilotDeviceLink(parent,name);
+}
+	
 void KPilotDeviceLink::close()
 {
 	FUNCTIONSETUP;
@@ -216,6 +253,7 @@ KPilotDeviceLink::open()
 	if (ret >= 0)
 	{
 		fStatus = DeviceOpen;
+		fOpenTimer->stop();
 
 		fSocketNotifier = new QSocketNotifier(fPilotMasterSocket,
 			QSocketNotifier::Read,
@@ -232,6 +270,9 @@ KPilotDeviceLink::open()
 		}
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ");
+
+		fOpenTimer->stop();
+
 		// goto errInit;
 	}
 
@@ -309,6 +350,31 @@ void KPilotDeviceLink::acceptDevice()
 		<< " and master "
 		<< fPilotMasterSocket
 		<< endl;
+
+	ret = pi_listen(fPilotMasterSocket, 1);
+	if (ret == -1)
+	{
+		char *s=strerror(errno);
+
+		kdWarning() << "pi_listen: " << s << endl;
+
+		emit logError(i18n("Can't listen on Pilot socket (%1)").arg(s));
+
+		return;
+	}
+
+	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
+	if (fCurrentPilotSocket == -1)
+	{
+		char *s=strerror(errno);
+
+		kdWarning() << "pi_accept: " << s << endl;
+
+		emit logError(i18n("Can't accept Pilot (%1)").arg(s));
+
+		fStatus=PilotLinkError;
+		return;
+	}
 
 	if ((fStatus != DeviceOpen) || (fPilotMasterSocket == -1))
 	{
@@ -407,10 +473,25 @@ bool KPilotDeviceLink::installFile(const QString &f)
 }
 
 
-void KPilotDeviceLink::addSyncLogEntry(const QString &entry)
+void KPilotDeviceLink::addSyncLogEntry(const QString &entry,bool suppress)
 {
 	dlp_AddSyncLogEntry(fCurrentPilotSocket, const_cast<char *>(entry.latin1()));
-	emit logMessage(entry);
+	if (!suppress)
+	{
+		emit logMessage(entry);
+	}
+}
+
+QString KPilotDeviceLink::deviceTypeString(int i) const
+{
+	switch(i)
+	{
+	case None : return QString("None");
+	case Serial : return QString("Serial");
+	case OldStyleUSB : return QString("OldStyleUSB");
+	case DevFSUSB : return QString("DevFSUSB");
+	default : return QString("<unknown>");
+	}
 }
 
 QString KPilotDeviceLink::statusString() const
@@ -435,6 +516,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.55  2001/09/16 12:24:54  adridg
+// Added sensible subclasses of KPilotLink, some USB support added.
+//
 // Revision 1.54  2001/09/06 22:04:27  adridg
 // Enforce singleton-ness & retry pi_bind()
 //

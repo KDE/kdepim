@@ -41,10 +41,6 @@ class QTimer;
 class QSocketNotifier;
 class KPilotUser;
 
-#ifndef _KPILOT_STATUSMESSAGES_H
-#include "statusMessages.h"
-#endif
-
 /*
 ** The KPilotLink class was originally a kind of C++ wrapper
 ** for the pilot-link library. It grew and grew and mutated
@@ -58,6 +54,9 @@ class KPilotUser;
 ** Which is exactly what is needed: something that conduits can
 ** plug onto to talk to the pilot.
 */
+
+class SyncAction;
+class KPilotDeviceLink;
 
 
 /*
@@ -84,36 +83,9 @@ struct db
 
 
 
-/*
-** KPilotLink is a QObject so that it can use the Qt signals / slots
-** architecture (although it currently does so only half-heartedly).
-*/
-
-class KPilotLink : public QObject
+class KPilotDeviceLink : public QObject
 {
-protected:
-	KPilotLink(const char *name) : QObject(0L,name) { } ;
-
-
-public:
-	/**
-	* This belongs on both client and server end: these are
-	* commands sent from KPilot telling the daemon
-	* to perform those actions.
-	*/
-	enum Commands { Backup, 
-		Restore, 
-		HotSync, 
-		FastSync,
-		InstallFile, 
-		TestConnection 
-	};
-
-	virtual QString statusString() const = 0;
-} ;
-
-class KPilotDeviceLink : public KPilotLink
-{
+friend class SyncAction;
 Q_OBJECT
 
 /*
@@ -125,13 +97,14 @@ protected:
 	*
 	* Call reset() on it to start looking for a device.
 	*/
-	KPilotDeviceLink();
+	KPilotDeviceLink(QObject *parent, const char *name);
 private:
 	static KPilotDeviceLink *fDeviceLink;
 
 public:
 	virtual ~KPilotDeviceLink();
-
+	static KPilotDeviceLink *link() { return fDeviceLink; } ;
+	static KPilotDeviceLink *init(QObject *parent=0L,const char *n=0L);
 
 /*
 ** Status information
@@ -183,6 +156,7 @@ public:
 		} DeviceType;
 
 	DeviceType deviceType() const { return fDeviceType; } ;
+	QString deviceTypeString(int i) const;
 	bool isTransient() const 
 	{ 
 		return (fDeviceType==OldStyleUSB) ||
@@ -198,6 +172,7 @@ public:
 	void reset(DeviceType t,const QString &pilotPath = QString::null);
 
 
+public slots:
 	/**
 	* Release all resources, including the master pilot socket,
 	* timers, notifiers, etc.
@@ -286,7 +261,7 @@ protected:
  	* highly dubious). Causes signal logEntry(const char *)
  	* to be emitted.
  	*/
- 	void addSyncLogEntry(const QString &entry);
+ 	void addSyncLogEntry(const QString &entry,bool suppress=false);
 
 signals:
  	/**
@@ -314,7 +289,45 @@ protected:
 	KPilotUser  *fPilotUser;
 } ;
 
+class SyncAction : public QObject
+{
+Q_OBJECT
+
+public:
+	SyncAction(KPilotDeviceLink *p,
+		QObject *parent=0L,
+		const char *name=0L);
+
+	typedef enum { Error=-1 } Status;
+
+	int status() const { return fStatus; } ;
+	virtual QString statusString() const;
+
+public slots:
+	virtual void exec();
+
+signals:
+	void syncDone(SyncAction *);
+	void logMessage(const QString &);
+	void logError(const QString &);
+	void logProgress(const QString &,int);
+
+protected:
+	KPilotDeviceLink *fHandle;
+	int fStatus;
+
+	int pilotSocket() const { return fHandle->pilotSocket(); } ;
+	void addSyncLogEntry(const QString &e,bool suppress=false) 
+		{ fHandle->addSyncLogEntry(e,suppress); }
+} ;
+
+
+
+
 // $Log$
+// Revision 1.31  2001/09/16 12:24:54  adridg
+// Added sensible subclasses of KPilotLink, some USB support added.
+//
 // Revision 1.30  2001/09/07 20:46:40  adridg
 // Cleaned up some methods
 //
