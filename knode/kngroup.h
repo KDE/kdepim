@@ -49,8 +49,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
     void updateThreadInfo();
-    void resort();
-    
+    void reorganize();
+
     //get
     collectionType type()               { return CTgroup; }
     QString path();

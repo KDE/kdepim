@@ -19,7 +19,6 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
-#include <ksimpleconfig.h>
 #include <kstddirs.h>
 #include <kaction.h>
 #include <kglobal.h>
@@ -48,19 +47,15 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
     return;
   }
 
-  KSimpleConfig info(dir+".standard.info");
   KNFolder *f;
 
   f=new KNFolder(1, i18n("Drafts"), "drafts");
-  f->setCount(info.readNumEntry("draftsCount", 0));
   f_List.append(f);
 
   f=new KNFolder(2, i18n("Outbox"), "outbox");
-  f->setCount(info.readNumEntry("outboxCount", 0));
   f_List.append(f);
 
   f=new KNFolder(3, i18n("Sent"), "sent");
-  f->setCount(info.readNumEntry("sentCount", 0));
   f_List.append(f);
 
   //custom folders
@@ -164,12 +159,6 @@ void KNFolderManager::syncFolders()
     displayInternalFileError();
     return;
   }
-
-  //save standard info
-  KSimpleConfig info(dir+".standard.info");
-  info.writeEntry("draftsCount", drafts()->count());
-  info.writeEntry("outboxCount", outbox()->count());
-  info.writeEntry("sentCount", sent()->count());
 
   //sync
   int idx=0;

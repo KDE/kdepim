@@ -138,7 +138,7 @@ class KNodeView : public QSplitter
     KAction   *a_ctGrpProperties,
               *a_ctGrpGetNewHdrs,
               *a_ctGrpExpire,
-              *a_ctGrpResort,
+              *a_ctGrpReorganize,
               *a_ctGrpUnsubscribe,
               *a_ctGrpSetAllRead,
               *a_ctGrpSetAllUnread;
@@ -198,7 +198,7 @@ class KNodeView : public QSplitter
     void slotGrpProperties();
     void slotGrpGetNewHdrs();
     void slotGrpExpire();
-    void slotGrpResort();
+    void slotGrpReorganize();
     void slotGrpUnsubscribe();
     void slotGrpSetAllRead();
     void slotGrpSetAllUnread();

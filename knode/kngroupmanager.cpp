@@ -473,15 +473,14 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
 }
 
 
-void KNGroupManager::resortGroup(KNGroup *g)
+void KNGroupManager::reorganizeGroup(KNGroup *g)
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
-  g->resort();
+  g->reorganize();
   if(g==c_urrentGroup)
     a_rticleMgr->showHdrs();
 }
-
 
 
 void KNGroupManager::setCurrentGroup(KNGroup *g)

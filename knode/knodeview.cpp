@@ -471,8 +471,8 @@ void KNodeView::initActions()
                               SLOT(slotGrpGetNewHdrs()), a_ctions, "group_dnlHeaders");
   a_ctGrpExpire             = new KAction(i18n("E&xpire Now"), "wizard", 0, this,
                               SLOT(slotGrpExpire()), a_ctions, "group_expire");
-  a_ctGrpResort             = new KAction(i18n("Res&ort"), 0, this,
-                              SLOT(slotGrpResort()), a_ctions, "group_resort");
+  a_ctGrpReorganize         = new KAction(i18n("Re&organize"), 0, this,
+                              SLOT(slotGrpReorganize()), a_ctions, "group_reorg");
   a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe"), "news_unsubscribe", 0, this,
                               SLOT(slotGrpUnsubscribe()), a_ctions, "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark all as &read"), "goto", 0, this,
@@ -732,7 +732,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctGrpProperties->setEnabled(enabled);
     a_ctGrpGetNewHdrs->setEnabled(enabled);
     a_ctGrpExpire->setEnabled(enabled);
-    a_ctGrpResort->setEnabled(enabled);
+    a_ctGrpReorganize->setEnabled(enabled);
     a_ctGrpUnsubscribe->setEnabled(enabled);
     a_ctGrpSetAllRead->setEnabled(enabled);
     a_ctGrpSetAllUnread->setEnabled(enabled);
@@ -1060,11 +1060,10 @@ void KNodeView::slotGrpExpire()
 }
 
 
-void KNodeView::slotGrpResort()
+void KNodeView::slotGrpReorganize()
 {
-  kdDebug(5003) << "KNodeView::slotGrpResort()" << endl;
-  if(g_rpManager->currentGroup())
-    g_rpManager->resortGroup(g_rpManager->currentGroup());
+  kdDebug(5003) << "KNodeView::slotGrpReorganize()" << endl;
+  g_rpManager->reorganizeGroup(g_rpManager->currentGroup());
 }
 
 

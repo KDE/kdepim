@@ -259,6 +259,30 @@ QCString KNMimeBase::multiPartBoundary()
 }
 
 
+QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
+{
+  QCString n=QCString(name)+": ";
+  int pos1=src.find(n, 0, false), pos2=0, len=src.length()-1;
+
+  if(pos1>-1 && (pos1==0 || src[pos1-1]=='\n')) {    //there is a header with the given name
+    QCString tmp=src.mid(pos1, src.length()-pos1);
+
+    pos1+=n.length(); //skip the name
+    pos2=pos1;
+    while(1) {
+      pos2=src.find("\n", pos2+1);
+      if(pos2==-1 || pos2==len || ( src[pos2+1]!=' ' && src[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
+        break;
+    }
+
+    if(pos2<0) pos2=len+1; //take the rest of the string
+    return src.mid(pos1, pos2-pos1).simplifyWhiteSpace();
+  }
+  else
+    return QCString(""); //header not found
+}
+
+
 QCString KNMimeBase::CRLFtoLF(const QCString &s)
 {
   QCString ret=s.copy();
@@ -1164,7 +1188,7 @@ int KNMimeContent::lineCount()
 
 QCString KNMimeContent::rawHeader(const char *name)
 {
-  QCString n=QCString(name)+": ";
+  /*QCString n=QCString(name)+": ";
   int pos1=h_ead.find(n, 0, false), pos2=0, len=h_ead.length()-1;
 
   if(pos1>-1 && (pos1==0 || h_ead[pos1-1]=='\n')) {    //there is a header with the given name
@@ -1182,7 +1206,8 @@ QCString KNMimeContent::rawHeader(const char *name)
     return h_ead.mid(pos1, pos2-pos1).simplifyWhiteSpace();
   }
   else
-    return QCString(); //header not found
+    return QCString(); //header not found*/
+  return extractHeader(h_ead, name);
 }
 
 

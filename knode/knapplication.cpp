@@ -18,6 +18,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kurl.h>
+#include <kconfig.h>
 
 #include "knode.h"
 #include "knapplication.h"
@@ -29,7 +30,7 @@
 #include "knnntpaccount.h"
 #include "kngroup.h"
 #include "kncollectionviewitem.h"
-
+#include "knconvert.h"
 
 KNApplication::KNApplication()
  : KUniqueApplication()
@@ -45,6 +46,27 @@ KNApplication::~KNApplication()
 int KNApplication::newInstance()
 {
   kdDebug(5003) << "KNApplication::newInstance()" << endl;
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("GENERAL");
+  QString ver=conf->readEntry("Version");
+
+  if(!ver.isEmpty() && ver!=KNODE_VERSION) { //new version installed
+    if(KNConvert::needToConvert(ver)) { //we need to convert
+      kdDebug(5003) << "KNApplication::newInstance() : conversion needed" << endl;
+      KNConvert *convDlg=new KNConvert(ver);
+      if(!convDlg->exec()) { //reject()
+        if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
+          conf->writeEntry("Version", KNODE_VERSION);
+        exit(0);
+      }
+      else //conversion done
+        conf->writeEntry("Version", KNODE_VERSION);
+      delete convDlg;
+    }
+    else //new version but no need to convert anything => just save the new version
+      conf->writeEntry("Version", KNODE_VERSION);
+  }
 
   if (mainWidget())
     KWin::setActiveWindow(mainWidget()->winId());

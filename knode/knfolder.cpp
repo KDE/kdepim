@@ -41,6 +41,8 @@ KNFolder::KNFolder(int id, const QString &name, KNCollection *parent)
   QString fname=path()+QString("%1_%2.").arg(n_ame).arg(i_d);
   m_boxFile.setName(fname+"mbox");
   i_ndexFile.setName(fname+"idx");
+
+  c_ount=i_ndexFile.size()/sizeof(DynData);
 }
 
 
@@ -51,6 +53,8 @@ KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNCollect
   QString fname=path()+QString("%1_%2.").arg(prefix).arg(i_d);
   m_boxFile.setName(fname+"mbox");
   i_ndexFile.setName(fname+"idx");
+
+  c_ount=i_ndexFile.size()/sizeof(DynData);
 }
 
 

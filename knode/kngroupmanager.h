@@ -97,7 +97,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void showGroupProperties(KNGroup *g=0);
     void checkGroupForNewHeaders(KNGroup *g=0);
     void expireGroupNow(KNGroup *g=0);
-    void resortGroup(KNGroup *g=0);
+    void reorganizeGroup(KNGroup *g=0);
       
     KNGroup* group(const QString &gName, const KNServerInfo *s);
     KNGroup* currentGroup()               { return c_urrentGroup; }

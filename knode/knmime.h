@@ -53,6 +53,7 @@ class KNMimeBase {
     static QCString multiPartBoundary();
 
     //string handling
+    static QCString extractHeader(const QCString &src, const char *name);
     static QCString CRLFtoLF(const QCString &s);
     static QCString CRLFtoLF(const char *s);
     static QCString LFtoCRLF(const QCString &s);

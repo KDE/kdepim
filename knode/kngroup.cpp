@@ -758,18 +758,20 @@ int KNGroup::findRef(KNRemoteArticle *a, int from, int to, bool reverse)
 }
 
 
-
-void KNGroup::resort()
+void KNGroup::reorganize()
 {
+  kdDebug(5003) << "KNGroup::reorganize()" << endl;
+
   for(int idx=0; idx<len; idx++) {
+    at(idx)->setId(idx+1); //new ids
     at(idx)->setIdRef(-1);
     at(idx)->setThreadingLevel(0);
   }
-  kdDebug(5003) << "KNGroup::resort()" << endl;
+
   sortHdrs(len);
+  saveStaticData(len, true);
   saveDynamicData(len, true);
 }
-
 
 
 void KNGroup::updateThreadInfo()
@@ -802,7 +804,7 @@ void KNGroup::updateThreadInfo()
 
   if(brokenThread) {
     kdWarning(5003) << "KNGroup::updateThreadInfo() : Found broken threading infos! Restoring ..." << endl;
-    resort();
+    reorganize();
     updateThreadInfo();
   }
 }
