@@ -21,7 +21,7 @@
 </authorgroup>
 
 <date>15/07/2000</date>
-<releaseinfo>1.01.45</releaseinfo>
+<releaseinfo>1.01.60</releaseinfo>
 
 <abstract>
 	
@@ -96,7 +96,7 @@ working with it right away. For more in-depth information see the
 <link linkend="secUsingKmail">Using KMail</link> section.</para>
 
 <para>Invoking KMail for the first time creates a directory called "Mail" containing the initial
-files (inbox, outbox, sent-mail, and trash) in your home directory.  Use
+files (inbox, outbox, sent-mail and trash) in your home directory.  Use
 <emphasis remap="bf">File | Settings...</emphasis> to enter some initial information so KMail will 
 be able to properly retrieve and send your messages. <!-- fixme: does it pop up
 automatically? --></para>
@@ -199,8 +199,7 @@ password, so people who can access your configuration files (e.g. system adminis
 can see your password if you select this option.</para>
 
 <para>Select <emphasis remap="bf">Retrieve all mail from server</emphasis> if you
-want to get all mails, not only the new ones.
-<!-- todo/correct: "If you have selected 'Delete mail from server' this has no effect." --></para>
+want to get all mails, not only the new ones.</para>
 
 <para>Select <emphasis remap="bf">Exclude from "Check Mail"</emphasis> if you
 don't want to check this account whenever you use <emphasis remap="bf">Check mail...</emphasis>.
@@ -276,7 +275,9 @@ clicking on another message. The two messages you just clicked on will be
 selected, along with all the messages in between. By holding down the Ctrl key
 you can select any number of messages without those in between. You may sort the messages by
 clicking on the column that you wish to sort. If you click on the same
-column more then once, sort order will toggle between ascending/descending.</para>
+column more then once, sort order will toggle between ascending/descending.
+If you click on the Subject column, you can toggle sorting between Subject
+ascending/descending and Status ascending/descending.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -408,7 +409,9 @@ menu. PGP key attachments are handled like file attachments.</para>
 
 <para>To check the spelling of your message, select <emphasis remap="bf">Edit
 | Spelling...</emphasis>. KMail uses KSpell to check spelling, which is
-the KDE frontend to the the ispell or aspell spelling checker.</para>
+the KDE frontend to the the ispell or aspell spelling checker. Note that
+you may need to configure the spellchecker using <emphasis remap="bf">Settings | Spellchecker...</emphasis>.
+</para>
 </sect2>
 </sect1>
 
@@ -464,7 +467,6 @@ selected folder is the <emphasis remap="bf">trash</emphasis> folder, all of the 
 
 <sect1 id="theaddressbook">
 <title>The Addressbook</title>
-<!-- TODO: update when new address book is included -->
 
 <para>The addressbook is a place to store your commonly used email addresses.  You can call up the addressbook
 from the <emphasis remap="bf">File</emphasis> menu, the addressbook button on the Main window, or the addressbook button in the
@@ -477,7 +479,7 @@ the list and hit the <emphasis remap="bf">Remove</emphasis> button. </para>
 <para>Addresses can also be added to the addressbook from the <emphasis remap="bf">Mail Reader</emphasis>
 window by right-clicking on
 an email address in the <emphasis remap="bf">To:</emphasis> or <emphasis remap="bf">From:</emphasis>
-fields and selecting <emphasis remap="bf">Add to Addressbook</emphasis>.</para>
+fields and selecting <emphasis remap="bf">Add to addressbook</emphasis>.</para>
 </sect1>
 
 <sect1 id="filters">
@@ -486,15 +488,6 @@ fields and selecting <emphasis remap="bf">Add to Addressbook</emphasis>.</para>
 <para>After using KMail for a while, you may find that you have trouble sorting out the new messages in 
 your inbox when they arrive. Filters allow you to automatically perform certain actions on
 incoming messages and to manually perform actions on selected messages in a folder.</para>
-
-<para>The actions section of the <emphasis remap="bf">Filter Rules</emphasis> window lets you perform 
-up to eight actions in one
-filter. <!-- You can you the "Skip Rest" option to skip the rest of the actions
-in the list.  Only the transfer action and the skip rest action are
-supported at this time,  but expect to see more action options available
-in future releases of KMail. -->
-<!-- fixme: true? isn't "nothing" the same as "skip rest"??? -->
-</para>
 
 <para>Usually, filters are used on incoming messages, but they can also be applied to a message or group of
 messages.  To selectively filter messages in a message folder, select the messages you want to filter and
@@ -523,27 +516,20 @@ of my KDE User List messages is that they always contain "kde-user@kde.org" in t
 <para>Select <emphasis remap="bf">Filter...</emphasis> from the File menu.</para>
 </listitem>
 <listitem>
-<para>Press the <emphasis remap="bf">New</emphasis> button to create an empty filter.</para>
-</listitem>
-<listitem>
-<para>Select the empty filter from the list. (It will appear as <emphasis remap="bf">Unnamed</emphasis>).</para>
+<para>Press the <emphasis remap="bf">New</emphasis> button to create an empty filter. It will appear as <emphasis remap="bf">Unnamed</emphasis>.</para>
 </listitem>
 <listitem>
 <para>The right side of the Filter window contains two sections: matching criteria and actions.
-In the matching criteria area, select <emphasis remap="bf">&lt;To: or Cc:&gt;</emphasis> from the first pull-down menu, "Contains" from the
-second pull-down menu, and type kde-user@kde.org in the text field.</para>
+In the matching criteria area, select <emphasis remap="bf">&lt;To: or Cc:&gt;</emphasis> from the first pull-down menu, 
+<emphasis remap="bf">contains</emphasis> from the
+second pull-down menu, and type <UserInput>kde-user@kde.org</UserInput> in the text field.</para>
 </listitem>
 <listitem>
-<para>Skip down to the actions section. Select "Transfer" from the first pull-down menu. A new
+<para>Skip down to the actions section. Select <emphasis remap="bf">transfer</emphasis> from the first pull-down menu. A new
 pull-down menu containing a list of folders will appear. Select the folder that you want the
 filtered messages to be transferred to if they match the criteria you selected. For this example, 
 you would select "KDE-User" from the pull-down menu.</para>
 </listitem>
-<!-- fixme: can be ignored, right?:
-<listitem>
-<para>Select "Skip Rest" from the next pull-down menu.</para>
-</listitem>
--->
 </orderedlist>
 </para>
 
@@ -558,12 +544,13 @@ into play:</para>
 <listitem>
 <para>Since you want to filter all messages that have "kde-user@kde.org" in the <emphasis remap="bf">To:</emphasis>
 or <emphasis remap="bf">Cc:</emphasis> field
-AND that are from Fred, select the AND option from the pull down menu between the two criteria
+AND that are from Fred, select the <emphasis remap="bf">and</emphasis> option from the pull down menu between the two criteria
 sections.</para>
 </listitem>
 <listitem>
 <para>Now, go to the bottom criteria section and select the following from the pull-down menus: 
-"From:", "Contains". Now, type fj@anywhere.com in the text field.</para>
+<emphasis remap="bf">From</emphasis>, <emphasis remap="bf">contains</emphasis>. Now, type 
+<UserInput>fj@anywhere.com</UserInput> in the text field.</para>
 </listitem>
 <!-- can be ignored, right?:
 <listitem>
@@ -586,7 +573,7 @@ tab to add or change
 your account settings. See the <link linkend="secgettingstarted">Getting started</link> section for more 
 information on the settings in the <emphasis remap="bf">Network</emphasis> tab.</para>
 
-<para>To check mail from a particular account, use the <emphasis remap="bf">Check Mail in...</emphasis>
+<para>To check mail from a particular account, use the <emphasis remap="bf">File | Check Mail in...</emphasis>
 submenu to select the account to use to check your mail.</para>
 </sect1>
 
@@ -595,7 +582,7 @@ submenu to select the account to use to check your mail.</para>
 <title>Pretty Good Privacy / PGP</title>
 
 <para>This is a short introduction on how to setup KMail's pgp support. It will
-give some hints on the use of pgp too. It's written for people, who are
+give some hints on the use of pgp too. It's written for people who are
 beginners in this area. If you are familiar with the use of pgp, you
 can skip most of the steps. (Note that working with GnuPG is generally
 the same, but some command line parameters may be different.)</para>
@@ -618,7 +605,7 @@ should know about are discussed there.</para>
 <title>PGP Preconditions</title>
 
 <para>If you haven't done so, you have to generate a key pair (secret and public
-key) for your identity. You must do this at the command line (use "pgp -kg").
+key) for your identity. You must do this at the command line (use <UserInput>pgp -kg</UserInput>).
 KMail has no internal support for pgp's key generation at this time. The
 identity (normally your name followed by your email address within brackets,
 such as "John Doe &lt;john@example.com&gt;") and your passphrase are important for
@@ -630,8 +617,8 @@ the co-operation between KMail and pgp.</para>
 <title>KMail Settings</title>
 
 <para>Open the KMail settings dialog and go to the <emphasis remap="bf">Security</emphasis>
-settings page. Type your identity into the "PGP user identity" entry field. There are also
-two options:</para>
+settings page. Type your identity into the <emphasis remap="bf">PGP user identity</emphasis>
+entry field. There are also two options:</para>
 
 <para><emphasis remap="bf">Keep passphrase in memory</emphasis>: When this option is off, then KMail will ask for
 your passphrase each time you sign a message (before sending) or decrypting a
@@ -639,7 +626,7 @@ message (sent to you). If you turn this option on, KMail will remember your
 passphrase from after your first successful input until you finish you KMail
 session. The passphrase is stored in memory and not written to the harddisk.
 Note that a user with enough privileges (e.g. root) might be able to catch your
-passphrase even from memory.</para>
+passphrase even from the computer's memory.</para>
 
 <para><emphasis remap="bf">Always encrypt to self</emphasis>: If this option is off and you want 
 send an encrypted message to somebody, then you can't read this message any longer after you have
@@ -652,7 +639,7 @@ readable for you too. You can then read the plain text of this messages in the
 messages will be signed before sent. (So you don't have to set the signing for
 each mail manually.)</para>
 
-<para>After step 2 you are able to sign outgoing messages. To let people send
+<para>Now you are able to sign outgoing messages. To let people send
 encrypted messages to you and to let them verify your signature you must send
 them your public key. To send encrypted mails to other people or to verify
 their signed messages you will need their public keys.  You can store your
@@ -673,8 +660,8 @@ settings tab, KMail will ask you for it.
 On the other hand, if you have already given the phrase to KMail, it will sign
 the message without any further prompt.
 In the <emphasis remap="bf">sent mail</emphasis> folder (or on the outbox, if you don't use 
-<emphasis remap="bf">"send immediately"</emphasis>) you can verify the result of pgp's
-signing process. There you should see your message wrapped by the info, 
+<emphasis remap="bf">send immediately</emphasis>) you can verify the result of pgp's
+signing process. There you should see your message wrapped by the info
 that it was signed by you.</para>
 
 </sect2>
@@ -691,7 +678,7 @@ will attach your public key to the mail. Now you can send the mail.</para>
 that the receiver will get the correct key. There can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
 key. That's why the recipient should verify the attached key by checking the
-key's fingerprint against the value, he got in a secure way from you. Have a
+key's fingerprint against the value he got in a secure way from you. Have a
 look at the pgp documentation for further details.</para>
 
 </sect2>
@@ -699,9 +686,9 @@ look at the pgp documentation for further details.</para>
 <sect2 id="secpgpyougotanencryptedmessage">
 <title>You got an encrypted Message</title>
 
-<para>All you have to do is to select the message in KMail. KMail perhaps will prompt
-for your passphrase, if you haven't input it. Then KMail will try to decrypt
-the message and show you the plain text, if the message had been encrypted with
+<para>All you have to do is to select the message in KMail. You will be prompted
+for your passphrase. Then KMail will try to decrypt
+the message and show you the plain text if the message had been encrypted with
 your public key. (If not, then you won't be able to read it.) KMail stores 
 the messages encrypted, so nobody can read this mail without knowing
 your passphrase.</para>
@@ -714,27 +701,25 @@ your passphrase.</para>
 <para>You can get a public key as an attachment or simply by ftp or floppy. Before
 you can use this key to encrypt an e-mail to the owner of the key, you should
 verify the key (check it's fingerprint or look for trusted signatures). Then
-you can add this key to your public keyring by typing "pgp -ka &lt;filename&gt;" at
+you can add this key to your public keyring by typing <UserInput>pgp -ka &lt;filename&gt;</UserInput> at
 the command line. If the key is not certified with a trusted signature, you
 can't use it with KMail to encrypt messages unless you have signed that key
-(use "pgp -ks &lt;identity of the key&gt;").</para>
+(use <UserInput>pgp -ks &lt;identity of the key&gt;</UserInput>).</para>
 
 </sect2>
 
 <sect2 id="secpgpencryptyourmessages">
 <title>Use Public Keys of other People - Encrypt your Messages</title>
 
-<para>To send an encrypted message to somebody of whom you have a public key (see
-step 6), you simply create the message in the composer window. Before you
+<para>To send an encrypted message to somebody of whom you have a public key,
+you simply create the message in the composer window. Before you
 send the message, check the button with the red key icon on it in the toolbar
 of the composer window. Then, you can send the message.</para>
 
 <para>If KMail can't find a key for any of the recipients, it will display a
-list for you containing all available keys. You can choose the
+list containing all available keys. You can choose the
 appropriate key out of the list (or cancel the action).
-KMail will also inform you about errors throughout the encryption process.
-<!-- fixme:correct?? -->
-</para>
+KMail might also inform you about errors throughout the encryption process.</para>
 
 <para>As mentioned above, you won't be able to read encrypted sent mails if you
 don't check <emphasis remap="bf">Always encrypt to self</emphasis> in the
@@ -770,8 +755,11 @@ more folders than in the default view, but it takes away some space for viewing 
 of the messages. With <emphasis remap="bf">Display message sizes</emphasis> selected there
 will be another column in the Header pane that show the messages' size in bytes.
 <emphasis remap="bf">Thread list of message headers</emphasis> will put all the messages in a kind
-of tree, so the replies to a mail are next to that mail. <emphasis remap="bf">Prefer plain text to HTML
-rendering</emphasis> will try to show even HTML mails as plain text.</para>
+of tree, so the replies to a message are next to that message.</para>
+
+<para><emphasis remap="bf">Prefer plain text to HTML
+rendering</emphasis> will try to show even HTML mails as plain text. It's a good idea to
+prefer plain text, as security problems with HTML might show up some day.</para>
 
 <para>The <emphasis remap="bf">Profiles</emphasis> offer several common default settings
 for colors and font sizes.</para>
@@ -813,42 +801,30 @@ keep the quoting correct (e.g. the "&gt;" will always be at the start of the lin
 <sect1 id="misctab">
 <title>Miscellaneous Tab</title>
 
-<para><variablelist>
+<para><emphasis remap="bf">Empty trash on exit</emphasis>:
+The trash folder is cleared of messages when you quit KMail if this option is selected.</para>
 
-<varlistentry>
-<term>Empty Trash On Exit</term>
-<listitem>
-<para>The trash folder is cleared of messages when you quit KMail if this option is selected.</para>
-</listitem>
-</varlistentry>
+<para><emphasis remap="bf">Send Mail in outbox Folder on Check</emphasis>:
+All messages queued in the outbox folder will be sent whenever you check your mail.</para>
 
-<varlistentry>
-<term>Send Mail in outbox Folder on Check</term>
-<listitem>
-<para>All messages queued in the outbox folder will be sent whenever you check your mail.</para>
-</listitem>
-</varlistentry>
+<para><emphasis remap="bf">Automatically send receive- and read confirmations</emphasis>:
+With this option, a confirmation is automatically send to the sender of a message
+if he requested that. If you disable this option, no confirmation will be sent.</para>
 
-<varlistentry>
-<term>Use external editor instead of composer</term>
-<listitem>
-<para>If you don't like the <emphasis remap="bf">Composer</emphasis> you can use any editor. Note that the 
+<para><emphasis remap="bf">Compact all folders on exit</emphasis>:
+This will compact all folder every time you exit KMail. Compacting folders means
+that the messages you removed from a folder will really be removed.</para>
+
+<para><emphasis remap="bf">Use external editor instead of composer</emphasis>:
+If you don't like the <emphasis remap="bf">Composer</emphasis> you can use any editor. Note that the 
 <emphasis remap="bf">Composer</emphasis> window will still open and the external editor will
 open as soon as you type just one character in the body of the message.</para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term>New Mail Notification</term>
-<listitem>
-<para>This let's you configure actions for the arrival of new mail. Note that
+<para><emphasis remap="bf">New Mail Notification</emphasis>:
+This let's you configure actions for the arrival of new mail. Note that
 automatically fetching mail can be configured in your account settings under
 <link linkend="receivingmail">Receiving Mail</link>.</para>
-</listitem>
-</varlistentry>
 
-</variablelist>
-</para>
 </sect1>
 
 </chapter>
@@ -968,6 +944,8 @@ a text editor that lets you save the files in Unix format.</para>
 <varlistentry>
 <term>Microsoft Outlook, Lotus Notes, BeOS Mail files, cc: Mail, etc...</term>
 <listitem>
+<para>First you should have a look at <ulink url="http://devel-home.kde.org/~kmail/">KMail's
+homepage</ulink> if there a tool to convert mails.</para>
 <para> Other mail programs probably do not work with KMail as they use
 proprietary mail formats that KMail cannot understand. However, there is no harm
 in trying! If the mailbox file looks similar to the mbox format, try copying the
@@ -997,7 +975,7 @@ menu item function, it is listed after the menu item.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>New Mailreader</term>
+<term>New Mail Client</term>
 <listitem>
 <para>Creates a new <emphasis remap="bf">Mail Reader</emphasis> window.</para>
 </listitem>
@@ -1017,7 +995,13 @@ menu item function, it is listed after the menu item.</para>
 </listitem>
 </varlistentry>
 
-<!-- Compact all folders -->
+<varlistentry>
+<term>Compact all folders</term>
+<listitem>
+<para>Will compact all folders, i.e. it will really move and delete the messages on disk
+according to how you have moved and deleted them in KMail.</para>
+</listitem>
+</varlistentry>
 
 <varlistentry>
 <term>Check Mail (Ctrl+L)</term>
@@ -1043,12 +1027,12 @@ menu item function, it is listed after the menu item.</para>
 <varlistentry>
 <term>Addressbook...</term>
 <listitem>
-<para>Opens up the Addressbook.</para>
+<para>Opens up the <link linkend="theaddressbook">Addressbook</link>.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Filters...</term>
+<term>Filter...</term>
 <listitem>
 <para>Opens the <link linkend="filters">Filter Rules</link> window.</para>
 </listitem>
@@ -1078,12 +1062,54 @@ KMail if there's only this one window.</para>
 <title>Edit Menu</title>
 
 <para><variablelist>
+
+<varlistentry>
+<term>Undo (Ctrl+Z)</term>
+<listitem>
+<para>Revoke you last move or delete action Note that you cannot undo a deletion
+in the trash.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term>Copy (Ctrl+C)</term>
 <listitem>
 <para>Copies selected text to the clipboard.</para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term>Delete (D)</term>
+<listitem>
+<para>Moves the selected messages in the trash folder. If the selected
+messages are already in the trash folder, they will really be deleted.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Search messages... (S)</term>
+<listitem>
+<para>Opens up a search window that lets you search for messages with
+certain characteristics, e.g. a certain subject. Start the search by
+entering some values and press <emphasis remap="bf">Search</emphasis>. Click on one of
+the resulting messages and it will appear in the <emphasis remap="bf">Message Pane</emphasis>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Find in message... (Ctrl+F)</term>
+<listitem>
+<para>Lets you search for a string in the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Mark all messages (K)</term>
+<listitem>
+<para>Selects all messages in the current folder.</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 </para>
 </sect2>
@@ -1132,17 +1158,18 @@ folder is the trash folder, the messages are permanently deleted.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Prefer plain text to HTML</term>
+<term>Prefer HTML to plain text</term>
 <listitem>
-<para>This will try to show even HTML mails as plain text.</para>
+<para>This will show HTML messages using HTML rendering.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>(Don't) thread messages</term>
+<term>Thread messages</term>
 <listitem>
 <para>Show the messages in the <emphasis remap="bf">Header pane</emphasis>
-in a simple list or in a tree-like list.</para>
+in a tree-like list, with replies showing up directly under the message
+they reply to.</para>
 </listitem>
 </varlistentry>
 
@@ -1159,14 +1186,6 @@ in a simple list or in a tree-like list.</para>
 <term>New Message (Ctrl+N)</term>
 <listitem>
 <para>Opens the <emphasis remap="bf">Composer</emphasis> window so you can write a new mail.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Search (S)</term>
-<listitem>
-<para>Opens a search dialog that lets you search for messages. Note that
-this is not useful for searching a text in one certain message.</para>
 </listitem>
 </varlistentry>
 
@@ -1230,8 +1249,7 @@ will be forwarded, too.</para>
 <term>Redirect... (E)</term>
 <listitem>
 <para>Works like forward, except that the message stays the same (even
-the <emphasis remap="bf">From</emphasis> field, but "(redirected)" is added to the
-<emphasis remap="bf">Subject</emphasis>). The user who redirected the message is added in
+the <emphasis remap="bf">From</emphasis> field). The user who redirected the message is added in
 special header fields (Redirect-From, Redirect-Date, Redirect-To, etc).</para>
 </listitem>
 </varlistentry>
@@ -1242,6 +1260,13 @@ special header fields (Redirect-From, Redirect-Date, Redirect-To, etc).</para>
 <para>Sends the message back to the sender with a notice that
 it cannot be delivered. This is nearly exactly the message you get from
 a mail relay if the user does not exist.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Send Again...</term>
+<listitem>
+<para>Sends the message again.</para>
 </listitem>
 </varlistentry>
 
@@ -1282,13 +1307,6 @@ folder can be edited.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Mark All (K)</term>
-<listitem>
-<para>Selects all of the messages in the current folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term>Move to submenu</term>
 <listitem>
 <para>Moves all of the selected messages to a certain folder.</para>
@@ -1299,30 +1317,6 @@ folder can be edited.</para>
 <term>Copy to submenu</term>
 <listitem>
 <para>Copies all of the the selected messages to a certain folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Delete (D)</term>
-<listitem>
-<para>Moves the selected messages into the trash folder. If the selected
-messages are already in the trash folder, they will really be deleted.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Undo (Ctrl+Z)</term>
-<listitem>
-<para>With this command, you can undo <emphasis remap="bf">Move</emphasis>
-and <emphasis remap="bf">Delete</emphasis> operations. <!-- todo: but not deletion in the
-trash, right? --></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Send Again...</term>
-<listitem>
-<para>Sends the message again.</para>
 </listitem>
 </varlistentry>
 
@@ -1354,14 +1348,14 @@ trash, right? --></para>
 <term>Brief, Fancy, Standard, Long, and All Headers</term>
 <listitem>
 <para>Changes the number of headers that are displayed and the formatting of the headers in 
-the Message pane.</para>
+the <emphasis remap="bf">Message pane</emphasis>.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Iconic, Smart, and Inlined Attachments</term>
 <listitem>
-<para>Changes the way that attachments appear in the Message pane. <!-- todo: explain! --></para>
+<para>Changes the way that attachments appear in the <emphasis remap="bf">Message pane</emphasis>.</para>
 </listitem>
 </varlistentry>
 
@@ -1382,8 +1376,6 @@ the Message pane.</para>
 </listitem>
 </varlistentry>
 
-<!-- fixme: what's this? -->
-
 <varlistentry>
 <term>Report Bug...</term>
 <listitem>
@@ -1395,7 +1387,7 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>About KMail...</term>
+<term>About kmail...</term>
 <listitem>
 <para>Displays information about KMail.</para>
 </listitem>
@@ -1452,7 +1444,7 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Address Book</term>
+<term>Addressbook...</term>
 <listitem>
 <para>Opens up the address book.</para>
 </listitem>
@@ -1475,7 +1467,7 @@ see if the bug has been reported already.</para>
 <varlistentry>
 <term>Close (Ctrl+W)</term>
 <listitem>
-<para>Closes the <emphasis remap="bf">Composer</emphasis> window.</para>
+<para>Closes this <emphasis remap="bf">Composer</emphasis> window.</para>
 </listitem>
 </varlistentry>
 
@@ -1529,7 +1521,7 @@ Ctrl while dragging the text, it will not be moved, but copied.</para>
 <varlistentry>
 <term>Clean Spaces</term>
 <listitem>
-<para>This replaces multiple spaces with single spaces in the current message.</para>
+<para>This replaces multiple spaces with single spaces in the current selection.</para>
 </listitem>
 </varlistentry>
 
@@ -1537,7 +1529,7 @@ Ctrl while dragging the text, it will not be moved, but copied.</para>
 <term>Spelling...</term>
 <listitem>
 <para>Uses KSpell to check the spelling in the body of your message. Note
-that you have to configure KSpell with Settings | Spellchecker... if you
+that you have to configure KSpell with <emphasis remap="bf">Settings | Spellchecker...</emphasis> if you
 use it for the first time.</para>
 </listitem>
 </varlistentry>
@@ -1556,7 +1548,7 @@ use it for the first time.</para>
 
 
 <sect2 id="optionsmenu">
-<title>Options Menu</title>
+<title>Message Options Menu</title>
 
 <para><variablelist>
 
@@ -1568,7 +1560,7 @@ use it for the first time.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Confirm Delivery</term>
+<term>Confirm delivery</term>
 <listitem>
 <para>If you choose this option, you request a confirmation email once your message is
 successfully delivered to its destination mail server. This has to be supported
@@ -1577,7 +1569,7 @@ on the receiver's side in order to work.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Confirm Read</term>
+<term>Confirm read</term>
 <listitem>
 <para>If you choose this option, you request a confirmation email once your message is
 downloaded and read by its recipient. This has to be supported and enabled
@@ -1600,7 +1592,7 @@ by the receiver's mail client in order to work.</para>
 <varlistentry>
 <term>Append Signature</term>
 <listitem>
-<para>Appends the contents of your signature file to the end of the message.</para>
+<para>Appends your signature to the end of the message.</para>
 </listitem>
 </varlistentry>
 
@@ -1614,7 +1606,7 @@ by the receiver's mail client in order to work.</para>
 <varlistentry>
 <term>Attach...</term>
 <listitem>
-<para>Attaches the selected file to the message using the encoding you select in the dialog.</para>
+<para>Attaches a file to the message using the encoding you select in the dialog.</para>
 </listitem>
 </varlistentry>
 
@@ -1688,8 +1680,6 @@ Mailreader window</link>.
 <para>This section contains the solution to common problems.
 Don't hesitate to mail <email>kmail@kde.org</email>
 if you think something is missing here.</para>
-
-<!-- todo: IMAP support? -->
 
 <sect2 id="myfolderskeepgrowingevenwhenideletemessages">
 <title>My folders keep growing even when I delete messages.</title>
