@@ -1484,12 +1484,15 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 {
   anchorType type=ATunknown;
   QString target;
-  kdDebug()<<" target :"<<a<<endl;
+  kdDebug(5003)<<" target :"<<a<<endl;
   if(a.left(17)=="internal://author") {
     type=ATauthor;
   }
   else if(a.left(15)=="internal://att=") {
-    target=a.mid(15, a.length()-15);
+    if(a.right(1) == "/")
+      target=a.mid(15, a.length()-16);
+    else
+      target=a.mid(15, a.length()-15);
     type=ATattachment;
   }
   else if(a.left(7).lower()=="http://" || a.left(8).lower() == "https://" ||
