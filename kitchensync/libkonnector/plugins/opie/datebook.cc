@@ -218,10 +218,10 @@ QByteArray DateBook::fromKDE( KAlendarSyncEntry* entry )
         stream << "<!DOCTYPE DATEBOOK><DATEBOOK>" << endl;
         QPtrList<KCal::Event> list = entry->calendar()->getAllEvents();
         KCal::Event *event;
+        stream << "<events>" << endl;
         for ( event = list.first(); event != 0; event = list.next() ) {
             stream << event2string( event ) << endl;
         }
-        stream << "<events>" << endl;
         stream << "</events>" << endl;
         stream << "</DATEBOOK>" << endl;
 

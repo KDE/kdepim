@@ -113,7 +113,7 @@ QString Base::konnectorId( const QString &appName,  const QString &uid )
     QString id;
     // Konnector-.length() ==  10
     if ( uid.startsWith( "Konnector-" ) ) { // not converted
-        id =  uid.mid( 11 );
+        id =  uid.mid( 10 );
     }else if ( m_helper) {
         id =  m_helper->konnectorId( appName,  uid );
         //                        konnector kde
