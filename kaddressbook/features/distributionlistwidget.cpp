@@ -1,25 +1,24 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qbuttongroup.h>
 #include <qcombobox.h>
@@ -193,8 +192,13 @@ void DistributionListWidget::createList()
   dlg.setCaption( i18n( "New Distribution List" ) );
   if ( !dlg.exec() )
     return;
-
-  new KABC::DistributionList( mManager, dlg.text() );
+  QString newName = dlg.text();
+  if (  mManager->listNames().contains(newName)!= 0)
+  {
+      KMessageBox::sorry(this, i18n("The name already exists"));
+      return;
+  }
+  new KABC::DistributionList( mManager, newName );
 
   mNameCombo->clear();
   mNameCombo->insertStringList( mManager->listNames() );
@@ -208,14 +212,19 @@ void DistributionListWidget::createList()
 void DistributionListWidget::editList()
 {
   QString oldName = mNameCombo->currentText();
-  
+
   KLineEditDlg dlg( i18n( "Please change name:" ), oldName, this );
   dlg.setCaption( i18n("Distribution List") );
   if ( !dlg.exec() )
     return;
-
+  QString newName = dlg.text();
+  if (  mManager->listNames().contains(newName)!= 0)
+  {
+      KMessageBox::sorry(this, i18n("The name already exists"));
+      return;
+  }
   KABC::DistributionList *list = mManager->list( oldName );
-  list->setName( dlg.text() );
+  list->setName( newName );
 
   mNameCombo->clear();
   mNameCombo->insertStringList( mManager->listNames() );
