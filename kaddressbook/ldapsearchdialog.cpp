@@ -57,7 +57,8 @@ static QMap<QString, QString>& adrbookattr2ldap()
     keys[ i18n( "Title" ) ] = "title";
     keys[ i18n( "Full Name" ) ] = "cn";
     keys[ i18n( "Email" ) ] = "mail";
-    keys[ i18n( "Phone Number" ) ] = "telephoneNumber";
+    keys[ i18n( "Home Number" ) ] = "homePhone";
+    keys[ i18n( "Work Number" ) ] = "telephoneNumber";
     keys[ i18n( "Mobile Number" ) ] = "mobile";
     keys[ i18n( "Fax Number" ) ] = "facsimileTelephoneNumber";
     keys[ i18n( "Pager" ) ] = "pager";
@@ -124,7 +125,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
   mFilterCombo = new KComboBox( groupBox );
   mFilterCombo->insertItem( i18n( "Name" ) );
   mFilterCombo->insertItem( i18n( "Email" ) );
-  mFilterCombo->insertItem( i18n( "Phone Number" ) );
+  mFilterCombo->insertItem( i18n( "Home Number" ) );
+  mFilterCombo->insertItem( i18n( "Work Number" ) );
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
   mSearchButton = new QPushButton( i18n( "Search" ), groupBox );
@@ -230,7 +232,8 @@ void LDAPSearchDialog::restoreSettings()
 
     mResultListView->addColumn( i18n( "Full Name" ) );
     mResultListView->addColumn( i18n( "Email" ) );
-    mResultListView->addColumn( i18n( "Phone Number" ) );
+    mResultListView->addColumn( i18n( "Home Number" ) );
+    mResultListView->addColumn( i18n( "Work Number" ) );
     mResultListView->addColumn( i18n( "Mobile Number" ) );
     mResultListView->addColumn( i18n( "Fax Number" ) );
     mResultListView->addColumn( i18n( "Company" ) );
@@ -284,7 +287,9 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr 
     result = result.arg( "cn" ).arg( query );
   } else if ( attr == i18n( "Email" ) ) {
     result = result.arg( "mail" ).arg( query );
-  } else if ( attr == i18n( "Phone Number" ) ) {
+  } else if ( attr == i18n( "Home Number" ) ) {
+    result = result.arg( "homePhone" ).arg( query );
+  } else if ( attr == i18n( "Work Number" ) ) {
     result = result.arg( "telephoneNumber" ).arg( query );
   } else {
     // Error?
@@ -416,17 +421,20 @@ void LDAPSearchDialog::slotUser3()
 
       workAddr.setStreet(QString::fromUtf8( cli->mAttrs[ "street" ].first()) );
       workAddr.setLocality(QString::fromUtf8( cli->mAttrs[ "l" ].first()) );
-      workAddr.setRegion(QString::fromUtf8(  cli->mAttrs[ "address" ].first()));
+      workAddr.setRegion(QString::fromUtf8( cli->mAttrs[ "st" ].first()));
       workAddr.setPostalCode(QString::fromUtf8( cli->mAttrs[ "postalCode" ].first()) );
       workAddr.setCountry(QString::fromUtf8( cli->mAttrs[ "co" ].first()) );
 
       addr.insertAddress( workAddr );
 
       // phone
+      KABC::PhoneNumber homeNr = QString::fromUtf8( cli->mAttrs[  "homePhone" ].first() );
+      homeNr.setType(KABC::PhoneNumber::Home);
+      addr.insertPhoneNumber(homeNr);
 
-      KABC::PhoneNumber telNr = QString::fromUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
-      telNr.setType(KABC::PhoneNumber::Work);
-      addr.insertPhoneNumber(telNr);
+      KABC::PhoneNumber workNr = QString::fromUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
+      workNr.setType(KABC::PhoneNumber::Work);
+      addr.insertPhoneNumber(workNr);
 
       KABC::PhoneNumber faxNr = QString::fromUtf8( cli->mAttrs[  "facsimileTelephoneNumber" ].first() );
       faxNr.setType(KABC::PhoneNumber::Fax);
