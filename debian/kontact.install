@@ -13,6 +13,7 @@ debian/tmp/usr/lib/libkpinterfaces.so.1
 debian/tmp/usr/lib/libkpinterfaces.so.1.0.0
 debian/tmp/usr/share/applnk/Applications/Kontact.desktop
 debian/tmp/usr/share/apps/kontact/kontactui.rc
+debian/tmp/usr/share/apps/kontact/pics/splash.png
 debian/tmp/usr/share/apps/kpkaddressbookplugin/kpkaddressbookplugin.rc
 debian/tmp/usr/share/apps/kpkmailplugin/kpkmailplugin.rc
 debian/tmp/usr/share/apps/kpknotesplugin/kpknotesplugin.rc
