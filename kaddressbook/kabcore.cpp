@@ -700,6 +700,14 @@ void KABCore::print()
   wizard.exec();
 }
 
+void KABCore::addGUIClient( KXMLGUIClient *client )
+{
+  if ( mGUIClient )
+    mGUIClient->insertChildClient( client );
+  else
+    KMessageBox::error( this, "no KXMLGUICLient");
+}
+
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
@@ -804,22 +812,7 @@ void KABCore::initActions()
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
                                       this, SLOT( editContact() ),
                                       actionCollection(), "file_properties" );
-/*
-  new KAction( i18n( "Import &KDE 2 Address Book..." ), 0, this,
-               SLOT( importKDE2() ), actionCollection(), "file_import_kde2" );
 
-  new KAction( i18n("Import vCard..." ), 0, this, SLOT( importVCardSimple() ),
-               actionCollection(), "file_import_vcard" );
-
-  new KAction( i18n( "&Import List..." ), 0, this, SLOT( importCSV() ),
-               actionCollection(), "file_import_csv" );
-
-  new KAction( i18n( "&Export List..." ), 0, this, SLOT( exportCSV() ),
-               actionCollection(), "file_export_csv" );
-
-  new KAction( i18n( "&Export vCard 3.0..." ), 0, this,
-               SLOT( exportVCard30() ), actionCollection(), "file_export_vcard30" );
-*/
   // edit menu
   if ( mIsPart ) {
     mActionCopy = new KAction( i18n( "&Copy" ), "editcopy", CTRL + Key_C, this,

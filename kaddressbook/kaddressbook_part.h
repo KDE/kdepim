@@ -34,7 +34,6 @@ class KAddressbookBrowserExtension;
 class KInstance;
 
 class KABCore;
-class ActionManager;
 
 class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface
 {

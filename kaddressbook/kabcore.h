@@ -233,6 +233,11 @@ class KABCore : public QWidget
      */
     void print();
 
+    /**
+      Registers a new GUI client, so plugins can register its actions.
+     */
+    void addGUIClient( KXMLGUIClient *client );
+
   private slots:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );

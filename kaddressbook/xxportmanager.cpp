@@ -126,6 +126,7 @@ void XXPortManager::loadPlugins()
 
     XXPortObject *obj = xxportFactory->xxportObject( mCore, this );
     if ( obj ) {
+      mCore->addGUIClient( obj );
       mXXPortObjects.insert( obj->identifier(), obj );
       connect( obj, SIGNAL( exportActivated( const QString&, const QString& ) ),
                this, SLOT( slotExport( const QString&, const QString& ) ) );

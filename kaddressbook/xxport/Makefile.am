@@ -6,7 +6,8 @@ libkaddrbk_kde2_xxport.la libkaddrbk_bookmark_xxport.la
 noinst_HEADERS = importdialog.h
 
 servicedir  = $(kde_servicesdir)/kaddressbook
-service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop
+service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop \
+bookmark_xxport.desktop
 
 libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp importdialog.cpp
 libkaddrbk_csv_xxport_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
@@ -28,5 +29,6 @@ libkaddrbk_bookmark_xxport_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all
 libkaddrbk_bookmark_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
 libkaddrbk_bookmark_xxport_la_METASOURCES = AUTO
 
-rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc bookmark_xxportui.rc
+rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc \
+bookmark_xxportui.rc
 rcdir = $(kde_datadir)/kaddressbook
