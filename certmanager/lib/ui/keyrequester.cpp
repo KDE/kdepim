@@ -75,6 +75,7 @@
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qlabel.h>
+#include <assert.h>
 
 Kleo::KeyRequester::KeyRequester( const CryptoBackend * backend,
 				  unsigned int allowedKeys, bool multipleKeys,

@@ -90,6 +90,7 @@
 #include <qregexp.h>
 
 #include <string.h>
+#include <assert.h>
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   
