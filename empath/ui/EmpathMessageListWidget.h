@@ -51,6 +51,7 @@ class KToggleAction;
 
 class EmpathFolder;
 class EmpathMessageListWidget;
+class EmpathMessageListItem;
 class EmpathMainWindow;
 
 class EmpathMarkAsReadTimer : public QObject
@@ -107,10 +108,10 @@ class EmpathMessageListWidget : public EmpathListView
         virtual void clearSelection();
 
         void setStatus(EmpathMessageListItem * item, RMM::MessageStatus s)
-                { item->setStatus(s); }
+        { item->setStatus(s); }
  
         void listenTo(unsigned int);
-
+        
         QActionCollection * actionCollection() { return actionCollection_; }
 
     public slots:
@@ -128,7 +129,6 @@ class EmpathMessageListWidget : public EmpathListView
         void s_messageMarkReplied();
         void s_messageMarkMany();
         void s_messageView();
-        void s_messageCompose();
 
         void s_messageReply();
         void s_messageReplyAll();
@@ -163,12 +163,82 @@ class EmpathMessageListWidget : public EmpathListView
         void hideReadChanged(bool);
         
     private:
-        
+       
+        class ThreadNode {
+
+            public:
+
+                ThreadNode(EmpathIndexRecord * data)
+                    :
+                    data_(data)
+                {
+                    childList_.setAutoDelete(true);
+                }
+
+                ~ThreadNode()
+                {
+                    delete data_;
+                    data_ = 0L;
+                }
+
+                EmpathIndexRecord * data()
+                {
+                    return data_;
+                }
+            
+                const QList<ThreadNode> & childList() const
+                {
+                    return childList_;
+                }
+
+                void addChild(ThreadNode * n)
+                {
+                    childList_.append(n);
+                }
+
+            private:
+
+                EmpathIndexRecord * data_;
+
+                QList<ThreadNode> childList_; 
+        };
+         
         void _reconnectToFolder(const EmpathURL &);
 
-        void _fillDisplay(bool);
+        void _fillDisplay();
+        void _fillNormal();
+        void _fillThreading();
+       
+        void _createThreads(
+            ThreadNode * root,
+            EmpathMessageListWidget * parent,
+            EmpathTask &
+        );
+       
+        void _createThreads(
+            ThreadNode * root,
+            EmpathMessageListItem * parent,
+            EmpathTask &
+        );
+       
+        EmpathMessageListItem * _createListItem(
+            EmpathMessageListWidget *,
+            EmpathIndexRecord,
+            EmpathTask &
+        );
+
+        EmpathMessageListItem * _createListItem(
+            EmpathMessageListItem *,
+            EmpathIndexRecord,
+            EmpathTask &
+        );
         
+        void _initStatic();
         void _initActions();
+        void _connectUp();
+    
+        void _restoreColumnSizes();
+        void _saveColumnSizes();
         
         void _setupMessageMenu();
         void _setupThreadMenu();
@@ -191,7 +261,7 @@ class EmpathMessageListWidget : public EmpathListView
         QPopupMenu  multipleMessageMenu_;
         QPopupMenu  messageMarkMenu_;
         QPopupMenu  threadMenu_;
-       
+ 
         QActionCollection * actionCollection_;
 
         // Navigation actions
@@ -207,7 +277,6 @@ class EmpathMessageListWidget : public EmpathListView
         KAction * ac_messageMarkMany_;
         
         KAction * ac_messageView_;
-        KAction	* ac_messageCompose_;
         KAction	* ac_messageReply_;
         KAction	* ac_messageReplyAll_;
         KAction	* ac_messageForward_;
@@ -222,7 +291,7 @@ class EmpathMessageListWidget : public EmpathListView
         // Thread related actions
         KAction * ac_threadExpand_;
         KAction * ac_threadCollapse_;
-       
+      
         QPixmap px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
                 px_SMx_, px_SxR_, px_xMR_, px_SMR_;
         

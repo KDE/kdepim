@@ -117,37 +117,12 @@ class EmpathFolder : public QObject
         const EmpathURL &    url()            const { return url_;    }
 
         /**
-         * How many messages in total are stored here ?
-         */
-        Q_UINT32 messageCount();
-
-        /**
-         * How many messages stored are unread ?
-         */
-        Q_UINT32 unreadMessageCount();
-
-        /**
          * @internal
          * Unique id.
          */
         Q_UINT32 id() const { return id_; }
 
-        void syncIndex();
-
-        bool removeFromIndex(const QString &);
-        bool insertInIndex(const QString &, EmpathIndexRecord &);
-        bool replaceInIndex(const QString &, EmpathIndexRecord &);
-        void setIndexInitialised();
-        bool indexInitialised();
-        QDateTime indexModified();
-        bool indexContains(const QString &);
-        void setIndexUnread(unsigned int);
-
-        /**
-         * Get an index record given an ID.
-         * @return a NULL IndexRecord (.isNull() == true) if couldn't be found.
-         */ 
-        EmpathIndexRecord indexRecord(const QString & key);
+        EmpathIndex * index() { return index_; }
 
         QStringList allIndexKeys();
 

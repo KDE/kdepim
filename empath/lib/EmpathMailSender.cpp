@@ -43,6 +43,7 @@
 #include "EmpathFolder.h"
 #include "EmpathURL.h"
 #include "EmpathIndex.h"
+#include "EmpathIndex.h"
 
 EmpathMailSender::EmpathMailSender()
     :   QObject()
@@ -95,7 +96,7 @@ EmpathMailSender::sendQueued()
         return;
     }
     
-    QStringList l(queueFolder->allIndexKeys());
+    QStringList l(queueFolder->index()->allKeys());
     QStringList::ConstIterator it;
     
     for (it = l.begin(); it != l.end(); ++it) {

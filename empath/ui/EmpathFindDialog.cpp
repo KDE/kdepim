@@ -30,336 +30,252 @@
 // Local headers
 #include "EmpathFindDialog.h"
 
-QStrList EmpathFindDialog::_findHistory;
-QStrList EmpathFindDialog::_replaceHistory;
+unsigned int EmpathFindDialog::historyMaxElements_  = 32;
+QStringList * EmpathFindDialog::findHistory_        = 0L;
+QStringList * EmpathFindDialog::replaceHistory_     = 0L;
 
 EmpathFindDialog::EmpathFindDialog(QWidget * parent, const char * name)
     : QDialog(parent, name, true)
 {
-    empathDebug("ctor");
+    if (0 == findHistory_)
+        findHistory_ = new QStringList;
 
-    directionGroup = new QButtonGroup(i18n("Direction"), this, "directionGroup");
-    directionGroup->setGeometry(180, 100, 180, 140);
-    
-    findTextCombo = new QComboBox(true, this, "findTextCombo");
-    findTextCombo->setGeometry(130, 20, 230, 30);
-    findTextCombo->setInsertionPolicy(QComboBox::AtBottom);
-    findTextCombo->setAutoCompletion(true);
-    findTextCombo->setSizeLimit(10);
-    findTextCombo->setFocus();
-    
-    replaceTextCombo = new QComboBox(true, this, "replaceTextCombo");
-    replaceTextCombo->setGeometry(130, 60, 230, 30);
-    replaceTextCombo->setInsertionPolicy(QComboBox::AtBottom);
-    replaceTextCombo->setAutoCompletion(true);
-    replaceTextCombo->setSizeLimit(10);
+    if (0 == replaceHistory_)
+        replaceHistory_ = new QStringList;
 
-    findLabel = new QLabel(this, "findLabel");
-    findLabel->setGeometry(10, 20, 110, 30);
-    findLabel->setText(i18n("Find"));
+    findTextCombo_ = new QComboBox(true, this, "findTextCombo");
+    findTextCombo_->setInsertionPolicy(QComboBox::AtBottom);
+    findTextCombo_->setAutoCompletion(true);
+    findTextCombo_->setSizeLimit(10);
+    findTextCombo_->setFocus();
     
-    replaceLabel = new QLabel(this, "replaceLabel");
-    replaceLabel->setGeometry(10, 60, 110, 30);
-    replaceLabel->setText(i18n("Replace with"));
-    
-    regExpCheckBox = new QCheckBox(this, "regExpCheckBox");
-    regExpCheckBox->setGeometry(10, 100, 160, 30);
-    regExpCheckBox->setText(i18n("Regular E&xpression"));
-    QObject::connect(regExpCheckBox, SIGNAL(clicked()),
-            this, SLOT(regExpSelected()));    
+    replaceTextCombo_ = new QComboBox(true, this, "replaceTextCombo");
+    replaceTextCombo_->setInsertionPolicy(QComboBox::AtBottom);
+    replaceTextCombo_->setAutoCompletion(true);
+    replaceTextCombo_->setSizeLimit(10);
 
-    firstOnLineCheckBox = new QCheckBox(this, "firstOnLineCheckBox");
-    firstOnLineCheckBox->setGeometry(10, 140, 160, 30);
-    firstOnLineCheckBox->setText(i18n("First on line &only"));
+    QLabel * findLabel = new QLabel(i18n("Find"), this, "findLabel");
     
-    ignoreCaseCheckBox = new QCheckBox(this, "ignoreCaseCheckBox");
-    ignoreCaseCheckBox->setGeometry(10, 180, 160, 30);
-    ignoreCaseCheckBox->setText(i18n("&Ignore case"));
+    QLabel * replaceLabel =
+        new QLabel(i18n("Replace with"), this, "replaceLabel");
     
-    wrapCheckBox = new QCheckBox(this, "wrapCheckBox");
-    wrapCheckBox->setGeometry(10, 220, 160, 30);
-    wrapCheckBox->setText(i18n("&Wrap search"));
-    
-    directionForwardsRadio = new QRadioButton(this, "directionForwardsRadio");
-    directionForwardsRadio->setGeometry(200, 140, 100, 20);
-    directionForwardsRadio->setText(i18n("&Forwards"));
-    directionForwardsRadio->setChecked(true);
-    
-    directionBackwardsRadio = new QRadioButton(this, "directionBackwardsRadio");
-    directionBackwardsRadio->setGeometry(200, 180, 100, 20);
-    directionBackwardsRadio->setText(i18n("&Backwards"));
+    regExpCheckBox_ =
+        new QCheckBox(i18n("Regular E&xpression"), this, "regExpCheckBox");
 
-    findButton = new QPushButton(this, "findButton");
-    findButton->setGeometry(370, 20, 140, 30);
-    findButton->setText(i18n("&Find"));
-    findButton->setAutoDefault(true);
-    findButton->setDefault(true);
+    firstOnLineCheckBox_ =
+        new QCheckBox(i18n("First on line &only"), this, "firstOnLineCheckBox");
     
-    replaceButton = new QPushButton(this, "replaceButton");
-    replaceButton->setGeometry(370, 60, 140, 30);
-    replaceButton->setText(i18n("&Replace"));
+    ignoreCaseCheckBox_ =
+        new QCheckBox(i18n("&Ignore case"), this, "ignoreCaseCheckBox");
     
-    replaceFindButton = new QPushButton(this, "replaceFindButton");
-    replaceFindButton->setGeometry(370, 100, 140, 30);
-    replaceFindButton->setText(i18n("Replace &+ Find"));
+    wrapCheckBox_ = new QCheckBox(i18n("&Wrap search"), this, "wrapCheckBox");
     
-    replaceAllButton = new QPushButton(this, "replaceAllButton");
-    replaceAllButton->setGeometry(370, 140, 140, 30);
-    replaceAllButton->setText(i18n("Replace &All"));
-    
-    helpButton = new QPushButton(this, "helpButton");
-    helpButton->setGeometry(370, 180, 140, 30);
-    helpButton->setText(i18n("&Help"));
-    
-    closeButton = new QPushButton(this, "closeButton");
-    closeButton->setGeometry(370, 220, 140, 30);
-    closeButton->setText(i18n("&Close"));
+    QButtonGroup * directionGroup =
+        new QButtonGroup(i18n("Direction"), this, "directionGroup");
 
-    directionGroup->insert(directionForwardsRadio);
-    directionGroup->insert(directionBackwardsRadio);
+    directionForwardsRadio_ =
+        new QRadioButton(i18n("&Forwards"), this, "directionForwardsRadio");
+
+    directionForwardsRadio_->setChecked(true);
     
-    QStrListIterator it(_findHistory);
-    for (; it.current() ; ++it)
-        findTextCombo->insertItem(it.current());
+    directionBackwardsRadio_ =
+        new QRadioButton(i18n("Backwards"), this, "directionBackwardsRadio");
     
-    QStrListIterator it2(_replaceHistory);
-    for (; it2.current() ; ++it2)
-        replaceTextCombo->insertItem(it2.current());
+    directionGroup->insert(directionForwardsRadio_);
+    directionGroup->insert(directionBackwardsRadio_);
+
+    findButton_ = new QPushButton(i18n("&Find"), this, "findButton");
+    findButton_->setAutoDefault(true);
+    findButton_->setDefault(true);
     
-    QObject::connect(findButton, SIGNAL(clicked()),
-            this, SLOT(findSelected()));
+    replaceButton_ =
+        new QPushButton(i18n("&Replace"), this, "replaceButton");
     
-    QObject::connect(replaceButton, SIGNAL(clicked()),
-            this, SLOT(replaceSelected()));
+    replaceFindButton_ =
+        new QPushButton(i18n("Replace &+ find"), this, "replaceFindButton");
     
-    QObject::connect(replaceAllButton, SIGNAL(clicked()),
-            this, SLOT(replaceAllSelected()));
+    replaceAllButton_ =
+        new QPushButton(i18n("Replace &All"), this, "replaceAllButton");
     
-    QObject::connect(replaceFindButton, SIGNAL(clicked()),
-            this, SLOT(replaceAndFindSelected()));
+    QPushButton * helpButton =
+        new QPushButton(i18n("&Help"), this, "helpButton");
     
-    QObject::connect(helpButton, SIGNAL(clicked()),
-            this, SLOT(helpSelected()));
+    QPushButton * closeButton =
+        new QPushButton(i18n("&Close"), this, "closeButton");
+
+    findTextCombo_->insertStringList(*findHistory_);
+    replaceTextCombo_->insertStringList(*replaceHistory_);
     
-    QObject::connect(closeButton, SIGNAL(clicked()),
-            this, SLOT(closeSelected()));
+    QObject::connect(
+        regExpCheckBox_,    SIGNAL(clicked()),
+        this,               SLOT(regExpSelected()));    
+
+    QObject::connect(
+        findButton_,    SIGNAL(clicked()),
+        this,           SLOT(findSelected()));
     
-    resize(520,260);
-    setMinimumSize(520,260);
-    setMaximumSize(520,260);
+    QObject::connect(
+        replaceButton_, SIGNAL(clicked()),
+        this,           SLOT(replaceSelected()));
+    
+    QObject::connect(
+        replaceAllButton_,  SIGNAL(clicked()),
+        this,               SLOT(replaceAllSelected()));
+    
+    QObject::connect(
+        replaceFindButton_, SIGNAL(clicked()),
+        this,               SLOT(replaceAndFindSelected()));
+    
+    QObject::connect(
+        helpButton,     SIGNAL(clicked()),
+        this,           SLOT(helpSelected()));
+    
+    QObject::connect(
+        closeButton,    SIGNAL(clicked()),
+        this,           SLOT(closeSelected()));
 }
 
 EmpathFindDialog::~EmpathFindDialog()
 {
-    empathDebug("dtor");
+    // Empty.
 }
     void
 EmpathFindDialog::findSelected()
 {
-    empathDebug("findSelected called");
-    updateFindHistory(findTextCombo->currentText());
-    updateFields();
+    _updateFindHistory(findTextCombo_->currentText());
+    _updateFields();
     emit(find());
 }
 
     void
 EmpathFindDialog::replaceSelected()
 {
-    empathDebug("findSelected called");
-    updateFindHistory(findTextCombo->currentText());
-    updateReplaceHistory(replaceTextCombo->currentText());
-    updateFields();
+    _updateFindHistory(findTextCombo_->currentText());
+    _updateReplaceHistory(replaceTextCombo_->currentText());
+    _updateFields();
     emit(replace());
 }
 
     void
 EmpathFindDialog::replaceAllSelected()
 {
-    empathDebug("replaceAllSelected called");
-    updateFindHistory(findTextCombo->currentText());
-    updateReplaceHistory(replaceTextCombo->currentText());
-    updateFields();
+    _updateFindHistory(findTextCombo_->currentText());
+    _updateReplaceHistory(replaceTextCombo_->currentText());
+    _updateFields();
     emit(replaceAll());
 }
 
     void
 EmpathFindDialog::replaceAndFindSelected()
 {
-    empathDebug("replaceAndFindSelected called");
-    updateFindHistory(findTextCombo->currentText());
-    updateReplaceHistory(replaceTextCombo->currentText());
-    updateFields();
+    _updateFindHistory(findTextCombo_->currentText());
+    _updateReplaceHistory(replaceTextCombo_->currentText());
+    _updateFields();
     emit(replaceAndFind());
 }
 
     void
 EmpathFindDialog::helpSelected()
 {
-    empathDebug("helpSelected called");
-    emit(help());
 }
 
     void
 EmpathFindDialog::closeSelected()
 {
-    empathDebug("closeSelected called");
-    updateFields();
-    done(0);
+    _updateFields();
+    accept();
 }
 
     void
 EmpathFindDialog::regExpSelected()
 {
-    empathDebug("regExpSelected called");
-    if (regExpCheckBox->isChecked()) {
-        replaceButton->setEnabled(false);
-        replaceFindButton->setEnabled(false);
-        replaceAllButton->setEnabled(false);
-        firstOnLineCheckBox->setEnabled(false);
-        ignoreCaseCheckBox->setEnabled(false);
-        wrapCheckBox->setEnabled(false);
-        directionForwardsRadio->setEnabled(false);
-        directionBackwardsRadio->setEnabled(false);
-        replaceLabel->setEnabled(false);
-        replaceTextCombo->setEnabled(false);
-        findButton->setText(i18n("&Run"));
-        findLabel->setText(i18n("Expression"));
-    } else {
-        replaceButton->setEnabled(true);
-        replaceFindButton->setEnabled(true);
-        replaceAllButton->setEnabled(true);
-        firstOnLineCheckBox->setEnabled(true);
-        ignoreCaseCheckBox->setEnabled(true);
-        wrapCheckBox->setEnabled(true);
-        directionForwardsRadio->setEnabled(true);
-        directionBackwardsRadio->setEnabled(true);
-        replaceLabel->setEnabled(true);
-        replaceTextCombo->setEnabled(true);
-        findButton->setText(i18n("&Find"));
-        findLabel->setText(i18n("Find"));
-    }
+    bool enable = !regExpCheckBox_->isChecked();
+
+    replaceButton_              ->setEnabled(enable);
+    replaceFindButton_          ->setEnabled(enable);
+    replaceAllButton_           ->setEnabled(enable);
+    firstOnLineCheckBox_        ->setEnabled(enable);
+    ignoreCaseCheckBox_         ->setEnabled(enable);
+    wrapCheckBox_               ->setEnabled(enable);
+    directionForwardsRadio_     ->setEnabled(enable);
+    directionBackwardsRadio_    ->setEnabled(enable);
+    replaceLabel_               ->setEnabled(enable);
+    replaceTextCombo_           ->setEnabled(enable);
+
+    findButton_ ->setText(enable ? i18n("&Find") : i18n("&Run"));
+    findLabel_  ->setText(enable ? i18n("Expression") : i18n("Find"));
 }
 
     void
-EmpathFindDialog::setFindHistory(const QStrList & history)
+EmpathFindDialog::_updateFindHistory(QString item)
 {
-    empathDebug("setFindHistory called");
-    _findHistory.clear();
-    
-    QStrListIterator it(history);
-    for (; it.current() ; ++it)
-        _findHistory.append(it.current());
-}
-    
-    void
-EmpathFindDialog::setReplaceHistory(const QStrList & history)
-{
-    empathDebug("setReplaceHistory called");
-    _replaceHistory.clear();
-    
-    QStrListIterator it(history);
-    for (; it.current() ; ++it)
-        _replaceHistory.append(it.current());
-}
-    
-    const QStrList &
-EmpathFindDialog::findHistory()
-{
-    empathDebug("findHistory called");
-    return _findHistory;
-}
-
-    const QStrList &
-EmpathFindDialog::replaceHistory()
-{
-    empathDebug("replaceHistory called");
-    return _replaceHistory;
-}
-
-    QString
-EmpathFindDialog::findText()
-{
-    empathDebug("findText called");
-    return QString(findTextCombo->currentText());
-}
-    
-    QString
-EmpathFindDialog::replaceText()
-{
-    empathDebug("replaceText called");
-    return QString(replaceTextCombo->currentText());
-}
-
-    void
-EmpathFindDialog::updateFindHistory(QString newItem)
-{
-    empathDebug("updateFindHistory called");
-    if (newItem.length() == 0) return;
-    
-    QString item(newItem); // shallow - strlist will make deep
+    if (item.isEmpty())
+        return;
     
     // Remove any duplicate first, so it gets 'moved' to top
-    for (Q_UINT32 i = 0 ; i < _findHistory.count() ; i++)
-        if (strcmp(_findHistory.at(i), item) == 0)
-                _findHistory.remove(i);
+    
+    QStringList::Iterator it;
+
+    for (it = findHistory_->begin(); it != findHistory_->end(); ++it)
+        if (*it == item)
+            findHistory_->remove(it);
     
     // Add the new item to the end of the internal list
-    _findHistory.append(item);
+    *findHistory_ << item;
 
     // If we filled the history, drop the last element (it's first :)
-    if (_findHistory.count() >= historyMaxElements) {
-        _findHistory.removeFirst();
-    }
+    if (findHistory_->count() >= historyMaxElements_)
+        findHistory_->remove(findHistory_->begin());
     
     // Clear out the combo box. Easier to update this way.
-    findTextCombo->clear();
+    findTextCombo_->clear();
     
     // Fill the combo box with the updated list
-    QStrListIterator it(_findHistory);
-    it.toLast();
-    for (; it.current() ; --it)
-        findTextCombo->insertItem(it.current());
+    QStringList::ConstIterator it2;
+
+    for (it2 = findHistory_->end(); it2 != findHistory_->begin() ; --it2)
+        findTextCombo_->insertItem(*it2);
 }
 
     void
-EmpathFindDialog::updateReplaceHistory(QString newItem)
+EmpathFindDialog::_updateReplaceHistory(QString item)
 {
-    empathDebug("updateReplaceHistory called");
     // Don't add empty strings
-    if (newItem.length() == 0) return;
-    
-    QString item(newItem);
+    if (item.isEmpty())
+        return;
 
     // Remove any duplicate first, so it gets 'moved' to top
-    for (Q_UINT32 i = 0 ; i < _replaceHistory.count() ; i++)
-        if (strcmp(_replaceHistory.at(i), item) == 0)
-                _replaceHistory.remove(i);
+    QStringList::Iterator it;
+
+    for (it = replaceHistory_->begin(); it != replaceHistory_->end(); ++it)
+        if (*it == item)
+            replaceHistory_->remove(it);
     
     // Add the new item to the end of the internal list
-    _replaceHistory.append(item);
+    *replaceHistory_ << item;
 
     // If we filled the history, drop the last element (it's first :)
-    if (_replaceHistory.count() >= historyMaxElements) {
-        _replaceHistory.removeFirst();
-    }
+    if (replaceHistory_->count() >= historyMaxElements_)
+        replaceHistory_->remove(replaceHistory_->begin());
 
     // Clear out the combo box. Easier to update this way.
-    replaceTextCombo->clear();
+    replaceTextCombo_->clear();
 
     // Fill the combo box with the updated list
-    QStrListIterator it(_replaceHistory);
-    it.toLast();
-    for (; it.current() ; --it)
-        replaceTextCombo->insertItem(it.current());
+    QStringList::ConstIterator it2;
+
+    for (it2 = replaceHistory_->end(); it2 != replaceHistory_->begin() ; --it2)
+        replaceTextCombo_->insertItem(*it2);
 }
 
     void
-EmpathFindDialog::updateFields()
+EmpathFindDialog::_updateFields()
 {
-    _useRegExp        = regExpCheckBox->isChecked();
-    _caseSensitive    = ignoreCaseCheckBox->isChecked();
-    _wrap            = wrapCheckBox->isChecked();
-    _forwards        = directionForwardsRadio->isChecked();
-    _firstOnLine    = firstOnLineCheckBox->isChecked();
+    useRegExp_      = regExpCheckBox_           ->isChecked();
+    caseSensitive_  = ignoreCaseCheckBox_       ->isChecked();
+    wrap_           = wrapCheckBox_             ->isChecked();
+    forwards_       = directionForwardsRadio_   ->isChecked();
+    firstOnLine_    = firstOnLineCheckBox_      ->isChecked();
 }
+
 // vim:ts=4:sw=4:tw=78

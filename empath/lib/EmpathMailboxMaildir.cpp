@@ -205,6 +205,7 @@ EmpathMailboxMaildir::loadConfig()
     void
 EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 {
+    empathDebug(currentDir);
     // We need to look at the maildir base directory, and go recursively
     // through subdirs. Any subdir that has cur, tmp and new is a Maildir
     // folder.

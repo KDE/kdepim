@@ -31,19 +31,18 @@
 #include <qwidget.h>
 #include <qdialog.h>
 #include <qfont.h>
-#include <qstring.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qradiobutton.h>
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
-#include <qstrlist.h>
+
+#include <qstring.h>
+#include <qstringlist.h>
 
 // Local headers
 #include "EmpathDefines.h"
-
-const Q_UINT32 historyMaxElements = 32;
 
 class EmpathFindDialog : public QDialog {
 
@@ -54,20 +53,20 @@ public:
     EmpathFindDialog(QWidget * parent = 0, const char * name = 0);
     ~EmpathFindDialog();
 
-    bool useRegExp()        { return _useRegExp; }
-    bool caseSensitive()    { return _caseSensitive; }
-    bool wrap()                { return _wrap; }
-    bool forwards()            { return _forwards; }
-    bool firstOnLine()        { return _firstOnLine; }
+    bool useRegExp()        const { return useRegExp_; }
+    bool caseSensitive()    const { return caseSensitive_; }
+    bool wrap()             const { return wrap_; }
+    bool forwards()         const { return forwards_; }
+    bool firstOnLine()      const { return firstOnLine_; }
 
-    QString findText();
-    QString replaceText();
+    QString findText() const { return findTextCombo_->currentText(); }
+    QString replaceText() const { return replaceTextCombo_->currentText(); }
 
-    void setFindHistory(const QStrList & history);
-    void setReplaceHistory(const QStrList & history);
+    void setFindHistory(const QStringList & l) { *findHistory_ = l; }
+    void setReplaceHistory(const QStringList & l) { *replaceHistory_ = l; }
     
-    const QStrList & findHistory();
-    const QStrList & replaceHistory();
+    QStringList findHistory() const { return *findHistory_; }
+    QStringList replaceHistory() const { return *replaceHistory_; }
     
 protected slots:
 
@@ -85,44 +84,41 @@ signals:
     void replace();
     void replaceAll();
     void replaceAndFind();
-    void help();
     
 private:
 
-    QComboBox        * findTextCombo;
-    QComboBox        * replaceTextCombo;
-
-    QLabel            * findLabel;
-    QLabel            * replaceLabel;
-
-    QCheckBox        * regExpCheckBox;
-    QCheckBox        * firstOnLineCheckBox;
-    QCheckBox        * ignoreCaseCheckBox;
-    QCheckBox        * wrapCheckBox;
-
-    QButtonGroup    * directionGroup;
-    QRadioButton    * directionForwardsRadio;
-    QRadioButton    * directionBackwardsRadio;
+    void _updateFindHistory(QString newItem);
+    void _updateReplaceHistory(QString newItem);
+    void _updateFields();
     
-    QPushButton        * findButton;
-    QPushButton        * replaceButton;
-    QPushButton        * replaceFindButton;
-    QPushButton        * replaceAllButton;
-    QPushButton        * helpButton;
-    QPushButton        * closeButton;
-    
-    bool            _useRegExp;
-    bool            _caseSensitive;
-    bool            _wrap;
-    bool            _forwards;
-    bool            _firstOnLine;
-    
-    static QStrList        _findHistory;
-    static QStrList        _replaceHistory;
+    QComboBox * findTextCombo_;
+    QComboBox * replaceTextCombo_;
 
-    void            updateFindHistory(QString newItem);
-    void            updateReplaceHistory(QString newItem);
-    void            updateFields();
+    QLabel * findLabel_;
+    QLabel * replaceLabel_;
+
+    QCheckBox * regExpCheckBox_;
+    QCheckBox * firstOnLineCheckBox_;
+    QCheckBox * ignoreCaseCheckBox_;
+    QCheckBox * wrapCheckBox_;
+
+    QRadioButton * directionForwardsRadio_;
+    QRadioButton * directionBackwardsRadio_;
+    
+    QPushButton * findButton_;
+    QPushButton * replaceButton_;
+    QPushButton * replaceFindButton_;
+    QPushButton * replaceAllButton_;
+    
+    static unsigned int historyMaxElements_;
+    static QStringList * findHistory_;
+    static QStringList * replaceHistory_;
+
+    bool useRegExp_;
+    bool caseSensitive_;
+    bool wrap_;
+    bool forwards_;
+    bool firstOnLine_;
 };
 
 #endif

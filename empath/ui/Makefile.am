@@ -1,4 +1,4 @@
-KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS)
+KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
 
 INCLUDES = -I$(top_srcdir)/rmm -I$(top_srcdir)/empath/lib $(all_includes)
 

@@ -35,6 +35,10 @@
 #include "EmpathComposeForm.h"
 #include "EmpathURL.h"
 
+class QActionCollection;
+
+class KAction;
+
 /**
  * @short A KDE interface to Empath
  * A KDE interface to Empath.
@@ -47,22 +51,30 @@ class EmpathUI : public QObject
 
         EmpathUI();
         ~EmpathUI();
+
+        static QActionCollection * actionCollection()
+        {
+            return actionCollection_;
+        }
         
     protected slots:
     
         void s_setup(Empath::SetupType, QWidget *);
-        
         void s_configureMailbox(const EmpathURL &, QWidget *);
-
         void s_getSaveName(const EmpathURL &, QWidget *);
-        
         void s_infoMessage(const QString &);
-        
         void s_newComposer(EmpathComposeForm);
 
     private:
-
+        
+        void _init();
         void _connectUp();
+        void _initActions();
+        void _showWizardIfNeeded();
+
+        static QActionCollection * actionCollection_;
+
+        KAction	* ac_messageCompose_;
 };
 
 #endif

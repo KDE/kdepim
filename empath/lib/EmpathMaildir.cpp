@@ -59,20 +59,12 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
         basePath_(basePath)
 {
     path_ = basePath + "/" + url.folderPath();
- 
-    mtime_ = QFileInfo(path_ + "/cur").lastModified();
-
-    QDir d(path_ + "/cur",
-        QString::null,
-        QDir::Unsorted,
-        QDir::Files | QDir::NoSymLinks);
-
-    cachedEntryList_ = d.entryList();
-    
+   
     createdOK_ = _checkDirs();
     
-    QObject::connect(&timer_, SIGNAL(timeout()),
-        this, SLOT(s_timerBeeped()));
+    QObject::connect(
+        &timer_,    SIGNAL(timeout()),
+        this,       SLOT(s_timerBeeped()));
     
     timer_.start(10000, true); // 10 seconds. Hard coded for now.
 }
@@ -85,6 +77,15 @@ EmpathMaildir::~EmpathMaildir()
     void
 EmpathMaildir::init()
 {
+    mtime_ = QFileInfo(path_ + "/cur").lastModified();
+
+    QDir d(path_ + "/cur",
+        QString::null,
+        QDir::Unsorted,
+        QDir::Files | QDir::NoSymLinks);
+
+    cachedEntryList_ = d.entryList();
+
     if (_checkDirs()) {
         _clearTmp();
         sync();
@@ -102,6 +103,11 @@ EmpathMaildir::sync(bool force)
 
     if (!force && !_touched(f))
         return;
+
+    if (!f->index()->lock()) {
+        empathDebug("Cannot lock index - don't worry, this may be a Good Thing");
+        return;
+    }
         
     tagList_.clear();
     
@@ -110,7 +116,12 @@ EmpathMaildir::sync(bool force)
     _removeUntagged(f);
     _recalculateCounters(f);
     
-    f->setIndexInitialised();
+    f->index()->setInitialised(true);
+
+    if (!f->index()->unlock()) {
+        empathDebug("Cannot unlock index");
+        return;
+    }
 }
 
     EmpathSuccessMap
@@ -194,7 +205,7 @@ EmpathMaildir::_removeMessage(const QString & id)
     if (!f.remove())
         return false;
     
-    folder->removeFromIndex(id);
+    folder->index()->remove(id);
 
     return true;
 }
@@ -202,21 +213,19 @@ EmpathMaildir::_removeMessage(const QString & id)
     bool
 EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 {
+    empathDebug("id == " + id);
     QStringList matchingEntries = _entryList().grep(id);
 
     if (matchingEntries.count() != 1) {
-        empathDebug("Hmm.. I matched more than one entry with id `" + id + "'");
+        empathDebug("Couldn't match exactly one entry with id `" + id + "'");
         return false;
     }
  
-    QString statusFlags;
+    QString statusFlags = _generateFlagsString(msgStat);
+    empathDebug("statusFlags == " + statusFlags);
 
-    statusFlags += msgStat & RMM::Read    ? "S" : "";
-    statusFlags += msgStat & RMM::Marked  ? "F" : "";
-    statusFlags += msgStat & RMM::Trashed ? "T" : "";
-    statusFlags += msgStat & RMM::Replied ? "R" : "";
-    
     QString filename(matchingEntries[0]);
+    empathDebug("filename == " + filename);
 
     QString newFilename(filename);
     
@@ -233,6 +242,7 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
     if (!renameOK) {
         empath->s_infoMessage(i18n("Couldn't mark message") +
            " [" + id + "] with flags " + statusFlags);
+        empathDebug("Failed");
         return false;
     }
  
@@ -243,6 +253,7 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
         return renameOK;
     }
 
+    empathDebug("Asking folder to update");
     f->update();
    
     return renameOK;
@@ -333,7 +344,7 @@ EmpathMaildir::_recalculateCounters(EmpathFolder * f)
         }
     }
 
-    f->setIndexUnread(unread);
+    f->index()->setUnread(unread);
 }
 
     void
@@ -528,19 +539,19 @@ EmpathMaildir::s_timerBeeped()
     bool
 EmpathMaildir::_touched(EmpathFolder * f)
 {
-    if (!(f->indexInitialised()))
+    if (!(f->index()->initialised()))
         return true;
     
     QFileInfo fiDir(path_ + "/cur/");
     
-    if (fiDir.lastModified() > f->indexModified()) {
+    if (fiDir.lastModified() > f->index()->lastModified()) {
         empathDebug("Index file is older than Maildir/cur");
         return true;
     }
     
     fiDir = (path_ + "/new/");
     
-    if (fiDir.lastModified() > f->indexModified()) {
+    if (fiDir.lastModified() > f->index()->lastModified()) {
         empathDebug("Index file is older than Maildir/new");
         return true;
     }
@@ -584,18 +595,18 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         tagList_.append(QString(s));
 
-        bool exists = f->indexContains(s);
+        bool exists = f->index()->contains(s);
 
         if (exists) {
         
-            EmpathIndexRecord rec = f->indexRecord(s);
+            EmpathIndexRecord rec = f->index()->record(s);
 
             if (rec.isNull())
                 continue;
             
             if (rec.status() != status) {
                 rec.setStatus(status);
-                f->replaceInIndex(rec.id(), rec);
+                f->index()->replace(rec.id(), rec);
             }
         
         } else {
@@ -612,7 +623,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             
             ir.setStatus(status);
             
-            f->insertInIndex(s, ir);
+            f->index()->insert(s, ir);
             f->itemCome(s);
         }
 
@@ -623,7 +634,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
     void
 EmpathMaildir::_removeUntagged(EmpathFolder * f)
 {
-    QStringList l(f->allIndexKeys());
+    QStringList l(f->index()->allKeys());
 
     QStringList::ConstIterator it;
     
@@ -631,7 +642,7 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
 
         if (!tagList_.contains(*it)) {
 
-            f->removeFromIndex(*it);
+            f->index()->remove(*it);
             f->itemGone(*it);
         }
     }

@@ -39,7 +39,7 @@
 // Local includes
 #include "EmpathMailbox.h"
 
-class KIOJob;
+//class KIO::Job;
 
 /**
  * @internal
@@ -208,7 +208,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         QFile       logFile_;
         QCString    greeting_;
         
-        KIOJob * job;
+//        KIO::Job * job;
         
         EmpathPOPIndex  index_;
         EmpathPOPQueue  commandQueue_;

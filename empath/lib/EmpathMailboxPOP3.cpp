@@ -32,7 +32,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <kio_job.h>
+#include <kio/job.h>
 
 // Local includes
 #include "EmpathMailboxPOP3.h"
@@ -53,19 +53,16 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
     type_ = POP3;
     typeString_ = "POP3";
     
-    job = 0;
-    job = new KIOJob();
-    CHECK_PTR(job);
+//    job = new KIOJob();
     
-    job->setGUImode(KIOJob::NONE);
+//    job->setGUImode(KIOJob::NONE);
     
     commandQueue_.setAutoDelete(true);
 }
 
 EmpathMailboxPOP3::~EmpathMailboxPOP3()
 {
-    delete job;
-    job = 0;
+//    delete job;
 }
 
     void
@@ -73,21 +70,21 @@ EmpathMailboxPOP3::init()
 {
     loadConfig();
     
-    QObject::connect(
-        job,    SIGNAL(sigFinished(int)),
-        this,   SLOT(s_jobFinished(int)));
+//    QObject::connect(
+//        job,    SIGNAL(sigFinished(int)),
+//        this,   SLOT(s_jobFinished(int)));
     
-    QObject::connect(
-        job,    SIGNAL(sigCanceled(int)),
-        this,   SLOT(s_jobCancelled(int)));
+//    QObject::connect(
+//        job,    SIGNAL(sigCanceled(int)),
+//        this,   SLOT(s_jobCancelled(int)));
   
-    QObject::connect(
-        job,    SIGNAL(sigError(int, int, const char *)),
-        this,   SLOT(s_jobError(int, int, const char *)));
+//    QObject::connect(
+//        job,    SIGNAL(sigError(int, int, const char *)),
+//        this,   SLOT(s_jobError(int, int, const char *)));
     
-    QObject::connect(
-        job,    SIGNAL(sigData(int, const char *, int)),
-        this,   SLOT(s_jobData(int, const char *, int)));
+//    QObject::connect(
+//        job,    SIGNAL(sigData(int, const char *, int)),
+//        this,   SLOT(s_jobData(int, const char *, int)));
     
     EmpathURL url(url_);
     url.setFolderPath(i18n("Inbox"));
@@ -126,9 +123,8 @@ EmpathMailboxPOP3::_nextCommand()
     
     QString command = prefix + commandQueue_.head()->command();
     
-    ASSERT(job != 0);
     empathDebug("Doing `" + command + "'");
-    job->get(command.ascii());
+//    job->get(command.ascii());
 }
 
     void

@@ -98,7 +98,7 @@ class Database
     /**
      * @return true if the key is in the index.
      */
-    bool exists(const QString & key);
+    bool exists(const QString & key) const;
 
     /**
      * Write all data to disk NOW.
@@ -133,6 +133,12 @@ class Database
     void increaseUnreadCount()  { ++unreadCount_; }
     void decreaseUnreadCount()  { --unreadCount_; }
     unsigned int unreadCount()  { return unreadCount_; }
+    
+    void saveIndex() { _saveIndex(); }
+
+    bool locked() const { return locked_; }
+    bool lock() { if (locked_) return false; locked_ = true; return true; }
+    bool unlock() { if (!locked_) return false; locked_ = false; return true; }
 
   private:
 
@@ -167,6 +173,8 @@ class Database
     QDateTime touched_;
 
     unsigned int unreadCount_;
+
+    bool locked_;
 };
 
 } // End namespace

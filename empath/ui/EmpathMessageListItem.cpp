@@ -164,7 +164,7 @@ EmpathMessageListItem::key(int column, bool) const
             break;
             
         case 1:
-            s = text(0); // TODO: sort on status
+            s = text(0); // TODO
             break;
         
         case 2:

@@ -37,7 +37,8 @@ Database::Database(const QString & filename)
     error_("No error"),
     offset_(0),
     indexFileSize_(0),
-    dataFileSize_(0)
+    dataFileSize_(0),
+    locked_(false)
 {
   indexFile_.setName(filename + ".idx");
   dataFile_.setName(filename + ".rdb");
@@ -194,7 +195,7 @@ Database::insert(const QString & key, const QByteArray & data)
 }
 
   bool
-Database::exists(const QString & key)
+Database::exists(const QString & key) const
 {
   return (index_[key] != 0);
 }

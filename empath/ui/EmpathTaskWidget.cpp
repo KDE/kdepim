@@ -157,7 +157,11 @@ EmpathTaskItem::s_done()
     void
 EmpathTaskItem::s_inc()
 {
-    progressMeter_->setProgress(++pos_);
+    int newPos = int(((pos_ + 1) / (double)max_) * 100);
+    if (newPos != ++pos_) {
+        progressMeter_->setProgress(pos_);
+        kapp->processEvents();
+    }
 }
 
     void
@@ -170,13 +174,12 @@ EmpathTaskItem::s_setMax(int max)
     void
 EmpathTaskItem::s_setPos(int pos)
 {
-    int newPos = (pos / (double)max_) * 100;
-    empathDebug("pos_ == " + QString::number(pos_) + " newPos == " + QString::number(newPos));
-    if (newPos = pos)
-        return;
+    int newPos = int((pos / (double)max_) * 100);
 
-    pos_ = pos;
-    progressMeter_->setProgress(pos_);
+    if (newPos != pos) {
+        pos_ = pos;
+        progressMeter_->setProgress(pos_);
+    }
 }
 
     QSize

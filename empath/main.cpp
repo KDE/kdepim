@@ -42,26 +42,51 @@ static const char* VERSION="0.0.1";
     int
 main(int argc, char ** argv)
 {
-    KAboutData aboutData( "empath", I18N_NOOP("Empath"),
-        VERSION, description, KAboutData::License_GPL,
-        "(c) 1999-2000, The Empath Team");
-    aboutData.addAuthor("Rik Hemsley",0, "rik@kde.org");
-    aboutData.addAuthor("Wilco Greven",0, "j.w.greven@student.utwente.nl");
-    KCmdLineArgs::init( argc, argv, &aboutData );
-  
     // Don't do anything if we're being run as root.
     if (getuid() == 0 || geteuid() == 0) {
         fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
         return 1;
     }    
 
+    KAboutData aboutData(
+        "empath",
+        I18N_NOOP("Empath"),
+        VERSION,
+        description,
+        KAboutData::License_GPL,
+        "(c) 1999-2000, The Empath Team",
+        0,
+        "http://without.netpedia.net",
+        "kde-pim@kde.org"
+    );
+
+    aboutData.addAuthor(
+        "Rik Hemsley",
+        I18N_NOOP("Design and coding"),
+        "rik@kde.org",
+        "http://without.netpedia.net"
+    );
+
+    aboutData.addAuthor(
+        "Wilco Greven",
+        I18N_NOOP("Design and coding"),
+        "j.w.greven@student.utwente.nl"
+    );
+
+    aboutData.addAuthor(
+        "kraftw",
+        I18N_NOOP("Empath logo")
+    );
+ 
+    KCmdLineArgs::init(argc, argv, &aboutData);
+  
     // Pick a sensible umask for everything Empath does.
     int prev_umask = umask(077);
     
 #ifdef DOSOMEDOSOMEDOSOME
 
     if (!KUniqueApplication::start())
-        exit(0);
+        exit(1);
     
     KUniqueApplication app;
 
@@ -75,10 +100,7 @@ main(int argc, char ** argv)
     Empath::start();
     
     // Create the user interface.
-    EmpathUI * ui = new EmpathUI;
-
-    // Attempt to get the UI up and running quickly.
-    app.processEvents();
+    EmpathUI ui;
 
     // Initialise the kernel.
     empath->init();
@@ -86,9 +108,7 @@ main(int argc, char ** argv)
     // Enter the event loop.
     int retval = app.exec();
     
-    delete ui;
-    ui = 0;
-    
+    // Clean up.
     empath->shutdown();
 
     // Restore umask.

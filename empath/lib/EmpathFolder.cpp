@@ -103,24 +103,6 @@ EmpathFolder::update()
     emit(countUpdated(index_->countUnread(), index_->count()));
 }
 
-    void
-EmpathFolder::syncIndex()
-{
-    index_->sync();
-} 
-
-    EmpathIndexRecord
-EmpathFolder::indexRecord(const QString & key)
-{
-    return index_->record(key);
-}
-
-    QStringList
-EmpathFolder::allIndexKeys()
-{
-    return index_->allKeys();
-}
-
     EmpathFolder *
 EmpathFolder::parent() const
 {
@@ -140,18 +122,6 @@ EmpathFolder::parent() const
     return empath->folder(u);
 }
 
-    Q_UINT32
-EmpathFolder::messageCount()
-{
-    return index_->count();
-}
-
-    Q_UINT32
-EmpathFolder::unreadMessageCount()
-{
-    return index_->countUnread();
-}
-
     void
 EmpathFolder::setStatus(const QString & key, RMM::MessageStatus status)
 {
@@ -163,54 +133,6 @@ EmpathFolder::setStatus(const QString & key, RMM::MessageStatus status)
 
     if (oldUnread != newUnread)
         emit(countUpdated(index_->countUnread(), index_->count()));
-}
-
-    bool
-EmpathFolder::removeFromIndex(const QString & key)
-{
-    return index_->remove(key);
-}
-
-    bool
-EmpathFolder::insertInIndex(const QString & key, EmpathIndexRecord & rec)
-{
-    return index_->insert(key, rec);
-}
-
-    bool
-EmpathFolder::replaceInIndex(const QString & key, EmpathIndexRecord & rec)
-{
-    return index_->replace(key, rec);
-}
-
-    void
-EmpathFolder::setIndexInitialised()
-{
-    index_->setInitialised(true);
-}
-
-    bool
-EmpathFolder::indexInitialised()
-{
-    return index_->initialised();
-}
-
-    QDateTime
-EmpathFolder::indexModified()
-{
-    return index_->lastModified();
-}
-
-    bool
-EmpathFolder::indexContains(const QString & key)
-{
-    return index_->contains(key);
-} 
-
-    void
-EmpathFolder::setIndexUnread(unsigned int i)
-{
-    index_->setUnread(i);
 }
 
     bool

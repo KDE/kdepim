@@ -30,6 +30,8 @@
 #include <qimage.h>
 
 // KDE includes
+#include <kglobal.h>
+#include <kconfig.h>
 #include <klocale.h>
 #include <krun.h>
 

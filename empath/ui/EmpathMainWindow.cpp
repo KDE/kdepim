@@ -40,6 +40,7 @@
 
 // Local includes
 #include "EmpathTask.h"
+#include "EmpathUI.h"
 #include "EmpathUIUtils.h"
 #include "EmpathDefines.h"
 #include "EmpathMainWidget.h"
@@ -95,7 +96,6 @@ EmpathMainWindow::EmpathMainWindow()
     _setupStatusBar();
     
     updateRects();
-    kapp->processEvents();
     show();
 }
 
@@ -118,9 +118,6 @@ EmpathMainWindow::_setupToolBar()
     int i = QMAX(p.width(), p.height());
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
-
-    QActionCollection * actionCollection
-            = messageListWidget_->actionCollection();
 
     KConfig * c = KGlobal::config();
 
@@ -145,7 +142,10 @@ EmpathMainWindow::_setupToolBar()
     QObject::connect(tb, SIGNAL(moved(BarPosition)),
             this, SLOT(s_toolbarMoved(BarPosition)));
 
-    actionCollection->action("messageCompose")->plug(tb);
+    QActionCollection * actionCollection
+            = messageListWidget_->actionCollection();
+
+    EmpathUI::actionCollection()->action("messageCompose")->plug(tb);
     actionCollection->action("messageReply")->plug(tb);
     actionCollection->action("messageForward")->plug(tb);
     actionCollection->action("messageForward")->plug(tb);
@@ -232,50 +232,50 @@ EmpathMainWindow::s_messageNew()
     void
 EmpathMainWindow::s_messageReply()
 {
-    if (!_messageSelected()) return;
-    empath->s_reply(messageListWidget_->firstSelectedMessage());
+    if (_messageSelected())
+        empath->s_reply(messageListWidget_->firstSelectedMessage());
 }
 
     void
 EmpathMainWindow::s_messageReplyAll()
 {
-    if (!_messageSelected()) return;
-    empath->s_replyAll(messageListWidget_->firstSelectedMessage());
+    if (_messageSelected())
+        empath->s_replyAll(messageListWidget_->firstSelectedMessage());
 }
 
     void
 EmpathMainWindow::s_messageForward()
 {
-    if (!_messageSelected()) return;
-    empath->s_forward(messageListWidget_->firstSelectedMessage());
+    if (_messageSelected())
+        empath->s_forward(messageListWidget_->firstSelectedMessage());
 }
 
     void
 EmpathMainWindow::s_messageBounce()
 {
-    if (!_messageSelected()) return;
-    empath->s_bounce(messageListWidget_->firstSelectedMessage());
+    if (_messageSelected())
+        empath->s_bounce(messageListWidget_->firstSelectedMessage());
 }
 
     void
 EmpathMainWindow::s_messageDelete()
 {
-    if (!_messageSelected()) return;
-    messageListWidget_->s_messageDelete();
+    if (_messageSelected())
+        messageListWidget_->s_messageDelete();
 }
 
     void
 EmpathMainWindow::s_messageSaveAs()
 {
-    if (!_messageSelected()) return;
-
-    empath->saveMessage(messageListWidget_->firstSelectedMessage(), this);
+    if (_messageSelected())
+        empath->saveMessage(messageListWidget_->firstSelectedMessage(), this);
 }
 
     void
 EmpathMainWindow::s_messageCopyTo()
 {
-    if (!_messageSelected()) return;
+    if (!_messageSelected())
+        return;
 
     EmpathFolderChooserDialog fcd(this);
 
@@ -288,6 +288,9 @@ EmpathMainWindow::s_messageCopyTo()
     void
 EmpathMainWindow::s_messageMoveTo()
 {
+    if (!_messageSelected())
+        return;
+
     EmpathFolderChooserDialog fcd(this);
 
     if (fcd.exec() != QDialog::Accepted)
@@ -307,19 +310,18 @@ EmpathMainWindow::s_messagePrint()
     void
 EmpathMainWindow::s_messageFilter()
 {
-    if (!_messageSelected()) return;
-    empath->filter(messageListWidget_->firstSelectedMessage());
+    if (_messageSelected())
+        empath->filter(messageListWidget_->firstSelectedMessage());
 }
 
     void
 EmpathMainWindow::s_messageView()
 {
-    if (!_messageSelected()) return;
+    if (!_messageSelected())
+        return;
     
-    EmpathMessageViewWindow * messageViewWindow =
-        new EmpathMessageViewWindow(messageListWidget_->firstSelectedMessage());
-
-    messageViewWindow->show();
+    (new EmpathMessageViewWindow(messageListWidget_->firstSelectedMessage()))
+        ->show();
 }
 
     void

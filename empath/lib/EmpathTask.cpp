@@ -73,6 +73,7 @@ EmpathTask::setPos(int i)
 EmpathTask::doneOne()
 {
     emit(addOne());
+#if 0
 
     // Adaptive method for choosing a number of loops to make before
     // processEvents(). Assumes loop iterations take approx. equal
@@ -103,6 +104,7 @@ EmpathTask::doneOne()
     
         startTime_ = currentTime;
     }
+#endif
 }
 
     void

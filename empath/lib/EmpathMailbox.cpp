@@ -28,6 +28,7 @@
 #include "EmpathUtilities.h"
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
+#include "EmpathIndex.h"
 #include "EmpathURL.h"
 #include "Empath.h"
 
@@ -86,7 +87,7 @@ EmpathMailbox::messageCount() const
     EmpathFolderListIterator it(folderList_);
     
     for (; it.current(); ++it)
-        c += it.current()->messageCount();
+        c += it.current()->index()->count();
 
     return c;
 }
@@ -99,7 +100,7 @@ EmpathMailbox::unreadMessageCount() const
     EmpathFolderListIterator it(folderList_);
     
     for (; it.current(); ++it)
-        c += it.current()->unreadMessageCount();
+        c += it.current()->index()->countUnread();
 
     return c;
 }

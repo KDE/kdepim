@@ -28,6 +28,7 @@
 #include <qstring.h>
 #include <qwidgetlist.h>
 #include <qapplication.h>
+#include <qaction.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -39,11 +40,13 @@
 #include <ktmainwindow.h>
 #include <kaboutdialog.h>
 #include <kfiledialog.h>
+#include <kaction.h>
 
 // Local includes
 #include "Empath.h"
 #include "EmpathConfig.h"
 #include "EmpathUI.h"
+#include "EmpathUIUtils.h"
 #include "EmpathSetupWizard.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
@@ -58,43 +61,16 @@
 #include "EmpathMessageListWidget.h"
 
 QString EmpathAboutText;
+QActionCollection * EmpathUI::actionCollection_ = 0L;
 
 EmpathUI::EmpathUI()
     : QObject((QObject *)0L, "EmpathUI")
 {
-    QString aboutTemplate = i18n(
-        "<p>Empath -- Mail client for KDE</p>"
-        "<p>Version: %1</p>"
-        "<p>Program design and code:<ul><li>%2</li><li>%3</li></ul></p>"
-        "<p>Graphics:<ul><li>%4</li></ul></p>");
+    _init();
 
-    EmpathAboutText =
-        aboutTemplate.arg("Under Development")
-            .arg("Rik Hemsley (rikkus)")
-            .arg("Wilco Greven")
-            .arg("kraftw");
+   (void) new EmpathMainWindow;
 
-    // If no mailboxes are configured, then show the setup wizard.
-
-    KConfig * c(KGlobal::config());
-    
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_GENERAL);
-    
-    QStringList l = c->readListEntry(GEN_MAILBOX_LIST);
-    
-    if (l.isEmpty()) {
-        EmpathSetupWizard wiz;
-        wiz.exec();
-    }
-
-    _connectUp();
-
-    EmpathMainWindow * w = new EmpathMainWindow;
-    w->show();
-    kapp->setMainWidget(w);
-    EmpathMessageListItem::initStatic();
+   kapp->processEvents();
 }
 
 EmpathUI::~EmpathUI()
@@ -234,6 +210,43 @@ EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
 }
 
     void
+EmpathUI::_init()
+{
+    QString aboutTemplate = i18n(
+        "<p>Empath -- Mail client for KDE</p>"
+        "<p>Version: %1</p>"
+        "<p>Program design and code:<ul><li>%2</li><li>%3</li></ul></p>"
+        "<p>Graphics:<ul><li>%4</li></ul></p>");
+
+    EmpathAboutText =
+        aboutTemplate.arg("Under Development")
+            .arg("Rik Hemsley (rikkus)")
+            .arg("Wilco Greven")
+            .arg("kraftw");
+
+    EmpathMessageListItem::initStatic();
+    
+    _initActions();
+    _connectUp();
+    _showWizardIfNeeded();
+}
+
+    void
+EmpathUI::_showWizardIfNeeded()
+{
+    // If no mailboxes are configured, then show the setup wizard.
+
+    KConfig * c(KGlobal::config());
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_GENERAL);
+    
+    if (c->readListEntry(GEN_MAILBOX_LIST).isEmpty())
+        s_setup(Empath::SetupWizard, static_cast<QWidget *>(0L));
+}
+
+    void
 EmpathUI::_connectUp()
 {
     QObject::connect(
@@ -255,6 +268,23 @@ EmpathUI::_connectUp()
     QObject::connect(
         empath, SIGNAL(setup(Empath::SetupType, QWidget *)),
         this,   SLOT(s_setup(Empath::SetupType, QWidget *)));
+}
+
+    void
+EmpathUI::_initActions()
+{
+    actionCollection_ = new QActionCollection(this, "actionCollection");
+
+    ac_messageCompose_ =
+        new KAction(
+            i18n("&Compose"),
+            empathIconSet("compose"),
+            Key_M, 
+            empath,
+            SLOT(s_compose()),
+            actionCollection_,
+            "messageCompose"
+        );
 }
 
 // vim:ts=4:sw=4:tw=78

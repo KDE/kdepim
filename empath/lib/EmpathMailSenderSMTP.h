@@ -33,7 +33,7 @@
 #include <qobject.h>
 
 // KDE includes
-#include <kio_job.h>
+#include <kio/job.h>
 
 // Local includes
 #include "RMM_Message.h"
@@ -82,7 +82,7 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         QString     serverName_;
         Q_UINT32    serverPort_;
         
-        KIOJob  * job_;
+        KIO::Job  * job_;
         QString currentID_;
 };
 

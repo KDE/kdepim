@@ -118,11 +118,15 @@ class EmpathIndex
         void setStatus(const QString & key, RMM::MessageStatus status);
         
         bool initialised() const { return initialised_; }
-        void setInitialised(bool i) { initialised_ = i; }
+        void setInitialised(bool i) { initialised_ = i; dbf_->saveIndex(); }
 
         void setUnread(unsigned int);
 
         const char * className() const { return "EmpathIndex"; }
+
+        bool locked() const { return dbf_->locked(); }
+        bool lock() { return dbf_->lock(); }
+        bool unlock() { return dbf_->unlock(); }
 
     protected:
         

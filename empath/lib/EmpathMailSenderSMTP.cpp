@@ -41,8 +41,7 @@
 EmpathMailSenderSMTP::EmpathMailSenderSMTP()
     :    EmpathMailSender()
 {
-    job_ = new KIOJob;
-    CHECK_PTR(job_);
+//    job_ = new KIO::Job;
 }
 
 EmpathMailSenderSMTP::~EmpathMailSenderSMTP()
@@ -92,7 +91,7 @@ EmpathMailSenderSMTP::sendOne(RMM::RMessage m, const QString & id)
         '/' +
         sender + ',' + recipient;
     
-    job_->put(putStr.ascii(), 0, false, false, 0);
+//    job_->put(putStr.ascii(), 0, false, false, 0);
 }
 
     void
@@ -140,7 +139,7 @@ EmpathMailSenderSMTP::s_jobCanceled(int)
     void
 EmpathMailSenderSMTP::s_jobReady(int)
 {
-    job_->slotData(0, 0);
+//    job_->slotData(0, 0);
 }
 
 // vim:ts=4:sw=4:tw=78

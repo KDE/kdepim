@@ -211,8 +211,8 @@ EmpathFolderListItem::init()
             return;
         }
 
-        setText(1, QString().setNum(f->unreadMessageCount()));
-        setText(2, QString().setNum(f->messageCount()));
+        setText(1, QString().setNum(f->index()->countUnread()));
+        setText(2, QString().setNum(f->index()->count()));
 
     } else {
 

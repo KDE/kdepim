@@ -148,7 +148,7 @@ EmpathComposer::newComposeForm(const QString & recipient)
     EmpathComposeForm composeForm;
     composeForm.setComposeType(ComposeNormal);
     _initVisibleHeaders(composeForm);
-    composeForm.setHeader("To", recipient.local8Bit(), false);
+    composeForm.setHeader("To", recipient.utf8(), false);
     emit(composeFormComplete(composeForm));
 }
 
@@ -200,7 +200,7 @@ EmpathComposer::bugReport()
     "- " +
     i18n("If you saw an error message, please try to reproduce it here.");
 
-    composeForm.setBody(body.local8Bit());
+    composeForm.setBody(body.utf8());
     _initVisibleHeaders(composeForm);
     emit(composeFormComplete(composeForm));
 }
@@ -317,7 +317,7 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
 
     if (s.isEmpty())
         composeForm.setHeader(
-                "Subject", i18n("Re: (no subject given)").local8Bit());
+                "Subject", i18n("Re: (no subject given)").utf8());
     else
         if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
             composeForm.setHeader("Subject", s);
@@ -364,7 +364,7 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
                 thingyWrote.replace(QRegExp("\\%d"),
                     i18n("An unknown date and time"));
         
-            composeForm.setBody('\n' + thingyWrote.local8Bit() + '\n' + s);
+            composeForm.setBody('\n' + thingyWrote.utf8() + '\n' + s);
         }
     }
 
@@ -385,7 +385,7 @@ EmpathComposer::_forward(EmpathJobID id, RMM::RMessage message)
 
     if (s.isEmpty()) 
         composeForm.setHeader("Subject",
-            i18n("Fwd: (no subject given)").local8Bit());
+            i18n("Fwd: (no subject given)").utf8());
     else
         if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
             composeForm.setHeader("Subject", s);
@@ -521,7 +521,7 @@ EmpathComposer::_quote(QCString & s)
     EmpathQuotedText quoted(QString::fromUtf8(s));
     quoted.rewrap(70);
     quoted.quote();
-    s = QString::fromUtf8(quoted.asString());
+    s = quoted.asString().utf8();
     empathDebug(s);
 }
 

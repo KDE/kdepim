@@ -1,5 +1,6 @@
 #include <kmenubar.h>
 
+#include "EmpathUI.h"
 #include "EmpathDefines.h"
 
 extern QString EmpathAboutText;
@@ -24,7 +25,7 @@ EmpathMainWindow::_setupMenuBar()
     
     messageMenu_->insertSeparator();
 
-    actionCollection->action("messageCompose")->plug(messageMenu_);
+    EmpathUI::actionCollection()->action("messageCompose")->plug(messageMenu_);
     actionCollection->action("messageReply")->plug(messageMenu_);
     actionCollection->action("messageReplyAll")->plug(messageMenu_);
     actionCollection->action("messageForward")->plug(messageMenu_);
@@ -119,7 +120,7 @@ EmpathMainWindow::_setupMenuBar()
         i18n("&Identity"),
         this, SLOT(s_setupIdentity()));
     
-    optionsMenu_->insertItem(empathIcon("settings-compose"),
+    optionsMenu_->insertItem(empathIcon("toolbar-compose"),
         i18n("&Compose"),
         this, SLOT(s_setupComposing()));
     
