@@ -32,7 +32,6 @@
 class KPilotDeviceLink;
 class QTimer;
 class QListView;
-#include <qcheckbox.h>
 class ResolutionDialogBase;
 
 
