@@ -39,9 +39,9 @@
 class EudoraXXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new EudoraXXPort( core, parent, name );
+      return new EudoraXXPort( ab, parent, name );
     }
 };
 
@@ -54,8 +54,8 @@ extern "C"
 }
 
 
-EudoraXXPort::EudoraXXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createImportAction( i18n( "Import Eudora Addressbook..." ) );
 }

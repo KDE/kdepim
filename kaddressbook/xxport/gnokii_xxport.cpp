@@ -35,11 +35,9 @@
 
 #include "config.h"
 
+#include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kabc/addressbook.h>
-
-#include <kdebug.h>
 
 #ifdef HAVE_GNOKII_H
 extern "C" {
@@ -54,9 +52,9 @@ extern "C" {
 class GNOKIIXXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new GNOKIIXXPort( core, parent, name );
+      return new GNOKIIXXPort( ab, parent, name );
     }
 };
 
@@ -69,11 +67,10 @@ extern "C"
 }
 
 
-GNOKIIXXPort::GNOKIIXXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createImportAction( i18n( "Import from Mobile Phone..." ) );
-  createExportAction( i18n( "Export to Mobile Phone..." ) );
 }
 
 /* import */
@@ -283,28 +280,25 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 }
 #endif
 
-
-
-
 KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 {
   KABC::AddresseeList addrList;
 
 #ifndef HAVE_GNOKII_H
 
-  KMessageBox::error(core(), i18n("Gnokii interface is not available.\n"
+  KMessageBox::error(parentWidget(), i18n("Gnokii interface is not available.\n"
 		"Please ask your distributor to add gnokii during compile time."));
 
 #else
 
   if (gn_cfg_read(&BinDir)<0 || !gn_cfg_phone_load("", &state)) {
-	KMessageBox::error(core(), i18n("GNOKII isn't yet configured."));
+	KMessageBox::error(parentWidget(), i18n("GNOKII isn't yet configured."));
 	return addrList;
   }
 
   QString errStr = businit();
   if (!errStr.isEmpty()) {
-	KMessageBox::error(core(), errStr);
+	KMessageBox::error(parentWidget(), errStr);
 	return addrList;
   }
 
@@ -320,27 +314,6 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 #endif
 
   return addrList;
-}
-
-
-/* export */
-
-bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
-{
-  Q_UNUSED(list);
-
-#ifndef HAVE_GNOKII_H
-
-  KMessageBox::error(core(), i18n("Gnokii interface is not available.\n"
-		"Please ask your distributor to add gnokii during compile time."));
-
-#else
-
-  KMessageBox::information(core(), i18n("Export to phone not yet implemented.\n"));
-
-#endif
-
-  return true;
 }
 
 #include "gnokii_xxport.moc"

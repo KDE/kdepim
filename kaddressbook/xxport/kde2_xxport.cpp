@@ -23,7 +23,6 @@
 
 #include <qfile.h>
 
-#include <kabc/addressbook.h>
 #include <kdebug.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
@@ -41,9 +40,9 @@
 class KDE2XXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new KDE2XXPort( core, parent, name );
+      return new KDE2XXPort( ab, parent, name );
     }
 };
 
@@ -56,8 +55,8 @@ extern "C"
 }
 
 
-KDE2XXPort::KDE2XXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createImportAction( i18n( "Import KDE 2 Addressbook..." ) );
 }
@@ -66,11 +65,11 @@ KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
 {
   QString fileName = locateLocal( "data", "kabc/std.vcf" );
   if ( !QFile::exists( fileName ) ) {
-    KMessageBox::sorry( core(), i18n( "<qt>Couldn't find a KDE 2 address book <b>%1</b>.</qt>" ).arg( fileName ) );
+    KMessageBox::sorry( parentWidget(), i18n( "<qt>Couldn't find a KDE 2 address book <b>%1</b>.</qt>" ).arg( fileName ) );
     return KABC::AddresseeList();
   }
 
-  int result = KMessageBox::questionYesNoCancel( core(),
+  int result = KMessageBox::questionYesNoCancel( parentWidget(),
       i18n( "Override previously imported entries?" ),
       i18n( "Import KDE 2 Addressbook" ) );
 
@@ -88,7 +87,7 @@ KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
 
   proc.start( KProcess::Block );
 
-  core()->addressBook()->load();
+  addressBook()->load();
 
   return KABC::AddresseeList();
 }

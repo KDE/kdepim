@@ -31,7 +31,7 @@ class VCardXXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    VCardXXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "vcard"; }
 

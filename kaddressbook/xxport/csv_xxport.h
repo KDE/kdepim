@@ -31,7 +31,7 @@ class CSVXXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    CSVXXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "csv"; }
 

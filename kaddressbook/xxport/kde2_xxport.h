@@ -31,7 +31,7 @@ class KDE2XXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    KDE2XXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "kde2"; }
 

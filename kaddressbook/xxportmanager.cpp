@@ -29,6 +29,7 @@
 #include <kresources/resourceselectdialog.h>
 #include <ktrader.h>
 
+#include "kabcore.h"
 #include "undocmds.h"
 #include "xxportselectdialog.h"
 
@@ -129,7 +130,7 @@ void XXPortManager::loadPlugins()
       continue;
     }
 
-    XXPortObject *obj = xxportFactory->xxportObject( mCore, this );
+    XXPortObject *obj = xxportFactory->xxportObject( mCore->addressBook(), mCore );
     if ( obj ) {
       mCore->addGUIClient( obj );
       mXXPortObjects.insert( obj->identifier(), obj );

@@ -32,7 +32,7 @@ class BookmarkXXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    BookmarkXXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "bookmark"; }
 

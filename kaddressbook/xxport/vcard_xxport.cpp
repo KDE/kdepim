@@ -38,9 +38,9 @@
 class VCardXXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new VCardXXPort( core, parent, name );
+      return new VCardXXPort( ab, parent, name );
     }
 };
 
@@ -53,8 +53,8 @@ extern "C"
 }
 
 
-VCardXXPort::VCardXXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createImportAction( i18n( "Import vCard..." ) );
   createExportAction( i18n( "Export vCard 2.1..." ), "v21" );
@@ -77,7 +77,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
   QFile outFile( fileName );
   if ( !outFile.open( IO_WriteOnly ) ) {
     QString text = i18n( "<qt>Unable to open file <b>%1</b> for export.</qt>" );
-    KMessageBox::error( core(), text.arg( fileName ) );
+    KMessageBox::error( parentWidget(), text.arg( fileName ) );
     return false;
   }
 
@@ -141,7 +141,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
       else if ( dataList[ i ].contains( "VERSION:2.1" ) )
         ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v2_1 );
       else {
-        KMessageBox::sorry( core(), i18n( "Not supported vCard version." ),
+        KMessageBox::sorry( parentWidget(), i18n( "Not supported vCard version." ),
                             caption );
         continue;
       }
@@ -151,7 +151,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
       else {
         QString text = i18n( "The selected file does not include a valid vCard. "
                              "Please check the file and try again." );
-        KMessageBox::sorry( core(), text, caption );
+        KMessageBox::sorry( parentWidget(), text, caption );
       }
     }
 
@@ -160,12 +160,12 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
     if ( addrList.count() > 0 ) {
       QString text = i18n( "One contact had been imported successfully.", "%n contacts had been imported successfully.", addrList.count() );
-      KMessageBox::information( core(), text, QString::null, "successful_imported" );
+      KMessageBox::information( parentWidget(), text, QString::null, "successful_imported" );
     }
 
   } else {
     QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
-    KMessageBox::error( core(), text.arg( url.url() ), caption );
+    KMessageBox::error( parentWidget(), text.arg( url.url() ), caption );
   }
 
   return addrList;

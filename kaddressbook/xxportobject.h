@@ -26,8 +26,8 @@
 
 #include <qobject.h>
 
+#include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
-#include <kaddressbook/kabcore.h>
 #include <klibloader.h>
 #include <kxmlguiclient.h>
 
@@ -36,7 +36,7 @@ class XXPortObject : public QObject, virtual public KXMLGUIClient
   Q_OBJECT
 
   public:
-    XXPortObject( KABCore *core, QObject *parent, const char *name = 0 );
+    XXPortObject( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     ~XXPortObject();
 
     /**
@@ -89,16 +89,24 @@ class XXPortObject : public QObject, virtual public KXMLGUIClient
     void createExportAction( const QString &label, const QString &identifier = QString::null );
 
     /**
-      Returns a pointer to the KABCore object. It's mainly used to
-      register the actions.
+      Returns a pointer to the address book object.
      */
-    KABCore *core() const;
+    KABC::AddressBook *addressBook() const;
+
+    /**
+      Returns a pointer to the parent widget. It can be used as parent for
+      message boxes.
+     */
+    QWidget *parentWidget() const;
 
   private slots:
     void slotImportActivated( const QString& );
     void slotExportActivated( const QString& );
 
   private:
+    KABC::AddressBook *mAddressBook;
+    QWidget *mParentWidget;
+
     class XXPortObjectPrivate;
     XXPortObjectPrivate *d;
 };
@@ -106,7 +114,7 @@ class XXPortObject : public QObject, virtual public KXMLGUIClient
 class XXPortFactory : public KLibFactory
 {
   public:
-    virtual XXPortObject *xxportObject( KABCore *core, QObject *parent,
+    virtual XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent,
                                         const char *name = 0 ) = 0;
 
   protected:

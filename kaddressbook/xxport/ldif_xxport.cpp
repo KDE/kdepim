@@ -42,7 +42,6 @@
 #include <kmessagebox.h>
 #include <ktempfile.h>
 #include <kurl.h>
-#include <kabc/addressbook.h>
 
 #include <kdebug.h>
 
@@ -51,9 +50,9 @@
 class LDIFXXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new LDIFXXPort( core, parent, name );
+      return new LDIFXXPort( ab, parent, name );
     }
 };
 
@@ -66,8 +65,8 @@ extern "C"
 }
 
 
-LDIFXXPort::LDIFXXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createImportAction( i18n( "Import LDIF Addressbook..." ) );
   createExportAction( i18n( "Export LDIF Addressbook..." ) );
@@ -86,7 +85,7 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
   QFile file( fileName );
   if ( !file.open( IO_ReadOnly ) ) {
     QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
-    KMessageBox::error( core(), msg.arg( fileName ) );
+    KMessageBox::error( parentWidget(), msg.arg( fileName ) );
     return addrList;
   }
 
@@ -328,7 +327,7 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
     KTempFile tmpFile;
     if ( tmpFile.status() != 0 ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>" );
-      KMessageBox::error( core(), txt.arg( url.url() )
+      KMessageBox::error( parentWidget(), txt.arg( url.url() )
                           .arg( strerror( tmpFile.status() ) ) );
       return false;
     }
@@ -336,12 +335,12 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
     doExport( tmpFile.file(), list );
     tmpFile.close();
 
-    return KIO::NetAccess::upload( tmpFile.name(), url, core() );
+    return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
   } else {
     QFile file( url.fileName() );
     if ( !file.open( IO_WriteOnly ) ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( core(), txt.arg( url.fileName() ) );
+      KMessageBox::error( parentWidget(), txt.arg( url.fileName() ) );
       return false;
     }
 

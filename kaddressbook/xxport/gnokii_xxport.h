@@ -31,12 +31,11 @@ class GNOKIIXXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    GNOKIIXXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "gnokii"; }
 
   public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::AddresseeList importContacts( const QString &data ) const;
 };
 

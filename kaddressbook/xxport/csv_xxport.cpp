@@ -37,9 +37,9 @@
 class CSVXXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new CSVXXPort( core, parent, name );
+      return new CSVXXPort( ab, parent, name );
     }
 };
 
@@ -52,8 +52,8 @@ extern "C"
 }
 
 
-CSVXXPort::CSVXXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+CSVXXPort::CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createImportAction( i18n( "Import CSV List..." ) );
   createExportAction( i18n( "Export CSV List..." ) );
@@ -69,7 +69,7 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
     KTempFile tmpFile;
     if ( tmpFile.status() != 0 ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>" );
-      KMessageBox::error( core(), txt.arg( url.url() )
+      KMessageBox::error( parentWidget(), txt.arg( url.url() )
                           .arg( strerror( tmpFile.status() ) ) );
       return false;
     }
@@ -77,12 +77,12 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
     doExport( tmpFile.file(), list );
     tmpFile.close();
 
-    return KIO::NetAccess::upload( tmpFile.name(), url, core() );
+    return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
   } else {
     QFile file( url.fileName() );
     if ( !file.open( IO_WriteOnly ) ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( core(), txt.arg( url.fileName() ) );
+      KMessageBox::error( parentWidget(), txt.arg( url.fileName() ) );
       return false;
     }
 
@@ -95,7 +95,7 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
 
 KABC::AddresseeList CSVXXPort::importContacts( const QString& ) const
 {
-  ContactImportDialog dlg( core()->addressBook(), core() );
+  ContactImportDialog dlg( addressBook(), parentWidget() );
 
   if ( dlg.exec() )
     return dlg.contacts();
@@ -108,7 +108,7 @@ void CSVXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
   QTextStream t( fp );
 
   KABC::AddresseeList::ConstIterator iter;
-  KABC::Field::List fields = core()->addressBook()->fields();
+  KABC::Field::List fields = addressBook()->fields();
   KABC::Field::List::Iterator fieldIter;
   bool first = true;
 

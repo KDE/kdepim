@@ -24,7 +24,6 @@
 #include <qmap.h>
 #include <qsignalmapper.h>
 
-#include <kabc/addresseelist.h>
 #include <kaction.h>
 #include <kmessagebox.h>
 
@@ -35,16 +34,15 @@
 class XXPortObject::XXPortObjectPrivate
 {
   public:
-    KABCore *mCore;
-
     QSignalMapper *mExportMapper;
     QSignalMapper *mImportMapper;
 };
 
-XXPortObject::XXPortObject( KABCore *core, QObject *parent, const char *name )
-  : QObject( parent, name ), d( new XXPortObjectPrivate )
+XXPortObject::XXPortObject( KABC::AddressBook *ab, QWidget *parent,
+                            const char *name )
+  : QObject( parent, name ), mAddressBook( ab ), mParentWidget( parent ),
+    d( new XXPortObjectPrivate )
 {
-  d->mCore = core;
   d->mExportMapper = new QSignalMapper( this );
   d->mImportMapper = new QSignalMapper( this );
 
@@ -92,9 +90,14 @@ void XXPortObject::createExportAction( const QString &label, const QString &data
   setXMLFile( identifier() + "_xxportui.rc" );
 }
 
-KABCore *XXPortObject::core() const
+KABC::AddressBook *XXPortObject::addressBook() const
 {
-  return d->mCore;
+  return mAddressBook;
+}
+
+QWidget *XXPortObject::parentWidget() const
+{
+  return mParentWidget;
 }
 
 void XXPortObject::slotExportActivated( const QString &data )

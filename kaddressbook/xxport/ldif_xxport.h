@@ -32,7 +32,7 @@ class LDIFXXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    LDIFXXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "ldif"; }
 

@@ -31,7 +31,7 @@ class EudoraXXPort : public XXPortObject
   Q_OBJECT
 
   public:
-    EudoraXXPort( KABCore *core, QObject *parent, const char *name = 0 );
+    EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
 
     QString identifier() const { return "eudora"; }
 

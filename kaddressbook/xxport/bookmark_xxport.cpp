@@ -34,9 +34,9 @@
 class BookmarkXXPortFactory : public XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABCore *core, QObject *parent, const char *name )
+    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new BookmarkXXPort( core, parent, name );
+      return new BookmarkXXPort( ab, parent, name );
     }
 };
 
@@ -49,8 +49,8 @@ extern "C"
 }
 
 
-BookmarkXXPort::BookmarkXXPort( KABCore *core, QObject *parent, const char *name )
-  : XXPortObject( core, parent, name )
+BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : XXPortObject( ab, parent, name )
 {
   createExportAction( i18n( "Export Bookmarks Menu..." ) );
 }
