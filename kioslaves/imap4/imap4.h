@@ -171,6 +171,11 @@ protected:
 
 private:
 
+  // This method behaves like the above method but takes an already encoded url,
+  // so you don't have to call KURL::url() for every mail.
+  void doListEntry (const QString & encodedUrl, int stretch, imapCache * cache = NULL,
+    bool withFlags = FALSE, bool withSubject = FALSE);
+
   QString myHost, myUser, myPass, myAuth, myTLS;
   int myPort;
   bool mySSL;

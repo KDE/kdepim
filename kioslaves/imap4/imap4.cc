@@ -497,6 +497,10 @@ IMAP4Protocol::listDir (const KURL & _url)
   if ((myType == ITYPE_BOX || myType == ITYPE_DIR_AND_BOX)
       && myLType != "LIST" && myLType != "LSUB" && myLType != "LSUBNOCHECK")
   {
+    KURL aURL = _url;
+    aURL.setQuery (QString::null);
+    const QString encodedUrl = aURL.url(0, 106); // utf-8
+
     if (!_url.query ().isEmpty ())
     {
       QString query = KURL::decode_string (_url.query ());
@@ -530,7 +534,7 @@ IMAP4Protocol::listDir (const KURL & _url)
                ++it)
           {
             fake.setUid((*it).toULong());
-            doListEntry (_url, stretch, &fake);
+            doListEntry (encodedUrl, stretch, &fake);
           }
           entry.clear ();
           listEntry (entry, true);
@@ -599,7 +603,7 @@ IMAP4Protocol::listDir (const KURL & _url)
           cache = getLastHandled ();
 
           if (cache && !fetch->isComplete())
-            doListEntry (_url, stretch, cache, withFlags, withSubject);
+            doListEntry (encodedUrl, stretch, cache, withFlags, withSubject);
         }
         while (!fetch->isComplete ());
         entry.clear ();
@@ -2010,17 +2014,29 @@ void
 IMAP4Protocol::doListEntry (const KURL & _url, int stretch, imapCache * cache,
   bool withFlags, bool withSubject)
 {
+  KURL aURL = _url;
+  aURL.setQuery (QString::null);
+  const QString encodedUrl = aURL.url(0, 106); // utf-8
+  doListEntry(encodedUrl, stretch, cache, withFlags, withSubject);
+}
+
+
+
+void
+IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache * cache,
+  bool withFlags, bool withSubject)
+{
   if (cache)
   {
     UDSEntry entry;
     UDSAtom atom;
-    KURL aURL = _url;
-    aURL.setQuery (QString::null);
 
     entry.clear ();
 
+    const QString uid = QString::number(cache->getUid());
+
     atom.m_uds = UDS_NAME;
-    atom.m_str = QString::number(cache->getUid());
+    atom.m_str = uid;
     atom.m_long = 0;
     if (stretch > 0)
     {
@@ -2036,10 +2052,10 @@ IMAP4Protocol::doListEntry (const KURL & _url, int stretch, imapCache * cache,
     entry.append (atom);
 
     atom.m_uds = UDS_URL;
-    atom.m_str = aURL.url(0, 106); // utf-8
+    atom.m_str = encodedUrl; // utf-8
     if (atom.m_str[atom.m_str.length () - 1] != '/')
       atom.m_str += '/';
-    atom.m_str += ";UID=" + QString::number(cache->getUid());
+    atom.m_str += ";UID=" + uid;
     atom.m_long = 0;
     entry.append (atom);
 
