@@ -121,28 +121,4 @@ private:
 	void cleanup();
 };
 
-
-// $Log$
-// Revision 1.6  2001/12/28 13:03:08  adridg
-// Fixup some email addresses, random lil' things
-//
-// Revision 1.5  2001/12/02 22:03:07  adridg
-// Expense conduit finally works
-//
-// Revision 1.4  2001/11/25 22:03:44  adridg
-// Port expense conduit to new arch. Doesn't compile yet.
-//
-// Revision 1.3  2001/03/15 21:10:07  molnarc
-//
-//
-// CJM - now it saves a csv file to the path in kpilotrc if
-//       the path exists. csv file needs some work, but its
-//       a start.
-//
-// Revision 1.2  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.1  2001/03/04 21:47:04  adridg
-// New expense conduit, non-functional but it compiles
-//
 #endif

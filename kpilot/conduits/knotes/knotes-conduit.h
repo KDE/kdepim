@@ -181,20 +181,3 @@ private:
 };
 
 #endif
-
-// $Log$
-// Revision 1.7  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
-// Revision 1.5  2000/12/29 14:17:51  adridg
-// Added checksumming to KNotes conduit
-//
-// Revision 1.2  2000/11/24 17:54:28  adridg
-// Two-way sync
-//
-// Revision 1.1  2000/11/20 00:22:28  adridg
-// New KNotes conduit
-//

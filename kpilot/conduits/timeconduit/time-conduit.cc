@@ -138,4 +138,3 @@ void TimeConduit::syncPCToPalm()
 	DEBUGCONDUIT<<fname<<": synced time "<<time.toString()<<" to the handheld"<<endl;
 #endif
 }
-

@@ -1147,6 +1147,8 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	if (piAddress.getCat()!=_getCat(abEntry.categories())) return false;
 
 
+	if (piAddress.getCat()!=_getCat(abEntry.categories())) return false;	
+	
 	return true;
 }
 

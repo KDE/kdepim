@@ -42,7 +42,6 @@ static const char *setupDialog_id=
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
-#include <iostream>
 
 #include <qwhatsthis.h>
 
@@ -673,74 +672,3 @@ PopMailOptions::setupWidget()
 	addPage(new setupInfoPage(this));
 }
 #endif
-
-
-// $Log$
-// Revision 1.31  2002/08/11 11:40:37  binner
-// Use KFileDialog.
-//
-// Revision 1.30  2002/08/01 16:05:03  binner
-// CVS_SILENT Style guide fix
-//
-// Revision 1.29  2002/07/11 13:27:28  mhunter
-// Corrected typographical errors
-//
-// Revision 1.28  2002/07/03 13:24:39  binner
-// CVS_SILENT Style guide fix
-//
-// Revision 1.27  2002/07/03 12:22:07  binner
-// CVS_SILENT Style guide fixes
-//
-// Revision 1.26  2002/05/15 16:58:02  gioele
-// kapp.h -> kapplication.h
-//
-// Revision 1.25  2002/02/23 20:57:40  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.24  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.23  2002/01/20 06:46:22  waba
-// Messagebox changes.
-//
-// Revision 1.22  2001/12/31 09:35:23  adridg
-// Sanitizing __FUNCTION__ and cerr
-//
-// Revision 1.21  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.20  2001/12/13 21:35:33  adridg
-// Gave all conduits a config dialog
-//
-// Revision 1.19  2001/07/04 08:53:37  cschumac
-// - Added explicitDomainName text widget to setup dialog
-// - Changed the support for the explicit domain name a little
-//   (added a few more debug lines)
-// - Changed expected response to EHLO to "^250" instead of "Hello", to
-//   fix some people's protocol-correct but unexpected SMTP server reply.
-//
-// Revision 1.18  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.17  2001/04/23 21:18:36  adridg
-// Some i18n() fixups and KMail sending
-//
-// Revision 1.16  2001/03/27 11:10:39  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.15  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.14  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.13  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.12  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
-// Revision 1.11  2001/01/03 00:05:13  adridg
-// Administrative
-//

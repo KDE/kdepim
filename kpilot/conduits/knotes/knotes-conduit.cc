@@ -35,7 +35,6 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#include <iostream>
 #ifndef QDIR_H
 #include <qdir.h>
 #endif
@@ -412,7 +411,7 @@ KNotesConduit::doSync()
 		QString msg = i18n("Changed %1/%2 Memos/Notes")
 			.arg(newCount)
 			.arg(oldCount);
-		addSyncLogMessage(msg.local8Bit());
+		addSyncLogMessage(msg);
 
 #ifdef DEBUG
 		DEBUGCONDUIT << fname

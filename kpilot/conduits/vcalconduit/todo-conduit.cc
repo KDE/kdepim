@@ -292,11 +292,12 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 
 	de->setComplete(todo->isCompleted());
 
+	// TODO: Use the Pilot codec.
 	// what we call summary pilot calls description.
-	de->setDescription(todo->summary());
+	de->setDescription(todo->summary().latin1());
 
 	// what we call description pilot puts as a separate note
-	de->setNote(todo->description());
+	de->setNote(todo->description().latin1());
 
 #ifdef DEBUG
 DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;

@@ -49,7 +49,4 @@ private:
 	KNotesWidget *fConfigWidget;
 } ;
 
-// $Log: $
-//
-
 #endif

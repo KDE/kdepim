@@ -14,6 +14,8 @@ kde_module_LTLIBRARIES = libaddressconduit.la
 # uncomment the following line to enable the addressbook conduit. 
 # THIS IS DANGEROUS AND MIGHT CAUSE DATA LOSS as the conduit 
 # has not been tested much!!!
+#
+# The address book conduit was deemed "safe" before KDE 3.1 came out.
 KDE_CXXFLAGS=-DDO_DANGEROUS_ABOOK_SYNC
 
 libaddressconduit_la_SOURCES = \

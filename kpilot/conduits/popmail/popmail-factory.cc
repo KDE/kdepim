@@ -189,10 +189,3 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 	fSendPage->readSettings(*fConfig);
 	fRecvPage->readSettings(*fConfig);
 }
-
-
-// $Log$
-// Revision 1.1  2001/12/13 21:40:19  adridg
-// New files for move to .so
-//
-

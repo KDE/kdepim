@@ -204,25 +204,3 @@ NullWidgetSetup::~NullWidgetSetup()
 		<< endl;
 #endif
 }
-
-
-// $Log$
-// Revision 1.6  2002/08/21 19:24:50  adridg
-// Tail end of the license change: fixup wording and LGPL the NULL conduit.
-//
-// Revision 1.5  2001/12/29 15:43:46  adridg
-// Various config buglets
-//
-// Revision 1.4  2001/12/20 22:56:04  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.3  2001/12/18 07:43:25  adridg
-// Actually do a (null) sync
-//
-// Revision 1.2  2001/10/08 22:25:41  adridg
-// Moved to libkpilot and lib-based conduits
-//
-// Revision 1.1  2001/10/04 23:51:55  adridg
-// Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
-//
-

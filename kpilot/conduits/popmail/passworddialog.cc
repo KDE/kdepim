@@ -136,24 +136,3 @@ const char * PasswordDialog::password()
    else
       return "";
 }
-
-
-
-
-
-// $Log$
-// Revision 1.11  2002/08/24 21:27:32  adridg
-// Lots of small stuff to remove warnings
-//
-// Revision 1.10  2002/05/15 16:58:02  gioele
-// kapp.h -> kapplication.h
-//
-// Revision 1.9  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.8  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.7  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

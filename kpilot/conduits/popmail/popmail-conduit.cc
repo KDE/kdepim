@@ -46,7 +46,6 @@ static const char *popmail_conduit_id=
 #include <sys/socket.h>
 #include <sys/utsname.h>
 #include <ctype.h>
-#include <iostream>
 
 #include <unistd.h>
 #include <errno.h>
@@ -431,7 +430,7 @@ int PopMailConduit::retrieveIncoming(int mode)
 // SMTP Transfer Method (only sending)
 //
 // Additional changes by Michael Kropfberger
-// Cleanup and fixing by Marko Grönroos <magi@iki.fi>, 2001
+// Cleanup and fixing by Marko Grnroos <magi@iki.fi>, 2001
 //
 
 // Helper function to get the Fully Qualified Domain Name
@@ -1969,117 +1968,3 @@ int PopMailConduit::doUnixStyle()
 	emit syncDone(this);
 	return true;
 }
-
-
-// $Log$
-// Revision 1.47  2003/01/08 23:07:20  adridg
-// Compile fix from Bausi. Seems to work on BSD too.
-//
-// Revision 1.46  2002/12/20 17:33:12  coolo
-// getdomainname returns the NIS/LDAP domain, you don't want that for DNS/SMTP
-//
-// Revision 1.45  2002/11/27 21:29:04  adridg
-// See larger ChangeLog entry
-//
-// Revision 1.44  2002/08/25 13:28:28  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// When replying, please CC me - I'm not subscribed
-//
-// Revision 1.43  2002/08/23 22:59:30  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.42  2002/08/23 22:03:20  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.41  2002/07/20 22:15:56  mhunter
-// Corrected typographical errors
-//
-// Revision 1.40  2002/05/15 16:58:02  gioele
-// kapp.h -> kapplication.h
-//
-// Revision 1.39  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.38.2.1  2002/04/13 22:16:56  adridg
-// Administrative, better config checking, use PISOCK_INCLUDE and PISOCK_LIB in compiles, minor code cleanup in popmail
-//
-// Revision 1.38  2002/02/23 20:57:40  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.37  2002/02/10 22:21:33  adridg
-// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
-//
-// Revision 1.36  2002/01/26 15:00:57  adridg
-// Compile fixes and more
-//
-// Revision 1.35  2002/01/23 10:14:51  adridg
-// CVS_SILENT: Compile fix on RH72
-//
-// Revision 1.34  2002/01/20 06:46:22  waba
-// Messagebox changes.
-//
-// Revision 1.33  2002/01/17 16:24:10  adridg
-// Compile fixes on Solaris
-//
-// Revision 1.32  2002/01/08 01:25:03  cschumac
-// Compile fixes.
-//
-// Revision 1.31  2001/12/31 09:24:45  adridg
-// Cleanup, various fixes for runtime loading
-//
-// Revision 1.30  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.29  2001/10/10 17:01:15  mueller
-// CVS_SILENT: fixincludes
-//
-// Revision 1.28  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.27  2001/07/04 08:53:37  cschumac
-// - Added explicitDomainName text widget to setup dialog
-// - Changed the support for the explicit domain name a little
-//   (added a few more debug lines)
-// - Changed expected response to EHLO to "^250" instead of "Hello", to
-//   fix some people's protocol-correct but unexpected SMTP server reply.
-//
-// Revision 1.26  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.25  2001/05/17 08:12:06  adridg
-// Nasty POP3 retrieval bug fixed (Jay Summett)
-//
-// Revision 1.24  2001/05/08 10:53:50  adridg
-// Moved leitner's __osf__ patches
-//
-// Revision 1.23  2001/05/07 20:03:12  adridg
-// Major SMTP fixups by Marko
-//
-// Revision 1.22  2001/05/03 06:37:21  leitner
-// getdomainname is void under Tru64
-//
-// Revision 1.21  2001/04/26 19:20:17  adridg
-// Respect KMail's outboxFolder setting
-//
-// Revision 1.20  2001/04/23 21:08:42  adridg
-// Extra debugging for bug #24522
-//
-// Revision 1.19  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.18  2001/03/06 12:13:32  adridg
-// Fixed Solaris compilation problems (again?)
-//
-// Revision 1.17  2001/03/05 23:57:53  adridg
-// Added KPILOT_VERSION
-//
-// Revision 1.16  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.15  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.14  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
