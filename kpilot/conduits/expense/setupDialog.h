@@ -31,69 +31,53 @@
 */
 
 
-#include <qwidget.h>
+#include "plugin.h"
 
-class QLabel;
-class QLineEdit;
-class QRadioButton;
-class QSpinBox;
-class KConfig;
-class QPushButton;
+class ExpenseWidget;
 
-class ExpenseCSVPage : public QWidget
+class ExpenseWidgetSetup : public ConduitConfig
 {
-	Q_OBJECT
-
+Q_OBJECT
 public:
-	ExpenseCSVPage(QWidget *);
+	ExpenseWidgetSetup(QWidget *,const char *,const QStringList &);
+	virtual ~ExpenseWidgetSetup();
 
-	virtual int commitChanges(KConfig &);
-	void readSettings(KConfig &);
+	virtual void readSettings();
 
 	typedef enum { PolicyOverwrite,
 		PolicyAppend,
 		PolicyRotate } RotatePolicy;
-	int getPolicy() const;
-	void setPolicy(RotatePolicy);
+	int getRotatePolicy() const;
+	void setRotatePolicy(RotatePolicy);
+
+	typedef enum { PolicyNone,
+		PolicyPostgresql,
+		PolicyMysql } DBPolicy;
+
+	int getDBPolicy() const;
+	void setDBPolicy(DBPolicy);
 
 public slots:
-	void slotPolicyChanged();
-	void slotBrowse();
+	void slotRotatePolicyChanged();
+	void slotCSVBrowse();
+
+	void slotDBPolicyChanged();
 
 protected:
-	QLineEdit *fCSVFileName;
-	QRadioButton *fOverWrite,*fAppend,*fRotate;
-	QSpinBox *fRotateNumber;
-	QPushButton *fBrowseButton;
+	virtual void commitChanges();
+
+private:
+	ExpenseWidget *fConfigWidget;
 } ;
-
-class ExpenseDBPage : public QWidget
-{
-	Q_OBJECT
-
-public:
-	ExpenseDBPage(QWidget *);
-
-	virtual int commitChanges(KConfig&);
-	void readSettings(KConfig &);
-
-	typedef enum { PolicyPostgresql,
-		PolicyMysql,
-		PolicyNone } DBTypePolicy;
-	int getPolicy() const;
-	void setPolicy(DBTypePolicy);
-
-public slots:
-	void slotPolicyChanged();
-
-protected:
-	QLineEdit *fDBServer, *fDBlogin, *fDBpasswd, *fDBname, *fDBtable;
-	QRadioButton *fpostgresql,*fmysql,*fnone;
-} ;
-
 
 
 // $Log$
+// Revision 1.5  2001/12/08 16:29:41  mlaurent
+// Fix compilation.
+// Dirk could you recreate a tarball for kde3.0beta1
+// we can't compile it without these fix.
+// Thanks
+//
 // Revision 1.4  2001/12/02 22:03:07  adridg
 // Expense conduit finally works
 //

@@ -221,7 +221,7 @@ ExpenseConduit::~ExpenseConduit()
 	fConfig->setGroup("Expense-conduit");
 
 	fDBType = fConfig->readNumEntry("DBTypePolicy",
-			ExpenseDBPage::PolicyNone);
+			ExpenseWidgetSetup::PolicyNone);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -257,14 +257,14 @@ ExpenseConduit::~ExpenseConduit()
 			//
 			int flags = 0;
 			int logPolicy = fConfig->readNumEntry("CSVRotatePolicy",
-				ExpenseCSVPage::PolicyAppend);
+				ExpenseWidgetSetup::PolicyAppend);
 
 			switch(logPolicy)
 			{
-			case ExpenseCSVPage::PolicyAppend :
+			case ExpenseWidgetSetup::PolicyAppend :
 				flags = IO_ReadWrite | IO_Append;
 				break;
-			case ExpenseCSVPage::PolicyOverwrite :
+			case ExpenseWidgetSetup::PolicyOverwrite :
 				flags = IO_WriteOnly | IO_Truncate;
 				break;
 			default :
@@ -385,7 +385,7 @@ void ExpenseConduit::slotNextRecord()
 
 	switch(fDBType)
 	{
-	case ExpenseDBPage::PolicyPostgresql :
+	case ExpenseWidgetSetup::PolicyPostgresql :
 		postgresOutput(&e);
 		break;
 	}
@@ -477,6 +477,12 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.19  2001/12/08 16:29:41  mlaurent
+// Fix compilation.
+// Dirk could you recreate a tarball for kde3.0beta1
+// we can't compile it without these fix.
+// Thanks
+//
 // Revision 1.18  2001/12/02 22:03:07  adridg
 // Expense conduit finally works
 //

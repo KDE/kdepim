@@ -36,24 +36,6 @@
 class KInstance;
 class KAboutData;
 
-class ExpenseWidget;
-
-class ExpenseWidgetSetup : public ConduitConfig
-{
-Q_OBJECT
-public:
-	ExpenseWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~ExpenseWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	ExpenseWidget *fConfigWidget;
-} ;
-
 class ExpenseConduitFactory : public KLibFactory
 {
 Q_OBJECT
@@ -63,6 +45,7 @@ public:
 	virtual ~ExpenseConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
+	static const char *group() { return fGroup; } ;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0, 
@@ -72,6 +55,7 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
+	static const char *fGroup;
 } ;
 
 extern "C"
@@ -82,6 +66,9 @@ void *init_libexpenseconduit();
 } ;
 
 // $Log$
+// Revision 1.2  2001/12/13 21:35:12  adridg
+// Gave all conduits a config dialog
+//
 // Revision 1.1  2001/11/18 16:55:51  adridg
 // Moving expenses conduit to new arch.
 //

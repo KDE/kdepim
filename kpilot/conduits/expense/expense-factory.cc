@@ -4,7 +4,7 @@
 **
 ** This file defines the factory for the expense-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -30,13 +30,16 @@
 
 #include <qtabwidget.h>
 #include <qlineedit.h>
+#include <qbuttongroup.h>
+#include <qradiobutton.h>
+#include <qspinbox.h>
 
 #include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "expenseConduit.h"
 #include "expense.h"
+#include "setupDialog.h"
 
 #include "expense-factory.moc"
 
@@ -52,6 +55,7 @@ void *init_libexpenseconduit()
 } ;
 
 
+const char *ExpenseConduitFactory::fGroup="Expense-conduit";
 KAboutData *ExpenseConduitFactory::fAbout = 0L;
 ExpenseConduitFactory::ExpenseConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
@@ -77,8 +81,8 @@ ExpenseConduitFactory::~ExpenseConduitFactory()
 {
 	FUNCTIONSETUP;
 
-	KPILOT_DELETE(fInstance);
 	KPILOT_DELETE(fAbout);
+	KPILOT_DELETE(fInstance);
 }
 
 /* virtual */ QObject *ExpenseConduitFactory::createObject( QObject *p,
@@ -133,45 +137,43 @@ ExpenseConduitFactory::~ExpenseConduitFactory()
 	return 0L;
 }
 
-ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	fConfigWidget = new ExpenseWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,ExpenseConduitFactory::about());
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-}
-
-ExpenseWidgetSetup::~ExpenseWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void ExpenseWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,"Expense-conduit");
-
-}
-
-/* virtual */ void ExpenseWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,"Expense-conduit");
-}
-
 
 // $Log$
+// Revision 1.8  2001/12/08 16:29:41  mlaurent
+// Fix compilation.
+// Dirk could you recreate a tarball for kde3.0beta1
+// we can't compile it without these fix.
+// Thanks
+//
+// Revision 1.7  2001/12/02 22:03:07  adridg
+// Expense conduit finally works
+//
+// Revision 1.6  2001/11/25 22:03:44  adridg
+// Port expense conduit to new arch. Doesn't compile yet.
+//
+// Revision 1.5  2001/10/10 17:01:15  mueller
+// CVS_SILENT: fixincludes
+//
+// Revision 1.4  2001/03/27 11:10:38  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
+// Revision 1.3  2001/03/24 16:10:11  adridg
+// Minor beautification
+//
+// Revision 1.2  2001/03/14 16:56:02  molnarc
+//
+// CJM - Added browse button on csv export tab.
+// CJM - Added database export tab and required information.
+//
+// Revision 1.1  2001/03/04 21:47:04  adridg
+// New expense conduit, non-functional but it compiles
+//
+
+// $Log$
+// Revision 1.3  2001/12/13 21:35:12  adridg
+// Gave all conduits a config dialog
+//
 // Revision 1.2  2001/12/02 22:03:07  adridg
 // Expense conduit finally works
 //
