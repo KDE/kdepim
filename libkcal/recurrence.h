@@ -138,7 +138,7 @@ class Recurrence
      */
     QDateTime endDateTime() const;
     /** Returns a string representing the recurrence end date in the format
-     according to the users lcoale settings. */
+     according to the user's locale settings. */
     QString endDateStr(bool shortfmt=true) const;
 
     /** Sets an event to recur minutely.
@@ -176,14 +176,14 @@ class Recurrence
 
     /** Sets an event to recur weekly.
      * @var _rFreq the frequency to recur, e.g. every other week etc.
-     * @var _rDays a 7 bit array indicating which days on which to recur.
+     * @var _rDays a 7 bit array indicating which days on which to recur (bit 0 = Monday).
      * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
      * @var weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly(int _rFreq, const QBitArray &_rDays, int duration, int weekStart = 1);
     /** Sets an event to recur weekly.
      * @var _rFreq the frequency to recur, e.g. every other week etc.
-     * @var _rDays a 7 bit array indicating which days on which to recur.
+     * @var _rDays a 7 bit array indicating which days on which to recur (bit 0 = Monday).
      * @var endDate the date on which to stop recurring.
      * @var weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
@@ -205,12 +205,14 @@ class Recurrence
      * set.
      * @var _rPos the position in the month for the recurrence, with valid
      * values being 1-5 (5 weeks max in a month).
-     * @var _rDays the days for the position to recur on.
-     * Example: _rPos = 2, and bits 1 and 3 are set in _rDays.
-     * the rule is to repeat every 2nd week on Monday and Wednesday.
+     * @var _rDays the days for the position to recur on (bit 0 = Monday).
+     * Example: _rPos = 2, and bits 0 and 2 are set in _rDays:
+     * the rule is to repeat every 2nd Monday and Wednesday in the month.
      */
     void addMonthlyPos(short _rPos, const QBitArray &_rDays);
-    /** Adds a position the the recursMonthlyDay list. */
+    /** Adds a position the the recursMonthlyDay list.
+     * @var _rDay the date in the month to recur.
+     */
     void addMonthlyDay(short _rDay);
     /** Returns list of day positions in months. */
     const QPtrList<rMonthPos> &monthPositions() const;
@@ -267,7 +269,7 @@ class Recurrence
     int  dailyCalc(PeriodFunc, QDate &enddate) const;
     int  weeklyCalc(PeriodFunc, QDate &enddate) const;
     int  weeklyCalcEndDate(QDate& enddate, int daysPerWeek) const;
-    int  weeklyCalcToDate(QDate& enddate, int daysPerWeek) const;
+    int  weeklyCalcToDate(const QDate& enddate, int daysPerWeek) const;
     int  weeklyCalcNextAfter(QDate& enddate, int daysPerWeek) const;
     int  monthlyCalc(PeriodFunc, QDate &enddate) const;
     int  monthlyCalcEndDate(QDate& enddate, MonthlyData&) const;
@@ -307,7 +309,7 @@ class Recurrence
 
     short recurs;                        // should be one of the enums.
 
-    int rWeekStart;                      // day which starts the week, 1 = Monday .. 7 = Sunday
+    int rWeekStart;                      // day which starts the week, Monday=1 .. Sunday=7
     QBitArray rDays;                     // array of days during week it recurs
 
     QPtrList<rMonthPos> rMonthPositions; // list of positions during a month
