@@ -55,6 +55,7 @@ class MainWindow : public KMainWindow
   protected:
     void startStatusBar();
     virtual void saveProperties( KConfig* );
+    virtual void readProperties( KConfig* );
     void saveGeometry();
     void loadGeometry();
     bool queryClose();
