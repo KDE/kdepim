@@ -997,7 +997,7 @@ void KABCore::initActions()
   mActionWhoAmI = new KAction( i18n( "Set 'Who Am I'" ), "personal", 0, this,
                                SLOT( setWhoAmI() ), actionCollection(),
                                "edit_set_personal" );
-  mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you don't have to input your personal data several times." ) );
+  mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
 
   mActionCategories = new KAction( i18n( "Select Categories..." ), 0, this,
                                    SLOT( setCategories() ), actionCollection(),

@@ -108,7 +108,7 @@ static QString businit(void)
 	char *aux;
 
 	if (gn_cfg_read(&BinDir)<0 || !gn_cfg_phone_load("", &state))
-		return i18n("GNOKII isn't yet configured.");
+		return i18n("GNOKII is not yet configured.");
 
 	gn_data_clear(&data);
 

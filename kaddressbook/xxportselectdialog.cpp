@@ -200,7 +200,7 @@ void XXPortSelectDialog::initGUI()
 
   mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
   QWhatsThis::add( mUseFilters, i18n( "Only export contacts matching the selected filter.\n"
-                                     "This option is disabled if you haven't defined any filters" ) );
+                                     "This option is disabled if you have not defined any filters" ) );
   groupLayout->addWidget( mUseFilters, 2, 0 );
 
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
