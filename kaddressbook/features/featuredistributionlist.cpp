@@ -289,16 +289,19 @@ void FeatureDistributionList::dropEvent( QDropEvent *e )
     return;
   }
 
-  QString vcard;
-  if ( KVCardDrag::decode( e, vcard ) ) {
-    KABC::Addressee addr;
+  QString vcards;
+  if ( KVCardDrag::decode( e, vcards ) ) {
+    QStringList list = QStringList::split( "\r\n\r\n", vcards );
+    QStringList::Iterator it;
     KABC::VCardConverter converter;
-    if ( converter.vCardToAddressee( vcard, addr ) ) {
-      distributionList->insertEntry( addr );
-
-      commit();
-      update();
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      KABC::Addressee addr;
+      if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) )
+        distributionList->insertEntry( addr );
     }
+
+    commit();
+    update();
   }
 }
 

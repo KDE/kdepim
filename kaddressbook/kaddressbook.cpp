@@ -95,14 +95,6 @@ void KAddressBook::newContact()
   newAddressee();
 }
 
-void KAddressBook::slotDistributionList()
-{
-  save();
-  KABC::DistributionListDialog dlg( KABC::StdAddressBook::self(), this );
-
-  dlg.exec();
-}
-
 void KAddressBook::addEmail( QString aStr )
 {
 

@@ -55,13 +55,6 @@ class KAddressBook : public QWidget
     QString getNameByPhone( QString phone );
     /** END DCOP METHODS */
 
-    /** Displays the distribution list editor dialog.
-    *
-    * This method name needs to be updated to something better.
-    * -mpilone
-    */
-    void slotDistributionList();
-
     /** Saves the contents of the AddressBook back to disk.
     */
     void save();

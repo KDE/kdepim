@@ -127,10 +127,6 @@ void ActionManager::initReadOnlyActions()
     new KAction(i18n("&New Contact..."), "filenew", CTRL+Key_N, mWidget,
                 SLOT(newAddressee()),mACollection,"file_new_contact");
 
-    new KAction(i18n("&Distribution List..."), 0, mWidget,
-                SLOT(slotDistributionList()), mACollection,
-                "file_distribution_list");
-
     mActionMail = KStdAction::mail(mViewManager, SLOT(sendMail()),
                                    mACollection);
     mActionEditAddressee = new KAction(i18n("&Edit Contact..."), "edit", 0,

@@ -605,7 +605,7 @@ void ViewManager::dropped(QDropEvent *e)
 {
   kdDebug() << "ViewManager::dropped: got a drop event" << endl;
 
-  QString clipText, vcard;
+  QString clipText, vcards;
   QStrList urls;
 
 
@@ -624,13 +624,17 @@ void ViewManager::dropped(QDropEvent *e)
       KURL url(*it);
       emit importVCard( url.path(), true );
     }
-  } else if ( KVCardDrag::decode( e, vcard ) ) {
+  } else if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::Addressee addr;
     KABC::VCardConverter converter;
-    if ( converter.vCardToAddressee( vcard, addr ) ) {
-      mDocument->insertAddressee( addr );
-      mActiveView->refresh();
+    QStringList list = QStringList::split( "\r\n\r\n", vcards );
+    QStringList::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) )
+        mDocument->insertAddressee( addr );
     }
+
+    mActiveView->refresh();
   }
 }
 
@@ -649,11 +653,13 @@ void ViewManager::startDrag()
   drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard(aList), this ) );
   KABC::Addressee::List::Iterator it;
   KABC::VCardConverter converter;
+  QStringList vcards;
   for ( it = aList.begin(); it != aList.end(); ++it ) {
     QString vcard = QString::null;
     if ( converter.addresseeToVCard( *it, vcard ) )
-      drag->addDragObject( new KVCardDrag( vcard, this ) );
+      vcards.append( vcard );
   }
+  drag->addDragObject( new KVCardDrag( vcards.join( "\r\n" ), this ) );
 
   drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
   drag->dragCopy();
