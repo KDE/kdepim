@@ -30,12 +30,14 @@
 #include "filter_oe4.hxx"
 #include "filter_oe5.hxx"
 #include "filter_pab.hxx"
+#include "filter_eudora_ab.hxx"
 
 void Kmailcvt2::doFilters(void)
 {
   imports->add(new filter_pab);
   imports->add(new filter_oe5);
   imports->add(new filter_oe4);
+  imports->add(new filter_eudora_ab);
 }
 
 

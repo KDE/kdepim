@@ -201,10 +201,10 @@ x_includes = @x_includes@
 x_libraries = @x_libraries@
 
 bin_PROGRAMS = kmailcvt
-kmailcvt_SOURCES = oe4_2mbox.cpp liboe.cxx filter_oe4.cxx oe5_2mbox.cpp pablib.cxx mapihd.cpp filters.cxx filter_pab.cxx filter_oe5.cxx kmailcvt.cpp main.cpp 
+kmailcvt_SOURCES = oe4_2mbox.cpp liboe.cxx filter_oe4.cxx oe5_2mbox.cpp pablib.cxx mapihd.cpp filters.cxx filter_pab.cxx filter_oe5.cxx kmailcvt.cpp main.cpp filter_eudora_ab.cxx
 kmailcvt_LDADD = -lkab -lkfile -lkdeui -lkdecore -lqt -lXext -lX11 $(LIBSOCKET)
 
-EXTRA_DIST = main.cpp kmailcvt.cpp kmailcvt.h kmailcvt.desktop kmailcvt.xpm mini-kmailcvt.xpm filter_oe5.cxx filter_oe5.hxx filter_pab.cxx filter_pab.hxx filters.cxx filters.hxx harray.hxx mapihd.cpp mapihd.h pablib.cxx pablib.hxx pabtypes.h liboe.h oe5_2mbox.cpp oe5_2mbox.h filter_oe4.cxx filter_oe4.hxx liboe.cxx oe4_2mbox.cpp oe4_2mbox.h PAB_format.html sv9429424.gif 
+EXTRA_DIST = main.cpp kmailcvt.cpp kmailcvt.h kmailcvt.desktop kmailcvt.xpm mini-kmailcvt.xpm filter_oe5.cxx filter_oe5.hxx filter_eudora_ab.cxx filter_eudora_ab.hxx filter_pab.cxx filter_pab.hxx filters.cxx filters.hxx harray.hxx mapihd.cpp mapihd.h pablib.cxx pablib.hxx pabtypes.h liboe.h oe5_2mbox.cpp oe5_2mbox.h filter_oe4.cxx filter_oe4.hxx liboe.cxx oe4_2mbox.cpp oe4_2mbox.h PAB_format.html sv9429424.gif 
 
 appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kmailcvt.desktop
@@ -262,13 +262,15 @@ LIBS = @LIBS@
 #>- kmailcvt_OBJECTS =  oe4_2mbox.$(OBJEXT) liboe.$(OBJEXT) \
 #>- filter_oe4.$(OBJEXT) oe5_2mbox.$(OBJEXT) pablib.$(OBJEXT) \
 #>- mapihd.$(OBJEXT) filters.$(OBJEXT) filter_pab.$(OBJEXT) \
-#>- filter_oe5.$(OBJEXT) kmailcvt.$(OBJEXT) main.$(OBJEXT)
-#>+ 9
+#>- filter_oe5.$(OBJEXT) kmailcvt.$(OBJEXT) main.$(OBJEXT) \
+#>- filter_eudora_ab.$(OBJEXT)
+#>+ 10
 kmailcvt_final_OBJECTS = kmailcvt.all_cxx.o kmailcvt.all_cpp.o 
 kmailcvt_nofinal_OBJECTS = oe4_2mbox.$(OBJEXT) liboe.$(OBJEXT) \
 filter_oe4.$(OBJEXT) oe5_2mbox.$(OBJEXT) pablib.$(OBJEXT) \
 mapihd.$(OBJEXT) filters.$(OBJEXT) filter_pab.$(OBJEXT) \
-filter_oe5.$(OBJEXT) kmailcvt.$(OBJEXT) main.$(OBJEXT)\
+filter_oe5.$(OBJEXT) kmailcvt.$(OBJEXT) main.$(OBJEXT) \
+filter_eudora_ab.$(OBJEXT)\
 kmailcvt.moc.o  \
 kmailcvt_meta_unload.o 
 @KDE_USE_FINAL_FALSE@kmailcvt_OBJECTS = $(kmailcvt_nofinal_OBJECTS)
@@ -287,29 +289,32 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link --tag=CXX $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) $(LDFLAGS) -o $@
 DATA =  $(apps_DATA)
 
-DIST_COMMON =  Makefile.am Makefile.in
+DIST_COMMON =  ChangeLog Makefile.am Makefile.in
 
 
 #>- DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=lo32-app-kmailcvt.png lo16-app-kmailcvt.png oe5_2mbox.hxx hi32-app-kmailcvt.png hi48-app-kmailcvt.png mapitags.h mapidefs.h 
+KDE_DIST=ecdancers.txt oe5_2mbox.hxx hi32-app-kmailcvt.png hi48-app-kmailcvt.png lo32-app-kmailcvt.png lo16-app-kmailcvt.png mapitags.h mapidefs.h 
 
 DISTFILES= $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
 
 TAR = tar
 GZIP_ENV = --best
-#>- DEP_FILES =  .deps/filter_oe4.P .deps/filter_oe5.P .deps/filter_pab.P \
-#>- .deps/filters.P .deps/kmailcvt.P .deps/liboe.P .deps/main.P \
-#>- .deps/mapihd.P .deps/oe4_2mbox.P .deps/oe5_2mbox.P .deps/pablib.P
-#>+ 8
+#>- DEP_FILES =  .deps/filter_eudora_ab.P .deps/filter_oe4.P \
+#>- .deps/filter_oe5.P .deps/filter_pab.P .deps/filters.P .deps/kmailcvt.P \
+#>- .deps/liboe.P .deps/main.P .deps/mapihd.P .deps/oe4_2mbox.P \
+#>- .deps/oe5_2mbox.P .deps/pablib.P
+#>+ 10
 @KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/kmailcvt.moc.P $(DEPDIR)/kmailcvt_meta_unload.P  $(DEPDIR)/kmailcvt.all_cxx.P $(DEPDIR)/kmailcvt.all_cpp.P \
-	  .deps/filter_oe4.P .deps/filter_oe5.P .deps/filter_pab.P \
-.deps/filters.P .deps/kmailcvt.P .deps/liboe.P .deps/main.P \
-.deps/mapihd.P .deps/oe4_2mbox.P .deps/oe5_2mbox.P .deps/pablib.P
-@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/kmailcvt.moc.P $(DEPDIR)/kmailcvt_meta_unload.P   .deps/filter_oe4.P .deps/filter_oe5.P .deps/filter_pab.P \
-.deps/filters.P .deps/kmailcvt.P .deps/liboe.P .deps/main.P \
-.deps/mapihd.P .deps/oe4_2mbox.P .deps/oe5_2mbox.P .deps/pablib.P
+	  .deps/filter_eudora_ab.P .deps/filter_oe4.P \
+.deps/filter_oe5.P .deps/filter_pab.P .deps/filters.P .deps/kmailcvt.P \
+.deps/liboe.P .deps/main.P .deps/mapihd.P .deps/oe4_2mbox.P \
+.deps/oe5_2mbox.P .deps/pablib.P
+@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/kmailcvt.moc.P $(DEPDIR)/kmailcvt_meta_unload.P   .deps/filter_eudora_ab.P .deps/filter_oe4.P \
+.deps/filter_oe5.P .deps/filter_pab.P .deps/filters.P .deps/kmailcvt.P \
+.deps/liboe.P .deps/main.P .deps/mapihd.P .deps/oe4_2mbox.P \
+.deps/oe5_2mbox.P .deps/pablib.P
 
 SOURCES = $(kmailcvt_SOURCES)
 OBJECTS = $(kmailcvt_OBJECTS)
@@ -710,11 +715,11 @@ clean-moc-classes:
 	-rm -f  kmailcvt_meta_unload.cpp
 
 #>+ 11
-kmailcvt.all_cxx.cxx: $(srcdir)/Makefile.in $(srcdir)/liboe.cxx $(srcdir)/filter_oe4.cxx $(srcdir)/pablib.cxx $(srcdir)/filters.cxx $(srcdir)/filter_pab.cxx $(srcdir)/filter_oe5.cxx  
+kmailcvt.all_cxx.cxx: $(srcdir)/Makefile.in $(srcdir)/liboe.cxx $(srcdir)/filter_oe4.cxx $(srcdir)/pablib.cxx $(srcdir)/filters.cxx $(srcdir)/filter_pab.cxx $(srcdir)/filter_oe5.cxx $(srcdir)/filter_eudora_ab.cxx  
 	@echo 'creating kmailcvt.all_cxx.cxx ...'; \
 	rm -f kmailcvt.all_cxx.files kmailcvt.all_cxx.final; \
 	echo "#define KDE_USE_FINAL 1" >> kmailcvt.all_cxx.final; \
-	for file in liboe.cxx filter_oe4.cxx pablib.cxx filters.cxx filter_pab.cxx filter_oe5.cxx ; do \
+	for file in liboe.cxx filter_oe4.cxx pablib.cxx filters.cxx filter_pab.cxx filter_oe5.cxx filter_eudora_ab.cxx ; do \
 	  echo "#include \"$$file\"" >> kmailcvt.all_cxx.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kmailcvt.all_cxx.final; \
 	done; \

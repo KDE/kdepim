@@ -1,9 +1,11 @@
 ---- TODO
 
-* 1.00 -- 
-  - Added Eudora Light support.
-
 ---- DONE
+
+* 27-11-2000
+  - Added Eudora Light Addressbook support. The addresses of this addressbook
+    are put in the comment field of KAB, because in eudora there's no 
+    difference between street, city, etc. 
 
 * 25-11-2000
   - Patch from Laurent Montel added. We're working with a QGridLayout
