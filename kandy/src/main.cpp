@@ -31,10 +31,10 @@ static KCmdLineOptions options[] =
 void initModem(Modem *modem)
 {
   kdDebug() << "Opening serial Device: "
-            << KandyPrefs::instance()->mSerialDevice
+            << KandyPrefs::serialDevice()
             << endl;
 
-  modem->setDevice(KandyPrefs::instance()->mSerialDevice);
+  modem->setDevice(KandyPrefs::serialDevice());
   modem->setSpeed(19200);
   modem->setData(8);
   modem->setParity('N');
@@ -91,11 +91,11 @@ int main(int argc, char **argv)
     MobileMain *m = new MobileMain(scheduler);
     if (!args->isSet("gui")) {
     } else {
-      if (KandyPrefs::instance()->mStartupTerminalWin ||
+      if (KandyPrefs::startupTerminalWin() ||
           args->isSet("terminal")) {
         k->show();
       }
-      if (KandyPrefs::instance()->mStartupMobileWin ||
+      if (KandyPrefs::startupMobileWin() ||
           args->isSet("mobilegui")) {
         m->show();
       }
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
 
     initModem(modem);
 
-    if (KandyPrefs::instance()->mStartupModem) k->modemConnect();
+    if (KandyPrefs::startupModem()) k->modemConnect();
   }
 
   return app.exec();

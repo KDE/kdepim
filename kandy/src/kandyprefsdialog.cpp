@@ -31,7 +31,7 @@
 
 
 KandyPrefsDialog::KandyPrefsDialog(QWidget *parent, char *name, bool modal) :
-  KPrefsDialog(KandyPrefs::instance(),parent,name,modal)
+  KPrefsDialog(KandyPrefs::self(),parent,name,modal)
 {
   setupSerialTab();
   setupWindowsTab();
@@ -55,15 +55,13 @@ void KandyPrefsDialog::setupSerialTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
-  serialDevice = addWidString( i18n("Serial device:"),
-                               KandyPrefs::instance()->mSerialDevice,
-                               topFrame);
+  serialDevice = addWidString( KandyPrefs::self()->serialDeviceItem(),
+                               topFrame );
   topLayout->addWidget(serialDevice->label(),0,0);
   topLayout->addWidget(serialDevice->lineEdit(),0,1);
 
-  openOnStartup = addWidBool( i18n("Open modem on startup"),
-                              KandyPrefs::instance()->mStartupModem,
-                              topFrame);
+  openOnStartup = addWidBool( KandyPrefs::self()->startupModemItem(),
+                              topFrame );
   topLayout->addWidget(openOnStartup->checkBox(),1,0);
   
   topLayout->setRowStretch(2,1);
@@ -78,13 +76,11 @@ void KandyPrefsDialog::setupWindowsTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
-  startupTerminal = addWidBool( i18n("Open terminal window on startup"),
-                                KandyPrefs::instance()->mStartupTerminalWin,
+  startupTerminal = addWidBool( KandyPrefs::self()->startupTerminalWinItem(),
                                 topFrame);
   topLayout->addWidget(startupTerminal->checkBox(),0,0);
   
-  startupMobile = addWidBool( i18n("Open mobile window on startup"),
-                              KandyPrefs::instance()->mStartupMobileWin,
+  startupMobile = addWidBool( KandyPrefs::self()->startupMobileWinItem(),
                               topFrame );
   topLayout->addWidget(startupMobile->checkBox(),1,0);
   

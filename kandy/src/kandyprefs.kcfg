@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+  <kcfgfile name="kandyrc"/>
+
+  <group name="Serial Port">
+    <entry type="QString" key="Serial Device">
+      <label>Serial device</label>
+      <default>/dev/ttyS1</default>
+    </entry>
+    <entry type="bool" name="StartupModem">
+      <label>Open modem on startup</label>
+      <default>false</default>
+    </entry>
+  </group>
+
+  <group name="Windows">
+    <entry type="bool" name="StartupTerminalWin">
+      <label>Open terminal window on startup</label>
+      <default>false</default>
+    </entry>
+    <entry type="bool" name="StartupMobileWin">
+      <label>Open mobile window on startup</label>
+      <default>true</default>
+    </entry>
+  </group>
+
+</kcfg>

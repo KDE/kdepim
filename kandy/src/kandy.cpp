@@ -303,7 +303,7 @@ void Kandy::modemConnect()
   if (!mScheduler->modem()->open()) {
     KMessageBox::sorry(this,
         i18n("Cannot open modem device %1.")
-        .arg(KandyPrefs::instance()->mSerialDevice), i18n("Modem Error"));
+        .arg(KandyPrefs::serialDevice()), i18n("Modem Error"));
     return;
   }
 

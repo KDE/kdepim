@@ -11,7 +11,7 @@ kandy_SOURCES =	main.cpp kandy.cpp \
                 modem.cpp \
                 atcommand.cpp commanditem.cpp mobilegui_base.ui mobilegui.cpp \
                 commandscheduler.cpp commandset.cpp \
-                kandyprefs.cpp kandyprefsdialog.cpp \
+                kandyprefs.kcfgc kandyprefsdialog.cpp \
                 mobilemain.cpp
 
 noinst_HEADERS   = kandy.h kandyview.h modem.h atcommand.h \
