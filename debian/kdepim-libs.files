@@ -10,5 +10,7 @@ usr/lib/libvcard.la
 usr/lib/libkgantt.so.0.0.2
 usr/lib/libkgantt.so.0
 usr/lib/libkgantt.la
+usr/lib/libkcal.so.1.0.0
+usr/lib/libkcal.so.1
+usr/lib/libkcal.la
 usr/share/apps/kgantt/*
-usr/share/lintian/overrides/kdepim-libs
