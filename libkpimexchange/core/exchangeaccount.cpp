@@ -1,6 +1,8 @@
 /*
     This file is part of libkpimexchange
+
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -32,6 +34,8 @@
 #include <kconfig.h>
 #include <dcopclient.h>
 #include <kcursor.h>
+#include <kmessagebox.h>
+#include <klocale.h>
 
 #include <kio/authinfo.h>
 #include <kio/davjob.h>
@@ -43,14 +47,17 @@
 
 using namespace KPIM;
 
-ExchangeAccount::ExchangeAccount( const QString& host, const QString& port, const QString& account,
-                                  const QString& password, const QString& mailbox )
+ExchangeAccount::ExchangeAccount( const QString &host, const QString &port,
+                                  const QString &account,
+                                  const QString &password,
+                                  const QString &mailbox )
+  : mError( false )
 {
-  KURL url("webdav://" + host + "/exchange/" + account);
+  KURL url( "webdav://" + host + "/exchange/" + account );
 
   if ( !port.isEmpty() )
   {
-    url.setPort(port.toInt());
+    url.setPort( port.toInt() );
   }
 
   mHost = host;
@@ -61,9 +68,10 @@ ExchangeAccount::ExchangeAccount( const QString& host, const QString& port, cons
   if ( mailbox.isEmpty() ) {
     mMailbox = url.url();
     kdDebug() << "#!#!#!#!#!#!# mailbox url: " << mMailbox << endl;
-  }
-  else
+  } else
     mMailbox = mailbox;
+
+  kdDebug() << "ExchangeAccount: mMailbox: " << mMailbox << endl;
 
   mCalendarURL = 0;
 }
@@ -82,11 +90,11 @@ QString endecryptStr( const QString &aStr )
   QString result;
   for (uint i = 0; i < aStr.length(); i++)
     result += (aStr[i].unicode() < 0x20) ? aStr[i] :
-      QChar(0x1001F - aStr[i].unicode());
+              QChar(0x1001F - aStr[i].unicode());
   return result;
 }
 
-void ExchangeAccount::save( QString const& group )
+void ExchangeAccount::save( QString const &group )
 {
   kapp->config()->setGroup( group );
   kapp->config()->writeEntry( "host", mHost );
@@ -96,7 +104,7 @@ void ExchangeAccount::save( QString const& group )
   kapp->config()->sync();
 }
 
-void ExchangeAccount::load( QString const& group )
+void ExchangeAccount::load( QString const &group )
 {
   kapp->config()->setGroup( group );
 
@@ -144,7 +152,7 @@ KURL ExchangeAccount::calendarURL()
   }
 }
 
-void ExchangeAccount::authenticate( QWidget* window )
+void ExchangeAccount::authenticate( QWidget *window )
 {
   if ( window )
     authenticate( window->winId() );
@@ -154,9 +162,8 @@ void ExchangeAccount::authenticate( QWidget* window )
 
 void ExchangeAccount::authenticate()
 {
-
   long windowId;
-  QWidgetList* widgets = QApplication::topLevelWidgets();
+  QWidgetList *widgets = QApplication::topLevelWidgets();
   if ( widgets->isEmpty() )
     windowId = 0;
   else
@@ -186,7 +193,8 @@ void ExchangeAccount::authenticate( int windowId )
   QDataStream stream(params, IO_WriteOnly);
   stream << info << windowId;
 
-  dcopClient->send( "kded", "kpasswdserver", "addAuthInfo(KIO::AuthInfo, long int)", params );
+  dcopClient->send( "kded", "kpasswdserver",
+                    "addAuthInfo(KIO::AuthInfo, long int)", params );
 
   dcopClient->detach();
   delete dcopClient;
@@ -195,16 +203,17 @@ void ExchangeAccount::authenticate( int windowId )
 
   calcFolderURLs();
 
+  // TODO: Remove this busy loop
   QApplication::setOverrideCursor( KCursor::waitCursor() );
   do {
     qApp->processEvents();
-  } while ( !mCalendarURL );
-  QApplication::restoreOverrideCursor();  
+  } while ( !mCalendarURL && !mError );
+  QApplication::restoreOverrideCursor();
 }
 
 void ExchangeAccount::calcFolderURLs()
 {
-  kdDebug() << "Calculating folder URLs" << endl;
+  kdDebug() << "ExchangeAccount::calcFolderURLs" << endl;
   QDomDocument doc;
   QDomElement root = addElement( doc, doc, "DAV:", "propfind" );
   QDomElement prop = addElement( doc, root, "DAV:", "prop" );
@@ -222,29 +231,41 @@ void ExchangeAccount::calcFolderURLs()
 // urn:schemas:httpmail:sendmsg Exchange Mail Submission URI 
 // urn:schemas:httpmail:msgfolderroot Mailbox folder (root) 
 
+  kdDebug() << "calcFolderUrls(): " << baseURL() << endl;
+
+  mError = false;
+
   KIO::DavJob* job = KIO::davPropFind( baseURL(), doc, "0", false );
   job->addMetaData( "errorPage", "false" );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotFolderResult( KIO::Job * ) ) );
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotFolderResult( KIO::Job * ) ) );
 }
 
-void ExchangeAccount::slotFolderResult( KIO::Job * job ) 
+void ExchangeAccount::slotFolderResult( KIO::Job *job ) 
 {
   kdDebug() << "ExchangeAccount::slotFolderResult()" << endl;
   if ( job->error() ) {
     kdError() << "Error: Cannot get well-know folder names; " << job->error() << endl;
-    job->showErrorDialog( 0L );
+    QString text = i18n("ExchangeAccount\nError accessing '%1': %2")
+                   .arg( baseURL().prettyURL() ).arg( job->errorString() );
+    KMessageBox::error( 0, text );
+    mError = true;
     return;
   }
-  QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
+  QDomDocument &response = static_cast<KIO::DavJob *>( job )->response();
 
   QDomElement prop = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "prop" ).toElement();
  
   QDomElement calElement = prop.namedItem( "calendar" ).toElement();
   if ( calElement.isNull() ) {
     kdError() << "Error: no calendar URL in Exchange server reply" << endl;
+    mError = true;
     return;
   }
   QString calendar = calElement.text();
+
+  kdDebug() << "calendarURL: " << calendar << endl;
+
   mCalendarURL = toDAV( new KURL( calendar ) );
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
 }

@@ -66,8 +66,8 @@ ExchangeDownload::ExchangeDownload( ExchangeAccount* account, QWidget* window ) 
 {
   mAccount = account;
   mDownloadsBusy = 0;
-  mProgress = 0L;
-  mCalendar = 0L;
+  mProgress = 0;
+  mCalendar = 0;
   mFormat = new KCal::ICalFormat();
 }
 
@@ -78,30 +78,40 @@ ExchangeDownload::~ExchangeDownload()
   if ( mEvents ) delete mEvents;
 }
 
-void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress)
+void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
+                                 const QDate &end, bool showProgress )
 {
   mCalendar = calendar;
   mEvents = 0;
 
+#if 0
   if( showProgress ) {
     //kdDebug() << "Creating progress dialog" << endl;
     mProgress = new ExchangeProgress();
     mProgress->show();
   
-    connect( this, SIGNAL(startDownload()), mProgress, SLOT(slotTransferStarted()) );
-    connect( this, SIGNAL(finishDownload()), mProgress, SLOT(slotTransferFinished()) );
+    connect( this, SIGNAL( startDownload() ), mProgress,
+             SLOT( slotTransferStarted() ) );
+    connect( this, SIGNAL(finishDownload()), mProgress,
+             SLOT( slotTransferFinished() ) );
   }
+#endif
 
   QString sql = dateSelectQuery( start, end.addDays( 1 ) );
  
-  // kdDebug() << "Exchange download query: " << endl << sql << endl;
+  kdDebug() << "Exchange download query: " << endl << sql << endl;
 
   increaseDownloads();
 
-  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
-  KIO::Scheduler::scheduleJob(job);
+  kdDebug() << "ExchangeDownload::download() davSearch URL: "
+            << mAccount->calendarURL() << endl;  
+
+  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql",
+                                     sql, false );
+  KIO::Scheduler::scheduleJob( job );
   job->setWindow( mWindow );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSearchResult(KIO::Job *)));
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotSearchResult( KIO::Job *) ) );
 }
 
 void ExchangeDownload::download( const QDate& start, const QDate& end, bool showProgress )
@@ -147,13 +157,13 @@ void ExchangeDownload::slotSearchResult( KIO::Job *job )
 {
   if ( job->error() ) {
     kdError() << "Error result for search: " << job->error() << endl;
-    job->showErrorDialog( 0L );
+    job->showErrorDialog( 0 );
     finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
 
-  // kdDebug() << "Search result: " << endl << response.toString() << endl;
+   kdDebug() << "Search result: " << endl << response.toString() << endl;
 
   handleAppointments( response, true );
   

@@ -1,7 +1,9 @@
 /*
     This file is part of libkpimexchange.
-    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
+    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+ 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -18,7 +20,6 @@
     02111-1307, USA.
 
 */
-
 #ifndef EXCHANGE_ACCOUNT_H
 #define EXCHANGE_ACCOUNT_H
 
@@ -30,19 +31,21 @@
 
 namespace KPIM {
 	
-class ExchangeAccount : public QObject {
-  Q_OBJECT
+class ExchangeAccount : public QObject
+{
+    Q_OBJECT
   public:
-    ExchangeAccount( const QString& host, const QString& port, const QString& account,
-                     const QString& password, const QString& mailbox = QString::null );
+    ExchangeAccount( const QString &host, const QString &port,
+                     const QString &account, const QString &password,
+                     const QString &mailbox = QString::null );
     /** 
      Create a new account object, read data from group app data
      */
-    ExchangeAccount( const QString& group );
+    ExchangeAccount( const QString &group );
     ~ExchangeAccount();
 
-    void save( QString const& group );
-    void load( QString const& group );
+    void save( QString const &group );
+    void load( QString const &group );
 
     QString host() { return mHost; }
     QString port() { return mPort; }
@@ -60,18 +63,20 @@ class ExchangeAccount : public QObject {
     KURL calendarURL();
 
     // Returns the mailbox URL of this user. QString::null if unsuccessful
-    static QString tryFindMailbox( const QString& host, const QString& port, const QString& user, const QString& password );
+    static QString tryFindMailbox( const QString &host, const QString &port,
+                                   const QString &user,
+                                   const QString &password );
 
     //  Put authentication info in KDE password store for auto-authentication
     //  with later webdav access. Also calculates the calendar URL.
     void authenticate();
-    void authenticate( QWidget* window );
+    void authenticate( QWidget *window );
 
   private:
     void authenticate( int windowId );
     void calcFolderURLs();
-    static QString tryMailbox( const QString& _url, const QString& user, const QString& password );
-
+    static QString tryMailbox( const QString &_url, const QString &user,
+                               const QString &password );
 
   private slots:
     void slotFolderResult( KIO::Job * );
@@ -83,7 +88,8 @@ class ExchangeAccount : public QObject {
     QString mMailbox;
     QString mPassword;
 
-    KURL* mCalendarURL;
+    KURL *mCalendarURL;
+    bool mError;
 };
 
 }

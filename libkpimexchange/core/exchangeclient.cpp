@@ -41,8 +41,9 @@
 
 using namespace KPIM;
 
-ExchangeClient::ExchangeClient( ExchangeAccount* account, const QString& timeZoneId ) :
-  mWindow( 0 ), mTimeZoneId( timeZoneId )
+ExchangeClient::ExchangeClient( ExchangeAccount *account,
+                                const QString &timeZoneId )
+  : mWindow( 0 ), mTimeZoneId( timeZoneId )
 {
   kdDebug() << "Creating ExchangeClient...\n";
   mAccount = account;
@@ -116,28 +117,39 @@ ExchangeMonitor* ExchangeClient::monitor( int pollMode, const QHostAddress& ownI
   return new ExchangeMonitor( mAccount, pollMode, ownInterface  );
 }
 */
-void ExchangeClient::download( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress )
+void ExchangeClient::download( KCal::Calendar *calendar, const QDate &start,
+                               const QDate &end, bool showProgress )
 {
   mAccount->authenticate( mWindow );
+
+  kdDebug() << "Create ExchangeDownload" << endl;
+
   ExchangeDownload* worker = new ExchangeDownload( mAccount, mWindow );
   worker->download( calendar, start, end, showProgress );
-  connect( worker, SIGNAL( finished( ExchangeDownload*, int, const QString& ) ), this, SLOT( slotDownloadFinished( ExchangeDownload*, int, const QString& ) ) );
+  connect( worker,
+           SIGNAL( finished( ExchangeDownload *, int, const QString & ) ),
+           SLOT( slotDownloadFinished( ExchangeDownload *, int,
+                                       const QString & ) ) );
 }
 
-void ExchangeClient::download( const QDate& start, const QDate& end, bool showProgress )
+void ExchangeClient::download( const QDate &start, const QDate &end,
+                               bool showProgress )
 {
   mAccount->authenticate( mWindow );
   ExchangeDownload* worker = new ExchangeDownload( mAccount, mWindow );
   worker->download( start, end, showProgress );
-  connect( worker, SIGNAL( finished( ExchangeDownload*, int, const QString& ) ), 
-           this, SLOT( slotDownloadFinished( ExchangeDownload*, int, const QString& ) ) );
-  connect( worker, SIGNAL( gotEvent( KCal::Event*, const KURL&  ) ), 
-           this, SIGNAL( event( KCal::Event*, const KURL& ) ) );
+  connect( worker,
+           SIGNAL( finished( ExchangeDownload *, int, const QString & ) ), 
+           SLOT( slotDownloadFinished( ExchangeDownload *, int,
+                                       const QString & ) ) );
+  connect( worker, SIGNAL( gotEvent( KCal::Event *, const KURL & ) ), 
+           SIGNAL( event( KCal::Event *, const KURL & ) ) );
 }
 
-void ExchangeClient::upload( KCal::Event* event )
+void ExchangeClient::upload( KCal::Event *event )
 {
   mAccount->authenticate( mWindow );
+
   ExchangeUpload* worker = new ExchangeUpload( event, mAccount, mTimeZoneId, mWindow );
   connect( worker, SIGNAL( finished( ExchangeUpload*, int, const QString& ) ), this, SLOT( slotUploadFinished( ExchangeUpload*, int, const QString& ) ) );
 }
