@@ -15,8 +15,14 @@ Comment[nl]=Novell GroupWise-messenger
 Comment[pl]=Komunikator Novell GroupWise
 Comment[pt_BR]=Mensageiro GroupWise da Novell
 Comment[ru]=Обмен сообщениями Novell GroupWise
+Comment[sr]=Novell-ов GroupWise Messenger
+Comment[sr@Latn]=Novell-ov GroupWise Messenger
 Comment[sv]=Novell Groupwise Messenger
+Comment[ta]=நோவல் குழுவாரியான செய்தியாளன்
 Comment[zh_CN]=Novell GroupWise 信使
 Name=GroupWise
+Name[sr]=Groupware
+Name[sr@Latn]=Groupware
 Name[sv]=Groupwise
+Name[ta]=குழுவாரியாக
 

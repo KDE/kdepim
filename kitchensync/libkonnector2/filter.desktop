@@ -17,8 +17,9 @@ Comment[pt]=Filtro para o Conector KitchenSync
 Comment[pt_BR]=Filtro para o Konnector do KitchenSync
 Comment[ru]=Фильтр для KitchenSync Konnector
 Comment[sr]=Филтер за KitchenSync Konnector
-Comment[sr@Latn]=Филтер за KitchenSync Konnector
+Comment[sr@Latn]=Filter za KitchenSync Konnector
 Comment[sv]=Filter för Kitchensync Konnector
+Comment[ta]=கிச்சன்கூட்டிணைப்பு இணைப்பானுக்கான அலங்காரம்
 Comment[tr]=KitchenSync Konnector için filtre
 Comment[uk]=Фільтр для KitchenSync Konnector
 Comment[xx]=xxFilter for KitchenSync Konnectorxx
@@ -30,6 +31,7 @@ Name[et]=KitchenSynci filter
 Name[hu]=KitchenSync-szűrő
 Name[pt_BR]=Filtro KitchenSync
 Name[sv]=Kitchensync-filter
+Name[ta]=கிச்சன்சிங்க் அலங்காரம்
 Name[xx]=xxKitchenSyncFilterxx
 
 [PropertyDef::X-KDE-KitchenSyncFilterType]

@@ -19,7 +19,10 @@ Name[pt]=Chave Não Validada
 Name[pt_BR]=Chave Não Validada
 Name[ru]=Непроверенный ключ
 Name[sl]=Nepreverjen ključ
+Name[sr]=Неоверени кључ
+Name[sr@Latn]=Neovereni ključ
 Name[sv]=Nyckeln har inte validerats
+Name[ta]=செல்லுபடியாகாத விசை
 Name[uk]=Неперевірений ключ
 Name[zh_CN]=未校验的密钥
 
@@ -48,7 +51,10 @@ Name[pt]=Chave Expirada
 Name[pt_BR]=Chave Expirada
 Name[ru]=Утерявший силу ключ
 Name[sl]=Pretečen ključ
+Name[sr]=Истекли кључ
+Name[sr@Latn]=Istekli ključ
 Name[sv]=Utgången nyckel
+Name[ta]=காலாவதியான விசை
 Name[uk]=Застарілий ключ
 Name[zh_CN]=过期密钥
 
@@ -74,7 +80,10 @@ Name[pt]=Chave Revogada
 Name[pt_BR]=Chave Revogada
 Name[ru]=Отозванный ключ
 Name[sl]=Preklican ključ
+Name[sr]=Опозвани кључ
+Name[sr@Latn]=Opozvani ključ
 Name[sv]=Återkallad nyckel
+Name[ta]=நீக்கிய விசை
 Name[uk]=Анульований ключ
 Name[zh_CN]=吊销的密钥
 
@@ -101,7 +110,10 @@ Name[pt]=Certificado Raiz de Confiança
 Name[pt_BR]=Certificado Raiz Confiável
 Name[ru]=Доверяемый корневой сертификат
 Name[sl]=Zaupan korenski certifikat
+Name[sr]=Корени сертификат од поверења
+Name[sr@Latn]=Koreni sertifikat od poverenja
 Name[sv]=Pålitligt rotcertifikat
+Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[uk]=Кореневий сертифікат з довірою
 Name[zh_CN]=可信任的根证书
 
@@ -128,7 +140,10 @@ Name[pt]=Certificado Raiz Não de Confiança
 Name[pt_BR]=Certificado Raiz Não-Confiável
 Name[ru]=Не доверяемый корневой сертификат
 Name[sl]=Nezaupan korenski certifikat
+Name[sr]=Корени сертификат који није од поверења
+Name[sr@Latn]=Koreni sertifikat koji nije od poverenja
 Name[sv]=Opålitligt rotcertifikat
+Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[uk]=Кореневий сертифікат без довіри
 Name[zh_CN]=未信任的根证书
 
@@ -156,7 +171,10 @@ Name[pt]=Outras Chaves
 Name[pt_BR]=Outras Chaves
 Name[ru]=Другие ключи
 Name[sl]=Drugi ključi
+Name[sr]=Други кључеви
+Name[sr@Latn]=Drugi ključevi
 Name[sv]=Andra nycklar
+Name[ta]=மற்ற விசைகள்
 Name[uk]=Інші ключі
 Name[zh_CN]=其它密钥
 
