@@ -87,8 +87,8 @@ void LocalKonnector::writeConfig( KConfig *config )
   Konnector::writeConfig( config );
 
   config->writePathEntry( "CalendarFile", mCalendarFile );
-  config->writeEntry( "AddressBookFile", mAddressBookFile );
-  config->writeEntry( "BookmarkFile", mAddressBookFile );
+  config->writePathEntry( "AddressBookFile", mAddressBookFile );
+  config->writePathEntry( "BookmarkFile", mAddressBookFile );
 }
 
 bool LocalKonnector::readSyncees()
