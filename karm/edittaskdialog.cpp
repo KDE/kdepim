@@ -49,6 +49,7 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
 {
   QWidget *page = new QWidget( this ); 
   setMainWidget(page);
+  KWinModule kwinmodule(0, KWinModule::INFO_DESKTOP);
 
   QVBoxLayout *lay1 = new QVBoxLayout(page);
   
@@ -123,7 +124,7 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   _diffTW = new KArmTimeWidget( page, "_sessionAddTW" );
   lay4->addWidget( _diffTW );
 
-  desktopCount = getDesktopCount();
+  desktopCount = kwinmodule.numberOfDesktops();
   
   // If desktopList contains higher numbered desktops than desktopCount then
   // delete those from desktopList. This may be the case if the user has
@@ -160,7 +161,7 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   lay1->addLayout(lay6);
   for (int i=0; i<desktopCount; i++) {
     _deskBox.push_back(new QCheckBox(groupBox,QString::number(i).latin1()));
-    _deskBox[i]->setText(QString::number(i+1));
+    _deskBox[i]->setText(kwinmodule.desktopName(i+1));
     _deskBox[i]->setChecked(false);
 
     lay6->addWidget(_deskBox[i]);
@@ -237,12 +238,6 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
                          "session."));
   QWhatsThis::add( _diffTW, i18n( "Specify how much time to add or subtract "
                                   "to the overall and session time"));
-}
-
-int EditTaskDialog::getDesktopCount()
-{
-  KWinModule k(0, KWinModule::INFO_DESKTOP);
-  return k.numberOfDesktops();
 }
 
 void EditTaskDialog::enterWhatsThis() 
