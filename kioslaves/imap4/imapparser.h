@@ -29,6 +29,9 @@
 #include <qptrlist.h>
 #include <qasciidict.h>
 
+#include <kio/authinfo.h>
+#include <kio/slavebase.h>
+
 #include "imaplist.h"
 #include "imapcommand.h"
 #include "imapinfo.h"
@@ -231,8 +234,8 @@ public:
    * @param resultInfo The resultinfo from the command
    * @return success or failure
    */
-  bool clientAuthenticate (const QString & aUser, const QString & aPass,
-               const QString & aAuth, bool isSSL, QString & resultInfo);
+  bool clientAuthenticate (KIO::SlaveBase *slave, KIO::AuthInfo &ai, const QString & aFQDN, 
+    const QString & aAuth, bool isSSL, QString & resultInfo);
 
   /**
    * main loop for the parser

@@ -64,6 +64,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#ifdef HAVE_LIBSASL2
+extern "C" {
+#include <sasl/sasl.h>
+}
+#endif
+
 #include <qbuffer.h>
 #include <qdatetime.h>
 #include <kprotocolmanager.h>
@@ -87,6 +93,20 @@ extern "C"
   int kdemain (int argc, char **argv);
 }
 
+#ifdef HAVE_LIBSASL2
+static sasl_callback_t callbacks[] = {
+    { SASL_CB_ECHOPROMPT, NULL, NULL },
+    { SASL_CB_NOECHOPROMPT, NULL, NULL },
+    { SASL_CB_GETREALM, NULL, NULL },
+    { SASL_CB_USER, NULL, NULL },
+    { SASL_CB_AUTHNAME, NULL, NULL },
+    { SASL_CB_PASS, NULL, NULL },
+    { SASL_CB_GETOPT, NULL, NULL },
+    { SASL_CB_CANON_USER, NULL, NULL },
+    { SASL_CB_LIST_END, NULL, NULL }
+};
+#endif
+
 int
 kdemain (int argc, char **argv)
 {
@@ -98,6 +118,13 @@ kdemain (int argc, char **argv)
     fprintf(stderr, "Usage: kio_imap4 protocol domain-socket1 domain-socket2\n");
     ::exit (-1);
   }
+
+#ifdef HAVE_LIBSASL2
+  if ( sasl_client_init( callbacks ) != SASL_OK ) {
+    fprintf(stderr, "SASL library initialization failed!\n");
+    ::exit (-1);
+  }
+#endif
 
   //set debug handler
 
@@ -111,6 +138,10 @@ kdemain (int argc, char **argv)
   slave->dispatchLoop ();
   delete slave;
 
+#ifdef HAVE_LIBSASL2
+  sasl_done();
+#endif
+  
   return 0;
 }
 
@@ -1744,6 +1775,7 @@ bool IMAP4Protocol::makeLogin ()
 
     myAuth = metaData("auth");
     myTLS  = metaData("tls");
+    kdDebug(7116) << "myAuth: " << myAuth << endl;
 
     imapCommand *cmd;
 
@@ -1822,27 +1854,35 @@ bool IMAP4Protocol::makeLogin ()
     authInfo.username = myUser;
     authInfo.password = myPass;
     authInfo.prompt = i18n ("Username and password for your IMAP account:");
-    if (myUser.isEmpty () || myPass.isEmpty ()) {
-      if(openPassDlg (authInfo)) {
-        myUser = authInfo.username;
-        myPass = authInfo.password;
-      }
-    }
 
     kdDebug(7116) << "IMAP4::makeLogin - open_PassDlg said user=" << myUser << " pass=xx" << endl;
 
     QString resultInfo;
     if (myAuth.isEmpty () || myAuth == "*")
     {
+      if (myUser.isEmpty () || myPass.isEmpty ()) {
+        if(openPassDlg (authInfo)) {
+          myUser = authInfo.username;
+          myPass = authInfo.password;
+        }
+      }
       if (!clientLogin (myUser, myPass, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to login. Probably the "
         "password is wrong.\nThe server replied:\n%1").arg(resultInfo));
     }
     else
     {
-      if (!clientAuthenticate (myUser, myPass, myAuth, mySSL, resultInfo))
+#ifdef HAVE_LIBSASL2      
+      if (!clientAuthenticate (this, authInfo, myHost, myAuth, mySSL, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to authenticate via %1.\n"
         "The server replied:\n%2").arg(myAuth).arg(resultInfo));
+      else {
+        myUser = authInfo.username;
+        myPass = authInfo.password;
+      }
+#else
+      error(KIO::ERR_COULD_NOT_LOGIN, i18n("SASL authentication is not compiled into kio_imap4."));
+#endif
     }
   }
 

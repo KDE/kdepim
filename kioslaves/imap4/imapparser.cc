@@ -22,6 +22,10 @@
  *
  *********************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "rfcdecoder.h"
 
 #include "imapparser.h"
@@ -37,6 +41,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifdef HAVE_LIBSASL2
+extern "C" {
+#include <sasl/sasl.h>
+}
+#endif
+
 #include <qregexp.h>
 #include <qbuffer.h>
 #include <qstring.h>
@@ -45,7 +55,6 @@
 #include <kdebug.h>
 #include <kmdcodec.h>
 #include <kurl.h>
-#include <kio/kdesasl.h>
 
 imapParser::imapParser ()
 {
@@ -137,42 +146,145 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
   return retVal;
 }
 
+#ifdef HAVE_LIBSASL2
+static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
+{
+  kdDebug(7116) << "sasl_interact" << endl;
+  sasl_interact_t *interact = ( sasl_interact_t * ) in;
+
+  //some mechanisms do not require username && pass, so it doesn't need a popup
+  //window for getting this info
+  for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
+    if ( interact->id == SASL_CB_AUTHNAME ||
+         interact->id == SASL_CB_PASS ) {
+
+      if ( ai.username.isEmpty() || ai.password.isEmpty() ) {
+        if (!slave->openPassDlg(ai))
+          return false;
+      }
+      break;
+    }
+  }
+
+  interact = ( sasl_interact_t * ) in;
+  while( interact->id != SASL_CB_LIST_END ) {
+    kdDebug(7116) << "SASL_INTERACT id: " << interact->id << endl;
+    switch( interact->id ) {
+      case SASL_CB_USER:
+      case SASL_CB_AUTHNAME:
+        kdDebug(7116) << "SASL_CB_[USER|AUTHNAME]: '" << ai.username << "'" << endl;
+        interact->result = strdup( ai.username.utf8() );
+        interact->len = strlen( (const char *) interact->result );
+        break;
+      case SASL_CB_PASS:
+        kdDebug(7116) << "SASL_CB_PASS: [hidden] " << endl;
+        interact->result = strdup( ai.password.utf8() );
+        interact->len = strlen( (const char *) interact->result );
+        break;
+      default:
+        interact->result = NULL; interact->len = 0;
+        break;
+    }
+    interact++;
+  }
+  return true;
+}
+#endif
 
 bool
-imapParser::clientAuthenticate (const QString & aUser, const QString & aPass,
-  const QString & aAuth, bool isSSL, QString & resultInfo)
+imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
+  const QString & aFQDN, const QString & aAuth, bool isSSL, QString & resultInfo)
 {
-  imapCommand *cmd;
   bool retVal = false;
+#ifdef HAVE_LIBSASL2
+  int result;
+  sasl_conn_t *conn = NULL;
+  sasl_interact_t *client_interact = NULL;
+  const char *out = NULL;
+  uint outlen;
+  const char *mechusing = NULL;
+
+  kdDebug(7116) << "aAuth: " << aAuth << " FQDN: " << aFQDN << " isSSL: " << isSSL << endl;
 
   // see if server supports this authenticator
   if (!hasCapability ("AUTH=" + aAuth))
     return false;
 
+//  result = sasl_client_new( isSSL ? "imaps" : "imap",
+  result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri 
+                                       must be 'imap'. I don't know if it's good or bad. */
+                       aFQDN.latin1(),
+                       0, 0, NULL, 0, &conn );
+
+  if ( result != SASL_OK ) {
+    kdDebug(7116) << "sasl_client_new failed with: " << result << endl;
+    resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
+    return false;
+  }
+
+  do {
+    result = sasl_client_start(conn, aAuth.latin1(), &client_interact,
+                       0, &outlen, &mechusing);
+
+    if ( result == SASL_INTERACT )
+      if ( !sasl_interact( slave, ai, client_interact ) ) {
+        sasl_dispose( &conn );
+        return false;
+      }
+  } while ( result == SASL_INTERACT );
+
+  if ( result != SASL_CONTINUE && result != SASL_OK ) {
+    kdDebug(7116) << "sasl_client_start failed with: " << result << endl;
+    resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
+    sasl_dispose( &conn );
+    return false;
+  }
+  imapCommand *cmd;
+
   // then lets try it
   cmd = sendCommand (new imapCommand ("AUTHENTICATE", aAuth));
-  KDESasl sasl(aUser, aPass, isSSL ? "imaps" : "imap");
-  sasl.setMethod(aAuth.latin1());
+
   while (!cmd->isComplete ())
   {
     //read the next line
     while (parseLoop() == 0);
 
-    if (!continuation.isEmpty ())
+    if (!continuation.isEmpty())
     {
-      QByteArray challenge;
-      challenge.duplicate(continuation.data() + 2, continuation.size() - 2);
-      challenge.resize(challenge.size() - 2); // trim CRLF
-
-      if (aAuth.upper () == "ANONYMOUS")
-      {
-        // we should present the challenge to the user and ask
-        // him for a mail-address or what ever
-        challenge = KCodecs::base64Encode(aUser.utf8());
-      } else {
-        challenge = sasl.getResponse(challenge);
+      QByteArray challenge, tmp;
+//      kdDebug(7116) << "S: " << QCString(continuation.data(),continuation.size()+1) << endl;
+      if ( continuation.size() > 4 ) {
+        tmp.setRawData( continuation.data() + 2, continuation.size() - 4 );
+        KCodecs::base64Decode( tmp, challenge );
+//        kdDebug(7116) << "S-1: " << QCString(challenge.data(),challenge.size()+1) << endl;
+        tmp.resetRawData( continuation.data() + 2, continuation.size() - 4 );
       }
 
+      do {
+        result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
+                                  challenge.size(),
+                                  &client_interact,
+                                  &out, &outlen);
+
+        if (result == SASL_INTERACT)
+          if ( !sasl_interact( slave, ai, client_interact ) ) {
+            sasl_dispose( &conn );
+            return false;
+          }
+      } while ( result == SASL_INTERACT );
+
+      if ( result != SASL_CONTINUE && result != SASL_OK ) {
+        kdDebug(7116) << "sasl_client_step failed with: " << result << endl;
+        resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
+        sasl_dispose( &conn );
+        return false;
+      }
+
+      tmp.setRawData( out, outlen );
+//      kdDebug(7116) << "C-1: " << QCString(tmp.data(),tmp.size()+1) << endl;
+      KCodecs::base64Encode( tmp, challenge );
+      tmp.resetRawData( out, outlen );
+//      kdDebug(7116) << "C: " << QCString(challenge.data(),challenge.size()+1) << endl;
       parseWriteLine (challenge);
       continuation.resize(0);
     }
@@ -186,6 +298,8 @@ imapParser::clientAuthenticate (const QString & aUser, const QString & aPass,
   resultInfo = cmd->resultInfo();
   completeQueue.removeRef (cmd);
 
+  sasl_dispose( &conn ); //we don't use sasl_en/decode(), so it's safe to dispose the connection.
+#endif //HAVE_LIBSASL2
   return retVal;
 }
 

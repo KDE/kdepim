@@ -17,6 +17,7 @@
 #define __sieve_h__
 
 #include <kio/tcpslavebase.h>
+#include <kio/authinfo.h>
 
 #include <qstring.h>
 #include <qcstring.h>
@@ -102,6 +103,7 @@ protected:
 	int operationResult();
 
 	bool parseCapabilities(bool requestCapabilities = false);
+  bool saslInteract( void *in, KIO::AuthInfo &ai );
 
 	// IOSlave global data
 	uint				m_connMode;
@@ -118,9 +120,6 @@ protected:
 	QString				m_sUser;
 	QString				m_sPass;
 	bool				m_shouldBeConnected;
-
-	// authentication method
-	QCString			m_auth_method;
 };
 
 #endif
