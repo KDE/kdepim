@@ -592,6 +592,12 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
 }
 
+int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo) 
+{
+	FUNCTIONSETUP;
+	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, dlpDBListRAM, 0, dbinfo);
+}
+
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
 	DBInfo *info)
 {
@@ -648,6 +654,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.9  2002/04/20 13:03:31  binner
+// CVS_SILENT Capitalisation fixes.
+//
 // Revision 1.8  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
 //
