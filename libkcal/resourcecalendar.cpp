@@ -92,6 +92,17 @@ bool ResourceCalendar::load()
     success = doLoad();
   }
   if ( !success && !mReceivedLoadError ) loadError();
+  
+  // If the resource is read-only, we need to set its incidences to read-only, 
+  // too. This can't be done at a lower-level, since the read-only setting 
+  // happens at this level
+  if ( readOnly() ) {
+    Incidence::List incidences( rawIncidences() );
+    Incidence::List::Iterator it;
+    for ( it = incidences.begin(); it != incidences.end(); ++it ) {
+      (*it)->setReadOnly( true );
+    }    
+  }
 
   kdDebug(5800) << "Done loading resource " + resourceName() << endl;
 
