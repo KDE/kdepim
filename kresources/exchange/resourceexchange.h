@@ -85,7 +85,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /** Add Event to calendar. */
     bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
+    bool deleteEvent(Event *);
 
     // Isn't called anymore.
     void changeIncidence( Incidence * );
@@ -128,7 +128,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /**
       Remove a todo from the todolist.
     */
-    void deleteTodo( Todo * );
+    bool deleteTodo( Todo * );
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
@@ -146,7 +146,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /** Add a Journal entry to calendar */
     virtual bool addJournal(Journal *);
     /** deletes an event from this calendar. */
-    virtual void deleteJournal(Journal *);
+    virtual bool deleteJournal(Journal *);
     /** Return Journals for given date */
     virtual Journal::List journals(const QDate &);
     /** Return Journal with given UID */
@@ -183,7 +183,11 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
+    Event::List rawEventsForDate(
+      const QDate &date,
+      EventSortField sortField=EventSortUnsorted,
+      SortDirection sortDirection=SortDirectionAscending );
+
     /**
       Get unfiltered events for date \a qdt.
     */

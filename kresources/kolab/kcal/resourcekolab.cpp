@@ -340,7 +340,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       mSilent = false;
       deleteIncidence( local ); // remove local from kmail
       kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-      if ( localIncidence ) { 
+      if ( localIncidence ) {
         addIncidence( localIncidence, subresource, 0  );
         mUidsPendingAdding.remove( localIncidence->uid() ); // we do want to inform KOrg also
       }
@@ -549,9 +549,9 @@ bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
   return true;
 }
 
-void ResourceKolab::deleteEvent( KCal::Event* event )
+bool ResourceKolab::deleteEvent( KCal::Event* event )
 {
-  deleteIncidence( event );
+  return deleteIncidence( event );
 }
 
 KCal::Event* ResourceKolab::event( const QString& uid )
@@ -565,9 +565,10 @@ KCal::Event::List ResourceKolab::rawEvents( EventSortField sortField, SortDirect
 }
 
 KCal::Event::List ResourceKolab::rawEventsForDate( const QDate& date,
-                                                   bool sorted )
+                                                   EventSortField sortField,
+                                                   SortDirection sortDirection )
 {
-  return mCalendar.rawEventsForDate( date, sorted );
+  return mCalendar.rawEventsForDate( date, sortField, sortDirection );
 }
 
 KCal::Event::List ResourceKolab::rawEventsForDate( const QDateTime& qdt )
@@ -596,9 +597,9 @@ void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
       addIncidence( todo, subresource, sernum );
 }
 
-void ResourceKolab::deleteTodo( KCal::Todo* todo )
+bool ResourceKolab::deleteTodo( KCal::Todo* todo )
 {
-  deleteIncidence( todo );
+  return deleteIncidence( todo );
 }
 
 KCal::Todo* ResourceKolab::todo( const QString& uid )
@@ -632,9 +633,9 @@ void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
   }
 }
 
-void ResourceKolab::deleteJournal( KCal::Journal* journal )
+bool ResourceKolab::deleteJournal( KCal::Journal* journal )
 {
-  deleteIncidence( journal );
+  return deleteIncidence( journal );
 }
 
 KCal::Journal* ResourceKolab::journal( const QString& uid )

@@ -65,7 +65,7 @@ bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     return false;
   }
 
-  appendItem( group, "ProductID", QVariant( cal.loadedProductId() ) );
+  appendItem( group, "ProductID", QVariant( cal.productId() ) );
   appendItem( group, "Events", QVariant( int( cal.events().count() ) ) );
   appendItem( group, "Journals", QVariant( int( cal.journals().count() ) ) );
   Todo::List todos = cal.todos();

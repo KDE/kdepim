@@ -44,7 +44,7 @@
 #include "../shared/resourcekolabbase.h"
 
 namespace KCal {
-  
+
 class KDE_EXPORT ResourceKolab : public KCal::ResourceCalendar,
                       public KCal::IncidenceBase::Observer,
                       public Kolab::ResourceKolabBase
@@ -68,22 +68,25 @@ public:
 
   // The libkcal functions. See the resource for descriptions
   bool addEvent( KCal::Event* anEvent );
-  void deleteEvent( KCal::Event* );
+  bool deleteEvent( KCal::Event* );
   KCal::Event* event( const QString &UniqueStr );
   KCal::Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
-  KCal::Event::List rawEventsForDate( const QDate& date, bool sorted = false );
+  KCal::Event::List rawEventsForDate(
+    const QDate& date,
+    EventSortField sortField=EventSortUnsorted,
+    SortDirection sortDirection=SortDirectionAscending );
   KCal::Event::List rawEventsForDate( const QDateTime& qdt );
   KCal::Event::List rawEvents( const QDate& start, const QDate& end,
                                bool inclusive = false );
 
   bool addTodo( KCal::Todo* todo );
-  void deleteTodo( KCal::Todo* );
+  bool deleteTodo( KCal::Todo* );
   KCal::Todo* todo( const QString& uid );
   KCal::Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Todo::List rawTodosForDate( const QDate& date );
 
   bool addJournal( KCal::Journal* );
-  void deleteJournal( KCal::Journal* );
+  bool deleteJournal( KCal::Journal* );
   KCal::Journal* journal( const QString& uid );
   KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Journal::List rawJournalsForDate( const QDate &date );

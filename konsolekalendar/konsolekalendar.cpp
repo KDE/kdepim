@@ -166,7 +166,10 @@ bool KonsoleKalendar::showInstance()
           for ( dt = firstdate;
                 dt <= lastdate && status != false;
                 dt = dt.addDays(1) ) {
-            Event::List events = m_variables->getCalendar()->events( dt, true );
+            Event::List events =
+              m_variables->getCalendar()->events( dt,
+                                                  EventSortStartDate,
+                                                  SortDirectionAscending );
             status = printEventList( &ts, &events, dt );
           }
 
@@ -192,7 +195,10 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt = m_variables->getStartDateTime().date();
                 dt <= datetime.date() && status != false;
                 dt = dt.addDays(1) ) {
-	    Event::List events = m_variables->getCalendar()->events( dt, true );
+	    Event::List events =
+              m_variables->getCalendar()->events( dt,
+                                                  EventSortStartDate,
+                                                  SortDirectionAscending );
 	    status = printEventList( &ts, &events, dt );
 
 	    // when we get next event we exit..
@@ -212,7 +218,10 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt = m_variables->getStartDateTime().date();
                 dt <= m_variables->getEndDateTime().date() && status != false;
                 dt = dt.addDays(1) ) {
-	    Event::List events = m_variables->getCalendar()->events( dt, true );
+	    Event::List events =
+              m_variables->getCalendar()->events( dt,
+                                                  EventSortStartDate,
+                                                  SortDirectionAscending );
 	    status = printEventList( &ts, &events, dt );
 	  }
 	}
@@ -412,7 +421,9 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
   bool found = false;
 
   Event::List eventList( m_variables->getCalendar()->
-                         rawEventsForDate( startdate.date(), true ) );
+                         rawEventsForDate( startdate.date(),
+                                           EventSortStartDate,
+                                           SortDirectionAscending ) );
   for ( it = eventList.begin(); it != eventList.end(); ++it ) {
     event = *it;
     if ( event->dtEnd() == enddate && event->summary() == summary ) {

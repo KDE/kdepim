@@ -76,7 +76,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     /**
       Deletes an event from this calendar.
      */
-    void deleteEvent( Event* );
+    bool deleteEvent( Event* );
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -92,7 +92,10 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
      */
-    Event::List rawEventsForDate( const QDate& date, bool sorted = false );
+    Event::List rawEventsForDate(
+      const QDate& date,
+      EventSortField sortField=EventSortUnsorted,
+      SortDirection sortDirection=SortDirectionAscending );
 
     /**
       Get unfiltered events for date \a qdt.
@@ -115,7 +118,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     /**
       Remove a todo from the todolist.
      */
-    void deleteTodo( Todo* todo );
+    bool deleteTodo( Todo* todo );
 
     /**
       Searches todolist for an event with this unique string identifier,
@@ -141,7 +144,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     /**
       Remove journal from the calendar.
      */
-    void deleteJournal( Journal* journal );
+    bool deleteJournal( Journal* journal );
 
     /**
       Return Journals for given date

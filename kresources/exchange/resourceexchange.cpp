@@ -272,15 +272,15 @@ bool ResourceExchange::uploadEvent( Event *event )
   return true;
 }
 
-void ResourceExchange::deleteEvent(Event *event)
+bool ResourceExchange::deleteEvent(Event *event)
 {
-  if ( !mCache ) return;
+  if ( !mCache ) return false;
   kdDebug(5800) << "ResourceExchange::deleteEvent" << endl;
 
   mClient->removeSynchronous( event );
 
   // This also frees the event
-  mCache->deleteEvent( event );
+ return mCache->deleteEvent( event );
 
 //  setModified( true );
 }
@@ -356,11 +356,11 @@ bool ResourceExchange::addTodo(Todo */*todo*/)
   return true;*/
 }
 
-void ResourceExchange::deleteTodo(Todo */*todo*/)
+bool ResourceExchange::deleteTodo(Todo */*todo*/)
 {
   // We don't handle todos yet
 //  if( !mCache )
-        return;
+        return false;
 //  mCache->deleteTodo( todo );
 
 //  setModified( true );
@@ -437,11 +437,10 @@ void ResourceExchange::insertEvent(const Event *anEvent)
 */
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
+Event::List ResourceExchange::rawEventsForDate( const QDate &qd,
+                                                EventSortField sortField,
+                                                SortDirection sortDirection )
 {
-//  kdDebug() << "ResourceExchange::rawEventsForDate(" << qd.toString() << ","
-//            << sorted << ")" << endl;
-
   if (!mCache) return Event::List();
   // If the events for this date are not in the cache, or if they are old,
   // get them again
@@ -486,7 +485,7 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
   // Events are safely in the cache now, return them from cache
   Event::List events;
   if ( mCache )
-	events = mCache->rawEventsForDate( qd, sorted );
+	events = mCache->rawEventsForDate( qd, sortField, sortDirection );
   // kdDebug() << "Found " << events.count() << " events." << endl;
   return events;
 }
@@ -529,11 +528,11 @@ bool ResourceExchange::addJournal(Journal */*journal*/)
   return true;*/
 }
 
-void ResourceExchange::deleteJournal(Journal */*journal*/)
+bool ResourceExchange::deleteJournal(Journal */*journal*/)
 {
   // Wedon't handle journals yet
 //  if( !mCache )
-        return;
+        return false;
 //  mCache->deleteJournal( journal );
 
 //  setModified( true );

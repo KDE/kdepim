@@ -344,15 +344,17 @@ bool ResourceXMLRPC::addEvent( Event* ev )
   return true;
 }
 
-void ResourceXMLRPC::deleteEvent( Event* ev )
+bool ResourceXMLRPC::deleteEvent( Event* ev )
 {
   if ( !(rights( ev ) & CAL_ACCESS_DELETE) && rights( ev ) != -1 )
-    return;
+    return false;
 
   mServer->call( DeleteEventCommand, idMapper().remoteId( ev->uid() ).toInt(),
-                 this, SLOT( deleteEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( deleteEventFinished( const QValueList<QVariant>&,
+                                                  const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( ev->uid() ) );
+  return true;
 }
 
 
@@ -361,9 +363,11 @@ Event *ResourceXMLRPC::event( const QString& uid )
   return mCalendar.event( uid );
 }
 
-Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd, bool sorted )
+Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd,
+                                              EventSortField sortField,
+                                              SortDirection sortDirection )
 {
-  return mCalendar.rawEventsForDate( qd, sorted );
+  return mCalendar.rawEventsForDate( qd, sortField, sortDirection );
 }
 
 
@@ -420,15 +424,17 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
   return true;
 }
 
-void ResourceXMLRPC::deleteTodo( Todo *todo )
+bool ResourceXMLRPC::deleteTodo( Todo *todo )
 {
   if ( !(rights( todo ) & CAL_ACCESS_DELETE) && rights( todo ) != -1 )
-    return;
+    return false;
 
   mServer->call( DeleteTodoCommand, idMapper().remoteId( todo->uid() ).toInt(),
-                 this, SLOT( deleteTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( deleteTodoFinished( const QValueList<QVariant>&,
+                                                 const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( todo->uid() ) );
+  return true;
 }
 
 Todo::List ResourceXMLRPC::rawTodos()
@@ -451,9 +457,9 @@ bool ResourceXMLRPC::addJournal( Journal* journal )
   return mCalendar.addJournal( journal );
 }
 
-void ResourceXMLRPC::deleteJournal( Journal* journal )
+bool ResourceXMLRPC::deleteJournal( Journal* journal )
 {
-  mCalendar.deleteJournal( journal );
+  return mCalendar.deleteJournal( journal );
 }
 
 Journal::List ResourceXMLRPC::journals( const QDate& date )

@@ -45,8 +45,8 @@ class KDE_EXPORT ResourceBlogging : public ResourceGroupwareBase
 
     bool addEvent( Event* ) { return false; }
     bool addTodo( Todo * ) { return false; }
-    void deleteEvent( Event* ) {}
-    void deleteTodo( Todo * ) {}
+    bool deleteEvent( Event* ) { return false; }
+    bool deleteTodo( Todo * ) { return false; }
     static KBlog::APIBlog *api() { return mAPI; }
 
   protected:
