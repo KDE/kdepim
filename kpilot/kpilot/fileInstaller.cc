@@ -103,7 +103,7 @@ void FileInstaller::clearPending()
 #endif
 
 	KURL srcName(s);
-	KURL destDir(fDirName + CSL1("/") + srcName.filename());
+	KURL destDir(fDirName + CSL1("/") + srcName.fileName());
 
 #if KDE_IS_VERSION(3,1,9)
 	return KIO::NetAccess::copy(srcName, destDir, w);
