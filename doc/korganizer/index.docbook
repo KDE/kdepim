@@ -1,22 +1,24 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
  <!ENTITY korganizer "<application>korganizer</application>">
 ]>
+
 <book lang="en">
 <bookinfo>
 <title>KOrganizer Reference Manual</title>
 <authorgroup>
 <author>
-<surname>Preston Brown </surname>
+<surname>Preston Brown</surname>
 <affiliation>
-<address><email><ulink url="mailto:pbrown@kde.org">pbrown@kde.org</ulink></email></address>
+<address><email>pbrown@kde.org</email></address>
 </affiliation>
 </author>
 </authorgroup>
-<date> Last updated January 15, 1999</date>
-<releaseinfo><!-- information about this particular version --></releaseinfo>
+<date>15/01/1999</date>
+<releaseinfo>1.00.00</releaseinfo>
 <abstract>
-<para>Online help / Introduction to KOrganizer. Covers through version 1.0.</para>
-<para>A Calendar / Scheduling Program for KDE / Unix / X</para><!-- Merge this with the previous paragraph; it comes from <META NAME="description" CONTENT="..."> --></abstract>
+<para>Help / Introduction to KOrganizer. Covers through version 1.0.</para>
+<para>&korganizer; is a calendar / scheduling program for KDE / Unix / X</para>
+</abstract>
 <keywordset>
 <keyword>PIM</keyword>
 <keyword>calendar</keyword>

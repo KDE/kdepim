@@ -3,6 +3,7 @@
  <!ENTITY % addindex "IGNORE">
  <![ %addindex; [ <!ENTITY docindex SYSTEM "docindex.docbook"> ]]>
 ]>
+
 <book lang="en">
 <bookinfo>
 <title>The Pab Handbook</title>
@@ -11,17 +12,18 @@
 <firstname>Don</firstname>
 <surname>Sanders</surname>
 <affiliation>
-<address><email><ulink url="mailto:dsanders@kde.org">dsanders@kde.org</ulink></email></address>
+<address><email>dsanders@kde.org</email></address>
 </affiliation>
 </author>
 </authorgroup>
-<date>06/22/1999</date>
-<releaseinfo>Version 0.1</releaseinfo>
+<date>22/06/1999</date>
+<releaseinfo>0.01.00</releaseinfo>
 <abstract>
 <para>SHORT DESCRIPTION GOES HERE</para>
 </abstract>
 <keywordset>
 <keyword>KDE</keyword>
+<keyword>abbrowser</keyword>
 </keywordset>
 </bookinfo>
 
@@ -85,11 +87,3 @@ to the <ulink url="mailto:dsanders@kde.org">author</ulink></para>
 </chapter>
 <![ %addindex; [ &docindex; ]]>
 </book>
-<!--
-Local Variables:
-mode: sgml
-sgml-omittag: nil
-sgml-shorttag: t
-sgml-general-insert-case: lower
-End:
--->
