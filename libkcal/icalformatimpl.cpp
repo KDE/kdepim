@@ -143,7 +143,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
 
-// TODO: attachements, resources
+// TODO: attachments, resources
 #if 0
   // attachments
   tmpStrList = anEvent->attachments();
@@ -172,7 +172,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
 {
 #if QT_VERSION >= 300
   kdDebug() << "icalformatimpl: writeFreeBusy: startDate: "
-    << freebusy->dtStart().toString("ddd MMMM d yyyy: h:m:s ap") << " End Date: " 
+    << freebusy->dtStart().toString("ddd MMMM d yyyy: h:m:s ap") << " End Date: "
     << freebusy->dtEnd().toString("ddd MMMM d yyyy: h:m:s ap") << endl;
 #endif
 
@@ -191,7 +191,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
 
   icalcomponent_add_property(vfreebusy,icalproperty_new_dtstamp(
       writeICalDateTime(QDateTime::currentDateTime(), !mCalendar->isLocalTime())));
-  
+
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
       writeICalDateTime(freebusy->dtStart(), !mCalendar->isLocalTime())));
 
@@ -210,7 +210,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
   for (it = list.begin(); it!= list.end(); ++it) {
     period.start = writeICalDateTime((*it).start(), !mCalendar->isLocalTime());
     period.end = writeICalDateTime((*it).end(), !mCalendar->isLocalTime());
-    icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) ); 
+    icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) );
   }
 
   return vfreebusy;
@@ -270,7 +270,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,icalproperty_new_summary(
         incidence->summary().local8Bit()));
   }
-  
+
   // location
   if (!incidence->location().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_location(
@@ -464,24 +464,43 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
   QPtrList<int> tmpDays;
   int *tmpDay;
   Recurrence::rMonthPos *tmpPos;
+  bool datetime = false;
   int day;
   int i;
 
   switch(recur->doesRecur()) {
+    case Recurrence::rMinutely:
+      r.freq = ICAL_MINUTELY_RECURRENCE;
+      datetime = true;
+#if 0
+      tmpStr.sprintf("M%i ",anEvent->rFreq);
+//      if (anEvent->rDuration > 0)
+//      tmpStr += "#";
+#endif
+      break;
+    case Recurrence::rHourly:
+      r.freq = ICAL_HOURLY_RECURRENCE;
+      datetime = true;
+#if 0
+      tmpStr.sprintf("H%i ",anEvent->rFreq);
+//      if (anEvent->rDuration > 0)
+//      tmpStr += "#";
+#endif
+      break;
     case Recurrence::rDaily:
       r.freq = ICAL_DAILY_RECURRENCE;
 #if 0
       tmpStr.sprintf("D%i ",anEvent->rFreq);
 //      if (anEvent->rDuration > 0)
-//	tmpStr += "#";
+//      tmpStr += "#";
 #endif
       break;
     case Recurrence::rWeekly:
       r.freq = ICAL_WEEKLY_RECURRENCE;
+      r.week_start = static_cast<icalrecurrencetype_weekday>(recur->weekStart()%7 + 1);
       for (i = 0; i < 7; i++) {
-	if (recur->days().testBit(i)) {
-          if (i == 6) day = 1;
-          else day = i + 2;
+        if (recur->days().testBit(i)) {
+          day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
           r.by_day[index++] = icalrecurrencetype_day_day_of_week(day);
         }
       }
@@ -489,8 +508,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 #if 0
       tmpStr.sprintf("W%i ",anEvent->rFreq);
       for (i = 0; i < 7; i++) {
-	if (anEvent->rDays.testBit(i))
-	  tmpStr += dayFromNum(i);
+        if (anEvent->rDays.testBit(i))
+          tmpStr += dayFromNum(i);
       }
 #endif
       break;
@@ -501,9 +520,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       tmpPos = tmpPositions.first();
       r.by_set_pos[index2++] = tmpPos->rPos;
       for (i = 0; i < 7; i++) {
-	if (tmpPos->rDays.testBit(i)) {
-          if (i == 6) day = 1;
-          else day = i + 2;
+        if (tmpPos->rDays.testBit(i)) {
+          day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
           r.by_day[index++] = icalrecurrencetype_day_day_of_week(day);
         }
       }
@@ -513,19 +531,19 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all rMonthPos's
       tmpPositions = anEvent->rMonthPositions;
       for (tmpPos = tmpPositions.first();
-	   tmpPos;
-	   tmpPos = tmpPositions.next()) {
+           tmpPos;
+           tmpPos = tmpPositions.next()) {
 
-	tmpStr2.sprintf("%i", tmpPos->rPos);
-	if (tmpPos->negative)
-	  tmpStr2 += "- ";
-	else
-	  tmpStr2 += "+ ";
-	tmpStr += tmpStr2;
-	for (i = 0; i < 7; i++) {
-	  if (tmpPos->rDays.testBit(i))
-	    tmpStr += dayFromNum(i);
-	}
+        tmpStr2.sprintf("%i", tmpPos->rPos);
+        if (tmpPos->negative)
+          tmpStr2 += "- ";
+        else
+          tmpStr2 += "+ ";
+        tmpStr += tmpStr2;
+        for (i = 0; i < 7; i++) {
+          if (tmpPos->rDays.testBit(i))
+            tmpStr += dayFromNum(i);
+        }
       } // loop for all rMonthPos's
 #endif
       break;
@@ -534,8 +552,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 
       tmpDays = recur->monthDays();
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
+           tmpDay;
+           tmpDay = tmpDays.next()) {
         r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay*8);//*tmpDay);
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
@@ -544,10 +562,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all rMonthDays;
       tmpDays = anEvent->rMonthDays;
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
 #endif
       break;
@@ -556,8 +574,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 
       tmpDays = recur->yearNums();
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
+           tmpDay;
+           tmpDay = tmpDays.next()) {
         r.by_month[index++] = *tmpDay;
       }
 //      r.by_set_pos[index] = ICAL_RECURRENCE_ARRAY_MAX;
@@ -566,10 +584,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all the rYearNums;
       tmpDays = anEvent->rYearNums;
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
 #endif
       break;
@@ -578,8 +596,8 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 
       tmpDays = recur->yearNums();
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
+           tmpDay;
+           tmpDay = tmpDays.next()) {
         r.by_year_day[index++] = *tmpDay;
       }
 //      r.by_year_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
@@ -588,10 +606,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all the rYearNums;
       tmpDays = anEvent->rYearNums;
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
 #endif
       break;
@@ -608,7 +626,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
   } else if (recur->duration() == -1) {
     r.count = 0;
   } else {
-    r.until = writeICalDate(recur->endDate());
+    if (datetime)
+      r.until = writeICalDateTime(recur->endDateTime());
+    else
+      r.until = writeICalDate(recur->endDate());
   }
 
 // Debug output
@@ -635,13 +656,13 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
     case Event::rDaily:
       tmpStr.sprintf("D%i ",anEvent->rFreq);
 //      if (anEvent->rDuration > 0)
-//	tmpStr += "#";
+//      tmpStr += "#";
       break;
     case Event::rWeekly:
       tmpStr.sprintf("W%i ",anEvent->rFreq);
       for (int i = 0; i < 7; i++) {
-	if (anEvent->rDays.testBit(i))
-	  tmpStr += dayFromNum(i);
+        if (anEvent->rDays.testBit(i))
+          tmpStr += dayFromNum(i);
       }
       break;
     case Event::rMonthlyPos:
@@ -649,19 +670,19 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all rMonthPos's
       tmpPositions = anEvent->rMonthPositions;
       for (tmpPos = tmpPositions.first();
-	   tmpPos;
-	   tmpPos = tmpPositions.next()) {
+           tmpPos;
+           tmpPos = tmpPositions.next()) {
 
-	tmpStr2.sprintf("%i", tmpPos->rPos);
-	if (tmpPos->negative)
-	  tmpStr2 += "- ";
-	else
-	  tmpStr2 += "+ ";
-	tmpStr += tmpStr2;
-	for (int i = 0; i < 7; i++) {
-	  if (tmpPos->rDays.testBit(i))
-	    tmpStr += dayFromNum(i);
-	}
+        tmpStr2.sprintf("%i", tmpPos->rPos);
+        if (tmpPos->negative)
+          tmpStr2 += "- ";
+        else
+          tmpStr2 += "+ ";
+        tmpStr += tmpStr2;
+        for (int i = 0; i < 7; i++) {
+          if (tmpPos->rDays.testBit(i))
+            tmpStr += dayFromNum(i);
+        }
       } // loop for all rMonthPos's
       break;
     case Event::rMonthlyDay:
@@ -669,10 +690,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all rMonthDays;
       tmpDays = anEvent->rMonthDays;
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
       break;
     case Event::rYearlyMonth:
@@ -680,10 +701,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all the rYearNums;
       tmpDays = anEvent->rYearNums;
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
       break;
     case Event::rYearlyDay:
@@ -691,10 +712,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       // write out all the rYearNums;
       tmpDays = anEvent->rYearNums;
       for (tmpDay = tmpDays.first();
-	   tmpDay;
-	   tmpDay = tmpDays.next()) {
-	tmpStr2.sprintf("%i ", *tmpDay);
-	tmpStr += tmpStr2;
+           tmpDay;
+           tmpDay = tmpDays.next()) {
+        tmpStr2.sprintf("%i ", *tmpDay);
+        tmpStr += tmpStr2;
       }
       break;
     default:
@@ -812,7 +833,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_DTSTART_PROPERTY:
         // Flag that todo has start date. Value is read in by readIncidence().
-	todo->setHasStartDate(true);
+        todo->setHasStartDate(true);
         break;
 
       default:
@@ -979,21 +1000,21 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
-	icaltime = icalproperty_get_dtstart(p);
+        icaltime = icalproperty_get_dtstart(p);
         freebusy->setDtStart(readICalDateTime(icaltime));
         break;
 
       case ICAL_DTEND_PROPERTY:  // start End Date and Time
-	icaltime = icalproperty_get_dtend(p);
+        icaltime = icalproperty_get_dtend(p);
         freebusy->setDtEnd(readICalDateTime(icaltime));
         break;
 
       case ICAL_FREEBUSY_PROPERTY:  //Any FreeBusy Times
         icalperiod = icalproperty_get_freebusy(p);
-	period_start = readICalDateTime(icalperiod.start);
-	period_end = readICalDateTime(icalperiod.end);
-	freebusy->addPeriod(period_start, period_end);
-	break;
+        period_start = readICalDateTime(icalperiod.start);
+        period_end = readICalDateTime(icalperiod.end);
+        freebusy->addPeriod(period_start, period_end);
+        break;
 
       default:
         kdDebug() << "ICALFormat::readIncidence(): Unknown property: " << kind
@@ -1147,7 +1168,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
-	icaltime = icalproperty_get_dtstart(p);
+        icaltime = icalproperty_get_dtstart(p);
         if (icaltime.is_date) {
           incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           incidence->setFloats(true);
@@ -1157,7 +1178,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         break;
 
       case ICAL_DURATION_PROPERTY:  // start date and time
-	icalduration = icalproperty_get_duration(p);
+        icalduration = icalproperty_get_duration(p);
         incidence->setDuration(readICalDuration(icalduration));
         break;
 
@@ -1175,7 +1196,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         text = icalproperty_get_location(p);
         incidence->setLocation(QString::fromLocal8Bit(text));
         break;
-        
+
 #if 0
   // status
   if ((vo = isAPropertyOf(vincidence, VCStatusProp)) != 0) {
@@ -1258,11 +1279,32 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 
   dumpIcalRecurrence(r);
 
+  int wkst;
   int index = 0;
   short day = 0;
   QBitArray qba(7);
 
   switch (r.freq) {
+    case ICAL_MINUTELY_RECURRENCE:
+      if (!icaltime_is_null_time(r.until)) {
+        recur->setMinutely(r.interval,readICalDateTime(r.until));
+      } else {
+        if (r.count == 0)
+          recur->setMinutely(r.interval,-1);
+        else
+          recur->setMinutely(r.interval,r.count);
+      }
+      break;
+    case ICAL_HOURLY_RECURRENCE:
+      if (!icaltime_is_null_time(r.until)) {
+        recur->setHourly(r.interval,readICalDateTime(r.until));
+      } else {
+        if (r.count == 0)
+          recur->setHourly(r.interval,-1);
+        else
+          recur->setHourly(r.interval,r.count);
+      }
+      break;
     case ICAL_DAILY_RECURRENCE:
       if (!icaltime_is_null_time(r.until)) {
         recur->setDaily(r.interval,readICalDate(r.until));
@@ -1275,27 +1317,22 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       break;
     case ICAL_WEEKLY_RECURRENCE:
 //      kdDebug(5800) << "WEEKLY_RECURRENCE" << endl;
-      while((day = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-//        kdDebug(5800) << " " << day << endl;
-        if (day == 1) qba.setBit(6);
-        else qba.setBit(day-2);
-      }
+      wkst = (r.week_start + 5)%7 + 1;
       if (!icaltime_is_null_time(r.until)) {
-        recur->setWeekly(r.interval,qba,readICalDate(r.until));
+        recur->setWeekly(r.interval,qba,readICalDate(r.until),wkst);
       } else {
         if (r.count == 0)
-          recur->setWeekly(r.interval,qba,-1);
+          recur->setWeekly(r.interval,qba,-1,wkst);
         else
-          recur->setWeekly(r.interval,qba,r.count);
+          recur->setWeekly(r.interval,qba,r.count,wkst);
+      }
+      while((day = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+//        kdDebug(5800) << " " << day << endl;
+        qba.setBit((day+5)%7);    // convert from Sunday=1 to Monday=0
       }
       break;
     case ICAL_MONTHLY_RECURRENCE:
       if (r.by_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
-        while((day = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-//          kdDebug(5800) << "----a " << index << ": " << day << endl;
-          if (day == 1) qba.setBit(6);
-          else qba.setBit(day-2);
-        }
         if (!icaltime_is_null_time(r.until)) {
           recur->setMonthly(Recurrence::rMonthlyPos,r.interval,
                             readICalDate(r.until));
@@ -1305,16 +1342,27 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           else
             recur->setMonthly(Recurrence::rMonthlyPos,r.interval,r.count);
         }
-        if (r.by_set_pos[0] != ICAL_RECURRENCE_ARRAY_MAX) {
-          recur->addMonthlyPos(r.by_set_pos[0],qba);
-        } else {
-          recur->addMonthlyPos(0,qba);
+        bool useSetPos = false;
+        short pos = 0;
+        while((day = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+//          kdDebug(5800) << "----a " << index << ": " << day << endl;
+          pos = icalrecurrencetype_day_position(day);
+          if (pos) {
+            day = icalrecurrencetype_day_day_of_week(day);
+            QBitArray ba(7);          // don't wipe qba
+            ba.setBit((day+5)%7);     // convert from Sunday=1 to Monday=0
+            recur->addMonthlyPos(pos,ba);
+          } else {
+            qba.setBit((day+5)%7);    // convert from Sunday=1 to Monday=0
+            useSetPos = true;
+          }
+        }
+        if (useSetPos) {
+          if (r.by_set_pos[0] != ICAL_RECURRENCE_ARRAY_MAX) {
+            recur->addMonthlyPos(r.by_set_pos[0],qba);
+          }
         }
       } else if (r.by_month_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
-        while((day = r.by_month_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-//          kdDebug(5800) << "----b " << day << endl;
-          recur->addMonthlyDay(day);
-        }
         if (!icaltime_is_null_time(r.until)) {
           recur->setMonthly(Recurrence::rMonthlyDay,r.interval,
                             readICalDate(r.until));
@@ -1324,13 +1372,14 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           else
             recur->setMonthly(Recurrence::rMonthlyDay,r.interval,r.count);
         }
+        while((day = r.by_month_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+//          kdDebug(5800) << "----b " << day << endl;
+          recur->addMonthlyDay(day);
+        }
       }
       break;
     case ICAL_YEARLY_RECURRENCE:
       if (r.by_year_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
-        while((day = r.by_year_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-          recur->addYearlyNum(day);
-        }
         if (!icaltime_is_null_time(r.until)) {
           recur->setYearly(Recurrence::rYearlyDay,r.interval,
                             readICalDate(r.until));
@@ -1340,18 +1389,53 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           else
             recur->setYearly(Recurrence::rYearlyDay,r.interval,r.count);
         }
-      } if (r.by_month[0] != ICAL_RECURRENCE_ARRAY_MAX) {
-        while((day = r.by_month[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+        while((day = r.by_year_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
           recur->addYearlyNum(day);
         }
-        if (!icaltime_is_null_time(r.until)) {
-          recur->setYearly(Recurrence::rYearlyMonth,r.interval,
-                            readICalDate(r.until));
+      } if (r.by_month[0] != ICAL_RECURRENCE_ARRAY_MAX) {
+        if (r.by_day[0] != ICAL_RECURRENCE_ARRAY_MAX) {
+          if (!icaltime_is_null_time(r.until)) {
+            recur->setYearly(Recurrence::rYearlyPos,r.interval,
+                              readICalDate(r.until));
+          } else {
+            if (r.count == 0)
+              recur->setYearly(Recurrence::rYearlyPos,r.interval,-1);
+            else
+              recur->setYearly(Recurrence::rYearlyPos,r.interval,r.count);
+          }
+          bool useSetPos = false;
+          short pos = 0;
+          while((day = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+//            kdDebug(5800) << "----a " << index << ": " << day << endl;
+            pos = icalrecurrencetype_day_position(day);
+            if (pos) {
+              day = icalrecurrencetype_day_day_of_week(day);
+              QBitArray ba(7);          // don't wipe qba
+              ba.setBit((day+5)%7);     // convert from Sunday=1 to Monday=0
+              recur->addMonthlyPos(pos,ba);
+            } else {
+              qba.setBit((day+5)%7);    // convert from Sunday=1 to Monday=0
+              useSetPos = true;
+            }
+          }
+          if (useSetPos) {
+            if (r.by_set_pos[0] != ICAL_RECURRENCE_ARRAY_MAX) {
+              recur->addMonthlyPos(r.by_set_pos[0],qba);
+            }
+          }
         } else {
-          if (r.count == 0)
-            recur->setYearly(Recurrence::rYearlyMonth,r.interval,-1);
-          else
-            recur->setYearly(Recurrence::rYearlyMonth,r.interval,r.count);
+          if (!icaltime_is_null_time(r.until)) {
+            recur->setYearly(Recurrence::rYearlyMonth,r.interval,
+                              readICalDate(r.until));
+          } else {
+            if (r.count == 0)
+              recur->setYearly(Recurrence::rYearlyMonth,r.interval,-1);
+            else
+              recur->setYearly(Recurrence::rYearlyMonth,r.interval,r.count);
+          }
+        }
+        while((day = r.by_month[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
+          recur->addYearlyNum(day);
         }
       }
       break;
@@ -1375,14 +1459,14 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       index = tmpStr.findRev(' ') + 1; // advance to last field
       if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->setRecursDaily(rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->setRecursDaily(rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0) // VEvents set this to 0 forever, we use -1
-	  anEvent->setRecursDaily(rFreq, -1);
-	else
-	  anEvent->setRecursDaily(rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0) // VEvents set this to 0 forever, we use -1
+          anEvent->setRecursDaily(rFreq, -1);
+        else
+          anEvent->setRecursDaily(rFreq, rDuration);
       }
     }
     /********************************* WEEKLY ******************************/
@@ -1394,28 +1478,28 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       QBitArray qba(7);
       QString dayStr;
       if( index == last ) {
-	// e.g. W1 #0
-	qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+        // e.g. W1 #0
+        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
       }
       else {
-	// e.g. W1 SU #0
-	while (index < last) {
-	  dayStr = tmpStr.mid(index, 3);
-	  int dayNum = numFromDay(dayStr);
-	  qba.setBit(dayNum);
-	  index += 3; // advance to next day, or possibly "#"
-	}
+        // e.g. W1 SU #0
+        while (index < last) {
+          dayStr = tmpStr.mid(index, 3);
+          int dayNum = numFromDay(dayStr);
+          qba.setBit(dayNum);
+          index += 3; // advance to next day, or possibly "#"
+        }
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->setRecursWeekly(rFreq, qba, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->setRecursWeekly(rFreq, qba, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->setRecursWeekly(rFreq, qba, -1);
-	else
-	  anEvent->setRecursWeekly(rFreq, qba, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->setRecursWeekly(rFreq, qba, -1);
+        else
+          anEvent->setRecursWeekly(rFreq, qba, rDuration);
       }
     }
     /**************************** MONTHLY-BY-POS ***************************/
@@ -1427,43 +1511,43 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       QBitArray qba(7);
       short tmpPos;
       if( index == last ) {
-	// e.g. MP1 #0
-	tmpPos = anEvent->dtStart().date().day()/7 + 1;
-	if( tmpPos == 5 )
-	  tmpPos = -1;
-	qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
-	anEvent->addRecursMonthlyPos(tmpPos, qba);
+        // e.g. MP1 #0
+        tmpPos = anEvent->dtStart().date().day()/7 + 1;
+        if( tmpPos == 5 )
+          tmpPos = -1;
+        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
+        anEvent->addRecursMonthlyPos(tmpPos, qba);
       }
       else {
-	// e.g. MP1 1+ SU #0
-	while (index < last) {
-	  tmpPos = tmpStr.mid(index,1).toShort();
-	  index += 1;
-	  if (tmpStr.mid(index,1) == "-")
-	    // convert tmpPos to negative
-	    tmpPos = 0 - tmpPos;
-	  index += 2; // advance to day(s)
-	  while (numFromDay(tmpStr.mid(index,3)) >= 0) {
-	    int dayNum = numFromDay(tmpStr.mid(index,3));
-	    qba.setBit(dayNum);
-	    index += 3; // advance to next day, or possibly pos or "#"
-	  }
-	  anEvent->addRecursMonthlyPos(tmpPos, qba);
-	  qba.detach();
-	  qba.fill(FALSE); // clear out
-	} // while != "#"
+        // e.g. MP1 1+ SU #0
+        while (index < last) {
+          tmpPos = tmpStr.mid(index,1).toShort();
+          index += 1;
+          if (tmpStr.mid(index,1) == "-")
+            // convert tmpPos to negative
+            tmpPos = 0 - tmpPos;
+          index += 2; // advance to day(s)
+          while (numFromDay(tmpStr.mid(index,3)) >= 0) {
+            int dayNum = numFromDay(tmpStr.mid(index,3));
+            qba.setBit(dayNum);
+            index += 3; // advance to next day, or possibly pos or "#"
+          }
+          anEvent->addRecursMonthlyPos(tmpPos, qba);
+          qba.detach();
+          qba.fill(FALSE); // clear out
+        } // while != "#"
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
-						    index))).date();
-	anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
+                                                    index))).date();
+        anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, -1);
-	else
-	  anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, -1);
+        else
+          anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rDuration);
       }
     }
 
@@ -1475,32 +1559,32 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       index += 1;
       short tmpDay;
       if( index == last ) {
-	// e.g. MD1 #0
-	tmpDay = anEvent->dtStart().date().day();
-	anEvent->addRecursMonthlyDay(tmpDay);
+        // e.g. MD1 #0
+        tmpDay = anEvent->dtStart().date().day();
+        anEvent->addRecursMonthlyDay(tmpDay);
       }
       else {
-	// e.g. MD1 3 #0
-	while (index < last) {
-	  int index2 = tmpStr.find(' ', index);
-	  tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-	  index = index2-1;
-	  if (tmpStr.mid(index, 1) == "-")
-	    tmpDay = 0 - tmpDay;
-	  index += 2; // advance the index;
-	  anEvent->addRecursMonthlyDay(tmpDay);
-	} // while != #
+        // e.g. MD1 3 #0
+        while (index < last) {
+          int index2 = tmpStr.find(' ', index);
+          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
+          index = index2-1;
+          if (tmpStr.mid(index, 1) == "-")
+            tmpDay = 0 - tmpDay;
+          index += 2; // advance the index;
+          anEvent->addRecursMonthlyDay(tmpDay);
+        } // while != #
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, -1);
-	else
-	  anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, -1);
+        else
+          anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, rDuration);
       }
     }
 
@@ -1512,29 +1596,29 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       index += 1;
       short tmpMonth;
       if( index == last ) {
-	// e.g. YM1 #0
-	tmpMonth = anEvent->dtStart().date().month();
-	anEvent->addRecursYearlyNum(tmpMonth);
+        // e.g. YM1 #0
+        tmpMonth = anEvent->dtStart().date().month();
+        anEvent->addRecursYearlyNum(tmpMonth);
       }
       else {
-	// e.g. YM1 3 #0
-	while (index < last) {
-	  int index2 = tmpStr.find(' ', index);
-	  tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
-	  index = index2+1;
-	  anEvent->addRecursYearlyNum(tmpMonth);
-	} // while != #
+        // e.g. YM1 3 #0
+        while (index < last) {
+          int index2 = tmpStr.find(' ', index);
+          tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
+          index = index2+1;
+          anEvent->addRecursYearlyNum(tmpMonth);
+        } // while != #
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, -1);
-	else
-	  anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, -1);
+        else
+          anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, rDuration);
       }
     }
 
@@ -1546,29 +1630,29 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       index += 1;
       short tmpDay;
       if( index == last ) {
-	// e.g. YD1 #0
-	tmpDay = anEvent->dtStart().date().dayOfYear();
-	anEvent->addRecursYearlyNum(tmpDay);
+        // e.g. YD1 #0
+        tmpDay = anEvent->dtStart().date().dayOfYear();
+        anEvent->addRecursYearlyNum(tmpDay);
       }
       else {
-	// e.g. YD1 123 #0
-	while (index < last) {
-	  int index2 = tmpStr.find(' ', index);
-	  tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-	  index = index2+1;
-	  anEvent->addRecursYearlyNum(tmpDay);
-	} // while != #
+        // e.g. YD1 123 #0
+        while (index < last) {
+          int index2 = tmpStr.find(' ', index);
+          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
+          index = index2+1;
+          anEvent->addRecursYearlyNum(tmpDay);
+        } // while != #
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->setRecursYearly(Event::rYearlyDay, rFreq, rEndDate);
+        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
+        anEvent->setRecursYearly(Event::rYearlyDay, rFreq, rEndDate);
       } else {
-	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	if (rDuration == 0)
-	  anEvent->setRecursYearly(Event::rYearlyDay, rFreq, -1);
-	else
-	  anEvent->setRecursYearly(Event::rYearlyDay, rFreq, rDuration);
+        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
+        if (rDuration == 0)
+          anEvent->setRecursYearly(Event::rYearlyDay, rFreq, -1);
+        else
+          anEvent->setRecursYearly(Event::rYearlyDay, rFreq, rDuration);
       }
     } else {
       kdDebug(5800) << "we don't understand this type of recurrence!" << endl;
@@ -1655,17 +1739,17 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
     switch ( action ) {
       case ICAL_ACTION_AUDIO:
         ialarm->setAudioFile( url );
-	break;
+        break;
       case ICAL_ACTION_PROCEDURE:
         ialarm->setProgramFile( url );
-	break;
+        break;
       default:
         break;
     }
   } else {
-    kdDebug() << "No attachement found in alarm." << endl;
+    kdDebug() << "No attachment found in alarm." << endl;
   }
-  
+
   // TODO: check for consistency of alarm properties
 }
 
@@ -1812,29 +1896,41 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     methodType = fakeCString(vObjectUStringZValue(curVO));
     if (mEnableDialogs)
       KMessageBox::information(mTopWidget,
-			       i18n("This calendar is an iTIP transaction of type \"%1\".")
-			       .arg(methodType),
+                               i18n("This calendar is an iTIP transaction of type \"%1\".")
+                               .arg(methodType),
                                i18n("%1: iTIP Transaction").arg(CalFormat::application()));
     delete methodType;
   }
 #endif
 
+  icalproperty *p;
+  const char *prodid;
+
+  p = icalcomponent_get_first_property(calendar,ICAL_PRODID_PROPERTY);
+  if (!p) {
+    kdDebug(5800) << "No PRODID property found" << endl;
+// TODO: does no PRODID really matter?
+//    mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
+//    return false;
+    mCalendarVersion = 0;
+  } else {
+    prodid = icalproperty_get_prodid(p);
+    kdDebug(5800) << "VCALENDAR prodid: '" << prodid << "'" << endl;
+    mCalendarVersion = CalFormat::calendarVersion(prodid);
+  }
+
 // TODO: check for unknown PRODID
 #if 0
-  // warn the user that we might have trouble reading non-known calendar.
-  if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
-    char *s = fakeCString(vObjectUStringZValue(curVO));
-    if (strcmp(CalFormat::productId().local8Bit(), s) != 0)
-      if (mEnableDialogs)
-	KMessageBox::information(mTopWidget,
-			     i18n("This vCalendar file was not created by KOrganizer "
-				     "or any other product we support. Loading anyway..."),
+  if (!mCalendarVersion
+  &&  strcmp(CalFormat::productId().local8Bit(), prodid) != 0) {
+    // warn the user that we might have trouble reading non-known calendar.
+    if (mEnableDialogs)
+      KMessageBox::information(mTopWidget,
+                             i18n("This vCalendar file was not created by KOrganizer "
+                                     "or any other product we support. Loading anyway..."),
                              i18n("%1: Unknown vCalendar Vendor").arg(CalFormat::application()));
-    deleteStr(s);
   }
 #endif
-
-  icalproperty *p;
 
   p = icalcomponent_get_first_property(calendar,ICAL_VERSION_PROPERTY);
   if (!p) {
@@ -1865,9 +1961,9 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(_VCAL_VERSION, s) != 0)
       if (mEnableDialogs)
-	KMessageBox::sorry(mTopWidget,
-			     i18n("This vCalendar file has version %1.\n"
-			          "We only support %2.")
+        KMessageBox::sorry(mTopWidget,
+                             i18n("This vCalendar file has version %1.\n"
+                                  "We only support %2.")
                              .arg(s).arg(_VCAL_VERSION),
                              i18n("%1: Unknown vCalendar Version").arg(CalFormat::application()));
     deleteStr(s);
@@ -1931,54 +2027,54 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     if (strcmp(vObjectName(curVO), VCEventProp) == 0) {
 
       if ((curVOProp = isAPropertyOf(curVO, KPilotStatusProp)) != 0) {
-	char *s;
-	s = fakeCString(vObjectUStringZValue(curVOProp));
-	// check to see if event was deleted by the kpilot conduit
-	if (atoi(s) == Event::SYNCDEL) {
-	  deleteStr(s);
-	  kdDebug(5800) << "skipping pilot-deleted event" << endl;
-	  goto SKIP;
-	}
-	deleteStr(s);
+        char *s;
+        s = fakeCString(vObjectUStringZValue(curVOProp));
+        // check to see if event was deleted by the kpilot conduit
+        if (atoi(s) == Event::SYNCDEL) {
+          deleteStr(s);
+          kdDebug(5800) << "skipping pilot-deleted event" << endl;
+          goto SKIP;
+        }
+        deleteStr(s);
       }
 
       // this code checks to see if we are trying to read in an event
       // that we already find to be in the calendar.  If we find this
       // to be the case, we skip the event.
       if ((curVOProp = isAPropertyOf(curVO, VCUniqueStringProp)) != 0) {
-	char *s = fakeCString(vObjectUStringZValue(curVOProp));
-	QString tmpStr(s);
-	deleteStr(s);
+        char *s = fakeCString(vObjectUStringZValue(curVOProp));
+        QString tmpStr(s);
+        deleteStr(s);
 
-	if (mCalendar->getEvent(tmpStr)) {
-	  goto SKIP;
-	}
-	if (mCalendar->getTodo(tmpStr)) {
-	  goto SKIP;
-	}
+        if (mCalendar->getEvent(tmpStr)) {
+          goto SKIP;
+        }
+        if (mCalendar->getTodo(tmpStr)) {
+          goto SKIP;
+        }
       }
 
       if ((!(curVOProp = isAPropertyOf(curVO, VCDTstartProp))) &&
-	  (!(curVOProp = isAPropertyOf(curVO, VCDTendProp)))) {
-	kdDebug(5800) << "found a VEvent with no DTSTART and no DTEND! Skipping..." << endl;
-	goto SKIP;
+          (!(curVOProp = isAPropertyOf(curVO, VCDTendProp)))) {
+        kdDebug(5800) << "found a VEvent with no DTSTART and no DTEND! Skipping..." << endl;
+        goto SKIP;
       }
 
       anEvent = VEventToEvent(curVO);
       // we now use addEvent instead of insertEvent so that the
       // signal/slot get connected.
       if (anEvent)
-	mCalendar->addEvent(anEvent);
+        mCalendar->addEvent(anEvent);
       else {
-	// some sort of error must have occurred while in translation.
-	goto SKIP;
+        // some sort of error must have occurred while in translation.
+        goto SKIP;
       }
     } else if (strcmp(vObjectName(curVO), VCTodoProp) == 0) {
       anEvent = VTodoToEvent(curVO);
       mCalendar->addTodo(anEvent);
     } else if ((strcmp(vObjectName(curVO), VCVersionProp) == 0) ||
-	       (strcmp(vObjectName(curVO), VCProdIdProp) == 0) ||
-	       (strcmp(vObjectName(curVO), VCTimeZoneProp) == 0)) {
+               (strcmp(vObjectName(curVO), VCProdIdProp) == 0) ||
+               (strcmp(vObjectName(curVO), VCTimeZoneProp) == 0)) {
       // do nothing, we know these properties and we want to skip them.
       // we have either already processed them or are ignoring them.
       ;

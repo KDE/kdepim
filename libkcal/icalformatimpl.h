@@ -53,7 +53,7 @@ class ICalFormatImpl {
     icalproperty *writeRecurrenceRule(Recurrence *);
     icalproperty *writeAlarm(Alarm *alarm);
 
-    QString extractErrorProperty(icalcomponent *);    
+    QString extractErrorProperty(icalcomponent *);
     Todo *readTodo(icalcomponent *vtodo);
     Event *readEvent(icalcomponent *vevent);
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
@@ -75,13 +75,15 @@ class ICalFormatImpl {
 
   private:
     void dumpIcalRecurrence(icalrecurrencetype);
-  
+
     ICalFormat *mParent;
     Calendar *mCalendar;
-  
+
+    int mCalendarVersion;       // determines backward compatibility mode on read
+
     QPtrList<Event> mEventsRelate;           // events with relations
     QPtrList<Todo> mTodosRelate;             // todos with relations
-    
+
     static const int mSecondsPerWeek;
     static const int mSecondsPerDay;
     static const int mSecondsPerHour;
