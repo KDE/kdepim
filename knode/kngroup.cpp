@@ -469,7 +469,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClien
       delete art;
       new_cnt++;
     }
-    else if(append(art)) {
+    else if ( (append(art)) && ( !art->isIgnored() ) ) {
       added_cnt++;
       new_cnt++;
     }
