@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-11-12</date>
-<releaseinfo>1.02.00</releaseinfo>
+<date>2004-11-26</date>
+<releaseinfo>1.02.02</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -3597,18 +3597,33 @@ if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
 <para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
 </note>
 
+<warning><para>If you install &kalarm; into a folder different from
+where &kde; is installed, it will not run correctly unless you make
+its location known to &kde;. To do this, you must prefix the
+<envar>KDEDIRS</envar> environment variable with &kalarm;'s location,
+each time before you start &kde;.</para>
+
+<para>For example, if &kde; is installed in
+<literal>/opt/kde</literal>, <envar>KDEDIRS</envar> might normally
+be set to <literal>/etc/opt/kde:/opt/kde</literal>. If you install
+&kalarm; into <literal>/usr/local</literal>, you would need to set
+<envar>KDEDIRS</envar> to
+<literal>/usr/local:/etc/opt/kde:/opt/kde</literal> before starting
+&kde;.</para></warning>
+
 <para>The standalone version of &kalarm; has a special configuration
 option which allows you to select which languages documentation is to
 be installed for by specifying a language code, or a list of language
 codes, as a parameter to <command>./configure</command>. By default,
 documentation in all available languages is installed. A list of
 documentation languages included in the package, together with their
-codes, is in the <filename>DOC-LANGUAGES</filename> file. Note that
-this has no effect on which user interface translations are installed.
-For example, to install only French and British English
-documentation:</para>
+codes, is in the <filename>DOC-LANGUAGES</filename> file. For example,
+to install only French and British English documentation:</para>
 
 <para><userinput><command>./configure</command> --enable-doc-language=<replaceable>"fr en_GB"</replaceable></userinput></para>
+
+<para>Note that this option has no effect on which user interface
+translations are installed.</para>
 
 </sect1>
 
