@@ -43,11 +43,11 @@
                 <cstring>groupBox2</cstring>
             </property>
             <property name="title">
-                <string>Handheld &amp;&amp; User Name</string>
+                <string>Handheld &amp;&amp; Username</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt;
-&lt;p&gt;Please enter the user name exactly as set on the handheld. &lt;/p&gt;
+&lt;p&gt;Please enter the username exactly as set on the handheld. &lt;/p&gt;
 &lt;p&gt;If setting the device type manually (i.e., if automatic detection did not work for you), please look below for tips on choosing the right device name.  {0...n} means a number from 0 up to a very large number, though usually just 255.
 &lt;p&gt;
 Serial Port: an old method of connection, used primarily by the original line of Palm Pilots, and various Palm-based cellphones.  Device name will look like /dev/ttyS{0...n} (Linux) or /dev/cuaa{0...n} (FreeBSD).&lt;/p&gt;
@@ -84,10 +84,10 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Automatically Detect Handheld &amp;&amp; User Name</string>
+                        <string>&amp;Automatically Detect Handheld &amp;&amp; Username</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Click this button to open the detection dialog. The wizard will try to automatically find and display the correct device and user name for your handheld. If the wizard cannot retrieve this information, check if you have write permission for the device.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Click this button to open the detection dialog. The wizard will try to automatically find and display the correct device and username for your handheld. If the wizard cannot retrieve this information, check if you have write permission for the device.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
@@ -106,7 +106,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fUserName</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Enter your user name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Enter your username here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="0" column="0">
@@ -120,7 +120,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fUserName</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Enter your user name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Enter your username here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>

@@ -101,7 +101,7 @@ CheckUser::~CheckUser()
 				i18n("A common name", "John Doe");
 
 			QString q = i18n("<qt>Neither KPilot nor the "
-				"Pilot have a user name set. "
+				"Pilot have a username set. "
 				"They <i>should</i> be set. "
 				"Should KPilot set them to a default value "
 				"(<i>%1</i>)?</qt>").arg(defaultUserName);
@@ -119,9 +119,9 @@ CheckUser::~CheckUser()
 		}
 		else
 		{
-			QString q = i18n("<qt>The Pilot has a user name set "
+			QString q = i18n("<qt>The Pilot has a username set "
 				"(<i>%1</i>) but KPilot does not. Should "
-				"KPilot use this user name in future?").
+				"KPilot use this username in future?").
 				arg(pilotUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */ ) ==
@@ -136,9 +136,9 @@ CheckUser::~CheckUser()
 	{
 		if (pilotUserEmpty)
 		{
-			QString q = i18n("<qt>KPilot has a user name set "
+			QString q = i18n("<qt>KPilot has a username set "
 				"(<i>%1</i>) but the Pilot does not. "
-				"Should KPilot's user name be set in the "
+				"Should KPilot's username be set in the "
 				"Pilot as well?").arg(guiUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */) ==
@@ -166,11 +166,11 @@ CheckUser::~CheckUser()
 			if (guiUserName != pilotUserName)
 			{
 				QString q = i18n("<qt>The handheld thinks that "
-					"the user name is %1, "
-					"however KPilot says you are %2."
+					"the username is %1; "
+					"however, KPilot says you are %2."
 					"Which of these is the correct name?\n"
 					"If you click on Cancel, the sync will proceed, "
-					"but the user names will not be changed.").
+					"but the usernames will not be changed.").
 					arg(pilotUserName).
 					arg(guiUserName);
 

@@ -929,7 +929,7 @@ void KPilotInstaller::componentUpdate()
 	//
 	if (fLogWidget)
 	{
-		fLogWidget->logMessage(i18n("Changed user name to `%1'.")
+		fLogWidget->logMessage(i18n("Changed username to `%1'.")
 			.arg(KPilotSettings::userName()));
 		fManagingWidget->showPage(0);
 		slotAboutToShowComponent(fLogWidget);
