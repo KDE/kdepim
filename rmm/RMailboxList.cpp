@@ -33,13 +33,13 @@
 using namespace RMM;
 
 RMailboxList::RMailboxList()
-    :    RHeaderBody()
+    :   RHeaderBody()
 {
     rmmDebug("ctor");
 }
 
 RMailboxList::RMailboxList(const RMailboxList & list)
-    :    RHeaderBody(list)
+    :   RHeaderBody(list)
 {
     rmmDebug("ctor");
     list_ = list.list_;
@@ -147,12 +147,9 @@ RMailboxList::_assemble()
     strRep_ = "";
     
     for (it = list_.begin(); it != list_.end(); ++it) {
-        
-        if (!firstTime) {
+        if (!firstTime) 
             strRep_ += QCString(",\n    ");
-            firstTime = false;
-        }
-
+        firstTime = false;
         strRep_ += (*it)->asString();
     }
 }

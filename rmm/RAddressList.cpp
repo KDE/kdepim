@@ -138,12 +138,9 @@ RAddressList::_assemble()
     strRep_ = "";
     
     for (it = list_.begin(); it != list_.end(); ++it) {
-        
-        if (!firstTime) {
+        if (!firstTime) 
             strRep_ += QCString(",\n    ");
-            firstTime = false;
-        }
-
+        firstTime = false;
         strRep_ += (*it)->asString();
     }
 }
