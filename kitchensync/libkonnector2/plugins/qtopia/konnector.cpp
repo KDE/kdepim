@@ -104,11 +104,11 @@ QString QtopiaPlugin::metaId()const {
 QIconSet QtopiaPlugin::iconSet()const {
     kdDebug(5225) << "iconSet" << endl;
     QPixmap logo;
-    logo.load( locate("appdata",  "pics/opie.jpg" ) );
+    logo.load( locate( "appdata", "pics/opie.png" ) );
     return QIconSet( logo );
 }
 QString QtopiaPlugin::iconName()const {
-    return QString::fromLatin1("pics/opie.jpg");
+    return QString::fromLatin1("opie.png");
 }
 void QtopiaPlugin::write( Syncee::PtrList lst) {
     kdDebug(5201) << " writing it now " << endl;

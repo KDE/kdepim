@@ -37,7 +37,7 @@ qtopiadatadir = $(kde_datadir)/kitchensync
 qtopiadata_DATA = qtopia.desktop
 
 qtopiapicsdir = $(kde_datadir)/kitchensync/pics
-qtopiapics_DATA = opie.jpg
+qtopiapics_DATA = opie.png
 
 SUBDIRS = . test
 

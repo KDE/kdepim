@@ -44,7 +44,6 @@
 #include <ksync_mainwindow.h>
 #include "ksync_splash.h"
 
-//#include "overviewwidget.h"
 
 static KCmdLineOptions options[] =
 {
@@ -95,8 +94,6 @@ int main(int argc,  char* argv[] )
   KSync::KSyncMainWindow *mainwindow = new KSync::KSyncMainWindow;
   delete splash;
   mainwindow->show();
-//  QWidget *wid = new KitchenSync::OverviewWidget();
-//  wid->show();
   kdDebug(5210) << "exec now " << endl;
   a.exec();
   delete mainwindow;

@@ -1,5 +1,3 @@
-#SUBDIRS = test
-
 lib_LTLIBRARIES= libkonnector.la
 
 INCLUDES = -I$(top_srcdir)/kitchensync/lib $(all_includes)
@@ -16,5 +14,5 @@ servicetype_DATA = konnector.desktop
 servicetypedir = $(kde_servicetypesdir)
 
 METASOURCES = AUTO
-SUBDIRS = .  plugins test
+SUBDIRS = .  plugins
 include_HEADERS = koperations.h kapabilities.h kdevice.h konnector.h konnectorplugin.h idhelper.h

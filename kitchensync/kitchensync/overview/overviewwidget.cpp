@@ -6,6 +6,7 @@
 
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include <error.h>
 #include <progress.h>

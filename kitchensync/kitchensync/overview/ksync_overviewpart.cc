@@ -24,6 +24,7 @@ namespace {
         str << no.code() << " " << no.text();
         return str;
     }
+
     kndbgstream operator <<( kndbgstream str, const Notify& no ) {
         return str;
     }
@@ -105,7 +106,7 @@ void OverviewPart::slotProfileChanged(const Profile& ) {
 }
 void OverviewPart::slotKonnectorChanged(const UDI& udi) {
     KonnectorProfile prof = core()->konnectorProfile();
-    QPixmap pix = DesktopIcon( core()->konnector()->info( prof.udi() ).iconName() );
+    QPixmap pix = DesktopIcon( core()->konnector()->info( prof.udi() ).iconName(), KIcon::User );
     m_widget->setProfile( prof.name(), pix );
     kdDebug(5210) << "Konnector Changed " << udi << endl;
 }
