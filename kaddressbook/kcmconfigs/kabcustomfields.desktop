@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=dlgedit
+Type=Service
+ServiceTypes=KCModule
+DocPath=
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kabcustomfields
+X-KDE-FactoryName=kabcustomfields
+X-KDE-ParentApp=kaddressbook
+X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
+X-KDE-CfgDlgHierarchy=KAB
+
+Name=Custom Pages
+Comment=Configure the Custom Pages
+Keywords=kaddressbook, configure, settings, custom fields

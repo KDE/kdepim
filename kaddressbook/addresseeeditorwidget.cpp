@@ -449,8 +449,13 @@ void AddresseeEditorWidget::setupAdditionalTabs()
 
 void AddresseeEditorWidget::setupCustomFieldsTabs()
 {
+  QStringList activePages = KABPrefs::instance()->mAdvancedCustomFields;
+
   QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
   for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {
+    if ( activePages.find( (*it).mid( (*it).findRev('/') + 1 ) ) == activePages.end() )
+      continue;
+
     ContactEditorTabPage *page = new ContactEditorTabPage( mTabWidget );
     AdvancedCustomFields *wdg = new AdvancedCustomFields( *it, core()->addressBook(), page );
     if ( wdg ) {
