@@ -1,6 +1,7 @@
 /* conduitConfigDialog.cc                KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2004 by Adriaan de Groot
 **
 ** This file defines a .ui-based configuration dialog for conduits.
 */
@@ -51,7 +52,7 @@ static const char *conduitconfigdialog_id =
 #include <kstandarddirs.h>
 #include <klibloader.h>
 #include <kseparator.h>
-#include <kconfigskeleton.h> 
+#include <kconfigskeleton.h>
 
 #include "plugin.h"
 #include "kpilotConfig.h"
@@ -150,12 +151,14 @@ static QHBox *addDescriptionPage(QWidgetStack *parent,
 {
 	QHBox *h = 0L;
 	QVBox *v = new QVBox(parent);
-	QLabel *l = new QLabel(v);
+	QLabel *l = 0L;
 
 	v->setFrameShape(QLabel::Box);
+	v->setMargin(SPACING);
 
+	l = new QLabel(v);
 	l->setText(text);
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+	l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 
 	if (buttons)
 	{
@@ -184,14 +187,14 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	QHBox *btns = 0L;
 
 	// Create the left hand column
-	v = new QVBox( spl );
-	fConduitList = new QListView(v,"ConduitList");
+	// v = new QVBox( spl );
+	fConduitList = new QListView(spl,"ConduitList");
 	fConduitList->addColumn(i18n("Conduit"));
-	v->setStretchFactor(fConduitList, 50);
-	v->setSpacing(50);
-	l = new QLabel(v);    // Just a placekeeper, to fix redraw problems.
-	l->resize(30,30);
-	v->setStretchFactor(l,3);
+	// v->setStretchFactor(fConduitList, 97);
+	// v->setSpacing(50);
+	// l = new QLabel(v);    // Just a placekeeper, to fix redraw problems.
+	// l->resize(30,30);
+	// v->setStretchFactor(l,3);
 
 	// Right hand column
 	fStack = new QWidgetStack(spl,"RightPart");
@@ -270,7 +273,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	FUNCTIONSETUP;
 
 	fConduitList->setSorting(-1);
-	fConduitList->setRootIsDecorated(false);
+	fConduitList->setRootIsDecorated(true);
 	fConduitList->setTreeStepSize(10);
 	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
@@ -342,11 +345,11 @@ void ConduitConfigWidget::fillLists()
 
 	conduits->setOpen(true);
 	actions->setOpen(true);
-	general->setOpen(true);
+	general->setOpen(false);
 
 	// Prevent items from being collapsed by the user.
-	connect(fConduitList,SIGNAL(collapsed(QListViewItem *)),
-		this,SLOT(reopenItem(QListViewItem *)));
+	// connect(fConduitList,SIGNAL(collapsed(QListViewItem *)),
+	//	this,SLOT(reopenItem(QListViewItem *)));
 
 
 	// Create entries under general.
