@@ -40,7 +40,7 @@
 
 </authorgroup>
 
-<date>2001-12-02</date>
+<date>2001-12-12</date>
 <releaseinfo>1.03.70</releaseinfo>
 
 <copyright>
@@ -804,13 +804,14 @@ the remaining filters also be applied, but the default is to stop
 processing at the first matching filter. </para></caution>
 
 <para>Usually, filters are used on incoming messages, but they can
-also be applied to a message or a group of messages. To selectively
-filter messages, select the messages you want to filter and type
-<keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo> or select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Apply
-Filters</guimenuitem></menuchoice>. This will apply all your filters
-to those messages; there is no way to apply only certain filters to
-messages, except for incoming and outgoing messages.</para>
+also be applied to sent messages or to an arbitrary message or group
+of messages. To selectively filter messages, select the messages you
+want to filter in the message list and type <keycombo
+action="simul">&Ctrl;<keycap>J</keycap> </keycombo> or select
+<menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
+Filters</guimenuitem></menuchoice>. This will apply all filters that
+have been marked for manual filtering in the <link
+linkend="filter-dialog">filter dialog</link> to those messages.</para>
 
 <sect2 id="filter-quick">
 <title>Fast Filter Creation</title>
@@ -825,16 +826,18 @@ should be moved to. But you can, of course, edit the filter as you
 like.</para>
 
 <para>The interesting thing about this method is that creating a
-filter on mailing lists will try really hard to find a header that
+filter on mailing lists will try really hard to find a criterion that
 uniquely identifies mails from that list. If it succeeds, the guessed
 name of the list is presented in the
 <menuchoice><guimenu>Message</guimenu><guisubmenu>Create
 Filter</guisubmenu><guimenuitem>Filter on
 Mailing-List...</guimenuitem></menuchoice> menu entry.</para>
 
+<!-- This is now done automatically
 <tip><para>In most cases this works very well, yet sometimes you
 should delete parts of the header contents that are likely to change
 again. Usually, just keeping the list address works best.</para></tip>
+-->
 
 <para>The second method is to manually construct a filter from scratch
 by calling the filter dialog through
@@ -863,9 +866,9 @@ Rules...</guimenuitem></menuchoice>.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Available Filters</guilabel></term>
-<listitem><para>This group contains the list of filters and action
+<listitem><para>This group contains the list of filters and some action
 buttons to modify the filters, namely to create new filters, to move
-them up or down the list, or to delete and rename them. If you select
+them up or down the list, or to delete or rename them. If you select
 a filter from the list, its properties are shown in the right-hand half
 of the dialog.</para></listitem>
 </varlistentry>
@@ -886,10 +889,9 @@ all but two rules from screen and resets those two.</para>
 <para>Invalid or empty rules are not evaluated. In fact, they are
 removed internally. Whether a given rule is considered invalid depends
 on the type of rule, but as a rule of thumb you can assume that rules
-are considered invalid if the domain (the first combobox in
-each row) or the search string (the line edit at the end of each row)
-is empty. Thus, to effectively delete a particular rule, you only
-need to empty one of those two edit fields.</para></listitem>
+are considered invalid if any one of the two edit fields is
+empty. Thus, to effectively delete a particular rule, you only need to
+clear one of those two edit fields.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Filter Actions</guilabel></term> <listitem><para>In
@@ -911,21 +913,23 @@ that actions are considered empty if no type is selected or - in case
 of actions that need a textual parameter (&ie; one which must be
 entered into a line edit) - the parameter is empty. Thus, to
 effectively delete a particular action, you only need to unset its
-type, &ie; select the last (empty) item in the type combo
-box.</para></listitem>
+type, &ie; select the last (empty) item in the type drop-down
+list.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Advanced options</guilabel></term><listitem><para> In
-this group you can define a few advanced options for filters, that
-allow you to refine your filtering.</para> <para>Using the combo box,
-you can toggle the applicability of the corresponding filter: The
-<guilabel>incoming</guilabel> choice shows that it may be considered
-for incoming mails (&ie; on <guimenuitem>Check Mail</guimenuitem>),
-while the <guilabel>outgoing</guilabel> choice shows the same for
-outgoing mails (&ie; on <guimenuitem>Send</guimenuitem>).</para>
-<note><para>Note that it is currently not possible to define a filter
-that is not considered for manual filtering. This is a known
-limitation. </para></note></listitem>
+this group you can define a few advanced options for filters that
+allow you to refine your filtering.</para> <para>Using the first row
+of check boxes, you can toggle the applicability of the corresponding
+filter: The <guilabel>incoming messages</guilabel> check shows whether
+it may be considered for incoming mails (&ie; on <guimenuitem>Check
+Mail</guimenuitem>). The <guilabel>sent messages</guilabel> check
+shows the same for sent mails (&ie; <emphasis>after</emphasis>
+<guimenuitem>Send</guimenuitem>) and the <guilabel>manual
+filtering</guilabel> check controls whether to apply this filter when
+filtering manually (&ie; via <menuchoice><guimenu>Message</guimenu>
+<guimenuitem>Apply filters</guimenuitem></menuchoice>).</para>
+</listitem>
 </varlistentry>
 </variablelist>
 
@@ -964,9 +968,9 @@ and action list respectively, before the filter is saved.</para>
 
 <para>The most common use of filters is to filter on the sender of
 messages. This can be done by choosing <guilabel>From</guilabel>. A
-good bet for a mailing list would be <guilabel>&lt;To or
-Cc&gt;</guilabel>. But there are other criteria a filter can search
-for:</para>
+good bet for a mailing list would be
+<guilabel>&lt;recipients&gt;</guilabel>. But there are other criteria
+a filter can search for:</para>
 
 <variablelist>
 <varlistentry>
@@ -989,7 +993,7 @@ if any).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>&lt;To or Cc&gt;</guilabel></term>
+<term><guilabel>&lt;recipients&gt;</guilabel></term>
 <listitem>
 <para>Searches the <quote>To</quote> and <quote>Cc</quote> header fields of the message.</para>
 </listitem>
@@ -1007,9 +1011,9 @@ if any).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term>Any other string</term>
+<term>Any other name</term>
 <listitem>
-<para>Searches the header field that is given by that string.</para>
+<para>Searches the header field that is given by that name.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1092,12 +1096,13 @@ spam.</para></caution>
 <term><guilabel>confirm delivery</guilabel></term>
 <listitem><para>Will try to return a message to the sender that
 indicates successful delivery of his or her message.</para> <para>This
-action allows you to select who will get
-delivery receipts from you. Though you can enable the sending of
-delivery confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog (section
-<guilabel>Security</guilabel>) we recommended to not send them to
-everyone, since this makes tracking of such things as spam very easy for
-the sender.</para>
+action allows you to select who will get delivery receipts from
+you. Though you can globally enable the sending of delivery
+confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog
+(<link
+linkend="configure-security-general"><guilabel>Security</guilabel>
+page</link>) we recommended to not send them to everyone, since this
+makes tracking of such things as spam very easy for the sender.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1219,7 +1224,7 @@ filter. It will appear as <guilabel>&lt;unnamed&gt;</guilabel>.</para>
 </step>
 <step>
 <para>In the <guilabel> Filter Criteria</guilabel> area, select
-<guilabel>&lt;To: or Cc:&gt;</guilabel> from the first pull-down menu,
+<guilabel>&lt;recipients&gt;</guilabel> from the first pull-down menu,
 <guilabel>contains</guilabel> from the second pull-down menu, and type
 <userinput>kde@lists.netcentral.net</userinput> in the text
 field.</para>
