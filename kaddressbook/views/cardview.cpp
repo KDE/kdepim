@@ -730,7 +730,8 @@ QRect CardView::itemRect(const CardViewItem *item)
 
 void CardView::ensureItemVisible(const CardViewItem *item)
 {
-  ensureVisible(item->d->x, item->d->y, d->mItemWidth, item->height());
+  ensureVisible(item->d->x                , item->d->y, d->mItemSpacing, 0);
+  ensureVisible(item->d->x + d->mItemWidth, item->d->y, d->mItemSpacing, 0);
 }
 
 void CardView::repaintItem(const CardViewItem *item)
@@ -1496,7 +1497,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
 void CardView::contentsWheelEvent( QWheelEvent * e )
 {
-  scrollBy(e->delta()/-2, 0);
+  scrollBy(2*e->delta()/-3, 0);
 }
 
 void CardView::setLayoutDirty(bool dirty)
