@@ -16,6 +16,7 @@
 * is it "message", "mail" or "email" ??? 
 * what is section / tab / ... ?
 * better markup instead of 'quote'
+* "authentication" or "authentification"
 -->
 
 <authorgroup>
@@ -39,7 +40,7 @@
 
 </authorgroup>
 
-<date>2001-07-21</date>
+<date>2001-07-22</date>
 <releaseinfo>1.03.00</releaseinfo>
 
 <copyright>
@@ -171,7 +172,7 @@ box.</para>
 <para>If you add a new identity, an <guilabel>Add
 Transport...</guilabel> button will appear (this button does not exist
 for the <guilabel>Default</guilabel> identity). It allows you to
-configure a way of sending messages for a specific identitiy, &eg; you
+configure a way of sending messages for a specific identity, &eg; you
 might want to use a different <acronym>SMTP</acronym> server for one
 of your identities.</para>
 
@@ -330,17 +331,17 @@ encrypt your password, so people who can access your configuration files (&eg;
 system administrators) can easily get your password if you select this option.</para></warning>
 
 <para>&kmail; supports encryption via <guilabel>SSL</guilabel> 
-and <guilabel>TLS</guilabel>.</para> 
-<!-- fixme: what's that?? -->
+and <guilabel>TLS</guilabel> (<guilabel>TLS</guilabel> should be preferred
+if it is available).</para> 
 
 <para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>, 
 <guilabel>PLAIN</guilabel>, <guilabel>CRAM-MD5</guilabel> and
-<guilabel>APOP</guilabel> authentificaton. 
+<guilabel>APOP</guilabel> authentication. 
 <guilabel>APOP</guilabel> and <guilabel>CRAM-MD5</guilabel> are secure 
 on their own, all the other options are only secure when used together
 with <guilabel>SSL</guilabel> or <guilabel>TLS</guilabel>.
 You should only use <guilabel>Clear text</guilabel> if your server doesn't support any 
-of the other authentification methods. Additionally, for IMAP
+of the other authentication methods. Additionally, for IMAP
 <guilabel>Anonymous</guilabel> is supported.</para>
 
 <para>You are now ready to send and receive mail! For IMAP,
@@ -527,7 +528,7 @@ has not yet been read.</entry>
 <row>
 <entry><guimenuitem>Queued</guimenuitem></entry>
 <entry>Envelope</entry>
-<entry>The mesage has been queued in the outbox to be sent later.</entry>
+<entry>The message has been queued in the outbox to be sent later.</entry>
 </row>
 <row>
 <entry><guimenuitem>Sent</guimenuitem></entry>
@@ -572,7 +573,7 @@ select addresses from there.</para>
 <para>When you start typing an address in the
 <guilabel>To:</guilabel>/<guilabel>Cc:</guilabel>/<guilabel>Bcc:</guilabel>
 fields, a popup will appear that offers matching addresses that have been used recently 
-and matching adresses from your address book. <!-- fixme: will hopefully be fixed: -->
+and matching addresses from your address book. <!-- fixme: will hopefully be fixed: -->
 Note that this auto-completion is case-sensitive, so if you type <guilabel>john</guilabel>, 
 <guilabel>John Doe &lt;doe@acme.com&gt;</guilabel> will not show
 up automatically. If you don't like the automatic popup you can disable it by clicking
@@ -940,7 +941,7 @@ filters are actually copied to the internal filter manager.</para>
 <listitem><para>the action list is empty.</para></listitem>
 </orderedlist>
 
-<para>Simlilarly, empty rules and actions are removed from the pattern
+<para>Similarly, empty rules and actions are removed from the pattern
 and action list respectively, before the filter is saved.</para>
 </note>
 
@@ -1115,12 +1116,12 @@ there are no other headers with that name in the message.</para>
 <para>Will scan the given header field, modify its contents and write
 it back. The search string is always interpreted as a case-sensitive
 regular expression. The replacement string is inserted literally
-except for occurences of <userinput>\n</userinput>,
+except for occurrences of <userinput>\n</userinput>,
 <userinput>$n</userinput> and <userinput>${nn}</userinput>, where
 <userinput>n</userinput> is a positive (single-digit, except for the
 third form) number or <userinput>0</userinput>. These constructs are
-interpreted as backreferences to substrings captured with parantheses
-in the search string.</para><para>Analogous restictions as in the
+interpreted as backreferences to substrings captured with parentheses
+in the search string.</para><para>Analogous restrictions as in the
 <guilabel>add header</guilabel> action apply here, too.</para>
 </listitem>
 </varlistentry>
@@ -1543,14 +1544,24 @@ quoted more than three times will appear in color.</para>
 <sect2 id="appearance-tab-layout">
 <title>Layout</title>
 
-<para>This section lets you toggle the long folder list on and off.  The long
-folder list lists folders all the way down the left side of the &kmail; window,
-which lets you see more folders than in the default view, but it takes away some
-space for viewing the text of the messages. With <guilabel>Display message
+<para><guilabel>Show long folder list</guilabel> lets you toggle the long folder 
+list on and off.  The long folder list shows folders all the way down the left 
+side of the &kmail; main window, which lets you see more folders than in the short view, 
+but it takes away some space for viewing the text of the messages. With <guilabel>Display message
 sizes</guilabel> selected there will be another column in the Header pane that
 shows the messages' size in bytes. <guilabel>Thread list of message
 headers</guilabel> will put all the messages in a kind of tree, so the replies
 to a message are below that message.</para>
+
+<para>With <guilabel>Message header threading options</guilabel> you can select
+under which conditions threads should appear open by default (&ie; not
+collapsed). You can still open/close threads using the 
+<guilabel>+</guilabel>/<guilabel>-</guilabel> buttons if you don't disable
+that here.</para>
+
+<para>With <guilabel>Display of Date</guilabel> you can choose between several
+date formats. The <guilabel>Localized Format</guilabel> is the one you can
+specify in &kcontrol;.</para>
 
 </sect2>
 
@@ -1586,7 +1597,7 @@ use the same database.</para>
 If at least one rule is defined for a folder, a <guilabel>Score</guilabel>
 column will appear in the Headers pane of that folder. Each rule has a
 name, a list of folders where it is active, one or more conditions that
-decide wheter the rule matches a message, and one or more actions that get
+decide whether the rule matches a message, and one or more actions that get
 triggered if a condition is matched. This concept is very similar to that
 of <link linkend="filters">filters</link>.</para>
 
@@ -1618,8 +1629,11 @@ values. These are shown at the top of the <guilabel>Phrases</guilabel> section:
 <symbol>%D</symbol> to insert the date, <symbol>%S</symbol> to insert the
 subject, <symbol>%F</symbol> to insert the sender, <symbol>%%</symbol> to insert
 a percent sign, <symbol>%_</symbol> to insert a space, and <symbol>%L</symbol> 
-to insert a line break.
-The <guilabel>Indentation</guilabel> field contains the character that will denote
+to insert a line break. You can add reply phrases in languages other than
+your default &kde; language using the <guilabel>Language</guilabel> button.
+This will only work for languages whose i18n package you have installed.</para>
+
+<para>The <guilabel>Indentation</guilabel> field contains the character that will denote
 quoted text (you will probably want to use the default).</para>
 
 <para><guilabel>Automatically append signature</guilabel> lets you toggle
@@ -1805,7 +1819,7 @@ removed.</para>
 <guilabel>trash</guilabel> folder (and only get deleted if they are already in the
 <guilabel>trash</guilabel> folder).  So although you normally won't lose any
 mail, you can still activate a confirmation dialog that will ask you if you
-really want to emtpy the folder.</para>
+really want to empty the folder.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1836,7 +1850,7 @@ linkend="receiving-mail">Incoming Mail</link>.</para>
 <chapter id="menus">
 <title>Menus and Keyboard Shortcuts</title>
 
-<para>Each menu item is discussed below. When there is a keyboard shorcut that
+<para>Each menu item is discussed below. When there is a keyboard shortcut that
 performs a menu item function, it is listed with the menu item.</para>
 
 <sect1 id="main-mail-reader-window">
@@ -3541,8 +3555,8 @@ and the mailing list address will be set to the <guilabel>To:</guilabel> field.
 </qandaentry>
 
 <qandaentry>
-<question><para>My SMTP server requires authentification. Does &kmail; support it?</para></question>
-<answer><para>There are two common techniques used for SMTP authentification:
+<question><para>My SMTP server requires authentication. Does &kmail; support it?</para></question>
+<answer><para>There are two common techniques used for SMTP authentication:
 <quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
 <quote>SMTP Auth</quote> is currently not supported.<!-- fixme? -->
 To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
@@ -3678,7 +3692,7 @@ user@host</option></userinput></para>
 <para>Modify your &kmail; configuration to fetch the mail via
 <acronym>POP3</acronym> from <userinput>localhost</userinput> and ssh will tunnel
 the connection for you. You need to be root to execute this
-command. Alternatively, change the first port number, &ie; the first occurence
+command. Alternatively, change the first port number, &ie; the first occurrence
 of <userinput>110</userinput>, to something above 1024 and configure &kmail; to
 use that port. <note><para>If non-encrypted mails have already been sent
 via internet, the only advantage of using <application>ssh</application> is
