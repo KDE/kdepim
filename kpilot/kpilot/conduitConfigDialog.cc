@@ -114,8 +114,8 @@ ConduitTip::~ConduitTip()
 }
 
 
-ConduitConfigDialog::ConduitConfigDialog(QWidget * w, const char *n,
-	bool m) : UIDialog(w, n, m)
+ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
+	bool m) : UIDialog(_w, n, m)
 {
 	FUNCTIONSETUP;
 
@@ -420,6 +420,9 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 // $Log$
+// Revision 1.5  2001/12/31 09:26:15  adridg
+// Removed support for old-style Exec= conduits
+//
 // Revision 1.4  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //
