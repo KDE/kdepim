@@ -41,6 +41,7 @@
 #include "certificateinfowidgetimpl.h"
 #include "crlview.h"
 #include "customactions.h"
+#include "hierarchyanalyser.h"
 #include "storedtransferjob.h"
 #include "conf/configuredialog.h"
 
@@ -163,6 +164,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   : KMainWindow( parent, name ),
     mCrlView( 0 ),
     mDirmngrProc( 0 ),
+    mHierarchyAnalyser( 0 ),
     mLineEditAction( 0 ),
     mComboAction( 0 ),
     mFindAction( 0 ),
@@ -922,6 +924,14 @@ static void showDeleteError( QWidget * parent, const GpgME::Error & err ) {
   KMessageBox::error( parent, msg, i18n("Certificate Deletion Failed") );
 }
 
+static bool ByFingerprint( const GpgME::Key & left, const GpgME::Key & right ) {
+  return qstricmp( left.primaryFingerprint(), right.primaryFingerprint() ) < 0 ;
+}
+
+static bool WithRespectToFingerprints( const GpgME::Key & left, const GpgME::Key & right ) {
+  return qstricmp( left.primaryFingerprint(), right.primaryFingerprint() ) == 0;
+}
+
 void CertManager::slotDeleteCertificate() {
   mItemsToDelete = mKeyListView->selectedItems();
   if ( mItemsToDelete.isEmpty() )
@@ -937,13 +947,61 @@ void CertManager::slotDeleteCertificate() {
   if ( keys.empty() )
     return;
 
-  if ( KMessageBox::warningContinueCancelList(
-         this,
-         i18n( "Do you really want to delete this certificate?", "Do you really want to delete these %n certificates?", keyDisplayNames.count()),
-         keyDisplayNames,
-         i18n( "Delete Certificates" ),
-         KGuiItem( i18n( "Delete" ), "editdelete" ),
-         "ConfirmDeleteCert", KMessageBox::Dangerous ) != KMessageBox::Continue )
+  if ( !mHierarchyAnalyser ) {
+    mHierarchyAnalyser = new HierarchyAnalyser( this, "mHierarchyAnalyser" );
+    Kleo::KeyListJob * job = Kleo::CryptPlugFactory::instance()->smime()->keyListJob();
+    assert( job );
+    connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+	     mHierarchyAnalyser, SLOT(slotNextKey(const GpgME::Key&)) );
+    connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
+	     this, SLOT(slotDeleteCertificate()) );
+    connectJobToStatusBarProgress( job, i18n("Checking key dependencies...") );
+    if ( const GpgME::Error error = job->start( QStringList() ) ) {
+      showKeyListError( this, error );
+      delete mHierarchyAnalyser; mHierarchyAnalyser = 0;
+    }
+    return;
+  } else
+    disconnectJobFromStatusBarProgress( 0 );
+
+  std::vector<GpgME::Key> keysToDelete = keys;
+  for ( std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it )
+    if ( !it->isNull() ) {
+      const std::vector<GpgME::Key> subjects
+	= mHierarchyAnalyser->subjectsForIssuerRecursive( it->subkey(0).fingerprint() );
+      keysToDelete.insert( keysToDelete.end(), subjects.begin(), subjects.end() );
+    }
+
+  std::sort( keysToDelete.begin(), keysToDelete.end(), ByFingerprint );
+  keysToDelete.erase( std::unique( keysToDelete.begin(), keysToDelete.end(),
+				   WithRespectToFingerprints ),
+		      keysToDelete.end() );
+
+  delete mHierarchyAnalyser; mHierarchyAnalyser = 0;
+
+  if ( keysToDelete.size() > keys.size() )
+    if ( KMessageBox::warningContinueCancel( this,
+					     i18n("Some or all of the selected "
+						  "certificates are issuers (CA certificates) "
+						  "for other, non-selected certificates.\n"
+						  "Deleting a CA certificate will also delete "
+						  "all certificates issued by it.\n"),
+					     i18n("Deleting CA Certificates") )
+	 != KMessageBox::Continue )
+      return;
+
+  const QString msg = keysToDelete.size() > keys.size()
+    ? i18n("Do you really want to delete this certificate and the %1 certificates it certified?",
+	   "Do you really want to delete these %n certificates and the %1 certificates they certified?",
+	   keys.size() ).arg( keysToDelete.size() - keys.size() )
+    : i18n("Do you really want to delete this certificate?",
+	   "Do you really want to delted these $n certificates?", keys.size() ) ;
+
+  if ( KMessageBox::warningContinueCancelList( this, msg, keyDisplayNames,
+					       i18n( "Delete Certificates" ),
+					       KGuiItem( i18n( "Delete" ), "editdelete" ),
+					       "ConfirmDeleteCert", KMessageBox::Dangerous )
+       != KMessageBox::Continue )
     return;
 
   if ( Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob() )

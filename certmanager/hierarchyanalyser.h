@@ -50,8 +50,8 @@ public:
   const std::vector<GpgME::Key> & rootItems() const {
     return subjectsForIssuer( 0 );
   }
-  const std::vector<GpgME::Key> & subjectsForIssuer( const char * issuer_dn ) const;
-  std::vector<GpgME::Key> subjectsForIssuerRecursive( const char * issuer_dn ) const;
+  const std::vector<GpgME::Key> & subjectsForIssuer( const char * issuer_fpr ) const;
+  std::vector<GpgME::Key> subjectsForIssuerRecursive( const char * issuer_fpr ) const;
 
   void clear() { mSubjectsByIssuer.clear(); }
 

@@ -59,6 +59,7 @@ class KToolBar;
 class KAction;
 
 class CRLView;
+class HierarchyAnalyser;
 
 class LineEditAction;
 class ComboAction;
@@ -178,6 +179,7 @@ private:
     KURL::List mURLsToImport;
     typedef QMap<const Kleo::Job *, QString> JobsDisplayNameMap;
     JobsDisplayNameMap mJobsDisplayNameMap;
+    HierarchyAnalyser * mHierarchyAnalyser;
 
     LineEditAction * mLineEditAction;
     ComboAction * mComboAction;
