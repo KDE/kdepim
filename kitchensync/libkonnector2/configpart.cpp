@@ -193,7 +193,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_lblPort->setBuddy( m_conPort );
     m_conLayout->addWidget( m_lblPort,  3,  0 );
     m_conLayout->addWidget( m_conPort,  3,  1 );
-    QArray<int> ints = kaps.ports();
+    QMemArray<int> ints = kaps.ports();
     if ( ints.isEmpty() ) {
         m_lblPort->setEnabled( false );
         m_conPort->setEnabled( false );

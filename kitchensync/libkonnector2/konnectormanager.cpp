@@ -48,7 +48,7 @@ Device::ValueList KonnectorManager::query(  ) {
 }
 UDI KonnectorManager::load( const Device& dev ) {
     KonnectorPlugin* plugin = KParts::ComponentFactory::
-                              createInstanceFromLibrary<KonnectorPlugin>( dev.library(),
+                              createInstanceFromLibrary<KonnectorPlugin>( dev.library().local8Bit(),
                                                                           this );
     if (!plugin)
         return QString::null;

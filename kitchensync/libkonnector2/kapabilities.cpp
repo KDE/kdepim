@@ -99,11 +99,11 @@ void Kapabilities::setSupportsListDir(bool listDir)
 {
   m_listdir = listDir;
 }
-QArray<int> Kapabilities::ports()const
+QMemArray<int> Kapabilities::ports()const
 {
   return m_ports;
 }
-void Kapabilities::setPorts(const QArray<int> & ports)
+void Kapabilities::setPorts(const QMemArray<int> & ports)
 {
   m_ports = ports;
 }
