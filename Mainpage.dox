@@ -1,0 +1,27 @@
+/** \mainpage The KDE-PIM API Reference
+
+This section contains the KDE online class reference for the current development version of KDE-PIM.
+
+- <a href="calendarsystem/html"><b>calendarsystem</b></a> (<a href="calendarsystem/html/classes.html">classes</a>)
+- <a href="kabc/html"><b>kabc</b></a> (<a href="kabc/html/classes.html">classes</a>)
+- <a href="kaddressbook/html"><b>kaddressbook</b></a> (<a href="kaddressbook/html/classes.html">classes</a>)
+- <a href="kalarm/html"><b>kalarm</b></a> (<a href="kalarm/html/classes.html">classes</a>)
+- <a href="kalarmd/html"><b>kalarmd</b></a> (<a href="kalarmd/html/classes.html">classes</a>)
+- <a href="kandy/html"><b>kandy</b></a> (<a href="kandy/html/classes.html">classes</a>)
+- <a href="kaplan/html"><b>kaplan</b></a> (<a href="kaplan/html/classes.html">classes</a>)
+- <a href="karm/html"><b>karm</b></a> (<a href="karm/html/classes.html">classes</a>)
+- <a href="kfile-plugins/html"><b>kfile-plugins</b></a> (<a href="kfile-plugins/html/classes.html">classes</a>)
+- <a href="kgantt/html"><b>kgantt</b></a> (<a href="kgantt/html/classes.html">classes</a>)
+- <a href="kitchensync/html"><b>kitchensync</b></a> (<a href="kitchensync/html/classes.html">classes</a>)
+- <a href="knotes/html"><b>knotes</b></a> (<a href="knotes/html/classes.html">classes</a>)
+- <a href="konsolekalendar/html"><b>konsolekalendar</b></a> (<a href="konsolekalendar/html/classes.html">classes</a>)
+- <a href="korganizer/html"><b>korganizer</b></a> (<a href="korganizer/html/classes.html">classes</a>)
+- <a href="kpilot/html"><b>kpilot</b></a> (<a href="kpilot/html/classes.html">classes</a>)
+- <a href="ksync/html"><b>ksync</b></a> (<a href="ksync/html/classes.html">classes</a>)
+- <a href="libkcal/html"><b>libkcal</b></a> (<a href="libkcal/html/classes.html">classes</a>)
+- <a href="libkdepim/html"><b>libkdepim</b></a> (<a href="libkdepim/html/classes.html">classes</a>)
+- <a href="libkpimexchange/html"><b>libkpimexchange</b></a> (<a href="libkpimexchange/html/classes.html">classes</a>)
+
+More information can be found at <a href="http://kdepim.kde.org/index.php">the kde pim web site.</a>
+
+*/

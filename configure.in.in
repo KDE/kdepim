@@ -6,3 +6,4 @@ AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.
 AC_CONFIG_SUBDIRS(libical)
 KDE_NEED_FLEX
 
+KDE_INIT_DOXYGEN([The KDE-PIM API Reference], [Version $VERSION])
