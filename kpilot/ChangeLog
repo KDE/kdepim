@@ -2,7 +2,16 @@ KPilot Developer's notes for april 22nd 2001
 ===========================================
 
 * Martin Junius has contributed an XML GUI framework for KPilot, so
-  it now finally uses the "modern" way of doing GUIs. [14-4]
+  it now finally uses the "modern" way of doing GUIs. This *does*
+  mean it's time for yet-another set of screenshots for the docs
+  and yet-another set of menus for users to get used to. [14-4]
+* Disposed of reported bug: bad category selection. [15-4]
+* Moved the todo-conduit into the vcalconduit directory. This makes
+  building much simpler. [15-4]
+* Fixed up more #include shenanigans for --enable-final. (Don't 
+  forget the #ifndef conventions from HOWTO-CODE.txt!) KPilot now
+  builds without warnings with --enable-final --disable-debug. [15-4]
+  
 
 KPilot Developer's notes for april 8th 2001
 ===========================================
