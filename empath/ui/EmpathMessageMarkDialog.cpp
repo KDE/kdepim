@@ -79,8 +79,8 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
     
     QWhatsThis::add(rb_read_, i18n(
             "Marking messages as read is useful when\n"
-            "you know you're not interested in some messages\n"
-            "and don't want to read them. They'll henceforth\n"
+            "you know you are not interested in some messages\n"
+            "and don't want to read them. They will henceforth\n"
             "be treated just the same as those you really have\n"
             "read."));
 
@@ -92,7 +92,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("On"), this, "rb_on");
     
     QWhatsThis::add(rb_on_, i18n(
-            "If you select this then every selected message\n"
+            "If you select this, every selected message\n"
             "will have its state switched on. For example,\n"
             "if you select 'Tag' and 'On' then untagged messages\n"
             "will become tagged."));
@@ -101,7 +101,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Off"), this, "rb_off");
     
     QWhatsThis::add(rb_off_, i18n(
-            "If you select this then every selected message\n"
+            "If you select this, every selected message\n"
             "will have its state switched off. For example,\n"
             "if you select 'Tag' and 'Off' then tagged messages\n"
             "will become untagged."));
@@ -110,7 +110,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         new QRadioButton(i18n("Toggle"), this, "rb_toggle");
     
     QWhatsThis::add(rb_toggle_, i18n(
-            "If you select this then every selected message\n"
+            "If you select this, every selected message\n"
             "will have its state toggled. For example, if you\n"
             "select 'Tag' and 'Toggle' then tagged messages\n"
             "will be untagged, and vice versa."));
