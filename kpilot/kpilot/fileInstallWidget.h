@@ -24,7 +24,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -32,19 +32,15 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
-#endif
 
 class QMultiLineEdit;
 class QPushButton;
 class QIconDragItem;
 
 class KIconView;
-
 class KPilotInstaller;
 class FileInstaller;
-
 
 class FileInstallWidget : public PilotComponent
 {
@@ -69,6 +65,7 @@ protected:
 
 	/* virtual */ void dragEnterEvent(QDragEnterEvent* event);
 	/* virtual */ void dropEvent(QDropEvent* drop);
+	/* virtual */ bool eventFilter (QObject *watched, QEvent *event );
 
 	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
@@ -89,7 +86,5 @@ protected slots:
 public slots:
 	void refreshFileInstallList();
 };
-
-
 
 #endif

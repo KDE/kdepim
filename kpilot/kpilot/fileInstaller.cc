@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -61,6 +61,8 @@ static const char *fileinstaller_id =
 #ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
 #endif
+
+#include <kmessagebox.h>
 
 #include "fileInstaller.moc"
 
@@ -107,6 +109,12 @@ void FileInstaller::clearPending()
 {
 	FUNCTIONSETUP;
 
+	if(!(s.endsWith("pdb", false) || s.endsWith("prc", false))) {
+		KMessageBox::detailedSorry(w, i18n("Can not install %1").arg(s),
+			i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
+		return false;
+	}
+
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Copying " << s << endl;
 #endif
@@ -127,7 +135,7 @@ void FileInstaller::addFiles(const QStringList & fileList, QWidget* w)
 	FUNCTIONSETUP;
 
 	if (!enabled) return;
-	
+
 	unsigned int succ = 0;
 
 	for(QStringList::ConstIterator it = fileList.begin();
@@ -148,7 +156,7 @@ void FileInstaller::addFile( const QString & file, QWidget* w )
 	FUNCTIONSETUP;
 
 	if (!enabled) return;
-	
+
 	if (runCopy(file, w))
 	{
 		emit(filesChanged());

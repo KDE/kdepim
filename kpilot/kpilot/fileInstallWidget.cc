@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -51,6 +51,7 @@ static const char *fileinstallwidget_id =
 #include <kiconloader.h>
 #include <kiconview.h>
 #include <kglobal.h>
+#include <kurl.h>
 
 #include "kpilotConfig.h"
 #include "fileInstaller.h"
@@ -58,7 +59,7 @@ static const char *fileinstallwidget_id =
 
 #include "fileInstallWidget.moc"
 
-FileInstallWidget::FileInstallWidget(QWidget * parent, 
+FileInstallWidget::FileInstallWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_files", path),
 	fSaveFileList(false),
@@ -73,7 +74,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	grid->addWidget(label, 1, 1);
 
 	QPushButton *abutton;
-	 
+
 	 abutton = clearButton= new QPushButton(i18n("Clear List"), this);
 
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
@@ -86,8 +87,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 4, 1);
 	QWhatsThis::add(abutton,
-		i18n
-		("<qt>Choose a file to add to the list of files to install.</qt>"));
+		i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
 
 	fIconView = new KIconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
@@ -96,6 +96,8 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	QWhatsThis::add(fIconView,
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
+	fIconView->setAcceptDrops(true);
+	fIconView->viewport()->installEventFilter(this);
 
 	grid->setRowStretch(2, 100);
 	grid->setColStretch(2, 50);
@@ -107,8 +109,6 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	connect(fInstaller, SIGNAL(filesChanged()),
 		this, SLOT(refreshFileInstallList()));
 
-	setAcceptDrops(true);
-
 	(void) fileinstallwidget_id;
 }
 
@@ -117,12 +117,44 @@ FileInstallWidget::~FileInstallWidget()
 	KPILOT_DELETE(fInstaller);
 }
 
-void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
+void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 {
 	FUNCTIONSETUP;
-	event->accept(KURLDrag::canDecode(event));
+
+	KURL::List urls;
+	if(!KURLDrag::decode(event, urls)) {
+		event->accept(false);
+		return;
+	}
+
+	KURL::List::const_iterator it;
+	QString filename;
+    for ( it = urls.begin(); it != urls.end(); ++it ) {
+		filename = (*it).fileName();
+		if(!(filename.endsWith("pdb", FALSE) || filename.endsWith("prc", FALSE))) {
+			event->accept(false);
+			return;
+		}
+	}
+	event->accept(true);
 }
 
+bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
+{
+	FUNCTIONSETUP;
+
+	if((watched == fIconView->viewport()) && (event->type() == QEvent::DragEnter)) {
+		dragEnterEvent(static_cast<QDragEnterEvent*>(event));
+		return true;
+	}
+	// We have to skip the DragMove event, because it seems to override the accept state,
+	// when it is set to false by dragEnterEvent() (event->accept(false);)
+	if((watched == fIconView->viewport()) && (event->type() == QEvent::DragMove)) {
+		return true;
+	}
+
+	return false;
+}
 
 void FileInstallWidget::dropEvent(QDropEvent * drop)
 {
@@ -133,7 +165,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 
 	if (!KURLDrag::decode(drop, list) || list.isEmpty())
 		return;
-	
+
 #ifdef DEBUG
 	DEBUGKPILOT << ": Got " << list.first().prettyURL() << endl;
 #endif
@@ -171,7 +203,8 @@ void FileInstallWidget::slotAddFile()
 	FUNCTIONSETUP;
 	if (!shown) return;
 
-	QStringList fileNames = KFileDialog::getOpenFileNames();
+	QStringList fileNames = KFileDialog::getOpenFileNames(
+		QString::null, i18n("*.pdb *.prc|PalmOS Databases (*.pdb *.prc)"));
 
 	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
@@ -187,7 +220,7 @@ bool FileInstallWidget::preHotSync(QString &)
 	fInstaller->setEnabled(false);
 	addButton->setEnabled(false);
 	clearButton->setEnabled(false);
-	
+
 	return true;
 }
 
@@ -224,5 +257,4 @@ void FileInstallWidget::refreshFileInstallList()
 		}
 	}
 }
-
 
