@@ -289,6 +289,8 @@ void Incidence::setRelatedTo(Incidence *relatedTo)
     mRelatedTo->addRelation(this);
     if ( mRelatedTo->uid() != mRelatedToUid )
       setRelatedToUid( mRelatedTo->uid() );
+  } else {
+    setRelatedToUid( QString::null );
   }
 }
 
