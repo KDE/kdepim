@@ -272,7 +272,8 @@ but in the software that sent the mail.</para></answer>
 <answer>
 <para>
 Separating the signature from the message body with two dashes and a space
-on a single line is common usage. If your signature does not already have 
+on a single line is common usage. These symbols permit mail clients who recognize 
+them to trim the signatures from a reply. If your signature does not already have 
 this separator, &kmail; will automatically add it.</para>
 </answer>
 </qandaentry>
