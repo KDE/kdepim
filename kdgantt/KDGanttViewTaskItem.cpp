@@ -191,6 +191,8 @@ void KDGanttViewTaskItem::hideMe()
     startShape->hide();
     progressShape->hide();
     textCanvas->hide();
+    floatStartShape->hide();
+    floatEndShape->hide();
 }
 
 
@@ -209,6 +211,10 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
   startShape->setZ( prio );
   progressShape->setZ(startShape->z()+0.002); // less than textCanvas
   progressShape->hide();
+  floatStartShape->setZ(startShape->z()+0.003); // less than textCanvas
+  floatStartShape->hide();
+  floatEndShape->setZ(startShape->z()+0.003); // less than textCanvas
+  floatEndShape->hide();
   textCanvas->setZ( prio + 0.005 );
   if ( displaySubitemsAsGroup() && !parent() && !isOpen() ) {
     hideMe();
@@ -286,6 +292,40 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     progtemp->move(temp->x(), temp->y());
     progtemp->show();
   }
+  if (myFloatStartTime.isValid()) {
+    KDCanvasRectangle* floatStartTemp = (KDCanvasRectangle*) floatStartShape;
+    int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
+    // FIXME: Configurable colors
+    QBrush b(temp->brush().color(), Dense4Pattern);
+    floatStartTemp->setBrush(b);
+    floatStartTemp->setPen(QPen(gray));
+    if (floatStartX < startX) {
+        floatStartTemp->setSize(startX - floatStartX, temp->size().height()/2);
+        floatStartTemp->move(floatStartX, temp->y() + temp->size().height()/4);
+    } else {
+        floatStartTemp->setSize(floatStartX - startX, temp->size().height()/2);
+        floatStartTemp->move(startX, temp->y() + temp->size().height()/4);
+    }
+    floatStartTemp->show();    
+  }
+  if (myFloatEndTime.isValid()) {
+    KDCanvasRectangle* floatEndTemp = (KDCanvasRectangle*) floatEndShape;
+    int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
+    // FIXME: Configurable colors
+    QBrush b(temp->brush().color(), Dense4Pattern);
+    floatEndTemp->setBrush(b);
+    floatEndTemp->setPen(QPen(gray));
+    int ex = startX + temp->size().width();
+    if (floatEndX > ex) {
+        floatEndTemp->setSize(floatEndX - ex, temp->size().height()/2);
+        floatEndTemp->move(ex, temp->y() + temp->size().height()/4);
+    } else {
+        floatEndTemp->setSize(ex - floatEndX, temp->size().height()/2);
+        floatEndTemp->move(floatEndX, temp->y() + temp->size().height()/4);
+    }
+    floatEndTemp->show();    
+  }
+  
   int wid = endX-startX - 4;
   if ( !displaySubitemsAsGroup() && !myGanttView->calendarMode()) {
     moveTextCanvas(endX,allY);

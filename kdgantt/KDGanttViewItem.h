@@ -86,7 +86,8 @@ protected:
     KDCanvasLine * startLine, *endLine,
       * startLineBack, *endLineBack, *actualEnd ;
     KDCanvasPolygonItem* startShape,* midShape, *endShape, *progressShape,
-      * startShapeBack,* midShapeBack, *endShapeBack;
+      * startShapeBack,* midShapeBack, *endShapeBack,
+      * floatStartShape, * floatEndShape;
     KDGanttView* myGanttView;
     KDCanvasText* textCanvas;
     QString textCanvasText;
@@ -97,6 +98,8 @@ protected:
 
     void moveTextCanvas(int x, int y);
     int myProgress;
+    QDateTime myFloatStartTime;
+    QDateTime myFloatEndTime;
 
 public:
     virtual ~KDGanttViewItem();
@@ -158,7 +161,9 @@ public:
     QColor textColor() const;
 
     void setProgress(int percent);
-    
+    void setFloatStartTime(const QDateTime &start);
+    void setFloatEndTime(const QDateTime &end);
+
     KDGanttViewItem* firstChild() const;
     KDGanttViewItem* nextSibling() const;
     KDGanttViewItem* parent() const;

@@ -201,6 +201,8 @@ void KDGanttViewEventItem::hideMe()
     startLine->hide();
     startLineBack->hide();
     textCanvas->hide();
+    floatStartShape->hide();
+    floatEndShape->hide();
 }
 
 
@@ -216,6 +218,10 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   startShape->setZ( prio + 0.0055 );
   startShapeBack->setZ( prio + 0.003 );
   startLine->setZ( prio + 0.0015  );
+  floatStartShape->setZ(prio + 0.004);
+  floatStartShape->hide();
+  floatEndShape->setZ(prio + 0.004);
+  floatEndShape->hide();
   textCanvas->setZ( prio + 0.006 );
   startLineBack->setZ( prio );
 
@@ -244,6 +250,41 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   startShape->show();
   startShapeBack->move(startX,allY);
   startShapeBack->show();
+  if (myFloatStartTime.isValid()) {
+    KDCanvasRectangle* floatStartTemp = (KDCanvasRectangle*) floatStartShape;
+    int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
+    int hei = startShape->boundingRect().height();
+    // FIXME: Configurable colors
+    QBrush b(startShape->brush().color(), Dense4Pattern);
+    floatStartTemp->setBrush(b);
+    floatStartTemp->setPen(QPen(gray));
+    if (floatStartX < startX) {
+        floatStartTemp->setSize(startX - floatStartX, hei/2);
+        floatStartTemp->move(floatStartX, allY-hei/4);
+    } else {
+        floatStartTemp->setSize(floatStartX - startX, hei/2);
+        floatStartTemp->move(startX, allY-hei/4);
+    }
+    floatStartShape->show();    
+  }
+  if (myFloatEndTime.isValid()) {
+    KDCanvasRectangle* floatEndTemp = (KDCanvasRectangle*) floatEndShape;
+    int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
+    int hei = startShape->boundingRect().height();
+    // FIXME: Configurable colors
+    QBrush b(startShape->brush().color(), Dense4Pattern);
+    floatEndTemp->setBrush(b);
+    floatEndTemp->setPen(QPen(gray));
+    if (floatEndX > startX) {
+        floatEndTemp->setSize(floatEndX - startX, hei/2);
+        floatEndTemp->move(startX, allY-hei/4);
+    } else {
+        floatEndTemp->setSize(startX - floatEndX, hei/2);
+        floatEndTemp->move(floatEndX, allY-hei/4);
+    }
+    floatEndShape->show();    
+   }
+
   moveTextCanvas(startX,allY);
   textCanvas->show();
   if (textCanvas->text().isEmpty())

@@ -261,6 +261,8 @@ KDGanttViewItem::~KDGanttViewItem()
   if ( midShapeBack ) delete midShapeBack   ;
   if ( endShapeBack ) delete endShapeBack  ;
   if ( progressShape ) delete  progressShape ;
+  if ( floatStartShape ) delete  floatStartShape ;
+  if ( floatEndShape ) delete  floatEndShape ;
   myGanttView->myTimeTable->removeItemFromTasklinks( this );
   myGanttView->myCanvasView->resetCutPaste( this );
   if ( listView() ) {
@@ -1425,6 +1427,8 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     myType = t;
     myProgress = 0;
     progressShape = 0;
+    floatStartShape = 0;
+    floatEndShape = 0;
     blockUpdating = true;
     isVisibleInGanttView = false;
     startShape = 0;
@@ -1477,6 +1481,8 @@ void KDGanttViewItem::initColorAndShapes(Type t)
       startShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
       progressShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
     }
+    floatStartShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+    floatEndShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
 
     // set color of shapes
     if (!( colorDefined = (myGanttView->colors(myType,myStartColor,myMiddleColor,myEndColor)))) {
@@ -2518,4 +2524,26 @@ void KDGanttViewItem::setProgress(int percent)
 {
     myProgress = QMAX(0, percent);
     myProgress = QMIN(100, myProgress);
+}
+
+/*!
+  Specifies the float start time of this item.
+  If the time is invalid, the start float is not shown.
+
+  \param start the float start time
+*/
+void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
+{
+    myFloatStartTime = start;
+}
+    
+/*!
+  Specifies the float end time of this item.
+  If the time is invalid, the end float is not shown.
+
+  \param end the float end time
+*/
+void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
+{
+    myFloatEndTime = end;
 }
