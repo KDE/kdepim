@@ -38,6 +38,7 @@
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kactionclasses.h>
+#include <kcmultidialog.h>
 #include <kdebug.h>
 #include <kdeversion.h>
 #include <klocale.h>
@@ -46,9 +47,9 @@
 #include <kprotocolinfo.h>
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
+#include <kstdguiitem.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
-#include <kstdguiitem.h>
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
@@ -74,9 +75,12 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
-    mLdapSearchDialog( 0 ), mReadWrite( readWrite ), mModified( false )
+    mConfigureDialog( 0 ), mLdapSearchDialog( 0 ), mReadWrite( readWrite ),
+    mModified( false )
 {
   mWidget = new QWidget( parent, name );
+
+  mIsPart = !parent->isA( "KAddressBookMain" );
 
   mAddressBook = KABC::StdAddressBook::self( true );
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
@@ -100,14 +104,10 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   initGUI();
 
-// BUG 68193: Grzegorz Jaskiewicz gj AT pointblue.com.pl
-// init it here, as addresssBookChaned() uses mViewManager
-// which is initialised in initGUI(); 
-  
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
-	  SLOT( addressBookChanged() ) );
+           SLOT( addressBookChanged() ) );
   connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
-	  SLOT( addressBookChanged() ) );
+           SLOT( addressBookChanged() ) );
 
   mIncSearchWidget->setFocus();
 
@@ -785,6 +785,24 @@ void KABCore::openLDAPDialog()
     mLdapSearchDialog->exec();
 }
 
+void KABCore::configure()
+{
+  // Save the current config so we do not loose anything if the user accepts
+  saveSettings();
+
+  if ( !mConfigureDialog ) {
+    mConfigureDialog = new KCMultiDialog( mWidget );
+
+    connect( mConfigureDialog, SIGNAL( configCommitted() ),
+             this, SLOT( configurationChanged() ) );
+
+    mConfigureDialog->addModule( "kabconfig.desktop" );
+    mConfigureDialog->addModule( "kabldapconfig.desktop" );
+  }
+
+  mConfigureDialog->show();
+}
+
 void KABCore::print()
 {
   KPrinter printer;
@@ -946,6 +964,15 @@ void KABCore::initActions()
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
+
+  if ( mIsPart )
+    action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0,
+                          this, SLOT( configure() ), actionCollection(),
+                          "kaddressbook_configure" );
+  else
+    action = KStdAction::preferences( this, SLOT( configure() ), actionCollection() );
+
+  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
 
   // misc
   action = new KAction( i18n( "&Lookup Addresses in LDAP Directory..." ), "find", 0,

@@ -24,8 +24,6 @@
 #include <kkeydialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ksettings/dialog.h>
-#include <ksettings/dispatcher.h>
 #include <kstatusbar.h>
 
 #include "kabcore.h"
@@ -33,7 +31,7 @@
 #include "kaddressbookmain.h"
 
 KAddressBookMain::KAddressBookMain()
-  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 ), mConfigDialog( 0 )
+  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 )
 {
   setCaption( i18n( "Address Book Browser" ) );
 
@@ -63,6 +61,11 @@ KAddressBookMain::~KAddressBookMain()
 void KAddressBookMain::addEmail( QString addr )
 {
   mCore->addEmail( addr );
+}
+
+void KAddressBookMain::importVCard( QString file )
+{
+  mCore->importVCard( KURL( file ) );
 }
 
 ASYNC KAddressBookMain::showContactEditor( QString uid )
@@ -103,8 +106,6 @@ void KAddressBookMain::initActions()
   KStdAction::quit( this, SLOT( close() ), actionCollection() );
 
   KAction *action;
-  action = KStdAction::preferences( this, SLOT( configure() ), actionCollection() );
-  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
   action = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
   action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 }
@@ -113,21 +114,5 @@ void KAddressBookMain::configureKeyBindings()
 {
   KKeyDialog::configure( actionCollection(), this );
 }
-
-void KAddressBookMain::configure()
-{
-  // Save the current config so we do not loose anything if the user accepts
-  mCore->saveSettings();
-
-  if ( !mConfigDialog ) {
-    mConfigDialog = new KSettings::Dialog( this );
-
-    KSettings::Dispatcher::self()->registerInstance( KGlobal::instance(), mCore,
-                                                     SLOT( configurationChanged() ) );
-  }
-
-  mConfigDialog->show();
-}
-
 
 #include "kaddressbookmain.moc"

@@ -46,6 +46,7 @@ class KAboutData;
 class KAction;
 class KActionCollection;
 class KConfig;
+class KCMultiDialog;
 class KToggleAction;
 class KXMLGUIClient;
 
@@ -294,6 +295,11 @@ class KABCore : public KAB::Core
     void openLDAPDialog();
 
     /**
+      Opens the settings dialog.
+     */
+    void configure();
+
+    /**
       Creates a KAddressBookPrinter, which will display the print
       dialog and do the printing.
      */
@@ -345,11 +351,13 @@ class KABCore : public KAB::Core
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 
+    KCMultiDialog *mConfigureDialog;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
 
     bool mReadWrite;
     bool mModified;
+    bool mIsPart;
 
     KAction *mActionPaste;
     KAction *mActionCut;

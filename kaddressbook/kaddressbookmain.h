@@ -29,7 +29,6 @@
 #include <kaction.h>
 #include <kapplication.h>
 #include <kmainwindow.h>
-#include <ksettings/dialog.h>
 
 #include "kaddressbookiface.h"
 
@@ -53,6 +52,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
 
   public slots:
     virtual void addEmail( QString addr );
+    virtual void importVCard( QString file );
     virtual ASYNC showContactEditor( QString uid );
     virtual void newContact();
     virtual QString getNameByPhone( QString phone );
@@ -77,11 +77,9 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
 
   private slots:
     void configureKeyBindings();
-    void configure();
 
   private:
     KABCore *mCore;
-    KSettings::Dialog *mConfigDialog;
 };
 
 #endif

@@ -1,8 +1,9 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="11">
+<kpartgui name="kaddressbook" version="12">
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
+      <Action name="file_new_contact"/>
       <Action name="file_properties"/>
       <Separator/>
       <Action name="file_sync"/>
@@ -56,6 +57,7 @@
       <Merge/>
       <Action name="options_edit_filters"/>
       <Separator/>
+      <Action name="kaddressbook_configure"/>
       <Merge name="configure_merge"/>
     </Menu>
 
@@ -71,6 +73,7 @@
   </Menu>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+    <Action name="file_new_contact"/>
     <Action name="file_properties"/>
     <Separator/>
     <Action name="file_sync" />
