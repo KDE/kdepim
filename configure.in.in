@@ -1,4 +1,4 @@
-#MIN_CONFIG(3.2)
+#MIN_CONFIG(3.3)
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.h)
