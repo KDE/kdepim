@@ -42,5 +42,6 @@ libgpgmepp_la_SOURCES = context.cpp \
 
 libgpgmepp_la_LDFLAGS = -no-undefined -version-info 0:0:0
 libgpgmepp_la_LIBADD = $(GPGME_LIBS)
+libgpgmepp_la_DEPENDENCIES = $(GPGME_LIBS_DEP)
 
 include ../../admin/Doxyfile.am
