@@ -31,6 +31,7 @@
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
 #include "konsolekalendarexports.h"
+#include "konsolekalendarvariables.h"
 
 using namespace KCal;
 using namespace std;
@@ -68,6 +69,9 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
+
+ 
+
   KAboutData aboutData(
       "konsolekalendar",               // internal program name
       I18N_NOOP( "KonsoleKalendar" ),  // displayable program name.
@@ -141,7 +145,7 @@ int main(int argc, char *argv[])
    *  Switch on export list
    */
   if ( args->isSet("export-list") ) {
-     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text\n Text-Organizer\n  HTML (not working yet)\n  CSV (not working yet)").local8Bit() << endl;
+     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text\n  Text-Organizer\n  HTML (not working yet)\n  CSV (not working yet)").local8Bit() << endl;
      return(0);
   }
 
@@ -262,7 +266,10 @@ int main(int argc, char *argv[])
 
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
 
-    date = variables.parseDate(option);
+    //date = variables.parseDate(option);
+
+    date = QDate::fromString( option,  Qt::ISODate );      
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | date: [" << date.toString() << "]" << endl;
 
     //variables.setDate(date);
   }
@@ -276,7 +283,10 @@ int main(int argc, char *argv[])
 
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show date info and exit: (" << option << ")" << endl;
 
-    time = variables.parseTime(option);
+    //time = variables.parseTime(option);
+    time = QTime::fromString( option,  Qt::ISODate );
+
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | time: [" << time.toString() << "]" << endl;
 
     //variables.setDate(date);
   }
@@ -291,7 +301,10 @@ int main(int argc, char *argv[])
 
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start date: (" << option << ")" << endl;
 
-    startdate = variables.parseDate(option);
+    //startdate = variables.parseDate(option);
+    startdate = QDate::fromString( option,  Qt::ISODate );
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | date: [" << startdate.toString() << "]" << endl;
+
 
     //variables.setStartDate(date);
   }
@@ -306,7 +319,11 @@ int main(int argc, char *argv[])
 
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start time: (" << option << ")" << endl;
 
-    starttime = variables.parseTime(option);
+    //starttime = variables.parseTime(option);
+
+    starttime = QTime::fromString( option,  Qt::ISODate );
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | time: [" << starttime.toString() << "]" << endl;
+
 
     //variables.setStartDate(date);
   }
@@ -321,7 +338,9 @@ int main(int argc, char *argv[])
 
       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End date: (" << option << ")" << endl;
 
-    enddate = variables.parseDate(option);
+    //enddate = variables.parseDate(option);
+    enddate = QDate::fromString( option,  Qt::ISODate );
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | date: [" << enddate.toString() << "]" << endl;
 
     //variables.setEndDate(date);
   }
@@ -335,7 +354,11 @@ int main(int argc, char *argv[])
 
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End time: (" << option << ")" << endl;
 
-    endtime = variables.parseTime(option);
+    //endtime = variables.parseTime(option);
+    endtime = QTime::fromString( option,  Qt::ISODate );
+
+    kdDebug() << "main.cpp::int main(int argc, char *argv[]) | time: [" << endtime.toString() << "]" << endl;
+
 
     // variables.setStartDate(date);
   }
@@ -477,8 +500,10 @@ int main(int argc, char *argv[])
       //here for testing
       //should be moved to KonsoleKalendar in future
       KonsoleKalendarExports exporter(&variables);
-	    
-      konsolekalendar->showInstance();
+
+
+
+      // konsolekalendar->showInstance();
     }
 
     konsolekalendar->closeCalendar();
