@@ -290,7 +290,7 @@ void KNNetAccess::threadDoneNntp()
       bool keep=false;
       if (KDialog::Accepted == KIO::PasswordDialog::getNameAndPassword(user, pass, &keep,
                                  i18n("You need to supply a username and a\npassword to access this server"), false,
-                                 kapp->makeStdCaption(i18n("Authorization Dialog")),info->server(),i18n("Server:"))) {
+                                 kapp->makeStdCaption(i18n("Authentication Failed")),info->server(),i18n("Server:"))) {
         info->setNeedsLogon(true);
         info->setUser(user);
         info->setPass(pass);
