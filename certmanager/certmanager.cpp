@@ -93,6 +93,7 @@
 #include <qpopupmenu.h>
 
 // other
+#include <algorithm>
 #include <assert.h>
 
 static const bool startWithHierarchicalKeyListing = false;
