@@ -86,10 +86,10 @@ class Konnector : public KRES::Resource
     virtual bool readSyncees() = 0;
 
     /**
-      Request to write back data contained in Syncee objects delivered by
-      synceesAvailable() to connected entity. The result of the write is sent
-      with the signal synceesWritten(). If an error occurs during write the
-      signal synceeWriteError() is emitted.
+      Request to write back data contained in Syncee objects hold by the
+      connected entity. The end of the write operation is signalled with
+      synceesWritten(). If an error occurs during write the signal
+      synceeWriteError() is emitted.
 
       @return true, if request could successfully be started, false otherwise.
     */
