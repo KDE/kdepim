@@ -79,10 +79,10 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
 
     return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
   } else {
-    QFile file( url.fileName() );
+    QFile file( url.path() );
     if ( !file.open( IO_WriteOnly ) ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.fileName() ) );
+      KMessageBox::error( parentWidget(), txt.arg( url.path() ) );
       return false;
     }
 
