@@ -771,7 +771,7 @@ programs:</para>
 </row>
 <row>
   <entry><option>--license</option></entry>
-  <entry>Show licence information.</entry>
+  <entry>Show license information.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -1406,7 +1406,7 @@ simply reinstall &kalarm;.</para>
 
 <chapter id="credits">
 
-<title>Credits and Licence</title>
+<title>Credits and License</title>
 
 <para>
 &kalarm;
