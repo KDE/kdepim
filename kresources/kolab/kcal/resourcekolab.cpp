@@ -41,29 +41,6 @@
 using namespace KCal;
 using namespace Kolab;
 
-
-class KolabFactory : public KRES::PluginFactoryBase
-{
-public:
-  KRES::Resource *resource( const KConfig *config )
-  {
-    return new ResourceKolab( config );
-  }
-
-  KRES::ConfigWidget *configWidget( QWidget* )
-  {
-    return 0;
-  }
-};
-
-extern "C"
-{
-  void *init_kcal_kolab()
-  {
-    return ( new KolabFactory() );
-  }
-}
-
 static const char* kmailCalendarContentsType = "Calendar";
 static const char* kmailTodoContentsType = "Task";
 static const char* kmailJournalContentsType = "Journal";
