@@ -32,6 +32,7 @@
 #include <klocale.h>
 #include <kprocess.h>
 #include <kaudioplayer.h>
+#include <kdebug.h>
 
 #include <libkcal/event.h>
 
@@ -101,7 +102,9 @@ void AlarmDialog::eventNotification()
     const Alarm* alarm;
     for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
 // TODO: Check whether this should be done for all multiple alarms
-      if (!alarm->programFile().isEmpty()) {
+      QString program = alarm->programFile();
+      if (!program.isEmpty()) {
+        kdDebug() << "Starting program: '" << program << "'" << endl;
         KProcess proc;
         proc << QFile::encodeName(alarm->programFile());
         proc.start(KProcess::DontCare);

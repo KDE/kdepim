@@ -56,9 +56,9 @@ KOAlarmClient::~KOAlarmClient()
 
 void KOAlarmClient::handleEvent( const QString &iCalendarString )
 {
-  kdDebug() << "KOAlarmClient::handleEvent()" << endl;
+//  kdDebug(5900) << "KOAlarmClient::handleEvent()" << endl;
   
-  kdDebug() << "-- iCalendar-String:" << iCalendarString << endl;
+//  kdDebug(5900) << "-- iCalendar-String:" << iCalendarString << endl;
 
   CalendarLocal cal;
   ICalFormat format( &cal );

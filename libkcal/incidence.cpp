@@ -58,7 +58,17 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mResources = i.mResources;
   mSecrecy = i.mSecrecy;
   mPriority = i.mPriority;
-//  QPtrList<Alarm> mAlarms;    QPtrList<Alarm> mAlarms;
+
+  QPtrListIterator<Alarm> it( i.mAlarms );
+  const Alarm *a;
+  while( (a = it.current()) ) {
+    Alarm *b = new Alarm( *a );
+    b->setParent( this );
+    mAlarms.append( b );
+
+    ++it;
+  }
+
 //  Recurrence *mRecurrence;      Recurrence *mRecurrence;
   mRecurrence = new Recurrence(this);
 }

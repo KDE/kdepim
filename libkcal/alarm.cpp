@@ -177,3 +177,8 @@ Duration Alarm::offset() const
 {
   return mOffset;
 }
+
+void Alarm::setParent( Incidence *parent )
+{
+  mParent = parent;
+}

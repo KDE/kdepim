@@ -99,6 +99,8 @@ class Alarm {
     /** get the alarm enabled status */
     bool enabled() const;
 
+    /** Set the alarm's parent incidence */
+    void setParent( Incidence * );
     /** get the alarm's parent incidence */
     Incidence *parent() const  { return mParent; }
 
