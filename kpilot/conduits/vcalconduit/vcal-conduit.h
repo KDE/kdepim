@@ -94,7 +94,7 @@ protected:
 	PilotLocalDatabase *fBackupDatabase;
 
 	QString fCalendarFile;
-	bool fFirstTime,fDeleteOnPilot;
+	bool fFirstTime,fDeleteOnPilot, fFullSync;
 	int pilotindex;
 
 private:
@@ -103,6 +103,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.21  2002/04/14 22:18:16  kainhofe
+// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
+//
 // Revision 1.20  2002/01/26 15:01:02  adridg
 // Compile fixes and more
 //

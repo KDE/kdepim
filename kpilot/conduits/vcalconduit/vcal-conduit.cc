@@ -196,6 +196,59 @@ VCalConduit::~VCalConduit()
 	KPILOT_DELETE(fCalendar);
 }
 
+/* There are several different scenarios for a record on the Palm and its PC counterpart
+  N means a new record, M flags a modified record, D a deleted and - an unmodified record
+  first is the Palm record, second the corresponding PC record
+  (-,-)...unchanged, just sync if first time or full sync
+  (N,-)...no rec matching the Palm ID in the backupDB/calendar yet => add KCal::Event
+  (M,-)...record is in backupDB, unchanged in calendar => modify in calendar and in backupDB
+  (D,-)...deleted on Palm, exists in backupDB and calendar => just delete from calendar and backupDB
+  (-,N)...no or invalid pilotID set for the KCal::Event => just add to palm and backupDB
+  (-,M)...valid PilotID set => just modify on Palm
+  (-,D)...Record in backupDB, but not in calendar => delete from Palm and backupDB
+  (N,N)...Can't find out (the two records are not correlated in any way, they just have the same data!!
+  (M,M),(M,L),(L,M)...(Record exists on Palm and the Event has the ID) CONFLICT, ask the user what to do 
+                      or use a config setting
+  (L,L)...already deleted on both, no need to do anything.
+
+
+   The sync process is as follows (for a fast sync):
+	1) syncRecord goes through all records on Palm (just the modified one are necessary), find it
+	   in the backupDB. The following handles ([NMD],*)
+	   a) if it doesn't exist and was not deleted, add it to the calendar and the backupDB
+	   b) if it exists and was not deleted,
+			A) if it is unchanged in the calendar, just modify in the calendar
+		c) if it exists and was deleted, delete it from the calendar if necessary
+	2) syncEvent goes through all KCale::Events in the calendar (just modified, this is the modification
+	   time is later than the last sync time). This handles (-,N),(-,M)
+		a) if it does not have a pilotID, add it to the palm and backupDB, store the PalmID
+		b) if it has a valid pilotID, update the Palm record and the backup
+	3) finally, deleteRecord goes through all records (which don't have the deleted flag) of the backup db
+	   and if one does not exist in the Calendar, it was deleted there, so delete it from the Palm, too.
+		This handles the last remaining case of (-,D)
+
+
+In addition to the fast sync, where only the last sync was done with the same PC and calendar file, 
+there are two special cases a full and a first sync.
+-) a full sync really goes through all records, not just the modified. the pilotID setting of 
+   the calendar records is used to determine if the record already exists. if yes, the record is just modified
+-) a first sync completely ignores the pilotID setting of the calendar events. All records are added,
+	so there might be duplicates. the add function for the calendar should check if a similar record already
+	exists, but this is not done yet.
+
+
+-) a full sync is done if
+	a) there is a backupdb and a calendar, but the PC id number changed
+	b) it was explicitely requested by pressing the full sync button in KPilot
+	c) the setting "always full sync" was selected in the configuration dlg
+-) a first sync is done if
+	a) either the calendar or the backup DB does not exist.
+	b) the calendar and the backup DB exists, but the sync is done for a different User name
+	c) it was explicitely requested in KPilot
+
+*/
+
+
 /* virtual */ void VCalConduit::exec()
 {
 	FUNCTIONSETUP;
@@ -220,8 +273,15 @@ VCalConduit::~VCalConduit()
 	fConfig->setGroup(VCalConduitFactory::group);
 
 	fCalendarFile = fConfig->readEntry(VCalConduitFactory::calendarFile);
-	fDeleteOnPilot = fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot,false);
-	fFirstTime = fConfig->readBoolEntry(VCalConduitFactory::firstTime,true);
+	fDeleteOnPilot = fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot, false);
+	// don't do a fisr sync by default, only when explicitely requested, or the backup
+	// database or the calendar are empty.
+	fFirstTime = fConfig->readBoolEntry(VCalConduitFactory::firstTime, false);
+	KPilotUser*usr=fHandle->getPilotUser();
+	// changing the PC or using a different Palm Desktop app causes a full sync
+	// User gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0)) 
+	// as PC_ID
+	fFullSync = (usr->getLastSyncPC()!=gethostid()) && fConfig->readBoolEntry(VCalConduitFactory::fullSyncOnPCChange, true);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -329,8 +389,8 @@ void VCalConduit::syncRecord()
 void VCalConduit::syncEvent()
 {
 // TODO: skip PC => Palm sync for now because it corrupts the palm data...
-//QTimer::singleShot(0,this,SLOT(deleteRecord()));
-//return;
+QTimer::singleShot(0,this,SLOT(deleteRecord()));
+return;
 
 
 	FUNCTIONSETUP;
@@ -528,6 +588,7 @@ KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
 	setStartEndTimes(e,de);
+DEBUGCONDUIT<<"In eventFromRecord, nach setStartEndTimes, vor setAlarms"<<endl;
 	setAlarms(e,de);
 	setRecurrence(e,de);
 	setExceptions(e,de);
@@ -541,9 +602,15 @@ KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &
 void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry &de)
 {
 	FUNCTIONSETUP;
+DEBUGCONDUIT<<"vor setDtStart"<<endl;
+DEBUGCONDUIT<<"Event: "<<de.getDescription()<<endl;
+QDateTime ttm=readTm(de.getEventStart());
+DEBUGCONDUIT<<"getEventStart: "<<ttm.toString()<<endl;
 	e->setDtStart(readTm(de.getEventStart()));
+DEBUGCONDUIT<<"vor setFloats"<<endl;
 	e->setFloats(de.isEvent());
 
+DEBUGCONDUIT<<"vor isMultiDay"<<endl;
 	if (de.isMultiDay())
 	{
 		e->setDtEnd(readTm(de.getRepeatEnd()));
@@ -552,16 +619,20 @@ void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry &de)
 	{
 		e->setDtEnd(readTm(de.getEventEnd()));
 	}
+DEBUGCONDUIT<<"ende setStartEndTimes"<<endl;
 }
 
 void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 {
 	FUNCTIONSETUP;
 	struct tm ttm=writeTm(e->dtStart());
+DEBUGCONDUIT<<"vor setEventStart"<<endl;
 	de->setEventStart(ttm);
+DEBUGCONDUIT<<"vor setEvent (float)"<<endl;
 	de->setEvent(e->doesFloat());
 
-	if (e->hasEndDate()) 
+DEBUGCONDUIT<<"vor hasEndDate"<<endl;
+	if (e->hasEndDate())
 	{
 		ttm=writeTm(e->dtEnd());
 	}
@@ -569,7 +640,10 @@ void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 	{
 		ttm=writeTm(e->dtStart());
 	}
+DEBUGCONDUIT<<"vor setEventEnd"<<endl;
 	de->setEventEnd(ttm);
+DEBUGCONDUIT<<"nach setEventEnd"<<endl;
+
 }
 
 void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
@@ -958,6 +1032,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.55  2002/04/17 20:47:04  kainhofe
+// Implemented the alarm sync
+//
 // Revision 1.54  2002/04/17 00:28:11  kainhofe
 // Removed a few #ifdef DEBUG clauses I had inserted for debugging purposes
 //
