@@ -2883,21 +2883,19 @@ void Recurrence::getMonthlyPosDays(QValueList<int> &list, int daysInMonth, int s
   // Go through the list, compiling a bit list of actual day numbers
   Q_UINT32 days = 0;
   for (QPtrListIterator<rMonthPos> pos(rMonthPositions); pos.current(); ++pos) {
-    int weeknum = pos.current()->rPos;
+    int weeknum = pos.current()->rPos - 1;   // get 0-based week number
     QBitArray &rdays = pos.current()->rDays;
     if (pos.current()->negative) {
       // nth days before the end of the month
-      ++weeknum;         // change to 0-based
       for (uint i = 1; i <= 7; ++i) {
         if (rdays.testBit(i - 1)) {
-          int day = daysInMonth + weeknum*7 - (endDayOfWeek - i + 7) % 7;
+          int day = daysInMonth - weeknum*7 - (endDayOfWeek - i + 7) % 7;
           if (day > 0)
             days |= 1 << (day - 1);
         }
       }
     } else {
       // nth days after the start of the month
-      --weeknum;         // change to 0-based
       for (uint i = 1; i <= 7; ++i) {
         if (rdays.testBit(i - 1)) {
           int day = 1 + weeknum*7 + (i - startDayOfWeek + 7) % 7;
@@ -2927,9 +2925,9 @@ int Recurrence::countMonthlyPosDays() const
     Q_UINT8* wk;
     if (pos.current()->negative) {
       // nth days before the end of the month
-      if (weeknum < -4)
+      if (weeknum > 4)
         return -1;       // days in 5th week are often missing
-      wk = &negative[weeknum + 4];
+      wk = &negative[4 - weeknum];
     } else {
       // nth days after the start of the month
       if (weeknum > 4)
