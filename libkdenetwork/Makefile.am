@@ -43,7 +43,8 @@ libkdenetwork_la_SOURCES = kscoring.cpp \
 			  \
 			  kfoldertree.cpp \
 			  ksubscription.cpp \
-			  kaccount.cpp
+			  kaccount.cpp \
+			  syntaxhighlighter.cpp
 
 libkdenetwork_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 4:0:2
 noinst_HEADERS = kpgpbase.h
