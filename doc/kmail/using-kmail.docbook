@@ -759,7 +759,8 @@ even this command will work (within its limits):
 <listitem>
 <para>This will feed the message to a program. If that program returns
 output, the entire message (including the headers) will be replaced
-with this output. If the program does not return output, the message
+with this output. If the program does not return output or exits
+with a return code that's not 0, the message
 will not change.  Specify the full path to the program. The same
 substitutions (<symbol>&percnt;n</symbol>,
 <symbol>&percnt;{foo}</symbol> as with <guilabel>execute
