@@ -499,15 +499,15 @@ void HtmlExport::formatHtmlAttendees (QTextStream *ts,Incidence *event)
 #ifndef KORG_NOKABC
     KABC::AddressBook *add_book = KABC::StdAddressBook::self();
     KABC::Addressee::List addressList;
-    addressList = add_book->findByEmail(event->organizer());
+    addressList = add_book->findByEmail(event->organizer().email());
     KABC::Addressee o = addressList.first();
     if (!o.isEmpty() && addressList.size()<2) {
-      *ts << "<a href=\"mailto:" << event->organizer() << "\">";
+      *ts << "<a href=\"mailto:" << event->organizer().email() << "\">";
       *ts << cleanChars(o.formattedName()) << "</a>\n";
     }
-		else *ts << event->organizer();
+		else *ts << event->organizer().fullName();
 #else
-	  *ts << event->organizer();
+	  *ts << event->organizer().fullName();
 #endif
     *ts << "</em><br />";
     Attendee::List::ConstIterator it;

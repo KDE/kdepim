@@ -707,8 +707,7 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
       writeICalDateTime( QDateTime::currentDateTime() ) ) );
 
   // organizer stuff
-  icalcomponent_add_property( parent, icalproperty_new_organizer(
-      ( "MAILTO:" + incidenceBase->organizer() ).utf8() ) );
+  icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
 
   // attendees
   if ( incidenceBase->attendeeCount() > 0 ) {
@@ -738,6 +737,19 @@ void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomPropertie
     icalcomponent_add_property(parent,p);
   }
 }
+
+icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
+{
+  icalproperty *p = icalproperty_new_organizer("MAILTO:" + organizer.email().utf8());
+
+  if (!organizer.name().isEmpty()) {
+    icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().utf8()) );
+  }
+  // TODO: Write dir, senty-by and language
+
+  return p;
+}
+
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 {
@@ -1429,6 +1441,25 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   return new Attendee( name, email, rsvp, status, role, uid );
 }
 
+Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
+{
+  QString email = QString::fromUtf8(icalproperty_get_organizer(organizer));
+  if ( email.startsWith("mailto:", false ) ) {
+    email = email.remove(0,7);
+  }
+  QString cn;
+  
+  icalparameter *p = icalproperty_get_first_parameter( 
+             organizer, ICAL_CN_PARAMETER );
+  
+  if ( p ) {
+    cn = QString::fromUtf8( icalparameter_get_cn( p ) );
+  }
+  Person org( cn, email );
+  // TODO: Treat sent-by, dir and language here, too
+  return org;
+}
+
 Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
 {
   icalattachtype *a = icalproperty_get_attach(attach);
@@ -1637,7 +1668,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        incidenceBase->setOrganizer(QString::fromUtf8(icalproperty_get_organizer(p)));
+        incidenceBase->setOrganizer( readOrganizer(p));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee

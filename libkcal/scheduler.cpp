@@ -363,7 +363,7 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 
   kdDebug(5800) << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
 
-  QString from;
+  Person from;
   if(method == Scheduler::Publish) {
     from = freebusy->organizer();
   }
