@@ -1,0 +1,2 @@
+SUBDIRS = ktnef lib gui
+
