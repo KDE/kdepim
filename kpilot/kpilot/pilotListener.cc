@@ -28,7 +28,9 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+#ifndef NDEBUG
 static const char *id="$Id$";
+#endif
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -38,6 +40,8 @@ static const char *id="$Id$";
 #include <iostream.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 
 // pilotListener is such a small program -- and not even a real
 // KDE app -- that it doesn't use kdDebug() &c. So the use of
@@ -49,37 +53,75 @@ int main(int argc, char* argv[])
 #ifndef NDEBUG
 	int p = getpid();
 
+	cerr << "*** " << id << endl;
 	cerr << "*** " << argv[0] << " with pid=" << p << " started." << endl;
 #endif
-  if(argc < 2)
-    {
-      cerr << "Usage: " << argv[0] << " <pilotPort>" << endl;
-      return -1;
-    }
 
-  int serialPort = open(argv[1], O_RDONLY);
-  fd_set set;
+	if(argc < 2)
+	{
+		cerr << "*** Usage: " << argv[0] << " <pilotPort>" << endl;
+		return 1;
+	}
 
-  if(serialPort == -1)
-    {
-      cerr << "Error opening " << argv[1] << endl;
-	perror(argv[1]);
-      return -1;
-    }
-  FD_ZERO(&set);
-  FD_SET(serialPort, &set);
-  select(serialPort + 1, &set, 0L, 0L, 0L);
-  close(serialPort);
+	int serialPort = open(argv[1], O_RDONLY | O_NONBLOCK);
+	if(serialPort < 0)
+	{
+		cerr << "*** " << argv[1] << strerror(errno) << endl;
+		return 1;
+	}
+
+
+	fd_set set;
+	FD_ZERO(&set);
+	FD_SET(serialPort, &set);
+
+	struct timeval tv;
+	tv.tv_sec = 3;
+	tv.tv_usec = 0;
+
+	int r = select(serialPort + 1, &set, 0L, 0L, &tv);
+	if (r<0)
+	{
+		cerr << "*** " << argv[1] << strerror(errno) << endl;
+		return 1;
+	}
+	if (r>0)
+	{
+		cerr << "*** Data arrived within 3 sec, draining." << endl;
+
+		char buf[16];
+		while ((r=read(serialPort,buf,16))>0)
+		{
+			cerr << "*** Drained " << r << " bytes." << endl;
+		}
+	}
+	else
+	{
+		cerr << "*** Data drain timed out." << endl;
+	}
+
+	FD_ZERO(&set);
+	FD_SET(serialPort, &set);
+	r = select(serialPort + 1, &set, 0L, 0L, 0L);
+	if (r<0)
+	{
+		cerr << "*** " << argv[1] << strerror(errno) << endl;
+		return 1;
+	}
+	close(serialPort);
+
 #ifndef NDEBUG
 	cerr << "*** " << argv[0] << " with pid=" << p << " ended." << endl;
 #endif
-  return 0;
-	/* NOTREACHED */
-	(void) id;
+
+	return 0;
 }
 
 
 // $Log$
+// Revision 1.10  2001/03/06 12:12:16  adridg
+// Additional listener debugging
+//
 // Revision 1.9  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //
