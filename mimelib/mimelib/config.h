@@ -35,7 +35,7 @@
 #   define DW_WIN32
 #endif
 
-#if defined(__unix__) || defined(__unix) || defined(_AIX) || defined(__NetBSD__)
+#if defined(__unix__) || defined(__unix) || defined(_AIX) || defined(__NetBSD__) || defined(__APPLE__)
 #   define DW_UNIX
 #endif
 
