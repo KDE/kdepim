@@ -1,5 +1,5 @@
 KDE_CXXFLAGS = $(USE_THREADS)
-INCLUDES= -I$(top_srcdir)/libkdenetwork $(all_includes) -I$(top_srcdir)/libkdepim
+INCLUDES= -I$(top_srcdir)/libkdenetwork -I$(top_srcdir)/libkdepim $(all_includes)
 SUBDIRS = pics filters
 
 bin_PROGRAMS = knode
