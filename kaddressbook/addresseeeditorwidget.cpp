@@ -370,6 +370,8 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( dateChanged( QDate ) ) );
   connect( mBirthdayPicker, SIGNAL( invalidDateEntered() ),
            SLOT( invalidDate() ) );
+  connect( mBirthdayPicker, SIGNAL( textChanged( const QString& ) ),
+           SLOT( emitModified() ) );
   label->setBuddy( mBirthdayPicker );
   layout->addWidget( mBirthdayPicker, 4, 4 );
   
@@ -381,6 +383,8 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( dateChanged( QDate ) ) );
   connect( mAnniversaryPicker, SIGNAL( invalidDateEntered() ),
            SLOT( invalidDate() ) );
+  connect( mAnniversaryPicker, SIGNAL( textChanged( const QString& ) ),
+           SLOT( emitModified() ) );
   label->setBuddy( mAnniversaryPicker );
   layout->addWidget( mAnniversaryPicker, 5, 4 );
   
