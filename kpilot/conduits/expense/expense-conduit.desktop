@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Name=KPilot Expenses Conduit
+Name[nl]=Uitgaven Conduit
+Implemented=file
+ServiceTypes=KPilotConduit
+Exec=conduitExpense
