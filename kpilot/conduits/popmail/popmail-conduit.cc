@@ -669,7 +669,7 @@ int PopMailConduit::sendViaSendmail()
 				   "Error Sending Mail");
 		kdWarning() << __FUNCTION__ 
 			<< ": Could not start sendmail.\n"
-			<< fname << ": " << count 
+			<< __FUNCTION__ << ": " << count 
 			<< " messages sent OK"
 			<< endl ;
 	      return -1;
@@ -1520,7 +1520,7 @@ int PopMailConduit::doUnixStyle()
 		QFileInfo info(filename);
 		if (!info.exists()) 
 		{
-			kdWarning() << fname << ": Mailbox doesn't exist."
+			kdWarning() << __FUNCTION__ << ": Mailbox doesn't exist."
 				<< endl;
 			return -1;
 		}
@@ -1537,7 +1537,7 @@ int PopMailConduit::doUnixStyle()
 	mailbox=fopen(filename.latin1(),"r");
 	if (mailbox==0L)
 	{
-		kdWarning() << fname << ": Can't open mailbox:" 
+		kdWarning() << __FUNCTION__ << ": Can't open mailbox:" 
 			<< perror
 			<< endl;
 		return -1;
@@ -1560,7 +1560,7 @@ int PopMailConduit::doUnixStyle()
 		}
 		else
 		{
-			kdWarning() << fname << ": Message "
+			kdWarning() << __FUNCTION__ << ": Message "
 				<< messageCount << " couldn't be written."
 				<< endl;
 			showMessage(i18n("Error writing mail message to Pilot"));

@@ -105,7 +105,7 @@ NotesSettings::NotesSettings(const QString &configPath,
 	}
 	else
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": No data file for note?"
 			<< endl;
 	}
@@ -121,7 +121,7 @@ QString NotesSettings::computeCheckSum() const
 	QFile f(dP);
 	if (!f.open(IO_ReadOnly))
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Couldn't open file."
 			<< endl;
 		return QString::null;
@@ -131,7 +131,7 @@ QString NotesSettings::computeCheckSum() const
 	int r = f.readBlock((char *)data,(int) PilotMemo::MAX_MEMO_LEN);
 	if (r<1)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Couldn't read notes file."
 			<< endl;
 		return QString::null;
@@ -157,7 +157,7 @@ int NotesSettings::readNotesData(char *text)
 
 	if (filesize > PilotMemo::MAX_MEMO_LEN) 
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Notes file is too large ("
 			<< filesize
 			<< " bytes) -- truncated to "
@@ -168,7 +168,7 @@ int NotesSettings::readNotesData(char *text)
 		
 	if (!f.open(IO_ReadOnly)) 
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Couldn't read notes file."
 			<< endl;
 		return 0;
@@ -228,18 +228,20 @@ collectNotes()
 		version = c->readNumEntry("version",1);
 		if (version<2)
 		{
-			kdWarning() << fname
+			kdWarning() << __FUNCTION__
 				<< ": Skipping old-style KNote"
 				<< *i
 				<< endl;
 			goto EndNote;
 		}
 
+		{
 		NotesSettings n(notedir.absFilePath(*i),
 			notedir.absPath(),
 			*c);
 		m.insert(*i,n);
-		
+		}
+
 EndNote:
 		delete c;
 	}
@@ -367,7 +369,7 @@ KNotesConduit::doSync()
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Can't get DCOP client."
 			<< endl;
 		return;
@@ -379,7 +381,7 @@ KNotesConduit::doSync()
 		"rereadNotesDir()",
 		data))
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Couldn't tell KNotes to re-read notes."
 			<< endl;
 	}
@@ -701,7 +703,7 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Can't get DCOP client."
 			<< endl;
 		return count;
@@ -719,7 +721,7 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 	}
 	else
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Couln't tell KNotes about new notes."
 			<< endl;
 	}
@@ -754,7 +756,7 @@ KNotesConduit::doTest()
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Can't get DCOP client."
 			<< endl;
 		return;
@@ -787,7 +789,7 @@ KNotesConduit::doTest()
 			}
 			else
 			{
-				kdWarning() << fname
+				kdWarning() << __FUNCTION__
 					<< ": DCOP send failed."
 					<< endl;
 			}
@@ -810,6 +812,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.7  2000/12/30 20:28:11  adridg
+// Checksumming added
+//
 // Revision 1.6  2000/12/29 14:17:51  adridg
 // Added checksumming to KNotes conduit
 //

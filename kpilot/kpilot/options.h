@@ -112,6 +112,7 @@ void listStrList(kdbgstream&,const QStringList&);
 // For debugging purposes it's also used by FUNCTIONSETUP.
 //
 //
+#define EFUNCTIONSETUP
 #define FUNCTIONSETUP
 #ifdef TEST_DEBUG
 class debugName { public: debugName(int i) : j(i) {} ; int j; } ;

@@ -188,7 +188,7 @@ void PopMailSendPage::setMode(PopMailConduit::SendMode m)
 		fNoSend->setChecked(true);
 		break;
 	default :
-		cerr << fname 
+		cerr << __FUNCTION__
 			<< ": Unknown mode " << (int) m
 			<< endl;
 		return;
@@ -449,7 +449,7 @@ void PopMailReceivePage::setMode(PopMailConduit::RetrievalMode m)
 		fReceiveUNIX->setChecked(true);
 		break;
 	default :
-		cerr << fname 
+		cerr << __FUNCTION__
 			<< ": Unknown mode " << (int) m
 			<< endl;
 		return;

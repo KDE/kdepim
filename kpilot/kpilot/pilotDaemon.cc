@@ -418,7 +418,7 @@ PilotDaemon::setupSubProcesses()
 	}
 	else
 	{
-		kdWarning() << fname << ": Can't start new listener process."
+		kdWarning() << __FUNCTION__ << ": Can't start new listener process."
 			<< endl;
 	}
 }
@@ -497,7 +497,7 @@ PilotDaemon::startHotSync()
 	  if (fork()==0)
 	    {
 	      execlp("kpilot", "kpilot", 0);
-		kdError() << fname << ": Failed to start KPilot." << endl;
+		kdError() << __FUNCTION__ << ": Failed to start KPilot." << endl;
 	      exit(1);
 	    }
 	}
@@ -568,7 +568,7 @@ PilotDaemon::slotEndHotSync()
 	}
 	else
 	{
-		kdError() << fname
+		kdError() << __FUNCTION__
 			<< ": No link to pilot!"
 			<< endl;
 	}
@@ -676,7 +676,7 @@ PilotDaemon::slotCommandReceived(KSocket*)
 #endif
 		break;
     default:
-      kdWarning() << fname << ": Unknown command!" << command << endl;
+      kdWarning() << __FUNCTION__ << ": Unknown command!" << command << endl;
       break;
     }
 
@@ -697,7 +697,7 @@ PilotDaemon::slotConnectionClosed(KSocket* connection)
 	delete connection;
 	if (fCurrentSocket != connection)
 	{
-		kdWarning() << fname 
+		kdWarning() << __FUNCTION__
 			<< ": Connection other than current was closed?"
 			<< endl;
 	}
@@ -849,7 +849,7 @@ PilotDaemon::sendStatus(const int status)
 
 		if (c->socket()<0)
 		{
-			kdWarning() << fname
+			kdWarning() << __FUNCTION__
 				<< ": Connection "
 				<< (int) c 
 				<< " has no valid socket"
@@ -1087,4 +1087,7 @@ int main(int argc, char* argv[])
 
 
 
-// $Log: $
+// $Log$
+// Revision 1.21  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
