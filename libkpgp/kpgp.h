@@ -36,6 +36,7 @@
 #include <kdialogbase.h>
 
 #include "kpgpkey.h"
+#include <kdepimmacros.h>
 
 class QLineEdit;
 class QCursor;
