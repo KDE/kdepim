@@ -47,7 +47,7 @@
 #include <kmessagebox.h>
 #include <kurl.h>
 #include <kurlrequester.h>
-#include <libkdepim/kimproxy.h>
+#include <kimproxy.h>
 
 #include "configuretableviewdialog.h"
 #include "contactlistview.h"

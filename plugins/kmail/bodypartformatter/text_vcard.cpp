@@ -46,7 +46,7 @@
 using KMail::Interface::BodyPart;
 #include "interfaces/bodyparturlhandler.h"
 #include "khtmlparthtmlwriter.h"
-#include "kimproxy.h"
+#include <kimproxy.h>
 
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>

@@ -39,7 +39,7 @@
 #include <kurl.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
-#include <libkdepim/kimproxy.h>
+#include <kimproxy.h>
 
 #include "kaddressbooktableview.h"
 
