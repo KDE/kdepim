@@ -3,7 +3,7 @@
 INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir) $(all_includes)
 
 bin_PROGRAMS = karm
-SUBDIRS = support pics
+SUBDIRS = support pics test
 
 METASOURCES = AUTO
 

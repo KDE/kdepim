@@ -1,0 +1,11 @@
+runscripts.cpp
+
+  Parse directory for script files (Python and Bash).  Run them if found.
+  Script files need to return a zero or 1 to indicate test result.
+
+  So the idea is you can add a new test without having to edit any C code.
+  
+  iCalendar testing is a lot of string manipulation, so Python seems like
+  a good fit.
+
+  The Bash scripts will be, for example, Thorsten's xautomation testing.
