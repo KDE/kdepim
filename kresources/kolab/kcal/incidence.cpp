@@ -563,6 +563,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   if ( mHasAlarm ) {
     KCal::Alarm* alarm = incidence->newAlarm();
     alarm->setStartOffset( qRound( mAlarm * 60.0 ) );
+    alarm->setEnabled( true );
   }
 
   incidence->setOrganizer( organizer().displayName + "<"
