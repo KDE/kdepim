@@ -1015,7 +1015,6 @@ void KNMainWidget::fontChange( const QFont & )
 
 void KNMainWidget::paletteChange( const QPalette & )
 {
-  c_fgManager->appearance()->updateHexcodes();
   KNArticleWidget::configChanged();
   configChanged();
 }

@@ -256,8 +256,6 @@ KNConfig::Appearance::Appearance()
   f_onts[articleList]=c->readFontEntry("articleListFont",&defFont);
   f_ontNames[articleList]=i18n("Article List");
 
-  updateHexcodes();
-
   //icons
   recreateLVIcons();
   i_cons[newFups]         = UserIcon("newsubs");
@@ -490,12 +488,17 @@ QFont KNConfig::Appearance::articleListFont()
 }
 
 
-void KNConfig::Appearance::updateHexcodes()
+QString KNConfig::Appearance::quotedTextHexcode(int i)
 {
-  sprintf(h_excodes[quoted1Hex], "#%2x%2x%2x", quoteColor1().red(), quoteColor1().green(), quoteColor1().blue());
-  sprintf(h_excodes[quoted2Hex], "#%2x%2x%2x", quoteColor2().red(), quoteColor2().green(), quoteColor2().blue());
-  sprintf(h_excodes[quoted3Hex], "#%2x%2x%2x", quoteColor3().red(), quoteColor3().green(), quoteColor3().blue());
-  sprintf(h_excodes[headerHex], "#%2x%2x%2x", headerDecoColor().red(), headerDecoColor().green(), headerDecoColor().blue());
+  switch(i) {
+    case quoted1Hex:
+      return quoteColor1().name();
+    case quoted2Hex:
+      return quoteColor2().name();
+    case quoted3Hex:
+      return quoteColor3().name();
+  }
+  return textColor().name();
 }
 
 
