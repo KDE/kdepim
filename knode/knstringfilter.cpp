@@ -46,7 +46,7 @@ bool KNStringFilter::doFilter(const QString &s)
   if(!expanded.isEmpty()) {
     if(regExp) {
       QRegExp matcher(expanded);
-      ret=(matcher.search(s) > 0);
+      ret = ( matcher.search(s) >= 0 );
     } else
       ret=(s.find(expanded,0,false)!=-1);
 
