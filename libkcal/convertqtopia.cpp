@@ -101,18 +101,18 @@ int main(int argc,char **argv)
     ICalFormat icalendarFormat;
     if ( outputFile.isEmpty() ) {
       QString out = icalendarFormat.toString( &cal );
-      cout << out.local8Bit() << endl;
+      std::cout << out.local8Bit() << std::endl;
     } else {
       bool success = icalendarFormat.save( &cal, outputFile );
       if ( !success ) {
-        cerr << "Error saving to '" << outputFile.local8Bit() << "'" << endl;
+        std::cerr << "Error saving to '" << outputFile.local8Bit() << "'" << std::endl;
         return 1;
       }
     }
   }
   
   if ( sourceIcalendar ) {
-    cerr << "Not implemented yet." << endl;
+    std::cerr << "Not implemented yet." << std::endl;
     return 1;
   }
 }
