@@ -372,11 +372,29 @@ void DwRfc822Tokenizer::ParseAtom()
     }
 }
 
-
-#define istspecial(c) ((c)=='('||(c)==')'||(c)=='<'||(c)=='>'||(c)=='@'\
-    ||(c)==','||(c)==';'||(c)==':'||(c)=='\\'||(c)=='"'||(c)=='/'\
-    ||(c)=='['||(c)==']'||(c)=='?'||(c)=='=')
-
+static inline bool istspecial( char c ) 
+{
+  switch ( c ) {
+     case '(':
+     case ')':
+     case '<':
+     case '>':
+     case '@':
+     case ',':
+     case ';':
+     case ':':
+     case '\\':
+     case '"':
+     case '/':
+     case '[':
+     case ']':
+     case '?':
+     case '=':
+        return true;
+     default:
+        return false;
+  }
+ }
 
 DwRfc1521Tokenizer::DwRfc1521Tokenizer(const DwString& aStr)
   : DwTokenizer(aStr)
