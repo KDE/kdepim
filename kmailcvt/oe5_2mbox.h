@@ -34,6 +34,7 @@ class oe5_2mbox
     filter        *f;
     filterInfo    *info;
     const char    *folderIn,*folderTo;
+    QString CAP;
   public:
     oe5_2mbox(const char *folderIn,const char *folderTo,filter *f,filterInfo *info);
    ~oe5_2mbox();
