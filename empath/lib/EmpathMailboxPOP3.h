@@ -71,14 +71,14 @@ class EmpathPOPIndexEntry
 		~EmpathPOPIndexEntry();
 		
 		int		number();
-		QString	uidl();
+		QString	id();
 		
 		const char * className() const { return "EmpathPOPIndexEntry"; }
 		
 	private:
 		
 		int		number_;
-		QString	uidl_;
+		QString	id_;
 };
 
 class EmpathPOPIndex : public QList<EmpathPOPIndexEntry>
@@ -106,7 +106,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		
 		~EmpathMailboxPOP3();
 
-		bool checkForNewMail();
 		bool logging();
 		void setLogging(bool policy);
 		bool alreadyHave();
@@ -116,8 +115,10 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 
 	protected slots:
 
-		void s_data(int, const char *, int);
+		void s_jobError(int, int, const char *);
+		void s_jobData(int, const char *, int);
 		void s_jobFinished(int);
+		void s_jobCancelled(int);
 	
 	public:
 
@@ -195,14 +196,12 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		
 		KIOJob * job;
 		
-		enum State {
-			NoWait,
-			WaitForList,
-			WaitForUIDL,
-			WaitForData };
-			
 		EmpathPOPIndex	index_;
 		EmpathPOPQueue	commandQueue_;
+		
+		unsigned int msgsInSpool_;
+		unsigned int octetsInSpool_;
+		QCString messageBuffer_;
 };
 
 

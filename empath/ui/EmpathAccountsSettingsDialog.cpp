@@ -244,7 +244,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 						(EmpathMailboxPOP3 *)tempMailbox,
 						false, this, "configDialog");
 
-				if (configDialog.exec() == QDialog::Accepted) {
+				if (configDialog.exec() != QDialog::Accepted) {
 					empathDebug("Deleting unwanted mailbox");
 					delete tempMailbox;
 					return;

@@ -40,82 +40,6 @@
 #include "EmpathConfig.h"
 #include "EmpathUtilities.h"
 
-	int
-EmpathPOPIndex::compareItems(EmpathPOPIndexEntry * i1, EmpathPOPIndexEntry * i2)
-{
-	return i1->number() - i2->number();
-}
-
-EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
-	:	type_(t),
-		msgNo_(n)
-{
-	empathDebug("ctor");
-
-	switch (t) {
-		
-		case Stat:		command_ = "stat";		break;
-		case List:		command_ = "list";		break;
-		case UIDL:		command_ = "uidl";		break;
-		case Get:		command_ = "download";	break;
-		case Remove:	command_ = "remove";	break;
-		default:								break;
-	}
-
-	if (n != -1)
-		command_ += '/' + QString().setNum(n);
-}
-
-EmpathPOPCommand::~EmpathPOPCommand()
-{
-	empathDebug("dtor");
-}
-
-	QString
-EmpathPOPCommand::command()
-{
-	return command_;
-}
-
-	EmpathPOPCommand::Type
-EmpathPOPCommand::type()
-{
-	return type_;
-}
-
-EmpathPOPIndexEntry::EmpathPOPIndexEntry(int i, const QString & s)
-	:	number_(i),
-		uidl_(s)
-{
-	empathDebug("ctor");
-}
-
-EmpathPOPIndexEntry::~EmpathPOPIndexEntry()
-{
-	empathDebug("dtor");
-}
-
-	int
-EmpathPOPIndexEntry::number()
-{
-	return number_;
-}
-
-	QString
-EmpathPOPIndexEntry::uidl()
-{
-	return uidl_;
-}
-
-EmpathPOPIndex::EmpathPOPIndex()
-{
-	empathDebug("ctor");
-}
-
-EmpathPOPIndex::~EmpathPOPIndex()
-{
-	empathDebug("dtor");
-}
 
 EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	:	EmpathMailbox		(name),
@@ -133,6 +57,8 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	job		= new KIOJob();
 	CHECK_PTR(job);
 	
+//	job->setGUImode(KIOJob::LIST);
+	
 	commandQueue_.setAutoDelete(true);
 }
 
@@ -147,13 +73,23 @@ EmpathMailboxPOP3::init()
 {
 	empathDebug("init() called");
 	
-	QObject::connect(
-		job, SIGNAL(sigFinished(int)),
-		this, SLOT(s_jobFinished(int)));
+	readConfig();
 	
 	QObject::connect(
-		job, SIGNAL(sigData(int, const char *, int)),
-		this, SLOT(s_data(int, const char *, int)));
+		job,	SIGNAL(sigFinished(int)),
+		this,	SLOT(s_jobFinished(int)));
+	
+	QObject::connect(
+		job,	SIGNAL(sigCanceled(int)),
+		this,	SLOT(s_jobCancelled(int)));
+  
+	QObject::connect(
+		job,	SIGNAL(sigError(int, int, const char *)),
+		this,	SLOT(s_jobError(int, int, const char *)));
+	
+	QObject::connect(
+		job,	SIGNAL(sigData(int, const char *, int)),
+		this,	SLOT(s_jobData(int, const char *, int)));
 	
 //	QString folderPixmapName = "mini-folder-inbox.png";
 
@@ -162,6 +98,7 @@ EmpathMailboxPOP3::init()
 	
 	EmpathFolder * folder_inbox = new EmpathFolder(url);
 	folderList_.append(folder_inbox);
+	emit(updateFolderLists());
 }
 
 	bool
@@ -173,38 +110,30 @@ EmpathMailboxPOP3::alreadyHave()
 	void
 EmpathMailboxPOP3::_enqueue(EmpathPOPCommand::Type t, int i)
 {
+	empathDebug("enqueue() called");
 	EmpathPOPCommand * p = new EmpathPOPCommand(t, i);
 	commandQueue_.enqueue(p);
+	if (commandQueue_.count() == 1)
+		_nextCommand();
 }
 
 	void
 EmpathMailboxPOP3::_nextCommand()
 {
+	empathDebug("nextCommand() called");
+
 	if (commandQueue_.isEmpty())
 		return;
 
 	QString prefix =
-		"pop://" + username_ + ":" + password_ + "@" + serverAddress_ + "/";
-
-	QString command = prefix + commandQueue_.head()->command();
-}
-
-	bool
-EmpathMailboxPOP3::checkForNewMail()
-{
-	empathDebug("_checkForNewMail() called");
-	_enqueue(EmpathPOPCommand::Stat);
+	//	"pop://" + username_ + ":" + password_ + "@" + serverAddress_ + "/";
+		"pop://" + serverAddress_ + "/";
 	
-	// XXX
-
-	EmpathPOPIndexIterator it(index_);
-
-	for (; it.current(); ++it)
-		_enqueue(EmpathPOPCommand::Get, it.current()->number());
-
-	// XXX
-
-	return false;
+	QString command = prefix + commandQueue_.head()->command();
+	
+	empathDebug("command == " + command);
+	
+	job->get(command);
 }
 
 	bool
@@ -216,8 +145,13 @@ EmpathMailboxPOP3::getMail()
 	void
 EmpathMailboxPOP3::s_checkNewMail()
 {
-	empathDebug("checkNewMail()");
-	checkForNewMail();
+	empathDebug("checkNewMail() called");
+	_enqueue(EmpathPOPCommand::Stat);
+	
+	EmpathPOPIndexIterator it(index_);
+
+	for (; it.current(); ++it)
+		_enqueue(EmpathPOPCommand::Get, it.current()->number());
 }
 
 	QString
@@ -237,8 +171,8 @@ EmpathMailboxPOP3::newMail() const
 	void
 EmpathMailboxPOP3::syncIndex(const EmpathURL &)
 {
-	if (!job->get("uidl"));
-		job->get("index");
+	index_.clear();
+	_enqueue(EmpathPOPCommand::UIDL);
 }
 
 	Q_UINT32
@@ -276,17 +210,40 @@ EmpathMailboxPOP3::path()
 	RMM::RMessage *
 EmpathMailboxPOP3::message(const EmpathURL & url)
 {
-//	_enqueue(EmpathPOPCommand::Get, url.messageID());
-	// XXX
+	QString inID = url.messageID();
+	
+	int messageIndex;
+	
+	if (inID.left(4) == "UIDL") { // 'UIDL%s'
+	
+		bool found(false);
+		
+		EmpathPOPIndexIterator it(index_);
+		
+		for (; it.current(); ++it) {
+			
+			if (it.current()->id() == inID) {
+			
+				found = true;
+				messageIndex = it.current()->number();	
+				break;
+			}
+		}
+		
+		if (!found) {
+			empathDebug("Couldn't find reference to message with id \"" +
+				inID + " in index !!");
+			return 0;
+		}
+		
+	} else // 'LIST%d'
+		messageIndex = inID.mid(4).toInt();
+
+	_enqueue(EmpathPOPCommand::Get, messageIndex);
+//XXX
 	return 0;
 }
 
-	bool
-EmpathMailboxPOP3::mark(
-	const EmpathURL &, const QStringList &, RMM::MessageStatus)
-{
-	return false;
-}
 
 	bool
 EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList & l)
@@ -304,36 +261,95 @@ EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList & l)
 EmpathMailboxPOP3::removeMessage(const EmpathURL & url)
 {
 //	_enqueue(EmpathPOPCommand::Remove, url.messageID());
-	// XXX
 	return false;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// KIOJOB SLOTS /////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
 	void
-EmpathMailboxPOP3::s_jobFinished(int)
+EmpathMailboxPOP3::s_jobCancelled(int id) 
 {
+	empathDebug("s_jobCancelled(" + QString().setNum(id) + ") called");
+	commandQueue_.dequeue();
+	_nextCommand();
 }
 
 	void
-EmpathMailboxPOP3::s_data(int, const char *, int)
+EmpathMailboxPOP3::s_jobFinished(int id) 
 {
+	empathDebug("s_jobFinished(" + QString().setNum(id) + ") called");
+	commandQueue_.dequeue();
+	_nextCommand();
+}
+
+	void
+EmpathMailboxPOP3::s_jobError(int id, int errorID, const char * text) 
+{
+	empathDebug("s_jobError(" + QString().setNum(id) + ") called");
+	empathDebug("Error ID == " + QString().setNum(errorID));
+	empathDebug("Error text == " + QString(text));
+	commandQueue_.dequeue();
+}
+
+	void
+EmpathMailboxPOP3::s_jobData(int, const char * data, int)
+{
+	empathDebug("s_data called with data == " + QString(data));
+	
+	QString s(data);
+	if (s.isEmpty()) {
+		empathDebug("Data is empty !!");
+		return;
+	}
+
 	if (commandQueue_.isEmpty()) {
 		// Whoah ! We should be waiting for completion.
-		empathDebug("Command queue empty in s_data");
+		empathDebug("Command queue empty in s_data !!");
 		return;
 	}
 	
 	switch (commandQueue_.head()->type()) {
 			
 		case EmpathPOPCommand::Stat:
+			{
+				int i = s.find(' ');
+			
+				msgsInSpool_ = s.left(i).toInt();
+			
+				octetsInSpool_ = s.mid(i + 1).toInt();
+			}
 			break;
 		
 		case EmpathPOPCommand::List:
+			{
+				int i = s.find(' ');
+			
+				EmpathPOPIndexEntry * e =
+					new EmpathPOPIndexEntry(
+						s.left(i).toInt(),
+						"LIST" + s.mid(i + 1));
+				index_.append(e);
+			}
 			break;
 			
 		case EmpathPOPCommand::UIDL:
+			{
+				int i = s.find(' ');
+			
+				EmpathPOPIndexEntry * e =
+					new EmpathPOPIndexEntry(
+						s.left(i).toInt(),
+						"UIDL" + s.mid(i + 1));
+				index_.append(e);
+			}
 			break;
 		
 		case EmpathPOPCommand::Get:
+			
+			messageBuffer_.append(s);
+			
 			break;
 		
 		case EmpathPOPCommand::Remove:
@@ -344,7 +360,9 @@ EmpathMailboxPOP3::s_data(int, const char *, int)
 	}
 }
 
-// Illegal operations follow
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// ILLEGAL OPS /////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 	bool
 EmpathMailboxPOP3::addFolder(const EmpathURL &)
@@ -363,9 +381,15 @@ EmpathMailboxPOP3::mark(const EmpathURL &, RMM::MessageStatus)
 	return false;
 }
 
+	bool
+EmpathMailboxPOP3::mark(
+	const EmpathURL &, const QStringList &, RMM::MessageStatus)
+{
+	return false;
+}
 
 //////////////////////////////////////////////////////////////////////////////
-///////////////////////// CONFIG STUFF FOLLOWS TO END ////////////////////////
+/////////////////////////////////// CONFIG ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
 	void
@@ -396,6 +420,7 @@ EmpathMailboxPOP3::saveConfig()
 	CWE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL,		checkMailInterval_);
 	CWE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE,		retrieveIfHave_);
 #undef CWE
+	config_->sync();
 }
 
 	void
@@ -405,15 +430,11 @@ EmpathMailboxPOP3::readConfig()
 	KConfig * config_ = KGlobal::config();
 	config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
-// For some reason, this just DOES NOT WORK here ! Need to do setGroup !
-//	KConfigGroupSaver(config_, canonName_);
 #define CRE config_->readEntry
 #define CRUNE config_->readUnsignedNumEntry
 #define CRBE config_->readBoolEntry
 	
 	empathDebug("Config group is now \"" + QString(config_->group()) + "\"");
-
-	url_.setMailboxName(CRE(EmpathConfig::KEY_MAILBOX_NAME, "Unnamed"));
 
 	serverAddress_ =
 		CRE(EmpathConfig::KEY_POP3_SERVER_ADDRESS, i18n("<unknown>"));
@@ -611,4 +632,89 @@ EmpathMailboxPOP3::setLogging(bool policy)
 	logging_ = policy;
 }
 
+//////////////////////////////////////////////////////////////////////////
+/////////////////////////////// COMMANDS /////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
+EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
+	:	type_(t),
+		msgNo_(n)
+{
+	empathDebug("ctor");
+
+	switch (t) {
+		
+		case Stat:		command_ = "stat";		break;
+		case List:		command_ = "index";		break;
+		case UIDL:		command_ = "uidl";		break;
+		case Get:		command_ = "download";	break;
+		case Remove:	command_ = "remove";	break;
+		default:								break;
+	}
+	
+	command_ += '/';
+
+	if (n != -1)
+		command_ + QString().setNum(n);
+}
+
+EmpathPOPCommand::~EmpathPOPCommand()
+{
+	empathDebug("dtor");
+}
+
+	QString
+EmpathPOPCommand::command()
+{
+	return command_;
+}
+
+	EmpathPOPCommand::Type
+EmpathPOPCommand::type()
+{
+	return type_;
+}
+
+//////////////////////////////////////////////////////////////////////////
+///////////////////////////////// INDEX //////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+EmpathPOPIndexEntry::EmpathPOPIndexEntry(int i, const QString & s)
+	:	number_(i),
+		id_(s)
+{
+	empathDebug("ctor");
+}
+
+EmpathPOPIndexEntry::~EmpathPOPIndexEntry()
+{
+	empathDebug("dtor");
+}
+
+	int
+EmpathPOPIndexEntry::number()
+{
+	return number_;
+}
+
+	QString
+EmpathPOPIndexEntry::id()
+{
+	return id_;
+}
+
+EmpathPOPIndex::EmpathPOPIndex()
+{
+	empathDebug("ctor");
+}
+
+EmpathPOPIndex::~EmpathPOPIndex()
+{
+	empathDebug("dtor");
+}
+
+	int
+EmpathPOPIndex::compareItems(EmpathPOPIndexEntry * i1, EmpathPOPIndexEntry * i2)
+{
+	return i1->number() - i2->number();
+}

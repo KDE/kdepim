@@ -52,6 +52,12 @@ class REntity : public RMessageComponent
 		virtual void createDefault() = 0L;
 		
 		virtual const char * className() const { return "REntity"; }
+	
+	protected:
+		
+		RMessageComponent::strRep_;
+		RMessageComponent::parsed_;
+		RMessageComponent::assembled_;
 };
 
 }
