@@ -120,9 +120,7 @@ class QtopiaParser : public QXmlDefaultHandler
         }
         
         QString categoryList = attributes.value( "categories" );
-        QStringList categories = QStringList::split( ";", categoryList );
-        // TODO: Translate category ids in real text.
-        event->setCategories( categories );
+        event->setCategories( lookupCategories( categoryList ) );
 
         QString alarmStr = attributes.value( "alarm" );
         if ( !alarmStr.isEmpty() ) {
@@ -160,9 +158,7 @@ class QtopiaParser : public QXmlDefaultHandler
         todo->setPriority( priority );
         
         QString categoryList = attributes.value( "Categories" );
-        QStringList categories = QStringList::split( ";", categoryList );
-        // TODO: Translate category ids in real text.
-        todo->setCategories( categories );
+        todo->setCategories( lookupCategories( categoryList ) );
         
         QString completedStr = attributes.value( "Completed" );
         if ( completedStr == "1" ) todo->setCompleted( true );
@@ -181,6 +177,10 @@ class QtopiaParser : public QXmlDefaultHandler
         if ( oldTodo ) mCalendar->deleteTodo( oldTodo );
 
         mCalendar->addTodo( todo );
+      } else if ( qName == "Category" ) {
+        QString id = attributes.value( "id" );
+        QString name = attributes.value( "name" );
+        setCategory( id, name );
       }
       
       return true;
@@ -230,10 +230,36 @@ class QtopiaParser : public QXmlDefaultHandler
       return dt;
     }
 
+    QStringList lookupCategories( const QString &categoryList )
+    {
+      QStringList categoryIds = QStringList::split( ";", categoryList );
+      QStringList categories;
+      QStringList::ConstIterator it;
+      for( it = categoryIds.begin(); it != categoryIds.end(); ++it ) {
+        categories.append( category( *it ) );
+      }
+      return categories;
+    }
+
   private:
     Calendar *mCalendar;
+
+    static QString category( const QString &id )
+    {
+      QMap<QString,QString>::ConstIterator it = mCategoriesMap.find( id );
+      if ( it == mCategoriesMap.end() ) return id;
+      else return *it;
+    }
+
+    static void setCategory( const QString &id, const QString &name )
+    {
+      mCategoriesMap.insert( id, name );
+    }
+
+    static QMap<QString,QString> mCategoriesMap;
 };
 
+QMap<QString,QString> QtopiaParser::mCategoriesMap;
 
 QtopiaFormat::QtopiaFormat()
 {
