@@ -187,7 +187,7 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
   topL->addWidget(stack);
 
   dummyLabel = new QLabel(i18n("Select an action."), stack);
-  stack->addWidget(dummyLabel);
+  stack->addWidget(dummyLabel, 0);
 
   // init widget stack and the types combo box
   int index = 1;
