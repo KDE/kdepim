@@ -209,10 +209,10 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 
   const QString uid = incidencebase->uid();
 
-  if ( mUidsPendingUpdate.contains( uid ) ) {
-    /* We are currently processing this event ( removing and readding it ). 
-     * If so, ignore this update. Keep the last of these around and process 
-     * once we hear back from KMail on this event. */
+  if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
+    /* We are currently processing this event ( removing and readding or 
+     * adding it ). If so, ignore this update. Keep the last of these around 
+     * and process once we hear back from KMail on this event. */
     mPendingUpdates.replace( uid, incidencebase );
     return;
   }
@@ -354,9 +354,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       /* Add to the cache immediately if this is a new event coming from 
        * KOrganizer. It relies on the incidence being in the calendar when
        * addIncidence returns. */
-      if ( newIncidence )
+      if ( newIncidence ) {
         mCalendar.addIncidence( incidence );
-
+        incidence->registerObserver( this );
+      }
     }
   } else { /* KMail told us */
     bool ourOwnUpdate = false;
@@ -378,9 +379,11 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
       /* Add to the cache if the add didn't come from KOrganizer, in which case
        * we've already added it, and listen to updates from KOrganizer for it. */
-      if ( !mUidsPendingAdding.contains( uid ) )
+      if ( !mUidsPendingAdding.contains( uid ) ) {
         mCalendar.addIncidence( incidence );
-      incidence->registerObserver( this );
+        incidence->registerObserver( this );
+      }
+      kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
         incidence->setReadOnly( !(*map)[ subResource ].writable() );
