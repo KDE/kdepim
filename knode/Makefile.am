@@ -143,6 +143,9 @@ apps_DATA = KNode.desktop
 rcdir = $(kde_datadir)/knode
 rc_DATA = headers.rc knodeui.rc knreaderui.rc kncomposerui.rc
 
+knewsprotocol_DATA = knewsservice.protocol
+knewsprotocoldir = $(kde_servicesdir)
+
 KDE_ICON = AUTO
 
 EXTRA_DIST = KNode.desktop
