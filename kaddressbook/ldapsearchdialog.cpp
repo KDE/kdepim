@@ -26,14 +26,13 @@
 #include <qlistview.h>
 #include <qpushbutton.h>
 
+#include <kabc/addresslineedit.h>
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-
-#include "viewmanager.h"
 
 #include "ldapsearchdialog.h"
 
@@ -171,7 +170,7 @@ void LDAPSearchDialog::restoreSettings()
 
   // then read the config file and register all selected 
   // server in the list
-  KConfig* config = ViewManager::config();
+  KConfig* config = KABC::AddressLineEdit::config();
   config->setGroup( "LDAP" );
   mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
   if ( !mNumHosts ) {
@@ -182,7 +181,7 @@ void LDAPSearchDialog::restoreSettings()
     for ( int j = 0; j < mNumHosts; ++j ) {
       KABC::LdapClient* ldapClient = new KABC::LdapClient( this, "ldapclient" );
     
-      QString host =  config->readEntry( QString( "SelectedHost%1" ).arg( j ), "" );
+      QString host = config->readEntry( QString( "SelectedHost%1" ).arg( j ), "" );
       if ( !host.isEmpty() )
         ldapClient->setHost( host );
 
