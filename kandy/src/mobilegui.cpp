@@ -498,8 +498,8 @@ void MobileGui::mergePhonebooks()
       
         QMessageBox *msg = new QMessageBox(i18n("Conflicting Entries"),text,
                                          QMessageBox::Warning,1,2,0,this);
-        msg->setButtonText(1,i18n("Use Kab entry"));
-        msg->setButtonText(2,i18n("Use Mobile entry"));
+        msg->setButtonText(1,i18n("Use Kab Entry"));
+        msg->setButtonText(2,i18n("Use Mobile Entry"));
         switch (msg->exec()) {
           case 1: // use kab entry
             mobileEntry->mPhone = kabEntry->mPhone;

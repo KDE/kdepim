@@ -26,7 +26,7 @@ KMailCVT::KMailCVT(QWidget *parent, const char *name)
 	setCaption( i18n( "KMailCVT Import Tool" ) );
 
 	selfilterpage = new KSelFilterPage(this);
-	addPage( selfilterpage, i18n( "Step 1: Select filter" ) );
+	addPage( selfilterpage, i18n( "Step 1: Select Filter" ) );
 
 	importpage = new KImportPage(this);
 	addPage( importpage, i18n( "Step 2: Importing..." ) );

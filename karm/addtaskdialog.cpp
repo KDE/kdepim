@@ -139,7 +139,7 @@ AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
     int lines = (int)(desktopCount/2);
     if (lines*2 != desktopCount) lines++; 
       groupBox = new QButtonGroup( lines, QGroupBox::Horizontal,
-                                   i18n("in desktop"), page, "_desktopsGB");
+                                   i18n("In Desktop"), page, "_desktopsGB");
   }
   lay1->addWidget(groupBox);
 

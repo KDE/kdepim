@@ -1388,11 +1388,11 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
     encrPrefCombo->insertItem( i18n("<none>") );
-    encrPrefCombo->insertItem( i18n("Never encrypt with this key") );
-    encrPrefCombo->insertItem( i18n("Always encrypt with this key") );
-    encrPrefCombo->insertItem( i18n("Encrypt whenever encryption is possible") );
-    encrPrefCombo->insertItem( i18n("Always ask") );
-    encrPrefCombo->insertItem( i18n("Ask whenever encryption is possible") );
+    encrPrefCombo->insertItem( i18n("Never Encrypt with This Key") );
+    encrPrefCombo->insertItem( i18n("Always Encrypt with This Key") );
+    encrPrefCombo->insertItem( i18n("Encrypt Whenever Encryption is Possible") );
+    encrPrefCombo->insertItem( i18n("Always Ask") );
+    encrPrefCombo->insertItem( i18n("Ask Whenever Encryption is Possible") );
 
     EncryptPref encrPref = pgp->encryptionPreference( *ait );
     switch( encrPref ) {

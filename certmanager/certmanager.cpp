@@ -185,7 +185,7 @@ CertManager::CertManager( bool remote, const QString& query,
   // Toolbar
   _toolbar = toolBar( "mainToolBar" );
 
-  (new LabelAction( i18n("Look for"), actionCollection(), "label_action"))->plug( _toolbar );
+  (new LabelAction( i18n("Look For"), actionCollection(), "label_action"))->plug( _toolbar );
   _leAction = new LineEditAction( QString::null, actionCollection(), this, 
 				  SLOT( loadCertificates() ), 
 				  "query_lineedit_action");
