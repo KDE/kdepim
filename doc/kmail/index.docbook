@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>10/01/2001</date>
+<date>14/01/2001</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -661,7 +661,8 @@ them.</para></warning>
 <warning><para>&kmail; has to rely on PGP's output. This is often different
 between different version of PGP, so it's important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
-not warn you if something fails.</para></warning>
+not warn you if something fails. You better enable <guilabel>Show ciphered text after composing</guilabel>.
+</para></warning>
 
 <para>To setup and use pgp support in &kmail; it is necessary to have pgp installed
 and set up properly. Of course we cannot give you a full introduction of
@@ -713,6 +714,11 @@ send an encrypted message to somebody, then you can't read this message any long
 composed and encrypted it. Turn this option on to keep sent encrypted messages
 readable for you too. You can then read the plain text of this messages in the
 <guilabel>sent-mail</guilabel> folder.</para>
+
+<para><guilabel>Show ciphered text after composing</guilabel>: This will show you the result
+of encrypting and signing before the message gets sent. This way you can still cancel sending
+if encrypting failed. It is strongly recommended to use this option if you have just
+started using &kmail; together with PGP.</para>
 
 <para><guilabel>Encryption tool</guilabel>: Here you can choose if you want to
 use GnuPG or PGP. Of course the program you select has to be installed on
