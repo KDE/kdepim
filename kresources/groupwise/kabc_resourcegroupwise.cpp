@@ -21,6 +21,7 @@
 #include <qapplication.h>
 
 #include <kabc/addressee.h>
+#include <kabc/vcardconverter.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -68,6 +69,9 @@ ResourceGroupwise::ResourceGroupwise( const KURL &url,
 
 void ResourceGroupwise::init()
 {
+  mDownloadJob = 0;
+  mProgress = 0;
+
   mPrefs = new GroupwisePrefs;
 
   setType( "groupwise" );
@@ -135,8 +139,46 @@ bool ResourceGroupwise::load()
 
 bool ResourceGroupwise::asyncLoad()
 {
+  if ( mDownloadJob ) {
+    kdWarning() << "Download still in progress" << endl;
+    return false;
+  }
+
   mAddrMap.clear();
   loadCache();
+
+#if 1
+  KURL url( prefs()->url() );
+  url.setProtocol( "groupwise" );
+  url.setPath( "/addressbook/" );
+  url.setUser( prefs()->user() );
+  url.setPass( prefs()->password() );
+
+  QString query = "?";
+  QStringList ids = mPrefs->readAddressBooks();
+  QStringList::ConstIterator it;
+  for( it = ids.begin(); it != ids.end(); ++it ) {
+    if ( it != ids.begin() ) query += "&";
+    query += "addressbookid=" + *it;
+  }
+  url.setQuery( query );
+
+  kdDebug() << "Download URL: " << url << endl;
+
+  mJobData = QString::null;
+
+  mDownloadJob = KIO::get( url, false, false );
+  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+
+  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
+    KPIM::ProgressManager::getUniqueID(), i18n("Downloading addressbook") );
+  connect( mProgress,
+           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SLOT( cancelLoad() ) );
+#else
 
 #if 1
   if ( !mServer->readAddressBooksSynchronous( mPrefs->readAddressBooks(), this ) ) {
@@ -150,6 +192,8 @@ bool ResourceGroupwise::asyncLoad()
     kdError() << "ResourceGroupwise::asyncLoad() error" << endl;
     return false;
   }
+#endif
+
 #endif
 
   return true;
@@ -189,6 +233,53 @@ bool ResourceGroupwise::asyncSave( Ticket* )
   return true;
 }
 
+void ResourceGroupwise::slotJobResult( KIO::Job *job )
+{
+  kdDebug() << "ResourceGroupwise::slotJobResult(): " << endl;
+
+  if ( job->error() ) {
+    kdError() << job->errorString() << endl;
+  } else {
+    mAddrMap.clear();
+  
+    KABC::VCardConverter conv;
+    Addressee::List addressees = conv.parseVCards( mJobData );
+    Addressee::List::ConstIterator it;
+    for( it = addressees.begin(); it != addressees.end(); ++it ) {
+      KABC::Addressee addr = *it;
+      if ( !addr.isEmpty() ) {
+        addr.setResource( this );
+#if 0      
+        QString remoteUid = converter.stringToQString( (*it)->id );
+
+        KABC::Addressee oldAddressee = findByUid( localUid( remoteUid ) );
+        if ( oldAddressee.isEmpty() ) // new addressee
+          setRemoteUid( addr.uid(), remoteUid );
+        else {
+          addr.setUid( oldAddressee.uid() );
+          removeAddressee( oldAddressee );
+        }
+#endif
+        insertAddressee( addr );
+        clearChange( addr );
+      }
+    }
+  }
+
+  loadFinished();
+
+  mDownloadJob = 0;
+  if ( mProgress ) mProgress->setComplete();
+  mProgress = 0;
+}
+
+void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
+{
+//  kdDebug() << "ResourceGroupwise::slotJobData()" << endl;
+
+  mJobData.append( data.data() );
+}
+
 void ResourceGroupwise::loadFinished()
 {
   if ( !mServer->error().isEmpty() ) {
@@ -200,6 +291,14 @@ void ResourceGroupwise::loadFinished()
 
     emit loadingFinished( this );
   }
+}
+
+void ResourceGroupwise::cancelLoad()
+{
+  if ( mDownloadJob ) mDownloadJob->kill();
+  mDownloadJob = 0;
+  if ( mProgress ) mProgress->setComplete();
+  mProgress = 0;
 }
 
 #include "kabc_resourcegroupwise.moc"

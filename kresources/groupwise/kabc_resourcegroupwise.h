@@ -22,6 +22,10 @@
 
 #include <kabcresourcecached.h>
 
+#include <libkdepim/progressmanager.h>
+
+#include <kio/job.h>
+
 class KConfig;
 
 class GroupwiseServer;
@@ -65,10 +69,19 @@ class ResourceGroupwise : public ResourceCached
   private slots:
     void loadFinished();
 
+    void slotJobResult( KIO::Job * );
+    void slotJobData( KIO::Job *, const QByteArray & );
+
+    void cancelLoad();
+
   private:
     GroupwisePrefs *mPrefs;
 
     GroupwiseServer *mServer;
+
+    KIO::TransferJob *mDownloadJob;
+    KPIM::ProgressItem *mProgress;
+    QString mJobData;
 };
 
 }
