@@ -238,46 +238,45 @@ bool KonsoleKalendar::showInstance()
 	  lastdate = m_variables->getEndDateTime().date();
 	}
 
+        HTMLExportSettings htmlSettings( "Konsolekalendar" );
+
+        title = "Appointments for " + firstdate.toString(Qt::TextDate);
+        if ( firstdate != lastdate ) {
+          title += " - " + lastdate.toString(Qt::TextDate);
+        }
+        htmlSettings.setEventTitle( title );
+        //TODO: get progname and url from the values set in main
+        htmlSettings.setCreditName( "KonsoleKalendar" );
+        htmlSettings.setCreditURL( "http://pim.kde.org/components/konsolekalendar.php" );
+
+        htmlSettings.setExcludePrivate( true );
+        htmlSettings.setExcludeConfidential( true );
+        
+        htmlSettings.setMonthView( false );
+        htmlSettings.setEventView( true );
+        htmlSettings.setEventAttendees( true );
+// Not supporting Todos yet
+//         title = "To-Do List for " + firstdate.toString(Qt::TextDate);
+//         if ( firstdate != lastdate ) {
+//           title += " - " + lastdate.toString(Qt::TextDate);
+//         }
+        htmlSettings.setTodoListTitle( title );
+        htmlSettings.setTodoView( false );
+//         htmlSettings.setTaskCategories( false );
+//         htmlSettings.setTaskAttendees( false );
+//         htmlSettings.setTaskDueDate( true );
+        
+        htmlSettings.setDateStart( QDateTime( firstdate ) );
+        htmlSettings.setDateEnd( QDateTime( lastdate ) ) ;
+        
         KCal::HtmlExport *Export;
         if ( !m_variables->isCalendarResources() ) {
-          Export = new HtmlExport( m_variables->getCalendar() );
+          Export = new HtmlExport( m_variables->getCalendar(), &htmlSettings );
         } else {
-          Export = new HtmlExport( m_variables->getCalendarResources() );
+          Export = new HtmlExport( m_variables->getCalendarResources(), &htmlSettings );
         }
-
-	title = "Appointments for " + firstdate.toString(Qt::TextDate);
-	if ( firstdate != lastdate ) {
-	  title += " - " + lastdate.toString(Qt::TextDate);
-	}
-	Export->setTitle( title );
-	Export->setEmail( "" );
-	Export->setFullName( "" );
-        //TODO: get progname and url from the values set in main
-	Export->setCredit( "KonsoleKalendar",
-                           "http://pim.kde.org/components/konsolekalendar.php");
-
-	Export->setMonthViewEnabled( false );
-	Export->setEventsEnabled( true );
-	Export->setCategoriesEventEnabled( true );
-	Export->setAttendeesEventEnabled( true );
-	Export->setExcludePrivateEventEnabled( true );
-	Export->setExcludeConfidentialEventEnabled( true );
-// Not supporting Todos yet
-	title = "To-Do List for " + firstdate.toString(Qt::TextDate);
-	if ( firstdate != lastdate ) {
-	  title += " - " + lastdate.toString(Qt::TextDate);
-	}
-	Export->setTitleTodo( title );
-	Export->setTodosEnabled( false );
-	Export->setCategoriesTodoEnabled( false );
-	Export->setAttendeesTodoEnabled( false );
-	Export->setExcludePrivateTodoEnabled( false );
-	Export->setExcludeConfidentialTodoEnabled( false );
-	Export->setDueDateEnabled( false );
-
-	Export->setDateRange( firstdate, lastdate );
-
 	status = Export->save( &ts );
+        delete Export;
       }
       f.close();
     }
