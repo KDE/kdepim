@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Novell Groupwise
+X-KDE-Library=kcal_groupwise
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=groupwise

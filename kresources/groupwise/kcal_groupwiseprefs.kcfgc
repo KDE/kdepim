@@ -1,0 +1,9 @@
+# Code generation options for kconfig_compiler
+File=kresources_kcal_groupwise.kcfg
+ClassName=GroupwisePrefs
+NameSpace=KCal
+Singleton=false
+Mutators=true
+GlobalEnums=true
+#ItemAccessors=true
+#SetUserTexts=true

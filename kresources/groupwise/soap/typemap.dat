@@ -1,0 +1,47 @@
+#	typemap.dat
+#
+#	gSOAP WSDL type definitions (optional) for the WSDL parser 'wsdl2h'
+#
+#	gSOAP XML Web services tools
+#	Copyright (C) 2004, Robert van Engelen, Genivia, Inc.
+#	All Rights Reserved.
+
+#	This file contains custom definitions of the XML schema types and
+#	C/C++ types for your project, and XML namespace prefix definitions.
+ 
+#	XML namespace prefix definitions can be provided to override the
+#	default choice of ns1, ns2, ... prefixes. For example:
+
+i	= "http://www.soapinterop.org/"
+s	= "http://www.soapinterop.org/xsd"
+
+#	Type definitions consists of a single line containing:
+#	type = declaration | use | pointer-use
+#	where
+#	type is the XML schema type (or an application type in a namespace
+#		that has a prefix definition given as above).
+#	declaration is an optional C/C++ type declaration
+#	use is how the type is referred to in code
+#	pointer-use is how the type should be referred to as a pointer to
+#		implement nillable XML elements/attributes (not required if
+#		type is already pointer-based)
+
+#	Example XML schema and C/C++ type bindings:
+
+xsd__int	= | int
+
+xsd__dateTime	= | char* | char*
+
+#	To use regular char* strings instead of std::string, use:
+
+# xsd__string	= | char* | char*
+
+#	To use regular char* strings serialized with xsi:type attributes, use:
+
+# xsd__string	= typedef char *xsd__string; | xsd__string | xsd__string
+
+#	More examples:
+
+# xsd__boolean = enum xsd__boolean { false_, true_ }; | enum xsd__boolean
+
+# xsd__base64Binary = class xsd__base64Binary { unsigned char *__ptr; int __size; }; | xsd__base64Binary | xsd__base64Binary
