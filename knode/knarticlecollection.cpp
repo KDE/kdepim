@@ -182,8 +182,8 @@ int KNArticleVector::compareById(const void *p1, const void *p2)
   KNArticle *a1, *a2;
   int rc=0, id1, id2;
 
-  a1=*(static_cast<KNArticle**>(p1));
-  a2=*(static_cast<KNArticle**>(p2));
+  a1=*((KNArticle**)(p1));
+  a2=*((KNArticle**)(p2));
 
   id1=a1->id(),
   id2=a2->id();
@@ -200,8 +200,8 @@ int KNArticleVector::compareByMsgId(const void *p1, const void *p2)
   KNArticle *a1, *a2;
   QCString mid1, mid2;
 
-  a1=*(static_cast<KNArticle**>(p1));
-  a2=*(static_cast<KNArticle**>(p2));
+  a1=*(KNArticle**)(p1);
+  a2=*(KNArticle**)(p2);
 
   mid1=a1->messageID(true)->as7BitString(false);
   mid2=a2->messageID(true)->as7BitString(false);
