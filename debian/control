@@ -8,9 +8,9 @@ Standards-Version: 3.1.1
 Package: kdepim-cvs
 Architecture: any
 Depends: ${shlibs:Depends}
-Conflicts: korganizer
+Conflicts: korganizer, kpilot
 Suggests: kdebase-cvs
-Provides: korganizer
+Provides: korganizer, kpilot
 Description: KDE Personal Information Management Applications
  This package contains the following programs: 
   - korganizer
