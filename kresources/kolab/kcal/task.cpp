@@ -55,6 +55,9 @@ QString Task::taskToXML( KCal::Todo* todo )
 }
 
 Task::Task( KCal::Todo* task )
+  : mPriority( 3 ), mPercentCompleted( 100 ),
+    mStatus( KCal::Incidence::StatusNone ),
+    mHasDueDate( false ), mHasCompletedDate( false )
 {
   if ( task )
     setFields( task );
@@ -64,15 +67,158 @@ Task::~Task()
 {
 }
 
+void Task::setPriority( int priority )
+{
+  mPriority = priority;
+}
+
+int Task::priority() const
+{
+  return mPriority;
+}
+
+void Task::setPercentCompleted( int percent )
+{
+  mPercentCompleted = percent;
+}
+
+int Task::percentCompleted() const
+{
+  return mPercentCompleted;
+}
+
+void Task::setStatus( KCal::Incidence::Status status )
+{
+  mStatus = status;
+}
+
+KCal::Incidence::Status Task::status() const
+{
+  return mStatus;
+}
+
+void Task::setParent( const QString& parentUid )
+{
+  mParent = parentUid;
+}
+
+QString Task::parent() const
+{
+  return mParent;
+}
+
+void Task::setDueDate( const QDateTime& date )
+{
+  mDueDate = date;
+}
+
+QDateTime Task::dueDate() const
+{
+  return mDueDate;
+}
+
+bool Task::hasDueDate() const
+{
+  return mHasDueDate;
+}
+
+void Task::setCompletedDate( const QDateTime& date )
+{
+  mCompletedDate = date;
+}
+
+QDateTime Task::completedDate() const
+{
+  return mCompletedDate;
+}
+
+bool Task::hasCompletedDate() const
+{
+  return mHasCompletedDate;
+}
+
 bool Task::loadAttribute( QDomElement& element )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  QString tagName = element.tagName();
+
+  if ( tagName == "priority" ) {
+    bool ok;
+    int priority = element.text().toInt( &ok );
+    if ( !ok || priority < 0 || priority > 5 )
+      priority = 3;
+    setPriority( priority );
+  } else if ( tagName == "completed" ) {
+    bool ok;
+    int percent = element.text().toInt( &ok );
+    if ( !ok || percent < 0 || percent > 100 )
+      percent = 0;
+    setPercentCompleted( percent );
+  } else if ( tagName == "status" ) {
+    if ( element.text() == "in-progress" )
+      setStatus( KCal::Incidence::StatusInProcess );
+    else if ( element.text() == "completed" )
+      setStatus( KCal::Incidence::StatusCompleted );
+    else if ( element.text() == "waiting-on-someone-else" )
+      setStatus( KCal::Incidence::StatusNeedsAction );
+    else if ( element.text() == "deferred" )
+      // Guessing a status here
+      setStatus( KCal::Incidence::StatusCanceled );
+    else
+      // Default
+      setStatus( KCal::Incidence::StatusNone );
+  } else if ( tagName == "due-date" )
+    setDueDate( stringToDateTime( element.text() ) );
+  else if ( tagName == "parent" )
+    setParent( element.text() );
+  else
+    return Incidence::loadAttribute( element );
+
+  // We handled this
   return true;
 }
 
 bool Task::saveAttributes( QDomElement& element ) const
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  // Save the base class elements
+  Incidence::saveAttributes( element );
+
+  writeString( element, "priority", QString::number( priority() ) );
+  writeString( element, "completed", QString::number( percentCompleted() ) );
+
+  switch( status() ) {
+  case KCal::Incidence::StatusInProcess:
+    writeString( element, "status", "in-progress" );
+    break;
+  case KCal::Incidence::StatusCompleted:
+    writeString( element, "status", "completed" );
+    break;
+  case KCal::Incidence::StatusNeedsAction:
+    writeString( element, "status", "waiting-on-someone-else" );
+    break;
+  case KCal::Incidence::StatusCanceled:
+    writeString( element, "status", "deferred" );
+    break;
+  case KCal::Incidence::StatusNone:
+    writeString( element, "status", "not-started" );
+    break;
+  case KCal::Incidence::StatusTentative:
+  case KCal::Incidence::StatusConfirmed:
+  case KCal::Incidence::StatusDraft:
+  case KCal::Incidence::StatusFinal:
+  case KCal::Incidence::StatusX:
+    // All of these are saved as StatusNone.
+    writeString( element, "status", "not-started" );
+    break;
+  }
+
+  if ( hasDueDate() )
+    writeString( element, "due-date", dateTimeToString( dueDate() ) );
+
+  if ( !parent().isNull() )
+    writeString( element, "parent", parent() );
+
+  // TODO: completeddate
+
   return true;
 }
 
@@ -114,12 +260,33 @@ QString Task::saveXML() const
 
 void Task::setFields( const KCal::Todo* task )
 {
-  kdDebug() << "NYFI: " << k_funcinfo << endl;
-  KolabBase::setFields( task );
+  Incidence::setFields( task );
+
+  setPriority( task->priority() );
+  setPercentCompleted( task->percentComplete() );
+  setStatus( task->status() );
+  if ( task->hasDueDate() )
+    setDueDate( task->dtDue() );
+  else
+    mHasDueDate = false;
+  setParent( QString::null );
+
+  // TODO: Completed date
 }
 
 void Task::saveTo( KCal::Todo* task )
 {
-  kdDebug() << "NYFI: " << k_funcinfo << endl;
-  KolabBase::saveTo( task );
+  Incidence::saveTo( task );
+
+  task->setPriority( priority() );
+  task->setPercentComplete( percentCompleted() );
+  task->setStatus( status() );
+  task->setHasDueDate( hasDueDate() );
+  if ( hasDueDate() )
+    task->setDtDue( dueDate() );
+
+  if ( parent() != QString::null )
+    task->setRelatedToUid( parent() );
+
+  // TODO: Completed date
 }

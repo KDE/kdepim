@@ -54,6 +54,9 @@ KolabBase::~KolabBase()
 
 void KolabBase::setFields( const KCal::Incidence* incidence )
 {
+  // So far unhandled KCal::IncidenceBase fields:
+  // mPilotID, mSyncStatus, mFloats
+
   setUid( incidence->uid() );
   setBody( incidence->description() );
   setCategories( incidence->categoriesStr() );

@@ -34,7 +34,9 @@
 #ifndef KOLAB_TASK_H
 #define KOLAB_TASK_H
 
-#include <kolabbase.h>
+#include <incidence.h>
+
+#include <libkcal/incidence.h>
 
 class QDomElement;
 
@@ -50,7 +52,7 @@ namespace Kolab {
  * The instances of this class are temporary, only used to convert
  * one to the other.
  */
-class Task : public KolabBase {
+class Task : public Incidence {
 public:
   /// Use this to parse an xml string to a task entry
   /// The caller is responsible for deleting the returned task
@@ -65,6 +67,26 @@ public:
   virtual QString type() const { return "Task"; }
 
   void saveTo( KCal::Todo* todo );
+
+  virtual void setPriority( int priority );
+  virtual int priority() const;
+
+  virtual void setPercentCompleted( int percent );
+  virtual int percentCompleted() const;
+
+  virtual void setStatus( KCal::Incidence::Status status );
+  virtual KCal::Incidence::Status status() const;
+
+  virtual void setParent( const QString& parentUid );
+  virtual QString parent() const;
+
+  virtual void setDueDate( const QDateTime& date );
+  virtual QDateTime dueDate() const;
+  virtual bool hasDueDate() const;
+
+  virtual void setCompletedDate( const QDateTime& date );
+  virtual QDateTime completedDate() const;
+  virtual bool hasCompletedDate() const;
 
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
@@ -81,6 +103,17 @@ public:
 protected:
   // Read all known fields from this ical todo
   void setFields( const KCal::Todo* );
+
+  int mPriority;
+  int mPercentCompleted;
+  KCal::Incidence::Status mStatus;
+  QString mParent;
+
+  bool mHasDueDate;
+  QDateTime mDueDate;
+
+  bool mHasCompletedDate;
+  QDateTime mCompletedDate;
 };
 
 }
