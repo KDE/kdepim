@@ -10,6 +10,6 @@ X-KDE-Library=kabldapconfig
 X-KDE-FactoryName=kabldapconfig
 X-KDE-HasReadOnlyMode=false
 
-Name=Address Book LDAP Configuration
+Name=LDAP Lookup
 Comment=Configure the address book LDAP settings
 Keywords=kaddressbook, configure, settings, LDAP
