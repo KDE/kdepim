@@ -48,7 +48,7 @@ public:
   // This is just for QMap
   SubResource() {}
 
-  SubResource( bool active, bool writable, const QString label = QString::null,
+  SubResource( bool active, bool writable, const QString& label,
                int completionWeight = 100 );
   virtual ~SubResource();
 

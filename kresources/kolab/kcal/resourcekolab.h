@@ -142,7 +142,8 @@ private:
   bool openResource( KConfig& config, const char* contentType,
                      Kolab::ResourceMap& map );
   void loadSubResourceConfig( KConfig& config, const QString& name,
-                              bool writable, Kolab::ResourceMap& subResource );
+                              const QString& label, bool writable,
+                              Kolab::ResourceMap& subResource );
   bool loadSubResource( const QString& subResource, const char* mimetype );
 
   QString configFile() const {

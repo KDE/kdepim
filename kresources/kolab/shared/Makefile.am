@@ -12,4 +12,6 @@ libresourcekolabshared_la_METASOURCES = AUTO
 libresourcekolabshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la
 libresourcekolabshared_la_LDFLAGS = -no-undefined
 
+kmailicalIface_DCOPIDLNG = true
+
 kmailicalIface_DIR = $(top_srcdir)/kmail

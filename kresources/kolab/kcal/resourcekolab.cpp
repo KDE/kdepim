@@ -65,25 +65,27 @@ ResourceKolab::~ResourceKolab()
 }
 
 void ResourceKolab::loadSubResourceConfig( KConfig& config,
-                                           const QString& name, bool writable,
+                                           const QString& name,
+                                           const QString& label,
+                                           bool writable,
                                            ResourceMap& subResource )
 {
   KConfigGroup group( &config, name );
   bool active = group.readBoolEntry( "Active", true );
-  subResource.insert( name, Kolab::SubResource( active, writable, name ) );
+  subResource.insert( name, Kolab::SubResource( active, writable, label ) );
 }
 
 bool ResourceKolab::openResource( KConfig& config, const char* contentType,
                                   ResourceMap& map )
 {
   // Read the subresource entries from KMail
-  QMap<QString, bool> subResources;
+  QValueList<KMailICalIface::SubResource> subResources;
   if ( !kmailSubresources( subResources, contentType ) )
     return false;
   map.clear();
-  QMap<QString, bool>::ConstIterator it;
+  QValueList<KMailICalIface::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it )
-    loadSubResourceConfig( config, it.key(), it.data(), map );
+    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable, map );
   return true;
 }
 

@@ -58,7 +58,7 @@ ResourceKolabBase::~ResourceKolabBase()
 }
 
 
-bool ResourceKolabBase::kmailSubresources( QMap<QString, bool>& lst,
+bool ResourceKolabBase::kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
                                            const QString& contentsType ) const
 {
   return mConnection->kmailSubresources( lst, contentsType );
@@ -138,12 +138,16 @@ bool ResourceKolabBase::connectToKMail() const
 
 QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
 {
-  ResourceMap possible;
+  // I have to use the label (shown in the dialog) as key here. But given how the
+  // label is made up, it should be unique. If it's not, well the dialog would suck anyway...
+  QMap<QString, QString> possible;
+  QStringList labels;
   ResourceMap::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it ) {
-    if ( it.data().writable() && it.data().active() )
+    if ( it.data().writable() && it.data().active() ) {
       // Writable and active possibility
-      possible[ it.key() ] = it.data();
+      possible[ it.data().label() ] = it.key();
+    }
   }
 
   if ( possible.isEmpty() ) { // None found!!
@@ -152,13 +156,14 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   }
   if ( possible.count() == 1 )
     // Just one found
-    return possible.begin().key();
+    return possible.begin().data(); // yes this is the subresource key, i.e. location
 
   // Several found, ask the user
-  // TODO: Show the label instead of the resource name
-
-  return KInputDialog::getItem( i18n( "Select Resource Folder" ),
-                                i18n( "You have more than one writable resource folder. "
-                                      "Please select the one you want to write to." ),
-                                possible.keys() );
+  QString chosenLabel = KInputDialog::getItem( i18n( "Select Resource Folder" ),
+                                               i18n( "You have more than one writable resource folder. "
+                                                     "Please select the one you want to write to." ),
+                                               possible.keys() );
+  if ( chosenLabel.isEmpty() ) // cancelled
+    return QString::null;
+  return possible[chosenLabel];
 }

@@ -164,7 +164,7 @@ bool KMailConnection::connectKMailSignal( const QCString& signal,
     && connectDCOPSignal( "kontact", dcopObjectId, signal, method, false );
 }
 
-bool KMailConnection::kmailSubresources( QMap<QString, bool>& lst,
+bool KMailConnection::kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
                                          const QString& contentsType )
 {
   if ( !connectToKMail() )

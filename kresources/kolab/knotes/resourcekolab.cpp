@@ -63,18 +63,17 @@ bool ResourceKolab::doOpen()
   config.setGroup( configGroupName );
 
   // Get the list of Notes folders from KMail
-  QMap<QString, bool> subResources;
+  QValueList<KMailICalIface::SubResource> subResources;
   if ( !kmailSubresources( subResources, kmailContentsType ) )
     return false;
 
   // Make the resource map from the folder list
-  QMap<QString, bool>::ConstIterator it;
+  QValueList<KMailICalIface::SubResource>::ConstIterator it;
   mSubResources.clear();
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
-    const QString subResource = it.key();
-    const bool active = config.readBoolEntry( it.key(), true );
-    const bool writable = it.data();
-    mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
+    const QString subResource = (*it).location;
+    const bool active = config.readBoolEntry( subResource, true );
+    mSubResources[ subResource ] = Kolab::SubResource( active, (*it).writable, (*it).label );
   }
 
   return true;

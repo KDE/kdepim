@@ -34,7 +34,7 @@
 
 using namespace Kolab;
 
-SubResource::SubResource( bool active, bool writable, const QString label,
+SubResource::SubResource( bool active, bool writable, const QString& label,
                           int completionWeight )
   : mActive( active ),  mWritable( writable ), mLabel( label ),
     mCompletionWeight( completionWeight )

@@ -88,12 +88,13 @@ KABC::ResourceKolab::~ResourceKolab()
 
 void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config,
                                                  const QString& name,
+                                                 const QString& label,
                                                  bool writable )
 {
   KConfigGroup group( &config, name );
   bool active = group.readBoolEntry( "Active", true );
   int completionWeight = group.readNumEntry( "CompletionWeight", 80 );
-  mSubResources.insert( name, Kolab::SubResource( active, writable, name,
+  mSubResources.insert( name, Kolab::SubResource( active, writable, label,
                                                completionWeight ) );
 }
 
@@ -102,13 +103,14 @@ bool KABC::ResourceKolab::doOpen()
   KConfig config( configFile() );
 
   // Read the calendar entries
-  QMap<QString, bool> subResources;
+  QValueList<KMailICalIface::SubResource> subResources;
   if ( !kmailSubresources( subResources, s_kmailContentsType ) )
     return false;
   mSubResources.clear();
-  QMap<QString, bool>::ConstIterator it;
-  for ( it = subResources.begin(); it != subResources.end(); ++it )
-    loadSubResourceConfig( config, it.key(), it.data() );
+  QValueList<KMailICalIface::SubResource>::ConstIterator it;
+  for ( it = subResources.begin(); it != subResources.end(); ++it ) {
+    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable );
+  }
 
   return true;
 }
@@ -399,7 +401,8 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   KConfig config( configFile() );
   config.setGroup( "Contact" );
-  loadSubResourceConfig( config, subResource, writable );
+  // ###### TODO label
+  loadSubResourceConfig( config, subResource, subResource, writable );
   loadSubResource( subResource );
   addressBook()->emitAddressBookChanged();
   emit signalSubresourceAdded( this, type, subResource );

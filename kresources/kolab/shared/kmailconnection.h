@@ -35,6 +35,7 @@
 #define KMAILCONNECTION_H
 
 #include <dcopobject.h>
+#include <kmail/kmailicalIface.h>
 
 class KURL;
 class DCOPClient;
@@ -71,7 +72,7 @@ public:
   bool connectToKMail();
 
   // Call the DCOP methods
-  bool kmailSubresources( QMap<QString, bool>& lst,
+  bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType );
   bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
                         const QString& resource );

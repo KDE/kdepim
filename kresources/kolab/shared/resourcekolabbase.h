@@ -39,6 +39,7 @@
 #include <qstringlist.h>
 
 #include "subresource.h"
+#include <kmail/kmailicalIface.h>
 
 class QCString;
 class KURL;
@@ -100,7 +101,7 @@ protected:
 
   /// List all folders with a certain contentsType. Returns a QMap with
   /// resourcename/writable pairs
-  bool kmailSubresources( QMap<QString, bool>& lst,
+  bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType ) const;
 
   /// Get the mimetype attachments from this folder. Returns a
