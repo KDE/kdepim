@@ -32,7 +32,7 @@
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
-#include "knlistview.h"
+#include "headerview.h"
 
 
 #define SORT_DEPTH 5

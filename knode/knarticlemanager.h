@@ -27,7 +27,7 @@ class QListViewItem;
 class KTempFile;
 
 class KNArticle;
-class KNListView;
+class KNHeaderView;
 class KNThread;
 class KNArticleCollection;
 class KNGroup;
@@ -92,14 +92,14 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     // Allow to delay the setup of UI elements, since the knode part may not 
     // be available when the config dialog is called
-    void setView(KNListView* v);
+    void setView(KNHeaderView* v);
 
   protected:
     void processJob(KNJobData *j);
     void createThread(KNRemoteArticle *a);
     void createCompleteThread(KNRemoteArticle *a);
 
-    KNListView *v_iew;
+    KNHeaderView *v_iew;
     KNGroup *g_roup;
     KNFolder *f_older;
     KNArticleFilter *f_ilter;

@@ -2,7 +2,7 @@
     knarticlemanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -41,6 +41,7 @@
 #include "knarticlefactory.h"
 #include "knarticlewindow.h"
 #include "knfoldermanager.h"
+#include "headerview.h"
 
 
 KNArticleManager::KNArticleManager() : QObject(0,0)
@@ -278,7 +279,7 @@ void KNArticleManager::showHdrs(bool clear)
     if(current && current->filterResult()) {
       if(!current->listItem())
         createCompleteThread(current);
-      v_iew->setActive(current->listItem(),true);
+      v_iew->setActive( current->listItem() );
       setFirstChild=false;
     }
 
@@ -1080,7 +1081,7 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
 }
 
 
-void KNArticleManager::setView(KNListView* v) {
+void KNArticleManager::setView(KNHeaderView* v) {
   v_iew = v;
   if(v) {
     connect(v, SIGNAL(expanded(QListViewItem*)), this,

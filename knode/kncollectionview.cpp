@@ -29,7 +29,7 @@
 #include "kngroupmanager.h"
 #include "knfolder.h"
 #include "knfoldermanager.h"
-#include "knlistview.h"
+#include "headerview.h"
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"
 

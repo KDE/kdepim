@@ -37,7 +37,7 @@ using KPIM::StatusbarProgressWidget;
 using KPIM::ProgressDialog;
 
 class KNMainWidget;
-class KNListView;
+class KNHeaderView;
 
 
 class KNMainWindow : public KMainWindow

@@ -148,7 +148,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   h_drDock->setHeader(header);
   QWidget *dummy = new QWidget(h_drDock);
   QVBoxLayout *vlay = new QVBoxLayout(dummy);
-  h_drView=new KNListView(dummy, "hdrView");
+  h_drView = new KNHeaderView( dummy, "hdrView" );
   header->setDragPanel(new KNDockWidgetHeaderDrag(h_drView, header, h_drDock));
   h_drDock->setWidget(dummy);
   h_drDock->manualDock(a_rtDock, KDockWidget::DockTop, 5000);
@@ -173,14 +173,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
 
   vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
-
-  h_drView->setShowSortIndicator(true);
-  h_drView->setRootIsDecorated(true);
-  h_drView->addColumn(i18n("Subject"),207);
-  h_drView->addColumn(i18n("From"),115);
-  h_drView->addColumn(i18n("Score"),42);
-  h_drView->addColumn(i18n("Lines"),42);
-  h_drView->addColumn(i18n("Date"),102);
 
   connect(h_drDock, SIGNAL(iMBeingClosed()), SLOT(slotHeaderDockHidden()));
   connect(h_drDock, SIGNAL(hasUndocked()), SLOT(slotHeaderDockHidden()));
@@ -548,35 +540,14 @@ void KNMainWidget::configChanged()
   KNConfig::Appearance *app=c_fgManager->appearance();
 
   c_olView->setFont(app->groupListFont());
-  h_drView->setFont(app->articleListFont());
 
   QPalette p = palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
   p.setColor(QColorGroup::Text, app->textColor());
   c_olView->setPalette(p);
   c_olView->setAlternateBackground(app->backgroundColor());
-  h_drView->setPalette(p);
-  h_drView->setAlternateBackground(app->alternateBackgroundColor());
 
-  if (knGlobals.configManager()->readNewsGeneral()->showScore()) {
-    if (!h_drView->header()->isResizeEnabled(2)) {
-      h_drView->header()->setResizeEnabled(true,2);
-      h_drView->header()->setLabel(2,i18n("Score"),42);
-    }
-  } else {
-    h_drView->header()->setLabel(2,QString::null,0);
-    h_drView->header()->setResizeEnabled(false,2);
-  }
-  if (knGlobals.configManager()->readNewsGeneral()->showLines()) {
-    if (!h_drView->header()->isResizeEnabled(3)) {
-      h_drView->header()->setResizeEnabled(true,3);
-      h_drView->header()->setLabel(3,i18n("Lines"),42);
-    }
-  } else {
-    h_drView->header()->setLabel(3,QString::null,0);
-    h_drView->header()->setResizeEnabled(false,3);
-  }
-
+  h_drView->configChanged();
   a_rtManager->updateListViewItems();
 }
 
@@ -588,12 +559,12 @@ void KNMainWidget::initActions()
 
   //navigation
   a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
-                              i18n("Go to next article")), "N;Right", this,
-                              SLOT(slotNavNextArt()), actionCollection(), "go_nextArticle" );
+                              i18n("Go to next article")), "N;Right", h_drView,
+                              SLOT(nextArticle()), actionCollection(), "go_nextArticle" );
   a_ctNavPrevArt            = new KAction( KGuiItem(i18n("&Previous Article"), "previous",
-                              i18n("Go to previous article")), "P;Left" , this,
-                              SLOT(slotNavPrevArt()), actionCollection(), "go_prevArticle" );
-  a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", ALT+Key_Space , this,
+                              i18n("Go to previous article")), "P;Left" , h_drView,
+                              SLOT(prevArticle()), actionCollection(), "go_prevArticle" );
+  a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", ALT+SHIFT+Key_Space , this,
                               SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");
   a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", SHIFT+Key_Space , this,
                               SLOT(slotNavNextUnreadThread()), actionCollection(), "go_nextUnreadThread");
@@ -619,6 +590,18 @@ void KNMainWidget::initActions()
   accel->connectItem(accel->insertItem(CTRL+Key_Space),
     c_olView, SLOT(selectCurrentFolder()));
 
+  new KAction( i18n("Focus on Next Article"), ALT+Key_Right, h_drView,
+               SLOT(incCurrentArticle()), actionCollection(), "inc_current_article" );
+  accel->connectItem( accel->insertItem(ALT+Key_Right),
+                      h_drView, SLOT(incCurrentArticle()) );
+  new KAction( i18n("Focus on Previous Article"), ALT+Key_Left, h_drView,
+               SLOT(decCurrentArticle()), actionCollection(), "dec_current_article" );
+  accel->connectItem( accel->insertItem(ALT+Key_Left),
+                      h_drView, SLOT(decCurrentArticle()) );
+  new KAction( i18n("Select Article with Focus"), ALT+Key_Space, h_drView,
+               SLOT(selectCurrentArticle()), actionCollection(), "select_current_article" );
+  accel->connectItem( accel->insertItem(ALT+Key_Space),
+                      h_drView, SLOT(selectCurrentArticle()) );
 
   //collection-view - accounts
   a_ctAccProperties         = new KAction(i18n("Account &Properties"), "configure", 0, this,
@@ -838,11 +821,11 @@ void KNMainWidget::readOptions()
       ++it;
     }
 
-    h=h_drView->header();
-    for (int i=0; i<5; i++) {
-      h->resizeSection(i,(*it));
-      ++it;
-    }
+//     h=h_drView->header();
+//     for (int i=0; i<5; i++) {
+//       h->resizeSection(i,(*it));
+//       ++it;
+//     }
   }
 
   lst = conf->readIntListEntry("Hdr_Order");
@@ -855,31 +838,22 @@ void KNMainWidget::readOptions()
       ++it;
     }
 
-    h=h_drView->header();
-    for (int i=0; i<5; i++) {
-      h->moveSection(i,(*it));
-      ++it;
-    }
+//     h=h_drView->header();
+//     for (int i=0; i<5; i++) {
+//       h->moveSection(i,(*it));
+//       ++it;
+//     }
   }
 
   if (conf->readBoolEntry("quicksearch", true))
     a_ctToggleQuickSearch->setChecked(true);
   else
     q_uicksearch->hide();
-  int sortCol=conf->readNumEntry("sortCol",4);
-  bool sortAsc=conf->readBoolEntry("sortAscending", false);
-  bool sortByThreadChangeDate=conf->readBoolEntry("sortByThreadChangeDate", false);
-  h_drView->setColAsc(sortCol, sortAsc);
-  h_drView->setSorting(sortCol, sortAsc);
-  h_drView->setSortByThreadChangeDate(sortByThreadChangeDate);
-  if(sortByThreadChangeDate)
-    h_drView->setColumnText(4, i18n("Date (thread changed)"));
-  else
-    h_drView->setColumnText(4, i18n("Date"));
-  a_ctArtSortHeaders->setCurrentItem(sortCol);
+  h_drView->readConfig();
+  a_ctArtSortHeaders->setCurrentItem( h_drView->sortColumn() );
 
-  sortCol = conf->readNumEntry("account_sortCol", 0);
-  sortAsc = conf->readBoolEntry("account_sortAscending", true);
+  int sortCol = conf->readNumEntry("account_sortCol", 0);
+  bool sortAsc = conf->readBoolEntry("account_sortAscending", true);
   c_olView->setSorting(sortCol, sortAsc);
 
   resize(787,478);  // default optimized for 800x600
@@ -918,13 +892,12 @@ void KNMainWidget::saveOptions()
   conf->writeEntry("Hdr_Order", lst);
 
   // store sorting setup
-  conf->writeEntry("sortCol", h_drView->sortColumn());
-  conf->writeEntry("sortAscending", h_drView->ascending());
-  conf->writeEntry("sortByThreadChangeDate", h_drView->sortByThreadChangeDate());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
   conf->writeEntry("account_sortAscending", c_olView->sortOrder() == Qt::Ascending ? true : false);
   conf->writeEntry("quicksearch", q_uicksearch->isShown());
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
+
+  h_drView->writeConfig();
 
   // store dock configuration
   manager()->writeConfig(knGlobals.config(),"dock_configuration");
@@ -1460,129 +1433,16 @@ void KNMainWidget::slotDockWidgetFocusChangeRequest(QWidget *w)
 //------------------------------ <Actions> --------------------------------
 
 
-void KNMainWidget::slotNavNextArt()
-{
-  kdDebug(5003) << "KNMainWidget::slotNavNextArt()" << endl;
-  KNHdrViewItem *it= static_cast<KNHdrViewItem*>(h_drView->currentItem());
-
-  if (it) {
-    if (it->isActive()) {  // take current article, if not selected
-      if (it->isExpandable())
-        it->setOpen(true);
-      it=static_cast<KNHdrViewItem*>(it->itemBelow());
-    }
-  } else
-    it=static_cast<KNHdrViewItem*>(h_drView->firstChild());
-
-  if(it)
-    h_drView->setActive(it, true);
-}
-
-
-void KNMainWidget::slotNavPrevArt()
-{
-  kdDebug(5003) << "KNMainWidget::slotNavPrevArt()" << endl;
-  KNHdrViewItem *it= static_cast<KNHdrViewItem*>(h_drView->currentItem());
-
-  if (it && it->isActive()) {  // take current article, if not selected
-    if (it) it=static_cast<KNHdrViewItem*>(it->itemAbove());
-    else it=static_cast<KNHdrViewItem*>(h_drView->firstChild());
-  }
-
-  if(it)
-    h_drView->setActive(it, true);
-}
-
-
 void KNMainWidget::slotNavNextUnreadArt()
 {
-  kdDebug(5003) << "KNMainWidget::slotNavNextUnreadArt()" << endl;
-
-  if(!g_rpManager->currentGroup())
-    return;
-
-  KNHdrViewItem *next, *current;
-  KNRemoteArticle *art;
-
-  current=static_cast<KNHdrViewItem*>(h_drView->currentItem());
-  if(!current)
-    current=static_cast<KNHdrViewItem*>(h_drView->firstChild());
-
-  if(!current) {               // no articles in the current group switch to next....
-    slotNavNextGroup();
-    return;
-  }
-
-  art=static_cast<KNRemoteArticle*>(current->art);
-
-  if ((!current->isActive())&&(!art->isRead()))   // take current article, if unread & not selected
-    next=current;
-  else {
-    if(current->isExpandable() && art->hasUnreadFollowUps() && !current->isOpen())
-        h_drView->setOpen(current, true);
-    next=static_cast<KNHdrViewItem*>(current->itemBelow());
-  }
-
-  while(next) {
-    art=static_cast<KNRemoteArticle*>(next->art);
-    if(!art->isRead()) break;
-    else {
-      if(next->isExpandable() && art->hasUnreadFollowUps() && !next->isOpen())
-        h_drView->setOpen(next, true);
-      next=static_cast<KNHdrViewItem*>(next->itemBelow());
-    }
-  }
-
-  if(next)
-    h_drView->setActive(next, true);
-  else
+  if ( !h_drView->nextUnreadArticle() )
     slotNavNextGroup();
 }
 
 
 void KNMainWidget::slotNavNextUnreadThread()
 {
-  kdDebug(5003) << "KNMainWidget::slotNavNextUnreadThread()" << endl;
-
-  KNHdrViewItem *next, *current;
-  KNRemoteArticle *art;
-
-  if(!g_rpManager->currentGroup())
-    return;
-
-  current=static_cast<KNHdrViewItem*>(h_drView->currentItem());
-  if(!current)
-    current=static_cast<KNHdrViewItem*>(h_drView->firstChild());
-
-  if(!current) {               // no articles in the current group switch to next....
-    slotNavNextGroup();
-    return;
-  }
-
-  art=static_cast<KNRemoteArticle*>(current->art);
-
-  if((current->depth()==0)&&((!current->isActive())&&(!art->isRead() || art->hasUnreadFollowUps())))
-    next=current;                           // take current article, if unread & not selected
-  else
-    next=static_cast<KNHdrViewItem*>(current->itemBelow());
-
-  while(next) {
-    art=static_cast<KNRemoteArticle*>(next->art);
-
-    if(next->depth()==0) {
-      if(!art->isRead() || art->hasUnreadFollowUps()) break;
-    }
-    next=static_cast<KNHdrViewItem*>(next->itemBelow());
-  }
-
-  if(next) {
-    h_drView->setCurrentItem(next);
-    if (art->isRead())
-      slotNavNextUnreadArt();
-    else
-      h_drView->setActive(next, true);
-  }
-  else
+  if ( !h_drView->nextUnreadThread() )
     slotNavNextGroup();
 }
 
@@ -1919,7 +1779,7 @@ void KNMainWidget::slotFolMBoxExport()
 void KNMainWidget::slotArtSortHeaders(int i)
 {
   kdDebug(5003) << "KNMainWidget::slotArtSortHeaders(int i)" << endl;
-  h_drView->slotSortList(i);
+  h_drView->setSorting( i );
 }
 
 
@@ -1929,7 +1789,7 @@ void KNMainWidget::slotArtSortHeadersKeyb()
 
   int newCol = KNHelper::selectDialog(this, i18n("Select Sort Column"), a_ctArtSortHeaders->items(), a_ctArtSortHeaders->currentItem());
   if (newCol != -1)
-    h_drView->slotSortList(newCol);
+    h_drView->setSorting( newCol );
 }
 
 
@@ -2160,7 +2020,7 @@ void KNMainWidget::slotArtDelete()
     a_rtManager->deleteArticles(lst);
 
   if(h_drView->currentItem())
-    h_drView->setActive(h_drView->currentItem(),true);
+    h_drView->setActive( h_drView->currentItem() );
 }
 
 
@@ -2334,13 +2194,13 @@ void FetchArticleIdDlg::slotTextChanged(const QString &_text )
 // Move to the next article
 void KNMainWidget::nextArticle()
 {
-  slotNavNextArt();
+  h_drView->nextArticle();
 }
 
 // Move to the previous article
 void KNMainWidget::previousArticle()
 {
-  slotNavPrevArt();
+  h_drView->prevArticle();
 }
 
 // Move to the next unread article

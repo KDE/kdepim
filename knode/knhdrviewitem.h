@@ -2,7 +2,7 @@
     knhdrviewitem.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -17,34 +17,43 @@
 #ifndef KNHDRVIEWITEM_H
 #define KNHDRVIEWITEM_H
 
-#include <qfont.h>
-#include <qcache.h>
-
-#include "knlistview.h"
+#include <klistview.h>
+#include "headerview.h"
 
 class KNArticle;
+class KNHeaderView;
 
 
-class KNHdrViewItem : public KNLVItemBase  {
-  
+class KNHdrViewItem : public KListViewItem  {
+
   public:
-    KNHdrViewItem(KNListView *ref, KNArticle *a=0);
-    KNHdrViewItem(KNLVItemBase *ref, KNArticle *a=0);
+    KNHdrViewItem( KNHeaderView *ref, KNArticle *a = 0 );
+    KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a = 0 );
     ~KNHdrViewItem();
 
     virtual int compare(QListViewItem *i, int col, bool ascending) const;
 
+    void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
+    int width(const QFontMetrics &fm, const QListView *lv, int column);
+
+    void expandChildren();
+
+    void setActive( bool b )  { mActive = b; }
+    bool isActive() const     { return mActive; }
+
     // DND
-    virtual QDragObject* dragObject();
+    QDragObject* dragObject();
 
     KNArticle *art;
-    virtual int countUnreadInThread();
+    int countUnreadInThread();
 
-  protected:
+  private:
     bool greyOut();
     bool firstColBold();
     QColor normalColor();
     QColor greyColor();
+
+    bool mActive;
 
 };
 

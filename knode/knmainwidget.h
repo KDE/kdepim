@@ -34,7 +34,7 @@ class KStatusBarLabel;
 class KLineEdit;
 class KXMLGUIClient;
 
-class KNListView;
+class KNHeaderView;
 class KNCollectionView;
 class KNCollectionViewItem;
 class KNProgress;
@@ -90,7 +90,7 @@ public:
 
   /** access to GUI-elements */
   KNCollectionView* collectionView()const  { return c_olView; }
-  KNListView*       headerView()const      { return h_drView; }
+  KNHeaderView*       headerView()const      { return h_drView; }
   KNArticleWidget*  articleView()const     { return a_rtView; }
   KStatusBarLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
   KStatusBarLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
@@ -191,7 +191,7 @@ protected:
   KNProgress      *p_rogBar;
   KNArticleWidget *a_rtView;
   KNCollectionView *c_olView;
-  KNListView      *h_drView;
+  KNHeaderView      *h_drView;
   KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
   bool b_lockui;
   KToolBar        *q_uicksearch;
@@ -327,8 +327,6 @@ protected:
     *a_ctSwitchToArticleViewer;
 
 protected slots:
-  void slotNavNextArt();
-  void slotNavPrevArt();
   void slotNavNextUnreadArt();
   void slotNavNextUnreadThread();
   void slotNavNextGroup();
