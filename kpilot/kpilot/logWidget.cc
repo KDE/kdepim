@@ -52,6 +52,10 @@ static const char *logw_id =
 
 #include <pi-version.h>
 
+#ifndef PILOT_LINK_PATCH
+#define PILOT_LINK_PATCH "unknown"
+#endif
+
 #include "logWidget.moc"
 
 LogWidget::LogWidget(QWidget * parent) :
@@ -353,6 +357,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.19  2002/04/10 06:13:34  adridg
+// Show version of pilot-link in about
+//
 // Revision 1.18  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
 //
