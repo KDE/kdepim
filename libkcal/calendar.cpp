@@ -334,6 +334,17 @@ Incidence *Calendar::incidence( const QString& uid )
   return i;
 }
 
+Incidence::List Calendar::incidencesFromSchedulingID( const QString &UID )
+{
+  Incidence::List result;
+  Incidence::List incidences = rawIncidences();
+  Incidence::List::iterator it = incidences.begin();
+  for ( ; it != incidences.end(); ++it )
+    if ( (*it)->schedulingID() == UID )
+      result.append( *it );
+  return result;
+}
+
 Incidence *Calendar::incidenceFromSchedulingID( const QString &UID )
 {
   Incidence::List incidences = rawIncidences();

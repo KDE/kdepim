@@ -253,6 +253,12 @@ class Calendar : public QObject, public CustomProperties,
     Incidence *incidenceFromSchedulingID( const QString &UID );
 
     /**
+      Searches all events and todos for an incidence with this
+      scheduling ID. Returns a list of matching results.
+    */
+    Incidence::List incidencesFromSchedulingID( const QString &UID );
+
+    /**
       Setup relations for an incidence.
     */
     virtual void setupRelations( Incidence * );
