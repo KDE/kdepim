@@ -92,13 +92,13 @@ void createLogWidget()
 	logWidget = w;
 }
 
-static KPilotDeviceLink *link = 0L;
+static KPilotDeviceLink *deviceLink = 0L;
 
 void createLink()
 {
 	FUNCTIONSETUP;
 
-	link = KPilotDeviceLink::init(0, "deviceLink");
+	deviceLink = KPilotDeviceLink::init(0, "deviceLink");
 }
 
 static SyncStack *syncStack = 0L;
@@ -114,11 +114,11 @@ void connectStack()
 	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
 		logWidget, SLOT(addProgress(const QString &,int)));
 
-	QObject::connect(link, SIGNAL(deviceReady()), syncStack, SLOT(exec()));
+	QObject::connect(deviceLink, SIGNAL(deviceReady()), syncStack, SLOT(exec()));
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		logWidget, SLOT(syncDone()));
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
-		link, SLOT(close()));
+		deviceLink, SLOT(close()));
 }
 
 void createConnection(KCmdLineArgs *p)
@@ -135,7 +135,7 @@ void createConnection(KCmdLineArgs *p)
 	KPilotDeviceLink::DeviceType deviceType =
 		KPilotDeviceLink::OldStyleUSB;
 
-	link->reset(deviceType, devicePath);
+	deviceLink->reset(deviceType, devicePath);
 }
 
 int syncTest(KCmdLineArgs *p)
@@ -145,7 +145,7 @@ int syncTest(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new SyncStack(link,&KPilotConfig::getConfig());
+	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig());
 
 	if (p->isSet("backup"))
 	{
@@ -178,7 +178,7 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new SyncStack(link,&KPilotConfig::getConfig(),l);
+	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig(),l);
 	syncStack->prepareSync();
 	
 	connectStack();
@@ -268,6 +268,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.12  2001/12/29 15:36:57  adridg
+// Sanity checking and simplification
+//
 // Revision 1.11  2001/12/02 22:05:46  adridg
 // Minor tweaks for conduit exec()
 //
