@@ -17,6 +17,7 @@
 
 #include <kcmodule.h>
 #include <kdebug.h>
+#include <klocale.h>
 
 #include "knglobals.h"
 #include "knconfig.h"
@@ -98,8 +99,8 @@ extern "C"
 KNConfig::AccountsPage::AccountsPage(QWidget *parent, const char *name)
   : BasePageWithTabs(parent, name) {
   
-  addTab(new KNConfig::NntpAccountListWidget(this), "Newsgroup Servers");
-  addTab(new KNConfig::SmtpAccountWidget(this), "Mail Server (SMTP)");
+  addTab(new KNConfig::NntpAccountListWidget(this), i18n("Newsgroup Servers"));
+  addTab(new KNConfig::SmtpAccountWidget(this), i18n("Mail Server (SMTP)"));
 }
 
 
@@ -134,12 +135,12 @@ KNConfig::ReadNewsPage::ReadNewsPage(QWidget *parent, const char *name)
   : BasePageWithTabs(parent, name) {
   
   KNConfigManager *cfgMgr = knGlobals.configManager();
-  addTab(new KNConfig::ReadNewsGeneralWidget(cfgMgr->readNewsGeneral(), this), "General");
-  addTab(new KNConfig::ReadNewsNavigationWidget(cfgMgr->readNewsNavigation(), this), "Navigation");
-  addTab(new KNConfig::ScoringWidget(cfgMgr->scoring(), this), "Scoring");
-  addTab(new KNConfig::FilterListWidget(this), "Filters");
-  addTab(new KNConfig::DisplayedHeadersWidget(cfgMgr->displayedHeaders(), this), "Headers");
-  addTab(new KNConfig::ReadNewsViewerWidget(cfgMgr->readNewsViewer(), this), "Viewer");
+  addTab(new KNConfig::ReadNewsGeneralWidget(cfgMgr->readNewsGeneral(), this), i18n("General"));
+  addTab(new KNConfig::ReadNewsNavigationWidget(cfgMgr->readNewsNavigation(), this), i18n("Navigation"));
+  addTab(new KNConfig::ScoringWidget(cfgMgr->scoring(), this), i18n("Scoring"));
+  addTab(new KNConfig::FilterListWidget(this), i18n("Filters"));
+  addTab(new KNConfig::DisplayedHeadersWidget(cfgMgr->displayedHeaders(), this), i18n("Headers"));
+  addTab(new KNConfig::ReadNewsViewerWidget(cfgMgr->readNewsViewer(), this), i18n("Viewer"));
 }
 
 
@@ -160,9 +161,9 @@ KNConfig::PostNewsPage::PostNewsPage(QWidget *parent, const char *name)
   : BasePageWithTabs(parent, name) {
   
   KNConfigManager *cfgMgr = knGlobals.configManager();
-  addTab(new KNConfig::PostNewsTechnicalWidget(cfgMgr->postNewsTechnical(), this), "Technical");
-  addTab(new KNConfig::PostNewsComposerWidget(cfgMgr->postNewsComposer(), this), "Composer");
-  addTab(new KNConfig::PostNewsSpellingWidget(this), "Spelling");
+  addTab(new KNConfig::PostNewsTechnicalWidget(cfgMgr->postNewsTechnical(), this), i18n("Technical"));
+  addTab(new KNConfig::PostNewsComposerWidget(cfgMgr->postNewsComposer(), this), i18n("Composer"));
+  addTab(new KNConfig::PostNewsSpellingWidget(this), i18n("Spelling"));
 }
 
 
