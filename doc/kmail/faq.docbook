@@ -64,8 +64,8 @@ Both will speed up <application>GnuPG</application> immensely.</para>
 <application>PGP</application>/<application>GnuPG</application> with
 &kmail;?</para></question>
 
-<answer><para>&kmail; provides a simple and easy to use interface for basic
- functions of these programs. Still you should understand how these programs
+<answer><para>&kmail; provides a simple and easy-to-use interface for the basic
+ functions of these programs; still you should understand how these programs
  work and what might make their use insecure. Some important issues:</para>
 
 <itemizedlist>
@@ -76,16 +76,15 @@ before you use it. &kmail; partly relies on
 which often change between different versions.</para>
 </listitem>
 <listitem>
-<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.
-If you want to encrypt to such a 
+<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key: if you want to encrypt to such a 
 key you should check the identity of the key owner and only then sign the key
-with your secret key. If you do not want to or cannot check the identity
+with your secret key; if you do not want to or cannot check the identity
 of the key owner but nevertheless want to encrypt the message then
 please sign the key locally with <userinput><command>gpg</command>
 <option>--lsign</option> <replaceable>keyID</replaceable></userinput>.</para>
 </listitem>
 <listitem>
-<para>Trusting a foreign public key without checking it is no good idea.</para>
+<para>Trusting a foreign public key without checking it is not a good idea.</para>
 </listitem>
 <listitem>
 <para>&kmail; cannot encrypt and sign attachments if you are using
@@ -95,19 +94,17 @@ plugins</link> installed and configured.</para>
 </listitem>
 <listitem>
 <para>Starting with GnuPG 1.0.7 you have to set your own key to
-ultimate ownertrust. It is no longer implicitly done for you.</para>
+ultimate ownertrust: it is no longer implicitly done for you.</para>
 </listitem>
 </itemizedlist>
 </answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>Where does &kmail; save my settings and my mails?</para></question>
+<question><para>Where does &kmail; save my settings and my mail?</para></question>
 <answer>
-<para>All &kmail; settings are stored in <filename>$KDEHOME/share/config/kmailrc</filename>,
-where <filename>$KDEHOME</filename> is typically <filename class="directory">~/.kde</filename>.
-The mails are saved in <filename class="directory">~/Mail</filename>. Note
-that some of the files are hidden, remember to also copy those if you
+<para>All &kmail; settings are stored in <filename>$<envar>KDEHOME</envar>/share/config/kmailrc</filename>,
+where $<envar>KDEHOME</envar> is typically <filename class="directory">~/.kde</filename>; your mail is saved in <filename class="directory">~/Mail</filename>. Note that some of the files are hidden: remember to also copy those if you
 want to backup or archive your mails.</para>
 </answer>
 </qandaentry>
@@ -116,15 +113,15 @@ want to backup or archive your mails.</para>
 <question><para>Why did &kmail; regenerate the index of a folder?</para></question>
 <answer>
 <para>&kmail; regenerates the index of a folder whenever the index appears to be
-out of date, &ie; whenever the contents of a folder is newer than the
-index. &kmail; does regenerate the index in this case in order to prevent
-the loss or corruption of messages. Unfortunately currently deleted
+out of date, &ie; whenever the contents of a folder are newer than the
+index. &kmail; regenerates the index in this case in order to prevent
+the loss or corruption of messages. Unfortunately, currently-deleted
 messages might reappear and message flags (like important, etc.) might
 be lost when the index is regenerated.</para>
-<para>An outdated index can have several causes. The two most important causes
+<para>An outdated index can have several causes; the two most important causes
 are:
 <itemizedlist>
-<listitem><para>Some other program modified the contents of the folder. If you want
+<listitem><para>Some other program modified the contents of the folder: if you want
 to use &kmail; together with procmail then please read <link
  linkend="faq-procmail">this &FAQ;</link>. If you want to use &kmail; together with
 another email client then please read <link 
@@ -149,8 +146,8 @@ way to achieve this is the use of the ntp daemon.</para></listitem>
 necessary, there is a script that will do such things when you run KDE 3.x
 for the first time. To fix the problem, remove the complete <quote>[AddressBook]</quote>
 group and the addressbook option in group <quote>[General]</quote> in your 
-<filename>kmailrc</filename> file. However, chances are you will also encounter other problems 
-that the config update script was to solve.</para>
+<filename>kmailrc</filename> file; however, chances are you will also encounter other problems 
+that the config update script would have solved.</para>
 </answer>
 </qandaentry>
 
@@ -177,7 +174,7 @@ you delete it.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>How can I use a different browser than Konqueror to
+<question><para>How can I use a browser other than &konqueror; to
 open links in messages?</para></question>
 <answer>
 <para>Change the <guilabel>File Associations</guilabel> for HTML files
@@ -199,7 +196,7 @@ Some other headers might also be changed.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>How can I make &kmail; to check for new messages at startup?</para></question>
+<question><para>How can I make &kmail; check for new messages at startup?</para></question>
 <answer>
 <para>Start &kmail; with <command>kmail <option>--check</option></command>.</para>
 </answer>
@@ -298,7 +295,7 @@ url="http://kmail.kde.org/">the &kmail; homepage</ulink>. Note that not all
 these bugs are valid. All in all we think that &kmail; is a very robust piece
 of software.</para>
 <para><warning><para>However, you should not run &kmail; while another email client is already
-accessing the files in <filename class="directory">~/Mail</filename>. If you try to do so,
+accessing the files in <filename class="directory">~/Mail</filename>; if you try to do so,
 you might lose messages. Note that you should make backups of your messages anyway.</para></warning></para>
 </answer>
 </qandaentry>
@@ -316,11 +313,11 @@ management).</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>&kmail; does not display <acronym>HTML</acronym> mails properly.</para></question>
-<answer><para>References to external content like images are disabled by
+<question><para>&kmail; does not display <acronym>HTML</acronym> mail properly.</para></question>
+<answer><para>References to external content like images, are disabled by
 default, as they can be used to track whether and when you read a message.
 Loading external references can be activated in the <guilabel>Security</guilabel>
-tab in &kmail;'s configuration dialog. Also Plugins (like <trademark
+tab in &kmail;'s configuration dialog; also Plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
 &Java; and JavaScript will not be displayed in &kmail; for security reasons
 and there is no way to activate them.</para></answer>
@@ -341,20 +338,19 @@ formats might have changed. Upgrading should never be a problem.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>&kmail; crashed while I was writing a mail. So this mail is lost now?</para></question>
+<question><para>&kmail; crashed while I was writing a mail; is that mail is lost now?</para></question>
 <answer><para>&kmail; tries to save your mail to 
 <filename>~/dead.letter</filename> in case of a crash. The next time you start
-&kmail; the mail composer should appear with your mail again. If it does not,
+&kmail; the mail composer should appear with your mail again; If it does not,
 try to open <filename>~/dead.letter</filename> with an editor. If it does not
-exist, the crash was so bad that &kmail; could not save your mail.</para></answer>
+exist then the crash was so bad that &kmail; could not save your mail.</para></answer>
 </qandaentry>
 
 <qandaentry>
 <question><para>When I try to set a folder to be mailing list-aware, it does not do
 anything when receiving an email from the list.</para></question>
 <answer><para>Associating a folder with a mailing list has nothing to do with
-filtering the mailing list messages. You have to add a new filter rule manually.
-However, once you associated a folder with a mailing list you can use <menuchoice>
+filtering the mailing list messages &mdash; you have to add a new filter rule manually; however, once you associated a folder with a mailing list you can use <menuchoice>
 <guimenu>Message</guimenu><guimenuitem>Reply to Mailing-List...</guimenuitem></menuchoice> or 
 <menuchoice><guimenu>Message</guimenu><guimenuitem>New Message to Mailing-List...</guimenuitem></menuchoice>
 and the mailing list address will be set in the <guilabel>To:</guilabel> field.
@@ -362,7 +358,7 @@ and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 </qandaentry>
 
 <qandaentry>
-<question><para>My SMTP server requires authentication. Does &kmail; support it?</para></question>
+<question><para>My SMTP server requires authentication; Does &kmail; support this?</para></question>
 <answer><para>There are two common techniques used for <acronym>SMTP</acronym> authentication:
 <quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
 <quote>SMTP Auth</quote> can be set in the <guilabel>General</guilabel> tab
@@ -382,15 +378,15 @@ mail from the spoolfiles in which <application>procmail</application>
 drops your mail. Do <emphasis>not</emphasis> set up procmail to deliver
 mail in a &kmail; folder, this  cannot work.</para>
           
-<para>For each procmail spoolfile, you then need to create an account
-from which &kmail; will fetch new mail. You also need to make sure you
+<para>For each procmail spoolfile you then need to create an account
+from which &kmail; will fetch new mail; you also need to make sure you
 specify the right lockfile name for this account. When setting up an
 account, &kmail; will do some minimal parsing on your
 <filename>.procmail</filename> file, and will try to list every
 spoolfile it has found, and also the lockfiles next to the
 <guilabel>procmail lockfile</guilabel> item. procmail lets the user
 specify lockfiles in three different ways, so there is no way to
-establish a correspondence between the spoolfiles and lockfiles. So it's
+establish a correspondence between the spoolfiles and lockfiles; so it's
 really up to you to make sure you specify the right lockfile for each
 spoolfile.</para>
 </answer>
@@ -517,7 +513,7 @@ tab and add your signature there.</para></answer>
 <question><para>How do I set up &Sendmail; to work with
 &kmail; if I have a  dial-up connection?</para></question> 
 
-<answer><para>First you should check if your &Linux;/BSD/whatever distribution
+<answer><para>First you should check if your distribution
 can do this for you. It probably has already been set up during
 installation.</para>
 
