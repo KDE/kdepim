@@ -8,8 +8,10 @@ class DetailedViewWrapper : public ViewWrapper
 public:
     DetailedViewWrapper();
     virtual ~DetailedViewWrapper();
-    QString type() const;
+
+    virtual QString type() const { return "Detailled"; };
     QString description() const;
+
     KAddressBookView *createView(KABC::AddressBook *doc,
                                  QWidget *parent,
                                  const char *name);

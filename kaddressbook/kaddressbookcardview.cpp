@@ -125,7 +125,6 @@ KAddressBookCardView::KAddressBookCardView(KABC::AddressBook *doc,
                                            const char *name)
     : KAddressBookView(doc, parent, name)
 {
-    mDocument = doc;
     mShowEmptyFields = true;
     
     // Init the GUI
@@ -205,7 +204,7 @@ void KAddressBookCardView::refresh(QString uid)
         for (iter = addresseeList.begin(); iter != addresseeList.end(); ++iter)
         {
             aItem = new AddresseeCardViewItem(fields(), mShowEmptyFields,
-                                              mDocument, *iter, mCardView);
+                                              addressBook(), *iter, mCardView);
         }
         
         // by default nothing is selected

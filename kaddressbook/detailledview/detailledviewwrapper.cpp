@@ -13,11 +13,6 @@ DetailedViewWrapper::~DetailedViewWrapper()
 {
 }
 
-QString DetailedViewWrapper::type() const
-{
-    return i18n("Detailed view");
-}
-
 QString DetailedViewWrapper::description() const
 {
     return i18n("<qt>This view displays details of a selected contact, "
@@ -31,8 +26,7 @@ KAddressBookView* DetailedViewWrapper::createView(KABC::AddressBook *doc,
     KConfig *config;
     KAddressBookDetailedView *view;
     config=kapp->config();
-    view=new KAddressBookDetailedView(doc, parent, name);
+    view = new KAddressBookDetailedView(doc, parent, name);
     view->init(config);
     return view;
 }
-

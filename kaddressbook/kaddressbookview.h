@@ -145,6 +145,10 @@ class KAddressBookView : public QWidget
     */
     const QString &defaultFilterName() const { return mDefaultFilterName; }
     
+    /** @return The address book.
+    */
+    KABC::AddressBook *addressBook() const { return mDocument; }
+
   public slots:
     /** Must be overloaded in subclasses to refresh the view.
     * Refreshing includes updating the view to ensure that only items

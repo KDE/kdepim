@@ -44,14 +44,12 @@ AddresseeIconView::AddresseeIconView(QWidget *parent, const char *name)
   setSelectionMode(QIconView::Extended);
   setResizeMode(QIconView::Adjust);
   setWordWrapIconText(true);
-  setMaxItemTextLength(8);
+  setMaxItemTextLength( 15 );
   setItemsMovable(false);
   setSorting(true, true);
   
-  connect(this, SIGNAL(dropped(QDropEvent*, 
-                       const QValueList<QIconDragItem>&)),
-          this, SLOT(itemDropped(QDropEvent*, 
-                                 const QValueList<QIconDragItem>&)));
+  connect(this, SIGNAL(dropped(QDropEvent*, const QValueList<QIconDragItem>&)),
+          this, SLOT(itemDropped(QDropEvent*, const QValueList<QIconDragItem>&)));
 }
 
 AddresseeIconView::~AddresseeIconView()
@@ -95,20 +93,7 @@ class AddresseeIconViewItem : public KIconViewItem
         mAddressee = mDocument->findByUid(mAddressee.uid());
         
         if (!mAddressee.isEmpty())
-        {
-          QString text = "";
-          
-          // Try all the selected fields until we find one with text.
-          // This will limit the number of unlabeled icons in the view
-          KABC::Field::List::Iterator iter;
-          for (iter = mFields.begin(); iter != mFields.end() && text.isEmpty();
-               ++iter)
-          {
-            text = (*iter)->value( mAddressee );
-          }
-       
-          setText(text);
-        }
+          setText( mAddressee.givenName() + " " + mAddressee.familyName() );
     }
     
   private:
@@ -125,8 +110,6 @@ KAddressBookIconView::KAddressBookIconView(KABC::AddressBook *doc,
                                            const char *name)
     : KAddressBookView(doc, parent, name)
 {
-    mDocument = doc;
-    
     // Init the GUI
     QVBoxLayout *layout = new QVBoxLayout(viewWidget());
     
@@ -184,44 +167,35 @@ QStringList KAddressBookIconView::selectedUids()
     
 void KAddressBookIconView::refresh(QString uid)
 {
-    QIconViewItem *item;
-    AddresseeIconViewItem *aItem;
+  QIconViewItem *item;
+  AddresseeIconViewItem *aItem;
     
-    if (uid == QString::null)
-    {
-        // Rebuild the view
-        mIconView->clear();
+  if ( uid == QString::null ) {
+    // Rebuild the view
+    mIconView->clear();
+    mIconList.clear();
         
-        QPixmap icon(KGlobal::iconLoader()->loadIcon("vcard",
-                                                     KIcon::Desktop));
-        KABC::Addressee::List addresseeList = addressees();
-        KABC::Addressee::List::Iterator iter;
-        for (iter = addresseeList.begin(); iter != addresseeList.end(); ++iter)
-        {
-            aItem = new AddresseeIconViewItem(fields(), mDocument, *iter,
-                                              mIconView);
-            aItem->setPixmap(icon);
-        }
-        
-        // by default nothing is selected
-        emit selected(QString::null);
-        
+    QPixmap icon( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop) );
+    KABC::Addressee::List addresseeList = addressees();
+    KABC::Addressee::List::Iterator iter;
+    for ( iter = addresseeList.begin(); iter != addresseeList.end(); ++iter ) {
+      aItem = new AddresseeIconViewItem( fields(), addressBook(), *iter, mIconView );
+      aItem->setPixmap(icon);
+      mIconList.append( aItem );
     }
-    else
-    {
-        // Try to find the one to refresh
-        bool found = false;
-        for (item = mIconView->firstItem(); item && !found; 
-             item = item->nextItem())
-        {
-            aItem = dynamic_cast<AddresseeIconViewItem*>(item);
-            if ((aItem) && (aItem->addressee().uid() == uid))
-            {
-                aItem->refresh();
-                found = true;
-            }    
-        }
+    mIconView->arrangeItemsInGrid( true );
+  } else {
+    // Try to find the one to refresh
+    for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
+      aItem = dynamic_cast<AddresseeIconViewItem*>(item);
+      if ((aItem) && (aItem->addressee().uid() == uid)) {
+        aItem->refresh();
+        mIconView->arrangeItemsInGrid( true );
+        return;
+      }
     }
+    refresh( QString::null );
+  }
 }
 
 void KAddressBookIconView::setSelected(QString uid, bool selected)
@@ -282,16 +256,15 @@ void KAddressBookIconView::addresseeSelected()
 void KAddressBookIconView::incrementalSearch(const QString &value, 
                                              KABC::Field *field)
 {
-  // Only supports searching on the first field, since that is all that
-  // is visible
-  if ( field->equals( fields().first() ) )
-  {
-    QIconViewItem *item = mIconView->findItem(value);
-    
-    if (item)
-    {
-      mIconView->setSelected(item, true, false);
-      mIconView->ensureItemVisible(item);
+  KABC::Addressee::List list = addressees();
+  KABC::Addressee::List::Iterator it;
+  for ( it = list.begin(); it != list.end(); ++it ) {
+    AddresseeIconViewItem *item;
+    for ( item = mIconList.first(); item; item = mIconList.next() ) {
+      if ( field->value( item->addressee() ).startsWith( value ) ) {
+        mIconView->setSelected(item, true, false);
+        mIconView->ensureItemVisible(item);
+      }
     }
   }
 }

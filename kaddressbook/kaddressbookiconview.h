@@ -31,6 +31,7 @@
 class QIconViewItem;
 class KConfig;
 class AddresseeIconView;
+class AddresseeIconViewItem;
 
 namespace KABC { class AddressBook; }
 
@@ -64,7 +65,7 @@ class KAddressBookIconView : public KAddressBookView
   
   private:
     AddresseeIconView *mIconView;
-    KABC::AddressBook *mDocument;
+    QPtrList<AddresseeIconViewItem> mIconList;
 };
 
 

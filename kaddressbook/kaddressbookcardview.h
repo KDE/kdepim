@@ -67,7 +67,6 @@ class KAddressBookCardView : public KAddressBookView
   
   private:
     AddresseeCardView *mCardView;
-    KABC::AddressBook *mDocument;
     bool mShowEmptyFields;
 };
 

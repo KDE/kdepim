@@ -33,7 +33,7 @@
 KAddressBookTableView::KAddressBookTableView( KABC::AddressBook *doc,
 		      QWidget *parent,
 		      const char *name )
-  : KAddressBookView(doc, parent, name), mDocument(doc)
+  : KAddressBookView(doc, parent, name)
 {
   mainLayout = new QVBoxLayout( viewWidget(), 2 );
   
@@ -62,7 +62,7 @@ void KAddressBookTableView::reconstructListView()
         delete mListView;
     }
 
-  mListView = new ContactListView( this, mDocument, viewWidget() );
+  mListView = new ContactListView( this, addressBook(), viewWidget() );
   
   // Add the columns
   KABC::Field::List fieldList = fields();
@@ -133,7 +133,7 @@ void KAddressBookTableView::refresh(QString uid)
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator it;
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
-      new ContactListViewItem(*it, mListView, mDocument, fields());
+      new ContactListViewItem(*it, mListView, addressBook(), fields());
     }
         
     // Sometimes the background pixmap gets messed up when we add lots

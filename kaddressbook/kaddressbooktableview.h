@@ -70,7 +70,6 @@ friend class ContactListView;
     void addresseeExecuted(QListViewItem*);
  
   private:
-    KABC::AddressBook *mDocument;
     QVBoxLayout *mainLayout;
     ContactListView *mListView;
 };
