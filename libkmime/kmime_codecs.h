@@ -49,7 +49,7 @@ class Decoder;
 
 /** Abstract base class of codecs like base64 and
     quoted-printable. It's a singleton.
-    
+
     @short Codecs for common mail transfer encodings.
     @author Marc Mutz <mutz@kde.org>
 */
@@ -64,21 +64,21 @@ protected:
   Codec() {}
 private:
   static void fillDictionary();
-  
+
 public:
   static Codec * codecForName( const char * name );
   static Codec * codecForName( const QCString & name );
 
   virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
   virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
-  
+
   virtual Encoder * makeEncoder( bool withCRLF=false ) const = 0;
   virtual Decoder * makeDecoder( bool withCRLF=false ) const = 0;
 
   /**
    * Convenience wrapper that can be used for small chunks of data
    * when you can provide a large enough buffer. The default
-   * implementation creates an @ref Encoder and uses it.
+   * implementation creates an @see Encoder and uses it.
    *
    * Encodes a chunk of bytes starting at @p scursor and extending to
    * @p send into the buffer described by @p dcursor and @p dend.
@@ -110,11 +110,11 @@ public:
   virtual bool encode( const char* & scursor, const char * const send,
 		       char* & dcursor, const char * const dend,
 		       bool withCRLF=false ) const;
-  
+
   /**
    * Convenience wrapper that can be used for small chunks of data
    * when you can provide a large enough buffer. The default
-   * implementation creates a @ref Decoder and uses it.
+   * implementation creates a @see Decoder and uses it.
    *
    * Decodes a chunk of bytes starting at @p scursor and extending to
    * @p send into the buffer described by @p dcursor and @p dend.
@@ -182,13 +182,13 @@ public:
    * @return the name of the encoding. Guaranteed to be lowercase.
    */
   virtual const char * name() const = 0;
-  
+
   virtual ~Codec() {}
-  
+
 };
-  
+
 /**
- * Stateful decoder class, modelled after @ref QTextDecoder.
+ * Stateful decoder class, modelled after @see QTextDecoder.
  *
  * @section Overview
  *
@@ -197,35 +197,35 @@ public:
  * arbitrary size. They maintain any state necessary to go on where
  * the previous call left off.
  *
- * The class consists of only two methods of interest: @ref decode,
- * which decodes an input block and @ref finalize, which flushes any
+ * The class consists of only two methods of interest: @see decode,
+ * which decodes an input block and @see finalize, which flushes any
  * remaining data to the output stream.
  *
- * Typically, you will create a decoder instance, call @ref decode as
- * often as necessary, then call @ref finalize (most often a single
+ * Typically, you will create a decoder instance, call @see decode as
+ * often as necessary, then call @see finalize (most often a single
  * call suffices, but it might be that during that call the output
- * buffer is filled, so you should be prepared to call @ref finalize
+ * buffer is filled, so you should be prepared to call @see finalize
  * as often as necessary, ie. until it returns @p true).
  *
  * @section Return Values
  *
  * Both methods return @p true to indicate that they've finished their
- * job. For @ref decode, a return value of @p true means that the
+ * job. For @see decode, a return value of @p true means that the
  * current input block has been finished (@p false most often means
  * that the output buffer is full, but that isn't required
- * behavior. The @ref decode call is free to return at arbitrary
+ * behavior. The @see decode call is free to return at arbitrary
  * times during processing).
  *
- * For @ref finalize, a return value of @p true means that all data
+ * For @see finalize, a return value of @p true means that all data
  * implicitly or explicitly stored in the decoder instance has been
  * flushed to the output buffer. A @p false return value should be
  * interpreted as "check if the output buffer is full and call me
- * again", just as with @ref decode.
+ * again", just as with @see decode.
  *
  * @section Usage Pattern
  *
  * Since the decoder maintains state, you can only use it once. After
- * a sequence of input blocks has been processed, you @ref finalize
+ * a sequence of input blocks has been processed, you @see finalize
  * the output and then delete the decoder instance. If you want to
  * process another input block sequence, you create a new instance.
  *
@@ -268,7 +268,7 @@ class Decoder {
 protected:
   friend class Codec;
   /**
-   * Protected constructor. Use @ref KMime::Codec::makeDecoder to
+   * Protected constructor. Use @see KMime::Codec::makeDecoder to
    * create an instance. The bool parameter determines whether lines
    * end with CRLF (true) or LF (false, default).
    **/
@@ -283,7 +283,7 @@ public:
   virtual bool decode( const char* & scursor, const char * const send,
 		       char* & dcursor, const char * const dend ) = 0;
   /** Call this method to finalize the output stream. Writes all
-   *  remaining data and resets the decoder. See @ref KMime::Codec for
+   *  remaining data and resets the decoder. See @see KMime::Codec for
    *  calling conventions.
    **/
   virtual bool finish( char* & dcursor, const char * const dend ) = 0;
@@ -291,8 +291,8 @@ public:
 protected:
   const bool mWithCRLF;
 };
-  
-/** Stateful encoder class, modelled after @ref QTextEncoder.
+
+/** Stateful encoder class, modelled after @see QTextEncoder.
     @short Stateful encoder class
     @author Marc Mutz <mutz@kde.org>
 */
@@ -308,12 +308,12 @@ public:
   virtual ~Encoder() {}
 
   /** Encode a chunk of data, maintaining state information between
-      calls. See @ref KMime::Codec for calling conventions. */
+      calls. See @see KMime::Codec for calling conventions. */
   virtual bool encode( const char* & scursor, const char * const send,
 		       char* & dcursor, const char * const dend ) = 0;
 
   /** Call this method to finalize the output stream. Writes all
-      remaining data and resets the encoder. See @ref KMime::Codec for
+      remaining data and resets the encoder. See @see KMime::Codec for
       calling conventions. */
   virtual bool finish( char* & dcursor, const char * const dend ) = 0;
 
@@ -339,7 +339,7 @@ protected:
   }
 
   /** Writes characters from the output buffer to the output stream.
-      Implementations of @ref encode and @ref finish should call this
+      Implementations of @see encode and @see finish should call this
       at the very beginning and for each iteration of the while loop.
       @return true if all chars could be written, false otherwise */
   bool flushOutputBuffer( char* & dcursor, const char * const dend );
@@ -353,7 +353,7 @@ protected:
   }
 
 private:
-  /** An output buffer to simplyfy some codecs. Use with @ref write
+  /** An output buffer to simplyfy some codecs. Use with @see write
       and flushOutputBuffer */
   char mOutputBuffer[ maxBufferedChars ];
 protected:
