@@ -112,7 +112,7 @@ void ResourceCached::readConfig( const KConfig *config )
 void ResourceCached::setupSaveTimer()
 {
   if ( mSavePolicy == SaveInterval ) {
-    kdDebug() << "ResourceCached::setSavePolicy(): start save timer (interval "
+    kdDebug(5800) << "ResourceCached::setSavePolicy(): start save timer (interval "
               << mSaveInterval << " minutes)." << endl;
     mSaveTimer.start( mSaveInterval * 60 * 1000 ); // n minutes
   } else {
@@ -123,7 +123,7 @@ void ResourceCached::setupSaveTimer()
 void ResourceCached::setupReloadTimer()
 {
   if ( mReloadPolicy == ReloadInterval ) {
-    kdDebug() << "ResourceCached::setSavePolicy(): start reload timer "
+    kdDebug(5800) << "ResourceCached::setSavePolicy(): start reload timer "
                  "(interval " << mReloadInterval << " minutes)" << endl;
     mReloadTimer.start( mReloadInterval * 60 * 1000 ); // n minutes
   } else {
@@ -276,7 +276,7 @@ void ResourceCached::clearChanges()
 void ResourceCached::calendarIncidenceAdded( Incidence *i )
 {
 #if 1
-  kdDebug() << "ResourceCached::calendarIncidenceAdded(): "
+  kdDebug(5800) << "ResourceCached::calendarIncidenceAdded(): "
             << i->uid() << endl;
 #endif
 
@@ -292,7 +292,7 @@ void ResourceCached::calendarIncidenceAdded( Incidence *i )
 void ResourceCached::calendarIncidenceChanged( Incidence *i )
 {
 #if 1
-  kdDebug() << "ResourceCached::calendarIncidenceChanged(): "
+  kdDebug(5800) << "ResourceCached::calendarIncidenceChanged(): "
             << i->uid() << endl;
 #endif
 
@@ -308,7 +308,7 @@ void ResourceCached::calendarIncidenceChanged( Incidence *i )
 void ResourceCached::calendarIncidenceDeleted( Incidence *i )
 {
 #if 1
-  kdDebug() << "ResourceCached::calendarIncidenceDeleted(): "
+  kdDebug(5800) << "ResourceCached::calendarIncidenceDeleted(): "
             << i->uid() << endl;
 #endif
 

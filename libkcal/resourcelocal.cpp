@@ -159,7 +159,7 @@ bool ResourceLocal::doLoad()
   bool success;
 
   if ( !KStandardDirs::exists( mURL.path() ) ) {
-    kdDebug() << "ResourceLocal::load(): File doesn't exist yet." << endl;
+    kdDebug(5800) << "ResourceLocal::load(): File doesn't exist yet." << endl;
     success = true;
   } else {
     success = mCalendar.load( mURL.path() );

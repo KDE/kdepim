@@ -814,9 +814,10 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
   icalproperty *p = icalproperty_new_attach( attach );
   icalattachtype_free( attach );
 
-  if ( !att->mimeType().isEmpty() )
+  if ( !att->mimeType().isEmpty() ) {
     icalproperty_add_parameter( p,
         icalparameter_new_fmttype( att->mimeType().utf8().data() ) );
+  }
 
   if ( att->isBinary() ) {
     icalproperty_add_parameter( p,
@@ -1442,9 +1443,9 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   if (ep)
     e = icalparameter_get_encoding(ep);
 
-  if (v == ICAL_VALUE_BINARY && e == ICAL_ENCODING_BASE64)
+  if (v == ICAL_VALUE_BINARY && e == ICAL_ENCODING_BASE64) {
     attachment = new Attachment(icalattachtype_get_base64(a));
-  else if ((v == ICAL_VALUE_NONE || v == ICAL_VALUE_URI) && (e == ICAL_ENCODING_NONE || e == ICAL_ENCODING_8BIT)) {
+  } else if ((v == ICAL_VALUE_NONE || v == ICAL_VALUE_URI) && (e == ICAL_ENCODING_NONE || e == ICAL_ENCODING_8BIT)) {
     attachment = new Attachment(QString(icalattachtype_get_url(a)));
   } else {
     kdWarning(5800) << "Unsupported attachment format, discarding it!" << endl;
