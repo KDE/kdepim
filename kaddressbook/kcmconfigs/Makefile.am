@@ -1,7 +1,7 @@
 INCLUDES= -I$(top_builddir)/kaddressbook -I$(top_srcdir)/kaddressbook \
           -I$(top_srcdir)/kaddressbook/common \
           -I$(top_srcdir)/kaddressbook/interfaces \
-          -I$(top_srcdir)/libkdepim \
+          -I$(top_builddir)/libkdepim \
           -I$(top_srcdir) -I$(top_builddir)/kaddressbook/common $(all_includes)
 
 kde_module_LTLIBRARIES = kcm_kabconfig.la kcm_kabldapconfig.la \
