@@ -396,6 +396,9 @@ bool ResourceIMAP::addJournal(Journal *journal)
 
 void ResourceIMAP::deleteJournal(Journal *journal)
 {
+  if( !journal )
+    return;
+
   if ( !mSilent ) {
     if ( !connectToKMail() ) {
       kdError() << "DCOP error during ResourceIMAP::deleteJournal(QString)\n";
