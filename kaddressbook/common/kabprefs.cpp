@@ -36,6 +36,7 @@ KABPrefs::KABPrefs()
   KConfigSkeleton::setCurrentGroup( "General" );
 
   QStringList defaultMap;
+  defaultMap << "http://www.maporama.com/share/map.asp?COUNTRYCODE=%c&_XgoGCAddress=%s&Zip=%z&State=%r&_XgoGCTownName=%l";
   defaultMap << "http://link2.map24.com/?lid=9cc343ae&maptype=CGI&lang=%1&street0=%s&zip0=%z&city0=%l&country0=%c";
   defaultMap << "http://www.mapquest.com/main.adp?searchtab=address&searchtype=address&country=%c&address=%s&state=%r&zipcode=%z&city=%l&search=1";
   addItemString( "LocationMapURL", mLocationMapURL, defaultMap[ 0 ] );
