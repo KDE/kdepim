@@ -23,7 +23,7 @@ libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_librar
 libkaddressbookpart_la_LIBADD = libkaddressbook.la
 
 noinst_LTLIBRARIES = libkabcommon.la
-libkabcommon_la_SOURCES = kabprefs.cpp
+libkabcommon_la_SOURCES = kabprefs.cpp locationmap.cpp
 libkabcommon_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                          $(top_builddir)/libkdepim/libkdepim.la

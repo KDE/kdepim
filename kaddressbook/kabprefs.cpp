@@ -42,6 +42,8 @@ KABPrefs::KABPrefs()
   addItemString( "PhoneHookApplication", mPhoneHookApplication, "" );
   addItemString( "FaxHookApplication", mFaxHookApplication,
                  "kdeprintfax --phone %N" );
+  addItemString( "LocationMapURL", mLocationMapURL,
+                 "http://link2.map24.com/?lid=9cc343ae&maptype=CGI&lang=%1&street0=%s&zip0=%z&city0=%l&country0=%c" );
 
   KConfigSkeleton::setCurrentGroup( "MainWindow" );
   addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );

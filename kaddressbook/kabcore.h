@@ -318,6 +318,8 @@ class KABCore : public KAB::Core
 
     void detailsHighlighted( const QString& );
 
+    void showContactsAddress( const QString &uid );
+
     void configurationChanged();
 
   private slots:

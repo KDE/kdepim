@@ -133,6 +133,19 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
+  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
+  boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
+  boxLayout->setAlignment( Qt::AlignTop );
+
+  mLocationMapURL = new QLineEdit( groupBox );
+  QToolTip::add( mLocationMapURL, i18n( "<ul> <li>%s: Street</li>"
+                                 "<li>%r: Region</li>"
+                                 "<li>%l: Location</li>"
+                                 "<li>%z: Zip Code</li>"
+                                 "<li>%c: Country ISO Code</li> </ul>" ) );
+  boxLayout->addWidget( mLocationMapURL );
+  layout->addWidget( groupBox );
+
   groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Extensions" ), generalPage );
   boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
@@ -195,6 +208,8 @@ void KABConfigWidget::restoreSettings()
   mFaxHook->setText( KABPrefs::instance()->mFaxHookApplication );
   mAddresseeWidget->restoreSettings();
   mEditorCombo->setCurrentItem( KABPrefs::instance()->mEditorType );
+  mLocationMapURL->setText( KABPrefs::instance()->mLocationMapURL.arg( KGlobal::locale()->country() ) );
+  mLocationMapURL->setCursorPosition( 0 );
 
   restoreExtensionSettings();
 
@@ -215,6 +230,7 @@ void KABConfigWidget::saveSettings()
   KABPrefs::instance()->mPhoneHookApplication = mPhoneHook->text();
   KABPrefs::instance()->mFaxHookApplication = mFaxHook->text();
   KABPrefs::instance()->mEditorType = mEditorCombo->currentItem();
+  KABPrefs::instance()->mLocationMapURL = mLocationMapURL->text();
   mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();

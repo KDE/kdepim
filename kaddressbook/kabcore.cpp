@@ -67,6 +67,7 @@
 #include "kaddressbookservice.h"
 #include "kaddressbookiface.h"
 #include "ldapsearchdialog.h"
+#include "locationmap.h"
 #include "printing/printingwizard.h"
 #include "searchmanager.h"
 #include "undocmds.h"
@@ -843,6 +844,25 @@ void KABCore::detailsHighlighted( const QString &msg )
     statusBar()->message( msg );
 }
 
+void KABCore::showContactsAddress( const QString &addrUid )
+{
+  QStringList uidList = mViewManager->selectedUids();
+  if ( uidList.isEmpty() )
+    return;
+
+  KABC::Addressee addr = mAddressBook->findByUid( uidList.first() );
+  if ( addr.isEmpty() )
+    return;
+
+  KABC::Address::List list = addr.addresses();
+  KABC::Address::List::Iterator it;
+  for ( it = list.begin(); it != list.end(); ++it )
+    if ( (*it).id() == addrUid ) {
+      LocationMap::instance()->showAddress( *it );
+      break;
+    }
+}
+
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
@@ -911,6 +931,9 @@ void KABCore::initGUI()
                                                     KDialog::spacingHint() );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
   detailsPageLayout->addWidget( mDetails );
+
+  connect( mDetails, SIGNAL( addressClicked( const QString&) ),
+           this, SLOT( showContactsAddress( const QString& ) ) );
 
   mViewManager = new ViewManager( this, mExtensionBarSplitter );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );

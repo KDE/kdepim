@@ -1,6 +1,6 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+    This file is part of KAddressbook.
+    Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,49 +21,31 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef LOCATIONWIDGET_H
-#define LOCATIONWIDGET_H
+#ifndef LOCATIONMAP_H
+#define LOCATIONMAP_H
 
+#include <kabc/address.h>
+#include <qobject.h>
+#include <qstring.h>
 
-#include "extensionwidget.h"
-
-class KComboBox;
-
-namespace KAB {
-class Core;
-}
-
-namespace KABC {
-class Address;
-class AddressBook;
-}
-
-class QPushButton;
-
-class LocationWidget : public KAB::ExtensionWidget
+class LocationMap : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
-    LocationWidget( KAB::Core *core, QWidget *parent, const char *name = 0 );
-    virtual ~LocationWidget();
+    static LocationMap *instance();
+    ~LocationMap();
 
-    void contactsSelectionChanged();
+  public slots:
+    void showAddress( const KABC::Address& );
 
-    QString title() const;
-    QString identifier() const;
-
-  private slots:
-    void loadLocationPage();
+  protected:
+    LocationMap();
 
   private:
     QString createUrl( const KABC::Address& );
 
-    KABC::Address::List mAddressList;
-    KComboBox *mAddressTypeCombo;
-    KComboBox *mURLTypeCombo;
-
-    QPushButton *mLoadButton;
+    static LocationMap *mSelf;
 };
 
 #endif
