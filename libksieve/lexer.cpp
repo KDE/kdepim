@@ -96,10 +96,6 @@ namespace KSieve {
     return ch >= '~' || isOfSet( illegalMap, ch );
   }
 
-  static inline bool is8Bit( signed char ch ) {
-    return ch < 0;
-  }
-
   int Lexer::_strnicmp( const char * left, const char * right, size_t len ) const {
     return charsLeft() >= len ? qstrnicmp( left, right, len ) : 1 ;
   }

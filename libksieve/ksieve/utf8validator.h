@@ -35,6 +35,10 @@
 
 namespace KSieve {
 
+  static inline bool is8Bit( signed char ch ) {
+    return ch < 0;
+  }
+
   bool isValidUtf8( const char * s, unsigned int len );
 
 } // namespace KSieve
