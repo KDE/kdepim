@@ -1428,10 +1428,10 @@ need to compile &kalarm; yourself from source files. Get the source
 package file <filename>kdepim-x.x.tar.gz</filename> or
 <filename>kalarm-x.x.tar.gz</filename> (or similar), depending on
 whether you want to install &package; or just &kalarm;. Unpack it in a
-new directory using the command <userinput><command>tar</command>
-<option>xvfz
-<replaceable>package.tar.gz</replaceable></option></userinput>, change
-to that directory and enter the following:</para>
+new directory using a command similar to
+<userinput><command>tar</command> <option>xvfz
+<replaceable>package.tar.gz</replaceable></option></userinput>, and
+change to the directory which has been created.</para>
 
 &install.compile.documentation;
 
