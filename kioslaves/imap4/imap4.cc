@@ -799,7 +799,8 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
         }
       }
       parseWriteLine ("");
-      while (!cmd->isComplete ())
+      // Wait until cmd is complete, or connection breaks.
+      while (!cmd->isComplete () && getState() != ISTATE_NO)
         parseLoop ();
       if (cmd->result () != "OK")
         error (ERR_SLAVE_DEFINED, cmd->resultInfo());
