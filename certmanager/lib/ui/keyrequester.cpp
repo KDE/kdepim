@@ -86,8 +86,6 @@ Kleo::KeyRequester::KeyRequester( const CryptoBackend * backend,
     mKeyUsage( allowedKeys ),
     d( 0 )
 {
-  kdFatal( 5150 ) << "KeyRequester: backend == 0 isn't yet supported!" << endl;
-
   QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
 
   // the label where the key id is to be displayed:
@@ -205,7 +203,8 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 }
 
 void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
-  assert( mBackend );
+  if ( !mBackend )
+    return;
 
   mTmpKeys.clear();
 
@@ -252,6 +251,8 @@ void Kleo::KeyRequester::slotKeyListResult( const GpgME::KeyListResult & res ) {
 
 
 void Kleo::KeyRequester::slotDialogButtonClicked() {
+  if ( !mBackend )
+    return;
   KeySelectionDialog dlg( mDialogCaption, mDialogMessage, mBackend,
 			  mKeys, false, mKeyUsage, mMulti );
   if ( dlg.exec() == QDialog::Accepted )
@@ -296,7 +297,13 @@ void Kleo::KeyRequester::setAllowedKeys( unsigned int keyUsage ) {
   mKeyUsage = keyUsage;
 }
 
+QPushButton * Kleo::KeyRequester::dialogButton() {
+  return mDialogButton;
+}
 
+QPushButton * Kleo::KeyRequester::eraseButton() {
+  return mEraseButton;
+}
 
 static inline unsigned int encryptionKeyUsage( bool trusted, bool valid ) {
   unsigned int result = Kleo::KeySelectionDialog::EncryptionKeys | Kleo::KeySelectionDialog::PublicKeys;

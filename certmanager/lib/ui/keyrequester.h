@@ -105,8 +105,8 @@ namespace Kleo {
     void setFingerprints( const QStringList & fingerprints );
 
 
-    QPushButton * eraseButton() const;
-    QPushButton * dialogButton() const;
+    QPushButton * eraseButton();
+    QPushButton * dialogButton();
 
     void setDialogCaption( const QString & caption );
     void setDialogMessage( const QString & message );
