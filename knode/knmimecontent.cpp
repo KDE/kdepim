@@ -177,12 +177,15 @@ void KNMimeContent::parse()
  			mInfo->setCTCategory(CCcontainer);
  			mInfo->setCTMediaType(MTmultipart);
  			mInfo->setCTSubType(STmixed);
+ 			this->KNMimeContent::assemble();
  			uuContent=new KNMimeContent();
  			uuContent->initContent();
- 			uuContent->setHeader(HTcontentType, "text/plain");
- 			uuContent->setHeader(HTencoding, "7bit");
- 			uuContent->parse();
+ 			uuContent->mimeInfo()->setCTMediaType(MTtext);
+ 			uuContent->mimeInfo()->setCTSubType(STplain);
+ 			uuContent->mimeInfo()->setCTEncoding(ECsevenBit);
+ 			uuContent->mimeInfo()->setCTDisposition(DPattached);
  			uuContent->mimeInfo()->setCTCategory(CCmain);
+ 			uuContent->assemble();
  			part=uup.textPart();
  			for(char *l=part->first(); l; l=part->next())
  				uuContent->addBodyLine(l);
@@ -191,10 +194,11 @@ void KNMimeContent::parse()
  			uuContent=new KNMimeContent();
  			uuContent->initContent();
  			tmp=uup.assumedMimeType().copy()+"; name=\""+uup.fileName()+"\"";
- 			uuContent->setHeader(HTcontentType, tmp.data());
- 			uuContent->setHeader(HTencoding, "x-uuencode");
- 			uuContent->parse();
+ 			uuContent->mimeInfo()->setCustomMimeType(tmp);
+ 			uuContent->mimeInfo()->setCTEncoding(ECuuencode);
+ 			uuContent->mimeInfo()->setCTDisposition(DPattached);
  			uuContent->mimeInfo()->setCTCategory(CCattachement);
+ 			uuContent->assemble();
  			part=uup.binaryPart();
  			for(char *l=part->first(); l; l=part->next())
  				uuContent->addBodyLine(l);
@@ -252,7 +256,7 @@ void KNMimeContent::prepareForDisplay()
 		
 	if(mInfo->ctMediaType()==MTtext) {
 		tmp.resize(16000);
-		tmp="";
+		tmp[0]='\0';
 		for(line=firstBodyLine(); line; line=nextBodyLine()){
 			tmp+=line;
 			tmp+="\n";

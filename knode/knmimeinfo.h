@@ -56,6 +56,9 @@ class KNMimeInfo : public KNArticleBase{
 		
 	protected:
 	 	QCString assembleMimeType();
+	 	void parseMimeType(const QCString &s);
+	 	void parseEncoding(const QCString &s);
+	 	void parseDisposition(const QCString &s);
 	 	mediaType 		    c_tMType;
 	  subType    		    c_tSType;
 	  encoding			    c_tEncoding;
