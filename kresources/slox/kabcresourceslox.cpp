@@ -21,7 +21,6 @@
 #include <qapplication.h>
 
 #include <kabc/addressee.h>
-#include <kaddressbook/kabprefs.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
