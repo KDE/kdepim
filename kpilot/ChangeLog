@@ -1,5 +1,13 @@
 TODO LIST (Moved again to the file TODO)
 
+2003-6-25  Adriaan de Groot
+* Be consistent about naming the sysinfo conduit "System Information"
+  in user-visible strings.
+* Remove "conduit" from the name of the Palm DOC conduit, and add a
+  new-style config panel to it. Made it resize properly.
+* Note that ConduitConfigBase::load() and its overrides should set
+  fModified to false.
+
 2003-6-22  Adriaan de Groot
 * Turn off NO_CAST_ASCII when doing DEBUG_CERR, because ostream is
   lacking an operator << for QString. (Nicer is probably to add
@@ -32,12 +40,12 @@ TODO LIST (Moved again to the file TODO)
   at all???)
 
 2003-6-19  Reinhold Kainhofer
-* Implemented the list of records in the generic DB viewer. To be 
-  able to sort the records by their index, I had to write my own 
-  compare method of the QListViewItem, which compares the numerical 
-  representation of the column entries. For large DBs (>300 records) 
-  this is way too slow (QString::toULong for each comparison, increasing 
-  with n*n), so I had to implement some caching. Now even large databases 
+* Implemented the list of records in the generic DB viewer. To be
+  able to sort the records by their index, I had to write my own
+  compare method of the QListViewItem, which compares the numerical
+  representation of the column entries. For large DBs (>300 records)
+  this is way too slow (QString::toULong for each comparison, increasing
+  with n*n), so I had to implement some caching. Now even large databases
   are sorted very fast.
 
 2003-6-16  Reinhold Kainhofer
@@ -164,7 +172,7 @@ KPilot Developer's notes for May 30th, 2003
 * Spent lots of time panicing my system and causing fatal exceptions
   on my Pilot by playing with pilot-link 0.11.7 and FreeBSD's USB
   stack.
-* kpilotlink.cc Suppress printing the "accidentally in acceptDevice" 
+* kpilotlink.cc Suppress printing the "accidentally in acceptDevice"
   more than once. Try to escape from the infinite socketnotifier loop.
 
 
@@ -194,7 +202,7 @@ KPilot Developer's notes for April 30th, 2003
 2003-4-22  Reinhold Kainhofer
 * Cleanup of several cout and other debug messages
 * In the addressbook and todo conduits, after the sync the AppInfoBlock
-  is written back to the databases so that adding categories to the 
+  is written back to the databases so that adding categories to the
   database finally works.
 
 2003-4-21  Adriaan de Groot
@@ -239,17 +247,17 @@ KPilot Developer's notes for April 30th, 2003
 
 2003-4-17  Adriaan de Groot
 * Finished moving the conduit config to checklist items. Worked out
-  a sensible compromise with the command buttons. The conduit 
+  a sensible compromise with the command buttons. The conduit
   descriptions (comment lines in the .desktop files) need work.
 
 2003-4-16  Reinhold Kainhofer
-* Tried to add a logMessagePart slot which would append some words 
-  to the last line of the sync log (but would not start a new paragraph, 
-  and more text could be added to the last paragraph). Realized that this 
+* Tried to add a logMessagePart slot which would append some words
+  to the last line of the sync log (but would not start a new paragraph,
+  and more text could be added to the last paragraph). Realized that this
   is not possible in a QTextEdit with LogText, and using RichText is too
   buggy to be useful. However, I found a way to get rid of the pseudo-
   progressbar in the libmal output, so this is not an issue any longer.
-  
+
 2003-4-16  Adriaan de Groot
 * Moved conduit config to a list of QCheckListItems, finally.
   This was easier than I thought. Took a bit of time to polish,
@@ -269,7 +277,7 @@ KPilot Developer's notes for April 30th, 2003
 2003-4-12  Adriaan de Groot
 * Mucking about with KPilot's UI again. Trying to remove dialogs
   and to make the viewers just viewers.
-  
+
 2003-4-1  Adriaan de Groot
 * My daughter, Mira Annelie Engel, was born this evening and is a
   bouncing healthy girl. But she's going to put a crimp in KPilot
@@ -283,7 +291,7 @@ KPilot Developer's notes for March 26th, 2003
 * More merging: lib/ just spacing fixes.
 * kpilot/ In HEAD, muck about with the toggle actions that were removed
   from kpilot.cc. This stuff is supposed to build in all KDE 3.x.
-* I've been thinking about _where_ to hack next. HEAD is evolving 
+* I've been thinking about _where_ to hack next. HEAD is evolving
   further under Reinhold's influence, and I feel pretty much stymied
   in BRANCH because I can't touch strings and the like. However, I'm
   still running KDE 3.1 and dedicated to KDE 3.0 compatibility as well.
@@ -294,14 +302,14 @@ KPilot Developer's notes for March 26th, 2003
   a mix of CVS branches. We might consider doing the conduit releases
   separately from KPilot itself - more 3rd party-ish - since the conduits
   change far more drastically than KPilot itself.
-  
-  Initial plans for 4.4.0: disable editing in the viewers ; move the 
+
+  Initial plans for 4.4.0: disable editing in the viewers ; move the
   configuration things into the JanusWidget, and out of separate dialogs.
 
 2003-3-24  Reinhold Kainhofer
 * Adapted the layout of the addressbook conduit's setup dialog to
   resemble the one from the calendar/todo conduit
-* Addressbook conduit: Implemented the option to sync with an 
+* Addressbook conduit: Implemented the option to sync with an
   arbitrary vcard file instead of only the standard addressbook.
   This actually involved quite a lot of dealing with resources,
   factories etc., so I'm still looking for an easier way to
@@ -337,7 +345,7 @@ KPilot Developer's notes for March 26th, 2003
 * Merging between BRANCH and HEAD.
 * options.h [BRANCH] Upped the version number again.
 * lib/ [BOTH] Merged documentation, fixed minor bug in plugin.cc in HEAD.
-* kpilot/ [BOTH] Merged stuff. 
+* kpilot/ [BOTH] Merged stuff.
 * pilotDaemon.{h,cc} [HEAD] The daemon has extra DCOP features and kroupware.
 * kpilot.h [HEAD] Extra in-use code and Ben's removal of toolbars
   (supported by standards in KDE 3.2 - this needs backporting and
@@ -352,7 +360,7 @@ KPilot Developer's notes for March 26th, 2003
 * [fileInstallWidget.cc] Applied file-installer multiselect patch
   from Ulrik Mikaelsson.
 * [pilotDaemon.cc] Applied DCOP interface additions from David Mott.
-  
+
 2003-3-15  Adriaan de Groot
 * The popmail conduit runs in backup mode during syncs. So do all the
   other conduits. What's going on? Thanks to Tobia Baier for spotting this.
@@ -444,7 +452,7 @@ KPilot Developer's notes for February 14th, 2003
 
 2003-2-14  Adriaan de Groot
 * Happy Valentine's Day, eh. Remember guys, today your girlfriend
-  _is_ more important than hacking. Which reminds me .. 
+  _is_ more important than hacking. Which reminds me ..
 
 2003-2-13  Adriaan de Groot
 * kpilotLink.{h,cc} [BRANCH] Added a messagesType flag to distinguish
@@ -479,14 +487,14 @@ KPilot Developer's notes for February 14th, 2003
 * logWidgetDCOP.h still had Log: tag in it,. removed [HEAD,BRANCH]
 * abbrowser conduit has new custom field code. Did BRANCH <- HEAD
   for the includes, though, just to normalize 'em. But, to quote
-  TMBG, "Who keeps moving my #includes?" The only unmerged stuff 
+  TMBG, "Who keeps moving my #includes?" The only unmerged stuff
   that _could_ be merged is minor code beautification in
   @@ -1496,22 +1563,26 @@
 * Should re-add a Pilot*Database constructor that takes a const char *
-  for those places that already have a dbName. 
+  for those places that already have a dbName.
 * vcalconduit has startOffset() support for alarms.
-  
-  
+
+
 2003-2-9  Adriaan de Groot (merge status)
 * Merging. I hate merging. We _definitely_ need a better process for
   this, like merging every fix into HEAD as soon as it's done. That
@@ -504,7 +512,7 @@ KPilot Developer's notes for February 14th, 2003
   one go. I think I have it back to normal now.
 
 KPilot Developer's notes for February 7th, 2003
-===============================================  
+===============================================
 
 * KPilot 4.3.7 is released. Tarballs on the website tonight.
 * Need to backport the changes from 2002-11-10 to BRANCH.
@@ -518,7 +526,7 @@ KPilot Developer's notes for February 7th, 2003
 2003-2-7  Adriaan de Groot
 * Updated the website some.
 * options.h [BRANCH] Version number now 4.3.7.
-  
+
 2003-2-6  Adriaan de Groot
 * Did a big chunk of merging from BRANCH to HEAD. Discovered two
   things that didn't work well:
@@ -526,14 +534,14 @@ KPilot Developer's notes for February 7th, 2003
   - Memo widget optimizations
   I hope I got them right. I'm going back to work in BRANCH.
 * Constant strings in the source are now (almost all) marked
-  with CSL1() for Constant String Latin 1. This reduces the 
+  with CSL1() for Constant String Latin 1. This reduces the
   number of hits for [lL]atin1. The macro uses a syntactic trick
   to make sure it's only applied to constant strings.
-  
-    
+
+
 2003-2-5  Adriaan de Groot
 * Almost everywhere [BRANCH] Search and destroyed latin1().
-* options.h [BRANCH] Handle <kdebugclasses.h> properly. Um, sort of. 
+* options.h [BRANCH] Handle <kdebugclasses.h> properly. Um, sort of.
   The dag-blabbed file is obsolete in KDE 3.2, required in 3.1, and
   incomplete in 3.0. Ignore it instead. Ignore all the fancy Q*
   operator <<s and do it all by hand.
@@ -544,11 +552,11 @@ KPilot Developer's notes for February 7th, 2003
 * kpilot.cc [BRANCH] Improve perceived startup time by delaying
   the loading of databases till the GUI is up.
 * options.h [BRANCH] To enforce discipline, use NO_ASCII_CAST.
-  NOT COMMITTED - it'll break a lot of debug stuff as well. 
+  NOT COMMITTED - it'll break a lot of debug stuff as well.
   However, as an occasional test, it's a good idea.
 * {many files} [BRANCH] Clean up random char * conversions.
 * kpilotConfig.{h,cc} [BRANCH] Introduce config entry for encoding.
-* kpilot.cc pilotDaemon.cc pilotAppCategory.h pilotRecord.cc [BRANCH] 
+* kpilot.cc pilotDaemon.cc pilotAppCategory.h pilotRecord.cc [BRANCH]
   Use the config entry for encoding. Applications that use any
   PilotAppCategory derived class - ie. that interpret data from the
   Pilot in any way - should call setupPilotCodec() beforehand with
@@ -566,7 +574,7 @@ KPilot Developer's notes for February 7th, 2003
 * memoWidget.{h,cc} [BRANCH] Removed double initialization. Removed
   heavy-handed initialize() call after memo deletion. Found potential
   data-loss bug with deleting memos after unselecting one. Decided that
-  extended select in this case is just _evil_. I can't decide which 
+  extended select in this case is just _evil_. I can't decide which
   memo to show after deselections, and there's several other problems
   as well related to slotUpdateButtons(). Reverted the multiple-select.
 * options.h [BRANCH] Added the TODO_I18N macro to BRANCH as well,
@@ -575,17 +583,17 @@ KPilot Developer's notes for February 7th, 2003
   copy JPilot's setup, maybe that will help with password issues.
 * kpilot.cc [BRANCH] Cleaned up deprecated headers.
 * conduitConfigDialog.cc [BRANCH] Preparing to repair the clumsy
-  conduit selection and activation 
+  conduit selection and activation
 
-  
+
 KPilot Developer's notes for January 30th, 2003
-===============================================  
+===============================================
 
 * Ugh. Looked at jpilot source. Now I remember why doing C often
   seemed a little unproductive. But it does give some very useful
-  information: We need a combo box to choose the Pilot's encoding. 
+  information: We need a combo box to choose the Pilot's encoding.
   We can use the list from JPilot. Next, we need to make _all_ the
-  QString::fromLatin1() and QString::latin1() -- also all the 
+  QString::fromLatin1() and QString::latin1() -- also all the
   implicit ones -- that refer to pilot records use the right codec.
   This will require some possibly major work on the database classes.
 * The logging is still lousy for many conduits. I ran the
@@ -604,7 +612,7 @@ KPilot Developer's notes for January 30th, 2003
   in KDE 3.1 and 3.0 environments. This makes tarball delivery a _lot_
   easier.
 
-  
+
 2003-1-31  Adriaan de Groot
 * Let's do the time-warp again!
 * syncAction.{h,cc} [HEAD] Added a delayDone() function for use from
@@ -638,7 +646,7 @@ KPilot Developer's notes for January 30th, 2003
         KPilot - HotSync software for KDE
   for a variety of consistency reasons. This can only happen
   in HEAD, though.
-* Reversed some confusing accidental commits by me in the 
+* Reversed some confusing accidental commits by me in the
   debugging department for the daemon.
 
 
@@ -651,21 +659,21 @@ KPilot Developer's notes for January 30th, 2003
 2003-1-24  Adriaan de Groot
 * Received a patch from David Mott that removes lots of the Log:
   tags from the KPilot source (mostly in kpilot/). Finished the
-  job too, committed. 
+  job too, committed.
 
 2003-1-20  Adriaan de Groot
 * For the next little while, I'll be working in _BRANCH fixing
   bugs as best I can. These will end up in KDE 3.1.x releases.
   Reinhold will be working in HEAD, adding neat features.
   BRANCH will be merged to HEAD regularly so that no bug-fixes
-  are lost in HEAD. 
-* Reduced debugging output clutter in PilotAddress by changing 
+  are lost in HEAD.
+* Reduced debugging output clutter in PilotAddress by changing
   to FUNCTIONSETUPL(). Assigned Levels are: 4=PilotAddress.
-  
-  
+
+
 2003-1-18  Reinhold Kainhofer
 * Removed several Log: ... tags from the conduits I maintain
-* started implementing the custom fields sync of the addressbook conduit. 
+* started implementing the custom fields sync of the addressbook conduit.
   I still have problems converting a string to a QDate using a custom format
 * Cleanup of includes in my conduits.
 * Some more work on the DOCConduit. There are still several open issues, but
@@ -689,18 +697,18 @@ KPilot Developer's notes for January 17th, 2003
 * Weirdness comes in threes: after a while the debug output stops printing.
   Even when it's sent to cerr directly. Hmm .. has something to do with
   printing NULL QStrings.
-* [hotSync.cc] Every "Backing up:" message was logged twice. 
+* [hotSync.cc] Every "Backing up:" message was logged twice.
 * [logWidget.cc] Added more version information. Discovered that
   QTextView is obsolete. Fixed log tailing problem. #ifdeffed it to
   Qt 3.1 and later.
 
 2003-1-10  Adriaan de Groot
-* [kpilot/interactivesync.cc] Some strlcpy problems when compiling HEAD 
-  (or BRANCH) KPilot on a KDE 3.0 system. Since we don't maintain branches, 
+* [kpilot/interactivesync.cc] Some strlcpy problems when compiling HEAD
+  (or BRANCH) KPilot on a KDE 3.0 system. Since we don't maintain branches,
   backwards compatibility in HEAD is essential. Added #if KDE_VERSION < 310.
-* [lib/kpilotlink.cc] Might have found the source of the KPilot-hangs-with-USB 
-  problems. There's a note in the QSocketNotifier docs saying not to disable 
-  read-notifiers.  I did anyway, and it never caused problems before. 
+* [lib/kpilotlink.cc] Might have found the source of the KPilot-hangs-with-USB
+  problems. There's a note in the QSocketNotifier docs saying not to disable
+  read-notifiers.  I did anyway, and it never caused problems before.
   Added some workaround crud.
 * I'm currently building kdelibs and base and pim on a Linux box, something
   I haven't done in over a year. This will allow me access to a USB stack
@@ -818,7 +826,7 @@ KPilot Developer's notes for november 10th, 2002
 * Added extra undocumented configuration option to the popmail
   conduit in an effort to save KMail sending capability.
 
-  
+
 KPilot Developer's notes for september 19th, 2002
 =================================================
 
@@ -826,16 +834,16 @@ KPilot Developer's notes for september 19th, 2002
 2002-09-13  Reinhold Kainhofer
 * Finally, the addressbook conduit is in a shape where I can release
   it with beta 2. There are still some issues (e.g. duplication as
-  conflict resolution is messed up on the next sync. Also, entries 
-  with newlines in an address field are always determined as changed, 
-  so the fast sync is not so fast with them.), but they can be targeted 
+  conflict resolution is messed up on the next sync. Also, entries
+  with newlines in an address field are always determined as changed,
+  so the fast sync is not so fast with them.), but they can be targeted
   later on.
 
 2002-09-10  Adriaan de Groot
 * Problems related to immediate "Exiting on Cancel" traced back to
   having two pilot-link versions installed; compile against one
   and link against the other.
-  
+
 2002-09-02  Adriaan de Groot
 * Added finer-grained pilot-link version checking in configure.in.in.
   Removed all support for ancient pilot-link versions.
@@ -866,12 +874,12 @@ KPilot Developer's notes for september 19th, 2002
 * (addressWidget.cc) Added more debugging output in response to bug #45977.
   Gosh, it's even a FreeBSD user. This basically means that the database
   can't be opened, and I have no idea why.
-* (kpilotlink.cc) Added more debugging output in KPilotLink::acceptDevice() 
+* (kpilotlink.cc) Added more debugging output in KPilotLink::acceptDevice()
   to deal with problems from Chris Cowell and Beat Straehl.
 * (kpilotlink.cc) (Perhaps) check pilot-link version more gracefully.
 * (pilotUser.h) bzero() new KPilotUser data structures, just in case.
 * (interactiveSync.cc) Fix compile warnings.
-* (knotes-action.cc) Fix bug that causes the KNotes conduit to hang 
+* (knotes-action.cc) Fix bug that causes the KNotes conduit to hang
   when KNotes isn't running.
 * (everything dependent on SyncAction) Changed the type of exec() to virtual
   bool, and removed it from the slots. Added a new slot execConduit() which
@@ -886,16 +894,16 @@ KPilot Developer's notes for august 15th, 2002
 
 2002-08-15  Reinhold Kainhofer
 * Implemented categories in the todo conduit
-* Fixed the bug which prevented error messages from 
-  being included in the hotsync log (the signals from 
+* Fixed the bug which prevented error messages from
+  being included in the hotsync log (the signals from
   fDeviceLink were not connected!)
-* Included the malconduit in the CVS tree (but disabled 
+* Included the malconduit in the CVS tree (but disabled
   its compilation for now), wrote several
-  emails asking for permission to either relicense libmal 
-  to use MPL 1.1, or to include special permission into 
+  emails asking for permission to either relicense libmal
+  to use MPL 1.1, or to include special permission into
   KPilot's COPYING to permit linking to libmal.
-  
-  
+
+
 KPilot Developer's notes for july 31th, 2002
 ===========================================
 
@@ -904,13 +912,13 @@ KPilot Developer's notes for july 31th, 2002
 * Also wrote an AvantGo conduit, but didn't add it to the cvs tree yet
   because it uses libmal, which is MPL (and thus GPL-incompatible).
   We have yet to figure out a way to make them compatible...
-  
+
 KPilot Developer's notes for july 17th, 2002
 ===========================================
 
 2002-07-17  Reinhold Kainhofer
-* A first almost-working version of the address conduit. Chances are, 
-  some data will be lost, but most parts work. "Duplicate entries" 
+* A first almost-working version of the address conduit. Chances are,
+  some data will be lost, but most parts work. "Duplicate entries"
   conflict resolution setting does not yet work.
 
 
@@ -937,7 +945,7 @@ Moving on past 3.0.2 and trying to sort things out.
 
 2002-06-24  Reinhold Kainhofer
   Still fighting with the addressbook conduit. The Palm -> PC way already
-  seems to work. Haven't committed anything yet to prevent breaking 
+  seems to work. Haven't committed anything yet to prevent breaking
   compilation of the kdepim module with a conduit which won't work yet anyway.
 
 
@@ -946,11 +954,11 @@ KPilot Developer's notes for june 16th, 2002
 
 2002-06-16 Reinhold Kainhofer
 * backported many fixes in the vcal conduits to the BRANCH for the 3.0.2
-  release. 
-* For the addressbook conduit I implemented a method 
+  release.
+* For the addressbook conduit I implemented a method
   QValueList<recordid_t> PilotDatabase::idList()
   which returns a list of all record ids in the database
-* KPilotDeviceLink::openDatabases now fetches the database from the palm 
+* KPilotDeviceLink::openDatabases now fetches the database from the palm
   if no backup copy exists on the PC.
 
 KPilot Developer's notes for june 9th, 2002
@@ -1073,7 +1081,7 @@ KPilot Developer's notes for mid-april 2002
 
 2002-04-06  Adriaan de Groot
 * Applied patch to avoid crash with undefined symbol. I forget who sent
-  it in, though. Thanks to you, anonymous! Wrote a script to catch this 
+  it in, though. Thanks to you, anonymous! Wrote a script to catch this
   kind of situation in the future.
 
 
@@ -1272,7 +1280,7 @@ KPilot Developer's notes for december 31st 2001
 
 Time to go out with a bang, eh.
 
-Fixing the VCal conduits so they actually do a sync was a fair bit of 
+Fixing the VCal conduits so they actually do a sync was a fair bit of
 work, partly because it was so weirdly crufty, partly because of the
 peculiar separation of the todo from the vcal conduit.
 
@@ -1290,7 +1298,7 @@ peculiar separation of the todo from the vcal conduit.
   - Why the heck does this (still) use FILE *?
   - It compiles and there is a sync action.
 
-Next up is checking out kpilotTest and making sure that it does sensible 
+Next up is checking out kpilotTest and making sure that it does sensible
 things, like closing the device handle, allowing multiple syncs, and
 running file install correctly. After that, testing testing testing.
 
@@ -1310,7 +1318,7 @@ running file install correctly. After that, testing testing testing.
   - Work around an off-by-one bug in pilot-link versions < 0.9.6.
 * kpilot/interactiveSync.cc
   - Added support for don't ask again in the check-user questions.
-    This changes the API of questionYesNo, but only inserts a 
+    This changes the API of questionYesNo, but only inserts a
     (defaulted) parameter, so "regular" calls of this should be
     unaffected.
 
@@ -1320,7 +1328,7 @@ is a good thing. Gonna hafta try the restore action soon ;)
 
 2001-12-29  Adriaan de Groot
 * conduits/null/null-*.{h,cc}
-  - Fixed some configuration load / restore / use bugs. 
+  - Fixed some configuration load / restore / use bugs.
     Moved configuration keys to the factory.
 * kpilot/syncStack.{h,cc}
   - The conduit proxy action also needs to proxy the messages from the conduit.
@@ -1344,7 +1352,7 @@ thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
     And ... that was fucking amazing. Greg, you da man.
 
     OK, so that one also runs to completion, at least the first time. It looks
-    like FirstTime isn't being turned off like it should, so I'll do that by 
+    like FirstTime isn't being turned off like it should, so I'll do that by
     hand. OK, changes get copied from the Pilot to KAddressbook ok, but the
     conduit seems to read *all* records from the Pilot, not just the modified
     ones. That's bad for the batteries. Oh well, I'm just so happy it works
@@ -1353,7 +1361,7 @@ thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
   - Seems to work fine.
 * conduits/knotes/*
   - Undefined symbols ... man, I (semi) hate libtool libraries.
-    See, I just left some essential code *out* here, and thus libtool 
+    See, I just left some essential code *out* here, and thus libtool
     thinks it'll be resolved later. Ha!
 
     OK, it at least copies new KNotes to the Pilot. That's enough for now.
@@ -1367,7 +1375,7 @@ thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
     kpilotTest: WARNING: [void ConduitProxy::exec()] : Can't create SyncAction.
 
     Very wise. Of course, the code to create a conduit is not in the
-    factory. Brilliant! Nothing a little cut-n-paste can't cure, and 
+    factory. Brilliant! Nothing a little cut-n-paste can't cure, and
     configure, and .. DrKonqui. Did some indenting, my brain hurts from
     trying to (a) understand this (b) fix all the memory leaks. Rewrite?
   - VCalConduit: it doesn't crash, but it's probably going to read all
@@ -1415,7 +1423,7 @@ that I can fast & hack for the rest of the week.
 Things fixed now:
 
 * conduits/vcalconduit/
-  - All the configuration dialogs now look ok, after a little fiddling 
+  - All the configuration dialogs now look ok, after a little fiddling
   about with the .ui files, and the configuration is saved as well.
   A sync is out of the question right now.
 
@@ -1482,7 +1490,7 @@ exploratory job for someone with grep and vi. In particular:
 
 * DEBUG* calls everywhere need to be surrounded by #ifdef DEBUG #endif.
   This is because some compilers don't optimize away unused strings,
-  leading to big bulky (well, sorta) executables. Adding the #ifdefs 
+  leading to big bulky (well, sorta) executables. Adding the #ifdefs
   makes sure that there's nothing at all left over from the debugging code
   when debugging is turned off.
 
@@ -1509,7 +1517,7 @@ when run. USE EXTREME CAUTION.
 
 I think the NULL conduit is safe, though :)
 
-Abbrowser Conduit: it compiles, and it has but a setup dialog and a 
+Abbrowser Conduit: it compiles, and it has but a setup dialog and a
 sync part which has not been tested at all.
 
 * Makefile.am
@@ -1593,7 +1601,7 @@ Shuffling the DCOP interfaces and cleaning up the UI, by [ade]:
 
 * logWidget.{h,cc}
   Made the splash more like a splash, removed some ugliness, moved the
-  progress bar into the SyncLog widget. 
+  progress bar into the SyncLog widget.
 * kpilotDCOP.h
   Removed the spurious filesChanged() call -- use KDirWatcher instead.
 * kpilot.{h,cc}
@@ -1610,7 +1618,7 @@ strings changed to reflect that they're not executed anymore [ade].
 * conduitConfigDialog.{h,cc}
   Added a warnNoLibrary function, moved warnings to Qt richtext.
 
-The FileInstallerWidget has some lousy strings with \n, and it needs 
+The FileInstallerWidget has some lousy strings with \n, and it needs
 a KDirWatcher [ade].
 
 * fileInstallWidget.{h,cc}
@@ -1643,7 +1651,7 @@ KPilot were really badly broken under anything non-Linux.
   Removed the extra spurious $(LIBPISOCK_PATH) which was breaking
   things under FreeBSD.
 * lib/uiDialog.{h,cc}
-  Added a virtual bool function validate() so that when Okaying a 
+  Added a virtual bool function validate() so that when Okaying a
   dialog, you can check first for valid settings. The default implementation
   is return true;
 * kpilot/kpilotConfigDialog.{h,cc}
@@ -1659,7 +1667,7 @@ KPilot were really badly broken under anything non-Linux.
 KPilot Developer's notes for october 28th 2001
 ==============================================
 
-So fun to have distributions release broken versions of an application. 
+So fun to have distributions release broken versions of an application.
 It sometimes makes me wish I didn't have to commit stuff to CVS at all
 until the application is totally right according to me (which is then
 sure to run into trouble with the KDE release schedule).
@@ -1694,7 +1702,7 @@ Worse is when your AGP bus turns out to be broken instead.
 
 * conduits/knotes/knotes-action.{h,cc}
   () Added method resetIndexes which should be called at the end of every phase
-  of the sync, basically to reset the counter and list iterator to the 
+  of the sync, basically to reset the counter and list iterator to the
   beginning of the list of KNotes.
   () Added method modifyNoteOnPilot which does the modified-notes-to Pilot
   work. It isn't very robust yet, since it doesn't handle weird cases
@@ -1702,12 +1710,12 @@ Worse is when your AGP bus turns out to be broken instead.
 
 2001-10-19  Adriaan de Groot
 
-Dern. Having your video card break and being thrown back to a 4MB SiS card 
+Dern. Having your video card break and being thrown back to a 4MB SiS card
 fit only for a firewall with no monitor is *no* fun. Where's a 24-hour
 computer store when you need one? Not only that, but I realise I'm
 going to have to put some serious thought into the KNotes conduit and
 how it is supposed to sync. So since that's hard, I'm going to look at
-the Mail conduit instead, since the functionality there is pretty much 
+the Mail conduit instead, since the functionality there is pretty much
 complete.
 
 2001-10-18  Adriaan de Groot
@@ -1745,18 +1753,18 @@ the ChangeLog standard, instead of these long rambling stories.
 2001-10-14  Adriaan de Groot
 
 Whee! It's KDE's birthday today. What a fitting day to finally release
-a version of KPilot that actually works, has useful features, and 
+a version of KPilot that actually works, has useful features, and
 doesn't gum up your Pilot hopelessly.
 
 2001-10-10  Adriaan de Groot
 
-* Actually add new KNotes to the memo pad. This means conduit syncing is 
+* Actually add new KNotes to the memo pad. This means conduit syncing is
   actually coming closer. Works from kpilotTest.
 * Renamed --test --list in kpilotTest, added option --notest to force a
   conduit to *really* run (may be hazardous!) from the tester.
 * Moved many things into lib/ -- whatever is shared between KPilot and
   conduits, basically.
-* Wow! There's stuff in PilotAddress I'd never noticed before that deserves 
+* Wow! There's stuff in PilotAddress I'd never noticed before that deserves
   to be moved to a superclass -- like setCategory. Kudos to Greg.
 * Updated the TODO list.
 * Added a nicer credits section in the about page of dialogs.
@@ -1793,7 +1801,7 @@ Hmm. Missed a few days. What I remember:
 * Implemented the Null- and KNotes-conduits setup dialogs in plugin
   libraries using David's UI files. That was fun and easy to do.
 * Make the new-style conduit configurator handle plugin libraries.
-  This was less fun, but it works. I haven't had any feedback on 
+  This was less fun, but it works. I haven't had any feedback on
   which of the two config dialogs is easier to use, but right now
   I'm leaning towards the new-style one (two columns + some buttons,
   just like it was *long* ago.) D'nD would be nice though.
@@ -1804,7 +1812,7 @@ Hmm. Missed a few days. What I remember:
 
 2001-10-01  Adriaan de Groot
 
-* Picked up David's new UI file for the conduit configuration dialog 
+* Picked up David's new UI file for the conduit configuration dialog
   and gave that a whirl. The results can be found in kpilotConfig,
   use --help to find out which options to use.
 
@@ -1844,8 +1852,8 @@ The conduit configuration is different -- again -- and easier to understand.
 
 Wrestled with crashes (cerr << i ; debugstatement ; cerr << i ; gave
 two different values for i) caused by mixing debug conde and non-debug
-code. Discovered that qglobal.h defines DEBUG unless NO_DEBUG is 
-set. Hmph. Also found that gcc does a poor job in optimizing away 
+code. Discovered that qglobal.h defines DEBUG unless NO_DEBUG is
+set. Hmph. Also found that gcc does a poor job in optimizing away
 debugging statements with NDEBUG defined. Therefore, debugging statements
 will be once again surrounded by #ifdefs. The plan is that I'll get all
 the code formatting and this kind of silly issues out of the way in the
@@ -1860,8 +1868,8 @@ existing conduits.
   settings are used. This solves David's complaint about ugly dialogs.
 * kpilot/hotSync.{h,cc}
   () Removed lots of commented out code from previous incarnations.
-  () Added a cleanup action. 
-  () Removed a heap-corruption bug caused by using QStringList & and 
+  () Added a cleanup action.
+  () Removed a heap-corruption bug caused by using QStringList & and
   then deleting what it points to in FileInstallAction.
   () Removed deadlock when last file to install couldn't be read.
   () Moved RestoreAction to interactiveSync.{h,cc}, since I feel it
@@ -1934,7 +1942,7 @@ KPilot dialogs with something sensible made with designer.
 * kpilot/memoWidget.cc
 * kpilot/addressWidget.cc
 * kpilot/conduitSetup.cc
-  Lots of little changes to reflect the KPilotConfig changes. Mostly 
+  Lots of little changes to reflect the KPilotConfig changes. Mostly
   removing calls to setGroup() and readEntry(), which are now safely
   encapsulated.
 * kpilot/pilotDaemon.{h,cc}
@@ -2002,7 +2010,7 @@ take another look at Qt3 -- I saw Cornelius has already put some changes in.
   somehow utterly broken kdDebug() and kdWarning(). Added compile flag
   DEBUG_CERR to make all the debugging info go to cerr instead.
 * kpilot/kpilot.cc
-  () Startup notification was added to startService...() in 2.2, so now 
+  () Startup notification was added to startService...() in 2.2, so now
   there's an #ifdef handling that case.
 
 2001-09-07  Adriaan de Groot
@@ -2027,9 +2035,9 @@ take another look at Qt3 -- I saw Cornelius has already put some changes in.
 * kpilot/main-test.{h,cc}
   () Added ASSERT() to enforce singleton-ness.
 * kpilot/hotSync.{h,cc}
-  () New files, containing most of the old HotSync code from 
+  () New files, containing most of the old HotSync code from
   kpilotlink.{h,cc}, now using the new KPilotDeviceLink base class.
-  
+
 KPilot Developer's notes for september 5th 2001
 ===============================================
 
@@ -2061,7 +2069,7 @@ needs more work, since the distribution of options is really unclear.
 And why are exactly *these* things grouped together? The "Address" tab
 really should go.
 
-The compilation of everything besides kpilotTest and kpilotConfig 
+The compilation of everything besides kpilotTest and kpilotConfig
 is now seriously broken (tm).
 
 KPilot Developer's notes for september 3rd 2001
@@ -2077,7 +2085,7 @@ a long time. In essence:
 Basically PilotDaemon and KPilotLink have been completely rewritten.
 
 What more is there to say? Almost every file has changed, even the
-coding guidelines have been relaxed (I'm not going to put #ifdefs 
+coding guidelines have been relaxed (I'm not going to put #ifdefs
 around #include anymore, not since it turns out that the gnu cpp
 handles this situation efficiently anyway).
 
@@ -2105,7 +2113,7 @@ there, though.
   Removed all remaining KPilotLink cruft. KPilot now communicates with
   the daemon through DCOP only.
 
-Still very much on the TODO list: 
+Still very much on the TODO list:
 - actually make the daemon quit when that's relevant
 - ditch pilotListener (backport from kitchensync)
 
@@ -2120,7 +2128,7 @@ udirng the freeze, so it may not get in into KDE 2.2.
 2001-08-01  Adriaan de Groot
 
 * kpilot/pilotDaemon.cc
-  (PilotSystemTray) Fix for bug #29764 -- I'd forgotten to initialize some 
+  (PilotSystemTray) Fix for bug #29764 -- I'd forgotten to initialize some
   pointers in the constuctor again.
 * conduits/abbrowser/abbrowser-conduit.cc
   (main) Workaround for bug #28104 allowing abbrowser to start from the conduit.
@@ -2165,7 +2173,7 @@ scheme makes it much easier to keep track of what was
 released when.
 
 Many bugs were fixed after Cornelius sent a message
-asking about the KPilot code; the abbrowser conduit 
+asking about the KPilot code; the abbrowser conduit
 has been renamed the KAddressBook conduit (it's still in
 conduits/abbrowser), some little stuff in the vcal conduit
 was fixed, much dead code was removed from KPilot and
@@ -2188,7 +2196,7 @@ doing silly things (like moving).
 * */Makefile.am
   I had to tweak some Makefiles to get kpilot working on FreeBSD.
   KPilot must include LIBPISOCK_PATH in its INCLUDES setup.
-  [Newer CVS versions already did, but I would like to note my 
+  [Newer CVS versions already did, but I would like to note my
   appreciation for sent-in patches that aid in portability -- ade]
 
 2001-06-02  Philipp Hullmann
@@ -2200,7 +2208,7 @@ doing silly things (like moving).
   code for recurring events a lot, and moves some more code to vcalBase.
 
 * kpilot/pilot*Entry.cc
-  ... and one more patch to PilotDateEntry and PilotTodoEntry: replace 
+  ... and one more patch to PilotDateEntry and PilotTodoEntry: replace
   notes of length 0 with empty ones.
 
 2001-05-23  Philipp Hullmann
@@ -2247,20 +2255,20 @@ listed here, please let me know.
 
 2001-04-27  Adriaan de Groot <adridg@cs.kun.nl>
 
-* I actually worked on the docs. Stephan Kulow's meinproc 
-  HTMLizer was wonderfully useful here. The docs aren't 
+* I actually worked on the docs. Stephan Kulow's meinproc
+  HTMLizer was wonderfully useful here. The docs aren't
   completely up-to-date yet, but they're moving.
 
 2001-04-28  Martin Junius  <mj@m-j-s.net>
 
-* kpilot/kpilot.cc 
+* kpilot/kpilot.cc
   (initMenu): use KToggleAction and setExclusiveGroup for view menu.
   (addComponentPage): same here for the other components.
   (initMenu): setChecked for view_kpilot action.
 
 2001-05-07  Philipp Hullmann
 
-* conduits/vcalconduit/todo-conduit.cc 
+* conduits/vcalconduit/todo-conduit.cc
   (): fixed missing due-date bugs
 
 
@@ -2273,7 +2281,7 @@ KPilot Developer's notes for april 26th 2001
 Ahh, spring is in the air; the time when a young man's mind turns
 to nights of C++ hacking. This has been a great few weeks for open-
 source collaboration. I've had useful and helpful mail from Philipp
-Hullmann, Martin Junius, and Marko Gronoos (maybe more -- if i've 
+Hullmann, Martin Junius, and Marko Gronoos (maybe more -- if i've
 forgotten you please complain privately) with patches, hints, and
 offers of help. Thanks guys!
 
@@ -2290,16 +2298,16 @@ offers of help. Thanks guys!
 * Discovered many i18n bugs in the sendmail conduit. Ouch. Some fixed. [23-4]
 * In a flash, implemented sending-via-KMail in the sendmail conduit.
   This is utterly untested and possibly hazardous. I'd appreciate it
-  if some people used a test account for KMail and tried it out. 
+  if some people used a test account for KMail and tried it out.
   I will too, soon. [23-4]
 * Looked for the right place to force KPilot conduits to use the KPilot
   .po file. The TLs are now OK. Thanks to Marko for prodding me to sort
   this bug out (conduit in Finnish is "siirtokanava"). [24-4]
 * Added QToolTips and buddies to the NULL conduit setup. [24-4]
-* Fixed a bug in the KMail sending if you use a different outbox 
+* Fixed a bug in the KMail sending if you use a different outbox
   from "outbox". [26-4]
 * Made KPilotLink::addSyncLogEntry marginally more useful -- this
-  is to work towards a read log window. As a side effect (which 
+  is to work towards a read log window. As a side effect (which
   obscures what I've done a little) I've reformatted kpilotlink.h
   according to the coding style guide, and added docs. [26-4]
 
@@ -2356,7 +2364,7 @@ KPilot Developer's notes for april 19th 2001
 * Disposed of reported bug: bad category selection. [15-4]
 * Moved the todo-conduit into the vcalconduit directory. This makes
   building much simpler. [15-4]
-* Fixed up more #include shenanigans for --enable-final. (Don't 
+* Fixed up more #include shenanigans for --enable-final. (Don't
   forget the #ifndef conventions from HOWTO-CODE.txt!) KPilot now
   builds without warnings with --enable-final --disable-debug. [15-4]
 
@@ -2368,7 +2376,7 @@ Things to do:
 * Make KPilot installation and run easier -- JPilot seems to work out-of-the
   box on systems where KPilot doesn't.
 * Look into bugs #23385 (crash in VCalConduit), #20318 (munged 8-bit chars)
-  and #24291 (doubled appointments). 
+  and #24291 (doubled appointments).
 
 KPilot Developer's notes for april 8th 2001
 ===========================================
@@ -2404,7 +2412,7 @@ western front though, we have:
   will be soon.
 * The memo viewer has been very slightly beautified.
 * Some work for bugs #22112 and #21908, fixing deficiencies in the todo-
-  conduit and in selecting categories under other locales. This isn't 
+  conduit and in selecting categories under other locales. This isn't
   done yet, though -- some attempts have been checking into CVS for testing.
 
 
@@ -2436,7 +2444,7 @@ The web-site has been updated, finally, which means you can finally check
 for new releases and info there again:
 
 	http://www.slac.com/~pilone/kpilot_home/
-	
+
 And, I've started to use KDevelop 1.4 for maintaining KPilot. I'm still
 making the transition from vi / make / 4 konsole windows, but so far I've
 been mostly pleased by the effect it has.
@@ -2502,7 +2510,7 @@ KPilot Developer's notes for february 4th 2001
 
 Nick Papadonis spent hours tracking down the vcal conduit crash and
 we found at least one bug in kpilotlink. It's been removed and I
-hope this quashes all the vcal crashes. Other than that there's simply 
+hope this quashes all the vcal crashes. Other than that there's simply
 not much we *can* do with the message and feature freeze and all.
 This is why the todo-immediately-after-freeze list exists:
 
@@ -2519,7 +2527,7 @@ KPilot Developer's notes for january 6th 2001
 =============================================
 
 Happy Millennium. I ([ade]) am off on a two-week vacation to
-Calgary, so no KPilot news from me till (almost) february. 
+Calgary, so no KPilot news from me till (almost) february.
 
 There have been several troublesome bugreports this week,
 ranging from "all the conduits crash" to "daemon dies on
@@ -2559,12 +2567,12 @@ Done this week:
 * Actually KPilotLink::doFullBackup wasn't all that bad. Still, all the
   code needs going-over for i18n yuckiness. doFullRestore() was worse;
   also fixed up directory yuckiness.
-	  Note to self: text for user is i18n()ed, kdDebug() &c. is in 
+	  Note to self: text for user is i18n()ed, kdDebug() &c. is in
 	  english ('cause Dan or I have to read it :) )
 * Finished integrating Heiko's patches. I believe that both HotSync and
   FastSync now do what the ought to do.
 * Started adding a DCOP interface to the daemon.
-  
+
 
 Other stuff:
 
@@ -2598,11 +2606,11 @@ Things-to-be-considered:
 KPilot Developer's notes for december 30th 2000
 ===============================================
 
-Ho ho ho. Merry Christmas. Happy new year. Last week started out 
-with Thomas Zander reporting that he *still* has the totally bizzarre 
-and inexplicable crash in KPilot that he's had ever since KPilot was 
-ported to KDE2 (+).  That pretty much colors this week's work. The rest 
-of the week was used for the KNotes conduit. After a pleasant exchange 
+Ho ho ho. Merry Christmas. Happy new year. Last week started out
+with Thomas Zander reporting that he *still* has the totally bizzarre
+and inexplicable crash in KPilot that he's had ever since KPilot was
+ported to KDE2 (+).  That pretty much colors this week's work. The rest
+of the week was used for the KNotes conduit. After a pleasant exchange
 of ideas with Wynn Wilkes (of KNotes) we got a DCOP interface working and
 this make the KNotes conduit more useful. Talked to Greg about the
 kab conduit and he's enthusiastic about the possibilities there,
@@ -2648,7 +2656,7 @@ Todo:
 #8  0x40483fcf in KIconLoader::loadIcon () from /usr/kde2/lib/libkdecore.so.3
 #9  0x805a166 in KPilotInstaller::initIcons ()
 
-  which is weird since the only possible png image being read is the 
+  which is weird since the only possible png image being read is the
   quit icon, which is standard in KDE2. Maybe some weird combo of options?
 
 KPilot Developer's notes for december 18th 2000
@@ -2664,7 +2672,7 @@ Done:
 
 * Moved all the (english) docs to the correct place.
 * More doc fixes: use &kpilot; and &pilot; properly, added screen shots for
-  various conduit setups. The docs still aren't complete but they're a 
+  various conduit setups. The docs still aren't complete but they're a
   darn sight better than they were.
 * Modal dialogs need exec() instead of show()
 * Changes in kdelibs caused some dialogs to hang in slotCancel()
@@ -2684,7 +2692,7 @@ ToDo:
 * Detect memo-too-large in knotes conduit
 * Try to reduce number of updates in knotes conduit
 * Figure out a nice DCOP interface with Wynn (KNotes)
-* Finally take a look at kab or whatever for the address book conduit. 
+* Finally take a look at kab or whatever for the address book conduit.
   Should probably talk to Greg about this one too.
 * Tell the KOrganizer docs people about KPilot
 * Fix the button-enabling in the address app
@@ -2716,7 +2724,7 @@ Lots of internal stuff going on:
 
 Visible changes:
 
-* Fixed up the documentation, the screenshots, the descriptions of the 
+* Fixed up the documentation, the screenshots, the descriptions of the
   conduits, etc. etc. It's still not complete but at least it matches
   what happens when you run KPilot.
 
@@ -2745,7 +2753,7 @@ KPilot Developer's notes for december 2nd 2000
 ===============================================
 
 Almost Sinterklaas, so I'd like to wish all the KPilot users in
-.nl a Happy Sinterklaas en Weg met de Kerstman. 
+.nl a Happy Sinterklaas en Weg met de Kerstman.
 
 UI Changes:
 
@@ -2778,7 +2786,7 @@ UI Changes:
 * The following bugs in QListBox and QListView made me ditch the old
   two column layout with movement buttons for something else. Let me
   know which one you prefer.
-	- There is some *bizzarre* behavior in the handling of 
+	- There is some *bizzarre* behavior in the handling of
 	  conduits being selected: select the top item in
 	  the left column, the top item in the right column
 	  (um, so install a conduit first) and then the top
@@ -2791,18 +2799,18 @@ UI Changes:
 Internal Changes:
 
 * Conduits that crash no longer hang KPilot and the entire sync.
-* Made a lot of static const int members of various classes 
+* Made a lot of static const int members of various classes
   enum values instead, and added a function write() to CStatusMessages
   for a clean way to write status messages to the link.
-* Replaced several if else if ... constructions with switch() 
-* Added a sensibleTitle() and shortTitle() to PilotMemo for use 
+* Replaced several if else if ... constructions with switch()
+* Added a sensibleTitle() and shortTitle() to PilotMemo for use
   by the KNotes conduit (and maybe others)
 
 Documentation:
 
 * Spent a little time on the (english) documentation and brought a few
   parts of it back up-to-date. It needs up-to-date URL's, probably we
-  should move the mailing list to kde-pim@kde.org, and we need new 
+  should move the mailing list to kde-pim@kde.org, and we need new
   screenshots.
 
 Wishlist:
@@ -2834,7 +2842,7 @@ deleted as well.
 If KNotes is running and the KNotes conduit makes changes,
 these aren't picked up by KNotes. There are also some
 obvious race conditions caused by the conduit writing KNotes
-config files. This basically means that we need to talk to 
+config files. This basically means that we need to talk to
 the KNotes maintainer to resolve these coordination problems.
 
 As for the code, I wrote this:
@@ -2867,7 +2875,7 @@ sure you do something like:
 	$ export LD_LIBRARY_PATH=$QTDIR/lib:
 	$ kpilot --debug 1023
 
-To make sure none of the conduits crashes with library loading 
+To make sure none of the conduits crashes with library loading
 problems and with all the debugging messages turned on.
 
 
@@ -2891,12 +2899,12 @@ Fixes:
 * Added some extra robustness in PilotDaemon::setupConnections
 * Made the daemon obey the "show in system tray" setting -- this was
   broken during the first port to KDE2
-* Handle reconfiguration through the settings dialog properly -- 
+* Handle reconfiguration through the settings dialog properly --
   at least KPilot picks up the changes to "Kill Daemon on Exit"
 * (re)Added --test option to conduits, though not all of them
   will support actual tests.
 * KNotes conduit is now functional in the sense that notes you write
-  on your desktop are in fact copied to the Pilot. 
+  on your desktop are in fact copied to the Pilot.
 
 Some general comments:
 
@@ -2945,12 +2953,12 @@ Lots of things have changed in the class hierarchy.
 * Added a .desktop file for the NULL conduit (with some translations
   of my own)
 
-* Added Qt2 layout code to the address and memo widgets so that they 
+* Added Qt2 layout code to the address and memo widgets so that they
   become easier to i18n() (ie. they display properly when the string
   lengths change).
 
 * Adopted some of Heiko's patches:
-	- New feature ForceFirst causes every conduit to behave 
+	- New feature ForceFirst causes every conduit to behave
 	  as if FirstTime=true every time (this is off by default,
 	  which matches previous behavior)
 	- New feature SyncLastPC causes a slow sync if the Pilot
@@ -2959,7 +2967,7 @@ Lots of things have changed in the class hierarchy.
 	- "fixed" font in address and memo editor replaced by the
 	  user's system preference
 	- In some cases the title (first name+last name or something
-	  similar) in an address was empty. This now gives the title 
+	  similar) in an address was empty. This now gives the title
 	  [unknown]
 	- Similar for memos
 
@@ -2981,7 +2989,7 @@ Developer's notes for november 9th 2000
 =======================================
 
 What's new? Lots of little bugs found by code review, some new (trivial?)
-features. KPilot 4 is in Mandrake cooker so it receives a little more 
+features. KPilot 4 is in Mandrake cooker so it receives a little more
 attention now than before.
 
 * Jorg Habenicht found a bug in the memo-import function. It causes
@@ -3017,7 +3025,7 @@ Some wishlist-style items:
 * Really, it's time to write a conduit that syncs with KNotes. It's
   not that hard, but KNotes has some silly bugs that need fixing first :(
 
-* A patch to introduce a notion of "fast sync" has been produced for 
+* A patch to introduce a notion of "fast sync" has been produced for
   KPilot 3.2.1 -- we're now looking into how to integrate that into
   the KPilot 4.x series. The idea is you only run a sync on the databases
   you have a conduit for.
@@ -3039,19 +3047,19 @@ Developer's notes for october 29th 2000
 
 And there's some really strange behavior that I've noticed: when I run
 the setup for an external conduit -- which is a separate process --
-KPilot always "jumps in front" of that conduits setup dialog when I 
+KPilot always "jumps in front" of that conduits setup dialog when I
 give KPilot the focus. This is very irritating.
 
 Bugs noted still remaining:
 
 * Much weirdness in conduit startup (mode must be set before running
-  the conduit's constructor, but mode wasn't set till after) has been 
+  the conduit's constructor, but mode wasn't set till after) has been
   looked at but not repaired.
 
 * The vcal-conduit had trouble running a sync the first time (you really
   should do a backup instead). We're working on this one.
 
-  
+
 
 Developer's notes for october 26th 2000
 =======================================
@@ -3081,7 +3089,7 @@ Some other minor issues have been fixed as well:
 And new questions raised for people who know the code (I'm thinking
 Preston or Cornelius may be able to explain):
 
-* vcal-conduit.cc line 522, what's the purpose of voStatus there?               
+* vcal-conduit.cc line 522, what's the purpose of voStatus there?
 
 
 
@@ -3137,6 +3145,6 @@ Some philosophical stuff:
 
 As far as I can tell KPilot 4 now has the same functionality and bugs
 as KPilot 3.2.1 did (with some polishing). So you still have to be
-careful with KOrganizer. But I think the framework is sufficiently 
+careful with KOrganizer. But I think the framework is sufficiently
 OK to make it worthwhile to really write some conduits for various
 KDE 2 apps. Like a kab conduit and a knotes conduit.
