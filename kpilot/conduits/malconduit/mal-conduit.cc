@@ -34,6 +34,7 @@
 
 #include "options.h"
 
+#include <qregexp.h>
 #include <kconfig.h>
 #include <kdebug.h>
 
@@ -243,6 +244,13 @@ bool MALConduit::skip()
 void MALConduit::printLogMessage(QString msg)
 {
 	FUNCTIONSETUP;
-	emit logMessage(msg);
+	// Remove the pseudo-progressbar:
+	QString newmsg(msg);
+	newmsg.replace( QRegExp("^\\s*\\.*\\s*"), "");
+	newmsg.replace( QRegExp("\\s*\\.*\\s*$"), "");
+	if (newmsg.length()>0)
+	{
+		emit logMessage(newmsg);
+	}
 }
 
