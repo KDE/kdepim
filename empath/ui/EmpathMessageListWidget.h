@@ -198,6 +198,7 @@ class EmpathMessageListWidget : public QListView
 		bool				maybeDrag_;
 		bool				wantScreenUpdates_;
 		bool				filling_;
+		Q_UINT32			itemListCount_;
 		// End order dependency
 };
 

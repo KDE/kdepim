@@ -56,7 +56,7 @@ EmpathUI::EmpathUI()
 	: QObject()
 {
 	empathDebug("ctor");
-
+	
 	qInitPngIO();
 	
 	KConfig * c(KGlobal::config());

@@ -80,8 +80,15 @@ Empath::init()
 Empath::~Empath()
 {
 	empathDebug("dtor");
+	
+	filterList_.save();
+	mailboxList_.saveConfig();
+	KGlobal::config()->sync();
+	
 	delete mailSender_;
 	mailSender_ = 0;
+	
+	empathDebug("Empath is dead. Long live Empath.");
 }
 
 	void

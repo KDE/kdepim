@@ -220,7 +220,7 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 	
 	QStringList l(d.entryList());
 	
-	QStringList::Iterator it(l.begin());
+	QStringList::ConstIterator it(l.begin());
 	
 	bool hasCur, hasNew, hasTmp;
 	hasCur = hasNew = hasTmp = false;

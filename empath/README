@@ -1,30 +1,60 @@
-OI !
+Package: Empath
 
-Note: umask is now used :)
+Version: 1.0 Alpha
 
-Potential developers:
+Description:
 
-See TODO for what you can help with.
+	Mail client written using the Qt and KDE libraries.
 
-Please mail me to let me know what you're interested in doing.
-This doesn't have to be coding, it can be providing input for the design of
-the system, writing docs, translating, testing, etc. The more
-the merrier.
+Features:
 
-* GETTING STARTED *
+	Designed to be fast, sturdy, extensible, and very safe.
+	
+	'Fast' doesn't necessarily mean 'faster than all other clients'. It means
+	Empath won't stall the user interface at any point. This means you get
+	to keep working whatever's going on behind the scenes.
+	
+	Empath doesn't use the most common UNIX mailbox formats, as these are
+	completely unsafe. Empath only uses Maildir format mailboxes for local mail.
 
-You need:
+Requirements:
 
-a) A Maildir, with some mail in it. I suggest using mail from an existing
-   Maildir (you can use mutt to do this). Back it up, then put it in place in
-   ~/Maildir/Inbox
+	To use Empath you need Qt version 2.0 and KDE from CVS, HEAD branch.
+	To get Qt, point your ftp client at ftp.troll.no
+	To get KDE libraries from CVS, if you're not already developing for KDE
+	you will probably want to get a recent snapshot of the CVS. Look at
+	ftp.kde.org for the daily snapshots. Please use a mirror.
+	Please also note that KDE HEAD branch is under continous development.
+	It's easy to end up with a snapshot that's not source or binary compatible
+	with Empath as the KDE API isn't yet stabilised. Please talk to Rik if
+	you don't understand what this means, and would like advice.
+
+	Qt's home page is at http://www.troll.no - the home of Troll Tech.
+	KDE's home page is at http://www.kde.org - the home of the KDE project.
+
+Developers:
+
+	See TODO for what you can help with.
+
+	Please mail me to let me know what you're interested in doing.
+	This doesn't have to be coding, it can be providing input for the design of
+	the system, writing docs, translating, testing, etc. The more the merrier.
+
+	If you want to help coding, read DESIGN.html
+
+Getting Started:
+
+	You need a Maildir format mailbox, with some mail in it. I suggest using
+	mail from an existing box. You can use mutt to do this. Back it up, then
+	put it in place in ~/Maildir/Inbox
+
+	Instead, you could use 'maildrop' to copy your mail to your local Maildir as
+	well as your regular box. This way, you get to play without burning your
+	mail. This is what I do.
    
-   Instead, you could use 'maildrop' to copy your mail to your local Maildir
-   as well as your regular box. This way, you get to play without burning your
-   mail. This is what I do.
-   
-FOR INFORMATION ON THE DESIGN:
+Contact information:
 
-Read DESIGN.html
+	General point of contact:
+	
+		Rik Hemsley <rik@kde.org>
 
-Rik Hemsley <rik@kde.org>

@@ -25,56 +25,21 @@
 
 // KDE includes
 #include <kapp.h>
-#include <kconfig.h>
 #include <kglobal.h>
+#include <kconfig.h>
+#include <kstartparams.h>
 
 // Local includes
-#include "lib/Empath.h"
-#include "ui/EmpathUI.h"
+#include "Empath.h"
+#include "EmpathDefines.h"
+#include "EmpathUI.h"
 
-	int
-EmpathMain(int argc, char * argv[])
-{
-	fprintf(stderr, "===================== Empath: Creating KApplication\n");
-
-	// Create a KApplication.
-	KApplication * app = new KApplication(argc, argv, "empath");
-	CHECK_PTR(app);
-	
-	// Don't do dollar expansion by default.
-	KGlobal::config()->setDollarExpansion(false);
-	
-	fprintf(stderr, "===================== Empath: Creating kernel\n");
-	
-	// Create the kernel.
-	Empath * e = new Empath;
-	
-	fprintf(stderr, "===================== Empath: Creating user interface\n");
-	
-	// Create the user interface.
-	new EmpathUI;
-
-	// Attempt to get the UI up and running quickly.
-	app->processEvents();
-
-	fprintf(stderr, "===================== Empath: Initialising kernel\n");
-
-	// Initialise the kernel.
-	e->init();
-
-	fprintf(stderr, "===================== Empath: Entering event loop\n");
-	// Enter the event loop.
-	return app->exec();
-}
+int EmpathMain(int argc, char * argv[]);
 
 	int
 main(int argc, char * argv[])
 {
-	fprintf(stderr, "======================================================\n");
-	fprintf(stderr, "==================== Empath Startup ==================\n");
-	fprintf(stderr, "======================================================\n");
-	
-	// Don't run if we're being run as root.
+	// Don't do anything if we're being run as root.
 	if (getuid() == 0 || geteuid() == 0) {
 		fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
 		return 1;
@@ -85,9 +50,59 @@ main(int argc, char * argv[])
 	EmpathMain(argc, argv);
 	
 	umask(prev_umask);
-	
-	fprintf(stderr, "======================================================\n");
-	fprintf(stderr, "=================== Empath Shutdown ==================\n");
-	fprintf(stderr, "======================================================\n");
 }
 
+	int
+EmpathMain(int argc, char * argv[])
+{
+	KStartParams opts(argc, argv);
+
+	if (opts.check("--help", "-h", true)) {
+		fprintf(stderr,
+			"usage: empath --help    gives you this message\n"
+			"              --no-gui  runs without GUI\n"
+			"              --version prints version information\n");
+		return 0;
+	}
+	
+	if (opts.check("--version", "-v", true)) {
+		fprintf(stderr, "empath version %s\n", EMPATH_VERSION_STRING.latin1());
+		return 0;
+	}
+	
+	// Create a KApplication.
+	KApplication * app = new KApplication(argc, argv, "empath");
+	CHECK_PTR(app);
+	
+	// Don't do dollar expansion by default.
+	KGlobal::config()->setDollarExpansion(false);	
+
+	// Create the kernel.
+	Empath * e = new Empath;
+	CHECK_PTR(e);
+	
+	EmpathUI * ui(0);
+
+	if (!opts.check("--no-gui", true)) {
+	
+		// Create the user interface.
+		ui = new EmpathUI;
+		CHECK_PTR(ui);
+		
+		// Attempt to get the UI up and running quickly.
+		app->processEvents();
+	}
+
+	// Initialise the kernel.
+	e->init();
+
+	// Enter the event loop.
+	int retval = app->exec();
+	
+	delete ui;
+	ui = 0;
+	delete e;
+	e = 0;
+
+	return retval;
+}

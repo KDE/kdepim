@@ -1,5 +1,5 @@
 APPSDIR = $(kde_appsdir)/Internet
-INCLUDES= $(all_includes) -I rmm/include/ -I lib/
+INCLUDES= $(all_includes) -I rmm/include/ -I lib/ -I ui/
 SUBDIRS = doc pics toolbar tips templates rmm lib ui
 
 bin_PROGRAMS = empath

@@ -24,6 +24,7 @@
 
 // Qt includes
 #include <qstring.h>
+#include <qstringlist.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -139,8 +140,8 @@ EmpathMailboxList::readConfig()
 	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	QStrList l;
-	c->readListEntry(EmpathConfig::KEY_MAILBOX_LIST, l);
+	QStringList l;
+	l = c->readListEntry(EmpathConfig::KEY_MAILBOX_LIST);
 	
 	QObject::connect(this, SIGNAL(updateFolderLists()),
 		empath, SLOT(s_updateFolderLists()));
@@ -151,11 +152,11 @@ EmpathMailboxList::readConfig()
 
 	EmpathMailbox::AccountType mailboxType = EmpathMailbox::Maildir;
 	
-	QStrListIterator it(l);
+	QStringList::ConstIterator it(l.begin());
 	
-	for (; it.current() ; ++it) {
+	for (; it != l.end() ; ++it) {
 		
-		c->setGroup(EmpathConfig::GROUP_MAILBOX + it.current());
+		c->setGroup(EmpathConfig::GROUP_MAILBOX + *it);
 		
 		mailboxType =
 			(EmpathMailbox::AccountType)
@@ -167,22 +168,22 @@ EmpathMailboxList::readConfig()
 			
 			case EmpathMailbox::Maildir:
 				empathDebug("Adding new Maildir mailbox with name \"" +
-					QString(it.current()) + "\"");
-				m = new EmpathMailboxMaildir(it.current());
+					*it + "\"");
+				m = new EmpathMailboxMaildir(*it);
 				CHECK_PTR(m);
 				break;
 			
 			case EmpathMailbox::POP3:
 				empathDebug("Adding new POP3 mailbox with name \"" +
-					QString(it.current()) + "\"");
-				m = new EmpathMailboxPOP3(it.current());
+					*it + "\"");
+				m = new EmpathMailboxPOP3(*it);
 				CHECK_PTR(m);
 				break;
 
 			case EmpathMailbox::IMAP4:
 				empathDebug("Adding new IMAP4 mailbox with name \"" +
-					QString(it.current()) + "\"");
-				m = new EmpathMailboxIMAP4(it.current());
+					*it + "\"");
+				m = new EmpathMailboxIMAP4(*it);
 				CHECK_PTR(m);
 				break;
 			

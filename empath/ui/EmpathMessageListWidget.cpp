@@ -60,9 +60,19 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 		nSelected_			(0),
 		maybeDrag_			(false),
 		wantScreenUpdates_	(false),
-		filling_			(false)
+		filling_			(false),
+		itemListCount_		(0)
 {
 	empathDebug("ctor");
+
+	setUpdatesEnabled(false);
+	
+	if (getWState() & WState_BlockUpdates) {
+		empathDebug("WState_BlockUpdates is set");
+	}
+	else {
+		empathDebug("WState_BlockUpdates is not set");
+	}
 
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
@@ -99,7 +109,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 		header()->setCellSize(i,
 				c->readUnsignedNumEntry(
 					EmpathConfig::KEY_MESSAGE_LIST_SIZE_COLUMN +
-					QString().setNum(i), 10));
+					QString().setNum(i), 80));
 		setColumnWidthMode(i, QListView::Manual);
 	}
 
@@ -122,6 +132,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 		this, SLOT(s_headerClicked(int)));
 	
 	markAsReadTimer_ = new EmpathMarkAsReadTimer(this);
+	
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
@@ -143,6 +154,8 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 			EmpathConfig::KEY_MESSAGE_LIST_POS_COLUMN + QString().setNum(i),
 			header()->cellPos(i));
 	}
+	
+	c->sync();
 	
 	delete markAsReadTimer_;
 	markAsReadTimer_ = 0;
@@ -196,8 +209,8 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 	
 	if (item->parentID().localPart().isEmpty()) {
 		newItem = new EmpathMessageListItem(this, *item);
+		++itemListCount_;
 		CHECK_PTR(newItem);
-		itemList_.append(newItem);
 		setStatus(newItem, item->status());
 		return;
 	}
@@ -209,13 +222,14 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 		
 	EmpathMessageListItem * parentItem = 0;
 	
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
 	for (; it.current(); ++it) {
 //		empathDebug("Looking at message id \"" +
 //			it.current()->messageID().asString() + "\"");
-		if (it.current()->messageID() == item->parentID()) {
-			parentItem = it.current();
+		EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
+		if (i->messageID() == item->parentID()) {
+			parentItem = (EmpathMessageListItem *)it.current();
 			break;
 		}
 	}
@@ -234,7 +248,7 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 		CHECK_PTR(newItem);
 		empathDebug("Created OK");
 	}
-	itemList_.append(newItem);
+	++itemListCount_;
 	setStatus(newItem, item->status());
 }
 
@@ -280,23 +294,23 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 	EmpathURL u(url_.mailboxName(), url_.folderPath(), QString::null);
 	
 	EmpathTask * t(empath->addTask("Marking messages"));
-	t->setMax(itemList_.count());
+	t->setMax(itemListCount_);
 	
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
 	for (; it.current(); ++it) {
-	
+		
 		t->doneOne();
 		
 		if (!it.current()->isSelected())
 			continue;
+		
+		EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
 
-		u.setMessageID(it.current()->id());
+		u.setMessageID(((EmpathMessageListItem *)it.current())->id());
 	
-		if (empath->mark(u,
-				RMM::MessageStatus(it.current()->status() ^ status)))
-			setStatus(it.current(),
-				RMM::MessageStatus(it.current()->status() ^ status));
+		if (empath->mark(u, RMM::MessageStatus(i->status() ^ status)))
+			setStatus(i, RMM::MessageStatus(i->status() ^ status));
 	}
 	
 	t->done();
@@ -355,7 +369,7 @@ EmpathMessageListWidget::s_messageDelete()
 	
 	EmpathURL u(url_.mailboxName(), url_.folderPath(), QString::null);
 	
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
 	for (; it.current(); ++it) {
 		
@@ -1038,13 +1052,17 @@ EmpathMessageListWidget::selectTagged()
 	
 	wantScreenUpdates_ = false;
 
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
-	for (; it.current(); ++it)
-		if (it.current()->status() & RMM::Marked) {
+	for (; it.current(); ++it) {
+		
+		EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
+		
+		if (i->status() & RMM::Marked) {
 			nSelected_++;
-			it.current()->setSelected(true);
+			i->setSelected(true);
 		}
+	}
 	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
@@ -1062,13 +1080,17 @@ EmpathMessageListWidget::selectRead()
 	
 	wantScreenUpdates_ = false;
 
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
-	for (; it.current(); ++it)
-		if (it.current()->status() & RMM::Read) {
+	for (; it.current(); ++it) {
+		
+		EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
+		
+		if (i->status() & RMM::Read) {
 			nSelected_++;
-			it.current()->setSelected(true);
+			i->setSelected(true);
 		}
+	}
 	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
@@ -1083,7 +1105,7 @@ EmpathMessageListWidget::selectAll()
 	
 	nSelected_ = 0;
 	
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	wantScreenUpdates_ = false;
 	
 	for (; it.current(); ++it) {
@@ -1104,7 +1126,7 @@ EmpathMessageListWidget::selectInvert()
 	
 	wantScreenUpdates_ = false;
 
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
 	for (; it.current(); ++it) {
 		if (!it.current()->isSelected()) {
@@ -1127,11 +1149,15 @@ EmpathMessageListWidget::s_itemGone(const QString & s)
 	empathDebug("itemGone(" + s + ")");
 	if (filling_) return;
 	
-	QListIterator<EmpathMessageListItem> it(itemList_);
+	QListViewItemIterator it(this);
 	
-	for (; it.current(); ++it)
-		if (it.current()->id() == s)
-			delete it.current();
+	for (; it.current(); ++it) {
+		
+		EmpathMessageListItem * i = (EmpathMessageListItem *)it.current();
+		
+		if (i->id() == s)
+			delete i;
+	}
 }
 
 	void
@@ -1164,7 +1190,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
 	
 		CHECK_PTR(newItem);
 
-		itemList_.append(newItem);
+		++itemListCount_;
 
 		setStatus(newItem, i->status());
 	}
@@ -1177,9 +1203,9 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 	
 	filling_ = true;
 	
-	itemList_.clear();
-
 	setUpdatesEnabled(false);
+	
+	clear();
 	
 	KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
 
@@ -1202,8 +1228,6 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 {
 	setRootIsDecorated(false);
 
-	itemList_.clear();
-
 	EmpathTask * t(empath->addTask("Sorting messages"));
 	CHECK_PTR(t);
 
@@ -1218,7 +1242,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 		
 		CHECK_PTR(newItem);
 
-		itemList_.append(newItem);
+		++itemListCount_;
 
 		setStatus(newItem, it.current()->status());
 
