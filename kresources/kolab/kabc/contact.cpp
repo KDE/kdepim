@@ -37,26 +37,32 @@
 #include <kio/netaccess.h>
 #include <kdebug.h>
 #include <qfile.h>
+#include <float.h>
 
 using namespace Kolab;
 
 static const char* s_pictureAttachmentName = "kolab-picture.png";
 static const char* s_logoAttachmentName = "kolab-logo.png";
+static const char* s_soundAttachmentName = "sound";
 
 // saving (addressee->xml)
 Contact::Contact( const KABC::Addressee* addr )
+  : mHasGeo( false )
 {
   setFields( addr );
 }
 
 // loading (xml->addressee)
 Contact::Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+  : mHasGeo( false )
 {
   load( xml );
   if ( !mPictureAttachmentName.isEmpty() )
     mPicture = loadPictureFromKMail( mPictureAttachmentName, resource, subResource, sernum );
   if ( !mLogoAttachmentName.isEmpty() )
     mLogo = loadPictureFromKMail( mLogoAttachmentName, resource, subResource, sernum );
+  if ( !mSoundAttachmentName.isEmpty() )
+    mSound = loadDataFromKMail( mSound, resource, subResource, sernum );
 }
 
 Contact::~Contact()
@@ -281,26 +287,6 @@ void Contact::setAnniversary( const QDate& date )
 QDate Contact::anniversary() const
 {
   return mAnniversary;
-}
-
-void Contact::setPicture( const QImage& picture )
-{
-  mPicture = picture;
-}
-
-QImage Contact::picture() const
-{
-  return mPicture;
-}
-
-void Contact::setLogo( const QImage& logo )
-{
-  mLogo = logo;
-}
-
-QImage Contact::logo() const
-{
-  return mLogo;
 }
 
 void Contact::setChildren( const QString& children )
@@ -576,6 +562,9 @@ bool Contact::loadAttribute( QDomElement& element )
   else if ( tagName == "x-logo" ) {
     mLogoAttachmentName = element.text();
   }
+  else if ( tagName == "x-sound" ) {
+    mSoundAttachmentName = element.text();
+  }
   else if ( tagName == "children" )
     setChildren( element.text() );
   else if ( tagName == "gender" )
@@ -595,6 +584,14 @@ bool Contact::loadAttribute( QDomElement& element )
     return loadAddressAttribute( element );
   else if ( tagName == "preferred-address" )
     setPreferredAddress( element.text() );
+  else if ( tagName == "latitude" ) {
+    setLatitude( element.text().toFloat() );
+    mHasGeo = true;
+  }
+  else if ( tagName == "longitude" ) {
+    setLongitude( element.text().toFloat() );
+    mHasGeo = true;
+  }
   else
     return KolabBase::loadAttribute( element );
 
@@ -627,6 +624,8 @@ bool Contact::saveAttributes( QDomElement& element ) const
     writeString( element, "picture", mPictureAttachmentName );
   if ( !logo().isNull() )
     writeString( element, "x-logo", mLogoAttachmentName );
+  if ( !sound().isNull() )
+    writeString( element, "x-sound", mSoundAttachmentName );
   writeString( element, "children", children() );
   writeString( element, "gender", gender() );
   writeString( element, "language", language() );
@@ -634,6 +633,10 @@ bool Contact::saveAttributes( QDomElement& element ) const
   saveEmailAttributes( element );
   saveAddressAttributes( element );
   writeString( element, "preferred-address", preferredAddress() );
+  if ( mHasGeo ) {
+    writeString( element, "latitude", QString::number( latitude(), 'g', DBL_DIG ) );
+    writeString( element, "longitude", QString::number( longitude(), 'g', DBL_DIG ) );
+  }
 
   return true;
 }
@@ -867,13 +870,23 @@ void Contact::setFields( const KABC::Addressee* addressee )
   if ( mLogoAttachmentName.isEmpty() )
     mLogoAttachmentName = s_logoAttachmentName;
 
+  setSound( loadSoundFromAddressee( addressee->sound() ) );
+  mSoundAttachmentName = addressee->custom( "KOLAB", "SoundAttachmentName" );
+  if ( mSoundAttachmentName.isEmpty() )
+    mSoundAttachmentName = s_soundAttachmentName;
+
+  if ( addressee->geo().isValid() ) {
+    setLatitude( addressee->geo().latitude() );
+    setLongitude( addressee->geo().longitude() );
+    mHasGeo = true;
+  }
+
   // Those fields, although defined in Addressee, are not used in KDE
   // (e.g. not visible in kaddressbook/addresseeeditorwidget.cpp)
   // So it doesn't matter much if we don't have them in the XML.
   // mailer, timezone, productId, sortString, agent, rfc2426 name()
 
   // TODO: Unhandled Addressee fields:
-  // geo, logo, sound
   // other KADDRESSBOOK custom fields than those already handled
   //    (includes IM address, crypto settings)
   // extra im addresses (X-messaging/*)
@@ -929,6 +942,12 @@ void Contact::saveTo( KABC::Addressee* addressee )
   if ( !mLogo.isNull() )
     addressee->setLogo( KABC::Picture( mLogo ) );
   addressee->insertCustom( "KOLAB", "LogoAttachmentName", mLogoAttachmentName );
+  if ( !mSound.isNull() )
+    addressee->setSound( KABC::Sound( mSound ) );
+  addressee->insertCustom( "KOLAB", "SoundAttachmentName", mSoundAttachmentName );
+
+  if ( mHasGeo )
+    addressee->setGeo( KABC::Geo( mLatitude, mLongitude ) );
 
   QStringList emailAddresses;
   for ( QValueList<Email>::ConstIterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
@@ -983,4 +1002,37 @@ QImage Contact::loadPictureFromAddressee( const KABC::Picture& picture )
   } else
     img = picture.data();
   return img;
+}
+
+QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+{
+  QByteArray data;
+  KURL url;
+  if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
+    QFile f( url.path() );
+    if ( f.open( IO_ReadOnly ) ) {
+      data = f.readAll();
+      f.close();
+    }
+    f.remove();
+  }
+  return data;
+}
+
+QByteArray Kolab::Contact::loadSoundFromAddressee( const KABC::Sound& sound )
+{
+  QByteArray data;
+  if ( !sound.isIntern() ) {
+    QString tmpFile;
+    if ( KIO::NetAccess::download( sound.url(), tmpFile, 0 /*no widget known*/ ) ) {
+      QFile f( tmpFile );
+      if ( f.open( IO_ReadOnly ) ) {
+        data = f.readAll();
+        f.close();
+      }
+      KIO::NetAccess::removeTempFile( tmpFile );
+    }
+  } else
+    data = sound.data();
+  return data;
 }

@@ -215,6 +215,7 @@ struct AttachmentList {
   }
 
   void updatePictureAttachment( const QImage& image, const QString& name );
+  void updateAttachment( const QByteArray& data, const QString& name, const char* mimetype );
 };
 } // namespace
 
@@ -234,15 +235,34 @@ void AttachmentList::updatePictureAttachment( const QImage& image, const QString
   }
 }
 
+void AttachmentList::updateAttachment( const QByteArray& data, const QString& name, const char* mimetype )
+{
+  assert( !name.isEmpty() );
+  if ( !data.isNull() ) {
+    KTempFile* tempFile = new KTempFile;
+    tempFile->file()->writeBlock( data );
+    tempFile->close();
+    KURL url;
+    url.setPath( tempFile->name() );
+    kdDebug(5650) << "data saved to " << url.path() << endl;
+    addAttachment( url.url(), name, mimetype );
+  } else {
+    deletedAttachments.append( name );
+  }
+}
+
 bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 {
   Contact contact( &addr );
   const QString uid = addr.uid();
-  // The addressee is converted to: 1) the xml  2) the optional picture
+  // The addressee is converted to: 1) the xml  2) the optional picture 3) the optional logo 4) the optional sound
   const QString xml = contact.saveXML();
   AttachmentList att;
   att.updatePictureAttachment( contact.picture(), contact.pictureAttachmentName() );
   att.updatePictureAttachment( contact.logo(), contact.logoAttachmentName() );
+  // no way to know the mimetype. The addressee editor allows to attach _any_ kind of file,
+  // and the sound system sorts it out.
+  att.updateAttachment( contact.sound(), contact.soundAttachmentName(), "audio/unknown" );
 
   QString subResource;
   Q_UINT32 sernum;

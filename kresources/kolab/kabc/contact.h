@@ -40,6 +40,7 @@ namespace KABC {
   class Addressee;
   class ResourceKolab;
   class Picture;
+  class Sound;
 }
 
 namespace Kolab {
@@ -136,13 +137,17 @@ public:
   void setAnniversary( const QDate& date );
   QDate anniversary() const;
 
-  void setPicture( const QImage& image);
+  void setPicture( const QImage& image) { mPicture = image; }
   QString pictureAttachmentName() const { return mPictureAttachmentName; }
-  QImage picture() const;
+  QImage picture() const { return mPicture; }
 
-  void setLogo( const QImage& image );
+  void setLogo( const QImage& image ) { mLogo = image; }
   QString logoAttachmentName() const { return mLogoAttachmentName; }
-  QImage logo() const;
+  QImage logo() const { return mLogo; }
+
+  void setSound( const QByteArray& sound ) { mSound = sound; }
+  QString soundAttachmentName() const { return mSoundAttachmentName; }
+  QByteArray sound() const { return mSound; }
 
   void setChildren( const QString& children );
   QString children() const;
@@ -168,6 +173,12 @@ public:
   // which address is preferred: home or business or other
   void setPreferredAddress( const QString& address );
   QString preferredAddress() const;
+
+  float latitude() const { return mLatitude; }
+  void setLatitude( float latitude ) { mLatitude = latitude; }
+
+  float longitude() const { return mLongitude; }
+  void setLongitude( float longitude ) { mLongitude = longitude; }
 
   // Load the attributes of this class
   bool loadAttribute( QDomElement& );
@@ -199,6 +210,9 @@ private:
   QImage loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
   QImage loadPictureFromAddressee( const KABC::Picture& picture );
 
+  QByteArray loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
+  QByteArray loadSoundFromAddressee( const KABC::Sound& sound );
+
   QString mGivenName;
   QString mMiddleNames;
   QString mLastName;
@@ -223,8 +237,10 @@ private:
   QDate mAnniversary;
   QImage mPicture;
   QImage mLogo;
-  QString mPictureAttachmentName; // only used when loading
-  QString mLogoAttachmentName; // only used when loading
+  QByteArray mSound;
+  QString mPictureAttachmentName;
+  QString mLogoAttachmentName;
+  QString mSoundAttachmentName;
   QString mChildren;
   QString mGender;
   QString mLanguage;
@@ -232,6 +248,9 @@ private:
   QValueList<Email> mEmails;
   QValueList<Address> mAddresses;
   QString mPreferredAddress;
+  float mLatitude;
+  float mLongitude;
+  bool mHasGeo;
 };
 
 }
