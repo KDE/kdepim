@@ -100,7 +100,7 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
             int offset = datTime.secsTo(todo->dtDue());
             // Add alarm as an incidence of this todo
             KCal::Alarm *al = new KCal::Alarm(todo);
-            al->setText(todo->description());
+            al->setDisplayAlarm(todo->description());
             al->setOffset(offset * -1);  // * -1 -> alarm has to be before event
             al->setEnabled(true);
             todo->addAlarm(al);

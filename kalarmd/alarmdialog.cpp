@@ -113,15 +113,13 @@ void AlarmDialog::eventNotification()
     const Alarm* alarm;
     for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
 // TODO: Check whether this should be done for all multiple alarms
-      QString program = alarm->programFile();
-      if (!program.isEmpty()) {
-        kdDebug() << "Starting program: '" << program << "'" << endl;
+      if (alarm->type() == Alarm::Procedure) {
+        kdDebug() << "Starting program: '" << alarm->programFile() << "'" << endl;
         KProcess proc;
         proc << QFile::encodeName(alarm->programFile());
         proc.start(KProcess::DontCare);
       }
-
-      if (!alarm->audioFile().isEmpty()) {
+      else if (alarm->type() == Alarm::Audio) {
         beeped = true;
         KAudioPlayer::play(QFile::encodeName(alarm->audioFile()));
       }

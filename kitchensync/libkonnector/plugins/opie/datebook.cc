@@ -84,9 +84,8 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
 
     // alarm
     KCal::Alarm *al = new KCal::Alarm( event );
-    al->setText( event->summary() );
     al->setOffset( e.attribute("alarm").toInt() * -60 );
-    al->setAudioFile( e.attribute("sound") );
+    al->setAudioAlarm( e.attribute("sound") );
     event->addAlarm( al );
 
     // Recurrence damn I feared to do that

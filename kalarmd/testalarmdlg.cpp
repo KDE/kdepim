@@ -21,8 +21,8 @@ int main(int argc,char **argv)
   e->setDtEnd( QDateTime::currentDateTime().addDays( 1 ) );
 
   Alarm *a = e->newAlarm();
-//  a->setProgramFile( "/usr/X11R6/bin/xeyes" );
-  a->setAudioFile( "/opt/kde/share/apps/korganizer/sounds/spinout.wav" );
+//  a->setProcedureAlarm( "/usr/X11R6/bin/xeyes" );
+  a->setAudioAlarm( "/opt/kde/share/apps/korganizer/sounds/spinout.wav" );
 
   AlarmDialog dlg;
   app.setMainWidget( &dlg );
