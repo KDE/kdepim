@@ -45,8 +45,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->addWidget( label );
 
   mSearchText = new KLineEdit( this );
-  QWhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text
-  here will start the search for the contact, which matchs the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
+  QWhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matchs the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
   layout->addWidget( mSearchText );
 
   mFieldCombo = new QComboBox( false, this );
