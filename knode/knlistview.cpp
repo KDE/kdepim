@@ -263,10 +263,9 @@ void KNListView::slotSortList(int col)
   else {
     emit sortingChanged(col);
     sCol=col;
-    sAsc=true;
   }
       
-  this->setSorting(sCol, sAsc);
+  setSorting(sCol, sAsc);
   
   if(currentItem()!=0) ensureItemVisible(currentItem());  
 }
