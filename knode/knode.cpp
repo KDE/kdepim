@@ -390,10 +390,15 @@ void KNodeApp::initActions()
 void KNodeApp::initPopups()
 {
   accPopup = static_cast<QPopupMenu *>(factory()->container("account_popup", this));
+  if (!accPopup) accPopup = new QPopupMenu();
   groupPopup = static_cast<QPopupMenu *>(factory()->container("group_popup", this));
+  if (!groupPopup) groupPopup = new QPopupMenu();
   folderPopup = static_cast<QPopupMenu *>(factory()->container("folder_popup", this));
+  if (!folderPopup) folderPopup = new QPopupMenu();
   fetchPopup = static_cast<QPopupMenu *>(factory()->container("fetch_popup", this));
+  if (!fetchPopup) fetchPopup = new QPopupMenu();
   savedPopup = static_cast<QPopupMenu *>(factory()->container("saved_popup", this));
+  if (!savedPopup) savedPopup = new QPopupMenu();
 }
 
 

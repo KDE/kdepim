@@ -130,6 +130,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
 
   // attachment popup
   attPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
+  if (!attPopup) attPopup = new QPopupMenu();
   slotAttachmentSelected(0);
 
   //init data 
@@ -723,6 +724,7 @@ void KNComposer::slotConfToolbar()
   if (dlg->exec()) {
     createGUI("kncomposerui.rc");
     attPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
+    if (!attPopup) attPopup = new QPopupMenu();
   }
   delete dlg;
 }
