@@ -244,7 +244,7 @@ QString TaskView::exportcsvHistory()
   CSVExportDialog dialog( ReportCriteria::CSVHistoryExport, this );
   if ( current_item() && current_item()->isRoot() )
     dialog.enableTasksToExportQuestion();
-
+  dialog.urlExportTo->KURLRequester::setMode(KFile::File);
   if ( dialog.exec() ) {
     err = _storage->report( this, dialog.reportCriteria() );
   }

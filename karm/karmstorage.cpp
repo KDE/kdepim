@@ -40,6 +40,7 @@
 #include <klocale.h>            // i18n
 #include <kmessagebox.h>
 #include <kprogress.h>
+#include <ktempfile.h>
 #include <resourcecalendar.h>
 #include <resourcelocal.h>
 #include <kpimprefs.h>
@@ -723,7 +724,7 @@ void KarmStorage::printTaskHistory (
     day = day.addDays(1);
   }
 
-  // Total for task this week
+  // Total for task 
   s += QString::fromLatin1("%1").arg(formatTime(sum/60, rc.decimalMinutes));
 
   // Task name
@@ -759,7 +760,7 @@ QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
 {
   QString err;
   if ( rc.reportType == ReportCriteria::CSVHistoryExport )
-      err = exportActivityReport( taskview, rc.from, rc.to, rc );
+      err = exportcsvHistory( taskview, rc.from, rc.to, rc );
   else if ( rc.reportType == ReportCriteria::CSVTotalsExport )
       err = exportcsvFile( taskview, rc );
   else
@@ -769,7 +770,7 @@ QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
 };
 
 // export history report as csv, all tasks X all dates in one block
-QString KarmStorage::exportActivityReport ( TaskView      *taskview, 
+QString KarmStorage::exportcsvHistory ( TaskView      *taskview, 
                                             const QDate   &from, 
                                             const QDate   &to,
                                             const ReportCriteria &rc)
@@ -784,7 +785,6 @@ QString KarmStorage::exportActivityReport ( TaskView      *taskview,
   QString line, buf;
   long sum;
   
-  QValueList<Week>::iterator week;
   QValueList<HistoryEvent> events;
   QValueList<HistoryEvent>::iterator event;
   QMap<QString, long> taskdaytotals;
@@ -810,10 +810,7 @@ QString KarmStorage::exportActivityReport ( TaskView      *taskview,
     .arg(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
   retval += cr;
 
-  // output one time card table for each week in the date range
-  QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
   day=from;
-
   events = taskview->getHistory(from, to);
   taskdaytotals.clear();
   daytotals.clear();
@@ -896,20 +893,32 @@ QString KarmStorage::exportActivityReport ( TaskView      *taskview,
   }
 
   // above taken from timekard.cpp
-      
-  QFile f( rc.url.path() );
-  if( !f.open( IO_WriteOnly ) ) {
-      err = i18n( "Could not open \"%1\"." ).arg( rc.url.path() );
+  
+  if (rc.url.isLocalFile())
+  {    
+    QFile f( rc.url.path() );
+    if( !f.open( IO_WriteOnly ) ) {
+        err = i18n( "Could not open \"%1\"." ).arg( rc.url.path() );
+    }
+    if (!err)
+    {
+      QTextStream stream(&f);
+      // Export to file
+      stream << retval;
+      f.close();
+    }
   }
-
-  if (!err)
+  else // use remote file
   {
-
-    QTextStream stream(&f);
-    // Export to file
-    stream << retval;
-    f.close();
-
+    KTempFile tmpFile;
+    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" ); 
+    else
+    {
+      QTextStream *stream=tmpFile.textStream();
+      *stream << retval;
+      tmpFile.close(); 
+      if (!KIO::NetAccess::upload( tmpFile.name(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
+    }
   }
   return err;
 }

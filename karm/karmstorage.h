@@ -296,7 +296,7 @@ class KarmStorage
     /**
      *  Write task history to file as comma-delimited data.
      */
-    QString exportActivityReport (
+    QString exportcsvHistory (
             TaskView* taskview,
             const QDate& from,
             const QDate& to,
