@@ -31,9 +31,11 @@ Pab::Pab()
 
   // create a popup menu -- in this case, the File menu
   QPopupMenu* p = new QPopupMenu;
-  p->insertItem(i18n("&Save"), this, SLOT(save()), CTRL+Key_S);
+  p->insertItem(i18n("&Sync"), this, SLOT(save()), CTRL+Key_S);
   p->insertItem(i18n("&New Contact"), this, SLOT(newContact()), CTRL+Key_N);
   p->insertItem(i18n("New &Group"), this, SLOT(newGroup()), CTRL+Key_G);
+  p->insertSeparator();
+  p->insertItem(i18n("&Send Mail"), view, SLOT(sendMail()));
   p->insertSeparator();
   p->insertItem(i18n("&Properties"), view, SLOT(properties()));
   p->insertItem(i18n("&Delete"), view, SLOT(clear()), Key_Delete);
@@ -69,8 +71,9 @@ Pab::Pab()
 
   // KDE will generate a short help menu automagically
   p = helpMenu( i18n("Kab --- KDE Address Book\n\n"
-		     "(c) 1999 The KDE PIM Team \n"
+		     "(c) 2000AD The KDE PIM Team \n"
 		     "Long Description"));
+
   menuBar()->insertItem(i18n("&Help"), p);
   
   toolBar()->insertButton(BarIcon("filenew"),   // icon
@@ -88,6 +91,12 @@ Pab::Pab()
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
 			  i18n("Remove this entry"));      // tooltip text
+  toolBar()->insertSeparator();
+  toolBar()->insertButton(BarIcon("filemail"),   // icon
+			  0,                  // button id
+			  SIGNAL(clicked()),  // action
+			  view, SLOT(sendMail()), // result
+			  i18n("Send email"));      // tooltip text
   
   // we do want a status bar
   enableStatusBar();
@@ -105,6 +114,7 @@ void Pab::newContact()
 
 void Pab::save()
 {
+  document->sync();
   //xxx  document->save( "entries.txt" );
 }
 

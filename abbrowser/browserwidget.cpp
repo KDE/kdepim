@@ -695,6 +695,46 @@ void PabWidget::properties()
   itemSelected( listView->currentItem() );
 }
 
+void PabWidget::sendMail()
+{
+  bool first = true;
+  QString emailAddrs;
+  QListViewItem *item;
+  for(item = listView->firstChild(); item; item = item->itemBelow()) {
+    if (!listView->isSelected( item ))
+      continue;
+    PabListViewItem *plvi = dynamic_cast< PabListViewItem* >(item);
+    if (!plvi)
+      continue;
+    QString entryKey = plvi->entryKey();
+    ContactEntry *ce = plvi->getEntry();
+    if (!ce)
+      continue;
+    if (!ce->find( "EMAIL" ))
+      continue;
+    QString email = *ce->find( "EMAIL" );
+    if (email.isEmpty())
+      continue;
+    email.stripWhiteSpace();
+
+    QString sFileAs;
+    if (ce->find( "N" )) {
+      sFileAs = *ce->find( "N" );
+      sFileAs.stripWhiteSpace();
+      sFileAs += " ";
+    }
+
+    if (!first)
+      emailAddrs += ", ";
+    else
+      first = false;
+
+    emailAddrs += sFileAs + "<" + email + ">";
+  }    
+
+  kapp->invokeMailer( emailAddrs, "" );
+}
+
 void PabWidget::itemSelected( QListViewItem *item )
 {
   PabListViewItem *plvi = dynamic_cast< PabListViewItem* >(item);

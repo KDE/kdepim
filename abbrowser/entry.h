@@ -55,6 +55,7 @@ public:
   ContactEntryList();
   ~ContactEntryList();
 
+  void sync();
   QString insert( ContactEntry *item );
   void unremove( const QString &key, ContactEntry *item );
   void remove( const QString &key );

@@ -134,6 +134,7 @@ public slots:
   virtual void paste();
   virtual void clear();
   virtual void properties();
+  virtual void sendMail();
   virtual void selectAll();
   virtual void saveConfig();
   virtual void readConfig();

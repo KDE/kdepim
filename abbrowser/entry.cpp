@@ -47,6 +47,11 @@ ContactEntryList::ContactEntryList()
 
 ContactEntryList::~ContactEntryList()
 {
+  sync();
+}
+
+void ContactEntryList::sync()
+{
   QStringList::Iterator it;
   KabKey key;
   for( it = removedKeys.begin(); it != removedKeys.end(); ++it ) {
@@ -59,7 +64,6 @@ ContactEntryList::~ContactEntryList()
 
 QString ContactEntryList::insert( ContactEntry *item )
 {
-  // need to get a write lock on the address book
   KabKey key;
   AddressBook::Entry empty;
   AddressBook::Entry entry = ContactEntryToKabEntry( item, empty );  
@@ -103,12 +107,12 @@ void ContactEntryList::replace( const QString &key, ContactEntry *item )
     return;
   }
 
-  if (addrBook->addressbook()->save("", true)!=AddressBook::NoError)
-    debug( "Error occurred trying to update database" );
-
   AddressBook::Entry entry = ContactEntryToKabEntry( item, old );
   addrBook->addressbook()->change( kabKey, entry ); // must check rc
   ceDict.replace( key, item );
+
+  if (addrBook->addressbook()->save("", true)!=AddressBook::NoError)
+    debug( "Error occurred trying to update database" );
 }
 
 ContactEntry* ContactEntryList::KabEntryToContactEntry( AddressBook::Entry entry )
