@@ -59,7 +59,9 @@ public:
 public:
 	/**
 	* Load or save the config widget's settings in the given
-	* KConfig object; leave the group unchanged.
+	* KConfig object; leave the group unchanged. load() and
+	* commit() should both call unmodified() to indicate that
+	* the current settings match the on-disk ones.
 	*/
 	virtual void commit(KConfig *) = 0L;
 	virtual void load(KConfig *) = 0L;
@@ -90,6 +92,8 @@ protected:
 	bool fModified;
 	QWidget *fWidget;
 	QString fConduitName;
+
+	void unmodified() { fModified=false; } ;
 } ;
 
 /**
