@@ -50,15 +50,15 @@ public:
 	int   getCat() const { return fCat; }
 	void  setCat(int cat) { fCat = cat; }
 
-	unsigned long getID() const { return fID; }
-	void setID(unsigned long id) { fID = id; }
+	recordid_t getID() const { return fID; }
+	void setID(recordid_t id) { fID = id; }
 
 private:
 	char* fData;
 	int   fLen;
 	int   fAttrib;
 	int   fCat;
-	unsigned long fID;
+	recordid_t fID;
 
 public:
 	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
