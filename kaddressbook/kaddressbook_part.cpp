@@ -30,6 +30,8 @@
 #include <kinstance.h>
 #include <klocale.h>
 #include <kparts/genericfactory.h>
+#include <kparts/statusbarextension.h>
+#include <kstatusbar.h>
 
 #include "kabcore.h"
 #include "kaddressbookiface.h"
@@ -67,6 +69,9 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
   mCore = new KABCore( this, true, canvas );
   mCore->restoreSettings();
   topLayout->addWidget( mCore->widget() );
+
+  KParts::StatusBarExtension *statusBar = new KParts::StatusBarExtension( this );
+  mCore->setStatusBar( statusBar->statusBar() );
 
   KParts::InfoExtension *info = new KParts::InfoExtension( this, "KABPart" );
   connect( mCore, SIGNAL( contactSelected( const QString& ) ),
