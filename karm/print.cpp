@@ -1,10 +1,13 @@
 #include <iostream>
 #include "task.h"
 #include "print.h"
-#include "klocale.h"
+
 #include <qpainter.h>
 #include <qpaintdevicemetrics.h>
 #include <qdatetime.h>
+
+#include <kglobal.h>
+#include <klocale.h>
 
 const int levelIndent = 10;
 
@@ -68,9 +71,9 @@ void MyPrinter::print()
 		painter.setFont(newFont);
 		
 		int height = metrics.height();
-		QString now = QDateTime::currentDateTime().toString();
+		QString now = KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
 		
-		painter.drawText(xMargin, yoff, pageWidth, height,
+		painter.drawText(xMargin, yoff, pageWidth*2, height*2,
 				 QPainter::AlignCenter, 
 				 i18n("KArm - %1").arg(now));
 		
