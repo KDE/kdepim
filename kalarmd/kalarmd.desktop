@@ -55,5 +55,5 @@ Name[zu]=Alarm daemon
 Exec=kalarmd
 Icon=kalarmd
 Type=Application
-Terminal=0
+Terminal=false
 X-DCOP-ServiceType=Unique
