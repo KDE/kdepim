@@ -8,6 +8,10 @@ developers of KPilot conduits, maintainers, etc.
 Files in this directory are:
 
 README			- This file
+README-3.2.1+		- The README for KPilot 3.2.1 with some changes
+			  that refer to KPilot 4 and KDE2, so it's quite
+			  confusing.
+README-4.0.0		- The real README for KPilot 4.0.0
 HOWTO-CONDUIT.txt	- An introduction to writing conduits, last
 			  updated for KPilot 3.1b9 (which is a LONG
 			  time ago)

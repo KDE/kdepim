@@ -2,6 +2,7 @@ KPILOT 4.0.0 by Dan Pilone
 ===========================
 	Additional work by Robert Ambrose, 
 	Preston Brown, Adriaan de Groot, 
+	Heiko Purnhagen, Jorg Habenicht,
 	and probably many more.
 
 	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
@@ -10,88 +11,28 @@ communcations was originally based on pilot-link.0.8.7. By default it
 attempts to connnect using /dev/pilot which should be a link to the actual
 serial port, however this is configurable in the settings dialog. 
 
+	Release notes can be found in Documentation/README-4.*. These are
+official announcements of KPilot 4.x releases. There is also a README for
+3.2.1 which is probably not interesting any more.
+
 	Additional release notes can be found in the user documentation.
-The user documentation (translations in: en and de) can be found
-under kpilot/doc in this directory or in the KDE documentation directory 
-under kpilot. Or run kpilot --htmlhelp to start the KDE help browser.
+The user documentation can be found under kpilot/doc. The user documentation
+was last updated for KPilot 3.2.1, which was the last KDE 1 release of
+KPilot. This means that the user documentation is quite out-of-date.
+
+	Developer's notes are listed in the file ChangeLog. This is
+probably only of interest if you want to see how certain features developed
+or if certain bugs have been reported before.
+
+	Generic installation instructions can be found in the file
+INSTALL, but note that KPilot is part of the kdepim package and you 
+have to configure that package, not KPilot. KPilot does compile and
+install on its own though, once kdepim is configured.
 
 
-Current features include:
-		* Now a KDE2 application.
-		o Plug in conduit support, currently including
-			KOrganizer, todolist, null and PopMail
-	        o Hot-Sync daemon.  - Now hot-sync with just the push of the
-          	  Hot-Sync button on your cradle.  No need to launch KPilot.
-	        o Add/Delete/Edit memos.
-                o Add/Delete/Edit addresses.
-                o Full Category support for both memos and addresses.
-                o KPilot now respects secret data.
-                o More configuration options including port speed and 
-		  docking control.
-                o Now supports signature files for email.
-                o Drag and drop to docked icon for file install.
-                o International Support
-		o Full Backup/Restore capabilities of Palm Pilot
-		o File (prc,pdb) installation
-		o Email syncing capabilities (via POP3 & sendmail)
-	        o SmartSync backing up modified data even
-			for databases KPilot doesn't recognize
-	        o Import/Export to/from virtually any text format for
-			Addresses.
-	        o Import/Export to/from text files for memos
-		o Sort and display addresses in different ways
-		o A null conduit (programming example)
-		o Syncing with UNIX mailboxes
-		o Database dispositions (sync, backup only, or ignore)
-
-	(* = new in this release)
-
-INSTALLATION
-============
-	KPilot 4.0.0 _REQUIRES_ KDE 2 (http://www.kde.org/) and
-v2.2.0 or better of the QT widget set (http://www.troll.no/). 
-KPilot also _REQUIRES_ pilot-link, which is not distributed with 
-all the linux distro's out there. You may have to go looking.
-
-	If you have these packages, a simple (see *NOTE*):
-
-	./configure
-	make
-	make install
-
-	from the kpilot-4.0.0 directory should configure and install KPilot.  
-If you are using KPanel (the panel that comes with KDE) restarting it
-should insert an icon into the Utilities submenu.  If you are not using
-KPanel, the executable is named kpilot and will be installed in either
-/opt/kde/bin/ or /usr/local/kde/bin (whichever is appropriate for your
-system).
-
-	In some cases KPilot will not compile due to configuration
-differences; in this case a less simple
-
-	autoconf
-	automake
-	./configure
-	make
-	make install
-
-should do the trick. If this fails as well, you can subscribe to the
-KPilot mailing list and state the nature of the failure there.
-
-	*NOTE* that KPilot makes assumptions about where pilot-link and
-the Qt libraries are; in particular it is important to set QTDIR correctly
-(to the Qt 1.44 directories) when compiling KPilot. On many systems the
-command to do this will be
-
-	export QTDIR=/usr/lib/qt-2*
-
-but your mileage may vary. RedHat 6.2 systems ship with Qt 1.45 and Qt 2.1,
-in which case it is doubly important to set QTDIR properly.
 
 USING THE SOFTWARE
 ==================
-	The user's documentation in the kpilot/doc directory is the
-best source for information on using KPilot.
 	When KPilot is run for the first time it will display the settings
 dialog.  The default device is /dev/pilot (which should be a link to the
 proper device for the pilot) though this is configurable. Please verify
@@ -153,4 +94,4 @@ contributions are welcome.  :)
 	Adriaan de Groot
 	adridg@cs.kun.nl
 	http://www.cs.kun.nl/~adridg/kpilot-bugs.html
-	July 20, 2000
+	November 26, 2000

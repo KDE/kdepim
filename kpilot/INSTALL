@@ -3,6 +3,11 @@ Basic Installation
 
    These are generic installation instructions.
 
+   KPILOT IS NOT A SEPARATE PACKAGE. APPLY THESE INSTALL INSTRUCTIONS
+   TO THE PACKAGE kdepim, WHICH SHOULD BE THE DIRECTORY ABOVE THE ONE
+   CONTAINING KPILOT. YOU MAY make KPILOT BY ITSELF THOUGH, ONCE YOU
+   HAVE CONFIGURED kdepim ACCORDING TO THE INSTRUCTIONS BELOW.
+
    The `configure' shell script attempts to guess correct values for
 various system-dependent variables used during compilation.  It uses
 those values to create a `Makefile' in each directory of the package.
