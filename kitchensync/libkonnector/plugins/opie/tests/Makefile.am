@@ -24,7 +24,7 @@ INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector \
 LDADD = $(top_builddir)/kitchensync/libkonnector/libkonnector.la $(top_builddir)/kitchensync/libkonnector/plugins/opie/libopiekonnector.la
 LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 
-check_PROGRAMS = opieimport todoreader
+check_PROGRAMS = opieimport todoreader eventreader
 
 #opieimport_LDADD = ../../../libkonnector.la ../libopiekonnector.la
 opieimport_SOURCES =  convertermain.cc
@@ -34,6 +34,12 @@ todoreader_LDADD = $(top_builddir)/libkcal/libkcal.la \
 	$(top_builddir)/kitchensync/libkonnector/plugins/opie/libopiekonnector.la \
 	$(top_builddir)/kitchensync/libkonnector/libkonnector.la
 todoreader_SOURCES = todoreader.cpp
+
+eventreader_LDADD = $(top_builddir)/libkcal/libkcal.la \
+	$(top_builddir)/kitchensync/lib/libksync.la \
+	$(top_builddir)/kitchensync/libkonnector/plugins/opie/libopiekonnector.la \
+	$(top_builddir)/kitchensync/libkonnector/libkonnector.la
+eventreader_SOURCES = eventreader.cpp
 
 METASOURCES = AUTO
 

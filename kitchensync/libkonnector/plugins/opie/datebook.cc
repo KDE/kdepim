@@ -51,7 +51,7 @@ DateBook::~DateBook()
 KCal::Event* DateBook::toEvent( QDomElement e) {
     kdDebug(5202) << "inside event" << endl;
     KCal::Event* event = new KCal::Event();
-    QStringList list = QStringList::split(";",  e.attribute("Categories") );
+    QStringList list = QStringList::split(";",  e.attribute("categories") );
     QStringList categories;
     for ( uint i = 0; i < list.count(); i++ ) {
         kdDebug(5202) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
@@ -84,7 +84,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
 
     // alarm
     KCal::Alarm *al = new KCal::Alarm( event );
-    al->setText( event->description() );
+    al->setText( event->summary() );
     al->setOffset( e.attribute("alarm").toInt() * -60 );
     al->setAudioFile( e.attribute("sound") );
     event->addAlarm( al );
@@ -127,6 +127,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
 
         if ( hasEnd ) {
             start = e.attribute("enddt");
+            kdDebug() << "has end " << start << endl;
             rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
         }else{
             rec->setWeekly( freq,  bits,  -1 );
@@ -254,7 +255,8 @@ QByteArray DateBook::fromKDE( KSync::EventSyncee* syncee )
         stream << "</DATEBOOK>" << endl;
 
     }
-    m_helper->replaceIds( "event",  m_kde2opie );
+    if (m_helper )
+        m_helper->replaceIds( "event",  m_kde2opie );
     return array;
 }
 QString DateBook::event2string( KCal::Event *event )

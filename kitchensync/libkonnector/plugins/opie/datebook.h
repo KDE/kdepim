@@ -10,7 +10,7 @@
 namespace KSync{
     class EventSyncee;
 };
-
+class QDomElement;
 namespace OpieHelper {
     enum Days { Monday=1,
                 Tuesday =2,
