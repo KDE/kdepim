@@ -471,7 +471,7 @@ int GeoDialog::nearestCity( double x, double y )
 {
   QMap<QString, GeoData>::Iterator it;
   int pos = 0;
-  for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, pos++ ) {
+  for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, ++pos ) {
     double dist = ( (*it).longitude - x ) * ( (*it).longitude - x ) +
                   ( (*it).latitude - y ) * ( (*it).latitude - y );
     if ( dist < 1.5 )
