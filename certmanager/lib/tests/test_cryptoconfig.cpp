@@ -37,6 +37,7 @@
 #include <iostream>
 using namespace std;
 
+#include <stdlib.h>
 #include <assert.h>
 
 int main( int argc, char** argv ) {
