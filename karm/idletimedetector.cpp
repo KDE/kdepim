@@ -1,8 +1,11 @@
 #include "idletimedetector.h"
-#include <qmessagebox.h>
-#include <klocale.h>
-#include <qtimer.h>
+
 #include <qdatetime.h>
+#include <qmessagebox.h>
+#include <qtimer.h>
+
+#include <kglobal.h>
+#include <klocale.h>
 
 IdleTimeDetector::IdleTimeDetector(int maxIdle) 
 {
@@ -61,8 +64,7 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
   
   QDateTime start = QDateTime::currentDateTime();
   QDateTime idleStart = start.addSecs(-60 * _maxIdle);
-  QString backThen;
-  backThen.sprintf("%d:%02d", idleStart.time().hour(), idleStart.time().minute());
+  QString backThen = KGlobal::locale()->formatTime(idleStart.time());
   
   int id =  QMessageBox::warning(0,i18n("Idle detection"),
                                      i18n("Desktop has been idle since %1."
