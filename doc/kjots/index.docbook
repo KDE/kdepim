@@ -106,13 +106,13 @@ hotlist</guimenuitem></menuchoice>.</para>
 
 <para>A book can be saved using <keycombo action="simul">&Ctrl;
 <keycap>S</keycap></keycombo> or the menu entry
-<menuchoice><guimenu>File</guimenu><guimenuitem>Save current
-book</guimenuitem></menuchoice>. When you change books, or exit &kjots;,
+<menuchoice><guimenu>File</guimenu><guimenuitem>Save Current
+Book</guimenuitem></menuchoice>. When you change books, or exit &kjots;,
 the currently open book will be saved.</para>
 
 <para>You can also export an entire book as a text file, using
-<menuchoice><guimenu>File</guimenu> <guimenuitem>Save book to ascii
-file</guimenuitem></menuchoice>.  You will be then prompted to enter a
+<menuchoice><guimenu>File</guimenu> <guimenuitem>Save Book to ASCII
+File</guimenuitem></menuchoice>.  You will be then prompted to enter a
 location for the file to be saved.  The format of an example saved book
 is shown below:</para>
 
@@ -207,7 +207,7 @@ editor.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Save book to ascii file</guimenuitem>
+<guimenuitem>Save Book to ASCII File</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Saves</action> the current book to a text file.
 See <link linkend="kjots-books">Using Books</link>.</para></listitem>
@@ -216,7 +216,7 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Save page to ascii file</guimenuitem>
+<guimenuitem>Save Page to ASCII File</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Saves</action> the current page to a text file.</para>
 </listitem>
@@ -382,7 +382,7 @@ book, if it exists.
 <varlistentry>
 <term><menuchoice>
 <guimenu>Hotlist</guimenu>
-<guimenuitem>Add current book to hotlist</guimenuitem>
+<guimenuitem>Add Current Book to Hotlist</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Adds</action> the current book to the hotlist.
 See <link linkend="kjots-books">Using Books</link>
@@ -392,7 +392,7 @@ See <link linkend="kjots-books">Using Books</link>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Hotlist</guimenu>
-<guimenuitem>Remove current book from hotlist</guimenuitem>
+<guimenuitem>Remove Current Book from Hotlist</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Removes</action> the current book to the hotlist.
 See <link linkend="kjots-books">Using Books</link>
