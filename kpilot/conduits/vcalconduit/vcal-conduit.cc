@@ -335,7 +335,7 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   VObject *vevent;
   VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
-  QString dateString, tmpStr;
+  QString tmpStr;
   QString numStr;
   PilotDateEntry dateEntry(rec);
   
@@ -349,7 +349,7 @@ void VCalConduit::updateVObject(PilotRecord *rec)
     numStr.sprintf("KPilot - %d",rec->getID());
     addPropValue(vevent, VCUniqueStringProp, numStr.latin1());
     addPropValue(vevent, VCSequenceProp, "1");
-    addPropValue(vevent, VCLastModifiedProp, dateString.latin1());
+	addDateProperty(vevent,VCLastModifiedProp,todaysDate);
     
     addPropValue(vevent, VCPriorityProp, "0");
     addPropValue(vevent, VCTranspProp, "0");
@@ -470,21 +470,10 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 			dateEntry.getRepeatEnd().tm_sec));
   }
       
-  /*
-  if (!dateEntry.getEvent()) {
-  	dateString = TmToISO(endDT);
-  } else {
-    // the event "floats"
-    dateString = TmToISO(endDT,true);
-  }
-  */
-
-
 
   if (vo)
   {
 	setDateProperty(vo,endDT,dateEntry.getEvent());
-    // setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
   }
   else 
   {
@@ -496,7 +485,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 	{
 		addDateProperty(vevent, VCDTendProp,
 			endDT,dateEntry.getEvent());
-		// addPropValue(vevent, VCDTendProp, dateString.latin1());
 	}
   }
 
@@ -1460,6 +1448,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.35  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.34  2001/04/03 09:55:13  adridg
 // Administrative, cleanup
 //
