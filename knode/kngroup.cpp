@@ -257,9 +257,16 @@ bool KNGroup::loadHdrs()
         for (uint i = buff.toUInt(); i > 0; --i) {
           buff = f.readLine();
           int pos = buff.find(':');
+          QCString hdrName = buff.left( pos );
+          // skip headers we already set above and which we actually never should
+          // find here, but however it still happens... (eg. #101355)
+          if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
+              || hdrName == "Message-ID" || hdrName == "References"
+              || hdrName == "Bytes" || hdrName == "Lines" )
+            continue;
           hdrValue = buff.right( buff.length() - (pos + 2) );
           if (hdrValue.length() > 0)
-            art->setHeader( new KMime::Headers::Generic( buff.left(pos), art, hdrValue ) );
+            art->setHeader( new KMime::Headers::Generic( hdrName, art, hdrValue ) );
         }
       }
 
@@ -455,7 +462,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClien
       int pos = hdr.find(':');
       hdrName = hdr.left( pos );
       // if the header format is 'full' we have to strip the header name
-      if (hdr.findRev("full") == (int)(hdr.length() - 5))
+      if (hdr.findRev("full") == (int)(hdr.length() - 4))
         data = data.right( data.length() - (hdrName.length() + 2) );
 
       // add header
