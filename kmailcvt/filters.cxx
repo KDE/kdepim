@@ -199,36 +199,47 @@ bool  kmail::kmailMessage(filterInfo *info,char *folder,char *_msg,unsigned long
 
   QString folderName(folder);
   QString msg(_msg);
-  
-  int result=dcopAddMessage(folderName,msg);
-  
+  const QByteArray kmData;
+  QByteArray kmRes;
+  QDataStream kmArg(kmData,IO_WriteOnly);
+  KURL message(msg);
+  QCString type;
+
+  kmArg << folderName << message;
+
+  DCOPClient *c=kapp->dcopClient();
+  if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,KURL)", kmData, type, kmRes)) {
+    // Maybe KMail isn't already running, so try starting it
+    KApplication::startServiceByDesktopName("kmail", QString::null); // Will wait until kmail is started
+    if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,KURL)", kmData, type, kmRes)) {
+      msg=i18n("FATAL: Unable to start KMail for DCOP communication.\n"
+               "       Make sure 'kmail' is installed.");
+      info->alert(cap,msg);
+      return false;
+    }
+  }
+
+  QDataStream KmResult(kmRes,IO_ReadOnly);
+  int result;
+  KmResult >> result;
+    
   if (result==-1) {
     msg=i18n("Cannot make folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
-  }
-  
-  if (result==-2) {
+  } else if (result==-2) {
     msg=i18n("Cannot add message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
-  }
-  
-  if (result==-3) {
-    msg=i18n("FATAL: Unable to start KMail for DCOP communication.\n"
-             "       Make sure 'kmail' is in your path.");
-    info->alert(cap,msg);
-    return false;
-  }
-  
-  if (result==0) {
+  } else if (result==0) {
     msg=i18n("Error while adding message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
 
-  if (result>0) 
-    { added+=1; }//fprintf(stderr,"added+1\n"); }
+  if (result>0) {
+    added+=1;
+  }
 
   return true;
 
@@ -270,38 +281,6 @@ bool kmail::kmailFolder(filterInfo *info,char *folder, FILE *fldr)
   info->alert(cap,"kmailFolder: Not implemented yet");
   return false;
 //return kmailMessage(info,folder,fldr);
-}
-
-int kmail::dcopAddMessage(QString folderName,QString fileName)
-{
-   const QByteArray kmData;
-   QByteArray kmRes;
-   QDataStream kmArg(kmData,IO_WriteOnly);
-   const QCString kmApp("kmail"),kmIface("KMailIface"),
-                  kmFunc("dcopAddMessage(QString,KURL)");
-   //QCString type("int");
-   QCString type;//("void");
-   bool res;
-   KURL message(fileName);
-
-
-   kmArg << folderName;
-   kmArg << message;
-
-   DCOPClient *c=kapp->dcopClient();
-   res=c->call(kmApp,kmIface,kmFunc,kmData,type,kmRes);
-   if (!res) { 
-     KApplication::startServiceByDesktopName("kmail", QString::null); // Will wait until kmail is started
-     res=c->call(kmApp,kmIface,kmFunc,kmData,type,kmRes);
-     if (!res) { return -3; }
-   }
-
-   QDataStream KmResult(kmRes,IO_ReadOnly);
-   int result;
-   KmResult >> result;
-   //printf("res=%d %d\n",res,result);
-
-return result; 
 }
 
 //////////////////////////////////////////////////////////////////////////////////
