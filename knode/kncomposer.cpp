@@ -1106,9 +1106,9 @@ void KNComposer::slotUpdateStatusBar()
   switch (m_ode) {
     case news:  typeDesc = i18n("News Article");
                 break;
-    case mail:  typeDesc = i18n("E-Mail");
+    case mail:  typeDesc = i18n("Email");
                 break;
-    default  :  typeDesc = i18n("News Article & E-Mail");
+    default  :  typeDesc = i18n("News Article & Email");
   }
   QString overwriteDesc;
   if (v_iew->e_dit->isOverwriteMode())

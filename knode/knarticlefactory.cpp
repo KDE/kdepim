@@ -140,7 +140,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   if(fup2 && !fup2->isEmpty()) {
     if(fup2->as7BitString(false).upper()=="POSTER") { //Followup-To: poster
       if (post)         // warn the user
-        KMessageBox::information(knGlobals.topWidget,i18n("The author has requested a reply by e-mail instead\nof a followup to the newsgroup. (Followup-To: poster)"),
+        KMessageBox::information(knGlobals.topWidget,i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)"),
                                  QString::null,"followupToPosterWarning");
       art->setDoPost(false);
       art->setDoMail(true);
@@ -820,7 +820,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   if(id->hasEmail()&&id->emailIsValid())
     from->setEmail(id->email().latin1());
   else {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Please enter a valid e-mail address."));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Please enter a valid email address."));
     delete art;
     return 0;
   }
@@ -904,7 +904,7 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
     KNLocalArticle *localArt=static_cast<KNLocalArticle*>(a);
 
     if(localArt->doMail() && !localArt->doPost()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("E-mails cannot be canceled or superseded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded!"));
       return false;
     }
 

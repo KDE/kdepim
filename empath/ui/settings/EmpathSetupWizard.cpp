@@ -134,7 +134,7 @@ EmpathUserInfoPage::EmpathUserInfoPage(QWidget * parent)
     
     QLabel * l_name     = new QLabel(i18n("&Full Name"),        this);
     QLabel * l_org      = new QLabel(i18n("&Organization"),     this);
-    QLabel * l_address  = new QLabel(i18n("E-mail &Address"),   this);
+    QLabel * l_address  = new QLabel(i18n("Email &Address"),   this);
     QLabel * l_reply    = new QLabel(i18n("&Reply address"),    this);
 
     le_name_    = new QLineEdit(this);
