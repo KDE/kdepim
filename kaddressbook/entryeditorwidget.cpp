@@ -764,7 +764,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     "C", "us", "au", "uk", "nz", "za", "dk",
     "de", "gr", "es", "fi", "fr", "il",
     "hu", "hr", "is", "it", "ko", "nl",
-    "no", "pl", "pt", "br", "ro", "ru",
+    "no", "pl", "pt", "pt_BR", "ro", "ru",
     "se", "tr", "cn", "tw", "ee",
     ""
   };
