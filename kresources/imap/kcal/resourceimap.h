@@ -204,6 +204,8 @@ private:
   QMap<QString, bool> mEventResources, mTaskResources, mJournalResources;
   // Mapping from uid to resource
   QMap<QString, QString> mUidmap;
+
+  bool mOpen;
 };
 
 }

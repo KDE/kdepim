@@ -31,7 +31,7 @@ using namespace KCal;
 ResourceIMAP::ResourceIMAP( const QString &server )
   : ResourceCalendar( 0 ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-    mServer( server )
+    mServer( server ), mOpen( false )
 {
   init();
 }
@@ -65,6 +65,12 @@ ResourceIMAP::~ResourceIMAP()
 
 bool ResourceIMAP::doOpen()
 {
+  if ( mOpen )
+    // Already open
+    return true;
+
+  mOpen = true;
+
   // Get the config file
   const QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
   KConfig config( configFile );
@@ -100,6 +106,12 @@ bool ResourceIMAP::doOpen()
 
 void ResourceIMAP::doClose()
 {
+  if ( !mOpen )
+    // Not open
+    return;
+
+  mOpen = false;
+
   // Get the config file
   const QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
   KConfig config( configFile );
@@ -681,6 +693,10 @@ void ResourceIMAP::subresourceDeleted( const QString& type,
 
 bool ResourceIMAP::subresourceActive( const QString& subresource ) const
 {
+  // Workaround: The ResourceView in KOrganizer wants to know this
+  // before it opens the resource :-( Make sure we are open
+  const_cast<ResourceIMAP*>( this )->doOpen();
+
   if ( mEventResources.contains( subresource ) ) {
     kdDebug(5650) << "subresourceActive/Event( " << subresource << " ): "
                   << mEventResources[ subresource ] << endl;
