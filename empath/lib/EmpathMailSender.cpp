@@ -170,7 +170,7 @@ EmpathMailSender::_emergencyBackup(RMM::Message message)
         empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
 
         QMessageBox::critical(0, "Empath",
-            i18n("Couldn't write the backup file ! Message has been LOST !"),
+            i18n("Couldn't write the backup file! Message has been LOST!"),
             i18n("OK"));
 
         return;
@@ -194,7 +194,7 @@ EmpathMailSender::_emergencyBackup(RMM::Message message)
         empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
 
         QMessageBox::critical(0, "Empath",
-        i18n("Couldn't write the backup file ! Message may have been LOST !"),
+        i18n("Couldn't write the backup file! Message may have been LOST!"),
             i18n("OK"));
 
         return;

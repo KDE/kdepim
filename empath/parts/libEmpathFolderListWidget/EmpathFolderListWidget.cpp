@@ -391,7 +391,7 @@ EmpathFolderListWidget::s_newFolder()
 EmpathFolderListWidget::s_removeFolder()
 {
     QString warning =
-        i18n("This will remove the folder %1 and ALL subfolders !");
+        i18n("This will remove the folder %1 and ALL subfolders!");
     QString folderPath = popupMenuOver->url().folderPath();
     
     int c =
