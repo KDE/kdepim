@@ -114,6 +114,11 @@ public:
     void setCurrentPort( int );
 
     /**
+     * If this konnector needs a network konnection at all
+     */
+    bool needsNetworkConnection()const;
+    void setNeedsNetworkConnection( bool );
+    /**
      *  Does the Konnector need an IP Address
      *  to work?
      *  @return if we need to give an IP Address
@@ -187,6 +192,7 @@ public:
     QValueList< QPair<QHostAddress, QHostAddress > > ipProposals() const;
     void setIpProposals( QValueList< QPair<QHostAddress, QHostAddress> >);
 
+
     /**
      * If the device need some kind of authentification first.
      * @return bool
@@ -241,6 +247,28 @@ public:
      */
     Kapabilities &operator=(const Kapabilities & );
     /**
+     * Some Options for palm and others using a  lib as backend
+     * supporting more devices
+     * and does not need network
+     */
+    /**
+     * A list of models isEmpty() if no models
+     */
+    QStringList models()const;
+    /**
+     * set the models
+     */
+    void setModels( const QStringList & );
+    /**
+     *
+     */
+    QString currentModel()const;
+    void setCurrentModel( const QString & );
+    void setConnectionMode( const QStringList & );
+    QStringList connectionModes()const;
+    QString currentConnectionMode()const;
+    void setCurrentConnectionMode(const QString &);
+    /**
      *
      */
     void setExtraOption( const QString &, const QVariant & );
@@ -249,6 +277,7 @@ public:
 private:
     class KapabilitiesPrivate;
     KapabilitiesPrivate *d;
+    bool m_needsNet:1;
     bool m_push:1;
     bool m_needConnection:1;
     bool m_listdir:1;
@@ -268,6 +297,10 @@ private:
     QString m_user;
     QString m_pass;
     QMap<QString,QVariant> m_extras;
+    QString m_currModell;
+    QStringList m_models;
+    QString m_currMode;
+    QStringList m_modes;
 };
 #endif
 

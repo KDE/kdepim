@@ -14,7 +14,6 @@
 
 #include "addressbook.h"
 
-#include "test.h"
 
 using namespace OpieHelper;
 
@@ -143,10 +142,10 @@ KAddressbookSyncEntry* AddressBook::toKDE( const QString &fileName )
 	}
 	n = n.nextSibling();
     }
-    KABC::ResourceFile r( abook, "/home/ich/addressbook2.vcf" );
+    /*KABC::ResourceFile r( abook, "/home/ich/addressbook2.vcf" );
     abook->addResource(&r );
     KABC::Ticket *t = abook->requestSaveTicket( &r );
-    abook->save( t );
+    abook->save( t );*/
     kdDebug() << "Dumped " << endl;
     return entry;
 }

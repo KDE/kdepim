@@ -41,6 +41,7 @@ Kapabilities::Kapabilities()
     m_needsAuthent=false;
     m_meta = false;
     m_supMeta = false;
+    m_needsNet = true;
 }
 Kapabilities::Kapabilities(const Kapabilities &kap )
     //: //d( 0 )
@@ -202,6 +203,46 @@ void Kapabilities::setExtraOption( const QString &extra, const QVariant &variant
 {
   m_extras.replace( extra, variant );
 }
+bool Kapabilities::needsNetworkConnection()const
+{
+    return m_needsNet;
+}
+void Kapabilities::setNeedsNetworkConnection( bool net )
+{
+    m_needsNet = net;
+}
+QStringList Kapabilities::models() const
+{
+    return m_models;
+}
+void Kapabilities::setModels( const QStringList& model )
+{
+    m_models = model;
+}
+QString Kapabilities::currentModel() const
+{
+    return m_currModell;
+}
+void Kapabilities::setCurrentModel( const QString &mod )
+{
+    m_currModell = mod;
+}
+void Kapabilities::setConnectionMode( const QStringList &mode )
+{
+    m_modes= mode;
+}
+QStringList Kapabilities::connectionModes() const
+{
+    return m_modes;
+}
+QString Kapabilities::currentConnectionMode()const
+{
+    return m_currMode;
+}
+void Kapabilities::setCurrentConnectionMode( const QString &mode )
+{
+    m_currMode = mode;
+}
 Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
 {
     m_push = rhs.m_push;
@@ -223,6 +264,13 @@ Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
     m_extras = rhs.m_extras;
     m_meta = rhs.m_meta;
     m_supMeta = rhs.m_supMeta;
+    m_needsNet = rhs.m_needsNet;
+
+    m_currModell = rhs.m_currModell;
+    m_models = rhs.m_models;
+    m_currMode = rhs.m_currMode;
+    m_modes = rhs.m_modes;
+
     return (*this );
 }
 
