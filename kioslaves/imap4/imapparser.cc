@@ -347,7 +347,6 @@ void
 imapParser::parseResult (QByteArray & result, parseString & rest,
   const QString & command)
 {
-  kdDebug() << k_funcinfo << "rest=" << rest.cstr() << " command=" << command << endl;
   if (command == "SELECT") selectInfo.setReadWrite(true);
 
   if (rest[0] == '[')
