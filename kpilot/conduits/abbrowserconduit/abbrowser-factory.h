@@ -7,7 +7,7 @@
 **
 ** This file defines the factory for the abbrowser-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -42,19 +42,19 @@ public:
 	AbbrowserConduitFactory(QObject * = 0L,const char * = 0L);
 	virtual ~AbbrowserConduitFactory();
 
+public:
+	// KConfig entry keys.
+	static const char
+		*fSyncMode, *fArchive,
+		*fResolution, *fSmartMerge, *fFirstSync,
+		*fOtherField, *fStreetType, *fFaxType,
+		*fCustom,
+		*fFullSyncOnPCChange;
+
 	static KAboutData *about() { return fAbout; } ;
 	static const char *group() { return fGroup; } ;
-	static const char *smartMerge() { return fSmartMerge; } ;
-	static const char *conflictResolution() { return fResolution; } ;
-	static const char *archiveDeletedRecs() { return fArchive; };
-	static const char *streetType() { return fStreetType; } ;
-	static const char *faxType() { return fFaxType; } ;
-	static const char *syncMode() { return fSyncMode;};
-	static const char *firstSync() { return fFirstSync; } ;
-	static const char *fullSyncOnPCChange() {return fFullSyncOnPCChange; } ;
-	static const char *otherField() { return fOtherField; } ;
-	static const QString custom() {return QString::fromLatin1(fCustom); };
-	
+	static const QString custom(int i) {return QString::fromLatin1(fCustom).arg(i); };
+
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -65,19 +65,6 @@ private:
 	static KAboutData *fAbout;
 	static const char *fGroup;
 
-	// KConfig entry keys.
-	//
-	//
-	static const char *fSmartMerge,
-		*fResolution,
-		*fArchive,
-		*fStreetType,
-		*fFaxType,
-		*fSyncMode, 
-		*fFirstSync,
-		*fOtherField,
-		*fFullSyncOnPCChange,
-		*fCustom;
 } ;
 
 extern "C"

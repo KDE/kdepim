@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>609</width>
-            <height>364</height>
+            <width>566</width>
+            <height>325</height>
         </rect>
     </property>
     <property name="caption">
@@ -44,13 +44,7 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <spacer row="6" column="0">
+                    <spacer row="3" column="0">
                         <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
@@ -62,40 +56,12 @@
                         </property>
                         <property name="sizeHint">
                             <size>
-                                <width>0</width>
-                                <height>28</height>
+                                <width>20</width>
+                                <height>50</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fSmartMerge</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Smartly merge addresses</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Use key fields to merge address books.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fFirstTimeSync</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string>&amp;First time syncing</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Should be checked if your PDA has never been synced or backed up before.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="2" column="0">
                         <property name="name">
                             <cstring>fArchive</cstring>
                         </property>
@@ -109,76 +75,155 @@
                             <string>&lt;qt&gt;If you delete an address on your handheld, you can determine if it should be archived on the PC. If you check that and this checkbox, the address will be added to your addressbook, but no longer synchronized with the handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="1" column="0">
-                        <property name="name">
-                            <cstring>TextLabel1</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Handle conflict in addresses:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="0">
-                        <property name="name">
-                            <cstring>TextLabel1_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Synchronization mode:</string>
-                        </property>
-                    </widget>
-                    <widget class="QComboBox" row="1" column="1">
-                        <item>
-                            <property name="text">
-                                <string>User Choose</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Do Nothing</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Handheld Overrides</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>KAddressbook Overrides</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Revert to Last Sync</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Use Both Entries</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>fConflictStrategy</cstring>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;How to handle a situation where the pim's address book has conflicting information with the KDE's addressbook&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QComboBox" row="2" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Hot Sync (fast)</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Full Sync (slow)</string>
-                            </property>
-                        </item>
+                    <widget class="QButtonGroup" row="1" column="0">
                         <property name="name">
                             <cstring>fSyncMode</cstring>
                         </property>
+                        <property name="title">
+                            <string>Synchronization mode:</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>radioButton18</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Hot Sync (fast)</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>radioButton19</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fu&amp;ll Sync (slow)</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Conflicts</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QButtonGroup" row="0" column="0">
+                        <property name="name">
+                            <cstring>fConflictStrategy</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Handle conflict in addresses:</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>radioButton13</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Do &amp;nothing</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>radioButton14</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Handheld overrides</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="3" column="0">
+                                <property name="name">
+                                    <cstring>radioButton15</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;KAddressbook overrides</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="4" column="0">
+                                <property name="name">
+                                    <cstring>radioButton16</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Revert to last sync</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="5" column="0">
+                                <property name="name">
+                                    <cstring>radioButton17</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Use &amp;both entries</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>radioButton12</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;User choose</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>fSmartMerge</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Smartly merge addresses</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;There are two synchronization modes: &lt;ul&gt;&lt;li&gt;A &lt;i&gt;full sync&lt;/i&gt; synchronizes all records, even if they have not changed.&lt;li&gt;A &lt;i&gt;fast sync&lt;/i&gt; goes just through the addresses that have been changed since the last sync (possibly missing some changes).&lt;/ul&gt;&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Use key fields to merge address books.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer row="3" column="0">
+                        <property name="name">
+                            <cstring>spacer6</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>41</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="2" column="0">
+                        <property name="name">
+                            <cstring>fFirstTimeSync</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>&amp;First time syncing</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Should be checked if your PDA has never been synced or backed up before.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                 </grid>
@@ -251,6 +296,14 @@
                         </item>
                         <property name="name">
                             <cstring>fOtherPhone</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Select which field in KAddressbook should be used to store the Pilot's &amp;quot;Other&amp;quot; phone.&lt;/qt&gt;</string>
@@ -624,12 +677,10 @@
         </widget>
     </grid>
 </widget>
+<connections>
+</connections>
 <tabstops>
-    <tabstop>fConflictStrategy</tabstop>
-    <tabstop>fSyncMode</tabstop>
     <tabstop>fArchive</tabstop>
-    <tabstop>fSmartMerge</tabstop>
-    <tabstop>fFirstTimeSync</tabstop>
     <tabstop>tabWidget</tabstop>
     <tabstop>fOtherPhone</tabstop>
     <tabstop>fAddress</tabstop>

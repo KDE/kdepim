@@ -5,7 +5,7 @@
 **
 ** This file defines the factory for the abbrowser-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -48,23 +48,25 @@ void *init_libaddressconduit()
 } ;
 
 
-// A number of static variables; except for fAbout, they're 
+// A number of static variables; except for fAbout, they're
 // all KConfig group or entry keys.
 //
 //
 KAboutData *AbbrowserConduitFactory::fAbout = 0L;
 const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
 
-const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
-const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
+const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
 const char *AbbrowserConduitFactory::fArchive = "ArchiveDeleted";
+const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
+const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
+const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
+const char *AbbrowserConduitFactory::fOtherField = "PilotOther";
 const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
 const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
-const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
-const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
-const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
-const char *AbbrowserConduitFactory::fOtherField = "PilotOther";
 const char *AbbrowserConduitFactory::fCustom = "Custom %1";
+
+const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
+
 
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
@@ -120,7 +122,7 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 		{
 			return new AbbrowserWidgetSetup(w,n,a);
 		}
-		else 
+		else
 		{
 			kdError() << k_funcinfo
 				<< ": Couldn't cast parent to widget."

@@ -87,15 +87,15 @@ private:
 	};
 	EConflictResolution getResolveConflictOption() const { return fConflictResolution; }
 	bool doSmartMerge() const { return fSmartMerge; }
-	
+
 	EConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress);
 	EConflictResolution getFieldResolution(const QString &entry, const QString &field, const QString &palm, const QString &backup, const QString &pc);
-	EConflictResolution ResolutionDialog(QString Title, 
-		QString Text, 
-		QStringList &lst, 
+	EConflictResolution ResolutionDialog(QString Title,
+		QString Text,
+		QStringList &lst,
 		QString remember=QString::null, bool*rem=0L) const;
 
-	int _conflict(const QString &entry, const QString &field, const QString &pc, const QString &backup, 
+	int _conflict(const QString &entry, const QString &field, const QString &pc, const QString &backup,
 			const QString &palm, bool & mergeNeeded, QString & mergedStr);
 	int _compare(const QString &str1, const QString &str2) const;
 
@@ -110,7 +110,7 @@ private:
 
 	/**
 	*  Do the preperations before doSync or doBackup.
-	*  Load contacts, set the pilot 
+	*  Load contacts, set the pilot
 	*/
 	bool _prepare();
 
@@ -130,21 +130,21 @@ private:
 	*  @return true if successful, false if not
 	*/
 	bool _saveAddressBook();
-	
+
 	static QString getOtherField(const KABC::Addressee&abEntry);
 	static void setOtherField(KABC::Addressee&abEntry, QString nr);
 	static QString getCustomField(const KABC::Addressee &abEntry, const int index);
 	static void setCustomField(KABC::Addressee &abEntry,  int index, QString cust);
 	static KABC::PhoneNumber getFax(const KABC::Addressee &abEntry);
 	static KABC::Address getAddress(const KABC::Addressee &abEntry);
-	
+
 
 	void _setAppInfo();
 	KABC::Addressee _addToAbbrowser(const PilotAddress & address);
 	int _mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry);
 	int _handleConflict(PilotAddress &piAddress, PilotAddress &backup, KABC::Addressee &abEntry);
 	int _smartMerge(PilotAddress & outPilotAddress, const PilotAddress & backupAddress, KABC::Addressee & outAbEntry);
-	int _smartMergePhone(KABC::Addressee &abEntry, const PilotAddress &backupAddress, 
+	int _smartMergePhone(KABC::Addressee &abEntry, const PilotAddress &backupAddress,
 		PilotAddress &pilotAddress, PilotAddress::EPhoneType PalmFlag, KABC::PhoneNumber phone, QString
 		 thisName, QString name);
 	int _smartMergeEntry(QString abEntry, const PilotAddress &backupAddress, PilotAddress &pilotAddress, int PalmFlag, QString thisName, QString name, QString &mergedString);
@@ -155,12 +155,12 @@ private:
 	KABC::Addressee _saveAbEntry(KABC::Addressee &abEntry);
 	void _checkDelete(PilotRecord *r, PilotRecord *s);
 
-   /** 
-	*  @return true if the abbEntry's pilot id was changed 
+   /**
+	*  @return true if the abbEntry's pilot id was changed
 	*/
 	bool _savePilotAddress(PilotAddress &address, KABC::Addressee &abEntry);
 	bool _saveBackupAddress(PilotAddress & backup);
-	
+
 	void _copyPhone(KABC::Addressee &toAbEntry, KABC::PhoneNumber phone, QString palmphone);
 	void _copy(PilotAddress &toPilotAddr, KABC::Addressee &fromAbEntry);
 	void _copy(KABC::Addressee &toAbEntry, const PilotAddress &fromPilotAddr);
@@ -170,19 +170,19 @@ private:
 	int _getCat(const QStringList cats) const ;
 	void _setCategory(KABC::Addressee &abEntry, QString cat);
 
-   /** 
+   /**
 	*  Given a list of contacts, creates the pilot id to contact key map
 	*  and a list of new contacts in O(n) time (single pass)
 	*/
    void _mapContactsToPilot( QMap < recordid_t, QString> &idContactMap) const;
 
 #ifdef DEBUG
-	/** 
-	* Output to console, for debugging only 
+	/**
+	* Output to console, for debugging only
 	*/
 	static void showAddressee(const KABC::Addressee &abAddress);
-	/** 
-	* Output to console, for debugging only 
+	/**
+	* Output to console, for debugging only
 	*/
 	static void showPilotAddress(const PilotAddress &pilotAddress);
 #endif
@@ -205,16 +205,14 @@ private:
 	{
 		eOtherPhone,
 		eAssistant,
-//		eBusiness2,
 		eBusinessFax,
 		eCarPhone,
 		eEmail2,
 		eHomeFax,
-//		eHomePhone2,
 		eTelex,
 		eTTYTTDPhone
 	} ePilotOther;
-	int syncAction; 
+	int syncAction;
 	int pilotindex;
 	bool abChanged;
 	static const QString appString;
@@ -224,17 +222,17 @@ private:
 	QValueList <recordid_t> syncedIds;
 	KABC::AddressBook* aBook;
 	KABC::AddressBook::Iterator abiter;
-	
+
 	static enum eCustomEnum {
 		eCustomField,
 		eCustomBirthdate,
 		eCustomURL,
 		eCustomIM
 	} eCustom[4];
-	
-	
-	
-	
+
+
+
+
 	void showAdresses(PilotAddress & pilotAddress, const PilotAddress & backupAddress, KABC::Addressee & abEntry);
 } ;
 

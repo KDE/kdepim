@@ -5,7 +5,7 @@
 **
 ** This file defines the setup dialog for the abbrowser-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -33,8 +33,10 @@
 #include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
+#include <qbuttongroup.h>
 
 #include <kconfig.h>
+#include <kurlrequester.h>
 
 #include "kaddressbookConduit.h"
 #include "abbrowser-factory.h"
@@ -64,33 +66,39 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
-	fConfig->writeEntry(AbbrowserConduitFactory::smartMerge(),
-		fConfigWidget->fSmartMerge->isChecked());
-	fConfig->writeEntry(AbbrowserConduitFactory::conflictResolution(),
-		fConfigWidget->fConflictStrategy->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::archiveDeletedRecs(),
+	// General page
+	fConfig->writeEntry(AbbrowserConduitFactory::fSyncMode,
+		fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected()));
+	fConfig->writeEntry(AbbrowserConduitFactory::fArchive,
 		fConfigWidget->fArchive->isChecked());
-	fConfig->writeEntry(AbbrowserConduitFactory::streetType(),
-		fConfigWidget->fAddress->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::faxType(),
-		fConfigWidget->fFax->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::syncMode(),
-		fConfigWidget->fSyncMode->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::firstSync(),
+
+	// Conflicts page
+	fConfig->writeEntry(AbbrowserConduitFactory::fResolution,
+		fConfigWidget->fConflictStrategy->id(
+			fConfigWidget->fConflictStrategy->selected()));
+	fConfig->writeEntry(AbbrowserConduitFactory::fSmartMerge,
+		fConfigWidget->fSmartMerge->isChecked());
+	fConfig->writeEntry(AbbrowserConduitFactory::fFirstSync,
 		fConfigWidget->fFirstTimeSync->isChecked());
-	fConfig->writeEntry(AbbrowserConduitFactory::otherField(),
+
+	// Fields page
+	fConfig->writeEntry(AbbrowserConduitFactory::fOtherField,
 		fConfigWidget->fOtherPhone->currentItem());
-		
-	fConfig->writeEntry(AbbrowserConduitFactory::custom().arg(0),
+	fConfig->writeEntry(AbbrowserConduitFactory::fStreetType,
+		fConfigWidget->fAddress->currentItem());
+	fConfig->writeEntry(AbbrowserConduitFactory::fFaxType,
+		fConfigWidget->fFax->currentItem());
+
+	// Custom fields page
+	fConfig->writeEntry(AbbrowserConduitFactory::custom(0),
 		fConfigWidget->fCustom0->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::custom().arg(1),
+	fConfig->writeEntry(AbbrowserConduitFactory::custom(1),
 		fConfigWidget->fCustom1->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::custom().arg(2),
+	fConfig->writeEntry(AbbrowserConduitFactory::custom(2),
 		fConfigWidget->fCustom2->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::custom().arg(3),
+	fConfig->writeEntry(AbbrowserConduitFactory::custom(3),
 		fConfigWidget->fCustom3->currentItem());
 }
 
@@ -99,33 +107,38 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
 	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
 
-	fConfigWidget->fSmartMerge->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::smartMerge(),true));
-	fConfigWidget->fConflictStrategy->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::conflictResolution(),0));
+	// General page
+	fConfigWidget->fSyncMode->setButton(
+		fConfig->readNumEntry(AbbrowserConduitFactory::fSyncMode, 0));
 	fConfigWidget->fArchive->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::archiveDeletedRecs(),true));
-	fConfigWidget->fAddress->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::streetType(),0));
-	fConfigWidget->fFax->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::faxType(),0));
-	fConfigWidget->fSyncMode->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),0));
+		fConfig->readBoolEntry(AbbrowserConduitFactory::fArchive, true));
+
+	// Conflicts page
+	fConfigWidget->fConflictStrategy->setButton(
+		fConfig->readNumEntry(AbbrowserConduitFactory::fResolution, 0));
+	fConfigWidget->fSmartMerge->setChecked(
+		fConfig->readBoolEntry(AbbrowserConduitFactory::fSmartMerge, true));
 	fConfigWidget->fFirstTimeSync->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
+		fConfig->readBoolEntry(AbbrowserConduitFactory::fFirstSync, false));
+
+	// Fields page
 	fConfigWidget->fOtherPhone->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::otherField(),0));
-		
+		fConfig->readNumEntry(AbbrowserConduitFactory::fOtherField, 0));
+	fConfigWidget->fAddress->setCurrentItem(
+		fConfig->readNumEntry(AbbrowserConduitFactory::fStreetType, 0));
+	fConfigWidget->fFax->setCurrentItem(
+		fConfig->readNumEntry(AbbrowserConduitFactory::fFaxType, 0));
+
+	// Custom fields page
 	fConfigWidget->fCustom0->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(0)));
+		fConfig->readNumEntry(AbbrowserConduitFactory::custom(0)));
 	fConfigWidget->fCustom1->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(1)));
+		fConfig->readNumEntry(AbbrowserConduitFactory::custom(1)));
 	fConfigWidget->fCustom2->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(2)));
+		fConfig->readNumEntry(AbbrowserConduitFactory::custom(2)));
 	fConfigWidget->fCustom3->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(3)));
+		fConfig->readNumEntry(AbbrowserConduitFactory::custom(3)));
 }
 
