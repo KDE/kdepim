@@ -220,12 +220,16 @@ void AddresseeEditorWidget::setupTab1()
 
   label = new QLabel( i18n("URL:"), tab1 );
   mURLEdit = new KLineEdit( tab1, "mURLEdit" );
+  connect( mURLEdit, SIGNAL( textChanged(const QString & )), 
+           SLOT( textChanged(const QString & )));
   label->setBuddy( mURLEdit );
   layout->addWidget( label, 8, 4 );
   layout->addMultiCellWidget( mURLEdit, 8, 8, 5, 6 );
 
   label = new QLabel( i18n( "&IM address:"), tab1 );
   mIMAddressEdit = new KLineEdit(tab1, "mIMAddressEdit");
+  connect( mIMAddressEdit, SIGNAL( textChanged(const QString & )), 
+           SLOT( textChanged(const QString & )));
   label->setBuddy( mIMAddressEdit );
   layout->addWidget( label, 9, 4 );
   layout->addMultiCellWidget( mIMAddressEdit, 9, 9, 5, 6 );
@@ -387,7 +391,7 @@ void AddresseeEditorWidget::load()
 
   mRoleEdit->setText(mAddressee.role());
   mOrgEdit->setText(mAddressee.organization());
-  mURLEdit->setURL(mAddressee.url());
+  mURLEdit->setURL(mAddressee.url().url());
   mURLEdit->home(false);
   mNoteEdit->setText(mAddressee.note());
   mEmailWidget->setEmails(mAddressee.emails());
