@@ -689,7 +689,7 @@ This is only available for &imap; folders.</para>
 </term>
 <listitem>
 <para>Moves all of the messages in the selected folder into the trash folder.
-This is only available if the currently selected folder is no trash 
+This is only available if the currently selected folder is not a trash 
 folder.</para>
 </listitem>
 </varlistentry>
@@ -888,8 +888,8 @@ sent to.</para>
 <listitem>
 <para>Opens up the composer window, inserts the quoted text of the currently
 selected message and presets the <guilabel>To:</guilabel> field with 
-the mailing-list address. If you didn't specify a mailing-list address for
-the currently selected folder and &kmail; can't determine the posting address
+the mailing-list address. If you did not specify a mailing-list address for
+the currently selected folder and &kmail; cannot determine the posting address
 from the currently selected message then the <guilabel>To:</guilabel> field
 will be empty.
 Your identity will automatically be set to the one which this message was
@@ -1022,7 +1022,7 @@ following states:</para>
 <row>
 <entry><guimenuitem>Unread</guimenuitem></entry>
 <entry>Close envelope</entry>
-<entry>The message is not new to &kmail; but hasn't been read yet.</entry>
+<entry>The message is not new to &kmail; but has not been read yet.</entry>
 </row>
 <row>
 <entry><guimenuitem>Important</guimenuitem></entry>
@@ -1060,7 +1060,7 @@ to mark spam messages.</entry>
 <entry><guimenuitem>Ham</guimenuitem></entry>
 <entry>Green check mark</entry>
 <entry>This status will not be set automatically by &kmail;. You can use it
-to mark messages which are no spam.</entry>
+to mark messages which are not spam.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -1903,7 +1903,7 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 </menuchoice>
 </term>
 <listitem>
-<para>Enables &html; editting.</para>
+<para>Enables &html; editing.</para>
 </listitem>
 </varlistentry>
 
@@ -1942,7 +1942,7 @@ to paste long lines that should not wrap.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Toggles automatic spellchecking. Note that in &html; editting mode
+<para>Toggles automatic spellchecking. Note that in &html;-editing mode
 automatic spellchecking is not available.</para>
 </listitem>
 </varlistentry>
