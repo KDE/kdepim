@@ -39,10 +39,11 @@
 #include <ksimpleconfig.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
+#include <kglobalsettings.h>
 
 #include "kpilotConfig.h"
 
-static const char *kpilotconfig_id =
+static const char kpilotconfig_id[] =
 	"$Id$";
 
 // This is a number indicating what configuration version
@@ -184,29 +185,8 @@ static QFont *thefont = 0L;
 {
 	FUNCTIONSETUP;
 
-	if (thefont)
-	{
-		return *thefont;
-	}
-
-	KConfig KDEGlobalConfig(QString::null);
-
-	KDEGlobalConfig.setGroup("General");
-	QString s = KDEGlobalConfig.readEntry("fixed");
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Creating font " << s << endl;
-#endif
-
-	thefont = new QFont(KDEGlobalConfig.readFontEntry("fixed"));
-
 	if (!thefont)
-	{
-		kdError() << k_funcinfo
-			<< ": **\n"
-			<< ": ** No font was created! (Expect crash now)\n"
-			<< ": **" << endl;
-	}
+		thefont = new QFont(KGlobalSettings::fixedFont());
 
 	return *thefont;
 }
