@@ -18,16 +18,18 @@
 #define KNCONFIG_H
 
 #include <qasciidict.h>
+#include <qdatetime.h>
 
 #include <kdialogbase.h>
 #include <kcmodule.h>
 
 #include "knwidgets.h"
 
+class QButtonGroup;
+class QCheckBox;
+class QGroupBox;
 class QRadioButton;
 class QTextEdit;
-class QCheckBox;
-class QButtonGroup;
 
 class KScoringRule;
 class KScoringEditorWidget;
@@ -41,6 +43,9 @@ class KURLCompletion;
 namespace Kpgp {
   class Config;
   class SecretKeyRequester;
+}
+namespace KNConfig {
+  class GroupCleanupWidget;
 }
 
 class KNNntpAccount;
@@ -254,7 +259,7 @@ class NntpAccountConfDialog : public KDialogBase  {
     NntpAccountConfDialog(KNNntpAccount* acc, QWidget *p=0, const char *n=0);
     ~NntpAccountConfDialog();
 
-  protected:    
+  protected:
     KLineEdit   *n_ame,
                 *s_erver,
                 *u_ser,
@@ -279,6 +284,8 @@ class NntpAccountConfDialog : public KDialogBase  {
     void slotAuthChecked(bool b);
     void slotIntervalChecked(bool b);
 
+  private:
+    GroupCleanupWidget *mCleanupWidget;
 };
 
 
@@ -1100,23 +1107,33 @@ class PrivacyWidget : public BaseWidget {
 };
 
 
+
+// BEGIN: Cleanup configuration -----------------------------------------------
+
 class Cleanup : public Base {
 
   friend class CleanupWidget;
+  friend class GroupCleanupWidget;
 
   public:
-    Cleanup();
-    ~Cleanup();
+    Cleanup( bool global = true );
+    ~Cleanup() {};
 
+    void loadConfig( KConfigBase *conf );
+    void saveConfig( KConfigBase *conf );
     void save();
 
     //expire
-    int maxAgeForRead()const         { return r_eadMaxAge; }
-    int maxAgeForUnread()const       { return u_nreadMaxAge; }
-    bool removeUnavailable()const    { return r_emoveUnavailable; }
-    bool preserveThreads()const      { return p_reserveThr; }
+    int maxAgeForRead() const        { return r_eadMaxAge; }
+    int maxAgeForUnread() const      { return u_nreadMaxAge; }
+    bool removeUnavailable() const   { return r_emoveUnavailable; }
+    bool preserveThreads() const     { return p_reserveThr; }
+    bool isGlobal() const            { return mGlobal; }
+    bool useDefault() const          { return mDefault; }
     bool expireToday();
     void setLastExpireDate();
+
+    void setUseDefault( bool def )   { mDefault = def; }
 
     //compact
     bool compactToday();
@@ -1133,9 +1150,44 @@ class Cleanup : public Base {
           u_nreadMaxAge,
           c_ompactInterval;
 
+  private:
+    /** global vs. per account or per group configuration */
+    bool mGlobal;
+    /** use default cleanup configuration */
+    bool mDefault;
+    /** last expiration and last comapction date */
+    QDateTime mLastExpDate, mLastCompDate;
+
 };
 
 
+/** Configuration widget for group expireration */
+class GroupCleanupWidget : public QWidget {
+
+  Q_OBJECT
+
+  public:
+    GroupCleanupWidget( Cleanup *data, QWidget *parent = 0, const char *name = 0 );
+
+    void load();
+    void save();
+
+  signals:
+    void changed();
+
+  private:
+    QCheckBox *mDefault, *mExpEnabled, *mExpUnavailable, *mPreserveThreads;
+    KIntSpinBox *mExpDays, *mExpReadDays, *mExpUnreadDays;
+    QGroupBox *mExpGroup;
+    Cleanup *mData;
+
+  private slots:
+    void slotDefaultToggled( bool state );
+
+};
+
+
+/** Global cleanup configuration widget */
 class CleanupWidget : public BaseWidget {
 
   Q_OBJECT
@@ -1148,27 +1200,22 @@ class CleanupWidget : public BaseWidget {
     void save();
 
   protected:
-    QCheckBox   *f_olderCB,
-                *g_roupCB,
-                *u_navailableCB,
-                *t_hrCB;
-    KIntSpinBox *f_olderDays,
-                *g_roupDays,
-                *r_eadDays,
-                *u_nreadDays;
-    QLabel      *f_olderDaysL,
-                *g_roupDaysL,
-                *r_eadDaysL,
-                *u_nreadDaysL;
+    QCheckBox   *f_olderCB;
+    KIntSpinBox *f_olderDays;
+    QLabel      *f_olderDaysL;
 
     Cleanup *d_ata;
 
 
   protected slots:
-    void slotGroupCBtoggled(bool b);
     void slotFolderCBtoggled(bool b);
 
+  private:
+    GroupCleanupWidget *mGroupCleanup;
+
 };
+
+// END: Cleanup configuration -------------------------------------------------
 
 
 /*class Cache : public Base {
@@ -1229,3 +1276,5 @@ class CacheWidget : public BaseWidget  {
 } //KNConfig
 
 #endif //KNCONFIG_H
+
+// kate: space-indent on; indent-width 2;

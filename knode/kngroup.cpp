@@ -31,6 +31,7 @@
 #include "knscoring.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
+#include "knnntpaccount.h"
 
 
 #define SORT_DEPTH 5
@@ -40,12 +41,14 @@ KNGroup::KNGroup(KNCollection *p)
     l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
+  mCleanupConf = new KNConfig::Cleanup( false );
 }
 
 
 KNGroup::~KNGroup()
 {
   delete i_dentity;
+  delete mCleanupConf;
 }
 
 
@@ -108,6 +111,8 @@ bool KNGroup::readInfo(const QString &confPath)
     i_dentity=0;
   }
 
+  mCleanupConf->loadConfig( &info );
+
   return (!g_roupname.isEmpty());
 }
 
@@ -154,6 +159,8 @@ void KNGroup::saveInfo()
       info.deleteEntry("sigFile", false);
       info.deleteEntry("sigText", false);
     }
+
+    mCleanupConf->saveConfig( &info );
   }
 }
 
@@ -759,7 +766,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
   int iterationCount;
   for (int idx=start; idx<end; idx++){
     art=at(idx);
-    startId=art->id();    
+    startId=art->id();
     isLoop=false;
     iterationCount=0;
     while(art->idRef()!=0 && !isLoop && (iterationCount < end)) {
@@ -768,14 +775,14 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
       iterationCount++;
     }
 
-    if(isLoop) {      
+    if(isLoop) {
       // this method is called from the nntp-thread!!!
       #ifndef NDEBUG
       qDebug("knode: Sorting : loop in %d",startId);
       #endif
       art=at(idx);
       art->setIdRef(0);
-      art->setThreadingLevel(0);      
+      art->setThreadingLevel(0);
     }
   }
 
@@ -1039,3 +1046,13 @@ void KNGroup::dynDataVer1::getData(KNRemoteArticle *a)
   a->setWatched(ignoredWatched==1);
   a->setIgnored(ignoredWatched==2);
 }
+
+
+KNConfig::Cleanup * KNGroup::activeCleanupConfig()
+{
+  if (!cleanupConfig()->useDefault())
+    return cleanupConfig();
+  return account()->activeCleanupConfig();
+}
+
+// kate: space-indent on; indent-width 2;

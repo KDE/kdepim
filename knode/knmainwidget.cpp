@@ -961,22 +961,15 @@ void KNMainWidget::prepareShutdown()
   //cleanup article-views
   KNArticleWidget::cleanup();
 
-  //expire & compact
+  // expire groups (if necessary)
+  KNCleanUp *cup = new KNCleanUp();
+  g_rpManager->expireAll(cup);
+  cup->start();
+
+  // compact folders
   KNConfig::Cleanup *conf=c_fgManager->cleanup();
-  KNCleanUp *cup=0;
-
-  if(conf->expireToday()) {
-    cup=new KNCleanUp(conf);
-    g_rpManager->expireAll(cup);
-    cup->start();
-    conf->setLastExpireDate();
-  }
-
-  if(conf->compactToday()) {
-    if(!cup)
-      cup=new KNCleanUp(conf);
-    else
-      cup->reset();
+  if (conf->compactToday()) {
+    cup->reset();
     f_olManager->compactAll(cup);
     cup->start();
     conf->setLastCompactDate();
@@ -2324,7 +2317,7 @@ FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
   label->setBuddy(edit);
   edit->setFocus();
   enableButtonOK( false );
-  setButtonOKText(i18n("&Fetch"));
+  setButtonOK( i18n("&Fetch") );
   connect( edit, SIGNAL(textChanged( const QString & )), this, SLOT(slotTextChanged(const QString & )));
   KNHelper::restoreWindowSize("fetchArticleWithID", this, QSize(325,66));
 }
@@ -2489,3 +2482,5 @@ bool KNMainWidget::handleCommandLine()
 ////////////////////////////////////////////////////////////////////////
 
 #include "knmainwidget.moc"
+
+// kate: space-indent on; indent-width 2;

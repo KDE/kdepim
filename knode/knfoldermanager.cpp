@@ -2,7 +2,7 @@
     knfoldermanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -172,7 +172,7 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   }
 
   emit folderRemoved(f);
-  
+
   del.append(f);
   for(fol=del.first(); fol; fol=del.next()) {
     if(c_urrentFolder==fol)
@@ -215,11 +215,11 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
     return false;
 
   emit folderRemoved(f);
-  
+
   // reparent
   f->setParent(p);
   f->saveInfo();
-  
+
   emit folderAdded(f);
 
   if(c_urrentFolder==f)
@@ -250,7 +250,7 @@ void KNFolderManager::compactFolder(KNFolder *f)
   if(!f || f->isRootFolder())
     return;
 
-  KNCleanUp cup(knGlobals.configManager()->cleanup());
+  KNCleanUp cup;
   cup.compactFolder(f);
 }
 
@@ -266,7 +266,7 @@ void KNFolderManager::compactAll(KNCleanUp *cup)
 
 void KNFolderManager::compactAll()
 {
-  KNCleanUp *cup = new KNCleanUp(knGlobals.configManager()->cleanup());
+  KNCleanUp *cup = new KNCleanUp();
 
   for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
     if (!f->isRootFolder() && f->lockedArticles()==0)
@@ -490,3 +490,5 @@ int KNFolderManager::loadCustomFolders()
 
 
 #include "knfoldermanager.moc"
+
+// kate: space-indent on; indent-width 2;

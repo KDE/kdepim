@@ -2,7 +2,7 @@
     kngroupmanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -362,6 +362,8 @@ void KNGroupManager::expireAll(KNCleanUp *cup)
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     if((var->isLocked()) || (var->lockedArticles()>0))
       continue;
+    if (!var->activeCleanupConfig()->expireToday())
+      continue;
 
     cup->appendCollection(var);
   }
@@ -370,7 +372,7 @@ void KNGroupManager::expireAll(KNCleanUp *cup)
 
 void KNGroupManager::expireAll(KNNntpAccount *a)
 {
-  KNCleanUp *cup=new KNCleanUp(knGlobals.configManager()->cleanup());
+  KNCleanUp *cup = new KNCleanUp();
 
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
@@ -530,7 +532,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
 
   KNArticleWindow::closeAllWindowsForCollection(g);
 
-  KNCleanUp cup(knGlobals.configManager()->cleanup());
+  KNCleanUp cup;
   cup.expireGroup(g, true);
 
   emit groupUpdated(g);
@@ -706,3 +708,4 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
 
 #include "kngroupmanager.moc"
 
+// kate: space-indent on; indent-width 2;

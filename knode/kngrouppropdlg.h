@@ -2,7 +2,7 @@
     kngrouppropdlg.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,8 @@ class KLineEdit;
 class KNGroup;
 
 namespace KNConfig {
-class IdentityWidget;
+  class IdentityWidget;
+  class GroupCleanupWidget;
 }
 
 
@@ -43,6 +44,7 @@ class KNGroupPropDlg : public KDialogBase  {
     KNGroup *g_rp;
     bool n_ickChanged;
     KNConfig::IdentityWidget* i_dWidget;
+    KNConfig::GroupCleanupWidget *mCleanupWidget;
     KLineEdit *n_ick;
     QCheckBox *u_seCharset;
     QComboBox *c_harset;
@@ -53,3 +55,5 @@ class KNGroupPropDlg : public KDialogBase  {
 };
 
 #endif
+
+// kate: space-indent on; indent-width 2;

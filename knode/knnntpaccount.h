@@ -2,7 +2,7 @@
     knnntpaccount.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,8 @@
 class KNNntpAccount;
 
 namespace KNConfig {
-class Identity;
+  class Identity;
+  class Cleanup;
 }
 
 
@@ -70,13 +71,17 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     void startTimer();
 
     //get
-    bool fetchDescriptions()const          { return f_etchDescriptions; }
-    QDate lastNewFetch()const              { return l_astNewFetch; }
-    bool wasOpen()const                    { return w_asOpen; }
-    bool useDiskCache()const               { return u_seDiskCache; }
+    bool fetchDescriptions() const         { return f_etchDescriptions; }
+    QDate lastNewFetch() const             { return l_astNewFetch; }
+    bool wasOpen() const                   { return w_asOpen; }
+    bool useDiskCache() const              { return u_seDiskCache; }
     KNConfig::Identity* identity() const   { return i_dentity; }
     bool intervalChecking() const          { return i_ntervalChecking; }
     int checkInterval() const              { return c_heckInterval; }
+    KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+
+    /** Returns the cleanup configuration that should be used for this account */
+    KNConfig::Cleanup *activeCleanupConfig() const;
 
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
@@ -88,6 +93,8 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
   protected:
     /** server specific identity */
     KNConfig::Identity *i_dentity;
+    /** account specific cleanup configuration */
+    KNConfig::Cleanup *mCleanupConf;
     /** use an additional "list newsgroups" command to fetch the newsgroup descriptions */
     bool f_etchDescriptions;
     /** last use of "newgroups" */
@@ -106,3 +113,5 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
 };
 
 #endif
+
+// kate: space-indent on; indent-width 2;

@@ -141,9 +141,17 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   grpL->setColStretch(2,1);
 
   pageL->addStretch(1);
-    
+
   // Specfic Identity tab =========================================
   i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
+
+  // per server cleanup configuration
+  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
+  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
+  mCleanupWidget = new KNConfig::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
+  mCleanupWidget->load();
+  cleanupLayout->addWidget( mCleanupWidget );
+  cleanupLayout->addStretch( 1 );
 
   KNHelper::restoreWindowSize("groupPropDLG", this, sizeHint());
 }
@@ -165,6 +173,7 @@ void KNGroupPropDlg::slotOk()
   }
 
   i_dWidget->save();
+  mCleanupWidget->save();
 
   g_rp->setUseCharset(u_seCharset->isChecked());
   g_rp->setDefaultCharset(c_harset->currentText().latin1());

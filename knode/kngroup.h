@@ -2,7 +2,7 @@
     kngroup.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,8 @@ class KNProtocolClient;
 class KNNntpAccount;
 
 namespace KNConfig {
-class Identity;
+  class Identity;
+  class Cleanup;
 }
 
 
@@ -126,6 +127,10 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void setStatus(Status s)                { s_tatus=s; }
     void showProperties();
 
+    // cleanup configuration
+    KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+    KNConfig::Cleanup *activeCleanupConfig();
+
 
   protected:
     void buildThreads(int cnt, KNProtocolClient *client=0);
@@ -152,6 +157,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     QStringList c_rosspostIDBuffer;
 
     KNConfig::Identity *i_dentity;
+    KNConfig::Cleanup *mCleanupConf;
 
     class dynDataVer0 {
 
@@ -184,3 +190,5 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 };
 
 #endif
+
+// kate: space-indent on; indent-width 2;

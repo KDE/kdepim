@@ -2,7 +2,7 @@
     knconfig.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -99,7 +99,8 @@ bool KNConfig::Identity::isEmpty()
 {
   return (  n_ame.isEmpty() &&  e_mail.isEmpty() &&
             r_eplyTo.isEmpty() && m_ailCopiesTo.isEmpty() &&
-            o_rga.isEmpty() && s_igPath.isEmpty() && s_igText.isEmpty() );
+            o_rga.isEmpty() && s_igPath.isEmpty() && s_igText.isEmpty() &&
+            s_igningKey.isEmpty() );
 }
 
 
@@ -1188,112 +1189,121 @@ void KNConfig::PostNewsComposer::save()
 
 
 
-//==============================================================================================================
+// BEGIN: Cleanup configuration ===============================================
 
 
-KNConfig::Cleanup::Cleanup()
+KNConfig::Cleanup::Cleanup( bool global ) :
+  // default values for new accounts / groups
+  d_oExpire( true ), r_emoveUnavailable( true ), p_reserveThr( true ),
+  e_xpireInterval( 5 ), r_eadMaxAge( 10 ), u_nreadMaxAge( 15 ),
+  mGlobal(global), mDefault(!global), mLastExpDate( QDate::currentDate() )
 {
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("EXPIRE");
-
-  d_oExpire=conf->readBoolEntry("doExpire", true);
-  r_emoveUnavailable=conf->readBoolEntry("removeUnavailable", true);
-  p_reserveThr=conf->readBoolEntry("saveThreads",true);
-  d_oCompact=conf->readBoolEntry("doCompact", true);
-  e_xpireInterval=conf->readNumEntry("expInterval", 5);
-  r_eadMaxAge=conf->readNumEntry("readDays",10);
-  u_nreadMaxAge=conf->readNumEntry("unreadDays",15);
-  c_ompactInterval=conf->readNumEntry("comInterval", 5);
+  if (mGlobal) {
+    KConfig *conf = knGlobals.config();
+    conf->setGroup( "EXPIRE" );
+    loadConfig( conf );
+  }
 }
 
 
-KNConfig::Cleanup::~Cleanup()
+void KNConfig::Cleanup::loadConfig(KConfigBase *conf)
 {
+  // group expire settings
+  d_oExpire = conf->readBoolEntry( "doExpire", true );
+  r_emoveUnavailable = conf->readBoolEntry( "removeUnavailable", true );
+  p_reserveThr = conf->readBoolEntry( "saveThreads", true );
+  e_xpireInterval = conf->readNumEntry( "expInterval", 5 );
+  r_eadMaxAge = conf->readNumEntry( "readDays", 10 );
+  u_nreadMaxAge = conf->readNumEntry( "unreadDays", 15 );
+  mLastExpDate = conf->readDateTimeEntry( "lastExpire" ).date();
+
+  // folder compaction settings (only available globally)
+  if (mGlobal) {
+    d_oCompact = conf->readBoolEntry( "doCompact", true );
+    c_ompactInterval = conf->readNumEntry( "comInterval", 5 );
+    mLastCompDate = conf->readDateTimeEntry( "lastCompact" ).date();
+  }
+
+  if (!mGlobal)
+    mDefault = conf->readBoolEntry( "UseDefaultExpConf", true );
+}
+
+
+void KNConfig::Cleanup::saveConfig(KConfigBase *conf)
+{
+  // group expire settings
+  conf->writeEntry( "doExpire", d_oExpire );
+  conf->writeEntry( "removeUnavailable", r_emoveUnavailable );
+  conf->writeEntry( "saveThreads", p_reserveThr );
+  conf->writeEntry( "expInterval", e_xpireInterval );
+  conf->writeEntry( "readDays", r_eadMaxAge );
+  conf->writeEntry( "unreadDays", u_nreadMaxAge );
+  conf->writeEntry( "lastExpire", mLastExpDate );
+
+  // folder compaction settings (only available globally)
+  if (mGlobal) {
+    conf->writeEntry( "doCompact", d_oCompact );
+    conf->writeEntry( "comInterval", c_ompactInterval );
+    conf->writeEntry( "lastCompact", mLastCompDate );
+  }
+
+  if (!mGlobal)
+    conf->writeEntry( "UseDefaultExpConf", mDefault );
+
+  conf->sync();
 }
 
 
 void KNConfig::Cleanup::save()
 {
-  if(!d_irty)
-    return;
-
   kdDebug(5003) << "KNConfig::Cleanup::save()" << endl;
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("EXPIRE");
-
-  conf->writeEntry("doExpire", d_oExpire);
-  conf->writeEntry("removeUnavailable", r_emoveUnavailable);
-  conf->writeEntry("saveThreads", p_reserveThr);
-  conf->writeEntry("doCompact", d_oCompact);
-  conf->writeEntry("expInterval", e_xpireInterval);
-  conf->writeEntry("readDays", r_eadMaxAge);
-  conf->writeEntry("unreadDays", u_nreadMaxAge);
-  conf->writeEntry("comInterval", c_ompactInterval);
-  conf->sync();
-
-  d_irty = false;
+  if (mGlobal) {
+    KConfig *conf = knGlobals.config();
+    conf->setGroup( "EXPIRE" );
+    saveConfig( conf );
+  }
 }
 
 
 bool KNConfig::Cleanup::expireToday()
 {
-  if(!d_oExpire)
+  if (!d_oExpire)
     return false;
 
-  KConfig *c=knGlobals.config();
-  c->setGroup("EXPIRE");
-
-  QDate today=QDate::currentDate();
-  QDate lastExpDate=c->readDateTimeEntry("lastExpire").date();
-
-  if(lastExpDate==today) {
-    c->writeEntry("lastExpire", QDateTime::currentDateTime());  // important! otherwise lastExpDate will be at its default value (current date) forever
+  QDate today = QDate::currentDate();
+  if (mLastExpDate == today)
     return false;
-  }
 
-  return (lastExpDate.daysTo(today) >= e_xpireInterval);
+  return (mLastExpDate.daysTo( today ) >= e_xpireInterval);
 }
 
 
 void KNConfig::Cleanup::setLastExpireDate()
 {
-  KConfig *c=knGlobals.config();
-  c->setGroup("EXPIRE");
-  c->writeEntry("lastExpire", QDateTime::currentDateTime());
+  mLastExpDate = QDateTime::currentDateTime();
 }
 
 
 bool KNConfig::Cleanup::compactToday()
 {
-  if(!d_oCompact)
+  if (!d_oCompact)
     return false;
 
-  KConfig *c=knGlobals.config();
-  c->setGroup("EXPIRE");
-
-  QDate today=QDate::currentDate();
-  QDate lastComDate=c->readDateTimeEntry("lastCompact").date();
-
-  if(lastComDate==today) {
-    c->writeEntry("lastCompact", QDateTime::currentDateTime());  // important! otherwise lastComDate will be at its default value (current date) forever
+  QDate today = QDate::currentDate();
+  if (mLastCompDate == today)
     return false;
-  }
 
-  return (lastComDate.daysTo(today) >= c_ompactInterval);
+  return (mLastCompDate.daysTo( today ) >= c_ompactInterval);
 }
 
 
 void KNConfig::Cleanup::setLastCompactDate()
 {
-  KConfig *c=knGlobals.config();
-  c->setGroup("EXPIRE");
-  c->writeEntry("lastCompact", QDateTime::currentDateTime());
+  mLastCompDate = QDateTime::currentDateTime();
 }
 
 
-
-//==============================================================================================================
+// END: Cleanup configuration =================================================
 
 
 
@@ -1334,3 +1344,5 @@ void KNConfig::Cache::save()
   d_irty = false;
 }
 */
+
+// kate: space-indent on; indent-width 2;

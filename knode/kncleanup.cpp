@@ -2,7 +2,7 @@
     kncleanup.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -17,6 +17,7 @@
 #include <stdlib.h>
 
 #include <qdir.h>
+#include <qlabel.h>
 #include <qlayout.h>
 #include <qprogressbar.h>
 
@@ -33,10 +34,10 @@
 #include "knfoldermanager.h"
 #include "kngroupmanager.h"
 #include "knarticlemanager.h"
-#include <qlabel.h>
+#include "knnntpaccount.h"
 
 
-KNCleanUp::KNCleanUp(KNConfig::Cleanup *cfg) :  d_lg(0) , c_onfig(cfg)
+KNCleanUp::KNCleanUp() :  d_lg(0)
 {
   c_olList.setAutoDelete(false);
 }
@@ -50,6 +51,9 @@ KNCleanUp::~KNCleanUp()
 
 void KNCleanUp::start()
 {
+  if (c_olList.isEmpty())
+    return;
+
   d_lg=new ProgressDialog(c_olList.count());
   d_lg->show();
 
@@ -83,7 +87,7 @@ void KNCleanUp::reset()
 }
 
 
-void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
+void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
 {
   int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr(), firstNew=-1;
   bool unavailable=false;
@@ -91,6 +95,8 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 
   if (!g)
     return;
+
+  KNConfig::Cleanup *conf = g->activeCleanupConfig();
 
   g->setNotUnloadable(true);
 
@@ -103,26 +109,26 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
   for(int i=0; i<g->length(); i++) {
     art=g->at(i);
     if(art->isRead())
-      expDays=c_onfig->maxAgeForRead();
+      expDays = conf->maxAgeForRead();
     else
-      expDays=c_onfig->maxAgeForUnread();
+      expDays = conf->maxAgeForUnread();
 
     unavailable = false;
-    if ((art->articleNumber() != -1) && c_onfig->removeUnavailable())
+    if ((art->articleNumber() != -1) && conf->removeUnavailable())
       unavailable = (art->articleNumber() < firstArtNr);
 
     art->setExpired( (art->date()->ageInDays() >= expDays) || unavailable );
   }
 
   //save threads
-  if(c_onfig->preserveThreads()) {
+  if (conf->preserveThreads()) {
     for(int i=0; i<g->length(); i++) {
       art=g->at(i);
       if(!art->isExpired()) {
         idRef=art->idRef();
         while(idRef!=0) {
           ref=g->byId(idRef);
-          ref->setExpired(false);          
+          ref->setExpired(false);
           idRef=ref->idRef();
         }
       }
@@ -137,7 +143,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
       foundId=0;
       while(foundId==0 && idRef!=0) {
         ref=g->byId(idRef);
-        if(!ref->isExpired()) foundId=ref->id();        
+        if(!ref->isExpired()) foundId=ref->id();
         idRef=ref->idRef();
       }
       art->setIdRef(foundId);
@@ -175,6 +181,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
   else
     g->syncDynamicData();
 
+  conf->setLastExpireDate();
   g->saveInfo();
   leftCnt=g->count();
 
@@ -312,3 +319,4 @@ void KNCleanUp::ProgressDialog::closeEvent(QCloseEvent *)
   // do nothing => prevent that the user closes the window
 }
 
+// kate: space-indent on; indent-width 2;

@@ -2,7 +2,7 @@
     knnntpaccount.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,7 @@ KNNntpAccount::KNNntpAccount()
 {
   l_astNewFetch = QDate::currentDate();
   a_ccountIntervalChecking = new KNNntpAccountIntervalChecking(this);
+  mCleanupConf = new KNConfig::Cleanup( false );
 }
 
 
@@ -84,6 +85,7 @@ KNNntpAccount::~KNNntpAccount()
 {
   delete a_ccountIntervalChecking;
   delete i_dentity;
+  delete mCleanupConf;
 }
 
 
@@ -112,6 +114,8 @@ bool KNNntpAccount::readInfo(const QString &confPath)
     delete i_dentity;
     i_dentity=0;
   }
+
+  mCleanupConf->loadConfig( &conf );
 
   if (n_ame.isEmpty() || s_erver.isEmpty() || i_d == -1)
     return false;
@@ -153,6 +157,8 @@ void KNNntpAccount::saveInfo()
     conf.deleteEntry("sigFile", false);
     conf.deleteEntry("sigText", false);
   }
+
+  mCleanupConf->saveConfig( &conf );
 }
 
 
@@ -213,4 +219,13 @@ void KNNntpAccount::setCheckInterval(int c)
   startTimer();
 }
 
+KNConfig::Cleanup *KNNntpAccount::activeCleanupConfig() const
+{
+  if (cleanupConfig()->useDefault())
+    return knGlobals.configManager()->cleanup();
+  return cleanupConfig();
+}
+
 #include "knnntpaccount.moc"
+
+// kate: space-indent on; indent-width 2;

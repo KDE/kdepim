@@ -2,7 +2,7 @@
     kncleanup.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -34,14 +34,14 @@ class Cleanup;
 class KNCleanUp {
 
   public:
-    KNCleanUp(KNConfig::Cleanup *cfg);
+    KNCleanUp();
     ~KNCleanUp();
 
     void appendCollection(KNArticleCollection *c)   { c_olList.append(c); }
     void start();
     void reset();
 
-    void expireGroup(KNGroup *g, bool showResult=false);
+    void expireGroup( KNGroup *g, bool showResult = false );
     void compactFolder(KNFolder *f);
 
   protected:
@@ -66,11 +66,9 @@ class KNCleanUp {
 
     ProgressDialog *d_lg;
     QPtrList<KNArticleCollection> c_olList;
-    KNConfig::Cleanup *c_onfig;
 
 };
 
-
-
-
 #endif
+
+// kate: space-indent on; indent-width 2;

@@ -278,6 +278,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
 //==========================================================================================
 
+// BEGIN: NNTP account configuration widgets ----------------------------------
 
 KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
   : BaseWidget(p, n), a_ccManager(knGlobals.accountManager())
@@ -546,6 +547,15 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   // Specfic Identity tab =========================================
   i_dWidget=new KNConfig::IdentityWidget(a->identity(), addVBoxPage(i18n("&Identity")));
 
+  // per server cleanup configuration
+  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
+  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
+  mCleanupWidget = new GroupCleanupWidget( a->cleanupConfig(), cleanupPage );
+  mCleanupWidget->load();
+  cleanupLayout->addWidget( mCleanupWidget );
+  cleanupLayout->addStretch( 1 );
+
+
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
@@ -582,6 +592,7 @@ void KNConfig::NntpAccountConfDialog::slotOk()
     a_ccount->saveInfo();
 
   i_dWidget->save();
+  mCleanupWidget->save();
 
   accept();
 }
@@ -602,6 +613,8 @@ void KNConfig::NntpAccountConfDialog::slotIntervalChecked(bool b)
   c_heckInterval->setEnabled(b);
   c_heckIntervalLabel->setEnabled(b);
 }
+
+// END: NNTP account configuration widgets ------------------------------------
 
 //=============================================================================================
 
@@ -2417,53 +2430,108 @@ void KNConfig::PrivacyWidget::save()
 //==============================================================================================================
 
 
+// BEGIN: Cleanup configuration widgets ---------------------------------------
+
+
+KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mData( data )
+{
+  QVBoxLayout *top = new QVBoxLayout( this );
+
+  if (!mData->isGlobal()) {
+    mDefault = new QCheckBox( i18n("&Use global cleanup configuration"), this );
+    connect( mDefault, SIGNAL(toggled(bool)), SLOT(slotDefaultToggled(bool)) );
+    top->addWidget( mDefault );
+  }
+
+  mExpGroup = new QGroupBox( i18n("Newsgroup cleanup settings"), this );
+  top->addWidget( mExpGroup );
+  QGridLayout *grid = new QGridLayout( mExpGroup, 7, 2, KDialog::marginHint(), KDialog::spacingHint() );
+
+  grid->setRowSpacing( 0, KDialog::spacingHint() );
+
+  mExpEnabled = new QCheckBox( i18n("&Expire old articles automatically"), mExpGroup );
+  grid->addMultiCellWidget( mExpEnabled, 1, 1, 0, 1 );
+  connect( mExpEnabled, SIGNAL(toggled(bool)), SIGNAL(changed()) );
+
+  mExpDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
+  mExpDays->setSuffix( i18n(" days") );
+  QLabel *label = new QLabel( mExpDays, i18n("&Purge groups every:"), mExpGroup );
+  grid->addWidget( label, 2, 0 );
+  grid->addWidget( mExpDays, 2, 1, Qt::AlignRight );
+  connect( mExpDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
+  connect( mExpEnabled, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)) );
+  connect( mExpEnabled, SIGNAL(toggled(bool)), mExpDays, SLOT(setEnabled(bool)) );
+
+  mExpReadDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
+  mExpReadDays->setSuffix( i18n(" days") );
+  label = new QLabel( mExpReadDays, i18n("&Keep read articles:"), mExpGroup );
+  grid->addWidget( label, 3, 0 );
+  grid->addWidget( mExpReadDays, 3, 1, Qt::AlignRight );
+  connect( mExpReadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
+
+  mExpUnreadDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
+  mExpUnreadDays->setSuffix( i18n(" days") );
+  label = new QLabel( mExpUnreadDays, i18n("Keep u&nread articles:"), mExpGroup );
+  grid->addWidget( label, 4, 0 );
+  grid->addWidget( mExpUnreadDays, 4, 1, Qt::AlignRight );
+  connect( mExpUnreadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
+
+  mExpUnavailable = new QCheckBox( i18n("&Remove articles that are not available on the server"), mExpGroup );
+  grid->addMultiCellWidget( mExpUnavailable, 5, 5, 0, 1 );
+  connect( mExpUnavailable, SIGNAL(toggled(bool)), SIGNAL(changed()) );
+
+  mPreserveThreads = new QCheckBox( i18n("Preser&ve threads"), mExpGroup );
+  grid->addMultiCellWidget( mPreserveThreads, 6, 6, 0, 1 );
+  connect( mPreserveThreads, SIGNAL(toggled(bool)), SIGNAL(changed()) );
+
+  grid->setColStretch(1,1);
+}
+
+
+void KNConfig::GroupCleanupWidget::load()
+{
+  if (!mData->isGlobal()) {
+    mDefault->setChecked( mData->useDefault() );
+    slotDefaultToggled( mData->useDefault() );
+  }
+  mExpEnabled->setChecked( !mData->d_oExpire ); // make sure the toggled(bool) signal is emitted at least once
+  mExpEnabled->setChecked( mData->d_oExpire );
+  mExpDays->setValue( mData->e_xpireInterval );
+  mExpReadDays->setValue( mData->maxAgeForRead() );
+  mExpUnreadDays->setValue( mData->maxAgeForUnread() );
+  mExpUnavailable->setChecked( mData->removeUnavailable() );
+  mPreserveThreads->setChecked( mData->preserveThreads() );
+}
+
+
+void KNConfig::GroupCleanupWidget::save()
+{
+  if (!mData->isGlobal())
+    mData->setUseDefault( mDefault->isChecked() );
+  mData->d_oExpire = mExpEnabled->isChecked();
+  mData->e_xpireInterval = mExpDays->value();
+  mData->r_eadMaxAge = mExpReadDays->value();
+  mData->u_nreadMaxAge = mExpUnreadDays->value();
+  mData->r_emoveUnavailable = mExpUnavailable->isChecked();
+  mData->p_reserveThr = mPreserveThreads->isChecked();
+}
+
+
+void KNConfig::GroupCleanupWidget::slotDefaultToggled( bool state )
+{
+    mExpGroup->setEnabled( !state );
+}
+
+
 KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n)
   : BaseWidget(p, n), d_ata(knGlobals.configManager()->cleanup())
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
-  // === groups ===========================================================
-
-  QGroupBox *groupsB=new QGroupBox(i18n("Newsgroups"), this);
-  topL->addWidget(groupsB);
-  QGridLayout *groupsL=new QGridLayout(groupsB, 7,2, 8,5);
-
-  groupsL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-
-  g_roupCB=new QCheckBox(i18n("&Expire old articles automatically"), groupsB);
-  connect(g_roupCB, SIGNAL(toggled(bool)), this, SLOT(slotGroupCBtoggled(bool)));
-  groupsL->addMultiCellWidget(g_roupCB,1,1,0,1);
-
-  g_roupDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
-  g_roupDays->setSuffix(i18n(" days"));
-  g_roupDaysL=new QLabel(g_roupDays,i18n("&Purge groups every:"), groupsB);
-  groupsL->addWidget(g_roupDaysL,2,0);
-  groupsL->addWidget(g_roupDays,2,1,Qt::AlignRight);
-  connect(g_roupDays, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-
-  r_eadDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
-  r_eadDays->setSuffix(i18n(" days"));
-  r_eadDaysL=new QLabel(r_eadDays, i18n("&Keep read articles:"), groupsB);
-  groupsL->addWidget(r_eadDaysL,3,0);
-  groupsL->addWidget(r_eadDays,3,1,Qt::AlignRight);
-  connect(r_eadDays, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-
-  u_nreadDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
-  u_nreadDays->setSuffix(i18n(" days"));
-  u_nreadDaysL=new QLabel(u_nreadDays, i18n("Keep u&nread articles:"), groupsB);
-  groupsL->addWidget(u_nreadDaysL,4,0);
-  groupsL->addWidget(u_nreadDays,4,1,Qt::AlignRight);
-  connect(u_nreadDays, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-
-  u_navailableCB=new QCheckBox(i18n("&Remove articles that are not available on the server"), groupsB);
-  groupsL->addMultiCellWidget(u_navailableCB, 5,5, 0,1);
-  connect(u_navailableCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-
-  t_hrCB=new QCheckBox(i18n("Preser&ve threads"), groupsB);
-  groupsL->addMultiCellWidget(t_hrCB, 6,6, 0,1);
-  connect(t_hrCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-
-  groupsL->setColStretch(1,1);
+  mGroupCleanup = new GroupCleanupWidget( d_ata, this );
+  topL->addWidget( mGroupCleanup );
+  connect( mGroupCleanup, SIGNAL(changed()), SLOT(slotEmitChanged()) );
 
   // === folders =========================================================
 
@@ -2471,7 +2539,7 @@ KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n)
   topL->addWidget(foldersB);
   QGridLayout *foldersL=new QGridLayout(foldersB, 3,2, 8,5);
 
-  foldersL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  foldersL->setRowSpacing( 0, KDialog::spacingHint() );
 
   f_olderCB=new QCheckBox(i18n("Co&mpact folders automatically"), foldersB);
   connect(f_olderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));
@@ -2501,14 +2569,8 @@ void KNConfig::CleanupWidget::load()
 {
   f_olderCB->setChecked(d_ata->d_oCompact);
   slotFolderCBtoggled(d_ata->d_oCompact);
-  g_roupCB->setChecked(d_ata->d_oExpire);
-  slotGroupCBtoggled(d_ata->d_oExpire);
-  u_navailableCB->setChecked(d_ata->r_emoveUnavailable);
-  t_hrCB->setChecked(d_ata->p_reserveThr);
   f_olderDays->setValue(d_ata->c_ompactInterval);
-  g_roupDays->setValue(d_ata->e_xpireInterval);
-  r_eadDays->setValue(d_ata->r_eadMaxAge);
-  u_nreadDays->setValue(d_ata->u_nreadMaxAge);
+  mGroupCleanup->load();
 }
 
 
@@ -2517,24 +2579,12 @@ void KNConfig::CleanupWidget::save()
   if(!d_irty)
     return;
 
-  d_ata->d_oExpire=g_roupCB->isChecked();
-  d_ata->e_xpireInterval=g_roupDays->value();
-  d_ata->u_nreadMaxAge=u_nreadDays->value();
-  d_ata->r_eadMaxAge=r_eadDays->value();
-  d_ata->r_emoveUnavailable=u_navailableCB->isChecked();
-  d_ata->p_reserveThr=t_hrCB->isChecked();
   d_ata->d_oCompact=f_olderCB->isChecked();
   d_ata->c_ompactInterval=f_olderDays->value();
 
+  mGroupCleanup->save();
+
   d_ata->setDirty(true);
-}
-
-
-void KNConfig::CleanupWidget::slotGroupCBtoggled(bool b)
-{
-  g_roupDaysL->setEnabled(b);
-  g_roupDays->setEnabled(b);
-  emit changed(true);
 }
 
 
@@ -2545,6 +2595,8 @@ void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
   emit changed(true);
 }
 
+
+// END: Cleanup configuration widgets -----------------------------------------
 
 //==============================================================================================================
 
@@ -2623,3 +2675,5 @@ void KNConfig::CacheWidget::apply()
 
 //------------------------
 #include "knconfig.moc"
+
+// kate: space-indent on; indent-width 2;
