@@ -1,4 +1,12 @@
-kdepim (2.0.1-1) unstable; urgency=low
+kdepim (4:2.0.1-2) unstable; urgency=low
+ 
+  * Removing task package
+  * Adding kpilot out of 2.1 cvs (Closes: #68255)
+  * more cleanup in alot of areas
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 12 Nov 2000 21:57:00 -0700
+
+kdepim (4:2.0.1-1) unstable; urgency=low
  
   * New upstream version
  
