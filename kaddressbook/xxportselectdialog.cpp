@@ -160,6 +160,9 @@ void XXPortSelectDialog::filterChanged( int )
 
 void XXPortSelectDialog::categoryClicked( QListViewItem *i )
 {
+  if ( !i )
+    return;
+
   QCheckListItem *qcli = static_cast<QCheckListItem*>( i );
   if ( qcli->isOn() )
     mUseCategories->setChecked( true );
