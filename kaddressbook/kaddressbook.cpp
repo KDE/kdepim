@@ -326,7 +326,8 @@ void KAddressBook::importCSV()
 
 void KAddressBook::importVCardSimple()
 {
-importVCard(QString::null,false);
+kdDebug() << "KAddressBook::importVCardSimple" << endl;
+importVCard(QString::null,true);
 }
 
 
@@ -335,14 +336,16 @@ void KAddressBook::importVCard(const QString &file = QString::null, bool showDia
 
  QString fileName; 
 
-  if (file)
+  if (file )
     fileName = file;
-  else
-    QString fileName = KFileDialog::getOpenFileName(QString::null,
+  else 
+    fileName = KFileDialog::getOpenFileName(QString::null,
                                                   "*.vcf|vCards", 0,
                                                   i18n("Select vCard to Import"));
-
-  if (!fileName.isEmpty()) {
+    
+    
+  if (fileName.isEmpty()) {
+    
     KABC::VCardConverter converter;
     KABC::Addressee a;
     QFile file(fileName);
