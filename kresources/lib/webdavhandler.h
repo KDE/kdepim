@@ -62,6 +62,17 @@ class KDE_EXPORT WebdavHandler
      * Returns the value of the "etag" header if it can be found in the headers.
      */
     static const QString getEtagFromHeaders( const QString& );
+
+
+    /**
+     * Return the representation of utc time in the time zone indicated by timeZoneId
+     */
+    static QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId );
+
+    /**
+     * Return the UTC representation of local time in the time zone indicated by timeZoneId 
+     */
+    static QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId );
 };
 
 #endif

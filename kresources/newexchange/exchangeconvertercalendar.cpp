@@ -58,6 +58,7 @@ ExchangeConverterCalendar::ExchangeConverterCalendar()
 
 void ExchangeConverterCalendar::setTimeZone( const QString &id )
 {
+ // kdDebug() << "Setting timezone to:  " << id << endl;
   mFormat.setTimeZone( id, true );
 }
 
@@ -336,9 +337,9 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
     return false;
   }
   if ( WebdavHandler::extractDateTime( node, "created", tmpdt ) )
-    event->setCreated( tmpdt );
+    event->setCreated( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
   if ( WebdavHandler::extractDateTime( node, "lastmodified", tmpdt ) )
-    event->setLastModified( tmpdt );
+    event->setLastModified( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
   // FIXME: Retrieve time zone: "timezone"
   // FIXME: Use the "recurrenceid" prop for the recurrenceId of the event (which is protected!)
 
@@ -355,9 +356,9 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
     incidence->setOrganizer( tmpstr );*/
 
   if ( WebdavHandler::extractDateTime( node, "dtstart", tmpdt ) )
-    event->setDtStart( tmpdt );
+    event->setDtStart( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
   if ( WebdavHandler::extractDateTime( node, "dtend", tmpdt ) ) {
-    event->setDtEnd( tmpdt );
+    event->setDtEnd( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
   } else if ( WebdavHandler::extractLong( node, "duration", tmplng ) ) {
     event->setDuration( tmplng );
   }
@@ -468,16 +469,16 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
     incidence->setLastModified( tmpdt );*/
 
   if ( WebdavHandler::extractDateTime( node, TaskProp_DtStart, tmpdt ) )
-    todo->setDtStart( tmpdt );
+    todo->setDtStart( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
   if ( WebdavHandler::extractDateTime( node, TaskProp_DtDue, tmpdt ) )
-    todo->setDtDue( tmpdt );
+    todo->setDtDue( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
   if ( WebdavHandler::extractLong( node, TaskProp_Duration, tmplong ) )
     todo->setDuration( tmplong );
 
   if ( WebdavHandler::extractBool( node, TaskProp_IsCompleted, tmpbool ) && tmpbool ) {
     todo->setCompleted( tmpbool );
     if ( tmpbool && WebdavHandler::extractDateTime( node, TaskProp_CompletionDate, tmpdt ) ) {
-      todo->setCompleted( tmpdt );
+      todo->setCompleted( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
     }
   }
   if ( WebdavHandler::extractFloat( node, TaskProp_PercentCompleted, tmpfloat ) )
@@ -571,10 +572,11 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
 {
   public:
     createWebDAVVisitor() : Visitor() {}
-    bool act( QDomDocument doc, QDomElement el, IncidenceBase *incidence )
+    bool act( QDomDocument doc, QDomElement el, IncidenceBase *incidence, const QString &timeZoneId )
     {
       mDoc = doc;
       mElement = el;
+      mTimeZoneId = timeZoneId;
       return incidence->accept( *this );
     }
   protected:
@@ -647,9 +649,9 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
       domProperty( "http://schemas.microsoft.com/exchange/",
                    "outlookmessageclass", "IPM.Appointment" );
       domCalendarProperty( "uid", event->uid() );
-      QDomElement el = domCalendarProperty( "created", timePropString( event->created() ) );
+      QDomElement el = domCalendarProperty( "created", timePropString( WebdavHandler::zoneAsUtc( event->created(), mTimeZoneId ) ) );
       addDateProp( el );
-      el = domCalendarProperty( "lastmodified", timePropString( event->lastModified() ) );
+      el = domCalendarProperty( "lastmodified", timePropString( WebdavHandler::zoneAsUtc( event->lastModified(), mTimeZoneId ) ) );
       addDateProp( el );
       // FIXME: domCalendarProperty( "dtstamp", ??);
 //       FIXME: domCalendarProperty( "sequence", event->sequence() );
@@ -665,10 +667,10 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
 //       FIXME: What do do with the "transparent" property?
 //       FIXME: Use the "timezone" property...
       domCalendarProperty( "alldayevent", event->doesFloat()?"1":"0" );
-      el = domCalendarProperty( "dtstart", timePropString( event->dtStart() ) );
+      el = domCalendarProperty( "dtstart", timePropString( WebdavHandler::zoneAsUtc( event->dtStart(), mTimeZoneId ) ) );
       addDateProp( el );
       if ( event->hasEndDate() ) {
-        el = domCalendarProperty( "dtend", timePropString( event->dtEnd() ) );
+        el = domCalendarProperty( "dtend", timePropString( WebdavHandler::zoneAsUtc( event->dtEnd(), mTimeZoneId ) ) );
         addDateProp( el );
       } else {
         domCalendarProperty( "duration", QString::number( event->duration() ) );
@@ -743,6 +745,7 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
   protected:
     QDomDocument mDoc;
     QDomElement mElement;
+    QString mTimeZoneId;
 };
 
 // Prefixes for the namespaces:
@@ -783,7 +786,7 @@ QDomDocument ExchangeConverterCalendar::createWebDAV( Incidence *incidence )
 // //   prop.setAttributeNS ( "xmlns:b", "xmlns:b", "urn:schemas-microsoft-com:datatypes" );
 
   ExchangeConverterCalendar::createWebDAVVisitor v;
-  v.act( doc, prop, incidence );
+  v.act( doc, prop, incidence, mFormat.timeZoneId() );
 
   return doc;
 }

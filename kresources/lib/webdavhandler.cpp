@@ -20,10 +20,17 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "webdavhandler.h"
 
 #include <kdebug.h>
 
+#include <qdatetime.h>
+
+extern "C" {
+  #include <ical.h>
+}
+
+
+#include "webdavhandler.h"
 
 WebdavHandler::WebdavHandler()
 {
@@ -144,3 +151,22 @@ const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
   return headers.mid( start, headers.find( "\n", start ) - start );
 }
 
+QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZoneId )
+{
+  QDateTime epoch;
+  epoch.setTime_t( 0 );
+  time_t v = epoch.secsTo( utc );
+  struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
+  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  return utc.addSecs( offset );
+}
+
+QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
+{
+  QDateTime epoch;
+  epoch.setTime_t( 0 );
+  time_t v = epoch.secsTo( zone );
+  struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
+  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  return zone.addSecs( - offset );
+}
