@@ -238,6 +238,7 @@ KNMainWindow::KNMainWindow()
   s_coreManager = new KNScoringManager();
   knGlobals.scoreManager = s_coreManager;
   //connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotReScore()));
+  connect(s_coreManager, SIGNAL(finishedEditing()), SLOT(slotReScore()));
 
   // Memory Manager
   m_emManager = new KNMemoryManager();
