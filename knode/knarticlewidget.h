@@ -39,13 +39,16 @@ class KNArticleCollection;
 class KNMimeContent;
 
 
-class KNSourceViewWindow : public QVBox {
+class KNSourceViewWindow : public KTextBrowser {
 
   Q_OBJECT
 
   public:
     KNSourceViewWindow(const QString &htmlCode);
     ~KNSourceViewWindow();
+
+  protected:
+    void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
 
 };
 

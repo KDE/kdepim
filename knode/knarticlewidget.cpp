@@ -67,25 +67,25 @@
 
 
 KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
-  : QVBox(0, 0, WType_TopLevel | WDestructiveClose)
+  : KTextBrowser(0)
 {
-  KTextBrowser *browser = new KTextBrowser(this);
+  setWFlags(WType_TopLevel | WDestructiveClose);
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
-  QColorGroup pcg(browser->paperColorGroup());
+  QColorGroup pcg(paperColorGroup());
   pcg.setColor(QColorGroup::Base, app->backgroundColor());
   pcg.setColor(QColorGroup::Text, app->textColor());
-  browser->setPaperColorGroup(pcg);
-  browser->setLinkColor(app->linkColor());
-  browser->setFont(knGlobals.cfgManager->appearance()->articleFont());
+  setPaperColorGroup(pcg);
+  setLinkColor(app->linkColor());
+  setFont(knGlobals.cfgManager->appearance()->articleFont());
 
   QStyleSheetItem *style;
-  style=new QStyleSheetItem(browser->styleSheet(), "txt");
+  style=new QStyleSheetItem(styleSheet(), "txt");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
 
-  browser->setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
+  setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
   restoreWindowSize("sourceWindow", this, QSize(500,300));
   show();
 }
@@ -94,6 +94,17 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
 KNSourceViewWindow::~KNSourceViewWindow()
 {
   saveWindowSize("sourceWindow",size());
+}
+
+
+void KNSourceViewWindow::viewportMouseReleaseEvent(QMouseEvent *e)
+{
+  QTextBrowser::viewportMouseReleaseEvent(e);
+
+  if (e->button()==LeftButton) {
+    if(hasSelectedText() && !selectedText().isEmpty())
+      copy();
+  }
 }
 
 
