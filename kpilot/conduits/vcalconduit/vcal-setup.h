@@ -59,7 +59,6 @@ public:
 #if 0
 class VCalWidgetSetup : public ConduitConfig
 {
-// Q_OBJECT
 public:
 	VCalWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~VCalWidgetSetup();
