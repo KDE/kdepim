@@ -30,6 +30,7 @@ extern "C"
 {
   void *init_kcal_slox()
   {
+    KGlobal::locale()->insertCatalogue( "libkcal" );
     KGlobal::locale()->insertCatalogue( "kabc_slox" );
     return new KRES::PluginFactory<KCalResourceSlox,KCalResourceSloxConfig>();
   }

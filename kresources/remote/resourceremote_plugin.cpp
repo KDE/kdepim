@@ -31,6 +31,7 @@ extern "C"
 {
   void *init_kcal_remote()
   {
+    KGlobal::locale()->insertCatalogue( "libkcal" );
     KGlobal::locale()->insertCatalogue( "kres_remote" );
     return new KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig>();
   }
