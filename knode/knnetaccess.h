@@ -60,7 +60,7 @@ class KNNetAccess : public QObject  {
 
     KNNntpClient *nntpClient;
     KNSmtpClient *smtpClient;   
-    QQueue<KNJobData> nntpJobQueue, smtpJobQueue;
+    QList<KNJobData> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     pthread_t nntpThread, smtpThread;
     pthread_mutex_t nntp_Mutex;

@@ -62,7 +62,7 @@ class KNJobData {
 
     friend class KNJobConsumer;
 
-    enum jobType {  JTLoadGroups,
+    enum jobType {  JTLoadGroups=1,
                     JTFetchGroups,
                     JTCheckNewGroups,
                     JTfetchNewHeaders,

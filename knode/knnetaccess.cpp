@@ -123,11 +123,14 @@ void KNNetAccess::addJob(KNJobData *job)
   }
 
   if (job->type()==KNJobData::JTmail) {
-    smtpJobQueue.enqueue(job);
+    smtpJobQueue.append(job);
     if (!currentSmtpJob)   // no active job, start the new one
       startJobSmtp();
   } else {
-    nntpJobQueue.enqueue(job);
+    if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTpostArticle)
+      nntpJobQueue.append(job);
+    else
+      nntpJobQueue.prepend(job);
     if (!currentNntpJob)   // no active job, start the new one
       startJobNntp();
   }
@@ -142,20 +145,19 @@ void KNNetAccess::stopJobsNntp(int type)
     currentNntpJob->cancel();
     triggerAsyncThread(nntpOutPipe[1]);
   }
-    
+
   KNJobData *tmp;                          // kill waiting jobs
-  KNJobData *start = nntpJobQueue.head(); 
+  KNJobData *start = nntpJobQueue.first();
   do {
     if (!nntpJobQueue.isEmpty()) {
-      tmp=nntpJobQueue.dequeue();
+      tmp=nntpJobQueue.take(0);
       if ((type==0)||(tmp->type()==type)) {
         tmp->cancel();
         tmp->notifyConsumer();
-          
       } else
-        nntpJobQueue.enqueue(tmp);
+        nntpJobQueue.append(tmp);
     }
-  } while(!nntpJobQueue.isEmpty() && (start != nntpJobQueue.head())); 
+  } while(!nntpJobQueue.isEmpty() && (start != nntpJobQueue.first()));
 }
 
 
@@ -169,17 +171,17 @@ void KNNetAccess::stopJobsSmtp(int type)
   }
     
   KNJobData *tmp;                          // kill waiting jobs
-  KNJobData *start = smtpJobQueue.head(); 
+  KNJobData *start = smtpJobQueue.first();
   do {
     if (!smtpJobQueue.isEmpty()) {
-      tmp=smtpJobQueue.dequeue();
+      tmp=smtpJobQueue.take(0);
       if ((type==0)||(tmp->type()==type)) {
         tmp->cancel();
         tmp->notifyConsumer();
       } else
-        smtpJobQueue.enqueue(tmp);
+        smtpJobQueue.append(tmp);
     }
-  } while(!smtpJobQueue.isEmpty() && (start != smtpJobQueue.head()));
+  } while(!smtpJobQueue.isEmpty() && (start != smtpJobQueue.first()));
 }
 
 
@@ -201,7 +203,7 @@ void KNNetAccess::startJobNntp()
     kdWarning(5003) << "KNNetAccess::startJobNntp(): job queue is empty?? aborting" << endl;
     return;
   }
-  currentNntpJob = nntpJobQueue.dequeue();
+  currentNntpJob = nntpJobQueue.take(0);
   nntpClient->insertJob(currentNntpJob);
   triggerAsyncThread(nntpOutPipe[1]);
   emit netActive(true);
@@ -220,7 +222,7 @@ void KNNetAccess::startJobSmtp()
   unshownByteCount = QString::null;
   unshownProgress = 0;
   
-  currentSmtpJob = smtpJobQueue.dequeue();
+  currentSmtpJob = smtpJobQueue.take(0);
   smtpClient->insertJob(currentSmtpJob);
   triggerAsyncThread(smtpOutPipe[1]);
   emit netActive(true);
