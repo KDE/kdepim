@@ -1,21 +1,25 @@
-/***************************************************************************
-                 konsolekalendar.cpp
-                 -------------------
-    begin                : Sun Jan  6 11:50:14 EET 2002
-    copyright            : (C) 2002-2003 by Tuukka Pasanen
-    copyright            : (C) 2003 by Allen Winter
-    email                : illuusio@mailcity.com
-
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+/********************************************************************************
+ *   konsolekalendar.cpp                                                        *
+ *                                                                              *
+ *   KonsoleKalendar is console frontend to calendar                            *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2003-2004  Allen Winter                                      *
+ *                                                                              *
+ *   This library is free software; you can redistribute it and/or              * 
+ *   modify it under the terms of the GNU Lesser General Public                 *
+ *   License as published by the Free Software Foundation; either               *
+ *   version 2.1 of the License, or (at your option) any later version.         *
+ *                                                                              *
+ *   This library is distributed in the hope that it will be useful,            * 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
+ *   Lesser General Public License for more details.                            *
+ *                                                                              *
+ *   You should have received a copy of the GNU Lesser General Public           *
+ *   License along with this library; if not, write to the Free Software        *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *                                                                              *
+ ********************************************************************************/ 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -149,13 +153,21 @@ bool KonsoleKalendar::showInstance()
           kdDebug() << "konsolekalendar.cpp::showInstance() | Show next activity in calendar" << endl;
 
           QDateTime datetime = m_variables->getStartDateTime();
-          datetime = datetime.addDays( 90 );
+          datetime = datetime.addDays( 720 );
 
 	  QDate dt;
 	  for (dt=m_variables->getStartDateTime().date(); dt<=datetime.date() && status != false; dt=dt.addDays(1)) {
 	    Event::List events = m_variables->getCalendar()->events( dt, true );
 	    status = printEventList( &ts, &events, dt );
+	    
+	    // when we get next event we exit..
+	    if ( events.count() ) {
+	      kdDebug() << "konsolekalendar.cpp::showInstance() | Next event" << endl;
+	      return true;
+	    } 
+	    
 	    }
+	    
 
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view raw events within date range list" << endl;
@@ -244,7 +256,7 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList, Q
 
     }// for
 
-  }
+  } 
 
   return( status );
 }
@@ -253,6 +265,7 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt)
 {
 
   bool status = false;
+  bool sameDay = true;
   KonsoleKalendarExports exports;
 
   if( event )
@@ -260,9 +273,17 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt)
     if( m_variables->getExportType() == CSV ) {
       status = exports.exportAsCSV( ts, event, dt );
       kdDebug() << "konsolekalendar.cpp::printEvent() | CSV export" << endl;
-    } else {  // Default ExportType is TEXT_KONSOLEKALENDAR
+    } else if( m_variables->getExportType() ==  TEXT_KONSOLEKALENDAR ) { // Default ExportType is TEXT_KONSOLEKALENDAR 
       status = exports.exportAsTxt( ts, event, dt );
       kdDebug() << "konsolekalendar.cpp::printEvent() | TEXT export" << endl;  
+    } else { 
+       if( dt.daysTo( m_saveDate ) ){
+         sameDay = false;
+         m_saveDate = dt;
+       } 
+    
+      status = exports.exportAsHuman( ts, event, dt, sameDay );
+      kdDebug() << "konsolekalendar.cpp::printEvent() | Human export" << endl;  
     } //else
   } //if
 

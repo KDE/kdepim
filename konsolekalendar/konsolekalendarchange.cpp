@@ -1,21 +1,25 @@
-/***************************************************************************
-        konsolekalendarchange.cpp  -  description
-           -------------------
-    begin                : Sun May 25 2003
-    copyright            : (C) 2003 by Tuukka Pasanen
-    copyright            : (C) 2003 by Allen Winter
-    email                : illuusio@mailcity.com
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
+/********************************************************************************
+ *   konsolekalendarchange.cpp                                                  *
+ *                                                                              *
+ *   KonsoleKalendar is console frontend to calendar                            *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2003-2004  Allen Winter                                      *
+ *                                                                              *
+ *   This library is free software; you can redistribute it and/or              * 
+ *   modify it under the terms of the GNU Lesser General Public                 *
+ *   License as published by the Free Software Foundation; either               *
+ *   version 2.1 of the License, or (at your option) any later version.         *
+ *                                                                              *
+ *   This library is distributed in the hope that it will be useful,            * 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
+ *   Lesser General Public License for more details.                            *
+ *                                                                              *
+ *   You should have received a copy of the GNU Lesser General Public           *
+ *   License along with this library; if not, write to the Free Software        *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *                                                                              *
+ ********************************************************************************/
 #include <stdlib.h>
 #include <iostream>
 
@@ -46,30 +50,42 @@ bool KonsoleKalendarChange::changeEvent()
     if( m_variables->isDryRun() ) {
       cout << i18n("Change Event <Dry Run>:").local8Bit() << endl;
       printSpecs( event );
-// TODO: put back after string freeze
-//      cout << i18n("To Event <Dry Run>:").local8Bit() << endl;
+      cout << i18n("To Event <Dry Run>:").local8Bit() << endl;
       printSpecs();
     } else {
        kdDebug() << "konsolekalendarchange.cpp:changeEvent() : " << m_variables->getUID().local8Bit() << endl;
 
-// TODO: put back after string freeze
        if( m_variables->isVerbose() ) {
-//	 cout << i18n("Change Event <Verbose>:").local8Bit() << endl;
-//	 printSpecs( event );
-//	 cout << i18n("To Event <Dry Run>:").local8Bit() << endl;
-//	 printSpecs();
+         cout << i18n("Change Event <Verbose>:").local8Bit() << endl;
+         printSpecs( event );
+         cout << i18n("To Event <Dry Run>:").local8Bit() << endl;
+         printSpecs();
        }
 
-       if( m_variables->isStartDateTime() )
-	 event->setDtStart( m_variables->getStartDateTime() );
-       if( m_variables->isEndDateTime() )
-	 event->setDtEnd( m_variables->getEndDateTime() );
-       if( m_variables->isSummary() )
-	 event->setSummary( m_variables->getSummary() );
-       if( m_variables->isDescription() )
-	 event->setDescription( m_variables->getDescription() );
+       if( m_variables->isStartDateTime() ) {
+         event->setDtStart( m_variables->getStartDateTime() );
+       }
+       
+       if( m_variables->isEndDateTime() ) {
+         event->setDtEnd( m_variables->getEndDateTime() );
+       }
+       
+       if( m_variables->isSummary() ) {
+         event->setSummary( m_variables->getSummary() );
+       }
+       
+       if( m_variables->isDescription() ) {
+        event->setDescription( m_variables->getDescription() );
+       }
+
+       if( m_variables->isLocation() ) {
+         event->setLocation( m_variables->getLocation() );
+       }
+
+              
        m_variables->getCalendar()->addEvent( event );
        
+       // TODO: Do we need this??
        if( !m_variables->isCalendarResources() ){
          m_variables->getCalendar()->save( m_variables->getCalendarFile() );
        } else {
@@ -89,6 +105,8 @@ void KonsoleKalendarChange::printSpecs( Event *event )
   cout << i18n("  Begin: ").local8Bit() << event->dtStart().toString(Qt::TextDate).local8Bit() << endl;
   cout << i18n("  End:   ").local8Bit() << event->dtEnd().toString(Qt::TextDate).local8Bit() << endl;
   cout << i18n("  Desc:  ").local8Bit() << event->description().local8Bit() << endl;;
+  cout << i18n("  Location:  ").local8Bit() << event->location().local8Bit() << endl;;
+
 }
 
 void KonsoleKalendarChange::printSpecs( )
@@ -98,4 +116,6 @@ void KonsoleKalendarChange::printSpecs( )
   cout << i18n("  Begin: ").local8Bit() << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
   cout << i18n("  End:   ").local8Bit() << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
   cout << i18n("  Desc:  ").local8Bit() << m_variables->getDescription().local8Bit() << endl;;
+  cout << i18n("  Location:  ").local8Bit() << m_variables->getLocation().local8Bit() << endl;;
+
 }

@@ -1,20 +1,25 @@
-/***************************************************************************
-        konsolekalendaradd.cpp  -  description
-           -------------------
-    begin                : Sun May 25 2003
-    copyright            : (C) 2002-2003 by Tuukka Pasanen
-    copyright            : (C) 2003 by Allen Winter
-    email                : illuusio@mailcity.com
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+/********************************************************************************
+ *   konsolekalendaradd.cpp                                                     *
+ *                                                                              *
+ *   KonsoleKalendar is console frontend to calendar                            *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2003-2004  Allen Winter                                      *
+ *                                                                              *
+ *   This library is free software; you can redistribute it and/or              * 
+ *   modify it under the terms of the GNU Lesser General Public                 *
+ *   License as published by the Free Software Foundation; either               *
+ *   version 2.1 of the License, or (at your option) any later version.         *
+ *                                                                              *
+ *   This library is distributed in the hope that it will be useful,            * 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
+ *   Lesser General Public License for more details.                            *
+ *                                                                              *
+ *   You should have received a copy of the GNU Lesser General Public           *
+ *   License along with this library; if not, write to the Free Software        *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *                                                                              *
+ ********************************************************************************/
 
 #include <stdlib.h>
 #include <iostream>
@@ -72,7 +77,8 @@ bool KonsoleKalendarAdd::addEvent()
     event->setDtEnd( m_variables->getEndDateTime() );
     event->setSummary( m_variables->getSummary() );
     event->setFloats( m_variables->getFloating() );
-    event->setDescription( m_variables->getDescription() );    
+    event->setDescription( m_variables->getDescription() );
+    event->setLocation( m_variables->getDescription() );    
 
     if( m_variables->getCalendar()->addEvent( event ) ) {
       cout << i18n("Success: \"").local8Bit()
@@ -82,6 +88,8 @@ bool KonsoleKalendarAdd::addEvent()
 	   << m_variables->getSummary().local8Bit() << i18n("\" not inserted").local8Bit() << endl;
     } // else
 
+    
+    // Do we need these??
     if( !m_variables->isCalendarResources() ){
       m_variables->getCalendar()->save( m_variables->getCalendarFile() );
     } else {
@@ -142,4 +150,6 @@ void KonsoleKalendarAdd::printSpecs()
     cout << i18n("  No Time Associated with Event").local8Bit() << endl;
   }
   cout << i18n("  Desc:  ").local8Bit() << m_variables->getDescription().local8Bit() << endl;
+  cout << i18n("  Location:  ").local8Bit() << m_variables->getLocation().local8Bit() << endl;
+
 }

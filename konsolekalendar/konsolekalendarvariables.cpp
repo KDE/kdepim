@@ -1,20 +1,26 @@
-/***************************************************************************
-        konsolekalendarvariables.cpp  -  description
-           -------------------
-    begin                : Sun Jan 6 2002
-    copyright            : (C) 2002-2003 by Tuukka Pasanen
-    copyright            : (C) 2003 by Allen Winter
-    email                : illuusio@mailcity.com
- ***************************************************************************/
+/********************************************************************************
+ *   konsolekalendarvariables.cpp                                               *
+ *                                                                              *
+ *   KonsoleKalendar is console frontend to calendar                            *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2003-2004  Allen Winter                                      *
+ *                                                                              *
+ *   This library is free software; you can redistribute it and/or              * 
+ *   modify it under the terms of the GNU Lesser General Public                 *
+ *   License as published by the Free Software Foundation; either               *
+ *   version 2.1 of the License, or (at your option) any later version.         *
+ *                                                                              *
+ *   This library is distributed in the hope that it will be useful,            * 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
+ *   Lesser General Public License for more details.                            *
+ *                                                                              *
+ *   You should have received a copy of the GNU Lesser General Public           *
+ *   License along with this library; if not, write to the Free Software        *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *                                                                              *
+ ********************************************************************************/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -62,7 +68,8 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bIsCalendarResources = false;
 }
 
-//The following function is taken from korganizer's KOPrefs::setTimeZoneIdDefault()
+// The following function is taken from korganizer's KOPrefs::setTimeZoneIdDefault()
+// Fine with me;) Tuukka
 void KonsoleKalendarVariables::setTimeZoneId()
 {
   QString zone;
@@ -284,6 +291,22 @@ QString KonsoleKalendarVariables::getDescription()
 bool KonsoleKalendarVariables::isDescription()
 {
   return m_bDescription;
+}
+
+void KonsoleKalendarVariables::setLocation(QString location)
+{
+  m_bLocation = true;
+  m_location = location;
+}
+
+QString KonsoleKalendarVariables::getLocation()
+{
+  return m_location;
+}
+
+bool KonsoleKalendarVariables::isLocation()
+{
+  return m_bLocation;
 }
 
 void KonsoleKalendarVariables::setSummary(QString summary)

@@ -1,21 +1,26 @@
-/***************************************************************************
-			  main.cpp  -  description
-			     -------------------
-    begin                : Sun Jan  6 11:50:14 EET 2002
-    copyright            : (C) 2002-2003 by Tuukka Pasanen
-    copyright            : (C) 2003 by Allen Winter
-    email                : illuusio@mailcity.com
+/********************************************************************************
+ *   main.cpp                                                                   *
+ *                                                                              *
+ *   KonsoleKalendar is console frontend to calendar                            *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2003-2004  Allen Winter                                      *
+ *                                                                              *
+ *   This library is free software; you can redistribute it and/or              * 
+ *   modify it under the terms of the GNU Lesser General Public                 *
+ *   License as published by the Free Software Foundation; either               *
+ *   version 2.1 of the License, or (at your option) any later version.         *
+ *                                                                              *
+ *   This library is distributed in the hope that it will be useful,            * 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
+ *   Lesser General Public License for more details.                            *
+ *                                                                              *
+ *   You should have received a copy of the GNU Lesser General Public           *
+ *   License along with this library; if not, write to the Free Software        *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *                                                                              *
+ ********************************************************************************/
 
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -59,7 +64,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.0.0";
+static const char progVersion[] = "1.1.0";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
@@ -91,6 +96,7 @@ static KCmdLineOptions options[] =
   { "epoch-end <epoch-time>", I18N_NOOP("  End at this time [secs since epoch]"), 0 },
   { "summary <summary>", I18N_NOOP("  Add summary to event (for add/change modes)"), 0 },
   { "description <description>", I18N_NOOP("Add description to event (for add/change modes)"), 0 },
+  { "location <location>", I18N_NOOP("  Add location information to event (for add/change modes)"), 0 },
 
   { ":", I18N_NOOP(" Export options:"), 0 },
   { "export-type <export-type>", I18N_NOOP("Export file type (Default: text)"), 0 },
@@ -111,7 +117,7 @@ int main(int argc, char *argv[])
       progVersion,                     // version string
       description,                     // short porgram description
       KAboutData::License_GPL,         // license type
-      "(c) 2002-2003, Tuukka Pasanen and Allen Winter", // copyright statement
+      "(c) 2002-2004, Tuukka Pasanen and Allen Winter", // copyright statement
       0,                               // any free form text
       "http://pim.kde.org",            // program home page address
       "bugs.kde.org"                   // bug report email address
@@ -189,7 +195,7 @@ int main(int argc, char *argv[])
    *  Switch on export list
    */
   if ( args->isSet("export-list") ) {
-     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text [Default]\n  HTML\n  CSV (Comma-Separated Values)").local8Bit() << endl;
+     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text [Default]\n  HTML\n  CSV (Comma-Separated Values)\n  Human (Easy to read for humans)\n").local8Bit() << endl;
      return(0);
   }
 
@@ -209,6 +215,9 @@ int main(int argc, char *argv[])
      } else if( option.upper() == "TEXT" ) {
        kdDebug() << "main | exporttype | Export to TXT" << endl;
        variables.setExportType( TEXT_KONSOLEKALENDAR );
+     } else if( option.upper() == "HUMAN" ) {
+       kdDebug() << "main | exporttype | Export to Human" << endl;
+       variables.setExportType( TEXT_HUMANREADABLE );
      } else {
        kdError() << i18n("Invalid Export Type Specified: ").local8Bit() << option << endl;
        return(1);
@@ -305,7 +314,18 @@ int main(int argc, char *argv[])
 
     variables.setDescription(option);
   }
+  
+  /*
+   *  Is there location information
+   *
+   */
+  if ( args->isSet("location") ) {
+    option = args->getOption("location");
 
+    kdDebug() << "main | parse options | Location: (" << option << ")" << endl;
+
+    variables.setLocation(option);
+  }
   /*
    *  Show next happening and exit
    *

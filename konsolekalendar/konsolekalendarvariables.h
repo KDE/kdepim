@@ -1,25 +1,28 @@
+/********************************************************************************
+ *   konsolekalendarvariables.h                                                 *
+ *                                                                              *
+ *   KonsoleKalendar is console frontend to calendar                            *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2003-2004  Allen Winter                                      *
+ *                                                                              *
+ *   This library is free software; you can redistribute it and/or              * 
+ *   modify it under the terms of the GNU Lesser General Public                 *
+ *   License as published by the Free Software Foundation; either               *
+ *   version 2.1 of the License, or (at your option) any later version.         *
+ *                                                                              *
+ *   This library is distributed in the hope that it will be useful,            * 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
+ *   Lesser General Public License for more details.                            *
+ *                                                                              *
+ *   You should have received a copy of the GNU Lesser General Public           *
+ *   License along with this library; if not, write to the Free Software        *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *                                                                              *
+ ********************************************************************************/
+
 #ifndef _KONSOLEKALENDARVARIABLES_H_
 #define _KONSOLEKALENDARVARIABLES_H_
-
-/***************************************************************************
-                       konsolekalendarvariables.h
-            Konsolekalendar variables contains global variables that are
-            used with this marvelous app;)
-                           -------------------
-    begin                : Sun Jan 6 2002
-    copyright            : (C) 2002-2003 by Tuukka Pasanen
-    copyright            : (C) 2003 by Allen Winter
-    email                : illuusio@mailcity.com
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
 #include <qdatetime.h>
 #include <qstring.h>
@@ -36,11 +39,12 @@
     */
   #define   NONE                     0
   #define   TEXT_KONSOLEKALENDAR     1
-  #define   HTML                     2
-  #define   XHTML                    3
-  #define   XML                      4
-  #define   CSV                      5
-  #define   VCARD                    6
+  #define   TEXT_HUMANREADABLE	     2
+  #define   HTML                     3
+  #define   XHTML                    4
+  #define   XML                      5
+  #define   CSV                      6
+  #define   VCARD                    7
 
 
 namespace KCal {
@@ -193,12 +197,30 @@ class KonsoleKalendarVariables
      * @return description of happening
      */
     QString getDescription();
-
+  
     /**
      * is there even a description?
      * @return true is there is description false there isn't
      */
     bool isDescription();
+    
+    /**
+     * Add location information
+     * @param where should this event happen
+     */
+    void setLocation( QString location );
+
+    /**
+     * return location information
+     * @return location where is it happening
+     */
+    QString getLocation();
+
+    /**
+     * is there event location informatio available?
+     * @return true is there is description false there isn't
+     */
+    bool isLocation();
 
     /**
      * Add summary
@@ -332,6 +354,7 @@ class KonsoleKalendarVariables
    QString m_calendar;
    QString m_import;
    QString m_description;
+   QString m_location;
    QString m_summary;
    QString m_export_file;
    QString m_UID;
@@ -341,6 +364,7 @@ class KonsoleKalendarVariables
    bool m_bDryRun;
    bool m_bAll;
    bool m_bDescription;
+   bool m_bLocation;
    bool m_bFloating;
    bool m_bDaysCount;
    bool m_bIsUID;
