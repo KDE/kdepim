@@ -185,7 +185,7 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
   topL->addWidget(types);
   stack = new QWidgetStack(this);
   topL->addWidget(stack);
-  
+
   dummyLabel = new QLabel(i18n("Select an action:"), stack);
   stack->addWidget(dummyLabel);
 
@@ -519,6 +519,8 @@ void RuleEditWidget::updateRule()
 void RuleEditWidget::slotAddGroup()
 {
   QString grp = groupsBox->currentText();
+  if ( grp.isEmpty() )
+      return;
   QString txt = groupsEdit->text().stripWhiteSpace();
   if (txt == ".*") groupsEdit->setText(grp);
   else groupsEdit->setText(txt + ";" + grp);
