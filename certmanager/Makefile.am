@@ -1,4 +1,4 @@
-SUBDIRS = lib .
+SUBDIRS = lib conf .
 
 KDE_CXXFLAGS = -DLIBKLEOPATRA_NO_COMPAT
 
@@ -17,7 +17,7 @@ kgpgcertmanager_SOURCES = \
 METASOURCES = AUTO
 
 kgpgcertmanager_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kgpgcertmanager_LDADD   = lib/libkleopatra.la $(LIB_KIO) $(LIB_KABC)
+kgpgcertmanager_LDADD   = conf/libconf.la lib/libkleopatra.la $(LIB_KUTILS) $(LIB_KABC)
 
 rcdir = $(kde_datadir)/kgpgcertmanager
 rc_DATA = kgpgcertmanagerui.rc

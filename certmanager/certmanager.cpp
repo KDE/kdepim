@@ -41,6 +41,7 @@
 #include "crlview.h"
 #include "customactions.h"
 #include "storedtransferjob.h"
+#include "conf/configuredialog.h"
 
 // libkleopatra
 #include <cryptplugwrapper.h>
@@ -266,7 +267,8 @@ void CertManager::slotEditKeybindings() {
 }
 
 void CertManager::slotShowConfigurationDialog() {
-
+  ConfigureDialog dlg( this );
+  dlg.exec();
 }
 
 void CertManager::slotToggleRemote( int idx ) {

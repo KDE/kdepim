@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=encrypted
+Type=Service
+ServiceTypes=KCModule
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kgpgcertmanager
+X-KDE-FactoryName=kgpgcertmanager_config_dirserv
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kgpgcertmanager
+X-KDE-ParentComponents=kgpgcertmanager
+X-KDE-CfgDlgHierarchy=KGpgCertManager
+
+Name=Directory Services
+Comment=Configuration of LDAP directory services
+Keywords=ldap,directory,services
