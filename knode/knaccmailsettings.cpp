@@ -19,13 +19,13 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
-#include <qspinbox.h>
 #include <qcheckbox.h>
 #include <qpixmap.h>
 
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <knuminput.h>
 #include <knumvalidator.h>
 
 #include "knserverinfo.h"
@@ -49,13 +49,13 @@ KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
 
   l = new QLabel(i18n("Hold connection for:"), this);
   topL->addWidget(l,2,0);
-  h_old = new QSpinBox(0,300,5,this);
+  h_old = new KIntSpinBox(0,300,5,0,10,this);
   h_old->setSuffix(i18n(" sec"));
   topL->addWidget(h_old,2,1);
 
   l = new QLabel(i18n("Timeout:"), this);
   topL->addWidget(l,3,0);
-  t_imeout = new QSpinBox(15,300,5,this);
+  t_imeout = new KIntSpinBox(15,300,5,15,10,this);
   t_imeout->setSuffix(i18n(" sec"));
   topL->addWidget(t_imeout,3,1);
 

@@ -22,7 +22,7 @@
 #include <kdialogbase.h>
 
 class QRadioButton;
-class QSpinBox;
+class KIntSpinBox;
 
 
 class KNScoreDialog : public KDialogBase  {
@@ -37,7 +37,7 @@ class KNScoreDialog : public KDialogBase  {
     
   protected:
     QRadioButton *iBtn, *nBtn, *wBtn, *cBtn;
-    QSpinBox *spin;
+    KIntSpinBox *spin;
     
 };
 

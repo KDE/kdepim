@@ -22,7 +22,7 @@
 #include "knsettingsdialog.h"
 
 class QCheckBox;
-class QSpinBox;
+class KIntSpinBox;
 class QLabel;
 
 
@@ -39,7 +39,7 @@ class KNCleanupSettings : public KNSettingsWidget  {
   protected:
     void init();
     QCheckBox *folderCB, *groupCB, *thrCB;
-    QSpinBox *folderDays, *groupDays, *readDays, *unreadDays;
+    KIntSpinBox *folderDays, *groupDays, *readDays, *unreadDays;
     QLabel *folderDaysL,*groupDaysL, *readDaysL, *unreadDaysL;
     
   protected slots:

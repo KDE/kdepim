@@ -21,7 +21,7 @@
 #include <qgroupbox.h>
 
 class QLabel;
-class QSpinBox;
+class KIntSpinBox;
 class QComboBox;
 class QCheckBox;
 
@@ -76,7 +76,7 @@ class KNRangeFilterWidget : public QGroupBox {
   protected:
     QCheckBox *enabled;
     QLabel *des;
-    QSpinBox *val1, *val2;
+    KIntSpinBox *val1, *val2;
     QComboBox *op1, *op2;
   
   protected slots:

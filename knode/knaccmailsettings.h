@@ -22,7 +22,7 @@
 #include "knsettingsdialog.h"
 
 class QLineEdit;
-class QSpinBox;
+class KIntSpinBox;
 class KNServerInfo;
 
 class KNAccMailSettings : public KNSettingsWidget  {
@@ -38,7 +38,7 @@ class KNAccMailSettings : public KNSettingsWidget  {
     
     KNServerInfo *serverInfo;
     QLineEdit *s_erver, *p_ort;
-    QSpinBox *h_old, *t_imeout;
+    KIntSpinBox *h_old, *t_imeout;
 };
 
 #endif

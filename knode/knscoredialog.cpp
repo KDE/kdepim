@@ -18,10 +18,10 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qradiobutton.h>
-#include <qspinbox.h>
 #include <qbuttongroup.h>
 
 #include <klocale.h>
+#include <knuminput.h>
 
 #include "utilities.h"
 #include "knscoredialog.h"
@@ -49,7 +49,7 @@ KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name )
 
   cBtn=new QRadioButton(i18n("custom"), bg);
   bgL->addWidget(cBtn, 3,0);
-  spin=new QSpinBox(0,100,1,bg);
+  spin=new KIntSpinBox(0,100,1,0,10,bg);
   connect(cBtn, SIGNAL(toggled(bool)), spin, SLOT(setEnabled(bool)));
   bgL->addWidget(spin, 3,1);
 

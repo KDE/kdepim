@@ -20,8 +20,8 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
-#include <qspinbox.h>
 
+#include <knuminput.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kseparator.h>
@@ -48,19 +48,19 @@ KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
 
   groupDaysL=new QLabel(i18n("purge groups every"), groupsB);
   groupsL->addWidget(groupDaysL,2,0);
-  groupDays=new QSpinBox(0, 999, 1, groupsB);
+  groupDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
   groupDays->setSuffix(i18n(" days"));
   groupsL->addWidget(groupDays,2,1,Qt::AlignRight);
 
   readDaysL=new QLabel(i18n("keep read articles"), groupsB);
   groupsL->addWidget(readDaysL,3,0);
-  readDays=new QSpinBox(0, 999, 1, groupsB);
+  readDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
   readDays->setSuffix(i18n(" days"));
   groupsL->addWidget(readDays,3,1,Qt::AlignRight);
 
   unreadDaysL=new QLabel(i18n("keep unread articles"), groupsB);
   groupsL->addWidget(unreadDaysL,4,0);
-  unreadDays=new QSpinBox(0, 999, 1, groupsB);
+  unreadDays=new KIntSpinBox(0, 999, 1, 0, 10, groupsB);
   unreadDays->setSuffix(i18n(" days"));
   groupsL->addWidget(unreadDays,4,1,Qt::AlignRight);
 
@@ -83,7 +83,7 @@ KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
 
   folderDaysL=new QLabel(i18n("purge folders every"), foldersB);
   foldersL->addWidget(folderDaysL,2,0);
-  folderDays=new QSpinBox(0, 999, 1, foldersB);
+  folderDays=new KIntSpinBox(0, 999, 1, 0, 10, foldersB);
   folderDays->setSuffix(i18n(" days"));
   foldersL->addWidget(folderDays,2,1,Qt::AlignRight);
 

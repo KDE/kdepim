@@ -27,7 +27,7 @@ class QPushButton;
 class QPixMap;
 class QLabel;
 class QCheckBox;
-class QSpinBox;
+class KIntSpinBox;
 class QLineEdit;
 
 class KNAccountManager;
@@ -85,7 +85,7 @@ class KNAccNewsConfDialog : public KDialogBase  {
   protected:
     QLineEdit *n_ame, *s_erver, *u_ser, *p_ass, *p_ort;
     QLabel *userLabel, *passLabel;
-    QSpinBox *h_old, *t_imeout;
+    KIntSpinBox *h_old, *t_imeout;
     QCheckBox *f_etchDes, *authCB;
     KNNntpAccount* acc;
     

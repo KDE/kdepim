@@ -18,10 +18,10 @@
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qspinbox.h>
 #include <qcheckbox.h>
 #include <qlineedit.h>
 
+#include <knuminput.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -43,7 +43,7 @@ KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
   generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
   generalL->addWidget(new QLabel(i18n("word warp at column:"), generalB),1,0);
-  maxLen=new QSpinBox(20, 100, 1, generalB);
+  maxLen=new KIntSpinBox(20, 100, 1, 20, 10, generalB);
   generalL->addWidget(maxLen,1,2);
 
   ownSigCB=new QCheckBox(i18n("append signature automatically"), generalB);

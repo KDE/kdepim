@@ -20,9 +20,9 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
-#include <qspinbox.h>
 #include <qcombobox.h>
 
+#include <knuminput.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -40,9 +40,9 @@ KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
   
   autoCB=new QCheckBox(i18n("check for new articles automatically"), mgb);
   l1=new QLabel(i18n("max to fetch"), mgb);
-  maxFetch=new QSpinBox(0, 9999, 1, mgb);
+  maxFetch=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
   markCB=new QCheckBox(i18n("mark article as read after"), mgb);
-  markSecs=new QSpinBox(0, 9999, 1, mgb);
+  markSecs=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
   connect(markCB, SIGNAL(toggled(bool)), markSecs, SLOT(setEnabled(bool)));
   markSecs->setSuffix(i18n(" sec"));
   l3=new QLabel(i18n("Open links with"), bgb);

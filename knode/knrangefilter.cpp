@@ -17,11 +17,11 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qspinbox.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
 
 #include <ksimpleconfig.h>
+#include <knuminput.h>
 
 #include "knrangefilter.h"
 
@@ -85,9 +85,9 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
 {
   enabled=new QCheckBox(this);
     
-  val1=new QSpinBox(min, max, 1, this);
+  val1=new KIntSpinBox(min, max, 1, min, 10, this);
   val1->setSuffix(unit);
-  val2=new QSpinBox(min, max, 1, this);
+  val2=new KIntSpinBox(min, max, 1, min, 10, this);
   val2->setSuffix(unit);
   
   op1=new QComboBox(this);

@@ -22,7 +22,7 @@
 #include "knsettingsdialog.h"
 
 class QCheckBox;
-class QSpinBox;
+class KIntSpinBox;
 class QLineEdit;
 
 
@@ -41,7 +41,7 @@ class KNPostComSettings : public KNSettingsWidget  {
     
   protected:
     void init();
-    QSpinBox *maxLen;
+    KIntSpinBox *maxLen;
     QCheckBox *ownSigCB, *authSigCB, *rewarpCB, *externCB;
     QLineEdit *intro, *quot, *editor;
     

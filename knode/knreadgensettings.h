@@ -22,7 +22,7 @@
 #include "knsettingsdialog.h"
 
 class QCheckBox;
-class QSpinBox;
+class KIntSpinBox;
 class QComboBox;
 
 
@@ -38,7 +38,7 @@ class KNReadGenSettings : public KNSettingsWidget  {
     void init();
     
     QCheckBox *autoCB, *markCB, *sigCB, *inlineCB, *openAttCB, *expCB, *altAttCB;
-    QSpinBox *markSecs, *maxFetch;
+    KIntSpinBox *markSecs, *maxFetch;
     QComboBox *browser;   
     
 };

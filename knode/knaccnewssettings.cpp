@@ -24,13 +24,13 @@
 #include <qgroupbox.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
-#include <qspinbox.h>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <knumvalidator.h>
+#include <knuminput.h>
 #include <kmessagebox.h>
 
 #include "knnntpaccount.h"
@@ -250,14 +250,14 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
 
   l = new QLabel(i18n("Hold connection for:"), page);
   topL->addWidget(l,3,0);
-  h_old = new QSpinBox(5,1800,5,page);
+  h_old = new KIntSpinBox(5,1800,5,5,10,page);
   h_old->setSuffix(i18n(" sec"));
   h_old->setValue(acc->hold());
   topL->addWidget(h_old,3,1);
 
   l = new QLabel(i18n("Timeout:"), page);
   topL->addWidget(l,4,0);
-  t_imeout = new QSpinBox(15,600,5,page);
+  t_imeout = new KIntSpinBox(15,600,5,15,10,page);
   t_imeout->setValue(acc->timeout());
   t_imeout->setSuffix(i18n(" sec"));
   topL->addWidget(t_imeout,4,1);
