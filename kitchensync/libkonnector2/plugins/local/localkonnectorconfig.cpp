@@ -37,12 +37,12 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  topLayout->addWidget( new QLabel( i18n("Calendar File:"), this ) );
-  
+  topLayout->addWidget( new QLabel( i18n("Calendar file:"), this ) );
+
   mCalendarFile = new KURLRequester( this );
   topLayout->addWidget( mCalendarFile );
 
-  topLayout->addWidget( new QLabel( i18n("Address Book File:"), this ) );
+  topLayout->addWidget( new QLabel( i18n("Address book file:"), this ) );
   
   mAddressBookFile = new KURLRequester( this );
   topLayout->addWidget( mAddressBookFile );

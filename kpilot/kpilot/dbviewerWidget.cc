@@ -77,7 +77,7 @@ void GenericDBWidget::setupWidget()
 	g->addWidget( fDBList, 0, 0 );
 	fDBType = new KComboBox( FALSE, this );
 	g->addWidget( fDBType, 1, 0 );
-	fDBType->insertItem( i18n( "All databases" ) );
+	fDBType->insertItem( i18n( "All Databases" ) );
 	fDBType->insertItem( i18n( "Only Applications (*.prc)" ) );
 	fDBType->insertItem( i18n( "Only Databases (*.pdb)" ) );
 

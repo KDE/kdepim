@@ -257,7 +257,7 @@ void KMobile::addDevice()
   if (!dialog)
     return;
 
-  dialog->setCaption( i18n("Add a New Mobile or Portable Device") );
+  dialog->setCaption( i18n("Add New Mobile or Portable Device") );
 
   dialog->helpText->setText( i18n("Please select the category to which your new device belongs:") );
   dialog->addButton->setText( i18n("&Scan for New Devices...") );

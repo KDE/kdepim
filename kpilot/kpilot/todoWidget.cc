@@ -229,7 +229,7 @@ void TodoWidget::setupWidget()
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new TodoListView(this);
-	fListBox->addColumn( i18n( "Todo item" ) );
+	fListBox->addColumn( i18n( "Todo Item" ) );
 	fListBox->setAllColumnsShowFocus( TRUE );
 	fListBox->setResizeMode( KListView::LastColumn );
 	fListBox->setFullWidth( TRUE );
