@@ -382,7 +382,6 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
         Incidence *i = (*it)->clone();
         const QString &remote = KURL( mCurrentGetUrl ).path();
         const QString &local = idMapper().localId( remote );
-        kdDebug(7000) << "Remote: " << remote << " local: " << local << endl;
         if ( local.isEmpty() ) {
           idMapper().setRemoteId( i->uid(), remote );
         } else {
