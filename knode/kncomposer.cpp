@@ -623,7 +623,10 @@ void KNComposer::slotAttachFile()
 {
   QString path=KFileDialog::getOpenFileName(QString::null, QString::null, this, i18n("Attach File"));   // this needs to be network-transparent (CG)
 
-  if(!path.isEmpty()) {
+  if(path.isEmpty()) // no file choosen
+    return;
+
+  if(QFile::exists(path)) {
     if (!view->viewOpen) {
       saveWindowSize("composer", size());
       view->showAttachmentView();
@@ -631,6 +634,8 @@ void KNComposer::slotAttachFile()
     (void) new AttachmentViewItem(view->attView, new KNAttachment(path));
     attChanged=true;
   }
+  else
+    displayExternalFileError();
 }
 
 
