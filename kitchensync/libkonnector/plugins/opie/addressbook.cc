@@ -10,6 +10,8 @@
 
 #include "addressbook.h"
 
+#include "test.h"
+
 using namespace OpieHelper;
 
 AddressBook::AddressBook( CategoryEdit *edit,

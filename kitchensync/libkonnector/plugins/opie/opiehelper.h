@@ -15,13 +15,13 @@
 class OpieHelperClass {
  public:
   OpieHelperClass() {};
-  ~OpieHelperClass();
+  ~OpieHelperClass()  {};
   void toOpieDesktopEntry(  const QString &,
 			   QPtrList<KSyncEntry> *list,
 			   OpieHelper::CategoryEdit *edit );
 
   void toCalendar(const QString &timeStamp,
-		  const QString &todo, 
+		  const QString &todo,
 		  const QString &calendar ,
 		  QPtrList<KSyncEntry> *list,
 		  OpieHelper::CategoryEdit *edit);

@@ -3,6 +3,7 @@
 #define CategoryEdit_H
 
 #include <qmap.h>
+#include <qstring.h>
 #include <qvaluelist.h>
 
 #include "opiecategories.h"
@@ -21,7 +22,7 @@ namespace OpieHelper {
         // id = 0 means generate a new id
         int addCategory(const QString &appName,  const QString &name,  int id = 0);
         void parse( const QString &fileName );
-        QString categoryById(const QString &id, const QString &app );
+        QString categoryById(const QString &id, const QString &app )const;
         void clear();
         QValueList<OpieCategories> categories()const {  return m_categories; };
     private:

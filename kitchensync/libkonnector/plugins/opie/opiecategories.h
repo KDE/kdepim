@@ -10,6 +10,7 @@ class OpieCategories {
     OpieCategories();
     OpieCategories(const QString &id, const QString &name, const QString &app );
     OpieCategories(const OpieCategories & );
+    ~OpieCategories() {};
     OpieCategories &operator=(const OpieCategories & );
     QString id()const;
     QString name()const;

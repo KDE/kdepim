@@ -4,7 +4,7 @@
 #include <qbuffer.h>
 #include <qdom.h>
 #include <qfile.h>
-#include <qstring.h>
+//#include <qstring.h>
 #include <qtextstream.h>
 
 
@@ -116,9 +116,9 @@ void CategoryEdit::clear()
     ids.clear();
     m_categories.clear();
 }
-QString CategoryEdit::categoryById( const QString &id,  const QString &app )
+QString CategoryEdit::categoryById( const QString &id,  const QString &app )const
 {
-    QValueList<OpieCategories>::Iterator it;
+    QValueList<OpieCategories>::ConstIterator it;
     QString category;
     QString fallback;
     for( it = m_categories.begin(); it != m_categories.end(); ++it ){

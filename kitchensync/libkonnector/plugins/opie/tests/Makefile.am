@@ -16,23 +16,14 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-SUBDIRS = tests
+INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib $(all_includes)
+LDADD = $(top_builddir)/kitchensync/libkonnector/libkonnector.la $(top_builddir)/kitchensync/libkonnector/plugins/opie/libopiekonnector.la
+LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 
-lib_LTLIBRARIES = libopiekonnector.la
+check_PROGRAMS = opieimport
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes)
-
-libopiekonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
-libopiekonnector_la_LIBDADD = ../../libkonnector.la ../../../libksyncentries.la
-libopiekonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH)-module 
-libopiekonnector_la_SOURCES = opiekonnector.cpp opiesocket.cpp \
-	opiecategories.cpp opiehelper.cpp \
-	todo.cc categoryedit.cc \
-	helper.cc addressbook.cc \
-	datebook.cc 
-
-opiedatadir = $(kde_datadir)/kitchensync
-opiedata_DATA = opie.desktop
+#opieimport_LDADD = ../../../libkonnector.la ../libopiekonnector.la
+opieimport_SOURCES =  convertermain.cc
 
 METASOURCES = AUTO
 
