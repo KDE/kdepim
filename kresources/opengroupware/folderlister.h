@@ -82,6 +82,7 @@ class FolderLister : public QObject
 
   protected:
     virtual KURL adjustUrl( const KURL &u );
+    virtual KIO::DavJob *createJob( const KURL &url );
     virtual FolderType getFolderType( const QDomNode &folderNode );
     virtual Entry::List defaultFolders();
     KURL getUrl() const { return mUrl; }

@@ -127,18 +127,22 @@ KURL FolderLister::adjustUrl( const KURL &u )
   return url;
 }
 
+KIO::DavJob *FolderLister::createJob( const KURL &url )
+{
+  QDomDocument props = WebdavHandler::createAllPropsRequest();
+  kdDebug(7000) << "props: " << props.toString() << endl;
+  return KIO::davPropFind( url, props, "1", false );
+}
+
 void FolderLister::retrieveFolders( const KURL &u )
 {
-  mUrl = u;
-
-  QDomDocument props = WebdavHandler::createAllPropsRequest();
+  mUrl = WebdavHandler::toDAV( u );
 
   kdDebug(7000) << "FolderLister::retrieveFolders: " << getUrl().prettyURL() << endl;
-  kdDebug(7000) << "props: " << props.toString() << endl;
 
   KURL url( adjustUrl( getUrl() ) );
 
-  mListEventsJob = KIO::davPropFind( url, props, "1", false );
+  mListEventsJob = createJob( url );
 
   kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" << url.prettyURL() << endl;
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
