@@ -201,8 +201,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 			kdWarning() << k_funcinfo
 				<< ": Selected category ("
 				<< selectedCategory
-				<< ") expands to "
-				<< qstringExpansion(selectedCategory) << endl;
+				<< ") " << endl;
 			kdWarning() << k_funcinfo
 				<< ": Categories expand to " << endl;
 #endif
@@ -215,8 +214,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 					<< ": Category ["
 					<< currentCatID
 					<< "] = "
-					<< charExpansion(info->
-					name[currentCatID]) << endl;
+					<< (info->name[currentCatID]) << endl;
 #endif
 				currentCatID++;
 			}

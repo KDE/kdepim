@@ -34,7 +34,7 @@
 */
 
 // the hex edit widget is in cvs now, so we can enable it globally.
-// I still leave this flag here so one can always easily disable 
+// I still leave this flag here so one can always easily disable
 // the generic DB viewer, which uses the widget.
 #define USE_KHEXEDIT
 
@@ -50,20 +50,16 @@
 #include <qglobal.h>
 #endif
 
-#if (QT_VERSION < 223)
-#error "This is KPilot for KDE2 and won't compile with Qt < 2.2.3"
+#if (QT_VERSION < 0x030200)
+#error "This is KPilot for KDE3.2 and won't compile with Qt < 3.2.0"
 #endif
 
 #ifndef KDE_VERSION
 #include <kdeversion.h>
 #endif
 
-#if KDE_VERSION > 289
-#define KDE3
-#undef KDE2
-#else
-#undef KDE3
-#define KDE2
+#if !(KDE_IS_VERSION(3,2,0))
+#error "This is KPilot for KDE 3.2 and won't compile with KDE < 3.2.0"
 #endif
 
 // Turn ON as much debugging as possible with -DDEBUG -DDEBUG_CERR
@@ -78,16 +74,12 @@
 #define DEBUGFUNC	kdDebug()
 #endif
 
-// For ostream
-#include <iostream>
 // For QString, and everything else needs it anyway.
 #include <qstring.h>
 // Dunno, really. Probably because everything needs it.
 #include <klocale.h>
 // For the debug stuff.
 #include <kdebug.h>
-
-using namespace std;
 
 // KPilot will move towards the *standard* way of doing
 // debug messages soon. This means that we need some
@@ -100,11 +92,17 @@ using namespace std;
 #define LIBPILOTDB_AREA	5513
 
 #ifdef DEBUG_CERR
+// For ostream
+#include <iostream>
 #define DEBUGSTREAM	ostream
-#define DEBUGKPILOT	cerr
-#define DEBUGDAEMON	cerr
-#define DEBUGCONDUIT	cerr
-#define DEBUGDB		cerr
+#define DEBUGKPILOT	std::cerr
+#define DEBUGDAEMON	std::cerr
+#define DEBUGCONDUIT	std::cerr
+#define DEBUGDB		std::cerr
+
+inline ostream& operator <<(ostream &o,const QString &s) { if (s.isEmpty()) return o; else return o<<s.latin1(); }
+inline ostream& operator <<(ostream &o,const QCString &s) { return (o << *s ); }
+
 #else
 #define DEBUGSTREAM	kdbgstream
 #define DEBUGKPILOT	kdDebug(KPILOT_AREA)
@@ -113,7 +111,7 @@ using namespace std;
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.4.1 (Osnabr\374ck)"
+#define KPILOT_VERSION	"4.4.2 (Osnabr\374ck)"
 
 // * KPilot debugging code looks like:
 //
@@ -158,13 +156,6 @@ QString rtExpand(const QString &s, bool richText=true);
 				fname << KPILOT_LOCNDEF; }
 
 
-// Next all kinds of specialty debugging functions,
-// added in an ad-hoc fashion.
-//
-//
-QString qstringExpansion(const QString &);
-QString charExpansion(const char *);
-
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 // In particular it doesn't give functions a local variable fname,
@@ -185,16 +176,6 @@ QString charExpansion(const char *);
 #define FUNCTIONSETUP
 #define FUNCTIONSETUPL(a)
 #endif
-
-// Next all kinds of specialty debugging functions,
-// added in an ad-hoc fashion.
-//
-//
-QString qstringExpansion(const QString &);
-QString charExpansion(const char *);
-
-inline ostream& operator <<(ostream &o,const QString &s) { if (s.isEmpty()) return o; else return o<<s.latin1(); }
-inline ostream& operator <<(ostream &o,const QCString &s) { return (o << *s ); }
 
 /**
  * Convert a struct tm from the pilot-link package to a QDateTime

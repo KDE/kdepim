@@ -63,7 +63,6 @@ int debug_level = 0;
 #endif
 const char *debug_spaces =
 	"                                                    ";
-
 QString rtExpand(const QString &s, bool richText)
 {
 	if (richText)
@@ -75,6 +74,7 @@ QString rtExpand(const QString &s, bool richText)
 		return s;
 }
 
+#if 0
 QString qstringExpansion(const QString & s)
 {
 	QString t;
@@ -105,6 +105,7 @@ QString charExpansion(const char *s)
 
 	return t;
 }
+#endif
 
 QDateTime readTm(const struct tm &t)
 {

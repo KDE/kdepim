@@ -36,6 +36,7 @@ static const char *test_id =
 
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 #include <qpushbutton.h>
 #include <qhbox.h>
@@ -268,13 +269,13 @@ int listConduits(KCmdLineArgs *)
 	{
 		KSharedPtr < KService > o = (*availList).service();
 
-		cout << o->desktopEntryName().latin1() << endl;
-		cout << "\t" << o->name().latin1()  << endl;
+		std::cout << o->desktopEntryName().latin1() << std::endl;
+		std::cout << "\t" << o->name().latin1()  << std::endl;
 		if (!o->library().isEmpty())
 		{
-			cout << "\tIn "
+			std::cout << "\tIn "
 				<< o->library().latin1()
-				<< endl;
+				<< std::endl;
 		}
 
 		++availList;
