@@ -93,16 +93,16 @@ bool KMailConnection::connectToKMail()
                               "fromKMailAddIncidence(QString,QString,Q_UINT32,QString)" ) )
       kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
     if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
-                              "deleteIncidence(QString,QString,QString)" ) )
+                              "fromKMailDelIncidence(QString,QString,QString)" ) )
       kdError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "slotRefresh(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceAdded(QString,QString)",
-                              "subresourceAdded(QString,QString)" ) )
+                              "fromKMailAddSubresource(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
-                              "subresourceDeleted(QString,QString)" ) )
+                              "fromKMailDelSubresource(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
   }
 
