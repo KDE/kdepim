@@ -92,6 +92,74 @@ AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
 	fAbout->addCredit("David Bishop", I18N_NOOP("UI"));
+
+
+/*
+// This is just testing code for the custom fields sync. Does not yet work.
+	char format[]="%d.%m.%y";
+	QDateTime bdate, backdate;
+	time_t btime, backt;
+	struct tm*btmtime, backtm;
+	char whatever[500];
+	size_t len;
+	QString strdate;
+	char*end;
+
+	bdate=QDateTime::currentDateTime();
+	if (!bdate.isValid())  cout<<"Not valid "<< endl;
+
+	cout<<"Birthdate="<<bdate.toString()<<endl;
+
+	btime=bdate.toTime_t();
+	btmtime=localtime(&btime);
+	len=strftime(&whatever[0], 500, format, btmtime);
+	strdate=&whatever[0];
+	cout<<"Birthdate="<<strdate<<endl;
+
+//	end=strptime(strdate.latin1(), format, &backtm);
+//	end=strptime("01.04.03 11:22:33", "%d.%m.%y %H:%M:%S", &backtm);
+cout<<"latin1: "<<strdate.latin1()<<endl;
+	end=strptime(strdate.latin1(), "%d.%m.%y", &backtm);
+	cout<< (int)end<<endl;
+
+//if (!end) {
+	backt=mktime(&backtm);
+	backdate.setTime_t(backt);
+//} else  cout<<"Conversion failed"<<endl;
+
+	cout<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
+
+
+
+cout<<"------------------------------------------"<<endl;
+
+
+
+	bdate=QDateTime::currentDateTime();
+	if (!bdate.isValid())  cout<<"Not valid "<< endl;
+
+	cout<<"Birthdate="<<bdate.toString()<<endl;
+
+	btime=bdate.toTime_t();
+	btmtime=localtime(&btime);
+	len=strftime(&whatever[0], 500, format, btmtime);
+	strdate=&whatever[0];
+	cout<<"Birthdate="<<strdate<<endl;
+
+//	end=strptime(strdate.latin1(), format, &backtm);
+	end=strptime("01.04.03 11:22:33", "%d.%m.%y %H:%M:%S", &backtm);
+	cout<< (int)end<<endl;
+
+//if (!end) {
+	backt=mktime(&backtm);
+	backdate.setTime_t(backt);
+//} else  cout<<"Conversion failed"<<endl;
+
+	cout<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
+
+*/
+
+
 }
 
 AbbrowserConduitFactory::~AbbrowserConduitFactory()
