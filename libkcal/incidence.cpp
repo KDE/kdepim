@@ -67,6 +67,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 
     ++it;
   }
+  mAlarms.setAutoDelete(true);
 
   mRecurrence = new Recurrence( *(i.mRecurrence), this );
 }
