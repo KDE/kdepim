@@ -97,9 +97,9 @@ void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen)
         for (i=0; i < mPatLen-1; ++i) {
 	    unsigned char skip = mPatLen - i - 1;
 	    mCiPat[i] = tolower(mPat[i]);
-	    mCiSkipAmt[(unsigned)mCiPat[i]] = skip;
-	    mCiSkipAmt[(unsigned)toupper(mCiPat[i])] = skip;
-	    mSkipAmt[(unsigned)mPat[i]] = skip;
+	    mCiSkipAmt[(unsigned char)mCiPat[i]] = skip;
+	    mCiSkipAmt[(unsigned char)toupper(mCiPat[i])] = skip;
+	    mSkipAmt[(unsigned char)mPat[i]] = skip;
 	}
 	mCiPat[i] = tolower(mPat[i]);
     }
