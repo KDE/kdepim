@@ -1207,7 +1207,7 @@ void KMFolderImap::deleteMessage(KMMessage * msg)
 {
   KURL url = mAccount->getUrl();
   KMFolderImap *msg_parent = static_cast<KMFolderImap*>(msg->parent());
-  QString uid = msg->headerField("X-UID");
+  const QString uid = msg->headerField("X-UID");
   /* If the uid is empty the delete job below will nuke all mail in the 
      folder, so we better safeguard against that. See ::expungeFolder, as
      to why. :( */
@@ -1237,7 +1237,7 @@ void KMFolderImap::deleteMessage(QPtrList<KMMessage> msgList)
   KMFolderImap *msg_parent = static_cast<KMFolderImap*>(msgList.first()->parent());
   for ( QStringList::Iterator it = sets.begin(); it != sets.end(); ++it )
   {
-    QString uid = *it;
+    const QString uid = *it;
     // Don't delete with no uid, that nukes the folder. Should not happen, but
     // better safe than sorry.
     if ( uid.isEmpty() ) continue;
