@@ -48,7 +48,7 @@
 #include "phoneeditwidget.h"
 
 PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent, name ), mReadOnly(false)
 {
   QGridLayout *layout = new QGridLayout( this, 5, 2 );
   layout->setSpacing( KDialog::spacingHint() );
