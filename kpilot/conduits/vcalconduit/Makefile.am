@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit 
+INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit 
 SUBDIRS = versit
 METASOURCES = AUTO
 bin_PROGRAMS = vcalconduit
@@ -22,7 +22,7 @@ vcalconduit_LDFLAGS = $(all_libraries) \
 # that depend on the following ones.
 vcalconduit_LDADD   = ../../kpilot/pilotDateEntry.o -lconduit \
 	$(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lversit -lpisock
+	@LIBSOCKET@ -lversit $(LIBPISOCK)
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = vcal-conduit.h vcal-setup.h

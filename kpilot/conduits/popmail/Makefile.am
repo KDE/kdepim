@@ -1,4 +1,4 @@
-INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/kpilot
+INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -20,7 +20,7 @@ popmail_conduit_LDFLAGS = $(all_libraries) \
 # that depend on the following ones.
 popmail_conduit_LDADD   =  -lconduit \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lpisock
+	@LIBSOCKET@ $(LIBPISOCK)
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = popmail-conduit.h passworddialog.h setupDialog.h

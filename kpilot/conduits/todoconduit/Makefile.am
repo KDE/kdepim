@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I../vcalconduit/versit
+INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot -I../vcalconduit/versit
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -19,7 +19,7 @@ todoconduit_LDFLAGS = $(all_libraries) -L`pwd`/../vcalconduit/versit \
 # that depend on the following ones.
 todoconduit_LDADD   = ../../kpilot/pilotTodoEntry.o -lconduit \
 	$(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lversit -lpisock
+	@LIBSOCKET@ -lversit $(LIBPISOCK)
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = todo-conduit.h todo-setup.h
