@@ -113,7 +113,7 @@ KTempFile* Base::file() {
 }
 QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 {
-    kdDebug() << "categoriesToNumber " << list.join(";") << endl;
+    kdDebug(5226) << "categoriesToNumber " << list.join(";") << endl;
     QString dummy;
     QValueList<OpieCategories>::ConstIterator catIt;
     QValueList<OpieCategories> categories = m_edit->categories();

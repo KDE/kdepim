@@ -11,6 +11,25 @@
 using KSync::Kapabilities;
 using namespace OpieHelper;
 
+
+namespace {
+    void setCurrent( const QString& str, QComboBox* box, bool insert = true ) {
+        if (str.isEmpty() ) return;
+        uint b = box->count();
+        for ( uint i = 0; i < b; i++ ) {
+            if ( box->text(i) == str ) {
+                box->setCurrentItem(i );
+                return;
+            }
+        }
+        if (!insert ) return;
+
+        box->insertItem( str );
+        box->setCurrentItem( b );
+    }
+}
+
+
 QtopiaConfig::QtopiaConfig( const Kapabilities& cap, QWidget* parent, const char* name )
     : KSync::ConfigWidget( cap, parent, name ) {
     initUI();
@@ -34,7 +53,7 @@ Kapabilities QtopiaConfig::capabilities()const {
     caps.setNeedsModelName( true );
     caps.setMetaSyncingEnabled( true );
 
-    caps.setSrcIP( m_cmbIP->currentText() );
+    caps.setDestIP( m_cmbIP->currentText() );
     caps.setUser( m_cmbUser->currentText() );
     caps.setPassword( m_cmbPass->currentText() );
     caps.setCurrentModel( m_cmbDev->currentText() );
@@ -46,16 +65,17 @@ QString QtopiaConfig::name()const {
     return m_name->text().isEmpty() ? "Zaurus" + kapp->randomString(5 ) : m_name->text();
 }
 void QtopiaConfig::setCapabilities( const Kapabilities& caps ) {
-    m_cmbUser->setCurrentText( caps.user() );
-    m_cmbPass->setCurrentText( caps.password() );
-    m_cmbIP->setCurrentText( caps.destIP() );
-    m_cmbDev->setCurrentText( caps.currentModel() );
-    if ( caps.currentModel() == QString::fromLatin1("Sharp Zaurus ROM") ) {
+    setCurrent( caps.user(), m_cmbUser );
+    setCurrent( caps.password(), m_cmbPass );
+    setCurrent( caps.destIP(), m_cmbIP );
+    setCurrent( caps.currentModel(), m_cmbDev, false );
+    if ( m_cmbDev->currentText() == QString::fromLatin1("Sharp Zaurus ROM") )
         m_name->setText( caps.modelName() );
-    }else
-        m_name->setEnabled( false );
+
 
     slotTextChanged( m_cmbDev->currentText() );
+    m_name->setEnabled( false );
+    m_cmbDev->setEnabled( false );
 }
 void QtopiaConfig::initUI() {
     m_layout = new QGridLayout( this, 4,5 );
@@ -78,6 +98,7 @@ void QtopiaConfig::initUI() {
     m_lblName = new QLabel(this);
     m_lblName->setText(i18n("Name:"));
     m_name = new QLineEdit(this);
+    m_name->setEnabled( false );
 
     m_lblIP = new QLabel( this );
     m_lblIP->setText(i18n("Destination Address:") );

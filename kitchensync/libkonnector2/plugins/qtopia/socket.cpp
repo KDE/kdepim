@@ -106,7 +106,7 @@ QtopiaSocket::QtopiaSocket( QObject* obj, const char* name )
     d->helper  = 0;
     d->edit    = 0;
     d->first   = false;
-    d->device = new OpieHelper::Device;    
+    d->device = new OpieHelper::Device;
 }
 QtopiaSocket::~QtopiaSocket() {
     delete d->device;
@@ -130,11 +130,11 @@ void QtopiaSocket::setModel( const QString& model, const QString& name ){
 	d->device->setDistribution( OpieHelper::Device::Zaurus );
     }else
 	d->device->setDistribution( OpieHelper::Device::Opie );
-	
+
     d->device->setMeta( name );
 }
 void QtopiaSocket::startUp() {
-    kdDebug(5210) << "Start Up " << endl;
+    kdDebug(5225) << "Start Up " << endl;
     delete d->socket;
     d->socket = new QSocket(this, "Qtopia Socket" );
 
@@ -295,8 +295,8 @@ void QtopiaSocket::process() {
     while ( d->socket->canReadLine() ) {
         QTextStream stream( d->socket );
         QString line = d->socket->readLine();
-        kdDebug(5225) << line << endl;
-        kdDebug(5225) << d->mode << endl;
+        //kdDebug(5225) << line << endl;
+        //kdDebug(5225) << d->mode << endl;
         switch( d->mode ) {
         case d->Start:
             start(line);
@@ -519,7 +519,7 @@ void QtopiaSocket::start(const QString& line ) {
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
-    }else{    
+    }else{
         /*
          * parse the uuid
          * here if not zaurus
@@ -605,8 +605,8 @@ void QtopiaSocket::handshake( const QString& line) {
     QTextStream stream( d->socket );
     QStringList list = QStringList::split( QString::fromLatin1(" "), line );
     d->path = list[3];
-    kdDebug(5225) << "D->PATH is " << d->path << endl;
-    kdDebug(5225) << "D Line Was " << line << endl;
+//    kdDebug(5225) << "D->PATH is " << d->path << endl;
+//    kdDebug(5225) << "D Line Was " << line << endl;
     if (!d->path.isEmpty() ) {
         d->getMode = d->Desktops;
         stream << "call QPE/System startSync(QString) KitchenSync" << endl;

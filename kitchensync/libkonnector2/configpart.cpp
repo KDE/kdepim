@@ -50,6 +50,21 @@
 
 using namespace KSync;
 
+namespace {
+    void setCurrent( const QString& str, QComboBox* box ) {
+        if (str.isEmpty() ) return;
+        uint b = box->count();
+        for ( uint i = 0; i < b; i++ ) {
+            if ( box->text(i) == str ) {
+                box->setCurrentItem(i );
+                return;
+            }
+        }
+        box->insertItem( str );
+        box->setCurrentItem( b );
+    }
+}
+
 ConfigPart::ConfigPart(const Kapabilities &kaps, QWidget *parent, const char *name )
   : ConfigWidget( parent, name )
 {
@@ -385,23 +400,23 @@ void ConfigPart::init()
  */
 void ConfigPart::apply( const Kapabilities& caps ) {
     if (m_kap.needsIPs() || m_kap.needsSrcIP() ) {
-        m_conSrcIp->setCurrentText( caps.srcIP() );
+        setCurrent( caps.srcIP(), m_conSrcIp );
     }
     if (m_kap.needsIPs() || m_kap.needsDestIP() ) {
-        m_conDestIp->setCurrentText( caps.destIP() );
+        setCurrent( caps.destIP(), m_conDestIp );
     }
     if (m_kap.needAuthentication() ) {
-        m_conUser->setCurrentText( caps.user() );
-        m_conPass->setCurrentText( caps.password() );
+        setCurrent( caps.user(), m_conUser );
+        setCurrent( caps.password(), m_conPass );
     }
     if ( !m_kap.models().isEmpty() ) {
-        m_cmbDevice->setCurrentText( caps.currentModel() );
+        setCurrent( caps.currentModel(), m_cmbDevice );
     }
     if ( m_kap.needsModelName() ) {
         m_lneName->setText( caps.modelName() );
     }
     if ( !m_kap.connectionModes().isEmpty() ) {
-        m_cmbConnection->setCurrentText( caps.currentConnectionMode() );
+        setCurrent( caps.currentConnectionMode(), m_cmbConnection );
     }
     QMap<QString, QString> specs = caps.extras();
     for ( QMap<QString, QString>::ConstIterator it = specs.begin(); it != specs.end(); ++it ) {
@@ -411,6 +426,6 @@ void ConfigPart::apply( const Kapabilities& caps ) {
             edit->setText( it.data() );
     }
     if (!m_kap.ports().isEmpty() ) {
-        m_conPort->setCurrentText( QString::number( caps.currentPort() ) );
+        setCurrent( QString::number( caps.currentPort() ), m_conPort );
     }
 }

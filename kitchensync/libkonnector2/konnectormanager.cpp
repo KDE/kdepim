@@ -255,6 +255,8 @@ Device KonnectorManager::parseDevice( const QString &path ) {
     QString vendo = service.property( QString::fromLatin1("Vendor") ).toString();
     QString id    = service.property( QString::fromLatin1("Id"    ) ).toString();
 
+    kdDebug(5201) << "Id " << id << " " << name << endl;
+
     return Device(name, group, vendo, lib, id );
 }
 Device KonnectorManager::find( const QString& device ) {

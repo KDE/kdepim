@@ -46,17 +46,17 @@ public:
      * @param vendor The Vendor of the konnector/Device
      * @param library The libray where the Konnector/Device is in
      */
-    Device(const QString &ident, const QString &group,
+    Device(const QString &name, const QString &group,
             const QString &vendor, const QString &library,
-            const QString &id);
+            const QString &ident);
     Device( const Device & );
     ~Device();
 
     bool operator==(const Device &);
     /**
-     * @return returns the identity of the Device
+     * @return returns the translated name of the Device
      */
-    QString identify() const;
+    QString name() const;
 
     /**
      * @return returns the group/category of the Device
@@ -72,7 +72,7 @@ public:
      * @return returns the library of the Device
      */
     // untranslated id
-    QString id()const;
+    QString identify()const;
     QString library() const;
     Device &operator=(const Device & );
 private:

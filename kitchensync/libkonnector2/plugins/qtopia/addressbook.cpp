@@ -32,18 +32,18 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
     KSync::AddressBookSyncee *syncee = new KSync::AddressBookSyncee();
     if( device() )
 	syncee->setSupports( device()->supports( Device::Addressbook ) );
-	
+
     //return entry;
     QFile file( fileName );
     if( !file.open(IO_ReadOnly ) ){
-        delete syncee;
-	return 0;
+        //delete syncee; there is not addressbook so to get one synced we need to add an empty Syncee
+	return syncee;
     }
     QDomDocument doc("mydocument" );
     if( !doc.setContent( &file ) ){
 	file.close();
-        delete syncee;
-	return 0l;
+        //delete syncee; same as above...
+	return syncee;
     }
 
 

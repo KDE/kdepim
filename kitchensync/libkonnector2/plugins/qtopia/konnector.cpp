@@ -102,7 +102,7 @@ QString QtopiaPlugin::metaId()const {
     return d->socket->metaId();
 }
 QIconSet QtopiaPlugin::iconSet()const {
-    kdDebug(5224) << "iconSet" << endl;
+    kdDebug(5225) << "iconSet" << endl;
     QPixmap logo;
     logo.load( locate("appdata",  "pics/opie.jpg" ) );
     return QIconSet( logo );

@@ -50,11 +50,11 @@ Device::Device()
 Device::Device(const Device &dev )
 {
   d = new DevicePrivate();
-  d->name = dev.identify();
+  d->name = dev.name();
   d->group = dev.group();
   d->vendor = dev.vendor();
   d->library = dev.library();
-  d->id = dev.id();
+  d->id = dev.d->id;
 }
 Device &Device::operator=( const Device &dev )
 {
@@ -71,9 +71,9 @@ Device::~Device()
 {
   delete d;
 }
-QString Device::identify() const
+QString Device::name() const
 {
-  return d->id;
+  return d->name;
 }
 QString Device::group() const
 {
@@ -87,7 +87,7 @@ QString Device::library() const
 {
   return d->library;
 }
-QString Device::id()const
+QString Device::identify()const
 {
     return d->id;
 }

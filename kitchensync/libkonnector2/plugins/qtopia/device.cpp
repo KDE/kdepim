@@ -151,6 +151,9 @@ QString Device::password()const {
     else
 	return QString::fromLatin1("Qtopia");
 }
+void Device::setPassword(const QString& pass ){
+    m_pass = pass;
+}
 void Device::setMeta( const QString& str ){
     m_meta = str;
 }
