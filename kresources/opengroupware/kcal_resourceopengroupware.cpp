@@ -479,7 +479,7 @@ void OpenGroupware::uploadNextIncidence()
 {
   if ( !mIncidencesForUpload.isEmpty() ) {
     KURL url( mBaseUrl );
-    url.setPath( url.path() + "/new.ics" );
+    url.setPath( url.path() + "/Calendar/new.ics" );
     const QString inc = mIncidencesForUpload.front();
     kdDebug(7000) << "Uploading to: " << inc << endl;
     kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
