@@ -861,11 +861,16 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   }
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL(parentUrl, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-  newBox = (newBox.isEmpty()) ? aBox : aBox + aDelimiter + newBox;
+  if ( newBox.isEmpty() )
+    newBox = aBox;
+  else if ( !aBox.isEmpty() )
+    newBox = aBox + aDelimiter + newBox;
+  kdDebug(7116) << "IMAP4::mkdir - create " << newBox << endl;
   imapCommand *cmd = doCommand (imapCommand::clientCreate(newBox));
 
   if (cmd->result () != "OK")
   {
+    kdDebug(7116) << "IMAP4::mkdir - " << cmd->resultInfo() << endl;
     error (ERR_COULD_NOT_MKDIR, _url.prettyURL());
     completeQueue.removeRef (cmd);
     return;
@@ -2031,7 +2036,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
           completeQueue.removeRef (cmd);
         } // cache
       }
-      else
+      else // current == box
       {
         retVal = ITYPE_BOX;
       }
@@ -2055,6 +2060,8 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
         {
           _hierarchyDelimiter = (*it).hierarchyDelimiter();
           mHierarchyDelim[myNamespace] = _hierarchyDelimiter;
+          kdDebug(7116) << "IMAP4: parseURL - got delimiter " << 
+            _hierarchyDelimiter << endl;
         }
       }
       completeQueue.removeRef (cmd);
