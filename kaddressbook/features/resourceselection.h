@@ -38,10 +38,13 @@ class ResourceSelection : public KAB::ExtensionWidget
   Q_OBJECT
 
   public:
-    ResourceSelection( KAB::Core*, QWidget *parent );
+    ResourceSelection( KAB::Core*, QWidget *parent, const char *name );
+    virtual ~ResourceSelection();
 
     QString title() const;
     QString identifier() const;
+
+    void contactsSelectionChanged() {};
 
   private slots:
     void add();
@@ -49,9 +52,11 @@ class ResourceSelection : public KAB::ExtensionWidget
     void remove();
     void currentChanged( QListViewItem* );
 
+    void updateView();
+
   private:
     void initGUI();
-    void updateView();
+
     ResourceItem* selectedItem() const;
 
     KListView *mView;

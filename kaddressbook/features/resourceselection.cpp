@@ -23,6 +23,7 @@
 
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtimer.h>
 
 #include <kabc/resource.h>
 #include <kdialog.h>
@@ -78,8 +79,8 @@ class ResourceItem : public QCheckListItem
     bool mChecked;
 };
 
-ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent )
-  : KAB::ExtensionWidget( core, parent )
+ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent, const char *name )
+  : KAB::ExtensionWidget( core, parent, name ), mManager( 0 )
 {
   initGUI();
 
@@ -93,7 +94,11 @@ ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent )
   connect( mView, SIGNAL( clicked( QListViewItem* ) ),
            SLOT( currentChanged( QListViewItem* ) ) );
 
-  updateView();
+  QTimer::singleShot( 0, this, SLOT( updateView() ) );
+}
+
+ResourceSelection::~ResourceSelection()
+{
 }
 
 QString ResourceSelection::title() const
@@ -256,9 +261,9 @@ void ResourceSelection::initGUI()
 class ResourceSelectionFactory : public KAB::ExtensionFactory
 {
   public:
-    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char* )
+    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
     {
-      return new ResourceSelection( core, parent );
+      return new ResourceSelection( core, parent, name );
     }
 
     QString identifier() const
