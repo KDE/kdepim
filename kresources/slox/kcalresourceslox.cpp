@@ -491,7 +491,7 @@ void KCalResourceSlox::emitEndProgress()
 
 void KCalResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
 {
-  kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
+//  kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
   emit progress( this, "sloxkcal", -1 );
 }
 
