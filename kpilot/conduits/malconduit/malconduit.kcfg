@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilot_malconduitrc"/> 
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kpilot_malconduitrc"/> 
   <group name="General">
     <entry name="LastMALSync" key="Last MAL Sync" type="DateTime">
 				<default>QDateTime( QDate(1970,1,1), QTime(0,0,0) )</default>
@@ -34,7 +37,7 @@
     <entry name="ProxyUser" key="Proxy User" type="String">
         <default></default>
     </entry>
-    <entry name="ProxyPassword" key="Proxy Password" type="String">
+    <entry name="ProxyPassword" key="Proxy Password" type="Password">
         <default></default>
     </entry>
     <entry name="MALServer" key="MAL Server" type="String">
