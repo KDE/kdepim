@@ -33,15 +33,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#ifndef MSG_NOSIGNAL
-/* bloody glibc 2.0 doesn't define MSG_NOSIGNAL */
-#ifdef __linux__
-#define MSG_NOSIGNAL 0x4000
-#else
-#define MSG_NOSIGNAL 0
-#endif
-#endif
-
 #include <qstrlist.h>
 #include <klocale.h>
 
@@ -657,7 +648,7 @@ bool KNProtocolClient::sendStr(const QCString &str)
   while (todo > 0) {
     if (!waitForWrite())
       return false;
-    ret = send(tcpSocket,&str.data()[done],todo, MSG_NOSIGNAL);
+    ret = write(tcpSocket,&str.data()[done],todo);
     if (ret <= 0) {
       if (job) {
         QString str = i18n("Communication error:\n");
