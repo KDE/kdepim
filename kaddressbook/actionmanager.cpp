@@ -200,7 +200,7 @@ void ActionManager::initReadOnlyActions()
     features << i18n("None") << i18n("Contact Editor")
              << i18n("Distribution Lists");
     mActionFeatures->setItems( features );
-    
+
     mActionJumpBar = new KToggleAction(i18n("Show Jump Bar"), "next", 0,
                                        this, SLOT(quickToolsAction()),
                                        mACollection,
@@ -213,8 +213,6 @@ void ActionManager::initReadOnlyActions()
                        0, mWidget, SLOT(configureFilters()),
                        mACollection, "options_edit_filters");
     mActionSelectFilter = new KSelectAction(i18n("Select Filter"), 0,
-                                            0,
-                                            this, SLOT(slotFilterActivated(int)),
                                             mACollection, "select_filter");
 #if KDE_VERSION >= 309
     mActionSelectFilter->setMenuAccelsEnabled( false );
