@@ -780,6 +780,7 @@ void KeySelectionDialog::slotRereadKeys()
   }
 
   initKeylist( keys, KeyIDList( mKeyIds ) );
+  slotFilter();
 
   if( mListView->isMultiSelection() ) {
     connect( mListView, SIGNAL( selectionChanged() ),
@@ -1065,7 +1066,8 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
 
   for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( item->text( 0 ).upper().startsWith( str )
-		      || rx.search( item->text( 1 ) ) >= 0 );
+		      || rx.search( item->text( 1 ) ) >= 0
+		      || anyChildMatches( item, rx ) );
   
 }
 
@@ -1077,13 +1079,19 @@ void KeySelectionDialog::filterByUID( const QString & str )
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
 
   for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( rx.search( item->text( 1 ) ) >= 0 );
+    item->setVisible( rx.search( item->text( 1 ) ) >= 0
+		      || anyChildMatches( item, rx ) );
 }
 
 
 bool KeySelectionDialog::anyChildMatches( const QListViewItem * item, QRegExp & rx ) const
 {
-  for ( QListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != item ; ++it )
+  if ( !item )
+    return false;
+
+  QListViewItem * stop = item->nextSibling(); // It's OK if stop is NULL...
+
+  for ( QListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != stop ; ++it )
     if ( rx.search( it.current()->text( 1 ) ) >= 0 ) {
       //item->setOpen( true ); // do we want that?
       return true;
