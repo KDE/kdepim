@@ -163,6 +163,7 @@ int SyncAction::questionYesNo(const QString & text,
 	FUNCTIONSETUP;
 
 	bool checkboxReturn = false;
+	int r;
 	KMessageBox::ButtonCode result;
 	if (!key.isEmpty())
 	{
@@ -187,18 +188,21 @@ int SyncAction::questionYesNo(const QString & text,
 		startTickle(timeout);
 	}
 
-	result = (KMessageBox::ButtonCode) KMessageBox::createKMessageBox(dialog,
+	r = (KMessageBox::ButtonCode) KMessageBox::createKMessageBox(dialog,
 		QMessageBox::Question,
 		text,
 		QStringList(),
 		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
 		&checkboxReturn,
 		0);
+	switch(r)
+	{
+	case KDialogBase::Yes : result=KMessageBox::Yes ; break;
+	case KDialogBase::No  : result=KMessageBox::No; break;
+	case KDialogBase::Cancel : result=KMessageBox::Cancel; break;
+	default : break;
+	}
 	stopTickle();
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;
-#endif
 
 	if (!key.isEmpty() && checkboxReturn)
 	{
@@ -220,7 +224,9 @@ int SyncAction::questionYesNoCancel(const QString & text,
 	FUNCTIONSETUP;
 
 	bool checkboxReturn = false;
+	int r;
 	KMessageBox::ButtonCode result;
+
 	if (!key.isEmpty())
 	{
 		if (!KMessageBox::shouldBeShownYesNo(key,result))
@@ -248,18 +254,21 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		startTickle(timeout);
 	}
 
-	result = (KMessageBox::ButtonCode) KMessageBox::createKMessageBox(dialog,
+	r = KMessageBox::createKMessageBox(dialog,
 		QMessageBox::Question,
 		text,
 		QStringList(),
 		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
 		&checkboxReturn,
 		0);
+	switch(r)
+	{
+	case KDialogBase::Yes : result=KMessageBox::Yes ; break;
+	case KDialogBase::No  : result=KMessageBox::No; break;
+	case KDialogBase::Cancel : result=KMessageBox::Cancel; break;
+	default : break;
+	}
 	stopTickle();
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;
-#endif
 
 	if (!key.isEmpty() && checkboxReturn)
 	{
