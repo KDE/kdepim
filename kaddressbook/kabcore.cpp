@@ -529,7 +529,7 @@ void KABCore::setModified( bool modified )
   mModified = modified;
   mActionSave->setEnabled( mModified );
 
-  mViewManager->refreshView();
+  mSearchManager->reload();
 }
 
 bool KABCore::modified() const
