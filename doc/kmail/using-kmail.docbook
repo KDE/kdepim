@@ -11,8 +11,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-07-13</date>
-<releaseinfo>1.7</releaseinfo>
+<date>2004-09-24</date>
+<releaseinfo>1.7.50</releaseinfo>
 </chapterinfo>
 
 <title>Using &kmail;</title>
@@ -44,13 +44,17 @@ folders.</para>
 <term>Message list (in the upper right by default)</term>
 <listitem>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
-Date, optionally Size) for the messages in the currently selected folder. Clicking on a header
+Date, and other optional columns like Size, Attachment Flag, Important Flag, etc.)
+for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane; you can also select
 more than one message by holding down the &Ctrl; key when clicking on messages.
 You may sort the messages by clicking on the column that you wish to
 sort; if you click on the same column more than once, sort order will toggle
 between ascending/descending and some alternative sorting criteria will become
-available (like sorting by Status when you click on the header of the Subject column).</para>
+available (like sorting by Status when you click on the header of the Subject column).
+Clicking the <mousebutton>right</mousebutton> mousebutton on the list header shows a popup menu,
+which allows to show or hide several columns in the list.
+</para>
 </listitem>
 </varlistentry>
 <varlistentry>
