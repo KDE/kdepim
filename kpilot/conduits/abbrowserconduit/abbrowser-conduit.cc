@@ -425,8 +425,8 @@ void AbbrowserConduit::syncPalmRecToPC()
 void AbbrowserConduit::syncPCRecToPalm()
 {
 	FUNCTIONSETUP;
-//QTimer::singleShot(0, this, SLOT(cleanup()));
-//return;
+QTimer::singleShot(0, this, SLOT(cleanup()));
+return;
 	bool ok;
 	KABC::Addressee ad=*abiter;
 	QString recID(ad.custom(appString, idString));
@@ -746,8 +746,8 @@ DEBUGCONDUIT<<"backup exists, merge in changes of "<<padr.getField(entryLastname
 DEBUGCONDUIT<<"vor insertCustom"<<endl;
 #endif
 		ad.insertCustom(appString, idString, QString::number(padr.getID()));
-		if (!_equal(padr, ad))
-		{
+//		if (!_equal(padr, ad))
+//		{
 #ifdef DEBUG
 DEBUGCONDUIT<<"Not equal"<<endl;
 #endif
@@ -760,7 +760,7 @@ DEBUGCONDUIT<<"Not equal"<<endl;
 //			rec->setID(id);
 //			fLocalDatabase->writeRecord(rec);
 //			KPILOT_DELETE(pr);
-		}
+//		}
 	}
 	return ad;
 }
@@ -870,52 +870,93 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress,
 		return false;
 	} 
 	if (_compare( abEntry.givenName(), piAddress.getField(entryFirstname) ) )
+	{
 		return false;
+	} 
 	if (_compare( abEntry.title(), piAddress.getField(entryTitle)))
+	{
 		return false;
+	} 
 	if (_compare( abEntry.organization(), piAddress.getField(entryCompany)))
+	{
 		return false;
+	} 
 	if (_compare( abEntry.note(), piAddress.getField(entryNote)))
+	{
 		return false;
+	} 
 	int cat=_getCat(abEntry.categories() );
 //#ifdef DEBUG
 //	DEBUGCONDUIT<<"Category for "<<abEntry.realName()<<" was: \""<<cat<<" ("<<fAddressAppInfo.category.name[cat]<<")"<<endl;
 //#endif
 	if (_compare( fAddressAppInfo.category.name[cat], piAddress.getCategoryLabel()))
+	{
 		return false;
+	} 
 	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Work).number(), piAddress.getPhoneField(PilotAddress::eWork)))
+	{
 		return false;
+	} 
 	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Home).number(), piAddress.getPhoneField(PilotAddress::eHome)))
+	{
 		return false;
-
+	} 
 // TODO: what to do with the other record on the palm???
-//	if (_compare( abEntry.findRef(fPilotOtherMap), piAddress.getPhoneField(PilotAddress::eEmail)))
+//	if (_compare( abEntry.findRef(fPilotOtherMap), piAddress.getPhoneField(PilotAddress::eOther)))
 //		return false;
-	if (_compare( abEntry.preferredEmail(), piAddress.getPhoneField(PilotAddress::eOther)) )
+	if (_compare( abEntry.preferredEmail(), piAddress.getPhoneField(PilotAddress::eEmail)) )
+	{
 		return false;
-	if (isPilotFaxHome())
+	} 
+/*	if (isPilotFaxHome())
+	{
 		if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home).number(), piAddress.getPhoneField(PilotAddress::eFax) ) )
+		{
 			return false;
-		else if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work).number(), piAddress.getPhoneField(PilotAddress::eFax) ) )
-			return false;
-	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Cell).number(), piAddress.getPhoneField(PilotAddress::eMobile) ) )
+		} 
+	}
+	else if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work).number(), piAddress.getPhoneField(PilotAddress::eFax) ) )
+	{
 		return false;
-	KABC::Address address = abEntry.address(KABC::Address::Home);
+	} */
+	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Fax).number(), piAddress.getPhoneField(PilotAddress::eFax)))
+	{
+		return false;
+	}
+	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Cell).number(), piAddress.getPhoneField(PilotAddress::eMobile) ) )
+	{
+		return false;
+	} 
+/*	KABC::Address address = abEntry.address(KABC::Address::Home);
 	if (_compare( address.street(), piAddress.getField(entryAddress)))
 	{
 		address = abEntry.address(KABC::Address::Work);
 		if (_compare( address.street(), piAddress.getField(entryAddress)))
+		{
 			return false;
+		} 
+	}*/
+	KABC::Address address = abEntry.address(0);
+	if (_compare( address.street(), piAddress.getField(entryAddress)))
+	{
+		return false;
 	}
 	if (_compare( address.locality(), piAddress.getField(entryCity)))
+	{
 		return false;
+	} 
 	if (_compare( address.region(), piAddress.getField(entryState)))
+	{
 		return false;
+	} 
 	if (_compare( address.postalCode(), piAddress.getField(entryZip)))
+	{
 		return false;
+	} 
 	if (_compare( address.country(), piAddress.getField(entryCountry)))
+	{
 		return false;
-
+	} 
 	
 	return true;
 }
@@ -961,17 +1002,18 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	// to the pilot phone entries so they can do the above assignment and
 	// assign the Other entry which is currenty unused
 	// TODO: really use home address by default?? Should add some config option for this
-	KABC::Address homeAddress = fromAbEntry.address(KABC::Address::Home);
+//	KABC::Address homeAddress = fromAbEntry.address(KABC::Address::Home);
+	KABC::Address homeAddress = fromAbEntry.address(0);
 	if (!homeAddress.isEmpty()) 
 		_setPilotAddress(toPilotAddr, homeAddress);
-	else
+/*	else
 	{
 		// no home address, try work address
 		KABC::Address workAddress =
 			fromAbEntry.address(KABC::Address::Work);
 		if (!workAddress.isEmpty())
 			_setPilotAddress(toPilotAddr, workAddress);
-	}
+	}*/
 	
 	// TODO: Process the additional entries from the Palm (the palm database app block tells us the name of the fields)
 	
@@ -1043,14 +1085,17 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	// be a prefs option
 	// for now, just assign to home since that's what I'm using it for
 	// TODO: really use home address for this???
-	KABC::Address homeAddress = toAbEntry.address(KABC::Address::Home);
+	KABC::Address homeAddress = toAbEntry.address(0);//KABC::Address::Home);
+	// TODO: check if work address is used for this, and if so, copy the data to the work address!
+	// Don't use any type on the address. This way we even avoid the option for home/work address/fax!!!
+//	homeAddress.setType(KABC::Address::Home);
 	homeAddress.setStreet(fromPiAddr.getField(entryAddress));
 	homeAddress.setLocality(fromPiAddr.getField(entryCity));
 	homeAddress.setRegion(fromPiAddr.getField(entryState));
 	homeAddress.setPostalCode(fromPiAddr.getField(entryZip));
 	homeAddress.setCountry(fromPiAddr.getField(entryCountry));
 	// always use "PalmAddress" as id, so the palm address is replaced!
-	homeAddress.setId("PalmAddress");
+//	homeAddress.setId("PalmAddress");
 	toAbEntry.insertAddress(homeAddress);
 
 	// copy the fromPiAddr pilot id to the custom field KPilot_Id;
@@ -1155,7 +1200,14 @@ int AbbrowserConduit::_compare(const QString &str1, const QString &str2) const
 //#endif
 	
 	if (str1.isEmpty() && str2.isEmpty() ) return 0;
-	else return str1.compare(str2);
+	else 
+	{
+#ifdef DEBUG
+		if (str1.compare(str2)) 
+			DEBUGCONDUIT<<"_compare: str1="<<str1<<", str2="<<str2<<endl;//", str3="<<str3<<endl;
+#endif
+		return str1.compare(str2);
+	}
 }
 
 
@@ -1168,10 +1220,10 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	PilotAddress pilotAddress(outPilotAddress);
 	KABC::Addressee abEntry(outAbEntry);
 	QString thisName(outAbEntry.realName());
-
 	bool mergeNeeded = false;
 	QString mergedStr;
 	int res;
+	KABC::PhoneNumber phone;
 
 	res=_conflict(thisName, i18n("last name"), pilotAddress.getField(entryLastname), backupAddress.getField(entryLastname),  abEntry.familyName(), mergeNeeded, mergedStr);
 #ifdef DEBUG
@@ -1216,20 +1268,24 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 		abEntry.setNote(mergedStr);
 	}
 
-	res=_conflict(thisName, i18n("work phone"), pilotAddress.getPhoneField(PilotAddress::eWork), backupAddress.getPhoneField(PilotAddress::eWork), abEntry.phoneNumber(KABC::PhoneNumber::Work).number(), mergeNeeded, mergedStr);
+	phone=abEntry.phoneNumber(KABC::PhoneNumber::Work);
+	res=_conflict(thisName, i18n("work phone"), pilotAddress.getPhoneField(PilotAddress::eWork), backupAddress.getPhoneField(PilotAddress::eWork), phone.number(), mergeNeeded, mergedStr);
 	if (res & ADD_BOTH) return clearAdd(res);
 	if (mergeNeeded)
 	{
 		pilotAddress.setPhoneField(PilotAddress::eWork, mergedStr.latin1());
-		abEntry.insertPhoneNumber(KABC::PhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Work)));
+		phone.setNumber(mergedStr);
+		abEntry.insertPhoneNumber(phone);
 	}
 
-	res=_conflict(thisName, i18n("home phone"), pilotAddress.getPhoneField(PilotAddress::eHome), backupAddress.getPhoneField(PilotAddress::eHome), abEntry.phoneNumber(KABC::PhoneNumber::Home).number(), mergeNeeded, mergedStr);
+	phone=abEntry.phoneNumber(KABC::PhoneNumber::Home);
+	res=_conflict(thisName, i18n("home phone"), pilotAddress.getPhoneField(PilotAddress::eHome), backupAddress.getPhoneField(PilotAddress::eHome), phone.number(), mergeNeeded, mergedStr);
 	if (res & ADD_BOTH) return clearAdd(res);
 	if (mergeNeeded)
 	{
 		pilotAddress.setPhoneField(PilotAddress::eHome, mergedStr.latin1());
-		abEntry.insertPhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Home));
+		phone.setNumber(mergedStr);
+		abEntry.insertPhoneNumber(phone);
 	}
 
 	res=_conflict(thisName, i18n("email"), pilotAddress.getPhoneField(PilotAddress::eEmail), backupAddress.getPhoneField(PilotAddress::eEmail), abEntry.preferredEmail(), mergeNeeded, mergedStr);
@@ -1237,18 +1293,20 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	if (mergeNeeded)
 	{
 		pilotAddress.setPhoneField(PilotAddress::eEmail, mergedStr.latin1());
-		abEntry.insertEmail(mergedStr);
+		abEntry.insertEmail(mergedStr, true);
 	}
 
-	res=_conflict(thisName, i18n("mobile phone"), pilotAddress.getPhoneField(PilotAddress::eMobile), backupAddress.getPhoneField(PilotAddress::eMobile), abEntry.phoneNumber(KABC::PhoneNumber::Cell).number(), mergeNeeded, mergedStr);
+	phone=abEntry.phoneNumber(KABC::PhoneNumber::Cell);
+	res=_conflict(thisName, i18n("mobile phone"), pilotAddress.getPhoneField(PilotAddress::eMobile), backupAddress.getPhoneField(PilotAddress::eMobile), phone.number(), mergeNeeded, mergedStr);
 	if (res & ADD_BOTH) return clearAdd(res);
 	if (mergeNeeded)
 	{
 		pilotAddress.setPhoneField(PilotAddress::eMobile, mergedStr.latin1());
-		abEntry.insertPhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Cell));
+		phone.setNumber(mergedStr);
+		abEntry.insertPhoneNumber(phone);
 	}
 
-	if (isPilotFaxHome())
+/*	if (isPilotFaxHome())
 	{
 		res=_conflict(thisName, i18n("fax"), pilotAddress.getPhoneField(PilotAddress::eFax), backupAddress.getPhoneField(PilotAddress::eFax),
 				abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home).number(), mergeNeeded, mergedStr);
@@ -1257,24 +1315,31 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	{
 		res=_conflict(thisName, i18n("fax"), pilotAddress.getPhoneField(PilotAddress::eFax), backupAddress.getPhoneField(PilotAddress::eFax),
 				abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work).number(), mergeNeeded, mergedStr);
-	}
+	}*/
+	phone=abEntry.phoneNumber(KABC::PhoneNumber::Fax );
+	res=_conflict(thisName, i18n("fax"), pilotAddress.getPhoneField(PilotAddress::eFax), backupAddress.getPhoneField(PilotAddress::eFax),
+			phone.number(), mergeNeeded, mergedStr);
 	if (res & ADD_BOTH) return clearAdd(res);
 	if (mergeNeeded)
 	{
 		pilotAddress.setPhoneField(PilotAddress::eFax, mergedStr.latin1());
-		if (isPilotFaxHome())
+		phone.setNumber(mergedStr);
+		abEntry.insertPhoneNumber(phone);
+/*		if (isPilotFaxHome())
 			abEntry.insertPhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax));
 		else
-			abEntry.insertPhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax));
+			abEntry.insertPhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax));*/
 	}
 
+	phone=abEntry.phoneNumber(KABC::PhoneNumber::Pager);
 	res=_conflict(thisName, i18n("pager"), pilotAddress.getPhoneField(PilotAddress::ePager), backupAddress.getPhoneField(PilotAddress::ePager),
-			abEntry.phoneNumber(KABC::PhoneNumber::Pager).number(), mergeNeeded, mergedStr);
+			phone.number(), mergeNeeded, mergedStr);
 	if (res & ADD_BOTH) return clearAdd(res);
 	if (mergeNeeded)
 	{
 		pilotAddress.setPhoneField(PilotAddress::ePager, mergedStr.latin1());
-		abEntry.insertPhoneNumber(KABC::PhoneNumber(mergedStr, KABC::PhoneNumber::Pager));
+		phone.setNumber(mergedStr);
+		abEntry.insertPhoneNumber(phone );
 	}
 
 //TODO: How do I sync the other field???????
@@ -1290,7 +1355,7 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 
 	// TODO: this doesn't really work!!!!
 	KABC::Address abAddress;
-	if (isPilotStreetHome())
+/*	if (isPilotStreetHome())
 	{
 		abAddress = abEntry.address(KABC::Address::Home);
 		res=_conflict(thisName, i18n("home address"), pilotAddress.getField(entryAddress), backupAddress.getField(entryAddress),
@@ -1301,7 +1366,10 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 		abAddress = abEntry.address(KABC::Address::Work);
 		res=_conflict(thisName, i18n("work address"), pilotAddress.getField(entryAddress), backupAddress.getField(entryAddress),
 				abAddress.street(), mergeNeeded, mergedStr);
-	}
+	}*/
+	abAddress = abEntry.address(0);
+	res=_conflict(thisName, i18n("address"), pilotAddress.getField(entryAddress), backupAddress.getField(entryAddress),
+			abAddress.street(), mergeNeeded, mergedStr);
 	if (res & ADD_BOTH) return clearAdd(res);
 	if (mergeNeeded)
 	{
@@ -1468,7 +1536,7 @@ DEBUGCONDUIT<<"_equal(backupAddress, abEntry)"<<endl;
 			return CHANGED_PC;
 		} else {
 #ifdef DEBUG
-DEBUGCONDUIT<<"Attempt a merge..."<<endl;
+DEBUGCONDUIT<<"!_equal(backupAddress, abEntry), Attempt a merge..."<<endl;
 #endif
 			// Both pc and palm were changed => merge, override, duplicate or ignore.
 			if (doSmartMerge()) {
@@ -1763,6 +1831,9 @@ void AbbrowserConduit::doTest()
 }*/
 
 // $Log$
+// Revision 1.35  2002/07/01 23:25:46  kainhofe
+// implemented categories syncing, many things seem to work, but still every sync creates an empty zombie.
+//
 // Revision 1.34  2002/06/30 22:17:50  kainhofe
 // some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
 //
