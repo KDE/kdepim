@@ -58,29 +58,6 @@ using namespace KSync;
 typedef KParts::GenericFactory< Backup> BackupFactory;
 K_EXPORT_COMPONENT_FACTORY( libksync_backup, BackupFactory )
 
-class BackupItem : public QListViewItem
-{
-  public:
-    BackupItem( QListView *parent, const QString &dirName )
-      : QListViewItem( parent )
-    {
-      QDateTime dt = QDateTime::fromString( dirName, ISODate );
-      QString txt;
-      if ( dt.isValid() ) {
-        txt = KGlobal::locale()->formatDateTime( dt );
-        mDirName = dirName;
-      } else {
-        txt = i18n("Invalid (\"%1\")").arg( dirName );
-      }
-      setText( 0, txt );
-    }
-    
-    QString dirName() const { return mDirName; }
-    
-  private:
-    QString mDirName;
-};
-
 Backup::Backup( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
   : ActionPart( parent, name ), m_widget( 0 ), mActive( false )
