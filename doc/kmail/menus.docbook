@@ -1040,12 +1040,36 @@ to compose a new message &etc;).</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Statusbar</guimenuitem>
+<guimenuitem>Configure Filters...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>If enabled, the Statusbar is visible (the Statusbar is the small one on
-the bottom which shows useful short messages and link targets).</para>
+<para>Opens the <link linkend="filters">Message Filters</link> window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure POP Filters...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="popfilters">Configure Pop Filters</link> window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Anti Spam Wizard...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>It starts a <link linkend="the-anti-spam-wizard">wizard</link> which can help 
+you to set up spam filtering.</para>
 </listitem>
 </varlistentry>
 
@@ -1066,19 +1090,6 @@ menu commands.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Toolbars...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens a window that lets you choose which icons are visible in the
-toolbar.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
 <guimenuitem>Configure Notifications...</guimenuitem>
 </menuchoice>
 </term>
@@ -1092,35 +1103,24 @@ like playing a sound.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that lets you choose which icons are visible in the
+toolbar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>Opens the <link linkend="configure">Configure</link> window.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Filters...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="filters">Message Filters</link> window.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure POP Filters...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="popfilters">Configure Pop Filters</link> window.</para>
 </listitem>
 </varlistentry>
 
