@@ -81,84 +81,100 @@ void KonsoleKalendar::importCalendar()
 
 bool KonsoleKalendar::createCalendar()
 {
-  kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables.getCalendarFile() << endl;
- 
+  bool status = false;
   CalendarLocal newCalendar;
 
+  kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables.getCalendarFile() << endl;
+
   if( newCalendar.save( m_variables.getCalendarFile() ) ) {
-     newCalendar.close();
-     return true;
-  } else {
-     return false;
+    newCalendar.close();
+    status = true;
   }
-	
-  return false;
+  return status;
 }
 
 bool KonsoleKalendar::showInstance()
 {
   bool status = true;
   QFile f;
-  
+  QString title;
+
   if( m_variables.isDryRun() ) {
     cout << i18n("View Events <Dry Run>:").local8Bit() << endl;
     m_variables.printSpecs("view");
   } else {
 
-     if( m_variables.isExportFile() ) {
-       f.setName( m_variables.getExportFile() );
-       if ( !f.open( IO_WriteOnly ) ) {
-	 status = false;
-	 kdDebug() << "konsolekalendar.cpp::showInstance() | unable to open export file " << m_variables.getExportFile() << endl;
-       } // if
-     } else {
-         f.open( IO_WriteOnly, stdout );
+    kdDebug() << "konsolekalendar.cpp::showInstance() | open export file" << endl;
+
+    if( m_variables.isExportFile() ) {
+      f.setName( m_variables.getExportFile() );
+      if ( !f.open( IO_WriteOnly ) ) {
+	status = false;
+	kdDebug() << "konsolekalendar.cpp::showInstance() | unable to open export file " << m_variables.getExportFile() << endl;
+      } // if
+    } else {
+      f.open( IO_WriteOnly, stdout );
     } // else
-  }
 
     if( status ) {
       kdDebug() << "konsolekalendar.cpp::showInstance() | opened successful" << endl;
+
       QTextStream ts( &f );
-	    
+
       if( m_variables.getExportType() != HTML ) {
 
-	 Event::List *eventList;
-         eventList = new Event::List ( m_Calendar->rawEvents( m_variables.getStartDateTime().date(),
-				        m_variables.getEndDateTime().date(),
-                                        false ) );
-	 status = printEventList ( &ts, eventList );
-         delete eventList;
+	kdDebug() << "konsolekalendar.cpp::showInstance() | get raw events list" << endl;
 
-      } else if( m_variables.getExportType() == HTML &&  
-                 m_variables.isExportFile() == true ) {
-        kdDebug() << "konsolekalendar.cpp::showInstance() | HTML" << endl;
-        KCal::HtmlExport Export( m_Calendar );
-        Export.setEmail( "" );
-        Export.setFullName( "" );
-  
-        Export.setMonthViewEnabled( true );
-        Export.setEventsEnabled( true );
-        Export.setTodosEnabled( true );
-        Export.setCategoriesEventEnabled( true );
-        Export.setAttendeesEventEnabled( true );
-        Export.setExcludePrivateEventEnabled( true );
-        Export.setExcludeConfidentialEventEnabled( true );
-        Export.setCategoriesTodoEnabled( true );
-        Export.setAttendeesTodoEnabled( true );
-        Export.setExcludePrivateTodoEnabled( true );
-        Export.setExcludeConfidentialTodoEnabled( true );
-        Export.setDueDateEnabled( true );
+	Event::List *eventList;
+	eventList = new Event::List ( m_Calendar->rawEvents( m_variables.getStartDateTime().date(),
+							     m_variables.getEndDateTime().date(),
+							     false ) );
 
-        Export.setDateRange( m_variables.getStartDateTime().date(), m_variables.getEndDateTime().date());
+	status = printEventList ( &ts, eventList );
 
-        Export.save( &ts );
+	delete eventList;
 
-    } else {    
-	cout << "Can't initialize export. If you are trying to export as HTML" << endl;
-	cout << "try use --export-file <file name> switch." << endl;
-		 
+      } else {
+
+	kdDebug() << "konsolekalendar.cpp::showInstance() | HTML" << endl;
+	KCal::HtmlExport Export( m_Calendar );
+	title = "Calendar for " + m_variables.getStartDateTime().date().toString(Qt::TextDate);
+	if( m_variables.getStartDateTime().date() != m_variables.getEndDateTime().date() ) {
+	  title += " - " + m_variables.getEndDateTime().date().toString(Qt::TextDate);
+	}
+	Export.setTitle( title );
+	Export.setEmail( "" );
+	Export.setFullName( "" );
+	Export.setCredit( "KonsoleKalendar", "http://pim.kde.org/components/konsolekalendar.php" );
+
+	Export.setMonthViewEnabled( false );  // month view would be another export mode, no?
+	Export.setEventsEnabled( true );
+	Export.setCategoriesEventEnabled( true );
+	Export.setAttendeesEventEnabled( true );
+	Export.setExcludePrivateEventEnabled( true );
+	Export.setExcludeConfidentialEventEnabled( true );
+// Not supporting Todos yet
+	title = "To-Do List for " + m_variables.getStartDateTime().date().toString(Qt::TextDate);
+	if( m_variables.getStartDateTime().date() != m_variables.getEndDateTime().date() ) {
+	  title += " - " + m_variables.getEndDateTime().date().toString(Qt::TextDate);
+	}
+	Export.setTitleTodo( title );
+	Export.setTodosEnabled( false );
+	Export.setCategoriesTodoEnabled( false );
+	Export.setAttendeesTodoEnabled( false );
+	Export.setExcludePrivateTodoEnabled( false );
+	Export.setExcludeConfidentialTodoEnabled( false );
+	Export.setDueDateEnabled( false );
+
+	Export.setDateRange( m_variables.getStartDateTime().date(), m_variables.getEndDateTime().date());
+
+	status = Export.save( &ts );
+      }
+
+      f.close();
+
     }
-  }	  
+  }
 
   return status;
 }
@@ -166,8 +182,8 @@ bool KonsoleKalendar::showInstance()
 bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
 {
 
-  bool status = true;	
-	
+  bool status = true;
+
   if( eventList->count() ) {
 
     Event *singleEvent;
@@ -178,11 +194,8 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
       singleEvent = *it;
 
       if( m_variables.getExportType() == CSV ) {
-       status = exports.exportAsCSV( ts, singleEvent );
-       kdDebug() << "konsolekalendar.cpp::printEventList() | CSV export" << endl;
-      } else if( m_variables.getExportType() == TEXT_KORGANIZER ) {
-        status = exports.exportAsTxtKorganizer( ts, singleEvent );
-        kdDebug() << "konsolekalendar.cpp::printEventList() | TEXT-KORGANIZER export" << endl;
+	status = exports.exportAsCSV( ts, singleEvent );
+	kdDebug() << "konsolekalendar.cpp::printEventList() | CSV export" << endl;
       } else {  // Default ExportType is TEXT_KONSOLEKALENDAR
         status = exports.exportAsTxt( ts, singleEvent );
         kdDebug() << "konsolekalendar.cpp::printEventList() | TEXT export" << endl;  
@@ -190,7 +203,11 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
 
     }// for
 
-  }// if eventList.count() != 0
+  } else {
+
+    // if no events
+    *ts << "(no events)" << endl;
+  }
 
   return( status );
 }
@@ -237,5 +254,5 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
       break;
     }
   }
-  return(found);
+  return found;
 }
