@@ -55,6 +55,7 @@
 #include "EmpathFilterManagerDialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathConfigPOP3Dialog.h"
+#include "EmpathMessageListWidget.h"
 
 QString EmpathAboutText;
 
@@ -93,6 +94,7 @@ EmpathUI::EmpathUI()
     EmpathMainWindow * w = new EmpathMainWindow;
     w->show();
     kapp->setMainWidget(w);
+    EmpathMessageListItem::initStatic();
 }
 
 EmpathUI::~EmpathUI()

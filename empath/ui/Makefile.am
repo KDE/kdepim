@@ -15,6 +15,7 @@ EmpathAddressSelectionWidget.cpp \
 EmpathAttachmentEditDialog.cpp \
 EmpathAttachmentListWidget.cpp \
 EmpathAttachmentListItem.cpp \
+EmpathAttachmentViewWidget.cpp \
 EmpathComposeSettingsDialog.cpp \
 EmpathComposeWidget.cpp \
 EmpathComposeWindow.cpp \

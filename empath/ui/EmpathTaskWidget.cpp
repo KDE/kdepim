@@ -106,7 +106,6 @@ EmpathTaskWidget::s_addTask(EmpathTask * t)
     setFixedHeight(itemList_.count() * itemHeight_);
     resize(width(), itemList_.count() * itemHeight_);
     show();
-    kapp->processEvents();
 }
 
     void
@@ -159,7 +158,6 @@ EmpathTaskItem::s_done()
 EmpathTaskItem::s_inc()
 {
     progressMeter_->setProgress(++pos_);
-    kapp->processEvents();
 }
 
     void
@@ -172,9 +170,13 @@ EmpathTaskItem::s_setMax(int max)
     void
 EmpathTaskItem::s_setPos(int pos)
 {
+    int newPos = (pos / (double)max_) * 100;
+    empathDebug("pos_ == " + QString::number(pos_) + " newPos == " + QString::number(newPos));
+    if (newPos = pos)
+        return;
+
     pos_ = pos;
     progressMeter_->setProgress(pos_);
-    kapp->processEvents();
 }
 
     QSize

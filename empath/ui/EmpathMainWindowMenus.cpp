@@ -7,25 +7,56 @@ extern QString EmpathAboutText;
 void
 EmpathMainWindow::_setupMenuBar()
 {
-    fileMenu_       = new QPopupMenu;
+    messageMenu_    = new QPopupMenu;
     selectMenu_     = new QPopupMenu;
     goMenu_         = new QPopupMenu;
     folderMenu_     = new QPopupMenu;
-    messageMenu_    = new QPopupMenu;
     optionsMenu_    = new QPopupMenu;
     optionsMenu_->setCheckable(true);
 
     QActionCollection * actionCollection 
             = messageListWidget_->actionCollection();
 
-    // File menu
+    // Message menu
+   
+    actionCollection->action("messageView")->plug(messageMenu_);
     
-    fileMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Pending Mail"),
+    messageMenu_->insertSeparator();
+
+    actionCollection->action("messageCompose")->plug(messageMenu_);
+    actionCollection->action("messageReply")->plug(messageMenu_);
+    actionCollection->action("messageReplyAll")->plug(messageMenu_);
+    actionCollection->action("messageForward")->plug(messageMenu_);
+    
+    messageMenu_->insertItem(empathIcon("menu-bounce"),
+        i18n("&Bounce"),
+        this, SLOT(s_messageBounce()));
+
+    actionCollection->action("messageDelete")->plug(messageMenu_);
+    actionCollection->action("messageSaveAs")->plug(messageMenu_);
+
+    messageMenu_->insertItem(empathIcon("menu-copy"),
+        i18n("&Copy to..."),
+        this, SLOT(s_messageCopyTo()));
+    
+    messageMenu_->insertItem(empathIcon("menu-move"),
+        i18n("&Move to..."),
+        this, SLOT(s_messageMoveTo()));
+    
+    messageMenu_->insertSeparator();
+        
+    messageMenu_->insertItem(empathIcon("menu-print"),
+        i18n("&Print") + "...",
+        this, SLOT(s_messagePrint()));
+    
+    messageMenu_->insertSeparator();
+
+    messageMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Pending Mail"),
         this, SLOT(s_fileSendNew()));
-
-    fileMenu_->insertItem(i18n("&Close"),
+    
+    messageMenu_->insertItem(i18n("&Close"),
         this, SLOT(s_fileClose()));
-
+ 
     // Select menu
     
     selectMenu_->insertItem(empathIcon("tree-marked"), i18n("&Tagged"),
@@ -65,41 +96,7 @@ EmpathMainWindow::_setupMenuBar()
         i18n("Delete") + "...",
         this, SLOT(s_folderDelete()));
    
-    // Message menu
-   
-    actionCollection->action("messageView")->plug(messageMenu_);
-    
-    messageMenu_->insertSeparator();
-
-    actionCollection->action("messageCompose")->plug(messageMenu_);
-    actionCollection->action("messageReply")->plug(messageMenu_);
-    actionCollection->action("messageReplyAll")->plug(messageMenu_);
-    actionCollection->action("messageForward")->plug(messageMenu_);
-    
-    messageMenu_->insertItem(empathIcon("menu-bounce"),
-        i18n("&Bounce"),
-        this, SLOT(s_messageBounce()));
-
-    actionCollection->action("messageDelete")->plug(messageMenu_);
-    actionCollection->action("messageSaveAs")->plug(messageMenu_);
-
-    messageMenu_->insertItem(empathIcon("menu-copy"),
-        i18n("&Copy to..."),
-        this, SLOT(s_messageCopyTo()));
-    
-    messageMenu_->insertItem(empathIcon("menu-move"),
-        i18n("&Move to..."),
-        this, SLOT(s_messageMoveTo()));
-    
-    messageMenu_->insertSeparator();
-        
-    messageMenu_->insertItem(empathIcon("menu-print"),
-        i18n("&Print") + "...",
-        this, SLOT(s_messagePrint()));
-    
-//    messageMenu_->insertItem(
-//        i18n("Fil&ter"),
-//        this, SLOT(s_messageFilter()));
+    // Options menu
 
     hideReadIndex_ = optionsMenu_->insertItem(empathIcon("tree"),
         i18n("Show only &new messages"),
@@ -135,10 +132,9 @@ EmpathMainWindow::_setupMenuBar()
     
     helpMenu_ = helpMenu(EmpathAboutText);
     
-    menu_->insertItem(i18n("&File"), fileMenu_);
+    menu_->insertItem(i18n("&Message"), messageMenu_);
     menu_->insertItem(i18n("&Select"), selectMenu_);
     menu_->insertItem(i18n("&Go"), goMenu_);
-    menu_->insertItem(i18n("&Message"), messageMenu_);
     menu_->insertItem(i18n("&Options"), optionsMenu_);
     menu_->insertSeparator();
     menu_->insertItem(i18n("&Help"), helpMenu_);

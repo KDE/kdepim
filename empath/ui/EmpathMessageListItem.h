@@ -74,17 +74,31 @@ class EmpathMessageListItem : public QListViewItem
         
         void setStatus(RMM::MessageStatus);
         
+        static void initStatic();
+        
         const char * className() const { return "EmpathMessageListItem"; }
         
     protected:
 
-        virtual void paintCell(QPainter * p, const QColorGroup &, int, int, int);
+        virtual void paintCell(QPainter *, const QColorGroup &, int, int, int);
 
     private:
 
         void _init();
 
-        QPixmap _statusIcon(RMM::MessageStatus);
+        QPixmap & _statusIcon(RMM::MessageStatus);
+
+        static QPixmap * px_;
+        static QPixmap * px_read_;
+        static QPixmap * px_marked_;
+        static QPixmap * px_replied_;
+
+        static QPixmap * px_read_marked_;
+        static QPixmap * px_read_replied_;
+        static QPixmap * px_marked_replied_;
+        static QPixmap * px_read_marked_replied_;
+
+        static QColor * unreadColour_;
 
         EmpathIndexRecord m_;
         

@@ -101,12 +101,12 @@ RAddress::operator == (RAddress & a)
     void
 RAddress::_parse()
 {
-    QCString s = strRep_.stripWhiteSpace();
+    strRep_ = strRep_.stripWhiteSpace();
 
     // RFC822: group: phrase ":" [#mailbox] ";"
     // -> If a group, MUST end in ";".
 
-    if (s.right(1) == ";") { // This is a group !
+    if (strRep_.right(1) == ";") { // This is a group !
 
         // TODO
         rmmDebug("I'm a group.");
@@ -114,7 +114,7 @@ RAddress::_parse()
 
     } else {
 
-        RMailbox m(s);
+        RMailbox m(strRep_);
         // XXX Is this necessary ?
         // m.parse();
         mailboxList_.append(m);

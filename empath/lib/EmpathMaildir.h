@@ -106,6 +106,9 @@ class EmpathMaildir : public QObject
         
         QTimer       timer_;
 
+        QStringList cachedEntryList_;
+        QStringList & _entryList();
+
         bool createdOK_;
 
         // Order dependency

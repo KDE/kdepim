@@ -62,7 +62,6 @@ RAddressList::at(unsigned int i)
 {
     parse();
 
-//    cerr << "list count == " << list_.count() << endl;
     if (!list_.isEmpty())
         return *(list_.at(i));
 
@@ -83,7 +82,7 @@ RAddressList::_parse()
 
     QStrList l;
     RTokenise(strRep_, ",\n\r", l, true, false);
-
+    
     if (l.count() == 0 && !strRep_.isEmpty()) { // Lets try what we have then.
 
         list_.append(RAddress(strRep_));

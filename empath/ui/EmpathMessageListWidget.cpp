@@ -271,9 +271,10 @@ EmpathMessageListWidget::markOne(RMM::MessageStatus status)
         (RMM::MessageStatus)
         (stat & status ? stat ^ status : stat | status);
     
-    empath->mark(u, s);
-    
     setStatus(item, s);
+    kapp->processEvents();
+
+    empath->mark(u, s);
 }
 
     void
@@ -288,13 +289,14 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 
     EmpathMessageListItemIterator it(selected_);
     
-    for (; it.current(); ++it)
+    for (; it.current(); ++it) {
         l.append(it.current()->id());
-        
-    empath->mark(url_, l, status);
-    
-    for (it.toFirst(); it.current(); ++it)
         setStatus(it.current(), status);
+    }
+
+    kapp->processEvents();
+
+    empath->mark(url_, l, status);
 }
 
     void
@@ -571,7 +573,6 @@ EmpathMessageListWidget::s_hideRead()
     filling_ = false;
     hideRead_ = !hideRead_;
     emit(hideReadChanged(hideRead_));
-    clear();
     _fillDisplay(hideRead_);
 }
 
@@ -583,7 +584,6 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url, unsigned int i)
 
     filling_ = false;
     _reconnectToFolder(url);
-    clear();
     _fillDisplay(hideRead_);
 }
     
@@ -991,10 +991,12 @@ EmpathMessageListWidget::_fillDisplay(bool unreadOnly)
 {
     filling_ = true;
     
-    selected_.clear();
+    setUpdatesEnabled(false);
     clear();
+    setUpdatesEnabled(true);
     triggerUpdate();
     kapp->processEvents();
+
     setUpdatesEnabled(false);
     viewport()->setUpdatesEnabled(false);
 
@@ -1012,46 +1014,91 @@ EmpathMessageListWidget::_fillDisplay(bool unreadOnly)
     
     using namespace EmpathConfig;
 
+    // Reading all index keys takes about 6ms for 512 messages on
+    // my machine. Don't bother profiling it again :)
     c->setGroup(GROUP_DISPLAY);
     QStringList index(f->allIndexKeys());
     QStringList::ConstIterator it(index.begin());
-    
-    if (KGlobal::config()->readBoolEntry(UI_THREAD))
+        
+    EmpathIndexRecord rec;
+
+    if (KGlobal::config()->readBoolEntry(UI_THREAD)) {
         
         // fill threading
-        for (; it != index.end() && filling_; ++it) {
 
-            EmpathIndexRecord rec = f->indexRecord(*it);
-            
-            if (rec.isNull()) {
-                empathDebug("Can't find record, but I'd called allKeys !");
-                continue;
+        if (unreadOnly) {
+
+            for (; it != index.end() && filling_; ++it) {
+
+                rec = f->indexRecord(*it);
+                
+                if (rec.isNull()) {
+                    empathDebug("Can't find record, but I'd called allKeys !");
+                    continue;
+                }
+
+                if (!(rec.status() & RMM::Read))
+                    _threadItem(rec);
+
+                t.doneOne();
             }
 
-            if (!(unreadOnly && (rec.status() & RMM::Read)))
+        } else {
+
+            for (; it != index.end() && filling_; ++it) {
+
+                rec = f->indexRecord(*it);
+                
+                if (rec.isNull()) {
+                    empathDebug("Can't find record, but I'd called allKeys !");
+                    continue;
+                }
+
                 _threadItem(rec);
 
-            t.doneOne();
-        }
-    
-    else
-        
-        // fill nonthreading;
-        // Rikkus: Hey Wilco, you don't need ';' after comments ;)
-        for (; it != index.end() && filling_; ++it) {
-            
-            EmpathIndexRecord rec = f->indexRecord(*it);
-
-            if (rec.isNull()) {
-                empathDebug("Can't find record, but I'd called allKeys !");
-                continue;
+                t.doneOne();
             }
-            
-            if (!(unreadOnly && (rec.status() & RMM::Read)))
-                new EmpathMessageListItem(this, rec);
-
-            t.doneOne();
         }
+        
+
+    } else {
+        
+        // fill nonthreading
+
+        if (unreadOnly) {
+
+            for (; it != index.end() && filling_; ++it) {
+                
+                rec = f->indexRecord(*it);
+
+                if (rec.isNull()) {
+                    empathDebug("Can't find record, but I'd called allKeys !");
+                    continue;
+                }
+                
+                if (!(rec.status() & RMM::Read))
+                    (void) new EmpathMessageListItem(this, rec);
+
+                t.doneOne();
+            }
+
+        } else {
+
+            for (; it != index.end() && filling_; ++it) {
+                
+                rec = f->indexRecord(*it);
+
+                if (rec.isNull()) {
+                    empathDebug("Can't find record, but I'd called allKeys !");
+                    continue;
+                }
+                
+                (void) new EmpathMessageListItem(this, rec);
+
+                t.doneOne();
+            }
+        }
+    }
    
     if (filling_) {
    

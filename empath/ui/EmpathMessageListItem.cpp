@@ -31,12 +31,24 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kiconloader.h>
 
 // Local includes
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageListItem.h"
 #include "EmpathUIUtils.h"
 #include "EmpathConfig.h"
+
+QPixmap * EmpathMessageListItem::px_                      = 0L;
+QPixmap * EmpathMessageListItem::px_read_                 = 0L;
+QPixmap * EmpathMessageListItem::px_marked_               = 0L;
+QPixmap * EmpathMessageListItem::px_replied_              = 0L;
+QPixmap * EmpathMessageListItem::px_read_marked_          = 0L;
+QPixmap * EmpathMessageListItem::px_read_replied_         = 0L;
+QPixmap * EmpathMessageListItem::px_marked_replied_       = 0L;
+QPixmap * EmpathMessageListItem::px_read_marked_replied_  = 0L;
+
+QColor  * EmpathMessageListItem::unreadColour_            = 0L;
 
 EmpathMessageListItem::EmpathMessageListItem(
         EmpathMessageListWidget * parent,
@@ -179,17 +191,31 @@ EmpathMessageListItem::setStatus(RMM::MessageStatus status)
     setPixmap(1, _statusIcon(status));
 }
 
-    QPixmap
+    QPixmap &
 EmpathMessageListItem::_statusIcon(RMM::MessageStatus status)
 {
-    QString iconName = "tree-";
-    
-    if (status & RMM::Read)    iconName += "read-";
-    if (status & RMM::Marked)  iconName += "marked-";
-    if (status & RMM::Replied) iconName += "replied-";
-    iconName.truncate(iconName.length() - 1); // Remove trailing '-';
-    
-    return empathIcon(iconName);
+    bool read = status & RMM::Read;
+    bool marked = status & RMM::Marked;
+    bool replied = status & RMM::Replied;
+
+    if (read)
+        if (marked)
+            if (replied)
+                return *px_read_marked_replied_;
+            else
+                return *px_read_marked_;
+        else
+            return *px_read_;
+    else
+        if (marked)
+            if (replied)
+                return *px_marked_replied_;
+            else
+                return *px_marked_;
+        else
+            return *px_;
+
+    return *px_;
 }
 
     void
@@ -201,14 +227,32 @@ EmpathMessageListItem::paintCell(
 
     else {
 
-        KConfig * c(KGlobal::config());
-        using namespace EmpathConfig;
-        c->setGroup(GROUP_DISPLAY);
-        QColor col = c->readColorEntry(UI_NEW, DFLT_NEW);
         QColorGroup modified(cg);
-        modified.setColor(QColorGroup::Text, col);
+        modified.setColor(QColorGroup::Text, *unreadColour_);
         QListViewItem::paintCell(p, modified, column, width, align);
     }
+}
+
+    void
+EmpathMessageListItem::initStatic()
+{
+#define BOLLOX(a) new QPixmap(KGlobal::iconLoader()->loadIcon((a)))
+
+    px_                     = BOLLOX("tree");
+    px_read_                = BOLLOX("tree-read");
+    px_marked_              = BOLLOX("tree-marked");
+    px_replied_             = BOLLOX("tree-replied");
+    px_read_marked_         = BOLLOX("tree-read-marked");
+    px_read_replied_        = BOLLOX("tree-read-replied");
+    px_marked_replied_      = BOLLOX("tree-marked-replied");
+    px_read_marked_replied_ = BOLLOX("tree-read-marked-replied");
+
+#undef BOLLOX
+
+    KConfig * c(KGlobal::config());
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_DISPLAY);
+    unreadColour_ = new QColor(c->readColorEntry(UI_NEW, DFLT_NEW));
 }
 
 // vim:ts=4:sw=4:tw=78

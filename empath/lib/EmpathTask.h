@@ -27,6 +27,8 @@
 #ifndef EMPATH_TASK_H
 #define EMPATH_TASK_H
 
+// Qt includes
+#include <qdatetime.h>
 #include <qstring.h>
 #include <qobject.h>
 
@@ -85,10 +87,13 @@ class EmpathTask : public QObject
         
     private:
         
+        QTime startTime_;
         QString name_;
         int max_;
         int pos_;
         bool done_;
+        unsigned int waitInterval_;
+        unsigned int waitCount_;
 };
 
 #endif

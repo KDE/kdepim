@@ -40,6 +40,7 @@
 #include "EmpathHeaderViewWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathComposeWindow.h"
+#include "EmpathAttachmentViewWidget.h"
 #include "EmpathUtilities.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
@@ -65,6 +66,8 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
     
     messageWidget_ = new EmpathMessageHTMLWidget(this);
     
+    attachmentViewWidget_ = new EmpathAttachmentViewWidget(this);
+    
     QObject::connect(
         headerViewWidget_,  SIGNAL(clipClicked()),
         this,               SLOT(s_clipClicked()));
@@ -76,7 +79,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
     QObject::connect(
         structureWidget_,    SIGNAL(showText(const QString &)),
         this,                SLOT(s_showText(const QString &)));
-   
+
     layout->activate();
     show();    
 }
@@ -108,13 +111,14 @@ EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
     RMM::RBodyPart message(m);
 
     structureWidget_->setMessage(message);
-    
+
     headerViewWidget_->useEnvelope(message.envelope());
 
     QString s;
     
     if (message.body().count() == 0) {
         empathDebug("Message body count is 0");
+        attachmentViewWidget_->hide();
         s = QString::fromUtf8(message.asXML(quote1, quote2));
         messageWidget_->show(s);
         return;
@@ -122,6 +126,7 @@ EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
     
     else if (message.body().count() == 1) {
         empathDebug("Message body count is 1");
+        attachmentViewWidget_->hide();
         s = QString::fromUtf8(message.body().at(0)->asXML(quote1, quote2));
         messageWidget_->show(s);
         return;
@@ -130,6 +135,9 @@ EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
     else {
         
         empathDebug("===================== MULTIPART ====================");
+        
+        attachmentViewWidget_->setMessage(message);
+        attachmentViewWidget_->show();
         
         QList<RMM::RBodyPart> body(message.body());
         QListIterator<RMM::RBodyPart> it(body);
@@ -183,8 +191,10 @@ EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
                     messageWidget_->show(s);
                     return;
                 }
-            }
-        }
+
+            } // End (if this body part is text)
+
+        } // End (if has content type)
         
         empathDebug("=================== END MULTIPART =====================");
     }

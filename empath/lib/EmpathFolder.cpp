@@ -98,18 +98,9 @@ EmpathFolder::update()
         return;
     }
     
-    unsigned int oldUnread = index_->countUnread();
-    unsigned int oldRead = index_->count();
-
     m->sync(url_);
     
-    unsigned int unread = index_->countUnread();
-    unsigned int read = index_->count();
-
-    if ((oldUnread != unread) || (oldRead != read)) {
-//        empathDebug("Count changed");
-        emit(countUpdated(index_->countUnread(), index_->count()));
-    }
+    emit(countUpdated(index_->countUnread(), index_->count()));
 }
 
     void

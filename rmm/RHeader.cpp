@@ -24,9 +24,11 @@ RHeader::RHeader()
 RHeader::RHeader(const RHeader & h)
     :   RMessageComponent(h),
         headerName_(h.headerName_),
-        headerType_(h.headerType_)
+        headerType_(h.headerType_),
+        headerBody_(0)
 {
-    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);
+    parse();
+    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);   
 }
 
 RHeader::~RHeader()
@@ -154,7 +156,8 @@ RHeader::_parse()
 
     *headerBody_ = strRep_.mid(split + 1).stripWhiteSpace();
 
-    headerBody_->parse();
+    // XXX Is this necessary ?
+    // headerBody_->parse();
 }
 
     void

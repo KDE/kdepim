@@ -76,8 +76,10 @@ EmpathMailboxMaildir::sync(const EmpathURL & url)
     EmpathMaildirListIterator it(boxList_);
     
     for (; it.current(); ++it)
-        if (it.current()->url().folderPath() == url.folderPath())
+        if (it.current()->url().folderPath() == url.folderPath()) {
             it.current()->sync();
+            break;
+        }
 }
     
     void

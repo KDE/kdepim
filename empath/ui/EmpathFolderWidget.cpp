@@ -164,8 +164,14 @@ EmpathFolderWidget::s_update()
 EmpathFolderWidget::s_sync()
 {
     QListIterator<EmpathFolderListItem> it(itemList_);
-    for (; it.current(); ++it)
+
+    for (; it.current(); ++it) {
+
+        if (kapp->closingDown())
+            break;
+
         it.current()->s_update();
+    }
 }
 
     void

@@ -163,14 +163,7 @@ RMailbox::_parse()
     }
     
     QStrList l;
-    RTokenise(strRep_, " \n", l);
-    QStrListIterator it2(l);
-#if 0
-    for (; it2.current(); ++it2) {
-        cerr << "Token: `" << it2.current() << "'" << endl;
-    }
-#endif
-
+    RTokenise(strRep_, " \n", l, false, true);
 
     bool hasRouteAddress(false);
 

@@ -53,80 +53,79 @@ EmpathJob::EmpathJob(const EmpathJob & other)
 // ------------------------------------------------------------------------
 
 EmpathWriteJob::EmpathWriteJob(const EmpathWriteJob & j)
-    : EmpathSingleJob(j)
+    :
+    EmpathSingleJob(j),
+    message_    (j.message_),
+    folder_     (j.folder_),
+    messageID_  (j.messageID_)
 {
-    if (this != &j) {
-        message_    = j.message_;
-        folder_     = j.folder_;
-        messageID_  = j.messageID_;
-    }
+    // Empty.
 }
 
 EmpathCopyJob::EmpathCopyJob(const EmpathCopyJob & j)
-    : EmpathMultiJob(j)
+    :
+    EmpathMultiJob(j),
+    source_         (j.source_),
+    destination_    (j.destination_)
 {
-    if (this != &j) {
-        source_         = j.source_;
-        destination_    = j.destination_;
-    }
+    // Empty.
 }
 
 EmpathMoveJob::EmpathMoveJob(const EmpathMoveJob & j)
-    : EmpathMultiJob(j)
+    :
+    EmpathMultiJob(j),
+    source_         (j.source_),
+    destination_    (j.destination_)
 {
-    if (this != &j) {
-        source_         = j.source_;
-        destination_    = j.destination_;
-    }
+    // Empty.
 }
 
 EmpathRemoveJob::EmpathRemoveJob(const EmpathRemoveJob & j)
-    : EmpathSingleJob(j)
+    :
+    EmpathSingleJob(j),
+    successMap_ (j.successMap_),
+    url_        (j.url_),
+    folder_     (j.folder_),
+    IDList_     (j.IDList_)
 {
-    if (this != &j) {
-        successMap_ = j.successMap_;
-        url_        = j.url_;
-        folder_     = j.folder_;
-        IDList_     = j.IDList_;
-    }
+    // Empty.
 }
 
 EmpathRetrieveJob::EmpathRetrieveJob(const EmpathRetrieveJob & j)
-    : EmpathSingleJob(j)
+    :
+    EmpathSingleJob(j),
+    url_        (j.url_),
+    message_    (j.message_)
 {
-    if (this != &j) {
-        url_        = j.url_;
-        message_    = j.message_;
-    }
+    // Empty.
 }
 
-
 EmpathMarkJob::EmpathMarkJob(const EmpathMarkJob & j)
-    : EmpathSingleJob(j)
+    :
+    EmpathSingleJob(j),
+    successMap_ (j.successMap_),
+    url_        (j.url_),
+    folder_     (j.folder_),
+    IDList_     (j.IDList_),
+    flags_      (j.flags_)
 {
-    if (this != &j) {
-        successMap_ = j.successMap_;
-        url_        = j.url_;
-        folder_     = j.folder_;
-        IDList_     = j.IDList_;
-        flags_      = j.flags_;
-    }
+    // Empty.
 }
 
 EmpathCreateFolderJob::EmpathCreateFolderJob(const EmpathCreateFolderJob & j)
-    : EmpathSingleJob(j)
+    :
+    EmpathSingleJob(j),
+    folder_(j.folder_)
 {
-    if (this != &j) {
-        folder_ = j.folder_;
-    }
+    // Empty.
 }
 
 EmpathRemoveFolderJob::EmpathRemoveFolderJob(const EmpathRemoveFolderJob & j)
-    : EmpathSingleJob(j)
+    :
+    EmpathSingleJob(j),
+    folder_(j.folder_)
 {
-    if (this != &j) {
-        folder_ = j.folder_;
-    }
+    // Empty.
 }
 
 // ------------------------------------------------------------------------

@@ -21,6 +21,7 @@
   Boston, MA 02111-1307, USA. 
 */
 
+#include <qdatetime.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 
@@ -220,6 +221,10 @@ Database::retrieve(const QString & key)
   dataFile_.at(*ofs);
 
   dataStream_ >> data;
+
+  // Ok, I measured this and it takes somewhere between 0 and 1ms to
+  // read.
+//  cerr << "Time to read record: " << startTime.msecsTo(currentTime) << endl;
 
   if (data.isNull()) {
     _setError("Record `" + key + "' not found in data file");

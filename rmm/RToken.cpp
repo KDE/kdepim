@@ -41,7 +41,7 @@ RTokenise(
     
     if (!delim || !str || strlen(delim) == 0 || strlen(str) == 0) return 0;
     
-    char * len = (char *)(str + strlen(str));    // End of string.
+    char * len = const_cast<char *>(str + strlen(str));    // End of string.
     
     int rl = strlen(str);
     char * rstart = new char[rl + 1];
@@ -79,19 +79,19 @@ RTokenise(
             continue;
         }
         
-        // If we find quote, make a token from everything until next quote.
-        // Ignore '\"' (quoted quote :)
-        // Bracing quote marks are included.
-        // Adding the quote marks means we can test string[0] from the token
-        // list to see if it's a quoted string.
-        
-        if (*i == '"' && quotedTokens) {
-            
-            // If there's anything in the buffer, make a token from that first.
-            if (r != rstart) {
-                *r = '\0';
-                l.append(rstart);
-                r = rstart;
+        // If we find a quote, we need to continue through until
+        // the next quote, ignoring delimiters
+        if (*i == '"') {
+          
+            if (quotedTokens) {
+
+                // If there's anything in the buffer, make a token from
+                // that first.
+                if (r != rstart) {
+                    *r = '\0';
+                    l.append(rstart);
+                    r = rstart;
+                }
             }
             
             do {
@@ -100,10 +100,14 @@ RTokenise(
             
             *r++ = *i++; // End quote mark
 
-            *r = '\0';
-            l.append(rstart);
-            r = rstart;
-            ++i;
+            if (quotedTokens) {
+
+                *r = '\0';
+                l.append(rstart);
+                r = rstart;
+                ++i;
+            }
+
             continue;
         }
                     

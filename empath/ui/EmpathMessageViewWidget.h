@@ -44,6 +44,7 @@
 class EmpathMessageStructureWidget;
 class EmpathMessageHTMLWidget;
 class EmpathHeaderViewWidget;
+class EmpathAttachmentViewWidget;
 
 namespace RMM { class RBodyPart; }
 
@@ -76,6 +77,7 @@ class EmpathMessageViewWidget : public QWidget
         EmpathMessageStructureWidget * structureWidget_;
         EmpathMessageHTMLWidget      * messageWidget_;
         EmpathHeaderViewWidget       * headerViewWidget_;
+        EmpathAttachmentViewWidget   * attachmentViewWidget_;
 
         EmpathURL   url_;
         bool        viewingSource_;

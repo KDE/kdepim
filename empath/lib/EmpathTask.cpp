@@ -24,8 +24,10 @@
 # pragma implementation "EmpathTask.h"
 #endif
 
+// KDE includes
 #include <kapp.h>
 
+// Local includes
 #include "Empath.h"
 #include "EmpathTask.h"
 #include "EmpathDefines.h"
@@ -35,8 +37,12 @@ EmpathTask::EmpathTask(const QString & name)
         name_(name),
         max_(0),
         pos_(0),
-        done_(false)
+        done_(false),
+        waitInterval_(1),
+        waitCount_(0)
 {
+    startTime_ = QTime::currentTime();
+
     QObject::connect(
         this,   SIGNAL(newTask(EmpathTask *)),
         empath, SLOT(s_newTask(EmpathTask *)));
@@ -67,7 +73,36 @@ EmpathTask::setPos(int i)
 EmpathTask::doneOne()
 {
     emit(addOne());
-    kapp->processEvents();
+
+    // Adaptive method for choosing a number of loops to make before
+    // processEvents(). Assumes loop iterations take approx. equal
+    // time. Concept credit: Coolo
+
+    if (waitCount_++ >= waitInterval_) {
+        
+        kapp->processEvents();
+
+        QTime currentTime = QTime::currentTime();
+
+        int loopTime = startTime_.msecsTo(currentTime);
+
+        if (loopTime > 100) {
+
+            if (waitInterval_ < 5)
+                waitInterval_ = 0;
+            else
+                waitInterval_-=5;
+
+            waitCount_ = 0;
+
+        } else if (loopTime < 50) {
+
+            waitInterval_+=5;
+            waitCount_ = 0;
+        }
+    
+        startTime_ = currentTime;
+    }
 }
 
     void

@@ -59,6 +59,15 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
         basePath_(basePath)
 {
     path_ = basePath + "/" + url.folderPath();
+ 
+    mtime_ = QFileInfo(path_ + "/cur").lastModified();
+
+    QDir d(path_ + "/cur",
+        QString::null,
+        QDir::Unsorted,
+        QDir::Files | QDir::NoSymLinks);
+
+    cachedEntryList_ = d.entryList();
     
     createdOK_ = _checkDirs();
     
@@ -193,8 +202,12 @@ EmpathMaildir::_removeMessage(const QString & id)
     bool
 EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 {
-    empathDebug("");
-    QDir d(path_ + "/cur/", id + "*", QDir::Unsorted);
+    QStringList matchingEntries = _entryList().grep(id);
+
+    if (matchingEntries.count() != 1) {
+        empathDebug("Hmm.. I matched more than one entry with id `" + id + "'");
+        return false;
+    }
  
     QString statusFlags;
 
@@ -203,14 +216,8 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
     statusFlags += msgStat & RMM::Trashed ? "T" : "";
     statusFlags += msgStat & RMM::Replied ? "R" : "";
     
-    if (d.count() != 1) {
-        empath->s_infoMessage(i18n("Couldn't mark message") +
-            " [" + id + "] with flags " + statusFlags);
-        return false;
-    }
-    
-    QString filename(d[0]);
-    
+    QString filename(matchingEntries[0]);
+
     QString newFilename(filename);
     
     if (!newFilename.contains(":2,"))
@@ -223,9 +230,11 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
     
     bool renameOK = QDir().rename(oldName, newName);
     
-    if (!renameOK)
+    if (!renameOK) {
         empath->s_infoMessage(i18n("Couldn't mark message") +
            " [" + id + "] with flags " + statusFlags);
+        return false;
+    }
  
     EmpathFolder * f(empath->folder(url_));
 
@@ -304,17 +313,11 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
     void
 EmpathMaildir::_recalculateCounters(EmpathFolder * f)
 {
-    QDir d(
-        path_ + "/cur",
-        QString::null,
-        QDir::Unsorted,
-        QDir::Files | QDir::NoSymLinks);
-    
     QRegExp re_flags(":2,[A-Z]*$");
     QString s;
     unsigned int unread(0);
 
-    QStringList l(d.entryList());
+    QStringList & l(_entryList());
     
     for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it) {
 
@@ -548,17 +551,7 @@ EmpathMaildir::_touched(EmpathFolder * f)
     void
 EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 {
-    QDir d(
-        path_ + "/cur/",
-        QString::null,
-        QDir::Name | QDir::IgnoreCase,
-        QDir::NoSymLinks | QDir::Files
-        );
-
-    QStringList fileList(d.entryList());
-    
-    // Finished reading dir. Get the UI going again quick ! :)
-    kapp->processEvents();
+    QStringList & fileList(_entryList());
 
     QStringList::ConstIterator it(fileList.begin());
     
@@ -566,6 +559,9 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
     QRegExp re_flags(":2,[A-Z]*$");
 
     for (; it != fileList.end(); ++it) {
+        
+        if (kapp->closingDown())
+            return;
 
         s = *it;
 
@@ -639,6 +635,27 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
             f->itemGone(*it);
         }
     }
+}
+
+    QStringList &
+EmpathMaildir::_entryList()
+{
+    QDateTime currentMtime = QFileInfo(path_ + "/cur").lastModified();
+
+    if (currentMtime != mtime_) {
+
+        QDir d(path_ + "/cur",
+            QString::null,
+            QDir::Unsorted,
+            QDir::Files | QDir::NoSymLinks);
+
+        cachedEntryList_ = d.entryList();
+        // Finished reading dir. Get the UI going again quick ! :)
+        kapp->processEvents();
+        mtime_ = currentMtime;
+    }
+
+    return cachedEntryList_;
 }
 
 // vim:ts=4:sw=4:tw=78
