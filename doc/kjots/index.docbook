@@ -1,10 +1,10 @@
-<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!-- nothing below must be removed -->
   <!ENTITY kappname "&kjots;">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
-  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
-  %ents;
+  
+  
 ]>
 <book lang="&language;">
 
@@ -731,3 +731,4 @@ sgml-minimize-attributes: nil
 sgml-general-insert-case: lower
 End:
 -->
+

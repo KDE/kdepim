@@ -1,9 +1,9 @@
-<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&knotes;">
   <!ENTITY % addindex "IGNORE">
-  <!ENTITY % English "INCLUDE" -- change language only here -->
-  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
-  %ents;
+  <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+  
+  
 ]>
 
 <book lang="&language;">
@@ -562,7 +562,7 @@ lists.</para>
 </sect1>
 </appendix>
 
-<![ %addindex; [ &documentation.index; ]]>
+&documentation.index; 
 </book>
 <!--
 Local Variables:
@@ -570,3 +570,4 @@ sgml-minimize-attributes: nil
 sgml-general-insert-case: lower
 End:
 -->
+
