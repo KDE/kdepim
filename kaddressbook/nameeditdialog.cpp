@@ -51,7 +51,6 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout(page);
   layout->setSpacing(spacingHint());
-  layout->setMargin(marginHint());
   layout->addColSpacing(2, 50);
   QLabel *label;
   

@@ -44,8 +44,9 @@ EmailEditWidget::EmailEditWidget(QWidget *parent, const char *name)
   : QWidget(parent, name)
 {
   QGridLayout *topLayout = new QGridLayout(this, 2, 2);
+  topLayout->setSpacing( KDialog::spacingHint() );
 
-  QLabel *label = new QLabel(i18n("Preferred email address:"), this);
+  QLabel *label = new QLabel(i18n("Email:"), this);
   topLayout->addWidget(label, 0, 0);
 
   mEmailEdit = new KLineEdit(this);

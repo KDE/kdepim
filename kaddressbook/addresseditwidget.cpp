@@ -65,6 +65,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
 
   mAddressTextEdit = new QTextEdit( this );
   mAddressTextEdit->setReadOnly( true );
+  mAddressTextEdit->setMinimumHeight( 20 );
   layout->addWidget( mAddressTextEdit );
 
   QPushButton *editButton = new QPushButton( i18n( "&Edit Addresses..." ),
