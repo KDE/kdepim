@@ -1,6 +1,5 @@
 debian/tmp/etc/kde3/khotnewstuffrc
 debian/tmp/usr/bin/ical2vcal
-debian/tmp/usr/bin/konsolekalendar
 debian/tmp/usr/bin/korgac
 debian/tmp/usr/bin/korganizer
 debian/tmp/usr/bin/korganizerIn
@@ -18,6 +17,8 @@ debian/tmp/usr/lib/kde3/libkorg_birthdays.la
 debian/tmp/usr/lib/kde3/libkorg_birthdays.so
 debian/tmp/usr/lib/kde3/libkorg_datenums.la
 debian/tmp/usr/lib/kde3/libkorg_datenums.so
+debian/tmp/usr/lib/kde3/libkorg_exchange.la
+debian/tmp/usr/lib/kde3/libkorg_exchange.so
 debian/tmp/usr/lib/kde3/libkorg_hebrew.la 
 debian/tmp/usr/lib/kde3/libkorg_hebrew.so
 debian/tmp/usr/lib/kde3/libkorg_holidays.la
@@ -35,7 +36,6 @@ debian/tmp/usr/share/apps/knewstuff/types
 debian/tmp/usr/share/autostart/korgac.desktop
 debian/tmp/usr/share/config.kcfg/korganizer.kcfg
 debian/tmp/usr/share/doc/kde/HTML/en/korganizer
-debian/tmp/usr/share/doc/kde/HTML/en/konsolekalendar
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/korganizer.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/korganizer.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/korganizer.png

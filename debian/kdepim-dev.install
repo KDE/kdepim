@@ -17,6 +17,7 @@ debian/tmp/usr/include/kde/kontact
 debian/tmp/usr/include/kde/knewstuff
 debian/tmp/usr/include/kde/ksieve
 debian/tmp/usr/include/kde/kaddressbook
+debian/tmp/usr/include/kde/libkcal
 debian/tmp/usr/lib/libkalarmd.so
 debian/tmp/usr/lib/libkcal.so
 debian/tmp/usr/lib/libkgantt.so

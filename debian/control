@@ -1,4 +1,4 @@
-Source: kdepim
+source: kdepim
 Section: x11
 Priority: optional
 Maintainer: Christopher L Cheney <ccheney@debian.org>
@@ -150,6 +150,16 @@ Description: KDE personal organizer
  KOrganizer also offers full synchronization with your Palm Pilot, if you
  have kpilot installed.
 
+Package: konsolekalendar
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE konsole personal organizer
+ To support console-based calendaring with KDE, the
+ konsolekalendar complements the KDE KOrganizer with
+ an according frontend to manage appointments and
+ your schedule on a text-based console.
+ 
 Package: korn
 Section: mail
 Architecture: any

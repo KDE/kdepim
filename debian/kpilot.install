@@ -19,6 +19,8 @@ debian/tmp/usr/lib/kde3/conduit_vcal.so
 debian/tmp/usr/lib/kde3/conduit_vcal.la
 debian/tmp/usr/lib/kde3/conduit_todo.so
 debian/tmp/usr/lib/kde3/conduit_todo.la
+debian/tmp/usr/lib/kde3/conduit_popmail.so
+debian/tmp/usr/lib/kde3/conduit_popmail.la
 debian/tmp/usr/share/applications/kde/kpalmdoc.desktop
 debian/tmp/usr/share/applications/kde/kpilot.desktop
 debian/tmp/usr/share/applications/kde/kpilotdaemon.desktop
@@ -65,6 +67,7 @@ debian/tmp/usr/share/services/vcal-conduit.desktop
 debian/tmp/usr/share/services/mal_conduit.desktop
 debian/tmp/usr/share/services/doc_conduit.desktop
 debian/tmp/usr/share/services/sysinfo_conduit.desktop
+debian/tmp/usr/share/services/popmail-conduit.desktop
 debian/tmp/usr/share/servicetypes/kpilotconduit.desktop
 debian/tmp/usr/share/doc/kde/HTML/en/kpilot/address-app.png
 debian/tmp/usr/share/doc/kde/HTML/en/kpilot/common
