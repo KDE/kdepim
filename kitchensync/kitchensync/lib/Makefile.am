@@ -19,9 +19,6 @@ libkitchensyncui_la_LIBADD = \
   -lkutils $(LIB_KPARTS) 
 
 ksyncincludedir = $(includedir)/kitchensync
-ksyncinclude_HEADERS = partbar.h actionpart.h systemtray.h mainwindow.h \
-  profile.h konnectorview.h
-
 ksyncinclude_HEADERS = actionpart.h actionpartservice.h \
                        core.h profilecheckitem.h        \
                        profile.h profileitem.h          \
