@@ -66,9 +66,7 @@ void FilterPlain::import(FilterInfo *info)
 
    // Count total number of files to be processed
    inf->log(i18n("Counting files..."));
-   totalFiles = countFiles("*.msg");
-   totalFiles += countFiles("*.eml");
-   totalFiles += countFiles("*.txt");
+   totalFiles = countFiles("*.msg; *.eml; *.txt");
    currentFile = 0;
 
    if (!kmailStart(inf)) { // Couldn't start KMail
@@ -76,12 +74,8 @@ void FilterPlain::import(FilterInfo *info)
    	return;
    }
    
-   inf->log(i18n("Importing new mail files ('.msg')..."));
-   processFiles("*.msg");
-   inf->log(i18n("Importing new mail files ('.eml')..."));
-   processFiles("*.eml");
-   inf->log(i18n("Importing new mail files ('.txt')..."));
-   processFiles("*.txt");
+   inf->log(i18n("Importing new mail files..."));
+   processFiles("*.msg; *.eml; *.txt");
    
    kmailStop(inf); // Stop KMail
 }
