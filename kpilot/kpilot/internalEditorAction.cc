@@ -61,7 +61,7 @@ InternalEditorAction::InternalEditorAction(KPilotDeviceLink * p) :
 bool InternalEditorAction::exec()
 {
 	FUNCTIONSETUP;
-	emit logMessage(i18n("Synchronizing changes by the internal editors of KPilot:"));
+	emit logMessage(i18n("[Internal Editors]"));
 	fInternalEditorSyncStatus=eSyncStarted;
 	QTimer::singleShot(0, this, SLOT(syncDirtyDB()));
 	return true;
