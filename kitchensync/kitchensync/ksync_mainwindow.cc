@@ -24,7 +24,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   :
   KParts::MainWindow( widget, name, f ){
   setInstance( KGlobal::instance() );
-  
+
   initActions();
   setXMLFile("ksyncgui.rc");
   createGUI( 0l );
@@ -43,8 +43,8 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
 
   resize(600,400);
   m_parts.setAutoDelete( true );
-  initPlugins();  
-  
+  initPlugins();
+
 };
 
 KSyncMainWindow::~KSyncMainWindow()
@@ -53,16 +53,15 @@ KSyncMainWindow::~KSyncMainWindow()
 }
 void KSyncMainWindow::initActions()
 {
-  (void)new KAction( i18n("Synchronize" ), 0, this, SLOT( slotSync() ),
+  (void)new KAction( i18n("Synchronize" ), "reload", 0, this, SLOT( slotSync() ),
 		     actionCollection(), "sync" );
-  (void)new KAction( i18n("Backup"), 0, this, SLOT( slotBackup() ),
+  (void)new KAction( i18n("Backup") ,  "mail_get", 0, this, SLOT( slotBackup() ),
 		     actionCollection(), "backup" );
-  (void)new KAction( i18n("Restore"), 0, this, SLOT (slotRestore() ),
+  (void)new KAction( i18n("Restore"),  "mail_send", 0, this, SLOT (slotRestore() ),
 		     actionCollection(), "restore" );
-  (void)new KAction( i18n("Quit"), 0, this, SLOT(slotQuit()),
+  (void)new KAction( i18n("Quit"),  "exit", 0, this, SLOT(slotQuit()),
 		     actionCollection(), "quit" );
-  (void)new KAction( i18n("Configure Kitchensync") , 0, this, SLOT (slotConfigure() ),
-		     actionCollection(), "configure" );
+  (void)new KAction( i18n("Configure Kitchensync"), "configure" , 0, this, SLOT (slotConfigure() ), actionCollection(), "configure" );
 }
 void KSyncMainWindow::initPlugins()
 {
@@ -76,14 +75,14 @@ void KSyncMainWindow::initPlugins()
       if (!plugin)
 	continue;
       addModPart( plugin );
-    } 
+    }
   */
   OrganizerPart *org = new OrganizerPart(this, "wallah" );
-  
+
   OverviewPart *view = new OverviewPart(this, "hallaw" );
   addModPart(view);
-  addModPart( org);
-  
+  addModPart(org);
+
 }
 
 void KSyncMainWindow::addModPart(ManipulatorPart *part)
@@ -95,7 +94,7 @@ void KSyncMainWindow::addModPart(ManipulatorPart *part)
   {
     kdDebug() << "before part insert \n"  ;
     m_bar->insertItem( part );
-    
+
   }
   m_parts.append( part );
   m_stack->addWidget( part->widget(), id );
@@ -117,7 +116,7 @@ void KSyncMainWindow::slotConfigure() {
   for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
     dlg.addWidget(part->configWidget(), part->name(), part->pixmap() );
   }
-  
+
   if (dlg.exec()) {
      for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
        part->slotConfigOk();
