@@ -27,7 +27,7 @@
 
 #include <kuniqueapp.h>
 
-class KAddressBook;
+class KAddressBookInterface;
 
 class KAddressBookServer : public KUniqueApplication
 {
@@ -42,14 +42,14 @@ class KAddressBookServer : public KUniqueApplication
 
 		QStringList list();
     bool remove(QString);
-    bool create(QString, QString);
+    bool create(QString name, QString location, QString formatAsXML);
 
 	private:
 
     void _readConfig();
     void _writeConfig();
 
-		QList<KAddressBook> addressBookList_;
+		QList<KAddressBookInterface> addressBookList_;
 };
 
 #endif

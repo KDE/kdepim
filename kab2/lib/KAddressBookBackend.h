@@ -18,44 +18,54 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef KADDRESSBOOK_INTERFACE_H
-#define KADDRESSBOOK_INTERFACE_H
+#ifndef KADDRESSBOOK_BACKEND_H
+#define KADDRESSBOOK_BACKEND_H
+
+#include <qobject.h>
 
 #include <qstring.h>
 #include <qstringlist.h>
-#include <dcopobject.h>
 
 #include <Entry.h>
 
-class KAddressBookBackend;
-
-class KAddressBookInterface : virtual public DCOPObject
+class KAddressBookBackend : public QObject
 {
-  K_DCOP
+  Q_OBJECT
 
   public:
 
-    KAddressBookInterface(QString name, QString path);
-    virtual ~KAddressBookInterface();
+    KAddressBookBackend
+      (
+       QString id,
+       QString path,
+       QObject * parent = 0,
+       const char * name = 0
+      );
 
-  k_dcop:
+    virtual ~KAddressBookBackend();
 
-    virtual QString name();
-    virtual QString path();
-    virtual Entry   entry(QString);
-    virtual QString insert(Entry);
-    virtual bool    remove(QString);
-    virtual bool    replace(Entry);
-    virtual bool    contains(QString);
+    bool initSuccess() const;
 
-    virtual QStringList entryList();
+    QString id() const;
+    QString path() const;
+
+    virtual bool        contains(QString) const = 0;
+    virtual Entry       entry(QString)    const = 0;
+    virtual QStringList entryList()       const = 0;
+    virtual QString     insert(Entry)           = 0;
+    virtual bool        remove(QString)         = 0;
+    virtual bool        replace(Entry)          = 0;
+
+  protected:
+
+    void setInitSuccess();
 
   private:
 
-    QString name_;
+    QString id_;
     QString path_;
 
-    KAddressBookBackend * backend_;
+    bool initSuccess_;
 };
 
 #endif

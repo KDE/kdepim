@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kab-def:definition>
 
-<kab-def:definition
-  xmlns:kab-def="http://kde.org/kab_definition/"
->
-  <kab-def:field
-    name="name"
-    mimetype="text/UTF-8"
-    unique="no"
-  />
-  <kab-def:field
-    name="email"
-    mimetype="text/email-address"
-  />
-  <kab-def:field
-    name="size"
-    mimetype="kab/enum"
-    values="small,medium,large"
-  />
-  <kab-def:field
-    name="sex-appeal"
-    mimetype="text/bla"
-  />
+<kab-def:definition xmlns:kab-def="http://kde.org/kab_definition/">
+  <kab-def:field name="username"  mimetype="text/UCS-2"                     />
+  <kab-def:field name="name"      mimetype="text/UCS-2"         unique="no" />
+  <kab-def:field name="email"     mimetype="address/rfc822"                 />
 </kab-def:definition>
 

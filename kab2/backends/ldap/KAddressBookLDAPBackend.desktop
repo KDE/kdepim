@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=KAddressBookLDAPBackend
+X-KDE-Library=libkabbackend_ldap
+

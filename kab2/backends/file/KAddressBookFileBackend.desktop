@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=KAddressBookFileBackend
+X-KDE-Library=libkabbackend_file
+

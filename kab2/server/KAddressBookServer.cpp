@@ -1,5 +1,5 @@
 /*
-    KAddressBook version 2
+    KAddressBookInterface version 2
     
     Copyright (C) 1999 The KDE PIM Team <kde-pim@kde.org>
     
@@ -38,8 +38,8 @@ KAddressBookServer::KAddressBookServer()
 
   qDebug("filenameForDefaultBook == `%s'", filenameForDefaultBook.ascii());
 
-	KAddressBook * ab =
-    new KAddressBook("default", filenameForDefaultBook);
+	KAddressBookInterface * ab =
+    new KAddressBookInterface("default", "file:" + filenameForDefaultBook);
 
 	addressBookList_.append(ab);
 
@@ -58,7 +58,7 @@ KAddressBookServer::list()
 {
 	QStringList ret;
 
-	for (QListIterator<KAddressBook> it(addressBookList_); it.current(); ++it)
+	for (QListIterator<KAddressBookInterface> it(addressBookList_); it.current(); ++it)
 		ret << it.current()->name();
 
 	return ret;
@@ -69,7 +69,7 @@ KAddressBookServer::remove(QString name)
 {
   bool deleted = false;
 
-	for (QListIterator<KAddressBook> it(addressBookList_); it.current(); ++it)
+	for (QListIterator<KAddressBookInterface> it(addressBookList_); it.current(); ++it)
   {
     if (it.current()->name() == name)
     {
@@ -86,9 +86,9 @@ KAddressBookServer::remove(QString name)
 }
 
   bool
-KAddressBookServer::create(QString name, QString path)
+KAddressBookServer::create(QString name, QString path, QString formatAsXML)
 {
-  KAddressBook * ab = new KAddressBook(name, path);
+  KAddressBookInterface * ab = new KAddressBookInterface(name, path);
   addressBookList_.append(ab);
 
   _writeConfig();
@@ -100,14 +100,14 @@ KAddressBookServer::_readConfig()
 {
   KConfig * c = KGlobal::config();
 
-  KConfigGroupSaver(c, "General");
+  c->setGroup("General");
 
   QStringList l = c->readListEntry("BookNames");
 
   for (QStringList::ConstIterator it(l.begin()); it != l.end(); ++it)
   {
-    KConfigGroupSaver(c, *it);
-    KAddressBook * ab = new KAddressBook(*it, c->readEntry("Path"));
+    c->setGroup(*it);
+    KAddressBookInterface * ab = new KAddressBookInterface(*it, c->readEntry("Path"));
     addressBookList_.append(ab);
   }
 }
@@ -117,20 +117,20 @@ KAddressBookServer::_writeConfig()
 {
   KConfig * c = KGlobal::config();
 
-  KConfigGroupSaver(c, "General");
+  c->setGroup("General");
 
   QStringList l;
 
-	for (QListIterator<KAddressBook> it(addressBookList_); it.current(); ++it)
+	for (QListIterator<KAddressBookInterface> it(addressBookList_); it.current(); ++it)
     if (it.current()->name() != "default")
       l << it.current()->name();
 
   c->writeEntry("BookNames", l);
 
-	for (QListIterator<KAddressBook> it(addressBookList_); it.current(); ++it)
+	for (QListIterator<KAddressBookInterface> it(addressBookList_); it.current(); ++it)
     if (it.current()->name() != "default")
     {
-      KConfigGroupSaver(c, it.current()->name());
+      c->setGroup(it.current()->name());
       c->writeEntry("Path", it.current()->path());
     }
 

@@ -2,6 +2,7 @@
 #include <qcstring.h>
 #include <qstringlist.h>
 #include <qtextstream.h>
+#include <qfileinfo.h>
 #include <qfile.h>
 #include <qdir.h>
 
@@ -66,14 +67,15 @@ main(int argc, char ** argv)
 
     QDataStream inStr(args, IO_WriteOnly);
 
-    inStr << QString("cvs accounts") << QString("/tmp/cvs_accounts.kab");
+    inStr << QString("cvs accounts") << QString("/tmp/cvs_accounts.kab") <<
+      QFileInfo("test_kab_definition").absFilePath();
 
     bool ok =
       client->call
       (
        "KAddressBookServer",
        "KAddressBookServer",
-       "create(QString,QString)",
+       "create(QString,QString,QString)",
        args,
        retType,
        retVal
@@ -90,8 +92,8 @@ main(int argc, char ** argv)
       qFatal("Can't create addressbook");
   }
 
-  KAddressBook_stub * ab =
-    new KAddressBook_stub("KAddressBookServer", "cvs accounts");
+  KAddressBookInterface_stub * ab =
+    new KAddressBookInterface_stub("KAddressBookServer", "cvs accounts");
 
   QFile f(accountsFilename);
 

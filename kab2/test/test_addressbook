@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kab:address-book>
+
+<kab:address-book
+  xmlns:kab="http://kde.org/kab_format/"
+  definition="file:$KDEHOME/share/apps/kab/kabfile.xml"
+>
+  <kab:entry id="blah-000">
+
+    <name>Bjork</name>
+    <email>bjork@home</email>
+    <size>quite small</size>
+    <sex-appeal>great</sex-appeal>
+
+    <kab:child-list>
+      <kab:child>blah-001</kab:child>
+      <kab:child>blah-002</kab:child>
+      <kab:child>blah-003</kab:child>
+		</kab:child-list>
+
+  </kab:entry>
+
+	<kab:entry id="blah-001">
+    <name>Some Entity 1</name>
+    <email>1@home</email>
+  </kab:entry>
+	
+	<kab:entry id="blah-002">
+    <name>Some Entity 2"</name>
+    <email>2@home</email>
+  </kab:entry>
+	
+	<kab:entry id="blah-003">
+    <name>Some Entity 3</name>
+    <email>3@home</email>
+  </kab:entry>
+	
+</kab:address-book>
+

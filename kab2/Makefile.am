@@ -1,1 +1,1 @@
-SUBDIRS = lib server test
+SUBDIRS = lib backends server tools test

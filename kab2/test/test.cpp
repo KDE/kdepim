@@ -66,8 +66,8 @@ main(int argc, char ** argv)
 
   for (; it != addressBookList.end(); ++it)
   {
-    KAddressBook_stub * ab =
-      new KAddressBook_stub("KAddressBookServer", (*it).latin1());
+    KAddressBookInterface_stub * ab =
+      new KAddressBookInterface_stub("KAddressBookServer", (*it).latin1());
 
     QListViewItem * abItem = new QListViewItem(lv, ab->name());
 
@@ -102,7 +102,7 @@ main(int argc, char ** argv)
         if
           (
            (f.type().isEmpty() || (f.type() == "text")) &&
-           (f.subType().isEmpty() || (f.subType() == "unicode"))
+           (f.subType().isEmpty() || (f.subType() == "UCS-2"))
           )
         {
           QString s;
@@ -110,7 +110,7 @@ main(int argc, char ** argv)
           str >> s;
           fieldItem->setText(1, s);
           fieldItem->setText(2, "text");
-          fieldItem->setText(3, "unicode");
+          fieldItem->setText(3, "UCS-2");
         }
         else
         {
