@@ -1,5 +1,6 @@
 TODO LIST (Ignore the file TODO)
 
+* Update libkcal files in the KPilot tarballs.
 * GJJ: Hunt down and kill printfs. Hunt down bad i18n.
 * GJJ: move the file install widget to an iconview.
 * GJJ: Show the sync log as a KPassivePopup
@@ -8,7 +9,7 @@ TODO LIST (Ignore the file TODO)
   playlist or kdebugdialog.
 * Good junior job: the question asked when kpilot and the pilot's
   usernames don't match isn't very intuitive. It should be changed
-  to a yes/no/cancel with "Use KPilot name" "Use Pilot name" "Cancel". 
+  to a yes/no/cancel with "Use KPilot name" "Use Pilot name" "Cancel".
   This is in interactiveSync.cc.
 * Should interactiveSync and syncStack be moved to lib/ ?
 * Really need to do something about all the disabled options in the
@@ -32,36 +33,43 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for March 2nd, 2003
 ============================================
 
-TODO: Update libkcal files.
+2003-3-2  Adriaan de Groot
+* Continued instrumentation of the vcal conduit.
 
 2003-3-2 Reinhold Kainhofer
 * the DOC conduit now also finds the correct sync direction
   if the user only wants PC->PDA or only PDA->PC sync.
-	Also, if a text was deleted on one side, it is also deleted
-	on the other end
+  Also, if a text was deleted on one side, it is also deleted
+  on the other end
 * The resolution dialog of the DOC conduit now uses a QScrollView
   instead of a QTable for the list of conflicting texts
 * In the DOC conduit, regular expressions as bookmark names work
-  now. E.g. a bookmark search string of "return (\S+);" and a 
-	bookmark name of "RetVal: $1" or "RetVal: \1" replaces all $i or 
-	\i by the i-th subexpression of the match.
+  now. E.g. a bookmark search string of "return (\S+);" and a
+  bookmark name of "RetVal: $1" or "RetVal: \1" replaces all $i or
+  \i by the i-th subexpression of the match.
 * DOC databases are now also kept locally if the user set this option
   (installDatabases has the addidtional argument not to delete
-	the files)
-* The calendar and todo conduits now use the standard calendar by 
-  default. The user can also specify a single  file to sync with 
-	instead of the whole calendar.
-* The calendar and todo conduits use identical setup dialogs, so 
+  the files)
+* The calendar and todo conduits now use the standard calendar by
+  default. The user can also specify a single  file to sync with
+  instead of the whole calendar.
+* The calendar and todo conduits use identical setup dialogs, so
   there is no reason for code duplication. Removed the setup dialog
-	of the todo conduit and derived it from the calendar conduit setup
-	dialog.
-* Updated the copyright lines in the source files as well as 
+  of the todo conduit and derived it from the calendar conduit setup
+  dialog.
+* Updated the copyright lines in the source files as well as
   in the about tabs of kpilot and the conduits.
 * Since we have the calendar resource framework, the calendarr conduit
   can run even while korganizer has the calendar open without causing
-	calendar corruption. So I removed the check for running korganizer 
-	and alarm daemon
+  calendar corruption. So I removed the check for running korganizer
+  and alarm daemon
 
+
+2003-2-28  Adriaan de Groot
+* Discovered that the changes from 2003-1-31 to syncAction.{h,cc}
+  had disappeared in some of my periodic CVS screwups. Re-did them.
+* vcal-conduitbase.{h,cc} [BRANCH] Added more instruments for
+  running test mode.
 
 2003-2-27  Adriaan de Groot
 * Merged Reinhold's print-conduit-id patch from HEAD.
@@ -82,7 +90,7 @@ KPilot Developer's notes for February 26th, 2003
   backup copy (replace pilone by adridg in the URL).
 
 KPilot Developer's notes for February 14th, 2003
-================================================  
+================================================
 
 2003-2-14  Adriaan de Groot
 * Happy Valentine's Day, eh. Remember guys, today your girlfriend
@@ -216,7 +224,7 @@ KPilot Developer's notes for February 7th, 2003
 * kpilotlink.cc [BRANCH] Reordered ReadSysInfo and ReadUserInfo to
   copy JPilot's setup, maybe that will help with password issues.
 * kpilot.cc [BRANCH] Cleaned up deprecated headers.
-* conduitConfigDialog.cc [BRANCH] Preparing to repair the clumsy 
+* conduitConfigDialog.cc [BRANCH] Preparing to repair the clumsy
   conduit selection and activation 
 
   
@@ -261,7 +269,7 @@ KPilot Developer's notes for January 30th, 2003
     return true;
   I'm not sure I trust all the pointers to still be OK when this happens.
   Using delayDone() makes sure that exec() and conduitExec() return
-  first and we get back to the main event loop.    
+  first and we get back to the main event loop.
 * syncStack.{h,cc} [HEAD] Using a stack instead of a queue has some
   comp-sci chique, but little practical value. Break up the API
   to make it more easy to use elsewhere and practical to insert
