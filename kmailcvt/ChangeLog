@@ -2,6 +2,12 @@
 
 ---- DONE
 
+* 8-1-2000
+  - Pegasus mail support added by Holger Schurig.
+
+* dec. 2000
+  - LDIF support added by Oliver Strutynski.
+
 * 27-11-2000
   - Added Eudora Light Addressbook support. The addresses of this addressbook
     are put in the comment field of KAB, because in eudora there's no 
