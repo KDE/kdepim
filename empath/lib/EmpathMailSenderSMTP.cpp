@@ -25,7 +25,7 @@
 #include <kglobal.h>
 #include <kstddirs.h>
 #include <kconfig.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 // Local includes
 #include "rmm/Message.h"

@@ -2,7 +2,7 @@
 // Carlos Moro <cfmoro@correo.uniovi.es>
 // GNU-GPL v.2
 
-#include <kapp.h>
+#include <kapplication.h>
 #include "mkdatepicker.h"
 #include <kdebug.h>
 

@@ -37,7 +37,7 @@
 #include <kfiledialog.h>
 #include <kbuttonbox.h>
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kurl.h>
 
 // Local includes

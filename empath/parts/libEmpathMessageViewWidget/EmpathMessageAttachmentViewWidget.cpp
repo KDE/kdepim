@@ -24,7 +24,7 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kmimetype.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 // Local includes
 #include "EmpathMessageAttachmentViewWidget.h"

@@ -22,7 +22,7 @@
 
 
 // KDE includes
-#include <kapp.h>
+#include <kapplication.h>
 
 // Local includes
 #include "Empath.h"

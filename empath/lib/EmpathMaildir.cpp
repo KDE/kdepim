@@ -35,7 +35,7 @@
 #include <qstringlist.h>
 
 // KDE includes
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 
 // Local includes

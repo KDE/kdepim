@@ -27,7 +27,7 @@
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 // Local includes
 #include "EmpathMailSenderQmail.h"
