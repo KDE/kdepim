@@ -8,7 +8,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -188,7 +188,7 @@ void DwTypeEnumToStr(int aEnum, DwString& aStr)
 
 int DwSubtypeStrToEnum(const DwString& aStr)
 {
-    if (aStr == "") {
+    if (aStr.empty()) {
         return DwMime::kSubtypeNull;
     }
     int type = DwMime::kSubtypeUnknown;
@@ -307,9 +307,9 @@ int DwSubtypeStrToEnum(const DwString& aStr)
         else if (DwStrcasecmp(aStr, "rfc822") == 0) {
             type = DwMime::kSubtypeRfc822;
         }
-        else if (DwStrcasecmp(aStr, "report") == 0) {
-          type = DwMime::kSubtypeReport;
-        }
+	else if (DwStrcasecmp(aStr, "report") == 0) {
+	    type = DwMime::kSubtypeReport;
+	}
         else if (DwStrcasecmp(aStr, "rtf") == 0) {
             type = DwMime::kSubtypeRtf;
         }
