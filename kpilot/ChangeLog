@@ -1,7 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
-2004-06-29 Joern Ahrens
+2004-06-29  Reinhold Kainhofer
+* Fix the bug that todos that were marked finished on the handheld
+  lost that state when synced to the PC.
+* A few layout adjustments for the perl/pyton conduits (QTextEdit 
+  instead of QLineEdit)
+
+2004-06-29  Joern Ahrens
 * Corrected the behavior of the configuration dialog, when the 
   screensaver option is changed. 
 * Moved the tickle code from InteractiveAction to SyncAction. 
@@ -9,7 +15,7 @@
 * Ahh, got Adriaans m100, now I'm able to test without destroying 
   my data on the palm. Thanks Adriaan !
 
-2004-06-27 Joern Ahrens
+2004-06-27  Joern Ahrens
 * Filled the notepad conduit with life. The notepads are saved as png
   files in a configurable directory.
 
@@ -30,7 +36,7 @@
   in the meantime, and commited by Joern. Olivier D. has started
   improving the MAL conduit, wrt. proxy and password support.
 
-2004-06-02 Joern Ahrens
+2004-06-02  Joern Ahrens
 * Improved the wizards whatsthis text, thanks to David Bishop
 
 2004-05-30  Adriaan de Groot
