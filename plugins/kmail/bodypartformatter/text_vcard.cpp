@@ -61,7 +61,8 @@ namespace {
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
     Formatter() {
-      mKIMProxy = new ::KIMProxy(  kapp->dcopClient() );
+      // disabled pending resolution of how to share static objects when dlopening libraries
+      //mKIMProxy = ::KIMProxy::instance( kapp->dcopClient() );
     }
 
     Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
@@ -86,7 +87,7 @@ namespace {
           KABC::Addressee a = (*it);
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a, mKIMProxy, 0, false );
+          QString contact = AddresseeView::vCardAsHTML( a, 0L, 0, false, true, true, true, true, true, false );
           writer->queue( contact );
 
           QString addToLinkText = i18n( "[Add this contact to the addressbook]" );
@@ -103,7 +104,7 @@ namespace {
        return Ok;
     }
   private:
-    ::KIMProxy *mKIMProxy;
+    //::KIMProxy *mKIMProxy;
 };
 
   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
