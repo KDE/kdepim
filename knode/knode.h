@@ -48,6 +48,7 @@ public slots:
 protected:
   bool queryClose();
 private:
+  void setupStatusBar();
   KNMainWidget *m_mainWidget;
 };
 

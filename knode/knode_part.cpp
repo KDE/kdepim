@@ -27,15 +27,18 @@
 #include "knmainwidget.h"
 #include "aboutdata.h"
 #include "knlistview.h"
+#include "knwidgets.h"
 
 #include "sidebarextension.h"
 
 #include <kapplication.h>
 #include <kparts/genericfactory.h>
+#include <kparts/statusbarextension.h>
 #include <knotifyclient.h>
 #include <dcopclient.h>
 #include <kiconloader.h>
 #include <kdebug.h>
+#include <kstatusbar.h>
 
 #include <qlayout.h>
 
@@ -76,6 +79,13 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
   new KParts::SideBarExtension( mainWidget->collectionView(),
                                 this,
                                 "KNodeSidebar" );
+
+  KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
+  statusBar->addStatusBarItem(knGlobals.progressBar, 0, false);
+  statusBar->addStatusBarItem(mainWidget->statusBarLabelMain(), 2, false);
+  statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 2, false);
+  statusBar->addStatusBarItem(mainWidget->statusBarLabelGroup(), 3, false);
+
   setXMLFile( "knodeui.rc" );
 }
 

@@ -330,14 +330,12 @@ void KNMainWidget::initStatusBar()
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
   p_rogBar = new KNProgress( sb->sizeHint().height()-4, 1000, 0, sb );
   knGlobals.progressBar = p_rogBar;
-  sb->addWidget( p_rogBar );
-  sb->insertItem( QString::null, SB_MAIN,2 );
-  sb->setItemAlignment( SB_MAIN,AlignLeft | AlignVCenter );
-  sb->insertItem( QString::null, SB_FILTER, 2 );
-  sb->setItemAlignment( SB_FILTER,AlignLeft | AlignVCenter );
+  s_tatusMain = new KStatusBarLabel( QString::null, SB_MAIN, sb );
+  s_tatusMain->setAlignment( AlignLeft | AlignVCenter );
+  s_tatusFilter = new KStatusBarLabel( QString::null, SB_FILTER, sb );
+  s_tatusFilter->setAlignment( AlignLeft | AlignVCenter );
   s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );
   s_tatusGroup->setAlignment( AlignLeft | AlignVCenter );
-  sb->addWidget( s_tatusGroup, 3 );
 }
 
 //================================== GUI =================================
@@ -351,9 +349,9 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   bar->clear();
   if (text.isEmpty() && (id==SB_MAIN))
     if (knGlobals.netAccess->currentMsg().isEmpty())
-      bar->changeItem(i18n(" Ready"),SB_MAIN);
+      s_tatusMain->setText(i18n(" Ready"));
     else
-      bar->changeItem(knGlobals.netAccess->currentMsg(), SB_MAIN);   // restore the original message
+      s_tatusMain->setText(knGlobals.netAccess->currentMsg());
   else if ( id == SB_GROUP ) {
     int statusWidth = s_tatusGroup->width();
     QString mtext = text;
@@ -363,7 +361,14 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
     s_tatusGroup->setText( mtext );
   }
   else {
-    bar->changeItem(text, id);
+    switch(id) {
+      case SB_MAIN:
+        s_tatusMain->setText(text); break;
+      case SB_GROUP:
+        s_tatusGroup->setText(text); break;
+      case SB_FILTER:
+        s_tatusFilter->setText(text); break;
+    }
   }
 }
 

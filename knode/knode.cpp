@@ -15,6 +15,7 @@
 */
 #include "knode.h"
 #include "knglobals.h"
+#include "knwidgets.h"
 
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
@@ -49,6 +50,7 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
   connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
            SLOT( setCaption(const QString&)) );
   setCentralWidget( m_mainWidget );
+  setupStatusBar();
   createGUI( "knodeui.rc" );
   knGlobals.instance = 0;
 
@@ -83,6 +85,13 @@ void KNMainWindow::slotNewToolbarConfig()
 bool KNMainWindow::queryClose()
 {
   return m_mainWidget->queryClose();
+}
+
+void KNMainWindow::setupStatusBar() {
+  statusBar()->addWidget(knGlobals.progressBar);
+  statusBar()->addWidget(m_mainWidget->statusBarLabelMain(), 2);
+  statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
+  statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
 }
 
 #include "knode.moc"

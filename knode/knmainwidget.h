@@ -90,6 +90,9 @@ public:
   KNListView*       collectionView()const  { return c_olView; }
   KNListView*       headerView()const      { return h_drView; }
   KNArticleWidget*  articleView()const     { return a_rtView; }
+  KStatusBarLabel*  statusBarLabelMain() const { return s_tatusMain; }
+  KStatusBarLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
+  KStatusBarLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
   public: //The dcop interface
   // Implementation of KNodeIface
   /* Navigation */
@@ -396,6 +399,8 @@ protected slots:
 
 private:
   KStatusBarLabel *s_tatusGroup; // widget used in the statusBar() for the group status
+  KStatusBarLabel *s_tatusMain;
+  KStatusBarLabel *s_tatusFilter;
   KXMLGUIClient *m_GUIClient;
 };
 
