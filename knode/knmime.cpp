@@ -644,7 +644,7 @@ void KNMimeContent::parse()
       }
     }
   }
-  else if(ct->isText() && b_ody.size()>10000) { //large textual body => maybe an uuencoded binary?
+  else if(!isMimeCompliant()) { //non-mime body => check for uuencoded content
     UUParser uup(b_ody, rawHeader("Subject"));
 
     if(uup.parse()) { // yep, it is uuencoded
@@ -1128,6 +1128,24 @@ bool KNMimeContent::removeHeader(const char *type)
         return h_eaders->remove();
 
   return false;
+}
+
+
+bool KNMimeContent::isMimeCompliant()
+{
+  return (  (h_ead.find("\nMIME-Version: ", 0, false) > -1) ||
+            (h_ead.find("\nContent-", 0, false) > -1) );
+}
+
+
+int KNMimeContent::size()
+{
+  int ret=b_ody.length();
+
+  if(contentTransferEncoding()->cte()==KNHeaders::CEbase64)
+    return (ret*3/4); //base64 => 6 bit per byte
+
+  return ret;
 }
 
 

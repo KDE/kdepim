@@ -156,6 +156,7 @@ class KNMimeContent : public KNMimeBase {
     virtual KNHeaders::Base* getHeaderByType(const char *type);
     virtual void setHeader(KNHeaders::Base *h);
     virtual bool removeHeader(const char *type);
+    bool isMimeCompliant();
     bool hasHeader(const char *type)                                  { return (getHeaderByType(type)!=0); }
     KNHeaders::ContentType* contentType(bool create=true)             { KNHeaders::ContentType *p=0; return getHeaderInstance(p, create); }
     KNHeaders::CTEncoding* contentTransferEncoding(bool create=true)  { KNHeaders::CTEncoding *p=0; return getHeaderInstance(p, create); }
@@ -163,7 +164,7 @@ class KNMimeContent : public KNMimeBase {
     KNHeaders::CDescription* contentDescription(bool create=true)     { KNHeaders::CDescription *p=0; return getHeaderInstance(p, create); }
 
     //content access
-    int size()            { return b_ody.length(); }
+    int size();
     int lineCount();
     QCString body()       { return b_ody; }
     QCString encodedContent(bool useCrLf=false);
@@ -253,7 +254,7 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     virtual KNHeaders::References* references(bool create=true)      { KNHeaders::References *p=0; return getHeaderInstance(p, create); }
     virtual KNHeaders::Lines* lines(bool create=true)                { if(!create && l_ines.isEmpty()) return 0; return &l_ines; }
     virtual KNHeaders::UserAgent* userAgent(bool create=true)        { KNHeaders::UserAgent *p=0; return getHeaderInstance(p, create); }
-    
+
     //id
     int id()             { return i_d; }
     void setId(int i)    { i_d=i; }
