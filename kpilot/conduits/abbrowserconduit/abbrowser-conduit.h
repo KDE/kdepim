@@ -98,6 +98,9 @@ class AbbrowserConduit : public BaseConduit
       void _mapContactsToPilot(const QDict<ContactEntry> &contacts,
 			       QMap<recordid_t, QString> &idContactMap,
 			       QDict<ContactEntry> &newContacts) const;
+      void _removeFromSync(const QString &key,
+			   QDict<ContactEntry> &newContacts,
+			   QMap<recordid_t, QString> &idContactMap) const;
 
       /** Output to console, for debugging only */
       static void showContactEntry(const ContactEntry &abAddress);
