@@ -28,15 +28,73 @@
 // Qt includes
 #include <qstring.h>
 #include <qtimer.h>
+#include <qqueue.h>
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "EmpathFolderList.h"
 #include <RMM_Message.h>
 #include <RMM_Envelope.h>
 #include <RMM_Message.h>
 #include <RMM_MessageID.h>
+
+class Action
+{
+    public:
+        
+        Action(ActionType t, const EmpathURL & url)
+            :   actionType_(t),
+                url_(url)
+        {
+            // Empty.
+        }
+
+        ActionType actionType() { return actionType_; }
+        EmpathURL url() { return url_; }
+                
+    private:
+        
+        ActionType actionType_;
+        EmpathURL url_;
+};
+
+class MarkAction : public Action
+{
+    public:
+
+        MarkAction(const EmpathURL & url, RMM::MessageStatus s)
+            :   Action(MarkMessage, url),
+                status_(s)
+        {
+            // Empty.
+        }
+
+        RMM::MessageStatus status() { return status_; }
+
+    private:
+
+        RMM::MessageStatus status_;
+};
+
+class WriteAction : public Action
+{
+    public:
+
+        WriteAction(const EmpathURL & url, RMM::RMessage & msg)
+            :   Action(WriteMessage, url),
+                message_(msg)
+        {
+            // Empty.
+        }
+
+        RMM::RMessage & msg() { return message_; }
+
+    private:
+
+        RMM::RMessage message_;
+};
 
 class EmpathFolder;
 
@@ -71,194 +129,175 @@ class EmpathMailbox : public QObject
         
         bool operator == (const EmpathMailbox & other) const
         { return id_ == other.id_; }
-        
-        // Pure virtual methods
-    
+
+        // Async methods
+
         /**
-         * @short Initialise this mailbox. Must be called after ctor and before
+         * Ask for a message to be retrieved.
+         */
+        void request(const EmpathURL &);
+        /**
+         * Write a new message to the specified folder.
+         */
+        EmpathURL write(const EmpathURL & folder, RMM::RMessage & msg);
+        /**
+         * Attempt to remove the message / folder specified in the url.
+         */
+        void remove(const EmpathURL &);
+        /**
+         * Attempt to remove the messages specified in the url list.
+         */
+        void remove(const EmpathURL &, const QStringList &);
+        /**
+         * Attempt to create a new folder as specified in the url.
+         */
+        void createFolder(const EmpathURL &);
+        /**
+         * Mark the message specified with the given status.
+         */
+        void mark(const EmpathURL &, RMM::MessageStatus);
+        /**
+         * Mark the messages specified with the given status.
+         */
+        void mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
+
+        // End async methods
+
+        // Pure virtuals.
+
+        /**
+         * Initialise this mailbox. Must be called after ctor and before
          * any other methods.
          */
-        virtual void
-            init() = 0;
-        
+        virtual void init() = 0;
         /**
-         * @short Trigger a config save for this box.
+         * Trigger a config save for this box.
          */
         virtual void saveConfig() = 0;
         
         /**
-         * @short Trigger a config read for this box.
+         * Trigger a config read for this box.
          */
         virtual void readConfig() = 0;
-        
+ 
         /**
-         * @short Write a new message to the specified folder.
+         * Synchronise the index for the folder specified in the url.
          */
-        virtual QString
-            writeMessage(const EmpathURL & folder, RMM::RMessage & msg) = 0;
-        
+        virtual void sync(const EmpathURL &) = 0;
+       
+    protected:
+
         /**
-         * @short Get the size of the message specified in the url.
+         * Retrieve a message.
          */
-        virtual Q_UINT32
-            sizeOfMessage        (const EmpathURL &) = 0;
-        
+        virtual void _retrieve(const EmpathURL &) = 0;
         /**
-         * @short Get the first plain body of the message specified in the url.
+         * Write a new message to the specified folder.
          */
-        virtual QString
-            plainBodyOfMessage    (const EmpathURL &) = 0;
-        
+        virtual QString _write
+            (const EmpathURL & folder, RMM::RMessage & msg) = 0;
         /**
-         * @short Get the envelope of the message specified in the url.
+         * Attempt to remove the message specified in the url.
          */
-        virtual RMM::REnvelope *
-            envelopeOfMessage    (const EmpathURL &) = 0;
-        
+        virtual void _removeMessage(const EmpathURL &) = 0;
         /**
-         * @short Get the message specified in the url.
+         * Attempt to remove the messages specified in the url list.
          */
-        virtual RMM::RMessage *
-            message                (const EmpathURL &) = 0;
-        
+        virtual void _removeMessage(const EmpathURL &, const QStringList &) = 0;
         /**
-         * @short Attempt to remove the message specified in the url.
+         * Attempt to create a new folder as specified in the url.
          */
-        virtual bool
-            removeMessage        (const EmpathURL &) = 0;
-        
+        virtual void _createFolder(const EmpathURL &) = 0;
         /**
-         * @short Attempt to remove the messages specified in the url list.
+         * Attempt to remove the folder specified in the url.
          */
-        virtual bool
-            removeMessage        (const EmpathURL &, const QStringList &) = 0;
-        
+        virtual void _removeFolder        (const EmpathURL &) = 0;
         /**
-         * @short Get the type of the message specified in the url.
+         * Mark the message specified with the given status.
          */
-        virtual RMM::RBodyPart::PartType
-            typeOfMessage        (const EmpathURL &) = 0;
-        
-        /**
-         * @short Attempt to create a new folder as specified in the url.
-         */
-        virtual bool
-            addFolder            (const EmpathURL &) = 0;
-        
-        /**
-         * @short Attempt to remove the folder specified in the url.
-         */
-        virtual bool
-            removeFolder        (const EmpathURL &) = 0;
-        
-        /**
-         * @short Synchronise the index for the folder specified in the url.
-         */
-        virtual void
-            syncIndex            (const EmpathURL &) = 0;
-    
-        /**
-         * @short Mark the message specified with the given status.
-         */
-        virtual bool
-            mark(const EmpathURL &, RMM::MessageStatus) = 0;
-        
-        /**
-         * @short Mark the messages specified with the given status.
-         */
-        virtual bool
-            mark(const EmpathURL &, const QStringList &, RMM::MessageStatus) = 0;
+        virtual void _mark(const EmpathURL &, RMM::MessageStatus) = 0;
 
     public slots:
 
-        virtual void s_checkNewMail()    = 0;
-        virtual void s_getNewMail()        = 0;
+        virtual void s_checkNewMail()   = 0;
+        virtual void s_getNewMail()     = 0;
         
         // End pure virtual methods
     
-        // Now follows non-virtual methods.
-        
     public:
 
-        void        setID(Q_UINT32 id) { id_ = id; }
-        Q_UINT32    id() const { return id_; }
-        
+        void        setID(Q_UINT32 id)  { id_ = id; }
+        Q_UINT32    id() const          { return id_; }
         /**
-         * @short Check if the folder with the given path exists.
+         * Check if the folder with the given path exists.
          */
         bool    folderExists(const EmpathURL & folderPath);
-        
         /**
-         * @short Get a pointer to the folder referenced by the given url.
+         * Get a pointer to the folder referenced by the given url.
          */
         EmpathFolder *    folder(const EmpathURL & url);
-        
         /**
-         * @short Get the list of folders contained by this mailbox.
+         * Get the list of folders contained by this mailbox.
          */
         const EmpathFolderList & folderList() const { return folderList_; }
-
         /**
-         * @short Set whether this mailbox uses a timer.
+         * Set whether this mailbox uses a timer.
          */
-        void        setCheckMail(bool yn);
-        
+        void setCheckMail(bool yn);
         /**
-         * @short Set the timer interval for this box.
+         * Set the timer interval for this box.
          */
-        void        setCheckMailInterval(Q_UINT32 checkMailInterval);
-
+        void setCheckMailInterval(Q_UINT32 checkMailInterval);
         /**
-         * @short Find out whether this mailbox uses a timer.
+         * Find out whether this mailbox uses a timer.
          */
-        bool        checkMail() const { return checkMail_; }
-        
+        bool checkMail() const { return checkMail_; }
         /**
-         * @short Report the timer interval for this box.
+         * Report the timer interval for this box.
          */
-        Q_UINT32    checkMailInterval() const { return checkMailInterval_; }
-
+        Q_UINT32 checkMailInterval() const { return checkMailInterval_; }
         /**
-         * @short Get the name of this box.
+         * Get the name of this box.
          */
-        QString     name()    const { return url_.mailboxName(); }
-        
+        QString name()    const { return url_.mailboxName(); }
         /**
-         * @short Change the name of this box.
+         * Change the name of this box.
          */
-        void        setName(const QString & name);
-        
+        void setName(const QString & name);
         /**
-         * @short Get the full url to this box.
+         * Get the full url to this box.
          */
-        const EmpathURL &    url()            const { return url_; }
-        
+        const EmpathURL & url() const { return url_; }
         /**
-         * @short Get the count of messages contained within all folders
+         * Get the count of messages contained within all folders
          * owned by this box.
          */
-        Q_UINT32    messageCount()            const;
-        
+        Q_UINT32 messageCount() const;
         /**
-         * @short Get the count of unread messages contained within all folders
+         * Get the count of unread messages contained within all folders
          * owned by this box.
          */
-        Q_UINT32    unreadMessageCount()    const;
-        
+        Q_UINT32 unreadMessageCount() const;
         /**
-         * @short Report the type of this mailbox.
+         * Report the type of this mailbox.
          */
-        AccountType    type()            const { return type_; }
-        
+        AccountType type() const { return type_; }
         /**
-         * @short Name of the desired pixmap to represent this box.
+         * Name of the desired pixmap to represent this box.
          */
-        QString     pixmapName()    const { return pixmapName_; }
-        
-        bool         newMailReady()    const { return (newMessagesCount_ != 0); }
-        Q_UINT32     newMails()        const { return newMessagesCount_; }
+        QString     pixmapName()    const { return pixmapName_;             }
+        /**
+         * Find out if there's any new mail ready.
+         */
+        bool        newMailReady()  const { return (newMessagesCount_ != 0);}
+        /**
+         * Count the number of new mails ready.
+         */
+        Q_UINT32    newMails()      const { return newMessagesCount_;       }
 
     signals:
+
+        void operationComplete(ActionType, bool b, const EmpathURL & url);
 
         void updateFolderLists();
         void newMailArrived();
@@ -272,21 +311,33 @@ class EmpathMailbox : public QObject
     protected:
         
         EmpathFolderList    folderList_;
-        EmpathIndex            index_;
 
-        EmpathURL            url_;
+        EmpathIndex index_;
 
-        AccountType            type_;
+        EmpathURL   url_;
 
-        Q_UINT32            newMessagesCount_;
+        AccountType type_;
 
-        bool                checkMail_;
-        Q_UINT32            checkMailInterval_;
+        Q_UINT32    newMessagesCount_;
+
+        bool        checkMail_;
+        Q_UINT32    checkMailInterval_;
         
-        QTimer                timer_;
-        QString                pixmapName_;
-        Q_UINT32             id_;
-        Q_UINT32            seq_;
+        QTimer      timer_;
+        QString     pixmapName_;
+        Q_UINT32    id_;
+        Q_UINT32    seq_;
+
+    private:
+
+        void _enqueue(const EmpathURL &, RMM::MessageStatus);
+        void _enqueue(const EmpathURL &, RMM::RMessage &);
+        void _enqueue(ActionType, const EmpathURL &);
+
+        QQueue<Action> queue_;
+        
+        void _enqueue(Action *);
+        void _runQueue();
 };
 
 #endif

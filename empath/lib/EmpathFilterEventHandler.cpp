@@ -126,7 +126,8 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
                 
                 RMM::RMessage message(*r);
                 
-                if (!mcf->writeMessage(message)) return;
+#warning ASYNC FIX NEEDED
+                // FIXME for async if (!mcf->writeMessage(message)) return;
                 
                 empath->remove(id);
             }
@@ -149,7 +150,8 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
                 
                 RMM::RMessage message(*r);
                 
-                mcf->writeMessage(message);
+#warning ASYNC FIX NEEDED
+//                mcf->writeMessage(message);
             }
         
             break;

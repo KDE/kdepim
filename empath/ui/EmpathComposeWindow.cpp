@@ -444,13 +444,7 @@ EmpathComposeWindow::s_messageCopyTo()
         return;
     }
 
-    EmpathFolder * copyFolder = empath->folder(fcd.selected());
-
-    if (copyFolder != 0)
-        copyFolder->writeMessage(message);
-    else {
-        empathDebug("Couldn't get copy folder");
-    }
+    empath->write(fcd.selected(), message);
 }
 
     void

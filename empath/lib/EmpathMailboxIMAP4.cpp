@@ -41,26 +41,31 @@ EmpathMailboxIMAP4::EmpathMailboxIMAP4(const QString & name)
     bool    
 EmpathMailboxIMAP4::getMail()
 {
+    // STUB
     return false;
 }
 
     void
 EmpathMailboxIMAP4::s_getNewMail()
 {
+    // STUB
 }
     void
 EmpathMailboxIMAP4::s_checkNewMail()
 {
+    // STUB
 }
 
     void
 EmpathMailboxIMAP4::saveConfig()
 {
+    // STUB
 }
 
     void
 EmpathMailboxIMAP4::readConfig()
 {
+    // STUB
 }
 
 // Set methods
@@ -86,6 +91,7 @@ EmpathMailboxIMAP4::setUsername(const QString & username)
     void
 EmpathMailboxIMAP4::setPassword(const QString & password)
 {
+    // STUB
     password_ = password;
 }
 
@@ -112,6 +118,7 @@ EmpathMailboxIMAP4::username()
     QString
 EmpathMailboxIMAP4::password()
 {
+    // STUB
     return password_;
 }
 
@@ -122,92 +129,95 @@ EmpathMailboxIMAP4::passwordSavePolicy()
 }
 
     QString
-EmpathMailboxIMAP4::writeMessage(const EmpathURL &, RMM::RMessage &)
+EmpathMailboxIMAP4::_write(const EmpathURL & url, RMM::RMessage &)
 {
+    // STUB
+    emit (operationComplete(WriteMessage, false, url));
     return QString::null;
 }
 
     bool
 EmpathMailboxIMAP4::newMail() const
 {
+    // STUB
     return false;
 }
     void
-EmpathMailboxIMAP4::syncIndex(const EmpathURL &)
+EmpathMailboxIMAP4::sync(const EmpathURL &)
 {
-}
-
-    RMM::RMessage *
-EmpathMailboxIMAP4::message(const EmpathURL &)
-{
-    return 0;
-}
-
-    Q_UINT32
-EmpathMailboxIMAP4::sizeOfMessage(const EmpathURL &)
-{
-    return 0;
-}
-
-    QString
-EmpathMailboxIMAP4::plainBodyOfMessage(const EmpathURL &)
-{
-    return QString::null;
-}
-
-    RMM::REnvelope *
-EmpathMailboxIMAP4::envelopeOfMessage(const EmpathURL &)
-{
-    return 0;
-}
-
-    RMM::RBodyPart::PartType
-EmpathMailboxIMAP4::typeOfMessage(const EmpathURL &)
-{
-    return RMM::RBodyPart::Basic;
+    // STUB
 }
 
     void
 EmpathMailboxIMAP4::init()
 {
+    // STUB
     empathDebug("init() called");
 }
 
-    bool
-EmpathMailboxIMAP4::removeMessage(const EmpathURL &)
+    void
+EmpathMailboxIMAP4::_retrieve(const EmpathURL & url)
 {
-    return false;
+    // STUB
+    emit (operationComplete(RetrieveMessage, false, url));
 }
 
-    bool
-EmpathMailboxIMAP4::addFolder(const EmpathURL &)
+    void
+EmpathMailboxIMAP4::_removeMessage(const EmpathURL & url)
 {
-    return false;
+    // STUB
+    emit (operationComplete(RemoveMessage, false, url));
 }
 
-    bool
-EmpathMailboxIMAP4::removeFolder(const EmpathURL &)
+    void
+EmpathMailboxIMAP4::_createFolder(const EmpathURL & url)
 {
-    return false;
+    // STUB
+    emit (operationComplete(CreateFolder, false, url));
 }
 
-    bool
-EmpathMailboxIMAP4::mark(const EmpathURL &, RMM::MessageStatus)
+    void
+EmpathMailboxIMAP4::_removeFolder(const EmpathURL & url)
 {
-    return false;
+    // STUB
+    emit (operationComplete(RemoveFolder, false, url));
 }
 
-    bool
-EmpathMailboxIMAP4::mark(
-    const EmpathURL &, const QStringList &, RMM::MessageStatus)
+    void
+EmpathMailboxIMAP4::_mark(const EmpathURL & url, RMM::MessageStatus)
 {
-    return false;
+    // STUB
+    emit (operationComplete(MarkMessage, false, url));
 }
 
-    bool
-EmpathMailboxIMAP4::removeMessage(const EmpathURL &, const QStringList &)
+    void
+EmpathMailboxIMAP4::_mark(
+    const EmpathURL & url, const QStringList & l, RMM::MessageStatus)
 {
-    return false;
+    // STUB
+    EmpathURL u(url);
+    
+    QStringList::ConstIterator it;
+    
+    for (it = l.begin(); it != l.end(); ++it) {
+        u.setMessageID(*it);
+        emit (operationComplete(MarkMessage, false, u));
+    }
+}
+
+    void
+EmpathMailboxIMAP4::_removeMessage(const EmpathURL & url, const QStringList & l)
+{
+    // STUB
+    EmpathURL u(url);
+    
+    QStringList::ConstIterator it;
+    
+    for (it = l.begin(); it != l.end(); ++it) {
+        u.setMessageID(*it);
+        emit (operationComplete(RemoveMessage, false, u));
+    }
+
 }
 
 // vim:ts=4:sw=4:tw=78

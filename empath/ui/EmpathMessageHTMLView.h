@@ -56,7 +56,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
          * Do the parsing and print to the widget
          */
         void toHTML(QString &);
-        bool show(const QString & s, bool markup = true);
+        bool showText(const QString & s, bool markup = true);
         
     protected slots:
         

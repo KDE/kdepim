@@ -122,7 +122,6 @@ EmpathMainWidget::messageViewWidget()
 EmpathMainWidget::s_displayMessage(const EmpathURL & url)
 {
     messageViewWidget_->s_setMessage(url);
-    messageViewWidget_->go();
 }
 
 // vim:ts=4:sw=4:tw=78

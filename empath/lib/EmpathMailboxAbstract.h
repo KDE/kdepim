@@ -27,40 +27,57 @@
 // XXX Make sure that you put a new public:, protected: etc specifier after the
 // #include or you'll turn some stuff into private: without knowing.
 
-// Pure virtual methods
 public:
-virtual bool getMail();
-virtual bool newMail() const;
+    
+    virtual void
+init();
+    
+    virtual bool
+getMail();
+    
+    virtual bool
+newMail() const;
 
-virtual void saveConfig();
-virtual void readConfig();
+    virtual void
+saveConfig();
+
+    virtual void
+readConfig();
         
-virtual QString writeMessage(const EmpathURL & folder, RMM::RMessage &);
+    virtual void
+sync(const EmpathURL &);
         
-virtual Q_UINT32                    sizeOfMessage        (const EmpathURL &);
-virtual QString                        plainBodyOfMessage    (const EmpathURL &);
-virtual RMM::REnvelope *            envelopeOfMessage    (const EmpathURL &);
-virtual RMM::RBodyPart::PartType    typeOfMessage        (const EmpathURL &);
-virtual RMM::RMessage *                message                (const EmpathURL &);
+protected:
+    
+    virtual void
+_retrieve(const EmpathURL &);
 
-virtual bool    removeMessage    (const EmpathURL &);
-virtual bool    removeMessage    (const EmpathURL &, const QStringList &);
+    virtual QString
+_write(const EmpathURL &, RMM::RMessage &);
+    
+    virtual void
+_removeMessage(const EmpathURL &);
+    
+    virtual void
+_removeMessage(const EmpathURL &, const QStringList &);
+    
+    virtual void
+_createFolder(const EmpathURL &);
 
-virtual bool    addFolder        (const EmpathURL &);
-virtual bool    removeFolder    (const EmpathURL &);
-
-virtual void    syncIndex        (const EmpathURL &);
-
-virtual bool mark(const EmpathURL &, RMM::MessageStatus);
-virtual bool mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
-
-virtual void init();
+    virtual void
+_removeFolder(const EmpathURL &);
+    
+    virtual void
+_mark(const EmpathURL &, RMM::MessageStatus);
+    
+    virtual void
+_mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
         
 public slots:
 
 virtual void s_checkNewMail();
 virtual void s_getNewMail();
 
-private: // Just to make sure we don't accidentally make lots of public slots.
-// End pure virtual methods
+private: // Prefer compiler warnings to public slots.
+
 // vim:ts=4:sw=4:tw=78

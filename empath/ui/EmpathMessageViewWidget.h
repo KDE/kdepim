@@ -39,6 +39,7 @@
 // Local includes
 #include "EmpathMessageStructureWidget.h"
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathMessageHTMLView.h"
 
 class EmpathHeaderViewWidget;
@@ -60,7 +61,6 @@ class EmpathMessageViewWidget : public QWidget
         /**
          * Tell the internal widget to start parsing
          */
-        void go();
         void resizeEvent(QResizeEvent * e);
         
     public slots:
@@ -77,10 +77,11 @@ class EmpathMessageViewWidget : public QWidget
         void s_vScrollbarSetValue(int);
         void s_URLSelected(QString, int);
         void s_clipClicked();
+        void s_operationComplete(ActionType, bool, const EmpathURL &);
 
     private:
         
-        void show(QCString &, bool m = true);
+        void showText(QCString &, bool m = true);
         EmpathMessageStructureWidget * structureWidget_;
         EmpathMessageHTMLWidget    * messageWidget_;
         QGridLayout                * mainLayout_;

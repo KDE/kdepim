@@ -22,10 +22,23 @@
 #define EMPATHENUM_H
 
 enum OutgoingServerType    { Sendmail, Qmail, SMTP };
-enum AccountType        { Local, Maildir, POP3, IMAP4 };
+enum AccountType           { Local, Maildir, POP3, IMAP4 };
 enum SendPolicy            { SendNow, SendLater };
 enum SavePolicy            { Forever, ThisSession, Never };
-enum ActionType            { MoveFolder, CopyFolder, Delete, Ignore, Forward };
+
+enum ActionType {
+    RetrieveMessage,
+    MoveMessage,
+    CopyMessage,
+    DeleteMessage,
+    IgnoreMessage,
+    ForwardMessage,
+    MarkMessage,
+    WriteMessage,
+    RemoveMessage,
+    CreateFolder,
+    RemoveFolder
+};
 
 enum MatchExprType {
     Size,

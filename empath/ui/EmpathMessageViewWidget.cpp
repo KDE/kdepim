@@ -114,21 +114,30 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 
     QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
             SLOT(s_URLSelected(QString, int)));
+
+    QObject::connect(
+        empath, SIGNAL(operationComplete(ActionType, bool, const EmpathURL &)),
+        this,   SLOT(s_operationComplete(ActionType, bool, const EmpathURL &)));
     
     mainLayout_->activate();
     QWidget::show();    
 }
 
     void
-EmpathMessageViewWidget::go()
+EmpathMessageViewWidget::s_operationComplete(
+    ActionType t, bool b, const EmpathURL & url)
 {
-    empathDebug("go() called");
+    empathDebug("Got operation complete signal");
+    empathDebug("b is " + QString(b ? "true" : "false")); 
+    empathDebug(QString().setNum((int)t)); 
+    if ((t != RetrieveMessage) || (b != true))
+        return;
 
-    QCString s;
     RMM::RMessage * m(empath->message(url_));
     
     if (m == 0) {
-        empathDebug("Can't load message from \"" + url_.asString() + "\"");
+        empathDebug("Couldn't get supposedly retrieved message from \"" +
+            url_.asString() + "\"");
         return;
     }
     
@@ -143,8 +152,7 @@ EmpathMessageViewWidget::go()
     
     headerViewWidget_->useEnvelope(message.envelope());
     
-    empathDebug("envelope:");
-    empathDebug(message.envelope().asString());
+    QCString s;
     
     if (message.body().count() == 0)
         s = message.decode().data();
@@ -215,7 +223,7 @@ EmpathMessageViewWidget::go()
                         RMM::RBodyPart p(*it.current());
                     
                         s = p.decode().data();
-                        show(s, true);
+                        showText(s, true);
                         return;
     
                     } else if (!stricmp(t.subType(), "plain")) {
@@ -225,7 +233,7 @@ EmpathMessageViewWidget::go()
                         RMM::RBodyPart p(*it.current());
                     
                         s = p.decode().data();
-                        show(s);
+                        showText(s);
                         return;
                     }
                     
@@ -234,7 +242,7 @@ EmpathMessageViewWidget::go()
                     empathDebug("Haven't decided what to do with this part yet");
                     RMM::RBodyPart p(*it.current());
                     s = p.decode().data();
-                    show(s);
+                    showText(s);
                 }
             }
         }
@@ -242,7 +250,7 @@ EmpathMessageViewWidget::go()
         empathDebug("=================== END MULTIPART =====================");
     }
 
-    show(s);
+    showText(s);
 }
 
     void
@@ -261,13 +269,16 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
     void
 EmpathMessageViewWidget::resizeEvent(QResizeEvent * e)
 {
-    resize(e->size());
-    s_docChanged();
+//    empathDebug("");
+//    s_docChanged();
+//    QWidget::resize(e->size());
 }
 
     void
 EmpathMessageViewWidget::s_docChanged()
 {
+    empathDebug("");
+    return;
     // Hide scrollbars if they're not necessary
 
     int docHeight    = messageWidget_->docHeight();
@@ -309,6 +320,7 @@ EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
     empathDebug("setMessage() called with \"" + url.asString() + "\"");
     url_ = url;
+    empath->request(url_);
 }
 
     void
@@ -359,7 +371,7 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
     empathDebug("s_partChanged() called");
     RMM::RBodyPart p(*part);
     QCString s(p.data());
-    show(s, true);
+    showText(s, true);
 }
 
     void
@@ -370,7 +382,7 @@ EmpathMessageViewWidget::s_switchView()
         
         empathDebug("Doing normal view");
         viewingSource_ = false;
-        go();
+        //go();
 
     } else {
         
@@ -385,16 +397,13 @@ EmpathMessageViewWidget::s_switchView()
         }
         
         QCString s(m->asString());
-        show(s, false);
+        showText(s, false);
     }
 }
 
     void
-EmpathMessageViewWidget::show(QCString & s, bool markup)
+EmpathMessageViewWidget::showText(QCString & s, bool markup)
 {
-    while (!messageWidget_->show(s, markup)) {
-        kapp->processEvents();
-    }
+    messageWidget_->showText(s, markup);
 }
 
-// vim:ts=4:sw=4:tw=78

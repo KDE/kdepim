@@ -86,7 +86,7 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 }
 
     bool
-EmpathMessageHTMLWidget::show(const QString & s, bool markup)
+EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
 {
     empathDebug("show() called");
     

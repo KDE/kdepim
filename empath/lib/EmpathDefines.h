@@ -30,12 +30,17 @@ static const int        EMPATH_VERSION_MAJOR    = 0;
 static const int        EMPATH_VERSION_MINOR    = 8;
 static const int        EMPATH_VERSION_RELEASE    = 1;
 
-#ifdef DEBUG
+#ifndef NDEBUG
 #include <iostream>
-#    define empathDebug(a)    std::cerr << className() << ": " << \
-                            QString((a)).ascii() << std::endl
+# ifdef __GNUG__
+#  define empathDebug(a) cerr << className() << ":" << __FUNCTION__ << " (" \
+                              << __LINE__ << "): " << QString((a)) << endl;
+# else
+#  define empathDebug(a) cerr << className() << ": " \
+                              << QString((a)) << endl;
+# endif
 #else
-#    define empathDebug(a)
+# define empathDebug(a)
 #endif
 
 #endif // included this file

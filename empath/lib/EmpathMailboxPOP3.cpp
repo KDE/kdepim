@@ -92,8 +92,6 @@ EmpathMailboxPOP3::init()
         job,    SIGNAL(sigData(int, const char *, int)),
         this,    SLOT(s_jobData(int, const char *, int)));
     
-//    QString folderPixmapName = "mini-folder-inbox.png";
-
     EmpathURL url(url_);
     url.setFolderPath(i18n("Inbox"));
     
@@ -141,6 +139,7 @@ EmpathMailboxPOP3::_nextCommand()
     bool
 EmpathMailboxPOP3::getMail()
 {
+    // STUB
     return false;
 }
 
@@ -157,60 +156,37 @@ EmpathMailboxPOP3::s_checkNewMail()
 }
 
     QString
-EmpathMailboxPOP3::writeMessage(const EmpathURL &, RMM::RMessage &)
+EmpathMailboxPOP3::_write(const EmpathURL & url, RMM::RMessage &)
 {
     empathDebug("writeMessage() called");
     empathDebug("This mailbox is READ ONLY !");
-    return QString::null; 
+    emit(operationComplete(WriteMessage, false, url));
+    return QString::null;
 }
     
     bool
 EmpathMailboxPOP3::newMail() const
 {
+    // STUB
     return false;
 }
 
     void
-EmpathMailboxPOP3::syncIndex(const EmpathURL &)
+EmpathMailboxPOP3::sync(const EmpathURL &)
 {
+    // TODO
 //    index_.clear();
 //    _enqueue(EmpathPOPCommand::UIDL);
 }
 
-    Q_UINT32
-EmpathMailboxPOP3::sizeOfMessage(const EmpathURL &)
-{
-    return 0;
-}
-
-    QString
-EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL &)
-{
-    return "";
-}
-
-    RMM::REnvelope *
-EmpathMailboxPOP3::envelopeOfMessage(const EmpathURL & _id)
-{
-    empathDebug("getEnvelopeOfMessage(" + _id.asString() + ") called");
-    return 0;
-}
-
-    RMM::RBodyPart::PartType
-EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
-{
-    empathDebug("getTypeOfMessage(" + _id.asString() + ") called");
-    return RMM::RBodyPart::Basic;
-}
-
-    EmpathURL
+   EmpathURL
 EmpathMailboxPOP3::path()
 {
     return url_;
 }
 
-    RMM::RMessage *
-EmpathMailboxPOP3::message(const EmpathURL & url)
+    void
+EmpathMailboxPOP3::_retrieve(const EmpathURL & url)
 {
     QString inID = url.messageID();
     
@@ -235,35 +211,33 @@ EmpathMailboxPOP3::message(const EmpathURL & url)
         if (!found) {
             empathDebug("Couldn't find reference to message with id \"" +
                 inID + " in index !!");
-            return 0;
+            return;
         }
         
     } else // 'LIST%d'
         messageIndex = inID.mid(4).toInt();
 
     _enqueue(EmpathPOPCommand::Get, messageIndex);
-//XXX
-    return 0;
 }
 
-
-    bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL &, const QStringList &)
+    void
+EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, const QStringList & l)
 {
-//    QStringList::ConstIterator it(l.begin());
+    EmpathURL u(url);
+
+    QStringList::ConstIterator it(l.begin());
     
-//    for (; it != l.end(); ++it)
+    for (; it != l.end(); ++it) {
+        u.setMessageID(*it);
 //        _enqueue(EmpathPOPCommand::Remove, *it);
-    
-    // XXX
-    return false;
+        emit (operationComplete(RemoveMessage, false, u));
+    }
 }
 
-    bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL &)
+    void
+EmpathMailboxPOP3::_removeMessage(const EmpathURL & url)
 {
-//    _enqueue(EmpathPOPCommand::Remove, url.messageID());
-    return false;
+    emit (operationComplete(RemoveMessage, false, url));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -366,28 +340,35 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 //////////////////////////////// ILLEGAL OPS /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-    bool
-EmpathMailboxPOP3::addFolder(const EmpathURL &)
+    void
+EmpathMailboxPOP3::_createFolder(const EmpathURL & url)
 {
-    return false;
+    emit (operationComplete(CreateFolder, false, url));
 }
 
-    bool
-EmpathMailboxPOP3::removeFolder(const EmpathURL &)
+    void
+EmpathMailboxPOP3::_removeFolder(const EmpathURL & url)
 {
-    return false;
+    emit (operationComplete(RemoveFolder, false, url));
 }
-    bool
-EmpathMailboxPOP3::mark(const EmpathURL &, RMM::MessageStatus)
+    void
+EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus)
 {
-    return false;
+    emit (operationComplete(MarkMessage, false, url));
 }
 
-    bool
-EmpathMailboxPOP3::mark(
-    const EmpathURL &, const QStringList &, RMM::MessageStatus)
+    void
+EmpathMailboxPOP3::_mark(
+    const EmpathURL & url, const QStringList & l, RMM::MessageStatus)
 {
-    return false;
+    EmpathURL u(url);
+    
+    QStringList::ConstIterator it;
+    
+    for (it = l.begin(); it != l.end(); ++it) {
+        u.setMessageID(*it);
+        emit (operationComplete(MarkMessage, false, u));
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////

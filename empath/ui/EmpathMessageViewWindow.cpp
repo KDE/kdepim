@@ -50,7 +50,6 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
     
     messageView_ = new EmpathMessageViewWidget(url_, this, "messageView");
     CHECK_PTR(messageView_);
-    messageView_->go();
     
     setView(messageView_, false);
     
@@ -287,13 +286,7 @@ EmpathMessageViewWindow::s_messageCopyTo()
         return;
     }
 
-    EmpathFolder * copyFolder = empath->folder(fcd.selected());
-
-    if (copyFolder != 0)
-        copyFolder->writeMessage(message);
-    else {
-        empathDebug("Couldn't get copy folder");
-    }
+    empath->write(fcd.selected(), message);
 }
 
     void
@@ -313,7 +306,10 @@ EmpathMessageViewWindow::s_messageBounce()
     void
 EmpathMessageViewWindow::s_messageDelete()
 {
+#warning ASYNC FIX NEEDED
     empathDebug("s_messageDelete called");
+    // FIXME to work with new async code
+#if 0
     if (empath->remove(url_)) {
         QMessageBox::information(this, "Empath",
             i18n("Message Deleted"), i18n("OK"));
@@ -322,6 +318,7 @@ EmpathMessageViewWindow::s_messageDelete()
             i18n("Couldn't delete message"), i18n("OK"));
     }
     s_fileClose();
+#endif
 }
 
     void

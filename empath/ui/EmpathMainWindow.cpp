@@ -225,6 +225,7 @@ EmpathMainWindow::s_fileQuit()
     void
 EmpathMainWindow::s_folderNew()
 {
+    // STUB
     empathDebug("s_folderNew called");
 
 }
@@ -232,6 +233,7 @@ EmpathMainWindow::s_folderNew()
     void
 EmpathMainWindow::s_folderEdit()
 {
+    // STUB
     empathDebug("s_folderEdit called");
 
 }
@@ -239,6 +241,7 @@ EmpathMainWindow::s_folderEdit()
     void
 EmpathMainWindow::s_folderClear()
 {
+    // STUB
     empathDebug("s_folderClear called");
 
 }
@@ -246,6 +249,7 @@ EmpathMainWindow::s_folderClear()
     void
 EmpathMainWindow::s_folderDelete()
 {
+    // STUB
     empathDebug("s_folderDelete called");
 
 }
@@ -351,13 +355,7 @@ EmpathMainWindow::s_messageCopyTo()
         return;
     }
 
-    EmpathFolder * copyFolder = empath->folder(fcd.selected());
-
-    if (copyFolder != 0)
-        copyFolder->writeMessage(message);
-    else {
-        empathDebug("Couldn't get copy folder");
-    }
+    empath->write(fcd.selected(), message);
 }
 
     void
@@ -383,11 +381,11 @@ EmpathMainWindow::s_messageMoveTo()
     }
 
 
-    EmpathFolder * copyFolder = empath->folder(fcd.selected());
-
-    if (copyFolder != 0)
-        if (!copyFolder->writeMessage(message).isNull())
-            empath->remove(messageListWidget_->firstSelectedMessage());
+#warning ASYNC FIX NEEDED
+    // FIXME FOR ASYNC
+//    if (copyFolder != 0)
+//        if (!copyFolder->writeMessage(message).isNull())
+//            empath->remove(messageListWidget_->firstSelectedMessage());
 }
 
     void

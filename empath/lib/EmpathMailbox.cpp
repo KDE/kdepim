@@ -139,4 +139,120 @@ EmpathMailbox::folder(const EmpathURL & url)
     return 0;
 }
 
+    void
+EmpathMailbox::request(const EmpathURL & url)
+{
+    _enqueue(RetrieveMessage, url);
+}
+
+    EmpathURL
+EmpathMailbox::write(const EmpathURL & folder, RMM::RMessage & msg)
+{
+    QString id = empath->generateUnique();
+    EmpathURL u(folder);
+    u.setMessageID(id);
+    _enqueue(u, msg);
+    return u;
+}
+    
+    void
+EmpathMailbox::remove(const EmpathURL & url)
+{
+    if (url.hasMessageID())
+        _enqueue(RemoveMessage, url);
+    else
+        _enqueue(RemoveFolder, url);
+}
+    
+    void
+EmpathMailbox::remove(const EmpathURL & url, const QStringList & l)
+{
+    EmpathURL u(url);
+    
+    QStringList::ConstIterator it;
+
+    for (it = l.begin(); it != l.end(); ++it) {
+        u.setMessageID(*it);
+        _enqueue(RemoveMessage, u);
+    }
+}
+    
+    void
+EmpathMailbox::createFolder(const EmpathURL & url)
+{
+    _enqueue(CreateFolder, url);
+}
+    
+    void
+EmpathMailbox::mark(const EmpathURL & url, RMM::MessageStatus s)
+{
+    _enqueue(url, s);
+}
+    
+    void
+EmpathMailbox::mark
+    (const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+{
+    EmpathURL u(url);
+    
+    QStringList::ConstIterator it;
+
+    for (it = l.begin(); it != l.end(); ++it) {
+        u.setMessageID(*it);
+        _enqueue(u, s);
+    }
+}
+
+    void
+EmpathMailbox::_enqueue(const EmpathURL & url, RMM::MessageStatus s)
+{
+    _enqueue(new MarkAction(url, s));
+}
+
+    void
+EmpathMailbox::_enqueue(ActionType t, const EmpathURL & url)
+{
+    _enqueue(new Action(t, url));
+}
+
+    void
+EmpathMailbox::_enqueue(const EmpathURL & url, RMM::RMessage & msg)
+{
+    _enqueue(new WriteAction(url, msg));
+}
+
+    void
+EmpathMailbox::_enqueue(Action * a)
+{
+    queue_.enqueue(a);
+    _runQueue();
+}
+
+    void
+EmpathMailbox::_runQueue()
+{
+    empathDebug("");
+    
+    while (queue_.count() != 0) {
+
+        Action * a = queue_.dequeue();
+
+        ActionType t = a->actionType();
+
+        EmpathURL u = a->url();
+        bool b = false;
+
+        switch (a->actionType())
+        {
+        case RetrieveMessage:   _retrieve(u);                           break;
+        case MarkMessage:       _mark (u, ((MarkAction *)a)->status()); break;
+        case WriteMessage:      _write(u, ((WriteAction *)a)->msg());   break;
+        case RemoveMessage:     _removeMessage(u);                      break;
+        case CreateFolder:      _createFolder(u);                       break;
+        case RemoveFolder:      _removeFolder(u);                       break;
+        default:                                                        break;
+        }
+    }
+}
+
 // vim:ts=4:sw=4:tw=78

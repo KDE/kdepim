@@ -83,8 +83,12 @@ EmpathMailSender::send(RMM::RMessage & message)
     
         return;
     }
-    
-    QString id(queueFolder->writeMessage(message));
+
+#warning ASYNC FIX NEEDED 
+#if 0
+    QString id((queueFolder->writeMessage(message)).messageID());
+
+    // FIXME FOR ASYNC
     
     if (id.isNull()) {
     
@@ -102,6 +106,7 @@ EmpathMailSender::send(RMM::RMessage & message)
     }
 
     _addPendingSend(id);
+#endif
 }
 
     void
@@ -127,6 +132,7 @@ EmpathMailSender::_startNextSend()
     
     url.setMessageID(*id);
 
+    // FIXME FOR ASYNC
     RMM::RMessage * m(empath->message(url));
  
     if (m == 0) {
@@ -140,6 +146,7 @@ EmpathMailSender::_startNextSend()
         return;
     }
     
+    // FIXME FOR ASYNC
     RMM::RMessage message(*m);
     
     sendOne(message, *id);
@@ -206,7 +213,10 @@ EmpathMailSender::sendCompleted(const QString & id, bool sentOK)
         return;
     }
     
-    QString newID(sentFolder->writeMessage(message));
+#warning ASYNC FIX NEEDED
+#if 0
+    // FIXME FOR ASYNC
+    QString newID((sentFolder->writeMessage(message)).messageID());
 
     if (newID.isNull()) {
         
@@ -236,6 +246,7 @@ EmpathMailSender::sendCompleted(const QString & id, bool sentOK)
     }
     
     empath->s_infoMessage(i18n("Message sent successfully"));
+#endif
 }
 
     void
@@ -288,6 +299,8 @@ EmpathMailSender::queue(RMM::RMessage & message)
         return;
     }
     
+    // FIXME FOR ASYNC
+#if 0
     if (!queueFolder->writeMessage(message)) {
         
         empathDebug("Couldn't queue message - folder won't accept !");
@@ -302,6 +315,7 @@ EmpathMailSender::queue(RMM::RMessage & message)
         
         return;
     }
+#endif
     
     empath->s_infoMessage(i18n("Message queued for later delivery"));
 }

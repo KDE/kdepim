@@ -203,6 +203,11 @@ EmpathMailboxList::readConfig()
         empathDebug("Adding mailbox with name = " + m->name());
         QList::append(m);
         m->init();
+        QObject::connect(
+            m,
+            SIGNAL(operationComplete(ActionType, bool, const EmpathURL &)),
+            empath,
+            SLOT(s_operationComplete(ActionType, bool, const EmpathURL &)));
     }
 }
 

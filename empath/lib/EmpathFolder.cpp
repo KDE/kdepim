@@ -74,26 +74,11 @@ EmpathFolder::setPixmap(const QString & p)
     pixmapName_ = p;
 }
 
-    bool
-EmpathFolder::removeMessage(const EmpathURL & id)
-{
-    EmpathMailbox * m = empath->mailbox(url_);
-    return (m != 0 && m->removeMessage(id));
-}
-
     const EmpathIndexRecord *
 EmpathFolder::messageDescription(RMM::RMessageID & id) const
 {
     empathDebug("messageWithID(" + id.asString() + ") called");
     return messageList_.messageDescription(id);
-}
-
-    RMM::RMessage *
-EmpathFolder::message(const EmpathURL & url)
-{
-    EmpathMailbox * m = empath->mailbox(url_);
-    if (m == 0) return 0;
-    return m->message(url);
 }
 
     void
@@ -112,28 +97,10 @@ EmpathFolder::update()
     EmpathMailbox * m = empath->mailbox(url_);
     if (m == 0) return;
     empathDebug("mailbox name = " + m->name());
-    m->syncIndex(url_);
+    m->sync(url_);
     empathDebug("emitting(" + QString().setNum(messageList_.countUnread()) +
        ", " + QString().setNum(messageList_.count()) + ")");
     emit(countUpdated(messageList_.countUnread(), messageList_.count()));
-}
-
-    QString
-EmpathFolder::writeMessage(RMM::RMessage & message)
-{
-    empathDebug("writeMessage() called");
-
-    EmpathMailbox * m = empath->mailbox(url_);
-    
-    if (m == 0)
-        return QString::null;
-    
-    QString id(m->writeMessage(url_, message));
-    
-    if (!id.isNull())
-        emit(countUpdated(messageList_.countUnread(), messageList_.count()));
-    
-    return id;
 }
 
     EmpathFolder *
@@ -151,48 +118,6 @@ EmpathFolder::parent() const
     empathDebug("Parent folder path is \"" + f + "\"");
     EmpathURL u(url_.mailboxName(), f, QString::null);
     return empath->folder(u);
-}
-
-    bool
-EmpathFolder::mark(const EmpathURL & message, RMM::MessageStatus s)
-{
-    empathDebug("mark called");
-    
-    EmpathMailbox * m(empath->mailbox(url_));
-    if (m == 0)
-        return false;
-    
-    if (m->mark(message, s)) {
-        messageList_[message.messageID()]->setStatus(s);
-        emit(countUpdated(messageList_.countUnread(), messageList_.count()));
-        return true;
-    }
-    
-    return false;
-}
-
-    bool
-EmpathFolder::mark(const QStringList & l, RMM::MessageStatus s)
-{
-    empathDebug("mark called");
-    
-    bool retval(false);
-    
-    EmpathMailbox * m(empath->mailbox(url_));
-
-    if (m == 0)
-        return false;
-    
-    retval = m->mark(url_, l, s);
-    
-    QStringList::ConstIterator it(l.begin());
-    
-    for (; it != l.end(); ++it)
-        messageList_[*it]->setStatus(s);
-        
-    emit(countUpdated(messageList_.countUnread(), messageList_.count()));
-    
-    return retval;
 }
 
 // vim:ts=4:sw=4:tw=78

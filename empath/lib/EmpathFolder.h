@@ -130,39 +130,11 @@ class EmpathFolder : public QObject
             messageDescription(RMM::RMessageID & messageID) const;
 
         /**
-         * Write a new message and pass back an unique id.
-         */
-        QString writeMessage(RMM::RMessage & message);
-        
-        /**
-         * Attempt to remove a message.
-         * @return false on failure.
-         */
-        bool removeMessage(const EmpathURL &);
-
-        /**
          * Call this when you want to sync with the mailbox and update any
          * on-screen lists.
          */
         void update();
 
-        /**
-         * @short Attempt to get the message
-         * This message is allocated with new. It is your responsibility to
-         * delete it.
-         */
-        RMM::RMessage * message(const EmpathURL & url);
-
-        /**
-         * Mark a message with the given status.
-         */
-        bool mark(const EmpathURL &, RMM::MessageStatus);
-        /**
-         * Mark many messages with the given status.
-         * The string list gives the message IDs to mark.
-         */
-        bool mark(const QStringList &, RMM::MessageStatus);
-        
         /**
          * Drop the index. Why ? Dunno.
          */

@@ -21,7 +21,7 @@
 // System includes
 #include <sys/stat.h>
 #include <unistd.h>
-#include <stdio.h>
+#include <iostream.h>
 
 // KDE includes
 #include <kapp.h>
@@ -34,42 +34,45 @@
 #include "EmpathDefines.h"
 #include "EmpathUI.h"
 
-int EmpathMain(int argc, char * argv[]);
+void EmpathMain(int, char **, bool = false);
 
     int
-main(int argc, char * argv[])
+main(int argc, char ** argv)
 {
     // Don't do anything if we're being run as root.
     if (getuid() == 0 || geteuid() == 0) {
-        fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
+        cerr << "DO NOT RUN GUI APPS AS ROOT !" << endl;
         return 1;
     }    
 
     int prev_umask = umask(077);
     
-    EmpathMain(argc, argv);
-    
-    umask(prev_umask);
-}
-
-    int
-EmpathMain(int argc, char * argv[])
-{
     KStartParams opts(argc, argv);
 
     if (opts.check("--help", "-h", true)) {
-        fprintf(stderr,
-            "usage: empath --help    gives you this message\n"
-            "              --server  runs as CORBA server\n"
-            "              --version prints version information\n");
+        cerr    << "usage: empath --help    gives you this message"     << endl
+                << "              --server  runs as CORBA server"       << endl
+                << "              --version prints version information" << endl;
         return 0;
     }
     
     if (opts.check("--version", "-v", true)) {
-        fprintf(stderr, "empath version %s\n", EMPATH_VERSION_STRING.latin1());
+        cerr << "Empath version " << EMPATH_VERSION_STRING.latin1() << endl;
         return 0;
     }
     
+    EmpathMain(argc, argv, (opts.check("--server", "-s", true)));
+
+    umask(prev_umask);
+    
+    return 0;
+}
+
+    void
+EmpathMain(int argc, char ** argv, bool server)
+{
+    if (server && fork() != 0) return;
+
     // Create a KApplication.
     KApplication * app = new KApplication(argc, argv, "empath");
     CHECK_PTR(app);
@@ -81,28 +84,35 @@ EmpathMain(int argc, char * argv[])
     Empath::start();
     
     EmpathUI * ui(0);
-
-    if (!opts.check("--server", "-s", true)) {
     
+    if (!server) {
+
         // Create the user interface.
         ui = new EmpathUI;
         CHECK_PTR(ui);
-        
+            
         // Attempt to get the UI up and running quickly.
         app->processEvents();
     }
 
     // Initialise the kernel.
     empath->init();
+    
+    cerr << endl << "Empath initialised. Entering event loop." << endl;
 
     // Enter the event loop.
-    int retval = app->exec();
+    app->exec();
     
-    delete ui;
-    ui = 0;
+    cerr << endl << "Empath exited event loop. Shutting down." << endl;
+    
+    if (!server) {
+        delete ui;
+        ui = 0;
+    }
+    
     empath->shutdown();
-
-    return retval;
+    
+    cerr << endl << "Empath shutdown complete." << endl;
 }
-// vim:ts=4:sw=4:tw=78
+
 // vim:ts=4:sw=4:tw=78

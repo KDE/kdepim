@@ -148,8 +148,7 @@ class Empath : public QObject
         void updateOutgoingServer();
     
         /**
-         * Gets the message specified. The message is placed in the cache, so
-         * you can forget about it as it will be deleted later.
+         * Get a previously requested message.
          * @return A pointer to an RMM::RMessage, unless the message can't
          * be found, when it returns 0.
          */
@@ -207,6 +206,8 @@ class Empath : public QObject
          * Generate an unique filename
          */
         QString generateUnique();
+
+        void cacheMessage(const EmpathURL &, RMM::RMessage *);
         
     protected:
 
@@ -240,53 +241,53 @@ class Empath : public QObject
          * @internal
          */
         void s_saveConfig();
-            
         /**
          * Compose a new message.
          */
         void s_compose();
-        
         /**
          * Reply to the given message.
          */
         void s_reply(const EmpathURL & url);
-        
         /**
          * Reply to the given message.
          */
         void s_replyAll(const EmpathURL & url);
-        
         /**
          * Forward given message.
          */
         void s_forward(const EmpathURL & url);
-        
+        /**
+         * Ask for a message to be retrieved.
+         */
+        void request(const EmpathURL &);
+        /**
+         * Write a new message to the specified folder.
+         */
+        EmpathURL write(const EmpathURL & folder, RMM::RMessage & msg);
         /**
          * Remove given message.
          */
-        bool remove(const EmpathURL &);
+        void remove(const EmpathURL &);
         /**
          * Remove messages. The mailbox and folder are given in the URL.
          * The QStringList is used to pass the message ids.
          */
-        bool remove(const EmpathURL &, const QStringList &);
-        
+        void remove(const EmpathURL &, const QStringList &);
         /**
          * Bounce a message.
          */
         void s_bounce(const EmpathURL &);
-
         /**
          * Mark a message with a particular status (Read, Marked, ...)
          */
-        bool mark(const EmpathURL &, RMM::MessageStatus);
+        void mark(const EmpathURL &, RMM::MessageStatus);
         /**
          * Mark many messages with a particular status.
          * The mailbox and folder to use are given in the URL. The QStringList
          * is used to pass the message ids.
          */
-        bool mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
-        
+        void mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
         /**
          * Request that the UI bring up the settings for the display.
          */
@@ -311,19 +312,27 @@ class Empath : public QObject
          * Request that the UI bring up the settings for the filters.
          */
         void s_setupFilters();
-        
         /**
          * Connect to this from anywhere to provide the about box.
          */
         void s_about();
-        
         /**
          * Creates a new composer using the bug report template.
          */
         void s_bugReport();
+
+        void s_operationComplete(ActionType, bool b, const EmpathURL & url);
     
     signals:
     
+        /**
+         * The queued operation that was requested has finished.
+         * @param t Type of operation.
+         * @param b Whether the operation was successful.
+         * @param url Dependent on type of action. For a message retrieval,
+         * it points to the location to use when asking for the message data.
+         */
+        void operationComplete(ActionType, bool b, const EmpathURL & url);
         /**
          * Signals that the on-screen folder lists should be updated.
          * Usually connected to a slot in the UI module.
@@ -346,7 +355,6 @@ class Empath : public QObject
          * Usually connected to a slot in the UI module.
          */
         void newComposer(const QString &);
-        
         /**
          * Signals that the display settings should be provided for
          * review. In other words, bring up the display settings dialog.
@@ -431,17 +439,17 @@ class Empath : public QObject
         QString pidStr_;
 };
 
-inline void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);        }
+inline void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
 inline void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
 inline void Empath::sendQueued()                { mailSender_->sendQueued();}
-inline void Empath::s_setupDisplay()            { emit(setupDisplay());        }
+inline void Empath::s_setupDisplay()            { emit(setupDisplay());     }
 inline void Empath::s_setupIdentity()           { emit(setupIdentity());    }
-inline void Empath::s_setupSending()            { emit(setupSending());        }
-inline void Empath::s_setupComposing()          { emit(setupComposing());    }
+inline void Empath::s_setupSending()            { emit(setupSending());     }
+inline void Empath::s_setupComposing()          { emit(setupComposing());   }
 inline void Empath::s_setupAccounts()           { emit(setupAccounts());    }
-inline void Empath::s_setupFilters()            { emit(setupFilters());        }
-inline void Empath::s_newMailArrived()          { emit(newMailArrived());    }
-inline void Empath::s_newTask(EmpathTask * t)   { emit(newTask(t));            }
+inline void Empath::s_setupFilters()            { emit(setupFilters());     }
+inline void Empath::s_newMailArrived()          { emit(newMailArrived());   }
+inline void Empath::s_newTask(EmpathTask * t)   { emit(newTask(t));         }
 inline void Empath::s_about()                   { emit(about());            }
 inline void Empath::s_bugReport()               { emit(bugReport());        }
 inline void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
@@ -473,6 +481,10 @@ Empath::s_bounce(const EmpathURL & url)
 inline void
 Empath::s_infoMessage(const QString & s)
 { emit(infoMessage(s)); }
+
+inline void
+Empath::s_operationComplete(ActionType t, bool b, const EmpathURL & url)
+{ emit(operationComplete(t, b, url)); }
 
 #endif
 

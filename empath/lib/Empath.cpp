@@ -171,22 +171,9 @@ Empath::message(const EmpathURL & source)
     
     empathDebug("message \"" + source.asString() + "\" not in cache");
     
-    // It's not in the cache. Get it from the mailbox.
-    EmpathMailbox * m = mailbox(source);
-    
-    if (m == 0) return 0;
-    
-    message = m->message(source);
-    
-    if (message == 0) return 0;
-    
-    // Put the message in the cache.
-    if (!cache_.insert(source.messageID(), message, message->size())) {
-        delete message;
-        message = 0;
-    }
-
-    return message;
+    // It's not in the cache. We don't have another source these days, due
+    // to the async code.
+    return 0;
 }
 
     EmpathMailbox *
@@ -213,50 +200,95 @@ Empath::folder(const EmpathURL & url)
     return m->folder(url);
 }
 
-    bool
+    void
+Empath::request(const EmpathURL & url)
+{
+    EmpathMailbox * m = mailbox(url);
+    
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        emit(operationComplete(RetrieveMessage, false, url));
+        return;
+    }
+    m->request(url);
+}
+
+    EmpathURL
+Empath::write(const EmpathURL & url, RMM::RMessage & msg)
+{
+    EmpathMailbox * m = mailbox(url);
+    
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        emit(operationComplete(WriteMessage, false, url));
+        return EmpathURL("");
+    }
+    return m->write(url, msg);
+}
+
+    void
 Empath::remove(const EmpathURL & url)
 {
     EmpathMailbox * m = mailbox(url);
+    
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.asString());
-        return false;
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        if (url.hasMessageID())
+            emit(operationComplete(RemoveMessage, false, url));
+        else
+            emit(operationComplete(RemoveFolder, false, url));
+        return;
     }
-    return m->removeMessage(url);
+    m->remove(url);
 }
 
-    bool
+    void
 Empath::remove(const EmpathURL & url, const QStringList & l)
 {
     EmpathMailbox * m = mailbox(url);
 
-    if (m == 0)
-        return false;
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        if (url.hasMessageID())
+            emit(operationComplete(RemoveMessage, false, url));
+        else
+            emit(operationComplete(RemoveFolder, false, url));
+        return;
+    }
 
-    return m->removeMessage(url, l);
+    return m->remove(url, l);
 }
 
-    bool
+    void
 Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
     empathDebug("mark() called");
-    EmpathFolder * f = folder(url);
-    if (f == 0) {
-        empathDebug("Can't find folder " + url.asString());
-        return false;
+    
+    EmpathMailbox * m = mailbox(url);
+    
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        emit(operationComplete(MarkMessage, false, url));
+        return;
     }
-    return f->mark(url, s);
+
+    m->mark(url, s);
 }
 
-    bool
+    void
 Empath::mark(const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
 {
     empathDebug("mark() called");
-    EmpathFolder * f = folder(url);
-    
-    if (f == 0)
-        return false;
 
-    return f->mark(l, s);
+    EmpathMailbox * m = mailbox(url);
+    
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        emit(operationComplete(MarkMessage, false, url));
+        return;
+    }
+
+    m->mark(url, l, s);
 }
 
     EmpathTask *
@@ -306,6 +338,12 @@ Empath::generateUnique()
     ++seq_;
 
     return unique;
+}
+
+    void
+Empath::cacheMessage(const EmpathURL & url, RMM::RMessage * m)
+{
+    cache_.insert(url.messageID(), m);
 }
 
 // vim:ts=4:sw=4:tw=78

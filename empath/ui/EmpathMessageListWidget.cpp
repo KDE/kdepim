@@ -349,11 +349,10 @@ EmpathMessageListWidget::s_messageDelete()
     
     for (; it.current(); ++it) {
                 
-        empathDebug(it.current()->id());
         u.setMessageID(it.current()->id());
         
-        if (!empath->remove(u))
-            empathDebug("Couldn't remove message \"" + u.asString() + "\"");
+        // XXX RETVAL ? 
+        empath->remove(u);
     
         _removeItem(it.current());
         
@@ -388,10 +387,8 @@ EmpathMessageListWidget::s_messageSaveAs()
     }
     empathDebug("Opened " + saveFilePath + " OK");
     
-    EmpathFolder * folder(empath->folder(url_));
-    if (folder == 0) return;
-    
-    RMM::RMessage * message(folder->message(firstSelectedMessage()));
+#warning ASYNC FIX NEEDED
+    RMM::RMessage * message(empath->message(firstSelectedMessage()));
     if (message == 0) return;
     
     QCString s =
@@ -540,9 +537,9 @@ EmpathMessageListWidget::setSignalUpdates(bool yn)
 EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 {
     EmpathURL u(url_.mailboxName(), url_.folderPath(), item->id());
-    if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read))) {
-        setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
-    }
+    // XXX RETVAL ?
+    empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read));
+    setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
 }
 
     void

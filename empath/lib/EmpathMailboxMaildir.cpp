@@ -58,40 +58,52 @@ EmpathMailboxMaildir::~EmpathMailboxMaildir()
     empathDebug("dtor");
 }
 
-    bool
-EmpathMailboxMaildir::mark(const EmpathURL & message, RMM::MessageStatus s)
+    void
+EmpathMailboxMaildir::_mark(const EmpathURL & url, RMM::MessageStatus s)
 {
-    EmpathMaildir * m = _box(message);
-
-    if (m == 0)
-        return false;
-    
-    return m->mark(message.messageID(), s);
-}
-
-    bool
-EmpathMailboxMaildir::mark(
-    const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
-{
-    if (l.count() == 0)
-        return false;
-
     EmpathMaildir * m = _box(url);
 
-    if (m == 0)
-        return false;
+    if (m == 0) {
+        emit (operationComplete(RemoveMessage, false, url));
+        return;
+    }
     
-    return m->mark(l, s);
+    bool retval = m->mark(url.messageID(), s);
+    emit (operationComplete(MarkMessage, retval, url));
 }
 
     void
-EmpathMailboxMaildir::syncIndex(const EmpathURL & url)
+EmpathMailboxMaildir::_mark(
+    const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
 {
-    empathDebug("syncIndex(" + url.asString() + ") called");
+    EmpathMaildir * m = _box(url);
+    
+    if ((m == 0) || (l.count() == 0)) {
+        
+        EmpathURL u(url);
+        
+        QStringList::ConstIterator it;
+        
+        for (it = l.begin(); it != l.end(); ++it) {
+        
+            u.setMessageID(*it);
+            emit (operationComplete(MarkMessage, false, u));
+        }
+        
+        return;
+    }
+    
+    bool retval = m->mark(l, s);
+    emit (operationComplete(RemoveMessage, retval, url));
+}
+
+    void
+EmpathMailboxMaildir::sync(const EmpathURL & url)
+{
+    empathDebug("");
     EmpathMaildirListIterator it(boxList_);
     
     for (; it.current(); ++it) {
-        empathDebug("Looking at \"" + it.current()->path() + "\"");
         if (it.current()->url() == url)
             it.current()->sync(url);
     }
@@ -158,18 +170,28 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 }
     
     QString
-EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMM::RMessage & m)
+EmpathMailboxMaildir::_write(const EmpathURL & url, RMM::RMessage & m)
 {
-    empathDebug("writeMessage() called");
+    empathDebug("");
     
-    EmpathMaildir * box = _box(folder);
-    if (box == 0) return QString::null;
-    return box->writeMessage(m);
+    EmpathMaildir * box = _box(url);
+
+    if (box == 0) {
+        emit(operationComplete(WriteMessage, false, url));
+        return QString::null;
+    }
+
+    QString s = box->writeMessage(m);
+
+    emit(operationComplete(WriteMessage, !(s.isEmpty()), url));
+    
+    return s;
 }
 
     bool
 EmpathMailboxMaildir::newMail() const
 {
+    // STUB
     return false;
 }
 
@@ -297,50 +319,20 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     bool
 EmpathMailboxMaildir::getMail()
 {
+    // STUB
     return false;
 }
 
     void
 EmpathMailboxMaildir::s_checkNewMail()
 {
-    syncIndex(url_);    
+    sync(url_);    
 }
     
     void
 EmpathMailboxMaildir::s_getNewMail()
 {
-}
-
-    Q_UINT32
-EmpathMailboxMaildir::sizeOfMessage(const EmpathURL & id)
-{
-    EmpathMaildir * m = _box(id);
-    if (m == 0) return 0;
-    return m->sizeOfMessage(id.messageID());
-}
-
-    QString
-EmpathMailboxMaildir::plainBodyOfMessage(const EmpathURL & id)
-{
-    EmpathMaildir * m = _box(id);
-    if (m == 0) return QString::null; 
-    return m->plainBodyOfMessage(id.messageID());
-}
-
-    RMM::REnvelope *
-EmpathMailboxMaildir::envelopeOfMessage(const EmpathURL & id)
-{
-    EmpathMaildir * m = _box(id);
-    if (m == 0) return 0;
-    return m->envelopeOfMessage(id.messageID());
-}
-
-    RMM::RBodyPart::PartType
-EmpathMailboxMaildir::typeOfMessage(const EmpathURL & id)
-{    
-    EmpathMaildir * m = _box(id);
-    if (m == 0) return RMM::RBodyPart::Basic;
-    return m->typeOfMessage(id.messageID());
+    // STUB
 }
 
     void
@@ -356,48 +348,64 @@ EmpathMailboxMaildir::init()
         }
 }
 
-    RMM::RMessage *
-EmpathMailboxMaildir::message(const EmpathURL & id)
+    void
+EmpathMailboxMaildir::_retrieve(const EmpathURL & url)
 {
-    empathDebug("message(" + id.asString() + ") called");
-    EmpathMaildir * m = _box(id);
-    if (m == 0) {
-        empathDebug("Can't find box \"" + id.asString() + "\"");
-        return 0;
-    }
-    return m->message(id.messageID());
-}
-
-    bool
-EmpathMailboxMaildir::removeMessage(const EmpathURL & id)
-{
-    empathDebug("removeMessage(" + id.asString() + ") called");
-    
-    EmpathMaildir * m = _box(id);
-    
-    if (m == 0) {
-        empathDebug("Can't find maildir");
-        return 0;
-    }
-    
-    return m->removeMessage(id.messageID());
-}
-
-    bool
-EmpathMailboxMaildir::removeMessage(
-    const EmpathURL & url, const QStringList & l)
-{
-    if (l.count() == 0)
-        return false;
-
     EmpathMaildir * m = _box(url);
     
     if (m == 0) {
-        empathDebug("Can't find maildir");
-        return 0;
+        emit(operationComplete(RetrieveMessage, false, url));
+        return;
     }
     
-    return m->removeMessage(l);
+    RMM::RMessage * message = m->message(url.messageID());
+
+    if (message != 0)
+        empath->cacheMessage(url, message);
+    
+    emit(operationComplete(RetrieveMessage, (message != 0), url));
+}
+
+
+    void
+EmpathMailboxMaildir::_removeMessage(const EmpathURL & url)
+{
+    EmpathMaildir * m = _box(url);
+    
+    if (m == 0) {
+        emit(operationComplete(RemoveMessage, false, url));
+        return;
+    }
+    
+    bool retval = m->removeMessage(url.messageID());
+    
+    emit(operationComplete(RemoveMessage, retval, url));
+}
+
+    void
+EmpathMailboxMaildir::_removeMessage(
+    const EmpathURL & url, const QStringList & l)
+{
+    EmpathMaildir * m = _box(url);
+    
+    if ((m == 0) || (l.count() == 0)) {
+
+        EmpathURL u(url);
+        
+        QStringList::ConstIterator it;
+        
+        for (it = l.begin(); it != l.end(); ++it) {
+            
+            u.setMessageID(*it);
+            emit(operationComplete(RemoveMessage, false, u));
+        }
+        
+        return;
+    }
+    
+    bool retval = m->removeMessage(l);
+
+    emit (operationComplete(RemoveMessage, retval, url));
 }
 
     void
@@ -422,29 +430,29 @@ EmpathMailboxMaildir::_box(const EmpathURL & id)
     return 0;
 }
 
-    bool
-EmpathMailboxMaildir::addFolder(const EmpathURL & id)
+    void
+EmpathMailboxMaildir::_createFolder(const EmpathURL & url)
 {
-    empathDebug("addFolder(" + id.asString() + ") called");
-    EmpathFolder * f = new EmpathFolder(id);
+    empathDebug("addFolder(" + url.asString() + ") called");
+    EmpathFolder * f = new EmpathFolder(url);
     CHECK_PTR(f);
     
-    EmpathMaildir * m = new EmpathMaildir(path_, id);
+    EmpathMaildir * m = new EmpathMaildir(path_, url);
     CHECK_PTR(m);
     m->init();
     
     folderList_.append(f);
     boxList_.append(m);
     
-    emit(updateFolderLists());
-    
-    return true;
+    // XXX Always ok ?
+    emit (operationComplete(CreateFolder, true, url));
+    emit (updateFolderLists());
 }
 
-    bool
-EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
+    void
+EmpathMailboxMaildir::_removeFolder(const EmpathURL & url)
 {
-    empathDebug("removeFolder(" + id.asString() + ") called");
+    empathDebug("removeFolder(" + url.asString() + ") called");
     
     bool removedFromFolderList = false;
     bool removedFromMaildirList = false;
@@ -452,7 +460,7 @@ EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
     EmpathFolderListIterator fit(folderList_);
     
     for (; fit.current(); ++fit)
-        if (fit.current()->url().folderPath() == id.folderPath()) {
+        if (fit.current()->url().folderPath() == url.folderPath()) {
             folderList_.remove(fit.current());
             removedFromFolderList = true;
             break;
@@ -460,13 +468,14 @@ EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
     
     if (!removedFromFolderList) {
         empathDebug("Couldn't remove from folder list");
-        return false;
+        emit (operationComplete(RemoveFolder, false, url));
+        return;
     }
     
     EmpathMaildirListIterator mit(boxList_);
     
     for (; mit.current(); ++mit)
-        if (mit.current()->url() == id) {
+        if (mit.current()->url() == url) {
             boxList_.remove(mit.current());
             removedFromMaildirList = true;
             break;
@@ -474,10 +483,13 @@ EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
     
     if (!removedFromMaildirList) {
         empathDebug("Couldn't remove from box list");
-        return false;
+        emit (operationComplete(RemoveFolder, false, url));
+        return;
     }
     
-    return _recursiveRemove(path_ + id.folderPath());
+    bool retval = _recursiveRemove(path_ + url.folderPath());
+
+    emit (operationComplete(RemoveFolder, retval, url));
 }
 
     bool
