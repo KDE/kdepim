@@ -645,7 +645,7 @@ mimeHeader::bodyDecodedBinary ()
   if (contentEncoding.find ("quoted-printable", 0, false) == 0)
     retVal = KCodecs::quotedPrintableDecode(postMultipartBody);
   else if (contentEncoding.find ("base64", 0, false) == 0)
-    KCodecs:base64Decode(postMultipartBody, retVal);
+    KCodecs::base64Decode(postMultipartBody, retVal);
   else retVal = postMultipartBody;
 
   kdDebug(7116) << "mimeHeader::bodyDecodedBinary - size is " << retVal.size () << endl;
