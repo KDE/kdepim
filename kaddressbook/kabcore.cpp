@@ -312,6 +312,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionMailVCard->setEnabled( selected );
   mActionWhoAmI->setEnabled( selected );
   mActionCategories->setEnabled( selected );
+  mActionMerge->setEnabled( selected );
 }
 
 void KABCore::sendMail()
