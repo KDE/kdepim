@@ -155,11 +155,6 @@ REnvelope::assemble()
 
 	strRep_ = "";
 
-//	if (!has(RMM::HeaderTo))		_createDefault(RMM::HeaderTo);
-//	if (!has(RMM::HeaderMessageID))	_createDefault(RMM::HeaderMessageID);
-//	if (!has(RMM::HeaderFrom))		_createDefault(RMM::HeaderFrom);
-//	if (!has(RMM::HeaderDate))		_createDefault(RMM::HeaderDate);
-
 	RHeaderListIterator it(headerList_);
 
 	for (; it.current(); ++it) {
@@ -617,26 +612,17 @@ REnvelope::parentMessageId()
 	// XXX If there's a references field, we use this over the InReplyTo: field.
 	// This is a temporary policy decision and may change.
 
-	rmmDebug("parentMessageId() called");
-
 	RMessageID m;
 
 	if (has(RMM::HeaderReferences)) {
 
-		rmmDebug("Has header references");
-
-		/// FIXME have to do set() as operator = seems to think operand is
-		//RMessageID !
 		QCString s = references().asString();
 		s = s.right(s.length() - s.findRev('<'));
 		m = s;
 
 	} else if (has(RMM::HeaderInReplyTo)) {
 
-		rmmDebug("Has header in reply to");
-
 		RText t = inReplyTo();
-		rmmDebug("..");
 		m = t.asString();
 
 	} else {
@@ -644,9 +630,6 @@ REnvelope::parentMessageId()
 		m.setLocalPart("");
 		m.setDomain("");
 	}
-
-	rmmDebug("DOING PARSE");
-	m.parse();
 
 	return m;
 }

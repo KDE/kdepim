@@ -145,7 +145,13 @@ EmpathMessageStructureWidget::s_saveAs()
 	
 	QDataStream d(&f);
 	
-	d << "x";
+	QListViewItem * i(currentItem());
+	
+	if (!i) return;
+	
+	QCString s = ((EmpathMessageStructureItem *)i)->part()->asString();
+	
+	d.writeRawBytes(s, s.length());
 
 	f.close();
 	

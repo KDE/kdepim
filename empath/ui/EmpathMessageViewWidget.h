@@ -64,6 +64,7 @@ class EmpathMessageViewWidget : public QWidget
 		void s_print();
 		void s_setMessage(const EmpathURL &);
 		void s_partChanged(RBodyPart *);
+		void s_switchView();
 
 	protected slots:
 		
@@ -75,6 +76,7 @@ class EmpathMessageViewWidget : public QWidget
 
 	private:
 		
+		void show(QCString &, bool m = true);
 		EmpathMessageStructureWidget * structureWidget_;
 		EmpathMessageHTMLWidget	* messageWidget_;
 		QGridLayout				* mainLayout_;
@@ -83,6 +85,7 @@ class EmpathMessageViewWidget : public QWidget
 		EmpathHeaderViewWidget	* headerViewWidget_;
 		EmpathURL				url_;
 		int						scrollbarSize_;
+		bool					viewingSource_;
 };
 
 #endif

@@ -38,10 +38,8 @@
 // Local includes
 #include "EmpathMessageList.h"
 #include "EmpathMessageListWidget.h"
-#include "EmpathMessageSourceView.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathMessageViewWindow.h"
-#include "EmpathMenuMaker.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathUIUtils.h"
@@ -176,74 +174,59 @@ EmpathMessageListWidget::find(RMessageID & msgId)
 	void
 EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 {
-	// Put the item into the master list.
 	empathDebug("addItem called");
+	
 	if (item == 0) {
 		empathDebug("item == 0 !");
 		return;
 	}
-#if 0	
-	QListIterator<EmpathMessageListItem> it(threadItemList_);
-	bool needToClearOut = false;
+
+	EmpathMessageListItem * newItem;
+	
+	if (item->parentID().localPart().isEmpty()) {
+		newItem = new EmpathMessageListItem(this, *item);
+		CHECK_PTR(newItem);
+		itemList_.append(newItem);
+		setStatus(newItem, item->status());
+		return;
+	}
+
+	// Find parent of this item.
+	
+	empathDebug("Message has parentID, looking for parent");
+	empathDebug("PARENTID: \"" + item->parentID().asString() + "\"");
+		
+	EmpathMessageListItem * parentItem = 0;
+	
+	QListIterator<EmpathMessageListItem> it(itemList_);
 	
 	for (; it.current(); ++it) {
-		if (it.current()->parentID() == item.messageID()) {
-			// This item is a parent of one in list
-			empathDebug("Should clear out!");
-			needToClearOut = true;
+		empathDebug("Looking at message id \"" +
+			it.current()->messageID().asString() + "\"");
+		if (it.current()->messageID() == item->parentID()) {
+			parentItem = it.current();
 			break;
 		}
 	}
-#endif
-	EmpathMessageListItem * newItem;
-	
-	// TODO: If the item is a parent of an item in our list, remove the tree
-	// from its child down, add the parent, then re-add the child and its
-	// descendants as children of the new parent.
-	// XXX: Actually I think we don't need to do this. We should really, but it's
-	// probably not necessary. I will sort the entries in the description list by
-	// date sent. It's theoretically impossible to send a reply to a message you
-	// haven't received yet. The only reason this will fail is when someone's
-	// clock is set wrongly. It remains to be seen how far out of sync the world's
-	// clocks are and how quickly people can reply to messages.
-	
-	if (! item->parentID().localPart().isEmpty() &&
-		! item->messageID().localPart().isEmpty()) {
-		// Child of other item
-		empathDebug("Message has parentID, looking for parent");
-//		empathDebug("MESSAGE ID: \"" + messageID.asString() + "\"");
-//		empathDebug("PARENTID: \"" + parentID.asString() + "\"");
-		
-		EmpathMessageListItem * parentItem = 0;
-		
-		parentItem = this->find(item->parentID());
 
-		if (parentItem == 0) {
-			
-			empathDebug("No parent for this item");
-			newItem = new EmpathMessageListItem(this, *item);
-			CHECK_PTR(newItem);
-			empathDebug("Created OK");
-			
-		} else {
-			
-			empathDebug("There's parent for this item");
-			newItem = new EmpathMessageListItem(parentItem, *item);
-			CHECK_PTR(newItem);
-			empathDebug("Created OK");
-		}
+	if (parentItem == 0) {
+		
+		empathDebug("No parent for this item");
+		newItem = new EmpathMessageListItem(this, *item);
+		CHECK_PTR(newItem);
+		empathDebug("Created OK");
 		
 	} else {
-		// Root item
-		empathDebug("Message is root item");
-		newItem = new EmpathMessageListItem(this, *item);
+		
+		empathDebug("There's parent for this item");
+		newItem = new EmpathMessageListItem(parentItem, *item);
 		CHECK_PTR(newItem);
 		empathDebug("Created OK");
 	}
 	itemList_.append(newItem);
-
 	setStatus(newItem, item->status());
 }
+
 /*
 	void
 EmpathMessageListWidget::getDescendants(
@@ -265,6 +248,7 @@ EmpathMessageListWidget::getDescendants(
 	itemList->append(initialItem);
 }
 */
+
 	EmpathURL
 EmpathMessageListWidget::firstSelectedMessage()
 {
@@ -469,19 +453,6 @@ EmpathMessageListWidget::s_messageView()
 }
 
 	void
-EmpathMessageListWidget::s_messageViewSource()
-{
-	empathDebug("s_messageViewSource called");
-	
-	EmpathMessageSourceView * sourceView =
-		new EmpathMessageSourceView(firstSelectedMessage(), 0);
-
-	CHECK_PTR(sourceView);
-
-	sourceView->show();
-}
-
-	void
 EmpathMessageListWidget::s_rightButtonPressed(
 		QListViewItem * item, const QPoint & pos, int column)
 {
@@ -515,16 +486,7 @@ EmpathMessageListWidget::s_rightButtonPressed(
 	messageMenu_.exec(pos);
 	wantScreenUpdates_ = true;
 }
-/*
-	void
-EmpathMessageListWidget::s_rightButtonClicked(
-		QListViewItem * item, const QPoint & pos, int column)
-{
-	if (item == 0) return;
-	setSelected(item, true);
-	messageMenu_.exec(pos);
-}
-*/
+
 	void
 EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 {
@@ -684,8 +646,6 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	itemList_.clear();
 	for (; mit.current(); ++mit) {
 		
-		empathDebug("in s_showFolder() mit.current()->status == " +
-			QString().setNum(mit.current()->status()));
 		addItem(mit.current());
 		t->doneOne();
 		
@@ -829,6 +789,10 @@ EmpathMessageListWidget::eventFilter(QObject * o, QEvent * e)
 	if (!o || !e)
 		return false;
 	
+	if (o == header()) {
+		return QListView::eventFilter(o, e);
+	}
+	
 	QMouseEvent * me = (QMouseEvent *) e;
 	
 	switch (me->type()) {
@@ -858,6 +822,7 @@ EmpathMessageListWidget::eventFilter(QObject * o, QEvent * e)
 EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 {
 	empathDebug("MOUSE PRESS EVENT");
+	
 	// Ok, here's the method:
 	// 
 	// CASE 0:
@@ -935,6 +900,8 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		
 		setSelected(item, true);
 		lastSelected_ = item;
+		
+		s_currentChanged(item);
 		
 		return;
 	}

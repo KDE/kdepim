@@ -57,7 +57,6 @@ class EmpathMessageViewWindow : public KTMainWindow
 		void s_messageReplyAll();
 		void s_messageSaveAs();
 		void s_messageCopyTo();
-		void s_messageViewSource();
 		void s_messageForward();
 		void s_messageBounce();
 		void s_messageDelete();

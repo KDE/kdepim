@@ -73,10 +73,6 @@ EmpathMainWindow::setupMenuBar()
 		i18n("&View"),
 		this, SLOT(s_messageView()));
 	
-	messageMenu_->insertItem(empathIcon("mini-view.png"),
-		i18n("View &Source"),
-		this, SLOT(s_messageViewSource()));
-
 	messageMenu_->insertSeparator();
 
 	messageMenu_->insertItem(empathIcon("mini-compose.png"),
@@ -154,7 +150,7 @@ EmpathMainWindow::setupMenuBar()
 		this, SLOT(s_help()));
 
 	helpMenu_->insertItem(i18n("&About Empath"),
-		this, SLOT(s_aboutEmpath()));
+		empath, SLOT(s_about()));
 
 	helpMenu_->insertSeparator();
 	

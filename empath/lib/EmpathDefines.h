@@ -21,21 +21,14 @@
 #ifndef EMPATHDEFINES_H
 #define EMPATHDEFINES_H
 
-// System includes
-#include <iostream.h>
-
 // Qt includes
 #include <qstring.h>
 
-// Local includes
-#include "EmpathEnum.h"
+// KDE includes
+#include <kdebug.h>
 
 #ifndef NDEBUG
-# define EMPATH_DEBUG
-#endif
-
-#ifdef EMPATH_DEBUG
-# define empathDebug(a) cerr << className() << ": " << QString((a)).data() << endl;
+#define empathDebug(a) kdebug(KDEBUG_INFO, 0,  "%s: %s\n", className(), QString((a)).data())
 // Enable Qt debuggers
 # define CHECK_STATE
 # define CHECK_RANGE
@@ -52,23 +45,6 @@
 #endif
 
 typedef Q_UINT32 uID;
-
-struct EmpathAttachmentSpec {
-	QString			filename;
-	QString			type;
-	QString			encoding;
-	int				sizeK;
-};
-
-#define ENCODING_EIGHT_BIT	"8 bit"
-#define ENCODING_SEVEN_BIT	"7 bit"
-#define ENCODING_BINARY		"Binary"
-
-#define TEMP_COMPOSE_FILENAME	"/tmp/empathCompose_XXXXXX"
-
-#define THIS_IS_MULTIPART		"This is a multi-part message in MIME format."
-
-#define POP_APOP_RETRIES		8
 
 #endif // included this file
 

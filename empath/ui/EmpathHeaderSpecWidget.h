@@ -46,7 +46,7 @@ class EmpathHeaderSpecWidget : public QWidget
 			int headerIndex, QWidget * parent = 0, const char * name = 0);
 		~EmpathHeaderSpecWidget();
 
-		RHeader		header();
+		QCString	header();
 		void		setHeaderList(const QStrList & headerList);
 		void		setHeaderName(const QString & headerName);
 		void		setHeaderBody(const QString & headerBody);

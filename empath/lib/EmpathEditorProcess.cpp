@@ -52,7 +52,7 @@ EmpathEditorProcess::EmpathEditorProcess(const QCString & text)
 EmpathEditorProcess::~EmpathEditorProcess()
 {
 	empathDebug("dtor");
-	p.kill();
+	p.kill(SIGKILL);
 }
 
 	void
@@ -60,8 +60,9 @@ EmpathEditorProcess::go()
 {	
 	empathDebug("run() called");
 
-	char * tn = new char[strlen(TEMP_COMPOSE_FILENAME)];
-	strcpy(tn, TEMP_COMPOSE_FILENAME);
+	QCString tempComposeFilename = "/tmp/empathCompose_XXXXXX";
+	char * tn = new char[strlen(tempComposeFilename)];
+	strcpy(tn, tempComposeFilename);
 
 	empathDebug("tempName = \"" + QCString(tn) + "\"");
 	empathDebug("running mkstemp");

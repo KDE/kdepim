@@ -79,6 +79,30 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 ////////////////////////////////////////////////////////////////////////	
 // Message view
 // 
+	l_displayHeaders_ =
+		new QLabel(i18n("Display headers"), w_view_, "l_displayHeaders");
+	CHECK_PTR(l_displayHeaders_);
+	
+	l_displayHeaders_->setFixedHeight(h);
+	
+	le_displayHeaders_ =
+		new QLineEdit(w_view_, "le_displayHeaders");
+	CHECK_PTR(le_displayHeaders_);
+	
+	le_displayHeaders_->setFixedHeight(h);
+	
+	KQuickHelp::add(le_displayHeaders_, i18n(
+			"Here you may enter the headers that you\n"
+			"want to appear in the block above the message\n"
+			"you are reading. The default is:\n"
+			"From,Date,Subject\n\n"
+			"You must separate the header names by commas (,).\n"
+			"This is not case-sensitive, i.e. you can write\n"
+			"DATE and 'Date', 'date', 'DaTe' etc will all work\n\n"
+			"Note that headers that you specify that do not appear\n"
+			"in the message envelope will not be shown at all.\n"
+			"This is to save space."));
+	
 	// Fixed font
 	
 	l_fixedFont_	=
@@ -137,7 +161,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"Choose the primary colour for quoted text.\n"
 			"Text can be quoted to multiple depths.\n"
 			"Text that's quoted to an odd number, e.g.\n"
-			"where the line begins with '> ' or '> > > '\n"
+			"where the line begins with '\\>	' or '\\> \\> \\> '\n"
 			"will be shown in this colour."));	
 	
 	// Markup colour two
@@ -157,7 +181,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"Choose the secondary colour for quoted text.\n"
 			"Text can be quoted to multiple depths.\n"
 			"Text that's quoted to an even number, e.g.\n"
-			"where the line begins with '> > ' or '> > > > '\n"
+			"where the line begins with '&gt; &gt; ' or '&gt; &gt; &gt; &gt; '\n"
 			"will be shown in this colour."));
 	
 	// Link
@@ -209,27 +233,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	cb_threadMessages_->setFixedHeight(h);
 	
-	l_displayHeaders_ =
-		new QLabel(i18n("Display headers"), w_list_, "l_displayHeaders");
-	CHECK_PTR(l_displayHeaders_);
-	
-	l_displayHeaders_->setFixedHeight(h);
-	
-	le_displayHeaders_ =
-		new QLineEdit(w_list_, "le_displayHeaders");
-	CHECK_PTR(le_displayHeaders_);
-	
-	le_displayHeaders_->setFixedHeight(h);
-	
-	KQuickHelp::add(le_displayHeaders_, i18n(
-			"Here you may enter the headers that you\n"
-			"want to appear in the block above the message\n"
-			"you are reading. The default is:\n"
-			"From,Date,Subject\n"
-			"You must separate the header names by commas (,).\n"
-			"This is not case-sensitive, i.e. you can write\n"
-			"DATE and 'Date', 'date', 'DaTe' etc will all work"));
-	
+
 	l_sortColumn_ =
 		new QLabel(i18n("Message sort column"), w_list_, "l_sortColumn");
 	CHECK_PTR(l_sortColumn_);
@@ -350,14 +354,14 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	topLevelLayout_				= new QGridLayout(this, 4, 2, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
-	listGroupLayout_			= new QGridLayout(w_list_, 4, 3, 0, 10);
+	listGroupLayout_			= new QGridLayout(w_list_, 3, 2, 0, 10);
 	CHECK_PTR(listGroupLayout_);
 	
-	viewGroupLayout_			= new QGridLayout(w_view_, 6, 2, 0, 10);
+	viewGroupLayout_			= new QGridLayout(w_view_, 7, 3, 0, 10);
 	CHECK_PTR(viewGroupLayout_);
 
-	topLevelLayout_->setRowStretch(0, 4);
-	topLevelLayout_->setRowStretch(1, 6);
+	topLevelLayout_->setRowStretch(0, 3);
+	topLevelLayout_->setRowStretch(1, 7);
 	topLevelLayout_->setRowStretch(2, 0);
 	topLevelLayout_->setRowStretch(3, 0);
 	
@@ -367,28 +371,28 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	topLevelLayout_->addWidget(cb_iconSet_,				2, 1);
 	topLevelLayout_->addMultiCellWidget(buttonBox_,		3, 3, 0, 1);
 	
-	listGroupLayout_->addWidget(l_displayHeaders_,		0, 0);
-	listGroupLayout_->addWidget(le_displayHeaders_,		0, 1);
-	listGroupLayout_->addWidget(l_sortColumn_,			1, 0);
-	listGroupLayout_->addWidget(cb_sortColumn_,			1, 1);
-	listGroupLayout_->addWidget(cb_sortAscending_,		2, 0);
-	listGroupLayout_->addWidget(cb_threadMessages_,		2, 1);
-	listGroupLayout_->addWidget(cb_timer_,				3, 0);
-	listGroupLayout_->addWidget(sb_timer_,				3, 1);
+	listGroupLayout_->addWidget(l_sortColumn_,			0, 0);
+	listGroupLayout_->addWidget(cb_sortColumn_,			0, 1);
+	listGroupLayout_->addWidget(cb_sortAscending_,		1, 0);
+	listGroupLayout_->addWidget(cb_threadMessages_,		1, 1);
+	listGroupLayout_->addWidget(cb_timer_,				2, 0);
+	listGroupLayout_->addWidget(sb_timer_,				2, 1);
 	listGroupLayout_->activate();
 	
-	viewGroupLayout_->addWidget(l_fixedFont_,					0, 0);
-	viewGroupLayout_->addWidget(l_sampleFixed_,					0, 1);
-	viewGroupLayout_->addWidget(pb_chooseFixedFont_,			0, 2);
-	viewGroupLayout_->addMultiCellWidget(l_quoteColourOne_,		1, 1, 0, 1);
-	viewGroupLayout_->addWidget(kcb_quoteColourOne_,			1, 2);
-	viewGroupLayout_->addMultiCellWidget(l_quoteColourTwo_,		2, 2, 0, 1);
-	viewGroupLayout_->addWidget(kcb_quoteColourTwo_,			2, 2);
-	viewGroupLayout_->addMultiCellWidget(l_linkColour_,			3, 3, 0, 1);
-	viewGroupLayout_->addWidget(kcb_linkColour_,				3, 2);
-	viewGroupLayout_->addMultiCellWidget(l_visitedLinkColour_,	4, 4, 0, 1);
-	viewGroupLayout_->addWidget(kcb_visitedLinkColour_,			4, 2);
-	viewGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	5, 5, 0, 2);
+	viewGroupLayout_->addWidget(l_displayHeaders_,				0, 0);
+	viewGroupLayout_->addMultiCellWidget(le_displayHeaders_,	0, 0, 1, 2);
+	viewGroupLayout_->addWidget(l_fixedFont_,					1, 0);
+	viewGroupLayout_->addWidget(l_sampleFixed_,					1, 1);
+	viewGroupLayout_->addWidget(pb_chooseFixedFont_,			1, 2);
+	viewGroupLayout_->addMultiCellWidget(l_quoteColourOne_,		2, 2, 0, 1);
+	viewGroupLayout_->addWidget(kcb_quoteColourOne_,			2, 2);
+	viewGroupLayout_->addMultiCellWidget(l_quoteColourTwo_,		3, 3, 0, 1);
+	viewGroupLayout_->addWidget(kcb_quoteColourTwo_,			3, 2);
+	viewGroupLayout_->addMultiCellWidget(l_linkColour_,			4, 4, 0, 1);
+	viewGroupLayout_->addWidget(kcb_linkColour_,				4, 2);
+	viewGroupLayout_->addMultiCellWidget(l_visitedLinkColour_,	5, 5, 0, 1);
+	viewGroupLayout_->addWidget(kcb_visitedLinkColour_,			5, 2);
+	viewGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	6, 6, 0, 2);
 	viewGroupLayout_->activate();
 
 	topLevelLayout_->activate();

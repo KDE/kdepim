@@ -27,6 +27,7 @@
 
 // Local includes
 #include "EmpathIndex.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "RMM_MessageID.h"
 

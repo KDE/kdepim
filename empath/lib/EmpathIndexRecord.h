@@ -23,6 +23,7 @@
 
 // Qt includes
 #include <qstring.h>
+#include <qlist.h>
 
 // KDE includes
 #include <RMM_Enum.h>
@@ -94,6 +95,19 @@ class EmpathIndexRecord
 		RMessageID			parentMessageId_;
 		
 		bool				tagged_;
+};
+
+class EmpathIndexRecordList : public QList<EmpathIndexRecord>
+{
+	public:
+		EmpathIndexRecordList() : QList<EmpathIndexRecord>() {}
+		virtual ~EmpathIndexRecordList() {}
+		
+	protected:
+		virtual int compareItems(EmpathIndexRecord * i1, EmpathIndexRecord * i2)
+		{
+			return i1->date().qdt() > i2->date().qdt() ? 1 : -1;
+		}
 };
 
 #endif

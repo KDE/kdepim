@@ -20,7 +20,6 @@
 
 #include <string.h>
 #include <stddef.h>
-#include <iostream>
 #include <qstring.h>
 #include <qstrlist.h>
 
@@ -35,7 +34,6 @@ RTokenise(
 	bool quotedTokens)
 {
 	// FIXME no stderr !
-	//cerr << "RTokenise (\"" << str << "\", \"" << delim << "\") called" << endl;
 	l.clear();
 	
 	if (!delim || !str || strlen(delim) == 0 || strlen(str) == 0) return 0;
@@ -55,13 +53,11 @@ RTokenise(
 		// Note that 127 (DEL) is ignored here. So what ? RFC822 is fucked up.
 		// I'm not going to pander to its self-contradictory crap.
 		if ((*i < 32 || *i == 127) && *i != '\t') {
-			//cerr << "Ignoring non-printable" << endl;
 			++i;
 			continue;
 		}
 
 		if (*i == '\\') { // Escaped chars go straight through.
-			//cerr << "Passing through an escaped char" << endl;
 			*r++ = *i++;
 			if (i <= len)
 				*r++ = *i++;
@@ -73,7 +69,6 @@ RTokenise(
 			// This has the effect that multiple delimiters are collapsed.
 			*r = '\0';
 			if (r != rstart) {
-				//cerr << "TOKEN " << rstart << endl;
 				l.append(rstart);
 			}
 			r = rstart;
@@ -89,27 +84,20 @@ RTokenise(
 		
 		if (*i == '"' && quotedTokens) {
 			
-			//cerr << "hit quote" << endl;
-
 			// If there's anything in the buffer, make a token from that first.
 			if (r != rstart) {
-				//cerr << "adding token from what was already held" << endl;
 				*r = '\0';
 				l.append(rstart);
 				r = rstart;
 			}
 			
-			//cerr << "Just making token from what we have" << endl;
-			
 			do {
-				//cerr << len - i << endl;
 				*r++ = *i++;
 			} while (i < len - 1 && (*(i - 1) != '\\' && *i != '"'));
 			
 			*r++ = *i++; // End quote mark
 
 			*r = '\0';
-				//cerr << "TOKEN " << rstart << endl;
 			l.append(rstart);
 			r = rstart;
 			++i;
@@ -120,17 +108,14 @@ RTokenise(
 		// the ending brace or the end of the string.
 		if (*i == '(') {
 
-			//cerr << "hit comment" << endl;
 			// If there's anything in the buffer, make a token from that first.
 			if (r != rstart) {
 				*r = '\0';
-			//	cerr << "TOKEN " << rstart << endl;
 				l.append(rstart);
 				r = rstart;
 			}
 	
 			do {
-				//cerr << i - len << endl;
 				*r++ = *i++;
 			} while (i < len && (*(i - 1) != '\\' && *i != ')'));
 			
@@ -139,7 +124,6 @@ RTokenise(
 			*r = '\0';
 			
 			if (!skipComments) {
-				//cerr << "TOKEN " << rstart << endl;
 				l.append(rstart);
 			}
 			r = rstart;
@@ -162,26 +146,4 @@ RTokenise(
 
 	return l.count();
 }
-
-#ifdef TEST
-main()
-{
-	QCString s = "Hello I'd \\\"like\" to be \"tokenised\r\n (I'm a \"with quote\" comment) without end";
-
-	QCString d = " ";
-
-	QStrList l;
-	l.setAutoDelete(true);
-
-	int ntokens = RTokenise(s, d, l, false);
-	
-	cerr << "-----------------\n" << ntokens << " tokens found" << endl;
-
-	QStrListIterator it(l);
-
-	for (; it.current(); ++it)
-		cerr << "TOKEN \"" << it.current() << "\"" << endl;
-	
-}
-#endif
 

@@ -48,6 +48,7 @@ class EmpathUI : public QObject
 		void s_setupComposing();
 		void s_setupAccounts();
 		void s_setupFilters();
+		void s_about();
 		
 		void s_newComposer(ComposeType, const EmpathURL &);
 		

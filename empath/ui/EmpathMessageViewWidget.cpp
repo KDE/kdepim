@@ -38,7 +38,8 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 		QWidget *parent,
 		const char *name)
 	:	QWidget(parent, name),
-		url_(url)
+		url_(url),
+		viewingSource_(false)
 {
 	empathDebug("ctor");
 	
@@ -112,7 +113,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	
 	s_docChanged();
 	mainLayout_->activate();
-	show();	
+	QWidget::show();	
 }
 
 	void
@@ -211,7 +212,7 @@ EmpathMessageViewWidget::go()
 						RBodyPart p(*it.current());
 					
 						s = p.decode().data();
-						messageWidget_->show(s, true);
+						show(s, true);
 						return;
 	
 					} else if (!stricmp(t.subType(), "plain")) {
@@ -221,7 +222,7 @@ EmpathMessageViewWidget::go()
 						RBodyPart p(*it.current());
 					
 						s = p.decode().data();
-						messageWidget_->show(s);
+						show(s);
 						return;
 					}
 					
@@ -230,7 +231,7 @@ EmpathMessageViewWidget::go()
 					empathDebug("Haven't decided what to do with this part yet");
 					RBodyPart p(*it.current());
 					s = p.decode().data();
-					messageWidget_->show(s);
+					show(s);
 				}
 			}
 		}
@@ -238,7 +239,7 @@ EmpathMessageViewWidget::go()
 		empathDebug("=================== END MULTIPART =====================");
 	}
 
-	messageWidget_->show(s);
+	show(s);
 }
 
 	void
@@ -357,6 +358,42 @@ EmpathMessageViewWidget::s_partChanged(RBodyPart * part)
 {
 	empathDebug("s_partChanged() called");
 	RBodyPart p(*part);
-	messageWidget_->show(p.data());
+	QCString s(p.data());
+	show(s, true);
+}
+
+	void
+EmpathMessageViewWidget::s_switchView()
+{
+	empathDebug("s_switchView() called");
+	if (viewingSource_) {
+		
+		empathDebug("Doing normal view");
+		viewingSource_ = false;
+		go();
+
+	} else {
+		
+		empathDebug("Doing source view");
+		viewingSource_ = true;
+	
+		RMessage * m(empath->message(url_));
+	
+		if (m == 0) {
+			empathDebug("Can't load message from \"" + url_.asString() + "\"");
+			return;
+		}
+		
+		QCString s(m->asString());
+		show(s, false);
+	}
+}
+
+	void
+EmpathMessageViewWidget::show(QCString & s, bool markup)
+{
+	while (!messageWidget_->show(s, markup)) {
+		kapp->processEvents();
+	}
 }
 

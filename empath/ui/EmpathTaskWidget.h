@@ -26,9 +26,7 @@
 #include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlayout.h>
-
-// KDE includes
-#include <kprogress.h>
+#include <qprogressbar.h>
 
 // Local includes
 #include "EmpathTask.h" 
@@ -64,7 +62,7 @@ class EmpathTaskItem : public QWidget
 		int max_;
 		int pos_;
 		
-		KProgress	* progressMeter_;
+		QProgressBar* progressMeter_;
 		QLabel		* label_;
 		QGridLayout * layout_;
 };

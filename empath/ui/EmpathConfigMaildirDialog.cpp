@@ -22,10 +22,12 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kapp.h>
+#include <kconfig.h>
 
 // Local includes
 #include "EmpathConfigMaildirDialog.h"
 #include "EmpathMailboxMaildir.h"
+#include "RikGroupBox.h"
 #include "EmpathUIUtils.h"
 		
 EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
@@ -33,16 +35,14 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 		QWidget * parent,
 		const char * name)
 	:	QDialog(parent, name, true),
-		mailbox_(mailbox)
+		mailbox_(mailbox),
+		applied_(false)
 {
 	empathDebug("ctor");
 	
 	setCaption(i18n("Settings for mailbox") + " \"" + mailbox->name() + "\" - "
 		+ kapp->getCaption());
 
-	buttonBox_				= new KButtonBox(this);
-	CHECK_PTR(buttonBox_);
-	
 	rgb_server_				= new RikGroupBox(i18n("Server"), 8, this,
 			"rgb_server");
 	CHECK_PTR(rgb_server_);
@@ -54,25 +54,6 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
-
-	// Widgets
-
-	// Bottom button group
-	pb_Help_	= buttonBox_->addButton(i18n("&Help"));	
-	buttonBox_->addStretch();
-	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
-	pb_Cancel_	= buttonBox_->addButton(i18n("&Cancel"));
-	
-	buttonBox_->setFixedHeight(buttonBox_->sizeHint().height());
-
-	QObject::connect(pb_OK_, SIGNAL(clicked()),
-			this, SLOT(s_OK()));
-	
-	QObject::connect(pb_Cancel_, SIGNAL(clicked()),
-			this, SLOT(s_Cancel()));
-	
-	QObject::connect(pb_Help_, SIGNAL(clicked()),
-			this, SLOT(s_Help()));
 
 	// Main group
 	
@@ -112,6 +93,43 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 	QObject::connect(cb_mailCheckInterval_, SIGNAL(toggled(bool)),
 			sb_mailCheckInterval_, SLOT(setEnabled(bool)));
 
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
+	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	pb_default_	= buttonBox_->addButton(i18n("&Default"));	
+	CHECK_PTR(pb_default_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_default_,	SIGNAL(clicked()),	SLOT(s_default()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
+
 	// Layouts
 	
 	topLevelLayout_			= new QGridLayout(this, 2, 1, 10, 10);
@@ -143,31 +161,38 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 	serverGroupLayout_->activate();
 	topLevelLayout_->activate();
 	
-	fillInSavedData();
-
 	rgb_server_->setMinimumSize(rgb_server_->minimumSizeHint());
 	setMinimumSize(minimumSizeHint());
 	resize(minimumSizeHint());
+	
+	loadData();
 }
 
 	void
 EmpathConfigMaildirDialog::s_OK()
 {
-	ASSERT(mailbox_ != 0);
-	mailbox_->setPath(le_mailboxPath_->text());
-	mailbox_->setCheckMail(cb_mailCheckInterval_->isChecked());
-	mailbox_->setCheckMailInterval(QString(sb_mailCheckInterval_->text()).toInt());
-	mailbox_->saveConfig();
-	
+	hide();
+	if (!applied_)
+		s_apply();
+	kapp->getConfig()->sync();
+
 	// That's it
 	accept();
 }
 
 	void
-EmpathConfigMaildirDialog::fillInSavedData()
+EmpathConfigMaildirDialog::saveData()
 {
 	ASSERT(mailbox_ != 0);
-//	mailbox_->readConfig();
+	mailbox_->setPath(le_mailboxPath_->text());
+	mailbox_->setCheckMail(cb_mailCheckInterval_->isChecked());
+	mailbox_->setCheckMailInterval(sb_mailCheckInterval_->value());
+}
+
+	void
+EmpathConfigMaildirDialog::loadData()
+{
+	ASSERT(mailbox_ != 0);
 	le_mailboxPath_->setText(mailbox_->path());
 	cb_mailCheckInterval_->setChecked(mailbox_->checkMail());
 	sb_mailCheckInterval_->setValue(mailbox_->checkMailInterval());
@@ -175,14 +200,42 @@ EmpathConfigMaildirDialog::fillInSavedData()
 }
 
 	void
-EmpathConfigMaildirDialog::s_Cancel()
+EmpathConfigMaildirDialog::s_cancel()
 {
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
 	reject();
 }
 
 	void
-EmpathConfigMaildirDialog::s_Help()
+EmpathConfigMaildirDialog::s_apply()
 {
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		loadData();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+	saveData();
+}
+
+	void
+EmpathConfigMaildirDialog::s_default()
+{
+	le_mailboxPath_->setText("");
+	cb_mailCheckInterval_->setChecked(true);
+	sb_mailCheckInterval_->setValue(1);
+}
+
+	void
+EmpathConfigMaildirDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
 }
 
 	void

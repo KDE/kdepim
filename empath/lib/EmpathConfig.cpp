@@ -372,4 +372,6 @@ EmpathConfig::KEY_CC_OTHER_ADDRESS = "CopyOtherAddress";
 	const QString
 EmpathConfig::KEY_LOCAL_MAILBOX_PATH = "MailboxPath";
 
+	const QString
+EmpathConfig::KEY_ADDRESSBOOK_FILENAME = "AddressbookFilename";
 

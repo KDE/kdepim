@@ -23,6 +23,7 @@
 #include "EmpathFolderList.h"
 #include "EmpathFolder.h"
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathMailbox.h"
 #include "EmpathIndex.h"
 #include "EmpathUtilities.h"
@@ -109,7 +110,7 @@ EmpathFolder::update()
 	bool
 EmpathFolder::writeMessage(RMessage & message)
 {
-	empathDebug("writeMessage() called")
+	empathDebug("writeMessage() called");
 	EmpathMailbox * m = empath->mailbox(url_);
 	if (m == 0)
 		return false;

@@ -95,11 +95,9 @@ class EmpathMainWindow : public KTMainWindow
 		void s_messagePrint();
 		void s_messageFilter();
 		void s_messageView();
-		void s_messageViewSource();
 
 		// Help menu slots
 		void s_help();
-		void s_aboutEmpath();
 		void s_aboutQt();
 		
 		// Debugging

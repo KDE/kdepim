@@ -226,6 +226,8 @@ class Empath : public QObject
 		void s_setupComposing();
 		void s_setupAccounts();
 		void s_setupFilters();
+		
+		void s_about();
 	
 	signals:
 	
@@ -243,6 +245,8 @@ class Empath : public QObject
 		void setupComposing();
 		void setupAccounts();
 		void setupFilters();
+
+		void about();
 		
 		void newTask(EmpathTask *);
 		
@@ -274,6 +278,7 @@ inline void Empath::s_setupAccounts()			{ emit(setupAccounts());	}
 inline void Empath::s_setupFilters()			{ emit(setupFilters());		}
 inline void Empath::s_newMailArrived() 			{ emit(newMailArrived());	}
 inline void Empath::s_newTask(EmpathTask * t)	{ emit(newTask(t));			}
+inline void Empath::s_about()					{ emit(about());			}
 inline void Empath::filter(const EmpathURL & m)	{ filterList_.filter(m);	}
 
 inline void 

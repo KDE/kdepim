@@ -113,8 +113,6 @@ class EmpathMessageListWidget : public QListView
 		void s_messageCopyTo();
 		void s_messagePrint();
 		void s_messageFilter();
-		void s_messageViewSource();
-		//void s_rightButtonClicked(QListViewItem *, const QPoint &, int);
 		void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
 		void s_doubleClicked(QListViewItem *);
 		void s_currentChanged(QListViewItem *);
@@ -144,7 +142,7 @@ class EmpathMessageListWidget : public QListView
 		QPopupMenu			messageMenu_;
 		QPopupMenu			messageMarkMenu_;
 		
-		QList<EmpathIndexRecord> masterList_;
+		EmpathIndexRecordList masterList_;
 		QList<EmpathMessageListItem> itemList_;
 
 		QPixmap px_;

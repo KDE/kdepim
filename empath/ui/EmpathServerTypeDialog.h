@@ -34,6 +34,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "RikGroupBox.h"
 
 class EmpathServerTypeDialog : public QDialog

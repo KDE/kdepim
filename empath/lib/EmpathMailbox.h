@@ -31,6 +31,7 @@
 #include "RMM_Message.h"
 #include "RMM_MessageID.h"
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "EmpathFolderList.h"
 

@@ -19,6 +19,7 @@
 */
 
 // KDE includes
+#include <kapp.h>
 #include <klocale.h>
 
 // Local includes
@@ -39,6 +40,8 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
 		filter_(filter)
 {
 	empathDebug("ctor");
+	
+	setCaption(i18n("Filter Action - ") + kapp->getCaption());
 	
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
@@ -210,8 +213,11 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
 	layout_->activate();
 
 	mainLayout_->activate();
+	
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
+	
 	load();
-//	resize(500, 300);
 }
 
 EmpathFilterActionDialog::~EmpathFilterActionDialog()

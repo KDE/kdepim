@@ -96,17 +96,16 @@ EmpathHeaderSpecWidget::setHeaderName(const QString & headerName)
 	headerNameWidget_->setHeaderName(headerName);
 }
 
-	RHeader
+	QCString
 EmpathHeaderSpecWidget::header()
 {
 	QCString s;
-	s = headerNameWidget_->headerName().ascii();
-	s += " ";
-	s += headerBodyWidget_->headerBody().ascii();
-	
-	RHeader h(s);
 
-	return h;
+	s = QCString(headerNameWidget_->headerName().ascii());
+	s += " ";
+	s += QCString(headerBodyWidget_->headerBody().ascii());
+	
+	return s;
 }
 
 	void

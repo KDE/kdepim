@@ -44,7 +44,8 @@
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 		QWidget			*	_parent,
 		const char		*	_name)
-	:	KHTMLWidget(_parent, _name)
+	:	KHTMLWidget(_parent, _name),
+		busy_(false)
 {
 	empathDebug("ctor");
 	qInitPngIO();
@@ -79,23 +80,16 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 	empathDebug("dtor");
 }
 
-	void
-EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
+	bool
+EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 {
 	empathDebug("show() called");
+	
+	if (busy_) return false;
+	busy_ = true;
 
 	setCursor(waitCursor);
 	
-	if (isHTML) {
-		empathDebug("Using HTML message");
-		begin();
-		write(s);
-		setCursor(arrowCursor);
-		parse();
-		return;
-	}
-	// FIXME Remove ascii()
-
 	KConfig * config(kapp->getConfig());
 	config->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
@@ -128,8 +122,7 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 	
 	setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
 
-	QCString html(s);
-	if (html.isEmpty()) {
+	if (s.isEmpty()) {
 		write(
 			"<HTML><BODY BGCOLOR=" +
 			QColorToHTML(empathWindowColour()) +
@@ -138,22 +131,34 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 			"</PRE></BODY></HTML>");
 		setCursor(arrowCursor);
 		parse();
-		return;
+		busy_ = false;
+		return true;
 	}
 		
-	toHTML(html);
-	
 	begin();
+
+	if (markup) {
+		
+		QCString html(s);
+		toHTML(html);
+		write(
+			"<HTML><BODY BGCOLOR=" +
+			QColorToHTML(empathWindowColour()) +
+			"><PRE>" +
+			html +
+			"</PRE></BODY></HTML>");
 	
-	write(
-		"<HTML><BODY BGCOLOR=" +
-		QColorToHTML(empathWindowColour()) +
-		"><PRE>" +
-		html +
-		"</PRE></BODY></HTML>");
+	} else {
+		
+		empathDebug("No markup required");
+
+		write("<HTML><BODY><PRE>" + s + "</PRE></BODY></HTML>");
+	}
 	
 	setCursor(arrowCursor);
 	parse();
+	busy_ = false;
+	return true;
 }
 
 	void
@@ -262,12 +267,19 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 					while (pos < end && (*pos == '>' || *pos == ' '))
 						if (*pos++ == '>') ++quoteDepth;
 
+					strcpy(bufpos, "<FONT COLOR=\"#");
+					bufpos += 14;
+					
 					if (quoteDepth % 2 == 0)
-						strcpy(bufpos, "<FONT COLOR=\"#" + quoteOne + "\">");
+						strcpy(bufpos, quoteOne);
 					else
-						strcpy(bufpos, "<FONT COLOR=\"#" + quoteTwo + "\">");
-						
-					bufpos += 22;
+						strcpy(bufpos, quoteTwo);
+					
+					bufpos += 6;
+					
+					strcpy(bufpos, "\">");
+					
+					bufpos += 2;
 					
 					for (x = 0 ; x < quoteDepth; x++) {
 						strcpy(bufpos, "&gt; ");

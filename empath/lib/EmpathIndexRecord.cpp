@@ -118,10 +118,8 @@ EmpathIndexRecord::niceDate(bool twelveHour)
 	if (then.daysTo(now) != 0)
 		dts += then.date().dayName(then.date().dayOfWeek()) + " ";
 	
-	// If the weeks differ, print the day of month.
-	if (then.date().daysTo(now.date()) > 6)
-		dts += QString().setNum(then.date().day()) + " ";
-		
+	// Print the day of month.
+	dts += QString().setNum(then.date().day()) + " ";
 		
 	// If the months differ, print month name.
 	if (then.date().month() != now.date().month())
@@ -132,7 +130,7 @@ EmpathIndexRecord::niceDate(bool twelveHour)
 		dts += QString().setNum(then.date().year()) + " ";
 
 	// If the day is the same, print the time of the message. 
-	if (then.date().day() == now.date().day()) {
+	if (then.date().daysTo(now.date()) == 0) {
 		
 		int hour = then.time().hour();
 		

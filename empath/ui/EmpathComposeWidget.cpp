@@ -18,11 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// System includes
-#include <unistd.h> // Linux man pages lie - mkstemp is in stdlib.h
-#include <stdlib.h>
-#include <sys/stat.h>
-
 // Qt includes
 #include <qregexp.h>
 #include <qfile.h>
@@ -43,13 +38,16 @@
 #include "Empath.h"
 #include "EmpathMailSender.h"
 #include "RMM_DateTime.h"
+#include "RMM_MailboxList.h"
+#include "RMM_Mailbox.h"
 
 EmpathComposeWidget::EmpathComposeWidget(
-	ComposeType			t,
-	const EmpathURL &	m,
-	QWidget *			parent,
-	const char *		name)
-	:	QWidget(parent, name),
+		ComposeType			t,
+		const EmpathURL &	m,
+		QWidget *			parent,
+		const char *		name)
+	:
+		QWidget(parent, name),
 		composeType_(t),
 		url_(m)
 {
@@ -119,8 +117,6 @@ EmpathComposeWidget::EmpathComposeWidget(
 	layout_->activate();
 
 	headerEditWidget_->setFocus();
-
-	_init();
 }
 
 	void
@@ -160,7 +156,7 @@ EmpathComposeWidget::message()
 	empathDebug("message called");
 
 	QCString s;
-	s += headerEditWidget_->envelope().asString();
+	s += headerEditWidget_->envelope();
 
 	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
 		
@@ -177,21 +173,22 @@ EmpathComposeWidget::message()
 		// we add the message id of that message to the references list.
 		if (message.envelope().has(RMM::HeaderReferences)) {
 			
-			QCString references = message.envelope().references().asString();
+			QCString references = "References: ";
+			references += message.envelope().references().asString();
 			references += ": ";
 			references += message.envelope().references().asString();
 			references += " ";
 			references += message.envelope().messageID().asString();
-			s += references + "\n";
+			s += references;
+			s += "\n";
 			
 		} else {
 			
 			// No references field. In that case, we just make an In-Reply-To
 			// header.
-			QCString inReplyTo;
-			inReplyTo = "In-Reply-To: " +
-				message.envelope().messageID().asString();
-			s += inReplyTo + "\n";
+			s += "In-Reply-To: ";
+		   	s += message.envelope().messageID().asString();
+			s += "\n";
 		}
 	}
 
@@ -203,21 +200,28 @@ EmpathComposeWidget::message()
 	KConfig * c(kapp->getConfig());
 	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 	
-	s += QCString("From: ") +
-		c->readEntry(EmpathConfig::KEY_NAME).ascii() + QCString(" <") +
-		c->readEntry(EmpathConfig::KEY_EMAIL).ascii() + QCString(">\n");
+	s += QCString("From: ");
+	s += QCString(c->readEntry(EmpathConfig::KEY_NAME).ascii());
+	s += QCString(" <");
+	s += QCString(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
+	s += QCString(">");
+	s += "\n";
 	
-	s += QCString("Subject: ") + subjectSpecWidget_->getSubject().ascii() +"\n";
+	s +=
+		QCString("Subject: ") +
+		QCString(subjectSpecWidget_->getSubject().ascii());
+	s += "\n";
+	
 	RDateTime dt;
 	dt.createDefault();
-	s += "Date: " + dt.asString() + "\n";
+	s += "Date: " + dt.asString();
+	s += "\n";
 	
 	RMessageID id;
 	id.createDefault();
 	
-	s += "Message-Id: " + id.asString() + "\n";
-	
-	s += "\n";
+	s += "Message-Id: " + id.asString();
+    s += "\n\n";
 	
 	// Body
 	s += editorWidget_->text().ascii();
@@ -235,9 +239,9 @@ EmpathComposeWidget::message()
 			QCString sig;
 		
 			while (!t.eof())
-				t >> sig;
+				sig += t.readLine().ascii() + QCString("\n");
 		
-			s += "\n" + sig + "\n";
+			s += "\n" + sig;
 		}
 	}
 
@@ -283,18 +287,57 @@ EmpathComposeWidget::_reply(bool toAll)
 	
 	RMessage message(*m);
 	
-	QString s;
+	QCString to, cc;
 	
-	// Find out who sent the message, and fill in 'To:'
-	s = message.envelope().firstSender().asString();
+	// First fill in the primary return address. This will be the Reply-To
+	// address if there's one given, otherwise it will be the first in
+	// the sender list.
+	if (!toAll) {
 
-	empathDebug("Replying to \"" + s + "\""); 
-	headerEditWidget_->setToText(s);
-	if (!s.isEmpty())
-		subjectSpecWidget_->setFocus();
+		if (message.envelope().has(RMM::HeaderReplyTo))
+			to = message.envelope().replyTo().at(0)->asString();
+		else
+			to = message.envelope().to().at(0)->asString();
+		
+		headerEditWidget_->setToText(to);
+	}
+	
+	if (toAll) {
+		
+		if (message.envelope().has(RMM::HeaderReplyTo)) {
+		
+			to = message.envelope().replyTo().asString();
+			headerEditWidget_->setToText(to);
+		
+		} else if (message.envelope().has(RMM::HeaderFrom)) {
+		
+			to = message.envelope().from().at(0).asString();
+			headerEditWidget_->setToText(to);
+		}
+		
+		if (message.envelope().has(RMM::HeaderCc)) {
+
+			if (message.envelope().cc().count() != 0) {
+			
+				bool firstTime = false;
+				
+				for (int i = 0; i < message.envelope().cc().count(); i++) {
+			
+					if (!firstTime)
+						cc += ", ";
+					cc += message.envelope().cc().at(i).asString();
+				}
+
+				headerEditWidget_->setCcText(cc);
+			}
+		}
+	}
+
+	
+	subjectSpecWidget_->setFocus();
 	
 	// Fill in the subject.
-	s = message.envelope().subject().asString();
+	QString s = message.envelope().subject().asString();
 	empathDebug("Subject was \"" + s + "\""); 
 
 	if (s.isEmpty())
@@ -315,33 +358,35 @@ EmpathComposeWidget::_reply(bool toAll)
 
 	// Add the 'On (date) (name) wrote' bit
 		
-	if (c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
+	if (!c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
+		editorWidget_->setFocus();
+		return;
+	}
 
-		QString s(message.data());
+	s = message.data();
+
+	s.replace(QRegExp("\\n"), "\n> ");
+
+	QString thingyWrote =
+		c->readEntry(
+			EmpathConfig::KEY_PHRASE_REPLY_SENDER, "") + '\n';
 	
-		s.replace(QRegExp("\\n"), "\n> ");
-
-		QString thingyWrote =
-			c->readEntry(
-				EmpathConfig::KEY_PHRASE_REPLY_SENDER, "") + '\n';
+	// Be careful here. We don't want to reveal people's
+	// email addresses.
+	if (message.envelope().has(RMM::HeaderFrom) &&
+		!message.envelope().from().at(0).phrase().isEmpty()) {
 		
-		// Be careful here. We don't want to reveal people's
-		// email addresses.
-		if (message.envelope().has(RMM::HeaderFrom) &&
-			!message.envelope().from().at(0).phrase().isEmpty()) {
-			
-			thingyWrote.replace(QRegExp("\\%s"),
-				message.envelope().from().at(0).phrase());
+		thingyWrote.replace(QRegExp("\\%s"),
+			message.envelope().from().at(0).phrase());
 
-			if (message.envelope().has(RMM::HeaderDate))
-				thingyWrote.replace(QRegExp("\\%d"),
-					message.envelope().date().qdt().date().toString());
-			else
-				thingyWrote.replace(QRegExp("\\%d"),
-					i18n("An unknown date and time"));
-		
-			editorWidget_->setText('\n' + thingyWrote + s);
-		}
+		if (message.envelope().has(RMM::HeaderDate))
+			thingyWrote.replace(QRegExp("\\%d"),
+				message.envelope().date().qdt().date().toString());
+		else
+			thingyWrote.replace(QRegExp("\\%d"),
+				i18n("An unknown date and time"));
+	
+		editorWidget_->setText('\n' + thingyWrote + s);
 	}
 
 	editorWidget_->setFocus();

@@ -27,6 +27,7 @@
 // Local includes
 #include "RMM_MessageID.h"
 #include "EmpathURL.h"
+#include "EmpathEnum.h"
 
 class EmpathFilterEventHandler : public QObject
 {

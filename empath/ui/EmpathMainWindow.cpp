@@ -34,19 +34,13 @@
 #include "EmpathMainWidget.h"
 #include "EmpathMainWindow.h"
 #include "EmpathMessageListWidget.h"
-#include "EmpathMessageViewWidget.h"
 #include "EmpathMessageViewWindow.h"
-#include "EmpathMailboxList.h"
 #include "EmpathMessageWidget.h"
 #include "EmpathMessageList.h"
 #include "EmpathFolderWidget.h"
-#include "EmpathAboutBox.h"
-#include "EmpathMessageSourceView.h"
 #include "EmpathConfig.h"
-#include "EmpathFilterManagerDialog.h"
 #include "EmpathFolderChooserDialog.h"
 #include "Empath.h"
-#include "EmpathMenuMaker.h"
 
 EmpathMainWindow::EmpathMainWindow(const char * name)
 	:	KTMainWindow(name)
@@ -117,7 +111,12 @@ EmpathMainWindow::setupToolBar()
 		(KToolBar::BarPosition)
 		c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POSITION);
 
-	if (pos == KToolBar::Floating) pos = KToolBar::Top;
+	if	(	pos != KToolBar::Top	||
+			pos != KToolBar::Left	||
+			pos != KToolBar::Right	||
+			pos != KToolBar::Bottom)
+		pos = KToolBar::Top;
+
 	tb->setBarPos(pos);
 	
 	this->addToolBar(tb, 0);
@@ -188,6 +187,7 @@ EmpathMainWindow::s_fileQuit()
 	empathDebug("s_fileQuit called");
 	// FIXME: Check if the user wants to save changes
 	hide();
+	kapp->processEvents();
 	delete this;
 }
 
@@ -373,7 +373,7 @@ EmpathMainWindow::s_messageMoveTo()
 EmpathMainWindow::s_messagePrint()
 {
 	empathDebug("s_messagePrint called");
-	mainWidget_->messageViewWidget()->s_print();
+//	mainWidget_->messageViewWidget()->s_print();
 }
 
 	void
@@ -398,29 +398,9 @@ EmpathMainWindow::s_messageView()
 }
 
 	void
-EmpathMainWindow::s_messageViewSource()
-{
-	empathDebug("s_messageViewSource called");
-	
-	EmpathMessageSourceView * sourceView =
-		new EmpathMessageSourceView(
-			messageListWidget_->firstSelectedMessage(), 0);
-
-	CHECK_PTR(sourceView);
-
-	sourceView->show();
-}
-
-	void
 EmpathMainWindow::s_help()
 {
 	empathInvokeHelp("", "");
-}
-
-	void
-EmpathMainWindow::s_aboutEmpath()
-{
-	EmpathAboutBox::create();
 }
 
 	void

@@ -34,13 +34,16 @@ Highest priority first.
   
 * Make printing work. HTML view will do it itself, though a little weirdly.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
+  
+* Plug memory leaks. Basically this just means putting setAutoDelete() back
+  in various parts of rmm. This caused crashes for me, and I couldn't figure
+  out the cause, but it shouldn't be too much hassle. The rest of Empath
+  is pretty leak-free I think, due to the lack of allocating anything ;)
 
 ===============================================================================
 Little things I need to do. Highest priority first.
 
-* Make reply use Reply-To.
-
-* Make HTML view switch to source view (easy).
+* Think about and possibly redesign the compose widget.
 
 * Sort out layout in filter dialogs.
 
@@ -57,12 +60,7 @@ Little things I need to do. Highest priority first.
 
 * Allow sort order in folder widget
 
-* Move 'Display Headers' from 'Message List' section to 'Message Viewing'
-  section in Display Settings dialog.
-
 * Find out why compose widget sometimes resizes to very small.
-
-* Make reply to all work.
 
 * Allow user to save, print etc the various parts of a message. When pressing
   'Message->Print', ask which part they want to print, unless there's only one.

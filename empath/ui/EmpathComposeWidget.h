@@ -74,6 +74,8 @@ class EmpathComposeWidget : public QWidget
 		 */
 		bool messageHasAttachments();
 		
+		void init() { _init(); }
+		
 	protected slots:
 		
 		void	s_editorDone(bool ok, QCString text);

@@ -22,15 +22,11 @@
 #define RMM_DEFINES_H
 
 #ifndef NDEBUG
-#include <qstring.h>
-#include <qregexp.h>
-#include <iostream>
-#define rmmDebug(a) cerr << className() << ": " << QCString((a)) << endl;
+#include <qcstring.h>
+#include <kdebug.h>
+#define rmmDebug(a) kdebug(KDEBUG_INFO, 0,  "%s: %s\n", className(), QCString((a)).data())
 #else
 #define rmmDebug(a)
 #endif
-
-#define toCRLF(a) (a).replace(QRegExp("\n"), QCString("\r\n"))
-#define toLF(a) (a).replace(QRegExp("\r\n"), QCString("\n"))
 
 #endif

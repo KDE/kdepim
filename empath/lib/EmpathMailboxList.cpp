@@ -18,9 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// System includes
-#include <iostream.h>
-
 // Qt includes
 #include <qstring.h>
 

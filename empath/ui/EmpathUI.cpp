@@ -24,6 +24,7 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathUI.h"
+#include "EmpathAboutBox.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathDisplaySettingsDialog.h"
@@ -70,6 +71,10 @@ EmpathUI::EmpathUI()
 	QObject::connect(
 		empath,	SIGNAL(setupFilters()),
 		this,	SLOT(s_setupFilters()));
+	
+	QObject::connect(
+		empath,	SIGNAL(about()),
+		this,	SLOT(s_about()));
 	
 	EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
 	kapp->setMainWidget(mainWindow);
@@ -142,5 +147,11 @@ EmpathUI::s_setupAccounts()
 EmpathUI::s_setupFilters()
 {
 	EmpathFilterManagerDialog::create();
+}
+
+	void
+EmpathUI::s_about()
+{
+	EmpathAboutBox::create();
 }
 

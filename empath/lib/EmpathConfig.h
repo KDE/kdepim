@@ -36,6 +36,8 @@ class EmpathConfig
 		static const QString		GROUP_IDENTITY;
 		static const QString		GROUP_SENDING;
 		static const QString		GROUP_ACCOUNT;
+		
+		static const QString		KEY_ADDRESSBOOK_FILENAME;
 
 		// DISPLAY
 		static const QString		KEY_MAIN_WINDOW_TOOLBAR_POSITION;

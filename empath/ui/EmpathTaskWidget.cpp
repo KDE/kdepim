@@ -18,8 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <iostream>
-
 // Qt includes
 #include <qpixmap.h>
 
@@ -148,14 +146,16 @@ EmpathTaskItem::EmpathTaskItem(const QString & title,
 		QWidget * parent, const char * name)
 	:
 		QWidget(parent, name),
-		title_(title)
+		title_(title),
+		pos_(0),
+		max_(100)
 {
 	empathDebug("ctor");
 	layout_ = new QGridLayout(this, 1, 2, 2, 10);
 	CHECK_PTR(layout_);
 	label_ = new QLabel(title_, this, "l_taskTitle");
 	CHECK_PTR(label_);
-	progressMeter_ = new KProgress(this, "taskProgress");
+	progressMeter_ = new QProgressBar(this, "taskProgress");
 	CHECK_PTR(progressMeter_);
 	
 	setFixedHeight(progressMeter_->sizeHint().height());
@@ -182,22 +182,27 @@ EmpathTaskItem::s_done()
 EmpathTaskItem::s_inc()
 {
 	empathDebug("s_inc() called");
-	progressMeter_->advance(1);
+	++pos_;
+	progressMeter_->setProgress((int)((pos_/(float)max_) * 100));
+	empathDebug("Progress now: " + QString().setNum(progressMeter_->progress()));
+	empathDebug("Progress now: " + QString().setNum((int)((pos_/(float)max_) * 100)));
 	kapp->processEvents();
 }
 
 	void
 EmpathTaskItem::s_setMax(int max)
 {
-	empathDebug("s_setMax() called");
-	progressMeter_->setRange(0, max);
+	empathDebug("s_setMax(" + QString().setNum(max) + ") called");
+	progressMeter_->setTotalSteps(max);
+	max_ = max;
 }
 
 	void
 EmpathTaskItem::s_setPos(int pos)
 {
 	empathDebug("s_setPos() called");
-	progressMeter_->setValue(pos);
+	pos_ = pos;
+	progressMeter_->setProgress((int)((pos_/(float)max_) * 100));
 	kapp->processEvents();
 }
 

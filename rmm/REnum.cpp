@@ -20,7 +20,6 @@
 
 #include <qstring.h>
 
-#include <iostream>
 #include <RMM_Enum.h>
 
 	const char *

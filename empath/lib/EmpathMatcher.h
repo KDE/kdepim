@@ -24,6 +24,7 @@
 #include "RMM_Message.h"
 #include "EmpathMatcher.h"
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
 
 class EmpathMatcher

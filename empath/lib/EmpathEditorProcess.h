@@ -18,45 +18,42 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATHMESSAGEHTMLVIEW_H
-#define EMPATHMESSAGEHTMLVIEW_H
-
 // Qt includes
-#include <qpopupmenu.h>
-#include <qregexp.h>
-#include <qtextview.h>
+#include <qcstring.h>
+#include <qobject.h>
+#include <qdatetime.h>
 
 // KDE includes
-#include <ktmainwindow.h>
-#include <kstdaccel.h>
-#include <khtml.h>
+#include <kprocess.h>
 
 // Local includes
-#include <RMM_Message.h>
 #include "EmpathDefines.h"
-#include "EmpathURL.h"
+#include "EmpathConfig.h"
 
-class EmpathMessageHTMLWidget : public KHTMLWidget
+class EmpathEditorProcess : public QObject
 {
 	Q_OBJECT
-
+	
 	public:
 		
-		EmpathMessageHTMLWidget(
-				QWidget		* _parent	= 0,
-				const char	* _name		= 0);
+		EmpathEditorProcess(const QCString &);
+		~EmpathEditorProcess();
+		void go();
 		
-		~EmpathMessageHTMLWidget();
-		
-		/**
-		 * Do the parsing and print to the widget
-		 */
-		void toHTML(QCString &);
-		bool show(const QCString & s, bool markup = true);
+	protected slots:
 
+		void s_composeFinished(KProcess *);
+		void s_debugExternalEditorOutput(KProcess *, char *, int);
+		
+	signals:
+		
+		void done(bool, QCString);
+		
 	private:
 		
-		bool busy_;
+		QCString text_;
+		QString fileName;
+		QDateTime myModTime_;
+		KProcess p;
 };
 
-#endif

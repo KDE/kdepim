@@ -21,7 +21,6 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-#include <iostream>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -83,7 +82,6 @@ operator >> (QDataStream & s, RDateTime & dt)
 {
 	s	>> dt.qdate_
 		>> dt.zone_;
-	cerr << " >> gave me : " << dt.qdate_.toString().ascii() << endl;
 	dt.parsed_		= true;
 	dt.assembled_	= false;
 	return s;
@@ -92,7 +90,6 @@ operator >> (QDataStream & s, RDateTime & dt)
 	QDataStream &
 operator << (QDataStream & s, RDateTime & dt)
 {
-	cerr << " << is getting : " << dt.qdate_.toString().ascii() << endl;
 	dt.parse();
 	s	<< dt.qdate_
 		<< dt.zone_;

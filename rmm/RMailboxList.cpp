@@ -20,7 +20,6 @@
 
 #include <ctype.h>
 #include <stdlib.h>
-#include <iostream.h>
 
 #include <qstring.h>
 

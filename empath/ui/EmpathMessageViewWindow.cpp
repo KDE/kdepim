@@ -30,7 +30,6 @@
 #include "EmpathUIUtils.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageViewWindow.h"
-#include "EmpathMenuMaker.h"
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMessageSourceView.h"
 
@@ -104,7 +103,7 @@ EmpathMessageViewWindow::setupMenuBar()
 	empathDebug("setting up message menu");
 
 	messageMenu_->insertItem(empathIcon("mini-view.png"), i18n("&View source"),
-		this, SLOT(s_messageViewSource()));
+		messageView_, SLOT(s_switchView()));
 	
 	messageMenu_->insertItem(empathIcon("mini-view.png"), i18n("&New"),
 		this, SLOT(s_messageNew()));
@@ -282,19 +281,6 @@ EmpathMessageViewWindow::s_messageCopyTo()
 	else {
 		empathDebug("Couldn't get copy folder");
 	}
-}
-
-	void
-EmpathMessageViewWindow::s_messageViewSource()
-{
-	empathDebug("s_messageViewSource called");
-
-	EmpathMessageSourceView * sourceView =
-		new EmpathMessageSourceView(url_, 0);
-
-	CHECK_PTR(sourceView);
-
-	sourceView->show();
 }
 
 	void

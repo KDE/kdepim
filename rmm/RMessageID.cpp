@@ -59,19 +59,17 @@ RMessageID::~RMessageID()
 	bool
 RMessageID::operator == (RMessageID & msgID)
 {
-	msgID.assemble();
 	return (
-		localPart_	== msgID.localPart_ &&
-		domain_		== msgID.domain_);
+		localPart_	== msgID.localPart() &&
+		domain_		== msgID.domain());
 }
 
 	bool
 RMessageID::operator != (RMessageID & msgID)
 {
-	msgID.assemble();
 	return (
-		localPart_	!= msgID.localPart_ ||
-		domain_		!= msgID.domain_);
+		localPart_	!= msgID.localPart() ||
+		domain_		!= msgID.domain());
 }
 
 
@@ -109,6 +107,7 @@ operator >> (QDataStream & s, RMessageID & mid)
 {
 	s	>> mid.localPart_
 		>> mid.domain_;
+	mid.parsed_ = true;
 	mid.assembled_ = false;
 	return s;
 }
@@ -160,14 +159,22 @@ RMessageID::parse()
 		return;
 	}
 	
-	QStrList l;
-	int ntokens = RTokenise(strRep_, "@", l);
-	if (ntokens < 2) return;
-	localPart_ = l.at(0);
-	QCString b = l.at(1);
-	localPart_.replace(QRegExp("^<"), "");
-	domain_ = b.left(b.findRev('>'));
-	rmmDebug("Done parse");
+	int atPos = strRep_.find('@');
+	
+	if (atPos == -1) {
+		parsed_ = true;
+		return;
+	}
+	
+	localPart_	= strRep_.left(atPos);
+	domain_		= strRep_.right(atPos - 1);
+	
+	if (localPart_.at(0) == '<')
+		localPart_.remove(0, 1);
+	
+	if (domain_.right(1) == ">")
+		domain_.remove(domain_.length() - 1, 1);
+	
 	parsed_ = true;
 	assembled_ = false;
 }

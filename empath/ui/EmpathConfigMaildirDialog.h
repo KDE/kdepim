@@ -39,9 +39,9 @@
 
 // Maildir includes
 #include "EmpathDefines.h"
-#include "RikGroupBox.h"
 
 class EmpathMailboxMaildir;
+class RikGroupBox;
 
 /**
  * Configure a local mailbox.
@@ -61,18 +61,21 @@ class EmpathConfigMaildirDialog : public QDialog
 		~EmpathConfigMaildirDialog() { empathDebug("dtor"); }
 
 		void setMailbox(EmpathMailboxMaildir * mailbox);
-
-		void fillInSavedData();
 		
 	protected slots:
 
 		void	s_OK();
-		void	s_Cancel();
-		void	s_Help();
+		void	s_cancel();
+		void	s_help();
+		void	s_apply();
+		void	s_default();
 		void	s_browseMailboxPath();
 
 	private:
 
+		void saveData();
+		void loadData();
+		
 		EmpathMailboxMaildir	* mailbox_;
 
 		RikGroupBox		* rgb_server_;
@@ -85,8 +88,10 @@ class EmpathConfigMaildirDialog : public QDialog
 		QGridLayout		* serverGroupLayout_;
 		
 		QPushButton		* pb_OK_;
-		QPushButton		* pb_Cancel_;
-		QPushButton		* pb_Help_;
+		QPushButton		* pb_cancel_;
+		QPushButton		* pb_help_;
+		QPushButton		* pb_apply_;
+		QPushButton		* pb_default_;
 
 		// w_server
 		
@@ -97,6 +102,8 @@ class EmpathConfigMaildirDialog : public QDialog
 		QSpinBox		* sb_mailCheckInterval_;
 
 		QCheckBox		* cb_mailCheckInterval_;
+		
+		bool			applied_;
 };
 
 #endif

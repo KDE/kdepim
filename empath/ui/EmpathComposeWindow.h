@@ -31,6 +31,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
 
 class EmpathComposeWidget;

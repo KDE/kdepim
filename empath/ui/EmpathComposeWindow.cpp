@@ -34,7 +34,6 @@
 #include "EmpathMessageWidget.h"
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMailSender.h"
-#include "EmpathMenuMaker.h"
 #include "EmpathAboutBox.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -65,8 +64,9 @@ EmpathComposeWindow::EmpathComposeWindow(
 	setCaption(i18n("Compose Message - ") + kapp->getCaption());
 	
 	updateRects();
-	kapp->processEvents();
 	show();
+	kapp->processEvents();
+	composeWidget_->init();
 }
 
 EmpathComposeWindow::~EmpathComposeWindow()
@@ -104,9 +104,6 @@ EmpathComposeWindow::setupToolBar()
 	id_digitallySign_		= 11;
 	id_encrypt_				= 12;
 	
-	KConfig * c(kapp->getConfig());
-	c->setGroup(EmpathConfig::GROUP_COMPOSE);
-#if 0	
 	tb->insertButton(
 		empathIcon("confirm-delivery.png"),
 		id_confirmDelivery_, SIGNAL(toggled(bool)),
@@ -126,29 +123,30 @@ EmpathComposeWindow::setupToolBar()
 		empathIcon("dig-sign.png"),
 		id_digitallySign_, SIGNAL(toggled(bool)),
 		this, SLOT(s_digSign(bool)), true, i18n("Digitally Sign"));
-#endif
+
 	tb->insertButton(
 		empathIcon("sign.png"),
 		id_addSignature_, SIGNAL(toggled(bool)),
 		this, SLOT(s_sign(bool)), true, i18n("Add Signature"));
-#if 0	
+	
+	KConfig * c(kapp->getConfig());
+
 	tb->setToggle(id_confirmDelivery_);
 	tb->setToggle(id_confirmReading_);
 	tb->setToggle(id_digitallySign_);
 	tb->setToggle(id_encrypt_);
+	tb->setToggle(id_addSignature_);
+	
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 	
 	tb->setButton(id_confirmDelivery_,
-		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_DELIVERY, false);
+		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_DELIVERY, false));
 	tb->setButton(id_confirmReading_,
-		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_READ, false);
+		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_READ, false));
 	tb->setButton(id_digitallySign_,
 		c->readBoolEntry(EmpathConfig::KEY_ADD_DIG_SIG, false));
 	tb->setButton(id_encrypt_,
 		c->readBoolEntry(EmpathConfig::KEY_ENCRYPT, false));
-#endif
-	tb->setToggle(id_addSignature_);
-	empathDebug(QString("Add sig is: ") +
-		(c->readBoolEntry(EmpathConfig::KEY_ADD_SIG) ? "true" : "false"));
 	tb->setButton(id_addSignature_,
 		c->readBoolEntry(EmpathConfig::KEY_ADD_SIG, false));
 }
@@ -224,7 +222,9 @@ EmpathComposeWindow::s_fileSaveAs()
 	
 	QDataStream d(&f);
 	
-	d << message.asString();
+	QCString s = message.asString();
+	
+	d.writeRawBytes(s, s.length());
 
 	f.close();
 	

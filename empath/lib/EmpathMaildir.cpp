@@ -20,6 +20,7 @@
 
 // System includes
 #include <sys/file.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
 
@@ -167,7 +168,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 		} else {	
 			// New file to add.
 			
-			// Read the file to a RMessage
+			// Read the file to an RMessage
 			RMessage m(_messageData(s));
 			
 			// Create an index record.
