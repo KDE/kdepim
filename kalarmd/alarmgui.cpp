@@ -23,6 +23,8 @@
 #include <kstddirs.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
+#include <kurl.h>
+#include <dcopclient.h>
 #include <knotifyclient.h>
 #include <kdebug.h>
 

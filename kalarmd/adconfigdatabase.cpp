@@ -20,6 +20,7 @@
 */
 
 #include <kstddirs.h>
+#include <kurl.h>
 #include <kdebug.h>
 #include <ksimpleconfig.h>
 
