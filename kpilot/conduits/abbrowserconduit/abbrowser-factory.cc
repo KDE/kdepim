@@ -66,6 +66,7 @@ const char *AbbrowserConduitFactory::fOtherField = "PilotOther";
 const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
 const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
 const char *AbbrowserConduitFactory::fCustom = "Custom %1";
+const char *AbbrowserConduitFactory::fCustomFmt = "CustomDateFormat";
 
 const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
 

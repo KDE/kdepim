@@ -55,7 +55,6 @@ AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	CM(fAbookFile,SIGNAL(textChanged(const QString &)));
 	CM(fArchive,SIGNAL(toggled(bool)));
 	CM(fConflictResolution,SIGNAL(activated(int)));
-	CM(fSmartMerge,SIGNAL(toggled(bool)));
 	CM(fOtherPhone,SIGNAL(activated(int)));
 	CM(fAddress,SIGNAL(activated(int)));
 	CM(fFax,SIGNAL(activated(int)));
@@ -63,6 +62,8 @@ AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	CM(fCustom1,SIGNAL(activated(int)));
 	CM(fCustom2,SIGNAL(activated(int)));
 	CM(fCustom3,SIGNAL(activated(int)));
+	CM(fCustomDate, SIGNAL(activated(int)));
+	CM(fCustomDate, SIGNAL(textChanged(const QString&)));
 #undef CM
 }
 
@@ -90,8 +91,6 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	// Conflicts page
 	fConfig->writeEntry(AbbrowserConduitFactory::fResolution,
 		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
-	fConfig->writeEntry(AbbrowserConduitFactory::fSmartMerge,
-		fConfigWidget->fSmartMerge->isChecked());
 
 	// Fields page
 	fConfig->writeEntry(AbbrowserConduitFactory::fOtherField,
@@ -110,6 +109,16 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfigWidget->fCustom2->currentItem());
 	fConfig->writeEntry(AbbrowserConduitFactory::custom(3),
 		fConfigWidget->fCustom3->currentItem());
+	int fmtindex=fConfigWidget->fCustomDate->currentItem();
+	if (fmtindex==0)
+	{
+		// "Locale Settings" was chosen
+		fConfig->writeEntry(AbbrowserConduitFactory::fCustomFmt, QString::null);
+	}
+	else
+	{
+		fConfig->writeEntry(AbbrowserConduitFactory::fCustomFmt, fConfigWidget->fCustomDate->currentText());
+	}
 
 	unmodified();
 }
@@ -133,8 +142,6 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fConflictResolution->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fResolution,
 		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
-	fConfigWidget->fSmartMerge->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::fSmartMerge, true));
 
 	// Fields page
 	fConfigWidget->fOtherPhone->setCurrentItem(
@@ -153,6 +160,15 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfig->readNumEntry(AbbrowserConduitFactory::custom(2)));
 	fConfigWidget->fCustom3->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::custom(3)));
+	QString datefmt=fConfig->readEntry(AbbrowserConduitFactory::fCustomFmt);
+	if (datefmt.isEmpty())
+	{
+		fConfigWidget->fCustomDate->setCurrentItem(0);
+	}
+	else
+	{
+		fConfigWidget->fCustomDate->setCurrentText(datefmt);
+	}
 
 	unmodified();
 }

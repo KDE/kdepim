@@ -1,0 +1,114 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>ResolutionDialogBase</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>widget2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>335</width>
+            <height>326</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>unnamed</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>fIntroText</cstring>
+            </property>
+            <property name="text">
+                <string>The following record was edited both on the handheld and on the PC. Please choose which values shall be synced:</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <widget class="QListView" row="1" column="0">
+            <column>
+                <property name="text">
+                    <string>Field</string>
+                </property>
+                <property name="clickable">
+                    <bool>false</bool>
+                </property>
+                <property name="resizable">
+                    <bool>false</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>fResolutionView</cstring>
+            </property>
+            <property name="rootIsDecorated">
+                <bool>true</bool>
+            </property>
+            <property name="resizeMode">
+                <enum>AllColumns</enum>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="3" column="0">
+            <property name="name">
+                <cstring>groupBox1</cstring>
+            </property>
+            <property name="title">
+                <string></string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton" row="1" column="2" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>fKeepBoth</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Keep both</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>fBackupValues</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Last sync values</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="0" column="2" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>fPalmValues</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Handheld values</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="0" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>fPCValues</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;PC values</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QLabel" row="2" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Line breaks in any of the entries are denoted by a " | " (without the quotes).</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
