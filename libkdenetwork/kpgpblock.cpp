@@ -79,6 +79,8 @@ Block::determineType() const
       else
         return PgpMessageBlock;
     }
+    else if( !strncmp( mText.data() + 15, "ARMORED FILE", 12 ) )
+      return PgpMessageBlock;
     else
       return UnknownBlock;
   }
