@@ -5,6 +5,11 @@ ServiceTypes=KitchenSync/Konnector
 X-KDE-Library=libphonekonnector
 
 Name=Opie Konnector
+Name[cs]=Opie konektor
+Name[es]=Konnector Opie
+Name[lv]=Opie Konnektors
+Name[pt_BR]=Konnector
+Name[sl]=Povezovalnik Opie
 Group=Cell Phone 
 Vendor=Daniel Molkentin
 Id=Phone

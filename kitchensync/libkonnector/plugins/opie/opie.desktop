@@ -6,11 +6,10 @@ X-KDE-Library=libopiekonnector
 
 Name=Opie Konnector
 Name[cs]=Opie konektor
+Name[es]=Konnector Opie
 Name[lv]=Opie Konnektors
+Name[pt_BR]=Konnector
 Name[sl]=Povezovalnik Opie
-Name[ven]=Mutanganyi wa Opie
-Name[wa]=Drovi ridant
-Name[zu]=Umxhumanisi we Opie
 Group= PDA
 Vendor = Holger 'zecke' Freyther
 Id=Opie-1
