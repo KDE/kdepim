@@ -54,9 +54,11 @@ class AddresseeEditorDialog : public KDialogBase
     virtual void slotApply();
     virtual void slotOk();
     virtual void slotCancel();
-    void widgetModified();
+    void widgetModified( const KABC::Addressee::List& );
 
   private:
+    virtual void setTitle( const KABC::Addressee& );
+
     AddresseeEditorBase *mEditorWidget;
 };
 

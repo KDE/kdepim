@@ -56,7 +56,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
     mEditorWidget = new AddresseeEditorWidget( core, false, page );
   }
   connect( mEditorWidget, SIGNAL( modified( const KABC::Addressee::List& ) ),
-           SLOT( widgetModified() ) );
+           SLOT( widgetModified( const KABC::Addressee::List& ) ) );
   layout->addWidget( mEditorWidget );
 
   enableButton( KDialogBase::Apply, false );
@@ -81,6 +81,8 @@ AddresseeEditorDialog::~AddresseeEditorDialog()
 void AddresseeEditorDialog::setAddressee( const KABC::Addressee &addr )
 {
   enableButton( KDialogBase::Apply, false );
+
+  setTitle( addr );
 
   mEditorWidget->setAddressee( addr );
   mEditorWidget->setInitialFocus();
@@ -120,8 +122,11 @@ void AddresseeEditorDialog::slotOk()
   delayedDestruct();
 }
 
-void AddresseeEditorDialog::widgetModified()
+void AddresseeEditorDialog::widgetModified( const KABC::Addressee::List &addressees )
 {
+  if ( !addressees.isEmpty() )
+    setTitle( addressees.first() );
+
   enableButton( KDialogBase::Apply, true );
 }
 
@@ -131,6 +136,12 @@ void AddresseeEditorDialog::slotCancel()
 
   // Destroy this dialog
   delayedDestruct();
+}
+
+void AddresseeEditorDialog::setTitle( const KABC::Addressee &addr )
+{
+  if ( !addr.realName().isEmpty() )
+    setCaption( i18n( "Edit Contact '%1'" ).arg( addr.realName() ) );
 }
 
 #include "addresseeeditordialog.moc"
