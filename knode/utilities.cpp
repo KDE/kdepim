@@ -302,7 +302,7 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
 
 void KNHelper::saveWindowSize(const QString &name, const QSize &s)
 {
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("WINDOW_SIZES");
   c->writeEntry(name, s);
 }
@@ -310,7 +310,7 @@ void KNHelper::saveWindowSize(const QString &name, const QSize &s)
 
 void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize)
 {
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("WINDOW_SIZES");
 
   QSize s=c->readSizeEntry(name,&defaultSize);

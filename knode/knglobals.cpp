@@ -18,14 +18,11 @@
 
 
 #include <kconfig.h>
-#include <kstaticdeleter.h>
-
-KConfig *KNGlobals::c_onfig = 0;
-static KStaticDeleter<KConfig> c_onfigSD;
 
 KConfig* KNGlobals::config()
 {
-  if (!c_onfig)
-    c_onfigSD.setObject(c_onfig, new KConfig( "knoderc"));
+  if (!c_onfig) {
+      c_onfig = KSharedConfig::openConfig( "knoderc" );
+  }
   return c_onfig;
 }

@@ -42,7 +42,7 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
   s_mtp=new KNServerInfo();
   s_mtp->setType(KNServerInfo::STsmtp);
   s_mtp->setId(0);
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("MAILSERVER");
   s_mtp->readConf(conf);
 

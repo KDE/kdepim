@@ -42,7 +42,7 @@ KNConfig::Identity::Identity(bool g)
  :  u_seSigFile(false), u_seSigGenerator(false), g_lobal(g)
 {
   if(g_lobal) {
-    KConfig *c=KNGlobals::config();
+    KConfig *c=knGlobals.config();
     c->setGroup("IDENTITY");
     loadConfig(c);
   }
@@ -88,7 +88,7 @@ void KNConfig::Identity::save()
 {
   kdDebug(5003) << "KNConfig::Identity::save()" << endl;
   if(g_lobal) {
-    KConfig *c=KNGlobals::config();
+    KConfig *c=knGlobals.config();
     c->setGroup("IDENTITY");
     saveConfig(c);
   }
@@ -174,7 +174,7 @@ void KNConfig::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
 
 KNConfig::Appearance::Appearance()
 {
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("VISUAL_APPEARANCE");
 
   //colors
@@ -288,7 +288,7 @@ void KNConfig::Appearance::save()
 
   kdDebug(5003) << "KNConfig::Appearance::save()" << endl;
 
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("VISUAL_APPEARANCE");
 
   c->writeEntry("customColors", u_seColors);
@@ -596,7 +596,7 @@ void KNConfig::Appearance::recreateLVIcons()
 
 KNConfig::ReadNewsGeneral::ReadNewsGeneral()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
 
   a_utoCheck=conf->readBoolEntry("autoCheck", true);
@@ -633,7 +633,7 @@ void KNConfig::ReadNewsGeneral::save()
 
   kdDebug(5003) << "KNConfig::ReadNewsGeneral::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
 
   conf->writeEntry("autoCheck", a_utoCheck);
@@ -663,7 +663,7 @@ void KNConfig::ReadNewsGeneral::save()
 
 KNConfig::ReadNewsNavigation::ReadNewsNavigation()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS_NAVIGATION");
 
   e_muKMail=conf->readBoolEntry("emuKMail", false);
@@ -687,7 +687,7 @@ void KNConfig::ReadNewsNavigation::save()
 
   kdDebug(5003) << "KNConfig::ReadNewsNavigation::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS_NAVIGATION");
 
   conf->writeEntry("emuKMail", e_muKMail);
@@ -706,7 +706,7 @@ void KNConfig::ReadNewsNavigation::save()
 
 KNConfig::ReadNewsViewer::ReadNewsViewer()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
 
   s_howHeaderDeco=conf->readBoolEntry("showHeaderDeco", true);
@@ -749,7 +749,7 @@ void KNConfig::ReadNewsViewer::save()
 
   kdDebug(5003) << "KNConfig::ReadNewsViewer::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
 
   conf->writeEntry("showHeaderDeco", s_howHeaderDeco);
@@ -917,7 +917,7 @@ void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
 
 KNConfig::Scoring::Scoring()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("SCORING");
 
   i_gnoredThreshold=conf->readNumEntry("ignoredThreshold", -100);
@@ -937,7 +937,7 @@ void KNConfig::Scoring::save()
 
   kdDebug(5003) << "KNConfig::Scoring::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("SCORING");
 
   conf->writeEntry("ignoredThreshold", i_gnoredThreshold);
@@ -971,7 +971,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
 {
   findComposerCSCache.setAutoDelete(true);
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("POSTNEWS");
 
   c_omposerCharsets=conf->readListEntry("ComposerCharsets");
@@ -1029,7 +1029,7 @@ void KNConfig::PostNewsTechnical::save()
 
   kdDebug(5003) << "KNConfig::PostNewsTechnical::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("POSTNEWS");
 
   conf->writeEntry("ComposerCharsets", c_omposerCharsets);
@@ -1135,7 +1135,7 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
 
 KNConfig::PostNewsComposer::PostNewsComposer()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("POSTNEWS");
 
   w_ordWrap=conf->readBoolEntry("wordWrap",true);
@@ -1162,7 +1162,7 @@ void KNConfig::PostNewsComposer::save()
 
   kdDebug(5003) << "KNConfig::PostNewsComposer::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("POSTNEWS");
 
   conf->writeEntry("wordWrap", w_ordWrap);
@@ -1189,7 +1189,7 @@ void KNConfig::PostNewsComposer::save()
 
 KNConfig::Cleanup::Cleanup()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("EXPIRE");
 
   d_oExpire=conf->readBoolEntry("doExpire", true);
@@ -1215,7 +1215,7 @@ void KNConfig::Cleanup::save()
 
   kdDebug(5003) << "KNConfig::Cleanup::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("EXPIRE");
 
   conf->writeEntry("doExpire", d_oExpire);
@@ -1237,7 +1237,7 @@ bool KNConfig::Cleanup::expireToday()
   if(!d_oExpire)
     return false;
 
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("EXPIRE");
 
   QDate today=QDate::currentDate();
@@ -1254,7 +1254,7 @@ bool KNConfig::Cleanup::expireToday()
 
 void KNConfig::Cleanup::setLastExpireDate()
 {
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("EXPIRE");
   c->writeEntry("lastExpire", QDateTime::currentDateTime());
 }
@@ -1265,7 +1265,7 @@ bool KNConfig::Cleanup::compactToday()
   if(!d_oCompact)
     return false;
 
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("EXPIRE");
 
   QDate today=QDate::currentDate();
@@ -1282,7 +1282,7 @@ bool KNConfig::Cleanup::compactToday()
 
 void KNConfig::Cleanup::setLastCompactDate()
 {
-  KConfig *c=KNGlobals::config();
+  KConfig *c=knGlobals.config();
   c->setGroup("EXPIRE");
   c->writeEntry("lastCompact", QDateTime::currentDateTime());
 }
@@ -1295,7 +1295,7 @@ void KNConfig::Cleanup::setLastCompactDate()
 
 /*KNConfig::Cache::Cache()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("CACHE");
 
   m_emMaxArt=conf->readNumEntry("memMaxArt", 1000);
@@ -1318,7 +1318,7 @@ void KNConfig::Cache::save()
 
   kdDebug(5003) << "KNConfig::Cache::save()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("CACHE");
 
   conf->writeEntry("memMaxArt", m_emMaxArt);

@@ -811,7 +811,7 @@ void KNMainWidget::initPopups()
 
 bool KNMainWidget::firstStart()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("GENERAL");
   QString ver = conf->readEntry("Version");
   if(!ver.isEmpty())
@@ -845,7 +845,7 @@ bool KNMainWidget::firstStart()
 
 void KNMainWidget::readOptions()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("APPEARANCE");
 
   QValueList<int> lst = conf->readIntListEntry("Hdrs_Size3");
@@ -902,13 +902,13 @@ void KNMainWidget::readOptions()
   //applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   // restore dock configuration
-  manager()->readConfig(KNGlobals::config(),"dock_configuration");
+  manager()->readConfig(knGlobals.config(),"dock_configuration");
 }
 
 
 void KNMainWidget::saveOptions()
 {
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("APPEARANCE");
 
   // store section sizes
@@ -943,7 +943,7 @@ void KNMainWidget::saveOptions()
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   // store dock configuration
-  manager()->writeConfig(KNGlobals::config(),"dock_configuration");
+  manager()->writeConfig(knGlobals.config(),"dock_configuration");
 }
 
 
@@ -996,7 +996,7 @@ void KNMainWidget::prepareShutdown()
   delete cup;
 
   saveOptions();
-  RecentAddresses::self()->save( KNGlobals::config() );
+  RecentAddresses::self()->save( knGlobals.config() );
   c_fgManager->syncConfig();
   a_rtManager->deleteTempFiles();
   g_rpManager->syncGroups();
@@ -1700,6 +1700,7 @@ void KNMainWidget::slotAccGetNewHdrs()
   if(a_ccManager->currentAccount())
     g_rpManager->checkAll(a_ccManager->currentAccount());
 }
+
 
 
 void KNMainWidget::slotAccDelete()

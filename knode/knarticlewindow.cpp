@@ -117,7 +117,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   if (!pop) pop = new QPopupMenu(this);
   artW->setBodyPopup(pop);
 
-  KConfig *conf = KNGlobals::config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
   resize(500,400);    // default optimized for 800x600
   applyMainWindowSettings(conf);
@@ -127,7 +127,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
 KNArticleWindow::~KNArticleWindow()
 {
   instances.removeRef(this);
-  KConfig *conf = KNGlobals::config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
   saveMainWindowSettings(conf);
 }

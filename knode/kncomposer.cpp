@@ -344,7 +344,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   v_iew->e_dit->setModified(false);
 
   // restore window & toolbar configuration
-  KConfig *conf = KNGlobals::config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
   resize(535,450);    // default optimized for 800x600
   applyMainWindowSettings(conf);
@@ -366,7 +366,7 @@ KNComposer::~KNComposer()
     delete e_ditorTempfile;
   }
 
-  KConfig *conf = KNGlobals::config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
   saveMainWindowSettings(conf);
 }
@@ -1356,7 +1356,7 @@ void KNComposer::slotConfKeys()
 
 void KNComposer::slotConfToolbar()
 {
-  KConfig *conf = KNGlobals::config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
   saveMainWindowSettings(conf);
   KEditToolbar dlg(guiFactory(),this);
@@ -1371,7 +1371,7 @@ void KNComposer::slotNewToolbarConfig()
   a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
   if(!a_ttPopup) a_ttPopup = new QPopupMenu();
 
-  KConfig *conf = KNGlobals::config();
+  KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
   applyMainWindowSettings(conf);
 }
@@ -1538,7 +1538,7 @@ void KNComposer::slotSpellStarted( KSpell *)
         s_pellChecker->setProgressResolution(2);
 
         // read the quote indicator from the preferences
-        KConfig *config=KNGlobals::config();
+        KConfig *config=knGlobals.config();
         KConfigGroupSaver saver(config, "READNEWS");
         QString quotePrefix;
         quotePrefix = config->readEntry("quoteCharacters",">");
@@ -1731,7 +1731,7 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   e_dit=new Editor(this, composer, main);
   e_dit->setMinimumHeight(50);
 
-  KConfig *config = KNGlobals::config();
+  KConfig *config = knGlobals.config();
   KConfigGroupSaver saver(config, "VISUAL_APPEARANCE");
   QColor defaultColor1( kapp->palette().active().text()); // defaults from kmreaderwin.cpp
   QColor defaultColor2( kapp->palette().active().text() );
@@ -1769,7 +1769,7 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
 KNComposer::ComposerView::~ComposerView()
 {
   if(v_iewOpen) {
-    KConfig *conf=KNGlobals::config();
+    KConfig *conf=knGlobals.config();
     conf->setGroup("POSTNEWS");
 
     conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
@@ -1888,7 +1888,7 @@ void KNComposer::ComposerView::showAttachmentView()
     v_iewOpen=true;
     a_ttWidget->show();
 
-    KConfig *conf=KNGlobals::config();
+    KConfig *conf=knGlobals.config();
     conf->setGroup("POSTNEWS");
 
     QValueList<int> lst=conf->readIntListEntry("Att_Splitter");

@@ -17,6 +17,8 @@
 #ifndef KNGLOBALS_H
 #define KNGLOBALS_H
 
+#include <kconfig.h>
+
 class KNConfigManager;
 class KNNetAccess;
 class KNProgress;
@@ -30,7 +32,6 @@ class KNFilterManager;
 class KNMainWidget;
 class KNScoringManager;
 class KNMemoryManager;
-class KConfig;
 namespace Kpgp {
    class Module;
 }
@@ -42,7 +43,6 @@ class KNArticleWidget;
     this removes many header dependencies.
     (knode.h isn't include everywhere) */
 class KNGlobals {
-
   public:
     /** topWidget == top, used for message boxes, */
     QWidget               *topWidget;
@@ -60,10 +60,10 @@ class KNGlobals {
     KNFilterManager       *filManager;
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
-    Kpgp::Module                 *pgp;
-    static KConfig               *config();
+    Kpgp::Module          *pgp;
+    KConfig               *config();
 private:
-    static KConfig               *c_onfig;
+    KSharedConfig::Ptr c_onfig;
 };
 
 

@@ -606,7 +606,7 @@ void KNConfig::SmtpAccountWidget::apply()
   s_erverInfo->setHold(h_old->value());
   s_erverInfo->setTimeout(t_imeout->value());
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("MAILSERVER");
   s_erverInfo->saveConf(conf);
 }

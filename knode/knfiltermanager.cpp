@@ -72,7 +72,7 @@ KNFilterManager::KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObjec
   connect(keybA, SIGNAL(activated()), this,  SLOT(slotShowFilterChooser()));
   loadFilters();
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
   setFilter(conf->readNumEntry("lastFilterID", 1));
 }
@@ -99,7 +99,7 @@ void KNFilterManager::saveOptions()
 void KNFilterManager::prepareShutdown()
 {
   if (currFilter) {
-    KConfig *conf=KNGlobals::config();
+    KConfig *conf=knGlobals.config();
     conf->setGroup("READNEWS");
     conf->writeEntry("lastFilterID", currFilter->id());
   }

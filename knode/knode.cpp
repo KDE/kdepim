@@ -54,7 +54,7 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
 
 KNMainWindow::~KNMainWindow()
 {
-  saveMainWindowSettings(KNGlobals::config(),"mainWindow_options");
+  saveMainWindowSettings(knGlobals.config(),"mainWindow_options");
 }
 
 void KNMainWindow::openURL( const KURL& url )
@@ -64,7 +64,7 @@ void KNMainWindow::openURL( const KURL& url )
 
 void KNMainWindow::slotConfToolbar()
 {
-  saveMainWindowSettings(KNGlobals::config(),"mainWindow_options");
+  saveMainWindowSettings(knGlobals.config(),"mainWindow_options");
   KEditToolbar dlg(actionCollection(), "knodeui.rc");
   connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
   dlg.exec();
@@ -74,7 +74,7 @@ void KNMainWindow::slotNewToolbarConfig()
 {
   createGUI("knodeui.rc");
   //initPopups();
-  applyMainWindowSettings(KNGlobals::config(),"mainWindow_options");
+  applyMainWindowSettings(knGlobals.config(),"mainWindow_options");
 }
 
 bool KNMainWindow::queryClose()

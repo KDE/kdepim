@@ -30,7 +30,7 @@ int KNApplication::newInstance()
 {
   kdDebug(5003) << "KNApplication::newInstance()" << endl;
 
-  KConfig *conf=KNGlobals::config();
+  KConfig *conf=knGlobals.config();
   conf->setGroup("GENERAL");
   QString ver=conf->readEntry("Version");
 
