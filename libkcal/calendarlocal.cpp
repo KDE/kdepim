@@ -39,12 +39,6 @@
 
 using namespace KCal;
 
-CalendarLocal::CalendarLocal()
-  : Calendar(), mEvents( 47 )
-{
-  init();
-}
-
 CalendarLocal::CalendarLocal( const QString &timeZoneId )
   : Calendar( timeZoneId ), mEvents( 47 )
 {
