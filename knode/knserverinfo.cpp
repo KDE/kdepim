@@ -27,7 +27,7 @@ using namespace KWallet;
 
 KNServerInfo::KNServerInfo()
   : t_ype(STnntp), i_d(-1), p_ort(119), h_old(300),
-    t_imeout(60), n_eedsLogon(false)
+    t_imeout(60), n_eedsLogon(false), p_assDirty(false)
 {
 }
 
@@ -61,7 +61,8 @@ void KNServerInfo::readConf(KConfig *conf)
     n_eedsLogon=conf->readBoolEntry("needsLogon",false);
     u_ser=conf->readEntry("user");
     p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
-    conf->deleteEntry("pass"); //first time run, don't store it in the config file
+    if(Wallet::isEnabled())
+      conf->deleteEntry("pass"); //first time run, don't store it in the config file
 
     if (Wallet::folderDoesNotExist(Wallet::NetworkWallet(), "knode") ||
         Wallet::keyDoesNotExist(Wallet::NetworkWallet(), "knode", QString::number(i_d)))
@@ -110,8 +111,8 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("id", i_d);
     conf->writeEntry("needsLogon", n_eedsLogon);
     conf->writeEntry("user", u_ser);
-    //open wallet for storing only if the user actually does have the password
-    if (n_eedsLogon) {
+    // open wallet for storing only if the user actually changed the password
+    if (n_eedsLogon && p_assDirty) {
       Wallet* wallet = openWallet();
       if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
           KMessageBox::information(0, i18n("KWallet is not running. It is strongly recommend to use "
@@ -119,6 +120,7 @@ void KNServerInfo::saveConf(KConfig *conf)
                                    i18n("KWallet is Not Running."), "KWalletWarning" );
           conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
       }
+      p_assDirty = false;
     }
   }
 }
@@ -135,4 +137,13 @@ bool KNServerInfo::operator==(const KNServerInfo &s)
             (n_eedsLogon==s.n_eedsLogon) &&
             (u_ser==s.u_ser) &&
             (p_ass==s.p_ass)            );
+}
+
+
+void KNServerInfo::setPass(const QString &s)
+{
+  if (p_ass != s) {
+    p_ass = s;
+    p_assDirty = true;
+  }
 }
