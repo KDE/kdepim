@@ -139,7 +139,7 @@ class Calendar {
   
     /**
       Set calendar filter, which filters events for the getEvents* functions.
-      Calendar takes ownership of the filter.
+      The Filter object is owned by the caller.
     */
     void setFilter(CalFilter *);
     /**
