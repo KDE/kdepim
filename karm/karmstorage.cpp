@@ -55,6 +55,7 @@
 #include "karmstorage.h"
 #include "preferences.h"
 #include "task.h"
+#include "reportcriteria.h"
 
 
 KarmStorage *KarmStorage::_instance = 0;
@@ -470,23 +471,24 @@ void KarmStorage::adjustFromLegacyFileFormat(Task* task)
 //----------------------------------------------------------------------------
 // Routines that handle Comma-Separated Values export file format.
 //
-QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
+QString KarmStorage::exportcsvFile( TaskView *taskview, 
+                                    const ReportCriteria &rc )
 {
-  QString delim = i18n( "," );
-  QString dquote = i18n( "\"" );
+  QString delim = rc.delimiter;
+  QString dquote = rc.quote;
   QString double_dquote = dquote + dquote;
-  bool to_quote;
+  bool to_quote = true;
   
   QString err;
   Task* task;
   int maxdepth=0; 
 
   kdDebug(5970)
-    << "KarmStorage::exportcsvFile: " << filename << endl;
+    << "KarmStorage::exportcsvFile: " << rc.url << endl;
 
-  QFile f(filename);
+  QFile f( rc.url );
   if( !f.open( IO_WriteOnly ) ) {
-      err = i18n("Could not open \"%1\".").arg(filename);
+      err = i18n("Could not open \"%1\".").arg( rc.url );
   }
 
   if (!err)
@@ -530,6 +532,7 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
       // indent the task in the csv-file:
       for ( int i=0; i < task->depth(); ++i ) stream << delim;
       
+      /*
       // CSV compliance
       // Surround the field with quotes if the field contains 
       // a comma (delim) or a double quote
@@ -537,6 +540,8 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
         to_quote = TRUE;
       else
         to_quote = FALSE;
+      */
+      to_quote = true;
 
       if (to_quote)
         stream << dquote;
@@ -550,10 +555,14 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
       // maybe other tasks are more indented, so to align the columns:
       for ( int i = 0; i < maxdepth - task->depth(); ++i ) stream << delim;
 
-      stream << delim << task->sessionTime()
-             << delim << task->time()
-             << delim << task->totalSessionTime()
-             << delim << task->totalTime()
+      stream << delim << formatTime( task->sessionTime(),
+                                     rc.decimalMinutes )
+             << delim << formatTime( task->time(),
+                                     rc.decimalMinutes )
+             << delim << formatTime( task->totalSessionTime(),
+                                     rc.decimalMinutes )
+             << delim << formatTime( task->totalTime(),
+                                     rc.decimalMinutes )
              << endl;
       tasknr++;
     }
@@ -645,25 +654,28 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
 }
 
 void KarmStorage::printTaskHistory (
-        const Task                *task, 
-        const QMap<QString,long>& taskdaytotals, 
-        QMap<QString,long>&       daytotals, 
-        const QDate&              from,
-        const QDate&              to, 
-        const int                 level, 
-        QString&                  s)
+        const Task               *task, 
+        const QMap<QString,long> &taskdaytotals, 
+        QMap<QString,long>       &daytotals, 
+        const QDate              &from,
+        const QDate              &to, 
+        const int                level, 
+        QString                  &s,
+        const ReportCriteria     &rc)
 // to>=from is precondition
 {
-  QString delim = i18n( "," );           
-  QString dquote = i18n("\"");
+  QString delim = rc.delimiter;
+  QString dquote = rc.quote;
   QString double_dquote = dquote + dquote;
-  bool to_quote;
+  bool to_quote = true;
 
   const QString cr = QString::fromLatin1("\n");
   QString buf;
   QString daytaskkey, daykey;
   QDate day;
   long sum;
+
+  if ( !task ) return;
 
   day = from;
   sum = 0;
@@ -678,7 +690,7 @@ void KarmStorage::printTaskHistory (
     if (taskdaytotals.contains(daytaskkey))
     {
       s += QString::fromLatin1("%1")
-        .arg(formatTime(taskdaytotals[daytaskkey]/60, true));
+        .arg(formatTime(taskdaytotals[daytaskkey]/60, rc.decimalMinutes));
       sum += taskdaytotals[daytaskkey];  // in seconds
 
       if (daytotals.contains(daykey))
@@ -692,16 +704,20 @@ void KarmStorage::printTaskHistory (
   }
 
   // Total for task this week
-  s += QString::fromLatin1("%1").arg(formatTime(sum/60, true));
+  s += QString::fromLatin1("%1").arg(formatTime(sum/60, rc.decimalMinutes));
 
   // Task name
   for ( int i = level + 1; i > 0; i-- ) s += delim;
 
+  /*
   // CSV compliance
   // Surround the field with quotes if the field contains 
   // a comma (delim) or a double quote
   to_quote = task->name().contains(delim) || task->name().contains(dquote);
+  */
+  to_quote = true; 
   if ( to_quote) s += dquote;
+
 
   // Double quotes replaced by a pair of consecutive double quotes 
   s += task->name().replace( dquote, double_dquote );
@@ -714,17 +730,31 @@ void KarmStorage::printTaskHistory (
       subTask;
       subTask = subTask->nextSibling())
   {
-    printTaskHistory(subTask, taskdaytotals, daytotals, from, to , level+1, s);
+    printTaskHistory( subTask, taskdaytotals, daytotals, from, to , level+1, s,
+                      rc );
   }
 }
 
-// export history report as csv, all tasks X all dates in one block
-QString KarmStorage::exportActivityReport
-(TaskView* taskview, const QString& filename, const QDate& from, 
- const QDate& to)
+QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
 {
-  QString delim = i18n( "," );            // delimiter
-  QString rdelim = i18n( "\\" ) + delim;  // escape-sequence for the delimiter
+  QString err;
+  if ( rc.reportType == ReportCriteria::CSVHistoryExport )
+      err = exportActivityReport( taskview, rc.from, rc.to, rc );
+  else if ( rc.reportType == ReportCriteria::CSVTotalsExport )
+      err = exportcsvFile( taskview, rc );
+  else
+      // hmmmm ... assert(0)?
+      ;
+  return err;
+};
+
+// export history report as csv, all tasks X all dates in one block
+QString KarmStorage::exportActivityReport ( TaskView      *taskview, 
+                                            const QDate   &from, 
+                                            const QDate   &to,
+                                            const ReportCriteria &rc)
+{
+  QString delim = rc.delimiter;
   const QString cr = QString::fromLatin1("\n");
   QString err;
   
@@ -806,13 +836,20 @@ QString KarmStorage::exportActivityReport
   }
   else
   {
-    sum = 0;
+    if ( rc.allTasks ) 
     {
-      for (Task* task= taskview->item_at_index(0); task; task= task->nextSibling())
+      for ( Task* task= taskview->item_at_index(0);
+            task; task= task->nextSibling() )
       {
-        printTaskHistory(task, taskdaytotals, daytotals, from, to, 0, retval);
+        printTaskHistory( task, taskdaytotals, daytotals, from, to, 0, 
+                          retval, rc );
       }
-    } 
+    }
+    else
+    {
+      printTaskHistory( taskview->current_item(), taskdaytotals, daytotals, 
+                        from, to, 0, retval, rc );
+    }
     retval += line;
         
     // totals
@@ -825,7 +862,7 @@ QString KarmStorage::exportActivityReport
       if (daytotals.contains(daykey))
       {
         retval += QString::fromLatin1("%1")
-            .arg(formatTime(daytotals[daykey]/60, true));
+            .arg(formatTime(daytotals[daykey]/60, rc.decimalMinutes));
         sum += daytotals[daykey];  // in seconds
       }
       retval += delim;
@@ -833,16 +870,16 @@ QString KarmStorage::exportActivityReport
     }
         
     retval += QString::fromLatin1("%1%2%3")
-        .arg(formatTime(sum/60, true))
-        .arg(delim)
-        .arg(i18n("Total"));
+        .arg( formatTime( sum/60, rc.decimalMinutes ) )
+        .arg( delim )
+        .arg( i18n( "Total" ) );
   }
 
   // above taken from timekard.cpp
       
-  QFile f(filename);
+  QFile f( rc.url );
   if( !f.open( IO_WriteOnly ) ) {
-      err = i18n("Could not open \"%1\".").arg(filename);
+      err = i18n( "Could not open \"%1\"." ).arg( rc.url );
   }
 
   if (!err)

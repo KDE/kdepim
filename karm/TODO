@@ -20,15 +20,11 @@ Mark - Sooner ...
         I haven't tested locking with local files that are defined as
         resources in the control center yet.
 
-  * 2004-04-14: Time zone handling.
-
   * 2003-09-24: Update manual.
   
   * 2003-10-24: update changelog.
 
   * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
-
-  * 2004-01-27: Save expanded/collapsed state of task view.  See KOrganizer.
 
   * 2004-01-27: BUG: if save fails (b/c of permission failure) KArm does not
     give any feecback and proceeds as if there was no error.
@@ -36,13 +32,17 @@ Mark - Sooner ...
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
+Mark - Later ...
+--------------------------
+
+  * 2004-06-14: In file exports, check if QT has a function to give you a
+    platform-specific end of line character.  Right now, it is hard coded to a
+    "\n"
+
   * 2003-08-15: Implement comments: VTODO COMMENT or DESCRIPTION?
       - Make sure wrapping works according to iCalendar spec.
       - Handle multiple comments against same VEVENT.
       - Show in history report.
-
-Mark - Later ...
---------------------------
 
   * 2004-01-27: Write dcop interface so time cards can be exported to other
     systems.

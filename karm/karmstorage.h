@@ -27,6 +27,7 @@
 #include <qptrstack.h>
 
 #include "journal.h"
+#include "reportcriteria.h"
 
 #include "desktoplist.h"
 
@@ -138,33 +139,10 @@ class KarmStorage
         const QString& filename);
 
     /**
-     *  Writes all tasks and their totals to a Comma-Separated Values file.
-     *
-     * The format of this file is zero or more lines of:
-     *    taskName,subtaskName,..,sessionTime,time,totalSessionTime,totalTime
-     * the number of subtasks is determined at runtime.
+     Output a report based on contents of ReportCriteria.
      */
-    QString exportcsvFile(TaskView* taskview,
-        const QString& filename);
+    QString report( TaskView *taskview, const ReportCriteria &rc );
 
-    /**
-     *  Write task history to file as comma-delimited data.
-     */
-    QString exportActivityReport (
-            TaskView* taskview, 
-            const QString& filename,
-            const QDate& from, 
-            const QDate& to
-            );
-
-    void printTaskHistory (
-            const Task *task, 
-            const QMap<QString,long>& taskdaytotals, 
-            QMap<QString,long>& daytotals, 
-            const QDate& from,
-            const QDate& to, 
-            const int level, QString& s
-            );
     /*
      * Log the change in a task's time.
      *
@@ -305,6 +283,34 @@ class KarmStorage
 
     KCal::Event* baseEvent(const Task*);
 
+    /**
+     *  Writes all tasks and their totals to a Comma-Separated Values file.
+     *
+     * The format of this file is zero or more lines of:
+     *    taskName,subtaskName,..,sessionTime,time,totalSessionTime,totalTime
+     * the number of subtasks is determined at runtime.
+     */
+    QString exportcsvFile( TaskView *taskview, const ReportCriteria &rc );
+
+    /**
+     *  Write task history to file as comma-delimited data.
+     */
+    QString exportActivityReport (
+            TaskView* taskview, 
+            const QDate& from, 
+            const QDate& to, 
+            const ReportCriteria &rc
+            );
+
+    void printTaskHistory (
+            const Task *task, 
+            const QMap<QString,long>& taskdaytotals, 
+            QMap<QString,long>& daytotals, 
+            const QDate& from,
+            const QDate& to, 
+            const int level, QString& s,
+            const ReportCriteria &rc
+            );
 };
 
 /**

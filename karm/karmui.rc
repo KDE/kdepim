@@ -6,7 +6,7 @@
     <Action name="reset_all_times" />
     <Separator />
     <Menu name="importexport">
-      <text>Import/Export</text>
+      <text>&amp;Import/Export</text>
       <Action name="import_flatfile" />
       <Action name="export_csvfile" />
       <Action name="export_csvhistory" />

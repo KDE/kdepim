@@ -15,15 +15,17 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 
+#include "csvexportdialog.h"
 #include "desktoptracker.h"
 #include "edittaskdialog.h"
 #include "idletimedetector.h"
+#include "karmstorage.h"
 #include "preferences.h"
+#include "printdialog.h"
+#include "reportcriteria.h"
 #include "task.h"
 #include "taskview.h"
 #include "timekard.h"
-#include "karmstorage.h"
-#include "printdialog.h"
 
 #define T_LINESIZE 1023
 #define HIDDEN_COLUMN -10
@@ -223,17 +225,13 @@ void TaskView::exportcsvFile()
 {
   kdDebug(5970) << "TaskView::exportcsvFile()" << endl;
 
-  //KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
+  CSVExportDialog dialog( ReportCriteria::CSVTotalsExport, this );
+  if ( current_item() && current_item()->isRoot() )
+    dialog.enableTasksToExportQuestion();
 
-  QString fileName(KFileDialog::getOpenFileName(QString::null, QString::null,
-                                                0));
-  if (!fileName.isEmpty()) {
-    QString err = _storage->exportcsvFile(this, fileName);
-    if (!err.isEmpty())
-    {
-      KMessageBox::error(this, err);
-      return;
-    }
+  if ( dialog.exec() ) {
+    QString err = _storage->report( this, dialog.reportCriteria() );
+    if ( !err.isEmpty() ) KMessageBox::error( this, err );
   }
 }
 
@@ -241,21 +239,13 @@ void TaskView::exportcsvHistory()
 {
   kdDebug(5970) << "TaskView::exportcsvHistory()" << endl;
 
-  PrintDialog *dialog = new PrintDialog();
-  if (dialog->exec()== QDialog::Accepted)
-  {
-    QString fileName (
-            KFileDialog::getOpenFileName(QString::null, QString::null, 0));
-    if ( !fileName.isEmpty() ) 
-    {
-        QString err = _storage->exportActivityReport (
-                this, fileName, dialog->from(), dialog->to() );
-        if ( !err.isEmpty() )
-        {
-            KMessageBox::error(this, err);
-            return;
-        }
-    }
+  CSVExportDialog dialog( ReportCriteria::CSVHistoryExport, this );
+  if ( current_item() && current_item()->isRoot() )
+    dialog.enableTasksToExportQuestion();
+
+  if ( dialog.exec() ) {
+    QString err = _storage->report( this, dialog.reportCriteria() );
+    if ( !err.isEmpty() ) KMessageBox::error( this, err );
   }
 }
 
