@@ -1,4 +1,5 @@
-INCLUDES = -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkdenetwork -I$(top_builddir)/libkdepim \
+   $(GPGME_CFLAGS) $(all_includes)
 
 SUBDIRS = pics kleo backends ui . tests
 

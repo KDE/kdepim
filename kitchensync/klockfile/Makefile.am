@@ -3,7 +3,7 @@ SUBDIRS = test
 kde_module_LTLIBRARIES = libkded_ksharedfile.la
 lib_LTLIBRARIES= libksharedfile.la
 
-INCLUDES = $(all_includes)
+INCLUDES = -I$(top_builddir)/libkdepim $(all_includes)
 libkded_ksharedfile_la_SOURCES = kdedsharedfile.cpp kdedsharedfile.skel
 libkded_ksharedfile_la_LDFLAGS = $(all_libraries) -module -avoid-version
 libkded_ksharedfile_la_LIBADD = $(LIB_KSYCOCA)
@@ -19,3 +19,4 @@ services_DATA = ksharedfile.desktop
 METASOURCES = AUTO
 
 include_HEADERS = ksharedfile.h
+

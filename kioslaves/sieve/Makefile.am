@@ -1,4 +1,4 @@
-INCLUDES= -I$(srcdir)/../.. -I$(srcdir)/.. $(all_includes)
+INCLUDES= -I$(srcdir)/../.. -I$(srcdir)/.. -I$(top_builddir)/libkdepim $(all_includes)
 
 kde_module_LTLIBRARIES = kio_sieve.la
 
