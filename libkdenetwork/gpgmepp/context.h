@@ -25,6 +25,7 @@
 #include <gpgmepp/gpgmefw.h>
 
 #include <vector>
+#include <utility>
 
 #include <sys/types.h> // for time_t
 
@@ -197,8 +198,9 @@ namespace GpgME {
     // Combined Decryption and Signature Verification
     //
 
-    Data decryptAndVerify( const Data & cipherText, /*SignatureStatus & status,*/ GpgME::Error & e );
-    GpgME::Error startVerifyingDecryption( const Data & cipherText, Data & plainText );
+    std::pair<DecryptionResult,VerificationResult> decryptAndVerify( const Data & cipherText, Data & plainText );
+    GpgME::Error startCombinedDecryptionAndVerification( const Data & cipherText, Data & plainText );
+    // use verificationResult() and decryptionResult() to retrieve the result objects...
 
     //
     // Signing
@@ -227,10 +229,9 @@ namespace GpgME {
     // Combined Signing and Encryption
     //
 
-#if 0
-    Data encryptAndSign( const std::vector<Key> & recipients, const Data & plainText, GpgME::Error & e );
-    GpgME::Error startEncryptingSigning( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText );
-#endif
+    std::pair<SigningResult,EncryptionResult> signAndEncrypt( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText, EncryptionFlags flags );
+    GpgME::Error startCombinedSigningAndEncryption( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText, EncryptionFlags flags );
+    // use encryptionResult() and signingResult() to retrieve the result objects...
 
     //
     //
