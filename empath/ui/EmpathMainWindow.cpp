@@ -131,51 +131,28 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
     void
 EmpathMainWindow::_setupActions()
 {
-    messageMenu_ = new QPopupMenu(this);
-    menuBar()->insertItem(i18n("&Message"), messageMenu_);
+#define PLUGMSGACTION(a) \
+    actionCollection()->insert(mainWidget_->messageListWidget()->actionCollection()->action(a)) 
 
-#define PLUGMSGMENU(a) \
-    mainWidget_->messageListWidget()->actionCollection()->action(a) \
-        ->plug(messageMenu_)
+    PLUGMSGACTION("messageCompose");
+    PLUGMSGACTION("messageView");
+    PLUGMSGACTION("messageTag");
+    PLUGMSGACTION("messageMarkRead");
+    PLUGMSGACTION("messageMarkReplied");
+    PLUGMSGACTION("messageReply");
+    PLUGMSGACTION("messageReplyAll");
+    PLUGMSGACTION("messageForward");
+    PLUGMSGACTION("messageDelete");
+    PLUGMSGACTION("messageSaveAs");
+    PLUGMSGACTION("messageFilter");
 
+    PLUGMSGACTION("goPrevious");
+    PLUGMSGACTION("goNext");
+    PLUGMSGACTION("goNextUnread");
 
-    PLUGMSGMENU("messageCompose");
-    PLUGMSGMENU("messageView");
-    
-    messageMenu_->insertSeparator();
-    
-    PLUGMSGMENU("messageTag");
-    PLUGMSGMENU("messageMarkRead");
-    PLUGMSGMENU("messageMarkReplied");
-    
-    messageMenu_->insertSeparator();
+#undef PLUGMSGACTION
 
-    PLUGMSGMENU("messageReply");
-    PLUGMSGMENU("messageReplyAll");
-    PLUGMSGMENU("messageForward");
-    PLUGMSGMENU("messageDelete");
-    PLUGMSGMENU("messageSaveAs");
-
-#undef PLUGMSGMENU
-
-#define PLUGTOOLBAR(a) \
-    mainWidget_->messageListWidget()->actionCollection()->action(a) \
-        ->plug(toolBar(0))
-
-    PLUGTOOLBAR("messageCompose");
-    PLUGTOOLBAR("messageReply");
-    PLUGTOOLBAR("messageReplyAll");
-    PLUGTOOLBAR("messageForward");
-    PLUGTOOLBAR("messageDelete");
-    PLUGTOOLBAR("messageSaveAs");
-
-    toolBar(0)->insertSeparator();
-    
-    PLUGTOOLBAR("goPrevious");
-    PLUGTOOLBAR("goNext");
-    PLUGTOOLBAR("goNextUnread");
-
-#undef PLUGTOOLBAR
+    createGUI("EmpathMainWindow.rc");
 }
 
 // vim:ts=4:sw=4:tw=78
