@@ -19,7 +19,7 @@ $(BUILDDIR)/build-stamp:
 	fi 
 	test -d $(BUILDDIR) || mkdir $(BUILDDIR) ;\
 	cd $(BUILDDIR) ;\
-	$$PWD/../configure $(configkde) 
+	$$PWD/../configure $(configkde) --with-extra-includes=/usr/include/libpisock
 	make -C $(BUILDDIR)
 	touch $(BUILDDIR)/build-stamp
 
@@ -47,19 +47,22 @@ binary-arch: build
 	dh_clean -k
 	make -C $(BUILDDIR) install DESTDIR=`pwd`/debian/tmp/
 	perl -w admin/debianrules
-	dh_movefiles
+	dh_movefiles -pkdepim-dev-cvs $(kde_libdir)/lib*.a $(kde_libdir)/lib*.so $(kde_libdir)/lib*.la 
 	dh_undocumented 
 	dh_installdocs
 	dh_installmenu
 	dh_installchangelogs
 	dh_strip
-	dh_perl
 	dh_compress
 	dh_fixperms
 	dh_suidregister
+	dh_makeshlibs
+	dh_perl
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
+	cd debian/tmp && find ./$(kde_confdir) -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles
+	chmod 644 debian/tmp/DEBIAN/conffiles
 	dh_md5sums
 	perl -w admin/debianrules update
 	dh_builddeb       	

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+/sbin/ldconfig >/dev/null 
+
+#DEBHELPER#
+#KDEHELPER#
