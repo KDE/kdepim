@@ -1,0 +1,7 @@
+?package(kpilot):\
+	needs=x11\
+	section=Apps/Tools\
+	hints="KDE"\
+	title="KPilot"\
+	command=kpilot
+
