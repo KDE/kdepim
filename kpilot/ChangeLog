@@ -7,6 +7,9 @@
   dialog. Minor constructor mod in pilotMemo.h, and a much more nasty problem
   in pilotMemo.cc, which seems to use a wrong memo length. Added some
   docs. Removed a warning in addressWidget.cc.
+* [conduitConfigWizard] Can't assign copyright except in writing, and even then
+  in the EU you can't renounce your copyright. Added a "None" sync setting,
+  for the use-case described on 4-11.
 
 2004-04-11  Adriaan de Groot
 * Testing, testing, 1, 2, 3. Let's look at a use case: someone who doesn't want

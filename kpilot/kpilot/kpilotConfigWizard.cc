@@ -1,9 +1,8 @@
-/* conduitConfigDialog.cc                KPilot
+/* conduitConfigWizard.cc                KPilot
 **
-** Copyright (C) 2004 by Dan Pilone
-** Written 2004 by Reinhold Kainhofer
+** Copyright (C) 2004 by Reinhold Kainhofer
 **
-** This file defines a .ui-based configuration dialog for conduits.
+** A simple configuration wizard.
 */
 
 /*
@@ -91,7 +90,8 @@ void ConfigWizard::accept()
 	enum eSyncApp {
 		eAppKDE=0,
 		eAppKontact,
-		eAppEvolution
+		eAppEvolution,
+		eAppNone
 	} app;
 	app=(eSyncApp)( page3->fAppType->selectedId() );
 	bool keepPermanently( page2->fPilotRunningPermanently->isChecked() );
@@ -109,7 +109,7 @@ void ConfigWizard::accept()
 	KPilotSettings::setSyncType(0);
 	KPilotSettings::setFullSyncOnPCChange( true );
 	KPilotSettings::setConflictResolution(0);
-	
+
 	KPilotWizard_vcalConfig*calendarConfig = new KPilotWizard_vcalConfig("Calendar");
 	KPilotWizard_vcalConfig*todoConfig = new KPilotWizard_vcalConfig("ToDo");
 	KPilotWizard_addressConfig*addressConfig = new KPilotWizard_addressConfig();
@@ -118,7 +118,7 @@ void ConfigWizard::accept()
 	notesConfig->readConfig();
 	todoConfig->readConfig();
 	calendarConfig->readConfig();
-	
+
 	QStringList conduits = KPilotSettings::installedConduits();
 	int version(0);
 #define APPEND_CONDUIT(a) if (!conduits.contains(a)) conduits.append(a)
@@ -154,6 +154,11 @@ void ConfigWizard::accept()
 
 			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or todo list using KPilot please quit Evolution before the sync, otherwise you will lose data."), i18n("Restrictions with Evolution"));
 			break;
+		case eAppNone:
+			conduits.clear();
+			APPEND_CONDUIT("internal_fileinstall");
+			applicationName=i18n("Kpilot will sync with nothing","nothing (it will backup only)");
+			break;
 		case eAppKontact:
 			applicationName=i18n("KDE's PIM suite", "Kontact");
 		case eAppKDE:
@@ -181,7 +186,7 @@ void ConfigWizard::accept()
 	notesConfig->writeConfig();
 	todoConfig->writeConfig();
 	calendarConfig->writeConfig();
-	
+
 	KPILOT_DELETE(addressConfig);
 	KPILOT_DELETE(notesConfig);
 	KPILOT_DELETE(todoConfig);
