@@ -1,5 +1,3 @@
-+ Serial Device configuration dialog: Setting of Baud rate must be supported
-  within the Kandy configuration.
 + There seem to exist mobile phones where a selected phone book does not start
   with index number 1. Still, this is assumed by Kandy and may lead to problems
   (Ericsson, Nokia?).
