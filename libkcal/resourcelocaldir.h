@@ -95,7 +95,7 @@ class ResourceLocalDir : public ResourceCalendar
       on the specified date.
     */
     // QString getHolidayForDate(const QDate &qd);
-    
+
     /**
       Add a todo to the todolist.
     */
@@ -149,9 +149,10 @@ class ResourceLocalDir : public ResourceCalendar
      * via it's pointer.  It makes sure that the calendar is internally
      * consistent. */
     virtual void update(IncidenceBase *incidence);
- 
+
   private:
     void init();
+    bool deleteIncidenceFile(Incidence *incidence);
 
     CalendarLocal mCalendar;
 

@@ -68,7 +68,7 @@ ResourceLocalDir::ResourceLocalDir( const KConfig* config )
   init();
 }
 
-ResourceLocalDir::ResourceLocalDir( const QString& dirName ) 
+ResourceLocalDir::ResourceLocalDir( const QString& dirName )
   : ResourceCalendar( 0 )
 {
   mURL = KURL( dirName );
@@ -137,9 +137,9 @@ bool ResourceLocalDir::load()
   kdDebug() << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
 
   QDir dir( dirName );
-    
+
   QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
-  
+
   QStringList::ConstIterator it;
   for( it = entries.begin(); it != entries.end(); ++it ) {
     QString fileName = dirName + "/" + *it;
@@ -206,8 +206,8 @@ bool ResourceLocalDir::addEvent(Event *event)
 void ResourceLocalDir::deleteEvent(Event *event)
 {
   kdDebug(5800) << "ResourceLocalDir::deleteEvent" << endl;
-
-  mCalendar.deleteEvent( event );
+  if ( deleteIncidenceFile(event) )
+    mCalendar.deleteEvent( event );
 }
 
 
@@ -245,7 +245,8 @@ bool ResourceLocalDir::addTodo(Todo *todo)
 
 void ResourceLocalDir::deleteTodo(Todo *todo)
 {
-  mCalendar.deleteTodo( todo );
+  if ( deleteIncidenceFile(todo) )
+    mCalendar.deleteTodo( todo );
 }
 
 
@@ -310,6 +311,12 @@ void ResourceLocalDir::dump() const
 {
   ResourceCalendar::dump();
   kdDebug(5800) << "  Url: " << mURL.url() << endl;
+}
+
+bool ResourceLocalDir::deleteIncidenceFile(Incidence *incidence)
+{
+  QFile file( mURL.path() + "/" + incidence->uid() );
+  return file.remove();
 }
 
 #include "resourcelocaldir.moc"
