@@ -5,27 +5,27 @@
 
 
 
-               =.            
-             .=l.            
+               =.
+             .=l.
            .>+-=
- _;:,     .>    :=|.         This library is free software; you can 
+ _;:,     .>    :=|.         This library is free software; you can
 .> <`_,   >  .   <=          redistribute it and/or  modify it under
 :`=1 )Y*s>-.--   :           the terms of the GNU Library General Public
 .="- .-=="i,     .._         License as published by the Free Software
  - .   .-<_>     .<>         Foundation; either version 2 of the License,
      ._= =}       :          or (at your option) any later version.
-    .%`+i>       _;_.        
-    .i_,=:_.      -<s.       This library is distributed in the hope that  
+    .%`+i>       _;_.
+    .i_,=:_.      -<s.       This library is distributed in the hope that
      +  .  -:.       =       it will be useful,  but WITHOUT ANY WARRANTY;
     : ..    .:,     . . .    without even the implied warranty of
     =_        +     =;=|`    MERCHANTABILITY or FITNESS FOR A
   _.=:.       :    :=>`:     PARTICULAR PURPOSE. See the GNU
 ..}^=.=       =       ;      Library General Public License for more
 ++=   -.     .`     .:       details.
- :     =  ...= . :.=-        
+ :     =  ...= . :.=-
  -.   .:....=;==+<;          You should have received a copy of the GNU
   -_. . .   )=.  =           Library General Public License along with
-    --        :-=`           this library; see the file COPYING.LIB. 
+    --        :-=`           this library; see the file COPYING.LIB.
                              If not, write to the Free Software Foundation,
                              Inc., 59 Temple Place - Suite 330,
                              Boston, MA 02111-1307, USA.
@@ -44,17 +44,18 @@
 #include <kdebug.h>
 #include <klistbox.h>
 
+#include "manipulatorpart.h"
 #include "partbar.h"
 
 using namespace KitchenSync;
 
-PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part ) 
+PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part )
   : QListBoxPixmap(KIconLoader::unknown() ) {
   m_Parents = parent;
   m_Part = part;
   m_Pixmap = m_Part->pixmap();
   setCustomHighlighting( true );
-  setText( part->name() ); 
+  setText( part->name() );
   //tooltip(part->description() );
 }
 
@@ -86,13 +87,13 @@ void PartBarItem::paint(QPainter *p)
   static const int margin = 3;
   int y = margin;
   const QPixmap *pm = pixmap();
-  
+
   if ( !pm->isNull() ) {
     int x = (w - pm->width()) / 2;
     x = QMAX( x, margin );
     p->drawPixmap( x, y, *pm );
   }
-  
+
   if ( !text().isEmpty() ) {
     QFontMetrics fm = p->fontMetrics();
     y += pm->height() + fm.height() - fm.descent();
@@ -108,11 +109,11 @@ void PartBarItem::paint(QPainter *p)
 }
 
 
-PartBar::PartBar(QWidget *parent, const char *name, WFlags f) 
+PartBar::PartBar(QWidget *parent, const char *name, WFlags f)
   : QFrame ( parent, name, f ),
     m_listBox( 0L ),
     m_activeItem ( 0L ) {
-  
+
   setListBox( 0L );
   setSizePolicy( QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred ) );
 }
@@ -121,12 +122,12 @@ PartBarItem * PartBar::insertItem( ManipulatorPart *part, int /*pos */ ) {
   kdDebug() << part->name() << "\n" << part->description() << "\n";
   PartBarItem *item = new PartBarItem( this , part );
   m_listBox->insertItem( item );
-  return item;   
+  return item;
 }
 
 void PartBar::setListBox(KListBox *view) {
   delete m_listBox;
-  
+
   if ( !view ) {
     m_listBox = new KListBox(this);
   } else {
@@ -136,13 +137,13 @@ void PartBar::setListBox(KListBox *view) {
     }
     m_listBox->resize( width(), height() );
   }
-  
+
   m_listBox->setSelectionMode( KListBox::Single );
   QPalette pal = palette();
   QColor gray = pal.color(QPalette::Normal, QColorGroup::Mid );
   pal.setColor( QPalette::Normal, QColorGroup::Base, gray );
   pal.setColor( QPalette::Inactive, QColorGroup::Base, gray );
-  
+
   setPalette( pal );
   m_listBox->viewport()->setBackgroundMode( PaletteMid);
 
@@ -160,12 +161,12 @@ void PartBar::resizeEvent( QResizeEvent *e ) {
 }
 
 QSize PartBar::sizeHint() const {
-  
+
   int w = 0;
   int h = 0;
-  
+
   QListBoxItem *item;
-  
+
   for ( item = m_listBox->firstItem(); item; item = item->next() ) {
     w = QMAX(w , item->width( m_listBox ));
     h += item->height( m_listBox );
@@ -174,7 +175,7 @@ QSize PartBar::sizeHint() const {
   if (m_listBox->verticalScrollBar()->isVisible() ) {
     w += m_listBox->verticalScrollBar()->width();
   }
-  
+
   if ( w == 0 && h == 0) {
     return QSize(100, 200);
   } else {

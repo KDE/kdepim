@@ -42,8 +42,9 @@
 #include <kpopupmenu.h>
 
 #include <konnector.h>
-#include <ksync_configuredialog.h>
-#include <partbar.h>
+#include "ksync_configuredialog.h"
+#include "manipulatorpart.h"
+#include "partbar.h"
 
 #include "ksync_mainwindow.h"
 
@@ -54,7 +55,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   :
   KParts::MainWindow( widget, name, f ){
 
-
+  m_konnector = 0;
   initActions();
   setXMLFile("ksyncgui.rc");
   setInstance( KGlobal::instance() );
@@ -185,6 +186,20 @@ void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
 void KSyncMainWindow::slotQuit() {
   close();
 }
-
-
+KSyncSystemTray* KSyncMainWindow::tray()
+{
+    return m_tray;
+}
+Konnector* KSyncMainWindow::konnector()
+{
+    return m_konnector;
+}
+QString KSyncMainWindow::currentId() const
+{
+    return m_currentId;
+}
+QStringList KSyncMainWindow::ids() const
+{
+    return m_ids;
+}
 //#include "ksync_mainwindow.moc"

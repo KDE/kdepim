@@ -43,13 +43,12 @@
 
 #include <qevent.h>
 
-#include "manipulatorpart.h"
-
+//#include "manipulatorpart.h"
 namespace KitchenSync {
 
   /* forward declaration */
-  class PartBar;
-
+    class PartBar;
+    class ManipulatorPart;
   /**
    * an member of the PartBar
    */

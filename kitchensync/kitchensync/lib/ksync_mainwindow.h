@@ -47,6 +47,7 @@ class Konnector;
 
 namespace KitchenSync {
     // no idea why we have this window
+    enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT
     public:
@@ -54,6 +55,8 @@ namespace KitchenSync {
         ~KSyncMainWindow();
         KSyncSystemTray *tray();
         Konnector*  konnector();
+        QString  currentId()const;
+        QStringList ids()const;
     private:
         virtual void initActions();
         void addModPart( ManipulatorPart * );
@@ -63,7 +66,9 @@ namespace KitchenSync {
         QWidgetStack *m_stack;
         QPtrList<ManipulatorPart> m_parts;
         KSyncSystemTray *m_tray;
-
+        Konnector *m_konnector;
+        QString m_currentId;
+        QString m_ids;
    private slots:
         void initPlugins();
         void slotSync();

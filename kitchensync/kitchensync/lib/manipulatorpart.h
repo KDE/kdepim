@@ -5,27 +5,27 @@
 
 
 
-               =.            
-             .=l.            
+               =.
+             .=l.
            .>+-=
- _;:,     .>    :=|.         This library is free software; you can 
+ _;:,     .>    :=|.         This library is free software; you can
 .> <`_,   >  .   <=          redistribute it and/or  modify it under
 :`=1 )Y*s>-.--   :           the terms of the GNU Library General Public
 .="- .-=="i,     .._         License as published by the Free Software
  - .   .-<_>     .<>         Foundation; either version 2 of the License,
      ._= =}       :          or (at your option) any later version.
-    .%`+i>       _;_.        
-    .i_,=:_.      -<s.       This library is distributed in the hope that  
+    .%`+i>       _;_.
+    .i_,=:_.      -<s.       This library is distributed in the hope that
      +  .  -:.       =       it will be useful,  but WITHOUT ANY WARRANTY;
     : ..    .:,     . . .    without even the implied warranty of
     =_        +     =;=|`    MERCHANTABILITY or FITNESS FOR A
   _.=:.       :    :=>`:     PARTICULAR PURPOSE. See the GNU
 ..}^=.=       =       ;      Library General Public License for more
 ++=   -.     .`     .:       details.
- :     =  ...= . :.=-        
+ :     =  ...= . :.=-
  -.   .:....=;==+<;          You should have received a copy of the GNU
   -_. . .   )=.  =           Library General Public License along with
-    --        :-=`           this library; see the file COPYING.LIB. 
+    --        :-=`           this library; see the file COPYING.LIB.
                              If not, write to the Free Software Foundation,
                              Inc., 59 Temple Place - Suite 330,
                              Boston, MA 02111-1307, USA.
@@ -45,36 +45,49 @@
 
 
 #include <ksyncentry.h>
+//#include "ksync_mainwindow.h"
+
 
 namespace KitchenSync {
-
-  class ManipulatorPart : public KParts::Part {
-    Q_OBJECT
+    class KSyncMainWindow;
+    class ManipulatorPart : public KParts::Part {
+        Q_OBJECT
     public:
-     ManipulatorPart(QObject *parent = 0, const char *name  = 0 );
-     virtual ~ManipulatorPart() {};
-     // the Type this Part understands/ is able to interpret
-     virtual QString type()const {return QString::null; };
+        ManipulatorPart(QWidget *parent = 0, const char *name  = 0 );
+        virtual ~ManipulatorPart() {};
 
-     virtual int progress()const { return 0; };
-     //virtual QString identifier()const { return QString::null; };
-     virtual QString name()const { return QString::null; };
+        KSyncMainWindow* core() { return m_window; };
+        // the Type this Part understands/ is able to interpret
+        virtual QString type()const {return QString::null; };
 
-     virtual QString description()const { return QString::null; };
-     virtual QPixmap *pixmap() { return 0l; };
-     virtual QString iconName() const {return QString::null; };
+        virtual int progress()const { return 0; };
+        //virtual QString identifier()const { return QString::null; };
+        virtual QString name()const { return QString::null; };
 
-     virtual bool partIsVisible()const { return false; }
-     virtual bool configIsVisible()const { return true; }
+        virtual QString description()const { return QString::null; };
+        virtual QPixmap *pixmap() { return 0l; };
+        virtual QString iconName() const {return QString::null; };
 
-     virtual QWidget *configWidget(){ return 0l; };
+        virtual bool partIsVisible()const { return false; }
+        virtual bool configIsVisible()const { return true; }
 
-     virtual QPtrList<KSyncEntry> processEntry(QPtrList<KSyncEntry>* ) {
-       QPtrList<KSyncEntry> ent;  return ent;
-     };
+        virtual QWidget *configWidget(){ return 0l; };
+
+        virtual QPtrList<KSyncEntry> processEntry(QPtrList<KSyncEntry>* ) {
+            QPtrList<KSyncEntry> ent;  return ent;
+        };
+    signals:
+        // 0 - 100
+        void progress( int );
+        // SYNC_START SYNC_SYNC SYNC_STOP
+        void syncStatus( int );
     public slots:
-     virtual void slotConfigOk() { };
-  };
+        virtual void slotProgress(ManipulatorPart */*part*/, int /*syncStatus*/, int /*progress*/  ) {};
+        virtual void slotPartActivated( ManipulatorPart */*part*/ ) { };
+        virtual void slotConfigOk() { };
+    private:
+        KSyncMainWindow *m_window;
+    };
 };
 
 #endif
