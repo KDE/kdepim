@@ -28,69 +28,33 @@
 static const char *memowidget_id =
 	"$Id$";
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 #include <time.h>
 
 #include <pi-macros.h>
 #include <pi-dlp.h>
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-#ifndef QLISTBOX_H
+#include <qptrlist.h>
 #include <qlistbox.h>
-#endif
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-#ifndef QPUSHBUTTON_H
 #include <qpushbutton.h>
-#endif
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
-#ifndef QDOM_H
 #include <qdom.h>
-#endif
-#ifndef QTEXTSTREAM_H
 #include <qtextstream.h>
-#endif
-#ifndef QWHATSTHIS_H
 #include <qwhatsthis.h>
-#endif
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
 #include <qtextcodec.h>
 
-#ifndef _KAPP_H
 #include <kapplication.h>
-#endif
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KPILOT_KPILOT_H
 #include "kpilot.h"
-#endif
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-#ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
-#endif
-#ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
-#endif
 #include "pilotMemo.h"
 
 #include "memoWidget.moc"
