@@ -311,8 +311,8 @@ protected slots:
   protected:
 
     // DND handling
-    virtual void dragEnterEvent(QDragEnterEvent *);
-    virtual void dropEvent(QDropEvent *);
+    virtual void contentsDragEnterEvent(QDragEnterEvent *);
+    virtual void contentsDropEvent(QDropEvent *);
     virtual void contentsContextMenuEvent( QContextMenuEvent *e );
     virtual void keyPressEvent ( QKeyEvent *e);
 private:

@@ -2089,7 +2089,7 @@ void KNComposer::Editor::slotRot13()
 }
 
 
-void KNComposer::Editor::dragEnterEvent(QDragEnterEvent *ev)
+void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 {
   if (KURLDrag::canDecode(ev))
     emit(sigDragEnterEvent(ev));
@@ -2098,7 +2098,7 @@ void KNComposer::Editor::dragEnterEvent(QDragEnterEvent *ev)
 }
 
 
-void KNComposer::Editor::dropEvent(QDropEvent *ev)
+void KNComposer::Editor::contentsDropEvent(QDropEvent *ev)
 {
   if (KURLDrag::canDecode(ev))
     emit(sigDropEvent(ev));
