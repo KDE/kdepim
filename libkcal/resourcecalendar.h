@@ -142,6 +142,8 @@ class ResourceCalendar : public QObject, public KRES::Resource
     void eventsDeleted( QPtrList<Event>& events );
 
     void resourceChanged( ResourceCalendar * );
+    void resourceLoaded( ResourceCalendar * );
+    void resourceSaved( ResourceCalendar * );
 
   public:
     /**

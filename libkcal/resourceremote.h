@@ -18,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_RESOURCELOCALDIRDIR_H
-#define KCAL_RESOURCELOCALDIRDIR_H
+#ifndef KCAL_RESOURCEREMOTEDIR_H
+#define KCAL_RESOURCEREMOTEDIR_H
 
 #include <qptrlist.h>
 #include <qstring.h>
@@ -34,28 +34,43 @@
 
 #include "resourcecalendar.h"
 
+namespace KIO {
+class FileCopyJob;
+class Job;
+}
+
 namespace KCal {
 
 /**
-  This class provides a calendar stored as a file per incidence in a directory.
+  This class provides a calendar stored as a remote file.
 */
-class ResourceLocalDir : public ResourceCalendar
+class ResourceRemote : public ResourceCalendar
 {
     Q_OBJECT
 
-    friend class ResourceLocalDirConfig;
+    friend class ResourceRemoteConfig;
 
   public:
-    ResourceLocalDir( const KConfig * );
-    ResourceLocalDir( const QString& fileName );
-    virtual ~ResourceLocalDir();
+    ResourceRemote( const KConfig * );
+    ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl = KURL() );
+    virtual ~ResourceRemote();
 
     void readConfig( const KConfig *config );
     void writeConfig( KConfig* config );
 
+    void setDownloadUrl( const KURL & );
+    KURL downloadUrl() const;
+    
+    void setUploadUrl( const KURL & );
+    KURL uploadUrl() const;
+
+    QString cacheFile();
+
     bool load();
 
     bool sync();
+
+    bool isSaving();
 
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);
@@ -142,7 +157,8 @@ class ResourceLocalDir : public ResourceCalendar
     void dump() const;
 
   protected slots:
-    void reload( const QString & );
+    void slotLoadJobResult( KIO::Job * );
+    void slotSaveJobResult( KIO::Job * );
 
   protected:
 
@@ -159,12 +175,15 @@ class ResourceLocalDir : public ResourceCalendar
 
     CalendarLocal mCalendar;
 
-    KURL mURL;
+    KURL mDownloadUrl;
+    KURL mUploadUrl;
+
     ICalFormat mFormat;
 
     bool mOpen;
 
-    KDirWatch mDirWatch;
+    KIO::FileCopyJob *mDownloadJob;
+    KIO::FileCopyJob *mUploadJob;
 };
 
 }
