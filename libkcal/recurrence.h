@@ -71,12 +71,12 @@ class Recurrence {
     /** turn off recurrence for this event. */
     void unsetRecurs();
     /** set an event to recur daily.
-     * @var _rFreq the frequency to recur, i.e. 2 is every other day
-     * @var _rDuration the duration for which to recur, i.e. 10 times
+     * @var _rFreq the frequency to recur, e.g. 2 is every other day
+     * @var _rDuration the duration for which to recur, e.g. 10 times
      */
     void setDaily(int _rFreq, int _rDuration);
     /** set an event to recur daily.
-     * @var _rFreq the frequency to recur, i.e. 2 is every other day
+     * @var _rFreq the frequency to recur, e.g. 2 is every other day
      * @var _rEndDate the ending date for which to stop recurring
      */
     void setDaily(int _rFreq, const QDate &_rEndDate);
@@ -103,13 +103,13 @@ class Recurrence {
     const QPtrList<int> &monthDays() const;
   
     /** set an event to recur weekly.
-     * @var _rFreq the frequency to recur, i.e every other week etc.
+     * @var _rFreq the frequency to recur, e.g. every other week etc.
      * @var _rDays a 7 bit array indicating which days on which to recur.
      * @var _rDuration the duration for which to recur
      */
     void setWeekly(int _rFreq, const QBitArray &_rDays, int _rDuration);
     /** set an event to recur weekly.
-     * @var _rFreq the frequency to recur, i.e every other week etc.
+     * @var _rFreq the frequency to recur, e.g. every other week etc.
      * @var _rDays a 7 bit array indicating which days on which to recur.
      * @var _rEndDate the date on which to stop recurring.
      */
@@ -117,8 +117,8 @@ class Recurrence {
   
     /** set an event to recur monthly.
      * @var type rMonthlyPos or rMonthlyDay
-     * @var _rFreq the frequency to recur, i.e. every third month etc.
-     * @var _rDuration the number of times to recur, i.e. 13
+     * @var _rFreq the frequency to recur, e.g. every third month etc.
+     * @var _rDuration the number of times to recur, e.g. 13
      */
     void setMonthly(short type, int _rFreq, int _rDuration);
     /** same as above, but with ending date not number of recurrences */
