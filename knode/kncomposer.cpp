@@ -879,10 +879,30 @@ void KNComposer::slotToggleDoPost()
 void KNComposer::slotToggleDoMail()
 {
   if (a_ctDoMail->isChecked()) {
-    if (a_ctDoPost->isChecked())
-      m_ode=news_mail;
-    else
-      m_ode=mail;
+    if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
+      QString tmp;
+      for(int i=0; i < v_iew->e_dit->numLines(); i++) {
+        if (v_iew->e_dit->textLine(i) == "-- ")   // try to be smart, don't include the signature,
+          break;                                  // kmail will append one, too.
+        tmp+=v_iew->e_dit->textLine(i)+"\n";
+      }
+
+      KProcess proc;
+      proc << "kmail";
+      proc << "--subject";
+      proc << v_iew->s_ubject->text();
+      proc << "--body";
+      proc << tmp;
+      proc << v_iew->t_o->text();
+      proc.start(KProcess::DontCare);
+
+      a_ctDoMail->setChecked(true); //revert
+    } else {
+      if (a_ctDoPost->isChecked())
+        m_ode=news_mail;
+      else
+        m_ode=mail;
+    }
   } else {
     if (a_ctDoPost->isChecked())
       m_ode=news;

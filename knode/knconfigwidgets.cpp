@@ -44,6 +44,7 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knmime.h"
+#include "knconfigmanager.h"
 
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
@@ -481,36 +482,42 @@ void KNConfig::NntpAccountConfDialog::slotAuthChecked(bool b)
 
 KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : BaseWidget(p, n)
 {
-  QGridLayout *topL=new QGridLayout(this, 5, 3, 5);
+  QGridLayout *topL=new QGridLayout(this, 6, 3, 5);
+
+  u_seKmail = new QCheckBox(i18n("&Use Kmail for Mail"), this);
+  connect(u_seKmail, SIGNAL(toggled(bool)), SLOT(useKmailToggled(bool)));
+  topL->addMultiCellWidget(u_seKmail, 0, 0, 0, 2);
 
   s_erver=new QLineEdit(this);
-  QLabel *l=new QLabel(s_erver, i18n("&Server:"), this);
-  topL->addWidget(l, 0,0);
-  topL->addMultiCellWidget(s_erver, 0, 0, 1, 2);
+  s_erverLabel=new QLabel(s_erver, i18n("&Server:"), this);
+  topL->addWidget(s_erverLabel, 1,0);
+  topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
 
   p_ort=new QLineEdit(this);
-  l=new QLabel(p_ort, i18n("&Port:"), this);
-  topL->addWidget(l, 1,0);
+  p_ortLabel=new QLabel(p_ort, i18n("&Port:"), this);
+  topL->addWidget(p_ortLabel, 2,0);
   p_ort->setValidator(new KIntValidator(0,65536,this));
-  topL->addWidget(p_ort, 1,1);
+  topL->addWidget(p_ort, 2,1);
 
   h_old = new KIntSpinBox(0,300,5,0,10,this);
   h_old->setSuffix(i18n(" sec"));
-  l = new QLabel(h_old, i18n("Hol&d connection for:"), this);
-  topL->addWidget(l,2,0);
-  topL->addWidget(h_old,2,1);
+  h_oldLabel = new QLabel(h_old, i18n("Hol&d connection for:"), this);
+  topL->addWidget(h_oldLabel,3,0);
+  topL->addWidget(h_old,3,1);
 
   t_imeout = new KIntSpinBox(15,300,5,15,10,this);
   t_imeout->setSuffix(i18n(" sec"));
-  l = new QLabel(t_imeout, i18n("&Timeout:"), this);
-  topL->addWidget(l,3,0);
-  topL->addWidget(t_imeout,3,1);
+  t_imeoutLabel = new QLabel(t_imeout, i18n("&Timeout:"), this);
+  topL->addWidget(t_imeoutLabel,4,0);
+  topL->addWidget(t_imeout,4,1);
 
   topL->setColStretch(1,1);
   topL->setColStretch(2,1);
 
   s_erverInfo=knGlobals.accManager->smtp();
 
+  u_seKmail->setChecked(knGlobals.cfgManager->postNewsTechnical()->useKmail());
+  useKmailToggled(knGlobals.cfgManager->postNewsTechnical()->useKmail());
   s_erver->setText(s_erverInfo->server());
   p_ort->setText(QString::number(s_erverInfo->port()));
   h_old->setValue(s_erverInfo->hold());
@@ -527,6 +534,12 @@ KNConfig::SmtpAccountWidget::~SmtpAccountWidget()
 
 void KNConfig::SmtpAccountWidget::apply()
 {
+  if(!d_irty)
+    return;
+
+  knGlobals.cfgManager->postNewsTechnical()->u_seKmail = u_seKmail->isChecked();
+  knGlobals.cfgManager->postNewsTechnical()->save();
+
   s_erverInfo->setServer(s_erver->text());
   s_erverInfo->setPort(p_ort->text().toInt());
   s_erverInfo->setHold(h_old->value());
@@ -535,6 +548,19 @@ void KNConfig::SmtpAccountWidget::apply()
   KConfig *conf=KGlobal::config();
   conf->setGroup("MAILSERVER");
   s_erverInfo->saveConf(conf);
+}
+
+
+void KNConfig::SmtpAccountWidget::useKmailToggled(bool b)
+{
+  s_erver->setEnabled(!b);
+  p_ort->setEnabled(!b);
+  h_old->setEnabled(!b);
+  t_imeout->setEnabled(!b);
+  s_erverLabel->setEnabled(!b);
+  p_ortLabel->setEnabled(!b);
+  h_oldLabel->setEnabled(!b);
+  t_imeoutLabel->setEnabled(!b);
 }
 
 

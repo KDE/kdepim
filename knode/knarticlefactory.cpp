@@ -230,6 +230,23 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //-------------------------- </Body> -----------------------------
 
+  if (mail && knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
+    KProcess proc;
+    proc << "kmail";
+    proc << "--subject";
+    proc << subject;
+    proc << "--body";
+    proc << quoted;
+    proc << address.asUnicodeString();
+    proc.start(KProcess::DontCare);
+    mail = false;
+    art->setDoMail(true);
+    if (!post) {
+      delete art;
+      return;
+    }
+  }
+
   //open composer
   KNComposer *c=new KNComposer(art, quoted, sig, notRewraped, true);
   c_ompList.append(c);
@@ -447,6 +464,14 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
 void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 {
+  if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
+    KProcess proc;
+    proc << "kmail";
+    proc << address->asUnicodeString();
+    proc.start(KProcess::DontCare);
+    return;
+  }
+
   //create new article
   QString sig;
   KNLocalArticle *art=newArticle(0, sig, knGlobals.cfgManager->postNewsTechnical()->charset());

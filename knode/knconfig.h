@@ -241,18 +241,28 @@ class NntpAccountConfDialog : public KDialogBase  {
 
 class SmtpAccountWidget : public BaseWidget {
 
+Q_OBJECT
+
   public:
     SmtpAccountWidget(QWidget *p=0, const char *n=0);
     ~SmtpAccountWidget();
 
     void apply();
 
+  protected slots:
+    void useKmailToggled(bool b);
+
   protected:
     KNServerInfo  *s_erverInfo;
+    QCheckBox     *u_seKmail;
     QLineEdit     *s_erver,
                   *p_ort;
     KIntSpinBox   *h_old,
                   *t_imeout;
+    QLabel        *s_erverLabel,
+                  *p_ortLabel,
+                  *h_oldLabel,
+                  *t_imeoutLabel;
 };
 
 
@@ -723,6 +733,7 @@ typedef QValueList<XHeader> XHeaders;
 class PostNewsTechnical : public Base {
 
   friend class PostNewsTechnicalWidget;
+  friend class SmtpAccountWidget;
 
   public:
     PostNewsTechnical();
@@ -743,6 +754,7 @@ class PostNewsTechnical : public Base {
     QCString hostname()         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
     bool noUserAgent()          { return d_ontIncludeUA; }
+    bool useKmail()             { return u_seKmail; }
 
   protected:
     QCString  c_harset,
@@ -753,7 +765,8 @@ class PostNewsTechnical : public Base {
               u_seOwnCharset,
               a_llow8BitHeaders,
               g_enerateMID,
-              d_ontIncludeUA;
+              d_ontIncludeUA,
+              u_seKmail;
 
     XHeaders x_headers;
 
