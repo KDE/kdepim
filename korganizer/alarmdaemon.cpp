@@ -58,11 +58,10 @@ AlarmDockWindow::~AlarmDockWindow()
 void AlarmDockWindow::mousePressEvent(QMouseEvent *e)
 {
   if (e->button() == LeftButton) {
-    // start up a korganizer.
-    KURL::List noargs;
-    KRun::run("korganizer", noargs);
-  } else
+    kapp->startServiceByDesktopName("korganizer", QString::null);
+  } else {
     KSystemTray::mousePressEvent(e);
+  }
 }
 
 void AlarmDockWindow::closeEvent(QCloseEvent *)
