@@ -5,6 +5,8 @@
 #include <qfile.h>
 #include <kapplication.h>
 
+#include <kstaticdeleter.h>
+
 #include "opiehelper.h"
 
 namespace {
@@ -27,7 +29,25 @@ QString categoryById(const QString &id, const QString &app, QValueList<OpieCateg
     kdDebug() << "CategoryById: " << category << endl;
     return category;
 };
+  void dump(const KABC::Addressee &test ){
+    kdDebug() << "Addressee" << endl;
+    kdDebug() << "Name " << test.name() << endl;
+    kdDebug() << "UID" << test.uid() << endl;
+    kdDebug() << "LastName" << test.familyName() << endl;
 
+  }
+
+};
+
+OpieHelper* OpieHelper::s_Self = 0;
+KStaticDeleter<OpieHelper> opiehelpersd;
+
+OpieHelper* OpieHelper::self()
+{
+  if( !s_Self )
+    s_Self = opiehelpersd.setObject( new OpieHelper() );
+
+  return s_Self;
 };
 
 void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *entry, const QValueList<OpieCategories> &cat )
@@ -122,15 +142,32 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 			kdDebug() << "Contacts: " << el.tagName() << endl;
 			KABC::Addressee adr;
 			adr.setUid(el.attribute("Uid" ) );
+			kdDebug()<< el.attribute("Uid" ) << endl;
+
+			kdDebug() << el.attribute("LastName" ) << endl;
 			adr.setFamilyName(el.attribute("LastName" ) );
+
+			kdDebug() << el.attribute("FirstName" )<< endl;
 			adr.setGivenName(el.attribute("FirstName" ) );
+
+			kdDebug() << el.attribute("MiddleName" )<< endl;
 			adr.setAdditionalName(el.attribute("MiddleName" )  );
+
+			kdDebug() << el.attribute("Suffix") << endl;
 			adr.setSuffix(el.attribute("Suffix") );
+
+			kdDebug() << el.attribute("Nickname" ) << endl;
 			adr.setNickName(el.attribute("Nickname" ) );
+
+			kdDebug() <<el.attribute("Birthday")  << endl;
 			adr.setBirthday( QDate::fromString(el.attribute("Birthday")  ) );
+			
+			kdDebug() << el.attribute("JobTitle" ) << endl;
 			adr.setRole(el.attribute("JobTitle" ) );
 			// inside into custom
+			dump(adr);
 			abook->insertAddressee(adr );
+
 
 		    }
 		    no = no.nextSibling();
@@ -139,6 +176,8 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 	}
 	n = n.nextSibling();
     }
+    abook->dump();
+    kdDebug() << "Dumped " << endl;
 }
 
 

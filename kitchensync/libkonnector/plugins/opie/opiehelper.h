@@ -13,9 +13,14 @@
 
 class OpieHelper {
  public:
-    static void toOpieDesktopEntry( const QString &, QPtrList<KSyncEntry> *list, const QValueList<OpieCategories> & );
-    static void toCalendar(const QString &fileName , QPtrList<KSyncEntry> *list, const QValueList<OpieCategories> &);
-    static void toAddressbook( const QString &fileName, QPtrList<KSyncEntry> *list, const QValueList<OpieCategories> & );
+  OpieHelper() {};
+  ~OpieHelper();
+  void toOpieDesktopEntry( const QString &, QPtrList<KSyncEntry> *list, const QValueList<OpieCategories> & );
+  void toCalendar(const QString &fileName , QPtrList<KSyncEntry> *list, const QValueList<OpieCategories> &);
+  void toAddressbook( const QString &fileName, QPtrList<KSyncEntry> *list, const QValueList<OpieCategories> & );
+  static OpieHelper *self();
+ private:
+  static OpieHelper *s_Self;
 };
 
 #endif

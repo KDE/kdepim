@@ -25,7 +25,8 @@ libopiekonnector_la_LIBDADD = ../../libkonnector.la ../../../libksyncentries.la
 libopiekonnector_la_LDFLAGS = $(all_libraries)  -module
 libopiekonnector_la_SOURCES = opiekonnector.cpp opiesocket.cpp opiecategories.cpp opiehelper.cpp
 
-
+opiedatadir = $(kde_datadir)/kitchensync
+opiedata_DATA = opie.desktop
 
 METASOURCES = AUTO
 
