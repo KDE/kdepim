@@ -34,10 +34,99 @@
 
 extern CryptPlugWrapper* pWrapper;
 
+/*
 static const int ID_LINEEDIT = 1;
 static const int ID_BUTTON   = 2;
 static const int ID_COMBO    = 3;
 static const int ID_LABEL    = 10;
+*/
+
+class LabelAction : public KAction {
+public:
+  LabelAction( const QString& text,  KActionCollection* parent, const char* name )
+    : KAction( text, QIconSet(), KShortcut(), 0, 0, parent, name ) {}
+  virtual int plug( QWidget *widget, int index = -1 ) {
+    if (kapp && !kapp->authorizeKAction(name()))
+      return -1;
+    if ( widget->inherits( "KToolBar" ) ) {
+      KToolBar *bar = (KToolBar *)widget;      
+      int id_ = getToolButtonID();      
+      QLabel* label = new QLabel( text(), bar, "kde toolbar widget" );
+      bar->insertWidget( id_, label->width(), label, index );      
+      addContainer( bar, id_ );      
+      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
+      return containerCount() - 1;
+    }
+    
+    int containerId = KAction::plug( widget, index );
+    
+    return containerId;
+  }
+};
+
+class LineEditAction : public KAction {
+public:
+  LineEditAction( const QString& text,  KActionCollection* parent, QObject* receiver, 
+		  const char* member, const char* name )
+    : KAction( text, QIconSet(), KShortcut(), 0, 0, parent, name ), 
+      _le(0), _receiver(receiver),_member(member) {}
+  virtual int plug( QWidget *widget, int index = -1 ) {
+    if (kapp && !kapp->authorizeKAction(name()))
+      return -1;
+    if ( widget->inherits( "KToolBar" ) ) {
+      KToolBar *bar = (KToolBar *)widget;      
+      int id_ = getToolButtonID();      
+      _le = new QLineEdit( bar, "kde toolbar widget" );
+      bar->insertWidget( id_, _le->width(), _le, index );      
+      bar->setStretchableWidget( _le );
+      addContainer( bar, id_ );      
+      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
+      connect( _le, SIGNAL( returnPressed() ), _receiver, _member );      
+      return containerCount() - 1;
+    }
+    
+    int containerId = KAction::plug( widget, index );
+    
+    return containerId;
+  }
+
+  void clear() { _le->setText(""); }  
+  void focusAll() { _le->selectAll(); _le->setFocus(); }
+  QString text() { return _le->text(); }
+
+private:
+  QLineEdit* _le;
+  QObject* _receiver;
+  const char* _member;
+};
+
+class ComboAction : public KAction {
+public:
+  ComboAction( const QStringList& lst,  KActionCollection* parent, QObject* receiver, 
+		  const char* member, const char* name )
+    : KAction( QString::null, QIconSet(), KShortcut(), 0, 0, parent, name ), 
+      _lst(lst), _receiver(receiver), _member(member) {}
+  virtual int plug( QWidget *widget, int index = -1 ) {
+    if (kapp && !kapp->authorizeKAction(name()))
+      return -1;
+    if ( widget->inherits( "KToolBar" ) ) {
+      KToolBar *bar = (KToolBar *)widget;      
+      int id_ = getToolButtonID();   
+      bar->insertCombo( _lst, id_, false, SIGNAL( highlighted(int) ), _receiver, _member ); 
+      addContainer( bar, id_ );      
+      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
+      return containerCount() - 1;
+    }
+    
+    int containerId = KAction::plug( widget, index );
+    
+    return containerId;
+  }
+private:
+  QStringList _lst;
+  QObject* _receiver;
+  const char* _member;
+};
 
 
 CertManager::CertManager( bool remote, const QString& query, 
@@ -45,73 +134,33 @@ CertManager::CertManager( bool remote, const QString& query,
     KMainWindow( parent, name ),
     dirmngrProc(0), _certBox(0), _remote( remote )
 {
-  KMenuBar* bar = menuBar();
-
-  // File Menu
-  QPopupMenu* fileMenu = new QPopupMenu( bar, "fileMenu" );
-  bar->insertItem( i18n("&File"), fileMenu );
-
-  KAction* update = KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
-  update->plug( fileMenu );
-
-  /*
-  KToggleAction* remoteaction = new KToggleAction( i18n("Remote lookup"), KShortcut(), this);
-  connect( remoteaction, SIGNAL( toggled(bool) ), this, SLOT( slotToggleRemote( bool ) ) );
-  remoteaction->setChecked( _remote );
-  remoteaction->plug( fileMenu );
-  */
-
-  fileMenu->insertSeparator();
-
-  KAction* quit = KStdAction::quit( this, SLOT( quit() ), actionCollection());
-  quit->plug( fileMenu );
-
-
-  // Certificate Menu --------------------------------------------------
-  QPopupMenu* certMenu = new QPopupMenu( bar, "certMenu" );
-  bar->insertItem( i18n("Certificates"), certMenu );
+  (void)KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
+  (void)KStdAction::quit( this, SLOT( quit() ), actionCollection());
 
   // New Certificate
-  KAction* newCert = new KAction( i18n("New Certificate"), QIconSet(), 0, this, SLOT( newCertificate() ),
-                                  actionCollection(), "newCert" );
-  newCert->plug( certMenu );
-
+  (void)new KAction( i18n("New Certificate"), QIconSet(), 0, this, SLOT( newCertificate() ),
+		     actionCollection(), "newCert" );
   // Revoke Certificate
   KAction* revokeCert = new KAction( i18n("Revoke Certificate"), QIconSet(), 0, this, SLOT( revokeCertificate() ),
                                      actionCollection(), "revokeCert" );
-  revokeCert->plug( certMenu );
   revokeCert->setEnabled( false );
 
   // Extend Certificate
   KAction* extendCert = new KAction( i18n("Extend Certificate"), QIconSet(), 0, this, SLOT( extendCertificate() ),
                                      actionCollection(), "extendCert" );
-  extendCert->plug( certMenu );
   extendCert->setEnabled( false );
 
   // Import Certificates
-  QPopupMenu* certImportMenu = new QPopupMenu( certMenu, "certImportMenu" );
-  certMenu->insertItem( i18n("&Import" ), certImportMenu );
-
   // Import from file
   KAction* importCertFromFile = new KAction( i18n("From &File..."), QIconSet(),
                                              0, this,
                                              SLOT( importCertFromFile() ),
                                              actionCollection(),
                                              "importCertFromFile" );
-  importCertFromFile->plug( certImportMenu );
-
-  // CRL menu --------------------------------------------------
-  QPopupMenu* crlMenu = new QPopupMenu( bar, "crlMenu" );
-  bar->insertItem( i18n( "CRL" ), crlMenu );
-
   // Import CRLs
-  QPopupMenu* crlImportMenu = new QPopupMenu( crlMenu, "crlImportMenu" );
-  crlMenu->insertItem( i18n("&Import" ), crlImportMenu );
-
   // Import from file
   KAction* importCRLFromFile = new KAction( i18n("From &File..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
-  importCRLFromFile->plug( crlImportMenu );
   QStringList lst;
   lst << "dirmngr" << "-h";
   importCRLFromFile->setEnabled( checkExec( lst ) );
@@ -119,30 +168,28 @@ CertManager::CertManager( bool remote, const QString& query,
   // Import from LDAP
   KAction* importCRLFromLDAP = new KAction( i18n("From &LDAP"), QIconSet(), 0, this, SLOT( importCRLFromLDAP() ),
                                             actionCollection(), "importCRLFromLDAP" );
-  importCRLFromLDAP->plug( crlImportMenu );
   importCRLFromLDAP->setEnabled( false );
 
   // Toolbar
   _toolbar = toolBar( "mainToolBar" );
 
-  _toolbar->insertWidget( ID_LABEL, -1, new QLabel( i18n("Look for"), _toolbar, "kde toolbar widget" ) );
-
-
-  _toolbar->insertLined( query, ID_LINEEDIT, SIGNAL( returnPressed() ), this, 
-			 SLOT( loadCertificates() ) );
-  _toolbar->setItemAutoSized( ID_LINEEDIT, true );
+  (new LabelAction( i18n("Look for"), actionCollection(), "label_action"))->plug( _toolbar );
+  _leAction = new LineEditAction( QString::null, actionCollection(), this, 
+				  SLOT( loadCertificates() ), 
+				  "query_lineedit_action");
+  _leAction->plug( _toolbar );
 
   lst.clear();
   lst << i18n("in local certificates") << i18n("in external certificates");
-  _toolbar->insertCombo( lst, ID_COMBO, false, SIGNAL( highlighted(int) ),
-			 this, SLOT( slotToggleRemote(int) ) );
-  _toolbar->getCombo( ID_COMBO )->setCurrentItem( _remote?1:0 );
+  _comboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ), 
+		       "location_combo_action");
+  _comboAction->plug( _toolbar );
 
-  KAction* find = KStdAction::find( this, SLOT( loadCertificates() ), actionCollection());
-  _toolbar->insertButton( find->icon(), ID_BUTTON, SIGNAL( clicked() ), this, 
-			  SLOT( loadCertificates() ), 
-			  true, i18n("Search") );
-  _toolbar->alignItemRight( ID_BUTTON, true );
+  _findAction = new KAction( i18n("Find"), "find", 0, this, SLOT( loadCertificates() ),
+                                            actionCollection(), "find" );
+  _findAction->plug( _toolbar );
+
+  createGUI();
 
   // Main Window --------------------------------------------------
   _certBox = new CertBox( this, "certBox" );
@@ -191,13 +238,14 @@ void CertManager::loadCertificates()
   */
 
   QApplication::setOverrideCursor( QCursor::WaitCursor );
-  _toolbar->setItemEnabled( ID_LINEEDIT, false );
-  _toolbar->setItemEnabled( ID_BUTTON, false );
+  _leAction->setEnabled( false );
+  _comboAction->setEnabled( false );
+  _findAction->setEnabled( false );
 
   // Clear display
   _certBox->clear();
 
-  QString text = _toolbar->getLinedText( ID_LINEEDIT ).stripWhiteSpace();
+  QString text = _leAction->text();
 
   //qDebug("About to query plugin");
   bool truncated;
@@ -222,11 +270,11 @@ void CertManager::loadCertificates()
     //qDebug("New CertItem %s", (*it).userid.latin1() );
     fillInOneItem( _certBox, 0, *it );
   }
-  _toolbar->setItemEnabled( ID_LINEEDIT, true );
-  _toolbar->setItemEnabled( ID_BUTTON, true );
-  KLineEdit* le = _toolbar->getLined( ID_LINEEDIT );
-  le->selectAll();
-  le->setFocus();
+  _leAction->setEnabled( true );
+  _comboAction->setEnabled( true );
+  _findAction->setEnabled( true );
+
+  _leAction->focusAll();
   QApplication::restoreOverrideCursor();
 }
 

@@ -185,7 +185,10 @@ static QString parseXMLInfo( const QString& info )
   for( QDomNode n = importinfo.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     if( n.isElement() ) {
       QDomElement elem = n.toElement();
-      result += "<tr><td>"+ elem.tagName() + "</td><td>" + elem.text().stripWhiteSpace() + "</td></tr>";
+      if( elem.tagName() == "count" || elem.text().toInt() != 0 ) {
+	result += "<tr><td>"+ elem.tagName() + "</td><td>" 
+	  + elem.text().stripWhiteSpace() + "</td></tr>";
+      }
     }
   }
   result += "</table></p>";

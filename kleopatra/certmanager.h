@@ -7,6 +7,10 @@ class CertBox;
 class KProcess;
 class CertItem;
 class KToolBar;
+class KAction;
+
+class LineEditAction;
+class ComboAction;
 
 class CertManager :public KMainWindow
 {
@@ -41,6 +45,7 @@ protected slots:
 
     void slotToggleRemote(int idx);
 
+
 private:
     bool checkExec( const QStringList& args );
 
@@ -55,6 +60,10 @@ private:
 
 
     KToolBar* _toolbar;
+    LineEditAction* _leAction;
+    ComboAction* _comboAction;
+    KAction* _findAction;
+
     CertBox* _certBox;
     bool     _remote;
 };

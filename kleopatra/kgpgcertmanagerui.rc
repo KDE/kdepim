@@ -1,0 +1,33 @@
+<!DOCTYPE kpartgui ><kpartgui name="kgpgcertmanager" version="1" >
+<MenuBar>
+	<Menu name="file" >
+		<text>File</text>
+		<Action name="redisplay" />
+		<Action name="quit" />
+	</Menu>
+	<Menu name="certMenu" >
+		<text>Certificates</text>
+		<Action name="newCert" />
+		<Action name="revokeCert" />
+		<Action name="extendCert" />
+	</Menu>
+	<Menu name="certImportMenu">
+	        <text>Import</text>
+		<Action name="importCertFromFile" />		        
+	</Menu>
+	<Menu name="crlMenu">
+		<text>CRL</text>
+		<Action name="importCRLFromFile" />
+		<Action name="importCRLFromLDAP" />	
+	</Menu>
+</MenuBar>
+
+<ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="mainToolBar" >
+<text>Main Toolbar</text>
+	<Action name="label_action" />
+	<Action name="query_lineedit_action" />
+	<Action name="location_combo_action" />
+	<Action name="find" />
+</ToolBar>
+
+</kpartgui>
