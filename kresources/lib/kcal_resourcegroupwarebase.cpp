@@ -64,6 +64,7 @@ KPIM::GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
   return new KPIM::GroupwarePrefsBase();
 }
 
+
 bool ResourceGroupwareBase::addEvent( Event *event )
 {
   if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Event ) ||
@@ -71,6 +72,7 @@ bool ResourceGroupwareBase::addEvent( Event *event )
     return ResourceCached::addEvent( event );
   } else return false;
 }
+
 bool ResourceGroupwareBase::addTodo( Todo *todo )
 {
   if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Todo ) ||
@@ -78,6 +80,7 @@ bool ResourceGroupwareBase::addTodo( Todo *todo )
     return ResourceCached::addTodo( todo );
   } else return false;
 }
+
 bool ResourceGroupwareBase::addJournal( Journal *journal )
 {
   if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Journal ) ||
@@ -85,7 +88,6 @@ bool ResourceGroupwareBase::addJournal( Journal *journal )
     return ResourceCached::addJournal( journal );
   } else return false;
 }
-
 
 
 KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( 
