@@ -95,7 +95,7 @@ void VCalSetupPage::slotBrowse()
 /* static */ const QString VCalSetup::VCalGroup("vcalOptions");
 
 VCalSetup::VCalSetup(QWidget *parent) :
-	setupDialog(parent,VCalGroup,VCalConduit::version())
+	setupDialog(parent,VCalGroup)
 {
 	FUNCTIONSETUP;
 	KConfig& config=KPilotLink::getConfig(VCalGroup);

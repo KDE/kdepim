@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 {
 	ConduitApp a(argc,argv,"knotes",
 		I18N_NOOP("KNotes Conduit"),
-		"0.1");
+		"4.0b2");
 
 	a.addAuthor("Adriaan de Groot",
 		"KNotes Conduit author",
@@ -77,7 +77,7 @@ NotesSettings::NotesSettings(const QString &configPath,
 	KConfig& c) :
 	cP(configPath)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	DEBUGCONDUIT << fname
 		<< ": Reading note from "
@@ -109,12 +109,11 @@ NotesSettings::NotesSettings(const QString &configPath,
 			<< ": No data file for note?"
 			<< endl;
 	}
-
 }
 
 QString NotesSettings::computeCheckSum() const
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if (dP.isEmpty()) return 0;
 
@@ -147,7 +146,7 @@ QString NotesSettings::computeCheckSum() const
 
 int NotesSettings::readNotesData(char *text)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	// Check that the data can actually fit into a memo.
 	// If it does, read it all.
@@ -341,7 +340,7 @@ KNotesConduit::readConfig()
 void
 KNotesConduit::doSync()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	readConfig();
 
@@ -752,7 +751,7 @@ KNotesConduit::dbInfo()
 /* virtual */ void
 KNotesConduit::doTest()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
@@ -812,6 +811,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.8  2001/01/02 15:02:59  bero
+// Fix build
+//
 // Revision 1.7  2000/12/30 20:28:11  adridg
 // Checksumming added
 //
