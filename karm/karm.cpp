@@ -167,7 +167,7 @@ void Karm::save()
 
  if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
    QString msg = i18n( "There was an error trying to save your data file.\n"
-                       "Time accumulated during this session will NOT be saved!\n");
+                       "Time accumulated during this session will not be saved!\n");
    KMessageBox::error(0, msg );
    return;
  }
