@@ -276,7 +276,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     sernum = 0;
   }
 
-  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, addr.assembledName(),
+  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, addr.uid() /*subject*/,
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );
   if ( !rc )
