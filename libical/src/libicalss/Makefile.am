@@ -24,9 +24,9 @@ libicalss_la_SOURCES =		\
 	icalfileset.c		\
 	icalfilesetimpl.h	\
 	icalset.c		\
-	icalsslexer.l		\
 	icalssyacc.h		\
 	icalssyacc.y		\
+	icalsslexer.l		\
 	icalspanlist.c		\
 	icalmessage.c		\
 	icalcstpclient.c        \
