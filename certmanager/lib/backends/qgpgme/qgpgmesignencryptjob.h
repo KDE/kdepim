@@ -37,7 +37,12 @@
 
 #include "qgpgmejob.h"
 
+#include <gpgmepp/signingresult.h>
+#include <gpgmepp/encryptionresult.h>
+
 #include <qcstring.h>
+
+#include <utility>
 
 namespace GpgME {
   class Error;
@@ -64,6 +69,9 @@ namespace Kleo {
 	    const QByteArray & plainText, bool alwaysTrust,
 	    QByteArray & cipherText );
 
+    /*! \reimp from Job */
+    void showErrorDialog( QWidget * parent ) const;
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
@@ -73,6 +81,8 @@ namespace Kleo {
     void doOperationDoneEvent( const GpgME::Error & e );
     GpgME::Error setup( const std::vector<GpgME::Key> &,
 			const QByteArray & );
+  private:
+    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
   };
 
 }
