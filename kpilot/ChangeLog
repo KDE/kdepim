@@ -1,10 +1,15 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-06-16  Adriaan de Groot
+* Disposed of foolish file installer bug. Updated tarballs on website
+  before fixing it, so now we're stuck :) Looked at 71122 again,
+  testing with my m500.
+
 2004-06-10  Adriaan de Groot
 * Much delay in getting back to work on KPilot, even after a new mobo
   arrived for my primary devel system. Useful patches were received
-  in the meantime, and commited by Joern. Olivier D. has started 
+  in the meantime, and commited by Joern. Olivier D. has started
   improving the MAL conduit, wrt. proxy and password support.
 
 2004-06-02 Joern Ahrens
