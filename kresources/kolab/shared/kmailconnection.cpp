@@ -114,7 +114,7 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              Q_UINT32 sernum,
                                              const QString& xml )
 {
-//   kdDebug(5650) << "KMailConnection::addIncidence( " << type << ", "
+//   kdDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
   return mResource->fromKMailAddIncidence( type, folder, sernum, xml );
 }
@@ -123,7 +123,7 @@ void KMailConnection::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
                                              const QString& xml )
 {
-//   kdDebug(5650) << "KMailConnection::deleteIncidence( " << type << ", "
+//   kdDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
   mResource->fromKMailDelIncidence( type, folder, xml );
 }
@@ -138,7 +138,7 @@ void KMailConnection::slotRefresh( const QString& type, const QString& folder )
 void KMailConnection::fromKMailAddSubresource( const QString& type,
                                                const QString& resource )
 {
-//   kdDebug(5650) << "KMailConnection::subresourceAdded( " << type << ", "
+//   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
 //                 << resource << " )\n";
   bool writable = true;
 
@@ -152,7 +152,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
 void KMailConnection::fromKMailDelSubresource( const QString& type,
                                                const QString& resource )
 {
-//   kdDebug(5650) << "KMailConnection::subresourceDeleted( " << type << ", "
+//   kdDebug(5650) << "KMailConnection::fromKMailDelSubresource( " << type << ", "
 //                 << resource << " )\n";
   mResource->fromKMailDelSubresource( type, resource );
 }
@@ -209,12 +209,13 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    Q_UINT32& sernum,
                                    const QString& subject,
                                    const QStringList& attachments,
+                                   const QStringList& mimetypes,
                                    const QStringList& deletedAttachments )
 {
   if ( connectToKMail() ) {
     sernum = mKMailIcalIfaceStub->update( resource, sernum,
                                           subject, attachments,
-                                          deletedAttachments );
+                                          mimetypes, deletedAttachments );
 
     return sernum && mKMailIcalIfaceStub->ok();
   } else

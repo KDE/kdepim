@@ -123,8 +123,10 @@ protected:
   /// The parameter sernum is updated with the right KMail serial number
   bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
                     const QString& xml,
-                    const QString& subject = QString::null,
+                    const QString& mimetype,
+                    const QString& subject,
                     const QStringList& attachments = QStringList(),
+                    const QStringList& mimetypes = QStringList(),
                     const QStringList& deletedAttachments = QStringList() );
 
   /// Get the full path of the config file.

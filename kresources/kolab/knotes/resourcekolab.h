@@ -58,31 +58,32 @@ public:
   ResourceKolab( const KConfig* );
   virtual ~ResourceKolab();
 
-  /** Load resource data. */
+  /// Load resource data.
   bool load();
 
-  /** Save resource data. */
+  /// Save resource data.
   bool save();
 
-  /** Open the notes resource. */
+  /// Open the notes resource.
   bool doOpen();
-  /** Close the notes resource. */
+  /// Close the notes resource.
   void doClose();
 
   bool addNote( KCal::Journal* );
 
   bool deleteNote( KCal::Journal* );
 
+  /// Reimplemented from IncidenceBase::Observer to know when a note was changed
   void incidenceUpdated( KCal::IncidenceBase* );
 
-  // The IMAPBase methods called by KMail
+  /// The ResourceKolabBase methods called by KMail
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               Q_UINT32 sernum, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& note );
   void slotRefresh( const QString& type, const QString& resource );
 
-  // Listen to KMail changes in the amount of sub resources
+  /// Listen to KMail changes in the amount of sub resources
   void fromKMailAddSubresource( const QString& type, const QString& resource,
                                 bool writable );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
@@ -103,7 +104,7 @@ private:
   bool addNote( const QString xml, const QString& subresource,
                 Q_UINT32 sernum );
 
-  bool loadResource( const QString& resource );
+  bool loadSubResource( const QString& resource );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "knotes" );

@@ -66,8 +66,9 @@ extern "C"
   }
 }
 
-static QString configGroupName = "Note";
-static QString kmailResourceType = "Note";
+static const char* configGroupName = "Note";
+static const char* kmailContentsType = "Note";
+static const char* attachmentMimeType = "application/x-vnd.kolab.note";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" )
@@ -85,7 +86,7 @@ bool ResourceKolab::doOpen()
 
   // Get the list of Notes folders from KMail
   QMap<QString, bool> resources;
-  if ( !kmailSubresources( resources, kmailResourceType ) )
+  if ( !kmailSubresources( resources, kmailContentsType ) )
     return false;
 
   // Make the resource map from the folder list
@@ -110,15 +111,17 @@ void ResourceKolab::doClose()
     config.writeEntry( it.key(), it.data().active() );
 }
 
-bool ResourceKolab::loadResource( const QString& resource )
+bool ResourceKolab::loadSubResource( const QString& resource )
 {
   // Get the list of journals
   QMap<Q_UINT32, QString> lst;
-  if( !kmailIncidences( lst, kmailResourceType, resource ) ) {
+  if( !kmailIncidences( lst, attachmentMimeType, resource ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
     return false;
   }
+
+  kdDebug(5500) << "Notes kolab resource: got " << lst.count() << " notes in " << resource << endl;
 
   // Populate with the new entries
   const bool silent = mSilent;
@@ -145,14 +148,16 @@ bool ResourceKolab::load()
       // This resource is disabled
       continue;
 
-    rc &= loadResource( itR.key() );
+    rc &= loadSubResource( itR.key() );
   }
 
+  kdDebug() << k_funcinfo << " - done" << endl;
   return rc;
 }
 
 bool ResourceKolab::save()
 {
+  // Nothing to do here, we save everything in incidenceUpdated()
   return true;
 }
 
@@ -176,13 +181,13 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
 
   manager()->registerNote( this, journal );
+  journal->registerObserver( this );
 
   // Find out if this note was previously stored in KMail
   bool newNote = subresource.isEmpty();
 
   if ( !newNote ) {
     mCalendar.addJournal( journal );
-    journal->registerObserver( this );
   }
 
   QString resource =
@@ -192,7 +197,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
     QString xml = Note::journalToXML( journal );
     kdDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
 
-    if( !kmailUpdate( resource, sernum, xml, journal->summary() ) ) {
+    if( !kmailUpdate( resource, sernum, xml, attachmentMimeType, journal->summary() ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
       return false;
     }
@@ -231,10 +236,11 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     resource = findWritableResource( mResources );
     sernum = 0;
   }
+  kdDebug() << k_funcinfo << "sernum=" << sernum << endl;
 
   KCal::Journal* journal = dynamic_cast<KCal::Journal*>( i );
   QString xml = Note::journalToXML( journal );
-  if( !xml.isEmpty() && kmailUpdate( resource, sernum, xml, journal->summary() ) )
+  if( !xml.isEmpty() && kmailUpdate( resource, sernum, xml, attachmentMimeType, journal->summary() ) )
     mUidMap[ i->uid() ] = StorageReference( resource, sernum );
 }
 
@@ -248,7 +254,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& note )
 {
   // Check if this is a note
-  if( type != kmailResourceType ) return false;
+  if( type != kmailContentsType ) return false;
 
   const bool silent = mSilent;
   mSilent = true;
@@ -263,7 +269,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& note )
 {
   // Check if this is a note
-  if( type != kmailResourceType ) return;
+  if( type != kmailContentsType ) return;
 
   // kdDebug(5500) << "ResourceKolab::deleteIncidence( " << type << ", " << uid
   //               << " )" << endl;
@@ -284,7 +290,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
 void ResourceKolab::slotRefresh( const QString& type,
                                  const QString& /*resource*/ )
 {
-  if ( type == kmailResourceType )
+  if ( type == kmailContentsType )
     load();
 }
 
@@ -292,7 +298,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& resource,
                                              bool writable )
 {
-  if ( type != kmailResourceType )
+  if ( type != kmailContentsType )
     // Not ours
     return;
 
@@ -305,7 +311,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   bool active = config.readBoolEntry( resource, true );
   mResources[ resource ] = Kolab::SubResource( active, writable, resource );
-  loadResource( resource );
+  loadSubResource( resource );
   emit signalSubresourceAdded( this, type, resource );
 }
 

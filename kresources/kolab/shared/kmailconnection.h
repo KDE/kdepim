@@ -82,6 +82,7 @@ public:
                     Q_UINT32& sernum,
                     const QString& subject,
                     const QStringList& attachments,
+                    const QStringList& mimetypes,
                     const QStringList& deletedAttachments );
 
 private slots:
