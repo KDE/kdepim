@@ -21,8 +21,11 @@
 #include "egroupwarewizard.h"
 #include "egroupwareconfig.h"
 
+#include "kresources/egroupware/kabc_egroupwareprefs.h"
 #include "kresources/egroupware/kabc_resourcexmlrpc.h"
+#include "kresources/egroupware/kcal_egroupwareprefs.h"
 #include "kresources/egroupware/kcal_resourcexmlrpc.h"
+#include "kresources/egroupware/knotes_egroupwareprefs.h"
 #include "kresources/egroupware/knotes_resourcexmlrpc.h"
 
 #include <libkcal/resourcecalendar.h>
@@ -98,11 +101,11 @@ class ChangeEGroupwareKabcResource : public KConfigPropagator::Change
         if ( (*it)->identifier() == mIdentifier ) {
           KABC::ResourceXMLRPC *resource = static_cast<KABC::ResourceXMLRPC*>( *it );
 
-          resource->setURL( createURL( EGroupwareConfig::self()->server(),
-                                       EGroupwareConfig::self()->useSSLConnection() ) );
-          resource->setDomain( EGroupwareConfig::self()->domain() );
-          resource->setUser( EGroupwareConfig::self()->user() );
-          resource->setPassword( EGroupwareConfig::self()->password() );
+          resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(),
+                                     EGroupwareConfig::self()->useSSLConnection() ) );
+          resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
+          resource->prefs()->setUser( EGroupwareConfig::self()->user() );
+          resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
 
           manager.change( resource );
           manager.writeConfig();
@@ -132,10 +135,10 @@ class CreateEGroupwareKcalResource : public KConfigPropagator::Change
 
       KCal::ResourceXMLRPC *resource = new KCal::ResourceXMLRPC();
       resource->setResourceName( i18n( "eGroupware" ) );
-      resource->setURL( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() ) );
-      resource->setDomain( EGroupwareConfig::self()->domain() );
-      resource->setUser( EGroupwareConfig::self()->user() );
-      resource->setPassword( EGroupwareConfig::self()->password() );
+      resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() ) );
+      resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
+      resource->prefs()->setUser( EGroupwareConfig::self()->user() );
+      resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
       manager.add( resource );
       manager.writeConfig();
     }
@@ -162,11 +165,11 @@ class ChangeEGroupwareKcalResource : public KConfigPropagator::Change
         if ( (*it)->identifier() == mIdentifier ) {
           KCal::ResourceXMLRPC *resource = static_cast<KCal::ResourceXMLRPC*>( *it );
 
-          resource->setURL( createURL( EGroupwareConfig::self()->server(),
-                                       EGroupwareConfig::self()->useSSLConnection() ) );
-          resource->setDomain( EGroupwareConfig::self()->domain() );
-          resource->setUser( EGroupwareConfig::self()->user() );
-          resource->setPassword( EGroupwareConfig::self()->password() );
+          resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(),
+                                     EGroupwareConfig::self()->useSSLConnection() ) );
+          resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
+          resource->prefs()->setUser( EGroupwareConfig::self()->user() );
+          resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
 
           manager.change( resource );
           manager.writeConfig();
@@ -198,10 +201,10 @@ class CreateEGroupwareKnotesResource : public KConfigPropagator::Change
 
       KNotes::ResourceXMLRPC *resource = new KNotes::ResourceXMLRPC();
       resource->setResourceName( i18n( "eGroupware" ) );
-      resource->setURL( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() ) );
-      resource->setDomain( EGroupwareConfig::self()->domain() );
-      resource->setUser( EGroupwareConfig::self()->user() );
-      resource->setPassword( EGroupwareConfig::self()->password() );
+      resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() ) );
+      resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
+      resource->prefs()->setUser( EGroupwareConfig::self()->user() );
+      resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
       manager.add( resource );
       manager.writeConfig();
     }
@@ -228,11 +231,11 @@ class ChangeEGroupwareKnotesResource : public KConfigPropagator::Change
         if ( (*it)->identifier() == mIdentifier ) {
           KNotes::ResourceXMLRPC *resource = static_cast<KNotes::ResourceXMLRPC*>( *it );
 
-          resource->setURL( createURL( EGroupwareConfig::self()->server(),
-                                       EGroupwareConfig::self()->useSSLConnection() ) );
-          resource->setDomain( EGroupwareConfig::self()->domain() );
-          resource->setUser( EGroupwareConfig::self()->user() );
-          resource->setPassword( EGroupwareConfig::self()->password() );
+          resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(),
+                                     EGroupwareConfig::self()->useSSLConnection() ) );
+          resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
+          resource->prefs()->setUser( EGroupwareConfig::self()->user() );
+          resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
 
           manager.change( resource );
           manager.writeConfig();
