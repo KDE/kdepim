@@ -242,7 +242,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 		
 		QString s(d.absPath());
 		s.remove(0, path_.length());
-		s.remove(0, 1);
 		empathDebug("Folder path is " + s);
 		
 		EmpathURL url(url_.mailboxName(), s, QString::null);
