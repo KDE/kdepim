@@ -67,6 +67,7 @@ bool KonsoleKalendar::openCalendar()
     m_variables->setCalendar( m_Calendar );
     return true;
   }*/
+  return true;  // to shut up compiler warning
 }
 
 void KonsoleKalendar::closeCalendar()
@@ -89,11 +90,22 @@ bool KonsoleKalendar::createCalendar()
   bool status = false;
   CalendarLocal newCalendar;
 
-  kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables->getCalendarFile() << endl;
+  if( m_variables->isDryRun() ) {
+// TODO: put back after string freeze
+//    cout << i18n("Create Calendar <Dry Run>:").local8Bit() << m_variables->getCalendarFile() << endl;
+  } else {
 
-  if( newCalendar.save( m_variables->getCalendarFile() ) ) {
-    newCalendar.close();
-    status = true;
+    kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables->getCalendarFile() << endl;
+
+    if( m_variables->isVerbose() ) {
+// TODO: put back after string freeze
+//      cout << i18n("Create Calendar <Verbose>:").local8Bit() << m_variables->getCalendarFile() << endl;
+    }
+
+    if( newCalendar.save( m_variables->getCalendarFile() ) ) {
+      newCalendar.close();
+      status = true;
+    }
   }
   return status;
 }
@@ -103,10 +115,12 @@ bool KonsoleKalendar::showInstance()
   bool status = true;
   QFile f;
   QString title;
+  Event::List *eventList;
+  Event *event;
 
   if( m_variables->isDryRun() ) {
     cout << i18n("View Events <Dry Run>:").local8Bit() << endl;
-    m_variables->printSpecs("view");
+    printSpecs();
   } else {
 
     kdDebug() << "konsolekalendar.cpp::showInstance() | open export file" << endl;
@@ -124,33 +138,58 @@ bool KonsoleKalendar::showInstance()
     if( status ) {
       kdDebug() << "konsolekalendar.cpp::showInstance() | opened successful" << endl;
 
+      if( m_variables->isVerbose() ) {
+// TODO: put back after string freeze
+//	cout << i18n("View Event <Verbose>:").local8Bit() << endl;
+	printSpecs();
+      }
+
       QTextStream ts( &f );
 
       if( m_variables->getExportType() != HTML ) {
 
-	kdDebug() << "konsolekalendar.cpp::showInstance() | get raw events list" << endl;
+	if( m_variables->getAll() ) {
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | view all events sorted list" << endl;
+	  Event::List sortedList = allEventsSorted( );
+	  status = printEventList ( &ts, &sortedList );
+	} else if( m_variables->isUID() ) {
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | view events by uid list" << endl;
+	  event = m_Calendar->event( m_variables->getUID() );
+	  status = printEvent ( &ts, event );
+	} else {
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | view raw events within date range list" << endl;
+	  eventList = new Event::List ( ((CalendarLocal *) m_variables->getCalendarResources())->rawEvents( 
+					  m_variables->getStartDateTime().date(),
+					  m_variables->getEndDateTime().date(),
+					  true ) );
 
-	Event::List *eventList;
-	CalendarResources *resource = m_variables->getCalendarResources(); 
-	      
-	eventList = new Event::List ( ((CalendarLocal *) m_variables->getCalendarResources())->rawEvents( 
-							     m_variables->getStartDateTime().date(),
-							     m_variables->getEndDateTime().date(),
-							     false ) );
-	//eventList = new Event::List( m_variables->getCalendarResources()->rawEvents() );      
-
-	status = printEventList ( &ts, eventList );
-
-	delete eventList;
+	  status = printEventList ( &ts, eventList );
+	  delete eventList;
+	}
 
       } else {
 
-	kdDebug() << "konsolekalendar.cpp::showInstance() | HTML" << endl;
-	      KCal::HtmlExport Export( m_variables->getCalendarResources() );
-	title = "Calendar for " + m_variables->getStartDateTime().date().toString(Qt::TextDate);
-	if( m_variables->getStartDateTime().date() != m_variables->getEndDateTime().date() ) {
-	  title += " - " + m_variables->getEndDateTime().date().toString(Qt::TextDate);
+	QDate firstdate, lastdate;
+	if( m_variables->getAll() ) {
+	  // TODO: this is broken since the date on last() may not be last date (this is the case for me)
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view all events sorted list" << endl;
+	  eventList = new Event::List ( m_Calendar->rawEvents( ) );
+	  firstdate = eventList->first()->dtStart().date();
+	  lastdate = eventList->last()->dtStart().date();
+	  delete eventList;
+	} else if( m_variables->isUID() ) {
+	  // TODO
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view events by uid list" << endl;
+	  kdError() << i18n("Sorry, export to HTML by UID is not supported yet").local8Bit() << endl;
+	  return( false );
+	} else {
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view raw events within date range list" << endl;
+	  firstdate = m_variables->getStartDateTime().date();
+	  lastdate = m_variables->getStartDateTime().date();
 	}
+
+	KCal::HtmlExport Export( m_variables->getCalendarResources() );
+
 	Export.setTitle( title );
 	Export.setEmail( "" );
 	Export.setFullName( "" );
@@ -163,9 +202,9 @@ bool KonsoleKalendar::showInstance()
 	Export.setExcludePrivateEventEnabled( true );
 	Export.setExcludeConfidentialEventEnabled( true );
 // Not supporting Todos yet
-	title = "To-Do List for " + m_variables->getStartDateTime().date().toString(Qt::TextDate);
-	if( m_variables->getStartDateTime().date() != m_variables->getEndDateTime().date() ) {
-	  title += " - " + m_variables->getEndDateTime().date().toString(Qt::TextDate);
+	title = "To-Do List for " + firstdate.toString(Qt::TextDate);
+	if( firstdate != lastdate ) {
+	  title += " - " + lastdate.toString(Qt::TextDate);
 	}
 	Export.setTitleTodo( title );
 	Export.setTodosEnabled( false );
@@ -175,7 +214,7 @@ bool KonsoleKalendar::showInstance()
 	Export.setExcludeConfidentialTodoEnabled( false );
 	Export.setDueDateEnabled( false );
 
-	Export.setDateRange( m_variables->getStartDateTime().date(), m_variables->getEndDateTime().date());
+	Export.setDateRange( firstdate, lastdate );
 
 	status = Export.save( &ts );
       }
@@ -202,13 +241,8 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
     for( it = eventList->begin(); it != eventList->end(); ++it ) {
       singleEvent = *it;
 
-      if( m_variables->getExportType() == CSV ) {
-	status = exports.exportAsCSV( ts, singleEvent );
-	kdDebug() << "konsolekalendar.cpp::printEventList() | CSV export" << endl;
-      } else {  // Default ExportType is TEXT_KONSOLEKALENDAR
-        status = exports.exportAsTxt( ts, singleEvent );
-        kdDebug() << "konsolekalendar.cpp::printEventList() | TEXT export" << endl;  
-      } //else
+      status = printEvent( ts, singleEvent );
+      if( ! status )break;
 
     }// for
 
@@ -221,6 +255,25 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
   return( status );
 }
 
+bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event )
+{
+
+  bool status = false;
+  KonsoleKalendarExports exports;
+
+  if( event )
+  {
+    if( m_variables->getExportType() == CSV ) {
+      status = exports.exportAsCSV( ts, event );
+      kdDebug() << "konsolekalendar.cpp::printEvent() | CSV export" << endl;
+    } else {  // Default ExportType is TEXT_KONSOLEKALENDAR
+      status = exports.exportAsTxt( ts, event );
+      kdDebug() << "konsolekalendar.cpp::printEvent() | TEXT export" << endl;  
+    } //else
+  } //if
+
+  return( status );
+}
 
 bool KonsoleKalendar::addEvent()
 {
@@ -266,4 +319,34 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
     }
   }
   return found;
+}
+
+Event::List KonsoleKalendar::allEventsSorted()
+{
+  Event::List *eventList = new Event::List ( m_Calendar->rawEvents( ) );
+
+  // Sort based on dtStart.toTime_t()
+  Event::List::ConstIterator it;
+  Event::List eventListSorted;
+  Event::List::Iterator sortIt;
+  for ( it = eventList->begin(); it != eventList->end(); ++it ) {
+    sortIt = eventListSorted.begin();
+    while ( sortIt != eventListSorted.end() &&
+            (*it)->dtStart().toTime_t() >= (*sortIt)->dtStart().toTime_t() ) {
+      ++sortIt;
+    }
+    eventListSorted.insert( sortIt, *it );
+  }
+  return ( eventListSorted );
+}
+
+void KonsoleKalendar::printSpecs()
+{
+  cout << i18n("  What:  ").local8Bit() << m_variables->getSummary().local8Bit() << endl;
+  cout << i18n("  Begin: ").local8Bit() << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  End:   ").local8Bit() << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  if( m_variables->getFloating() == true ) {
+    cout << i18n("  No Time Associated with Event").local8Bit() << endl;
+  }
+  cout << i18n("  Desc:  ").local8Bit() << m_variables->getDescription().local8Bit() << endl;
 }

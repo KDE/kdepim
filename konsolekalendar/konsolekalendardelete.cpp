@@ -38,48 +38,38 @@ KonsoleKalendarDelete::~KonsoleKalendarDelete()
 
 bool KonsoleKalendarDelete::deleteEvent()
 {
-  // Currently, ALL events at the start datetime are deleted
+  bool status = false;
 
-  bool found = false;
+  /* Retrieve event on the basis of the unique string ID */
+  Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
 
-  Event::List eventList( ((CalendarLocal *)m_variables->
-                         getCalendarResources())->rawEventsForDate( m_variables->getStartDateTime() ) );
-  
-   
-   /*
-   * Just to make this shorter
-   */
-
-  QTime starttime = m_variables->getStartDateTime().time();
-//  QTime endtime = m_variables->getEndDateTime().time();
-
-                     
-  Event::List::ConstIterator it;
-  //for( it = eventList.begin(); it != eventList.end(); ++it ) {
-    Event *singleEvent = *it;
-
-    /*
-     * I don't know if end time check is needed (add if so;)
-     * There should be millions of deleting stuff in same minute...
-     */
-
-  if( starttime.hour() == singleEvent->dtStart().time().hour() &&
-        starttime.minute() == singleEvent->dtStart().time().minute() ){
-
-    found = true;
+  if( event ) {
     if( m_variables->isDryRun() ) {
       cout << i18n("Delete Event <Dry Run>:").local8Bit() << endl;
-      m_variables->printSpecs("Delete");
+      printSpecs( event );
     } else {
-      kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : " << singleEvent->dtStartStr().local8Bit() << endl;
-      m_variables->getCalendar()->deleteEvent( singleEvent );
+      kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : " << m_variables->getUID().local8Bit() << endl;
+
+      if( m_variables->isVerbose() ) {
+// TODO: put back after string freeze
+//	cout << i18n("Delete Event <Verbose>:").local8Bit() << endl;
+	printSpecs( event );
+      }
+
+      m_variables->getCalendar()->deleteEvent( event );
       m_variables->getCalendar()->save();
-    }// else
-
-  } // if
+    }
+    status = true;
+  }
  
-  //} //for
-
-  return( found );
+  return( status );
 }
 
+void KonsoleKalendarDelete::printSpecs( Event *event )
+{
+  cout << i18n("  UID:   ").local8Bit() << m_variables->getUID().local8Bit() << endl;
+  cout << i18n("  What:  ").local8Bit() << event->summary().local8Bit() << endl;;
+  cout << i18n("  Begin: ").local8Bit() << event->dtStart().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  End:   ").local8Bit() << event->dtEnd().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  Desc:  ").local8Bit() << event->description().local8Bit() << endl;;
+}

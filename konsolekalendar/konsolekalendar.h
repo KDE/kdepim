@@ -99,6 +99,11 @@ class KonsoleKalendar
   private:
 
    /**
+    * Print event specs for dryrun and verbose options
+    */
+   void printSpecs();
+
+   /**
     * Prints event list in many formats
     *
     * @param eventlist which event we should print
@@ -107,10 +112,24 @@ class KonsoleKalendar
     bool printEventList( QTextStream *ts, Event::List *eventList );
 
    /**
+    * Prints a single event in many formats
+    *
+    * @param event which we should print
+    */
+
+    bool printEvent( QTextStream *ts, Event *event );
+
+    /**
+     * Builds and then returns a list of all events sorted in time order
+     *
+     */
+    Event::List KonsoleKalendar::allEventsSorted();
+
+   /**
     * Variables that changes stuff in programm
     */
     KonsoleKalendarVariables *m_variables;
-   
+
    /**
     * Calendar file itself
     */

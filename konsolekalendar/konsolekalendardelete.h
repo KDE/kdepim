@@ -42,6 +42,11 @@ class KonsoleKalendarDelete
   private:
 
    /**
+    * Print event specs for dryrun and verbose options
+    */
+    void printSpecs( Event *event );
+
+   /**
     * What we need to delete
     */
    

@@ -59,6 +59,10 @@ class KonsoleKalendarVariables
     QDateTime getEndDateTime();
     bool isEndDateTime();
 
+    void setUID( QString uid );
+    QString getUID();
+    bool isUID();
+
     void setNext( bool next );
     bool isNext();
 
@@ -88,8 +92,6 @@ class KonsoleKalendarVariables
 
     void setFloating( bool floating );
     bool getFloating();
-
-    void printSpecs( QString mode );
 
     QDate parseDate( QString string );
     QTime parseTime( QString str );
@@ -168,7 +170,8 @@ class KonsoleKalendarVariables
    char findSeparator( const QString &str, int &pos, int &seppos );
    void skipWhiteSpace( const QString &str, int &pos );
 
-   
+   bool m_bIsUID;
+   QString m_UID;
    QDateTime m_startDateTime;
    QDateTime m_endDateTime;
    bool m_bIsStartDateTime;

@@ -60,13 +60,13 @@ bool KonsoleKalendarAdd::addEvent()
 
   if( m_variables->isDryRun() ) {
     cout << i18n("Insert Event <Dry Run>:").local8Bit() << endl;
-    m_variables->printSpecs("add");
+    printSpecs();
   } else {
     Event *event = new Event();
 
     if( m_variables->isVerbose() ) {
       cout << i18n("Insert Event <Verbose>:").local8Bit() << endl;
-      m_variables->printSpecs("add");
+      printSpecs();
     }
 
     event->setDtStart( m_variables->getStartDateTime() );
@@ -75,12 +75,12 @@ bool KonsoleKalendarAdd::addEvent()
     event->setFloats( m_variables->getFloating() );
     event->setDescription( m_variables->getDescription() );    
     kdDebug() << "konsolekalendaradd.cpp::addEvent() | Do adding " << endl;
-    
+
     if( !m_variables->getCalendarResources() ){
      kdDebug() << "konsolekalendaradd.cpp::addEvent() | There is no calendar " << endl;
-     return false;     
+     return false;
     }
-	  
+
     if( m_variables->getCalendarResources()->addEvent( event ) ) {
       cout << i18n("Success: \"").local8Bit()
 	   << m_variables->getSummary().local8Bit() << i18n("\" inserted").local8Bit() << endl;
@@ -132,3 +132,13 @@ bool KonsoleKalendarAdd::addImportedCalendar()
  return true;
 }
 
+void KonsoleKalendarAdd::printSpecs()
+{
+  cout << i18n("  What:  ").local8Bit() << m_variables->getSummary().local8Bit() << endl;
+  cout << i18n("  Begin: ").local8Bit() << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  End:   ").local8Bit() << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  if( m_variables->getFloating() == true ) {
+    cout << i18n("  No Time Associated with Event").local8Bit() << endl;
+  }
+  cout << i18n("  Desc:  ").local8Bit() << m_variables->getDescription().local8Bit() << endl;
+}

@@ -45,6 +45,11 @@ public:
 private:
 
    /**
+    * Print event specs for dryrun and verbose options
+    */
+   void printSpecs();
+
+   /**
     * Variable to how to make it
     */
 

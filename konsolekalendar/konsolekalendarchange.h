@@ -42,6 +42,12 @@ class KonsoleKalendarChange
  private:
 
    /**
+    * Print event specs for dryrun and verbose options
+    */
+    void printSpecs( Event *event );
+    void printSpecs( );
+
+   /**
     * Variables are here
     */
 

@@ -38,53 +38,59 @@ KonsoleKalendarChange::~KonsoleKalendarChange()
 
 bool KonsoleKalendarChange::changeEvent()
 {
-  // Currently, ALL events at the start datetime are changed
+  bool status = false;
 
-  bool found = false;
+  /* Retrieve event on the basis of the unique string ID */
+  Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
+  if( event ) {
+    if( m_variables->isDryRun() ) {
+      cout << i18n("Change Event <Dry Run>:").local8Bit() << endl;
+      printSpecs( event );
+// TODO: put back after string freeze
+//      cout << i18n("To Event <Dry Run>:").local8Bit() << endl;
+      printSpecs();
+    } else {
+       kdDebug() << "konsolekalendarchange.cpp:changeEvent() : " << m_variables->getUID().local8Bit() << endl;
 
-  Event::List eventList( ((CalendarLocal *) m_variables->
-                         getCalendarResources())->
-                         rawEventsForDate( m_variables->getStartDateTime() ) );
-  
-	
-  Event::List::ConstIterator it;
+// TODO: put back after string freeze
+       if( m_variables->isVerbose() ) {
+//	 cout << i18n("Change Event <Verbose>:").local8Bit() << endl;
+//	 printSpecs( event );
+//	 cout << i18n("To Event <Dry Run>:").local8Bit() << endl;
+//	 printSpecs();
+       }
 
-  /*
-   * Just to make this shorter
-   */
-
-  QTime starttime = m_variables->getStartDateTime().time();
-//  QTime endtime = m_variables->getEndDateTime().time();
-
-  //for( it = eventList.begin(); it != eventList.end(); ++it ) {
-    Event *singleEvent = *it;
-
-   /*
-    * I don't know if end time check is needed (add if so;)
-    * There should be millions of changing stuff in same minute...
-    */
-
-   if( starttime.hour() == singleEvent->dtStart().time().hour() &&
-        starttime.minute() == singleEvent->dtStart().time().minute() ){
-
-     found = true;
-
-     if( m_variables->isDryRun() ) {
-       cout << i18n("Change Event <Dry Run>:").local8Bit() << endl;
-       m_variables->printSpecs("Change");
-     } else {
-       kdDebug() << "konsolekalendarchange.cpp:changeEvent() : " << singleEvent->dtStartStr().local8Bit() << endl;
-       singleEvent->setSummary( m_variables->getSummary() );
-       singleEvent->setDescription( m_variables->getDescription() );
-       m_variables->getCalendar()->addEvent( singleEvent );
+       if( m_variables->isStartDateTime() )
+	 event->setDtStart( m_variables->getStartDateTime() );
+       if( m_variables->isEndDateTime() )
+	 event->setDtEnd( m_variables->getEndDateTime() );
+       if( m_variables->isSummary() )
+	 event->setSummary( m_variables->getSummary() );
+       if( m_variables->isDescription() )
+	 event->setDescription( m_variables->getDescription() );
+       m_variables->getCalendar()->addEvent( event );
        m_variables->getCalendar()->save();
-     }// else
+     }
+    status = true;
+  }
 
-   } // if
-
-  //} //for
-
-
-  return( found );
+  return( status );
 }
 
+void KonsoleKalendarChange::printSpecs( Event *event )
+{
+  cout << i18n("  UID:   ").local8Bit() << event->uid().local8Bit() << endl;
+  cout << i18n("  What:  ").local8Bit() << event->summary().local8Bit() << endl;;
+  cout << i18n("  Begin: ").local8Bit() << event->dtStart().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  End:   ").local8Bit() << event->dtEnd().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  Desc:  ").local8Bit() << event->description().local8Bit() << endl;;
+}
+
+void KonsoleKalendarChange::printSpecs( )
+{
+  cout << i18n("  UID:   ").local8Bit() << m_variables->getUID().local8Bit() << endl;
+  cout << i18n("  What:  ").local8Bit() << m_variables->getSummary().local8Bit() << endl;;
+  cout << i18n("  Begin: ").local8Bit() << m_variables->getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  End:   ").local8Bit() << m_variables->getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  cout << i18n("  Desc:  ").local8Bit() << m_variables->getDescription().local8Bit() << endl;;
+}

@@ -80,6 +80,7 @@ static KCmdLineOptions options[] =
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
   { "next", I18N_NOOP("  View next activity in calendar"), 0 },
   { "all", I18N_NOOP("  View all calendar entries"), 0 },
+  { "uid <uid>", I18N_NOOP("  Event Unique-string identifier"), 0 },
   { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
   { "time <start-time>", I18N_NOOP("  Start from this time [HH:MM:SS]"), 0 },
   { "end-date <end-date>", I18N_NOOP("  End at this day [YYYY-MM-DD]"), 0 },
@@ -94,7 +95,7 @@ static KCmdLineOptions options[] =
   { "export-file <export-file>", I18N_NOOP("Export to file (Default: stdout)"), 0 },
   { "export-list", I18N_NOOP("  Print list of export types supported and exit"), 0 },
 
-  { "", I18N_NOOP("Examples:\n  konsolekalendar --view --all\n  konsolekalendar --add --date 2003-06-04 --time 10:00 --end-time 12:00 \\\n                  --summary \"Doctor Visit\" --description \"Get My Head Examined\""), 0 },
+  { "", I18N_NOOP("Examples:\n  konsolekalendar --view\n  konsolekalendar --add --date 2003-06-04 --time 10:00 --end-time 12:00 \\\n                  --summary \"Doctor Visit\" --description \"Get My Head Examined\"\n  konsolekalendar --delete --uid KOrganizer-1740380426.803"), 0 },
 
   KCmdLineLastOption
 };
@@ -314,6 +315,18 @@ int main(int argc, char *argv[])
     variables.setNext(true);
   }
 
+
+  /*
+   *  Set event unique string identifier
+   *
+   */
+  if (args->isSet("uid") ) {
+    option = args->getOption("uid");
+
+    kdDebug() << "main | parse options | Event UID: (" << option << ")" << endl;
+
+    variables.setUID( option );
+  }
 
   /*
    *  Set starting date for calendar
@@ -657,6 +670,10 @@ int main(int argc, char *argv[])
 
     if( change ) {
       kdDebug() << "main | modework | calling changeEvent()" << endl;
+      if( !variables.isUID() ) {
+	kdError() << i18n("Must specify a UID with --uid to change event").local8Bit() << endl;
+	return(1);
+      }
       if( konsolekalendar->changeEvent() != true ) {
 	kdError() << i18n("Attempting to change a non-existent event").local8Bit() << endl;
 	return(1);
@@ -666,6 +683,10 @@ int main(int argc, char *argv[])
 
     if( del ) {
       kdDebug() << "main | modework | calling deleteEvent()" << endl;
+      if( !variables.isUID() ) {
+	kdError() << i18n("Must specify a UID with --uid to delete event").local8Bit() << endl;
+	return(1);
+      }
       if( konsolekalendar->deleteEvent() != true ) {
 	kdError() << i18n("Attempting to delete a non-existent event").local8Bit() << endl;
 	return(1);

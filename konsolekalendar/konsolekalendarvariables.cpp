@@ -42,6 +42,7 @@ using namespace std;
 
 KonsoleKalendarVariables::KonsoleKalendarVariables()
 {
+  m_bIsUID = false;
   m_bIsStartDateTime = false;
   m_bIsEndDateTime = false;
   m_bNext = false;
@@ -59,6 +60,22 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
  // delete m_resource;
+}
+
+void KonsoleKalendarVariables::setUID(QString uid)
+{
+  m_bIsUID = true;
+  m_UID = uid;
+}
+
+QString KonsoleKalendarVariables::getUID()
+{
+  return m_UID;
+}
+  
+bool KonsoleKalendarVariables::isUID()
+{
+  return m_bIsUID;
 }
 
 void KonsoleKalendarVariables::setStartDateTime(QDateTime start)
@@ -320,28 +337,3 @@ bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 	
 	  return true;
 }
-
-
-void KonsoleKalendarVariables::printSpecs(QString mode)
-{
-  if( mode.upper() != "VIEW" ) {
-    cout << i18n("  What:  ").local8Bit() << getSummary().local8Bit() << endl;
-    cout << i18n("  Begin: ").local8Bit() << getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
-    cout << i18n("  End:   ").local8Bit() << getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
-    if( getFloating() == true ) {
-      cout << i18n("  No Time Associated with Event").local8Bit() << endl;
-    }
-    if( getSummary() != getDescription() ) {
-      cout << i18n("  Desc:  ").local8Bit() << getDescription().local8Bit() << endl;
-    }
-  } else {
-    cout << i18n("  Begin: ").local8Bit() << getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
-    cout << i18n("  End:   ").local8Bit() << getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
-  }    
-}
-
-
-
-
-
-
