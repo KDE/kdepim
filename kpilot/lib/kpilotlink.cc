@@ -71,6 +71,8 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 
 	ASSERT(fDeviceLink == 0L);
 	fDeviceLink = this;
+
+	(void) kpilotlink_id;
 }
 
 KPilotDeviceLink::~KPilotDeviceLink()
@@ -553,6 +555,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.3  2001/12/29 15:45:28  adridg
+// Lots of little changes for the syncstack
+//
 // Revision 1.2  2001/10/08 22:25:41  adridg
 // Moved to libkpilot and lib-based conduits
 //
