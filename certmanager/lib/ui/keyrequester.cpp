@@ -330,16 +330,20 @@ void Kleo::KeyRequester::slotDialogButtonClicked() {
     ? new KeySelectionDialog( mDialogCaption, mDialogMessage, mInitialQuery, mKeyUsage, mMulti )
     : new KeySelectionDialog( mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti ) ;
 
-  if ( dlg->exec() == QDialog::Accepted )
+  if ( dlg->exec() == QDialog::Accepted ) {
     if ( mMulti )
       setKeys( dlg->selectedKeys() );
     else
       setKey( dlg->selectedKey() );
+    emit changed();
+  }
 
   delete dlg;
 }
 
 void Kleo::KeyRequester::slotEraseButtonClicked() {
+  if ( !mKeys.empty() )
+    emit changed();
   mKeys.clear();
   updateKeys();
 }

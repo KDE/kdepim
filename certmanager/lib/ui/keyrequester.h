@@ -122,6 +122,9 @@ namespace Kleo {
     void setInitialQuery( const QString & s ) { mInitialQuery = s; }
     const QString & initialQuery() const { return mInitialQuery; }
 
+  signals:
+    void changed();
+
   private:
     void init();
     void startKeyListJob( const QStringList & fingerprints );
