@@ -75,37 +75,37 @@ the gpgsm keybox and for retrieving certificates from
 
 <sect1 id="search"><title>Searching</title>
 <para>When &kgpgcertmanager; starts, it is ready to search for certificates
-in the local keybox. Just type in part of the name of a certificate
-owner, press the find-button and the results will display.</para>
-<para>When double-clicking on the results, a dialog with information
+in the local keybox: just type in part of the name of a certificate
+owner, press the find-button and the results will be displayed.</para>
+<para>When a result is double-clicked on a dialog with information
 about the certificate will be displayed.</para> 
 <para>The combobox in the toolbar can be switched from "in local
-certificated" to "in external certificates" to search the LDAP servers
+certificates" to "in external certificates" to search the LDAP servers
 for certificates. When the results are displayed, each certificate can
-be double-clicked to show an informational dialog. This dialog has a
-button "Import to Local" that allows the certificate to imported into
+be double-clicked to show an information dialog; this dialog has a
+button, "Import to Local", that allows the certificate to be imported into
 the local keybox.</para>
 </sect1>
 
 <sect1 id="quit"><title>File/Quit</title>
-<para>The menuitem
+<para>The menu item
 <menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>
 exits the application.
 </para></sect1>
 
 <sect1 id="redisplay"><title>View/Redisplay</title>
-<para>The menuitem <menuchoice><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>
+<para>The menu item <menuchoice><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>
 performs the current query again and displays the results.
 </para></sect1>
 
 <sect1 id="newcert"><title>Certificates/New Certificate</title>
-<para>The menuitem
+<para>The menu item
 <menuchoice><guimenu>Certificates</guimenu><guimenuitem>New
-Certificate</guimenuitem></menuchoice> starts the certificate 
-request creating wizard. It will guide you through a number of steps
-to create a certificate request. This request can, at the end of the
+Certificate</guimenuitem></menuchoice> starts the certificate-
+request-creating wizard which will guide you through a number of steps
+to create a certificate request; this request can, at the end of the
 wizard, either be sent to a certificate authority (CA) to be signed or
-saved to a file (for example a floppy, so it can be shipped to the
+saved to a file (for example to a floppy, so it can be shipped to the
 CA).</para>
 <para>Whenever you are done with a step in the wizard, press
 <guibutton>Next</guibutton> to go to the next step (or
@@ -117,26 +117,26 @@ point by pressing the <guibutton>Cancel</guibutton> button.
 for the certificate. The fields to fill out are:
 <itemizedlist>
 <listitem>
-<para><guilabel>Name:</guilabel> Your name :)</para>
+<para><guilabel>Name:</guilabel> Your name;</para>
 </listitem>
 <listitem>
-<para><guilabel>Location:</guilabel>The town or city you live in.</para>
+<para><guilabel>Location:</guilabel>The town or city you live in;</para>
 </listitem>
 <listitem>
 <para><guilabel>Organization:</guilabel>The organization you represent
-(for example the company you work for)</para>
+(for example, the company you work for);</para>
 </listitem>
 <listitem>
 <para><guilabel>Department:</guilabel>The organizational unit you're
-in. For example "Logistics".</para> 
+in (for example, "Logistics");</para> 
 </listitem>
 <listitem>
 <para><guilabel>Country code:</guilabel>The two letter code for the
-country you're living in. For example "US".</para>
+country you're living in (for example, "US");</para>
 </listitem>
 <listitem>
-<para><guilabel>Email address:</guilabel>Your email address. Be sure
-to get that one right -- this will be the address people will be
+<para><guilabel>Email address:</guilabel>Your email address; be sure
+to get that one right &mdash; this will be the address people will be
 sending mail to when they use your certificate.</para>
 </listitem>
 </itemizedlist>
@@ -149,7 +149,7 @@ specify the filename or email address to send the certificate request to.
 
 <sect1 id="import"><title>Import/Certificate</title>
 <para>The <menuchoice><guimenu>Import</guimenu><guimenuitem>Certificate...</guimenuitem></menuchoice>
- menuitem allows you to import a certificate from a
+ menu item allows you to import a certificate from a
 file into the local keybox</para><para>The format of the certificate
 file should be one understood be the gpg-backend. Please refer to the
 gpg and gpgsm manuals for specifics about this.
@@ -162,14 +162,14 @@ transparently by the backend, but it might sometimes by useful to
 import a CRL manually into the local CRL cache.</para>
 <para>This can be done from the
 <menuchoice><guimenu>Import</guimenu><guimenuitem>CRL...</guimenuitem></menuchoice>
-menuitem.</para>
+menu item.</para>
 <para>NOTE: For CRL import to work, the "dirmngr" tool must be in the
-search PATH. If the <guimenuitem>From File...</guimenuitem> menuitem
+search PATH. If the <guimenuitem>From File...</guimenuitem> menu item
 is disabled, you should contact the system administrator and ask
-him/her to install dirmngr.
+them to install dirmngr.
 </para>
 <para>
-You can view the contents of the local CRL cache from the menuitem
+You can view the contents of the local CRL cache from the menu item
 <menuchoice><guimenu>View</guimenu><guimenuitem>CRL
 cache...</guimenuitem></menuchoice>. This will display a dialog with
 information about the CRLs in the cache and the fingerprints of the
