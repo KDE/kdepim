@@ -6,6 +6,8 @@ practice". And agreeing on indentation style is difficult as well.
 Below you can find the guidelines I try to stick to when writing
 KPilot, split into "C++ Source Code" and "Header Files".
 
+(For actual coding information and some information about how
+KPilot works, see HOWTO-CONDUIT.txt)
 
 
 C++ Source Code
