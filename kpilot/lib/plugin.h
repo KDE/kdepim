@@ -3,6 +3,7 @@
 /* plugin.h                             KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2004 by Adriaan de Groot
 **
 ** This file defines the base class of all KPilot conduit plugins configuration
 ** dialogs. This is necessary so that we have a fixed API to talk to from
@@ -56,11 +57,6 @@ class PilotDatabase;
 * a QWidget subclass would require an additional layout here, which
 * seems a little foolish.
 *
-* DEPRECATED: ConduitConfig: This is a dialog that contains the
-* setup widget (typically a ConduitConfigBase widget!).
-*
-* DEPRECATED: ConduitConfigImplementation: This is an automated
-* facility for creating ConduitConfigs containing a Base widget.
 */
 
 class ConduitConfigBase : public QObject
@@ -120,63 +116,6 @@ protected:
 
 	void unmodified() { fModified=false; } ;
 } ;
-
-/**
-* Dialogs that are created by the factory take a stringlist of
-* arguments. They interpret at least an argument of "modal",
-* and possible others (depending on the conduit).
-*
-* The config file to be read is set after creationg, but before
-* show()ing the dialog.
-*/
-class ConduitConfig : public UIDialog
-{
-Q_OBJECT
-
-public:
-	ConduitConfig(QWidget *parent=0L,
-		const char *name=0L,
-		const QStringList &args = QStringList()) KDE_DEPRECATED;
-	virtual ~ConduitConfig();
-
-	virtual void readSettings() = 0 ;
-	/* virtual void commit() = 0 ; --- from UIDialog */
-
-	// User-readable name of the conduit. Should match
-	// the other conduitName() methods in other classes
-	// in this file.
-	QString conduitName() const { return fConduitName; } ;
-protected:
-	QString fConduitName;
-} ;
-
-/**
-* This is a generic implementation of the ConduitConfig
-* dialog that takes a function pointer - to a ConduitConfigBase
-* constructor or its static equivalent - and creates a
-* dialog embedding that ConduitConfigBase object.
-*/
-class ConduitConfigImplementation : public ConduitConfig
-{
-public:
-	ConduitConfigImplementation(QWidget *,
-		const char *,
-		const QStringList &,
-		ConduitConfigBase *(*f)(QWidget *, const char *)) KDE_DEPRECATED;
-	virtual ~ConduitConfigImplementation();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-protected:
-	ConduitConfigBase *fConfigWidget;
-} ;
-
-
-
-
 
 
 

@@ -40,6 +40,8 @@
 
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)
+// #define DEBUG				(1)
+// #define DEBUG_CERR			(1)
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

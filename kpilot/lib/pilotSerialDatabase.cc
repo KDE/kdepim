@@ -301,6 +301,16 @@ void PilotSerialDatabase::openDatabase()
 	FUNCTIONSETUP;
 	int db;
 
+	QString s = getDBName();
+	if (s.isEmpty() || s.isNull())
+	{
+		kdError() << k_funcinfo << ": Bad DB name, "
+			<< (s.isNull() ? "null" : "empty")
+			<< " string given."
+			<< endl;
+		return;
+	}
+
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
 		QFile::encodeName(getDBName()).data(), &db) < 0)
 	{

@@ -108,7 +108,6 @@ private:
 	QListViewItem *fCurrentConduit;
 	QListViewItem *fGeneralPage;
 	ConduitConfigBase *fCurrentConfig;
-	ConduitConfig *fCurrentOldStyle;
 };
 
 #endif

@@ -286,8 +286,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	fConfigure(0L),
 	fCurrentConduit(0L),
 	fGeneralPage(0L),
-	fCurrentConfig(0L),
-	fCurrentOldStyle(0L)
+	fCurrentConfig(0L)
 {
 	FUNCTIONSETUP;
 
@@ -526,7 +525,6 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	}
 
 	QObject *o = 0L;
-	bool oldstyle = false;
 
 	// Page 4: General setup
 	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_setup")))
@@ -545,8 +543,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	{
 		QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
 
-		KLibFactory *f = KLibLoader::self()->
-			factory(library);
+		KLibFactory *f = KLibLoader::self()->factory(library);
 		if (!f)
 		{
 #ifdef DEBUG
@@ -564,7 +561,6 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		QStringList a;
 		a.append(CSL1("modal"));
 
-		// QObject *o = f->create(this, 0L, "ConduitConfig",a);
 		o = f->create(fStack, 0L, "ConduitConfigBase", a);
 
 		if (!o)
@@ -575,86 +571,52 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 				<< endl;
 #endif
 
-			o = f->create(this, 0L, "ConduitConfig", a);
-			oldstyle=true;
-
-			if (!o)
-			{
-#ifdef DEBUG
-				DEBUGKPILOT << fname
-					<< ": No ConduitConfig either."
-					<< endl;
-#endif
-				KLibLoader::self()->unloadLibrary(
-					library);
-				fStack->raiseWidget(BROKEN_CONDUIT);
-				warnNoLibrary(p);
-				return;
-			}
-		}
-	}
-
-	if (oldstyle)
-	{
-		ConduitConfig *d = dynamic_cast<ConduitConfig *>(o);
-
-		if (!d)
-		{
-#ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Can't cast to config dialog."
-				<< endl;
-#endif
+			KLibLoader::self()->unloadLibrary(
+				library);
 			fStack->raiseWidget(BROKEN_CONDUIT);
 			warnNoLibrary(p);
 			return;
 		}
-		fStack->raiseWidget(OLD_CONDUIT);
+	}
 
-		fCurrentOldStyle=d;
-		d->readSettings();
+	ConduitConfigBase *d = dynamic_cast<ConduitConfigBase *>(o);
+
+	if (!d)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Can't cast to config base object."
+			<< endl;
+#endif
+		fStack->raiseWidget(BROKEN_CONDUIT);
+		warnNoLibrary(p);
+		return;
+	}
+
+	// Remove the config widget from the stack before we can add the new one
+	QWidget *oldConfigWidget = fStack->widget( NEW_CONDUIT );
+	if ( oldConfigWidget )
+	{
+		fStack->removeWidget( oldConfigWidget );
+		KPILOT_DELETE( oldConfigWidget );
+	}
+	if (fStack->addWidget(d->widget(),NEW_CONDUIT)<0)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Can't add config widget to stack."
+			<< endl;
+#endif
 	}
 	else
 	{
-		ConduitConfigBase *d = dynamic_cast<ConduitConfigBase *>(o);
-
-		if (!d)
-		{
-#ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Can't cast to config base object."
-				<< endl;
-#endif
-			fStack->raiseWidget(BROKEN_CONDUIT);
-			warnNoLibrary(p);
-			return;
-		}
-
-		// Remove the config widget from the stack before we can add the new one
-		QWidget *oldConfigWidget = fStack->widget( NEW_CONDUIT );
-		if ( oldConfigWidget )
-		{
-			fStack->removeWidget( oldConfigWidget );
-			KPILOT_DELETE( oldConfigWidget );
-		}
-		if (fStack->addWidget(d->widget(),NEW_CONDUIT)<0)
-		{
-#ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Can't add config widget to stack."
-				<< endl;
-#endif
-		}
-		else
-		{
-			d->load();
-			fStack->raiseWidget(NEW_CONDUIT);
-			d->widget()->show();
-			fCurrentConfig=d;
-			// make sure the changed signal is propagated to the KCM*Dialog
-			// and the apply button is enabled correspondingly.
-			connect(d, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-		}
+		d->load();
+		fStack->raiseWidget(NEW_CONDUIT);
+		d->widget()->show();
+		fCurrentConfig=d;
+		// make sure the changed signal is propagated to the KCM*Dialog
+		// and the apply button is enabled correspondingly.
+		connect(d, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
 	}
 }
 
@@ -668,11 +630,6 @@ bool ConduitConfigWidget::release()
 		fStack->raiseWidget(0);
 		delete fCurrentConfig;
 	}
-	if (fCurrentOldStyle)
-	{
-		fStack->raiseWidget(0);
-		delete fCurrentOldStyle;
-	}
 	if (fCurrentConduit)
 	{
 		KLibLoader::self()->unloadLibrary(
@@ -680,7 +637,6 @@ bool ConduitConfigWidget::release()
 	}
 	fCurrentConduit=0L;
 	fCurrentConfig=0L;
-	fCurrentOldStyle=0L;
 	return true;
 }
 
@@ -728,14 +684,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 
 void ConduitConfigWidget::configure()
 {
-	if (!fCurrentOldStyle)
-	{
-		loadAndConfigure(fConduitList->selectedItem());
-	}
-	if (fCurrentOldStyle)
-	{
-		fCurrentOldStyle->exec();
-	}
+	loadAndConfigure(fConduitList->selectedItem());
 }
 
 void ConduitConfigWidget::warnNoExec(const QListViewItem * p)

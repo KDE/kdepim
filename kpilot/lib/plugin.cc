@@ -92,21 +92,6 @@ ConduitConfigBase::~ConduitConfigBase()
 	return true;
 }
 
-ConduitConfig::ConduitConfig(QWidget *parent,
-	const char *name,
-	const QStringList &args) :
-	UIDialog(parent,name,PluginUtility::isModal(args)),
-	fConduitName(i18n("Unnamed"))
-{
-	FUNCTIONSETUP;
-}
-
-
-/* virtual */ ConduitConfig::~ConduitConfig()
-{
-	FUNCTIONSETUP;
-}
-
 ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	const char *name,
 	const QStringList &args) :
@@ -380,37 +365,5 @@ bool PluginUtility::isModal(const QStringList &a)
 	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);
-}
-
-ConduitConfigImplementation::ConduitConfigImplementation(QWidget *w, const char *n,
-	const QStringList &a,
-	ConduitConfigBase *(*f)(QWidget *, const char *)) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-	fConfigWidget=f(widget(),n);
-	fConfigWidget->widget()->adjustSize();
-	fConfigWidget->widget()->show();
-	fConduitName=fConfigWidget->conduitName();
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Created conduit " << fConduitName << endl;
-#endif
-	widget()->adjustSize();
-	adjustSize();
-}
-
-ConduitConfigImplementation::~ConduitConfigImplementation()
-{
-	FUNCTIONSETUP;
-}
-
-void ConduitConfigImplementation::readSettings()
-{
-	fConfigWidget->load();
-}
-
-void ConduitConfigImplementation::commitChanges()
-{
-	fConfigWidget->commit();
 }
 

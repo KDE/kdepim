@@ -565,7 +565,7 @@ CleanupAction::~CleanupAction()
 #ifdef DEBUG
 	FUNCTIONSETUP;
 	DEBUGDAEMON << fname
-		<< ": Deleting @" << (int)this << endl;
+		<< ": Deleting @" << (long)this << endl;
 #endif
 }
 

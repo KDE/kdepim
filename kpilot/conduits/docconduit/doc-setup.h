@@ -43,19 +43,5 @@ protected:
 	DOCWidget *fConfigWidget;
 } ;
 
-class DOCWidgetSetup : public ConduitConfig
-{
-public:
-	DOCWidgetSetup(QWidget *, const char *, const QStringList &);
-	virtual ~ DOCWidgetSetup();
-
-	virtual void readSettings();
-
- protected:
-	virtual void commitChanges();
-
- private:
-	DOCWidgetConfig * fConfigBase;
-};
 
 #endif
