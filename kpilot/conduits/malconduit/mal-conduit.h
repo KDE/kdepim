@@ -1,6 +1,6 @@
 #ifndef _MAL_CONDUIT_H
 #define _MAL_CONDUIT_H
-/* mal-conduit.cc
+/* mal-conduit.h                           KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
@@ -80,5 +80,6 @@ private:
 	int fProxyPort, fMALPort;
 	QDateTime fLastSync;
 } ;
+
 
 #endif

@@ -86,12 +86,12 @@ MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
 		"(C) 2002, Reinhold Kainhofer");
 	fAbout->addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
-	fAbout->addAuthor("Jason Day",
+	fAbout->addCredit("Jason Day",
 		I18N_NOOP("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
-	fAbout->addAuthor("Tom Whittaker",
+	fAbout->addCredit("Tom Whittaker",
 		I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
-	fAbout->addAuthor("AvantGo, Inc.",
-		I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "www.avantgo.comreinhold@kainhofer.com", "http://www.avantgo.com/");
+	fAbout->addCredit("AvantGo, Inc.",
+		I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "", "http://www.avantgo.com/");
 }
 
 MALConduitFactory::~MALConduitFactory()
