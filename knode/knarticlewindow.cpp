@@ -50,7 +50,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
 
   // article menu
-  actPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotArtReply()),
+  actPostReply = new KAction(i18n("Post &reply"),"message_reply", Key_R , this, SLOT(slotArtReply()),
                              actionCollection(), "article_postReply");
   actPostReply->setEnabled(false);
   actMailReply = new KAction(i18n("&Mail reply"),"mail_reply", Key_A , this, SLOT(slotArtRemail()),
