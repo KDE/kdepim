@@ -75,11 +75,11 @@ static KCmdLineOptions options[] =
   { "add", I18N_NOOP("  Insert an event into the calendar"), 0 },
   { "change", I18N_NOOP("  Modify an existing calendar event"), 0 },
   { "delete", I18N_NOOP("  Remove an existing calendar event"), 0 },
-  { "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
   { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
+  { "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
 
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
-  { "next", I18N_NOOP("  View next activity in calendar"), 0 },
+//  { "next", I18N_NOOP("  View next activity in calendar"), 0 },
   { "all", I18N_NOOP("  View all calendar entries"), 0 },
   { "uid <uid>", I18N_NOOP("  Event Unique-string identifier"), 0 },
   { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
@@ -88,8 +88,8 @@ static KCmdLineOptions options[] =
   { "end-time <end-time>", I18N_NOOP("  End at this time [HH:MM:SS]"), 0 },
   { "epoch-start <epoch-time>", I18N_NOOP(" Start from this time [secs since epoch]"), 0 },
   { "epoch-end <epoch-time>", I18N_NOOP("  End at this time [secs since epoch]"), 0 },
-  { "description <description>", I18N_NOOP("Add description to event (for add/change modes)"), 0 },
   { "summary <summary>", I18N_NOOP("  Add summary to event (for add/change modes)"), 0 },
+  { "description <description>", I18N_NOOP("Add description to event (for add/change modes)"), 0 },
 
   { ":", I18N_NOOP(" Export options:"), 0 },
   { "export-type <export-type>", I18N_NOOP("Export file type (Default: text)"), 0 },
