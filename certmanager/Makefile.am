@@ -13,7 +13,7 @@ kleopatra_SOURCES = \
 	hierarchyanalyser.cpp \
 	certificatewizard.ui certificatewizardimpl.cpp \
 	certificateinfowidget.ui certificateinfowidgetimpl.cpp \
-	crlview.cpp storedtransferjob.cpp certlistview.cpp
+	crlview.cpp certlistview.cpp
 
 METASOURCES = AUTO
 

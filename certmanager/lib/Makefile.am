@@ -5,6 +5,7 @@ SUBDIRS = pics kleo backends ui . tests
 lib_LTLIBRARIES = libkleopatra.la
 
 libkleopatra_la_SOURCES = \
+			storedtransferjob.cpp \
 			cryptplug.cpp \
 			cryptplugwrapper.cpp \
 			cryptplugwrapperlist.cpp \
@@ -16,7 +17,7 @@ libkleopatra_la_LIBADD = \
 			ui/libkleopatra_ui.la \
 			\
 			$(top_builddir)/libkdenetwork/qgpgme/libqgpgme.la \
-			$(LIB_KDEUI)
+			$(LIB_KIO) $(LIB_KDEUI)
 
 # Disabled for kdepim-3.3, see also kleo/cryptobackendfactory.cpp
 # backends/kpgp/libkleopatra_backend_kpgp.la
