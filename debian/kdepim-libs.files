@@ -1,6 +1,3 @@
-usr/lib/libical.la
-usr/lib/libicalss.la
-usr/lib/libicalvcal.la
 usr/lib/libimap.so.0.0.0
 usr/lib/libimap.so.0
 usr/lib/libimap.la

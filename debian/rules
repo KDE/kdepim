@@ -58,7 +58,13 @@ binary-arch: build
 	dh_installdocs -a
 	dh_installmenu -a
 	dh_installmime -a
-	dh_installchangelogs -a
+	dh_installchangelogs -pkorganizer
+	dh_installchangelogs -pabbrowser
+	dh_installchangelogs -pkpilot kpilot/ChangeLog
+	dh_installchangelogs -pkdepim-libs
+	dh_installchangelogs -pkdepim-dev
+	dh_installchangelogs -plibical libical/ChangeLog
+	dh_installchangelogs -plibical-dev libical/ChangeLog
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a
