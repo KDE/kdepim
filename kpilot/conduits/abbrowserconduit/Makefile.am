@@ -19,8 +19,7 @@ libabbrowserconduit_la_SOURCES = \
 
 libabbrowserconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
-
-libabbrowserconduit_la_CFLAGS += -DDEBUG -DDEBUG_CERR
+libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
 
 testkab_SOURCES = testkabapi.cpp
 testkab_LDFLAGS = $(all_libraries) $(KDE_RPATH)
