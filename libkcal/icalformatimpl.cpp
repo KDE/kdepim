@@ -516,6 +516,7 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
     icalattachtype_set_base64( attach, att->data(), 0 );
 
   icalproperty *p = icalproperty_new_attach( attach );
+  icalattachtype_free( attach );
 
   if ( !att->mimeType().isEmpty() )
     icalproperty_add_parameter( p,
