@@ -76,7 +76,7 @@ class Event : public Incidence
 
     QDateTime mDtEnd;
     bool mHasEndDate;
-    int mTransparency;
+    Transparency mTransparency;
 };
 
 bool operator==( const Event&, const Event& );

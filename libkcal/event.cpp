@@ -27,7 +27,7 @@
 using namespace KCal;
 
 Event::Event() :
-  mHasEndDate(false), mTransparency(0)
+  mHasEndDate( false ), mTransparency( Opaque )
 {
 }
 
@@ -111,8 +111,7 @@ bool Event::isMultiDay() const
   return multi;
 }
 
-
-void Event::setTransparency(Transparency transparency)
+void Event::setTransparency(Event::Transparency transparency)
 {
   if (mReadOnly) return;
   mTransparency = transparency;
