@@ -53,12 +53,14 @@ void KAccelMenuWatch::updateMenus()
   AccelItem *item;
 
   for( ; (item = iter.current()) ; ++iter ) {
+    // These setAccel calls were converted from all changeMenuAccel calls
+    // as descibed in KDE3PORTING.html
     switch( item->type ) {
       case StringAccel:
-        _accel->changeMenuAccel( item->menu, item->itemId, item->action );
+        item->menu->setAccel( _accel->shortcut( item->action ).keyCodeQt(), item->itemId );
         break;
       case StdAccel:
-        _accel->changeMenuAccel( item->menu, item->itemId, item->stdAction );
+        item->menu->setAccel( KStdAccel::shortcut( item->stdAction ).keyCodeQt(), item->itemId );
         break;
       default:
         break;
