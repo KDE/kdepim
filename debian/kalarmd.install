@@ -1,12 +1,8 @@
 debian/tmp/usr/bin/kalarmd
-debian/tmp/usr/bin/korgac
-debian/tmp/usr/bin/simplealarmdaemon
 debian/tmp/usr/lib/libkalarmd.la
 debian/tmp/usr/lib/libkalarmd.so.*
 debian/tmp/usr/share/applnk/.hidden/kalarmd.desktop
-debian/tmp/usr/share/apps/kalarmdgui
 debian/tmp/usr/share/autostart/kalarmd.autostart.desktop
-debian/tmp/usr/share/autostart/korgac.desktop
 debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd/common
 debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd/index.cache.bz2
 debian/tmp/usr/share/doc/kde/HTML/en/kcontrol/kalarmd/index.docbook

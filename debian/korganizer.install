@@ -1,7 +1,9 @@
 debian/tmp/usr/bin/ical2vcal
 debian/tmp/usr/bin/konsolekalendar
+debian/tmp/usr/bin/korgac
 debian/tmp/usr/bin/korganizer
 debian/tmp/usr/bin/korganizerIn
+debian/tmp/usr/bin/simplealarmdaemon
 debian/tmp/usr/lib/libkorganizer.la
 debian/tmp/usr/lib/libkorganizer.so.*
 debian/tmp/usr/lib/libkpimexchange.la
@@ -19,7 +21,9 @@ debian/tmp/usr/lib/kde3/libkorg_projectview.so
 debian/tmp/usr/lib/kde3/libkorg_webexport.la
 debian/tmp/usr/lib/kde3/libkorg_webexport.so
 debian/tmp/usr/share/applnk/Applications/korganizer.desktop
+debian/tmp/usr/share/apps/korgac
 debian/tmp/usr/share/apps/korganizer
+debian/tmp/usr/share/autostart/korgac.desktop
 debian/tmp/usr/share/doc/kde/HTML/en/korganizer
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/korganizer.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/korganizer.png
