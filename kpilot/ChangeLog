@@ -1,6 +1,27 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2003-12-23  Adriaan de Groot
+* Added recent hardware reports. If you reported something and I've
+  forgotten it, please send me a gentle reminder.
+* Added IrDA howto from Stuart, who failed to provide an email 
+  address that I can respond to.
+* I think I got the KNotes conduit working again, but it needs some
+  testing so that change hasn't been committed yet.
+
+2003-12-12  Adriaan de Groot
+* Reduce warnings in vcalconduit.
+
+2003-12-10  Adriaan de Groot
+* Fix for #66321 - fill in a default value for the vcal file.
+
+2003-12-05  Adriaan de Groot
+* Het heerlijk avondje is gekomen. Damn right it is.
+ 
+2003-12-02  Adriaan de Groot
+* Removed #if 0'ed code; moved some deprecated code to #if 0; removed
+  use of deprecated stuff. Fixed up includes.
+  
 2003-11-23  Adriaan de Groot
 * Minor string fixups that don't affect TL.
 
