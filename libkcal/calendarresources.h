@@ -275,7 +275,12 @@ class CalendarResources : public Calendar,
   protected:
     void connectResource( ResourceCalendar * );
 
+  public:
+    // resourceAdded needs to be public, because in-process added
+    // resources don't emit the corresponding signal, so this method
+    // has to be called manually!
     void resourceAdded( ResourceCalendar *resource );
+  protected:
     void resourceModified( ResourceCalendar *resource );
     void resourceDeleted( ResourceCalendar *resource );
 
