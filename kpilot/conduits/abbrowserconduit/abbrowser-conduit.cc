@@ -185,10 +185,11 @@ bool AbbrowserConduit::_getAbbrowserContacts(QDict<ContactEntry> &contacts)
 
 void AbbrowserConduit::showContactEntry(const ContactEntry &abAddress)
      {
-     qDebug("Abbrowser Contact Entry");
-     qDebug("\tLast name = %s", abAddress.getLastName().latin1());
-     qDebug("\tFirst name = %s", abAddress.getFirstName().latin1());
-     qDebug("\tCompany = %s", abAddress.getCompany().latin1());
+     qDebug("\tAbbrowser Contact Entry");
+     qDebug("\t\tLast name = %s", abAddress.getLastName().latin1());
+     qDebug("\t\tFirst name = %s", abAddress.getFirstName().latin1());
+     qDebug("\t\tCompany = %s", abAddress.getCompany().latin1());
+     /*
      qDebug("\tJob Title = %s", abAddress.getJobTitle().latin1());
      qDebug("\tNote = %s", abAddress.getNote().latin1());
      qDebug("\tHome phone = %s", abAddress.getHomePhone().latin1());
@@ -197,16 +198,17 @@ void AbbrowserConduit::showContactEntry(const ContactEntry &abAddress)
      qDebug("\tEmail = %s", abAddress.getEmail().latin1());
      qDebug("\tFax = %s", abAddress.getBusinessFax().latin1());
      qDebug("\tPager = %s", abAddress.getPager().latin1());
+     */
      }
 
 
 void AbbrowserConduit::showPilotAddress(const PilotAddress &pilotAddress) 
      {
-     qDebug("Pilot Address");
-     qDebug("\tLast name = %s", pilotAddress.getField(entryLastname));
-     qDebug("\tFirst name = %s", pilotAddress.getField(entryFirstname));
-     qDebug("\tCompany = %s", pilotAddress.getField(entryCompany));
-     qDebug("\tJob Title = %s", pilotAddress.getField(entryTitle));
+     qDebug("\tPilot Address");
+     qDebug("\t\tLast name = %s", pilotAddress.getField(entryLastname));
+     qDebug("\t\tFirst name = %s", pilotAddress.getField(entryFirstname));
+     qDebug("\t\tCompany = %s", pilotAddress.getField(entryCompany));
+     /*qDebug("\tJob Title = %s", pilotAddress.getField(entryTitle));
      qDebug("\tNote = %s", pilotAddress.getField(entryNote));
      qDebug("\tHome phone = %s",
 	    pilotAddress.getPhoneField(PilotAddress::eHome));
@@ -220,6 +222,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress &pilotAddress)
 	    pilotAddress.getPhoneField(PilotAddress::eFax));
      qDebug("\tPager = %s",
 	    pilotAddress.getPhoneField(PilotAddress::ePager));
+     */
      }
 
 void AbbrowserConduit::_copy(PilotAddress &toPilotAddr,
@@ -334,21 +337,20 @@ void AbbrowserConduit::_addToPalm(ContactEntry &entry)
 void AbbrowserConduit::_handleConflict(PilotAddress *pilotAddress,
 				       ContactEntry *abEntry)
     {
-    qDebug("AbbrowserConduit::_handleConflict");
     if (pilotAddress && abEntry)
 	{
-	qDebug("  Both records exist but both were changed");
+	qDebug("AbbrowserConduit::_handleConflict => Both records exist but both were changed");
 	showContactEntry(*abEntry);
 	showPilotAddress(*pilotAddress);
 	}
-    if (pilotAddress)
+    else if (pilotAddress)
 	{
-	qDebug("  ContactEntry was deleted but pilotAddress was modified");
+	qDebug("AbbrowserConduit::_handleConflict =>  ContactEntry was deleted but pilotAddress was modified");
 	showPilotAddress(*pilotAddress);
 	}
     else
 	{
-	qDebug("  PilotAddress was deleted but ConactEntry was modified");
+	qDebug("AbbrowserConduit::_handleConflict =>  PilotAddress was deleted but ConactEntry was modified");
 	showContactEntry(*abEntry);
 	}
     }
@@ -458,7 +460,26 @@ ContactEntry *
 AbbrowserConduit::_findMatch(const QDict<ContactEntry> entries,
 			     const PilotAddress &pilotAddress) const
     {
-    return NULL;
+    // for now just loop throug all entries; in future, probably better
+    // to create a map for first and last name, then just do O(1) calls
+    for (QDictIterator<ContactEntry> iter(entries);iter.current();
+	 ++iter)
+	{
+	ContactEntry *abEntry = iter.current();
+	if (abEntry->getLastName() != QString::null
+	     && abEntry->getFirstName() != QString::null)
+	    {
+	    if (abEntry->getLastName() == pilotAddress.getField(entryLastname)
+		&& abEntry->getFirstName() ==
+		pilotAddress.getField(entryFirstname))
+		return abEntry;
+	    }
+	else
+	    if (abEntry->getCompany() != QString::null &&
+		abEntry->getCompany() == pilotAddress.getField(entryCompany))
+		return abEntry;
+	}
+    return 0L;
     }
 
 
@@ -490,7 +511,7 @@ void AbbrowserConduit::doBackup()
     // iterate through all records in palm pilot
     int recIndex=0;
     for (PilotRecord *record = readRecordByIndex(recIndex); record != NULL; 
-	 recIndex++, record = readRecordByIndex(recIndex))
+	 ++recIndex, record = readRecordByIndex(recIndex))
 	{
 	PilotAddress pilotAddress(fAddressAppInfo, record);
 	
@@ -511,7 +532,18 @@ void AbbrowserConduit::doBackup()
 	    ContactEntry *abEntry =
 		_findMatch(abbrowserContacts, pilotAddress);
 	    if (abEntry)
-		_handleConflict(&pilotAddress, abEntry);
+		{
+		// if already found in abbrowser and kpilot, just assign
+		// the kpilot id and save
+		if (_equal(pilotAddress, *abEntry))
+		    {
+		    qDebug("Abbrowser::doBackup both records already exist and are equal, just assigning the KPILOT_ID to the abbrowser entry");
+		    abEntry->setCustomField("KPILOT_ID", QString::number(pilotAddress.getID()));
+		    _saveAbEntry(*abEntry);
+		    }
+		else
+		    _handleConflict(&pilotAddress, abEntry);
+		}
 	    else  // if not found in the abbrowser contacts, add it
 		{
 		ContactEntry newEntry;
@@ -551,7 +583,7 @@ void AbbrowserConduit::doSync()
     // iterate through all records in palm pilot
     int recIndex=0;
     for (PilotRecord *record = readRecordByIndex(recIndex); record != NULL; 
-	 recIndex++, record = readRecordByIndex(recIndex))
+	 ++recIndex, record = readRecordByIndex(recIndex))
 	{
 	PilotAddress pilotAddress(fAddressAppInfo, record);
 	//   if record not in abbrowser
