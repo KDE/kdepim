@@ -20,7 +20,7 @@ libKAddressBook_la_SOURCES = \
   KAddressBookInterface.stub \
   KAddressBookBackend.cpp
 
-libKAddressBook_la_METASOURCES = AUTO
+METASOURCES = AUTO
 
 libKAddressBook_la_LIBADD = $(LIB_KDECORE) $(all_libraries)
 
@@ -43,8 +43,6 @@ libKAddressBookServer_la_SOURCES  = \
   KAddressBookServerInterface.skel  \
   KAddressBookServerInterface.stub
 
-libKAddressBookServer_la_METASOURCES = AUTO
-
 libKAddressBookServer_la_LIBADD = ./libKAddressBook.la $(LIB_KDECORE) $(all_libraries)
 
 kab2includedir = $(includedir)/kab2
@@ -56,8 +54,6 @@ kab_server_SOURCES = kab_server.cpp
 
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kab_server.desktop
-
-kab_server_METASOURCES = AUTO
 
 ###########################################################################
 

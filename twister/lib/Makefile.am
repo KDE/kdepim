@@ -14,7 +14,7 @@ libtwisterkernel_la_LDFLAGS = $(all_libraries) \
 #	-no-undefined
 
 libtwisterkernel_la_LIBADD = $(LIB_KDECORE) \
-	$(top_builddir)/empath/lib/libempathkernel.la
+	$(top_builddir)/empath/lib/libempathkernel.la \
 	$(top_builddir)/rmm/librmm.la
 
 METASOURCES = AUTO
