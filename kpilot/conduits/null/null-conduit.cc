@@ -54,6 +54,10 @@ int main(int argc, char* argv[])
 	ConduitApp a(argc,argv,"null-conduit",
 		I18N_NOOP("NULL Conduit"),
 		"4.0b");
+
+	a.addAuthor("Adriaan de Groot",
+		"NULL Conduit author",
+		"adridg@sci.kun.nl");
 #else
 	ConduitApp a(argc, argv, "null-conduit",
 		"\t\tNull-Conduit -- A conduit for KPilot\n"
@@ -121,6 +125,9 @@ NullConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.7  2000/09/05 07:13:57  adridg
+// Updated to KCmdLineArgs
+//
 // Revision 1.6  2000/08/28 12:22:03  pilone
 // 	KDE 2.0 Cleanup patches.  Start of adding conduits as kpilot
 // services.

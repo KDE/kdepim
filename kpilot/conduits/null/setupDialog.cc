@@ -21,6 +21,7 @@
 #include <stream.h>
 #include <qlabel.h>
 #include <qlineedit.h>
+#include <qlayout.h>
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -34,12 +35,6 @@
 static char *id="$Id$";
 
 
-// I couldn't find a max() function so this is
-// it, for the null conduit. It's used in the widget
-// layout section.
-//
-//
-#define max(a,b) ((a)>(b) ? (a) : (b))
 
 /* static */ const QString NullOptions::NullGroup("Null-conduit Options");
 
@@ -85,27 +80,37 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 	setupDialogPage(i18n("Null Conduit"),parent,config)
 {
 	FUNCTIONSETUP;
+	QGridLayout *grid=new QGridLayout(this,4,4,0,SPACING);
+	grid->addRowSpacing(0,SPACING);
+	grid->addColSpacing(0,SPACING);
+	grid->addColSpacing(3,SPACING);
 
 	generalLabel=new QLabel(i18n(
 		"The NULL conduit doesn't actually do anything."),
 		this);
 	generalLabel->adjustSize();
-	generalLabel->move(10,14);
 
-	textFieldLabel=new QLabel(i18n("Log message:"),
-		this);
+	grid->addMultiCellWidget(generalLabel,1,1,1,2);
+
+	textFieldLabel=new QLabel(i18n("Log message:"),this);
 	textFieldLabel->adjustSize();
-	textFieldLabel->move(10,BELOW(generalLabel));
 
 	textField=new QLineEdit(this);
 	textField->setText(config->readEntry("Text","NULL conduit was here!"));
-	textField->resize(200,textField->height());
-	textField->move(RIGHT(textFieldLabel),BELOW(generalLabel));
+	textField->adjustSize();
 
+	grid->addWidget(textFieldLabel,2,1);
+	grid->addWidget(textField,2,2);
+
+	grid->setRowStretch(3,100);
 }
 
 
 // $Log$
+// Revision 1.7  2000/08/28 12:22:03  pilone
+// 	KDE 2.0 Cleanup patches.  Start of adding conduits as kpilot
+// services.
+//
 // Revision 1.6  2000/08/08 02:22:30  matz
 // As rikkus did not disable compilation of kpilot anymore I can even make
 // it compilable:
