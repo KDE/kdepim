@@ -624,7 +624,7 @@ void KPilotInstaller::initMenu()
 	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
 
-	a = new KAction(i18n("Configuration &Wizard ..."), CSL1("wizard"), 0,
+	a = new KAction(i18n("Configuration &Wizard..."), CSL1("wizard"), 0,
 		this, SLOT(slotConfigureWizard()),
 		actionCollection(), "options_configure_wizard");
 	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
