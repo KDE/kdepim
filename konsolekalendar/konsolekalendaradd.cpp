@@ -53,8 +53,8 @@ bool KonsoleKalendarAdd::addEvent()
 
   event->setDtStart( m_variables->getStartDate() );
   event->setDtEnd( m_variables->getStartDate() );
-  //event->setDescription( m_variables->getDescription() );
-  //event->setSummary( m_variables->getSummary() );
+  event->setDescription( m_variables->getDescription() );
+  event->setSummary( m_variables->getSummary() );
 
   if( m_variables->getCalendar()->addEvent( event ) == true ) {
     kdDebug() << "Event added!" << endl;
