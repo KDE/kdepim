@@ -1,0 +1,79 @@
+# Name            : MIME type/subtype   : Description (en_US)
+# ---------------------------------------------------------------
+# 
+# Personal info
+# 
+Title             : text/unicode        : Title
+FullName          : text/unicode        : Full name
+Initials          : text/unicode        : Initials
+FirstName         : text/unicode        : First name
+MiddleNames       : text/unicode        : Middle names
+LastName          : text/unicode        : Last name
+Suffix            : text/unicode        : Name suffix
+Nickname          : text/unicode        : Nickname
+FileAs            : text/unicode        : Name to file under
+Gender            : text/unicode        : Gender
+Picture           : image/x-png         : Picture
+Children          : x-kab/unicode-list  : Names of children
+Spouse            : text/unicode        : Name of spouse
+Profession        : text/unicode        : Profession
+Birthday          : x-kab/date          : Date of birth
+Anniversary       : x-kab/date          : Wedding anniversary
+HomeStreet        : x-kab/unicode-list  : Home street address
+HomeCountry       : text/unicode        : Country of residence
+HomePOBox         : text/unicode        : Home post office box
+HomePostalCode    : text/unicode        : Home zip/postal code
+HomeCountry       : text/unicode        : Country of residence
+HomeFax           : text/unicode        : Home facsimile number
+HomePhone         : text/unicode        : Home telephone number
+HomePhone2        : text/unicode        : Second home telephone number
+MobilePhone       : text/unicode        : Mobile telephone number
+CarPhone          : text/unicode        : Car telephone number
+Extension         : text/unicode        : Work telephone extension
+Pager             : text/unicode        : Pager number
+Telex             : text/unicode        : Telex number
+Email             : text/unicode        : Email address
+ISDN              : text/unicode        : ISDN number
+Callback          : text/unicode        : Callback number
+RadioPhone        : text/unicode        : Radiophone number
+TtyTddPhone       : text/unicode        : TtyTddPhone
+PersonalHomePage  : x-kab/url           : Personal home page
+PersonalFTPSite   : x-kab/url           : Personal FTP site
+FirstLanguage     : text/unicode        : First language
+SecondLanguage    : text/unicode        : Second language
+Nationality       : text/unicode        : Nationality
+Hobbies           : x-kab/unicode-list  : Hobbies
+#
+# Work-related info
+#
+OrgID             : text/unicode        : ID at organization
+Org               : text/unicode        : Name of organization
+OrgStreet         : x-kab/unicode-list  : Business street address
+OrgPOBox          : text/unicode        : Business post office box
+OrgPostalCode     : text/unicode        : Business zip/postal code
+OrgCountry        : text/unicode        : Business country
+OrgFax            : text/unicode        : Business facsimile number
+OrgHomePage       : x-kab/url           : Business home page
+OrgPhone          : text/unicode        : Business telephone number
+OfficeLocation    : text/unicode        : Office location
+Department        : text/unicode        : Department
+Manager           : x-kab/entity        : Manager
+Account           : text/unicode        : Account
+Role              : text/unicode        : Role
+Rank              : text/unicode        : Rank
+Assistant         : x-kab/kab-entity    : Assistant
+Attachment        : x-kab/byte-array    : Attachment
+GovtIDNumber      : x-kab/byte-array    : Government ID number
+#
+# Misc info
+#
+Created           : x-kab/date          : Date this record was created
+Notes             : text/unicode        : Notes
+Sensitivity       : text/unicode        : Sensitivity
+ReferredBy        : text/unicode        : Referrer
+CustomerID        : x-kab/byte-array    : Customer ID
+BillingInfo       : text/unicode        : Billing info
+Mileage           : x-kab/integer       : Mileage
+Location          : text/unicode        : Location
+Categories        : x-kab/unicode-list  : Categories
+# eof
