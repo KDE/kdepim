@@ -26,11 +26,12 @@
 #include <qdatetime.h>
 
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "konsolekalendar.h"
 
 using namespace KCal;
+using namespace std;
 
 static const char *description = I18N_NOOP("KonsoleKalendar");
 	

@@ -20,7 +20,7 @@
 #include "kalendarVariables.h"
 
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 
 KalendarVariables::KalendarVariables()

@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 
 #include <qdatetime.h>
 
@@ -29,6 +29,7 @@
 #include "konsolekalendar.h"
 
 using namespace KCal;
+using namespace std;
 
 KonsoleKalendar::KonsoleKalendar(KalendarVariables &variables)
 {
