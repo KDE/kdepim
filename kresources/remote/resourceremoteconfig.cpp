@@ -26,6 +26,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kdialog.h>
 
@@ -85,6 +86,12 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
     res->setUploadUrl( KURL( mUploadUrl->url() ) );
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
+
+
+    if ( mUploadUrl->url().isEmpty() && !resource->readOnly() ) {
+      KMessageBox::information( this, i18n( "You have specified no upload URL, the calendar will be read-only." ) );
+      resource->setReadOnly( true );
+    }
   } else {
     kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
   }
