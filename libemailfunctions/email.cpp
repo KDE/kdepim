@@ -201,12 +201,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 
     case InAngleAddress : {
       switch ( aStr[index] ) {
-        case '"' :
-         if ( inQuotedString ) {
-            inQuotedString = false;
-            } else if ( !inQuotedString ) {
-              inQuotedString = true;
-            }
+        case '"' : inQuotedString = !inQuotedString;
             break;
         case '@' :
           if ( inQuotedString ) {
