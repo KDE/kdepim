@@ -92,7 +92,7 @@ NullConduit::~NullConduit()
 		return false;
 	}
 
-	QString m(NullConduitSettings::messge());
+	QString m(NullConduitSettings::logMessage());
 	if (!m.isEmpty())
 	{
 		addSyncLogEntry(m);
