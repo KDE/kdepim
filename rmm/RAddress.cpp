@@ -106,7 +106,8 @@ RAddress::_parse()
     // RFC822: group: phrase ":" [#mailbox] ";"
     // -> If a group, MUST end in ";".
 
-    mailboxList_clear();
+    mailboxList_.clear();
+
     if (strRep_.right(1) == ";")
     { // This is a group !
 		// TOUNDO :)
@@ -131,8 +132,6 @@ RAddress::_parse()
 		QStrList list;
 		RTokenise(address, ",", list, true, false); //Tokenise?  What a brit :)
 		
-        mailboxList_.clear();
-        
 	    for (QStrListIterator it(list); it.current(); ++it)
 		    mailboxList_.append(RMailbox(*it.current()));
 
@@ -140,7 +139,6 @@ RAddress::_parse()
 
         RMailbox m(strRep_);
 
-        mailboxList_.clear();
         mailboxList_.append(m);
     }
 }
