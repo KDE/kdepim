@@ -35,48 +35,75 @@ void StandardSync::syncToTarget( Syncee *source, Syncee *target, bool override )
                 << " to: " << target->identifier() << "  override: "
                 << override  << endl;
 
-  SyncEntry *sourceEntry = source->firstEntry();
-  while ( sourceEntry ) {
-    kdDebug(5250) << "SYNC: sourceEntry: " << sourceEntry->id() << endl;
+  SyncEntry *sourceEntry;
+  for( sourceEntry = source->firstEntry(); sourceEntry;
+       sourceEntry = source->nextEntry() ) {
+    kdDebug(5250) << "SYNC: sourceEntry: " << sourceEntry->id()
+                  << " (" << sourceEntry->name() << ")"
+                  << " " << int( sourceEntry ) << endl;
+    if ( sourceEntry->dontSync() ) {
+      kdDebug(5250) << "SYNC:   source don't sync" << endl;
+      continue;
+    }
     SyncEntry *targetEntry = target->findEntry( sourceEntry->id() );
     if ( targetEntry ) {
+      kdDebug(5250) << "SYNC:   targetEntry: " << targetEntry->id()
+                    << " (" << targetEntry->name() << ")"
+                    << " " << int( targetEntry ) << endl;
+      if ( targetEntry->dontSync() ) {
+        kdDebug(5250) << "SYNC:   target don't sync" << endl;
+        continue;
+      }
+      kdDebug(5250) << "SYNC:   entry exists" << endl;
       // Entry already exists in target
       if ( sourceEntry->equals( targetEntry ) ) {
         // Entries are equal, no action required
-        kdDebug(5250) << "SYNC: equal" << endl;
+        kdDebug(5250) << "SYNC:   equal" << endl;
       } else {
+        kdDebug(5250) << "SYNC:   entries are different" << endl;
         // Entries are different, resolve conflict
         if ( override ) {
           // Force override
           target->replaceEntry( targetEntry, sourceEntry );
-          kdDebug(5250) << "SYNC: replace" << endl;
+          kdDebug(5250) << "SYNC:   force replace" << endl;
         } else {
           if ( source->hasChanged( sourceEntry ) &&
                target->hasChanged( targetEntry ) ) {
             // Both entries have changed
-            kdDebug(5250) << "SYNC: Both have changed" << endl;
+            kdDebug(5250) << "SYNC:   Both have changed" << endl;
             SyncEntry *result = deconflict( sourceEntry, targetEntry );
-            if ( result == sourceEntry ) {
-              target->replaceEntry( targetEntry, sourceEntry );
+            if ( !result ) {
+              kdDebug(5250) << "SYNC:   no decision" << endl;
+              sourceEntry->setDontSync( true );
+              targetEntry->setDontSync( true );
+            } else {
+              if ( result == sourceEntry ) {
+                kdDebug(5250) << "SYNC:   take source" << endl;
+                target->replaceEntry( targetEntry, sourceEntry );
+              } else {
+                kdDebug(5250) << "SYNC:   take target" << endl;
+              }
             }
           } else if ( source->hasChanged( sourceEntry ) &&
                       !target->hasChanged( targetEntry ) ) {
             // take source entry
             target->replaceEntry( targetEntry, sourceEntry );
-            kdDebug(5250) << "SYNC: Take source entry." << endl;
+            kdDebug(5250) << "SYNC:   source changed, target not" << endl;
+            kdDebug(5250) << "SYNC:   Take source entry." << endl;
           } else if ( !source->hasChanged( sourceEntry ) &&
                       target->hasChanged( targetEntry ) ) {
             // take target entry, no action required
-            kdDebug(5250) << "SYNC: Take target entry." << endl;
+            kdDebug(5250) << "SYNC:   target changed, source not" << endl;
+            kdDebug(5250) << "SYNC:   Take target entry." << endl;
+          } else {
+            kdDebug(5250) << "SYNC:   nothing has changed." << endl;
           }
         }
       }
     } else {
       // New entry
       target->addEntry( sourceEntry );
-      kdDebug(5250) << "SYNC: New entry." << endl;
+      kdDebug(5250) << "SYNC:   New entry." << endl;
     }
-
-    sourceEntry = source->nextEntry();
   }
 }
