@@ -21,9 +21,8 @@
 
 #include "filters.hxx"
 #include "mapihd.h"
-#include <stdio.h>
 #include <klocale.h>
-
+#include <qfile.h>
 
 #define INDEX_OF_INDEX	0x000000c4
 #define PAB_REC_OK	0xbcec
@@ -35,7 +34,7 @@ class pab
   friend class pabrec;
 
   private:
-    FILE *in;
+    QFile in;
     FilterInfo *info;
     Filter     *f;
     const char *pabfile;
@@ -58,7 +57,7 @@ class pab
     word_t     lower(content_t);
     word_t     upper(content_t);
     byte_t     readbyte(void);
-    adr_t      curpos(void) { return ftell(in); }
+    adr_t      curpos(void) { return in.at(); }
     adr_t      tell(void)   { return curpos(); }
   private:
     bool  recUnknown(pabrec & R);

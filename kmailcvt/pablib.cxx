@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdio.h>
 #include "pablib.hxx"
 
 #define REC_OK PAB_REC_OK
@@ -27,14 +26,15 @@ pab::pab(const char *_pabfile,Filter *_f,FilterInfo *_info)
   pabfile=_pabfile;
   f=_f;
   info=_info;
-  in=fopen(pabfile,"rb");
+  in.setName(pabfile);
+  in.open(IO_ReadOnly);
   cap=i18n("Import MS Exchange Personal Addressbook (.PAB)");
 }
 
 
 pab::~pab()
 {
-  if (in!=NULL) { fclose(in); }
+  if (in.isOpen()) { in.close(); }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ bool pab::convert(void)
 adr_t A;
 bool ret;
 
-   if (in==NULL) {QString msg;
+   if (!in.isOpen()) {QString msg;
      msg=i18n("Can't open %1 for reading").arg(pabfile);
      info->alert(msg);
      return false;
@@ -286,9 +286,9 @@ return true;
 content_t pab::go(adr_t a)
 {
 content_t A;
-  fseek(in,a,SEEK_SET);
+  in.at(a);
   A=read();
-  fseek(in,a,SEEK_SET);
+  in.at(a);
 return A;
 }
 
@@ -296,7 +296,7 @@ content_t pab::read(void)
 {
 unsigned char mem[4];
 content_t A;
-  fread(&mem,sizeof(A),1,in);	// WinTel unsigned long opslag
+  in.readBlock((char *) &mem, sizeof(A));	// WinTel unsigned long opslag
   A=mem[3];
   A<<=8;A|=mem[2];
   A<<=8;A|=mem[1];
@@ -307,7 +307,7 @@ return A;
 void pab::read(word_t & w)
 {
 unsigned char mem[2];
-  fread(&mem,sizeof(w),1,in);
+  in.readBlock((char *) &mem, sizeof(w));
   w=mem[1];
   w<<=8;w|=mem[0];
 }
@@ -315,7 +315,7 @@ unsigned char mem[2];
 content_t pab::relative(int words)
 {
 adr_t     a;
-  a=ftell(in);
+  a=in.at();
 return go(a+(words*sizeof(content_t)));
 }
 
@@ -349,11 +349,11 @@ void pab::size(content_t A,pabsize_t & s1,pabsize_t & s2)
 byte_t pab::readbyte(void)
 {
 byte_t c;
-    c=fgetc(in);
+    c=in.getch();
 return c;
 }
 
 void pab::read(unsigned char *mem,content_t size)
 {
-  fread(mem,size,1,in);
+  in.readBlock((char *) mem, size);
 }

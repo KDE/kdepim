@@ -20,8 +20,6 @@
 
 #include "filters.hxx"
 #include <qmemarray.h> 
-#include <string>
-#include <stdio.h>
 
 #include "pabtypes.h"
 
