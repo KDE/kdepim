@@ -3,6 +3,8 @@ debian/tmp/usr/bin/kaddressbook
 debian/tmp/usr/lib/libkaddressbook.so.*
 debian/tmp/usr/lib/libkaddressbook.la
 debian/tmp/usr/lib/libkabinterfaces.so.*
+debian/tmp/usr/lib/kde3/kabc_imap.so
+debian/tmp/usr/lib/kde3/kabc_imap.la
 debian/tmp/usr/lib/kde3/ldifvcardthumbnail.so
 debian/tmp/usr/lib/kde3/ldifvcardthumbnail.la 
 debian/tmp/usr/lib/kde3/libkaddressbookpart.la
@@ -101,6 +103,7 @@ debian/tmp/usr/share/services/kaddressbook/ldif_xxport.desktop
 debian/tmp/usr/share/services/kaddressbook/gnokii_xxport.desktop
 debian/tmp/usr/share/services/kaddressbook/opera_xxport.desktop
 debian/tmp/usr/share/services/kaddressbook/pab_xxport.desktop
+debian/tmp/usr/share/services/kresources/kabc/imap.desktop
 debian/tmp/usr/share/services/ldifvcardthumbnail.desktop
 debian/tmp/usr/share/services/kabconfig.desktop
 debian/tmp/usr/share/services/kabldapconfig.desktop
