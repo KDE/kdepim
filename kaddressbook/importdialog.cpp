@@ -78,7 +78,7 @@ void ContactImportDialog::convertRow()
   a.setPrefix(mNamePrefix->convert());
   a.setSuffix(mNameSuffix->convert());
   a.setNickName(mNickName->convert());
-  a.setBirthday( QDateTime::fromString( mBirthday->convert() ) );
+  a.setBirthday( QDateTime::fromString( mBirthday->convert(), Qt::ISODate ) );
   a.insertEmail(mEmail->convert(), true);
   a.setRole(mRole->convert());
   a.setTitle(mJobTitle->convert());
