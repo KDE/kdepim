@@ -34,6 +34,16 @@ namespace Kpgp {
 BaseG::BaseG()
   : Base()
 {
+  // determine the version of gpg (the method is equivalent to gpgme's method)
+  runGpg( "--version", 0 );
+  int eol = output.find( '\n' );
+  if( eol > 0 ) {
+    int pos = output.findRev( ' ', eol - 1 );
+    if( pos != -1 ) {
+      mVersion = output.mid( pos + 1, eol - pos - 1 );
+      kdDebug(5100) << "found GnuPG " << mVersion << endl;
+    }
+  }
 }
 
 

@@ -97,6 +97,8 @@ protected:
   QCString error;
   QString errMsg;
 
+  QCString mVersion;
+
   int status;
 
 };

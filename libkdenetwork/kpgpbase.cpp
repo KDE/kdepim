@@ -421,8 +421,18 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   pipe(perr);
 
     if( passphrase && ( 0 == getenv("GPG_AGENT_INFO") ) ) {
-      snprintf(gpgcmd, 1023, "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",ppass[0],cmd);
-    } else {
+      if( mVersion >= "1.0.7" ) {
+        snprintf( gpgcmd, 1023,
+                  "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",
+                  ppass[0], cmd );
+      }
+      else {
+        snprintf( gpgcmd, 1023,
+                  "LANGUAGE=C gpg --passphrase-fd %d %s",
+                  ppass[0], cmd );
+      }
+    }
+    else {
       snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
     }
 
@@ -445,8 +455,18 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
     //#warning FIXME: there has to be a better way to do this
      /* this is nasty nasty nasty (but it works) */
     if( passphrase && ( 0 == getenv("GPG_AGENT_INFO") ) ) {
-      snprintf(gpgcmd, 1023, "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",ppass[0],cmd);
-    } else {
+      if( mVersion >= "1.0.7" ) {
+        snprintf( gpgcmd, 1023,
+                  "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",
+                  ppass[0], cmd );
+      }
+      else {
+        snprintf( gpgcmd, 1023,
+                  "LANGUAGE=C gpg --passphrase-fd %d %s",
+                  ppass[0], cmd );
+      }
+    }
+    else {
       snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
     }
 
