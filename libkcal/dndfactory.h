@@ -51,16 +51,12 @@ class DndFactory
     /** Create Event object from drop event */
     Event *createDrop(QDropEvent *de);
 
-    /** cut event to clipboard */
-    void cutEvent(Event *);
-    /** cut todo to clipboard */
-    void cutTodo(Todo *);
-    /** copy event to clipboard */
-    bool copyEvent(Event *);
-    /** copy todo to clipboard */
-    bool copyTodo(Todo *);
+    /** cut incidence to clipboard */
+    void cutIncidence( Incidence * );
+    /** copy the incidence to clipboard */
+    bool copyIncidence( Incidence * );
     /** pastes the event or todo and returns a pointer to the new incidence pasted. */
-    Incidence *pasteIncidence(const QDate &, const QTime *newTime = 0);
+    Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
 
   private:
     Calendar *mCalendar;

@@ -97,39 +97,22 @@ Todo *DndFactory::createDropTodo(QDropEvent *de)
 }
 
 
-void DndFactory::cutEvent(Event *selectedEv)
+void DndFactory::cutIncidence( Incidence *selectedInc )
 {
-  if (copyEvent(selectedEv)) {
-    mCalendar->deleteEvent(selectedEv);
+  if ( copyIncidence( selectedInc ) ) {
+    mCalendar->deleteIncidence( selectedInc );
   }
 }
 
-void DndFactory::cutTodo(Todo *selectedTodo)
+bool DndFactory::copyIncidence( Incidence *selectedInc )
 {
-  if (copyTodo(selectedTodo)) {
-    mCalendar->deleteTodo(selectedTodo);
-  }
-}
-
-bool DndFactory::copyEvent( Event *selectedEv )
-{
+  if ( !selectedInc ) 
+    return false;
   QClipboard *cb = QApplication::clipboard();
 
   CalendarLocal cal( mCalendar->timeZoneId() );
-  Event *ev = new Event( *selectedEv );
-  cal.addEvent(ev);
-  cb->setData( new ICalDrag( &cal ) );
-
-  return true;
-}
-
-bool DndFactory::copyTodo( Todo *selectedTodo )
-{
-  QClipboard *cb = QApplication::clipboard();
-
-  CalendarLocal cal( mCalendar->timeZoneId() );
-  Todo *todo = new Todo( *selectedTodo );
-  cal.addTodo(todo);
+  Incidence *inc = selectedInc->clone();
+  cal.addIncidence( inc );
   cb->setData( new ICalDrag( &cal ) );
 
   return true;
@@ -141,8 +124,6 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
 
   CalendarLocal cal( mCalendar->timeZoneId() );
 
-  Event *anEvent = 0;
-
   QClipboard *cb = QApplication::clipboard();
 
   if ( !ICalDrag::decode( cb->data(), &cal ) &&
@@ -151,50 +132,54 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
     return 0;
   }
 
-  Event::List evList = cal.events();
-  Event *ev = evList.first();
-  if ( !evList.isEmpty() && ev ) {
-    anEvent = new Event( *ev );
+  Incidence::List incList = cal.incidences();
+  Incidence *inc = incList.first();
 
-    anEvent->recreate();
+  if ( !incList.isEmpty() && inc ) {
+    inc = inc->clone();
 
-    // Calculate length of event
-    int daysOffset = anEvent->dtStart().date().daysTo(
-      anEvent->dtEnd().date() );
-    // new end date if event starts at the same time on the new day
-    QDateTime endDate(newDate.addDays(daysOffset), anEvent->dtEnd().time() );
+    inc->recreate();
 
-    if ( newTime ) {
-      // additional offset for new time of day
-      int addSecsOffset( anEvent->dtStart().time().secsTo( *newTime ));
-      endDate=endDate.addSecs( addSecsOffset );
-      anEvent->setDtStart( QDateTime( newDate, *newTime ) );
-    } else {
-      anEvent->setDtStart( QDateTime( newDate, anEvent->dtStart().time() ) );
-    }
+    if ( inc->type() == "Event" ) {
+      
+      Event *anEvent = static_cast<Event*>( inc );
+      // Calculate length of event
+      int daysOffset = anEvent->dtStart().date().daysTo(
+        anEvent->dtEnd().date() );
+      // new end date if event starts at the same time on the new day
+      QDateTime endDate( newDate.addDays(daysOffset), anEvent->dtEnd().time() );
 
-    anEvent->setDtEnd( endDate );
-    if (mCalendar) mCalendar->addEvent( anEvent );
-		return anEvent;
-		
-  } else {
-	
-    Todo::List toList = cal.todos();
-    Todo *to = toList.first();
-    if ( !toList.isEmpty() && to ) {
-      Todo *anTodo = new Todo(*to);
-			anTodo->recreate();
-			
-	    if ( newTime ) {
+      if ( newTime ) {
+        // additional offset for new time of day
+        int addSecsOffset( anEvent->dtStart().time().secsTo( *newTime ));
+        endDate=endDate.addSecs( addSecsOffset );
+        anEvent->setDtStart( QDateTime( newDate, *newTime ) );
+      } else {
+        anEvent->setDtStart( QDateTime( newDate, anEvent->dtStart().time() ) );
+      }
+      anEvent->setDtEnd( endDate );
+    
+    } else if ( inc->type() == "Todo" ) {
+      Todo *anTodo = static_cast<Todo*>( inc );
+      if ( newTime ) {
         anTodo->setDtDue( QDateTime( newDate, *newTime ) );
-	    } else {
-  	    anTodo->setDtDue( QDateTime( newDate, anTodo->dtDue().time() ) );
-    	}
-      if (mCalendar) mCalendar->addTodo(anTodo);
-			return anTodo;
+      } else {
+        anTodo->setDtDue( QDateTime( newDate, anTodo->dtDue().time() ) );
+      }
+    } else if ( inc->type() == "Journal" ) {
+      Journal *anJournal = static_cast<Journal*>( inc );
+      if ( newTime ) {
+        anJournal->setDtStart( QDateTime( newDate, *newTime ) );
+      } else {
+        anJournal->setDtStart( QDateTime( newDate ) );
+      }
     } else {
-      kdDebug(5800) << "unknown event type in paste!!!" << endl;
+      kdDebug(5850) << "Trying to past unknown incidence of type " << inc->type() << endl;
     }
+    
+    if ( mCalendar ) mCalendar->addIncidence( inc );
+    return inc;
+   
   }
 
   return 0;
