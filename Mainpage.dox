@@ -1,28 +1,84 @@
-/** \mainpage The KDE-PIM API Reference
-
-This section contains the KDE online class reference for the current development version of KDE-PIM.
-
-- <a href="calendarsystem/html"><b>calendarsystem</b></a> (<a href="calendarsystem/html/classes.html">classes</a>)
-- <a href="kabc/html"><b>kabc</b></a> (<a href="kabc/html/classes.html">classes</a>)
-- <a href="kaddressbook/html"><b>kaddressbook</b></a> (<a href="kaddressbook/html/classes.html">classes</a>)
-- <a href="kalarm/html"><b>kalarm</b></a> (<a href="kalarm/html/classes.html">classes</a>)
-- <a href="kalarmd/html"><b>kalarmd</b></a> (<a href="kalarmd/html/classes.html">classes</a>)
-- <a href="kandy/html"><b>kandy</b></a> (<a href="kandy/html/classes.html">classes</a>)
-- <a href="kaplan/html"><b>kaplan</b></a> (<a href="kaplan/html/classes.html">classes</a>)
-- <a href="karm/html"><b>karm</b></a> (<a href="karm/html/classes.html">classes</a>)
-- <a href="kfile-plugins/html"><b>kfile-plugins</b></a> (<a href="kfile-plugins/html/classes.html">classes</a>)
-- <a href="kgantt/html"><b>kgantt</b></a> (<a href="kgantt/html/classes.html">classes</a>)
-- <a href="kitchensync/html"><b>kitchensync</b></a> (<a href="kitchensync/html/classes.html">classes</a>)
-- <a href="knotes/html"><b>knotes</b></a> (<a href="knotes/html/classes.html">classes</a>)
-- <a href="konsolekalendar/html"><b>konsolekalendar</b></a> (<a href="konsolekalendar/html/classes.html">classes</a>)
-- <a href="korganizer/html"><b>korganizer</b></a> (<a href="korganizer/html/classes.html">classes</a>)
-- <a href="kpilot/html"><b>kpilot</b></a> (<a href="kpilot/html/classes.html">classes</a>)
-- <a href="ksync/html"><b>ksync</b></a> (<a href="ksync/html/classes.html">classes</a>)
-- <a href="libkcal/html"><b>libkcal</b></a> (<a href="libkcal/html/classes.html">classes</a>)
-- <a href="libkdepim/html"><b>libkdepim</b></a> (<a href="libkdepim/html/classes.html">classes</a>)
-- <a href="libkholidays/html"><b>libkholidays</b></a> (<a href="libkholidays/html/classes.html">classes</a>)
-- <a href="libkpimexchange/html"><b>libkpimexchange</b></a> (<a href="libkpimexchange/html/classes.html">classes</a>)
-
-More information can be found at <a href="http://pim.kde.org/index.php">the KDE-PIM web site.</a>
-
-*/
+/**
+        * @mainpage The KDE-PIM API Reference
+        *
+        * This section contains the KDE online class reference for the current
+        * development version of KDE-PIM.  Additionally, you can subscribe
+        * or read the mailing lists for any additions and/or modifications
+        * to the API.
+        *
+        * - <a href="certmanager/html/index.html"><b>certmanager</b></a>
+        *   (<a href="certmanager/html/classes.html">classes</a>)\n
+        *   <i>KDE Key Manager.</i>
+        * - <a href="kaddressbook/html/index.html"><b>kaddressbook</b></a>
+        *   (<a href="kaddressbook/html/classes.html">classes</a>)\n
+        *   <i>Keeps your addresses on file.</i>
+        * - <a href="kandy/html/index.html"><b>kandy</b></a>
+        *   (<a href="kandy/html/classes.html">classes</a>)\n
+        *   <i>Synchronises data with your mobile phone.</i>
+        * - <a href="karm/html/index.html"><b>karm</b></a>
+        *   (<a href="karm/html/classes.html">classes</a>)\n
+        *   <i>A time tracker.</i>
+        * - <a href="kfile-plugins/html/index.html"><b>kfile-plugins</b></a>
+        *   (<a href="kfile-plugins/html/classes.html">classes</a>)\n
+        *   <i></i>
+        * - <a href="kgantt/html/index.html"><b>kgantt</b></a>
+        *   (<a href="kgantt/html/classes.html">classes</a>)\n
+        *   <i></i>
+        * - <a href="kitchensync/html/index.html"><b>kitchensync</b></a>
+        *   (<a href="kitchensync/html/classes.html">classes</a>)\n
+        *   <i>Generic Syncing.</i>
+        * - <a href="kmail/html/index.html"><b>kmail</b></a>
+        *   (<a href="kmail/html/classes.html">classes</a>)\n
+        *   <i>A fully-featured email client.</i>
+        * - <a href="knotes/html/index.html"><b>knotes</b></a>
+        *   (<a href="knotes/html/classes.html">classes</a>)\n
+        *   <i>A small tool to scribble down notes.</i>
+        * - <a href="konsolekalendar/html/index.html"><b>konsolekalendar</b></a>
+        *   (<a href="konsolekalendar/html/classes.html">classes</a>)\n
+        *   <i>A command line interface to KDE calendars.</i>
+        * - <a href="kontact/html/index.html"><b>kontact</b></a>
+        *   (<a href="kontact/html/classes.html">classes</a>)\n
+        *   <i>Brings together all the KDE PIM applications under one roof.</i>
+        * - <a href="korganizer/html/index.html"><b>korganizer</b></a>
+        *   (<a href="korganizer/html/classes.html">classes</a>)\n
+        *   <i>The calendar and scheduling program for KDE.</i>
+        * - <a href="kpilot/kpilot/html/index.html"><b>kpilot</b></a>
+        *   (<a href="kpilot/kpilot/html/classes.html">classes</a>)\n
+        *   <i>Synchronizes data with your PalmOS-based handheld.</i>
+        * - <a href="kpilot/lib/html/index.html"><b>kpilot library</b></a>
+        *   (<a href="kpilot/lib/html/classes.html">classes</a>)\n
+        *   <i>KPilot Library.</i>
+        * - <a href="ksync/html/index.html"><b>ksync</b></a>
+        *   (<a href="ksync/html/classes.html">classes</a>)\n
+        *   <i>A generic library for syncing collections of data entries.</i>
+        * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
+        *   (<a href="libemailfunctions/html/classes.html">classes</a>)\n
+        *   <i>A library for general purpose email handling.</i>
+        * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
+        *   (<a href="libkcal/html/classes.html">classes</a>)\n
+        *   <i>A library of calendaring classes.</i>
+        * - <a href="libkdenetwork/html/index.html"><b>libkdenetwork</b></a>
+        *   (<a href="libkdenetwork/html/classes.html">classes</a>)\n
+        *   <i>A library of networkworking classes.</i>
+        * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
+        *   (<a href="libkdepim/html/classes.html">classes</a>)\n
+        *   <i>A library of widgets and other goodies for pim.</i>
+        * - <a href="libkholidays/html/index.html"><b>libkholidays</b></a>
+        *   (<a href="libkholidays/html/classes.html">classes</a>)\n
+        *   <i>A library for handling holidays.</i>
+        * - <a href="libkmime/html/index.html"><b>libkmime</b></a>
+        *   (<a href="libkmime/html/classes.html">classes</a>)\n
+        *   <i>A library for MIME handling.</i>
+        * - <a href="libkpgp/html/index.html"><b>libkpgp</b></a>
+        *   (<a href="libkpgp/html/classes.html">classes</a>)\n
+        *   <i>A PGP abstraction layer.</i>
+        * - <a href="libkpimexchange/html/index.html"><b>libkpimexchange</b></a>
+        *   (<a href="libkpimexchange/html/classes.html">classes</a>)\n
+        *   <i></i>
+        *
+        * More information can be found at the
+        * <a href="http://pim.kde.org/index.php">KDE-PIM web site</a>
+        * or at the
+        * <a href="http://developer.kde.org/index.php">KDE Developer's corner</a>.
+        *
+        */
