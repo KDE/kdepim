@@ -44,9 +44,6 @@ public:
 protected:
 	virtual void commitChanges();
 
-protected slots:
-	void slotBrowseCalendar();
-
 private:
 	VCalWidget *fConfigWidget;
 } ;

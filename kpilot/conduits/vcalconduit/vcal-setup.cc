@@ -28,17 +28,18 @@
 
 #include "options.h"
 
+#include "vcal-setup.moc"
+
 #include <qtabwidget.h>
-#include <qlineedit.h>
 #include <qcheckbox.h>
 #include <qbuttongroup.h>
 
 #include <kconfig.h>
-#include <kfiledialog.h>
+//#include <kfiledialog.h>
+#include <kurlrequester.h>
 
 #include "korganizerConduit.h"
 #include "vcal-factory.h"
-#include "vcal-setup.moc"
 
 
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n,
@@ -62,8 +63,8 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n,
 //	fConfigWidget->resize(s);
 //	fConfigWidget->setMinimumSize(s);
 
-	QObject::connect((QObject*)fConfigWidget->fCalBrowse,SIGNAL(clicked()),
-		this,SLOT(slotBrowseCalendar()));
+	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
+	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All files (*.*)");
 }
 
 VCalWidgetSetup::~VCalWidgetSetup()
@@ -79,7 +80,7 @@ VCalWidgetSetup::~VCalWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
 
-	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->text());
+	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->url());
 	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
 	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
 		fConfigWidget->conflictResolution->id(fConfigWidget->conflictResolution->selected()));
@@ -103,7 +104,7 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	if (!fConfig) return;
 
 	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
-	fConfigWidget->fCalendarFile->setText( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
+	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
 	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
 	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
 
@@ -117,13 +118,4 @@ VCalWidgetSetup::~VCalWidgetSetup()
 		fConfigWidget->syncAction->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
 	}
 
-}
-
-void VCalWidgetSetup::slotBrowseCalendar()
-{
-	FUNCTIONSETUP;
-
-	QString fileName = KFileDialog::getOpenFileName(CSL1("::calendar"), CSL1("*.vcs *ics|ICalendars"),this);
-	if(fileName.isNull()) return;
-	fConfigWidget->fCalendarFile->setText(fileName);
 }

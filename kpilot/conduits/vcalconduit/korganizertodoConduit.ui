@@ -40,31 +40,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QLineEdit" row="0" column="1">
-                        <property name="name">
-                            <cstring>fCalendarFile</cstring>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton" row="0" column="2">
-                        <property name="name">
-                            <cstring>fCalBrowse</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Browse...</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Open a file browser</string>
-                        </property>
-                    </widget>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
                             <cstring>TextLabel1</cstring>
@@ -90,7 +65,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fArchive</cstring>
                         </property>
@@ -101,7 +76,7 @@
                             <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="3">
+                    <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>syncAction</cstring>
                         </property>
@@ -154,6 +129,17 @@
                                 </property>
                             </widget>
                         </vbox>
+                    </widget>
+                    <widget class="KURLRequester" row="0" column="1">
+                        <property name="name">
+                            <cstring>fCalendarFile</cstring>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                        </property>
                     </widget>
                 </grid>
             </widget>
@@ -249,8 +235,6 @@
 </widget>
 <tabstops>
     <tabstop>tabWidget</tabstop>
-    <tabstop>fCalendarFile</tabstop>
-    <tabstop>fCalBrowse</tabstop>
     <tabstop>RadioButton9</tabstop>
     <tabstop>RadioButton10</tabstop>
     <tabstop>RadioButton11</tabstop>
@@ -261,4 +245,9 @@
     <tabstop>RadioButton3</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
 </UI>
