@@ -108,17 +108,13 @@ setupDialog::setupDialog(QWidget *parent,
 	}
 
 	setCancelButton();
-#ifdef KDE2
 	setCaption(p->programName() + QString(" ") +
 		p->version());
 	// Avoid some unused parameter warnings.
 	//
 	//
-	name.length();
-	caption.length();
-#else
-	setCaption(caption.isNull() ? name : caption);
-#endif
+	(void) name.length();
+	(void) caption.length();
 
 	connect(this,SIGNAL(applyButtonPressed()),
                 this, SLOT(commitChanges()));

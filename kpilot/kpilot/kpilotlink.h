@@ -14,7 +14,6 @@
 #ifndef __KPILOT_LINK
 #define __KPILOT_LINK
 
-#if (QT_VERSION > 199)
 #include <qobject.h>
 
 class QWidget;
@@ -35,23 +34,6 @@ class PilotLocalDatabase;
 #include "pilotDatabase.h"
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
-
-#else
-#include <qobject.h>
-#include <qlist.h>
-#include <kurl.h>
-#include <kstatusbar.h>
-#include <kprogress.h>
-#include <kapp.h>
-#include <kprocess.h>
-#include <ksock.h>
-#include "pilotUser.h"
-#include "pi-file.h"
-#include "pilotDatabase.h"
-#include "pilotSerialDatabase.h"
-#include "pilotLocalDatabase.h"
-#include "messageDialog.h"
-#endif
 
 /**
   * This class is an attempt to provide some wrapper around the pilot-link
@@ -95,11 +77,7 @@ public:
    * devicePath = path to serial port.  Defaults to /dev/pilot
    */
   KPilotLink(QWidget* owner, KStatusBar* statusBar = 0L, 
-#ifdef KDE2
 		const QString &devicePath = QString::null);
-#else
-		const QString &devicePath = QString());
-#endif
   ~KPilotLink();
   
   /**
@@ -194,9 +172,8 @@ public:
 	*
 	* Callers should delete this object when no longer needed.
 	*/
-#ifdef KDE2
 	static KConfig& getConfig(const QString &group=QString::null);
-#endif
+
 	/**
 	* Reads the configuration version from a standard location.
 	*/

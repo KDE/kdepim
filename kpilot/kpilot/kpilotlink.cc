@@ -60,17 +60,8 @@ static const char *id="$Id$";
 
 #include "kpilotlink.moc"
 
-// This is to force source compatibility between the KDE1 and KDE2
-// versions. For some things we define macros:
-//
-//
-#ifdef KDE2
 #define LOCALCONFIG	QString("/home/adridg/.kde/share/config")
 #define LOCALKDE	QString("/home/adridg/.kde")
-#else
-#define LOCALCONFIG	kapp->localconfigdir()
-#define LOCALKDE	kapp->localkdedir()
-#endif
 
 KPilotLink* KPilotLink::fKPilotLink = 0L;
 
@@ -566,7 +557,6 @@ KPilotLink::registeredConduit(const QString &dbName)
 		return QString::null;
 	}
 
-#ifdef KDE2
 	KService::Ptr conduit = KService::serviceByDesktopName(result);
 	if (!conduit)
 	{
@@ -587,12 +577,6 @@ KPilotLink::registeredConduit(const QString &dbName)
 		}
 		return conduit->exec();
 	}
-#else
-  QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits/";
-
-  if(result.isNull()) return result;
-  else return conduitPath + "/" + result;
-#endif
 }
 
 
@@ -1563,6 +1547,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.17  2000/11/13 08:52:31  adridg
+// Much getConfig() grief averted
+//
 // Revision 1.16  2000/11/10 13:22:00  adridg
 // Failed to catch all the changed getConfig() calls
 //

@@ -10,8 +10,10 @@
 //
 // This file defines some global constants and macros for KPilot.
 // In particular, KDE2 is defined when KDE2 seems to be the environment
-// (is there a better way to do this?) and many debug functions
-// are defined as well.
+// (is there a better way to do this?). Use of KDE2 to #ifdef sections
+// of code is deprecated though.
+//
+// Many debug functions are defined as well.
 //
 //
 
@@ -27,9 +29,7 @@
 #error "This is KPilot for KDE2"
 #endif
 
-#ifdef KDE2
 #include <klocale.h>
-#endif
 
 extern int debug_level;
 extern const char *tabs;

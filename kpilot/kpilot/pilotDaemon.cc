@@ -361,15 +361,7 @@ PilotDaemon::startHotSync()
 	FUNCTIONSETUP;
 
 
-#ifdef KDE2
 	setPixmap(busyicon);
-#else
-	if(fDockingLabel)
-	{
-		QPixmap icon(busysync_icon);
-		fDockingLabel->setPixmap(icon);
-	}
-#endif
 
   // We need to send the SYNC_STARTING message after the sync
   // has already begun so that if KPilot is running it doesn't start
@@ -448,15 +440,7 @@ PilotDaemon::slotEndHotSync()
 {
 	FUNCTIONSETUP;
 
-#ifdef KDE2
 	setPixmap(icon);
-#else
-	if(fDockingLabel)
-	{
-		QPixmap icon(hotsync_icon);
-		fDockingLabel->setPixmap(icon);
-	}
-#endif
 
 	KPilotLink *p=getPilotLink();
 
@@ -845,7 +829,6 @@ int main(int argc, char* argv[])
 {
 	FUNCTIONSETUP;
 
-#ifdef KDE2
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
                          "4.0b",
                          "KPilot - Hot-sync software for unix\n\n",
@@ -870,19 +853,13 @@ int main(int argc, char* argv[])
 	KApplication a(true,true);
 
 	KConfig& c=KPilotLink::getConfig();
-#else
-	KApplication a(argc,argv,"pilotDaemon");
-	handleOptions(argc,argv);
-#endif
 
-#ifdef KDE2
 	if (c.readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
 	{
 		cerr << fname << ": Is still not configured for use."
 			<< endl;
 		return 1;
 	}
-#endif
 
 
 	gPilotDaemon = new PilotDaemon();
@@ -902,12 +879,10 @@ int main(int argc, char* argv[])
 	signal(SIGQUIT, signalHandler);
 	signal(SIGTERM, signalHandler);
 
-#ifdef KDE2
 	// Copied from Klipper
 	KWin::setSystemTrayWindowFor( gPilotDaemon->winId(), 0 );
 	gPilotDaemon->setGeometry(-100, -100, 42, 42 );
 	gPilotDaemon->show();
-#endif
 
 	return a.exec();
 }

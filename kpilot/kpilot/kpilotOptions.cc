@@ -39,12 +39,11 @@
 #include <kconfig.h>
 #include <kwin.h>
 #include <kmessagebox.h>
-#ifdef KDE2
 #include <kglobal.h>
 #include <kio/netaccess.h>
 #include <kstddirs.h>
 #include <kdebug.h>
-#endif
+
 #ifndef STANDALONE
 #include <kpilotlink.h>
 #endif
@@ -623,6 +622,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.12  2000/11/10 08:32:33  adridg
+// Fixed spurious config new() and delete()
+//
 // Revision 1.11  2000/11/04 14:04:38  habenich
 // using pilot-link environment for speed and device\nusing passwd file entry for real name
 //

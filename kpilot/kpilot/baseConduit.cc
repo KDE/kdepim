@@ -21,7 +21,6 @@
 
 #include "options.h"
 
-#ifdef KDE2
 #include <stream.h>
 #include <fcntl.h>
 #include <ctype.h>
@@ -32,18 +31,6 @@
 
 #include "baseConduit.moc"
 #include "statusMessages.h"
-#else
-#include <iostream.h>
-#include <qdir.h> // Just to avoid namespace problems in old Qt versions
-#include <ksock.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-#include "baseConduit.moc"
-#include "statusMessages.h"
-#include "pilotRecord.h"
-#include "kpilot.h"
-#endif
 
 static const char *id="$Id$";
 
@@ -292,3 +279,5 @@ int BaseConduit::getDebugLevel(KConfig& c)
 	debug_level |= d;
 	return debug_level ;
 }
+
+// $Log:$

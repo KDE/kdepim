@@ -48,12 +48,10 @@ static const char *id="$Id$";
 #include <kcombobox.h>
 #include <kmenubar.h>
 #include <kstddirs.h>
-#ifdef KDE2
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kiconloader.h>
 #include <kdebug.h>
-#endif
 
 #include "kpilotOptions.h"
 #include "kpilot.moc"
@@ -714,14 +712,7 @@ KPilotInstaller::initMenu()
 	connect(conduitMenu, SIGNAL(activated(int)),
 		SLOT(menuCallback(int)));
 
-#ifdef KDE2
 	KPopupMenu *theHelpMenu = helpMenu();
-#else
-	QPopupMenu *theHelpMenu = KTMainWindow::helpMenu(QString(version(0)) +
-		i18n("\n\nCopyright (C) 1998-2000 Dan Pilone, Adriaan de Groot") +
-		i18n("\n\nProgramming by:\n") +
-		authors()) ;
-#endif
     
     this->fMenuBar = new KMenuBar(this);
     this->fMenuBar->insertItem(i18n("&File"), fileMenu);
@@ -957,28 +948,14 @@ static char authorsbuf[256]={0};
 // Command line options descriptions.
 //
 //
-#ifdef KDE2
-// Due to the strings freeze there are no descriptions
-// for any of the command-line options. --help and such
-// are now standard KDE options.
 //
 //
 static KCmdLineOptions kpilotoptions[] =
 {
-	{ "setup", I18N_NOOP(""),0L },
-	{ "debug <level>", I18N_NOOP(""),"0" },
+	{ "setup", I18N_NOOP("Setup the Pilot device and other parameters"),0L },
+	{ "debug <level>", I18N_NOOP("Set debug level to <level> (try 1023)"),"0" },
 	{ 0,0,0 }
 } ;
-#else
-static struct option longOptions[]=
-{
-	{ "debug",1,0L,'d' },
-	{ "htmlhelp",0,0L, 2 },
-	{ "help",0,0L,1 },
-	{ "setup",0,0L,'s' },
-	{ 0L,0,0L,0 }
-} ;
-#endif
 
 
 
@@ -993,43 +970,10 @@ static struct option longOptions[]=
 int run_mode=0;
 			 
 
-#ifndef KDE2
-void handleOptions(int& argc, char **argv)
-{
-	FUNCTIONSETUP;
-	static const char *banner=
-		"KPilot v4.0b\n"
-		"Copyright (C) 1998,1999 Dan Pilone\n"
-		"Copyright (C) 2000 Dan Pilone, Adriaan de Groot\n\n";
-
-	int c,li;
-
-	while((c=getopt_long(argc,argv,"d:s",longOptions,&li))>0)
-	{
-		switch(c)
-		{
-		case 'd' : debug_level=atoi(optarg);
-			if (debug_level)
-			{
-				cerr << fname << ": Debug level set to "
-					<< debug_level << endl;
-			}
-			break;
-		case 's' : run_mode='s';
-			break;
-		case 2 : kapp->invokeHTMLHelp("kpilot/index.html", "");
-		case 1 : usage(banner,longOptions); exit(0);
-		default : usage(banner,longOptions); exit(1);
-		}
-	}
-}
-#endif
-
 int main(int argc, char** argv)
 {
 	FUNCTIONSETUP;
 
-#ifdef KDE2
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
                          "4.0b",
                          "KPilot - Hot-sync software for unix\n\n",
@@ -1059,10 +1003,6 @@ int main(int argc, char** argv)
 	{
 		run_mode='s';
 	}
-#else
-	KApplication a;
-	handleOptions(argc,argv);
-#endif
 
 	if (run_mode=='s')
 	{
@@ -1086,14 +1026,12 @@ int main(int argc, char** argv)
 		c.setGroup(QString::null);
 	}
 
-#ifdef KDE2
 	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
 		cerr << fname << ": Is still not configured for use."
 			<< endl;
 		return 1;
 	}
-#endif
 
         KPilotInstaller *tp = new KPilotInstaller();
 
