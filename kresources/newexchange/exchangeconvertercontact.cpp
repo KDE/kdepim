@@ -417,10 +417,14 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   att_c.setValue( "urn:schemas:contacts:" );
   doc.documentElement().setAttributeNode( att_c );
   
+  QDomAttr att_b = doc.createAttribute( "xmlns:b" );
+  att_b.setValue( "urn:schemas-microsoft-com:datatypes" );
+  root.setAttributeNode( att_b );
+
   domDavProperty( "contentclass", "urn:content-classes:person" );
   domProperty( "http://schemas.microsoft.com/exchange/",
                "outlookmessageclass", "IPM.Contact" );
-  domContactProperty( "uid", addr.uid() );
+//   domContactProperty( "uid", addr.uid() );
   
   domContactProperty( "fileas", addr.formattedName() );
   domContactProperty( "givenName", addr.givenName() );
@@ -559,6 +563,15 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   domContactProperty( "spousecn", addr.custom( "KADDRESSBOOK", "X-SpousesName" ) );
 
  // TODO: Birthday and Anniversary:
+ QDate dt = addr.birthday().date();
+ QString str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
+ QDomElement el = domContactProperty( "bday", str );
+ el.setAttribute( "b:dt", "date" );
+ 
+ dt = QDate::fromString( addr.custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+ str = (dt.isValid())?(dt.toString( Qt::ISODate )):(QString::null);
+ el = domContactProperty( "weddinganniversary", str );
+ el.setAttribute( "b:dt", "date" );
 /*  if ( WebdavHandler::extractDateTime( node, "bday", tmpdt ) ) 
     addressee.setBirthday( tmpdt.date() );
   if ( WebdavHandler::extractString( node, "weddinganniversary", tmpstr ) ) 
@@ -569,8 +582,13 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   KABC::Geo geo = addr.geo();
   if ( geo.isValid() ) {
     // TODO: Do we need to set any other attribute to make it a float?
-    domCalendarProperty( "geolatitude", QString::number( geo.latitude() ) );
-    domCalendarProperty( "geolongitude", QString::number( geo.longitude() ) );
+    QDomAttr att_cal = doc.createAttribute( "xmlns:cal" );
+    att_cal.setValue( "urn:schemas:calendar:" );
+    doc.documentElement().setAttributeNode( att_cal );
+    QDomElement el = domCalendarProperty( "geolatitude", QString::number( geo.latitude() ) );
+    el.setAttribute( "b:dt", "float" );
+    el = domCalendarProperty( "geolongitude", QString::number( geo.longitude() ) );
+    el.setAttribute( "b:dt", "float" );
   }
 
   domContactProperty( "textdescription", addr.note() );
