@@ -35,6 +35,8 @@
 #include <stdlib.h>
 
 #include <qstringlist.h>
+#include <qfileinfo.h>
+#include <qdir.h>
 
 #include <dcopclient.h>
 
@@ -115,6 +117,7 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 	if (!fLocalDatabase->isDBOpen() )
 	{
 		QString dbpath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
+		KPILOT_DELETE(fLocalDatabase);
 #ifdef DEBUG
 		DEBUGCONDUIT << "Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
 #endif
@@ -126,16 +129,31 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 #endif
 			return false;
 		}
+#ifdef DEBUG
+			DEBUGCONDUIT <<"Found Palm database: "<<dbinfo.name<<endl
+					<<"type = "<< dbinfo.type<<endl
+					<<"creator = "<< dbinfo.creator<<endl
+					<<"version = "<< dbinfo.version<<endl
+					<<"index = "<< dbinfo.index<<endl;
+#endif
 		dbinfo.flags &= ~dlpDBFlagOpen;
+		
+		// make sure the dir for the backup db really exists!
+		QFileInfo fi(dbpath);
+		if (!fi.exists()) {
+			QDir d(fi.dir(TRUE));
+#ifdef DEBUG
+			DEBUGCONDUIT <<"Creating backup directory "<<d.absPath()<<endl;
+#endif
+			d.mkdir(d.absPath());
+		}
 		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) ) 
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << "Could not retrieve database "<<name<<" from the handheld."<<endl;
 #endif
-			KPILOT_DELETE(fLocalDatabase);
 			return false;
 		}
-		KPILOT_DELETE(fLocalDatabase);
 		fLocalDatabase = new PilotLocalDatabase(name);
 		if (!fLocalDatabase || !fLocalDatabase->isDBOpen()) 
 		{
@@ -247,6 +265,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.10  2002/06/08 16:33:43  kainhofe
+// openDatabases fetches the database from the palm if it doesn't exist. openDatabases has an additional (optional) parameter (bool*) retrieved which is set to true if the database had to be downloaded from the handheld
+//
 // Revision 1.9  2002/05/22 20:42:09  adridg
 // Additional support for testing instrumentation
 //

@@ -43,6 +43,7 @@ static const char *pilotadress_id =
 
 
 const int PilotAddress::APP_BUFFER_SIZE = 0xffff;
+#define MAXFIELDS 19
 
 PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	PilotRecord * rec) :
@@ -51,8 +52,7 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	fAddressInfo()
 {
 	FUNCTIONSETUP;
-	unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(),
-		rec->getLen());
+	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(), rec->getLen());
 	(void) pilotadress_id;
 }
 
@@ -88,6 +88,19 @@ PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
 	_copyAddressInfo(copyFrom.fAddressInfo);
 	return *this;
 }
+
+bool PilotAddress::operator==(const PilotAddress &compareTo) {
+	FUNCTIONSETUP;
+	// TODO: call == of PilotAppCategory. I don't think this is necessary, but I'm not so sure...
+//	if (!(PilotAppCategory)(this)->operator==(compareTo) ) return false;
+	
+	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
+	for (int i=0; i<MAXFIELDS; i++) {
+		if ( (getField(i) != compareTo.getField(i)) && ( strcmp(getField(i), compareTo.getField(i)) ) )  return false;
+	}
+	return true;
+}
+
 
 void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 {
@@ -304,6 +317,9 @@ void *PilotAddress::pack(void *buf, int *len)
 }
 
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.21  2001/09/29 16:26:18  adridg
 // The big layout change
 //

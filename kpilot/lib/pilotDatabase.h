@@ -79,6 +79,12 @@ public:
 	/** Writes the application block info. */
 	virtual int writeAppBlock(unsigned char* buffer, int len) = 0;
 
+	/** returns the number of records in the database */
+	virtual int recordCount()=0;
+	
+	/** Returns a QValueList of all record ids in the database.  */
+	 virtual QValueList<recordid_t> idList()=0;
+
 	/** Reads a record from database by id, returns record length */
 	virtual PilotRecord* readRecordById(recordid_t id) = 0;
 
@@ -116,7 +122,7 @@ public:
 	* meant for debugging, and it dumps an appinfo block to stdout.
 	*/
 	static void listAppInfo(const struct CategoryAppInfo *);
-
+	
 protected:
 	virtual void openDatabase() = 0;
 	virtual void closeDatabase() = 0;
@@ -130,6 +136,10 @@ private:
 
 
 // $Log$
+// Revision 1.6  2002/06/07 07:13:25  adridg
+// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
+// Extend *Database classes with dbPathName() for consistency.
+//
 // Revision 1.5  2002/05/22 20:40:13  adridg
 // Renaming for sensibility
 //

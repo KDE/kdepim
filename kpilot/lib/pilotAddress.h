@@ -94,6 +94,7 @@ public:
 	PilotAddress(struct AddressAppInfo &appInfo, PilotRecord* rec);
 	PilotAddress(const PilotAddress &copyFrom);
 	PilotAddress& operator=( const PilotAddress &r );
+	bool operator==(const PilotAddress &r);
 
 	~PilotAddress();
 
@@ -178,6 +179,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.15  2001/09/29 16:26:18  adridg
 // The big layout change
 //

@@ -47,8 +47,8 @@ PilotSerialDatabase::PilotSerialDatabase(int linksocket,
 	QObject *p,const char *n) :
 	PilotDatabase(p,n),
 	fDBName(0L), 
-	fDBSocket(linksocket), 
-	fDBHandle(-1)
+	fDBHandle(-1),
+	fDBSocket(linksocket)
 {
 	FUNCTIONSETUP;
 	fDBName = new char[strlen(dbName) + 1];
@@ -97,6 +97,35 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 		return -1;
 	}
 	return dlp_WriteAppBlock(fDBSocket, getDBHandle(), buffer, len);
+}
+
+	// returns the number of records in the database 
+int PilotSerialDatabase::recordCount()
+{
+	int idlen;
+	if (isDBOpen() ) return dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen);
+	else return -1;
+}
+
+
+// Returns a QValueList of all record ids in the database. 
+QValueList<recordid_t> PilotSerialDatabase::idList()
+{
+	QValueList<recordid_t> idlist;
+	int idlen=recordCount();
+	if (idlen<=0) return idlist;
+	
+	recordid_t *idarr=new recordid_t[idlen];
+	int idlenread;
+	dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread); 
+	
+	// now create the QValue list from the idarr:
+	for (idlen=0; idlen<idlenread; idlen++) 
+	{
+		idlist.append(idarr[idlen]);
+	}
+	delete[] idarr;
+	return idlist;
 }
 
 
@@ -261,6 +290,10 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.3  2002/06/07 07:13:25  adridg
+// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
+// Extend *Database classes with dbPathName() for consistency.
+//
 // Revision 1.2  2002/05/22 20:40:13  adridg
 // Renaming for sensibility
 //

@@ -162,6 +162,29 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 	return 0;
 }
 
+
+	// returns the number of records in the database 
+int PilotLocalDatabase::recordCount()
+{
+	return fNumRecords;
+}
+
+
+// Returns a QValueList of all record ids in the database. 
+QValueList<recordid_t> PilotLocalDatabase::idList()
+{
+	int idlen=recordCount();
+	QValueList<recordid_t> idlist;
+	if (idlen<=0) return idlist;
+	
+	// now create the QValue list from the idarr:
+	for (int id=0; id<idlen; id++) 
+	{
+		idlist.append(fRecords[id]->getID());
+	}
+	return idlist;
+}
+
 // Reads a record from database by id, returns record length
 PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 {
@@ -389,7 +412,7 @@ QString PilotLocalDatabase::dbPathName() const
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
 
-	tempName += "/";
+	if (!tempName.endsWith("/")) tempName += "/";
 	tempName += getDBName();
 	tempName += ".pdb";
 	return tempName;
@@ -491,6 +514,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.5  2002/06/12 21:40:59  helio
+// Fixed debug message
+//
 // Revision 1.4  2002/05/22 20:40:13  adridg
 // Renaming for sensibility
 //

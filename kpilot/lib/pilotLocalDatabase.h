@@ -56,6 +56,10 @@ public:
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	// Writes the application block info.
 	virtual int writeAppBlock(unsigned char* buffer, int len);  
+	// returns the number of records in the database 
+	virtual int recordCount();
+	// Returns a QValueList of all record ids in the database.
+	virtual QValueList<recordid_t> idList();
 	// Reads a record from database by id, returns record length
 	virtual PilotRecord* readRecordById(recordid_t id);
 	// Reads a record from database, returns the record length
@@ -76,7 +80,6 @@ public:
 
 	// Writes a new ID to the record specified the index.  Not supported on Serial connections
 	virtual recordid_t writeID(PilotRecord* rec);
-
 	QString getDBName() const { return fDBName; }
 
 	/**
@@ -125,6 +128,10 @@ private:
 
 
 // $Log$
+// Revision 1.5  2002/06/07 07:13:25  adridg
+// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
+// Extend *Database classes with dbPathName() for consistency.
+//
 // Revision 1.4  2002/05/22 20:40:13  adridg
 // Renaming for sensibility
 //
