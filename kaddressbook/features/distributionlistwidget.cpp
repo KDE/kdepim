@@ -375,7 +375,6 @@ void DistributionListWidget::dropped( QDropEvent *e, QListViewItem* )
 void DistributionListWidget::changed()
 {
   save();
-  emit modified( KABC::Addressee::List() );
 }
 
 
