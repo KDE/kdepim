@@ -2,7 +2,6 @@ TODO LIST (Ignore the file TODO)
 
 * GJJ: Hunt down and kill printfs. Hunt down bad i18n.
 * GJJ: move the file install widget to an iconview.
-* GJJ: Add a menuitem "Configure conduits" to the kpilotDaemon RMB Menu
 * GJJ: Show the sync log as a KPassivePopup
 * Good junior job: move the conduit configuration dialog (for the
   umpteenth time) to a list of QCheckBoxes, like noatun's plain
@@ -30,6 +29,17 @@ TODO LIST (Ignore the file TODO)
 
 KPilot Developer's notes for February 14th, 2003
 ================================================  
+
+2003-2-12  Adriaan de Groot
+* Applied David Mott's DCOP patches to HEAD. Also applied his RMB
+  patches to HEAD. This takes care of some GJJs.
+* memoWidget.cc [BOTH] Replaced the label "Memos:" beside the
+  category combobox by "Category:" which is also used by the
+  address widget. Kept the old string around for safekeeping.
+* Dealing with non-latin1 Pilots again, now in Russian. And it
+  _seems_ to work. I think last week's changes were sufficiently
+  general. Added in the rest of the Pilot languages as well,
+  from the JPilot source.
 
 2003-2-10  Adriaan de Groot
 * popmail-conduit.cc [HEAD] Did some actual TODO_I18N work,
