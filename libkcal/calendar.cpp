@@ -345,31 +345,31 @@ Todo::List Calendar::todos( const QDate &date )
 
 // When this is called, the todo have already been added to the calendar.
 // This method is only about linking related todos
-void Calendar::setupRelations( Incidence *incidence )
+void Calendar::setupRelations( Incidence *forincidence )
 {
-  QString uid = incidence->uid();
+  QString uid = forincidence->uid();
 
   // First, go over the list of orphans and see if this is their parent
   while( Incidence* i = mOrphans[ uid ] ) {
     mOrphans.remove( uid );
-    i->setRelatedTo( incidence );
-    incidence->addRelation( i );
+    i->setRelatedTo( forincidence );
+    forincidence->addRelation( i );
     mOrphanUids.remove( i->uid() );
   }
 
   // Now see about this incidences parent
-  if( !incidence->relatedTo() && !incidence->relatedToUid().isEmpty() ) {
+  if( !forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty() ) {
     // This incidence has a uid it is related to, but is not registered to it yet
     // Try to find it
-    Incidence* parent = this->incidence( incidence->relatedToUid() );
+    Incidence* parent = incidence( forincidence->relatedToUid() );
     if( parent ) {
       // Found it
-      incidence->setRelatedTo( parent );
-      parent->addRelation( incidence );
+      forincidence->setRelatedTo( parent );
+      parent->addRelation( forincidence );
     } else {
       // Not found, put this in the mOrphans list
-      mOrphans.insert( incidence->relatedToUid(), incidence );
-      mOrphanUids.insert( incidence->uid(), incidence );
+      mOrphans.insert( forincidence->relatedToUid(), forincidence );
+      mOrphanUids.insert( forincidence->uid(), forincidence );
     }
   }
 }
