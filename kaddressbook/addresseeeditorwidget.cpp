@@ -416,9 +416,9 @@ void AddresseeEditorWidget::save()
   if ( !mDirty ) return;
 
   mAddressee.setNameFromString(mNameEdit->text());
+  mAddressee.setFormattedName(mFormattedNameBox->currentText());
   mAddressee.setRole(mRoleEdit->text());
   mAddressee.setOrganization(mOrgEdit->text());
-  mAddressee.setFormattedName(mFormattedNameBox->currentText());
   mAddressee.setUrl(KURL(mURLEdit->text()));
   mAddressee.setNote(mNoteEdit->text());
   if ( mBirthdayPicker->inputIsValid() )
@@ -504,11 +504,15 @@ bool AddresseeEditorWidget::dirty()
 
 void AddresseeEditorWidget::nameTextChanged(const QString &text)
 {
-  // Update the formatted name combo
-  
   // use the addressee class to parse the name for us
-  if ( mParseBox->isChecked() )
-    mAddressee.setNameFromString(text);
+  if ( mParseBox->isChecked() ) {
+    if ( !mAddressee.formattedName().isEmpty() ) {
+      QString fn = mAddressee.formattedName();
+      mAddressee.setNameFromString(text);
+      mAddressee.setFormattedName( fn );
+    } else
+      mAddressee.setNameFromString(text);
+  }
 
   nameBoxChanged();  
 
@@ -525,13 +529,17 @@ void AddresseeEditorWidget::nameBoxChanged()
   addr.setNameFromString( mNameEdit->text() );
 
   int pos = mFormattedNameBox->currentItem();
+  bool isEmpty = ( mFormattedNameBox->count() == 0 );
   mFormattedNameBox->clear();
   QStringList options;
   options << addr.givenName() + QString(" ") + addr.familyName()
           << mAddressee.formattedName()
           << addr.familyName() + QString(", ") + addr.givenName();
   mFormattedNameBox->insertStringList(options);
-  mFormattedNameBox->setCurrentItem( pos );
+  if ( isEmpty )
+    mFormattedNameBox->setCurrentText( mAddressee.formattedName() );
+  else
+    mFormattedNameBox->setCurrentItem( pos );
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
