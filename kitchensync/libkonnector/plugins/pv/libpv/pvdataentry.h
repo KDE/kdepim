@@ -108,12 +108,13 @@ class PVDataEntry
        */
     virtual void fromXML(string strXML) = 0;
     
-    // Possible states of the entries. The states are used in two ways:
-    // 1. Getting the modified entries from the PV. The state of the entry
-    //    is set depending what was happening with this entry since the last sync.
-    // 2. Receiving the synchronized entries from KitchenSync. Depending on the
-    //    state, the synchronized entry will be added / modified / removed on
-    //    the PV.
+    /** Possible states of the entries. The states are used in two ways:
+      * 1. Getting the modified entries from the PV. The state of the entry is
+      *    set depending what was happening with this entry since the last sync.
+      * 2. Receiving the synchronized entries from KitchenSync. Depending on the
+      *    state, the synchronized entry will be added / modified / removed on
+      *    the PV.
+      */
     enum State {
       // The state of the data entry is undefined -> state is set to UNDEFINED in constructor
       UNDEFINED,

@@ -66,7 +66,7 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
         if ((el.tagName() == QString::fromLatin1("name")) ||
              (el.tagName() == QString::fromLatin1("field1")))
         {
-          adr.setFamilyName(el.text());
+          adr.setNameFromString(el.text());
         }
         else if ((el.tagName() == QString::fromLatin1("homenumber")) ||
                   (el.tagName() == QString::fromLatin1("field2")))
@@ -225,7 +225,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
 
     if ((categories[0] == "Contact Business") || (categories[0] == "Contact Private"))
     {
-      str.append("<name>" + ab.familyName() + "</name>\n");
+      str.append("<name>" + ab.assembledName() + "</name>\n");
 
       KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
       str.append("<homenumber>" + homePhoneNum.number() + "</homenumber>\n");
@@ -275,7 +275,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
     else
     {
       // Untitled contacts
-      str.append("<field1>" + ab.familyName() + "</field1>\n");
+      str.append("<field1>" + ab.assembledName() + "</field1>\n");
       KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
       str.append("<field2>" + homePhoneNum.number() + "</field2>\n");
 
