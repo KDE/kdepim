@@ -82,12 +82,12 @@ Pab::Pab() : KMainWindow(0)
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(newContact()), // result
 			  true, i18n("Add a new entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("pencil"),   // icon
+  toolBar()->insertButton(BarIcon("edit"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(properties()), // result
 			  true, i18n("Change this entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("eraser"),   // icon
+  toolBar()->insertButton(BarIcon("editdelete"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
