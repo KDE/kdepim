@@ -1,6 +1,6 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 
-<kpartgui name="kpilot" version="3">
+<kpartgui name="kpilot" version="4">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_hotsync" />
@@ -10,7 +10,6 @@
     <Action name="file_restore" />
     <Action name="file_list" />
     <Separator />
-    <Action name="file_quit" />
   </Menu>
   <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
     <Action name="options_show_statusbar" />
@@ -30,7 +29,6 @@
   <Action name="file_backup" />
   <Action name="file_restore" />
   <Separator />
-  <Action name="file_quit"/>
 </Menu>
 
 <ToolBar name="mainToolBar"><text>Main Toolbar</text>
@@ -38,7 +36,6 @@
   <Action name="file_backup" />
   <Action name="file_reload" />
   <Separator />
-  <Action name="file_quit" />
 </ToolBar>
 
 </kpartgui>
