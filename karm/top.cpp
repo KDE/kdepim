@@ -31,6 +31,7 @@
 #include <qevent.h>
 #include <qapplication.h>
 #include <kkeydialog.h>
+#include <kdebug.h>
 
 #include "kaccelmenuwatch.h"
 #include "karm.h"
@@ -109,21 +110,22 @@ void KarmWindow::slotSelectionChanged()
 
 void KarmWindow::save()
 {
+  kdDebug() << i18n("Saving time data to disk.") << endl;
   _karm->save();
   saveGeometry();
 }
 
 void KarmWindow::quit()
 {
-  _karm->stopAllTimers();
-  save();
   kapp->quit();
 }
 
 
 KarmWindow::~KarmWindow()
 {
-  quit();
+  kdDebug() << i18n("Quitting karm.") << endl;
+  _karm->stopAllTimers();
+  save();
 }
 
 void KarmWindow::enableStopAll()

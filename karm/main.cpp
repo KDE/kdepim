@@ -3,6 +3,7 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
+#include <kdebug.h>
 #include "version.h"
 #include "top.h"
 
@@ -14,6 +15,7 @@ const char* description = I18N_NOOP("KDE Time tracker tool.");
 
 void cleanup( int )
 {
+    kdDebug() << i18n("Just caught a software interrupt.") << endl;
     kapp->exit();
 }
 
