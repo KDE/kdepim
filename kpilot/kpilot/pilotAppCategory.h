@@ -37,8 +37,8 @@
 #endif
 
 class PilotAppCategory
-    {
-    protected:			// Use protected since we will be subclassed
+{
+protected:			// Use protected since we will be subclassed
     int fAttrs;		        // Attributes on this record
     recordid_t fId;		// The unique ID this record was assigned
     
@@ -52,28 +52,44 @@ class PilotAppCategory
      */
     int fCategory;		// The category ID this record belongs to
     
-//     virtual void *internalPack(unsigned char *) = 0;
-//     virtual void *pack(int *) = 0;
     virtual void *pack(void *, int *) = 0;
     virtual void unpack(const void *, int = 0) = 0;
     
     
-    public:
-    PilotAppCategory(void) : fAttrs(0), fId(0), fCategory(0) { }
-    PilotAppCategory(int a, recordid_t i, int c) : fAttrs(a), fId(i), fCategory(c) { }
-    PilotAppCategory(PilotRecord* rec) : fAttrs(rec->getAttrib()), fId(rec->getID()), fCategory(rec->getCat()) { }
-      PilotAppCategory(const PilotAppCategory &copyFrom) :
-	    fAttrs(copyFrom.fAttrs), fId(copyFrom.fId),
-	    fCategory(copyFrom.fCategory) { }
-    PilotAppCategory& operator=( const PilotAppCategory &r )
-		{
+public:
+	PilotAppCategory(void) : 
+		fAttrs(0), 
+		fId(0), 
+		fCategory(0) 
+	{} ;
+
+	PilotAppCategory(int a, recordid_t i, int c) : 
+		fAttrs(a), 
+		fId(i), 
+		fCategory(c) 
+	{} ;
+
+	PilotAppCategory(PilotRecord* rec) : 
+		fAttrs(rec->getAttrib()), 
+		fId(rec->getID()), 
+		fCategory(rec->getCat()) 
+	{} ;
+
+	PilotAppCategory(const PilotAppCategory &copyFrom) :
+		fAttrs(copyFrom.fAttrs), 
+		fId(copyFrom.fId), 
+		fCategory(copyFrom.fCategory) 
+	{} ;
+
+	PilotAppCategory& operator=( const PilotAppCategory &r )
+	{
 		fAttrs = r.fAttrs;
 		fId = r.fId;
 		fCategory = r.fCategory;
 		return *this;
-		}
+	} ;
 
-    virtual ~PilotAppCategory(void) {}
+	virtual ~PilotAppCategory(void) {};
 
       /** @return a PilotRecord that contains all of the info of the
        *  subclass.  Remember to delete the PilotRecord when finished.
@@ -104,7 +120,7 @@ public:
 	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
       bool isModified() const { return fAttrs & dlpRecAttrDirty; }
         
-    };
+};
 
 #else
 #ifdef DEBUG
@@ -114,6 +130,9 @@ public:
 
 
 // $Log$
+// Revision 1.12  2001/05/01 06:03:20  stern
+// Fixed bug in isModified method
+//
 // Revision 1.11  2001/04/30 20:48:10  stern
 // Added comments
 //

@@ -154,35 +154,24 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 			{
 				memo = new PilotMemo(pilotRec);
 				fMemoList.append(memo);
-#ifdef DEBUG
-				{
-					kdDebug() << fname <<
-						": Added memo "
-						<< currentRecord
-						<< endl ;
-				}
-#endif
+
+				DEBUGKPILOT << fname <<
+					": Added memo "
+					<< currentRecord
+					<< endl ;
 			}
 			else
 			{
-#ifdef DEBUG
-				{
-					kdDebug() << fname <<
-						": Skipped secret record " <<
-						currentRecord << endl ;
-				}
-#endif
+				DEBUGKPILOT << fname <<
+					": Skipped secret record " <<
+					currentRecord << endl ;
 			}
 		}
 		else
 		{
-#ifdef DEBUG
-			{
-				kdDebug() << fname << 
-					": Skipped deleted record " <<
-					currentRecord << endl ;
-			}
-#endif
+			DEBUGKPILOT << fname << 
+				": Skipped deleted record " <<
+				currentRecord << endl ;
 		}
 
 		delete pilotRec;
@@ -587,6 +576,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.31  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.30  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

@@ -56,52 +56,50 @@ class QListBox;
 
 class MemoWidget : public PilotComponent
 {
-  Q_OBJECT
+Q_OBJECT
   
 public:
 	MemoWidget(QWidget* parent, const QString& dbpath);
-  ~MemoWidget();
+	virtual ~MemoWidget();
   
-    // Pilot Component Methods:
-  void initialize();
-  void preHotSync(char*);
-  void postHotSync();
-  bool saveData();
+	// Pilot Component Methods:
+	void initialize();
+	void preHotSync(char*);
+	void postHotSync();
+	bool saveData();
   
 	typedef enum { 
 		MAX_MEMO_LEN = 8192 
 		} Constants ;
 
-	// int findSelectedCategory(bool AllIsUnfiled=false);
-
 protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);
   
- public slots:
+public slots:
 	/**
 	* Called whenever the selected memo changes to indicate
 	* which buttons are active, mostly to prevent the delete
 	* button from being active when it can't do anything.
 	*/
 	void slotUpdateButtons();
- void slotShowMemo(int);
-  void slotTextChanged();
-  void slotImportMemo();
-  void slotExportMemo();
-  void slotDeleteMemo(); // Delets the currently selected memo
-  void slotSetCategory(int);
+	void slotShowMemo(int);
+	void slotTextChanged();
+	void slotImportMemo();
+	void slotExportMemo();
+	void slotDeleteMemo(); // Delets the currently selected memo
+	void slotSetCategory(int);
 
 private:
-  void setupWidget();
-  void updateWidget(); // Called with the lists have changed..
-  void writeMemo(PilotMemo* which);
-  QComboBox* fCatList;
+	void setupWidget();
+	void updateWidget(); // Called with the lists have changed..
+	void writeMemo(PilotMemo* which);
+	QComboBox* fCatList;
   
-  QMultiLineEdit*    fTextWidget;
-  struct MemoAppInfo fMemoAppInfo;
-  QList<PilotMemo>   fMemoList;
-  QListBox *          fListBox;
+	QMultiLineEdit*    fTextWidget;
+	struct MemoAppInfo fMemoAppInfo;
+	QList<PilotMemo>   fMemoList;
+	QListBox *          fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
 };
@@ -114,6 +112,9 @@ private:
 
 
 // $Log$
+// Revision 1.13  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.12  2001/04/01 17:31:11  adridg
 // --enable-final and #include fixes
 //
