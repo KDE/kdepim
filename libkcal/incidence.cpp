@@ -80,7 +80,7 @@ Incidence::~Incidence()
         if ( (*it)->relatedTo() == this ) (*it)->setRelatedTo( 0 );
     }
     if ( relatedTo() ) relatedTo()->removeRelation( this );
-    
+
     delete mRecurrence;
 }
 

@@ -201,7 +201,7 @@ bool CalendarResources::isSaving()
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::addIncidence" << endl;
-  
+
   ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
@@ -685,7 +685,7 @@ bool CalendarResources::save( Ticket *ticket )
     releaseSaveTicket( ticket );
     return true;
   }
-  
+
   return false;
 }
 
@@ -708,7 +708,7 @@ bool CalendarResources::beginChange( Incidence *incidence )
     }
     mResourceMap[ incidence ] = r;
   }
-    
+
   int count = incrementChangeCount( r );
   if ( count == 1 ) {
     Ticket *ticket = requestSaveTicket( r );
@@ -731,11 +731,11 @@ bool CalendarResources::endChange( Incidence *incidence )
 
   ResourceCalendar *r = resource( incidence );
   if ( !r ) return false;
-  
+
   int count = decrementChangeCount( r );
-  
+
   r->changeIncidence( incidence );
-  
+
   if ( count == 0 ) {
     bool ok = save( mTickets[ r ] );
     if ( ok ) {
@@ -744,7 +744,7 @@ bool CalendarResources::endChange( Incidence *incidence )
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -757,7 +757,7 @@ int CalendarResources::incrementChangeCount( ResourceCalendar *r )
   int count = mChangeCounts[ r ];
   ++count;
   mChangeCounts[ r ] = count;
-  
+
   return count;
 }
 
@@ -775,7 +775,7 @@ int CalendarResources::decrementChangeCount( ResourceCalendar *r )
     count = 0;
   }
   mChangeCounts[ r ] = count;
-  
+
   return count;
 }
 
