@@ -4,9 +4,45 @@
 
 <sect1 id="plugins-chapter-overview">
 <title>Overview</title>
-
 <para>
+&korganizer; provides you the possibility of extending the applications with plugins.
 </para>
+</sect1>
+
+<sect1 id="plugins-chapter-configuration">
+<title>Configuration</title>
+</sect1>
+
+<sect1 id="plugins-chapter-availableplugins">
+<title>Available Plugins</title>
+
+<sect2 id="birthdays-import-plugin">
+<title>Birthdays import plugin for &korganizer;</title>
+</sect2>
+
+<sect2 id="date-numbers-plugin">
+<title>Date numbers plugin for Calendars</title>
+</sect2>
+
+<sect2 id="holiday-plugin">
+<title>Holiday plugin for Calendars</title>
+</sect2>
+
+<sect2 id="jewish-calendar-plugin">
+<title>Jewish calendar plugin</title>
+</sect2>
+
+<sect2 id="microsoft-exchange-2000-plugin">
+<title>Microsoft Exchange 2000 plugin for KOrganizer</title>
+</sect2>
+
+<sect2 id="project-view-plugin">
+<title>Project View plugin for &korganizer;</title>
+</sect2>
+
+<sect2 id="web-export-plugin">
+<title>Web export plugin for &korganizer;</title>
+</sect2>
 
 </sect1>
 
