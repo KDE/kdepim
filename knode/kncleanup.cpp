@@ -21,6 +21,7 @@
 #include <qtextstream.h>
 #include <qdir.h>
 
+#include <klocale.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
 #include <kconfig.h>
@@ -124,7 +125,7 @@ void KNCleanUp::group(KNGroup *g, bool withGUI)
 	leftCnt=g->count();
 	
 	if(withGUI)
-	  KMessageBox::information(0, QString("<b>%1</b>\nexpired:\t%2\nleft:\t%3").arg(g->groupname()).arg(delCnt).arg(leftCnt));
+	  KMessageBox::information(0, i18n("<b>%1</b>\nexpired:\t%2\nleft:\t%3").arg(g->groupname()).arg(delCnt).arg(leftCnt));
 }
 
 
