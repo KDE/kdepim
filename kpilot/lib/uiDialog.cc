@@ -35,6 +35,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qhbox.h>
+#include <qtextview.h>
 
 #include <kaboutapplication.h>
 #include <kglobal.h>
@@ -72,7 +73,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 	KIconLoader *l = KGlobal::iconLoader();
 	const KAboutData *p = ad ? ad : KGlobal::instance()->aboutData();
 	
-	QGridLayout *grid = new QGridLayout(w, 4, 4, SPACING);
+	QGridLayout *grid = new QGridLayout(w, 5, 4, SPACING);
 
 	grid->addColSpacing(0, SPACING);
 	grid->addColSpacing(4, SPACING);
@@ -162,9 +163,55 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		connect(but, SIGNAL(clicked()), this, SLOT(showAbout()));
 		but->adjustSize();
 		grid->addWidget(but, 4, 2);
+		grid->setRowStretch(3, 100);
+	}
+	else
+	{
+		QValueList<KAboutPerson> l = p->authors();
+		QValueList<KAboutPerson>::ConstIterator i;
+		s = i18n("<qt><b>Authors:</b> ");
+
+		int count=1;
+		for (i=l.begin(); i!=l.end(); ++i)
+		{
+			s.append(QString("%1 (<i>%2</i>)%3")
+				.arg((*i).name())
+				.arg((*i).task())
+				.arg(count<l.count() ? ", " : "")
+				);
+			count++;
+		}
+
+		l = p->credits();
+		if (l.count()>0)
+		{
+			count=1;
+			s.append("<br><b>Credits:</b> ");
+			for (i=l.begin(); i!=l.end(); ++i)
+			{
+				s.append(QString("%1 (<i>%2</i>)%3")
+					.arg((*i).name())
+					.arg((*i).task())
+					.arg(count<l.count() ? ", " : "")
+					);
+				count++;
+			}
+		}
+
+
+		s.append("</qt>");
+
+		text = new QLabel(w);
+		text->setText(s);
+		text->adjustSize();
+
+		grid->addMultiCellWidget(text,4,4,2,3);
+
+		grid->setRowStretch(4,100);
+		grid->addRowSpacing(5,SPACING);
 	}
 
-	grid->setRowStretch(3, 100);
+
 	grid->setColStretch(3, 100);
 
 #ifdef DEBUG
@@ -235,6 +282,9 @@ void UIDialog::setTabWidget(QTabWidget * w)
 
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 // Revision 1.3  2001/09/29 16:26:18  adridg
 // The big layout change
 //

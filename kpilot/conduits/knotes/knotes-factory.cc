@@ -154,7 +154,7 @@ KNotesWidgetSetup::KNotesWidgetSetup(QWidget *w, const char *n,
 
 	fConfigWidget = new KNotesWidget(widget());
 	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(true,KNotesConduitFactory::about());
+	addAboutPage(false,KNotesConduitFactory::about());
 
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
@@ -415,6 +415,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.3  2001/10/10 21:42:09  adridg
+// Actually do part of a sync now
+//
 // Revision 1.2  2001/10/10 13:40:07  cschumac
 // Compile fixes.
 //
