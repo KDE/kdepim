@@ -186,8 +186,6 @@ EmpathMailboxMaildir::loadConfig()
 
     QStringList::ConstIterator it(folderList.begin());
 
-    QTime startTime = QTime::currentTime();
-
     for (; it != folderList.end(); ++it) {
         
         EmpathURL url(*it);
@@ -207,8 +205,6 @@ EmpathMailboxMaildir::loadConfig()
         }
     }
     
-    QTime endTime = QTime::currentTime();
-
     emit(updateFolderLists());
 
     _recursiveReadFolders(path_);
