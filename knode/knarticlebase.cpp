@@ -223,7 +223,7 @@ QCString KNArticleBase::encodeRFC2047String(const QCString aStr)
 {
   QCString result;
 
-  unsigned int start=0,end;
+  unsigned int start=0,end=0;
   bool nonAscii=false;
 
   for (unsigned int i=0;i<aStr.length();i++) {
