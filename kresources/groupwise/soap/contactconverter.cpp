@@ -37,6 +37,7 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   contact->categories = 0;
   contact->created = 0;
   contact->customs = 0;
+  contact->modified = 0;
   contact->changes = 0;
   contact->type = 0;
 
