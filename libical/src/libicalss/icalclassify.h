@@ -56,9 +56,9 @@ typedef enum icalclass {
     ICAL_COUNTER_CLASS,
     ICAL_DECLINECOUNTER_CLASS,
     ICAL_MALFORMED_CLASS, 
-    ICAL_OBSOLETE_CLASS, /* 21 */
-    ICAL_MISSEQUENCED_CLASS, /* 22 */
-    ICAL_UNKNOWN_CLASS /* 23 */
+    ICAL_OBSOLETE_CLASS, /* 25 */
+    ICAL_MISSEQUENCED_CLASS, /* 26 */
+    ICAL_UNKNOWN_CLASS /* 27 */
 } ical_class;
 
 ical_class icalclassify(icalcomponent* c,icalcomponent* match, 
