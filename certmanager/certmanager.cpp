@@ -482,6 +482,7 @@ void CertManager::slotRefreshKeys() {
 }
 
 void CertManager::slotRefreshKeysResult( const GpgME::Error & err ) {
+  disconnectJobFromStatusBarProgress( err );
   if ( err.isCanceled() )
     return;
   if ( err )
