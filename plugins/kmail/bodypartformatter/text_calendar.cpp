@@ -3,12 +3,12 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
-    KMail is free software; you can redistribute it and/or modify it
+    This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
-    KMail is distributed in the hope that it will be useful, but
+    This program is distributed in the hope that it will be useful, but
     WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -31,6 +31,7 @@
 
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
+#include <interfaces/bodyparturlhandler.h>
 #include <khtmlparthtmlwriter.h>
 
 #include <libkcal/calendarlocal.h>
@@ -42,6 +43,7 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kdebug.h>
+#include <kmessagebox.h>
 
 #include <qurl.h>
 #include <qapplication.h>
@@ -350,32 +352,39 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       if( sMethod == "request" || sMethod == "update" ||
           sMethod == "publish" ) {
         // Accept
-        html += "<a href=\"kmail:groupware_request_accept\"><b>";
+        html += "<a href=\"" +
+                bodyPart->makeLink( "groupware_request_accept" ) + "\"><b>";
         html += i18n( "[Accept]" );
         html += "</b></a></td><td> &nbsp; </td><td>";
         // Accept conditionally
-        html += "<a href=\"kmail:groupware_request_accept conditionally\"><b>";
+        html += "<a href=\"" +
+                bodyPart->makeLink( "groupware_request_accept conditionally" ) +
+                "\"><b>";
         html += i18n( "Accept conditionally", "[Accept cond.]" );
         html += "</b></a></td><td> &nbsp; </td><td>";
         // Decline
-        html += "<a href=\"kmail:groupware_request_decline\"><b>";
+        html += "<a href=\"" +
+                bodyPart->makeLink( "groupware_request_decline" ) + "\"><b>";
         html += i18n( "[Decline]" );
         if( event ) {
           // Check my calendar...
           html += "</b></a></td><td> &nbsp; </td><td>";
-          html += "<a href=\"kmail:groupware_request_check\"><b>";
+          html += "<a href=\"" +
+                  bodyPart->makeLink( "groupware_request_check" ) + "\"><b>";
           html += i18n("[Check my calendar...]" );
         }
       } else if( sMethod == "reply" ) {
         // Enter this into my calendar
-        html += "<a href=\"kmail:groupware_reply#%1\"><b>";
+        html += "<a href=\"" +
+                bodyPart->makeLink( "groupware_reply" ) + "\"><b>";
         if( event )
           html += i18n( "[Enter this into my calendar]" );
         else
           html += i18n( "[Enter this into my task list]" );
       } else if( sMethod == "cancel" ) {
         // Cancel event from my calendar
-        html += "<a href=\"kmail:groupware_cancel\"><b>";
+        html += "<a href=\"" +
+                bodyPart->makeLink( "groupware_cancel" ) + "\"><b>";
         html += i18n( "[Remove this from my calendar]" );
       }
       html += "</b></a></td></tr></table>";
@@ -396,26 +405,65 @@ class Formatter : public KMail::Interface::BodyPartFormatter
     }
 };
 
+class UrlHandler : public KMail::Interface::BodyPartURLHandler
+{
+  public:
+    UrlHandler()
+    {
+      kdDebug() << "UrlHandler() (iCalendar)" << endl;
+    }
+
+    bool handleClick( KMail::Interface::BodyPart *part,
+                      const QString &path ) const
+    {
+      KMessageBox::information( 0, i18n("URI clicked: %1").arg( path ),
+                                i18n("iCalendar URL Handler") );
+      return true;
+    }
+
+    bool handleContextMenuRequest( KMail::Interface::BodyPart *part,
+                                   const QString &path,
+                                   const QPoint &p ) const
+    {
+      return false;
+    }
+
+    QString statusBarMessage( KMail::Interface::BodyPart *part,
+                              const QString &path ) const
+    {
+      if ( !path.isEmpty() ) {
+        return "statusBarMessage: path=" + path;
+      } else {
+        return QString::null;
+      }
+    }
+};
+
 class Plugin : public KMail::Interface::BodyPartFormatterPlugin
 {
   public:
     const KMail::Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
     {
-      return idx == 0 ? new Formatter() : 0 ;
+      if ( idx == 0 ) return new Formatter();
+      else return 0;
     }
 
     const char *type( int idx ) const
     {
-      return idx == 0 ? "text" : 0 ;
+      if ( idx == 0 ) return "text";
+      else return 0;
     }
 
     const char *subtype( int idx ) const
     {
-      return idx == 0 ? "calendar" : 0 ;
+      if ( idx == 0 ) return "calendar";
+      else return 0;
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int ) const { 
-       return 0; 
+    const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const
+    {
+      if ( idx == 0 ) return new UrlHandler();
+      else return 0;
     }
 };
 
@@ -423,6 +471,7 @@ class Plugin : public KMail::Interface::BodyPartFormatterPlugin
 
 extern "C"
 KMail::Interface::BodyPartFormatterPlugin *
-libkmail_bodypartformatter_text_calendar_create_bodypart_formatter_plugin() {
+libkmail_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
+{
   return new Plugin();
 }
