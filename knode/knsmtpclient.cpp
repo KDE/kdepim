@@ -119,7 +119,7 @@ bool KNSmtpClient::openConnection()
 
   int rep;
   if (!sendCommand(cmd,rep))
-    return;
+    return false;
 
   while (rep == 220) {  // some smtp servers send multiple "220 xxx" lines...
     if (!getNextResponse(rep))
