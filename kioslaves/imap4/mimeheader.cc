@@ -57,16 +57,16 @@ QPtrList<mimeHeader> mimeHeader::getAllParts()
 	// caller is responsible for clearing
 	retVal.setAutoDelete( false );
 	nestedParts.setAutoDelete( false );
-	
+
 	// shallow copy
 	retVal = nestedParts;
-	
+
 	// can't have duplicate pointers
 	nestedParts.clear();
-	
+
 	// restore initial state
 	nestedParts.setAutoDelete( true );
-	
+
 	return retVal;
 } */
 
@@ -139,7 +139,6 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         else
         {
           additionalHdrLines.append (addLine);
-          aList = new QDict < QString >;
         }
 //        cout << addLine->getLabel().data() << ": '" << mimeValue.data() << "'" << endl;
 
@@ -164,6 +163,9 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 void
 mimeHeader::addParameter (const QCString& aParameter, QDict < QString > *aList)
 {
+  if ( !aList )
+    return;
+
   QString *aValue;
   QCString aLabel;
   int pos = aParameter.find ('=');
@@ -604,9 +606,9 @@ mimeHeader::bodyPart (const QString & _str)
 void mimeHeader::serialize(QDataStream& stream)
 {
   int nestedcount = nestedParts.count();
-  if (nestedParts.isEmpty() && nestedMessage) 
+  if (nestedParts.isEmpty() && nestedMessage)
     nestedcount = 1;
-  stream << nestedcount << contentType << QString (getTypeParm ("name")) << _contentDescription 
+  stream << nestedcount << contentType << QString (getTypeParm ("name")) << _contentDescription
     << _contentDisposition << contentEncoding << contentLength << partSpecifier;
   // serialize nested message
   if (nestedMessage)
@@ -617,7 +619,7 @@ void mimeHeader::serialize(QDataStream& stream)
   {
     QPtrListIterator < mimeHeader > it(nestedParts);
     mimeHeader* part;
-    while ( (part = it.current()) != 0 ) 
+    while ( (part = it.current()) != 0 )
     {
       ++it;
       part->serialize(stream);
