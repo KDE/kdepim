@@ -138,6 +138,8 @@ class ResourceCached : public ResourceCalendar
     */
     void setTimeZoneId( const QString& tzid );
   
+    QString timeZoneId();
+  
   protected:
     CalendarLocal mCalendar;
 
