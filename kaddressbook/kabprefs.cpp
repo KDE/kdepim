@@ -47,8 +47,11 @@ KABPrefs::KABPrefs()
   addItemIntList( "DetailsSplitter", mDetailsSplitter );
 
   KPrefs::setCurrentGroup( "Extensions_General" );
+  QStringList defaultExtensions;
+  defaultExtensions << "merge";
+  defaultExtensions << "distribution_list_editor";
   addItemInt( "CurrentExtension", mCurrentExtension, 0 );
-  addItemStringList( "ActiveExtensions", mActiveExtensions );
+  addItemStringList( "ActiveExtensions", mActiveExtensions, defaultExtensions );
 
   KPrefs::setCurrentGroup( "Views" );
   QString defaultView = i18n( "Default Table View" );

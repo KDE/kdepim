@@ -39,7 +39,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 
   QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Incremental search:" ), this );
+  QLabel *label = new QLabel( i18n( "Search:" ), this );
   label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
   layout->addWidget( label );
 
