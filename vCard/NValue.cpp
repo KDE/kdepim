@@ -78,7 +78,7 @@ NValue::operator == (NValue & x)
 
 	return (
 		family_	== x.family_	&&
-		given_	== x.given_		&&
+		given_	== x.given_	&&
 		middle_	== x.middle_	&&
 		prefix_	== x.prefix_	&&
 		suffix_ == x.suffix_);
@@ -86,6 +86,12 @@ NValue::operator == (NValue & x)
 
 NValue::~NValue()
 {
+}
+
+	NValue *
+NValue::clone()
+{
+	return new NValue( *this );
 }
 
 	void
@@ -102,7 +108,7 @@ NValue::_parse()
 			case 2: middle_	= l.at(2);	break;
 			case 3: prefix_	= l.at(3);	break;
 			case 4: suffix_	= l.at(4);	break;
-			default:					break;
+			default:			break;
 		}
 	}
 }
@@ -110,7 +116,7 @@ NValue::_parse()
 	void
 NValue::_assemble()
 {
-	strRep_ =			family_;
+	strRep_ =		family_;
 	strRep_ += ";" +	given_;
 	strRep_ += ";" +	middle_;
 	strRep_ += ";" +	prefix_;

@@ -105,7 +105,7 @@ extern const ParamType paramTypesTable[];
 ParamType EntityTypeToParamType(EntityType);
 ValueType EntityTypeToValueType(EntityType);
 QCString EntityTypeToParamName(EntityType);
-EntityType ParamNameToEntityType(const QCString &);
+EntityType EntityNameToEntityType(const QCString &);
 
 char * encodeBase64(const char *, unsigned long, unsigned long &);
 char * decodeBase64(const char *, unsigned long, unsigned long &);

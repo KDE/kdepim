@@ -211,7 +211,7 @@ VCard::_assemble()
 {
 	vDebug("Assembling vcard");
 	strRep_ = "BEGIN:VCARD\r\n";
-//	strRep_ += "VERSION:3.0\r\n";
+	strRep_ += "VERSION:3.0\r\n";
 
 	QPtrListIterator<ContentLine> it(contentLineList_);
 

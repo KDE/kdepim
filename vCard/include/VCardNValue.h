@@ -29,6 +29,8 @@ namespace VCARD
 class NValue : public Value
 {
 #include "NValue-generated.h"
+	NValue *clone();
+
 	QCString family()	{ parse(); return family_;	}
 	QCString given()	{ parse(); return given_;	}
 	QCString middle()	{ parse(); return middle_;	}

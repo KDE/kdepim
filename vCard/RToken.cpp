@@ -55,10 +55,12 @@ RTokenise(const char * str, const char * delim, QStrList & l)
 		if (strchr(delim, *i) != 0) {
 			// We hit a delimiter. If we have some text, make a new token.
 			// This has the effect that multiple delimiters are collapsed.
+                        // cs: We mustn't collapse multiple delimiters, otherwise we
+                        // lose empty fields.
 			*r = '\0';
-			if (r != rstart) {
+//			if (r != rstart) {
 				l.append(rstart);
-			}
+//			}
 			r = rstart;
 			++i;
 			continue;
@@ -68,10 +70,10 @@ RTokenise(const char * str, const char * delim, QStrList & l)
 	}
 
 	// Catch last token
-	if (r != rstart) {
+//	if (r != rstart) {
 		*r = '\0';
 		l.append(rstart);
-	}
+//	}
 	
 	r = 0;
 	

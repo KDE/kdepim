@@ -31,6 +31,8 @@ namespace VCARD
 class Value : public Entity
 {
 #include "Value-generated.h"
+
+	virtual Value *clone() { return new Value( *this ); }
 };
 
 typedef QList<Value> ValueList;

@@ -66,14 +66,14 @@ VCARD::paramNames [] =
 VCARD::paramTypesTable[] = {
 	ParamNone,		// NAME
 	ParamNone,		// PROFILE
-	ParamSource,	// SOURCE
+	ParamSource,		// SOURCE
 	ParamText,		// FN
 	ParamText,		// N
 	ParamText,		// NICKNAME
 	ParamImage,		// PHOTO (inline/refer)
 	ParamDate,		// BDAY ("VALUE = "date-time/date)
-	ParamAddrText,	// ADR (adr-param/text-param)
-	ParamAddrText,	// LABEL (adr-param/text-param)
+	ParamAddrText,		// ADR (adr-param/text-param)
+	ParamAddrText,		// LABEL (adr-param/text-param)
 	ParamTel,		// TEL
 	ParamEmail,		// EMAIL
 	ParamText,		// MAILER
@@ -94,7 +94,7 @@ VCARD::paramTypesTable[] = {
 	ParamNone,		// URL
 	ParamNone,		// VERSION
 	ParamNone,		// CLASS
-	ParamTextBin,	// KEY
+	ParamTextBin,		// KEY
 	ParamTextNS		// X
 };
 
@@ -112,19 +112,19 @@ VCARD::EntityTypeToParamType(EntityType e)
 	//---------------------------------------------------------------//	
 		case EntitySource:		t = ParamSource;	break;
 	//---------------------------------------------------------------//	
-		case EntityTelephone:	t = ParamTel;		break;
+		case EntityTelephone:		t = ParamTel;		break;
 	//---------------------------------------------------------------//	
 		case EntityEmail:		t = ParamEmail;		break;
 	//---------------------------------------------------------------//	
 		case EntityKey:			t = ParamTextBin;	break;
 	//---------------------------------------------------------------//	
-		case EntityExtension:	t = ParamTextNS;	break;
+		case EntityExtension:		t = ParamTextNS;	break;
 	//---------------------------------------------------------------//	
 		case EntityAddress:
 		case EntityLabel:		t = ParamAddrText;	break;
 	//---------------------------------------------------------------//	
 		case EntityBirthday:
-		case EntityRevision:	t = ParamDate;		break;
+		case EntityRevision:		t = ParamDate;		break;
 	//---------------------------------------------------------------//	
 		case EntityPhoto:
 		case EntityLogo:		t = ParamImage;		break;
@@ -149,7 +149,7 @@ VCARD::EntityTypeToParamType(EntityType e)
 		case EntityName:
 		case EntityVersion:
 		case EntityProfile:
-		default:				t = ParamNone;				break;
+		default:			t = ParamNone;		break;
 	//---------------------------------------------------------------//	
 
 	}
@@ -171,15 +171,15 @@ VCARD::EntityTypeToValueType(EntityType e)
 	//---------------------------------------------------------------//	
 		case EntityAddress:		t = ValueAddress;	break;
 	//---------------------------------------------------------------//	
-		case EntityTelephone:	t = ValueTel;		break;
+		case EntityTelephone:		t = ValueTel;		break;
 	//---------------------------------------------------------------//	
 		case EntityKey:			t = ValueTextBin;	break;
 	//---------------------------------------------------------------//	
-		case EntityOrganisation:t = ValueOrg;		break;
+		case EntityOrganisation:	t = ValueOrg;		break;
 	//---------------------------------------------------------------//	
-		case EntityN:			t = ValueN;			break;
+		case EntityN:			t = ValueN;		break;
 	//---------------------------------------------------------------//	
-		case EntityTimeZone:	t = ValueUTC;		break;
+		case EntityTimeZone:		t = ValueUTC;		break;
 	//---------------------------------------------------------------//		
 		case EntityClass:		t = ValueClass;		break;
 	//---------------------------------------------------------------//		
@@ -192,10 +192,10 @@ VCARD::EntityTypeToValueType(EntityType e)
 		case EntityLogo:		t = ValueImage;		break;
 	//---------------------------------------------------------------//	
 		case EntityBirthday:
-		case EntityRevision:	t = ValueDate;		break;
+		case EntityRevision:		t = ValueDate;		break;
 	//---------------------------------------------------------------//	
 		case EntityCategories:
-		case EntityNickname:	t = ValueTextList;	break;
+		case EntityNickname:		t = ValueTextList;	break;
 	//---------------------------------------------------------------//	
 		case EntityLabel:
 		case EntityExtension:
@@ -211,7 +211,7 @@ VCARD::EntityTypeToValueType(EntityType e)
 		case EntityProfile:
 		case EntityUID:
 		case EntityNote:
-		default:				t = ValueText;		break;
+		default:			t = ValueText;		break;
 	//---------------------------------------------------------------//	
 
 	}
@@ -227,7 +227,7 @@ VCARD::EntityTypeToParamName(EntityType e)
 }
 
 	EntityType
-VCARD::ParamNameToEntityType(const QCString & s)
+VCARD::EntityNameToEntityType(const QCString & s)
 {
 	if (s.isEmpty()) return EntityUnknown;
 	

@@ -21,6 +21,7 @@
 #include <VCardRToken.h>
 #include <VCardAdrValue.h>
 #include <VCardValue.h>
+#include <VCardDefines.h>
 
 using namespace VCARD;
 
@@ -31,12 +32,12 @@ AdrValue::AdrValue()
 
 AdrValue::AdrValue(const AdrValue & x)
 	:	Value(x),
-		poBox_			(x.poBox_),
-		extAddress_		(x.extAddress_),
-		street_			(x.street_),
-		locality_		(x.locality_),
-		region_			(x.region_),
-		postCode_		(x.postCode_),
+		poBox_		(x.poBox_),
+		extAddress_	(x.extAddress_),
+		street_		(x.street_),
+		locality_	(x.locality_),
+		region_		(x.region_),
+		postCode_	(x.postCode_),
 		countryName_	(x.countryName_)
 {
 }
@@ -51,12 +52,12 @@ AdrValue::operator = (AdrValue & x)
 {
 	if (*this == x) return *this;
 
-	poBox_			= x.poBox_;
-	extAddress_		= x.extAddress_;
-	street_			= x.street_;
-	locality_		= x.locality_;
-	region_			= x.region_;
-	postCode_		= x.postCode_;
+	poBox_		= x.poBox_;
+	extAddress_	= x.extAddress_;
+	street_		= x.street_;
+	locality_	= x.locality_;
+	region_		= x.region_;
+	postCode_	= x.postCode_;
 	countryName_	= x.countryName_;
 
 	Value::operator = (x);
@@ -77,17 +78,23 @@ AdrValue::operator == (AdrValue & x)
 	x.parse();
 	
 	return (
-		poBox_			== x.poBox_			&&
-		extAddress_		== x.extAddress_	&&
-		street_			== x.street_		&&
-		locality_		== x.locality_		&&
-		region_			== x.region_		&&
-		postCode_		== x.postCode_		&&
+		poBox_		== x.poBox_		&&
+		extAddress_	== x.extAddress_	&&
+		street_		== x.street_		&&
+		locality_	== x.locality_		&&
+		region_		== x.region_		&&
+		postCode_	== x.postCode_		&&
 		countryName_	== x.countryName_);
 }
 
 AdrValue::~AdrValue()
 {
+}
+
+	AdrValue *
+AdrValue::clone()
+{
+	return new AdrValue( *this );
 }
 
 	void
@@ -100,12 +107,12 @@ AdrValue::_parse()
 		
 		switch (i) {
 			
-			case 0: poBox_			= l.at(0);	break;
-			case 1: extAddress_		= l.at(1);	break;
-			case 2: street_			= l.at(2);	break;
-			case 3: locality_		= l.at(3);	break;
-			case 4: region_			= l.at(4);	break;
-			case 5: postCode_		= l.at(5);	break;
+			case 0: poBox_		= l.at(0);	break;
+			case 1: extAddress_	= l.at(1);	break;
+			case 2: street_		= l.at(2);	break;
+			case 3: locality_	= l.at(3);	break;
+			case 4: region_		= l.at(4);	break;
+			case 5: postCode_	= l.at(5);	break;
 			case 6: countryName_	= l.at(6);	break;
 			default:							break;
 		}
@@ -115,7 +122,9 @@ AdrValue::_parse()
 	void
 AdrValue::_assemble()
 {
-	strRep_ =			poBox_;
+	vDebug("AdrValue::assemble_");
+
+	strRep_ =		poBox_;
 	strRep_ += ";" +	extAddress_;
 	strRep_ += ";" +	street_;
 	strRep_ += ";" +	locality_;

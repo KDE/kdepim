@@ -22,6 +22,7 @@
 #define  ADRPARAM_H
 
 #include <qcstring.h>
+#include <qstrlist.h>
 
 #include <VCardParam.h>
 

@@ -36,9 +36,9 @@ class ContentLine : public Entity
 
 #include "ContentLine-generated.h"
 	
-	QCString	group()		{ parse(); return group_;		}
-	QCString	name()		{ parse(); return name_;		}
-	Value	*	value()		{ parse(); return value_;		}
+	QCString	group()		{ parse(); return group_;	}
+	QCString	name()		{ parse(); return name_;	}
+	Value	*	value()		{ parse(); return value_;	}
 	ParamList	paramList()	{ parse(); return paramList_;	}
 	ParamType	paramType()	{ parse(); return paramType_;	}
 	ValueType	valueType()	{ parse(); return valueType_;	}

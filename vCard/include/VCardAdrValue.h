@@ -32,6 +32,8 @@ class AdrValue : public Value
 	
 #include "AdrValue-generated.h"
 	
+	AdrValue *clone();
+	
 	void setPOBox(const QCString & s)
 	{ poBox_ = s; assembled_ = false; }
 	
@@ -53,12 +55,12 @@ class AdrValue : public Value
 	void setCountryName(const QCString & s)
 	{ countryName_ = s; assembled_ = false; }
 	
-	QCString poBox()		{ parse(); return poBox_;		}
+	QCString poBox()	{ parse(); return poBox_;	}
 	QCString extAddress()	{ parse(); return extAddress_;	}
-	QCString street()		{ parse(); return street_;		}
-	QCString locality()		{ parse(); return locality_;	}
-	QCString region()		{ parse(); return region_;		}
-	QCString postCode()		{ parse(); return postCode_;	}
+	QCString street()	{ parse(); return street_;	}
+	QCString locality()	{ parse(); return locality_;	}
+	QCString region()	{ parse(); return region_;	}
+	QCString postCode()	{ parse(); return postCode_;	}
 	QCString countryName()	{ parse(); return countryName_;	}
 	
 	private:

@@ -27,17 +27,23 @@
 using namespace VCARD;
 
 Param::Param()
-	:	Entity()
+	:	Entity(),
+		name_(""),
+		value_("")
 {
 }
 
 Param::Param(const Param & x)
-	:	Entity(x)
+	:	Entity(x),
+		name_(x.name_),
+		value_(x.value_)
 {
 }
 
 Param::Param(const QCString & s)
-	:	Entity(s)
+	:	Entity(s),
+		name_(""),
+		value_("")
 {
 }
 
@@ -47,6 +53,9 @@ Param::operator = (Param & x)
 	if (*this == x) return *this;
 
 	Entity::operator = (x);
+        name_ = x.name_;
+        value_ = x.value_;
+        
 	return *this;
 }
 
@@ -76,63 +85,42 @@ Param::_parse()
 	void
 Param::_assemble()
 {
+	strRep_ = name_ + "=" + value_;
 }
 
-	void
-Param::parseToList()
-{
-	QStrList l;
-	RTokenise(strRep_, ",", l);
-	
-	QStrListIterator it(l);
-	
-	for (; it.current(); ++it) {
-		
-		QCString s(it.current());
-		
-		int split = s.find('=');
-
-		if (split == -1)
-			continue;
-		
-		SubParam * p = new SubParam(s.left(split), s.mid(split + 1));
-		subParamList_.append(p);
-	}
-}
-
-SubParam::SubParam()
-	:	name_(""),
-		value_("")
-{
-}
-
-SubParam::SubParam(const QCString & name, const QCString & value)
-	:	name_(name),
+Param::Param(const QCString &name, const QCString &value)
+	:	Entity(),
+		name_(name),
 		value_(value)
 {
+	parsed_ = true;
+	assembled_ = false;
 }
 
 	void
-SubParam::setName(const QCString & name)
+Param::setName(const QCString & name)
 {
 	name_ = name;
+        
+        assembled_ = false;
 }
 
 	void
-SubParam::setValue(const QCString & value)
+Param::setValue(const QCString & value)
 {
 	value_ = value;
+        
+        assembled_ = false;
 }
 
 	QCString
-SubParam::name()
+Param::name()
 {
 	return name_;
 }
 
 	QCString
-SubParam::value()
+Param::value()
 {
 	return value_;
 }
-

@@ -22,46 +22,30 @@
 #define  PARAM_H
 
 #include <qcstring.h>
-#include <qstrlist.h>
+#include <qlist.h>
 
 #include <VCardEntity.h>
 
 namespace VCARD
 {
-	
-class SubParam
-{
-	public:
-		
-		SubParam();
-		SubParam(const QCString &, const QCString &);
-		
-		void setName(const QCString &);
-		void setValue(const QCString &);
-		
-		QCString name();
-		QCString value();
-	
-	private:
-		
-		QCString name_;
-		QCString value_;
-};
-
-typedef QList<SubParam> SubParamList;
-typedef QListIterator<SubParam> SubParamListIterator;
-
 
 class Param : public Entity
 {
 
 #include "Param-generated.h"
-	
-	void parseToList();
-	
-	protected:
+
+        Param(const QCString &name, const QCString &value);
+
+	void setName(const QCString &);
+	void setValue(const QCString &);
 		
-		SubParamList subParamList_;
+	QCString name();
+	QCString value();
+	
+	private:
+		
+		QCString name_;
+		QCString value_;
 };
 
 typedef QList<Param> ParamList;

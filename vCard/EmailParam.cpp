@@ -81,6 +81,7 @@ EmailParam::~EmailParam()
 	void
 EmailParam::_parse()
 {
+#if 0
 	Param::parseToList();
 	
 	SubParamListIterator it(subParamList_);
@@ -99,6 +100,7 @@ EmailParam::_parse()
 			pref_ = true;
 		}
 	}
+#endif
 }
 
 	void

@@ -67,8 +67,8 @@ ContentLine::ContentLine(const ContentLine & x)
 	:	Entity(x),
                 group_ (x.group_),
                 name_ (x.name_),
-		paramList_	(x.paramList_),
-		value_(new Value(*(x.value_)))
+		paramList_(x.paramList_),
+		value_(x.value_->clone())
 {
 }
 
@@ -84,7 +84,7 @@ ContentLine::operator = (ContentLine & x)
 	if (*this == x) return *this;
 	
 	paramList_ = x.paramList();
-	value_ = new Value(*(x.value_));
+	value_ = x.value_->clone();
 
 	Entity::operator = (x);
 	return *this;
@@ -160,7 +160,7 @@ ContentLine::_parse()
 	// Remove the name part.
 	l.remove(0u);
 	
-	entityType_	= ParamNameToEntityType(name_);
+	entityType_	= EntityNameToEntityType(name_);
 	paramType_	= EntityTypeToParamType(entityType_);
 	
 	unsigned int i = 0;
@@ -171,24 +171,30 @@ ContentLine::_parse()
 	
 	for (; it.current(); ++it, i++) {
 
-		Param * p(0);
-	
-		switch (paramType_) {
-		
-			case ParamDate:		p = new DateParam;		break;
-			case ParamAgent:	p = new AgentParam;		break;
-			case ParamEmail:	p = new EmailParam;		break;
-			case ParamImage:	p = new ImageParam;		break;
-			case ParamTextBin:	p = new TextBinParam;	break;
-			case ParamSource:	p = new SourceParam;	break;
-			case ParamMailer:
-			case ParamAddrText:
-			default:			p = new TextParam;		break;
+		QCString str = *it;
+
+		split = str.find("=");
+		if (split < 0 ) {
+			vDebug("No '=' in paramter.");
+			continue;
 		}
 		
-		*p = l.at(i);
-		p->parse();
-		paramList_.append(p);
+		QCString paraName = str.left(split);
+		QCString paraValue = str.mid(split + 1);
+		
+		QStrList paraValues;
+		RTokenise(paraValue, ",", paraValues);
+		
+		QStrListIterator it2( paraValues );
+		
+		for(; it2.current(); ++it2) {		
+		
+			Param *p = new Param;
+			p->setName( paraName );
+			p->setValue( *it2 );
+	
+			paramList_.append(p);
+		}
 	}
 
 	// Create a new value of the correct type.
@@ -213,7 +219,7 @@ ContentLine::_parse()
 		case ValueTextList:	value_ = new TextListValue;	break;
 		case ValueText:
 		case ValueUnknown:
-		default:			value_ = new TextValue;	break;
+		default:		value_ = new TextValue;		break;
 	}
 	
 	*value_ = valuePart;
