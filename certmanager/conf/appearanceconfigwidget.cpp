@@ -146,23 +146,25 @@ private:
   bool mStrikeOut;
 };
 
-// copied from kconfigbasedkeyfilter.cpp
-static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
-  if ( it )
-    font.setItalic( true );
-  if ( b )
-    font.setBold( true );
-  if ( strike )
-    font.setStrikeOut( true );
+static inline QFont adapt( QFont font, bool it, bool b ) {
   return font;
 }
 
 void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   QColorGroup _cg = cg;
+  QFont font = p->font();
   if ( mHasFont )
-    p->setFont( mFont );
-  else
-    p->setFont( adapt( p->font(), mItalic, mBold, mStrikeOut ) );
+    font = mFont;
+  else {
+    if ( mItalic )
+      font.setItalic( true );
+    if ( mBold )
+      font.setBold( true );
+  }
+  if ( mStrikeOut )
+    font.setStrikeOut( true );
+  p->setFont( font );
+
   if ( mForegroundColor.isValid() )
     _cg.setColor( QColorGroup::Text, mForegroundColor );
   if ( mBackgroundColor.isValid() )
