@@ -152,7 +152,7 @@ void KNNetAccess::stopJobsNntp(int type)
       if ((type==0)||(tmp->type()==type)) {
         tmp->cancel();
         tmp->notifyConsumer();
-        	
+          
       } else
         nntpJobQueue.enqueue(tmp);
     }

@@ -283,8 +283,8 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
   if(result) result=age.doFilter(a->date()->ageInDays());
   if(result) result=subject.doFilter(a->subject()->asUnicodeString());
   if(result) {
-  	QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
-  	result=from.doFilter(tmp);
+    QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
+    result=from.doFilter(tmp);
   }
 
   a->setFilterResult(result);

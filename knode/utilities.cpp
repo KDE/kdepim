@@ -119,7 +119,7 @@ QString rot13(const QString &s)
       if  ( r[i] >= QChar('N') && r[i] <= QChar('Z') ||
             r[i] >= QChar('n') && r[i] <= QChar('z') )
         r[i] = (char)((int)QChar(r[i]) - 13);
-  }  	
+  }   
 
   return r;
 }

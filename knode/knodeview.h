@@ -132,30 +132,30 @@ class KNodeView : public QSplitter
     //listview slots
     void slotArticleSelected(QListViewItem*);
     void slotArticleDoubleClicked(QListViewItem*);
-		void slotCollectionSelected(QListViewItem*);
-		void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
-		void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
-		void slotHdrViewSortingChanged(int i);
-		
-		//network slots
-		void slotNetworkActive(bool b);
-		
-		
+    void slotCollectionSelected(QListViewItem*);
+    void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
+    void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
+    void slotHdrViewSortingChanged(int i);
+    
+    //network slots
+    void slotNetworkActive(bool b);
+    
+    
   //--------------------------- <Actions> -----------------------------
-		
+    
   protected:
 
     KActionCollection *a_ctions;
 
     //navigation
-    KAction 	*a_ctNavNextArt,
-    					*a_ctNavPrevArt,
-    					*a_ctNavNextUnreadArt,
-    					*a_ctNavNextUnreadThread,
-    					*a_ctNavNextGroup,
-    					*a_ctNavPrevGroup,
-    					*a_ctNavReadThrough;    			
-    					
+    KAction   *a_ctNavNextArt,
+              *a_ctNavPrevArt,
+              *a_ctNavNextUnreadArt,
+              *a_ctNavNextUnreadThread,
+              *a_ctNavNextGroup,
+              *a_ctNavPrevGroup,
+              *a_ctNavReadThrough;          
+              
     //collection-view - accounts
     KAction   *a_ctAccProperties,
               *a_ctAccSubscribe,
@@ -170,36 +170,36 @@ class KNodeView : public QSplitter
               *a_ctGrpResort,
               *a_ctGrpUnsubscribe,
               *a_ctGrpSetAllRead,
-							*a_ctGrpSetAllUnread;
-	
-	  //collection-view - folder
+              *a_ctGrpSetAllUnread;
+  
+    //collection-view - folder
     KAction   *a_ctFolCompact,
               *a_ctFolEmpty,
               *a_ctFolProperties;
-				
+        
     //header-view - list-handling
-    KSelectAction					*a_ctArtSortHeaders;
-		KNFilterSelectAction	*a_ctArtFilter;		
-		KAction								*a_ctArtSortHeadersKeyb,
-		                      *a_ctArtFilterKeyb,
-		                      *a_ctArtSearch,
-													*a_ctArtRefreshList,
-													*a_ctArtCollapseAll,
-													*a_ctArtExpandAll,
-													*a_ctArtToggleThread;
-		KToggleAction 				*a_ctArtToggleShowThreads;					
-		
-		//header-view - remote articles
-		KAction *a_ctArtSetArtRead,
-						*a_ctArtSetArtUnread,
-						*a_ctArtSetThreadRead,
-						*a_ctArtSetThreadUnread,
-						*a_ctSetArtScore,
-						*a_ctArtSetThreadScore,
-						*a_ctArtToggleIgnored,
-						*a_ctArtToggleWatched,
-						*a_ctArtOpenNewWindow;
-														
+    KSelectAction         *a_ctArtSortHeaders;
+    KNFilterSelectAction  *a_ctArtFilter;   
+    KAction               *a_ctArtSortHeadersKeyb,
+                          *a_ctArtFilterKeyb,
+                          *a_ctArtSearch,
+                          *a_ctArtRefreshList,
+                          *a_ctArtCollapseAll,
+                          *a_ctArtExpandAll,
+                          *a_ctArtToggleThread;
+    KToggleAction         *a_ctArtToggleShowThreads;          
+    
+    //header-view - remote articles
+    KAction *a_ctArtSetArtRead,
+            *a_ctArtSetArtUnread,
+            *a_ctArtSetThreadRead,
+            *a_ctArtSetThreadUnread,
+            *a_ctSetArtScore,
+            *a_ctArtSetThreadScore,
+            *a_ctArtToggleIgnored,
+            *a_ctArtToggleWatched,
+            *a_ctArtOpenNewWindow;
+                            
     //header-view local articles
     KAction *a_ctArtSendOutbox,
             *a_ctArtDelete,
@@ -210,7 +210,7 @@ class KNodeView : public QSplitter
     KAction *a_ctNetCancel;
 
   protected slots:
-		void slotNavNextArt();
+    void slotNavNextArt();
     void slotNavPrevArt();
     void slotNavNextUnreadArt();
     void slotNavNextUnreadThread();
@@ -230,39 +230,39 @@ class KNodeView : public QSplitter
     void slotGrpResort();
     void slotGrpUnsubscribe();
     void slotGrpSetAllRead();
-		void slotGrpSetAllUnread();
-		
-		void slotFolCompact();
+    void slotGrpSetAllUnread();
+    
+    void slotFolCompact();
     void slotFolEmpty();
     void slotFolProperties();
 
     void slotArtSortHeaders(int i);
     void slotArtSortHeadersKeyb();
-		void slotArtSearch();
-		void slotArtRefreshList();
-		void slotArtCollapseAll();
-		void slotArtExpandAll();
-		void slotArtToggleThread();
-		void slotArtToggleShowThreads();
-		
-		void slotArtSetArtRead();
-		void slotArtSetArtUnread();
-		void slotArtSetThreadRead();
-		void slotArtSetThreadUnread();
-		void slotArtSetArtScore();
-		void slotArtSetThreadScore();
-		void slotArtToggleIgnored();
-		void slotArtToggleWatched();
-		void slotArtOpenNewWindow();
-		
-		void slotArtSendOutbox();
+    void slotArtSearch();
+    void slotArtRefreshList();
+    void slotArtCollapseAll();
+    void slotArtExpandAll();
+    void slotArtToggleThread();
+    void slotArtToggleShowThreads();
+    
+    void slotArtSetArtRead();
+    void slotArtSetArtUnread();
+    void slotArtSetThreadRead();
+    void slotArtSetThreadUnread();
+    void slotArtSetArtScore();
+    void slotArtSetThreadScore();
+    void slotArtToggleIgnored();
+    void slotArtToggleWatched();
+    void slotArtOpenNewWindow();
+    
+    void slotArtSendOutbox();
     void slotArtDelete();
     void slotArtSendNow();
     void slotArtEdit();
 
     void slotNetCancel();
 
-  //--------------------------- </Actions> -----------------------------			
+  //--------------------------- </Actions> -----------------------------      
 
 };
 

@@ -429,8 +429,8 @@ QDateTime KNHeaders::Date::qdt()
 
 int KNHeaders::Date::ageInDays()
 {
-	QDate today=QDate::currentDate();
-	return ( qdt().date().daysTo(today) );
+  QDate today=QDate::currentDate();
+  return ( qdt().date().daysTo(today) );
 }
 
 

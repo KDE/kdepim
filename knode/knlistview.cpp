@@ -202,8 +202,8 @@ void KNListView::setActive(QListViewItem *i, bool activate)
   KNLVItemBase *item = static_cast<KNLVItemBase*>(i);
 
   if (!item || (item->isActive() == activate))
-  	return;
-  	
+    return;
+    
   if (activeItem) {
     activeItem->setActive(false);
     repaintItem(activeItem);
@@ -220,7 +220,7 @@ void KNListView::setActive(QListViewItem *i, bool activate)
   } else
     repaintItem(item);
 }
-	
+  
 
 void KNListView::clear()
 {

@@ -1111,10 +1111,10 @@ KNHeaders::Base* KNMimeContent::getHeaderByType(const char *type)
 
 void KNMimeContent::setHeader(KNHeaders::Base *h)
 {
-	if(!h) return;
-	removeHeader(h->type());
-	if(!h_eaders) {
-  	h_eaders=new KNHeaders::List();
+  if(!h) return;
+  removeHeader(h->type());
+  if(!h_eaders) {
+    h_eaders=new KNHeaders::List();
     h_eaders->setAutoDelete(true);
   }
   h_eaders->append(h);
@@ -1343,23 +1343,23 @@ KNHeaders::Base* KNArticle::getHeaderByType(const char *type)
 
 void KNArticle::setHeader(KNHeaders::Base *h)
 {
-	if(h->is("Subject"))
-		s_ubject.fromUnicodeString(h->asUnicodeString(), h->rfc2047Charset());
-  else if(h->is("Date"))  	
-		d_ate.setUnixTime( (static_cast<KNHeaders::Date*>(h))->unixTime() );
+  if(h->is("Subject"))
+    s_ubject.fromUnicodeString(h->asUnicodeString(), h->rfc2047Charset());
+  else if(h->is("Date"))    
+    d_ate.setUnixTime( (static_cast<KNHeaders::Date*>(h))->unixTime() );
   else if(h->is("Lines"))
     l_ines.setNumberOfLines( (static_cast<KNHeaders::Lines*>(h))->numberOfLines() );
   else
-    return KNMimeContent::setHeader(h);	
+    return KNMimeContent::setHeader(h); 
 }
 
 
 bool KNArticle::removeHeader(const char *type)
 {
   if(strcasecmp("Subject", type)==0)
-		s_ubject.clear();
-  else if(strcasecmp("Date", type)==0)  	
-		d_ate.clear();
+    s_ubject.clear();
+  else if(strcasecmp("Date", type)==0)    
+    d_ate.clear();
   else if(strcasecmp("Lines", type)==0)
     l_ines.clear();
   else
@@ -1372,7 +1372,7 @@ bool KNArticle::removeHeader(const char *type)
 void KNArticle::setListItem(KNHdrViewItem *it)
 {
   i_tem=it;
-	if(i_tem) i_tem->art=this;
+  if(i_tem) i_tem->art=this;
 }
 
 
@@ -1454,23 +1454,23 @@ KNHeaders::Base* KNRemoteArticle::getHeaderByType(const char *type)
 
 void KNRemoteArticle::setHeader(KNHeaders::Base *h)
 {
-	if(h->is("Message-ID"))
-		m_essageID.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);
-  else if(h->is("From")) {  	
-		f_rom.setEmail( (static_cast<KNHeaders::From*>(h))->email() );
-		f_rom.setName( (static_cast<KNHeaders::From*>(h))->name() );
-	}
-	else
-	  KNArticle::setHeader(h);	
+  if(h->is("Message-ID"))
+    m_essageID.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);
+  else if(h->is("From")) {    
+    f_rom.setEmail( (static_cast<KNHeaders::From*>(h))->email() );
+    f_rom.setName( (static_cast<KNHeaders::From*>(h))->name() );
+  }
+  else
+    KNArticle::setHeader(h);  
 }
 
 
 bool KNRemoteArticle::removeHeader(const char *type)
 {
   if(strcasecmp("Message-ID", type)==0)
-		m_essageID.clear();
-  else if(strcasecmp("From", type)==0)  	
-		f_rom.clear();
+    m_essageID.clear();
+  else if(strcasecmp("From", type)==0)    
+    f_rom.clear();
   else
      return KNArticle::removeHeader(type);
 
@@ -1483,11 +1483,11 @@ void KNRemoteArticle::initListItem()
   i_tem->setText(0, s_ubject.asUnicodeString());
   i_tem->subjectCS = s_ubject.rfc2047Charset();
 
-	if(f_rom.hasName())
-  	i_tem->setText(1, f_rom.name());
+  if(f_rom.hasName())
+    i_tem->setText(1, f_rom.name());
   else
-  	i_tem->setText(1, QString(f_rom.email()));
-  i_tem->nameCS = f_rom.rfc2047Charset();  	
+    i_tem->setText(1, QString(f_rom.email()));
+  i_tem->nameCS = f_rom.rfc2047Charset();   
 
   i_tem->setText(3, QString("%1").arg(lines()->numberOfLines()));
 
@@ -1526,7 +1526,7 @@ void KNRemoteArticle::updateListItem()
     i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));
 
   i_tem->setText(2, QString("%1").arg(s_core));
-	
+  
   i_tem->setExpandable( (threadMode() && hasVisibleFollowUps()) );
 
   i_tem->repaint(); //force repaint
@@ -1633,20 +1633,20 @@ KNHeaders::Base* KNLocalArticle::getHeaderByType(const char *type)
 void KNLocalArticle::setHeader(KNHeaders::Base *h)
 {
   if(h->is("To"))
-		t_o.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);
-  else if(h->is("Newsgroups"))  	
-	  n_ewsgroups.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);	
-	else
-    return KNArticle::setHeader(h);	
+    t_o.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);
+  else if(h->is("Newsgroups"))    
+    n_ewsgroups.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);  
+  else
+    return KNArticle::setHeader(h); 
 }
 
 
 bool KNLocalArticle::removeHeader(const char *type)
 {
   if(strcasecmp("To", type)==0)
-		t_o.clear();
-  else if(strcasecmp("Newsgroups", type)==0)  	
-		n_ewsgroups.clear();
+    t_o.clear();
+  else if(strcasecmp("Newsgroups", type)==0)    
+    n_ewsgroups.clear();
   else
      return KNArticle::removeHeader(type);
 

@@ -67,7 +67,7 @@ private:
 
 class KNArticleManager : public QObject {
 
-	Q_OBJECT
+  Q_OBJECT
 
   public:
     KNArticleManager(KNListView *v, KNFilterManager *f);

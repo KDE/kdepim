@@ -113,7 +113,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void slotCheckForNewGroups(KNNntpAccount *a, QDate date);    // check for new groups (created after the given date)
     
   protected:
-		void processJob(KNJobData *j); //reimplemented from KNJobConsumer
+    void processJob(KNJobData *j); //reimplemented from KNJobConsumer
     QList<KNGroup>  *g_List;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;

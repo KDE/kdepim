@@ -152,10 +152,10 @@ class KNMimeContent : public KNMimeBase {
     virtual void clear();
 
     //header access
-		QCString head()				{ return h_ead; }
+    QCString head()       { return h_ead; }
     virtual KNHeaders::Base* getHeaderByType(const char *type);
-		virtual void setHeader(KNHeaders::Base *h);
-		virtual bool removeHeader(const char *type);
+    virtual void setHeader(KNHeaders::Base *h);
+    virtual bool removeHeader(const char *type);
     bool hasHeader(const char *type)                                  { return (getHeaderByType(type)!=0); }
     KNHeaders::ContentType* contentType(bool create=true)             { KNHeaders::ContentType *p=0; return getHeaderInstance(p, create); }
     KNHeaders::CTEncoding* contentTransferEncoding(bool create=true)  { KNHeaders::CTEncoding *p=0; return getHeaderInstance(p, create); }
@@ -163,9 +163,9 @@ class KNMimeContent : public KNMimeBase {
     KNHeaders::CDescription* contentDescription(bool create=true)     { KNHeaders::CDescription *p=0; return getHeaderInstance(p, create); }
 
     //content access
-		int size()            { return b_ody.length(); }
-		int lineCount();
-		QCString body()				{ return b_ody; }
+    int size()            { return b_ody.length(); }
+    int lineCount();
+    QCString body()       { return b_ody; }
     QCString encodedContent(bool useCrLf=false);
     QByteArray decodedContent();
     void decodedText(QString &s);
@@ -223,54 +223,54 @@ class KNArticleCollection;
 class KNArticle : public KNMimeContent, public KNJobItem {
 
   public:
-	  typedef QList<KNArticle> List;	
+    typedef QList<KNArticle> List;  
 
-		KNArticle(KNArticleCollection *c);
-   	~KNArticle();
+    KNArticle(KNArticleCollection *c);
+    ~KNArticle();
 
-   	//content handling
-   	void parse();
-   	void assemble();
-   	void clear();
+    //content handling
+    void parse();
+    void assemble();
+    void clear();
 
-   	//header access
-   	KNHeaders::Base* getHeaderByType(const char *type);
-		void setHeader(KNHeaders::Base *h);
-		bool removeHeader(const char *type);
-   	virtual KNHeaders::MessageID* messageID(bool create=true)        { KNHeaders::MessageID *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::Control* control(bool create=true)            { KNHeaders::Control *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::Supersedes* supersedes(bool create=true)      { KNHeaders::Supersedes *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::Subject* subject(bool create=true)            { if(!create && s_ubject.isEmpty()) return 0; return &s_ubject; }
-   	virtual KNHeaders::Date* date(bool create=true)                  { if(!create && d_ate.isEmpty()) return 0;return &d_ate; }
-   	virtual KNHeaders::From* from(bool create=true)                  { KNHeaders::From *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::Organization* organization(bool create=true)  { KNHeaders::Organization *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::ReplyTo* replyTo(bool create=true)            { KNHeaders::ReplyTo *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::To* to(bool create=true)                      { KNHeaders::To *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::CC* cc(bool create=true)                      { KNHeaders::CC *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::BCC* bcc(bool create=true)                    { KNHeaders::BCC *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::Newsgroups* newsgroups(bool create=true)      { KNHeaders::Newsgroups *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::FollowUpTo* followUpTo(bool create=true)      { KNHeaders::FollowUpTo *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::References* references(bool create=true)      { KNHeaders::References *p=0; return getHeaderInstance(p, create); }
-   	virtual KNHeaders::Lines* lines(bool create=true)                { if(!create && l_ines.isEmpty()) return 0; return &l_ines; }
+    //header access
+    KNHeaders::Base* getHeaderByType(const char *type);
+    void setHeader(KNHeaders::Base *h);
+    bool removeHeader(const char *type);
+    virtual KNHeaders::MessageID* messageID(bool create=true)        { KNHeaders::MessageID *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::Control* control(bool create=true)            { KNHeaders::Control *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::Supersedes* supersedes(bool create=true)      { KNHeaders::Supersedes *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::Subject* subject(bool create=true)            { if(!create && s_ubject.isEmpty()) return 0; return &s_ubject; }
+    virtual KNHeaders::Date* date(bool create=true)                  { if(!create && d_ate.isEmpty()) return 0;return &d_ate; }
+    virtual KNHeaders::From* from(bool create=true)                  { KNHeaders::From *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::Organization* organization(bool create=true)  { KNHeaders::Organization *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::ReplyTo* replyTo(bool create=true)            { KNHeaders::ReplyTo *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::To* to(bool create=true)                      { KNHeaders::To *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::CC* cc(bool create=true)                      { KNHeaders::CC *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::BCC* bcc(bool create=true)                    { KNHeaders::BCC *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::Newsgroups* newsgroups(bool create=true)      { KNHeaders::Newsgroups *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::FollowUpTo* followUpTo(bool create=true)      { KNHeaders::FollowUpTo *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::References* references(bool create=true)      { KNHeaders::References *p=0; return getHeaderInstance(p, create); }
+    virtual KNHeaders::Lines* lines(bool create=true)                { if(!create && l_ines.isEmpty()) return 0; return &l_ines; }
     virtual KNHeaders::UserAgent* userAgent(bool create=true)        { KNHeaders::UserAgent *p=0; return getHeaderInstance(p, create); }
-   	
-   	//id
-   	int id()             { return i_d; }
-   	void setId(int i)    { i_d=i; }
+    
+    //id
+    int id()             { return i_d; }
+    void setId(int i)    { i_d=i; }
 
-   	//list item handling
-   	KNHdrViewItem* listItem()            { return i_tem; }
-   	void setListItem(KNHdrViewItem *i);
-   	virtual void updateListItem() {}
-       	
-   	//network lock (reimplemented from KNJobItem)
-   	bool isLocked()                      { return f_lags.get(0); }
-   	void setLocked(bool b=true);
+    //list item handling
+    KNHdrViewItem* listItem()            { return i_tem; }
+    void setListItem(KNHdrViewItem *i);
+    virtual void updateListItem() {}
+        
+    //network lock (reimplemented from KNJobItem)
+    bool isLocked()                      { return f_lags.get(0); }
+    void setLocked(bool b=true);
 
-   	//article-collection
-   	KNArticleCollection* collection()           { return c_ol; }
-   	void setCollection(KNArticleCollection *c)  { c_ol=c; }
-   	
+    //article-collection
+    KNArticleCollection* collection()           { return c_ol; }
+    void setCollection(KNArticleCollection *c)  { c_ol=c; }
+    
     virtual void setForceDefaultCS(bool b);
 
   protected:
@@ -312,8 +312,8 @@ class KNRemoteArticle : public KNArticle {
 
     // header access
     KNHeaders::Base* getHeaderByType(const char *type);
-		void setHeader(KNHeaders::Base *h);
-		bool removeHeader(const char *type);
+    void setHeader(KNHeaders::Base *h);
+    bool removeHeader(const char *type);
     KNHeaders::MessageID* messageID(bool create=true) { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
     KNHeaders::From* from(bool create=true)           { if(!create && f_rom.isEmpty()) return 0; return &f_rom; }
 
@@ -334,11 +334,11 @@ class KNRemoteArticle : public KNArticle {
     void setIdRef(int i)                          { i_dRef=i; }
     bool threadMode()                             { return f_lags.get(6); }
     void setThreadMode(bool b=true)               { f_lags.set(6, b); }
-		unsigned char threadingLevel()                { return t_hrLevel; }
-		void setThreadingLevel(unsigned char l)				{ t_hrLevel=l; }
+    unsigned char threadingLevel()                { return t_hrLevel; }
+    void setThreadingLevel(unsigned char l)       { t_hrLevel=l; }
     unsigned char score()                         { return s_core; }
-    void setScore(unsigned char s)								{ s_core=s; }
-		unsigned short newFollowUps()                 { return n_ewFups; }
+    void setScore(unsigned char s)                { s_core=s; }
+    unsigned short newFollowUps()                 { return n_ewFups; }
     bool hasNewFollowUps()                        { return (n_ewFups>0); }
     void setNewFollowUps(unsigned short s)        { n_ewFups=s; }
     void incNewFollowUps(unsigned short s=1)      { n_ewFups+=s; }
@@ -350,15 +350,15 @@ class KNRemoteArticle : public KNArticle {
     void decUnreadFollowUps(unsigned short s=1)   { u_nreadFups-=s; }
     void thread(List *f);
 
-		//filtering
-		bool filterResult()                  		{ return f_lags.get(7); }
-    void setFilterResult(bool b=true)    		{ f_lags.set(7, b); }
-    bool isFiltered()                    		{ return f_lags.get(8); }
-    void setFiltered(bool b=true)        		{ f_lags.set(8, b); }
-		bool hasVisibleFollowUps()							{ return f_lags.get(9); }
-		void setVisibleFollowUps(bool b=true)		{ f_lags.set(9, b); }
+    //filtering
+    bool filterResult()                     { return f_lags.get(7); }
+    void setFilterResult(bool b=true)       { f_lags.set(7, b); }
+    bool isFiltered()                       { return f_lags.get(8); }
+    void setFiltered(bool b=true)           { f_lags.set(8, b); }
+    bool hasVisibleFollowUps()              { return f_lags.get(9); }
+    void setVisibleFollowUps(bool b=true)   { f_lags.set(9, b); }
 
-		// list item handling
+    // list item handling
     void initListItem();
     void updateListItem();
 
@@ -403,58 +403,58 @@ class KNLocalArticle : public KNArticle {
 
     // header access
     KNHeaders::Base* getHeaderByType(const char *type);
-		void setHeader(KNHeaders::Base *h);
-		bool removeHeader(const char *type);
-		KNHeaders::Newsgroups* newsgroups(bool create=true)     { if( (!create && n_ewsgroups.isEmpty()) || (!create && !doPost()) )
-		                                                            return 0;
-		                                                          return &n_ewsgroups; }
-		KNHeaders::To* to(bool create=true)                     { if( (!create && t_o.isEmpty()) || (!create && !doMail()) )
-		                                                            return 0;
-		                                                          return &t_o; }
-		
-		//send article as mail
-		bool doMail()                 { return f_lags.get(1); }
-		void setDoMail(bool b=true)   { f_lags.set(1, b); }
-		bool mailed()                 { return f_lags.get(2); }
-		void setMailed(bool b=true)   { f_lags.set(2, b); }
-		
-		//post article to a newsgroup
-		bool doPost()                 { return f_lags.get(3); }
-		void setDoPost(bool b=true)   { f_lags.set(3, b); }
-		bool posted()                 { return f_lags.get(4); }
-		void setPosted(bool b=true)   { f_lags.set(4, b); }
-		bool canceled()               { return f_lags.get(5); }
-		void setCanceled(bool b=true) { f_lags.set(5, b); }
-		
-		//sending status
-		bool pending()                { return ( (doPost() && !posted()) || (doMail() && !mailed()) ); }
-		
-		//edit
-		bool editDisabled()               { return f_lags.get(6); }
-		void setEditDisabled(bool b=true) { f_lags.set(6, b); }
-				
-		//MBOX infos
-		int startOffset()             { return s_Offset; }
-		void setStartOffset(int so)   { s_Offset=so; }
-		int endOffset()               { return e_Offset; }
-		void setEndOffset(int eo)     { e_Offset=eo; }
-				
-		//nntp-server id
-		int serverId()                { if(!doPost()) return -1; else return s_erverId; }
-		void setServerId(int i)       { s_erverId=i; }
-		
-		//list item handling
-		void updateListItem();
-		
+    void setHeader(KNHeaders::Base *h);
+    bool removeHeader(const char *type);
+    KNHeaders::Newsgroups* newsgroups(bool create=true)     { if( (!create && n_ewsgroups.isEmpty()) || (!create && !doPost()) )
+                                                                return 0;
+                                                              return &n_ewsgroups; }
+    KNHeaders::To* to(bool create=true)                     { if( (!create && t_o.isEmpty()) || (!create && !doMail()) )
+                                                                return 0;
+                                                              return &t_o; }
+    
+    //send article as mail
+    bool doMail()                 { return f_lags.get(1); }
+    void setDoMail(bool b=true)   { f_lags.set(1, b); }
+    bool mailed()                 { return f_lags.get(2); }
+    void setMailed(bool b=true)   { f_lags.set(2, b); }
+    
+    //post article to a newsgroup
+    bool doPost()                 { return f_lags.get(3); }
+    void setDoPost(bool b=true)   { f_lags.set(3, b); }
+    bool posted()                 { return f_lags.get(4); }
+    void setPosted(bool b=true)   { f_lags.set(4, b); }
+    bool canceled()               { return f_lags.get(5); }
+    void setCanceled(bool b=true) { f_lags.set(5, b); }
+    
+    //sending status
+    bool pending()                { return ( (doPost() && !posted()) || (doMail() && !mailed()) ); }
+    
+    //edit
+    bool editDisabled()               { return f_lags.get(6); }
+    void setEditDisabled(bool b=true) { f_lags.set(6, b); }
+        
+    //MBOX infos
+    int startOffset()             { return s_Offset; }
+    void setStartOffset(int so)   { s_Offset=so; }
+    int endOffset()               { return e_Offset; }
+    void setEndOffset(int eo)     { e_Offset=eo; }
+        
+    //nntp-server id
+    int serverId()                { if(!doPost()) return -1; else return s_erverId; }
+    void setServerId(int i)       { s_erverId=i; }
+    
+    //list item handling
+    void updateListItem();
+    
     void setForceDefaultCS(bool b);
-		
-		protected:
-		  //hardcoded headers
-		  KNHeaders::Newsgroups n_ewsgroups;
-		  KNHeaders::To t_o;
-		  int s_Offset, //position in mbox-file : start
-		      e_Offset, //position in mbox-file : end
-		      s_erverId; //id of the nntp-server this article is posted to
+    
+    protected:
+      //hardcoded headers
+      KNHeaders::Newsgroups n_ewsgroups;
+      KNHeaders::To t_o;
+      int s_Offset, //position in mbox-file : start
+          e_Offset, //position in mbox-file : end
+          s_erverId; //id of the nntp-server this article is posted to
 };
 
 
@@ -506,7 +506,7 @@ class KNAttachment {
     bool  i_sAttached,
           h_asChanged,
           f_b64;
-};		
+};    
 
 // some compilers (for instance Compaq C++) need template inline functions
 // here rather than in the *.cpp file

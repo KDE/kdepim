@@ -92,7 +92,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   //header view
   h_drFocus=new KNFocusWidget(s_ecSplitter,"hdrFocus");
   h_drView=new KNListView(h_drFocus,"hdrView");
-	h_drFocus->setWidget(h_drView);
+  h_drFocus->setWidget(h_drView);
   s_ecSplitter->setResizeMode(h_drFocus, QSplitter::KeepSize);
 
   h_drView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -104,10 +104,10 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   h_drView->addColumn(i18n("Lines"),42);
   h_drView->addColumn(i18n("Date"),102);
 
-	connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
-	  this, SLOT(slotArticleSelected(QListViewItem*)));
-	connect(h_drView, SIGNAL(doubleClicked(QListViewItem*)),
-	  this, SLOT(slotArticleDoubleClicked(QListViewItem*)));
+  connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
+    this, SLOT(slotArticleSelected(QListViewItem*)));
+  connect(h_drView, SIGNAL(doubleClicked(QListViewItem*)),
+    this, SLOT(slotArticleDoubleClicked(QListViewItem*)));
   connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
@@ -476,16 +476,16 @@ void KNodeView::initActions()
                               SLOT(slotGrpUnsubscribe()), a_ctions, "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark all as &read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), a_ctions, "group_allRead");
-	a_ctGrpSetAllUnread       = new KAction(i18n("Mark all as u&nread"), 0, this,
-	                            SLOT(slotGrpSetAllUnread()), a_ctions, "group_allUnread");
-	
-	//collection-view - folder
+  a_ctGrpSetAllUnread       = new KAction(i18n("Mark all as u&nread"), 0, this,
+                              SLOT(slotGrpSetAllUnread()), a_ctions, "group_allUnread");
+  
+  //collection-view - folder
   a_ctFolCompact            = new KAction(i18n("&Compact Folder"), "wizard", 0, this,
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
   a_ctFolEmpty              = new KAction(i18n("&Empty Folder"), 0, this,
                               SLOT(slotFolEmpty()), a_ctions, "folder_empty");
   a_ctFolProperties         = 0;
-	  					
+              
   //header-view - list-handling
   a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), 0, a_ctions, "view_Sort");
   QStringList items;
@@ -495,46 +495,46 @@ void KNodeView::initActions()
   items += i18n("By &Lines");
   items += i18n("By &Date");
   a_ctArtSortHeaders->setItems(items);
-	connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
-	a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), 0, Key_F7 , this,
+  connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
+  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), 0, Key_F7 , this,
                              SLOT(slotArtSortHeadersKeyb()), a_ctions, "view_Sort_Keyb");
-	
-	a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
-	                            a_ctions, "view_Filter");
-  a_ctArtFilterKeyb         =	new KAction(i18n("Filter"), Key_F6, a_ctions, "view_Filter_Keyb");
-	a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"find" , Key_F4 , this,
-	                            SLOT(slotArtSearch()), a_ctions, "article_search");
-	a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this,
-	                            SLOT(slotArtRefreshList()), a_ctions, "view_Refresh");
-	a_ctArtCollapseAll        = new KAction(i18n("&Collapse all threads"), 0 , this,
-	                            SLOT(slotArtCollapseAll()), a_ctions, "view_CollapseAll");
-	a_ctArtExpandAll          = new KAction(i18n("E&xpand all threads"), 0 , this,
-	                            SLOT(slotArtExpandAll()), a_ctions, "view_ExpandAll");
-	a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Key_T, this,
-	                            SLOT(slotArtToggleThread()), a_ctions, "thread_toggle");
-	a_ctArtToggleShowThreads	= new KToggleAction(i18n("Show T&hreads"), 0 , this,
-	                            SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");			
-		                            	
-	//header-view - remote articles
-	a_ctArtSetArtRead         = new KAction(i18n("Mark as &read"), Key_D , this,
-	                            SLOT(slotArtSetArtRead()), a_ctions, "article_read");
-	a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as unread"), Key_U , this,
-	                            SLOT(slotArtSetArtUnread()), a_ctions, "article_unread");
-	a_ctArtSetThreadRead      = new KAction(i18n("Mark thread as r&ead"), CTRL+Key_D , this,
-	                            SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
-	a_ctArtSetThreadUnread    = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this,
-	                            SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
-	a_ctSetArtScore           = new KAction(i18n("Set Sc&ore"), "rotate", Key_S , this,
-	                            SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
-	a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread"), "rotate", CTRL+Key_S , this,
-	                            SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
-	a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
-	                            SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
-	a_ctArtToggleWatched      = new KAction(i18n("&Watch"), "top", Key_W , this,
-	                            SLOT(slotArtToggleWatched()), a_ctions, "thread_watch");
-	a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &window"), "viewmag+", Key_O , this,
-	                            SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");							
-							
+  
+  a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
+                              a_ctions, "view_Filter");
+  a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Key_F6, a_ctions, "view_Filter_Keyb");
+  a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"find" , Key_F4 , this,
+                              SLOT(slotArtSearch()), a_ctions, "article_search");
+  a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this,
+                              SLOT(slotArtRefreshList()), a_ctions, "view_Refresh");
+  a_ctArtCollapseAll        = new KAction(i18n("&Collapse all threads"), 0 , this,
+                              SLOT(slotArtCollapseAll()), a_ctions, "view_CollapseAll");
+  a_ctArtExpandAll          = new KAction(i18n("E&xpand all threads"), 0 , this,
+                              SLOT(slotArtExpandAll()), a_ctions, "view_ExpandAll");
+  a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Key_T, this,
+                              SLOT(slotArtToggleThread()), a_ctions, "thread_toggle");
+  a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
+                              SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");      
+                                  
+  //header-view - remote articles
+  a_ctArtSetArtRead         = new KAction(i18n("Mark as &read"), Key_D , this,
+                              SLOT(slotArtSetArtRead()), a_ctions, "article_read");
+  a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as unread"), Key_U , this,
+                              SLOT(slotArtSetArtUnread()), a_ctions, "article_unread");
+  a_ctArtSetThreadRead      = new KAction(i18n("Mark thread as r&ead"), CTRL+Key_D , this,
+                              SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
+  a_ctArtSetThreadUnread    = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this,
+                              SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
+  a_ctSetArtScore           = new KAction(i18n("Set Sc&ore"), "rotate", Key_S , this,
+                              SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
+  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread"), "rotate", CTRL+Key_S , this,
+                              SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
+  a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
+                              SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
+  a_ctArtToggleWatched      = new KAction(i18n("&Watch"), "top", Key_W , this,
+                              SLOT(slotArtToggleWatched()), a_ctions, "thread_watch");
+  a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &window"), "viewmag+", Key_O , this,
+                              SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");             
+              
   //header-view local articles
   a_ctArtSendOutbox         = new KAction(i18n("Sen&d pending messages"), "mail_send", 0, this,
                               SLOT(slotArtSendOutbox()), a_ctions, "net_sendPending");
@@ -611,17 +611,17 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
   enabled=( s_electedArticle && s_electedArticle->type()==KNMimeBase::ATremote );
   if(a_ctArtSetArtRead->isEnabled() != enabled) {
     a_ctArtSetArtRead->setEnabled(enabled);
-  	a_ctArtSetArtUnread->setEnabled(enabled);
-  	a_ctArtSetThreadRead->setEnabled(enabled);
-  	a_ctArtSetThreadUnread->setEnabled(enabled);
-  	a_ctSetArtScore->setEnabled(enabled);
-  	a_ctArtSetThreadScore->setEnabled(enabled);
-  	a_ctArtToggleIgnored->setEnabled(enabled);
-  	a_ctArtToggleWatched->setEnabled(enabled);
+    a_ctArtSetArtUnread->setEnabled(enabled);
+    a_ctArtSetThreadRead->setEnabled(enabled);
+    a_ctArtSetThreadUnread->setEnabled(enabled);
+    a_ctSetArtScore->setEnabled(enabled);
+    a_ctArtSetThreadScore->setEnabled(enabled);
+    a_ctArtToggleIgnored->setEnabled(enabled);
+    a_ctArtToggleWatched->setEnabled(enabled);
   }
 
- 	a_ctArtOpenNewWindow->setEnabled( s_electedArticle && (f_olManager->currentFolder()!=f_olManager->outbox())
- 	                                                   && (f_olManager->currentFolder()!=f_olManager->drafts()));
+  a_ctArtOpenNewWindow->setEnabled( s_electedArticle && (f_olManager->currentFolder()!=f_olManager->outbox())
+                                                     && (f_olManager->currentFolder()!=f_olManager->drafts()));
 
   enabled=( s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal );
   a_ctArtDelete->setEnabled(enabled);
@@ -730,19 +730,19 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctGrpResort->setEnabled(enabled);
     a_ctGrpUnsubscribe->setEnabled(enabled);
     a_ctGrpSetAllRead->setEnabled(enabled);
-  	a_ctGrpSetAllUnread->setEnabled(enabled);
-		a_ctArtFilter->setEnabled(enabled);
-		a_ctArtFilterKeyb->setEnabled(enabled);
-		a_ctArtSearch->setEnabled(enabled);
-		a_ctArtRefreshList->setEnabled(enabled);
-		a_ctArtCollapseAll->setEnabled(enabled);
-		a_ctArtExpandAll->setEnabled(enabled);
-  	a_ctArtToggleShowThreads->setEnabled(enabled);		
+    a_ctGrpSetAllUnread->setEnabled(enabled);
+    a_ctArtFilter->setEnabled(enabled);
+    a_ctArtFilterKeyb->setEnabled(enabled);
+    a_ctArtSearch->setEnabled(enabled);
+    a_ctArtRefreshList->setEnabled(enabled);
+    a_ctArtCollapseAll->setEnabled(enabled);
+    a_ctArtExpandAll->setEnabled(enabled);
+    a_ctArtToggleShowThreads->setEnabled(enabled);    
   }
-	
-	enabled=( s_electedFolder!=0 );
-	if(a_ctFolCompact->isEnabled() != enabled) {
-  	a_ctFolCompact->setEnabled(enabled);
+  
+  enabled=( s_electedFolder!=0 );
+  if(a_ctFolCompact->isEnabled() != enabled) {
+    a_ctFolCompact->setEnabled(enabled);
     a_ctFolEmpty->setEnabled(enabled);
     //a_ctFolProperties->setEnabled( (s_electedFolder) );
   }

@@ -211,7 +211,7 @@ class Subject : public Base {
     virtual bool isEmpty()          { return (s_ubject.isEmpty()); }
     virtual const char* type()      { return "Subject"; }
 
-    bool isReply()									{ return (s_ubject.find(QString("Re:"), 0, false)==0); }
+    bool isReply()                  { return (s_ubject.find(QString("Re:"), 0, false)==0); }
 
   protected:
     QString s_ubject;
@@ -239,7 +239,7 @@ class AddressField : public Base {
     virtual void clear()            { n_ame.truncate(0); e_mail.resize(0); }
     virtual bool isEmpty()          { return (e_mail.isEmpty()); }
 
-    bool hasName()										{ return ( !n_ame.isEmpty() ); }
+    bool hasName()                    { return ( !n_ame.isEmpty() ); }
     bool hasEmail()                   { return ( !e_mail.isEmpty() ); }
     QString name()                    { return n_ame; }
     QCString nameAs7Bit();
@@ -327,8 +327,8 @@ class Date : public Base {
     void setUnixTime(time_t t)      { t_ime=t; }
     void setUnixTime()              { t_ime=time(0); }
     QDateTime qdt();
-		int ageInDays();
-		
+    int ageInDays();
+    
   protected:
     time_t t_ime;
 
@@ -545,7 +545,7 @@ class ContentType : public Base {
     //parameter handling
     QCString charset();
     void setCharset(const QCString &s);
-		QCString boundary();
+    QCString boundary();
     void setBoundary(const QCString &s);
     QString name();
     void setName(const QString &s, QFont::CharSet cs);
@@ -636,7 +636,7 @@ class CDescription : public Base {
     CDescription(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s, defaultCS, force); }
     CDescription(const QString &s, QFont::CharSet cs)         { fromUnicodeString(s, cs); }
     ~CDescription()                                           {}
-		
+    
     virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
     virtual QCString as7BitString(bool incType=true);
     virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);

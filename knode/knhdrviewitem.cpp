@@ -80,10 +80,10 @@ bool KNHdrViewItem::greyOut()
 
 bool KNHdrViewItem::firstColBold()
 {
-	if(art->type()==KNMimeBase::ATremote)
-		return ( static_cast<KNRemoteArticle*>(art)->isNew() );
-	else
-		return false;
+  if(art->type()==KNMimeBase::ATremote)
+    return ( static_cast<KNRemoteArticle*>(art)->isNew() );
+  else
+    return false;
 }
 
 

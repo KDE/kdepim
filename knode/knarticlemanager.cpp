@@ -124,10 +124,10 @@ KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(
   s_earchDlg=0;
   s_howThreads=true;
 
-	connect(v, SIGNAL(expanded(QListViewItem*)), this,
-		SLOT(slotItemExpanded(QListViewItem*)));
+  connect(v, SIGNAL(expanded(QListViewItem*)), this,
+    SLOT(slotItemExpanded(QListViewItem*)));
   connect(f, SIGNAL(filterChanged(KNArticleFilter*)), this,
-  	SLOT(slotFilterChanged(KNArticleFilter*)));
+    SLOT(slotFilterChanged(KNArticleFilter*)));
 }
 
 
@@ -152,12 +152,12 @@ void KNArticleManager::deleteTempFiles()
 
 void KNArticleManager::saveContentToFile(KNMimeContent *c, QWidget *parent)
 {
-	KNSaveHelper helper(c->contentType()->name(),parent);
+  KNSaveHelper helper(c->contentType()->name(),parent);
 
   QFile *file = helper.getFile(i18n("Save Attachment"));
 
   if (file) {
-		QByteArray data=c->decodedContent();
+    QByteArray data=c->decodedContent();
     file->writeBlock(data.data(), data.size());
   }
 }
@@ -181,7 +181,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 
 QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 {
-	QString path;
+  QString path;
   KNHeaders::Base *pathHdr=c->getHeaderByType("X-KNode-Tempfile");  // check for existing temp file
 
   if(pathHdr) {
@@ -197,7 +197,7 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 
   t_empFiles.append(tmpFile);
   QFile *f=tmpFile->file();
-	QByteArray data=c->decodedContent();
+  QByteArray data=c->decodedContent();
   f->writeBlock(data.data(), data.size());
   tmpFile->close();
   path=tmpFile->name();
@@ -210,7 +210,7 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 
 void KNArticleManager::openContent(KNMimeContent *c)
 {
-	QString path=saveContentToTemp(c);
+  QString path=saveContentToTemp(c);
   if(path.isNull()) return;
 
   KService::Ptr offer = KServiceTypeProfile::preferredService(c->contentType()->mimeType(), true);
@@ -230,16 +230,16 @@ void KNArticleManager::openContent(KNMimeContent *c)
 
 void KNArticleManager::showHdrs(bool clear)
 {
-	if(!g_roup && !f_older) return;
+  if(!g_roup && !f_older) return;
 
-	KNArticle *currentArt=knGlobals.view->articleView()->article();
-	if(currentArt && !currentArt->listItem()) {
-	  currentArt=0;
-	  knGlobals.view->articleView()->setArticle(0);
-	}
-	
+  KNArticle *currentArt=knGlobals.view->articleView()->article();
+  if(currentArt && !currentArt->listItem()) {
+    currentArt=0;
+    knGlobals.view->articleView()->setArticle(0);
+  }
+  
   if(clear)
-  	v_iew->clear();
+    v_iew->clear();
 
   knGlobals.top->setCursorBusy(true);
   knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
@@ -259,14 +259,14 @@ void KNArticleManager::showHdrs(bool clear)
     }
 
     if(f_ilter)
-    	f_ilter->doFilter(g_roup);
+      f_ilter->doFilter(g_roup);
     else
       for(int i=0; i<g_roup->length(); i++) {
-      	art=g_roup->at(i);
+        art=g_roup->at(i);
         art->setFilterResult(true);
         art->setFiltered(true);
         if(art->idRef()>0)
-        	g_roup->byId(art->idRef())->setVisibleFollowUps(true);
+          g_roup->byId(art->idRef())->setVisibleFollowUps(true);
       }
 
     for(int i=0; i<g_roup->length(); i++) {
@@ -553,7 +553,7 @@ void KNArticleManager::setScore(KNRemoteArticle::List *l, int score)
 
 void KNArticleManager::createHdrItem(KNRemoteArticle *a)
 {
-	a->setListItem(new KNHdrViewItem(v_iew));
+  a->setListItem(new KNHdrViewItem(v_iew));
   a->setThreadMode(s_howThreads);
   a->initListItem();
 }
@@ -561,7 +561,7 @@ void KNArticleManager::createHdrItem(KNRemoteArticle *a)
 
 void KNArticleManager::createThread(KNRemoteArticle *a)
 {
-	KNRemoteArticle *ref=0;
+  KNRemoteArticle *ref=0;
   int idRef=a->idRef();
   bool found=false;
 
@@ -573,7 +573,7 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
 
   if(found) {
     if(!ref->listItem())
-    	createThread(ref);
+      createThread(ref);
     a->setListItem(new KNHdrViewItem(ref->listItem()));
   }
   else
@@ -616,7 +616,7 @@ void KNArticleManager::updateStatusString()
 
 void KNArticleManager::slotFilterChanged(KNArticleFilter *f)
 {
-	f_ilter=f;
+  f_ilter=f;
   showHdrs();
 }
 
@@ -630,7 +630,7 @@ void KNArticleManager::slotSearchDialogDone()
 
 void KNArticleManager::slotItemExpanded(QListViewItem *p)
 {
-	int idRef=0, topId=0;
+  int idRef=0, topId=0;
   KNRemoteArticle *art, *ref;
   KNHdrViewItem *hdrItem;
 
@@ -670,7 +670,7 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
   }
 
   if(rng->totalExpandThreads())
-  	hdrItem->expandChildren();
+    hdrItem->expandChildren();
 }
 
 //-----------------------------

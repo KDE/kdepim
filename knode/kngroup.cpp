@@ -343,7 +343,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
     split.next();
     art->subject()->from7BitString(split.string(), defCS, false);
     if(art->subject()->isEmpty())
-    	art->subject()->fromUnicodeString(i18n("no subject"), defCS);
+      art->subject()->fromUnicodeString(i18n("no subject"), defCS);
     
     //From and Email
     split.next();

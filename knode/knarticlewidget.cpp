@@ -455,7 +455,7 @@ void KNArticleWidget::openAttachment(int id)
 
 bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 {
- 	KNHeaders::ContentType *ct=c->contentType();
+  KNHeaders::ContentType *ct=c->contentType();
   return ( ct->isText() || ct->isImage() );
 }
 
@@ -538,45 +538,45 @@ void KNArticleWidget::setArticle(KNArticle *a)
   t_imer->stop();
 
   if(!a)
-  	showBlankPage();
+    showBlankPage();
   else {
-  	//kdDebug(5003) << "KNArticleWidget::setArticle() : " << a->messageID()->as7BitString(false) << endl;
-  	if(a->hasContent()) //article is already loaded => just show it
-  		createHtmlPage();
-  	else if(!a->isLocked()) {
-  	  if(a->type()==KNMimeBase::ATremote) {//ok, this is a remote-article => fetch it from the server
-    		KNGroup *g=static_cast<KNGroup*>(a->collection());
-    		emitJob( new KNJobData(	KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
+    //kdDebug(5003) << "KNArticleWidget::setArticle() : " << a->messageID()->as7BitString(false) << endl;
+    if(a->hasContent()) //article is already loaded => just show it
+      createHtmlPage();
+    else if(!a->isLocked()) {
+      if(a->type()==KNMimeBase::ATremote) {//ok, this is a remote-article => fetch it from the server
+        KNGroup *g=static_cast<KNGroup*>(a->collection());
+        emitJob( new KNJobData( KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
       }
-  	  else { //local article
-    	  KNLocalArticle *la=static_cast<KNLocalArticle*>(a_rticle);
-    	  KNFolder *f=static_cast<KNFolder*>(a_rticle->collection());
-    	  if(!f || !f->loadArticle(la))
-    	    showErrorMessage(i18n("Cannot load the article from the mbox-file!"));
-    	  else
-    	    createHtmlPage();
-    	}
+      else { //local article
+        KNLocalArticle *la=static_cast<KNLocalArticle*>(a_rticle);
+        KNFolder *f=static_cast<KNFolder*>(a_rticle->collection());
+        if(!f || !f->loadArticle(la))
+          showErrorMessage(i18n("Cannot load the article from the mbox-file!"));
+        else
+          createHtmlPage();
+      }
     }
-	}
+  }
 }
 
 
 void KNArticleWidget::processJob(KNJobData *j)
 {
-	KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
-	
-	if(j->canceled()) {
-	  articleChanged(a);	
-	}
-	else {
+  KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
+  
+  if(j->canceled()) {
+    articleChanged(a);  
+  }
+  else {
     if(j->success()) {
-  	  a->updateListItem();
-  	  articleChanged(a);
-  	}
-  	else if(a_rticle==a)
-  	  showErrorMessage(j->errorString());
-  }	
-	
+      a->updateListItem();
+      articleChanged(a);
+    }
+    else if(a_rticle==a)
+      showErrorMessage(j->errorString());
+  } 
+  
   delete j;
 }
 
@@ -614,11 +614,11 @@ void KNArticleWidget::createHtmlPage()
   if(f_ullHdrs) {
     KNStringSplitter split;
     split.init(a_rticle->head(), "\n");
-		QString temp;
+    QString temp;
     int pos;
     bool splitOk=split.first();
     while(splitOk) {
-    	html+="<tr><td align=right>";
+      html+="<tr><td align=right>";
       temp=QString::fromLatin1(split.string().data(), split.string().length());
       if( (pos=temp.find(':'))==-1 )
         html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp));
@@ -626,16 +626,16 @@ void KNArticleWidget::createHtmlPage()
         html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>")
                       .arg(toHtmlString(temp.left(pos+1)))
                       .arg(toHtmlString(temp.right(temp.length()-pos-2)));
-			splitOk=split.next();
+      splitOk=split.next();
     }
   }
   else {
-		KNHeaders::Base *hb;
-		KNDisplayedHeader *dh;
+    KNHeaders::Base *hb;
+    KNDisplayedHeader *dh;
     KNConfig::DisplayedHeaders::Iterator it=knGlobals.cfgManager->displayedHeaders()->iterator();
     for(; it.current(); ++it) {
-			dh=it.current();
-			hb=a_rticle->getHeaderByType(dh->header().latin1());
+      dh=it.current();
+      hb=a_rticle->getHeaderByType(dh->header().latin1());
       if(!hb) continue; //header not found
 
       if(dh->hasName()) {
@@ -649,14 +649,14 @@ void KNArticleWidget::createHtmlPage()
       html+=dh->headerOpenTag();
 
       if(hb->is("From"))
-				html+=QString("<a href=\"internal:author\">%1</a>")
+        html+=QString("<a href=\"internal:author\">%1</a>")
                 .arg(toHtmlString(hb->asUnicodeString()));
       else if(hb->is("Date")) {
-      	KNHeaders::Date *date=static_cast<KNHeaders::Date*>(hb);
-				html+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
+        KNHeaders::Date *date=static_cast<KNHeaders::Date*>(hb);
+        html+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
       }
       else
-				html+=toHtmlString(hb->asUnicodeString());
+        html+=toHtmlString(hb->asUnicodeString());
 
       html += dh->headerCloseTag()+"</td></tr>";
     }
@@ -679,24 +679,24 @@ void KNArticleWidget::createHtmlPage()
 
 
   KNMimeContent *text=a_rticle->textContent();
-	if(text) {
-	  if(!text->canDecode8BitText()) {
-  	  html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
+  if(text) {
+    if(!text->canDecode8BitText()) {
+      html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
         .arg(i18n("Unknown charset! Default charset is used instead."));
-		  kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
-	    setFont(app->articleFont());
-	  }
-	  else {
-	    QFont f=app->articleFont();
+      kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
+      setFont(app->articleFont());
+    }
+    else {
+      QFont f=app->articleFont();
       text->setFontForContent(f);
       setFont(f);
     }
   }
-	else
-	  setFont(app->articleFont());
-	
-	kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
-	
+  else
+    setFont(app->articleFont());
+  
+  kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
+  
   html+="</table>";
 
   //----------------------------------- </Header> --------------------------------------
@@ -704,7 +704,7 @@ void KNArticleWidget::createHtmlPage()
 
   //------------------------------------- <Body> ---------------------------------------
 
-	KNHeaders::ContentType *ct=a_rticle->contentType();
+  KNHeaders::ContentType *ct=a_rticle->contentType();
 
   //Attachments
   if(!text || ct->isMultipart()) {
@@ -740,13 +740,13 @@ void KNArticleWidget::createHtmlPage()
 
   //body text
   if(text && text->hasContent()) {
-		html+="<bodyblock>";
+    html+="<bodyblock>";
     if(text->contentType()->isHTMLText()) {
-    	QString htmlTxt;
-    	text->decodedText(htmlTxt);
-    	setText(htmlTxt);             // is this correct? what happens to the headers? (CG)
-   	}
-		else {
+      QString htmlTxt;
+      text->decodedText(htmlTxt);
+      setText(htmlTxt);             // is this correct? what happens to the headers? (CG)
+    }
+    else {
       QChar firstChar;
       int oldLevel=0, newLevel=0;
       unsigned int idx=0;
@@ -754,9 +754,9 @@ void KNArticleWidget::createHtmlPage()
       QStringList lines;
       QString line;
       text->decodedText(lines);
-			for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
-      	line=(*it);
-      	if(!line.isEmpty()) {
+      for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
+        line=(*it);
+        if(!line.isEmpty()) {
           if(!isSig && line=="-- ") {
             isSig=true;
             if(newLevel>0) {
@@ -791,8 +791,8 @@ void KNArticleWidget::createHtmlPage()
             }
           }
           html+=toHtmlString(line,true,true,true)+"<br>";
-	      }
-	      else
+        }
+        else
           html+="<br>";
       }
       if(newLevel>0) html+="</font>";
@@ -811,7 +811,7 @@ void KNArticleWidget::createHtmlPage()
                     .arg(i18n("name")).arg(i18n("mime-type")).arg(i18n("description"));
 
       for(KNMimeContent *var=a_tt->first(); var; var=a_tt->next()) {
-				ct=var->contentType();
+        ct=var->contentType();
         html+=QString("<tr><td align=center><a href=\"internal:att=%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
               .arg(attCnt)
               .arg(ct->name())
@@ -828,11 +828,11 @@ void KNArticleWidget::createHtmlPage()
             }
           }
           else { //text
-						QString tmp;
-						var->decodedText(tmp);
-						if(ct->isHTMLText())
-							html+=tmp;
-						else
+            QString tmp;
+            var->decodedText(tmp);
+            if(ct->isHTMLText())
+              html+=tmp;
+            else
               html+="<pre>"+toHtmlString(tmp,true,false,true)+"</pre>";
           }
           html+="</td></tr>";
@@ -906,9 +906,9 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   }
 
   if((button==LeftButton)||(button==MidButton)) {
-		KNGroup *g;
-		KNRemoteArticle *a;
-		
+    KNGroup *g;
+    KNRemoteArticle *a;
+    
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
@@ -916,14 +916,14 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       break;
       case ATreference:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target << endl;
-				g=static_cast<KNGroup*>(a_rticle->collection());
-				a=g->byMessageId(a_rticle->references()->at(target.toInt()));
-				if(a)
-					setArticle(a);
-			  else
-					showErrorMessage(i18n("Article %1 not found in group %2")
-																.arg(a_rticle->references()->at(target.toInt()))
-																.arg(g->groupname()));
+        g=static_cast<KNGroup*>(a_rticle->collection());
+        a=g->byMessageId(a_rticle->references()->at(target.toInt()));
+        if(a)
+          setArticle(a);
+        else
+          showErrorMessage(i18n("Article %1 not found in group %2")
+                                .arg(a_rticle->references()->at(target.toInt()))
+                                .arg(g->groupname()));
       break;
       case ATattachment:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target << endl;
@@ -1005,7 +1005,7 @@ void KNArticleWidget::slotPrint()
       hb=a_rticle->getHeaderByType(dh->header().latin1());
 
       if(hb && !hb->isEmpty()) {
-      	if(dh->hasName())
+        if(dh->hasName())
           text=QString("%1: %2").arg(dh->translatedName()).arg(hb->asUnicodeString());
         else
           text=hb->asUnicodeString();
@@ -1033,26 +1033,26 @@ void KNArticleWidget::slotPrint()
     p.setFont( QFont(font().family(), 10, QFont::Normal) );
     fm=p.fontMetrics();
 
-		QStringList lines;
-		KNMimeContent *txt=a_rticle->textContent();
-		
-		if(txt) {
-			txt->decodedText(lines);
-			for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
-				
-				if(yPos+margin > metrics.height()) {
-        	printer->newPage();
-        	yPos=0;
-      	}
-      	
-      	text=(*it);
-      	p.drawText( 10, yPos+margin,  metrics.width(),
-                		fm.lineSpacing(), ExpandTabs | DontClip,
-                		text );
-      	
-      	yPos+=fm.lineSpacing();
-    	}
-    }	
+    QStringList lines;
+    KNMimeContent *txt=a_rticle->textContent();
+    
+    if(txt) {
+      txt->decodedText(lines);
+      for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
+        
+        if(yPos+margin > metrics.height()) {
+          printer->newPage();
+          yPos=0;
+        }
+        
+        text=(*it);
+        p.drawText( 10, yPos+margin,  metrics.width(),
+                    fm.lineSpacing(), ExpandTabs | DontClip,
+                    text );
+        
+        yPos+=fm.lineSpacing();
+      }
+    } 
 
     p.end();
   }

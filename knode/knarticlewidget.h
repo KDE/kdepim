@@ -55,7 +55,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void setBodyPopup(QPopupMenu *popup)  { b_odyPopup = popup; };
 
     void setArticle(KNArticle *a);
-		void createHtmlPage();
+    void createHtmlPage();
     void showBlankPage();
     void showErrorMessage(const QString &s);
 
@@ -72,8 +72,8 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     KAction* setCharsetKeyboardAction() { return a_ctSetCharsetKeyb; }
 
   protected:
-		void processJob(KNJobData *j);
-		void focusInEvent(QFocusEvent *e);
+    void processJob(KNJobData *j);
+    void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     void keyPressEvent(QKeyEvent *e);
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
@@ -89,10 +89,10 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     KNArticle *a_rticle;
     QList<KNMimeContent> *a_tt;
     bool h_tmlDone, f_ullHdrs, r_ot13;
-   	QTimer *t_imer;
-   	QFont::CharSet overrideCS;
-   	bool forceCS;
-    	
+    QTimer *t_imer;
+    QFont::CharSet overrideCS;
+    bool forceCS;
+      
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
 

@@ -463,7 +463,7 @@ void KNGroupManager::resortGroup(KNGroup *g)
   if(!g) return;
   g->resort();
   if(g==c_urrentGroup)
-  	a_rticleMgr->showHdrs();
+    a_rticleMgr->showHdrs();
 }
 
 
@@ -480,7 +480,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
     if (loaded) {
      a_rticleMgr->showHdrs();
       if(knGlobals.cfgManager->readNewsGeneral()->autoCheckGroups())
-      	checkGroupForNewHeaders(g);
+        checkGroupForNewHeaders(g);
     }
     else
       KMessageBox::error(knGlobals.topWidget, i18n("Cannot load saved headers"));
@@ -549,9 +549,9 @@ void KNGroupManager::processJob(KNJobData *j)
         KMessageBox::error(knGlobals.topWidget, j->errorString());
     }         
     if(group==c_urrentGroup)
-    	a_rticleMgr->showHdrs(false);
-		
-   	delete j;
+      a_rticleMgr->showHdrs(false);
+    
+    delete j;
   }
 }
 
@@ -589,7 +589,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
 
-	emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
+  emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
 }
 
 

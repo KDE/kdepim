@@ -149,11 +149,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //options menu
 
   a_ctDoPost = new KToggleAction(i18n("Send &News Article"), "filenew", 0 , this,
-	                 SLOT(slotToggleDoPost()), actionCollection(), "send_news");			
-	
+                   SLOT(slotToggleDoPost()), actionCollection(), "send_news");      
+  
   a_ctDoMail = new KToggleAction(i18n("Send E-&Mail"), "mail_generic" , 0 , this,
-	                 SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
-	
+                   SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
+  
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
   a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
@@ -163,8 +163,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
                                    SLOT(slotSetCharsetKeyboard()), actionCollection(), "set_charset_keyboard");
 
 
-  a_ctWordWrap	= new KToggleAction(i18n("&Word Wrap"), 0 , this,
-	                    SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");			
+  a_ctWordWrap  = new KToggleAction(i18n("&Word Wrap"), 0 , this,
+                      SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");     
 
   //tools menu
 
@@ -1544,10 +1544,10 @@ void KNComposer::Editor::slotPasteAsQuotation()
   if (!s.isEmpty()) {
     for (int i=0; (uint)i<s.length(); i++) {
       if ( s[i] < ' ' && s[i] != '\n' && s[i] != '\t' )
-    		s[i] = ' ';    		
-  	}
-  	s.prepend("> ");
-  	s.replace(QRegExp("\n"),"\n> ");
+        s[i] = ' ';       
+    }
+    s.prepend("> ");
+    s.replace(QRegExp("\n"),"\n> ");
     pasteString(s);
   }
 }
@@ -1576,8 +1576,8 @@ void KNComposer::Editor::slotAddQuotes()
   if (hasMarkedText()) {
     QString s = markedText();
     s.prepend("> ");
-  	s.replace(QRegExp("\n"),"\n> ");
-  	pasteString(s);
+    s.replace(QRegExp("\n"),"\n> ");
+    pasteString(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1596,8 +1596,8 @@ void KNComposer::Editor::slotRemoveQuotes()
     QString s = markedText();
     if (s.left(2) == "> ")
       s.remove(0,2);
-  	s.replace(QRegExp("\n> "),"\n");
-  	pasteString(s);
+    s.replace(QRegExp("\n> "),"\n");
+    pasteString(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1617,9 +1617,9 @@ void KNComposer::Editor::slotAddBox()
   if (hasMarkedText()) {
     QString s = markedText();
     s.prepend(",----[  ]\n");
-  	s.replace(QRegExp("\n"),"\n| ");
-  	s.append("\n`----");
-  	pasteString(s);
+    s.replace(QRegExp("\n"),"\n| ");
+    s.append("\n`----");
+    pasteString(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1635,12 +1635,12 @@ void KNComposer::Editor::slotRemoveBox()
 {
   if (hasMarkedText()) {
     QString s = QString::fromLatin1("\n") + markedText() + QString::fromLatin1("\n");
-  	s.replace(QRegExp("\n,----[^\n]*\n"),"\n");
-  	s.replace(QRegExp("\n| "),"\n");
-  	s.replace(QRegExp("\n`----[^\n]*\n"),"\n");	
-  	s.remove(0,1);
-  	s.truncate(s.length()-1);
-  	pasteString(s);
+    s.replace(QRegExp("\n,----[^\n]*\n"),"\n");
+    s.replace(QRegExp("\n| "),"\n");
+    s.replace(QRegExp("\n`----[^\n]*\n"),"\n"); 
+    s.remove(0,1);
+    s.truncate(s.length()-1);
+    pasteString(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
@@ -1695,7 +1695,7 @@ void KNComposer::Editor::slotRemoveBox()
 void KNComposer::Editor::slotRot13()
 {
   if (hasMarkedText())
-  	pasteString(rot13(markedText()));
+    pasteString(rot13(markedText()));
 }
 
 
