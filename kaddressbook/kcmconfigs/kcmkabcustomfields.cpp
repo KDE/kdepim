@@ -375,7 +375,7 @@ void KCMKabCustomFields::itemClicked( QListViewItem *item )
 
 QString KCMKabCustomFields::kabLocalDir()
 {
-  QStringList kabdirs = KGlobal::dirs()->findDirs("data", "kaddressbook");
+  QStringList kabdirs = locateLocal("data", "kaddressbook/");
   return kabdirs.grep( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
 }
 
