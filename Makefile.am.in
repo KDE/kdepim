@@ -5,23 +5,24 @@
 # hints for the cvs.sh script. If you change something here, you have
 # to call Makefile.cvs again
 COMPILE_BEFORE_libkpimidentities = libkdepim certmanager
-COMPILE_BEFORE_certmanager = libkdenetwork
+COMPILE_BEFORE_certmanager = libkdenetwork libkpgp
 COMPILE_BEFORE_korganizer = libkdepim libkpimidentities libkpimexchange kgantt 
 COMPILE_BEFORE_konsolekalendar = libkpimexchange
 COMPILE_BEFORE_kaddressbook = libkdepim certmanager
 COMPILE_BEFORE_kandy = libkdepim
-COMPILE_BEFORE_kmail= libkdepim libkpimidentities certmanager
-COMPILE_BEFORE_knode= libkdepim
+COMPILE_BEFORE_kmail= libkdepim libkpimidentities certmanager libkpgp libkmime
+COMPILE_BEFORE_knode= libkdepim libkpgp libkmime
 COMPILE_BEFORE_karm = libkdepim
 COMPILE_BEFORE_plugins = kmail libkdepim libkcal
 COMPILE_AFTER_libkcal = kalarm kalarmd kitchensync konsolekalendar korganizer ksync libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
 COMPILE_AFTER_mimelib = korn kmail
-COMPILE_AFTER_libkdenetwork = kmail knode certmanager kioslaves
+COMPILE_AFTER_libkdenetwork = kmail knode certmanager
 COMPILE_AFTER_libksieve = kmail
 COMPILE_BEFORE_libkcal = libical
 COMPILE_BEFORE_kontact = kaddressbook knotes korganizer
+COMPILE_BEFORE_kioslaves = libkmime
 COMPILE_BEFORE_libkpimexchange = kalarmd libkdepim
-COMPILE_BEFORE_kalarm = kalarmd libkdepim
+COMPILE_BEFORE_kalarm = kalarmd libkdepim libkmime
 COMPILE_BEFORE_kresources = libkpimexchange knotes kaddressbook kode
 COMPILE_BEFORE_wizards = libkdepim korganizer kaddressbook kmail
 COMPILE_BEFORE_korn = libkdenetwork

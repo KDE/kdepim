@@ -15,7 +15,6 @@ libkleopatra_la_LIBADD = \
 			backends/qgpgme/libkleopatra_backend_qgpgme.la \
 			ui/libkleopatra_ui.la \
 			\
-			$(top_builddir)/libkdenetwork/libkdenetwork.la \
 			$(top_builddir)/libkdenetwork/qgpgme/libqgpgme.la \
 			$(LIB_KDEUI)
 
