@@ -1,6 +1,6 @@
 
 ############ Autoconf-generated variables  ###################
-INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libemailfunctions -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir) $(all_includes)
 
 bin_PROGRAMS = karm
 SUBDIRS = support pics
