@@ -25,6 +25,7 @@
 #include <qstring.h>
 
 #include <libkcal/calendarlocal.h>
+#include <libkcal/calendarresources.h>
 #include <libkcal/event.h>
 
 
@@ -133,37 +134,64 @@ class KonsoleKalendarVariables
 
    int getExportType();
 
+   /**
+    * creates calendar resources
+    */ 
+   
+   bool createCalendarResources();
+   
+   /**
+    * Add to Calendar Resources 
+    */
+   bool addCalendarResources( ResourceCalendar *cal );
+   
+  /**
+   * Calendar resource is the new way 
+   */
+   void setCalendarResources( CalendarResources *cal );
+   
+   /**
+   * Calendar resource is the new way 
+   */  
+  CalendarResources *getCalendarResources();
 
    
+  /*
+   * Loads calendar resources 
+   */
+  CalendarResources *loadCalendarResources( KConfig *config ); 
    
-
+   
   private:
-    int findNumber( const QString &str, int &pos, int &startpos );
-    char findSeparator( const QString &str, int &pos, int &seppos );
-    void skipWhiteSpace( const QString &str, int &pos );
+   int findNumber( const QString &str, int &pos, int &startpos );
+   char findSeparator( const QString &str, int &pos, int &seppos );
+   void skipWhiteSpace( const QString &str, int &pos );
 
-    QDateTime m_startDateTime;
-    QDateTime m_endDateTime;
-    bool m_bIsStartDateTime;
-    bool m_bIsEndDateTime;
-    QString m_calendar;
-    QString m_import;
-    QString m_description;
-    QString m_summary;
-    QString m_export_file;
-    bool m_bSummary;
-    bool m_bNext;
-    bool m_bVerbose;
-    bool m_bDryRun;
-    bool m_bAll;
-    bool m_bDescription;
-    bool m_bFloating;
-    int str_length;
-    int m_export_type;
-    QString m_exportFile;
-    bool m_bIsExportFile;
-    // We can use this from everywhere
-    CalendarLocal *m_calendarLocal;
+   
+   QDateTime m_startDateTime;
+   QDateTime m_endDateTime;
+   bool m_bIsStartDateTime;
+   bool m_bIsEndDateTime;
+   QString m_calendar;
+   QString m_import;
+   QString m_description;
+   QString m_summary;
+   QString m_export_file;
+   bool m_bSummary;
+   bool m_bNext;
+   bool m_bVerbose;
+   bool m_bDryRun;
+   bool m_bAll;
+   bool m_bDescription;
+   bool m_bFloating;
+   int str_length;
+   int m_export_type;
+   QString m_exportFile;
+   bool m_bIsExportFile;
+   // New resource stuff will over-ride old pne
+   CalendarResources *m_resource;
+   // We can use this from everywhere
+   CalendarLocal *m_calendarLocal;
    
  
 

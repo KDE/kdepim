@@ -29,6 +29,8 @@
 #include <kdebug.h>
 
 #include <libkcal/calformat.h>
+#include <libkcal/calendarresources.h>
+#include <libkcal/resourcelocal.h>
 
 #include <qdatetime.h>
 #include <qfile.h>
@@ -421,24 +423,45 @@ int main(int argc, char *argv[])
     kdDebug() << "main | parse options | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
 
   } else {
-    KConfig cfg( locate( "config", "korganizerrc" ) );
+    /*KConfig cfg( locate( "config", "korganizerrc" ) );
+     *
+     * cfg.setGroup("General");
+     * KURL url( cfg.readPathEntry("Active Calendar") );
+     * if ( url.isLocalFile() )
+     * {
+     * KalendarFile = url.path();
+     *
+     * variables.setCalendarFile(KalendarFile);
+     *
+     * if( variables.isVerbose() ) {
+     *   cout << i18n("Using calendar file ").local8Bit() << variables.getCalendarFile().local8Bit() << endl;
+     * }
+     * } else {
+     *  kdError() << i18n("Remote calendar files are not supported yet").local8Bit() << endl;
+     *  return(1);
+     *}
+     */
 
-    cfg.setGroup("General");
-    KURL url( cfg.readPathEntry("Active Calendar") );
-    if ( url.isLocalFile() )
-    {
-      KalendarFile = url.path();
+     /*
+      * If this ain't best way i'll make the bug report at once;) 
+      */
 
-      variables.setCalendarFile(KalendarFile);
-
-      if( variables.isVerbose() ) {
-        cout << i18n("Using calendar file ").local8Bit() << variables.getCalendarFile().local8Bit() << endl;
-      }
-    } else {
-      kdError() << i18n("Remote calendar files are not supported yet").local8Bit() << endl;
-      return(1);
-    }
-  }
+     variables.createCalendarResources();
+	  
+     /*KConfig cfg( locateLocal( "config", "korganizerrc" ) );
+	  
+	  
+     CalendarResourceManager *manager = variables.loadCalendarResources( &cfg )->resourceManager();
+	  
+     kdDebug() << "CalendarResources used by Konsolekalendar:" << endl;
+     CalendarResourceManager::Iterator it;
+     
+     for( it = manager->begin(); it != manager->end(); ++it ) {
+       (*it)->dump();
+     }*/
+	  
+     
+   }
 
   /***************************************************************************
    * Glorious date/time checking and setting code                            *
