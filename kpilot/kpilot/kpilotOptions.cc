@@ -74,6 +74,8 @@
 static const char *kpilotoptions_id="$Id$";
 
 
+static const char *daemondesktop="Utilities/kpilotdaemon.desktop";
+static const char *daemonautostart="kpilotdaemon.desktop";
 
 // --------------------------------------------------
 //
@@ -439,7 +441,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 		config.readBoolEntry("StartDaemonAtLogin", false));
 	grid->addMultiCellWidget(fStartDaemonAtLogin,2,2,fieldCol,fieldCol+2);
 	// Utilities/KPilotDaemon
-	t = locate("apps","kpilotdaemon.desktop");
+	t = locate("apps",daemondesktop);
 	if (t.isNull())
 	{
 		fStartDaemonAtLogin->setEnabled(false);
@@ -486,9 +488,10 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 
 	// WARNING: shouldn't this be QCString with a limit to 256 chars ?
 	dest = getenv("HOME");
-	dest+="/Desktop/Autostart/KPilotDaemon.desktop";
+	dest+="/Desktop/Autostart/";
+	dest+=daemonautostart;
 
-	src = locate("apps","Utilities/KPilotDaemon.desktop");
+	src = locate("apps",daemondesktop);
 	if (src.isNull())
 	{
 		if (fStartDaemonAtLogin->isEnabled() &&
@@ -714,6 +717,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.23  2001/03/04 11:23:04  adridg
+// Changed for bug 21392
+//
 // Revision 1.22  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
