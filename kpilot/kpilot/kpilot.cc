@@ -1074,6 +1074,7 @@ KPilotInstaller::initMenu()
 	FUNCTIONSETUP;
 
 	KAction *p;
+	KToggleAction *pt;
 
 	// File actions
 	p = new KAction(i18n("&HotSync"), "hotsync", 0,
@@ -1092,10 +1093,12 @@ KPilotInstaller::initMenu()
 			     actionCollection());
 
 	// View actions
-	p = new KAction(i18n("&KPilot"),"kpilot", 0,
+	pt = new KToggleAction(i18n("&KPilot"),"kpilot", 0,
 		this, SLOT(slotShowTitlePage()),
 		actionCollection(),"view_kpilot");
-	
+	pt->setExclusiveGroup("view_menu");
+	pt->setChecked(true);
+
 	// Options actions
 	m_statusbarAction
 	    = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()),
@@ -1206,9 +1209,12 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 		<< actionname
 		<< endl;
 
-	(void) new KAction(name, /* "kpilot" -- component icon, */  0,
-		p, SLOT(slotShowComponent()),
-		actionCollection(),actionname);
+	KToggleAction *pt =
+		new KToggleAction(name, /* "kpilot" -- component icon, */  0,
+			p, SLOT(slotShowComponent()),
+			actionCollection(),actionname);
+	pt->setExclusiveGroup("view_menu");
+
 	connect(p,SIGNAL(showComponent(PilotComponent *)),
 		this,SLOT(slotShowComponent(PilotComponent *)));
 }
@@ -1629,6 +1635,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.50  2001/04/26 21:59:00  adridg
+// CVS_SILENT B0rkage with previous commit
+//
 // Revision 1.49  2001/04/23 21:05:39  adridg
 // Fixed bug w/ absent conduit executables. Fixed resize bug.
 //
