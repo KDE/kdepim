@@ -433,13 +433,14 @@ QCString KNHeaders::To::as7BitString(bool incType)
 
   if(incType)
     ret+=typeIntro();
+  else
+    ret="";
 
-  bool isFirst=true;
   AddressList::Iterator it=a_ddrList->begin();
-  for(; it!=a_ddrList->end(); ++it) {
-    if(!isFirst) ret+=",";
-    ret+=(*it).as7BitString();
-  }
+  ret+=(*it).as7BitString(false);
+  ++it;
+  for(; it!=a_ddrList->end(); ++it)
+    ret+=","+(*it).as7BitString(false);
 
   return ret;
 }
@@ -456,7 +457,7 @@ void KNHeaders::To::fromUnicodeString(const QString &s, QFont::CharSet cs)
 
   QStringList::Iterator it=l.begin();
   for(; it!=l.end(); ++it)
-    *a_ddrList << AddressField((*it, cs));
+    *a_ddrList << AddressField( (*it), cs );
 
   e_ncCSet=cs;
 }
@@ -468,12 +469,12 @@ QString KNHeaders::To::asUnicodeString()
     return QString::null;
 
   QString ret="";
-  bool isFirst=true;
   AddressList::Iterator it=a_ddrList->begin();
-  for(; it!=a_ddrList->end(); ++it) {
-    if(!isFirst) ret+=",";
-    ret+=(*it).asUnicodeString();
-  }
+  ret+=(*it).asUnicodeString();
+  ++it;
+
+  for(; it!=a_ddrList->end(); ++it)
+    ret+=","+(*it).asUnicodeString();
 
   return ret;
 }
@@ -485,6 +486,16 @@ void KNHeaders::To::addAddress(const AddressField &a)
     a_ddrList=new QValueList<AddressField>;
 
   a_ddrList->append(a);
+}
+
+
+void KNHeaders::To::emails(QStrList *l)
+{
+  l->clear();
+  AddressList::Iterator it=a_ddrList->begin();
+  for(; it!=a_ddrList->end(); ++it)
+    if( (*it).hasEmail() )
+      l->append( (*it).email() );
 }
 
 

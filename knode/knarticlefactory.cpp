@@ -319,16 +319,16 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 }
 
 
-void KNArticleFactory::createMail(const QString &address)
+void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 {
-  /*/create new article
+  //create new article
   KNLocalArticle *art=newArticle();
   if(!art)
     return;
 
   art->setDoMail(true);
   art->setDoPost(false);
-  art->to()->fromUnicodeString(address);
+  art->to()->addAddress((*address));
 
   //identity
   setIdentity(art, 0);
@@ -337,7 +337,7 @@ void KNArticleFactory::createMail(const QString &address)
   KNComposer *c=new KNComposer(art, QString::null, knGlobals.cfgManager->identity()->getSignature(), true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
-  c->show();*/
+  c->show();
 }
 
 

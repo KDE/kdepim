@@ -340,6 +340,7 @@ class To : public Base {
     virtual const char* type()      { return "To"; }
 
     void addAddress(const AddressField &a);
+    void emails(QStrList *l);
 
   protected:
    AddressList *a_ddrList;

@@ -41,7 +41,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);
-    void createMail(const QString &email);
+    void createMail(KNHeaders::AddressField *address);
 
     //article handling
     void edit(KNLocalArticle *a);

@@ -63,9 +63,17 @@ void KNSmtpClient::doMail()
     
   progressValue = 80;
 
-  cmd = "RCPT TO:";
-  cmd += art->to()->as7BitString(false);
-  if(!sendCommandWCheck(cmd, 250))
+  QStrList emails;
+  art->to()->emails(&emails);
+  bool rcptOK=false;
+
+  for(char *e=emails.first() ; e; e=emails.next()) {
+    cmd="RCPT TO:<" + QCString(e) + ">";
+    if(sendCommandWCheck(cmd, 250))
+      rcptOK=true;
+  }
+
+  if(!rcptOK) // mail has not been accepted by the smtp-host
     return;
     
   progressValue = 90;

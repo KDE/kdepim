@@ -833,7 +833,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
-        knGlobals.artFactory->createMail(a_rticle->from()->as7BitString(false));
+        knGlobals.artFactory->createMail(a_rticle->from());
       break;
       case ATreference:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target << endl;
