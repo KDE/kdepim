@@ -31,6 +31,7 @@
 #include <gpgmepp/verificationresult.h>
 #include <gpgmepp/signingresult.h>
 #include <gpgmepp/encryptionresult.h>
+#include <gpgmepp/engineinfo.h>
 
 #include "callbacks.h"
 #include "data_p.h"
@@ -609,3 +610,24 @@ namespace GpgME {
 GpgME::Error GpgME::setDefaultLocale( int cat, const char * val ) {
   return gpgme_set_locale( 0, cat, val );
 }
+
+GpgME::EngineInfo GpgME::engineInfo( Context::Protocol proto ) {
+  gpgme_engine_info_t ei = 0;
+  if ( gpgme_get_engine_info( &ei ) )
+    return EngineInfo();
+
+  gpgme_protocol_t p = proto == Context::CMS ? GPGME_PROTOCOL_CMS : GPGME_PROTOCOL_OpenPGP ;
+
+  for ( gpgme_engine_info_t i = ei ; i ; i = i->next )
+    if ( i->protocol == p )
+      return EngineInfo( i );
+
+  return EngineInfo();
+}
+
+GpgME::Error GpgME::checkEngine( Context::Protocol proto ) {
+  gpgme_protocol_t p = proto == Context::CMS ? GPGME_PROTOCOL_CMS : GPGME_PROTOCOL_OpenPGP ;
+
+  return gpgme_engine_check_version( p );
+}
+

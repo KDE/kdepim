@@ -19,7 +19,8 @@ gpgmepp_HEADERS = context.h \
 		decryptionresult.h \
 		verificationresult.h \
 		signingresult.h \
-		encryptionresult.h
+		encryptionresult.h \
+		engineinfo.h
 
 noinst_HEADERS = context_p.h data_p.h shared.h callbacks.h gpgme-0-3-compat.h
 
@@ -36,7 +37,8 @@ libgpgmepp_la_SOURCES = context.cpp \
 			decryptionresult.cpp \
 			verificationresult.cpp \
 			signingresult.cpp \
-			encryptionresult.cpp
+			encryptionresult.cpp \
+			engineinfo.cpp
 
 libgpgmepp_la_LDFLAGS = -no-undefined -version-info 0:0:0
 libgpgmepp_la_LIBADD = $(GPGME_LIBS)

@@ -43,6 +43,8 @@ namespace GpgME {
   class SigningResult;
   class EncryptionResult;
 
+  class EngineInfo;
+
   class Error {
   public:
     Error( int e ) : mErr( e ) {}
@@ -272,7 +274,10 @@ namespace GpgME {
   IdleFunction registerIdleFunction( IdleFunction idleFunction );
 
   typedef void (*IOCallback)( void * data, int fd );
-  
+
+  EngineInfo engineInfo( Context::Protocol proto );
+
+  GpgME::Error checkEngine( Context::Protocol proto );
 
 } // namespace GpgME
 

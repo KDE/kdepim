@@ -51,4 +51,7 @@ typedef struct _gpgme_key_sig * gpgme_key_sig_t;
 struct _gpgme_sig_notation;
 typedef struct _gpgme_sig_notation * gpgme_sig_notation_t;
 
+struct _gpgme_engine_info;
+typedef struct _gpgme_engine_info * gpgme_engine_info_t;
+
 #endif // __GPGMEPP_GPGMEFW_H__
