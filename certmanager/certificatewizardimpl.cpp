@@ -58,6 +58,10 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kurlrequester.h>
+#include <kdcopservicestarter.h>
+#include <dcopclient.h>
+#include <kio/job.h>
+#include <kio/netaccess.h>
 
 // Qt
 #include <qlineedit.h>
@@ -127,7 +131,7 @@ static const QString attributeFromKey( QString key ) {
 static bool availForMod( const QLineEdit * le ) {
   return le && le->isEnabled();
 }
-    
+
 /*
  *  Constructs a CertificateWizardImpl which is a child of 'parent', with the
  *  name 'name' and widget flags set to 'f'
@@ -143,7 +147,11 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
     // setNextEnabled( personalDataPage, false ); // ## disable again once we have a criteria when to enable again
 
     createPersonalDataPage();
-   
+
+    // Allow to select remote URLs
+    storeUR->setMode( KFile::File );
+    //storeUR->fileDialog()->setOperationMode( KFileDialog::Saving );
+
     connect( this, SIGNAL( helpClicked() ),
 	     this, SLOT( slotHelpClicked() ) );
     connect( insertAddressButton, SIGNAL( clicked() ),
@@ -241,7 +249,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
     if( !email.isEmpty() )
       certParms += "\nname-email: " + email;
     certParms += "\n</GnupgKeyParms>\n";
-    
+
     kdDebug() << certParms << endl;
 
     Kleo::KeyGenerationJob * job =
@@ -383,6 +391,147 @@ QString CertificateWizardImpl::caEMailAddress() const {
 
 QString CertificateWizardImpl::saveFileUrl() const {
   return storeUR->url().stripWhiteSpace();
+}
+
+void CertificateWizardImpl::showPage( QWidget * page )
+{
+  CertificateWizard::showPage( page );
+  if ( page == generatePage ) {
+    // Initial settings for the generation page: focus the correct lineedit
+    // and disable the other one
+    if ( storeInFileRB->isChecked() ) {
+      storeUR->setEnabled( true );
+      caEmailED->setEnabled( false );
+      storeUR->setFocus();
+    } else {
+      storeUR->setEnabled( false );
+      caEmailED->setEnabled( true );
+      caEmailED->setFocus();
+    }
+  }
+}
+
+static const char* const dcopObjectId = "KMailIface";
+/**
+  Send the new certificate by mail using KMail
+ */
+void CertificateWizardImpl::sendCertificate( const QString& email, const QByteArray& certificateData )
+{
+  QString error;
+  QCString dcopService;
+  int result = KDCOPServiceStarter::self()->
+    findServiceFor( "DCOP/Mailer", QString::null,
+                    QString::null, &error, &dcopService );
+  if ( result != 0 ) {
+    kdDebug() << "Couldn't connect to KMail\n";
+    KMessageBox::error( this,
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail\n%1" ).arg( error ) );
+    return;
+  }
+
+  QCString dummy;
+  // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
+  // This is kind of a limitation of findServiceFor, which should do this by itself,
+  // for that it needs to know the dcop object ID -> requires kdelibs API change.
+  if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) ) {
+    KDCOPServiceStarter::self()->startServiceFor( "DCOP/Mailer", QString::null,
+                                                  QString::null, &error, &dcopService );
+    assert( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) );
+  }
+
+  DCOPClient* dcopClient = kapp->dcopClient();
+  QByteArray data;
+  QDataStream arg( data, IO_WriteOnly );
+  arg << email;
+  arg << certificateData;
+  if( !dcopClient->send( dcopService, dcopObjectId,
+                         "sendCertificate(QString,QByteArray)", data ) ) {
+    KMessageBox::error( this,
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
+    return;
+  }
+}
+
+// Called when pressing Finish
+// We want to do the emailing/uploading first, before closing the dialog,
+// in case of errors during the upload.
+void CertificateWizardImpl::accept()
+{
+  if( sendToCA() ) {
+    // Ask KMail to send this key to the CA.
+    sendCertificate( caEMailAddress(), _keyData );
+  } else {
+    // Save in file/URL
+    KURL url = KURL::fromPathOrURL( saveFileUrl() );
+    bool overwrite = false;
+    if ( KIO::NetAccess::exists( url, false /*dest*/, this ) ) {
+      if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(
+                                                                     this,
+                                                                     i18n( "A file named \"%1\" already exists. "
+                                                                           "Are you sure you want to overwrite it?" ).arg( url.prettyURL() ),
+                                                                     i18n( "Overwrite File?" ),
+                                                                     i18n( "&Overwrite" ) ) )
+        return;
+      overwrite = true;
+    }
+
+    // Inspired from KMKernel::byteArrayToRemoteFile
+    mUploadJob = KIO::put( url, -1, overwrite, false /*resume*/ );
+    connect( mUploadJob, SIGNAL( dataReq( KIO::Job*, QByteArray& ) ),
+             this, SLOT( slotUploadDataReq( KIO::Job*, QByteArray& ) ) );
+    connect( mUploadJob, SIGNAL( result( KIO::Job* ) ),
+             this, SLOT( slotUploadResult( KIO::Job* ) ) );
+    mUploadOffset = 0;
+    // Can't press finish again during the upload
+    setFinishEnabled( finishPage, false );
+  }
+}
+
+/**
+   This slot is invoked by the KIO job used in newCertificate
+   to save/upload the certificate, to request more data.
+*/
+void CertificateWizardImpl::slotUploadDataReq( KIO::Job* job, QByteArray& data )
+{
+  Q_ASSERT( job == mUploadJob );
+  if ( job != mUploadJob )
+    return;
+
+  // send the data in 64 KB chunks
+  const int MAX_CHUNK_SIZE = 64*1024;
+  int remainingBytes = _keyData.size() - mUploadOffset;
+  if( remainingBytes > MAX_CHUNK_SIZE ) {
+    // send MAX_CHUNK_SIZE bytes to the receiver (deep copy)
+    data.duplicate( _keyData.data() + mUploadOffset, MAX_CHUNK_SIZE );
+    mUploadOffset += MAX_CHUNK_SIZE;
+    //kdDebug() << "Sending " << MAX_CHUNK_SIZE << " bytes ("
+    //                << remainingBytes - MAX_CHUNK_SIZE << " bytes remain)\n";
+  } else {
+    // send the remaining bytes to the receiver (deep copy)
+    data.duplicate( _keyData.data() + mUploadOffset, remainingBytes );
+    _keyData = QByteArray();
+    mUploadOffset = 0;
+    //kdDebug() << "Sending " << remainingBytes << " bytes\n";
+  }
+}
+
+/**
+   This slot is invoked by the KIO job used in newCertificate
+   to save/upload the certificate, when finished (success or error).
+*/
+void CertificateWizardImpl::slotUploadResult( KIO::Job* job )
+{
+  Q_ASSERT( job == mUploadJob );
+  if ( job != mUploadJob )
+    return;
+
+  if ( job->error() ) {
+    job->showErrorDialog();
+    setFinishEnabled( finishPage, true );
+  } else {
+    // All good, close dialog
+    CertificateWizard::accept();
+  }
 }
 
 #include "certificatewizardimpl.moc"

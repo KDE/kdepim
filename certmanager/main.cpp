@@ -54,7 +54,7 @@ int main( int argc, char** argv )
             { "+lib" , I18N_NOOP("The library of the plugin"), 0 },
             { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
             { "query " , I18N_NOOP("Initial query string"), 0 },
-	    { "import-certificate ", I18N_NOOP("Name of certificte file to import"), 0 },
+	    { "import-certificate ", I18N_NOOP("Name of certificate file to import"), 0 },
 	    KCmdLineLastOption// End of options.
   };
   KCmdLineArgs::addCmdLineOptions( options );
@@ -77,6 +77,5 @@ int main( int argc, char** argv )
   args->clear();
   manager->show();
 
-  QObject::connect( qApp, SIGNAL( lastWindowClosed() ), qApp, SLOT( quit() ) );
   return app.exec();
 }

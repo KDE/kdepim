@@ -115,7 +115,6 @@ private:
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
-    void sendCertificate( const QString& email, const QByteArray& certificateData );
 
 private:
     Kleo::KeyListView * mKeyListView;

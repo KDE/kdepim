@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>621</width>
-            <height>473</height>
+            <height>475</height>
         </rect>
     </property>
     <property name="caption">
@@ -395,6 +395,18 @@ If you want to change anything, press Back and make your changes. Otherwise pres
         <receiver>CertificateWizard</receiver>
         <slot>slotEmailAddressChanged(const QString&amp;)</slot>
     </connection>
+    <connection>
+        <sender>sendToCARB</sender>
+        <signal>clicked()</signal>
+        <receiver>caEmailED</receiver>
+        <slot>setFocus()</slot>
+    </connection>
+    <connection>
+        <sender>storeInFileRB</sender>
+        <signal>clicked()</signal>
+        <receiver>storeUR</receiver>
+        <slot>setFocus()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>sendToCARB</tabstop>
@@ -408,6 +420,7 @@ If you want to change anything, press Back and make your changes. Otherwise pres
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
+    <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
     <includehint>kpushbutton.h</includehint>
 </includehints>

@@ -73,7 +73,6 @@
 #include <kdebug.h>
 #include <kdialogbase.h>
 #include <kkeydialog.h>
-#include <kdcopservicestarter.h>
 
 // Qt
 #include <qfontmetrics.h>
@@ -314,81 +313,21 @@ void CertManager::updateStatusBarLabels() {
 			       "%n Keys.", mKeyListView->childCount() ) );
 }
 
-static const QCString dcopObjectId = "KMailIface";
-/**
-  Send the new certificate by mail using KMail
- */
-void CertManager::sendCertificate( const QString& email, const QByteArray& certificateData )
-{
-  QString error;
-  QCString dcopService;
-  int result = KDCOPServiceStarter::self()->
-    findServiceFor( "DCOP/Mailer", QString::null,
-                    QString::null, &error, &dcopService );
-  if ( result != 0 ) {
-    kdDebug(5800) << "Couldn't connect to KMail\n";
-    KMessageBox::error( this,
-                        i18n( "DCOP Communication Error, unable to send certificate using KMail\n%1" ).arg( error ) );
-    return;
-  }
-
-  QCString dummy;
-  // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
-  // This is kind of a limitation of findServiceFor, which should do this by itself,
-  // for that it needs to know the dcop object ID -> requires kdelibs API change.
-  if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) ) {
-    KDCOPServiceStarter::self()->startServiceFor( "DCOP/Mailer", QString::null,
-                                                  QString::null, &error, &dcopService );
-    assert( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) );
-  }
-
-  DCOPClient* dcopClient = kapp->dcopClient();
-  QByteArray data;
-  QDataStream arg( data, IO_WriteOnly );
-  arg << email;
-  arg << certificateData;
-  if( !dcopClient->send( dcopService, dcopObjectId,
-                         "sendCertificate(QString,QByteArray)", data ) ) {
-    KMessageBox::error( this,
-                        i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
-    return;
-  }
-}
-
 /**
   This slot is invoked when the user selects "New certificate"
  */
 void CertManager::newCertificate()
 {
-  CertificateWizardImpl* wizard = new CertificateWizardImpl( this );
-  if( wizard->exec() == QDialog::Accepted ) {
-    if( wizard->sendToCA() ) {
-          // Ask KMail to send this key to the CA.
-          sendCertificate( wizard->caEMailAddress(), wizard->keyData() );
-    } else {
-          // Store in file
-          QFile file( wizard->saveFileUrl() );
-          if( file.open( IO_WriteOnly ) ) {
-              file.writeBlock( wizard->keyData().data(),
-                               wizard->keyData().count() );
-              file.close();
-          } else {
-              KMessageBox::error( this,
-                                  i18n( "Could not open output file for writing" ) );
-              return;
-          }
-
-      }
-  }
+  CertificateWizardImpl wizard( this );
+  wizard.exec();
 }
-
 
 /**
    This slot is invoked when the user chooses File->Quit
 */
 void CertManager::quit()
 {
-  qApp->quit();
+  kapp->deref();
 }
 
 /**
@@ -659,6 +598,5 @@ void CertManager::slotListViewItemActivated( Kleo::KeyListViewItem * item ) {
 	   SLOT(slotStartCertificateDownload(const QString&)) );
   dialog->show();
 }
-
 
 #include "certmanager.moc"

@@ -41,6 +41,9 @@
 namespace GpgME {
   class KeyGenerationResult;
 }
+namespace KIO {
+  class Job;
+}
 
 class CertificateWizardImpl : public CertificateWizard
 {
@@ -50,14 +53,16 @@ public:
     CertificateWizardImpl( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
     ~CertificateWizardImpl();
 
-    const QByteArray & keyData() const { return _keyData; }
-
     bool sendToCA() const;
     QString caEMailAddress() const;
     QString saveFileUrl() const;
 
     typedef QPair<QString, QLineEdit*> StringLEPair;
-    typedef QValueVector< StringLEPair > AttrPairList; 
+    typedef QValueVector< StringLEPair > AttrPairList;
+
+public:
+    virtual void showPage( QWidget * page );
+    virtual void accept();
 
 private slots:
     void slotGenerateCertificate();
@@ -67,12 +72,19 @@ private slots:
 
     void slotHelpClicked();
 
+    void slotUploadDataReq( KIO::Job*, QByteArray& );
+    void slotUploadResult( KIO::Job* );
+
 private:
     void createPersonalDataPage();
+    void sendCertificate( const QString& email, const QByteArray& certificateData );
 
 private:
     AttrPairList _attrPairList;
     QByteArray _keyData;
+
+    KIO::Job* mUploadJob;
+    int mUploadOffset;
 };
 
 #endif // CERTIFICATEWIZARDIMPL_H
