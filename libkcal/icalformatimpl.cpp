@@ -1692,15 +1692,12 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime, bool u
   t.second = datetime.time().second();
 
   t.is_date = 0;
+  t.zone = 0;
+  t.is_utc = 0;
 
   if (utc) {
     t = icaltime_as_utc(t,mCalendar->timeZoneId().local8Bit());
-    t.is_utc = 1;
-  } else {
-    t.is_utc = 0;
   }
-
-  t.zone = 0;
 
   return t;
 }
