@@ -66,6 +66,7 @@ AddressWidget::AddressWidget(KPilotInstaller* installer, QWidget* parent)
 		parent->geometry().width(), parent->geometry().height());
 	setupWidget();
 	fAddressList.setAutoDelete(true);
+	fTextWidget->setFont(installer->fixed());
 	installer->addComponentPage(this, i18n("Address Book"));
 }
 
@@ -238,7 +239,6 @@ AddressWidget::setupWidget()
 	grid->addWidget(label,0,2);
 
 	fTextWidget = new QMultiLineEdit(this, "textArea");
-	fTextWidget->setFont(QFont("fixed", 10));
 	fTextWidget->setReadOnly(TRUE);
 	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
 
@@ -374,7 +374,16 @@ char *AddressWidget::createTitle(PilotAddress *address,int displayMode)
 
 	if(title[0] == 0L) // One last try
 	{
-		strcpy(title, fAddressList.current()->getField(entryCompany));
+		if (fAddressList.current()->getField(entryCompany))
+		{
+			strcpy(title, fAddressList.current()->
+				getField(entryCompany));
+		}
+		if (title[0] == 0)
+		{
+			QString t = i18n("[unknown]");
+			strcpy(title,t.local8Bit());
+		}
 	}
 
 	return title;
@@ -435,7 +444,12 @@ AddressWidget::slotAddRecord(PilotAddress* address)
   fAddressList.append(address);
   writeAddress(address);
   updateWidget();
-  fListBox->setCurrentItem(fAddressList.count() - 1); // Show the newest one
+	// k holds the item number of the address just added.
+	//
+	//
+	int k = fAddressList.count() - 1 ;
+	fListBox->setCurrentItem(k); // Show the newest one
+	fListBox->setBottomItem(k);
 }
 
 void
@@ -814,6 +828,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.15  2000/11/14 06:33:22  adridg
+// Using Qt Layout code now
+//
 // Revision 1.14  2000/11/10 16:11:21  adridg
 // Re-patched array overflows in category boxes
 //

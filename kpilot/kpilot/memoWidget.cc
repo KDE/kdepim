@@ -66,6 +66,7 @@ MemoWidget::MemoWidget(KPilotInstaller* installer, QWidget* parent)
 	setupWidget();
 	initialize();
 	fMemoList.setAutoDelete(true);
+	fTextWidget->setFont(installer->fixed());
 	installer->addComponentPage(this, "Memos");
 }
 
@@ -75,48 +76,6 @@ MemoWidget::~MemoWidget()
 
 }
 
-#if 0
-// void MemoWidget::initializeCategories(PilotDatabase *memoDB)
-//
-// Fill up the categories combobox with a list of all the
-// categories available on the Pilot.
-//
-void MemoWidget::initializeCategories(PilotDatabase *memoDB)
-{
-	FUNCTIONSETUP;
-
-	int i;
-	fCatList->clear();
-	// Get all the category names. The "All" category isn't
-	// in the list of category names, so add it by
-	// hand at the top of the list when all others are
-	// already in the list.
-	//
-	//
-
-
-	if (memoDB != 0)
-	{
-
-	for(i = 0; i < 15; i++)
-	{
-		if(strlen(fMemoAppInfo.category.name[i]))
-		{
-			fCatList->insertItem(fMemoAppInfo.category.name[i]);
-			if (debug_level & UI_MINOR)
-			{
-				kdDebug() << fname 
-					<< ": Added category "
-					<< i << '='
-					<< fMemoAppInfo.category.name[i]
-					<< endl ;
-			}
-		}
-	}
-	}
-	fCatList->insertItem(i18n("All"),0);
-}
-#endif
 
 // void MemoWidget::initializeMemos(PilotDatabase *memoDB)
 //
@@ -482,8 +441,20 @@ MemoWidget::updateWidget()
 		if((fMemoList.current()->getCat() == currentCatID) ||
 			(currentCatID==-1))
 		{
-			// List will delete it.
-			fListBox->insertItem(fMemoList.current()->getTitle());
+			// List will delete the title of the memo,
+			// so there's no memory leak here.
+			//
+			//
+			const char *s = fMemoList.current()->getTitle() ;
+			if (s && *s)
+			{
+				fListBox->insertItem(s);
+			}
+			else
+			{
+				fListBox->insertItem(i18n("[unknown]"));
+			}
+
 			fLookupTable[currentEntry++] = listIndex;
 			if (debug_level & UI_TEDIOUS)
 			{
