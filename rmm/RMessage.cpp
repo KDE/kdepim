@@ -26,7 +26,6 @@
 #include <RMM_Defines.h>
 #include <RMM_Message.h>
 #include <RMM_Envelope.h>
-#include <RMM_Body.h>
 
 RMessage::RMessage()
 	:	RBodyPart()
