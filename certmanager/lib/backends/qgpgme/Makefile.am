@@ -5,6 +5,8 @@ INCLUDES = -I$(top_srcdir)/libkdenetwork \
 noinst_LTLIBRARIES = libkleopatra_backend_qgpgme.la
 
 libkleopatra_backend_qgpgme_la_SOURCES = \
+			gnupgprocessbase.cpp \
+			\
 			qgpgmekeylistjob.cpp \
 			qgpgmekeygenerationjob.cpp \
 			qgpgmeimportjob.cpp \
@@ -18,8 +20,5 @@ libkleopatra_backend_qgpgme_la_SOURCES = \
 			qgpgmeverifyopaquejob.cpp \
 			qgpgmesignencryptjob.cpp \
 			qgpgmedecryptverifyjob.cpp
-
-#libkleopatra_backend_qgpgme_la_LIBADD = ../../kleo/libkleopatra_core.la
-#libkleopatra_backend_qgpgme_la_LDFLAGS = $(all_libraries)
 
 METASOURCES = AUTO
