@@ -7,7 +7,7 @@
 
 #include <ksyncentry.h>
 #include <kalendarsyncentry.h>
-#include <kaddressbooksyncentry.h>g
+#include <kaddressbooksyncentry.h>
 #include <opiedesktopsyncentry.h>
 #include "opiecategories.h"
 
