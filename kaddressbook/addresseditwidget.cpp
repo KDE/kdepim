@@ -52,6 +52,8 @@
 
 #include "addresseditwidget.h"
 
+static QStringList sortLocaleAware( const QStringList &list );
+
 class TabPressEater : public QObject
 {
   public:
@@ -561,7 +563,7 @@ void AddressEditDialog::fillCountryCombo()
   for ( int i = 0; !country[ i ].isEmpty(); ++i )
     countries.append( country[ i ] );
 
-  countries.sort();
+  countries = sortLocaleAware( countries );
 
   mCountryCombo->insertStringList( countries );
   mCountryCombo->completionObject()->setItems( countries );
@@ -606,6 +608,43 @@ int AddressTypeDialog::type() const
   }
 
   return type;
+}
+
+/**
+  Small helper class, I hope we can remove it as soon as a general solution has
+  been committed to kdelibs
+ */
+class LocaleAwareString : public QString
+{
+  public:
+    LocaleAwareString() : QString()
+    {}
+
+    LocaleAwareString( const QString &str ) : QString( str )
+    {}
+};
+
+static bool operator<( const LocaleAwareString &s1, const LocaleAwareString &s2 )
+{
+  return ( QString::localeAwareCompare( s1, s2 ) < 0 );
+}
+
+QStringList sortLocaleAware( const QStringList &list )
+{
+  QValueList<LocaleAwareString> sortedList;
+
+  QStringList::ConstIterator it;
+  for ( it = list.begin(); it != list.end(); ++it )
+    sortedList.append( LocaleAwareString( *it ) );
+
+  qHeapSort( sortedList );
+
+  QStringList retval;
+  QValueList<LocaleAwareString>::ConstIterator retIt;
+  for ( retIt = sortedList.begin(); retIt != sortedList.end(); ++retIt )
+    retval.append( *retIt );
+
+  return retval;
 }
 
 #include "addresseditwidget.moc"
