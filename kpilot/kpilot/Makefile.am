@@ -13,16 +13,18 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 
 kpilot_SOURCES	= kpilot.cc \
 	kpilotConfig.cc kpilotlink.cc \
-	fileInstallWidget.cc pilotMemo.cc memoWidget.cc pilotComponent.cc \
+	fileInstaller.cc fileInstallWidget.cc \
+	pilotMemo.cc memoWidget.cc pilotComponent.cc \
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
-	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc pilotAddress.cc \
-	addressWidget.cc addressEditor.cc \
+	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
+	pilotAddress.cc addressWidget.cc addressEditor.cc \
 	strToken.cc pilotDateEntry.cc \
 	conduitSetup.cc listCat.cc pilotTodoEntry.cc \
 	options.cc 
 
 kpilotDaemon_SOURCES = pilotDaemon.cc \
 	kpilotConfig.cc kpilotlink.cc \
+	fileInstaller.cc \
 	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
 	messageDialog.cc \
 	pilotDaemonDCOP.skel \
