@@ -82,7 +82,7 @@ class Calendar {
     virtual bool save(const QString &fileName,CalFormat *format=0) = 0;
     /** clears out the current calendar, freeing all used memory etc. etc. */
     virtual void close() = 0;
-  
+
     /** set the owner of the calendar.  Should be owner's full name. */
     const QString &getOwner() const;
     /** return the owner of the calendar's full name. */
@@ -91,10 +91,10 @@ class Calendar {
     const QString &getEmail();
     /** return the email address of the calendar owner. */
     void setEmail(const QString &);
-  
+
     /** set time zone from a timezone string (e.g. -2:00) */
     void setTimeZone(const QString & tz);
-    /** set time zone froma aminutes value (e.g. -60) */
+    /** set time zone from a minutes value (e.g. -60) */
     void setTimeZone(int tz);
     /** Return time zone as offest in minutes */
     int getTimeZone() const;
@@ -104,7 +104,11 @@ class Calendar {
     void setTimeZoneId(const QString &);
     /** Return time zone id. */
     QString timeZoneId() const;
-  
+    /** use local time, not UTC or a time zone */
+    void setLocalTime();
+    /** Return whether local time is being used */
+    bool isLocalTime() const;
+
     /** adds a Event to this calendar object.
      * @param anEvent a pointer to the event to add
      */
@@ -136,7 +140,7 @@ class Calendar {
       Return all events in calendar
     */
     virtual QPtrList<Event> getAllEvents() = 0;
-  
+
     /**
       Set calendar filter, which filters events for the getEvents* functions.
       The Filter object is owned by the caller.
@@ -146,10 +150,10 @@ class Calendar {
       Return calendar filter.
     */
     CalFilter *filter();
-      
+
     /** returns the number of events that are present on the specified date. */
     virtual int numEvents(const QDate &qd) = 0;
-  
+
     /** add a todo to the todolist. */
     virtual void addTodo(Todo *todo) = 0;
     /** remove a todo from the todolist. */
@@ -173,8 +177,8 @@ class Calendar {
 
     /** Add an incidence to calendar. */
     void addIncidence(Incidence *);
-  
-    /** Enable/Disable dialogs shown by calendar class */  
+
+    /** Enable/Disable dialogs shown by calendar class */
     void showDialogs(bool d);
 
     /** Return all alarms, which ocur in the given time interval. */
@@ -185,7 +189,7 @@ class Calendar {
       public:
         virtual void calendarModified( bool, Calendar * ) = 0;
     };
-  
+
     void registerObserver( Observer * );
 
     void setModified( bool );
@@ -206,29 +210,31 @@ class Calendar {
     */
     virtual QPtrList<Event> events(const QDate &start,const QDate &end,
                                   bool inclusive=false) = 0;
-  
+
     CalFormat *mFormat;
     CalFormat *mDndFormat;  // format used for drag and drop operations
     ICalFormat *mICalFormat;
-  
+
   private:
     void init();
-  
+
     QString mOwner;        // who the calendar belongs to
     QString mOwnerEmail;   // email address of the owner
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)
+    bool mLocalTime;       // use local time, not UTC or a time zone
     bool mDialogsOn;       // display various GUI dialogs?
 
     CalFilter *mFilter;
     CalFilter *mDefaultFilter;
-    
+
     QString mTimeZoneId;
 
     Observer *mObserver;
-    
+    bool mNewObserver;
+
     bool mModified;
 };
-  
+
 }
 
 #endif

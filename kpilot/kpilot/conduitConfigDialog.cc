@@ -321,11 +321,13 @@ void ConduitConfigDialog::configureConduit()
 		factory(library);
 	if (!f)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": No conduit library "
 			<< library
 			<< " found."
 			<< endl;
+#endif
 		warnNoLibrary(p);
 		return;
 	}
@@ -338,9 +340,11 @@ void ConduitConfigDialog::configureConduit()
 
 	if (!o)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Can't create object."
 			<< endl;
+#endif
 
 		KLibLoader::self()->unloadLibrary(
 			library);
@@ -352,9 +356,12 @@ void ConduitConfigDialog::configureConduit()
 
 	if (!d)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Can't cast to dialog."
 			<< endl;
+#endif
+
 		delete o;
 		KLibLoader::self()->unloadLibrary(
 			library);
@@ -423,6 +430,9 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 // $Log$
+// Revision 1.7  2002/01/26 15:00:11  adridg
+// Dblclick to configure
+//
 // Revision 1.6  2002/01/02 11:42:19  bero
 // Fix build.
 //

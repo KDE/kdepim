@@ -27,11 +27,14 @@ alarmguiiface.h: $(top_srcdir)/kalarmd/alarmguiiface.h
 autostart_DATA = kalarm.tray.desktop
 autostartdir = $(prefix)/share/autostart
 
-kdelnkdir = $(kde_appsdir)/Applications
-kdelnk_DATA = kalarm.desktop
+install-data-local:
+	$(mkinstalldirs) $(kde_appsdir)/Applications/
+	$(INSTALL_DATA) $(srcdir)/kalarm.desktop $(kde_appsdir)/Applications/kalarm.desktop
 
-appicondir = $(kde_datadir)/kalarm/icons
-appicon_ICON = AUTO
+uninstall-local:
+	-rm -f $(kde_appsdir)/Applications/kalarm.desktop
+
+KDE_ICON = AUTO
 
 messages: 
 	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp -o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \

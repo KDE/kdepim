@@ -111,16 +111,17 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode)
+	switch(fMode && SyncStack::ActionMask)
 	{
-	case SyncStack::Test :
-		l.append("test");
-		break;
 	case SyncStack::Backup :
 		l.append("backup");
 		break;
 	default:
 		;
+	}
+	if (fMode & SyncStack::FlagTest)
+	{
+		l.append("test");
 	}
 
 
@@ -213,6 +214,12 @@ void SyncStack::prepare(int m)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Using sync mode " << m
+		<< endl;
+#endif
+
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -276,10 +283,10 @@ void SyncStack::prepare(int m)
 
 void SyncStack::exec()
 {
-	nextAction(0L);
+	actionCompleted(0L);
 }
 
-void SyncStack::nextAction(SyncAction *b)
+void SyncStack::actionCompleted(SyncAction *b)
 {
 	FUNCTIONSETUP;
 
@@ -324,12 +331,22 @@ void SyncStack::nextAction(SyncAction *b)
 	QObject::connect(a, SIGNAL(logProgress(const QString &, int)),
 		this, SIGNAL(logProgress(const QString &, int)));
 	QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
-		this, SLOT(nextAction(SyncAction *)));
+		this, SLOT(actionCompleted(SyncAction *)));
 
 	QTimer::singleShot(0,a,SLOT(exec()));
 }
 
 // $Log$
+// Revision 1.3.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
+// Revision 1.3  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.2  2002/01/25 21:43:13  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

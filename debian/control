@@ -1,17 +1,71 @@
 Source: kdepim
-Build-Depends: automake (>= 1:1.4-p4-1.1) || automake1.5, autoconf, libtool, kdelibs-dev (>= 4:2.2.2-1), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex, docbook-to-man, findutils
 Section: x11
 Priority: optional
-Maintainer: Daniel Stone <daniel@sfarc.net> 
-Standards-Version: 3.5.6
+Maintainer: Christopher L Cheney <ccheney@debian.org>
+Build-Depends: debhelper (>> 4.0.0), automake1.5, bison, byacc, flex, gawk, gettext, kdelibs4-dev, libfam-dev, libpisock-dev, libqt3-mt-dev, libtiff3g-dev, texinfo, xlibs-dev, zlib1g-dev
+Standards-Version: 3.5.6.0
+
+Package: kdepim
+Architecture: all
+Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
+Description: KDE Personal Information Management metapackage
+ kdepim is a collection of Personal Information Management (PIM) tools for
+ the K Desktop Enviromnent (KDE).
+
+Package: kdepim-dev
+Section: devel
+Architecture: any
+Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
+Description: KDE Personal Information Management (development files)
+ This package contains development files needed to compile kdepim applications.
+
+Package: kalarm
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE alarm message scheduler
+ KDE alarm message scheduler.
+
+Package: kalarmd
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE alarm message scheduler daemon
+ KDE alarm message scheduler daemon.
+
+Package: kandy
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE mobile phone utility
+ At the moment Kandy is more or less a terminal program with some special
+ features to store commands and their parameters, but is also has a simple
+ GUI to access the phone book of a mobile phone and it is able to save this
+ phone book to the KDE address book.
+ .
+ Kandy is aimed at mobile phones with integrated (GSM) modems.
+
+Package: karm
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE time tracker tool
+ KArm is a time tracker for busy people who need to keep track of the amount of
+ time they spend on various tasks.
+
+Package: knotes
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE Notes
+ Sticky notes for KDE.
 
 Package: korganizer
-Architecture: any
 Section: x11
+Architecture: any
 Depends: ${shlibs:Depends}
-Recommends: kghostview, kdebase-libs
-Suggests: kpilot
-Description: Personal organizer based on Qt and KDE 
+Recommends: kghostview
+Description: KDE personal organizer
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
  industry standard vCalendar file format.
@@ -32,40 +86,23 @@ Description: Personal organizer based on Qt and KDE
  have kpilot installed.
 
 Package: kpilot
-Architecture: any
 Section: utils
-Depends: ${shlibs:Depends}, pilot-link
-Recommends: kdebase-libs
-Suggests: korganizer, kab, knotes
-Description: Palm Pilot sync tool for KDE
- Palm Pilot sync tool for KDE
-
-Package: kandy
 Architecture: any
-Section: utils
 Depends: ${shlibs:Depends}
-Recommends: kdebase-libs
-Description: Mobile phone utility for KDE
- At the moment Kandy is more or less a terminal program with some special
- features to store commands and their parameters, but is also has a simple 
- GUI to access the phone book of a mobile phone and it is able to save this 
- phone book to the KDE address book.
- .
- Kandy is aimed at mobile phones with integrated (GSM) modems.
+Suggests: knotes, korganizer
+Description: KDE Palm Pilot hot-sync tool
+ KDE Palm Pilot hot-sync tool.
 
-Package: kdepim-libs
-Architecture: any
+Package: libkcal2
 Section: libs
-Replaces: korganizer (<< 4:2.2.1-1)
-Depends: ${shlibs:Depends}
-Description: KDE libraries amd modules for kdepim
- This package contains the different interface modules and libraries
- provided by the kdepim package.  These includes interfaces to imap.
-
-Package: kdepim-dev
 Architecture: any
-Section: devel
-Depends: kdepim-libs (= ${Source-Version}), kdelibs-dev
-Description: KDE PIM applications (development files)
- KDE PIM application development files
- You need these files to compile some PIM related KDE apps.
+Depends: ${shlibs:Depends}
+Description: iCalendar and vCalendar library
+ iCalendar and vCalendar library
+
+Package: libkgantt0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: library to display and manage Gantt diagrams
+ library to display and manage Gantt diagrams

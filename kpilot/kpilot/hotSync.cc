@@ -456,6 +456,15 @@ CleanupAction::CleanupAction(KPilotDeviceLink *p)  : SyncAction(p,"cleanupAction
 	FUNCTIONSETUP;
 }
 
+CleanupAction::~CleanupAction()
+{
+#ifdef DEBUG
+	FUNCTIONSETUP;
+	DEBUGDAEMON << fname
+		<< ": Deleting @" << (int)this << endl;
+#endif
+}
+
 void CleanupAction::exec()
 {
 	FUNCTIONSETUP;
@@ -466,6 +475,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.14  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.13  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

@@ -30,11 +30,12 @@
 */
 
 #include <klibloader.h>
+#include "vcal-factorybase.h"
 
 class KInstance;
 class KAboutData;
 
-class ToDoConduitFactory : public KLibFactory
+class ToDoConduitFactory : public VCalConduitFactoryBase
 {
 Q_OBJECT
 
@@ -44,13 +45,7 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
-	// Configuration keys
-	//
-	//
 	static const char * const group;
-	static const char * const calendarFile;
-	static const char * const firstTime;
-	static const char * const deleteOnPilot;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -70,6 +65,12 @@ void *init_libtodoconduit();
 } ;
 
 // $Log$
+// Revision 1.3  2002/04/22 22:51:51  kainhofe
+// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
+//
+// Revision 1.2  2001/12/27 16:43:36  adridg
+// Fixup configuration
+//
 // Revision 1.1  2001/12/13 21:40:40  adridg
 // New files for move to .so
 //
