@@ -3,9 +3,8 @@
     Copyright (c) 2003 Helge Deller <deller@kde.org>
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU General Public License version 2 as 
+    published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -118,8 +117,9 @@ static QString businit(void)
 	if (aux && !strcmp(aux, "yes")) {
 		lockfile = gn_device_lock(state.config.port_device);
 		if (lockfile == NULL) {
-			return i18n("Lock file error.\n "
-			"Please exit all other running instances of gnokii and try again.");
+			return i18n("Gnokii reports a 'Lock file error'.\n "
+			"Please exit all other running instances of gnokii, check if you have "
+			"write permissions in the /var/lock directory and try again.");
 		}
 	}
 
@@ -212,11 +212,15 @@ static gn_error read_phone_entry( int index, gn_memory_type memtype, gn_phoneboo
 
 static bool phone_entry_empty( int index, gn_memory_type memtype )
 {
-	gn_phonebook_entry entry;
 	gn_error error;
-	error = read_phone_entry( index, memtype, &entry );
+	gn_phonebook_entry entry;
+	entry.memory_type = memtype;
+	entry.location = index;
+	data.phonebook_entry = &entry;
+	error = gn_sm_functions(GN_OP_ReadPhonebook, &data, &state);
 	if (error == GN_ERR_EMPTYLOCATION)
 		return true;
+	GNOKII_CHECK_ERROR(error);
 	if (error == GN_ERR_NONE && entry.empty)
 		return true;
 	return false;
@@ -515,6 +519,12 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 			break; // Phonebook full
 		s = emails[n].simplifyWhiteSpace();
 		if (s.isEmpty()) continue;
+		// only one email allowed if we have URLS, notes, addresses (to avoid phone limitations)
+		if (n && !addr->url().isEmpty() && !addr->note().isEmpty() && addr->addresses().count()) {
+			GNOKII_DEBUG(QString(" DROPPED email %1 in favor of URLs, notes and addresses.\n")
+					.arg(s));
+			continue;
+		}
 		subentry->entry_type  = GN_PHONEBOOK_ENTRY_Email;
 		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
@@ -596,6 +606,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 #else
 
 	KABC::AddresseeList::ConstIterator it;
+	QStringList failedList;
 
 	gn_error error;
 
@@ -685,6 +696,9 @@ try_next_phone_entry:
 			}
 		}
 
+		if (error != GN_ERR_NONE)
+			failedList.append(addr->realName());
+
 		// break if we got an error on the first entry
 		if (error != GN_ERR_NONE && it==list.begin())
 			break;
@@ -705,6 +719,9 @@ try_next_phone_entry:
 	}
 
 finish:
+	if (!failedList.isEmpty())
+		GNOKII_DEBUG(QString("Failed to export: %1\n").arg(failedList.join(", ")));
+
 	GNOKII_DEBUG("GNOKII export filter finished.\n");
 
 	busterminate();
