@@ -895,6 +895,7 @@ with &knotes; synchronized with the memos you write on your &PalmPilot;.
 
 <para>
 Setting up the &knotes; conduit is very simple.
+</para>
 
 <screenshot>
 <screeninfo>&knotes; Conduit Setup</screeninfo>
@@ -905,6 +906,7 @@ Setting up the &knotes; conduit is very simple.
 </mediaobject>
 </screenshot>
 
+<para>
 In the <guilabel>General</guilabel> Tab there are two configuration options:
 
 <variablelist>
