@@ -2,7 +2,7 @@
     Calendar access for KDE Alarm Daemon and KDE Alarm Daemon GUI.
 
     This file is part of the KDE alarm daemon.
-    Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2001, 2005 David Jarvie <software@astrojar.org.uk>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #ifndef ADCALENDARBASE_H
 #define ADCALENDARBASE_H
 
+#include <qstringlist.h>
 #include <libkcal/calendarlocal.h>
 namespace KIO {
   class Job;
@@ -44,6 +45,7 @@ class ADCalendarBase : public CalendarLocal
     ~ADCalendarBase()  { }
 
     const QString&   urlString() const   { return mUrlString; }
+    int              urlIndex() const    { return mUrlIndex; }
     const QCString&  appName() const     { return mAppName; }
     int              rcIndex() const     { return mRcIndex; }
     const QDateTime& lastCheck() const   { return mLastCheck; }
@@ -91,19 +93,29 @@ class ADCalendarBase : public CalendarLocal
     void         slotDownloadJobResult( KIO::Job * );
 
   protected:
+    struct EventKey
+    {
+      EventKey() : calendarIndex(-1) { }
+      EventKey(const QString& id, int cal) : eventID(id), calendarIndex(cal) { }
+      bool    operator<(const EventKey& k) const
+                     { return (calendarIndex == k.calendarIndex)
+                            ? (eventID < k.eventID) : (calendarIndex < k.calendarIndex);
+                     }
+      QString eventID;
+      int     calendarIndex;
+    };
     struct EventItem
     {
       EventItem() : eventSequence(0) { }
-      EventItem(const QString& url, int seqno, const QValueList<QDateTime>& alarmtimes)
-        : calendarURL(url), eventSequence(seqno), alarmTimes(alarmtimes) {}
-
-      QString   calendarURL;
-      int       eventSequence;
+      EventItem(int seqno, const QValueList<QDateTime>& alarmtimes)
+        : eventSequence(seqno), alarmTimes(alarmtimes) {}
+      int                   eventSequence;
       QValueList<QDateTime> alarmTimes;
     };
 
-    typedef QMap<QString, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
-    static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
+    typedef QMap<EventKey, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
+    static EventsMap   mEventsHandled; // IDs of displayed KALARM type events
+    static QStringList mCalendarUrls;  // URLs of all calendars ever opened
 
   private:
     QString           mUrlString;     // calendar file URL
@@ -111,6 +123,7 @@ class ADCalendarBase : public CalendarLocal
     Type              mActionType;    // action to take on event
     QDateTime         mLastCheck;     // time at which calendar was last checked for alarms
     QString           mTempFileName;  // temporary file used if currently downloading, else null
+    int               mUrlIndex;      // unique index to URL in mCalendarUrls
     int               mRcIndex;       // index within 'clients' RC file for this calendar's entry
     bool              mLoaded;        // true if calendar file is currently loaded
     bool              mLoadedConnected; // true if the loaded() signal has been connected to AlarmDaemon

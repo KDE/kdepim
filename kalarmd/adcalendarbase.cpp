@@ -2,7 +2,7 @@
     Calendar access for KDE Alarm Daemon.
 
     This file is part of the KDE alarm daemon.
-    Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2001, 2005 David Jarvie <software@astrojar.org.uk>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,8 @@
 #include "adcalendarbase.h"
 #include "adcalendarbase.moc"
 
-ADCalendarBase::EventsMap ADCalendarBase::eventsHandled_;
+ADCalendarBase::EventsMap ADCalendarBase::mEventsHandled;
+QStringList               ADCalendarBase::mCalendarUrls;    // never delete or reorder anything in this list!
 
 ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type type)
   : mUrlString(url),
@@ -49,6 +50,12 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
     mLoadedConnected(false),
     mUnregistered(false)
 {
+  mUrlIndex = mCalendarUrls.findIndex(url);    // get unique index for this URL
+  if (mUrlIndex < 0)
+  {
+    mUrlIndex = static_cast<int>(mCalendarUrls.count());
+    mCalendarUrls.append(url);
+  }
   if (mAppName == "korgac")
   {
     KConfig cfg( locate( "config", "korganizerrc" ) );
@@ -128,14 +135,14 @@ void ADCalendarBase::loadLocalFile( const QString& filename )
   else
   {
     // Remove all now non-existent events from the handled list
-    for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
+    for (EventsMap::Iterator it = mEventsHandled.begin();  it != mEventsHandled.end();  )
     {
-      if (it.data().calendarURL == mUrlString  &&  !event(it.key()))
+      if (it.key().calendarIndex == mUrlIndex  &&  !event(it.key().eventID))
       {
         // Event belonged to this calendar, but can't find it any more
         EventsMap::Iterator i = it;
         ++it;                      // prevent iterator becoming invalid with remove()
-        eventsHandled_.remove(i);
+        mEventsHandled.remove(i);
       }
       else
         ++it;

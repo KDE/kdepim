@@ -2,7 +2,7 @@
     KDE Alarm Daemon.
 
     This file is part of the KDE alarm daemon.
-    Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2001, 2005 David Jarvie <software@astrojar.org.uk>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ ADCalendar *ADCalendarFactory::create(const QString& url, const QCString& appnam
  */
 bool ADCalendar::eventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
 {
-  EventsMap::ConstIterator it = eventsHandled_.find(event->uid());
-  if (it == eventsHandled_.end())
+  EventsMap::ConstIterator it = mEventsHandled.find(EventKey(event->uid(), urlIndex()));
+  if (it == mEventsHandled.end())
     return false;
 
   int oldCount = it.data().alarmTimes.count();
@@ -73,17 +73,16 @@ void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>
   if (event)
   {
     kdDebug(5900) << "ADCalendar::setEventHandled(" << event->uid() << ")\n";
-    EventsMap::Iterator it = eventsHandled_.find(event->uid());
-    if (it != eventsHandled_.end())
+    EventKey key(event->uid(), urlIndex());
+    EventsMap::Iterator it = mEventsHandled.find(key);
+    if (it != mEventsHandled.end())
     {
       // Update the existing entry for the event
       it.data().alarmTimes = alarmtimes;
       it.data().eventSequence = event->revision();
     }
     else
-      eventsHandled_.insert(event->uid(),EventItem(urlString(),
-                                                   event->revision(),
-                                                   alarmtimes));
+      mEventsHandled.insert(key, EventItem(event->revision(), alarmtimes));
   }
 }
 
@@ -92,15 +91,19 @@ void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>
  */
 void ADCalendar::clearEventsHandled(const QString& calendarURL)
 {
-  for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
+  int urlIndex = mCalendarUrls.findIndex(calendarURL);    // get unique index for the calendar
+  if (urlIndex >= 0)
   {
-    if (it.data().calendarURL == calendarURL)
+    for (EventsMap::Iterator it = mEventsHandled.begin();  it != mEventsHandled.end();  )
     {
-      EventsMap::Iterator i = it;
-      ++it;                      // prevent iterator becoming invalid with remove()
-      eventsHandled_.remove(i);
+      if (it.key().calendarIndex == urlIndex)
+      {
+        EventsMap::Iterator i = it;
+        ++it;                      // prevent iterator becoming invalid with remove()
+        mEventsHandled.remove(i);
+      }
+      else
+        ++it;
     }
-    else
-      ++it;
   }
 }
