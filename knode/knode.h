@@ -344,6 +344,7 @@ class KNMainWindow : public KDockMainWindow
     void slotSwitchToArticleViewer();
     void slotConfKeys();
     void slotConfToolbar();
+    void slotNewToolbarConfig();
     void slotSettings();
 
   //--------------------------- </Actions> -----------------------------

@@ -80,9 +80,9 @@ KNMainWindow::KNMainWindow()
   sb->setItemAlignment (SB_MAIN,AlignLeft | AlignVCenter);
   sb->insertItem(QString::null, SB_FILTER,2);
   sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
-  s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );  
+  s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );
   s_tatusGroup->setAlignment(AlignLeft | AlignVCenter);
-  sb->addWidget( s_tatusGroup, 3 );   
+  sb->addWidget( s_tatusGroup, 3 );
 
   //setup splitter behaviour
   manager()->setSplitterHighResolution(true);
@@ -339,8 +339,8 @@ void KNMainWindow::setStatusMsg(const QString& text, int id)
     }
     s_tatusGroup->setText( mtext );
   }
-  else {      
-    statusBar()->changeItem(text, id);  
+  else {
+    statusBar()->changeItem(text, id);
   }
 }
 
@@ -2253,15 +2253,17 @@ void KNMainWindow::slotConfKeys()
 void KNMainWindow::slotConfToolbar()
 {
   saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
-  KEditToolbar *dlg = new KEditToolbar(actionCollection(), "knodeui.rc");
+  KEditToolbar dlg(actionCollection(), "knodeui.rc");
+  connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
+  dlg.exec();
+}
 
-  if (dlg->exec()) {
-    createGUI("knodeui.rc");
-    initPopups();
-    applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
-  }
 
-  delete dlg;
+void KNMainWindow::slotNewToolbarConfig()
+{
+  createGUI("knodeui.rc");
+  initPopups();
+  applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
 }
 
 
