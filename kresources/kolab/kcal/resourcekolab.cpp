@@ -687,6 +687,20 @@ bool ResourceKolab::subresourceActive( const QString& subresource ) const
 
   return true;
 }
+  
+void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
+{
+  // Workaround: The ResourceView in KOrganizer wants to know this
+  // before it opens the resource :-( Make sure we are open
+  const_cast<ResourceKolab*>( this )->doOpen();
+
+  if ( mEventSubResources.contains( subresource ) )
+    return mEventSubResources[ subresource ].setActive( v );
+  if ( mTodoSubResources.contains( subresource ) )
+    return mTodoSubResources[ subresource ].setActive( v );
+  if ( mJournalSubResources.contains( subresource ) )
+    return mJournalSubResources[ subresource ].setActive( v );
+}
 
 KABC::Lock* ResourceKolab::lock()
 {

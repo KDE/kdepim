@@ -110,6 +110,8 @@ public:
 
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
+  /** (De)activate the subresource */
+  virtual void setSubresourceActive( const QString &, bool );
 
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
