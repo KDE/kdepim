@@ -1,4 +1,5 @@
 #include "kdevice.h"
+#include "konnectorplugin.h"
 #include "konnector.h"
 #include "kapabilities.h"
 
@@ -6,6 +7,15 @@ class KOperations{
 public:
   KOperations(){ };
 
+};
+
+class Konnector::KonnectorPrivate{
+public:
+  KonnectorPrivate(){
+
+  }
+  QMap<QString, KonnectorPlugin*> m_konnectors;
+  QValueList<KDevice> m_devices;
 };
 
 Konnector::Konnector( QObject *object, const char *name ) : QObject( object, name )
@@ -20,6 +30,14 @@ QValueList<KDevice> Konnector::query(const QString &category )
 {
   QValueList<KDevice> dev;
   return dev;
+}
+QString Konnector::registerKonnector(const QString &Devie )
+{
+  return QString::null;
+}
+QString Konnector::registerKonnector(const KDevice &Device )
+{
+  return QString::null;
 }
 Kapabilities Konnector::capabilities (const QString& ) const 
 {
@@ -49,3 +67,12 @@ void Konnector::write( const QString &udi, const QString &dest, const QByteArray
 {
 
 }
+bool Konnector::isConnected(const QString &udi ){
+  return false;
+}
+
+
+
+
+
+

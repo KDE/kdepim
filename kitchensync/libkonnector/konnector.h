@@ -38,17 +38,20 @@ Q_OBJECT
   ~Konnector();
   QValueList<KDevice> query(const QString &category= QString::null );
   QString /*runtime unique-dev-id*/ registerKonnector(const QString &DeviceIdentification );
+  QString /*runtime unique-dev-id*/ registerKonnector(const KDevice &Device );
   Kapabilities capabilities( const QString &udi ) const;
   void setCapabilities( const QString &udi, const Kapabilities& );
   QByteArray file( const QString &udi, const QString &path ); // this would allow some post processing
   void retrieveFile(const QString &udi, const QString &);
+  bool isConnected(const QString &udi );
 
  public slots:
   void write(const QString &udi, QPtrList<KSyncEntry> );
   void write(const QString &udi, QValueList<KOperations> );
   void write(const QString &udi, const QString &dest, const QByteArray& ); // post processing
  signals:
-  void wantsToSync(int udi, int way, QPtrList<KSyncEntry>);
+  void wantsToSync(int, int, QPtrList<KSyncEntry>);
+  void stateChanged(QString, bool ); // udi + state
 
  private:
   class KonnectorPrivate;

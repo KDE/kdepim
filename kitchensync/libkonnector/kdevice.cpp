@@ -64,3 +64,10 @@ QString KDevice::vendor() const
 {
   return d->vendor;
 }
+bool operator==(const KDevice &orig, const KDevice &dest ){
+  if( orig.identify() == dest.identify() && orig.group() == dest.group() && dest.vendor() == orig.vendor() ){
+    return true;
+  }else{ 
+    return false;
+  }
+}

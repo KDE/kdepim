@@ -33,8 +33,8 @@ class KDevice {
   QString group() const;
   QString vendor() const;
   KDevice &operator=(const KDevice & );
-
  private:
+  friend bool operator==(const KDevice &, const KDevice );
   friend class Konnector;
   class KDevicePrivate;
   KDevicePrivate *d;

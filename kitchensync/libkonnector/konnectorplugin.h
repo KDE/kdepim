@@ -28,6 +28,7 @@
 
 class Kapabilities;
 class KSyncEntry;
+class KOperations;
 class KonnectorPlugin : public QObject
 {
 Q_OBJECT
@@ -40,9 +41,10 @@ Q_OBJECT
   virtual void setCapabilities( const Kapabilities &kaps ) = 0;
   virtual bool startSync() = 0;
   virtual bool insertFile(const QString &fileName ) = 0;
- public:
+ public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) = 0;
   virtual void slotWrite(QPtrList<KSyncEntry> ) = 0;
+  virtual void slotWrite(QValueList<KOperations> ) = 0;
  signals:
   void sync(QPtrList<KSyncEntry> ); 
 };
