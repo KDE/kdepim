@@ -76,7 +76,7 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
 	DEBUGCONDUIT<<memofile_conduit_id<<endl;
 #endif
 	fConduitName=i18n("Memofile");
-	fMemoList.setAutoDelete(true);	
+	fMemoList.setAutoDelete(true);
 }
 
 MemofileConduit::~MemofileConduit()
@@ -90,7 +90,7 @@ MemofileConduit::~MemofileConduit()
 {
 	FUNCTIONSETUP;
 
-	fFirstSync = false;
+	setFirstSync( false );
 	if(!openDatabases(CSL1("MemoDB"))) {
 		emit logError(i18n("Unable to open the memo databases on the handheld."));
 		return false;
@@ -105,10 +105,10 @@ MemofileConduit::~MemofileConduit()
 
 	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
 
-	fFirstSync = _memofiles->isFirstSync();
+	setFirstSync( _memofiles->isFirstSync() );
 	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
 
-	if (SyncAction::eCopyHHToPC == getSyncDirection() || fFirstSync) {
+	if (SyncAction::eCopyHHToPC == getSyncDirection() || isFirstSync()) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
@@ -188,12 +188,12 @@ bool MemofileConduit::setAppInfo()
 	}
 
 	fCategories = map;
-	
+
 	for (int i = 0; i < 15; i++)
 	{
 		if (fCategories.contains(i)) {
 			QString name = fCategories[i].left(16);
-			
+
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 			<< ": setting category: [" << i
@@ -381,7 +381,7 @@ void MemofileConduit::getModifiedFromPilot()
 		} else {
 			fLocalDatabase->writeRecord(pilotRec);
 		}
-		
+
 		if ((!pilotRec->isSecret()) || _sync_private) {
 			fMemoList.append(memo);
 
@@ -475,7 +475,7 @@ bool MemofileConduit::copyPCToHH()
 	//       after this, we need to reinitialize our memofiles object...
 	setAppInfo();
 	cleanup();
-	
+
 	// re-create our memofiles helper...
 	delete _memofiles;
 	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
@@ -484,7 +484,7 @@ bool MemofileConduit::copyPCToHH()
 	fDatabase->deleteRecord(0, true);
 	fLocalDatabase->deleteRecord(0, true);
 	cleanup();
-	
+
 	_memofiles->load(true);
 
 	QPtrList<Memofile> memofiles = _memofiles->getAll();
@@ -516,7 +516,7 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 	<< "] could not be written to the pilot."
 	<< endl;
 #endif
-		
+
 		return -1;
 	}
 

@@ -150,11 +150,13 @@ there are two special cases: a full and a first sync.
 
 	// don't do a first sync by default in any case, only when explicitly
 	// requested, or the backup database or the alendar are empty.
-	fFirstSync = false;
+	setFirstSync( false );
 
 	// TODO: Check Full sync and First sync
+	bool retrieved = false;
 	if (!openCalendar() ) goto error;
-	if (!openDatabases(dbname(), &fFirstSync) ) goto error;
+	if (!openDatabases(dbname(), &retrieved) ) goto error;
+	setFirstSync( retrieved );
 	preSync();
 
 
@@ -317,7 +319,7 @@ static void listResources(KCal::CalendarResources *p)
 					return false;
 				}
 				fl.close();
-				fFirstSync=true;
+				setFirstSync( true );
 			}
 			addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
 			break;
@@ -368,7 +370,7 @@ static void listResources(KCal::CalendarResources *p)
 	fP->updateIncidences();
 	if (fP->count()<1)
 	{
-		fFirstSync=true;
+		setFirstSync( true );
 	}
 
 	return true;

@@ -73,10 +73,10 @@ AddressBook*AbbrowserConduit::aBook=0L;
 /// Use a macro, because that saves two lines for each call, but does not
 /// have the overhead of a function call
 static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &nr)
-{ 
+{
 	PhoneNumber phone = abEntry.phoneNumber(type);
 	phone.setNumber(nr); \
-	abEntry.insertPhoneNumber(phone); 
+	abEntry.insertPhoneNumber(phone);
 }
 
 
@@ -280,7 +280,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	// a Abbrowser Addressee; allows for easy lookup and comparisons
 	if(aBook->begin() == aBook->end())
 	{
-		fFirstSync = true;
+		setFirstSync( true );
 	}
 	else
 	{
@@ -470,7 +470,7 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 				// use given format
 				bdate=KGlobal::locale()->readDate(cust, AbbrowserSettings::customDateFormat(), &ok);
 			}
-			
+
 			if (!ok)
 			{
 				QString format = KGlobal::locale()->dateFormatShort();
@@ -726,15 +726,16 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 
 	_prepare();
 
-	fFirstSync = false;
-	if(!openDatabases(CSL1("AddressDB"), &fFirstSync))
+	bool retrieved = false;
+	if(!openDatabases(CSL1("AddressDB"), &retrieved))
 	{
 		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
 	}
+	setFirstSync( retrieved );
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync << endl;
+	DEBUGCONDUIT << fname << ": First sync now " << isFirstSync() << endl;
 #endif
 
 	_getAppInfo();
@@ -743,10 +744,10 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 		emit logError(i18n("Unable to open the addressbook."));
 		return false;
 	}
-	fFirstSync = fFirstSync || (aBook->begin() == aBook->end());
+	setFirstSync( isFirstSync() || (aBook->begin() == aBook->end()) );
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync
+	DEBUGCONDUIT << fname << ": First sync now " << isFirstSync()
 		<< " and addressbook is "
 		<< ((aBook->begin() == aBook->end()) ? "" : "non-")
 		<< "empty." << endl;
