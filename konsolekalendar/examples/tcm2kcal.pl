@@ -16,6 +16,7 @@
 #                     default is current year
 #          -f <file>, where file is location of output KDE calendar
 #                     default is $HOME/.kde/share/apps/korganizer/tcm.ics
+#	   -w <konsolekaledar> where konsolekalendar is located
 
 use strict;
 use Env qw(HOME);
@@ -23,7 +24,7 @@ use Getopt::Std;
 use Date::Calc qw(Today Month_to_Text Add_Delta_DHMS Add_Delta_Days);
 
 #location of konsolekalendar program
-my($konkal)="/home/tuukka/src/c/kde/kdepim/konsolekalendar/konsolekalendar";
+my($konkal)="/usr/local/src/KDE3/CVS/kdepim/konsolekalendar/konsolekalendar";
 
 #location of new TCM KDE calendar
 my($cal)="$HOME/.kde/share/apps/korganizer/tcm.ics";
@@ -113,14 +114,20 @@ sub rmleadwhite() {
 sub parse() {
   #parse command line
 
-  our($opt_d, $opt_c, $opt_m, $opt_y, $opt_f);
-  getopts('dcm:y:f:');
+  our($opt_h, $opt_d, $opt_c, $opt_m, $opt_y, $opt_f, $opt_w);
+  getopts('hdcm:y:f:w:');
 
   $mode="--delete" if( $opt_d );
   $mode="--change" if( $opt_c );
   $month=$opt_m if( $opt_m );
   $year=$opt_y if( $opt_y );
   $cal=$opt_f if( $opt_f );
+  $konkal=$opt_w if( $opt_w );
+
+#  if( $opt_h ) {
+#   print "help here!\r\n"; 
+#  } // if
+
 }
 
 sub process() {
