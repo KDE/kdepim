@@ -36,7 +36,6 @@
 #include <libkcal/resourcecalendar.h>
 #include <libkcal/event.h>
 
-#include "konsolekalendar.h"
 #include "konsolekalendarvariables.h"
 
 namespace KCal {
