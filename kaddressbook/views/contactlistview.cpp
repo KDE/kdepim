@@ -200,7 +200,14 @@ void ContactListViewItem::refresh()
   int i = 0;
   KABC::Field::List::ConstIterator it;
   for( it = mFields.begin(); it != mFields.end(); ++it ) {
-    setText( i++, (*it)->value( mAddressee ) );
+    if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
+      QDate date = mAddressee.birthday().date();
+      if ( date.isValid() )
+        setText( i++, KGlobal::locale()->formatDate( date, true ) );
+      else
+        setText( i++, "" );
+    } else
+      setText( i++, (*it)->value( mAddressee ) );
   }
 }
 
