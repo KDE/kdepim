@@ -77,7 +77,7 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
   } else if( errorCode == DisallowedChar ) {
     return "DisallowedChar";
   }
-  return "unknown errror code";
+  return "unknown error code";
 }
 
 static QString simpleEmailTestParseResultToString( bool validEmail )
