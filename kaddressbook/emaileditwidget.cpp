@@ -196,6 +196,15 @@ QStringList EmailEditDialog::emails() const
 
 void EmailEditDialog::add()
 {
+  // check if item already available, ignore if so...
+  for ( int i = 0; i < mEmailListBox->count(); ++i ) {
+    if ( mEmailListBox->text( i ) == mEmailEdit->text() ) {
+      mEmailEdit->clear();
+      mEmailEdit->setFocus();
+      return;
+    }
+  }
+
   mEmailListBox->insertItem( mEmailEdit->text() );
 
   mEmailEdit->clear();
