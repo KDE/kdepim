@@ -1,4 +1,6 @@
-INCLUDES = -I$(top_srcdir) -I$(top_builddir)/kaddressbook -I$(top_srcdir)/kaddressbook/interfaces \
+INCLUDES = -I$(top_srcdir) -I$(top_builddir)/kaddressbook/common \
+           -I$(top_srcdir)/kaddressbook/common \
+           -I$(top_srcdir)/kaddressbook/interfaces \
            -I$(top_srcdir)/kaddressbook $(all_includes) 
 
 kde_module_LTLIBRARIES = libkaddrbk_cardview.la libkaddrbk_iconview.la \

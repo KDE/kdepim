@@ -1,4 +1,4 @@
-SUBDIRS = interfaces printing . views features editors kcmconfigs xxport pics csv-templates \
+SUBDIRS = interfaces common printing . views features editors kcmconfigs xxport pics csv-templates \
           thumbnailcreator
 SRCDOC_DEST = $(kde_htmldir)/en/kaddressbook
 
@@ -7,8 +7,9 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/features \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
+          -I$(top_srcdir)/kaddressbook/common \
           -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
-	  $(all_includes)
+          $(all_includes)
 
 bin_PROGRAMS = kaddressbook
 
@@ -21,12 +22,6 @@ kde_module_LTLIBRARIES = libkaddressbookpart.la
 libkaddressbookpart_la_SOURCES = kaddressbook_part.cpp
 libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
 libkaddressbookpart_la_LIBADD = libkaddressbook.la
-
-noinst_LTLIBRARIES = libkabcommon.la
-libkabcommon_la_SOURCES = kabprefs.cpp kabprefs_base.kcfgc locationmap.cpp filter.cpp 
-libkabcommon_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
-libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
-                         $(top_builddir)/libkdepim/libkdepim.la
 
 lib_LTLIBRARIES = libkaddressbook.la
 libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
@@ -47,19 +42,20 @@ libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la 
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                             $(top_builddir)/libkdepim/libkdepim.la \
                             $(top_builddir)/libkcal/libkcal.la \
-                            -lkabc_file \
-                            $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint -lqui
+                            -lkabc_file $(LIB_KABC) $(LIB_KHTML) \
+                            $(top_builddir)/kaddressbook/common/libkabcommon.la \
+                            -lkdeprint -lqui
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
                                    $(top_srcdir)/libkdepim/categoryeditdialog.h \
-                                   kabprefs_base.h
+                                   $(top_builddir)/kaddressbook/common/kabprefs_base.h
 
 
 noinst_HEADERS = \
     addresseditwidget.h addresseeconfig.h \
     addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
-    addviewdialog.h emaileditwidget.h extensionmanager.h filter.h \
+    addviewdialog.h emaileditwidget.h extensionmanager.h \
     filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
-    incsearchwidget.h jumpbuttonbar.h kablock.h kabprefs.h kaddressbook_part.h \
+    incsearchwidget.h jumpbuttonbar.h kablock.h kaddressbook_part.h \
     kaddressbookservice.h kaddressbookview.h keywidget.h \
     ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
     soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
@@ -83,7 +79,7 @@ KDE_ICON = kaddressbook
 
 messages: rc.cpp
 	$(EXTRACTRC) *.rc *.ui */*.ui >> rc.cpp
-	$(XGETTEXT) *.h *.cpp details/*.cpp editors/*.cpp features/*.cpp printing/*.cpp views/*.cpp xxport/*.cpp details/*.h interfaces/*.h -o $(podir)/kaddressbook.pot
+	$(XGETTEXT) *.h *.cpp common/*.cpp details/*.cpp editors/*.cpp features/*.cpp printing/*.cpp views/*.cpp xxport/*.cpp details/*.h interfaces/*.h -o $(podir)/kaddressbook.pot
 
 srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)

@@ -30,7 +30,7 @@
 
 #include <kwizard.h>
 
-#include "../filter.h"
+#include "common/filter.h"
 #include "kabc/addressbook.h"
 #include "printstyle.h"
 
