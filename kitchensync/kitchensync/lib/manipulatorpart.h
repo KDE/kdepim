@@ -61,7 +61,7 @@ class ManipulatorPart : public KParts::Part
      * @param parent The parent
      * @param name The name of the manipulator part
      */
-    ManipulatorPart(QObject *parent = 0, const char *name  = 0 );
+    ManipulatorPart( QObject *parent = 0, const char *name  = 0 );
     virtual ~ManipulatorPart();
 
     /**
@@ -167,11 +167,11 @@ class ManipulatorPart : public KParts::Part
 
   signals:
     // 0 - 100
-    void sig_progress( ManipulatorPart*, int );
-    void sig_progress( ManipulatorPart*, const Progress& );
-    void sig_error( ManipulatorPart*, const Error& );
+    void sig_progress( ManipulatorPart *, int );
+    void sig_progress( ManipulatorPart *, const Progress & );
+    void sig_error( ManipulatorPart *, const Error & );
     // SYNC_START SYNC_SYNC SYNC_STOP
-    void sig_syncStatus( ManipulatorPart*, int );
+    void sig_syncStatus( ManipulatorPart *, int );
 
   protected:
     /**
@@ -198,9 +198,6 @@ class ManipulatorPart : public KParts::Part
 
     /* const Profile& */
     void connectProfileChanged( const char* slot );
-
-    /* Konnector * */
-    void connectKonnectorChanged( const char* slot );
 
     /* Konnector *,Syncee::PtrList */
     void connectKonnectorDownloaded( const char* slot );

@@ -135,8 +135,8 @@ KSyncMainWindow::KSyncMainWindow( QWidget *widget, const char *name, WFlags f )
 
 KSyncMainWindow::~KSyncMainWindow()
 {
-    m_prof->save();
-    createGUI( 0 );
+  m_prof->save();
+  createGUI( 0 );
 }
 
 void KSyncMainWindow::initActions()

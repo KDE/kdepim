@@ -151,11 +151,6 @@ void ManipulatorPart::connectProfileChanged( const char* slot )
     connect( core(), SIGNAL( profileChanged( const Profile & ) ), slot );
 }
 
-void ManipulatorPart::connectKonnectorChanged( const char* slot )
-{
-    connect( core(), SIGNAL( konnectorChanged( Konnector * ) ), slot );
-}
-
 void ManipulatorPart::connectKonnectorDownloaded( const char* slot )
 {
     connect( core(), SIGNAL(konnectorDownloaded( Konnector *, Syncee::PtrList ) ),

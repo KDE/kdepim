@@ -119,7 +119,7 @@ class KSyncMainWindow : public Core
 // obsolete:    void slotRestore();
     void slotActivated( ManipulatorPart * );
     void slotQuit();
-    void slotKonnectorBar(bool );
+    void slotKonnectorBar( bool );
 
     void slotPreferences();
     void updateConfig();
