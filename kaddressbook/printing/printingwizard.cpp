@@ -1,8 +1,13 @@
 #include <qradiobutton.h>
 #include <qcombobox.h>
+#include <qlayout.h>
+#include <qpixmap.h>
+#include <qlabel.h>
 
 #include <kdebug.h>
 #include <kprinter.h>
+#include <klocale.h>
+#include <kdialog.h>
 
 #include "printingwizard.h"
 #include "printstyle.h"
@@ -11,45 +16,46 @@
 
 namespace KABPrinting {
 
-    PrintingWizard::PrintingWizard(KPrinter *printer_,
-                                   KABC::AddressBook* doc,
-                                   const QStringList& selection_,
-                                   QWidget *parent,
-                                   const char* name)
-        : PrintingWizardBase(parent, name),
-          style(0),
-          mDocument(doc),
-          selection(selection_),
-          mPrinter(printer_)
+    PrintingWizardImpl::PrintingWizardImpl(KPrinter *printer,
+                                           KABC::AddressBook* doc,
+                                           const QStringList& selection,
+                                           QWidget *parent,
+                                           const char* name)
+        : PrintingWizard(printer, doc, selection, parent, name),
+          style(0)
     {
-        rbSelection->setEnabled(!selection.isEmpty());
-        setAppropriate(General, true);
+        mBasicPage=new BasicPage(this);
+        mBasicPage->rbSelection->setEnabled(!selection.isEmpty());
+        connect(mBasicPage->cbStyle, SIGNAL(activated(int)),
+                SLOT(slotStyleSelected(int)));
+        addPage(mBasicPage, i18n("General"));
+        setAppropriate(mBasicPage, true);
         registerStyles();
-        if(cbStyle->count()>0)
+        if(mBasicPage->cbStyle->count()>0)
         {
             slotStyleSelected(0);
         }
     }
 
-    PrintingWizard::~PrintingWizard()
+    PrintingWizardImpl::~PrintingWizardImpl()
     {
     }
 
-    void PrintingWizard::registerStyles()
+    void PrintingWizardImpl::registerStyles()
     {
         styleFactories.append(new DetailledPrintStyleFactory(this));
         styleFactories.append(new MikesStyleFactory(this));
 
-        cbStyle->clear();
+        mBasicPage->cbStyle->clear();
         for(unsigned int i=0; i<styleFactories.count(); ++i)
         {
-            cbStyle->insertItem(styleFactories.at(i)->description());
+            mBasicPage->cbStyle->insertItem(styleFactories.at(i)->description());
         }
     }
 
-    void PrintingWizard::slotStyleSelected(int index)
+    void PrintingWizardImpl::slotStyleSelected(int index)
     {
-        if(index>=0 && index<cbStyle->count())
+        if(index>=0 && index<mBasicPage->cbStyle->count())
         {
             if(style!=0)
             {
@@ -57,45 +63,45 @@ namespace KABPrinting {
                 style=0;
             }
             PrintStyleFactory *factory=styleFactories.at(index);
-            kdDebug() << "PrintingWizard::slotStyleSelected: "
+            kdDebug() << "PrintingWizardImpl::slotStyleSelected: "
                       << "creating print style "
                       << factory->description() << endl;
             style=factory->create();
         }
-        setFinishEnabled(General, style!=0);
+        const QPixmap& preview=style->preview();
+        mBasicPage->plPreview->setPixmap(preview); // reset it if it is Null
+        if(preview.isNull())
+        {
+            mBasicPage->plPreview->setText(i18n("(No Preview available.)"));
+        }
+        setFinishEnabled(mBasicPage, style!=0);
     }
 
-    KABC::AddressBook* PrintingWizard::document()
+    KABC::AddressBook* PrintingWizardImpl::document()
     {
         return mDocument;
     }
 
-    KPrinter* PrintingWizard::printer()
+    KPrinter* PrintingWizardImpl::printer()
     {
         return mPrinter;
     }
 
     // WORK_TO_DO: select contacts for printing
-    void PrintingWizard::print()
+    void PrintingWizardImpl::print()
     {
         QStringList contacts;
         if(style!=0)
         {
-            if(rbCurrentContact->isChecked())
+            if(mBasicPage->rbSelection->isChecked())
             {
-                // ... print current entry
-                // contacts << document()->currentEntry();
+                contacts=mSelection;
             } else {
-                if(rbSelection->isChecked())
+                // create a string list of all entries:
+                KABC::AddressBook::Iterator iter;
+                for(iter=document()->begin(); iter!=document()->end(); ++iter)
                 {
-                    contacts=selection;
-                } else {
-                    // create a string list of all entries:
-                    KABC::AddressBook::Iterator iter;
-                    for(iter=document()->begin(); iter!=document()->end(); ++iter)
-                    {
-                        contacts << (*iter).uid();
-                    }
+                    contacts << (*iter).uid();
                 }
             }
         }

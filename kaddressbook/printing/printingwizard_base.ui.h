@@ -6,7 +6,3 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 
-
-void PrintingWizardBase::slotStyleSelected( int )
-{
-}

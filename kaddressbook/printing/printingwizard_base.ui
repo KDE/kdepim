@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>PrintingWizardBase</class>
-<widget class="QWizard">
+<class>BasicPage</class>
+<widget class="QWidget">
     <property name="name">
-        <cstring>PrintingWizardBase</cstring>
+        <cstring>BasicPage</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -13,143 +13,181 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Printing Wizard</string>
+        <string>General</string>
     </property>
-    <widget class="QWidget">
+    <grid>
         <property name="name">
-            <cstring>General</cstring>
+            <cstring>unnamed</cstring>
         </property>
-        <attribute name="title">
-            <string>General</string>
-        </attribute>
-        <vbox>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>unnamed</cstring>
+                <cstring>Layout1</cstring>
             </property>
-            <property name="margin">
-                <number>3</number>
-            </property>
-            <property name="spacing">
-                <number>3</number>
-            </property>
-            <widget class="QLayoutWidget">
+            <hbox>
                 <property name="name">
-                    <cstring>Layout1</cstring>
+                    <cstring>unnamed</cstring>
                 </property>
-                <hbox>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel">
                     <property name="name">
-                        <cstring>unnamed</cstring>
+                        <cstring>tlStyle</cstring>
                     </property>
-                    <property name="margin">
-                        <number>0</number>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
                     </property>
-                    <property name="spacing">
-                        <number>6</number>
+                    <property name="text">
+                        <string>Print Style:</string>
                     </property>
-                    <widget class="QLabel">
-                        <property name="name">
-                            <cstring>tlStyle</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>1</hsizetype>
-                                <vsizetype>5</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="text">
-                            <string>Print Style:</string>
-                        </property>
-                        <property name="alignment">
-                            <set>AlignVCenter|AlignRight</set>
-                        </property>
-                    </widget>
-                    <widget class="QComboBox">
-                        <property name="name">
-                            <cstring>cbStyle</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>3</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                    </widget>
-                </hbox>
-            </widget>
-            <widget class="QButtonGroup">
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignRight</set>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>cbStyle</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QButtonGroup" row="1" column="0">
+            <property name="name">
+                <cstring>bgPrintSet</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="title">
+                <string>Print what contacts?</string>
+            </property>
+            <vbox>
                 <property name="name">
-                    <cstring>bgPrintSet</cstring>
+                    <cstring>unnamed</cstring>
                 </property>
-                <property name="sizePolicy">
-                    <sizepolicy>
-                        <hsizetype>5</hsizetype>
-                        <vsizetype>1</vsizetype>
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                    </sizepolicy>
+                <property name="margin">
+                    <number>11</number>
                 </property>
-                <property name="title">
-                    <string>Print what contacts?</string>
+                <property name="spacing">
+                    <number>6</number>
                 </property>
-                <vbox>
+                <widget class="QRadioButton">
                     <property name="name">
-                        <cstring>unnamed</cstring>
+                        <cstring>rbSelection</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
+                    <property name="text">
+                        <string>Selection</string>
                     </property>
-                    <property name="spacing">
-                        <number>6</number>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>rbWholeBook</cstring>
                     </property>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>rbCurrentContact</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Print current contact</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>rbSelection</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Selection</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>rbWholeBook</cstring>
-                        </property>
-                        <property name="text">
-                            <string>All entries</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
-                    </widget>
-                </vbox>
-            </widget>
-        </vbox>
-    </widget>
+                    <property name="text">
+                        <string>All entries</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QLayoutWidget" row="1" column="1">
+            <property name="name">
+                <cstring>Layout2</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>tlPreview</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Preview:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>plPreview</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>7</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <pointsize>20</pointsize>
+                        </font>
+                    </property>
+                    <property name="frameShape">
+                        <enum>Box</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Sunken</enum>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
 </widget>
-<connections>
-    <connection>
-        <sender>cbStyle</sender>
-        <signal>activated(int)</signal>
-        <receiver>PrintingWizardBase</receiver>
-        <slot>slotStyleSelected(int)</slot>
-    </connection>
-</connections>
 <includes>
     <include location="local" impldecl="in implementation">printingwizard_base.ui.h</include>
 </includes>
-<slots>
-    <slot>slotStyleSelected( int )</slot>
-</slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

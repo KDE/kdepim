@@ -4,29 +4,33 @@
 #include <qlist.h>
 #include <qstringlist.h>
 
-#include "printingwizard_base.h"
+#include "../kaddressbookprinter.h"
 #include "kabc/addressbook.h"
 #include "printstyle.h"
 
+// ----- the general page:
+#include "printingwizard_base.h"
+
 class KPrinter;
+class QVBoxLayout;
 
 namespace KABPrinting {
 
     /** The PrintingWizard combines pages common for all print styles
         and those provided by the respective style.
     */
-    class PrintingWizard : public PrintingWizardBase
+    class PrintingWizardImpl : public PrintingWizard
     {
         Q_OBJECT
     public:
         /** Construct a printing wizard. Give the document
         (addressbook instance) to print.
         */
-        PrintingWizard(KPrinter *printer,
-                       KABC::AddressBook* doc,
-                       const QStringList& selection,
-                       QWidget *parent=0, const char *name=0);
-        ~PrintingWizard();
+        PrintingWizardImpl(KPrinter *printer,
+                           KABC::AddressBook* doc,
+                           const QStringList& selection,
+                           QWidget *parent=0, const char *name=0);
+        ~PrintingWizardImpl();
         /** Modify this method to add a new PrintStyle.
          */
         void registerStyles();
@@ -36,21 +40,17 @@ namespace KABPrinting {
         KABC::AddressBook *document();
         /** Retrieve the printer to be used. */
         KPrinter* printer();
-    protected:
+    protected slots:
         /** A print style has been selected. The argument is the index
             in the cbStyle combo and in styles.
         */
         void slotStyleSelected(int);
+    protected:
         QPtrList<PrintStyleFactory> styleFactories;
         PrintStyle *style;
-        KABC::AddressBook *mDocument;
-        QStringList selection;
-        /** The printer is handed over at construction time and needs
-            to be already set up.
-            The printer is handed down to the PrintStyle object that
-            actually prints.
-        */
-        KPrinter *mPrinter;
+        /** The general page. */
+        BasicPage *mBasicPage;
+        QVBoxLayout* pageLayout;
     };
 
 }
