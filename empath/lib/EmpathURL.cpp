@@ -36,7 +36,8 @@ EmpathURL::EmpathURL()
     :    mailboxName_    (QString::null),
         folderPath_        (QString::null),
         messageID_        (QString::null),
-        strRep_            (QString::null)
+        strRep_            (QString::null),
+        isValid_            (false)
 {
 }
 
@@ -48,13 +49,15 @@ EmpathURL::EmpathURL(
         mailboxName_    (mailboxName),
         folderPath_        (folderPath),
         messageID_        (messageID),
-        strRep_            (QString::null)
+        strRep_            (QString::null),
+        isValid_            (true)
 {
     _assemble();
 }
 
 EmpathURL::EmpathURL(const QString & fullPath)
-    :    strRep_(fullPath)
+    :    strRep_(fullPath),
+        isValid_(false)
 {
     _parse();
     _assemble();
@@ -64,7 +67,8 @@ EmpathURL::EmpathURL(const QString & fullPath)
 EmpathURL::EmpathURL(const EmpathURL & url)
     :    mailboxName_(url.mailboxName_),
         folderPath_(url.folderPath_),
-        messageID_(url.messageID_)
+        messageID_(url.messageID_),
+        isValid_(url.isValid_)
 {
     _assemble();
 }
@@ -72,11 +76,9 @@ EmpathURL::EmpathURL(const EmpathURL & url)
     void
 EmpathURL::_parse()
 {
-    if (strRep_.left(9) != "empath://") {
-        isValid_ = false;
-        return;
-    }
+    if (strRep_.left(9) != "empath://") return;
     
+    isValid_ = true;
     strRep_.remove(0, 9);
     bool hadTrailingSlash(strRep_.at(0) == '/');
     _cleanUp(strRep_);

@@ -91,6 +91,12 @@ class EmpathURL
         QString messageID() const;
         
         EmpathURL withoutMessageID() const;
+
+        /**
+         * Returns false if the URL is empty or if there was a 
+         * parse error.
+         */
+        bool isValid() const { return isValid_; }
         
         /**
          * This will always return true, theoretically.

@@ -205,6 +205,7 @@ EmpathMailboxMaildir::readConfig()
         path_ += '/';
     
     _recursiveReadFolders(path_);
+    emit(updateFolderLists());
     
     // Initialise all maildir objects.
     
@@ -280,8 +281,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     EmpathMaildir * m = new EmpathMaildir(path_, url);
     
     boxList_.append(m);
-
-    emit(updateFolderLists());
 }
 
     bool
