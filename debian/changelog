@@ -1,3 +1,30 @@
+kdepim (4:3.2.92-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Schepler <schepler@debian.org>  Mon,  2 Aug 2004 10:49:28 -0700
+
+kdepim (4:3.2.2-2) unstable; urgency=high
+
+  * Build-Conflicts: gnokii - due to gnokii not being properly maintained.
+
+ -- Christopher L Cheney <ccheney@debian.org>  Mon, 26 Apr 2004 22:00:00 -0500
+
+kdepim (4:3.2.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/*.menu: remove the obsolete kderemove tag.
+
+ -- Christopher L Cheney <ccheney@debian.org>  Fri, 16 Apr 2004 19:00:00 -0500
+
+kdepim (4:3.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added Danish and Japanese po-debconf translations. (Closes: #233579)
+  * Added Brazilian Portuguese po-debconf translations. (Closes: #235461)
+
+ -- Christopher L Cheney <ccheney@debian.org>  Sat,  6 Mar 2004 17:00:00 -0600
+
 kdepim (4:3.2.0-0pre1v1) experimental; urgency=low
 
   * New upstream release.
