@@ -47,7 +47,7 @@ ProfileDialog::ProfileDialog( const Profile::List &profiles,
   QBoxLayout *topLayout = new QVBoxLayout( topWidget );
   topLayout->setSpacing( spacingHint() );
 
-  QLabel *label = new QLabel( i18n("Setup Profiles"), topWidget );
+  QLabel *label = new QLabel( "<qt><b>" + i18n("Setup Profiles") + "</b></qt>", topWidget );
   topLayout->addWidget( label );
 
   label = new QLabel(
@@ -60,8 +60,12 @@ ProfileDialog::ProfileDialog( const Profile::List &profiles,
   QBoxLayout *listLayout = new QHBoxLayout( topLayout );
 
   mProfileList = new KListView( topWidget );
-  mProfileList->addColumn( i18n("Name") );
+  mProfileList->addColumn( i18n( "Name" ) );
+  mProfileList->setAllColumnsShowFocus( true );
+  mProfileList->setFullWidth( true );
   listLayout->addWidget( mProfileList );  
+  connect( mProfileList, SIGNAL( selectionChanged( QListViewItem* ) ),
+           SLOT( slotSelectionChanged() ) );
 
   QBoxLayout *buttonLayout = new QVBoxLayout( listLayout );
   
@@ -69,17 +73,19 @@ ProfileDialog::ProfileDialog( const Profile::List &profiles,
   buttonLayout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( slotAdd() ) );
   
-  button = new QPushButton( i18n("Edit..."), topWidget );
-  buttonLayout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SLOT( slotEdit() ) );
+  mEditButton = new QPushButton( i18n("Edit..."), topWidget );
+  buttonLayout->addWidget( mEditButton );
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( slotEdit() ) );
   
-  button = new QPushButton( i18n("Remove"), topWidget );
-  buttonLayout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SLOT( slotRemove() ) );
+  mRemoveButton = new QPushButton( i18n("Remove"), topWidget );
+  buttonLayout->addWidget( mRemoveButton );
+  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( slotRemove() ) );
   
   buttonLayout->addStretch();
 
   initListView( profiles );
+
+  slotSelectionChanged();
 }
 
 ProfileDialog::~ProfileDialog()
@@ -131,6 +137,14 @@ void ProfileDialog::slotEdit()
   if ( wiz.exec() ) {
     item->setProfile( wiz.profile() );
   }
+}
+
+void ProfileDialog::slotSelectionChanged()
+{
+  bool state = (mProfileList->selectedItem() != 0);
+
+  mEditButton->setEnabled( state );
+  mRemoveButton->setEnabled( state );
 }
 
 #include "profiledialog.moc"

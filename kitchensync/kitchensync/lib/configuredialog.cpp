@@ -29,60 +29,57 @@
 using namespace KSync;
 
 
-ConfigureDialog::ConfigureDialog( QWidget *parent,
-				  const char *name,
-				  bool modal )
-  : KDialogBase( IconList,
-		 i18n("Configure KitchenSync"),
-		 Ok|Cancel,
-		 Ok, parent, name, modal, true ) {
-
+ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
+ : KDialogBase( IconList, i18n( "Configure KitchenSync" ), Ok | Cancel, Ok,
+                parent, name, modal, true )
+{
   setIconListAllVisible( false );
-  resize(500,400);
-
+  resize( 500, 300 );
 }
 
-
-
-ConfigureDialog::~ConfigureDialog() {
+ConfigureDialog::~ConfigureDialog()
+{
 }
 
-void ConfigureDialog::show() {
-  if( !isVisible() ) {
+void ConfigureDialog::show()
+{
+  if ( !isVisible() )
     setup();
-  }
+
   KDialogBase::show();
 }
 
-void ConfigureDialog::slotOk() {
+void ConfigureDialog::slotOk()
+{
   apply( true );
   accept();
   emit ok();
 }
 
-
-void ConfigureDialog::slotCancel() {
+void ConfigureDialog::slotCancel()
+{
   apply( false );
   reject();
 }
 
-
-void ConfigureDialog::addWidget(QWidget* widget, const QString &name, QPixmap* pixmap) {
-  QFrame *frame = addPage(name, name, *pixmap);
+void ConfigureDialog::addWidget( QWidget* widget, const QString &name, QPixmap* pixmap )
+{
+  QFrame *frame = addPage( name, name, *pixmap );
   QHBoxLayout *lay = new QHBoxLayout( frame );
-  widget->reparent(frame, QPoint(0,0));
+  widget->reparent( frame, QPoint( 0, 0 ) );
   lay->addWidget( widget );
-
 }
 
-void ConfigureDialog::setup() {
+void ConfigureDialog::setup()
+{
 }
 
-void ConfigureDialog::unload() {
+void ConfigureDialog::unload()
+{
 }
 
-void ConfigureDialog::apply(bool ) {
-
+void ConfigureDialog::apply( bool )
+{
 }
 
 #include "configuredialog.moc"

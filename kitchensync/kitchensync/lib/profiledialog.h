@@ -28,6 +28,7 @@
 #include <kdialogbase.h>
 
 class KListView;
+class QPushButton;
 
 namespace KSync {
 
@@ -45,10 +46,15 @@ class ProfileDialog : public KDialogBase
     void slotAdd();
     void slotEdit();
 
+    void slotSelectionChanged();
+
   private:
     void initListView( const Profile::List & );
+
     ActionPartService::List mAvailableParts;
     KListView *mProfileList;
+    QPushButton *mEditButton;
+    QPushButton *mRemoveButton;
 };
 
 }

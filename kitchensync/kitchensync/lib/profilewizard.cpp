@@ -71,7 +71,7 @@ void ProfileWizard::initUI()
   mNameEdit = new KLineEdit( topWidget );
   nameLayout->addWidget( mNameEdit );
 
-  label = new QLabel( i18n("Which Parts to load?"), topWidget );
+  label = new QLabel( "<qt><b>" + i18n("Which Parts to load?") + "</b></qt>", topWidget );
   topLayout->addWidget( label );
   
   label = new QLabel( i18n("KitchenSync supports a variety of plugins. Below\n"
@@ -81,9 +81,11 @@ void ProfileWizard::initUI()
   topLayout->addWidget( label );
 
   mPartListView = new KListView( topWidget );
-  mPartListView->addColumn( i18n("Name") );
-  mPartListView->addColumn( i18n("Comment") );
+  mPartListView->addColumn( i18n( "Name" ) );
+  mPartListView->addColumn( i18n( "Comment" ) );
   mPartListView->setSortColumn( -1 ); // Disable sorting by the user
+  mPartListView->setAllColumnsShowFocus( true );
+  mPartListView->setFullWidth( true );
   topLayout->addWidget( mPartListView );
 
   QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );

@@ -19,25 +19,25 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "konnectorview.h"
-
-#include <konnector.h>
 #include <configwidget.h>
-#include <konnectormanager.h>
-#include <konnectorinfo.h>
 #include <klocale.h>
+#include <konnector.h>
+#include <konnectorinfo.h>
+#include <konnectormanager.h>
 
-#include <qlistview.h>
 #include <qlayout.h>
+#include <qlistview.h>
+
+#include "konnectorview.h"
 
 using namespace KSync;
 
 class KonnectorCheckItem : public QCheckListItem
 {
   public:
-    KonnectorCheckItem( Konnector *k, QListView *l )
-      : QCheckListItem( l, k->resourceName(), CheckBox ),
-        mKonnector( k )
+    KonnectorCheckItem( Konnector *konnector, QListView *view )
+      : QCheckListItem( view, konnector->resourceName(), CheckBox ),
+        mKonnector( konnector )
     {
     }
 
@@ -53,8 +53,11 @@ KonnectorView::KonnectorView( QWidget *parent, const char *name )
 {  
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mKonnectorList = new QListView( this );
-  mKonnectorList->addColumn( i18n("Konnector" ) );
+  mKonnectorList = new KListView( this );
+  mKonnectorList->addColumn( i18n( "Konnector" ) );
+  mKonnectorList->setAllColumnsShowFocus( true );
+  mKonnectorList->setFullWidth( true );
+
   topLayout->addWidget( mKonnectorList, 1 );
 
   updateKonnectorList();
@@ -64,13 +67,10 @@ void KonnectorView::updateKonnectorList()
 {
   mKonnectorList->clear();
 
-  kdDebug() << "KonnectorView::updateKonnectorList()" << endl;
-
   KRES::Manager<Konnector> *manager = KonnectorManager::self();
   
   KRES::Manager<Konnector>::ActiveIterator it;
-  for( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-    kdDebug() << "Konnector: id: " << (*it)->identifier() << endl;
+  for ( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
     KonnectorCheckItem *item = new KonnectorCheckItem( *it, mKonnectorList );
     item->setOn( true );
   }

@@ -19,6 +19,7 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+
 #ifndef KSYNC_CONFIGUREDIALOG_H
 #define KSYNC_CONFIGUREDIALOG_H
 
@@ -36,7 +37,8 @@ namespace KSync {
  */
 class ConfigureDialog : public KDialogBase
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     /**
      * simple c'tor
@@ -44,23 +46,22 @@ class ConfigureDialog : public KDialogBase
      * @param name The name
      * @param modal if the dialog is modal
      */
-    ConfigureDialog( QWidget *parent = 0, const char *name = 0,
-                     bool modal = true );
+    ConfigureDialog( QWidget *parent = 0, const char *name = 0, bool modal = true );
     ~ConfigureDialog();
 
     virtual void show();
 
     /**
      * add a widget to ConfigureDialog
-     * @param wid The widget to be added. It'll be reparented
-     * @param str The string shown as name
-     * @param pix the QPixmap shown
+     * @param widegt The widget to be added. It'll be reparented
+     * @param name The string shown as name
+     * @param pixmap the QPixmap shown
      */
-    void addWidget( QWidget *wid ,const QString &str, QPixmap *pix );
+    void addWidget( QWidget *widget ,const QString &name, QPixmap *pixmap );
 
   signals:
     /**
-     *ok
+     * Emitted whenever the Ok button is clicked.
      */
     void ok();
 
@@ -72,7 +73,7 @@ class ConfigureDialog : public KDialogBase
      /**
       * Plugin sensitive. 
       */
-     void apply(bool);
+     void apply( bool );
 
   private:
      /**

@@ -23,14 +23,15 @@
 
 #include <konnector.h>
 
-#include <qlistview.h>
+#include <klistview.h>
 
 namespace KSync
 {
 
 class KonnectorView : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     KonnectorView( QWidget *parent, const char *name = 0 );
     
@@ -39,7 +40,7 @@ class KonnectorView : public QWidget
     void updateKonnectorList();
     
   private:
-    QListView *mKonnectorList;
+    KListView *mKonnectorList;
 };
 
 }
