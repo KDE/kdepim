@@ -186,6 +186,7 @@ public:
       free( _attrOrderChar[ i ] );
       ++i;
     }
+    delete[] _attrOrderChar;
   }
 
   QStringList attrOrder() const
