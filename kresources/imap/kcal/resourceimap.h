@@ -189,7 +189,6 @@ private:
   QString mServer;
   ICalFormat mFormat;
   bool mSilent;
-  QString mCurrentUID;
 
   // The default calendar
   CalendarLocal mCalendar;
