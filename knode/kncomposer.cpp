@@ -63,6 +63,22 @@ using Syntaxhighlighter::SpellChecker;
 #include <spellingfilter.h>
 
 
+KNLineEdit::KNLineEdit(bool useCompletion,
+                       QWidget *parent, const char *name)
+    : KNLineEditInherited(parent,useCompletion,name)
+{
+}
+
+void KNLineEdit::loadAddresses()
+{
+    KNLineEditInherited::loadAddresses();
+
+    QStringList recent = RecentAddresses::self()->addresses();
+    QStringList::Iterator it = recent.begin();
+    for ( ; it != recent.end(); ++it )
+        addAddress( *it );
+}
+
 KNLineEditSpell::KNLineEditSpell(QWidget * parent, const char * name)
     :QLineEdit( parent,name )
 {
@@ -1616,7 +1632,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   hdrL->setColStretch(1,1);
 
   //To
-  t_o=new KLineEdit(hdrFrame);
+  t_o=new KNLineEdit(true, hdrFrame);
   l_to=new QLabel(t_o, i18n("T&o:"), hdrFrame);
   t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
   hdrL->addWidget(l_to, 0,0);

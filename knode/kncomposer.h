@@ -33,6 +33,9 @@
 #include <keditcl.h>
 #endif
 
+#include <kabc/addresslineedit.h>
+
+
 class QGroupBox;
 
 class KProcess;
@@ -47,6 +50,20 @@ class SpellingFilter;
 namespace Syntaxhighlighter {
   class DictSpellChecker;
 }
+
+//-----------------------------------------------------------------------------
+class KNLineEdit : public KABC::AddressLineEdit
+{
+    Q_OBJECT
+    typedef KABC::AddressLineEdit KNLineEditInherited;
+public:
+    KNLineEdit(bool useCompletion, QWidget *parent = 0,
+               const char *name = 0);
+protected:
+    // Inherited. Always called by the parent when this widget is created.
+    virtual void loadAddresses();
+};
+
 
 class KNComposer : public KMainWindow  {
 
@@ -230,8 +247,8 @@ class KNComposer::ComposerView  : public QSplitter {
                 *l_fup2;
     KNLineEditSpell *s_ubject;
 
-    KLineEdit   *g_roups,
-                *t_o;
+    KLineEdit   *g_roups;
+    KNLineEdit  *t_o;
 
     KComboBox   *f_up2;
     QPushButton *g_roupsBtn,
