@@ -96,8 +96,7 @@ void ResourceKABC::init()
 
   mLock = new KABC::LockNull( false );
 
-  mAddressbook = KABC::StdAddressBook::self();
-  connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
+  mAddressbook = 0;
 }
 
 void ResourceKABC::readConfig( const KConfig *config )
@@ -118,6 +117,9 @@ void ResourceKABC::writeConfig( KConfig *config )
 bool ResourceKABC::doOpen()
 {
   kdDebug(5800) << "ResourceKABC::doOpen()" << endl;
+
+  mAddressbook = KABC::StdAddressBook::self();
+  connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
 
   mOpen = true;
 
