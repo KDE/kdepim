@@ -223,6 +223,23 @@ int PilotAddress::_getAppPhoneLabelNum(const QString &phoneType) const
     return -1;
     }
 
+void PilotAddress::setShownPhone(EPhoneType type)
+    {
+    QString typeStr(_typeToStr(type));
+    int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
+    int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
+    if (fieldSlot == -1)
+	{
+	if (type != eHome)
+	    {
+	    setShownPhone(eHome);
+	    return;
+	    }
+	fieldSlot = entryPhone1;
+	}
+    fAddressInfo.showPhone = fieldSlot - entryPhone1;
+    }
+
 void 
 PilotAddress::setField(int field, const char* text)
     {
@@ -251,6 +268,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.16  2001/04/11 16:45:03  stern
+// Fixed bug in copying an address
+//
 // Revision 1.15  2001/04/11 11:02:37  leitner
 // A void function must not return anything. Also there was an uninitialize
 // variable being used.

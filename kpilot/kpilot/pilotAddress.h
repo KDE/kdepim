@@ -121,8 +121,10 @@ class PilotAddress : public PilotAppCategory
        * overview of addresses. Adjusted here means
        * that it's actually an index into 3..8, the fields
        * that store phone numbers, so 0 means field 3 is selected.
+       * @return # between 0 and 3, where 0 is entryPhone1 and 3 is entryPhone4
        */
       int getShownPhone() const { return fAddressInfo.showPhone; }
+      void setShownPhone(EPhoneType phoneType);
       int  getPhoneLabelIndex(int index) { return fAddressInfo.phoneLabel[index]; }
       PilotRecord* pack() { return PilotAppCategory::pack(); }
 
@@ -135,6 +137,7 @@ class PilotAddress : public PilotAppCategory
       
     private:
       void _copyAddressInfo(const struct Address &copyFrom);
+      /** @return the type string (as used by the Palm Pilot) */
       QString _typeToStr(EPhoneType type) const;
       int _getNextEmptyPhoneSlot() const;
       /** @return the phone label number (0 through 8) that corresponds
@@ -160,6 +163,9 @@ class PilotAddress : public PilotAppCategory
 
 
 // $Log$
+// Revision 1.11  2001/04/04 21:20:32  stern
+// Added support for category information and copy constructors
+//
 // Revision 1.10  2001/04/02 21:56:22  stern
 // Fixed bugs in getPhoneField and setPhoneField methods
 //
