@@ -146,19 +146,19 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
 
 Incidence *ICalFormat::fromString( const QString &text )
 {
-  Calendar *cal = new CalendarLocal();
-  fromString(cal, text);
+  CalendarLocal cal( mTimeZoneId );
+  fromString(&cal, text);
   
   Incidence *ical = 0;
-  QPtrList<Event> elist = cal->events();
+  QPtrList<Event> elist = cal.events();
   if ( elist.count() > 0 ) {
     ical = elist.first();
   } else {
-    QPtrList<Todo> tlist = cal->todos();
+    QPtrList<Todo> tlist = cal.todos();
     if ( tlist.count() > 0 ) {
       ical = tlist.first();
     } else {
-      QPtrList<Journal> jlist = cal->journals();
+      QPtrList<Journal> jlist = cal.journals();
       if ( jlist.count() > 0 ) {
         ical = jlist.first();
       }
@@ -214,7 +214,7 @@ QString ICalFormat::toString( Calendar *cal )
 
 QString ICalFormat::toICalString( Incidence *incidence )
 {
-  CalendarLocal cal;
+  CalendarLocal cal( mTimeZoneId );
   cal.addIncidence( incidence->clone() );
   return toString( &cal );
 }
