@@ -1,0 +1,10 @@
+Demo konnector with a threaded implementation. It origin is in the IrMC
+Sync konnector. There is a worker thread which can happily block and a
+manager thread which tries to start jobs if the worker is idle.
+This implementation does nothing other then print debug messages via
+kdDebug() and signal that it has finished. Fill the switch statement in
+ClientThread::run() with life if you want to use this framework.
+
+Enjoy syncronous programming.
+
+   Mathias Fröhlich <Mathias.Froehlich@web.de>
