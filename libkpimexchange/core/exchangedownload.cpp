@@ -28,7 +28,6 @@
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
-#include <kapp.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kaction.h>
@@ -210,11 +209,10 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       }
       QString href = hrefElement.text();
       KURL url(href);
-      url.setProtocol("webdav");
       
       kdDebug() << "Getting appointment from url: " << url.prettyURL() << endl;
       
-      readAppointment( url );
+      readAppointment( toDAV( url ) );
       successCount++;
     }
   }

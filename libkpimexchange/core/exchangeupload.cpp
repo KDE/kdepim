@@ -111,10 +111,9 @@ void ExchangeUpload::slotFindUidResult( KIO::Job * job )
   // Overwrite it with the new data
   QString href = hrefElement.text();
   KURL url(href);
-  url.setProtocol("webdav");
   kdDebug() << "Found URL with identical uid: " << url.prettyURL() << ", overwriting that one" << endl;
 
-  startUpload( url );  
+  startUpload( toDAV( url ) );  
 }  
 
 void ExchangeUpload::tryExist()
@@ -211,7 +210,7 @@ QString timezoneid( int offset ) {
 }
 
 
-void ExchangeUpload::startUpload( KURL& url )
+void ExchangeUpload::startUpload( const KURL& url )
 {
   KCal::Event* event = static_cast<KCal::Event *>( m_currentUpload );
   if ( ! event ) {

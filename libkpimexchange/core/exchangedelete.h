@@ -47,7 +47,7 @@ class ExchangeDelete : public QObject {
 
   private:
     void findUidSingleMaster( QString const& uid );
-    void startDelete( KURL& url );
+    void startDelete( const KURL& url );
     
     ExchangeAccount* mAccount;
     QWidget* mWindow;

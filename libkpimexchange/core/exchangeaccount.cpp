@@ -128,7 +128,6 @@ void ExchangeAccount::load( QString const& group )
 KURL ExchangeAccount::baseURL()
 {
   KURL url = KURL( mMailbox );
-  url.setProtocol( "webdav" );
   return url;
 }
 
@@ -242,8 +241,7 @@ void ExchangeAccount::slotFolderResult( KIO::Job * job )
     return;
   }
   QString calendar = calElement.text();
-  mCalendarURL = new KURL( calendar );
-  mCalendarURL->setProtocol("webdav");
+  mCalendarURL = toDAV( new KURL( calendar ) );
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
 }
 
@@ -251,7 +249,14 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& use
 {
   kdDebug() << "Entering ExchangeAccount::tryFindMailbox()" << endl;
 
-  KURL url = KURL( "http://" + host + "/exchange" );
+  QString result = tryMailbox( "http://" + host + "/exchange", user, password );
+  if ( result.isNull() )
+    result = tryMailbox( "https://" + host + "/exchange", user, password );
+  return result;
+}
+  
+static QString ExchangeAccount::tryMailbox( const QString& _url, const QString& user, const QString& password ) {
+  KURL url = KURL( _url );
   url.setUser( user );
   url.setPass( password );
 
@@ -287,9 +292,8 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& use
         kdWarning() << "Strange, could not get URL from " << mailboxString << " in line " << line << endl;
         continue;
       }
-      mailbox.setProtocol( "webdav" );
-      kdDebug() << "Found mailbox: " << mailbox.prettyURL( -1 ) << endl;
-      result = mailbox.prettyURL( -1 ); // Strip ending slash from URL, if present
+      result = toDAV( mailbox ).prettyURL( -1 ); // Strip ending slash from URL, if present
+      kdDebug() << "Found mailbox: " << result << endl;
     }
     file.close();
 
