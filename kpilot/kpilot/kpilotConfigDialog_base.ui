@@ -3,7 +3,6 @@
 <comment>A tabWidget for configuring
 KPilot's settings.</comment>
 <author>David Bishop</author>
-<include location="local">kpilotConfigDialog_base.moc</include>
 <widget>
     <class>QWidget</class>
     <property stdset="1">

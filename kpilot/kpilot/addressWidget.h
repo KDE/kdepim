@@ -67,8 +67,6 @@ public slots:
 	* it in the viewer widget.
 	*/
 	void slotShowAddress(int);
-	void slotImportAddressList();
-	void slotExportAddressList();
 	void slotEditRecord();
 	void slotCreateNewRecord();
 	void slotDeleteRecord();
@@ -77,16 +75,6 @@ public slots:
 
 signals:
 	void recordChanged(PilotAddress *);
-
-protected:
-	/**
-	* These next threeare helper functions for the import and
-	* export functions.
-	*/
-	const char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
-	void setFieldBySymbol(PilotAddress* rec, 
-		const char* symbol, const char* text);
-	PilotAddress* findAddress(const char* text, const char* symbol);
 
 protected slots:
 	/**
@@ -153,6 +141,9 @@ public:
 
 
 // $Log$
+// Revision 1.18  2001/09/23 18:30:15  adridg
+// Adjusted widget for new config
+//
 // Revision 1.17  2001/09/06 22:33:43  adridg
 // Cruft cleanup
 //

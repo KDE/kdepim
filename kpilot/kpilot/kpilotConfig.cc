@@ -120,7 +120,7 @@ static const char *kpilotconfig_id =
 }
 
 #ifndef DEBUG
-/* static */ int KPilotConfig::getDebugLevel(KConfig&)
+/* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings &)
 {
 	return 0;
 }
@@ -148,9 +148,11 @@ static const char *kpilotconfig_id =
 	return debug_level ;
 }
 
-/* static */ int KPilotConfig::getDebugLevel(KCmdLineArgs *p)
+/* static */ int KPilotConfig::getDebugLevel(bool useDebugId)
 {
 	FUNCTIONSETUP;
+
+	KCmdLineArgs *p = KCmdLineArgs::parsedArgs(useDebugId ? "debug" : 0L);
 
 	if (p)
 	{
@@ -349,6 +351,9 @@ void KPilotConfigSettings::setDatabaseConduit(const QString &database,const QStr
 
 
 // $Log$
+// Revision 1.7  2001/09/23 18:25:50  adridg
+// New config architecture
+//
 // Revision 1.6  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test

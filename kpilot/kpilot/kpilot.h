@@ -168,6 +168,8 @@ private:
 	*/
 protected:
 	void killDaemonIfNeeded();
+public:
+	void startDaemonIfNeeded();
 
 public slots:
 	void slotRestoreRequested();
@@ -285,6 +287,9 @@ private:
 
 
 // $Log$
+// Revision 1.30  2001/09/23 18:25:50  adridg
+// New config architecture
+//
 // Revision 1.29  2001/09/07 20:48:13  adridg
 // Stripped away last crufty IPC, added logWidget
 //

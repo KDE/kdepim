@@ -308,9 +308,12 @@ PilotDaemon::PilotDaemon() :
 	fNextSyncType(0),
 	fPilotLink(0L),
 	fTray(0L),
+	fP(0L),
 	fKPilotStub(new KPilotDCOP_stub("kpilot","KPilotIface"))
 {
 	FUNCTIONSETUP;
+
+	fP = new PilotDaemonPrivate;
 
 	setupPilotLink();
 	reloadSettings();
@@ -684,7 +687,14 @@ QString  PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 
-	if (b) delete b;
+	if (b)
+	{
+		DEBUGDAEMON << fname
+			<< ": Completed action "
+			<< b->name()
+			<< endl;
+		delete b;
+	}
 
 	if (fP->SyncActionStack.isEmpty()) 
 	{ 
@@ -694,6 +704,11 @@ QString  PilotDaemon::syncTypeString(int i) const
 
 	SyncAction *a = fP->SyncActionStack.pop();
 	if (!a) return;
+
+	DEBUGDAEMON << fname
+		<< ": Will run action "
+		<< a->name()
+		<< endl;
 
 	QObject::connect(a,SIGNAL(logMessage(const QString &)),
 		this,SLOT(logMessage(const QString &)));
@@ -718,8 +733,8 @@ QString  PilotDaemon::syncTypeString(int i) const
 
 	fPilotLink->close();
 
-	getKPilot().daemonStatus(
-		i18n("HotSync Completed."));
+	getKPilot().daemonProgress(
+		i18n("HotSync Completed."),100);
 
 	if(!fQuitAfterSync)
 	{
@@ -777,25 +792,17 @@ void PilotDaemon::slotRunKPilot()
 	}
 }
 
-static KCmdLineOptions kpilotoptions[] =
-{
-#ifdef DEBUG
-	{ "debug <level>", I18N_NOOP("Set debugging level"),"0" },
-#endif
-	{ 0,0,0 }
-} ;
 
-
-int main(int argc, char* argv[])
+int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
         KAboutData about("kpilotDaemon", 
-			I18N_NOOP("KPilot"),
-			 KPILOT_VERSION,
-                         "KPilot - Hot-sync software for unix\n\n",
-                         KAboutData::License_GPL,
-                         "(c) 1998-2001, Dan Pilone");
+		I18N_NOOP("KPilot"),
+		KPILOT_VERSION,
+		"KPilot - Hot-sync software for unix\n\n",
+		KAboutData::License_GPL,
+		"(c) 1998-2001, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
 		"pilone@slac.com",
@@ -806,28 +813,20 @@ int main(int argc, char* argv[])
 		"http://www.cs.kun.nl/~adridg/kpilot/");
 
         KCmdLineArgs::init(argc, argv, &about);
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
-	KUniqueApplication::addCmdLineOptions();
 #ifdef DEBUG
-	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
-
-	debug_level=atoi(p->getOption("debug"));
-	if (debug_level)
-	{
-		DEBUGDAEMON << fname
-			<< ": Debug level set to "
-			<< debug_level
-			<< endl;
-	}
-#else
-	(void) KCmdLineArgs::parsedArgs();
+	KCmdLineArgs::addCmdLineOptions(debug_options,"debug");
 #endif
+	KUniqueApplication::addCmdLineOptions();
+
 
 	if (!KUniqueApplication::start())
 	{
 		return 0;
 	}
 	KUniqueApplication a(true,true);
+
+	// No options besides debug
+	KPilotConfig::getDebugLevel(false);
 
 	// A block just to keep variables local.
 	//
@@ -876,6 +875,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.45  2001/09/23 18:46:11  adridg
+// Oops .. needed some extra work on the QStack part
+//
 // Revision 1.44  2001/09/23 18:24:59  adridg
 // New syncing architecture
 //

@@ -49,7 +49,7 @@ static const char *hotsync_id = "$Id$";
 
 #include "hotSync.moc"
 
-static const char *hotSync_id="$Id:$";
+static const char *hotSync_id="$Id$";
 
 TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
 {
@@ -90,7 +90,7 @@ TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
 }
 
 BackupAction::BackupAction(KPilotDeviceLink *p) :
-	SyncAction(p)
+	SyncAction(p,0,"backupAction")
 {
 	FUNCTIONSETUP;
 
@@ -121,6 +121,12 @@ BackupAction::BackupAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
+	DEBUGDAEMON << fname
+		<< ": This Pilot user's name is \""
+		<< fHandle->getPilotUser()->getUserName()
+		<< "\""
+		<< endl;
+
 	addSyncLogEntry(i18n("Full backup started."));
 
 	ASSERT(!fTimer);
@@ -140,6 +146,8 @@ BackupAction::BackupAction(KPilotDeviceLink *p) :
 	FUNCTIONSETUP;
 
 	struct DBInfo info;
+
+	emit logProgress(QString::null,fDBIndex);
 
 	if (dlp_OpenConduit(pilotSocket())<0)
 	{
@@ -317,7 +325,7 @@ bool operator<(const db &a, const db &b)
 }
 
 RestoreAction::RestoreAction(KPilotDeviceLink *p) :
-	SyncAction(p)
+	SyncAction(p,0,"restoreAction")
 {
 	FUNCTIONSETUP;
 
@@ -336,8 +344,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink *p) :
 		<< endl;
 	
 	QString dirname = fP->fDatabaseDir +
-		// fHandle->getPilotUser()->getUserName() 
-		"ade" +
+		fHandle->getPilotUser()->getUserName() +
 		"/";
 
 	DEBUGDAEMON << fname
@@ -569,12 +576,23 @@ RestoreAction::RestoreAction(KPilotDeviceLink *p) :
 
 FileInstallAction::FileInstallAction(KPilotDeviceLink *p,
 	const QStringList &l) :
-	SyncAction(p),
+	SyncAction(p,0,"fileInstall"),
 	fList(l),
 	fDBIndex(-1),
 	fTimer(0L)
 {
 	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": File list has " << l.count() << " entries" << endl;
+
+	QStringList::ConstIterator i;
+
+	for (i=l.begin(); i!=l.end(); ++i)
+	{
+		DEBUGDAEMON << fname << ": " << *i << endl;
+	}
+#endif
 }
 
 FileInstallAction::~FileInstallAction()
@@ -591,7 +609,12 @@ FileInstallAction::~FileInstallAction()
 	fDBIndex=0;
 
 	// Possibly no files to install?
-	if (!fList.count()) return;
+	if (!fList.count()) 
+	{
+		emit logMessage(i18n("No Files to install"));
+		emit syncDone(this);
+		return;
+	}
 
 	fTimer = new QTimer(this);
 	QObject::connect(fTimer,SIGNAL(timeout()),
@@ -609,8 +632,21 @@ FileInstallAction::~FileInstallAction()
 	ASSERT(fDBIndex >= 0);
 	ASSERT(fDBIndex < fList.count());
 
+	DEBUGDAEMON << fname
+		<< ": Installing file index "
+		<< fDBIndex
+		<< " (of "
+		<< fList.count()
+		<< ")"
+		<< endl;
+
 	const QString &s = fList[fDBIndex];
 	fDBIndex++;
+
+	DEBUGDAEMON << fname
+		<< ": Installing file "
+		<< s
+		<< endl;
 
 	if (fDBIndex>= fList.count())
 	{
@@ -620,12 +656,6 @@ FileInstallAction::~FileInstallAction()
 
 	
 	struct pi_file *f;
-
-
-	DEBUGDAEMON << fname 
-		<< ": Installing file "
-		<< s 
-		<< endl;
 
 	emit logProgress(QString::null,
 		(100 * fDBIndex) / fList.count());
@@ -661,6 +691,14 @@ FileInstallAction::~FileInstallAction()
 	}
 
 	pi_file_close(f);
+
+	if (fDBIndex==-1)
+	{
+		// fDBIndex was set to -1 if this was the last file to install.
+		//
+		//
+		emit syncDone(this);
+	}
 }
 
 /* virtual */ QString FileInstallAction::statusString() const
@@ -1858,16 +1896,15 @@ void KPilotDeviceLink::checkPilotUser()
 
 	if (guiUserName != getPilotUser()->getUserName())
 	{
-		QString
-			imessage(i18n
-			("The Palm Pilot thinks the user name is %1, "
-		   "however KPilot says you are %2.\n"
-"Should I assume the Pilot is right and set the " "user name for KPilot to %1? "
-				"(Otherwise I'll use %2 for now)"));
+		QString imessage(i18n("<qt>The Pilot thinks the user name is %1, "
+			"however KPilot says you are %2."
+			"Should I assume the Pilot is right and set the " 
+			"user name for KPilot to %1? "
+			"(Otherwise I'll use %2 for now)"));
+
 		QString message =
 			imessage.arg(getPilotUser()->getUserName()).
 			arg(getPilotUser()->getUserName()).arg(guiUserName).
-
 			arg(guiUserName);
 
 		if (KMessageBox::warningYesNo(0L,

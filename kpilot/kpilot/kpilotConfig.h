@@ -187,8 +187,7 @@ public:
 	*
 	* @ret resulting debug level
 	*/
-	static int getDebugLevel(KPilotConfigSettings &);
-	static int getDebugLevel(KCmdLineArgs *p=0L);
+	static int getDebugLevel(bool useDebugId=true);
 
 
 	/**
@@ -196,11 +195,17 @@ public:
 	* fixed font.
 	*/
 	static const QFont& fixed() ;
+
+protected:
+	static int getDebugLevel(KPilotConfigSettings &);
 } ;
 
 
 
 // $Log$
+// Revision 1.6  2001/09/23 18:25:50  adridg
+// New config architecture
+//
 // Revision 1.5  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test
