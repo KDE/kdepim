@@ -324,8 +324,10 @@ bool Alarm::hasTime() const
 
 void Alarm::setSnoozeTime(int alarmSnoozeTime)
 {
-  mAlarmSnoozeTime = alarmSnoozeTime;
-  mParent->updated();
+  if (alarmSnoozeTime > 0) {
+    mAlarmSnoozeTime = alarmSnoozeTime;
+    mParent->updated();
+  }
 }
 
 int Alarm::snoozeTime() const
@@ -335,13 +337,62 @@ int Alarm::snoozeTime() const
 
 void Alarm::setRepeatCount(int alarmRepeatCount)
 {
-  mAlarmRepeatCount = alarmRepeatCount;
-  mParent->updated();
+  if (alarmRepeatCount >= 0) {
+    mAlarmRepeatCount = alarmRepeatCount;
+    mParent->updated();
+  }
 }
 
 int Alarm::repeatCount() const
 {
   return mAlarmRepeatCount;
+}
+
+int Alarm::duration() const
+{
+  return mAlarmRepeatCount * mAlarmSnoozeTime * 60;
+}
+
+QDateTime Alarm::nextRepetition(const QDateTime& preTime) const
+{
+  // This method is coded to avoid 32-bit integer overflow using
+  // QDateTime::secsTo(), which occurs with time spans > 68 years.
+  QDateTime at = time();
+  if (at > preTime)
+    return at;
+  if (!mAlarmRepeatCount)
+    return QDateTime();   // there isn't an occurrence after the specified time
+  int snoozeSecs = mAlarmSnoozeTime * 60;
+  QDateTime lastRepetition = at.addSecs(mAlarmRepeatCount * snoozeSecs);
+  if (lastRepetition <= preTime)
+    return QDateTime();    // all repetitions have finished before the specified time
+  int repetition = (at.secsTo(preTime) + snoozeSecs) / snoozeSecs;
+  return at.addSecs(repetition * snoozeSecs);
+}
+
+QDateTime Alarm::previousRepetition(const QDateTime& afterTime) const
+{
+  // This method is coded to avoid 32-bit integer overflow using
+  // QDateTime::secsTo(), which occurs with time spans > 68 years.
+  QDateTime at = time();
+  if (at >= afterTime)
+    return QDateTime();    // alarm's first/only time is at/after the specified time
+  if (!mAlarmRepeatCount)
+    return at;
+  int snoozeSecs = mAlarmSnoozeTime * 60;
+  QDateTime lastRepetition = at.addSecs(mAlarmRepeatCount * snoozeSecs);
+  if (lastRepetition < afterTime)
+    return lastRepetition;   // all repetitions have finished before the specified time
+  int repetition = (at.secsTo(afterTime) - 1) / snoozeSecs;
+  return at.addSecs(repetition * snoozeSecs);
+}
+
+QDateTime Alarm::endTime() const
+{
+  if (mAlarmRepeatCount)
+    return time().addSecs(mAlarmRepeatCount * mAlarmSnoozeTime * 60);
+  else
+    return time();
 }
 
 void Alarm::toggleAlarm()

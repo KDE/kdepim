@@ -220,6 +220,11 @@ class Alarm : public CustomProperties
     */
     QDateTime time() const;
     /**
+      Return the date/time when the last repetition of the alarm goes off.
+	  If the alarm does not repeat, this is equivalent to calling time().
+    */
+    QDateTime endTime() const;
+    /**
       Return true, if the alarm has an explicit date/time.
     */
     bool hasTime() const;
@@ -271,13 +276,35 @@ class Alarm : public CustomProperties
     int snoozeTime() const;
 
     /**
-      Set how many times an alarm is to repeat itself (w/snoozes).
+      Set how many times an alarm is to repeat itself after its initial
+      occurrence (w/snoozes).
     */
     void setRepeatCount( int alarmRepeatCount );
     /**
-      Get how many times an alarm repeats.
+      Get how many times an alarm repeats, after its initial occurrence.
     */
     int repeatCount() const;
+    /**
+      Get the time of the alarm's initial occurrence or its next repetition,
+      after a given time.
+      @param preTime the date and time after which to find the next repetition.
+      @return the date and time of the next repetition, or an invalid date/time if
+      the specified time is at or after the alarm's last repetition.
+    */
+    QDateTime nextRepetition(const QDateTime& preTime) const;
+    /**
+      Get the time of the alarm's latest repetition, or its initial occurrence if
+      none, before a given time.
+      @param afterTime the date and time before which to find the latest repetition.
+      @return the date and time of the latest repetition, or an invalid date/time if
+      the specified time is at or before the alarm's initial occurrence.
+    */
+    QDateTime previousRepetition(const QDateTime& afterTime) const;
+    /**
+      Get how long between the alarm's initial occurrence and its final repetition.
+      @return the number of seconds between the initial occurrence and final repetition.
+    */
+    int duration() const;
 
     /**
       Toggles the value of alarm to be either on or off.
