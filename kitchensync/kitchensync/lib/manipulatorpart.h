@@ -6,6 +6,8 @@
 #include <qstring.h>
 #include <kparts/part.h>
 #include <qptrlist.h>
+#include <qstringlist.h>
+
 
 #include <ksyncentry.h>
 
@@ -14,7 +16,7 @@ namespace KitchenSync {
   class ManipulatorPart : public KParts::Part {
     Q_OBJECT
     public:
-     ManipulatorPart(QWidget *parent = 0, const char *name  = 0, const QStringList &= QStringList() );
+     ManipulatorPart(QWidget *parent = 0, const char *name  = 0, const QStringList & = QStringList() );
      virtual ~ManipulatorPart() {};
      // the Type this Part understands/ is able to interpret
      virtual QString type()const {return QString::null; };
@@ -24,15 +26,13 @@ namespace KitchenSync {
      virtual QString name()const { return QString::null; };
 
      virtual QString description()const { return QString::null; };
-     virtual QPixmap *pixmap()const { return 0l; };
+     virtual QPixmap *pixmap() { return 0l; };
      virtual bool partIsVisible()const { return false; }
-     virtual QWidget *configWidget() const;
+     virtual QWidget *configWidget() const{ return 0l; };
     public slots:
-     virtual void slotConfigOk();
+     virtual void slotConfigOk() { };
      virtual void syncEntries( const QPtrList<KSyncEntry> & ){ };     
-
   };
 };
-
 
 #endif

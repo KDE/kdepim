@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Comment=
+Name=OverView Part
+Icon=
+ServiceTypes=KitchenSync/Manipulator
+X-KDE-Library=liboverviewpart
