@@ -36,6 +36,8 @@ namespace KXMLRPC {
 class Server;
 }
 
+class QTimer;
+
 namespace KCal {
 
 /**
@@ -193,6 +195,7 @@ class ResourceXMLRPC : public ResourceCalendar
     void logoutFinished( const QValueList<QVariant>&, const QVariant& );
 
     void listEntriesFinished( const QValueList<QVariant>&, const QVariant& );
+    void rawDatesFinished( const QValueList<QVariant>&, const QVariant& );
     void addEntryFinished( const QValueList<QVariant>&, const QVariant& );
     void updateEntryFinished( const QValueList<QVariant>&, const QVariant& );
     void deleteEntryFinished( const QValueList<QVariant>&, const QVariant& );
@@ -206,13 +209,17 @@ class ResourceXMLRPC : public ResourceCalendar
 
   private slots:
     void reload();
+    void processQueue();
 
   private:
     void init();
     void writeEvent( Event*, QMap<QString, QVariant>& );
-    void readEvent( const QMap<QString, QVariant>&, Event* );
+    void readEvent( const QMap<QString, QVariant>&, Event*, QString& );
     void enter_loop();
     void exit_loop();
+
+    void addToQueue( const QDate &date );
+    void addToQueue( const QDate &start, const QDate &end );
 
     CalendarLocal mCalendar;
     KXMLRPC::Server *mServer;
@@ -232,6 +239,9 @@ class ResourceXMLRPC : public ResourceCalendar
     QMap<QString, QString> mUidMap;
     QMap<QString, int> mCategoryMap;
     QMap<QString, int> mRightsMap;
+    QTimer *mQueueTimer;
+    QValueList<QDate> mDateQueue;
+    QValueList< QPair<QDate, QDate> > mDateRangeQueue;
 
     bool mSyncComm;
 

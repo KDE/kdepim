@@ -26,6 +26,7 @@
 #include <qdatetime.h>
 #include <qptrlist.h>
 #include <qstringlist.h>
+#include <qtimer.h>
 
 #include <kabc/locknull.h>
 #include <kdebug.h>
@@ -125,6 +126,11 @@ void ResourceXMLRPC::init()
   mLock = new KABC::LockNull( true );
 
   mOpen = false;
+
+  mQueueTimer = new QTimer( this );
+  mQueueTimer->start( 3000 );
+
+  connect( mQueueTimer, SIGNAL( timeout() ), this, SLOT( processQueue() ) );
 }
 
 void ResourceXMLRPC::readConfig( const KConfig* config )
@@ -147,7 +153,6 @@ void ResourceXMLRPC::writeConfig( KConfig* config )
   config->writeEntry( "XmlRpcPassword", KStringHandler::obscure( mPassword ) );
   config->writeEntry( "XmlRpcStartDay", mStartDay );
   config->writeEntry( "XmlRpcEndDay", mEndDay );
-  load();
 }
 
 
@@ -185,17 +190,6 @@ bool ResourceXMLRPC::load()
   if ( !mOpen ) return true;
 
   mCalendar.close();
-
-  QDateTime startDate = QDate::currentDate().addDays( mStartDay * -1 );
-  QDateTime endDate = QDate::currentDate().addDays( mEndDay );
-
-  QMap<QString, QVariant> args;
-  args.insert( "start", startDate );
-  args.insert( "end", endDate );
-
-  mServer->call( ReadEntriesObject, args,
-                 this, SLOT( listEntriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   return true;
 }
@@ -271,7 +265,7 @@ bool ResourceXMLRPC::save()
      QMap<QString, QVariant> args;
      writeEvent( (*evIt), args );
 
-     args.insert( "id", mUidMap[ (*evIt)->uid() ] );
+     args.insert( "id", mUidMap[ (*evIt)->uid() ].toInt() );
      mServer->call( UpdateEntryObject, QVariant( args ),
                     this, SLOT( updateEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -312,7 +306,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
   if ( oldEvent ) { // already exists
     if ( !oldEvent->isReadOnly() ) {
       writeEvent( ev, args );
-      args.insert( "id", mUidMap[ ev->uid() ] );
+      args.insert( "id", mUidMap[ ev->uid() ].toInt() );
       mServer->call( UpdateEntryObject, QVariant( args ),
                      this, SLOT( updateEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -352,6 +346,7 @@ Event *ResourceXMLRPC::event( const QString& uid )
 
 Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd, bool sorted )
 {
+  addToQueue( qd );
   return mCalendar.rawEventsForDate( qd, sorted );
 }
 
@@ -359,11 +354,13 @@ Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd, bool sorted )
 Event::List ResourceXMLRPC::rawEvents( const QDate& start, const QDate& end,
                                        bool inclusive )
 {
+  addToQueue( start, end );
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
 Event::List ResourceXMLRPC::rawEventsForDate( const QDateTime& qdt )
 {
+  addToQueue( qdt.date() );
   return mCalendar.rawEventsForDate( qdt.date() );
 }
 
@@ -448,6 +445,106 @@ void ResourceXMLRPC::reload()
   load();
 }
 
+void ResourceXMLRPC::processQueue()
+{
+  if ( mDateQueue.isEmpty() && mDateRangeQueue.isEmpty() )
+    return;
+
+  mQueueTimer->stop();
+
+  QValueList< QPair<QDate, QDate> >::Iterator it;
+  for ( it = mDateRangeQueue.begin(); it != mDateRangeQueue.end(); ++it ) {
+    QMap<QString, QVariant> args;
+    args.insert( "start", QDateTime( (*it).first ) );
+    args.insert( "end", QDateTime( (*it).second ) );
+
+    mServer->call( ReadEntriesObject, args,
+                   this, SLOT( rawDatesFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+  }
+
+  QValueList<QDate>::Iterator dateIt;
+  for ( dateIt = mDateQueue.begin(); dateIt != mDateQueue.end(); ++dateIt ) {
+    QMap<QString, QVariant> args;
+    args.insert( "start", QDateTime( *dateIt ) );
+    args.insert( "end", QDateTime( *dateIt ) );
+
+    mServer->call( ReadEntriesObject, args,
+                   this, SLOT( rawDatesFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+  }
+
+  mDateRangeQueue.clear();
+  mDateQueue.clear();
+
+  mQueueTimer->start( 3000 );
+}
+
+void ResourceXMLRPC::addToQueue( const QDate &date )
+{
+  QValueList< QPair<QDate, QDate> >::Iterator it;
+  for ( it = mDateRangeQueue.begin(); it != mDateRangeQueue.end(); ++it ) {
+    if ( date >= (*it).first && date <= (*it).second ) // alread in existing range
+      return;
+
+    if ( date.addDays( 1 ) == (*it).first ) {
+      (*it).first = date;
+      return;
+    } else if ( (*it).second.addDays( 1 ) == date ) {
+      (*it).second = date;
+      return;
+    }
+  }
+
+  if ( mDateQueue.find( date ) != mDateQueue.end() )
+    return;
+
+  QValueList<QDate>::Iterator dateIt;
+  for ( dateIt = mDateQueue.begin(); dateIt != mDateQueue.end(); ++dateIt ) {
+    if ( date < (*dateIt ) ) {
+      if ( date.addDays( 8 ) >= (*dateIt) ) {
+        addToQueue( date, *dateIt );
+        mDateQueue.remove( dateIt );
+        return;
+      }
+    } else {
+      if ( date.addDays( -8 ) <= (*dateIt) ) {
+        addToQueue( *dateIt, date );
+        mDateQueue.remove( dateIt );
+        return;
+      }
+    }
+  }
+
+  mDateQueue.append( date );
+}
+
+void ResourceXMLRPC::addToQueue( const QDate &start, const QDate &end )
+{
+  QValueList< QPair<QDate, QDate> >::Iterator it;
+  for ( it = mDateRangeQueue.begin(); it != mDateRangeQueue.end(); ++it ) {
+    if ( (start >= (*it).first && start <= (*it).second) &&
+         (end >= (*it).first && end <= (*it).second) ) { // already included
+      return;
+    } else if ( (start >= (*it).first && start <= (*it).second) &&
+                (end > (*it).second) ) { // overlaps
+      (*it).second = end;
+      return;
+    } else if ( (start < (*it).first) &&
+                (end >= (*it).first && end <= (*it).second) ) { // overlaps
+      (*it).first = start;
+      return;
+    } else if ( ((*it).first >= start && (*it).first <= end) &&
+                ((*it).second >= start && (*it).second <= end) ) { // absorbs
+      (*it).first = start;
+      (*it).second = end;
+      return;
+    }
+  }
+
+  mDateRangeQueue.append( qMakePair( start, end ) );
+}
+
 void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
                                     const QVariant& )
 {
@@ -508,7 +605,9 @@ void ResourceXMLRPC::listEntriesFinished( const QValueList<QVariant>& list,
       Event *event = new Event;
       event->setFloats( false );
 
-      readEvent( (*entryIt).toMap(), event );
+      QString uid;
+      readEvent( (*entryIt).toMap(), event, uid );
+      mUidMap.insert( event->uid(), uid );
 
       mCalendar.addEvent( event );
     }
@@ -517,6 +616,55 @@ void ResourceXMLRPC::listEntriesFinished( const QValueList<QVariant>& list,
   exit_loop();
 
   emit resourceChanged( this );
+}
+
+void ResourceXMLRPC::rawDatesFinished( const QValueList<QVariant>& list,
+                                       const QVariant& )
+{
+  QMap<QString, QVariant> listMap = list[ 0 ].toMap();
+  QMap<QString, QVariant>::Iterator listIt;
+
+  bool changed = false;
+  for ( listIt = listMap.begin(); listIt != listMap.end(); ++listIt ) {
+    QMap<QString, QVariant> entryMap = (*listIt).toMap();
+    QMap<QString, QVariant>::Iterator entryIt;
+
+    for ( entryIt = entryMap.begin(); entryIt != entryMap.end(); ++entryIt ) {
+      Event *event = new Event;
+      event->setFloats( false );
+
+      QString uid;
+      readEvent( (*entryIt).toMap(), event, uid );
+
+      // do we already have this event?
+      Event *oldEvent = 0;
+      QMap<QString, QString>::Iterator it;
+      for ( it = mUidMap.begin(); it != mUidMap.end(); ++it )
+        if ( it.data() == uid ) {
+          oldEvent = mCalendar.event( it.key() );
+          break;
+        }
+
+      if ( oldEvent ) {
+        event->setUid( oldEvent->uid() );
+        event->setCreated( oldEvent->created() );
+
+        if ( !(*oldEvent == *event) ) {
+          mCalendar.deleteEvent( oldEvent );
+          mCalendar.addEvent( event );
+          changed = true;
+        } else
+          delete event;
+      } else {
+        mUidMap.insert( event->uid(), uid );
+        mCalendar.addEvent( event );
+        changed = true;
+      }
+    }
+  }
+
+  if ( changed )
+    emit resourceChanged( this );
 }
 
 void ResourceXMLRPC::deleteEntryFinished( const QValueList<QVariant>& list,
@@ -562,7 +710,8 @@ void ResourceXMLRPC::fault( int error, const QString& errorMsg,
   exit_loop();
 }
 
-void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *event )
+void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *event,
+                                QString &uid )
 {
   // for recurrence
   int rType = CAL_RECUR_NONE;
@@ -575,7 +724,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = args.begin(); it != args.end(); ++it ) {
     if ( it.key() == "id" ) {
-      mUidMap.insert( event->uid(), it.data().toString() );
+      uid = it.data().toString();
     } else if ( it.key() == "rights" ) {
       rights = it.data().toInt();
     } else if ( it.key() == "start" ) {
