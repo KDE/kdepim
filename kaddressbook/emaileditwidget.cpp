@@ -179,8 +179,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
 {
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 4, 3, marginHint(),
-                                            spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( page, 4, 3, 0, spacingHint() );
 
   mEmailListBox = new QListBox( page );
 
