@@ -110,6 +110,7 @@ class KNodeApp : public KMainWindow
     void cleanup();
     bool queryClose();
 
+    virtual void fontChange( const QFont & );
     virtual void paletteChange ( const QPalette & );
 
     //actions

@@ -83,10 +83,20 @@ class KNAppSettings : public KNSettingsWidget  {
     
     QListBox *cList, *fList;
     QCheckBox *longCB, *colorCB, *fontCB;
+    QButton *changeFontB, *defaultFontB, *changeColorB, *defaultColorB;
 
   protected slots:
+    void slotColCBtoggled(bool);
+    void slotColSelectionChanged();
     void slotColItemSelected(QListBoxItem *);   // show color dialog for the entry
+    void slotChangeColorBtnClicked();
+    void slotDefaultColorBtnClicked();
+
+    void slotFontCBtoggled(bool);
+    void slotFontSelectionChanged();
     void slotFontItemSelected(QListBoxItem *);  // show font dialog for the entry
+    void slotChangeFontBtnClicked();            // show color dialog for the entry
+    void slotDefaultFontBtnClicked();
 
 };
 

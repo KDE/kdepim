@@ -116,22 +116,47 @@ int KNAppSettings::FontListItem::width(const QListBox *lb ) const
 
 KNAppSettings::KNAppSettings(QWidget *p) : KNSettingsWidget(p)
 {
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  topL->setAutoAdd(true);
+  QGridLayout *topL=new QGridLayout(this, 9,2, 5,5);
 
   longCB = new QCheckBox(i18n("Show long group list"),this);
+  topL->addWidget(longCB,0,0);
+
   colorCB = new QCheckBox(i18n("Use custom colors"),this);
+  connect(colorCB, SIGNAL(toggled(bool)), SLOT(slotColCBtoggled(bool)));
+  topL->addWidget(colorCB,1,0);
+
   cList = new QListBox(this);
+  connect(cList, SIGNAL(selectionChanged()),SLOT(slotColSelectionChanged()));
   connect(cList, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
-  connect(colorCB, SIGNAL(toggled(bool)),cList, SLOT(setEnabled(bool)));
+  topL->addMultiCellWidget(cList,2,4,0,0);
+
+  changeColorB=new QPushButton(i18n("Cha&nge"), this);
+  connect(changeColorB, SIGNAL(clicked()), this, SLOT(slotChangeColorBtnClicked()));
+  topL->addWidget(changeColorB,2,1);
+
+  defaultColorB=new QPushButton(i18n("&Defaults"), this);
+  connect(defaultColorB, SIGNAL(clicked()), this, SLOT(slotDefaultColorBtnClicked()));
+  topL->addWidget(defaultColorB,3,1);
+
   fontCB = new QCheckBox(i18n("Use custom fonts"),this);
+  connect(fontCB, SIGNAL(toggled(bool)), SLOT(slotFontCBtoggled(bool)));
+  topL->addWidget(fontCB,5,0);
+
   fList = new QListBox(this);
+  connect(fList, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
   connect(fList, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
-  connect(fontCB, SIGNAL(toggled(bool)),fList, SLOT(setEnabled(bool)));
+  topL->addMultiCellWidget(fList,6,8,0,0);
+
+  changeFontB=new QPushButton(i18n("Chan&ge"), this);
+  connect(changeFontB, SIGNAL(clicked()), this, SLOT(slotChangeFontBtnClicked()));
+  topL->addWidget(changeFontB,6,1);
+
+  defaultFontB=new QPushButton(i18n("D&efaults"), this);
+  connect(defaultFontB, SIGNAL(clicked()), this, SLOT(slotDefaultFontBtnClicked()));
+  topL->addWidget(defaultFontB,7,1);
 
   init();
 }
-
 
 
 KNAppSettings::~KNAppSettings()
@@ -147,15 +172,18 @@ void KNAppSettings::init()
 
   colorCB->setChecked(man->useColors());
   cList->setEnabled(man->useColors());
+  changeColorB->setEnabled(false);
+  defaultColorB->setEnabled(man->useColors());
   for (int i=0;i<man->colorCount();i++)
     cList->insertItem(new ColorListItem(man->colorName(i),man->color(i)));
 
   fontCB->setChecked(man->useFonts());
   fList->setEnabled(man->useFonts());
+  changeFontB->setEnabled(false);
+  defaultFontB->setEnabled(man->useFonts());
   for (int i=0;i<man->fontCount();i++)
     fList->insertItem(new FontListItem(man->fontName(i),man->font(i)));
 }
-
 
 
 void KNAppSettings::apply()
@@ -171,6 +199,20 @@ void KNAppSettings::apply()
   man->setUseFonts(fontCB->isChecked());
   for (int i=0;i<man->fontCount();i++)
     man->font(i) = static_cast<FontListItem*>(fList->item(i))->font();
+}
+
+
+void KNAppSettings::slotColCBtoggled(bool b)
+{
+  cList->setEnabled(b);
+  changeColorB->setEnabled(b && (cList->currentItem()!=-1));
+  defaultColorB->setEnabled(b);
+}
+
+
+void KNAppSettings::slotColSelectionChanged()
+{
+  changeColorB->setEnabled(cList->currentItem()!=-1);
 }
 
 
@@ -190,6 +232,35 @@ void KNAppSettings::slotColItemSelected(QListBoxItem *it)
 }
 
 
+void KNAppSettings::slotChangeColorBtnClicked()
+{
+  if (cList->currentItem()!=-1)
+    slotColItemSelected(cList->item(cList->currentItem()));
+}
+
+
+void KNAppSettings::slotDefaultColorBtnClicked()
+{
+  for (int i=0;i<knGlobals.appManager->colorCount();i++)
+    static_cast<ColorListItem*>(cList->item(i))->setColor(knGlobals.appManager->defaultColor(i));
+  cList->triggerUpdate(true);
+}
+
+
+void KNAppSettings::slotFontCBtoggled(bool b)
+{
+  fList->setEnabled(b);
+  changeFontB->setEnabled(b && (fList->currentItem()!=-1));
+  defaultFontB->setEnabled(b);
+}
+
+
+void KNAppSettings::slotFontSelectionChanged()
+{
+  changeFontB->setEnabled(fList->currentItem()!=-1);
+}
+
+
 // show font dialog for the entry
 void KNAppSettings::slotFontItemSelected(QListBoxItem *it)
 {
@@ -206,10 +277,22 @@ void KNAppSettings::slotFontItemSelected(QListBoxItem *it)
 }
 
 
+void KNAppSettings::slotChangeFontBtnClicked()
+{
+  if (fList->currentItem()!=-1)
+    slotFontItemSelected(fList->item(fList->currentItem()));
+}
+
+
+void KNAppSettings::slotDefaultFontBtnClicked()
+{
+  for (int i=0;i<knGlobals.appManager->fontCount();i++)
+    static_cast<FontListItem*>(fList->item(i))->setFont(knGlobals.appManager->defaultFont(i));
+  fList->triggerUpdate(true);
+}
+
+
 //--------------------------------
 
 #include "knappsettings.moc"
-
-
-
 

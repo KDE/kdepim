@@ -812,10 +812,17 @@ void KNodeApp::jobDone(KNJobData *j)
 }
 
 
+void KNodeApp::fontChange( const QFont & )
+{
+  progBar->setFont(font());    // should be called automatically?
+  AppManager->updateVisualDefaults();
+}
+
 
 void KNodeApp::paletteChange( const QPalette & )
 {
   progBar->setPalette(palette());    // should be called automatically?
+  AppManager->updateVisualDefaults();
 }
 
 

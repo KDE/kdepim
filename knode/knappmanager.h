@@ -40,6 +40,8 @@ class KNAppManager {
     void readOptions();
     void saveOptions();
 
+    void updateVisualDefaults();
+
     bool longGroupList()          { return l_ongGroupList; }
     void setLongGroupList(bool b) { l_ongGroupList = b; }
 
@@ -47,11 +49,13 @@ class KNAppManager {
     void setUseColors(bool b)    { u_seColors = b; }
     int colorCount()             { return colors.count(); }
     QColor& color(int code)      { return colors[code]; }
+    QColor& defaultColor(int code) { return defaultColors[code]; }
     QString& colorName(int code) { return colorNames[code]; }
 
     bool useFonts()             { return u_seFonts; }
     void setUseFonts(bool b)    { u_seFonts = b; }
     int fontCount()             { return fonts.count(); }
+    QFont& defaultFont(int code) { return defaultFonts[code]; }
     QFont& font(int code)       { return fonts[code]; }
     QString& fontName(int code) { return fontNames[code]; }
 
@@ -62,8 +66,8 @@ class KNAppManager {
   protected:
 
     bool l_ongGroupList, u_seColors, u_seFonts;
-    QValueList<QColor> colors;
-    QValueList<QFont> fonts;
+    QValueList<QColor> colors, defaultColors;
+    QValueList<QFont> fonts, defaultFonts;
     QStringList colorNames, fontNames;
 
     KNUserEntry *d_efaultUser;

@@ -41,6 +41,8 @@ KNAppManager::~KNAppManager()
 
 void KNAppManager::readOptions()
 {
+  updateVisualDefaults();
+
   KConfig *c=KGlobal::config();
   c->setGroup("VISUAL_APPEARANCE");
 
@@ -48,51 +50,42 @@ void KNAppManager::readOptions()
 
   u_seColors = c->readBoolEntry("customColors", false);
 
-  QColor defCol = kapp->palette().active().base();
-  colors.append(c->readColorEntry("backgroundColor",&defCol));
+  colors.append(c->readColorEntry("backgroundColor",&defaultColors[0]));
   colorNames.append(i18n("Background"));
 
-  defCol = kapp->palette().active().background();
-  colors.append(c->readColorEntry("headerColor",&defCol));
+  colors.append(c->readColorEntry("headerColor",&defaultColors[1]));
   colorNames.append(i18n("Header Decoration"));
 
-  defCol = kapp->palette().active().text();
-  colors.append(c->readColorEntry("textColor",&defCol));
+  colors.append(c->readColorEntry("textColor",&defaultColors[2]));
   colorNames.append(i18n("Normal Text"));
 
-  defCol = kapp->palette().active().text();
-  colors.append(c->readColorEntry("quote1Color",&defCol));
+  colors.append(c->readColorEntry("quote1Color",&defaultColors[3]));
   colorNames.append(i18n("Quoted Text - First level"));
 
-  defCol = kapp->palette().active().text();
-  colors.append(c->readColorEntry("quote2Color",&defCol));
+  colors.append(c->readColorEntry("quote2Color",&defaultColors[4]));
   colorNames.append(i18n("Quoted Text - Second level"));
 
-  defCol = kapp->palette().active().text();
-  colors.append(c->readColorEntry("quote3Color",&defCol));
+  colors.append(c->readColorEntry("quote3Color",&defaultColors[5]));
   colorNames.append(i18n("Quoted Text - Third level"));
 
-  defCol = KGlobalSettings::linkColor();
-  colors.append(c->readColorEntry("URLColor",&defCol));
+  colors.append(c->readColorEntry("URLColor",&defaultColors[6]));
   colorNames.append(i18n("Link"));
 
-  defCol = kapp->palette().disabled().text();
-  colors.append(c->readColorEntry("readArticleColor",&defCol));
+  colors.append(c->readColorEntry("readArticleColor",&defaultColors[7]));
   colorNames.append(i18n("Read Article"));
 
   u_seFonts = c->readBoolEntry("customFonts", false);
 
-  QFont defFont = KGlobalSettings::generalFont();
-  fonts.append(c->readFontEntry("articleFont",&defFont));
+  fonts.append(c->readFontEntry("articleFont",&defaultFonts[0]));
   fontNames.append(i18n("Article Body"));
 
-  fonts.append(c->readFontEntry("composerFont",&defFont));
+  fonts.append(c->readFontEntry("composerFont",&defaultFonts[1]));
   fontNames.append(i18n("Composer"));
 
-  fonts.append(c->readFontEntry("groupListFont",&defFont));
+  fonts.append(c->readFontEntry("groupListFont",&defaultFonts[2]));
   fontNames.append(i18n("Group List"));
 
-  fonts.append(c->readFontEntry("articleListFont",&defFont));
+  fonts.append(c->readFontEntry("articleListFont",&defaultFonts[3]));
   fontNames.append(i18n("Article List"));
 
   c->setGroup("IDENTITY");
@@ -128,4 +121,29 @@ void KNAppManager::saveOptions()
 }
 
 
+void KNAppManager::updateVisualDefaults()
+{
+  defaultColors.clear();
+  QColor defCol = kapp->palette().active().base();  // backgroundColor
+  defaultColors.append(defCol);
+  defCol = kapp->palette().active().background();   // headerColor
+  defaultColors.append(defCol);
+  defCol = kapp->palette().active().text();         // textColor
+  defaultColors.append(defCol);
+  defCol = kapp->palette().active().text();         // quote1Color
+  defaultColors.append(defCol);
+  defCol = kapp->palette().active().text();         // quote2Color
+  defaultColors.append(defCol);
+  defCol = kapp->palette().active().text();         // quote3Color
+  defaultColors.append(defCol);
+  defCol = KGlobalSettings::linkColor();            // URLColor
+  defaultColors.append(defCol);
+  defCol = kapp->palette().disabled().text();       // readArticleColor
+  defaultColors.append(defCol);
+
+  QFont defFont = KGlobalSettings::generalFont();
+  defaultFonts.clear();
+  for (int i=0;i<4;i++)
+    defaultFonts.append(defFont);
+}
 
