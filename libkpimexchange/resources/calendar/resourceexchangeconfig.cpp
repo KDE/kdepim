@@ -99,7 +99,7 @@ void ResourceExchangeConfig::saveSettings( KRES::Resource *resource )
     if ( mMailboxEqualsUser->isChecked() ) {
       res->mAccount->setMailbox( "webdav://" + mHostEdit->text() + "/exchange/" + mAccountEdit->text() );
     } else {
-      res->mAccount->setMailbox( mAccountEdit->text() );
+      res->mAccount->setMailbox( mMailboxEdit->text() );
     }
     res->mCachedSeconds = mCacheEdit->value();
   } else
