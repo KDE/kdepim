@@ -29,6 +29,7 @@
 
 #include "recurrence.h"
 #include "alarm.h"
+#include "attachment.h"
 
 #include "incidencebase.h"
 
@@ -167,10 +168,16 @@ class Incidence : public IncidenceBase
      rule set, or false otherwise. */
     bool isException(const QDate &qd) const;
 
-    /** set the list of attachments/associated files for this event */
-    void setAttachments(const QStringList &attachments);
-    /** return list of associated files */
-    QStringList attachments() const;
+    /** add attachment to this event */
+    void addAttachment(Attachment *attachment);
+    /** remove and delete a specific attachment */
+    void deleteAttachment(Attachment *attachment);
+    /** remove and delete all attachments with this mime type */
+    void deleteAttachments(const QString& mime);
+    /** return list of all associated attachments */
+    QPtrList<Attachment> attachments() const;
+    /** find a list of attachments with this mime type */
+    QPtrList<Attachment> attachments(const QString& mime) const;
 
     /** sets the event's status the value specified.  See the enumeration
      * above for possible values. */
@@ -236,7 +243,7 @@ class Incidence : public IncidenceBase
     QString mRelatedToUid;
     QPtrList<Incidence> mRelations;
     DateList mExDates;
-    QStringList mAttachments;
+    QPtrList<Attachment> mAttachments;
     QStringList mResources;
 
     int mSecrecy;

@@ -374,6 +374,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,icalproperty_new_exdate(
         writeICalDate(*exIt)));
   }
+  
+  // attachments
+  QPtrList<Attachment> attachments = incidence->attachments();
+  for (Attachment *at = attachments.first(); at; at = attachments.next())
+    icalcomponent_add_property(parent,writeAttachment(at));
 
   // alarms
   QPtrList<Alarm> alarms = incidence->alarms();
@@ -491,6 +496,26 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
     icalproperty_add_parameter(p,icalparameter_uid);
   }
 
+  return p;
+}
+
+icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
+{
+  icalattachtype* attach = icalattachtype_new();
+  if (att->isURI())
+    icalattachtype_set_url(attach, att->uri().utf8().data());
+  else
+    icalattachtype_set_base64(attach, att->data(), 0);
+
+  icalproperty *p = icalproperty_new_attach(attach);
+
+  if (!att->mimeType().isEmpty())
+    icalproperty_add_parameter(p,icalparameter_new_fmttype(att->mimeType().utf8().data()));
+
+  if (att->isBinary()) {
+    icalproperty_add_parameter(p,icalparameter_new_value(ICAL_VALUE_BINARY));
+    icalproperty_add_parameter(p,icalparameter_new_encoding(ICAL_ENCODING_BASE64));
+  }
   return p;
 }
 
@@ -1058,10 +1083,39 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
     p = icalproperty_get_next_parameter(attendee,ICAL_X_PARAMETER);
   } */
 
-
-
-
   return new Attendee( name, email, rsvp, status, role, uid );
+}
+
+Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
+{
+  icalattachtype *a = icalproperty_get_attach(attach);
+  icalparameter_value v = ICAL_VALUE_NONE;
+  icalparameter_encoding e = ICAL_ENCODING_NONE;
+  
+  Attachment *attachment = 0;
+  
+  icalparameter *vp = icalproperty_get_first_parameter(attach, ICAL_VALUE_PARAMETER);
+  if (vp)
+    v = icalparameter_get_value(vp);
+
+  icalparameter *ep = icalproperty_get_first_parameter(attach, ICAL_ENCODING_PARAMETER);
+  if (ep)
+    e = icalparameter_get_encoding(ep);
+  
+  if (v == ICAL_VALUE_BINARY && e == ICAL_ENCODING_BASE64)
+    attachment = new Attachment(icalattachtype_get_base64(a));
+  else if ((v == ICAL_VALUE_NONE || v == ICAL_VALUE_URI) && (e == ICAL_ENCODING_NONE || e == ICAL_ENCODING_8BIT)) {
+    attachment = new Attachment(QString(icalattachtype_get_url(a)));
+  } else {
+    kdWarning(5800) << "Unsupported attachment format, discarding it!" << endl;
+    return 0;
+  }
+
+  icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
+  if (p)
+    attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
+
+  return attachment;
 }
 
 void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
@@ -1165,7 +1219,11 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
           incidence->setSecrecy(Incidence::SecrecyPrivate);
         }
         break;
-
+        
+      case ICAL_ATTACH_PROPERTY:  // attachments
+        incidence->addAttachment(readAttachment(p));
+        break;
+ 
       default:
 //        kdDebug(5800) << "ICALFormat::readIncidence(): Unknown property: " << kind
 //                  << endl;
@@ -1219,7 +1277,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
       case ICAL_ATTENDEE_PROPERTY:  // attendee
         incidenceBase->addAttendee(readAttendee(p));
         break;
-
+        
       default:
         break;
     }

@@ -580,12 +580,11 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     addPropValue(vevent, VCCategoriesProp, tmpStr.local8Bit());
   }
 
-  // attachments
-  tmpStrList = anEvent->attachments();
-  for ( QStringList::Iterator it = tmpStrList.begin();
-        it != tmpStrList.end();
-        ++it )
-    addPropValue(vevent, VCAttachProp, (*it).local8Bit());
+  // attachments 
+  // TODO: handle binary attachments!
+  QPtrList<Attachment> attachments = anEvent->attachments();
+  for ( Attachment *at = attachments.first(); at; at = attachments.next() )
+    addPropValue(vevent, VCAttachProp, at->uri().local8Bit());
 
   // resources
   tmpStrList = anEvent->resources();
@@ -1286,11 +1285,11 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   while (moreIteration(&voi)) {
     vo = nextVObject(&voi);
     if (strcmp(vObjectName(vo), VCAttachProp) == 0) {
-      tmpStrList.append(s = fakeCString(vObjectUStringZValue(vo)));
+      s = fakeCString(vObjectUStringZValue(vo));
+      anEvent->addAttachment(new Attachment(QString(s)));
       deleteStr(s);
     }
   }
-  anEvent->setAttachments(tmpStrList);
 
   // resources
   if ((vo = isAPropertyOf(vevent, VCResourcesProp)) != 0) {

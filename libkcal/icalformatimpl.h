@@ -53,6 +53,7 @@ class ICalFormatImpl {
     icalcomponent *writeJournal(Journal *journal);
     void writeIncidence(icalcomponent *parent,Incidence *incidence);
     icalproperty *writeAttendee(Attendee *attendee);
+    icalproperty *writeAttachment(Attachment *attach);
     icalproperty *writeRecurrenceRule(Recurrence *);
     icalproperty *writeAlarm(Alarm *alarm);
 
@@ -62,6 +63,7 @@ class ICalFormatImpl {
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
     Journal *readJournal(icalcomponent *vjournal);
     Attendee *readAttendee(icalproperty *attendee);
+    Attachment *readAttachment(icalproperty *attach);
     void readIncidence(icalcomponent *parent,Incidence *incidence);
     void readRecurrenceRule(icalproperty *rrule,Incidence *event);
     void readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur );

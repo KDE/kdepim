@@ -22,14 +22,16 @@
 
 using namespace KCal;
 
-Attachment::Attachment(const QString& uri)
+Attachment::Attachment(const QString& uri, const QString& mime)
 {
+  mMimeType = mime;
   mData = uri;
   mBinary = false;
 }
 
-Attachment::Attachment(const char *base64)
+Attachment::Attachment(const char *base64, const QString& mime)
 {
+  mMimeType = mime;
   mData = QString::fromUtf8(base64);
   mBinary = true;
 }
@@ -58,7 +60,7 @@ bool Attachment::isBinary() const
   return mBinary;
 }
 
-const char *Attachment::data() const
+char *Attachment::data() const
 {
   if (mBinary)
     return mData.utf8().data();

@@ -38,6 +38,7 @@ Incidence::Incidence() :
   recreate();
 
   mAlarms.setAutoDelete(true);
+  mAttachments.setAutoDelete(true);
 }
 
 Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
@@ -311,16 +312,46 @@ bool Incidence::isException(const QDate &date) const
   return false;
 }
 
-void Incidence::setAttachments(const QStringList &attachments)
+void Incidence::addAttachment(Attachment *attachment)
 {
-  if (mReadOnly) return;
-  mAttachments = attachments;
+  if (mReadOnly || !attachment) return;
+  mAttachments.append(attachment);
   updated();
 }
 
-QStringList Incidence::attachments() const
+void Incidence::deleteAttachment(Attachment *attachment)
+{
+  mAttachments.removeRef(attachment);
+}
+
+void Incidence::deleteAttachments(const QString& mime)
+{
+  Attachment *at = mAttachments.first();
+  while (at) {
+    if (at->mimeType() == mime)
+      mAttachments.remove();
+    else
+      at = mAttachments.next();
+  }
+}
+
+QPtrList<Attachment> Incidence::attachments() const
 {
   return mAttachments;
+}
+
+QPtrList<Attachment> Incidence::attachments(const QString& mime) const
+{
+  QPtrList<Attachment> attachments;
+  QPtrListIterator<Attachment> it( mAttachments );
+  Attachment *at;
+  while ( (at = it.current()) ) {
+    if (at->mimeType() == mime)
+      attachments.append(at);
+    ++it;
+  }
+ 
+  return attachments;
 }
 
 void Incidence::setResources(const QStringList &resources)
