@@ -334,7 +334,8 @@ Event *ICalFormat::pasteEvent(const QDate &/*newDate*/,const QTime */*newTime*/)
                             i18n("An error has occurred parsing the "
                                  "contents of the clipboard.\nYou can "
                                  "only paste a valid vCalendar into "
-                                 "KOrganizer.\n"));
+                                 "%1.\n").arg(application()),
+                            i18n("%1: Paste Calendar").arg(application()));
       return 0;
     }
   }  
