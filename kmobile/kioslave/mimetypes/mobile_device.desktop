@@ -3,7 +3,7 @@ Encoding=UTF-8
 Comment=Mobile Device
 Icon=kmobile
 Type=MimeType
-MimeType=kmobile/device
+MimeType=mobile/device
 Patterns=
 
 X-KDE-AutoEmbed=true

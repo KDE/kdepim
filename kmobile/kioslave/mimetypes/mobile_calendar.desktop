@@ -3,7 +3,7 @@ Encoding=UTF-8
 Comment=Calendar in Mobile Device
 Icon=korganizer
 Type=MimeType
-MimeType=kmobile/calendar
+MimeType=mobile/calendar
 Patterns=
 
 X-KDE-AutoEmbed=true
