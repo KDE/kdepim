@@ -1,4 +1,6 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/groupwise $(all_includes) -DDEBUG
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/groupwise $(all_includes)
+
+#AM_CPPFLAGS = -DDEBUG
 
 check_PROGRAMS = soapdebug
 
