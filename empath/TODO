@@ -1,9 +1,0 @@
-Finish DCOP interface (EmpathInterface).
-
-Integrate POP, IMAP and SMTP support via kioslaves.
-
-Fix composing.
-
-Add missing features.
-
-Kill bugs.
