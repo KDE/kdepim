@@ -7,12 +7,12 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -34,15 +34,24 @@
 
 #include "gwjobs.h"
 
-GWJob::GWJob( Type type, struct soap *soap, const QString &url,
-              const std::string &session, QObject *parent )
+GWJob::GWJob( Type type, const QString &url, const std::string &session,
+              QObject *parent )
   : Job( parent, "GWJob" ),
-    mType( type ), mSoap( soap ), mUrl( url ), mSession( session )
+    mType( type ), mUrl( url ), mSession( session )
 {
+  mSoap = new struct soap();
+  soap_init( mSoap );
+
+  mSoap->header = new( SOAP_ENV__Header );
 }
 
 GWJob::~GWJob()
 {
+  soap_end( mSoap );
+  soap_done( mSoap );
+
+  delete mSoap->header;
+  mSoap->header = 0;
 }
 
 void GWJob::processEvent( KPIM::ThreadWeaver::Event *event )
@@ -52,9 +61,9 @@ void GWJob::processEvent( KPIM::ThreadWeaver::Event *event )
     deleteLater();
 }
 
-ReadAddressBooksJob::ReadAddressBooksJob( struct soap *soap, const QString &url,
-                                          const std::string &session, QObject *parent )
-  : GWJob( ReadAddressBooks, soap, url, session, parent )
+ReadAddressBooksJob::ReadAddressBooksJob( const QString &url, const std::string &session,
+                                          QObject *parent )
+  : GWJob( ReadAddressBooks, url, session, parent )
 {
 }
 
@@ -122,9 +131,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   }
 }
 
-ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
-                                  const std::string &session, QObject *parent )
-  : GWJob( ReadCalendar, soap, url, session, parent )
+ReadCalendarJob::ReadCalendarJob( const QString &url, const std::string &session,
+                                  QObject *parent )
+  : GWJob( ReadCalendar, url, session, parent )
 {
 }
 
@@ -170,6 +179,17 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
   itemsRequest.container = id;
   itemsRequest.view = "recipients message recipientStatus";
 
+/*
+  ns1__Filter *filter = soap_new_ns1__Filter( mSoap, -1 );
+  ns1__FilterEntry *filterEntry = soap_new_ns1__FilterEntry( mSoap, -1 );
+  filterEntry->op = gte;
+  filterEntry->field = QString::fromLatin1( "startDate" ).utf8();
+  filterEntry->value = QDateTime::currentDateTime().toString( "yyyyMMddThhmmZ" ).utf8();
+
+  filter->element = filterEntry;
+
+  itemsRequest.filter = filter;
+*/
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
 
@@ -184,7 +204,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 
   if ( items ) {
     IncidenceConverter conv( mSoap );
-  
+
     std::vector<class ns1__Item * >::const_iterator it;
     for( it = items->begin(); it != items->end(); ++it ) {
       ns1__Appointment *a = dynamic_cast<ns1__Appointment *>( *it );

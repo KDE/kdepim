@@ -109,7 +109,7 @@ void ResourceGroupwise::writeConfig( KConfig *config )
 Ticket *ResourceGroupwise::requestSaveTicket()
 {
   if ( !addressBook() ) {
-	  kdDebug(5700) << "no addressbook" << endl;
+    kdDebug(5700) << "no addressbook" << endl;
     return 0;
   }
 
@@ -128,7 +128,7 @@ bool ResourceGroupwise::doOpen()
 
 void ResourceGroupwise::doClose()
 {
-//  mServer->logout();
+  mServer->logout();
 }
 
 bool ResourceGroupwise::load()

@@ -8,12 +8,12 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -51,11 +51,11 @@ GroupwiseServer::GroupwiseServer( const QString &host, const QString &user,
 
 GroupwiseServer::~GroupwiseServer()
 {
-  delete mSoap;
-  mSoap = 0;
-
   delete mWeaver;
   mWeaver = 0;
+
+  delete mSoap;
+  mSoap = 0;
 }
 
 bool GroupwiseServer::login()
@@ -352,7 +352,7 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
 
 bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds )
 {
-  mReadAddressBooksJob = new ReadAddressBooksJob( mSoap, mUrl, mSession, this );
+  mReadAddressBooksJob = new ReadAddressBooksJob( mUrl, mSession, 0 );
   mReadAddressBooksJob->setAddressBookIds( addrBookIds );
 
   connect( mReadAddressBooksJob, SIGNAL( done() ),
@@ -365,7 +365,6 @@ bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds )
 
 void GroupwiseServer::slotReadAddressBooksFinished()
 {
-  qDebug( "slotReadAddressBooksFinished" );
   emit readAddressBooksFinished( mReadAddressBooksJob->addresseeList() );
 }
 
@@ -564,7 +563,7 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 
 bool GroupwiseServer::readCalendar( KCal::Calendar *calendar )
 {
-  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession, this );
+  ReadCalendarJob *job = new ReadCalendarJob( mUrl, mSession, 0 );
   job->setCalendar( calendar );
   job->setCalendarFolder( &mCalendarFolder );
 
