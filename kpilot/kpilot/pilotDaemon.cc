@@ -87,6 +87,7 @@ static const char *pilotdaemon_id =
 #include "hotSync.h"
 #include "interactiveSync.h"
 #include "syncStack.h"
+#include "internalEditorAction.h"
 
 #ifdef ENABLE_KROUPWARE
 #include "kroupware.h"
@@ -781,6 +782,10 @@ QString PilotDaemon::syncTypeString(int i) const
 		case SyncAction::eCopyHHToPC:
 			mode |= ActionQueue::FlagHHToPC;
 			break;
+		}
+		if (c.getInternalEditors() && !(mode | ActionQueue::FlagHHToPC) )
+		{
+			fSyncStack->addAction(new InternalEditorAction(fPilotLink, mode));
 		}
 		// Now check for changed PC
 		{

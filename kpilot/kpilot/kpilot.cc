@@ -31,70 +31,30 @@ static const char *kpilot_id =
 	"$Id$";
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-
 #include <qptrlist.h>
-
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-
 #include <qvbox.h>
 #include <qtimer.h>
 
 #include <kjanuswidget.h>
-
-#ifndef _KURL_H_
 #include <kurl.h>
-#endif
-#ifndef _KMESSAGEBOX_H_
 #include <kmessagebox.h>
-#endif
-#ifndef _KSTATUSBAR_H_
 #include <kstatusbar.h>
-#endif
-#ifndef _KCONFIG_H_
 #include <kconfig.h>
-#endif
-#ifndef _KWIN_H_
 #include <kwin.h>
-#endif
-#ifndef _KCOMBOBOX_H_
 #include <kcombobox.h>
-#endif
-#ifndef _KMENUBAR_H_
 #include <kmenubar.h>
-#endif
-#ifndef _KSTDDIRS_H_
 #include <kstddirs.h>
-#endif
-#ifndef _KABOUTDATA_H_
 #include <kaboutdata.h>
-#endif
-#ifndef _KCMDLINEARGS_H_
 #include <kcmdlineargs.h>
-#endif
-#ifndef _KICONLOADER_H_
 #include <kiconloader.h>
-#endif
-#ifndef _KDEBUG_H_
 #include <kdebug.h>
-#endif
-#ifndef _KACTION_H_
 #include <kaction.h>
-#endif
-#ifndef _KSTDACTION_H_
 #include <kstdaction.h>
-#endif
-#ifndef _KUNIQUEAPP_H_
 #include <kuniqueapp.h>
-#endif
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 
@@ -110,6 +70,8 @@ static const char *kpilot_id =
 #include "memoWidget.h"
 #include "fileInstallWidget.h"
 #include "logWidget.h"
+#include "dbviewerWidget.h"
+#include "datebookWidget.h"
 
 #include "conduitConfigDialog.h"
 
@@ -337,13 +299,21 @@ void KPilotInstaller::initComponents()
 	fLogWidget->setShowTime(true);
 
 
-	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
-	addComponentPage(new MemoWidget(w, defaultDBPath),
-		i18n("Memo Viewer"));
+	ADDICONPAGE(i18n("Calendar Viewer"),CSL1("kpilot/kpilot-calendar.png"));
+	addComponentPage(new DatebookWidget(w,defaultDBPath),
+		i18n("Calendar Viewer"));
 
 	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
+
+	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
+	addComponentPage(new MemoWidget(w, defaultDBPath),
+		i18n("Memo Viewer"));
+
+	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/kpilot-db.png"));
+	addComponentPage(new GenericDBWidget(w,defaultDBPath),
+		i18n("Generic DB Viewer"));
 
 	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/kpilot-fileinstaller.png"));
 	fFileInstallWidget = new FileInstallWidget(

@@ -14,6 +14,7 @@ SUBDIRS = Icons
 ### database record types into a library.
 
 noinst_PROGRAMS = kpilotTest kpilotConfig
+### noinst_LTLIBRARIES = libkhexedit_shared.la
 bin_PROGRAMS = kpilot kpilotDaemon
 
 METASOURCES = AUTO
@@ -26,11 +27,14 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### you want any debugging at all.
 ###
 ### KDE_CXXFLAGS=-DNDEBUG -UDEBUG
-KDE_CXXFLAGS=-DDEBUG
+### KDE_CXXFLAGS=-DDEBUG
 
 ###
 ### Non-automake variables
 ###
+
+### libkhexedit_shared_la_SOURCES = hexbuffer.cc hexclipboard.cc hexdrag.cc hexerror.cc hexviewwidget.cc hexprinter.cc conversion.cc hexviewwidget.cc
+
 
 kpilot_SOURCES	= \
 	pilotDaemonDCOP.stub kpilotDCOP.skel logWidgetDCOP.skel \
@@ -49,12 +53,12 @@ kpilot_SOURCES	= \
 kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub logWidgetDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
-	hotSync.cc interactiveSync.cc syncStack.cc \
+	hotSync.cc internalEditorAction.cc interactiveSync.cc syncStack.cc \
 	fileInstaller.cc kroupware.cc
 
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
-	hotSync.cc interactiveSync.cc \
+	hotSync.cc internalEditorAction.cc interactiveSync.cc \
 	logWidgetDCOP.skel \
 	syncStack.cc \
 	main-test.cc
@@ -66,6 +70,7 @@ kpilotConfig_SOURCES = kpilotConfig.cc \
 	listCat.cc main-config.cc
 
 
+## libkhexedit_shared_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -73,6 +78,8 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
+### libkhexedit_shared_la_LIBADD = $(LIB_KPRINTER) $(LIB_KPRINT) -lkdeprint
+### kpilot_LDADD		= $(LIB_KFILE) $(LIB_KPRINTER) $(LIB_KPRINT) -lkdeprint $(PISOCK_LIB) ../lib/libkpilot.la libkhexedit_shared.la
 kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
