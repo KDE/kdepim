@@ -49,6 +49,9 @@ class KNCollectionView : public KFolderTree {
     void addPendingFolders();
     void reloadFolders();
 
+    void nextGroup();
+    void prevGroup();
+
     // KMail like keyboard navigation
     void decCurrentFolder();
     void incCurrentFolder();

@@ -329,8 +329,6 @@ protected:
 protected slots:
   void slotNavNextUnreadArt();
   void slotNavNextUnreadThread();
-  void slotNavNextGroup();
-  void slotNavPrevGroup();
   void slotNavReadThrough();
 
   void slotAccProperties();

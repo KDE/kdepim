@@ -568,10 +568,10 @@ void KNMainWidget::initActions()
                               SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");
   a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", SHIFT+Key_Space , this,
                               SLOT(slotNavNextUnreadThread()), actionCollection(), "go_nextUnreadThread");
-  a_ctNavNextGroup          = new KAction(i18n("Ne&xt Group"), "down", Key_Plus , this,
-                              SLOT(slotNavNextGroup()), actionCollection(), "go_nextGroup");
-  a_ctNavPrevGroup          = new KAction(i18n("Pre&vious Group"), "up", Key_Minus , this,
-                              SLOT(slotNavPrevGroup()), actionCollection(), "go_prevGroup");
+  a_ctNavNextGroup          = new KAction(i18n("Ne&xt Group"), "down", Key_Plus , c_olView,
+                              SLOT(nextGroup()), actionCollection(), "go_nextGroup");
+  a_ctNavPrevGroup          = new KAction(i18n("Pre&vious Group"), "up", Key_Minus , c_olView,
+                              SLOT(prevGroup()), actionCollection(), "go_prevGroup");
   a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Key_Space , this,
                               SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
   a_ctNavReadThrough->plugAccel(a_ccel);
@@ -1436,61 +1436,14 @@ void KNMainWidget::slotDockWidgetFocusChangeRequest(QWidget *w)
 void KNMainWidget::slotNavNextUnreadArt()
 {
   if ( !h_drView->nextUnreadArticle() )
-    slotNavNextGroup();
+    c_olView->nextGroup();
 }
 
 
 void KNMainWidget::slotNavNextUnreadThread()
 {
   if ( !h_drView->nextUnreadThread() )
-    slotNavNextGroup();
-}
-
-
-void KNMainWidget::slotNavNextGroup()
-{
-  kdDebug(5003) << "KNMainWidget::slotNavNextGroup()" << endl;
-  KNCollectionViewItem *current=static_cast<KNCollectionViewItem*>(c_olView->currentItem());
-  KNCollectionViewItem *next=0;
-
-  if(!current) current=(KNCollectionViewItem*)c_olView->firstChild();
-  if(!current) return;
-
-  next=current;
-  while(next) {
-    if(!next->isSelected())
-      break;
-    if(next->childCount()>0 && !next->isOpen()) {
-      next->setOpen(true);
-      secureProcessEvents();
-      next=static_cast<KNCollectionViewItem*>(next->firstChild());
-    }
-    else next=static_cast<KNCollectionViewItem*>(next->itemBelow());
-  }
-
-  if (next)
-    c_olView->setActive( next );
-}
-
-
-void KNMainWidget::slotNavPrevGroup()
-{
-  kdDebug(5003) << "KNMainWidget::slotNavPrevGroup()" << endl;
-  KNCollectionViewItem *current=static_cast<KNCollectionViewItem*>(c_olView->currentItem());
-  KNCollectionViewItem *prev;
-
-  if(!current) current=static_cast<KNCollectionViewItem*>(c_olView->firstChild());
-  if(!current) return;
-
-  prev=current;
-  while(prev) {
-    if(!prev->isSelected())
-      break;
-    prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
-  }
-
-  if (prev)
-    c_olView->setActive( prev );
+    c_olView->nextGroup();
 }
 
 
@@ -1637,7 +1590,7 @@ void KNMainWidget::slotGrpSetAllRead()
 
   a_rtManager->setAllRead(true);
   if (c_fgManager->readNewsNavigation()->markAllReadGoNext())
-    slotNavNextGroup();
+    c_olView->nextGroup();
 }
 
 
@@ -2218,13 +2171,13 @@ void KNMainWidget::nextUnreadThread()
 // Move to the next group
 void KNMainWidget::nextGroup()
 {
-  slotNavNextGroup();
+  c_olView->nextGroup();
 }
 
 // Move to the previous group
 void KNMainWidget::previousGroup()
 {
-  slotNavPrevGroup();
+  c_olView->prevGroup();
 }
 
 void KNMainWidget::fetchHeaders()

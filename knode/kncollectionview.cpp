@@ -243,6 +243,20 @@ void KNCollectionView::setActive( QListViewItem *i )
 }
 
 
+void KNCollectionView::nextGroup()
+{
+  incCurrentFolder();
+  setActive( currentItem() );
+}
+
+
+void KNCollectionView::prevGroup()
+{
+  decCurrentFolder();
+  setActive( currentItem() );
+}
+
+
 void KNCollectionView::decCurrentFolder()
 {
   QListViewItemIterator it( currentItem() );
