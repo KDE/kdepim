@@ -148,7 +148,12 @@ Wallet* KNServerInfo::wallet()
     return 0;
 
   static KStaticDeleter<Wallet> sd;
-  sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet()) );
+  if (knGlobals.top)
+    sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet(),
+                  knGlobals.topWidget->topLevelWidget()->winId()) );
+  else
+    sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet()) );
+
   if (!mWallet) {
     KMessageBox::error(knGlobals.topWidget, i18n("The wallet could not be opened. "
         "This error is most probably caused by providing a wrong password."));
