@@ -193,7 +193,8 @@ after the right time. Leave the box unchecked to display the alarm at
 the first opportunity starting at the scheduled time.</para>
 
 <note><para>An alarm can only be displayed while you are logged in,
-and while both X and the alarm daemon are running.</para></note>
+and while both X and the <application>alarm daemon</application> are
+running.</para></note>
 
 <para>Check the <guilabel>Beep</guilabel> checkbox if you want an
 audible alarm to sound when the alarm message is displayed.</para>
@@ -354,11 +355,12 @@ from the context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>The alarm daemon is started if necessary and alarms will be
-monitored for when they become due.</para>
+<para>The <application>alarm daemon</application> is started if
+necessary and alarms will be monitored for when they become due.</para>
 
-<warning><para>Starting the alarm daemon will affect any other
-applications which use the alarm daemon.</para></warning>
+<warning><para>Starting the <application>alarm daemon</application>
+will affect any other applications which use the <application>alarm
+daemon</application>.</para></warning>
 
 </sect3>
 
@@ -388,13 +390,14 @@ Preferences dialog, quit &kalarm;.</para>
 </listitem>
 </itemizedlist>
 
-<para>The alarm daemon stops monitoring &kalarm;'s alarms. &kalarm;
-will not display any further alarms until alarms are re-enabled.</para>
+<para>The <application>alarm daemon</application> stops monitoring
+&kalarm;'s alarms. &kalarm; will not display any further alarms until
+alarms are re-enabled.</para>
 
-<note><para>The alarm daemon is not stopped by this operation: it
-simply stops monitoring &kalarm;'s alarms. So there will be no effect
-on the functioning of any other applications which use the alarm
-daemon.</para></note>
+<note><para>The <application>alarm daemon</application> is not stopped
+by this operation: it simply stops monitoring &kalarm;'s alarms. So
+there will be no effect on the functioning of any other applications
+which use the <application>alarm daemon</application>.</para></note>
 
 </sect3>
 </sect2>
@@ -402,12 +405,14 @@ daemon.</para></note>
 <sect2>
 <title>Resetting the alarm daemon</title>
 
-<para>To reset the alarm daemon, select <menuchoice>
+<para>To reset the <application>alarm daemon</application>, select
+<menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
 </menuchoice>.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm daemon</link> section
-for a discussion about resetting the alarm daemon.</para>
+for a discussion about resetting the <application>alarm
+daemon</application>.</para>
 
 </sect2>
 
@@ -423,12 +428,12 @@ This displays the configuration dialog. Here, you can:</para>
 <listitem><para>Specify &kalarm;'s run mode. You can choose either to
 run it continuously in the &kde; system tray, or to run it only on
 demand. This selection does not affect the display of alarms when they
-become due, since it is the alarm daemon and not &kalarm; which
-monitors the alarm list. Running &kalarm; in the system tray makes the
-application more accessible and displays an alarm-enabled indication,
-but running an application continuously does consume some system
-resources. So if system performance is of concern, the
-<quote>on-demand</quote> option may be preferable.</para>
+become due, since it is the <application>alarm daemon</application>
+and not &kalarm; which monitors the alarm list. Running &kalarm; in
+the system tray makes the application more accessible and displays an
+alarm-enabled indication, but running an application continuously does
+consume some system resources. So if system performance is of concern,
+the <quote>on-demand</quote> option may be preferable.</para>
 
 <para>When running in <quote>on-demand</quote> mode, the system tray
 icon can still be displayed. The main difference in operation between
@@ -449,8 +454,8 @@ displayed at &kde; session login.</para>
 
 <listitem><para>Set the frequency at which the &kalarm; system tray
 icon is updated to reflect whether alarms are currently being
-monitored. This involves checking whether the alarm daemon is
-running.</para>
+monitored. This involves checking whether the <application>alarm
+daemon</application> is running.</para>
 </listitem>
 
 <listitem><para>Set the default font and background colour to use for
@@ -463,8 +468,8 @@ alarm message display.</para>
 <sect2>
 <title>Configuring the alarm daemon</title>
 
-<para>To set options for the alarm daemon, select
-<menuchoice><guimenu>Settings</guimenu>
+<para>To set options for the <application>alarm daemon</application>,
+select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure Alarm Daemon...</guimenuitem></menuchoice>.
 This displays the alarm daemon configuration dialog.</para>
 
@@ -1343,6 +1348,12 @@ holds your &kalarm; preferences.</para>
 <para>The calendar file which stores your scheduled alarm messages is
 <filename>~/.kde/share/apps/kalarm/calendar.ics</filename>, unless
 a different calendar file is specified in the preferences file.</para>
+
+<note><para>If you change the calendar file in the preferences file,
+you should also edit the alarm daemon's <filename>clients</filename>
+configuration file to remove the old calendar file reference. This
+should be done while the alarm daemon is not running to avoid it
+overwriting your change.</para></note>
 </answer>
 </qandaentry>
 
