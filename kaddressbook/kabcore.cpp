@@ -121,7 +121,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
            SLOT( incrementalSearch( const QString& ) ) );
   connect( mIncSearchWidget, SIGNAL( fieldChanged() ),
-           mJumpButtonBar, SLOT( recreateButtons() ) );
+           mJumpButtonBar, SLOT( updateButtons() ) );
 
   connect( mDetails, SIGNAL( sendEmail( const QString& ) ),
            SLOT( sendMail( const QString& ) ) );
@@ -552,9 +552,6 @@ void KABCore::setModified( bool modified )
 {
   mModified = modified;
   mActionSave->setEnabled( mModified );
-
-  if ( modified )
-    mJumpButtonBar->recreateButtons();
 
   mViewManager->refreshView();
 }

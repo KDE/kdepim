@@ -29,8 +29,6 @@
 #include <qptrlist.h>
 #include <qstringlist.h>
 
-class QChar;
-class QGridLayout;
 class QResizeEvent;
 class QPushButton;
 
@@ -51,16 +49,11 @@ class JumpButtonBar : public QWidget
     JumpButtonBar( KABCore *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
     
-    QSizePolicy sizePolicy() const;    
-    
+    virtual QSizePolicy sizePolicy() const;
+
   public slots:
-    /**
-      This method removes all buttons from the GUI and recreates them
-      according to the current global search field and the content of
-      the address book.
-     */
-    void recreateButtons();
-    
+    void updateButtons();
+
   signals:
     /**
       Emitted whenever a letter is selected by the user.
@@ -70,13 +63,14 @@ class JumpButtonBar : public QWidget
   protected slots:
     void letterClicked();
 
+  protected:
+    virtual void resizeEvent( QResizeEvent* );
+
   private:
     void sortListLocaleAware( QStringList &list );
 
     KABCore *mCore;
 
-    QGridLayout *mButtonLayout;
-    QStringList mCharacters;
     QPtrList<QPushButton> mButtons;
 };
 

@@ -21,10 +21,12 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#include <qapplication.h>
 #include <qevent.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qstring.h>
+#include <qstyle.h>
 
 #include <kabc/addressbook.h>
 #include <kabc/field.h>
@@ -38,40 +40,47 @@
 class JumpButton : public QPushButton
 {
   public:
-    JumpButton( const QString &text, QWidget *parent,
-                const QString &character );
+    JumpButton( const QString &firstChar, const QString &lastChar,
+                QWidget *parent );
 
-    void setCharacter( const QString &character );
-    QString character() const;
+    QString firstCharacter() const;
+    QString lastCharacter() const;
 
   private:
-    QString mCharacter;
+    QString mFirstCharacter;
+    QString mLastCharacter;
 };
 
-JumpButton::JumpButton( const QString &text, QWidget *parent,
-                        const QString &character )
-  : QPushButton( text, parent )
+JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
+                        QWidget *parent )
+  : QPushButton( "", parent ), mFirstCharacter( firstChar ),
+    mLastCharacter( lastChar )
 {
-  mCharacter = character;
+  if ( !lastChar.isEmpty() )
+    setText( QString( "%1 - %2" ).arg( firstChar.upper() ).arg( lastChar.upper() ) );
+  else
+    setText( firstChar.upper() );
 }
 
-void JumpButton::setCharacter( const QString &character )
+QString JumpButton::firstCharacter() const
 {
-  mCharacter = character;
+  return mFirstCharacter;
 }
 
-QString JumpButton::character() const
+QString JumpButton::lastCharacter() const
 {
-  return mCharacter;
+  return mLastCharacter;
 }
 
 JumpButtonBar::JumpButtonBar( KABCore *core, QWidget *parent, const char *name )
   : QWidget( parent, name ), mCore( core )
 {
-  mButtonLayout = new QGridLayout( this, 10, 3 );
-  mButtonLayout->setAlignment( Qt::AlignTop );
+  setMinimumSize( 1, 1 );
 
-  recreateButtons();
+  QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setAlignment( Qt::AlignTop );
+  layout->setAutoAdd( true );
+  layout->setResizeMode( QLayout::FreeResize );
 }
 
 JumpButtonBar::~JumpButtonBar()
@@ -80,25 +89,26 @@ JumpButtonBar::~JumpButtonBar()
 
 QSizePolicy JumpButtonBar::sizePolicy() const
 {
-  return QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Minimum,
+	return QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Minimum,
                       QSizePolicy::Vertically );
 }
-  
-void JumpButtonBar::letterClicked()
-{
-  JumpButton *button = (JumpButton*)sender();
-  QString character = button->character();
-  if ( !character.isNull() )
-    emit jumpToLetter( character );
-}
 
-void JumpButtonBar::recreateButtons()
+void JumpButtonBar::updateButtons()
 {
   // the easiest way to remove all buttons ;)
   mButtons.setAutoDelete( true );
   mButtons.clear();
   mButtons.setAutoDelete( false );
-  mCharacters.clear();
+
+  QStringList characters;
+
+  // calculate how many buttons are possible
+  QFontMetrics fm = fontMetrics();
+  QSize buttonSize = style().sizeFromContents( QStyle::CT_PushButton, this,
+                     fm.size( ShowPrefix, "X") ).
+                     expandedTo( QApplication::globalStrut() );
+
+  uint possibleButtons = height() / buttonSize.height();
 
   QString character;
   KABC::AddressBook *ab = mCore->addressBook();
@@ -109,44 +119,76 @@ void JumpButtonBar::recreateButtons()
     if ( field ) {
       setEnabled( true );
       if ( !field->value( *it ).isEmpty() )
-        character = field->value( *it )[ 0 ];
+        character = field->value( *it )[ 0 ].lower();
     } else {
       setEnabled( false );
       return;
     }
 
-    character = character.lower();
-    if ( !character.isEmpty() && !mCharacters.contains( character ) )
-      mCharacters.append( character );
+    if ( !character.isEmpty() && !characters.contains( character ) )
+      characters.append( character );
   }
 
-  int maxRows = mCharacters.count() / 2; // we use 2 columns
-  if ( mCharacters.count() % 2 )
-    maxRows++;
-
-  sortListLocaleAware( mCharacters );
+  sortListLocaleAware( characters );
 
   bool state = isUpdatesEnabled();
   setUpdatesEnabled( false );
 
-  int row = 1, col = 0;
-  for ( uint i = 0; i < mCharacters.count(); ++i ) {
-    JumpButton *button = new JumpButton( mCharacters[ i ].upper(), this, mCharacters[ i ] );
-    connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
-    mButtonLayout->addWidget( button, row, col );
-    mButtons.append( button );
-    button->show();
+  if ( characters.count() <= possibleButtons ) {
+    // at first the easy case: all buttons fits in window
+    for ( uint i = 0; i < characters.count(); ++i ) {
+      JumpButton *button = new JumpButton( characters[ i ], QString::null, this );
+      connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
+      mButtons.append( button );
+      button->show();
+    }
+  } else {
+    if ( possibleButtons == 0 ) // to avoid crashes on startup
+      return;
+    int offset = characters.count() / possibleButtons;
+    int odd = characters.count() % possibleButtons;
+    if ( odd )
+      offset++;
 
-    if ( row == maxRows ) {
-      col++;
-      row = 1;
-    } else
-      row++;
+    int current = 0;
+    for ( uint i = 0; i < possibleButtons; ++i ) {
+      if ( characters.count() - current == 0 )
+        continue;
+      if ( characters.count() - current <= possibleButtons - i ) {
+        JumpButton *button = new JumpButton( characters[ current ],
+			                     QString::null, this );
+        connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
+        mButtons.append( button );
+        button->show();
+        current++;      
+      } else {
+        int pos = ( current + offset >= characters.count() ?
+                    characters.count() - 1 : current + offset - 1 );
+        JumpButton *button = new JumpButton( characters[ current ],
+			                     characters[ pos ], this );
+        connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
+        mButtons.append( button );
+        button->show();
+        current = ( i + 1 ) * offset;
+      }
+    }
   }
 
-  mButtonLayout->activate();
   setUpdatesEnabled( state );
   update();
+}
+
+void JumpButtonBar::letterClicked()
+{
+  JumpButton *button = (JumpButton*)sender();
+  QString character = button->firstCharacter();
+  if ( !character.isEmpty() )
+    emit jumpToLetter( character );
+}
+
+void JumpButtonBar::resizeEvent( QResizeEvent* )
+{
+  updateButtons();
 }
 
 void JumpButtonBar::sortListLocaleAware( QStringList &list )
