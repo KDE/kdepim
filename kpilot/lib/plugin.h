@@ -86,8 +86,8 @@ public:
 	* commit() should both call unmodified() to indicate that
 	* the current settings match the on-disk ones.
 	*/
-	virtual void commit() = 0L;
-	virtual void load() = 0L;
+	virtual void commit() = 0;
+	virtual void load() = 0;
 	/**
 	* Called when the object is to be hidden again and might
 	* need to save changed settings. Should prompt the user

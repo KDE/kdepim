@@ -81,14 +81,14 @@ public:
      *
      * @param parent The parent widget. It will be used as parent for message boxes.
      */
-    virtual bool connectDevice( QWidget *parent = 0 ) = 0L;
+    virtual bool connectDevice( QWidget *parent = 0 ) = 0;
 
     /**
      * Disconnect from the device.
      *
      * @param parent The parent widget. It will be used as parent for message boxes.
      */
-    virtual bool disconnectDevice( QWidget *parent = 0 ) = 0L;
+    virtual bool disconnectDevice( QWidget *parent = 0 ) = 0;
 
     /**
      * Returns true, if the device is currently connected and the link is online.
@@ -115,7 +115,7 @@ public:
      * Returns an unique ID for the device, e.g. IMEI number on phones, or serial number.
      * The returned String is used to have a unique identification for syncronisation.
      */
-    virtual QString deviceUniqueID() = 0L;
+    virtual QString deviceUniqueID() = 0;
 
     /**
      * Returns true, if the device is connected via a slow connection.
