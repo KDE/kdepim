@@ -234,21 +234,13 @@ void KPilotInstaller::readConfig(KConfig& config)
 }
 
 
-#include "kpilot.xpm"
-
 void
 KPilotInstaller::setupWidget()
     {
 	FUNCTIONSETUP;
-	QPixmap icon((const char **)kpilot);
 
-	// FIXME: We need to load the mini icon
-	KWin::setIcons(winId(), icon, icon);
-
-    // KWM::setIcon(winId(), kapp->getIcon());
     setCaption("KPilot");
     setMinimumSize(500,405);
-    // setMaximumSize(500,405);
     initIcons();
     initToolBar();
     initMenu();
@@ -1393,6 +1385,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.45  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.44  2001/03/09 09:40:52  adridg
 // Large-scale #include cleanup; component resizing bug fixed
 //

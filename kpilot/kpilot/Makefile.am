@@ -53,3 +53,5 @@ servicetype_DATA = kpilotconduit.desktop
 servicetypedir = $(kde_servicetypesdir)
 kpiloticondir = $(kde_datadir)/kpilot/icons
 kpiloticon_ICON = AUTO
+
+KDE_ICON = kpilot
