@@ -31,7 +31,7 @@ UID:KOrganizer-676656311.951
 SEQUENCE:1
 LAST-MODIFIED:20031213T215131Z
 DESCRIPTION:Can you spell utf8?\nÄÖÜäöüß\nCan you escape?\nSlash:/\,Backslas
- h:\\\,Quotes:"\n
+ h:\\\,Quotes:"\nComma:\,\nSemicolon:\;
 SUMMARY:Umlaut test aäöüßÄÖÜ - does it work?
 CLASS:PUBLIC
 PRIORITY:3

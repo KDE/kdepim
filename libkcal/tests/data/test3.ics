@@ -18,7 +18,7 @@ ORGANIZER
  :MAILTO:nobody@nowhere
 DESCRIPTION
  :Can you spell utf8?\nÄÖÜäöüß\nCan you escape?\nSlash:/\,Backslash
- :\\\,Quotes:"\n
+ :\\\,Quotes:"\nComma:\,\nSemicolon:\;
 SUMMARY
  :Umlaut test aäöüßÄÖÜ - does it work?
 CLASS
