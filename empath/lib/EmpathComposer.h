@@ -69,7 +69,10 @@ class EmpathComposer : public QObject
          * Create a new composeform with the given parameters 
          */
         void newComposeForm(const QString & recipient);
-        void newComposeForm(const ComposeType, const EmpathURL &);
+        void newComposeForm(
+            EmpathComposeForm::ComposeType,
+            const EmpathURL &
+        );
         
         /**
          * Convert a composeform to a message, so that it can be sent.
@@ -103,16 +106,16 @@ class EmpathComposer : public QObject
 
         void _initVisibleHeaders(EmpathComposeForm &);
         
-        QCString _referenceHeaders(RMM::RMessage m);
-        QCString _stdHeaders();
+        QString _referenceHeaders(RMM::RMessage m);
+        QString _stdHeaders();
 
-        QCString _signature();
+        QString _signature();
         
         QMap<EmpathJobID, EmpathComposeForm> jobList_;
        
-        QCString referenceHeaders_;
+        QString referenceHeaders_;
 
-        void _quote(QCString &);
+        void _quote(QString &);
 };
 
 #endif

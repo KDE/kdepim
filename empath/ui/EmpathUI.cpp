@@ -20,21 +20,14 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathUI.h"
-#endif
-
 // Qt includes
 #include <qstring.h>
 #include <qwidgetlist.h>
-#include <qapplication.h>
-#include <qaction.h>
 
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kiconloader.h>
-#include <kapp.h>
 #include <kstddirs.h>
 #include <klocale.h>
 #include <ktmainwindow.h>
@@ -47,19 +40,7 @@
 #include "Empath.h"
 #include "EmpathConfig.h"
 #include "EmpathUI.h"
-#include "EmpathUIUtils.h"
-#include "EmpathSetupWizard.h"
 #include "EmpathMainWindow.h"
-#include "EmpathComposeWindow.h"
-#include "EmpathDisplaySettingsDialog.h"
-#include "EmpathIdentitySettingsDialog.h"
-#include "EmpathComposeSettingsDialog.h"
-#include "EmpathSendingSettingsDialog.h"
-#include "EmpathAccountsSettingsDialog.h"
-#include "EmpathFilterManagerDialog.h"
-#include "EmpathConfigIMAP4Dialog.h"
-#include "EmpathConfigPOP3Dialog.h"
-#include "EmpathMessageListItem.h"
 #include "EmpathMailbox.h"
 
 EmpathUI * EmpathUI::instance_ = 0L;
@@ -70,8 +51,6 @@ EmpathUI::EmpathUI()
     _init();
 
    (void) new EmpathMainWindow;
-
-   kapp->processEvents();
 }
 
 EmpathUI::~EmpathUI()
@@ -82,8 +61,8 @@ EmpathUI::~EmpathUI()
     void    
 EmpathUI::s_newComposer(EmpathComposeForm composeForm)
 {
-    empathDebug("");
-    (new EmpathComposeWindow(composeForm))->show();
+    empathDebug("STUB");
+//    (new EmpathComposeWindow(composeForm))->show();
 }
 
     void
@@ -91,84 +70,11 @@ EmpathUI::s_setup(Empath::SetupType t, QWidget * parent)
 {
     switch (t) {
 
-        case Empath::SetupDisplay:
-            {
-                EmpathDisplaySettingsDialog d(parent);
-                d.loadData();
-                d.exec();
-            }
-            break;
-            
-        case Empath::SetupIdentity:
-            {
-                EmpathIdentitySettingsDialog d(parent);
-                d.loadData();
-                d.exec();
-            }
-            break;
-            
-        case Empath::SetupComposing:
-            {
-                EmpathComposeSettingsDialog d(parent);
-                d.loadData();
-                d.exec();
-            }
-            break;
-        
-        case Empath::SetupSending:
-            {
-                EmpathSendingSettingsDialog d(parent);
-                d.loadData();
-                d.exec();
-            }
-            break;
-
-        case Empath::SetupAccounts:
-            {
-                EmpathAccountsSettingsDialog d(parent);
-                d.loadData();
-                d.exec();
-            }
-            break;
-
-        case Empath::SetupFilters:
-            {
-                EmpathFilterManagerDialog d(parent);
-                d.loadData();
-                d.exec();
-            }
-            break;
-
-        case Empath::SetupWizard:
-            {
-                EmpathSetupWizard wiz;
-                wiz.exec();
-            }
-
         default:
-            empathDebug("Setup what ?");
+            empathDebug("STUB");
             break;
     }
 }
-
-    void
-EmpathUI::s_infoMessage(const QString & s)
-{
-    QWidgetList * l = QApplication::topLevelWidgets();
-    
-    if (l->isEmpty())
-        return;
-    
-    QWidgetListIt it(*l);
-    
-    for (; it.current(); ++it)
-        if (it.current()->inherits("KTMainWindow"))
-            ((KTMainWindow *)it.current())->statusBar()->message(s, 4000);
-    
-    delete l;
-    l = 0;
-}
-
 
     void
 EmpathUI::s_getSaveName(const EmpathURL & url, QWidget * parent)
@@ -194,19 +100,8 @@ EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
  
     switch (mailbox->type()) {
 
-        case EmpathMailbox::POP3:
-            {
-                EmpathConfigPOP3Dialog d(url, w);
-                d.exec();
-            }
-            break;
-
-        case EmpathMailbox::IMAP4:
-            EmpathConfigIMAP4Dialog::create(url, w);
-            break;
-
         default:
-            empathDebug("I can't configure a mailbox if I don't know its type");
+            empathDebug("STUB");
             break;
     }
 }
@@ -214,8 +109,6 @@ EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
     void
 EmpathUI::_init()
 {
-    EmpathMessageListItem::initStatic();
-    
     _initActions();
     _connectUp();
     _showWizardIfNeeded();
@@ -244,10 +137,6 @@ EmpathUI::_connectUp()
         this,   SLOT(s_getSaveName(const EmpathURL &, QWidget *)));
     
     QObject::connect(
-        empath, SIGNAL(infoMessage(const QString &)),
-        this,   SLOT(s_infoMessage(const QString &)));
-
-    QObject::connect(
         empath, SIGNAL(newComposer(EmpathComposeForm)),
         this,   SLOT(s_newComposer(EmpathComposeForm)));
     
@@ -268,7 +157,7 @@ EmpathUI::_initActions()
     ac_messageCompose_ =
         new KAction(
             i18n("&Compose"),
-            empathIconSet("compose"),
+            QIconSet(BarIcon("compose")),
             Key_M, 
             empath,
             SLOT(s_compose()),

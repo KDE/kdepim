@@ -1,10 +1,12 @@
 Description:
 
-  Mail client.
+  Modular mail client.
 
-  Intended to be a part of the KDE Personal Information Management project.
+  Part of the KDE Personal Information Management project.
 
-  Designed with extensibility, security, mail safety and integration in mind.
+  Designed for reuse. The application 'empath' is built by default,
+  but is intended for testing the various modules and will not
+  necessarily continue to exist as a standalone client.
 
 Requirements:
 
@@ -15,7 +17,6 @@ Requirements:
   o Get a snapshot via ftp.
   o Get a local copy of the sources via cvsup.
   o Use your CVS access (if you have it) to get a local copy.
-
 
   See the KDE homepage for details:
   
@@ -31,24 +32,21 @@ Contributing:
   * Architectural
     - Error reporting
     - Identify inefficient models / paradigms.
-    - Identify and describe usage of design patterns, document the
-      existing architecture in terms of DP.
-    - Draw UML diagram(s)
     - Work out how threading support can be built in.
-    - Design a DCOP interface.
  
   * Implementation
     - Adding new features.
     - Debugging.
-    - Support for widget embedding.
     - Clean up over-complex, dangerous, sloppy or ill-conceived code.
     - Identify and plug memory leaks.
     - Identify and plug security holes.
-    - Implement threading support
+    - Implement multi-threading support
     - Implement a DCOP interface.
 
-  Note: Programmers and designers may read DESIGN for a useful
-  introduction to the system architecture.
+    Note: Programmers and designers may read DESIGN for a useful
+    introduction to the system architecture. Information on developing
+    for KDE is available within the Qt documentation and at
+    http://developer.kde.org
     
   * Documentation
     - Clean up and assure completeness of class documentation.
@@ -58,8 +56,7 @@ Contributing:
     - Write and maintain a user manual.
 
   * Artwork
-    - Design a logo.
-    - Add some artwork to web pages.
+    - Draw some artwork for web pages.
   
   * Maintenance
     - Bug reporting.
@@ -109,11 +106,3 @@ Contact information:
         Put 'unsubscribe my@email.address' in the message body.
         You may leave the subject line blank.
 
----------------------------------------------------------------------------
-Shell function to create a Maildir format mailbox
----------------------------------------------------------------------------
-
-function mkmaildir()
-{ mkdir --mode=0700 $1; for i in cur new tmp; do mkdir --mode=0700 $1/$i; done }
-
----------------------------------------------------------------------------

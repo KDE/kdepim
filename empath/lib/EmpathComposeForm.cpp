@@ -27,7 +27,7 @@
 #include "EmpathComposeForm.h"
 
 EmpathComposeForm::EmpathComposeForm()
-    :   composeType_(ComposeNormal)
+    :   composeType_(Normal)
 {
     // Empty.
 }
@@ -61,25 +61,25 @@ EmpathComposeForm::operator = (const EmpathComposeForm & f)
     return *this;
 }
 
-    ComposeType
+    EmpathComposeForm::ComposeType
 EmpathComposeForm::composeType() const
 {
     return composeType_;
 }
 
-    RMM::REnvelope
+    QMap<QString, QString>
 EmpathComposeForm::visibleHeaders() const
 {
     return visibleHeaders_;
 }
 
-    RMM::REnvelope
+    QMap<QString, QString>
 EmpathComposeForm::invisibleHeaders() const
 {
     return invisibleHeaders_;
 }
 
-    QCString
+    QString
 EmpathComposeForm::body() const
 {
     return body_;
@@ -98,60 +98,70 @@ EmpathComposeForm::setComposeType(ComposeType t)
 }
 
     void
-EmpathComposeForm::setVisibleHeaders(RMM::REnvelope e)
+EmpathComposeForm::setVisibleHeaders(const QMap<QString, QString> & e)
 {
     visibleHeaders_ = e;
 }
 
     void
-EmpathComposeForm::setInvisibleHeaders(RMM::REnvelope e)
+EmpathComposeForm::setInvisibleHeaders(const QMap<QString, QString> & e)
 {
     invisibleHeaders_ = e;
 }
 
     void
-EmpathComposeForm::setBody(const QCString & s)
+EmpathComposeForm::setBody(const QString & s)
 {
     body_ = s;
 }
 
     void
-EmpathComposeForm::setAttachmentList(EmpathAttachmentSpecList asl)
+EmpathComposeForm::setAttachmentList(const EmpathAttachmentSpecList & asl)
 {
     attachments_ = asl;
 }
 
     void
-EmpathComposeForm::addAttachment(EmpathAttachmentSpec s)
+EmpathComposeForm::addAttachment(const EmpathAttachmentSpec & s)
 {
     attachments_.append(s);
 }
 
     void
-EmpathComposeForm::removeAttachment(EmpathAttachmentSpec s)
+EmpathComposeForm::removeAttachment(const EmpathAttachmentSpec & s)
 {
     attachments_.remove(s);
 }
 
     void
-EmpathComposeForm::addVisibleHeader(RMM::RHeader h)
+EmpathComposeForm::addVisibleHeader(
+    const QString & name,
+    const QString & body
+)
 {
-    visibleHeaders_.addHeader(h);
+    visibleHeaders_[name] = body;
 }
 
     void
-EmpathComposeForm::addInvisibleHeader(RMM::RHeader h)
+EmpathComposeForm::addInvisibleHeader(
+    const QString & name,
+    const QString & body
+)
 {
-    invisibleHeaders_.addHeader(h);
+    invisibleHeaders_[name] = body;
 }
 
     void
-EmpathComposeForm::setHeader(QCString name, QCString body, bool visible)
+EmpathComposeForm::setHeader(
+    const QString & name,
+    const QString & body,
+    bool visible
+)
 {
     if (visible)
-        visibleHeaders_.set(name, body);
+        visibleHeaders_[name] = body;
     else
-        invisibleHeaders_.set(name, body);
+        invisibleHeaders_[name] = body;
 }
 
 // vim:ts=4:sw=4:tw=78

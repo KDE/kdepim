@@ -35,13 +35,18 @@
 
 // KDE includes
 #include <kglobal.h>
+#include <kconfig.h>
 #include <kstddirs.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"
 #include "EmpathIndex.h"
 #include "EmpathFolder.h"
+#include "EmpathConfig.h"
 #include "Empath.h"
+
+// Increment this if you change the index format.
+Q_UINT8 EmpathIndexVersion = 0;
 
 /**
  * Provides access to a dict of EmpathIndexRecord.
@@ -59,9 +64,7 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
         dirty_              (false),
         read_               (false),
         count_              (0),
-        unreadCount_        (0),
-        countCached_        (false),
-        unreadCountCached_  (false)
+        unreadCount_        (0)
 {
     dict_.setAutoDelete(true);
 
@@ -166,6 +169,8 @@ EmpathIndex::_write()
 
     QDataStream d(&f);
 
+    d << EmpathIndexVersion;
+
     QDictIterator<EmpathIndexRecord> it(dict_);
 
     for (; it.current(); ++it)
@@ -225,6 +230,14 @@ EmpathIndex::_read()
     QByteArray a = f.readAll();
 
     QDataStream d(a, IO_ReadOnly);
+    
+    Q_UINT8 savedVersion;
+    d >> savedVersion;
+
+    if (savedVersion != EmpathIndexVersion) {
+        read_ = false;
+        return false;
+    }
 
     EmpathIndexRecord rec;
 
@@ -239,6 +252,7 @@ EmpathIndex::_read()
 
     read_ = true;
     _resetIdleTimer();
+    emit(countUpdated(count_, unreadCount_));
     return true;
 }
 
@@ -358,6 +372,7 @@ EmpathIndex::setStatus(const QString & key, EmpathIndexRecord::Status status)
 EmpathIndex::_setDirty()
 {
     dirty_ = true;
+    emit(countUpdated(count_, unreadCount_));
 }
 
     void

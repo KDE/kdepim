@@ -17,7 +17,7 @@
               Contents 
 -------------------------------------------------------------------------------
 
-  libempath - The Kernel
+  The Kernel
     Introduction
     URLs
     General Operations
@@ -32,10 +32,10 @@
       Event Handler
     Sending Mail
     Kernel Summary
-  libempathui - The User Interface
+  The User Interface
 
 ===============================================================================
-              libempath - The Kernel 
+              The Kernel 
 -------------------------------------------------------------------------------
 Introduction
 -------------------------------------------------------------------------------
@@ -43,6 +43,8 @@ Introduction
   The kernel does most of the hard work. It is designed to be very open,
   in the sense that the parts are not tied tightly together with
   interdependencies.
+
+  You can find all the kernel code in lib/.
 
   Note: Empath used to 'contain' a library called 'librmm'. This library
   does the message parsing necessary for Empath to manipulate IMM (Internet
@@ -89,8 +91,8 @@ General operations
 
   empath://a mailbox/a folder/another folder/bigLongMessageID.localhost 
 
-  You can get a pointer to the mailbox 'arse' that's referenced in there like
-  this:
+  You can get a pointer to the mailbox 'a mailbox' that's referenced in
+  there like this:
 
   EmpathMailbox * m(empath->mailbox(url)); 
 
@@ -286,27 +288,11 @@ Kernel Summary
               The User Interface 
 -------------------------------------------------------------------------------
 
-  This should look pretty familiar to KDE programmers.
+  The UI is itself split into modules. There are three kparts-based
+  widgets in parts/.
 
-  If you don't understand something, look it up in the KDE/Qt docs or the
-  library documentation for libempath or librmm. Anyone with some KDE
-  programming experience should have no trouble here.
-
-  The UI is entirely separate from the kernel, and should stay that way.
-
-  Most operations are in fact very simple from within the UI code. That's
-  why the kernel's there, to provide the intelligence.
-
-  I like having the UI separate as it allows me to think more clearly. Of
-  course, it is entirely possible to write a new (GTK/Motif/Tk/slang)
-  interface. That's not currently on the drawing board, though it's nice
-  to have the option.
-
-  Currently work is being done to convert Empath's UI into a set of
-  kparts. Please see developer.kde.org for more information about kparts.
-
-  The basic idea is that each major widget will be wrapped into a kpart
-  and will thus be available for embedding in any KDE application.
+  The rest of the UI, which includes utility widgets and shells for
+  embedding the kparts-based widgets, is in ui/.
 
 ===============================================================================
 

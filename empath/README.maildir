@@ -38,3 +38,10 @@ Work through the following steps:
 4. Restart deliveries to your mbox spool
 
 ------------------------------------------------------------------------------
+Shell function to create a Maildir format mailbox
+------------------------------------------------------------------------------
+
+function mkmaildir()
+{ mkdir --mode=0700 $1; for i in cur new tmp; do mkdir --mode=0700 $1/$i; done }
+
+------------------------------------------------------------------------------

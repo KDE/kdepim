@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMainWidget.h"
-#endif
-
 // Qt includes
 #include <qheader.h>
 #include <qvaluelist.h>
@@ -33,6 +29,7 @@
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
+#include <klibloader.h>
 
 // Local includes
 #include "Empath.h"
@@ -40,8 +37,6 @@
 #include "EmpathConfig.h"
 #include "EmpathMainWidget.h"
 #include "EmpathFolderWidget.h"
-#include "EmpathMessageViewWidget.h"
-#include "EmpathMessageListWidget.h"
 #include "EmpathIndex.h"
 
 EmpathMainWidget::EmpathMainWidget(QWidget * parent)
@@ -54,8 +49,34 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
     QSplitter * vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
 
-    messageListWidget_  = new EmpathMessageListWidget(vSplit);
-    messageViewWidget_  = new EmpathMessageViewWidget(EmpathURL(), vSplit);
+    KLibFactory * listFactory =
+        KLibLoader::self()->factory("libEmpathMessageListWidget");
+    
+    KLibFactory * viewFactory =
+        KLibLoader::self()->factory("libEmpathMessageViewWidget");
+
+    if (listFactory) {
+
+        messageListWidget_ =
+            (KParts::ReadWritePart *)
+            listFactory->create(this, "list part", "KParts::ReadWritePart");
+
+    } else {
+        
+        return;
+    }
+
+    if (viewFactory) {
+
+        messageViewWidget_ =
+            (KParts::ReadOnlyPart *)
+            viewFactory->create(this, "view part", "KParts::ReadOnlyPart");
+
+    } else {
+        
+        return;
+    }
+
 
     QObject::connect(
         folderWidget,       SIGNAL(showFolder(const EmpathURL &)),
@@ -124,14 +145,23 @@ EmpathMainWidget::s_showFolder(const EmpathURL & url)
 {
     currentFolder_ = url;
 
-    EmpathFolder * f(empath->folder(url));
+    EmpathFolder * f(empath->folder(currentFolder_));
 
     if (0 == f) {
-        empathDebug("Can't find folder `" + url.asString() + "'");
+        empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
         return;
     }
 
-    messageListWidget_->s_showFolder(f->index()->dict());
+    KConfig * c(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
+
+    // TODO
+//    messageListWidget_->s_setThread(c->readBoolEntry("ThreadMessages"));
+//    messageListWidget_->s_setHideRead(c->readBoolEntry("HideReadMessages"));
+//    messageListWidget_->s_setIndex(f->index()->dict());
 }
 
     void
@@ -140,7 +170,8 @@ EmpathMainWidget::s_changeView(const QString & id)
     EmpathURL u(currentFolder_);
     u.setMessageID(id);
 
-    messageViewWidget_->s_setMessage(u);
+    // TODO
+    //messageViewWidget_->s_setMessage(u);
 }
 
     void
@@ -223,5 +254,57 @@ EmpathMainWidget::s_view(const QString &)
     empathDebug("STUB");
 }
 
+    void
+EmpathMainWidget::s_toggleHideRead()
+{
+    KConfig * c(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
+
+    bool hideRead = c->readBoolEntry("HideReadMessages");
+
+    c->writeEntry("HideReadMessages", !hideRead);
+
+    // TODO
+    //messageListWidget_->s_setHideRead(!hideRead);
+
+    EmpathFolder * f(empath->folder(currentFolder_));
+
+    if (0 == f) {
+        empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
+        return;
+    }
+
+    // TODO
+//    messageListWidget_->s_setIndex(f->index()->dict());
+}
+
+    void
+EmpathMainWidget::s_toggleThread()
+{
+    KConfig * c(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
+
+    bool thread = c->readBoolEntry("ThreadMessages");
+
+    c->writeEntry("ThreadMessages", !thread);
+    // TODO
+    //messageListWidget_->s_setThread(!thread);
+
+    EmpathFolder * f(empath->folder(currentFolder_));
+
+    if (0 == f) {
+        empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
+        return;
+    }
+
+    // TODO
+    //messageListWidget_->s_setIndex(f->index()->dict());
+}
 
 // vim:ts=4:sw=4:tw=78

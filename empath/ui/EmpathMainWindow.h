@@ -20,34 +20,27 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMainWindow.h"
-#endif
-
 #ifndef EMPATH_MAIN_WINDOW_H
 #define EMPATH_MAIN_WINDOW_H
 
 // KDE includes
-#include <ktmainwindow.h>
+#include <kparts/mainwindow.h>
 
 class QPopupMenu;
 class QWidgetStack;
 
-class EmpathMainWidget;
 class EmpathTask;
+class EmpathMainWidget;
 enum BarPosition {};
 
-class EmpathMainWindow : public KTMainWindow
+class EmpathMainWindow : public KParts::MainWindow
 {
     Q_OBJECT
 
     public:
         
         EmpathMainWindow();
-        ~EmpathMainWindow();
-
-        void statusMessage(const QString & messageText, int milliseconds);
-        void clearStatusMessage();
+        virtual ~EmpathMainWindow();
     
     protected slots:
 
@@ -61,8 +54,6 @@ class EmpathMainWindow : public KTMainWindow
         EmpathMainWidget * mainWidget_;
 
         QWidgetStack * progressStack_;
-
-        QPopupMenu * messageMenu_;
 };
 
 #endif

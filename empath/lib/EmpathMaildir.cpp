@@ -221,8 +221,6 @@ EmpathMaildir::_mark(const QString & id, EmpathIndexRecord::Status msgStat)
     bool renameOK = QDir().rename(oldName, newName);
     
     if (!renameOK) {
-        empath->s_infoMessage(i18n("Couldn't mark message") +
-           " [" + id + "] with flags " + statusFlags);
         empathDebug("Failed");
         return false;
     }

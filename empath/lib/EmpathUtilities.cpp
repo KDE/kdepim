@@ -24,9 +24,6 @@
 # pragma implementation "EmpathUtilities.h"
 #endif
 
-// Qt includes
-#include <qstring.h>
-
 // Local includes
 #include "EmpathUtilities.h"
 #include "RMM_MessageID.h"
@@ -36,16 +33,6 @@
 #include "RMM_Address.h"
 #include "RMM_Mailbox.h"
 #include "RMM_Enum.h"
-
-QString baseName(const QString & filename)
-{
-    return filename.mid(filename.findRev('/') + 1);
-}
-
-bool stricmp(const QString & a, const QString & b)
-{
-    return a.lower() == b.lower();
-}
 
 EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::RMessage & m)
 {

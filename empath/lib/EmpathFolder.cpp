@@ -56,6 +56,10 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 {
     index_ = new EmpathIndex(url_);
 
+    QObject::connect(
+        index_,     SIGNAL(countUpdated(unsigned int, unsigned int)),
+        this,       SIGNAL(countUpdated(unsigned int, unsigned int)));
+
     EmpathMailbox * m = empath->mailbox(url_);
 	
     if (m != 0)
@@ -86,24 +90,6 @@ EmpathFolder::~EmpathFolder()
 EmpathFolder::setPixmap(const QString & p)
 {
     pixmapName_ = p;
-}
-
-    void
-EmpathFolder::update()
-{
-    if (container_)
-        return;
-
-    EmpathMailbox * m = empath->mailbox(url_);
-    
-    if (m == 0) {
-        empathDebug("Can't find my mailbox !");
-        return;
-    }
-    
-    m->sync(url_);
-    
-    emit(countUpdated(index_->countUnread(), index_->count()));
 }
 
     EmpathFolder *

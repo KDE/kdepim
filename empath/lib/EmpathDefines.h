@@ -35,11 +35,6 @@
         fprintf(stderr, "%s, line %d\n", __PRETTY_FUNCTION__, __LINE__); \
         cerr << QString((a)).ascii() << endl;
 
-#   define eDebug(format, args) \
-        fprintf(stderr, "%s, line %d\n", __PRETTY_FUNCTION__, __LINE__); \
-        fprintf(stderr, format, ## args); \
-        fprintf(stderr, "\n");
-        
 #else
         
 #       define empathDebug(a)

@@ -131,12 +131,6 @@ class EmpathFolder : public QObject
         QStringList allIndexKeys();
 
         /**
-         * Call this when you want to sync with the mailbox and update any
-         * on-screen lists.
-         */
-        void update();
-
-        /**
          * Call this when an item has disappeared from the index.
          */
         void itemGone(const QString & s) { emit(itemLeft(s));        }
@@ -149,11 +143,6 @@ class EmpathFolder : public QObject
         bool isContainer() const;
         
     protected slots:
-        
-        /**
-         * Connected to update()
-         */
-        void s_update() { update(); }
 
         void s_itemGone(const QString & key) { itemGone(key); }
 

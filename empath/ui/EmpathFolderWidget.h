@@ -20,12 +20,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFolderWidget.h"
-#endif
-
-#ifndef EMPATHFOLDERWIDGET_H
-#define EMPATHFOLDERWIDGET_H
+#ifndef EMPATH_FOLDER_WIDGET_H
+#define EMPATH_FOLDER_WIDGET_H
 
 // Qt includes
 #include <qpixmap.h>
@@ -35,13 +31,11 @@
 
 // Local includes
 #include "EmpathListView.h"
-#include "EmpathDefines.h"
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
 #include "EmpathFolderListItem.h"
 #include "EmpathURL.h"
 #include "EmpathJob.h"
-#include "Empath.h"
 
 class EmpathFolderWidget : public EmpathListView
 {

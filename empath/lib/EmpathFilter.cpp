@@ -40,27 +40,26 @@ EmpathFilter::EmpathFilter(const QString & name)
         fEventHandler_(0),
         name_(name)
 {
-    empathDebug("ctor");
+    // Empty.
 }
 
 EmpathFilter::~EmpathFilter()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
 EmpathFilter::save()
 {
-    empathDebug("save() called");
-    
     KConfig * config = KGlobal::config();
     
     using namespace EmpathConfig;
-    config->setGroup(GROUP_FILTER + name_);
 
-    config->writeEntry(F_EXPRS,     matchExprs_.count());
-    config->writeEntry(F_FOLDER,    url_.asString());
-    config->writeEntry(F_PRIORITY,  priority_);
+    config->setGroup(QString::fromUtf8(GROUP_FILTER) + name_);
+
+    config->writeEntry(QString::fromUtf8(F_EXPRS),     matchExprs_.count());
+    config->writeEntry(QString::fromUtf8(F_FOLDER),    url_.asString());
+    config->writeEntry(QString::fromUtf8(F_PRIORITY),  priority_);
     
     EmpathMatcherListIterator it(matchExprs_);
     
@@ -69,7 +68,6 @@ EmpathFilter::save()
     for (; it.current() ; ++it)
         it.current()->save(name_, c++);
 
-    empathDebug("Saving event handler");
     if (fEventHandler_ != 0)
         fEventHandler_->save(name_);
     
@@ -83,18 +81,20 @@ EmpathFilter::load()
     
     using namespace EmpathConfig;
     
-    config->setGroup(GROUP_FILTER + name_);
+    config->setGroup(QString::fromUtf8(GROUP_FILTER) + name_);
     
-    url_ = config->readEntry(F_FOLDER);
+    url_ = config->readEntry(QString::fromUtf8(F_FOLDER));
     
-    Q_UINT32 numMatchExprs = config->readUnsignedNumEntry(F_EXPRS);
+    Q_UINT32 numMatchExprs =
+        config->readUnsignedNumEntry(QString::fromUtf8(F_EXPRS));
     
     for (Q_UINT32 i = 0 ; i < numMatchExprs ; ++i)
         loadMatchExpr(i);
 
     loadEventHandler();
     
-    priority_ = config->readUnsignedNumEntry(F_PRIORITY, 100);
+    priority_ =
+        config->readUnsignedNumEntry(QString::fromUtf8(F_PRIORITY), 100);
 }
 
     void
@@ -138,14 +138,12 @@ EmpathFilter::eventHandler()
     EmpathURL
 EmpathFilter::url() const
 {
-    empathDebug("url() called");
     return url_;
 }
 
     void
 EmpathFilter::setURL(const EmpathURL & url)
 {
-    empathDebug("setFolder(" + url.asString() + ") called");
     url_ = url;
 }
 
@@ -158,9 +156,9 @@ EmpathFilter::description() const
     QString desc;
     
     desc += i18n("When new mail arrives in");
-    desc += " ";
+    desc += QString::fromUtf8(" ");
     desc += url_.asString();
-    desc += ", ";
+    desc += QString::fromUtf8(", ");
     desc += actionDescription();
 
     return desc;
@@ -184,17 +182,13 @@ EmpathFilter::matchExprList()
     void
 EmpathFilter::filter(const EmpathURL & id)
 {
-    empathDebug("filter() called");
-    
     if (fEventHandler_ == 0) {
-        empathDebug("I have no event handler (action) defined");
+        empathDebug(QString::fromUtf8("Event handler not defined"));
         return;
     }
     
-    if (!match(id)) {
-        empathDebug("Didn't match this message");
+    if (!match(id))
         return;
-    }
     
     fEventHandler_->handleMessage(id);
 }
@@ -202,18 +196,11 @@ EmpathFilter::filter(const EmpathURL & id)
     bool
 EmpathFilter::match(const EmpathURL & id)
 {
-    empathDebug("match(" + QString(id.asString()) + ") called");
-    
-    empathDebug("There are " + QString().setNum(matchExprs_.count()) +
-        " match expressions to try");
-
     EmpathMatcherListIterator it(matchExprs_);
     
     for (; it.current(); ++it)
-        if (it.current()->match(id)) {
-            empathDebug("Matched message !");
+        if (it.current()->match(id))
             return true;
-        }
     
     return false;
 }

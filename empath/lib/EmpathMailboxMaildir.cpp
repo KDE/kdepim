@@ -181,8 +181,6 @@ EmpathMailboxMaildir::loadConfig()
             return;
         }
 
-    empath->s_infoMessage(i18n("Reading folders"));
-    
     c->setGroup(GROUP_MAILBOX + url_.mailboxName());
     QStringList folderList = c->readListEntry(M_FOLDER_LIST);
 

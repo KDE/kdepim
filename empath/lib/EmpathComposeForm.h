@@ -28,53 +28,63 @@
 #define EMPATHCOMPOSEFORM_H
 
 // Qt includes
-#include <qcstring.h>
-#include <qvaluelist.h>
+#include <qstring.h>
 
 // Local includes
-#include "EmpathEnum.h"
 #include "EmpathAttachmentSpec.h"
-#include <RMM_Envelope.h>
-#include <RMM_Header.h>
 
 /**
- * A composeform is used by the composer UI.
+ * A composeform is used by the composer + the composer UI.
  */
 class EmpathComposeForm 
 {
     public:
 
+        enum ComposeType {
+            Reply,
+            ReplyAll,
+            Forward,
+            Normal,
+            Bounce
+        };
+
         EmpathComposeForm();
-        ~EmpathComposeForm();
         EmpathComposeForm(const EmpathComposeForm &);
         EmpathComposeForm & operator = (const EmpathComposeForm &);
 
-        ComposeType     composeType()       const;
-        RMM::REnvelope  visibleHeaders()    const;
-        RMM::REnvelope  invisibleHeaders()  const;
-        QCString        body()              const;
-        EmpathAttachmentSpecList attachmentList() const;
+        ~EmpathComposeForm();
+
+        ComposeType                 composeType()       const;
+        QMap<QString, QString>      visibleHeaders()    const;
+        QMap<QString, QString>      invisibleHeaders()  const;
+        QString                     body()              const;
+        EmpathAttachmentSpecList    attachmentList()    const;
 
         void setComposeType         (ComposeType);
-        void setVisibleHeaders      (RMM::REnvelope);
-        void setInvisibleHeaders    (RMM::REnvelope);
-        void setBody                (const QCString &);
-        void setAttachmentList      (EmpathAttachmentSpecList);
+        void setVisibleHeaders      (const QMap<QString, QString> &);
+        void setInvisibleHeaders    (const QMap<QString, QString> &);
+        void setBody                (const QString &);
 
-        void addAttachment          (EmpathAttachmentSpec);
-        void removeAttachment       (EmpathAttachmentSpec);
+        void setAttachmentList      (const EmpathAttachmentSpecList &);
 
-        void addVisibleHeader       (RMM::RHeader);
-        void addInvisibleHeader     (RMM::RHeader);
+        void addAttachment          (const EmpathAttachmentSpec &);
+        void removeAttachment       (const EmpathAttachmentSpec &);
 
-        void setHeader(QCString name, QCString body, bool vis = true);
+        void addVisibleHeader       (const QString & name, const QString &body);
+        void addInvisibleHeader     (const QString & name, const QString &body);
+
+        void setHeader(
+            const QString & name,
+            const QString & body,
+            bool vis = true
+        );
 
     private:
 
         ComposeType                 composeType_;
-        RMM::REnvelope              visibleHeaders_;
-        RMM::REnvelope              invisibleHeaders_;
-        QCString                    body_;
+        QMap<QString, QString>      visibleHeaders_;
+        QMap<QString, QString>      invisibleHeaders_;
+        QString                     body_;
         EmpathAttachmentSpecList    attachments_;
 };
 

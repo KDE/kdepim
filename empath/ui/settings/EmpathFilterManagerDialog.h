@@ -38,9 +38,8 @@
 #include <kdialog.h>
 
 // Local includes
+#include "EmpathFilterListItem.h"
 #include "EmpathDefines.h"
-
-class EmpathFilterListItem;
 
 class EmpathFilterManagerDialog : public KDialog
 {

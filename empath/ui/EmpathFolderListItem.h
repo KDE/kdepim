@@ -20,12 +20,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFolderListItem.h"
-#endif
-
-#ifndef EMPATHFOLDERLISTITEM_H
-#define EMPATHFOLDERLISTITEM_H
+#ifndef EMPATH_FOLDER_LIST_ITEM_H
+#define EMPATH_FOLDER_LIST_ITEM_H
 
 // Qt includes
 #include <qlistview.h>
@@ -55,8 +51,6 @@ class EmpathFolderListItem : public QObject, public QListViewItem
         
         void setOpen(bool o);
 
-        void init();
-        
     signals:
         
         void opened();

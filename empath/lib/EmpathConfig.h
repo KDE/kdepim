@@ -149,11 +149,6 @@ static const char *   DFLT_REPLY_ALL      = "On %1, %2 wrote:";
 static const char *   DFLT_FORWARD        = "Forwarded message from %1";
 static const char *   DFLT_HEADERS        = "From,Date,Subject";
 
-static QColor *  DFLT_Q_1;
-static QColor *  DFLT_Q_2;
-static QColor *  DFLT_LINK;
-static QColor *  DFLT_NEW;
-
 static const bool      DFLT_UNDER_LINKS    = true;
 static const bool      DFLT_AUTO_QUOTE     = true;
 static const bool      DFLT_SIGN           = true;

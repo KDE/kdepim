@@ -67,7 +67,6 @@ EmpathJobScheduler::newRetrieveJob(
     const char * slot
 )
 {
-    empathDebug("url == " + url.asString());
     EmpathRetrieveJob * j = new EmpathRetrieveJob(url);
     
     if (0 != o)

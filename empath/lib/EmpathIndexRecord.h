@@ -159,7 +159,7 @@ class EmpathIndexRecord
          * Find out if there's a previous message (for threading).
          */
         bool hasParent() const
-        { return !(parentID_ == "<@>"); }
+        { return !(parentID_ == QString::fromUtf8("<@>")); }
         
         /**
          * Does this message have more than one part ?

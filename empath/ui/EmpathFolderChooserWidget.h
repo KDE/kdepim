@@ -20,17 +20,14 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFolderChooserWidget.h"
-#endif
-
-#ifndef EMPATHFOLDERCHOOSERWIDGET_H
-#define EMPATHFOLDERCHOOSERWIDGET_H
+#ifndef EMPATH_FOLDER_CHOOSER_WIDGET_H
+#define EMPATH_FOLDER_CHOOSER_WIDGET_H
 
 // Qt includes
 #include <qwidget.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
+
+class QLineEdit;
+class QPushButton;
 
 // Local includes
 #include "EmpathURL.h"

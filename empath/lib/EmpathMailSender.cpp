@@ -63,8 +63,6 @@ EmpathMailSender::~EmpathMailSender()
     void
 EmpathMailSender::send(RMM::RMessage message)
 {
-    empath->s_infoMessage(i18n("Sending message"));
-
     empath->write(
         message,
         empath->outbox(),
@@ -75,8 +73,6 @@ EmpathMailSender::send(RMM::RMessage message)
     void
 EmpathMailSender::queue(RMM::RMessage message)
 {
-    empath->s_infoMessage(i18n("Queuing message"));
-
     empath->write(
         message,
         empath->outbox(),
@@ -100,8 +96,6 @@ EmpathMailSender::s_writtenNowSend(EmpathWriteJob job)
             i18n("OK"));
     
         _emergencyBackup(job.message());
-    
-        empath->s_infoMessage(i18n("Unable to send message"));
     }
 }
 
@@ -121,8 +115,6 @@ EmpathMailSender::s_writtenNowQueue(EmpathWriteJob job)
             i18n("OK"));
     
         _emergencyBackup(job.message());
-    
-        empath->s_infoMessage(i18n("Unable to send message"));
     }
 }
 
@@ -193,8 +185,6 @@ EmpathMailSender::_emergencyBackup(RMM::RMessage message)
             i18n("Couldn't write the backup file ! Message has been LOST !"),
             i18n("OK"));
         
-        empath->s_infoMessage(i18n("Couldn't write backup file !"));
-        
         return;
     }
 
@@ -219,16 +209,12 @@ EmpathMailSender::_emergencyBackup(RMM::RMessage message)
         i18n("Couldn't write the backup file ! Message may have been LOST !"),
             i18n("OK"));
         
-        empath->s_infoMessage(i18n("Couldn't write backup file !"));
-        
         return;
     }
     
     QMessageBox::information(0, "Empath",
         i18n("Message backup written to") + " " + tempName,
         i18n("OK"));
-    
-    empath->s_infoMessage(i18n("Message backup written to:") + " " + tempName);
 }
 
     void

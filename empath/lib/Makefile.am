@@ -1,4 +1,4 @@
-KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
+KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST -W -Wall
 
 INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
 
@@ -20,10 +20,8 @@ Empath.cpp \
 EmpathInterface.cpp \
 EmpathJob.cpp \
 EmpathJobScheduler.cpp \
-EmpathCachedMessage.cpp \
 EmpathComposeForm.cpp \
 EmpathComposer.cpp \
-EmpathEditorProcess.cpp \
 EmpathFilter.cpp \
 EmpathFilterEventHandler.cpp \
 EmpathFilterList.cpp \
@@ -41,9 +39,8 @@ EmpathMaildir.cpp \
 EmpathMailboxPOP3.cpp \
 EmpathMatcher.cpp \
 EmpathQuotedText.cpp \
+EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
 EmpathTaskTimer.cpp \
 EmpathURL.cpp \
-EmpathUtilities.cpp \
-EmpathViewFactory.cpp \
-EmpathSecurityProcess.cpp
+EmpathUtilities.cpp

@@ -38,13 +38,12 @@
 EmpathFilterEventHandler::EmpathFilterEventHandler()
     :    actionType_(MoveFolder)
 {
-    empathDebug("ctor");
     moveCopyFolder_ = EmpathURL("empath://local/orphaned");
 }
 
 EmpathFilterEventHandler::~EmpathFilterEventHandler()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     EmpathFilterEventHandler::ActionType
@@ -68,7 +67,6 @@ EmpathFilterEventHandler::forwardAddress() const
     void
 EmpathFilterEventHandler::setMoveFolder(const EmpathURL & folder)
 {
-    empathDebug("setMoveFolder(" + folder.asString() + ")");
     actionType_ = MoveFolder;
     moveCopyFolder_ = folder;
 }
@@ -76,7 +74,6 @@ EmpathFilterEventHandler::setMoveFolder(const EmpathURL & folder)
     void
 EmpathFilterEventHandler::setCopyFolder(const EmpathURL & folder)
 {
-    empathDebug("setCopyFolder(" + folder.asString() + ")");
     actionType_ = CopyFolder;
     moveCopyFolder_ = folder;
 }
@@ -84,21 +81,18 @@ EmpathFilterEventHandler::setCopyFolder(const EmpathURL & folder)
     void
 EmpathFilterEventHandler::setDelete()
 {
-    empathDebug("setDelete");
     actionType_ = Delete;
 }
 
     void
 EmpathFilterEventHandler::setIgnore()
 {
-    empathDebug("setIgnore");
     actionType_ = Ignore;
 }
 
     void
 EmpathFilterEventHandler::setForward(const QString & address)
 {
-    empathDebug("setForward(" + QString(address) + ")");
     actionType_ = Forward;
     forwardAddress_ = address;
 }
@@ -106,8 +100,6 @@ EmpathFilterEventHandler::setForward(const QString & address)
     void
 EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 {
-    empathDebug("handleMessage() called");
-
     EmpathFolder * folder = empath->folder(id);
     if (folder == 0) return;
     
@@ -133,7 +125,6 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
             break;
             
         default:
-            empathDebug("Don't know what to do with " + id.asString());
             break;
     }
 }
@@ -211,7 +202,6 @@ EmpathFilterEventHandler::save(const QString & filterID)
     QString
 EmpathFilterEventHandler::description() const
 {
-    empathDebug("description() called");
     QString action;
     
     switch (actionType_) {

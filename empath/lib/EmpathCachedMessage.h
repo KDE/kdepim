@@ -32,15 +32,24 @@ class EmpathCachedMessage
 {
     public:
 
-        EmpathCachedMessage(RMM::RMessage & m);
-        ~EmpathCachedMessage();
+        EmpathCachedMessage(RMM::RMessage & m)
+            :   message_(m)
+        { ref(); }
 
-        RMM::RMessage message();
+        ~EmpathCachedMessage()
+        { /* Empty. */ }
 
-        unsigned int refCount() const;
+        RMM::RMessage message()
+        { deref(); return message_; }
 
-        void ref();
-        void deref();
+        unsigned int refCount() const
+        { return refCount_; }
+
+        void ref()
+        { ++refCount_; }
+
+        void deref()
+        { --refCount_; }
 
         const char * className() const { return "EmpathCachedMessage"; }
 

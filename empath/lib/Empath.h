@@ -319,12 +319,6 @@ class Empath : public QObject
         void s_checkMail();
         
         /**
-         * Connect to this to provide a message for the user.
-         * It'll probably turn up in all statusbars.
-         */
-        void s_infoMessage(const QString &);
-   
-        /**
          * Use when folders have changed and any displayed lists need updating.
          */
         void s_updateFolderLists();
@@ -475,11 +469,6 @@ class Empath : public QObject
          * Usually connected to a slot in the UI module.
          */
         void newTask(EmpathTask *);
-        /**
-         * Signals that we want to tell the user something.
-         * Usually connected to a slot in the UI module.
-         */
-        void infoMessage(const QString &);
         
     private:
 

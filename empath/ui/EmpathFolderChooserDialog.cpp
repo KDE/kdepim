@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathFolderChooserDialog.h"
-#endif
-
 // Qt includes
 #include <qlineedit.h>
 #include <qlayout.h>
@@ -36,11 +32,8 @@
 // Local includes
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathFolderChooserWidget.h"
-#include "EmpathSeparatorWidget.h"
-#include "EmpathDefines.h"
 #include "EmpathFolder.h"
 #include "EmpathFolderWidget.h"
-#include "EmpathUIUtils.h"
 
 EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
     :    KDialog(parent, "FolderChooserDialog", true)
@@ -65,7 +58,6 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
 
     layout->addWidget(folderWidget_);
     layout->addStretch(10);
-    layout->addWidget(new EmpathSeparatorWidget(this));
     layout->addWidget(buttonBox);
 }
 

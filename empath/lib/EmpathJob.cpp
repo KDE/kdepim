@@ -365,7 +365,7 @@ void EmpathRemoveJob::run()
         EmpathFolder * f = empath->folder(url_);
 
         if (0 == f) {
-            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
             setSuccess(false);
             _done();
             return;
@@ -378,7 +378,7 @@ void EmpathRemoveJob::run()
         EmpathFolder * f = empath->folder(folder_);
 
         if (0 == f) {
-            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
             setSuccess(false);
             _done();
             return;
@@ -392,7 +392,6 @@ void EmpathRemoveJob::run()
 
 void EmpathRetrieveJob::run()
 {
-    empathDebug("");
     RMM::RMessage cached = empath->message(url_);
 
     if (!cached.isNull()) {
@@ -406,7 +405,7 @@ void EmpathRetrieveJob::run()
     EmpathFolder * f = empath->folder(url_);
 
     if (0 == f) {
-        empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+        empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
         setSuccess(false);
         _done();
         return;
@@ -419,7 +418,6 @@ void EmpathRetrieveJob::run()
 
     setSuccess(!message_.isNull());
     _done();
-    empathDebug("done");
 }
 
 void EmpathMarkJob::run()
@@ -429,7 +427,7 @@ void EmpathMarkJob::run()
         EmpathFolder * f = empath->folder(url_);
     
         if (0 == f) {
-            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
             setSuccess(false);
             _done();
             return;
@@ -442,7 +440,7 @@ void EmpathMarkJob::run()
         EmpathFolder * f = empath->folder(folder_);
      
         if (0 == f) {
-            empathDebug("Folder `" + url_.asString() + "' does not exist ?");
+            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
             setSuccess(false);
             _done();
             return;
@@ -460,7 +458,7 @@ void EmpathCreateFolderJob::run()
 
     if (!m) {
       
-        empathDebug("Mailbox `" + folder_.asString() + "' does not exist ?");
+        empathDebug(QString::fromUtf8("Mailbox `") + folder_.asString() + QString::fromUtf8("' does not exist ?"));
         setSuccess(false);
         _done();
         return;
@@ -475,7 +473,7 @@ void EmpathRemoveFolderJob::run()
     EmpathMailbox * m = empath->mailbox(folder_);
 
     if (!m) {
-        empathDebug("Mailbox `" + folder_.asString() + "' does not exist ?");
+        empathDebug(QString::fromUtf8("Mailbox `") + folder_.asString() + QString::fromUtf8("' does not exist ?"));
         setSuccess(false);
         _done();
         return;

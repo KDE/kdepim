@@ -1,9 +1,9 @@
-Use XML to create GUI
-
-Separate GUI components into kparts.
-
-Finish DCOP interface.
+Finish DCOP interface (EmpathInterface).
 
 Integrate POP, IMAP and SMTP support via kioslaves.
 
-Fix composing
+Fix composing.
+
+Add missing features.
+
+Kill bugs.

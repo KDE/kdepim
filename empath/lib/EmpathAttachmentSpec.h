@@ -20,8 +20,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATHATTACHMENTSPEC_H
-#define EMPATHATTACHMENTSPEC_H
+#ifndef EMPATH_ATTACHMENT_SPEC_H
+#define EMPATH_ATTACHMENT_SPEC_H
 
 // Qt includes
 #include <qstring.h>
@@ -29,7 +29,6 @@
 
 // Local includes
 #include "EmpathDefines.h"
-#include "RMM_Enum.h"
 
 /**
  * Attachment information.
@@ -38,7 +37,16 @@
 class EmpathAttachmentSpec
 {
     public:
-        
+
+        enum EncodingType {
+            EncodingType7bit,
+            EncodingType8bit,
+            EncodingTypeBinary,
+            EncodingTypeQuotedPrintable,
+            EncodingTypeBase64,
+            EncodingTypeXtension
+        };
+
         /**
          * Default ctor. Not much use until you fill in the fields.
          */
@@ -52,7 +60,7 @@ class EmpathAttachmentSpec
         EmpathAttachmentSpec(
                 const QString & filename,
                 const QString & description,
-                RMM::CteType    encoding,
+                EncodingType    encoding,
                 const QString & type,
                 const QString & subType,
                 const QString & charset)
@@ -108,14 +116,14 @@ class EmpathAttachmentSpec
         
         QString filename()      const { return filename_;       }
         QString description()   const { return description_;    }
-        RMM::CteType encoding() const { return encoding_;       }
+        EncodingType encoding() const { return encoding_;       }
         QString type()          const { return type_;           }
         QString subType()       const { return subType_;        }
         QString charset()       const { return charset_;        }
         
         void setFilename    (const QString & s) { filename_     = s; }
         void setDescription (const QString & s) { description_  = s; }
-        void setEncoding    (RMM::CteType t)    { encoding_     = t; }
+        void setEncoding    (EncodingType t)    { encoding_     = t; }
         void setType        (const QString & s) { type_         = s; }
         void setSubType     (const QString & s) { subType_      = s; }
         void setCharset     (const QString & s) { charset_      = s; }
@@ -129,7 +137,7 @@ class EmpathAttachmentSpec
         
         QString filename_;
         QString description_;
-        RMM::CteType encoding_;
+        EncodingType encoding_;
         QString type_;
         QString subType_;
         QString charset_;

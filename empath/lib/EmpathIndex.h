@@ -122,6 +122,7 @@ class EmpathIndex : public QObject
 
         void itemGone(const QString &);
         void statusChange(const QString &, EmpathIndexRecord::Status);
+        void countUpdated(unsigned int c, unsigned int uc);
 
     private:
         
@@ -143,8 +144,6 @@ class EmpathIndex : public QObject
         bool read_;
         unsigned int count_;
         unsigned int unreadCount_;
-        bool countCached_;
-        bool unreadCountCached_;
         // End order dependency
 };
 

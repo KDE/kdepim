@@ -50,14 +50,6 @@ enum MatchExprType {
     AnyMessage
 };
  
-enum ComposeType {
-    ComposeReply,
-    ComposeReplyAll,
-    ComposeForward,
-    ComposeNormal,
-    ComposeBounce
-};
-
 enum MessagePriority {
     Highest,
     High,

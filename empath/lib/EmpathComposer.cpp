@@ -29,7 +29,6 @@
 #include <qtextstream.h>
 
 // KDE includes
-#include <kapp.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -65,17 +64,18 @@ EmpathComposer::message(EmpathComposeForm composeForm)
     RMM::RMessage message;
     
     // Copy the visible headers first.
-    RMM::REnvelope envelope = composeForm.visibleHeaders();
+    QMap<QString, QString> envelope = composeForm.visibleHeaders();
 
     // Now add the invisible headers. Should really implement
     // REnvelope::operator +, but for now this will do.
-    RMM::RHeaderList invisibleHeaders =
-        composeForm.invisibleHeaders().headerList();
+    QMap<QString, QString> invisibleHeaders = composeForm.invisibleHeaders();
 
-    for (RMM::RHeaderListIterator it(invisibleHeaders); it.current(); ++it)
-        envelope.addHeader(*it.current());
+    QMap<QString, QString>::ConstIterator it(invisibleHeaders.begin());
 
-    message.setEnvelope(envelope);
+    for (; it != invisibleHeaders.end(); ++it)
+        envelope.insert(it.key(), it.data());
+
+// TODO    message.setEnvelope(envelope);
 
     // Now we need to know what type the main body part has.
     // We really need to find a nice way to send 16-bit Unicode.
@@ -95,11 +95,11 @@ EmpathComposer::message(EmpathComposeForm composeForm)
     // advertise that they handle 8-bit, they really do. I'm not
     // going to spend my life worrying about broken sendmail.
 
-    QCString body = composeForm.body();
+    QString body = composeForm.body();
 
     body += _signature();
 
-    message.setData(body);
+    message.setData(body.utf8()); // FIXME: Encode !
 
     EmpathAttachmentSpecList attachments = composeForm.attachmentList();
 
@@ -110,7 +110,8 @@ EmpathComposer::message(EmpathComposeForm composeForm)
         RMM::RBodyPart * newPart = new RMM::RBodyPart;
 
         newPart->setDescription ((*it2).description().utf8());
-        newPart->setEncoding    ((*it2).encoding());
+        // FIXME: Need to keep in sync to do this !
+        newPart->setEncoding    (RMM::CteType((*it2).encoding()));
         newPart->setMimeType    ((*it2).type().utf8());
         newPart->setMimeSubType ((*it2).subType().utf8());
         newPart->setCharset     ((*it2).charset().utf8());
@@ -125,22 +126,22 @@ EmpathComposer::message(EmpathComposeForm composeForm)
 EmpathComposer::newComposeForm(const QString & recipient)
 {
     EmpathComposeForm composeForm;
-    composeForm.setComposeType(ComposeNormal);
     _initVisibleHeaders(composeForm);
-    composeForm.setHeader("To", recipient.utf8(), false);
+    composeForm.setHeader(QString::fromUtf8("To"), recipient, false);
     emit(composeFormComplete(composeForm));
 }
 
     void
-EmpathComposer::newComposeForm(ComposeType t, const EmpathURL & url)
+EmpathComposer::newComposeForm(
+    EmpathComposeForm::ComposeType t,
+    const EmpathURL & url
+)
 {
     EmpathComposeForm composeForm;
 
     composeForm.setComposeType(t);
     
     EmpathJobID id = empath->retrieve(url, this);
-
-    empathDebug("Created a job with id " + QString::number(id));
 
     jobList_.insert(id, composeForm); 
 }
@@ -149,12 +150,12 @@ EmpathComposer::newComposeForm(ComposeType t, const EmpathURL & url)
 EmpathComposer::s_retrieveJobFinished(EmpathRetrieveJob j)
 {
     if (!(jobList_.contains(j.id()))) {
-        empathDebug("jobList does not contain a job with id " + QString::number(j.id()));
+        empathDebug(QString::fromUtf8("jobList does not contain a job with id ") + QString::number(j.id()));
         return;
     }
 
     if (!j.success()) {
-        empathDebug("job was unsuccessful");
+        empathDebug(QString::fromUtf8("job was unsuccessful"));
         return;
     }
 
@@ -162,11 +163,11 @@ EmpathComposer::s_retrieveJobFinished(EmpathRetrieveJob j)
     
     switch (jobList_[j.id()].composeType()) {
 
-        case ComposeReply:              _reply(j.id(), m);      break; 
-        case ComposeReplyAll:           _reply(j.id(), m);      break;
-        case ComposeForward:            _forward(j.id(), m);    break; 
-        case ComposeBounce:             _bounce(j.id(), m);     break;
-        case ComposeNormal: default:                            break;
+        case EmpathComposeForm::Reply:      _reply(j.id(), m);      break; 
+        case EmpathComposeForm::ReplyAll:   _reply(j.id(), m);      break;
+        case EmpathComposeForm::Forward:    _forward(j.id(), m);    break; 
+        case EmpathComposeForm::Bounce:     _bounce(j.id(), m);     break;
+        case EmpathComposeForm::Normal:     default:                break;
     }
 
     EmpathComposeForm composeForm(jobList_[j.id()]);
@@ -179,11 +180,14 @@ EmpathComposer::s_retrieveJobFinished(EmpathRetrieveJob j)
 EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
 { 
     KConfig * config(KGlobal::config());
-    config->setGroup(EmpathConfig::GROUP_COMPOSE);
+
+    using namespace EmpathConfig;
+
+    config->setGroup(QString::fromUtf8(GROUP_COMPOSE));
     
     QStrList l;
 
-    config->readListEntry(EmpathConfig::C_EXTRA_HEADERS, l, ',');
+    config->readListEntry(QString::fromUtf8(C_EXTRA_HEADERS), l, ',');
 
     // Standard headers
     l.prepend("Bcc");
@@ -192,17 +196,15 @@ EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
     l.append("Subject");
 
     for (QStrListIterator it(l); it.current(); ++it)
-        composeForm.setHeader(it.current(), "");
+        composeForm.setHeader(QString::fromUtf8(it.current()), QString::null);
 }
 
    void
 EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
 {
-    empathDebug("");
- 
     EmpathComposeForm composeForm(jobList_[id]);
-    QCString to, cc;
-    KConfig * config = new KConfig("emaildefaults");
+    QString to, cc;
+    KConfig * config = new KConfig(QString::fromUtf8("emaildefaults"));
     
     referenceHeaders_ = _referenceHeaders(message);
     
@@ -215,61 +217,64 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
     else if (message.envelope().has(RMM::HeaderFrom)) 
         to = message.envelope().from().at(0).asString();
     else
-        to = i18n("Could not find sender of this message").ascii() +
-            QCString(" <postmaster@localhost>");
+        to = i18n("Could not find sender of this message") +
+            QString::fromUtf8(" <postmaster@localhost>");
 
-    composeForm.setHeader("To", to);
+    composeForm.setHeader(QString::fromUtf8("To"), to);
 
-    if (composeForm.composeType() == ComposeReplyAll) {
+    if (composeForm.composeType() == EmpathComposeForm::ReplyAll) {
         
         if (message.envelope().has(RMM::HeaderCc)) 
 
             for (unsigned int i = 0; i < message.envelope().cc().count(); i++) {
                 if (i > 0)
-                    cc += ", ";
+                    cc += QString::fromUtf8(", ");
                 if (cc.length() > 70)
-                    cc += "\r\n ";
-                cc += message.envelope().cc().at(i).asString();
+                    cc += QString::fromUtf8("\r\n ");
+                cc +=
+                    QString::fromUtf8(message.envelope().cc().at(i).asString());
             }
     
-        config->setGroup("UserInfo");
+        config->setGroup(QString::fromUtf8("UserInfo"));
         
-        RMM::RAddress me(config->readEntry("EmailAddress").ascii());
+        RMM::RAddress me(config->readEntry(QString::fromUtf8("EmailAddress")).ascii());
         RMM::RAddress msgTo(message.envelope().to().at(0));
         
         if (me != msgTo && !cc.isEmpty()) 
-            cc += message.envelope().to().asString();
+            cc += QString::fromUtf8(message.envelope().to().asString());
         
-        composeForm.setHeader("Cc", cc);
+        composeForm.setHeader(QString::fromUtf8("Cc"), cc);
     }
     
     // Fill in the subject.
-    QCString s = message.envelope().subject().asString();
-    empathDebug("Subject was \"" + s + "\""); 
+    QString s = message.envelope().subject().asString();
 
     if (s.isEmpty())
         composeForm.setHeader(
-                "Subject", i18n("Re: (no subject given)").utf8());
+                QString::fromUtf8("Subject"),
+                i18n("Re: (no subject given)")
+        );
     else
-        if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
-            composeForm.setHeader("Subject", s);
+        if (s.find(QRegExp(QString::fromUtf8("^[Rr][Ee]:"))) != -1)
+            composeForm.setHeader(QString::fromUtf8("Subject"), s);
         else
-            composeForm.setHeader("Subject", "Re: " + s);
+            composeForm.setHeader(QString::fromUtf8("Subject"),
+                QString::fromUtf8("Re: ") + s);
 
     // Now quote original message if we need to.
     
-    config->setGroup(EmpathConfig::GROUP_COMPOSE);
+    using namespace EmpathConfig;
+
+    config->setGroup(QString::fromUtf8(GROUP_COMPOSE));
     
     // Add the 'On (date) (name) wrote' bit
         
-    if (config->readBoolEntry(EmpathConfig::C_AUTO_QUOTE, false)) {
-
-        empathDebug("Quoting original");
+    if (config->readBoolEntry(QString::fromUtf8(C_AUTO_QUOTE), false)) {
 
         s = message.data();
 
         // Remove the signature
-        int sigpos = s.find(QRegExp("\n--[ ]?\n"));
+        int sigpos = s.find(QRegExp(QString::fromUtf8("\n--[ ]?\n")));
         if (sigpos != -1)
             s.truncate(sigpos);
         
@@ -277,29 +282,29 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
         
         QString thingyWrote;
        
-        if (composeForm.composeType() == ComposeReplyAll)
+        if (composeForm.composeType() == EmpathComposeForm::ReplyAll)
             thingyWrote =
-                config->readEntry(EmpathConfig::C_PHRASE_REPLY_ALL, "");
+                config->readEntry(QString::fromUtf8(C_PHRASE_REPLY_ALL));
         else
             thingyWrote =
-                config->readEntry(EmpathConfig::C_PHRASE_REPLY_SENDER, "");
+                config->readEntry(QString::fromUtf8(C_PHRASE_REPLY_SENDER));
         
         // Be careful here. We don't want to reveal people's
         // email addresses.
         if (message.envelope().has(RMM::HeaderFrom) &&
             !message.envelope().from().at(0).phrase().isEmpty()) {
             
-            thingyWrote.replace(QRegExp("\\%s"),
+            thingyWrote.replace(QRegExp(QString::fromUtf8("\\%s")),
                 message.envelope().from().at(0).phrase());
 
             if (message.envelope().has(RMM::HeaderDate))
-                thingyWrote.replace(QRegExp("\\%d"),
+                thingyWrote.replace(QRegExp(QString::fromUtf8("\\%d")),
                     message.envelope().date().qdt().date().toString());
             else
-                thingyWrote.replace(QRegExp("\\%d"),
+                thingyWrote.replace(QRegExp(QString::fromUtf8("\\%d")),
                     i18n("An unknown date and time"));
         
-            composeForm.setBody('\n' + thingyWrote.utf8() + '\n' + s);
+            composeForm.setBody('\n' + thingyWrote + '\n' + s);
         }
     }
 
@@ -311,22 +316,25 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
     void
 EmpathComposer::_forward(EmpathJobID id, RMM::RMessage message)
 {
-    empathDebug("");
-    
     EmpathComposeForm composeForm(jobList_[id]);
-    QCString s;
+    QString s;
 
     // Fill in the subject.
     s = message.envelope().subject().asString();
-    empathDebug("Subject was \"" + s + "\""); 
 
     if (s.isEmpty()) 
-        composeForm.setHeader("Subject", i18n("Fwd: (no subject)").utf8());
+        composeForm.setHeader(
+            QString::fromUtf8("Subject"),
+            i18n("Fwd: (no subject)")
+        );
     else
-        if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
-            composeForm.setHeader("Subject", s);
+        if (s.find(QRegExp(QString::fromUtf8("^[Ff][Ww][Dd]:"))) != -1)
+            composeForm.setHeader(QString::fromUtf8("Subject"), s);
         else
-            composeForm.setHeader("Subject", "Fwd: " + s);
+            composeForm.setHeader(
+                QString::fromUtf8("Subject"),
+                QString::fromUtf8("Fwd: ") + s
+            );
 
     QString description = i18n("Forwarded message from %1");
 
@@ -362,10 +370,10 @@ EmpathComposer::_bounce(EmpathJobID, RMM::RMessage /* m */)
     // TODO
 }
 
-    QCString
+    QString
 EmpathComposer::_referenceHeaders(RMM::RMessage message)
 {
-    QCString s;
+    QString s;
 
     // Ok, here's the system.
     // Whatever happens, we create an In-Reply-To.
@@ -379,13 +387,13 @@ EmpathComposer::_referenceHeaders(RMM::RMessage message)
     
     // There is a references header.
 
-    QCString references;
+    QString references;
     
-    QCString refs(message.envelope().references().asString());
+    QString refs(message.envelope().references().asString());
     
     QStrList l;
     
-    RMM::RTokenise(refs, " ", l);
+    RMM::RTokenise(refs.utf8(), " ", l);
     
     // While there are more than 10 references, remove the one in
     // the second position. This way, we'll end up with 10 again,
@@ -397,79 +405,94 @@ EmpathComposer::_referenceHeaders(RMM::RMessage message)
     QStrListIterator it(l);
 
     for (; it.current(); ++it) {
-        references += it.current();
-        references += " ";
+        references += QString::fromUtf8(it.current());
+        references += QString::fromUtf8(" ");
     }
     
     references += message.envelope().messageID().asString();
 
-    s += "References: " + references + "\n";
+    s +=
+        QString::fromUtf8("References: ") +
+        references +
+        QString::fromUtf8("\n");
     
     return s;
 }
 
-    QCString
+    QString
 EmpathComposer::_stdHeaders()
 {
-    QCString s;
+    QString s;
     
-    KConfig * config = new KConfig("emaildefaults");
-    config->setGroup("UserInfo");
+    KConfig * config = new KConfig(QString::fromUtf8("emaildefaults"));
+    config->setGroup(QString::fromUtf8("UserInfo"));
 
-    QCString fullName = config->readEntry("FullName").ascii();
-    QCString emailAddress = config->readEntry("EmailAddress").ascii();
-    QCString organization = config->readEntry("Organization").ascii();
+    QString fullName = config->readEntry(QString::fromUtf8("FullName"));
+    QString emailAddress = config->readEntry(QString::fromUtf8("EmailAddress"));
+    QString organization = config->readEntry(QString::fromUtf8("Organization"));
 
     if (fullName.isEmpty()) {
-        empathDebug("Name of user is empty.");
+        empathDebug(QString::fromUtf8("Name of user is empty."));
     }
 
     if (emailAddress.isEmpty()) {
 
         // Shit !
-        empathDebug("User's email address is empty !");
-        emailAddress = "no.address.given@nowhere";
+        empathDebug(QString::fromUtf8("User's email address is empty !"));
+        emailAddress = QString::fromUtf8("no.address.given@nowhere");
     }
 
-    s += "From: " + fullName + " <" + emailAddress + ">\n";
+    s +=
+        QString::fromUtf8("From: ") +
+        fullName +
+        QString::fromUtf8(" <") + emailAddress + QString::fromUtf8(">\n");
  
     if (!organization.isEmpty())
-        s += "Organization: " + organization + "\n";
+        s +=
+            QString::fromUtf8("Organization: ") +
+            organization +
+            QString::fromUtf8("\n");
     
     RMM::RDateTime dt;
     dt.createDefault();
-    s += "Date: " + dt.asString() + "\n";
+    s +=
+        QString::fromUtf8("Date: ") +
+        QString::fromUtf8(dt.asString()) +
+        QString::fromUtf8("\n");
     
     RMM::RMessageID id;
     id.createDefault();
     
-    s += "Message-Id: " + id.asString() + "\n";
+    s +=
+        QString::fromUtf8("Message-Id: ") +
+        QString::fromUtf8(id.asString()) +
+        QString::fromUtf8("\n");
 
     delete config;
 
     return s;
 }
 
-    QCString
+    QString
 EmpathComposer::_signature()
 {
-    QCString sig;
+    QString sig;
 
     KConfig * config(KGlobal::config());
 
     using namespace EmpathConfig;
 
-    config->setGroup(GROUP_COMPOSE);
+    config->setGroup(QString::fromUtf8(GROUP_COMPOSE));
     
-    if (config->readBoolEntry(C_ADD_SIG, false)) {
+    if (config->readBoolEntry(QString::fromUtf8(C_ADD_SIG), false)) {
 
-        QFile f(config->readEntry(C_SIG_PATH));
+        QFile f(config->readEntry(QString::fromUtf8(C_SIG_PATH)));
         
         if (f.open(IO_ReadOnly)) {    
             QTextStream t(&f);
-            QCString s;
+            QString s;
             t >> s;
-            sig = "\n-- \n" + s;
+            sig = QString::fromUtf8("\n-- \n") + s;
         }
     }
     
@@ -477,14 +500,12 @@ EmpathComposer::_signature()
 }
 
     void
-EmpathComposer::_quote(QCString & s)
+EmpathComposer::_quote(QString & s)
 {
-    empathDebug(s);
-    EmpathQuotedText quoted(QString::fromUtf8(s));
+    EmpathQuotedText quoted(s);
     quoted.rewrap(70);
     quoted.quote();
-    s = quoted.asString().utf8();
-    empathDebug(s);
+    s = quoted.asString();
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -20,16 +20,15 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathFolderChooserWidget.h"
-#endif
-
 // Qt includes
 #include <qlayout.h>
+#include <qlineedit.h>
+#include <qpushbutton.h>
 #include <qpixmap.h>
 
 // KDE includes
 #include <klocale.h>
+#include <kiconloader.h>
 
 // Local includes
 #include "Empath.h"
@@ -38,7 +37,6 @@
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailbox.h"
-#include "EmpathUIUtils.h"
 
 EmpathFolderChooserWidget::EmpathFolderChooserWidget(QWidget * parent)
     :    QWidget(parent, "FolderChooserWidget")
@@ -46,7 +44,7 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(QWidget * parent)
     le_folderName_      = new QLineEdit(this, "l_folderName_");
     pb_selectFolder_    = new QPushButton(this, "pb_selectFolder_");
 
-    pb_selectFolder_->setPixmap(empathIcon("misc-browse"));
+    pb_selectFolder_->setPixmap(BarIcon("misc-browse"));
     pb_selectFolder_->setFixedWidth(pb_selectFolder_->sizeHint().height());
     
     QObject::connect(pb_selectFolder_, SIGNAL(clicked()),

@@ -31,9 +31,6 @@
 #include <unistd.h>
 #include <errno.h>
 
-// Qt includes
-#include <qcolor.h>
-
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
@@ -44,7 +41,6 @@
 #include "Empath.h"
 #include "EmpathConfig.h"
 #include "EmpathJobScheduler.h"
-#include "EmpathJob.h"
 #include "EmpathCachedMessage.h"
 #include "EmpathComposer.h"
 #include "EmpathFilterList.h"
@@ -89,17 +85,19 @@ Empath::Empath()
     
     using namespace EmpathConfig;
 
-    DFLT_Q_1   = new QColor(Qt::darkBlue);
-    DFLT_Q_2   = new QColor(Qt::darkCyan);
-    DFLT_LINK  = new QColor(Qt::blue);
-    DFLT_NEW   = new QColor(Qt::darkRed);
-
     // Don't do dollar expansion by default.
     // Possible security hole.
     KGlobal::config()->setDollarExpansion(false);    
 
-    KGlobal::dirs()->addResourceType("indices", "share/apps/empath/indices");
-    KGlobal::dirs()->addResourceType("cache",   "share/apps/empath/cache");
+    KGlobal::dirs()->addResourceType(
+        "indices",
+        QString::fromUtf8("share/apps/empath/indices")
+    );
+
+    KGlobal::dirs()->addResourceType(
+        "cache",
+        QString::fromUtf8("share/apps/empath/cache")
+    );
 }
 
     void
@@ -125,13 +123,22 @@ Empath::init()
 
     using namespace EmpathConfig;
 
-    c->setGroup(GROUP_FOLDERS);
+    c->setGroup(QString::fromUtf8(GROUP_FOLDERS));
 
-    inbox_  .setFolderPath  (c->readEntry(FOLDER_INBOX,   i18n("Inbox")));
-    outbox_ .setFolderPath  (c->readEntry(FOLDER_OUTBOX,  i18n("Outbox")));
-    sent_   .setFolderPath  (c->readEntry(FOLDER_SENT,    i18n("Sent")));
-    drafts_ .setFolderPath  (c->readEntry(FOLDER_DRAFTS,  i18n("Drafts")));
-    trash_  .setFolderPath  (c->readEntry(FOLDER_TRASH,   i18n("Trash")));
+    inbox_  .setFolderPath
+        (c->readEntry(QString::fromUtf8(FOLDER_INBOX),   i18n("Inbox")));
+
+    outbox_ .setFolderPath
+        (c->readEntry(QString::fromUtf8(FOLDER_OUTBOX),  i18n("Outbox")));
+
+    sent_   .setFolderPath
+        (c->readEntry(QString::fromUtf8(FOLDER_SENT),    i18n("Sent")));
+
+    drafts_ .setFolderPath
+        (c->readEntry(QString::fromUtf8(FOLDER_DRAFTS),  i18n("Drafts")));
+
+    trash_  .setFolderPath
+        (c->readEntry(QString::fromUtf8(FOLDER_TRASH),   i18n("Trash")));
    
     mailboxList()->loadConfig();
 }
@@ -149,15 +156,6 @@ Empath::~Empath()
 
     delete jobScheduler_;
     jobScheduler_ = 0L;
-
-    using namespace EmpathConfig;
-
-    delete DFLT_Q_1;
-    delete DFLT_Q_2;
-    delete DFLT_LINK;
-    delete DFLT_NEW;
-
-    DFLT_Q_1 = DFLT_Q_2 = DFLT_LINK = DFLT_NEW = 0L;
 }
 
     void
@@ -254,7 +252,7 @@ Empath::mailbox(const EmpathURL & url)
 Empath::folder(const EmpathURL & url)
 { EmpathMailbox * m = mailbox(url); return (m == 0 ? 0 : m->folder(url)); }
 
-   EmpathJobID
+    EmpathJobID
 Empath::copy(const EmpathURL & from, const EmpathURL & to, QObject * o, const char * slot)
 { return _jobScheduler()->newCopyJob(from, to, o, slot); }
 
@@ -342,19 +340,19 @@ Empath::s_composeTo(const QString & recipient)
 
     void
 Empath::s_reply(const EmpathURL & url)
-{ EmpathComposer::instance()->newComposeForm(ComposeReply, url); }
+{ EmpathComposer::instance()->newComposeForm(EmpathComposeForm::Reply, url); }
 
     void
 Empath::s_replyAll(const EmpathURL & url)
-{ EmpathComposer::instance()->newComposeForm(ComposeReplyAll, url); }
+{ EmpathComposer::instance()->newComposeForm(EmpathComposeForm::ReplyAll, url);}
 
     void
 Empath::s_forward(const EmpathURL & url)
-{ EmpathComposer::instance()->newComposeForm(ComposeForward, url); }
+{ EmpathComposer::instance()->newComposeForm(EmpathComposeForm::Forward, url); }
 
     void
 Empath::s_bounce(const EmpathURL & url)
-{ EmpathComposer::instance()->newComposeForm(ComposeBounce, url); }
+{ EmpathComposer::instance()->newComposeForm(EmpathComposeForm::Bounce, url); }
 
     void
 Empath::saveMessage(const EmpathURL & url, QWidget * parent)
@@ -363,10 +361,6 @@ Empath::saveMessage(const EmpathURL & url, QWidget * parent)
     void
 Empath::s_configureMailbox(const EmpathURL & u, QWidget * w)
 { emit(configureMailbox(u, w)); }
-
-    void
-Empath::s_infoMessage(const QString & s)
-{ emit(infoMessage(s)); }
 
     void
 Empath::s_checkMail()

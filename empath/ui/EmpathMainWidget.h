@@ -20,21 +20,17 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMainWidget.h"
-#endif
-
-#ifndef EMPATHMAINWIDGET_H
-#define EMPATHMAINWIDGET_H
+#ifndef EMPATH_MAIN_WIDGET_H
+#define EMPATH_MAIN_WIDGET_H
 
 // Qt includes
 #include <qwidget.h>
 
+// KDE includes
+#include <kparts/part.h>
+
 // Local includes
 #include "EmpathURL.h"
-
-class EmpathMessageListWidget;
-class EmpathMessageViewWidget;
 
 class EmpathMainWidget : public QWidget
 {
@@ -45,13 +41,16 @@ class EmpathMainWidget : public QWidget
         EmpathMainWidget(QWidget * parent);
         ~EmpathMainWidget();
 
-        EmpathMessageListWidget * messageListWidget()
+        KParts::ReadOnlyPart * messageViewWidget()
+        { return messageViewWidget_; }
+
+        KParts::ReadWritePart * messageListWidget()
         { return messageListWidget_; }
 
     protected slots:
-    
-        void s_showFolder(const EmpathURL & url);
-        void s_changeView(const QString & messageID);
+
+        void s_showFolder(const EmpathURL &);
+        void s_changeView(const QString &);
         void s_reply(const QString &);
         void s_replyAll(const QString &);
         void s_forward(const QString &);
@@ -63,13 +62,16 @@ class EmpathMainWidget : public QWidget
         void s_print(const QStringList &);
         void s_filter(const QStringList &);
         void s_view(const QString &);
-        
+
+        void s_toggleHideRead();
+        void s_toggleThread();
+
     private:
 
         EmpathURL currentFolder_;
 
-        EmpathMessageListWidget * messageListWidget_;
-        EmpathMessageViewWidget * messageViewWidget_;
+        KParts::ReadWritePart * messageListWidget_;
+        KParts::ReadOnlyPart * messageViewWidget_;
 };
 
 #endif

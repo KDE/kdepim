@@ -20,35 +20,26 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMainWindow.h"
-#endif
-
 // Qt includes
 #include <qpopupmenu.h>
 #include <qwidgetstack.h>
 
 // KDE includes
-#include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kaction.h>
 #include <kstdaction.h>
-#include <kmenubar.h>
-#include <ktoolbar.h>
 
 // Local includes
 #include "EmpathTask.h"
-#include "EmpathMainWidget.h"
 #include "EmpathMainWindow.h"
-#include "EmpathMessageListWidget.h"
+#include "EmpathMainWidget.h"
 #include "EmpathProgressIndicator.h"
-#include "EmpathUI.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 
 EmpathMainWindow::EmpathMainWindow()
-    :    KTMainWindow("MainWindow")
+    :   KParts::MainWindow("MainWindow")
 {
     // Resize to previous size.
    
@@ -73,15 +64,15 @@ EmpathMainWindow::EmpathMainWindow()
         empath, SIGNAL(newTask(EmpathTask *)),
         this,   SLOT(s_newTask(EmpathTask *)));
 
-    mainWidget_ = new EmpathMainWidget(this);
+    setXMLFile("EmpathMainWindow.rc");
 
-    setView(mainWidget_, false);
-   
     _setupActions();
 
-    empath->s_infoMessage(i18n("Welcome to Empath"));
-    
-    updateRects();
+    mainWidget_ = new EmpathMainWidget(this);
+    setView(mainWidget_);
+
+    createGUI(mainWidget_->messageListWidget());
+    createGUI(mainWidget_->messageViewWidget());
 
     show();
 }
@@ -106,18 +97,6 @@ EmpathMainWindow::s_newTask(EmpathTask * t)
 }
 
     void
-EmpathMainWindow::statusMessage(const QString & messageText, int milliseconds)
-{
-    statusBar()->message(messageText, milliseconds);
-}
-
-    void
-EmpathMainWindow::clearStatusMessage()
-{
-    statusBar()->clear();
-}
-
-    void
 EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 {
     KConfig * c = KGlobal::config();
@@ -131,28 +110,19 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
     void
 EmpathMainWindow::_setupActions()
 {
-#define PLUGMSGACTION(a) \
-    actionCollection()->insert(mainWidget_->messageListWidget()->actionCollection()->action(a)) 
+    KStdAction::preferences(
+        this,
+        SLOT(s_settings()),
+        actionCollection(),
+        "settings"
+    );
 
-    PLUGMSGACTION("messageCompose");
-    PLUGMSGACTION("messageView");
-    PLUGMSGACTION("messageTag");
-    PLUGMSGACTION("messageMarkRead");
-    PLUGMSGACTION("messageMarkReplied");
-    PLUGMSGACTION("messageReply");
-    PLUGMSGACTION("messageReplyAll");
-    PLUGMSGACTION("messageForward");
-    PLUGMSGACTION("messageDelete");
-    PLUGMSGACTION("messageSaveAs");
-    PLUGMSGACTION("messageFilter");
-
-    PLUGMSGACTION("goPrevious");
-    PLUGMSGACTION("goNext");
-    PLUGMSGACTION("goNextUnread");
-
-#undef PLUGMSGACTION
-
-    createGUI("EmpathMainWindow.rc");
+    KStdAction::saveOptions(
+        this,
+        SLOT(s_saveSettings()),
+        actionCollection(),
+        "saveSettings"
+    );
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -21,15 +21,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFolderChooserDialog.h"
-#endif
-
-#ifndef EMPATHFOLDERCHOOSERDIALOG_H
-#define EMPATHFOLDERCHOOSERDIALOG_H
-
-// Qt includes
-#include <qpushbutton.h>
+#ifndef EMPATH_FOLDER_CHOOSER_DIALOG_H
+#define EMPATH_FOLDER_CHOOSER_DIALOG_H
 
 // KDE includes
 #include <kdialog.h>

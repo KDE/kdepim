@@ -34,8 +34,6 @@
 #include "EmpathIndexRecord.h"
 #include "RMM_Message.h"
 
-QString baseName(const QString & filename);
-bool stricmp(const QString & a, const QString & b);
 EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::RMessage &);
 
 #endif

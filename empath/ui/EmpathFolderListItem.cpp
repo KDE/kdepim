@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathFolderListItem.h"
-#endif
-
 // Qt includes
 #include <qfont.h>
 #include <qstring.h>
@@ -34,6 +30,7 @@
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kiconloader.h>
 
 // Local includes
 #include "EmpathConfig.h"
@@ -42,7 +39,6 @@
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
 #include "EmpathDefines.h"
-#include "EmpathUIUtils.h"
 #include "Empath.h"
 
 EmpathFolderListItem::EmpathFolderListItem(
@@ -78,7 +74,7 @@ EmpathFolderListItem::EmpathFolderListItem(
     setText(0, m->name());
     setText(1, "...");
     setText(2, "...");
-    setPixmap(0, empathIcon(m->pixmapName()));
+    setPixmap(0, BarIcon(m->pixmapName()));
 }
 
 EmpathFolderListItem::EmpathFolderListItem(
@@ -120,7 +116,7 @@ EmpathFolderListItem::EmpathFolderListItem(
     
     setText(0, s);
 
-    setPixmap(0, empathIcon(f->pixmapName()));
+    setPixmap(0, BarIcon(f->pixmapName()));
 }
     
 EmpathFolderListItem::~EmpathFolderListItem()
@@ -167,7 +163,8 @@ EmpathFolderListItem::paintCell(
         KConfig * c(KGlobal::config());
         using namespace EmpathConfig;
         c->setGroup(GROUP_DISPLAY);
-        QColor col = c->readColorEntry(UI_NEW, DFLT_NEW);
+        QColor defaultNewColour = Qt::darkRed;
+        QColor col = Qt::darkRed; // FIXME c->readColorEntry(UI_NEW, &defaultNewColour);
         QColorGroup modified(cg);
         modified.setColor(QColorGroup::Text, col);
         QListViewItem::paintCell(p, modified, column, width, align);
@@ -175,7 +172,7 @@ EmpathFolderListItem::paintCell(
 }
 
     void
-EmpathFolderListItem::s_setCount(unsigned int unread, unsigned int read)
+EmpathFolderListItem::s_setCount(unsigned int read, unsigned int unread)
 {
     setText(1, QString::number(unread));
     setText(2, QString::number(read));
@@ -187,37 +184,5 @@ EmpathFolderListItem::setOpen(bool o)
     emit(opened());
     QListViewItem::setOpen(o);
 }
-
-    void
-EmpathFolderListItem::init()
-{
-    if (depth() > 0) {
-
-        EmpathFolder * f(empath->folder(url_));
-        
-        if (f == 0) {
-            empathDebug("Can't find my folder !");
-            return;
-        }
-
-        if (!f->isContainer()) {
-
-            setText(1, QString().setNum(f->index()->countUnread()));
-            setText(2, QString().setNum(f->index()->count()));
-        }
-
-    } else {
-
-        EmpathMailbox * m(empath->mailbox(url_));
-
-        if (m == 0) {
-            empathDebug("Can't find my mailbox !");
-            return;
-        }
-
-        setText(1, QString().setNum(m->unreadMessageCount()));
-        setText(2, QString().setNum(m->messageCount()));
-    }
-} 
 
 // vim:ts=4:sw=4:tw=78

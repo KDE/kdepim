@@ -60,31 +60,130 @@ EmpathInterface::EmpathInterface()
 {
     fnDict_.setAutoDelete(true);
 
-    fnDict_.insert("QString inboxURL()", new int(EmpathFnInboxURL));
-    fnDict_.insert("QString outboxURL()", new int(EmpathFnOutboxURL));
-    fnDict_.insert("QString sentURL()", new int(EmpathFnSentURL));
-    fnDict_.insert("QString draftsURL()", new int(EmpathFnDraftsURL));
-    fnDict_.insert("QString trashURL()", new int(EmpathFnTrashURL));
-    fnDict_.insert("QByteArray message(QString)", new int(EmpathFnMessage));
-    fnDict_.insert("unsigned int queue(QByteArray)", new int(EmpathFnQueue));
-    fnDict_.insert("unsigned int send(QByteArray)", new int(EmpathFnSend));
-    fnDict_.insert("unsigned int sendQueued()", new int(EmpathFnSendQueued));
-    fnDict_.insert("unsigned int checkMail()", new int(EmpathFnCheckMail));
-    fnDict_.insert("unsigned int compose(QString)", new int(EmpathFnCompose));
-    fnDict_.insert("unsigned int reply(QString)", new int(EmpathFnReply));
-    fnDict_.insert("unsigned int replyAll(QString)", new int(EmpathFnReplyAll));
-    fnDict_.insert("unsigned int forward(QString)", new int(EmpathFnForward));
-    fnDict_.insert("unsigned int bounce(QString)", new int(EmpathFnBounce));
-    fnDict_.insert("unsigned int createFolder(QString)", new int(EmpathFnCreateFolder));
-    fnDict_.insert("unsigned int removeFolder(QString)", new int(EmpathFnRemoveFolder));
-    fnDict_.insert("unsigned int copy(QString, QString)", new int(EmpathFnCopy));
-    fnDict_.insert("unsigned int move(QString, QString)", new int(EmpathFnMove));
-    fnDict_.insert("unsigned int retrieve(QString)", new int(EmpathFnRetrieve));
-    fnDict_.insert("unsigned int write(QByteArray, QString)", new int(EmpathFnWrite));
-    fnDict_.insert("unsigned int remove(QString)", new int(EmpathFnRemove));
-    fnDict_.insert("unsigned int remove(QString, QStringList)", new int(EmpathFnRemoveMany));
-    fnDict_.insert("unsigned int mark(QString, int)", new int(EmpathFnMark));
-    fnDict_.insert("unsigned int mark(QString, QStringList, int)", new int(EmpathFnMarkMany));
+    fnDict_.insert(
+        QString::fromUtf8("QString inboxURL()"),
+        new int(EmpathFnInboxURL)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("QString outboxURL()"),
+        new int(EmpathFnOutboxURL)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("QString sentURL()"),
+        new int(EmpathFnSentURL)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("QString draftsURL()"),
+        new int(EmpathFnDraftsURL)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("QString trashURL()"),
+        new int(EmpathFnTrashURL)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("QByteArray message(QString)"),
+        new int(EmpathFnMessage)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int queue(QByteArray)"),
+        new int(EmpathFnQueue)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int send(QByteArray)"),
+        new int(EmpathFnSend)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int sendQueued()"),
+        new int(EmpathFnSendQueued)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int checkMail()"),
+        new int(EmpathFnCheckMail)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int compose(QString)"),
+        new int(EmpathFnCompose)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int reply(QString)"),
+        new int(EmpathFnReply)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int replyAll(QString)"),
+        new int(EmpathFnReplyAll)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int forward(QString)"),
+        new int(EmpathFnForward)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int bounce(QString)"),
+        new int(EmpathFnBounce)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int createFolder(QString)"),
+        new int(EmpathFnCreateFolder)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int removeFolder(QString)"),
+        new int(EmpathFnRemoveFolder)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int copy(QString, QString)"),
+        new int(EmpathFnCopy)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int move(QString, QString)"),
+        new int(EmpathFnMove)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int retrieve(QString)"),
+        new int(EmpathFnRetrieve)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int write(QByteArray, QString)"),
+        new int(EmpathFnWrite)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int remove(QString)"),
+        new int(EmpathFnRemove)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int remove(QString, QStringList)"),
+        new int(EmpathFnRemoveMany)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int mark(QString, int)"),
+        new int(EmpathFnMark)
+    );
+
+    fnDict_.insert(
+        QString::fromUtf8("unsigned int mark(QString, QStringList, int)"),
+        new int(EmpathFnMarkMany)
+    );
 }
 
     bool

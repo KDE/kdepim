@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathFolderWidget.h"
-#endif
-
 // Qt includes
 #include <qdragobject.h>
 #include <qstringlist.h>
@@ -38,13 +34,12 @@
 #include <kiconloader.h>
 
 // Local includes
-#include "EmpathUIUtils.h"
 #include "EmpathConfig.h"
-#include "EmpathConfigPOP3Dialog.h"
-#include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathFolderWidget.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFolderList.h"
+#include "EmpathDefines.h"
+#include "Empath.h"
 
 EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
     :   EmpathListView(parent, "FolderWidget")
@@ -131,13 +126,6 @@ EmpathFolderWidget::s_update()
     for (; mit.current(); ++mit)
         if (mit.current()->type() != EmpathMailbox::POP3)
             _addMailbox(mit.current());
-
-    QListIterator<EmpathFolderListItem> it(itemList_);
-
-    for (; it.current(); ++it) {
-        it.current()->init();
-        kapp->processEvents();
-    }
 }
 
     void
