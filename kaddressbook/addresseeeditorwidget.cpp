@@ -507,8 +507,16 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
       QString fn = mAddressee.formattedName();
       mAddressee.setNameFromString(text);
       mAddressee.setFormattedName( fn );
-    } else
-      mAddressee.setNameFromString(text);
+    } else {
+      // use extra addressee to avoid a formatted name assignment
+      Addressee addr;
+      addr.setNameFromString(text);
+      mAddressee.setPrefix( addr.prefix() );
+      mAddressee.setGivenName( addr.givenName() );
+      mAddressee.setAdditionalName( addr.additionalName() );
+      mAddressee.setFamilyName( addr.familyName() );
+      mAddressee.setSuffix( addr.suffix() );
+    }
   }
 
   nameBoxChanged();  
@@ -532,8 +540,8 @@ void AddresseeEditorWidget::nameBoxChanged()
   mFormattedNameBox->clear();
   QStringList options;
   options << mAddressee.formattedName()
-          << addr.realName()
-          << addr.givenName() + QString(" ") + addr.familyName()
+          << QString( addr.realName() ).simplifyWhiteSpace()
+          << QString( addr.givenName() + QString(" ") + addr.familyName() ).simplifyWhiteSpace()
           << addr.familyName() + QString(", ") + addr.givenName();
   mFormattedNameBox->insertStringList(options);
   mFormattedNameBox->setCurrentItem( pos );
@@ -620,8 +628,14 @@ void AddresseeEditorWidget::dateChanged(QDate)
 void AddresseeEditorWidget::formattedNameChanged(const QString &fn)
 {
   mAddressee.setFormattedName( fn );
-  mFormattedNameBox->setCurrentText( fn );
+  QLineEdit *le = mFormattedNameBox->lineEdit();
+  int pos = 0;
+  if ( le )
+    pos = le->cursorPosition();
+
   nameBoxChanged();
+
+  le->setCursorPosition( pos );
 }
 
 #include "addresseeeditorwidget.moc"

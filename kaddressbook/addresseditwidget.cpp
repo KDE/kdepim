@@ -309,10 +309,10 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list, const KAB
     if ( !mTypeList.contains( type ) )
       mTypeList.append( type );
   }
-  if ( !mTypeList.contains( KABC::Address::Home ) )
-    mTypeList.append( KABC::Address::Home );
   if ( !mTypeList.contains( KABC::Address::Work ) )
     mTypeList.append( KABC::Address::Work );
+  if ( !mTypeList.contains( KABC::Address::Home ) )
+    mTypeList.append( KABC::Address::Home );
 
   updateTypeCombo();
   mTypeCombo->setCurrentItem( mTypeList.findIndex( mAddress.type() & ~KABC::Address::Pref ) );
