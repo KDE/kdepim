@@ -20,11 +20,11 @@ here.</para>
 <simplelist> 
 <member>news.answers</member> 
 <member>news.newusers.questions</member> 
-<member>de.newsusers.infos (german)</member> 
-<member>de.answers (german)</member> 
-<member>de.comp.os.unix.linux.infos (german)</member> 
-<member>de.newusers.answers (german)</member> 
-<member>de.newusers.questions (german)</member> 
+<member>de.newsusers.infos (German)</member> 
+<member>de.answers (German)</member> 
+<member>de.comp.os.unix.linux.infos (German)</member> 
+<member>de.newusers.answers (German)</member> 
+<member>de.newusers.questions (German)</member> 
 </simplelist> 
 
 <para>For beginners it is especially recommended to read these
@@ -32,7 +32,7 @@ articles at least partially: informed users have strong advantages in
 news groups. There are some more-specialized news groups where
 <acronym>FAQ</acronym>s and introductory
 <glossterm>articles</glossterm> are posted frequently, &eg; the
-<glossterm>newsgroup</glossterm> de.comp.os.unix.linux.infos (german),
+<glossterm>newsgroup</glossterm> de.comp.os.unix.linux.infos (German),
 which contains a lot of useful articles about the &Linux; operating system.
 Just have a look on the group list of your newsserver for
 it.</para>
@@ -57,7 +57,7 @@ for erroneous settings and generate a followup with useful
 hints.</para> 
 
 <simplelist> 
-<member>de.test (german test newsgroup)</member> 
+<member>de.test (German test newsgroup)</member> 
 <member>misc.test</member> 
 <member>alt.test</member> 
 <member>alt.test.ignore</member> 
@@ -76,38 +76,38 @@ the articles posted there.</para>
 
 <simplelist> 
 <member>Introduction for de.newusers.infos: <ulink url="http://www.kirchwitz.de/~amk/dni/einleitung">http://www.kirchwitz.de/~amk/dni/einleitung</ulink>
-(german)</member> 
+(German)</member> 
 <member>The newsgroups of the de.alt hierarchy: <ulink url="http://www.kirchwitz.de/~amk/dni/de-alt-newsgruppen"> 
 http://www.kirchwitz.de/~amk/dni/de-alt-newsgruppen</ulink>
-(german)</member> 
+(German)</member> 
 <member>The newsgroups of the de-hierarchy: <ulink
 url="http://www.kirchwitz.de/~amk/dni/de-newsgruppen">http://www.kirchwitz.de/~amk/dni/de-newsgruppen</ulink>
-(german)</member> 
+(German)</member> 
 <member>First read, then post: <ulink
-url="http://www.kirchwitz.de/~amk/dni/erst-lesen-dann-schreiben">http://www.kirchwitz.de/~amk/dni/erst-lesen-dann-schreiben</ulink> (german)</member> 
+url="http://www.kirchwitz.de/~amk/dni/erst-lesen-dann-schreiben">http://www.kirchwitz.de/~amk/dni/erst-lesen-dann-schreiben</ulink> (German)</member> 
 <member>First steps in the usenet: <ulink
 url="http://www.kirchwitz.de/~amk/dni/erste-schritte">http://www.kirchwitz.de/~amk/dni/erste-schritte</ulink>
-(german)</member>
-<member>Questions and answers from von de.newusers.questions: <ulink
+(German)</member>
+<member>Questions and answers from de.newusers.questions: <ulink
 url="http://www.kirchwitz.de/~amk/dni/faq">http://www.kirchwitz.de/~amk/dni/faq</ulink>
-(german)</member> 
+(German)</member> 
 <member>Seven theses about behavior in the internet: <ulink
 url="http://www.kirchwitz.de/~amk/dni/hoeflichkeit">http://www.kirchwitz.de/~amk/dni/hoeflichkeit</ulink>
-(german)</member> 
+(German)</member> 
 <member>Introduction to the usenet: <ulink
 url="http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung">http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung</ulink>
-(german)</member> 
+(German)</member> 
 <member>Why should I take the rules seriously? <ulink
 url="http://www.kirchwitz.de/~amk/dni/warum-regel">http://www.kirchwitz.de/~amk/dni/warum-regel</ulink>
-(german)</member> 
+(German)</member> 
 <member>The newsreader <acronym>FAQ</acronym>: <ulink
 url="http://www.crosswinds.net/~cgarbers/faq/newsreaderFAQ.htm">http://www.crosswinds.net/~cgarbers/faq/newsreaderFAQ.htm</ulink></member> 
 <member>The correct quoting: <ulink
 url="http://www.afaik.de/usenet/faq/zitieren">http://www.afaik.de/usenet/faq/zitieren</ulink>
-(german)</member> 
-<member>The german umlauts <acronym>FAQ</acronym>: <ulink
+(German)</member> 
+<member>The German umlauts <acronym>FAQ</acronym>: <ulink
 url="http://www.westfalen.de/paefken/de.newusers/umlaute-faq.txt">
-http://www.westfalen.de/paefken/de.newusers/umlaute-faq.txt</ulink> (german)</member> 
+http://www.westfalen.de/paefken/de.newusers/umlaute-faq.txt</ulink> (German)</member> 
 </simplelist> 
 </sect1> 
 
@@ -121,7 +121,7 @@ connection to news, you should not miss the following
 
 <simplelist> 
 <member>Header entries: <ulink url="http://www.kirchwitz.de/~amk/dni/headerzeilen"> 
-http://www.kirchwitz.de/~amk/dni/headerzeilen</ulink> (german)</member> 
+http://www.kirchwitz.de/~amk/dni/headerzeilen</ulink> (German)</member> 
 <member>A very useful message-ID <acronym>FAQ</acronym>: <ulink url="http://www.qad.org/faq/faq-messageid.html"> 
 http://www.qad.org/faq/faq-messageid.html</ulink></member> 
 <member>A lot of links about newsreaders and related topics: <ulink

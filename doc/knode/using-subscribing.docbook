@@ -529,7 +529,7 @@ been fetched.</para>
 <imageobject> 
 <imagedata fileref="redballchk.png" format="PNG"/> </imageobject> 
 </inlinemediaobject> 
-Articles labled with this symbol are unread but the body has already
+Articles labeled with this symbol are unread but the body has already
 been already fetched.</para> 
 </listitem> 
 <listitem> 
@@ -547,7 +547,7 @@ unread articles in it.</para>
 <imageobject> 
 <imagedata fileref="eyes.png" format="PNG"/> </imageobject> 
 </inlinemediaobject> 
-Articles labled with this symbol are parts of a guarded thread. This
+Articles labeled with this symbol are parts of a guarded thread. This
 corresponds to a score of 100.</para> 
 </listitem> 
 </itemizedlist> 
@@ -606,7 +606,7 @@ to use the <keycap>Right Arrow</keycap> key.</para>
 <varlistentry> 
 <term>Filter <keycap>F6</keycap></term> 
 <listitem> 
-<para>A dialog is shown where you can chose the filter for the
+<para>A dialog is shown where you can choose the filter for the
 articles.</para> 
 </listitem> 
 </varlistentry> 
@@ -1294,7 +1294,7 @@ less space on the server.</para>
 <tip> 
 <para>You can find a good guide for correct quoting at <ulink
 url="http://www.afaik.de/usenet/faq/zitieren">http://www.afaik.de/usenet/faq/zitieren</ulink>
-(german).</para> 
+(German).</para> 
 </tip> 
 
 <para>Now we still need to post our reply; like posting the original message
