@@ -173,18 +173,15 @@ void AbbrowserConduit::readConfig()
 		AbbrowserConduitFactory::fAbookType, 0);
 	fAbookFile = fConfig->readEntry(
 		AbbrowserConduitFactory::fAbookFile);
-	syncAction=fConfig->readNumEntry(
-		AbbrowserConduitFactory::fSyncMode, SYNC_FAST);
 	fArchive=fConfig->readBoolEntry(
 		AbbrowserConduitFactory::fArchive, true);
 
 	// Conflict page
-	fConflictResolution=(EConflictResolution) fConfig->readNumEntry(
-		AbbrowserConduitFactory::fResolution, eUserChoose);
+	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)fConfig->readNumEntry(
+		AbbrowserConduitFactory::fResolution, SyncAction::eUseGlobalSetting);
+	if (res!=SyncAction::eUseGlobalSetting) fConflictResolution=res;
 	fSmartMerge=fConfig->readBoolEntry(
 		AbbrowserConduitFactory::fSmartMerge, true);
-	fFirstTime=fConfig->readBoolEntry(
-		AbbrowserConduitFactory::fFirstSync, false);
 
 	// Fields page
 	fPilotStreetHome=!fConfig->readBoolEntry(
@@ -209,13 +206,12 @@ void AbbrowserConduit::readConfig()
 		<< " fConflictResolution=" << fConflictResolution
 		<< " fPilotStreetHome=" << fPilotStreetHome
 		<< " fPilotFaxHome=" << fPilotFaxHome
-		<< " syncAction=" << syncAction
 		<< " fArchive=" << fArchive
 		<< " eCustom[0]=" << eCustom[0]
 		<< " eCustom[1]=" << eCustom[1]
 		<< " eCustom[2]=" << eCustom[2]
 		<< " eCustom[3]=" << eCustom[3]
-		<< " fFirstTime=" << fFirstTime << endl;
+		<< " fFirstTime=" << isFirstSync() << endl;
 #endif
 }
 
@@ -280,7 +276,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	// a Abbrowser KABC::Addressee; allows for easy lookup and comparisons
 	if(aBook->begin() == aBook->end())
 	{
-		fFirstTime = true;
+		fFirstSync = true;
 	}
 	else
 	{
@@ -581,8 +577,6 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
 
-	KPilotUser *usr;
-
 	if(!fConfig)
 	{
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
@@ -592,17 +586,9 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 
 	_prepare();
 
-	usr = fHandle->getPilotUser();
-	// changing the PC or using a different Palm Desktop app causes a full sync
-	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-	fFullSync =(syncAction == SYNC_FULL) ||
-		((usr->getLastSyncPC() !=(unsigned long) gethostid())
-		&& fConfig->readBoolEntry(AbbrowserConduitFactory::fFullSyncOnPCChange, true));
-
-	fFirstTime = false;
+	fFirstSync = false;
 	// Database names probably in latin1.
-	if(!openDatabases(QString::fromLatin1("AddressDB"), &fFirstTime))
+	if(!openDatabases(QString::fromLatin1("AddressDB"), &fFirstSync))
 	{
 		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
@@ -613,14 +599,14 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 		emit logError(i18n("Unable to open the addressbook."));
 		return false;
 	}
-	fFirstTime |=(aBook->begin() == aBook->end());
+	fFirstSync = fFirstSync || (aBook->begin() == aBook->end());
 
 	// perform syncing from palm to abbrowser
 	// iterate through all records in palm pilot
 	pilotindex = 0;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": fullsync=" << fFullSync << ", firstSync=" <<    fFirstTime << endl;
+	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
 	DEBUGCONDUIT << fname << ": syncAction=" << syncAction << ", archive = " << fArchive << endl;
 	DEBUGCONDUIT << fname << ": smartmerge=" << fSmartMerge << ", conflictRes="<< fConflictResolution << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << fPilotStreetHome << ", PilotFaxHOme" << fPilotFaxHome << endl;
@@ -638,7 +624,7 @@ void AbbrowserConduit::syncPalmRecToPC()
 	FUNCTIONSETUP;
 	PilotRecord *r = 0L, *s = 0L;
 
-	if(fFirstTime || fFullSync)
+	if(isFullSync())
 	{
 		r = fDatabase->readRecordByIndex(pilotindex++);
 	}
@@ -675,7 +661,7 @@ void AbbrowserConduit::syncPalmRecToPC()
 		e = _findMatch(PilotAddress(fAddressAppInfo, r));
 	}
 
-	if((!s && e.isEmpty()) || fFirstTime)
+	if((!s && e.isEmpty()) || isFirstSync())
 	{
 		// doesn't exist on PC. Either not deleted at all, or deleted with the archive flag on.
 		if(!r->isDeleted() ||(fArchive && archiveRecord))
@@ -769,9 +755,9 @@ void AbbrowserConduit::syncPCRecToPalm()
 
 
 	PilotRecord *backup = fLocalDatabase->readRecordById(rid);
-	// only update if no backup record or the backup record is not equal to the addresse
+	// only update if no backup record or the backup record is not equal to the addressee
 	PilotAddress pbackupadr(fAddressAppInfo, backup);
-	if(!backup || !_equal(pbackupadr, ad) || fFirstTime)
+	if(!backup || !_equal(pbackupadr, ad) || isFirstSync() )
 	{
 		PilotRecord *rec = fDatabase->readRecordById(rid);
 		if (!rec && !backup)
@@ -796,7 +782,7 @@ void AbbrowserConduit::syncPCRecToPalm()
 
 		if(!rec)
 		{
-			if(fFirstTime) _addToPalm(ad);
+			if(isFirstSync()) _addToPalm(ad);
 			else _checkDelete(rec, backup);
 		}
 		else
@@ -819,7 +805,7 @@ void AbbrowserConduit::syncDeletedRecord()
 	FUNCTIONSETUP;
 
 	PilotRecord *s = fLocalDatabase->readRecordByIndex(pilotindex++);
-	if(!s || fFirstTime)
+	if(!s || isFirstSync() )
 	{
 		QTimer::singleShot(0, this, SLOT(cleanup()));
 		return;
@@ -1105,17 +1091,17 @@ KABC::Addressee AbbrowserConduit::_changeOnPC(PilotRecord * rec, PilotRecord * b
 			KABC::Addressee ab;
 			switch(getEntryResolution(ad, pbackupadr, padr))
 			{
-				case ePilotOverides:
+				case SyncAction::eHHOverrides:
 					_addToAbbrowser(padr);
 					break;
-				case eAbbrowserOverides:
+				case SyncAction::ePCOverrides:
 					_removePilotAddress(padr);
 					break;
-				case eRevertToBackup:
+				case SyncAction::ePreviousSyncOverrides:
 					ab = _addToAbbrowser(pbackupadr);
 					if(_savePilotAddress(pbackupadr, ab)) _saveAbEntry(ab);
 					break;
-				case eDoNotResolve:
+				case SyncAction::eDoNothing:
 				default:
 					break;
 			}
@@ -1483,8 +1469,8 @@ int AbbrowserConduit::_conflict(const QString & entry, const QString & field, co
 	// if both entries are already the same, no need to do anything
 	if(pc == palm) return CHANGED_NONE;
 
-	// If this is a first sync, we don't have a bckup record, so
-	if(fFirstTime)
+	// If this is a first sync, we don't have a backup record, so
+	if(isFirstSync())
 	{
 		bckup = QString();
 		if(pc.isEmpty())
@@ -1519,30 +1505,30 @@ int AbbrowserConduit::_conflict(const QString & entry, const QString & field, co
 	}
 
 	// We need to do some deconfliction. Use already chosen resolution option if possible
-	EConflictResolution fieldres = getFieldResolution(entry, field, palm, bckup, pc);
+	SyncAction::eConflictResolution fieldres = getFieldResolution(entry, field, palm, bckup, pc);
 #ifdef DEBUG
 	DEBUGCONDUIT << "fieldres=" << fieldres << endl;
 #endif
 	switch(fieldres)
 	{
-		case eAbbrowserOverides:
+		case SyncAction::ePCOverrides:
 			mergeNeeded = true;
 			mergedStr = pc;
 			return CHANGED_PALM;
 			break;
-		case ePilotOverides:
+		case SyncAction::eHHOverrides:
 			mergeNeeded = true;
 			mergedStr = palm;
 			return CHANGED_PC;
 			break;
-		case eRevertToBackup:
+		case SyncAction::ePreviousSyncOverrides:
 			mergeNeeded = true;
 			mergedStr = backup;
 			return CHANGED_BOTH;
 			break;
-		case eKeepBothInAbbrowser:
+		case SyncAction::eDuplicate:
 			return CHANGED_DUPLICATE;
-		case eDoNotResolve:
+		case SyncAction::eDoNothing:
 		default:
 			return CHANGED_NORES;
 	}
@@ -1653,7 +1639,7 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress,
 	const PilotAddress & backupAddress, KABC::Addressee & outAbEntry)
 {
 	FUNCTIONSETUP;
-	fEntryResolution = getResolveConflictOption();
+	fEntryResolution = getConflictResolution();
 	PilotAddress pilotAddress(outPilotAddress);
 	KABC::Addressee abEntry(outAbEntry);
 	QString thisName(outAbEntry.realName());
@@ -1929,19 +1915,19 @@ int AbbrowserConduit::_handleConflict(PilotAddress & pilotAddress, PilotAddress 
 			{			// no smart merge
 				switch(getEntryResolution(abEntry, backupAddress, pilotAddress))
 				{
-					case eKeepBothInAbbrowser:
+					case SyncAction::eDuplicate:
 						return CHANGED_DUPLICATE;
-					case ePilotOverides:
+					case SyncAction::eHHOverrides:
 						_copy(abEntry, pilotAddress);
 						return CHANGED_PC;
-					case eAbbrowserOverides:
+					case SyncAction::ePCOverrides:
 						_copy(pilotAddress, abEntry);
 						return CHANGED_PALM;
-					case eRevertToBackup:
+					case SyncAction::ePreviousSyncOverrides:
 						_copy(abEntry, backupAddress);
 						pilotAddress = backupAddress;
 						return CHANGED_BOTH;
-					case eDoNotResolve:
+					case SyncAction::eDoNothing:
 						return CHANGED_NORES;
 						default:
 						return CHANGED_NONE;
@@ -1953,28 +1939,28 @@ int AbbrowserConduit::_handleConflict(PilotAddress & pilotAddress, PilotAddress 
 	return CHANGED_NONE;
 }
 
-AbbrowserConduit::EConflictResolution AbbrowserConduit::getFieldResolution(const QString & entry, const QString & field,
+SyncAction::eConflictResolution AbbrowserConduit::getFieldResolution(const QString & entry, const QString & field,
 	const QString & palm, const QString & backup, const QString & pc)
 {
 	FUNCTIONSETUP;
-	EConflictResolution res = fEntryResolution;
-	if(res == eUserChoose)
+	SyncAction::eConflictResolution res = fEntryResolution;
+	if(res == SyncAction::eAskUser)
 	{
-		res = getResolveConflictOption();
+		res = getConflictResolution();
 	}
 	switch(res)
 	{
-		case eKeepBothInAbbrowser:
-		case ePilotOverides:
-		case eAbbrowserOverides:
-		case eDoNotResolve:
+		case SyncAction::eDuplicate:
+		case SyncAction::eHHOverrides:
+		case SyncAction::ePCOverrides:
+		case SyncAction::eDoNothing:
 			return res;
 			break;
-		case eRevertToBackup:
-			if(backup.isNull()) return eDoNotResolve;
+		case SyncAction::ePreviousSyncOverrides:
+			if(backup.isNull()) return SyncAction::eDoNothing;
 			else return res;
 			break;
-		case eUserChoose:
+		case SyncAction::eAskUser:
 		default:
 			QStringList lst;
 			lst <<
@@ -1993,7 +1979,10 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getFieldResolution(const
 				"</table>"
 				"<p>How should this conflict be resolved?</p></html>").arg(field).arg(entry).arg(palm).arg(pc).arg(backup),
 				lst, i18n("Apply to all fields of this entry"), &remember);
-			if(backup.isNull() && res == 4) res =(EConflictResolution) 5;
+			// If we don't have a backup, the item does not appear in the dialog.
+			// Instead Duplicate will be the 4th radiobutton, so adjust  its index.
+			if(backup.isNull() && (res == SyncAction::ePreviousSyncOverrides) )
+				res = SyncAction::eDuplicate;
 			if(remember)
 			{
 				fEntryResolution = res;
@@ -2002,20 +1991,20 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getFieldResolution(const
 	}
 }
 
-AbbrowserConduit::EConflictResolution AbbrowserConduit::getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress)
+SyncAction::eConflictResolution AbbrowserConduit::getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress)
 {
 	FUNCTIONSETUP;
-	EConflictResolution res = getResolveConflictOption();
+	SyncAction::eConflictResolution res = getConflictResolution();
 	switch(res)
 	{
-		case eKeepBothInAbbrowser:
-		case ePilotOverides:
-		case eAbbrowserOverides:
-		case eRevertToBackup:
-		case eDoNotResolve:
+		case SyncAction::eDuplicate:
+		case SyncAction::eHHOverrides:
+		case SyncAction::ePCOverrides:
+		case SyncAction::ePreviousSyncOverrides:
+		case SyncAction::eDoNothing:
 			return res;
 			break;
-		case eUserChoose:
+		case SyncAction::eAskUser:
 		default:
 			QStringList lst;
 			lst << i18n("Leave untouched") <<
@@ -2062,18 +2051,18 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getEntryResolution(const
 }
 
 
-AbbrowserConduit::EConflictResolution AbbrowserConduit::ResolutionDialog(QString Title, QString Text, QStringList & lst, QString remember, bool * rem) const
+SyncAction::eConflictResolution AbbrowserConduit::ResolutionDialog(QString Title, QString Text, QStringList & lst, QString remember, bool * rem) const
 {
 	FUNCTIONSETUP;
 	ResolutionDlg *dlg = new ResolutionDlg(0L, fHandle, Title, Text, lst, remember);
 	if(dlg->exec() == KDialogBase::Cancel)
 	{
 		delete dlg;
-		return eDoNotResolve;
+		return SyncAction::eDoNothing;
 	}
 	else
 	{
-		EConflictResolution res = (EConflictResolution)(dlg->ResolutionButtonGroup->id(dlg->ResolutionButtonGroup->selected()) + 1);
+		SyncAction::eConflictResolution res = (SyncAction::eConflictResolution)(dlg->ResolutionButtonGroup->id(dlg->ResolutionButtonGroup->selected()) + 1);
 
 		if(!remember.isEmpty() && rem)
 		{
@@ -2093,7 +2082,7 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 	FUNCTIONSETUP;
 	// TODO: also search with the pilotID
 	// first, use the pilotID to UID map to find the appropriate record
-	if(!fFirstTime &&(pilotAddress.id() > 0))
+	if( !isFirstSync() && (pilotAddress.id() > 0) )
 	{
 		QString id(addresseeMap[pilotAddress.id()]);
 #ifdef DEBUG
@@ -2176,21 +2165,21 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 		switch(getEntryResolution(e, badr, adr))
 		{
-			case ePilotOverides:
+			case SyncAction::eHHOverrides:
 				_deleteOnPC(r, s);
 				break;
-			case eAbbrowserOverides:
+			case SyncAction::ePCOverrides:
 				_copy(adr, e);
 				// undelete the pilot record before changing to make sure it doesn't stay deleted!
 				adr.setAttrib(adr.getAttrib() & ~dlpRecAttrDeleted);
 				if (_savePilotAddress(adr, e)) _saveAbEntry(e);
 				break;
-			case eRevertToBackup:
+			case SyncAction::ePreviousSyncOverrides:
 				_copy(e, badr);
 				_savePilotAddress(badr, e);
 				_saveAbEntry(e);
 				break;
-			case eDoNotResolve:
+			case SyncAction::eDoNothing:
 			default:
 				break;
 		}

@@ -73,19 +73,14 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 			fConfigWidget->fSyncDestination->selected()));
 	fConfig->writeEntry(AbbrowserConduitFactory::fAbookFile,
 		fConfigWidget->fAbookFile->url());
-	fConfig->writeEntry(AbbrowserConduitFactory::fSyncMode,
-		fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected()));
 	fConfig->writeEntry(AbbrowserConduitFactory::fArchive,
 		fConfigWidget->fArchive->isChecked());
 
 	// Conflicts page
 	fConfig->writeEntry(AbbrowserConduitFactory::fResolution,
-		fConfigWidget->fConflictStrategy->id(
-			fConfigWidget->fConflictStrategy->selected()));
+		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
 	fConfig->writeEntry(AbbrowserConduitFactory::fSmartMerge,
 		fConfigWidget->fSmartMerge->isChecked());
-	fConfig->writeEntry(AbbrowserConduitFactory::fFirstSync,
-		fConfigWidget->fFirstTimeSync->isChecked());
 
 	// Fields page
 	fConfig->writeEntry(AbbrowserConduitFactory::fOtherField,
@@ -111,25 +106,22 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
+	KConfigGroupSaver s(fConfig, AbbrowserConduitFactory::group());
 
 	// General page
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
 	fConfigWidget->fAbookFile->setURL(
 		fConfig->readEntry(AbbrowserConduitFactory::fAbookFile));
-	fConfigWidget->fSyncMode->setButton(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fSyncMode, 0));
 	fConfigWidget->fArchive->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::fArchive, true));
 
 	// Conflicts page
-	fConfigWidget->fConflictStrategy->setButton(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fResolution, 0));
+	fConfigWidget->fConflictResolution->setCurrentItem(
+		fConfig->readNumEntry(AbbrowserConduitFactory::fResolution,
+		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
 	fConfigWidget->fSmartMerge->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::fSmartMerge, true));
-	fConfigWidget->fFirstTimeSync->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::fFirstSync, false));
 
 	// Fields page
 	fConfigWidget->fOtherPhone->setCurrentItem(
@@ -149,4 +141,3 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fCustom3->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::custom(3)));
 }
-

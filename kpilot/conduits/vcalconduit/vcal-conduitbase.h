@@ -30,26 +30,19 @@
 */
 
 #include <plugin.h>
-
-
 #include <options.h>
-//#include <unistd.h>
-
-//#include <qdatetime.h>
 
 
 
 namespace KCal
 {
 class Calendar;
-// class Event;
 class Incidence;
 } ;
 
 class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
-//class PilotDateEntry;
 class PilotAppCategory;
 
 QDateTime readTm(const struct tm &t);
@@ -101,7 +94,7 @@ protected slots:
 	void syncDeletedIncidence();
 	void cleanup();
 
-	
+
 protected:
 
 	virtual int resolveConflict(KCal::Incidence*e, PilotAppCategory*de);
@@ -117,16 +110,16 @@ protected:
 	virtual void deletePalmRecord(KCal::Incidence*e, PilotRecord*s);
 
 	virtual void updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*de);
-	
+
 	virtual void readConfig();
 	virtual bool openCalendar();
 
 	// THESE NEED TO BE IMPLEMENTED BY CHILD CLASSES!!!!
-	
+
 	// create events from Palm records or vice versa
 	virtual PilotRecord*recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)=0;
 	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *e, const PilotAppCategory *de)=0;
-	
+
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r)=0;
 	virtual KCal::Incidence*newIncidence()=0;
 
@@ -134,7 +127,7 @@ protected:
 	// general settings, implemented by child classes for the conduits
 	virtual const QString configGroup() = 0;
 	virtual const QString dbname() = 0;
-	
+
 	virtual const QString getTitle(PilotAppCategory*de)=0;
 
 	// THESE *CAN* BE IMPLEMTED BY CHILD CLASSES
@@ -148,9 +141,7 @@ protected:
 	KCal::Calendar *fCalendar;
 
 	QString fCalendarFile;
-	int syncAction, nextSyncAction, conflictResolution;
 	bool archive;
-	bool fFirstTime, fFullSync;
 	int pilotindex;
 	enum eCalendarTypeEnum {
 		eCalendarResource=0,
@@ -158,9 +149,8 @@ protected:
 	} fCalendarType;
 
 protected:
-//	class VCalPrivateBase;
 	VCalConduitPrivateBase *fP;
-   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar)=0;
+	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar)=0;
 } ;
 
 #endif

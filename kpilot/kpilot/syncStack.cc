@@ -140,13 +140,15 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		;
 	}
 	if (fMode & ActionQueue::FlagTest)
-	{
 		l.append(CSL1("--test"));
-	}
 	if (fMode & ActionQueue::FlagLocal)
-	{
 		l.append(CSL1("--local"));
-	}
+	if (fMode & ActionQueue::FlagFull)
+		l.append(CSL1("--full"));
+	if (fMode & ActionQueue::FlagHHToPC)
+		l.append(CSL1("--copyHHToPC"));
+	if (fMode & ActionQueue::FlagPCToHH)
+		l.append(CSL1("--copyPCToHH"));
 
 
 	QObject *object = factory->create(fHandle,name(),"SyncAction",l);
@@ -182,9 +184,11 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		conduitFlags.append(*i);
 		conduitFlags.append(CSL1("  "));
 	}
-	
-	logMessage(conduitFlags);
 
+	logMessage(conduitFlags);
+#ifdef DEBUG
+	DEBUGKPILOT<<conduitFlags<<endl;
+#endif
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
 		this,SLOT(execDone(SyncAction *)));
@@ -270,7 +274,7 @@ void ActionQueue::prepare(int m)
 		<< ": Using sync mode " << m
 		<< endl;
 #endif
-	
+
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -289,7 +293,7 @@ void ActionQueue::prepare(int m)
 	queueInit(m);
 	if (m & WithConduits)
 		queueConduits(fConfig,fConduits,m);
-	
+
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:

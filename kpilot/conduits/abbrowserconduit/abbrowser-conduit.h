@@ -44,10 +44,6 @@
 #define SYNCMOD 1
 #define SYNCDEL 3
 
-#define SYNC_FULL 1
-#define SYNC_FAST 0
-#define SYNC_FIRST 2
-
 #define CHANGED_NONE 0
 #define CHANGED_PC 1
 #define CHANGED_PALM 2
@@ -77,20 +73,11 @@ protected slots:
 	void cleanup();
 
 private:
-	enum EConflictResolution {
-		eUserChoose=0,
-		eDoNotResolve,
-		ePilotOverides,
-		eAbbrowserOverides,
-		eRevertToBackup,
-		eKeepBothInAbbrowser
-	};
-	EConflictResolution getResolveConflictOption() const { return fConflictResolution; }
 	bool doSmartMerge() const { return fSmartMerge; }
 
-	EConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress);
-	EConflictResolution getFieldResolution(const QString &entry, const QString &field, const QString &palm, const QString &backup, const QString &pc);
-	EConflictResolution ResolutionDialog(QString Title,
+	eConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress);
+	eConflictResolution getFieldResolution(const QString &entry, const QString &field, const QString &palm, const QString &backup, const QString &pc);
+	eConflictResolution ResolutionDialog(QString Title,
 		QString Text,
 		QStringList &lst,
 		QString remember=QString::null, bool*rem=0L) const;
@@ -103,8 +90,8 @@ private:
 	*  @return the Abbrowser Contact field to map the pilot "other" phone
 	*  field to (such as BusinessFax, etc)
 	*/
-	static bool isPilotStreetHome()  { return fPilotStreetHome; }
-	static bool isPilotFaxHome()  { return fPilotFaxHome; }
+	static bool isPilotStreetHome()  { return fPilotStreetHome; };
+	static bool isPilotFaxHome()  { return fPilotFaxHome; };
 
 
 
@@ -199,9 +186,9 @@ private:
 	struct AddressAppInfo fAddressAppInfo;
 
 	bool fSmartMerge;
-	EConflictResolution fConflictResolution, fEntryResolution;
+	eConflictResolution fEntryResolution;
 	static bool fPilotStreetHome, fPilotFaxHome;
-	bool fFullSync, fFirstTime, fArchive;
+	bool fArchive;
 	static enum  ePilotOtherEnum
 	{
 		eOtherPhone,
@@ -213,7 +200,6 @@ private:
 		eTelex,
 		eTTYTTDPhone
 	} ePilotOther;
-	int syncAction;
 	int pilotindex;
 	bool abChanged;
 	static const QString appString;
@@ -238,9 +224,6 @@ private:
 		eCustomURL,
 		eCustomIM
 	} eCustom[4];
-
-
-
 
 	void showAdresses(PilotAddress & pilotAddress, const PilotAddress & backupAddress, KABC::Addressee & abEntry);
 } ;

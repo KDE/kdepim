@@ -8,7 +8,7 @@
 **
 ** The factories used by KPilot plugins are also documented here.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -25,7 +25,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -37,6 +37,7 @@
 #include <qstringlist.h>
 #include <qfileinfo.h>
 #include <qdir.h>
+#include <qregexp.h>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -86,7 +87,7 @@ void ConduitConfigBase::load(KConfig *)
 /* virtual */ QString ConduitConfigBase::maybeSaveText() const
 {
 	FUNCTIONSETUP;
-	
+
 	return i18n("<qt>The <i>%1</i> conduit's settings have been changed. Do you "
 		"want to save the changes before continuing?</qt>").arg(this->conduitName());
 }
@@ -94,9 +95,9 @@ void ConduitConfigBase::load(KConfig *)
 /* virtual */ bool ConduitConfigBase::maybeSave(KConfig *c)
 {
 	FUNCTIONSETUP;
-	
+
 	if (!isModified()) return true;
-	
+
 	int r = KMessageBox::questionYesNoCancel(fWidget,
 		maybeSaveText(),
 		i18n("%1 Conduit").arg(this->conduitName()));
@@ -140,9 +141,21 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	fLocalDatabase(0L),
 	fTest(args.contains(CSL1("--test"))),
 	fBackup(args.contains(CSL1("--backup"))),
-	fLocal(args.contains(CSL1("--local")))
+	fLocal(args.contains(CSL1("--local"))),
+	fConflictResolution(SyncAction::eAskUser)
 {
 	FUNCTIONSETUP;
+	if (args.contains(CSL1("--copyPCToHH"))) fSyncDirection=SyncAction::eCopyPCToHH;
+	else if (args.contains(CSL1("--copyHHToPC"))) fSyncDirection=SyncAction::eCopyHHToPC;
+	else if (args.contains(CSL1("--full"))) fSyncDirection=SyncAction::eFullSync;
+	else fSyncDirection=SyncAction::eFastSync;
+
+	QString cResolution(args.grep(QRegExp("--conflictResolution \\d*")).first());
+	if (cResolution.isEmpty())
+	{
+		fConflictResolution=(SyncAction::eConflictResolution)
+			cResolution.replace(QRegExp("--conflictResolution (\\d*)"), "\\1").toInt();
+	}
 
 #ifdef DEBUG
 	for (QStringList::ConstIterator it = args.begin();
@@ -318,7 +331,7 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 {
 	FUNCTIONSETUP;
-	
+
 	/*
 	** We should look into the --local flag passed
 	** to the conduit and act accordingly, but until
@@ -331,7 +344,7 @@ bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 		<< (isLocal() ? "local " : "")
 		<< endl ;
 #endif
-		
+
 	if (isTest() && isLocal())
 	{
 		return openDatabases_(dbName,CSL1("/tmp/"));

@@ -116,10 +116,10 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 {
 	PilotTodoEntry*entry=dynamic_cast<PilotTodoEntry*>(tosearch);
 	if (!entry) return 0L;
-	
+
 	QString title=entry->getDescription();
 	QDateTime dt=readTm( entry->getDueDate() );
-	
+
 	KCal::Todo *event = fAllTodos.first();
 	while (event!=0)
 	{
@@ -244,7 +244,7 @@ void TodoConduit::readConfig()
 	// determine if the categories have ever been synce. Needed to prevent loosing the categories on the desktop.
 	// also use a full sync for the first time to make sure the palm categories are really transferred to the desktop
 	categoriesSynced = fConfig->readNumEntry("ConduitVersion", 0)>=CONDUIT_VERSION_CATEGORYSYNC;
-	if (!categoriesSynced) fFullSync=true;
+	if (!categoriesSynced & !isFullSync() ) fSyncDirection=SyncAction::eFullSync;
 #ifdef DEBUG
 	DEBUGCONDUIT<<"categoriesSynced="<<categoriesSynced<<endl;
 #endif
@@ -294,7 +294,7 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 	} else {
 		de->setIndefinite(1);
 	}
-	
+
 	// TODO: take recurrence (code in VCAlConduit) from ActionNames
 
 	setCategory(de, todo);
@@ -318,17 +318,17 @@ DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
 
 
 
-void TodoConduit::preRecord(PilotRecord*r) 
+void TodoConduit::preRecord(PilotRecord*r)
 {
 	FUNCTIONSETUP;
-	if (!categoriesSynced && r) 
+	if (!categoriesSynced && r)
 	{
 		const PilotAppCategory*de=newPilotEntry(r);
 		KCal::Incidence *e = fP->findIncidence(r->getID());
 		setCategory(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de));
 	}
 }
- 
+
 
 
 void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
@@ -406,12 +406,12 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 		e->setDtDue(readTm(de->getDueDate()));
 		e->setHasDueDate(true);
 	}
-	
+
 	// Categories
 	// TODO: Sync categories
 	// first remove all categories and then add only the appropriate one
 	setCategory(e, de);
-	
+
 	// PRIORITY //
 	e->setPriority(de->getPriority());
 

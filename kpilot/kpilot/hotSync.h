@@ -5,11 +5,11 @@
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines SyncActions, which are used to perform some specific
-** task during a HotSync. Conduits are not included here, nor are 
+** task during a HotSync. Conduits are not included here, nor are
 ** sync actions requiring user interaction. Those can be found in the
 ** conduits subdirectory or interactiveSync.h.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -38,7 +38,7 @@ class QTimer;
 #include <qstringlist.h>
 
 #include "syncAction.h"
-
+#include "syncStack.h"
 
 class TestLink : public SyncAction
 {
@@ -56,10 +56,11 @@ class BackupAction : public SyncAction
 Q_OBJECT
 
 public:
-	BackupAction(KPilotDeviceLink *);
+	BackupAction(KPilotDeviceLink *, int mode=ActionQueue::BackupMode);
 
 	enum Status { Init,
 		Error,
+		FastBackup,
 		FullBackup,
 		BackupIncomplete,
 		BackupEnded,
@@ -76,6 +77,7 @@ private:
 	*/
 	void endBackup();
 	bool createLocalDatabase(DBInfo *);
+	bool checkBackupDirectory(QString backupDir);
 
 private slots:
 	void backupOneDB();
@@ -83,7 +85,9 @@ private slots:
 private:
 	QTimer *fTimer;
 	int fDBIndex;
-	QString fDatabaseDir;
+	QString fBackupDir, fDatabaseDir;
+	int fMode;
+	bool fFullBackup;
 } ;
 
 class FileInstallAction : public SyncAction
@@ -115,7 +119,7 @@ class CleanupAction : public SyncAction
 public:
 	CleanupAction(KPilotDeviceLink * p);
 	virtual ~CleanupAction();
-	
+
 protected:
 	virtual bool exec();
 } ;

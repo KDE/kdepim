@@ -66,8 +66,8 @@ static const char *logw_id =
 
 
 LogWidget::LogWidget(QWidget * parent) :
-	PilotComponent(parent, "component_log", QString::null),
 	DCOPObject("LogIface"),
+	PilotComponent(parent, "component_log", QString::null),
 	fLog(0L),
 	fShowTime(false),
 	fSplash(0L),

@@ -525,12 +525,12 @@ void KPilotDeviceLink::acceptDevice()
 	else
 	{
 		DEBUGDAEMON << fname
-			<< ": RomVersion=" << fPilotSysInfo.romVersion()
-			<< " Locale=" << fPilotSysInfo.locale()
+			<< ": RomVersion=" << fPilotSysInfo->getRomVersion()
+			<< " Locale=" << fPilotSysInfo->getLocale()
 #if PILOT_LINK_NUMBER < 10
 			/* No prodID member */
 #else
-			<< " Product=" << fPilotSysInfo.prodID()
+			<< " Product=" << fPilotSysInfo->getProductID()
 #endif
 			<< endl;
 	}

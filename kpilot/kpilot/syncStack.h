@@ -142,14 +142,19 @@ public:
 		// These are optional (mixins)
 		//
 		//
-		                   // 16 still available
+		WithBackup=0x10,
 		WithUserCheck=0x20,
 		WithInstaller=0x40,
 		WithConduits=0x80,
+
 		// These are misc. flags you can set
+		FlagPCToHH=0x100,
+		FlagHHToPC=0x200,
 		FlagLocal=0x1000,
+		FlagFull=0x2000,
 		                   // 8192 still available
 		FlagTest=0x4000,
+
 		                   // 32768 still available
 		// These are masks you can use to select
 		// the bits coding the action, mixins (With*)
@@ -158,13 +163,13 @@ public:
 		//
 		ActionMask=0xf,
 		MixinMask=0xf0,
-		FlagMask=0xf000,
+		FlagMask=0xff00,
 		// These are derived values for convenience.
 		// Note that a HotSync doesn't install files by default.
 		//
 		//
-		TestMode = Test | WithUserCheck | WithConduits,
-		BackupMode = Backup | WithUserCheck | WithConduits,
+		TestMode = Test | WithUserCheck | WithConduits | FlagTest,
+		BackupMode = Backup | WithUserCheck | WithConduits | WithBackup,
 		RestoreMode = Restore | WithUserCheck,
 		HotSyncMode = HotSync | WithUserCheck | WithConduits
 		} ;
@@ -177,7 +182,7 @@ public:
 	* and possibly one or more of the With* elements, which insert extra
 	* actions at the relevant moment in the execution of the stack.
 	*/
-	
+
 	/* DEPRECATED */
 	void prepare(int m);
 	void prepareBackup() { prepare(BackupMode); } ;
@@ -199,13 +204,13 @@ public:
 	* For queueConduits, whatever is relevant for the conduits
 	*   can be used, usually things in the FlagMask and ActionMask.
 	*/
-	
-	void queueInit(int mode=WithUserCheck); 
+
+	void queueInit(int mode=WithUserCheck);
 	void queueConduits(KConfig *,const QStringList &conduits,int mode=0);
 	void queueInstaller(const QString &dir,const QStringList &files);
 	void queueCleanup();
-	
-	
+
+
 protected:
 	virtual bool exec();
 

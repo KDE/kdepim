@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2002-3 by Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
-** 
+**
 ** Contributions:
 **    Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
 **
@@ -45,7 +45,7 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
 #include <libkcal/incidence.h>
-#include <libkcal/calendarresources.h> 
+#include <libkcal/calendarresources.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 
@@ -129,13 +129,12 @@ struct tm writeTm(const QDate &dt)
  *                          VCalConduitBase class                               *
  ****************************************************************************/
 
- 
+
 VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
 	const char *n,
 	const QStringList &a) :
 	ConduitAction(d,n,a),
 	fCalendar(0L),
-	fFullSync(false),
 	fP(0L)
 {
 	FUNCTIONSETUP;
@@ -155,43 +154,42 @@ VCalConduitBase::~VCalConduitBase()
 }
 
 
-
 /* There are several different scenarios for a record on the Palm and its PC counterpart
-  N means a new record, M flags a modified record, D a deleted and - an unmodified record
-  first is the Palm record, second the corresponding PC record
-  (-,-)...unchanged, just sync if first time or full sync
-  (N,-)...no rec matching the Palm ID in the backupDB/calendar yet => add KCal::Event
-  (M,-)...record is in backupDB, unchanged in calendar => modify in calendar and in backupDB
-  (D,-)...deleted on Palm, exists in backupDB and calendar => just delete from calendar and backupDB
-  (-,N)...no or invalid pilotID set for the KCal::Event => just add to palm and backupDB
-  (-,M)...valid PilotID set => just modify on Palm
-  (-,D)...Record in backupDB, but not in calendar => delete from Palm and backupDB
-  (N,N)...Can't find out (the two records are not correlated in any way, they just have the same data!!
-  (M,M),(M,L),(L,M)...(Record exists on Palm and the Event has the ID) CONFLICT, ask the user what to do
-                      or use a config setting
-  (L,L)...already deleted on both, no need to do anything.
+	N means a new record, M flags a modified record, D a deleted and - an unmodified record
+	first is the Palm record, second the corresponding PC record
+	(-,-)...unchanged, just sync if first time or full sync
+	(N,-)...no rec matching the Palm ID in the backupDB/calendar yet => add KCal::Event
+	(M,-)...record is in backupDB, unchanged in calendar => modify in calendar and in backupDB
+	(D,-)...deleted on Palm, exists in backupDB and calendar => just delete from calendar and backupDB
+	(-,N)...no or invalid pilotID set for the KCal::Event => just add to palm and backupDB
+	(-,M)...valid PilotID set => just modify on Palm
+	(-,D)...Record in backupDB, but not in calendar => delete from Palm and backupDB
+	(N,N)...Can't find out (the two records are not correlated in any way, they just have the same data!!
+	(M,M),(M,L),(L,M)...(Record exists on Palm and the Event has the ID) CONFLICT, ask the user what to do
+		or use a config setting
+	(L,L)...already deleted on both, no need to do anything.
 
 
-   The sync process is as follows (for a fast sync):
+	The sync process is as follows (for a fast sync):
 	1) syncPalmRecToPC goes through all records on Palm (just the modified one are necessary), find it
-	   in the backupDB. The following handles ([NMD],*)
-	   a) if it doesn't exist and was not deleted, add it to the calendar and the backupDB
-	   b) if it exists and was not deleted,
+		in the backupDB. The following handles ([NMD],*)
+		a) if it doesn't exist and was not deleted, add it to the calendar and the backupDB
+		b) if it exists and was not deleted,
 			A) if it is unchanged in the calendar, just modify in the calendar
 		c) if it exists and was deleted, delete it from the calendar if necessary
 	2) syncEvent goes through all KCale::Events in the calendar (just modified, this is the modification
-	   time is later than the last sync time). This handles (-,N),(-,M)
+		time is later than the last sync time). This handles (-,N),(-,M)
 		a) if it does not have a pilotID, add it to the palm and backupDB, store the PalmID
 		b) if it has a valid pilotID, update the Palm record and the backup
 	3) finally, deleteRecord goes through all records (which don't have the deleted flag) of the backup db
-	   and if one does not exist in the Calendar, it was deleted there, so delete it from the Palm, too.
+		and if one does not exist in the Calendar, it was deleted there, so delete it from the Palm, too.
 		This handles the last remaining case of (-,D)
 
 
 In addition to the fast sync, where the last sync was done with this very PC and calendar file,
 there are two special cases: a full and a first sync.
 -) a full sync goes through all records, not just the modified ones. The pilotID setting of the calendar
-   records is used to determine if the record already exists. if yes, the record is just modified
+	records is used to determine if the record already exists. if yes, the record is just modified
 -) a first sync completely ignores the pilotID setting of the calendar events. All records are added,
 	so there might be duplicates. The add function for the calendar should check if a similar record already
 	exists, but this is not done yet.
@@ -213,8 +211,6 @@ there are two special cases: a full and a first sync.
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<vcalconduitbase_id<<endl;
 
-	KPilotUser*usr;
-
 	if (!fConfig)
 	{
 		kdWarning() << k_funcinfo
@@ -223,49 +219,35 @@ there are two special cases: a full and a first sync.
 		return false;
 	}
 
-/*	// Since we now have the calendar resource framework
-		// this check is no longer needeed to prevent corruption
-	if (PluginUtility::isRunning("korganizer") ||
-		PluginUtility::isRunning("alarmd"))
-	{
-		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
-		return false;
-	}*/
-
 	readConfig();
 
 	// don't do a first sync by default in any case, only when explicitely requested, or the backup
 	// database or the alendar are empty.
-	fFirstTime = (syncAction==SYNC_FIRST || nextSyncAction!=0);
-	usr=fHandle->getPilotUser();
-	// changing the PC or using a different Palm Desktop app causes a full sync
-	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-	fFullSync = fFullSync|| (syncAction==SYNC_FULL) ||
-		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(VCalConduitFactoryBase::fullSyncOnPCChange, true));
+	fFirstSync = false;
 
-	if (!openDatabases(dbname(), &fFullSync) ) goto error;
+	// TODO: Check Full sync and First sync
+	if (!openDatabases(dbname(), &fFirstSync) ) goto error;
 	if (!openCalendar() ) goto error;
 
 	preSync();
 
 
 #ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": fullsync="<<fFullSync<<", firstSync="<<fFirstTime<<endl;
-	DEBUGCONDUIT<<fname<<": syncAction="<<syncAction<<", nextSyncAction = "<<nextSyncAction
-		<<", conflictResolution = "<<conflictResolution<<", archive = "<<archive<<endl;
+	DEBUGCONDUIT<<fname<<": fullsync="<<isFullSync()<<", firstSync="<<isFirstSync()<<endl;
+	DEBUGCONDUIT<<fname<<": syncAction="<<fSyncDirection<<
+		<<", conflictResolution = "<<fConflictResolution<<", archive = "<<archive<<endl;
 #endif
 
 	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(fCalendarFile));
 	pilotindex=0;
-	switch (nextSyncAction)
+	switch (fSyncDirection)
 	{
-	case 2:
+	case SyncAction::eCopyPCToHH:
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
 		// the Palm->PC side and leave the existing items on the palm?
 		QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
 		break;
-	case 1:
+	case SyncAction::eCopyHHToPC:
 		// TODO: Clear the backup database and the calendar, update fP
 		//       or just add the palm items and leave the PC ones there????
 	default:
@@ -289,9 +271,9 @@ error:
 	fConfig->setGroup(configGroup());
 
 	fCalendarFile = fConfig->readEntry(VCalConduitFactoryBase::calendarFile);
-	syncAction = fConfig->readNumEntry(VCalConduitFactoryBase::syncAction);
-	nextSyncAction = fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction);
-	conflictResolution = fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution);
+	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)fConfig->readNumEntry(
+		VCalConduitFactoryBase::conflictResolution, SyncAction::eUseGlobalSetting);
+	if (res!=SyncAction::eUseGlobalSetting) fConflictResolution=res;
 	archive = fConfig->readBoolEntry(VCalConduitFactoryBase::archive);
 	fCalendarType = (eCalendarTypeEnum)fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0);
 }
@@ -328,7 +310,7 @@ error:
 			fCalendar->setLocalTime();*/
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo << 
+				kdWarning() << k_funcinfo <<
 				    "Cannot initialize calendar object for file "<<fCalendarFile<<endl;
 				return false;
 			}
@@ -344,7 +326,7 @@ error:
 #ifdef DEBUG
 				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
 #endif
-				fFirstTime=true;
+				fFirstSync=true;
 			}
 			break;
 
@@ -368,8 +350,8 @@ error:
 	fP = newVCalPrivate(fCalendar);
 	if (!fP) return false;
 	fP->updateIncidences();
-	if (fP->count()<1) //fFullSync=true;
-		fFirstTime=true;
+	if (fP->count()<1)
+		fFirstSync=true;
 
 	return (fCalendar && fP);
 }
@@ -381,7 +363,7 @@ void VCalConduitBase::syncPalmRecToPC()
 	FUNCTIONSETUP;
 
 	PilotRecord *r;
-	if (fFirstTime || fFullSync)
+	if (isFullSync())
 	{
 		r = fDatabase->readRecordByIndex(pilotindex++);
 	}
@@ -394,7 +376,7 @@ void VCalConduitBase::syncPalmRecToPC()
 	if (!r)
 	{
 		fP->updateIncidences();
-		if (nextSyncAction==1)
+		if (fSyncDirection==SyncAction::eCopyHHToPC)
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
@@ -414,7 +396,7 @@ void VCalConduitBase::syncPalmRecToPC()
 	bool archiveRecord=(r->isArchived());
 
 	s = fLocalDatabase->readRecordById(r->getID());
-	if (!s || fFirstTime)
+	if (!s || isFirstSync())
 	{
 #ifdef DEBUG
 		if (r->getID()>0 && !s)
@@ -435,7 +417,7 @@ void VCalConduitBase::syncPalmRecToPC()
 	{
 		if (r->isDeleted())
 		{
-			if (archive && archiveRecord) 
+			if (archive && archiveRecord)
 			{
 				changeRecord(r,s);
 			}
@@ -461,13 +443,13 @@ void VCalConduitBase::syncPCRecToPalm()
 {
 	FUNCTIONSETUP;
 	KCal::Incidence*e=0L;
-	if (fFirstTime || fFullSync) e=fP->getNextIncidence();
+	if (isFullSync()) e=fP->getNextIncidence();
 	else e=fP->getNextModifiedIncidence();
 
 	if (!e)
 	{
 		pilotindex=0;
-		if (nextSyncAction!=0)
+		if ( (fSyncDirection==SyncAction::eCopyHHToPC) || (fSyncDirection==SyncAction::eCopyPCToHH) )
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
@@ -475,7 +457,7 @@ void VCalConduitBase::syncPCRecToPalm()
 		QTimer::singleShot(0,this,SLOT(syncDeletedIncidence()));
 		return;
 	}
-	
+
 	// let subclasses do something with the event
 	preIncidence(e);
 
@@ -517,7 +499,7 @@ void VCalConduitBase::syncDeletedIncidence()
 	FUNCTIONSETUP;
 
 	PilotRecord *r = fLocalDatabase->readRecordByIndex(pilotindex++);
-	if (!r || fFullSync || fFirstTime)
+	if (!r || isFullSync() )
 	{
 		QTimer::singleShot(0 ,this,SLOT(cleanup()));
 		return;
@@ -556,7 +538,7 @@ void VCalConduitBase::cleanup()
 	FUNCTIONSETUP;
 	postSync();
 
-	if (fDatabase) 
+	if (fDatabase)
 	{
 		fDatabase->resetSyncFlags();
 		fDatabase->cleanup();
@@ -610,8 +592,8 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 	PilotAppCategory *de=newPilotEntry(r);
 	KCal::Incidence*e =0L;
-	 
-	if (de) 
+
+	if (de)
 	{
 		e=fP->findIncidence(de);
 		if (!e)
@@ -628,7 +610,7 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 		}
 /*	if (e && de)
 	{
-		
+
 		incidenceFromRecord(e,de);
 		// TODO: find out if there is already an entry with this data...
 
@@ -640,15 +622,16 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 // return how to resolve conflicts. for now PalmOverrides=0=false, PCOverrides=1=true, Ask=2-> ask the user using a messagebox
 int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
-	if (conflictResolution==RES_ASK)
+	if (fConflictResolution==SyncAction::eAskUser)
 	{
-		return KMessageBox::warningYesNo(NULL, 
+		// TODO: This is messed up!!!
+		return KMessageBox::warningYesNo(NULL,
 			i18n("The following item was modified both on the Pilot and on your PC:\nPC entry:\n\t")+e->summary()+i18n("\nPilot entry:\n\t")+getTitle(de)+
 				i18n("\n\nShould the Pilot entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Pilot entry."),
 			i18n("Conflicting Entries")
 		)==KMessageBox::No;
 	}
-	return conflictResolution;
+	return fConflictResolution;
 }
 
 KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
@@ -785,5 +768,5 @@ const QString VCalConduitBase::dbname()
 {
     return QString::null;
 }
-	
-	
+
+

@@ -3,7 +3,7 @@
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines SyncActions, which are used to perform some specific
-** task during a HotSync. Conduits are not included here, nor are 
+** task during a HotSync. Conduits are not included here, nor are
 ** sync actions requiring user interaction. Those can be found in the
 ** conduits subdirectory or interactiveSync.h.
 */
@@ -53,6 +53,10 @@ static const char *hotsync_id =
 
 #include "pilotUser.h"
 #include "pilotAppCategory.h"
+#include "syncStack.h"
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+#include "pilotDatabase.h"
 
 #include "hotSync.moc"
 
@@ -111,8 +115,8 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 	return true;
 }
 
-BackupAction::BackupAction(KPilotDeviceLink * p) :
-	SyncAction(p, "backupAction")
+BackupAction::BackupAction(KPilotDeviceLink * p, int mode) :
+	SyncAction(p, "backupAction"), fMode(mode), fFullBackup(mode & ActionQueue::FlagFull)
 {
 	FUNCTIONSETUP;
 
@@ -136,8 +140,17 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 	case FullBackup:
 		s.append(CSL1("FullBackup"));
 		break;
+	case FastBackup:
+		s.append(CSL1("FastBackup"));
+		break;
 	case BackupEnded:
 		s.append(CSL1("BackupEnded"));
+		break;
+	case BackupIncomplete:
+		s.append(CSL1("BackupIncomplete"));
+		break;
+	case BackupComplete:
+		s.append(CSL1("BackupComplete"));
 		break;
 	default:
 		s.append(CSL1("(unknown "));
@@ -159,20 +172,75 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 		<< fHandle->getPilotUser()->getUserName() << "\"" << endl;
 #endif
 
-	addSyncLogEntry(i18n("Full backup started."));
+	fBackupDir =
+		fDatabaseDir +
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
+		CSL1("/");
 
-	// Q_ASSERT(!fTimer);
+	if (fFullBackup)
+	{
+		fStatus = FullBackup;
+		addSyncLogEntry(i18n("Full backup started."));
+	}
+	else
+	{
+		fStatus = FastBackup;
+		addSyncLogEntry(i18n("Fast backup started"));
+	}
+
+	if (!checkBackupDirectory(fBackupDir))
+	{
+		fStatus=BackupIncomplete;
+		// Don't issue an error message, checkBackupDirectory
+		// did this already...
+		return false;
+	}
 
 	fTimer = new QTimer(this);
 	QObject::connect(fTimer, SIGNAL(timeout()),
 		this, SLOT(backupOneDB()));
 
 	fDBIndex = 0;
-	fStatus = FullBackup;
 
 	fTimer->start(0, false);
 	return true;
 }
+
+bool BackupAction::checkBackupDirectory(QString backupDir)
+{
+	FUNCTIONSETUP;
+	QFileInfo fi(backupDir);
+
+	if (!(fi.exists() && fi.isDir()))
+	{
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Need to create backup directory for user "
+			<< fHandle->getPilotUser()->getUserName() << endl;
+#endif
+
+		fi = QFileInfo(fDatabaseDir);
+		if (!(fi.exists() && fi.isDir()))
+		{
+			kdError() << k_funcinfo
+				<< ": Database backup directory "
+				<< "doesn't exist."
+				<< endl;
+			return false;
+		}
+
+		QDir databaseDir(backupDir);
+
+		if (!databaseDir.mkdir(backupDir, true))
+		{
+			kdError() << k_funcinfo
+				<< ": Can't create backup directory." << endl;
+			return false;
+		}
+	}
+	return true;
+}
+
 
 /* slot */ void BackupAction::backupOneDB()
 {
@@ -195,13 +263,18 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 		return;
 	}
 
-	if (fHandle->getNextDatabase(fDBIndex, &info) < 0)
+	// TODO: Is there a way to skip unchanged databases?
+	int res=fHandle->getNextDatabase(fDBIndex, &info);
+	if (res < 0)
 	{
 #ifdef DEBUG
 		DEBUGDAEMON << fname << ": Backup complete." << endl;
 #endif
 
-		addSyncLogEntry(i18n("Full backup complete."));
+		if (fFullBackup)
+			addSyncLogEntry(i18n("Full backup complete."));
+		else
+			addSyncLogEntry(i18n("Fast backup complete."));
 		endBackup();
 		fStatus = BackupComplete;
 		return;
@@ -232,47 +305,46 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
-	QString fullBackupDir =
-		fDatabaseDir + 
-		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
-		CSL1("/");
-
 #ifdef DEBUG
 	DEBUGDAEMON << fname
-		<< ": Looking in directory " << fullBackupDir << endl;
+		<< ": Looking in directory " << fBackupDir << endl;
 #endif
-
-	QFileInfo fi(fullBackupDir);
-
-	if (!(fi.exists() && fi.isDir()))
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname
-			<< ": Need to create backup directory for user "
-			<< fHandle->getPilotUser()->getUserName() << endl;
-#endif
-
-		fi = QFileInfo(fDatabaseDir);
-		if (!(fi.exists() && fi.isDir()))
-		{
-			kdError() << k_funcinfo
-				<< ": Database backup directory "
-				<< "doesn't exist."
-				<< endl;
-			return false;
-		}
-
-		QDir databaseDir(fDatabaseDir);
-
-		if (!databaseDir.mkdir(fullBackupDir, true))
-		{
-			kdError() << k_funcinfo
-				<< ": Can't create backup directory." << endl;
-			return false;
-		}
-	}
 
 	QString databaseName(QString::fromLatin1(info->name));
+	if (!fFullBackup)
+	{
+		// open the serial db first so that the local db is not read into memory
+		// in case of an error
+		PilotSerialDatabase*serial=new PilotSerialDatabase(pilotSocket(), databaseName);
+		if (serial->isDBOpen())
+		{
+			PilotLocalDatabase*local=new PilotLocalDatabase(fBackupDir, databaseName);
+			if (local->isDBOpen())
+			{
+				// Now walk through all modified records
+				int index=0;
+				PilotRecord*rec=serial->readNextModifiedRec(&index);
+				while (rec)
+				{
+					local->writeRecord(rec);
+					KPILOT_DELETE(rec);
+					rec=serial->readNextModifiedRec(&index);
+				}
+				KPILOT_DELETE(local);
+				KPILOT_DELETE(serial);
+				return true;
+			}
+			KPILOT_DELETE(local);
+		}
+		KPILOT_DELETE(serial);
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Fast backup not possible with database "<<info->name<<". Will do full backup on it"<<endl;
+#endif
+	}
+
+	// Either we want a full backup, or fast backup encoutered a problem
+	// Just fetch the database to the backup dir
+	if (!checkBackupDirectory(fBackupDir)) return false;
 
 #if QT_VERSION < 0x30100
 	databaseName.replace(QRegExp(CSL1("/")), CSL1("_"));
@@ -280,7 +352,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	databaseName.replace('/', CSL1("_"));
 #endif
 
-	QString fullBackupName = fullBackupDir + databaseName;
+	QString fullBackupName = fBackupDir + databaseName;
 
 	if (info->flags & dlpDBFlagResource)
 	{

@@ -205,7 +205,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	QString s = getDaemon().statusString();
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
+	DEBUGKPILOT << fname << ": Daemon status is " << s.latin1() << endl;
 #endif
 
 	if ((s.isEmpty()) || (!getDaemon().ok()))

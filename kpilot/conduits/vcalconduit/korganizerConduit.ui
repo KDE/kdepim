@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>530</width>
-            <height>338</height>
+            <width>392</width>
+            <height>265</height>
         </rect>
     </property>
     <property name="caption">
@@ -80,10 +80,6 @@
                                 <property name="text">
                                     <string>&amp;Standard calendar</string>
                                 </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-
-                                </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
                                 <property name="name">
@@ -98,69 +94,12 @@
                             </widget>
                         </grid>
                     </widget>
-                    <widget class="QButtonGroup">
-                        <property name="name">
-                            <cstring>syncAction</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Synchronization Mode:</string>
-                        </property>
-                        <vbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>11</number>
-                            </property>
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton9</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Do a &amp;fast sync if possible</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton10</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Always do a f&amp;ull sync (may take some time)</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton11</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Sync only handheld items to PC (next sync only)</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton12</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Sync only PC items to handheld (next sync only)</string>
-                                </property>
-                            </widget>
-                        </vbox>
-                    </widget>
                     <widget class="QCheckBox">
                         <property name="name">
                             <cstring>fArchive</cstring>
                         </property>
                         <property name="text">
                             <string>Store &amp;archived records  in the KDE calendar</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
@@ -196,50 +135,94 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QButtonGroup" row="1" column="0">
+                    <widget class="QGroupBox" row="0" column="0">
                         <property name="name">
-                            <cstring>conflictResolution</cstring>
+                            <cstring>groupBox4</cstring>
                         </property>
                         <property name="title">
-                            <string>Conflicting Items</string>
+                            <string>Conflict resolution</string>
                         </property>
                         <grid>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QRadioButton" row="2" column="0">
+                            <widget class="QLabel" row="1" column="0">
                                 <property name="name">
-                                    <cstring>RadioButton3</cstring>
+                                    <cstring>textLabel1_2</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>4</hsizetype>
+                                        <vsizetype>5</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Ask for every conflicting item</string>
+                                    <string>Conflict &amp;resolution:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fConflictResolution</cstring>
                                 </property>
                             </widget>
-                            <widget class="QRadioButton" row="0" column="0">
+                            <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
                                 <property name="name">
-                                    <cstring>RadioButton1</cstring>
-                                </property>
-                                <property name="focusPolicy">
-                                    <enum>NoFocus</enum>
+                                    <cstring>textLabel1</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Handheld overrides desktop</string>
+                                    <string>&lt;p&gt;Here you can select the default action if an event was modified on both sides. &lt;/p&gt;&lt;p&gt;Conflict resolution is not meant to resolve double-scheduling conflicts, e.g. if you have two meetings at the same time, the conduit will not warn you!&lt;/p&gt;
+</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>WordBreak|AlignJustify|AlignVCenter</set>
                                 </property>
                             </widget>
-                            <widget class="QRadioButton" row="1" column="0">
+                            <widget class="QComboBox" row="1" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Use KPilot's global setting</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ask user</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Do Nothing</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Handheld overrides</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>PC overrides</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Values from last sync (if possible)</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Use both entries</string>
+                                    </property>
+                                </item>
                                 <property name="name">
-                                    <cstring>RadioButton2</cstring>
+                                    <cstring>fConflictResolution</cstring>
                                 </property>
-                                <property name="text">
-                                    <string>&amp;Desktop overrides handheld</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
+                                <property name="currentItem">
+                                    <number>6</number>
                                 </property>
                             </widget>
                         </grid>
                     </widget>
-                    <spacer row="2" column="0">
+                    <spacer row="1" column="0">
                         <property name="name">
                             <cstring>Spacer3</cstring>
                         </property>
@@ -256,14 +239,6 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QLabel" row="0" column="0">
-                        <property name="name">
-                            <cstring>textLabel1</cstring>
-                        </property>
-                        <property name="text">
-                            <string>If you change the same entry on the PC and on the handheld, the conduit somehow needs to decide which of the two modifications is the correct one. Here you can select the default action if an event was modified on both sides. &lt;p&gt;Conflict resolution is not meant to resolve double-scheduling conflicts, e.g. if you have two meetings at the same time, the conduit will not warn you!&lt;/p&gt;</string>
-                        </property>
-                    </widget>
                 </grid>
             </widget>
         </widget>
@@ -279,14 +254,7 @@
 </connections>
 <tabstops>
     <tabstop>tabWidget</tabstop>
-    <tabstop>RadioButton9</tabstop>
-    <tabstop>RadioButton10</tabstop>
-    <tabstop>RadioButton11</tabstop>
-    <tabstop>RadioButton12</tabstop>
     <tabstop>fArchive</tabstop>
-    <tabstop>RadioButton1</tabstop>
-    <tabstop>RadioButton2</tabstop>
-    <tabstop>RadioButton3</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

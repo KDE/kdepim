@@ -34,6 +34,7 @@
 #include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qbuttongroup.h>
+#include <qcombobox.h>
 
 #include <kconfig.h>
 //#include <kfiledialog.h>
@@ -87,23 +88,12 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile,
 		fConfigWidget->fCalendarFile->url());
 
-	int act=fConfigWidget->syncAction->id(fConfigWidget->syncAction->selected())+1;
-	if (act>SYNC_MAX)
-	{
-		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, act-SYNC_MAX);
-	}
-	else
-	{
-		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
-		fConfig->writeEntry(VCalConduitFactoryBase::syncAction, act);
-	}
 	fConfig->writeEntry(VCalConduitFactoryBase::archive,
 		fConfigWidget->fArchive->isChecked());
 
 	// Conflicts page
 	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
-		fConfigWidget->conflictResolution->id(
-			fConfigWidget->conflictResolution->selected()));
+		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
 
 }
 
@@ -120,22 +110,13 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(
 		VCalConduitFactoryBase::calendarFile,QString::null));
 
-	int nextAction=fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction, 0);
-	if (nextAction)
-	{
-		fConfigWidget->syncAction->setButton( SYNC_MAX+nextAction-1);
-	}
-	else
-	{
-		fConfigWidget->syncAction->setButton(
-			fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
-	}
 	fConfigWidget->fArchive->setChecked(
 		fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
 
 	// Conflicts page
-	fConfigWidget->conflictResolution->setButton(
-		fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
+	fConfigWidget->fConflictResolution->setCurrentItem(
+		fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution,
+		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
 
 
 }

@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -33,16 +33,17 @@ class KPilotDeviceLink;
 class QButtonGroup;
 class QCheckBox;
 class QTimer;
+
 class ResolutionDlg : public KDialogBase
-{ 
+{
     Q_OBJECT
 
 public:
-	ResolutionDlg( QWidget* parent=0, 
-		KPilotDeviceLink*fH=0L, 
-		QString caption=QString::null, 
-		QString Text=QString::null, 
-		QStringList lst=QStringList(), 
+	ResolutionDlg( QWidget* parent=0,
+		KPilotDeviceLink*fH=0L,
+		QString caption=QString::null,
+		QString Text=QString::null,
+		QStringList lst=QStringList(),
 		QString remember=QString::null);
 	~ResolutionDlg();
 public slots:

@@ -10,7 +10,7 @@
 **
 ** The factories used by KPilot plugins are also documented here.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -51,8 +51,8 @@ public:
 	QWidget *widget() const { return fWidget; } ;
 
 public:
-	/** 
-	* Load or save the config widget's settings in the given 
+	/**
+	* Load or save the config widget's settings in the given
 	* KConfig object; leave the group unchanged.
 	*/
 	virtual void commit(KConfig *) = 0L;
@@ -140,6 +140,17 @@ protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
 	bool isLocal() const { return fLocal; } ;
+	int getSyncDirection() const { return fSyncDirection; };
+	eConflictResolution getConflictResolution() const {return fConflictResolution; };
+	/* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It completely ignore
+	   all modified flags and walks through all records in the database */
+	bool isFullSync() const { return fFirstSync || (fSyncDirection!=SyncAction::eFastSync && fSyncDirection!=SyncAction::eHotSync);}
+	// A first sync (i.e. database newly fetched from the handheld )
+	// does not check for deleted records, but understands them as
+	// added on the other side. The flag is set by the conduits
+	// when opening the local database, or the calendar/addressbook (if it is empty)
+	// This also implies a full sync
+	bool isFirstSync() const { return fFirstSync; };
 
 	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;
@@ -156,6 +167,13 @@ private:
 	bool fBackup;	// Do a backup of the database
 	bool fLocal;	// Local test without a Pilot
 
+	// Make these only protected so the conduit can change the variable
+protected:
+	int fSyncDirection; // Stores fast, full, PCToHH or HHToPC as sync directions.
+	eConflictResolution fConflictResolution;
+	bool fFirstSync;
+
+private:
 	/**
 	* Open both the local copy of database @p dbName
 	* and the version on the Pilot. Return true only
@@ -203,7 +221,7 @@ public:
 * class KPilotPlugin : public KLibFactory
 * {
 * Q_OBJECT
-* 
+*
 * public:
 * 	KPilotPlugin(QObject * = 0L,const char * = 0L) ;
 * 	virtual ~KPilotPlugin();
@@ -212,12 +230,12 @@ public:
 * You don't @em have to provide about information for the plugin,
 * but it's useful, particularly for the about box in a conduit.
 *
-* 
+*
 * <pre>
 * 	static KAboutData *about() { return fAbout; } ;
 * </pre>
 *
-* 
+*
 * This is what it's all about: creating objects for the plugin.
 * One classname that @em must be supported is ConduitConfig,
 * which is defined above. The other is SyncAction.
@@ -225,12 +243,12 @@ public:
 *
 * <pre>
 * protected:
-* 	virtual QObject* createObject( QObject* parent = 0, 
-* 		const char* name = 0, 
-* 		const char* classname = "QObject", 
+* 	virtual QObject* createObject( QObject* parent = 0,
+* 		const char* name = 0,
+* 		const char* classname = "QObject",
 * 		const QStringList &args = QStringList() );
 * </pre>
-* 
+*
 * More boilerplate, and support for an instance and about data, used
 * by about() above.
 *

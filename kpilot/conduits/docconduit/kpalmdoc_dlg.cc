@@ -5,7 +5,7 @@
 #include <kapplication.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <iostream.h>
+#include <iostream>
 
 #include <kurlrequester.h>
 #include <qcheckbox.h>
@@ -368,7 +368,7 @@ DEBUGCONDUIT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", tx
 			return;
 		}
 
-		if (convertTXTtoPDB(txtinfo.dirPath(true), txtinfo.fileName(), 
+		if (convertTXTtoPDB(txtinfo.dirPath(true), txtinfo.fileName(),
 				pdbinfo.dirPath(true), pdbinfo.fileName(), &conv) )
 		{
 			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(txturl));

@@ -82,6 +82,7 @@ static const char *pilotdaemon_id =
 
 #include "fileInstaller.h"
 #include "kpilotConfig.h"
+#include "pilotUser.h"
 
 #include "hotSync.h"
 #include "interactiveSync.h"
@@ -635,6 +636,8 @@ QString PilotDaemon::syncTypeString(int i) const
 	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
 
 	fStatus = HOTSYNC_START ;
+	int mode=0;
+	bool pcchanged=false;
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -644,24 +647,16 @@ QString PilotDaemon::syncTypeString(int i) const
 #endif
 
 	KPilotConfigSettings &c = KPilotConfig::getConfig();
-	QStringList conduits ;
-	bool installFiles = false;
+	QStringList conduits( c.getInstalledConduits() );
+	if (c.getSyncFiles() && fInstaller) mode |= ActionQueue::WithInstaller;
+
+	// Queue to add all the actions for this sync to.
+	fSyncStack = new ActionQueue(fPilotLink);
 
 #ifdef ENABLE_KROUPWARE
 	bool _syncWithKMail = false;
 	int _kroupwareParts = 0;
 #endif
-
-	if ((fNextSyncType == PilotDaemonDCOP::HotSync)
-		/* || other sync types */
-		)
-	{
-		conduits = c.getInstalledConduits();
-		installFiles = c.getSyncFiles();
-	}
-
-	// Queue to add all the actions for this sync to.
-	fSyncStack = new ActionQueue(fPilotLink);
 
 	/**
 	* If KPilot is busy with something - like configuring
@@ -688,7 +683,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	* and we can behave normally.
 	*/
 	if ((callstatus == DCOPStub::CallSucceeded) &&
-		 (kpilotstatus != KPilotDCOP::WaitingForDaemon))
+		(kpilotstatus != KPilotDCOP::WaitingForDaemon))
 	{
 		kdWarning() << k_funcinfo <<
 			": KPilot returned status " << kpilotstatus << endl;
@@ -744,29 +739,72 @@ QString PilotDaemon::syncTypeString(int i) const
 		// No conduits, nothing.
 		break;
 	case PilotDaemonDCOP::Backup:
+		mode |= ActionQueue::BackupMode | ActionQueue::FlagFull;
 		if (conduits.count() > 0)
 		{
 			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
-				conduits,
-				ActionQueue::Backup);
+				conduits, mode);
 		}
-		fSyncStack->addAction(new BackupAction(fPilotLink));
+		fSyncStack->addAction(new BackupAction(fPilotLink, mode));
 		break;
 	case PilotDaemonDCOP::Restore:
+		mode |= ActionQueue::RestoreMode | ActionQueue::FlagFull;
 		fSyncStack->addAction(new RestoreAction(fPilotLink));
-		break;
-	case PilotDaemonDCOP::HotSync:
-		if (conduits.count() > 0)
-		{
-			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
-				conduits,
-				ActionQueue::HotSync);
-		}
-		if (installFiles && fInstaller)
+		if (mode & ActionQueue::WithInstaller)
 		{
 			fSyncStack->queueInstaller(fInstaller->dir(),
 				fInstaller->fileNames());
 		}
+		break;
+	case PilotDaemonDCOP::HotSync:
+		// first install the files, and only then do the conduits
+		// (conduits might want to sync a database that will be installed
+		mode |= ActionQueue::HotSyncMode;
+		if (mode & ActionQueue::WithInstaller)
+		{
+			fSyncStack->queueInstaller(fInstaller->dir(),
+				fInstaller->fileNames());
+		}
+		switch (c.getSyncType())
+		{
+		case SyncAction::eFastSync:
+			break;
+		case SyncAction::eHotSync:
+			mode |= ActionQueue::WithBackup;
+			break;
+		case SyncAction::eFullSync:
+			mode |= ActionQueue::WithBackup | ActionQueue::FlagFull;
+			break;
+		case SyncAction::eCopyPCToHH:
+			mode |= ActionQueue::FlagPCToHH;
+			break;
+		case SyncAction::eCopyHHToPC:
+			mode |= ActionQueue::FlagHHToPC;
+			break;
+		}
+		// Now check for changed PC
+		{
+		KPilotUser *usr = fPilotLink->getPilotUser();
+		// changing the PC or using a different Palm Desktop app causes a full sync
+		// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+		// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
+		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
+		}
+
+		if (conduits.count() > 0)
+		{
+			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
+				conduits, pcchanged?(mode|ActionQueue::FlagFull):mode);
+		}
+		if (pcchanged && c.getFullSyncOnPCChange())
+			mode |=  (ActionQueue::WithBackup | ActionQueue::FlagFull);
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Sync Mode="
+			<< mode << ", Sync Type="<<c.getSyncType()<<endl;
+#endif
+		if (mode & ActionQueue::WithBackup)
+			fSyncStack->addAction(new BackupAction(fPilotLink, mode));
 		break;
 	default:
 #ifdef DEBUG
