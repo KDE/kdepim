@@ -57,9 +57,9 @@ Q_OBJECT
 /**/    KIO::Job *createListFoldersJob( const KURL &url );
 /**/    KIO::TransferJob *createListItemsJob( const KURL &url );
 /**/    KIO::TransferJob *createDownloadJob( const KURL &url,
-/**/                                        KPIM::GroupwareJob::ContentType ctype );
+/**/                                    KPIM::GroupwareJob::ContentType ctype );
     KIO::Job *createRemoveJob( const KURL &url,
-                                  KPIM::GroupwareUploadItem::List deleteItems );
+                          const KPIM::GroupwareUploadItem::List &deleteItems );
 
 /**/    bool interpretLoginJob( KIO::Job *job );
 /**/    void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * );

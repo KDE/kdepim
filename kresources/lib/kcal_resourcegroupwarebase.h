@@ -80,7 +80,7 @@ class ResourceGroupwareBase : public ResourceCached
     void setFolderLister( KPIM::FolderLister *folderLister );
     void setAdaptor( CalendarAdaptor *adaptor );
     CalendarAdaptor *adaptor() const { return mAdaptor; }
-    
+
     virtual KPIM::GroupwareDownloadJob *createDownloadJob( CalendarAdaptor *adaptor );
     virtual KPIM::GroupwareUploadJob *createUploadJob( CalendarAdaptor *adaptor );
 

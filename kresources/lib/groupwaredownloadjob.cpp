@@ -64,6 +64,8 @@ void GroupwareDownloadJob::run()
            SLOT( slotItemOnServer( const QString & ) ) );
   connect( adaptor(), SIGNAL( itemDownloaded( const QString &, const QString &, const QString & ) ),
            SLOT( slotItemDownloaded( const QString &, const QString &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemDownloadError( const QString &, const QString & ) ),
+           SLOT( slotItemDownloaded( const QString &, const QString & ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(),
@@ -155,27 +157,40 @@ void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
 void GroupwareDownloadJob::downloadItem()
 {
   kdDebug(7000) << " downloadItem " << endl;
-  QMap<QString,ContentType>::Iterator it = mItemsForDownload.begin();
-  if ( it != mItemsForDownload.end() ) {
-    const QString href( it.key() );
-    ContentType ctype = it.data();
+  if ( mItemsForDownload.isEmpty() ) { 
+    if ( mProgress ) mProgress->setComplete();
+    
+    mItemsForDownload.clear();
+    mItemsDownloading.clear();
+    mItemsDownloaded.clear();
+    mItemsDownloadError.clear();
+    
+    mProgress = 0;
+    success();
+  } else {
+    if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchRequest ) {
+      mDownloadItemsData = QString::null;
+      mDownloadJob = adaptor()->createDownloadJob( mItemsForDownload );
+      mItemsDownloading = mItemsForDownload;
+      mItemsForDownload.clear();
+    } else {
+      // Download the first item of the list
+      QMap<QString,ContentType>::Iterator it = mItemsForDownload.begin();
+      const QString href( it.key() );
+      ContentType ctype = it.data();
+      mItemsDownloading.insert( it.key(), it.data() );
+      mItemsForDownload.remove( it.key() );
+ 
+      KURL url( href );
+      adaptor()->adaptDownloadUrl( url );
+      mDownloadItemsData = QString::null;
 
-    mItemsForDownload.remove( it.key() );
-
-    KURL url( href );
-    adaptor()->adaptDownloadUrl( url );
-
-    mDownloadItemsData = QString::null;
-
-    mDownloadJob = adaptor()->createDownloadJob( url, ctype );
+      mDownloadJob = adaptor()->createDownloadJob( url, ctype );
+    }
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotDownloadItemResult( KIO::Job * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
         SLOT( slotDownloadItemData( KIO::Job *, const QByteArray & ) ) );
-  } else {
-    if ( mProgress ) mProgress->setComplete();
-    mProgress = 0;
-    success();
   }
 }
 
@@ -213,6 +228,7 @@ void GroupwareDownloadJob::slotItemToDownload( const QString &remoteURL,
                          KPIM::GroupwareJob::ContentType type )
 {
   if ( !mItemsForDownload.contains( remoteURL ) &&
+       !mItemsDownloading.contains( remoteURL ) && 
        !mItemsDownloaded.contains( remoteURL ) ) {
     mItemsForDownload.insert( remoteURL, type );
   }
@@ -228,14 +244,30 @@ kdDebug()<<"GroupwareDownloadJob::slotItemOnServer( " << remoteURL << ")" << end
 }
 
 
+void GroupwareDownloadJob::slotItemDownloadError( const QString &remoteURL, const QString &/*error*/ )
+{
+  // TODO: Error handling!
+  if ( mItemsDownloading.contains( remoteURL ) ) {
+    mItemsDownloadError[ remoteURL ] = mItemsDownloading[ remoteURL ];
+  } else if ( mItemsForDownload.contains( remoteURL ) ) {
+    mItemsDownloadError[ remoteURL ] = mItemsForDownload[ remoteURL ];
+  }
+}
+
+
 void GroupwareDownloadJob::slotItemDownloaded( const QString &localID,
          const QString &remoteURL, const QString &fingerprint )
 {
 kdDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << remoteURL << ", " << fingerprint << ")" << endl;
   if ( mItemsForDownload.contains( remoteURL ) ) {
     mItemsDownloaded[ remoteURL ] = mItemsForDownload[ remoteURL ];
-    mItemsDownloaded.remove( remoteURL );
-  } else if ( !mItemsDownloaded.contains( remoteURL ) ) {
+    mItemsForDownload.remove( remoteURL );
+  }
+  if ( mItemsDownloading.contains( remoteURL ) ) {
+    mItemsDownloaded[ remoteURL ] = mItemsDownloading[ remoteURL ];
+    mItemsDownloading.remove( remoteURL );
+  }
+  if ( !mItemsDownloaded.contains( remoteURL ) ) {
     mItemsDownloaded[ remoteURL ] = Unknown;
   }
   adaptor()->idMapper()->setRemoteId( localID, remoteURL );
@@ -258,6 +290,8 @@ void GroupwareDownloadJob::cancelLoad()
   if ( mListEventsJob ) mListEventsJob->kill();
   mListEventsJob = 0;
   if ( mProgress ) mProgress->setComplete();
+  
+
   mProgress = 0;
 }
 

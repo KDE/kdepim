@@ -58,7 +58,7 @@ class OGoGlobals
     static KIO::TransferJob *createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
                        const KURL &url, KPIM::GroupwareJob::ContentType ctype );
     static KIO::Job *createRemoveJob( const KURL &uploadurl,
-                                 KPIM::GroupwareUploadItem::List deletedItems );
+                          const KPIM::GroupwareUploadItem::List &deletedItems );
 
 
     static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,

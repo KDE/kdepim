@@ -129,7 +129,7 @@ class APIBlog : public QObject
     virtual KIO::Job *createListFoldersJob() = 0;
     virtual KIO::TransferJob *createListItemsJob( const KURL &url ) = 0;
     virtual KIO::TransferJob *createDownloadJob( const KURL &url ) = 0;
-//     virtual KIO::Job *createRemoveJob( const KURL &url, KPIM::GroupwareUploadItem::List deletedItems ) = 0;
+//     virtual KIO::Job *createRemoveJob( const KURL &url, const KPIM::GroupwareUploadItem::List &deletedItems ) = 0;
 
     virtual bool interpretUserInfoJob( KIO::Job *job ) = 0;
     virtual void interpretListFoldersJob( KIO::Job *job ) = 0;

@@ -54,7 +54,7 @@ class OGoCalendarAdaptor : public DavCalendarAdaptor
         { return OGoGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
         { return OGoGlobals::createDownloadJob( this, url,ctype ); }
-    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+    KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
         { return OGoGlobals::createRemoveJob( uploadurl, deletedItems ); }
 
 

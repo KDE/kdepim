@@ -53,10 +53,24 @@ void GroupwareUploadJob::run()
     SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
     SLOT( cancelSave() ) );
 
+  connect( adaptor(), SIGNAL( itemDeletionError( const QString &, const QString & ) ),
+           SLOT( slotItemDeleteError( const QString &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemUploadError( const QString &, const QString & ) ),
+           SLOT( slotItemUploadError( const QString &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemUploadNewError( const QString &, const QString & ) ),
+           SLOT( slotItemUploadNewError( const QString &, const QString & ) ) );
+
+  connect( adaptor(), SIGNAL( itemDeleted( const QString &, const QString & ) ),
+           SLOT( slotItemDeleted( const QString &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemUploaded( const QString &, const QString & ) ),
+           SLOT( slotItemUploaded( const QString &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemUploadedNew( const QString &, const QString & ) ),
+           SLOT( slotItemUploadedNew( const QString &, const QString & ) ) );
+
+
   mUploadProgress->setTotalItems( mAddedItems.size() + mChangedItems.size() +
                            ((mChangedItems.isEmpty())?0:1) );
   mUploadProgress->updateProgress();
-
 }
 
 void GroupwareUploadJob::deleteItem()
@@ -68,12 +82,24 @@ void GroupwareUploadJob::deleteItem()
     kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
     KURL url( mBaseUrl );
-
     adaptor()->adaptUploadUrl( url );
+    if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchDelete ) {
+      mDeletionJob = adaptor()->createRemoveJob( url, mDeletedItems );
+      mItemsUploading += mDeletedItems;
+      mDeletedItems.clear();
+    } else {
+      KPIM::GroupwareUploadItem *item = mDeletedItems.front();
+      mDeletionJob = adaptor()->createRemoveJob( url, item );
+      mItemsUploading.append( mDeletedItems.front() );
+      mDeletedItems.pop_front();
+    }
 
-    mDeletionJob = adaptor()->createRemoveJob( url, mDeletedItems );
-    connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
-             SLOT( slotDeletionResult( KIO::Job* ) ) );
+    if ( mDeletionJob ) {
+      connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
+               SLOT( slotDeletionResult( KIO::Job* ) ) );
+    } else {
+      deleteItem();
+    }
   }
 }
 
@@ -226,6 +252,37 @@ void GroupwareUploadJob::kill()
   cancelSave();
 }
 
+void GroupwareUploadJob::slotItemDeleted( const QString &/*localId*/, const QString &/*remoteURL*/ )
+{
+  // TODO: Remove from Uploading / ToUpload lists...
+}
+
+void GroupwareUploadJob::slotItemUploaded( const QString &/*localId*/, const QString &/*remoteURL*/ )
+{
+  // TODO: Remove from Uploading / ToUpload lists...
+}
+
+void GroupwareUploadJob::slotItemUploadedNew( const QString &/*localId*/, const QString &/*remoteURL*/ )
+{
+  // TODO: Remove from Uploading / ToUpload lists...
+}
+
+void GroupwareUploadJob::slotItemUploadError( const QString &/*localID*/, const QString &/*remoteURL*/ )
+{
+  // TODO: Add to error list, remove from uploading and toUpload list
+}
+
+void GroupwareUploadJob::slotItemDeleteError( const QString &/*localID*/, const QString &/*remoteURL*/ )
+{
+  // TODO: Add to error list, remove from uploading and toUpload list
+}
+
+void GroupwareUploadJob::slotItemUploadNewError( const QString &/*localID*/, const QString &/*remoteURL*/ )
+{
+  // TODO: Add to error list, remove from uploading and toUpload list
+}
+
+
 void GroupwareUploadJob::cancelSave()
 {
   if ( mUploadJob ) mUploadJob->kill();
@@ -233,5 +290,10 @@ void GroupwareUploadJob::cancelSave()
   if ( mUploadProgress ) mUploadProgress->setComplete();
   mUploadProgress = 0;
 }
+
+
+    KPIM::GroupwareUploadItem::List mItemsUploading;
+    KPIM::GroupwareUploadItem::List mItemsUploaded;
+    KPIM::GroupwareUploadItem::List mItemsUploadError;
 
 #include "groupwareuploadjob.moc"

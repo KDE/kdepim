@@ -160,10 +160,10 @@ kdDebug()<<"Person="<<KPIM::GroupwareJob::Contact << ", Appointment="<<KPIM::Gro
 
 
 KIO::Job *ExchangeGlobals::createRemoveJob( const KURL &uploadurl,
-       KPIM::GroupwareUploadItem::List deletedItems )
+       const KPIM::GroupwareUploadItem::List &deletedItems )
 {
   QStringList urls;
-  KPIM::GroupwareUploadItem::List::iterator it;
+  KPIM::GroupwareUploadItem::List::const_iterator it;
   kdDebug(5800) << " ExchangeGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;

@@ -125,8 +125,7 @@ void AddressBookAdaptor::addressbookItemDownloaded( KABC::Addressee addr,
   // update the fingerprint and the ids in the idMapper
   idMapper()->removeRemoteId( localId );
   idMapper()->removeRemoteId( newLocalId );
-  idMapper()->setRemoteId( addr.uid(), remoteId );
-  idMapper()->setFingerprint( addr.uid(), fingerprint );
+  emit itemDownloaded( addr.uid(), remoteId, fingerprint );
 }
 
 

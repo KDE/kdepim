@@ -58,7 +58,7 @@ KIO::TransferJob *GroupwareUploadItem::createUploadJob(
   if ( !adaptor ) return 0;
   const QString dta = data();
   //kdDebug(7000) << "Uploading: " << data << endl;
-  //kdDebug(7000) << "Uploading to: " << url.prettyURL() << endl;
+  kdDebug(7000) << "Uploading to: " << url.prettyURL() << endl;
   KIO::TransferJob *job = KIO::storedPut( dta.utf8(), url, -1, true, 
                                           false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );

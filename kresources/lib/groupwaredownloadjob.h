@@ -66,13 +66,16 @@ class GroupwareDownloadJob : public GroupwareJob
     void slotItemOnServer( const QString &remoteURL );
     void slotItemDownloaded( const QString &localID, const QString &remoteURL,
                              const QString &fingerprint );
+    void slotItemDownloadError( const QString &remoteURL, const QString &error );
 
   private:
     QStringList mFoldersForDownload;
     QStringList mCurrentlyOnServer;
 
     QMap<QString,ContentType> mItemsForDownload;
+    QMap<QString,ContentType> mItemsDownloading;
     QMap<QString,ContentType> mItemsDownloaded;
+    QMap<QString,ContentType> mItemsDownloadError;
 
     KPIM::ProgressItem *mProgress;
 

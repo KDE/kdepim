@@ -53,7 +53,7 @@ class GroupwareUploadJob : public GroupwareJob
     { 
       return mAddedItems; 
     }
-    void setAddedItems( KPIM::GroupwareUploadItem::List items ) 
+    void setAddedItems( const KPIM::GroupwareUploadItem::List &items ) 
     { 
       mAddedItems = items; 
     }
@@ -61,7 +61,7 @@ class GroupwareUploadJob : public GroupwareJob
     { 
       return mChangedItems;
     }
-    void setChangedItems( KPIM::GroupwareUploadItem::List items ) 
+    void setChangedItems( const KPIM::GroupwareUploadItem::List &items ) 
     { 
       mChangedItems = items;
     }
@@ -69,7 +69,7 @@ class GroupwareUploadJob : public GroupwareJob
     { 
       return mDeletedItems;
     }
-    void setDeletedItems( KPIM::GroupwareUploadItem::List items ) 
+    void setDeletedItems( const KPIM::GroupwareUploadItem::List &items ) 
     { 
       mDeletedItems = items;
     }
@@ -90,6 +90,14 @@ class GroupwareUploadJob : public GroupwareJob
     void slotUploadJobResult( KIO::Job *job );
     void slotUploadNewJobResult( KIO::Job *job );
 
+    void slotItemDeleted( const QString &localID, const QString &remoteURL );
+    void slotItemUploaded( const QString &localID, const QString &remoteURL );
+    void slotItemUploadedNew( const QString &localID, const QString &remoteURL );
+    
+    void slotItemDeleteError( const QString &remoteURL, const QString &error );
+    void slotItemUploadError( const QString &remoteURL, const QString &error  );
+    void slotItemUploadNewError( const QString &localID, const QString &error );
+
   private:
     KPIM::GroupwareUploadItem::List mAddedItems;
     KPIM::GroupwareUploadItem::List mChangedItems;
@@ -100,6 +108,10 @@ class GroupwareUploadJob : public GroupwareJob
     KIO::TransferJob *mUploadJob;
     KIO::Job *mDeletionJob;
     KPIM::ProgressItem *mUploadProgress;
+
+    KPIM::GroupwareUploadItem::List mItemsUploading;
+    KPIM::GroupwareUploadItem::List mItemsUploaded;
+    KPIM::GroupwareUploadItem::List mItemsUploadError;
 };
 
 }

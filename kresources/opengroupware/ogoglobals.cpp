@@ -129,12 +129,12 @@ kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
 
 
 KIO::Job *OGoGlobals::createRemoveJob( const KURL &uploadurl,
-       KPIM::GroupwareUploadItem::List deletedItems )
+       const KPIM::GroupwareUploadItem::List &deletedItems )
 {
   QStringList urls;
-  KPIM::GroupwareUploadItem::List::iterator it;
+  KPIM::GroupwareUploadItem::List::const_iterator it;
   kdDebug(5800) << " OGoGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
-  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
+  for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     KURL url( uploadurl );
     url.setPath( (*it)->url().path() );

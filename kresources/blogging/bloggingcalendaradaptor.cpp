@@ -150,7 +150,7 @@ KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KURL &url,
 }
 
 KIO::Job *BloggingCalendarAdaptor::createRemoveJob( const KURL &/*url*/,
-                               KPIM::GroupwareUploadItem::List /*deleteItem*/ )
+                         const KPIM::GroupwareUploadItem::List &/*deleteItem*/ )
 {
   /* TODO: if ( mAPI ) {
     return mAPI->createRemoveJob( deleteItem );
