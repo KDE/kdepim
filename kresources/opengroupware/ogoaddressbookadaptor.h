@@ -37,8 +37,8 @@ class OGoAddressBookAdaptor : public DavAddressBookAdaptor
   public:
     OGoAddressBookAdaptor();
 
-    void adaptDownloadUrl( KURL &url );
-    void adaptUploadUrl( KURL &url );
+    void customAdaptDownloadUrl( KURL &url );
+    void customAdaptUploadUrl( KURL &url );
     QString mimeType() const { return "text/x-vcard"; }
     QCString identifier() const { return "KABCResourceOpengroupware"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
@@ -49,7 +49,7 @@ class OGoAddressBookAdaptor : public DavAddressBookAdaptor
     KIO::Job *createListFoldersJob( const KURL &url )
         { return OGoGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
-        { return DAVGroupwareGlobals::createListItemsJob( url ); }
+        { return OGoGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
         { return OGoGlobals::createDownloadJob( this, url, ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
@@ -58,9 +58,9 @@ class OGoAddressBookAdaptor : public DavAddressBookAdaptor
 
     // Interpreting Jobs
     bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
-        { return DAVGroupwareGlobals::interpretListItemsJob( this, job ); }
+        { return OGoGlobals::interpretListItemsJob( this, job ); }
     bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
-        { return DAVGroupwareGlobals::interpretAddressBookDownloadItemsJob(
+        { return OGoGlobals::interpretAddressBookDownloadItemsJob(
            this, job, jobData ); }
 
 

@@ -43,7 +43,7 @@ using namespace KCal;
 */
 
 
-BloggingCalendarAdaptor::BloggingCalendarAdaptor() : mAuthenticated( false ), mAPI( 0 )
+BloggingCalendarAdaptor::BloggingCalendarAdaptor() : mAPI( 0 ), mAuthenticated( false )
 {
 }
 

@@ -53,8 +53,8 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
   public:
     ExchangeCalendarAdaptor();
 
-    void adaptDownloadUrl( KURL &url );
-    void adaptUploadUrl( KURL &url );
+    void customAdaptDownloadUrl( KURL &url );
+    void customAdaptUploadUrl( KURL &url );
     QString mimeType() const { return "message/rfc822"; }
     QCString identifier() const { return "KCalResourceExchange"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
@@ -67,15 +67,17 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
         { return ExchangeGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return ExchangeGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+        { return ExchangeGlobals::createDownloadJob( this, url, ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
         { return ExchangeGlobals::createRemoveJob( uploadurl, deletedItems ); }
 
 
     // Interpreting Jobs
-    bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
-        { return ExchangeGlobals::interpretListItemsJob( this, job ); }
-    bool interpretDownloadItemsJob( KIO::Job *job, const QString &/*rawText*/ );
+    bool interpretListItemsJob( KIO::Job *job, const QString &jobData )
+        { return ExchangeGlobals::interpretListItemsJob( this, job, jobData ); }
+    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
+        { return ExchangeGlobals::interpretCalendarDownloadItemsJob( this, job, jobData );  }
 
 
 

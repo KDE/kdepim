@@ -24,62 +24,35 @@
 #include "groupwaredataadaptor.h"
 #include <webdavhandler.h>
 #include <libemailfunctions/idmapper.h>
+#include <calendaradaptor.h>
+#include <addressbookadaptor.h>
+
+#include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
+#include <libkcal/resourcecached.h>
+#include <kabc/vcardconverter.h>
 
 #include <kdebug.h>
 #include <kio/davjob.h>
 #include <kio/job.h>
 
-KIO::Job *OGoGlobals::createListFoldersJob( const KURL &url )
+QString OGoGlobals::extractFingerprint( KIO::Job *job, const QString &/*jobData*/ )
 {
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
-  QDomElement prop = WebdavHandler::addElement(  doc, root, "d:prop" );
-  WebdavHandler::addElement( doc, prop, "d:displayname" );
-  WebdavHandler::addElement( doc, prop, "d:resourcetype" );
-//  WebdavHandler::addElement( doc, prop, "d:hassubs" );
-
-  kdDebug(7000) << "props: " << doc.toString() << endl;
-  return KIO::davPropFind( url, doc, "1", false );
+  const QString& headers = job->queryMetaData( "HTTP-Headers" );
+  return WebdavHandler::getEtagFromHeaders( headers );
 }
 
-KIO::TransferJob *OGoGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
+
+KPIM::GroupwareJob::ContentType OGoGlobals::getContentType( const QDomElement &prop )
 {
-kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
-  KIO::TransferJob *job = KIO::get( url, false, false );
-  if ( adaptor ) {
-    QString mt = adaptor->mimeType();
-    job->addMetaData( "accept", mt );
-  }
-  job->addMetaData( "PropagateHttpHeader", "true" );
-  return job;
+  QDomElement ctype = prop.namedItem("getcontenttype").toElement();
+  if ( ctype.isNull() ) return KPIM::GroupwareJob::Unknown;
+  const QString &type = ctype.text();
+kdDebug()<<"Found content type: "<<type<<endl;
+  /// TODO: Not yet implemented in OGo!
+  return KPIM::GroupwareJob::Unknown;
 }
 
-KIO::Job *OGoGlobals::createRemoveJob( const KURL &uploadurl,
-       KPIM::GroupwareUploadItem::List deletedItems )
-{
-  QStringList urls;
-  KPIM::GroupwareUploadItem::List::iterator it;
-  kdDebug(5800) << " OGoGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
-  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
-    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    KURL url( uploadurl );
-    url.setPath( (*it)->url().path() );
-    if ( !(*it)->url().isEmpty() )
-      urls << url.url();
-    kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
-  }
-  return KIO::del( urls, false, false );
-}
-
-bool OGoGlobals::getFolderHasSubs( const QDomNode &folderNode )
-{
-  // a folder is identified by the collection item in the resourcetype:
-  // <a:resourcetype xmlns:a="DAV:"><a:collection xmlns:a="DAV:"/>...</a:resourcetype>
-  QDomElement e = folderNode.namedItem("resourcetype").toElement();
-  if ( !e.namedItem( "collection" ).isNull() )
-    return true;
-  else return false;
-}
 
 KPIM::FolderLister::FolderType OGoGlobals::getFolderType( const QDomNode &folderNode )
 {
@@ -101,3 +74,180 @@ kdDebug()<<"OGoGlobals::getFolderType(...)"<<endl;
   }
   return KPIM::FolderLister::Unknown;
 }
+
+bool OGoGlobals::getFolderHasSubs( const QDomNode &folderNode )
+{
+  // a folder is identified by the collection item in the resourcetype:
+  // <a:resourcetype xmlns:a="DAV:"><a:collection xmlns:a="DAV:"/>...</a:resourcetype>
+  QDomElement e = folderNode.namedItem("resourcetype").toElement();
+  if ( !e.namedItem( "collection" ).isNull() )
+    return true;
+  else return false;
+}
+
+
+
+
+KIO::Job *OGoGlobals::createListFoldersJob( const KURL &url )
+{
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
+  QDomElement prop = WebdavHandler::addElement(  doc, root, "d:prop" );
+  WebdavHandler::addElement( doc, prop, "d:displayname" );
+  WebdavHandler::addElement( doc, prop, "d:resourcetype" );
+//  WebdavHandler::addElement( doc, prop, "d:hassubs" );
+
+  kdDebug(7000) << "props: " << doc.toString() << endl;
+  return KIO::davPropFind( url, doc, "1", false );
+}
+
+
+KIO::TransferJob *OGoGlobals::createListItemsJob( const KURL &url )
+{
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
+  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
+  WebdavHandler::addDavElement( doc, prop, "getetag" );
+//  WebdavHandler::addDavElement( doc, prop, "getcontenttype" );
+  kdDebug(5800) << "props = "<< doc.toString() << endl;
+  return KIO::davPropFind( url, doc, "1", false );
+}
+
+
+KIO::TransferJob *OGoGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
+                    const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
+{
+kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
+  KIO::TransferJob *job = KIO::get( url, false, false );
+  if ( adaptor ) {
+    QString mt = adaptor->mimeType();
+    job->addMetaData( "accept", mt );
+  }
+  job->addMetaData( "PropagateHttpHeader", "true" );
+  return job;
+}
+
+
+KIO::Job *OGoGlobals::createRemoveJob( const KURL &uploadurl,
+       KPIM::GroupwareUploadItem::List deletedItems )
+{
+  QStringList urls;
+  KPIM::GroupwareUploadItem::List::iterator it;
+  kdDebug(5800) << " OGoGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
+  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
+    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    KURL url( uploadurl );
+    url.setPath( (*it)->url().path() );
+    if ( !(*it)->url().isEmpty() )
+      urls << url.url();
+    kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
+  }
+  return KIO::del( urls, false, false );
+}
+
+
+
+
+bool OGoGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
+                                        KIO::Job *job )
+{
+  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
+
+  if ( !davjob ) {
+    return false;
+  }
+  QDomDocument doc = davjob->response();
+
+  kdDebug(7000) << " Doc: " << doc.toString() << endl;
+  kdDebug(7000) << " IdMapper: " << adaptor->idMapper()->asString() << endl;
+
+  QDomElement docElem = doc.documentElement();
+  QDomNode n = docElem.firstChild();
+  while( !n.isNull() ) {
+    QDomElement e = n.toElement(); // try to convert the node to an element.
+    n = n.nextSibling();
+    if ( e.isNull() )
+      continue;
+
+    const QString &entry = e.namedItem("href").toElement().text();
+    QDomElement propstat = e.namedItem("propstat").toElement();
+    if ( propstat.isNull() )
+      continue;
+    QDomElement prop = propstat.namedItem( "prop" ).toElement();
+    if ( prop.isNull() )
+      continue;
+    QDomElement elem = prop.namedItem("getetag").toElement();
+    const QString &newFingerprint = elem.text();
+    if ( elem.isNull() || newFingerprint.isEmpty() )
+      continue;
+
+    KPIM::GroupwareJob::ContentType type = getContentType( prop );
+
+    adaptor->processDownloadListItem( entry, newFingerprint, type );
+  }
+
+  return true;
+}
+
+
+bool OGoGlobals::interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor,
+                                         KIO::Job *job, const QString &jobData )
+{
+kdDebug(5800) << "DAVGroupwareGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
+kdDebug(5800) << jobData << endl;
+  if ( !adaptor || !job ) return false;
+  KCal::CalendarLocal calendar;
+  KCal::ICalFormat ical;
+  calendar.setTimeZoneId( adaptor->resource()->timeZoneId() );
+  KCal::Incidence::List incidences;
+  if ( ical.fromString( &calendar, jobData ) ) {
+    KCal::Incidence::List raw = calendar.rawIncidences();
+    KCal::Incidence::List::Iterator it = raw.begin();
+    if ( raw.count() != 1 ) {
+      kdError() << "Parsed iCalendar does not contain exactly one event." << endl;
+      return false;
+    }
+
+    KCal::Incidence *inc = (raw.front())->clone();
+    if ( !inc ) return false;
+    KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob *>(job);
+    QString remoteId( QString::null );
+    if ( sjob ) remoteId = sjob->url().path();
+    QString fingerprint = extractFingerprint( job, jobData );
+    adaptor->calendarItemDownloaded( inc, inc->uid(), remoteId, fingerprint,
+                                     sjob->url().prettyURL() );
+    return true;
+  } else {
+    kdError() << "Unable to parse iCalendar" << endl;
+  }
+  return false;
+}
+
+
+bool OGoGlobals::interpretAddressBookDownloadItemsJob(
+      KABC::AddressBookAdaptor *adaptor, KIO::Job *job, const QString &jobData )
+{
+kdDebug(5800) << "DAVGroupwareGlobals::interpretAddressBookDownloadItemsJob, vCard=" << endl;
+kdDebug(5800) << jobData << endl;
+  if ( !adaptor || !job ) return false;
+
+  KABC::VCardConverter conv;
+  KABC::Addressee::List addrs( conv.parseVCards( jobData ) );
+
+  if ( addrs.count() != 1 ) {
+    kdError() << "Parsed vCard does not contain exactly one addressee." << endl;
+    return false;
+  }
+
+  KABC::Addressee a = addrs.first();
+
+  KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob*>(job);
+  QString remoteId( QString::null );
+  if ( sjob ) remoteId = sjob->url().path();
+  QString fingerprint = extractFingerprint( job, jobData );
+  adaptor->addressbookItemDownloaded( a, a.uid(), remoteId, fingerprint,
+                                      sjob->url().prettyURL() );
+  return true;
+}
+
+

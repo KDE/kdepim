@@ -51,7 +51,7 @@ class OGoCalendarAdaptor : public DavCalendarAdaptor
     KIO::Job *createListFoldersJob( const KURL &url )
         { return OGoGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
-        { return DAVGroupwareGlobals::createListItemsJob( url ); }
+        { return OGoGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
         { return OGoGlobals::createDownloadJob( this, url,ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
@@ -60,10 +60,10 @@ class OGoCalendarAdaptor : public DavCalendarAdaptor
 
     // Interpreting Jobs
     bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
-        { return DAVGroupwareGlobals::interpretListItemsJob( this, job ); }
+        { return OGoGlobals::interpretListItemsJob( this, job ); }
     bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
-        { return DAVGroupwareGlobals::interpretCalendarDownloadItemsJob( this, job, jobData );  }
-    
+        { return OGoGlobals::interpretCalendarDownloadItemsJob( this, job, jobData );  }
+
 
     bool getFolderHasSubs( const QDomNode &folderNode )
         { return OGoGlobals::getFolderHasSubs( folderNode ); }

@@ -29,6 +29,8 @@
 
 using namespace KCal;
 
+// TODO: This is exactly the same code as for the DavAddressBookAdaptor::interpretListFoldersJob!
+//       But as this emits a signal, it needs to be located inside a QObject
 void DavCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister */*folderLister*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
@@ -43,10 +45,11 @@ void DavCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLis
   for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomNode n2 = n.namedItem( "propstat" );
     QDomNode n3 = n2.namedItem( "prop" );
-    
+
     QString href = n.namedItem( "href" ).toElement().text();
     QString displayName = n3.namedItem( "displayname" ).toElement().text();
     KPIM::FolderLister::FolderType type = getFolderType( n3 );
+    // TODO: Only emit these for folders, not for ordinary files!
 
     emit folderInfoRetrieved( href, displayName, type );
     emit folderSubitemRetrieved( href, getFolderHasSubs( n3 ) );

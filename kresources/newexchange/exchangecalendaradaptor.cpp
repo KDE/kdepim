@@ -67,78 +67,17 @@ ExchangeCalendarAdaptor::ExchangeCalendarAdaptor() : DavCalendarAdaptor()
 {
 }
 
-void ExchangeCalendarAdaptor::adaptDownloadUrl( KURL &url )
+void ExchangeCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
 }
 
-void ExchangeCalendarAdaptor::adaptUploadUrl( KURL &url )
+void ExchangeCalendarAdaptor::customAdaptUploadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
 //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
-bool ExchangeCalendarAdaptor::interpretDownloadItemsJob(
-                 KIO::Job *job, const QString &/*rawText*/ )
-{
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  if ( !davjob ) return false;
-
-kdDebug() << "ExchangeCalendarAdaptor::interpretDownloadItemsJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
-  KCal::ExchangeConverterCalendar conv;
-  KCal::Incidence::List incidences = conv.parseWebDAV( davjob->response() );
-
-  bool res = false;
-  KCal::Incidence::List::Iterator it = incidences.begin();
-  for ( ; it != incidences.end(); ++it ) {
-    QString fpr = (*it)->customProperty( "KDEPIM-Exchange-Resource", "fingerprint" );
-    QString href = (*it)->customProperty( "KDEPIM-Exchange-Resource", "href" );
-    KURL u( href );
-    calendarItemDownloaded( (*it), (*it)->uid(), u.path(), fpr, u.prettyURL() );
-    res = true;
-  }
-  return res;
-}
-
-
-
-KIO::TransferJob *ExchangeCalendarAdaptor::createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-{
-kdDebug()<<"ExchangeGlobals::createDownloadJob()"<<endl;
-kdDebug()<<"ctype="<<ctype<<endl;
-kdDebug()<<"Appointment="<<KPIM::GroupwareJob::Appointment<<", Task="<<KPIM::GroupwareJob::Task<<", Journal="<<KPIM::GroupwareJob::Journal<<", Message="<<KPIM::GroupwareJob::Message<<endl;
-  // Don't use an <allprop/> request!
-
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement( doc, doc, "d:propfind" );
-  QDomElement prop = WebdavHandler::addElement( doc, root, "d:prop" );
-  QDomAttr att_h = doc.createAttribute( "xmlns:h" );
-  att_h.setValue( "urn:schemas:mailheader:" );
-  root.setAttributeNode( att_h );
-
-  QDomAttr att_m = doc.createAttribute( "xmlns:m" );
-  att_m.setValue( "urn:schemas:httpmail:" );
-  root.setAttributeNode( att_m );
-
-  switch ( ctype ) {
-    case KPIM::GroupwareJob::Appointment:
-        KCal::ExchangeConverterCalendar::createRequestAppointment( doc, prop );
-        break;
-    case KPIM::GroupwareJob::Task:
-        KCal::ExchangeConverterCalendar::createRequestTask( doc, prop );
-        break;
-    case KPIM::GroupwareJob::Journal:
-    case KPIM::GroupwareJob::Message:
-        KCal::ExchangeConverterCalendar::createRequestJournal( doc, prop );
-        break;
-    default:
-        break;
-  }
-
-  kdDebug(7000) << "doc: " << doc.toString() << endl;
-  KIO::DavJob *job = KIO::davPropFind( url, doc, "0", false );
-  return job;
-}
 
 /* Removing items: old version of the exchange resource:  If the event is part
    of a sequence of recurring event, we need to delete the master!

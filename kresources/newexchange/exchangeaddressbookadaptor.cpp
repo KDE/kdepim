@@ -53,63 +53,15 @@ ExchangeAddressBookAdaptor::ExchangeAddressBookAdaptor() : DavAddressBookAdaptor
 {
 }
 
-void ExchangeAddressBookAdaptor::adaptDownloadUrl( KURL &url )
+void ExchangeAddressBookAdaptor::customAdaptDownloadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
 }
 
-void ExchangeAddressBookAdaptor::adaptUploadUrl( KURL &url )
+void ExchangeAddressBookAdaptor::customAdaptUploadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
 //   url.setPath( url.path() + "/NewItem.EML" );
-}
-
-bool ExchangeAddressBookAdaptor::interpretDownloadItemsJob(
-                 KIO::Job *job, const QString &/*rawText*/ )
-{
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  if ( !davjob ) return false;
-
-kdDebug() << "ExchangeAddressBookAdaptor::interpretDownloadItemsJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
-  KABC::ExchangeConverterContact conv;
-  KABC::Addressee::List addressees = conv.parseWebDAV( davjob->response() );
-  // TODO: Let the ExchangeConverterContact store the fingerprint into a custom field!
-
-  bool res = false;
-  KABC::Addressee::List::Iterator it = addressees.begin();
-  for ( ; it != addressees.end(); ++it ) {
-    QString fpr = (*it).custom( "KDEPIM-Exchange-Resource", "fingerprint" );
-    QString href = (*it).custom( "KDEPIM-Exchange-Resource", "href" );
-    KURL u( href );
-    addressbookItemDownloaded( (*it), (*it).uid(), u.path(), fpr, u.prettyURL() );
-    res = true;
-  }
-  return res;
-}
-
-KIO::TransferJob *ExchangeAddressBookAdaptor::createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-{
-kdDebug()<<"ExchangeAddressBookAdaptor::createDownloadJob()"<<endl;
-  // Don't use an <allprop/> request!
-  KIO::DavJob *job = 0;
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
-  QDomElement prop = WebdavHandler::addElement( doc, root, "d:prop" );
-  
-  QDomAttr att_h = doc.createAttribute( "xmlns:h" );
-  att_h.setValue( "urn:schemas:mailheader:" );
-  root.setAttributeNode( att_h );
-
-  QDomAttr att_m = doc.createAttribute( "xmlns:m" );
-  att_m.setValue( "urn:schemas:httpmail:" );
-  root.setAttributeNode( att_m );
-
-  if ( ctype == KPIM::GroupwareJob::Contact ) {
-    KABC::ExchangeConverterContact::createRequest( doc, prop );
-    kdDebug(7000) << "doc: " << doc.toString() << endl;
-    job = KIO::davPropFind( url, doc, "0", false );
-  }
-  return job;
 }
 
 QString ExchangeAddressBookAdaptor::defaultNewItemName( KPIM::GroupwareUploadItem *item ) {

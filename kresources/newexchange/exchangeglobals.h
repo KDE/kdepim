@@ -35,23 +35,37 @@ namespace KPIM {
 class GroupwareDataAdaptor;
 class GroupwareUploadItem;
 }
+namespace KABC {
+class AddressBookAdaptor;
+}
+namespace KCal {
+class CalendarAdaptor;
+}
 
 class ExchangeGlobals
 {
   public:
     ExchangeGlobals() {}
-
-    static KIO::Job *createListFoldersJob( const KURL &url );
-    
-    static KIO::Job *createRemoveJob( const KURL &uploadurl,
-           KPIM::GroupwareUploadItem::List deletedItems );
     static KPIM::GroupwareJob::ContentType getContentType( const QDomElement &prop );
     static KPIM::GroupwareJob::ContentType getContentType( const QString &contentclass );
-    static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
-           KIO::Job *job );
-    static KIO::TransferJob *createListItemsJob( const KURL &url );
-    static bool getFolderHasSubs( const QDomNode &folderNode );
     static KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode );
+    static bool getFolderHasSubs( const QDomNode &folderNode );
+
+
+    static KIO::Job *createListFoldersJob( const KURL &url );
+    static KIO::TransferJob *createListItemsJob( const KURL &url );
+    static KIO::TransferJob *createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
+                       const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+    static KIO::Job *createRemoveJob( const KURL &uploadurl,
+                                 KPIM::GroupwareUploadItem::List deletedItems );
+
+
+    static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
+           KIO::Job *job, const QString &jobData );
+    static bool interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor,
+                                        KIO::Job *job, const QString &jobData );
+    static bool interpretAddressBookDownloadItemsJob( KABC::AddressBookAdaptor *adaptor,
+                                        KIO::Job *job, const QString &jobData );
 };
 
 #endif

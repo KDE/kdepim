@@ -40,7 +40,7 @@ class ExchangeAddressBookUploadItem : public KPIM::GroupwareUploadItem
   public:
     ExchangeAddressBookUploadItem( AddressBookAdaptor *adaptor, KABC::Addressee addr, UploadType type );
     virtual ~ExchangeAddressBookUploadItem() {}
-    virtual KIO::TransferJob *createUploadJob(
+/**/    virtual KIO::TransferJob *createUploadJob(
             KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
 
   protected:
@@ -53,8 +53,8 @@ class ExchangeAddressBookAdaptor : public DavAddressBookAdaptor
   public:
     ExchangeAddressBookAdaptor();
 
-    void adaptDownloadUrl( KURL &url );
-    void adaptUploadUrl( KURL &url );
+    void customAdaptDownloadUrl( KURL &url );
+    void customAdaptUploadUrl( KURL &url );
     QString mimeType() const { return "message/rfc822"; }
     QCString identifier() const { return "KABCResourceExchange"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
@@ -67,20 +67,23 @@ class ExchangeAddressBookAdaptor : public DavAddressBookAdaptor
         { return ExchangeGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return ExchangeGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+        { return ExchangeGlobals::createDownloadJob( this, url, ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
         { return ExchangeGlobals::createRemoveJob( uploadurl, deletedItems ); }
 
 
 
     // Interpreting Jobs
-    bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
-       { return ExchangeGlobals::interpretListItemsJob( this, job ); }
-    bool interpretDownloadItemsJob( KIO::Job *job, const QString &/*rawText*/ );
+    bool interpretListItemsJob( KIO::Job *job, const QString &jobData )
+       { return ExchangeGlobals::interpretListItemsJob( this, job, jobData ); }
+    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
+        { return ExchangeGlobals::interpretAddressBookDownloadItemsJob( this, job, jobData ); }
 
 
 
-    KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
+
+/**/    KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
             KPIM::GroupwareUploadItem::UploadType type );
 
 

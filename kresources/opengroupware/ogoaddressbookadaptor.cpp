@@ -38,12 +38,12 @@ OGoAddressBookAdaptor::OGoAddressBookAdaptor() : DavAddressBookAdaptor()
 {
 }
 
-void OGoAddressBookAdaptor::adaptDownloadUrl( KURL &url )
+void OGoAddressBookAdaptor::customAdaptDownloadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
 }
 
-void OGoAddressBookAdaptor::adaptUploadUrl( KURL &url )
+void OGoAddressBookAdaptor::customAdaptUploadUrl( KURL &url )
 {
 kdDebug()<<"OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
   url = WebdavHandler::toDAV( url );
