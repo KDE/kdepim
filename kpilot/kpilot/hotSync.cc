@@ -284,7 +284,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	fDBIndex = info.index + 1;
 
 	QStringList nobackupdb = KPilotSettings::skipBackupDB();
-	if (nobackupdb.findIndex(QString::fromLatin1(info.name)))
+	if (nobackupdb.findIndex(QString::fromLatin1(info.name)) != -1)
 	{
 		QString s = i18n("Skipping %1")
 			.arg(QString::fromLatin1(info.name));
