@@ -111,10 +111,10 @@ void MALConduit::readConfig()
 	DEBUGCONDUIT<<"Last sync was "<<fLastSync.toString()<<endl;
 #endif
 	
-	eSyncTime=fConfig->readNumEntry(MALConduitFactory::syncTime(), 0);
+	eSyncTime=(eSyncTimeEnum) fConfig->readNumEntry(MALConduitFactory::syncTime(), (int) eEverySync );
 	
 	// Proxy settings
-	eProxyType=fConfig->readNumEntry(MALConduitFactory::proxyType(), 0);
+	eProxyType=(eProxyTypeEnum) fConfig->readNumEntry(MALConduitFactory::proxyType(), (int) eProxyNone );
 	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), QString::null);
 	
 	fProxyPort=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
@@ -191,6 +191,7 @@ bool MALConduit::skip()
 		return true;
 	}
 	
+	
 	// Set all proxy settings
 	switch (eProxyType) 
 	{
@@ -199,21 +200,21 @@ bool MALConduit::skip()
 #ifdef DEBUG
 			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString())<<"set"<<endl;
 #endif
-			setHttpProxy(fProxyServer.latin1());
+			setHttpProxy(const_cast<char *>(fProxyServer.latin1()));
 			if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
 			else setHttpProxyPort(80);
 			
 			if (!fProxyUser.isEmpty()) 
 			{
-				setProxyUsername( fProxyUser.latin1() );
-				if (!fProxyPassword.isEmpty()) setProxyPassword( fProxyPassword.latin1() );
+				setProxyUsername( const_cast<char *>(fProxyUser.latin1()) );
+				if (!fProxyPassword.isEmpty()) setProxyPassword( const_cast<char *>(fProxyPassword.latin1()) );
 			}
 			break;
 		case eProxySOCKS:
 #ifdef DEBUG
 			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
-			setSocksProxy( fProxyServer.latin1() );
+			setSocksProxy( const_cast<char *>(fProxyServer.latin1()) );
 			if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );
 			else setSocksProxyPort(1080);
 			break; 
