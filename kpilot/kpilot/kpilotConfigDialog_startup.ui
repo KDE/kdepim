@@ -87,7 +87,7 @@ KPilot's settings.</comment>
                         <cstring>fDockDaemon</cstring>
                     </property>
                     <property name="text">
-                        <string>S&amp;how KPilot in panel</string>
+                        <string>S&amp;how KPilot in system tray</string>
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Check this box to place a Kpilot icon in the system tray, which shows the daemon's status, and allows you to select the next sync type and to configure KPilot.&lt;/qt&gt;</string>
