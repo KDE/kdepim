@@ -120,22 +120,26 @@ bool ICalFormat::fromString( const QString &text )
     return false;
   }
 
+  bool success = true;
+
   if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
     kdDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
     setException(new ErrorFormat(ErrorFormat::NoCalendar));
-    return false;
-  }
-
-  // put all objects into their proper places
-  if (!mImpl->populate(calendar)) {
-    kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
-    if ( !exception() ) {
-      setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+    success = false;
+  } else {
+    // put all objects into their proper places
+    if (!mImpl->populate(calendar)) {
+      kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
+      if ( !exception() ) {
+        setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+      }
+      success = false;
     }
-    return false;
   }
 
-  return true;
+  icalcomponent_free( calendar );
+  
+  return success;
 }
 
 QString ICalFormat::toString()
@@ -169,6 +173,8 @@ QString ICalFormat::toString()
   }
 
   const char *text = icalcomponent_as_ical_string( calendar );
+
+  icalcomponent_free( calendar );
 
   if (!text) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
