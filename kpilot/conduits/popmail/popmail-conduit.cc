@@ -492,35 +492,6 @@ QString getFQDomainName (const KConfig& config)
 	if (useExplicitDomainName == 0) {
 		// We trust in the system FQDN domain name
 
-#ifdef HAVE_GETDOMAINNAME
-		char namebuffer [1024];
-		int ret;
-#ifdef __osf__
-		// OSF has a getdomainname that returns void.
-		//
-		//
-		getdomainname(namebuffer,1024);
-		ret=0;
-#else
-		ret = getdomainname (namebuffer, 1024);
-#endif
-		fqDomainName = namebuffer;
-		if (ret)
-		{
-			kdWarning() << k_funcinfo 
-				<< ": getdomainname: " 
-				<< strerror(errno) << endl;
-		}
-		else
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname 
-				<< ": Got domain name "
-				<< namebuffer  << endl;
-#endif
-		}
-
-#else
 		struct utsname u;
 		uname (&u);
 		fqDomainName = u.nodename;
@@ -529,7 +500,6 @@ QString getFQDomainName (const KConfig& config)
 		DEBUGCONDUIT << fname 
 			<< ": Got uname.nodename " 
 			<< u.nodename << endl;
-#endif
 #endif
 	}
 
@@ -2000,6 +1970,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.45  2002/11/27 21:29:04  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.44  2002/08/25 13:28:28  mhunter
 // CVS_SILENT Corrected typographical errors
 //
