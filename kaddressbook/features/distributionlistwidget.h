@@ -93,6 +93,8 @@ class DistributionListView : public KListView
 {
   Q_OBJECT
 
+  using QListView::dropped;
+
   public:
     DistributionListView( QWidget *parent, const char* name = 0 );
 
