@@ -86,8 +86,6 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
 {
   _caption    = c.readEntry(fu(CaptionConfigKey));
   _clickCmd   = c.readPathEntry(fu(ClickConfigKey));
-  _nMailCmd   = c.readPathEntry(fu(NewMailConfigKey));
-  _soundFile  = c.readPathEntry(fu(SoundFileConfigKey));
   _style      = Style(c.readUnsignedNumEntry(fu(DisplayStyleConfigKey), Plain));
   _bgColour   = c.readColorEntry(fu(BgColourConfigKey), &QApplication::palette().active().background());
   _fgColour   = c.readColorEntry(fu(FgColourConfigKey), &QApplication::palette().active().text());

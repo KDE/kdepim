@@ -89,7 +89,7 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config )
 	this->edInterval->setText( _config->readEntry( "interval", "300" ) );
 	
 	this->chUseBox->setChecked( _config->readBoolEntry( "boxsettings", true ) );
-	this->edRunCommand->setURL( _config->readEntry( "command", "" ) );
+	this->edRunCommand->setURL( _config->readEntry( "newcommand", "" ) );
 	this->edPlaySound->setURL( _config->readEntry( "sound", "" ) );
 	this->chPassivePopup->setChecked( _config->readBoolEntry( "passivepopup", false ) );
 	this->chPassiveDate->setChecked( _config->readBoolEntry( "passivedate", false ) );
@@ -139,7 +139,7 @@ void KornAccountCfgImpl::writeConfig()
 	_config->writeEntry( "interval", this->edInterval->text().toInt() );
 
 	_config->writeEntry( "boxsettings", this->chUseBox->isChecked() );
-	_config->writeEntry( "command", this->edRunCommand->url() );
+	_config->writeEntry( "newcommand", this->edRunCommand->url() );
 	_config->writeEntry( "sound", this->edPlaySound->url() );
 	_config->writeEntry( "passivepopup", this->chPassivePopup->isChecked() );
 	_config->writeEntry( "passivedate", this->chPassiveDate->isChecked() );

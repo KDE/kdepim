@@ -214,14 +214,19 @@ void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 {
 	Dropinfo *info = _dropInfo->find( mailDrop ).data();
 	info->newMessages = count > info->msgnr || ( count == info->msgnr && info->newMessages );
-	info->msgnr = count;
+	
+	if( count > info->msgnr )
+	{
+		if( !mailDrop->soundFile().isEmpty() )
+			playSound( mailDrop->soundFile() );
+		if( !mailDrop->newMailCmd().isEmpty() )
+			runCommand( mailDrop->newMailCmd() );
+	}
+	
+	info->msgnr = count;	
 	if( info->msgnr - info->reset < 0 )
 		info->reset = 0;
 
-	if( !mailDrop->soundFile().isEmpty() )
-		playSound( mailDrop->soundFile() );
-	if( !mailDrop->newMailCmd().isEmpty() )
-		runCommand( mailDrop->newMailCmd() );
 	setCount( totalMessages(), hasNewMessages() && totalMessages() > 0 );
 	setTooltip( getTooltip() );
 }
