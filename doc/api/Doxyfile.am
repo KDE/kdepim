@@ -16,6 +16,7 @@ apidox-am-yes:
 		echo "RTF_OUTPUT             = $(subdir)/rtf" >> Doxyfile; \
 		echo "MAN_OUTPUT             = $(subdir)/man" >> Doxyfile; \
 		$(DOXYGEN) Doxyfile ;\
+		sh $(top_srcdir)/doc/api/doxyndex.sh $(top_builddir)/apidocs/$(subdir)/html ; \
 	fi
 
 apidox-am-no:
