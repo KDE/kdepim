@@ -379,6 +379,18 @@ const GpgME::Key & Kleo::KeySelectionDialog::selectedKey() const {
   return mKeyListView->selectedItem()->key();
 }
 
+QString Kleo::KeySelectionDialog::fingerprint() const {
+  return selectedKey().subkey(0).fingerprint();
+}
+
+QStringList Kleo::KeySelectionDialog::fingerprints() const {
+  QStringList result;
+  for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
+    if ( const char * fpr = it->subkey(0).fingerprint() )
+      result.push_back( fpr );
+  return result;
+}
+
 #ifdef TEMPORARILY_REMOVED
 QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
 {

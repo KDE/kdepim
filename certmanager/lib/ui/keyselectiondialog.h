@@ -104,8 +104,12 @@ namespace Kleo {
         Otherwise it returns a null key. */
     const GpgME::Key & selectedKey() const;
  
+    QString fingerprint() const;
+
     /** Returns a list of selected key IDs. */
     const std::vector<GpgME::Key> & selectedKeys() const { return mSelectedKeys; }
+
+    QStringList fingerprints() const;
 
     bool rememberSelection() const;
     bool hideInvalidKeys() const;
