@@ -6,7 +6,8 @@ lib_LTLIBRARIES = libkcal_groupwise.la libkabc_groupwise.la
 
 libkcal_groupwise_la_SOURCES = kcal_resourcegroupwise.cpp \
                                kcal_resourcegroupwiseconfig.cpp \
-                               kcal_groupwiseprefs.kcfgc \
+                               kcal_groupwiseprefsbase.kcfgc \
+                               kcal_groupwiseprefs.cpp \
                                confirmsavedialog.cpp
 libkcal_groupwise_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
                                -version-info 1:0:0 -no-undefined
