@@ -400,6 +400,17 @@ void KABCore::deleteContacts()
 void KABCore::deleteContacts( const QStringList &uids )
 {
   if ( uids.count() > 0 ) {
+    QStringList names;
+    QStringList::ConstIterator it = uids.begin();
+    while ( it != uids.end() ) {
+      names.append( mAddressBook->findByUid( *it ).formattedName() );
+      ++it;
+    }
+
+    if ( KMessageBox::questionYesNoList( mWidget, i18n( "Do you really want to delete these contacts?" ),
+                                         names ) == KMessageBox::No )
+      return;
+
     PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
     UndoStack::instance()->push( command );
     RedoStack::instance()->clear();
