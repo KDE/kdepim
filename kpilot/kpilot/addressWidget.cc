@@ -55,6 +55,7 @@ static const char *addresswidget_id="$Id$";
 #include "addressEditor.h"
 #include "kpilotConfig.h"
 #include "kpilotOptions.h"
+#include "listItems.h"
 #include "pilotLocalDatabase.h"
 
 #include "addressWidget.moc"
@@ -290,7 +291,6 @@ AddressWidget::updateWidget()
 	int addressDisplayMode = KPilotOptionsAddress::getDisplayMode(
 		KPilotConfig::getConfig());
 	int listIndex = 0;
-	int currentEntry = 0;
 
 #ifdef DEBUG
 	if (debug_level & UI_MINOR)
@@ -329,8 +329,10 @@ AddressWidget::updateWidget()
 				addressDisplayMode);
 			if (title)
 			{
-				fListBox->insertItem(title, -1);
-				fLookupTable[currentEntry++] = listIndex;
+				PilotListItem *p = new PilotListItem(title,
+					listIndex,
+					fAddressList.current());
+				fListBox->insertItem(p);
 			}
 		}
 		listIndex++;
@@ -444,27 +446,29 @@ AddressWidget::slotSetCategory(int)
 
 void
 AddressWidget::slotEditRecord()
-  {
-  	FUNCTIONSETUP;
+{
+	FUNCTIONSETUP;
 
-    int item = fListBox->currentItem();
-    if(item == -1)
-      return;
-    item = fLookupTable[item];
-    if(fAddressList.at(item)->id() == 0x0)
-      {
-	KMessageBox::error(0L, 
-		       i18n("Cannot edit new records until\n"
-			    "Hot-Synced with Pilot."),
-		       i18n("Hot-Sync Required"));
-			 
-	return;
-      }
-    AddressEditor* editor = new AddressEditor(fAddressList.at(item),this);
-    connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
-	    this, SLOT(slotUpdateRecord(PilotAddress*)));
-    editor->show();
-  }
+	int item = fListBox->currentItem();
+	if(item == -1) return;
+
+	PilotListItem *p = (PilotListItem *)fListBox->item(item);
+	PilotAddress *selectedRecord = (PilotAddress *)p->rec();
+
+	if (selectedRecord->id() == 0)
+	{
+		KMessageBox::error(0L, 
+			i18n("Cannot edit new records until\n"
+				"Hot-Synced with Pilot."),
+			i18n("Hot-Sync Required"));
+		return;
+	}
+
+	AddressEditor* editor = new AddressEditor(selectedRecord,this);
+	connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
+		this, SLOT(slotUpdateRecord(PilotAddress*)));
+	editor->show();
+}
 
 void
 AddressWidget::slotCreateNewRecord()
@@ -489,10 +493,10 @@ AddressWidget::slotCreateNewRecord()
 		return;
 	}
 
-  AddressEditor* editor = new AddressEditor(0L);
-  connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
-	  this, SLOT(slotAddRecord(PilotAddress*)));
-  editor->show();
+	AddressEditor* editor = new AddressEditor(0L);
+	connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
+		this, SLOT(slotAddRecord(PilotAddress*)));
+	editor->show();
 }
 
 void
@@ -504,10 +508,12 @@ AddressWidget::slotAddRecord(PilotAddress* address)
 		&(fAddressAppInfo.category),true);
 
 
-  address->setCat(currentCatID);
-  fAddressList.append(address);
-  writeAddress(address);
-  updateWidget();
+	address->setCat(currentCatID);
+	fAddressList.append(address);
+	writeAddress(address);
+	// TODO: Just add the new record to the lists
+	updateWidget();
+
 	// k holds the item number of the address just added.
 	//
 	//
@@ -521,10 +527,11 @@ AddressWidget::slotUpdateRecord(PilotAddress* address)
 {
 	FUNCTIONSETUP;
 
-  writeAddress(address);
-  int currentRecord = fListBox->currentItem();
-  updateWidget();
-  fListBox->setCurrentItem(currentRecord);
+	writeAddress(address);
+	int currentRecord = fListBox->currentItem();
+	// TODO: Just change the record
+	updateWidget();
+	fListBox->setCurrentItem(currentRecord);
 
 	emit(recordChanged(address));
 }
@@ -534,26 +541,31 @@ AddressWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
 
-  int item = fListBox->currentItem();
-  if(item == -1)
-    return;
-  item = (int)fLookupTable[item];
-  if(fAddressList.at(item)->id() == 0x0)
-    {
-      KMessageBox::error(this, 
-			 i18n("Cannot delete new records until\n"
-			      "Hot-Synced with pilot."), 
-			 i18n("Hot-Sync Required"));
-      return;
-    }
-  if(KMessageBox::questionYesNo(this, i18n("Delete currently selected record?"),
-				i18n("Delete Record?")) == KMessageBox::No)
-    return;
-  PilotAddress* address = fAddressList.at(item);
-  address->setAttrib(address->getAttrib() | dlpRecAttrDeleted);
-  writeAddress(address);
-	emit(recordChanged(address));
-  initialize();
+	int item = fListBox->currentItem();
+	if(item == -1) return;
+
+	PilotListItem * p = (PilotListItem *)fListBox->item(item);
+	PilotAddress * selectedRecord = (PilotAddress *)p->rec();
+
+	if (selectedRecord->id() == 0)
+	{
+		KMessageBox::error(this, 
+			i18n("Cannot delete new records until\n"
+				"Hot-Synced with pilot."), 
+			i18n("Hot-Sync Required"));
+		return;
+	}
+
+	if(KMessageBox::questionYesNo(this, 
+		i18n("Delete currently selected record?"),
+		i18n("Delete Record?")) == KMessageBox::No)
+		return;
+
+	selectedRecord->setAttrib(
+		selectedRecord->getAttrib() | dlpRecAttrDeleted);
+	writeAddress(selectedRecord);
+	emit(recordChanged(selectedRecord));
+	initialize();
 }
 
 void
@@ -562,7 +574,8 @@ AddressWidget::slotShowAddress(int which)
     	FUNCTIONSETUP;
 
     char text[BUFFERSIZE];
-    PilotAddress* theAdd = fAddressList.at(fLookupTable[which]);
+	PilotListItem *p = (PilotListItem *)fListBox->item(which);
+    PilotAddress* theAdd = (PilotAddress *)p->rec();
     int i;
     int pad;
     text[0] = 0L;
@@ -842,7 +855,7 @@ AddressWidget::writeAddress(PilotAddress* which,PilotDatabase *addressDB)
 
 	if (myDB==0L || !myDB->isDBOpen())
 	{
-		myDB = new PilotLocalDatabase(dbPath(),"AddressWidget");
+		myDB = new PilotLocalDatabase(dbPath(),"AddressDB");
 		usemyDB=true;
 	}
 
@@ -918,6 +931,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.27  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.26  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
