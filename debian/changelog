@@ -1,8 +1,10 @@
-kdepim (4:2.1-20001212-0) unstable; urgency=low
+kdepim (4:2.1-20001218-1) unstable; urgency=low
 
   * New upstream cvs version
+  * Including kpilot, 2 years and 10 days after I did the ITP for it (Closes: #68255)
+  * korganizer is the 2.0.1 version still
 
- -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 12 Dec 2000 16:00:00 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 18 Dec 2000 23:00:00 -0700
 
 kdepim (2.0-20001011-0) unstable; urgency=low
  
