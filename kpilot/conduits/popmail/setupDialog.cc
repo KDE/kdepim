@@ -441,7 +441,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 
 	grid->addWidget(fLeaveMail,6,1);
 
-	currentLabel = new QLabel(i18n("Pop password:"), this);
+	currentLabel = new QLabel(i18n("POP password:"), this);
 	currentLabel->adjustSize();
 
 	fPopPass = new QLineEdit(this);
@@ -453,7 +453,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	grid->addWidget(fPopPass,7,1);
 
 
-	fStorePass = new QCheckBox(i18n("Save &Pop password"), this);
+	fStorePass = new QCheckBox(i18n("Save &POP password"), this);
 	connect(fStorePass, SIGNAL(clicked()), this, SLOT(togglePopPass()));
 	fStorePass->adjustSize();
 	togglePopPass();
@@ -674,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.28  2002/07/03 13:24:39  binner
+// CVS_SILENT Style guide fix
+//
 // Revision 1.27  2002/07/03 12:22:07  binner
 // CVS_SILENT Style guide fixes
 //

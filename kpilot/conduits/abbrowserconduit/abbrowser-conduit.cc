@@ -454,7 +454,7 @@ void AbbrowserConduit::syncPCRecToPalm()
 			{
 				// not found on palm, so it was permanently deleted from the palm. 
 				int res=KMessageBox::warningYesNo(0L, 
-					i18n("The following record does not exist on the handheld and was probably deleted from the handheld:\n%s\n\n "
+					i18n("The following record does not exist on the handheld and was probably deleted from the handheld:\n%s\n\n"
 					"Also delete it from the PC?").arg(ad.realName()),  
 					i18n("Addressbook conduit Conflict"), i18n("Delete from PC"), i18n("Add on handheld")/*, i18n("don't resolve")*/ );
 				switch (res) {
@@ -1876,6 +1876,9 @@ void AbbrowserConduit::doTest()
 }*/
 
 // $Log$
+// Revision 1.37  2002/07/09 22:40:18  kainhofe
+// backup database fixes, prevent duplicate vcal entries, fixed the empty record that was inserted on the palm on every sync
+//
 // Revision 1.36  2002/07/04 23:47:00  kainhofe
 // Phone, email and address entries are no longer duplicated on a sync.
 //
