@@ -49,7 +49,7 @@ static const char *pilotlocaldatabase_id =
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
-	const QString & dbName,
+	const QString & dbName, bool useDefaultPath,
 	QObject *p, const char *n) :
 	PilotDatabase(p,n),
 	fPathName(path),
@@ -64,7 +64,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	fixupDBName();
 	openDatabase();
 
-	if (!isDBOpen())
+	if (!isDBOpen() && useDefaultPath)
 	{
 		if (fPathBase && !fPathBase->isEmpty())
 		{
@@ -77,6 +77,8 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		}
 		fixupDBName();
 		openDatabase();
+		if (!isDBOpen())
+			fPathName=path;
 	}
 
 	/* NOTREACHED */
@@ -136,7 +138,16 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int cardno, int
 	FUNCTIONSETUP;
 	
 	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
-	if (isDBOpen()) return true;
+	if (isDBOpen()) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" already open. Cannot recreate it."<<endl;
+#endif
+		return true;
+	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Creating database "<<fDBName<<endl;
+#endif
 	
 	memcpy(&fDBInfo.name[0], fDBName, 34*sizeof(char));
 	fDBInfo.creator=creator;
@@ -548,8 +559,12 @@ void PilotLocalDatabase::closeDatabase()
 	pi_file *dbFile;
 	int i;
 
-	if (isDBOpen() == false)
+	if (isDBOpen() == false) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
+#endif
 		return;
+	}
 
 	QString tempName_ = dbPathName();
 	QString newName_ = tempName_ + ".bak";
@@ -558,6 +573,9 @@ void PilotLocalDatabase::closeDatabase()
 
 	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
 		&fDBInfo);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Created temp file "<<newName<<" for the database file "<<dbPathName()<<endl;
+#endif
 
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)
@@ -601,6 +619,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.8  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.7  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

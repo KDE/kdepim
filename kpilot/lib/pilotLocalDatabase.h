@@ -44,7 +44,7 @@ class PilotLocalDatabase : public PilotDatabase
 {
 public:
 	/** Opens the local database */
-	PilotLocalDatabase( const QString& path, const QString& name,
+	PilotLocalDatabase( const QString& path, const QString& name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
 	PilotLocalDatabase(const QString &name,
 		QObject *p=0L,const char *n=0L);
@@ -132,6 +132,9 @@ private:
 
 
 // $Log$
+// Revision 1.8  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.7  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to
