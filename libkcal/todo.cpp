@@ -51,9 +51,9 @@ Todo::~Todo()
 {
 }
 
-Incidence *Todo::clone()
+Todo *Todo::clone()
 {
-  return new Todo(*this);
+  return new Todo( *this );
 }
 
 

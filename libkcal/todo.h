@@ -40,7 +40,7 @@ class Todo : public Incidence
     QCString type() const { return "Todo"; }
 
     /** Return an exact copy of this todo. */
-    Incidence *clone();
+    Todo *clone();
 
     /** for setting the todo's due date/time with a QDateTime. */
     void setDtDue(const QDateTime &dtDue);

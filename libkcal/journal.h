@@ -38,7 +38,7 @@ class Journal : public Incidence
 
     QCString type() const { return "Journal"; }
     
-    Incidence *clone();
+    Journal *clone();
 };
 
     bool operator==( const Journal&, const Journal& );

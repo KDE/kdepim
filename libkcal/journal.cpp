@@ -30,9 +30,9 @@ Journal::~Journal()
 {
 }
 
-Incidence *Journal::clone()
+Journal *Journal::clone()
 {
-  return new Journal(*this);
+  return new Journal( *this );
 }
 
 

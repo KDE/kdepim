@@ -42,7 +42,7 @@ class Event : public Incidence
 
     QCString type() const { return "Event"; }
 
-    Incidence *clone();
+    Event *clone();
 
     /** for setting an event's ending date/time with a QDateTime. */
     void setDtEnd(const QDateTime &dtEnd);
