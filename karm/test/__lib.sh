@@ -9,8 +9,7 @@ function set_up()
 
   if [ -e "$TESTFILE" ]; then rm $TESTFILE; fi
 
-
-  echo "mkb: __lib.sh - starting karm with $TESTFILE"
+  #echo "__lib.sh - starting karm with $TESTFILE"
   karm "$TESTFILE" & 
 
   # Make sure karm is up and running
@@ -19,7 +18,7 @@ function set_up()
   DCOPID=""
   while [ "$idx" -lt "$limit"  ]
   do
-    echo "mkb: __lib.sh: dcop 2>/dev/null | grep karm"
+    #echo "__lib.sh: dcop 2>/dev/null | grep karm"
     DCOPID=`dcop 2>/dev/null | grep karm`
     if [ -n "$DCOPID" ]
     then
@@ -37,7 +36,7 @@ function set_up()
   KARM_VERSION=""
   while [ "$idx" -lt "$limit"  ]
   do
-    echo "__lib.sh: dcop $DCOPID KarmDCOPIface version 2>/dev/null"
+    #echo "__lib.sh: dcop $DCOPID KarmDCOPIface version 2>/dev/null"
     KARM_VERSION=`dcop $DCOPID KarmDCOPIface version 2>/dev/null`
     if [ -n "$KARM_VERSION" ]
     then
