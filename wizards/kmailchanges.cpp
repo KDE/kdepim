@@ -25,6 +25,10 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kemailsettings.h>
+#include <identitymanager.h>
+#include <identity.h>
+#include <kdebug.h>
 
 
 class CreateDisconnectedImapAccount : public KConfigPropagator::Change
@@ -83,29 +87,27 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "port", "465" );
       c.writeEntry( "encryption", "SSL" );
 
-      // Write email in kmailrc or emailidentities, depending on whether the migration was done already
-      KConfig* emailConfig = 0;
-      bool hasEmailIdentities = !locate( "config", "emailidentities" ).isEmpty();
-      if ( hasEmailIdentities )
-        emailConfig = new KConfig( "emailidentities" );
-      else
-        emailConfig = &c;
-      int i = 0;
-      while (emailConfig->hasGroup(QString("Identity #%1").arg(i)))
-        ++i;
-      emailConfig->setGroup( QString("Identity #%1").arg(i) );
-
       QString user = KolabConfig::self()->user();
       int pos = user.find( "@" );
       if ( pos > 0 ) user = user.left( pos );
 
-      emailConfig->writeEntry("Email Address", user+"@"+KolabConfig::self()->server() );
-      emailConfig->writeEntry("Name", KolabConfig::self()->realName() );
-      emailConfig->writeEntry("uoid", kapp->random() );
+      QString email = user+"@"+KolabConfig::self()->server();
 
-      if ( hasEmailIdentities )
-        delete emailConfig;
-      emailConfig = 0;
+      // Write email in "default kcontrol settings", used by IdentityManager
+      // if it has to create a default identity.
+      KEMailSettings es;
+      es.setSetting( KEMailSettings::RealName, KolabConfig::self()->realName() );
+      es.setSetting( KEMailSettings::EmailAddress, email );
+
+      KPIM::IdentityManager identityManager;
+      if ( !identityManager.allEmails().contains( email ) ) {
+        // Not sure how to name the identity. First one is "Default", next one "Kolab", but then...
+        KPIM::Identity& identity = identityManager.newFromScratch( i18n( "Kolab" ) );
+        identity.setFullName( KolabConfig::self()->realName() );
+        identity.setEmailAddr( email );
+      } else {
+        kdDebug() << "Identity with " << email << " exists already" << endl;
+      }
 
       // This needs to be done here, since it reference just just generated id
       c.setGroup( "IMAP Resource" );
