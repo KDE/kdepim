@@ -160,7 +160,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 	      "enter the passphrase once.</p><p>Be aware that this could be a "
 	      "security risk. If you leave your computer, others "
 	      "can use it to send signed messages and/or read your encrypted "
-	      "messages. If you do a core dump, the content of your RAM will "
+	      "messages. If a core dump occurs, the contents of your RAM will "
 	      "be saved onto disk, including your passphrase.</p>"
 	      "<p>Note that when using KMail, this setting only applies "
 	      "if you are not using gpg-agent. It is also ignored "
@@ -171,7 +171,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
                                mpOptionsGroupBox );
     msg = i18n( "<qt><p>When this option is enabled, the message/file "
 		"will not only be encrypted with the receiver's public key, "
-		"but with your key also. This will enable you to decrypt the "
+		"but also with your key. This will enable you to decrypt the "
 		"message/file at a later time. This is generally a good idea."
 		"</p></qt>" );
     QWhatsThis::add( encToSelf, msg );
@@ -183,7 +183,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
                                   mpOptionsGroupBox );
   msg = i18n( "<qt><p>When this option is enabled, the signed/encrypted text "
 	      "will be shown in a separate window, enabling you to know how "
-	      "it will look like before it is sent. This is a good idea when "
+	      "it will look before it is sent. This is a good idea when "
 	      "you are verifying that your encryption system works.</p></qt>" );
   QWhatsThis::add( showCipherText, msg );
   if( encrypt ) {
@@ -193,7 +193,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
     msg = i18n( "<qt><p>When this option is enabled, the application will "
 		"always show you a list of public keys from which you can "
 		"choose the one it will use for encryption. If it is off, "
-		"the application will only show the dialog if it can not find "
+		"the application will only show the dialog if it cannot find "
 		"the right key or if there are several which could be used. "
 		"</p></qt>" );
     QWhatsThis::add( showKeyApprovalDlg, msg );
