@@ -21,38 +21,40 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#include <kabc/stdaddressbook.h>
+
 #include "addresseeutil.h"
 
-#include <kdebug.h>
-
-QString AddresseeUtil::addresseeToClipboard(KABC::Addressee &a)
+QString AddresseeUtil::addresseeToClipboard( KABC::Addressee &a )
 {
-  // The temp solution is to use the email address. See the
-  // AddresseeUtil documentation.
-  return a.fullEmail();
+  return a.uid();
 }
    
-QString AddresseeUtil::addresseesToClipboard(KABC::Addressee::List &aList)
+QString AddresseeUtil::addresseesToClipboard( KABC::Addressee::List &list )
 {
-  QString clipboard;
-  bool first = true;
-  KABC::Addressee::List::Iterator iter;
-  for (iter = aList.begin(); iter != aList.end(); ++iter)
-  {
-    if (!first)
-      clipboard += ", ";
-      
-    clipboard += (*iter).fullEmail();
-    first = false;
+  QStringList uids;
+
+  KABC::Addressee::List::Iterator it;
+  for ( it = list.begin(); it != list.end(); ++it ) {
+    uids.append( addresseeToClipboard( *it ) );
   }
   
-  return clipboard;
+  return uids.join( "," );
 }
 
-KABC::Addressee::List AddresseeUtil::clipboardToAddressees(const QString &)
+KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &clipboard )
 {
-  // Need a VCard parser
-  kdDebug() << "AddresseeUtil::clipboardToAddressees: not implemented" << endl;
-  
-  return KABC::Addressee::List();
+  KABC::Addressee::List list;
+  KABC::AddressBook *ab = KABC::StdAddressBook::self();
+
+  QStringList uids = QStringList::split( ',', clipboard );
+
+  QStringList::Iterator it;
+  for ( it = uids.begin(); it != uids.end(); ++it ) {
+    KABC::Addressee addr = ab->findByUid( *it );
+    if ( !addr.isEmpty() )
+      list.append( addr );
+  }
+
+  return list;
 }

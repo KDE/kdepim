@@ -1,3 +1,26 @@
+/*                                                                      
+    This file is part of KAddressBook.                                  
+    Copyright (c) 2002 Mirko Boehm <mirko@kde.org>
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/                                                                      
+
 #include <qlayout.h>
 #include <qcombobox.h>
 #include <qpushbutton.h>
@@ -20,140 +43,143 @@ namespace KABC
 {
 
 // MOSTLY A COPY FROM kdelibs/kabc:
-    class EntryItem : public QListViewItem
+class EntryItem : public QListViewItem
+{
+  protected:
+    FeatureDistributionList *list;
+
+  public:
+    EntryItem( FeatureDistributionList *l, QListView *parent,
+               const Addressee &addressee, const QString &email = QString::null )
+      : QListViewItem( parent ), list( l ), mAddressee( addressee ), mEmail( email )
     {
-    protected:
-        FeatureDistributionList *list;
-    public:
-        EntryItem(FeatureDistributionList *l,
-                  QListView *parent, const Addressee &addressee,
-                  const QString &email=QString::null ) :
-            QListViewItem( parent ),
-            list(l),
-            mAddressee( addressee ),
-            mEmail( email )
-            {
-                setDropEnabled(true);
-                setText( 0, addressee.realName() );
-                if( email.isEmpty() ) {
-                    setText( 1, addressee.preferredEmail() );
-                    setText( 2, i18n("Yes") );
-                } else {
-                    setText( 1, email );
-                    setText( 2, i18n("No") );
-                }
-            }
+      setDropEnabled( true );
+      setText( 0, addressee.realName() );
+      if ( email.isEmpty() ) {
+        setText( 1, addressee.preferredEmail() );
+        setText( 2, i18n( "Yes" ) );
+      } else {
+        setText( 1, email );
+        setText( 2, i18n( "No" ) );
+      }
+    }
 
-        Addressee addressee() const
-            {
-                return mAddressee;
-            }
+    Addressee addressee() const
+    {
+      return mAddressee;
+    }
 
-        QString email() const
-            {
-                return mEmail;
-            }
-    protected:
-        bool acceptDrop ( const QMimeSource * /* mime */ )
-            { // WORK_TO_DO: check data type
-                return true;
-            }
-        void dropped(QDropEvent *e)
-            {
-                list->slotDropped(e);
-            }
-    private:
-        Addressee mAddressee;
-        QString mEmail;
-    };
+    QString email() const
+    {
+      return mEmail;
+    }
+
+  protected:
+    bool acceptDrop( const QMimeSource* )
+    {
+      // WORK_TO_DO: check data type
+      return true;
+    }
+
+    void dropped( QDropEvent *e )
+    {
+      list->slotDropped( e );
+    }
+
+  private:
+    Addressee mAddressee;
+    QString mEmail;
+};
+
 }
 
-FeatureDistributionList::FeatureDistributionList(KABC::AddressBook *doc,
-                                                 QWidget *parent, const char* name)
-    : FeatureDistributionListBase(parent, name),
-      mDoc(doc),
-      mManager(new KABC::DistributionListManager(doc))
+FeatureDistributionList::FeatureDistributionList( KABC::AddressBook *doc,
+                                            QWidget *parent, const char* name )
+  : QWidget( parent, name ),
+    mDoc( doc ),
+    mManager( new KABC::DistributionListManager( doc ) )
 {
-    QLayout *l=layout();
-    if(l!=0) // should be...
-    {
-        l->setMargin(KDialog::marginHint());
-        l->setSpacing(KDialog::spacingHint());
-    }
-    connect(mLvAddressees, SIGNAL(selectionChanged()),
-            SLOT(slotAddresseeSelectionChanged()));
-    connect(mLvAddressees, SIGNAL(dropped(QDropEvent*)),
-            SLOT(slotDropped(QDropEvent*)));
-    mLvAddressees->addColumn( i18n("Name") );
-    mLvAddressees->addColumn( i18n("Email") );
-    mLvAddressees->addColumn( i18n("Use Preferred") );
+  initGUI();
 
-    mManager->load();
+  connect( mLvAddressees, SIGNAL(selectionChanged()),
+           SLOT(slotAddresseeSelectionChanged()));
+  connect( mLvAddressees, SIGNAL(dropped(QDropEvent*)),
+           SLOT(slotDropped(QDropEvent*)));
+
+  mLvAddressees->addColumn( i18n( "Name" ) );
+  mLvAddressees->addColumn( i18n( "Email" ) );
+  mLvAddressees->addColumn( i18n( "Use Preferred" ) );
+
+  mManager->load();
 }
 
 FeatureDistributionList::~FeatureDistributionList()
 {
-    delete mManager;
+  delete mManager;
 }
 
 void FeatureDistributionList::update()
 {
-    int index=mCbListSelect->currentItem();
-    mLvAddressees->clear();
-    mCbListSelect->clear();
-    mCbListSelect->insertStringList(mManager->listNames());
-    if(index<mCbListSelect->count())
-    {
-        mCbListSelect->setCurrentItem(index);
-    }
-    updateGUI();
+  int index = mCbListSelect->currentItem();
+
+  mLvAddressees->clear();
+  mCbListSelect->clear();
+  mCbListSelect->insertStringList(mManager->listNames());
+
+  if ( index < mCbListSelect->count() ) {
+    mCbListSelect->setCurrentItem( index );
+  }
+
+  updateGUI();
 }
 
 void FeatureDistributionList::updateGUI()
 {
-    KABC::DistributionList *list = mManager->list(mCbListSelect->currentText());
-    if(!list)
-    {
-        mPbListRename->setEnabled(false);
-        mPbListRemove->setEnabled(false);
-        mPbChangeEmail->setEnabled(false);
-        mPbEntryRemove->setEnabled(false);
-        mLvAddressees->setEnabled(false);
-        mLvAddressees->clear();
-        return;
-    } else {
-        mPbListRename->setEnabled(true);
-        mPbListRemove->setEnabled(true);
-        mLvAddressees->setEnabled(true);
-        KABC::DistributionList::Entry::List entries = list->entries();
-        KABC::DistributionList::Entry::List::ConstIterator it;
-        for(it=entries.begin(); it!=entries.end(); ++it)
-        {
-            new KABC::EntryItem(this, mLvAddressees, (*it).addressee, (*it).email);
-        }
+  KABC::DistributionList *list = mManager->list( mCbListSelect->currentText() );
+  if( !list ) {
+    mPbListRename->setEnabled( false );
+    mPbListRemove->setEnabled( false );
+    mPbChangeEmail->setEnabled( false );
+    mPbEntryRemove->setEnabled( false );
+    mLvAddressees->setEnabled( false );
+    mLvAddressees->clear();
+    return;
+  } else {
+    mPbListRename->setEnabled( true );
+    mPbListRemove->setEnabled( true );
+    mLvAddressees->setEnabled( true );
+    KABC::DistributionList::Entry::List entries = list->entries();
+    KABC::DistributionList::Entry::List::ConstIterator it;
+    for( it = entries.begin(); it != entries.end(); ++it ) {
+      new KABC::EntryItem( this, mLvAddressees, (*it).addressee, (*it).email );
     }
-  KABC::EntryItem *entryItem = static_cast<KABC::EntryItem *>(mLvAddressees->selectedItem());
-  bool state=entryItem;
-  mPbChangeEmail->setEnabled(state);
-  mPbEntryRemove->setEnabled(state);
+  }
+
+  KABC::EntryItem *entryItem = static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem() );
+
+  bool state = entryItem;
+  mPbChangeEmail->setEnabled( state );
+  mPbEntryRemove->setEnabled( state );
 }
 
-void FeatureDistributionList::showEvent(QShowEvent *)
+void FeatureDistributionList::showEvent( QShowEvent* )
 {
-    update();
+  update();
 }
 
 void FeatureDistributionList::slotListNew()
 {
-  KLineEditDlg dlg(i18n("Please enter name:"), QString::null, this);
-  dlg.setCaption(i18n("New Distribution List"));
-  if (!dlg.exec()) return;
+  KLineEditDlg dlg( i18n( "Please enter name:" ), QString::null, this );
+  dlg.setCaption( i18n("New Distribution List") );
 
-  new KABC::DistributionList(mManager, dlg.text());
+  if ( !dlg.exec() )
+    return;
+
+  new KABC::DistributionList( mManager, dlg.text() );
 
   mCbListSelect->clear();
-  mCbListSelect->insertStringList(mManager->listNames());
-  mCbListSelect->setCurrentItem(mCbListSelect->count()-1);
+  mCbListSelect->insertStringList( mManager->listNames() );
+  mCbListSelect->setCurrentItem( mCbListSelect->count() - 1 );
 
   commit();
   update();
@@ -161,120 +187,165 @@ void FeatureDistributionList::slotListNew()
 
 void FeatureDistributionList::slotListRename()
 {
-    QString oldName = mCbListSelect->currentText();
+  QString oldName = mCbListSelect->currentText();
 
-    KLineEditDlg dlg(i18n("Please change name:"), oldName, this);
-    dlg.setCaption(i18n("Distribution List"));
-    if (!dlg.exec()) return;
+  KLineEditDlg dlg( i18n( "Please change name:" ), oldName, this );
+  dlg.setCaption( i18n( "Distribution List" ) );
 
-    KABC::DistributionList *list=mManager->list(oldName);
-    list->setName(dlg.text());
+  if ( !dlg.exec() )
+    return;
 
-    mCbListSelect->clear();
-    mCbListSelect->insertStringList(mManager->listNames());
-    mCbListSelect->setCurrentItem(mCbListSelect->count()-1);
+  KABC::DistributionList *list = mManager->list( oldName );
+  list->setName( dlg.text() );
 
-    commit();
-    update();
+  mCbListSelect->clear();
+  mCbListSelect->insertStringList( mManager->listNames() );
+  mCbListSelect->setCurrentItem( mCbListSelect->count() - 1 );
+
+  commit();
+  update();
 }
 
 void FeatureDistributionList::slotListRemove()
 {
-    int result = KMessageBox::warningContinueCancel
-                 (this,
-                  i18n("Delete distibution list '%1'?").arg(mCbListSelect->currentText()),
-                  QString::null, i18n("Delete"));
+  int result = KMessageBox::warningContinueCancel( this,
+                  i18n( "Delete distibution list '%1'?" ).arg( mCbListSelect->currentText() ),
+                  QString::null, i18n( "Delete" ) );
 
-    if(result!=KMessageBox::Continue) return;
+  if ( result != KMessageBox::Continue)
+    return;
 
-    delete mManager->list(mCbListSelect->currentText());
-    mCbListSelect->removeItem(mCbListSelect->currentItem() );
-    commit();
-    updateGUI();
+  delete mManager->list( mCbListSelect->currentText() );
+  mCbListSelect->removeItem( mCbListSelect->currentItem() );
+
+  commit();
+  updateGUI();
 }
 
 void FeatureDistributionList::slotEntryChangeEmail()
 {
-    KABC::DistributionList *list=mManager->list(mCbListSelect->currentText());
-    if (!list) return;
+  KABC::DistributionList *list = mManager->list( mCbListSelect->currentText() );
+  if ( !list )
+    return;
 
-    KABC::EntryItem *entryItem =
-        static_cast<KABC::EntryItem *>(mLvAddressees->selectedItem());
-    if (!entryItem) return;
+  KABC::EntryItem *entryItem = static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem() );
+  if ( !entryItem )
+    return;
 
-    QString email=KABC::EmailSelectDialog::getEmail(entryItem->addressee().emails(),
-                                                    entryItem->email(), this);
-    list->removeEntry(entryItem->addressee(), entryItem->email());
-    list->insertEntry(entryItem->addressee(), email);
+  QString email = KABC::EmailSelectDialog::getEmail( entryItem->addressee().emails(),
+                                                     entryItem->email(), this );
+  list->removeEntry( entryItem->addressee(), entryItem->email() );
+  list->insertEntry( entryItem->addressee(), email );
 
-    commit();
-    update();
+  commit();
+  update();
 }
 
 void FeatureDistributionList::slotEntryRemove()
 {
-    KABC::DistributionList *list=mManager->list(mCbListSelect->currentText());
-    if (!list) return;
+  KABC::DistributionList *list = mManager->list( mCbListSelect->currentText() );
+  if ( !list )
+    return;
 
-    KABC::EntryItem *entryItem =
-        static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem() );
-    if(!entryItem) return;
+  KABC::EntryItem *entryItem = static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem() );
+  if ( !entryItem )
+    return;
 
-    list->removeEntry(entryItem->addressee(), entryItem->email());
-    delete entryItem;
-    commit();
+  list->removeEntry( entryItem->addressee(), entryItem->email() );
+  delete entryItem;
+
+  commit();
 }
 
-void FeatureDistributionList::slotListSelected(int)
+void FeatureDistributionList::slotListSelected( int )
 {
-    update();
+  update();
 }
 
 void FeatureDistributionList::slotAddresseeSelectionChanged()
 {
-    KABC::EntryItem *entryItem =
-        static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem());
-    bool state=entryItem;
-    mPbChangeEmail->setEnabled(state);
-    mPbEntryRemove->setEnabled(state);
-}
+  KABC::EntryItem *entryItem = static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem() );
+  bool state = entryItem;
 
+  mPbChangeEmail->setEnabled( state );
+  mPbEntryRemove->setEnabled( state );
+}
 
 void FeatureDistributionList::commit()
 {
-    mManager->save();
-    emit(modified());
+  mManager->save();
+  emit modified();
 }
 
-void FeatureDistributionList::dropEvent(QDropEvent *e)
+void FeatureDistributionList::dropEvent( QDropEvent *e )
 {
-    QString clipText;
-    if (QTextDrag::decode(e, clipText))
-    {
-        KABC::Addressee::List aList;
-        aList = AddresseeUtil::clipboardToAddressees(clipText);
-        KABC::DistributionList *list=mManager->list(mCbListSelect->currentText());
-        if ( !list ) {
-            kdDebug(5700)
-                << "FeatureDistributionList::dropEvent: No dist list '"
-                << mCbListSelect->currentText() << "'" << endl;
-            return;
-            }
+  QString clipText;
 
-        KABC::Addressee::List::Iterator iter;
-        for (iter = aList.begin(); iter != aList.end(); ++iter)
-        {
-
-            list->insertEntry(*iter);
-        }
-        commit();
-        update();
+  if ( QTextDrag::decode( e, clipText ) ) {
+    KABC::Addressee::List list;
+    list = AddresseeUtil::clipboardToAddressees( clipText );
+    KABC::DistributionList *distributionList = mManager->list( mCbListSelect->currentText() );
+    if ( !distributionList ) {
+      kdDebug(5700) << "FeatureDistributionList::dropEvent: No dist list '"
+                    << mCbListSelect->currentText() << "'" << endl;
+      return;
     }
+
+    KABC::Addressee::List::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it )
+      distributionList->insertEntry( *it );
+
+    commit();
+    update();
+  }
 }
 
-void FeatureDistributionList::slotDropped(QDropEvent *e)
+void FeatureDistributionList::slotDropped( QDropEvent *e )
 {
-    dropEvent(e);
+  dropEvent( e );
+}
+
+void FeatureDistributionList::initGUI()
+{
+  setCaption( i18n( "Edit Distribution Lists" ) );
+
+  QGridLayout *layout = new QGridLayout( this, 1, 1, KDialog::marginHint(), KDialog::spacingHint() ); 
+  QSpacerItem* spacer = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
+  layout->addMultiCell( spacer, 3, 4, 2, 2 );
+
+  mCbListSelect = new QComboBox( false, this );
+  layout->addWidget( mCbListSelect, 0, 0 );
+
+  mPbListRename = new QPushButton( i18n( "Rename List..." ), this );
+  layout->addWidget( mPbListRename, 2, 0 );
+
+  mPbListRemove = new QPushButton( i18n( "Remove List..." ), this );
+  layout->addWidget( mPbListRemove, 3, 0 );
+
+  QSpacerItem* spacer_2 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
+  layout->addItem( spacer_2, 4, 0 );
+
+  mPbChangeEmail = new QPushButton( i18n( "Change Email..." ), this );
+  layout->addWidget( mPbChangeEmail, 0, 2 );
+
+  mPbEntryRemove = new QPushButton( i18n( "Remove Entry" ), this );
+  layout->addWidget( mPbEntryRemove, 1, 2 );
+
+  mPbListNew = new QPushButton( i18n( "New List..." ), this );
+  layout->addWidget( mPbListNew, 1, 0 );
+
+  mLvAddressees = new FeatureDistributionListView( this );
+  layout->addMultiCellWidget( mLvAddressees, 0, 4, 1, 1 );
+
+  resize( QSize(760, 500).expandedTo(sizeHint()) );
+
+  // signals and slots connections
+  connect( mPbListNew, SIGNAL( clicked() ), this, SLOT( slotListNew() ) );
+  connect( mPbListRename, SIGNAL( clicked() ), this, SLOT( slotListRename() ) );
+  connect( mPbListRemove, SIGNAL( clicked() ), this, SLOT( slotListRemove() ) );
+  connect( mPbChangeEmail, SIGNAL( clicked() ), this, SLOT( slotEntryChangeEmail() ) );
+  connect( mPbEntryRemove, SIGNAL( clicked() ), this, SLOT( slotEntryRemove() ) );
+  connect( mCbListSelect, SIGNAL( activated(int) ), this, SLOT( slotListSelected(int) ) );
 }
 
 #include "featuredistributionlist.moc"

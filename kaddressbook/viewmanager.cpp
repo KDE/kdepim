@@ -638,17 +638,20 @@ void ViewManager::addresseeSelected(const QString &uid)
 
 void ViewManager::addresseeModified()
 {
-    KABC::Addressee a;
-    // WORK_TO_DO: obsolete after port of Quick Edit to be a Details View Style
-    mQuickEdit->save();
-    // a = mQuickEdit->addressee();
-    // save the changes:
-    // WORK_TO_DO: check for emittances during build up
-    a = mDetails->addressee();
-    mDocument->insertAddressee(a);
-    mActiveView->refresh(a.uid());
+  KABC::Addressee a;
 
-    emit modified();
+  // WORK_TO_DO: obsolete after port of Quick Edit to be a Details View Style
+  mQuickEdit->save();
+  a = mQuickEdit->addressee();
+
+  // save the changes:
+  // WORK_TO_DO: check for emittances during build up
+  // a = mDetails->addressee();
+
+  mDocument->insertAddressee( a );
+  mActiveView->refresh( a.uid() );
+
+  emit modified();
 }
 
 void ViewManager::filtersChanged(const Filter::List &list)
@@ -683,7 +686,7 @@ void ViewManager::filterActivated(int index)
 
 void ViewManager::slotModified()
 {
-    modified();
+  modified();
 }
 
 #include "viewmanager.moc"
