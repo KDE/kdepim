@@ -81,7 +81,7 @@ ResourceIMAP::~ResourceIMAP()
 
 bool ResourceIMAP::getIncidenceList( QStringList& lst, const QString& type )
 {
-  if( !kmailIncidences( lst, type ) ) {
+  if( !kmailIncidences( lst, type, "FIXME" ) ) {
     kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
     return false;
   }
@@ -213,7 +213,7 @@ bool ResourceIMAP::addEvent(Event *anEvent)
 
   mCurrentUID = anEvent->uid();
   QString vCal = mFormat.createScheduleMessage( anEvent, Scheduler::Request );
-  bool rc = kmailAddIncidence( "Calendar", mCurrentUID, vCal );
+  bool rc = kmailAddIncidence( "Calendar", "FIXME", mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -230,7 +230,7 @@ void ResourceIMAP::deleteEvent(Event *event)
   // Call kmail ...
   if ( !mSilent ) {
     mCurrentUID = event->uid();
-    kmailDeleteIncidence( "Calendar", mCurrentUID );
+    kmailDeleteIncidence( "Calendar", "FIXME", mCurrentUID );
     mCurrentUID = QString::null;
   }
 
@@ -284,7 +284,7 @@ bool ResourceIMAP::addTodo(Todo *todo)
 
   mCurrentUID = todo->uid();
   QString vCal = mFormat.createScheduleMessage( todo, Scheduler::Request );
-  bool rc = kmailAddIncidence( "Task", mCurrentUID, vCal );
+  bool rc = kmailAddIncidence( "Task", "FIXME", mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -298,7 +298,7 @@ void ResourceIMAP::deleteTodo(Todo *todo)
   // call kmail ...
   if ( !mSilent ) {
     mCurrentUID = todo->uid();
-    kmailDeleteIncidence( "Task", mCurrentUID );
+    kmailDeleteIncidence( "Task", "FIXME", mCurrentUID );
     mCurrentUID = QString::null;
   }
   mCalendar.deleteTodo(todo);
@@ -339,7 +339,7 @@ bool ResourceIMAP::addJournal(Journal *journal)
   // call kmail ..
   mCurrentUID = journal->uid();
   QString vCal = mFormat.createScheduleMessage( journal, Scheduler::Request );
-  bool rc = kmailAddIncidence( "Journal", mCurrentUID, vCal );
+  bool rc = kmailAddIncidence( "Journal", "FIXME", mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -355,7 +355,7 @@ void ResourceIMAP::deleteJournal(Journal *journal)
 
   if ( !mSilent ) {
     mCurrentUID = journal->uid();
-    kmailDeleteIncidence( "Journal", mCurrentUID );
+    kmailDeleteIncidence( "Journal", "FIXME", mCurrentUID );
     mCurrentUID = QString::null;
   }
   mCalendar.deleteJournal(journal);
@@ -413,8 +413,8 @@ void ResourceIMAP::update(IncidenceBase *incidencebase)
   mCurrentUID = incidencebase->uid();
   QString vCal = mFormat.createScheduleMessage( incidencebase,
                                                 Scheduler::Request );
-  bool rc = kmailDeleteIncidence( type, mCurrentUID );
-  rc &= kmailAddIncidence( type, mCurrentUID, vCal );
+  bool rc = kmailDeleteIncidence( type, "FIXME", mCurrentUID );
+  rc &= kmailAddIncidence( type, "FIXME", mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -498,6 +498,16 @@ void ResourceIMAP::slotRefresh( const QString& type )
     loadAllTasks();
   else if ( type == "Journal" )
     loadAllJournals();
+}
+
+QStringList ResourceIMAP::subresources() const
+{
+    return mSubresources.keys();
+}
+
+void ResourceIMAP::setSubresourceActive( const QString& subresource,
+                                         bool active )
+{
 }
 
 void ResourceIMAP::setTimeZoneId( const QString& tzid )

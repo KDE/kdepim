@@ -41,9 +41,15 @@ class KMailConnection : public QObject, public DCOPObject {
 
   // These are the methods called by KMail when the resource changes
   k_dcop:
-    bool addIncidence( const QString& type, const QString& ical );
-    void deleteIncidence( const QString& type, const QString& uid );
-    void slotRefresh( const QString& type );
+    bool addIncidence( const QString& type, const QString& resource,
+                       const QString& ical );
+    void deleteIncidence( const QString& type, const QString& resource,
+                          const QString& uid );
+    void slotRefresh( const QString& type, const QString& resource );
+    void subresourceAdded( const QString& type, const QString& resource,
+                           const QString& id );
+    void subresourceDeleted( const QString& type, const QString& resource,
+                             const QString& id );
 
   public:
     KMailConnection( ResourceIMAPShared* resource, const QCString& objId );
@@ -55,13 +61,17 @@ class KMailConnection : public QObject, public DCOPObject {
     bool connectToKMail();
 
     // Call the DCOP methods
-    bool kmailIncidences( QStringList& lst, const QString& type );
+    bool kmailIncidences( QStringList& lst, const QString& type,
+                          const QString& resource );
     bool kmailAddIncidence( const QString& type, const QString& uid,
-                            const QString& incidence );
-    bool kmailDeleteIncidence( const QString& type, const QString& uid );
-    bool kmailUpdate( const QString& type, const QStringList& lst );
-    bool kmailUpdate( const QString& type, const QString& uid,
-                      const QString& incidence );
+                            const QString& incidence,
+                            const QString& resource );
+    bool kmailDeleteIncidence( const QString& type, const QString& uid,
+                               const QString& resource );
+    bool kmailUpdate( const QString& type, const QString& resource,
+                      const QStringList& lst );
+    bool kmailUpdate( const QString& type, const QString& resource,
+                      const QString& uid, const QString& incidence );
 
   private slots:
     virtual void unregisteredFromDCOP( const QCString& );
@@ -75,7 +85,7 @@ class KMailConnection : public QObject, public DCOPObject {
     ResourceIMAPShared* mResource;
     DCOPClient* mDCOPClient;
     KMailICalIface_stub* mKMailIcalIfaceStub;
-};  
+};
 
 }
 

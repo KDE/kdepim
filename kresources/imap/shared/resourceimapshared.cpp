@@ -40,34 +40,40 @@ ResourceIMAPShared::~ResourceIMAPShared()
 
 
 bool ResourceIMAPShared::kmailIncidences( QStringList& lst,
-                                          const QString& type )
+                                          const QString& type,
+                                          const QString& resource )
 {
-  return mConnection->kmailIncidences( lst, type );
+  return mConnection->kmailIncidences( lst, type, resource );
 }
 
 bool ResourceIMAPShared::kmailAddIncidence( const QString& type,
+                                            const QString& resource,
                                             const QString& uid,
                                             const QString& incidence )
 {
-  return mConnection->kmailAddIncidence( type, uid, incidence );
+  return mConnection->kmailAddIncidence( type, resource, uid, incidence );
 }
 
 bool ResourceIMAPShared::kmailDeleteIncidence( const QString& type,
+                                               const QString& resource,
                                                const QString& uid )
 {
-  return mConnection->kmailDeleteIncidence( type, uid );
+  return mConnection->kmailDeleteIncidence( type, resource, uid );
 }
 
 bool ResourceIMAPShared::kmailUpdate( const QString& type,
+                                      const QString& resource,
                                       const QStringList& lst )
 {
-  return mConnection->kmailUpdate( type, lst );
+  return mConnection->kmailUpdate( type, resource, lst );
 }
 
-bool ResourceIMAPShared::kmailUpdate( const QString& type, const QString& uid,
+bool ResourceIMAPShared::kmailUpdate( const QString& type,
+                                      const QString& resource,
+                                      const QString& uid,
                                       const QString& incidence )
 {
-  return mConnection->kmailUpdate( type, uid, incidence );
+  return mConnection->kmailUpdate( type, resource, uid, incidence );
 }
 
 bool ResourceIMAPShared::connectToKMail() const

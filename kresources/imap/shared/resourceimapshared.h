@@ -22,9 +22,9 @@
 #ifndef IMAPSHARED_H
 #define IMAPSHARED_H
 
+#include <qstring.h>
 
 class QCString;
-class QString;
 class QStringList;
 
 namespace ResourceIMAPBase {
@@ -42,6 +42,10 @@ class ResourceIMAPShared {
     virtual bool addIncidence( const QString& type, const QString& ical ) = 0;
     virtual void deleteIncidence( const QString& type, const QString& uid ) = 0;
     virtual void slotRefresh( const QString& type ) = 0;
+    virtual void subresourceAdded( const QString& /*type*/,
+                                   const QString& /*id*/ ) {}
+    virtual void subresourceDeleted( const QString& /*type*/,
+                                     const QString& /*id*/ ) {}
 
   protected:
     /**
@@ -50,17 +54,20 @@ class ResourceIMAPShared {
     bool connectToKMail() const;
 
     // These are the KMail dcop functions
-    bool kmailIncidences( QStringList& lst, const QString& type );
-    bool kmailAddIncidence( const QString& type, const QString& uid,
-                            const QString& incidence );
-    bool kmailDeleteIncidence( const QString& type, const QString& uid );
-    bool kmailUpdate( const QString& type, const QStringList& lst );
-    bool kmailUpdate( const QString& type, const QString& uid,
-                      const QString& incidence );
+    bool kmailIncidences( QStringList& lst, const QString& type,
+                          const QString& resource );
+    bool kmailAddIncidence( const QString& type, const QString& resource,
+                            const QString& uid, const QString& incidence );
+    bool kmailDeleteIncidence( const QString& type, const QString& resource,
+                               const QString& uid );
+    bool kmailUpdate( const QString& type, const QString& resource,
+                      const QStringList& lst );
+    bool kmailUpdate( const QString& type, const QString& resource,
+                      const QString& uid, const QString& incidence );
 
   private:
     mutable KMailConnection* mConnection;
-};  
+};
 
 }
 

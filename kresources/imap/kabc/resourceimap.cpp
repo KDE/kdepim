@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB 
+    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ bool KABC::ResourceIMAP::load()
   mAddrMap.clear();
 
   QStringList lst;
-  if ( !kmailIncidences( lst, "Contact" ) ) {
+  if ( !kmailIncidences( lst, "Contact", "FIXME" ) ) {
     kdError() << "Communication problem in ResourceIMAP::load()\n";
     return false;
   }
@@ -135,7 +135,7 @@ bool KABC::ResourceIMAP::save( Ticket* )
     return true;
 
   // Save in KMail
-  bool rc = kmailUpdate( "Contact", vCards );
+  bool rc = kmailUpdate( "Contact", "FIXME", vCards );
 
   // Mark all of them as read
   for( Iterator it = begin(); it != end(); ++it )
@@ -164,10 +164,10 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
     bool rc;
     if( !update )
       // Save the new addressee
-      rc = kmailAddIncidence( "Contact", addr.uid(), vCard );
+      rc = kmailAddIncidence( "Contact", "FIXME", addr.uid(), vCard );
     else
       // Update existing addressee
-      rc = kmailUpdate( "Contact", addr.uid(), vCard );
+      rc = kmailUpdate( "Contact", "FIXME", addr.uid(), vCard );
 
     if( rc )
         // This is ugly, but it's faster than doing
@@ -183,7 +183,7 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
 void KABC::ResourceIMAP::removeAddressee( const Addressee& addr )
 {
   if ( !mSilent )
-    kmailDeleteIncidence( "Contact", addr.uid() );
+    kmailDeleteIncidence( "Contact", "FIXME", addr.uid() );
 
   Resource::removeAddressee( addr );
 }

@@ -76,34 +76,56 @@ bool KMailConnection::connectToKMail()
                                                    dcopService, dcopObjectId );
 
     // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString)",
-                              "addIncidence(QString,QString)" ) )
+    if ( !connectKMailSignal( "incidenceAdded(QString,QString,QString)",
+                              "addIncidence(QString,QString,QString)" ) )
       kdError() << "DCOP connection to incidenceAdded failed" << endl;
-    if ( !connectKMailSignal( "incidenceDeleted(QString,QString)",
-                              "deleteIncidence(QString,QString)" ) )
+    if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
+                              "deleteIncidence(QString,QString,QString)" ) )
       kdError() << "DCOP connection to incidenceDeleted failed" << endl;
-    if ( !connectKMailSignal( "signalRefresh(QString)",
-                              "slotRefresh(QString)" ) )
+    if ( !connectKMailSignal( "signalRefresh(QString,QString)",
+                              "slotRefresh(QString,QString)" ) )
+      kdError() << "DCOP connection to signalRefresh failed" << endl;
+    if ( !connectKMailSignal( "subresourceAdded(QString,QString,QString)",
+                              "subresourceAdded(QString,QString,QString)" ) )
+      kdError() << "DCOP connection to signalRefresh failed" << endl;
+    if ( !connectKMailSignal( "subresourceDeleted(QString,QString,QString)",
+                              "subresourceDeleted(QString,QString,QString)" ) )
       kdError() << "DCOP connection to signalRefresh failed" << endl;
   }
 
   return ( mKMailIcalIfaceStub != 0 );
 }
 
-bool KMailConnection::addIncidence( const QString& type, const QString& ical )
+bool KMailConnection::addIncidence( const QString& type, const QString& folder,
+                                    const QString& ical )
 {
   return mResource->addIncidence( type, ical );
 }
 
 void KMailConnection::deleteIncidence( const QString& type,
+                                       const QString& folder,
                                        const QString& uid )
 {
   mResource->deleteIncidence( type, uid );
 }
 
-void KMailConnection::slotRefresh( const QString& type )
+void KMailConnection::slotRefresh( const QString& type, const QString& folder )
 {
   mResource->slotRefresh( type );
+}
+
+void KMailConnection::subresourceAdded( const QString& type,
+                                        const QString& resource,
+                                        const QString& id )
+{
+  mResource->subresourceAdded( type, id );
+}
+
+void KMailConnection::subresourceDeleted( const QString& type,
+                                          const QString& resource,
+                                          const QString& id )
+{
+  mResource->subresourceDeleted( type, id );
 }
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,
@@ -112,18 +134,20 @@ bool KMailConnection::connectKMailSignal( const QCString& signal,
   return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false );
 }
 
-bool KMailConnection::kmailIncidences( QStringList& lst, const QString& type )
+bool KMailConnection::kmailIncidences( QStringList& lst, const QString& type,
+                                       const QString& resource )
 {
   if ( !connectToKMail() ) {
     kdError() << "DCOP error: Can't connect to KMail\n";
     return false;
   }
 
-  lst = mKMailIcalIfaceStub->incidences( type );
+  lst = mKMailIcalIfaceStub->incidences( type, resource );
   return mKMailIcalIfaceStub->ok();
 }
 
 bool KMailConnection::kmailAddIncidence( const QString& type,
+                                         const QString& resource,
                                          const QString& uid,
                                          const QString& incidence )
 {
@@ -132,11 +156,12 @@ bool KMailConnection::kmailAddIncidence( const QString& type,
     return false;
   }
 
-  return mKMailIcalIfaceStub->addIncidence( type, uid, incidence )
+  return mKMailIcalIfaceStub->addIncidence( type, resource, uid, incidence )
     && mKMailIcalIfaceStub->ok();
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& type,
+                                            const QString& resource,
                                             const QString& uid )
 {
   if ( !connectToKMail() ) {
@@ -144,11 +169,12 @@ bool KMailConnection::kmailDeleteIncidence( const QString& type,
     return false;
   }
 
-  return mKMailIcalIfaceStub->deleteIncidence( type, uid )
+  return mKMailIcalIfaceStub->deleteIncidence( type, resource, uid )
     && mKMailIcalIfaceStub->ok();
 }
 
 bool KMailConnection::kmailUpdate( const QString& type,
+                                   const QString& resource,
                                    const QStringList& lst )
 {
   if ( !connectToKMail() ) {
@@ -156,11 +182,12 @@ bool KMailConnection::kmailUpdate( const QString& type,
     return false;
   }
 
-  return mKMailIcalIfaceStub->update( type, lst )
+  return mKMailIcalIfaceStub->update( type, resource, lst )
     && mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailUpdate( const QString& type, const QString& uid,
+bool KMailConnection::kmailUpdate( const QString& type,
+                                   const QString& resource, const QString& uid,
                                    const QString& incidence )
 {
   if ( !connectToKMail() ) {
@@ -168,7 +195,7 @@ bool KMailConnection::kmailUpdate( const QString& type, const QString& uid,
     return false;
   }
 
-  return mKMailIcalIfaceStub->update( type, uid, incidence )
+  return mKMailIcalIfaceStub->update( type, resource, uid, incidence )
     && mKMailIcalIfaceStub->ok();
 }
 

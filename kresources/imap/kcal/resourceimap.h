@@ -96,7 +96,7 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
       on the specified date.
     */
     // QString getHolidayForDate(const QDate &qd);
-    
+
     /**
       Add a todo to the todolist.
     */
@@ -137,21 +137,34 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
     /** Return all alarms, which ocur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
 
-    
+
     /** this method should be called whenever a Event is modified directly
      * via it's pointer.  It makes sure that the calendar is internally
      * consistent. */
     void update(IncidenceBase *incidence);
- 
+
     friend class ResourceIMAPConfig;
 
     // Public because needed in MultiCalendar::load()
     bool doOpen();
 
-
     void setTimeZoneId( const QString& tzid );
-  
-  protected:
+
+    /**
+      If this resource has subresources, return a QStringList of them.
+      In the normal case, resources do not have subresources, so this is
+      by default just empty.
+    */
+    virtual QStringList subresources() const;
+
+  public slots:
+    /**
+      (De-)activate a subresource.
+    */
+    virtual void setSubresourceActive( const QString& subresource,
+                                       bool active );
+
+protected:
     /** Notification function of IncidenceBase::Observer. */
     virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
     /** Append alarms of incidence in interval to list of alarms. */
@@ -172,10 +185,15 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
 
     QString mServer;
     ICalFormat mFormat;
-    CalendarLocal mCalendar;
     bool mSilent;
     QString mCurrentUID;
-};  
+
+    // The default calendar
+    CalendarLocal mCalendar;
+
+    // The subresources
+    QMap<QString, CalendarLocal> mSubresources;
+};
 
 }
 

@@ -77,7 +77,7 @@ bool KNotesIMAP::ResourceIMAP::load()
 {
   // Get the list of journals
   QStringList lst;
-  if( !kmailIncidences( lst, "Note" ) ) {
+  if( !kmailIncidences( lst, "Note", "FIXME" ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceIMAP::getIncidenceList()\n";
     return false;
@@ -117,7 +117,7 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal )
 
   KCal::ICalFormat format;
   QString note = format.toICalString( journal );
-  if( !kmailAddIncidence( "Note", journal->uid(), note ) ) {
+  if( !kmailAddIncidence( "Note", "FIXME", journal->uid(), note ) ) {
     kdError(5500) << "Communication problem in ResourceIMAP::addNote()\n";
     return false;
   }
@@ -131,7 +131,7 @@ bool KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* journal )
 
   // Call kmail ...
   if ( !mSilent )
-    kmailDeleteIncidence( "Note", journal->uid() );
+    kmailDeleteIncidence( "Note", "FIXME", journal->uid() );
 
   mCalendar.deleteJournal( journal );
   return true;
