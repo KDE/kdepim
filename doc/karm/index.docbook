@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&karm;">
+  <!ENTITY package "kdepim">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
   <!ENTITY % addindex "IGNORE">
 ]>
@@ -30,7 +31,7 @@
 <firstname>Lauri</firstname>
 <surname>Watts</surname>
 <contrib>Reviewer</contrib>
-<affiliation><address><email>vampyr@atconnex.net</email></address></affiliation>
+<affiliation><address><email>lauri@kde.org</email></address></affiliation>
 </othercredit>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
@@ -152,8 +153,8 @@ accumulated time.</para>
 <menuchoice><shortcut>
 <keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>S</accel>ave</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Save</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para><action>Saves the current tasks and subtasks with their accumulated
@@ -166,8 +167,8 @@ times</action></para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>P</accel>rint</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Print</guimenuitem>
 </menuchoice></term>
 <listitem><para>
 <action>Prints</action> the &karm; window</para>
@@ -179,8 +180,8 @@ times</action></para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>R</accel>eset Session Time</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Reset Session Time</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para><action>Resets the total elapsed time for the current session to
@@ -193,8 +194,8 @@ zero</action></para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>Q</accel>uit</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para><action>Closes</action> &karm;</para>
@@ -211,11 +212,9 @@ zero</action></para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul"><keycap>S</keycap></keycombo>
-</shortcut>
+<shortcut><keycap>S</keycap></shortcut>
 <guimenu>Clock</guimenu>
-<guimenuitem><accel>S</accel>tart</guimenuitem>
+<guimenuitem>Start</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -225,11 +224,9 @@ zero</action></para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Esc;</keycombo>
-</shortcut>
+<shortcut><keycap>&Esc;</keycap></shortcut>
 <guimenu>Clock</guimenu>
-<guimenuitem>S<accel>t</accel>op</guimenuitem>
+<guimenuitem>Stop</guimenuitem>
 </menuchoice>
 </term>
 <listitem><para><action>Stops</action> timing the selected task</para></listitem>
@@ -248,7 +245,7 @@ zero</action></para>
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
 <guimenu>Task</guimenu>
-<guimenuitem><accel>N</accel>ew</guimenuitem>
+<guimenuitem>New</guimenuitem>
 </menuchoice>
 </term>
 <listitem><para><action>Add</action> a new task</para></listitem>
@@ -276,7 +273,7 @@ zero</action></para>
 <keycap>Del</keycap>
 </shortcut>
 <guimenu>Task</guimenu>
-<guimenuitem><accel>D</accel>elete</guimenuitem>
+<guimenuitem>Delete</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -291,7 +288,7 @@ zero</action></para>
 <keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>
 </shortcut>
 <guimenu>Task</guimenu>
-<guimenuitem><accel>E</accel>dit</guimenuitem>
+<guimenuitem>Edit</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -311,8 +308,8 @@ both the session and total times.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configure <accel>K</accel>ey Bindings...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Key Bindings...</guimenuitem>
 </menuchoice>
 </term>
 <listitem><para><action>Opens</action> a dialog to allow the user to customize
@@ -323,8 +320,8 @@ the keyboard shortcuts</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem><accel>C</accel>onfigure KArm</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KArm</guimenuitem>
 </menuchoice>
 </term>
 <listitem><para><action>Opens</action> a dialog to allow the user to
@@ -342,67 +339,9 @@ has been detected for a specified amount of time.</para> </listitem>
 
 <sect2>
 <title>The <guimenu>Help</guimenu> menu</title>
-<variablelist>
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>F1</keycap></shortcut>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem><accel>C</accel>ontents</guimenuitem>
-</menuchoice>
-</term>
-<listitem><para><action>Opens this document</action></para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut>
-<keycombo action="simul"><keycap>Shift</keycap><keycap>F1</keycap></keycombo></shortcut>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem>What's <accel>T</accel>his?...</guimenuitem>
-</menuchoice>
-</term>
-<listitem><para>Select this and click on items to learn more about
-them</para>
-</listitem>
-</varlistentry>
+&help.menu.documentation;
 
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem><accel>R</accel>eport Bug...</guimenuitem>
-</menuchoice>
-</term>
-<listitem><para>A convenient dialog for reporting bugs in
-&karm;</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem><accel>A</accel>bout KArm</guimenuitem>
-</menuchoice>
-</term>
-<listitem><para><action>Provides information</action> about
-&karm;</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem>About <accel>K</accel>DE</guimenuitem>
-</menuchoice>
-</term>
-<listitem><para><action>Provides information about the KDE
-project</action></para>
-</listitem>
-</varlistentry>
-</variablelist>
 </sect2>
 
 </sect1>
@@ -470,19 +409,8 @@ which is that it is based on the Xt toolkit.</para>
 <sect1 id="getting-kapp">
 <title>How to obtain &karm;</title>
 
-<para>&karm; is part of the kdeutils package and should be compiled and
-installed as indicated in the package's main directory. New versions of
-kdeutils can be obtained at <ulink
-url="ftp://ftp.kde.org/pub/kde">ftp://ftp.kde.org/pub/kde/</ulink>.</para>
-
-<para>To build &karm;:</para>
-
-<screen><userinput><command>cd</command> <filename class="directory">kdeutils/karm</filename></userinput>
-<userinput><command>./configure</command></userinput>
-<userinput><command>make</command></userinput>
-<userinput><command>su</command></userinput>
-<userinput><command>make install</command></userinput>
-</screen>
+&install.intro.documentation;
+&install.compile.documentation;
 
 </sect1>
 
@@ -500,5 +428,5 @@ sgml-indent-step:0
 sgml-indent-data:nil
 End:
 
-// vim:ts=0:sw=2:tw=78:noet
+// vim:ts=2:sw=2:tw=78:noet
 -->
