@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE gui>
+<gui name="ldif_xxport" version="2">
+<MenuBar>
+  <Menu name="file"><text>&amp;File</text>
+    <Menu name="file_import"><text>&amp;Import</text>
+      <Action name="file_import_ldif"/>
+    </Menu>
+  </Menu>
+</MenuBar>
+</gui>
