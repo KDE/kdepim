@@ -856,7 +856,9 @@ KABC::Addressee AbbrowserConduit::_changeOnPC(PilotRecord*rec, PilotRecord*backu
 {
 	FUNCTIONSETUP;
 	PilotAddress padr(fAddressAppInfo, rec);
+#ifdef DEBUG
 	showPilotAddress(padr);
+#endif
 	struct AddressAppInfo ai=fAddressAppInfo;
 	PilotAddress pbackupadr(ai, backup);
 	KABC::Addressee ad;
@@ -1889,6 +1891,11 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 // $Log$
+// Revision 1.51  2002/10/04 12:46:23  cschumac
+// Use right save call. This still isn't optimal, because the conduit should
+// lock the addressbook before changing it and not only on saving it, but
+// it at least works in most cases.
+//
 // Revision 1.50  2002/09/12 22:21:19  kainhofe
 // FINALLLY!!! The conduit seems to work. Had the company field hardcoded, where a variable should have been. This messed up the whole conduit ;-((( Some minor issues remain, but the conduit can be released as beta 2
 //
