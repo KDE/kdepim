@@ -90,7 +90,7 @@ void Message::assemble()
   //X-Headers
   int pos=h_ead.find("\nX-");
   if(pos>-1) //we already have some x-headers => "recycle" them
-    newHead+=h_ead.mid(++pos, h_ead.length()-pos);
+    newHead+=h_ead.mid(pos+1, h_ead.length()-pos-1);
   else if(h_eaders && !h_eaders->isEmpty()) {
     for(h=h_eaders->first(); h; h=h_eaders->next()) {
       if( h->isXHeader() && (strncasecmp(h->type(), "X-KNode", 7)!=0) )
