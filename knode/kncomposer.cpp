@@ -122,21 +122,24 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(v_iew->e_dit, SIGNAL(redoAvailable(bool)), redo, SLOT(setEnabled(bool)));
 #endif
 
-  KAction *cut =KStdAction::cut(v_iew->e_dit, SLOT(cut()), actionCollection());
+  KStdAction::cut(this, SLOT(slotCut()), actionCollection());
 
+#if 0
   connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), cut , SLOT(setEnabled(bool)));
+#endif
 
-
-  KAction *copy = KStdAction::copy(v_iew->e_dit, SLOT(copy()), actionCollection());
+  KStdAction::copy(this, SLOT(slotCopy()), actionCollection());
+#if 0
   copy->setEnabled(false);
   connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), copy, SLOT(setEnabled(bool)));
+#endif
 
-  KStdAction::paste(v_iew->e_dit, SLOT(paste()), actionCollection());
+  KStdAction::paste(this, SLOT(slotPaste()), actionCollection());
 
   new KAction(i18n("Paste as &Quotation"), 0, v_iew->e_dit,
                    SLOT(slotPasteAsQuotation()), actionCollection(), "paste_quoted");
 
-  KStdAction::selectAll(v_iew->e_dit, SLOT(selectAll()), actionCollection());
+  KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
   KStdAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
 
@@ -323,6 +326,55 @@ void KNComposer::slotRedo()
         ((QMultiLineEdit*)fw)->redo();
     else if (fw->inherits("QLineEdit"))
         ((QLineEdit*)fw)->redo();
+}
+
+void KNComposer::slotCut()
+{
+  QWidget* fw = focusWidget();
+  if (!fw) return;
+
+  if (fw->inherits("KEdit"))
+    ((QMultiLineEdit*)fw)->cut();
+  else if (fw->inherits("QLineEdit"))
+    ((QLineEdit*)fw)->cut();
+  else kdDebug() << "wrong focus widget" << endl;
+}
+
+void KNComposer::slotCopy()
+{
+  QWidget* fw = focusWidget();
+  if (!fw) return;
+
+  if (fw->inherits("KEdit"))
+    ((QMultiLineEdit*)fw)->copy();
+  else if (fw->inherits("QLineEdit"))
+    ((QLineEdit*)fw)->copy();
+  else kdDebug() << "wrong focus widget" << endl;
+
+}
+
+
+void KNComposer::slotPaste()
+{
+  QWidget* fw = focusWidget();
+  if (!fw) return;
+
+  if (fw->inherits("KEdit"))
+    ((QMultiLineEdit*)fw)->paste();
+  else if (fw->inherits("QLineEdit"))
+    ((QLineEdit*)fw)->paste();
+  else kdDebug() << "wrong focus widget" << endl;
+}
+
+void KNComposer::slotSelectAll()
+{
+  QWidget* fw = focusWidget();
+  if (!fw) return;
+
+  if (fw->inherits("QLineEdit"))
+      ((QLineEdit*)fw)->selectAll();
+  else if (fw->inherits("QMultiLineEdit"))
+    ((QMultiLineEdit*)fw)->selectAll();
 }
 
 
