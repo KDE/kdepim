@@ -172,14 +172,20 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
     if ( met )
         writeMeta( events, todos, meta );
 
-    /* 8. write back data */
+    /* 8. write back data */     
     save( events, todos, path );
 
     /* 8.1 take care of the IdHelpers.... */
 
     /* 9. */
-    out.append( events );
-    out.append( todos );
+    if (events)
+    {
+      out.append( events );
+    }
+    if (todos)
+    {
+      out.append( todos );
+    }
 }
 
 //AddressBookSyncee* ANY
@@ -348,15 +354,23 @@ void OrganizerPart::save( EventSyncee* evSyncee,
     KCal::CalendarLocal* loc = new KCal::CalendarLocal();
     EventSyncEntry* evEntry=0l;
     TodoSyncEntry* toEntry=0l;
-    for ( evEntry = (EventSyncEntry*)evSyncee->firstEntry();
-          evEntry;
-          evEntry = (EventSyncEntry*)evSyncee->nextEntry() ) {
-        loc->addEvent( evEntry->incidence() );
+    if (evSyncee)
+    {
+      for ( evEntry = (EventSyncEntry*)evSyncee->firstEntry();
+            evEntry;
+            evEntry = (EventSyncEntry*)evSyncee->nextEntry() )
+      {
+        loc->addEvent(evEntry->incidence());
+      }
     }
-    for ( toEntry = (TodoSyncEntry*)toSyncee->firstEntry();
-          toEntry;
-          toEntry = (TodoSyncEntry*)toSyncee->nextEntry() ) {
-        loc->addTodo( toEntry->todo() );
+    if (toSyncee)
+    {
+      for ( toEntry = (TodoSyncEntry*)toSyncee->firstEntry();
+            toEntry;
+            toEntry = (TodoSyncEntry*)toSyncee->nextEntry() )
+      {
+        loc->addTodo(toEntry->todo());
+      }
     }
     loc->save( path );
 }
