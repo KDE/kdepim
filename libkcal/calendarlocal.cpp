@@ -540,6 +540,7 @@ QDate CalendarLocal::keyToDate(long int key)
 // BL: an the returned list should be deleted!!!
 QList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 {
+  // Search non-recurring events
   QList<Event> eventList;
   QList<Event> *tmpList;
   Event *anEvent;
@@ -549,12 +550,14 @@ QList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 	 anEvent = tmpList->next())
       eventList.append(anEvent);
   }
+
+  // Search recurring events
   int extraDays, i;
   for (anEvent = mRecursList.first(); anEvent; anEvent = mRecursList.next()) {
     if (anEvent->isMultiDay()) {
       extraDays = anEvent->dtStart().date().daysTo(anEvent->dtEnd().date());
       for (i = 0; i <= extraDays; i++) {
-	if (anEvent->recursOn(qd.addDays(i))) {
+	if (anEvent->recursOn(qd.addDays(-i))) {
 	  eventList.append(anEvent);
 	  break;
 	}
@@ -564,9 +567,11 @@ QList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 	eventList.append(anEvent);
     }
   }
+  
   if (!sorted) {
     return eventList;
   }
+
   //  kdDebug() << "Sorting getEvents for date\n" << endl;
   // now, we have to sort it based on getDtStart.time()
   QList<Event> eventListSorted;

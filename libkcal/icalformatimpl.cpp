@@ -83,6 +83,9 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 
 icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 {
+  kdDebug() << "Write Event '" << event->summary() << "' (" << event->VUID()
+              << ")" << endl;
+ 
   QString tmpStr;
   QStringList tmpStrList;
 
@@ -286,7 +289,8 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // recurrence rule stuff
   KORecurrence *recur = incidence->recurrence();
   if (recur->doesRecur()) {
-    kdDebug() << "Write recurrence for " << incidence->summary() << endl;
+    kdDebug() << "Write recurrence for '" << incidence->summary() << "' (" << incidence->VUID()
+              << ")" << endl;
     icalcomponent_add_property(parent,writeRecurrenceRule(recur));
   }
 
