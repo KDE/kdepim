@@ -326,8 +326,6 @@ void KNMainWidget::initStatusBar()
   //statusbar
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
-  s_tatusMain = new KStatusBarLabel( QString::null, SB_MAIN, sb );
-  s_tatusMain->setAlignment( AlignLeft | AlignVCenter );
   s_tatusFilter = new KStatusBarLabel( QString::null, SB_FILTER, sb );
   s_tatusFilter->setAlignment( AlignLeft | AlignVCenter );
   s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );
@@ -345,9 +343,9 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   bar->clear();
   if (text.isEmpty() && (id==SB_MAIN))
     if (knGlobals.netAccess()->currentMsg().isEmpty())
-      s_tatusMain->setText(i18n(" Ready"));
+      bar->changeItem(i18n(" Ready"), 1);
     else
-      s_tatusMain->setText(knGlobals.netAccess()->currentMsg());
+      bar->changeItem(knGlobals.netAccess()->currentMsg(), 1);
   else if ( id == SB_GROUP ) {
     int statusWidth = s_tatusGroup->width();
     QString mtext = text;
@@ -359,7 +357,7 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   else {
     switch(id) {
       case SB_MAIN:
-        s_tatusMain->setText(text); break;
+        bar->changeItem(text, 1); break;
       case SB_GROUP:
         s_tatusGroup->setText(text); break;
       case SB_FILTER:

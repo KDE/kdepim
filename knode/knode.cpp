@@ -107,7 +107,8 @@ void KNMainWindow::setupStatusBar() {
 
   statusBar()->addWidget( mLittleProgress, 0 , true );
 
-  statusBar()->addWidget(m_mainWidget->statusBarLabelMain(), 2);
+  statusBar()->insertItem("", 1 /* item id equal to kontact */, 2);
+  statusBar()->setItemAlignment(1, AlignLeft | AlignVCenter);
   statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
   statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
 }
