@@ -128,19 +128,19 @@ for the certificate. The fields to fill out are:
 <para><guilabel>Name:</guilabel> Your name;</para>
 </listitem>
 <listitem>
-<para><guilabel>Location:</guilabel>The town or city you live in;</para>
+<para><guilabel>Location:</guilabel>The town or city in which you live;</para>
 </listitem>
 <listitem>
 <para><guilabel>Organization:</guilabel>The organization you represent
 (for example, the company you work for);</para>
 </listitem>
 <listitem>
-<para><guilabel>Department:</guilabel>The organizational unit you're
+<para><guilabel>Department:</guilabel>The organizational unit you are
 in (for example, "Logistics");</para> 
 </listitem>
 <listitem>
 <para><guilabel>Country code:</guilabel>The two letter code for the
-country you're living in (for example, "US");</para>
+country in which you are living (for example, "US");</para>
 </listitem>
 <listitem>
 <para><guilabel>Email address:</guilabel>Your email address; be sure
@@ -150,7 +150,7 @@ sending mail to when they use your certificate.</para>
 </itemizedlist>
 </para><para>
 The next step in the wizard is to select whether to store the
-certificate in a file or send it directly to a CA. You'll have to
+certificate in a file or send it directly to a CA. You will have to
 specify the filename or email address to send the certificate request to.
 </para></sect1>
 
@@ -211,7 +211,7 @@ If you want to disallow the use <guibutton>Insert My Address</guibutton> button,
 <tip><para>
 Due to the nature of the &kde; <acronym>KIOSK</acronym> framework, using immutable flag 
 (<varname>$i</varname>) makes it impossible for the user to override the flag. This is 
-indented behavior. <varname>$i</varname> and <varname>$e</varname> can be used with any 
+intended behavior. <varname>$i</varname> and <varname>$e</varname> can be used with any 
 other config key in &kde; applications.
 </para></tip>
 
@@ -220,7 +220,7 @@ other config key in &kde; applications.
 <para>
 <programlisting>
 [CertificateCreationWizard] 
-;Disallow to copy personal data from the addressbook, don't allow local override
+;Disallow to copy personal data from the addressbook, do not allow local override
 ShowSetWhoAmI[$i]=false
 
 ;sets the user name to $USER
