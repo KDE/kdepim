@@ -24,6 +24,7 @@
 #include <qimage.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qobjectlist.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
 #include <qwidgetfactory.h>
@@ -56,6 +57,41 @@ class PageItem : public QCheckListItem
         mPath( path ), mIsActive( false )
     {
       mName = path.mid( path.findRev( '/' ) + 1 );
+
+      QWidget *wdg = QWidgetFactory::create( mPath, 0, 0 );
+      if ( wdg ) {
+        QPixmap pm = QPixmap::grabWidget( wdg );
+        QImage img = pm.convertToImage().smoothScale( 300, 300, QImage::ScaleMin );
+        mPreview = img;
+
+        QObjectList *list = wdg->queryList( "QWidget" );
+        QObjectListIt it( *list );
+
+        QStringList allowedTypes;
+        allowedTypes << "QLineEdit"
+                     << "QSpinBox"
+                     << "QCheckBox"
+                     << "QComboBox"
+                     << "QDateTimeEdit"
+                     << "KLineEdit"
+                     << "KDateTimeWidget"
+                     << "KDatePicker";
+
+        while ( it.current() ) {
+          if ( allowedTypes.contains( it.current()->className() ) ) {
+            QString name = it.current()->name();
+            if ( name.startsWith( "X_" ) ) {
+              QListViewItem *item = new QListViewItem( this, name );
+              item->setSelectable( false );
+            }
+          }
+
+          ++it;
+        }
+
+        delete list;
+      } else
+        delete wdg;
     }
 
 
@@ -72,21 +108,17 @@ class PageItem : public QCheckListItem
 
     QPixmap preview()
     {
-      if ( mPreview.isNull() ) {
-        QWidget *wdg = QWidgetFactory::create( mPath, 0, 0 );
-        if ( wdg ) {
-          QPixmap pm = QPixmap::grabWidget( wdg );
-          QImage img = pm.convertToImage().smoothScale( 300, 300, QImage::ScaleMin );
-          mPreview = img;
-        } else
-          delete wdg;
-      }
-
       return mPreview;
     }
 
     void setIsActive( bool isActive ) { mIsActive = isActive; }
     bool isActive() const { return mIsActive; }
+
+  protected:
+    void paintBranches( QPainter *p, const QColorGroup & cg, int w, int y, int h )
+    {
+      QListViewItem::paintBranches( p, cg, w, y, h );
+    }
 
   private:
     QString mName;
@@ -115,7 +147,7 @@ void KCMKabCustomFields::load()
 {
   QStringList activePages = KABPrefs::instance()->mAdvancedCustomFields;
 
-  QListViewItemIterator it( mPageView );
+  QListViewItemIterator it( mPageView, QListViewItemIterator::Selectable );
   while ( it.current() ) {
     PageItem *item = static_cast<PageItem*>( it.current() );
     if ( activePages.find( item->name() ) != activePages.end() ) {
@@ -129,7 +161,8 @@ void KCMKabCustomFields::load()
 
 void KCMKabCustomFields::save()
 {
-  QListViewItemIterator it( mPageView, QListViewItemIterator::Checked );
+  QListViewItemIterator it( mPageView, QListViewItemIterator::Checked |
+                            QListViewItemIterator::Selectable );
 
   QStringList activePages;
   while ( it.current() ) {
@@ -157,6 +190,7 @@ void KCMKabCustomFields::initGUI()
 
   mPageView = new KListView( this );
   mPageView->addColumn( i18n( "UI Files" ) );
+  mPageView->setRootIsDecorated( true );
   mPageView->setAllColumnsShowFocus( true );
   mPageView->setFullWidth( true );
   hbox->addWidget( mPageView );
@@ -190,7 +224,7 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
 
 void KCMKabCustomFields::itemClicked( QListViewItem *item )
 {
-  if ( !item )
+  if ( !item || item->parent() != 0 )
     return;
 
   PageItem *pageItem = static_cast<PageItem*>( item );
