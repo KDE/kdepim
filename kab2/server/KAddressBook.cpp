@@ -347,3 +347,13 @@ KAddressBook::_removeEntity(const QString & id)
   return true;
 }
 
+QCString KAddressBook::functions()
+{
+  return DCOPObject::functions() + 
+  "entity(QString);"
+  "insert(Entity);"
+  "remove(QString);"
+  "replace(Entity);"
+  "contains(QString);"
+  ;
+}
