@@ -56,8 +56,11 @@ void GroupwareUploadJob::deleteItem()
   } else {
     kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
+    KURL url( mBaseUrl );
+    url = WebdavHandler::toDAV( url );
+    
     // TODO: What to do with servers that don't allow you to remove all incidences at once?
-    mDeletionJob = adaptor()->createRemoveItemsJob( mBaseUrl, mDeletedItems );
+    mDeletionJob = adaptor()->createRemoveItemsJob( url, mDeletedItems );
     connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
              SLOT( slotDeletionResult( KIO::Job* ) ) );
   }
@@ -192,6 +195,10 @@ void GroupwareUploadJob::slotUploadNewJobResult( KIO::Job *job )
   if ( job->error() ) {
     error( job->errorString() );
   } else {
+//     TODO: Don't update the etag, but instead let the download job download that new
+//     item. Otherwise we won't know the url of the item!
+//     Actually, the remote URL can be extracted in updateFingerprintId, but
+//     that's not implemented yet. So don't call it at all as a quick hack!
     adaptor()->updateFingerprintId( trfjob, mAddedItems.front() );
     delete mAddedItems.front();
     mAddedItems.pop_front();

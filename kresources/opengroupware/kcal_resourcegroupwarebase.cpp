@@ -246,6 +246,9 @@ bool ResourceGroupwareBase::doSave()
   mUploadJob->setChangedItems( changedItems );
   mUploadJob->setDeletedItems( deletedItems );
 
+  // FIXME: Calling clearChanges() here is not the ideal way since the
+  // upload might fail, but there is no other place to call it...
+  clearChanges();
   return true;
 }
 

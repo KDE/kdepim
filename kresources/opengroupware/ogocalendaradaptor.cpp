@@ -24,9 +24,11 @@
 #include "ogoglobals.h"
 #include "davgroupwareglobals.h"
 #include "webdavhandler.h"
+#include <libemailfunctions/idmapper.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
+#include <libkcal/resourcecached.h>
 
 #include <kdebug.h>
 
@@ -39,13 +41,12 @@ OGoCalendarAdaptor::OGoCalendarAdaptor()
 void OGoCalendarAdaptor::adaptDownloadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
-  url.addPath( "/Calendar" );
 }
 
 void OGoCalendarAdaptor::adaptUploadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
-  url.setPath( url.path() + "/Calendar/new.ics" );
+  url.setPath( url.path() + "/new.ics" );
 }
 
 QString OGoCalendarAdaptor::extractFingerprint( KIO::TransferJob *job, 
@@ -71,7 +72,16 @@ bool OGoCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &c
 
 void OGoCalendarAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
 {
-  return OGoGlobals::updateFingerprintId( this, trfjob, item );
+  OGoGlobals::updateFingerprintId( this, trfjob, item );
+//  idMapper()->setFingerprint( item->uid(), "" );
+  Incidence *inc = resource()->incidence( item->uid() );
+  if ( inc ) {
+    resource()->disableChangeNotification();
+    inc->setCustomProperty( identifier(), "storagelocation", 
+               idMapper()->remoteId( item->uid() ) );
+    resource()->addIncidence( inc );
+    resource()->enableChangeNotification();
+  }  
 }
 
 KIO::Job *OGoCalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )

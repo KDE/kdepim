@@ -36,7 +36,7 @@ KURL OGoFolderLister::adjustUrl( const KURL &u )
 {
   KURL url = u;
   if ( getType() == Calendar ) {
-    url.addPath( "Groups" );
+//    url.addPath( "Groups" );
   } else {
     url.addPath( "public" );
   }
@@ -55,19 +55,20 @@ FolderLister::Entry::List OGoFolderLister::defaultFolders()
   Entry::List newFolders;
 
   // Personal calendar/addressbook
-  Entry personal;
+/*  Entry personal;
   KURL url = getUrl();
   url.setUser( QString::null );
   url.setPass( QString::null );
   if ( getType() == Calendar ) {
     personal.name = i18n("Personal Calendar");
     personal.id = url.url();
+    newFolders.append( personal );
   } else {
     personal.name = i18n("Personal Addressbook");
     url.addPath( "Contacts" );
     personal.id = url.url();
-  }
-  newFolders.append( personal );
+    newFolders.append( personal );
+  }*/
   return newFolders;
 }
 

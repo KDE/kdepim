@@ -74,7 +74,6 @@ KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl,
   kdDebug(5800) << " OGoGlobals::createRemoveItemsJob: , URL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    kdDebug(7000) << "Delete: " <<   (*it)->url().path() << endl;
     KURL url( uploadurl );
     url.setPath( (*it)->url().path() );
     if ( !(*it)->url().isEmpty() )

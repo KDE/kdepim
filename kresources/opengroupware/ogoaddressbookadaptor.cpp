@@ -27,6 +27,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
+#include <kabcresourcecached.h>
 
 #include <kio/job.h>
 #include <kdebug.h>
@@ -87,7 +88,12 @@ bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList
 
 void OGoAddressBookAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
 {
-  return OGoGlobals::updateFingerprintId( this, trfjob, item );
+  OGoGlobals::updateFingerprintId( this, trfjob, item );
+  Addressee addr( resource()->findByUid( item->uid() ) );
+  if ( !addr.isEmpty() ) {
+    addr.insertCustom( identifier(), "storagelocation", 
+               idMapper()->remoteId( item->uid() ) );
+  }
 }
 
 KIO::Job *OGoAddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
