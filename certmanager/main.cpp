@@ -63,6 +63,8 @@ int main( int argc, char** argv )
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
+  KGlobal::locale()->insertCatalogue( "libkleopatra" );
+
   if( !Kleo::CryptPlugFactory::instance()->smime() ) {
     KMessageBox::error(0,
 			i18n( "<qt>The crypto plugin could not be initialized.<br>"
