@@ -60,7 +60,7 @@ Module::Module()
   if (!kpgpObject) {
     kdDebug(5100) << "creating new pgp object" << endl;
   }
-  kpgpObject=kpgpod.setObject(this);
+  kpgpObject=kpgpod.setObject(Module::kpgpObject, this);
   pgp = 0;
 
   config = new KConfig("kpgprc");
@@ -72,7 +72,7 @@ Module::~Module()
 {
   writeAddressData();
 
-  if (kpgpObject == this) kpgpObject = kpgpod.setObject(0);
+  if (kpgpObject == this) kpgpObject = kpgpod.setObject( Module::kpgpObject, 0, false );
   clear(TRUE);
   delete config;
   delete pgp;
