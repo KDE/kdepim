@@ -27,6 +27,7 @@
 #include <qlayout.h>
 #include <qobjectlist.h>
 #include <qspinbox.h>
+#include <qregexp.h>
 #include <qwidgetfactory.h>
 
 #include <kdatepicker.h>
@@ -50,13 +51,21 @@ AdvancedCustomFields::AdvancedCustomFields( const QString &uiFile, KABC::Address
 void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
 {
   QStringList customs = addr->customs();
+    
+  QString ns;
+  if ( (mIdentifier.upper() == "KADDRESSBOOK") ||
+        (QRegExp( "^Form\\d\\d?$").search(mIdentifier) >= 0 )
+      )
+    ns = "KADDRESSBOOK";
+  else 
+    ns = mIdentifier;
 
   QStringList::ConstIterator it;
   for ( it = customs.begin(); it != customs.end(); ++it ) {
     QString app, name, value;
     splitField( *it, app, name, value );
 
-    if ( app == "KADDRESSBOOK" ) {
+    if ( app == ns ) {
       QMap<QString, QWidget*>::Iterator it = mWidgets.find( name );
       if ( it != mWidgets.end() ) {
         if ( it.data()->isA( "QLineEdit" ) || it.data()->isA( "KLineEdit" ) ) {
@@ -114,10 +123,18 @@ void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
       value = wdg->currentText();
     }
 
+    QString ns;
+    if ( (mIdentifier.upper() == "KADDRESSBOOK") ||
+         (QRegExp( "^Form\\d\\d?$").search(mIdentifier) >= 0 )
+       )
+      ns = "KADDRESSBOOK";
+    else 
+      ns = mIdentifier;
+
     if ( value.isEmpty() )
-      addr->removeCustom( "KADDRESSBOOK", it.key() );
+      addr->removeCustom( ns.latin1(), it.key() );
     else
-      addr->insertCustom( "KADDRESSBOOK", it.key(), value );
+      addr->insertCustom( ns.latin1(), it.key(), value );
   }
 }
 
