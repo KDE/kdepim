@@ -27,7 +27,7 @@
 #include "options.h"
 
 extern "C" {
-	#include "libplugin.h"
+	#include "JPilotAPI/libplugin.h"
 }
 
 int jpilot_logf(int level, char *format, ...){

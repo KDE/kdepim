@@ -25,7 +25,7 @@
 
 extern "C" {
 #undef signals /* GTK uses "signals" as variable name :( */
-#include "libplugin.h"
+#include "JPilotAPI/libplugin.h"
 //#include <gtk/gtk.h>
 #define signals protected /* GTK is done messing up ;) */
 
