@@ -171,10 +171,8 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir(CSL1("kpilot"));
-	icon = KGlobal::iconLoader()->loadIcon(CSL1("hotsync"), KIcon::Toolbar,
-		0, KIcon::DefaultState, 0, false);
-	busyicon = KGlobal::iconLoader()->loadIcon(CSL1("busysync"), KIcon::Toolbar,
-		0, KIcon::DefaultState, 0, false);
+	icon = SmallIcon(CSL1("hotsync"));
+	busyicon = SmallIcon(CSL1("busysync"));
 
 	slotShowBusy();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
