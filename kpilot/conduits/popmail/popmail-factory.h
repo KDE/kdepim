@@ -35,28 +35,6 @@
 class KInstance;
 class KAboutData;
 
-class PopMailSendPage;
-class PopMailReceivePage;
-
-#if 0
-class PopmailWidgetSetup : public ConduitConfig
-{
-// Q_OBJECT
-public:
-	PopmailWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~PopmailWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	PopMailSendPage *fSendPage;
-	PopMailReceivePage *fRecvPage;
-} ;
-#endif
-
 class PopMailConduitFactory : public KLibFactory
 {
 Q_OBJECT
@@ -67,10 +45,6 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
-	static const char *group() { return fGroup; } ;
-	static const char *syncIncoming() { return fSyncIncoming; } ;
-	static const char *syncOutgoing() { return fSyncOutgoing; } ;
-
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -79,20 +53,11 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	
-	// Config keys for the mail conduit.
-	//
-	//
-	static const char * const fGroup;
-	static const char * const fSyncOutgoing,
-		* const fSyncIncoming;
-} ;
+}  ;
 
 extern "C"
 {
-
 void *init_conduit_popmail();
-
 }
 
 #endif

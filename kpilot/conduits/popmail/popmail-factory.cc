@@ -4,7 +4,7 @@
 **
 ** This file defines the factory for the popmail-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -50,10 +50,6 @@ void *init_conduit_popmail()
 
 }
 
-
-/* static */ const char * const PopMailConduitFactory::fGroup = "Popmail-conduit" ;
-const char * const PopMailConduitFactory::fSyncIncoming = "SyncIncoming" ;
-const char * const PopMailConduitFactory::fSyncOutgoing = "SyncOutgoing" ;
 
 KAboutData *PopMailConduitFactory::fAbout = 0L;
 PopMailConduitFactory::PopMailConduitFactory(QObject *p, const char *n) :
@@ -122,27 +118,6 @@ PopMailConduitFactory::~PopMailConduitFactory()
 			return 0L;
 		}
 	}
-	
-	if (qstrcmp(c,"ConduitConfig")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-
-		if (w)
-		{
-			return new ConduitConfigImplementation(w,n,a,
-				PopMailWidgetConfig::create);
-		}
-		else
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname
-				<< ": Couldn't cast parent to widget."
-				<< endl;
-#endif
-			return 0L;
-		}
-	}
-
 
 	if (qstrcmp(c,"SyncAction")==0)
 	{
@@ -163,53 +138,3 @@ PopMailConduitFactory::~PopMailConduitFactory()
 	return 0L;
 }
 
-#if 0
-PopmailWidgetSetup::PopmailWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	QTabWidget *t = new QTabWidget(widget());
-	fSendPage = new PopMailSendPage(t);
-	t->addTab(fSendPage,i18n("Send Mail"));
-	fRecvPage = new PopMailReceivePage(t);
-	t->addTab(fRecvPage,i18n("Retrieve Mail"));
-
-	setTabWidget(t);
-	addAboutPage(false,PopMailConduitFactory::about());
-
-	t->adjustSize();
-	fConduitName=i18n("POP/Mail");
-}
-
-PopmailWidgetSetup::~PopmailWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void PopmailWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group);
-
-	fSendPage->commitChanges(*fConfig);
-	fRecvPage->commitChanges(*fConfig);
-}
-
-/* virtual */ void PopmailWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group);
-
-	fSendPage->readSettings(*fConfig);
-	fRecvPage->readSettings(*fConfig);
-}
-
-#endif

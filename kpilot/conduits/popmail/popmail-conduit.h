@@ -25,7 +25,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -51,22 +51,11 @@ public:
 		const QStringList &l=QStringList());
 	virtual ~PopMailConduit();
 
-	enum RetrievalMode {
-		RECV_NONE=0,
-		RECV_POP=1,
-		RECV_UNIX=2 } ;
-	enum SendMode {
-		SEND_NONE=0,
-		SEND_SENDMAIL=7,
-		SEND_KMAIL=8,
-		SEND_SMTP=12
-		} ;
-
 protected:
 	virtual bool exec();
 
-	static PilotRecord *readMessage(FILE *mailbox,
-	        char *buffer,int bufferSize);
+	// static PilotRecord *readMessage(FILE *mailbox,
+	//	char *buffer,int bufferSize);
 
 protected:
 	void doSync();
@@ -76,13 +65,13 @@ protected:
 	//
 	//
 	int sendPendingMail(int mode /* unused */);
-	int sendViaSendmail();
+	// int sendViaSendmail();
 	int sendViaKMail();
-	int sendViaSMTP();
+	// int sendViaSMTP();
 	void writeMessageToFile(FILE* sendf, struct Mail& theMail);
 	QString getKMailOutbox() const;
 
-
+#if 0
 	// Local mail -> Pilot
 	//
 	//
@@ -138,6 +127,7 @@ protected:
 
 private:
 	PilotDatabase *fDatabase;
+#endif
 };
 
 #endif

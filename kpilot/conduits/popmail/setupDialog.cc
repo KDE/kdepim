@@ -22,7 +22,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -69,21 +69,16 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 	fConfigWidget(new PopMailWidget(p,"PopMailWidget"))
 {
 	FUNCTIONSETUP;
-	fConduitName = i18n("Popmail");
+	fConduitName = i18n("KMail");
 	UIDialog::addAboutPage(fConfigWidget->fTabWidget,PopMailConduitFactory::about());
 	fWidget=fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fStorePass,SIGNAL(toggled(bool)));
-	CM(fPopPass,SIGNAL(textChanged(const QString &)));
-	CM(fRecvMode,SIGNAL(activated(int)));
 	CM(fSendMode,SIGNAL(activated(int)));
+	CM(fEmailFrom,SIGNAL(textChanged(const QString &)));
+	CM(fSignature,SIGNAL(textChanged(const QString &)));
 #undef CM
 
-	connect(fConfigWidget->fStorePass,SIGNAL(toggled(bool)),
-		fConfigWidget->fPopPass,SLOT(setEnabled(bool)));
-	connect(fConfigWidget->fRecvMode,SIGNAL(activated(int)),
-		this,SLOT(toggleRecvMode(int)));
 	connect(fConfigWidget->fSendMode,SIGNAL(activated(int)),
 		this,SLOT(toggleSendMode(int)));
 
@@ -93,72 +88,32 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 void PopMailWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
-	KConfig*fConfig=MailConduitSettings::self()->config();
-	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group());
-#define WR(a,b,c) fConfig->writeEntry(c,fConfigWidget->a->b);
-	WR(fSendMode,currentItem(),PopMailConduitFactory::syncIncoming());
-	WR(fEmailFrom,text(),"EmailAddress");
-	WR(fSignature,url(),"Signature");
-	WR(fLeaveMail,isChecked(),"LeaveMail");
+
+#define WR(a,b,c) MailConduitSettings::set##a(fConfigWidget->b->c);
+	WR(SyncOutgoing,fSendMode,currentItem());
+	WR(EmailAddress,fEmailFrom,text());
+	WR(Signature,fSignature,url());
 #undef WR
+
+	MailConduitSettings::self()->writeConfig();
+	unmodified();
 }
 
 void PopMailWidgetConfig::load()
 {
 	FUNCTIONSETUP;
-	KConfig*fConfig=MailConduitSettings::self()->config();
-	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group());
-#define RD(a,b,c,d,e) fConfigWidget->a->b(fConfig->read##c##Entry(d,e))
-	RD(fSendMode,setCurrentItem,Num,PopMailConduitFactory::syncIncoming(),(int)NoSend);
-	RD(fRecvMode,setCurrentItem,Num,PopMailConduitFactory::syncOutgoing(),(int)NoRecv);
-	RD(fEmailFrom,setText,,"EmailAddress",QString::null);
-	RD(fSignature,setURL,,"Signature",CSL1("$HOME/.signature"));
-	RD(fLeaveMail,setChecked,Bool,"LeaveMail",true);
+
+#define RD(a,b,c) fConfigWidget->a->b(MailConduitSettings::c())
+	RD(fSendMode,setCurrentItem,syncOutgoing);
+	RD(fEmailFrom,setText,emailAddress);
+	RD(fSignature,setURL,signature);
 #undef RD
 
 	toggleSendMode(fConfigWidget->fSendMode->currentItem());
-	toggleRecvMode(fConfigWidget->fRecvMode->currentItem());
+
+	unmodified();
 }
 
-
-/* slot */ void PopMailWidgetConfig::toggleRecvMode(int i)
-{
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Got mode " << i << endl;
-#endif
-
-#define E(a,b) fConfigWidget->a->setEnabled(b)
-	switch(i)
-	{
-	case RecvPOP :
-		E(fPopPass,true);
-		E(fStorePass,true);
-		E(fPopServer,true);
-		E(fPopUser,true);
-		E(fLeaveMail,true);
-		E(fMailbox,false);
-		break;
-	case RecvMBOX :
-		E(fPopPass,false);
-		E(fStorePass,false);
-		E(fPopServer,false);
-		E(fPopUser,false);
-		E(fLeaveMail,false);
-		E(fMailbox,true);
-		break;
-	case NoRecv : /* FALLTHRU */
-	default :
-		E(fPopPass,false);
-		E(fStorePass,false);
-		E(fPopServer,false);
-		E(fPopUser,false);
-		E(fLeaveMail,false);
-		E(fMailbox,false);
-		break;
-	}
-#undef E
-}
 
 /* slot */ void PopMailWidgetConfig::toggleSendMode(int i)
 {
@@ -173,27 +128,11 @@ void PopMailWidgetConfig::load()
 	case SendKMail :
 		E(fEmailFrom,true);
 		E(fSignature,true);
-		E(fSMTPServer,false);
-		E(fSendmailCmd,false);
-		break;
-	case SendSMTP :
-		E(fEmailFrom,true);
-		E(fSignature,true);
-		E(fSMTPServer,true);
-		E(fSendmailCmd,false);
-		break;
-	case SendSendmail :
-		E(fEmailFrom,true);
-		E(fSignature,true);
-		E(fSMTPServer,false);
-		E(fSendmailCmd,true);
 		break;
 	case NoSend : /* FALLTHRU */
 	default :
 		E(fEmailFrom,false);
 		E(fSignature,false);
-		E(fSMTPServer,false);
-		E(fSendmailCmd,false);
 		break;
 	}
 #undef E

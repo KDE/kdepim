@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/> 
+<kcfg><kcfgfile name="kpilotrc"/>
+<group name="Popmail-conduit">
+  <entry name="SyncOutgoing" type="UInt">
+    <label>Selects the way in which mail is sent: none (0), kmail (1).</label>
+    <default>0</default>
+  </entry>
+  <entry name="EmailAddress" type="String">
+    <label>The email address entered in the To: field of outgoing messages.</label>
+    <default></default>
+  </entry>
+  <entry name="Signature" type="Path">
+    <label>The pathname of your .signature file.</label>
+    <default>$HOME/.signature</default>
+  </entry>
+  <entry name="OutboxFolder" type="String">
+    <label>The name of KMail's outbox - use with caution.</label>
+    <default></default>
+  </entry>
+</group>
 </kcfg>
