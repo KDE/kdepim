@@ -112,8 +112,9 @@ main(int argc, char ** argv)
     qDebug("name: %s", name.ascii());
     qDebug("mail: %s", mail.ascii());
 
-    Entry e(user);
+    Entry e;
 
+    e.addField(Field("User", user));
     e.addField(Field("Name", name));
     e.addField(Field("Mail", mail));
 

@@ -44,7 +44,7 @@ class Field
     Field & operator = (const Field &);
     bool operator == (const Field &) const;
     
-    QDomElement toDomElement() const;
+    void insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const;
 
     virtual QString     name()    const;
     virtual QString     type()    const;

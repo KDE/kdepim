@@ -35,7 +35,6 @@ Entry::Entry(const QDomElement & e)
   : dirty_(false)
 {
   id_   = e.attribute("id");
-  name_ = e.attribute("name");
 
   QDomNode n = e.firstChild();
 
@@ -66,14 +65,6 @@ Entry::Entry(const QDomElement & e)
   }
 }
 
-Entry::Entry(const QString & name)
-  : dirty_(false),
-    name_(name)
-{
-  // Empty.
-}
-
-
 Entry::~Entry()
 {
   // Empty.
@@ -81,7 +72,6 @@ Entry::~Entry()
 
 Entry::Entry(const Entry & e)
   : id_         (e.id_),
-    name_       (e.name_),
     fieldList_  (e.fieldList_),
     memberList_ (e.memberList_)
 {
@@ -94,7 +84,6 @@ Entry::operator = (const Entry & e)
     return *this;
 
   id_         = e.id_;
-  name_       = e.name_;
   fieldList_  = e.fieldList_;
   memberList_ = e.memberList_;
 
@@ -125,19 +114,6 @@ Entry::setID(const QString & id)
   id_ = id;
 }
 
-  QString
-Entry::name() const
-{
-  return name_;
-}
-
-  void
-Entry::setName(const QString & name)
-{
-  name_ = name;
-  dirty_ = true;
-}
-  
   void
 Entry::addField(const Field & f)
 {
@@ -222,30 +198,27 @@ Entry::memberList() const
   return memberList_;
 }
 
-  QDomElement
-Entry::toDomElement() const
+  void
+Entry::insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const
 {
-  QDomElement e;
+  QDomElement e = parentDoc.createElement("kab:entry");
 
   e.setAttribute("id", id_);
-  e.setAttribute("name", name_);
 
   FieldList::ConstIterator fit = fieldList_.begin();
 
   for (; fit != fieldList_.end(); ++fit)
-    e.appendChild((*fit).toDomElement());
+    (*fit).insertInDomTree(e, parentDoc);
  
   if (!memberList_.isEmpty())
   {
-    QDomElement memberListElement;
-    memberListElement.setTagName("kab:child-list");
+    QDomElement memberListElement = parentDoc.createElement("kab:child-list");
 
     QStringList::ConstIterator it(memberList_.begin());
 
     for (; it != memberList_.end(); ++it)
     {
-      QDomElement memberElement;
-      memberElement.setTagName("kab:child");
+      QDomElement memberElement = parentDoc.createElement("kab:child");;
       memberElement.setNodeValue(*it);
       memberListElement.appendChild(memberElement);
     }
@@ -253,14 +226,13 @@ Entry::toDomElement() const
     e.appendChild(memberListElement);
   }
 
-  return e;
+  parent.appendChild(e);
 }
 
   QDataStream &
 operator << (QDataStream & str, const Entry & e)
 {
   str <<  e.id_
-      <<  e.name_
       <<  e.fieldList_
       <<  e.memberList_;
 
@@ -271,7 +243,6 @@ operator << (QDataStream & str, const Entry & e)
 operator >> (QDataStream & str, Entry & e)
 {
   str >>  e.id_
-      >>  e.name_
       >>  e.fieldList_
       >>  e.memberList_;
 
@@ -293,7 +264,7 @@ Entry::replace(const QString & name, const QString & value)
   Field f;
   f.setName(name);
   f.setType("text");
-  f.setSubType("unicode");
+  f.setSubType("UCS-2");
   QByteArray a;
   QDataStream str(a, IO_WriteOnly);
   str << value;

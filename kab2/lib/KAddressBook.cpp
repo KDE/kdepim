@@ -93,8 +93,6 @@ KAddressBook::contains(QString id)
   QString
 KAddressBook::insert(Entry e)
 {
-  qDebug("insert entry `" + e.name() + "'");
-
   e.setID(_generateUniqueID());
 
   index_.append(e.id());
@@ -195,7 +193,7 @@ KAddressBook::_initIndex()
 }
 
   bool
-KAddressBook::_writeEntry(Entry & e)
+KAddressBook::_writeEntry(const Entry & e)
 {
   qDebug("KAddressBook::_writeEntry()");
   QString filename = path_ + "/tmp" + e.id();
@@ -217,9 +215,11 @@ KAddressBook::_writeEntry(Entry & e)
     return false;
   }
 
-  QDomDocument doc("kab-entity");
+  QDomDocument doc("kab-entry");
 
-  doc.appendChild(e.toDomElement());
+  e.insertInDomTree(doc, doc);
+
+  qDebug("Doc as string: %s", doc.toString().ascii());
 
   QTextStream str(&f);
 

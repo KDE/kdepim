@@ -38,21 +38,17 @@ class Entry
 
     Entry();
     Entry(const QDomElement &);
-    Entry(const QString & name);
     Entry(const Entry &);
     virtual ~Entry();
 
     Entry & operator = (const Entry &);
     bool operator == (const Entry &) const;
 
-    QDomElement toDomElement() const;
+    void insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const;
 
     virtual QString id() const;
     virtual void setID(const QString &);
-    virtual QString name() const;
 
-    virtual void setName(const QString & name);
-    
     virtual void addField(const Field &);
     virtual bool removeField(const QString & name);
     
@@ -80,7 +76,7 @@ class Entry
 
     bool dirty_;
 
-    QString id_, name_;
+    QString id_;
     FieldList fieldList_;
     QStringList memberList_;
 };

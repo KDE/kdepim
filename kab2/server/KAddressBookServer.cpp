@@ -30,7 +30,7 @@ KAddressBookServer::KAddressBookServer()
 {
 	addressBookList_.setAutoDelete(true);
 
-  KGlobal::dirs()->addResourceType("addressbook", "share/kab2/books");
+  KGlobal::dirs()->addResourceType("addressbook", "share/apps/kab2/books");
 
   // Create default book
 

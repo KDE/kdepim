@@ -87,7 +87,7 @@ main(int argc, char ** argv)
         continue;
       }
 
-      QListViewItem * entryItem = new QListViewItem(abItem, e.name());
+      QListViewItem * entryItem = new QListViewItem(abItem, e.id());
 
       FieldList fl(e.fieldList());
 

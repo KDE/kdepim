@@ -55,7 +55,7 @@ class KAddressBook : virtual public DCOPObject
     void      _initIndex();
 
     Entry *  _readEntry(const QString & filename);
-    bool      _writeEntry(Entry &);
+    bool      _writeEntry(const Entry &);
     bool      _removeEntry(const QString & id);
 
     QString   _generateUniqueID();

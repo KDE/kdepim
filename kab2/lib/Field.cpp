@@ -137,11 +137,10 @@ Field::stringValue() const
 
   if
     (
-     (type_.isEmpty() || type_ == "text") &&
-     (subType_.isEmpty() || subType_ == "unicode")
+     (type_.isEmpty()     || (type_ == "text")      ) &&
+     (subType_.isEmpty()  || (subType_ == "UCS-2")  )
     )
   {
-    QString ret;
     QDataStream str(value_, IO_ReadOnly);
     str >> ret;
   }
@@ -180,16 +179,15 @@ Field::setValue(const QString & s)
   str << s;
 }
 
-  QDomElement
-Field::toDomElement() const
+  void
+Field::insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const
 {
-  QDomElement e;
+  QDomElement e = parentDoc.createElement(name_);
 
-  e.setAttribute("name", name_);
-  e.setAttribute("mimetype", QString("%1/%2").arg(type_).arg(subType_));
-//  e.setAttribute("value", value_); encode it !
+  // FIXME - need to encode other data types !
+  e.appendChild(parentDoc.createTextNode(stringValue()));
 
-  return e;
+  parent.appendChild(e);
 }
 
   QDataStream &
