@@ -1,0 +1,12 @@
+# KDE Config File  
+[KDE Desktop Entry]
+Type=Application
+Exec=kmailcvt2 -caption "%c" %i %m  
+Icon=kmailcvt2.xpm
+MiniIcon=kmailcvt2.xpm
+DocPath=kmailcvt2/index.html
+Comment=
+Comment[de]=
+Terminal=0
+Name=Kmailcvt2
+Name[de]=Kmailcvt2
