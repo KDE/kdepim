@@ -948,6 +948,8 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
   QLabel *l1;
 
+  d_ecoCB=new QCheckBox(i18n("Show fancy header deco&rations"), appgb);
+  r_ewrapCB=new QCheckBox(i18n("Re&wrap text when necessary"), appgb);
   s_igCB=new QCheckBox(i18n("Show sig&nature"), appgb);
   f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), appgb);
   q_uoteCharacters=new QLineEdit(appgb);
@@ -970,7 +972,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QGridLayout *appgbL=new QGridLayout(appgb, 4,2, 8,5);
+  QGridLayout *appgbL=new QGridLayout(appgb, 6,2, 8,5);
   QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
   QGridLayout *bgbL=new QGridLayout(bgb, 3,3, 8,5);
 
@@ -980,10 +982,12 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   topL->addStretch(1);
 
   appgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  appgbL->addMultiCellWidget(s_igCB, 1,1, 0,1);
-  appgbL->addMultiCellWidget(f_ormatCB, 2,2, 0,1);
-  appgbL->addWidget(quoteCharL, 3,0);
-  appgbL->addWidget(q_uoteCharacters, 3,1);
+  appgbL->addMultiCellWidget(d_ecoCB, 1,1, 0,1);
+  appgbL->addMultiCellWidget(r_ewrapCB, 2,2, 0,1);
+  appgbL->addMultiCellWidget(s_igCB, 3,3, 0,1);
+  appgbL->addMultiCellWidget(f_ormatCB, 4,4, 0,1);
+  appgbL->addWidget(quoteCharL, 5,0);
+  appgbL->addWidget(q_uoteCharacters, 5,1);
 
   agbL->addSpacing(fontMetrics().lineSpacing()-4);
   agbL->addWidget(i_nlineCB);
@@ -1000,6 +1004,8 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   topL->setResizeMode(QLayout::Minimum);
 
   //init
+  d_ecoCB->setChecked(d->s_howHeaderDeco);
+  r_ewrapCB->setChecked(d->r_ewrapBody);
   s_igCB->setChecked(d->s_howSig);
   f_ormatCB->setChecked(d->i_nterpretFormatTags);
   q_uoteCharacters->setText(d->q_uoteCharacters);
@@ -1023,6 +1029,8 @@ void KNConfig::ReadNewsViewerWidget::apply()
   if(!d_irty)
     return;
 
+  d_ata->s_howHeaderDeco=d_ecoCB->isChecked();
+  d_ata->r_ewrapBody=r_ewrapCB->isChecked();
   d_ata->s_howSig=s_igCB->isChecked();
   d_ata->i_nterpretFormatTags=f_ormatCB->isChecked();
   d_ata->q_uoteCharacters=q_uoteCharacters->text();

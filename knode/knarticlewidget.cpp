@@ -142,20 +142,6 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   i_nstances.append(this);
   setNotifyClick( true );
 
-  //custom tags <bodyblock> , <headerblock>, <txt_attachment>
-  QStyleSheetItem *style;
-  style=new QStyleSheetItem(styleSheet(), "bodyblock");
-  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  style->setMargin(QStyleSheetItem::MarginAll, 5);
-  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
-  style=new QStyleSheetItem(styleSheet(), "headerblock");
-  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  style->setMargin(QStyleSheetItem::MarginLeft, 10);
-  style->setMargin(QStyleSheetItem::MarginVertical, 2);
-  style=new QStyleSheetItem(styleSheet(), "txt_attachment");
-  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
-
   f_actory = new QMimeSourceFactory();
   setMimeSourceFactory(f_actory);
 
@@ -322,6 +308,36 @@ bool KNArticleWidget::canDecode8BitText(const QCString &charset)
 void KNArticleWidget::applyConfig()
 {
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+  KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
+
+  //custom tags <bodyblock> , <headerblock>, <txt_attachment>
+  QStyleSheetItem *style;
+  style=new QStyleSheetItem(styleSheet(), "bodyblock");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  if (rnv->showHeaderDecoration())
+    style->setMargin(QStyleSheetItem::MarginAll, 5);
+  else
+    style->setMargin(QStyleSheetItem::MarginAll, 0);
+  if (rnv->rewrapBody())
+    style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNormal);
+  else
+    style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
+
+  style=new QStyleSheetItem(styleSheet(), "headerblock");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  if (rnv->showHeaderDecoration()) {
+    style->setMargin(QStyleSheetItem::MarginLeft, 10);
+    style->setMargin(QStyleSheetItem::MarginVertical, 2);
+  } else {
+    style->setMargin(QStyleSheetItem::MarginLeft, 0);
+    style->setMargin(QStyleSheetItem::MarginRight, 0);
+    style->setMargin(QStyleSheetItem::MarginTop, 0);
+    style->setMargin(QStyleSheetItem::MarginBottom, 2);
+  }
+
+  style=new QStyleSheetItem(styleSheet(), "txt_attachment");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
 
   QColorGroup pcg(paperColorGroup());
   pcg.setColor(QColorGroup::Base, app->backgroundColor());
@@ -816,8 +832,11 @@ void KNArticleWidget::createHtmlPage()
   //----------------------------------- <Header> ---------------------------------------
 
   QString html, hLine;
-  html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\"></td><td width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
-        .arg(app->headerDecoHexcode());
+  if (rnv->showHeaderDecoration())
+    html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\"></td><td width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
+         .arg(app->headerDecoHexcode());
+  else
+    html="<qt><headerblock><table width=\"100%\" cellpadding=0 cellspacing=0><tr><td><table cellpadding=0 cellspacing=0>";
 
   if(f_ullHdrs) {
     KNStringSplitter split;
@@ -849,7 +868,7 @@ void KNArticleWidget::createHtmlPage()
       if(dh->hasName()) {
         html += QString("<tr><td align=right>") + i18n("%1%2:%3")
         .arg(dh->nameOpenTag()).arg(toHtmlString(dh->translatedName()))
-        .arg(dh->nameCloseTag()) + QString("</td><td width=\"100%\">");
+        .arg(dh->nameCloseTag()) + "</td><td width=\"100%\">";
       }
       else
         html+="<tr><td colspan=2>";
@@ -870,31 +889,38 @@ void KNArticleWidget::createHtmlPage()
     }
   }
 
-  html+=QString("</table></headerblock></td></tr><tr><td colspan=2 bgcolor=\"%1\"><headerblock>")
-    .arg(app->headerDecoHexcode());
+  if (rnv->showHeaderDecoration()) {    // no decorations <=> no references
+    html+=QString("</table></headerblock></td></tr><tr><td colspan=2 bgcolor=\"%1\"><headerblock>")
+          .arg(app->headerDecoHexcode());
 
-  //References
-  KNHeaders::References *refs=a_rticle->references(false);
-  if(a_rticle->type()==KNMimeBase::ATremote && refs) {
-    int refCnt=refs->count(), i=1;
-    QCString id = refs->first();
-    html+=QString("<b>%1</b>").arg(i18n("References:"));
+    //References
+    KNHeaders::References *refs=a_rticle->references(false);
+    if(a_rticle->type()==KNMimeBase::ATremote && refs) {
+      int refCnt=refs->count(), i=1;
+      QCString id = refs->first();
+      html+=QString("<b>%1</b>").arg(i18n("References:"));
 
-    while (i <= refCnt) {
-      html+=QString(" <a href=\"news:%1\">%2</a>").arg(id).arg(i);
-      id = refs->next();
-      i++;
+      while (i <= refCnt) {
+        html+=QString(" <a href=\"news:%1\">%2</a>").arg(id).arg(i);
+        id = refs->next();
+        i++;
+      }
     }
-  }
-  else html+=i18n("no references");
+    else html+=i18n("no references");
 
-  html+="</headerblock></td></tr>";
+    html+="</headerblock></td></tr>";
+  }
 
   KNMimeContent *text=a_rticle->textContent();
   if(text) {
     if(!canDecode8BitText(text->contentType()->charset())) {
-      html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
-        .arg(i18n("Unknown charset! Default charset is used instead."));
+      if (rnv->showHeaderDecoration())
+        html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
+              .arg(i18n("Unknown charset! Default charset is used instead."));
+      else
+        html+=QString("<tr><td colspan=2 bgcolor=red><font color=black>%1</font></td></tr>")
+              .arg(i18n("Unknown charset! Default charset is used instead."));
+
       kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
       setFont(app->articleFont());
     }
@@ -912,7 +938,10 @@ void KNArticleWidget::createHtmlPage()
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-charset = " << (int)(font().charSet()) << endl;
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : article-charset = " << text->contentType()->charset() << endl;
 
-  html+="</table>";
+  if (rnv->showHeaderDecoration())
+    html+="</table>";
+  else
+    html+="</table></tr></td></table></headerblock>";
 
   //----------------------------------- </Header> --------------------------------------
 

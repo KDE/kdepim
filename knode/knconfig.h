@@ -510,6 +510,8 @@ class ReadNewsViewer : public Base {
 
     void save();
 
+    bool showHeaderDecoration()      { return s_howHeaderDeco; }
+    bool rewrapBody()                { return r_ewrapBody; }
     bool showSignature()             { return s_howSig; }
     bool interpretFormatTags()       { return i_nterpretFormatTags; }
     QString quoteCharacters()        { return q_uoteCharacters; }
@@ -522,7 +524,9 @@ class ReadNewsViewer : public Base {
     QString browserCommand()         { return b_rowserCommand; }
 
   protected:
-    bool  s_howSig,
+    bool  s_howHeaderDeco,
+          r_ewrapBody,
+          s_howSig,
           i_nterpretFormatTags,
           i_nlineAtt,
           o_penAtt,
@@ -546,7 +550,9 @@ class ReadNewsViewerWidget : public BaseWidget {
     void apply();
 
   protected:
-    QCheckBox   *s_igCB,
+    QCheckBox   *d_ecoCB,
+                *r_ewrapCB,
+                *s_igCB,
                 *i_nlineCB,
                 *o_penAttCB,
                 *a_ltAttCB,

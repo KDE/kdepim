@@ -599,6 +599,8 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   KConfig *conf=KGlobal::config();
   conf->setGroup("READNEWS");
 
+  s_howHeaderDeco=conf->readBoolEntry("showHeaderDeco", true);
+  r_ewrapBody=conf->readBoolEntry("rewrapBody", true);
   s_howSig=conf->readBoolEntry("showSig", true);
   i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
   q_uoteCharacters=conf->readEntry("quoteCharacters",">:");
@@ -632,6 +634,8 @@ void KNConfig::ReadNewsViewer::save()
   KConfig *conf=KGlobal::config();
   conf->setGroup("READNEWS");
 
+  conf->writeEntry("showHeaderDeco", s_howHeaderDeco);
+  conf->writeEntry("rewrapBody", r_ewrapBody);
   conf->writeEntry("showSig", s_howSig);
   conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
   conf->writeEntry("quoteCharacters",q_uoteCharacters);
