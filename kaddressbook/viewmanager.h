@@ -40,6 +40,7 @@ class QDropEvent;
 class QSplitter;
 class QTabWidget;
 class KConfig;
+class KJanusWidget;
 namespace KABC { class AddressBook; }
 
 class ViewWrapper;
@@ -290,7 +291,7 @@ class ViewManager : public QWidget
     AddresseeEditorWidget *mQuickEdit;
     QSplitter *mQSpltDetails;
     QSplitter *mQSpltFeatures;
-    QTabWidget *mFeatures;
+    KJanusWidget *mFeatureBar;
     FeatureDistributionList *mFeatDistList;
 };
 

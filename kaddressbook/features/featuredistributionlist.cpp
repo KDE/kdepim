@@ -36,6 +36,7 @@
 #include <klineeditdlg.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <kiconloader.h>
 #include <libkdepim/kvcarddrag.h>
 
 #include "addresseeutil.h"
@@ -312,8 +313,6 @@ void FeatureDistributionList::slotDropped( QDropEvent *e )
 
 void FeatureDistributionList::initGUI()
 {
-  setCaption( i18n( "Edit Distribution Lists" ) );
-
   QGridLayout *layout = new QGridLayout( this, 1, 1, KDialog::marginHint(), KDialog::spacingHint() );
   QSpacerItem* spacer = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
   layout->addMultiCell( spacer, 3, 4, 2, 2 );
@@ -342,8 +341,6 @@ void FeatureDistributionList::initGUI()
   mLvAddressees = new FeatureDistributionListView( this );
   layout->addMultiCellWidget( mLvAddressees, 0, 4, 1, 1 );
   QToolTip::add(mLvAddressees, i18n("Drag addressees here to add them to the distribution list."));
-
-  resize( QSize(760, 500).expandedTo(sizeHint()) );
 
   // signals and slots connections
   connect( mPbListNew, SIGNAL( clicked() ), this, SLOT( slotListNew() ) );

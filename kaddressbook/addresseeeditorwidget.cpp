@@ -43,6 +43,7 @@
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <kdebug.h>
+#include <kjanuswidget.h>
 
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/categoryeditdialog.h>
@@ -57,9 +58,9 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget(QWidget *parent, 
+AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent, 
                                             const char *name)
-  : QWidget(parent, name)
+  : QWidget( parent, name )
 {
   initGUI();
   mCategoryDialog = 0;
@@ -94,11 +95,11 @@ void AddresseeEditorWidget::textChanged(const QString &)
   
 void AddresseeEditorWidget::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  
-  mTabWidget = new QTabWidget(this, "mTabWidget");
-  layout->addWidget(mTabWidget);
-  
+  QVBoxLayout *layout = new QVBoxLayout( this );
+
+  mTabWidget = new QTabWidget( this );
+  layout->addWidget( mTabWidget );
+
   setupTab1();
   setupTab2();
   setupTab3();
@@ -107,7 +108,8 @@ void AddresseeEditorWidget::initGUI()
 void AddresseeEditorWidget::setupTab1()
 {
   // This is the General tab
-  QWidget *tab1 = new QWidget(mTabWidget, "tab1");
+  QWidget *tab1 = new QWidget( mTabWidget );
+
   QGridLayout *layout = new QGridLayout(tab1, 11, 7);
   layout->setMargin(KDialogBase::marginHint());
   layout->setSpacing(KDialogBase::spacingHint());
@@ -256,13 +258,15 @@ void AddresseeEditorWidget::setupTab1()
   
   // Build the layout and add to the tab widget
   layout->activate(); // required
-  mTabWidget->addTab( tab1, i18n( "&General" ));
+
+  mTabWidget->addTab( tab1, i18n( "&General" ) );
 }
 
 void AddresseeEditorWidget::setupTab2()
 {
   // This is the Details tab
-  QWidget *tab2 = new QWidget(mTabWidget, "tab2");
+  QWidget *tab2 = new QWidget( mTabWidget );
+
   QGridLayout *layout = new QGridLayout(tab2, 6, 6);
   layout->setMargin(KDialogBase::marginHint());
   layout->setSpacing(KDialogBase::spacingHint());
@@ -370,7 +374,8 @@ void AddresseeEditorWidget::setupTab2()
   
    // Build the layout and add to the tab widget
   layout->activate(); // required
-  mTabWidget->addTab( tab2, i18n( "&Details" ));
+
+  mTabWidget->addTab( tab2, i18n( "&Details" ) );
 }
 
 void AddresseeEditorWidget::setupTab3()

@@ -27,6 +27,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kjanuswidget.h>
 
 #include "addresseeeditorwidget.h"
 
@@ -38,10 +39,10 @@ AddresseeEditorDialog::AddresseeEditorDialog(QWidget *parent, const char *name)
   QWidget *page = plainPage();
   
   QVBoxLayout *layout = new QVBoxLayout(page);
-  
-  mEditorWidget = new AddresseeEditorWidget(page, "mEditorWidget");
+
+  mEditorWidget = new AddresseeEditorWidget( page );
   connect(mEditorWidget, SIGNAL(modified()), this, SLOT(widgetModified()));
-  layout->addWidget(mEditorWidget);
+  layout->addWidget( mEditorWidget );
   
   enableButton(KDialogBase::Apply, false);
 }

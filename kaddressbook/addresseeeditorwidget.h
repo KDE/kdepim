@@ -28,6 +28,7 @@
 #include <qdatetime.h>
 
 #include <kdialogbase.h>
+#include <kjanuswidget.h>
 #include <kabc/addressee.h>
 
 class QCheckBox;
@@ -56,7 +57,7 @@ class AddresseeEditorWidget : public QWidget
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget(QWidget *parent, const char *name);
+    AddresseeEditorWidget( QWidget *parent, const char *name = 0 );
     ~AddresseeEditorWidget();  
 
     void setAddressee(const KABC::Addressee &a);
@@ -103,9 +104,9 @@ class AddresseeEditorWidget : public QWidget
     bool mDirty;
     
     // GUI
-    QTabWidget *mTabWidget;
     KPIM::CategorySelectDialog *mCategoryDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
+    QTabWidget *mTabWidget;
     
     // Tab1
     KLineEdit *mNameEdit;

@@ -42,6 +42,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kjanuswidget.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
@@ -136,7 +137,7 @@ void ViewManager::readConfig()
   }
   mQSpltDetails->setSizes( splitterSize );
 
-  mFeatures->setCurrentPage( mConfig->readNumEntry( "CurrentFeatureBarPage", 0 ) );
+  mFeatureBar->showPage( mConfig->readNumEntry( "CurrentFeatureBarPage", 0 ) );
 }
 
 void ViewManager::writeConfig()
@@ -159,7 +160,7 @@ void ViewManager::writeConfig()
   mConfig->setGroup( "Splitter" );
   mConfig->writeEntry( "FeaturesSplitter", mQSpltFeatures->sizes() );
   mConfig->writeEntry( "DetailsSplitter", mQSpltDetails->sizes() );
-  mConfig->writeEntry( "CurrentFeatureBarPage", mFeatures->currentPageIndex() );
+  mConfig->writeEntry( "CurrentFeatureBarPage", mFeatureBar->activePageIndex() );
 }
 
 QStringList ViewManager::selectedUids()
@@ -505,8 +506,6 @@ void ViewManager::initGUI()
 
   mQSpltDetails = new QSplitter( mQSpltFeatures );
 
-  mFeatures = new QTabWidget( mQSpltFeatures );
-
   mViewWidgetStack = new QWidgetStack( mQSpltDetails, "mViewWidgetStack" );
 
   mDetails = new ViewContainer( mQSpltDetails );
@@ -517,17 +516,25 @@ void ViewManager::initGUI()
             SLOT(browse(const QString&)) );
 
   mJumpButtonBar = new JumpButtonBar( this, "mJumpButtonBar" );
-  // ----- create the quick edit widget as part of the features tabwidget
-  //       (THIS WILL BE REMOVED!):
-  mQuickEdit = new AddresseeEditorWidget( mFeatures, "mQuickEdit" );
-  connect( mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()) );
-
   connect( mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
             this, SLOT(jumpToLetter(const QChar &)) );
-  mFeatures->addTab( mQuickEdit, i18n("QuickEdit") );
-  mFeatDistList=new FeatureDistributionList(mDocument, mFeatures);
-  mFeatures->addTab(mFeatDistList, i18n("Distribution Lists..."));
-  connect(mFeatDistList, SIGNAL(modified()), SLOT(slotModified()));
+
+  /*
+   * Setup the feature bar widget.
+   */
+  mFeatureBar = new KJanusWidget( mQSpltFeatures, "mFeatureBar", KJanusWidget::IconList );
+  QHBox *featureBox = mFeatureBar->addHBoxPage( i18n( "Contact Editor" ), i18n( "Contact Editor" ),
+                    KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop ) );
+
+  mQuickEdit = new AddresseeEditorWidget( featureBox, "mQuickEdit" );
+  connect( mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()) );
+
+  featureBox = mFeatureBar->addHBoxPage( i18n( "Distribution Lists" ), i18n( "Distribution Lists" ),
+                    KGlobal::iconLoader()->loadIcon( "contents", KIcon::Desktop ) );
+
+  mFeatDistList = new FeatureDistributionList( mDocument, featureBox );
+  connect( mFeatDistList, SIGNAL(modified()), SLOT(slotModified()) );
+
   l->addWidget( mQSpltFeatures );
   l->setStretchFactor( mQSpltFeatures, 100 );
   l->addWidget( mJumpButtonBar );
@@ -581,9 +588,9 @@ void ViewManager::setJumpButtonBarVisible(bool visible)
 void ViewManager::setFeaturesVisible(bool visible)
 {
   if (visible)
-    mFeatures->show();
+    mFeatureBar->show();
   else
-    mFeatures->hide();
+    mFeatureBar->hide();
 }
 
 void ViewManager::setDetailsVisible(bool visible)
