@@ -323,7 +323,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(g->name.contains(filtertxt))))
+          (notCheckStr||(g->name.find(filtertxt)!=-1)))
       tempList->append(g);
     }
 
@@ -335,7 +335,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(g->name.contains(filtertxt))))
+          (notCheckStr||(g->name.find(filtertxt)!=-1)))
         matchList->append(g);
     }
   }
