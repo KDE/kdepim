@@ -65,7 +65,7 @@ void ExchangeProgress::slotTransferFinished()
 void ExchangeProgress::updateLabel()
 {
   progressBar()->setValue( m_finished );
-  QString str = QString( i18n( "Downloading, %1 of %2" ) ).arg( m_finished ).arg( m_total );
+  QString str = i18n( "Downloading, %1 of %2" ).arg( m_finished ).arg( m_total );
   setLabel( str );
 }
 
