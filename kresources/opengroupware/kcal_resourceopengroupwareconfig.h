@@ -20,6 +20,8 @@
 #ifndef KCALRESOURCEGROUPWARECONFIG_H
 #define KCALRESOURCEGROUPWARECONFIG_H
 
+#include "folderconfig.h"
+
 #include <kurlrequester.h>
 
 #include <kresources/resource.h>
@@ -33,6 +35,7 @@ namespace KCal {
 
 class ResourceCachedReloadConfig;
 class ResourceCachedSaveConfig;
+class FolderConfig;
 
 /**
   Configuration widget for groupware kioslave resource.
@@ -56,6 +59,7 @@ class OpenGroupwareConfig : public KRES::ConfigWidget
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;
+    FolderConfig *mFolderConfig;
 };
 
 }

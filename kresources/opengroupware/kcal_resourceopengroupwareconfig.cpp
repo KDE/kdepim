@@ -18,6 +18,8 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include "folderlister.h"
+
 #include <typeinfo>
 
 #include <qlabel.h>
@@ -28,6 +30,7 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <klineedit.h>
+#include <kdialog.h>
 
 #include <libkcal/resourcecachedconfig.h>
 
@@ -41,8 +44,10 @@ using namespace KCal;
 OpenGroupwareConfig::OpenGroupwareConfig( QWidget* parent,  const char* name )
     : KRES::ConfigWidget( parent, name )
 {
-  resize( 245, 115 ); 
+  resize( 245, 115 );
+
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  mainLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n("URL:"), this );
   mainLayout->addWidget( label, 1, 0 );
@@ -61,10 +66,13 @@ OpenGroupwareConfig::OpenGroupwareConfig( QWidget* parent,  const char* name )
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
+  mainLayout->addMultiCellWidget( mReloadConfig, 1, 3, 2, 2 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
+  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 2, 2 );
+
+  mFolderConfig = new FolderConfig( this );
+  mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
 }
 
 void OpenGroupwareConfig::loadSettings( KRES::Resource *resource )
@@ -83,6 +91,9 @@ void OpenGroupwareConfig::loadSettings( KRES::Resource *resource )
     mPasswordEdit->setText( res->prefs()->password() );
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
+    
+    mFolderConfig->setFolderLister( res->folderLister() );
+    mFolderConfig->updateFolderList();
   } else {
     kdError(5700) << "KCalOpenGroupwareConfig::loadSettings(): no KCalOpenGroupware, cast failed" << endl;
   }
@@ -97,6 +108,8 @@ void OpenGroupwareConfig::saveSettings( KRES::Resource *resource )
     res->prefs()->setPassword( mPasswordEdit->text() );
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
+    
+    mFolderConfig->saveSettings();
   } else {
     kdError(5700) << "KCalOpenGroupwareConfig::saveSettings(): no KCalOpenGroupware, cast failed" << endl;
   }

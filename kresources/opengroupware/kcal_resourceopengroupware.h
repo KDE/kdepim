@@ -29,6 +29,7 @@
 #include <kconfig.h>
 
 #include "kcal_opengroupwareprefsbase.h"
+
 namespace KIO {
   class Job;
   class TransferJob;
@@ -38,6 +39,7 @@ namespace KIO {
 namespace KCal {
 
 class GroupwarePrefsBase;
+class FolderLister;
 
 /**
   This class provides a resource for accessing a Groupware kioslave-based
@@ -56,6 +58,7 @@ class OpenGroupware : public ResourceCached
     void writeConfig( KConfig *config );
 
     OpenGroupwarePrefsBase *prefs();
+    FolderLister *folderLister() { return mFolderLister; }
 
     bool doOpen();
     void doClose();
@@ -85,6 +88,7 @@ class OpenGroupware : public ResourceCached
 
   private:
     OpenGroupwarePrefsBase *mPrefs;
+    FolderLister *mFolderLister;
     KABC::LockNull mLock;
 
     KIO::TransferJob *mDownloadJob;

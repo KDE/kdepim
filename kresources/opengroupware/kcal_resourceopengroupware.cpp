@@ -26,6 +26,7 @@
 
 #include "libkcal/confirmsavedialog.h"
 #include "webdavhandler.h"
+#include "folderlister.h"
 
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
@@ -86,6 +87,7 @@ void OpenGroupware::init()
   mIsShowingError = false;
 
   mPrefs = new OpenGroupwarePrefsBase();
+  mFolderLister = new FolderLister;
   
   setType( "groupware" );
 
@@ -104,6 +106,13 @@ void OpenGroupware::readConfig( const KConfig *config )
   mPrefs->readConfig();
 
   ResourceCached::readConfig( config );
+
+  KURL url = mPrefs->url();
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
+  mFolderLister->setUrl( url );
+  
+  mFolderLister->readConfig( config );
 }
 
 void OpenGroupware::writeConfig( KConfig *config )
@@ -115,6 +124,8 @@ void OpenGroupware::writeConfig( KConfig *config )
   mPrefs->writeConfig();
 
   ResourceCached::writeConfig( config );
+
+  mFolderLister->writeConfig( config );
 }
 
 bool OpenGroupware::doOpen()
@@ -140,6 +151,8 @@ bool OpenGroupware::doLoad()
     kdWarning() << "Download still in progress" << endl;
     return false;
   }
+
+  // FIXME: If folder list is empty retrieve it from server.
 
   mCalendar.close();
 
