@@ -1,45 +1,65 @@
 dnl Check to see if pisock header and library are available
 
-HAVE_PISOCK=1
 
-AC_MSG_CHECKING(for libpisock)
-libpisock_not_set=1
-LIBPISOCK_PATH="."
-dirs="/usr/include /usr/include/libpisock /usr/local/include/libpisock"
-for i in $dirs ; do
-    if test -r $i/pi-file.h; then
-        LIBPISOCK_PATH="$i"
-        AC_SUBST(LIBPISOCK_PATH)
-        AC_MSG_RESULT(found)
-        libpisock_not_set=0
-        break
-    fi
-done
+dnl This will be (re)defined to whatever we need to get the
+dnl pilot-link library linked and working (if possible).
+dnl
+LIBPISOCK=""
+LIBPISOCK_PATH=""
 
-if test "libpisock_not_set" = "1" ; then
-    HAVE_PISOCK=0
-else
-    ac_save_cppflags="$CPPFLAGS"
-    CPPFLAGS="$CPPFLAGS -I$LIBPISOCK_PATH"
-    AC_CHECK_HEADER(pi-file.h, , HAVE_PISOCK=0)
-    CPPFLAGS="$ac_save_cppflags"
-fi
+dnl A list of dirs to try for include files and the library
+dnl
+include_dirs="/usr/include /usr/include/libpisock /usr/local/include/libpisock"
 
-ac_save_cppflags="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -L/usr/local/lib"
-AC_CHECK_LIB(pisock,
-	pi_accept,
-	[LIBPISOCK="-lpisock"], 
-	[AC_CHECK_LIB(pisock,
-		pi_accept,
-		[LIBPISOCK="-lpisock -lxnet"],
-		[AC_MSG_WARN([KPILOT: pisock library not found])
-		HAVE_PISOCK=0])])
-CPPFLAGS="$ac_save_cppflags"
-AC_SUBST(LIBPISOCK)
+
+AC_MSG_CHECKING(for pilot-link headers)
+
+
+dnl check for the headers first
+dnl
+HAVE_PISOCK=0
+AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1
+	AC_MSG_RESULT(found)], )
 
 if test "$HAVE_PISOCK" = "0" ; then
+	for i in $include_dirs ; do
+		if test -r $i/pi-file.h; then
+			HAVE_PISOCK=1
+			LIBPISOCK_PATH="$i"
+			AC_MSG_RESULT(found)
+			break
+		fi
+	done
+fi
+
+dnl warn if no headers found
+dnl
+if  test "$HAVE_PISOCK" = "0" ; then
+	AC_MSG_WARN([KPILOT: no pilot-link headers found.])
+fi
+
+if test "$HAVE_PISOCK" = "1" ; then
+	HAVE_PISOCK=0
+	ac_save_cppflags="$CPPFLAGS"
+	for pisock_libs in "" "-lpisock" "-lsocket" "-lxnet" "-lsocket -lxnet" ; do
+		AC_CHECK_LIB(pisock,
+			pi_accept,
+			[LIBPISOCK="$pisock_libs"
+			HAVE_PISOCK=1
+			break
+			],
+			[])
+	done
+	CPPFLAGS="$ac_save_cppflags"
+fi
+
+if test "$HAVE_PISOCK" = "0" ; then
+  AC_MSG_WARN([KPILOT: pisock library not found])
   DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+else
+  AC_MSG_RESULT([found])
+  AC_SUBST(LIBPISOCK)
+  AC_SUBST(LIBPISOCK_PATH)
 fi
 
 
