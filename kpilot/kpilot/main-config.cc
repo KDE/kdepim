@@ -80,9 +80,8 @@ int main(int argc, char **argv)
 	KApplication a;
 
 #ifdef DEBUG
-	debug_level = p->getOption("debug").toInt();
+	KPilotConfig::getDebugLevel(p);
 #endif
-	KPilotConfig::getDebugLevel(true);
 
 	int r = 0;
 

@@ -913,10 +913,7 @@ int main(int argc, char **argv)
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
-	{
-		QString s = p->getOption("debug");
-		debug_level = s.toInt();
-	}
+	KPilotConfig::getDebugLevel(p);
 #endif
 
 	if (p->isSet("setup"))
@@ -933,8 +930,6 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	KUniqueApplication a(true, true);
-
-	KPilotConfig::getDebugLevel();
 
 	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
@@ -971,26 +966,23 @@ int main(int argc, char **argv)
 			<< ": Running setup first."
 			<< " (mode " << run_mode << ")" << endl;
 #endif
-
+		bool outdated = false;
+		if (c.getVersion() < KPilotConfig::ConfigurationVersion)
+		{
+			outdated = true;
+			KPilotConfig::interactiveUpdate();
+		}
 		KPilotConfigDialog *options = new KPilotConfigDialog(0L,
 			"configDialog", true);
 		int r = options->exec();
 
+		// If cancelled, always fail.
+		if (!r) return 1;
+		// User expected configure only.
 		if (run_mode == ConfigureKPilot)
 		{
-			if (!r)
-			{
-				return 1;
-			}
-			else
-			{
-				return 0;
-			}
+			return 0;
 		}
-
-		if (!r)
-			return 1;
-
 
 		// The options dialog may have changed the group
 		// while reading or writing settings (still a
@@ -1003,6 +995,7 @@ int main(int argc, char **argv)
 	{
 		kdWarning() << k_funcinfo <<
 			": Is still not configured for use." << endl;
+		KPilotConfig::sorryVersionOutdated(c.getVersion());
 		return 1;
 	}
 

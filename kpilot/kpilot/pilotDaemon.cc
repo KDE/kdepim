@@ -1022,7 +1022,7 @@ int main(int argc, char **argv)
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
-	debug_level = p->getOption("debug").toInt();
+	KPilotConfig::getDebugLevel(p);
 #endif
 
 	if (!KUniqueApplication::start())
@@ -1043,6 +1043,7 @@ int main(int argc, char **argv)
 			kdError() << k_funcinfo
 				<< ": Is still not configured for use."
 				<< endl;
+			KPilotConfig::sorryVersionOutdated(c.getVersion());
 			return 1;
 		}
 

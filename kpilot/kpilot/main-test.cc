@@ -292,7 +292,7 @@ int main(int argc, char **argv)
 
 	KApplication a;
 #ifdef DEBUG
-	debug_level = p->getOption("debug").toInt();
+	KPilotConfig::getDebugLevel(p);
 #endif
 
 	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
