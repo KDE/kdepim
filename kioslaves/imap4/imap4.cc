@@ -1953,14 +1953,14 @@ bool IMAP4Protocol::makeLogin ()
       }
       if (!clientLogin (myUser, myPass, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to login. Probably the "
-        "password is wrong.\nThe server replied:\n%1").arg(resultInfo));
+        "password is wrong.\nThe server %1 replied:\n%2").arg(myHost).arg(resultInfo));
     }
     else
     {
 #ifdef HAVE_LIBSASL2      
       if (!clientAuthenticate (this, authInfo, myHost, myAuth, mySSL, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to authenticate via %1.\n"
-        "The server replied:\n%2").arg(myAuth).arg(resultInfo));
+	"The server %2 replied:\n%3").arg(myAuth).arg(myHost).arg(resultInfo));
       else {
         myUser = authInfo.username;
         myPass = authInfo.password;
