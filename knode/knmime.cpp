@@ -286,10 +286,11 @@ QCString KNMimeBase::LFtoCRLF(const QCString &s)
 void KNMimeBase::stripCRLF(char *str)
 {
   int pos=strlen(str)-1;
-  while(str[pos]!='\n' && pos>0) pos--;
-  if(pos>0) {
-    str[pos--]='\0';
-    if(str[pos]=='\r') str[pos]='\0';
+  while(pos>-1 && (str[pos]!='\n' && str[pos]!='\r') ) pos--;
+  if(pos>-1) {
+    if(str[pos]=='\n' && (pos-1)>0 && str[pos-1]=='\r')
+      pos--;
+    str[pos]='\0';
   }
 }
 
@@ -561,6 +562,8 @@ void KNMimeContent::setContent(QStrList *l)
 
   bool isHead=true;
   for(char *line=l->first(); line; line=l->next()) {
+    stripCRLF(line); //make sure that there's no newline
+
     if(isHead && line[0]=='\0') {
       isHead=false;
       continue;
@@ -594,7 +597,7 @@ void KNMimeContent::setContent(const QCString &s)
 //parse the message, split multiple parts
 void KNMimeContent::parse()
 {
-  qDebug("void KNMimeContent::parse() : start");
+  //qDebug("void KNMimeContent::parse() : start");
   delete h_eaders;
   h_eaders=0;
   delete c_ontents;
@@ -683,7 +686,7 @@ void KNMimeContent::parse()
       }
     }
   }
-  qDebug("void KNMimeContent::parse() : finished");
+  //qDebug("void KNMimeContent::parse() : finished");
 }
 
 
@@ -1877,6 +1880,7 @@ void KNAttachment::attach(KNMimeContent *c)
       c_ontent=0;
     }
     else {
+      txt[readBytes]='\0'; //terminate string
       c_ontent->b_ody=txt;
       c_ontent->contentTransferEncoding()->setDecoded(true);
     }

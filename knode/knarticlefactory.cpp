@@ -200,8 +200,11 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   QStringList::Iterator line;
   bool incSig=knGlobals.cfgManager->postNewsComposer()->includeSignature();
 
-  if (selectedText.isEmpty())
-    a->decodedText(text);
+  if (selectedText.isEmpty()) {
+    KNMimeContent *tc = a->textContent();
+    if(tc)
+      tc->decodedText(text);
+  }
   else
     text = QStringList::split('\n',selectedText);
 
