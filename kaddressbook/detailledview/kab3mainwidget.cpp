@@ -150,7 +150,7 @@ void Kab3MainWidget::slotAddressBookChanged(KABC::AddressBook *ab)
         category=cbCategory->currentText();
     }
     kdDebug() << "Kab3MainWidget::slotAddressBookChanged: category is "
-              << (category.isEmpty() ? ("empty") : category) << "."
+              << (category.isEmpty() ? QString("empty") : category) << "."
               << endl;
     cbCategory->clear();
     cbCategory->insertItem(i18n("All"));
