@@ -779,6 +779,7 @@ imaginable.
 &kpilot;'s configuration dialog allows you to select which conduits
 to run during a &HotSync; and to configure those conduits.
 A window similar to the following will be displayed:
+</para>
 <screenshot>
 <screeninfo>The Conduit Setup Dialog</screeninfo>
 <mediaobject>
@@ -787,6 +788,7 @@ A window similar to the following will be displayed:
 <caption><para>The Conduit Setup Dialog</para></caption>
 </mediaobject>
 </screenshot>
+<para>
 Check the box to the left of the conduit name to make it active, uncheck to make
 it inactive or click on the conduit name to configure it.
 </para>
