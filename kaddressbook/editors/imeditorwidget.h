@@ -1,8 +1,8 @@
-/*    
+/*
 	imeditorwidget.h
-	
+
 	IM addresses editor widget for KAddressbook
-	
+
 	Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This program is free software; you can redistribute it and/or modify
@@ -71,13 +71,13 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 		IMEditorBase *mWidget;
 		// Used to track changed protocols to reduce KABC writes
 		QValueList<IMProtocol> mChangedProtocols;
-		
+
 };
 
 /**
- * List view item representing a single IM address.  
+ * List view item representing a single IM address.
  */
- 
+
 // VCard has been disabled as there is no standard VCard location to store IM addresses yet.
 class IMAddressLVI : public KListViewItem
 {
@@ -88,10 +88,10 @@ class IMAddressLVI : public KListViewItem
 		void setProtocol( IMProtocol protocol );
 		void setContext( IMContext context );
 		void activate();
-		IMProtocol protocol();
-		QString address();
-		IMContext context();
-		bool inVCard();
+		IMProtocol protocol() const;
+		QString address() const;
+		IMContext context() const;
+		bool inVCard() const;
 	private:
 		IMProtocol mProtocol;
 		IMContext mContext;
