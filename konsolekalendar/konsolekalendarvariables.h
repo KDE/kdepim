@@ -116,7 +116,13 @@ class KonsoleKalendarVariables
    
    QString getExportFile();
    
-    /**
+   /*
+    * Has an Export File been set?
+    */
+    
+   bool isExportFile();
+
+   /**
      * Set export type that'll we use
      */
    
@@ -155,8 +161,10 @@ class KonsoleKalendarVariables
     bool m_bFloating;
     int str_length;
     int m_export_type;
+    QString m_exportFile;
+    bool m_bIsExportFile;
     // We can use this from everywhere
-    CalendarLocal *m_caledarLocal;
+    CalendarLocal *m_calendarLocal;
    
  
 

@@ -44,7 +44,7 @@ class KonsoleKalendar
    /**
     * Visualisez what we need
     */
-    void showInstance();
+    bool showInstance();
 
    /**
     *  Opens calendar file (now in our machine future from others)
@@ -65,19 +65,19 @@ class KonsoleKalendar
    /**
     * Add event to calendar
     */
-   void addEvent();
+   bool addEvent();
 
    /**
     * Change event
     */
 
-   void changeEvent();
+   bool changeEvent();
 
    /**
     * Delete event
     */
 
-   void deleteEvent();
+   bool deleteEvent();
 
    /**
     * Detect if event already exists
@@ -103,7 +103,7 @@ class KonsoleKalendar
     * @param eventlist which event we should print
     */
 
-    void printEventList( Event::List *eventList );
+    bool printEventList( QTextStream *ts, Event::List *eventList );
 
    /**
     * Variables that changes stuff in programm

@@ -43,6 +43,8 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bSummary = false;
   m_summary = "Default summary";
   m_bFloating = true;
+  m_export_type = TEXT_KONSOLEKALENDAR;
+  m_bIsExportFile = false;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
@@ -134,16 +136,16 @@ QString KonsoleKalendarVariables::getImportFile()
 
 void KonsoleKalendarVariables::setCalendar( CalendarLocal *calendar )
 {
-	m_caledarLocal = calendar;
+	m_calendarLocal = calendar;
 }
 
 CalendarLocal *KonsoleKalendarVariables::getCalendar()
 {
-	return m_caledarLocal;
+	return m_calendarLocal;
 }
 
 
-void KonsoleKalendarVariables::setExportFile( QString export_file )
+/*void KonsoleKalendarVariables::setExportFile( QString export_file )
 {
   m_export_file = export_file;
 }
@@ -151,7 +153,7 @@ void KonsoleKalendarVariables::setExportFile( QString export_file )
 QString KonsoleKalendarVariables::getExportFile()
 {
   return m_export_file;
-}
+}*/
 
 
 void KonsoleKalendarVariables::setExportType( int export_type )
@@ -164,6 +166,21 @@ int KonsoleKalendarVariables::getExportType()
   return m_export_type;
 }
 
+void KonsoleKalendarVariables::setExportFile( QString export_file )
+{
+  m_exportFile = export_file;
+  m_bIsExportFile = true;
+}
+
+bool KonsoleKalendarVariables::isExportFile()
+{
+  return m_bIsExportFile;
+}
+
+QString KonsoleKalendarVariables::getExportFile()
+{
+  return m_exportFile;
+}
 
 bool KonsoleKalendarVariables::isAll()
 {

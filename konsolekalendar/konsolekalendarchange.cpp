@@ -38,6 +38,10 @@ KonsoleKalendarChange::~KonsoleKalendarChange()
 
 bool KonsoleKalendarChange::changeEvent()
 {
+  // Currently, ALL events at the start datetime are changed
+
+  bool found = false;
+
   Event::List eventList( m_variables->
                          getCalendar()->
                          rawEventsForDate( m_variables->getStartDateTime() ) );
@@ -49,17 +53,20 @@ bool KonsoleKalendarChange::changeEvent()
    */
 
   QTime starttime = m_variables->getStartDateTime().time();
-  QTime endtime = m_variables->getEndDateTime().time();
+//  QTime endtime = m_variables->getEndDateTime().time();
+
   for( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *singleEvent = *it;
 
    /*
     * I don't know if end time check is needed (add if so;)
-    * There should be milllions of deleting stuff in same minute...
+    * There should be millions of changing stuff in same minute...
     */
 
    if( starttime.hour() == singleEvent->dtStart().time().hour() &&
         starttime.minute() == singleEvent->dtStart().time().minute() ){
+
+     found = true;
 
      if( m_variables->isDryRun() ) {
        cout << i18n("Change Event <Dry Run>:").local8Bit() << endl;
@@ -72,11 +79,11 @@ bool KonsoleKalendarChange::changeEvent()
        m_variables->getCalendar()->save( m_variables->getCalendarFile() );
      }// else
 
-  } // if
+   } // if
 
   } //for
 
 
-  return true;
+  return( found );
 }
 

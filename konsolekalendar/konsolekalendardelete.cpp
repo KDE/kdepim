@@ -38,6 +38,10 @@ KonsoleKalendarDelete::~KonsoleKalendarDelete()
 
 bool KonsoleKalendarDelete::deleteEvent()
 {
+  // Currently, ALL events at the start datetime are deleted
+
+  bool found = false;
+
   Event::List eventList( m_variables->
                          getCalendar()->
                          rawEventsForDate( m_variables->getStartDateTime() ) );
@@ -46,7 +50,7 @@ bool KonsoleKalendarDelete::deleteEvent()
    */
 
   QTime starttime = m_variables->getStartDateTime().time();
-  QTime endtime = m_variables->getEndDateTime().time();
+//  QTime endtime = m_variables->getEndDateTime().time();
 
                      
   Event::List::ConstIterator it;
@@ -55,26 +59,26 @@ bool KonsoleKalendarDelete::deleteEvent()
 
     /*
      * I don't know if end time check is needed (add if so;)
-     * There should be milllions of deleting stuff in same minute...
+     * There should be millions of deleting stuff in same minute...
      */
 
   if( starttime.hour() == singleEvent->dtStart().time().hour() &&
         starttime.minute() == singleEvent->dtStart().time().minute() ){
 
-   if( m_variables->isDryRun() ) {
-     cout << i18n("Delete Event <Dry Run>:").local8Bit() << endl;
-     m_variables->printSpecs("Delete");
-   } else {
-     kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : " << singleEvent->dtStartStr().local8Bit() << endl;
-     m_variables->getCalendar()->deleteEvent( singleEvent );
-     m_variables->getCalendar()->save( m_variables->getCalendarFile() );
-   }// else
+    found = true;
+    if( m_variables->isDryRun() ) {
+      cout << i18n("Delete Event <Dry Run>:").local8Bit() << endl;
+      m_variables->printSpecs("Delete");
+    } else {
+      kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : " << singleEvent->dtStartStr().local8Bit() << endl;
+      m_variables->getCalendar()->deleteEvent( singleEvent );
+      m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+    }// else
 
   } // if
  
-
   } //for
 
-  return true;
+  return( found );
 }
 

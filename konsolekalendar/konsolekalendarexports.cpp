@@ -46,7 +46,7 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 {
 }
 
-void KonsoleKalendarExports::exportAsTxt( Event *event ){
+bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
 
   if( m_firstEntry == true || 
       m_lastDate.day() != event->dtStart().date().day() ||
@@ -58,44 +58,47 @@ void KonsoleKalendarExports::exportAsTxt( Event *event ){
     int len = event->dtStartStr().length();
     QString date = event->dtStartStr();
     date.truncate( len - 5 );
-    cout << I18N_NOOP("Date:") << "\t" <<  date.local8Bit() << endl;
+    *ts << I18N_NOOP("Date:") << "\t" <<  date.local8Bit() << endl;
     m_lastDate = event->dtStart().date();
 	  
   }
 
   if ( !event->doesFloat() ) {
-    cout << "\t";
-    cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-    cout << " - ";
-    cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts << "\t";
+    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts << " - ";
+    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
   }
 
 
-  cout << endl << I18N_NOOP("Summary:") << endl;
-  cout << "\t" << event->summary().local8Bit() << endl;
-  cout << I18N_NOOP("Description:") << endl;  
-  cout << "\t" << event->description().local8Bit() << endl;
-  cout << "-----------------" << endl;
+  *ts << endl << I18N_NOOP("Summary:") << endl;
+  *ts << "\t" << event->summary().local8Bit() << endl;
+  *ts << I18N_NOOP("Description:") << endl;  
+  *ts << "\t" << event->description().local8Bit() << endl;
+  *ts << "-----------------" << endl;
+
+	return true;
 }
 
-void KonsoleKalendarExports::exportAsTxtKorganizer( Event *event ){
+bool KonsoleKalendarExports::exportAsTxtKorganizer( QTextStream *ts, Event *event ){
  event = event;
+ return true;
 }
 
-void KonsoleKalendarExports::exportAsCSV( Event *event ){
+bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
   if ( !event->doesFloat() ) {
-    cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-    cout << "\t";
-    cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts << "\t";
+    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
   }
 
 
-  cout << "\t" << I18N_NOOP("Summary:") << "\t";
-  cout << "\t\"" << event->summary().local8Bit() << "\"" << "\t";
-  cout << "\t" << I18N_NOOP("Description:") << "\t";
-  cout << "\t\"" << event->description().local8Bit() << "\"" << endl;
+  *ts << "\t" << I18N_NOOP("Summary:") << "\t";
+  *ts << "\t\"" << event->summary().local8Bit() << "\"" << "\t";
+  *ts << "\t" << I18N_NOOP("Description:") << "\t";
+  *ts << "\t\"" << event->description().local8Bit() << "\"" << endl;
 
-
+ return true;
 }
 
 

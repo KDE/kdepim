@@ -19,6 +19,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qtextstream.h>
 #include "konsolekalendarvariables.h"
 
 namespace KCal
@@ -36,10 +37,10 @@ public:
    */
    
 
-  void exportAsTxt( Event *event );
-  void exportAsTxtKorganizer( Event *event );
-  void exportAsCSV( Event *event );
-
+  bool exportAsTxt( QTextStream *ts, Event *event );
+  bool exportAsTxtKorganizer( QTextStream *ts, Event *event );
+  bool exportAsCSV( QTextStream *ts, Event *event );
+   
 
 private:
    KonsoleKalendarVariables *m_variables;
