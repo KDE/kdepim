@@ -613,13 +613,17 @@ KPilotLink::registeredConduit(const QString &dbName)
 #ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
+#ifndef NDEBUG
 		kdbgstream s = kdDebug();
+#endif
 		kdDebug() << fname << ": Found conduit "
 			<< result << endl
 			<< fname << ": Installed Conduits are"
 			<< endl;
 
+#ifndef NDEBUG
 		listStrList(s,installed);
+#endif
 	}
 #endif
 
@@ -1633,6 +1637,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.23  2000/12/13 16:59:27  adridg
+// Removed dead code, i18n stupidities
+//
 // Revision 1.22  2000/11/27 02:20:20  adridg
 // Internal cleanup
 //
