@@ -143,6 +143,7 @@ NotepadActionThread::NotepadActionThread(QObject *parent, int pilotSocket) :
 			saveImage(&a);
 		}
 	}
+    KPILOT_DELETE(db);
 	QApplication::postEvent(fParent, new QEvent(QEvent::User));
 }
 
