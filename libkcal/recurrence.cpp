@@ -682,7 +682,7 @@ QDateTime Recurrence::getNextDateTime(const QDateTime &preDateTime, bool *last) 
     case rYearlyPos: {
       QDate preDate = preDateTime.date();
       if (!mFloats && mRecurStart.time() > preDateTime.time())
-        preDate.addDays(-1);
+        preDate = preDate.addDays(-1);
       return QDateTime(getNextDateNoTime(preDate, last), mRecurStart.time());
     }
     default:
@@ -752,7 +752,7 @@ QDateTime Recurrence::getPreviousDateTime(const QDateTime &afterDateTime, bool *
     case rYearlyPos: {
       QDate afterDate = afterDateTime.date();
       if (!mFloats && mRecurStart.time() < afterDateTime.time())
-        afterDate.addDays(1);
+        afterDate = afterDate.addDays(1);
       return QDateTime(getPreviousDateNoTime(afterDate, last), mRecurStart.time());
     }
     default:
@@ -1214,7 +1214,7 @@ int Recurrence::recurCalc(PeriodFunc func, QDateTime &endtime) const
       if (rDuration == 0 && endtime > rEndDateTime)
         enddate = rEndDateTime.date();
       else if (!mFloats && mRecurStart.time() > endtime.time())
-        enddate.addDays(-1);
+        enddate = enddate.addDays(-1);
       break;
     case NEXT_AFTER_DATE:
       if (endtime < mRecurStart) {
@@ -1226,7 +1226,7 @@ int Recurrence::recurCalc(PeriodFunc func, QDateTime &endtime) const
         return 0;
       }
       if (!mFloats && mRecurStart.time() > endtime.time())
-        enddate.addDays(-1);
+        enddate = enddate.addDays(-1);
       break;
     default:
       endtime = QDateTime();
@@ -2898,7 +2898,7 @@ QDate Recurrence::getFirstDateInMonth(const QDate &earliestDate) const
           minday = day;
       }
       if (minday <= daysInMonth)
-        return QDate(earliestDate.addDays(minday - earliestDay));
+        return earliestDate.addDays(minday - earliestDay);
       break;
     }
     case rMonthlyPos:
