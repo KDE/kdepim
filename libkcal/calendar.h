@@ -129,15 +129,11 @@ class Calendar : public QObject, public CustomProperties,
     bool isLocalTime() const;
   
     /**
-      Adds a Event to this calendar object.
-      @param anEvent a pointer to the event to add
+      Add an incidence to calendar.
+      
+      @return true on success, false on error.
     */
-    virtual void addEvent( Event *anEvent ) = 0;
-    /**
-      Delete event from calendar.
-    */
-    virtual void deleteEvent( Event * ) = 0;
-
+    bool addIncidence( Incidence * );  
     /**
       Return filtered list of all incidences of this calendar.
     */
@@ -148,6 +144,17 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual QPtrList<Incidence> rawIncidences();
 
+    /**
+      Adds a Event to this calendar object.
+      @param anEvent a pointer to the event to add
+      
+      @return true on success, false on error.
+    */
+    virtual bool addEvent( Event *anEvent ) = 0;
+    /**
+      Delete event from calendar.
+    */
+    virtual void deleteEvent( Event * ) = 0;
     /**
       Retrieves an event on the basis of the unique string ID.
     */
@@ -186,8 +193,10 @@ class Calendar : public QObject, public CustomProperties,
   
     /**
       Add a todo to the todolist.
+      
+      @return true on success, false on error.
     */
-    virtual void addTodo( Todo *todo ) = 0;
+    virtual bool addTodo( Todo *todo ) = 0;
     /**
       Remove a todo from the todolist.
     */
@@ -212,8 +221,10 @@ class Calendar : public QObject, public CustomProperties,
 
     /**
       Add a Journal entry to calendar.
+      
+      @return true on success, false on error.
     */
-    virtual void addJournal( Journal * ) = 0;
+    virtual bool addJournal( Journal * ) = 0;
     /**
       Return Journal for given date.
     */
@@ -227,11 +238,6 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual QPtrList<Journal> journals() = 0;
 
-    /**
-      Add an incidence to calendar.
-    */
-    void addIncidence( Incidence * );
-  
     /**
       Set calendar filter, which filters events for the events() functions.
       The Filter object is owned by the caller.

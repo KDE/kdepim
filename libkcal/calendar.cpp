@@ -37,9 +37,9 @@ class AddIncidenceVisitor : public Incidence::Visitor
     /** Add incidence to calendar \a calendar. */
     AddIncidenceVisitor( Calendar *calendar ) : mCalendar( calendar ) {}
 
-    bool visit( Event *e ) { mCalendar->addEvent( e ); return true; }
-    bool visit( Todo *t ) { mCalendar->addTodo( t ); return true; }
-    bool visit( Journal *j ) { mCalendar->addJournal( j ); return true; }
+    bool visit( Event *e ) { return mCalendar->addEvent( e ); }
+    bool visit( Todo *t ) { return mCalendar->addTodo( t ); }
+    bool visit( Journal *j ) { return mCalendar->addJournal( j ); }
 
   private:
     Calendar *mCalendar;
@@ -306,11 +306,11 @@ QPtrList<Event> Calendar::events()
 }
 
 
-void Calendar::addIncidence(Incidence *i)
+bool Calendar::addIncidence(Incidence *i)
 {
   AddIncidenceVisitor v(this);
 
-  i->accept(v);
+  return i->accept(v);
 }
 
 QPtrList<Todo> Calendar::todos()

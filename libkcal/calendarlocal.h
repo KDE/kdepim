@@ -42,7 +42,7 @@ class CalendarLocal : public Calendar
     CalendarLocal();
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarLocal( const QString &timeZoneId );
-    virtual ~CalendarLocal();
+    ~CalendarLocal();
   
     /**
       Loads a calendar on disk in vCalendar or iCalendar format into the current
@@ -65,7 +65,7 @@ class CalendarLocal : public Calendar
     void save() {}
   
     /** Add Event to calendar. */
-    void addEvent(Event *anEvent);
+    bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
@@ -94,7 +94,7 @@ class CalendarLocal : public Calendar
     /**
       Add a todo to the todolist.
     */
-    void addTodo( Todo *todo );
+    bool addTodo( Todo *todo );
     /**
       Remove a todo from the todolist.
     */
@@ -120,13 +120,13 @@ class CalendarLocal : public Calendar
     QPtrList<Todo> todos() { return Calendar::todos(); }
 
     /** Add a Journal entry to calendar */
-    virtual void addJournal(Journal *);
+    bool addJournal(Journal *);
     /** Remove a Journal from the calendar */
-    virtual void deleteJournal(Journal *);
+    void deleteJournal(Journal *);
     /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
+    Journal *journal(const QDate &);
     /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID);
+    Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
     QPtrList<Journal> journals();
 

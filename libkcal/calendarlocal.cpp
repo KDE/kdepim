@@ -125,7 +125,7 @@ void CalendarLocal::close()
 }
 
 
-void CalendarLocal::addEvent(Event *anEvent)
+bool CalendarLocal::addEvent(Event *anEvent)
 {
   insertEvent(anEvent);
   if (anEvent->organizer() != getEmail()) {
@@ -137,6 +137,8 @@ void CalendarLocal::addEvent(Event *anEvent)
   anEvent->registerObserver( this );
 
   setModified( true );
+
+  return true;
 }
 
 // probably not really efficient, but...it works for now.
@@ -268,13 +270,15 @@ Event *CalendarLocal::event( const QString &uid )
   return (Event *) 0;
 }
 
-void CalendarLocal::addTodo(Todo *todo)
+bool CalendarLocal::addTodo(Todo *todo)
 {
   mTodoList.append(todo);
 
   todo->registerObserver( this );
 
   setModified( true );
+
+  return true;
 }
 
 void CalendarLocal::deleteTodo(Todo *todo)
@@ -709,7 +713,7 @@ QPtrList<Event> CalendarLocal::rawEvents()
   return eventList;
 }
 
-void CalendarLocal::addJournal(Journal *journal)
+bool CalendarLocal::addJournal(Journal *journal)
 {
   if (journal->dtStart().isValid())
     kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
@@ -721,6 +725,8 @@ void CalendarLocal::addJournal(Journal *journal)
   journal->registerObserver( this );
 
   setModified( true );
+
+  return true;
 }
 
 void CalendarLocal::deleteJournal(Journal *journal)

@@ -44,7 +44,7 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     CalendarResources();
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarResources( const QString &timeZoneId );
-    virtual ~CalendarResources();
+    ~CalendarResources();
 
     /**
       Return ResourceManager used by this calendar.
@@ -62,9 +62,9 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     bool isSaving();
 
     /** Add Event to calendar. */
-    void addEvent(Event *anEvent);
+    bool addEvent(Event *anEvent);
     /** Add Event to a resource. */
-    void addEvent(Event *anEvent, ResourceCalendar *resource);
+    bool addEvent(Event *anEvent, ResourceCalendar *resource);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
@@ -93,9 +93,9 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     /**
       Add a todo to the todolist.
     */
-    void addTodo( Todo *todo );
+    bool addTodo( Todo *todo );
     /** Add Todo to a resource. */
-    void addTodo(Todo *todo, ResourceCalendar *resource);
+    bool addTodo(Todo *todo, ResourceCalendar *resource);
     /**
       Remove a todo from the todolist.
     */
@@ -121,13 +121,13 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     QPtrList<Todo> todos() { return Calendar::todos(); }
 
     /** Add a Journal entry to calendar */
-    virtual void addJournal(Journal *);
+    bool addJournal(Journal *);
     /** Add Event to a resource. */
-    void addJournal(Journal *journal, ResourceCalendar *resource);
+    bool addJournal(Journal *journal, ResourceCalendar *resource);
     /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
+    Journal *journal(const QDate &);
     /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID);
+    Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
     QPtrList<Journal> journals();
 
@@ -150,7 +150,7 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     /**
       The observer interface. So far not implemented.
     */
-    virtual void incidenceUpdated( IncidenceBase * );
+    void incidenceUpdated( IncidenceBase * );
 
     /**
       Builds and then returns a list of all events that match for the

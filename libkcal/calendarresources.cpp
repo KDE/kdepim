@@ -146,7 +146,7 @@ bool CalendarResources::isSaving()
   return false;
 }
 
-void CalendarResources::addEvent(Event *anEvent)
+bool CalendarResources::addEvent(Event *anEvent)
 {
   kdDebug(5800) << "CalendarResources::addEvent" << endl;
 
@@ -155,12 +155,15 @@ void CalendarResources::addEvent(Event *anEvent)
     mResourceMap[anEvent] = mManager->standardResource();
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding events isn't going to work" << endl;
+    return false;
   }
 
   setModified( true );
+
+  return true;
 }
 
-void CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
+bool CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
 {
   bool validRes = false;
   CalendarResourceManager::ActiveIterator it;
@@ -173,6 +176,8 @@ void CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
   } else {
     addEvent( anEvent );
   }
+
+  return true;
 }
 
 void CalendarResources::deleteEvent(Event *event)
@@ -211,7 +216,7 @@ Event *CalendarResources::event( const QString &uid )
   return 0;
 }
 
-void CalendarResources::addTodo(Todo *todo)
+bool CalendarResources::addTodo(Todo *todo)
 {
   kdDebug(5800) << "CalendarResources::addTodo" << endl;
 
@@ -220,12 +225,15 @@ void CalendarResources::addTodo(Todo *todo)
     mResourceMap[todo] = mManager->standardResource();
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding todos isn't going to work" << endl;
+    return false;
   }
 
   setModified( true );
+
+  return true;
 }
 
-void CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
+bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
 {
   bool validRes = false;
   CalendarResourceManager::ActiveIterator it;
@@ -238,6 +246,8 @@ void CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
   } else {
     addTodo( todo );
   }
+
+  return true;
 }
 
 void CalendarResources::deleteTodo(Todo *todo)
@@ -448,7 +458,7 @@ QPtrList<Event> CalendarResources::rawEvents()
 }
 
 
-void CalendarResources::addJournal(Journal *journal)
+bool CalendarResources::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
@@ -457,12 +467,15 @@ void CalendarResources::addJournal(Journal *journal)
     mResourceMap[journal] = mManager->standardResource();
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding journals isn't going to work" << endl;
+    return false;
   }
 
   setModified( true );
+
+  return true;
 }
 
-void CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
+bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
 {
   bool validRes = false;
   CalendarResourceManager::ActiveIterator it;
