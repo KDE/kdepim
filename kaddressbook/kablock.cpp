@@ -79,7 +79,7 @@ bool KABLock::unlock( KABC::Resource *resource )
     if ( entry.counter == 0 ) {
       mAddressBook->save( entry.ticket );
       mAddressBook->releaseSaveTicket( entry.ticket );
-      
+
       mLocks.remove( resource );
     }
   }

@@ -60,8 +60,12 @@ bool PwDeleteCommand::undo()
 {
   // Put it back in the document
   KABC::Addressee::List::Iterator it;
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+
+  // lock resources
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
     lock()->lock( (*it).resource() );
+
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -73,18 +77,21 @@ bool PwDeleteCommand::undo()
 
 bool PwDeleteCommand::redo()
 {
-  // Just remove it from the document. This is enough to make the user
-  // Think the item has been deleted
   KABC::Addressee addr;
+  KABC::Addressee::List::Iterator addrIt;
+
   QStringList::Iterator it;
   for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
     addr = addressBook()->findByUid( *it );
     lock()->lock( addr.resource() );
-    addressBook()->removeAddressee( addr );
-    lock()->unlock( addr.resource() );
     mAddresseeList.append( addr );
     AddresseeConfig cfg( addr );
     cfg.remove();
+  }
+
+  for ( addrIt = mAddresseeList.begin(); addrIt != mAddresseeList.end(); ++addrIt ) {
+    addressBook()->removeAddressee( *addrIt );
+    lock()->unlock( (*addrIt).resource() );
   }
 
   return true;
@@ -108,8 +115,12 @@ QString PwPasteCommand::name()
 bool PwPasteCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+
+  // lock resources
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
     lock()->lock( (*it).resource() );
+
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
     addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -121,13 +132,17 @@ bool PwPasteCommand::redo()
 {
   QStringList uids;
   KABC::Addressee::List::Iterator it;
+
+  // lock resources
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
+    lock()->lock( (*it).resource() );
+
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
     /* we have to set a new uid for the contact, otherwise insertAddressee()
        ignore it.
      */ 
     (*it).setUid( KApplication::randomString( 10 ) );
     uids.append( (*it).uid() );
-    lock()->lock( (*it).resource() );
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -230,14 +245,18 @@ QString PwCutCommand::name()
 bool PwCutCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
+
+  // lock resources
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
     lock()->lock( (*it).resource() );
+
+  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 
   mAddresseeList.clear();
-  
+
   QClipboard *cb = QApplication::clipboard();
   kapp->processEvents();
   cb->setText( mOldText );
@@ -248,13 +267,18 @@ bool PwCutCommand::undo()
 bool PwCutCommand::redo()
 {
   KABC::Addressee addr;
+  KABC::Addressee::List::Iterator addrIt;
+
   QStringList::Iterator it;
   for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
     addr = addressBook()->findByUid( *it );
-    lock()->lock( addr.resource() );
-    addressBook()->removeAddressee( addr );
-    lock()->unlock( addr.resource() );
     mAddresseeList.append( addr );
+    lock()->lock( addr.resource() );
+  }
+
+  for ( addrIt = mAddresseeList.begin(); addrIt != mAddresseeList.end(); ++addrIt ) {
+    addressBook()->removeAddressee( *addrIt );
+    lock()->unlock( addr.resource() );
   }
 
   // Convert to clipboard

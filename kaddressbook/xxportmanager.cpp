@@ -31,6 +31,7 @@
 #include <ktrader.h>
 
 #include "core.h"
+#include "kablock.h"
 #include "undocmds.h"
 #include "xxportselectdialog.h"
 
@@ -83,6 +84,8 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
   if ( !resource )
     return;
 
+  KABLock::self( mCore->addressBook() )->lock( resource );
+
   KABC::AddresseeList list = obj->importContacts( data );
   KABC::AddresseeList::Iterator it;
   bool imported = false;
@@ -94,6 +97,8 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
     RedoStack::instance()->clear();
     imported = true;
   }
+
+  KABLock::self( mCore->addressBook() )->unlock( resource );
 
   if ( imported )
     emit modified();
