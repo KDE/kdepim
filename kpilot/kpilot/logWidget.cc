@@ -65,7 +65,8 @@ LogWidget::LogWidget(QWidget * parent) :
 	fShowTime(false),
 	fSplash(0L),
 	fLabel(0L),
-	fProgress(0L)
+	fProgress(0L),
+	fButtonBox(0L)
 {
 	FUNCTIONSETUP;
 	QGridLayout *grid = new QGridLayout(this, 4, 4, SPACING);
@@ -118,6 +119,8 @@ LogWidget::LogWidget(QWidget * parent) :
 		"during this HotSync to a file (for example for use in a "
 		"bug report) by clicking here.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(saveLog()));
+
+	fButtonBox = h;
 
 	grid->addMultiCellWidget(h,2,2,1,2);
 
@@ -363,6 +366,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.23  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.22  2002/05/18 23:28:19  adridg
 // Compile fixes
 //

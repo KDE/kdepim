@@ -38,6 +38,9 @@ static const char *test_id =
 
 #include <iostream.h>
 
+#include <qpushbutton.h>
+#include <qhbox.h>
+
 #include <kapplication.h>
 #include <klocale.h>
 #include <kaboutdata.h>
@@ -78,6 +81,7 @@ static KCmdLineOptions kpilotoptions[] = {
 
 
 static LogWidget *logWidget = 0L;
+static QPushButton *resetButton = 0L;
 
 void createLogWidget()
 {
@@ -88,6 +92,8 @@ void createLogWidget()
 	w->setShowTime(true);
 	kapp->setMainWidget(w);
 	logWidget = w;
+
+	resetButton = new QPushButton(w->buttonBox(),i18n("Reset"));
 }
 
 static KPilotDeviceLink *deviceLink = 0L;
@@ -111,12 +117,17 @@ void connectStack()
 		logWidget, SLOT(addMessage(const QString &)));
 	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
 		logWidget, SLOT(addProgress(const QString &,int)));
+	QObject::connect(syncStack,SIGNAL(logMessage(const QString &)),
+		logWidget, SLOT(addMessage(const QString &)));
 
 	QObject::connect(deviceLink, SIGNAL(deviceReady()), syncStack, SLOT(exec()));
+
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		logWidget, SLOT(syncDone()));
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		deviceLink, SLOT(close()));
+		
+	QObject::connect(resetButton,SIGNAL(clicked()),deviceLink,SLOT(reset()));
 }
 
 void createConnection(KCmdLineArgs *p)
@@ -276,6 +287,14 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.17  2002/05/15 17:15:33  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.16  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

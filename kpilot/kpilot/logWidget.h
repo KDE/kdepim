@@ -7,7 +7,7 @@
 ** This file defines the log window widget, which logs
 ** sync-messages during a HotSync.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 
 class QLabel;
 class QTextView;
+class QHBox;
 class KProgress;
 
 class LogWidget : public PilotComponent , public KPilotDCOP
@@ -57,6 +58,11 @@ public:
 	virtual ASYNC logMessage(QString);
 	virtual ASYNC logProgress(QString,int);
 
+	// GUI customization hooks
+	//
+	//
+	QHBox *buttonBox() const { return fButtonBox; } ;
+
 public slots:
 	void addMessage(const QString &);
 	void addError(const QString &);
@@ -77,9 +83,13 @@ private:
 	QLabel *fSplash;
 	QLabel *fLabel;
 	KProgress *fProgress;
+	QHBox *fButtonBox;
 } ;
 
 // $Log$
+// Revision 1.7  2001/12/29 15:44:16  adridg
+// Missing progress slots
+//
 // Revision 1.6  2001/11/25 22:02:57  adridg
 // Save/clear the sync log
 //
