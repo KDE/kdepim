@@ -1,3 +1,15 @@
+KPilot Developer's notes for october 7th 2001
+=============================================
+
+Ah, post-KDE3-alpha1. And that when KPilot remains completely 2.1 and 2.2
+compatible. A new release of KPilot for 2.2 is imminent.
+
+2001-10-01  Adriaan de Groot
+
+* Picked up David's new UI file for the conduit configuration dialog 
+  and gave that a whirl. The results can be found in kpilotConfig,
+  use --help to find out which options to use.
+
 KPilot Developer's notes for september 30th 2001
 ================================================
 
