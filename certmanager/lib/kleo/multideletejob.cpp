@@ -77,6 +77,7 @@ void Kleo::MultiDeleteJob::slotCancel() {
 }
 
 void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
+  mJob = 0;
   GpgME::Error error = err;
   if ( error || // error in last op
        mIt == mKeys.end() || // (shouldn't happen)
@@ -96,13 +97,13 @@ void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
 GpgME::Error Kleo::MultiDeleteJob::startAJob() {
   if ( mIt == mKeys.end() )
     return 0;
-  DeleteJob * job = mBackend->deleteJob();
-  assert( job ); // FIXME: we need a way to generate errors ourselves,
-		 // but I don't like the dependency on gpg-error :/
+  mJob = mBackend->deleteJob();
+  assert( mJob ); // FIXME: we need a way to generate errors ourselves,
+		  // but I don't like the dependency on gpg-error :/
 
-  connect( job, SIGNAL(result(const GpgME::Error&)), SLOT(slotResult(const GpgME::Error&)) );
+  connect( mJob, SIGNAL(result(const GpgME::Error&)), SLOT(slotResult(const GpgME::Error&)) );
 
-  return job->start( *mIt, mAllowSecretKeyDeletion );
+  return mJob->start( *mIt, mAllowSecretKeyDeletion );
 }
 
 #include "multideletejob.moc"
