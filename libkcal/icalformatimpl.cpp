@@ -1503,10 +1503,10 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
   return t;
 }
 
-icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
+icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime, bool utc)
 {
   icaltimetype t;
-  
+
   t.year = datetime.date().year();
   t.month = datetime.date().month();
   t.day = datetime.date().day();
@@ -1517,7 +1517,12 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 
   t.is_date = 0;
 
-  t.is_utc = 0;
+  if (utc) {
+    t = icaltime_as_utc(t,mCalendar->timeZoneId().local8Bit());
+    t.is_utc = 1;
+  } else {
+    t.is_utc = 0;
+  }
   
   t.zone = 0;
   
@@ -1534,6 +1539,11 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
             << endl;
   kdDebug() << "--- isDate: " << t.is_date << endl;
 */
+
+  if (t.is_utc) {
+//    kdDebug() << "--- Converting time to zone '" << mCalendar->timeZoneId() << "'." << endl;
+    t = icaltime_as_zone(t,mCalendar->timeZoneId().local8Bit());
+  }
 
   return QDateTime(QDate(t.year,t.month,t.day),
                    QTime(t.hour,t.minute,t.second));

@@ -1,6 +1,8 @@
+// $Id$
+//
 // Calendar class for KOrganizer
 // (c) 1998 Preston Brown
-// 	$Id$
+// (c) 2000,2001 Cornelius Schumacher
 
 #include "config.h"
 
@@ -61,6 +63,18 @@ class AddIncidenceVisitor : public IncidenceVisitor {
 
 Calendar::Calendar()
   : QObject()
+{
+  init();
+}
+
+Calendar::Calendar(const QString &timeZoneId)
+{
+  mTimeZoneId = timeZoneId;
+  
+  init();
+}
+
+void Calendar::init()
 {
   mDndFormat = new VCalFormat(this);
   
@@ -165,6 +179,7 @@ Calendar::Calendar()
   
   setTimeZone(tzStr);
 #endif
+
 //  KOPrefs::instance()->writeConfig();
 }
 
@@ -275,6 +290,15 @@ int Calendar::getTimeZone() const
   return mTimeZone;
 }
 
+void Calendar::setTimeZoneId(const QString &id)
+{
+  mTimeZoneId = id;
+}
+
+QString Calendar::timeZoneId() const
+{
+  return mTimeZoneId;
+}
 const QString &Calendar::getEmail()
 {
   return mOwnerEmail;

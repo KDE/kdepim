@@ -21,6 +21,8 @@ class CalendarLocal : public Calendar {
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarLocal();
+    /** constructs a new calendar, with variables initialized to sane values. */
+    CalendarLocal(const QString &timeZoneId);
     virtual ~CalendarLocal();
   
     /**
@@ -132,6 +134,8 @@ class CalendarLocal : public Calendar {
     QDate keyToDate(long int key);
   
   private:
+    void init();
+  
     QIntDict<QList<Event> > *mCalDict;    // dictionary of lists of events.
     QList<Event> mRecursList;             // list of repeating events.
 

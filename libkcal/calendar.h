@@ -35,6 +35,7 @@ class Calendar : public QObject {
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
     Calendar();
+    Calendar(const QString &timeZoneId);
     virtual ~Calendar();
 
     /** Return the iCalendar format class the calendar object uses. */
@@ -87,6 +88,10 @@ class Calendar : public QObject {
     int getTimeZone() const;
     /* compute an ISO 8601 format string from the time zone. */
     QString getTimeZoneStr() const;
+    /** set time zone id (see /usr/share/zoneinfo/zone.tab for list of legal values) */
+    void setTimeZoneId(const QString &);
+    /** Return time zone id. */
+    QString timeZoneId() const;
   
     /** adds a Event to this calendar object.
      * @param anEvent a pointer to the event to add
@@ -209,6 +214,8 @@ class Calendar : public QObject {
     ICalFormat *mICalFormat;
   
   private:
+    void init();
+  
     QString mHoliday;      // code for holiday
     QString mHolidayfile;  // name of file defining holidays
     QString mOwner;        // who the calendar belongs to
@@ -217,6 +224,8 @@ class Calendar : public QObject {
     bool mDialogsOn;       // display various GUI dialogs?
 
     CalFilter *mFilter;
+    
+    QString mTimeZoneId;
 };
   
 }

@@ -1,6 +1,8 @@
+// $Id$
+//
 // Calendar class for KOrganizer
 // (c) 1998 Preston Brown
-// 	$Id$
+// (c) 2000,2001 Cornelius Schumacher
 
 #include "config.h"
 
@@ -38,6 +40,17 @@ using namespace KCal;
 CalendarLocal::CalendarLocal()
   : Calendar()
 {
+  init();
+}
+
+CalendarLocal::CalendarLocal(const QString &timeZoneId)
+  : Calendar(timeZoneId)
+{
+  init();
+}
+
+void CalendarLocal::init()
+{
   mOldestDate = 0L;
   mNewestDate = 0L;
 
@@ -48,6 +61,7 @@ CalendarLocal::CalendarLocal()
   mCalDict = new QIntDict<QList<Event> > (BIGPRIME);
   mCalDict->setAutoDelete(TRUE);
 }
+
 
 CalendarLocal::~CalendarLocal() 
 {
@@ -406,7 +420,7 @@ bool CalendarLocal::checkNonRecurringAlarms(QList<Event>& alarmEvents, bool appe
   }
   return alarmEvents.count() != origSize;
 }
-  
+
 bool CalendarLocal::checkTodos(QList<Todo>& alarmTodos, bool append)
 {
   Todo *aTodo;

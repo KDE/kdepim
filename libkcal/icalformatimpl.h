@@ -42,7 +42,7 @@ class ICalFormatImpl {
 
     icaltimetype writeICalDate(const QDate &);
     QDate readICalDate(icaltimetype);
-    icaltimetype writeICalDateTime(const QDateTime &);
+    icaltimetype writeICalDateTime(const QDateTime &,bool utc=true);
     QDateTime readICalDateTime(icaltimetype);
     icaldurationtype writeICalDuration(int seconds);
     int readICalDuration(icaldurationtype);
