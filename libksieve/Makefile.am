@@ -1,6 +1,6 @@
 # final breaks anonymous namespace use:
 KDE_OPTIONS = nofinal
-SUBDIRS = ksieve shared parser dom . tests
+SUBDIRS = ksieve shared parser . tests
 
 INCLUDES = $(all_includes)
 
@@ -10,7 +10,7 @@ CLEANFILES = dummy.cpp
 
 libksieve_la_SOURCES = dummy.cpp
 libksieve_la_LIBADD = \
-	dom/libksieve_dom.la
+	parser/libksieve_parser.la
 libksieve_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 
 dummy.cpp:
