@@ -16,6 +16,7 @@
 
 #include <qlayout.h>
 #include <qregexp.h>
+#include <qregexp3.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
@@ -46,8 +47,11 @@ bool KNStringFilter::doFilter(const QString &s)
   bool ret=true;
 
   if(!expanded.isEmpty()) {
-    if(regExp) ret=(s.contains(QRegExp(expanded)) > 0);
-    else ret=(s.find(expanded,0,false)!=-1);
+    if(regExp) {
+      QRegExp3 matcher(expanded);
+      ret=(matcher.search(s) > 0);
+    } else
+      ret=(s.find(expanded,0,false)!=-1);
 
     if(!con) ret=!ret;
   }

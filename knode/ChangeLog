@@ -1,5 +1,7 @@
 changes between 0.4 and 0.6
 - real scoring
+- full-fledged regular expressions can be used for scoring
+  and filter rules.
 - support for customizable folders
 - DnD between folders and groups
 - convenient mbox-folder import/export
