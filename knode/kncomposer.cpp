@@ -1700,7 +1700,9 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   connect(t_oBtn, SIGNAL(clicked()), parent(), SLOT(slotToBtnClicked()));
 
   //Newsgroups
-  g_roups=new KLineEdit(hdrFrame);
+  g_roups=new KNLineEdit(this, false, hdrFrame);
+  mEdtList.append(g_roups);
+
   l_groups=new QLabel(g_roups, i18n("&Groups:"), hdrFrame);
   g_roupsBtn=new QPushButton(i18n("B&rowse..."), hdrFrame);
   hdrL->addWidget(l_groups, 1,0);

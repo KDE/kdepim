@@ -236,7 +236,7 @@ class KNComposer::ComposerView  : public QSplitter {
                 *l_fup2;
     KNLineEditSpell *s_ubject;
 
-    KLineEdit   *g_roups;
+    KNLineEdit   *g_roups;
     KNLineEdit  *t_o;
 
     KComboBox   *f_up2;
