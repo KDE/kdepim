@@ -45,9 +45,9 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
   QCString result, str;
   QCString declaredCS;
   DwString dwsrc, dwdest;
-  char *pos, *dest, *beg, *end, *mid;
+  char *pos, *dest, *beg, *end, *mid, *endOfLastEncWord=0;
   char encoding, ch;
-  bool valid;
+  bool valid, onlySpacesSinceLastWord=false;
   const int maxLen=400;
   int i;
 
@@ -60,6 +60,8 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
       if (pos[0]!='=' || pos[1]!='?')
       {
         *dest++ = *pos;
+        if (onlySpacesSinceLastWord)
+          onlySpacesSinceLastWord = (pos[0]==' ' || pos[1]=='\t');
         continue;
       }
       beg = pos+2;
@@ -95,6 +97,10 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
       }
 
       if (valid) {
+        // cut all linear-white space between two encoded words
+        if (onlySpacesSinceLastWord)
+          dest=endOfLastEncWord;
+
         ch = *pos;
         *pos = '\0';
         str = QCString(mid, (int)(mid - pos - 1));
@@ -116,7 +122,10 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
         }
         *pos = ch;
         for (i=0; str[i]; i++)
-        *dest++ = str[i];
+          *dest++ = str[i];
+
+        endOfLastEncWord=dest;
+        onlySpacesSinceLastWord=true;
 
         pos = end -1;
       }
@@ -322,7 +331,7 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
     if (!folded)
       return src.mid(pos1, pos2-pos1);
     else
-      return (src.mid(pos1, pos2-pos1).replace(QRegExp("\\n\\s")," "));
+      return (src.mid(pos1, pos2-pos1).replace(QRegExp("\\s*\\n\\s*")," "));
   }
   else {
     return QCString(""); //header not found
