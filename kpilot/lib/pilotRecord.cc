@@ -125,27 +125,3 @@ void PilotRecord::makeSecret()
 	FUNCTIONSETUP;
 	fAttrib |= dlpRecAttrSecret;
 }
-
-
-// $Log$
-// Revision 1.2  2002/02/10 22:21:33  adridg
-// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.8  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.7  2001/04/23 21:26:43  adridg
-// More convenience things
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.4  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

@@ -76,24 +76,4 @@ private:
 	void *internalPack(unsigned char *);
 };
 
-
-
-
-
-// $Log$
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.8  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.7  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

@@ -85,36 +85,4 @@ private:
 	struct PilotUser fUser;
 };
 
-
-
-// $Log$
-// Revision 1.3  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.2  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.9  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.8  2001/09/24 22:24:32  adridg
-// Squashed buffer overflows
-//
-// Revision 1.7  2001/09/05 22:15:34  adridg
-// Operator & is just *too* weird
-//
-// Revision 1.6  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.5  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.4  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

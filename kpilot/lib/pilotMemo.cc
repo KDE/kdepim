@@ -123,25 +123,3 @@ QString PilotMemo::sensibleTitle() const
 		return QString(i18n("[unknown]"));
 	}
 }
-
-
-// $Log$
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.8  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.7  2001/02/07 14:21:54  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.6  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
