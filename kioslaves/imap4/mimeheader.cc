@@ -139,7 +139,6 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         else
         {
           additionalHdrLines.append (addLine);
-          aList = new QDict < QString >;
         }
 //        cout << addLine->getLabel().data() << ": '" << mimeValue.data() << "'" << endl;
 
@@ -164,6 +163,9 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 void
 mimeHeader::addParameter (const QCString& aParameter, QDict < QString > *aList)
 {
+  if ( !aList )
+    return;
+
   QString *aValue;
   QCString aLabel;
   int pos = aParameter.find ('=');
