@@ -25,6 +25,7 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qlayout.h>
+#include <qptrlist.h>
 #include <qregexp.h>
 #include <qvbox.h>
 
@@ -168,6 +169,13 @@ KABCore::~KABCore()
 {
   saveSettings();
   KABPrefs::instance()->writeConfig();
+
+  QPtrList<KABC::Resource> resources = mAddressBook->resources();
+  QPtrListIterator<KABC::Resource> it( resources );
+  while ( it.current() ) {
+    it.current()->close();
+    ++it;
+  }
 
   mAddressBook->disconnect();
 
@@ -740,6 +748,27 @@ void KABCore::storeContactIn( const QString &uid )
 
 void KABCore::save()
 {
+  QPtrList<KABC::Resource> resources = mAddressBook->resources();
+  QPtrListIterator<KABC::Resource> it( resources );
+  while ( it.current() && !it.current()->readOnly() ) {
+    KABC::Ticket *ticket = mAddressBook->requestSaveTicket( it.current() );
+    if ( ticket ) {
+      if ( !mAddressBook->save( ticket ) ) {
+        KMessageBox::error( mWidget,
+                            i18n( "<qt>Unable to save address book <b>%1</b></qt>." ).arg( it.current()->resourceName() ) );
+        mAddressBook->releaseSaveTicket( ticket );
+      } else {
+        setModified( false );
+      }
+    } else {
+      KMessageBox::error( mWidget,
+                          i18n( "<qt>Unable to get access for saving the address book <b>%1</b></qt>." )
+                          .arg( it.current()->resourceName() ) );
+    }
+
+    ++it;
+  }
+/*
   KABC::StdAddressBook *b = dynamic_cast<KABC::StdAddressBook*>( mAddressBook );
   if ( b ) {
     if ( !b->save() ) {
@@ -769,6 +798,7 @@ void KABCore::save()
                                "book.") );
     }
   }
+*/
 }
 
 void KABCore::undo()
