@@ -143,7 +143,7 @@ class Incidence : public QObject
     /** sets the list of dates which are exceptions to the recurrence rule */
     void setExDates(const QDateList &_exDates);
     void setExDates(const char *dates);
-    /** Add a date to the list of exfeptions of the recurrence rule. */
+    /** Add a date to the list of exceptions of the recurrence rule. */
     void addExDate(const QDate &date);
 
     /** returns true if there is an exception for this date in the recurrence
@@ -167,13 +167,13 @@ class Incidence : public QObject
     /** return human-readable name of secrecy class */
     static QString secrecyName(int);
 
-    /** pilot syncronization states */
-    enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
     /** Set Pilot Id. */
     void setPilotId(int id);
     /** Return Pilot Id. */
     int pilotId() const;
     
+    /** pilot syncronization states */
+    enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
     /** Set synchronisation satus. */
     void setSyncStatus(int stat);
     /** Return synchronisation satus. */

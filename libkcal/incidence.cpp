@@ -34,7 +34,7 @@ Incidence::Incidence()
   mExDates.setAutoDelete(true);
   
   mPilotId = 0;
-  mSyncStatus = 1;
+  mSyncStatus = SYNCMOD;
 
   mSecrecy = SecrecyPublic;
   
