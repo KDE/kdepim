@@ -236,6 +236,7 @@ bool VCalConduit::_copy( PCEntry *toPCEntry, const PilotAppCategory *fromPalmEnt
 	}
 
 	VCalDataBase *db = dynamic_cast<VCalDataBase *>(mPCData);
+	// TODO: What about the common name?
 	if ( pcEntry->organizer().isEmpty() && db && db->calendar() ) 
 		pcEntry->setOrganizer( db->calendar()->getEmail());
 	pcEntry->setSecrecy( palmEntry->isSecret() ?

@@ -106,7 +106,7 @@ void InternalEditorAction::syncDirtyDB()
 	}
 	while ( (rec=localDB->readNextModifiedRec()) )
 	{
-		int id=rec->getID();
+		int id=rec->id();
 #ifdef DEBUG
 		DEBUGKPILOT<<"ID of modified record is "<<id<<endl;
 		DEBUGKPILOT<<endl<<endl;
@@ -128,7 +128,7 @@ void InternalEditorAction::syncDirtyDB()
 		else
 		{
 #ifdef DEBUG
-			DEBUGKPILOT<<"Generating ID for Record "<<rec->getID()<<" with data "<<endl;
+			DEBUGKPILOT<<"Generating ID for Record "<<rec->id()<<" with data "<<endl;
 			DEBUGKPILOT<<rec->getData()<<endl;
 			DEBUGKPILOT<<"-----------------------------------------"<<endl;
 #endif

@@ -603,14 +603,14 @@ bool KNotesAction::syncMemoToKNotes()
 			fP->fDeleteCounter++;
 		}
 
-		fLocalDatabase->deleteRecord(rec->getID());
+		fLocalDatabase->deleteRecord(rec->id());
 	}
 	else if (memo->isDeleted() /* && !m.valid() */ )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
 #endif
-		fLocalDatabase->deleteRecord(rec->getID());
+		fLocalDatabase->deleteRecord(rec->id());
 	}
 	else if (!memo->isDeleted() && m.valid())
 	{

@@ -212,8 +212,8 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 //			if (!(pilotRec->isDeleted()) )
 			{
 				PilotListViewItem*item=new PilotListViewItem(fRecordList,
-					QString::number(currentRecord), QString::number(pilotRec->getLen()),  QString::number(pilotRec->getID()), QString::null,
-					pilotRec->getID(), pilotRec);
+					QString::number(currentRecord), QString::number(pilotRec->getLen()),  QString::number(pilotRec->id()), QString::null,
+					pilotRec->id(), pilotRec);
 				item->setNumericCol(0, true);
 				item->setNumericCol(1, true);
 				item->setNumericCol(2, true);
@@ -305,8 +305,8 @@ void GenericDBWidget::slotAddRecord()
 	PilotRecord*rec=new PilotRecord(0L, 0, 0, 0, 0);
 	PilotListViewItem*item=new PilotListViewItem(fRecordList,
 		QString::number(-1), QString::number(rec->getLen()),
-		QString::number(rec->getID()), QString::null,
-		rec->getID(), rec);
+		QString::number(rec->id()), QString::null,
+		rec->id(), rec);
 	if (slotEditRecord(item))
 	{
 		fRecList.append(rec);
@@ -330,7 +330,7 @@ bool GenericDBWidget::slotEditRecord(QListViewItem*item)
 		if (dlg->exec())
 		{
 			currRecItem->setText(1, QString::number(rec->getLen()));
-			currRecItem->setText(2, QString::number(rec->getID()));
+			currRecItem->setText(2, QString::number(rec->id()));
 			fRecordList->triggerUpdate();
 			writeRecord(rec);
 			KPILOT_DELETE(dlg);
@@ -357,7 +357,7 @@ void GenericDBWidget::slotDeleteRecord()
 	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting Record"))==KMessageBox::Yes) )
 	{
 		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
-		rec->makeDeleted();
+		rec->setDeleted();
 		writeRecord(rec);
 		// fRecordList->triggerUpdate();
 		KPILOT_DELETE(currRecItem);

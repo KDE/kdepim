@@ -222,14 +222,14 @@ void RecordConduit::slotPalmRecToPC()
 	}
 
 	// already synced, so skip:
-	if ( mSyncedIds.contains( palmRec->getID() ) )
+	if ( mSyncedIds.contains( palmRec->id() ) )
 	{
 		KPILOT_DELETE( palmRec );
 		QTimer::singleShot( 0, this, SLOT( slotPalmRecToPC() ) );
 		return;
 	}
 
-	backupRec = fLocalDatabase->readRecordById( palmRec->getID() );
+	backupRec = fLocalDatabase->readRecordById( palmRec->id() );
 	PilotRecord *compareRec = backupRec ? backupRec : palmRec;
 	PilotAppCategory *compareEntry = createPalmEntry( compareRec );
 	PCEntry *pcEntry = findMatch( compareEntry );
@@ -244,7 +244,7 @@ void RecordConduit::slotPalmRecToPC()
 
 	syncEntry( pcEntry, backupEntry, palmEntry );
 
-	mSyncedIds.append( palmRec->getID() );
+	mSyncedIds.append( palmRec->id() );
 
 	KPILOT_DELETE( pcEntry );
 	KPILOT_DELETE( palmEntry );
@@ -322,7 +322,7 @@ void RecordConduit::slotPCRecToPalm()
 		syncEntry( pcEntry, backupEntry, palmEntry );
 		// update the id just in case it changed
 		if ( palmRec ) 
-			recID = palmRec->getID();
+			recID = palmRec->id();
 		KPILOT_DELETE( palmRec );
 		KPILOT_DELETE( palmEntry );
 	}
@@ -351,16 +351,16 @@ void RecordConduit::slotDeletedRecord()
 	}
 
 	// already synced, so skip this record:
-	if ( mSyncedIds.contains( backupRec->getID() ) )
+	if ( mSyncedIds.contains( backupRec->id() ) )
 	{
 		KPILOT_DELETE( backupRec );
 		QTimer::singleShot( 0, this, SLOT( slotDeletedRecord() ) );
 		return;
 	}
 
-	QString uid = mEntryMap[ backupRec->getID() ];
+	QString uid = mEntryMap[ backupRec->id() ];
 	PCEntry *pcEntry = mPCData->findByUid( uid );
-	PilotRecord *palmRec = fDatabase->readRecordById( backupRec->getID() );
+	PilotRecord *palmRec = fDatabase->readRecordById( backupRec->id() );
 	PilotAppCategory *backupEntry = 0L;
 	if (backupRec) 
 		backupEntry = createPalmEntry( backupRec );
@@ -368,7 +368,7 @@ void RecordConduit::slotDeletedRecord()
 	if (palmRec) 
 		palmEntry = createPalmEntry( palmRec );
 
-	mSyncedIds.append( backupRec->getID() );
+	mSyncedIds.append( backupRec->id() );
 	syncEntry( pcEntry, backupEntry, palmEntry );
 
 	KPILOT_DELETE( pcEntry );
@@ -768,7 +768,7 @@ bool RecordConduit::pcCopyToPalm( PCEntry *pcEntry, PilotAppCategory *backupEntr
 	}
 	_copy( hhEntry, pcEntry );
 #ifdef DEBUG
-	DEBUGCONDUIT << "palmEntry->id=" << hhEntry->getID() << ", pcEntry.ID=" <<
+	DEBUGCONDUIT << "palmEntry->id=" << hhEntry->id() << ", pcEntry.ID=" <<
 		pcEntry->uid() << endl;
 #endif
 
@@ -776,7 +776,7 @@ bool RecordConduit::pcCopyToPalm( PCEntry *pcEntry, PilotAppCategory *backupEntr
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << "Entry palmEntry->id=" <<
-		hhEntry->getID() << "saved to palm, now updating pcEntry->uid()=" << pcEntry->uid() << endl;
+		hhEntry->id() << "saved to palm, now updating pcEntry->uid()=" << pcEntry->uid() << endl;
 #endif
 		pcSaveEntry( pcEntry, backupEntry, hhEntry );
 	}
@@ -822,7 +822,7 @@ bool RecordConduit::palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 #ifdef DEBUG
 	DEBUGCONDUIT << "PilotRec nach writeRecord (" << pilotId << 
-		": ID=" << pilotRec->getID() << endl;
+		": ID=" << pilotRec->id() << endl;
 #endif
 	fLocalDatabase->writeRecord( pilotRec );
 	KPILOT_DELETE( pilotRec );
@@ -893,31 +893,31 @@ bool RecordConduit::pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEnt
 
 	if ( palmEntry )
 	{
-		if ( !mSyncedIds.contains( palmEntry->getID() ) ) 
+		if ( !mSyncedIds.contains( palmEntry->id() ) ) 
 		{
-			mSyncedIds.append(palmEntry->getID());
+			mSyncedIds.append(palmEntry->id());
 		}
 		palmEntry->makeDeleted();
 		PilotRecord *pilotRec = palmEntry->pack();
-		pilotRec->makeDeleted();
+		pilotRec->setDeleted();
 		mPalmIndex--;
 		fDatabase->writeRecord( pilotRec );
 		fLocalDatabase->writeRecord( pilotRec );
-		mSyncedIds.append( pilotRec->getID() );
+		mSyncedIds.append( pilotRec->id() );
 		KPILOT_DELETE( pilotRec );
 	}
 	else if ( backupEntry )
 	{
-		if ( !mSyncedIds.contains( backupEntry->getID() ) )
+		if ( !mSyncedIds.contains( backupEntry->id() ) )
 		{
-			mSyncedIds.append( backupEntry->getID() );
+			mSyncedIds.append( backupEntry->id() );
 		}
 		backupEntry->makeDeleted();
 		PilotRecord *pilotRec = backupEntry->pack();
-		pilotRec->makeDeleted();
+		pilotRec->setDeleted();
 		mPalmIndex--;
 		fLocalDatabase->writeRecord( pilotRec );
-		mSyncedIds.append( pilotRec->getID() );
+		mSyncedIds.append( pilotRec->id() );
 		KPILOT_DELETE( pilotRec );
 	}
 	if ( !pcEntry->isEmpty() )
@@ -995,7 +995,7 @@ RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) 
 		KPILOT_DELETE( abEntry );
 	}
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Could not find any entry matching Palm record with id " << QString::number( palmEntry->getID() ) << endl;
+	DEBUGCONDUIT << fname << ": Could not find any entry matching Palm record with id " << QString::number( palmEntry->id() ) << endl;
 #endif
 	return 0;
 }

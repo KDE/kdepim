@@ -330,7 +330,7 @@ void TodoConduit::preRecord(PilotRecord*r)
 	if (!categoriesSynced && r)
 	{
 		const PilotAppCategory*de=newPilotEntry(r);
-		KCal::Incidence *e = fP->findIncidence(r->getID());
+		KCal::Incidence *e = fP->findIncidence(r->id());
 		setCategory(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de));
 	}
 }
@@ -395,7 +395,7 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
    // We don't want this, do we?
 //	e->setOrganizer(fCalendar->getEmail());
-	e->setPilotId(de->getID());
+	e->setPilotId(de->id());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 

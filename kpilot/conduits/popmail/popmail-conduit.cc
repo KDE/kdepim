@@ -318,7 +318,7 @@ int PopMailConduit::sendViaKMail()
 #endif
 
 		// Mark it as filed...
-		pilotRec->setCat(3);
+		pilotRec->setCategory(3);
 		pilotRec->setAttrib(pilotRec->getAttrib() & ~dlpRecAttrDirty);
 		fDatabase->writeRecord(pilotRec);
 		delete pilotRec;

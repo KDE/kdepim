@@ -761,14 +761,14 @@ void AbbrowserConduit::slotPalmRecToPC()
 	}
 
 	// already synced, so skip:
-	if(syncedIds.contains(palmRec->getID()))
+	if(syncedIds.contains(palmRec->id()))
 	{
 		KPILOT_DELETE(palmRec);
 		QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
 		return;
 	}
 
-	backupRec = fLocalDatabase->readRecordById(palmRec->getID());
+	backupRec = fLocalDatabase->readRecordById(palmRec->id());
 	PilotRecord*compareRec=(backupRec)?(backupRec):(palmRec);
 	Addressee e = _findMatch(PilotAddress(fAddressAppInfo, compareRec));
 
@@ -779,7 +779,7 @@ void AbbrowserConduit::slotPalmRecToPC()
 
 	syncAddressee(e, backupAddr, palmAddr);
 
-	syncedIds.append(palmRec->getID());
+	syncedIds.append(palmRec->id());
 	KPILOT_DELETE(palmAddr);
 	KPILOT_DELETE(backupAddr);
 	KPILOT_DELETE(palmRec);
@@ -853,7 +853,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 		if (palmRec) palmAddr= new PilotAddress(fAddressAppInfo, palmRec);
 		syncAddressee(ad, backupAddr, palmAddr);
 		// update the id just in case it changed
-		if (palmRec) rid=palmRec->getID();
+		if (palmRec) rid=palmRec->id();
 		KPILOT_DELETE(palmRec);
 		KPILOT_DELETE(palmAddr);
 	}
@@ -879,22 +879,22 @@ void AbbrowserConduit::slotDeletedRecord()
 	}
 
 	// already synced, so skip this record:
-	if(syncedIds.contains(backupRec->getID()))
+	if(syncedIds.contains(backupRec->id()))
 	{
 		KPILOT_DELETE(backupRec);
 		QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
 		return;
 	}
 
-	QString uid = addresseeMap[backupRec->getID()];
+	QString uid = addresseeMap[backupRec->id()];
 	Addressee e = aBook->findByUid(uid);
-	PilotRecord*palmRec=fDatabase->readRecordById(backupRec->getID());
+	PilotRecord*palmRec=fDatabase->readRecordById(backupRec->id());
 	PilotAddress*backupAddr=0L;
 	if (backupRec) backupAddr=new PilotAddress(fAddressAppInfo, backupRec);
 	PilotAddress*palmAddr=0L;
 	if (palmRec) palmAddr=new PilotAddress(fAddressAppInfo, palmRec);
 
-	syncedIds.append(backupRec->getID());
+	syncedIds.append(backupRec->id());
 	syncAddressee(e, backupAddr, palmAddr);
 
 	KPILOT_DELETE(palmAddr);
@@ -1203,7 +1203,7 @@ bool AbbrowserConduit::_copyToHH(Addressee &pcAddr, PilotAddress*backupAddr,
 	}
 	_copy(paddr, pcAddr);
 #ifdef DEBUG
-	DEBUGCONDUIT<<"palmAddr->id="<<paddr->getID()<<", pcAddr.ID="<<
+	DEBUGCONDUIT<<"palmAddr->id="<<paddr->id()<<", pcAddr.ID="<<
 		pcAddr.custom(appString, idString)<<endl;
 #endif
 
@@ -1211,7 +1211,7 @@ bool AbbrowserConduit::_copyToHH(Addressee &pcAddr, PilotAddress*backupAddr,
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Vor _saveAbEntry, palmAddr->id="<<
-		paddr->getID()<<", pcAddr.ID="<<pcAddr.custom(appString, idString)<<endl;
+		paddr->id()<<", pcAddr.ID="<<pcAddr.custom(appString, idString)<<endl;
 #endif
 		_savePCAddr(pcAddr, backupAddr, paddr);
 	}
@@ -1264,25 +1264,25 @@ bool AbbrowserConduit::_deleteAddressee(Addressee &pcAddr, PilotAddress*backupAd
 
 	if (palmAddr)
 	{
-		if (!syncedIds.contains(palmAddr->getID())) syncedIds.append(palmAddr->getID());
+		if (!syncedIds.contains(palmAddr->id())) syncedIds.append(palmAddr->id());
 		palmAddr->makeDeleted();
 		PilotRecord *pilotRec = palmAddr->pack();
-		pilotRec->makeDeleted();
+		pilotRec->setDeleted();
 		pilotindex--;
 		fDatabase->writeRecord(pilotRec);
 		fLocalDatabase->writeRecord(pilotRec);
-		syncedIds.append(pilotRec->getID());
+		syncedIds.append(pilotRec->id());
 		KPILOT_DELETE(pilotRec);
 	}
 	else if (backupAddr)
 	{
-		if (!syncedIds.contains(backupAddr->getID())) syncedIds.append(backupAddr->getID());
+		if (!syncedIds.contains(backupAddr->id())) syncedIds.append(backupAddr->id());
 		backupAddr->makeDeleted();
 		PilotRecord *pilotRec = backupAddr->pack();
-		pilotRec->makeDeleted();
+		pilotRec->setDeleted();
 		pilotindex--;
 		fLocalDatabase->writeRecord(pilotRec);
-		syncedIds.append(pilotRec->getID());
+		syncedIds.append(pilotRec->id());
 		KPILOT_DELETE(pilotRec);
 	}
 	if (!pcAddr.isEmpty())
@@ -1318,7 +1318,7 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 	PilotRecord *pilotRec = palmAddr->pack();
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 #ifdef DEBUG
-	DEBUGCONDUIT<<"PilotRec nach writeRecord ("<<pilotId<<": ID="<<pilotRec->getID()<<endl;
+	DEBUGCONDUIT<<"PilotRec nach writeRecord ("<<pilotId<<": ID="<<pilotRec->id()<<endl;
 #endif
 	fLocalDatabase->writeRecord(pilotRec);
 	KPILOT_DELETE(pilotRec);
@@ -1588,7 +1588,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	// pilot id may be zero(since it could be new) but couldn't hurt
 	// to even assign it to zero; let's us know what state the
 	// toAbEntry is in
-	toAbEntry.insertCustom(appString, idString, QString::number(fromPiAddr->getID()));
+	toAbEntry.insertCustom(appString, idString, QString::number(fromPiAddr->id()));
 
 
 	int cat = fromPiAddr->getCat();
