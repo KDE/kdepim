@@ -64,7 +64,7 @@
 #error "You need at least pilot-link version 0.9.5"
 #endif
 
-#define PILOT_LINK_NUMBER	((1000*PILOT_LINK_VERSION) + \
+#define PILOT_LINK_NUMBER	((10000*PILOT_LINK_VERSION) + \
 				(100*PILOT_LINK_MAJOR)+PILOT_LINK_MINOR)
 #if PILOT_LINK_NUMBER < 1200
 #define PI_SIZE_T int
