@@ -36,8 +36,6 @@
 <affiliation><address><email>juergen.nagel@student.fh-reutlingen.de</email></address></affiliation>
 </author>
 
-<para />
-
 <othercredit role="developer">
 <firstname>Reinhold</firstname>
 <surname>Kainhofer</surname>
@@ -65,8 +63,6 @@
 <affiliation><address><email>lauri@kde.org</email></address></affiliation>
 <contrib>Reviewer</contrib>
 </othercredit>
-
-<para />
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
