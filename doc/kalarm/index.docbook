@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2005-01-02</date>
-<releaseinfo>1.02.04</releaseinfo>
+<date>2005-01-18</date>
+<releaseinfo>1.02.05</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -185,6 +185,16 @@ always shown. You can use the
 <link linkend="preferences-view">Preferences dialog</link> to change
 the default columns to display.</para>
 
+<sect2 id="expired">
+<title>Expired alarms</title>
+
+<para>By default, &kalarm; stores alarms for a limited period once
+they have expired or been deleted. (But note that alarms which you
+delete are stored only if they have already triggered at least once.)
+You can control whether &kalarm; stores expired alarms, and for how
+long, in the
+<link linkend="preferences-general">Preferences dialog</link>.</para>
+
 <para>Expired alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
 Alarms</guimenuitem></menuchoice>. To hide them again, repeat the
@@ -192,6 +202,7 @@ action. You can use the
 <link linkend="preferences-view">Preferences dialog</link> to show
 expired alarms by default.</para>
 
+</sect2>
 </sect1>
 
 <sect1 id="create-edit">
@@ -323,7 +334,7 @@ dialog</link>.</para>
 </sect2>
 
 <sect2>
-<title>Deleting an alarm</title>
+<title>Deleting/reactivating an alarm</title>
 
 <para>To delete existing alarms, do one of the following:</para>
 
@@ -338,6 +349,34 @@ alarm list. Then choose <menuchoice>
 <para><mousebutton>Right</mousebutton> click on the desired entries in
 the alarm list and choose
 <menuchoice><guimenuitem>Delete</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>When you delete an active alarm, it is stored as an expired
+alarm, provided that it has triggered at least once before being
+deleted, and provided that expired alarms are stored at all. (Use the
+<link linkend="preferences-general">Preferences dialog</link> to
+control whether and for how long expired alarms are stored.) When you
+delete an expired alarm, or an active alarm which has not yet
+triggered, it is removed permanently.</para>
+
+<para>You can reactivate a deleted alarm from the expired alarms list,
+provided that it has not yet expired. To do this, first display
+expired alarms, as described in
+<link linkend="expired">Expired alarms</link>. Then:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select one or more appropriate expired alarms by clicking on
+their entries in the alarm list. Then choose <menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>Reactivate</guimenuitem>
+</menuchoice>.</para>
+</listitem>
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the desired entries in
+the expired alarm list and choose
+<menuchoice><guimenuitem>Reactivate</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
 </itemizedlist>
