@@ -118,7 +118,7 @@ void KAddressBookMain::slotNewToolbarConfig()
 
 void KAddressBookMain::configureKeys()
 {
-  KKeyDialog::configureKeys( actionCollection(), xmlFile(), true, this );
+  KKeyDialog::configure( actionCollection(), true, this );
 }
 
 bool KAddressBookMain::queryClose()
