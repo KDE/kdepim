@@ -68,7 +68,7 @@ class CardViewItemList : public QPtrList<CardViewItem>
 {
   protected:
     virtual int compareItems( QPtrCollection::Item item1,
-                              QPtrCollection::Item item2 ) const
+                              QPtrCollection::Item item2 )
     {
       CardViewItem *cItem1 = (CardViewItem*)item1;
       CardViewItem *cItem2 = (CardViewItem*)item2;
