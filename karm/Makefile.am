@@ -16,7 +16,7 @@ karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la $(LIBXSS)
 karm_LDFLAGS = $(all_libraries)
 noinst_HEADERS = desktoptracker.h edittaskdialog.h \
                  idletimedetector.h kaccelmenuwatch.h \
-		 karmutility.h ktimewidget.h logging.h mainwindow.h \
+		 karmutility.h ktimewidget.h karmstorage.h mainwindow.h \
 		 preferences.h print.h task.h taskview.h toolicons.h \
 		 tray.h version.h
 
