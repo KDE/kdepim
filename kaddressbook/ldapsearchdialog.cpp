@@ -286,6 +286,10 @@ void LDAPSearchDialog::slotSetScope( bool rec )
 
 QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr )
 {
+  if( query.isEmpty() )
+    // Return a filter that matches everything
+    return QString( "|(cn=*)(sn=*)" );
+
   if ( attr == i18n( "Name" ) ) {
     QString result( "|(cn=*%1*)(sn=*%2*)" );
 
