@@ -19,23 +19,39 @@ libical_la_LDFLAGS = -version-info 0:0:0
 
 libical_la_SOURCES =		\
 	icalcomponent.c		\
+	icalcomponent.h		\
 	icalenums.c		\
+	icalenums.h		\
 	icalerror.c		\
+	icalerror.h		\
 	icallexer.l		\
 	icalmemory.c		\
+	icalmemory.h		\
 	icalmime.c		\
+	icalmime.h		\
 	icalparameter.c		\
+	icalparameter.h		\
 	icalparser.c		\
+	icalparser.h		\
 	icalproperty.c		\
+	icalproperty.h		\
 	icalrecur.c		\
+	icalrecur.h		\
 	icalrestriction.c	\
+	icalrestriction.h	\
 	icaltime.c		\
+	icaltime.h		\
 	icaltypes.c		\
+	icaltypes.h		\
 	icalvalue.c		\
+	icalvalue.h		\
 	icalyacc.h		\
 	icalyacc.y		\
 	pvl.c			\
-	sspm.c
+	pvl.h			\
+	sspm.c			\
+	sspm.h			\
+	vsnprintf.c
 
 libicalincludedir = $(includedir)
 
@@ -43,24 +59,23 @@ libicalinclude_HEADERS =  ical.h
 
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 # is required to make the combined header ical.h properly
-COMBINEDHEADERS=\
-	icalversion.h \
-	icaltime.h \
-	icalenums.h \
-	icaltypes.h \
-	icalvalue.h \
-	icalparameter.h \
-	icalproperty.h \
-	pvl.h \
-	icalcomponent.h	\
-	icalparser.h \
-	icalmemory.h \
-	icalerror.h \
-	icalrestriction.h \
-	icalrecur.h \
-	sspm.h \
-	icalmime.h 
-
+COMBINEDHEADERS =					\
+	$(top_builddir)/src/libical/icalversion.h	\
+	$(top_srcdir)/src/libical/icaltime.h		\
+	$(top_srcdir)/src/libical/icalenums.h		\
+	$(top_srcdir)/src/libical/icaltypes.h		\
+	$(top_srcdir)/src/libical/icalrecur.h		\
+	$(top_srcdir)/src/libical/icalvalue.h		\
+	$(top_srcdir)/src/libical/icalparameter.h	\
+	$(top_srcdir)/src/libical/icalproperty.h	\
+	$(top_srcdir)/src/libical/pvl.h			\
+	$(top_srcdir)/src/libical/icalcomponent.h	\
+	$(top_srcdir)/src/libical/icalparser.h		\
+	$(top_srcdir)/src/libical/icalmemory.h		\
+	$(top_srcdir)/src/libical/icalerror.h		\
+	$(top_srcdir)/src/libical/icalrestriction.h	\
+	$(top_srcdir)/src/libical/sspm.h		\
+	$(top_srcdir)/src/libical/icalmime.h 
 
 BUILT_SOURCES =			\
 	icalparameter.c		\
@@ -71,10 +86,10 @@ BUILT_SOURCES =			\
 	icalvalue.c		\
 	icalvalue.h
 
-#This is not srcdir!=builddir safe, and ical.h is in CVS anyway
-#ical.h: $(COMBINEDHEADERS) $(BUILT_SOURCES)
-#	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \
-#		| egrep -v "#include.*\"pvl\.h\"" > ical.h
+ical.h: $(COMBINEDHEADERS) $(BUILT_SOURCES)
+	cat $(COMBINEDHEADERS)				\
+	| egrep -v "#include.*\"ical"			\
+	| egrep -v "#include.*\"pvl\.h\"" > ical.h
 
 icallexer.c : icalyacc.h
 
@@ -155,8 +170,8 @@ EXTRA_DIST =			\
 	icalrestriction.c.in	\
 	icalvalue.c.in		\
 	icalvalue.h.in		\
+	icalversion.h.in	\
 	$(BUILT_SOURCES)	\
-	$(COMBINEDHEADERS)	\
 	icallexer.c		\
 	icalyacc.c
 

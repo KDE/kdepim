@@ -369,46 +369,6 @@ typedef enum icalparameter_value {
     ICAL_VALUE_ERROR = ICAL_NO_VALUE
 } icalparameter_value;
 
-/***********************************************************************
- * Recurrances 
-**********************************************************************/
-
-typedef enum icalrecurrencetype_frequency
-{
-    /* These enums are used to index an array, so don't change the
-       order or the integers */
-
-    ICAL_SECONDLY_RECURRENCE=0,
-    ICAL_MINUTELY_RECURRENCE=1,
-    ICAL_HOURLY_RECURRENCE=2,
-    ICAL_DAILY_RECURRENCE=3,
-    ICAL_WEEKLY_RECURRENCE=4,
-    ICAL_MONTHLY_RECURRENCE=5,
-    ICAL_YEARLY_RECURRENCE=6,
-    ICAL_NO_RECURRENCE=7
-
-} icalrecurrencetype_frequency;
-
-typedef enum icalrecurrencetype_weekday
-{
-    ICAL_NO_WEEKDAY,
-    ICAL_SUNDAY_WEEKDAY,
-    ICAL_MONDAY_WEEKDAY,
-    ICAL_TUESDAY_WEEKDAY,
-    ICAL_WEDNESDAY_WEEKDAY,
-    ICAL_THURSDAY_WEEKDAY,
-    ICAL_FRIDAY_WEEKDAY,
-    ICAL_SATURDAY_WEEKDAY
-} icalrecurrencetype_weekday;
-
-enum {
-    ICAL_RECURRENCE_ARRAY_MAX = 0x7f7f,
-    ICAL_RECURRENCE_ARRAY_MAX_BYTE = 0x7f
-};
-    
-
-const char* icalenum_recurrence_to_string(icalrecurrencetype_frequency kind);
-const char* icalenum_weekday_to_string(icalrecurrencetype_weekday kind);
 
 /***********************************************************************
  * Request Status codes
@@ -461,16 +421,16 @@ icalrequeststatus icalenum_num_to_reqstat(short major, short minor);
 **********************************************************************/
 
 const char* icalenum_property_kind_to_string(icalproperty_kind kind);
-icalproperty_kind icalenum_string_to_property_kind(char* string);
+icalproperty_kind icalenum_string_to_property_kind(const char* string);
 
 const char* icalenum_value_kind_to_string(icalvalue_kind kind);
 icalvalue_kind icalenum_value_kind_by_prop(icalproperty_kind kind);
 
 const char* icalenum_parameter_kind_to_string(icalparameter_kind kind);
-icalparameter_kind icalenum_string_to_parameter_kind(char* string);
+icalparameter_kind icalenum_string_to_parameter_kind(const char* string);
 
 const char* icalenum_component_kind_to_string(icalcomponent_kind kind);
-icalcomponent_kind icalenum_string_to_component_kind(char* string);
+icalcomponent_kind icalenum_string_to_component_kind(const char* string);
 
 icalvalue_kind icalenum_property_kind_to_value_kind(icalproperty_kind kind);
 

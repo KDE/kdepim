@@ -108,7 +108,7 @@ void test_properties()
 
     /* Create a new property */
     prop = icalproperty_vanew_comment(
-	strdup("Another Comment"),
+	"Another Comment",
 	icalparameter_new_cn("A Common Name 1"),
 	icalparameter_new_cn("A Common Name 2"),
 	icalparameter_new_cn("A Common Name 3"),

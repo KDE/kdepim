@@ -34,7 +34,6 @@
 #include <errno.h> /* for errno */
 #include <string.h> /* for icalmemory_strdup */
 #include <assert.h>
-#include <limits.h> /* for SHRT_MAX */
 
 #define TEMP_MAX 1024
 
@@ -150,37 +149,6 @@ void* icalattachtype_get_binary(struct icalattachtype* v)
 }
 
 
-void icalrecurrencetype_clear(struct icalrecurrencetype *recur)
-{
-    memset(recur,ICAL_RECURRENCE_ARRAY_MAX_BYTE,
-	   sizeof(struct icalrecurrencetype));
-
-    recur->week_start = ICAL_MONDAY_WEEKDAY;
-    recur->freq = ICAL_NO_RECURRENCE;
-    recur->interval = 1;
-    memset(&(recur->until),0,sizeof(struct icaltimetype));
-    recur->count = 0;
-}
-
-/* The 'day' element of icalrecurrencetype_weekday is encoded to allow
-reporesentation of both the day of the week ( Monday, Tueday), but
-also the Nth day of the week ( First tuesday of the month, last
-thursday of the year) These routines decode the day values. 
-
-The day's position in the period ( Nth-ness) and the numerical value
-of the day are encoded together as: pos*7 + dow
- */
-
-enum icalrecurrencetype_weekday icalrecurrencetype_day_day_of_week(short day)
-{
-    return abs(day)%8;
-}
-
-short icalrecurrencetype_day_position(short day)
-{
-    return (day-icalrecurrencetype_day_day_of_week(day))/8;
-}
-
 
 struct icalreqstattype icalreqstattype_from_string(char* str)
 {
@@ -214,7 +182,7 @@ struct icalreqstattype icalreqstattype_from_string(char* str)
   p1 = strchr(str,';');
 
   if (p1 == 0){
-    icalerror_set_errno(ICAL_BADARG_ERROR);
+/*    icalerror_set_errno(ICAL_BADARG_ERROR);*/
     return stat;
   }
 

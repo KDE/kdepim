@@ -17,32 +17,34 @@ libicalss_la_LDFLAGS = -version-info 0:0:0
 
 libicalss_la_SOURCES =		\
 	icalclassify.c		\
+	icalgauge.c		\
+	icalgaugeimpl.h		\
 	icaldirset.c		\
 	icaldirsetimpl.h	\
 	icalfileset.c		\
 	icalfilesetimpl.h	\
-	icalgauge.c		\
-	icalgaugeimpl.h		\
 	icalset.c		\
 	icalsslexer.l		\
 	icalssutil.c		\
 	icalssyacc.h		\
 	icalssyacc.y		\
 	icalspanlist.c		\
-	icalmessage.c
+	icalmessage.c		\
+	icalcstp.c
 
 libicalssincludedir = $(includedir)
 
 COMBINEDHEADERS = \
+        icalgauge.h \
         icalset.h \
         icalfileset.h \
         icaldirset.h \
         icalcalendar.h  \
-        icalgauge.h \
         icalssutil.h \
         icalclassify.h \
 	icalspanlist.h	\
-	icalmessage.h 
+	icalmessage.h \
+	icalcstp.h
 
 icalss.h: $(COMBINEDHEADERS)
 	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \

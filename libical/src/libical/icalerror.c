@@ -56,8 +56,13 @@ void icalerror_clear_errno() {
 void icalerror_set_errno(icalerrorenum e) {
 
 #ifdef ICAL_ERRORS_ARE_FATAL
-    fprintf(stderr,"libical: icalerrno_set_error: %s",icalerror_strerror(e));
-    icalerror_crash_here();
+    fprintf(stderr,"libical: icalerrno_set_error: %s\n",icalerror_strerror(e));
+#ifdef NDEBUG
+	icalerror_crash_here();
+#else
+	assert(0);
+#endif 
+
 #endif
 
     icalerror_stop_here();

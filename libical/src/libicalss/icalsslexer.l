@@ -84,12 +84,10 @@ WHERE			{ return WHERE; }
 ">=" 			{ return GREATEREQUALS; }
 AND 			{ return AND; }
 OR			{ return OR; }
+\'                      { return QUOTE; }
 [ \t\n\r]+ ;			
 ;			{ return EOL; }
-[\*A-Za-z0-9\-\.]+		{ sslval.v_string= icalmemory_tmp_copy(sstext);
-			  return STRING; }
-
-'[^'\n]*' {
+\'[\*A-Za-z0-9\-\.]+\' {
 	int c = input();
 	unput(c);
 	if(c!='\''){
@@ -99,6 +97,10 @@ OR			{ return OR; }
 		/*ssmore();*/
 	}
 }
+
+[\*A-Za-z0-9\-\.]+		{ sslval.v_string= icalmemory_tmp_copy(sstext);
+			  return STRING; }
+
 
 .			{ return yytext[0]; }
 

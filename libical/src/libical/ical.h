@@ -2,7 +2,7 @@
 #define ICAL_VERSION_H
 
 #define ICAL_PACKAGE "libical"
-#define ICAL_VERSION "0.21"
+#define ICAL_VERSION "0.21b"
 
 #endif
 /* -*- Mode: C -*- */
@@ -57,7 +57,44 @@ struct icaltimetype
 	int is_utc; /* 1-> time is in UTC timezone */
 
 	int is_date; /* 1 -> interpret this as date. */
+   
+	const char* zone; /*Ptr to Olsen placename. Libical does not own mem*/
 };	
+
+/* Convert seconds past UNIX epoch to a timetype*/
+struct icaltimetype icaltime_from_timet(time_t v, int is_date);
+time_t icaltime_as_timet(struct icaltimetype);
+
+/* Like icaltime_from_timet(), except that the input may be in seconds
+   past the epoch in floating time */
+struct icaltimetype icaltime_from_int(int v, int is_date, int is_utc);
+int icaltime_as_int(struct icaltimetype);
+
+/* create a time from an ISO format string */
+struct icaltimetype icaltime_from_string(const char* str);
+
+/* Routines for handling timezones */
+/* Return the offset of the named zone as seconds. tt is a time
+   indicating the date for which you want the offset */
+int icaltime_utc_offset(struct icaltimetype tt, const char* tzid);
+int icaltime_local_utc_offset();
+int icaltime_daylight_offset(struct icaltimetype tt, const char* tzid);
+int icaltime_local_daylight_offset();
+
+/* convert tt, of timezone tzid, into a utc time. Does nothing if the
+   time is already UTC.  */
+struct icaltimetype icaltime_as_utc(struct icaltimetype tt,
+				    const char* tzid);
+
+/* convert tt, a time in UTC, into a time in timezone tzid */
+struct icaltimetype icaltime_as_zone(struct icaltimetype tt,
+				     const char* tzid);
+
+/* convert tt, a time in UTC, into a local time. This does nothing is
+   the time is not UTC*/
+struct icaltimetype icaltime_as_local(struct icaltimetype tt);
+
+
 
 struct icaltimetype icaltime_null_time(void);
 
@@ -71,9 +108,6 @@ struct icaltimetype icaltime_from_day_of_year(short doy,  short year);
 short icaltime_day_of_week(struct icaltimetype t);
 short icaltime_start_doy_of_week(struct icaltimetype t);
 
-struct icaltimetype icaltime_from_timet(time_t v, int is_date, int is_utc);
-struct icaltimetype icaltime_from_string(const char* str);
-time_t icaltime_as_timet(struct icaltimetype);
 char* icaltime_as_ctime(struct icaltimetype);
 
 short icaltime_week_number(short day_of_month, short month, short year);
@@ -82,24 +116,10 @@ struct icaltimetype icaltime_from_week_number(short week_number, short year);
 
 int icaltime_compare(struct icaltimetype a,struct icaltimetype b);
 
+int icaltime_compare_date_only(struct icaltimetype a, struct icaltimetype b);
+
 
 short icaltime_days_in_month(short month,short year);
-
-/* Routines for handling timezones */
-
-/* Return the offset of the named zone as seconds. tt is a time
-   indicating the date for which you want the offset */
-time_t icaltime_utc_offset(struct icaltimetype tt, const char* tzid);
-
-time_t icaltime_local_utc_offset();
-
-
-/* convert tt, of timezone tzid, into a utc time */
-struct icaltimetype icaltime_as_utc(struct icaltimetype tt,const char* tzid);
-
-/* convert tt, a time in UTC, into a time in timezone tzid */
-struct icaltimetype icaltime_as_zone(struct icaltimetype tt,const char* tzid);
-
 
 
 struct icaldurationtype
@@ -112,9 +132,9 @@ struct icaldurationtype
 	unsigned int seconds;
 };
 
-struct icaldurationtype icaldurationtype_from_timet(time_t t);
+struct icaldurationtype icaldurationtype_from_int(int t);
 struct icaldurationtype icaldurationtype_from_string(const char*);
-time_t icaldurationtype_as_timet(struct icaldurationtype duration);
+int icaldurationtype_as_int(struct icaldurationtype duration);
 
 
 struct icalperiodtype 
@@ -511,46 +531,6 @@ typedef enum icalparameter_value {
     ICAL_VALUE_ERROR = ICAL_NO_VALUE
 } icalparameter_value;
 
-/***********************************************************************
- * Recurrances 
-**********************************************************************/
-
-typedef enum icalrecurrencetype_frequency
-{
-    /* These enums are used to index an array, so don't change the
-       order or the integers */
-
-    ICAL_SECONDLY_RECURRENCE=0,
-    ICAL_MINUTELY_RECURRENCE=1,
-    ICAL_HOURLY_RECURRENCE=2,
-    ICAL_DAILY_RECURRENCE=3,
-    ICAL_WEEKLY_RECURRENCE=4,
-    ICAL_MONTHLY_RECURRENCE=5,
-    ICAL_YEARLY_RECURRENCE=6,
-    ICAL_NO_RECURRENCE=7
-
-} icalrecurrencetype_frequency;
-
-typedef enum icalrecurrencetype_weekday
-{
-    ICAL_NO_WEEKDAY,
-    ICAL_SUNDAY_WEEKDAY,
-    ICAL_MONDAY_WEEKDAY,
-    ICAL_TUESDAY_WEEKDAY,
-    ICAL_WEDNESDAY_WEEKDAY,
-    ICAL_THURSDAY_WEEKDAY,
-    ICAL_FRIDAY_WEEKDAY,
-    ICAL_SATURDAY_WEEKDAY
-} icalrecurrencetype_weekday;
-
-enum {
-    ICAL_RECURRENCE_ARRAY_MAX = 0x7f7f,
-    ICAL_RECURRENCE_ARRAY_MAX_BYTE = 0x7f
-};
-    
-
-const char* icalenum_recurrence_to_string(icalrecurrencetype_frequency kind);
-const char* icalenum_weekday_to_string(icalrecurrencetype_weekday kind);
 
 /***********************************************************************
  * Request Status codes
@@ -603,16 +583,16 @@ icalrequeststatus icalenum_num_to_reqstat(short major, short minor);
 **********************************************************************/
 
 const char* icalenum_property_kind_to_string(icalproperty_kind kind);
-icalproperty_kind icalenum_string_to_property_kind(char* string);
+icalproperty_kind icalenum_string_to_property_kind(const char* string);
 
 const char* icalenum_value_kind_to_string(icalvalue_kind kind);
 icalvalue_kind icalenum_value_kind_by_prop(icalproperty_kind kind);
 
 const char* icalenum_parameter_kind_to_string(icalparameter_kind kind);
-icalparameter_kind icalenum_string_to_parameter_kind(char* string);
+icalparameter_kind icalenum_string_to_parameter_kind(const char* string);
 
 const char* icalenum_component_kind_to_string(icalcomponent_kind kind);
-icalcomponent_kind icalenum_string_to_component_kind(char* string);
+icalcomponent_kind icalenum_string_to_component_kind(const char* string);
 
 icalvalue_kind icalenum_property_kind_to_value_kind(icalproperty_kind kind);
 
@@ -695,61 +675,6 @@ struct icalgeotype
 
 					   
 
-/* See RFC 2445 Section 4.3.10, RECUR Value, for an explaination of
-   the values and fields in struct icalrecurrencetype */
-
-
-struct icalrecurrencetype 
-{
-	icalrecurrencetype_frequency freq;
-
-
-	/* until and count are mutually exclusive. */
-       	struct icaltimetype until;
-	int count;
-
-	short interval;
-	
-	icalrecurrencetype_weekday week_start;
-	
-	/* The BY* parameters can each take a list of values. Here I
-	 * assume that the list of values will not be larger than the
-	 * range of the value -- that is, the client will not name a
-	 * value more than once. 
-	 
-	 * Each of the lists is terminated with the value SHRT_MAX
-	 * unless the the list is full. */
-
-	short by_second[61];
-	short by_minute[61];
-	short by_hour[25];
-	short by_day[8]; /* Encoded value, see below */
-	short by_month_day[32];
-	short by_year_day[367];
-	short by_week_no[54];
-	short by_month[13];
-	short by_set_pos[367];
-};
-
-
-void icalrecurrencetype_clear(struct icalrecurrencetype *r);
-
-/* The 'day' element of icalrecurrencetype_weekday is encoded to allow
-reporesentation of both the day of the week ( Monday, Tueday), but
-also the Nth day of the week ( First tuesday of the month, last
-thursday of the year) These routines decode the day values */
-
-/* 1 == Monday, etc. */
-enum icalrecurrencetype_weekday icalrecurrencetype_day_day_of_week(short day);
-
-/* 0 == any of day of week. 1 == first, 2 = second, -2 == second to last, etc */
-short icalrecurrencetype_day_position(short day);
-
-/* Return the next occurance of 'r' after the time specified by 'after' */
-struct icaltimetype icalrecurrencetype_next_occurance(
-    struct icalrecurrencetype *r,
-    struct icaltimetype *after);
-
 union icaltriggertype 
 {
 	struct icaltimetype time; 
@@ -780,6 +705,173 @@ struct icalreqstattype icalreqstattype_from_string(char* str);
 char* icalreqstattype_as_string(struct icalreqstattype);
 
 #endif /* !ICALTYPES_H */
+/* -*- Mode: C -*- */
+/*======================================================================
+ FILE: icalrecur.h
+ CREATOR: eric 20 March 2000
+
+
+ (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of either: 
+
+    The LGPL as published by the Free Software Foundation, version
+    2.1, available at: http://www.fsf.org/copyleft/lesser.html
+
+  Or:
+
+    The Mozilla Public License Version 1.0. You may obtain a copy of
+    the License at http://www.mozilla.org/MPL/
+
+
+======================================================================*/
+
+#ifndef ICALRECUR_H
+#define ICALRECUR_H
+
+#include <time.h>
+
+/***********************************************************************
+ * Recurrance enumerations
+**********************************************************************/
+
+typedef enum icalrecurrencetype_frequency
+{
+    /* These enums are used to index an array, so don't change the
+       order or the integers */
+
+    ICAL_SECONDLY_RECURRENCE=0,
+    ICAL_MINUTELY_RECURRENCE=1,
+    ICAL_HOURLY_RECURRENCE=2,
+    ICAL_DAILY_RECURRENCE=3,
+    ICAL_WEEKLY_RECURRENCE=4,
+    ICAL_MONTHLY_RECURRENCE=5,
+    ICAL_YEARLY_RECURRENCE=6,
+    ICAL_NO_RECURRENCE=7
+
+} icalrecurrencetype_frequency;
+
+typedef enum icalrecurrencetype_weekday
+{
+    ICAL_NO_WEEKDAY,
+    ICAL_SUNDAY_WEEKDAY,
+    ICAL_MONDAY_WEEKDAY,
+    ICAL_TUESDAY_WEEKDAY,
+    ICAL_WEDNESDAY_WEEKDAY,
+    ICAL_THURSDAY_WEEKDAY,
+    ICAL_FRIDAY_WEEKDAY,
+    ICAL_SATURDAY_WEEKDAY
+} icalrecurrencetype_weekday;
+
+enum {
+    ICAL_RECURRENCE_ARRAY_MAX = 0x7f7f,
+    ICAL_RECURRENCE_ARRAY_MAX_BYTE = 0x7f
+};
+    
+const char* icalrecur_recurrence_to_string(icalrecurrencetype_frequency kind);
+icalrecurrencetype_frequency icalrecur_string_to_recurrence(const char* str);
+const char* icalrecur_weekday_to_string(icalrecurrencetype_weekday kind);
+icalrecurrencetype_weekday icalrecur_string_to_weekday(const char* str);
+
+
+/********************** Recurrence type routines **************/
+
+/* See RFC 2445 Section 4.3.10, RECUR Value, for an explaination of
+   the values and fields in struct icalrecurrencetype */
+
+#define ICAL_BY_SECOND_SIZE 61
+#define ICAL_BY_MINUTE_SIZE 61
+#define ICAL_BY_HOUR_SIZE 25
+#define ICAL_BY_DAY_SIZE 364 /* 7 days * 52 weeks */
+#define ICAL_BY_MONTHDAY_SIZE 32
+#define ICAL_BY_YEARDAY_SIZE 367
+#define ICAL_BY_WEEKNO_SIZE 54
+#define ICAL_BY_MONTH_SIZE 13
+#define ICAL_BY_SETPOS_SIZE 367
+
+struct icalrecurrencetype 
+{
+	icalrecurrencetype_frequency freq;
+
+
+	/* until and count are mutually exclusive. */
+       	struct icaltimetype until; 
+	int count;
+
+	short interval;
+	
+	icalrecurrencetype_weekday week_start;
+	
+	/* The BY* parameters can each take a list of values. Here I
+	 * assume that the list of values will not be larger than the
+	 * range of the value -- that is, the client will not name a
+	 * value more than once. 
+	 
+	 * Each of the lists is terminated with the value
+	 * ICAL_RECURRENCE_ARRAY_MAX unless the the list is full.
+	 */
+
+	short by_second[ICAL_BY_SECOND_SIZE];
+	short by_minute[ICAL_BY_MINUTE_SIZE];
+	short by_hour[ICAL_BY_HOUR_SIZE];
+	short by_day[ICAL_BY_DAY_SIZE]; /* Encoded value, see below */
+	short by_month_day[ICAL_BY_MONTHDAY_SIZE];
+	short by_year_day[ ICAL_BY_YEARDAY_SIZE];
+	short by_week_no[ICAL_BY_WEEKNO_SIZE];
+	short by_month[ICAL_BY_MONTH_SIZE];
+	short by_set_pos[ICAL_BY_SETPOS_SIZE];
+};
+
+
+void icalrecurrencetype_clear(struct icalrecurrencetype *r);
+
+/* The 'day' element of the by_day array is encoded to allow
+representation of both the day of the week ( Monday, Tueday), but also
+the Nth day of the week ( First tuesday of the month, last thursday of
+the year) These routines decode the day values */
+
+/* 1 == Monday, etc. */
+enum icalrecurrencetype_weekday icalrecurrencetype_day_day_of_week(short day);
+
+/* 0 == any of day of week. 1 == first, 2 = second, -2 == second to last, etc */
+short icalrecurrencetype_day_position(short day);
+
+/* Return the next occurance of 'r' after the time specified by 'after' */
+struct icaltimetype icalrecurrencetype_next_occurance(
+    struct icalrecurrencetype *r,
+    struct icaltimetype *after);
+
+
+
+typedef void icalrecur_iterator;
+void icalrecurrencetype_test();
+
+/***********************************************************************
+ * Recurrance rule parser
+**********************************************************************/
+
+struct icalrecurrencetype icalrecurrencetype_from_string(const char* str);
+char* icalrecurrencetype_as_string(struct icalrecurrencetype *recur);
+
+
+/********** recurrence routines ********************/
+
+icalrecur_iterator* icalrecur_iterator_new(struct icalrecurrencetype rule, struct icaltimetype dtstart);
+
+struct icaltimetype icalrecur_iterator_next(icalrecur_iterator*);
+
+int icalrecur_iterator_count(icalrecur_iterator*);
+
+void icalrecur_iterator_free(icalrecur_iterator*);
+
+/* Fills array up with at most 'count' time_t values, each
+   representing an occurrence time in seconds past the POSIX epoch */
+int icalrecur_expand_recurrence(char* rule, time_t start, 
+				int count, time_t* array);
+
+
+#endif
 /* -*- Mode: C -*- */
 /*======================================================================
   FILE: icalvalue.h
@@ -819,7 +911,7 @@ icalvalue* icalvalue_new(icalvalue_kind kind);
 
 icalvalue* icalvalue_new_clone(icalvalue* value);
 
-icalvalue* icalvalue_new_from_string(icalvalue_kind kind, char* str);
+icalvalue* icalvalue_new_from_string(icalvalue_kind kind, const char* str);
 
 void icalvalue_free(icalvalue* value);
 
@@ -1698,6 +1790,12 @@ icalproperty** icalcomponent_get_properties(icalcomponent* component,
  */ 
 
 
+/* Return the first VEVENT, VTODO or VJOURNAL sub-component of cop, or
+   comp if it is one of those types */
+
+icalcomponent* icalcomponent_get_inner(icalcomponent* comp);
+
+
 void icalcomponent_add_component(icalcomponent* parent,
 				icalcomponent* child);
 
@@ -2204,49 +2302,6 @@ int icalrestriction_check(icalcomponent* comp);
 
 
 
-/* -*- Mode: C -*- */
-/*======================================================================
- FILE: icalrecur.h
- CREATOR: eric 20 March 2000
-
-
- (C) COPYRIGHT 2000, Eric Busboom, http://www.softwarestudio.org
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
-
-    The LGPL as published by the Free Software Foundation, version
-    2.1, available at: http://www.fsf.org/copyleft/lesser.html
-
-  Or:
-
-    The Mozilla Public License Version 1.0. You may obtain a copy of
-    the License at http://www.mozilla.org/MPL/
-
-  The original code is icaltypes.h
-
-======================================================================*/
-
-#ifndef ICALRECUR_H
-#define ICALRECUR_H
-
-#include <time.h>
-
-
-typedef void icalrecur_iterator;
-void icalrecurrencetype_test();
-
-
-icalrecur_iterator* icalrecur_iterator_new(struct icalrecurrencetype rule, struct icaltimetype dtstart);
-
-struct icaltimetype icalrecur_iterator_next(icalrecur_iterator*);
-
-int icalrecur_iterator_count(icalrecur_iterator*);
-
-void icalrecur_iterator_free(icalrecur_iterator*);
-
-
-#endif
 /* -*- Mode: C -*-
   ======================================================================
   FILE: sspm.h Mime Parser

@@ -32,6 +32,7 @@
 #include <time.h>
 #include "icalenums.h"
 #include "icaltypes.h"
+#include "icalrecur.h"
                           
 typedef void icalvalue;
 
@@ -39,7 +40,7 @@ icalvalue* icalvalue_new(icalvalue_kind kind);
 
 icalvalue* icalvalue_new_clone(icalvalue* value);
 
-icalvalue* icalvalue_new_from_string(icalvalue_kind kind, char* str);
+icalvalue* icalvalue_new_from_string(icalvalue_kind kind, const char* str);
 
 void icalvalue_free(icalvalue* value);
 

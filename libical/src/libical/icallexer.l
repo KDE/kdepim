@@ -189,7 +189,8 @@ FR                       { return FR; }
 =                        { return EQUALS; }
 ,                        { return COMMA; }
 ;                        { return SEMICOLON; }
-[\-\+0-9]+		 { ical_yylval.v_string= icalmemory_tmp_copy(yytext);
+-                        { return MINUS; }
+[\+0-9]+		 { ical_yylval.v_string= icalmemory_tmp_copy(yytext);
                            return DIGITS; }
 T			 { return TIME_CHAR; }
 Z			 { return UTC_CHAR; }

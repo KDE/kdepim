@@ -32,6 +32,7 @@
 
 #include <stdio.h> /* For fprintf */
 #include <stdio.h> /* For stderr */
+#include <string.h> /* For strncmp */
 #include <assert.h>
 
 struct icalproperty_kind_map {
@@ -41,6 +42,7 @@ struct icalproperty_kind_map {
 
 static struct icalproperty_kind_map property_map[] = 
 {
+    { ICAL_ANY_PROPERTY, "ANY"},
     { ICAL_ACTION_PROPERTY, "ACTION"},
     { ICAL_ATTACH_PROPERTY, "ATTACH"},
     { ICAL_ATTENDEE_PROPERTY, "ATTENDEE"},
@@ -126,7 +128,7 @@ const char* icalenum_property_kind_to_string(icalproperty_kind kind)
 
 }
 
-icalproperty_kind icalenum_string_to_property_kind(char* string)
+icalproperty_kind icalenum_string_to_property_kind(const char* string)
 {
     int i;
 
@@ -134,11 +136,17 @@ icalproperty_kind icalenum_string_to_property_kind(char* string)
 	return ICAL_NO_PROPERTY;
     }
 
+
     for (i=0; property_map[i].kind  != ICAL_NO_PROPERTY; i++) {
 	if (strcmp(property_map[i].name, string) == 0) {
 	    return property_map[i].kind;
 	}
     }
+
+    if(strncmp(string,"X-",2)==0){
+	return ICAL_X_PROPERTY;
+    }
+
 
     return ICAL_NO_PROPERTY;
 }
@@ -173,6 +181,7 @@ static struct icalparameter_kind_map parameter_map[] =
     { ICAL_SENTBY_PARAMETER, "SENT-BY"},
     { ICAL_TZID_PARAMETER, "TZID"},
     { ICAL_VALUE_PARAMETER, "VALUE"},
+    { ICAL_X_PARAMETER, "X"},
 
     /* CAP parameters */
 
@@ -198,7 +207,7 @@ const char* icalenum_parameter_kind_to_string(icalparameter_kind kind)
 
 }
 
-icalparameter_kind icalenum_string_to_parameter_kind(char* string)
+icalparameter_kind icalenum_string_to_parameter_kind(const char* string)
 {
     int i;
 
@@ -210,6 +219,10 @@ icalparameter_kind icalenum_string_to_parameter_kind(char* string)
 	if (strcmp(parameter_map[i].name, string) == 0) {
 	    return parameter_map[i].kind;
 	}
+    }
+
+    if(strncmp(string,"X-",2)==0){
+	return ICAL_X_PARAMETER;
     }
 
     return ICAL_NO_PARAMETER;
@@ -319,7 +332,7 @@ const char* icalenum_component_kind_to_string(icalcomponent_kind kind)
 
 }
 
-icalcomponent_kind icalenum_string_to_component_kind(char* string)
+icalcomponent_kind icalenum_string_to_component_kind(const char* string)
 {
     int i;
 
@@ -424,61 +437,9 @@ icalvalue_kind icalenum_property_kind_to_value_kind(icalproperty_kind kind)
     return ICAL_NO_VALUE;
 }
 
-struct {icalrecurrencetype_weekday wd; const char * str; } 
-wd_map[] = {
-    {ICAL_SUNDAY_WEEKDAY,"SU"},
-    {ICAL_MONDAY_WEEKDAY,"MO"},
-    {ICAL_TUESDAY_WEEKDAY,"TU"},
-    {ICAL_WEDNESDAY_WEEKDAY,"WE"},
-    {ICAL_THURSDAY_WEEKDAY,"TH"},
-    {ICAL_FRIDAY_WEEKDAY,"FR"},
-    {ICAL_SATURDAY_WEEKDAY,"SA"},
-    {ICAL_NO_WEEKDAY,0}
-};
-
-const char* icalenum_weekday_to_string(icalrecurrencetype_weekday kind)
-{
-    int i;
-
-    for (i=0; wd_map[i].wd  != ICAL_NO_WEEKDAY; i++) {
-	if ( wd_map[i].wd ==  kind) {
-	    return wd_map[i].str;
-	}
-    }
-
-    return 0;
-}
-
 
 struct {
-	icalrecurrencetype_frequency kind;
-	const char* str;
-} freq_map[] = {
-    {ICAL_SECONDLY_RECURRENCE,"SECONDLY"},
-    {ICAL_MINUTELY_RECURRENCE,"MINUTELY"},
-    {ICAL_HOURLY_RECURRENCE,"HOURLY"},
-    {ICAL_DAILY_RECURRENCE,"DAILY"},
-    {ICAL_WEEKLY_RECURRENCE,"WEEKLY"},
-    {ICAL_MONTHLY_RECURRENCE,"MONTHLY"},
-    {ICAL_YEARLY_RECURRENCE,"YEARLY"},
-    {ICAL_NO_RECURRENCE,0}
-};
-
-const char* icalenum_recurrence_to_string(icalrecurrencetype_frequency kind)
-{
-    int i;
-
-    for (i=0; freq_map[i].kind != ICAL_NO_RECURRENCE ; i++) {
-	if ( freq_map[i].kind == kind ) {
-	    return freq_map[i].str;
-	}
-    }
-    return 0;
-}
-
-
-struct {
-	icalrecurrencetype_frequency kind;
+	 enum icalrequeststatus kind;
 	int major;
 	int minor;
 	const char* str;

@@ -15,6 +15,7 @@
 #include <time.h>
 #include "icalparameter.h"
 #include "icalvalue.h"  
+#include "icalrecur.h"
 
 typedef void icalproperty;
 

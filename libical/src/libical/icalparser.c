@@ -181,8 +181,8 @@ char* make_segment(char* start, char* end)
     
 }
 
-char* input_buffer;
-char* input_buffer_p;
+const char* input_buffer;
+const char* input_buffer_p;
 #define min(a,b) ((a) < (b) ? (a) : (b))   
 
 int icalparser_flex_input(char* buf, int max_size)
@@ -203,7 +203,7 @@ void icalparser_clear_flex_input(void)
     input_buffer_p = input_buffer+strlen(input_buffer);
 }
 
-/* Cal the flex parser to parse a complex value */
+/* Call the flex/bison parser to parse a complex value */
 
 icalvalue*  icalparser_parse_value(icalvalue_kind kind,
                                    const char* str, icalproperty** error)
@@ -737,7 +737,16 @@ icalcomponent* icalparser_add_line(icalparser* parser,
 
 	    kind = icalenum_string_to_parameter_kind(name);
 
-	    if (kind != ICAL_NO_PARAMETER){
+	    if(kind == ICAL_X_PARAMETER){
+		param = icalparameter_new(ICAL_X_PARAMETER);
+		
+		if(param != 0){
+		    icalparameter_set_xname(param,name);
+		    icalparameter_set_xvalue(param,pvalue);
+		}
+
+
+	    } else if (kind != ICAL_NO_PARAMETER){
 		param = icalparameter_new_from_string(kind,pvalue);
 	    } else {
 		/* Error. Failed to parse the parameter*/
