@@ -17,10 +17,14 @@
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <kurlrequester.h>
+#include <kfiledialog.h>
+#include <kprocess.h>
 
 extern CryptPlugWrapper* pWrapper;
 
-CertManager::CertManager( QWidget* parent, const char* name ) :KMainWindow( parent, name )
+CertManager::CertManager( QWidget* parent, const char* name ) :
+    KMainWindow( parent, name ),
+    gpgsmProc( 0 )
 {
   KMenuBar* bar = menuBar();
 
@@ -46,28 +50,42 @@ CertManager::CertManager( QWidget* parent, const char* name ) :KMainWindow( pare
   revokeCert->plug( certMenu );
   revokeCert->setEnabled( false );
 
-  // Extend Cerificate
+  // Extend Certificate
   KAction* extendCert = new KAction( i18n("Extend Certificate"), QIconSet(), 0, this, SLOT( extendCertificate() ),
                                      actionCollection(), "extendCert" );
   extendCert->plug( certMenu );
   extendCert->setEnabled( false );
 
+  // Import Certificates
+  QPopupMenu* certImportMenu = new QPopupMenu( certMenu, "certImportMenu" );
+  certMenu->insertItem( i18n("&Import" ), certImportMenu );
+
+  // Import from file
+  KAction* importCertFromFile = new KAction( i18n("From &File..."), QIconSet(),
+                                             0, this,
+                                             SLOT( importCertFromFile() ),
+                                             actionCollection(),
+                                             "importCertFromFile" );
+  importCertFromFile->plug( certImportMenu );
+  importCertFromFile->setEnabled( true );
+
+
   // CRL menu --------------------------------------------------
   QPopupMenu* crlMenu = new QPopupMenu( bar, "crlMenu" );
   bar->insertItem( i18n( "CRL" ), crlMenu );
 
-  // Import
+  // Import CRLs
   QPopupMenu* crlImportMenu = new QPopupMenu( crlMenu, "crlImportMenu" );
-  crlMenu->insertItem( i18n("Import" ), crlImportMenu );
+  crlMenu->insertItem( i18n("&Import" ), crlImportMenu );
 
   // Import from file
-  KAction* importCRLFromFile = new KAction( i18n("from file"), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
+  KAction* importCRLFromFile = new KAction( i18n("From &File..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
   importCRLFromFile->plug( crlImportMenu );
   importCRLFromFile->setEnabled( false );
 
   // Import from file
-  KAction* importCRLFromLDAP = new KAction( i18n("from LDAP"), QIconSet(), 0, this, SLOT( importCRLFromLDAP() ),
+  KAction* importCRLFromLDAP = new KAction( i18n("From &LDAP"), QIconSet(), 0, this, SLOT( importCRLFromLDAP() ),
                                             actionCollection(), "importCRLFromLDAP" );
   importCRLFromLDAP->plug( crlImportMenu );
   importCRLFromLDAP->setEnabled( false );
@@ -114,7 +132,7 @@ void CertManager::newCertificate()
           // Store in file
           QFile file( wizard->storeUR->url() );
           if( file.open( IO_WriteOnly ) ) {
-              file.writeBlock( wizard->keyData().data(), 
+              file.writeBlock( wizard->keyData().data(),
                                wizard->keyData().count() );
               file.close();
           } else {
@@ -122,7 +140,7 @@ void CertManager::newCertificate()
                                   i18n( "Could not open output file for writing" ) );
               return;
           }
-          
+
       }
   }
 }
@@ -147,12 +165,58 @@ void CertManager::revokeCertificate()
 
 /**
    This slot is invoked when the user selects extend certificate.
-   It will send an extension request fir the selected certificates
+   It will send an extension request for the selected certificates
 */
 void CertManager::extendCertificate()
 {
   qDebug("Not Yet Implemented");
 }
+
+
+/**
+   This slot is invoke dwhen the user selects Certificates/Import/From File.
+*/
+void CertManager::importCertFromFile()
+{
+    QString certFilename = KFileDialog::getOpenFileName( QString::null,
+                                                         QString::null,
+                                                         this,
+                                                         i18n( "Select Certificate File" ) );
+
+    if( !certFilename.isEmpty() ) {
+        gpgsmProc = new KProcess();
+        *gpgsmProc << "gpgsm";
+        *gpgsmProc << "--import" << certFilename;
+        connect( gpgsmProc, SIGNAL( processExited( KProcess* ) ),
+                 this, SLOT( slotGPGSMExited() ) );
+        if( !gpgsmProc->start() ) { // NotifyOnExit, NoCommunication
+                                    // are defaults
+            KMessageBox::error( this, i18n( "Couldn't start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
+            delete gpgsmProc;
+            gpgsmProc = 0;
+        }
+    }
+}
+
+
+/**
+   This slot is called when the gpgsm process that imports a
+   certificate file exists.
+*/
+void CertManager::slotGPGSMExited()
+{
+    if( !gpgsmProc->normalExit() )
+        KMessageBox::error( this, i18n( "The GPGSM process that tried to import the certificate file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
+    else
+        if( gpgsmProc->exitStatus() )
+            KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file." ), i18n( "Certificate Manager Error" ) );
+        else
+            KMessageBox::information( this, i18n( "Certificate file imported successfully." ), i18n( "Certificate Manager Error" ) );
+
+    if( gpgsmProc )
+        delete gpgsmProc;
+}
+
 
 /**
    This slot will import CRLs from a file.

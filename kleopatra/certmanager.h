@@ -3,8 +3,9 @@
 
 #include <kmainwindow.h>
 class CertBox;
+class KProcess;
 
-class CertManager :public KMainWindow 
+class CertManager :public KMainWindow
 {
 Q_OBJECT
 
@@ -15,15 +16,18 @@ protected:
   void loadCertificates();
 
 protected slots:
-  void newCertificate();
-  void quit();
-  void revokeCertificate();
-  void extendCertificate();
-  void importCRLFromFile();
-  void importCRLFromLDAP();
+    void newCertificate();
+    void quit();
+    void revokeCertificate();
+    void extendCertificate();
+    void importCertFromFile();
+    void importCRLFromFile();
+    void importCRLFromLDAP();
+    void slotGPGSMExited();
 
 private:
-  CertBox* _certBox;
+    KProcess* gpgsmProc;
+    CertBox* _certBox;
 };
 
 #endif // _CERTMANAGER_H_
