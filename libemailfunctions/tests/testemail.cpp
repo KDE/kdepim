@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
   // Parenthesis
   checkGetNameAndEmail( "faure@kde.org (David Faure)", "David Faure", "faure@kde.org", true );
   checkGetNameAndEmail( "(David Faure) faure@kde.org", "David Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "My Name (me) <me@home.net>", "My Name (me)", "me@home.net", true ); // #93513
 
   // Double-quotes inside parenthesis
   checkGetNameAndEmail( "faure@kde.org (David \"Crazy\" Faure)", "David \"Crazy\" Faure", "faure@kde.org", true );
