@@ -26,9 +26,9 @@
 #include <qptrlist.h>
 #include <qstring.h>
 #include <qcstring.h>
-#include <ksyncentry.h>
 
-#include <kdevice.h> 
+#include "ksyncentry.h"
+#include "kdevice.h" 
 #include "koperations.h"
 
 class Kapabilities;

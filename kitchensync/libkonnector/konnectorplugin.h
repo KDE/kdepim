@@ -24,12 +24,12 @@
 #include <qiconset.h>
 #include <qwidget.h>
 #include <qstringlist.h>
-#include <ksyncentry.h>
 #include <qptrlist.h>
+
+#include "ksyncentry.h"
 #include "koperations.h"
 
 class Kapabilities;
-class KSyncEntry;
 
 /**
  *  The base class of all plugins. The functions are
