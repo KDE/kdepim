@@ -85,6 +85,9 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   groupView->addColumn(i18n("Description"));
   groupView->setTreeStepSize(15);
 
+  connect(groupView, SIGNAL(doubleClicked(QListViewItem*)),
+          this, SLOT(slotItemDoubleClicked(QListViewItem*)));
+
   //layout
   QGridLayout *topL=new QGridLayout(page,3,1,0,5);
   QHBoxLayout *filterL=new QHBoxLayout(10);
@@ -276,6 +279,12 @@ void KNGroupBrowser::slotItemExpand(QListViewItem *it)
   }
 
   createListItems(it);
+}
+
+
+void KNGroupBrowser::slotItemDoubleClicked(QListViewItem *it)
+{
+  if (it && (it->childCount()==0)) static_cast<CheckItem*>(it)->setOn(!static_cast<CheckItem*>(it)->isOn());
 }
 
 

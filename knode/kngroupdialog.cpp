@@ -51,8 +51,6 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
 
   connect(groupView, SIGNAL(selectionChanged(QListViewItem*)),
     this, SLOT(slotItemSelected(QListViewItem*)));
-  connect(groupView, SIGNAL(doubleClicked(QListViewItem*)),
-    this, SLOT(slotItemDoubleClicked(QListViewItem*)));
   connect(groupView, SIGNAL(selectionChanged()),
     this, SLOT(slotSelectionChanged()));
   connect(subView, SIGNAL(selectionChanged(QListViewItem*)),
@@ -205,13 +203,6 @@ void KNGroupDialog::slotItemSelected(QListViewItem *it)
 
 
 
-void KNGroupDialog::slotItemDoubleClicked(QListViewItem *it)
-{
-  if (it) static_cast<CheckItem*>(it)->setOn(!static_cast<CheckItem*>(it)->isOn());
-}
-
-
-
 void KNGroupDialog::slotSelectionChanged()
 {
   if (!groupView->selectedItem())
@@ -241,7 +232,6 @@ void KNGroupDialog::slotArrowBtn1()
 
   arrowBtn1->setEnabled(false);
 }
-
 
 
 void KNGroupDialog::slotArrowBtn2()

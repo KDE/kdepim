@@ -90,6 +90,7 @@ class KNGroupBrowser : public KDialogBase {
   protected slots:
     void slotLoadList();
     void slotItemExpand(QListViewItem *it);
+    void slotItemDoubleClicked(QListViewItem *it);   // double click checks/unchecks (opens/closes) item
     void slotFilter(const QString &txt);
     void slotRefilter();
 
