@@ -192,7 +192,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
     QString xml = Note::journalToXML( journal );
     kdDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
 
-    if( !kmailUpdate( resource, sernum, xml ) ) {
+    if( !kmailUpdate( resource, sernum, xml, journal->summary() ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
       return false;
     }
@@ -232,8 +232,9 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     sernum = 0;
   }
 
-  QString xml = Note::journalToXML( dynamic_cast<KCal::Journal*>( i ) );
-  if( !xml.isEmpty() && kmailUpdate( resource, sernum, xml ) )
+  KCal::Journal* journal = dynamic_cast<KCal::Journal*>( i );
+  QString xml = Note::journalToXML( journal );
+  if( !xml.isEmpty() && kmailUpdate( resource, sernum, xml, journal->summary() ) )
     mUidMap[ i->uid() ] = StorageReference( resource, sernum );
 }
 

@@ -80,7 +80,7 @@ public:
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
   bool kmailUpdate( const QString& resource,
                     Q_UINT32& sernum,
-                    const QCString& subject,
+                    const QString& subject,
                     const QStringList& attachments,
                     const QStringList& deletedAttachments );
 
