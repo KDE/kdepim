@@ -83,7 +83,6 @@ void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 	else
 	    fAddressInfo.entry[entryLp] = 0L;
 	}
-    return;
     }
 
 
@@ -252,6 +251,10 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.15  2001/04/11 11:02:37  leitner
+// A void function must not return anything. Also there was an uninitialize
+// variable being used.
+//
 // Revision 1.14  2001/04/04 21:20:32  stern
 // Added support for category information and copy constructors
 //
