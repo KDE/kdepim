@@ -1,5 +1,5 @@
-#ifndef _LOGING_H_
-#define _LOGING_H_
+#ifndef _LOGGING_H_
+#define _LOGGING_H_
 
 #include "preferences.h"
 #include <qstring.h>
@@ -10,17 +10,17 @@ class Task;
  * Log changes to a file.
  */
 
-class Loging {
+class Logging {
 
 private:
   Preferences *_preferences;
-  static Loging *_instance;
+  static Logging *_instance;
   void log( Task *task, short type, long minutes = 0);
 
 public:
-  static Loging *instance();
-  Loging();
-  ~Loging();
+  static Logging *instance();
+  Logging();
+  ~Logging();
   void start( Task *task);
   void stop( Task *task);
   void newTotalTime( Task *task, long minutes);
