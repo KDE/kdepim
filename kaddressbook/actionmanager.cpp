@@ -207,7 +207,9 @@ void ActionManager::initReadOnlyActions()
                                             0,
                                             this, SLOT(slotFilterActivated(int)),
                                             mACollection, "select_filter");
+#if KDE_VERSION >= 307
     mActionSelectFilter->setRemoveAmpersandsInCombo( true );
+#endif
 
     connect(mActionSelectFilter, SIGNAL(activated(int)),
             SLOT(slotFilterActivated(int)));
