@@ -873,7 +873,8 @@ void KNGroup::scoreArticles(bool onlynew)
     knGlobals.top->setCursorBusy(false);
 
     //kdDebug(5003) << KNScorableArticle::notifyC->collection() << endl;
-    KNScorableArticle::notifyC->displayCollection();
+    if (KNScorableArticle::notifyC)
+      KNScorableArticle::notifyC->displayCollection();
   }
 }
 
