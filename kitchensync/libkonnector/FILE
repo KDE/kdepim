@@ -1,3 +1,6 @@
+konnectorplugin.[cpp,h] Holger Freyther <freyther@kde.org>
+			* The base class for all KonnectorPlugins
+
 kdevice.[cpp,h]:	Holger Freyther <freyther@kde.org>
 			* A class to store "device" informations
 			

@@ -49,6 +49,7 @@ class KSyncEntry
       identifier for the entry, when user interaction is required.
     */
     virtual QString name() = 0;
+    virtual void setName(const QString & ) = 0;
     /**
       Return a unique id. This is used to uniquely identify the entry. Two
       entries having the same id are considered to be two variants of the same
@@ -56,6 +57,9 @@ class KSyncEntry
       id.
     */
     virtual QString id() = 0;
+    virtual void setId(const QString & ) = 0;
+    virtual QString oldId() = 0;
+    virtual void setOldId(const QString &) = 0;
     /**
       Return a time stamp representing the time of the last change. This is only
       used to compare, if an entry has changed or not. It is not used to define
@@ -65,6 +69,7 @@ class KSyncEntry
       has to be different.
     */
     virtual QDateTime timestamp() = 0;
+    virtual void setTimestamp(const QDateTime &) = 0;
     /**
       Return, if the two entries are equal. Two entries are considered to be
       equal, if they contain exactly the same information, including the same id
