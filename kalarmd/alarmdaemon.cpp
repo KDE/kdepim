@@ -342,8 +342,8 @@ void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const
   kdDebug(5901) << "  From: " << from.toString() << "  To: " << to.toString() << endl;
 
   QPtrList<Event> alarmEvents;
-  QValueList<KOAlarm*> alarms;
-  QValueList<KOAlarm*>::ConstIterator it;
+  QValueList<Alarm*> alarms;
+  QValueList<Alarm*>::ConstIterator it;
   switch ( cal->actionType() ) {
     case ADCalendar::KORGANIZER:
       alarms = cal->alarms( from, to );
@@ -648,8 +648,8 @@ void AlarmDaemon::dumpAlarms()
   ADCalendarBase *cal;
   for( cal = cals.first(); cal; cal = cals.next() ) {
     kdDebug(5900) << "  Cal: " << cal->urlString() << endl;
-    QValueList<KOAlarm*> alarms = cal->alarms( start, end );
-    QValueList<KOAlarm*>::ConstIterator it;
+    QValueList<Alarm*> alarms = cal->alarms( start, end );
+    QValueList<Alarm*>::ConstIterator it;
     for( it = alarms.begin(); it != alarms.end(); ++it ) {
       Alarm *a = *it;
       kdDebug(5900) << "    " << a->parent()->summary() << " ("
