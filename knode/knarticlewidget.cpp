@@ -313,17 +313,18 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   if (!knGlobals.cfgManager->readNewsViewer()->interpretFormatTags())
     beautification=false;
 
+  uint lastReplacement=0;
   for(uint idx=0; idx<len; idx++){
     
     switch(text[idx].latin1()) {
       
-      case '\r':  break;
-      case '\n':  result+="<br>"; break;  
-      case '<' :  result+="&lt;"; break;
-      case '>' :  result+="&gt;"; break;
-      case '&' :  result+="&amp;"; break;
-      case '"' :  result+="&quot;"; break;
-      case '\t':  result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;   // tab == 8 spaces
+      case '\r':  lastReplacement=idx; break;
+      case '\n':  lastReplacement=idx; result+="<br>"; break;
+      case '<' :  lastReplacement=idx; result+="&lt;"; break;
+      case '>' :  lastReplacement=idx; result+="&gt;"; break;
+      case '&' :  lastReplacement=idx; result+="&amp;"; break;
+      case '"' :  lastReplacement=idx; result+="&quot;"; break;
+      case '\t':  lastReplacement=idx; result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;   // tab == 8 spaces
       
       case 32 :
         if(text[idx+1].latin1()==32)  {
@@ -340,12 +341,48 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             forceNBSP=true; // force &nbsp; for the rest of this line
           }
           else result+=' ';
+        lastReplacement=idx;
+        break;
+
+      case '@' :            // email-addresses or message-ids
+        if (parseURLs) {
+          uint startIdx = idx;
+          // move backwards to the begin of the address, stop when
+          // the end of the last replacement is reached. (
+
+          while ((startIdx>0) && (startIdx>lastReplacement) && (text[startIdx-1]!=' ') && (text[startIdx-1]!='\t')
+                                                            && (text[startIdx-1]!=',') && (text[startIdx-1]!='<')
+                                                            && (text[startIdx-1]!='>') && (text[startIdx-1]!='(')
+                                                            && (text[startIdx-1]!=')') && (text[startIdx-1]!='[')
+                                                            && (text[startIdx-1]!=']') && (text[startIdx-1]!='{')
+                                                            && (text[startIdx-1]!='}') )
+            startIdx--;
+
+          regExp="[^\\s<>()\"|\\[\\]{}]+";
+          if (regExp.match(text,startIdx,&matchLen)!=-1) {
+            if (text[startIdx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[startIdx+matchLen-1]==',')   // remove trailing comma
+              matchLen--;
+            if (matchLen < 3)
+              result+=text[idx];
+            else {
+              result.remove(result.length()-(idx-startIdx), idx-startIdx);
+              result+=QString::fromLatin1("<a href=\"addrOrId:") + text.mid(startIdx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(startIdx,matchLen) + QString::fromLatin1("</a>");
+              idx=startIdx+matchLen-1;
+              lastReplacement=idx;
+            }
+            break;
+          }
+        }
+        result+=text[idx];
         break;
       
       case 'h' :  
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
-          regExp="^https?://[^\\s<>()\"|]+";
+          regExp="^https?://[^\\s<>()\"|\\[\\]{}]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -354,6 +391,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
+            lastReplacement=idx;
             break;
           }
         }
@@ -363,7 +401,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'w' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
-          regExp="^www\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
+          regExp="^www\\.[^\\s<>()\"|\\[\\]{}]+\\.[^\\s<>()\"|\\[\\]{}]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -372,6 +410,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             result+=QString::fromLatin1("<a href=\"http://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
+            lastReplacement=idx;
             break;
           }
         }
@@ -381,7 +420,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'f' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
-          regExp="^ftp://[^\\s<>()\"|]+";
+          regExp="^ftp://[^\\s<>()\"|\\[\\]{}]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -390,9 +429,10 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
+            lastReplacement=idx;
             break;
           }
-          regExp="^ftp\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
+          regExp="^ftp\\.[^\\s<>()\"|\\[\\]{}]+\\.[^\\s<>()\"|\\[\\]{}]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -401,6 +441,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             result+=QString::fromLatin1("<a href=\"ftp://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
+            lastReplacement=idx;
             break;
           }
         }
@@ -410,7 +451,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'n' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='e')) {   // don't do all the stuff for every 'e'
-          regExp="^news:[^\\s<>()\"|]+";
+          regExp="^news:[^\\s<>()\"|\\[\\]{}]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -419,6 +460,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
+            lastReplacement=idx;
             break;
           }
         }
@@ -428,7 +470,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'm' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='a')) {   // don't do all the stuff for every 'm'
-          regExp="^mailto:[^\\s<>()\"|]+";
+          regExp="^mailto:[^\\s<>()\"|\\[\\]{}]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -437,6 +479,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
+            lastReplacement=idx;
             break;
           }
         }
@@ -465,6 +508,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                   break;                  
               }
               idx+=matchLen-1;
+              lastReplacement=idx;
               break;
             }
           }
@@ -1039,6 +1083,22 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   else if(a.left(7)=="mailto:") {
     target=a.mid(7, a.length()-7);
     type=ATmailto;
+  }
+  else if(a.left(9)=="addrOrId:") {
+    target=a.mid(9, a.length()-9);
+
+    if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)
+      type=ATmailto;
+    else {
+      switch (KMessageBox::warningYesNoCancel(this, i18n("<qt>Do you want treat the selected text as an <b>email address</b> or a <b>message-id</b>?</qt>"),
+                                              i18n("Address or ID"), i18n("&Email"), i18n("&Message-Id"))) {
+        case KMessageBox::Yes:  type=ATmailto;
+                                break;
+        case KMessageBox::No:   type=ATmsgid;
+                                break;
+        default:                type=ATunknown;
+      }
+    }
   }
 
   if((button==LeftButton)||(button==MidButton)) {
