@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kab_format>
+<!-- FIXME: This isn't finished yet -->
+
+<kab-definition name="vcard_3_0">
+
+<field
+  name="name"
+  caption="Name"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="profile"
+  caption="Profile"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="source"
+  caption="Source"
+  unique="true"
+  mimetype="VCardValue/URI"
+/>
+
+<field
+  name="fullName"
+  caption="Full Name"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="n"
+  caption="What goes here ?"
+  unique="true"
+  mimetype="VCardValue/n"
+/>
+
+<field
+  name="nickname"
+  caption="Nickname"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="photo"
+  caption="Photograph"
+  unique="true"
+  mimetype="VCardValue/image"
+/>
+
+<field
+  name="birthday"
+  caption="Birthday"
+  unique="true"
+  mimetype="VCardValue/date"
+/>
+
+<field
+  name="address"
+  caption="Address"
+  unique="true"
+  mimetype="VCardValue/address"
+/>
+
+<field
+  name="telephone"
+  caption="Telephone"
+  unique="true"
+  mimetype="VCardValue/tel"
+/>
+
+<field
+  name="email"
+  caption="email"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="mailer"
+  caption="Mailer"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="timezone"
+  caption="Time Zone"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="geo"
+  caption="Geographical location"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="title"
+  caption="Title"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="role"
+  caption="Rôle"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="logo"
+  caption="Logo"
+  unique="true"
+  mimetype="VCardValue/image"
+/>
+
+<field
+  name="agent"
+  caption="Agent"
+  unique="true"
+  mimetype="VCardValue/agent"
+/>
+
+<field
+  name="organization"
+  caption="Organization"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="categories"
+  caption="Categories"
+  unique="true"
+  mimetype="VCardValue/textList"
+/>
+
+<field
+  name="note"
+  caption="Note"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="productID"
+  caption="Product ID"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="revision"
+  caption="Revision"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="sortString"
+  caption="Sort String"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="sound"
+  caption="Sound"
+  unique="true"
+  mimetype="VCardValue/sound"
+/>
+
+<field
+  name="UID"
+  caption="UID"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="URL"
+  caption="URL"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="version"
+  caption="Version"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="class"
+  caption="Class"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+<field
+  name="key"
+  caption="Key"
+  unique="true"
+  mimetype="VCardValue/text"
+/>
+
+</kab-definition>
