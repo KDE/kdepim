@@ -101,10 +101,10 @@ void Todo::setDtDue(const QDateTime &dtDue, bool first )
 
 QDateTime Todo::dtDue( bool first ) const
 {
-  if ( doesRecur() && !first )
+  if ( doesRecur() && !first && mDtRecurrence.isValid() )
     return mDtRecurrence;
-  else
-    return mDtDue;
+
+  return mDtDue;
 }
 
 QString Todo::dtDueTimeStr() const
@@ -239,5 +239,8 @@ void Todo::setDtRecurrence( const QDateTime &dt )
 
 QDateTime Todo::dtRecurrence() const
 {
+  if ( !mDtRecurrence.isValid() )
+    return mDtDue;
+
   return mDtRecurrence;
 }
