@@ -20,7 +20,7 @@
 #ifndef KABC_RESOURCEGROUPWISE_H
 #define KABC_RESOURCEGROUPWISE_H
 
-#include <kabc/resource.h>
+#include <kabcresourcecached.h>
 
 class KConfig;
 
@@ -30,7 +30,7 @@ namespace KABC {
 
 class GroupwisePrefs;
 
-class ResourceGroupwise : public Resource
+class ResourceGroupwise : public ResourceCached
 {
   Q_OBJECT
 
@@ -58,15 +58,12 @@ class ResourceGroupwise : public Resource
     bool save( Ticket * );
     bool asyncSave( Ticket * );
 
-    void insertAddressee( const Addressee &addr );
-    void removeAddressee( const Addressee& addr );
-
   protected:
     void init();
     void initGroupwise();
 
   private slots:
-    void loadFinished( const KABC::Addressee::List& );
+    void loadFinished();
 
   private:
     GroupwisePrefs *mPrefs;

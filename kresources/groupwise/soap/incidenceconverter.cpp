@@ -77,6 +77,8 @@ ns1__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event )
   if ( event->hasEndDate() )
     appointment->endDate = qDateTimeToChar( event->dtEnd(), mTimezone );
 
+  appointment->acceptLevel = Busy;
+
   KCal::Alarm::List alarms = event->alarms();
   if ( !alarms.isEmpty() ) {
     ns1__Alarm* alarm = soap_new_ns1__Alarm( soap(), -1 );

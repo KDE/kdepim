@@ -27,6 +27,7 @@
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
+#include "kabc_resourcegroupwise.h"
 #include "kcal_resourcegroupwise.h"
 #include "soapH.h"
 
@@ -70,10 +71,13 @@ void ReadAddressBooksJob::setAddressBookIds( const QStringList &ids )
   mAddressBookIds = ids;
 }
 
+void ReadAddressBooksJob::setResource( KABC::ResourceGroupwise *resource )
+{
+  mResource = resource;
+}
+
 void ReadAddressBooksJob::run()
 {
-  mAddresseeList.clear();
-
   mSoap->header->ns1__session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
   soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
@@ -123,7 +127,19 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
       KABC::Addressee addr = converter.convertFromContact( contact );
       if ( !addr.isEmpty() ) {
         addr.insertCustom( "GWRESOURCE", "CONTAINER", converter.stringToQString( id ) );
-        mAddresseeList.append( addr );
+
+        QString remoteUid = converter.stringToQString( (*it)->id );
+
+        KABC::Addressee oldAddressee = mResource->findByUid( mResource->localUid( remoteUid ) );
+        if ( oldAddressee.isEmpty() ) // new addressee
+          mResource->setRemoteUid( addr.uid(), remoteUid );
+        else {
+          addr.setUid( oldAddressee.uid() );
+          mResource->removeAddressee( oldAddressee );
+        }
+
+        mResource->insertAddressee( addr );
+        mResource->clearChange( addr );
       }
     }
   }

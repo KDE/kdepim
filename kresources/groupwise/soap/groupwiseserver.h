@@ -31,6 +31,10 @@
 
 #include "gwjobs.h"
 
+namespace KABC {
+class ResourceGroupwise;
+}
+
 namespace KCal {
 class Calendar;
 class Incidence;
@@ -64,9 +68,10 @@ class GroupwiseServer : public QObject
 
     QMap<QString, QString> addressBookList();
 
-    bool readAddressBooks( const QStringList &addrBookIds );
+    bool readAddressBooks( const QStringList &addrBookIds, KABC::ResourceGroupwise* );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
+    bool changeAddressee( const KABC::Addressee& );
     bool removeAddressee( const KABC::Addressee& );
 
     bool dumpData();
@@ -77,11 +82,8 @@ class GroupwiseServer : public QObject
     bool getCategoryList();
 
   signals:
-    void readAddressBooksFinished( const KABC::Addressee::List& );
+    void readAddressBooksFinished();
     void readCalendarFinished();
-
-  protected slots:
-    void slotReadAddressBooksFinished();
 
   protected:
     void dumpCalendarFolder( const std::string &id );
@@ -102,7 +104,6 @@ class GroupwiseServer : public QObject
     
     struct soap *mSoap;
     KPIM::ThreadWeaver::Weaver *mWeaver;
-    ReadAddressBooksJob *mReadAddressBooksJob;
 };
 
 #endif

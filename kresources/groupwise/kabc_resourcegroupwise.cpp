@@ -33,7 +33,7 @@
 using namespace KABC;
 
 ResourceGroupwise::ResourceGroupwise( const KConfig *config )
-  : Resource( config )
+  : ResourceCached( config )
 {
   init();
 
@@ -51,7 +51,7 @@ ResourceGroupwise::ResourceGroupwise( const KURL &url,
                                       const QString &password,
                                       const QStringList &readAddressBooks,
                                       const QString &writeAddressBook )
-  : Resource( 0 )
+  : ResourceCached( 0 )
 {
   init();
 
@@ -82,17 +82,14 @@ void ResourceGroupwise::initGroupwise()
   mServer = new GroupwiseServer( url, mPrefs->user(),
                                  mPrefs->password(), this );
 
-  connect( mServer, SIGNAL( readAddressBooksFinished( const KABC::Addressee::List& ) ),
-           this, SLOT( loadFinished( const KABC::Addressee::List& ) ) );
+  connect( mServer, SIGNAL( readAddressBooksFinished() ),
+           this, SLOT( loadFinished() ) );
 }
 
 ResourceGroupwise::~ResourceGroupwise()
 {
-  kdDebug() << "KABC::~ResourceGroupwise()" << endl;
-
   delete mPrefs;
-
-  kdDebug() << "KABC::~ResourceGroupwise() done" << endl;
+  mPrefs = 0;
 }
 
 void ResourceGroupwise::readConfig( const KConfig * )
@@ -102,9 +99,6 @@ void ResourceGroupwise::readConfig( const KConfig * )
 
 void ResourceGroupwise::writeConfig( KConfig *config )
 {
-  kdDebug() << "ResourceGroupwise::writeConfig() " << endl;
-  kdDebug() << mPrefs->host() << endl;
-
   Resource::writeConfig( config );
 
   mPrefs->writeConfig();
@@ -137,55 +131,56 @@ void ResourceGroupwise::doClose()
 
 bool ResourceGroupwise::load()
 {
-  mAddrMap.clear();
-
-  mServer->readAddressBooks( mPrefs->readAddressBooks() );
-
-  return true;
+  return asyncLoad();
 }
 
 bool ResourceGroupwise::asyncLoad()
 {
   mAddrMap.clear();
+  loadCache();
 
-  mServer->readAddressBooks( mPrefs->readAddressBooks() );
+  mServer->readAddressBooks( mPrefs->readAddressBooks(), this );
 
   return true;
 }
 
-bool ResourceGroupwise::save( Ticket* )
+bool ResourceGroupwise::save( Ticket *ticket )
 {
-  return false; // readonly
+  return asyncSave( ticket );
 }
 
 bool ResourceGroupwise::asyncSave( Ticket* )
 {
-  return false; // readonly
-}
+  KABC::Addressee::List::Iterator it;
 
-void ResourceGroupwise::insertAddressee( const Addressee& addr )
-{
-  KABC::Addressee addressee = addr;
-
-  if ( mServer->insertAddressee( mPrefs->writeAddressBook(), addressee ) )
-    mAddrMap.insert( addressee.uid(), addressee );
-}
-
-void ResourceGroupwise::removeAddressee( const Addressee& addr )
-{
-  if ( mServer->removeAddressee( addr ) )
-    mAddrMap.remove( addr.uid() );
-}
-
-void ResourceGroupwise::loadFinished( const KABC::Addressee::List &addresses )
-{
-  KABC::Addressee::List::ConstIterator it;
-  for ( it = addresses.begin(); it != addresses.end(); ++it ) {
-    KABC::Addressee addr = (*it);
-    addr.setChanged( false );
-    addr.setResource( this );
-    mAddrMap.insert( addr.uid(), addr );
+  KABC::Addressee::List addedList = addedAddressees();
+  for ( it = addedList.begin(); it != addedList.end(); ++it ) {
+    if ( mServer->insertAddressee( mPrefs->writeAddressBook(), *it ) ) {
+      clearChange( *it );
+      setRemoteUid( (*it).uid(), (*it).custom( "GWRESOURCE", "UID" ) );
+    }
   }
+
+  KABC::Addressee::List changedList = changedAddressees();
+  for ( it = changedList.begin(); it != changedList.end(); ++it ) {
+    if ( mServer->changeAddressee( *it ) )
+      clearChange( *it );
+  }
+
+  KABC::Addressee::List deletedList = deletedAddressees();
+  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+    if ( mServer->removeAddressee( *it ) )
+      clearChange( *it );
+  }
+
+  saveCache();
+
+  return true;
+}
+
+void ResourceGroupwise::loadFinished()
+{
+  saveCache();
 
   emit loadingFinished( this );
 }

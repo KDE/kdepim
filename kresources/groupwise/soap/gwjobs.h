@@ -29,6 +29,10 @@
 #include <kabc/addressee.h>
 #include <libkdepim/weaver.h>
 
+namespace KABC {
+class ResourceGroupwise;
+}
+
 namespace KCal {
 class Calendar;
 class ResourceGroupwise;
@@ -62,7 +66,8 @@ class ReadAddressBooksJob : public GWJob
 
     void setAddressBookIds( const QStringList& );
 
-    KABC::Addressee::List addresseeList() { return mAddresseeList; }
+    // we need the resource here for doing uid mapping
+    void setResource( KABC::ResourceGroupwise* );
 
   protected:
     void run();
@@ -70,7 +75,7 @@ class ReadAddressBooksJob : public GWJob
 
   private:
     QStringList mAddressBookIds;
-    KABC::Addressee::List mAddresseeList;
+    KABC::ResourceGroupwise *mResource;
 };
 
 class ReadCalendarJob : public GWJob

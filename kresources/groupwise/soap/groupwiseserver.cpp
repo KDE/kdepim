@@ -350,22 +350,18 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
   return map;
 }
 
-bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds )
+bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::ResourceGroupwise *resource )
 {
-  mReadAddressBooksJob = new ReadAddressBooksJob( mUrl, mSession, 0 );
-  mReadAddressBooksJob->setAddressBookIds( addrBookIds );
+  ReadAddressBooksJob *job = new ReadAddressBooksJob( mUrl, mSession, 0 );
+  job->setAddressBookIds( addrBookIds );
+  job->setResource( resource );
 
-  connect( mReadAddressBooksJob, SIGNAL( done() ),
-           this, SLOT( slotReadAddressBooksFinished() ) );
+  connect( job, SIGNAL( done() ),
+           this, SIGNAL( readAddressBooksFinished() ) );
 
-  mWeaver->enqueue( mReadAddressBooksJob );
+  mWeaver->enqueue( job );
 
   return true;
-}
-
-void GroupwiseServer::slotReadAddressBooksFinished()
-{
-  emit readAddressBooksFinished( mReadAddressBooksJob->addresseeList() );
 }
 
 bool GroupwiseServer::addIncidence( KCal::Incidence *incidence )
@@ -492,46 +488,52 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addressee &addr )
 {
   ContactConverter converter( mSoap );
-  if ( addr.custom( "GWRESOURCE", "UID" ).isEmpty() ) {
-    addr.insertCustom( "GWRESOURCE", "CONTAINER", addrBookId );
 
-    ns1__Contact* contact = converter.convertToContact( addr );
+  addr.insertCustom( "GWRESOURCE", "CONTAINER", addrBookId );
 
-    _ns1__createItemRequest request;
-    request.item = contact;
+  ns1__Contact* contact = converter.convertToContact( addr );
 
-    _ns1__createItemResponse response;
-    mSoap->header->ns1__session = mSession;
+  _ns1__createItemRequest request;
+  request.item = contact;
+
+  _ns1__createItemResponse response;
+  mSoap->header->ns1__session = mSession;
 
 
-    int result = soap_call___ns9__createItemRequest( mSoap, mUrl.latin1(), 0,
-                                                     &request, &response );
-    if ( result != 0 ) {
-      soap_print_fault( mSoap, stderr );
-      return false;
-    } else {
-      addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.c_str() ) );
-      addr.setChanged( false );
-    }
+  int result = soap_call___ns9__createItemRequest( mSoap, mUrl.latin1(), 0,
+                                                   &request, &response );
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return false;
   } else {
-    ns1__Contact* contact = converter.convertToContact( addr );
+    addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.c_str() ) );
+    addr.setChanged( false );
+  }
 
-    _ns1__modifyItemRequest request;
-    request.id = contact->id;
-    request.updates = soap_new_ns1__ItemChanges( mSoap, -1 );
-    request.updates->add = 0;
-    request.updates->_delete = 0;
-    request.updates->update = contact;
+  return true;
+}
 
-    _ns1__modifyItemResponse response;
-    mSoap->header->ns1__session = mSession;
+bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
+{
+  ContactConverter converter( mSoap );
 
-    int result = soap_call___ns10__modifyItemRequest( mSoap, mUrl.latin1(), 0,
-                                                      &request, &response );
-    if ( result != 0 ) {
-      soap_print_fault( mSoap, stderr );
-      return false;
-    }
+  ns1__Contact* contact = converter.convertToContact( addr );
+
+  _ns1__modifyItemRequest request;
+  request.id = contact->id;
+  request.updates = soap_new_ns1__ItemChanges( mSoap, -1 );
+  request.updates->add = 0;
+  request.updates->_delete = 0;
+  request.updates->update = contact;
+
+  _ns1__modifyItemResponse response;
+  mSoap->header->ns1__session = mSession;
+
+  int result = soap_call___ns10__modifyItemRequest( mSoap, mUrl.latin1(), 0,
+                                                    &request, &response );
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return false;
   }
 
   return true;
