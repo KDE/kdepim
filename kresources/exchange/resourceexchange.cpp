@@ -429,6 +429,7 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
 //  kdDebug() << "ResourceExchange::rawEventsForDate(" << qd.toString() << ","
 //            << sorted << ")" << endl;
 
+  if (!mCache) return Event::List();
   // If the events for this date are not in the cache, or if they are old,
   // get them again
   QDateTime now = QDateTime::currentDateTime();
@@ -465,6 +466,7 @@ Event::List ResourceExchange::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
   kdDebug() << "ResourceExchange::rawEvents(start,end,inclusive)" << endl;
+	if (!mCache) return Event::List();
   return mCache->rawEvents( start, end, inclusive );
 }
 
@@ -477,17 +479,20 @@ Event::List ResourceExchange::rawEventsForDate(const QDateTime &qdt)
 Event::List ResourceExchange::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
   kdDebug() << "ResourceExchange::rawEvents()" << endl;
+	if (!mCache) return Event::List();
   return mCache->rawEvents( sortField, sortDirection );
 }
 
 bool ResourceExchange::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-  mCache->addJournal( journal );
+	if (mCache) {
+    mCache->addJournal( journal );
 
-  journal->registerObserver( this );
+    journal->registerObserver( this );
 
-//  setModified( true );
+//    setModified( true );
+  }
 
   return true;
 }
