@@ -283,8 +283,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
   : BaseWidget(p, n), a_ccManager(knGlobals.accountManager())
 {
-  KGlobal::iconLoader()->addAppDir("knode");
-  p_ixmap = UserIcon("server");
+  p_ixmap = SmallIcon("server");
 
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 

@@ -17,8 +17,6 @@
 #ifndef KNLISTVIEW_H
 #define KNLISTVIEW_H
 
-#include <qbitarray.h>
-
 #include <klistview.h>
 
 class KNListView;
@@ -32,18 +30,16 @@ class KNLVItemBase : public KListViewItem  {
     KNLVItemBase(KNLVItemBase *item);
     ~KNLVItemBase();
 
-    void setActive(bool b)  { a_ctive = b; };
+    void setActive(bool b)  { a_ctive = b; }
     bool isActive()const         { return a_ctive; }
 
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
-    void paintFocus(QPainter *, const QColorGroup & cg, const QRect & r);
     void sortChildItems(int column, bool a);
     void expandChildren();
 
     // DND
-    virtual QDragObject *dragObject()              { return 0; };
-    virtual bool acceptDrag(QDropEvent* ) const    { return false; };
+    virtual QDragObject *dragObject()              { return 0; }
 
     virtual int countUnreadInThread()   { return 0; }
 
@@ -52,8 +48,6 @@ class KNLVItemBase : public KListViewItem  {
     virtual bool firstColBold()     { return false; }
     virtual QColor normalColor();
     virtual QColor greyColor();
-    virtual QString shortString(QString text, int col, int width, QFontMetrics fm);
-    virtual const QFont& fontForColumn(int, const QFont &font)    { return font; }
 
   private:
     bool a_ctive;
@@ -83,10 +77,6 @@ class KNListView : public KListView  {
 
     void ensureItemVisibleWithMargin(const QListViewItem *i);
 
-    /** @param outsideOk accept drops of this type even if
-	the mouse cursor is not on top of an item */
-    void addAcceptableDropMimetype(const char *mimeType, bool outsideOk);
-
     virtual void reparent(QWidget *parent, WFlags f, const QPoint &p, bool showIt=false);
   public slots:
     void slotSortList(int col);
@@ -106,13 +96,10 @@ class KNListView : public KListView  {
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     virtual QDragObject* dragObject();
-    bool acceptDrag(QDropEvent* event) const;
 
     bool s_ortAsc, s_ortByThreadChangeDate;
     int s_ortCol, d_elayedCenter;
     KNLVItemBase *a_ctiveItem;
-    QMemArray<const char*> a_cceptableDropMimetypes;
-    QBitArray a_cceptOutside;
     bool k_eepSelection;
 
   protected slots:

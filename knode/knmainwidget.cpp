@@ -174,11 +174,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
 
-  h_drView->setAcceptDrops(false);
-  h_drView->setDragEnabled(true);
-  h_drView->setSelectionModeExt(KListView::Extended);
-  h_drView->setFrameStyle(QFrame::Panel | QFrame::Plain);
-  h_drView->setLineWidth(1);
   h_drView->setShowSortIndicator(true);
   h_drView->setRootIsDecorated(true);
   h_drView->addColumn(i18n("Subject"),207);

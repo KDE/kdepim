@@ -322,17 +322,17 @@ Q_OBJECT
 
 class Appearance : public Base {
 
-#define COL_CNT 14
+#define COL_CNT 12
 #define FNT_CNT 5
 #define HEX_CNT 4
-#define ICON_CNT 18
+#define ICON_CNT 14
 
   friend class AppearanceWidget;
 
   public:
     enum ColorIndex   { background=0, alternateBackground=1, header=2, normalText=3, quoted1=4,
                         quoted2=5, quoted3=6, url=7, unreadThread=8, readThread=9,
-                        unreadArticle=10, readArticle=11, activeItem=12, selectedItem=13 };
+                        unreadArticle=10, readArticle=11 };
 
     enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2 };
 
@@ -341,9 +341,8 @@ class Appearance : public Base {
     enum IconIndex    { greyBall=0,        redBall=1,      greyBallChkd=2,
                         redBallChkd=3,     newFups=4,      eyes=5,
                         ignore=6,          mail=7,         posting=8,
-                        canceledPosting=9, savedRemote=10, nntp=11,
-                        group=12,          folder=13,      rootFolder=14,
-                        customFolder=15,   sendErr=16,     null=17 };
+                        canceledPosting=9, savedRemote=10, group=11,
+                        sendErr=12,        null=13 };
     Appearance();
     ~Appearance();
 
@@ -361,8 +360,6 @@ class Appearance : public Base {
     QColor readThreadColor();
     QColor unreadArticleColor();
     QColor readArticleColor();
-    QColor activeItemColor();
-    QColor selectedItemColor();
 
     QString headerDecoHexcode()       { return headerDecoColor().name(); }
     QString quotedTextHexcode(int i);
@@ -1108,7 +1105,7 @@ class PrivacyWidget : public BaseWidget {
 
 
 
-// BEGIN: Cleanup configuration -----------------------------------------------
+//BEGIN: Cleanup configuration -----------------------------------------------
 
 class Cleanup : public Base {
 
@@ -1117,7 +1114,7 @@ class Cleanup : public Base {
 
   public:
     Cleanup( bool global = true );
-    ~Cleanup() {};
+    ~Cleanup() {}
 
     void loadConfig( KConfigBase *conf );
     void saveConfig( KConfigBase *conf );
@@ -1215,7 +1212,7 @@ class CleanupWidget : public BaseWidget {
 
 };
 
-// END: Cleanup configuration -------------------------------------------------
+//END: Cleanup configuration -------------------------------------------------
 
 
 /*class Cache : public Base {

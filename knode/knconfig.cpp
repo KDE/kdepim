@@ -230,14 +230,6 @@ KNConfig::Appearance::Appearance()
   c_olors[unreadArticle]=c->readColorEntry("unreadArtColor",&defCol);
   c_olorNames[unreadArticle]=i18n("Unread Article");
 
-  defCol=kapp->palette().active().highlight();
-  c_olors[activeItem]=c->readColorEntry("activeItemColor",&defCol);
-  c_olorNames[activeItem]=i18n("Active Item Background");
-
-  defCol=kapp->palette().active().background();
-  c_olors[selectedItem]=c->readColorEntry("selectedItemColor",&defCol);
-  c_olorNames[selectedItem]=i18n("Selected Item Background");
-
   //fonts
   u_seFonts = c->readBoolEntry("customFonts", false);
   QFont defFont=KGlobalSettings::generalFont();
@@ -268,11 +260,7 @@ KNConfig::Appearance::Appearance()
   i_cons[posting]         = SmallIcon("filenew");
   i_cons[canceledPosting] = SmallIcon("editdelete");
   i_cons[savedRemote]     = SmallIcon("editcopy");
-  i_cons[nntp]            = SmallIcon("server");
   i_cons[group]           = UserIcon("group");
-  i_cons[folder]          = SmallIcon("folder_cyan");
-  i_cons[rootFolder]      = SmallIcon("folder");
-  i_cons[customFolder]    = SmallIcon("folder_green");
   i_cons[sendErr]         = UserIcon("snderr");
 }
 
@@ -305,8 +293,6 @@ void KNConfig::Appearance::save()
   c->writeEntry("unreadThreadColor", c_olors[unreadThread]);
   c->writeEntry("readArtColor", c_olors[readArticle]);
   c->writeEntry("unreadArtColor", c_olors[unreadArticle]);
-  c->writeEntry("activeItemColor", c_olors[activeItem]);
-  c->writeEntry("selectedItemColor", c_olors[selectedItem]);
 
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", f_onts[article]);
@@ -428,24 +414,6 @@ QColor KNConfig::Appearance::readArticleColor()
 }
 
 
-QColor KNConfig::Appearance::activeItemColor()
-{
-  if(u_seColors)
-    return c_olors[activeItem];
-  else
-    return kapp->palette().active().highlight();
-}
-
-
-QColor KNConfig::Appearance::selectedItemColor()
-{
-  if(u_seColors)
-    return c_olors[selectedItem];
-  else
-    return kapp->palette().active().background();
-}
-
-
 QFont KNConfig::Appearance::articleFont()
 {
   if(u_seFonts)
@@ -541,14 +509,6 @@ QColor KNConfig::Appearance::defaultColor(int i)
 
     case readThread:
       return kapp->palette().disabled().text();
-    break;
-
-    case activeItem:
-      return kapp->palette().active().highlight();
-    break;
-
-    case selectedItem:
-      return kapp->palette().active().background();
     break;
 
     case unreadArticle:

@@ -18,7 +18,10 @@
 #include <qheader.h>
 #include <qtimer.h>
 #include <qpainter.h>
+
+#include <kdeversion.h>
 #include <klocale.h>
+#include <kstringhandler.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -50,23 +53,21 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 {
   int xText=0, xPM=3, yPM=0;
   QColor base;
-  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
-
-  p->setFont(fontForColumn(column, p->font()));
 
   QPen pen=p->pen();
-  if (isSelected()||a_ctive) {
+  if (isSelected() || a_ctive) {
     pen.setColor(cg.highlightedText());
-    if (a_ctive)
-      base=app->activeItemColor();
-    else
-      base=app->selectedItemColor();
+    base = cg.highlight();
   } else {
     if(this->greyOut())
       pen.setColor(greyColor());
     else
       pen.setColor(normalColor());
-    base=backgroundColor();
+#if KDE_IS_VERSION(3,3,90)
+    base = backgroundColor( column );
+#else
+    base = backgroundColor();
+#endif
   }
 
   p->setPen(pen);
@@ -81,8 +82,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 
     for(int i=0; i<4; i++) {
        pm=pixmap(i);
-       if(pm)
-        if(!pm->isNull()) {
+        if(pm && !pm->isNull()) {
           yPM = (height() - pm->height())/2;
           p->drawPixmap(xPM, yPM, *pm);
           xPM+=pm->width()+3;
@@ -102,7 +102,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
       f2.setBold (true);
       cntWidth = QFontMetrics(f2).width(t2, -1);
     }
-    QString t = shortString(text(column),column,width-xText-cntWidth-5,p->fontMetrics());
+    QString t = KStringHandler::rPixelSqueeze( text(column), p->fontMetrics(), width - xText - cntWidth - 5 );
     p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
     if (cntWidth) {
       QFont orig = p->font();
@@ -124,24 +124,17 @@ int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
 {
   int ret = fm.boundingRect( text(column) ).width();
 
-  if(column==0) {
-
-    int i=0;
-    const QPixmap *pm=pixmap(i);
-    while(pm) {
-      ret+=pixmap(i)->width()+3;
-      i++;
+  // all pixmaps are drawn in the first column
+  if(column == 0) {
+    const QPixmap *pm;
+    for(int i = 0; i < 4; ++i) {
+      pm = pixmap(i);
+      if(pm && !pm->isNull())
+        ret += pm->width() + 3;
     }
   }
 
   return ret;
-}
-
-
-void KNLVItemBase::paintFocus(QPainter *p, const QColorGroup & cg, const QRect & r)
-{
-  p->setPen(QPen(cg.foreground(),1, DotLine));
-  p->drawRect(r.x(), r.y(), r.width()-3, r.height());
 }
 
 
@@ -173,20 +166,6 @@ QColor KNLVItemBase::greyColor()
 }
 
 
-QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
-{
-  QString t(text);
-  int ew = fm.width("...");
-  if (fm.width(t) > width) {
-    for (int i=t.length();i>0;i--)
-      if (fm.width(t)+ew > width)
-        t.truncate(i);
-    t += "...";
-  }
-  return t;
-}
-
-
 //==============================================================================
 
 
@@ -202,12 +181,15 @@ KNListView::KNListView(QWidget *parent, const char *name)
 
   header()->setMovingEnabled(true);
   header()->setStretchEnabled(true, 0);
-  setFrameStyle(NoFrame);
 
   setDropVisualizer(false);
-  setDropHighlighter(true);
+  setDropHighlighter(false);
   setItemsRenameable(false);
   setItemsMovable(false);
+  setAcceptDrops( false );
+  setDragEnabled( true );
+  setAllColumnsShowFocus( true );
+  setSelectionMode( QListView::Extended );
 
   installEventFilter(this);
 }
@@ -288,17 +270,6 @@ void KNListView::ensureItemVisibleWithMargin(const QListViewItem *i)
 }
 
 
-void KNListView::addAcceptableDropMimetype(const char *mimeType, bool outsideOk)
-{
-  int oldSize = a_cceptableDropMimetypes.size();
-  a_cceptableDropMimetypes.resize(oldSize+1);
-  a_cceptOutside.resize(oldSize+1);
-
-  a_cceptableDropMimetypes.at(oldSize) =  mimeType;
-  a_cceptOutside.setBit(oldSize, outsideOk);
-}
-
-
 void KNListView::slotSortList(int col)
 {
   if(col==s_ortCol) {
@@ -351,10 +322,12 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
     k_eepSelection = true;
 
   KListView::contentsMousePressEvent(e);
-  bool rootDecoClicked = i
-           && ( vp.x() <= header()->cellPos( header()->mapToActual( 0 ) ) +
-                treeStepSize() * ( i->depth() + ( rootIsDecorated() ? 1 : 0) ) + itemMargin() )
-           && ( vp.x() >= header()->cellPos( header()->mapToActual( 0 ) ) );
+
+  int decoLeft = header()->sectionPos( 0 ) +
+      treeStepSize() * ( (i->depth() - 1) + ( rootIsDecorated() ? 1 : 0) );
+  int decoRight = kMin( decoLeft + treeStepSize() + itemMargin(),
+      header()->sectionPos( 0 ) + header()->sectionSize( 0 ) );
+  bool rootDecoClicked = i && vp.x() > decoLeft && vp.x() < decoRight;
 
   if(i && !selectMode && i->isSelected() && !rootDecoClicked)
     setActive(i, true);
@@ -432,24 +405,6 @@ QDragObject* KNListView::dragObject()
     return item->dragObject();
   else
     return 0;
-}
-
-
-bool KNListView::acceptDrag(QDropEvent* event) const
-{
-  QListViewItem *after=0, *parent=0;
-  // why isn't ::findDrop const??? grrr...
-  const_cast<KNListView*>(this)->findDrop(event->pos(), parent, after);
-
-  for (uint i=0; i < a_cceptableDropMimetypes.size(); i++) {
-    if (event->provides(a_cceptableDropMimetypes[i])) {
-      if (after)
-        return (static_cast<KNLVItemBase*>(after))->acceptDrag(event);
-      else
-        return a_cceptOutside[i];
-    }
-  }
-  return false;
 }
 
 
