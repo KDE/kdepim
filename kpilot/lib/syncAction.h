@@ -100,12 +100,16 @@ protected slots:
 protected:
 	bool delayDone();
 
+public:
+	void addSyncLogEntry(const QString &e,bool log=true)
+		{ fHandle->addSyncLogEntry(e,log); } ;
+	void addLogMessage( const QString &msg ) { emit logMessage( msg ); }
+	void addLogError( const QString &msg ) { emit logError( msg ); }
+	void addLogProgress( const QString &msg, int prog ) { emit logProgress( msg, prog ); }
 protected:
 	KPilotDeviceLink *fHandle;
 	int fActionStatus;
 
-	void addSyncLogEntry(const QString &e,bool log=true)
-		{ fHandle->addSyncLogEntry(e,log); } ;
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
 	int openConduit() { return fHandle->openConduit(); } ;
