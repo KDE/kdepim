@@ -340,9 +340,9 @@ mimeHeader::setParameter (const QCString& aLabel, const QString& aValue,
     //see if it needs to be truncated
     vlen = val.length();
     llen = aLabel.length();
-    if (vlen + llen + 4 > 80)
+    if (vlen + llen + 4 > 80 && llen < 80 - 8 )
     {
-      int limit = 80 - 8 - llen;
+      int limit = 80 - 8 - (int)llen;
       int i = 0;
       QString shortValue;
       QCString shortLabel;
