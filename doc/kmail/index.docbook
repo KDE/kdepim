@@ -4,47 +4,47 @@
 
 <book lang="en">
 <bookinfo>
-	<title>The KMail Handbook</title>
+<title>The KMail Handbook</title>
 
-	<!-- note from dnaber@mini.gt.owl.de, 2000-05-21: I'm working on this
-	"by hand" (using nedit) so please don't mix up the formatting to much. -->
+<!-- note from dnaber@mini.gt.owl.de, 2000-05-21: I'm working on this
+"by hand" (using nedit) so please don't mix up the formatting to much. -->
 
-	<authorgroup>
-	<author>
-		<firstname>David</firstname>
-		<surname>Rugge</surname>
-	</author>
-	<author>
-		<firstname>Daniel</firstname>
-		<surname>Naber</surname>
-	</author>
-	</authorgroup>
+<authorgroup>
+<author>
+	<firstname>David</firstname>
+	<surname>Rugge</surname>
+</author>
+<author>
+	<firstname>Daniel</firstname>
+	<surname>Naber</surname>
+</author>
+</authorgroup>
 
-	<date>23/05/2000</date>
-	<releaseinfo>1.01.45</releaseinfo>
+<date>23/05/2000</date>
+<releaseinfo>1.01.45</releaseinfo>
 
-	<abstract>
+<abstract>
 	
-	<para>Even if you don't like reading documentation: Some very helpful hints you probably
-	don't want to miss are collected in the 
-	<link linkend="secintro">Introduction</link>
-	section.</para>
+<para>Even if you don't like reading documentation: Some very helpful hints you probably
+don't want to miss are collected in the 
+<link linkend="secintro">Introduction</link>
+section.</para>
 	
-	<para>Please mail any comments and additions to
-	<ulink url="kmail@kde.org">kmail@kde.org</ulink>.</para>
+<para>Please mail any comments and additions to
+<ulink url="kmail@kde.org">kmail@kde.org</ulink>.</para>
 
-	<para>This documentation was last updated for KMail version 1.1.45.</para>
+<para>This documentation was last updated for KMail version 1.1.45.</para>
 
-	</abstract>
+</abstract>
 
-	<keywordset>
-	<keyword>KDE</keyword>
-	<keyword>Mail</keyword>
-	<keyword>email</keyword>
-	<keyword>Client</keyword>
-	<keyword>POP3</keyword>
-	<keyword>PGP</keyword>
-	</keywordset>
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>Mail</keyword>
+<keyword>email</keyword>
+<keyword>Client</keyword>
+<keyword>POP3</keyword>
+<keyword>PGP</keyword>
+</keywordset>
 </bookinfo>
 
 <chapter id="secintro">
