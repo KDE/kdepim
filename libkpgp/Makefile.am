@@ -1,6 +1,6 @@
 INCLUDES = $(all_includes)
 
-SUBDIRS = pics4kmail
+SUBDIRS = pics
 
 lib_LTLIBRARIES = libkpgp.la
 
