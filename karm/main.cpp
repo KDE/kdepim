@@ -24,6 +24,7 @@ int main( int argc, char *argv[] )
 	aboutData.addAuthor( "Jesper Pedersen",   0, "blackie@kde.org" );
 	aboutData.addAuthor( "Gioele Barabucci",  0, "gioele@gioelebarabucci.com");
 	aboutData.addAuthor( "Jan Schaumann",     0, "jschauma@netmeister.org");
+	aboutData.addAuthor( "Scott Monachello",  0, "smonach@cox.net");
 	
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KApplication myApp;
