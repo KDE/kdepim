@@ -1,5 +1,16 @@
 TODO LIST (Moved again to the file TODO)
 
+2003-6-29  Adriaan de Groot
+* Added some code validation support to plugin.h
+* Messed about with popmail's config. What was the firewall stuff for?
+  Created new-style configs, didn't complete the load/save code, and
+  then sortof gave up because is there really any point to doing this
+  conduit without switching to the SMTP ioslave? And using identities
+  then?
+
+2003-6-26  Adriaan de Groot
+* Removed stupid comment in popmail/Makefile.am
+
 2003-6-25  Adriaan de Groot
 * Be consistent about naming the sysinfo conduit "System Information"
   in user-visible strings.
