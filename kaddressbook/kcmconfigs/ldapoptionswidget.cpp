@@ -275,11 +275,11 @@ void LDAPOptionsWidget::initGUI()
   QVBox* upDownBox = new QVBox( hBox );
   upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox, "mUpButton" );
-  mUpButton->setPixmap( BarIcon( "up", KIcon::SizeSmall ) );
+  mUpButton->setIconSet( BarIconSet( "up", KIcon::SizeSmall ) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
 
   mDownButton = new QToolButton( upDownBox, "mDownButton" );
-  mDownButton->setPixmap( BarIcon( "down", KIcon::SizeSmall ) );
+  mDownButton->setIconSet( BarIconSet( "down", KIcon::SizeSmall ) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet
 
   QWidget* spacer = new QWidget( upDownBox );
