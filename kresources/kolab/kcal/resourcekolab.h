@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef RESOURCEKOLAB_H
-#define RESOURCEKOLAB_H
+#ifndef KCAL_RESOURCEKOLAB_H
+#define KCAL_RESOURCEKOLAB_H
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/resourcecalendar.h>
@@ -164,4 +164,4 @@ private:
 
 }
 
-#endif // RESOURCEKOLAB_H
+#endif // KCAL_RESOURCEKOLAB_H

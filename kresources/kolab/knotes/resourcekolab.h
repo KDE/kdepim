@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef RESOURCEKOLAB_H
-#define RESOURCEKOLAB_H
+#ifndef KNOTES_RESOURCEKOLAB_H
+#define KNOTES_RESOURCEKOLAB_H
 
 #include <resourcenotes.h>
 #include <libkcal/incidencebase.h>
@@ -118,4 +118,4 @@ private:
 
 }
 
-#endif // RESOURCEKOLAB_H
+#endif // KNOTES_RESOURCEKOLAB_H

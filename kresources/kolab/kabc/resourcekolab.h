@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef RESOURCEKolab_H
-#define RESOURCEKolab_H
+#ifndef KABC_RESOURCEKOLAB_H
+#define KABC_RESOURCEKOLAB_H
 
 #include <libkdepim/resourceabc.h>
 #include <dcopobject.h>
@@ -156,4 +156,4 @@ protected:
 
 }
 
-#endif
+#endif // KABC_RESOURCEKOLAB_H
