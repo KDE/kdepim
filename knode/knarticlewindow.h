@@ -28,7 +28,7 @@ class KNArticleCollection;
 class KNArticleWindow : public KMainWindow  {
 
   Q_OBJECT
-  
+
   public:
     KNArticleWindow(KNArticle *art);
     ~KNArticleWindow();
@@ -44,12 +44,13 @@ class KNArticleWindow : public KMainWindow  {
     KNArticleWidget *artW;
     KToggleAction *a_ctShowToolbar;
     static QPtrList<KNArticleWindow> instances;
-    
+
   protected slots:
     void slotFileClose();
     void slotToggleToolBar();
     void slotConfKeys();
     void slotConfToolbar();
+    void slotNewToolbarConfig();
 };
 
 #endif

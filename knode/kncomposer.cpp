@@ -143,8 +143,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
 
-  a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"), 
-		   "signature", 0, 
+  a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"),
+		   "signature", 0,
                    actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
@@ -244,16 +244,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     v_iew->e_dit->setCursorPosition(0,0);
   v_iew->e_dit->setFocus();
 
-  if (v_iew->s_ubject->text().length() == 0) {    
+  if (v_iew->s_ubject->text().length() == 0) {
     v_iew->s_ubject->setFocus();
-  }      
-
-  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {    
-    v_iew->g_roups->setFocus();    
   }
 
-  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {    
-    v_iew->t_o->setFocus();    
+  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {
+    v_iew->g_roups->setFocus();
+  }
+
+  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {
+    v_iew->t_o->setFocus();
   }
 
   if(firstEdit && knGlobals.cfgManager->postNewsComposer()->appendOwnSignature())
@@ -406,28 +406,28 @@ bool KNComposer::hasValidData()
   bool hasAttributionLine = false;
   int sigLength = 0;
   int notQuoted = 0;
-  int textLines = 0;  
+  int textLines = 0;
   QStringList text = v_iew->e_dit->processedText();
-  
+
   for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
-  
+
     if (!n_eeds8Bit && !KMime::isUsAscii(*it))
       n_eeds8Bit=true;
 
     if (*it == "-- ") {   // signature text
-      for (++it; it != text.end(); ++it) {        
+      for (++it; it != text.end(); ++it) {
 
         if (!n_eeds8Bit && !KMime::isUsAscii(*it))
           n_eeds8Bit=true;
 
         sigLength++;
         if((*it).length()>80) {
-          longLine = true;          
+          longLine = true;
         }
       }
       break;
     }
-    
+
     if(!(*it).isEmpty()) {
       empty = false;
       textLines++;
@@ -437,9 +437,9 @@ bool KNComposer::hasValidData()
       }
     }
     if((*it).length()>80) {
-      longLine = true;      
+      longLine = true;
     }
-    
+
     firstLine = false;
   }
 
@@ -467,7 +467,7 @@ bool KNComposer::hasValidData()
   }
 
   if (longLine)
-    if (!(KMessageBox::warningYesNo( this, 
+    if (!(KMessageBox::warningYesNo( this,
           i18n("Your article contains lines longer than 80 characters.\n"
 	       "Do you want to re-edit the article or send it anyway?"),
           QString::null, i18n("&Send"),
@@ -496,10 +496,10 @@ bool KNComposer::hasValidData()
       else if ( acc->identity() && acc->identity()->hasSigningKey() )
         signingKey = acc->identity()->signingKey();
     }
-    
-    // the article can only be signed if we have a key  
-    if (signingKey.isEmpty()) {    
-          if ( KMessageBox::warningContinueCancel( this, 
+
+    // the article can only be signed if we have a key
+    if (signingKey.isEmpty()) {
+          if ( KMessageBox::warningContinueCancel( this,
                    i18n("You haven't configured your preferred "
                         "signing key yet.\n"
                         "Please specify it in the global "
@@ -508,11 +508,11 @@ bool KNComposer::hasValidData()
                         "group properties!\n"
                         "The article will be sent unsigned." ),
                    QString::null, i18n( "Send Unsigned" ),
-                   "sendUnsignedDialog" ) 
+                   "sendUnsignedDialog" )
                == KMessageBox::Cancel )
              return false;
     }
-  }      
+  }
 
   v_alidated=true;
   return true;
@@ -602,13 +602,13 @@ bool KNComposer::applyChanges()
     else
       text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
   }
-  
+
   //assemble the text line by line
   QString tmp;
   QStringList textLines = v_iew->e_dit->processedText();
-  for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it)    
+  for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it)
     tmp += *it + "\n";
-  
+
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
@@ -637,7 +637,7 @@ bool KNComposer::applyChanges()
               QCString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           }
-      }     
+      }
   }
 
   text->fromUnicodeString(tmp);
@@ -794,10 +794,10 @@ void KNComposer::insertFile(bool clear, bool box)
   QFile *file = helper.getFile(i18n("Insert File"));
   KURL url;
   QString boxName;
-  
+
   if (file) {
     url = helper.getURL();
-    
+
     if (url.isLocalFile())
       boxName = url.path();
     else
@@ -863,7 +863,7 @@ void KNComposer::slotInsertFileBoxed()
 void KNComposer::slotAttachFile()
 {
   KNLoadHelper *helper = new KNLoadHelper(this);
-  
+
   if (helper->getFile(i18n("Attach File"))) {
    if (!v_iew->v_iewOpen) {
       KNHelper::saveWindowSize("composer", size());
@@ -1172,19 +1172,28 @@ void KNComposer::slotConfKeys()
 
 void KNComposer::slotConfToolbar()
 {
-  KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
-  if(dlg->exec()) {
-    createGUI("kncomposerui.rc");
-
-    e_ditPopup=static_cast<QPopupMenu*> (factory()->container("edit", this));
-    if(!e_ditPopup) e_ditPopup = new QPopupMenu();
-    v_iew->e_dit->installRBPopup(e_ditPopup);
-    a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
-    if(!a_ttPopup) a_ttPopup = new QPopupMenu();
-  }
-  delete dlg;
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("composerWindow_options");
+  saveMainWindowSettings(conf);
+  KEditToolbar dlg(guiFactory(),this);
+  connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
+  dlg.exec();
 }
 
+void KNComposer::slotNewToolbarConfig()
+{
+  createGUI("kncomposerui.rc");
+
+  e_ditPopup=static_cast<QPopupMenu*> (factory()->container("edit", this));
+  if(!e_ditPopup) e_ditPopup = new QPopupMenu();
+  v_iew->e_dit->installRBPopup(e_ditPopup);
+  a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
+  if(!a_ttPopup) a_ttPopup = new QPopupMenu();
+
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("composerWindow_options");
+  applyMainWindowSettings(conf);
+}
 
 //-------------------------------- </Actions> -----------------------------------
 
@@ -1455,7 +1464,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   hdrL->addMultiCellWidget(s_ubject, 3,3, 1,2);
   connect(s_ubject, SIGNAL(textChanged(const QString&)),
           parent(), SLOT(slotSubjectChanged(const QString&)));
-  
+
   //Editor
   e_dit=new Editor(main);
   e_dit->setMinimumHeight(50);
@@ -1617,7 +1626,7 @@ void KNComposer::ComposerView::hideExternalNotification()
 KNComposer::Editor::Editor(QWidget *parent, char *name)
   : KEdit(parent, name)
 {
-  setOverwriteEnabled(true);  
+  setOverwriteEnabled(true);
 }
 
 
@@ -1636,7 +1645,7 @@ QStringList KNComposer::Editor::processedText()
 
   if (wordWrap() == NoWrap) {
     for (int i = 0; i <= lines; i++)
-      ret.append(textLine(i));    
+      ret.append(textLine(i));
   } else {
     for (int i = 0; i <= lines; i++) {
       int lines_in_parag = linesOfParagraph(i);
@@ -1647,19 +1656,19 @@ QStringList KNComposer::Editor::processedText()
         QString parag_text = textLine(i);
         int pos = 0;
         int last_pos = 0;
-        int current_line = 0;       
+        int current_line = 0;
         while (current_line+1 < lines_in_parag) {
-          while (lineOfChar(i, pos) == current_line) pos++;            
+          while (lineOfChar(i, pos) == current_line) pos++;
           ret.append(parag_text.mid(last_pos, pos - last_pos - 1));
           current_line++;
-          last_pos = pos;         
+          last_pos = pos;
         }
         // add last line
         ret.append(parag_text.mid(pos));
       }
     }
   }
-  
+
   QString replacement;
   int tabPos;
   for (QStringList::Iterator it = ret.begin(); it != ret.end(); ++it ) {
@@ -1703,8 +1712,8 @@ void KNComposer::Editor::slotReplace()
 void KNComposer::Editor::slotAddQuotes()
 {
   if (hasMarkedText()) {
-    QString s = markedText();    
-    s.prepend("> ");    
+    QString s = markedText();
+    s.prepend("> ");
     s.replace(QRegExp("\n"),"\n> ");
     insert(s);
   } else {

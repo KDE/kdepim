@@ -157,16 +157,19 @@ void KNArticleWindow::slotConfKeys()
 
 void KNArticleWindow::slotConfToolbar()
 {
-  KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
-  if (dlg->exec()) {
-    createGUI("knreaderui.rc");
-    QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
-    if (!pop) pop = new QPopupMenu(this);
-    artW->setBodyPopup(pop);
-  }
-  delete dlg;
+  KEditToolbar dlg(guiFactory(),this);
+  connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
+  dlg.exec();
 }
 
+
+void KNArticleWindow::slotNewToolbarConfig()
+{
+  createGUI("knreaderui.rc");
+  QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
+  if (!pop) pop = new QPopupMenu(this); // deleted where?
+  artW->setBodyPopup(pop);
+}
 
 //--------------------------------
 

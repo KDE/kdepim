@@ -37,7 +37,7 @@ class KNAttachment;
 class KNComposer : public KMainWindow  {
 
   Q_OBJECT
-  
+
   public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
                           CRdel, CRsave, CRcancel };
@@ -114,8 +114,8 @@ class KNComposer : public KMainWindow  {
 
   protected slots:
     void slotSendNow();
-    void slotSendLater();     
-    void slotSaveAsDraft();   
+    void slotSendLater();
+    void slotSaveAsDraft();
     void slotArtDelete();
     void slotAppendSig();
     void slotInsertFile();
@@ -137,6 +137,7 @@ class KNComposer : public KMainWindow  {
     void slotUpdateCursorPos();
     void slotConfKeys();
     void slotConfToolbar();
+    void slotNewToolbarConfig();
 
   //------------------------------ </Actions> ----------------------------
 
@@ -173,7 +174,7 @@ class KNComposer : public KMainWindow  {
 
   signals:
     void composerDone(KNComposer*);
-              
+
 };
 
 
@@ -220,7 +221,7 @@ class KNComposer::Editor : public KEdit {
 
   public:
     Editor(QWidget *parent=0, char *name=0);
-    ~Editor();    
+    ~Editor();
     QStringList processedText();
 
   public slots:
