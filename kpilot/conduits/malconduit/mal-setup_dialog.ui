@@ -75,7 +75,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>KPilot will try to synchronise with the MAL servers every time you sync.</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
@@ -89,7 +89,7 @@
                                     <string></string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than an hour since the last MAL sync.</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one hour before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than an hour since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
@@ -100,7 +100,7 @@
                                     <string>Once a &amp;day</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than a day since the last MAL sync.</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one day before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than a day since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="3" column="0">
@@ -111,7 +111,7 @@
                                     <string>Once a &amp;week</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than a week since the last MAL sync.</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one week before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than a week since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="4" column="0">
@@ -122,7 +122,7 @@
                                     <string>Once a &amp;month</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than a month since the last MAL sync.</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one month before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than a month since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -188,7 +188,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Select this option if you do not want KPilot to use a proxy server.</string>
+                                    <string>&lt;qt&gt;Select this option if you do not want KPilot to use a proxy server. Use this option if you connect to the internet directly.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -199,7 +199,7 @@
                                     <string>&amp;HTTP proxy</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Select this option if you want KPilot to use a HTTP proxy.</string>
+                                    <string>&lt;qt&gt;Select this option if you want KPilot to use a HTTP proxy.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -210,7 +210,7 @@
                                     <string>&amp;SOCKS proxy</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Select this option if you want KPilot to use a SOCKS proxy.</string>
+                                    <string>&lt;qt&gt;Select this option if you want KPilot to use a SOCKS proxy.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </hbox>
@@ -260,7 +260,7 @@
                                     <string>Custom &amp;port:</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Tells KPilot that your proxy operates on a non-standard port.</string>
+                                    <string>Check this box to use a non-standard proxy port.</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="0" column="0">
@@ -273,16 +273,16 @@
                                 <property name="buddy" stdset="0">
                                     <cstring>proxyServerName</cstring>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type here the address of the proxy server to use, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
+                                </property>
                             </widget>
                             <widget class="KHistoryCombo" row="0" column="1" rowspan="1" colspan="2">
                                 <property name="name">
                                     <cstring>proxyServerName</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>This is the address of the proxy server to use, e.g:
-&lt;u&gt;&lt;i&gt;foo.bar.com&lt;/i&gt;&lt;/u&gt;
-&lt;b&gt;not&lt;/b&gt;
-&lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;</string>
+                                    <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type here the address of the proxy server to use, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KIntNumInput" row="1" column="1">
@@ -302,7 +302,7 @@
                                     <number>65535</number>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Enter the port you want KPilot to use to connect to your proxy server here.</string>
+                                    <string>&lt;qt&gt;Enter here the port you want KPilot to use when connecting to your proxy server.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KPasswordEdit" row="5" column="1" rowspan="1" colspan="2">
@@ -313,7 +313,7 @@
                                     <enum>Password</enum>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>If your proxy requires authentication, enter your password here.</string>
+                                    <string>&lt;qt&gt;If your proxy requires authentication, enter your password here.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QLineEdit" row="4" column="1" rowspan="1" colspan="2">
@@ -321,7 +321,7 @@
                                     <cstring>proxyUserName</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>If your proxy requires authentication, enter your username here.</string>
+                                    <string>&lt;qt&gt;If your proxy requires authentication, enter your username here.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="5" column="0">
@@ -345,6 +345,9 @@
                                 <property name="buddy" stdset="0">
                                     <cstring>proxyUserName</cstring>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;If your proxy requires authentication, enter your username here.&lt;/qt&gt;</string>
+                                </property>
                             </widget>
                             <widget class="Line" row="3" column="0" rowspan="1" colspan="3">
                                 <property name="name">
@@ -365,7 +368,7 @@
                                     <cstring>proxyExclude</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Enter a list of MAL servers that do not need the use of a proxy here, separated with commas, e.g: &lt;br&gt;&lt;i&gt;localhost,127.0.0.1,.lan&lt;/i&gt;</string>
+                                    <string>&lt;qt&gt;Enter a list of MAL servers that do not need the use of a proxy here, separated with commas, e.g: &lt;br&gt;&lt;i&gt;localhost,127.0.0.1,.lan&lt;/i&gt;&lt;qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="2" column="0">
@@ -377,6 +380,9 @@
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>proxyExclude</cstring>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Enter a list of MAL servers that do not need the use of a proxy here, separated with commas, e.g: &lt;br&gt;&lt;i&gt;localhost,127.0.0.1,.lan&lt;/i&gt;&lt;qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -565,7 +571,7 @@
                             <cstring>TextLabel1_3</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;qt&gt;There is currently &lt;b&gt;no way to set server parameters on the desktop&lt;/b&gt;; you need to use the &lt;i&gt;MobileLink&lt;/i&gt; application on the handheld device. &lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;There is currently &lt;b&gt;no way to set server parameters on the desktop&lt;/b&gt;; you need to use the &lt;i&gt;MobileLink&lt;/i&gt; or &lt;i&gt;AGConnect&lt;/i&gt; application on the handheld device. &lt;/qt&gt;</string>
                         </property>
                     </widget>
                 </grid>
@@ -573,8 +579,6 @@
         </widget>
     </grid>
 </widget>
-<customwidgets>
-</customwidgets>
 <connections>
     <connection>
         <sender>RadioButton8</sender>

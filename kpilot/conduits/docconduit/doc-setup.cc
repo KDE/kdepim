@@ -77,10 +77,10 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 /* virtual */ void DOCWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
-	
+
 	DOCConduitSettings::setTXTDirectory( fConfigWidget->fTXTDir->url() );
 	DOCConduitSettings::setPDBDirectory( fConfigWidget->fPDBDir->url() );
-	
+
 	DOCConduitSettings::setKeepPDBsLocally( fConfigWidget->fkeepPDBLocally->isChecked());
 	DOCConduitSettings::setConflictResolution( fConfigWidget->fConflictResolution->id(
 		fConfigWidget->fConflictResolution->selected()) );
@@ -104,7 +104,7 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 {
 	FUNCTIONSETUP;
 	DOCConduitSettings::self()->readConfig();
-	
+
 	fConfigWidget->fTXTDir->setURL( DOCConduitSettings::tXTDirectory() );
 	fConfigWidget->fPDBDir->setURL( DOCConduitSettings::pDBDirectory() );
 	fConfigWidget->fkeepPDBLocally->setChecked( DOCConduitSettings::keepPDBsLocally() );

@@ -48,6 +48,9 @@
                     <property name="buddy" stdset="0">
                         <cstring>X_CUSTOM3</cstring>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the third custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QLabel" row="4" column="0">
                     <property name="name">
@@ -59,20 +62,32 @@
                     <property name="buddy" stdset="0">
                         <cstring>X_CUSTOM3</cstring>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the fourth custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QLineEdit" row="3" column="1">
                     <property name="name">
                         <cstring>X_CUSTOM2</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the third custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="2" column="1">
                     <property name="name">
                         <cstring>X_CUSTOM1</cstring>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the second custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QLineEdit" row="4" column="1">
                     <property name="name">
                         <cstring>X_CUSTOM3</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the fourth custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="2" column="0">
@@ -85,6 +100,9 @@
                     <property name="buddy" stdset="0">
                         <cstring>X_CUSTOM2</cstring>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the second custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QLabel" row="1" column="0">
                     <property name="name">
@@ -95,6 +113,9 @@
                     </property>
                     <property name="buddy" stdset="0">
                         <cstring>X_CUSTOM1</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the first custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
@@ -108,6 +129,9 @@
                             <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
                         </sizepolicy>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Edit or enter the value of the first custom field here. Using KPilot, you can synchronize these values with the handheld's Address application custom fields.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
