@@ -29,13 +29,14 @@ What it is
 * kpilot: to sync with your PalmPilot
 * kalarm: gui for setting up personal alarm messages, emails and commands
 * kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
-* kontact: A shell for the PIM apps, still experimental.
+* kontact: Integrated PIM application
 * karm: Time tracker.
 * kitchensync: Synchronization framework, still under heavy development.
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
 * konsolecalendar: Command line tool for accessing calendar files.
 * korn: mail checker
+* akregator: Feed reader
 
 There is also quite an amount of infrastructure in this package:
 
@@ -75,10 +76,11 @@ If you'd like to get involved with the project, subscribe to kde-pim@kde.org
 with an email to kde-pim-request@kde.org with the subject line:
 subscribe my@email.address
 
-If you have questions relating to this module please post them on the
-mailing list (kde-pim@mail.kde.org).
+If you have questions relating to development of this module please post them on
+the developers mailing list (kde-pim@kde.org). If you have user questions,
+please use kdepim-users@kde.org
 
 If you are interested in kmail development use the mailing list
-kmail@kde.org.
+kmail-devel@kde.org.
 
 $Id$
