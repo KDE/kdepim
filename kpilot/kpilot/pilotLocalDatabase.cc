@@ -37,8 +37,8 @@ static const char *pilotlocaldatabase_id="$Id$";
 
 #include <qstring.h>
 #include <qfile.h>
-#include <kdebug.h>
 
+#include <kdebug.h>
 
 
 #include "pilotLocalDatabase.h"
@@ -72,14 +72,7 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::checkDBName()
 {
 	fDBName = fDBName.replace( QRegExp("/"), "_" );
-    
-#if 0
-    int i = -1;
-    while(fDBName[++i])
-	if(fDBName[i] == '/')
-	    fDBName[i] = '_';
-#endif
-    }
+}
 
 // Reads the application block info
 int PilotLocalDatabase::readAppBlock(unsigned char* buffer, int )
@@ -321,22 +314,35 @@ int PilotLocalDatabase::cleanUpDatabase()
     return 0;
     }
 
+QString PilotLocalDatabase::dbPathName() const
+{
+	QString tempName(fPathName);
+	tempName += "/" ;
+	tempName += getDBName() ;
+	tempName += ".pdb";
+	return tempName;
+}
+
 void PilotLocalDatabase::openDatabase()
 {
 	FUNCTIONSETUP;
-    void* tmpBuffer;
-    pi_file* dbFile;
-    int size, attr, cat;
-    pi_uid_t id;
-    
-	QString tempName(fPathName);
-	tempName.append("/" + getDBName() + ".pdb");
 
-    dbFile = pi_file_open((const char *)QFile::encodeName(tempName));
-    if(dbFile == 0L)
+	void* tmpBuffer;
+	pi_file* dbFile;
+	int size, attr, cat;
+	pi_uid_t id;
+    
+	QString tempName = dbPathName();
+	QCString fileName = QFile::encodeName(tempName);
+	dbFile = pi_file_open(const_cast<char *>((const char *)fileName));
+
+	if(dbFile == 0L)
 	{
-	kdError() << __FUNCTION__ << ": Failed to open " << tempName << endl;
-	return;
+		kdError() << __FUNCTION__ 
+			<< ": Failed to open " 
+			<< tempName 
+			<< endl;
+		return;
 	}
     pi_file_get_info(dbFile, &fDBInfo);
     pi_file_get_app_info(dbFile, &tmpBuffer, &fAppLen);
@@ -361,15 +367,15 @@ void PilotLocalDatabase::closeDatabase()
 
 	if(isDBOpen() == false) return;
 
-	QString tempName,newName;
-	tempName=fPathName;
-	tempName.append("/" + getDBName() + ".pdb");
-	newName=tempName + ".bak";
+	QString tempName_ = dbPathName();
+	QString newName_ = tempName_ + ".bak";
+	QCString tempName = QFile::encodeName(tempName_);
+	QCString newName = QFile::encodeName(newName_);
 
-	dbFile = pi_file_create((const char *)QFile::encodeName(newName), 
+	dbFile = pi_file_create(const_cast<char *>((const char *)newName), 
 		&fDBInfo);
-	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 
+	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for(i = 0; i < fNumRecords; i++)
 	{
 		pi_file_append_record(dbFile, 
@@ -380,9 +386,6 @@ void PilotLocalDatabase::closeDatabase()
 	}
 
 	pi_file_close(dbFile);
-
-
-
 	unlink((const char *)QFile::encodeName(tempName));
 	rename((const char *)QFile::encodeName(newName), 
 		(const char *)QFile::encodeName(tempName));
@@ -390,6 +393,9 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.10  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.9  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
