@@ -325,7 +325,7 @@ this particular group; you can find more about this in the
 
 <para>When you select a newsgroup with your mouse a list of articles
 of this group appears in the upper-right window; if there are no
-articles in the upper left window there are two possibilities &mdash;
+articles in the upper-right window there are two possibilities &mdash;
 either there are no articles for this newsgroup on the newsserver
 or the newsserver did not fetch them yet.  Select
 <menuchoice><guimenu>Account</guimenu><guimenuitem>Get new articles in
@@ -617,15 +617,6 @@ articles.</para>
 <para>A dialog is shown where you can change the sorting of the
 articles; if you choose a column for a second time it will change the
 sorting direction.</para> 
-<tip> 
-<para>The dialog shown will also contain the columns which are not shown
-in the article window; because of this you can sort the articles with
-respect to those columns without showing the columns. You can activate those
-columns at 
-<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KNode...</guimenuitem><guilabel>Reading
-News</guilabel><guilabel>General</guilabel></menuchoice>.</para> 
-</tip> 
 </listitem> 
 </varlistentry> 
 <varlistentry>
@@ -684,7 +675,7 @@ closed threads are ignored.</para>
 </term> 
 <listitem> 
 <para>This command jumps to the next newsgroup; the sequence follows
-the order of articles in the article view.</para> 
+the order of newsgroups in the folder view.</para> 
 </listitem> 
 </varlistentry> 
 <varlistentry> 
@@ -692,7 +683,7 @@ the order of articles in the article view.</para>
 </term> 
 <listitem> 
 <para>This command jumps to the previous newsgroup; the sequence
-follows the order of articles in the article view.</para> 
+follows the order of newsgroups in the folder view.</para> 
 </listitem> 
 </varlistentry> 
 </variablelist> 
