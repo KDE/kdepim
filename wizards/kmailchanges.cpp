@@ -119,7 +119,6 @@ void CreateDisconnectedImapAccount::apply()
 
   KConfig c( "kmailrc" );
   c.setGroup( "General" );
-  c.writeEntry( "Default domain", mServer );
   int accountId;
   if ( mExistingAccountId < 0 ) {
     uint accCnt = c.readNumEntry( "accounts", 0 );

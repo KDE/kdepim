@@ -66,6 +66,12 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
           // The user did type in a domain on the email address. Use that
           basedn = h;
       }
+      { // while we're here, write default domain
+        KConfig c( "kmailrc" );
+        c.setGroup( "General" );
+        c.writeEntry( "Default domain", basedn );
+      }
+
       basedn.replace(".",",dc=");
       basedn.prepend("dc=");
 
