@@ -23,6 +23,7 @@
 #include "ogocalendaradaptor.h"
 #include "ogoglobals.h"
 #include "davgroupwareglobals.h"
+#include "webdavhandler.h"
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
