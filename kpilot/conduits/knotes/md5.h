@@ -58,7 +58,13 @@ void Bin_MD5Transform (uint32 buf[4], uint32 const in[16]);
 #endif /* !MD5_H */
 
 
-/* $Log$
+/*
+ * $Log$
+ * Revision 1.3  2001/02/19 15:33:36  tranter
+ * Add path to libpisock includes to prevent compile errors when
+ * headers are not in /usr/include. Change comments in md5.h from
+ * C++ to C style since this is compiled as C code.
+ *
  * Revision 1.2  2001/02/07 15:46:31  adridg
  * Updated copyright headers for source release. Added CVS log. No code change.
  */
