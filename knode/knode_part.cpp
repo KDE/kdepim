@@ -81,7 +81,6 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
                                 "KNodeSidebar" );
 
   KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
-  statusBar->addStatusBarItem(knGlobals.progressBar, 0, false);
   statusBar->addStatusBarItem(mainWidget->statusBarLabelMain(), 2, false);
   statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 2, false);
   statusBar->addStatusBarItem(mainWidget->statusBarLabelGroup(), 3, false);

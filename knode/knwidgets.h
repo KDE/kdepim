@@ -2,7 +2,7 @@
     knwidgets.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -60,28 +60,6 @@ class KNDialogListBox : public QListBox
     void keyPressEvent( QKeyEvent *e );
 
     bool a_lwaysIgnore;
-};
-
-
-//====================================================================================
-
-
-class KNProgress : public KProgress
-{
-  Q_OBJECT
-
-  public:
-    KNProgress (int desiredHeight, int maxValue, int value, QWidget *parent=0, const char *name=0);
-    ~KNProgress();
-
-    /** 0% and no text */
-    void disableProgressBar();
-    /** manual operation */
-    void setProgressBar(int value,const QString& = QString::null);
-    virtual QSize sizeHint() const;
-
-  protected:
-    int desHeight;
 };
 
 

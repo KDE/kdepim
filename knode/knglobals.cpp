@@ -112,9 +112,3 @@ void KNGlobals::setStatusMsg(const QString &text, int id)
   if(top)
     top->setStatusMsg(text, id);
 }
-
-void KNGlobals::setProgressBar(int value, const QString &text)
-{
-  if(progressBar)
-    progressBar->setProgressBar(value, text);
-}

@@ -53,7 +53,6 @@ class KNGlobals {
     KNMainWidget          *top;
     KXMLGUIClient         *guiClient;
     KNArticleWidget       *artWidget;
-    KNProgress            *progressBar;
     KNArticleFactory      *artFactory;
     Kpgp::Module          *pgp;
     KConfig               *config();
@@ -71,8 +70,6 @@ class KNGlobals {
 
     /** forwarded to top->setStatusMsg() if available */
     void setStatusMsg(const QString& text = QString::null, int id = SB_MAIN);
-    /** forwarded to progressBar->setProgressBar() if available */
-    void setProgressBar(int value, const QString &text);
 
 private:
     KSharedConfig::Ptr c_onfig;

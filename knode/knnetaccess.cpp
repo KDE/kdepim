@@ -2,7 +2,7 @@
     knnetaccess.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,8 @@
 #include <ksocks.h>
 #include <kapplication.h>
 
+#include "progressmanager.h"
+
 #include "knmainwidget.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"
@@ -34,9 +36,12 @@
 #include "knnetaccess.h"
 #include "knwidgets.h"
 
+using KPIM::ProgressManager;
+
 
 KNNetAccess::KNNetAccess(QObject *parent, const char *name )
-: QObject(parent,name), currentNntpJob(0L), currentSmtpJob(0L)
+  : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0), 
+    mNNTPProgressItem(0), mSMTPProgressItem(0)
 {
   if((pipe(nntpInPipe)==-1)||
      (pipe(nntpOutPipe)==-1)||
@@ -78,6 +83,11 @@ KNNetAccess::~KNNetAccess()
 {
   disconnect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
   disconnect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
+
+  if(mNNTPProgressItem)
+    mNNTPProgressItem->setComplete();
+  if(mSMTPProgressItem)
+    mSMTPProgressItem->setComplete();
 
   nntpClient->terminate();
   nntpClient->wait();
@@ -210,6 +220,10 @@ void KNNetAccess::startJobNntp()
     kdWarning(5003) << "KNNetAccess::startJobNntp(): job queue is empty?? aborting" << endl;
     return;
   }
+  
+  mNNTPProgressItem = ProgressManager::createProgressItem( 
+      0, "NNTP", i18n("Knode NNTP"), QString::null, false, false );
+
   currentNntpJob = nntpJobQueue.take(0);
   currentNntpJob->prepareForExecution();
   if (currentNntpJob->success()) {
@@ -231,8 +245,9 @@ void KNNetAccess::startJobSmtp()
     return;
   }
   unshownMsg = QString::null;
-  unshownByteCount = QString::null;
-  unshownProgress = 0;
+
+  mSMTPProgressItem = ProgressManager::createProgressItem( 
+      0, "SMTP", i18n("KNode SMTP"), QString::null, false, false );
 
   currentSmtpJob = smtpJobQueue.take(0);
   currentSmtpJob->prepareForExecution();
@@ -290,14 +305,13 @@ void KNNetAccess::threadDoneNntp()
   if (!currentSmtpJob) {
     emit netActive(false);
     currMsg = QString::null;
-    if(knGlobals.progressBar)
-      knGlobals.progressBar->disableProgressBar();
     knGlobals.setStatusMsg();
   } else {
-    knGlobals.setProgressBar(unshownProgress,unshownByteCount);
     currMsg = unshownMsg;
     knGlobals.setStatusMsg(currMsg);
   }
+  mNNTPProgressItem->setComplete();
+  mNNTPProgressItem = 0;
 
   tmp->notifyConsumer();
 
@@ -323,10 +337,10 @@ void KNNetAccess::threadDoneSmtp()
   if (!currentNntpJob) {
     emit netActive(false);
     currMsg = QString::null;
-    if(knGlobals.progressBar)
-      knGlobals.progressBar->disableProgressBar();
     knGlobals.setStatusMsg();
   }
+  mSMTPProgressItem->setComplete();
+  mSMTPProgressItem = 0;
 
   tmp->notifyConsumer();
 
@@ -363,56 +377,58 @@ void KNNetAccess::slotThreadSignal(int i)
       case KNProtocolClient::TSconnect:
         currMsg = i18n(" Connecting to server...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSloadGrouplist:
         currMsg = i18n(" Loading group list from disk...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSwriteGrouplist:
         currMsg = i18n(" Writing group list to disk...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadGrouplist:
         currMsg = i18n(" Downloading group list...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadNewGroups:
         currMsg = i18n(" Looking for new groups...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadDesc:
         currMsg = i18n(" Downloading group descriptions...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadNew:
         currMsg = i18n(" Downloading new headers...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSsortNew:
         currMsg = i18n(" Sorting...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSdownloadArticle:
         currMsg = i18n(" Downloading article...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSsendArticle:
         currMsg = i18n(" Sending article...");
         knGlobals.setStatusMsg(currMsg);
+        mNNTPProgressItem->setStatus(currMsg);
       break;
       case KNProtocolClient::TSjobStarted:
-        knGlobals.setProgressBar(10, i18n("0 Bytes"));
+        mNNTPProgressItem->setProgress(0);
       break;
       case KNProtocolClient::TSprogressUpdate:
-        if (nntpClient->isInByteCountMode()) {
-          byteCount = nntpClient->getByteCount();
-          if (byteCount < 1000)
-            tmp = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0));
-          else
-            tmp = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount/1000.0, 1));
-          knGlobals.setProgressBar(nntpClient->getProgressValue(),tmp);
-        } else
-          knGlobals.setProgressBar(nntpClient->getProgressValue(),"%p%");
+          mNNTPProgressItem->setProgress(nntpClient->getProgressValue()/10);
       break;
     };
   } else {                    // signal from smtp thread
@@ -426,6 +442,7 @@ void KNNetAccess::slotThreadSignal(int i)
           currMsg = unshownMsg;
           knGlobals.setStatusMsg(currMsg);
         }
+        mSMTPProgressItem->setStatus(unshownMsg);
       break;
       case KNProtocolClient::TSsendMail:
         unshownMsg = i18n(" Sending mail...");
@@ -433,22 +450,13 @@ void KNNetAccess::slotThreadSignal(int i)
           currMsg = unshownMsg;
           knGlobals.setStatusMsg(currMsg);
         }
+        mSMTPProgressItem->setStatus(unshownMsg);
       break;
       case KNProtocolClient::TSjobStarted:
-        unshownByteCount = i18n("0 Bytes");
-        unshownProgress = 10;
-        if (!currentNntpJob)
-          knGlobals.setProgressBar(unshownProgress,unshownByteCount);
+        mSMTPProgressItem->setProgress(0);
       break;
       case KNProtocolClient::TSprogressUpdate:
-        byteCount = smtpClient->getByteCount();
-        if (byteCount < 1000)
-          unshownByteCount = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0));
-        else
-          unshownByteCount = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount, 1));
-        unshownProgress = smtpClient->getProgressValue();
-        if (!currentNntpJob)
-          knGlobals.setProgressBar(unshownProgress,unshownByteCount);
+        mSMTPProgressItem->setProgress(smtpClient->getProgressValue()/10);
       break;
     }
   }

@@ -2,7 +2,7 @@
     knnetaccess.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,12 @@
 #include <qptrqueue.h>
 
 class QSocketNotifier;
+
+namespace KPIM {
+  class ProgressItem;
+}
+using KPIM::ProgressItem;
+
 class KNJobData;
 class KNNntpClient;
 class KNSmtpClient;
@@ -60,9 +66,7 @@ class KNNetAccess : public QObject  {
 	so that it can be restored by the mainwindow */
     QString currMsg;
     /** messages from the nntp-client have priority */
-    QString unshownMsg, unshownByteCount;
-    /** unshown messages get stored here */
-    int unshownProgress;
+    QString unshownMsg;
 
     KNNntpClient *nntpClient;
     KNSmtpClient *smtpClient;
@@ -77,6 +81,9 @@ class KNNetAccess : public QObject  {
 
   signals:
     void netActive(bool);
+
+  private:
+    ProgressItem *mNNTPProgressItem, *mSMTPProgressItem;
 
 };
 

@@ -326,8 +326,6 @@ void KNMainWidget::initStatusBar()
   //statusbar
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
-  p_rogBar = new KNProgress( sb->sizeHint().height()-4, 1000, 0, sb );
-  knGlobals.progressBar = p_rogBar;
   s_tatusMain = new KStatusBarLabel( QString::null, SB_MAIN, sb );
   s_tatusMain->setAlignment( AlignLeft | AlignVCenter );
   s_tatusFilter = new KStatusBarLabel( QString::null, SB_FILTER, sb );

@@ -2,7 +2,7 @@
     knwidgets.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -101,53 +101,6 @@ void KNDialogListBox::keyPressEvent(QKeyEvent *e)
     e->ignore();
   else
     QListBox::keyPressEvent(e);
-}
-
-
-//====================================================================================
-
-
-KNProgress::KNProgress (int desiredHeight, int maxValue, int value, QWidget *parent, const char *name)
- : KProgress(parent, name), desHeight(desiredHeight)
-{
-  setTotalSteps(maxValue);
-  setValue(value);
-  setFixedWidth(110);
-  setFrameStyle(QFrame::Box);
-  setLineWidth(1);
-  setBackgroundMode(QWidget::PaletteBackground);
-  disableProgressBar();
-}
-
-
-KNProgress::~KNProgress()
-{}
-
-
-// 0% and no text
-void KNProgress::disableProgressBar()
-{
-  setFormat(QString::null);
-  setValue(0);
-  repaint(false);
-}
-
-
-// manual operation
-void KNProgress::setProgressBar(int value,const QString& text)
-{
-  setFormat(text);
-  if (value>1000) {
-    setValue(1000);
-    update();       // circumvent the optimization of setValue
-  } else
-    setValue(value);
-}
-
-
-QSize KNProgress::sizeHint() const
-{
-  return QSize(KProgress::sizeHint().width(),desHeight);
 }
 
 

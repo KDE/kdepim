@@ -2,7 +2,7 @@
     knode.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,9 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kapplication.h>
+
+#include "progressdialog.h"
+#include "statusbarprogresswidget.h"
 
 //GUI
 #include "knmainwidget.h"
@@ -95,7 +98,15 @@ bool KNMainWindow::queryClose()
 }
 
 void KNMainWindow::setupStatusBar() {
-  statusBar()->addWidget(knGlobals.progressBar);
+  
+  mProgressDialog = new KPIM::ProgressDialog( statusBar(), this );
+  mProgressDialog->hide();
+
+  mLittleProgress = new StatusbarProgressWidget( mProgressDialog, statusBar() );
+  mLittleProgress->show();
+
+  statusBar()->addWidget( mLittleProgress, 0 , true );
+
   statusBar()->addWidget(m_mainWidget->statusBarLabelMain(), 2);
   statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
   statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
