@@ -67,11 +67,13 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( Calendar * calendar, const QString & );  
+    bool fromString( Calendar * calendar, const QString & );
+
     /**
       Parse string and return first ical component.
     */
-    Incidence *fromString( const QString & );  
+    Incidence *fromString( const QString & );
+
     /**
       Return calendar information as string.
     */
@@ -120,6 +122,14 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
       Return true if timezone used is UTC, otherwise return false.
     */
     bool utc() const;
+
+  protected:
+    /**
+      Parse string and return first ical component of a raw byte array of 
+      a utf8 encoded string. This is an overload used for efficiency reading
+      to avoid utf8 conversions, which are expensive, when reading from disk.
+    */
+    bool fromRawString( Calendar * calendar, const QCString & );
 
   private:
     ICalFormatImpl *mImpl;

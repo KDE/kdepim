@@ -87,7 +87,7 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
   if ( text.stripWhiteSpace().isEmpty() ) // empty files are valid
     return true;
   else
-    return fromString( calendar, text );
+    return fromRawString( calendar, text.latin1() );
 }
 
 
@@ -128,13 +128,19 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
 bool ICalFormat::fromString( Calendar *cal, const QString &text )
 {
+  return fromRawString( cal, text.utf8() );
+}
+ 
+bool ICalFormat::fromRawString( Calendar *cal, const QCString &text )
+{
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 
   // Get first VCALENDAR component.
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
 
-  calendar = icalcomponent_new_from_string( (char*)text.latin1() );
+  // Let's defend const correctness until the very gates of hell^Wlibical
+  calendar = icalcomponent_new_from_string( const_cast<char*>( (const char*)text ) );
   //  kdDebug(5800) << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
     kdDebug(5800) << "ICalFormat::load() parse error" << endl;
