@@ -55,7 +55,7 @@ QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 }
 
 Task::Task( const QString& tz, KCal::Todo* task )
-  : Incidence( tz ), mPriority( 3 ), mPercentCompleted( 100 ),
+  : Incidence( tz ), mPriority( 3 ), mPercentCompleted( 0 ),
     mStatus( KCal::Incidence::StatusNone ),
     mHasStartDate( false ), mHasDueDate( false ),
     mHasCompletedDate( false )
