@@ -128,7 +128,7 @@ class Task : public QObject, public QListViewItem
       QDateTime startTime() const { return _lastStart; };
 
       /** sets session time to zero. */
-      void startNewSession() { changeTimes( -_sessionTime, 0, 0); };
+      void startNewSession() { changeTimes( -_sessionTime, 0 ); };
     //@}
 
     //@{ desktop related functions
