@@ -675,13 +675,13 @@ void KABCore::save()
   KABC::StdAddressBook *b = dynamic_cast<KABC::StdAddressBook*>( mAddressBook );
   if ( !b || !b->save() ) {
     QString text = i18n( "There was an error while attempting to save the "
-    			"address book. Please check that some other application is "
-    			"not using it. " );
+    			 "address book. Please check that no other application "
+                         "is using it." );
 
     KMessageBox::error( mWidget, text, i18n( "Unable to Save" ) );
+  } else {
+    setModified( false );
   }
-
-  setModified( false );
 }
 
 void KABCore::undo()
