@@ -77,7 +77,7 @@ bool KNotesIMAP::ResourceIMAP::load()
 {
   // Get the list of journals
   QStringList lst;
-  if( !kmailIncidences( lst, "Notes" ) ) {
+  if( !kmailIncidences( lst, "Note" ) ) {
     kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
     return false;
   }
@@ -86,14 +86,14 @@ bool KNotesIMAP::ResourceIMAP::load()
   mCalendar.deleteAllEvents();
 
   // Populate the calendar with the new events
+  bool silent = mSilent;
+  mSilent = true;
   for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
     KCal::Journal* journal = parseJournal( *it );
-    if( journal ) {
-      mCalendar.addJournal( journal );
-      journal->registerObserver( this );
-      manager()->registerNote( this, journal, true );
-    }
+    if( journal )
+      addNote( journal );
   }
+  mSilent = silent;
 
   return true;
 }
@@ -104,10 +104,23 @@ bool KNotesIMAP::ResourceIMAP::save()
   return false;
 }
 
-bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )
+bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal )
 {
-  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
-  return false;
+  kdDebug() << "KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
+
+  mCalendar.addJournal( journal );
+  journal->registerObserver( this );
+  manager()->registerNote( this, journal, true );
+
+  if ( mSilent ) return true;
+
+  QString note = mFormat->toString( journal );
+  if( !note.isEmpty() && !kmailAddIncidence( "Note", journal->uid(), note ) ) {
+    kdError() << "Communication problem in ResourceIMAP::addNote()\n";
+    return false;
+  }
+
+  return true;
 }
 
 bool KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* )
