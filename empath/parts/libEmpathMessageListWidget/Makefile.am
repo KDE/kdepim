@@ -1,6 +1,7 @@
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/empath/lib -I$(top_srcdir)/empath/ui
+INCLUDES = $(all_includes) -I$(top_srcdir)/empath/lib -I$(top_srcdir)/empath/ui\
+	-I$(top_srcdir)/rmm
 
 lib_LTLIBRARIES = libEmpathMessageListWidget.la
 
