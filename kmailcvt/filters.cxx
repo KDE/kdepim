@@ -77,10 +77,10 @@ filterInfo::filterInfo(QWidget *parent,char */*name*/)
    _current->setText(i18n("current:"));
    grid1->addMultiCellWidget(_current,2,2,0,4);
    _to=new QLabel(this);
-   _to->setText(i18n("to:"));
+   _to->setText(i18n("Destination:"));
       grid1->addMultiCellWidget(_to,0,0,0,4);
    _from=new QLabel(this);
-   _from->setText(i18n("from:"));
+   _from->setText(i18n("Source:"));
    grid1->addMultiCellWidget(_from,1,1,0,4);
 }
 

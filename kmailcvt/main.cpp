@@ -25,8 +25,7 @@
 #include "kmailcvt.h"
 
 static const char *description =
-	I18N_NOOP("Kmailcvt2");
-// INSERT A DESCRIPTION FOR YOUR APPLICATION HERE
+	I18N_NOOP("A little tool to convert mail boxes and address books to kmail format");
 	
 	
 static KCmdLineOptions options[] =

@@ -27,8 +27,9 @@
 #include "oe5_2mbox.h"
 #include "liboe.h"
 
-#define CAP	i18n("Import Outlook Express 5")
+#define CAP	cap 
 
+QString	      oe5_2mbox::cap = i18n("Import Outlook Express 5");
 filter *      oe5_2mbox::F = 0;
 const char *  oe5_2mbox::FOLDER = 0;
 filterInfo *  oe5_2mbox::INFO = 0;

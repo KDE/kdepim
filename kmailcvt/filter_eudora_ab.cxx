@@ -62,7 +62,7 @@ FILE   *F;
      return;
    }
 
-   QString from=i18n("from: "),to=i18n("to: ");
+   QString from=i18n("Source: "),to=i18n("Destination: ");
      from+="\t";from+=file;
      to+="\t";to+=i18n("the K Addressbook");
      info->from(from);

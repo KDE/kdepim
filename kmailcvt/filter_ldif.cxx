@@ -47,7 +47,7 @@ void filter_ldif::import(filterInfo *info) {
    }
 	 strcpy(file,_file.latin1());	//lukas: FIXME no strcpy nor .latin1() for filenames!!!
 
-	 QString from=i18n("from: "),to=i18n("to: ");
+	 QString from=i18n("Source: "),to=i18n("Desination: ");
    from+="\t"; from+=file;
    to+="\t"; to+=i18n("the K Address Book");
    info->from(from);

@@ -29,6 +29,7 @@ class oe5_2mbox
     static filterInfo *INFO;
     static int         numOfMessages;
     static unsigned long added, mails;
+    static QString cap;
   private:
     filter        *f;
     filterInfo    *info;

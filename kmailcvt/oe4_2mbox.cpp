@@ -27,8 +27,9 @@
 #include "oe4_2mbox.h"
 #include "liboe.h"
 
-#define CAP	i18n("Import Outlook Express 4")
+#define CAP cap
 
+QString       oe4_2mbox::cap = i18n("Import Outlook Express 4");
 filter *      oe4_2mbox::F = 0;
 const char *  oe4_2mbox::FOLDER = 0;
 filterInfo *  oe4_2mbox::INFO = 0;
@@ -85,7 +86,7 @@ char s[1024];
     }
   }
   else {QString msg;
-    msg=i18n("%1 mails read, %2 were new kmail folder").arg(mails).arg(added);
+    msg=i18n("%n mail read, %1 were new kmail folder", "%n mails read, %1 were new kmail folder", mails).arg(added);
     info->log(msg);
   }
 
@@ -173,4 +174,6 @@ static float perc=0.0;
     break;
   }
 }
+
 #undef CAP
+

@@ -43,7 +43,7 @@ QWidget *parent=info->parent();
    strcpy(file,_file.latin1());
 
    {pab PAB(file,this,info);
-    QString from=i18n("from: "),to=i18n("to: ");
+    QString from=i18n("Source: "),to=i18n("Destination: ");
       from+="\t";
       from+=file;
       to+="\t";

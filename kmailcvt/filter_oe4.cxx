@@ -114,16 +114,14 @@ QWidget *parent=info->parent();
 
               {QString s;
                  s.sprintf("\t%s",fldr);
-                 s=i18n("from:")+s;
+                 s=i18n("Source:")+s;
                  info->from(s);
                  s.sprintf("\tOE4-%s",name);
-                 s=i18n("to:")+s;
+                 s=i18n("Destination:")+s;
                  info->to(s);
               }
 
-              {QString f,n;
-                 f.sprintf(" '%s' ",file);
-                 n.sprintf(" 'OE4-%s'...",name);
+              {
                  msg=i18n("  importing folder %1 to kmail %2").arg(file).arg(name);
                  info->log(msg);
               }
