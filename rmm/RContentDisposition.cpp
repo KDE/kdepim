@@ -138,7 +138,8 @@ RContentDisposition::_parse()
     void
 RContentDisposition::_assemble()
 {
-    // STUB
+	strRep_ = (dispType_==DispositionTypeAttachment) ? "attachment" : "inline";
+	strRep_+=parameterList_.asString();    
 }
     
     void
