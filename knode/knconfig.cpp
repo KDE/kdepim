@@ -183,7 +183,7 @@ KNConfig::Appearance::Appearance()
   QColor defCol=kapp->palette().active().base();
   c_olors[background]=c->readColorEntry("backgroundColor",&defCol);
   c_olorNames[background]=i18n("Background");
-  
+
   defCol=KGlobalSettings::alternateBackgroundColor();
   c_olors[alternateBackground]=c->readColorEntry("alternateBackgroundColor",&defCol);
   c_olorNames[alternateBackground]=i18n("Alternate Background");
@@ -196,15 +196,15 @@ KNConfig::Appearance::Appearance()
   c_olors[normalText]=c->readColorEntry("textColor",&defCol);
   c_olorNames[normalText]=i18n("Normal Text");
 
-  defCol=kapp->palette().active().text();
+  defCol=QColor( 0x00, 0x80, 0x00 );
   c_olors[quoted1]=c->readColorEntry("quote1Color",&defCol);
   c_olorNames[quoted1]=i18n("Quoted Text - First level");
 
-  defCol=kapp->palette().active().text();
+  defCol=QColor( 0x00, 0x70, 0x00 );
   c_olors[quoted2]=c->readColorEntry("quote2Color",&defCol);
   c_olorNames[quoted2]=i18n("Quoted Text - Second level");
 
-  defCol=kapp->palette().active().text();
+  defCol=QColor( 0x00, 0x60, 0x00 );
   c_olors[quoted3]=c->readColorEntry("quote3Color",&defCol);
   c_olorNames[quoted3]=i18n("Quoted Text - Third level");
 
@@ -506,7 +506,7 @@ QColor KNConfig::Appearance::defaultColor(int i)
     case background:
       return kapp->palette().active().base();
     break;
-    
+
     case alternateBackground:
       return KGlobalSettings::alternateBackgroundColor();
 
@@ -514,10 +514,17 @@ QColor KNConfig::Appearance::defaultColor(int i)
       return kapp->palette().active().background();
     break;
 
-    case normalText:
-    case quoted1:
+  case quoted1:
+      return QColor( 0x00, 0x80, 0x00 );
+      break;
     case quoted2:
+        return QColor( 0x00, 0x70, 0x00 );
+        break;
     case quoted3:
+        return QColor( 0x00, 0x60, 0x00 );
+        break;
+
+    case normalText:
     case unreadThread:
       return kapp->palette().active().text();
     break;
