@@ -25,8 +25,8 @@
 
 
 class KNFolder : public KNArticleCollection  {
-  
-  friend class KNCleanUp; 
+
+  friend class KNCleanUp;
 
   public:
     KNFolder();
@@ -38,15 +38,15 @@ class KNFolder : public KNArticleCollection  {
     collectionType type()               { return CTfolder; }
 
     //id
-    int id()                            { return i_d; }
+    int id() const                           { return i_d; }
     void setId(int i)                   { i_d=i; }
-    int parentId()                      { return p_arentId; }
+    int parentId() const                     { return p_arentId; }
     bool isStandardFolder()             { return (i_d > 0) && (i_d <=3); }
     bool isRootFolder()                 { return i_d==0; }
 
     //list item handling
     void updateListItem();
-    bool wasOpen()                      { return w_asOpen; }
+    bool wasOpen()const                      { return w_asOpen; }
 
     //info
     QString path();
@@ -92,7 +92,7 @@ class KNFolder : public KNArticleCollection  {
           ~DynData() {}
           void setData(KNLocalArticle *a);
           void getData(KNLocalArticle *a);
-          
+
           int id,
               so,
               eo,

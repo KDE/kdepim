@@ -34,12 +34,12 @@ class KNFolderManager
 
     //folder access
     void setCurrentFolder(KNFolder *f);
-    KNFolder* currentFolder()             { return c_urrentFolder; }
+    KNFolder* currentFolder()const             { return c_urrentFolder; }
     bool hasCurrentFolder()               { return (c_urrentFolder!=0); }
     KNFolder* folder(int id);
 
     //standard folders
-    KNFolder* root()                      { return f_List.at(0); }
+    KNFolder* root()                     { return f_List.at(0); }
     KNFolder* drafts()                    { return f_List.at(1); }
     KNFolder* outbox()                    { return f_List.at(2); }
     KNFolder* sent()                      { return f_List.at(3); }
@@ -70,13 +70,13 @@ class KNFolderManager
     void exportToMBox(KNFolder *f);
 
     //synchronization
-    void syncFolders();   
+    void syncFolders();
 
   protected:
     int loadCustomFolders();
     void showListItems();
     void createListItem(KNFolder *f);
-        
+
     KNFolder  *c_urrentFolder;
     QPtrList<KNFolder> f_List;
     int l_astId;

@@ -23,28 +23,28 @@ class KConfig;
 
 
 class KNServerInfo {
-  
+
   public:
     enum serverType { STnntp, STsmtp, STpop3 };
     KNServerInfo();
     ~KNServerInfo();
-    
+
     void clear();
-    
+
     void readConf(KConfig *conf);
     void saveConf(KConfig *conf);
-            
+
     //get
     serverType type()         { return t_ype; }
     int id()                  { return i_d; }
     const QString& server()   { return s_erver; }
     const QString& user()     { return u_ser; }
     const QString& pass()     { return p_ass; }
-    int port()                { return p_ort; }
-    int hold()                { return h_old; }
-    int timeout()             { return t_imeout; }
-    bool needsLogon()         { return n_eedsLogon; }
-    bool isEmpty()            { return s_erver.isEmpty(); }
+    int port() const                { return p_ort; }
+    int hold() const               { return h_old; }
+    int timeout() const            { return t_imeout; }
+    bool needsLogon()const         { return n_eedsLogon; }
+    bool isEmpty()const            { return s_erver.isEmpty(); }
 
     //set
     void setType(serverType t)        { t_ype=t; }
@@ -72,7 +72,7 @@ class KNServerInfo {
         t_imeout;
 
     bool n_eedsLogon;
-    
+
 };
 
 

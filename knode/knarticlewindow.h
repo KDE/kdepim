@@ -32,7 +32,7 @@ class KNArticleWindow : public KMainWindow  {
   public:
     KNArticleWindow(KNArticle *art);
     ~KNArticleWindow();
-    KNArticleWidget* artWidget()        { return artW; }
+    KNArticleWidget* artWidget()const        { return artW; }
 
     static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force=true);
     static bool closeAllWindowsForArticle(KNArticle *art, bool force=true);

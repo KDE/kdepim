@@ -28,30 +28,30 @@ class KNFolder;
 
 
 class KNArticleFilter {
-  
+
   friend class KNFilterManager;
   friend class KNFilterDialog;
-  friend class KNSearchDialog;  
+  friend class KNSearchDialog;
 
   public:
     KNArticleFilter(int id=-1);
     KNArticleFilter(const KNArticleFilter& org);   // constructs a copy of org
     ~KNArticleFilter();
-    
+
     bool loadInfo();
     void load();
     void save();
-                
+
     void doFilter(KNGroup *g);
     void doFilter(KNFolder *f);
-    int count()                     { return c_ount; }
-    int id()                        { return i_d; }
+    int count()const                     { return c_ount; }
+    int id()const                        { return i_d; }
     int applyOn()                   { return static_cast<int>(apon); }
     const QString& name()           { return n_ame; }
     QString translatedName();        // *trys* to translate the name
-    bool isEnabled()                { return e_nabled; }
-    bool loaded()                   { return l_oaded; }
-    bool isSearchFilter()           { return s_earchFilter; }
+    bool isEnabled()const                { return e_nabled; }
+    bool loaded()const                   { return l_oaded; }
+    bool isSearchFilter()const           { return s_earchFilter; }
 
     void setId(int i)               { i_d=i; }
     void setApplyOn(int i)          { apon=(ApOn)i; }
@@ -60,18 +60,18 @@ class KNArticleFilter {
     void setTranslatedName(const QString &s);     // *trys* to retranslate the name to english
     void setEnabled(bool l)         { e_nabled=l; }
     void setSearchFilter(bool b)    { s_earchFilter = b; }
-    
+
   protected:
-    
+
     enum ApOn { articles=0 , threads=1 };
     bool applyFilter(KNRemoteArticle *a);
     bool applyFilter(KNLocalArticle *a);
-      
+
     QString n_ame;
     int i_d, c_ount;
     bool l_oaded, e_nabled, translateName, s_earchFilter;
     ApOn apon;
-    
+
     KNStatusFilter status;
     KNRangeFilter score, age, lines;
     KNStringFilter subject, from, messageId, references;

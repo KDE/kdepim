@@ -36,9 +36,9 @@ class KNGroupPropDlg : public KDialogBase  {
   public:
     KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
     ~KNGroupPropDlg();
-    
-    bool nickHasChanged() { return n_ickChanged; }
-    
+
+    bool nickHasChanged()const { return n_ickChanged; }
+
   protected:
     KNGroup *g_rp;
     bool n_ickChanged;
@@ -46,10 +46,10 @@ class KNGroupPropDlg : public KDialogBase  {
     KLineEdit *n_ick;
     QCheckBox *u_seCharset;
     QComboBox *c_harset;
-    
+
   protected slots:
     void slotOk();
-  
+
 };
 
 #endif

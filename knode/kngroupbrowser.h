@@ -66,7 +66,7 @@ class KNGroupBrowser : public KDialogBase {
                    bool newCBact=false, const QString &user1=QString::null, const QString &user2=QString::null);
     ~KNGroupBrowser();
 
-    KNNntpAccount* account()      { return a_ccount; }
+    KNNntpAccount* account()const      { return a_ccount; }
     virtual void itemChangedState(CheckItem *it, bool s)=0;
 
   public slots:

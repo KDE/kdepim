@@ -53,7 +53,7 @@ class KNComposer : public KMainWindow  {
     //get result
     bool hasValidData();
     composerResult result()               { return r_esult; }
-    KNLocalArticle* article()             { return a_rticle; }
+    KNLocalArticle* article()const             { return a_rticle; }
     bool applyChanges();
 
     void closeEvent(QCloseEvent *e);

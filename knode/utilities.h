@@ -118,8 +118,8 @@ public:
       a file open for reading */
   KNFile* setURL(KURL url);
   /** returns the file after getFile(QString) of setURL(url) was called */
-  KNFile* getFile() { return f_ile; };
-  KURL getURL()     { return u_rl; };
+  KNFile* getFile()const { return f_ile; };
+  KURL getURL() const    { return u_rl; };
 
 private:
 

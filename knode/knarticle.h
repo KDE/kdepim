@@ -51,11 +51,11 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     ~KNArticle();
 
     //id
-    int id()             { return i_d; }
+    int id() const            { return i_d; }
     void setId(int i)    { i_d=i; }
 
     //list item handling
-    KNHdrViewItem* listItem()            { return i_tem; }
+    KNHdrViewItem* listItem() const           { return i_tem; }
     void setListItem(KNHdrViewItem *i);
     virtual void updateListItem() {}
 
@@ -68,9 +68,9 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     void setNotUnloadable(bool b=true)   { f_lags.set(1, b); }
 
     //article-collection
-    KNArticleCollection* collection()           { return c_ol; }
+    KNArticleCollection* collection() const          { return c_ol; }
     void setCollection(KNArticleCollection *c)  { c_ol=c; }
-    bool isOrphant()                            { return (i_d==-1); }
+    bool isOrphant() const                           { return (i_d==-1); }
 
   protected:
     int i_d; //unique in the given collection
@@ -112,7 +112,7 @@ class KNRemoteArticle : public KNArticle {
     KMime::Headers::References* references(bool create=true) { if(!create && r_eferences.isEmpty()) return 0; return &r_eferences; }
 
     // article number
-    int articleNumber()                  { return a_rticleNumber; }
+    int articleNumber() const                 { return a_rticleNumber; }
     void setArticleNumber(int number)    { a_rticleNumber = number; }
 
     // status
@@ -134,8 +134,8 @@ class KNRemoteArticle : public KNArticle {
 
     // thread info
     int idRef()                                     { return i_dRef; }
-    void setIdRef(int i)                            { if (i != id()) 
-                                                        i_dRef=i; 
+    void setIdRef(int i)                            { if (i != id())
+                                                        i_dRef=i;
                                                       else
                                                         i_dRef=0; }
     KNRemoteArticle* displayedReference()           { return d_ref; }
@@ -259,9 +259,9 @@ class KNLocalArticle : public KNArticle {
     void setFilterResult(bool b=true)  { f_lags.set(8, b); }
 
     //MBOX infos
-    int startOffset()             { return s_Offset; }
+    int startOffset() const             { return s_Offset; }
     void setStartOffset(int so)   { s_Offset=so; }
-    int endOffset()               { return e_Offset; }
+    int endOffset() const              { return e_Offset; }
     void setEndOffset(int eo)     { e_Offset=eo; }
 
     //nntp-server id
@@ -309,14 +309,14 @@ class KNAttachment {
     int cte()                             { return e_ncoding.cte(); }
     void setCte(int e)                    { e_ncoding.setCte( (KMime::Headers::contentEncoding)(e) );
                                             h_asChanged=true; }
-    bool isFixedBase64()                  { return f_b64; }
+    bool isFixedBase64()const                  { return f_b64; }
     QString encoding()                    { return e_ncoding.asUnicodeString(); }
 
     //content handling
-    KMime::Content* content()             { return c_ontent; }
+    KMime::Content* content()const             { return c_ontent; }
     QString contentSize();
-    bool isAttached()                     { return i_sAttached; }
-    bool hasChanged()                     { return h_asChanged; }
+    bool isAttached() const                    { return i_sAttached; }
+    bool hasChanged() const                    { return h_asChanged; }
     void updateContentInfo();
     void attach(KMime::Content *c);
     void detach(KMime::Content *c);

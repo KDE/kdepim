@@ -60,7 +60,7 @@ class Base {
 
     virtual void save()    {}
 
-    bool dirty()           { return d_irty; }
+    bool dirty()const           { return d_irty; }
     void setDirty(bool b)  { d_irty=b; }
 
   protected:
@@ -79,7 +79,7 @@ class BaseWidget : public QWidget {
 
     void show()             { d_irty=true; QWidget::show(); }
 
-    bool dirty()            { return d_irty; }
+    bool dirty()const            { return d_irty; }
     void setDirty(bool b)   { d_irty=b; }
 
     virtual void apply() {}
@@ -104,11 +104,11 @@ Q_OBJECT
     void saveConfig(KConfigBase *c);
     void save();
     bool isEmpty();
-    bool isGlobal()           { return g_lobal; }
+    bool isGlobal()const           { return g_lobal; }
 
     //personal information
     bool hasName()                    { return (!n_ame.isEmpty()); }
-    QString name()                    { return n_ame; }
+    QString name() const                   { return n_ame; }
     void setName(const QString &s)    { n_ame=s; }
     bool emailIsValid();
     bool hasEmail()                   { return (!e_mail.isEmpty()); }
@@ -121,7 +121,7 @@ Q_OBJECT
     QString mailCopiesTo()            { return m_ailCopiesTo; }
     void setMailCopiesTo(const QString &s) { m_ailCopiesTo=s; }
     bool hasOrga()                    { return (!o_rga.isEmpty()); }
-    QString orga()                    { return o_rga; }
+    QString orga() const                   { return o_rga; }
     void setOrga(const QString &s)    { o_rga=s; }
 
     // OpenPGP signing key
@@ -131,10 +131,10 @@ Q_OBJECT
 
     //signature
     bool hasSignature()       { return ( (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty() ); }
-    bool useSigFile()         { return u_seSigFile; }
-    bool useSigGenerator()    { return u_seSigGenerator; }
-    QString sigPath()         { return s_igPath; }
-    QString sigText()         { return s_igText; }
+    bool useSigFile() const        { return u_seSigFile; }
+    bool useSigGenerator()const    { return u_seSigGenerator; }
+    QString sigPath()const         { return s_igPath; }
+    QString sigText()const         { return s_igText; }
     QString getSignature();
 
   protected slots:
@@ -192,7 +192,7 @@ class IdentityWidget : public BaseWidget {
     void slotSignatureType(int type);
     void slotSignatureChoose();
     void slotSignatureEdit();
-    void textFileNameChanged(const QString &);    
+    void textFileNameChanged(const QString &);
 
 };
 
@@ -472,26 +472,26 @@ class ReadNewsGeneral : public Base {
 
     void save();
 
-    bool autoCheckGroups()           { return a_utoCheck; }
-    int maxToFetch()                 { return m_axFetch; }
-    bool autoMark()                  { return a_utoMark; }
-    int autoMarkSeconds()            { return m_arkSecs; }
-    bool markCrossposts()            { return m_arkCrossposts; }
+    bool autoCheckGroups()const           { return a_utoCheck; }
+    int maxToFetch()const                 { return m_axFetch; }
+    bool autoMark()const                  { return a_utoMark; }
+    int autoMarkSeconds()const            { return m_arkSecs; }
+    bool markCrossposts()const            { return m_arkCrossposts; }
 
-    bool smartScrolling()            { return s_martScrolling; }
-    bool totalExpandThreads()        { return t_otalExpand; }
-    bool defaultToExpandedThreads()  { return d_efaultExpand; }
-    bool showLines()                 { return s_howLines; }
-    bool showScore()                 { return s_howScore; }
-    bool showUnread()                { return s_howUnread; }
+    bool smartScrolling()const            { return s_martScrolling; }
+    bool totalExpandThreads()const        { return t_otalExpand; }
+    bool defaultToExpandedThreads()const  { return d_efaultExpand; }
+    bool showLines()const                 { return s_howLines; }
+    bool showScore()const                 { return s_howScore; }
+    bool showUnread()const                { return s_howUnread; }
 
-    int collCacheSize()              { return c_ollCacheSize; }
-    int artCacheSize()               { return a_rtCacheSize; }
+    int collCacheSize()const              { return c_ollCacheSize; }
+    int artCacheSize()const               { return a_rtCacheSize; }
 
-    bool showThreads()               { return s_howThreads; }
+    bool showThreads()const               { return s_howThreads; }
     void setShowThreads(bool b)      { d_irty=true; s_howThreads=b;}
 
-    bool autoCheckPgpSigs()          { return a_utoCheckPgpSigs; }
+    bool autoCheckPgpSigs()const          { return a_utoCheckPgpSigs; }
     void setAutoCheckPgpSigs(bool b) { d_irty=true; a_utoCheckPgpSigs=b;}
 
   protected:
@@ -553,12 +553,12 @@ class ReadNewsNavigation : public Base {
 
     void save();
 
-    bool emulateKMail()               { return e_muKMail; }
-    bool markAllReadGoNext()          { return m_arkAllReadGoNext; }
-    bool markThreadReadGoNext()       { return m_arkThreadReadGoNext; }
-    bool markThreadReadCloseThread()  { return m_arkThreadReadCloseThread; }
-    bool ignoreThreadGoNext()         { return i_gnoreThreadGoNext; }
-    bool ignoreThreadCloseThread()   { return i_gnoreThreadCloseThread; }
+    bool emulateKMail()const               { return e_muKMail; }
+    bool markAllReadGoNext()const          { return m_arkAllReadGoNext; }
+    bool markThreadReadGoNext() const      { return m_arkThreadReadGoNext; }
+    bool markThreadReadCloseThread()const  { return m_arkThreadReadCloseThread; }
+    bool ignoreThreadGoNext()const         { return i_gnoreThreadGoNext; }
+    bool ignoreThreadCloseThread()const   { return i_gnoreThreadCloseThread; }
 
   protected:
     bool  e_muKMail,
@@ -604,23 +604,23 @@ class ReadNewsViewer : public Base {
 
     void save();
 
-    bool showHeaderDecoration()      { return s_howHeaderDeco; }
-    bool rewrapBody()                { return r_ewrapBody; }
-    bool removeTrailingNewlines()    { return r_emoveTrailingNewlines; }
-    bool showSignature()             { return s_howSig; }
-    bool interpretFormatTags()       { return i_nterpretFormatTags; }
-    QString quoteCharacters()        { return q_uoteCharacters; }
+    bool showHeaderDecoration()const      { return s_howHeaderDeco; }
+    bool rewrapBody()const                { return r_ewrapBody; }
+    bool removeTrailingNewlines()const    { return r_emoveTrailingNewlines; }
+    bool showSignature()const             { return s_howSig; }
+    bool interpretFormatTags()const       { return i_nterpretFormatTags; }
+    QString quoteCharacters()const        { return q_uoteCharacters; }
 
-    bool showAttachmentsInline()     { return i_nlineAtt; }
-    bool openAttachmentsOnClick()    { return o_penAtt; }
-    bool showAlternativeContents()   { return s_howAlts; }
+    bool showAttachmentsInline()const     { return i_nlineAtt; }
+    bool openAttachmentsOnClick()const    { return o_penAtt; }
+    bool showAlternativeContents()const   { return s_howAlts; }
 
-    browserType browser()            { return b_rowser; }
-    QString browserCommand()         { return b_rowserCommand; }
+    browserType browser()const            { return b_rowser; }
+    QString browserCommand()const         { return b_rowserCommand; }
 
-    bool showFullHdrs()              { return f_ullHdrs; }
+    bool showFullHdrs()const              { return f_ullHdrs; }
     void setShowFullHdrs(bool b)     { d_irty = true; f_ullHdrs=b; }
-    bool useFixedFont()              { return u_seFixedFont; }
+    bool useFixedFont() const             { return u_seFixedFont; }
     void setUseFixedFont(bool b)     { d_irty = true; u_seFixedFont=b; }
 
   protected:
@@ -907,18 +907,18 @@ class PostNewsTechnical : public Base {
 
     void save();
 
-    QCString charset()          { return c_harset; }
+    QCString charset() const         { return c_harset; }
     QStringList composerCharsets() { return c_omposerCharsets; }
     int indexForCharset(const QCString &str);
     QCString findComposerCharset(QCString cs);
 
-    bool allow8BitBody()        { return a_llow8BitBody; }
-    bool useOwnCharset()        { return u_seOwnCharset; }
-    bool generateMessageID()    { return g_enerateMID; }
-    QCString hostname()         { return h_ostname; }
+    bool allow8BitBody() const       { return a_llow8BitBody; }
+    bool useOwnCharset() const       { return u_seOwnCharset; }
+    bool generateMessageID()const    { return g_enerateMID; }
+    QCString hostname()const         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
-    bool noUserAgent()          { return d_ontIncludeUA; }
-    bool useExternalMailer()    { return u_seExternalMailer; }
+    bool noUserAgent()const          { return d_ontIncludeUA; }
+    bool useExternalMailer()const    { return u_seExternalMailer; }
 
   protected:
     QCString  c_harset,
@@ -999,17 +999,17 @@ class PostNewsComposer : public Base {
 
     void save();
 
-    bool wordWrap()             { return w_ordWrap; }
-    int maxLineLength()         { return m_axLen; }
-    bool appendOwnSignature()   { return a_ppSig; }
+    bool wordWrap()const             { return w_ordWrap; }
+    int maxLineLength()const         { return m_axLen; }
+    bool appendOwnSignature()const   { return a_ppSig; }
 
-    QString intro()             { return i_ntro; }
-    bool rewrap()               { return r_ewrap; }
-    bool includeSignature()     { return i_ncSig; }
-    bool cursorOnTop()          { return c_ursorOnTop; }
+    QString intro()const             { return i_ntro; }
+    bool rewrap()const               { return r_ewrap; }
+    bool includeSignature()const     { return i_ncSig; }
+    bool cursorOnTop()const          { return c_ursorOnTop; }
 
-    QString externalEditor()    { return e_xternalEditor; }
-    bool useExternalEditor()    { return u_seExtEditor; }
+    QString externalEditor()const    { return e_xternalEditor; }
+    bool useExternalEditor()const    { return u_seExtEditor; }
 
 
   protected:
@@ -1096,10 +1096,10 @@ class Cleanup : public Base {
     void save();
 
     //expire
-    int maxAgeForRead()         { return r_eadMaxAge; }
-    int maxAgeForUnread()       { return u_nreadMaxAge; }
-    bool removeUnavailable()    { return r_emoveUnavailable; }
-    bool preserveThreads()      { return p_reserveThr; }
+    int maxAgeForRead()const         { return r_eadMaxAge; }
+    int maxAgeForUnread()const       { return u_nreadMaxAge; }
+    bool removeUnavailable()const    { return r_emoveUnavailable; }
+    bool preserveThreads()const      { return p_reserveThr; }
     bool expireToday();
     void setLastExpireDate();
 

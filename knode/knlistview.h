@@ -25,7 +25,7 @@ class KNListView;
 class QPainter;
 
 class KNLVItemBase : public KFolderTreeItem  {
-  
+
   public:
   /** restricted to KNListView to prevent that the
       static_cast in @ref ~KNLVItemBase fails. */
@@ -34,7 +34,7 @@ class KNLVItemBase : public KFolderTreeItem  {
     ~KNLVItemBase();
 
     void setActive(bool b)  { a_ctive = b; };
-    bool isActive()         { return a_ctive; }
+    bool isActive()const         { return a_ctive; }
 
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
@@ -74,8 +74,8 @@ class KNListView : public KFolderTree  {
     KNListView(QWidget *parent, const char *name=0);
     ~KNListView();
 
-    int sortColumn()                { return s_ortCol; }
-    bool ascending()                { return s_ortAsc; }
+    int sortColumn() const               { return s_ortCol; }
+    bool ascending() const               { return s_ortAsc; }
     void setColAsc(int c, bool a)   { s_ortCol=c; s_ortAsc=a; }
 
     void setActive(QListViewItem *item, bool activate);

@@ -42,7 +42,7 @@ class KNConvert : public QDialog {
 
     KNConvert(const QString &version);
     ~KNConvert();
-    bool conversionDone() { return c_onversionDone; }
+    bool conversionDone()const { return c_onversionDone; }
 
 
   protected:

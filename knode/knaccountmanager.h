@@ -29,26 +29,26 @@ class KNServerInfo;
 class KNAccountManager : public QObject
 {
   Q_OBJECT
-  
+
   public:
     KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent=0, const char * name=0);
     ~KNAccountManager();
 
     void prepareShutdown();
-    
+
     void setCurrentAccount(KNNntpAccount *a);
-    
+
     bool newAccount(KNNntpAccount *a);       // a is new account allocated and configured by the caller
     bool removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
     void editProperties(KNNntpAccount *a=0);
     void accountRenamed(KNNntpAccount *a=0);
 
-    bool hasCurrentAccount()              { return (c_urrentAccount!=0); }
-    KNNntpAccount* currentAccount()       { return c_urrentAccount; }
-    KNServerInfo* smtp()                  { return s_mtp; }
+    bool hasCurrentAccount() const             { return (c_urrentAccount!=0); }
+    KNNntpAccount* currentAccount() const       { return c_urrentAccount; }
+    KNServerInfo* smtp() const                 { return s_mtp; }
     KNNntpAccount* first()                { return accList->first(); }
-    KNNntpAccount* next()                 { return accList->next(); }   
-    KNNntpAccount* account(int i);  
+    KNNntpAccount* next()                 { return accList->next(); }
+    KNNntpAccount* account(int i);
 
   protected:
     void loadAccounts();

@@ -36,17 +36,17 @@ class KNCollection {
     virtual collectionType type()=0;
 
     // list item handling
-    KNCollectionViewItem* listItem()  { return l_istItem; }
+    KNCollectionViewItem* listItem()const  { return l_istItem; }
     void setListItem(KNCollectionViewItem *i);
     virtual void updateListItem();
 
     // info
     virtual QString path()=0;
     virtual bool readInfo(const QString &confPath)=0;
-    virtual void saveInfo()=0;    
+    virtual void saveInfo()=0;
 
     // parent
-    KNCollection* parent()                    { return p_arent; }
+    KNCollection* parent()const                    { return p_arent; }
     virtual void setParent(KNCollection *p)   { p_arent=p; }
 
     // name
@@ -54,7 +54,7 @@ class KNCollection {
     void setName(const QString &s)    { n_ame=s; }
 
     // count
-    int count()                       { return c_ount; }
+    int count()const                       { return c_ount; }
     void setCount(int i)              { c_ount=i; }
     void incCount(int i)              { c_ount+=i; }
     void decCount(int i)              { c_ount-=i; }
