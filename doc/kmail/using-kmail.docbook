@@ -553,21 +553,41 @@ removes all but one action and resets that one.</para>
 <para>Invalid or empty actions are not executed.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Advanced Options</guilabel></term>
-<listitem><para> In
-this group you can define a few advanced options for filters that
-allow you to refine your filtering.</para>
-<para>Using the first row
-of check boxes, you can toggle the applicability of the corresponding
-filter: the <guilabel>to incoming messages</guilabel> check shows whether
-it may be considered for incoming messages (&ie; on <guiicon>Check
-Mail</guiicon>); the <guilabel>to sent messages</guilabel> check
-shows the same for sent messages (&ie; <emphasis>after</emphasis>
-<guiicon>Send</guiicon>); the <guilabel>on manual
-filtering</guilabel> check controls whether to apply this filter when
-filtering manually (&ie; via <menuchoice><guimenu>Message</guimenu>
-<guimenuitem>Apply Filters</guimenuitem></menuchoice>.)</para>
+
+<listitem>
+
+<para>In this group you can define a few advanced options for filters
+that allow you to refine your filtering.</para>
+
+<para>Using the first row of check boxes, you can toggle when the
+filter is applied: the <guilabel>to incoming messages</guilabel>
+option means that the filter is applied to messages when you receive
+them (&ie; on <guiicon>Check Mail</guiicon>); the <guilabel>to sent
+messages</guilabel> options means that the filter is applied to
+messages when you send them and the <guilabel>on manual
+filtering</guilabel> option controls whether to apply this filter when
+filtering is specifically selected (&ie; via
+<menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
+Filters</guimenuitem></menuchoice>.)</para>
+
+<para>The <guilabel>If this filter matches, stop processing here</guilabel>
+check box in the second row controls whether or not the filters after
+the current filter will be applied, if the current filter matches.</para>
+
+<para>If the <guilabel>Add this filter to the Apply Filter menu</guilabel>
+check box in the third row is selected, this filter will be inserted
+in the <menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
+Filter</guimenuitem></menuchoice> submenu. You can then apply this
+filter to a message. Another way of applying filters is to use
+<menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
+Filters</guimenuitem></menuchoice> menu option, which applies <emphasis>all
+</emphasis> the filters - one after another until they are all used or one of the
+filters that matches has the <guilabel>If the filters matches, stop
+processing here</guilabel>.</para>
+
 </listitem>
 </varlistentry>
 </variablelist>
@@ -736,7 +756,7 @@ spam messages.</para></warning>
 <listitem><para>Will try to return a message to the sender that
 indicates successful delivery of their message, if the sender requested that.</para> <para>This
 action allows you to select who will get delivery receipts from
-you. Though you can globaly enable the sending of delivery
+you. Though you can globally enable the sending of delivery
 confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog
 (<link linkend="configure-security-general"><guilabel>Security</guilabel>
 page</link>) we recommended not to send them to everyone, since this
@@ -779,7 +799,7 @@ even this command will work (within its limits):
 <para>This will feed the message to a program: if the program returns
 output, the entire message (including the headers) will be replaced
 with this output; if the program does not return output or exits
-with a return code other than 0 (indicating an error occured), the message
+with a return code other than 0 (indicating an error occurred), the message
 will not change.  Specify the full path to the program. The same
 substitutions (<symbol>&percnt;n</symbol>,
 <symbol>&percnt;{foo}</symbol> as with <guilabel>execute
@@ -918,6 +938,89 @@ that are from <userinput>fj@anywhere.com</userinput>.</para>
 <!-- fixme: trigger with ctrl-j or whenever new mail arrives (unless
 <guilabel>Advanced Options</guilabel> are changed. -->
 </sect2>
+
+<sect2 id="filter-optimization">
+<title>Filter Optimization</title>
+
+<para>It is important to know that, for example, the order of the
+filters has an  impact on the speed of the filter process. Here are
+some ideas which can help you to improve the filtering:
+</para>
+
+<variablelist>
+<varlistentry>
+<term>Stop filter processing as early as possible:</term>
+<listitem>
+<para>If you know that a filter finally processes a certain class of 
+messages, please make sure to check the option <guilabel>If this filter 
+matches, stop processing here</guilabel> for the filter. 
+This will avoid the evaluation of the filter rules of all subsequent
+filters. (See the advanced options in the <link linkend="filter-dialog-id">
+Filter Dialog</link>).</para>
+<para>An example is filtering messages from mailing lists via List-Id
+header into separate folders. Having found out that a message came from 
+list A means that you can avoid checking the next filter for messages
+from list B.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Consider the costs of the evaluation of filter rules:</term>
+<listitem>
+<para>The time required to evaluate a filter rule depends on the way
+the rule is constructed. In particular, scanning for a
+substring using the <guilabel>contains</guilabel> operation is easier
+than a pattern matching using the <guilabel>matches regular
+expr.</guilabel> operation.
+</para>
+<para>Another dependency is on the amount of data which is used for the
+evaluation of a filter rule. If the rule is based on a message header,
+it's evaluation should normally be much faster than the evaluation of 
+a rule based on the complete message.
+</para>
+<para>You should try to keep the filter rules as simple as possible.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term>Check the order of your filters:</term>
+<listitem>
+<para>All the different filter actions have a different complexity. 
+The most expensive filter actions are <guilabel>pipe through</guilabel> 
+and <guilabel>execute command</guilabel>, because both need external 
+programs to be run. Placing filters containing these filter actions
+behind other filters that can reduce the number of times these complex
+actions are required is useful, if the filter logic does allow
+this.</para> 
+<para>An example is filtering messages from a mailing list and detecting 
+spam messages. For the spam detection you will usually use an external 
+tool via a <guilabel>pipe through</guilabel> action. Filtering the messages 
+for the mailing list is done via the List-Id header. If you don't want to 
+check the messages from the mailing list for spam too, it is better to
+use the filter for the mailing list messages before the filter for the 
+spam detection. So you avoid the expensive and slow spam check for all
+messages which were identified as mailing list messages.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+<sect2 id="filter-logging">
+<title>Filter Log</title>
+<para>If you want to verify that your filters work as intended, you can
+open a viewer for the filter log via <menuchoice><guimenu>Tools</guimenu>
+<guimenuitem>Filter Log Viewer...</guimenuitem></menuchoice>. 
+</para>
+<para>In the viewer, there you can configure  the logging of the filter 
+processing. You can control the detail level of the log, clear the log 
+or save the log into a file. The log can provide valuable information if 
+you need to debug your filtering process.
+</para>
+</sect2>
 </sect1>
 
 <!-- dnaber update 2004-02-22 -->
@@ -1021,9 +1124,9 @@ option, since once you deleted a mail from the server, there is no
 way to undelete it again.</para>
 
 <para>In the <guilabel>Filtered Messages</guilabel> section you can
-check the box if you got messages that were automatically tagged for
+check the box if you receive messages that were automatically tagged for
 a certain action (download, download later, delete) by a filter rule.
-The checkbox is only enabled if you got some messages that were
+The check-box is only enabled if you receive some messages that were
 matched by a filter rule; once you check it, a list similar to the
 one for the not-automatically-tagged messages will be displayed and you 
 can change the action for every single message.</para>
@@ -1034,7 +1137,7 @@ not be displayed. One exception occurs if you have checked
 <guilabel>Always show matched 'Download Later' messages</guilabel> in
 the <guilabel>Global Options</guilabel> section of the POP filter
 configuration dialog; then, the dialog will also be displayed if you only
-have matched messages, but at least one got tagged for
+have matched messages, but at least one message was tagged for
 <guilabel>Download later</guilabel>.</para>
 
 </sect2>
@@ -1270,7 +1373,7 @@ display a list containing all matching keys for this recipient. In both
 cases you can select the key(s) which should be used for encrypting
 this message for the recipient in question.
 Using the <guilabel>Remember choice</guilabel>
-checkbox you can save your selection for future messages.</para>
+check-box you can save your selection for future messages.</para>
 
 <para>If you are using a key for the first time, there are conflicting
 Encryption Preferences, or if <guilabel>Always
@@ -1302,13 +1405,13 @@ defined for the current identity to the message. Now you can send the message.</
 that the receiver will get the correct key: there can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
 key. That is why the recipient should verify the attached key by checking the
-key's fingerprint against the one he got in a secure way from you; have a look
+key's fingerprint against the one he received in a secure way from you; have a look
 at the <application>PGP</application> documentation for further details.</para>
 
 </sect2>
 
-<sect2 id="pgp-you-got-an-encrypted-message">
-<title>You got an encrypted Message</title>
+<sect2 id="pgp-you-received-an-encrypted-message">
+<title>You received an encrypted Message</title>
 
 <para>All you have to do is to select the message in &kmail;. You will be
 prompted for your passphrase; then, &kmail; will try to decrypt the message and
