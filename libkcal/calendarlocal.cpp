@@ -349,10 +349,9 @@ int CalendarLocal::numEvents(const QDate &qd)
 
 Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 {
-  if( mOldestDate.isValid() )
-    return alarms( mOldestDate, to );
-  else
-    return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
+  // Don't use mOldestDate here, since alarms can be earlier than the
+  // parent incidence's dtStart().
+  return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
 }
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
@@ -361,12 +360,16 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
   Alarm::List alarms;
 
   // Check all non-recurring events.
+  QPtrList<Event> eventList;   // this is to prevent each event being processed more than once
   QIntDictIterator<QPtrList<Event> > it( *mCalDict );
   for( ; it.current(); ++it ) {
     QPtrList<Event> *events = it.current();
-    Event *e;
-    for( e = events->first(); e; e = events->next() ) {
-      appendAlarms( alarms, e, from, to );
+    for( Event *e = events->first(); e; e = events->next() ) {
+      if ( eventList.find(e) == -1 ) {
+        // This event has not yet been processed
+        eventList.append(e);    // note that it has now been processed
+        appendAlarms( alarms, e, from, to );
+      }
     }
   }
 
@@ -391,7 +394,7 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
   QPtrList<Alarm> alarmList = incidence->alarms();
   Alarm *alarm;
   for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-//    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+//    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << alarm->text()
 //                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
     if ( alarm->enabled() ) {
       if ( alarm->time() >= from && alarm->time() <= to ) {
