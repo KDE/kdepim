@@ -70,10 +70,9 @@ public:
 	}
 	void setProductID(char* prodid)
 	{
-		::memset(fSysInfo.name, 0, sizeof(fSysInfo.name));
-		::strncpy(fSysInfo.name, prodid, sizeof(fSysInfo.name)-1);
+		strlcpy(fSysInfo.name, prodid, sizeof(fSysInfo.name));
 		boundsCheck();
-		fSysInfo.nameLength = ::strlen(fSysInfo.name);
+		fSysInfo.nameLength = strlen(fSysInfo.name);
 	}
 
 	const unsigned short getMajorVersion() const {return 0;}
@@ -91,10 +90,9 @@ public:
 	}
 	void setProductID(char* prodid)
 	{
-		::memset(fSysInfo.prodID, 0, sizeof(fSysInfo.prodID));
-		::strncpy(fSysInfo.prodID, prodid, sizeof(fSysInfo.prodID)-1);
+		strlcpy(fSysInfo.prodID, prodid, sizeof(fSysInfo.prodID));
 		boundsCheck();
-		fSysInfo.prodIDLength = ::strlen(fSysInfo.prodID);
+		fSysInfo.prodIDLength = strlen(fSysInfo.prodID);
 	}
 
 	const unsigned short getMajorVersion() const {return fSysInfo.dlpMajorVersion;}

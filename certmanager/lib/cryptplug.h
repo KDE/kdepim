@@ -377,7 +377,7 @@ public:
    If the plugins initialization fails the calling process might want
    to display the library version number to the user for checking if
    there is an old version of the library installed...
-   
+
    \note This function <b>must</b> be implemented by each plug-in using
    this API specification.
 */
@@ -411,8 +411,8 @@ const char* bugURL( void );
 
    This function may be called prior to initialize().
   */
-int interfaceVersion (int *min_version); 
-
+int interfaceVersion (int *min_version);
+#define CRYPTPLUG_ERR_WRONG_KEY_USAGE 0x7070
 
 /*! \ingroup groupGeneral
     \brief This function sets up all internal structures.
@@ -454,92 +454,6 @@ bool initialize( void );
    this API specification.
 */
 bool hasFeature( Feature );
-
-
-/*!
-  \ingroup groupConfigSign
-  \brief Returns true if the specified email address is contained
-  in the specified certificate.
-*/
-bool isEmailInCertificate( const char* email, const char* certificate );
-
-/*! \ingroup groupConfigSign
-   \brief Returns the number of days that are left until the
-   specified certificate expires.
-   
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-   
-   \param certificate the certificate to check
-*/
-int signatureCertificateDaysLeftToExpiry( const char* certificate );
-
-/*! \ingroup groupConfigSign
-  \brief Returns the number of days that are left until the
-  CA certificate of the specified certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-
-  \param certificate the certificate to check
-*/
-int caCertificateDaysLeftToExpiry( const char* certificate );
-
-/*! \ingroup groupConfigSign
-   \brief Returns the number of days that are left until the
-   root certificate of the specified certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-
-   \param certificate the certificate to check
-*/
-int rootCertificateDaysLeftToExpiry( const char* certificate );
-
-
-/*! \ingroup groupConfigCrypt
-  \brief Returns the number of days until the specified receiver
-  certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-*/
-int receiverCertificateDaysLeftToExpiry( const char* certificate );
-
-
-/*! \ingroup groupConfigCrypt
-  \brief Returns the number of days until the first certificate in
-  the chain of the receiver certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-*/
-int certificateInChainDaysLeftToExpiry( const char* certificate );
-
-
-/*! \ingroup groupCertHand
-   \brief Returns \c true if and only if the
-          certificates in the certificate chain starting at
-          \c certificate are valid.
-
-   If \c level is non-null, the parameter contains
-          the degree of trust on a backend-specific scale. In an X.509
-          implementation, this will either be \c 1
-          (valid up to the root certificate) or \c 0
-          (not valid up to the root certificate).
-*/
-bool certificateValidity( const char* certificate, int* level );
-
 
 /*! \ingroup groupSignCryptAct
    \brief Information record returned by signing and by encrypting
@@ -1063,7 +977,7 @@ bool findCertificates( const char* addressee,
                        bool secretOnly,
                        char** attrOrder,
                        const char* unknownAttrsHandling );
-                       
+
 /*! \ingroup groupCryptAct
    \brief Encrypts an email message in
           \c cleartext according to the \c addressee and
@@ -1245,12 +1159,6 @@ endListCertificates( struct CertIterator* );
     Import a certificate from memory.
   */
   GpgME::ImportResult importCertificateFromMem( const char* data, size_t length );
-
-protected:
-int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
-						     const char* certificate );
-
-
 }; // class CryptPlug
 
 class SMIMECryptPlug : public CryptPlug {
