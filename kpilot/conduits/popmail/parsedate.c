@@ -1676,7 +1676,7 @@ main(ac, av)
     for ( ; ; ) {
 	(void)printf("\t> ");
 	(void)fflush(stdout);
-	if (gets(buff) == NULL || buff[0] == '\n')
+	if (fgets(stdin,buff,127) == NULL || buff[0] == '\n')
 	    break;
 #if YYDEBUG
 	if (strcmp(buff, "yydebug") == 0) {
