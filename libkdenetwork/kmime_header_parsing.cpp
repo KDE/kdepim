@@ -309,7 +309,7 @@ bool parseToken( const char * & scursor, const char * const send,
   const char * start = scursor;
 
   while ( scursor != send ) {
-    char ch = *scursor++;
+    signed char ch = *scursor++;
     if ( ch > 0 && isTText(ch) ) {
       // TText: OK
       success = true;
