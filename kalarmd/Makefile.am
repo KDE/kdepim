@@ -21,7 +21,7 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
         alarmdaemoniface.skel
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
-	alarmguiiface.h adcalendarbase.h adcalendar.h adcalendar_gui.h \
+	alarmguiiface.h adcalendarbase.h adcalendar.h \
 	adconfigdatabase.h adconfigdatarw.h clientinfo.h
 
 METASOURCES = AUTO
