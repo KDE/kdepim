@@ -25,6 +25,8 @@ int main(int argc,char **argv)
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
+  Q_UNUSED( args );
+
   CalendarLocal cal;
   
   cal.save("mycal");

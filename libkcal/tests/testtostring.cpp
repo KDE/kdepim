@@ -7,7 +7,7 @@
 
 using namespace KCal;
 
-int main(int argc,char **argv)
+int main( int, char ** )
 {
 
  // std::cout << "Hello World!" << std::endl;
@@ -16,7 +16,7 @@ int main(int argc,char **argv)
   ICalFormat iformat;
   QString icalstr = iformat.toICalString(ev);
   kdDebug() << icalstr << endl;
-  Event *ev2 = iformat.fromString(icalstr);
+  Incidence *ev2 = iformat.fromString(icalstr);
   kdDebug() << "Event reread!" << endl ;
   
   if (ev2)
