@@ -1,6 +1,6 @@
 /* -*- Mode: C -*-
 
-  $Id:$
+  $Id$
 
   Copyright (C) 2001 by Klarälvdalens Datakonsult AB
 
@@ -111,3 +111,4 @@ void CertificateInfoWidgetImpl::slotShowInfo( QListViewItem* item )
 {
   textView->setText( item->text(1) );
 }
+#include "certificateinfowidgetimpl.moc"
