@@ -22,6 +22,7 @@
 */                                                                      
 
 #include <kabc/stdaddressbook.h>
+#include <kdebug.h>
 
 #include "addresseeutil.h"
 
@@ -32,29 +33,19 @@ QString AddresseeUtil::addresseeToClipboard( KABC::Addressee &a )
    
 QString AddresseeUtil::addresseesToClipboard( KABC::Addressee::List &list )
 {
-  QStringList uids;
+  QStringList emails;
 
   KABC::Addressee::List::Iterator it;
   for ( it = list.begin(); it != list.end(); ++it ) {
-    uids.append( addresseeToClipboard( *it ) );
+    if ( !(*it).fullEmail().isEmpty() )
+      emails.append( (*it).fullEmail() );
   }
-  
-  return uids.join( "," );
+
+  return emails.join( "," );
 }
 
-KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &clipboard )
+KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString& )
 {
-  KABC::Addressee::List list;
-  KABC::AddressBook *ab = KABC::StdAddressBook::self();
-
-  QStringList uids = QStringList::split( ',', clipboard );
-
-  QStringList::Iterator it;
-  for ( it = uids.begin(); it != uids.end(); ++it ) {
-    KABC::Addressee addr = ab->findByUid( *it );
-    if ( !addr.isEmpty() )
-      list.append( addr );
-  }
-
-  return list;
+  kdDebug(5700) << "Not yet implemented" << endl;
+  return KABC::Addressee::List();
 }

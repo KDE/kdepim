@@ -21,27 +21,31 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qevent.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qwidgetstack.h>
 #include <qapplication.h>
 #include <qclipboard.h>
-#include <qhbox.h>
+#include <qcombobox.h>
 #include <qdragobject.h>
+#include <qevent.h>
+#include <qhbox.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlineedit.h>
 #include <qsplitter.h>
 #include <qtabwidget.h>
+#include <qwidgetstack.h>
+
+#include <kabc/addressbook.h>
+#include <kabc/field.h>
+#include <kabc/vcardconverter.h>
 #include <kapplication.h>
 #include <kconfig.h>
-#include <kmessagebox.h>
-#include <klocale.h>
+#include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kdebug.h>
-#include <kabc/field.h>
-#include <kabc/addressbook.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kmultipledrag.h>
+#include <libkdepim/kvcarddrag.h>
 
 #include "undo.h"
 #include "undocmds.h"
@@ -601,38 +605,33 @@ void ViewManager::dropped(QDropEvent *e)
 {
   kdDebug() << "ViewManager::dropped: got a drop event" << endl;
 
-  QString clipText;
-  QStrList  urls;
+  QString clipText, vcard;
+  QStrList urls;
 
 
-  if (QUriDrag::decode(e, urls)) {
-     QPtrListIterator<char> it (urls);
-     int c = urls.count();
-     if ( c > 1 ) {
-       QString questionString = i18n( "Import one contact into your addressbook?","Import %n contacts into your addressbook?", c );
-       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
-         for ( ; it.current(); ++it) {
-           KURL url(*it);
-           emit importVCard( url.path(), false );
-         }
-       }
-     } else if (c == 1) {
-       KURL url(*it);
-       emit importVCard( url.path(), true );
-     }
-  } else if (QTextDrag::decode(e, clipText)) {
-     KABC::Addressee::List aList;
-     aList = AddresseeUtil::clipboardToAddressees(clipText);
-
-     KABC::Addressee::List::Iterator iter;
-     for (iter = aList.begin(); iter != aList.end(); ++iter)
-     {
-       mDocument->insertAddressee(*iter);
-     }
-
-     mActiveView->refresh();
-   }
-
+  if ( QUriDrag::decode( e, urls) ) {
+    QPtrListIterator<char> it( urls );
+    int c = urls.count();
+    if ( c > 1 ) {
+      QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
+      if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
+        for ( ; it.current(); ++it) {
+          KURL url(*it);
+          emit importVCard( url.path(), false );
+        }
+      }
+    } else if ( c == 1 ) {
+      KURL url(*it);
+      emit importVCard( url.path(), true );
+    }
+  } else if ( KVCardDrag::decode( e, vcard ) ) {
+    KABC::Addressee addr;
+    KABC::VCardConverter converter;
+    if ( converter.vCardToAddressee( vcard, addr ) ) {
+      mDocument->insertAddressee( addr );
+      mActiveView->refresh();
+    }
+  }
 }
 
 void ViewManager::startDrag()
@@ -646,11 +645,18 @@ void ViewManager::startDrag()
   for (iter = uidList.begin(); iter != uidList.end(); ++iter)
     aList.append(mDocument->findByUid(*iter));
 
-  QDragObject *drobj;
-  drobj = new QTextDrag( AddresseeUtil::addresseesToClipboard(aList), this );
-  drobj->setPixmap(KGlobal::iconLoader()->loadIcon("vcard",
-                                                     KIcon::Desktop));
-  drobj->dragCopy();
+  KMultipleDrag *drag = new KMultipleDrag( this );
+  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard(aList), this ) );
+  KABC::Addressee::List::Iterator it;
+  KABC::VCardConverter converter;
+  for ( it = aList.begin(); it != aList.end(); ++it ) {
+    QString vcard = QString::null;
+    if ( converter.addresseeToVCard( *it, vcard ) )
+      drag->addDragObject( new KVCardDrag( vcard, this ) );
+  }
+
+  drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
+  drag->dragCopy();
 }
 
 void ViewManager::addresseeSelected(const QString &uid)

@@ -32,9 +32,11 @@
 #include <klocale.h>
 #include <kabc/distributionlist.h>
 #include <kabc/distributionlisteditor.h>
+#include <kabc/vcardconverter.h>
 #include <klineeditdlg.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <libkdepim/kvcarddrag.h>
 
 #include "addresseeutil.h"
 #include "featuredistributionlist.h"
@@ -280,24 +282,23 @@ void FeatureDistributionList::commit()
 
 void FeatureDistributionList::dropEvent( QDropEvent *e )
 {
-  QString clipText;
+  KABC::DistributionList *distributionList = mManager->list( mCbListSelect->currentText() );
+  if ( !distributionList ) {
+    kdDebug(5700) << "FeatureDistributionList::dropEvent: No dist list '"
+                  << mCbListSelect->currentText() << "'" << endl;
+    return;
+  }
 
-  if ( QTextDrag::decode( e, clipText ) ) {
-    KABC::Addressee::List list;
-    list = AddresseeUtil::clipboardToAddressees( clipText );
-    KABC::DistributionList *distributionList = mManager->list( mCbListSelect->currentText() );
-    if ( !distributionList ) {
-      kdDebug(5700) << "FeatureDistributionList::dropEvent: No dist list '"
-                    << mCbListSelect->currentText() << "'" << endl;
-      return;
+  QString vcard;
+  if ( KVCardDrag::decode( e, vcard ) ) {
+    KABC::Addressee addr;
+    KABC::VCardConverter converter;
+    if ( converter.vCardToAddressee( vcard, addr ) ) {
+      distributionList->insertEntry( addr );
+
+      commit();
+      update();
     }
-
-    KABC::Addressee::List::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      distributionList->insertEntry( *it );
-
-    commit();
-    update();
   }
 }
 
