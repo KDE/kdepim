@@ -1,0 +1,7 @@
+[Misc]
+Encoding=UTF-8
+Name=Application Octetstream
+Comment=A bodypart formatter plugin for text/x-diff
+[Plugin]
+Type=text/x-diff
+X-KDE-Library=libkmail_bodypartformatter_text_xdiff
