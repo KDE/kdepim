@@ -5,18 +5,21 @@ INCLUDES = -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/knotes \
            -I$(top_srcdir)/certmanager/lib \
            -I$(top_builddir)/kresources/groupwise \
+           -I$(top_srcdir)/kresources/lib \
            $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
-               groupwisewizard
+               groupwisewizard exchangewizard
 
 kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la \
-                         libkolabwizard.la libgroupwisewizard.la
+                         libkolabwizard.la libgroupwisewizard.la \
+                         libexchangewizard.la
 
 
 groupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) \
-                        libkolabwizard.la libgroupwisewizard.la
+                        libkolabwizard.la libgroupwisewizard.la \
+                        libexchangewizard.la
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
@@ -76,10 +79,22 @@ groupwisewizard_LDADD = libgroupwisewizard.la
 groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 groupwisewizard_SOURCES = groupwisemain.cpp
 
+# Exchange
+libexchangewizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libexchangewizard_la_SOURCES = exchangewizard.cpp
+libexchangewizard_la_LIBADD = $(top_builddir)/kresources/newexchange/libkcal_newexchange.la \
+                              $(top_builddir)/kresources/newexchange/libkabc_newexchange.la \
+                              $(top_builddir)/libkdepim/libkdepim.la
+
+exchangewizard_LDADD = libexchangewizard.la
+exchangewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+exchangewizard_SOURCES = exchangemain.cpp
+
+
 noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
-                 groupwisewizard.h
+                 groupwisewizard.h exchangewizard.h
 
 kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg
 
-messages: rc.cpp
+oessages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot

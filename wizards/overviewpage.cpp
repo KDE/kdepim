@@ -36,6 +36,7 @@
 #include "kolabwizard.h"
 #include "sloxwizard.h"
 #include "groupwisewizard.h"
+#include "exchangewizard.h"
 
 #include "overviewpage.h"
 
@@ -78,6 +79,11 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addMultiCellWidget( button, 6, 6, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
 
+  button = new QPushButton( i18n("Microsoft Exchange"), this );
+  layout->addMultiCellWidget( button, 6, 6, 0, 3 );
+  connect( button, SIGNAL( clicked() ), SLOT( showWizardExchange() ) );
+
+
   QFrame *frame = new QFrame( this );
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   layout->addMultiCellWidget( frame, 7, 7, 0, 3 );
@@ -117,6 +123,12 @@ void OverViewPage::showWizardSlox()
 void OverViewPage::showWizardGroupwise()
 {
   GroupwiseWizard wizard;
+  wizard.exec();
+}
+
+void OverViewPage::showWizardExchange()
+{
+  ExchangeWizard wizard;
   wizard.exec();
 }
 
