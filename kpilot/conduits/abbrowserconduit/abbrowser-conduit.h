@@ -97,8 +97,8 @@ public:
 	*  field to (such as BusinessFax, etc)
 	*/
 //	const QString &getPilotOtherMap() const { return fPilotOtherMap; }
-	bool isPilotStreetHome() const { return fPilotStreetHome; }
-	bool isPilotFaxHome() const { return fPilotFaxHome; }
+	static bool isPilotStreetHome()  { return fPilotStreetHome; }
+	static bool isPilotFaxHome()  { return fPilotFaxHome; }
 //	bool isFormatName() const { return fFormatName; }
 	// bool backupDone() const { return fBackupDone; }
 
@@ -131,10 +131,10 @@ private:
 	*/
 	bool _saveAddressBook();
 	
-	QString getOtherField(const KABC::Addressee&abEntry) const;
-	void setOtherField(KABC::Addressee&abEntry, QString nr);
-	KABC::PhoneNumber getFax(const KABC::Addressee &abEntry) const;
-	KABC::Address getAddress(const KABC::Addressee &abEntry) const;
+	static QString getOtherField(const KABC::Addressee&abEntry);
+	static void setOtherField(KABC::Addressee&abEntry, QString nr);
+	static KABC::PhoneNumber getFax(const KABC::Addressee &abEntry);
+	static KABC::Address getAddress(const KABC::Addressee &abEntry);
 	
 
 	void _setAppInfo();
@@ -198,9 +198,9 @@ private:
 	bool fSmartMerge;
 	EConflictResolution fConflictResolution, fEntryResolution;
 //	int fPilotOther;
-	bool fPilotStreetHome, fPilotFaxHome;
+	static bool fPilotStreetHome, fPilotFaxHome;
 	bool fFullSync, fFirstTime, fArchive;
-   enum  ePilotOtherField
+   static enum  ePilotOtherEnum
 	{
 		eOtherPhone,
 		eAssistant,
@@ -225,12 +225,22 @@ private:
 	KABC::AddressBook* aBook;
 //	KABC::Ticket* ticket;
 	KABC::AddressBook::Iterator abiter;
+	
+	
+	
+	
+	
+	
+	void showAdresses(PilotAddress & pilotAddress, const PilotAddress & backupAddress, KABC::Addressee & abEntry);
 } ;
 
 
 
 
 // $Log$
+// Revision 1.23  2002/08/15 21:48:59  kainhofe
+// removed deprecated files (ContactEntry class and DCOP things)
+//
 // Revision 1.22  2002/08/15 21:40:14  kainhofe
 // some more work in the addressbook conduit. Does not yet work
 //
