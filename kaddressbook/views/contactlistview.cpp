@@ -223,10 +223,12 @@ void ContactListViewItem::refresh()
 
   int i = 0;
   // don't show unknown presence, it's not interesting
-  if ( mHasIM && mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
-    setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
-  else
-    setPixmap( parentListView->imColumn(), QPixmap() );
+  if ( mHasIM ) {
+    if ( mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
+      setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
+    else
+      setPixmap( parentListView->imColumn(), QPixmap() );
+  }
 
   KABC::Field::List::ConstIterator it;
   for ( it = mFields.begin(); it != mFields.end(); ++it ) {
@@ -262,7 +264,7 @@ ContactListView::ContactListView(KAddressBookTableView *view,
   mToolTips = true;
   mShowIM = true;
   mAlternateColor = KGlobalSettings::alternateBackgroundColor();
-  
+
   setAlternateBackgroundEnabled(mABackground);
   setAcceptDrops( true );
   viewport()->setAcceptDrops( true );
