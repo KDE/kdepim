@@ -38,14 +38,14 @@ Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE alarm message scheduler
- KDE alarm message scheduler.
+ KDE personal alarm message, command and email scheduler.
 
 Package: kalarmd
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: KDE alarm message scheduler daemon
- KDE alarm message scheduler daemon.
+Description: KDE alarm scheduler daemon
+ KDE alarm scheduler daemon.
 
 Package: kandy
 Section: utils
