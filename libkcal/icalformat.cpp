@@ -72,7 +72,6 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
     return false;
   }
   QTextStream ts( &file );
-  ts.setEncoding(QTextStream::UnicodeUTF8);
   QString text = ts.read();
   file.close();
 
@@ -99,7 +98,6 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
     return false;
   }
   QTextStream ts( &file );
-  ts.setEncoding(QTextStream::UnicodeUTF8);
   ts << text;
   file.close();
 

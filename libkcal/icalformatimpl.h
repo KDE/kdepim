@@ -76,9 +76,6 @@ class ICalFormatImpl {
     icalcomponent *createCalendarComponent();
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
 
-    QString from8Bit(const char *);
-    bool isUtf8(const char *);
-
   private:
     void dumpIcalRecurrence(icalrecurrencetype);
 

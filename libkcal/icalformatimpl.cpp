@@ -727,7 +727,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         break;
 
       case ICAL_RELATEDTO_PROPERTY:  // related todo (parent)
-        todo->setRelatedToUid(from8Bit(icalproperty_get_relatedto(p)));
+        todo->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
         mTodosRelate.append(todo);
         break;
 
@@ -843,7 +843,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 #endif
 
       case ICAL_RELATEDTO_PROPERTY:  // releated event (parent)
-        event->setRelatedToUid(from8Bit(icalproperty_get_relatedto(p)));
+        event->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
         mEventsRelate.append(event);
         break;
 
@@ -897,11 +897,11 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
     switch (kind) {
 
       case ICAL_UID_PROPERTY:  // unique id
-        freebusy->setUid(from8Bit(icalproperty_get_uid(p)));
+        freebusy->setUid(QString::fromUtf8(icalproperty_get_uid(p)));
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        freebusy->setOrganizer(from8Bit(icalproperty_get_organizer(p)));
+        freebusy->setOrganizer(QString::fromUtf8(icalproperty_get_organizer(p)));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -949,13 +949,13 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 {
   icalparameter *p = 0;
 
-  QString email = from8Bit(icalproperty_get_attendee(attendee));
+  QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
 
   QString name;
   QString uid = QString::null;
   p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
   if (p) {
-    name = from8Bit(icalparameter_get_cn(p));
+    name = QString::fromUtf8(icalparameter_get_cn(p));
   } else {
   }
 
@@ -1054,7 +1054,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_UID_PROPERTY:  // unique id
         text = icalproperty_get_uid(p);
-        incidence->setUid(from8Bit(text));
+        incidence->setUid(QString::fromUtf8(text));
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1069,7 +1069,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
         text = icalproperty_get_organizer(p);
-        incidence->setOrganizer(from8Bit(text));
+        incidence->setOrganizer(QString::fromUtf8(text));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -1093,17 +1093,17 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_DESCRIPTION_PROPERTY:  // description
         text = icalproperty_get_description(p);
-        incidence->setDescription(from8Bit(text));
+        incidence->setDescription(QString::fromUtf8(text));
         break;
 
       case ICAL_SUMMARY_PROPERTY:  // summary
         text = icalproperty_get_summary(p);
-        incidence->setSummary(from8Bit(text));
+        incidence->setSummary(QString::fromUtf8(text));
         break;
 
       case ICAL_LOCATION_PROPERTY:  // location
         text = icalproperty_get_location(p);
-        incidence->setLocation(from8Bit(text));
+        incidence->setLocation(QString::fromUtf8(text));
         break;
 
 #if 0
@@ -1123,7 +1123,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_CATEGORIES_PROPERTY:  // categories
         text = icalproperty_get_categories(p);
-        categories.append(from8Bit(text));
+        categories.append(QString::fromUtf8(text));
         break;
 
       case ICAL_RRULE_PROPERTY:
@@ -1150,10 +1150,10 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       case ICAL_X_PROPERTY:
         if (strcmp(icalproperty_get_name(p),"X-PILOTID") == 0) {
           text = icalproperty_get_value_as_string(p);
-          incidence->setPilotId(from8Bit(text).toInt());
+          incidence->setPilotId(QString::fromUtf8(text).toInt());
         } else if (strcmp(icalproperty_get_name(p),"X-PILOTSTAT") == 0) {
           text = icalproperty_get_value_as_string(p);
-          incidence->setSyncStatus(from8Bit(text).toInt());
+          incidence->setSyncStatus(QString::fromUtf8(text).toInt());
         }
         break;
 
@@ -1413,17 +1413,17 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
       // Only in DISPLAY and EMAIL and PROCEDURE alarms
       case ICAL_DESCRIPTION_PROPERTY:
-        ialarm->setText(from8Bit(icalproperty_get_description(p)));
+        ialarm->setText(QString::fromUtf8(icalproperty_get_description(p)));
         break;
 
       // Only in EMAIL alarm
       case ICAL_SUMMARY_PROPERTY:
-        ialarm->setMailSubject(from8Bit(icalproperty_get_summary(p)));
+        ialarm->setMailSubject(QString::fromUtf8(icalproperty_get_summary(p)));
         break;
 
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY:
-        ialarm->addMailAddress(from8Bit(icalproperty_get_attendee(p)));
+        ialarm->addMailAddress(QString::fromUtf8(icalproperty_get_attendee(p)));
         break;
 
       default:
@@ -1625,7 +1625,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     mLoadedProductId = "";
     mCalendarVersion = 0;
   } else {
-    mLoadedProductId = from8Bit(icalproperty_get_prodid(p));
+    mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
     mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId);
     kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
   }
@@ -1934,103 +1934,4 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
   }
 
   return message;
-}
-
-/*
- * Convert an input string from UTF8 if it is in UTF8 format, else
- * from local 8-bit encoding.
- */
-QString ICalFormatImpl::from8Bit(const char *text)
-{
-  if (isUtf8(text))
-    return QString::fromUtf8(text);
-  else
-    return QString::fromLocal8Bit(text);
-}
-
-/*
- * Determine whether a string is in UTF8 format or not.
- * Copied from kdecore/kconfigbase.cpp.
- */
-bool ICalFormatImpl::isUtf8(const char *buf)
-{
-  int i, n;
-  register char c;
-  bool gotone = false;
-
-#define F 0   /* character never appears in text */
-#define T 1   /* character appears in plain ASCII text */
-#define I 2   /* character appears in ISO-8859 text */
-#define X 3   /* character appears in non-ISO extended ASCII (Mac, IBM PC) */
-
-  static const char text_chars[256] = {
-  /*                  BEL BS HT LF    FF CR    */
-        F, F, F, F, F, F, F, T, T, T, T, F, T, T, F, F,  /* 0x0X */
-        /*                              ESC          */
-        F, F, F, F, F, F, F, F, F, F, F, T, F, F, F, F,  /* 0x1X */
-        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x2X */
-        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x3X */
-        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x4X */
-        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x5X */
-        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x6X */
-        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, F,  /* 0x7X */
-        /*            NEL                            */
-        X, X, X, X, X, T, X, X, X, X, X, X, X, X, X, X,  /* 0x8X */
-        X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,  /* 0x9X */
-        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xaX */
-        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xbX */
-        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xcX */
-        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xdX */
-        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xeX */
-        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I   /* 0xfX */
-  };
-
-  /* *ulen = 0; */
-  for (i = 0; (c = buf[i]); i++) {
-    if ((c & 0x80) == 0) {        /* 0xxxxxxx is plain ASCII */
-      /*
-       * Even if the whole file is valid UTF-8 sequences,
-       * still reject it if it uses weird control characters.
-       */
-
-      if (text_chars[c] != T)
-        return false;
-
-    } else if ((c & 0x40) == 0) { /* 10xxxxxx never 1st byte */
-      return false;
-    } else {                           /* 11xxxxxx begins UTF-8 */
-      int following;
-
-      if ((c & 0x20) == 0) {             /* 110xxxxx */
-        following = 1;
-      } else if ((c & 0x10) == 0) {      /* 1110xxxx */
-        following = 2;
-      } else if ((c & 0x08) == 0) {      /* 11110xxx */
-        following = 3;
-      } else if ((c & 0x04) == 0) {      /* 111110xx */
-        following = 4;
-      } else if ((c & 0x02) == 0) {      /* 1111110x */
-        following = 5;
-      } else
-        return false;
-
-      for (n = 0; n < following; n++) {
-        i++;
-        if (!(c = buf[i]))
-          goto done;
-
-        if ((c & 0x80) == 0 || (c & 0x40))
-          return false;
-      }
-      gotone = true;
-    }
-  }
-done:
-  return gotone;   /* don't claim it's UTF-8 if it's all 7-bit */
-
-#undef F
-#undef T
-#undef I
-#undef X
-
 }
