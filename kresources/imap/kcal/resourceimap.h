@@ -134,9 +134,6 @@ public:
 
   friend class ResourceIMAPConfig;
 
-  // Public because needed in MultiCalendar::load()
-  bool doOpen();
-
   void setTimeZoneId( const QString& tzid );
 
   /**
@@ -172,6 +169,7 @@ protected:
   void deleteIncidence( const QString& type, const QString& uid,
                         bool silence );
 
+  bool doOpen();
   void doClose();
   bool doLoad();
   bool doSave();
@@ -201,8 +199,6 @@ private:
   QMap<QString, bool> mEventResources, mTaskResources, mJournalResources;
   // Mapping from uid to resource
   QMap<QString, QString> mUidmap;
-
-  bool mOpen;
 };
 
 }

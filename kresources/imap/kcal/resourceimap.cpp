@@ -30,15 +30,14 @@ using namespace KCal;
 ResourceIMAP::ResourceIMAP( const QString &server )
   : ResourceCalendar( 0 ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-    mServer( server ), mOpen( false )
+    mServer( server )
 {
   init();
 }
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),
-    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-    mOpen( false )
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" )
 {
   init();
 
@@ -60,17 +59,12 @@ void ResourceIMAP::writeConfig( KConfig* config )
 
 ResourceIMAP::~ResourceIMAP()
 {
-  close();
+  if ( isOpen() )
+    close();
 }
 
 bool ResourceIMAP::doOpen()
 {
-  if ( mOpen )
-    // Already open
-    return true;
-
-  mOpen = true;
-
   KConfig config( configFile() );
 
   // Read the calendar entries
@@ -106,12 +100,6 @@ bool ResourceIMAP::doOpen()
 
 void ResourceIMAP::doClose()
 {
-  if ( !mOpen )
-    // Not open
-    return;
-
-  mOpen = false;
-
   KConfig config( configFile() );
 
   config.setGroup( "Calendar" );
