@@ -1,6 +1,6 @@
 /*
  *   This file only:
- *     Copyright (C) 2003, 2004  Mark Bucciarelli <mark@hubcapconsutling.com>
+ *     Copyright (C) 2003, 2004  Mark Bucciarelli <mark@hubcapconsulting.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -32,13 +32,15 @@
 #include <qdatetime.h>
 #include <qstringlist.h>
 
+#include "incidence.h"
 #include "kapplication.h"       // kapp
 #include <kdebug.h>
 #include <kemailsettings.h>
 #include <klocale.h>            // i18n
+#include <kmessagebox.h>
+#include <resourcecalendar.h>
+#include <resourcelocal.h>
 #include <taskview.h>
-
-#include "incidence.h"
 
 //#include <calendarlocal.h>
 //#include <journal.h>
@@ -54,15 +56,16 @@ KarmStorage *KarmStorage::_instance = 0;
 
 KarmStorage *KarmStorage::instance()
 {
-  if (_instance == 0) {
-    _instance = new KarmStorage();
-  }
+  if (_instance == 0) _instance = new KarmStorage();
   return _instance;
 }
 
-KarmStorage::KarmStorage() { }
+KarmStorage::KarmStorage() 
+{ 
+  _calendar = 0;
+}
 
-QString KarmStorage::load(TaskView* view, const Preferences* preferences)
+QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 {
   // When I tried raising an exception from this method, the compiler
   // complained that exceptions are not allowed.  Not sure how apps
@@ -74,31 +77,53 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
 
   QString err;
   KEMailSettings settings;
-  int handle;
 
-  // if same file, don't reload
+  // If same file, don't reload
   if (preferences->iCalFile() == _icalfile) return err;
-
-  // If file doesn't exist, create a blank one.  This avoids an error dialog
-  // that libkcal presents when asked to load a non-existent file.  We make it
-  // user and group read/write, others read.  This is masked by the users
-  // umask.  (See man creat)
-  handle = open
-    (QFile::encodeName(preferences->iCalFile()), O_CREAT|O_EXCL|O_WRONLY,
-      S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
-  if (handle != -1) close(handle);
 
   // Clear view and calendar from memory.
   view->clear();
-  _calendar.close();
 
-  // Load new file
+  // If KArm just instantiated, load calendar resources.
+  if ( ! _calendar) _calendar = new KCal::CalendarResources();
+  else 
+  {
+    // TODO: release lock here.
+    _calendar->close();
+  }
+
+  // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
-  kdDebug(5970) << "KarmStorage::load - loading " << _icalfile << endl;
-  _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-  _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
-  if (!_calendar.load(_icalfile))
-    err = i18n("Error loading file \"%1\"").arg(_icalfile);
+  KCal::ResourceCalendar *l = new KCal::ResourceLocal( _icalfile );
+  // TODO: Set time zone from control center
+  //l->setTimeZone();
+  l->setResourceName( QString::fromLatin1("KArm") );
+  l->open();
+  l->load();
+  KCal::CalendarResourceManager *m = _calendar->resourceManager();
+  m->add(l);
+  m->setStandardResource(l);
+    
+  // Claim ownership of iCalendar file if no one else has.
+  QString email = _calendar->getEmail();
+  QString owner = _calendar->getOwner();
+  if ( email.isEmpty() && owner.isEmpty() ) 
+  {
+    _calendar->setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
+    _calendar->setOwner( settings.getSetting( KEMailSettings::RealName ) );
+  }
+
+  // Get lock.  If no lock, allow read-only access to data.
+  //
+  // Note:  An improved implementation would be to behave like KOrganizer, and
+  //        allow updates, and only request lock when trying to save data.
+  _lock = _calendar->requestSaveTicket(m->standardResource());
+  if ( !_lock )
+  {
+    KMessageBox::information(0, 
+        i18n("Another program is currently using this file.  "
+          "Access will be read-only."));
+  }
 
   // Build task view from iCal data
   if (!err)
@@ -109,7 +134,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
 
     // Build dictionary to look up Task object from Todo uid.  Each task is a
     // QListViewItem, and is initially added with the view as the parent.
-    todoList = _calendar.rawTodos();
+    todoList = _calendar->rawTodos();
     kdDebug(5970) << "KarmStorage::load "
       << "rawTodo count (includes completed todos) ="
       << todoList.count() << endl;
@@ -142,7 +167,6 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
       }
       else
         task->setOpen(true);
-
     }
 
     // Load each task under it's parent task.
@@ -161,8 +185,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
             .arg(task->name())
             .arg((*todo)->relatedToUid());
 
-        if (!err)
-          task->move( newParent);
+        if (!err) task->move( newParent);
       }
     }
 
@@ -175,6 +198,8 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
 
 void KarmStorage::save(TaskView* taskview)
 {
+  if ( !_lock ) return;
+
   QPtrStack< KCal::Todo > parents;
 
   for (Task* task=taskview->first_child(); task; task = task->nextSibling())
@@ -182,7 +207,9 @@ void KarmStorage::save(TaskView* taskview)
     writeTaskAsTodo(task, 1, parents );
   }
 
-  _calendar.save(_icalfile);
+  _calendar->save(_lock);
+  _lock = _calendar->requestSaveTicket
+    (_calendar->resourceManager()->standardResource());
 
   kdDebug(5970)
     << "KarmStorage::save : wrote "
@@ -194,7 +221,7 @@ void KarmStorage::writeTaskAsTodo(Task* task, const int level,
 {
   KCal::Todo* todo;
 
-  todo = _calendar.todo(task->uid());
+  todo = _calendar->todo(task->uid());
   task->asTodo(todo);
 
   if ( !parents.isEmpty() )
@@ -215,7 +242,7 @@ bool KarmStorage::isEmpty()
 {
   KCal::Todo::List todoList;
 
-  todoList = _calendar.rawTodos();
+  todoList = _calendar->rawTodos();
   return todoList.empty();
 }
 
@@ -432,11 +459,11 @@ QString KarmStorage::addTask(const Task* task, const Task* parent)
   QString uid;
 
   todo = new KCal::Todo();
-  if (_calendar.addTodo(todo))
+  if (_calendar->addTodo(todo))
   {
     task->asTodo(todo);
     if (parent)
-      todo->setRelatedTo(_calendar.todo(parent->uid()));
+      todo->setRelatedTo(_calendar->todo(parent->uid()));
     uid = todo->uid();
   }
 
@@ -445,9 +472,10 @@ QString KarmStorage::addTask(const Task* task, const Task* parent)
 
 bool KarmStorage::removeTask(Task* task)
 {
+  if ( !_lock ) return false;
 
   // delete history
-  KCal::Event::List eventList = _calendar.rawEvents();
+  KCal::Event::List eventList = _calendar->rawEvents();
   for(KCal::Event::List::iterator i = eventList.begin();
       i != eventList.end();
       ++i)
@@ -460,25 +488,29 @@ bool KarmStorage::removeTask(Task* task)
         || ( (*i)->relatedTo()
             && (*i)->relatedTo()->uid() == task->uid()))
     {
-      _calendar.deleteEvent(*i);
+      _calendar->deleteEvent(*i);
     }
   }
 
   // delete todo
-  KCal::Todo *todo = _calendar.todo(task->uid());
-  _calendar.deleteTodo(todo);
+  KCal::Todo *todo = _calendar->todo(task->uid());
+  _calendar->deleteTodo(todo);
 
-  // save entire file
-  _calendar.save(_icalfile);
+  // Save entire file
+  _calendar->save(_lock);
+  _lock = _calendar->requestSaveTicket
+    (_calendar->resourceManager()->standardResource());
 
   return true;
 }
 
 void KarmStorage::addComment(const Task* task, const QString& comment)
 {
+  if ( !_lock) return;
+
   KCal::Todo* todo;
 
-  todo = _calendar.todo(task->uid());
+  todo = _calendar->todo(task->uid());
 
   // Do this to avoid compiler warnings about comment not being used.  once we
   // transition to using the addComment method, we need this second param.
@@ -491,7 +523,9 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
   // temporary
   todo->setDescription(task->comment());
 
-  _calendar.save(_icalfile);
+  _calendar->save(_lock);
+  _lock = _calendar->requestSaveTicket
+    (_calendar->resourceManager()->standardResource());
 }
 
 void KarmStorage::stopTimer(const Task* task)
@@ -522,13 +556,13 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
       QCString("duration"),
       QString::number(deltaSeconds));
 
-  _calendar.addEvent(e);
+  _calendar->addEvent(e);
 
   // This saves the entire iCal file each time, which isn't efficient but
   // ensures no data loss.  A faster implementation would be to append events
   // to a file, and then when KArm closes, append the data in this file to the
   // iCal file.
-  //_calendar.save(_icalfile);
+  //
   // Meanwhile, we simply use a timer to delay the full-saving until the GUI
   // has updated, for better user feedback. Feel free to get rid of this
   // if/when implementing the faster saving (DF).
@@ -546,7 +580,7 @@ KCal::Event* KarmStorage::baseEvent(const Task * task)
   e->setSummary(task->name());
 
   // Can't use setRelatedToUid()--no error, but no RelatedTo written to disk
-  e->setRelatedTo(_calendar.todo(task->uid()));
+  e->setRelatedTo(_calendar->todo(task->uid()));
 
   // Debugging: some events where not getting a related-to field written.
   assert(e->relatedTo()->uid() == task->uid());
@@ -585,7 +619,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
 
   for(QDate d = from; d <= to; d = d.addDays(1))
   {
-    events = _calendar.rawEventsForDate(d);
+    events = _calendar->events(d);
     for (event = events.begin(); event != events.end(); ++event)
     {
 

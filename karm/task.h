@@ -1,24 +1,28 @@
 #ifndef KARM_TASK_H
 #define KARM_TASK_H
 
-#include <qlistview.h>
-#include <qobject.h>
-#include <qpixmap.h>
+// Required b/c QPtrList is a struct, not a class.
 #include <qptrlist.h>
+
+// Requred b/c/ QPtrVector is a template (?)
 #include <qptrvector.h>
-#include <qstring.h>
 
-#include "incidence.h"          // KCal::Incidence
-#include "event.h"              // KCal::Event
-#include "todo.h"
-
+// Required b/c DesktopList is a typedef not a class.
 #include "desktoplist.h"
-#include "karmstorage.h"
+
+// Required b/c of static cast below?  (How else can compiler know that a
+// TaskView is a subclass or QListView?)
+#include "taskview.h"
 
 class QFile;
-class QTimer;
+class QString;
+class KarmStorage;
 
-class TaskView;
+class QTimer;
+class KCal::Incidence;
+class KCal::Todo;
+class QObject;
+class QPixmap;
 
 /// \class Task
 /** \brief A class representing a task

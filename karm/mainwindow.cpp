@@ -114,6 +114,8 @@ void MainWindow::save()
 
 void MainWindow::quit()
 {
+  //_taskView->_storage->clearLock();
+  // TODO: _taskView->closeStorage();
   kapp->quit();
 }
 

@@ -24,18 +24,20 @@
 #define KARM_STORAGE_H
 
 #include <qdict.h>
-#include <qdatetime.h>
+#include <qptrstack.h>
 
-#include "incidence.h"
-#include "calendarlocal.h"
 #include "journal.h"
 
-#include "taskview.h"
+#include "desktoplist.h"
 
+#include <calendarresources.h>
+
+class QDateTime;
 class Preferences;
 class Task;
 class TaskView;
 class HistoryEvent;
+class KCal::Todo;
 
 /**
  * Singleton to store/retrieve KArm data to/from persistent storage.
@@ -233,7 +235,7 @@ class KarmStorage
     /**
      *  Check if the iCalendar file currently loaded has any Todos in it.
      *
-     *  @return true if the CalendarLocal::rawTodos() list is not empty.
+     *  @return true if iCalendar file has any todos
      */
     bool isEmpty();
 
@@ -253,16 +255,17 @@ class KarmStorage
     QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
 
   private:
-    static KarmStorage *_instance;
-    KCal::CalendarLocal _calendar;
-    QString _icalfile;
+    static KarmStorage                *_instance;
+    KCal::CalendarResources           *_calendar;
+    QString                           _icalfile;
+    KCal::CalendarResources::Ticket   *_lock;
 
     KarmStorage();
     void adjustFromLegacyFileFormat(Task* task);
     bool parseLine(QString line, long *time, QString *name, int *level,
         DesktopList* desktopList);
-    void writeTaskAsTodo(Task* task, const int level,
-        QPtrStack< KCal::Todo >& parents);
+    void writeTaskAsTodo
+      (Task* task, const int level, QPtrStack< KCal::Todo >& parents);
 
     KCal::Event* baseEvent(const Task*);
 

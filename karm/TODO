@@ -7,16 +7,26 @@
 * add mouse double-click action (start new timer, stop old) to "Configure
   Shortcuts" dialog.
 
-Mark - KDEPIM post 3.2. release
+Mark - Sooner ...
 --------------------------
 
-  * 2003-09-24: UPDATE DOCS!!
+  * 2004-01-27: File locking--test and clear lock on exit.
+
+        If I open a file in KArm, and then open the same file in KOrganizer
+        (using File -> Open, not defining a resource), then locking does not
+        work.  I can write changes in KOrganizer, and I should not be able to
+        as KArm get's a lock when it opens a file and holds on to it.
+
+        I haven't tested locking with local files that are defined as
+        resources in the control center yet.
+
+  * 2004-04-14: Time zone handling.
+
+  * 2003-09-24: Update manual.
   
-  * 2003-10-24: Update ChangeLog.
+  * 2003-10-24: update changelog.
 
   * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
-
-  * 2004-01-27: File locking--see how KOrganizer does it.
 
   * 2004-01-27: Save expanded/collapsed state of task view.  See KOrganizer.
 
@@ -26,31 +36,25 @@ Mark - KDEPIM post 3.2. release
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
+  * 2003-08-15: Implement comments: VTODO COMMENT or DESCRIPTION?
+      - Make sure wrapping works according to iCalendar spec.
+      - Handle multiple comments against same VEVENT.
+      - Show in history report.
+
+Mark - Later ...
+--------------------------
+
   * 2004-01-27: Write dcop interface so time cards can be exported to other
     systems.
 
-
-Mark - 3.3
---------------------------
-
   * 2003-09-24: Change menu entry from KArm to Time Clock.
-
-  * 2003-08-15: Remove code that is causing compiler warnings.
 
   * 2003-08-15: Go over code and delete all cruft.  In particular, take a look
     at taskview.cpp.
   
-  * 2003-08-15: If Cornelius accepts my comment patch, use the COMMENT
-    attribute to store comments, not the VTODO DESCRIPTION.
-      - KarmStorage::addComment()
-
   * 2003-09-26: Add totals table across entire date range.
 
   * 2003-09-19: If task active, editing task stops timer.  Necessary?
-
-  * 2003-09-17: Modify KarmStorage to raise exceptions instead of returning
-    empty string.  See DF's note in KarmStorage on the required mod to the
-    Makefile.am.
 
   * 2003-08-15: When loading an empty ics file, ask user if they want to
     import a task list from another file.  If they say no, then pop up the new
@@ -65,16 +69,10 @@ Mark - 3.3
     unless a child task has hours logged (that is, show full tree for every
     task with time logged).
 
-  * 2003-09-24: Add comments to report.
-      1. Only activate menu choice when task(s) are active
-      2. Append comment to VEVENTs description
-      3. Make sure wrapping works according to iCalendar spec.
-      4. Handle multiple comments against same VEVENT.
-      5. Show in history report.
-
   * 2003-10-13: New event: publish time card.  Mark events that are published
     as read-only.  Create plug-in framework so that when this event occurs, we
     export to a different backend.  Write plugins for GnuCash and SQL-Ledger.
+    Hmmm ... or just write a sql calendar resource?
 
 
 Wishlist:
