@@ -1,5 +1,3 @@
-// $Id$
-
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qgroupbox.h>
@@ -58,13 +56,13 @@ void KandyPrefsDialog::setupSerialTab()
   topLayout->setMargin(marginHint());
   
   serialDevice = addWidString( i18n("Serial device:"),
-                               &(KandyPrefs::instance()->mSerialDevice),
+                               KandyPrefs::instance()->mSerialDevice,
                                topFrame);
   topLayout->addWidget(serialDevice->label(),0,0);
   topLayout->addWidget(serialDevice->lineEdit(),0,1);
 
   openOnStartup = addWidBool( i18n("Open modem on startup"),
-                              &(KandyPrefs::instance()->mStartupModem),
+                              KandyPrefs::instance()->mStartupModem,
                               topFrame);
   topLayout->addWidget(openOnStartup->checkBox(),1,0);
   
@@ -81,12 +79,12 @@ void KandyPrefsDialog::setupWindowsTab()
   topLayout->setMargin(marginHint());
   
   startupTerminal = addWidBool( i18n("Open terminal window on startup"),
-                                &(KandyPrefs::instance()->mStartupTerminalWin),
+                                KandyPrefs::instance()->mStartupTerminalWin,
                                 topFrame);
   topLayout->addWidget(startupTerminal->checkBox(),0,0);
   
   startupMobile = addWidBool( i18n("Open mobile window on startup"),
-                              &(KandyPrefs::instance()->mStartupMobileWin),
+                              KandyPrefs::instance()->mStartupMobileWin,
                               topFrame );
   topLayout->addWidget(startupMobile->checkBox(),1,0);
   
