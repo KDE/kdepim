@@ -18,6 +18,8 @@
 #include "kmailcvt.h"
 #include <kaboutdialog.h>
 #include <klocale.h>
+#include <qgrid.h>
+#include <qlayout.h>
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -39,38 +41,26 @@ void Kmailcvt2::doFilters(void)
 
 Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-int H;
+  QGridLayout *grid1 = new QGridLayout(this,15,8,15,7);
   info=new filterInfo(this);
 
+  grid1->addMultiCellWidget(info, 2,14,0,7);
   imports=new filters(info,this);
+  grid1->addMultiCellWidget(imports, 0,0,0,5);
   doFilters();
-  imports->adjustSize();
-  imports->move(10,10);
 
   import=new QPushButton(i18n("&Import"),this);
-  import->adjustSize();
-  import->move(imports->width()+imports->x()+10,10);
-
-  H=max(import->height(),imports->height());
+  grid1->addWidget(import, 0,6);
 
   quit=new QPushButton(i18n("&Quit"),this);
-  quit->resize(import->width(),H);
-  quit->move(import->x()+import->width()+10,10);
+  grid1->addWidget(quit, 0,7);
 
   about=new QPushButton(i18n("&About"),this);
-  about->resize(import->width(),H);
-  about->move(quit->x(),H+10+10);
-
-  imports->resize(imports->width(),H);
-  import->resize(import->width(),H);
+  grid1->addWidget(about,1 ,7);
 
   connect(import,SIGNAL(clicked()),SLOT(startFilter()));
   connect(quit,SIGNAL(clicked()),SLOT(Quit()));
   connect(about,SIGNAL(clicked()),SLOT(About()));
-
-  resize(quit->x()+quit->width()+10,height());
-
-  info->adjustSize();
 
   setCaption(KMAILCVT KMAILCVT_VERSION);
 }

@@ -26,6 +26,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <qgrid.h>
+#include <qlayout.h>
+#include <kmessagebox.h>
 #include <klocale.h>
 
 #define A(a,b)  (a=="" || b=="" || a==b)
@@ -58,37 +61,27 @@ bool operator == (AddressBook::Entry::Address & a, AddressBook::Entry::Address &
 //////////////////////////////////////////////////////////////////////////////////
 
 filterInfo::filterInfo(QWidget *parent,char */*name*/)
+: QWidget( parent )
 {
-int w,h;
+  QGridLayout *grid1 = new QGridLayout(this,20,4,15,7);
    _parent=parent;
 
-   w=parent->width();
-   h=parent->height();
-   w-=20;
+   _log=new QListBox(this);
+   grid1->addMultiCellWidget(_log,5,19,0,4);
+   _done_overall=new QProgressBar(100,this);
+   grid1->addMultiCellWidget(_done_overall,4,4,0,4);
+   _done_current=new QProgressBar(100,this);
+   grid1->addMultiCellWidget(_done_current,3,3,0,4);
 
-   h-=100;
-   _log=new QListBox(parent);
-   _log->setGeometry(10,h,w,90);
-
-   h-=30;
-   _done_overall=new QProgressBar(100,parent);
-   _done_overall->setGeometry(10,h,w,20);
-   h-=30;
-   _done_current=new QProgressBar(100,parent);
-   _done_current->setGeometry(10,h,w,20);
-
-   _current=new QLabel(parent);
+   _current=new QLabel(this);
    _current->setText(i18n("current:"));
-   h-=(_current->height()+2);
-   _current->setGeometry(10,h,w,_current->height());
-   _to=new QLabel(parent);
+   grid1->addMultiCellWidget(_current,2,2,0,4);
+   _to=new QLabel(this);
    _to->setText(i18n("to:"));
-   h-=(_to->height()+2);
-   _to->setGeometry(10,h,w,_to->height());
-   _from=new QLabel(parent);
+      grid1->addMultiCellWidget(_to,0,0,0,4);
+   _from=new QLabel(this);
    _from->setText(i18n("from:"));
-   h-=(_from->height()+1);
-   _from->setGeometry(10,h,w,_from->height());
+   grid1->addMultiCellWidget(_from,1,1,0,4);
 }
 
 filterInfo::~filterInfo()
@@ -175,7 +168,7 @@ void filterInfo::clear(void)
 
 void filterInfo::alert(QString conversion, QString message)
 {
-  QMessageBox::information(_parent,conversion,message);
+  KMessageBox::information(_parent,message,conversion);
 }
 
 void filterInfo::adjWidth(QWidget *q)
@@ -344,8 +337,8 @@ int     result;
     return false;
   }
 
-  if (result>0) { added+=1; }//fprintf(stderr,"added+1\n"); }  
-  
+  if (result>0) { added+=1; }//fprintf(stderr,"added+1\n"); }
+
 return true;
 
 #else

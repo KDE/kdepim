@@ -22,18 +22,19 @@
   #define HAVE_SGI_STL
 #endif
 
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qprogressbar.h>
-#include <qmessagebox.h>
-#include <qlistbox.h>
-#include <kabapi.h>
 
+
+
+#include <qcombobox.h>
+#include <qprogressbar.h>
+#include <kabapi.h>
+#include <qlistbox.h>
+#include <qlabel.h>
 #include "harray.hxx"
 #include <string>
 #include <stdio.h>
 
-class filterInfo
+class filterInfo : public QWidget
 {
   private:
     QWidget      *_parent;
