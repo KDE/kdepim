@@ -54,6 +54,7 @@ static const char *interactivesync_id =
 #include <kdialogbase.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
+#include <kmessagebox.h>
 
 #include <kapplication.h>
 
@@ -114,6 +115,8 @@ CheckUser::~CheckUser()
 				config.setUser(defaultUserName);
 				fHandle->getPilotUser()->
 					setUserName(PilotAppCategory::codec()->fromUnicode(defaultUserName));
+				guiUserName=defaultUserName;
+				pilotUserName=defaultUserName;
 			}
 
 		}
@@ -128,6 +131,7 @@ CheckUser::~CheckUser()
 				KDialogBase::Yes)
 			{
 				config.setUser(pilotUserName);
+				guiUserName=pilotUserName;
 			}
 		}
 	}
@@ -157,31 +161,46 @@ CheckUser::~CheckUser()
 #endif
 
 				fHandle->getPilotUser()->setUserName(l1);
+				pilotUserName=guiUserName;
 			}
 		}
 		else
 		{
 			if (guiUserName != pilotUserName)
 			{
-				QString q = i18n("<qt>The Pilot thinks that "
+				QString q = i18n("<qt>The handheld thinks that "
 					"the user name is %1, "
 					"however KPilot says you are %2."
-					"Should I assume the Pilot is right "
-					"and set the user name "
-					"for KPilot to %1?").
-					arg(pilotUserName).arg(pilotUserName).
+					"Which of these is the correct name?\n"
+					"If you click on Cancel, the sync will proceed, "
+					"but the user names will not be changed.").
+					arg(pilotUserName).
 					arg(guiUserName);
 
-				int r = questionYesNo(q,
-					i18n("User Mismatch") /* ,"askUserDiff" */);
-				if (r == KDialogBase::Yes)
+				int r = KMessageBox::questionYesNoCancel(fParent, q,
+					i18n("User Mismatch"), i18n("Use KPilot name"),
+					i18n("Use handheld name")  /* ,"askUserDiff" */);
+				switch (r)
 				{
-					config.setUser(pilotUserName);
+					case KMessageBox::Yes:
+							fHandle->getPilotUser()->setUserName(guiUserName.latin1());
+							pilotUserName=guiUserName;
+							break;
+					case KMessageBox::No:
+						config.setUser(pilotUserName);
+						guiUserName=pilotUserName;
+						break;
+					case KDialogBase::Cancel:
+					default:
+						// TODO: cancel the sync... Or just don't change any user name?
+						break;
 				}
 			}
 		}
+
 	}
 
+	
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": User name set to <"
