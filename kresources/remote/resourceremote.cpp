@@ -220,7 +220,7 @@ bool ResourceRemote::load()
     connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
              SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
     mProgress = KPIM::ProgressManager::createProgressItem(
-        "kcalremote", i18n("Downloading Calendar") );
+        KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
 
     mProgress->setProgress( 0 );
   }
