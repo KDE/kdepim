@@ -69,18 +69,18 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
   // \t<Incidence UID>
   // --------------------------------------------------
 
-  // Print Event Date (in our standard format)
+  // Print Event Date (in user's prefered format)
   *ts << i18n( "Date:" )
       << "\t"
-      << date.toString("dddd yyyy-MM-dd")
+      << KGlobal::locale()->formatDate( date )
       << endl;
 
   // Print Event Starttime - Endtime, for Non-Floating Events Only
   if ( !event->doesFloat() ) {
     *ts << "\t"
-        << event->dtStart().time().toString("hh:mm")
+        << KGlobal::locale()->formatTime( event->dtStart().time() )
         << " - "
-        << event->dtEnd().time().toString("hh:mm");
+        << KGlobal::locale()->formatTime( event->dtEnd().time() );
   }
   *ts << endl;
 
@@ -150,50 +150,41 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   // \t\t<Incidence Description | "\t">
 
   if ( !sameday ) {
-    // If a new date, then print the day separator
-    *ts << "--------------------------------------------------"
-        << endl;
-
-    // Print Event Date (in our standard format)
-    *ts << date.toString("dddd yyyy-MM-dd")
+    // If a new date, then Print the Event Date (in user's prefered format)
+    *ts << KGlobal::locale()->formatDate( date ) << ":"
         << endl;
   }
 
   // Print Event Starttime - Endtime
   if ( !event->doesFloat() ) {
-    *ts << event->dtStart().time().toString("hh:mm")
+    *ts << KGlobal::locale()->formatTime( event->dtStart().time() )
         << " - "
-        << event->dtEnd().time().toString("hh:mm");
+        << KGlobal::locale()->formatTime( event->dtEnd().time() );
   } else {
-    *ts << "\t";
+    *ts << i18n( "[all day]\t" );
   }
   *ts << "\t";
 
   // Print Event Summary
-  *ts << event->summary();
+  *ts << event->summary().replace( QChar( '\n' ), QChar( ' ' ) );
 
   // Print Event Location
   if ( !event->location().isEmpty() ) {
     if ( !event->summary().isEmpty() ) {
       *ts << ", ";
     }
-    *ts << event->location();
+    *ts << event->location().replace( QChar( '\n' ), QChar( ' ' ) );
   }
   *ts << endl;
 
   // Print Event Description
-  *ts << "\t\t";
   if ( !event->description().isEmpty() ) {
-    *ts << event->description()
+    *ts << "\t\t\t"
+        << event->description().replace( QChar( '\n' ), QChar( ' ' ) )
         << endl;
   }
 
-  // Print Event UID
 // By user request, no longer print UIDs if export-type==short
-//      << event->uid()
-//      << endl;
-
-  *ts << endl;  // blank line between events
 
   return true;
 }
@@ -222,14 +213,14 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
   QString dquote = i18n( "\"" ); // character to use to quote CSV fields
 
   if ( !event->doesFloat() ) {
-    *ts <<          pF( date.toString("yyyy-MM-dd") )
-        << delim << pF( event->dtStart().time().toString("hh:mm") )
-        << delim << pF( date.toString("yyyy-MM-dd") )
-        << delim << pF( event->dtEnd().time().toString("hh:mm") );
+    *ts <<          pF( KGlobal::locale()->formatDate( date ) )
+        << delim << pF( KGlobal::locale()->formatTime( event->dtStart().time() ) )
+        << delim << pF( KGlobal::locale()->formatDate( date ) )
+        << delim << pF( KGlobal::locale()->formatTime( event->dtEnd().time() ) );
   } else {
-    *ts <<          pF( date.toString("yyyy-MM-dd") )
+    *ts <<          pF( KGlobal::locale()->formatDate( date ) )
         << delim << pF( "" )
-        << delim << pF( date.toString("yyyy-MM-dd") )
+        << delim << pF( KGlobal::locale()->formatDate( date ) )
         << delim << pF( "" );
   }
 
