@@ -1,8 +1,8 @@
 Source: kdepim
-Build-Depends: autoconf2.13, automake, libtool, kdelibs-dev (>= 4:2.2.0-final-1), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex, g++-3.0 [alpha], gcc-3.0 [alpha]
+Build-Depends: autoconf2.13, automake, libtool, kdelibs-dev (>= 4:2.2.1-1), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex, g++-3.0 [alpha], gcc-3.0 [alpha]
 Section: x11
 Priority: optional
-Maintainer: Ivan E. Moore II <rkrusty@debian.org>
+Maintainer: Debian QA Team <packages@qa.debian.org>
 Standards-Version: 3.5.5
 
 Package: korganizer

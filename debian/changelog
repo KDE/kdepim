@@ -1,3 +1,11 @@
+kdepim (4:2.2.1-1) unstable; urgency=low
+ 
+  * new upstream version 2.2.1
+  * Change maintainer
+  * Lintian fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 25 Aug 2001 14:48:00 -0700
+
 kdepim (4:2.2.0-final-1) unstable; urgency=low
  
   * new upstream version 2.2
@@ -246,8 +254,3 @@ kdepim-cvs (2.0-20000516-1.0) experimental; urgency=low
   * Initial Release.
 
  -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 16 May 2000 20:40:02 -0700
-
-Local variables:
-mode: debian-changelog
-add-log-mailing-address: "coolo@kde.org"
-End:
