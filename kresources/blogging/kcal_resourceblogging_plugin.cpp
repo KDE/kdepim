@@ -22,7 +22,20 @@
 #include "kcal_resourceblogging.h"
 #include "kcal_resourcebloggingconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
 typedef KRES::PluginFactory< ResourceBlogging, ResourceBloggingConfig > BloggingFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory )
+//K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory )
+
+extern "C"
+{
+  void *init_kabc_blogging()
+  {
+    KGlobal::locale()->insertCatalogue( "kdepimresources" );
+    KGlobal::locale()->insertCatalogue( "kres_blogging" );
+    return new BloggingFactory;
+  }
+}
