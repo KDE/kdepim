@@ -27,6 +27,7 @@
 #include <addressbooksyncee.h>
 #include <bookmarksyncee.h>
 
+#include <kabc/resource.h>
 #include <kabc/resourcefile.h>
 #include <kabc/stdaddressbook.h>
 
@@ -195,7 +196,22 @@ bool LocalKonnector::writeSyncees()
   }
 
   if ( mUseStdAddressBook ) {
-    KABC::StdAddressBook::save();
+    QPtrList<KABC::Resource> resources = KABC::StdAddressBook::self()->resources();
+    KABC::Resource *resource;
+    for ( resource = resources.first(); resource; resource = resources.next() ) {
+      if ( resource->readOnly() )
+        continue;
+
+      KABC::Ticket *ticket;
+      ticket = KABC::StdAddressBook::self()->requestSaveTicket( resource );
+      if ( !ticket ) {
+        kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
+                    << "addressbook." << endl;
+        continue;
+      }
+
+      ((KABC::AddressBook*)KABC::StdAddressBook::self())->save( ticket );
+    }
   } else {
     if ( !mAddressBookFile.isEmpty() ) {
       KABC::Ticket *ticket;
