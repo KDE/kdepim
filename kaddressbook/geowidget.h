@@ -56,6 +56,7 @@ class GeoWidget : public QWidget
 
   private slots:
     void updateGeoMap();
+    void geoMapChanged();
 
   private:
     GeoMapWidget *mMapWidget;
@@ -65,6 +66,8 @@ class GeoWidget : public QWidget
 
 class GeoMapWidget : public QWidget
 {
+  Q_OBJECT
+
   public:
     GeoMapWidget( QWidget *parent, const char *name = 0 );
     ~GeoMapWidget();
@@ -74,8 +77,12 @@ class GeoMapWidget : public QWidget
 
     void setLongitude( double longitude );
     double longitude();
+
+  signals:
+    void changed();
     
   protected:
+    virtual void mousePressEvent( QMouseEvent* );
     virtual void paintEvent( QPaintEvent* );
 
   private:

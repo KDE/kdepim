@@ -58,6 +58,8 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   topLayout->addWidget( mLongitudeBox, 1, 2 );
   label->setBuddy( mLongitudeBox );
 
+  connect( mMapWidget, SIGNAL( changed() ),
+           SLOT( geoMapChanged() ) );
   connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
            SIGNAL( changed() ) );
   connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
@@ -99,8 +101,23 @@ void GeoWidget::updateGeoMap()
 {
   mMapWidget->setLatitude( mLatitudeBox->value() );
   mMapWidget->setLongitude( mLongitudeBox->value() );
+  mMapWidget->update();
 }
 
+void GeoWidget::geoMapChanged()
+{
+  bool blocked = mLatitudeBox->signalsBlocked();
+  mLatitudeBox->blockSignals( true );
+
+  mLatitudeBox->setValue( mMapWidget->latitude() );
+  mLongitudeBox->setValue( mMapWidget->longitude() );
+
+  mLatitudeBox->blockSignals( blocked );
+
+  updateGeoMap();
+
+  emit changed();
+}
 
 GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
   : QWidget( parent, name ), mLatitude( 0 ), mLongitude( 0 )
@@ -119,7 +136,6 @@ GeoMapWidget::~GeoMapWidget()
 void GeoMapWidget::setLatitude( double latitude )
 {
   mLatitude = latitude;
-  update();
 }
 
 double GeoMapWidget::latitude()
@@ -130,12 +146,25 @@ double GeoMapWidget::latitude()
 void GeoMapWidget::setLongitude( double longitude )
 {
   mLongitude = longitude;
-  update();
 }
 
 double GeoMapWidget::longitude()
 {
   return mLongitude;
+}
+
+void GeoMapWidget::mousePressEvent( QMouseEvent *event )
+{
+  double latMid = height() / 2;
+  double longMid = width() / 2;
+
+  double latOffset = latMid - event->y();
+  double longOffset = event->x() - longMid;
+
+  mLatitude = ( latOffset * 90 ) / latMid;
+  mLongitude = ( longOffset * 180 ) / longMid;
+
+  emit changed();
 }
     
 void GeoMapWidget::paintEvent( QPaintEvent* )
