@@ -38,7 +38,9 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 
+#include <kapplication.h>
 #include <kaddrbook.h>
+#include <kimproxy.h>
 
 #include "interfaces/bodypartformatter.h"
 #include "interfaces/bodypart.h"
@@ -57,7 +59,13 @@ using KPIM::AddresseeView;
 namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {
+     
   public:
+
+    Formatter() { 
+      mKIMProxy = new ::KIMProxy(  kapp->dcopClient() );
+    }
+     
     Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
 
        VCardConverter vcc;
@@ -78,7 +86,7 @@ namespace {
           KABC::Addressee a = (*it);
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a, false, false );
+          QString contact = AddresseeView::vCardAsHTML( a, mKIMProxy, false, false );
           writer->queue( contact );
 
           QString addToLinkText = i18n( "Add this contact to the addressbook." );
@@ -94,6 +102,8 @@ namespace {
 
        return Ok;
     }
+  private:
+    ::KIMProxy *mKIMProxy;
   };
 
   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
