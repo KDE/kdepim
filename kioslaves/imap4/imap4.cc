@@ -1263,6 +1263,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   }
   default:
     kdWarning(7116) << "Unknown command in special(): " << tmp << endl;
+    error( ERR_UNSUPPORTED_ACTION, QString(QChar(tmp)) );
     break;
   }
 }
