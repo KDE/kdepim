@@ -395,7 +395,7 @@ specific program at that time.</para>
 program; if you do not, the program will not run.</para></tip>
 <para>Choose how many minutes, hours or days before the event you want to be
 reminded. Click on the musical <guiicon>Note</guiicon> symbol to choose the
-alarm sound. Click on the <guiicon>Running Man</guiicon> icon to browse for a
+alarm sound. Click on the <guiicon>Gear</guiicon> icon to browse for a
 program that should run at the alarm time.</para></listitem>
 </varlistentry>
 
@@ -567,6 +567,14 @@ to the attachment.</para>
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <guibutton>OK</guibutton>, <guibutton>Apply</guibutton> and
 <guibutton>Cancel</guibutton>.</para>
+
+</sect2>
+
+<sect2 id="entering-data-events-template-buttons">
+<title><guilabel>Load/Save as Template</guilabel></title>
+
+<para>The <guilabel>Save as Template</guilabel> button enables you to save the current event as a template, so that you can reuse the data entered for future events. As an example you can save a template for a meeting that takes place at the same location and with the same people.</para>
+<para>With the <guilabel>Load Template</guilabel> button you can use an existing template for your event. Continuing the example in the preceding paragraph you can specify the agenda of the meeting.</para>
 
 </sect2>
 
@@ -989,11 +997,11 @@ that you enter <userinput>Product launch event</userinput>.</para></step>
 area. For the sake of this simple example, enter <userinput>Introduction,
 The Plan, Conclusion</userinput> on three separate lines.</para></step>
 
-<step><para>Click the <guilabel>Select Categories</guilabel> button.</para></step>
-
 <step><para>Check the <guilabel>Reminder</guilabel> checkbox.  Set the
 reminder time to 15 minutes&mdash;just long enough to brew a cup of tea
 prior to the meeting start.</para></step>
+
+<step><para>Click the <guilabel>Select Categories</guilabel> button.</para></step>
 
 <step><para>Check <guilabel>Appointment</guilabel> in the Available
 Categories. Then click the
@@ -1103,7 +1111,7 @@ attendee to the list.</para></listitem>
 <term><guilabel>Name</guilabel> field</term>
 <listitem><para>Fill in the Attendee <guilabel>Name</guilabel> and
 <guilabel>Email</guilabel> address fields.  To use your Address Book, see
-the <guibutton>Select Adressee...</guibutton> entry below.</para></listitem>
+the <guibutton>Select Addressee...</guibutton> entry below.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1181,7 +1189,7 @@ like <guiicon>Find</guiicon> and <guiicon>Print</guiicon> preview), a
 <guiicon>Views</guiicon> toolbar (for selecting between
 <guiicon>List view</guiicon>, <guiicon>Day view</guiicon>,
 <guiicon>Workday view</guiicon>, <guiicon>Week view</guiicon>, and 
-<guiicon>Month view</guiicon>) and a Show tolbar (with <guiicon>Publish</guiicon>, 
+<guiicon>Month view</guiicon>) and a Show toolbar (with <guiicon>Publish</guiicon>, 
 <guiicon>Request</guiicon>, <guiicon>Reply</guiicon> and <guiicon>Addressbook</guiicon>). 
 You can customize these toolbars in various
 ways: you can add new icons, change the icon size, change toolbar position and
@@ -1347,7 +1355,7 @@ will never ask before deleting events.</para></listitem>
 <varlistentry>
 <term><guilabel>Mail Client</guilabel></term>
 <listitem><para>Here you can choose which type of mail transport you would like
-to use. You can either use KMail or the sendmail command (which must be installed
+to use. You can either use &kmail; or the sendmail command (which must be installed
 on your system in order to work).</para></listitem>
 </varlistentry>
 
@@ -1358,14 +1366,14 @@ on your system in order to work).</para></listitem>
 
 <varlistentry>
 <term><guilabel>Export to HTML with every save</guilabel></term>
-<listitem><para>By checking this option, you can order KOrganizer to do an export
+<listitem><para>By checking this option, you can order &korganizer; to do an export
 of your to-do list every time you save your changes.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>New Events/Todos Should</guilabel></term>
 <listitem><para>This option lets you choose add a new event/todo item either to
-a standard resource or have KOrganizer ask you which resource should be used.</para></listitem>
+a standard resource or have &korganizer; ask you which resource should be used.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -1433,7 +1441,12 @@ earliest time that you use for events. It could be the time when you
 usually get up, or the time when you start working.</para></listitem>
 </varlistentry>
 
-<!-- Days to show in next-X-days view -->
+<varlistentry>
+<term><guilabel>Days to show in next-X-days view</guilabel></term>
+<listitem><para><guilabel>Days to show in next-X-days view</guilabel>
+allows you to change the amount of days of the <guimenu>Next X Days</guimenu>
+Option in the <guimenu>Views</guimenu> menu.</para></listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>Hour size in schedule view</guilabel></term>
@@ -1468,9 +1481,25 @@ seconds.</para></listitem>
 
 <!--Enable Scrollbars in Month View cells-->
 
-<!--Month view uses full window-->
+<varlistentry>
+<term><guilabel>Month view uses full window</guilabel></term>
+<listitem><para>If you enable this option the month view will be displayed
+in the whole &korganizer; window instead of sharing the window with the date
+navigator, the To-Dos and the calendars.</para></listitem>
+</varlistentry>
 
-<!--Todo View uses full window-->
+<varlistentry>
+<term><guilabel>Month view uses category colors</guilabel></term>
+<listitem><para>If you enable this option the month view will use the colors
+associated with the selected category instead of using no color.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>To-do view uses full window</guilabel></term>
+<listitem><para>If you enable this option the To-do view will be displayed
+in the whole &korganizer; window instead of sharing the window with the date
+navigator, the To-Dos and the calendars.</para></listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>Show current time (Marcus Bains line)</guilabel></term>
@@ -1514,7 +1543,7 @@ Font style and Size for the Marcus Bains line.</para></listitem>
 <title>Colors</title>
 
 <para>Choose the color used for holidays, for highlighting, and for specific
-event categories. You can choose different color for each category. Of course
+event categories. You can choose a different color for each category. Of course
 too many colors may be confusing, so use common sense.</para>
 
 <para>You can also choose a default event color and agenda view background
@@ -1540,7 +1569,7 @@ should be sent immediately.
 <listitem><para>This tells &korganizer; what further emailaddresses you have in
 addition to the one set in personal preferences <link
 linkend="preferences-personal">personal preferences</link>. This is needed, if
-you are an attenddee of one event, but have another emailaddress there.
+you are an attendee of one event, but have another emailaddress there.
 </para></listitem>
 </varlistentry>
 
@@ -1548,6 +1577,7 @@ you are an attenddee of one event, but have another emailaddress there.
 
 </sect3>
 
+<!-- 
 <sect3 id="preferences-groupautomation">
 <title>Group Automation</title>
 
@@ -1586,6 +1616,49 @@ you are an attenddee of one event, but have another emailaddress there.
 </variablelist>
 
 </sect3>
+-->
+
+<!-- 
+<sect3 id="preferences-free-busy">
+<title>Free/Busy</title>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Publish Tab</guilabel></term>
+<listitem>
+<itemizedlist>
+<listitem><para><guilabel>Publish free/busy information</guilabel></para></listitem>
+<listitem><para><guilabel>Minimum time between uploads in minutes</guilabel></para></listitem>
+<listitem><para><guilabel>Publish (default 60) days of free/busy</guilabel></para></listitem>
+<listitem><para><guilabel>Server URL</guilabel></para></listitem>
+<listitem><para><guilabel>Username</guilabel></para></listitem>
+<listitem><para><guilabel>Password</guilabel></para></listitem>
+<listitem><para><guilabel>Remember password</guilabel></para></listitem>
+<listitem><para><guilabel>Retrieve tab</guilabel></para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Retrieve Tab</guilabel></term>
+<listitem>
+<itemizedlist>
+<listitem><para><guilabel>Retrieve other peoples' free/busy</guilabel></para>
+	<para>Test test test</para>
+</listitem>
+<listitem><para><guilabel>Server URL</guilabel></para></listitem>
+<listitem><para><guilabel>Username</guilabel></para></listitem>
+<listitem><para><guilabel>Password</guilabel></para></listitem>
+<listitem><para><guilabel>Remember password</guilabel></para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+-->
 
 </sect2>
 
@@ -1600,8 +1673,6 @@ you are an attenddee of one event, but have another emailaddress there.
 <para>to be written</para>
 </sect2>
 </sect1>
-
-<!-- end 2.2.0 modifications -->
 
 
 <sect1 id="reference-menus">
@@ -2633,7 +2704,7 @@ is included in the kdepim package together with &korganizer;.</para>
 </row>
 <row>
   <entry><option>--license</option></entry>
-  <entry>Displays the licanse.</entry>
+  <entry>Displays the license.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -2709,7 +2780,7 @@ Ical</guimenuitem></menuchoice> to carry out this task.</para>
 <para>Palm Synchronization can be done via &kpilot;. Choose 
 <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure conduits</guimenuitem></menuchoice> and
 check <guilabel>Korganizer Calendar</guilabel> and <guilabel>Korganizer Todo's</guilabel>. 
-After synchronization the Calendar and Todo's should be visible in Korganizer.</para> 
+After synchronization the Calendar and Todo's should be visible in &korganizer;.</para> 
 <para>See the <link linkend="faq">&FAQ;</link> for one of the most common &PalmPilot;
 syncing problems.</para>
 
