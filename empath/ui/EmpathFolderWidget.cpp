@@ -157,7 +157,8 @@ EmpathFolderWidget::_addChildren(const EmpathFolder & item)
 
 	EmpathFolderListItem * newItem = 0;
 
-	EmpathFolderListItem * parentFolderListFolder = _parentFolderListFolder(item);
+	EmpathFolderListItem * parentFolderListFolder =
+		_parentFolderListFolder(item);
 	
 	if (parentFolderListFolder == 0) {
 		

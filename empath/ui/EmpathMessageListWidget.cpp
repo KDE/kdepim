@@ -260,7 +260,7 @@ EmpathMessageListWidget::firstSelectedMessage() const
 	if (currentItem() == 0) return u;
 	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
 	// FIXME we want id of message from item.
-	u = EmpathURL(url_.mailboxName(), url_.folderPath(), QString::null);
+	u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->msgDesc()->id());
 	return u;
 }
 

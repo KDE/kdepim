@@ -44,8 +44,6 @@ class EmpathFolder : public QObject
 
 		EmpathFolder();
 		
-		EmpathFolder(const EmpathFolder &);
-		
 		EmpathFolder(const EmpathURL & url);
 
 		virtual ~EmpathFolder();
@@ -70,14 +68,11 @@ class EmpathFolder : public QObject
 
 		EmpathIndex & messageList() { return messageList_; }
 		
-		void addMessage(EmpathIndexRecord & messageDesc);
-		
-		bool removeMessage(const RMessageID & messageID);
-		
 		const EmpathIndexRecord *
 			messageDescription(const RMessageID & messageID) const;
 
 		bool writeMessage(const RMessage & message);
+		bool removeMessage(const EmpathURL &);
 
 		void update();
 
@@ -93,6 +88,8 @@ class EmpathFolder : public QObject
 		void countUpdated(int, int);
 		
 	private:
+
+		EmpathFolder(const EmpathFolder &) {}
 
 		static uID ID;
 		uID id_;

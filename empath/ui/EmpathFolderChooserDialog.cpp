@@ -106,7 +106,6 @@ EmpathFolderChooserDialog::s_help()
 	EmpathFolder *
 EmpathFolderChooserDialog::selectedFolder() const
 {
-	//XXX write this
 	empathDebug("selectedFolder() called");
 	return folderWidget_->selectedFolder();
 }

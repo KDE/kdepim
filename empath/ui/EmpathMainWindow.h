@@ -125,20 +125,17 @@ class EmpathMainWindow : public KTMainWindow
 		void s_aboutEmpath();
 		void s_aboutQt();
 		
+#ifndef NDEBUG
 		// Debugging
 		void s_dumpWidgetList();
+#endif
 
 	private:
 	
 		// General
-		KStdAccel		* accel;
-
-		KMenuBar		* menu;
-		KToolBar		* tool;
-		KStatusBar		* status;
+		KMenuBar		* menu_;
+		KStatusBar		* status_;
 		
-		KConfig			* config;
-	
 		QPopupMenu		* fileMenu_;
 		QPopupMenu		* editMenu_;
 		QPopupMenu		* folderMenu_;

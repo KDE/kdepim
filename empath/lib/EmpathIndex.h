@@ -44,11 +44,6 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
 		void setFolder(EmpathFolder * parent) { folder_ = parent; }
 
 		/**
-		 * This hunts down the message in the local mailbox, and finds the
-		 * corresponding message in the internal list, which is also destroyed.
-		 */
-		bool remove(const RMessageID & messageId);
-		/**
 		 * Count the number of messages stored.
 		 */
 		Q_UINT32 countUnread() const;

@@ -43,6 +43,19 @@ EmpathIndexRecord::EmpathIndexRecord()
 }
 
 
+EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
+	:	id_(id),
+		subject_(m.envelope().subject().asString()),
+		sender_(m.envelope().sender()),
+		date_(m.envelope().date()),
+		status_(m.status()),
+		size_(m.size()),
+		messageId_(m.envelope().messageID()),
+		parentMessageId_(m.envelope().parentMessageId())
+{
+	empathDebug("ctor w/ an RMessage - my id == " + id_);
+}
+
 EmpathIndexRecord::EmpathIndexRecord(
 		const QString &		id,
 		const QString &		subject,

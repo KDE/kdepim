@@ -159,7 +159,7 @@ EmpathFolderListItem::setup()
 	
 	int th = QFontMetrics(empathGeneralFont()).height();
 	
-	if (pixmap(0) == 0)
+	if (!pixmap(0))
 		setHeight(th);
 	else 
 		setHeight(QMAX(pixmap(0)->height(), th) + 8);

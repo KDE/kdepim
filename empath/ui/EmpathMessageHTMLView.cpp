@@ -156,8 +156,11 @@ EmpathMessageHTMLWidget::go()
 	htmlTemplate.replace(QRegExp("@_TTEND_"), "</PRE>");
 	
 	RMessage * message(empath->message(url_));
+	
 	if (message == 0) {
 		empathDebug("Can't load message from \"" + url_.asString() + "\"");
+		// Don't forget to reset the cursor.
+		setCursor(arrowCursor);
 		return;
 	}
 	
@@ -180,10 +183,10 @@ EmpathMessageHTMLWidget::go()
 	
 	write(htmlTemplate.right(htmlTemplate.length() - bodyTagPos + 1));
 	
-	/////////////////////////////////////////////////////////////////// Testing ///
-	// Write the HTML to a file. Useful considering HTML widget crashes.        ///
-	///////////////////////////////////////////////////////////////////////////////
-#ifdef DEBUG
+	///////////////////////////////////////////////////////////// Testing ///
+	// Write the HTML to a file. Useful considering HTML widget crashes.  ///
+	/////////////////////////////////////////////////////////////////////////
+#ifndef NDEBUG
 	empathDebug("Writing message as html to message.html");
 	QFile f("message.html");
 	if (f.open(IO_WriteOnly)) {
@@ -192,7 +195,7 @@ EmpathMessageHTMLWidget::go()
 		f.close();
 	}
 #endif
-	///////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////
 
 	setCursor(arrowCursor);
 	parse();
@@ -296,7 +299,6 @@ EmpathMessageHTMLWidget::replaceBodyTagsByData(
 {
 	empathDebug("replaceBodyTagsByData");
 
-//	RxRegExp sigSep("\n-- ?\n");
 	QRegExp sigSep("\n-- ?\n");
 	int i = sigSep.match(body);
 	
@@ -421,7 +423,6 @@ EmpathMessageHTMLWidget::markupHeaderBodies(
 		empathDebug("Replacing all " + QString(fieldToReplace.pattern()) +
 				QString(" with ") + QString(headerBody));
 		html.replace(QRegExp(fieldToReplace.pattern()), headerBody);
-//		RxRegExp::replace(html, fieldToReplace.pattern(), headerBody);
 	}
 }
 	
@@ -430,7 +431,7 @@ EmpathMessageHTMLWidget::markupHeaderBodies(
 EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 {
 	
-	// OOh shit shit shit XXX XXX XXX Will this work with Qt-2.0's QString ?
+	// Will this work with Qt-2.0's QString ?
 	register char * buf = new char[32768]; // 32k buffer. Will be reused.
 	QCString outStr;
 	
@@ -521,13 +522,6 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 				}
 				break;
 
-//			case '\t':
-//				for (x = 0; x < tabstop; x++) {
-//					strcpy(bufpos, "&nbsp;");
-//					bufpos += 6;
-//				}
-//				break;
-			
 			case '&':
 				strcpy(bufpos, "&amp;");
 				bufpos += 5;

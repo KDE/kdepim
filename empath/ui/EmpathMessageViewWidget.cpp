@@ -142,12 +142,12 @@ EmpathMessageViewWidget::s_docChanged()
 	}
 	
 	verticalScrollBar_->setRange(0,
-		messageWidget_->height() - messageWidget_->docHeight());
+		messageWidget_->docHeight() - messageWidget_->height());
 	verticalScrollBar_->setSteps(12, messageWidget_->height() - 24);
 
 	
 	horizontalScrollBar_->setRange(0,
-		messageWidget_->width() - messageWidget_->docWidth());
+		messageWidget_->docWidth() - messageWidget_->width());
 	horizontalScrollBar_->setSteps(12, messageWidget_->width() - 24);
 }
 

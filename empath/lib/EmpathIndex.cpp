@@ -27,7 +27,7 @@
 EmpathIndex::EmpathIndex()
 	:	QDict<EmpathIndexRecord>(101)
 {
-	// empty
+	setAutoDelete(true);
 }
 
 EmpathIndex::~EmpathIndex()
@@ -61,15 +61,6 @@ EmpathIndex::messageDescription(const RMessageID & id) const
 		if (it.current()->messageID() == id) return it.current();
 
 	return 0;
-}
-
-	bool
-EmpathIndex::remove(const RMessageID & id)
-{
-	const EmpathIndexRecord * m = messageDescription(id);
-	if (m == 0 || m->messageID() != id) return false;
-	QDict::remove(m->id());
-	return true;
 }
 
 	Q_UINT32

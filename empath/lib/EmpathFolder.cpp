@@ -39,14 +39,6 @@ EmpathFolder::EmpathFolder()
 	id_ = ID++;
 }
 
-EmpathFolder::EmpathFolder(const EmpathFolder & f)
-	:	QObject()
-{
-	empathDebug("copy ctor !");
-	// FIXME !
-	id_ = ID++;
-}
-
 EmpathFolder::EmpathFolder(const EmpathURL & url)
 	:	QObject(),
 		messageCount_(0),
@@ -78,20 +70,11 @@ EmpathFolder::setPixmap(const QPixmap & p)
 	pixmap_ = p;
 }
 
-	void
-EmpathFolder::addMessage(EmpathIndexRecord & messageDesc)
-{
-//	messageList_[messageDesc.id()] = messageDesc;
-	//return (messageList_.append(message) && mailbox_->writeMessage(message));
-}
-
 	bool
-EmpathFolder::removeMessage(const RMessageID & id)
+EmpathFolder::removeMessage(const EmpathURL & id)
 {
-	if (!messageList_.remove(id)) return false;
 	EmpathMailbox * m = empath->mailbox(url_);
-	return (m != 0 &&
-		m->removeMessage(EmpathURL(url_.asString() + "/" + QString(id.asString()))));
+	return (m != 0 && m->removeMessage(id));
 }
 
 	const EmpathIndexRecord *

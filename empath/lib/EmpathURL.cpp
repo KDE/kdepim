@@ -46,8 +46,8 @@ EmpathURL::EmpathURL(
 		messageID_(messageID),
 		strRep_("")
 {
-	empathDebug("ctor with \"" + QString(mailboxName) +
-		"\", \"" + QString(folderPath) + "\"");
+	empathDebug("ctor with \"" +
+		mailboxName_ + "\", \"" + folderPath_ + "\", \"" + messageID_ + "\"");
 	_assemble();
 }
 
@@ -128,6 +128,7 @@ EmpathURL::operator = (const EmpathURL & url)
 	empathDebug("operator = ");
 	mailboxName_	= url.mailboxName_;
 	folderPath_		= url.folderPath_;
+	messageID_		= url.messageID_;
 	_assemble();
 	return *this;
 }
@@ -189,6 +190,7 @@ EmpathURL::_assemble()
 	QString s = mailboxName_ + "/" + folderPath_ + "/" + messageID_;
 	s.replace(QRegExp("//"), "/");
 	strRep_ = "empath://" + s;
+	empathDebug("Assembled to \"" + strRep_ + "\"");
 }
 
 	QStringList

@@ -58,7 +58,7 @@ class RMessage : public REntity {
 		QCString recipientListAsPlainString();
 
 		REnvelope	& envelope()			{ return envelope_; }
-		RBody		& body()				{ return body_; }
+		RBody		& body() 				{ return body_; }
 
 		Q_UINT32 size() const				{ return strRep_.length(); }
 		

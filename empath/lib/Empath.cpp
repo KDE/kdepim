@@ -341,7 +341,7 @@ Empath::typeOfMessage(const EmpathURL & source)
 	RMessage *
 Empath::message(const EmpathURL & source)
 {
-	EmpathMailbox * m = mailbox(source.mailboxName());
+	EmpathMailbox * m = mailbox(source);
 	if (m == 0) return 0;
 	return m->message(source);
 }

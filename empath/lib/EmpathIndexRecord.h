@@ -41,6 +41,8 @@ class EmpathIndexRecord
 		
 		EmpathIndexRecord();
 			
+		EmpathIndexRecord(const QString & id, RMessage &);
+
 		EmpathIndexRecord(
 				const QString & id,
 				const QString & subject,
@@ -75,6 +77,9 @@ class EmpathIndexRecord
 
 		void setStatus(MessageStatus s) { status_ = s; }
 		
+		void tag()		{ tagged_ = true; }
+		bool isTagged()	{ return tagged_; }
+		
 	private:
 		
 		// Order dependency
@@ -86,6 +91,8 @@ class EmpathIndexRecord
 		Q_UINT32			size_;
 		RMessageID			messageId_;
 		RMessageID			parentMessageId_;
+		
+		bool				tagged_;
 };
 
 #endif

@@ -285,8 +285,12 @@ EmpathMailboxMaildir::init()
 	RMessage *
 EmpathMailboxMaildir::message(const EmpathURL & id)
 {
+	empathDebug("message(" + id.asString() + ") called");
 	EmpathMaildir * m = _box(id);
-	if (m == 0) return 0;
+	if (m == 0) {
+		empathDebug("Can't find box \"" + id.asString() + "\"");
+		return 0;
+	}
 	return m->message(id.messageID());
 }
 
@@ -307,12 +311,16 @@ EmpathMailboxMaildir::setPath(const QString & path)
 	EmpathMaildir *
 EmpathMailboxMaildir::_box(const EmpathURL & id)
 {
+	empathDebug("_box(" + id.asString() + ") called");
 	EmpathMaildirListIterator it(boxList_);
 	
-	for (; it.current(); ++it)
-		if (it.current()->url() == id)
+	for (; it.current(); ++it) {
+		empathDebug("Looking at \"" + it.current()->url().folderPath() + "\"");
+		if (it.current()->url().folderPath() == id.folderPath())
 			return it.current();
+	}
 	
+	empathDebug("Can't find box with id \"" + id.asString() + "\"");
 	return 0;
 }
 

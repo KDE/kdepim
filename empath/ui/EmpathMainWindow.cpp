@@ -51,16 +51,17 @@
 #include "EmpathFolderChooserDialog.h"
 #include "Empath.h"
 #include "EmpathMenuMaker.h"
+#ifndef NDEBUG
 #include "EmpathDebugDialog.h"
+#endif
 
 EmpathMainWindow::EmpathMainWindow(const char * name)
 	:	KTMainWindow(name)
 {
 	empathDebug("ctor");
 
-	menu	= menuBar();
-//	tool	= toolBar();
-	status	= statusBar();
+	menu_	= menuBar();
+	status_	= statusBar();
 		
 	mainWidget_						=
 		new EmpathMainWidget(this, "mainWidget");
@@ -217,13 +218,13 @@ EmpathMainWindow::setupMenuBar()
 	// Help menu
 	setupHelpMenu(this, 0, helpMenu_);
 
-	menu->insertItem(i18n("&File"), fileMenu_);
-	menu->insertItem(i18n("&Edit"), editMenu_);
-	menu->insertItem(i18n("F&older"), folderMenu_);
-	menu->insertItem(i18n("&Message"), messageMenu_);
-	menu->insertItem(i18n("&Options"), optionsMenu_);
-	menu->insertSeparator();
-	menu->insertItem(i18n("&Help"), helpMenu_);
+	menu_->insertItem(i18n("&File"), fileMenu_);
+	menu_->insertItem(i18n("&Edit"), editMenu_);
+	menu_->insertItem(i18n("F&older"), folderMenu_);
+	menu_->insertItem(i18n("&Message"), messageMenu_);
+	menu_->insertItem(i18n("&Options"), optionsMenu_);
+	menu_->insertSeparator();
+	menu_->insertItem(i18n("&Help"), helpMenu_);
 }
 
 	void
@@ -243,7 +244,6 @@ EmpathMainWindow::setupToolBar()
 	KToolBar::BarPosition pos =
 		(KToolBar::BarPosition)c->readNumEntry(KEY_MAIN_WINDOW_TOOLBAR_POS);
 
-	// FIXME: Hack to stop toolbar disappearing.
 	if (pos == KToolBar::Floating) pos = KToolBar::Top;
 	tb->setBarPos(pos);
 	
@@ -278,7 +278,7 @@ EmpathMainWindow::setupToolBar()
 EmpathMainWindow::setupStatusBar()
 {
 	empathDebug("setting up status bar");
-	status->message("Ready");
+	status_->message("Ready");
 }
 
 // If the user presses the close button on the title bar, or tries
@@ -330,7 +330,7 @@ EmpathMainWindow::s_filePrint()
 EmpathMainWindow::s_fileGetNew()
 {
 	empathDebug("s_fileGetNew called");
-	status->message("Getting new mail", 6000);
+	status_->message("Getting new mail", 6000);
 	empath->mailboxList().getNewMail();
 }
 
@@ -692,13 +692,13 @@ EmpathMainWindow::s_aboutQt()
 	void
 EmpathMainWindow::statusMessage(const QString & messageText, int seconds)
 {
-	status->message(messageText, seconds);
+	status_->message(messageText, seconds);
 }
 
 	void
 EmpathMainWindow::clearStatusMessage()
 {
-	status->clear();
+	status_->clear();
 }
 
 	void
@@ -781,12 +781,14 @@ EmpathMainWindow::s_optionsSettingsFilters()
 	settingsDialog.exec();
 }
 
+#ifndef NDEBUG
 	void
 EmpathMainWindow::s_dumpWidgetList()
 {
 	EmpathDebugDialog d(this, "debugDialog");
 	d.exec();
 }
+#endif
 
 	RMessage *
 EmpathMainWindow::_getFirstSelectedMessage() const

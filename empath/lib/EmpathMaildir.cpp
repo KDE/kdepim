@@ -61,8 +61,10 @@ EmpathMaildir::sync(const EmpathURL & url)
 {
 	empathDebug("sync(" + url.asString() + ") called");
 	
+	// First make sure any new mail that has arrived goes into cur.
 	_markNewMailAsSeen();
 	
+	// Get a pointer to the folder related to us.
 	EmpathFolder * f(empath->folder(url));
 	
 	if (f == 0) {
@@ -70,18 +72,29 @@ EmpathMaildir::sync(const EmpathURL & url)
 		return;
 	}
 	
-	QFileInfo fi(path_);
+	// Check the mtime of cur. If it's not changed, we can return now.
+	QFileInfo fi(path_ + "/cur/");
 	
 	if (fi.lastModified() <= mtime_) {
 		empathDebug("sync: Not modified");
 		return;
 	}
 	
-	QDir d(path_,
+	// Get the dir listing.
+	QDir d(path_ + "/cur/",
 		QString::null, QDir::Name | QDir::IgnoreCase,
 		QDir::NoSymLinks | QDir::Files);
 
 	QStringList fileList(d.entryList());
+	empathDebug("There are " + QString().setNum(fileList.count()) + " files in cur");
+	
+	// Look through the file list.
+	// 
+	// Any files that we don't recognise must be parsed and added to the
+	// folder's message list.
+	// 
+	// Any files that have disappeared (are in the message list but not in the
+	// dir entry list) must be removed from the message list.
 	
 	QStringList::ConstIterator it(fileList.begin());
 	
@@ -91,14 +104,55 @@ EmpathMaildir::sync(const EmpathURL & url)
 	for (; it != fileList.end(); ++it) {
 	
 		s = *it;
+		
+		// Remove the flags from the end of the filename.
 		s.replace(re_flags, QString::null);
 		
-		if (!f->messageList()[s]) {
+		EmpathIndexRecord * rec = f->messageList()[s];
+		
+		// If the record exists, we tag it to say it's still here. Later, we'll
+		// look for all untagged records. In this way, we'll be able to
+		// efficiently find all records that no longer have a matching file,
+		// and therefore which have disappeared.
+		
+		if (rec)
+			rec->tag();
+		
+		else {	
 			// New file to add.
 			
-			empathDebug("New message in index");
+			// Read the file to a RMessage
+			RMessage m(_messageData(s));
+			
+			// Parse the message.
+			m.parse();
+			
+			// Create an index record.
+			EmpathIndexRecord * ir = new EmpathIndexRecord(s, m);
+			CHECK_PTR(ir);
+			
+			ir->tag();
+			
+			f->messageList().insert(s, ir);
+			
+			empathDebug("New message in index with id \"" + s + "\"");
 		}
 	}
+	
+	// Now go through the index, looking for untagged records.
+	// Anything that wasn't tagged is no longer in the dir, and has been
+	// deleted or moved. We therefore remove it from the index.
+	
+	EmpathIndexIterator iit(f->messageList());
+	
+	for (; iit.current(); ++iit)
+		if (!iit.current()->isTagged()) {
+			
+			empathDebug("Message with id \"" +
+				iit.currentKey() + "\" has gone.");
+			
+			f->messageList().remove(iit.currentKey());
+		}
 	
 	empathDebug("sync done");
 }
@@ -152,12 +206,16 @@ EmpathMaildir::typeOfMessage(const QString & id)
 	RMessage *
 EmpathMaildir::message(const QString & id)
 {
-//	if (!folder.messageList().messageStillExists(id))
-//		return 0;
-
-	RMessage * tempMessage = new RMessage;
-	tempMessage->set(_messageData(id));
-	return tempMessage;
+	QCString s = _messageData(id);
+	
+	if (s.isEmpty()) {
+		empathDebug("Couldn't load data for \"" + id + "\"");
+		return 0;
+	}
+	
+	RMessage * m = new RMessage(s);
+	CHECK_PTR(m);
+	return m;
 }
 
 	bool
@@ -490,9 +548,6 @@ EmpathMaildir::_write(const RMessage & msg)
 
 	// Try to close the file. Should close OK since we fsync()ed it,
 	// but this might be over NFS, which could go down any second.
-	
-	// FIXME: When Qt 2.0 is out, should be able to check the return
-	// value from QFile::close().
 	
 	f.close();
 
