@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   KApplication::addCmdLineOptions();
 
 	KApplication app;
-	ConverterDlg *dlg=new ConverterDlg(0L, i18n("PalmDOC converter"));
+	ConverterDlg *dlg=new ConverterDlg(0L, i18n("PalmDOC Converter"));
 	dlg->show();
 	return app.exec();
 }
