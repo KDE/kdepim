@@ -409,11 +409,13 @@ void ViewManager::dropped( QDropEvent *e )
 
 void ViewManager::startDrag()
 {
-  kdDebug(5720) << "ViewManager::startDrag: starting to drag" << endl;
-
   // Get the list of all the selected addressees
   KABC::Addressee::List addrList;
   QStringList uidList = selectedUids();
+  if (  uidList.count() == 0 )
+      return;
+  kdDebug(5720) << "ViewManager::startDrag: starting to drag" << endl;
+
   QStringList::Iterator it;
   for ( it = uidList.begin(); it != uidList.end(); ++it )
     addrList.append( mCore->addressBook()->findByUid( *it ) );
