@@ -386,6 +386,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         html += "<a href=\"" +
                 bodyPart->makeLink( "decline" ) + "\"><b>";
         html += i18n( "[Decline]" );
+#if 0
+        // TODO: Do this
         if( event ) {
           // Check my calendar...
           html += "</b></a></td><td> &nbsp; </td><td>";
@@ -393,6 +395,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
                   bodyPart->makeLink( "check_calendar" ) + "\"><b>";
           html += i18n("[Check my calendar...]" );
         }
+#endif
       } else if( sMethod == "reply" ) {
         // Enter this into my calendar
         html += "<a href=\"" +
@@ -524,10 +527,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( incidence->organizer(), msg, subject );
     }
 
-    bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
+    bool saveFile( const QString& iCal, const QString& type ) const
     {
-      // First, save it for KOrganizer to handle
-      QString location = locateLocal( "data", "korganizer/income.accepted/", true );
+      QString location = locateLocal( "data", "korganizer/income." + type,
+                                      true );
       QString file;
       do {
         file = location + KApplication::randomString( 10 );
@@ -536,11 +539,19 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( !f.open( IO_WriteOnly ) ) {
         KMessageBox::error( 0, i18n("Could not open file for writing:\n%1")
                             .arg( file ) );
+        return false;
       } else {
         QByteArray msgArray = iCal.utf8();
         f.writeBlock( msgArray, msgArray.size() );
         f.close();
       }
+      return true;
+    }
+
+    bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
+    {
+      // First, save it for KOrganizer to handle
+      saveFile( iCal, "accepted" );
 
       // Now produce the return message
       ICalFormat format;
@@ -567,8 +578,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if ( path == "accept" )
         return handleAccept( iCal, c );
-      else if ( path == "decline" )
+      if ( path == "decline" )
         return handleDecline( iCal, c );
+      if ( path == "reply" || path == "cancel" )
+        // These should just be saved with their type as the dir
+        return saveFile( iCal, path );
+
       return false;
     }
 
@@ -585,6 +600,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( !path.isEmpty() ) {
         if ( path == "accept" )
           return i18n("Accept incidence");
+        // This doesn't do anything so far
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
         if ( path == "decline" )
