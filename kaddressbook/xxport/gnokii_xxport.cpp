@@ -41,8 +41,6 @@
 #ifdef HAVE_GNOKII_H
 extern "C" {
 #include <gnokii.h>
-#define GNOKII_VERSION 0x060  // gnokii.h should provide this !
-//#define GNOKII_VERSION 0x061  // gnokii.h should provide this !
 }
 #endif
 
@@ -94,7 +92,6 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 /* import */
 
 #ifdef HAVE_GNOKII_H
-static char *BinDir;
 static char *lockfile = NULL;
 static char model[GN_MODEL_MAX_LENGTH+1], revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
 static QString PhoneProductId;
@@ -113,9 +110,10 @@ static QString businit(void)
 	gn_error error;
 	char *aux;
 
-#if GNOKII_VERSION >= 0x061
-	if (gn_cfg_read_default(&BinDir)<0)
+#if defined(LIBGNOKII_VERSION) && LIBGNOKII_VERSION >= LIBGNOKII_MAKE_VERSION(2,0,0)
+	if (gn_cfg_read_default()<0)
 #else
+	static char *BinDir;
 	if (gn_cfg_read(&BinDir)<0)
 #endif
 		return i18n("Failed to initialize the Gnokii library.");
