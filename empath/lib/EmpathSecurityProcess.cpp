@@ -28,7 +28,8 @@
 #include <stdlib.h>             // setenv()
 
 // KDE includes
-#include <klineeditdlg.h>
+// This makes us rely on kdeui !
+//#include <klineeditdlg.h>
 #include <klocale.h>
 
 // Local includes
@@ -130,10 +131,21 @@ EmpathSecurityProcess::_encryptAndSign(
     this,    SIGNAL(done(bool, QCString)),
     parent,    SLOT(s_encryptAndSignDone(bool, QCString)));
 
-    KLineEditDlg led(
-        i18n("PGP passphrase"), QString::null, 0);
+    bool ok(false);
+
+    // This makes us rely on kdeui !
+    // Need to use EmpathUI to get this.
+    QString passphrase; // =
+#if 0
+        KLineEditDlg::getText(
+            i18n("PGP passphrase"),
+            QString::null,
+            &ok,
+            static_cast<QWidget *>(0L)
+        );
+#endif
     
-    if (!led.exec() || led.text().isEmpty()) {
+    if (!ok || passphrase.isEmpty()) {
         emit(done(false, ""));
         delete this;
     }

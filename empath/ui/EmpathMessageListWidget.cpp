@@ -66,6 +66,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
         lastHeaderClicked_  (-1),
         hideRead_           (false)
 {
+    empathDebug("");
     _init();
 
     setFrameStyle(QFrame::NoFrame);
@@ -75,7 +76,10 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     setSelectionMode(QListView::Extended);
 
     addColumn(i18n("Subject"));
-    addColumn(i18n("F"));
+    addColumn(i18n("S"));
+    addColumn(i18n("T"));
+    addColumn(i18n("R"));
+    addColumn(i18n("A"));
     addColumn(i18n("Sender"));
     addColumn(i18n("Date"));
     addColumn(i18n("Size"));
@@ -85,6 +89,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     _setupThreadMenu();
     _restoreColumnSizes();
     _connectUp();
+    empathDebug("");
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
@@ -100,14 +105,11 @@ EmpathMessageListWidget::_init()
     markAsReadTimer_ = new EmpathMarkAsReadTimer(this);
     listItemPool_ = new QList<EmpathMessageListItem>;
 
-    px_xxx_    = empathIcon("tree");
-    px_Sxx_    = empathIcon("tree-read");
-    px_xMx_    = empathIcon("tree-marked");
-    px_xxR_    = empathIcon("tree-replied");
-    px_SMx_    = empathIcon("tree-read-marked");
-    px_SxR_    = empathIcon("tree-read-replied");
-    px_xMR_    = empathIcon("tree-marked-replied");
-    px_SMR_    = empathIcon("tree-read-marked-replied");
+    px_unread_      = empathIcon("tree-unread");
+    px_read_        = empathIcon("tree-read");
+    px_marked_      = empathIcon("tree-marked");
+    px_attachments_ = empathIcon("tree-attachments");
+    px_replied_     = empathIcon("tree-replied");
 }
 
     void
@@ -686,18 +688,32 @@ EmpathMessageListWidget::_initActions()
             this, SLOT(s_goNextUnread()), actionCollection(),
             "goNextUnread");
     
+    // On/off pixmaps identical until I make the 'off' versions.
+    // Small/Large identical until I make the large versions.
+    // (rikkus)
+ 
+    QIconSet markedOrNot, readOrNot, repliedOrNot;
+
+    markedOrNot.setPixmap(px_marked_, QIconSet::Small, QIconSet::Normal);
+    markedOrNot.setPixmap(px_marked_, QIconSet::Large, QIconSet::Normal);
+    readOrNot.setPixmap(px_read_, QIconSet::Small, QIconSet::Normal);
+    readOrNot.setPixmap(px_read_, QIconSet::Large, QIconSet::Normal);
+    repliedOrNot.setPixmap(px_replied_, QIconSet::Small, QIconSet::Normal);
+    repliedOrNot.setPixmap(px_replied_, QIconSet::Large, QIconSet::Normal);
+
+
     ac_messageTag_ =
-        new KToggleAction(i18n("Tag"), QIconSet(px_xMx_), 0, 
+        new KToggleAction(i18n("Tag"), markedOrNot, 0, 
             this, SLOT(s_messageMark()), actionCollection(),
             "messageTag");
 
-    ac_messageMarkRead_ =
-        new KToggleAction(i18n("&Mark as read"), QIconSet(px_Sxx_), 0, 
+       ac_messageMarkRead_ =
+        new KToggleAction(i18n("&Mark as read"), readOrNot, 0, 
             this, SLOT(s_messageMarkRead()), actionCollection(),
             "messageMarkRead");
 
     ac_messageMarkReplied_ =
-        new KToggleAction(i18n("Mark as replied"), QIconSet(px_xxR_), 0, 
+        new KToggleAction(i18n("Mark as replied"), repliedOrNot, 0, 
             this, SLOT(s_messageMarkReplied()), actionCollection(),
             "messageMarkReplied");
                     
@@ -1054,25 +1070,55 @@ EmpathMessageListWidget::_fillThreading()
         return;
     }
  
-    EmpathTask t(i18n("Sorting messages"));
-    t.setMax(f->index()->count());
 
     QStringList index(f->index()->allKeys());
-    QStringList::ConstIterator indexIt(index.begin());
+    
+    unsigned int numMsgs = index.count();
 
-    QDict<ThreadNode> allDict;
+    EmpathTask t(i18n("Sorting messages"));
+    t.setMax(numMsgs);
+
+    unsigned int dictSize = 101;
+
+    if (numMsgs > 100 && numMsgs < 500)
+        dictSize = 503;
+    else if (numMsgs < 1000)
+        dictSize = 1009;
+    else if (numMsgs < 5000)
+        dictSize = 5003;
+    else if (numMsgs < 10000)
+        dictSize = 1007;
+
+    QStringList::ConstIterator indexIt(index.begin());
+    QDict<ThreadNode> allDict(dictSize);
 
     // Put all index records into thread nodes, and the nodes into allDict.
+    // Two versions, one for unread only.
 
-    for (QStringList::ConstIterator it(index.begin()); it != index.end(); ++it)
-    {
-        EmpathIndexRecord * rec =
-            new EmpathIndexRecord(f->index()->record(*it));
+    QStringList::ConstIterator it(index.begin());
+    EmpathIndexRecord * rec = static_cast<EmpathIndexRecord *>(0L);
 
-        allDict.insert(rec->messageID(), new ThreadNode(rec));
+    if (hideRead_) {
+
+        for (; it != index.end(); ++it)
+        {
+            rec = new EmpathIndexRecord(f->index()->record(*it));
+            
+            if (!(rec->status() & RMM::Read))
+                allDict.insert(rec->messageID(), new ThreadNode(rec));
+        }
+
+    } else {
+
+        for (; it != index.end(); ++it)
+        {
+            rec = new EmpathIndexRecord(f->index()->record(*it));
+
+            allDict.insert(rec->messageID(), new ThreadNode(rec));
+        }
     }
 
-    QDict<ThreadNode> rootDict;
+    QDict<ThreadNode> rootDict(dictSize);
 
     // Go through every node in allDict.
     // Look for parent of node.

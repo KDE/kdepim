@@ -4,8 +4,12 @@ INCLUDES = -I$(top_srcdir)/rmm -I$(top_srcdir)/empath/lib $(all_includes)
 
 lib_LTLIBRARIES = libempathui.la
 
-libempathui_la_LDFLAGS = $(all_libraries)
-libempathui_la_LIBADD = $(LIB_KIO) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE)
+libempathui_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+#	Define this for testing
+#	-no-undefined
+
+libempathui_la_LIBADD = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KIO) $(LIB_KDECORE) \
+	$(top_builddir)/empath/lib/libempathkernel.la
 
 METASOURCES = AUTO
 

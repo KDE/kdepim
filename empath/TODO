@@ -1,22 +1,8 @@
-Highest priority first.
 
-* Finish composition code - adding attachments etc.
+Separate GUI components into kparts.
 
-* Finish DnD - connect to relevant slots and test.
+Finish DCOP interface.
 
-* Use open folder icons when appropriate.
+Integrate POP, IMAP and SMTP support via kioslaves.
 
-* kioslaves need to be worked in for POP (working on), IMAP, and possibly SMTP
-  (where a kioslave would have to be written !)
-  
-* Implement simple (to one host) SMTP sending.
-
-* Switch to using KAction everywhere and sort out some accelerator keys,
-  including mutt+vi style !
-
-* Provide an external interface that allows triggering a mail check,
-  retrieving a message, sending, etc. Will use DCOP, I think.
-  Update: In progress. See lib/EmpathInterface.(cpp|h)
-
-* Release !
-
+Fix composing

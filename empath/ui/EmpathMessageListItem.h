@@ -86,17 +86,13 @@ class EmpathMessageListItem : public QListViewItem
 
         void _init();
 
-        QPixmap & _statusIcon(unsigned int);
+        void _setStatusIcons();
 
-        static QPixmap * px_;
+        static QPixmap * px_unread_;
         static QPixmap * px_read_;
         static QPixmap * px_marked_;
         static QPixmap * px_replied_;
-
-        static QPixmap * px_read_marked_;
-        static QPixmap * px_read_replied_;
-        static QPixmap * px_marked_replied_;
-        static QPixmap * px_read_marked_replied_;
+        static QPixmap * px_attachments_;
 
         static QColor * unreadColour_;
 

@@ -296,6 +296,8 @@ class EmpathMarkJob : public EmpathSingleJob
         virtual void run();
 
         QMap<QString, bool> successMap() const { return successMap_; }
+        EmpathURL folder() const { return folder_; }
+        QStringList IDList() const { return IDList_; }
         EmpathURL url() const { return url_; }
         RMM::MessageStatus flags() const { return flags_; }
 

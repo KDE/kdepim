@@ -4,8 +4,12 @@ INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
 
 lib_LTLIBRARIES = libempathkernel.la
 
-libempathkernel_la_LDFLAGS = $(all_libraries)
-libempathkernel_la_LIBADD = $(LIB_KDECORE) $(LIBQPTHREAD) $(LIBPTHREAD)
+libempathkernel_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+#	Define this for testing.
+#	-no-undefined
+
+libempathkernel_la_LIBADD = $(LIB_KDECORE) \
+	$(top_builddir)/rmm/librmm.la
 
 METASOURCES = AUTO
 

@@ -157,8 +157,12 @@ EmpathTaskItem::s_done()
     void
 EmpathTaskItem::s_inc()
 {
+    int curPos = int(((pos_) / (double)max_) * 100);
     int newPos = int(((pos_ + 1) / (double)max_) * 100);
-    if (newPos != ++pos_) {
+
+    ++pos_;
+
+    if (newPos != curPos) {
         progressMeter_->setProgress(pos_);
         kapp->processEvents();
     }
@@ -167,18 +171,20 @@ EmpathTaskItem::s_inc()
     void
 EmpathTaskItem::s_setMax(int max)
 {
-    progressMeter_->setTotalSteps(max);
     max_ = max;
 }
 
     void
 EmpathTaskItem::s_setPos(int pos)
 {
-    int newPos = int((pos / (double)max_) * 100);
+    int curPos = int(((pos_) / (double)max_) * 100);
+    int newPos = int(((pos) / (double)max_) * 100);
+    
+    pos_ = pos;
 
-    if (newPos != pos) {
-        pos_ = pos;
+    if (newPos != curPos) {
         progressMeter_->setProgress(pos_);
+        kapp->processEvents();
     }
 }
 

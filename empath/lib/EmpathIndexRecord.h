@@ -71,7 +71,8 @@ class EmpathIndexRecord
                 unsigned int        status,
                 unsigned int        size,
                 const QString &     messageID,
-                const QString &     parentMessageID);
+                const QString &     parentMessageID,
+                bool                hasAttachments);
 
         EmpathIndexRecord & operator = (const EmpathIndexRecord &);
         
@@ -157,6 +158,12 @@ class EmpathIndexRecord
         { return !(parentID_ == "<@>"); }
         
         /**
+         * Does this message have more than one part ?
+         */
+        bool hasAttachments() const
+        { return hasAttachments_; }
+        
+        /**
          * Change the status of this record.
          */
         void setStatus(unsigned int s)
@@ -167,7 +174,7 @@ class EmpathIndexRecord
          */
         void tag(bool b)
         { tagged_ = b; }
-        
+
         /**
          * @internal
          */
@@ -198,6 +205,7 @@ class EmpathIndexRecord
         unsigned int    size_;
         QString         messageID_;
         QString         parentID_;
+        bool            hasAttachments_;
         
         bool            tagged_;
 };

@@ -2,10 +2,15 @@ INCLUDES=$(all_includes)
 
 noinst_PROGRAMS = test
 test_SOURCES = test.cpp
-test_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-test_LDADD = $(top_builddir)/rmm/librmm.la $(LIB_QT)
+test_LDFLAGS = $(all_libraries)
+test_LDADD = -L$(top_builddir)/rmm -lrmm
 
 lib_LTLIBRARIES = librmm.la
+librmm_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+# Define this for testing.
+# -no-undefined 
+
+librmm_la_LIBADD = $(LIB_QT)
 
 librmm_la_SOURCES = \
 RAddress.cpp \

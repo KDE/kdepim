@@ -109,3 +109,11 @@ Contact information:
         Put 'unsubscribe my@email.address' in the message body.
         You may leave the subject line blank.
 
+---------------------------------------------------------------------------
+Shell function to create a Maildir format mailbox
+---------------------------------------------------------------------------
+
+function mkmaildir()
+{ mkdir --mode=0700 $1; for i in cur new tmp; do mkdir --mode=0700 $1/$i; done }
+
+---------------------------------------------------------------------------

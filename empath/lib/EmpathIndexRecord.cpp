@@ -50,6 +50,7 @@ EmpathIndexRecord::EmpathIndexRecord()
         size_           (0),
         messageID_      (""),
         parentID_       (""),
+        hasAttachments_ (false),
         tagged_         (false)
 {
     date_.setTime_t(0);
@@ -66,6 +67,7 @@ EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
         size_           (i.size_),
         messageID_      (i.messageID_),
         parentID_       (i.parentID_),
+        hasAttachments_ (i.hasAttachments_),
         tagged_         (i.tagged_)
 {
     // Empty.
@@ -82,6 +84,8 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
         size_           (m.size()),
         messageID_      (m.envelope().messageID().asString()),
         parentID_       (m.envelope().parentMessageId().asString()),
+        hasAttachments_
+            (0 != stricmp(m.envelope().contentType().type(), "multipart")),
         tagged_         (false)
 {
     if (!subject_)
@@ -98,7 +102,8 @@ EmpathIndexRecord::EmpathIndexRecord(
         unsigned int        status,
         unsigned int        size,
         const QString &     messageID,
-        const QString &     parentID)
+        const QString &     parentID,
+        bool                hasAttachments)
     :
         id_             (id),
         subject_        (subject),
@@ -110,6 +115,7 @@ EmpathIndexRecord::EmpathIndexRecord(
         size_           (size),
         messageID_      (messageID),
         parentID_       (parentID),
+        hasAttachments_ (hasAttachments),
         tagged_         (false)
 {
     if (!subject_)
@@ -132,6 +138,7 @@ EmpathIndexRecord::operator = (const EmpathIndexRecord & i)
     size_           = i.size_;
     messageID_      = i.messageID_;
     parentID_       = i.parentID_;
+    hasAttachments_ = i.hasAttachments_;
     tagged_         = i.tagged_;
 
     return *this;
@@ -141,46 +148,6 @@ EmpathIndexRecord::~EmpathIndexRecord()
 {
     // Empty.
 }
-
-#if 0
-// Re-enable this for locale == en_UK only ?
-    QString
-EmpathIndexRecord::niceDate(bool twelveHour)
-{
-    if (isNull_)
-        return QString::null;
-
-    QDateTime now(QDateTime::currentDateTime());
-    QDateTime then(date_.qdt());
-    
-    // Use difference between times to work out how old a message is, and see
-    // if we can represent it in a more concise fashion.
-    // FIXME: This is only for locale en_GB
-
-    QString dts;
-    
-    // If the dates differ, then print the day of week..
-    if (then.daysTo(now) != 0) {
-        dts += then.date().dayName(then.date().dayOfWeek()) + " ";
-    // Print the day of month.
-        dts += QString().setNum(then.date().day()) + " ";
-    }
-
-    // If the months differ, print month name.
-    if (then.date().month() != now.date().month())
-        dts += then.date().monthName(then.date().month()) + " ";
-        
-    // If the message is from a different year, add that too.
-    if (then.date().year() != now.date().year())
-        dts += QString().setNum(then.date().year()) + " ";
-
-    // If the day is the same, print the time of the message. 
-    if (then.date().daysTo(now.date()) == 0) 
-        dts = KGlobal::locale()->formatTime(then.time());
-       
-    return dts;
-}
-#endif
 
     QDataStream &
 operator << (QDataStream & s, EmpathIndexRecord & rec)
@@ -195,7 +162,8 @@ operator << (QDataStream & s, EmpathIndexRecord & rec)
         << (Q_UINT8)rec.status_
         << rec.size_
         << rec.messageID_
-        << rec.parentID_;
+        << rec.parentID_
+        << (Q_UINT8)rec.hasAttachments_;
 
     return s;
 }
@@ -205,6 +173,7 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
 {
     Q_UINT8 statusAsInt;
     Q_UINT8 taggedAsInt;
+    Q_UINT8 hasAttachmentsAsInt;
 
     s   >> rec.id_
         >> taggedAsInt
@@ -216,10 +185,12 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
         >> statusAsInt
         >> rec.size_
         >> rec.messageID_
-        >> rec.parentID_;
+        >> rec.parentID_
+        >> hasAttachmentsAsInt;
 
-    rec.status_ = (unsigned int)statusAsInt;
-    rec.tagged_ = (bool)taggedAsInt;
+    rec.status_         = static_cast<unsigned int>(statusAsInt);
+    rec.tagged_         = static_cast<bool>(taggedAsInt);
+    rec.hasAttachments_ = static_cast<bool>(hasAttachmentsAsInt);
     
     return s;
 }

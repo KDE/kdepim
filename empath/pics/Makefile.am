@@ -96,14 +96,11 @@ toolbar-save.png \
 toolbar-send.png \
 toolbar-sendlater.png \
 toolbar-sign.png \
-tree-marked-replied.png \
+tree-attachments.png \
 tree-marked.png \
-tree-read-marked-replied.png \
-tree-read-marked.png \
-tree-read-replied.png \
 tree-read.png \
 tree-replied.png \
-tree.png
+tree-unread.png
 
 datadir = $(kde_datadir)/empath/pics
 

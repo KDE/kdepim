@@ -40,14 +40,11 @@
 #include "EmpathConfig.h"
 #include "RMM_Enum.h"
 
-QPixmap * EmpathMessageListItem::px_                      = 0L;
+QPixmap * EmpathMessageListItem::px_unread_               = 0L;
 QPixmap * EmpathMessageListItem::px_read_                 = 0L;
 QPixmap * EmpathMessageListItem::px_marked_               = 0L;
 QPixmap * EmpathMessageListItem::px_replied_              = 0L;
-QPixmap * EmpathMessageListItem::px_read_marked_          = 0L;
-QPixmap * EmpathMessageListItem::px_read_replied_         = 0L;
-QPixmap * EmpathMessageListItem::px_marked_replied_       = 0L;
-QPixmap * EmpathMessageListItem::px_read_marked_replied_  = 0L;
+QPixmap * EmpathMessageListItem::px_attachments_          = 0L;
 
 QColor  * EmpathMessageListItem::unreadColour_            = 0L;
 
@@ -90,14 +87,15 @@ EmpathMessageListItem::_init()
 
     // Subject
     setText(0, m_.subject());
- 
+
     // Status
-    setPixmap(1, _statusIcon(m_.status()));
- 
+    _setStatusIcons();
+
+    // Sender
     QString s = m_.senderName();
 
     if (s.isEmpty())
-        setText(2, m_.senderAddress());
+        s = m_.senderAddress();
         
     else {
 
@@ -106,9 +104,9 @@ EmpathMessageListItem::_init()
             if (s.right(1) == "\"")
                 s.remove(s.length() - 1, 1);
         }
-
-        setText(2, s);
     }
+    
+    setText(5, s);
 
     QDateTime dt = m_.date();
 
@@ -116,7 +114,7 @@ EmpathMessageListItem::_init()
     dt.setTime(dt.time().addSecs(60 * m_.timeZone()));
 
     // Date 
-    setText(3, KGlobal::locale()->formatDate(dt.date(), true));
+    setText(6, KGlobal::locale()->formatDate(dt.date(), true));
    
     // Size
     QString sizeStr;
@@ -146,7 +144,7 @@ EmpathMessageListItem::_init()
         }
     }
     
-    setText(4, sizeStr);
+    setText(7, sizeStr);
     
     int sinceEpoch = QDateTime().secsTo(dt);
 
@@ -176,18 +174,30 @@ EmpathMessageListItem::key(int column, bool) const
             break;
             
         case 1:
-            s = text(0); // TODO
+            s = m_.status() & RMM::Read ? '1' : '0';
+            break;
+
+        case 2:
+            s = m_.status() & RMM::Marked ? '1' : '0';
+            break;
+
+        case 3:
+            s = m_.status() & RMM::Replied ? '1' : '0';
+            break;
+
+        case 4:
+            s = m_.hasAttachments() ? '1' : '0';
             break;
         
-        case 2:
-            s = text(2);
+        case 5:
+            s = text(5);
             break;
             
-        case 3:
+        case 6:
             s = dateStr_;
             break;
             
-        case 4:
+        case 7:
             s = sizeStr_;
             break;
             
@@ -202,34 +212,25 @@ EmpathMessageListItem::key(int column, bool) const
 EmpathMessageListItem::setStatus(unsigned int status)
 {
     m_.setStatus(status);
-    setPixmap(1, _statusIcon(status));
+    _setStatusIcons();
 }
 
-    QPixmap &
-EmpathMessageListItem::_statusIcon(unsigned int status)
+    void
+EmpathMessageListItem::_setStatusIcons()
 {
-    bool read = status & RMM::Read;
-    bool marked = status & RMM::Marked;
-    bool replied = status & RMM::Replied;
-
-    if (read)
-        if (marked)
-            if (replied)
-                return *px_read_marked_replied_;
-            else
-                return *px_read_marked_;
-        else
-            return *px_read_;
+    if (m_.status() & RMM::Read)
+       setPixmap(1, *px_read_);
     else
-        if (marked)
-            if (replied)
-                return *px_marked_replied_;
-            else
-                return *px_marked_;
-        else
-            return *px_;
+       setPixmap(1, *px_unread_);
 
-    return *px_;
+    if (m_.status() & RMM::Marked)
+       setPixmap(2, *px_marked_);
+    
+    if (m_.status() & RMM::Replied)
+       setPixmap(3, *px_replied_);
+    
+    if (!m_.hasAttachments()) // FIXME this is backwards :)
+       setPixmap(4, *px_attachments_);
 }
 
     void
@@ -252,14 +253,11 @@ EmpathMessageListItem::initStatic()
 {
 #define BOLLOX(a) new QPixmap(KGlobal::iconLoader()->loadIcon((a)))
 
-    px_                     = BOLLOX("tree");
+    px_unread_              = BOLLOX("tree");
     px_read_                = BOLLOX("tree-read");
     px_marked_              = BOLLOX("tree-marked");
     px_replied_             = BOLLOX("tree-replied");
-    px_read_marked_         = BOLLOX("tree-read-marked");
-    px_read_replied_        = BOLLOX("tree-read-replied");
-    px_marked_replied_      = BOLLOX("tree-marked-replied");
-    px_read_marked_replied_ = BOLLOX("tree-read-marked-replied");
+    px_attachments_         = BOLLOX("tree-read");
 
 #undef BOLLOX
 

@@ -285,8 +285,8 @@ class EmpathMessageListWidget : public EmpathListView
         KAction * ac_threadExpand_;
         KAction * ac_threadCollapse_;
       
-        QPixmap px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
-                px_SMx_, px_SxR_, px_xMR_, px_SMR_;
+        QPixmap px_unread_, px_read_, px_marked_,
+            px_attachments_, px_replied_;
         
         EmpathURL url_;
 
