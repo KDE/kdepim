@@ -1,3 +1,5 @@
+SUBDIRS = pixmaps
+
 INCLUDES= -I$(top_srcdir) $(all_includes)
 
 METASOURCES = AUTO
@@ -10,6 +12,11 @@ konsolekalendar_SOURCES = konsolekalendarepoch.cpp konsolekalendardelete.cpp \
   main.cpp 
 konsolekalendar_LDADD = $(top_builddir)/libkcal/libkcal.la
 konsolekalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+
+appsdir = $(kde_appsdir)/Utilities
+xdg_apps_DATA = konsolekalendar.desktop
+
+KDE_ICON = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/konsolekalendar.pot
