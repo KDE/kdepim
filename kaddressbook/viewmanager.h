@@ -137,6 +137,12 @@ class ViewManager : public QWidget
      */
     KABC::Field *currentSearchField();
 
+    /**
+      @return KConfig for kaddressbookrc, useful for when KAddressBook
+      is used as a KPart
+     */
+    static KConfig *config();
+
   public slots:
     /**
       Reads the config file.

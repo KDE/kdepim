@@ -32,6 +32,7 @@
 #include <qapplication.h>
 
 #include "ldapsearchdialogimpl.h"
+#include "viewmanager.h"
 
 static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
 {
@@ -131,7 +132,7 @@ void LDAPSearchDialogImpl::rereadConfig()
 
   // then read the config file and register all selected 
   // server in the list
-  KConfig* config = kapp->config();
+  KConfig* config = ViewManager::config();
   config->setGroup( "LDAP" );
   mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
   if ( !mNumHosts ) {

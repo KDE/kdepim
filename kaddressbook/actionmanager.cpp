@@ -27,6 +27,7 @@
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
+#include <kkeydialog.h>
 #include <klocale.h>
 #include <kprotocolinfo.h>
 #include <kxmlguiclient.h>
@@ -42,6 +43,7 @@ ActionManager::ActionManager( KXMLGUIClient *client, KAddressBook *widget,
   : QObject(parent), mGUIClient( client ), mWidget( widget ), mReadWrite( readWrite )
 {
   mACollection = mGUIClient->actionCollection();
+  mIsPart = !parent->inherits( "KAddressBookMain" );
 
   connect( mWidget, SIGNAL( addresseeSelected( bool ) ),
            SLOT( addresseeSelected( bool ) ) );
@@ -60,7 +62,7 @@ ActionManager::ActionManager( KXMLGUIClient *client, KAddressBook *widget,
   if ( mReadWrite )
     initReadWriteActions();
 
-  KConfig *config = kapp->config();
+  KConfig *config = ViewManager::config();
   config->setGroup( "Views" );
   mActiveViewName = config->readEntry( "Active" );
   config->setGroup( "MainWindow" );
@@ -79,7 +81,7 @@ ActionManager::ActionManager( KXMLGUIClient *client, KAddressBook *widget,
 
 ActionManager::~ActionManager()
 {
-  KConfig *config = kapp->config();
+  KConfig *config = ViewManager::config();
 
   config->setGroup( "Views" );
   config->writeEntry( "Active", mActiveViewName );
@@ -119,12 +121,21 @@ void ActionManager::initReadOnlyActions()
   new KAction( i18n( "&New Contact..." ), "filenew", CTRL+Key_N, mWidget,
                SLOT( newAddressee() ), mACollection, "file_new_contact" );
 
-  mActionMail = KStdAction::mail( mViewManager, SLOT( sendMail() ), mACollection );
+  if ( mIsPart )
+    mActionMail = new KAction( i18n( "&Mail" ), "mail_generic", 0, mViewManager,
+                               SLOT( sendMail() ), mACollection, "kaddressbook_mail" );
+  else
+    mActionMail = KStdAction::mail( mViewManager, SLOT( sendMail() ), mACollection );
+
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
                                       mWidget, SLOT( editAddressee() ),
                                       mACollection, "file_properties" );
 
-  KStdAction::print( mWidget, SLOT( print() ), mACollection );
+  if ( mIsPart )
+    new KAction( i18n( "&Print" ), "fileprint", CTRL + Key_P, mWidget,
+                 SLOT( print() ), mACollection, "kaddressbook_print" );
+  else
+    KStdAction::print( mWidget, SLOT( print() ), mACollection );
 
   new KAction( i18n( "Import &KDE 2 Address Book..." ), 0, mWidget,
                SLOT( importKDE2() ), mACollection, "file_import_kde2" );
@@ -142,18 +153,34 @@ void ActionManager::initReadOnlyActions()
                SLOT( exportVCard30() ), mACollection, "file_export_vcard30" );
 
   // edit menu
-  mActionCopy = KStdAction::copy( mViewManager, SLOT( copy() ), mACollection );
+  if ( mIsPart )
+    mActionCopy = new KAction( i18n( "&Copy" ), "editcopy", CTRL + Key_C, mViewManager,
+                               SLOT( copy() ), mACollection, "kaddressbook_copy" );
+  else
+    mActionCopy = KStdAction::copy( mViewManager, SLOT( copy() ), mACollection );
 
-  KStdAction::selectAll( mViewManager, SLOT( setSelected() ), mACollection );
+  if ( mIsPart )
+    new KAction( i18n( "Select &All" ), CTRL + Key_A, mViewManager,
+                 SLOT( setSelected() ), mACollection, "kaddressbook_select_all" );
+  else
+    KStdAction::selectAll( mViewManager, SLOT( setSelected() ), mACollection );
 
   mActionDelete = new KAction( i18n( "&Delete Contact" ), "editdelete",
                                Key_Delete, mViewManager, SLOT( deleteAddressees() ),
                                mACollection, "edit_delete" );
 
-  mActionUndo = KStdAction::undo( mWidget, SLOT( undo() ), mACollection );
+  if ( mIsPart )
+    mActionUndo = new KAction( i18n( "&Undo" ), "undo", CTRL + Key_Z, mWidget,
+                               SLOT( undo() ), mACollection, "kaddressbook_undo" );
+  else
+    mActionUndo = KStdAction::undo( mWidget, SLOT( undo() ), mACollection );
   mActionUndo->setEnabled( false );
 
-  mActionRedo = KStdAction::redo( mWidget, SLOT( redo() ), mACollection );
+  if ( mIsPart )
+    mActionRedo = new KAction( i18n( "Re&do" ), "redo", CTRL + SHIFT + Key_Z, mWidget,
+                               SLOT( redo() ), mACollection, "kaddressbook_redo" );
+  else
+    mActionRedo = KStdAction::redo( mWidget, SLOT( redo() ), mACollection );
   mActionRedo->setEnabled( false );
 
   // view menu
@@ -216,13 +243,31 @@ void ActionManager::initReadOnlyActions()
            SLOT( setCurrentFilterName( const QString& ) ) );
   connect( mViewManager, SIGNAL( setCurrentFilter( int ) ),
            SLOT( setCurrentFilter( int ) ) );
+
+  if ( mIsPart ) {
+    new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, mWidget,
+                 SLOT( configure() ), mACollection, "kaddressbook_configure" );
+    new KAction( i18n( "Configure S&hortcuts..." ), "configure_shortcuts", 0,
+                 this, SLOT( keyBindings() ), mACollection, "kaddressbook_configure_shortcuts" );
+  } else {
+    KStdAction::preferences( mWidget, SLOT( configure() ), mACollection );
+    KStdAction::keyBindings( this, SLOT( keyBindings() ), mACollection );
+  }
 }
 
 void ActionManager::initReadWriteActions()
 {
   // edit menu
-  mActionCut = KStdAction::cut( mViewManager, SLOT( cut() ), mACollection );
-  mActionPaste = KStdAction::paste( mViewManager, SLOT( paste() ), mACollection );
+  if ( mIsPart ) {
+    mActionCut = new KAction( i18n( "Cu&t" ), "editcut", CTRL + Key_X, mViewManager,
+                              SLOT( cut() ), mACollection, "kaddressbook_cut" );
+    mActionPaste = new KAction( i18n( "&Paste" ), "editpaste", CTRL + Key_V, mViewManager,
+                                SLOT( paste() ), mACollection, "kaddressbook_paste" );
+  } else {
+    mActionCut = KStdAction::cut( mViewManager, SLOT( cut() ), mACollection );
+    mActionPaste = KStdAction::paste( mViewManager, SLOT( paste() ), mACollection );
+  }
+
   clipboardDataChanged();
 }
 
@@ -354,6 +399,11 @@ void ActionManager::setCurrentFilter( int index )
 bool ActionManager::isModified() const
 {
   return mModified;
+}
+
+void ActionManager::keyBindings()
+{
+  KKeyDialog::configure( mACollection, true );
 }
 
 #include "actionmanager.moc"

@@ -111,6 +111,8 @@ class ActionManager : public QObject
      */
     void slotFilterActivated();
 
+    void keyBindings();
+
   signals:
     /**
       Announce filter selection changes.
@@ -145,6 +147,7 @@ class ActionManager : public QObject
 
     bool mModified;
     bool mReadWrite;
+    bool mIsPart;
 
     KAction *mActionPaste;
     KAction *mActionCut;

@@ -36,6 +36,7 @@
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
+#include "viewmanager.h"
 
 class LDAPServer
 {
@@ -149,7 +150,7 @@ void LDAPOptionsWidget::slotRemoveHost()
 
 void LDAPOptionsWidget::restoreSettings()
 {
-  KConfig *config = kapp->config();
+  KConfig *config = ViewManager::config();
   config->setGroup( "LDAP" );
 
   QString host;
@@ -177,7 +178,7 @@ void LDAPOptionsWidget::restoreSettings()
 
 void LDAPOptionsWidget::saveSettings()
 {
-  KConfig *config = kapp->config();
+  KConfig *config = ViewManager::config();
   config->deleteGroup( "LDAP" );
 
   config->setGroup("LDAP");

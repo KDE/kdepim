@@ -84,7 +84,7 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
                                 "X-Anniversary", "KADDRESSBOOK" );
 
   // Create the GUI
-  mViewManager = new ViewManager( mAddressBook, kapp->config(), this );
+  mViewManager = new ViewManager( mAddressBook, ViewManager::config(), this );
   topLayout->addWidget( mViewManager );
   connect( mViewManager, SIGNAL( selected( const QString& ) ),
            SLOT( addresseeSelected( const QString& ) ) );

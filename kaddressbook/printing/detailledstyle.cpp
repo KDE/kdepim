@@ -201,9 +201,17 @@ namespace KABPrinting {
                   << "    comment:  " << comment.family() << "("
                   << comment.pointSize() << ")" << endl;
 
-        mEPntr=new KABEntryPainter(foreColor, headerColor, useHeaderColor,
-                                   backColor,
-                                   header, headlines, body, fixed, comment);
+        mEPntr = new KABEntryPainter;
+        mEPntr->setForegroundColor( foreColor );
+        mEPntr->setHeaderColor( headerColor );
+        mEPntr->setBackgroundColor( backColor );
+        mEPntr->setUseHeaderColor( useHeaderColor );
+        mEPntr->setHeaderFont( header );
+        mEPntr->setHeadLineFont( headlines );
+        mEPntr->setBodyFont( body );
+        mEPntr->setFixedFont( fixed );
+        mEPntr->setCommentFont( comment );
+
         KPrinter *printer=wizard()->printer();
         QPainter painter;
         // ----- variables used to define MINIMAL MARGINS entered by the user:
@@ -257,14 +265,14 @@ namespace KABPrinting {
                 kdDebug(5720) << "DetailledPrintStyle::printEntries: printing addressee "
                           << (*it).realName() << endl;
                 // ----- do a faked print to get the bounding rect:
-                if(!mEPntr->printEntry((*it), window, painter, ypos, true, &brect))
+                if(!mEPntr->printAddressee((*it), window, painter, ypos, true, &brect))
                 { // it does not fit on the page beginning at ypos:
                     printer->newPage();
                     // WORK_TO_DO: this assumes the entry fits on the whole page
                     // (dunno how to fix this without being illogical)
                     ypos=0;
                 }
-                mEPntr->printEntry((*it), window, painter, ypos, false, &brect);
+                mEPntr->printAddressee((*it), window, painter, ypos, false, &brect);
                 ypos+=brect.height();
             } else {
                 kdDebug(5720) << "DetailledPrintStyle::printEntries: strange, addressee "

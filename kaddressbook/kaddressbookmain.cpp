@@ -133,9 +133,7 @@ void KAddressBookMain::initActions()
 {
   KStdAction::quit( this, SLOT( close() ), actionCollection() );
 
-  KStdAction::preferences( mWidget, SLOT( configure() ), actionCollection() );
   KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
-  KStdAction::keyBindings( this, SLOT( configureKeys() ), actionCollection() );
 }
 
 void KAddressBookMain::configureToolbars()

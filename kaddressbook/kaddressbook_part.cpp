@@ -74,13 +74,14 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   mWidget->show();
 
-  mActionManager = new ActionManager( this, mWidget, false, this );
+  mActionManager = new ActionManager( this, mWidget, true, this );
 
   setXMLFile( "kaddressbook_part.rc" );
 }
 
 KAddressbookPart::~KAddressbookPart()
 {
+  mWidget->save();
   closeURL();
 }
 

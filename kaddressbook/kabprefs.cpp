@@ -29,6 +29,7 @@
 KABPrefs *KABPrefs::sInstance = 0;
 
 KABPrefs::KABPrefs()
+  : KPimPrefs("kaddressbookrc")
 {
   KPrefs::setCurrentGroup( "Views" );
   addItemBool( "HonorSingleClick", &mHonorSingleClick, false );

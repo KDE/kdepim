@@ -102,51 +102,39 @@ class KABDetailedView : public KABBasicLook
     bool getBackground( QString path, QPixmap& image );
 
   private:
-    QPtrList<QRect> locURLs;
-    QPtrList<QRect> locEmails;
-    QPtrList<QRect> locPhones;
-    KABEntryPainter *epainter;
-    /** Map of QImages to save loaded background images into it. */
-    QMap<QString, QPixmap> backgrounds;
-    /** The background image used in that entry. */
-    QPixmap background;
-    /** The background style. */
-    BackgroundStyle bgStyle;
-    /** Setting: default background is a color (defaultBGColor). */
-    bool useDefaultBGImage;
-    /** The default background color. */
-    QColor defaultBGColor;
-    /** Colored headline background and text? */
-    bool useHeadlineBGColor;
-    /** The headline background color. */
-    QColor headlineBGColor;
-    /** The headline color. */
-    QColor headlineTextColor;
-    /** The default background image. */
-    QPixmap defaultBGImage;
-    /** Show addresses? */
-    KToggleAction *actionShowAddresses;
-    /** Show emails? */
-    KToggleAction *actionShowEmails;
-    /** Show telephones? */
-    KToggleAction *actionShowTelephones;
-    /** Show URLs? */
-    KToggleAction *actionShowURLs;
-    /** Used for constant distances. */
-    const int Grid;
-    /** Stores a list of the contents of the bordered backgrounds directory. */
-    QStringList borders;
-    /** Stores a list of the contents of the tiled backgrounds directory. */
-    QStringList tiles;
-    /** The bordered backgrounds menu. Only valid when not zero (e.g.,
-        when handling a mouse click event. */
-    QPopupMenu *menuBorderedBG;
-    /** The tiled backgrounds menu. Only valid when not zero (e.g.,
-        when handling a mouse click event. */
-    QPopupMenu *menuTiledBG;
+    QPtrList<QRect> mURLRects;
+    QPtrList<QRect> mEmailRects;
+    QPtrList<QRect> mPhoneRects;
+    KABEntryPainter *mPainter;
 
-    static const QString BorderedBGDir;
-    static const QString TiledBGDir;
+    QMap<QString, QPixmap> mBackgroundMap;
+    QPixmap mCurrentBackground;
+
+    BackgroundStyle mBackgroundStyle;
+
+    bool mUseDefaultBGImage;
+    bool mUseHeadLineBGColor;
+
+    QColor mDefaultBGColor;
+    QColor mHeadLineBGColor;
+    QColor mHeadLineTextColor;
+
+    QPixmap mDefaultBGImage;
+
+    KToggleAction *mActionShowAddresses;
+    KToggleAction *mActionShowEmails;
+    KToggleAction *mActionShowPhones;
+    KToggleAction *mActionShowURLs;
+
+    const int mGrid;
+    QStringList mBorders;
+    QStringList mTiles;
+
+    QPopupMenu *mMenuBorderedBG;
+    QPopupMenu *mMenuTiledBG;
+
+    static const QString mBorderedBGDir;
+    static const QString mTiledBGDir;
 };
 
 class KABDetailedViewFactory : public KABLookFactory

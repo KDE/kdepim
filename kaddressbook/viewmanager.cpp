@@ -48,6 +48,7 @@
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
 #include <libkdepim/kvcarddrag.h>
+#include <kstandarddirs.h>
 
 #include "addresseeeditorwidget.h"
 #include "addresseeutil.h"
@@ -253,7 +254,7 @@ void ViewManager::setActiveView( const QString &name )
 
   // Check if we found the view. If we didn't, then we need to create it
   if ( view == 0 ) {
-    KConfig *config = kapp->config();
+    KConfig *config = ViewManager::config();
     config->setGroup( name );
     QString type = config->readEntry( "Type", "Table" );
 
@@ -367,7 +368,7 @@ void ViewManager::deleteView()
     mViewNameList.remove( mActiveView->name() );
 
     // remove the view from the config file
-    KConfig *config = kapp->config();
+    KConfig *config = ViewManager::config();
     config->deleteGroup( mActiveView->name() );
 
     mViewDict.remove( mActiveView->name() );
@@ -404,7 +405,7 @@ void ViewManager::addView()
     mViewNameList.append( newName );
 
     // write the view to the config file,
-    KConfig *config = kapp->config();
+    KConfig *config = ViewManager::config();
     config->deleteGroup( newName );
     config->setGroup( newName );
     config->writeEntry( "Type", type );
@@ -693,6 +694,15 @@ void ViewManager::setActiveExtension( int id )
     mCurrentExtensionWidget->show();
   }
 }
+
+KConfig* ViewManager::config()
+{
+  static KConfig *mConfig = 0;
+  if ( !mConfig )
+    mConfig = new KConfig( locateLocal( "config", "kaddressbookrc" ) );
+  return mConfig;
+}
+
 
 QStringList ViewManager::extensionNames()
 {
