@@ -13,7 +13,7 @@ namespace KitchenSync {
     ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
     ~ConfigureDialog();
     virtual void show();
-    void addwidget();
+    void addWidget();
    
     protected slots:
      virtual void slotOk();
