@@ -361,10 +361,10 @@ void KAddressBook::importVCard( KABC::VCardConverter::Version version )
 
       editAddressee(a.uid());
     } else {
-      QString text = i18n("The selected file does not appear to be a valid VCard. "
+      QString text = i18n("The selected file does not appear to be a valid vCard. "
                           "Please check the file and try again.");
 
-      KMessageBox::sorry(this, text, i18n("VCard Import Failed"));
+      KMessageBox::sorry(this, text, i18n("vCard Import Failed"));
     }
   }
 }

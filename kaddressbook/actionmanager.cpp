@@ -139,10 +139,10 @@ void ActionManager::initReadOnlyActions()
     new KAction(i18n("Import &KDE 2 Address Book..."), 0, mWidget,
                 SLOT(importKDE2()), mACollection, "file_import_kde2");
 
-    new KAction(i18n("Import vCard2.1..."), 0, mWidget, SLOT(importVCard21()),
+    new KAction(i18n("Import vCard 2.1..."), 0, mWidget, SLOT(importVCard21()),
                 mACollection, "file_import_vcard21");
 
-    new KAction(i18n("Import vCard3.0..."), 0, mWidget, SLOT(importVCard30()),
+    new KAction(i18n("Import vCard 3.0..."), 0, mWidget, SLOT(importVCard30()),
                 mACollection, "file_import_vcard30");
 
     new KAction(i18n("&Import List..."), 0, mWidget, SLOT(importCSV()),
@@ -151,7 +151,7 @@ void ActionManager::initReadOnlyActions()
     new KAction(i18n("&Export List..."), 0, mWidget, SLOT(exportCSV()),
                 mACollection, "file_export_csv");
 
-    new KAction(i18n("&Export vCard3.0..."), 0, mWidget, SLOT(exportVCard30()),
+    new KAction(i18n("&Export vCard 3.0..."), 0, mWidget, SLOT(exportVCard30()),
                 mACollection, "file_export_vcard30");
 
     // Edit menu

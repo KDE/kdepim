@@ -1,10 +1,21 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=VCard Info
-Name[da]=VCard info
+Name=vCard Info
+Name[af]=vkaart inligting
+Name[cs]=VCard info
+Name[da]=VCard-info
+Name[de]=VCard-Info
+Name[es]=Info VCard
+Name[fi]=VCard tiedot
 Name[he]=מידע VCard
+Name[hr]=VCard Informacije
+Name[hu]=VCard-jellemzők
+Name[ja]=VCard 情報
+Name[pt_BR]=Informações sobre o VCard
+Name[sl]=Informacije o VCard
 Name[sv]=Vcard-information
+Name[tr]=VCard Bilgisi
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_vcf
 MimeType=text/x-vcard
