@@ -262,8 +262,16 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
 
   bool selectMode=(( e->state() & ShiftButton ) || ( e->state() & ControlButton ));
 
+  QPoint vp = contentsToViewport( e->pos() );
+  QListViewItem * i = itemAt( vp );
+
+  if ( (e->button() == RightButton) && i && (i->isSelected()) ) {
+    emit rightButtonPressed( i, viewport()->mapToGlobal(vp), -1 );
+	  return;
+	}
+
   QListView::contentsMousePressEvent(e);
-  QListViewItem *i=currentItem();
+  i=currentItem();
   if (i && !selectMode && i->isSelected())
     setActive(i, true);
 }
