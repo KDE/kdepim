@@ -924,7 +924,7 @@ bool kio_sieveProtocol::sendData(const QCString &data)
 {
 	QCString write_buf = data + "\r\n";
 
-	ksDebug() << "C: " << data << endl;
+	//ksDebug() << "C: " << data << endl;
 
 	// Write the command
 	ssize_t write_buf_len = write_buf.length();
@@ -951,6 +951,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, QCString *reparse)
 		// read data from the server
 		char buffer[SIEVE_DEFAULT_RECIEVE_BUFFER];
 		readLine(buffer, SIEVE_DEFAULT_RECIEVE_BUFFER - 1);
+		buffer[SIEVE_DEFAULT_RECIEVE_BUFFER-1] = '\0';
 
 		// strip LF/CR
 		interpret = QCString(buffer).left(qstrlen(buffer) - 2);
@@ -961,24 +962,25 @@ bool kio_sieveProtocol::receiveData(bool waitForData, QCString *reparse)
 
 	r.clear();
 
-	ksDebug() << "S: " << interpret << endl;
+	//ksDebug() << "S: " << interpret << endl;
 
 	switch(interpret[0]) {
 		case '{':
+		  {
 			// expecting {quantity}
 			start = 0;
 			end = interpret.find('}', start + 1);
 
-			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt(/* *err */));
-			// FIXME
-			/*if (*err) {
-				delete err;
+			bool ok = false;
+			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
+			if (!ok) {
 				disconnect();
-				error(ERR_COULD_NOT_LOGIN, i18n("A protocol error occurred."));
-				return;
-			}*/
+				error(ERR_INTERNAL_SERVER, i18n("A protocol error occurred."));
+				return false;
+			}
 
 			return true;
+		  }
 		case '"':
 			// expecting "key" "value" pairs
 			break;
