@@ -52,19 +52,34 @@
 #include "malconduitSettings.h"
 
 
-MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
+MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n) :
+	ConduitConfigBase(w,n),
+	fConfigWidget(new MALWidget(w))
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new MALWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,MALConduitFactory::about());
+	fConduitName=i18n("MAL");
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,MALConduitFactory::about());
+	fWidget = fConfigWidget;
 
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-	fConduitName=i18n("MAL");
+#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	CM( syncTime, SIGNAL(clicked(int)) );
+	CM( proxyType, SIGNAL(clicked(int)) );
+	
+	CM( proxyServerName, SIGNAL(textChanged(const QString &)) );
+	CM( proxyCustomPortCheck, SIGNAL(clicked()) );
+	CM( proxyCustomPort, SIGNAL(valueChanged(int)) );
+	CM( proxyUserName, SIGNAL(textChanged(const QString &)) );
+	CM( proxyPassword, SIGNAL(textChanged(const QString &)) );
+	
+	CM( malServerName, SIGNAL(textChanged(const QString &)) );
+	CM( malCustomPortCheck, SIGNAL(clicked()) );
+	CM( malCustomPort, SIGNAL(valueChanged(int)) );
+	CM( malUserName, SIGNAL(textChanged(const QString &)) );
+	CM( malPassword, SIGNAL(textChanged(const QString &)) );
+#undef CM
 }
 
 MALWidgetSetup::~MALWidgetSetup()
@@ -72,7 +87,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void MALWidgetSetup::commitChanges()
+/* virtual */ void MALWidgetSetup::commit()
 {
 	FUNCTIONSETUP;
 
@@ -110,11 +125,12 @@ MALWidgetSetup::~MALWidgetSetup()
 	MALConduitSettings::setMALPassword( fConfigWidget->malPassword->text() );
 	
 	MALConduitSettings::self()->writeConfig();
+	unmodified();
 }
 
 
 
-/* virtual */ void MALWidgetSetup::readSettings()
+/* virtual */ void MALWidgetSetup::load()
 {
 	FUNCTIONSETUP;
 	MALConduitSettings::self()->readConfig();
@@ -147,5 +163,11 @@ MALWidgetSetup::~MALWidgetSetup()
 	}
 	fConfigWidget->malUserName->setText(MALConduitSettings::mALUser());
 	fConfigWidget->malPassword->setText(MALConduitSettings::mALPassword());
+	unmodified();
+}
+
+/* static */ ConduitConfigBase *MALWidgetSetup::create(QWidget *w, const char *n)
+{
+	return new MALWidgetSetup(w,n);
 }
 

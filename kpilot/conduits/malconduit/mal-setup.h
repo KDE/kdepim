@@ -37,18 +37,15 @@
 
 class MALWidget;
 
-class MALWidgetSetup : public ConduitConfig
+class MALWidgetSetup : public ConduitConfigBase
 {
 Q_OBJECT
 public:
-	MALWidgetSetup(QWidget *,const char *,const QStringList &);
+	MALWidgetSetup(QWidget *,const char *);
 	virtual ~MALWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
+	virtual void load();
+	virtual void commit();
+	static ConduitConfigBase *create(QWidget *, const char *);
 private:
 	MALWidget *fConfigWidget;
 } ;
