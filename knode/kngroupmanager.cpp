@@ -353,7 +353,7 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 
 
 
-void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent=0)
+void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
 {
   KNGroupDialog* gDialog=new KNGroupDialog((parent!=0)? parent:knGlobals.topWidget, a);
   

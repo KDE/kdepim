@@ -55,7 +55,7 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am, KNGroupMa
   // info box
   QGroupBox *gb = new QGroupBox(2,Qt::Horizontal,QString::null,this);
   topL->addWidget(gb,5,0);
-  
+
   serverInfo = new QLabel(gb);
   portInfo = new QLabel(gb);
 
@@ -63,11 +63,11 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am, KNGroupMa
   addBtn=new QPushButton(i18n("&Add"), this);
   connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(addBtn, 0,1);
-  
+
   delBtn=new QPushButton(i18n("&Delete"), this);
   connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(delBtn, 1,1);
-  
+
   editBtn=new QPushButton(i18n("modify something","&Edit"), this);
   connect(editBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(editBtn, 2,1);
@@ -75,7 +75,7 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am, KNGroupMa
   subBtn=new QPushButton(i18n("&Subscribe"), this);
   connect(subBtn, SIGNAL(clicked()), this, SLOT(slotSubBtnClicked()));
   topL->addWidget(subBtn, 3,1);
-    
+
   topL->setRowStretch(4,1);   // stretch the server listbox
 
   for(KNNntpAccount *a=aManager->first(); a; a=aManager->next())
@@ -86,7 +86,7 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am, KNGroupMa
   connect(aManager, SIGNAL(accountAdded(KNNntpAccount*)), this, SLOT(slotAddItem(KNNntpAccount*)));
   connect(aManager, SIGNAL(accountRemoved(KNNntpAccount*)), this, SLOT(slotRemoveItem(KNNntpAccount*)));
   connect(aManager, SIGNAL(accountModified(KNNntpAccount*)), this, SLOT(slotUpdateItem(KNNntpAccount*)));
-    
+
   slotSelectionChanged();     // disable Delete & Edit initially
 }
 
@@ -157,7 +157,7 @@ void KNAccNewsSettings::slotSelectionChanged()
 
 
 
-void KNAccNewsSettings::slotItemSelected(int id)
+void KNAccNewsSettings::slotItemSelected(int)
 {
   slotEditBtnClicked();
 }
@@ -227,25 +227,25 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
   QFrame* page=plainPage();
   QGridLayout *topL=new QGridLayout(page, 10, 3, 5);
 
-  QLabel *l=new QLabel(i18n("Name:"),page); 
-  topL->addWidget(l, 0,0);  
+  QLabel *l=new QLabel(i18n("Name:"),page);
+  topL->addWidget(l, 0,0);
   n_ame=new QLineEdit(page);
   n_ame->setText(acc->name());
-  topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);  
+  topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);
 
-  l=new QLabel(i18n("Server:"), page);  
+  l=new QLabel(i18n("Server:"), page);
   topL->addWidget(l, 1,0);
   if (acc->id()!=-1) l->setEnabled(false);
-  s_erver=new QLineEdit(page);  
+  s_erver=new QLineEdit(page);
   s_erver->setText(acc->server());
   if (acc->id()!=-1) s_erver->setEnabled(false);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
-  
-  l=new QLabel(i18n("Port:"), page);  
+
+  l=new QLabel(i18n("Port:"), page);
   topL->addWidget(l, 2,0);
-  p_ort=new QLineEdit(page);  
+  p_ort=new QLineEdit(page);
   p_ort->setValidator(new KIntValidator(0,65536,this));
-  p_ort->setText(QString::number(acc->port())); 
+  p_ort->setText(QString::number(acc->port()));
   topL->addWidget(p_ort, 2,1);
 
   l = new QLabel(i18n("Hold connection for:"), page);
@@ -275,12 +275,12 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
   u_ser=new QLineEdit(page);
   u_ser->setText(acc->user());
   topL->addMultiCellWidget(u_ser, 7,7, 1,2);
-  
+
   passLabel=new QLabel(i18n("Password:"), page);
   topL->addWidget(passLabel, 8,0);
   p_ass=new QLineEdit(page);
   p_ass->setEchoMode(QLineEdit::Password);
-  p_ass->setText(acc->pass());    
+  p_ass->setText(acc->pass());
   topL->addMultiCellWidget(p_ass, 8,8, 1,2);
 
   slotAuthChecked(acc->needsLogon());
@@ -312,13 +312,13 @@ void KNAccNewsConfDialog::slotOk()
   acc->setName(n_ame->text());
   acc->setServer(s_erver->text());
   acc->setPort(p_ort->text().toInt());
-  acc->setHold(h_old->value()); 
+  acc->setHold(h_old->value());
   acc->setTimeout(t_imeout->value());
   acc->setFetchDescriptions(f_etchDes->isChecked());
   acc->setNeedsLogon(authCB->isChecked());
   acc->setUser(u_ser->text());
   acc->setPass(p_ass->text());
-  
+
   accept();
 }
 

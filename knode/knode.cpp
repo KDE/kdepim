@@ -658,7 +658,7 @@ void KNodeApp::slotArticlePopup(QListViewItem *it, const QPoint &p, int)
 
 
 
-void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int c)
+void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int)
 {
   if (blockInput)
     return;

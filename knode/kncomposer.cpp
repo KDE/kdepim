@@ -691,13 +691,13 @@ void KNComposer::slotAttachmentSelected(QListViewItem *it)
 }
 
 
-void KNComposer::slotAttachmentEdit(QListViewItem *it)
+void KNComposer::slotAttachmentEdit(QListViewItem *)
 {
   slotAttachmentProperties();
 }
 
 
-void KNComposer::slotAttachmentRemove(QListViewItem *it)
+void KNComposer::slotAttachmentRemove(QListViewItem *)
 {
   slotRemoveAttachment();
 }
@@ -802,7 +802,7 @@ void KNComposer::slotCancelEditor()
 //=====================================================================================
 // handle Tabs... (expanding them in textLine(), etc.)
 
-KNComposer::Editor::Editor(QWidget *parent=0, char *name=0)
+KNComposer::Editor::Editor(QWidget *parent, char *name)
   : KEdit(parent, name)
 {
   installEventFilter(this);

@@ -80,7 +80,7 @@ void KNRangeFilter::save(KSimpleConfig *conf)
 //=====================================================================================
 //=====================================================================================
 
-KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent, const QString &unit=QString::null)
+KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent, const QString &unit)
   : QGroupBox(value, parent)
 {
   enabled=new QCheckBox(this);

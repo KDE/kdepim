@@ -225,7 +225,7 @@ void KNPostTechSettings::slotSelectionChanged()
 
 
 
-void KNPostTechSettings::slotItemSelected(int id)
+void KNPostTechSettings::slotItemSelected(int)
 {
   slotEditBtnClicked();
 }

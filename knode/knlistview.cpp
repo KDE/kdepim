@@ -164,7 +164,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 
 
 
-int KNLVItemBase::width(const QFontMetrics &fm, const QListView *lv, int column)
+int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
 {
   int ret = fm.boundingRect( text(column) ).width();
   
@@ -194,7 +194,7 @@ void KNLVItemBase::paintFocus(QPainter *p, const QColorGroup & cg, const QRect &
 
 
 
-void KNLVItemBase::sortChildItems(int column, bool a)
+void KNLVItemBase::sortChildItems(int column, bool)
 {
   QListViewItem::sortChildItems(column, true);
 }

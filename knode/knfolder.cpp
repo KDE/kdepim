@@ -65,7 +65,7 @@ void KNFolder::updateListItem()
 
 
 
-bool KNFolder::readInfo(const QString &confPath)
+bool KNFolder::readInfo(const QString &)
 {
   return true;
 }
@@ -275,7 +275,7 @@ bool KNFolder::loadArticle(KNSavedArticle *a)
 
 
 
-void KNFolder::saveStaticData(int start, int cnt, bool ovr)
+void KNFolder::saveStaticData(int, int cnt, bool ovr)
 {
   int mode;
   KNSavedArticle *art;
