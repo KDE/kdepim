@@ -202,23 +202,23 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 
 
 	// load the lib
+	fLibraryName = o->library();
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Loading desktop "
 		<< fDesktopName
 		<< " with lib "
-		<< o->library()
+		<< fLibraryName
 		<< endl;
 #endif
 
-	fLibraryName = o->library();
 	KLibFactory *factory = KLibLoader::self()->factory(
-		QFile::encodeName(o->library()));
+		QFile::encodeName(fLibraryName));
 	if (!factory)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Can't load library "
-			<< o->library()
+			<< fLibraryName
 			<< endl;
 		addSyncLogEntry(i18n("Could not load conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
