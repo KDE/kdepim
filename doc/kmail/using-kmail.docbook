@@ -2038,6 +2038,65 @@ standard setup. Modifying existing filters is not yet possible.
 <para>You can activate the wizard via <menuchoice><guimenu>Tools</guimenu>
 <guisubmenu>Anti-Spam Wizard...</guisubmenu></menuchoice>.</para>
 
+<para>The wizard scans for known anti-spam tools on your computer. 
+It is as well possible to use results of spam checks made by your provider
+by evaluating some header information which has been added to the messages.
+You can let the wizard prepare KMail to use one or many of them in parallel.
+However, note that anti-spam tool operations are usually time consuming.
+KMail can appear to be frozen during the scan of the messages for spam, 
+you may encounter problems with the responsiveness of KMail. Please consider 
+deleting the filter rules created by the wizard if the filtering becomes 
+too slow for you. 
+Here are some recommendations regarding the supported tools:</para>
+
+<variablelist>
+<varlistentry>
+  <term>Bogofilter</term>
+<listitem>
+<para>Bogofilter is a bayesian filter, that means it's spam detection 
+relies on an initial training phase. On the other hand, it's a pretty 
+fast tool. That's why it is recommended to be used by people which 
+primarily want to have a fast spam detection, and which don't worry 
+about the little training in the beginning before the detection rate
+increases significantly.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term>SpamAssassin</term>
+<listitem>
+<para>SpamAssassin is a pretty complex tool to fight against spam. 
+Although it's behavior depends heavily on it's configuration, that 
+tool can detect spam quite well without any training. However,
+scanning a message takes a little longer compare to pure bayesian 
+filters. Let's say, it's not the tool of choice for people without
+some background information about SpamAssassin's capabilities.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term>Annoyance-Filter</term>
+<listitem>
+<para>Perhaps not so often used until distributions pick it up.
+It's clearly a tool for specialists.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term>GMX Spam Filter</term>
+<listitem>
+<para>Given that you get your mail via the GMX freemail provider,
+your messages are scanned for spam. The result of that process is 
+documented in a special header field of each message. It's possible to
+use the content of this header field to sort out spam. There is no 
+slowdown in the filtering if only this tool is used, as the messages
+have already been processed.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+
 </sect2>
 
 <sect2 id="spam-wizard-advanced">
@@ -2114,6 +2173,9 @@ the wizard will create additional filter actions to pass the messages to the
 tools (<guilabel>execute command</guilabel> actions) in the 
 appropriate learn mode.
 </para>
+
+<para>If you want to fine-tune the filtering process, you might be interested in the 
+chapter about <link linkend="filter-optimization">Filter Optimization</link>.</para>
 
 </sect2>
 
