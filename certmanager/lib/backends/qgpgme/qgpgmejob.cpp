@@ -38,12 +38,15 @@
 #include "qgpgmeprogresstokenmapper.h"
 
 #include <kleo/job.h>
+#include <ui/passphrasedialog.h>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgmepp/context.h>
 #include <gpgmepp/data.h>
+
+#include <klocale.h>
 
 #include <qstring.h>
 #include <qstringlist.h>
@@ -53,6 +56,7 @@
 
 Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
   : GpgME::ProgressProvider(),
+    GpgME::PassphraseProvider(),
     mThis( _this ),
     mCtx( context ),
     mPatterns( 0 ),
@@ -64,6 +68,8 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
   assert( context );
   QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(aboutToDestroy()),
 		    _this, SLOT(slotCancel()) );
+  context->setProgressProvider( this );
+  context->setPassphraseProvider( this );
 }
 
 Kleo::QGpgMEJob::~QGpgMEJob() {
@@ -83,7 +89,6 @@ void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
   QObject::connect( QGpgME::EventLoopInteractor::instance(),
 		    SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
 		    mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
-  mCtx->setProgressProvider( this );
 }
 
 void Kleo::QGpgMEJob::setPatterns( const QStringList & sl, bool allowEmpty ) {
@@ -139,3 +144,25 @@ void Kleo::QGpgMEJob::showProgress( const char * what, int type, int current, in
   doEmitProgressSignal( QGpgMEProgressTokenMapper::instance()->map( what, type, current, total ), current, total );
 }
 
+char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*description*/,
+ 				       bool previousWasBad, bool & canceled ) {
+  // DF: here, description is the key fingerprint, twice, then "17 0". Not really descriptive.
+  //     So I'm ignoring QString::fromLocal8Bit( description ) )
+  QString msg = previousWasBad ?
+                i18n( "You need a passphrase to unlock the secret key for user:<br/> %1 (retry)" ) :
+                i18n( "You need a passphrase to unlock the secret key for user:<br/> %1" );
+  msg = msg.arg( QString::fromUtf8( useridHint ) ) + "<br/><br/>";
+  msg.prepend( "<qt>" );
+  msg += i18n( "This dialog will reappear every time the passphrase is needed. For a more secure solution that also allows caching the passphrase, install gpg-agent." );
+  msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" )
+         .arg( "1.9" )
+         .arg( "http://www.gnupg.org/download" );  // add #gnupg2 if you can make this a real link
+  Kleo::PassphraseDialog dlg( msg, i18n("Passphrase Dialog") );
+  if ( dlg.exec() != QDialog::Accepted ) {
+    canceled = true;
+    return 0;
+  }
+  canceled = false;
+  // gpgme++ free()s it, and we need to copy as long as dlg isn't deleted :o
+  return strdup( dlg.passphrase() );
+}
