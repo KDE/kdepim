@@ -65,8 +65,17 @@ public:
     QString country;
   };
 
+  /// Use this to parse an xml string to a contact entry
+  /// The caller is responsible for deleting the returned object
+  static KABC::Address* xmlToAddress( const QString& xml );
+
+  /// Use this to get an xml string describing this contact
+  static QString addressToXML( KABC::Address* );
+
   explicit Contact( KABC::Address* address = 0 );
   ~Contact();
+
+  void saveTo( KABC::Address* address );
 
   QString type() const { return "Contact"; }
 

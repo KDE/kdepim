@@ -32,9 +32,26 @@
 
 #include "contact.h"
 
+#include <kabc/address.h>
 #include <kdebug.h>
 
 using namespace Kolab;
+
+
+KABC::Address* Contact::xmlToAddress( const QString& xml )
+{
+  Contact contact;
+  contact.load( xml );
+  KABC::Address* address = new KABC::Address();
+  contact.saveTo( address );
+  return address;
+}
+
+QString Contact::addressToXML( KABC::Address* address )
+{
+  Contact contact( address );
+  return contact.saveXML();
+}
 
 Contact::Contact( KABC::Address* addr )
 {
@@ -455,19 +472,53 @@ bool Contact::saveAttributes( QDomElement& ) const
   return false;
 }
 
-bool Contact::loadXML( const QDomDocument& xml )
+bool Contact::loadXML( const QDomDocument& document )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return false;
+  QDomElement top = document.documentElement();
+
+  if ( top.tagName() != "contact" ) {
+    qWarning( "XML error: Top tag was %s instead of the expected contact",
+              top.tagName().ascii() );
+    return false;
+  }
+
+  for ( QDomNode n = top.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      if ( !loadAttribute( e ) )
+        // TODO: Unhandled tag - save for later storage
+        qDebug( "Warning: Unhandled tag %s", e.tagName().ascii() );
+    } else
+      qDebug( "Node is not a comment or an element???" );
+  }
+
+  return true;
 }
 
 QString Contact::saveXML() const
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return QString::null;
+  QDomDocument document = domTree();
+  QDomElement element = document.createElement( "contact" );
+  element.setAttribute( "version", "1.0" );
+  saveAttributes( element );
+  document.appendChild( element );
+  return document.toString();
 }
 
 void Contact::setFields( KABC::Address* address )
 {
   kdError() << "NYI: " << k_funcinfo << endl;
+}
+
+void Contact::saveTo( KABC::Address* address )
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+#if 0
+  KolabBase::saveTo( journal );
+
+  // TODO: background and foreground
+  journal->setSummary( summary() );
+#endif
 }
