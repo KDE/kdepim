@@ -19,6 +19,7 @@
 #include <qclipboard.h>
 #include <qdragobject.h>
 
+#include <kaccel.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kabapi.h>

@@ -21,6 +21,7 @@
 #include <kkeydialog.h>
 #include <kconfig.h>
 #include <kaction.h>
+#include <kaccel.h>
 
 #include "knarticle.h"
 #include "knarticlewidget.h"

@@ -16,6 +16,7 @@
 
 #include <qhbox.h>
 
+#include <kaccel.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kkeydialog.h>
