@@ -77,7 +77,9 @@ public:
     if ( widget->inherits( "KToolBar" ) ) {
       KToolBar *bar = (KToolBar *)widget;      
       int id_ = getToolButtonID();      
-      _le = new QLineEdit( bar, "kde toolbar widget" );
+      // The toolbar trick doesn't seem to work for lineedits
+      //_le = new QLineEdit( bar, "kde toolbar widget" );
+      _le = new QLineEdit( bar );
       bar->insertWidget( id_, _le->width(), _le, index );      
       bar->setStretchableWidget( _le );
       addContainer( bar, id_ );      
@@ -94,6 +96,7 @@ public:
   void clear() { _le->setText(""); }  
   void focusAll() { _le->selectAll(); _le->setFocus(); }
   QString text() { return _le->text(); }
+  void setText( const QString& txt ) { _le->setText(txt); }
 
 private:
   QLineEdit* _le;
@@ -197,7 +200,10 @@ CertManager::CertManager( bool remote, const QString& query,
   _certBox = new CertBox( this, "certBox" );
   setCentralWidget( _certBox );
 
-  if( !query.isEmpty() ) loadCertificates();
+  if( !query.isEmpty() ) {
+    _leAction->setText(query);    
+    loadCertificates();
+  }
 }
 
 bool CertManager::checkExec( const QStringList& args )
