@@ -270,6 +270,8 @@ class Incidence : public QObject
     void addAlarm(Alarm*);
     /** Remove an alarm that is associated with this incidence */
     void removeAlarm(Alarm*);
+    /** Remove all alarms that are associated with this incidence */
+    void clearAlarms();
     /** return whether any alarm associated with this incidence is enabled */
     bool isAlarmEnabled() const;
 

@@ -594,6 +594,12 @@ void Incidence::removeAlarm(Alarm *alarm)
   emit eventUpdated(this);
 }
 
+void Incidence::clearAlarms()
+{
+  mAlarms.clear();
+  emit eventUpdated(this);
+}
+
 bool Incidence::isAlarmEnabled() const
 {
   Alarm* alarm;
