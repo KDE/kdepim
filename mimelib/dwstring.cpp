@@ -1395,7 +1395,7 @@ void DwString::PrintDebugInfo(std::ostream& aStrm) const
     for (size_t i=0; i < mLength && i < 64; ++i) {
         aStrm << mRep->mBuffer[mStart+i];
     }
-    aStrm << endl;
+    aStrm << std::endl;
 }
 #else
 void DwString::PrintDebugInfo(std::ostream& ) const {}
