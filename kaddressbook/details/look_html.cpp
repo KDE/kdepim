@@ -118,7 +118,7 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
   "<td rowspan=\"3\" align=\"right\" valign=\"top\">"
   "<img src=\"myimage\" width=\"50\" height=\"70\">"
   "</td>"
-  "<td align=\"left\"><b>%1</b></td>"   // name
+  "<td align=\"left\"><font size=\"+2\"><b>%1</b></font></td>"   // name
   "</tr>"
   "<tr>"
   "<td align=\"left\">%2</td>"          // role
