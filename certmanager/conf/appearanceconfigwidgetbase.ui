@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>AppearanceConfigWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -37,7 +37,7 @@
         </widget>
         <widget class="QLayoutWidget">
             <property name="name">
-                <cstring>layout5</cstring>
+                <cstring>layout2</cstring>
             </property>
             <vbox>
                 <property name="name">
@@ -85,18 +85,28 @@
                         <string>Alt+O</string>
                     </property>
                 </widget>
-                <widget class="QPushButton">
+                <widget class="QCheckBox">
                     <property name="name">
-                        <cstring>defaultLookPB</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
+                        <cstring>italicCB</cstring>
                     </property>
                     <property name="text">
-                        <string>Default appearance</string>
+                        <string>Italic</string>
                     </property>
-                    <property name="accel">
-                        <string></string>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>boldCB</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Bold</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>strikeoutCB</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Strikeout</string>
                     </property>
                 </widget>
                 <spacer>
@@ -112,10 +122,24 @@
                     <property name="sizeHint">
                         <size>
                             <width>20</width>
-                            <height>140</height>
+                            <height>100</height>
                         </size>
                     </property>
                 </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>defaultLookPB</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Default appearance</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                </widget>
             </vbox>
         </widget>
     </hbox>
@@ -151,13 +175,44 @@
         <receiver>AppearanceConfigWidgetBase</receiver>
         <slot>slotDefaultClicked()</slot>
     </connection>
+    <connection>
+        <sender>italicCB</sender>
+        <signal>clicked()</signal>
+        <receiver>AppearanceConfigWidgetBase</receiver>
+        <slot>slotItalicClicked()</slot>
+    </connection>
+    <connection>
+        <sender>boldCB</sender>
+        <signal>clicked()</signal>
+        <receiver>AppearanceConfigWidgetBase</receiver>
+        <slot>slotBoldClicked()</slot>
+    </connection>
+    <connection>
+        <sender>strikeoutCB</sender>
+        <signal>clicked()</signal>
+        <receiver>AppearanceConfigWidgetBase</receiver>
+        <slot>slotStrikeoutClicked()</slot>
+    </connection>
 </connections>
+<tabstops>
+    <tabstop>categoriesLV</tabstop>
+    <tabstop>foregroundButton</tabstop>
+    <tabstop>backgroundButton</tabstop>
+    <tabstop>fontButton</tabstop>
+    <tabstop>italicCB</tabstop>
+    <tabstop>boldCB</tabstop>
+    <tabstop>strikeoutCB</tabstop>
+    <tabstop>defaultLookPB</tabstop>
+</tabstops>
 <slots>
     <slot access="protected">slotForegroundClicked()</slot>
     <slot access="protected">slotBackgroundClicked()</slot>
     <slot access="protected">slotFontClicked()</slot>
     <slot access="protected">slotSelectionChanged( QListViewItem * )</slot>
     <slot access="protected">slotDefaultClicked()</slot>
+    <slot access="protected">slotItalicClicked()</slot>
+    <slot access="protected">slotBoldClicked()</slot>
+    <slot access="protected">slotStrikeoutClicked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -36,6 +36,8 @@
 #endif
 
 #include "appearanceconfigwidget.h"
+#include <cryptplugfactory.h>
+#include <kleo/keyfiltermanager.h>
 
 #include <klistview.h>
 #include <kconfig.h>
@@ -54,27 +56,31 @@
 #include <qstring.h>
 #include <qpainter.h>
 #include <qregexp.h>
+#include <qcheckbox.h>
 
 #include <assert.h>
-#include <cryptplugfactory.h>
 
 using namespace Kleo;
 
 class CategoryListViewItem : public QListViewItem
 {
 public:
- CategoryListViewItem( QListView* lv, QListViewItem* prev )
-    : QListViewItem( lv, prev ) {}
+  CategoryListViewItem( QListView* lv, QListViewItem* prev, const KConfigBase& config )
+    : QListViewItem( lv, prev ) {
 
-  void load( const KConfigBase& config ) {
     setName( config.readEntry( "name", i18n("<unnamed>") ) );
     mForegroundColor = config.readColorEntry( "foreground-color" );
     mBackgroundColor = config.readColorEntry( "background-color" );
     mHasFont = config.hasKey( "font" );
-    if ( mHasFont )
-      mFont = config.readFontEntry( "font" );
+    if ( mHasFont ) {
+      setFont( config.readFontEntry( "font" ) ); // sets mItalic and mBold
+    }
+    else {
+      mItalic = config.readBoolEntry( "font-italic", false );
+      mBold = config.readBoolEntry( "font-bold", false );
+    }
+    mStrikeOut = config.readBoolEntry( "font-strikeout", false );
     mIsExpired = config.readBoolEntry( "is-expired", false );
-    // TODO support for partial font changes (italic, bold, strikeout) (see kconfigbasedkeyfilter)
   }
 
   void save( KConfigBase& config ) {
@@ -83,20 +89,45 @@ public:
     config.writeEntry( "background-color", mBackgroundColor );
     if ( mHasFont )
       config.writeEntry( "font", mFont );
-    else
+    else {
       config.deleteEntry( "font" );
+      config.writeEntry( "font-italic", mItalic );
+      config.writeEntry( "font-bold", mBold );
+    }
+    config.writeEntry( "font-strikeout", mStrikeOut );
   }
 
   void setForegroundColor( const QColor& foreground ) { mForegroundColor = foreground; }
   void setBackgroundColor( const QColor& background ) { mBackgroundColor = background; }
-  void setFont( const QFont& font ) { mFont = font; }
+  void setFont( const QFont& font ) {
+    mFont = font;
+    mHasFont = true;
+    mItalic = font.italic();
+    mBold = font.bold();
+  }
+
+  QColor foregroundColor() const { return mForegroundColor; }
+  QColor backgroundColor() const { return mBackgroundColor; }
+  QFont font() const { return mFont; }
 
   void setDefaultAppearance() {
     mForegroundColor = mIsExpired ? Qt::red : QColor();
     mBackgroundColor = QColor();
     mHasFont = false;
     mFont = QFont();
+    mBold = false;
+    mItalic = false;
+    mStrikeOut = false;
   }
+
+  bool isItalic() const { return mItalic; }
+  bool isBold() const { return mBold; }
+  bool isStrikeout() const { return mStrikeOut; }
+  bool hasFont() const { return mHasFont; }
+
+  void toggleItalic() { mItalic = !mItalic; if ( mHasFont ) mFont.setItalic( mItalic ); }
+  void toggleBold() { mBold = !mBold; if ( mHasFont ) mFont.setBold( mBold ); }
+  void toggleStrikeout() { mStrikeOut = !mStrikeOut; }
 
 private:
   void setName( const QString& name ) {
@@ -110,12 +141,28 @@ private:
   QFont mFont;
   bool mHasFont;
   bool mIsExpired; // used for default settings
+  bool mItalic;
+  bool mBold;
+  bool mStrikeOut;
 };
+
+// copied from kconfigbasedkeyfilter.cpp
+static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
+  if ( it )
+    font.setItalic( true );
+  if ( b )
+    font.setBold( true );
+  if ( strike )
+    font.setStrikeOut( true );
+  return font;
+}
 
 void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   QColorGroup _cg = cg;
   if ( mHasFont )
     p->setFont( mFont );
+  else
+    p->setFont( adapt( p->font(), mItalic, mBold, mStrikeOut ) );
   if ( mForegroundColor.isValid() )
     _cg.setColor( QColorGroup::Text, mForegroundColor );
   if ( mBackgroundColor.isValid() )
@@ -152,6 +199,16 @@ void AppearanceConfigWidget::slotSelectionChanged( QListViewItem* item )
   backgroundButton->setEnabled( sel );
   fontButton->setEnabled( sel );
   defaultLookPB->setEnabled( sel );
+  if ( item ) {
+    CategoryListViewItem* clvi = static_cast<CategoryListViewItem *>( item );
+    italicCB->setChecked( clvi->isItalic() );
+    boldCB->setChecked( clvi->isBold() );
+    strikeoutCB->setChecked( clvi->isStrikeout() );
+  } else {
+    italicCB->setChecked( false );
+    boldCB->setChecked( false );
+    strikeoutCB->setChecked( false );
+  }
 }
 
 /*
@@ -193,7 +250,6 @@ QStringList AppearanceConfigWidget::createDefaultCategories( KConfig* config )
     group.writeEntry( defaultCategoriesList[i].configKey, defaultCategoriesList[i].value );
     groups << name;
   }
-  kdDebug() << k_funcinfo << groups << endl;
   return groups;
 }
 
@@ -203,15 +259,13 @@ void AppearanceConfigWidget::load()
   if ( !config )
     return;
   QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
-  kdDebug() << k_funcinfo << groups << endl;
   bool setDefaults = groups.isEmpty();
   if ( setDefaults )
     groups = createDefaultCategories( config );
 
   for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
     KConfigGroup cfg( config, *it );
-    CategoryListViewItem* item = new CategoryListViewItem( categoriesLV, categoriesLV->lastItem() );
-    item->load( cfg );
+    (void) new CategoryListViewItem( categoriesLV, categoriesLV->lastItem(), cfg );
   }
   if ( setDefaults )
     defaults(); // set the default colors for the default categories
@@ -238,6 +292,8 @@ void AppearanceConfigWidget::save()
     KConfigGroup cfg( config, *it );
     item->save( cfg );
   }
+  config->sync();
+  Kleo::KeyFilterManager::instance()->reload();
 }
 
 
@@ -246,7 +302,7 @@ void AppearanceConfigWidget::slotForegroundClicked() {
   Q_ASSERT( item );
   if( !item )
     return;
-  QColor fg;
+  QColor fg = item->foregroundColor();
   int result = KColorDialog::getColor( fg );
   if ( result == KColorDialog::Accepted ) {
     item->setForegroundColor( fg );
@@ -260,7 +316,7 @@ void AppearanceConfigWidget::slotBackgroundClicked() {
   Q_ASSERT( item );
   if( !item )
     return;
-  QColor bg;
+  QColor bg = item->backgroundColor();
   int result = KColorDialog::getColor( bg );
   if ( result == KColorDialog::Accepted ) {
     item->setBackgroundColor( bg );
@@ -274,7 +330,7 @@ void AppearanceConfigWidget::slotFontClicked() {
   Q_ASSERT( item );
   if( !item )
     return;
-  QFont font;
+  QFont font = item->font();
   int result = KFontDialog::getFont( font );
   if ( result == KFontDialog::Accepted ) {
     item->setFont( font );
@@ -292,6 +348,33 @@ void AppearanceConfigWidget::defaults()
     item->setDefaultAppearance();
   }
 
+}
+
+void AppearanceConfigWidget::slotItalicClicked()
+{
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  if ( item ) {
+    item->toggleItalic();
+    emit changed();
+  }
+}
+
+void AppearanceConfigWidget::slotBoldClicked()
+{
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  if ( item ) {
+    item->toggleBold();
+    emit changed();
+  }
+}
+
+void AppearanceConfigWidget::slotStrikeoutClicked()
+{
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  if ( item ) {
+    item->toggleStrikeout();
+    emit changed();
+  }
 }
 
 #include "appearanceconfigwidget.moc"

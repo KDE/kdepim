@@ -64,6 +64,9 @@ namespace Kleo {
     virtual void slotForegroundClicked();
     virtual void slotBackgroundClicked();
     virtual void slotFontClicked();
+    virtual void slotItalicClicked();
+    virtual void slotBoldClicked();
+    virtual void slotStrikeoutClicked();
 
   private:
     QStringList createDefaultCategories( KConfig* config );
