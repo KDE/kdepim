@@ -36,6 +36,8 @@
 
 #include <gpgmepp/key.h>
 
+class QToolTip;
+
 namespace Kleo {
 
   class KeyListView;
@@ -55,6 +57,8 @@ namespace Kleo {
     //
     // only boring stuff below:
     //
+    virtual QString toolTip( int column ) const;
+
     /*! \reimp for covariant return */
     KeyListView * listView() const;
     /*! \reimp for covariant return */
@@ -90,6 +94,8 @@ namespace Kleo {
     // only boring stuff below:
     //
     /*! \reimp */
+    QString toolTip( int col ) const;
+    /*! \reimp */
     QString text( int col ) const;
     /*! \reimp */
     const QPixmap * pixmap( int col ) const;
@@ -118,6 +124,8 @@ namespace Kleo {
     // only boring stuff below:
     //
     /*! \reimp */
+    QString toolTip( int col ) const;
+    /*! \reimp */
     QString text( int col ) const;
     /*! \reimp */
     const QPixmap * pixmap( int col ) const;
@@ -145,6 +153,8 @@ namespace Kleo {
     //
     // only boring stuff below:
     //
+    /*! \reimp */
+    QString toolTip( int col ) const;
     /*! \reimp */
     QString text( int col ) const;
     /*! \reimp */
@@ -195,6 +205,7 @@ namespace Kleo {
 
   private:
     const ColumnStrategy * mColumnStrategy;
+    QToolTip * mItemToolTip;
     class Private;
     Private * d;
   };
@@ -205,19 +216,24 @@ namespace Kleo {
     virtual QString title( int column ) const = 0;
     virtual int width( int column, const QFontMetrics & fm ) const;
     virtual QListView::WidthMode widthMode( int ) const { return QListView::Manual; }
+
     virtual QString text( const GpgME::Key & key, int column ) const = 0;
+    virtual QString toolTip( const GpgME::Key & key, int column ) const;
     virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
     virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
 
     virtual QString subkeyText( const GpgME::Subkey &, int ) const { return QString::null; }
+    virtual QString subkeyToolTip( const GpgME::Subkey & subkey, int column ) const;
     virtual const QPixmap * subkeyPixmap( const GpgME::Subkey &, int ) const { return 0; }
     virtual int subkeyCompare( const GpgME::Subkey & subkey1, const GpgME::Subkey & subkey2, const int column ) const;
 
     virtual QString userIDText( const GpgME::UserID &, int ) const { return QString::null; }
+    virtual QString userIDToolTip( const GpgME::UserID & userID, int column ) const;
     virtual const QPixmap * userIDPixmap( const GpgME::UserID &, int ) const { return 0; }
     virtual int userIDCompare( const GpgME::UserID & userID1, const GpgME::UserID & userID2, const int column ) const;
 
     virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString::null; }
+    virtual QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
     virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
     virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
   };

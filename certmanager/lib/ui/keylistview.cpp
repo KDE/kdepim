@@ -38,8 +38,61 @@
 #include <kdebug.h>
 
 #include <qfontmetrics.h>
+#include <qtooltip.h>
+#include <qrect.h>
+#include <qheader.h>
+#include <qpoint.h>
 
-// a list of signals where we want to repleace QListViewItem with
+namespace {
+
+  class ItemToolTip : public QToolTip {
+  public:
+    ItemToolTip( Kleo::KeyListView * parent );
+  protected:
+    void maybeTip( const QPoint & p );
+  private:
+    Kleo::KeyListView * mKeyListView;
+  };
+
+  ItemToolTip::ItemToolTip( Kleo::KeyListView * parent )
+    : QToolTip( parent->viewport() ), mKeyListView( parent ) {}
+
+  void ItemToolTip::maybeTip( const QPoint & p ) {
+    if ( !mKeyListView )
+      return;
+
+    const QListViewItem * item = mKeyListView->itemAt( p );
+    if ( !item )
+      return;
+
+    const QRect itemRect = mKeyListView->itemRect( item );
+    if ( !itemRect.isValid() )
+      return;
+
+    const int col = mKeyListView->header()->sectionAt( p.x() );
+    if ( col == -1 )
+      return;
+
+    const QRect headerRect = mKeyListView->header()->sectionRect( col );
+    if ( !headerRect.isValid() )
+      return;
+
+    const QRect cellRect( headerRect.left(), itemRect.top(),
+			  headerRect.width(), itemRect.height() );
+
+    QString tipStr;
+    if ( ( item->rtti() & Kleo::KeyListViewItem::RTTI_MASK ) == Kleo::KeyListViewItem::RTTI )
+      tipStr = static_cast<const Kleo::KeyListViewItem*>( item )->toolTip( col );
+    else
+      tipStr = item->text( col ) ;
+
+    if ( !tipStr.isEmpty() )
+      tip( cellRect, tipStr );
+  }
+
+} // anon namespace
+
+// a list of signals where we want to replace QListViewItem with
 // Kleo:KeyListViewItem:
 static const struct {
   const char * source;
@@ -59,9 +112,9 @@ static const int numSignalReplacements = sizeof signalReplacements / sizeof *sig
 
 Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy,
 				QWidget * parent, const char * name, WFlags f )
-  //: KListView( parent, name, f ) // doesn't work - shitty KListView
   : KListView( parent, name ),
-    mColumnStrategy( columnStrategy )
+    mColumnStrategy( columnStrategy ),
+    mItemToolTip( 0 )
 {
   setWFlags( f );
 
@@ -78,13 +131,19 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy,
   }
 
   setAllColumnsShowFocus( true );
+  setShowToolTips( false ); // we do it instead...
 
   for ( int i = 0 ; i < numSignalReplacements ; ++i )
     connect( this, signalReplacements[i].source, signalReplacements[i].target );
+
+  QToolTip::remove( this );
+  QToolTip::remove( viewport() ); // make double sure :)
+  mItemToolTip = new ItemToolTip( this );
 }
 
 Kleo::KeyListView::~KeyListView() {
-  delete mColumnStrategy;
+  delete mColumnStrategy; mColumnStrategy = 0;
+  delete mItemToolTip; mItemToolTip = 0;
 }
 
 void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
@@ -95,22 +154,22 @@ void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
 // slots for the emission of covariant signals:
 
 void Kleo::KeyListView::slotEmitDoubleClicked( QListViewItem * item, const QPoint & p, int col ) {
-  if ( !item || item->rtti() & KeyListViewItem::RTTI_MASK == KeyListViewItem::RTTI )
+  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
     emit doubleClicked( static_cast<KeyListViewItem*>( item ), p, col );
 }
 
 void Kleo::KeyListView::slotEmitReturnPressed( QListViewItem * item ) {
-  if ( !item || item->rtti() & KeyListViewItem::RTTI_MASK == KeyListViewItem::RTTI )
+  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
     emit returnPressed( static_cast<KeyListViewItem*>( item ) );
 }
 
 void Kleo::KeyListView::slotEmitSelectionChanged( QListViewItem * item ) {
-  if ( !item || item->rtti() & KeyListViewItem::RTTI_MASK == KeyListViewItem::RTTI )
+  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
     emit selectionChanged( static_cast<KeyListViewItem*>( item ) );
 }
 
 void Kleo::KeyListView::slotEmitContextMenuRequested( QListViewItem * item, const QPoint & p, int col ) {
-  if ( !item || item->rtti() & KeyListViewItem::RTTI_MASK == KeyListViewItem::RTTI )
+  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
     emit contextMenuRequested( static_cast<KeyListViewItem*>( item ), p, col );
 }
 
@@ -152,6 +211,12 @@ void Kleo::KeyListViewItem::setKey( const GpgME::Key & key ) {
 QString Kleo::KeyListViewItem::text( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->text( key(), col )
+    : QString::null ;
+}
+
+QString Kleo::KeyListViewItem::toolTip( int col ) const {
+  return listView() && listView()->columnStrategy()
+    ? listView()->columnStrategy()->toolTip( key(), col )
     : QString::null ;
 }
 
@@ -208,6 +273,12 @@ QString Kleo::SubkeyKeyListViewItem::text( int col ) const {
     : QString::null ;
 }
 
+QString Kleo::SubkeyKeyListViewItem::toolTip( int col ) const {
+  return listView() && listView()->columnStrategy()
+    ? listView()->columnStrategy()->subkeyToolTip( subkey(), col )
+    : QString::null ;
+}
+
 const QPixmap * Kleo::SubkeyKeyListViewItem::pixmap( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->subkeyPixmap( subkey(), col ) : 0 ;
@@ -258,6 +329,12 @@ void Kleo::UserIDKeyListViewItem::setUserID( const GpgME::UserID & userID ) {
 QString Kleo::UserIDKeyListViewItem::text( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->userIDText( userID(), col )
+    : QString::null ;
+}
+
+QString Kleo::UserIDKeyListViewItem::toolTip( int col ) const {
+  return listView() && listView()->columnStrategy()
+    ? listView()->columnStrategy()->userIDToolTip( userID(), col )
     : QString::null ;
 }
 
@@ -314,6 +391,12 @@ QString Kleo::SignatureKeyListViewItem::text( int col ) const {
     : QString::null ;
 }
 
+QString Kleo::SignatureKeyListViewItem::toolTip( int col ) const {
+  return listView() && listView()->columnStrategy()
+    ? listView()->columnStrategy()->signatureToolTip( signature(), col )
+    : QString::null ;
+}
+
 const QPixmap * Kleo::SignatureKeyListViewItem::pixmap( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->signaturePixmap( signature(), col ) : 0 ;
@@ -352,6 +435,22 @@ int Kleo::KeyListView::ColumnStrategy::userIDCompare( const GpgME::UserID & uid1
 
 int Kleo::KeyListView::ColumnStrategy::signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, int col ) const {
   return QString::localeAwareCompare( signatureText( sig1, col ), signatureText( sig2, col ) );
+}
+
+QString Kleo::KeyListView::ColumnStrategy::toolTip( const GpgME::Key & key, int col ) const {
+  return text( key, col );
+}
+
+QString Kleo::KeyListView::ColumnStrategy::subkeyToolTip( const GpgME::Subkey & sub, int col ) const {
+  return subkeyText( sub, col );
+}
+
+QString Kleo::KeyListView::ColumnStrategy::userIDToolTip( const GpgME::UserID & uid, int col ) const {
+  return userIDText( uid, col );
+}
+
+QString Kleo::KeyListView::ColumnStrategy::signatureToolTip( const GpgME::UserID::Signature & sig, int col ) const {
+  return signatureText( sig, col );
 }
 
 //

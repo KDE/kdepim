@@ -57,6 +57,7 @@ namespace {
   public:
     ~TestColumnStrategy() {}
     QString title( int col ) const;
+    QString toolTip( const GpgME::Key & key, int col ) const;
     QString text( const GpgME::Key & key, int col ) const;
   };
 
@@ -70,6 +71,10 @@ namespace {
     case 5: return "Validity";
     default: return QString::null;
     }
+  }
+
+  QString TestColumnStrategy::toolTip( const GpgME::Key & key, int ) const {
+    return "Fingerprint: " + QString::fromUtf8( key.subkey(0).fingerprint() );
   }
 
   QString TestColumnStrategy::text( const GpgME::Key & key, int col ) const {
