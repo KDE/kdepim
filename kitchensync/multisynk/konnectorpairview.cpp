@@ -19,6 +19,7 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include <qtimer.h>
 #include <klocale.h>
 
 #include "konnectorpairmanager.h"
@@ -36,8 +37,10 @@ KonnectorPairItem::KonnectorPairItem( KonnectorPair *pair, KListView *parent )
            this, SLOT( synceesWritten( KSync::Konnector* ) ) );
   connect( pair->manager(), SIGNAL( synceeWriteError( KSync::Konnector* ) ),
            this, SLOT( synceeWriteError( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( syncFinished() ),
+           this, SLOT( syncFinished() ) );
 
-  mStatusMsg = i18n( "Press \"Sync\" to synchronize" );
+  initialState();
 }
 
 QString KonnectorPairItem::text( int column ) const
@@ -62,6 +65,12 @@ QString KonnectorPairItem::uid() const
   return mPair->uid();
 }
 
+void KonnectorPairItem::initialState()
+{
+  mStatusMsg = i18n( "Press \"Sync\" to synchronize" );
+  repaint();
+}
+
 void KonnectorPairItem::synceesRead( Konnector *konnector )
 {
   mStatusMsg = i18n( "Retrieve data from %1..." ).arg( konnector->resourceName() );
@@ -84,6 +93,14 @@ void KonnectorPairItem::synceeWriteError( Konnector *konnector )
 {
   mStatusMsg = i18n( "Couldn't write back data to %1..." ).arg( konnector->resourceName() );
   repaint();
+}
+
+void KonnectorPairItem::syncFinished()
+{
+  mStatusMsg = i18n( "Synchronization finished" );
+  repaint();
+
+  QTimer::singleShot( 2, this, SLOT( initialState() ) );
 }
 
 

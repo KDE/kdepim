@@ -31,3 +31,6 @@ Name[hu]=KitchenSync-szűrő
 Name[pt_BR]=Filtro KitchenSync
 Name[sv]=Kitchensync-filter
 Name[xx]=xxKitchenSyncFilterxx
+
+[PropertyDef::X-KDE-KitchenSyncFilterType]
+Type=QString

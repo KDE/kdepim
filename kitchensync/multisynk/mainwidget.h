@@ -57,6 +57,7 @@ class KDE_EXPORT MainWidget : public QWidget
     void startSync();
     void syncDone();
     void konnectorPairSelected( bool );
+    void engineError( const QString& );
 
   private:
     void initGUI();

@@ -50,28 +50,39 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
 
     void connectSignals();
 
+    void readConfig( KConfig* );
+    void writeConfig( KConfig* );
+
+  public slots:
+    void emitFinished();
+
   signals:
     /**
       Emitted when Syncee list becomes available as response to
       requestSyncees().
-    */
+     */
     void synceesRead( KSync::Konnector* );
 
     /**
       Emitted when an error occurs during read.
-    */
+     */
     void synceeReadError( KSync::Konnector* );
 
     /**
       Emitted when Syncee list was successfully written back to connected
       entity.
-    */
+     */
     void synceesWritten( KSync::Konnector* );
 
     /**
       Emitted when an error occurs during write.
-    */
+     */
     void synceeWriteError( KSync::Konnector* );
+
+    /**
+      Emitted when the synchronization has finished.
+     */
+    void syncFinished();
 
   private:
     class Private;

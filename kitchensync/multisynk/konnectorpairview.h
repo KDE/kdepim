@@ -39,10 +39,12 @@ class KonnectorPairItem : public QObject, public QListViewItem
     QString uid() const;
 
   private slots:
+    void initialState();
     void synceesRead( KSync::Konnector* );
     void synceeReadError( KSync::Konnector* );
     void synceesWritten( KSync::Konnector* );
     void synceeWriteError( KSync::Konnector* );
+    void syncFinished();
 
   private:
     KonnectorPair *mPair;

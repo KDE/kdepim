@@ -53,6 +53,7 @@ class KABCKonnector : public KSync::Konnector
     bool disconnectDevice();
 
     KSync::KonnectorInfo info() const;
+    virtual QStringList supportedFilterTypes() const;
 
     void setCurrentResource( const QString &identifier ) { mResourceIdentifier = identifier; }
     QString currentResource() const { return mResourceIdentifier; }

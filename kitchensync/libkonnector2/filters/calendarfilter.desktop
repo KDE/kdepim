@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Filter
+
+X-KDE-Library=libksfilter_calendar
+X-KDE-KitchenSyncFilterType=calendar
+
+Name=Calendar Filter
+Name[xx]=xxCalendar Filterxx
+
+Comment=Filters events and todos in a calendar
+Comment[xx]=xxFilters events and todos in a calendarxx

@@ -187,4 +187,12 @@ KonnectorInfo QtopiaKonnector::info() const
                         d->socket->isConnected() );
 }
 
+QStringList QtopiaKonnector::supportedFilterTypes() const
+{
+  QStringList types;
+  types << "addressbook" << "calendar";
+
+  return types;
+}
+
 #include "qtopiakonnector.moc"

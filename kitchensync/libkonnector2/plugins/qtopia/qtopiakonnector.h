@@ -47,6 +47,7 @@ class QtopiaKonnector : public Konnector
     bool disconnectDevice();
 
     KonnectorInfo info() const;
+    virtual QStringList supportedFilterTypes() const;
 
     void setDestinationIP( const QString &IP ) { mDestinationIP = IP; }
     QString destinationIP() const { return mDestinationIP; }

@@ -21,6 +21,7 @@
 
 #include <qdir.h>
 
+#include <dcopclient.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -54,6 +55,45 @@ void KonnectorManager::connectSignals()
     connect( *it, SIGNAL( synceeWriteError( KSync::Konnector * ) ),
              SIGNAL( synceeWriteError( KSync::Konnector * ) ) );
   }
+}
+
+void KonnectorManager::readConfig( KConfig *config )
+{
+  KRES::Manager<Konnector>::readConfig( config );
+
+  ActiveIterator it;
+  for ( it = activeBegin(); it != activeEnd(); ++it ) {
+    (*it)->initDefaultFilters();
+
+    Filter::List filters = (*it)->filters();
+    Filter::List::Iterator filterIt;
+    for ( filterIt = filters.begin(); filterIt != filters.end(); ++filterIt ) {
+      KConfigGroupSaver saver( config, QString( "ResourceFilter_%1_%2" )
+                              .arg( (*filterIt)->type() ).arg( (*it)->identifier() ) );
+      (*filterIt)->load( config );
+    }
+  }
+}
+
+void KonnectorManager::writeConfig( KConfig *config )
+{
+  KRES::Manager<Konnector>::writeConfig( config );
+
+  ActiveIterator it;
+  for ( it = activeBegin(); it != activeEnd(); ++it ) {
+    const Filter::List filters = (*it)->filters();
+    Filter::List::ConstIterator filterIt;
+    for ( filterIt = filters.begin(); filterIt != filters.end(); ++filterIt ) {
+      KConfigGroupSaver saver( config, QString( "ResourceFilter_%1_%2" )
+                              .arg( (*filterIt)->type() ).arg( (*it)->identifier() ) );
+      (*filterIt)->save( config );
+    }
+  }
+}
+
+void KonnectorManager::emitFinished()
+{
+  emit syncFinished();
 }
 
 #include "konnectormanager.moc"

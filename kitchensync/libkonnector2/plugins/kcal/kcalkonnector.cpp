@@ -115,6 +115,11 @@ KSync::KonnectorInfo KCalKonnector::info() const
                         false );
 }
 
+QStringList KCalKonnector::supportedFilterTypes() const
+{
+  return QStringList( "calendar" );
+}
+
 bool KCalKonnector::writeSyncees()
 {
   if ( mCalendar->resourceManager()->isEmpty() )

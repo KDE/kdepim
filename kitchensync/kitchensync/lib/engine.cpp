@@ -138,6 +138,14 @@ void Engine::executeActions()
 {
   logMessage( i18n("Execute Actions") );
 
+  /*
+   * Apply filters before sync
+   */
+  Konnector *konnector;
+  for ( konnector = mOpenedKonnectors.first(); konnector;
+        konnector = mOpenedKonnectors.next() )
+    konnector->applyFilters( KSync::Konnector::FilterBeforeSync );
+
   bool needsWrite = false;
 
   ActionPart *part;
@@ -149,9 +157,9 @@ void Engine::executeActions()
   if ( needsWrite ) {
     mProcessedKonnectors.clear();
 
-    Konnector *konnector;
     for( konnector = mOpenedKonnectors.first(); konnector;
          konnector = mOpenedKonnectors.next() ) {
+      konnector->applyFilters( KSync::Konnector::FilterAfterSync );
       if ( konnector->writeSyncees() ) {
         kdDebug() << "writeSyncees(): " << konnector->resourceName() << endl;
       } else {

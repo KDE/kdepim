@@ -22,8 +22,9 @@
 
 #include "konnector.h"
 
-#include "konnectorinfo.h"
 #include "filter.h"
+#include "filtermanager.h"
+#include "konnectorinfo.h"
 
 #include <kmdcodec.h>
 #include <kdebug.h>
@@ -35,7 +36,7 @@ using namespace KPIM;
 using namespace KSync;
 
 Konnector::Konnector( const KConfig *config )
-    : KRES::Resource( config )
+  : KRES::Resource( config )
 {
   /* default storage path */
   m_sPath = QDir::homeDirPath() + "/.kitchensync/meta/";
@@ -48,6 +49,18 @@ Konnector::~Konnector()
     delete *it;
 
   m_filterList.clear();
+}
+
+void Konnector::initDefaultFilters()
+{
+  const QStringList types = supportedFilterTypes();
+
+  QStringList::ConstIterator it;
+  for ( it = types.begin(); it != types.end(); ++it ) {
+    Filter *filter = FilterManager::self()->create( *it );
+    if ( filter )
+      addFilter( filter );
+  }
 }
 
 void Konnector::writeConfig( KConfig *config )
@@ -159,7 +172,6 @@ void Konnector::purgeRemovedEntries( Syncee* sync )
   lst.clear();
 }
 
-
 void Konnector::addFilter( KSync::Filter* filter )
 {
   m_filterList.append( filter );
@@ -173,6 +185,16 @@ void Konnector::removeFilter( KSync::Filter* filter )
 KSync::Filter::List Konnector::filters() const
 {
   return m_filterList;
+}
+
+KSync::Filter* Konnector::filter( const QString &type )
+{
+  Filter::List::Iterator it;
+  for ( it = m_filterList.begin(); it != m_filterList.end(); ++it )
+    if ( (*it)->type() == type )
+      return *it;
+
+  return 0;
 }
 
 /*

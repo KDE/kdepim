@@ -208,6 +208,14 @@ KSync::KonnectorInfo RemoteKonnector::info() const
                         false );
 }
 
+QStringList RemoteKonnector::supportedFilterTypes() const
+{
+  QStringList types;
+  types << "addressbook" << "calendar" << "bookmarks";
+
+  return types;
+}
+
 bool RemoteKonnector::writeSyncees()
 {
   mSynceeWriteCount = 0;

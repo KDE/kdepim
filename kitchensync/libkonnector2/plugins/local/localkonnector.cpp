@@ -180,6 +180,14 @@ KSync::KonnectorInfo LocalKonnector::info() const
                         false );
 }
 
+QStringList LocalKonnector::supportedFilterTypes() const
+{
+  QStringList types;
+  types << "addressbook" << "calendar" << "bookmarks";
+
+  return types;
+}
+
 bool LocalKonnector::writeSyncees()
 {
   if ( !mCalendarFile.isEmpty() ) {

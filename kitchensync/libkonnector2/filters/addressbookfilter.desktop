@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Filter
+
+X-KDE-Library=libksfilter_addressbook
+X-KDE-KitchenSyncFilterType=addressbook
+
+Name=Address Book Filter
+Name[xx]=xxAddress Book Filterxx
+
+Comment=Filters contacts in an address book
+Comment[xx]=xxFilters contacts in an address bookxx

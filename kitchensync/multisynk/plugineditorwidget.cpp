@@ -22,12 +22,12 @@
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <kresources/configdialog.h>
 
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 
+#include "konnectorconfigdialog.h"
 #include "konnectorpair.h"
 #include "plugineditorwidget.h"
 
@@ -94,7 +94,7 @@ void PluginEditorWidget::changeOptions()
   if ( mKonnector == 0 )
     return;
 
-  KRES::ConfigDialog dlg( this, "konnector", mKonnector );
+  KonnectorConfigDialog dlg( this, mKonnector );
 
   dlg.exec();
 }

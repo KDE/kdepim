@@ -122,6 +122,11 @@ KSync::KonnectorInfo KABCKonnector::info() const
                         false );
 }
 
+QStringList KABCKonnector::supportedFilterTypes() const
+{
+  return QStringList( "addressbook" );
+}
+
 bool KABCKonnector::writeSyncees()
 {
   if ( !mResource )

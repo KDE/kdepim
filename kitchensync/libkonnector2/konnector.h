@@ -70,6 +70,12 @@ class KDE_EXPORT Konnector : public KRES::Resource
     Konnector( const KConfig *config );
 
     /**
+      Is called by KonnectorManager to initialize the default filters
+      of the Konnector.
+     */
+    void initDefaultFilters();
+
+    /**
       Destruct Konnector object.
     */
     virtual ~Konnector();
@@ -165,6 +171,11 @@ class KDE_EXPORT Konnector : public KRES::Resource
      */
     //@{
     /**
+     * Returns a list of supported filter types.
+     */
+    virtual QStringList supportedFilterTypes() const = 0;
+
+    /**
      * Add a Filter to the list of filters
      * ownership is transfered to the Konnector
      */
@@ -181,6 +192,11 @@ class KDE_EXPORT Konnector : public KRES::Resource
      * the list of filters
      */
     KSync::Filter::List filters() const;
+
+    /**
+     * returns the filter of the specified type.
+     */
+    KSync::Filter* filter( const QString &type );
 
     /**
      * apply the filter to the synceeList()

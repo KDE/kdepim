@@ -25,10 +25,32 @@
 #include <qstringlist.h>
 #include <qptrlist.h>
 
+#include <klibloader.h>
+#include <kgenericfactory.h>
+
 #include <syncer.h>
 
 class KConfig;
 class QWidget;
+
+#define K_EXPORT_KS_FILTER_CATALOG( libname, FilterClass, catalog ) \
+ class KDE_NO_EXPORT localFilterFactory : public FilterFactory \
+ { \
+   Filter *createFilter( QObject *parent ) \
+   { \
+     const char *cat = catalog; \
+     if ( cat ) \
+       KGlobal::locale()->insertCatalogue( cat ); \
+     return new FilterClass( parent ); \
+   } \
+ }; \
+ K_EXPORT_COMPONENT_FACTORY( libname, localFilterFactory )
+
+
+#define K_EXPORT_KS_FILTER( libname, FilterClass ) \
+	K_EXPORT_KS_FILTER_CATALOG( libname, FilterClass, NULL )
+
+
 namespace KSync {
 
 /**
@@ -57,150 +79,115 @@ class Filter : public QObject
   public:
     typedef QValueList<Filter*> List;
   
-    Filter( QObject* obj, const char* name);
+    Filter( QObject *parent, const char *name );
     virtual ~Filter();
   
-    void load( KConfig* );
-    void save( KConfig* );
-    QString name()const;
-  
-    virtual bool supports( Syncee* ) = 0;
-    virtual QWidget *configWidget( QWidget *parent ) = 0;
-    virtual void configWidgetClosed( QWidget *widget ) = 0;
-  
-    /*
-     * operate on the Syncee
-     *
-     * ### FIXME implement replacing of Syncee from the Konnector
-     * synceeList
+    /**
+      This method will call doLoad() which you need to implement
+      if you need to read configuration data.
+
+      @param config The KConfig from where to load configuration.
+                    The group is already set.
      */
+    void load( KConfig *config );
+
+    void save( KConfig* );
+
+    /**
+      Get the translated name of the filter
+
+      Get the name of the filter. Filters can call \sa setName
+      to set the filters name.
+     */
+    QString name() const;
+    virtual QString type() const = 0;
+  
+    /**
+      Test if a filter can operate on the syncee
+
+      Before requesting to convert/reconvert the syncee
+      the KSync::Filter is asked to if it can operate on the
+      syncee.
+      Filters need to implement it.
+
+      @param syncee Can the filter operate on this Syncee
+     */
+    virtual bool supports( Syncee *syncee ) = 0;
+
+    /**
+      Create a new configuration widget.
+
+      Create a new configuration widget.
+      
+      @param parent The parent widget.
+     */
+    virtual QWidget *configWidget( QWidget *parent ) = 0;
+
+    /**
+      Called when config widget is closed
+
+      @param widget The widget that was created by @ref configWidget().
+     */
+    virtual void configWidgetClosed( QWidget *widget ) = 0;
+
     virtual void convert( Syncee* ) = 0;
     virtual void reconvert( Syncee* ) = 0;
   
   protected:
+    /**
+      Returns the KConfig instance
+
+      Get KConfig object where the configuration is stored. Do not change
+      the group, and it is only valid from within the doLoad() method
+
+      @see doLoad()
+     */
     KConfig *config();
+
+    /**
+      Set the name of the filter
+
+      Set the name returned by \sa name() const. Normally a filter
+      implementation will do this from within the constructor.
+
+      @param name Set the name of the filter
+     */
     void setName( const QString& name );
   
   private:
+    /**
+      Do load your configuration.
+
+      Filter implementation will load the configuration here.
+      In this time calling config() is save and the right group is set.
+     */
     virtual void doLoad() = 0;
+
+    /**
+      Do save your configuration
+
+      Filter implementation will save the configuration here.
+      In this time calling config() is save and the right group is set.
+     */
     virtual void doSave() = 0;
+
     KConfig *mConfig;
     QString mName;
 };
 
+class FilterFactory : public KLibFactory
+{
+  public:
+    virtual Filter *createFilter( QObject *parent ) = 0;
+
+  protected:
+    virtual QObject* createObject( QObject*, const char*, const char*,
+                                   const QStringList & )
+    {
+      return 0;
+    }
+};
+
 }
 
-/**
- * \fn void KSync::Filter::load( KConfig *cfg)
- *
- * This method will call doLoad() which you need to implement
- * if you need to read configuration data.
- *
- * @param cfg The KConfig from where to load Configuration. The group is already set
- */
-
-
-/**
- * \fn QString KSync::Filter::name()const
- * \brief Get the translated name of the Filter
- *
- * Get the Name of the Filter. Filters can call \sa setName
- * to set the Filters Name.
- *
- */
-
-/**
- * \fn bool KSync::Filter::supports(Syncee* syncee)
- * \brief Test if a Filter can operate on the Syncee
- *
- * Before requesting to convert/reconvert the Syncee
- * the KSync::Filter is asked to if it can operate on the
- * Syncee.
- * Filters need to implement it
- *
- * @param syncee Can the filter operate on this Syncee
- */
-
-
-/*
- * ### FIXME implement replacing of Syncees
- */
-#if 0
-/**
- * \fn Syncee* KSync::Filter::convert(Syncee* syn)
- * \brief Convert the Syncee before emitting the Read signal
- *
- * Before the Syncee emits the read signal you can filter the
- * Syncee.
- * If you return a different Syncee the old one will be replaced.
- * The old one will be cleaned up and removed by the
- * KonnectorManager
- *
- * @param syn The Syncee to filter
- * @return The filtered Syncee or a new one
- */
-
-/**
- * \fn Syncee* KSync::Filter::reconvert(Syncee* syn)
- * \brief Convert the Syncee before writing back
- *
- * Before the Syncees gets written back to the
- * Konnector you can filter it. If you return a different
- * Syncee the old one will be replaced.
- * The old one will be cleaned up and removed by the
- * KonnectorManager
- *
- * @param syn The Syncee to filter
- * @return The filtered Syncee or a new one
- */
-
-#endif
-
-/**
- * \fn KConfig* KSync::Filter::config()
- * \brief Return the KConfig Instance
- *
- * Get KConfig object where the Configuration is stored. Do not change
- * the group, and it is only valid from within the doLoad() method
- *
- * @see doLoad()
- */
-
-/**
- * \fn void KSync::Filter::setName(const QString& name)
- * \brief Set the Name of the Filter
- *
- * Set the Name returned by \sa name()const. Normally a Filter
- * Implementation will do this from within the Constructor.
- *
- * @param name Set the Name of the Filter
- */
-
-/**
- * \fn void KSync::Filter::doLoad()
- * \brief Do load your Configuration
- *
- * Filter Implementation will load the Configuration here.
- * In this Time calling config() is save and the
- * right group is set
- *
- */
-
-/**
- * \fn QWidget* KSync::Filter::configWidget( QWidget* parent )
- * \brief Create a new Configure Widget
- *
- * Create a new KConfig widget. Use @param parent as the parent.
- *
- * Use the current values for your Config Widget.
- *
- */
-
-/**
- * \fn void KSync::Filter::configWidgetClosed( QWidget* widget )
- * \brief Called when config widget is closed
- *
- * @param widget is the widget that was created by @ref configWidget().
- *
- */
 #endif

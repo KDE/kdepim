@@ -26,6 +26,7 @@
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kpassivepopup.h>
 #include <kstdaction.h>
 #include <kxmlguiclient.h>
 
@@ -52,6 +53,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *widget, const char *n
 
   connect( mView, SIGNAL( konnectorPairSelected( bool ) ),
            this, SLOT( konnectorPairSelected( bool ) ) );
+  connect( mEngine, SIGNAL( error( const QString& ) ),
+           this, SLOT( engineError( const QString& ) ) );
 
   mView->refresh();
 }
@@ -182,6 +185,11 @@ void MainWidget::konnectorPairSelected( bool state )
   mEditAction->setEnabled( state );
   mDeleteAction->setEnabled( state );
   mSyncAction->setEnabled( state );
+}
+
+void MainWidget::engineError( const QString &message )
+{
+  KPassivePopup::message( message, this );
 }
 
 void MainWidget::initGUI()

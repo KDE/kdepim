@@ -27,6 +27,7 @@
 #include <qobject.h>
 #include <qptrlist.h>
 
+class KonnectorManager;
 class KonnectorPair;
 
 namespace KSync {
@@ -53,7 +54,8 @@ class Engine : public QObject
     void setResolveStrategy( int strategy );
 
   protected:
-    void logMessage( const QString & );
+    void logMessage( const QString& );
+    void logError( const QString& );
 
     void tryExecuteActions();
     void executeActions();
@@ -70,6 +72,7 @@ class Engine : public QObject
     void slotSynceeWriteError( KSync::Konnector * );
 
   signals:
+    void error( const QString& );
     void doneSync();
 
   private:
@@ -80,6 +83,7 @@ class Engine : public QObject
     uint mKonnectorCount;
 
     Konnector::List mKonnectors;
+    KonnectorManager *mManager;
 
     Syncer mCalendarSyncer;
     Syncer mAddressBookSyncer;

@@ -21,7 +21,8 @@ lib_LTLIBRARIES = libmultisynk.la
 libmultisynk_la_SOURCES = engine.cpp konnectormanager.cpp konnectorpair.cpp \
                           konnectorpairmanager.cpp konnectorpairview.cpp \
                           logdialog.cpp mainwidget.cpp paireditordialog.cpp \
-                          paireditorwidget.cpp plugineditorwidget.cpp
+                          paireditorwidget.cpp plugineditorwidget.cpp \
+                          konnectorconfigdialog.cpp
 libmultisynk_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libmultisynk_la_LIBADD = $(top_builddir)/kitchensync/libkonnector2/libkonnector.la \
                          $(top_builddir)/kitchensync/libksync/libksync2.la

@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2004 Holger Freyther <freyther@kde.org>
+    Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,46 +19,35 @@
     Boston, MA 02111-1307, USA.
 */
 
+#ifndef KSYNC_FILTERMANAGER_H
+#define KSYNC_FILTERMANAGER_H
+
 #include "filter.h"
 
-#include <kconfig.h>
+class KLibFactory;
 
 namespace KSync {
 
-Filter::Filter( QObject *parent, const char *name )
-  : QObject( parent, name ), mConfig( 0 )
+class FilterManager
 {
-}
+  public:
+    static FilterManager *self();
 
-Filter::~Filter()
-{
-}
+    virtual ~FilterManager();
 
-void Filter::load( KConfig* config ) 
-{
-  mConfig = config;
-  doLoad();
-}
+    Filter *create( const QString &type );
+  
+  private:
+    FilterManager();
 
-void Filter::save( KConfig* config ) 
-{
-  mConfig = config;
-  doSave();
-}
+    void loadFactories();
 
-QString Filter::name() const 
-{
-  return mName;
-}
+    static FilterManager *mSelf;
 
-KConfig* Filter::config() 
-{
-  return mConfig;
-}
-
-void Filter::setName( const QString& name ) 
-{
-  mName = name;
-}
+    typedef QMap<QString, FilterFactory*> FactoryMap;
+    FactoryMap mFactoryMap;
+};
 
 }
+
+#endif

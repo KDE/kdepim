@@ -56,8 +56,8 @@ class RemoteKonnector : public KSync::Konnector
     bool connectDevice();
     bool disconnectDevice();
 
-    /** the state and some informations */
     KSync::KonnectorInfo info() const;
+    virtual QStringList supportedFilterTypes() const;
 
     void setCalendarUrl( const QString &f ) { mCalendarUrl = f; }
     QString calendarUrl() const { return mCalendarUrl; }

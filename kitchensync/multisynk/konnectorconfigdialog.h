@@ -1,7 +1,8 @@
 /*
     This file is part of KitchenSync.
+    Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
 
-    Copyright (c) 2004 Holger Freyther <freyther@kde.org>
+    Based on the code of KRES::ConfigDialog from kdelibs
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,46 +20,47 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "filter.h"
+#ifndef KONNECTORCONFIGDIALOG_H
+#define KONNECTORCONFIGDIALOG_H
 
-#include <kconfig.h>
+#include <kdialogbase.h>
+
+class QCheckBox;
+class QWidget;
+
+class KLineEdit;
+
+namespace KRES {
+class ConfigWidget;
+};
 
 namespace KSync {
+class Konnector;
+};
 
-Filter::Filter( QObject *parent, const char *name )
-  : QObject( parent, name ), mConfig( 0 )
+class KonnectorConfigDialog : public KDialogBase
 {
-}
+  Q_OBJECT
 
-Filter::~Filter()
-{
-}
+  public:
+    KonnectorConfigDialog( QWidget *parent, KSync::Konnector* konnector );
 
-void Filter::load( KConfig* config ) 
-{
-  mConfig = config;
-  doLoad();
-}
+    void setInEditMode( bool value );
 
-void Filter::save( KConfig* config ) 
-{
-  mConfig = config;
-  doSave();
-}
+  protected slots:
+    void accept();
+    void setReadOnly( bool value );
+    void slotNameChanged( const QString &text );
 
-QString Filter::name() const 
-{
-  return mName;
-}
+  private:
+    QWidget *createGeneralPage( QWidget* );
+    QWidget *createFilterPage( QWidget* );
 
-KConfig* Filter::config() 
-{
-  return mConfig;
-}
+    KRES::ConfigWidget *mConfigWidget;
+    KSync::Konnector* mKonnector;
 
-void Filter::setName( const QString& name ) 
-{
-  mName = name;
-}
+    KLineEdit *mName;
+    QCheckBox *mReadOnly;
+};
 
-}
+#endif

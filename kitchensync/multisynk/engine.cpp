@@ -40,7 +40,7 @@
 using namespace KSync;
 
 Engine::Engine()
-  : mSyncUi( 0 )
+  : mManager( 0 ), mSyncUi( 0 )
 {
 }
 
@@ -56,6 +56,16 @@ void Engine::logMessage( const QString &message )
   text += message;
 
   kdDebug() << "LOG: " << text << endl;
+}
+
+void Engine::logError( const QString &message )
+{
+  QString text = QTime::currentTime().toString() + ": ";
+  text += message;
+
+  kdDebug() << "ERR: " << text << endl;
+
+  emit error( message );
 }
 
 void Engine::setResolveStrategy( int strategy )
@@ -94,16 +104,21 @@ void Engine::go( KonnectorPair *pair )
 
   mKonnectors.clear();
 
-  KonnectorManager *manager = pair->manager();
+  if ( mManager )
+    disconnect( this, SIGNAL( doneSync() ), mManager, SLOT( emitFinished() ) );
+
+  mManager = pair->manager();
+  connect( this, SIGNAL( doneSync() ), mManager, SLOT( emitFinished() ) );
+
   KonnectorManager::Iterator it;
-  for ( it = manager->begin(); it != manager->end(); ++it )
+  for ( it = mManager->begin(); it != mManager->end(); ++it )
     mKonnectors.append( *it );
 
   Konnector *k;
   for( k = mKonnectors.first(); k; k = mKonnectors.next() ) {
     logMessage( i18n("Connecting '%1'").arg( k->resourceName() ) );
     if ( !k->connectDevice() ) {
-      logMessage( i18n("Error connecting device.") );
+      logError( i18n("Can't connect device '%1'.").arg( k->resourceName() ) );
     } else {
       mOpenedKonnectors.append( k );
       ++mKonnectorCount;
@@ -113,7 +128,7 @@ void Engine::go( KonnectorPair *pair )
   for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
     logMessage( i18n("Request Syncees") );
     if ( !k->readSyncees() ) {
-      logMessage( i18n("Request failed.") );
+      logError( i18n("Can't read data from '%1'.").arg( k->resourceName() ) );
     }
   }
 }
@@ -156,26 +171,27 @@ void Engine::executeActions()
 {
   logMessage( i18n("Execute Actions") );
 
+  Konnector *konnector;
+  for ( konnector = mOpenedKonnectors.first(); konnector;
+        konnector = mOpenedKonnectors.next() )
+    konnector->applyFilters( KSync::Konnector::FilterBeforeSync );
+
   doSync();
 
   mProcessedKonnectors.clear();
 
-  Konnector *konnector;
   for( konnector = mOpenedKonnectors.first(); konnector;
        konnector = mOpenedKonnectors.next() ) {
-    if ( konnector->writeSyncees() ) {
-      kdDebug() << "writeSyncees(): " << konnector->resourceName() << endl;
-    } else {
-      kdError() << "Error requesting to write Syncee: "
-                << konnector->resourceName() << endl;
-    }
+    konnector->applyFilters( KSync::Konnector::FilterAfterSync );
+
+    if ( !konnector->writeSyncees() )
+      logError( i18n("Can't write data back to '%1'.").arg( konnector->resourceName() ) );
   }
 }
 
 void Engine::slotSynceeReadError( Konnector *k )
 {
-  logMessage( i18n("Error reading Syncees from '%1'")
-              .arg( k->resourceName() ) );
+  logError( i18n("Error reading Syncees from '%1'").arg( k->resourceName() ) );
 
   --mKonnectorCount;
 
@@ -195,8 +211,7 @@ void Engine::slotSynceesWritten( Konnector *k )
 
 void Engine::slotSynceeWriteError( Konnector *k )
 {
-  logMessage( i18n("Error writing Syncees to '%1'")
-              .arg( k->resourceName() ) );
+  logError( i18n("Error writing Syncees to '%1'").arg( k->resourceName() ) );
 
   --mKonnectorCount;
 
@@ -207,9 +222,8 @@ void Engine::slotSynceeWriteError( Konnector *k )
 
 void Engine::disconnectDevice( Konnector *k )
 {
-  if ( !k->disconnectDevice() ) {
-    logMessage( i18n("Error disconnecting device") );
-  }
+  if ( !k->disconnectDevice() )
+    logError( i18n("Error disconnecting device '%1'").arg( k->resourceName() ) );
 }
 
 void Engine::tryFinish()

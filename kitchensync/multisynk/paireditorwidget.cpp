@@ -115,7 +115,6 @@ void PairEditorWidget::initGUI()
 
   tabWidget->addTab( createPluginTab(), i18n( "Plugins" ) );
   tabWidget->addTab( createSyncOptionTab(), i18n( "Synchronize Options" ) );
-//  tabWidget->addTab( createFilterTab(), i18n( "Filters" ) );
 }
 
 QWidget *PairEditorWidget::createPluginTab()
@@ -181,11 +180,6 @@ QWidget *PairEditorWidget::createSyncOptionTab()
   layout->addStretch( 10 );
 
   return widget;
-}
-
-QWidget *PairEditorWidget::createFilterTab()
-{
-  return new QWidget( this );
 }
 
 #include "paireditorwidget.moc"
