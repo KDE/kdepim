@@ -164,6 +164,7 @@ protected:
                     const imapList & item);
 
   void specialACLCommand( int command, QDataStream& stream );
+  void specialAnnotateMoreCommand( int command, QDataStream& stream );
 
 private:
 

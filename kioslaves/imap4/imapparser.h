@@ -273,6 +273,8 @@ public:
   void parseExpunge (ulong value, parseString & result);
   /** @brief parse a ACL line */
   void parseAcl (parseString & result);
+  /** @brief parse a ANNOTATION line */
+  void parseAnnotation (parseString & result);
 
   /**
    * parses the results of a fetch command
@@ -365,7 +367,7 @@ public:
 
   /** extract the box,section,list type, uid, uidvalidity from an url */
   static void parseURL (const KURL & _url, QString & _box, QString & _section,
-                        QString & _type, QString & _uid, QString & _validity, 
+                        QString & _type, QString & _uid, QString & _validity,
                         QString & _info);
 
 
