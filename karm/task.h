@@ -104,7 +104,7 @@ class Task : public QObject, public QListViewItem
        *
        *  @param minutesSession   minutes to add to task session time
        *  @param minutes          minutes to add to task time
-       *  @param storage          Pointer to KarmStorage instance.  
+       *  @param storage          Pointer to KarmStorage instance.
        *                          If zero, don't save changes.
        */
       void changeTimes
@@ -151,6 +151,7 @@ class Task : public QObject, public QListViewItem
 
       /** sets the name of the task
        *  @param name    a pointer to the name. A deep copy will be made.
+       *  @param storage a pointer to a KarmStorage object.
        */
       void setName( const QString& name, KarmStorage* storage );
 
@@ -173,7 +174,9 @@ class Task : public QObject, public QListViewItem
     //@{ the state of a Task - stopped, running
 
       /** starts or stops a task
-       *  @param on       true or false for starting or stopping a task */
+       *  @param on       true or false for starting or stopping a task
+       *  @param storage a pointer to a KarmStorage object.
+       */
       void setRunning(bool on, KarmStorage* storage);
 
       /** return the state of a task - if it's running or not
@@ -202,7 +205,7 @@ class Task : public QObject, public QListViewItem
 
     /** remove Task with all it's children
      * @param   activeTasks - list of aktive tasks
-     * @param true if task removed sucessfully, false otherwise
+     * @param storage a pointer to a KarmStorage object.
      */
     bool remove( QPtrList<Task>& activeTasks, KarmStorage* storage );
 

@@ -49,13 +49,13 @@ signals:
      @param minutes Minutes to extract.
   **/
   void extractTime(int minutes);
-  
-  /** 
+
+  /**
       Tells the listener to stop timing
    **/
   void stopAllTimers();
 
-public slots:  
+public slots:
   /**
      Sets the maximum allowed idle.
      @param maxIdle Maximum allowed idle time in minutes
@@ -66,20 +66,20 @@ public slots:
      Starts detecting idle time
   **/
   void startIdleDetection();
-  
-  /** 
+
+  /**
       Stops detecting idle time.
   **/
   void stopIdleDetection();
 
   /**
      Sets whether idle detection should be done at all
-     @param on If true idle detection is done based on @ref
+     @param on If true idle detection is done based on @see
      startIdleDetection and @ref stopIdleDetection
   **/
-  void toggleOverAllIdleDetection(bool);
-  
-  
+  void toggleOverAllIdleDetection(bool on);
+
+
 protected:
 #ifdef HAVE_LIBXSS
   void informOverrun(int idle);
@@ -87,7 +87,7 @@ protected:
 
 protected slots:
   void check();
-  
+
 private:
 #ifdef HAVE_LIBXSS
   XScreenSaverInfo *_mit_info;

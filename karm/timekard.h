@@ -1,5 +1,5 @@
 /*
- *   This file only: 
+ *   This file only:
  *     Copyright (C) 2003  Mark Bucciarelli <mark@hubcapconsutling.com>
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the 
+ *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330 
+ *      59 Temple Place - Suite 330
  *      Boston, MA  02111-1307  USA.
  *
  */
@@ -63,7 +63,7 @@ class Week
      * days, one being a Sunday and the other being a Monday, you will get two
      * weeks back in the list.
      */
-    static QValueList<Week> weeksFromDateRange(const QDate& from, 
+    static QValueList<Week> weeksFromDateRange(const QDate& from,
         const QDate& to);
 
     /**
@@ -92,9 +92,10 @@ class TimeKard
      *
      * Formatted for pasting into clipboard.
      *
+     * @param taskview a pointer to a TaskView object.
      * @param justThisTask Only useful when user has picked a root task.  We
      * use this parameter to distinguish between when a user just wants to
-     * print the task subtree for a root task and when they want to print 
+     * print the task subtree for a root task and when they want to print
      * all tasks.
      */
     QString totalsAsText(TaskView* taskview, bool justThisTask = true);
@@ -104,14 +105,14 @@ class TimeKard
      *
      * Formatted for pasting into clipboard.
      */
-    QString historyAsText(TaskView* taskview, const QDate& from, 
+    QString historyAsText(TaskView* taskview, const QDate& from,
         const QDate& to, bool justThisTask = true);
 
     void printTask(Task *t, QString &s, int level);
 
-    void printWeekTask(const Task *t, const QMap<QString, long>& datamap, 
-        QMap<QString, long>& daytotals, 
+    void printWeekTask(const Task *t, const QMap<QString, long>& datamap,
+        QMap<QString, long>& daytotals,
         const Week& week, const int level, QString& retval);
-  
+
 };
 #endif // KARM_TIMEKARD_H
