@@ -45,6 +45,8 @@ namespace Kleo {
   class SignJob;
   class VerifyDetachedJob;
   class VerifyOpaqueJob;
+  class SignEncryptJob;
+  class DecryptVerifyJob;
 }
 
 namespace Kleo {
@@ -57,13 +59,15 @@ namespace Kleo {
     virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;
     virtual DecryptJob        * decryptJob() const = 0;
     virtual SignJob           * signJob( int includedCerts=0, bool armor=false, bool textMode=false ) const = 0;
-    virtual VerifyDetachedJob * verifyDetachedJob() const = 0;
-    virtual VerifyOpaqueJob   * verifyOpaqueJob() const = 0;
+    virtual VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const = 0;
+    virtual VerifyOpaqueJob   * verifyOpaqueJob( bool textmode=false ) const = 0;
     virtual KeyGenerationJob  * keyGenerationJob() const = 0;
     virtual ImportJob         * importJob() const = 0;
     virtual ExportJob         * exportJob( bool armor=false ) const = 0;
     virtual DownloadJob       * downloadJob( bool armor=false ) const = 0;
     virtual DeleteJob         * deleteJob() const = 0;
+    virtual SignEncryptJob    * signEncryptJob( int includedCerts=0, bool armor=false, bool textMode=false ) const = 0;
+    virtual DecryptVerifyJob  * decryptVerifyJob( bool textmode=false ) const = 0;
   };
 
 }

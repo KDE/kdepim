@@ -38,7 +38,9 @@
 #include "keylistjob.h"
 #include "encryptjob.h"
 #include "decryptjob.h"
+#include "decryptverifyjob.h"
 #include "signjob.h"
+#include "signencryptjob.h"
 #include "verifydetachedjob.h"
 #include "verifyopaquejob.h"
 #include "keygenerationjob.h"
@@ -47,10 +49,13 @@
 #include "downloadjob.h"
 #include "deletejob.h"
 
+#include <qapplication.h>
+
 Kleo::Job::Job( QObject * parent, const char * name )
   : QObject( parent, name )
 {
-
+  if ( qApp )
+    connect( qApp, SIGNAL(aboutToQuit()), SLOT(slotCancel()) );
 }
 
 Kleo::Job::~Job() {
@@ -67,7 +72,9 @@ Kleo::Job::~Job() {
 make_job_subclass(KeyList)
 make_job_subclass(Encrypt)
 make_job_subclass(Decrypt)
+make_job_subclass(DecryptVerify)
 make_job_subclass(Sign)
+make_job_subclass(SignEncrypt)
 make_job_subclass(VerifyDetached)
 make_job_subclass(VerifyOpaque)
 make_job_subclass(KeyGeneration)
@@ -83,7 +90,9 @@ make_job_subclass(Delete)
 #include "keylistjob.moc"
 #include "encryptjob.moc"
 #include "decryptjob.moc"
+#include "decryptverifyjob.moc"
 #include "signjob.moc"
+#include "signencryptjob.moc"
 #include "verifydetachedjob.moc"
 #include "verifyopaquejob.moc"
 #include "keygenerationjob.moc"

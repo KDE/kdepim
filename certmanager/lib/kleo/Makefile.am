@@ -17,6 +17,7 @@ kleo_HEADERS = \
 	dn.h \
 	job.h \
 	keylistjob.h keygenerationjob.h importjob.h exportjob.h downloadjob.h deletejob.h \
-	encryptjob.h decryptjob.h signjob.h verifydetachedjob.h verifyopaquejob.h
+	encryptjob.h decryptjob.h signjob.h verifydetachedjob.h verifyopaquejob.h \
+	decryptverifyjob.h signencryptjob.h
 
 METASOURCES = AUTO
