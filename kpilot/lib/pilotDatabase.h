@@ -160,6 +160,15 @@ public:
 	virtual QString dbPathName() const = 0;
 
 	/**
+	* Use this instead of RTTI to determine the type of a
+	* PilotDatabase, for those cases where it's important.
+	*/
+	typedef enum { eNone=0,
+		eLocalDB=1,
+		eSerialDB=2 } DBType;
+	int dbType() const { return fDBType; }
+
+	/**
 	* Here are some static utility functions. listAppInfo() is primarily
 	* meant for debugging, and it dumps an appinfo block to stdout.
 	*/
@@ -176,9 +185,15 @@ protected:
 
 	void setDBOpen(bool yesno) { fDBOpen = yesno; }
 
+	/**
+	* Use this from constructors of subclasses to set the
+	* type. Call it once only, with the correct type from DBType.
+	*/
+	void setDBType(int);
 private:
 	bool fDBOpen;
 	QString fName;
+	int fDBType;
 };
 
 #endif

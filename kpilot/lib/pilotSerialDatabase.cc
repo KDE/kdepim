@@ -50,6 +50,7 @@ PilotSerialDatabase::PilotSerialDatabase(int linksocket,
 	fDBSocket(linksocket)
 {
 	FUNCTIONSETUP;
+	setDBType(eSerialDB);
 	fDBName = dbName;
 
 	openDatabase();

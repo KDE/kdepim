@@ -60,6 +60,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
+	setDBType(eLocalDB);
 	fixupDBName();
 	openDatabase();
 
@@ -96,6 +97,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
+	setDBType(eLocalDB);
 	if (fPathBase && !fPathBase->isEmpty() )
 	{
 		fPathName = *fPathBase;
