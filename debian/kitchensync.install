@@ -11,6 +11,8 @@ debian/tmp/usr/lib/libdummykonnector.so
 debian/tmp/usr/lib/libdummykonnector.la
 debian/tmp/usr/lib/liblocalkonnector.so
 debian/tmp/usr/lib/liblocalkonnector.la
+debian/tmp/usr/lib/libqtopiakonnector.so 
+debian/tmp/usr/lib/libqtopiakonnector.la
 debian/tmp/usr/lib/kde3/liboverviewpart.so
 debian/tmp/usr/lib/kde3/liboverviewpart.la
 debian/tmp/usr/lib/kde3/libksync_debugger.so
@@ -24,6 +26,7 @@ debian/tmp/usr/lib/kde3/libksync_backup.la
 debian/tmp/usr/lib/kde3/libkded_ksharedfile.so
 debian/tmp/usr/lib/kde3/libkded_ksharedfile.la
 debian/tmp/usr/share/apps/kitchensync/ksyncgui.rc
+debian/tmp/usr/share/apps/kitchensync/pics/opie.png
 debian/tmp/usr/share/servicetypes/kitchensync.desktop
 debian/tmp/usr/share/servicetypes/konnector.desktop
 debian/tmp/usr/share/services/kitchensync/debugger.desktop
@@ -33,5 +36,6 @@ debian/tmp/usr/share/services/kded/ksharedfile.desktop
 debian/tmp/usr/share/services/overview.desktop
 debian/tmp/usr/share/services/kresources/konnector/dummykonnector.desktop
 debian/tmp/usr/share/services/kresources/konnector/localkonnector.desktop
+debian/tmp/usr/share/services/kresources/konnector/qtopia.desktop
 debian/tmp/usr/share/mimelnk/kdedevice/cellphone.desktop
 debian/tmp/usr/share/mimelnk/kdedevice/pda.desktop

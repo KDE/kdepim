@@ -1,12 +1,6 @@
 debian/tmp/usr/bin/kontact
-debian/tmp/usr/lib/libkontact.la
-debian/tmp/usr/lib/libkontact.so
-debian/tmp/usr/lib/libkontact.so.1
-debian/tmp/usr/lib/libkontact.so.1.0.0
-debian/tmp/usr/lib/libkpinterfaces.la
-debian/tmp/usr/lib/libkpinterfaces.so
-debian/tmp/usr/lib/libkpinterfaces.so.1
-debian/tmp/usr/lib/libkpinterfaces.so.1.0.0
+debian/tmp/usr/lib/libkontact.*
+debian/tmp/usr/lib/libkpinterfaces.*
 debian/tmp/usr/lib/kde3/kcm_kontact.la
 debian/tmp/usr/lib/kde3/kcm_kontact.so
 debian/tmp/usr/lib/kde3/libkontact_kaddressbookplugin.so
@@ -27,7 +21,6 @@ debian/tmp/usr/lib/kde3/libkontact_knodeplugin.so
 debian/tmp/usr/lib/kde3/libkontact_knodeplugin.la
 debian/tmp/usr/lib/kde3/libkontact_kitchensync.so
 debian/tmp/usr/lib/kde3/libkontact_kitchensync.la
-debian/tmp/usr/share/services/kontactconfig.desktop
 debian/tmp/usr/share/applications/kde/Kontact.desktop
 debian/tmp/usr/share/apps/kontact/kontactui.rc
 debian/tmp/usr/share/apps/kontact/pics/splash.png
@@ -36,6 +29,7 @@ debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/korganizer_todo.png
+debian/tmp/usr/share/services/kontactconfig.desktop
 debian/tmp/usr/share/services/kontact/kaddressbookplugin.desktop
 debian/tmp/usr/share/services/kontact/kmailplugin.desktop
 debian/tmp/usr/share/services/kontact/knotesplugin.desktop
