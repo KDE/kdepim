@@ -270,7 +270,7 @@ do not take effect on the &PalmPilot; until the next HotSync.
 <para>
 The memo application has a drop-down box
 for the memo categories defined in the &PalmPilot;.
-Here category &quot;All&quot; is selected.
+Here category <quote>All</quote> is selected.
 Underneath the drop-down box is a list of memo titles.
 These are the first lines of the memos, just like
 in the &PalmPilot; memo application.

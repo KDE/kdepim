@@ -71,7 +71,8 @@ After starting the wizard, you are prompted to select how your &PalmPilot;
 will connect to the <acronym>PC</acronym>. The connection can be trough serial
 port, USB port, infrared, Bluetooth, network or the generic
 <filename class="devicefile">/dev/pilot</filename> device. Selecting the correct
-connection method is essential if you want the wizard to probe for the device.
+connection method is essential if you want the wizard to probe for the correct
+device.
 </para>
 
 <screenshot>
@@ -87,7 +88,7 @@ connection method is essential if you want the wizard to probe for the device.
 In the pilot info dialog, please type your <guilabel>User Name</guilabel>. It
 should match the one from the &PalmPilot;. Next, you can type the file name of
 the <guilabel>Device</guilabel> you will use to connect the &PalmPilot; (for
-instance, &quot;<filename class="devicefile">/dev/pilot</filename>&quot;.)
+instance, <quote><filename class="devicefile">/dev/pilot</filename></quote>.)
 Alternatively, you can &HotSync; and click the <guibutton>Probe</guibutton>
 button. The Wizard will try to match the correct <guilabel>Device</guilabel> and
 <guilabel>User Name</guilabel>.
@@ -97,10 +98,9 @@ button. The Wizard will try to match the correct <guilabel>Device</guilabel> and
 <emphasis>Attention:</emphasis> if the
 <guilabel>Device</guilabel> does not have the right permissions, the wizard will
 not be able to find it. Normal users must be able to read/write the correct
-device. The console command to make a device read/write for all users is 
-<userinput><command>chmod</command> <parameter>666</parameter>
-<replaceable>device</replaceable></userinput> where
-<replaceable>device</replaceable> is the correct port.
+device. To resolve this issue, please refer to <link
+linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot</errorname></quote>
+&FAQ; entry</link>, or contact your system administrator.
 </para>
 
 <screenshot>
@@ -116,8 +116,13 @@ device. The console command to make a device read/write for all users is
 KPilot has the ability to sync with other applications. The programs that
 perform these actions are called conduits. The sync dialog configures in one
 step all applicable &kpilot; conduits to sync with widely used
-<acronym>PIM</acronym> suites. You can fine tune these settings later in the
-<link linkend="conduits">conduits configuration</link>.
+<acronym>PIM</acronym> suites. You can fine tune these settings later, from the
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure &kpilot;</guimenuitem>
+</menuchoice>
+menu. Please check the <link linkend="conduits">conduits configuration</link>
+section of this document for more information.
 </para>
 
 <screenshot>
@@ -138,13 +143,13 @@ step all applicable &kpilot; conduits to sync with widely used
 
 <para>
 The settings available in the &kpilot; configuration dialog
-under the heading &quot;general setup&quot;
+under the heading <guilabel>General Setup</guilabel>
 give you detailed control over the operation of &kpilot;:
 you can select a non-standard hardware device,
 set special encodings for foreign-language &handheld;s,
 and control how &kpilot; displays your data. There
-are five items under the &quot;general setup&quot;
-heading. You will need to expand the &quot;general setup&quot;
+are five items under the <guilabel>General Setup</guilabel>
+heading. You will need to expand the <guilabel>General Setup</guilabel>
 heading to see them.
 </para>
 
@@ -159,7 +164,7 @@ heading to see them.
 
 
 <sect2 id="page-general">
-<title>Device</title>
+<title>Device Page</title>
 
 <para>
 This is a setup page that contains options describing
@@ -169,11 +174,11 @@ to be started.
 </para>
 
 <screenshot>
-<screeninfo>Device page</screeninfo>
+<screeninfo>Device Page</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="setup-general.png" format="PNG"/></imageobject>
-<textobject><phrase>The Device page</phrase></textobject>
-<caption><para>The Device page</para></caption>
+<textobject><phrase>The Device Page</phrase></textobject>
+<caption><para>The Device Page</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -216,6 +221,10 @@ normal user!  This could be done by doing a
 <replaceable>device</replaceable> is the correct port.
 &kpilot; will complain if the permissions are wrong, but you
 will need to fix the permissions by hand.
+To resolve this issue, please refer to <link
+linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot
+</errorname></quote>
+&FAQ; entry</link>, or contact your system administrator.
 </para>
 </listitem>
 </varlistentry>
@@ -274,7 +283,7 @@ named <filename>DBBackup/<replaceable>Pilot User</replaceable></filename>.
 </sect2>
 
 <sect2 id="page-hotsync">
-<title>HotSync page</title>
+<title>HotSync Page</title>
 
 <para>
 This page contains settings with which you can instruct
@@ -285,81 +294,113 @@ change the same data.
 </para>
 
 <screenshot>
-<screeninfo>HotSync page</screeninfo>
+<screeninfo>HotSync Page</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="setup-hotsync.png" format="PNG"/></imageobject>
-<textobject><phrase>The HotSync page</phrase></textobject>
-<caption><para>The HotSync page</para></caption>
+<textobject><phrase>The HotSync Page</phrase></textobject>
+<caption><para>The HotSync Page</para></caption>
 </mediaobject>
 </screenshot>
 
 
 <variablelist>
-
 <varlistentry>
-	<term><guilabel>Sync Mode</guilabel></term>
-	<listitem>
-	<para>
-	Select the kind of HotSync to do normally.
 
-<!-- TODO: unknown what these settings mean -->
-	</para>
-	</listitem>
+<term><guilabel>Sync Mode</guilabel></term>
+
+<listitem><para>
+Select the type of HotSync that will be performed by default.
+</para>
+
+
+<itemizedlist>
+
+<listitem><para>
+<guilabel>Fast Sync (if possible), no backup</guilabel>: Only synchronize those
+databases that have conduits, and perform no backup of the data
+on the &PalmPilot;, reducing greatly the time required for the sync
+operation. This also means that if something goes wrong with your &PalmPilot;,
+you may not be able to recover databases with no conduit. This is a classic
+trade-off between speed and safety.
+</para ></listitem >
+
+<listitem><para>
+<guilabel>Normal sync, do a backup</guilabel>: syncs all new or modified
+records, and &kpilot; does a  back up on every &HotSync;, resulting
+in more data safety, but longer backup operation time.
+</para ></listitem >
+
+<listitem><para>
+<guilabel>Special sync:</guilabel>
+
+<itemizedlist>
+<listitem><para>
+<guilabel>Full Sync (slow), backup</guilabel>: sync all databases, and performs
+a full backup. It is the safest option, but takes the longest time.
+</para ></listitem >
+</itemizedlist >
+
+</para ></listitem >
+
+</itemizedlist >
+
+</listitem>
 </varlistentry>
 
 <varlistentry>
-	<term><guilabel>Do full backup when changing PCs</guilabel></term>
-	<listitem>
-	<para>
-	If you &HotSync; your &handheld; with multiple PCs,
-	the information on the &handheld; that records which
-	records have changed since the last &HotSync; may be
-	inaccurate. It is recommended to do a full sync when
-	changing PCs.
-	You can disable the full sync by unchecking this box.
-	</para>
-	</listitem>
+<term><guilabel>Do full backup when changing PCs</guilabel></term>
+<listitem>
+<para>
+If you &HotSync; your &handheld; with multiple <acronym>PC</acronym>s,
+the information on the &handheld; that records which
+records have changed since the last &HotSync; may be
+inaccurate. It is recommended to do a full sync when
+changing <acronym>PC</acronym>s.
+You can disable the full sync by unchecking this box.
+</para>
+</listitem>
 </varlistentry>
 
 <varlistentry>
-	<term><guilabel>Conflict Resolution</guilabel></term>
-	<listitem>
-	<para>
-	Data can be changed both on the &handheld; and
-	on the PC; if one record has incompatible changes
-	in both the &handheld; and the PC, (such as 
-	changing a phone number in different ways on both sides),
-	the conflicting change needs to be resolved so
-	that both the &handheld; and the PC are in sync again.
-	Choices for conflict resolution are:
-	</para>
-	<itemizedlist>
-	<listitem><para><emphasis>Ask User</emphasis>
-	&mdash; pop up a dialog for the user to
-	choose how the conflict is to be resolved for
-	every conflict.
-	</para></listitem>
-	<listitem><para><emphasis>Do Nothing</emphasis>
-	&mdash; leave the entries in an inconsistent state.
-	Future syncs will not notice the discrepancy.
-	</para></listitem>
-	<listitem><para><emphasis>Handheld Overrides</emphasis>
-	&mdash; copy the values from the &handheld; to the PC,
-	discarding the changes on the PC.
-	</para></listitem>
-	<listitem><para><emphasis>PC Overrides</emphasis>
-	&mdash; copy the values from the PC to the &handheld;,
-	discarding changes on the &handheld;.
-	</para></listitem>
-	<listitem><para><emphasis>Values From Last Sync</emphasis>
-	<!-- TODO: I have no idea what this means -->
-	</para></listitem>
-	<listitem><para><emphasis>Use Both Entries</emphasis>
-	<!-- TODO: I have no idea what this means -->
-	</para></listitem>
-	</itemizedlist>
-	</listitem>
+<term><guilabel>Conflict Resolution</guilabel></term>
+<listitem>
+<para>
+Data can be changed both on the &handheld; and
+on the PC; if one record has incompatible changes
+in both the &handheld; and the PC, (such as 
+changing a phone number in different ways on both sides),
+the conflicting change needs to be resolved so
+that both the &handheld; and the <acronym>PC</acronym> are in sync again.
+Choices for conflict resolution are:
+</para>
+<itemizedlist>
+<listitem><para><emphasis>Ask User</emphasis>
+&mdash; pop up a dialog for the user to
+choose how the conflict is to be resolved for
+every conflict.
+</para></listitem>
+<listitem><para><emphasis>Do Nothing</emphasis>
+&mdash; leave the entries in an inconsistent state.
+Future syncs will not notice the discrepancy.
+</para></listitem>
+<listitem><para><emphasis>Handheld Overrides</emphasis>
+&mdash; copy the values from the &handheld; to the PC,
+discarding the changes on the PC.
+</para></listitem>
+<listitem><para><emphasis><acronym>PC</acronym> Overrides</emphasis>
+&mdash; copy the values from the <acronym>PC</acronym> to the &handheld;,
+discarding changes on the &handheld;.
+</para></listitem>
+<listitem><para><emphasis>Values From Last Sync</emphasis>
+<!-- TODO: I have no idea what this means -->
+</para></listitem>
+<listitem><para><emphasis>Use Both Entries</emphasis>
+<!-- TODO: I have no idea what this means -->
+</para></listitem>
+</itemizedlist>
+</listitem>
 </varlistentry>
+
 
 </variablelist>
 
@@ -367,8 +408,106 @@ change the same data.
 </sect2>
 
 
+<sect2 id="page-backup">
+<title>
+Backup Page
+</title>
+
+<para>
+This page contains settings specific to the backup operation, which saves 
+a copy of the the &handheld; databases, allowing the user to
+restore this information later.
+</para>
+
+<para>In short, databases are all files stored in your &handheld;. A database
+can be either a record database, which stores dynamic information created by the
+user (for instance, the addresses or the todo information), or a resource
+database, which tend to be static (for instance the applications).</para >
+
+<screenshot>
+<screeninfo>Backup Page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-dbspecial.png" format="PNG"/>
+</imageobject>
+<textobject><phrase>The Backup Page</phrase></textobject>
+<caption><para>The Backup Page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Databases</guilabel></term>
+<listitem>
+<para>
+List databases that should not be synced or backed up.
+Note that you have to fill in the database creator,
+not the name of the product, so for Handbase
+databases you fill in <userinput>PmDB</userinput>.
+Multiple databases should be separated by commas.
+See the <link linkend="dbskip">FAQ</link>
+for a list of databases that should be listed
+here (the default should be OK though).
+
+<itemizedlist>
+<listitem><para>
+<guilabel>No backup:</guilabel> Databases that will be excluded from the backup
+operation. Some databases do not follow the standard database layout, and trying
+to backup them will result in errors.
+<!-- CW TODO: should this be "No Sync?" as it was before? This makes no sense to me--> 
+</para ></listitem>
+
+<listitem><para>
+<guilabel>Not restored:</guilabel> Databases with volatile information, such as
+news or web pages, often do not need to be restored. Add here the databases
+you do not need to restore, in order to speed up the backup operation.
+<!-- CW TODO: should this be "No Backup?" --> 
+</para ></listitem>
+</itemizedlist>
+
+<warning>
+<para>
+Changing the contents of the <guilabel>No backup:</guilabel>
+or <guilabel>Not restored:</guilabel> fields, in particular removing
+the databases already listed there, can damage those databases
+when you perform a &HotSync;.
+</para>
+</warning>
+
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Run conduits during a backup:</guilabel></term>
+<listitem>
+<para>
+The backup typically updates the copy of the &handheld; databases.
+Conduits are programs that extend the &kpilot; functionality. Running them
+usually means syncing the &handheld; to other <acronym>PC</acronym> databases,
+like the addressbook or the calender. Check here to perform both operation on
+every backup.
+</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+
+</sect2>
+
+
 <sect2 id="viewerstab">
 <title>Viewers Tab</title>
+
+<para>
+In your &PalmPilot; you can mark some records
+as <quote>private</quote>.
+By default,
+&kpilot; does not
+display these records on the screen.
+If you want to see them, turn this
+option on.
+</para>
 
 
 <variablelist>
@@ -377,8 +516,7 @@ change the same data.
 daemon at login</guilabel></term>
 <listitem>
 <para>
- By
-enabling this a link to the daemon is placed in your autostart folder
+By enabling this a link to the daemon is placed in your autostart folder
 and will be started automatically.  Note that this is not normally
 needed if the daemon is docked in the panel.
 <!-- TODO: broken functionality -->
@@ -441,7 +579,7 @@ starts &kpilot; automatically.
 <sect2 id="viewers">
 <title>Viewers configuration</title>
 <para>
-&kpilot; contains &quot;viewers&quot; for
+&kpilot; contains <quote>viewers</quote> for
 presenting information from the &PalmPilot;.
 These viewers present the databases present on
 the &PalmPilot; in much the same way that the device
@@ -461,193 +599,14 @@ These settings change the way in which the data is shown.
 </mediaobject>
 </screenshot>
 </sect2>
-
-
-<sect2 id="dbspecial">
-<title>
-DB Specials page
-</title>
-
-<para>
-This page contains settings specific to
-the &PalmPilot; databases &kpilot; works with.
-</para>
-
-<screenshot>
-<screeninfo>DB Specials page</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="setup-dbspecial.png" format="PNG"/>
-</imageobject>
-<textobject><phrase>The DB Setup page</phrase></textobject>
-<caption><para>The DB Setup page</para></caption>
-</mediaobject>
-</screenshot>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Show Secrets</guilabel></term>
-<listitem>
-<para>
-	In your &PalmPilot; you can mark some records
-	as <quote>private</quote>.
-	By default,
-	&kpilot; does not
-	display these records on the screen.
-	If you want to see them, turn this
-	option on.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Backup only:</guilabel></term>
-<listitem>
-<para>
-	This text field can be used to list databases
-	that should not be synced, only backed up.
-	Note that you have to fill in the database creator,
-	not the name of the product, so for Handbase
-	databases you fill in
-	<userinput>PmDB</userinput>.
-	Multiple databases should be separated by commas.
-	See the <link linkend="dbskip">FAQ</link>
-	for a list of databases that should be listed
-	here (the default should be OK though).
-</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term><guilabel>Skip</guilabel></term>
-<listitem>
-<para>
-	This text field lists databases that should not be backed up nor
-	synced, in the same format as the backup only field.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<warning>
-<para>
-Changing the contents of the <guilabel>Backup Only:</guilabel>
-or <guilabel>Skip</guilabel> fields, in particular removing
-the databases already listed there, can damage those databases
-when you perform a &HotSync;.
-</para>
-</warning>
-
-</sect2>
-
-<sect2 id="sync">
-<title>
-Sync page
-</title>
-
-<para>
-The sync page contains preferences relevant to
-the &HotSync; operation on your &PalmPilot;.
-</para>
-
-<screenshot>
-<screeninfo>Sync page</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="setup-hotsync.png" format="PNG"/>
-</imageobject>
-<textobject><phrase>The Sync page</phrase></textobject>
-<caption><para>The Sync page</para></caption>
-</mediaobject>
-</screenshot>
-
-<variablelist>
-<varlistentry><term><guilabel>Sync Files</guilabel></term>
-<listitem>
-<para>
-When
-this is enabled any files dropped into the file install (either the
-icon docked on the panel or into the file installer in &kpilot;)
-will be installed on the &PalmPilot; during the next HotSync.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry><term><guilabel>Local overrides Pilot</guilabel></term>
-<listitem>
-<para>
-When
-a record has been modified on both the &PalmPilot; and the local side, only
-one can be kept.  By default &kpilot; assumes the &PalmPilot; has the most
-recent information and will keep that.  By enabling this option
-&kpilot; assumes <emphasis>it</emphasis> has the
-most recent information and will overwrite the &PalmPilot;'s copy.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Force first-time sync every time</guilabel></term>
-<listitem>
-<para>
-Under some circumstances &mdash; you have many
-<acronym>PC</acronym>s and many &PalmPilot;s &mdash;
-you may want to perform a &quot;cleaner&quot; HotSync every time
-instead of the &quot;quick-and-dirty&quot; HotSync that
-&kpilot; does if you just have one &PalmPilot; and one <acronym>PC</acronym>.
-Just <emphasis>when</emphasis> you want to enable this
-option is a matter of personal preference.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do full backup when changing PCs</guilabel></term>
-<listitem>
-<para>
-If you have more than one <acronym>PC</acronym> and synchronize your &PalmPilot;
-with each of them you may want to disable this option.
-When you change <acronym>PC</acronym>s
-it is a good idea to perform a full backup,
-since otherwise your KDE desktop will not reflect
-the state of your &PalmPilot; accurately. (This is a limitation
-of the &PalmPilot; itself.) On the other hand, performing a full
-backup can be time-consuming and annoying, which is why
-you can disable such a backup here.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Prefer FastSync to HotSync</guilabel></term>
-<listitem>
-<para>
-While a HotSync is faster than a full backup,
-a FastSync is faster still than a HotSync and
-synchronizes only those databases that have conduits.
-This means that any database without a conduit is
-not backed up and not synchronized.
-This also means that if something goes wrong with your &PalmPilot;,
-you may not be able to recover databases with no
-conduit.
-This is a classic trade-off between speed and safety.
-</para>
-</listitem>
-</varlistentry>
-
-
-</variablelist>
-</sect2>
-
 </sect1>
+
 
 <sect1 id="config-actions">
 <title>Configuring Actions</title>
 
 <para>
-&quot;Actions&quot; are pieces of functionality that may be enabled to
+<quote>Actions</quote> are pieces of functionality that may be enabled to
 run during a &HotSync;. They tend not to have configuration options at all.
 You can enable or disable specific actions from taking place during a &HotSync;
 by checking, (or unchecking) the box next to the action's name.
@@ -659,7 +618,7 @@ by checking, (or unchecking) the box next to the action's name.
 <title>Configuring Conduits</title>
 
 <para>
-The &quot;conduits&quot; heading in the configuration dialog
+The <quote>conduits</quote> heading in the configuration dialog
 collects all the installed conduits available to &kpilot;.
 Just like actions, the conduits can be enabled and disabled
 by clicking on the check box to the left of the conduit's name.

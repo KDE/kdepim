@@ -60,7 +60,7 @@ Just add up the numbers of the kind of messages you want.
 </answer>
 </qandaentry>
 
-<qandaentry>
+<qandaentry id="faq-connection">
 <question>
 <para>
 &kpilot; says <errorname>Can't connect to pilot</errorname>
@@ -184,7 +184,7 @@ If you can find out what the creator id of the database is,
 you can add it to either the
 <guilabel>Backup Only:</guilabel> list or the
 <guilabel>Skip</guilabel> list in the
-<link linkend="dbspecial">settings dialog</link>.
+<link linkend="page-backup">settings dialog</link>.
 </para>
 
 <para>
