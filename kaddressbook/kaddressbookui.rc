@@ -7,25 +7,25 @@
       <Action name="file_properties"/>
       <Separator/>
       <Action name="file_sync"/>
-      
+
       <Menu name="file_import"><text>&amp;Import</text>
         <Action name="file_import_kde2"/>
         <Action name="file_import_vcard"/>
         <Action name="file_import_csv"/>
       </Menu>
-      
+
       <Menu name="file_export"><text>&amp;Export</text>
         <Action name="file_export_csv"/>
         <Action name="file_export_vcard30"/>
       </Menu>
     </Menu>
-    
+
     <Menu name="edit"><text>&amp;Edit</text>
       <Action name="edit_delete" append="edit_paste_merge"/>
     </Menu>
-    
+
     <Menu name="view"><text>&amp;View</text>
-      <ActionList name="view_loadedviews"/> 
+      <ActionList name="view_loadedviews"/>
       <Separator/>
       <Action name="select_filter"/>
       <Separator/>
@@ -35,7 +35,7 @@
       <Separator/>
       <Action name="view_refresh"/>
     </Menu>
-    
+
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
       <Action name="options_show_jump_bar"/>
       <Action name="options_show_features"/>
@@ -44,15 +44,15 @@
       <Action name="options_show_statusbar"/>
       <Merge name="show_merge"/>
       <Separator/>
+      <Merge/>
+      <Action name="options_edit_filters"/>
+      <Separator/>
       <Action name="options_configure_keybinding"/>
       <Action name="options_configure_toolbars"/>
       <Action name="options_configure"/>
       <Merge name="configure_merge"/>
-      <Merge/>
-      <Separator/>
-      <Action name="options_edit_filters"/>
     </Menu>
-    
+
   </MenuBar>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
