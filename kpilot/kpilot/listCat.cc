@@ -33,6 +33,7 @@ static const char *listCat_id =
 
 #include "options.h"
 
+#include <qpainter.h>
 #include <klocale.h>
 
 #include "listCat.moc"
@@ -280,6 +281,9 @@ void RichListViewItem::computeHeight(int c)
 
 
 // $Log$
+// Revision 1.7  2001/09/30 23:02:13  adridg
+// Add support for multi-line comments in conduit configurator and add it to kpilotConfig
+//
 // Revision 1.6  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //
