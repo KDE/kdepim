@@ -1,4 +1,0 @@
-* Add quoted-printable and base64 encoding + decoding.
-* Make it easier to construct messages.
-* Nail down the parsing of mime bodies, which is a little buggy.
-* Fill in everything commented as 'STUB'
