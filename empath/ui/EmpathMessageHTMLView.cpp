@@ -58,6 +58,8 @@ static char * replaceTagsBody[] = {
 	"@_SIGNATURE_"
 };
 
+// const int fsizes[7] = { 6, 9, 11, 13, 15, 20, 24 };
+
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 		const EmpathURL &	url,
 		QWidget			*	_parent,
@@ -67,6 +69,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 {
 	empathDebug("ctor");
 	
+//	setFontSizes(fsizes);
 	KConfig * c = kapp->getConfig();
 	c->setGroup(GROUP_DISPLAY);
 	QString iconSet = c->readEntry(KEY_ICON_SET);

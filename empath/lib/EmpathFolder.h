@@ -23,7 +23,6 @@
 
 // Qt includes
 #include <qobject.h>
-#include <qpixmap.h>
 #include <qstring.h>
 
 // Local includes
@@ -52,11 +51,10 @@ class EmpathFolder : public QObject
 		
 		EmpathFolder * parent() const;
 	
-		void setPixmap(const QPixmap &);
+		void setPixmap(const QString &);
 		
-		const QPixmap &		pixmap()	const { return pixmap_;	}
-		const QString &		name()		const { return name_;	}
-		const EmpathURL &	url()		const { return url_;	}
+		const QString &		pixmapName()	const { return pixmapName_;	}
+		const EmpathURL &	url()			const { return url_;	}
 		
 		Q_UINT32	messageCount()			const
 		{ return messageList_.count(); }
@@ -97,11 +95,10 @@ class EmpathFolder : public QObject
 		Q_UINT32 messageCount_;
 		Q_UINT32 unreadMessageCount_;
 
-		QPixmap pixmap_;
+		QString pixmapName_;
 		EmpathIndex	messageList_;
 		
 		EmpathURL url_;
-		QString name_;
 };
 
 #endif

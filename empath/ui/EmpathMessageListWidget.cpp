@@ -491,6 +491,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	if (f == 0) return;
 	
 	clear();
+	masterList_.clear();
 	
 	f->messageList().sync();
 

@@ -22,6 +22,7 @@
 #include <qfont.h>
 #include <qstring.h>
 #include <qfontmetrics.h>
+#include <qpixmap.h>
 
 // Local includes
 #include "EmpathFolderListItem.h"
@@ -38,44 +39,23 @@ EmpathFolderListItem::EmpathFolderListItem(
 		QListViewItem(parent),
 		url_(url)
 {
-	if (url_.hasFolder()) {
+	empathDebug("ctor with mailbox");
+
+	EmpathMailbox * m(empath->mailbox(url_));
 	
-		empathDebug("ctor with folder \"" + url_.folderPath() + "\"");
-	
-		EmpathFolder * f(empath->folder(url_));
-		
-		if (f == 0) {
-			empathDebug("Can't find the folder !!!!");
-			return;
-		}
-		
-		setText(0, f->name());
-		setText(1, QString().setNum(f->unreadMessageCount()));
-		setText(2, QString().setNum(f->messageCount()));
-		setPixmap(0, f->pixmap());
-		connect(f, SIGNAL(countUpdated(int, int)),
-			this, SLOT(s_setCount(int, int)));
-	
-	} else {
-	
-		empathDebug("ctor with mailbox");
-	
-		EmpathMailbox * m(empath->mailbox(url_));
-		
-		if (m == 0) {
-			empathDebug("Can't find the mailbox !!!!");
-			return;
-		}
-		
-		setText(0, m->name());
-		setText(1, QString().setNum(m->unreadMessageCount()));
-		setText(2, QString().setNum(m->messageCount()));
-		setPixmap(0, m->pixmap());
-		connect(m, SIGNAL(countUpdated(int, int)),
-			this, SLOT(s_setCount(int, int)));
-	
+	if (m == 0) {
+		empathDebug("Can't find the mailbox !!!!");
+		return;
 	}
+	
+	setText(0, m->name());
+	setText(1, QString().setNum(m->unreadMessageCount()));
+	setText(2, QString().setNum(m->messageCount()));
+	setPixmap(0, empathIcon(m->pixmapName()));
+	connect(m, SIGNAL(countUpdated(int, int)),
+		this, SLOT(s_setCount(int, int)));
 }
+
 EmpathFolderListItem::EmpathFolderListItem(
 		QListViewItem * parent,
 		const EmpathURL & url)
@@ -83,43 +63,26 @@ EmpathFolderListItem::EmpathFolderListItem(
 		QListViewItem(parent),
 		url_(url)
 {
-	if (url_.hasFolder()) {
+	empathDebug("ctor with folder \"" + url_.folderPath() + "\"");
+
+	EmpathFolder * f(empath->folder(url_));
 	
-		empathDebug("ctor with folder \"" + url_.folderPath() + "\"");
-	
-		EmpathFolder * f(empath->folder(url_));
-		
-		if (f == 0) {
-			empathDebug("Can't find the folder !!!!");
-			return;
-		}
-		
-		setText(0, f->name());
-		setText(1, QString().setNum(f->unreadMessageCount()));
-		setText(2, QString().setNum(f->messageCount()));
-		setPixmap(0, f->pixmap());
-		connect(f, SIGNAL(countUpdated(int, int)),
-			this, SLOT(s_setCount(int, int)));
-	
-	} else {
-	
-		empathDebug("ctor with mailbox");
-	
-		EmpathMailbox * m(empath->mailbox(url_));
-		
-		if (m == 0) {
-			empathDebug("Can't find the mailbox !!!!");
-			return;
-		}
-		
-		setText(0, m->name());
-		setText(1, QString().setNum(m->unreadMessageCount()));
-		setText(2, QString().setNum(m->messageCount()));
-		setPixmap(0, m->pixmap());
-		connect(m, SIGNAL(countUpdated(int, int)),
-			this, SLOT(s_setCount(int, int)));
-	
+	if (f == 0) {
+		empathDebug("Can't find the folder !!!!");
+		return;
 	}
+
+	QString s = url.folderPath();
+	if (s.right(1) == "/")
+		s = s.remove(s.length(), 1);
+	s = s.left(s.length() - s.findRev("/") + 1);
+	
+	setText(0, s);
+	setText(1, QString().setNum(f->unreadMessageCount()));
+	setText(2, QString().setNum(f->messageCount()));
+	setPixmap(0, empathIcon(f->pixmapName()));
+	connect(f, SIGNAL(countUpdated(int, int)),
+		this, SLOT(s_setCount(int, int)));
 }
 	
 EmpathFolderListItem::~EmpathFolderListItem()
@@ -162,7 +125,7 @@ EmpathFolderListItem::setup()
 	if (!pixmap(0))
 		setHeight(th);
 	else 
-		setHeight(QMAX(pixmap(0)->height(), th) + 8);
+		setHeight(QMAX(pixmap(0)->height(), th));
 }
 
 	void

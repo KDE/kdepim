@@ -37,6 +37,7 @@ EmpathFolder::EmpathFolder()
 {
 	empathDebug("default ctor !");
 	id_ = ID++;
+	pixmapName_ = "mini-folder-grey.xpm";
 }
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
@@ -50,6 +51,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 	id_ = ID++;
 	QObject::connect(this, SIGNAL(countUpdated(int, int)),
 		empath->mailbox(url_), SLOT(s_countUpdated(int, int)));
+	pixmapName_ = "mini-folder-grey.xpm";
 }
 
 	bool
@@ -65,9 +67,9 @@ EmpathFolder::~EmpathFolder()
 }
 
 	void
-EmpathFolder::setPixmap(const QPixmap & p)
+EmpathFolder::setPixmap(const QString & p)
 {
-	pixmap_ = p;
+	pixmapName_ = p;
 }
 
 	bool

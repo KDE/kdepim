@@ -29,7 +29,7 @@ EmpathMailbox::EmpathMailbox(const QString & name)
 	:	url_(name, "", "")
 {
 	empathDebug("ctor - url == \"" + url_.asString() + "\"");
-//	pixmap_ = empathIcon("mailbox.xpm");
+	pixmapName_ = "mailbox.xpm";
 	folderList_.setAutoDelete(true);
 	QObject::connect(this, SIGNAL(updateFolderLists()),
 		empath, SLOT(s_updateFolderLists()));

@@ -24,7 +24,6 @@
 // Qt includes
 #include <qstring.h>
 #include <qtimer.h>
-#include <qpixmap.h>
 
 // Local includes
 #include "RMM_Message.h"
@@ -217,12 +216,12 @@ class EmpathMailbox : public QObject
 		AccountType	type() const { return type_; }
 		
 		/**
-		 * @short Get the pixmap that represents this box.
+		 * @short Name of the desired pixmap to represent this box.
 		 */
-		const QPixmap &	pixmap()			const { return pixmap_; }
+		const QString &	pixmapName() const { return pixmapName_; }
 		
-		bool 		newMailReady() const { return (newMessagesCount_ != 0); }
-		Q_UINT32 	newMails() const { return newMessagesCount_; }
+		bool 		newMailReady()	const { return (newMessagesCount_ != 0); }
+		Q_UINT32 	newMails()		const { return newMessagesCount_; }
 
 	signals:
 
@@ -249,7 +248,7 @@ class EmpathMailbox : public QObject
 		Q_UINT32			checkMailInterval_;
 		
 		QTimer				timer_;
-		QPixmap				pixmap_;
+		QString				pixmapName_;
 		Q_UINT32 			id_;
 		Q_UINT32			seq_;
 };

@@ -46,7 +46,7 @@ EmpathIndexRecord::EmpathIndexRecord()
 EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
 	:	id_(id),
 		subject_(m.envelope().subject().asString()),
-		sender_(m.envelope().sender()),
+		sender_(m.envelope().firstSender()),
 		date_(m.envelope().date()),
 		status_(m.status()),
 		size_(m.size()),

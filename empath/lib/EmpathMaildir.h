@@ -75,6 +75,8 @@ class EmpathMaildir
 		bool		_setupDirs();
 		QString		_generateUnique();
 		QString		_generateFlagsString(MessageStatus s);
+		void		_readIndex();
+		void		_writeIndex();
 		
 		// Order dependency
 		Q_UINT32	seq_;

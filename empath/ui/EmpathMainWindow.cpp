@@ -270,7 +270,7 @@ EmpathMainWindow::setupToolBar()
 			this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 	
 	// Debugging
-	tb->insertButton(empathIcon("mini-bug1.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("mini-view.xpm"), 0, SIGNAL(clicked()),
 			this, SLOT(s_dumpWidgetList()), true, i18n("Debug"));
 }
 

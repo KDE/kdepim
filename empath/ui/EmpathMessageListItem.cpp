@@ -117,7 +117,7 @@ EmpathMessageListItem::setup()
 	widthChanged();
 	int ph = pixmap(0) ? pixmap(0)->height() : 0;
 	int th = QFontMetrics(empathGeneralFont()).height();
-	setHeight(QMAX(ph, th) + 4);
+	setHeight(QMAX(ph, th));
 }
 
 	QString

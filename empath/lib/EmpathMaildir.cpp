@@ -86,7 +86,8 @@ EmpathMaildir::sync(const EmpathURL & url)
 		QDir::NoSymLinks | QDir::Files);
 
 	QStringList fileList(d.entryList());
-	empathDebug("There are " + QString().setNum(fileList.count()) + " files in cur");
+	empathDebug("There are " +
+		QString().setNum(fileList.count()) + " files in cur");
 	
 	// Look through the file list.
 	// 
@@ -154,6 +155,7 @@ EmpathMaildir::sync(const EmpathURL & url)
 			f->messageList().remove(iit.currentKey());
 		}
 	
+	_writeIndex();
 	empathDebug("sync done");
 }
 
@@ -322,7 +324,7 @@ EmpathMaildir::_init()
 	kapp->processEvents();
 	
 	// Tell the index to sync up with what's stored.
-//	index_.sync();
+	_readIndex();
 	
 	// Last op may have taken some time.
 	kapp->processEvents();
@@ -341,7 +343,8 @@ EmpathMaildir::_markNewMailAsSeen()
 	dn.setFilter(QDir::Files | QDir::NoSymLinks | QDir::Writable);
 	
 	QStringList l = dn.entryList();
-	empathDebug("There are " + QString().setNum(l.count()) + " messages to rename");
+	empathDebug("There are " +
+		QString().setNum(l.count()) + " messages to rename");
 	
 	QValueListConstIterator<QString> it = l.begin();
 
@@ -613,5 +616,99 @@ EmpathMaildir::_generateFlagsString(MessageStatus s)
 	flags += s & Replied	? "R" : "";
 	
 	return flags;
+}
+	
+	void
+EmpathMaildir::_readIndex()
+{
+	empathDebug("_readIndex() called");
+
+	QFile indexFile(path_ + "/.empathIndex");
+	
+	if (!indexFile.open(IO_ReadOnly)) {
+		empathDebug("Couldn't read index file \"" + indexFile.name() + "\"");
+		return;
+	}
+		
+	// Get a pointer to the folder related to us.
+	EmpathFolder * f(empath->folder(url_));
+	
+	if (f == 0) {
+		empathDebug("sync: Couldn't find folder !");
+		return;
+	}
+	
+	QRegExp re_flags(":2,[A-Za-z]*$");
+
+	QDataStream indexStream(&indexFile);
+	
+	EmpathIndexRecord * r;
+	
+	while (!indexStream.eof()) {
+
+		r = new EmpathIndexRecord;
+		indexStream >> *r;
+	
+		int flagsStart = r->id().find(re_flags);
+
+		if (!flagsStart) flagsStart = r->id().length();
+
+		QString flags = r->id().right(r->id().length() - flagsStart + 3);
+	
+		r->setStatus(
+		  flags.contains('S') ? Read	: (MessageStatus)0
+		| flags.contains('T') ? Trashed	: (MessageStatus)0
+		| flags.contains('R') ? Replied	: (MessageStatus)0);
+		
+		empathDebug("Inserting the new index record.");
+		
+		if (r->id().isEmpty()) {
+			empathDebug("Not really - no filename !");
+			delete r;
+			continue;
+		}
+
+		f->messageList().insert(r->id(), r);
+	}
+
+	indexFile.close();
+	
+	QFileInfo fi(path_ + "/cur/");
+	mtime_ = fi.lastModified();
+}
+
+	void
+EmpathMaildir::_writeIndex()
+{
+	empathDebug("_writeIndex() called");
+
+	// Get a pointer to the folder related to us.
+	EmpathFolder * f(empath->folder(url_));
+	
+	if (f == 0) {
+		empathDebug("sync: Couldn't find folder !");
+		return;
+	}
+	
+	QFile indexFile(path_  + "/.empathIndex");
+	
+	if (!indexFile.open(IO_WriteOnly)) {
+		empathDebug("Couldn't write to index \"" + indexFile.name() + "\"");
+		return;
+	}
+	
+	QDataStream indexStream(&indexFile);
+	
+	empathDebug("Writing " +
+		QString().setNum(f->messageList().count()) + " entries");
+
+	EmpathIndexIterator it(f->messageList());
+	
+	for (; it.current(); ++it) {
+		
+		indexStream << *it.current();
+	}
+	
+	indexFile.close();
 }
 

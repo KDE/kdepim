@@ -191,12 +191,6 @@ EmpathFolderWidget::_addChildren(const EmpathFolder & item)
 	empathDebug("Appending new item to list");
 	itemList_.append(newItem);
 	
-	empathDebug("Checking item's pixmap");
-	if (item.pixmap().isNull())
-		newItem->setPixmap(0, empathIcon("mini/folder.xpm"));
-	else
-		newItem->setPixmap(0, item.pixmap());
-	
 	empathDebug("Adding children of the new item now");
 
 	EmpathMailbox * m = empath->mailbox(item.url());
