@@ -243,6 +243,7 @@ public:
 	QValueList<RestoreInfo *> fDBList;
 	QTimer fTimer;
 	QValueList<RestoreInfo *>::ConstIterator fDBIterator;
+	int fDBIndex;
 };
 
 
@@ -347,7 +348,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		f = 0L;
 	}
 
-	fP->fDBIndex = fP->fDBList::begin();
+	fP->fDBIndex = 0;
+	fP->fDBIterator = fP->fDBList::begin();
 	fActionStatus = GettingFileInfo;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
@@ -369,7 +371,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	qBubbleSort(fP->fDBList);
 
-	fP->fDBIndex = fP->fDBList::begin();
+	fP->fDBIndex = 0;
+	fP->fDBIterator = fP->fDBList::begin();
 	fActionStatus = InstallingFiles;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
@@ -399,6 +402,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	dbi = *fP->fDBIterator;
 	++(fP->fDBIterator);
+	++(fP->fDBIndex);
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Trying to install " << dbi->path << endl;
 #endif
