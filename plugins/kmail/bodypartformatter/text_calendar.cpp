@@ -228,8 +228,6 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       const QString iCalendar = bodyPart->asText();
       if ( iCalendar.isEmpty() ) return AsIcon;
 
-      writer->begin( "" );
-
       // FIXME: Get the correct time zone from korganizerrc
       CalendarLocal cl;
       ICalFormat format;
@@ -257,6 +255,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       sMethod = "METHOD";
       vPartMicroParser( iCalendar, sMethod );
       sMethod = sMethod.lower();
+
+      if ( sMethod.isEmpty() ) return AsIcon;
 
       // First make the text of the message
       QString html;
@@ -397,8 +397,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         html += sDescr + "</td></tr></table>";
       }
 
+      writer->begin( "" );
       writer->write( html );
-
       writer->end();
     
       return Ok;
