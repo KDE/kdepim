@@ -1780,6 +1780,7 @@ on exit</guilabel>. Maybe you want to select <guilabel>Empty trash on exit</guil
 too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para></answer>
 </qandaentry>
 
+<!-- doesn't see to be such a good idea, as a break will be in the content-type header
 <qandaentry>
  <question><para>I'm using a non-English language to write my mails but &kmail;
  fails to set the charset.</para></question>
@@ -1792,6 +1793,7 @@ too. This will remove all the messages in the trash folder whenever you exit &km
  Your outgoing messages will now use this value in their headers.
  </para></answer>
 </qandaentry>
+-->
 
 <qandaentry>
  <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
