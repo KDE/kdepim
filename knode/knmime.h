@@ -22,6 +22,7 @@
 #include <qtextstream.h>
 #include <qfile.h>
 #include <qfont.h>
+#include <qcolor.h>
 #include <qasciidict.h>
 
 #include "knheaders.h"
@@ -236,7 +237,7 @@ class KNArticleCollection;
 class KNArticle : public KNMimeContent, public KNJobItem {
 
   public:
-    typedef QList<KNArticle> List;  
+    typedef QList<KNArticle> List;
 
     KNArticle(KNArticleCollection *c);
     ~KNArticle();
@@ -276,7 +277,7 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     KNHdrViewItem* listItem()            { return i_tem; }
     void setListItem(KNHdrViewItem *i);
     virtual void updateListItem() {}
-        
+
     //network lock (reimplemented from KNJobItem)
     bool isLocked()                      { return f_lags.get(0); }
     void setLocked(bool b=true);
@@ -395,6 +396,9 @@ class KNRemoteArticle : public KNArticle {
 
     void setForceDefaultCS(bool b);
 
+    QColor color() const { return c_olor; }
+    void setColor(const QColor& c) { c_olor = c; }
+
   protected:
     // hardcoded headers
     KNHeaders::MessageID m_essageID;
@@ -406,6 +410,7 @@ class KNRemoteArticle : public KNArticle {
     KNRemoteArticle *d_ref;          // displayed reference-article (may differ from i_dRef)
     unsigned char t_hrLevel;         // quality of threading
     short s_core;                    // guess what ;-)
+    QColor c_olor;                   // color for the header list
     unsigned short u_nreadFups,      // number of the article's unread follow-ups
                    n_ewFups;         // number of the article's new follow-ups
 

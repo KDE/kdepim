@@ -50,20 +50,24 @@ void KNScorableArticle::addScore(short s)
   _a->setChanged(true);
 }
 
+void KNScorableArticle::changeColor(const QColor& c)
+{
+  _a->setColor(c);
+}
 
-QString KNScorableArticle::from() const 
+QString KNScorableArticle::from() const
 {
   return _a->from()->asUnicodeString();
 }
 
 
-QString KNScorableArticle::subject() const 
+QString KNScorableArticle::subject() const
 {
   return _a->subject()->asUnicodeString();
 }
 
 
-QString KNScorableArticle::getHeaderByType(const QString& s) const 
+QString KNScorableArticle::getHeaderByType(const QString& s) const
 {
   KNHeaders::Base *h = _a->getHeaderByType(s.latin1());
   if (!h) return "";
@@ -93,11 +97,11 @@ KNScoringManager::KNScoringManager()
 
 KNScoringManager::~KNScoringManager()
 {
-  delete c_onfDialog;
+  //delete c_onfDialog;
 }
 
 
-QStringList KNScoringManager::getGroups() const 
+QStringList KNScoringManager::getGroups() const
 {
   KNAccountManager *am = knGlobals.accManager;
   KNNntpAccount *ac = am->first();
@@ -115,16 +119,10 @@ QStringList KNScoringManager::getGroups() const
 
 void KNScoringManager::configure()
 {
-  if(!c_onfDialog) {
-    c_onfDialog = new KDialogBase(knGlobals.topWidget, 0, false, i18n("Edit Scoring Rules"), KDialogBase::Close, KDialogBase::Close, true);
-    KScoringRulesConfig *c = new KScoringRulesConfig(this, true, c_onfDialog);
-    c_onfDialog->setMainWidget(c);
-    connect(c_onfDialog, SIGNAL(finished()), SLOT(slotDialogDone()));
-    KNHelper::restoreWindowSize("scoringRulesEditor", c_onfDialog, QSize(255,223));
-    c_onfDialog->show();
-  }
-  else
-    KWin::setActiveWindow(c_onfDialog->winId());
+  c_onfDialog = KScoringEditor::createEditor(this);
+  //connect(c_onfDialog, SIGNAL(finished()), SLOT(slotDialogDone()));
+  KNHelper::restoreWindowSize("scoringRulesEditor", c_onfDialog, QSize(255,223));
+  c_onfDialog->show();
 }
 
 
@@ -134,5 +132,6 @@ void KNScoringManager::slotDialogDone()
   c_onfDialog->delayedDestruct();
   c_onfDialog=0;
 }
+
 
 #include "knscoring.moc"

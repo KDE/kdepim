@@ -79,7 +79,7 @@ bool KNHdrViewItem::greyOut()
   if(art->type()==KNMimeBase::ATremote)
     return (  !((KNRemoteArticle*)art)->hasUnreadFollowUps() &&
               ((KNRemoteArticle*)art)->isRead() );
-  else return false;  
+  else return false;
 }
 
 
@@ -94,7 +94,12 @@ bool KNHdrViewItem::firstColBold()
 
 QColor KNHdrViewItem::normalColor()
 {
-  return knGlobals.cfgManager->appearance()->unreadThreadColor();
+  if (art->type()==KNMimeBase::ATremote) {
+    KNRemoteArticle *rart = static_cast<KNRemoteArticle*>(art);
+    return rart->color();
+  }
+  else
+    return knGlobals.cfgManager->appearance()->unreadThreadColor();
 }
 
 

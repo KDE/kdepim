@@ -28,7 +28,7 @@ class QMultiLineEdit;
 class QCheckBox;
 
 class KScoringRule;
-class KScoringRulesConfig;
+class KScoringEditorWidget;
 class KpgpConfig;
 class KConfigBase;
 class KProcess;
@@ -716,7 +716,7 @@ class ScoringWidget : public BaseWidget {
     void apply();
 
   private:
-    KScoringRulesConfig *ksc;
+    KScoringEditorWidget *ksc;
     KIntSpinBox *i_gnored,
                 *w_atched;
 
@@ -992,12 +992,12 @@ class PostNewsSpellingWidget : public BaseWidget {
 class PrivacyWidget : public BaseWidget {
 
   Q_OBJECT
- 
+
   public:
     PrivacyWidget(QWidget *_p=0, const char *n=0);
     ~PrivacyWidget();
     void apply();   // overrides BaseWidget::apply()
- 
+
   protected:
     KpgpConfig *conf;
 };

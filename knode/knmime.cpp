@@ -1563,7 +1563,7 @@ void KNArticle::setHeader(KNHeaders::Base *h)
   bool del=true;
   if(h->is("Subject"))
     s_ubject.fromUnicodeString(h->asUnicodeString(), h->rfc2047Charset());
-  else if(h->is("Date"))    
+  else if(h->is("Date"))
     d_ate.setUnixTime( (static_cast<KNHeaders::Date*>(h))->unixTime() );
   else if(h->is("Lines"))
     l_ines.setNumberOfLines( (static_cast<KNHeaders::Lines*>(h))->numberOfLines() );
@@ -1580,7 +1580,7 @@ bool KNArticle::removeHeader(const char *type)
 {
   if(strcasecmp("Subject", type)==0)
     s_ubject.clear();
-  else if(strcasecmp("Date", type)==0)    
+  else if(strcasecmp("Date", type)==0)
     d_ate.clear();
   else if(strcasecmp("Lines", type)==0)
     l_ines.clear();
@@ -1624,6 +1624,7 @@ void KNArticle::setForceDefaultCS(bool b)
 
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
+   c_olor(knGlobals.cfgManager->appearance()->unreadThreadColor()),
    u_nreadFups(0), n_ewFups(0)
 {
   m_essageID.setParent(this);
@@ -1689,7 +1690,7 @@ void KNRemoteArticle::setHeader(KNHeaders::Base *h)
   bool del=true;
   if(h->is("Message-ID"))
     m_essageID.from7BitString(h->as7BitString(false));
-  else if(h->is("From")) {    
+  else if(h->is("From")) {
     f_rom.setEmail( (static_cast<KNHeaders::From*>(h))->email() );
     f_rom.setName( (static_cast<KNHeaders::From*>(h))->name() );
   }
@@ -1709,7 +1710,7 @@ bool KNRemoteArticle::removeHeader(const char *type)
 {
   if(strcasecmp("Message-ID", type)==0)
     m_essageID.clear();
-  else if(strcasecmp("From", type)==0)    
+  else if(strcasecmp("From", type)==0)
     f_rom.clear();
   else if(strcasecmp("References", type)==0)
     r_eferences.clear();
@@ -1767,7 +1768,7 @@ void KNRemoteArticle::updateListItem()
     i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));
 
   i_tem->setText(2, QString("%1").arg(s_core));
-  
+
   i_tem->setExpandable( (threadMode() && hasVisibleFollowUps()) );
 
   i_tem->repaint(); //force repaint
@@ -1875,7 +1876,7 @@ void KNLocalArticle::setHeader(KNHeaders::Base *h)
   bool del=true;
   if(h->is("To"))
     t_o.from7BitString(h->as7BitString(false));
-  else if(h->is("Newsgroups"))    
+  else if(h->is("Newsgroups"))
     n_ewsgroups.from7BitString(h->as7BitString(false));
   else {
     del=false;
@@ -1890,7 +1891,7 @@ bool KNLocalArticle::removeHeader(const char *type)
 {
   if(strcasecmp("To", type)==0)
     t_o.clear();
-  else if(strcasecmp("Newsgroups", type)==0)    
+  else if(strcasecmp("Newsgroups", type)==0)
     n_ewsgroups.clear();
   else
      return KNArticle::removeHeader(type);

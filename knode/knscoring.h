@@ -31,6 +31,7 @@ public:
   virtual ~KNScorableArticle();
 
   virtual void addScore(short s);
+  virtual void changeColor(const QColor&);
   virtual QString from() const;
   virtual QString subject() const;
   virtual QString getHeaderByType(const QString&) const;
@@ -44,7 +45,7 @@ class KNScorableGroup : public ScorableGroup
 {
 public:
   KNScorableGroup();
-  virtual ~KNScorableGroup();    
+  virtual ~KNScorableGroup();
 };
 
 
@@ -59,18 +60,19 @@ class KNScoringManager : public KScoringManager
 {
   Q_OBJECT
 
-  public:
-    KNScoringManager();
-    virtual ~KNScoringManager();
-    virtual QStringList getGroups() const;
+public:
+  KNScoringManager();
+  virtual ~KNScoringManager();
+  virtual QStringList getGroups() const;
 
-    void configure();
+  void configure();
+  bool canColors() { return true; }
 
-  protected:
-    KDialogBase  *c_onfDialog;
+protected:
+  KDialogBase  *c_onfDialog;
 
-  protected slots:
-    void slotDialogDone();
+protected slots:
+  void slotDialogDone();
 };
 
 #endif

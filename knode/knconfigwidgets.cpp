@@ -1382,7 +1382,7 @@ KNConfig::ScoringWidget::ScoringWidget(Scoring *d, QWidget *p, const char *n)
   : BaseWidget(p,n), d_ata(d)
 {
   QGridLayout *topL = new QGridLayout(this,3,2, 5,5);
-  ksc = new KScoringRulesConfig(knGlobals.scoreManager, false, this);
+  ksc = new KScoringEditorWidget(knGlobals.scoreManager,this);
   topL->addMultiCellWidget(ksc, 0,0, 0,1);
 
   i_gnored=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
