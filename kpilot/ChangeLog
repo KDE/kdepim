@@ -1,5 +1,19 @@
 TODO LIST (Moved again to the file TODO)
 
+2003-7-6  Adriaan de Groot
+* Made the bugreport and question and help links in the about pages
+  clickable through KActiveLabel. Made the credits text scrollable
+  with a QTextEdit.
+* Weird redraw bugs reappear in the conduit config dialog, fixed again.
+
+2003-7-5  Adriaan de Groot
+* Upped the config version number to 440.
+* Worked on the docs (really!), so the HEAD docs now reflect _some_ of
+  the reality of KPilot 4.4.0. Noted lots of inconsistencies.
+  Put in lots of TODO's, and the whole thing needs going over.
+* Using the trademark HotSync in the GUI might not be a good idea.
+  Removed where I could, added a trademark reference in the about pages.
+
 2003-7-5  Adriaan de Groot
 * Renamed all conduit plugins from lib<bla>conduit (and variants) to
   conduit_<bla>, so that they're easier to identify in $KDEDIR/lib/kde3.
@@ -19,7 +33,7 @@ TODO LIST (Moved again to the file TODO)
   todo conduit. Stripped out lots of extra #includes. Stripped out extra
   Q_OBJECT macros. Reduced space in widget some. Fixed void return 0;
   Fixed improper AboutData in todo conduit.
-* New-style for abbrowser. Minor == vs = mixup. 
+* New-style for abbrowser. Minor == vs = mixup.
 * Shrunk margin for kpilot config dialog. Use the available charsets from
   KDE instead of our own list. Added a quit-after-sync option.
 
