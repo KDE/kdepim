@@ -68,7 +68,7 @@ class KABHtmlViewFactory : public KABLookFactory
 
     QString description()
     {
-      return i18n( "Html table style." );
+      return i18n( "HTML table style." );
     }
 };
 
