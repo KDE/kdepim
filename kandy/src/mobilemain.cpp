@@ -39,27 +39,27 @@
 #include <kaction.h>
 #include <kstdaction.h>
 
+#include <qpushbutton.h>
+
 #include "mobilegui.h"
 
 #include "mobilemain.h"
 #include <kstatusbar.h>
 #include "mobilemain.moc"
 
-MobileMain::MobileMain(CommandScheduler *scheduler)
+MobileMain::MobileMain(CommandScheduler *scheduler, KandyPrefs *prefs)
     : KMainWindow( 0, "MobileMain" )
 {
-  mView = new MobileGui(scheduler,this);
-
+  mView = new MobileGui(scheduler, prefs, this);
   setCentralWidget(mView);
   setupActions();
-
-//  statusBar()->insertItem(i18n(""),0,10);
 
   statusBar()->insertItem(i18n(" Disconnected "),1,0,true);
   connect(mView,SIGNAL(statusMessage(const QString &)),
           SLOT(showStatusMessage(const QString &)));
   connect(mView,SIGNAL(transientStatusMessage(const QString &)),
           SLOT(showTransientStatusMessage(const QString &)));
+
   statusBar()->show();
 
   setAutoSaveSettings();
@@ -82,11 +82,6 @@ void MobileMain::setupActions()
   KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
   KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
-
-  new KAction(i18n("Connect"),0,this,SIGNAL(modemConnect()),
-              actionCollection(),"modem_connect");
-  new KAction(i18n("Disconnect"),0,this,SIGNAL(modemDisconnect()),
-              actionCollection(),"modem_disconnect");
 
   createGUI("kandymobileui.rc");
 }
@@ -123,21 +118,6 @@ void MobileMain::dropEvent(QDropEvent *event)
 
     // do nothing
     KMainWindow::dropEvent(event);
-/*
-    KURL::List list;
-
-    // see if we can decode a URI.. if not, just ignore it
-    if (KURLDrag::decode(event, list) && !list.isEmpty())
-    {
-        const KURL &url = uri.first();
-
-        if (url.isLocalFile())
-        {
-            // load in the file
-            load(url.path());
-        }
-    }
-*/
 }
 
 void MobileMain::optionsConfigureKeys()
@@ -208,16 +188,4 @@ bool MobileMain::queryClose()
 void MobileMain::showTerminal()
 {
   emit showTerminalWin();
-}
-
-void MobileMain::setConnected(bool connected)
-{
-  if (connected) {
-    statusBar()->changeItem(i18n(" Connected "),1);
-    mView->readModelInformation();
-    mView->refreshStatus();
-
-  } else {
-    statusBar()->changeItem(i18n(" Disconnected "),1);
-  }
 }
