@@ -193,7 +193,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
 
   mLineEditAction->setText(query);
   if ( !mRemote || !query.isEmpty() )
-    slotStartCertificateListing();
+    slotSearch();
 
   if ( !import.isEmpty() )
     slotImportCertFromFile( KURL( import ) );
@@ -223,8 +223,7 @@ void CertManager::createActions() {
 
   (void)KStdAction::quit( this, SLOT(close()), actionCollection() );
 
-  action = KStdAction::redisplay( this, SLOT(slotStartCertificateListing()),
-				  actionCollection() );
+  action = KStdAction::redisplay( this, SLOT(slotRedisplay()), actionCollection() );
   // work around the fact that the stdaction has no shortcut
   KShortcut reloadShortcut = KStdAccel::shortcut(KStdAccel::Reload);
   reloadShortcut.append(KKey(CTRL + Key_R));
@@ -302,7 +301,7 @@ void CertManager::createActions() {
 
   (new LabelAction( i18n("Search:"), actionCollection(), "label_action"))->plug( _toolbar );
   mLineEditAction = new LineEditAction( QString::null, actionCollection(), this,
-					SLOT(slotStartCertificateListing()),
+					SLOT(slotSearch()),
 					"query_lineedit_action");
   mLineEditAction->plug( _toolbar );
 
@@ -312,7 +311,7 @@ void CertManager::createActions() {
                                   "location_combo_action");
   mComboAction->plug( _toolbar );
 
-  mFindAction = new KAction( i18n("Find"), "find", 0, this, SLOT(slotStartCertificateListing()),
+  mFindAction = new KAction( i18n("Find"), "find", 0, this, SLOT(slotSearch()),
 			     actionCollection(), "find" );
   mFindAction->plug( _toolbar );
 
@@ -388,11 +387,11 @@ void CertManager::updateStatusBarLabels() {
 //
 
 
-static QStringList extractKeyFingerprints( const QPtrList<Kleo::KeyListViewItem> & items ) {
-  QStringList result;
+static std::set<std::string> extractKeyFingerprints( const QPtrList<Kleo::KeyListViewItem> & items ) {
+  std::set<std::string> result;
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
     if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
-      result.push_back( fpr );
+      result.insert( fpr );
   return result;
 }
 
@@ -406,19 +405,32 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   KMessageBox::error( parent, msg, i18n( "Certificate Listing Failed" ) );
 }
 
-void CertManager::slotStartCertificateListing() {
+void CertManager::slotSearch() {
+  mPreviouslySelectedFingerprints.clear();
   // Clear display
   mKeyListView->clear();
-  const QString query = mLineEditAction->text();
-  startKeyListing( false, query );
+  mCurrentQuery = mLineEditAction->text();
+  startKeyListing( false, false, mCurrentQuery );
 }
 
-void CertManager::slotValidate() {
-  const QStringList selectedKeys = extractKeyFingerprints( mKeyListView->selectedItems() );
-  startKeyListing( true, selectedKeys );
+void CertManager::startRedisplay( bool validate ) {
+  mPreviouslySelectedFingerprints = extractKeyFingerprints( mKeyListView->selectedItems() );
+  if ( mPreviouslySelectedFingerprints.empty() )
+    startKeyListing( validate, true, mCurrentQuery );
+  else
+    startKeyListing( validate, true, mPreviouslySelectedFingerprints );
 }
 
-void CertManager::startKeyListing( bool validating, const QStringList & patterns ) {
+void CertManager::startKeyListing( bool validating, bool refresh, const std::set<std::string> & patterns ) {
+  // ARGH. This is madness. Shitty Qt containers don't support QStringList( patterns.begin(), patterns.end() ) :/
+  QStringList sl;
+  for ( std::set<std::string>::const_iterator it = patterns.begin() ; it != patterns.end() ; ++it )
+    // let's make extra sure, maybe someone tries to make Qt not support std::string->QString conversion
+    sl.push_back( QString::fromLatin1( it->c_str() ) );
+  startKeyListing( validating, refresh, sl );
+}
+
+void CertManager::startKeyListing( bool validating, bool refresh, const QStringList & patterns ) {
   mRemote = mNextFindRemote;
   mLineEditAction->setEnabled( false );
   mComboAction->setEnabled( false );
@@ -429,7 +441,7 @@ void CertManager::startKeyListing( bool validating, const QStringList & patterns
   assert( job );
 
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	   mKeyListView, validating ? SLOT(slotRefreshKey(const GpgME::Key&)) : SLOT(slotAddKey(const GpgME::Key&)) );
+	   mKeyListView, refresh ? SLOT(slotRefreshKey(const GpgME::Key&)) : SLOT(slotAddKey(const GpgME::Key&)) );
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
 	   this, SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
 
@@ -441,6 +453,15 @@ void CertManager::startKeyListing( bool validating, const QStringList & patterns
     return;
   }
   mProgressBar->setProgress( 0, 0 ); // enable busy indicator
+}
+
+static void selectKeys( Kleo::KeyListView * lv, const std::set<std::string> & fprs ) {
+  if ( !lv || fprs.empty() )
+    return;
+  for ( Kleo::KeyListViewItem * item = lv->firstChild() ; item ; item = item->nextSibling() ) {
+    const char * fpr = item->key().subkey(0).fingerprint();
+    item->setSelected( fpr && fprs.find( fpr ) != fprs.end() );
+  }
 }
 
 void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
@@ -458,6 +479,7 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
 
   mLineEditAction->focusAll();
   disconnectJobFromStatusBarProgress( res.error() );
+  selectKeys( mKeyListView, mPreviouslySelectedFingerprints );
 }
 
 void CertManager::slotContextMenu(Kleo::KeyListViewItem* item, const QPoint& point) {
@@ -517,6 +539,8 @@ void CertManager::slotImportCertFromFile( const KURL & certURL )
   if ( !certURL.isValid() ) // empty or malformed
     return;
 
+  mPreviouslySelectedFingerprints.clear();
+
   // Prevent two simultaneous imports
   updateImportActions( false );
 
@@ -550,6 +574,7 @@ static void showCertificateDownloadError( QWidget * parent, const GpgME::Error &
 }
 
 void CertManager::slotDownloadCertificate() {
+  mPreviouslySelectedFingerprints.clear();
   QPtrList<Kleo::KeyListViewItem> items = mKeyListView->selectedItems();
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
     if ( !it.current()->key().isNull() )
@@ -693,13 +718,13 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
 			      .arg( displayName ).arg( lines.join( QString::null ) ),
 			      i18n( "Certificate Import Result" ) );
 
-    if ( !isRemote() )
-      slotStartCertificateListing();
-    else
-      disconnectJobFromStatusBarProgress( res.error() );
+    disconnectJobFromStatusBarProgress( res.error() );
+    // save the fingerprints of imported certs for later selection:
+    const std::vector<GpgME::Import> imports = res.imports();
+    for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != imports.end() ; ++it )
+      mPreviouslySelectedFingerprints.insert( it->fingerprint() );
   }
-  if ( !mURLsToImport.isEmpty() )
-    importNextURL();
+  importNextURLOrRedisplay();
 }
 
 
@@ -1086,16 +1111,21 @@ void CertManager::slotUploadResult( KIO::Job* job )
 void CertManager::slotDropped(const KURL::List& lst)
 {
   mURLsToImport = lst;
-  importNextURL();
+  if ( !lst.empty() )
+    importNextURLOrRedisplay();
 }
 
-void CertManager::importNextURL()
+void CertManager::importNextURLOrRedisplay()
 {
-  if ( !mURLsToImport.isEmpty() ) {
+  if ( !mURLsToImport.empty() ) {
     // We can only import them one by one, otherwise the jobs would run into each other
     KURL url = mURLsToImport.front();
     mURLsToImport.pop_front();
     slotImportCertFromFile( url );
+  } else {
+    if ( isRemote() )
+      return;
+    startKeyListing( false, true, mPreviouslySelectedFingerprints );
   }
 }
 

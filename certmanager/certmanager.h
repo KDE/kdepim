@@ -41,6 +41,9 @@
 #include <qcstring.h>
 #include <qptrlist.h>
 
+#include <set>
+#include <string>
+
 namespace Kleo {
   class KeyListView;
   class KeyListViewItem;
@@ -87,7 +90,6 @@ signals:
 
 private slots:
     void slotStartCertificateDownload( const QString & fingerprint, const QString& displayName );
-    void slotStartCertificateListing();
     void newCertificate();
     void revokeCertificate();
     void extendCertificate();
@@ -127,22 +129,34 @@ private slots:
     void slotShowConfigurationDialog();
     void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
     void slotDropped(const KURL::List&);
+    /** Schedule a repaint for the listview items. E.g. when the
+	colour config has changed */
     void slotRepaint();
-    void slotValidate();
+    /** Schedule a validating keylisting for the selected items (or
+	all items, if none is selected). */
+    void slotValidate() { startRedisplay( true ); }
+    /** Schedule a non-validating keylisting for the selected items
+	(or all items, if none are selected). */
+    void slotRedisplay() { startRedisplay( false ); }
+    /** Start a keylisting with the current value of the query text as
+	pattern. */
+    void slotSearch();
 
 private:
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
     void updateImportActions( bool enable );
-    void startKeyListing( bool, const QStringList & );
+    void startKeyListing( bool, bool, const QStringList & );
+    void startKeyListing( bool, bool, const std::set<std::string> & );
     void startCertificateImport( const QByteArray & keyData, const QString& certDisplayName );
     void startImportCRL( const QString& fileName, bool isTempFile );
     void startSecretKeyExport( const QString & fingerprint );
     void startCertificateExport( const QStringList & fingerprints );
     void connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText );
     void disconnectJobFromStatusBarProgress( const GpgME::Error & err );
-    void importNextURL();
+    void importNextURLOrRedisplay();
+    void startRedisplay( bool validating );
     QString displayNameForJob( const Kleo::Job *job );
 
 private:
@@ -175,6 +189,8 @@ private:
     KAction * mValidateCertificateAction;
 
     QString mImportCRLTempFile;
+    QString mCurrentQuery;
+    std::set<std::string> mPreviouslySelectedFingerprints;
     bool     mNextFindRemote : 1; // state of the combo, i.e. whether the next find action will be remote
     bool     mRemote : 1; // whether the currently displayed items are from a remote listing
     bool     mDirMngrFound : 1;
