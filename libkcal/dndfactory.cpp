@@ -55,7 +55,7 @@ ICalDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
     icd->setPixmap( BarIcon( "appointment" ) );
   else if ( i->type() == "Todo" )
     icd->setPixmap( BarIcon( "todo" ) );
-  
+
   return icd;
 }
 
@@ -143,17 +143,22 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
 
     anEvent->recreate();
 
-    int daysOffset = anEvent->dtEnd().date().dayOfYear() -
-      anEvent->dtStart().date().dayOfYear();
+    // Calculate length of event
+    int daysOffset = anEvent->dtStart().date().daysTo(
+      anEvent->dtEnd().date() );
+    // new end date if event starts at the same time on the new day
+    QDateTime endDate(newDate.addDays(daysOffset), anEvent->dtEnd().time() );
 
     if ( newTime ) {
+      // additional offset for new time of day
+      int addSecsOffset( anEvent->dtStart().time().secsTo( *newTime ));
+      endDate=endDate.addSecs( addSecsOffset );
       anEvent->setDtStart( QDateTime( newDate, *newTime ) );
     } else {
       anEvent->setDtStart( QDateTime( newDate, anEvent->dtStart().time() ) );
     }
 
-    anEvent->setDtEnd( QDateTime( newDate.addDays( daysOffset ),
-				  anEvent->dtEnd().time() ) );
+    anEvent->setDtEnd( endDate );
     mCalendar->addEvent( anEvent );
   } else {
     Todo::List toList = cal.todos();
