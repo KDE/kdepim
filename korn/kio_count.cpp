@@ -121,7 +121,6 @@ void KIO_Count::count( KKioDrop *drop )
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
 
-	kdDebug() << "KIO::listDir( " << kurl.prettyURL() << ", false )" << endl;
 	//Making job to fetch file-list
 	_job = KIO::listDir( kurl, false );
 	_job->addMetaData( metadata );
@@ -183,7 +182,6 @@ void KIO_Count::showPassive( const QString& id )
 
 void KIO_Count::disconnectSlave()
 {
-	kdDebug() << "KIO_Count::disconnectSlave()" << endl;
 	if( _subjects_pending > 0 )
 		return; //Still getting data
 
@@ -203,7 +201,6 @@ void KIO_Count::disconnectSlave()
 //This function is called when fetching is over
 void KIO_Count::result( KIO::Job* job )
 {
-	kdDebug() << "KIO_Count::result()" << endl;
 	//job should be the latest job; elsewise: print an error.
 	if( job != _job )
 		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
@@ -227,8 +224,6 @@ void KIO_Count::result( KIO::Job* job )
 	delete _kurl; _kurl = 0;
 	delete _metadata; _metadata = 0;
 
-	kdDebug() << "name = " << name() << endl;
-	kdDebug() << _kio->_mailurls->count() << " != " << _new_mailurls->count() << endl;
 	if( _kio->_mailurls->count() != _new_mailurls->count() )
 	{
 		*_kio->_mailurls = *_new_mailurls;
@@ -330,7 +325,6 @@ void KIO_Count::addtoPassivePopup( KornMailSubject* subject )
 
 void KIO_Count::deleteSingleSubject( KIO_Single_Subject* single_subject )
 {
-	kdDebug() << "KIO_Count::deleteSingelSubject()" << endl;
 	delete single_subject;
 }
 

@@ -174,7 +174,6 @@ void KMailDrop::setCaption(QString s)
 
 void KMailDrop::setClickCmd(QString s)
 {
-  kdDebug() << "KMailDrop::setClickCmd(" << s << ")" << endl;
   _clickCmd = s;
   emit(configChanged());
 }
@@ -223,7 +222,6 @@ void KMailDrop::setNewFgColour(QColor c)
 
 void KMailDrop::setIcon(QString s)
 {
-  kdDebug() << "KMailDrop::setIcon(" << s << ")" << endl;
   _icon = s;
   emit(configChanged());
 }

@@ -42,6 +42,11 @@ class KornSubjectsDlg: public KDialogBase
 		SubjectListViewItem( QListView *parent, KornMailSubject * item);
 
 		/**
+		 * SubjectListViewItem Destructor
+		 */
+		~SubjectListViewItem();
+
+		/**
 		* Compare to list view item. Called if the sort header are clicked.
 		* @param item item to compare this with
 		* @param column column to compare

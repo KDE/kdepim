@@ -331,7 +331,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
         if( ! _protocol )
         	_protocol = _protocols->first()->clone();
 
-	if( _protocol->fields() & KIO_Protocol::server )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::server )
 	{
 		val = cfg.readEntry(fu(HostConfigKey));
 		if( val.isEmpty() )
@@ -345,7 +345,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 	} else
 		setKioServer( val2, "", _protocol->defaultPort(), KIO::MetaData(), false );
 
-	if( _protocol->fields() & KIO_Protocol::username )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::username )
 	{
 		_kurl->setUser( cfg.readEntry(fu(UserConfigKey)) );
 		if( _kurl->user().isEmpty() )
@@ -357,9 +357,8 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 		}
 	}
 
-	if( _protocol->fields() & KIO_Protocol::mailbox )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::mailbox )
 	{
-		kdDebug() << "FOOBAE" << endl;
 		_kurl->setPath( cfg.readEntry(fu(MailboxConfigKey)) );
 		if( _kurl->path().isEmpty() )
 		{
@@ -370,7 +369,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 		}
 	}
 
-	if( _protocol->fields() & KIO_Protocol::password )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::password )
 	{
 		_password = cfg.readEntry(fu(PassConfigKey));
 		//decrypt( _password );
@@ -382,7 +381,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 		}
 	}
 	
-	if( _protocol->fields() & KIO_Protocol::auth )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::auth )
 	{
 		(*_metadata)["auth"] = cfg.readEntry(fu(AuthConfigKey),"");
 		if( (*_metadata)["auth"].isEmpty() )
@@ -406,17 +405,17 @@ bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
 	}
 
 	cfg.writeEntry(fu(ProtoConfigKey),   _protocol->configName() );
-	if( _protocol->fields() & KIO_Protocol::server )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::server )
 		cfg.writeEntry(fu(HostConfigKey),    _kurl->host()     );
-	if( _protocol->fields() & KIO_Protocol::port )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::port )
 		cfg.writeEntry(fu(PortConfigKey),    _kurl->port()     );
-	if( _protocol->fields() & KIO_Protocol::username )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::username )
 		cfg.writeEntry(fu(UserConfigKey),    _kurl->user() );
-	if( _protocol->fields() & KIO_Protocol::mailbox )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::mailbox )
 		cfg.writeEntry(fu(MailboxConfigKey), _kurl->path()     );
-	if( _protocol->fields() & KIO_Protocol::password )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::password )
 		cfg.writeEntry(fu(PassConfigKey), p );
-	if( _protocol->fields() & KIO_Protocol::auth )
+	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::auth )
 		cfg.writeEntry(fu(AuthConfigKey), auth() );
 
 	return true;

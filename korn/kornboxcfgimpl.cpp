@@ -92,9 +92,9 @@ void KornBoxCfgImpl::readViewConfig()
 	this->chNewText->setChecked(   _config->readBoolEntry ( "hasnewfgcolour", true ) );
 	this->cbNewText->setColor(     _config->readColorEntry( "newfgcolour", &Qt::black ) );
 	this->chNormalBack->setChecked(_config->readBoolEntry ( "hasnormalbgcolour", false ) );
-	this->cbNormalBack->setColor(  _config->readColorEntry( "normalbgcolour" ) );
+	this->cbNormalBack->setColor(  _config->readColorEntry( "normalbgcolour", &Qt::white ) );
 	this->chNewBack->setChecked(   _config->readBoolEntry ( "hasnewbgcolour", false ) );
-	this->cbNewBack->setColor(     _config->readColorEntry( "newbgcolour" ) );
+	this->cbNewBack->setColor(     _config->readColorEntry( "newbgcolour", &Qt::white ) );
 	
 	this->chNormalIcon->setChecked(_config->readBoolEntry( "hasnormalicon", false ) );
 	this->ibNormalIcon->setIcon(   _config->readEntry    ( "normalicon", "" ) );
@@ -109,7 +109,6 @@ void KornBoxCfgImpl::readViewConfig()
 	*_fonts[ 1 ] = _config->readFontEntry( "newfont" );
 	*_anims[ 0 ] = _config->readEntry    ( "normalanim", "" );
 	*_anims[ 1 ] = _config->readEntry    ( "newanim", "" );
-	
 }
 
 void KornBoxCfgImpl::readEventConfig()

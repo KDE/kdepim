@@ -75,7 +75,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		
 		_kioList->append( kiodrop );
 		
-		info->index = index;
+		info->index = counter;
 		info->reset = accountGroup->readNumEntry( "reset", 0 );
 		info->msgnr = 0;
 		info->newMessages = false;
@@ -228,7 +228,6 @@ void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 
 void AccountManager::slotValidChanged( bool )
 {
-  kdDebug() << "AccountManager::slotValidChange()" << endl;
 	setTooltip( getTooltip() );
 }
 

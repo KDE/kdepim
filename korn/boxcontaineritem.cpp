@@ -162,7 +162,7 @@ void BoxContainerItem::runCommand( const QString& cmd )
 {
 	KProcess *process = new KProcess;
 	process->setUseShell( true );
-	*process << KProcess::quote( KProcess::quote( cmd ) );
+	*process << KProcess::quote( cmd );
 	connect( process, SIGNAL( processExited (KProcess *) ), this, SLOT( processExited( KProcess * ) ) );
 	process->start();
 }
@@ -178,7 +178,7 @@ void BoxContainerItem::mouseButtonPressed( Qt::ButtonState state )
 		button = 1;
 	else
 		return; //Invalid mouse button
-	
+
 	if( _recheckSettings[ button ] )
 		doRecheck();
 	if( _resetSettings[ button ] )

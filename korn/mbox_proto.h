@@ -40,8 +40,8 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
-	virtual int fields() const { return mailbox; }
-	virtual int urlFields() const { return no_fields; }
+	virtual int fields() const { return no_fields; }
+	virtual int urlFields() const { return mailbox; }
 		
 	virtual QString mailboxName() const { return i18n( "File:" ); }
 	

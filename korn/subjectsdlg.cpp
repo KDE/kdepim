@@ -16,12 +16,17 @@
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( QListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)
 	: KListViewItem(parent, item->getSender(), item->getSubject(), "", KGlobal::locale()->formatNumber(item->getSize(), 0))
-	, _mailSubject(item)
+	, _mailSubject( new KornMailSubject( *item ) )
 {
 	// convert the date according to the user settings and show it in column 2
 	QDateTime date;
 	date.setTime_t(_mailSubject->getDate());
 	setText(2, KGlobal::locale()->formatDateTime(date, true, true));
+}
+
+KornSubjectsDlg::SubjectListViewItem::~SubjectListViewItem()
+{
+	delete _mailSubject;
 }
 
 int KornSubjectsDlg::SubjectListViewItem::compare( QListViewItem* item, int column, bool ascending ) const
@@ -223,8 +228,6 @@ void KornSubjectsDlg::reloadSubjects()
 	
 	_subjects->progress->show();
 	
-	kdDebug() << "KornSubjectsDlg::reloadSubjects(): " << _subjects->progress->isVisible() << endl;
-	
 	prepareStep1Subjects( _subjects->it->current() );
 }
 
@@ -286,6 +289,9 @@ bool KornSubjectsDlg::makeSubjectsStruct()
 
 void KornSubjectsDlg::deleteSubjectsStruct()
 {
+	if( !_subjects )
+		return;
+
 	disconnect( _subjects->progress, SIGNAL( cancelPressed() ), this, SLOT( slotSubjectsCanceled() ) );
 	
 	delete _subjects->progress;
@@ -323,6 +329,7 @@ void KornSubjectsDlg::subjectAvailable( KornMailSubject * subject )
 		_subjects->subjects->push_back( *subject );
 	
 	delete subject;
+	
 }
 
 void KornSubjectsDlg::subjectsReady( bool success )
@@ -347,6 +354,9 @@ void KornSubjectsDlg::subjectsReady( bool success )
 	{
 		prepareStep1Subjects( _subjects->it->current() );
 	} else {
+		//Clear list first
+		_list->clear();
+		
 		//All subjects downloaded
 		for( QValueVector<KornMailSubject>::iterator it = _subjects->subjects->begin(); it != _subjects->subjects->end();
 				   ++it )
