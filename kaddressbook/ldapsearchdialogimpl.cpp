@@ -36,59 +36,59 @@
 static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
 {
   QString res;
-  bool alredy = FALSE;
+  bool alredy = false;
   for ( KABC::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( alredy )
       res += sep;
     alredy = TRUE;
-    res += QString::fromUtf8(*it);
+    res += QString::fromUtf8( *it );
   }
   return res;
 }
 
-static QMap<QString,QString>& adrbookattr2ldap() {
-  static QMap<QString,QString> keys;
-  if( keys.isEmpty() ) {
-    keys[i18n("Full Name")] = "cn";
-    keys[i18n("File As")] = "cn";
-    keys[i18n("Email")] = "mail";
-    keys[i18n("Home Phone")] = "telephoneNumber";
-    keys[i18n("Business Phone")] = "telephoneNumber";
-    keys[i18n("State")] = "st";
-    keys[i18n("Country")] = "c";
+static QMap<QString, QString>& adrbookattr2ldap()
+{
+  static QMap<QString, QString> keys;
+
+  if ( keys.isEmpty() ) {
+    keys[ i18n( "Full Name" ) ] = "cn";
+    keys[ i18n( "File As" ) ] = "cn";
+    keys[ i18n( "Email" ) ] = "mail";
+    keys[ i18n( "Home Phone" ) ] = "telephoneNumber";
+    keys[ i18n( "Business Phone" ) ] = "telephoneNumber";
+    keys[ i18n( "State" ) ] = "st";
+    keys[ i18n( "Country" ) ] = "c";
   }  
+
   return keys;
 }
 
-class ContactListItem : public QListViewItem {
-public:
-  ContactListItem( QListView* parent, const KABC::LdapAttrMap& attrs )
-    : QListViewItem( parent), _attrs(attrs) {}
-  KABC::LdapAttrMap _attrs;
+class ContactListItem : public QListViewItem
+{
+  public:
+    ContactListItem( QListView* parent, const KABC::LdapAttrMap& attrs )
+      : QListViewItem( parent ), mAttrs( attrs )
+    { }
 
-  virtual QString text( int col ) const {
-    // Look up a suitable attribute for column col
-    QString colName = listView()->columnText(col);
-    return join( _attrs[adrbookattr2ldap()[colName]], ", " );
-  }
+    KABC::LdapAttrMap mAttrs;
+
+    virtual QString text( int col ) const
+    {
+      // Look up a suitable attribute for column col
+      QString colName = listView()->columnText( col );
+      return join( mAttrs[ adrbookattr2ldap()[ colName ] ], ", " );
+    }
 };
 
-/* 
- *  Constructs a LDAPSearchDialogImpl which is a child of 'parent', with the 
- *  name 'name' and widget flags set to 'f' 
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
 LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* parent, const char* name, bool modal, WFlags fl )
   : LDAPSearchDialog( parent, name, modal, fl ), mAddressBook( ab )
 {
-  numHosts = 0;
-  bOK = false;
+  mNumHosts = 0;
+  mIsOK = false;
 
-  filterCombo->insertItem(i18n("Name"));
-  filterCombo->insertItem(i18n("Email"));
-  filterCombo->insertItem(i18n("Phone Number"));
+  filterCombo->insertItem( i18n( "Name" ) );
+  filterCombo->insertItem( i18n( "Email" ) );
+  filterCombo->insertItem( i18n( "Phone Number" ) );
  
   resultListView->setSelectionMode( QListView::Multi );
   resultListView->setAllColumnsShowFocus( true );
@@ -112,43 +112,42 @@ LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* pare
 
 void LDAPSearchDialogImpl::rereadConfig()
 {
-    // Create one KABC::LdapClient per selected server and configure it.
+  // Create one KABC::LdapClient per selected server and configure it.
 
   // First clean the list to make sure it is empty at 
   // the beginning of the process
-  ldapclientlist.setAutoDelete(TRUE);
-  ldapclientlist.clear();
+  mLdapClientList.setAutoDelete( true );
+  mLdapClientList.clear();
 
   // then read the config file and register all selected 
   // server in the list
   KConfig* config = kapp->config();
-  config->setGroup("LDAP");
-  numHosts = config->readUnsignedNumEntry( "NumSelectedHosts"); 
-  if (!numHosts) {
+  config->setGroup( "LDAP" );
+  mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
+  if ( !mNumHosts ) {
     KMessageBox::error( this, i18n( "You must select a LDAP server before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );
-    bOK = false;
+    mIsOK = false;
   } else {
-    bOK = true;
-    for ( int j = 0; j < numHosts; j++ ) {
+    mIsOK = true;
+    for ( int j = 0; j < mNumHosts; ++j ) {
       KABC::LdapClient* ldapClient = new KABC::LdapClient( this, "ldapclient" );
     
-      QString host =  config->readEntry( QString( "SelectedHost%1" ).arg(j), "" ).stripWhiteSpace();
-      if ( host != "" ){
+      QString host =  config->readEntry( QString( "SelectedHost%1" ).arg( j ), "" );
+      if ( !host.isEmpty() )
         ldapClient->setHost( host );
-      }
-      QString port = QString::number(config->readUnsignedNumEntry(QString( "SelectedPort%1" ).arg(j)));
-      if(!port.isEmpty() ) {
+
+      QString port = QString::number( config->readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( j ) ) );
+      if ( !port.isEmpty() )
         ldapClient->setPort( port );
-      }
-      QString base = config->readEntry(QString( "SelectedBase%1" ).arg(j), "" ).stripWhiteSpace();
-      if ( base != "" ){
+
+      QString base = config->readEntry( QString( "SelectedBase%1" ).arg( j ), "" );
+      if ( !base.isEmpty() )
         ldapClient->setBase( base );
-      }
 
       QStringList attrs;
-      for( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it) {
+      for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
         attrs << *it;
-      }
+
       ldapClient->setAttrs( attrs );
 
       connect( ldapClient, SIGNAL( result( const KABC::LdapObject& ) ),
@@ -158,42 +157,28 @@ void LDAPSearchDialogImpl::rereadConfig()
       connect( ldapClient, SIGNAL( error( const QString& ) ),
 	       this, SLOT( slotError( const QString& ) ) );
 
-      //_ldapClient->setHost("sphinx500.bsi.bund.de");
-      //_ldapClient->setHost( "ldap.bigfoot.com" );
-      //_ldapClient->setBase( "dc=klaralvdalens-datakonsult,dc=se" );
-      //_ldapClient->setBase(""); 
-      ldapclientlist.append( ldapClient );     
+      mLdapClientList.append( ldapClient );     
     }
 
-    while( resultListView->header()->count() > 0 ) {
+/** CHECKIT*/
+    while ( resultListView->header()->count() > 0 ) {
       resultListView->removeColumn(0);
     }
 
-// Disabled because of restructuring of views.
-#if 0
-    QStringList* field = _adrBook->fields();
-    for ( uint i = 0; i < field->count(); i++ )
-      resultListView->addColumn( Attributes::instance()->fieldToName( (*field)[i] ) );
-#endif
-    
-    resultListView->addColumn( i18n("Full Name") );
-    resultListView->addColumn( i18n("Email") );
+    resultListView->addColumn( i18n( "Full Name" ) );
+    resultListView->addColumn( i18n( "Email" ) );
 
     resultListView->clear();
   }
 }
 
-/*  
- *  Destroys the object and frees any allocated resources
- */
 LDAPSearchDialogImpl::~LDAPSearchDialogImpl()
 {
-    // no need to delete child widgets, Qt does it all for us
 }
 
 void LDAPSearchDialogImpl::cancelQuery()
 {
-  for( KABC::LdapClient* client = ldapclientlist.first(); client; client = ldapclientlist.next() ) {
+  for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->cancelQuery();
   }
 }
@@ -205,46 +190,54 @@ void LDAPSearchDialogImpl::slotAddResult( const KABC::LdapObject& obj )
 
 void LDAPSearchDialogImpl::slotSetScope( bool rec )
 {
-  for( KABC::LdapClient* client = ldapclientlist.first(); client; client = ldapclientlist.next() ) {
-    if( rec ) client->setScope( "sub" );
-    else client->setScope( "one" );  
+  for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+    if ( rec )
+      client->setScope( "sub" );
+    else
+      client->setScope( "one" );  
   }
 }
 
 QString LDAPSearchDialogImpl::makeFilter( const QString& query, const QString& attr )
 {
   QString result;
-  if( query.isEmpty() ) result = "%1=*%2";
-  else result = "%1=*%2*";
-  if( attr == i18n("Name") ) {
+
+  if ( query.isEmpty() )
+    result = "%1=*%2";
+  else
+    result = "%1=*%2*";
+
+  if ( attr == i18n( "Name" ) ) {
     result = result.arg( "cn" ).arg( query );
-  } else if( attr == i18n( "Email" ) ) {
+  } else if ( attr == i18n( "Email" ) ) {
     result = result.arg( "mail" ).arg( query );
-  } else if( attr == i18n( "Phone Number" ) ) {
+  } else if ( attr == i18n( "Phone Number" ) ) {
     result = result.arg( "telePhonenumber" ).arg( query );
   } else {
     // Error?
     result = QString::null;
   }
+
   return result;
 }
 
 void LDAPSearchDialogImpl::slotStartSearch()
 {
   cancelQuery();
-  //closeButton->setEnabled( false );
+
   QApplication::setOverrideCursor( Qt::waitCursor );
-  searchButton->setText( i18n("Stop" ) );
+  searchButton->setText( i18n( "Stop" ) );
+
   disconnect( searchButton, SIGNAL( clicked() ),
-	      this, SLOT( slotStartSearch() ) );
+              this, SLOT( slotStartSearch() ) );
   connect( searchButton, SIGNAL( clicked() ),
-	   this, SLOT( slotStopSearch() ) );
+           this, SLOT( slotStopSearch() ) );
 
   QString filter = makeFilter( searchEdit->text().stripWhiteSpace(), filterCombo->currentText() );
 
    // loop in the list and run the KABC::LdapClients 
   resultListView->clear();
-  for( KABC::LdapClient* client = ldapclientlist.first(); client; client = ldapclientlist.next() ) {
+  for( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->startQuery( filter );
   }
 }
@@ -258,22 +251,24 @@ void LDAPSearchDialogImpl::slotStopSearch()
 void LDAPSearchDialogImpl::slotSearchDone()
 {
   // If there are no more active clients, we are done.
-  for( KABC::LdapClient* client = ldapclientlist.first(); client; client = ldapclientlist.next() ) {
-    if( client->isActive() ) return;
+  for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+    if ( client->isActive() )
+      return;
   }
+
   disconnect( searchButton, SIGNAL( clicked() ),
-	      this, SLOT( slotStopSearch() ) );
+              this, SLOT( slotStopSearch() ) );
   connect( searchButton, SIGNAL( clicked() ),
-	   this, SLOT( slotStartSearch() ) );
-  searchButton->setText( i18n("Search" ) );  
+           this, SLOT( slotStartSearch() ) );
+
+  searchButton->setText( i18n( "Search" ) );
   QApplication::restoreOverrideCursor();
-  //closeButton->setEnabled( true );
 }
 
-void LDAPSearchDialogImpl::slotError( const QString& err )
+void LDAPSearchDialogImpl::slotError( const QString& error )
 {
   QApplication::restoreOverrideCursor();
-  KMessageBox::error( this, err );
+  KMessageBox::error( this, error );
 }
 
 void LDAPSearchDialogImpl::closeEvent( QCloseEvent* e )
@@ -290,10 +285,10 @@ void LDAPSearchDialogImpl::slotAddSelectedContacts()
       KABC::Addressee addr;
 
       // name
-      addr.setNameFromString( QString::fromUtf8( cli->_attrs["cn"].first() ) );
+      addr.setNameFromString( QString::fromUtf8( cli->mAttrs["cn"].first() ) );
 
       // email
-      KABC::LdapAttrValue lst = cli->_attrs["mail"];
+      KABC::LdapAttrValue lst = cli->mAttrs["mail"];
       KABC::LdapAttrValue::ConstIterator it = lst.begin();
       bool pref = true;
       if ( it != lst.end() ) {
@@ -303,7 +298,7 @@ void LDAPSearchDialogImpl::slotAddSelectedContacts()
       }
 
       // phone
-      addr.insertPhoneNumber( QString::fromUtf8( cli->_attrs["telePhonenumber"].first() ) );
+      addr.insertPhoneNumber( QString::fromUtf8( cli->mAttrs[ "telePhonenumber" ].first() ) );
 
       if ( mAddressBook )
         mAddressBook->insertAddressee( addr );
@@ -323,21 +318,22 @@ QString LDAPSearchDialogImpl::selectedEMails() const
 {
   QStringList result;
   ContactListItem* cli = static_cast<ContactListItem*>( resultListView->firstChild() );
-  while( cli ) {
-    if( cli->isSelected() ) {
-      QString email = QString::fromUtf8(cli->_attrs["mail"].first()).stripWhiteSpace();
-      if( !email.isEmpty() ) {
-	QString name = QString::fromUtf8(cli->_attrs["cn"].first()).stripWhiteSpace();
-	if( name.isEmpty() ) {
-	  result << email;
-	} else {
-	  result << name + " <" + email + ">";
-	}
+  while ( cli ) {
+    if ( cli->isSelected() ) {
+      QString email = QString::fromUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
+      if ( !email.isEmpty() ) {
+        QString name = QString::fromUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
+        if ( name.isEmpty() ) {
+          result << email;
+        } else {
+          result << name + " <" + email + ">";
+        }
       }
     }
     cli = static_cast<ContactListItem*>( cli->nextSibling() );
   }
-  return result.join(", ");
+
+  return result.join( ", " );
 }
 
 void LDAPSearchDialogImpl::slotSendMail()

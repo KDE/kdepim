@@ -29,7 +29,7 @@ void PrefsDialog::setupLdapPage()
   ////////////////////////////////////////
   // Views
   QFrame *page = addPage( i18n("Views"), i18n("Views"),
-                          KGlobal::iconLoader()->loadIcon( "viewmag", KIcon::Desktop ) );
+                          KGlobal::iconLoader()->loadIcon( "view_remove", KIcon::Desktop ) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( page, spacingHint(), marginHint() );
   topLayout->setAutoAdd( true );

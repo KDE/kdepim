@@ -37,7 +37,7 @@ class LDAPSearchDialogImpl : public LDAPSearchDialog
 public:
   LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* parent, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
   ~LDAPSearchDialogImpl();
-  bool isOK() const { return bOK; }
+  bool isOK() const { return mIsOK; }
 
   void rereadConfig();
 
@@ -66,9 +66,9 @@ private:
 
   void cancelQuery();
 
-  int numHosts;
-  QPtrList<KABC::LdapClient> ldapclientlist;
-  bool bOK;
+  int mNumHosts;
+  QPtrList<KABC::LdapClient> mLdapClientList;
+  bool mIsOK;
   KABC::AddressBook *mAddressBook;
 };
 
