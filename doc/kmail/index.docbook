@@ -58,7 +58,7 @@ $Id$
 
 </authorgroup>
 
-<date>2002-07-11</date>
+<date>2002-07-27</date>
 <releaseinfo>1.04.02</releaseinfo>
 
 <copyright>
@@ -895,7 +895,8 @@ and action list respectively, before the filter is saved.</para>
 messages. This can be done by choosing <guilabel>From</guilabel>. A
 good bet for a mailing list would be
 <guilabel>&lt;recipients&gt;</guilabel>. But there are other criteria
-a filter can search for:</para>
+a filter can search for. Note that all patterns are interpreted 
+case-insensitively:</para>
 
 <variablelist>
 <varlistentry>
