@@ -78,7 +78,7 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 //	fEventList->setAlternateBackground( QColor( 221, 146, 240 ) );
 	g->addMultiCellWidget(fEventList, 0, 2, 3, 3);
 
-	connect(fDatePicker, SIGNAL(), SLOT(slotDayChanged()));
+	connect(fDatePicker, SIGNAL(dateChanged()), SLOT(slotDayChanged()));
 	connect(fAddButton, SIGNAL(clicked()), SLOT(slotAddEvent()));
 	connect(fEditButton, SIGNAL(clicked()), SLOT(slotEditEvent()));
 	connect(fDeleteButton, SIGNAL(clicked()), SLOT(slotDeleteEvent()));
