@@ -1,0 +1,10 @@
+debian/tmp/usr/bin/kalarmd
+debian/tmp/usr/bin/korgac
+debian/tmp/usr/lib/kde3/libkcm_alarmdaemonctrl.la
+debian/tmp/usr/lib/kde3/libkcm_alarmdaemonctrl.so
+debian/tmp/usr/lib/libkalarmd.la
+debian/tmp/usr/lib/libkalarmd.so.*
+debian/tmp/usr/share/applnk/Settings/System/alarmdaemonctrl.desktop
+debian/tmp/usr/share/apps/kalarmdgui
+debian/tmp/usr/share/autostart/kalarmd.autostart.desktop
+debian/tmp/usr/share/autostart/korgac.desktop
