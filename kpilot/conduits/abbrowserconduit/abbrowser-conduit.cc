@@ -35,6 +35,7 @@
 #include <qtimer.h>
 #include <qtextcodec.h>
 #include <qfile.h>
+#include <qregexp.h>
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/resourcefile.h>
