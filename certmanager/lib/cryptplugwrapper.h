@@ -76,6 +76,7 @@ namespace Kleo {
   class DeleteJob;
   class SignEncryptJob;
   class DecryptVerifyJob;
+  class CryptoConfig;
 }
 
 /*! \file cryptplugwrapper.h
