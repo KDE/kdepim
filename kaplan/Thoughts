@@ -2,6 +2,7 @@
 * Note: Lines starting with a # are my comments - Cornelius
 * Note: Lines starting with a "z" are my comments - Zack :)
 * Note: Lines starting with a "s" are my comments - Simon
+* Note: Lines starting with a % are my comments - Don
 
 Misc:
 =====
@@ -45,23 +46,77 @@ z Kaplan so that the interface looks like
 z which is not that bad. The question would be how to render the tree
 z on the Kaplan side while keeping the items on the parts side ( because
 z e.g. KMails hold custom pixmaps for the folders which had to be
-z displayed in the Kaplan tree). 
+z displayed in the Kaplan tree).
 
-d That raises an interesting point: The KNotes plugin would not need an own 
+% The folder tree makes sense for advanced users, but I think
+% the simplicity of the current navigator widget has advantages for 
+% non power users.
+%
+% Actually instead of the navigator widget I think it makes sense 
+% to consider reusing the widget choosing widget in the latest 
+% version of the Qt designer, which in a sense can be
+% considered a generalization of the navigator widget. And could
+% make the folder tree in kmail unnecessary.
+%
+% I might investigate the Qt designer widget further but if someone
+% else wants to look at a folder tree widget that's cool with me.
+
+d That raises an interesting point: The KNotes plugin would not need an own
 d canvas in the WidgetStack then. It's sufficient to have the notes in the
 d folder view, an RMB menu on them and a "New Note" action.
 d So the new design must be able to catch that case (the current one does not).
-
 
 d - Toolbar Items
 d The KParts Technology only provides actions for the current part. It might be
 d desireable to have common actions that are always available.
 
+% I agree that it is desireable to have common actions always
+% available (and parts too like the todo list)
+%
+% But are you sure Kparts is limited in this way? KOrganizer can load 
+% multiple plugins simultaneously. And all of these plugins are kparts 
+% (eg. birthday import), and kactions for all loaded plugins are
+% created and made available simultaneously.
+%
+% Yeah, I'm quite positive you can load multiple parts simultaneously.
+
 # Certainly. Actions like "New Mail", "New Contact", "New Event" should be
 # available independently of a selected part.
 
+% This is a very important issue, I think we need a library with three 
+% methods:
+% KAddressBookIface loadKAddressBook()
+% KMailIface loadKMail()
+% KOrganizerIface loadKOrganizer()
+% 
+% Now if kontact is running then loadX will load the X part in kontact
+% (if it is not already loaded) and return a dcop iface for that
+% part.
+%
+% If kontact is not running but is the users preferred application
+% then loadX will start kontact and then do the above.
+%
+% If kontact is not running and is not the users preferred application
+% then a standalone version of X should be started, and an iface for
+% that standalone app returned.
+%
+% I think this library should be in libkdepim ad all the kdepim apps
+% should be moved into kdepim, so their iface files all be in one
+% package.
+%
+% Another important issue is invokeMailer and the fact that currently
+% KDE just runs kmail with command line arguments by default. That has
+% to be made smarter. 
+%
+% I guess when kmail is run with command line arguments it could
+% actually use loadKMail() and then use the resulting iface.
+%
+% And the same for all other loadX apps.
+
 d - Status Bar
 d We need a more sophisticated handling (progressbar, etc)
+
+% Definitely.
 
 # - Kaplan plugin unification
 # Currentlly all Kaplan plugins look quite similar. It would be nice, if we
@@ -70,6 +125,14 @@ d We need a more sophisticated handling (progressbar, etc)
 d I thouht of a KaplanPart, similar to a KOPart, if that makes sense. I don't think
 d a normal KPart is sufficient for us.
 
+% I've spent quite a bit of time in all pim *_part files and IIRC
+% the amount of duplicated code, is pretty much negligible.
+%
+% But a KaplanPart could make sense for when the parts want to communicate with
+% the container. Eg. if the parts want to add folders to the container
+% apps folder tree (or navigator)
+%
+% And maybe for communicating with the status bar.
 	
 Communication/Interaction:
 ==========================
@@ -92,6 +155,8 @@ z last used part on startup. Make sure its loading finishes and then
 z load the rest once the user can already interact with the last used
 z loaded part.
 
+% I guess my machine is too fast, starting parts is pretty quick here :-)
+
 d DCOP is too slow, internal communication should be handled via a dedicated
 d interface, communication with external applications (i.e. knotes) should be
 d done via wrapper parts that communicate with their respective IPC method to
@@ -108,11 +173,24 @@ s being intuitive (and fast) when using DCOP signals/slots (causing roundtrips) 
 s I have the impression that DCOP was used to work around an implementation detail
 s of certain applications.
 
-d Yes, but of course one should always prefer in-process IPC if possible. DCOP 
+d Yes, but of course one should always prefer in-process IPC if possible. DCOP
 d currently _works_ for kaplan, but that's all about it. It isn't exactly elegant.
 d The only advantange of the current approach is that we can allow the user to
 d run one of the parts standalone. I am not really sure we want that. I used to find
 d it desireable, but I am not sure anymore.
+
+% I love being able to run the apps inside or outside of the
+% container, it's just really cool being able to choose I think it's a
+% great feature and users will really love having the
+% choice. Especially when they are migrating.
+%
+% I think if we use the loadX methods defined above then we can still
+% support this. I'm PRO DCOP. And this way we don't have to special
+% case of the code depending on whether the application is running in
+% a container app or not.
+%
+% I find difficult to imagine a function that DCOP is not fast enough
+% to support. It supports all our current PIM IPC needs fine.
 
 # Communication with external applications is something which doesn't fit too
 # well with the 'integrated' approach of Kaplan. Is this really necessary?
@@ -129,6 +207,6 @@ d problems. (Martin's concern)
 # "Kaplan/Plugin". This is just as save as starting a program statically linking
 # its parts. I really don't see any security concerns here.
 
-d Ok, if we limit stuff to Kaplan/Plugin and Kaplan/Part that might be safe enough 
-d indeed. I (and Martin, who raise this concern initially) was just afraid of 
+d Ok, if we limit stuff to Kaplan/Plugin and Kaplan/Part that might be safe enough
+d indeed. I (and Martin, who raise this concern initially) was just afraid of
 d allowing "any" part.
