@@ -1,8 +1,8 @@
 /*
-    This file is part of libkolabformat - the library implementing the
+    This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004  Bo Thorsen <bo@sonofthor.dk>
+    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,11 +18,22 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
 */
 
 #include "note.h"
 
-using namespace KolabFormat;
+using namespace Kolab;
 
 
 Note::Note()
@@ -74,7 +85,7 @@ bool Note::loadAttribute( QDomElement& element )
   else if ( tagName == "backgroundcolor" )
     setBackgroundColor( stringToColor( element.text() ) );
   else
-    return Base::loadAttribute( element );
+    return KolabBase::loadAttribute( element );
 
   // We handled this
   return true;
@@ -83,7 +94,7 @@ bool Note::loadAttribute( QDomElement& element )
 bool Note::saveAttributes( QDomElement& element ) const
 {
   // Save the base class elements
-  Base::saveAttributes( element );
+  KolabBase::saveAttributes( element );
 
   // Save the elements
 #if 0

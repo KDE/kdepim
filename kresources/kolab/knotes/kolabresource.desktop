@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KolabResource_Notes
+X-KDE-Library=knotes_kolab
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=notes
+X-KDE-ResourceType=kolab
