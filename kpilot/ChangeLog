@@ -30,8 +30,14 @@ TODO LIST (Ignore the file TODO)
 * Update README, TODO, NEWS, AUTHORS in HEAD.
 * Merge the JPilot proxy changes (even though it's disabled).
 
-KPilot Developer's notes for March 9th, 2003
-============================================
+KPilot Developer's notes for March 12th, 2003
+=============================================
+
+2003-3-12  Adriaan de Groot
+* Lots of administrivia changes, like the FSF address.
+* Really ought to merge the copyright changes into BRANCH, since they're
+  still being released with weird copyright assignments.
+* vcal conduit in local-test mode will write out an .ics.
 
 2003-3-4  Adriaan de Groot
 * Welcome back to David Mott, author of several patches already and
