@@ -62,6 +62,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
      */
     virtual bool save();
 
+    KABC::Lock *lock();
+
     /** constructs a new calendar, with variables initialized to sane values. */
 //    ExchangeCalendar( KPIM::ExchangeAccount* account );
     /** constructs a new calendar, with variables initialized to sane values. */
@@ -231,7 +233,9 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     QMap<QDate, QDateTime>* mCacheDates;
     int mCachedSeconds;
     bool mAutoMailbox;
-};  
+
+    KABC::Lock *mLock;
+};
 
 }
 

@@ -36,6 +36,8 @@
 
 #include <kresources/configwidget.h>
 
+#include <kabc/locknull.h>
+
 #include "dateset.h"
 #include "exchangeaccount.h"
 #include "exchangeclient.h"
@@ -65,7 +67,9 @@ public:
 ResourceExchange::ResourceExchange( const KConfig *config )
   : ResourceCalendar( config )
 {
-  mCache = 0L;
+  mLock = new KABC::LockNull( true );
+
+  mCache = 0;
   kdDebug() << "Creating ResourceExchange" << endl;
   if (config ) {
     mAccount = new ExchangeAccount(
@@ -161,6 +165,11 @@ bool ResourceExchange::load()
 bool ResourceExchange::save()
 {
   return true;
+}
+
+KABC::Lock *ResourceExchange::lock()
+{
+  return mLock;
 }
 
 void ResourceExchange::slotMonitorNotify( const QValueList<long>& IDs, const QValueList<KURL>& urls )
