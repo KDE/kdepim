@@ -104,7 +104,7 @@ bool ResourceCalendar::load()
     Incidence::List::Iterator it;
     for ( it = incidences.begin(); it != incidences.end(); ++it ) {
       (*it)->setReadOnly( true );
-    }    
+    }
   }
 
   kdDebug(5800) << "Done loading resource " + resourceName() << endl;

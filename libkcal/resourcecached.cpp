@@ -42,7 +42,7 @@ using namespace KCal;
 ResourceCached::ResourceCached( const KConfig* config )
   : ResourceCalendar( config ), mReloadPolicy( ReloadNever ),
     mReloadInterval( 10 ), mReloaded( false ), mSavePolicy( SaveNever ),
-    mSaveInterval( 10 )
+    mSaveInterval( 10 ), mIdMapper( "kcal/uidmaps/" )
 {
   connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
   connect( &mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );
@@ -277,21 +277,27 @@ void ResourceCached::clearChanges()
 
 void ResourceCached::loadCache()
 {
-  if ( !mIdMapper.load( uidMapFile() ) )
-    kdError(5800) << "Can't read uid map file '" << uidMapFile() << "'" << endl;
+  setIdMapperIdentifier();
+  mIdMapper.load();
 
-  if ( KStandardDirs::exists( cacheFile() ) )
+  if ( KStandardDirs::exists( cacheFile() ) ) {
     mCalendar.load( cacheFile() );
+  }
 }
 
 void ResourceCached::saveCache()
 {
   kdDebug(5800) << "ResourceCached::saveCache(): " << cacheFile() << endl;
 
-  if ( !mIdMapper.save( uidMapFile() ) )
-    kdError(5800) << "Can't write uid map file '" << uidMapFile() << "'" << endl;
+  setIdMapperIdentifier();
+  mIdMapper.save();
 
   mCalendar.save( cacheFile() );
+}
+
+void ResourceCached::setIdMapperIdentifier()
+{
+  mIdMapper.setIdentifier( type() + "_" + identifier() );
 }
 
 void ResourceCached::clearCache()
@@ -366,11 +372,6 @@ KPIM::IdMapper& ResourceCached::idMapper()
 QString ResourceCached::cacheFile() const
 {
   return locateLocal( "cache", "kcal/kresources/" + identifier() );
-}
-
-QString ResourceCached::uidMapFile() const
-{
-  return locateLocal( "data", "kcal/uidmaps/" + type() + "/" + identifier() );
 }
 
 void ResourceCached::calendarIncidenceAdded( Incidence *i )
@@ -492,6 +493,8 @@ void ResourceCached::disableChangeNotification()
 
 void ResourceCached::slotReload()
 {
+  if ( !isActive() ) return;
+
   kdDebug(5800) << "ResourceCached::slotReload()" << endl;
 
   load();
@@ -499,6 +502,8 @@ void ResourceCached::slotReload()
 
 void ResourceCached::slotSave()
 {
+  if ( !isActive() ) return;
+
   kdDebug(5800) << "ResourceCached::slotSave()" << endl;
 
   save();

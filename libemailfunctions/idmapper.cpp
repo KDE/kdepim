@@ -1,6 +1,8 @@
 /*
-    This file is part of libkdepim.
+    This file is part of kdepim.
+
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,9 +20,12 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <qfile.h>
-
 #include "idmapper.h"
+
+#include <kstandarddirs.h>
+#include <kdebug.h>
+
+#include <qfile.h>
 
 using namespace KPIM;
 
@@ -28,15 +33,41 @@ IdMapper::IdMapper()
 {
 }
 
+IdMapper::IdMapper( const QString &path, const QString &identifier )
+  : mPath( path ), mIdentifier( identifier )
+{
+}
+
 IdMapper::~IdMapper()
 {
 }
 
-bool IdMapper::load( const QString &fileName )
+void IdMapper::setPath( const QString &path )
 {
-  QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) )
+  mPath = path;
+}
+
+void IdMapper::setIdentifier( const QString &identifier )
+{
+  mIdentifier = identifier;
+}
+
+QString IdMapper::filename()
+{
+  QString file = mPath;
+  if ( !file.endsWith( "/" ) ) file += "/";
+  file += mIdentifier;
+
+  return locateLocal( "data", file );
+}
+
+bool IdMapper::load()
+{
+  QFile file( filename() );
+  if ( !file.open( IO_ReadOnly ) ) {
+    kdError(5800) << "Can't read uid map file '" << filename() << "'" << endl;
     return false;
+  }
 
   clear();
 
@@ -53,11 +84,13 @@ bool IdMapper::load( const QString &fileName )
   return true;
 }
 
-bool IdMapper::save( const QString &fileName )
+bool IdMapper::save()
 {
-  QFile file( fileName );
-  if ( !file.open( IO_WriteOnly ) )
+  QFile file( filename() );
+  if ( !file.open( IO_WriteOnly ) ) {
+    kdError(5800) << "Can't write uid map file '" << filename() << "'" << endl;
     return false;
+  }
 
   QString content;
 

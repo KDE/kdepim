@@ -311,11 +311,11 @@ class ResourceCached : public ResourceCalendar,
      */
     virtual QString cacheFile() const;
 
-    virtual QString uidMapFile() const;
-
   protected slots:
     void slotReload();
     void slotSave();
+
+    void setIdMapperIdentifier();
 
   private:
     int mReloadPolicy;

@@ -1,6 +1,8 @@
 /*
-    This file is part of libkdepim.
+    This file is part of kdepim.
+
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,9 +19,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
-#ifndef IDMAPPER_H
-#define IDMAPPER_H
+#ifndef KPIM_IDMAPPER_H
+#define KPIM_IDMAPPER_H
 
 #include <qmap.h>
 #include <qvariant.h>
@@ -29,18 +30,51 @@ namespace KPIM {
 class IdMapper
 {
   public:
+    /**
+      Create Id mapper. You have to set path and identifier before you can call
+      load() or save().
+    */
     IdMapper();
+    /**
+      Create Id mapper. The path specifies the category of mapping, the
+      identifier the concrete object.
+      
+      If you don't pass an identifier you have to set it before calling load()
+      or save().
+      
+      The current implementation stores the data at
+      $(KDEHOME)/share/apps/<path>/<identifier>.
+    */
+    IdMapper( const QString &path, const QString &identifier = QString::null );
     ~IdMapper();
 
     /**
-      Loads the map from a file.
-     */
-    bool load( const QString &fileName );
+      Set id map path.
+    */
+    void setPath( const QString &path );
+    /**
+      Return id map path.
+    */
+    QString path() const { return mPath; }
 
     /**
-      Saves the map to a file.
+      Set id map identifier.
+    */
+    void setIdentifier( const QString &identifier );
+    /**
+      Return id map identifier.
+    */
+    QString identifier() const { return mIdentifier; }
+
+    /**
+      Loads the map.
      */
-    bool save( const QString &fileName );
+    bool load();
+
+    /**
+      Saves the map.
+     */
+    bool save();
 
     /**
       Clears the map.
@@ -73,8 +107,14 @@ class IdMapper
      */
     QString asString() const;
 
+  protected:
+    QString filename();
+
   private:
     QMap<QString, QVariant> mIdMap;
+
+    QString mPath;
+    QString mIdentifier;
 };
 
 }
