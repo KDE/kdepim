@@ -1,0 +1,87 @@
+<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
+  <!ENTITY kappname "&kandy;">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+  
+  
+]>
+
+<book lang="&language;">
+<bookinfo>
+<title>The Kandy Handbook</title>
+<authorgroup>
+<author>
+<firstname>Cornelius</firstname>
+<surname>Schumacher</surname>
+<affiliation>
+<address><email>schumacher@kde.org</email></address>
+</affiliation>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>11/04/2001</date>
+<releaseinfo>0.01.00</releaseinfo>
+<abstract>
+<para>Kandy is an application for synchronizing data on a mobile phone with the
+data on the desktop.</para>
+</abstract>
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kandy</keyword>
+</keywordset>
+</bookinfo>
+
+<chapter id="using-kandy">
+<title>Using Kandy</title>
+
+<sect1 id=mainwindow>
+<title>The Main Window</title>
+
+<para>The main window provides a low level interface for controlling the mobile
+phone via AT modem commands. You can type in commands in the upper middle field.
+The lower middle fields shows the direct response of the mobile phone. In the
+right side of the main window the processed output is shown.</para>
+
+<para> On the left side you have
+the list of available commands. You can execute them by double-clicking or
+pressing the "Execute" button. The modem response output fields show what happens.
+If you have typed in a new command you can add it to the list of available
+commands by pressing the "Add Command" button. A dialog pops up, which lets you
+select name and parameters for the command.</para>
+
+<para>The command list is saved to an XML
+file by selecting "Save" from the menu or presing the corresponding toolbar
+button. You can load an existing file by selecting "Open" from the menu.</para>
+
+</sect1>
+
+<sect1 id=mobilegui>
+<title>Mobile Interface Window</title>
+
+<para>By pressing the button at the lower left corner of the main window you
+open the Interface Window for your mobile phone. This shows a comprehensive view
+of the status and data present on the phone including.</para>
+
+<para>You can read the phone book by pressing the "Read" button. By üressing
+"Save" you can store the phonebook as list of comma-seperated values to disk.
+The "Import to KAB" button writes the phonebook to the KDE address book. The
+"Export form KAB" button loads the KDE address book into the list of
+phonenumbers. Currently it is not possible to ave phonebook data back to the
+mobile.</para>
+
+</sect1>
+
+<sect1 id=configuring>
+<title>Configuring Kandy</title>
+
+<para>By selecting the entry "Configure Kandy" from the menu you get the
+preferences dialog of Kandy. You can set the name of the serial device, where
+your mobile is connected in this dialog. Examples for the name of the serial
+device under Linux are /dev/ttyS0 for the first and /dev/ttyS1 for the second
+serial interface of your computer.</para>
+
+</sect1>
+
+</chapter>
+
+</book>
