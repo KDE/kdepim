@@ -25,7 +25,7 @@
 
 #include <kglobal.h>
 #include <klocale.h>
-#include <kio/kmdcodec.h>
+#include <kmdcodec.h>
 #include <kcharsets.h>
 #include <kmimemagic.h>
 #include <kdebug.h>
