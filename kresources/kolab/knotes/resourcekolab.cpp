@@ -153,7 +153,11 @@ bool ResourceKolab::load()
     rc &= loadSubResource( itR.key() );
   }
 
-  kdDebug() << k_funcinfo << " - done" << endl;
+  KCal::Journal::List journals = mCalendar.journals();
+  KCal::Journal::List::ConstIterator it;
+  for ( it = journals.begin(); it != journals.end(); ++it )
+    manager()->registerNote( this, *it );
+
   return rc;
 }
 
@@ -188,10 +192,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 
   // Find out if this note was previously stored in KMail
   bool newNote = subresource.isEmpty();
-
-  if ( !newNote ) {
-    mCalendar.addJournal( journal );
-  }
+  mCalendar.addJournal( journal );
 
   QString resource =
     newNote ? findWritableResource( mResources ) : subresource;
