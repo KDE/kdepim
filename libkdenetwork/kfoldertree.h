@@ -74,9 +74,10 @@ class KFolderTreeItem : public KListViewItem
       Templates,
       Root,
       Calendar,
+      Tasks,
+      Journals,
       Contacts,
       Notes,
-      Tasks,
       Other
     };
 
