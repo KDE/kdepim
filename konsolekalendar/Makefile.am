@@ -4,7 +4,7 @@ METASOURCES = AUTO
 
 bin_PROGRAMS = konsolekalendar
 
-konsolekalendar_SOURCES = konsolekalendarepoch.cpp konsolekalendarvariables.cpp konsolekalendaradd.cpp konsolekalendar.cpp main.cpp 
+konsolekalendar_SOURCES = konsolekalendarepoch.cpp konsolekalendardelete.cpp konsolekalendarchange.cpp konsolekalendarvariables.cpp konsolekalendaradd.cpp konsolekalendar.cpp main.cpp 
 konsolekalendar_LDADD   = $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 konsolekalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
