@@ -24,7 +24,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_ADDRESSWIDGET_H
 #define _KPILOT_ADDRESSWIDGET_H
@@ -141,6 +141,9 @@ public:
 
 
 // $Log$
+// Revision 1.19  2001/09/23 21:44:56  adridg
+// Myriad small changes
+//
 // Revision 1.18  2001/09/23 18:30:15  adridg
 // Adjusted widget for new config
 //

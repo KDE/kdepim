@@ -23,9 +23,10 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *memowidget_id="$Id$";
+static const char *memowidget_id =
+	"$Id$";
 
 #ifndef _KPILOT_OPTIONS_H
 #include "options.h"
@@ -96,22 +97,25 @@ static const char *memowidget_id="$Id$";
 
 
 
-MemoWidget::MemoWidget( QWidget* parent, const QString& path) : 
-	PilotComponent(parent,"component_memo",path), 
+MemoWidget::MemoWidget(QWidget * parent,
+	const QString & path) :
+	PilotComponent(parent, "component_memo", path),
 	fTextWidget(0L)
 {
 	FUNCTIONSETUP;
 
-	setGeometry(0, 0, 
+	setGeometry(0, 0,
 		parent->geometry().width(), parent->geometry().height());
 	setupWidget();
 	initialize();
 	fMemoList.setAutoDelete(true);
-	// fTextWidget->setFont(KPilotConfig::fixed());
 	slotUpdateButtons();
 
-	connect(fTextWidget, SIGNAL(textChanged()), 
+	connect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
+
+	/* NOTREACHED */
+	(void) memowidget_id;
 }
 
 MemoWidget::~MemoWidget()
@@ -126,8 +130,8 @@ MemoWidget::~MemoWidget()
 // Reads all the memos from the local database and places them
 // in the selection screen.
 //
-void
-MemoWidget::initializeMemos(PilotDatabase *memoDB)
+
+void MemoWidget::initializeMemos(PilotDatabase * memoDB)
 {
 	FUNCTIONSETUP;
 
@@ -135,7 +139,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 	// ShowSecrets tells us to also list memos with an attribute of "Secret"
 	// or "Private"
 	//
-	bool showSecrets=KPilotConfig::getConfig().getShowSecrets();
+	bool showSecrets = KPilotConfig::getConfig().getShowSecrets();
 
 	fMemoList.clear();
 
@@ -144,45 +148,50 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 
 
 	int currentRecord = 0;
-	PilotRecord* pilotRec;
-	PilotMemo* memo;
+	PilotRecord *pilotRec;
+	PilotMemo *memo;
 
-	while((pilotRec = memoDB->readRecordByIndex(currentRecord)) != NULL)
+	while ((pilotRec = memoDB->readRecordByIndex(currentRecord)) != NULL)
 	{
-		if(!pilotRec->isDeleted())
+		if (!pilotRec->isDeleted())
 		{
-			if((!pilotRec->isSecret()) || showSecrets)
+			if ((!pilotRec->isSecret()) || showSecrets)
 			{
 				memo = new PilotMemo(pilotRec);
 				fMemoList.append(memo);
 
+#ifdef DEBUG
 				DEBUGKPILOT << fname <<
 					": Added memo "
-					<< currentRecord
-					<< endl ;
+					<< currentRecord << endl;
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				DEBUGKPILOT << fname <<
 					": Skipped secret record " <<
-					currentRecord << endl ;
+					currentRecord << endl;
+#endif
 			}
 		}
 		else
 		{
-			DEBUGKPILOT << fname << 
+#ifdef DEBUG
+			DEBUGKPILOT << fname <<
 				": Skipped deleted record " <<
-				currentRecord << endl ;
+				currentRecord << endl;
+#endif
 		}
 
 		delete pilotRec;
+
 		currentRecord++;
 	}
 }
 
 
-void
-MemoWidget::initialize()
+void MemoWidget::initialize()
 {
 	FUNCTIONSETUP;
 
@@ -191,42 +200,73 @@ MemoWidget::initialize()
 	// NULL, or the database object may be returned but unopened.
 	//
 	//
-	PilotDatabase* memoDB = 
-		new PilotLocalDatabase(dbPath(),"MemoDB");
-	if (memoDB==NULL || !memoDB->isDBOpen())
+	PilotLocalDatabase *memoDB =
+		new PilotLocalDatabase(dbPath(), "MemoDB");
+	if (memoDB == NULL || !memoDB->isDBOpen())
 	{
-		kdWarning() << __FUNCTION__ << 
-			": Can't open local database MemoDB\n" ;
+		kdWarning() << __FUNCTION__ <<
+			": Can't open local database MemoDB\n";
 
-		populateCategories(fCatList,0L);
+		populateCategories(fCatList, 0L);
 		updateWidget();
 		return;
-		/* NOTREACHED */
-		(void) memowidget_id;
 	}
 
 	// Normal case: there is a database so we can read it
 	// and determine all the categories.
 	//
-	unsigned char buffer[PILOT_BUFFER_SIZE];
-	int appLen = memoDB->readAppBlock(buffer, sizeof(buffer));
-	unpack_MemoAppInfo(&fMemoAppInfo, buffer, appLen);
+	int appLen = memoDB->appInfoSize();
 
-	populateCategories(fCatList,&fMemoAppInfo.category);
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Got appInfoLen " << appLen << endl;
+#endif
+
+	unpack_MemoAppInfo(&fMemoAppInfo,
+		(unsigned char *) memoDB->appInfo(), appLen);
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Unpacked app info." << endl;
+#endif
+
+	for (int i = 0; i < 15; i++)
+	{
+		fMemoAppInfo.category.name[i][7] = 0;
+
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Category #"
+			<< i
+			<< " has ID "
+			<< (int) fMemoAppInfo.category.ID[i]
+			<< " and name "
+			<< (fMemoAppInfo.category.name[i][0] ? "*" : "-")
+			<< fMemoAppInfo.category.name[i] << endl;
+#endif
+	}
+
+	populateCategories(fCatList, &fMemoAppInfo.category);
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Populated categories" << endl;
+#endif
+
 	initializeMemos(memoDB);
 
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Finished initializing" << endl;
+#endif
+
 	delete memoDB;
+
 	updateWidget();
 }
 
-void
-MemoWidget::preHotSync(char*)
+void MemoWidget::preHotSync(char *)
 {
 	FUNCTIONSETUP;
 }
 
-void
-MemoWidget::postHotSync()
+void MemoWidget::postHotSync()
 {
 	FUNCTIONSETUP;
 	fMemoList.clear();
@@ -239,18 +279,17 @@ MemoWidget::postHotSync()
 // Setup all the GUI components by allocating them. 
 //
 //
-void
-MemoWidget::setupWidget()
+void MemoWidget::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	QLabel *label=NULL;
-	QPushButton *button=NULL;
-	QGridLayout *grid = new QGridLayout(this,5,4,SPACING);
+	QLabel *label = NULL;
+	QPushButton *button = NULL;
+	QGridLayout *grid = new QGridLayout(this, 5, 4, SPACING);
 
 	fCatList = new QComboBox(this);
-	grid->addWidget(fCatList,0,1);
-	connect(fCatList, SIGNAL(activated(int)), 
+	grid->addWidget(fCatList, 0, 1);
+	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
 	QToolTip::add(fCatList,
 		i18n("Select the category of addresses\n"
@@ -258,11 +297,11 @@ MemoWidget::setupWidget()
 
 	label = new QLabel(i18n("Memos:"), this);
 	label->setBuddy(fCatList);
-	grid->addWidget(label,0,0);
+	grid->addWidget(label, 0, 0);
 
 	fListBox = new QListBox(this);
-	grid->addMultiCellWidget(fListBox,1,1,0,1);
-	connect(fListBox, SIGNAL(highlighted(int)), 
+	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
 		this, SLOT(slotUpdateButtons()));
@@ -272,35 +311,36 @@ MemoWidget::setupWidget()
 			"one to display it to the right."));
 
 	label = new QLabel(i18n("Memo Text:"), this);
-	grid->addWidget(label,0,2);
+	grid->addWidget(label, 0, 2);
 
 	fTextWidget = new QMultiLineEdit(this, "textArea");
 	fTextWidget->setWordWrap(QMultiLineEdit::WidgetWidth);
-	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
+	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
 	QToolTip::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
 
 	button = new QPushButton(i18n("Import Memo"), this);
-	grid->addWidget(button,2,0);
+	grid->addWidget(button, 2, 0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
 	QToolTip::add(button,
-		i18n("Read a text file and add it to the Pilot's memo database."));
+		i18n
+		("Read a text file and add it to the Pilot's memo database."));
 
 	fExportButton = new QPushButton(i18n("Export Memo"), this);
-	grid->addWidget(fExportButton,2,1);
-	connect(fExportButton, SIGNAL(clicked()), this, SLOT(slotExportMemo()));
+	grid->addWidget(fExportButton, 2, 1);
+	connect(fExportButton, SIGNAL(clicked()), this,
+		SLOT(slotExportMemo()));
 	QToolTip::add(fExportButton,
 		i18n("Write the selected memo to a file."));
 
 	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
-	grid->addWidget(fDeleteButton,3,0);
-	connect(fDeleteButton, SIGNAL(clicked()), this, SLOT(slotDeleteMemo()));
-	QToolTip::add(fDeleteButton,
-		i18n("Delete the selected memo."));
+	grid->addWidget(fDeleteButton, 3, 0);
+	connect(fDeleteButton, SIGNAL(clicked()), this,
+		SLOT(slotDeleteMemo()));
+	QToolTip::add(fDeleteButton, i18n("Delete the selected memo."));
 }
 
-void
-MemoWidget::slotUpdateButtons()
+void MemoWidget::slotUpdateButtons()
 {
 	FUNCTIONSETUP;
 
@@ -308,40 +348,38 @@ MemoWidget::slotUpdateButtons()
 
 	if (fExportButton)
 	{
-		fExportButton -> setEnabled(item != -1);
+		fExportButton->setEnabled(item != -1);
 	}
 	if (fDeleteButton)
 	{
-		fDeleteButton -> setEnabled(item != -1);
+		fDeleteButton->setEnabled(item != -1);
 	}
 }
 
-void 
-MemoWidget::slotSetCategory(int)
+void MemoWidget::slotSetCategory(int)
 {
 	FUNCTIONSETUP;
 	updateWidget();
 }
 
-void
-MemoWidget::slotDeleteMemo()
+void MemoWidget::slotDeleteMemo()
 {
 	FUNCTIONSETUP;
 
 	int item = fListBox->currentItem();
 
-	if(item == -1)
+	if (item == -1)
 	{
 #ifdef DEBUG
-		kdDebug() << fname <<
-			": No current item selected\n" ;
+		DEBUGKPILOT << fname << ": No current item selected\n";
 #endif
 		return;
 	}
 
-	PilotListItem * p = (PilotListItem *)fListBox->item(item);
-	PilotMemo * selectedMemo = (PilotMemo *)p->rec();
-	if(selectedMemo->id() == 0x0)
+	PilotListItem *p = (PilotListItem *) fListBox->item(item);
+	PilotMemo *selectedMemo = (PilotMemo *) p->rec();
+
+	if (selectedMemo->id() == 0x0)
 	{
 		// QADE: Why is this? What prevents us from deleting
 		// a "new" memo, ie. one we've imported, before *ever*
@@ -351,22 +389,21 @@ MemoWidget::slotDeleteMemo()
 		kdWarning() << __FUNCTION__ <<
 			": Refusing to delete new memo.\n";
 
-		KMessageBox::error(this, i18n("Cannot delete new memo until \n" 
-				   "Hot-Synced with pilot."),
-                                    i18n("Hot-Sync Required"));
+		KMessageBox::error(this,
+			i18n("Cannot delete new memo until \n"
+				"Hot-Synced with pilot."),
+			i18n("Hot-Sync Required"));
 		return;
 	}
 
-	
-	if(KMessageBox::questionYesNo(this,  
-				      i18n("Delete currently selected memo?"),
-				      i18n("Delete Memo?")) == KMessageBox::No)
+
+	if (KMessageBox::questionYesNo(this,
+			i18n("Delete currently selected memo?"),
+			i18n("Delete Memo?")) == KMessageBox::No)
 	{
 #ifdef DEBUG
-		{
-			kdDebug() << fname <<
-				": User decided not to delete memo.\n" ;
-		}
+		DEBUGKPILOT << fname <<
+			": User decided not to delete memo.\n";
 #endif
 		return;
 	}
@@ -381,21 +418,21 @@ MemoWidget::slotDeleteMemo()
 }
 
 
-void
-MemoWidget::updateWidget()
+void MemoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
 
-	if (fCatList->currentItem()==-1)
+	if (fCatList->currentItem() == -1)
 	{
-		DEBUGKPILOT << fname <<
-			": No category selected.\n";
-		return ;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": No category selected.\n";
+#endif
+		return;
 	}
 
 	int listIndex = 0;
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fMemoAppInfo.category),false);
+		&(fMemoAppInfo.category), false);
 
 
 	fListBox->clear();
@@ -407,15 +444,17 @@ MemoWidget::updateWidget()
 	// (using -1 to mean "All")
 	//
 	//
-	while(fMemoList.current())
+	while (fMemoList.current())
 	{
-		if((fMemoList.current()->getCat() == currentCatID) ||
-			(currentCatID==-1))
+		if ((fMemoList.current()->getCat() == currentCatID) ||
+			(currentCatID == -1))
 		{
-			PilotListItem * p = new PilotListItem(
-				fMemoList.current()->shortTitle(),
+			PilotListItem *p =
+				new PilotListItem(fMemoList.current()->
+				shortTitle(),
 				listIndex,
 				fMemoList.current());
+
 			// List will delete the title of the memo,
 			// so there's no memory leak here.
 			//
@@ -423,21 +462,15 @@ MemoWidget::updateWidget()
 			fListBox->insertItem(p);
 
 #ifdef DEBUG
-			{
-				kdDebug() << fname << ": Added memo "
-					<< fMemoList.current()->getTitle()
-					<< endl;
-			}
+			DEBUGKPILOT << fname << ": Added memo "
+				<< fMemoList.current()->getTitle() << endl;
 #endif
 		}
 		else
 		{
 #ifdef DEBUG
-			{
-				kdDebug() << fname << ": Skipped memo "
-					<< fMemoList.current()->getTitle()
-					<< endl;
-			}
+			DEBUGKPILOT << fname << ": Skipped memo "
+				<< fMemoList.current()->getTitle() << endl;
 #endif
 		}
 
@@ -450,120 +483,137 @@ MemoWidget::updateWidget()
 	slotUpdateButtons();
 }
 
-void
-MemoWidget::slotShowMemo(int which)
-{      
-	disconnect(fTextWidget, SIGNAL(textChanged()), 
+void MemoWidget::slotShowMemo(int which)
+{
+	FUNCTIONSETUP;
+
+	disconnect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
 	fTextWidget->deselect();
-	PilotListItem *p = (PilotListItem *)fListBox->item(which);
-	PilotMemo * theMemo = (PilotMemo *)p->rec();
+	PilotListItem *p = (PilotListItem *) fListBox->item(which);
+	PilotMemo *theMemo = (PilotMemo *) p->rec();
+
 	fTextWidget->setText(theMemo->text());
-	connect(fTextWidget, SIGNAL(textChanged()), 
+	connect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
 }
 
-void
-MemoWidget::writeMemo(PilotMemo* which)
+void MemoWidget::writeMemo(PilotMemo * which)
 {
 	FUNCTIONSETUP;
-	PilotDatabase* memoDB = 
-		new PilotLocalDatabase(dbPath(),"MemoDB");
-	PilotRecord* pilotRec = which->pack();
+
+	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), "MemoDB");
+	PilotRecord *pilotRec = which->pack();
+
 	memoDB->writeRecord(pilotRec);
 	delete pilotRec;
 	delete memoDB;
 }
-    
-void
-MemoWidget::slotTextChanged()
+
+void MemoWidget::slotTextChanged()
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
+
 	if (fListBox->currentItem() == -1)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": slotTextChanged with no memo selected!"
-			<< endl;
+			<< ": slotTextChanged with no memo selected!" << endl;
 		return;
 	}
 
-  PilotListItem *p = (PilotListItem *)fListBox->item(fListBox->currentItem());
-  PilotMemo* currentMemo = (PilotMemo *)p->rec();
-  if(fListBox->currentItem() >= 0)
-    {
-      if(currentMemo->id() == 0x0)
+	PilotListItem *p =
+		(PilotListItem *) fListBox->item(fListBox->currentItem());
+	PilotMemo *currentMemo = (PilotMemo *) p->rec();
+
+	if (fListBox->currentItem() >= 0)
 	{
-	  KMessageBox::error(0L,
-			     i18n("Cannot edit new memo until \n Hot-Synced with pilot."), 
-			     i18n("Hot-Sync Required"));
-	  slotShowMemo(fListBox->currentItem());
-	  return;
+		if (currentMemo->id() == 0x0)
+		{
+			KMessageBox::error(0L,
+				i18n
+				("Cannot edit new memo until \n Hot-Synced with pilot."),
+				i18n("Hot-Sync Required"));
+			slotShowMemo(fListBox->currentItem());
+			return;
+		}
+		currentMemo->setText(fTextWidget->text().latin1());
+		writeMemo(currentMemo);
 	}
-      currentMemo->setText(fTextWidget->text().latin1());
-      writeMemo(currentMemo);
-    }
 }
 
-void
-MemoWidget::slotImportMemo()
-    {
-    FUNCTIONSETUP;
-    int i = 0;
-    int nextChar;
+void MemoWidget::slotImportMemo()
+{
+	FUNCTIONSETUP;
+
+	int i = 0;
+	int nextChar;
 	int currentCatID = findSelectedCategory(fCatList,
-		&(fMemoAppInfo.category),true);
-  
-    QString fileName = KFileDialog::getOpenFileName();
-    if(fileName != NULL)
+		&(fMemoAppInfo.category), true);
+
+	QString fileName = KFileDialog::getOpenFileName();
+
+	if (fileName != NULL)
 	{
-	QFile importFile(fileName);
-	if(importFile.open(IO_ReadOnly) == FALSE)
-	    {
-	    // show error!
-	    return;
-	    }
-	char *text = new char[(int) MemoWidget::MAX_MEMO_LEN];
-	for(i = 0; (i < (MemoWidget::MAX_MEMO_LEN - 1)) && ((nextChar = importFile.getch()) != -1); i++)
-	    text[i] = nextChar;
-	text[i] = 0;
-	PilotMemo* aMemo = new PilotMemo(text, 0, 0, currentCatID);
-	fMemoList.append(aMemo);
-	writeMemo(aMemo);
-	updateWidget();
-	delete[] text;
+		QFile importFile(fileName);
+
+		if (importFile.open(IO_ReadOnly) == FALSE)
+		{
+			// show error!
+			return;
+		}
+		char *text = new char[(int) MemoWidget::MAX_MEMO_LEN];
+
+		for (i = 0;
+			(i < (MemoWidget::MAX_MEMO_LEN - 1))
+			&& ((nextChar = importFile.getch()) != -1); i++)
+			text[i] = nextChar;
+		text[i] = 0;
+		PilotMemo *aMemo = new PilotMemo(text, 0, 0, currentCatID);
+
+		fMemoList.append(aMemo);
+		writeMemo(aMemo);
+		updateWidget();
+		delete[]text;
 	}
-    }
+}
 
-void
-MemoWidget::slotExportMemo()
-    {
-    FUNCTIONSETUP;
-    int item = fListBox->currentItem();
-    const char* data;
+void MemoWidget::slotExportMemo()
+{
+	FUNCTIONSETUP;
 
-    if(item == -1)
-	return;
+	int item = fListBox->currentItem();
+	const char *data;
 
-	PilotListItem *p = (PilotListItem *)fListBox->item(item);
-	PilotMemo* theMemo = (PilotMemo *)p->rec();
+	if (item == -1)
+		return;
+
+	PilotListItem *p = (PilotListItem *) fListBox->item(item);
+	PilotMemo *theMemo = (PilotMemo *) p->rec();
 
 	QString fileName = KFileDialog::getSaveFileName();
-	if(fileName.isEmpty()) return;
+
+	if (fileName.isEmpty())
+		return;
 
 	data = theMemo->text();
 
-    QFile outFile(fileName);
-    if(outFile.open(IO_WriteOnly | IO_Truncate) == FALSE)
+	QFile outFile(fileName);
+
+	if (outFile.open(IO_WriteOnly | IO_Truncate) == FALSE)
 	{
-	// show error!
-	return;
+		// show error!
+		return;
 	}
-    QDataStream outStream(&outFile);
-    outStream.writeRawBytes(data, strlen(data) + 1);
-    outFile.close();
-    }
+	QDataStream outStream(&outFile);
+
+	outStream.writeRawBytes(data, strlen(data) + 1);
+	outFile.close();
+}
 
 // $Log$
+// Revision 1.37  2001/09/23 18:30:15  adridg
+// Adjusted widget for new config
+//
 // Revision 1.36  2001/09/06 22:33:43  adridg
 // Cruft cleanup
 //

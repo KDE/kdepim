@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTDATABASE_H
 #define _KPILOT_PILOTDATABASE_H
@@ -93,6 +93,9 @@ class PilotDatabase
 
 
 // $Log$
+// Revision 1.9  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.8  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

@@ -23,8 +23,13 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
+static const char *pilotMemo_id =
+	"$Id$";
+
+#include "options.h"
+
 #include <iostream.h>
 
 #ifndef _KLOCALE_H_
@@ -44,75 +49,81 @@
 #endif
 
 
-static const char *pilotMemo_id =
-	"$Id$";
 
-PilotMemo::PilotMemo(PilotRecord* rec)
-  : PilotAppCategory(rec)
-    {
-    unpack(rec->getData(), 1);
-    (void) pilotMemo_id;
-    }
-
-void PilotMemo::unpack(const void *text, int firstTime) 
+PilotMemo::PilotMemo(PilotRecord * rec) : PilotAppCategory(rec)
 {
-  if (!firstTime && fText)
-    {
-      delete fText;
-      delete fTitle;
-    }
-  
-  fSize = strlen((const char *) text) + 1;
-  fText = new char [fSize];
-  (void) strcpy(fText, (const char *) text);
+	FUNCTIONSETUP;
+	unpack(rec->getData(), 1);
+	(void) pilotMemo_id;
+}
 
-  int memoTitleLen = 0;
-  while(fText[memoTitleLen] && (fText[memoTitleLen] != '\n'))
-    memoTitleLen++;
-  fTitle = new char[memoTitleLen+1];
-  strncpy(fTitle, fText, memoTitleLen);
-  fTitle[memoTitleLen] = 0;
+void PilotMemo::unpack(const void *text, int firstTime)
+{
+	FUNCTIONSETUP;
+	if (!firstTime && fText)
+	{
+		delete fText;
+		delete fTitle;
+	}
+
+	fSize = strlen((const char *) text) + 1;
+	fText = new char[fSize];
+
+	(void) strcpy(fText, (const char *) text);
+
+	int memoTitleLen = 0;
+
+	while (fText[memoTitleLen] && (fText[memoTitleLen] != '\n'))
+		memoTitleLen++;
+	fTitle = new char[memoTitleLen + 1];
+
+	strncpy(fTitle, fText, memoTitleLen);
+	fTitle[memoTitleLen] = 0;
 }
 
 // The indirection just to make the base class happy
-void *PilotMemo::internalPack(unsigned char *buf) 
-    {
-    return strcpy((char *) buf, fText);
-    }
-
-void *PilotMemo::pack(void *buf, int *len) 
-    {
-    if (*len < fSize)
-	return NULL;
-
-    *len = fSize;
-
-    return internalPack((unsigned char *) buf);
-    }
-
-
-QString
-PilotMemo::shortTitle() const
+void *PilotMemo::internalPack(unsigned char *buf)
 {
+	FUNCTIONSETUP;
+	return strcpy((char *) buf, fText);
+}
+
+void *PilotMemo::pack(void *buf, int *len)
+{
+	FUNCTIONSETUP;
+	if (*len < fSize)
+		return NULL;
+
+	*len = fSize;
+
+	return internalPack((unsigned char *) buf);
+}
+
+
+QString PilotMemo::shortTitle() const
+{
+	FUNCTIONSETUP;
 	QString t = QString(getTitle()).simplifyWhiteSpace();
 
-	if (t.length() < 32) return t;
+	if (t.length() < 32)
+		return t;
 	t.truncate(40);
 
 	int spaceIndex = t.findRev(' ');
+
 	if (spaceIndex > 32)
 	{
 		t.truncate(spaceIndex);
 	}
-	
+
 	t += "...";
 
 	return t;
 }
 
-QString
-PilotMemo::sensibleTitle() const
+QString PilotMemo::sensibleTitle() const
 {
+	FUNCTIONSETUP;
 	const char *s = getTitle();
 
 	if (s && *s)
@@ -127,6 +138,9 @@ PilotMemo::sensibleTitle() const
 
 
 // $Log$
+// Revision 1.9  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.8  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

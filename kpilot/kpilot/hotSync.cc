@@ -7,7 +7,7 @@
 ** sync actions requiring user interaction. Those can be found in the
 ** conduits subdirectory or interactiveSync.h.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -24,12 +24,13 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-static const char *hotsync_id = "$Id$";
+static const char *hotsync_id =
+	"$Id$";
 
 #include "options.h"
 
@@ -53,10 +54,10 @@ static const char *hotsync_id = "$Id$";
 
 #include "hotSync.moc"
 
-TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
+TestLink::TestLink(KPilotDeviceLink * p) : SyncAction(p, 0, "testLink")
 {
 	FUNCTIONSETUP;
-	
+
 	(void) hotsync_id;
 }
 
@@ -65,22 +66,21 @@ TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
 	FUNCTIONSETUP;
 
 	int i;
-	int dbindex=0;
-	int count=0;
+	int dbindex = 0;
+	int count = 0;
 	struct DBInfo db;
 
 	addSyncLogEntry(i18n("Performing a TestSync."));
 
-	while ((i=dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,
-		dbindex,&db)) > 0)
+	while ((i = dlp_ReadDBList(pilotSocket(), 0, dlpDBListRAM,
+				dbindex, &db)) > 0)
 	{
 		count++;
-		dbindex=db.index+1;
+		dbindex = db.index + 1;
 
-		DEBUGKPILOT << fname
-			<< ": Read database "
-			<< db.name
-			<< endl;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Read database " << db.name << endl;
+#endif
 
 		emit logMessage(i18n("Syncing database %1...").arg(db.name));
 
@@ -91,8 +91,8 @@ TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
 	emit syncDone(this);
 }
 
-BackupAction::BackupAction(KPilotDeviceLink *p) :
-	SyncAction(p,0,"backupAction")
+BackupAction::BackupAction(KPilotDeviceLink * p):
+SyncAction(p, 0, "backupAction")
 {
 	FUNCTIONSETUP;
 
@@ -102,15 +102,25 @@ BackupAction::BackupAction(KPilotDeviceLink *p) :
 
 /* virtual */ QString BackupAction::statusString() const
 {
+	FUNCTIONSETUP;
 	QString s("BackupAction=");
 
-	switch(status())
+	switch (status())
 	{
-	case Init : s.append("Init"); break;
-	case Error : s.append("Error"); break;
-	case FullBackup : s.append("FullBackup"); break;
-	case BackupEnded : s.append("BackupEnded"); break;
-	default : s.append("(unknown ");
+	case Init:
+		s.append("Init");
+		break;
+	case Error:
+		s.append("Error");
+		break;
+	case FullBackup:
+		s.append("FullBackup");
+		break;
+	case BackupEnded:
+		s.append("BackupEnded");
+		break;
+	default:
+		s.append("(unknown ");
 		s.append(QString::number(status()));
 		s.append(")");
 	}
@@ -123,24 +133,24 @@ BackupAction::BackupAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": This Pilot user's name is \""
-		<< fHandle->getPilotUser()->getUserName()
-		<< "\""
-		<< endl;
+		<< fHandle->getPilotUser()->getUserName() << "\"" << endl;
+#endif
 
 	addSyncLogEntry(i18n("Full backup started."));
 
 	ASSERT(!fTimer);
 
 	fTimer = new QTimer(this);
-	QObject::connect(fTimer,SIGNAL(timeout()),
-		this,SLOT(backupOneDB()));
+	QObject::connect(fTimer, SIGNAL(timeout()),
+		this, SLOT(backupOneDB()));
 
-	fDBIndex=0;
-	fStatus=FullBackup;
+	fDBIndex = 0;
+	fStatus = FullBackup;
 
-	fTimer->start(0,false);
+	fTimer->start(0, false);
 }
 
 /* slot */ void BackupAction::backupOneDB()
@@ -149,30 +159,30 @@ BackupAction::BackupAction(KPilotDeviceLink *p) :
 
 	struct DBInfo info;
 
-	emit logProgress(QString::null,fDBIndex);
+	emit logProgress(QString::null, fDBIndex);
 
-	if (dlp_OpenConduit(pilotSocket())<0)
+	if (dlp_OpenConduit(pilotSocket()) < 0)
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname
-			<< ": dlp_OpenConduit failed. User cancel?"
-			<< endl;
+			<< ": dlp_OpenConduit failed. User cancel?" << endl;
+#endif
 
 		addSyncLogEntry(i18n("Exiting on cancel."));
 		endBackup();
-		fStatus=BackupIncomplete;
+		fStatus = BackupIncomplete;
 		return;
 	}
 
-	if (dlp_ReadDBList(pilotSocket(),
-		0,0x80,fDBIndex,&info)<0)
+	if (dlp_ReadDBList(pilotSocket(), 0, 0x80, fDBIndex, &info) < 0)
 	{
-		DEBUGDAEMON << fname
-			<< ": Backup complete."
-			<< endl;
+#ifdef DEBUG
+		DEBUGDAEMON << fname << ": Backup complete." << endl;
+#endif
 
 		addSyncLogEntry(i18n("Full backup complete."));
 		endBackup();
-		fStatus=BackupComplete;
+		fStatus = BackupComplete;
 		return;
 	}
 
@@ -184,8 +194,7 @@ BackupAction::BackupAction(KPilotDeviceLink *p) :
 	{
 		kdError() << __FUNCTION__
 			<< ": Couldn't create local database for "
-			<< info.name
-			<< endl;
+			<< info.name << endl;
 		addSyncLogEntry(i18n("Backup of %1 failed.").arg(info.name));
 	}
 	else
@@ -204,40 +213,44 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	QString fullBackupDir =
 		fDatabaseDir + fHandle->getPilotUser()->getUserName() + "/";
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
-		<< ": Looking in directory "
-		<< fullBackupDir
-		<< endl;
+		<< ": Looking in directory " << fullBackupDir << endl;
+#endif
 
 	QFileInfo fi(fullBackupDir);
+
 	if (!(fi.exists() && fi.isDir()))
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Need to create backup directory for user "
-			<< fHandle->getPilotUser()->getUserName()
-			<< endl;
+			<< fHandle->getPilotUser()->getUserName() << endl;
+#endif
 
-		fi=QFileInfo(fDatabaseDir);
+		fi = QFileInfo(fDatabaseDir);
 		if (!(fi.exists() && fi.isDir()))
 		{
 			kdError() << fname
-				<< ": Database backup directory doesn't exist."
+				<< ": Database backup directory "
+				<< "doesn't exist."
 				<< endl;
 			return false;
 		}
 
 		QDir databaseDir(fDatabaseDir);
-		if (!databaseDir.mkdir(fullBackupDir,true))
+
+		if (!databaseDir.mkdir(fullBackupDir, true))
 		{
 			kdError() << fname
-				<< ": Can't create backup directory."
-				<< endl;
+				<< ": Can't create backup directory." << endl;
 			return false;
 		}
 	}
 
 	QString databaseName(info->name);
-	databaseName.replace(QRegExp("/"),"_");
+
+	databaseName.replace(QRegExp("/"), "_");
 
 	QString fullBackupName = fullBackupDir + databaseName;
 
@@ -250,10 +263,10 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 		fullBackupName.append(".pdb");
 	}
 
-	DEBUGDB << fname 
-		<< ": Creating local database " 
-		<< fullBackupName 
-		<< endl;
+#ifdef DEBUG
+	DEBUGDB << fname
+		<< ": Creating local database " << fullBackupName << endl;
+#endif
 
 	/* Ensure that DB-open flag is not kept */
 	info->flags &= ~dlpDBFlagOpen;
@@ -266,21 +279,21 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	// which needs a const cast to become a char *
 	//
 	//
-	f = pi_file_create( const_cast<char *>((const char *)(QFile::encodeName(fullBackupName))), info);
+	f = pi_file_create(const_cast < char *>
+		((const char *) (QFile::encodeName(fullBackupName))),
+		info);
 
 	if (f == 0)
 	{
-		kdWarning() << __FUNCTION__ 
-			<< ": Failed, unable to create file" 
-			<< endl;
+		kdWarning() << __FUNCTION__
+			<< ": Failed, unable to create file" << endl;
 		return false;
 	}
 
 	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
 	{
-		kdWarning() << __FUNCTION__ 
-			<< ": Failed, unable to back up database" 
-			<< endl;
+		kdWarning() << __FUNCTION__
+			<< ": Failed, unable to back up database" << endl;
 
 		pi_file_close(f);
 		return false;
@@ -295,29 +308,30 @@ void BackupAction::endBackup()
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fTimer);
-	fDBIndex=-1;
-	fStatus=BackupEnded;
+	fDBIndex = (-1);
+	fStatus = BackupEnded;
 
 	emit syncDone(this);
 }
 
-FileInstallAction::FileInstallAction(KPilotDeviceLink *p,
-	const QString &d,
-	const QStringList &l) :
-	SyncAction(p,0,"fileInstall"),
-	fDir(d),
-	fList(l),
-	fDBIndex(-1),
+FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
+	const QString & d,
+	const QStringList & l) :
+	SyncAction(p, 0, "fileInstall"),
+	fDir(d), 
+	fList(l), 
+	fDBIndex(-1), 
 	fTimer(0L)
 {
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": File list has " << fList.count() << " entries" << endl;
+	DEBUGDAEMON << fname << ": File list has " 
+		<< fList.  count() << " entries" << endl;
 
 	QStringList::ConstIterator i;
 
-	for (i=fList.begin(); i!=fList.end(); ++i)
+	for (i = fList.begin(); i != fList.end(); ++i)
 	{
 		DEBUGDAEMON << fname << ": " << *i << endl;
 	}
@@ -335,29 +349,29 @@ FileInstallAction::~FileInstallAction()
 {
 	FUNCTIONSETUP;
 
-	fDBIndex=0;
+	fDBIndex = 0;
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
-		<< ": Installing "
-		<< fList.count()
-		<< " files"
-		<< endl;
+		<< ": Installing " << fList.count() << " files" << endl;
+#endif
 
 	// Possibly no files to install?
-	if (!fList.count()) 
+	if (!fList.count())
 	{
 		emit logMessage(i18n("No Files to install"));
 		emit syncDone(this);
+
 		return;
 	}
 
 	fTimer = new QTimer(this);
-	QObject::connect(fTimer,SIGNAL(timeout()),
-		this,SLOT(installNextFile()));
+	QObject::connect(fTimer, SIGNAL(timeout()),
+		this, SLOT(installNextFile()));
 
-	fTimer->start(0,false);
+	fTimer->start(0, false);
 
-	emit logProgress(i18n("Installing Files"),0);
+	emit logProgress(i18n("Installing Files"), 0);
 }
 
 /* slot */ void FileInstallAction::installNextFile()
@@ -367,36 +381,36 @@ FileInstallAction::~FileInstallAction()
 	ASSERT(fDBIndex >= 0);
 	ASSERT(fDBIndex < fList.count());
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Installing file index "
-		<< fDBIndex
-		<< " (of "
-		<< fList.count()
-		<< ")"
-		<< endl;
+		<< fDBIndex << " (of " << fList.count() << ")" << endl;
+#endif
 
-	if ((!fList.count()) || (fDBIndex>=fList.count()))
+	if ((!fList.count()) || (fDBIndex >= fList.count()))
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname
-			<< ": Peculiar file index, bailing out."
-			<< endl;
-		if (fTimer) fTimer->stop();
+			<< ": Peculiar file index, bailing out." << endl;
+#endif
+		if (fTimer)
+			fTimer->stop();
 		emit syncDone(this);
 	}
 
 	const QString s = fDir + fList[fDBIndex];
+
 	fDBIndex++;
 
-	DEBUGDAEMON << fname
-		<< ": Installing file "
-		<< s
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Installing file " << s << endl;
+#endif
 
-	if (fDBIndex>= fList.count())
+	if (fDBIndex >= fList.count())
 	{
-		fDBIndex=-1;
+		fDBIndex = (-1);
 		fTimer->stop();
-		emit logProgress(i18n("Done Installing Files"),100);
+		emit logProgress(i18n("Done Installing Files"), 100);
 	}
 	else
 	{
@@ -404,32 +418,28 @@ FileInstallAction::~FileInstallAction()
 			(100 * fDBIndex) / fList.count());
 	}
 
-	
+
 	struct pi_file *f = 0L;
 
-	f = pi_file_open(const_cast<char *>((const char *)QFile::encodeName(s)));
+	f = pi_file_open(const_cast <char *>
+		((const char *) QFile::encodeName(s)));
 
 	if (!f)
 	{
-		kdWarning() << __FUNCTION__ 
-			<< ": Unable to open file." 
-			<< endl;
+		kdWarning() << __FUNCTION__
+			<< ": Unable to open file." << endl;
 
-		emit logError(
-			i18n("Unable to open file &quot;%1&quot;!").
+		emit logError(i18n("Unable to open file &quot;%1&quot;!").
 			arg(s));
 		goto nextFile;
 	}
 
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
 	{
-		kdWarning() << __FUNCTION__ 
-			<< ": failed to install." 
-			<< endl;
+		kdWarning() << __FUNCTION__ << ": failed to install." << endl;
 
 
-		emit logError(
-			i18n("Cannot install file &quot;%1&quot;!").
+		emit logError(i18n("Cannot install file &quot;%1&quot;!").
 			arg(s));
 	}
 	else
@@ -448,13 +458,14 @@ nextFile:
 
 /* virtual */ QString FileInstallAction::statusString() const
 {
-	if (fDBIndex<0)
+	FUNCTIONSETUP;
+	if (fDBIndex < 0)
 	{
 		return QString("Idle");
 	}
 	else
 	{
-		if (fDBIndex>=fList.count())
+		if (fDBIndex >= fList.count())
 		{
 			return QString("Index out of range");
 		}
@@ -480,6 +491,7 @@ void KPilotDeviceLink::initConduitSocket()
 
 PilotRecord *KPilotDeviceLink::readRecord(KSocket * theSocket)
 {
+	FUNCTIONSETUP;
 	int len, attrib, cat;
 	recordid_t uid;
 	char *data;
@@ -501,6 +513,7 @@ PilotRecord *KPilotDeviceLink::readRecord(KSocket * theSocket)
 
 void KPilotDeviceLink::writeRecord(KSocket * theSocket, PilotRecord * rec)
 {
+	FUNCTIONSETUP;
 	int len = rec->getLen();
 	int attrib = rec->getAttrib();
 	int cat = rec->getCat();
@@ -517,8 +530,10 @@ void KPilotDeviceLink::writeRecord(KSocket * theSocket, PilotRecord * rec)
 	write(theSocket->socket(), data, len);
 }
 
-int KPilotDeviceLink::writeResponse(KSocket * k, CStatusMessages::LinkMessages m)
+int KPilotDeviceLink::writeResponse(KSocket * k,
+	CStatusMessages::LinkMessages m)
 {
+	FUNCTIONSETUP;
 	// I have a bad feeling about using pointers
 	// to parameters passed to me, so I'm going 
 	// to copy the value parameter to a local (stack)
@@ -593,8 +608,10 @@ void KPilotDeviceLink::slotConduitRead(KSocket * cSocket)
 		memset(s, 0, i);
 		read(cSocket->socket(), s, i);
 		s[i] = 0;
+#ifdef DEBUG
 		DEBUGDB << fname << ": Message length "
 			<< i << " => " << s << endl;
+#endif
 		addSyncLogEntry(s);
 		delete s;
 
@@ -738,6 +755,7 @@ void KPilotDeviceLink::slotConduitClosed(KSocket * theSocket)
 
 void KPilotDeviceLink::resumeDB()
 {
+	FUNCTIONSETUP;
 	if (!fCurrentDB)
 	{
 		kdWarning() << __FUNCTION__
@@ -770,13 +788,17 @@ QString KPilotDeviceLink::registeredConduit(const QString & dbName) const
 
 	KConfig & config = KPilotConfig::getConfig("Database Names");
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname << ": Looking for " << dbName << endl;
+#endif
 
 	QString result = config.readEntry(dbName);
 
 	if (result.isNull())
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname << ": Not found." << endl;
+#endif
 
 		return result;
 	}
@@ -784,10 +806,10 @@ QString KPilotDeviceLink::registeredConduit(const QString & dbName) const
 	config.setGroup("Conduit Names");
 	QStringList installed = config.readListEntry("InstalledConduits");
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname << ": Found conduit " << result << endl;
 	DEBUGDAEMON << fname << ": Installed Conduits are" << endl;
 
-#ifndef NDEBUG
 	kdbgstream s = kdDebug(DAEMON_AREA);
 
 	listStrList(s, installed);
@@ -795,20 +817,27 @@ QString KPilotDeviceLink::registeredConduit(const QString & dbName) const
 
 	if (!installed.contains(result))
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname << ": Conduit not installed." << endl;
+#endif
 		return QString::null;
 	}
 
 	KService::Ptr conduit = KService::serviceByDesktopName(result);
 	if (!conduit)
 	{
-		DEBUGDAEMON << fname << ": No service for this conduit" << endl;
+#ifdef DEBUG
+		DEBUGDAEMON << fname << ": No service for this conduit" <<
+			endl;
+#endif
 		return QString::null;
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname << ": Found service with exec="
 			<< conduit->exec() << endl;
+#endif
 		return conduit->exec();
 	}
 
@@ -834,11 +863,13 @@ void KPilotDeviceLink::slotConduitConnected(KSocket * theSocket)
 // Requires the text is displayed in item 0
 void KPilotDeviceLink::showMessage(const QString & message)
 {
+	FUNCTIONSETUP;
 	emit logMessage(message);
 }
 
 int KPilotDeviceLink::compare(struct db *d1, struct db *d2)
 {
+	FUNCTIONSETUP;
 	/* types of 'appl' sort later than other types */
 	if (d1->creator == d2->creator)
 		if (d1->type != d2->type)
@@ -899,7 +930,9 @@ bool KPilotDeviceLink::doFullRestore()
 		if ((*it == "..") || (*it == "."))
 			continue;
 
+#ifdef DEBUG
 		DEBUGKPILOT << fname << ": Trying database " << *it << endl;
+#endif
 
 		db[dbcount] = (struct db *) malloc(sizeof(struct db));
 
@@ -995,6 +1028,7 @@ bool KPilotDeviceLink::doFullRestore()
 
 void KPilotDeviceLink::finishDatabaseSync()
 {
+	FUNCTIONSETUP;
 	// Since we're done with the DB anyway
 	// we can forget it. This also flags 
 	// for resumeDB not to do anything
@@ -1048,8 +1082,10 @@ void KPilotDeviceLink::doFullBackup()
 		if (dlp_ReadDBList(getCurrentPilotSocket(),
 				0, 0x80, i, &info) < 0)
 		{
+#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Last database encountered." << endl;
+#endif
 			break;
 		}
 		i = info.index + 1;
@@ -1096,7 +1132,7 @@ void KPilotDeviceLink::installFiles(const QString & path)
 	if (fileIter == fileNameList.end())
 		return;
 
-	emit logProgress(i18n("Installing Files"),0);
+	emit logProgress(i18n("Installing Files"), 0);
 
 	if (getConnected() == false)
 	{
@@ -1105,13 +1141,17 @@ void KPilotDeviceLink::installFiles(const QString & path)
 		return;
 	}
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname << ": Installing from directory "
 		<< actualPath << endl;
+#endif
 
 	while (fileIter != fileNameList.end())
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << fname << ": Installing file "
 			<< *fileIter << endl;
+#endif
 
 		emit logProgress(QString::null,
 			(100 / fileNameList.count()) * fileNum);
@@ -1141,8 +1181,7 @@ void KPilotDeviceLink::installFiles(const QString & path)
 			message =
 				i18n("Unable to open file &quot;%1&quot;!").
 				arg(*fileIter);
-			KMessageBox::error(0L, message,
-				i18n("Missing File"));
+			KMessageBox::error(0L, message, i18n("Missing File"));
 		}
 		else
 		{
@@ -1220,7 +1259,8 @@ void KPilotDeviceLink::doConduitBackup()
 	// we'll get called again.
 	displaymessage = i18n("%1: Running conduit").arg(info.name);
 	fCurrentDBInfo = info;
-	fCurrentDB = new PilotSerialDatabase(getCurrentPilotSocket(), info.name);
+	fCurrentDB =
+		new PilotSerialDatabase(getCurrentPilotSocket(), info.name);
 	fCurrentDB->resetDBIndex();
 	if (fConduitProcess->isRunning())
 	{
@@ -1274,8 +1314,10 @@ int KPilotDeviceLink::findNextDB(DBInfo * info)
 	}
 	while (info->flags & dlpDBFlagResource);
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname << ": Found database with:\n"
 		<< fname << ": Index=" << fNextDBIndex << endl;
+#endif
 
 	return 1;
 }
@@ -1308,13 +1350,17 @@ void KPilotDeviceLink::syncNextDB()
 		backupOnly = c.readEntry("BackupForSync");
 	}
 
+#ifdef DEBUG
 	DEBUGDB << fname << ": Special dispositions are: \n"
 		<< fname << ": * BackupOnly=" << backupOnly << endl
 		<< fname << ": * Skip=" << skip << endl;
+#endif
 	if (!findNextDB(&info))
 		return;
 
+#ifdef DEBUG
 	DEBUGDB << fname << ": Syncing " << info.name << endl;
+#endif
 
 
 
@@ -1322,16 +1368,20 @@ void KPilotDeviceLink::syncNextDB()
 
 	while (conduitName.isNull())
 	{
+#ifdef DEBUG
 		DEBUGDB << fname << ": No registered conduit for "
 			<< info.name << endl;
+#endif
 
 		// If we want a FastSync, skip all DBs without conduits.
 		//
 		if (fFastSyncRequired)
 		{
+#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Skipping database "
 				<< info.name << " during FastSync." << endl;
+#endif
 			goto nextDB;
 		}
 
@@ -1345,8 +1395,10 @@ void KPilotDeviceLink::syncNextDB()
 		{
 			char *m = printlong(info.creator);
 
+#ifdef DEBUG
 			DEBUGDB << fname << ": Looking for disposition of "
 				<< m << endl;
+#endif
 		}
 #endif
 		if (findDisposition(skip, &info))
@@ -1367,7 +1419,9 @@ void KPilotDeviceLink::syncNextDB()
 
 		if (syncDatabase(&info))
 		{
+#ifdef DEBUG
 			DEBUGDB << fname << ": Sync OK" << endl;
+#endif
 			addSyncLogEntry("OK.\n");
 		}
 		else
@@ -1383,7 +1437,9 @@ void KPilotDeviceLink::syncNextDB()
 			return;
 
 		conduitName = registeredConduit(info.name);
+#ifdef DEBUG
 		DEBUGDB << fname << ": Syncing " << info.name << endl;
+#endif
 	}
 
 	// Fire up the conduit responsible for this db and when it's finished
@@ -1392,10 +1448,13 @@ void KPilotDeviceLink::syncNextDB()
 	addSyncLogEntry(message.local8Bit());
 	fCurrentDBInfo = info;
 
+#ifdef DEBUG
 	DEBUGDB << fname << ": " << message << endl;
+#endif
 
 
-	fCurrentDB = new PilotSerialDatabase(getCurrentPilotSocket(), info.name);
+	fCurrentDB =
+		new PilotSerialDatabase(getCurrentPilotSocket(), info.name);
 	fCurrentDB->resetDBIndex();
 	if (fConduitProcess->isRunning())
 	{
@@ -1441,10 +1500,11 @@ bool KPilotDeviceLink::syncDatabase(DBInfo * database)
 	PilotRecord *pilotRec;
 
 	QString currentDBPath = fDatabaseDir +
-
 		getPilotUser()->getUserName() + "/";
 
-	firstDB = new PilotSerialDatabase(getCurrentPilotSocket(), database->name);
+	firstDB =
+		new PilotSerialDatabase(getCurrentPilotSocket(),
+		database->name);
 	secondDB = new PilotLocalDatabase(currentDBPath, database->name);
 
 	if (firstDB->isDBOpen() && (secondDB->isDBOpen() == false))
@@ -1463,7 +1523,7 @@ bool KPilotDeviceLink::syncDatabase(DBInfo * database)
 			KMessageBox::error(0L,
 				i18n
 				("Could not create local copy of database "
-				    "&quot;%1&quot;").arg(database->name),
+					"&quot;%1&quot;").arg(database->name),
 				i18n("Backup"));
 
 			// Why continue here? The database isn't open, so
@@ -1473,7 +1533,9 @@ bool KPilotDeviceLink::syncDatabase(DBInfo * database)
 			return false;
 		}
 
-		firstDB = new PilotSerialDatabase(getCurrentPilotSocket(), database->name);
+		firstDB =
+			new PilotSerialDatabase(getCurrentPilotSocket(),
+			database->name);
 		secondDB =
 			new PilotLocalDatabase(currentDBPath, database->name);
 
@@ -1559,7 +1621,8 @@ void CleanupAction::exec()
 	fHandle->getPilotUser()->setLastSyncPC((unsigned long) gethostid());
 	fHandle->getPilotUser()->setLastSyncDate(time(0));
 
-	dlp_WriteUserInfo(pilotSocket(), fHandle->getPilotUser()->pilotUser());
+	dlp_WriteUserInfo(pilotSocket(),
+		fHandle->getPilotUser()->pilotUser());
 	addSyncLogEntry("End of Hot-Sync\n");
 	dlp_EndOfSync(pilotSocket(), 0);
 
@@ -1567,4 +1630,13 @@ void CleanupAction::exec()
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.6  2001/09/24 22:17:41  adridg
+// () Removed lots of commented out code from previous incarnations.
+// () Added a cleanup action.
+// () Removed a heap-corruption bug caused by using QStringList & and
+//    then deleting what it points to in FileInstallAction.
+// () Removed deadlock when last file to install couldn't be read.
+// () Moved RestoreAction to interactiveSync.{h,cc}, since I feel it
+//    needs to ask "Are you sure?" at the very least.
+//

@@ -138,21 +138,29 @@ void CConduitSetup::conduitExecuted(QListViewItem * p)
 	FUNCTIONSETUP;
 	if (!p)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname << ": Executed NULL conduit?" << endl;
+#endif
 		return;
 	}
 
 	if (!p->parent())
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname << ": Executed a category?" << endl;
+#endif
 		return;
 	}
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Executing conduit " << p->text(0) << endl;
+#endif
 
 	QString execPath = findExecPath(p);
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Exec path=" << execPath << endl;
+#endif
 
 	if (execPath.isNull())
 	{
@@ -198,8 +206,10 @@ void CConduitSetup::conduitExecuted(QListViewItem * p)
 
 	if (p != conduitSetup)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname << ": Process other than setup exited?"
 			<< endl;
+#endif
 		return;
 	}
 
@@ -254,11 +264,9 @@ void CConduitSetup::fillLists()
 		KSharedPtr < KService > o = (*availList).service();
 
 #ifdef DEBUG
-		{
-			kdDebug() << fname << ": "
-				<< o->desktopEntryName()
-				<< " = " << o->name() << endl;
-		}
+		DEBUGKPILOT << fname << ": "
+			<< o->desktopEntryName()
+			<< " = " << o->name() << endl;
 #endif
 		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
 		{
@@ -338,14 +346,15 @@ void CConduitSetup::writeInstalledConduits()
 	{
 		FILE *conduitpipe;
 
+#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Current conduit = "
 			<< p->text(CONDUIT_NAME) << endl;
-
 		DEBUGKPILOT << fname
 			<< ": Current conduit service from "
 			<< p->text(CONDUIT_DESKTOP)
 			<< " says exec=" << p->text(CONDUIT_EXEC) << endl;
+#endif
 
 		QString currentConduit = findExecPath(p);
 
@@ -394,12 +403,10 @@ void CConduitSetup::writeInstalledConduits()
 		else if (strcmp(dbName, "<none>") == 0)
 		{
 #ifdef DEBUG
-			{
-				kdDebug() << fname
-					<< ": Conduit "
-					<< p->text(0)
-					<< " supports no databases." << endl;
-			}
+			DEBUGKPILOT << fname
+				<< ": Conduit "
+				<< p->text(0)
+				<< " supports no databases." << endl;
 #endif
 		}
 		else
@@ -416,7 +423,7 @@ void CConduitSetup::writeInstalledConduits()
 					stripWhiteSpace(), m);
 			}
 		}
-nextConduit:
+	      nextConduit:
 		p = p->nextSibling();
 	}
 	config.sync();
@@ -431,7 +438,9 @@ void CConduitSetup::warnNoExec(const QListViewItem * p)
 	QString msg = i18n("No executable could be "
 		"found for the conduit %1.").arg(p->text(CONDUIT_NAME));
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": " << msg << endl;
+#endif
 
 	KMessageBox::error(this, msg, i18n("Conduit error"));
 }
@@ -444,7 +453,9 @@ void CConduitSetup::warnSetupRunning()
 		"Please complete that action before setting "
 		"up another conduit.");
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": " << msg << endl;
+#endif
 
 	KMessageBox::error(this, msg, i18n("Conduit Setup error"));
 
@@ -454,6 +465,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.26  2001/09/23 18:25:50  adridg
+// New config architecture
+//
 // Revision 1.25  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

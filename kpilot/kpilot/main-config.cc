@@ -24,11 +24,12 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
-static const char *config_id="$Id$";
+static const char *config_id =
+	"$Id$";
 
 
 #include "options.h"
@@ -50,47 +51,46 @@ int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
-        KAboutData about("kpilotConfig", I18N_NOOP("KPilot Configurator"),
-                         KPILOT_VERSION,
-                         "KPilot Configurator",
-                         KAboutData::License_GPL,
-                         "(c) 2001, Dan Pilone");
+	KAboutData about("kpilotConfig", I18N_NOOP("KPilot Configurator"),
+		KPILOT_VERSION,
+		"KPilot Configurator",
+		KAboutData::License_GPL, "(c) 2001, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
-		"pilone@slac.com",
-		"http://www.slac.com/pilone/kpilot_home/");
+		"pilone@slac.com", "http://www.slac.com/pilone/kpilot_home/");
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
-		"adridg@cs.kun.nl",
-		"http://www.cs.kun.nl/~adridg/kpilot/");
+		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 
-        KCmdLineArgs::init(argc, argv, &about);
+	KCmdLineArgs::init(argc, argv, &about);
 #ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options,"debug");
+	KCmdLineArgs::addCmdLineOptions(debug_options, "debug");
 #endif
 	KApplication::addCmdLineOptions();
-	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
+	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
 	KApplication a;
 
 	KPilotConfig::getDebugLevel(false);
 
-	int r=0;
+	int r = 0;
 
-	KDialogBase *d = new KPilotConfigDialog(0L,"configDialog",true);
+	KDialogBase *d = new KPilotConfigDialog(0L, "configDialog", true);
+
 	r = d->exec();
 
 	if (r)
 	{
-		DEBUGKPILOT << fname
-			<< ": Configuration was okayed."
-			<< endl;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Configuration was okayed." << endl;
+#endif
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname
-			<< ": Configuration was cancelled."
-			<< endl;
+			<< ": Configuration was cancelled." << endl;
+#endif
 	}
 
 	return r;
@@ -101,6 +101,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.3  2001/09/23 21:42:35  adridg
+// Factored out debugging options
+//
 // Revision 1.2  2001/09/23 18:28:52  adridg
 // Adjusted tests to new .ui and config
 //

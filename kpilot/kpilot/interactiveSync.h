@@ -26,7 +26,7 @@
 */
  
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
 
@@ -135,5 +135,8 @@ private:
 } ;
 
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/09/24 22:25:54  adridg
+// New SyncActions with support for interaction with the user
+//
 #endif

@@ -26,9 +26,10 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *fileinstallwidget_id="$Id$";
+static const char *fileinstallwidget_id =
+	"$Id$";
 
 #ifndef _KPILOT_OPTIONS_H
 #include "options.h"
@@ -80,107 +81,127 @@ static const char *fileinstallwidget_id="$Id$";
 
 #include "fileInstallWidget.moc"
 
-FileInstallWidget::FileInstallWidget( QWidget* parent,
-	const QString& path) : 
-	PilotComponent(parent,"component_files",path), 
-	fSaveFileList(false) 
+FileInstallWidget::FileInstallWidget(QWidget * parent, 
+	const QString & path) :
+	PilotComponent(parent, "component_files", path),
+	fSaveFileList(false)
 {
-	QGridLayout *grid = new QGridLayout(this,5,5,SPACING);
+	FUNCTIONSETUP;
 
-	QLabel* label = new QLabel(i18n("Files To Install:"), this);
-	grid->addWidget(label,1,1);
+	QGridLayout *grid = new QGridLayout(this, 5, 5, SPACING);
 
-	QPushButton* abutton = new QPushButton(i18n("Clear List"), this);
+	QLabel *label = new QLabel(i18n("Files To Install:"), this);
+
+	grid->addWidget(label, 1, 1);
+
+	QPushButton *abutton = new QPushButton(i18n("Clear List"), this);
+
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
-	grid->addWidget(abutton,3,1);
-	QToolTip::add(abutton,i18n("Clear the list of files to install.\nNo files wil be installed."));
+	grid->addWidget(abutton, 3, 1);
+	QToolTip::add(abutton,
+		i18n
+		("Clear the list of files to install.\nNo files wil be installed."));
 
 	abutton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
-	grid->addWidget(abutton,4,1);
-	QToolTip::add(abutton,i18n("Choose a file to add to the list\nof files to install."));
+	grid->addWidget(abutton, 4, 1);
+	QToolTip::add(abutton,
+		i18n
+		("Choose a file to add to the list\nof files to install."));
 
 	fListBox = new QListBox(this);
-	grid->addMultiCellWidget(fListBox,1,4,2,3);
-	QToolTip::add(fListBox,i18n("This lists files that will be installed on the Pilot during the next HotSync.\nDrag files here or use the Add button."));
+	grid->addMultiCellWidget(fListBox, 1, 4, 2, 3);
+	QToolTip::add(fListBox,
+		i18n
+		("This lists files that will be installed on the Pilot during the next HotSync.\nDrag files here or use the Add button."));
 
-	grid->setRowStretch(2,100);
-	grid->setColStretch(2,50);
-	grid->setColStretch(2,50);
-	grid->addColSpacing(4,SPACING);
-	grid->addRowSpacing(5,SPACING);
+	grid->setRowStretch(2, 100);
+	grid->setColStretch(2, 50);
+	grid->setColStretch(2, 50);
+	grid->addColSpacing(4, SPACING);
+	grid->addRowSpacing(5, SPACING);
 
 	fInstaller = new FileInstaller;
-	connect(fInstaller,SIGNAL(filesChanged()),
-		this,SLOT(refreshFileInstallList()));
+	connect(fInstaller, SIGNAL(filesChanged()),
+		this, SLOT(refreshFileInstallList()));
 
 	setAcceptDrops(true);
 }
 
-void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
+void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
 {
+	FUNCTIONSETUP;
 	event->accept(QUriDrag::canDecode(event));
 }
-    
 
-void FileInstallWidget::dropEvent(QDropEvent* drop)
+
+void FileInstallWidget::dropEvent(QDropEvent * drop)
 {
 	FUNCTIONSETUP;
 
 	QStrList list;
+
 	QUriDrag::decode(drop, list);
 
+#ifdef DEBUG
 	DEBUGKPILOT << ": Got " << list.first() << endl;
+#endif
 
-	if(list.first() != 0L)
+	if (list.first() != 0L)
 	{
 		fInstaller->addFiles(list);
 	}
 }
 
-void
-FileInstallWidget::slotClearButton()
+void FileInstallWidget::slotClearButton()
 {
+	FUNCTIONSETUP;
 	fInstaller->clearPending();
 }
 
-void
-FileInstallWidget::initialize()
+void FileInstallWidget::initialize()
 {
+	FUNCTIONSETUP;
 	refreshFileInstallList();
 }
 
-void
-FileInstallWidget::slotAddFile()
+void FileInstallWidget::slotAddFile()
 {
+	FUNCTIONSETUP;
+
 	QString fileName = KFileDialog::getOpenFileName();
-	if(!fileName.isEmpty())
+
+	if (!fileName.isEmpty())
 	{
 		fInstaller->addFile(fileName);
 	}
 }
 
-void
-FileInstallWidget::preHotSync(char* command)
+void FileInstallWidget::preHotSync(char *command)
 {
+	FUNCTIONSETUP;
 }
 
-void
-FileInstallWidget::postHotSync()
+void FileInstallWidget::postHotSync()
 {
+	FUNCTIONSETUP;
 	refreshFileInstallList();
 }
 
 
-void
-FileInstallWidget::refreshFileInstallList()
+void FileInstallWidget::refreshFileInstallList()
 {
+	FUNCTIONSETUP;
+
 	fListBox->clear();
 	fListBox->insertStringList(fInstaller->fileNames());
 }
 
 
 // $Log$
+// Revision 1.18  2001/09/06 22:33:43  adridg
+// Cruft cleanup
+//
 // Revision 1.17  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

@@ -26,7 +26,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -203,6 +203,9 @@ protected:
 
 
 // $Log$
+// Revision 1.7  2001/09/23 21:44:56  adridg
+// Myriad small changes
+//
 // Revision 1.6  2001/09/23 18:25:50  adridg
 // New config architecture
 //

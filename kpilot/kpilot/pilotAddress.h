@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTADDRESS_H
 #define _KPILOT_PILOTADDRESS_H
@@ -182,6 +182,9 @@ class PilotAddress : public PilotAppCategory
 
 
 // $Log$
+// Revision 1.14  2001/05/07 22:14:47  stern
+// Fixed phone localization bug
+//
 // Revision 1.13  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

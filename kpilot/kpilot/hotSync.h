@@ -28,7 +28,7 @@
 */
  
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -118,6 +118,15 @@ public:
 } ;
 
 // $Log$
+// Revision 1.3  2001/09/24 22:17:41  adridg
+// () Removed lots of commented out code from previous incarnations.
+// () Added a cleanup action.
+// () Removed a heap-corruption bug caused by using QStringList & and
+//    then deleting what it points to in FileInstallAction.
+// () Removed deadlock when last file to install couldn't be read.
+// () Moved RestoreAction to interactiveSync.{h,cc}, since I feel it
+//    needs to ask "Are you sure?" at the very least.
+//
 // Revision 1.2  2001/09/23 18:24:59  adridg
 // New syncing architecture
 //

@@ -1,4 +1,3 @@
-
 /* listItem.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -24,11 +23,13 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_OPTIONS_H
+
+static const char *listitems_id =
+	"$Id:$";
+
 #include "options.h"
-#endif
 
 
 
@@ -52,40 +53,45 @@
 
 /* static */ void PilotListItem::counts()
 {
-	kdDebug() << __FUNCTION__
-		<< ": created="
-		<< crt
-		<< " deletions="
-		<< del
-		<< endl;
+	FUNCTIONSETUP;
+	DEBUGKPILOT << __FUNCTION__
+		<< ": created=" << crt << " deletions=" << del << endl;
 }
 #endif
 
-PilotListItem::PilotListItem(const QString &text, 
-	int pilotid, 
-	void *r) : QListBoxText(text), 
+PilotListItem::PilotListItem(const QString & text,
+	int pilotid, void *r) :
+	QListBoxText(text), 
 	fid(pilotid), 
 	fr(r)
 {
+	FUNCTIONSETUP;
 #ifdef DEBUG
 	crt++;
 	count++;
-	if (!(count & 0xff)) counts();
+	if (!(count & 0xff))
+		counts();
 #endif
+	(void) listitems_id;
 }
 
 PilotListItem::~PilotListItem()
 {
+	FUNCTIONSETUP;
 #ifdef DEBUG
 	del++;
 	count++;
-	if (!(count & 0xff)) counts();
+	if (!(count & 0xff))
+		counts();
 #endif
 }
 
 
 
 // $Log$
+// Revision 1.4  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.3  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

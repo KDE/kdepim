@@ -30,7 +30,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -167,13 +167,7 @@ DEBUGSTREAM& operator << (DEBUGSTREAM&,const QSize &) ;
 //
 #define FUNCTIONSETUP
 
-class debugName {
-public:
-	debugName(int i) : j(i) { };
-	int j;
-};
-extern const debugName fname;
-inline kndbgstream &operator << (kndbgstream &s, const QSize &) { return s; }
+extern const int fname;
 #endif
 
 
@@ -194,6 +188,9 @@ inline kndbgstream &operator << (kndbgstream &s, const QSize &) { return s; }
 
 
 // $Log$
+// Revision 1.34  2001/09/24 22:23:28  adridg
+// More generalized debugging handling, even on broken platforms
+//
 // Revision 1.33  2001/09/23 21:42:35  adridg
 // Factored out debugging options
 //

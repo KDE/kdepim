@@ -23,11 +23,12 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
-static const char *kpilot_id="$Id$";
+static const char *kpilot_id =
+	"$Id$";
 
 
 #ifndef _KPILOT_OPTIONS_H
@@ -158,31 +159,30 @@ static const char *kpilot_id="$Id$";
 
 #include "kpilot.moc"
 
-// This is an XPM disguised as an include file.
-//
-//
-#include "kpilot_on_pp.h"
-
-KPilotInstaller::KPilotInstaller() : 
-	KMainWindow(0), 
+KPilotInstaller::KPilotInstaller() :
+	KMainWindow(0),
 	DCOPObject("KPilotIface"),
-	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface")),
-	fMenuBar(0L), 
-	fStatusBar(0L), 
+	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
+		"KPilotDaemonIface")),
+	fMenuBar(0L),
+	fStatusBar(0L),
 	fProgress(0L),
 	fToolBar(0L),
-	fQuitAfterCopyComplete(false), 
-	fManagingWidget(0L), 
+	fQuitAfterCopyComplete(false),
+	fManagingWidget(0L),
 	fKillDaemonOnExit(false),
-	fStatus(Startup),
-	fFileInstallWidget(0L),
+	fStatus(Startup), 
+	fFileInstallWidget(0L), 
 	fLogWidget(0L)
 {
 	FUNCTIONSETUP;
 
 	readConfig();
 	setupWidget();
-	showTitlePage(QString::null,true);
+	showTitlePage(QString::null, true);
+
+	/* NOTREACHED */
+	(void) kpilot_id;
 }
 
 KPilotInstaller::~KPilotInstaller()
@@ -195,11 +195,11 @@ KPilotInstaller::~KPilotInstaller()
 void KPilotInstaller::killDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
-	if(fKillDaemonOnExit)
+	if (fKillDaemonOnExit)
 	{
-		DEBUGKPILOT << fname
-			<< ": Killing daemon."
-			<< endl;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Killing daemon." << endl;
+#endif
 
 		getDaemon().quitNow();
 	}
@@ -215,35 +215,28 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 	QString s = getDaemon().statusString();
 
-	DEBUGKPILOT << fname
-		<< ": Daemon status is "
-		<< s
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
+#endif
 
 	if ((s.isNull()) || (!getDaemon().ok()))
 	{
-		DEBUGKPILOT << fname
-			<< ": Daemon not responding."
-			<< endl;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Daemon not responding." << endl;
+#endif
 		fKillDaemonOnExit |= true;
 	}
-		
+
 	if (KApplication::startServiceByDesktopPath(
 		"Utilities/kpilotdaemon.desktop",
-		QString::null,
-		&daemonError,
-		&daemonDCOP,
-		&daemonPID
+		QString::null, &daemonError, &daemonDCOP, &daemonPID
 #if (KDE_VERSION >= 220)
-		// Startup notification was added in 2.2
-		,
-		"0"
+			// Startup notification was added in 2.2
+			, "0"
 #endif
 		))
 	{
-		kdError() << __FUNCTION__
-			<< ": Can't start daemon."
-			<< endl;
+		kdError() << __FUNCTION__ << ": Can't start daemon." << endl;
 	}
 }
 
@@ -251,24 +244,23 @@ void KPilotInstaller::readConfig()
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings &c = KPilotConfig::getConfig();
+	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	fKillDaemonOnExit = c.getKillDaemonOnExit();
 }
 
 
-void
-KPilotInstaller::setupWidget()
+void KPilotInstaller::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Creating central widget."
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Creating central widget." << endl;
+#endif
 
 	setCaption("KPilot");
-	setMinimumSize(500,405);
+	setMinimumSize(500, 405);
 	fManagingWidget = new QWidgetStack(this);
-	fManagingWidget->setMinimumSize(500,330);
+	fManagingWidget->setMinimumSize(500, 330);
 	fManagingWidget->show();
 	setCentralWidget(fManagingWidget);
 
@@ -276,78 +268,93 @@ KPilotInstaller::setupWidget()
 	initMenu();
 	initComponents();
 
-	createGUI("kpilotui.rc",false);
+	createGUI("kpilotui.rc", false);
+#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Got XML from "
-		<< xmlFile()
-		<< " and "
-		<< localXMLFile()
-		<< endl;
+		<< xmlFile() << " and " << localXMLFile() << endl;
+#endif
 
 
 	initStatusBar();
 }
 
 
-void
-KPilotInstaller::initComponents()
+void KPilotInstaller::initComponents()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Creating title screen."
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Creating title screen." << endl;
+#endif
 
-	QLabel* titleScreen = new QLabel(getManagingWidget());
-	titleScreen->setPixmap(QPixmap(kpilot_on_pp));
+	QLabel *titleScreen = new QLabel(getManagingWidget());
+	QString splashPath =
+		KGlobal::dirs()->findResource("data",
+		"kpilot/kpilot-splash.png");
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Found splash at " << splashPath << endl;
+#endif
+
+	if (!splashPath.isEmpty() && QFile::exists(splashPath))
+	{
+		titleScreen->setPixmap(QPixmap(splashPath));
+	}
+	else
+	{
+		titleScreen->setText(i18n("<center>Welcome to KPilot.<BR>"
+				"The title image could not be found.</center>"));
+	}
+
 	titleScreen->setAlignment(AlignCenter);
 	titleScreen->setBackgroundColor(QColor("black"));
-	titleScreen->setGeometry(0, 0, 
-		getManagingWidget()->geometry().width(), 
+	titleScreen->setGeometry(0, 0,
+		getManagingWidget()->geometry().width(),
 		getManagingWidget()->geometry().height());
-	fManagingWidget->addWidget(titleScreen,0);
+	fManagingWidget->addWidget(titleScreen, 0);
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
-	DEBUGKPILOT << fname
-		<< ": Creating component pages."
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Creating component pages." << endl;
+#endif
 
-	addComponentPage(new MemoWidget(getManagingWidget(),defaultDBPath),
+	addComponentPage(new MemoWidget(getManagingWidget(), defaultDBPath),
 		i18n("Memo Viewer"));
-	addComponentPage(new AddressWidget(getManagingWidget(),defaultDBPath),
-		i18n("Address Viewer"));
+	addComponentPage(new AddressWidget(getManagingWidget(),
+			defaultDBPath), i18n("Address Viewer"));
 
 	fFileInstallWidget = new FileInstallWidget(getManagingWidget(),
-			defaultDBPath);
-	addComponentPage(fFileInstallWidget,
-		i18n("File Installer"));
+		defaultDBPath);
+	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
 	fLogWidget = new LogWidget(getManagingWidget());
-	addComponentPage(fLogWidget,i18n("Sync Log"));
+	addComponentPage(fLogWidget, i18n("Sync Log"));
 }
 
-void
-KPilotInstaller::initStatusBar()
+void KPilotInstaller::initStatusBar()
 {
 	FUNCTIONSETUP;
-	QString welcomeMessage=i18n("Welcome to KPilot");
-	welcomeMessage+=" (";
-	welcomeMessage+=version(0);
-	welcomeMessage+=")";
+	QString welcomeMessage = i18n("Welcome to KPilot");
+
+	welcomeMessage += " (";
+	welcomeMessage += version(0);
+	welcomeMessage += ")";
 
 	fStatusBar = statusBar();
-	fStatusBar->insertItem(welcomeMessage,0);
+	fStatusBar->insertItem(welcomeMessage, 0);
 	fStatusBar->show();
 
-	fProgress = new KProgress(0,100,0,KProgress::Horizontal,fStatusBar);
+	fProgress =
+		new KProgress(0, 100, 0, KProgress::Horizontal, fStatusBar);
 	fProgress->adjustSize();
-	fProgress->resize(100,fProgress->height());
+	fProgress->resize(100, fProgress->height());
 	fProgress->show();
 
-	fStatusBar->addWidget(fProgress,0,true);
+	fStatusBar->addWidget(fProgress, 0, true);
 
-	fStatusBar->message(i18n("Initializing"),500);
+	fStatusBar->message(i18n("Initializing"), 500);
 }
 
 
@@ -361,16 +368,18 @@ void KPilotInstaller::initIcons()
 
 void KPilotInstaller::slotShowTitlePage()
 {
+	FUNCTIONSETUP;
 	showTitlePage();
 }
 
-void KPilotInstaller::slotSelectComponent(PilotComponent *p)
+void KPilotInstaller::slotSelectComponent(PilotComponent * p)
 {
-	fManagingWidget->raiseWidget(static_cast<QWidget *>(p));
+	FUNCTIONSETUP;
+	fManagingWidget->raiseWidget(static_cast < QWidget * >(p));
 }
 
 
-void KPilotInstaller::showTitlePage(const QString& msg,bool)
+void KPilotInstaller::showTitlePage(const QString & msg, bool)
 {
 	FUNCTIONSETUP;
 
@@ -378,48 +387,45 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool)
 
 	if (!msg.isNull())
 	{
-		fStatusBar->changeItem(msg,0);
+		fStatusBar->changeItem(msg, 0);
 	}
 }
 
-	
-void
-KPilotInstaller::slotBackupRequested()
+
+void KPilotInstaller::slotBackupRequested()
 {
 	FUNCTIONSETUP;
 	showTitlePage();
-	fStatusBar->changeItem(
-		i18n("Backing up pilot. ")+
-		i18n("Please press the hot-sync button."), 
-		0);
+	fStatusBar->changeItem(i18n("Backing up pilot. ") +
+		i18n("Please press the hot-sync button."), 0);
 
 	getDaemon().requestSync(PilotDaemonDCOP::Backup);
 }
 
-void
-KPilotInstaller::slotRestoreRequested()
+void KPilotInstaller::slotRestoreRequested()
 {
 	FUNCTIONSETUP;
 
 	showTitlePage();
 
-	fStatusBar->changeItem(
-		i18n("Restoring pilot. ")+
+	fStatusBar->changeItem(i18n("Restoring pilot. ") +
 		i18n("Please press the hot-sync button."), 0);
 	getDaemon().requestSync(PilotDaemonDCOP::Restore);
 }
 
-void KPilotInstaller::slotHotSyncRequested() 
-{ 
+void KPilotInstaller::slotHotSyncRequested()
+{
+	FUNCTIONSETUP;
 	setupSync(PilotDaemonDCOP::HotSync,
-		i18n("HotSyncing. ")+
+		i18n("HotSyncing. ") +
 		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotFastSyncRequested()
-{ 
+{
+	FUNCTIONSETUP;
 	setupSync(PilotDaemonDCOP::FastSync,
-		i18n("FastSyncing. ")+
+		i18n("FastSyncing. ") +
 		i18n("Please press the HotSync button."));
 }
 
@@ -430,24 +436,21 @@ void KPilotInstaller::componentPreSync(bool expectEmptyLinkCommand)
 	if (fLinkCommand[0] && expectEmptyLinkCommand)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": LinkCommand not empty!"
-			<< endl;
+			<< ": LinkCommand not empty!" << endl;
 	}
 
 
-	for(fPilotComponentList.first(); 
-		fPilotComponentList.current(); 
-		fPilotComponentList.next())
+	for (fPilotComponentList.first();
+		fPilotComponentList.current(); fPilotComponentList.next())
 	{
-		kdDebug() << fname 
+		DEBUGKPILOT << fname
 			<< ": Pre-sync for builtin "
-			<< fPilotComponentList.current()->name()
-			<< endl;
+			<< fPilotComponentList.current()->name() << endl;
 		fPilotComponentList.current()->preHotSync(fLinkCommand);
 	}
 }
- 
-void KPilotInstaller::setupSync(int kind,const QString& message)
+
+void KPilotInstaller::setupSync(int kind, const QString & message)
 {
 	FUNCTIONSETUP;
 
@@ -457,17 +460,15 @@ void KPilotInstaller::setupSync(int kind,const QString& message)
 }
 
 
-void
-KPilotInstaller::closeEvent(QCloseEvent *e)
+void KPilotInstaller::closeEvent(QCloseEvent * e)
 {
 	FUNCTIONSETUP;
 
-  quit();
-  e->accept();
+	quit();
+	e->accept();
 }
 
-void
-KPilotInstaller::initMenu()
+void KPilotInstaller::initMenu()
 {
 	FUNCTIONSETUP;
 
@@ -476,53 +477,51 @@ KPilotInstaller::initMenu()
 
 	// File actions
 	p = new KAction(i18n("&HotSync"), "hotsync", 0,
-			this, SLOT(slotHotSyncRequested()),
-			actionCollection(), "file_hotsync"  );
+		this, SLOT(slotHotSyncRequested()),
+		actionCollection(), "file_hotsync");
 	p = new KAction(i18n("&FastSync"), "fastsync", 0,
-			this, SLOT(slotHotSyncRequested()),
-			actionCollection(), "file_fastsync"  );
+		this, SLOT(slotHotSyncRequested()),
+		actionCollection(), "file_fastsync");
 	p = new KAction(i18n("&Backup"), "backup", 0,
-			this, SLOT(slotBackupRequested()),
-			actionCollection(), "file_backup"  );
+		this, SLOT(slotBackupRequested()),
+		actionCollection(), "file_backup");
 	p = new KAction(i18n("&Restore"), "restore", 0,
-			this, SLOT(slotRestoreRequested()),
-			actionCollection(), "file_restore"  );
-	p = KStdAction::quit(this, SLOT(quit()),
-			     actionCollection());
+		this, SLOT(slotRestoreRequested()),
+		actionCollection(), "file_restore");
+	p = KStdAction::quit(this, SLOT(quit()), actionCollection());
 
 	// View actions
-	pt = new KToggleAction(i18n("&KPilot"),"kpilot", 0,
+	pt = new KToggleAction(i18n("&KPilot"), "kpilot", 0,
 		this, SLOT(slotShowTitlePage()),
-		actionCollection(),"view_kpilot");
+		actionCollection(), "view_kpilot");
 	pt->setExclusiveGroup("view_menu");
 	pt->setChecked(true);
 
 	// Options actions
 	m_statusbarAction
-	    = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()),
-					actionCollection());
-	m_toolbarAction
-	    = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
-				      actionCollection());
+		=
+		KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()),
+		actionCollection());
+	m_toolbarAction =
+		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
+		actionCollection());
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
-				    actionCollection());
-	p = KStdAction::configureToolbars(this,
-		SLOT(optionsConfigureKeys()),
+		actionCollection());
+	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
 	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
-				    actionCollection());
-	p = new KAction(i18n("C&onfigure Conduits..."), "configure", 0,
-			this, SLOT(slotConfigureConduits()),
-			actionCollection(), "options_configure_conduits");
+		actionCollection());
+	p = new KAction(i18n("C&onfigure Conduits..."), "configure", 0, this,
+		SLOT(slotConfigureConduits()), actionCollection(),
+		"options_configure_conduits");
 }
 
-void
-KPilotInstaller::fileInstalled(int )
-    {
-    }
+void KPilotInstaller::fileInstalled(int)
+{
+	FUNCTIONSETUP;
+}
 
-void
-KPilotInstaller::quit()
+void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
 
@@ -530,25 +529,23 @@ KPilotInstaller::quit()
 	kapp->quit();
 }
 
-void
-KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
+void KPilotInstaller::addComponentPage(PilotComponent * p,
+	const QString & name)
 {
 	FUNCTIONSETUP;
 
 	if (!p)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Adding NULL component?"
-			<< endl;
+			<< ": Adding NULL component?" << endl;
 		return;
 	}
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Adding component @"
-		<< (int) p
-		<< " called " 
-		<< p->name("(none)")
-		<< endl;
+		<< (int) p << " called " << p->name("(none)") << endl;
+#endif
 
 	p->initialize();
 	fPilotComponentList.append(p);
@@ -556,44 +553,48 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 	// The first component added gets id 1, while the title
 	// screen -- added elsewhere -- has id 0.
 	//
-	fManagingWidget->addWidget(p,fPilotComponentList.count());
+	fManagingWidget->addWidget(p, fPilotComponentList.count());
 
 
 	const char *componentname = p->name("(none)");
 	char *actionname = 0L;
-	if (strncmp(componentname,"component_",10)==0)
+
+	if (strncmp(componentname, "component_", 10) == 0)
 	{
-		actionname = new char[strlen(componentname)-10+8];
-		strcpy(actionname,"view_");
-		strcat(actionname,componentname+10);
+		actionname = new char[strlen(componentname) - 10 + 8];
+
+		strcpy(actionname, "view_");
+		strcat(actionname, componentname + 10);
 	}
 	else
 	{
-		actionname = new char[8+strlen(componentname)];
-		strcpy(actionname,"view_");
-		strcat(actionname,componentname);
+		actionname = new char[8 + strlen(componentname)];
+
+		strcpy(actionname, "view_");
+		strcat(actionname, componentname);
 	}
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Using component action name "
-		<< name
-		<< " for "
-		<< actionname
-		<< endl;
+		<< name << " for " << actionname << endl;
+#endif
 
 	KToggleAction *pt =
-		new KToggleAction(name, /* "kpilot" -- component icon, */  0,
-			p, SLOT(slotShowComponent()),
-			actionCollection(),actionname);
+		new KToggleAction(name, /* "kpilot" -- component icon, */ 0,
+		p, SLOT(slotShowComponent()),
+		actionCollection(), actionname);
+
 	pt->setExclusiveGroup("view_menu");
 
-	connect(p,SIGNAL(showComponent(PilotComponent *)),
-		this,SLOT(slotSelectComponent(PilotComponent *)));
+	connect(p, SIGNAL(showComponent(PilotComponent *)),
+		this, SLOT(slotSelectComponent(PilotComponent *)));
 }
 
 
 void KPilotInstaller::optionsShowStatusbar()
 {
+	FUNCTIONSETUP;
 	if (m_statusbarAction->isChecked())
 	{
 		statusBar()->show();
@@ -610,6 +611,7 @@ void KPilotInstaller::optionsShowStatusbar()
 
 void KPilotInstaller::optionsShowToolbar()
 {
+	FUNCTIONSETUP;
 	if (m_toolbarAction->isChecked())
 	{
 		toolBar()->show();
@@ -618,7 +620,7 @@ void KPilotInstaller::optionsShowToolbar()
 	{
 		toolBar()->hide();
 	}
-	
+
 	kapp->processEvents();
 	resizeEvent(0);
 }
@@ -626,11 +628,13 @@ void KPilotInstaller::optionsShowToolbar()
 
 void KPilotInstaller::optionsConfigureKeys()
 {
-    KKeyDialog::configureKeys(actionCollection(), xmlFile());
+	FUNCTIONSETUP;
+	KKeyDialog::configureKeys(actionCollection(), xmlFile());
 }
 
 void KPilotInstaller::optionsConfigureToolbars()
 {
+	FUNCTIONSETUP;
 	// use the standard toolbar editor
 	KEditToolbar dlg(actionCollection());
 
@@ -638,12 +642,11 @@ void KPilotInstaller::optionsConfigureToolbars()
 	{
 		// recreate our GUI
 		createGUI();
-	} 
+	}
 }
 
 
-void
-KPilotInstaller::slotConfigureKPilot()
+void KPilotInstaller::slotConfigureKPilot()
 {
 	FUNCTIONSETUP;
 
@@ -653,13 +656,12 @@ KPilotInstaller::slotConfigureKPilot()
 	showTitlePage();
 
 	KPilotConfigDialog *options = new KPilotConfigDialog(this,
-		"configDialog",true);
+		"configDialog", true);
 
 	if (!options)
 	{
-		kdError() << __FUNCTION__ 
-			<< ": Can't allocate KPilotOptions object"
-			<< endl;
+		kdError() << __FUNCTION__
+			<< ": Can't allocate KPilotOptions object" << endl;
 		return;
 	}
 
@@ -667,8 +669,9 @@ KPilotInstaller::slotConfigureKPilot()
 
 	if (options->result())
 	{
-		DEBUGKPILOT << fname 
-			<< ": Updating link." << endl;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Updating link." << endl;
+#endif
 
 		readConfig();
 
@@ -680,27 +683,27 @@ KPilotInstaller::slotConfigureKPilot()
 		// Update each installed component.
 		//
 		//
-		for(fPilotComponentList.first(); 
-		fPilotComponentList.current();
-		fPilotComponentList.next())
+		for (fPilotComponentList.first();
+			fPilotComponentList.current();
+			fPilotComponentList.next())
 		{
 			fPilotComponentList.current()->initialize();
 		}
 	}
 
 	delete options;
-	options=0L;
-	DEBUGKPILOT << fname 
-		<< ": Done with options." 
-		<< endl;
+
+	options = 0L;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Done with options." << endl;
+#endif
 }
 
-void
-KPilotInstaller::slotConfigureConduits()
+void KPilotInstaller::slotConfigureConduits()
 {
 	FUNCTIONSETUP;
 
-	CConduitSetup* conSetup = 0L;
+	CConduitSetup *conSetup = 0L;
 
 	showTitlePage();
 	conSetup = new CConduitSetup(this);
@@ -718,29 +721,33 @@ KPilotInstaller::slotConfigureConduits()
 
 /* DCOP */ ASYNC KPilotInstaller::daemonStatus(QString s)
 {
+	FUNCTIONSETUP;
 	if (fStatusBar)
 	{
-		fStatusBar->changeItem(s,0);
+		fStatusBar->changeItem(s, 0);
 	}
 
 	if (fLogWidget)
 	{
 		QTime t = QTime::currentTime();
 		QString s1 = t.toString();
+
 		s1.append("  ");
 		s1.append(s);
 		fLogWidget->addMessage(s1);
 	}
 }
 
-/* DCOP */ ASYNC KPilotInstaller::daemonProgress(QString s,int i)
+/* DCOP */ ASYNC KPilotInstaller::daemonProgress(QString s, int i)
 {
+	FUNCTIONSETUP;
 	if (!s.isEmpty())
 	{
-		fStatusBar->message(s,2000 /* ms */);
+		fStatusBar->message(s, 2000 /* ms */ );
 	}
 
-	if (!fProgress) return;
+	if (!fProgress)
+		return;
 
 	if (i == -1)
 	{
@@ -750,25 +757,26 @@ KPilotInstaller::slotConfigureConduits()
 	{
 		fProgress->show();
 	}
-	else if ((i>=0) && (i<=100))
+	else if ((i >= 0) && (i <= 100))
 	{
 		fProgress->setValue(i);
 	}
 }
- 
+
 /* static */ const char *KPilotInstaller::version(int kind)
 {
-  // I don't think the program title needs to be translated. (ADE)
-  //
-  //
-  if (kind) 
-  {
-    return ::kpilot_id;
-    }
-  else 
-  {
-    return "KPilot v" KPILOT_VERSION;
-    }
+	FUNCTIONSETUP;
+	// I don't think the program title needs to be translated. (ADE)
+	//
+	//
+	if (kind)
+	{
+		return ::kpilot_id;
+	}
+	else
+	{
+		return "KPilot v" KPILOT_VERSION;
+	}
 }
 
 // Command line options descriptions.
@@ -776,14 +784,15 @@ KPilotInstaller::slotConfigureConduits()
 //
 //
 //
-static KCmdLineOptions kpilotoptions[] =
-{
-	{ "s",0,0 },
-	{ "setup", I18N_NOOP("Setup the Pilot device and other parameters"),0L },
-	{ "c",0,0 },
-	{ "conduit-setup", I18N_NOOP("Run conduit setup"),0L },
-	{ 0,0,0 }
-} ;
+static KCmdLineOptions kpilotoptions[] = {
+	{"s", 0, 0},
+	{"setup", 
+		I18N_NOOP("Setup the Pilot device and other parameters"),
+		0L},
+	{"c", 0, 0},
+	{"conduit-setup", I18N_NOOP("Run conduit setup"), 0L},
+	{0, 0, 0}
+};
 
 
 
@@ -797,71 +806,70 @@ static KCmdLineOptions kpilotoptions[] =
 // kpilot still does a setup the first time it is run.
 //
 //
-int run_mode=0;
-			 
+int run_mode = 0;
 
-int main(int argc, char** argv)
+
+int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
-        KAboutData about("kpilot", I18N_NOOP("KPilot"),
-                         KPILOT_VERSION,
-                         "KPilot - Hot-sync software for unix\n\n",
-                         KAboutData::License_GPL,
-                         "(c) 1998-2000, Dan Pilone");
+	KAboutData about("kpilot", I18N_NOOP("KPilot"),
+		KPILOT_VERSION,
+		"KPilot - Hot-sync software for unix\n\n",
+		KAboutData::License_GPL, "(c) 1998-2000, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
-		"pilone@slac.com",
-		"http://www.slac.com/pilone/kpilot_home/");
+		"pilone@slac.com", "http://www.slac.com/pilone/kpilot_home/");
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
-		"adridg@cs.kun.nl",
-		"http://www.cs.kun.nl/~adridg/kpilot/");
-	about.addAuthor("Preston Brown",
-		I18N_NOOP("VCal conduit"));
-	about.addAuthor("Greg Stern",
-		I18N_NOOP("Abbrowser conduit"));
-	about.addAuthor("Chris Molnar",
-		I18N_NOOP("Expenses conduit"));
-	about.addAuthor("Heiko Purnhagen",
-		I18N_NOOP("Bugfixer"));
-	about.addAuthor("Joerg Habenicht",
-		I18N_NOOP("Bugfixer"));
+		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+	about.addAuthor("Preston Brown", I18N_NOOP("VCal conduit"));
+	about.addAuthor("Greg Stern", I18N_NOOP("Abbrowser conduit"));
+	about.addAuthor("Chris Molnar", I18N_NOOP("Expenses conduit"));
+	about.addAuthor("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
+	about.addAuthor("Joerg Habenicht", I18N_NOOP("Bugfixer"));
 	about.addAuthor("Martin Junius",
 		I18N_NOOP("XML GUI"),
 		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
 
 
 
-        KCmdLineArgs::init(argc, argv, &about);
+	KCmdLineArgs::init(argc, argv, &about);
 #ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options,"debug","debug");
+	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
 #endif
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"kpilot",0L,"debug");
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot", 0L, "debug");
 	KUniqueApplication::addCmdLineOptions();
-	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
+	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
-	if (p->isSet("setup")) { run_mode='s'; } 
-	if (p->isSet("conduit-setup")) { run_mode='c'; }
+	if (p->isSet("setup"))
+	{
+		run_mode = 's';
+	}
+	if (p->isSet("conduit-setup"))
+	{
+		run_mode = 'c';
+	}
 
 	if (!KUniqueApplication::start())
 	{
 		return 0;
 	}
-	KUniqueApplication a(true,true);
+	KUniqueApplication a(true, true);
 
 	KPilotConfig::getDebugLevel();
 
-	KPilotConfigSettings &c = KPilotConfig::getConfig();
+	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		run_mode='S';
+		run_mode = 'S';
 	}
 
-	if (run_mode=='c')
+	if (run_mode == 'c')
 	{
 		CConduitSetup *cs = new CConduitSetup(0L);
 		int r = cs->exec();
+
 		if (r)
 		{
 			return 1;	// Dialog cancelled
@@ -872,19 +880,19 @@ int main(int argc, char** argv)
 		}
 	}
 
-	if ((run_mode=='s') || (run_mode=='S'))
+	if ((run_mode == 's') || (run_mode == 'S'))
 	{
 #ifdef DEBUG
-			kdDebug() << fname << ": Running setup first."
-				<< " (mode " << run_mode << ")"
-				<< endl ;
+		DEBUGKPILOT << fname
+			<< ": Running setup first."
+			<< " (mode " << run_mode << ")" << endl;
 #endif
 
-		KPilotConfigDialog * options = new KPilotConfigDialog (0L,
-			"configDialog",true);
+		KPilotConfigDialog *options = new KPilotConfigDialog(0L,
+			"configDialog", true);
 		int r = options->exec();
 
-		if (run_mode=='s')
+		if (run_mode == 's')
 		{
 			if (!r)
 			{
@@ -896,8 +904,9 @@ int main(int argc, char** argv)
 			}
 		}
 
-		if (!r) return 1;
-			
+		if (!r)
+			return 1;
+
 
 		// The options dialog may have changed the group
 		// while reading or writing settings (still a
@@ -908,24 +917,26 @@ int main(int argc, char** argv)
 
 	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		kdWarning() << __FUNCTION__ << ": Is still not configured for use."
-			<< endl;
+		kdWarning() << __FUNCTION__ <<
+			": Is still not configured for use." << endl;
 		return 1;
 	}
 
 
-        KPilotInstaller *tp = new KPilotInstaller();
+	KPilotInstaller *tp = new KPilotInstaller();
 
 	if (tp->status() == KPilotInstaller::Error)
 	{
 		delete tp;
-		tp=0;
+
+		tp = 0;
 		return 1;
 	}
 
 	tp->startDaemonIfNeeded();
 
-        KGlobal::dirs()->addResourceType("pilotdbs", "share/apps/kpilot/DBBackup");
+	KGlobal::dirs()->addResourceType("pilotdbs",
+		"share/apps/kpilot/DBBackup");
 	tp->show();
 	a.setMainWidget(tp);
 	return a.exec();
@@ -933,6 +944,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.60  2001/09/23 21:42:35  adridg
+// Factored out debugging options
+//
 // Revision 1.59  2001/09/23 18:25:50  adridg
 // New config architecture
 //

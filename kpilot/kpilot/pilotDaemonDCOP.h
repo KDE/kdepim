@@ -27,7 +27,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -76,6 +76,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.10  2001/09/23 18:24:59  adridg
+// New syncing architecture
+//
 // Revision 1.9  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

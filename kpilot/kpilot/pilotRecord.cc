@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #include "options.h"
 
@@ -40,76 +40,97 @@ static const char *pilotRecord_id =
 	"$Id$";
 
 
-PilotRecord::PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid)
-  : fData(0L), fLen(len), fAttrib(attrib), fCat(cat), fID(uid)
-    {
-    fData = new char[len];
-    memcpy(fData, data, len);
-    (void) pilotRecord_id;
-    }
+PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
+	pi_uid_t uid) :
+	fData(0L), 
+	fLen(len), 
+	fAttrib(attrib), 
+	fCat(cat),
+	fID(uid)
+{
+	FUNCTIONSETUP;
+	fData = new char[len];
 
-PilotRecord::PilotRecord(PilotRecord* orig)
-    {
-    fData = new char[orig->getLen()];
-    memcpy(fData, orig->getData(), orig->getLen());
-    fLen = orig->getLen();
-    fAttrib = orig->getAttrib();
-    fCat = orig->getCat();
-    fID = orig->getID();
-    }
+	memcpy(fData, data, len);
+	(void) pilotRecord_id;
+}
 
-PilotRecord& PilotRecord::operator=(PilotRecord& orig)
-    {
-    if(fData)
-	delete [] fData;
-    fData = new char[orig.getLen()];
-    memcpy(fData, orig.getData(), orig.getLen());
-    fLen = orig.getLen();
-    fAttrib = orig.getAttrib();
-    fCat = orig.getCat();
-    fID = orig.getID();
-    return *this;
-    }
+PilotRecord::PilotRecord(PilotRecord * orig)
+{
+	FUNCTIONSETUP;
+	fData = new char[orig->getLen()];
 
-void PilotRecord::setData(const char* data, int len)
-    {
-    if(fData)
-	delete [] fData;
-    fData = new char[len];
-    memcpy(fData, data, len);
-    fLen = len;
-    }
+	memcpy(fData, orig->getData(), orig->getLen());
+	fLen = orig->getLen();
+	fAttrib = orig->getAttrib();
+	fCat = orig->getCat();
+	fID = orig->getID();
+}
+
+PilotRecord & PilotRecord::operator = (PilotRecord & orig)
+{
+	FUNCTIONSETUP;
+	if (fData)
+		delete[]fData;
+	fData = new char[orig.getLen()];
+
+	memcpy(fData, orig.getData(), orig.getLen());
+	fLen = orig.getLen();
+	fAttrib = orig.getAttrib();
+	fCat = orig.getCat();
+	fID = orig.getID();
+	return *this;
+}
+
+void PilotRecord::setData(const char *data, int len)
+{
+	FUNCTIONSETUP;
+	if (fData)
+		delete[]fData;
+	fData = new char[len];
+
+	memcpy(fData, data, len);
+	fLen = len;
+}
 
 bool PilotRecord::isArchived() const
 {
-	return getAttrib() & dlpRecAttrArchived ;
+	FUNCTIONSETUP;
+	return getAttrib() & dlpRecAttrArchived;
 }
 
 bool PilotRecord::isDeleted() const
 {
-	return getAttrib() & dlpRecAttrDeleted ;
+	FUNCTIONSETUP;
+	return getAttrib() & dlpRecAttrDeleted;
 }
 
 bool PilotRecord::isSecret() const
 {
-	return getAttrib() & dlpRecAttrSecret ;
+	FUNCTIONSETUP;
+	return getAttrib() & dlpRecAttrSecret;
 }
 
 
 void PilotRecord::makeDeleted()
 {
-	fAttrib |= dlpRecAttrDeleted ;
+	FUNCTIONSETUP;
+	fAttrib |= dlpRecAttrDeleted;
 }
 
 
 
 void PilotRecord::makeSecret()
 {
-	fAttrib |= dlpRecAttrSecret ;
+	FUNCTIONSETUP;
+	fAttrib |= dlpRecAttrSecret;
 }
 
 
 // $Log$
+// Revision 1.7  2001/04/23 21:26:43  adridg
+// More convenience things
+//
 // Revision 1.6  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

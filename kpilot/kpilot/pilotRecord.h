@@ -1,4 +1,3 @@
-
 /* pilotRecord.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -24,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTRECORD_H
 #define _KPILOT_PILOTRECORD_H
@@ -83,6 +82,9 @@ public:
 
 
 // $Log$
+// Revision 1.8  2001/04/23 21:26:43  adridg
+// More convenience things
+//
 // Revision 1.7  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

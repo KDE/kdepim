@@ -25,62 +25,65 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-
-#ifndef _KDEBUG_H_
-#include <kdebug.h>
-#endif
-
-#ifndef _KLOCALE_H_
-#include <klocale.h>
-#endif
-
-
-#include "listCat.moc"
 
 static const char *listCat_id =
 	"$Id$";
 
-ListCategorizer::ListCategorizer(QWidget *parent, const char *name) :
-	KListView(parent,name),
+#include "options.h"
+
+#include <klocale.h>
+
+#include "listCat.moc"
+
+
+ListCategorizer::ListCategorizer(QWidget * parent,
+	const char *name) :
+	KListView(parent, name), 
 	fStartOpen(false)
 {
+	FUNCTIONSETUP;
 	setupWidget();
 	(void) listCat_id;
 }
 
-ListCategorizer::ListCategorizer(const QStringList& i,
+ListCategorizer::ListCategorizer(const QStringList & i,
 	bool startOpen,
-	QWidget *parent,
+	QWidget * parent,
 	const char *name) :
-	KListView(parent,name),
+	KListView(parent, name), 
 	fStartOpen(startOpen)
 {
+	FUNCTIONSETUP;
 	addCategories(i);
 }
 
-void ListCategorizer::addCategories(const QStringList& l)
+void ListCategorizer::addCategories(const QStringList & l)
 {
+	FUNCTIONSETUP;
 	QStringList::ConstIterator i;
 
-	for (i=l.begin(); i!=l.end(); ++i)
+	for (i = l.begin(); i != l.end(); ++i)
 	{
 		(void) addCategory(*i);
 	}
 }
 
-QListViewItem *ListCategorizer::addCategory(const QString& name, 
-	const QString& desc)
+QListViewItem *ListCategorizer::addCategory(const QString & name,
+	const QString & desc)
 {
-	QListViewItem *m = new QListViewItem(this,name,desc);
+	FUNCTIONSETUP;
+	QListViewItem *m = new QListViewItem(this, name, desc);
+
 	m->setSelectable(false);
 	m->setOpen(fStartOpen);
 	return m;
 }
-		
+
 void ListCategorizer::setupWidget()
 {
+	FUNCTIONSETUP;
 	addColumn(i18n("Category"));
 	addColumn(i18n("Description"));
 	setItemsMovable(false);
@@ -90,55 +93,64 @@ void ListCategorizer::setupWidget()
 	setRootIsDecorated(true);
 }
 
-/* virtual */ bool ListCategorizer::acceptDrag(QDropEvent* event) const
+/* virtual */ bool ListCategorizer::acceptDrag(QDropEvent * event) const
 {
-	if (!(event->source())) return false;
+	FUNCTIONSETUP;
+	if (!(event->source()))
+		return false;
 	QListViewItem *p = itemAt(event->pos());
-	if (!p) return false;
+
+	if (!p)
+		return false;
 
 	return true;
 }
 
-/* virtual */ void ListCategorizer::contentsDropEvent (QDropEvent*e)
+/* virtual */ void ListCategorizer::contentsDropEvent(QDropEvent * e)
 {
+	FUNCTIONSETUP;
 	cleanDropVisualizer();
 
-	if (!acceptDrag(e)) return;
+	if (!acceptDrag(e))
+		return;
 	e->accept();
 
 	QListViewItem *p = itemAt(e->pos());
 	QListViewItem *selection = currentItem();
-	if (!p) 
+
+	if (!p)
 	{
-		kdDebug()  << "Drop without a category!"
-			<< endl;
+		kdWarning() << "Drop without a category!" << endl;
 		return;
 	}
 
 	QListViewItem *category = p->parent();
+
 	if (!category)
 	{
 		category = p;
 	}
 
-	moveItem(selection,category,0L);
+	moveItem(selection, category, 0L);
 }
 
 /* virtual */ void ListCategorizer::startDrag()
 {
+	FUNCTIONSETUP;
 	QListViewItem *p = currentItem();
 
-	if (!p || !p->parent()) return;
+	if (!p || !p->parent())
+		return;
 
 	KListView::startDrag();
 }
 
-QStringList ListCategorizer::listSiblings(const QListViewItem *p,
-	int column) const
+QStringList ListCategorizer::listSiblings(const QListViewItem * p, int column) const
 {
+	FUNCTIONSETUP;
 	QStringList l;
 
-	while(p)
+	while (p)
 	{
 		l.append(p->text(column));
 		p = p->nextSibling();
@@ -147,33 +159,39 @@ QStringList ListCategorizer::listSiblings(const QListViewItem *p,
 	return l;
 }
 
-QListViewItem *ListCategorizer::findCategory(const QString& category) const
+QListViewItem *ListCategorizer::findCategory(const QString & category) const
 {
+	FUNCTIONSETUP;
 	QListViewItem *p = firstChild();
 
 	while (p)
 	{
-		if (p->text(0) == category) return p;
+		if (p->text(0) == category)
+			return p;
 		p = p->nextSibling();
 	}
 
 	return 0L;
 }
 
-QListViewItem *ListCategorizer::addItem(const QString& category,
-	const QString& name,
-	const QString& description)
+QListViewItem *ListCategorizer::addItem(const QString & category,
+	const QString & name, const QString & description)
 {
+	FUNCTIONSETUP;
 	QListViewItem *p = findCategory(category);
 
-	if (!p) return 0L;
+	if (!p)
+		return 0L;
 
-	return new QListViewItem(p,name,description);
+	return new QListViewItem(p, name, description);
 }
 
 
 
 // $Log$
+// Revision 1.4  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.3  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef LISTCAT_H
 #define LISTCAT_H
@@ -200,6 +200,9 @@ private:
 
 
 // $Log$
+// Revision 1.5  2001/09/24 10:43:19  cschumac
+// Compile fixes.
+//
 // Revision 1.4  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include "options.h"
@@ -70,33 +70,36 @@ static const char *kpilotconfig_id =
 //
 /* static */ const int KPilotConfig::ConfigurationVersion = 402;
 
-/* static */ int KPilotConfig::getConfigVersion(KConfig *config)
+/* static */ int KPilotConfig::getConfigVersion(KConfig * config)
 {
+	FUNCTIONSETUP;
 
-	if (!config)	return 0;
-	else		return getConfigVersion(*config);
+	if (!config)
+		return 0;
+	else
+		return getConfigVersion(*config);
 	/* NOTREACHED */
 	(void) kpilotconfig_id;
 }
 
-/* static */ int KPilotConfig::getConfigVersion(KConfig& config)
+/* static */ int KPilotConfig::getConfigVersion(KConfig & config)
 {
 	FUNCTIONSETUP;
 
 	config.setGroup(QString::null);
-	int version=config.readNumEntry("Configured",0);
-	if (version<ConfigurationVersion)
+	int version = config.readNumEntry("Configured", 0);
+
+	if (version < ConfigurationVersion)
 	{
-		kdWarning() << __FUNCTION__ << ": Config file has old version "
-			<< version
-			<< endl;
+		kdWarning() << __FUNCTION__ <<
+			": Config file has old version " << version << endl;
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGDB << fname
-			<< ": Config file has version "
-			<< version
-			<< endl;
+			<< ": Config file has version " << version << endl;
+#endif
 	}
 
 	return version;
@@ -106,12 +109,13 @@ static const char *kpilotconfig_id =
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings &config = getConfig();
+	KPilotConfigSettings & config = getConfig();
 	config.setVersion(ConfigurationVersion);
 }
 
 /* static */ QString KPilotConfig::getDefaultDBPath()
 {
+	FUNCTIONSETUP;
 	QString lastUser = getConfig().getUser();
 	QString dbsubpath = "kpilot/DBBackup/";
 	QString defaultDBPath = KGlobal::dirs()->
@@ -122,30 +126,31 @@ static const char *kpilotconfig_id =
 #ifndef DEBUG
 /* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings &)
 {
+	FUNCTIONSETUP;
 	return 0;
 }
 
-/* static */ int KPilotConfig::getDebugLevel(KCmdLineArgs *)
+/* static */ int KPilotConfig::getDebugLevel(bool)
 {
+	FUNCTIONSETUP;
 	return 0;
 }
 #else
-/* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings &c)
+/* static */ int KPilotConfig::getDebugLevel(KPilotConfigSettings & c)
 {
 	FUNCTIONSETUP;
 
-	int d=c.getDebug();
+	int d = c.getDebug();
+
 	debug_level |= d;
 
 	if (debug_level)
 	{
-		kdDebug() << fname 
-			<< ": Debug level set to "
-			<< debug_level
-			<< endl;
+		DEBUGKPILOT << fname
+			<< ": Debug level set to " << debug_level << endl;
 	}
 
-	return debug_level ;
+	return debug_level;
 }
 
 /* static */ int KPilotConfig::getDebugLevel(bool useDebugId)
@@ -169,7 +174,8 @@ static const char *kpilotconfig_id =
 #endif
 
 static KPilotConfigSettings *theconfig = 0L;
-KPilotConfigSettings &KPilotConfig::getConfig()
+
+KPilotConfigSettings & KPilotConfig::getConfig()
 {
 	FUNCTIONSETUP;
 
@@ -184,47 +190,47 @@ KPilotConfigSettings &KPilotConfig::getConfig()
 	* It is a grave programming error, so we will let that
 	* stand.
 	*/
-	QString existingConfig=
+	QString existingConfig =
 		KGlobal::dirs()->findResource("config", "kpilotrc");
 
-	
+
 	if (existingConfig.isNull())
 	{
-		DEBUGDB << fname 
-			<< ": Making a new config file"
-			<< endl;
-		KSimpleConfig *c=new KSimpleConfig("kpilotrc",false);
+#ifdef DEBUG
+		DEBUGDB << fname << ": Making a new config file" << endl;
+#endif
+		KSimpleConfig *c = new KSimpleConfig("kpilotrc", false);
 
-		c->writeEntry("Configured",ConfigurationVersion);
-		c->writeEntry("NextUniqueID",61440);
+		c->writeEntry("Configured", ConfigurationVersion);
+		c->writeEntry("NextUniqueID", 61440);
 		c->sync();
 		delete c;
 
-		theconfig=new KPilotConfigSettings("kpilotrc");
+		theconfig = new KPilotConfigSettings("kpilotrc");
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGDB << fname
 			<< ": Re-using existing config file "
-			<< existingConfig
-			<< endl;
+			<< existingConfig << endl;
+#endif
 
-		theconfig=new KPilotConfigSettings(existingConfig);
+		theconfig = new KPilotConfigSettings(existingConfig);
 	}
 
 	if (theconfig == 0L)
 	{
-		kdWarning() << __FUNCTION__ 
-			<< ": No configuration was found."
-			<< endl;
+		kdWarning() << __FUNCTION__
+			<< ": No configuration was found." << endl;
 	}
 
 	return *theconfig;
 }
 
-static QFont *thefont=0L;
+static QFont *thefont = 0L;
 
-/* static */ const QFont& KPilotConfig::fixed()
+/* static */ const QFont & KPilotConfig::fixed()
 {
 	FUNCTIONSETUP;
 
@@ -234,13 +240,13 @@ static QFont *thefont=0L;
 	}
 
 	KConfig KDEGlobalConfig(QString::null);
+
 	KDEGlobalConfig.setGroup("General");
 	QString s = KDEGlobalConfig.readEntry("fixed");
 
-	DEBUGKPILOT << fname
-		<< ": Creating font "
-		<< s 
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Creating font " << s << endl;
+#endif
 
 	thefont = new QFont(KDEGlobalConfig.readFontEntry("fixed"));
 
@@ -249,20 +255,21 @@ static QFont *thefont=0L;
 		kdError() << __FUNCTION__
 			<< ": **\n"
 			<< ": ** No font was created! (Expect crash now)\n"
-			<< ": **"
-			<< endl;
+			<< ": **" << endl;
 	}
 
 	return *thefont;
 }
 
-KPilotConfigSettings::KPilotConfigSettings(const QString &f,bool b) :
-	KSimpleConfig(f,b)
+KPilotConfigSettings::KPilotConfigSettings(const QString & f, bool b) :
+	KSimpleConfig(f, b)
 {
+	FUNCTIONSETUP;
 }
 
 KPilotConfigSettings::~KPilotConfigSettings()
 {
+	FUNCTIONSETUP;
 }
 
 
@@ -278,11 +285,11 @@ KPilotConfigSettings::~KPilotConfigSettings()
 	void KPilotConfigSettings::set##a(int i) { \
 	if ((i<0) || (i>m)) i=0; writeEntry(key,i); }
 
-IntProperty_(PilotType,"PilotType",0,3)
-IntProperty_(PilotSpeed,"PilotSpeed",0,4)
-IntProperty_(AddressDisplayMode,"AddressDisplay",0,1)
-IntProperty_(Version,"Configured",0,100000)
-IntProperty_(Debug,"Debug",0,1023)
+IntProperty_(PilotType, "PilotType", 0, 3)
+IntProperty_(PilotSpeed, "PilotSpeed", 0, 4)
+IntProperty_(AddressDisplayMode, "AddressDisplay", 0, 1)
+IntProperty_(Version, "Configured", 0, 100000)
+IntProperty_(Debug, "Debug", 0, 1023)
 
 #define BoolProperty_(a,key,defl) \
 	bool KPilotConfigSettings::get##a(QCheckBox *p) { \
@@ -291,13 +298,13 @@ IntProperty_(Debug,"Debug",0,1023)
 	set##a(p->isChecked()); } \
 	void KPilotConfigSettings::set##a(bool b) { \
 	writeEntry(key,b); }
+	BoolProperty_(DockDaemon, "DockDaemon", true)
 
-BoolProperty_(DockDaemon,"DockDaemon",true)
-BoolProperty_(KillDaemonOnExit,"StopDaemonAtExit",false)
-BoolProperty_(StartDaemonAtLogin,"StartDaemonAtLogin",true)
-BoolProperty_(ShowSecrets,"ShowSecrets",false)
-BoolProperty_(SyncFiles,"SyncFiles",true)
-BoolProperty_(UseKeyField,"UseKeyField",false)
+BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
+BoolProperty_(StartDaemonAtLogin, "StartDaemonAtLogin", true)
+BoolProperty_(ShowSecrets, "ShowSecrets", false)
+BoolProperty_(SyncFiles, "SyncFiles", true)
+BoolProperty_(UseKeyField, "UseKeyField", false)
 
 
 #define StringProperty_(a,key,defl) \
@@ -307,50 +314,60 @@ BoolProperty_(UseKeyField,"UseKeyField",false)
 	set##a(p->text()); } \
 	void  KPilotConfigSettings::set##a(const QString &s) { \
 	writeEntry(key,s); }
+	StringProperty_(PilotDevice, "PilotDevice", "/dev/pilot")
 
 
-StringProperty_(PilotDevice,"PilotDevice","/dev/pilot")
-StringProperty_(User,"UserName",QString::null)
-StringProperty_(BackupOnly,"BackupForSync","Arng,PmDB,lnch")
-StringProperty_(Skip,"SkipSync","AvGo")
+StringProperty_(User, "UserName", QString::null)
+StringProperty_(BackupOnly, "BackupForSync", "Arng,PmDB,lnch")
+StringProperty_(Skip, "SkipSync", "AvGo")
 
 
 KPilotConfigSettings & KPilotConfigSettings::setAddressGroup()
 {
+	FUNCTIONSETUP;
 	setGroup("Address Widget");
 	return *this;
 }
 
-KPilotConfigSettings &KPilotConfigSettings::setConduitGroup()
+KPilotConfigSettings & KPilotConfigSettings::setConduitGroup()
 {
+	FUNCTIONSETUP;
 	setGroup("Conduit Names");
 	return *this;
 }
 
-KPilotConfigSettings &KPilotConfigSettings::setDatabaseGroup()
+KPilotConfigSettings & KPilotConfigSettings::setDatabaseGroup()
 {
+	FUNCTIONSETUP;
 	setGroup("Database Names");
 	return *this;
 }
 
 QStringList KPilotConfigSettings::getInstalledConduits()
 {
+	FUNCTIONSETUP;
 	return readListEntry("InstalledConduits");
 }
 
-void KPilotConfigSettings::setInstalledConduits(const QStringList &l)
+void KPilotConfigSettings::setInstalledConduits(const QStringList & l)
 {
-	writeEntry("InstalledConduits",l);
+	FUNCTIONSETUP;
+	writeEntry("InstalledConduits", l);
 }
 
-void KPilotConfigSettings::setDatabaseConduit(const QString &database,const QString &conduit)
+void KPilotConfigSettings::setDatabaseConduit(const QString & database,
+	const QString & conduit)
 {
+	FUNCTIONSETUP;
 	setDatabaseGroup();
-	writeEntry(database,conduit);
+	writeEntry(database, conduit);
 }
 
 
 // $Log$
+// Revision 1.8  2001/09/23 21:44:56  adridg
+// Myriad small changes
+//
 // Revision 1.7  2001/09/23 18:25:50  adridg
 // New config architecture
 //

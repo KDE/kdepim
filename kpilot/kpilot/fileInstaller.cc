@@ -26,7 +26,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 static const char *fileinstaller_id =
@@ -77,6 +77,7 @@ FileInstaller::FileInstaller()
 
 /* virtual */ FileInstaller::~FileInstaller()
 {
+	FUNCTIONSETUP;
 }
 
 
@@ -90,31 +91,34 @@ void FileInstaller::clearPending()
 
 	// Start from 2 to skip . and ..
 	//
-	for (i=2; i < installDir.count(); i++)
+	for (i = 2; i < installDir.count(); i++)
 	{
-		unlink((fDirName + installDir[i]).latin1());
+		QFile::remove(fDirName + installDir[i]);
 	}
 
-	if (i>2) { emit filesChanged(); }
+	if (i > 2)
+	{
+		emit filesChanged();
+	}
 }
 
-/* virtual */ bool FileInstaller::runCopy(const QString& s)
+/* virtual */ bool FileInstaller::runCopy(const QString & s)
 {
 	FUNCTIONSETUP;
 
-	DEBUGDAEMON << fname
-		<< ": Copying "
-		<< s
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Copying " << s << endl;
+#endif
 
 	KURL srcName(s);
 	KURL destDir(fDirName + "/" + srcName.filename());
+
 	return KIO::NetAccess::copy(srcName, destDir);
 }
 
-	
 
-void FileInstaller::addFiles(QStrList& fileList)
+
+void FileInstaller::addFiles(QStrList & fileList)
 {
 	FUNCTIONSETUP;
 
@@ -123,14 +127,18 @@ void FileInstaller::addFiles(QStrList& fileList)
 
 	while (i < fileList.count())
 	{
-		if (runCopy(fileList.at(i))) succ++;
+		if (runCopy(fileList.at(i)))
+			succ++;
 		i++;
 	}
 
-	if (succ) { emit filesChanged(); }
+	if (succ)
+	{
+		emit filesChanged();
+	}
 }
 
-void FileInstaller::addFiles(QStringList& fileList)
+void FileInstaller::addFiles(QStringList & fileList)
 {
 	FUNCTIONSETUP;
 
@@ -139,14 +147,18 @@ void FileInstaller::addFiles(QStringList& fileList)
 
 	while (i < fileList.count())
 	{
-		if (runCopy(fileList[i])) succ++;
+		if (runCopy(fileList[i]))
+			succ++;
 		i++;
 	}
 
-	if (succ) { emit filesChanged(); }
+	if (succ)
+	{
+		emit filesChanged();
+	}
 }
 
-void FileInstaller::addFile(const QString& file)
+void FileInstaller::addFile(const QString & file)
 {
 	FUNCTIONSETUP;
 
@@ -158,6 +170,7 @@ void FileInstaller::addFile(const QString& file)
 
 /* slot */ void FileInstaller::copyCompleted()
 {
+	FUNCTIONSETUP;
 }
 
 const QStringList FileInstaller::fileNames() const
@@ -166,18 +179,19 @@ const QStringList FileInstaller::fileNames() const
 
 	QDir installDir(fDirName);
 
-	return installDir.entryList(QDir::Files | 
-		QDir::NoSymLinks | 
-		QDir::Readable);
+	return installDir.entryList(QDir::Files |
+		QDir::NoSymLinks | QDir::Readable);
 }
 
 
 
 // $Log$
+// Revision 1.3  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.2  2001/03/04 13:11:58  adridg
 // Actually use the fileInstaller object
 //
 // Revision 1.1  2001/03/01 20:41:11  adridg
 // Added class to factor out code in daemon and fileinstallwidget
 //
-

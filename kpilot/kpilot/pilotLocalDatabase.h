@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTLOCALDATABASE_H
 #define _KPILOT_PILOTLOCALDATABASE_H
@@ -82,6 +82,13 @@ class PilotLocalDatabase : public PilotDatabase
 	*/
 	QString dbPathName() const;
 
+	/**
+	* Accessor functions for the application info block.
+	*/
+	int appInfoSize() const 
+		{ if (isDBOpen()) return fAppLen; else return -1; } ;
+	char *appInfo() { return fAppInfo; } ;
+
     protected:
     void openDatabase();
     void closeDatabase();
@@ -105,6 +112,9 @@ class PilotLocalDatabase : public PilotDatabase
 
 
 // $Log$
+// Revision 1.10  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.9  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

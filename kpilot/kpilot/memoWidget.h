@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_MEMOWIDGET_H
 #define _KPILOT_MEMOWIDGET_H
@@ -111,6 +111,9 @@ private:
 
 
 // $Log$
+// Revision 1.16  2001/09/24 10:43:19  cschumac
+// Compile fixes.
+//
 // Revision 1.15  2001/09/06 22:33:43  adridg
 // Cruft cleanup
 //

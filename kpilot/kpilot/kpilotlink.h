@@ -27,7 +27,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -325,6 +325,9 @@ protected:
 
 
 // $Log$
+// Revision 1.33  2001/09/24 19:46:17  adridg
+// Made exec() pure virtual for SyncActions, since that makes more sense than having an empty default action.
+//
 // Revision 1.32  2001/09/23 18:24:59  adridg
 // New syncing architecture
 //

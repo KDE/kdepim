@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #ifndef _KPILOT_LISTITEMS_H
@@ -64,6 +64,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.3  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.2  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

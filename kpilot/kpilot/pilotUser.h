@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include <stdlib.h>
@@ -90,6 +90,9 @@ private:
 
 
 // $Log$
+// Revision 1.8  2001/09/24 22:24:32  adridg
+// Squashed buffer overflows
+//
 // Revision 1.7  2001/09/05 22:15:34  adridg
 // Operator & is just *too* weird
 //

@@ -5,7 +5,7 @@
 ** This file defines the log window widget, which logs
 ** sync-messages during a HotSync.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -24,9 +24,10 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org.
 */
-static const char *logw_id="$Id$";
+static const char *logw_id =
+	"$Id$";
 
 #include "options.h"
 
@@ -37,35 +38,39 @@ static const char *logw_id="$Id$";
 
 #include "logWidget.moc"
 
-LogWidget::LogWidget(QWidget *parent) :
-	PilotComponent(parent,"component_log",QString::null),
-	fLog(0L),
+LogWidget::LogWidget(QWidget * parent) :
+	PilotComponent(parent, "component_log", QString::null),
+	fLog(0L), 
 	fShowTime(false)
 {
-	QGridLayout *grid = new QGridLayout(this,3,3,SPACING);
-	grid->addRowSpacing(0,SPACING);
-	grid->addRowSpacing(2,SPACING);
-	grid->addColSpacing(0,SPACING);
-	grid->addColSpacing(2,SPACING);
-	grid->setRowStretch(1,100);
-	grid->setColStretch(1,100);
+	FUNCTIONSETUP;
+	QGridLayout *grid = new QGridLayout(this, 3, 3, SPACING);
+
+	grid->addRowSpacing(0, SPACING);
+	grid->addRowSpacing(2, SPACING);
+	grid->addColSpacing(0, SPACING);
+	grid->addColSpacing(2, SPACING);
+	grid->setRowStretch(1, 100);
+	grid->setColStretch(1, 100);
 
 	fLog = new QTextView(this);
-	QToolTip::add(fLog,i18n("This lists all the messages received "
-		"during the current HotSync"));
-	grid->addWidget(fLog,1,1);
+	QToolTip::add(fLog, i18n("This lists all the messages received "
+			"during the current HotSync"));
+	grid->addWidget(fLog, 1, 1);
 
 	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
 	(void) logw_id;
 }
 
-void LogWidget::addMessage(const QString &s)
+void LogWidget::addMessage(const QString & s)
 {
+	FUNCTIONSETUP;
+
 	if (fShowTime)
 	{
 		QString t;
 
-		t=QTime::currentTime().toString();
+		t = QTime::currentTime().toString();
 		t.append("  ");
 		t.append(s);
 		fLog->append(t);
@@ -76,14 +81,16 @@ void LogWidget::addMessage(const QString &s)
 	}
 }
 
-void LogWidget::addError(const QString &s)
+void LogWidget::addError(const QString & s)
 {
+	FUNCTIONSETUP;
+
 	QString t("<qt><B>");
 
 	if (fShowTime)
 	{
 
-		t=QTime::currentTime().toString();
+		t = QTime::currentTime().toString();
 		t.append("  ");
 	}
 
@@ -95,11 +102,12 @@ void LogWidget::addError(const QString &s)
 
 void LogWidget::syncDone()
 {
+	FUNCTIONSETUP;
+
 	addMessage(i18n("<b>HotSync Finished!</b>"));
 }
 
 void LogWidget::initialize()
 {
+	FUNCTIONSETUP;
 }
-
-

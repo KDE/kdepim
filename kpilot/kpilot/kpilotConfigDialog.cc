@@ -6,7 +6,7 @@
 ** that can actually handle some HotSync tasks, like backup
 ** and restore. It does NOT do conduit stuff.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -41,8 +41,8 @@
 #include "kpilotConfigDialog_base.h"
 #include "kpilotConfigDialog.moc"
 
-KPilotConfigDialog::KPilotConfigDialog(QWidget *w,const char *n,bool m) :
-	UIDialog(w,n,m)
+KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
+	bool m) : UIDialog(w, n, m)
 {
 	FUNCTIONSETUP;
 
@@ -56,8 +56,8 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget *w,const char *n,bool m) :
 
 	changePortType(fConfigWidget->fPortType->currentItem());
 
-	QObject::connect(fConfigWidget->fPortType,SIGNAL(activated(int)),
-		this,SLOT(changePortType(int)));
+	QObject::connect(fConfigWidget->fPortType, SIGNAL(activated(int)),
+		this, SLOT(changePortType(int)));
 
 	addAboutPage(false);
 }
@@ -81,7 +81,7 @@ void KPilotConfigDialog::readConfig()
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings &c=KPilotConfig::getConfig();
+	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	c.resetGroup();
 
 	(void) c.getPilotDevice(fConfigWidget->fPilotDevice);
@@ -96,7 +96,7 @@ void KPilotConfigDialog::readConfig()
 	(void) c.getBackupOnly(fConfigWidget->fBackupOnly);
 	(void) c.getSkip(fConfigWidget->fSkipDB);
 
-	(void) c.getSyncFiles( fConfigWidget->fSyncFiles);
+	(void) c.getSyncFiles(fConfigWidget->fSyncFiles);
 
 	c.setAddressGroup();
 	(void) c.getUseKeyField(fConfigWidget->fUseKeyField);
@@ -104,12 +104,12 @@ void KPilotConfigDialog::readConfig()
 
 	c.resetGroup();
 }
-	
+
 /* virtual */ void KPilotConfigDialog::commitChanges()
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings &c=KPilotConfig::getConfig();
+	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	c.resetGroup();
 
 	// General page
@@ -118,7 +118,7 @@ void KPilotConfigDialog::readConfig()
 	c.setPilotSpeed(fConfigWidget->fPilotSpeed);
 	c.setUser(fConfigWidget->fUserName);
 	c.setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin);
-	c.setKillDaemonOnExit( fConfigWidget->fKillDaemonOnExit);
+	c.setKillDaemonOnExit(fConfigWidget->fKillDaemonOnExit);
 	c.setDockDaemon(fConfigWidget->fDockDaemon);
 
 	// DB specials page
@@ -144,8 +144,10 @@ int KPilotConfigDialog::getAddressDisplay() const
 {
 	FUNCTIONSETUP;
 
-	if (fConfigWidget->fNormalDisplay->isChecked()) return 0;
-	if (fConfigWidget->fCompanyDisplay->isChecked()) return 1;
+	if (fConfigWidget->fNormalDisplay->isChecked())
+		return 0;
+	if (fConfigWidget->fCompanyDisplay->isChecked())
+		return 1;
 
 	return 0;
 }
@@ -154,11 +156,17 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 {
 	FUNCTIONSETUP;
 
-	switch(i)
+	switch (i)
 	{
-	case 0 : fConfigWidget->fNormalDisplay->setChecked(true); break;
-	case 1 : fConfigWidget->fCompanyDisplay->setChecked(true); break;
-	default : fConfigWidget->fNormalDisplay->setChecked(true); break;
+	case 0:
+		fConfigWidget->fNormalDisplay->setChecked(true);
+		break;
+	case 1:
+		fConfigWidget->fCompanyDisplay->setChecked(true);
+		break;
+	default:
+		fConfigWidget->fNormalDisplay->setChecked(true);
+		break;
 	}
 }
 
@@ -167,17 +175,19 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 {
 	FUNCTIONSETUP;
 
-	switch(i)
+	switch (i)
 	{
-	case 0 : fConfigWidget->fPilotSpeed->setEnabled(true);
+	case 0:
+		fConfigWidget->fPilotSpeed->setEnabled(true);
 		break;
-	case 1 :
-	case 2 : fConfigWidget->fPilotSpeed->setEnabled(false);
+	case 1:
+	case 2:
+		fConfigWidget->fPilotSpeed->setEnabled(false);
 		break;
-	default :
+	default:
 		kdWarning() << __FUNCTION__
-			<< ": Unknown port type "
-			<< i
-			<< endl;
+			<< ": Unknown port type " << i << endl;
 	}
 }
+
+// $Log:$

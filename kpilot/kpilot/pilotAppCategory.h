@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTAPPCATEGORY_H
 #define _KPILOT_PILOTAPPCATEGORY_H
@@ -130,6 +130,9 @@ public:
 
 
 // $Log$
+// Revision 1.13  2001/06/11 07:35:19  adridg
+// Cleanup before the freeze
+//
 // Revision 1.12  2001/05/01 06:03:20  stern
 // Fixed bug in isModified method
 //

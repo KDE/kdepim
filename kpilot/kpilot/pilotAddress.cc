@@ -23,11 +23,12 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
-static const char *pilotadress_id="$Id$";
+static const char *pilotadress_id =
+	"$Id$";
 
 #ifndef _KPILOT_OPTIONS_H
 #include "options.h"
@@ -44,228 +45,268 @@ static const char *pilotadress_id="$Id$";
 const int PilotAddress::APP_BUFFER_SIZE = 0xffff;
 
 PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
-			   PilotRecord* rec)
-      : PilotAppCategory(rec), fAppInfo(appInfo), fAddressInfo()
-    {
-    unpack_Address(&fAddressInfo, (unsigned char*)rec->getData(), rec->getLen());
-    (void)pilotadress_id;
-    }
+	PilotRecord * rec) :
+	PilotAppCategory(rec), 
+	fAppInfo(appInfo),
+	fAddressInfo()
+{
+	FUNCTIONSETUP;
+	unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(),
+		rec->getLen());
+	(void) pilotadress_id;
+}
 
 PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
-      PilotAppCategory(), fAppInfo(appInfo)
-    {
-    reset();
+	PilotAppCategory(),
+	fAppInfo(appInfo)
+{
+	FUNCTIONSETUP;
+	reset();
 
-    // assign the phoneLabel so it doesn't appear in the pilot as
-    // work for all fields, but at least shows other fields
-    fAddressInfo.phoneLabel[0] = (int) eWork;
-    fAddressInfo.phoneLabel[1] = (int) eHome;
-    fAddressInfo.phoneLabel[2] = (int) eOther;
-    fAddressInfo.phoneLabel[3] = (int) eMobile;
-    fAddressInfo.phoneLabel[4] = (int) eEmail;
-    }
+	// assign the phoneLabel so it doesn't appear in the pilot as
+	// work for all fields, but at least shows other fields
+	fAddressInfo.phoneLabel[0] = (int) eWork;
+	fAddressInfo.phoneLabel[1] = (int) eHome;
+	fAddressInfo.phoneLabel[2] = (int) eOther;
+	fAddressInfo.phoneLabel[3] = (int) eMobile;
+	fAddressInfo.phoneLabel[4] = (int) eEmail;
+}
 
-PilotAddress::PilotAddress(const PilotAddress &copyFrom) :
-      PilotAppCategory(copyFrom), fAppInfo(copyFrom.fAppInfo),
-      fAddressInfo()
-    {
-    _copyAddressInfo(copyFrom.fAddressInfo);
-    }
+PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
+	PilotAppCategory(copyFrom),
+	fAppInfo(copyFrom.fAppInfo), 
+	fAddressInfo()
+{
+	FUNCTIONSETUP;
+	_copyAddressInfo(copyFrom.fAddressInfo);
+}
 
-PilotAddress& PilotAddress::operator=( const PilotAddress &copyFrom )
-    {
-    PilotAppCategory::operator=(copyFrom);
-    _copyAddressInfo(copyFrom.fAddressInfo);
-    return *this;
-    }
+PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
+{
+	FUNCTIONSETUP;
+	PilotAppCategory::operator = (copyFrom);
+	_copyAddressInfo(copyFrom.fAddressInfo);
+	return *this;
+}
 
 void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
-    {
-    fAddressInfo.showPhone = copyFrom.showPhone;
-    for (int labelLp=0;labelLp < 5;labelLp++)
-	fAddressInfo.phoneLabel[labelLp] =
-	    copyFrom.phoneLabel[labelLp];
-    for (int entryLp=0;entryLp < 19;entryLp++)
+{
+	FUNCTIONSETUP;
+	fAddressInfo.showPhone = copyFrom.showPhone;
+
+	for (int labelLp = 0; labelLp < 5; labelLp++)
 	{
-	if (copyFrom.entry[entryLp])
-	    fAddressInfo.entry[entryLp] =
-		qstrdup(copyFrom.entry[entryLp]);
-	else
-	    fAddressInfo.entry[entryLp] = 0L;
+		fAddressInfo.phoneLabel[labelLp] =
+			copyFrom.phoneLabel[labelLp];
 	}
-    }
+
+	for (int entryLp = 0; entryLp < 19; entryLp++)
+	{
+		if (copyFrom.entry[entryLp])
+			fAddressInfo.entry[entryLp] =
+				qstrdup(copyFrom.entry[entryLp]);
+		else
+			fAddressInfo.entry[entryLp] = 0L;
+	}
+}
 
 
 PilotAddress::~PilotAddress()
-    {
-    free_Address(&fAddressInfo);
-    }
+{
+	FUNCTIONSETUP;
+	free_Address(&fAddressInfo);
+}
 
 bool PilotAddress::setCategory(const char *label)
-    {
-    for (int catId=0;catId < 16;catId++)
+{
+	FUNCTIONSETUP;
+	for (int catId = 0; catId < 16; catId++)
 	{
-	QString aCat = fAppInfo.category.name[catId]; 
-	if (label == aCat)
-	    {
-	    setCat(catId);
-	    return true;
-	    }
-	else
-	    // if empty, then no more labels; add it 
-	    if (aCat.isEmpty())
+		QString aCat = fAppInfo.category.name[catId];
+
+		if (label == aCat)
 		{
-		qstrncpy(fAppInfo.category.name[catId], label, 16);
-		setCat(catId);
-		return true;
+			setCat(catId);
+			return true;
+		}
+		else
+			// if empty, then no more labels; add it 
+		if (aCat.isEmpty())
+		{
+			qstrncpy(fAppInfo.category.name[catId], label, 16);
+			setCat(catId);
+			return true;
 		}
 	}
-    // if got here, the category slots were full
-    return false;
-    }
+	// if got here, the category slots were full
+	return false;
+}
 
 int PilotAddress::_getNextEmptyPhoneSlot() const
-    {
-    for (int phoneSlot = entryPhone1;phoneSlot <= entryPhone5;phoneSlot++)
+{
+	FUNCTIONSETUP;
+	for (int phoneSlot = entryPhone1; phoneSlot <= entryPhone5;
+		phoneSlot++)
 	{
-	QString phoneField = getField(phoneSlot);
-	if (phoneField.isEmpty())
-	    return phoneSlot;
+		QString phoneField = getField(phoneSlot);
+
+		if (phoneField.isEmpty())
+			return phoneSlot;
 	}
-    return entryCustom4;
-    }
+	return entryCustom4;
+}
 
 void PilotAddress::setPhoneField(EPhoneType type, const char *field,
-				 bool overflowCustom)
-    {
-    // first look to see if the type is already assigned to a fieldSlot
-    //QString typeStr(_typeToStr(type));
-    //int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
-    int appPhoneLabelNum = (int)type;
-    QString typeStr( fAppInfo.phoneLabels[appPhoneLabelNum] );
-    QString fieldStr(field);
-    int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
-    if (fieldSlot == -1)
-	fieldSlot = _getNextEmptyPhoneSlot();
-    
-    // store the overflow phone
-    if (fieldSlot == entryCustom4)
+	bool overflowCustom)
+{
+	FUNCTIONSETUP;
+	// first look to see if the type is already assigned to a fieldSlot
+	//QString typeStr(_typeToStr(type));
+	//int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
+	int appPhoneLabelNum = (int) type;
+	QString typeStr(fAppInfo.phoneLabels[appPhoneLabelNum]);
+	QString fieldStr(field);
+	int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
+
+	if (fieldSlot == -1)
+		fieldSlot = _getNextEmptyPhoneSlot();
+
+	// store the overflow phone
+	if (fieldSlot == entryCustom4)
 	{
-	if (!fieldStr.isEmpty() && overflowCustom)
-	    {
-	    QString custom4Field = getField(entryCustom4);
-	    custom4Field += typeStr + " " + fieldStr;
-	    setField(entryCustom4, custom4Field.latin1());
-	    }
+		if (!fieldStr.isEmpty() && overflowCustom)
+		{
+			QString custom4Field = getField(entryCustom4);
+
+			custom4Field += typeStr + " " + fieldStr;
+			setField(entryCustom4, custom4Field.latin1());
+		}
 	}
-    else // phone field 1 - 5; straight forward storage
+	else			// phone field 1 - 5; straight forward storage
 	{
-	setField(fieldSlot, field);
-	int labelIndex = fieldSlot - entryPhone1;
-	fAddressInfo.phoneLabel[labelIndex] = appPhoneLabelNum;
+		setField(fieldSlot, field);
+		int labelIndex = fieldSlot - entryPhone1;
+
+		fAddressInfo.phoneLabel[labelIndex] = appPhoneLabelNum;
 	}
-    }
+}
 
 int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
-    {
-    for (int index=0;index < 5;index++)
-	if (fAddressInfo.phoneLabel[index] == appTypeNum)
-	    return index+entryPhone1;
-    return -1;
-    }
+{
+	FUNCTIONSETUP;
+	for (int index = 0; index < 5; index++)
+	{
+		if (fAddressInfo.phoneLabel[index] == appTypeNum)
+			return index + entryPhone1;
+	}
 
-const char *PilotAddress::getPhoneField(EPhoneType type,
-					bool checkCustom4) const
-    {
-    // given the type, need to find which slot is associated with it
-    //QString typeToStr(_typeToStr(type));
-    //int appTypeNum = _getAppPhoneLabelNum(typeToStr);
-    int appTypeNum = (int)type;
-    QString typeToStr( fAppInfo.phoneLabels[appTypeNum] );
+	return -1;
+}
 
-    int fieldSlot = _findPhoneFieldSlot(appTypeNum); 
-    if (fieldSlot != -1)
-	return getField(fieldSlot);
+const char *PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
+{
+	FUNCTIONSETUP;
+	// given the type, need to find which slot is associated with it
+	//QString typeToStr(_typeToStr(type));
+	//int appTypeNum = _getAppPhoneLabelNum(typeToStr);
+	int appTypeNum = (int) type;
+	QString typeToStr(fAppInfo.phoneLabels[appTypeNum]);
 
-    // look through custom 4 for the field
-    if (!checkCustom4)
-	return 0L;
+	int fieldSlot = _findPhoneFieldSlot(appTypeNum);
 
-    // look for the phone type str
-    QString customField(getField(entryCustom4));
-    int foundField = customField.find(typeToStr);
-    if (foundField == -1)
-	return 0L;
+	if (fieldSlot != -1)
+		return getField(fieldSlot);
 
-    // parse out the next token
-    int startPos = foundField+typeToStr.length()+1;
-    int endPos = customField.find(' ', startPos);
-    if (endPos == -1)
-	endPos = customField.length();
-    QString field = customField.mid(startPos, endPos);
-    field = field.simplifyWhiteSpace();
+	// look through custom 4 for the field
+	if (!checkCustom4)
+		return 0L;
 
-    // return the token
-    return field.latin1();
-    }
+	// look for the phone type str
+	QString customField(getField(entryCustom4));
+	int foundField = customField.find(typeToStr);
+
+	if (foundField == -1)
+		return 0L;
+
+	// parse out the next token
+	int startPos = foundField + typeToStr.length() + 1;
+	int endPos = customField.find(' ', startPos);
+
+	if (endPos == -1)
+		endPos = customField.length();
+	QString field = customField.mid(startPos, endPos);
+
+	field = field.simplifyWhiteSpace();
+
+	// return the token
+	return field.latin1();
+}
 
 
-int PilotAddress::_getAppPhoneLabelNum(const QString &phoneType) const
-    {
-    for (int index=0;index < 8;index++)
-	if (phoneType == fAppInfo.phoneLabels[index])
-	    return index;
-    qDebug("PilotAddress::getAppPhoneLabelNum can't find index for phoneType = %s", phoneType.latin1());
-    assert(0);
-    return -1;
-    }
+int PilotAddress::_getAppPhoneLabelNum(const QString & phoneType) const
+{
+	FUNCTIONSETUP;
+	for (int index = 0; index < 8; index++)
+	{
+		if (phoneType == fAppInfo.phoneLabels[index])
+			return index;
+	}
+
+	return -1;
+}
 
 void PilotAddress::setShownPhone(EPhoneType type)
-    {
-    //QString typeStr(_typeToStr(type));
-    //int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
-    int appPhoneLabelNum = (int)type;
-    int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
-    if (fieldSlot == -1)
-	{
-	if (type != eHome)
-	    {
-	    setShownPhone(eHome);
-	    return;
-	    }
-	fieldSlot = entryPhone1;
-	}
-    fAddressInfo.showPhone = fieldSlot - entryPhone1;
-    }
+{
+	FUNCTIONSETUP;
+	int appPhoneLabelNum = (int) type;
+	int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
 
-void 
-PilotAddress::setField(int field, const char* text)
-    {
-    // This will have either been created with unpack_Address, and/or will
-    // be released with free_Address, so use malloc/free here:
-    if(fAddressInfo.entry[field])
+	if (fieldSlot == -1)
 	{
-	free(fAddressInfo.entry[field]);
+		if (type != eHome)
+		{
+			setShownPhone(eHome);
+			return;
+		}
+		fieldSlot = entryPhone1;
 	}
-    if (text)
-      {
-	fAddressInfo.entry[field] = (char*)malloc(strlen(text) + 1);
-	strcpy(fAddressInfo.entry[field], text);
-      }
-    else
-      fAddressInfo.entry[field] = 0L;
-    }
+	fAddressInfo.showPhone = fieldSlot - entryPhone1;
+}
 
-void*
-PilotAddress::pack(void *buf, int *len)
-    {
-    int i;
-    i = pack_Address(&fAddressInfo, (unsigned char*)buf, *len);
-    *len = i;
-    return buf;
-    }
+void PilotAddress::setField(int field, const char *text)
+{
+	FUNCTIONSETUP;
+	// This will have either been created with unpack_Address, and/or will
+	// be released with free_Address, so use malloc/free here:
+	if (fAddressInfo.entry[field])
+	{
+		free(fAddressInfo.entry[field]);
+	}
+	if (text)
+	{
+		fAddressInfo.entry[field] = (char *) malloc(strlen(text) + 1);
+		strcpy(fAddressInfo.entry[field], text);
+	}
+	else
+	{
+		fAddressInfo.entry[field] = 0L;
+	}
+}
+
+void *PilotAddress::pack(void *buf, int *len)
+{
+	FUNCTIONSETUP;
+	int i;
+
+	i = pack_Address(&fAddressInfo, (unsigned char *) buf, *len);
+	*len = i;
+	return buf;
+}
 
 // $Log$
+// Revision 1.20  2001/05/07 22:14:47  stern
+// Fixed phone localization bug
+//
 // Revision 1.19  2001/05/07 19:26:41  adridg
 // Possible fix for abbrowser phone label corruption
 //

@@ -7,13 +7,14 @@
 ### $Id$
 ###
 
+SUBDIRS = Icons
+
 ### Fairly large changes to allow enable final and make life easier for
 ### conduits (and others) -- now build all the database types and known
 ### database record types into a library.
 
 noinst_PROGRAMS = kpilotTest kpilotConfig
 bin_PROGRAMS = kpilot kpilotDaemon
-subdirs = Icons
 
 METASOURCES = AUTO
 

@@ -22,7 +22,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 static const char *kpilotlink_id =
 	"$Id$";
@@ -54,10 +54,9 @@ static const char *kpilotlink_id =
 #include "kpilotlink.moc"
 
 
-SyncAction::SyncAction(KPilotDeviceLink *p,
-	QObject *parent,
-	const char *name) :
-	QObject(parent,name),
+SyncAction::SyncAction(KPilotDeviceLink * p,
+	QObject * parent, const char *name) : 
+	QObject(parent, name), 
 	fHandle(p)
 {
 	FUNCTIONSETUP;
@@ -65,47 +64,48 @@ SyncAction::SyncAction(KPilotDeviceLink *p,
 
 /* virtual */ QString SyncAction::statusString() const
 {
+	FUNCTIONSETUP;
 	QString s("status=");
+
 	s.append(QString::number(status()));
 	return s;
 }
 
 KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 
-KPilotDeviceLink::KPilotDeviceLink(QObject *parent,const char *name) :
-	QObject(parent,name),
+KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
+	QObject(parent, name),
 	fPilotPath(QString::null),
 	fDeviceType(None),
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
-	fCurrentPilotSocket(-1),
-	fPilotMasterSocket(-1),
+	fCurrentPilotSocket(-1), 
+	fPilotMasterSocket(-1), 
 	fStatus(Init)
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fDeviceLink==0L);
-	fDeviceLink=this;
+	ASSERT(fDeviceLink == 0L);
+	fDeviceLink = this;
 }
 
 KPilotDeviceLink::~KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
 	close();
-	fDeviceLink=0L;
+	fDeviceLink = 0L;
 }
 
-KPilotDeviceLink *KPilotDeviceLink::init(QObject *parent,
-	const char *name)
+KPilotDeviceLink *KPilotDeviceLink::init(QObject * parent, const char *name)
 {
 	FUNCTIONSETUP;
 
 	ASSERT(!fDeviceLink);
 
-	return new KPilotDeviceLink(parent,name);
+	return new KPilotDeviceLink(parent, name);
 }
-	
+
 void KPilotDeviceLink::close()
 {
 	FUNCTIONSETUP;
@@ -116,36 +116,44 @@ void KPilotDeviceLink::close()
 	pi_close(fPilotMasterSocket);
 }
 
-void KPilotDeviceLink::reset(DeviceType t,const QString &dP)
+void KPilotDeviceLink::reset(DeviceType t, const QString & dP)
 {
 	FUNCTIONSETUP;
 
-	fStatus=Init;
-	fRetries=0;
+	fStatus = Init;
+	fRetries = 0;
 
 	// Release all resources
 	//
 	//
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
-	if (fCurrentPilotSocket!=-1) pi_close(fCurrentPilotSocket);
-	if (fPilotMasterSocket!=-1) pi_close(fPilotMasterSocket);
-	fPilotMasterSocket = -1;
-	fCurrentPilotSocket = -1;
-	fPilotPath=QString::null;
+	if (fCurrentPilotSocket != -1)
+	{
+		pi_close(fCurrentPilotSocket);
+	}
+	if (fPilotMasterSocket != -1)
+	{
+		pi_close(fPilotMasterSocket);
+	}
+	fPilotMasterSocket = (-1);
+	fCurrentPilotSocket = (-1);
+	fPilotPath = QString::null;
 
-	fDeviceType=t;
-	if (t==None) return;
+	fDeviceType = t;
+	if (t == None)
+		return;
 
-	fPilotPath=dP;
-	if (fPilotPath.isEmpty()) return;
+	fPilotPath = dP;
+	if (fPilotPath.isEmpty())
+		return;
 
-	fOpenTimer=new QTimer(this);
-	QObject::connect(fOpenTimer,SIGNAL(timeout()),
-		this,SLOT(openDevice()));
-	fOpenTimer->start(1000,false);
+	fOpenTimer = new QTimer(this);
+	QObject::connect(fOpenTimer, SIGNAL(timeout()),
+		this, SLOT(openDevice()));
+	fOpenTimer->start(1000, false);
 
-	fStatus=WaitingForDevice;
+	fStatus = WaitingForDevice;
 }
 
 
@@ -164,29 +172,29 @@ void KPilotDeviceLink::openDevice()
 	// This transition (from Waiting to Found) can only be
 	// taken once.
 	//
-	if (fStatus==WaitingForDevice)
+	if (fStatus == WaitingForDevice)
 	{
 		fStatus = FoundDevice;
 	}
 
 	emit logMessage(i18n("Trying to open device ..."));
+
 	if (open())
 	{
 		emit logMessage(i18n("Device link ready."));
 	}
 	else
 	{
-		emit logError(i18n("Could not open device: %1")
-			.arg(fPilotPath));
+		emit logError(i18n("Could not open device: %1").
+			arg(fPilotPath));
 		if (fStatus != PilotLinkError)
 		{
-			fOpenTimer->start(1000,false);
+			fOpenTimer->start(1000, false);
 		}
 	}
 }
 
-bool
-KPilotDeviceLink::open()
+bool KPilotDeviceLink::open()
 {
 	FUNCTIONSETUP;
 
@@ -195,15 +203,16 @@ KPilotDeviceLink::open()
 	int e = 0;
 	QString msg;
 
-	if (fCurrentPilotSocket!=-1) pi_close(fCurrentPilotSocket);
-	fCurrentPilotSocket=-1;
+	if (fCurrentPilotSocket != -1)
+		pi_close(fCurrentPilotSocket);
+	fCurrentPilotSocket = (-1);
 
 	if (fPilotMasterSocket == -1)
 	{
 		if (fPilotPath.isEmpty())
 		{
 			kdWarning() << __FUNCTION__
-				<< ": No point in trying empty device." 
+				<< ": No point in trying empty device."
 				<< endl;
 
 			msg = i18n("The Pilot device is not configured yet.");
@@ -211,8 +220,8 @@ KPilotDeviceLink::open()
 			goto errInit;
 		}
 
-		if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP, 
-			PI_SOCK_STREAM, PI_PF_PADP)))
+		if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP,
+					PI_SOCK_STREAM, PI_PF_PADP)))
 		{
 			e = errno;
 			msg = i18n("Cannot create socket for communicating "
@@ -220,20 +229,19 @@ KPilotDeviceLink::open()
 			goto errInit;
 		}
 
+#ifdef DEBUG
 		DEBUGDAEMON << fname
-			<< ": Got master "
-			<< fPilotMasterSocket
-			<< endl;
+			<< ": Got master " << fPilotMasterSocket << endl;
+#endif
 
 		fStatus = CreatedSocket;
 	}
 
 	ASSERT(fStatus == CreatedSocket);
 
-	DEBUGDAEMON << fname
-		<< ": Binding to path "
-		<< fPilotPath
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
+#endif
 
 	addr.pi_family = PI_AF_SLP;
 	strcpy(addr.pi_device, QFile::encodeName(fPilotPath));
@@ -247,15 +255,14 @@ KPilotDeviceLink::open()
 		fOpenTimer->stop();
 
 		fSocketNotifier = new QSocketNotifier(fPilotMasterSocket,
-			QSocketNotifier::Read,
-			this);
-		QObject::connect(fSocketNotifier,SIGNAL(activated(int)),
-			this,SLOT(acceptDevice()));
+			QSocketNotifier::Read, this);
+		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
+			this, SLOT(acceptDevice()));
 		return true;
 	}
 	else
 	{
-		if (isTransient() && (fRetries<5))
+		if (isTransient() && (fRetries < 5))
 		{
 			return false;
 		}
@@ -335,21 +342,22 @@ void KPilotDeviceLink::acceptDevice()
 		fSocketNotifier->setEnabled(false);
 	}
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Current status "
 		<< statusString()
-		<< " and master "
-		<< fPilotMasterSocket
-		<< endl;
+		<< " and master " << fPilotMasterSocket << endl;
+#endif
 
 	ret = pi_listen(fPilotMasterSocket, 1);
 	if (ret == -1)
 	{
-		char *s=strerror(errno);
+		char *s = strerror(errno);
 
 		kdWarning() << "pi_listen: " << s << endl;
 
-		emit logError(i18n("Can't listen on Pilot socket (%1)").arg(s));
+		emit logError(i18n("Can't listen on Pilot socket (%1)").
+			arg(s));
 
 		return;
 	}
@@ -357,112 +365,115 @@ void KPilotDeviceLink::acceptDevice()
 	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
 	if (fCurrentPilotSocket == -1)
 	{
-		char *s=strerror(errno);
+		char *s = strerror(errno);
 
 		kdWarning() << "pi_accept: " << s << endl;
 
 		emit logError(i18n("Can't accept Pilot (%1)").arg(s));
 
-		fStatus=PilotLinkError;
+		fStatus = PilotLinkError;
 		return;
 	}
 
 	if ((fStatus != DeviceOpen) || (fPilotMasterSocket == -1))
 	{
-		fStatus=PilotLinkError;
+		fStatus = PilotLinkError;
 		kdError() << __FUNCTION__
 			<< ": Already connected or unable to connect!"
 			<< endl;
 		return;
 	}
 
-	emit logProgress(QString::null,30);
+	emit logProgress(QString::null, 30);
 
 	fPilotUser = new KPilotUser;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
-	DEBUGDAEMON << fname
-		<< ": Reading user info."
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Reading user info." << endl;
+#endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
 	fPilotUser->boundsCheck();
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
-		<< ": Read user name "
-		<< fPilotUser->getUserName()
-		<< endl;
+		<< ": Read user name " << fPilotUser->getUserName() << endl;
+#endif
 
-	emit logProgress(i18n("Checking last PC..."),70);
+	emit logProgress(i18n("Checking last PC..."), 70);
 
 	/* Tell user (via Pilot) that we are starting things up */
 	if (dlp_OpenConduit(fCurrentPilotSocket) < 0)
 	{
-		fStatus=SyncDone;
-		emit logMessage(i18n("Exiting on cancel. All data not restored."));
+		fStatus = SyncDone;
+		emit logMessage(i18n
+			("Exiting on cancel. All data not restored."));
 		return;
 	}
 
 	fStatus = AcceptedDevice;
 
-	emit logProgress(QString::null,100);
+	emit logProgress(QString::null, 100);
 
 	addSyncLogEntry("Sync started with KPilot-v" KPILOT_VERSION "\n");
 	emit deviceReady();
 }
 
-int KPilotDeviceLink::installFiles(const QStringList &l)
+int KPilotDeviceLink::installFiles(const QStringList & l)
 {
 	FUNCTIONSETUP;
 
 	QStringList::ConstIterator i;
-	int k=0;
-	int n=0;
+	int k = 0;
+	int n = 0;
 
-	for (i=l.begin(); i!=l.end(); ++i)
+	for (i = l.begin(); i != l.end(); ++i)
 	{
-		emit logProgress(QString::null, 
-			(int)((100.0 / l.count()) *(float) n));
+		emit logProgress(QString::null,
+			(int) ((100.0 / l.count()) * (float) n));
 
-		if (installFile(*i)) k++;
+		if (installFile(*i))
+			k++;
 		n++;
 	}
-	emit logProgress(QString::null,100);
+	emit logProgress(QString::null, 100);
 
 	return k;
 }
 
-bool KPilotDeviceLink::installFile(const QString &f)
+bool KPilotDeviceLink::installFile(const QString & f)
 {
 	FUNCTIONSETUP;
 
-	DEBUGDAEMON << fname
-		<< ": Installing file "
-		<< f
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Installing file " << f << endl;
+#endif
 
-	if (!QFile::exists(f)) return false;
+	if (!QFile::exists(f))
+		return false;
 
-	struct pi_file *pf = pi_file_open(
-		const_cast<char *>((const char *)QFile::encodeName(f)));
-	
+	struct pi_file *pf =
+		pi_file_open(const_cast < char *>
+			((const char *) QFile::encodeName(f)));
+
 	if (!f)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Can't open file "
-			<< f
-			<< endl;
-		emit logError(i18n("<qt>Can't install the file &quot;%1&quot;.</qt>").arg(f));
+			<< ": Can't open file " << f << endl;
+		emit logError(i18n
+			("<qt>Can't install the file &quot;%1&quot;.</qt>").
+			arg(f));
 		return false;
 	}
 
-	if (pi_file_install(pf,fCurrentPilotSocket,0) < 0)
+	if (pi_file_install(pf, fCurrentPilotSocket, 0) < 0)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Can't pi_file_install "
-			<< f
-			<< endl;
-		emit logError(i18n("<qt>Can't install the file &quot;%1&quot;.</qt>").arg(f));
+			<< ": Can't pi_file_install " << f << endl;
+		emit logError(i18n
+			("<qt>Can't install the file &quot;%1&quot;.</qt>").
+			arg(f));
 		return false;
 	}
 
@@ -473,9 +484,11 @@ bool KPilotDeviceLink::installFile(const QString &f)
 }
 
 
-void KPilotDeviceLink::addSyncLogEntry(const QString &entry,bool suppress)
+void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 {
-	dlp_AddSyncLogEntry(fCurrentPilotSocket, const_cast<char *>(entry.latin1()));
+	FUNCTIONSETUP;
+	dlp_AddSyncLogEntry(fCurrentPilotSocket,
+		const_cast < char *>(entry.latin1()));
 	if (!suppress)
 	{
 		emit logMessage(entry);
@@ -484,31 +497,54 @@ void KPilotDeviceLink::addSyncLogEntry(const QString &entry,bool suppress)
 
 QString KPilotDeviceLink::deviceTypeString(int i) const
 {
-	switch(i)
+	FUNCTIONSETUP;
+	switch (i)
 	{
-	case None : return QString("None");
-	case Serial : return QString("Serial");
-	case OldStyleUSB : return QString("OldStyleUSB");
-	case DevFSUSB : return QString("DevFSUSB");
-	default : return QString("<unknown>");
+	case None:
+		return QString("None");
+	case Serial:
+		return QString("Serial");
+	case OldStyleUSB:
+		return QString("OldStyleUSB");
+	case DevFSUSB:
+		return QString("DevFSUSB");
+	default:
+		return QString("<unknown>");
 	}
 }
 
 QString KPilotDeviceLink::statusString() const
 {
+	FUNCTIONSETUP;
 	QString s("KPilotDeviceLink=");
 
 
-	switch(fStatus)
+	switch (fStatus)
 	{
-	case Init : s.append("Init"); break;
-	case WaitingForDevice : s.append("WaitingForDevice"); break;
-	case FoundDevice : s.append("FoundDevice"); break;
-	case CreatedSocket : s.append("CreatedSocket"); break;
-	case DeviceOpen : s.append("DeviceOpen"); break;
-	case AcceptedDevice : s.append("AcceptedDevice"); break;
-	case SyncDone : s.append("SyncDone"); break;
-	case PilotLinkError : s.append("PilotLinkError"); break;
+	case Init:
+		s.append("Init");
+		break;
+	case WaitingForDevice:
+		s.append("WaitingForDevice");
+		break;
+	case FoundDevice:
+		s.append("FoundDevice");
+		break;
+	case CreatedSocket:
+		s.append("CreatedSocket");
+		break;
+	case DeviceOpen:
+		s.append("DeviceOpen");
+		break;
+	case AcceptedDevice:
+		s.append("AcceptedDevice");
+		break;
+	case SyncDone:
+		s.append("SyncDone");
+		break;
+	case PilotLinkError:
+		s.append("PilotLinkError");
+		break;
 	}
 
 	return s;
@@ -516,6 +552,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.58  2001/09/24 22:20:28  adridg
+// Made exec() pure virtual for SyncActions
+//
 // Revision 1.57  2001/09/24 19:46:17  adridg
 // Made exec() pure virtual for SyncActions, since that makes more sense than having an empty default action.
 //

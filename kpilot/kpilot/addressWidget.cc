@@ -24,7 +24,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 static const char *addresswidget_id =
 	"$Id$";
@@ -109,13 +109,17 @@ static const char *addresswidget_id =
 #define BUFFERSIZE	(0xffff)
 
 AddressWidget::AddressWidget(QWidget * parent,
-	const QString & path):PilotComponent(parent, "component_address",
-	path), fAddrInfo(0)
+	const QString & path) :
+	PilotComponent(parent, "component_address", path), 
+	fAddrInfo(0)
 {
 	FUNCTIONSETUP;
 
 	setupWidget();
 	fAddressList.setAutoDelete(true);
+
+	/* NOTREACHED */
+	(void) addresswidget_id;
 }
 
 AddressWidget::~AddressWidget()
@@ -133,7 +137,9 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 	bool showSecrets = KPilotConfig::getConfig().getShowSecrets();
 
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Reading AddressDB..." << endl;
+#endif
 
 	while ((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -143,9 +149,10 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
 			{
-				kdWarning() << __FUNCTION__ <<
-					": Couldn't allocate " "record " <<
-					currentRecord++ << endl;
+				kdWarning() << __FUNCTION__ 
+					<< ": Couldn't allocate record " 
+					<< currentRecord++ 
+					<< endl;
 				break;
 			}
 			fAddressList.append(address);
@@ -155,22 +162,22 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 		currentRecord++;
 	}
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Total " << currentRecord << " records" << endl;
+#endif
 
 	return currentRecord;
-	/* NOTREACHED */
-	(void) addresswidget_id;
 }
 
 void AddressWidget::initialize()
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Reading from directory "
-		<< dbPath()
-		<< endl;
+		<< ": Reading from directory " << dbPath() << endl;
+#endif
 
 	PilotDatabase *addressDB =
 		new PilotLocalDatabase(dbPath(), "AddressDB");
@@ -282,10 +289,10 @@ void AddressWidget::updateWidget()
 
 	int listIndex = 0;
 
-	DEBUGKPILOT << fname 
-		<< ": Display Mode="
-		<< addressDisplayMode 
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Display Mode=" << addressDisplayMode << endl;
+#endif
 
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fAddressAppInfo.category));
@@ -293,7 +300,9 @@ void AddressWidget::updateWidget()
 	fListBox->clear();
 	fAddressList.first();
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": Adding records..." << endl;
+#endif
 
 	while (fAddressList.current())
 	{
@@ -323,7 +332,9 @@ void AddressWidget::updateWidget()
 		fAddressList.next();
 	}
 
+#ifdef DEBUG
 	DEBUGKPILOT << fname << ": " << listIndex << " records" << endl;
+#endif
 
 	slotUpdateButtons();
 }
@@ -698,7 +709,10 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	//
 	if (!myDB->isDBOpen())
 	{
-		DEBUGKPILOT << fname << ": Address database is not open" << endl;
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Address database is not open" <<
+			endl;
+#endif
 		return;
 	}
 
@@ -719,6 +733,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.39  2001/09/23 21:44:56  adridg
+// Myriad small changes
+//
 // Revision 1.38  2001/09/23 18:30:15  adridg
 // Adjusted widget for new config
 //

@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #ifndef _KPILOT_KPILOTDCOP_H
@@ -49,6 +49,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.4  2001/09/07 20:48:13  adridg
+// Stripped away last crufty IPC, added logWidget
+//
 // Revision 1.3  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

@@ -23,7 +23,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTMEMO_H
 #define _KPILOT_PILOTMEMO_H
@@ -98,6 +98,9 @@ private:
 
 
 // $Log$
+// Revision 1.9  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.8  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

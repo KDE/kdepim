@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 /**
@@ -116,6 +116,9 @@ private:
 
 
 // $Log$
+// Revision 1.11  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.10  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test

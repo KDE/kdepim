@@ -24,7 +24,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -51,7 +51,6 @@
 
 #include "pilotComponent.moc"
 
-
 static const char *pilotComponent_id =
 	"$Id$";
 
@@ -60,15 +59,17 @@ static const char *pilotComponent_id =
 //
 #define MAX_CATEGORIES	(15)
 
-PilotComponent::PilotComponent(QWidget* parent,
+PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
-	const QString &path) : 
-	QWidget(parent,id),
+	const QString & path) :
+	QWidget(parent, id), 
 	fDBPath(path)
 {
+	FUNCTIONSETUP;
+
 	if (parent)
 	{
-		resize(parent->geometry().width(), 
+		resize(parent->geometry().width(),
 			parent->geometry().height());
 	}
 
@@ -77,20 +78,19 @@ PilotComponent::PilotComponent(QWidget* parent,
 
 
 
-int PilotComponent::findSelectedCategory(QComboBox *fCatList,
-	struct CategoryAppInfo *info,
-	bool AllIsUnfiled)
+int PilotComponent::findSelectedCategory(QComboBox * fCatList,
+	struct CategoryAppInfo *info, bool AllIsUnfiled)
 {
 	FUNCTIONSETUP;
 
 	// Semantics of currentCatID are: 
 	//
-	// >=0		is a specific category based on the text -> 
-	//		category number mapping defined by the Pilot, 
-	// ==-1 	means "All" category selected when 
-	//		AllIsUnfiled is true.
-	// == 0		== Unfiled means "All" category selected when 
-	//		AllIsUnfiled is false.
+	// >=0          is a specific category based on the text -> 
+	//              category number mapping defined by the Pilot, 
+	// ==-1         means "All" category selected when 
+	//              AllIsUnfiled is true.
+	// == 0         == Unfiled means "All" category selected when 
+	//              AllIsUnfiled is false.
 	//
 	//
 	int currentCatID = 0;
@@ -105,49 +105,48 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 	// selected we can indicate that we are using the "All" category.
 	//
 	//
-	if (fCatList->currentItem()==0)
+	if (fCatList->currentItem() == 0)
 	{
-		currentCatID=-1;
+		currentCatID = (-1);
 #ifdef DEBUG
-		{
-			kdDebug() << fname <<
-				": Category 'All' selected.\n" ;
-		}
+		DEBUGKPILOT << fname << ": Category 'All' selected.\n";
 #endif
 	}
 	else
 	{
-		QString selectedCategory=fCatList->text(fCatList->currentItem());
+		QString selectedCategory =
+			fCatList->text(fCatList->currentItem());
+
+#ifdef DEBUG
 		DEBUGKPILOT << fname
-			<< ": List item " 
+			<< ": List item "
 			<< fCatList->currentItem()
 			<< " (of "
 			<< fCatList->count()
 			<< ") "
-			<< " selected, text="
-			<< selectedCategory 
-			<< endl ;
+			<< " selected, text=" << selectedCategory << endl;
+#endif
 
-		currentCatID=0;
-		while(strcmp(info->name[currentCatID], 
-		       selectedCategory.local8Bit()) && 
+		currentCatID = 0;
+		while (strcmp(info->name[currentCatID],
+				selectedCategory.local8Bit()) &&
 			(currentCatID < MAX_CATEGORIES))
 		{
+#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Didn't match category "
-				<< currentCatID 
-				<< "="
-				<< info->name[currentCatID]
-				<< endl ;
+				<< currentCatID
+				<< "=" << info->name[currentCatID] << endl;
+#endif
 
 			currentCatID++;
 		}
 
 		if (!(currentCatID < MAX_CATEGORIES))
 		{
-			currentCatID=0;
-			while(strcmp(info->name[currentCatID],
-				selectedCategory.latin1()) &&
+			currentCatID = 0;
+			while (strcmp(info->name[currentCatID],
+					selectedCategory.latin1()) &&
 				(currentCatID < MAX_CATEGORIES))
 			{
 				currentCatID++;
@@ -156,9 +155,9 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 
 		if (!(currentCatID < MAX_CATEGORIES))
 		{
-			currentCatID=0;
-			while(strcmp(info->name[currentCatID],
-				selectedCategory.ascii()) &&
+			currentCatID = 0;
+			while (strcmp(info->name[currentCatID],
+					selectedCategory.ascii()) &&
 				(currentCatID < MAX_CATEGORIES))
 			{
 				currentCatID++;
@@ -167,17 +166,19 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 
 		if (!(currentCatID < MAX_CATEGORIES))
 		{
-			currentCatID=0;
-			while((info->name[currentCatID][0]) &&
+			currentCatID = 0;
+			while ((info->name[currentCatID][0]) &&
 				(currentCatID < MAX_CATEGORIES))
 			{
 				if (selectedCategory ==
-					QString::fromLatin1(info->name[currentCatID]))
+					QString::fromLatin1(info->
+						name[currentCatID]))
 				{
+#ifdef DEBUG
 					DEBUGKPILOT << fname
 						<< ": Matched "
-						<< currentCatID
-						<< endl;
+						<< currentCatID << endl;
+#endif
 
 					break;
 				}
@@ -187,35 +188,32 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 
 		if (currentCatID < MAX_CATEGORIES)
 		{
-			DEBUGKPILOT << fname 
+#ifdef DEBUG
+			DEBUGKPILOT << fname
 				<< ": Matched category "
-				<< currentCatID 
-				<< "=" 
-				<< info->name[currentCatID]
-				<< endl ;
+				<< currentCatID
+				<< "=" << info->name[currentCatID] << endl;
+#endif
 		}
 		else
 		{
-#ifdef DEBUG       // necessary for Tru64 unix
-			kdWarning() << __FUNCTION__ 
+#ifdef DEBUG			// necessary for Tru64 unix
+			kdWarning() << __FUNCTION__
 				<< ": Selected category didn't match "
-				"any name!\n" ;
+				"any name!\n";
 			kdWarning() << __FUNCTION__
 				<< ": Number of listed categories "
-				<< fCatList->count()
-				<< endl;
+				<< fCatList->count() << endl;
 			kdWarning() << __FUNCTION__
 				<< ": Selected category ("
 				<< selectedCategory
 				<< ") expands to "
-				<< qstringExpansion(selectedCategory)
-				<< endl;
+				<< qstringExpansion(selectedCategory) << endl;
 			kdWarning() << __FUNCTION__
-				<< ": Categories expand to "
-				<< endl;
+				<< ": Categories expand to " << endl;
 #endif
-			currentCatID=0;
-			while((info->name[currentCatID][0]) &&
+			currentCatID = 0;
+			while ((info->name[currentCatID][0]) &&
 				(currentCatID < MAX_CATEGORIES))
 			{
 #ifdef DEBUG
@@ -223,30 +221,37 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 					<< ": Category ["
 					<< currentCatID
 					<< "] = "
-					<< charExpansion(info->name[currentCatID])
-					<< endl;
+					<< charExpansion(info->
+					name[currentCatID]) << endl;
 #endif
 				currentCatID++;
 			}
 
-			currentCatID=-1;
+			currentCatID = (-1);
 		}
 	}
 
-	if ((currentCatID==-1) && AllIsUnfiled) currentCatID=0;
+	if ((currentCatID == -1) && AllIsUnfiled)
+		currentCatID = 0;
 	return currentCatID;
 }
 
 
-void PilotComponent::populateCategories(QComboBox *c,
+void PilotComponent::populateCategories(QComboBox * c,
 	struct CategoryAppInfo *info)
 {
 	FUNCTIONSETUP;
-	int i;
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Combo box @"
+		<< (int) c << " and info @" << (int) info << endl;
+#endif
 
 	c->clear();
 
-	if (!info) goto CategoryAll;
+	if (!info)
+		goto CategoryAll;
 
 	// Fill up the categories list box with
 	// the categories defined by the user. 
@@ -254,23 +259,23 @@ void PilotComponent::populateCategories(QComboBox *c,
 	// the user uses, so no translation is necessary.
 	//
 	//
-	for(i = 0; i < 15; i++)
+	for (int i = 0; i < 15; i++)
 	{
-		if(info->name[i][0])
+		if (info->name[i][0])
 		{
+#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Adding category: "
 				<< info->name[i]
-				<< " with ID: " 
-				<< (int)info->ID[i] 
-				<< endl;
+				<< " with ID: " << (int) info->ID[i] << endl;
+#endif
 
 			c->insertItem(QString::fromLatin1(info->name[i]));
 		}
 	}
 
-CategoryAll:
-	c->insertItem(i18n("All"),0);
+      CategoryAll:
+	c->insertItem(i18n("All"), 0);
 }
 
 
@@ -278,15 +283,19 @@ void PilotComponent::slotShowComponent()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Showing component @"
-		<< (int) this
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Showing component @" << (int) this << endl;
+#endif
 
 	emit showComponent(this);
 }
 
 // $Log$
+// Revision 1.20  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
 // Revision 1.19  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

@@ -24,7 +24,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -54,19 +54,16 @@
 static const char *addressEditor_id =
 	"$Id$";
 
-AddressEditor::AddressEditor(PilotAddress *p,
+AddressEditor::AddressEditor(PilotAddress * p,
 	struct AddressAppInfo *appInfo,
-	QWidget *parent,
+	QWidget * parent,
 	const char *name) :
 	KDialogBase(KDialogBase::Plain,
 		i18n("Address Editor"),
-		Ok | Cancel,
-		Cancel,
-		parent,
-		name,
-		false /* non-modal */),
-	fDeleteOnCancel(p == 0L),
-	fAddress(p),
+		Ok | Cancel, Cancel,
+		parent, name, false /* non-modal */ ),
+	fDeleteOnCancel(p == 0L), 
+	fAddress(p), 
 	fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
@@ -74,8 +71,8 @@ AddressEditor::AddressEditor(PilotAddress *p,
 	initLayout();
 	fillFields();
 
-	connect(parent,SIGNAL(recordChanged(PilotAddress *)),
-		this,SLOT(updateRecord(PilotAddress *)));
+	connect(parent, SIGNAL(recordChanged(PilotAddress *)),
+		this, SLOT(updateRecord(PilotAddress *)));
 
 	(void) addressEditor_id;
 }
@@ -86,17 +83,19 @@ AddressEditor::~AddressEditor()
 
 	if (fDeleteOnCancel && fAddress)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname
-			<< ": Deleting private address record."
-			<< endl;
+			<< ": Deleting private address record." << endl;
+#endif
 
 		delete fAddress;
+
 		fAddress = 0L;
 	}
 
-	DEBUGKPILOT << fname
-		<< ": Help! I'm deleting!"
-		<< endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Help! I'm deleting!" << endl;
+#endif
 }
 
 
@@ -104,25 +103,27 @@ AddressEditor::~AddressEditor()
 /*
  * Return phone label from AddressAppInfo + some sanity checking
  */
-QString AddressEditor::phoneLabelText(PilotAddress *addr, int i)
+QString AddressEditor::phoneLabelText(PilotAddress * addr, int i)
 {
-    QString ret(i18n("Phone"));
-    char *s;
-    int idx = i;
+	FUNCTIONSETUP;
 
-    if(addr) 
-	idx = addr->getPhoneLabelIndex(i);
-    
-    if(idx>=0 && idx<8)		// hard-coded, no constant in pi-address.h
-    {
-	if( (s = fAppInfo->phoneLabels[idx]) )
+	QString ret(i18n("Phone"));
+	char *s;
+	int idx = i;
+
+	if (addr)
+		idx = addr->getPhoneLabelIndex(i);
+
+	if (idx >= 0 && idx < 8)	// hard-coded, no constant in pi-address.h
 	{
-	    ret = s;
-	    ret += ":";
+		if ((s = fAppInfo->phoneLabels[idx]))
+		{
+			ret = s;
+			ret += ":";
+		}
 	}
-    }
 
-    return ret;
+	return ret;
 }
 
 
@@ -131,35 +132,35 @@ void AddressEditor::fillFields()
 {
 	FUNCTIONSETUP;
 
-	if(fAddress == 0L)
+	if (fAddress == 0L)
 	{
-	        fAddress = new PilotAddress(*fAppInfo);
+		fAddress = new PilotAddress(*fAppInfo);
 		fDeleteOnCancel = true;
 	}
 
 	// phone labels
-	for(int i=0; i<5; i++)
-	    m_phoneLabel[i]->setText( phoneLabelText(fAddress, i) );
-	
+	for (int i = 0; i < 5; i++)
+		m_phoneLabel[i]->setText(phoneLabelText(fAddress, i));
+
 	// fields
-	fLastNameField ->setText( fAddress->getField(entryLastname) );
-	fFirstNameField->setText( fAddress->getField(entryFirstname) );
-	fCompanyField  ->setText( fAddress->getField(entryCompany) );
-	fPhoneField[0] ->setText( fAddress->getField(entryPhone1) );
-	fPhoneField[1] ->setText( fAddress->getField(entryPhone2) );
-	fPhoneField[2] ->setText( fAddress->getField(entryPhone3) );
-	fPhoneField[3] ->setText( fAddress->getField(entryPhone4) );
-	fPhoneField[4] ->setText( fAddress->getField(entryPhone5) );
-	fAddressField  ->setText( fAddress->getField(entryAddress) );
-	fCityField     ->setText( fAddress->getField(entryCity) );
-	fStateField    ->setText( fAddress->getField(entryState) );
-	fZipField      ->setText( fAddress->getField(entryZip) );
-	fCountryField  ->setText( fAddress->getField(entryCountry) );
-	fTitleField    ->setText( fAddress->getField(entryTitle) );
-	fCustom1Field  ->setText( fAddress->getField(entryCustom1) );
-	fCustom2Field  ->setText( fAddress->getField(entryCustom2) );
-	fCustom3Field  ->setText( fAddress->getField(entryCustom3) );
-	fCustom4Field  ->setText( fAddress->getField(entryCustom4) );
+	fLastNameField->setText(fAddress->getField(entryLastname));
+	fFirstNameField->setText(fAddress->getField(entryFirstname));
+	fCompanyField->setText(fAddress->getField(entryCompany));
+	fPhoneField[0]->setText(fAddress->getField(entryPhone1));
+	fPhoneField[1]->setText(fAddress->getField(entryPhone2));
+	fPhoneField[2]->setText(fAddress->getField(entryPhone3));
+	fPhoneField[3]->setText(fAddress->getField(entryPhone4));
+	fPhoneField[4]->setText(fAddress->getField(entryPhone5));
+	fAddressField->setText(fAddress->getField(entryAddress));
+	fCityField->setText(fAddress->getField(entryCity));
+	fStateField->setText(fAddress->getField(entryState));
+	fZipField->setText(fAddress->getField(entryZip));
+	fCountryField->setText(fAddress->getField(entryCountry));
+	fTitleField->setText(fAddress->getField(entryTitle));
+	fCustom1Field->setText(fAddress->getField(entryCustom1));
+	fCustom2Field->setText(fAddress->getField(entryCustom2));
+	fCustom3Field->setText(fAddress->getField(entryCustom3));
+	fCustom4Field->setText(fAddress->getField(entryCustom4));
 }
 
 
@@ -183,45 +184,48 @@ void AddressEditor::fillFields()
 
 void AddressEditor::initLayout()
 {
-    QFrame *p = plainPage();
-    QGridLayout *grid = new QGridLayout(p,10,5,0,SPACING);
-    
-    QLabel *t;
-    
-    MakeField(i18n("Last Name:"),  fLastNameField,   0,	0);
-    MakeField(i18n("First Name:"), fFirstNameField,  1,	0);
-    MakeField(i18n("Title:"),      fTitleField,      2,	0);
-    MakeField(i18n("Company:"),    fCompanyField,    3,	0);
-    
-    for(int i=0; i<5; i++)
-    {
-	MakeFieldL(phoneLabelText(NULL, 0),
-		   m_phoneLabel[i],
-		   fPhoneField[i],
-		   4+i, 0);
-    }
+	FUNCTIONSETUP;
 
-    MakeField(i18n("Address:"),    fAddressField,    0,	4);
-    MakeField(i18n("City:"),       fCityField,       1,	4);
-    MakeField(i18n("State:"),      fStateField,      2,	4);
-    MakeField(i18n("Zip Code:"),   fZipField,        3,	4);
-    MakeField(i18n("Country:"),    fCountryField,    4,	4);
-    MakeField(i18n("Custom 1:"),   fCustom1Field,    5,	4);
-    MakeField(i18n("Custom 2:"),   fCustom2Field,    6,	4);
-    MakeField(i18n("Custom 3:"),   fCustom3Field,    7,	4);
-    MakeField(i18n("Custom 4:"),   fCustom4Field,    8,	4);
-    
-    grid->addRowSpacing(9, SPACING);
-    grid->addColSpacing(2, SPACING);
-    grid->setRowStretch(9, 100);
-    grid->setColStretch(2, 50);
+	QFrame *p = plainPage();
+	QGridLayout *grid = new QGridLayout(p, 10, 5, 0, SPACING);
+
+	QLabel *t;
+
+	MakeField(i18n("Last Name:"), fLastNameField, 0, 0);
+	MakeField(i18n("First Name:"), fFirstNameField, 1, 0);
+	MakeField(i18n("Title:"), fTitleField, 2, 0);
+	MakeField(i18n("Company:"), fCompanyField, 3, 0);
+
+	for (int i = 0; i < 5; i++)
+	{
+		MakeFieldL(phoneLabelText(NULL, 0),
+			m_phoneLabel[i], fPhoneField[i], 4 + i, 0);
+	}
+
+	MakeField(i18n("Address:"), fAddressField, 0, 4);
+	MakeField(i18n("City:"), fCityField, 1, 4);
+	MakeField(i18n("State:"), fStateField, 2, 4);
+	MakeField(i18n("Zip Code:"), fZipField, 3, 4);
+	MakeField(i18n("Country:"), fCountryField, 4, 4);
+	MakeField(i18n("Custom 1:"), fCustom1Field, 5, 4);
+	MakeField(i18n("Custom 2:"), fCustom2Field, 6, 4);
+	MakeField(i18n("Custom 3:"), fCustom3Field, 7, 4);
+	MakeField(i18n("Custom 4:"), fCustom4Field, 8, 4);
+
+	grid->addRowSpacing(9, SPACING);
+	grid->addColSpacing(2, SPACING);
+	grid->setRowStretch(9, 100);
+	grid->setColStretch(2, 50);
 }
 
 /* slot */ void AddressEditor::slotCancel()
 {
+	FUNCTIONSETUP;
+
 	if (fDeleteOnCancel && fAddress)
 	{
 		delete fAddress;
+
 		fAddress = 0L;
 	}
 	KDialogBase::slotCancel();
@@ -255,8 +259,9 @@ void AddressEditor::initLayout()
 	KDialogBase::slotOk();
 }
 
-/* slot */ void AddressEditor::updateRecord(PilotAddress *p)
+/* slot */ void AddressEditor::updateRecord(PilotAddress * p)
 {
+	FUNCTIONSETUP;
 	if (p != fAddress)
 	{
 		// Not meant for me
@@ -277,6 +282,9 @@ void AddressEditor::initLayout()
 }
 
 // $Log$
+// Revision 1.8  2001/08/27 22:51:41  adridg
+// MartinJ's beautification of the address viewer
+//
 // Revision 1.7  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //
