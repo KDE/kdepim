@@ -361,8 +361,16 @@ CConduitSetup::slotOk()
 		  KMessageBox::error(this, tmpMessage, i18n("Conduit error."));
 		}
 	      else
-	      {
-		config->writeEntry(dbName, (*conduit).desktopEntryName());
+		{
+			QStringList l=QStringList::split(QChar(','),
+				QString(dbName));
+			QStringList::Iterator i;
+			const QString &m=(*conduit).desktopEntryName();
+
+			for (i=l.begin(); i!=l.end(); ++i)
+			{
+				config->writeEntry((*i).stripWhiteSpace(),m);
+			}
 		}
 	}
 	config->sync();
