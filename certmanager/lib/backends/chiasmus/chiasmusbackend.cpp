@@ -116,6 +116,11 @@ namespace {
     from_helper( const T & t ) : QVariant( t ) {}
   };
 
+  template <typename T>
+  QVariant from( const T & t ) {
+    return from_helper<T>( t );
+  }
+
   // some special types:
   template <> struct from_helper<bool> : public QVariant {
     from_helper( bool b ) : QVariant( b, int() ) {}
@@ -134,11 +139,6 @@ namespace {
   template <> struct from_helper<KURL::List> : public from_helper< QValueList<KURL> > {
     from_helper( const KURL::List & l ) : from_helper< QValueList<KURL> >( l ) {}
   };
-
-  template <typename T>
-  QVariant from( const T & t ) {
-    return from_helper<T>( t );
-  }
 
   class ChiasmusConfigEntry : public Kleo::CryptoConfigEntry {
     unsigned int mIdx;
