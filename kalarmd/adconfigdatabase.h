@@ -54,8 +54,12 @@ class ADConfigDataBase
     static const QString CLIENTS_KEY;
     static const QCString GUI_KEY;
     static const QString GUIS_KEY;
-    static const QString CALENDAR_KEY;
-  
+    static const QString CLIENT_CALENDAR_KEY;
+    static const QString CLIENT_TITLE_KEY;
+    static const QString CLIENT_DCOP_OBJECT_KEY;
+    static const QString CLIENT_NOTIFICATION_KEY;
+    static const QString CLIENT_DISP_CAL_KEY;
+
     ClientList        mClients;             // client application names and data
     CalendarList      mCalendars;           // the calendars being monitored
 

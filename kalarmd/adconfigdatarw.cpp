@@ -65,7 +65,7 @@ void ADConfigDataRW::readDaemonData(bool sessionStarting)
       // Get this client's details from its own config section
       QString groupKey = GUI_KEY + gui;
       clientConfig.setGroup(groupKey);
-      QCString dcopObject = clientConfig.readEntry("DCOP object").local8Bit();
+      QCString dcopObject = clientConfig.readEntry(CLIENT_DCOP_OBJECT_KEY).local8Bit();
       mGuis.insert(gui, dcopObject);
       if (!newGuis.isEmpty())
         newGuis += ',';
@@ -94,16 +94,16 @@ void ADConfigDataRW::writeConfigClient(const QCString& appName, const ClientInfo
   clientConfig.deleteGroup(groupKey, true);
 
   clientConfig.setGroup(groupKey);
-  clientConfig.writeEntry("Title", cinfo.title);
+  clientConfig.writeEntry(CLIENT_TITLE_KEY, cinfo.title);
   if (!cinfo.dcopObject.isEmpty())
-    clientConfig.writeEntry("DCOP object", QString::fromLocal8Bit(cinfo.dcopObject));
-  clientConfig.writeEntry("Notification", cinfo.notificationType);
-  clientConfig.writeEntry("Display calendar names", cinfo.displayCalName);
+    clientConfig.writeEntry(CLIENT_DCOP_OBJECT_KEY, QString::fromLocal8Bit(cinfo.dcopObject));
+  clientConfig.writeEntry(CLIENT_NOTIFICATION_KEY, cinfo.notificationType);
+  clientConfig.writeEntry(CLIENT_DISP_CAL_KEY, cinfo.displayCalName);
   int i = 0;
   for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
     if (cal->appName() == appName)
-      clientConfig.writeEntry(CALENDAR_KEY + QString::number(++i), QString("%1,").arg(cal->actionType()) + cal->urlString());
+      clientConfig.writeEntry(CLIENT_CALENDAR_KEY + QString::number(++i), QString("%1,").arg(cal->actionType()) + cal->urlString());
   }
 }
 
@@ -118,7 +118,7 @@ void ADConfigDataRW::writeConfigClientGui(const QCString& appName, const QString
   QString groupKey = GUI_KEY + appName;
 
   clientConfig.setGroup(groupKey);
-  clientConfig.writeEntry("DCOP object", dcopObject);
+  clientConfig.writeEntry(CLIENT_DCOP_OBJECT_KEY, dcopObject);
 }
 
 /*
@@ -152,7 +152,7 @@ void ADConfigDataRW::writeConfigCalendar(const QCString& appName, const ADCalend
   // Find an unused CalendarN entry for this calendar
   for (int i = 1;  ;  ++i)
   {
-    QString key = CALENDAR_KEY + QString::number(i);
+    QString key = CLIENT_CALENDAR_KEY + QString::number(i);
     if (entries.find(key) == entries.end())
     {
       // This calendar index is unused, so use it for the new calendar
@@ -170,11 +170,11 @@ void ADConfigDataRW::deleteConfigCalendar(const ADCalendarBase* cal)
 {
   KSimpleConfig clientConfig(clientDataFile());
   QString groupKey = CLIENT_KEY + cal->appName();
-  int len = CALENDAR_KEY.length();
+  int len = CLIENT_CALENDAR_KEY.length();
   QMap<QString, QString> entries = clientConfig.entryMap(groupKey);
   for (QMap<QString, QString>::ConstIterator it = entries.begin();  it != entries.end();  ++it)
   {
-    if (it.key().startsWith(CALENDAR_KEY))
+    if (it.key().startsWith(CLIENT_CALENDAR_KEY))
     {
       bool ok;
       it.key().mid(len).toInt(&ok);

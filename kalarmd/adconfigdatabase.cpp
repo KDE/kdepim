@@ -44,7 +44,12 @@ const QCString ADConfigDataBase::CLIENT_KEY("Client_");
 const QString ADConfigDataBase::CLIENTS_KEY("Clients");
 const QCString ADConfigDataBase::GUI_KEY("Gui_");
 const QString ADConfigDataBase::GUIS_KEY("Guis");
-const QString ADConfigDataBase::CALENDAR_KEY("Calendar");
+// Client data file key strings
+const QString ADConfigDataBase::CLIENT_CALENDAR_KEY("Calendar");
+const QString ADConfigDataBase::CLIENT_TITLE_KEY("Title");
+const QString ADConfigDataBase::CLIENT_DCOP_OBJECT_KEY("DCOP object");
+const QString ADConfigDataBase::CLIENT_NOTIFICATION_KEY("Notification");
+const QString ADConfigDataBase::CLIENT_DISP_CAL_KEY("Display calendar names");
 
 
 ADConfigDataBase::ADConfigDataBase(bool daemon)
@@ -131,28 +136,29 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
     {
       QString groupKey = CLIENT_KEY + client;
 
-      // Get this client's details from its own config section
+      // Get this client's details from its own config section.
+      // If the client is already known, update its details.
       ClientInfo info = getClientInfo( client );
-      if ( !info.isValid() ) {
-        clientConfig.setGroup(groupKey);
-        QString title = clientConfig.readEntry( "Title", client );   // read app title (default = app name)
-        QCString dcopObject = clientConfig.readEntry("DCOP object").local8Bit();
-        int type = clientConfig.readNumEntry("Notification type", 0);
-        bool displayCalName = clientConfig.readBoolEntry("Display calendar names", true);
-        info = ClientInfo( client, title, dcopObject, type, displayCalName,
-                           sessionStarting );
-        mClients.append( info );
-      }
+      if ( info.isValid() )
+        removeClientInfo( client );
+      clientConfig.setGroup(groupKey);
+      QString  title      = clientConfig.readEntry(CLIENT_TITLE_KEY, client);   // read app title (default = app name)
+      QCString dcopObject = clientConfig.readEntry(CLIENT_DCOP_OBJECT_KEY).local8Bit();
+      int      type       = clientConfig.readNumEntry(CLIENT_NOTIFICATION_KEY, 0);
+      bool displayCalName = clientConfig.readBoolEntry(CLIENT_DISP_CAL_KEY, true);
+      info = ClientInfo( client, title, dcopObject, type, displayCalName,
+                         sessionStarting );
+      mClients.append( info );
 
       // Get the client's calendar files
-#warning "check if any calendars have been deleted"
-      int len = CALENDAR_KEY.length();
+#warning "TODO: check if any calendars have been deleted"
+      int len = CLIENT_CALENDAR_KEY.length();
       QMap<QString, QString> entries = clientConfig.entryMap(groupKey);
       for (QMap<QString, QString>::ConstIterator it = entries.begin();  it != entries.end();  ++it)
       {
-        kdDebug(5900) << "ADConfigDataBase::readConfigData(): " << it.key() << "=" << it.data() << endl;
-        if (it.key().startsWith(CALENDAR_KEY))
+        if (it.key().startsWith(CLIENT_CALENDAR_KEY))
         {
+          kdDebug(5900) << "ADConfigDataBase::readConfigData(): " << it.key() << "=" << it.data() << endl;
           bool ok;
           it.key().mid(len).toInt(&ok);
           if (ok)
