@@ -85,7 +85,7 @@
 </othercredit>
 
 <othercredit role="developer">
-<firstname>Kalle</firstname>
+<firstname>Matthias Kalle</firstname>
 <surname>Dalheimer</surname>
 <contrib>Developer</contrib>
 </othercredit>
@@ -117,7 +117,7 @@
 
 <abstract>
 <para>
-&kleopatra; is a tool for managing X509 certificates.
+&kleopatra; is a tool for managing X.509 certificates.
 </para>
 </abstract>
 
@@ -162,11 +162,11 @@ German spelling of Cleopatra.</para></note>
 
 <para>&kleopatra;'s main function is to display and edit the contents
 of the local keybox, which is similar to &gpg;'s concept of keyrings,
-albeit one shouldn't stretch this analogy too much.</para>
+albeit one should not stretch this analogy too much.</para>
 
 <para>The main window is divided into the large key listing area, the
 menubar and the <link linkend="functions-search">search bar</link> on
-top and a statusbar at the bottom.</para>
+top, and a statusbar at the bottom.</para>
 
 <para>Each line in the key list corresponds to one certificate,
 identified by the so-called <guilabel>Subject &dn;</guilabel>. &dn; is
@@ -177,19 +177,19 @@ supposed to globally uniquely identify a given certificate.</para>
 <para>To be valid, and thus usable, (public) keys need to be signed by
 a &ca; (Certification Authority). These signatures are called
 certificates, but usually the terms <quote>certificate</quote> and
-<quote>(public) key</quote> are used interchangably, and we won't
+<quote>(public) key</quote> are used interchangably, and we will not
 distinguish between them in this manual either, except when explicitly
 noted. The name of the &ca; which issued the certificate (it's &dn;)
 is shown in the <guilabel>Issuer DN</guilabel> column.</para>
 
 <para>&ca;s must in turn be signed by other &ca;s to be valid. Of
 course, this must end somewhere, so the top-level &ca; (root-&ca;)
-signs it's key with itself (this is called a self-signature). Root
+signs its key with itself (this is called a self-signature). Root
 certificates thus need to be assigned validity (commonly called trust)
-manually, &eg; after verifying the fingerprint with the one on the
-&ca;'s website. This is typically done by the system administrator or
+manually, &eg; after comparing the fingerprint with the one on the
+website of the &ca;. This is typically done by the system administrator or
 the vendor of a product using certificates, but can be done by the
-user via &gpgsm;'s command line.</para>
+user via &gpgsm;'s command line interface.</para>
 
 <para>To see which of the certificates are root certificates, you can
 either compare <guilabel>Subject &dn;</guilabel> and <guilabel>Issuer
@@ -218,17 +218,17 @@ selected.</para>
 
 <sect1 id="functions-search"><title>Searching and Importing Certificates</title>
 
-<para>Most of the time you will acquire new certificates by verifying
+<para>Most of the time, you will acquire new certificates by verifying
 signatures in emails, since certificates are embedded in the
 signatures made using them most of the time. However, if you need to
-send a mail to someone you haven't yet had contact with, you need to
+send a mail to someone you have not yet had contact with, you need to
 fetch the certificate from an LDAP directory (although &gpgsm; can do
 this automatically), or from a file. You also need to import your own
 certificate after receiving the &ca; answer to your certification
 request.</para>
 
 <para>To search for a certificate in an LDAP directory, switch the
-search bar's dropdown menu from <guilabel>in Local
+dropdown menu of the search bar from <guilabel>in Local
 Certificates</guilabel> to <guilabel>in External
 Certificates</guilabel>, enter some text (&eg; the name of the person
 you want the certificate for) into the line edit, and click on the
@@ -245,14 +245,14 @@ button.</para>
 Services</guilabel></link> page of &kleopatra;'s <link
 linkend="configuration">configure dialog</link>.</para>
 
-<para>If you got the certificate as a file, try <xref
+<para>If you received the certificate as a file, try <xref
 linkend="file-import-certificates"/>. &gpgsm; needs to understand the
 format of the certificate file; please refer to &gpgsm;'s manual for a
 list of supported file formats.</para>
 
-<para>If you didn't <link linkend="functions-newkey">create your
+<para>If you did not <link linkend="functions-newkey">create your
 keypair with &gpgsm;</link>, you also need to manually import the
-public, as well as the secret key from the PKCS#12 file you got from
+public, as well as the secret, key from the PKCS#12 file you got from
 the &ca;. You can do this on the command line with <link
 linkend="commandline-option-import-certificate"><userinput><command>kleopatra
 &commandline-option-import-certificate;
@@ -265,15 +265,15 @@ just as you would to for <quote>normal</quote> certificates.</para>
 <sect1 id="functions-newkey"><title>Creating New Key Pairs</title>
 
 <para>The menu item <xref linkend="file-new-key-pair"/> starts the
-certificate- request-creating wizard which will guide you through a
-number of steps to create a certificate request; this request can, at
-the end of the wizard, either be sent to a certificate authority (CA)
+certificate-request-creating wizard which will guide you through a
+number of steps to create a certificate request; this request can, on the 
+last page of the wizard, either be sent to a certificate authority (CA)
 to be signed or saved to a file (for example to a floppy, so it can be
 shipped to the CA).</para> <para>Whenever you are done with a step in
 the wizard, press <guibutton>Next</guibutton> to go to the next step
 (or <guibutton>Back</guibutton> to review steps that are already
 completed). The certificate request creation can be canceled at any
-point by pressing the <guibutton>Cancel</guibutton> button.
+time by pressing the <guibutton>Cancel</guibutton> button.
 </para>
 <para>The first step in the wizard is to type in your personal data
 for the certificate. The fields to fill out are:
@@ -298,7 +298,7 @@ country in which you are living (for example, "US");</para>
 </listitem>
 <listitem>
 <para><guilabel>Email address:</guilabel>Your email address; be sure
-to get that one right &mdash; this will be the address people will be
+to type this in correctly&mdash;this will be the address people will be
 sending mail to when they use your certificate.</para>
 </listitem>
 </itemizedlist>
@@ -342,11 +342,11 @@ linkend="crls-dump-crl-cache"/>).</para>
 allows to send the public part to a certification authority
 (<acronym>CA</acronym>) for signing. The resulting certificate is then
 sent back to you, or stored in an LDAP server for you to download into
-your local keybox, from where you can use it to sign and decrypt
+your local keybox, where you can use it to sign and decrypt
 mails.</para>
 
 <para>This mode of operation is called <quote>decentralized key
-generation</quote> since all keys are created locally. &kleopatra;
+generation</quote>, since all keys are created locally. &kleopatra;
 (and &gpgsm;) do not support <quote>centralized key generation</quote>
 directly, but you can import the public/secret key bundle that you
 receive from the CA in PKCS#12 format via
@@ -361,7 +361,7 @@ receive from the CA in PKCS#12 format via
 <listitem>
 <para><action>Exports the selected certificates</action> into a file.</para>
 
-<note><para>This exports only the public keys material, even if the
+<note><para>This exports only the public keys, even if the
 secret key is available. Use &file-export-secret-key; to export both
 public and secret keys into a file, but note that this is almost
 always a bad idea.</para></note>
@@ -376,10 +376,10 @@ always a bad idea.</para></note>
 <para><action>Exports both the public and the secret key to a
 (PKCS#12) file.</action></para>
 
-<warning><para>It should be rarely necessary to use this function, and
+<warning><para>It should rarely be necessary to use this function, and
 if it is, it should be carefully planned. Planning the migration of a
 secret key involves choice of transport media and secure deletion of
-the key material on the old machine, as well as the transport medium,
+the key data on the old machine, as well as the transport medium,
 among other things.</para></warning>
 </listitem>
 </varlistentry>
@@ -392,7 +392,7 @@ among other things.</para></warning>
 <para><action>Imports certificates and/or secret keys from files into
 the local keybox.</action></para>
 
-<para>The format of the certificate file must be one understood by
+<para>The format of the certificate file must be supported by
 &gpgsm;. Please refer to the &gpgsm; manual for a list of supported
 formats.</para>
 </listitem>
@@ -403,11 +403,11 @@ formats.</para>
 <term>&file-import-crls;</term>
 
 <listitem>
-<para><action>Allows to manually import CRLs from
+<para><action>Lets you manually import CRLs from
 files.</action></para>
 
 <para>Normally, Certificate Revocation Lists (CRLs) are handled
-transparently by the backend, but it might sometimes by useful to
+transparently by the backend, but it can sometimes be useful to
 import a CRL manually into the local CRL cache.</para>
 
 <note><para>For CRL import to work, the
@@ -429,7 +429,7 @@ certificates in each CRL.
 <term>&file-quit;</term>
 
 <listitem>
-<para><action>Exits &kleopatra;.</action></para>
+<para><action>Terminates &kleopatra;.</action></para>
 </listitem>
 </varlistentry>
 
@@ -450,17 +450,17 @@ certificates in each CRL.
 <para><action>Redisplays the selected certificates or refreshes the
 certificate list.</action></para>
 
-<para>If there are selected certificates, the refresh is restricted to
-those selected entries.</para>
+<para>If there are selected certificates, the refresh operation is
+restricted to those selected entries.</para>
 
 <para>If a query result (either remote or local) is currently
-displayed, the query is re-issued and the new results displayed in the
+displayed, the query is re-issued and the new results are displayed in
 place of the old ones.</para>
 
-<para>If no query has been performed, the whole keybox contents are
+<para>If no query has been performed, the whole keybox contents is
 re-fetched and re-displayed.</para>
 
-<para>You may use this if you changed the contents of
+<para>You can use this if you have changed the contents of
 the keybox by other means than &kleopatra; (&eg; by using &gpgsm;'s
 command line interface).</para>
 </listitem>
@@ -475,8 +475,9 @@ command line interface).</para>
 search or a download.</para>
 
 <note><para>Depending on the server used, cancelling a remote search
-might block &kleopatra; for a few seconds while waiting for the
-backend to complete the procedure. This is normal.</para></note>
+can block &kleopatra; for a few seconds while waiting for the backend
+to complete the procedure. This is normal and expected
+behavior.</para></note>
 </listitem>
 </varlistentry>
 
@@ -488,7 +489,7 @@ backend to complete the procedure. This is normal.</para></note>
 <para><action>Shows the details of the currently selected
 certificate.</action></para>
 
-<para>This function is also available through double-clicking the
+<para>This function is also available by double-clicking the
 corresponding item in the list view directly.</para>
 
 <!--FIXME: link to the dialog's help, but where do we put _that_?-->
@@ -506,7 +507,7 @@ corresponding item in the list view directly.</para>
 <para>In hierarchical mode, certificates are arranged in
 issuer/subject relation, so it is easy to see to which certification
 hierarchy a given certificate belongs, but a given certificate is
-harder to find in the first place (though you can of course use the
+harder to find initially (though you can of course use the
 <link linkend="functions-search">search bar</link>).</para>
 
 <para>In flat mode, all certificates are displayed in a flat list,
@@ -530,7 +531,7 @@ view,</action> &ie; makes all items visible.</para>
 <para>This is the default when entering hierarchical keylist
 mode.</para>
 
-<para>You can still expand and collapse each indivitual item by
+<para>You can still expand and collapse each individual item by
 itself, of course.</para>
 </listitem>
 </varlistentry>
@@ -568,17 +569,17 @@ itself, of course.</para>
 
 <para>This is similar to <xref linkend="view-redisplay"/>, but
 performs a validation of the (selected) keys. Validation here means
-that any relevant CRLs are fetched and the certificate chain is
+that all relevant CRLs are fetched, and the certificate chain is
 checked for correctness. As a result, invalid or expired keys will be
 marked according to your color and font preferences set in the <link
 linkend="configuration-appearance"><guilabel>Appearance</guilabel>
 page</link> of &kleopatra;'s <link linkend="configuration">configure
 dialog</link>.</para>
 
-<warning><para>Only information from validated keys can be relied on,
+<warning><para>You can only rely on information from validated keys,
 and, since any of them may be revoked at any time, even validation is
 only ever a snapshot of the current state of the local keyring. This
-is why the backend normally performs any such checks whenever the keys
+is why the backend normally performs such checks whenever the keys
 are used (&eg; for signing, signature verification, encryption or
 decryption).</para></warning>
 </listitem>
@@ -596,10 +597,10 @@ key.</para>
 
 <para>This function only has an effect on certificates which define a
 CRL distribution point. Depending on the backend used, certificates
-stating checks should occur through OCSP will not be updated.</para>
+configured to perform checks using OCSP will not be updated.</para>
 
-<para>You may use this &eg; if you have sideband knowledge of a key
-having been revoked, and you want the backend to reflect this
+<para>You may use this &eg; if you have sideband knowledge that a key
+has been revoked, and you want the backend to reflect this
 <emphasis>now</emphasis> instead of relying on this to automatically
 happen at the next scheduled CRL update.</para>
 
@@ -608,7 +609,7 @@ your provider's or company's network, since CRLs of large
 organizations can be surprisingly big (several megabytes are not
 uncommon).</para>
 
-<para>Use this function scarcly.</para></warning>
+<para>Use this function scarcely.</para></warning>
 </listitem>
 </varlistentry>
 
@@ -623,7 +624,7 @@ uncommon).</para>
 <para>Use this function to remove unused keys from your local
 keybox. However, since certificates are typically attached to signed
 emails, verifying an email might result in the key just removed to pop
-back into the local keybox. So it's probably best to avoid using this
+back into the local keybox. So it is probably best to avoid using this
 function as much as possible. When you are lost, use the <link
 linkend="functions-search">search bar</link> or the <xref
 linkend="view-hierarchical-key-list"/> function to regain control over
@@ -728,7 +729,7 @@ items.</action></para>
 <term>&settings-configure-gpgme-backend;</term>
 
 <listitem>
-<para><action>Opens a dialog that allows to configure every aspect of
+<para><action>Opens a dialog that allows you to configure every aspect of
 &gpgsm; and other backend modules.</action></para>
 
 <para>This dialog is dynamically built from the output of the
@@ -757,7 +758,7 @@ help menu.</para>
 
 <para>Only the options specific to &kleopatra; are listed here. As
 with all &kde; applications, you can get a complete list of options
-with <userinput><command>kleopatra
+by issuing the command <userinput><command>kleopatra
 <option>--help</option></command></userinput>.</para>
 
 <variablelist>
@@ -799,7 +800,7 @@ linkend="file-import-certificates"/>.</para>
 
 <chapter id="configuration"><title>Configuring &kleopatra;</title>
 
-<para>&kleopatra;'s configure dialog can be reached via <xref
+<para>&kleopatra;'s configure dialog can be accessed via <xref
 linkend="settings-configure-kleopatra"/>.</para>
 
 <para>Each of its pages is decribed in the sections below.</para>
@@ -830,7 +831,7 @@ then press the <guilabel>Remove Service</guilabel> button.</para>
 them and move it up or down with the arrow buttons right next to the
 list.</para>
 
-<para>To set the LDAP timeout, &ie; the maximum time the backend shall
+<para>To set the LDAP timeout, &ie; the maximum time the backend will
 wait for a server to respond, simply use the corresponding input field
 labelled <guilabel>LDAP timeout</guilabel>.</para>
 
@@ -838,12 +839,12 @@ labelled <guilabel>LDAP timeout</guilabel>.</para>
 reasonable searches like <userinput>Smith</userinput> hit the
 <guilabel>maximum number of items returned by query</guilabel>, you
 might want to increase this limit. You can find out easily if you hit
-the limit during a search, since in that case a dialog box will pop
-up, telling you that the results have been truncated.</para>
+the limit during a search, since a dialog box will pop up in that
+case, telling you that the results have been truncated.</para>
 
 <note><para>Some servers may impose their own limits on the number of
 items returned from a query. In this case, increasing the limit here
-will not result in more items being returned.</para></note>
+will not result in more returned items.</para></note>
 
 </sect1>
 
@@ -861,14 +862,14 @@ power user, see <xref linkend="admin-key-filters"/> in <xref
 linkend="admin"/>.</para>
 
 <para>To change the text (foreground) color of a category, select it
-in the list, and the press the <guilabel>Set Text Color...</guilabel>
+in the list, and press the <guilabel>Set Text Color...</guilabel>
 button. The standard &kde; color selection dialog will appear where
 you can select or create a new color.</para>
 
-<para>Changing the background color is done analogous, just press
+<para>Changing the background color is done in the same way, just press
 <guilabel>Set Background Color...</guilabel> instead.</para>
 
-<para>To change the font, you have essentially two options:</para>
+<para>To change the font, you basically have two options:</para>
 
 <orderedlist>
 <listitem><para>Modify the standard font, used for all list views in
@@ -877,8 +878,8 @@ you can select or create a new color.</para>
 </orderedlist>
 
 <para>The first option has the advantage that the font will follow
-whetever style you choose &kde;-wide, whereas the latter gives you
-full control over the font to use. Your pick.</para>
+whichever style you choose &kde;-wide, whereas the latter gives you
+full control over the font to use. The choice is yours.</para>
 
 <para>To use the modified standard font, select the category in the
 list, and check or uncheck the font modifiers
@@ -900,12 +901,12 @@ standard font.</para>
 <sect1 id="configuration-dn-order"><title>Configuring the Order DN Attributes are Shown</title>
 
 <para>Although &dn;s are hierarchical, the order of the individual
-components (called relative &dn;s (RDNs), or &dn; attributes) isn't
+components (called relative &dn;s (RDNs), or &dn; attributes) is not
 defined. The order in which the attributes are shown is thus a matter
-of personal taste or company policy, which is why it's configurable in
+of personal taste or company policy, which is why it is configurable in
 &kleopatra;.</para>
 
-<note><para>This setting applies not only to &kleopatra;, but to all
+<note><para>This setting does not only apply to &kleopatra;, but to all
 applications using &kleopatra; Technology. At the time of this
 writing, these include KMail, KAddressBook, as well as &kleopatra;
 itself, of course.</para></note>
@@ -934,7 +935,7 @@ list, all unlisted attributes (whether known or not), are inserted at
 the point of <guilabel>_X_</guilabel>, in their original relative
 order.</para>
 
-<para>A small example will help clear things up:</para>
+<para>A small example will help to make this more clear:</para>
 
 <informalexample>
 <para>Given the &dn;</para>
@@ -982,11 +983,11 @@ button.</para>
 
 <chapter id="admin"><title>Administrator's Guide</title>
 
-<para>This Admin's Guide describes ways to customize &kleopatra; that
+<para>This Administrator's Guide describes ways to customize &kleopatra; that
 are not accessible via the GUI, but only via config files.</para>
 
 <para>It is assumed that the reader is familiar with the technology
-surrounding &kde; application configuration, including layout,
+used for &kde; application configuration, including layout,
 filesystem location and cascading of &kde; config files, as well as
 the KIOSK framework.</para>
 
@@ -995,31 +996,31 @@ the KIOSK framework.</para>
 <para>&kleopatra; allows you to customize the fields that the user is
 allowed to enter in order to create their certificate.</para>
 
-<para>Create a group called CertificateCreationWizard in the
-system-wide <filename>kleopatrarc</filename>. If you want a custom
-order of attributes or if you only want certain items to appear,
-create a key called <varname>DNAttributeOrder</varname>. The argument
-is one more more of
-<varname>CN,SN,GN,L,T,OU,O,PC,C,SP,DC,BC,EMAIL</varname> If you want
-to preempt fields with a certain value, write something like
+<para>Create a group called
+<literal>CertificateCreationWizard</literal> in the system-wide
+<filename>kleopatrarc</filename>. If you want a custom order of
+attributes or if you only want certain items to appear, create a key
+called <varname>DNAttributeOrder</varname>. The argument is one or
+more of <varname>CN,SN,GN,L,T,OU,O,PC,C,SP,DC,BC,EMAIL</varname> If
+you want to initialize fields with a certain value, write something like
 Attribute=value. If you want the attribute to be treated as a required
-one, follow it with an exclamation point
+one, append an exclamation mark
 (e.g. <varname>CN!,L,OU,O!,C!,EMAIL!</varname>, which happens to be
 the default configuration).</para>
 
-<para> Using the <acronym>KIOSK</acronym> modes modifiers
-<varname>$e</varname> allows for retrieving the values from
+<para> Using the <acronym>KIOSK</acronym> mode modifier
+<varname>$e</varname> allows to retrieve the values from
 environment variables or from an evaluated script or binary. If you
-want to additionally disallow editing of the respective field, use the
+want to disallow editing of the respective field in addition, use the
 modifier <varname>$i</varname>.  If you want to disallow the use
 <guibutton>Insert My Address</guibutton> button, set
 <varname>ShowSetWhoAmI</varname> to false.</para>
 
 <tip><para> Due to the nature of the &kde; <acronym>KIOSK</acronym>
-framework, using immutable flag (<varname>$i</varname>) makes it
+framework, using the immutable flag (<varname>$i</varname>) makes it
 impossible for the user to override the flag. This is intended
 behavior. <varname>$i</varname> and <varname>$e</varname> can be used
-with any other config key in &kde; applications.</para></tip>
+with all other config keys in &kde; applications as well.</para></tip>
 
 <para>The following example outlines possible customizations:</para>
 
@@ -1054,7 +1055,7 @@ C=DE
       <para>
 	&kleopatra; allows the user to configure the <link
 	linkend="configuration-appearance">visual appearance</link> of
-	key based on a concept called <guilabel>Key
+	keys based on a concept called <guilabel>Key
 	Categories</guilabel>. This section describes how you can edit
 	the available categories and add new ones.
       </para>
@@ -1091,7 +1092,7 @@ C=DE
       </para>
 
       <table id="table-key-filters-appearance">
-	<title>Key Filter Config Keys Defining Display
+	<title>Key Filter Configuration Keys Defining Display
 	Properties</title>
 	<tgroup cols="3">
 	  <colspec colnum="2" align="center"/>
@@ -1109,7 +1110,7 @@ C=DE
 	      <entry>color</entry>
 	      <entry>
 		The background color to use. If missing, defaults to
-		whatever background color is defined globally for list
+		whichever background color is defined globally for list
 		views.
 	      </entry>
 	    </row>
@@ -1118,7 +1119,7 @@ C=DE
 	      <entry>color</entry>
 	      <entry>
 		The foreground color to use. If missing, defaults to
-		whatever foreground color is defined globally for list
+		whichever foreground color is defined globally for list
 		views.
 	      </entry>
 	    </row>
@@ -1136,7 +1137,7 @@ C=DE
 	      <entry>boolean</entry>
 	      <entry>
 		If set to <literal>true</literal> and
-		<varname>font</varname> is not present, uses the
+		<varname>font</varname> is not set, uses the
 		default list view font with bold font style added (if
 		available). Ignored if <varname>font</varname> is also
 		present.
@@ -1155,15 +1156,15 @@ C=DE
 	      <entry>boolean</entry>
 	      <entry>
 		If <literal>true</literal>, draws a centered line over
-		the font. Applied even in the presence of
-		<varname>font</varname>.
+		the font. Applied even if
+		<varname>font</varname> is set.
 	      </entry>
 	    </row>
 	    <row>
 	      <entry><varname>icon</varname></entry>
 	      <entry>text</entry>
 	      <entry>
-		Name of an icon to show in the first column. Not yet
+		The name of an icon to show in the first column. Not yet
 		implemented.
 	      </entry>
 	    </row>
@@ -1172,7 +1173,7 @@ C=DE
       </table>
 
       <table id="table-key-filters-criteria">
-	<title>Key Filter Config Keys Defining Filter Criteria</title>
+	<title>Key Filter Configuration Keys Defining Filter Criteria</title>
 	<tgroup cols="3">
 	  <colspec colnum="2" align="center"/>
 	  <thead>
@@ -1192,7 +1193,7 @@ C=DE
 	    <row>
 	      <entry><varname>is-expired</varname></entry>
 	      <entry>boolean</entry>
-	      <entry>the key has expired.</entry>
+	      <entry>the key is expired.</entry>
 	    </row>
 	    <row>
 	      <entry><varname>is-disabled</varname></entry>
@@ -1221,7 +1222,7 @@ C=DE
 	      <entry><varname>can-sign</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>
-		the key can be used for making signatures.
+		the key can be used for signing.
 	      </entry>
 	    </row>
 	    <row>
@@ -1289,12 +1290,12 @@ C=DE
 		(<replaceable>prefix</replaceable>&nbsp;=&nbsp;<literal>is-at-least</literal>),
 		or has at most
 		(<replaceable>prefix</replaceable>&nbsp;=&nbsp;<literal>is-at-most</literal>)
-		the ownertrust given as the config key's value. If
+		the ownertrust given as the value of the config key. If
 		more than one
 		<varname><replaceable>prefix</replaceable>-ownertrust</varname>
 		keys (with different
-		<replaceable>prefix</replaceable>) are present in a
-		single group, the behaviour is undefined.
+		<replaceable>prefix</replaceable> values) are present in a
+		single group, the behavior is undefined.
 	      </entry>
 	    </row>
 	    <row>
@@ -1314,7 +1315,7 @@ C=DE
 	<para>
 	  Some of the more interesting criteria, such as
 	  <varname>is-revoked</varname> or
-	  <varname>is-expired</varname> may only work on
+	  <varname>is-expired</varname> will only work on
 	  <emphasis>validated</emphasis> keys, which is why, by
 	  default, only validated keys are checked for revocation and
 	  expiration, although you are free to remove these extra
@@ -1324,9 +1325,9 @@ C=DE
 
       <para>
 	In general, criteria not specified (&ie; the config entry is
-	not present) are not checked for. If a criterion is given, it
+	not set) are not checked for. If a criterion is given, it
 	is checked for and must match for the filter as a whole to
-	match, &ie; criteria are AND'ed together.
+	match, &ie; the criteria are AND'ed together.
       </para>
 
       <example>
@@ -1337,7 +1338,7 @@ C=DE
 	  To check for all expired, but non-revoked root certificates,
 	  you would use a key filter defined as follows:
 	</para>
-<!-- isn't there a better way to no indent this in the output??? -->
+<!-- isn't there a better way to not indent this in the output??? -->
 	<screen><!--
 -->[Key Filter #<replaceable>n</replaceable>]
 Name=expired, but not revoked
@@ -1347,8 +1348,8 @@ is-revoked=false
 is-root-certificate=true<!--
      --></screen>
 	<para>
-	  To check for all disabled OpenPGP keys (if &kleopatra;
-	  supported them yet) with ownertrust of at least
+	  To check for all disabled OpenPGP keys (not yet supported by &kleopatra;)
+	  with ownertrust of at least
 	  <quote>marginal</quote>, you would use:
 	</para>
 	<screen><!--
@@ -1367,7 +1368,7 @@ is-at-least-ownertrust=marginal<!--
 <chapter id="credits-and-license">
 <title>Credits and License</title>
 
-<para>&kleopatra; copyright 2002 Steffen Hansen, Kalle Dalheimer
+<para>&kleopatra; copyright 2002 Steffen Hansen, Matthias Kalle Dalheimer
 and Jesper Pedersen., copyright 2004 Daniel Molkentin, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
 
 <para>Documentation copyright 2002 Steffen Hansen, copyright 2004
@@ -1385,7 +1386,7 @@ Daniel Molkentin, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
 <para>Steffen Hansen <email>hansen@kde.org</email></para>
 </listitem>
 <listitem>
-<para>Kalle Dalheimer <email>kalle@kde.org</email></para>
+<para>Matthias Kalle Dalheimer <email>kalle@kde.org</email></para>
 </listitem>
 <listitem>
 <para>Jesper Pedersen <email>blackie@kde.org</email></para>
