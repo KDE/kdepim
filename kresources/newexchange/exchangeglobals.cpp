@@ -157,6 +157,12 @@ kdDebug() << "Person=" << KPIM::FolderLister::Contact << ", "
   kdDebug(7000) << "doc: " << doc.toString() << endl;
   KURL authURL = url;
   KIO::DavJob *job = KIO::davPropFind( authURL, doc, "0", false );
+/*  KURL httpurl( url );
+  QString proto("http");
+  httpurl.setProtocol( proto );
+  KIO::TransferJob *job = KIO::get(httpurl, false, false);
+  job->addMetaData("customHTTPHeader", "Translate: f");
+  job->addMetaData("cache", "reload");*/
   return job;
 }
 
