@@ -747,7 +747,7 @@ void KABCore::save()
       }
     } else {
       KMessageBox::error( mWidget,
-                          i18n( "<qt>Unable to get access for saving the address book <b>%1</b></qt>." )
+                          i18n( "<qt>Unable to get access for saving the address book <b>%1</b>.</qt>" )
                           .arg( it.current()->resourceName() ) );
     }
 
