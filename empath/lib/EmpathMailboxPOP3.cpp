@@ -289,7 +289,7 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 }
 
     RMM::RMessage
-EmpathMailboxPOP3::retrieveMessage(const EmpathURL & url)
+EmpathMailboxPOP3::retrieveMessage(const EmpathURL & /* url */)
 {
     // STUB
     RMM::RMessage retval;
@@ -298,8 +298,8 @@ EmpathMailboxPOP3::retrieveMessage(const EmpathURL & url)
 
     QString
 EmpathMailboxPOP3::writeMessage(
-    RMM::RMessage & message,
-    const EmpathURL & folder
+    RMM::RMessage &,
+    const EmpathURL &
 )
 {
     // We don't do this.
@@ -307,7 +307,7 @@ EmpathMailboxPOP3::writeMessage(
 }
 
     bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL & url)
+EmpathMailboxPOP3::removeMessage(const EmpathURL & /* url */)
 {
     // STUB
     return false;
@@ -315,8 +315,9 @@ EmpathMailboxPOP3::removeMessage(const EmpathURL & url)
         
     EmpathSuccessMap
 EmpathMailboxPOP3::removeMessage(
-    const EmpathURL & folder,
-    const QStringList & messageIDList)
+    const EmpathURL & /* folder */,
+    const QStringList & /* messageIDList */
+)
 {
     // STUB
     EmpathSuccessMap retval;
@@ -324,7 +325,7 @@ EmpathMailboxPOP3::removeMessage(
 }
 
     bool
-EmpathMailboxPOP3::markMessage(const EmpathURL & url, EmpathIndexRecord::Status s)
+EmpathMailboxPOP3::markMessage(const EmpathURL &, EmpathIndexRecord::Status)
 {
     // We don't do this.
     return false;
@@ -332,9 +333,9 @@ EmpathMailboxPOP3::markMessage(const EmpathURL & url, EmpathIndexRecord::Status 
 
     EmpathSuccessMap
 EmpathMailboxPOP3::markMessage(
-    const EmpathURL & folder,
-    const QStringList & messageIDList,
-    EmpathIndexRecord::Status status)
+    const EmpathURL &,
+    const QStringList &,
+    EmpathIndexRecord::Status)
 {
     // We don't do this.
     EmpathSuccessMap retval;
@@ -342,14 +343,14 @@ EmpathMailboxPOP3::markMessage(
 }
 
     bool
-EmpathMailboxPOP3::createFolder(const EmpathURL & url)
+EmpathMailboxPOP3::createFolder(const EmpathURL &)
 {
     // We don't do this.
     return false;
 }
 
     bool
-EmpathMailboxPOP3::removeFolder(const EmpathURL & url)
+EmpathMailboxPOP3::removeFolder(const EmpathURL &)
 {
     // We don't do this.
     return false;
