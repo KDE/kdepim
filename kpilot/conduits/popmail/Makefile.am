@@ -6,7 +6,7 @@ service_DATA = popmail-conduit.desktop
 
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed 
-noinst_PROGRAMS = popmail_conduit
+bin_PROGRAMS = popmail_conduit
 
 # Which sources should be compiled for popmail_conduit
 popmail_conduit_SOURCES= popmail-conduit.cc \
