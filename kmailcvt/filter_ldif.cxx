@@ -63,7 +63,7 @@ void FilterLDIF::import(FilterInfo *info) {
 
 
 bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
-   if (!kabStart(info))
+   if (!openAddressBook(info))
 	return false;
 
    QString caption( i18n("Import Netscape LDIF Personal Addressbook (.LDIF)") );
@@ -76,9 +76,6 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    }
 
    QString empty;
-   QString givenName, email, title, firstName, lastName, nickName,
-	street, locality, state, zipCode, country, organization,
-	department, phone, fax, mobile, homepage, comment;
 
    QTextStream t( &f );
    QString s, completeline, fieldname;
@@ -94,6 +91,8 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    int numEntries = 0;
 
    while ( !t.eof() ) {
+	KABC::Addressee a;
+	KABC::Address addr;
 	s = t.readLine();
 	completeline = s;
 	bytesProcessed += s.length();
@@ -106,18 +105,11 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 		// Newline: Write data
 writeData:
 		if (!isGroup) {
-			if (!firstName.isEmpty() || !lastName.isEmpty() || !email.isEmpty()) {
+			if (!a.formattedName().isEmpty() || a.emails().count() > 1) {
 				numEntries++;
-  				kabAddress( info, i18n("Netscape Addressbook"),
-				  givenName, email, title, firstName, empty, lastName, nickName,
-				  street, locality, state, zipCode, country, organization, 
-				  department, empty, empty, phone, fax, mobile, empty, homepage, 
-				  empty, comment, empty);
+				a.insertAddress(addr);
+				addContact(a);
 			}
-			givenName = email = title = firstName = lastName = nickName =
-			 street = locality = state = zipCode = country = organization =
-			 department = phone = fax = mobile = homepage = comment = QString::null;
-
    		} else {
 			info->log(i18n("Warning: List data is being ignored."));
    		}
@@ -155,78 +147,70 @@ writeData:
 		if (lastWasComment) {
 			// if the last entry was a comment, add this one too, since
 			// we might have a multi-line comment entry.
-			if (!comment.isEmpty())
-				comment += "\n";
-			comment += s;
+			if (!a.note().isEmpty())
+				a.setNote(a.note() + "\n");
+			a.setNote(a.note() + s);
 		}
 		continue;
 	}
 	lastWasComment = false;
 
 	if (fieldname == "givenname")
-		{ firstName = s; continue; }
+		{ a.setFormattedName(s); continue; }
 
 	if (fieldname == "xmozillanickname")
-		{ nickName = s; continue; }
+		{ a.setNickName(s); continue; }
 
 	if (fieldname == "dn")	/* ignore */
 		{ goto writeData; }
 	
 	if (fieldname == "sn")
-		{ lastName = s;	continue; }
+		{ a.setFamilyName(s); continue; }
 	
 	if (fieldname == "mail")
-		{ email = s; continue; }
+		{ a.insertEmail(s); continue; }
 
 	if (fieldname == "title")
-		{ title = s; continue; }
+		{ a.setTitle(s); continue; }
 
 	if (fieldname == "cn")
-		{ givenName = s; continue; }
+		{ a.setFormattedName(s); continue; }
 
 	if (fieldname == "o")
-		{ organization = s; continue; }
+		{ a.setOrganization(s); continue; }
 
 	if (fieldname == "description")
-		{ comment = s; lastWasComment = true; continue; }
+		{ a.setNote(s); lastWasComment = true; continue; }
 
 	if (fieldname == "homeurl")
-		{ homepage = s;	continue; }
+		{ a.setUrl(s); continue; }
 
-	if (fieldname == "homephone" || fieldname == "telephonenumber") {
-		if (!phone.isEmpty())
-			info->log(i18n("Discarding phone number %1 from entry of %2 %3")
-					.arg(s)
-					.arg(firstName)
-					.arg(lastName));
-		else
-  			phone = s;
-		continue; 
-	}
+	if (fieldname == "homephone" || fieldname == "telephonenumber")
+		{ a.insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Voice ) ); continue; }
 
 	if (fieldname == "postalcode")
-		{ zipCode = s;	continue; }
+		{ addr.setPostalCode(s); continue; }
 
 	if (fieldname == "facsimiletelephonenumber")
-		{ fax = s; continue; }
+		{ a.insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Fax ) ); continue; }
 	
 	if (fieldname == "streetaddress")
-		{ street = s; continue; }
+		{ addr.setStreet(s); continue; }
 
 	if (fieldname == "locality")
-		{ locality = s; continue; }
+		{ addr.setLocality(s); continue; }
 	
 	if (fieldname == "countryname")
-		{ country = s; continue; }
+		{ addr.setCountry(s); continue; }
 		
 	if (fieldname == "cellphone")
-		{ mobile = s; continue; }
+		{ a.insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Cell ) ); continue; }
 
 	if (fieldname == "st")
-		{ state = s; continue; }
+		{ addr.setRegion(s); continue; }
 
 	if (fieldname == "ou")
-		{ department = s; continue; }
+		{ a.setRole(s); continue; }
 
 	if (fieldname == "objectclass" && s == "groupOfNames")
 			isGroup = true;
@@ -239,6 +223,6 @@ writeData:
     
     info->log(i18n("%1 phonebook entries sucessfully imported.").arg(numEntries));
 
-    kabStop(info);
+    closeAddressBook();
     return true;
 }

@@ -37,7 +37,7 @@ void FilterEudoraAb::import(FilterInfo *info)
   QString file;
   QWidget *parent=info->parent();
 
-  if (!kabStart(info)) return;
+  if (!openAddressBook(info)) return;
 
   file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.[tT][xX][tT]",parent);
   if (file.length()==0) 
@@ -70,22 +70,14 @@ void FilterEudoraAb::import(FilterInfo *info)
       else 
         comment=adr[i]+"\n"+comments[i]; 
 
-      kabAddress(info,"Eudora Light",
-          keys[i],(emails[i].isEmpty()) ? QString::null : emails[i],
-          QString::null,QString::null,QString::null,
-          (names[i].isEmpty()) ? QString::null : names[i],
-          QString::null,
-          QString::null,QString::null,
-          QString::null,QString::null,
-          QString::null,
-          QString::null,QString::null,
-          QString::null,QString::null,
-          (phones[i].isNull()) ? QString::null : phones[i],QString::null,
-          QString::null,QString::null,
-          QString::null,QString::null,
-          (comments[i].isNull()) ? QString::null : comments[i], QString::null
-          );
+      KABC::Addressee a;
+      a.setFormattedName(keys[i]);
+      if (!emails[i].isEmpty()) a.insertEmail(emails[i]);
+      if (!names[i].isEmpty()) a.setFamilyName(names[i]);
+      if (!phones[i].isNull()) a.insertPhoneNumber( KABC::PhoneNumber( phones[i], KABC::PhoneNumber::Home | KABC::PhoneNumber::Voice ) );
+      if (!comments[i].isNull()) a.setNote(comments[i]);
 
+      addContact( a );
       { 
         info->overall(100*i/lines);
       }
@@ -95,7 +87,7 @@ void FilterEudoraAb::import(FilterInfo *info)
     }
   }
 
-  kabStop(info);
+  closeAddressBook( );
   info->current(i18n("Finished converting Eudora Light addresses to KAddressBook"));
   F.close();
   info->overall(100);

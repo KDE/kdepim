@@ -57,14 +57,14 @@ bool ret;
      return false;
    }
 
-   if (!f->kabStart(info)) {
+   if (!f->openAddressBook(info)) {
      return false;
    }
 
    A=go(INDEX_OF_INDEX);
    ret=convert(A,0,0);
 
-   f->kabStop(info);
+   f->closeAddressBook();
 
 return ret;
 }
@@ -193,32 +193,8 @@ content_t hdr;
      pabrec       rec(*this);
      pabfields_t  fields(rec,info,parent);
 
-     char *givenName,*email,
-          *title, *firstName,*additionalName,*lastName,
-          *address, *town, *state, *zip, *country,
-          *organization, *department, *subDep, *job,
-          *tel, *fax, *mobile, *modem,
-          *homepage, *talk,
-          *comment, *birthday;
-
      if (fields.isOK() && fields.isUsable()) {
-       fields.get(givenName,email,
-                  title,firstName,additionalName,lastName,
-                  address, town, state, zip, country,
-                  organization, department, subDep, job,
-                  tel, fax, mobile, modem,
-                  homepage,talk,
-                  comment, birthday
-                 );
-       f->kabAddress(info,"MS Personal Addressbook",
-                  givenName,email,
-                  title,firstName,additionalName,lastName,
-                  address,town,state,zip,country,
-                  organization,department,subDep,job,
-                  tel,fax,mobile,modem,
-                  homepage,talk,
-                  comment,birthday
-                 );
+       f->addContact( fields.get() );
       }
    }
 }

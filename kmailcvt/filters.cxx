@@ -131,13 +131,6 @@ Filter::Filter( const QString& name, const QString& author,
 {
 }
 
-#if 0
-KMail::~KMail()
-{
-  m_info->log("kmail has adopted the (new) folders and messages");
-}
-#endif
-
 bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          const QString& msgPath )
 {
@@ -169,126 +162,24 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
   return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-// This is the kab class, it provides the interface to KAddressBook.
-// This one uses kabAPI 10
-//
-//////////////////////////////////////////////////////////////////////////////////
-
-KAb::KAb() : mAddressBook(0)
+bool Filter::openAddressBook( FilterInfo* info )
 {
-}
-
-KAb::~KAb()
-{
-}
-
-bool KAb::kabStart(FilterInfo *info)
-{
-  mAddressBook = KABC::StdAddressBook::self();
-  mTicket = mAddressBook->requestSaveTicket();
-  if ( !mTicket ) {
-     info->alert(i18n("Unable to store imported data in address book."));
-     return false;
-  }
-  return true;
-}
-
-void KAb::kabStop(FilterInfo *info)
-{
-  Q_UNUSED(info);
-  mAddressBook->save( mTicket );
-}
-
-bool KAb::checkStr( QString &str )
-{
-  if ( str.isEmpty() )
+  saveTicket = KABC::StdAddressBook::self()->requestSaveTicket();
+  if (!saveTicket) {
+    info->alert(i18n("Unable to store imported data in address book."));
     return false;
-  return !str.stripWhiteSpace().isEmpty();
+  }
+  return true;
 }
 
-bool KAb::kabAddress(FilterInfo *_info,QString adrbookname,
-                      QString givenname, QString email,
-                      QString title,QString firstname,
-                      QString additionalname,QString lastname,
-                      QString nickname,
-                      QString address,QString town,
-                      QString /*state*/,QString zip,QString country,
-                      QString organization,QString department,
-                      QString subDep,QString job,
-                      QString tel,QString fax,QString mobile,QString modem,
-                      QString homepage,QString talk,
-                      QString comment,QString /*birthday*/
-                     )
+bool Filter::closeAddressBook( )
 {
-  // initialize
+  return KABC::StdAddressBook::self()->save(saveTicket);
+}
 
-  info=_info;
-
-  // first check if givenname already exists...
-
-  KABC::Addressee a;
-
-  QString note;
-
-  KABC::AddressBook::Iterator it;
-  for( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
-    if ( givenname == (*it).formattedName() ) {
-      a = *it;
-      break;
-    }
-  }
-
-  // Now we've got a valid addressbook entry, fill it up.
-
-  a.setFormattedName( givenname );
-
-  if ( checkStr( email ) ) a.insertEmail( email );
-
-  if ( checkStr( title ) ) a.setTitle( title );
-  if ( checkStr( firstname ) ) a.setGivenName ( firstname );
-  if ( checkStr( additionalname ) ) a.setAdditionalName( additionalname );
-  if ( checkStr( lastname ) ) a.setFamilyName( lastname );
-  if ( checkStr( nickname ) ) a.setNickName( nickname );
-
-  KABC::Address addr;
-  
-  addr.setId( adrbookname );
-  
-  if ( checkStr( town ) ) addr.setLocality( town );
-  if ( checkStr( country ) ) addr.setCountry( country );
-  if ( checkStr( zip ) ) addr.setPostalCode( zip );
-  if ( checkStr( address ) ) addr.setLabel( address );
-  a.insertAddress( addr );
-
-  if ( checkStr( organization ) ) a.setOrganization( organization );
-
-  if ( checkStr( department ) ) a.insertCustom("KADDRESSBOOK", "X-Department", department);
-  if ( checkStr( subDep ) ) a.insertCustom("KADDRESSBOOK", "X-Office", subDep);
-  if ( checkStr( job ) ) note.append( job + "\n" );
-
-  if ( checkStr( tel ) )
-    a.insertPhoneNumber( KABC::PhoneNumber( tel, KABC::PhoneNumber::Voice ) );
-  if ( checkStr( fax ) )
-    a.insertPhoneNumber( KABC::PhoneNumber( fax, KABC::PhoneNumber::Fax ) );
-  if ( checkStr( mobile ) )
-    a.insertPhoneNumber( KABC::PhoneNumber( mobile, KABC::PhoneNumber::Cell ) );
-  if ( checkStr( modem ) )
-    a.insertPhoneNumber( KABC::PhoneNumber( modem, KABC::PhoneNumber::Modem ) );
-
-  if ( checkStr( homepage ) ) a.setUrl( KURL( homepage ) );
-  if ( checkStr( talk ) ) note.append( "Talk: " + talk + "\n" );
-
-  if ( checkStr( comment ) ) note.append( comment );
-
-  a.setNote( note );
-
-  mAddressBook->insertAddressee( a );
-
-  a.dump();
-
-  return true;
+void Filter::addContact( const KABC::Addressee& a )
+{
+  KABC::StdAddressBook::self()->insertAddressee( a );
 }
 
 // vim: ts=2 sw=2 et

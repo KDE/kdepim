@@ -284,40 +284,35 @@ content_t pabfields_t::order(int k)
 return tags[k].order();
 }
 
-#define C(a)  _##a=(a=="") ? NULL : ((char *) a.latin1())
+KABC::Addressee pabfields_t::get() {
+  KABC::Addressee a;
+  if (!givenName.isEmpty()) a.setFormattedName(givenName);
+  if (!email.isEmpty()) a.insertEmail(email);
+  if (!title.isEmpty()) a.setTitle(title);
+  if (!firstName.isEmpty()) a.setName(firstName);
+  if (!additionalName.isEmpty()) a.setAdditionalName(additionalName);
+  if (!lastName.isEmpty()) a.setFamilyName(lastName);
 
-void pabfields_t::get(char * & _givenName,char * &_email,
-              char * & _title,char * & _firstName,char * & _additionalName,char * & _lastName,
-              char * & _address,char * & _town,char * & _state,char * & _zip,char * & _country,
-              char * & _organization,char * & _department,char * & _subDep,char * & _job,
-              char * & _tel,char * & _fax,char * & _mobile,char * & _modem,
-              char * & _homepage,char * & _talk,
-              char * & _comment,char * & _birthday
-             )
-{
-  C(givenName);
-  C(email);
-  C(title);
-  C(firstName);
-  C(additionalName);
-  C(lastName);
-  C(address);
-  C(town);
-  C(zip);
-  C(state);
-  C(country);
-  C(organization);
-  C(department);
-  C(subDep);
-  C(job);
-  C(tel);
-  C(fax);
-  C(mobile);
-  C(modem);
-  C(homepage);
-  C(talk);
-  C(comment);
-  C(birthday);
+  KABC::Address addr;
+  if (!address.isEmpty()) addr.setStreet(address);
+  if (!town.isEmpty()) addr.setLocality(town);
+  if (!zip.isEmpty()) addr.setPostalCode(zip);
+  if (!state.isEmpty()) addr.setRegion(state);
+  if (!country.isEmpty()) addr.setCountry(country);
+  a.insertAddress(addr);
+
+  if (!organization.isEmpty()) a.setOrganization(organization);
+  if (!department.isEmpty()) a.setRole(department);
+  // Miss out department, subDep, job
+  if (!tel.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( tel, KABC::PhoneNumber::Voice ) );
+  if (!fax.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( fax, KABC::PhoneNumber::Fax ) );
+  if (!mobile.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( mobile, KABC::PhoneNumber::Cell ) );
+  if (!modem.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( modem, KABC::PhoneNumber::Modem ) );
+  if (!homepage.isEmpty()) a.setUrl(homepage);
+  // Miss out talk
+  if (!comment.isEmpty()) a.setNote(comment);
+  // Miss out birthday
+  return a;
 }
 
 

@@ -108,14 +108,7 @@
    public:
      pabfields_t(pabrec & R,FilterInfo *info,QWidget *parent);
    public:
-     void get(char * &givenName,char * &email,
-              char * &title,char * &firstName,char * &additionalName,char * &lastName,
-              char * &address,char * &town,char * &state,char * &zip,char * &country,
-              char * &organization,char * &department,char * &subDep,char * &job,
-              char * &tel,char * &fax,char * & mobile,char * &modem,
-              char * &homepage,char * &talk,
-              char * &comment,char * &birthday
-             );
+     KABC::Addressee get( );
      bool isOK(void)     { return OK; }
      bool isUsable(void) { return givenName!=""; }
  };

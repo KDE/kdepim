@@ -52,39 +52,7 @@ class FilterInfo
     QWidget      *m_parent;
 };
 
-class KAb
-{
-  public:
-    KAb();
-   ~KAb();
-    bool kabStart(FilterInfo *info);
-    bool kabAddress(FilterInfo *info, QString adrbookname,
-                    QString givenname, QString email=QString::null,
-                    QString title=QString::null,
-                    QString firstName=QString::null,QString additionalName=QString::null,
-                    QString lastName=QString::null, QString nickname=QString::null,
-                    QString adress=QString::null,QString town=QString::null,
-                    QString state=QString::null,QString zip=QString::null,
-                    QString country=QString::null,
-                    QString organization=QString::null,QString department=QString::null,
-                    QString subDep=QString::null,QString job=QString::null,
-                    QString tel=QString::null,QString fax=QString::null,
-                    QString mobile=QString::null,QString modem=QString::null,
-                    QString homepage=QString::null,QString talk=QString::null,
-                    QString comment=QString::null,QString birthday=QString::null
-                   );
-    void kabStop(FilterInfo *info);
-
-  private:
-    FilterInfo  *info;    // tmp var
-    KABC::AddressBook *mAddressBook;
-    KABC::Ticket *mTicket;
-    QString       tels;
-    QString       cap;
-    bool checkStr( QString & );
-};
-
-class Filter : public KAb
+class Filter
 {
   public:
     typedef Filter* ( *Creator )();
@@ -100,15 +68,20 @@ class Filter : public KAb
     static void registerFilter( Creator );
     static List createFilters();
 
+    // FIXME: Move to protected when pablib goes
+    void addContact( const KABC::Addressee& a );
+    bool openAddressBook( FilterInfo* info );
+    bool closeAddressBook( );
+
   protected:
     bool addMessage( FilterInfo* info,
                      const QString& folder,
                      const QString& msgFile );
-
   private:
     QString m_name;
     QString m_author;
     QString m_info;
+    KABC::Ticket *saveTicket;
 };
 
 template< class T >
