@@ -218,7 +218,7 @@ class KNLocalArticle : public KNArticle {
     ~KNLocalArticle();
 
     //type
-    articleType type() const     { return ATlocal; }
+    articleType type()     { return ATlocal; }
 
     //content handling
     void parse();
