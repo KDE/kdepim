@@ -265,9 +265,11 @@ QString Backup::backupFile( Konnector *k, Syncee *s )
   return mBackupDir + "/" + k->identifier() + "-" + s->type();
 }
 
-void Backup::slotSynceesRead( Konnector *k, const SynceeList &syncees )
+void Backup::slotSynceesRead( Konnector *k )
 {
   logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
+
+  SynceeList syncees = k->syncees();
 
   if ( syncees.count() == 0 ) {
     logMessage( i18n("Syncee list is empty.") );

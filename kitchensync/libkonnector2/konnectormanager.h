@@ -87,7 +87,7 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
       Emitted when Syncee list becomes available as response to
       requestSyncees().
     */
-    void synceesRead( Konnector *, const SynceeList & );
+    void synceesRead( Konnector * );
 
     /**
       Emitted when an error occurs during read.

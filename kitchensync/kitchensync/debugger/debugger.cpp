@@ -219,8 +219,8 @@ Konnector *Debugger::currentKonnector()
 
   if ( mConnectedKonnectors.find( k ) < 0 ) {
     kdDebug() << "Connect Konnector" << endl;
-    connect( k, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
-             SLOT( slotReceiveData( Konnector *, const SynceeList & ) ) );
+    connect( k, SIGNAL( synceesRead( Konnector * ) ),
+             SLOT( slotReceiveData( Konnector * ) ) );
     connect( k, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
              SLOT( slotProgress( Konnector *, const Progress & ) ) );
     connect( k, SIGNAL( sig_error( Konnector *, const Error & ) ),
@@ -240,13 +240,13 @@ void Debugger::readSyncees()
   if ( k ) k->readSyncees();
 }
 
-void Debugger::slotReceiveData( Konnector *k, const SynceeList &syncees )
+void Debugger::slotReceiveData( Konnector *k )
 {
   logMessage( i18n("Got Syncee list from Konnector at address %1").arg( (long)k ) );
-  mSynceeList = syncees;
+  mSynceeList = k->syncees();
 
   SynceeList::ConstIterator it;
-  for( it = syncees.begin(); it != syncees.end(); ++it ) {
+  for( it = mSynceeList.begin(); it != mSynceeList.end(); ++it ) {
     Syncee *syncee = *it;
     logMessage( i18n("Got Syncee of type %1").arg( syncee->type() ) );
     SyncEntry *syncEntry;

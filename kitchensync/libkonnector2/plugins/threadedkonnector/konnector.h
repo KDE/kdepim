@@ -60,9 +60,6 @@ namespace Threaded {
     bool readSyncees();
     bool writeSyncees();
     
-    bool startBackup( const QString& );
-    bool startRestore( const QString& );
-    
     bool connectDevice();
     bool disconnectDevice();
     

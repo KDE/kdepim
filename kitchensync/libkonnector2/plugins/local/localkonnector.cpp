@@ -49,6 +49,8 @@ LocalKonnector::LocalKonnector( const KConfig *config )
     mCalendarFile = config->readPathEntry( "CalendarFile" );
     mAddressBookFile = config->readPathEntry( "AddressBookFile" );
   }
+
+  mSyncees.append( new CalendarSyncee( &mCalendar ) );    
 }
 
 LocalKonnector::~LocalKonnector()
@@ -81,31 +83,17 @@ KSync::Kapabilities LocalKonnector::capabilities()
   return caps;
 }
 
-void LocalKonnector::setCapabilities( const KSync::Kapabilities& caps )
+void LocalKonnector::setCapabilities( const KSync::Kapabilities& )
 {
 }
 
 bool LocalKonnector::readSyncees()
 {
-  SynceeList syncees;
   if ( !mCalendar.load( mCalendarFile ) ) return false;
-  syncees.append( new CalendarSyncee( &mCalendar ) );    
 
-  emit synceesRead( this, syncees );
+  emit synceesRead( this );
 
   return true;
-}
-
-bool LocalKonnector::startBackup(const QString& path)
-{
-  error ( StdError::backupNotSupported() );
-  return false;
-}
-
-bool LocalKonnector::startRestore( const QString& path )
-{
-  error ( StdError::backupNotSupported() );
-  return false;
 }
 
 bool LocalKonnector::connectDevice()

@@ -17,8 +17,6 @@ namespace KSync {
         void setCapabilities( const KSync::Kapabilities& );
         bool readSyncees();
         bool writeSyncees();
-        bool startBackup( const QString& path );
-        bool startRestore( const QString& path );
         bool connectDevice();
         bool disconnectDevice();
 

@@ -85,7 +85,7 @@ class Backup : public ManipulatorPart
     void restoreBackup();
     void deleteBackup();
 
-    void slotSynceesRead( Konnector *k, const SynceeList &syncees );
+    void slotSynceesRead( Konnector *k );
     void slotSynceeReadError( Konnector *k );
 
     void slotSynceesWritten( Konnector *k );

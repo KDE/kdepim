@@ -56,11 +56,10 @@ class DummyKonnector : public KSync::Konnector
      */
     void setCapabilities( const KSync::Kapabilities& );
 
+    SynceeList syncees();
+
     bool readSyncees();
     bool writeSyncees();
-
-    bool startBackup(const QString& path );
-    bool startRestore( const QString& path );
 
     bool connectDevice();
     bool disconnectDevice();
@@ -77,6 +76,8 @@ class DummyKonnector : public KSync::Konnector
 
   private:
     KCal::CalendarLocal mCalendar;
+    
+    SynceeList mSyncees;
 };
 
 }

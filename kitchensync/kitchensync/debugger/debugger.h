@@ -75,7 +75,7 @@ class Debugger : public ManipulatorPart
     void connectDevice();
     void disconnectDevice();
 
-    void slotReceiveData( Konnector *, const SynceeList &syncees );
+    void slotReceiveData( Konnector * );
     void slotProgress( Konnector *, const Progress & );
     void slotError( Konnector *, const Error & );
 

@@ -59,8 +59,6 @@ namespace Threaded {
     enum Command {
       Connect,
       Disconnect,
-      Backup,
-      Restore,
       ReadSyncees,
       WriteSyncees,
       TerminateThread
@@ -103,10 +101,6 @@ namespace Threaded {
        The command to process;
      */
     Command mCommand;
-    /**
-       The file where to write/read backups/restores.
-     */
-    QString mFilename;
     /**
        The synceelist to write/read to/from.
      */

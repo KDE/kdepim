@@ -116,42 +116,6 @@ bool ClientManager::writeSyncees()
 }
 
 /**
-   Starts a backup to file named @param file.
-   Returns if a backup could be started. If the function returns with true
-   the job is terminated by by either a @ref signalError( const KSync::Error& )
-   or a @ref signalFinished( const KSync::Progress& ).
-*/
-bool ClientManager::startBackup( const QString& file )
-{
-  if ( mWorker.mLock.tryLock() ) {
-    mWorker.mFilename = file;
-    mWorker.mCommand = ClientThread::Backup;
-    mWorker.mLock.unlock();
-    mWorker.mWait.wakeOne();
-    return true;
-  } else
-    return false;
-}
-
-/**
-   Starts a restore from file named @param file.
-   Returns if a backup could be started. If the function returns with true
-   the job is terminated by by either a @ref signalError( const KSync::Error& )
-   or a @ref signalFinished( const KSync::Progress& ).
-*/
-bool ClientManager::startRestore( const QString& file )
-{
-  if ( mWorker.mLock.tryLock() ) {
-    mWorker.mFilename = file;
-    mWorker.mCommand = ClientThread::Restore;
-    mWorker.mLock.unlock();
-    mWorker.mWait.wakeOne();
-    return true;
-  } else
-    return false;
-}
-
-/**
    Starts connecting the device.
    Returns if a backup could be started. If the function returns with true
    the job is terminated by by either a @ref signalError( const KSync::Error& )

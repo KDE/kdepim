@@ -72,8 +72,8 @@ Konnector *KonnectorManager::load( const Device& dev )
         createInstanceFromLibrary<Konnector>( dev.library().local8Bit(), this );
     if ( !plugin ) return 0;
 
-    connect( plugin, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
-             SLOT( slotSync( Konnector *, const SynceeList & ) ) );
+    connect( plugin, SIGNAL( synceesRead( Konnector * ) ),
+             SLOT( slotSync( Konnector * ) ) );
     connect( plugin, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
              SLOT( slotProgress( Konnector *, const Progress & ) ) );
     connect( plugin, SIGNAL( sig_error( Konnector *, const Error & ) ),
@@ -280,8 +280,8 @@ void KonnectorManager::connectSignals()
 {
   Iterator it;
   for( it = begin(); it != end(); ++it ) {
-    connect( *it, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
-             SIGNAL( synceesRead( Konnector *, const SynceeList & ) ) );
+    connect( *it, SIGNAL( synceesRead( Konnector * ) ),
+             SIGNAL( synceesRead( Konnector * ) ) );
     connect( *it, SIGNAL( synceeReadError( Konnector * ) ),
              SIGNAL( synceeReadError( Konnector * ) ) );
     connect( *it, SIGNAL( synceesWritten( Konnector * ) ),

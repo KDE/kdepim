@@ -64,7 +64,7 @@ class SyncerPart : public ManipulatorPart
     void actionSync();
 
   public slots:
-    void slotSynceesRead( Konnector *, const SynceeList & );
+    void slotSynceesRead( Konnector * );
 
     void slotSynceeReadError( Konnector * );
 

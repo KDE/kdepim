@@ -68,14 +68,6 @@ void ClientThread::run()
       kdDebug() << "################################### Disconnect" << endl;
       finished();
       break;
-    case Backup:
-      kdDebug() << "################################### Backup" << endl;
-      finished();
-      break;
-    case Restore:
-      kdDebug() << "################################### Restore" << endl;
-      finished();
-      break;
     case ReadSyncees:
       kdDebug() << "################################### ReadSyncee" << endl;
       finished();

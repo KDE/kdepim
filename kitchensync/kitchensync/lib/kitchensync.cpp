@@ -190,8 +190,8 @@ void KitchenSync::addModPart( ManipulatorPart *part )
              SLOT(slotPartSyncStatus( ManipulatorPart*, int ) ) );
 
     KonnectorManager *m = KonnectorManager::self();
-    connect( m, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
-             part, SLOT( slotSynceesRead( Konnector *, const SynceeList & ) ) );
+    connect( m, SIGNAL( synceesRead( Konnector * ) ),
+             part, SLOT( slotSynceesRead( Konnector * ) ) );
     connect( m, SIGNAL( synceeReadError( Konnector * ) ),
              part, SLOT( slotSynceeReadError( Konnector * ) ) );
     connect( m, SIGNAL( synceesWritten( Konnector * ) ),

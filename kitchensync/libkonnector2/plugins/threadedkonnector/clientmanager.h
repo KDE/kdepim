@@ -77,21 +77,6 @@ namespace Threaded {
     bool writeSyncees();
 
     /**
-       Starts a backup to file named @param file.
-       Returns if a backup could be started. If the function returns with true
-       the job is terminated by by either a @ref signalError( const KSync::Error& )
-       or a @ref signalFinished( const KSync::Progress& ).
-     */
-    bool startBackup( const QString& file );
-    /**
-       Starts a restore from file named @param file.
-       Returns if a backup could be started. If the function returns with true
-       the job is terminated by by either a @ref signalError( const KSync::Error& )
-       or a @ref signalFinished( const KSync::Progress& ).
-     */
-    bool startRestore( const QString& file );
-
-    /**
        Starts connecting the device.
        Returns if a backup could be started. If the function returns with true
        the job is terminated by by either a @ref signalError( const KSync::Error& )

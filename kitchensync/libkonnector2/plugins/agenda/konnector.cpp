@@ -52,14 +52,6 @@ bool AgendaPlugin::readSyncees() {
     m_socket->startSync();
     return true;
 }
-bool AgendaPlugin::startBackup(const QString& path) {
-    error ( StdError::backupNotSupported() );
-    return false;
-}
-bool AgendaPlugin::startRestore( const QString& path ) {
-    error ( StdError::backupNotSupported() );
-    return false;
-}
 bool AgendaPlugin::connectDevice() {
     m_socket->startUP();
     return true;

@@ -50,11 +50,10 @@ class LocalKonnector : public KSync::Konnector
      */
     void setCapabilities( const KSync::Kapabilities& );
 
+    SynceeList syncees() { return mSyncees; }
+
     bool readSyncees();
     bool writeSyncees();
-
-    bool startBackup(const QString& path );
-    bool startRestore( const QString& path );
 
     bool connectDevice();
     bool disconnectDevice();
@@ -77,6 +76,8 @@ class LocalKonnector : public KSync::Konnector
     QString mAddressBookFile;
 
     KCal::CalendarLocal mCalendar;
+    
+    SynceeList mSyncees;
 };
 
 }

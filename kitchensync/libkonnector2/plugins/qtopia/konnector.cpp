@@ -87,16 +87,6 @@ bool QtopiaPlugin::readSyncees()
     return d->socket->startSync();
 }
 
-bool QtopiaPlugin::startBackup( const QString & )
-{
-    return false;
-}
-
-bool QtopiaPlugin::startRestore( const QString& )
-{
-    return false;
-}
-
 bool QtopiaPlugin::connectDevice()
 {
     d->socket->startUp();

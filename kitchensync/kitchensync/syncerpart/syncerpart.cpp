@@ -214,11 +214,13 @@ void SyncerPart::actionSync()
   }
 }
 
-void SyncerPart::slotSynceesRead( Konnector *k, const SynceeList &syncees )
+void SyncerPart::slotSynceesRead( Konnector *k )
 {
   logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
 
   mProcessedKonnectors.append( k );
+
+  SynceeList syncees = k->syncees();
 
   if ( syncees.count() == 0 ) {
     logMessage( i18n("Syncee list is empty.") );

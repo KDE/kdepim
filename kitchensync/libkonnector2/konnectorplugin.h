@@ -70,6 +70,13 @@ class Konnector : public KRES::Resource
     virtual ~Konnector();
 
     /**
+      Get list of Syncees used by this Konnector. It will contain a Syncee for
+      each supported data type. If readSyncees() hasn't be called before, the
+      Syncees will be empty.
+    */
+    virtual SynceeList syncees() = 0;
+
+    /**
       Request list of Syncee objects containing PIM data from connected entity.
       The response is sent with the signal synceesRead(). If an error occurs
       during read the signal synceeReadError() is emitted.
@@ -93,7 +100,7 @@ class Konnector : public KRES::Resource
       Emitted when Syncee list becomes available as response to
       requestSyncees().
     */
-    void synceesRead( Konnector *, const SynceeList & );
+    void synceesRead( Konnector * );
 
     /**
       Emitted when an error occurs during read.
@@ -131,14 +138,6 @@ class Konnector : public KRES::Resource
               true.
     */
 //    virtual bool startSync() = 0;
-    /**
-      Start restore.
-    */
-    virtual bool startRestore( const QString &path ) = 0;
-    /**
-      Start backup.
-    */
-    virtual bool startBackup( const QString &path ) = 0;
 
     /**
       Connect device. Return true, if device could be connected.

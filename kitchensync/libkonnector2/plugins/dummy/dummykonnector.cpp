@@ -65,6 +65,9 @@ DummyKonnector::DummyKonnector( const KConfig *config )
   event = new Event;
   event->setSummary( "Another Event" );
   mCalendar.addEvent( event );
+
+  CalendarSyncee *calendarSyncee = new CalendarSyncee( &mCalendar );
+  mSyncees.append( calendarSyncee );  
 }
 
 DummyKonnector::~DummyKonnector()
@@ -93,30 +96,18 @@ void DummyKonnector::setCapabilities( const KSync::Kapabilities & )
 {
 }
 
+SynceeList DummyKonnector::syncees()
+{
+  return mSyncees;
+}
+
 bool DummyKonnector::readSyncees()
 {
   kdDebug() << "DummyKonnector::readSyncees()" << endl;
 
-  SynceeList synceeList;
-
-  CalendarSyncee *calendarSyncee = new CalendarSyncee( &mCalendar );
-  synceeList.append( calendarSyncee );
-  
-  emit synceesRead( this, synceeList );
+  emit synceesRead( this );
 
   return true;
-}
-
-bool DummyKonnector::startBackup(const QString& path)
-{
-  error ( StdError::backupNotSupported() );
-  return false;
-}
-
-bool DummyKonnector::startRestore( const QString& path )
-{
-  error ( StdError::backupNotSupported() );
-  return false;
 }
 
 bool DummyKonnector::connectDevice()
@@ -144,13 +135,13 @@ void DummyKonnector::download( const QString& )
   error( StdError::downloadNotSupported() );
 }
 
-KSync::ConfigWidget *DummyKonnector::configWidget( const KSync::Kapabilities& cap, QWidget* parent,
-                                                   const char* name )
+KSync::ConfigWidget *DummyKonnector::configWidget( const KSync::Kapabilities&, QWidget*,
+                                                   const char* )
 {
   return 0;
 }
 
-KSync::ConfigWidget *DummyKonnector::configWidget( QWidget* parent, const char* name )
+KSync::ConfigWidget *DummyKonnector::configWidget( QWidget*, const char* )
 {
   return 0;
 }

@@ -81,16 +81,6 @@ bool ThreadedPlugin::writeSyncees() {
   return mClientManager.writeSyncees();
 }
 
-bool ThreadedPlugin::startBackup( const QString& file ) { 
-  kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
-  return mClientManager.startBackup( file );
-}
-
-bool ThreadedPlugin::startRestore( const QString& file ) {
-  kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
-  return mClientManager.startRestore( file );
-}
-
 bool ThreadedPlugin::connectDevice() {
   kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
   return mClientManager.connectDevice();
