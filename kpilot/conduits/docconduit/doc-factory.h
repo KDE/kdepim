@@ -47,14 +47,9 @@ public:
 	static KAboutData *about() { 
 		return fAbout;
 	};
-	
 
-	static const char *fGroup;
-	static const char *fTXTDir, *fPDBDir, *fKeepPDBLocally, 
-		*fConflictResolution, 
-		*fConvertBookmarks, *fBookmarksBmk, *fBookmarksInline, *fBookmarksEndtags, *fPCBookmarks,
-		*fCompress, 
-		*fSyncDirection, *fDOCList, *fDBListSynced, *fIgnoreBmkChanges, *fLocalSync, *fAlwaysUseResolution;
+	static const char 
+		*fDBListSynced;
 	static const char *dbDOCtype;
 	static const char *dbDOCcreator;
  

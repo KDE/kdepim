@@ -39,6 +39,7 @@
 #include "setup_base.h"
 #include "null-conduit.h"
 #include "null-factory.moc"
+#include "nullconduitSettings.h"
 
 
 extern "C"
@@ -55,8 +56,8 @@ class NullConduitConfig : public ConduitConfigBase
 {
 public:
 	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
-	virtual void commit(KConfig *);
-	virtual void load(KConfig *);
+	virtual void commit();
+	virtual void load();
 	static ConduitConfigBase *create(QWidget *p,const char *n)
 		{ return new NullConduitConfig(p,n); } ;
 protected:
@@ -79,7 +80,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		this,SLOT(modified()));
 }
 
-/* virtual */ void NullConduitConfig::commit(KConfig *fConfig)
+/* virtual */ void NullConduitConfig::commit()
 {
 	FUNCTIONSETUP;
 
@@ -94,26 +95,20 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		<< endl;
 #endif
 
-	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
-
-	fConfig->writeEntry(NullConduitFactory::message,fConfigWidget->fLogMessage->text());
-	fConfig->writeEntry(NullConduitFactory::databases,fConfigWidget->fDatabases->text());
-	fConfig->writeEntry(NullConduitFactory::failImmediately,
-		fConfigWidget->fFailImmediately->isChecked());
+	NullConduitSettings::setMessage( fConfigWidget->fLogMessage->text() );
+	NullConduitSettings::setDatabases( fConfigWidget->fDatabases->text() );
+	NullConduitSettings::setFailImmediately( fConfigWidget->fFailImmediately->isChecked());
+	NullConduitSettings::self()->writeConfig();
 }
 
-/* virtual */ void NullConduitConfig::load(KConfig *fConfig)
+/* virtual */ void NullConduitConfig::load()
 {
 	FUNCTIONSETUP;
+	NullConduitSettings::self()->readConfig();
 
-	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
-
-	fConfigWidget->fLogMessage->setText(
-		fConfig->readEntry(NullConduitFactory::message,i18n("KPilot was here!")));
-	fConfigWidget->fDatabases->setText(
-		fConfig->readEntry(NullConduitFactory::databases));
-	fConfigWidget->fFailImmediately->setChecked(
-		fConfig->readBoolEntry(NullConduitFactory::failImmediately,false));
+	fConfigWidget->fLogMessage->setText( NullConduitSettings::message() );
+	fConfigWidget->fDatabases->setText( NullConduitSettings::databases().join(",") );
+	fConfigWidget->fFailImmediately->setChecked( NullConduitSettings::failImmediately() );
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -128,11 +123,6 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 
 	fModified=false;
 }
-
-/* static */ const char * const NullConduitFactory::group = "Null-conduit";
-const char * const NullConduitFactory::databases = "Databases" ;
-const char * const NullConduitFactory::message = "LogMessage";
-const char * const NullConduitFactory::failImmediately = "FailNow";
 
 KAboutData *NullConduitFactory::fAbout = 0L;
 NullConduitFactory::NullConduitFactory(QObject *p, const char *n) :

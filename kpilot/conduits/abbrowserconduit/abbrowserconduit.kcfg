@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="kpilotrc"/> 
+  <group name="Abbrowser-conduit">
+    <entry name="AddressbookType" key="Addressbook type" type="Enum">
+				<choices>
+						<choice name="eAbookResource"/>
+						<choice name="eAbookFile"/>
+				</choices>
+        <label>
+        </label>
+        <default>eAbookResource</default>
+    </entry>
+    <entry name="FileName" type="String">
+        <label>
+        </label>
+        <default></default>
+    </entry>
+		<entry name="ArchiveDeleted" type="Bool">
+        <label>
+        </label>
+        <default>true</default>
+    </entry>
+    <entry name="ConflictResolution" key="ConflictResolve" type="Int">
+        <label>
+        </label>
+        <default>-1</default>
+    </entry>
+    <entry name="PilotOther" type="Enum">
+				<choices>
+						<choice name="eOtherPhone"/>
+						<choice name="eAssistant"/>
+						<choice name="eBusinessFax"/>
+						<choice name="eCarPhone"/>
+						<choice name="eEmail2"/>
+						<choice name="eHomeFax"/>
+						<choice name="eTelex"/>
+						<choice name="eTTYTTDPhone"/>
+				</choices>
+        <label>
+        </label>
+        <default>eAssistant</default>
+    </entry>
+    <entry name="PilotStreet" type="Enum">
+				<choices>
+						<choice name="ePilotStreetHome"/>
+						<choice name="ePilotStreetWork"/>
+				</choices>
+        <label>
+        </label>
+        <default>ePilotStreetHome</default>
+    </entry>
+    <entry name="PilotFax" type="Enum">
+				<choices>
+						<choice name="ePilotFaxHome"/>
+						<choice name="ePilotFaxWork"/>
+				</choices>
+        <label>
+        </label>
+        <default>ePilotFaxHome</default>
+    </entry>
+    <entry name="Custom$(customIndex)" key="Custom $(customIndex)" type="Enum">
+				<parameter name="customIndex" type="Int" max="3"/>
+				<choices label="eCustomEnum">
+						<choice name="eCustomField"/>
+						<choice name="eCustomBirthdate"/>
+						<choice name="eCustomURL"/>
+						<choice name="eCustomIM"/>
+				</choices>
+        <label>
+        </label>
+        <default>eCustomField</default>
+    </entry>
+    <entry name="CustomDateFormat" type="String">
+        <label>
+        </label>
+        <default></default>
+    </entry>
+  </group>
+	
+</kcfg>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="kpilotrc"/>
+  <group name="SysInfo-conduit">
+    <entry name="OutputFile" key="Output file" type="String">
+        <label>
+        </label>
+        <default>$HOME/kpilot-syslog.html</default>
+    </entry>
+    <entry name="OutputFormat" key="Output format" type="Enum">
+				<choices>
+						<choice name="eSysInfoHTML"/>
+						<choice name="eSysInfoText"/>
+						<choice name="eSysInfoTemplate"/>
+				</choices>
+        <label>
+        </label>
+        <default>eSysInfoHTML</default>
+    </entry>
+    <entry name="TemplateFile" key="Template file" type="String">
+        <label>
+        </label>
+        <default></default>
+    </entry>
+    <entry name="DebugInformation" key="Debug Information" type="Bool">
+        <label>Debug information (for KPilot developers)</label>
+        <default>true</default>
+    </entry>
+    <entry name="HardwareInfo" key="Hardware Info" type="Bool">
+        <label>Hardware information</label>
+        <default>true</default>
+    </entry>
+    <entry name="DatabaseList" key="Database List" type="Bool">
+        <label>List of databases on handheld (takes long!)</label>
+        <default>true</default>
+    </entry>
+    <entry name="MemoryInfo" key="Memory Info" type="Bool">
+        <label>Memory information</label>
+        <default>true</default>
+    </entry>
+    <entry name="RecordNumbers" key="Record Numbers" type="Bool">
+        <label>Number of addresses, todos, events and memos</label>
+        <default>true</default>
+    </entry>
+    <entry name="PalmOSVersion" key="PalmOS Version" type="Bool">
+        <label>PalmOS version</label>
+        <default>true</default>
+    </entry>
+    <entry name="StorageInfo" key="Storage Info" type="Bool">
+        <label>Storage info (SD card, memory stick, ...)</label>
+        <default>true</default>
+    </entry>
+    <entry name="SyncInfo" key="Sync Info" type="Bool">
+        <label>Synchronization information</label>
+        <default>true</default>
+    </entry>
+    <entry name="UserInfo" key="User Info" type="Bool">
+        <label>User information</label>
+        <default>true</default>
+    </entry>
+    <entry name="KDEVersion" key="KDE Version" type="Bool">
+        <label>Version of KPilot, pilot-link and KDE</label>
+        <default>true</default>
+    </entry>
+  </group>
+
+</kcfg>

@@ -53,7 +53,7 @@ static const char *null_conduit_id=
 #include "pilotSerialDatabase.h"
 #include "null-factory.h"
 #include "null-conduit.h"
-
+#include "nullconduitSettings.h"
 
 // A conduit that does nothing has a very
 // simple constructor and destructor.
@@ -83,18 +83,7 @@ NullConduit::~NullConduit()
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<null_conduit_id<<endl;
 
-	if (!fConfig)
-	{
-		kdWarning() << k_funcinfo
-			<< ": No configuration set for NULL conduit."
-			<< endl;
-		return false;
-	}
-
-	fConfig->setGroup(NullConduitFactory::group);
-
-	bool r = fConfig->readBoolEntry(NullConduitFactory::failImmediately);
-	if (r)
+	if ( NullConduitSettings::failImmediately() )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Config says to fail now." << endl;
@@ -103,7 +92,7 @@ NullConduit::~NullConduit()
 		return false;
 	}
 
-	QString m=fConfig->readEntry(NullConduitFactory::message);
+	QString m(NullConduitSettings::messge());
 	if (!m.isEmpty())
 	{
 		addSyncLogEntry(m);

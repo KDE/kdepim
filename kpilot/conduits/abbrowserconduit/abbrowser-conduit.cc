@@ -55,6 +55,7 @@
 #include "abbrowser-factory.h"
 #include "resolutionDialog.h"
 #include "resolutionTable.h"
+#include "abbrowserSettings.h"
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -68,19 +69,7 @@ const QString AbbrowserConduit::appString=CSL1("KPILOT");
 const QString AbbrowserConduit::flagString=CSL1("Flag");
 const QString AbbrowserConduit::idString=CSL1("RecordID");
 
-bool AbbrowserConduit::fPilotStreetHome=true;
-bool AbbrowserConduit::fPilotFaxHome=true;
-bool AbbrowserConduit::fArchive=true;
-enum AbbrowserConduit::ePilotOtherEnum AbbrowserConduit::ePilotOther=AbbrowserConduit::eOtherPhone;
 AddressBook*AbbrowserConduit::aBook=0L;
-
-enum AbbrowserConduit::eCustomEnum AbbrowserConduit::eCustom[4] = {
-	AbbrowserConduit::eCustomField,
-	AbbrowserConduit::eCustomField,
-	AbbrowserConduit::eCustomField,
-	AbbrowserConduit::eCustomField
-	} ;
-QString AbbrowserConduit::fCustomFmt=QString::null;
 
 /// This macro just sets the phone number of type "type" to "phone"
 /// Use a macro, because that saves two lines for each call, but does not
@@ -169,49 +158,23 @@ bool AbbrowserConduit::_prepare()
 void AbbrowserConduit::readConfig()
 {
 	FUNCTIONSETUP;
-
-	KConfigGroupSaver g(fConfig, AbbrowserConduitFactory::group());
-
-	// General page
-	fAbookType = (eAbookTypeEnum)fConfig->readNumEntry(
-		AbbrowserConduitFactory::fAbookType, 0);
-	fAbookFile = fConfig->readEntry(
-		AbbrowserConduitFactory::fAbookFile);
-	fArchive=fConfig->readBoolEntry(
-		AbbrowserConduitFactory::fArchive, true);
+	AbbrowserSettings::self()->readConfig();
 
 	// Conflict page
-	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)fConfig->readNumEntry(
-		AbbrowserConduitFactory::fResolution, SyncAction::eUseGlobalSetting);
-	if (res!=SyncAction::eUseGlobalSetting) fConflictResolution=res;
-
-	// Fields page
-	fPilotStreetHome=!fConfig->readBoolEntry(
-		AbbrowserConduitFactory::fStreetType, true);
-	fPilotFaxHome=!fConfig->readBoolEntry(
-		AbbrowserConduitFactory::fFaxType, true);
-	ePilotOther=(ePilotOtherEnum)(fConfig->readNumEntry(
-		AbbrowserConduitFactory::fOtherField, eOtherPhone));
-
-	// Custom fields page
-	for (int i=0; i<4; i++)
-	{
-		eCustom[i]=(eCustomEnum)(fConfig->readNumEntry(
-			AbbrowserConduitFactory::custom(i), eCustomField) );
-	}
-	fCustomFmt=fConfig->readEntry(AbbrowserConduitFactory::fCustomFmt, QString::null);
+	SyncAction::eConflictResolution res = (SyncAction::eConflictResolution)AbbrowserSettings::conflictResolution();
+	if (res != SyncAction::eUseGlobalSetting) fConflictResolution = res;
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Settings "
 		<< " fConflictResolution=" << fConflictResolution
-		<< " fPilotStreetHome=" << fPilotStreetHome
-		<< " fPilotFaxHome=" << fPilotFaxHome
-		<< " fArchive=" << fArchive
-		<< " eCustom[0]=" << eCustom[0]
-		<< " eCustom[1]=" << eCustom[1]
-		<< " eCustom[2]=" << eCustom[2]
-		<< " eCustom[3]=" << eCustom[3]
+		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
+		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
+		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
+		<< " eCustom[0]=" << AbbrowserSettings::custom(0)
+		<< " eCustom[1]=" << AbbrowserSettings::custom(1)
+		<< " eCustom[2]=" << AbbrowserSettings::custom(2)
+		<< " eCustom[3]=" << AbbrowserSettings::custom(3)
 		<< " fFirstTime=" << isFirstSync()
 		<< endl;
 #endif
@@ -220,15 +183,15 @@ void AbbrowserConduit::readConfig()
 
 
 bool AbbrowserConduit::isDeleted(const PilotAddress*addr)
-{
+{	
 	if (!addr) return true;
 	if (addr->isDeleted() && !addr->isArchived()) return true;
-	if (addr->isArchived()) return !fArchive;
+	if (addr->isArchived()) return !AbbrowserSettings::archiveDeleted();
 	return false;
 }
 bool AbbrowserConduit::isArchived(const PilotAddress*addr)
 {
-	if (addr && addr->isArchived()) return fArchive;
+	if (addr && addr->isArchived()) return AbbrowserSettings::archiveDeleted();
 	else return false;
 }
 bool AbbrowserConduit::isArchived(const Addressee &addr)
@@ -248,20 +211,19 @@ bool AbbrowserConduit::makeArchived(Addressee &addr)
 bool AbbrowserConduit::_loadAddressBook()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver g(fConfig, AbbrowserConduitFactory::group());
-	switch (fAbookType)
+	switch ( AbbrowserSettings::addressbookType() )
 	{
-		case eAbookResource:
+		case AbbrowserSettings::eAbookResource:
 			DEBUGCONDUIT<<"Loading standard addressbook"<<endl;
 			aBook = StdAddressBook::self();
 			break;
-		case eAbookLocal: { // initialize the abook with the given file
+		case AbbrowserSettings::eAbookFile: { // initialize the abook with the given file
 			DEBUGCONDUIT<<"Loading custom addressbook"<<endl;
 			aBook = new AddressBook();
 			if (!aBook) return false;
-			KABC::Resource *res = new ResourceFile( fAbookFile, "vcard" );
+			KABC::Resource *res = new ResourceFile( AbbrowserSettings::fileName(), "vcard" );
 			if ( !aBook->addResource( res ) ) {
-				DEBUGCONDUIT << "Unable to open resource for file " << fAbookFile << endl;
+				DEBUGCONDUIT << "Unable to open resource for file " << AbbrowserSettings::fileName() << endl;
 				KPILOT_DELETE( aBook );
 				return false;
 			}
@@ -332,7 +294,7 @@ bool AbbrowserConduit::_saveAddressBook()
 		kdWarning()<<k_funcinfo<<": No ticket available to save the "
 		<<"addressbook."<<endl;
 	}
-	if (fAbookType!=eAbookResource)
+	if ( AbbrowserSettings::addressbookType()!= AbbrowserSettings::eAbookResource )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Deleting addressbook"<<endl;
@@ -387,12 +349,12 @@ QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int ind
 {
 	FUNCTIONSETUP;
 
-	switch (eCustom[index]) {
-		case eCustomBirthdate: {
+	switch (AbbrowserSettings::custom(index)) {
+		case AbbrowserSettings::eCustomBirthdate: {
 			QDateTime bdate(abEntry.birthday().date());
 			if (!bdate.isValid()) return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
 			QString tmpfmt(KGlobal::locale()->dateFormat());
-			if (!fCustomFmt.isEmpty()) KGlobal::locale()->setDateFormat(fCustomFmt);
+			if (!AbbrowserSettings::customDateFormat().isEmpty()) KGlobal::locale()->setDateFormat(AbbrowserSettings::customDateFormat());
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Birthdate: "<<KGlobal::locale()->formatDate(bdate.date())<<" (QDate: "<<bdate.toString()<<endl;
 #endif
@@ -400,13 +362,13 @@ QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int ind
 			KGlobal::locale()->setDateFormat(tmpfmt);
 			return ret;
 		}
-		case eCustomURL:
+		case AbbrowserSettings::eCustomURL:
 			return abEntry.url().url();
 			break;
-		case eCustomIM:
+		case AbbrowserSettings::eCustomIM:
 			return abEntry.custom(CSL1("KADDRESSBOOK"), CSL1("X-IMAddress"));
 			break;
-		case eCustomField:
+		case AbbrowserSettings::eCustomField:
 		default:
 			return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
 			break;
@@ -416,11 +378,11 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 {
 	FUNCTIONSETUP;
 
-	switch (eCustom[index]) {
-		case eCustomBirthdate: {
+	switch (AbbrowserSettings::custom(index) ) {
+		case AbbrowserSettings::eCustomBirthdate: {
 			QDate bdate;
 			bool ok=false;
-			if (!fCustomFmt.isEmpty())
+			if (!AbbrowserSettings::customDateFormat().isEmpty())
 			{
 				// empty format means use locale setting
 				bdate=KGlobal::locale()->readDate(cust, &ok);
@@ -428,7 +390,7 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 			else
 			{
 				// use given format
-				bdate=KGlobal::locale()->readDate(cust, fCustomFmt, &ok);
+				bdate=KGlobal::locale()->readDate(cust, AbbrowserSettings::customDateFormat(), &ok);
 			}
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Birthdate from "<<index<<"-th custom field: "<<bdate.toString()<<endl;
@@ -439,13 +401,13 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 			else
 				return abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("X-IMAddress"), cust);
 			break; }
-		case eCustomURL: {
+		case AbbrowserSettings::eCustomURL: {
 			return abEntry.setUrl(cust);
 			break;}
-		case eCustomIM: {
+		case AbbrowserSettings::eCustomIM: {
 			return abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("X-IMAddress"), cust);
 			break;}
-		case eCustomField:
+		case AbbrowserSettings::eCustomField:
 		default: {
 			return abEntry.insertCustom(appString, CSL1("CUSTOM")+QString::number(index), cust);
 			break;}
@@ -457,23 +419,23 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 
 QString AbbrowserConduit::getOtherField(const Addressee & abEntry)
 {
-	switch(ePilotOther)
+	switch(AbbrowserSettings::pilotOther())
 	{
-		case eOtherPhone:
+		case AbbrowserSettings::eOtherPhone:
 			return abEntry.phoneNumber(0).number();
-		case eAssistant:
+		case AbbrowserSettings::eAssistant:
 			return abEntry.custom(CSL1("KADDRESSBOOK"), CSL1("AssistantsName"));
-		case eBusinessFax:
+		case AbbrowserSettings::eBusinessFax:
 			return abEntry.phoneNumber(PhoneNumber::Fax | PhoneNumber::Work).number();
-		case eCarPhone:
+		case AbbrowserSettings::eCarPhone:
 			return abEntry.phoneNumber(PhoneNumber::Car).number();
-		case eEmail2:
+		case AbbrowserSettings::eEmail2:
 			return abEntry.emails().first();
-		case eHomeFax:
+		case AbbrowserSettings::eHomeFax:
 			return abEntry.phoneNumber(PhoneNumber::Fax | PhoneNumber::Home).number();
-		case eTelex:
+		case AbbrowserSettings::eTelex:
 			return abEntry.phoneNumber(PhoneNumber::Bbs).number();
-		case eTTYTTDPhone:
+		case AbbrowserSettings::eTTYTTDPhone:
 			return abEntry.phoneNumber(PhoneNumber::Pcs).number();
 		default:
 			return QString::null;
@@ -482,29 +444,29 @@ QString AbbrowserConduit::getOtherField(const Addressee & abEntry)
 void AbbrowserConduit::setOtherField(Addressee & abEntry, QString nr)
 {
 //	PhoneNumber phone;
-	switch(ePilotOther)
+	switch (AbbrowserSettings::pilotOther())
 	{
-		case eOtherPhone:
+		case AbbrowserSettings::eOtherPhone:
 			_setPhoneNumber(abEntry, 0, nr)
 			break;
-		case eAssistant:
+		case AbbrowserSettings::eAssistant:
 			abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("AssistantsName"), nr);
 			break;
-		case eBusinessFax:
+		case AbbrowserSettings::eBusinessFax:
 			_setPhoneNumber(abEntry, PhoneNumber::Fax | PhoneNumber::Work, nr)
 			break;
-		case eCarPhone:
+		case AbbrowserSettings::eCarPhone:
 			_setPhoneNumber(abEntry, PhoneNumber::Car, nr)
 			break;
-		case eEmail2:
+		case AbbrowserSettings::eEmail2:
 			return abEntry.insertEmail(nr);
-		case eHomeFax:
+		case AbbrowserSettings::eHomeFax:
 			_setPhoneNumber(abEntry, PhoneNumber::Fax|PhoneNumber::Home, nr)
 			break;
-		case eTelex:
+		case AbbrowserSettings::eTelex:
 			_setPhoneNumber(abEntry, PhoneNumber::Bbs, nr)
 			break;
-		case eTTYTTDPhone:
+		case AbbrowserSettings::eTTYTTDPhone:
 			_setPhoneNumber(abEntry, PhoneNumber::Pcs, nr)
 			break;
 	}
@@ -514,12 +476,12 @@ void AbbrowserConduit::setOtherField(Addressee & abEntry, QString nr)
 
 PhoneNumber AbbrowserConduit::getFax(const Addressee & abEntry)
 {
-	return abEntry.phoneNumber(PhoneNumber::Fax |
-		( (fPilotFaxHome) ?(PhoneNumber::Home) :(PhoneNumber::Work)));
+	return abEntry.phoneNumber( PhoneNumber::Fax |
+		( (AbbrowserSettings::pilotFax()==0) ?(PhoneNumber::Home) :(PhoneNumber::Work)));
 }
 void AbbrowserConduit::setFax(Addressee & abEntry, QString fax)
 {
-	_setPhoneNumber(abEntry, PhoneNumber::Fax | (fPilotFaxHome ? PhoneNumber::Home : PhoneNumber::Work ), fax);
+	_setPhoneNumber(abEntry, PhoneNumber::Fax | ( (AbbrowserSettings::pilotFax()==0) ? PhoneNumber::Home : PhoneNumber::Work ), fax);
 }
 
 
@@ -529,12 +491,12 @@ void AbbrowserConduit::setFax(Addressee & abEntry, QString fax)
  *  return an address with preferred + home/work flag (from config dlg). */
 KABC::Address AbbrowserConduit::getAddress(const Addressee & abEntry)
 {
-	int type=(fPilotStreetHome)?(KABC::Address::Home):(KABC::Address::Work);
+	int type=(AbbrowserSettings::pilotStreet==0)?(KABC::Address::Home):(KABC::Address::Work);
 	KABC::Address ad(abEntry.address(KABC::Address::Pref));
 	if (!ad.isEmpty()) return ad;
 	ad=abEntry.address(type);
 	if (!ad.isEmpty()) return ad;
-	ad=abEntry.address((fPilotStreetHome) ?(KABC::Address::Work):(KABC::Address::Home));
+	ad=abEntry.address((AbbrowserSettings::pilotStreet==0) ?(KABC::Address::Work):(KABC::Address::Home));
 	if (!ad.isEmpty()) return ad;
 
 	return abEntry.address(type | KABC::Address::Pref);
@@ -664,13 +626,6 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
 
-	if(!fConfig)
-	{
-		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		emit logError(i18n("Unable to load configuration of the addressbook conduit."));
-		return false;
-	}
-
 	_prepare();
 
 	fFirstSync = false;
@@ -696,9 +651,9 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
 	DEBUGCONDUIT << fname << ": "
 		<< "syncDirection=" << fSyncDirection << ", "
-		<< "archive = " << fArchive << endl;
+		<< "archive = " << AbbrowserSettings::archiveDeleted() << endl;
 	DEBUGCONDUIT << fname << ": conflictRes="<< fConflictResolution << endl;
-	DEBUGCONDUIT << fname << ": PilotStreetHome=" << fPilotStreetHome << ", PilotFaxHOme" << fPilotFaxHome << endl;
+	DEBUGCONDUIT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
 #endif
 
 	if (!isFirstSync())

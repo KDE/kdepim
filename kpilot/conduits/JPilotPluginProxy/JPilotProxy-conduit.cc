@@ -38,8 +38,6 @@
 #include <qmessagebox.h>
 #endif
 
-#include <kconfig.h>
-
 #include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
 #include "JPilotProxy-conduit.h"
@@ -65,12 +63,8 @@ JPilotProxyConduit::JPilotProxyConduit(KPilotDeviceLink *d, const char *n, const
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<JPilotProxy_conduit_id<<endl;
 
-	if (!fConfig) return false;
-
-	KConfigGroupSaver cfgs(fConfig, conduitSettingsGroup());
-	
 	if (!JPilotProxyConduitFactory::pluginsloaded) 
-		JPilotProxyConduitFactory::loadPlugins(fConfig);
+		JPilotProxyConduitFactory::loadPlugins();
 		
 	if (JPilotProxyConduitFactory::pluginsloaded) {
 		PluginIterator_t it(*JPilotProxyConduitFactory::plugins); // iterator for plugin list

@@ -54,23 +54,9 @@ void *init_conduit_mal()
 } ;
 
 
-// A number of static variables; except for fAbout, they're 
-// all KConfig group or entry keys.
-//
+// A number of static variables
 //
 KAboutData *MALConduitFactory::fAbout = 0L;
-const char *MALConduitFactory::fGroup = "MAL-conduit";
-const char *MALConduitFactory::fLastSync = "Last MAL Sync";
-const char *MALConduitFactory::fSyncTime = "Sync Frequency";
-const char *MALConduitFactory::fProxyType = "Proxy Type";
-const char *MALConduitFactory::fProxyServer = "Proxy Server";
-const char *MALConduitFactory::fProxyPort = "Proxy Port";
-const char *MALConduitFactory::fProxyUser = "Proxy User";
-const char *MALConduitFactory::fProxyPassword = "Proxy Password";
-const char *MALConduitFactory::fMALServer = "MAL Server";
-const char *MALConduitFactory::fMALPort = "MAL Port";
-const char *MALConduitFactory::fMALUser = "MAL User";
-const char *MALConduitFactory::fMALPassword = "Proxy Password";
 
 MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)

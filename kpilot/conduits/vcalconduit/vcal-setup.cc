@@ -39,79 +39,9 @@
 #include <kurlrequester.h>
 
 #include "korganizerConduit.h"
-#include "vcal-factorybase.h"
+#include "vcal-factory.h"
 #include "vcal-setup.h"
-
-
-VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
-	fConfigWidget(new VCalWidget(w))
-{
-	FUNCTIONSETUP;
-	fWidget=fConfigWidget;
-
-	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
-	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)");
-
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fSyncDestination,SIGNAL(clicked(int)));
-	CM(fCalendarFile,SIGNAL(textChanged(const QString &)));
-	CM(fArchive,SIGNAL(toggled(bool)));
-	CM(fConflictResolution,SIGNAL(activated(int)));
-#undef CM
-}
-
-VCalWidgetSetupBase::~VCalWidgetSetupBase()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void VCalWidgetSetupBase::commit(KConfig *fConfig)
-{
-	FUNCTIONSETUP;
-	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig,configGroup());
-	// General page
-	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
-		fConfigWidget->fSyncDestination->id(
-			fConfigWidget->fSyncDestination->selected()));
-	fConfig->writePathEntry(VCalConduitFactoryBase::calendarFile,
-		fConfigWidget->fCalendarFile->url());
-
-	fConfig->writeEntry(VCalConduitFactoryBase::archive,
-		fConfigWidget->fArchive->isChecked());
-
-	// Conflicts page
-	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
-		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
-
-	unmodified();
-}
-
-/* virtual */ void VCalWidgetSetupBase::load(KConfig *fConfig)
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig, configGroup());
-
-	// General page
-	fConfigWidget->fSyncDestination->setButton(
-		fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
-	fConfigWidget->fCalendarFile->setURL( fConfig->readPathEntry(
-		VCalConduitFactoryBase::calendarFile,
-                CSL1("$HOME/.kde/share/apps/korganizer/calendar.ics")));
-
-	fConfigWidget->fArchive->setChecked(
-		fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
-
-	// Conflicts page
-	fConfigWidget->fConflictResolution->setCurrentItem(
-		fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution,
-		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
-
-	unmodified();
-}
+#include "vcalconduitSettings.h"
 
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
@@ -119,7 +49,6 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	UIDialog::addAboutPage(fConfigWidget->tabWidget, VCalConduitFactoryBase::about());
 	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));
 	fConduitName=i18n("Calendar");
-	fGroupName=VCalConduitFactoryBase::getGroup();
 
 }
 

@@ -47,12 +47,6 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
-	// Configuration keys
-	static const char * const group;
-	static const char * const databases,
-		* const message,
-		* const failImmediately;
-
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,

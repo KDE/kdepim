@@ -67,7 +67,6 @@ static const char *pilotdaemon_id =
 #include <ksimpleconfig.h>
 #include <kurl.h>
 #include <ksock.h>
-#include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kpopupmenu.h>
 #include <kiconloader.h>
@@ -88,14 +87,16 @@ static const char *pilotdaemon_id =
 #include "interactiveSync.h"
 #include "syncStack.h"
 #include "internalEditorAction.h"
+#include "logFile.h"
 
 #ifdef ENABLE_KROUPWARE
 #include "kroupware.h"
 #endif
 
+
 #include "kpilotDCOP_stub.h"
 #include "kpilotDCOP.h"
-#include "logWidgetDCOP_stub.h"
+#include "loggerDCOP_stub.h"
 
 #include "pilotDaemon.moc"
 
@@ -182,8 +183,8 @@ void PilotDaemonTray::setupWidget()
 	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), daemon,
 		SLOT(slotRunKPilot()));
 
-	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure Conduits..."),
-		daemon, SLOT(slotRunConduitConfig()));
+	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
+		daemon, SLOT(slotRunConfig()));
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Finished getting icons" << endl;
@@ -258,12 +259,14 @@ PilotDaemon::PilotDaemon() :
 	fStatus(INIT),
 	fPostSyncAction(None),
 	fPilotLink(0L),
-	fPilotDevice(QString::null),
+//	fPilotDevice(QString::null),
 	fNextSyncType(PilotDaemonDCOP::HotSync),
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
+	fLogFile(0L),
 	fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
+	fLogFileStub(new LoggerDCOP_stub("kpilotDaemon", "LogIface")),
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
@@ -279,6 +282,7 @@ PilotDaemon::PilotDaemon() :
 	}
 
 	fInstaller = new FileInstaller;
+	fLogFile = new LogFile;
 	connect(fInstaller, SIGNAL(filesChanged()),
 		this, SLOT(slotFilesChanged()));
 
@@ -306,11 +310,11 @@ void PilotDaemon::addInstallFiles(const QStringList &l)
 	fInstaller->addFiles( l, fTray );
 }
 
-int PilotDaemon::getPilotSpeed(KPilotConfigSettings & config)
+int PilotDaemon::getPilotSpeed()
 {
 	FUNCTIONSETUP;
 
-	int speed = config.getPilotSpeed();
+	int speed = KPilotSettings::pilotSpeed();
 
 	// Translate the speed entry in the
 	// config file to something we can
@@ -397,20 +401,18 @@ void PilotDaemon::showTray()
 		break;
 	}
 
-	KPilotConfigSettings & config = KPilotConfig::getConfig();
-	config.reparseConfiguration();
+	KPilotSettings::self()->readConfig();
+	getPilotSpeed();
 
-	getPilotSpeed(config);
-
-	fPilotDevice = config.getPilotDevice();
+//	fPilotDevice = KPilotSettings::pilotDevice();
 	fPilotType = KPilotDeviceLink::None;
 
-	(void) PilotAppCategory::setupPilotCodec(config.getEncoding());
+	(void) PilotAppCategory::setupPilotCodec(KPilotSettings::encoding());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Got configuration "
-		<< fPilotDevice
+		<< KPilotSettings::pilotDevice()
 		<< " ("
 		<< fPilotType
 		<< ")"
@@ -430,15 +432,15 @@ void PilotDaemon::showTray()
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Resetting with device "
-			<< fPilotDevice
+			<< KPilotSettings::pilotDevice()
 			<< " and type "
 			<< fPilotLink->deviceTypeString(fPilotType) << endl;
 #endif
 
-		fPilotLink->reset(fPilotType, fPilotDevice);
+		fPilotLink->reset(fPilotType, KPilotSettings::pilotDevice());
 	}
 
-	if (config.getDockDaemon())
+	if (KPilotSettings::dockDaemon())
 	{
 		if (!fTray)
 		{
@@ -562,6 +564,7 @@ bool PilotDaemon::setupPilotLink()
 		fPostSyncAction |= Quit;
 		break;
 	}
+	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestRegularSyncNext()
@@ -616,6 +619,31 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 }
 
+/** 
+* DCOP Functions reporting same status data, e.g. for the kontact plugin.
+*/
+QDateTime PilotDaemon::lastSyncDate()
+{
+	return KPilotSettings::lastSyncTime();
+}
+QStringList PilotDaemon::configuredConduitList()
+{
+	return KPilotSettings::installedConduits();
+}
+QString PilotDaemon::logFileName()
+{
+	return KPilotSettings::logFileName();
+}
+
+QString PilotDaemon::userName()
+{
+	return KPilotSettings::userName();
+}
+QString PilotDaemon::pilotDevice()
+{
+	return KPilotSettings::pilotDevice();
+}
+
 /* slot */ void PilotDaemon::startHotSync()
 {
 	FUNCTIONSETUP;
@@ -632,6 +660,8 @@ QString PilotDaemon::syncTypeString(int i) const
 
 	// Tell KPilot what's going on.
 	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
+	getLogger().logStartSync();
+	getFileLogger().logStartSync();
 
 	fStatus = HOTSYNC_START ;
 	int mode=0;
@@ -644,8 +674,7 @@ QString PilotDaemon::syncTypeString(int i) const
 		<< " (" << fNextSyncType << ")" << endl;
 #endif
 
-	KPilotConfigSettings &c = KPilotConfig::getConfig();
-	QStringList conduits( c.getInstalledConduits() );
+	QStringList conduits( KPilotSettings::installedConduits() );
 	if ( (conduits.findIndex( CSL1("internal_fileinstall") ) >= 0) &&
 		fInstaller) mode |= ActionQueue::WithInstaller;
 
@@ -739,8 +768,7 @@ QString PilotDaemon::syncTypeString(int i) const
 		mode |= ActionQueue::BackupMode | ActionQueue::FlagFull;
 		if (conduits.count() > 0)
 		{
-			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
-				conduits, mode);
+			fSyncStack->queueConduits(conduits, mode);
 		}
 		fSyncStack->addAction(new BackupAction(fPilotLink, mode));
 		break;
@@ -762,7 +790,7 @@ QString PilotDaemon::syncTypeString(int i) const
 			fSyncStack->queueInstaller(fInstaller->dir(),
 				fInstaller->fileNames());
 		}
-		switch (c.getSyncType())
+		switch (KPilotSettings::syncType())
 		{
 		case SyncAction::eFastSync:
 			break;
@@ -779,7 +807,7 @@ QString PilotDaemon::syncTypeString(int i) const
 			mode |= ActionQueue::FlagHHToPC;
 			break;
 		}
-		if (c.getInternalEditors() && !(mode & ActionQueue::FlagHHToPC) )
+		if (KPilotSettings::internalEditors() && !(mode & ActionQueue::FlagHHToPC) )
 		{
 			fSyncStack->addAction(new InternalEditorAction(fPilotLink, mode));
 		}
@@ -794,15 +822,14 @@ QString PilotDaemon::syncTypeString(int i) const
 
 		if (conduits.count() > 0)
 		{
-			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
-				conduits, pcchanged?(mode|ActionQueue::FlagFull):mode);
+			fSyncStack->queueConduits( conduits, pcchanged?(mode|ActionQueue::FlagFull):mode);
 		}
-		if (pcchanged && c.getFullSyncOnPCChange())
+		if (pcchanged && KPilotSettings::fullSyncOnPCChange())
 			mode |=  (ActionQueue::WithBackup | ActionQueue::FlagFull);
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Sync Mode="
-			<< mode << ", Sync Type="<<c.getSyncType()<<endl;
+			<< mode << ", Sync Type="<< KPilotSettings::syncType()<<endl;
 #endif
 		if (mode & ActionQueue::WithBackup)
 			fSyncStack->addAction(new BackupAction(fPilotLink, mode));
@@ -850,6 +877,7 @@ launch:
 	FUNCTIONSETUPL(2);
 
 	getLogger().logMessage(s);
+	getFileLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
@@ -858,6 +886,7 @@ launch:
 	FUNCTIONSETUP;
 
 	getLogger().logError(s);
+	getFileLogger().logError(s);
 	updateTrayStatus(s);
 }
 
@@ -866,6 +895,7 @@ launch:
 	FUNCTIONSETUPL(2);
 
 	getLogger().logProgress(s, i);
+	getFileLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
 }
 
@@ -882,7 +912,12 @@ launch:
 	fPilotLink->close();
 
 	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
+	getFileLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
+	getLogger().logEndSync();
+	getFileLogger().logEndSync();
 	getKPilot().daemonStatus(KPilotDCOP::EndOfHotSync);
+	KPilotSettings::setLastSyncTime(QDateTime::currentDateTime());
+	KPilotSettings::self()->writeConfig();
 
 	fStatus = HOTSYNC_END;
 
@@ -940,19 +975,19 @@ void PilotDaemon::slotRunKPilot()
 	}
 }
 
-void PilotDaemon::slotRunConduitConfig()
+void PilotDaemon::slotRunConfig()
 {
 	FUNCTIONSETUP;
 
 	// This function tries to send the raise() DCOP call to kpilot.
 	// If it succeeds, we can assume kpilot is running and then try
-	// to send the configureConduits() DCOP call.
+	// to send the configure() DCOP call.
 	// If it fails (probably because kpilot isn't running) it tries
 	// to call kpilot via KProcess (using a command line switch to
-	// only bring up the configure conduits dialog).
+	// only bring up the configure dialog).
 	//
 	// Implementing the function this way catches all cases.
-	// ie 1 KPilot running with configure conduit dialog open (raise())
+	// ie 1 KPilot running with configure dialog open (raise())
 	//    2 KPilot running with dialog NOT open (configureConduits())
 	//    3 KPilot NOT running (KProcess)
 
@@ -961,14 +996,14 @@ void PilotDaemon::slotRunConduitConfig()
 	// This DCOP call to kpilot's raise function solves the final case
 	// ie when kpilot already has the dialog open
 
-	if (client->send("kpilot", "kpilot-mainwindow#1", "raise()",
-		QString::null))
+	if ( client->isApplicationRegistered( "kpilot" ) )
 	{
-		client->send("kpilot", "KPilotIface", "configureConduits()",
-			QString::null);
+		client->send("kpilot", "kpilot-mainwindow#1", "raise()",QString::null);
+		client->send("kpilot", "KPilotIface", "configure()", QString::null);
 	}
 	else
 	{
+		// KPilot not running
 		KProcess *p = new KProcess;
 		*p << "kpilot" << "-c";
 
@@ -986,10 +1021,10 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 			.arg(statusString())
 			.arg(s)
 		);
+	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
 }
 
 static KCmdLineOptions daemonoptions[] = {
-	{ "dummy", I18N_NOOP("Dummy command line argument."), 0},
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
@@ -1012,6 +1047,9 @@ int main(int argc, char **argv)
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+	about.addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Developer"),
+		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(daemonoptions,"kpilotconfig");
@@ -1032,22 +1070,21 @@ int main(int argc, char **argv)
 	//
 	//
 	{
-		KPilotConfigSettings & c = KPilotConfig::getConfig();
-		c.setReadOnly(false);
+//		KPilotSettings::self()->config()->setReadOnly(false);
 
-		if (c.getVersion() < KPilotConfig::ConfigurationVersion)
+		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
 			kdError() << k_funcinfo
 				<< ": Is still not configured for use."
 				<< endl;
-			KPilotConfig::sorryVersionOutdated(c.getVersion());
+			KPilotConfig::sorryVersionOutdated(KPilotSettings::configVersion());
 			return 1;
 		}
 
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Configuration version "
-			<< c.getVersion() << endl;
+			<< KPilotSettings::configVersion() << endl;
 #endif
 	}
 

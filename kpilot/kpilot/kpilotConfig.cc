@@ -54,26 +54,13 @@ static const char kpilotconfig_id[] =
 // (increase) this number.
 //
 //
-/* static */ const int KPilotConfig::ConfigurationVersion = 440;
+/* static */ const uint KPilotConfig::ConfigurationVersion = 440;
 
-/* static */ int KPilotConfig::getConfigVersion(KConfig * config)
+/* static */ int KPilotConfig::getConfigVersion()
 {
 	FUNCTIONSETUP;
 
-	if (!config)
-		return 0;
-	else
-		return getConfigVersion(*config);
-	/* NOTREACHED */
-	(void) kpilotconfig_id;
-}
-
-/* static */ int KPilotConfig::getConfigVersion(KConfig & config)
-{
-	FUNCTIONSETUP;
-
-	config.setGroup(QString::null);
-	int version = config.readNumEntry("Configured", 0);
+	uint version = KPilotSettings::configVersion();
 
 	if (version < ConfigurationVersion)
 	{
@@ -94,15 +81,13 @@ static const char kpilotconfig_id[] =
 /* static */ void KPilotConfig::updateConfigVersion()
 {
 	FUNCTIONSETUP;
-
-	KPilotConfigSettings & config = getConfig();
-	config.setVersion(ConfigurationVersion);
+	KPilotSettings::setConfigVersion( ConfigurationVersion );
 }
 
 /* static */ QString KPilotConfig::getDefaultDBPath()
 {
 	FUNCTIONSETUP;
-	QString lastUser = getConfig().getUser();
+	QString lastUser = KPilotSettings::userName();
 	QString dbsubpath = CSL1("kpilot/DBBackup/");
 	QString defaultDBPath = KGlobal::dirs()->
 		saveLocation("data", dbsubpath + lastUser + CSL1("/"));
@@ -124,9 +109,9 @@ static const char kpilotconfig_id[] =
 	return debug_level;
 }
 
-static KPilotConfigSettings *theconfig = 0L;
+//static KPilotConfigSettings *theconfig = 0L;
 
-KPilotConfigSettings & KPilotConfig::getConfig()
+/*KPilotConfigSettings & KPilotConfig::getConfig()
 {
 	FUNCTIONSETUP;
 
@@ -134,14 +119,14 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 	{
 		return *theconfig;
 	}
-
+*/
 	/**
 	* This causes a crash if no instance has been created
 	* yet. A standard KDE error message reports this fact.
 	* It is a grave programming error, so we will let that
 	* stand.
 	*/
-	QString existingConfig =
+/*	QString existingConfig =
 		KGlobal::dirs()->findResource("config", CSL1("kpilotrc"));
 
 
@@ -153,7 +138,6 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 		KSimpleConfig *c = new KSimpleConfig(CSL1("kpilotrc"), false);
 
 		c->writeEntry("Configured", ConfigurationVersion);
-		c->writeEntry("NextUniqueID", 61440);
 		c->sync();
 		delete c;
 
@@ -177,7 +161,7 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 	}
 
 	return *theconfig;
-}
+}*/
 
 static QFont *thefont = 0L;
 
@@ -191,183 +175,40 @@ static QFont *thefont = 0L;
 	return *thefont;
 }
 
-KPilotConfigSettings::KPilotConfigSettings(const QString & f, bool b) :
-	KSimpleConfig(f, b)
+
+void KPilotConfig::addDirtyDatabase(QString db)
 {
 	FUNCTIONSETUP;
-}
-
-KPilotConfigSettings::~KPilotConfigSettings()
-{
-	FUNCTIONSETUP;
-}
-
-#define IntProperty_(a,key,defl,m) \
-	int KPilotConfigSettings::get##a() const { \
-	int i = readNumEntry(key,defl); \
-	if ((i<0) || (i>m)) i=0; \
-	return i; } \
-	void KPilotConfigSettings::set##a(int i) { \
-	if ((i<0) || (i>m)) i=0; writeEntry(key,i); }
-
-IntProperty_(PilotSpeed, "PilotSpeed", 0, 4)
-IntProperty_(SyncType, "SyncType", 0, 4)
-IntProperty_(ConflictResolution, "ConflictResolution", 0,5)
-IntProperty_(AddressDisplayMode, "AddressDisplay", 0, 1)
-IntProperty_(Version, "Configured", 0, 100000)
-IntProperty_(Debug, "Debug", 0, 1023)
-
-#define BoolProperty_(a,key,defl) \
-	bool KPilotConfigSettings::get##a() const { \
-	bool b = readBoolEntry(key,defl); return b; } \
-	void KPilotConfigSettings::set##a(bool b) { \
-	writeEntry(key,b); }
-
-BoolProperty_(StartDaemonAtLogin, "StartDaemonAtLogin", true)
-BoolProperty_(DockDaemon, "DockDaemon", true)
-BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
-BoolProperty_(QuitAfterSync, "QuitAfterSync", false)
-BoolProperty_(FullSyncOnPCChange, "FullSyncOnPCChange", true)
-// BoolProperty_(SyncFiles, "SyncFiles", true)
-// BoolProperty_(SyncWithKMail, "SyncWithKMail", false)
-BoolProperty_(ShowSecrets, "ShowSecrets", false)
-BoolProperty_(UseKeyField, "UseKeyField", false)
-BoolProperty_(InternalEditors, "InternalEditorsWritable", true)
-
-
-#define StringProperty_(a,key,defl) \
-	QString KPilotConfigSettings::get##a() const { \
-	QString s = readEntry(key,defl); return s; } \
-	void  KPilotConfigSettings::set##a(const QString &s) { \
-	writeEntry(key,s); }
-
-
-StringProperty_(PilotDevice, "PilotDevice", CSL1("/dev/pilot"))
-StringProperty_(Encoding, "Encoding", QString::null)
-
-StringProperty_(User, "UserName", QString::null)
-StringProperty_(BackupOnly, "BackupForSync", CSL1("Arng,PmDB,lnch"))
-StringProperty_(Skip, "SkipSync", CSL1("AvGo"))
-
-
-KPilotConfigSettings & KPilotConfigSettings::setAddressGroup()
-{
-	FUNCTIONSETUP;
-	setGroup("Address Widget");
-	return *this;
-}
-
-KPilotConfigSettings & KPilotConfigSettings::setConduitGroup()
-{
-	FUNCTIONSETUP;
-	setGroup("Conduit Names");
-	return *this;
-}
-
-KPilotConfigSettings & KPilotConfigSettings::setDatabaseGroup()
-{
-	FUNCTIONSETUP;
-	setGroup("Database Names");
-	return *this;
-}
-
-QStringList KPilotConfigSettings::getInstalledConduits()
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Conduit Names");
-	return readListEntry("InstalledConduits");
-}
-
-void KPilotConfigSettings::setInstalledConduits(const QStringList & l)
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Conduit Names");
-	writeEntry("InstalledConduits", l);
-}
-
-QStringList KPilotConfigSettings::getDirtyDatabases()
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Internal Editors");
-	return readListEntry("Changed Databases");
-}
-
-void KPilotConfigSettings::setDirtyDatabases(const QStringList &l)
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Internal Editors");
-	writeEntry("Changed Databases", l);
-}
-
-void KPilotConfigSettings::addDirtyDatabase(QString db)
-{
-	FUNCTIONSETUP;
-	QStringList l(getDirtyDatabases());
+	QStringList l(KPilotSettings::dirtyDatabases());
 	if (!l.contains(db))
 	{
 		l.append(db);
-		setDirtyDatabases(l);
+		KPilotSettings::setDirtyDatabases(l);
 	}
 }
 
 
-QStringList KPilotConfigSettings::getAppBlockChangedDatabases()
+void KPilotConfig::addAppBlockChangedDatabase(QString db)
 {
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Internal Editors");
-	return readListEntry("AppBlock Changed");
-}
-
-void KPilotConfigSettings::setAppBlockChangedDatabases(const QStringList &l)
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Internal Editors");
-	writeEntry("AppBlock Changed", l);
-}
-
-void KPilotConfigSettings::addAppBlockChangedDatabase(QString db)
-{
-	QStringList l(getAppBlockChangedDatabases());
+	QStringList l(KPilotSettings::appBlockChangedDatabases());
 	if (!l.contains(db))
 	{
 		l.append(db);
-		setAppBlockChangedDatabases(l);
+		KPilotSettings::setAppBlockChangedDatabases(l);
+	}
+}
+
+void KPilotConfig::addFlagsChangedDatabase(QString db)
+{
+	QStringList l(KPilotSettings::flagsChangedDatabases());
+	if (!l.contains(db))
+	{
+		l.append(db);
+		KPilotSettings::setFlagsChangedDatabases(l);
 	}
 }
 
 
-QStringList KPilotConfigSettings::getFlagsChangedDatabases()
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Internal Editors");
-	return readListEntry("Flags Changed");
-}
-
-void KPilotConfigSettings::setFlagsChangedDatabases(const QStringList &l)
-{
-	FUNCTIONSETUP;
-	KConfigGroupSaver cgs(this,"Internal Editors");
-	writeEntry("Flags Changed", l);
-}
-
-void KPilotConfigSettings::addFlagsChangedDatabase(QString db)
-{
-	QStringList l(getFlagsChangedDatabases());
-	if (!l.contains(db))
-	{
-		l.append(db);
-		setFlagsChangedDatabases(l);
-	}
-}
-
-
-void KPilotConfigSettings::setDatabaseConduit(const QString & database,
-	const QString & conduit)
-{
-	FUNCTIONSETUP;
-	setDatabaseGroup();
-	writeEntry(database, conduit);
-}
 
 
 /* static */ QString KPilotConfig::versionDetails(int fileversion, bool run)
@@ -414,9 +255,9 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 /* static */ void KPilotConfig::interactiveUpdate()
 {
 	FUNCTIONSETUP;
-	KPilotConfigSettings &c = KPilotConfig::getConfig();
-	int fileversion = c.getVersion();
+	
 	int res = 0;
+	// TODO!!! better config handling -> Move the config entries using kconf_update
 
 	res = KMessageBox::warningContinueCancel(0L,
 		i18n("The configuration file for KPilot is out-of "
@@ -428,16 +269,18 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 
 	// Try to update conduit list
 	{
-	QStringList conduits( c.getInstalledConduits() );
-	c.resetGroup();
-	bool useKroupware = c.readBoolEntry("SyncWithKMail",false);
-	bool installFiles = c.readBoolEntry("SyncFiles",true);
+	QStringList conduits( KPilotSettings::installedConduits() );
+	KConfig*c = KPilotSettings::self()->config();
+///	c->resetGroup();
+	c->setGroup( QString::null );
+	bool useKroupware = c->readBoolEntry("SyncWithKMail",false);
+	bool installFiles = c->readBoolEntry("SyncFiles",true);
 	if (useKroupware) conduits.append( CSL1("internal_kroupware") );
 	if (installFiles) conduits.append( CSL1("internal_fileinstall") );
-	c.deleteEntry("SyncWithKMail");
-	c.deleteEntry("SyncFiles");
-	c.setInstalledConduits(conduits);
-	c.sync();
+	c->deleteEntry("SyncWithKMail");
+	c->deleteEntry("SyncFiles");
+	KPilotSettings::setInstalledConduits(conduits);
+	c->sync();
 	if (useKroupware || installFiles)
 		KMessageBox::information(0L,
 			i18n("The settings for Kroupware syncing with KMail "
@@ -478,5 +321,5 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 	}
 
 	KPilotConfig::updateConfigVersion();
-	c.sync();
+	KPilotSettings::writeConfig();
 }

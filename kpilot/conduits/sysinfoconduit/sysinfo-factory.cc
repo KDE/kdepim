@@ -49,25 +49,8 @@ void *init_conduit_sysinfo()
 }
 
 
-// A number of static variables; except for fAbout, they're
-// all KConfig group or entry keys.
-//
-//
+// A number of static variables
 KAboutData *SysInfoConduitFactory::fAbout = 0L;
-const char *SysInfoConduitFactory::fGroup = "SysInfo-conduit";
-const char *SysInfoConduitFactory::fOutputFile = "Output file";
-const char *SysInfoConduitFactory::fTemplateFile = "Template file";
-const char *SysInfoConduitFactory::fOutputType = "Output format";
-const char *SysInfoConduitFactory::fHardwareInfo = "Hardware Info";
-const char *SysInfoConduitFactory::fUserInfo = "User Info";
-const char *SysInfoConduitFactory::fMemoryInfo = "Memory Info";
-const char *SysInfoConduitFactory::fStorageInfo = "Storage Info";
-const char *SysInfoConduitFactory::fDBList = "Database List";
-const char *SysInfoConduitFactory::fRecordNumber = "Record Numbers";
-const char *SysInfoConduitFactory::fSyncInfo = "Sync Info";
-const char *SysInfoConduitFactory::fKDEVersion = "KDE Version";
-const char *SysInfoConduitFactory::fPalmOSVersion = "PalmOS Version";
-const char *SysInfoConduitFactory::fDebugInfo = "Debug Information";
 
 
 SysInfoConduitFactory::SysInfoConduitFactory(QObject *p, const char *n) :

@@ -11,7 +11,7 @@ service_DATA = time_conduit.desktop
 kde_module_LTLIBRARIES = conduit_time.la
 
 
-conduit_time_la_SOURCES = \
+conduit_time_la_SOURCES = timeConduitSettings.kcfgc \
 	time-factory.cc \
 	time-setup.cc \
 	time-conduit.cc \
@@ -19,3 +19,4 @@ conduit_time_la_SOURCES = \
 conduit_time_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_time_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI)
  
+kde_kcfg_DATA = timeconduit.kcfg

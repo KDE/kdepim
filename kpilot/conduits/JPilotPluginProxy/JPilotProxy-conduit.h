@@ -40,8 +40,6 @@ public:
 	JPilotProxyConduit(KPilotDeviceLink *, const char *n=0L, const QStringList &l=QStringList());
 	virtual ~JPilotProxyConduit() {};
 	virtual bool exec();
-	/* pure virtual functions, need to be overloaded in child classes */
-	virtual const QString conduitSettingsGroup() { return QString("JPilotPluginProxy");};
 };
 
 

@@ -41,6 +41,7 @@
 #include "mal-factory.h"
 #include "mal-conduit.moc"
 #include <libmal.h>
+#include "malconduitSettings.h"
 
 
 // Something to allow us to check what revision
@@ -110,29 +111,10 @@ MALConduit::~MALConduit()
 void MALConduit::readConfig()
 {
 	FUNCTIONSETUP;
-	QDateTime dt;
-	KConfigGroupSaver g(fConfig, MALConduitFactory::group());
-	fLastSync = fConfig->readDateTimeEntry(MALConduitFactory::lastSync(), &dt);
+	MALConduitSettings::self()->readConfig();
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Last sync was "<<fLastSync.toString()<<endl;
+	DEBUGCONDUIT<<"Last sync was "<<MALConduitSettings::lastMALSync().toString()<<endl;
 #endif
-	
-	eSyncTime=(eSyncTimeEnum) fConfig->readNumEntry(MALConduitFactory::syncTime(), (int) eEverySync );
-	
-	// Proxy settings
-	eProxyType=(eProxyTypeEnum) fConfig->readNumEntry(MALConduitFactory::proxyType(), (int) eProxyNone );
-	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer());
-	
-	fProxyPort=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
-	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser());
-	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword());
-
-	// MAL Server settings (not yet possible!!!)
-	fMALServer=fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com");
-	fMALPort=fConfig->readNumEntry(MALConduitFactory::malPort(), 0);
-	
-	fMALUser=fConfig->readEntry(MALConduitFactory::malUser());
-	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword());
 }
 
 
@@ -140,9 +122,8 @@ void MALConduit::readConfig()
 void MALConduit::saveConfig()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver g(fConfig, MALConduitFactory::group());
-	
-	fConfig->writeEntry(MALConduitFactory::lastSync(), QDateTime::currentDateTime());
+	MALConduitSettings::setLastMALSync( QDateTime::currentDateTime() );
+	MALConduitSettings::self()->writeConfig();
 }
 
 
@@ -150,23 +131,25 @@ void MALConduit::saveConfig()
 bool MALConduit::skip() 
 {
 	QDateTime now=QDateTime::currentDateTime();
-	if (!fLastSync.isValid() || !now.isValid()) return false;
+	QDateTime lastSync=MALConduitSettings::lastMALSync();
 	
-	switch (eSyncTime) 
+	if (!lastSync.isValid() || !now.isValid()) return false;
+	
+	switch ( MALConduitSettings::syncFrequency() ) 
 	{
-		case eEveryHour:
-			if ( (fLastSync.secsTo(now)<=3600) && (fLastSync.time().hour()==now.time().hour()) ) return true;
+		case MALConduitSettings::eEveryHour:
+			if ( (lastSync.secsTo(now)<=3600) && (lastSync.time().hour()==now.time().hour()) ) return true;
 			else return false;
-		case eEveryDay:
-			if ( fLastSync.date() == now.date() ) return true;
+		case MALConduitSettings::eEveryDay:
+			if ( lastSync.date() == now.date() ) return true;
 			else return false;
-		case eEveryWeek:
-			if ( (fLastSync.daysTo(now)<=7)  && ( fLastSync.date().dayOfWeek()<=now.date().dayOfWeek()) ) return true;
+		case MALConduitSettings::eEveryWeek:
+			if ( (lastSync.daysTo(now)<=7)  && ( lastSync.date().dayOfWeek()<=now.date().dayOfWeek()) ) return true;
 			else return false;
-		case eEveryMonth:
-			if ( (fLastSync.daysTo(now)<=31) && (fLastSync.date().month()==now.date().month()) ) return true;
+		case MALConduitSettings::eEveryMonth:
+			if ( (lastSync.daysTo(now)<=31) && (lastSync.date().month()==now.date().month()) ) return true;
 			else return false;
-		case eEverySync:
+		case MALConduitSettings::eEverySync:
 		default:
 			return false;
 	}
@@ -179,12 +162,6 @@ bool MALConduit::skip()
 {
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<MAL_conduit_id<<endl;
-
-	if (!fConfig)
-	{
-		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		return false;
-	}
 
 	readConfig();
 	
@@ -206,55 +183,60 @@ bool MALConduit::skip()
 		return false;
 	}
 
+	QString proxyServer( MALConduitSettings::proxyServer() );
+	int proxyPort( MALConduitSettings::proxyPort() );
 	// Set all proxy settings
-	switch (eProxyType) 
+	switch (MALConduitSettings::proxyType()) 
 	{
-		case eProxyHTTP:
-			if (fProxyServer.isEmpty()) break;
+		case MALConduitSettings::eProxyHTTP:
+			if (proxyServer.isEmpty()) break;
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString())<<"set"<<endl;
+			DEBUGCONDUIT<<" Using HTTP proxy server \""<<proxyServer<<
+				"\", Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<
+				", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString())<<"set"
+				<<endl;
 #endif
 #ifdef LIBMAL20
-			setHttpProxy(const_cast<char *>(fProxyServer.latin1()));
-			if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
+			setHttpProxy(const_cast<char *>(proxyServer.latin1()));
+			if (proxyPort>0 && proxyPort<65536) setHttpProxyPort( proxyPort );
 			else setHttpProxyPort(80);
 #else
-			pInfo->httpProxy = new char[ fProxyServer.length() + 1 ];
-			strncpy( pInfo->httpProxy, fProxyServer.latin1(), fProxyServer.length() );
-			if (fProxyPort>0 && fProxyPort<65536) pInfo->httpProxyPort = fProxyPort;
+			pInfo->httpProxy = new char[ proxyServer.length() + 1 ];
+			strncpy( pInfo->httpProxy, proxyServer.latin1(), proxyServer.length() );
+			if (proxyPort>0 && proxyPort<65536) pInfo->httpProxyPort = proxyPort;
 			else pInfo->httpProxyPort = 80;
 #endif
 			
-			if (!fProxyUser.isEmpty()) 
+			if (!MALConduitSettings::proxyUser().isEmpty()) 
 			{
 #ifdef LIBMAL20
-				setProxyUsername( const_cast<char *>(fProxyUser.latin1()) );
-				if (!fProxyPassword.isEmpty()) setProxyPassword( const_cast<char *>(fProxyPassword.latin1()) );
+				setProxyUsername( const_cast<char *>(MALConduitSettings::proxyUser().latin1()) );
+				if (!MALConduitSettings::proxyPassword().isEmpty()) setProxyPassword( const_cast<char *>(MALConduitSettings::proxyPassword().latin1()) );
 #else
-				pInfo->proxyUsername = new char[ fProxyUser.length() + 1 ];
-				strncpy( pInfo->proxyUsername, fProxyUser.latin1(), fProxyUser.length() );
-//				pInfo->proxyUsername = fProxyUser.latin1();
-				if (!fProxyPassword.isEmpty()) {
-//						pInfo->proxyPassword = fProxyPassword.latin1();
-					pInfo->proxyPassword = new char[ fProxyPassword.length() + 1 ];
-					strncpy( pInfo->proxyPassword, fProxyPassword.latin1(), fProxyPassword.length() );
+				pInfo->proxyUsername = new char[ MALConduitSettings::proxyUser().length() + 1 ];
+				strncpy( pInfo->proxyUsername, MALConduitSettings::proxyUser().latin1(), MALConduitSettings::proxyUser().length() );
+//				pInfo->proxyUsername = MALConduitSettings::proxyUser().latin1();
+				if (!MALConduitSettings::proxyPassword().isEmpty()) {
+//						pInfo->proxyPassword = MALConduitSettings::proxyPassword().latin1();
+					pInfo->proxyPassword = new char[ MALConduitSettings::proxyPassword().length() + 1 ];
+					strncpy( pInfo->proxyPassword, MALConduitSettings::proxyPassword().latin1(), MALConduitSettings::proxyPassword().length() );
 				}
 #endif
 			}
 			break;
-		case eProxySOCKS:
+		case MALConduitSettings::eProxySOCKS:
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString() )<<"set"<<endl;
+			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<proxyServer<<"\",  Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
 #ifdef LIBMAL20
-			setSocksProxy( const_cast<char *>(fProxyServer.latin1()) );
-			if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );
+			setSocksProxy( const_cast<char *>(proxyServer.latin1()) );
+			if (proxyPort>0 && proxyPort<65536) setSocksProxyPort( proxyPort );
 			else setSocksProxyPort(1080);
 #else
-//			pInfo->socksProxy = fProxyServer.latin1();
-			pInfo->socksProxy = new char[ fProxyServer.length() + 1 ];
-			strncpy( pInfo->socksProxy, fProxyServer.latin1(), fProxyServer.length() );
-			if (fProxyPort>0 && fProxyPort<65536) pInfo->socksProxyPort = fProxyPort;
+//			pInfo->socksProxy = proxyServer.latin1();
+			pInfo->socksProxy = new char[ proxyServer.length() + 1 ];
+			strncpy( pInfo->socksProxy, proxyServer.latin1(), proxyServer.length() );
+			if (proxyPort>0 && proxyPort<65536) pInfo->socksProxyPort = proxyPort;
 			else pInfo->socksProxyPort = 1080;
 #endif
 			break; 
@@ -270,6 +252,7 @@ bool MALConduit::skip()
 //	register_printErrorHook(malconduit_logf);
 
 	pInfo->pilot_rHandle = pilotSocket();
+	malsync( pInfo );
 	delete[] pInfo->httpProxy;
 	delete[] pInfo->proxyUsername;
 	delete[] pInfo->proxyPassword;

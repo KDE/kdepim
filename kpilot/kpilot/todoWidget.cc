@@ -103,8 +103,6 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 	int currentRecord = 0;
 	PilotRecord *pilotRec;
 	PilotTodoEntry *todo;
-	bool showSecrets = KPilotConfig::getConfig().getShowSecrets();
-
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Reading ToDoDB..." << endl;
@@ -113,7 +111,7 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 	while ((pilotRec = todoDB->readRecordByIndex(currentRecord)) != 0L)
 	{
 		if (!(pilotRec->isDeleted()) &&
-			(!(pilotRec->isSecret()) || showSecrets))
+			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
 			todo = new PilotTodoEntry(fTodoAppInfo, pilotRec);
 			if (todo == 0L)

@@ -99,7 +99,6 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 	int currentRecord = 0;
 	PilotRecord *pilotRec;
 	PilotAddress *address;
-	bool showSecrets = KPilotConfig::getConfig().getShowSecrets();
 
 
 #ifdef DEBUG
@@ -109,7 +108,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 	while ((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
 	{
 		if (!(pilotRec->isDeleted()) &&
-			(!(pilotRec->isSecret()) || showSecrets))
+			(!(pilotRec->isSecret()) || KPilotSettings::showSecrets()))
 		{
 			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
@@ -285,9 +284,7 @@ void AddressWidget::updateWidget()
 {
 	FUNCTIONSETUP;
 
-	int addressDisplayMode =
-		KPilotConfig::getConfig().setAddressGroup().
-		getAddressDisplayMode();
+	int addressDisplayMode = KPilotSettings::addressDisplayMode();
 
 	int listIndex = 0;
 

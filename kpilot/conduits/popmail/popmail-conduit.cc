@@ -73,6 +73,7 @@ static const char *popmail_conduit_id=
 #include "passworddialog.h"
 #include "popmail-factory.h"
 #include "popmail-conduit.h"
+#include "popmailSettings.h"
 
 
 extern "C" {
@@ -292,6 +293,7 @@ void
 PopMailConduit::doSync()
 {
 	FUNCTIONSETUP;
+	KConfig*fConfig=MailConduitSettings::self()->config();
 
 	int mode=0;
 	int sent_count=0,received_count=0;
@@ -375,7 +377,7 @@ int PopMailConduit::sendPendingMail(int mode)
 		kdWarning() << k_funcinfo
 			<< ": Mail was not sent at all!"
 			<< endl;
-		emit logError(TODO_I18N("[ No mail could be sent. ]"));
+		emit logError(i18n("No mail could be sent."));
 	}
 	else
 	{
@@ -577,6 +579,8 @@ int sendSMTPCommand (KSocket& kSocket,
 int PopMailConduit::sendViaSMTP ()
 {
 	FUNCTIONSETUP;
+	KConfig*fConfig=MailConduitSettings::self()->config();
+	
 	QString			smtpSrv;					// Hostname of the SMTP server
 	int				smtpPort = 25;
 	int				handledCount = 0;			// Number of messages handled
@@ -813,6 +817,7 @@ int PopMailConduit::sendViaSendmail()
   QString currentDest;
   PilotRecord* pilotRec;
 
+	KConfig*fConfig=MailConduitSettings::self()->config();
   sendmailCmd = fConfig->readPathEntry("SendmailCmd");
 
   // Should probably read the prefs..
@@ -852,8 +857,8 @@ int PopMailConduit::sendViaSendmail()
 	  sendf = popen(sendmailCmd.latin1(), "w");
 	  if(!sendf)
 	    {
- 	      KMessageBox::error(0L, TODO_I18N("Cannot talk to sendmail!"),
-				   TODO_I18N("Error Sending Mail"));
+ 	      KMessageBox::error(0L, i18n("Cannot talk to sendmail!"),
+				   i18n("Error Sending Mail"));
 		kdWarning() << k_funcinfo
 			<< ": Could not start sendmail." << endl;
 		kdWarning() << k_funcinfo << ": " << count
@@ -894,18 +899,15 @@ int PopMailConduit::sendViaSendmail()
 QString PopMailConduit::getKMailOutbox() const
 {
 	FUNCTIONSETUP;
-	// Read-only config file. This is code
-	// suggested by Don Sanders. It must be
-	// kept up-to-date with what KMail does.
-	//
-	// TODO: Completely broken since KMail disposed of this
-	// setting in KDE 3.0. No idea how to fix short of i18n("outbox").
+	
+	// Default to "outbox" with newer KMails.
 	KSimpleConfig c(CSL1("kmailrc"),true);
 	c.setGroup("General");
 
 	QString outbox = c.readEntry("outboxFolder");
 	if (outbox.isEmpty())
 	{
+		KConfig*fConfig=MailConduitSettings::self()->config();
 		KConfigGroupSaver gs(fConfig,PopMailConduitFactory::group());
 		outbox = fConfig->readEntry("outboxFolder");
 	}
@@ -926,6 +928,7 @@ int PopMailConduit::sendViaKMail()
 	bool sendImmediate = true;
 	QString kmailOutboxName = getKMailOutbox();
 
+	KConfig*fConfig=MailConduitSettings::self()->config();
 	sendImmediate = fConfig->readBoolEntry("SendImmediate",true);
 
 	DCOPClient *dcopptr = KApplication::kApplication()->
@@ -1068,6 +1071,7 @@ PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 
   QTextStream mailPipe(sendf, IO_WriteOnly);
 
+	KConfig*fConfig=MailConduitSettings::self()->config();
   QString fromAddress = fConfig->readEntry("EmailAddress");
   mailPipe << "From: " << fromAddress << "\r\n";
   mailPipe << "To: " << theMail.to << "\r\n";
@@ -1407,6 +1411,7 @@ int PopMailConduit::doPopQuery()
 	// the config file.
 	//
 	//
+	KConfig*fConfig=MailConduitSettings::self()->config();
 	if (fConfig->readNumEntry("LeaveMail") == 0)
 	{
 		flags |= POP_DELE ;
@@ -1839,6 +1844,7 @@ int PopMailConduit::doUnixStyle()
 	char *buffer=new char[BUFFERSIZE];
 	int messageCount=0;
 
+	KConfig*fConfig=MailConduitSettings::self()->config();
 	PilotRecord *pilotRec=0L;
 
 	{
@@ -1935,8 +1941,7 @@ int PopMailConduit::doUnixStyle()
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<popmail_conduit_id<<endl;
 
-	if (!fConfig) return false;
-
+	KConfig*fConfig=MailConduitSettings::self()->config();
 	KConfigGroupSaver cfgs(fConfig,PopMailConduitFactory::group());
 
 	fDatabase=new PilotSerialDatabase(pilotSocket(),
@@ -1955,7 +1960,7 @@ int PopMailConduit::doUnixStyle()
 	}
 	else if (isBackup())
 	{
-		emit logError(TODO_I18N("Cannot perform backup on mail database"));
+		emit logError(i18n("Cannot perform backup on mail database"));
 	}
 	else
 	{

@@ -35,11 +35,11 @@
 #include "kpilotlink.h"
 #include "pilotDaemonDCOP.h"
 
+
 class QDragEnterEvent;
 class QDropEvent;
 
 class KServerSocket;
-class KConfig;
 class KSocket;
 class KProcess;
 class KAboutApplication;
@@ -47,6 +47,7 @@ class KAboutApplication;
 class PilotRecord;
 class KPilotDCOP_stub;
 class LoggerDCOP_stub;
+class LogFile;
 
 
 class PilotDaemon;
@@ -151,6 +152,14 @@ public:
 	virtual int nextSyncType() const;
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
+	/** 
+	* Functions reporting same status data, e.g. for the kontact plugin.
+	*/
+	virtual QDateTime lastSyncDate();
+	virtual QStringList configuredConduitList();
+	virtual QString logFileName();
+	virtual QString userName();
+	virtual QString pilotDevice();
 
 protected:
 	DaemonStatus fStatus;
@@ -171,15 +180,15 @@ protected slots:
 	void logProgress(const QString &,int);
 
 private:
-	int getPilotSpeed(KPilotConfigSettings &);
+	int getPilotSpeed();
 
 	bool setupPilotLink();
 
 	KPilotDeviceLink &getPilotLink() { return *fPilotLink; }
 	KPilotDeviceLink *fPilotLink;
 
-	QString fPilotDevice;
 	KPilotDeviceLink::DeviceType fPilotType;
+	// TODO!!! get rid of the next sync type
 	int fNextSyncType;
 
 	ActionQueue *fSyncStack;
@@ -214,17 +223,21 @@ protected slots:
 	/**
 	* Run conduit configuration using "kpilot -c"
 	*/
-	void slotRunConduitConfig();
+	void slotRunConfig();
 
 	/**
 	* Provide access to KPilot's DCOP interface through a stub.
 	*/
 protected:
 	LoggerDCOP_stub &getLogger() { return *fLogStub; } ;
+	LoggerDCOP_stub &getFileLogger() { return *fLogFileStub; } ;
 	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
+
+	LogFile*fLogFile;
 
 private:
 	LoggerDCOP_stub *fLogStub;
+	LoggerDCOP_stub *fLogFileStub;
 	KPilotDCOP_stub *fKPilotStub;
 };
 

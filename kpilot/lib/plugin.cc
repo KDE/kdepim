@@ -67,6 +67,7 @@ ConduitConfigBase::~ConduitConfigBase()
 /* slot */ void ConduitConfigBase::modified()
 {
 	fModified=true;
+	emit changed(true);
 }
 
 /* virtual */ QString ConduitConfigBase::maybeSaveText() const
@@ -77,7 +78,7 @@ ConduitConfigBase::~ConduitConfigBase()
 		"want to save the changes before continuing?</qt>").arg(this->conduitName());
 }
 
-/* virtual */ bool ConduitConfigBase::maybeSave(KConfig *c)
+/* virtual */ bool ConduitConfigBase::maybeSave()
 {
 	FUNCTIONSETUP;
 
@@ -87,7 +88,7 @@ ConduitConfigBase::~ConduitConfigBase()
 		maybeSaveText(),
 		i18n("%1 Conduit").arg(this->conduitName()));
 	if (r == KMessageBox::Cancel) return false;
-	if (r == KMessageBox::Yes) commit(c);
+	if (r == KMessageBox::Yes) commit();
 	return true;
 }
 
@@ -95,7 +96,6 @@ ConduitConfig::ConduitConfig(QWidget *parent,
 	const char *name,
 	const QStringList &args) :
 	UIDialog(parent,name,PluginUtility::isModal(args)),
-	fConfig(0L),
 	fConduitName(i18n("Unnamed"))
 {
 	FUNCTIONSETUP;
@@ -111,7 +111,6 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	const char *name,
 	const QStringList &args) :
 	SyncAction(p,name),
-	fConfig(0L),
 	fDatabase(0L),
 	fLocalDatabase(0L),
 	fTest(args.contains(CSL1("--test"))),
@@ -140,6 +139,8 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	{
 		DEBUGCONDUIT << fname << ": " << *it << endl;
 	}
+
+	DEBUGCONDUIT << fname << ": Direction=" << fSyncDirection << endl;
 #endif
 }
 
@@ -405,11 +406,11 @@ ConduitConfigImplementation::~ConduitConfigImplementation()
 
 void ConduitConfigImplementation::readSettings()
 {
-	if (fConfig) fConfigWidget->load(fConfig);
+	fConfigWidget->load();
 }
 
 void ConduitConfigImplementation::commitChanges()
 {
-	if (fConfig) fConfigWidget->commit(fConfig);
+	fConfigWidget->commit();
 }
 

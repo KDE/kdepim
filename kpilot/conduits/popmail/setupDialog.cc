@@ -72,6 +72,7 @@ static const char *setupDialog_id=
 #include "popmail-factory.h"
 #include "setup-dialog.h"
 #include "setupDialog.moc"
+#include "popmailSettings.h"
 
 #if 0
 PopMailSendPage::PopMailSendPage(QWidget *parent) :
@@ -620,9 +621,10 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 		this,SLOT(toggleSendMode(int)));
 }
 
-void PopMailWidgetConfig::commit(KConfig *fConfig)
+void PopMailWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
+	KConfig*fConfig=MailConduitSettings::self()->config();
 	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group());
 #define WR(a,b,c) fConfig->writeEntry(c,fConfigWidget->a->b);
 	WR(fSendMode,currentItem(),PopMailConduitFactory::syncIncoming());
@@ -632,9 +634,10 @@ void PopMailWidgetConfig::commit(KConfig *fConfig)
 #undef WR
 }
 
-void PopMailWidgetConfig::load(KConfig *fConfig)
+void PopMailWidgetConfig::load()
 {
 	FUNCTIONSETUP;
+	KConfig*fConfig=MailConduitSettings::self()->config();
 	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group());
 #define RD(a,b,c,d,e) fConfigWidget->a->b(fConfig->read##c##Entry(d,e))
 	RD(fSendMode,setCurrentItem,Num,PopMailConduitFactory::syncIncoming(),(int)NoSend);

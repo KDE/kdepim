@@ -54,6 +54,7 @@ void PilotMemo::unpack(const void *text, int /* firstTime */)
 void *PilotMemo::internalPack(unsigned char *buf)
 {
 	FUNCTIONSETUP;
+	kdWarning() << k_funcinfo << ": Deprecated." << endl;
 	QCString s = codec()->fromUnicode(fText);
 	return strcpy((char *) buf, (const char *)s);
 }
@@ -61,12 +62,25 @@ void *PilotMemo::internalPack(unsigned char *buf)
 void *PilotMemo::pack(void *buf, int *len)
 {
 	FUNCTIONSETUP;
-	if (((unsigned)*len) < fText.length())
-		return NULL;
+	if (*len < 0) return NULL; // buffer size being silly
+	if (fText.length() > (unsigned) *len) return NULL; // won't fit either
 
-	*len = fText.length();
+	QCString s = codec()->fromUnicode(fText);
 
-	return internalPack((unsigned char *) buf);
+	// It won't fit if the buffer is too small. This second test
+	// is because the encoded length in bytes may be longer (?)
+	// than the unencoded length in characters.
+	if (s.length() > *len) return NULL;
+
+	// Zero out the buffer, up to the max memo size.
+	memset(buf,0,QMIN(*len,MAX_MEMO_LEN));
+
+	// Copy the encoded string and make extra sure it's NUL terminated.
+	// Yay, _every_ parameter needs a cast.
+	strlcpy(( char *)buf,(const char *)s,
+		QMIN((unsigned) *len,(unsigned)MAX_MEMO_LEN));
+
+	return buf;
 }
 
 

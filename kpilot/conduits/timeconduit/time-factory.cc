@@ -50,13 +50,8 @@ void *init_conduit_time()
 }
 
 
-// A number of static variables; except for fAbout, they're 
-// all KConfig group or entry keys.
-//
-//
+// A number of static variables
 KAboutData *TimeConduitFactory::fAbout = 0L;
-const char *TimeConduitFactory::fGroup = "Time-conduit";
-const char *TimeConduitFactory::fDirection = "Direction";
 
 
 TimeConduitFactory::TimeConduitFactory(QObject *p, const char *n) :

@@ -34,39 +34,29 @@
 #include <qbuttongroup.h>
 #include <qlistview.h>
 #include <kapplication.h>
-#include <kconfig.h>
 #include <kurlrequester.h>
 
 #include "sysinfo-setup_dialog.h"
 
 #include "sysinfo-factory.h"
 #include "sysinfo-setup.h"
+#include "sysinfoSettings.h"
 
-typedef struct { const char *name; const char *key; } sysinfoEntry_t;
+typedef struct { const char *name; bool (*accessor)(); void (*mutator)(bool); } sysinfoEntry_t;
 
 const sysinfoEntry_t sysinfoEntries[] =
 {
-	{ I18N_NOOP("Hardware information"),
-		SysInfoConduitFactory::fHardwareInfo },
-	{ I18N_NOOP("User information"),
-		SysInfoConduitFactory::fUserInfo },
-	{ I18N_NOOP("Memory information"),
-		SysInfoConduitFactory::fMemoryInfo },
-	{ I18N_NOOP("Storage info (SD card, memory stick, ...)"),
-		SysInfoConduitFactory::fStorageInfo },
-	{ I18N_NOOP("List of databases on handheld (takes long!)"),
-		SysInfoConduitFactory::fDBList },
-	{ I18N_NOOP("Number of addresses, todos, events and memos"),
-		SysInfoConduitFactory::fRecordNumber },
-	{ I18N_NOOP("Synchronization information"),
-		SysInfoConduitFactory::fSyncInfo },
-	{ I18N_NOOP("Version of KPilot, pilot-link and KDE"),
-		SysInfoConduitFactory::fKDEVersion },
-	{ I18N_NOOP("PalmOS version"),
-		SysInfoConduitFactory::fPalmOSVersion },
-	{ I18N_NOOP("Debug information (for KPilot developers)"),
-		SysInfoConduitFactory::fDebugInfo },
-	{ 0L,0L }
+	{ I18N_NOOP("HardwareInfo"), SysinfoSettings::hardwareInfo, SysinfoSettings::setHardwareInfo },
+	{ I18N_NOOP("UserInfo"), SysinfoSettings::userInfo, SysinfoSettings::setUserInfo },
+	{ I18N_NOOP("MemoryInfo"), SysinfoSettings::memoryInfo, SysinfoSettings::setMemoryInfo },
+	{ I18N_NOOP("StorageInfo"), SysinfoSettings::storageInfo, SysinfoSettings::setStorageInfo },
+	{ I18N_NOOP("DatabaseList"), SysinfoSettings::databaseList, SysinfoSettings::setDatabaseList },
+	{ I18N_NOOP("RecordNumbers"), SysinfoSettings::recordNumbers, SysinfoSettings::setRecordNumbers},
+	{ I18N_NOOP("SyncInfo"), SysinfoSettings::syncInfo, SysinfoSettings::setSyncInfo },
+	{ I18N_NOOP("KDEVersion"), SysinfoSettings::kDEVersion, SysinfoSettings::setKDEVersion },
+	{ I18N_NOOP("PalmOSVersion"), SysinfoSettings::palmOSVersion, SysinfoSettings::setPalmOSVersion },
+	{ I18N_NOOP("DebugInformation"), SysinfoSettings::debugInformation, SysinfoSettings::setDebugInformation },
+	{ 0L, 0L, 0L }
 } ;
 
 
@@ -74,7 +64,7 @@ const sysinfoEntry_t sysinfoEntries[] =
 ** The QCheckListItems used in the list of parts to print have
 ** several text fields with special meanings.
 **    0: The text displayed in the list.
-**    1: The KConfig key the item came from.
+**    1: The index of the item in the sysinfoEntries array.
 **    2: This string is empty if the part was originally not checked,
 **       and non-empty (probably "1") if the part was originally checked.
 **       This is used to detect changes in the configuration.
@@ -109,56 +99,67 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 	fConduitName=i18n("System Information");
 }
 
-void SysInfoWidgetConfig::commit(KConfig *fConfig)
+void SysInfoWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver s(fConfig,SysInfoConduitFactory::fGroup);
-	fConfig->writePathEntry(SysInfoConduitFactory::fOutputFile,
-		fConfigWidget->fOutputFile->url());
-	fConfig->writeEntry(SysInfoConduitFactory::fTemplateFile,
-		fConfigWidget->fTemplateFile->url());
-	fConfig->writeEntry(SysInfoConduitFactory::fOutputType,
+
+	SysinfoSettings::setOutputFile(
+		fConfigWidget->fOutputFile->url() );
+	SysinfoSettings::setTemplateFile(
+		fConfigWidget->fTemplateFile->url() );
+	SysinfoSettings::setOutputFormat(
 		fConfigWidget->fOutputType->id(fConfigWidget->fOutputType->selected()));
 
 	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
 	QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
-
+	{ // group this to make the group saver go away before saving
+	KConfig*fConfig=SysinfoSettings::self()->config();
+	KConfigGroupSaver s(fConfig, "SysInfo-conduit");
 	while(ci)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Saving " << ci->text(PART_KEY)
+		DEBUGCONDUIT << fname << ": Saving " << ci->text(PART_NAME)
 			<< (ci->isOn() ? " on" : " off") << endl;
 #endif
-		fConfig->writeEntry(ci->text(PART_KEY),ci->isOn());
+		int index=ci->text(PART_KEY).toInt();
+		if (0<=index && index<=10) 
+		{
+			const sysinfoEntry_t *p = sysinfoEntries+index;
+			p->mutator(ci->isOn());
+		}
 		updateSetting(ci);
 		i=i->nextSibling();
 		ci = dynamic_cast<QCheckListItem *>(i);
 	}
+	}
+	SysinfoSettings::self()->writeConfig();
 	unmodified();
 }
 
-void SysInfoWidgetConfig::load(KConfig *fConfig)
+void SysInfoWidgetConfig::load()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver s(fConfig,SysInfoConduitFactory::fGroup);
-	fConfigWidget->fOutputFile->setURL(fConfig->readPathEntry(SysInfoConduitFactory::fOutputFile));
-	fConfigWidget->fTemplateFile->setURL(fConfig->readPathEntry(SysInfoConduitFactory::fTemplateFile));
-	fConfigWidget->fOutputType->setButton(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType, 0));
+	SysinfoSettings::self()->readConfig();
 
 	const sysinfoEntry_t *p = sysinfoEntries;
 	QCheckListItem *i = 0L;
+	{ // group this to make the group saver go away before doing all the other stuff
+	KConfig*fConfig=SysinfoSettings::self()->config();
+	KConfigGroupSaver s(fConfig, "SysInfo-conduit");
 	while (p && p->name)
 	{
 		i = new QCheckListItem(fConfigWidget->fPartsList,i18n(p->name),QCheckListItem::CheckBox);
 		// by default let the sysinfo conduit write out all available information
-		i->setOn(fConfig->readBoolEntry(p->key, true));
-		i->setText(PART_KEY,QString::fromLatin1(p->key));
+		i->setOn( p->accessor() );
+		i->setText(PART_KEY, QString::number(p-sysinfoEntries)); // store index there
 		updateSetting(i);
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Loaded " << p->key
+		DEBUGCONDUIT << fname << ": Loaded " << p->name
 			<< (i->isOn() ? " on" : " off") << endl;
 #endif
+
 		p++;
+	}
 	}
 	unmodified();
 }
@@ -206,16 +207,12 @@ SysInfoWidgetSetup::~SysInfoWidgetSetup()
 /* virtual */ void SysInfoWidgetSetup::commitChanges()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	fConfigBase->commit(fConfig);
+	fConfigBase->commit();
 }
 
 /* virtual */ void SysInfoWidgetSetup::readSettings()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	fConfigBase->load(fConfig);
+	fConfigBase->load();
 }
 

@@ -1,0 +1,7 @@
+File=docconduit.kcfg
+ClassName=DOCConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

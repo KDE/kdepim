@@ -43,16 +43,7 @@ public:
 	virtual ~AbbrowserConduitFactory();
 
 public:
-	// KConfig entry keys.
-	static const char *fAbookType, *fAbookFile,
-		*fSyncMode, *fArchive,
-		*fResolution, *fSmartMerge, *fFirstSync,
-		*fOtherField, *fStreetType, *fFaxType,
-		*fCustom, *fCustomFmt;
-
 	static KAboutData *about() { return fAbout; } ;
-	static const char *group() { return fGroup; } ;
-	static const QString custom(int i) {return QString::fromLatin1(fCustom).arg(i); };
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,

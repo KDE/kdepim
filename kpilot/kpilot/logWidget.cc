@@ -312,6 +312,14 @@ void LogWidget::hideSplash()
 	addProgress(s,i);
 }
 
+/* DCOP */ ASYNC LogWidget::logStartSync()
+{
+}
+
+/* DCOP */ ASYNC LogWidget::logEndSync()
+{
+}
+
 /* slot */ void LogWidget::clearLog()
 {
 	FUNCTIONSETUP;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+  <group name="Time-conduit">
+    <entry name="Direction" type="Enum">
+        <label>
+        </label>
+				<choices>
+				    <choice name="eSetHHfromPC"/>
+						<choice name="eSetPCfromHH"/>
+				</choices>
+        <default>eSetHHfromPC</default>
+    </entry>
+  </group>
+	
+
+</kcfg>

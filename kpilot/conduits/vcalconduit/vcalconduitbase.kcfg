@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>  
+  <kcfgfile name="kpilotrc">
+    <parameter name="conduit" />
+  </kcfgfile>
+
+  <group name="$(conduit)Options">
+    <entry name="ConduitVersion"  type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+    <entry name="CalendarType"  type="Enum">
+				<choices>
+						<choice name="eCalendarResource"/>
+						<choice name="eCalendarLocal"/>
+				</choices>
+        <label>
+        </label>
+        <default>eCalendarResource</default>
+    </entry>
+    <entry name="CalendarFile" key="CalFile"  type="String">
+        <label>
+        </label>
+        <default></default>
+    </entry>
+    <entry name="SyncArchived"  type="Bool">
+        <label>
+        </label>
+        <default>true</default>
+    </entry>
+    <entry name="ConflictResolution"  type="Int">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>		
+  </group>
+
+</kcfg>

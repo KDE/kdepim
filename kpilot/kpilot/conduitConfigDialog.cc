@@ -40,6 +40,7 @@ static const char *conduitconfigdialog_id =
 #include <qlayout.h>
 #include <qwidgetstack.h>
 #include <qvbox.h>
+#include <qsplitter.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -53,6 +54,7 @@ static const char *conduitconfigdialog_id =
 
 #include "plugin.h"
 #include "kpilotConfig.h"
+#include "kpilotConfigDialog.h"
 
 #include "conduitConfigDialog.moc"
 
@@ -60,6 +62,16 @@ static const char *conduitconfigdialog_id =
 #define CONDUIT_COMMENT (1)
 #define CONDUIT_DESKTOP (2)
 #define CONDUIT_LIBRARY (3)
+#define CONDUIT_ORDER	(4)
+
+extern "C"
+{
+  KCModule *create_kpilotconfig( QWidget *parent, const char * )
+  {
+    return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
+  }
+}
+
 
 class ConduitTip : public QToolTip
 {
@@ -122,36 +134,52 @@ ConduitTip::~ConduitTip()
 #define OLD_CONDUIT      (1)
 #define BROKEN_CONDUIT   (2)
 #define INTERNAL_CONDUIT (3)
-#define NEW_CONDUIT      (4)
+#define INTERNAL_EXPLN   (4)
+#define CONDUIT_EXPLN    (5)
+#define GENERAL_EXPLN    (6)
+#define GENERAL_ABOUT    (7)
+#define NEW_CONDUIT      (8)
 
 
-ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
-	QObject(p,n)
+ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n) :
+	KCModule(parent, n)
 {
-	p->setSpacing(10);
+	QBoxLayout *p = new QVBoxLayout( this );
+
+	QSplitter *spl = new QSplitter( this, "ConduitSplitter" );
+	spl->setOrientation( QSplitter::Horizontal );
+	p->addWidget(spl);
 
 	QWidget *w = 0L; // For spacing purposes only.
 	QLabel *l = 0L;
 	QVBox *v = 0L;
 
 	// Create the left hand column
-	v = new QVBox(p);
+	v = new QVBox( spl );
+//	v->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7,
+//	                  0, 1, listView1->sizePolicy().hasHeightForWidth() ) );
 	fConduitList = new QListView(v,"ConduitList");
 	fConduitList->addColumn(i18n("Conduit"));
-	v->setStretchFactor(fConduitList,0);
+	v->setStretchFactor(fConduitList, 50);
 	v->setSpacing(50);
 	l = new QLabel(v);    // Just a placekeeper, to fix redraw problems.
 	l->resize(30,30);
-	v->setStretchFactor(l,100);
+	v->setStretchFactor(l,3);
 
 	// Right hand column
-	fStack = new QWidgetStack(p,"RightPart");
+	fStack = new QWidgetStack(spl,"RightPart");
+//	spl->setStretchFactor(v, 7);
+//	spl->setStretchFactor(fStack, 6);
 
 	// Zero'th page in stack
 	l = new QLabel(fStack);
 	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt>Select a conduit in the list to configure it. "
-		"Checked conduits will be run during a HotSync.</qt>"));
+	l->setText(i18n("<qt>This is KPilot's configuration. "
+		"You can enable an actions or conduit by clicking on its checkbox. "
+		"Checked conduits will be run during a HotSync. "
+		"Select a conduit to configure it. "
+		"General settings can be changed as well."
+		"</qt>"));
 	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 	fStack->addWidget(l,INTRO);
 
@@ -188,66 +216,61 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 		"configuration options.</qt>"));
 	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 	fStack->addWidget(l,INTERNAL_CONDUIT);
-}
+
+	// Page 4 - explanation of what "actions" are.
+	l = new QLabel(fStack);
+	l->setFrameShape(QLabel::Box);
+	l->setText(i18n("<qt><i>Actions</i> lists actions that can occur "
+		"during a HotSync but that require no further configuration. "
+		// "If the list is hidden, double-click on the <i>Actions</i> label."
+		"</qt>"));
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+	fStack->addWidget(l,INTERNAL_EXPLN);
+
+	// Page 5 - explanation about conduits
+	l = new QLabel(fStack);
+	l->setFrameShape(QLabel::Box);
+	l->setText(i18n("<qt><i>Conduits</i> are external (possibly third-party) "
+		"programs that perform synchronization actions. They may "
+		"have individual configurations. Select a conduit to configure it, "
+		"and enable it by clicking on its checkbox. "
+		// "If the list of conduits is hidden, double-click on the "
+		// "<i>conduits</i> label."
+		"</qt>"));
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+	fStack->addWidget(l,CONDUIT_EXPLN);
+
+	// Page 6 - explanation about general setup
+	//
+	// TODO: add wizard-startup buttons here.
+	l = new QLabel(fStack);
+	l->setFrameShape(QLabel::Box);
+	l->setText(i18n("<qt>The <i>general</i> portion of KPilot's setup "
+		"contains settings for your hardware and the way KPilot "
+		"should display your data. The HotSync settings are "
+		"various esoteric things.</qt>"));
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+	fStack->addWidget(l,GENERAL_EXPLN);
 
 
-ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
-	bool m) : UIDialog(_w, n, Ok|Apply|Cancel,m)
-{
-	FUNCTIONSETUP;
-
-	enableButtonSeparator(true);
-	// selected(0L);
-
-	QHBox *h = dynamic_cast<QHBox *>(widget());
-	if (!h)
-	{
-		h = new QHBox(widget());
-	}
-
-	fConfigWidget = new ConduitConfigWidget(h,0L);
-
-	QObject::connect(fConfigWidget,SIGNAL(sizeChanged()),
-		h,SLOT(adjustSize()));
-	QObject::connect(fConfigWidget,SIGNAL(sizeChanged()),
-		this,SLOT(adjustSize()));
-
-	(void) conduitconfigdialog_id;
-}
-
-ConduitConfigDialog::~ConduitConfigDialog()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ bool ConduitConfigDialog::validate()
-{
-	return fConfigWidget->release();
-}
-
-/* virtual */ void ConduitConfigDialog::commitChanges()
-{
-	fConfigWidget->commitChanges();
-}
-
-/* virtual */ void ConduitConfigDialog::slotApply()
-{
-	commitChanges();
+	fStack->addWidget(UIDialog::aboutPage(fStack,0L),GENERAL_ABOUT);
 }
 
 #define PAGE_SIZE	QSize(440,300)
 
-ConduitConfigWidget::ConduitConfigWidget(QHBox *p, const char *n,
+ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	bool) :
-	ConduitConfigWidgetBase(p,n),
+	ConduitConfigWidgetBase(parent,n),
 	fConfigure(0L),
 	fCurrentConduit(0L),
 	fCurrentConfig(0L),
-	fCurrentOldStyle(0L),
-	fParentWidget(p)
+	fCurrentOldStyle(0L)
 {
 	FUNCTIONSETUP;
 
+	fConduitList->setSorting(-1);
+	fConduitList->setRootIsDecorated(false);
+	fConduitList->setTreeStepSize(10);
 	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
 	fConduitList->adjustSize();
@@ -262,12 +285,24 @@ ConduitConfigWidget::ConduitConfigWidget(QHBox *p, const char *n,
 	QObject::connect(fConfigureButton,
 		SIGNAL(clicked()),
 		this,SLOT(configure()));
+	QObject::connect(fConduitList,
+		SIGNAL(clicked(QListViewItem*)),
+		this, SLOT(conduitsChanged(QListViewItem*)));
 
 	selected(0L);
 	// adjustSize();
 	fStack->raiseWidget(INTRO);
 
 	(void) new ConduitTip(fConduitList);
+	setButtons(Apply);
+
+/*	QObject::connect(this,SIGNAL(sizeChanged()),
+		h,SLOT(adjustSize()));
+	QObject::connect(this,SIGNAL(sizeChanged()),
+		this,SLOT(adjustSize()));
+*/
+//	load()
+	(void) conduitconfigdialog_id;
 }
 
 ConduitConfigWidget::~ConduitConfigWidget()
@@ -280,9 +315,84 @@ void ConduitConfigWidget::fillLists()
 {
 	FUNCTIONSETUP;
 
-	QStringList potentiallyInstalled =
-		KPilotConfig::getConfig().setConduitGroup().
-		getInstalledConduits();
+	// 3 QListViewItems for the three headings in the list
+	QListViewItem *general,*conduits,*actions;
+
+	// And two generic pointers for the rest.
+	QListViewItem *q = 0L;
+	QCheckListItem *p = 0L;
+
+
+	conduits = new QListViewItem(fConduitList, i18n("Conduits"));
+	actions = new QListViewItem(fConduitList, i18n("Actions"));
+	general = new QListViewItem( fConduitList, i18n("General Setup" ) );
+
+	// Give them identifiers so they can be handled specially when selected.
+	conduits->setText(CONDUIT_LIBRARY,CSL1("expln_conduits"));
+	actions->setText(CONDUIT_LIBRARY,CSL1("expln_actions"));
+	general->setText( CONDUIT_LIBRARY, CSL1("expln_general") );
+
+	general->setText( CONDUIT_COMMENT,
+		i18n("General setup of KPilot (User name, port, general sync settings)") );
+	actions->setText( CONDUIT_COMMENT,
+		i18n("Simple actions for HotSync with no configuration."));
+	conduits->setText( CONDUIT_COMMENT,
+		i18n("Actions for HotSync with individual configuration."));
+
+	conduits->setOpen(true);
+	actions->setOpen(true);
+	general->setOpen(true);
+
+	// Prevent items from being collapsed by the user.
+	connect(fConduitList,SIGNAL(collapsed(QListViewItem *)),
+		this,SLOT(reopenItem(QListViewItem *)));
+
+
+	// Create entries under general.
+	q = new QListViewItem(general, i18n("About"));
+	q->setText(CONDUIT_COMMENT, i18n("About KPilot. Credits."));
+	q->setText(CONDUIT_LIBRARY, CSL1("general_about"));
+
+	q = new QListViewItem(general, i18n("HotSync") );
+	q->setText(CONDUIT_COMMENT,
+		i18n("Special behavior during HotSync.") );
+	q->setText(CONDUIT_LIBRARY, CSL1("general_sync") );
+
+	q = new QListViewItem(general, i18n("Viewers") );
+	q->setText(CONDUIT_COMMENT,
+		i18n("Viewer settings.") );
+	q->setText(CONDUIT_LIBRARY, CSL1("general_view") );
+
+	q = new QListViewItem(general, i18n("Device") );
+	q->setText(CONDUIT_COMMENT,
+		i18n("Hardware settings and startup and exit options.") );
+	q->setText(CONDUIT_LIBRARY, CSL1("general_setup") );
+
+
+
+
+	// List of installed (enabled) actions and conduits.
+	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
+
+	//  Create internal conduits.
+	//
+	//
+
+#define IC(a,b,c) p = new QCheckListItem(actions,i18n(a),QCheckListItem::CheckBox); \
+	p->setText(CONDUIT_COMMENT,i18n(c)); \
+	p->setText(CONDUIT_LIBRARY,"internal_" b); \
+	p->setText(CONDUIT_DESKTOP,"internal_" b); \
+	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
+		p->setOn(true);
+
+	IC("Kroupware","kroupware",
+		"Sync the handheld with a Kroupware client (for example, KMail).");
+	IC("Install Files","fileinstall",
+		"Install files that are dragged to KPilot onto the handheld.");
+#undef IC
+
+
+
 	KServiceTypeProfile::OfferList offers =
 		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
@@ -297,8 +407,6 @@ void ConduitConfigWidget::fillLists()
 			<< " = " << o->name() << endl;
 #endif
 
-		QCheckListItem *p = 0L;
-
 		if (!o->exec().isEmpty())
 		{
 			kdWarning() << k_funcinfo
@@ -307,7 +415,7 @@ void ConduitConfigWidget::fillLists()
 				<< endl;
 		}
 
-		p = new QCheckListItem(fConduitList,
+		p = new QCheckListItem(conduits,
 			o->name(),
 			QCheckListItem::CheckBox);
 		p->setMultiLinesEnabled(true);
@@ -326,22 +434,6 @@ void ConduitConfigWidget::fillLists()
 
 		++availList;
 	}
-
-	// Now the (statically compiled) internal conduits
-	QCheckListItem *p = 0L;
-#define IC(a,b,c) p = new QCheckListItem(fConduitList,i18n(a),QCheckListItem::CheckBox); \
-	p->setText(CONDUIT_COMMENT,i18n(c)); \
-	p->setText(CONDUIT_LIBRARY,"internal_" b); \
-	p->setText(CONDUIT_DESKTOP,"internal_" b); \
-	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
-		p->setOn(true);
-
-	IC("Kroupware","kroupware",
-		"Sync the handheld with a Kroupware client (for example, KMail).");
-	IC("Install Files","fileinstall",
-		"Install files that are dragged to KPilot onto the handheld.");
-
-#undef IC
 }
 
 void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
@@ -379,54 +471,94 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		return;
 	}
 
-	QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
-
-	KLibFactory *f = KLibLoader::self()->
-		factory(library);
-	if (!f)
+	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_actions"))
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": No conduit library "
-			<< library
-			<< " found."
-			<< endl;
-#endif
-		fStack->raiseWidget(BROKEN_CONDUIT);
-		warnNoLibrary(p);
+		fStack->raiseWidget(INTERNAL_EXPLN);
+		return;
+	}
+	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_conduits"))
+	{
+		fStack->raiseWidget(CONDUIT_EXPLN);
+		return;
+	}
+	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_general"))
+	{
+		fStack->raiseWidget(GENERAL_EXPLN);
 		return;
 	}
 
-	QStringList a;
-	a.append(CSL1("modal"));
-
-	// QObject *o = f->create(this, 0L, "ConduitConfig",a);
-	QObject *o = f->create(fStack, 0L, "ConduitConfigBase", a);
-	bool oldstyle=false;
-
-	if (!o)
+	if (p->text(CONDUIT_LIBRARY) == CSL1("general_about"))
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Can't create ConduitConfigBase - must be old conduit."
-			<< endl;
-#endif
+		fStack->raiseWidget(GENERAL_ABOUT);
+		return;
+	}
 
-		o = f->create(fParentWidget,0L,"ConduitConfig",a);
-		oldstyle=true;
+	QObject *o = 0L;
+	bool oldstyle = false;
+
+	// Page 4: General setup
+	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_setup")))
+	{
+		o = new DeviceConfigPage( fStack, "generalSetup" );
+	}
+	else if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_sync")))
+	{
+		o = new SyncConfigPage( fStack, "syncSetup" );
+	}
+	else if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_view")))
+	{
+		o = new KPilotConfigPage( fStack, "syncSetup" );
+	}
+	else
+	{
+		QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
+
+		KLibFactory *f = KLibLoader::self()->
+			factory(library);
+		if (!f)
+		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname
+				<< ": No conduit library "
+				<< library
+				<< " found."
+				<< endl;
+#endif
+			fStack->raiseWidget(BROKEN_CONDUIT);
+			warnNoLibrary(p);
+			return;
+		}
+
+		QStringList a;
+		a.append(CSL1("modal"));
+
+		// QObject *o = f->create(this, 0L, "ConduitConfig",a);
+		o = f->create(fStack, 0L, "ConduitConfigBase", a);
 
 		if (!o)
 		{
 #ifdef DEBUG
 			DEBUGKPILOT << fname
-				<< ": No ConduitConfig either."
+				<< ": Can't create ConduitConfigBase - must be old conduit."
 				<< endl;
 #endif
-			KLibLoader::self()->unloadLibrary(
-				library);
-			fStack->raiseWidget(BROKEN_CONDUIT);
-			warnNoLibrary(p);
-			return;
+
+			o = f->create(this, 0L, "ConduitConfig", a);
+			oldstyle=true;
+
+			if (!o)
+			{
+#ifdef DEBUG
+				DEBUGKPILOT << fname
+					<< ": No ConduitConfig either."
+					<< endl;
+#endif
+				KLibLoader::self()->unloadLibrary(
+					library);
+				fStack->raiseWidget(BROKEN_CONDUIT);
+				warnNoLibrary(p);
+				return;
+			}
 		}
 	}
 
@@ -452,7 +584,6 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 				.arg(p->text(CONDUIT_NAME)));
 
 		fCurrentOldStyle=d;
-		d->setConfig(&KPilotConfig::getConfig());
 		d->readSettings();
 	}
 	else
@@ -480,18 +611,21 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		}
 		if (fStack->addWidget(d->widget(),NEW_CONDUIT)<0)
 		{
-	#ifdef DEBUG
+#ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": Can't add config widget to stack."
 				<< endl;
-	#endif
+#endif
 		}
 		else
 		{
-			d->load(&KPilotConfig::getConfig());
+			d->load();
 			fStack->raiseWidget(NEW_CONDUIT);
 			d->widget()->show();
 			fCurrentConfig=d;
+			// make sure the changed signal is propagated to the KCM*Dialog
+			// and the apply button is enabled correspondingly.
+			connect(d, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
 		}
 	}
 }
@@ -501,7 +635,7 @@ bool ConduitConfigWidget::release()
 	FUNCTIONSETUP;
 	if (fCurrentConfig)
 	{
-		if (!fCurrentConfig->maybeSave(&KPilotConfig::getConfig()))
+		if (!fCurrentConfig->maybeSave())
 			return false;
 		fStack->raiseWidget(0);
 		delete fCurrentConfig;
@@ -541,19 +675,19 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 	}
 	fCurrentConduit=p;
 	loadAndConfigure(p);
-	fStack->adjustSize();
+//	fStack->adjustSize();
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": New widget size "
 		<< fStack->size().width() << "x" << fStack->size().height() << endl;
-	DEBUGKPILOT << fname << ": Parent current size "
-		<< fParentWidget->size().width() << "x"
-		<< fParentWidget->size().height() << endl;
+	DEBUGKPILOT << fname << ": Current size "
+		<< size().width() << "x"
+		<< size().height() << endl;
 #endif
 	emit sizeChanged();
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Parent new size "
-		<< fParentWidget->size().width() << "x"
-		<< fParentWidget->size().height() << endl;
+	DEBUGKPILOT << fname << ": New size "
+		<< size().width() << "x"
+		<< size().height() << endl;
 #endif
 
 }
@@ -580,11 +714,11 @@ void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
 		.arg(p->text(CONDUIT_NAME));
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": No library for " 
+	DEBUGKPILOT << fname << ": No library for "
 		<< p->text(CONDUIT_NAME) << endl;
 #endif
 
-	KMessageBox::error(fParentWidget, msg, i18n("Conduit Error"));
+	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
 void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
@@ -601,39 +735,79 @@ void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
 		<< p->text(CONDUIT_NAME) << endl;
 #endif
 
-	KMessageBox::error(fParentWidget, msg, i18n("Conduit Error"));
+	KMessageBox::error(this, msg, i18n("Conduit Error"));
 }
 
-/* virtual */ void ConduitConfigWidget::commitChanges()
+void ConduitConfigWidget::save()
 {
 	FUNCTIONSETUP;
-	
-	// Only new-style conduits have changes that need to be commited
+
+	// Only new-style conduits and the general setup have changes that need to be commited
 	// old-style conduits have their own config dlg which commits them itself
 	if ( fStack->id( fStack->visibleWidget())==NEW_CONDUIT )
 	{
-		fCurrentConfig->commit(&KPilotConfig::getConfig());
+		if (fCurrentConfig) fCurrentConfig->commit();
 	}
 
 	QStringList activeConduits;
-	const QCheckListItem *p =
-		dynamic_cast<QCheckListItem *>(fConduitList->firstChild());
-	KPilotConfigSettings & config = KPilotConfig::getConfig();
-
-
-
-	while (p)
-	{
-		if (p->isOn())
+	QListViewItemIterator it( fConduitList );
+	while ( it.current() ) {
+		const QCheckListItem*p = dynamic_cast<QCheckListItem*>(it.current());
+		if ( p && p->isOn() )
 		{
 			activeConduits.append(p->text(CONDUIT_DESKTOP));
 		}
-		p = dynamic_cast<QCheckListItem *>(p->nextSibling());
+		++it;
 	}
-	config.setConduitGroup().setInstalledConduits(activeConduits);
-	config.sync();
+	KPilotSettings::setInstalledConduits(activeConduits);
+	KPilotSettings::self()->writeConfig();
 }
 
 
+void ConduitConfigWidget::load()
+{
+	FUNCTIONSETUP;
+	KPilotSettings::self()->readConfig();
 
+	QStringList potentiallyInstalled = KPilotSettings::installedConduits();
+	QListViewItem*p = fConduitList->firstChild();
+	while (p)
+	{
+		QListViewItem*q = p->firstChild();
+		while (q)
+		{
+			QCheckListItem*qq=dynamic_cast<QCheckListItem*>(q);
+			if (qq)
+			{
+				qq->setOn(! (potentiallyInstalled.findIndex(qq->text(CONDUIT_DESKTOP))<0) );
+			}
+			q = q->nextSibling();
+		}
+		p=p->nextSibling();
+	}
+
+
+	// Only new-style conduits and the general setup have changes that need to be commited
+	// old-style conduits have their own config dlg which commits them itself
+	if ( fStack->id( fStack->visibleWidget())==NEW_CONDUIT )
+	{
+		if (fCurrentConfig) fCurrentConfig->load();
+	}
+}
+
+
+void ConduitConfigWidget::conduitsChanged(QListViewItem*item)
+{
+	QCheckListItem*i=dynamic_cast<QCheckListItem*>(item);
+	if (i)
+	{
+		// TODO_Osnabrueck: find out if the item was actually checked/unchecked
+		emit changed(true);
+	}
+}
+
+void ConduitConfigWidget::reopenItem(QListViewItem *i)
+{
+	i->setOpen(true);
+}
 

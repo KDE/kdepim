@@ -51,15 +51,6 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-public:
-	// KConfig entry keys.
-	static const char *fGroup,
-		*fOutputFile, *fOutputType, *fTemplateFile,
-		*fHardwareInfo, *fUserInfo,
-		*fMemoryInfo, *fStorageInfo,
-		*fDBList, *fRecordNumber,
-		*fSyncInfo, *fKDEVersion,
-		*fPalmOSVersion, *fDebugInfo;
 } ;
 
 extern "C"

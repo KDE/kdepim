@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="kpilotrc"/> 
+  <group name="DOC-conduit">
+    <entry name="TXTDirectory" key="TXT Directory" type="String"/>
+    <entry name="PDBDirectory" key="PDB Directory" type="String"/>
+    <entry name="KeepPDBsLocally" key="Keep PDBs locally" type="Bool">
+        <default>false</default>
+    </entry>
+		<entry name="LocalSync" key="Sync only locally" type="Bool">
+				<default>false</default>
+		</entry>
+    <entry name="ConflictResolution" key="Conflict Resolution" type="UInt">
+        <default>0</default>
+    </entry>
+    <entry name="ConvertBookmarks" key="Convert Bookmarks" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="BmkFileBookmarks" key="Bmk file bookmarks" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="InlineBookmarks" key="Inline bookmarks" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="EndtagBookmarks" key="Endtag bookmarks" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="Compress"  type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="SyncDirection" key="Sync Direction" type="UInt">
+        <default>1</default>
+    </entry>
+    <entry name="IgnoreBmkChanges" key="Ignore only bookmark changes" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="AlwaysShowResolutionDialog" key="Always show resolution dialog" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="BookmarksToPC" key="Bookmarks to PC" type="UInt">
+        <default>0</default>
+    </entry>
+    <entry name="ConvertedDOCfiles" key="Converted PalmDOCs" type="StringList">
+        <default></default>
+    </entry>
+  </group>
+
+</kcfg>

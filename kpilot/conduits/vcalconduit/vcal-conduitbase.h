@@ -121,7 +121,6 @@ protected:
 
 
 	// general settings, implemented by child classes for the conduits
-	virtual const QString configGroup() { return VCalConduitFactoryBase::getGroup(); };
 	virtual const QString dbname() = 0;
 
 	virtual const QString getTitle(PilotAppCategory*de)=0;
@@ -135,17 +134,11 @@ protected:
 
 protected:
 	KCal::Calendar *fCalendar;
-
-	QString fCalendarFile;
-	bool archive;
 	int pilotindex;
-	enum eCalendarTypeEnum {
-		eCalendarResource=0,
-		eCalendarLocal
-	} fCalendarType;
 
 protected:
-	VCalConduitPrivateBase *fP;
+	virtual VCalConduitSettings *config()=0;
+	VCalConduitPrivateBase*fP;
 	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar)=0;
 } ;
 

@@ -47,6 +47,7 @@
 
 #include "sysinfo-factory.h"
 #include "sysinfo-conduit.moc"
+#include "sysinfoSettings.h"
 
 const QString SysInfoConduit::defaultpage = QString("KPilot System Information Page\n"
 "==============================\n"
@@ -173,27 +174,14 @@ SysInfoConduit::~SysInfoConduit()
 void SysInfoConduit::readConfig()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver g(fConfig, SysInfoConduitFactory::fGroup);
-	fOutputFile=fConfig->readPathEntry(SysInfoConduitFactory::fOutputFile);
-	fTemplateFile=fConfig->readPathEntry(SysInfoConduitFactory::fTemplateFile);
-	fOutputType=(eOutputTypeEnum)(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType, 0));
-	fHardwareInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fHardwareInfo, true);
-	fUserInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fUserInfo, true);
-	fMemoryInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fMemoryInfo, true);
-	fStorageInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fStorageInfo, true);
-	fDBList=fConfig->readBoolEntry(SysInfoConduitFactory::fDBList, true);
-	fRecordNumber=fConfig->readBoolEntry(SysInfoConduitFactory::fRecordNumber, true);
-	fSyncInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fSyncInfo, true);
-	fKDEVersion=fConfig->readBoolEntry(SysInfoConduitFactory::fKDEVersion, true);
-	fPalmOSVersion=fConfig->readBoolEntry(SysInfoConduitFactory::fPalmOSVersion, true);
-	fDebugInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fDebugInfo, true);
+	
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Output file="<<fOutputFile<<" with type "<<
-		fOutputType<<" (Template:"<<fTemplateFile<<")"<<endl;
-	DEBUGCONDUIT<<"HW:"<<fHardwareInfo<<",User:"<<fUserInfo<<
-		",Mem:"<<fMemoryInfo<<",Sto:"<<fStorageInfo<<endl;
-	DEBUGCONDUIT<<"DBL:"<<fDBList<<",Rec:"<<fRecordNumber<<
-		",KDE:"<<fKDEVersion<<",PalmOS:"<<fPalmOSVersion<<endl;
+	DEBUGCONDUIT<<"Output file="<<SysinfoSettings::outputFile()<<" with type "<<
+		SysinfoSettings::outputFormat()<<" (Template:"<<SysinfoSettings::templateFile()<<")"<<endl;
+	DEBUGCONDUIT<<"HW:"<<SysinfoSettings::hardwareInfo()<<",User:"<<SysinfoSettings::userInfo()<<
+		",Mem:"<<SysinfoSettings::memoryInfo()<<",Sto:"<<SysinfoSettings::storageInfo()<<endl;
+	DEBUGCONDUIT<<"DBL:"<<SysinfoSettings::databaseList()<<",Rec:"<<SysinfoSettings::recordNumbers()<<
+		",KDE:"<<SysinfoSettings::kDEVersion()<<",PalmOS:"<<SysinfoSettings::palmOSVersion()<<endl;
 #endif
 }
 
@@ -202,12 +190,6 @@ void SysInfoConduit::readConfig()
 {
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<SysInfo_conduit_id<<endl;
-
-	if (!fConfig)
-	{
-		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		return false;
-	}
 
 	readConfig();
 
@@ -219,6 +201,8 @@ void SysInfoConduit::hardwareInfo()
 {
 	FUNCTIONSETUP;
 	if (fHardwareInfo) {
+		QString unknown = i18n("unknown");
+		
 		/* Retrieve values for
 		* - #deviceid#
 		* - #devicename#
@@ -226,13 +210,33 @@ void SysInfoConduit::hardwareInfo()
 		* - #manufactorer#
 		* - #devicetype#
 		*/
-		fValues["deviceid"] = QString(fHandle->getSysInfo()->getProductID());
-		KPilotCard*device = fHandle->getCardInfo();
-		fValues["devicename"] = QString(device->getCardName());
-		fValues["devicemodel"] = i18n("unknown");  // TODO
-		fValues["manufacturer"] = QString(device->getCardManufacturer());
+		KPilotSysInfo *sysinfo = fHandle->getSysInfo();
+		if (sysinfo)
+		{
+			fValues["deviceid"] = QString(sysinfo->getProductID());
+		}
+		else
+		{
+			fValues["deviceid"] = unknown;
+		}
+		
+		KPilotCard *device = fHandle->getCardInfo();
+		if (device)
+		{
+			fValues["devicename"] = QString(device->getCardName());
+			fValues["devicemodel"] = unknown;  // TODO
+			fValues["manufacturer"] = QString(device->getCardManufacturer());
+		}
+		else
+		{
+			fValues["devicename"] = unknown;
+			fValues["devicemodel"] = unknown;
+			fValues["manufacturer"] = unknown;
+		}
+		
 		fValues["devicetype"] = QString(
 			fHandle->deviceTypeString(fHandle->deviceType()));
+		
 		KPILOT_DELETE(device);
 		keepParts.append("hardware");
 	} else removeParts.append("hardware");
@@ -286,7 +290,7 @@ void SysInfoConduit::storageInfo()
 		 * - $cards$
 		 */
 		KPilotCard*device = fHandle->getCardInfo(1);
-		if (device && device) {
+		if (device) {
 			fValues["cards"] = QString("%1 (%2, %3 kB of %3 kB free)")
 				.arg(device->getCardName())
 				.arg(device->getCardManufacturer())

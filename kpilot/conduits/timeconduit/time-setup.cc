@@ -32,12 +32,12 @@
 #include <qradiobutton.h>
 #include <qbuttongroup.h>
 #include <kapplication.h>
-#include <kconfig.h>
 
 #include "time-setup_dialog.h"
 
 #include "time-factory.h"
 #include "time-setup.moc"
+#include "timeConduitSettings.h"
 
 TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
@@ -49,19 +49,20 @@ TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 	fConduitName=i18n("Time");
 }
 
-void TimeWidgetConfig::commit(KConfig *fConfig)
+void TimeWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver s(fConfig,TimeConduitFactory::group());
-	fConfig->writeEntry(TimeConduitFactory::direction(),
-		fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()));
+	TimeConduitSettings::setDirection( 
+		fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()) );
+	TimeConduitSettings::self()->writeConfig();
 }
 
-void TimeWidgetConfig::load(KConfig *fConfig)
+void TimeWidgetConfig::load()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver s(fConfig,TimeConduitFactory::group());
-	fConfigWidget->directionGroup->setButton(fConfig->readNumEntry(TimeConduitFactory::direction(), DIR_PCToPalm) );
+	TimeConduitSettings::self()->readConfig();
+
+	fConfigWidget->directionGroup->setButton( TimeConduitSettings::direction() );
 }
 
 TimeWidgetSetup::TimeWidgetSetup(QWidget *w, const char *n,
@@ -83,15 +84,13 @@ TimeWidgetSetup::~TimeWidgetSetup()
 {
 	FUNCTIONSETUP;
 
-	if (!fConfig) return;
-	fConfigBase->commit(fConfig);
+	fConfigBase->commit();
 }
 
 /* virtual */ void TimeWidgetSetup::readSettings()
 {
 	FUNCTIONSETUP;
 
-	if (!fConfig) return;
-	fConfigBase->load(fConfig);
+	fConfigBase->load();
 }
 

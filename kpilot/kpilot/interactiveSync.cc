@@ -82,10 +82,7 @@ CheckUser::~CheckUser()
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings & config = KPilotConfig::getConfig();
-	config.resetGroup();
-
-	QString guiUserName = config.getUser();
+	QString guiUserName = KPilotSettings::userName();
 	QString pilotUserName = PilotAppCategory::codec()->
 		toUnicode(fHandle->getPilotUser()->getUserName());
 	bool pilotUserEmpty = pilotUserName.isEmpty();
@@ -110,7 +107,7 @@ CheckUser::~CheckUser()
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserNone" */) ==
 				KDialogBase::Yes)
 			{
-				config.setUser(defaultUserName);
+				KPilotSettings::setUserName(defaultUserName);
 				fHandle->getPilotUser()->
 					setUserName(PilotAppCategory::codec()->fromUnicode(defaultUserName));
 				guiUserName=defaultUserName;
@@ -128,7 +125,7 @@ CheckUser::~CheckUser()
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */ ) ==
 				KDialogBase::Yes)
 			{
-				config.setUser(pilotUserName);
+				KPilotSettings::setUserName(pilotUserName);
 				guiUserName=pilotUserName;
 			}
 		}
@@ -185,7 +182,7 @@ CheckUser::~CheckUser()
 							pilotUserName=guiUserName;
 							break;
 					case KMessageBox::No:
-						config.setUser(pilotUserName);
+						KPilotSettings::setUserName(pilotUserName);
 						guiUserName=pilotUserName;
 						break;
 					case KDialogBase::Cancel:
@@ -207,7 +204,7 @@ CheckUser::~CheckUser()
 		<< endl;
 #endif
 
-	config.sync();
+	KPilotSettings::writeConfig();
 
 	// Now we've established which user will be used,
 	// fix the database location for local databases.

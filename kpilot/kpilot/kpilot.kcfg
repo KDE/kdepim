@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="kpilotrc"/> 
+  <include>kstandarddirs.h</include>
+  <group name="General">
+    <entry name="Debug" type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+    <entry name="ConfigVersion" key="Configured" type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+    <entry name="LastSyncTime" type="DateTime">
+        <label>
+        </label>
+        <default>QDateTime()</default>
+    </entry>
+		<entry name="NextSyncType" type="Enum">
+		    <label>
+				</label>
+				<choices>
+				
+				</choices>
+				<default></default>
+		</entry>
+
+    <entry name="PilotDevice" type="String">
+        <label>
+        </label>
+        <default>/dev/pilot</default>
+    </entry>
+    <entry name="PilotSpeed" type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+    <entry name="Encoding" type="String">
+        <label>
+        </label>
+        <default>QString::null</default>
+    </entry>
+    <entry name="UserName" type="String">
+        <label>
+        </label>
+        <default>QString::null</default>
+    </entry>
+    <entry name="LogFileName" type="String">
+        <label>
+        </label>
+        <default code="true">KGlobal::dirs()->saveLocation("data", "kpilot/").append("lastsync.log")</default>
+    </entry>
+    <entry name="StartDaemonAtLogin" type="Bool">
+        <label>
+        </label>
+        <default>true</default>
+    </entry>
+    <entry name="KillDaemonAtExit" type="Bool">
+        <label>
+        </label>
+        <default>false</default>
+    </entry>
+    <entry name="DockDaemon" type="Bool">
+        <label>
+        </label>
+        <default>true</default>
+    </entry>
+    <entry name="QuitAfterSync" type="Bool">
+        <label>
+        </label>
+        <default>false</default>
+    </entry>
+
+
+    <entry name="SyncType" type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+    <entry name="FullSyncOnPCChange" type="Bool">
+        <label>
+        </label>
+        <default>true</default>
+    </entry>
+    <entry name="ConflictResolution" type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+
+
+
+    <entry name="InternalEditors" key="InternalEditorsWritable"  type="Bool">
+        <label>
+        </label>
+        <default>true</default>
+    </entry>
+    <entry name="ShowSecrets" type="Bool">
+        <label>
+        </label>
+        <default>false</default>
+    </entry>
+    <entry name="SkipBackupDB" type="String">
+        <label>
+        </label>
+        <default>Arng,PmDB,lnch</default>
+    </entry>
+    <entry name="SkipRestoreDB" type="String">
+        <label>
+        </label>
+        <default>AvGo</default>
+    </entry>
+    <entry name="DeviceDBs" type="StringList">
+        <label>
+        </label>
+        <default></default>
+    </entry>
+    <entry name="AddedDBs" type="StringList">
+        <label>
+        </label>
+        <default></default>
+    </entry>
+  </group>
+
+  <group name="Conduit Names">
+    <entry name="InstalledConduits" type="StringList">
+        <label>
+        </label>
+        <default>abbrowser_conduit,internal_fileinstall,knotes-conduit,vcal-conduit,todo-conduit,mal_conduit,sysinfo_conduit</default>
+    </entry>
+  </group>
+	
+  <group name="Internal Editors">
+    <entry name="AppBlockChangedDatabases" key="AppBlock Changed" type="StringList">
+        <label>
+        </label>
+    </entry>
+    <entry name="DirtyDatabases" key="Changed Databases" type="StringList">
+        <label>
+        </label>
+    </entry>
+    <entry name="FlagsChangedDatabases" key="Flags Changed" type="StringList">
+        <label>
+        </label>
+    </entry>
+  </group>
+	
+	
+  <group name="Address Widget">
+    <entry name="AddressDisplayMode" key="AddressDisplay" type="UInt">
+        <label>
+        </label>
+        <default>0</default>
+    </entry>
+    <entry name="UseKeyField" type="Bool">
+        <label>
+        </label>
+        <default>false</default>
+    </entry>
+  </group>
+
+
+</kcfg>

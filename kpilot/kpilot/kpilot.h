@@ -126,12 +126,6 @@ public:
 	*/
 	virtual ASYNC configure();
 
-	/**
-	* This is the DCOP interface from the daemon to KPilot
-	* to configure conduits.
-	*/
-	virtual ASYNC configureConduits();
-
 protected:
 	void readConfig();
 
@@ -167,14 +161,12 @@ private:
 	LogWidget *fLogWidget;
 
 	// Used to track if dialog is visible - needed for new DCOP calls
-	bool fConfigureConduitDialogInUse;
 	bool fConfigureKPilotDialogInUse;
 
 
 protected slots:
 	void quit();
 	void slotConfigureKPilot();
-	void slotConfigureConduits();
 	void fileInstalled(int which);
 	void slotNewToolbarConfig();
 

@@ -57,7 +57,7 @@ static const char *kpilot_id =
 #include <kuniqueapp.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
-
+#include <kcmultidialog.h>
 #include <kprogress.h>
 
 
@@ -121,7 +121,6 @@ KPilotInstaller::KPilotInstaller() :
 	PilotRecord::allocationInfo();
 #endif
 	fConfigureKPilotDialogInUse = false;
-	fConfigureConduitDialogInUse = false;
 
 	/* NOTREACHED */
 	(void) kpilot_id;
@@ -228,10 +227,9 @@ void KPilotInstaller::readConfig()
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings & c = KPilotConfig::getConfig();
-	fKillDaemonOnExit = c.getKillDaemonOnExit();
+	KPilotSettings::self()->readConfig();
 
-	(void) PilotAppCategory::setupPilotCodec(c.getEncoding());
+	(void) PilotAppCategory::setupPilotCodec(KPilotSettings::encoding());
 	if (fLogWidget)
 	{
 		fLogWidget->addMessage(i18n("Using character set %1 on "
@@ -483,17 +481,6 @@ void KPilotInstaller::slotListSyncRequested()
 		slotConfigureKPilot();
 }
 
-/* virtual DCOP */ ASYNC KPilotInstaller::configureConduits()
-{
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Daemon requested configure conduits" << endl;
-#endif
-
-	if (!fConfigureConduitDialogInUse)
-		slotConfigureConduits();
-}
-
 bool KPilotInstaller::componentPreSync()
 {
 	FUNCTIONSETUP;
@@ -581,7 +568,7 @@ void KPilotInstaller::initMenu()
 		actionCollection(), "file_fastsync");
 #endif
 #ifdef DEBUG
-	(void) new KAction(TODO_I18N("List only"),CSL1("list"),0,
+	(void) new KAction(i18n("List only"),CSL1("list"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 #endif
@@ -614,9 +601,6 @@ void KPilotInstaller::initMenu()
 		actionCollection());
 	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
-        (void) new KAction(i18n("C&onfigure Conduits..."), CSL1("configure"), 0, this,
-		SLOT(slotConfigureConduits()), actionCollection(),
-		"options_configure_conduits");
 }
 
 void KPilotInstaller::fileInstalled(int)
@@ -784,9 +768,10 @@ void KPilotInstaller::slotConfigureKPilot()
 	int rememberedSync = getDaemon().nextSyncType();
 	getDaemon().requestSync(0);
 
-	KPilotConfig::getConfig().reparseConfiguration();
-	KPilotConfigDialog *options = new KPilotConfigDialog(this,
-		"configDialog", true);
+	KPilotSettings::self()->readConfig();
+	
+	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("KPilot configuration"), this, "KPilotPreferences", true );
+	options->addModule( "kpilot_config.desktop" );
 
 	if (!options)
 	{
@@ -798,16 +783,20 @@ void KPilotInstaller::slotConfigureKPilot()
 		return;
 	}
 
-	options->exec();
+	int r = options->exec();
+//	connect( options, SIGNAL( configCommitted() ),
+//		this, SLOT( readConfig() ) );
+//	options->show();
+//	options->raise();
 
-	if (options->result())
+	if ( r && options->result() )
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname << ": Updating link." << endl;
 #endif
 
-		KPilotConfig::getConfig().sync();
-		readConfig();
+		// The settings are changed in the external module!!!
+		KPilotSettings::self()->readConfig();
 
 		// Update the daemon to reflect new settings.
 		//
@@ -836,29 +825,6 @@ void KPilotInstaller::slotConfigureKPilot()
 	fStatus=Normal;
 }
 
-void KPilotInstaller::slotConfigureConduits()
-{
-	FUNCTIONSETUP;
-
-	if (fStatus!=Normal) return;
-	fStatus=UIBusy;
-	fConfigureConduitDialogInUse = true;
-
-	ConduitConfigDialog *conSetup = 0L;
-
-	conSetup = new ConduitConfigDialog(this,0L,true);
-	int r = conSetup->exec();
-	if (r)
-	{
-		KPilotConfig::getConfig().sync();
-		getDaemon().reloadSettings();
-	}
-	delete conSetup;
-
-	fConfigureConduitDialogInUse = false;
-	fStatus=Normal;
-}
-
 
 /* static */ const char *KPilotInstaller::version(int kind)
 {
@@ -884,10 +850,10 @@ void KPilotInstaller::slotConfigureConduits()
 static KCmdLineOptions kpilotoptions[] = {
 	{"s", 0, 0},
 	{"setup",
-		I18N_NOOP("Setup the Pilot device and other parameters"),
+		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
 		0L},
 	{"c", 0, 0},
-	{"conduit-setup", I18N_NOOP("Run conduit setup"), 0L},
+	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead!"), 0L},
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
@@ -899,7 +865,6 @@ static KCmdLineOptions kpilotoptions[] = {
 
 // "Regular" mode == 0
 // setup mode == 's'
-// setup forced by config change == 'S'
 // conduit setup == 'c'
 //
 // This is only changed by the --setup flag --
@@ -924,7 +889,7 @@ int main(int argc, char **argv)
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
 	about.addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+		I18N_NOOP("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
 	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
 	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
 	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
@@ -948,13 +913,9 @@ int main(int argc, char **argv)
 	KPilotConfig::getDebugLevel(p);
 #endif
 
-	if (p->isSet("setup"))
+	if (p->isSet("setup") || p->isSet("conduit-setup"))
 	{
 		run_mode = ConfigureKPilot;
-	}
-	if (p->isSet("conduit-setup"))
-	{
-		run_mode = ConfigureConduits;
 	}
 
 	if (!KUniqueApplication::start())
@@ -963,32 +924,16 @@ int main(int argc, char **argv)
 	}
 	KUniqueApplication a(true, true);
 
-	KPilotConfigSettings & c = KPilotConfig::getConfig();
-	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
+	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		kdWarning() << ": KPilot configuration version "
 			<< KPilotConfig::ConfigurationVersion
 			<< " newer than stored version "
-			<< c.getVersion() << endl;
+			<< KPilotSettings::configVersion() << endl;
 		// Only force a reconfigure and continue if the
 		// user is expecting normal startup. Otherwise,
 		// do the configuration they're explicitly asking for.
 		if (Normal==run_mode) run_mode = ConfigureAndContinue;
-	}
-
-	if (run_mode == ConfigureConduits)
-	{
-		ConduitConfigDialog *cs = new ConduitConfigDialog(0L,0L,true);
-		int r = cs->exec();
-
-		if (r)
-		{
-			return 1;	// Dialog canceled
-		}
-		else
-		{
-			return 0;
-		}
 	}
 
 	if ((run_mode == ConfigureKPilot) || (run_mode == ConfigureAndContinue))
@@ -999,13 +944,15 @@ int main(int argc, char **argv)
 			<< " (mode " << run_mode << ")" << endl;
 #endif
 		bool outdated = false;
-		if (c.getVersion() < KPilotConfig::ConfigurationVersion)
+		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
 			outdated = true;
 			KPilotConfig::interactiveUpdate();
 		}
-		KPilotConfigDialog *options = new KPilotConfigDialog(0L,
-			"configDialog", true);
+		KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, 
+			i18n("KPilot configuration"), 0L, "KPilotPreferences", true );
+		options->addModule( "kpilot_config.desktop" );
+//		ConduitConfigDialog *options = new ConduitConfigDialog(0L, "configDialog", true);
 		int r = options->exec();
 
 		// If canceled, always fail.
@@ -1015,19 +962,13 @@ int main(int argc, char **argv)
 		{
 			return 0;
 		}
-
-		// The options dialog may have changed the group
-		// while reading or writing settings (still a
-		// bad idea, actually).
-		//
-		c.resetGroup();
 	}
 
-	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
+	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		kdWarning() << k_funcinfo <<
 			": Is still not configured for use." << endl;
-		KPilotConfig::sorryVersionOutdated(c.getVersion());
+		KPilotConfig::sorryVersionOutdated( KPilotSettings::configVersion());
 		return 1;
 	}
 

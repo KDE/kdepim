@@ -35,7 +35,7 @@
 #include "vcal-setup.h"
 #include "vcal-conduit.h"
 #include "vcal-factory.moc"
-
+#include "vcalconduitSettings.h"
 
 extern "C"
 {
@@ -47,9 +47,9 @@ void *init_conduit_vcal()
 
 }
 
-// Configuration keys
-//
-//
+
+VCalConduitSettings* VCalConduitFactory::fConfig=0L;
+
 VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 	VCalConduitFactoryBase(p,n)
 {
@@ -80,7 +80,6 @@ VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("iCalendar port"));
 	fAbout->addCredit("Philipp Hullmann",
 		I18N_NOOP("Bugfixer"));
-	group="vcalOptions";
 }
 
 VCalConduitFactory::~VCalConduitFactory()
@@ -88,6 +87,14 @@ VCalConduitFactory::~VCalConduitFactory()
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fInstance);
+}
+
+VCalConduitSettings* VCalConduitFactory::config()
+{
+	if (!fConfig) {
+		fConfig = new VCalConduitSettings("vcal");
+	}
+	return fConfig;
 }
 
 /* virtual */ QObject *VCalConduitFactory::createObject( QObject *p,

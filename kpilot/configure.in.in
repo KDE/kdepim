@@ -173,6 +173,7 @@ fi
 
 AC_SUBST(PISOCK_LIB)
 AC_SUBST(PISOCK_INCLUDE)
+AM_CONDITIONAL(compile_kpilot, test "$HAVE_PISOCK" = 1)
 
 
 CPPFLAGS="$kpilot_save_cflags"

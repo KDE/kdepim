@@ -38,8 +38,8 @@ class KNotesConfigBase : public ConduitConfigBase
 public:
 	KNotesConfigBase(QWidget *parent, const char *name);
 
-	virtual void commit(KConfig *);
-	virtual void load(KConfig *);
+	virtual void commit();
+	virtual void load();
 
 	static ConduitConfigBase *create(QWidget *p, const char *n);
 private:

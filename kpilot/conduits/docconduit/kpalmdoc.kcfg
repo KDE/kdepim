@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="converterrc"/>
+	<group name="General">
+    <entry name="TXTFolder" key="TXT folder" type="String"/>
+    <entry name="PDBFolder" key="PDB folder" type="String"/>
+    <entry name="SyncFolders" key="Sync folders" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="AskOverwrite" key="Ask before overwriting files" type="Bool">
+       <default>true</default> 
+    </entry>
+    <entry name="VerboseMessages" key="Verbose messages" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="Compress"  type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="ConvertBookmarks" key="Convert bookmarks" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="BookmarksInline" key="Bookmarks inline" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="BookmarksEndtags" key="Bookmarks endtags" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="BookmarksBmk" key="Bookmarks bmk" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="BookmarksToPC" key="Bookmarks to PC" type="UInt">
+        <default>0</default>
+    </entry>
+	</group>
+</kcfg>

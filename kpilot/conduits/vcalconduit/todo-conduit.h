@@ -99,6 +99,7 @@ protected:
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
 	virtual void preRecord(PilotRecord*r);
+	virtual VCalConduitSettings *config() { return ToDoConduitFactory::config(); }
 
 protected:
 

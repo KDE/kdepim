@@ -29,9 +29,7 @@ void *init_libmalconduit()
 } ;
 
 
-// A number of static variables; except for fAbout, they're 
-// all KConfig group or entry keys.
-//
+// A number of static variables
 KAboutData *MALConduitFactory::fAbout = 0L;
 const char *MALConduitFactory::fGroup = "MAL-conduit";
 const char *MALConduitFactory::fLastSync = "Last MAL Sync";

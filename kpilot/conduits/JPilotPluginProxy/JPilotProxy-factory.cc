@@ -37,14 +37,13 @@
 #include "kpilotlink.h"
 #include "kconfig.h"
 #include "JPilotProxy-factory.moc"
-
+#include "jpilotproxysettings.h"
 
 extern "C"
 {
 
 void *init_conduit_JPilotProxy() {
 	FUNCTIONSETUP;
-//	K_EXPORT_COMPONENT_FACTORY( libkspread, KSpreadFactory )
 	return new JPilotProxyConduitFactory;
 }
 
@@ -52,9 +51,6 @@ void *init_conduit_JPilotProxy() {
 
 
 bool JPilotProxyConduitFactory::pluginsloaded=false;
-QString JPilotProxyConduitFactory::settingsGroup="JPilotPluginProxy";
-QString JPilotProxyConduitFactory::PluginPathes="PluginPathes";
-QString JPilotProxyConduitFactory::LoadedPlugins="LoadedPlugins";
 
 KAboutData *JPilotProxyConduitFactory::fAbout = 0L;
 PluginList_t *JPilotProxyConduitFactory::plugins=0L;
@@ -62,7 +58,6 @@ PluginList_t *JPilotProxyConduitFactory::plugins=0L;
 JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) :
 		KLibFactory(p,n)  {
 	FUNCTIONSETUP;
-	fConfig=0L;
 	plugins=new PluginList_t();
 	// load the library containing the JPilot API functions. If this fails, any plugin will probably crash KPilot, so just exit!!!
 	apilib=KLibLoader::self()->globalLibrary("libJPilotAPI");
@@ -176,7 +171,7 @@ int JPilotProxyConduitFactory::removePlugin( QString path) {
 	}
 }
 
-int JPilotProxyConduitFactory::addPluginPath(QString path, KConfig*fC) {
+int JPilotProxyConduitFactory::addPluginPath(QString path) {
 	FUNCTIONSETUP;
 	// find the list of possible plugins in the directory given by path
 	QDir dir(path);
@@ -188,25 +183,22 @@ int JPilotProxyConduitFactory::addPluginPath(QString path, KConfig*fC) {
 		#endif
 		bool on=false;
 		if (fC) {
-			KConfigGroupSaver cfgs(fC, settingsGroup);
-			on=fC->readBoolEntry(*it);
+			on=JPilotProxySettings::config()->readBoolEntry(*it);
 		}
 		addPlugin(dir.absFilePath(*it), on);
 	}
 }
 
-int JPilotProxyConduitFactory::loadPlugins(KConfig*fC) {
+int JPilotProxyConduitFactory::loadPlugins() {
 	FUNCTIONSETUP;
-	if (!fC) return -1;
-		
-	KConfigGroupSaver cfgs(fC, settingsGroup);
 	
-	QStringList pathes=fC->readListEntry(PluginPathes);
+	JPilotProxySettings::self()->loadConfig();
+	QStringList pathes( JPilotProxySettings::PluginPathes() );
 	for (QStringList::Iterator it = pathes.begin(); it != pathes.end(); ++it ) {
 		addPluginPath(*it, fC);
 	}
 	// now load the individual plugins...
-	QStringList plugs=fC->readListEntry(LoadedPlugins);
+	QStringList plugs( JPilotProxySettigns::LoadedPlugins() );
 	for (QStringList::Iterator it = plugs.begin(); it != plugs.end(); ++it ) {
 		addPlugin(*it, fC->readBoolEntry(*it));
 	}
@@ -219,7 +211,7 @@ int JPilotProxyConduitFactory::loadPlugins(KConfig*fC) {
 		loadedplugs.append(it.current()->info.fullpath);
 		// TODO:...
 //		QStringList pluginfo();
-//		fConfig->
+//		// Do something useful here
 	}*/
 	
 }

@@ -46,29 +46,8 @@ extern "C" {
 
 
 
-// A number of static variables; except for fAbout, they're
-// all KConfig group or entry keys.
-//
-//
+// A number of static variables
 KAboutData * DOCConduitFactory::fAbout = 0L;
-
-const char *DOCConduitFactory::fGroup = "DOC-conduit";
-const char *DOCConduitFactory::fTXTDir = "TXT Directory";
-const char *DOCConduitFactory::fPDBDir = "PDB Directory";
-const char *DOCConduitFactory::fKeepPDBLocally = "Keep PDBs locally";
-const char *DOCConduitFactory::fConflictResolution = "Conflict Resolution";
-const char *DOCConduitFactory::fConvertBookmarks = "Convert Bookmarks";
-const char *DOCConduitFactory::fBookmarksBmk = "Bmk file bookmarks";
-const char *DOCConduitFactory::fBookmarksInline = "Inline bookmarks";
-const char *DOCConduitFactory::fBookmarksEndtags = "Endtag bookmarks";
-const char *DOCConduitFactory::fCompress = "Compress";
-const char *DOCConduitFactory::fSyncDirection = "Sync Direction";
-const char *DOCConduitFactory::fDOCList = "Converted PalmDOCs";
-const char *DOCConduitFactory::fIgnoreBmkChanges = "Ignore only bookmark changes";
-const char *DOCConduitFactory::fAlwaysUseResolution = "Always show resolution dialog";
-const char *DOCConduitFactory::fPCBookmarks = "Bookmarks to PC";
-
-const char *DOCConduitFactory::fLocalSync = "Sync only locally";
 
 const char *DOCConduitFactory::dbDOCtype = "TEXt";
 const char *DOCConduitFactory::dbDOCcreator = "REAd";

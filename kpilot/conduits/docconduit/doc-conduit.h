@@ -117,12 +117,8 @@ public slots:
 	QString constructPDBFileName(QString name);
 	QString constructTXTFileName(QString name);
 
-
-	QString fTXTDir, fPDBDir;
-	bool fKeepPDBLocally;
 	eSyncDirectionEnum  eConflictResolution;
 	int fTXTBookmarks, fPDBBookmarks;
-	bool fCompress, fIgnoreBmkChangesOnly, fLocalSync, fAlwaysUseResolution;
 	QStringList fDBListSynced;
 	QStringList fDBNames;
 	syncInfoList fSyncInfoList;

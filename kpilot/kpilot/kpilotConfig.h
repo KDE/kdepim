@@ -31,122 +31,30 @@
 
 
 #include <ksimpleconfig.h>
+#include <qdatetime.h>
+#include "kpilotSettings.h"
 
 class KCmdLineArgs;
 class QLineEdit;
 class QComboBox;
 class QCheckBox;
 
-class KPilotConfigSettings : public KSimpleConfig
+
+/*class KPilotConfigSettings : public KSimpleConfig
 {
 public:
 	KPilotConfigSettings(const QString &filename,bool readonly=false);
 	virtual ~KPilotConfigSettings();
 
-	// All the functions in this class follow one of the patterns
-	//
-	// getXXX() read the config file and return the value.
-	//        If there are parameters, set the value of those parameters
-	//        to the value read.
-	// setXXX() write the value to the config file. The value might
-	//        be taken from a variety of widgets of data types.
-	//
-	// For example, the following would be typical of a string that
-	// can be entered in a line edit:
-	//
-	// QString getPilotDevice(QLineEdit *p=0L);
-	// void setPilotDevice(QLineEdit *);
-	// void setPilotDevice(const QString &);
-	//
-	// Since the boilerplate is straightfoward, I use macros to
-	// define String, Bool and Int properties.
-	//
-	//
-
-#define IntProperty(a) \
-	int get##a() const; \
-	void set##a(int); \
-
-#define BoolProperty(a) \
-	bool get##a() const; \
-	void set##a(bool);
-
-#define StringProperty(a) \
-	QString get##a() const; \
-	void set##a(const QString &);
-
-	IntProperty(Version)
-	IntProperty(Debug)
-
-	/* General tab in the config dialog */
-	StringProperty(PilotDevice)
-	IntProperty(PilotSpeed)
-	StringProperty(Encoding)
-	StringProperty(User)
-	BoolProperty(StartDaemonAtLogin)
-	BoolProperty(DockDaemon)
-	BoolProperty(KillDaemonOnExit)
-	BoolProperty(QuitAfterSync)
-
-	/* Sync tab */
-	IntProperty(SyncType)
-	BoolProperty(FullSyncOnPCChange)
-	IntProperty(ConflictResolution)
-	// BoolProperty(SyncFiles)
-	// BoolProperty(SyncWithKMail)
-
-	/* Viewers tab */
-	BoolProperty(InternalEditors)
-	BoolProperty(ShowSecrets)
-
-	// Address widget stuff goes in a different group
-	KPilotConfigSettings &setAddressGroup();
-	IntProperty(AddressDisplayMode)
-	BoolProperty(UseKeyField)
-
-	/* Backup tab */
-	StringProperty(BackupOnly)
-	StringProperty(Skip)
-
-
-
-
-#undef StringProperty
-#undef BoolProperty
-#undef IntProperty
-
 	// Conduit configuration information
-	//
-	//
-	KPilotConfigSettings &setConduitGroup();
-
-	QStringList getInstalledConduits();
-	void setInstalledConduits(const QStringList &);
-
-	QStringList getDirtyDatabases();
-	void setDirtyDatabases(const QStringList &);
 	void addDirtyDatabase(QString db);
-
-	QStringList getAppBlockChangedDatabases();
-	void setAppBlockChangedDatabases(const QStringList &);
 	void addAppBlockChangedDatabase(QString db);
-
-	QStringList getFlagsChangedDatabases();
-	void setFlagsChangedDatabases(const QStringList &);
 	void addFlagsChangedDatabase(QString db);
-
-	KPilotConfigSettings &setDatabaseGroup();
-	void setDatabaseConduit(const QString &database,const QString &conduit);
-
-public:
-	// Re-export some useful functions from KConfig
-	//
-	//
-	void sync() { KSimpleConfig::sync(); } ;
-	KPilotConfigSettings & resetGroup()
-		{ setGroup(QString::null); return *this; } ;
-
-} ;
+	
+	QDateTime getLastSyncTime();
+	void setLastSyncTime( QDateTime &);
+	
+} ;*/
 
 class KPilotConfig
 {
@@ -162,7 +70,7 @@ public:
 	* created, or the program will crash (SIGSEGV in KDE 2.1,
 	* qFatal() with a sensible message in KDE 2.2).
 	*/
-	static KPilotConfigSettings& getConfig();
+//	static KPilotConfigSettings& getConfig();
 
         /**
 	 * @return QString of default path for the BackupDB files
@@ -171,20 +79,24 @@ public:
         static QString getDefaultDBPath();
 
 
+	// Conduit configuration information
+	static void addDirtyDatabase(QString db);
+	static void addAppBlockChangedDatabase(QString db);
+	static void addFlagsChangedDatabase(QString db);
+	
 	/**
 	* This number can be changed every time a new
 	* KPilot version is released that absolutely requires
 	* the user to take a look at the configuration of
 	* KPilot.
 	*/
-	static const int ConfigurationVersion;
+	static const uint ConfigurationVersion;
 
 	/**
 	* Reads the configuration version from a configuration file.
 	* TODO: Make this use the *standard* location.
 	*/
-	static int getConfigVersion(KConfig *);
-	static int getConfigVersion(KConfig&);
+	static int getConfigVersion();
 
 	/**
 	* Write the current configuration version to the standard
@@ -214,6 +126,8 @@ public:
 	* fixed font.
 	*/
 	static const QFont& fixed() ;
+	
+	static void sync() { KPilotSettings::self()->config()->sync(); }
 } ;
 
 

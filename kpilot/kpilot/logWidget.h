@@ -29,7 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include "logWidgetDCOP.h"
+#include "loggerDCOP.h"
 #include "pilotComponent.h"
 
 class QLabel;
@@ -56,6 +56,8 @@ public:
 	virtual ASYNC logError(QString);
 	virtual ASYNC logMessage(QString);
 	virtual ASYNC logProgress(QString,int);
+	virtual ASYNC logStartSync();
+	virtual ASYNC logEndSync();
 
 	// GUI customization hooks
 	//

@@ -157,8 +157,8 @@ class PopMailWidgetConfig : public ConduitConfigBase
 Q_OBJECT
 public:
 	PopMailWidgetConfig(QWidget *, const char *);
-	virtual void load(KConfig *);
-	virtual void commit(KConfig *);
+	virtual void load();
+	virtual void commit();
 
 	static ConduitConfigBase *create(QWidget *w, const char *n)
 		{ return new PopMailWidgetConfig(w,n); } ;

@@ -45,8 +45,6 @@ public:
 	virtual ~TimeConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
-	static const char *group() { return fGroup; } ;
-	static const char *direction() { return fDirection; } ;
 	
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -56,8 +54,6 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	// KConfig entry keys.
-	static const char *fGroup, *fDirection;
 } ;
 
 extern "C"

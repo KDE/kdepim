@@ -49,6 +49,7 @@
 
 #include "mal-factory.h"
 #include "mal-setup.moc"
+#include "malconduitSettings.h"
 
 
 MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n,
@@ -75,42 +76,40 @@ MALWidgetSetup::~MALWidgetSetup()
 {
 	FUNCTIONSETUP;
 
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,MALConduitFactory::group());
-	
-	fConfig->writeEntry(MALConduitFactory::syncTime(),
+	MALConduitSettings::setSyncFrequency(
 		fConfigWidget->syncTime->id(fConfigWidget->syncTime->selected()));
 	
 	// Proxy settings
-	fConfig->writeEntry(MALConduitFactory::proxyType(),
+	MALConduitSettings::setProxyType(
 		fConfigWidget->proxyType->id(fConfigWidget->proxyType->selected()));
-	fConfig->writeEntry(MALConduitFactory::proxyServer(), fConfigWidget->proxyServerName->currentText() );
+	MALConduitSettings::setProxyServer( fConfigWidget->proxyServerName->currentText() );
 
 	if (fConfigWidget->proxyCustomPortCheck->isChecked() ) 
 	{
-		fConfig->writeEntry(MALConduitFactory::proxyPort(), 	fConfigWidget->proxyCustomPort->value());
+		MALConduitSettings::setProxyPort( fConfigWidget->proxyCustomPort->value());
 	}
 	else 
 	{
-		fConfig->writeEntry(MALConduitFactory::proxyPort(), 0);
+		MALConduitSettings::setProxyPort(0);
 	}
-	fConfig->writeEntry(MALConduitFactory::proxyUser(),  fConfigWidget->proxyUserName->text() );
-	fConfig->writeEntry(MALConduitFactory::proxyPassword(), fConfigWidget->proxyPassword->text() );
+	MALConduitSettings::setProxyUser( fConfigWidget->proxyUserName->text() );
+	MALConduitSettings::setProxyPassword( fConfigWidget->proxyPassword->text() );
 
 	// MAL Server settings (not yet possible!!!)
-	fConfig->writeEntry(MALConduitFactory::malServer(), fConfigWidget->malServerName->currentText() );
+	MALConduitSettings::setMALServer( fConfigWidget->malServerName->currentText() );
 	
 	if (fConfigWidget->malCustomPortCheck->isChecked() ) 
 	{
-		fConfig->writeEntry(MALConduitFactory::malPort(), fConfigWidget->malCustomPort->value());
+		MALConduitSettings::setMALPort( fConfigWidget->malCustomPort->value());
 	}
 	else 
 	{
-		fConfig->writeEntry(MALConduitFactory::malPort(), 0);
+		MALConduitSettings::setMALPort(0);
 	}
-	fConfig->writeEntry(MALConduitFactory::malUser(),  fConfigWidget->malUserName->text() );
-	fConfig->writeEntry(MALConduitFactory::malPassword(), fConfigWidget->malPassword->text() );
+	MALConduitSettings::setMALUser( fConfigWidget->malUserName->text() );
+	MALConduitSettings::setMALPassword( fConfigWidget->malPassword->text() );
+	
+	MALConduitSettings::self()->writeConfig();
 }
 
 
@@ -118,38 +117,35 @@ MALWidgetSetup::~MALWidgetSetup()
 /* virtual */ void MALWidgetSetup::readSettings()
 {
 	FUNCTIONSETUP;
+	MALConduitSettings::self()->readConfig();
 
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,MALConduitFactory::group());
-	
-	fConfigWidget->syncTime->setButton(fConfig->readNumEntry(MALConduitFactory::syncTime(), 0));
+	fConfigWidget->syncTime->setButton( MALConduitSettings::syncFrequency() );
 	
 	// Proxy settings
-	fConfigWidget->proxyType->setButton(fConfig->readNumEntry(MALConduitFactory::proxyType(), 0));
-	fConfigWidget->proxyServerName->setEditText(fConfig->readEntry(MALConduitFactory::proxyServer()));
+	fConfigWidget->proxyType->setButton(MALConduitSettings::proxyType());
+	fConfigWidget->proxyServerName->setEditText(MALConduitSettings::proxyServer());
 	
-	int proxyPortNr=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
+	int proxyPortNr=MALConduitSettings::proxyPort();
 	if (proxyPortNr>0 && proxyPortNr<65536) 
 	{
 		fConfigWidget->proxyCustomPortCheck->setChecked(true);
 		fConfigWidget->proxyCustomPort->setEnabled(true);
 		fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
 	}
-	fConfigWidget->proxyUserName->setText(fConfig->readEntry(MALConduitFactory::proxyUser()));
-	fConfigWidget->proxyPassword->setText(fConfig->readEntry(MALConduitFactory::proxyPassword()));
+	fConfigWidget->proxyUserName->setText(MALConduitSettings::proxyUser());
+	fConfigWidget->proxyPassword->setText(MALConduitSettings::proxyPassword());
 
 	// MAL Server settings (not yet possible!!!)
-	fConfigWidget->malServerName->setEditText(fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com"));
+	fConfigWidget->malServerName->setEditText(MALConduitSettings::mALServer());
 	
-	int malPortNr=fConfig->readNumEntry(MALConduitFactory::malPort(), 0);
+	int malPortNr=MALConduitSettings::mALPort();
 	if (malPortNr>0 && malPortNr<65536) 
 	{
 		fConfigWidget->malCustomPortCheck->setChecked(true);
 		fConfigWidget->malCustomPort->setEnabled(true);
 		fConfigWidget->malCustomPort->setValue(proxyPortNr);
 	}
-	fConfigWidget->malUserName->setText(fConfig->readEntry(MALConduitFactory::malUser()));
-	fConfigWidget->malPassword->setText(fConfig->readEntry(MALConduitFactory::malPassword()));
+	fConfigWidget->malUserName->setText(MALConduitSettings::mALUser());
+	fConfigWidget->malPassword->setText(MALConduitSettings::mALPassword());
 }
 

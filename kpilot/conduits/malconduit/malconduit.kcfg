@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+  <group name="MAL-conduit">
+    <entry name="LastMALSync" key="Last MAL Sync" type="DateTime">
+				<default>QDateTime( QDate(1970,1,1), QTime(0,0,0) )</default>
+		</entry>
+		
+    <entry name="SyncFrequency" key="Sync Frequency" type="Enum">
+				<choices>
+					<choice name="eEverySync"/>
+					<choice name="eEveryHour"/>
+					<choice name="eEveryDay"/>
+					<choice name="eEveryWeek"/>
+					<choice name="eEveryMonth"/>
+				</choices>
+        <default>eEverySync</default>
+    </entry>
+		
+    <entry name="ProxyType" key="Proxy Type" type="Enum">
+				<choices>
+					<choice name="eProxyNone"/>
+					<choice name="eProxyHTTP"/>
+					<choice name="eProxySOCKS"/>
+				</choices>
+        <default>eProxyNone</default>
+    </entry>
+    <entry name="ProxyServer" key="Proxy Server" type="String">
+        <default></default>
+    </entry>
+    <entry name="ProxyPort" key="Proxy Port" type="UInt">
+        <default>0</default>
+    </entry>
+    <entry name="ProxyUser" key="Proxy User" type="String">
+        <default></default>
+    </entry>
+    <entry name="ProxyPassword" key="Proxy Password" type="String">
+        <default></default>
+    </entry>
+    <entry name="MALServer" key="MAL Server" type="String">
+        <default>sync.avantgo.com</default>
+    </entry>
+    <entry name="MALPort" key="MAL Port" type="UInt">
+        <default>0</default>
+    </entry>
+    <entry name="MALUser" key="MAL User" type="String">
+        <default></default>
+    </entry>
+    <entry name="MALPassword" key="MAL Password" type="String">
+        <default></default>
+    </entry>
+  </group>
+</kcfg>

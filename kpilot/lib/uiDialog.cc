@@ -74,16 +74,11 @@ UIDialog::~UIDialog()
 	FUNCTIONSETUP;
 }
 
-/* static */ QPushButton *UIDialog::addAboutPage(QTabWidget *tw,
-	KAboutData *ad,
-	bool /* aboutbutton */)
+/* static */ QWidget *UIDialog::aboutPage(QWidget *parent, KAboutData *ad)
 {
 	FUNCTIONSETUP;
 
-	Q_ASSERT(tw);
-
-	QWidget *w = new QWidget(tw, "aboutpage");
-	QPushButton *but = 0L;
+	QWidget *w = new QWidget(parent, "aboutpage");
 
 	QString s;
 	QLabel *text;
@@ -106,7 +101,7 @@ UIDialog::~UIDialog()
 	QPixmap applicationIcon =
 		l->loadIcon(QString::fromLatin1(p->appName()),
 		KIcon::Desktop,
-		0, KIcon::DefaultState, 0L,
+		64, KIcon::DefaultState, 0L,
 		true);
 
 	if (applicationIcon.isNull())
@@ -125,7 +120,7 @@ UIDialog::~UIDialog()
 	// Experiment with a long non-<qt> string. Use that to find
 	// sensible widths for the columns.
 	//
-	text->setText(i18n("Send questions and comments to kde-pim@kde.org"));
+	text->setText(i18n("Send questions and comments to kdepim-users@kde.org"));
 	text->adjustSize();
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -157,17 +152,19 @@ UIDialog::~UIDialog()
 	linktext->setMinimumSize(linewidth,QMAX(260,60+12*lineheight));
 	linktext->setFixedHeight(QMAX(260,60+12*lineheight));
 	linktext->setVScrollBarMode(QScrollView::AlwaysOn);
-	grid->addMultiCellWidget(linktext,0,2,2,3);
+	text = new QLabel(w);
+	grid->addMultiCellWidget(text,0,0,2,3);
+	grid->addMultiCellWidget(linktext,1,2,1,3);
 
 	// Now set the program and copyright information.
-	s = CSL1("<h3>");
+	s = CSL1("<qt><h3>");
 	s += p->programName();
 	s += ' ';
 	s += p->version();
 	s += CSL1("</h3>");
-	linktext->append(s);
-	s = p->copyrightStatement() + CSL1("<br>");
-	linktext->append(s);
+	s += p->copyrightStatement() + CSL1("<br></qt>");
+	text->setText(s);
+
 	linktext->append(p->shortDescription() + CSL1("<br>"));
 
 	if (!p->homepage().isEmpty())
@@ -253,6 +250,18 @@ UIDialog::~UIDialog()
 		<< endl;
 #endif
 
+	return w;
+}
+
+/* static */ void UIDialog::addAboutPage(QTabWidget *tw,
+	KAboutData *ad,
+	bool /* aboutbutton */)
+{
+	FUNCTIONSETUP;
+
+	Q_ASSERT(tw);
+
+	QWidget *w = UIDialog::aboutPage(tw,ad);
 	QSize sz = w->size();
 
 	if (sz.width() < tw->size().width())
@@ -276,17 +285,12 @@ UIDialog::~UIDialog()
 	tw->resize(sz);
 	tw->addTab(w, i18n("About"));
 	tw->adjustSize();
-	return but;
 }
 
 void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 {
 	FUNCTIONSETUP;
-	QPushButton *but = addAboutPage(tabWidget(),ad,aboutbutton);
-	if (but)
-	{
-		connect(but, SIGNAL(clicked()), this, SLOT(showAbout()));
-	}
+	addAboutPage(tabWidget(),ad,aboutbutton);
 }
 
 void UIDialog::setTabWidget(QTabWidget * w)

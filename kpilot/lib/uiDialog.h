@@ -9,7 +9,7 @@
 ** some support for the default about-page in setup dialogs, for applications
 ** (like conduits) with no main window or menu.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -68,9 +68,15 @@ public:
 	* page to a tabwidget. It is made public and static so that
 	* it can be used elsewhere wherever tabwidgets appear.
 	*/
-	static QPushButton *addAboutPage(QTabWidget *,
+	static  void addAboutPage(QTabWidget *,
 		KAboutData *data=0L,
 		bool aboutbutton=false);
+
+	/**
+	* This creates the actual about widget. Again, public & static so
+	* you can slap in an about widget wherever.
+	*/
+	static QWidget *aboutPage(QWidget *parent, KAboutData *data=0L);
 
 protected slots:
 	void showAbout();

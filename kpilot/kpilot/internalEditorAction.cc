@@ -74,7 +74,7 @@ void InternalEditorAction::syncDirtyDB()
 	if (fInternalEditorSyncStatus!=eSyncDirtyDB)
 	{
 		fInternalEditorSyncStatus=eSyncDirtyDB;
-		dirtyDBs=KPilotConfig::getConfig().getDirtyDatabases();
+		dirtyDBs=KPilotSettings::dirtyDatabases();
 		emit logMessage(i18n("Databases with changed records: %1").arg(dirtyDBs.join(", ")));
 		dbIter=dirtyDBs.begin();
 	}
@@ -84,8 +84,8 @@ void InternalEditorAction::syncDirtyDB()
 	}
 	if (dbIter==dirtyDBs.end())
 	{
-		KPilotConfig::getConfig().setDirtyDatabases(QStringList());
-		KPilotConfig::getConfig().sync();
+		KPilotSettings::setDirtyDatabases(QStringList());
+		KPilotConfig::sync();
 		QTimer::singleShot(0, this, SLOT(syncFlagsChangedDB()));
 		return;
 	}
@@ -320,7 +320,7 @@ void InternalEditorAction::syncFlagsChangedDB()
 	if (fInternalEditorSyncStatus!=eSyncFlagsChangedDB)
 	{
 		fInternalEditorSyncStatus=eSyncFlagsChangedDB;
-		dirtyDBs=KPilotConfig::getConfig().getFlagsChangedDatabases();
+		dirtyDBs=KPilotSettings::flagsChangedDatabases();
 		emit logMessage(i18n("Databases with changed flags: %1").arg(dirtyDBs.join(", ")));
 		dbIter=dirtyDBs.begin();
 	}
@@ -330,8 +330,8 @@ void InternalEditorAction::syncFlagsChangedDB()
 	}
 	if (dbIter==dirtyDBs.end())
 	{
-		KPilotConfig::getConfig().setFlagsChangedDatabases(QStringList());
-		KPilotConfig::getConfig().sync();
+		KPilotSettings::setFlagsChangedDatabases(QStringList());
+		KPilotConfig::sync();
 		QTimer::singleShot(0, this, SLOT(syncAppBlockChangedDB()));
 		return;
 	}
@@ -361,7 +361,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 	if (fInternalEditorSyncStatus!=eSyncAppBlockChangedDB)
 	{
 		fInternalEditorSyncStatus=eSyncAppBlockChangedDB;
-		dirtyDBs=KPilotConfig::getConfig().getAppBlockChangedDatabases();
+		dirtyDBs=KPilotSettings::appBlockChangedDatabases();
 		emit logMessage(i18n("Databases with changed AppBlock: %1").arg(dirtyDBs.join(", ")));
 		dbIter=dirtyDBs.begin();
 	}
@@ -371,8 +371,8 @@ void InternalEditorAction::syncAppBlockChangedDB()
 	}
 	if (dbIter==dirtyDBs.end())
 	{
-		KPilotConfig::getConfig().setAppBlockChangedDatabases(QStringList());
-		KPilotConfig::getConfig().sync();
+		KPilotSettings::setAppBlockChangedDatabases(QStringList());
+		KPilotConfig::sync();
 		QTimer::singleShot(0, this, SLOT(cleanup()));
 		return;
 	}

@@ -30,37 +30,69 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "uiDialog.h"
+#include "plugin.h"
+
 
 class KPilotConfigWidget;
-class KPilotConfigSettings;
+class SyncConfigWidget;
+class DeviceConfigWidget;
 
-class KPilotConfigDialog : public UIDialog
+class DeviceConfigPage : public ConduitConfigBase
 {
 Q_OBJECT
 public:
-	KPilotConfigDialog(QWidget *,const char *,bool);
-	virtual ~KPilotConfigDialog();
+	DeviceConfigPage( QWidget *, const char * );
 
 protected:
 	virtual bool validate();
-	virtual void commitChanges();
+	virtual void load();
+	virtual void commit();
 
 protected slots:
 	void changePortType(int);
+
+private:
+	DeviceConfigWidget *fConfigWidget;
+
+	// Read and write the values of Encoding
+	// and EncodingDD.
+	void getEncoding();
+	void setEncoding();
+} ;
+
+
+class SyncConfigPage : public ConduitConfigBase
+{
+Q_OBJECT
+public:
+	SyncConfigPage( QWidget *, const char * );
+
+protected:
+	virtual bool validate();
+	virtual void load();
+	virtual void commit();
+
+protected slots:
 	void slotSelectNoBackupDBs();
 	void slotSelectNoRestoreDBs();
 
 private:
+	SyncConfigWidget *fConfigWidget;
+} ;
+
+class KPilotConfigPage : public ConduitConfigBase
+{
+Q_OBJECT
+public:
+	KPilotConfigPage( QWidget *, const char * );
+
+protected:
+	virtual bool validate();
+	virtual void load();
+	virtual void commit();
+
+private:
 	KPilotConfigWidget *fConfigWidget;
-
-	void readConfig();
-	void disableUnusedOptions();
-
-	// Read and write the values of Encoding
-	// and EncodingDD.
-	void getEncoding(const KPilotConfigSettings &);
-	void setEncoding(KPilotConfigSettings &);
 } ;
 
 #endif

@@ -37,8 +37,9 @@ class TimeWidgetConfig : public ConduitConfigBase
 {
 public:
 	TimeWidgetConfig(QWidget *parent, const char *);
-	virtual void commit(KConfig *);
-	virtual void load(KConfig *);
+	virtual void commit();
+	virtual void load();
+	static ConduitConfigBase *create(QWidget *,const char *);
 protected:
 	TimeWidget *fConfigWidget;
 } ;

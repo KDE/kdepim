@@ -113,7 +113,7 @@ using namespace std;
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.4.0 (HEAD)"
+#define KPILOT_VERSION	"4.4.1 (Osnabr\374ck)"
 
 // * KPilot debugging code looks like:
 //
@@ -157,7 +157,6 @@ QString rtExpand(const QString &s, bool richText=true);
 				if (debug_level>l) { DEBUGFUNC << \
 				fname << KPILOT_LOCNDEF; }
 
-class KConfig;
 
 // Next all kinds of specialty debugging functions,
 // added in an ad-hoc fashion.
@@ -186,8 +185,6 @@ QString charExpansion(const char *);
 #define FUNCTIONSETUP
 #define FUNCTIONSETUPL(a)
 #endif
-
-class KConfig;
 
 // Next all kinds of specialty debugging functions,
 // added in an ad-hoc fashion.

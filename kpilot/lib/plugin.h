@@ -37,7 +37,6 @@
 #include "uiDialog.h"
 #include "syncAction.h"
 
-class KConfig;
 class PilotDatabase;
 
 /**
@@ -87,8 +86,8 @@ public:
 	* commit() should both call unmodified() to indicate that
 	* the current settings match the on-disk ones.
 	*/
-	virtual void commit(KConfig *) = 0L;
-	virtual void load(KConfig *) = 0L;
+	virtual void commit() = 0L;
+	virtual void load() = 0L;
 	/**
 	* Called when the object is to be hidden again and might
 	* need to save changed settings. Should prompt the user
@@ -98,7 +97,7 @@ public:
 	* Returns false if the change is to be canceled. Returns
 	* true otherwise, whether or not the changes were saved.
 	*/
-	virtual bool maybeSave(KConfig *);
+	virtual bool maybeSave();
 protected:
 	/**
 	* This function provides the string for the prompt used
@@ -111,6 +110,8 @@ public:
 
 protected slots:
 	void modified();
+signals:
+	void changed(bool);
 
 protected:
 	bool fModified;
@@ -138,8 +139,6 @@ public:
 		const QStringList &args = QStringList()) KDE_DEPRECATED;
 	virtual ~ConduitConfig();
 
-	void setConfig(KConfig *c) { fConfig=c; } ;
-
 	virtual void readSettings() = 0 ;
 	/* virtual void commit() = 0 ; --- from UIDialog */
 
@@ -148,7 +147,6 @@ public:
 	// in this file.
 	QString conduitName() const { return fConduitName; } ;
 protected:
-	KConfig *fConfig;
 	QString fConduitName;
 } ;
 
@@ -202,8 +200,6 @@ public:
 		const QStringList &args = QStringList());
 	virtual ~ConduitAction();
 
-	void setConfig(KConfig *c) { fConfig=c; } ;
-
 	QString conduitName() const { return fConduitName; } ;
 
 protected:
@@ -239,7 +235,6 @@ protected:
 		(fSyncDirection==SyncAction::eCopyHHToPC) ||
 		(fSyncDirection==SyncAction::eCopyPCToHH); };
 
-	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
 	/**

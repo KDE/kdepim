@@ -63,6 +63,7 @@ static const char *TodoConduit_id = "$Id$";
 #include <pilotLocalDatabase.h>
 
 #include "todo-conduit.moc"
+#include "vcalconduitSettings.h"
 
 // define conduit versions, one for the version when categories were synced for the first time, and the current version number
 #define CONDUIT_VERSION_CATEGORYSYNC 10
@@ -253,7 +254,7 @@ void TodoConduit::readConfig()
 	VCalConduitBase::readConfig();
 	// determine if the categories have ever been synce. Needed to prevent loosing the categories on the desktop.
 	// also use a full sync for the first time to make sure the palm categories are really transferred to the desktop
-	categoriesSynced = fConfig->readNumEntry("ConduitVersion", 0)>=CONDUIT_VERSION_CATEGORYSYNC;
+	categoriesSynced = config()->conduitVersion()>=CONDUIT_VERSION_CATEGORYSYNC;
 	if (!categoriesSynced & !isFullSync() ) fSyncDirection=SyncAction::eFullSync;
 #ifdef DEBUG
 	DEBUGCONDUIT<<"categoriesSynced="<<categoriesSynced<<endl;
@@ -266,9 +267,8 @@ void TodoConduit::postSync()
 {
 	FUNCTIONSETUP;
 	VCalConduitBase::postSync();
-	fConfig->setGroup(configGroup());
 	// after this successful sync the categories have been synced for sure
-	fConfig->writeEntry("ConduitVersion", CONDUIT_VERSION);
+	config()->setConduitVersion( CONDUIT_VERSION );
 	_setAppInfo();
 }
 

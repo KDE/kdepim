@@ -38,11 +38,12 @@ class KAboutData;
 
 class ToDoConduitFactory : public VCalConduitFactoryBase
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
 	ToDoConduitFactory(QObject * = 0L,const char * = 0L);
 	virtual ~ToDoConduitFactory();
+	static VCalConduitSettings*config();
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -51,7 +52,8 @@ protected:
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
-} ;
+	static VCalConduitSettings*fConfig;
+};
 
 extern "C"
 {

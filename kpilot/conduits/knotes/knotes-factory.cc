@@ -57,9 +57,6 @@ void *init_conduit_knotes()
 
 /* static */ KAboutData *KNotesConduitFactory::fAbout = 0L;
 
-const char * const KNotesConduitFactory::group = "KNotes-conduit";
-const char * const KNotesConduitFactory::matchDeletes = "DeleteNoteForMemo";
-
 KNotesConduitFactory::KNotesConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
 {

@@ -72,7 +72,7 @@ static const char *vcalconduitbase_id = "$Id$";
 
 #include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"
-
+#include "vcalconduitSettings.h"
 
 
 
@@ -164,14 +164,6 @@ there are two special cases: a full and a first sync.
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<vcalconduitbase_id<<endl;
 
-	if (!fConfig)
-	{
-		kdWarning() << k_funcinfo
-			<< ": No configuration set for vcal-conduit"
-			<< endl;
-		return false;
-	}
-
 	readConfig();
 
 	// don't do a first sync by default in any case, only when explicitly requested, or the backup
@@ -187,10 +179,10 @@ there are two special cases: a full and a first sync.
 #ifdef DEBUG
 	DEBUGCONDUIT<<fname<<": fullsync="<<isFullSync()<<", firstSync="<<isFirstSync()<<endl;
 	DEBUGCONDUIT<<fname<<": syncAction="<<fSyncDirection<<
-		", conflictResolution = "<<fConflictResolution<<", archive = "<<archive<<endl;
+		", conflictResolution = "<<fConflictResolution<<", archive = "<<config()->syncArchived()<<endl;
 #endif
 
-	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(fCalendarFile));
+	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
 	pilotindex=0;
 	switch (fSyncDirection)
 	{
@@ -220,14 +212,9 @@ error:
 
 /* virtual */ void VCalConduitBase::readConfig()
 {
-	fConfig->setGroup(configGroup());
-
-	fCalendarFile = fConfig->readPathEntry(VCalConduitFactoryBase::calendarFile);
-	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)fConfig->readNumEntry(
-		VCalConduitFactoryBase::conflictResolution, SyncAction::eUseGlobalSetting);
+	config()->readConfig();
+	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)(config()->conflictResolution());
 	if (res!=SyncAction::eUseGlobalSetting) fConflictResolution=res;
-	archive = fConfig->readBoolEntry(VCalConduitFactoryBase::archive);
-	fCalendarType = (eCalendarTypeEnum)fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0);
 }
 
 
@@ -246,19 +233,22 @@ error:
 
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Using calendar file " << fCalendarFile << endl;
-	DEBUGCONDUIT << "fCalendarType="<<fCalendarType<<endl;
-	DEBUGCONDUIT << "eCalendarLocal would be "<<eCalendarLocal<<
-			", eCalendarResources would be "<<eCalendarResource<<endl;
+	DEBUGCONDUIT << fname << ": Using calendar file " << config()->calendarFile() << endl;
+	DEBUGCONDUIT << "fCalendarType="<<config()->calendarType()<<endl;
+	DEBUGCONDUIT << "eCalendarLocal would be "<<VCalConduitSettings::eCalendarLocal<<
+			", eCalendarResources would be "<<VCalConduitSettings::eCalendarResource<<endl;
 #endif
 
-	switch(fCalendarType)
+	// Need a subclass ptr. for the ResourceCalendar methods
+	KCal::CalendarResources *rescal = 0L;
+	
+	switch(config()->calendarType())
 	{
-		case eCalendarLocal:
+		case VCalConduitSettings::eCalendarLocal:
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Using CalendarLocal!"<<endl;
 #endif
-			if (fCalendarFile.isEmpty() )
+			if (config()->calendarFile().isEmpty() )
 			{
 #ifdef DEBUG
 				DEBUGCONDUIT<<"empty calendar file name, cannot open"<<endl;
@@ -273,7 +263,7 @@ error:
 			if ( !fCalendar)
 			{
 				kdWarning() << k_funcinfo <<
-				    "Cannot initialize calendar object for file "<<fCalendarFile<<endl;
+				    "Cannot initialize calendar object for file "<<config()->calendarFile()<<endl;
 				return false;
 			}
 #ifdef DEBUG
@@ -283,23 +273,23 @@ error:
 
 			// if there is no calendar yet, use a first sync..
 			// the calendar is initialized, so nothing more to do...
-			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
+			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(config()->calendarFile()) )
 			{
 #ifdef DEBUG
-				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<
+				DEBUGCONDUIT << "calendar file "<<config()->calendarFile()<<
 						" could not be opened. Will create a new one"<<endl;
 #endif
 				// Try to create empty file. if it fails, no valid file name was given.
-				QFile fl(fCalendarFile);
+				QFile fl(config()->calendarFile());
 				if (!fl.open(IO_WriteOnly | IO_Append))
 				{
 #ifdef DEBUG
-					DEBUGCONDUIT<<"Invalid calendar file name "<<fCalendarFile<<endl;
+					DEBUGCONDUIT<<"Invalid calendar file name "<<config()->calendarFile()<<endl;
 #endif
 					emit logError(i18n("You chose to sync with the file \"%1\", which "
 							"cannot be opened or created. Please make sure to supply a "
 							"valid file name in the conduit's configuration dialog. "
-							"Aborting the conduit.").arg(fCalendarFile));
+							"Aborting the conduit.").arg(config()->calendarFile()));
 					return false;
 				}
 				fl.close();
@@ -307,17 +297,20 @@ error:
 			}
 			break;
 
-		case eCalendarResource:
+		case VCalConduitSettings::eCalendarResource:
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Using CalendarResource!"<<endl;
 #endif
-			fCalendar = new KCal::CalendarResources(tz);
+			rescal = new KCal::CalendarResources(tz);
+			fCalendar = rescal;
 			if ( !fCalendar)
 			{
 				kdWarning() << k_funcinfo << "Cannot initialize calendar "<<
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
+			rescal->readConfig();
+			rescal->load();
 			break;
 		default:
 			break;
@@ -388,10 +381,10 @@ void VCalConduitBase::slotPalmRecToPC()
 			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->getID()<<endl;
 		}
 #endif
-		if (!r->isDeleted() || (archive && archiveRecord))
+		if (!r->isDeleted() || (config()->syncArchived() && archiveRecord))
 		{
 			KCal::Incidence*e=addRecord(r);
-			if (archive && archiveRecord)  {
+			if (config()->syncArchived() && archiveRecord)  {
 				e->setSyncStatus(KCal::Incidence::SYNCDEL);
 			}
 		}
@@ -400,7 +393,7 @@ void VCalConduitBase::slotPalmRecToPC()
 	{
 		if (r->isDeleted())
 		{
-			if (archive && archiveRecord)
+			if (config()->syncArchived() && archiveRecord)
 			{
 				changeRecord(r,s);
 			}
@@ -535,12 +528,12 @@ void VCalConduitBase::cleanup()
 	KPILOT_DELETE(fLocalDatabase);
 	if (fCalendar)
 	{
-		switch(fCalendarType)
+		switch(config()->calendarType())
 		{
-			case eCalendarLocal:
-					dynamic_cast<KCal::CalendarLocal*>(fCalendar)->save(fCalendarFile);
+			case VCalConduitSettings::eCalendarLocal:
+					dynamic_cast<KCal::CalendarLocal*>(fCalendar)->save(config()->calendarFile());
 				break;
-			case eCalendarResource:
+			case VCalConduitSettings::eCalendarResource:
 				fCalendar->save();
 				break;
 			default:
@@ -559,8 +552,6 @@ void VCalConduitBase::cleanup()
 void VCalConduitBase::postSync()
 {
 	FUNCTIONSETUP;
-	fConfig->setGroup(configGroup());
-	fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
 }
 
 

@@ -49,8 +49,6 @@ public slots:
 
 protected:
 	void readConfig();
-private:
-	int fDirection;
 } ;
 
 #endif

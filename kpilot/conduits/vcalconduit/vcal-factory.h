@@ -32,6 +32,7 @@
 
 #include <klibloader.h>
 #include "vcal-factorybase.h"
+#include "vcal-factory.h"
 
 class KInstance;
 class KAboutData;
@@ -43,7 +44,8 @@ class VCalConduitFactory : public VCalConduitFactoryBase
 public:
 	VCalConduitFactory(QObject * = 0L,const char * = 0L);
 	virtual ~VCalConduitFactory();
-
+	static VCalConduitSettings*config();
+	
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -51,6 +53,7 @@ protected:
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
+	static VCalConduitSettings*fConfig;
 };
 
 extern "C"

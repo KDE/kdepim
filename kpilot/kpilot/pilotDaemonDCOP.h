@@ -35,6 +35,8 @@
 #include <dcopobject.h>
 #endif
 
+#include <qdatetime.h>
+#include <qstringlist.h>
 
 class PilotDaemonDCOP : virtual public DCOPObject
 {
@@ -70,6 +72,17 @@ k_dcop:
 	* Functions requesting the status of the daemon.
 	*/
 	virtual QString statusString() = 0;
+	
+	/** 
+	* Functions reporting same status data, e.g. for the kontact plugin.
+	*/
+	virtual QDateTime lastSyncDate() = 0;
+	virtual QStringList configuredConduitList() = 0;
+	virtual QString logFileName() = 0;
+	virtual QString userName() = 0;
+	virtual QString pilotDevice() = 0;
+k_dcop_signals:
+	void kpilotDaemonStatusChanged();
 } ;
 
 #endif

@@ -39,8 +39,8 @@ class AbbrowserWidgetSetup : public ConduitConfigBase
 public:
 	AbbrowserWidgetSetup(QWidget *,const char *);
 	virtual ~AbbrowserWidgetSetup();
-	virtual void load(KConfig *);
-	virtual void commit(KConfig *);
+	virtual void load();
+	virtual void commit();
 	static ConduitConfigBase *create(QWidget *,const char *);
 private:
 	AbbrowserWidget *fConfigWidget;

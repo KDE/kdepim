@@ -83,8 +83,6 @@ private:
 	*  @return the Abbrowser Contact field to map the pilot "other" phone
 	*  field to (such as BusinessFax, etc)
 	*/
-	static bool isPilotStreetHome()  { return fPilotStreetHome; };
-	static bool isPilotFaxHome()  { return fPilotFaxHome; };
 	static bool isDeleted(const PilotAddress*addr);
 	static bool isArchived(const PilotAddress*addr);
 	static bool isArchived(const Addressee &addr);
@@ -227,20 +225,6 @@ private:
 
 	struct AddressAppInfo fAddressAppInfo;
 
-/*	eConflictResolution fEntryResolution;*/
-	static bool fPilotStreetHome, fPilotFaxHome;
-	static bool fArchive;
-	static enum ePilotOtherEnum
-	{
-		eOtherPhone,
-		eAssistant,
-		eBusinessFax,
-		eCarPhone,
-		eEmail2,
-		eHomeFax,
-		eTelex,
-		eTTYTTDPhone
-	} ePilotOther;
 	int pilotindex;
 	bool abChanged;
 	static const QString appString;
@@ -253,20 +237,6 @@ private:
 	AddressBook::Iterator abiter;
 	// for a local file, we need to obtain a saveTicket when opening the abook
 	Ticket*ticket;
-
-	QString fAbookFile;
-	enum eAbookTypeEnum {
-		eAbookResource=0,
-		eAbookLocal
-	} fAbookType;
-
-	static enum eCustomEnum {
-		eCustomField,
-		eCustomBirthdate,
-		eCustomURL,
-		eCustomIM
-	} eCustom[4];
-	static QString fCustomFmt;
 
 } ;
 

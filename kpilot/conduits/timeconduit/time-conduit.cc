@@ -34,6 +34,7 @@
 
 #include "time-factory.h"
 #include "time-conduit.moc"
+#include "timeConduitSettings.h"
 
 
 // Something to allow us to check what revision
@@ -47,8 +48,7 @@ const char *Time_conduit_id =
 TimeConduit::TimeConduit(KPilotDeviceLink * o,
 	const char *n, 
 	const QStringList & a) :
-	ConduitAction(o, n, a),
-	fDirection(0)
+	ConduitAction(o, n, a)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
@@ -69,8 +69,7 @@ TimeConduit::~TimeConduit()
 void TimeConduit::readConfig()
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver g(fConfig, TimeConduitFactory::group());
-	fDirection = fConfig->readNumEntry(TimeConduitFactory::direction(),DIR_PCToPalm);
+	TimeConduitSettings::self()->readConfig();
 }
 
 
@@ -79,29 +78,23 @@ void TimeConduit::readConfig()
 	FUNCTIONSETUP;
 	DEBUGCONDUIT<<Time_conduit_id<<endl;
 
-	if (!fConfig)
-	{
-		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		return false;
-	}
-
 	readConfig();
 
-	switch (fDirection)
+	switch (TimeConduitSettings::direction())
 	{
-		case DIR_PCToPalm:
+		case TimeConduitSettings::eSetPCfromHH:
 			emit logMessage(i18n("Setting the clock on the handheld"));
 //			fHandle->addSyncLogEntry(i18n("Setting the clock on the handheld"));
 			syncPCToPalm();
 			break;
-		case DIR_PalmToPC:
+		case TimeConduitSettings::eSetHHfromPC:
 			emit logMessage(i18n("Setting the clock on the PC from the time on the handheld"));
 //			fHandle->addSyncLogEntry(i18n("Setting the clock on the PC from the time on the handheld"));
 			syncPalmToPC();
 			break;
 		default:
 			emit logError(i18n("Unknown setting for time synchronization."));
-			kdWarning() << k_funcinfo << ": unknown sync direction "<<fDirection<<endl;
+			kdWarning() << k_funcinfo << ": unknown sync direction "<<TimeConduitSettings::direction()<<endl;
 			return false;
 	}
 	emit syncDone(this);

@@ -1,0 +1,7 @@
+File=timeconduit.kcfg
+ClassName=TimeConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

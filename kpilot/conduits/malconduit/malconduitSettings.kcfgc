@@ -1,0 +1,7 @@
+File=malconduit.kcfg
+ClassName=MALConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

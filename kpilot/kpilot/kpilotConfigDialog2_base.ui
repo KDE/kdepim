@@ -1,0 +1,316 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SyncConfigWidget</class>
+<comment>A widget for editing HotSync-specific settings.</comment>
+<author>David Bishop</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>593</width>
+            <height>316</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KPilot Options</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>SyncTab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>S&amp;ync</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <spacer row="4" column="1">
+                        <property name="name">
+                            <cstring>Spacer5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QComboBox" row="2" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Ask User</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Do Nothing</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Handheld Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>PC Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Values From Last Sync (if possible)</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Use Both Entries</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>4</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>Conflict &amp;resolution:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fConflictResolution</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fSyncMode</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Sync Mode</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QComboBox" row="2" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Full Sync (slow), backup</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Copy PC to Handheld</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Copy Handheld to PC</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fSpecialSync</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>radioButton3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Fast sync (if possible), no backup</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>radioButton4</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Normal sync, do a backup</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>radioButton9</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>4</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Special sync:</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fFullBackupCheck</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Do full backup when changing PCs</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>We really don't know what this does.</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>BackupTab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Backup</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QGroupBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>GroupBox23</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Databases</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel5</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;No backup:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fBackupOnly</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel6</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Not &amp;restored:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fSkipDB</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit" row="0" column="1">
+                                <property name="name">
+                                    <cstring>fBackupOnly</cstring>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Databases listed here are only backed up, not synced.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit" row="1" column="1">
+                                <property name="name">
+                                    <cstring>fSkipDB</cstring>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Databases listed here are neither backed up, nor synced.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton" row="0" column="2">
+                                <property name="name">
+                                    <cstring>fBackupOnlyChooser</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>...</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton" row="1" column="2">
+                                <property name="name">
+                                    <cstring>fSkipDBChooser</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>...</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>Spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>radioButton9</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fSpecialSync</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>radioButton3</tabstop>
+    <tabstop>radioButton4</tabstop>
+    <tabstop>radioButton9</tabstop>
+    <tabstop>fSpecialSync</tabstop>
+    <tabstop>fFullBackupCheck</tabstop>
+    <tabstop>fConflictResolution</tabstop>
+    <tabstop>fBackupOnly</tabstop>
+    <tabstop>fBackupOnlyChooser</tabstop>
+    <tabstop>fSkipDB</tabstop>
+    <tabstop>fSkipDBChooser</tabstop>
+    <tabstop>tabWidget</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -40,6 +40,7 @@
 #include "kaddressbookConduit.h"
 #include "abbrowser-factory.h"
 #include "abbrowser-setup.h"
+#include "abbrowserSettings.h"
 
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
@@ -72,95 +73,75 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void AbbrowserWidgetSetup::commit(KConfig *fConfig)
+/* virtual */ void AbbrowserWidgetSetup::commit()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig,AbbrowserConduitFactory::group());
-
-	// General page
-	fConfig->writeEntry(AbbrowserConduitFactory::fAbookType,
-		fConfigWidget->fSyncDestination->id(
-			fConfigWidget->fSyncDestination->selected()));
-	fConfig->writePathEntry(AbbrowserConduitFactory::fAbookFile,
-		fConfigWidget->fAbookFile->url());
-	fConfig->writeEntry(AbbrowserConduitFactory::fArchive,
-		fConfigWidget->fArchive->isChecked());
+	
+	QButtonGroup*grp=fConfigWidget->fSyncDestination;
+	AbbrowserSettings::setAddressbookType(grp->id(grp->selected()));
+	AbbrowserSettings::setFileName(fConfigWidget->fAbookFile->url());
+	AbbrowserSettings::setArchiveDeleted(fConfigWidget->fArchive->isChecked());
 
 	// Conflicts page
-	fConfig->writeEntry(AbbrowserConduitFactory::fResolution,
+	AbbrowserSettings::setConflictResolution(
 		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
 
 	// Fields page
-	fConfig->writeEntry(AbbrowserConduitFactory::fOtherField,
-		fConfigWidget->fOtherPhone->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::fStreetType,
-		fConfigWidget->fAddress->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::fFaxType,
-		fConfigWidget->fFax->currentItem());
+	AbbrowserSettings::setPilotOther(fConfigWidget->fOtherPhone->currentItem());
+	AbbrowserSettings::setPilotStreet(fConfigWidget->fAddress->currentItem());
+	AbbrowserSettings::setPilotFax(fConfigWidget->fFax->currentItem());
 
 	// Custom fields page
-	fConfig->writeEntry(AbbrowserConduitFactory::custom(0),
-		fConfigWidget->fCustom0->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::custom(1),
-		fConfigWidget->fCustom1->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::custom(2),
-		fConfigWidget->fCustom2->currentItem());
-	fConfig->writeEntry(AbbrowserConduitFactory::custom(3),
-		fConfigWidget->fCustom3->currentItem());
+	AbbrowserSettings::setCustom(0, fConfigWidget->fCustom0->currentItem());
+	AbbrowserSettings::setCustom(1, fConfigWidget->fCustom1->currentItem());
+	AbbrowserSettings::setCustom(2, fConfigWidget->fCustom2->currentItem());
+	AbbrowserSettings::setCustom(3, fConfigWidget->fCustom3->currentItem());
 	int fmtindex=fConfigWidget->fCustomDate->currentItem();
-	if (fmtindex==0)
-	{
-		// "Locale Settings" was chosen
-		fConfig->writeEntry(AbbrowserConduitFactory::fCustomFmt, QString::null);
-	}
-	else
-	{
-		fConfig->writeEntry(AbbrowserConduitFactory::fCustomFmt, fConfigWidget->fCustomDate->currentText());
-	}
+	AbbrowserSettings::setCustomDateFormat(
+	  (fmtindex==0)?(QString::null):fConfigWidget->fCustomDate->currentText() );
 
+	AbbrowserSettings::self()->writeConfig();
 	unmodified();
 }
 
-/* virtual */ void AbbrowserWidgetSetup::load(KConfig *fConfig)
+/* virtual */ void AbbrowserWidgetSetup::load()
 {
 	FUNCTIONSETUP;
+	AbbrowserSettings::self()->readConfig();
 
-	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig, AbbrowserConduitFactory::group());
-
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Settings "
+		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
+		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
+		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
+		<< " eCustom[0]=" << AbbrowserSettings::custom(0)
+		<< " eCustom[1]=" << AbbrowserSettings::custom(1)
+		<< " eCustom[2]=" << AbbrowserSettings::custom(2)
+		<< " eCustom[3]=" << AbbrowserSettings::custom(3)
+		<< endl;
+#endif
+	
 	// General page
-	fConfigWidget->fSyncDestination->setButton(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
-	fConfigWidget->fAbookFile->setURL(
-		fConfig->readPathEntry(AbbrowserConduitFactory::fAbookFile));
-	fConfigWidget->fArchive->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::fArchive, true));
+	fConfigWidget->fSyncDestination->setButton(AbbrowserSettings::addressbookType());
+	fConfigWidget->fAbookFile->setURL(AbbrowserSettings::fileName());
+	fConfigWidget->fArchive->setChecked(AbbrowserSettings::archiveDeleted());
 
 	// Conflicts page
 	fConfigWidget->fConflictResolution->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fResolution,
-		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
+	  AbbrowserSettings::conflictResolution() - SyncAction::eCROffset );
 
 	// Fields page
-	fConfigWidget->fOtherPhone->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fOtherField, 0));
-	fConfigWidget->fAddress->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fStreetType, 0));
-	fConfigWidget->fFax->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::fFaxType, 0));
+	fConfigWidget->fOtherPhone->setCurrentItem(AbbrowserSettings::pilotOther());
+	fConfigWidget->fAddress->setCurrentItem(AbbrowserSettings::pilotStreet());
+	fConfigWidget->fFax->setCurrentItem(AbbrowserSettings::pilotFax());
 
 	// Custom fields page
-	fConfigWidget->fCustom0->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom(0)));
-	fConfigWidget->fCustom1->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom(1)));
-	fConfigWidget->fCustom2->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom(2)));
-	fConfigWidget->fCustom3->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::custom(3)));
-	QString datefmt=fConfig->readEntry(AbbrowserConduitFactory::fCustomFmt);
+	fConfigWidget->fCustom0->setCurrentItem(AbbrowserSettings::custom(0));
+	fConfigWidget->fCustom1->setCurrentItem(AbbrowserSettings::custom(1));
+	fConfigWidget->fCustom2->setCurrentItem(AbbrowserSettings::custom(2));
+	fConfigWidget->fCustom3->setCurrentItem(AbbrowserSettings::custom(3));
+	QString datefmt=AbbrowserSettings::customDateFormat();
 	if (datefmt.isEmpty())
 	{
 		fConfigWidget->fCustomDate->setCurrentItem(0);

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="kpilotrc"/> 
+  <group name="KNotes-conduit">
+    <entry name="DeleteNoteForMemo"  type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="MemoIds"  type="IntList">
+        <label>list of the synced MemoDB records</label>
+        <default></default>
+    </entry>
+    <entry name="NoteIds"  type="StringList">
+        <label>list of the corresponding KNotes note IDs</label>
+        <default></default>
+    </entry>
+  </group>
+</kcfg>

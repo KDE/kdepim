@@ -57,6 +57,7 @@ static const char *test_id =
 #include "interactiveSync.h"
 
 static KCmdLineOptions kpilotoptions[] = {
+	{"p",0,0},
 	{"port <device>",
 		I18N_NOOP("Path to Pilot device node"),
 		"/dev/pilot"},
@@ -78,7 +79,13 @@ static KCmdLineOptions kpilotoptions[] = {
 		0 } ,
 	{ "F",0,0},
 	{ "test-local",
-		"Run the conduit in file-test mode.",
+		I18N_NOOP("Run the conduit in file-test mode."),
+		0 } ,
+	{ "HHtoPC",
+		I18N_NOOP("Copy Pilot to Desktop."),
+		0 } ,
+	{ "PCtoHH",
+		I18N_NOOP("Copy Desktop to Pilot."),
 		0 } ,
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
@@ -204,9 +211,14 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
+	int syncMode = ActionQueue::HotSyncMode;
+	if (p->isSet("test")) syncMode |= ActionQueue::TestMode;
+	if (p->isSet("HHtoPC")) syncMode |= ActionQueue::FlagHHToPC;
+	if (p->isSet("PCtoHH")) syncMode |= ActionQueue::FlagPCToHH;
+	
 	syncStack = new ActionQueue(deviceLink); 
 	syncStack->queueInit();
-	syncStack->queueConduits(&KPilotConfig::getConfig(),l,
+	syncStack->queueConduits(l,
 		p->isSet("test") ? (ActionQueue::HotSyncMode|ActionQueue::TestMode) :
 			ActionQueue::HotSyncMode);
 	syncStack->queueCleanup();
@@ -229,7 +241,7 @@ int testConduit(KCmdLineArgs *p)
 	createLink();
 
 	syncStack = new ActionQueue(deviceLink);
-	syncStack->queueConduits(&KPilotConfig::getConfig(),
+	syncStack->queueConduits(
 		QStringList(s),
 		ActionQueue::FlagTest | ActionQueue::FlagLocal);
 

@@ -46,19 +46,7 @@ public:
 	virtual ~MALConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
-	static const char *group() { return fGroup; } ;
-	static const char *lastSync() { return fLastSync; };
-	static const char *syncTime() {return fSyncTime;};
-	static const char *proxyType() {return fProxyType;};
-	static const char *proxyServer() {return fProxyServer;};
-	static const char *proxyPort() {return fProxyPort;};
-	static const char *proxyUser() {return fProxyUser;};
-	static const char *proxyPassword() {return fProxyPassword;};
-	static const char *malServer() {return fMALServer;};
-	static const char *malPort() {return fMALPort;};
-	static const char *malUser() {return fMALUser;};
-	static const char *malPassword() {return fMALPassword;};
-	
+
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -67,11 +55,6 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	// KConfig entry keys.
-	static const char *fGroup;
-	static const char *fLastSync, *fSyncTime, 
-		*fProxyType, *fProxyServer, *fProxyPort, *fProxyUser, *fProxyPassword, 
-		*fMALServer, *fMALPort, *fMALUser, *fMALPassword;
 } ;
 
 extern "C"

@@ -1,6 +1,55 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-01-16  Adriaan de Groot
+* De-tabified ChangeLog again.
+* Updated version. Hope that \374 makes sense (it's a ü).
+* Added explanation for "Actions" page in config. Ditto for "Conduits".
+  Prevent user from collapsing the tree.
+* Fixup layout for popmail conduit when including it in the config dialog.
+* Experimental stab at separating the config into separate bits in the
+  new KCM config dialog.
+
+2004-01-02 - 2004-01-11  Reinhold Kainhofer
+* This was work done in osnabrueck_branch, at the 2004 kdepim meeting
+  and the week afterwards. This issue is one of the feature targets
+  for the kdepim 3.3 release in Q1 2004.
+* Moved the general setup dialog from a separate dialog to a page of
+  the conduit config dlg. Combined the kpilot setup and conduit config
+  dialog to one dialog.
+* Implemented the kontact plugin for KPilot (showing status information)
+* Added three DCOP functions to the daemon for querying status information
+* Hotsync log is written out to a file (~/.kde/share/apps/kpilot/lastsync.log)
+* Converted all conduits to KConfig XT (mail und kroupware still missing)
+* Converted the config dialog to a KCM module
+* KPilot plugin for contact: shows status in summary and makes config available
+* kpilotDaemon sends a DCOP signal when its settings/state are changed
+* New DCOP functions in the daemon to query its state and settings
+* the kontact plugin also detects if the daemon is quit
+* Use a QSplitter in the config dialog instead of the QHBox layout
+* implemented the kconf_update scripts to move groupless entries to the 
+  [General] group
+* Still missing: 
+    o) KConfig sync between the three processes working on the
+       kpilot config: kpilot, kpilotDaemon and possibly kontact
+       with the kpilot plugin
+    o) Wizard to setup kpilot correctly for kontact (the defaults
+       should suffice, just in case someone played around and
+       messed them up)
+
+
+2004-01-02 - 2004-01-04 Adriaan de Groot
+* This was work done in osnabrueck_branch, at the 2004 kdepim meeting.
+* Fixed the TODO_I18N -> they're all i18n() now.
+* Discovered ttypatch, which is da bong. Thanks to Dan Clemmensen
+  for writing it, and Bernhard Reiter for showing it to me. All of
+  a sudden, POSE actually looks usable.
+
+2004-01-02  Adriaan de Groot
+* Non-functional commits all over; split off osnabrueck_branch.
+* Naming changes in todo conduit.
+* Fix sync race in knotes conduit.
+
 2003-12-29  Adriaan de Groot
 * Reenabled the popmail conduit, but in severely limited form.
 
@@ -9,13 +58,13 @@
   I don't think the mode code is right in that conduit either.
 * Stared at various bugs that I can't reproduce.
 * Looked into #69987, changed some names in the todo conduit.
-* Changed the parts of the changelog to real changelog format 
+* Changed the parts of the changelog to real changelog format
   (dates must be yyyy-mm-dd, with leading zeroes if needed).
 
 2003-12-23  Adriaan de Groot
 * Added recent hardware reports. If you reported something and I've
   forgotten it, please send me a gentle reminder.
-* Added IrDA howto from Stuart, who failed to provide an email 
+* Added IrDA howto from Stuart, who failed to provide an email
   address that I can respond to.
 * I think I got the KNotes conduit working again, but it needs some
   testing so that change hasn't been committed yet.
@@ -28,22 +77,22 @@
 
 2003-12-05  Adriaan de Groot
 * Het heerlijk avondje is gekomen. Damn right it is.
- 
+
 2003-12-02  Adriaan de Groot
 * Removed #if 0'ed code; moved some deprecated code to #if 0; removed
   use of deprecated stuff. Fixed up includes.
-  
+
 2003-11-23  Adriaan de Groot
 * Minor string fixups that don't affect TL.
 
 2003-11-22  Reinhold Kainhofer
-* Fixed the broken conduit config dialog (wasn't able to show config 
-  widgets of more than one conduit. If you configured one conduit, and 
+* Fixed the broken conduit config dialog (wasn't able to show config
+  widgets of more than one conduit. If you configured one conduit, and
   switched to another, its config widget couldn't be added to the stack).
 * Configure conduits dialog now has an apply button.
 
 2003-10-21  Adriaan de Groot
-* Updated the website some with lots of new hardware. Thanks to 
+* Updated the website some with lots of new hardware. Thanks to
   everyone who reported new stuff.
 
 2003-10-10  Adriaan de Groot
@@ -52,47 +101,47 @@
   build KPilot now, suck to be auto* and make.
 
 2003-07-30  Reinhold Kainhofer
-* The addressbook conduit now uses a different algorithm to find 
+* The addressbook conduit now uses a different algorithm to find
   the type of address on the PC to sync with.
-  First, if there is a preferred address (no matter if home, work 
-  or whatever), this one is synced to the handheld. If no preferred 
-  address exists, either home or work (depending on the setting in 
-  the conduit config dialog) is used for the sync. If that doesn't 
-  exist, either, the other one (work/home) is tried. If that also 
-  doesn't exist, and the address is copied to the PC, its type is 
-  set to preferred+the setting from the config dialog. 
-  This fixes both bugs #50560 (conduit should sync with preferred 
-  address) as well as bug #60659 (conduit should use the existing 
-  address from the PC, even if the type is not the one chosen in 
+  First, if there is a preferred address (no matter if home, work
+  or whatever), this one is synced to the handheld. If no preferred
+  address exists, either home or work (depending on the setting in
+  the conduit config dialog) is used for the sync. If that doesn't
+  exist, either, the other one (work/home) is tried. If that also
+  doesn't exist, and the address is copied to the PC, its type is
+  set to preferred+the setting from the config dialog.
+  This fixes both bugs #50560 (conduit should sync with preferred
+  address) as well as bug #60659 (conduit should use the existing
+  address from the PC, even if the type is not the one chosen in
   the config dialog).  (also backported to BRANCH)
-* Allow two addressbook entries with the same name and organization, 
-  but different phones, addresses etc. Actually, it allows entries 
-  which are equal up to at least one entry. This fixes bug #59569. 
-* Fixed bug #60691 where events recurring monthly on a given weekday 
+* Allow two addressbook entries with the same name and organization,
+  but different phones, addresses etc. Actually, it allows entries
+  which are equal up to at least one entry. This fixes bug #59569.
+* Fixed bug #60691 where events recurring monthly on a given weekday
   were shifted by one day. (also backported to BRANCH)
-* Also, when initializing a LocalCalendar, you are not supposed 
+* Also, when initializing a LocalCalendar, you are not supposed
   to give a time zone...
-* Also, fixed infinite loop glitch by Cornelius. 
-* If the user chose to sync to an iCalendar file instead of the 
-  standard (resource) calendar, and he gave an empty or invalid 
-  file name, an error message is now written out to inform him/her 
+* Also, fixed infinite loop glitch by Cornelius.
+* If the user chose to sync to an iCalendar file instead of the
+  standard (resource) calendar, and he gave an empty or invalid
+  file name, an error message is now written out to inform him/her
   about the problem.
-  I don't want to ask him for a file name, because one of the 
-  guidelines of conduit development is that a sync should be able 
+  I don't want to ask him for a file name, because one of the
+  guidelines of conduit development is that a sync should be able
   to run without user intervention.
-  this should probably also be backported, but it introduces two 
-  new i18n strings, so it is not possible. Thus the bug will remain 
+  this should probably also be backported, but it introduces two
+  new i18n strings, so it is not possible. Thus the bug will remain
   in 3.1 branch.
 * Fixed the toolbar configuration.
 
 2003-07-27  Reinhold Kainhofer
-* The internal editor action now displays the contents of the conflicting 
+* The internal editor action now displays the contents of the conflicting
   records and lets the user decide which one overrides (Fixes bug #61103).
-* For this I added a function getTextRepresentation(bool richText) to 
-  PilotAppCategory, PilotAddress, PilotMemo, PilotDateEnty and PilotTodoEnty, 
+* For this I added a function getTextRepresentation(bool richText) to
+  PilotAppCategory, PilotAddress, PilotMemo, PilotDateEnty and PilotTodoEnty,
   which returns the contents of the record as a string that can be displayed
   to the user. Moved that code from the internal viewers to the classes.
-* If there is no nice-text representation, I now use KHE::KHexEdit to 
+* If there is no nice-text representation, I now use KHE::KHexEdit to
   show the raw contents, so the user gets an idea of the conflicting records.
 
 
@@ -101,54 +150,53 @@
   bits of KDE. Worked on meinproc, build fixes, dependencies, etc.
 
 2003-07-26  Reinhold Kainhofer
-* Changed a few accelerators (duplicates reported by Dr.Klash) 
+* Changed a few accelerators (duplicates reported by Dr.Klash)
 * Also show items marked as deleted in the GenericDB viewer.
-* All conduits now have their own copy of the handheld's database 
-  in $KDEHOME/share/apps/kpilot/conduits/UserName/*.pdb. This was 
-  needed so that backup runs don't break the conduit's algorithm to 
-  detect changed records on the PC. So far, we compared each entry 
-  to the corresponding entry in the backup database. It that changed, 
-  basically we are screwed. 
-  For this new feature I extended the constructur of PilotLocalDatabase 
-  to take an additional boolean parameter useConduitDBs. If that is set, 
+* All conduits now have their own copy of the handheld's database
+  in $KDEHOME/share/apps/kpilot/conduits/UserName/*.pdb. This was
+  needed so that backup runs don't break the conduit's algorithm to
+  detect changed records on the PC. So far, we compared each entry
+  to the corresponding entry in the backup database. It that changed,
+  basically we are screwed.
+  For this new feature I extended the constructur of PilotLocalDatabase
+  to take an additional boolean parameter useConduitDBs. If that is set,
   the db will be opened in ..../conduits/Username/
-* Do not return "Unfiled" or "Nicht abgelegt" as category label 
+* Do not return "Unfiled" or "Nicht abgelegt" as category label
   if no category is set. Instead return an empty string.
-* Added isArchived() and makeArchived() methods to PilotAppCategory 
+* Added isArchived() and makeArchived() methods to PilotAppCategory
   to set the dlpRecArchived flag.
-* Changed the way how the DBBackup/username/ and conduits/username/ 
-  directories are created (now I'm using KStandardDirs::makeDir and 
+* Changed the way how the DBBackup/username/ and conduits/username/
+  directories are created (now I'm using KStandardDirs::makeDir and
   KStandardDirs::exists).
-* FirstSync now also means PC->HH or HH->PC directions (which is clear 
-  intuitively, as with these direction, nothing that's on the other 
+* FirstSync now also means PC->HH or HH->PC directions (which is clear
+  intuitively, as with these direction, nothing that's on the other
   side should matter at all).
 * Added eDelete to the sync actions in the SyncAction class
 
 
 2003-07-15 to 2003-7-26  Reinhold Kainhofer
-Complete rewrite of the addressbook conduit (for the, umhh, third(?) time). 
-* NEW FEATURE: custom fields can now also be synced with 
+Complete rewrite of the addressbook conduit (for the, umhh, third(?) time).
+* NEW FEATURE: custom fields can now also be synced with
   birth date, URL, ICQ, etc. (bug #50871)
-* Conflict resolution shows the whole conflicting item 
-  and all conflicting fields (so far, every conflicting 
-  field was shown on its own, bug #59222). The conflict 
-  resolution is done completely independent from the addressee 
+* Conflict resolution shows the whole conflicting item
+  and all conflicting fields (so far, every conflicting
+  field was shown on its own, bug #59222). The conflict
+  resolution is done completely independent from the addressee
   object and might so be reused later in other conduits as well.
-* Separated the mechanism to detect changes from the mechanism 
-  to sync/merge addressees. This makes the whole thing a lot 
-  easier to understand and maintain, and there are far less 
+* Separated the mechanism to detect changes from the mechanism
+  to sync/merge addressees. This makes the whole thing a lot
+  easier to understand and maintain, and there are far less
   cases you have to consider.
-* the conduit now obeys the global conflict resolution (ask, 
-  PC overrides, HH overrides, last sync overrides, duplicate) 
+* the conduit now obeys the global conflict resolution (ask,
+  PC overrides, HH overrides, last sync overrides, duplicate)
   and sync direction (fast, full, only PC->HH, only HH->PC)
   settings. Bug #59220.
-* The "only HH->PC" and "only PC->HH" sync directions first 
-  copy all existing entries to the receiving end, and only then 
-  remove all other entries from there. This avoids data loss if 
+* The "only HH->PC" and "only PC->HH" sync directions first
+  copy all existing entries to the receiving end, and only then
+  remove all other entries from there. This avoids data loss if
   the connection breaks while such a special sync is running.
-* Added a crash handler to clean up the addressbook if the 
+* Added a crash handler to clean up the addressbook if the
   conduit crashes.
- 
 
 2003-07-11  Reinhold Kainhofer
 * Records in the PilotLocalDatabase with ID 0 (i.e. new records
@@ -190,7 +238,7 @@ KPilot Developer's notes for July 9th
 2003-7-7  Adriaan de Groot
 * Added a conduit description to PalmDOC. Well, fixed the "Conduit"
   vs. "Comment" typo in the .desktop file.
-	
+
 2003-7-6  Adriaan de Groot
 * Made the bugreport and question and help links in the about pages
   clickable through KActiveLabel. Made the credits text scrollable

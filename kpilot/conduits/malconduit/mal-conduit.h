@@ -60,25 +60,9 @@ protected:
 	 */
 	void saveConfig();
 	/**
-	 * Check if the last sync was not so long ago that according to eSyncTime we can skip the sync this time
+	 * Check if the last sync was not so long ago that according to MALConduitSettings::syncFrequency() we can skip the sync this time
 	 */
 	bool skip();
-private:
-	enum eProxyTypeEnum {
-		eProxyNone=0,
-		eProxyHTTP,
-		eProxySOCKS
-	} eProxyType;
-	enum eSyncTimeEnum {
-		eEverySync=0,
-		eEveryHour,
-		eEveryDay,
-		eEveryWeek,
-		eEveryMonth
-	} eSyncTime;
-	QString fProxyServer, fProxyUser, fProxyPassword, fMALServer, fMALUser, fMALPassword;
-	int fProxyPort, fMALPort;
-	QDateTime fLastSync;
 } ;
 
 

@@ -372,9 +372,8 @@ void GenericDBWidget::slotShowAppInfo()
 	{
 		fDB->writeAppBlock( (unsigned char*)(dlg->appInfo), dlg->len );
 
-		KPilotConfigSettings &c=KPilotConfig::getConfig();
-		c.setDatabaseGroup().addAppBlockChangedDatabase(getCurrentDB());
-		c.sync();
+		KPilotConfig::addAppBlockChangedDatabase(getCurrentDB());
+		KPilotSettings::writeConfig();
 	}
 	KPILOT_DELETE(dlg);
 	delete[] appBlock;
@@ -394,9 +393,8 @@ void GenericDBWidget::slotShowDBInfo()
 #endif
 		fDB->setDBInfo(db);
 
-		KPilotConfigSettings&c=KPilotConfig::getConfig();
-		c.setDatabaseGroup().addFlagsChangedDatabase(getCurrentDB());
-		c.sync();
+		KPilotConfig::addFlagsChangedDatabase(getCurrentDB());
+		KPilotSettings::writeConfig();
 
 		slotSelected(fDBList->currentText());
 	}

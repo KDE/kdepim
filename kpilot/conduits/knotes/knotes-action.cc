@@ -49,6 +49,7 @@
 #include "knotes-factory.h"
 
 #include "knotes-action.moc"
+#include "knotesconduitSettings.h"
 
 
 typedef QString KNoteID_t;
@@ -120,15 +121,23 @@ public:
 	// This is the collection of  notes held by KNotes and
         // returned by the notes() DCOP call.
 	QMap <KNoteID_t,QString> fNotes;
+
 	// This iterates through that list; it's in here because
 	// we use slots to process one item at a time and need
 	// to keep track of where we are between slot calls.
 	QMap <KNoteID_t,QString>::ConstIterator fIndex;
+
+	// The record index we're dealing with. Used by
+	// CopyHHToPC sync only.
+	int fRecordIndex;
+
 	// The DCOP client for this application, and the KNotes stub.
 	DCOPClient *fDCOP;
 	KNotesIface_stub *fKNotes;
+
 	// The timer for invoking process() to do some more work.
 	QTimer *fTimer;
+
 	// The database we're working with (MemoDB)
 	// PilotSerialDatabase *fDatabase;
 	// Some counter that needs to be preserved between calls to
@@ -192,8 +201,6 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		return false;
 	}
 
-	if (!fConfig) return false;
-
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
@@ -247,7 +254,12 @@ void KNotesAction::listNotes()
 		i++;
 	}
 
-	emit syncDone(this);
+	
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": " 
+		<< "Sync direction: " << fSyncDirection << endl;
+#endif
+	delayDone();
 }
 
 /* slot */ void KNotesAction::process()
@@ -263,6 +275,13 @@ void KNotesAction::listNotes()
 	case Init:
 		getAppInfo();
 		getConfigInfo();
+		fStatus=ModifiedNotesToPilot;
+		// TODO: Handle all varieties of special syncs
+		if (SyncAction::eCopyHHToPC == fSyncDirection)
+		{
+			fStatus = MemosToKNotes;
+			fP->fRecordIndex = 0;
+		}
 		break;
 	case ModifiedNotesToPilot :
 		if (modifyNoteOnPilot())
@@ -299,41 +318,37 @@ void KNotesAction::getConfigInfo()
 {
 	FUNCTIONSETUP;
 
-	if (fConfig)
+	KNotesConduitSettings::self()->readConfig();
+
+	QValueList<KNoteID_t> notes;
+	QValueList<int> memos;
+
+		// Make this match the type of KNoteID_t !
+	notes=KNotesConduitSettings::noteIds();
+	memos=KNotesConduitSettings::memoIds();
+
+	if (notes.count() != memos.count())
 	{
-		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
+		kdWarning() << k_funcinfo
+			<< ": Notes and memo id lists don't match ("
+			<< notes.count()
+			<< ","
+			<< memos.count()
+			<< ")"
+			<< endl;
+		notes.clear();
+		memos.clear();
+		fFirstSync = true;
+	}
 
-		QValueList<KNoteID_t> notes;
-		QValueList<int> memos;
+	QValueList<KNoteID_t>::ConstIterator iNotes = notes.begin();
+	QValueList<int>::ConstIterator iMemos = memos.begin();
 
-
-                // Make this match the type of KNoteID_t !
-		notes=fConfig->readListEntry(noteIdsKey);
-		memos=fConfig->readIntListEntry(memoIdsKey);
-
-		if (notes.count() != memos.count())
-		{
-			kdWarning() << k_funcinfo
-				<< ": Notes and memo id lists don't match ("
-				<< notes.count()
-				<< ","
-				<< memos.count()
-				<< ")"
-				<< endl;
-			notes.clear();
-			memos.clear();
-			fFirstSync = true;
-		}
-
-		QValueList<KNoteID_t>::ConstIterator iNotes = notes.begin();
-		QValueList<int>::ConstIterator iMemos = memos.begin();
-
-		while((iNotes != notes.end()) && (iMemos != memos.end()))
-		{
-			fP->fIdList.append(NoteAndMemo(*iNotes,*iMemos));
-			++iNotes;
-			++iMemos;
-		}
+	while((iNotes != notes.end()) && (iMemos != memos.end()))
+	{
+		fP->fIdList.append(NoteAndMemo(*iNotes,*iMemos));
+		++iNotes;
+		++iMemos;
 	}
 }
 
@@ -356,7 +371,6 @@ void KNotesAction::getAppInfo()
 	PilotDatabase::listAppInfo(&memoInfo.category);
 
 	resetIndexes();
-	fStatus=ModifiedNotesToPilot;
 
 	addSyncLogEntry(i18n("[KNotes conduit: "));
 }
@@ -376,7 +390,7 @@ bool KNotesAction::modifyNoteOnPilot()
 		}
 		else
 		{
-			addSyncLogEntry(TODO_I18N("No memos were changed."));
+			addSyncLogEntry(i18n("No memos were changed."));
 		}
 		return true;
 	}
@@ -444,7 +458,7 @@ bool KNotesAction::addNewNoteToPilot()
 		}
 		else
 		{
-			addSyncLogEntry(TODO_I18N("No memos were added."));
+			addSyncLogEntry(i18n("No memos were added."));
 		}
 		return true;
 	}
@@ -485,7 +499,18 @@ bool KNotesAction::syncMemoToKNotes()
 {
 	FUNCTIONSETUP;
 
-	PilotRecord *rec = fDatabase->readNextModifiedRec();
+	PilotRecord *rec = 0L;
+	
+	if (SyncAction::eCopyHHToPC == fSyncDirection)
+	{
+		rec = fDatabase->readRecordByIndex(fP->fRecordIndex);
+		fP->fRecordIndex++;
+	}
+	else
+	{
+		rec = fDatabase->readNextModifiedRec();
+	}
+	
 	if (!rec)
 	{
 		if (fP->fCounter)
@@ -495,7 +520,7 @@ bool KNotesAction::syncMemoToKNotes()
 		}
 		else
 		{
-			addSyncLogEntry(TODO_I18N("No memos added to KNotes."));
+			addSyncLogEntry(i18n("No memos added to KNotes."));
 		}
 		return true;
 	}
@@ -578,38 +603,33 @@ void KNotesAction::cleanupMemos()
 	// Tell KNotes we're up-to-date
 	fP->fKNotes->sync(CSL1("kpilot"));
 
-	if (fConfig)
-	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": Writing "
-			<< fP->fIdList.count()
-			<< " pairs to the config file."
-			<< endl;
-		DEBUGCONDUIT << fname
-			<< ": The config file is read-only: "
-			<< fConfig->isReadOnly()
-			<< endl;
+	DEBUGCONDUIT << fname
+		<< ": Writing "
+		<< fP->fIdList.count()
+		<< " pairs to the config file."
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< ": The config file is read-only: "
+		<< KNotesConduitSettings::self()->config()->isReadOnly()
+		<< endl;
 #endif
 
-		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
+	QValueList<KNoteID_t> notes;
+	QValueList<int> memos;
 
-		QValueList<KNoteID_t> notes;
-		QValueList<int> memos;
-
-		for (QValueList<NoteAndMemo>::ConstIterator i =
-			fP->fIdList.begin();
-			i!=fP->fIdList.end();
-			++i)
-		{
-			notes.append((*i).note());
-			memos.append((*i).memo());
-		}
-
-		fConfig->writeEntry(noteIdsKey,notes);
-		fConfig->writeEntry(memoIdsKey,memos);
-		fConfig->sync();
+	for (QValueList<NoteAndMemo>::ConstIterator i =
+		fP->fIdList.begin();
+		i!=fP->fIdList.end();
+		++i)
+	{
+		notes.append((*i).note());
+		memos.append((*i).memo());
 	}
+
+	KNotesConduitSettings::setNoteIds(notes);
+	KNotesConduitSettings::setMemoIds(memos);
+	KNotesConduitSettings::self()->writeConfig();
 
 	fStatus=Done;
 	fDatabase->cleanup();

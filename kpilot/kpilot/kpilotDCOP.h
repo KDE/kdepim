@@ -63,12 +63,6 @@ k_dcop:
 	virtual ASYNC configure() = 0;
 
 	/**
-	* This is the method the daemon uses to popup
-	* the configure conduits dialog.
-	*/
-	virtual ASYNC configureConduits() = 0;
-
-	/**
 	* Report KPilot's state back to the daemon.
 	*/
 	virtual int kpilotStatus() = 0;

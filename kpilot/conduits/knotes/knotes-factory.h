@@ -48,12 +48,6 @@ public:
 	// has const char * const members. The extra const prevents people
 	// from assigning to this variable, so you have to work hard to
 	// break its value. We store group and entry keys in here.
-	//
-	// Typical usage is KConfig::setGroup(KNotesConduitFactory::group).
-	//
-	//
-	static const char * const group ;
-	static const char * const matchDeletes ; // delete note when memo is deleted
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,

@@ -481,8 +481,8 @@ void KPilotDeviceLink::acceptDevice()
 		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
-		emit logError(TODO_I18N("Can't accept Pilot (%1)")
-			.arg(TODO_I18N("already connected")));
+		emit logError(i18n("Can't accept Pilot (%1)")
+			.arg(i18n("already connected")));
 		close();
 		return;
 	}

@@ -1,0 +1,9 @@
+ClassName=JPilotProxySettings
+File=jpilotproxysettings.kcfg
+GlobalEnums=true
+Inherits=KConfigSkeleton
+ItemAccessors=true
+MemberVariables=protected
+Mutators=true
+SetUserTexts=true
+Singleton=true

@@ -40,6 +40,7 @@
 
 #include "knotes-factory.h"
 #include "knotes-setup.h"
+#include "knotesconduitSettings.h"
 
 
 KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
@@ -54,20 +55,16 @@ KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
 	fConduitName=i18n("KNotes");
 }
 
-void KNotesConfigBase::commit(KConfig *fConfig)
+void KNotesConfigBase::commit()
 {
-	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
-
-	fConfig->writeEntry(KNotesConduitFactory::matchDeletes,
-		fConfigWidget->fDeleteNoteForMemo->isChecked());
+	KNotesConduitSettings::setDeleteNoteForMemo( fConfigWidget->fDeleteNoteForMemo->isChecked() );
+	KNotesConduitSettings::self()->writeConfig();
 }
 
-void KNotesConfigBase::load(KConfig *fConfig)
+void KNotesConfigBase::load()
 {
-	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
-
-	fConfigWidget->fDeleteNoteForMemo->setChecked(
-		fConfig->readBoolEntry(KNotesConduitFactory::matchDeletes,false));
+	KNotesConduitSettings::self()->readConfig();
+	fConfigWidget->fDeleteNoteForMemo->setChecked(KNotesConduitSettings::deleteNoteForMemo() );
 }
 
 /* static */ ConduitConfigBase *KNotesConfigBase::create(QWidget *w, const char *n)

@@ -48,25 +48,7 @@ void *init_conduit_address()
 }
 
 
-// A number of static variables; except for fAbout, they're
-// all KConfig group or entry keys.
-//
-//
 KAboutData *AbbrowserConduitFactory::fAbout = 0L;
-const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
-
-const char *AbbrowserConduitFactory::fAbookType = "Addressbook type";
-const char *AbbrowserConduitFactory::fAbookFile = "FileName";
-const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
-const char *AbbrowserConduitFactory::fArchive = "ArchiveDeleted";
-const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
-const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
-const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
-const char *AbbrowserConduitFactory::fOtherField = "PilotOther";
-const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
-const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
-const char *AbbrowserConduitFactory::fCustom = "Custom %1";
-const char *AbbrowserConduitFactory::fCustomFmt = "CustomDateFormat";
 
 
 

@@ -59,7 +59,7 @@ static const char *syncAction_id =
 #endif
 
 #include "syncAction.moc"
-
+#include "kpilotlibSettings.h"
 
 SyncAction::SyncAction(KPilotDeviceLink  *p,
 	const char *name) :
@@ -194,9 +194,8 @@ int InteractiveAction::questionYesNo(const QString & text,
 {
 	FUNCTIONSETUP;
 
-	KConfig *config = kapp->config();
+	KConfig *config = KPilotLibSettings::self()->config();
 	KConfigGroupSaver cfgs(config,"Notification Messages");
-
 
 	if (!key.isEmpty())
 	{

@@ -1,0 +1,7 @@
+File=popmail.kcfg
+ClassName=MailConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

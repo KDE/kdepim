@@ -31,18 +31,6 @@
 #include "vcal-factorybase.moc"
 #include "options.h"
 
-// Configuration keys
-//
-//
-const char *const VCalConduitFactoryBase::syncAction = "SyncAction";
-const char *const VCalConduitFactoryBase::nextSyncAction = "NextSyncAction";
-const char *const VCalConduitFactoryBase::archive = "SyncArchived";
-const char *const VCalConduitFactoryBase::conflictResolution = "ConflictResolution";
-const char * const VCalConduitFactoryBase::calendarType = "CalendarType";
-
-const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
-
-QString VCalConduitFactoryBase::group = "vcalOptions" ;
 KAboutData *VCalConduitFactoryBase::fAbout = 0L;
 
 

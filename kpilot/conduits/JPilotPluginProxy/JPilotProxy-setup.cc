@@ -41,7 +41,7 @@
 #include "JPilotProxy-conduit.h"
 #include "JPilotProxy-factory.h"
 #include "JPilotProxy-setup.moc"
-
+#include "jpilotproxysettings.h"
 
 
 JPilotProxyWidgetSetup::JPilotProxyWidgetSetup(QWidget *w, const char *n,
@@ -184,45 +184,40 @@ void JPilotProxyWidgetSetup::slotUpdatePluginPath(const QString &newpath) {
 /* virtual */ void JPilotProxyWidgetSetup::commitChanges() {
 	FUNCTIONSETUP;
 
-	if (!fConfig) return;
-	KConfigGroupSaver s(fConfig, getSettingsGroup());
-	
 	// First save the list of plugin pathes
 	QStringList plugpathes;
 	for (int i=0; i<fConfigWidget->ListPluginPathes->count(); i++) {
 		plugpathes<<fConfigWidget->ListPluginPathes->text(i);
 	}
-	fConfig->writeEntry(JPilotProxyConduitFactory::PluginPathes, plugpathes);
+	JPilotProxySettings::setPluginPathes( plugpathes );
 
 	// now save the list of all loaded/found plugins
 	QStringList pluginfiles;
 	QListViewItem *item=fConfigWidget->ListPlugins->firstChild();
 	while (item) {
 		pluginfiles << item->text(1);
-		fConfig->writeEntry(item->text(1), (dynamic_cast<QCheckListItem*>(item))->isOn());
+		JPilotProxySettings::config()->writeEntry(item->text(1), (dynamic_cast<QCheckListItem*>(item))->isOn() );
 		item=item->nextSibling();
 	}
-	fConfig->writeEntry(JPilotProxyConduitFactory::LoadedPlugins, pluginfiles);
+	JPilotProxySettings::setLoadedPlugins( pluginfiles);
+	
+	JPilotProxySettings::self()->saveConfig();
 }
 
 /* virtual */ void JPilotProxyWidgetSetup::readSettings() {
 	FUNCTIONSETUP;
+	JPilotProxySettings::loadConfig();
 
-	if (!fConfig) {
-		DEBUGCONDUIT << fname << ": !fConfig..." << endl;
-		return;
-	}
 //TODO: Activate:
-//	JPilotProxyConduitFactory::loadPlugins(fConfig);
+//	JPilotProxyConduitFactory::loadPlugins();
 
-	KConfigGroupSaver s(fConfig, getSettingsGroup());
-	QStringList plugpathes=fConfig->readListEntry(JPilotProxyConduitFactory::PluginPathes);
+	QStringList plugpathes=JPilotProxySettings::pluginPathes();
 	fConfigWidget->ListPluginPathes->insertStringList(plugpathes);
 	
 	// TODO: Use the plugin list? or use the list stored in the config?
-	QStringList pluginfiles=fConfig->readListEntry(JPilotProxyConduitFactory::LoadedPlugins);
+	QStringList pluginfiles=JPilotProxySettings::loadedPlugins();
 	for (QStringList::Iterator it = pluginfiles.begin(); it != pluginfiles.end(); ++it ) {
-		addConduit(*it, fConfig->readBoolEntry(*it));
+		addConduit(*it, JPilotProxySettings::self()->readBoolEntry(*it));
 	}
 }
 

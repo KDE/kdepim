@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=identity
+Type=Service
+ServiceTypes=KCModule
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kpilot
+X-KDE-FactoryName=kpilotconfig
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kpilot
+X-KDE-ParentComponents=kpilot,kpilotDaemon,kontact_kpilotplugin
+X-KDE-CfgDlgHierarchy=KOrganizer
+
+Name=KPilot configuration
+Comment=KPilot Main Configuration
+Keywords=kpilot,main

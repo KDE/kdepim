@@ -33,7 +33,7 @@
 #include <qhbox.h>
 
 // #include "conduitConfigDialog_base.h"
-#include "uiDialog.h"
+#include "kcmodule.h"
 
 class QListView;
 class QListViewItem;
@@ -44,11 +44,11 @@ class KProcess;
 class ConduitConfigBase;
 class ConduitConfig;
 
-class ConduitConfigWidgetBase : public QObject
+class ConduitConfigWidgetBase : public KCModule
 {
 Q_OBJECT
 public:
-	ConduitConfigWidgetBase(QHBox *p=0L,const char *n=0L);
+	ConduitConfigWidgetBase(QWidget *p=0L,const char *n=0L);
 
 	QListView *fConduitList;
 	QWidgetStack *fStack;
@@ -60,7 +60,7 @@ class ConduitConfigWidget : public ConduitConfigWidgetBase
 {
 Q_OBJECT
 public:
-	ConduitConfigWidget(QHBox *,
+	ConduitConfigWidget(QWidget *,
 		const char *name=0L, bool ownButtons=false);
 	virtual ~ConduitConfigWidget();
 
@@ -81,8 +81,13 @@ public:
 	* or closing the dialog.)
 	*/
 	bool release();
+	bool validate() {return release(); }
+	
 public slots:
-	void commitChanges();
+	virtual void save();
+	virtual void load();
+//	void slotOk();
+//	void slotApply();
 
 signals:
 	void selectionChanged(QListViewItem *);
@@ -91,31 +96,14 @@ signals:
 protected slots:
 	void selected(QListViewItem *);
 	void configure();
+	void conduitsChanged(QListViewItem*);
+	void reopenItem(QListViewItem *);
 
 private:
 	QPushButton *fConfigure;
 	QListViewItem *fCurrentConduit;
 	ConduitConfigBase *fCurrentConfig;
 	ConduitConfig *fCurrentOldStyle;
-	QWidget *fParentWidget;
-} ;
-
-class ConduitConfigDialog : public UIDialog
-{
-Q_OBJECT;
-public:
-	ConduitConfigDialog(QWidget *,const char *,bool);
-	virtual ~ConduitConfigDialog();
-
-protected:
-	// These are slots in the base class
-	virtual void commitChanges();
-	virtual bool validate();
-protected slots:
-	virtual void slotApply();
-
-private:
-	ConduitConfigWidget *fConfigWidget;
 } ;
 
 #endif

@@ -37,8 +37,8 @@ class DOCWidgetConfig : public ConduitConfigBase
 {
 public:
 	DOCWidgetConfig(QWidget *, const char *);
-	virtual void commit(KConfig *);
-	virtual void load(KConfig *);
+	virtual void commit();
+	virtual void load();
 protected:
 	DOCWidget *fConfigWidget;
 } ;

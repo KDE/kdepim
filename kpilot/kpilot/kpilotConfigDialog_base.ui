@@ -1,18 +1,17 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>KPilotConfigWidget</class>
-<comment>A tabWidget for configuring
-KPilot's settings.!</comment>
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>DeviceConfigWidget</class>
+<comment>A widget for configuring the hardware device.</comment>
 <author>David Bishop</author>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form1</cstring>
+        <cstring>Form3</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>593</width>
-            <height>310</height>
+            <width>383</width>
+            <height>324</height>
         </rect>
     </property>
     <property name="caption">
@@ -34,457 +33,126 @@ KPilot's settings.!</comment>
                     <cstring>GeneralTab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>&amp;General</string>
+                    <string>Device</string>
                 </attribute>
                 <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QGroupBox" row="1" column="0">
+                    <spacer row="1" column="2">
                         <property name="name">
-                            <cstring>GroupBox1</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Startup Options</string>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QCheckBox" row="0" column="1">
-                                <property name="name">
-                                    <cstring>fKillDaemonOnExit</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>S&amp;top daemon on exit</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox" row="1" column="0">
-                                <property name="name">
-                                    <cstring>fDockDaemon</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>S&amp;how daemon in panel</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Places a HotSync icon in the system tray, which shows the daemon's status and allows you to configure KPilot.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox" row="0" column="0">
-                                <property name="name">
-                                    <cstring>fStartDaemonAtLogin</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Start daemon at login</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox" row="1" column="1">
-                                <property name="name">
-                                    <cstring>fQuitAfterSync</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Quit &amp;after HotSync</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Stop both KPilot and the KPilot daemon after the HotSync finishes.
-This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                    <widget class="QGroupBox" row="0" column="0">
-                        <property name="name">
-                            <cstring>GroupBox3</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Device Options</string>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel" row="1" column="2">
-                                <property name="name">
-                                    <cstring>textLabel1</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>En&amp;coding:</string>
-                                </property>
-                                <property name="alignment">
-                                    <set>AlignVCenter|AlignRight</set>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fPilotEncoding</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QComboBox" row="1" column="3">
-                                <property name="name">
-                                    <cstring>fPilotEncoding</cstring>
-                                </property>
-                                <property name="editable">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;This box lets you select the encoding that your Pilot uses. If your Pilot accepts input in one of the languages listed, choose it. If your Pilot is a European or North American model, choose Western (ISO8859-1).&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QLineEdit" row="2" column="1" rowspan="1" colspan="3">
-                                <property name="name">
-                                    <cstring>fUserName</cstring>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="3">
-                                <property name="name">
-                                    <cstring>fPilotDevice</cstring>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Enter the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="1" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel4</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Spee&amp;d:</string>
-                                </property>
-                                <property name="alignment">
-                                    <set>AlignVCenter|AlignRight</set>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fPilotSpeed</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="0" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel1</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Pilot &amp;device:</string>
-                                </property>
-                                <property name="alignment">
-                                    <set>AlignVCenter|AlignRight</set>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fPilotDevice</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="2" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Pilot &amp;user:</string>
-                                </property>
-                                <property name="alignment">
-                                    <set>AlignVCenter|AlignRight</set>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fUserName</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QComboBox" row="1" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>9600</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>19200</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>38400</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>57600</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>115200</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>fPilotSpeed</cstring>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Sets the speed of the connection to your Pilot. This is only important for serial devices.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                </grid>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>SyncTab</cstring>
-                </property>
-                <attribute name="title">
-                    <string>S&amp;ync</string>
-                </attribute>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <spacer row="4" column="1">
-                        <property name="name">
-                            <cstring>Spacer5</cstring>
+                            <cstring>spacer1</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Vertical</enum>
+                            <enum>Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
                         <property name="sizeHint">
                             <size>
-                                <width>20</width>
+                                <width>156</width>
                                 <height>20</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QComboBox" row="2" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Ask User</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Do Nothing</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Handheld Overrides</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>PC Overrides</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Values From Last Sync (if possible)</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Use Both Entries</string>
-                            </property>
-                        </item>
+                    <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>fConflictResolution</cstring>
+                            <cstring>fPilotEncoding</cstring>
+                        </property>
+                        <property name="editable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;This box lets you select the encoding that your Pilot uses. If your Pilot accepts input in one of the languages listed, choose it. If your Pilot is a European or North American model, choose Western (ISO8859-1).&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fUserName</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0">
+                        <property name="name">
+                            <cstring>TextLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Pilot &amp;user:</string>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignVCenter|AlignRight</set>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fUserName</cstring>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
                         <property name="name">
                             <cstring>textLabel1</cstring>
                         </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>4</hsizetype>
-                                <vsizetype>5</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
                         <property name="text">
-                            <string>Conflict &amp;resolution:</string>
+                            <string>En&amp;coding:</string>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignVCenter|AlignRight</set>
                         </property>
                         <property name="buddy" stdset="0">
-                            <cstring>fConflictResolution</cstring>
+                            <cstring>fPilotEncoding</cstring>
                         </property>
                     </widget>
-                    <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="1" column="0">
                         <property name="name">
-                            <cstring>fSyncMode</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Sync Mode</string>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QComboBox" row="2" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Full Sync (slow), backup</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Copy PC to Handheld</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Copy Handheld to PC</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>fSpecialSync</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>radioButton3</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Fast sync (if possible), no backup</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>radioButton4</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Normal sync, do a backup</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="2" column="0">
-                                <property name="name">
-                                    <cstring>radioButton9</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>4</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Special sync:</string>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fFullBackupCheck</cstring>
+                            <cstring>TextLabel4</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Do full backup when changing PCs</string>
+                            <string>Spee&amp;d:</string>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignVCenter|AlignRight</set>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fPilotSpeed</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="1" column="1">
+                        <item>
+                            <property name="text">
+                                <string>9600</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>19200</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>38400</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>57600</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>115200</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fPilotSpeed</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>We really don't know what this does.</string>
+                            <string>&lt;qt&gt;Sets the speed of the connection to your Pilot. This is only important for serial devices.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                </grid>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>ViewersTab</cstring>
-                </property>
-                <attribute name="title">
-                    <string>&amp;Viewers</string>
-                </attribute>
-                <vbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <widget class="QCheckBox">
+                    <spacer row="4" column="1">
                         <property name="name">
-                            <cstring>fInternalEditors</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Make internal viewers &amp;editable</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fUseSecret</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Show private records</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Records that are marked &amp;quot;Private&amp;quot; in the Pilot are displayed by KPilot only when this box is checked.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QButtonGroup">
-                        <property name="name">
-                            <cstring>fAddressGroup</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Address Viewer</string>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QRadioButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>fNormalDisplay</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show as "&amp;Last, first"</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by last name, first name.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>fCompanyDisplay</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show as "&amp;Company, last"</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="Line" row="2" column="0">
-                                <property name="name">
-                                    <cstring>line1</cstring>
-                                </property>
-                                <property name="frameShape">
-                                    <enum>HLine</enum>
-                                </property>
-                                <property name="frameShadow">
-                                    <enum>Sunken</enum>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox" row="3" column="0">
-                                <property name="name">
-                                    <cstring>fUseKeyField</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Use key field</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Combine all entries with the same last name.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                    <spacer>
-                        <property name="name">
-                            <cstring>Spacer3</cstring>
+                            <cstring>spacer2</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Vertical</enum>
@@ -495,142 +163,42 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>60</height>
+                                <height>81</height>
                             </size>
                         </property>
                     </spacer>
-                </vbox>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>BackupTab</cstring>
-                </property>
-                <attribute name="title">
-                    <string>&amp;Backup</string>
-                </attribute>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <widget class="QGroupBox" row="1" column="0">
+                    <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>GroupBox23</cstring>
+                            <cstring>fPilotDevice</cstring>
                         </property>
-                        <property name="title">
-                            <string>Databases</string>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device.&lt;/qt&gt;</string>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel" row="0" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel5</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;No backup:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fBackupOnly</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="1" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel6</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Not &amp;restored:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fSkipDB</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLineEdit" row="0" column="1">
-                                <property name="name">
-                                    <cstring>fBackupOnly</cstring>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Databases listed here are only backed up, not synced.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QLineEdit" row="1" column="1">
-                                <property name="name">
-                                    <cstring>fSkipDB</cstring>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Databases listed here are neither backed up, nor synced.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="0" column="2">
-                                <property name="name">
-                                    <cstring>fBackupOnlyChooser</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>...</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="1" column="2">
-                                <property name="name">
-                                    <cstring>fSkipDBChooser</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>...</string>
-                                </property>
-                            </widget>
-                        </grid>
                     </widget>
-                    <spacer row="2" column="0">
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>Spacer2</cstring>
+                            <cstring>TextLabel1</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
+                        <property name="text">
+                            <string>Pilot &amp;device:</string>
                         </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
+                        <property name="alignment">
+                            <set>AlignVCenter|AlignRight</set>
                         </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
+                        <property name="buddy" stdset="0">
+                            <cstring>fPilotDevice</cstring>
                         </property>
-                    </spacer>
+                    </widget>
                 </grid>
             </widget>
         </widget>
     </grid>
 </widget>
-<connections>
-    <connection>
-        <sender>radioButton9</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>fSpecialSync</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-</connections>
 <tabstops>
     <tabstop>fPilotDevice</tabstop>
     <tabstop>fPilotSpeed</tabstop>
     <tabstop>fPilotEncoding</tabstop>
     <tabstop>fUserName</tabstop>
-    <tabstop>fStartDaemonAtLogin</tabstop>
-    <tabstop>fDockDaemon</tabstop>
-    <tabstop>fKillDaemonOnExit</tabstop>
-    <tabstop>radioButton3</tabstop>
-    <tabstop>radioButton4</tabstop>
-    <tabstop>radioButton9</tabstop>
-    <tabstop>fSpecialSync</tabstop>
-    <tabstop>fFullBackupCheck</tabstop>
-    <tabstop>fConflictResolution</tabstop>
-    <tabstop>fUseSecret</tabstop>
-    <tabstop>fNormalDisplay</tabstop>
-    <tabstop>fCompanyDisplay</tabstop>
-    <tabstop>fUseKeyField</tabstop>
-    <tabstop>fBackupOnly</tabstop>
-    <tabstop>fBackupOnlyChooser</tabstop>
-    <tabstop>fSkipDB</tabstop>
-    <tabstop>fSkipDBChooser</tabstop>
     <tabstop>tabWidget</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>

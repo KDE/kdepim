@@ -49,6 +49,7 @@
 #include "doc-conflictdialog.h"
 #include "DOC-converter.h"
 #include "pilotDOCHead.h"
+#include "docconduitSettings.h"
 
 
 // Something to allow us to check what revision
@@ -112,50 +113,32 @@ const unsigned long DOCConduit::dbcreator() {
 void DOCConduit::readConfig()
 {
 	FUNCTIONSETUP;
+	DOCConduitSettings::self()->readConfig();
 
-	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
-
-	fTXTDir = fConfig->readEntry(DOCConduitFactory::fTXTDir);
-	fPDBDir = fConfig->readEntry(DOCConduitFactory::fPDBDir);
-	fKeepPDBLocally =
-		fConfig->readBoolEntry(DOCConduitFactory::fKeepPDBLocally, true);
-	eConflictResolution =
-		(enum eSyncDirectionEnum) (fConfig->
-		readNumEntry(DOCConduitFactory::fConflictResolution, 0));
+	eConflictResolution = (enum eSyncDirectionEnum) (DOCConduitSettings::conflictResolution() );
 	fTXTBookmarks = DOCConverter::eBmkNone;
-	if (fConfig->readBoolEntry(DOCConduitFactory::fConvertBookmarks, true))
+	if ( DOCConduitSettings::convertBookmarks() )
 	{
-		if (fConfig->readBoolEntry(DOCConduitFactory::fBookmarksBmk, true))
+		if ( DOCConduitSettings::bmkFileBookmarks() )
 			fTXTBookmarks |= DOCConverter::eBmkFile;
-		if (fConfig->readBoolEntry(DOCConduitFactory::fBookmarksInline, true))
+		if ( DOCConduitSettings::inlineBookmarks() )
 			fTXTBookmarks |= DOCConverter::eBmkInline;
-		if (fConfig->readBoolEntry(DOCConduitFactory::fBookmarksEndtags, true))
+		if ( DOCConduitSettings::endtagBookmarks() )
 			fTXTBookmarks |= DOCConverter::eBmkEndtags;
 	}
-	fPDBBookmarks = fConfig->readNumEntry(DOCConduitFactory::fPCBookmarks, DOCConverter::eBmkNone);
 
-
-	fCompress = fConfig->readBoolEntry(DOCConduitFactory::fCompress, true);
-	eSyncDirection =
-		(enum eSyncDirectionEnum) (fConfig->
-		readNumEntry(DOCConduitFactory::fSyncDirection, 1));
-
-	fIgnoreBmkChangesOnly = fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false);
-	fLocalSync = fConfig->readBoolEntry(DOCConduitFactory::fLocalSync, false);
-	fAlwaysUseResolution = fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false);
-
-	fDBListSynced=fConfig->readListEntry(DOCConduitFactory::fDOCList);
+	eSyncDirection = (enum eSyncDirectionEnum)(DOCConduitSettings::syncDirection() );
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Settings "
-		<< " fTXTDir=" << fTXTDir
-		<< " fPDBDir=" << fPDBDir
-		<< " fkeepPDBLocally=" << fKeepPDBLocally
+		<< " tXTDirectory=" << DOCConduitSettings::tXTDirectory()
+		<< " pDBDirectory=" << DOCConduitSettings::pDBDirectory()
+		<< " keepPDBLocally=" << DOCConduitSettings::keepPDBsLocally()
 		<< " eConflictResolution=" << eConflictResolution
-		<< " fTXTBookmarks=" << fTXTBookmarks
-		<< " fPDBBookmarks=" << fPDBBookmarks
-		<< " fCompress=" << fCompress
+		<< " tXTBookmarks=" << fTXTBookmarks
+		<< " pDBBookmarks=" << DOCConduitSettings::bookmarksToPC()
+		<< " compress=" << DOCConduitSettings::compress()
 		<< " eSyncDirection=" << eSyncDirection << endl;
 #endif
 }
@@ -164,12 +147,10 @@ void DOCConduit::readConfig()
 
 bool DOCConduit::pcTextChanged(QString txtfn)
 {
-	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
-
 	// How do I find out if a text file has changed shince we last synced it??
 	// Use KMD5 for now. If I realize it is too slow, then I have to go back to comparing modification times
 	// if there is no config setting yet, assume the file has been changed. the md5 sum will be written to the config file after the sync.
-	QString oldDigest=fConfig->readEntry(txtfn);
+	QString oldDigest=DOCConduitSettings::self()->config()->readEntry(txtfn);
 	if (oldDigest.length()<=0)
 	{
 		return true;
@@ -231,9 +212,9 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 	if (modRecInd >= 0) {
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Handheld side has changed, condition="<<
-			((!fIgnoreBmkChangesOnly) || (modRecInd <= storyRecs))<<endl;
+			((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs))<<endl;
 #endif
-		if ((!fIgnoreBmkChangesOnly) || (modRecInd <= storyRecs)) 
+		if ((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs)) 
 			return true;
 	} else {
 #ifdef DEBUG
@@ -253,7 +234,7 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 QString DOCConduit::constructPDBFileName(QString name) {
 	FUNCTIONSETUP;
 	QString fn;
-	QDir dr(fPDBDir);
+	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo pth(dr, name);
 	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".pdb");
 	return fn;
@@ -261,7 +242,7 @@ QString DOCConduit::constructPDBFileName(QString name) {
 QString DOCConduit::constructTXTFileName(QString name) {
 	FUNCTIONSETUP;
 	QString fn;
-	QDir dr(fTXTDir);
+	QDir dr( DOCConduitSettings::tXTDirectory() );
 	QFileInfo pth(dr, name);
 	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".txt");
 	return fn;
@@ -286,10 +267,6 @@ QString DOCConduit::constructTXTFileName(QString name) {
 	DEBUGCONDUIT<<"Conduit version: "<<doc_conduit_id<<endl;
 #endif
 
-	if (!fConfig) {
-		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		return false;
-	}
 	readConfig();
 	dbnr=0;
 	
@@ -320,8 +297,8 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 #endif
 			}
 		}
-		if (!sinfo.pdbfilename.isEmpty() && fKeepPDBLocally) {
-			PilotLocalDatabase*database=new PilotLocalDatabase(fPDBDir, 
+		if (!sinfo.pdbfilename.isEmpty() && DOCConduitSettings::keepPDBsLocally() ) {
+			PilotLocalDatabase*database=new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), 
 				QString::fromLatin1(sinfo.dbinfo.name), false);
 			if (database) {
 				if ( database->deleteDatabase() !=0 ) {
@@ -330,7 +307,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 				KPILOT_DELETE(database);
 			}
 		}
-		if (!fLocalSync) {
+		if (!DOCConduitSettings::localSync()) {
 			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), 
 				QString::fromLatin1(sinfo.dbinfo.name));
 			if ( database->deleteDatabase() !=0 ) {
@@ -361,13 +338,13 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		connect(&docconverter, SIGNAL(logError(const QString &)), SIGNAL(logError(const QString &)));
 		connect(&docconverter, SIGNAL(logMessage(const QString &)), SIGNAL(logMessage(const QString &)));
 
-		docconverter.setTXTpath(fTXTDir, sinfo.txtfilename);
+		docconverter.setTXTpath( DOCConduitSettings::tXTDirectory(), sinfo.txtfilename );
 		docconverter.setPDB(database);
-		docconverter.setCompress(fCompress);
+		docconverter.setCompress(DOCConduitSettings::compress());
 
 		switch (sinfo.direction) {
 			case eSyncPDAToPC:
-				docconverter.setBookmarkTypes(fPDBBookmarks);
+				docconverter.setBookmarkTypes(DOCConduitSettings::bookmarksToPC());
 				res = docconverter.convertPDBtoTXT();
 				break;
 			case eSyncPCToPDA:
@@ -380,14 +357,13 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		
 		// Now calculate the md5 checksum of the PC text and write it to the config file
 		{
-			KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
 			KMD5 docmd5;
 			QFile txtfile(docconverter.txtFilename());
 			if (txtfile.open(IO_ReadOnly)) {
 				docmd5.update(txtfile);
 				QString thisDigest(docmd5.hexDigest() /* .data() */);
-				fConfig->writeEntry(docconverter.txtFilename(), thisDigest);
-				fConfig->sync();
+				DOCConduitSettings::self()->config()->writeEntry(docconverter.txtFilename(), thisDigest);
+				DOCConduitSettings::self()->config()->sync();
 #ifdef DEBUG
 				DEBUGCONDUIT<<"MD5 Checksum of the text "<<sinfo.txtfilename<<" is "<<thisDigest<<endl;
 #endif
@@ -470,9 +446,9 @@ void DOCConduit::syncNextTXT()
 		return;
 	}
 
-	// if docnames isn't initialized, get a list of all *.txt files in fTXTDir
+	// if docnames isn't initialized, get a list of all *.txt files in DOCConduitSettings::tXTDirectory()
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
-		docnames=QDir(fTXTDir, CSL1("*.txt")).entryList() ;
+		docnames=QDir( DOCConduitSettings::tXTDirectory(), CSL1("*.txt")).entryList() ;
 		dociterator=docnames.begin();
 	}
 	if (dociterator==docnames.end()) {
@@ -484,7 +460,7 @@ void DOCConduit::syncNextTXT()
 
 	QString fn=(*dociterator);
 
-	QDir dr(fTXTDir);
+	QDir dr( DOCConduitSettings::tXTDirectory() );
 	QFileInfo fl(dr, fn );
 	QString txtfilename=fl.absFilePath();
 	QString pdbfilename;
@@ -516,12 +492,12 @@ void DOCConduit::syncNextTXT()
 
 
 
-/** This slot will only be used if fKeepPDBLocally to check if new doc databases have been copied to the pdb directory.
+/** This slot will only be used if DOCConduitSettings::keepPDBsLocally() to check if new doc databases have been copied to the pdb directory.
  *  If so, install it to the handheld and sync it to the PC */
 void DOCConduit::checkPDBFiles() {
 	FUNCTIONSETUP;
 
-	if (fLocalSync || !fKeepPDBLocally || eSyncDirection==eSyncPCToPDA )
+	if ( DOCConduitSettings::localSync() || !DOCConduitSettings::keepPDBsLocally() || eSyncDirection==eSyncPCToPDA )
 	{
 		// no more databases available, so check for PC->Palm sync
 		QTimer::singleShot(0, this, SLOT(checkDeletedDocs()));
@@ -529,9 +505,9 @@ void DOCConduit::checkPDBFiles() {
 	}
 
 	// Walk through all files in the pdb directory and check if it has already been synced.
-	// if docnames isn't initialized, get a list of all *.pdb files in fPDBDir
+	// if docnames isn't initialized, get a list of all *.pdb files in DOCConduitSettings::pDBDirectory()
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
-		docnames=QDir(fPDBDir, CSL1("*.pdb")).entryList() ;
+		docnames=QDir(DOCConduitSettings::pDBDirectory(), CSL1("*.pdb")).entryList() ;
 		dociterator=docnames.begin();
 	}
 	if (dociterator==docnames.end()) {
@@ -543,7 +519,7 @@ void DOCConduit::checkPDBFiles() {
 
 	QString fn=(*dociterator);
 
-	QDir dr(fPDBDir);
+	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo fl(dr, fn );
 	QString pdbfilename=fl.absFilePath();
 	dociterator++;
@@ -645,7 +621,7 @@ void DOCConduit::resolve() {
 	
 	// Show the conflict resolution dialog and ask for the action for each database
 	ResolutionDialog*dlg=new ResolutionDialog( 0,  i18n("Conflict Resolution"), &fSyncInfoList , fHandle);
-	bool show=fAlwaysUseResolution || (dlg && dlg->hasConflicts);
+	bool show=DOCConduitSettings::alwaysShowResolutionDialog() || (dlg && dlg->hasConflicts);
 	if (show) {
 		if (!dlg || !dlg->exec() ) {
 			KPILOT_DELETE(dlg)
@@ -707,7 +683,7 @@ void DOCConduit::syncDatabases() {
 
 
 PilotDatabase*DOCConduit::openDOCDatabase(QString dbname) {
-	if (fLocalSync) return new PilotLocalDatabase(fPDBDir, dbname, false);
+	if (DOCConduitSettings::localSync()) return new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), dbname, false);
 	else return new PilotSerialDatabase(pilotSocket(), dbname);
 }
 
@@ -887,7 +863,7 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 
 	{
 		// make sure the dir for the local texts really exists!
-		QDir dir(fTXTDir);
+		QDir dir( DOCConduitSettings::tXTDirectory() );
 		if (!dir.exists())
 		{
 			dir.mkdir(dir.absPath());
@@ -898,10 +874,10 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 	switch (sinfo.direction)
 	{
 		case eSyncPDAToPC:
-			if (fKeepPDBLocally)
+			if (DOCConduitSettings::keepPDBsLocally())
 			{
 				// make sure the dir for the local db really exists!
-				QDir dir(fPDBDir);
+				QDir dir(DOCConduitSettings::pDBDirectory());
 
 				if (!dir.exists())
 				{
@@ -922,10 +898,10 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 			}
 			break;
 		case eSyncPCToPDA:
-			if (fKeepPDBLocally)
+			if (DOCConduitSettings::keepPDBsLocally())
 			{
 				// make sure the dir for the local db really exists!
-				QDir dir(fPDBDir);
+				QDir dir(DOCConduitSettings::pDBDirectory());
 				if (!dir.exists())
 				{
 					dir.mkdir(dir.absPath());
@@ -935,9 +911,9 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 		default:
 			break;
 	}
-	if (fKeepPDBLocally)
+	if (DOCConduitSettings::keepPDBsLocally())
 	{
-		return new PilotLocalDatabase(fPDBDir, 
+		return new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), 
 			QString::fromLatin1(dbinfo.name), false);
 	}
 	else
@@ -964,7 +940,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 				DEBUGCONDUIT<<"Resetting sync flags for database "
 					<<sinfo.dbinfo.name<<endl;
 #endif
-			if (fKeepPDBLocally && !fLocalSync) {
+			if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync()) {
 				PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(), 
 					QString::fromLatin1(sinfo.dbinfo.name));
 #ifdef DEBUG
@@ -986,7 +962,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 #endif
 			break;
 		case eSyncPCToPDA:
-			if (fKeepPDBLocally && !fLocalSync && res)
+			if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync() && res)
 			{
 				// Copy the database to the palm
 				PilotLocalDatabase*localdb=dynamic_cast<PilotLocalDatabase*>(database);
@@ -1029,10 +1005,8 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 void DOCConduit::cleanup()
 {
 	FUNCTIONSETUP;
-	
-	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
-	fConfig->writeEntry(DOCConduitFactory::fDOCList, fDBNames);
-	fConfig->sync();
+	DOCConduitSettings::setConvertedDOCfiles( fDBNames );
+	DOCConduitSettings::self()->writeConfig();
 
 	emit syncDone(this);
 }

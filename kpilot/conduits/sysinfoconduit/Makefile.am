@@ -10,7 +10,7 @@ service_DATA = sysinfo_conduit.desktop
 
 kde_module_LTLIBRARIES = conduit_sysinfo.la
 
-conduit_sysinfo_la_SOURCES = \
+conduit_sysinfo_la_SOURCES = sysinfoSettings.kcfgc \
 	sysinfo-factory.cc \
 	sysinfo-setup.cc \
 	sysinfo-conduit.cc \
@@ -21,3 +21,4 @@ conduit_sysinfo_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI) $(LIB_KIO)
 kpilot_sysinfo_data_DATA = Template.html Template.txt
 kpilot_sysinfo_datadir = $(kde_datadir)/kpilot/sysinfoconduit
 EXTRA_DIST = $(kpilot_sysinfo_data_DATA)
+kde_kcfg_DATA = sysinfoconduit.kcfg

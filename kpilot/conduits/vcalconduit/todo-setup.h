@@ -31,6 +31,7 @@
 
 #include "plugin.h"
 #include "vcal-setup.h"
+#include "todo-factory.h"
 
 class ToDoWidgetSetup : public VCalWidgetSetupBase
 {
@@ -38,6 +39,7 @@ public:
 	ToDoWidgetSetup(QWidget *,const char *);
 	virtual ~ToDoWidgetSetup();
 
+	virtual VCalConduitSettings*config() { return ToDoConduitFactory::config(); }
 	static ConduitConfigBase *create(QWidget *, const char *);
 } ;
 

@@ -9,39 +9,37 @@
 
 SUBDIRS = Icons
 
-### Fairly large changes to allow enable final and make life easier for
-### conduits (and others) -- now build all the database types and known
-### database record types into a library.
-
-noinst_PROGRAMS = kpilotTest kpilotConfig
+noinst_LTLIBRARIES = libconfiguration.la
+noinst_PROGRAMS = kpilotTest
 bin_PROGRAMS = kpilot kpilotDaemon
+kde_module_LTLIBRARIES = kcm_kpilot.la
 
 METASOURCES = AUTO
 
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 
-###
-### On some platforms, such as stock RH 7.1, the KDE libraries are built without
-### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
-### you want any debugging at all.
-###
-### KDE_CXXFLAGS=-DNDEBUG -UDEBUG
-### KDE_CXXFLAGS=-DDEBUG
+libconfiguration_la_SOURCES = kpilotConfig.cc kpilotSettings.kcfgc
+libconfiguration_la_LDFLAGS = $(all_libraries)
 
-###
-### Non-automake variables
-###
+kcm_kpilot_la_SOURCES = kpilotConfigDialog.cc \
+	kpilotConfigDialog_base.ui \
+	kpilotConfigDialog2_base.ui \
+	kpilotConfigDialog3_base.ui \
+	conduitConfigDialog.cc \
+	dbSelectionDialog.cc dbSelection_base.ui
+kcm_kpilot_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
+kcm_kpilot_la_LIBADD = $(LIB_KFILE) $(PISOCK_LIB) \
+	../lib/libkpilot.la \
+	libconfiguration.la
 
 
 kpilot_SOURCES	= \
-	pilotDaemonDCOP.stub kpilotDCOP.skel logWidgetDCOP.skel \
-	kpilot.cc kpilotConfig.cc \
-	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
-	conduitConfigDialog.cc \
-	dbSelectionDialog.cc dbSelection_base.ui \
+	pilotDaemonDCOP.stub kpilotDCOP.skel loggerDCOP.skel \
+	kpilot.cc \
 	pilotComponent.cc logWidget.cc memoWidget.cc \
 	addressWidget.cc addressEditor.cc \
-	dbviewerWidget.cc dbFlagsEditor.cc dbFlagsEditor_base.ui dbRecordEditor.cc dbAppInfoEditor.cc \
+	dbviewerWidget.cc dbFlagsEditor.cc dbFlagsEditor_base.ui \
+	dbRecordEditor.cc dbAppInfoEditor.cc \
 	datebookWidget.cc \
 	todoWidget.cc todoEditor.cc todoEditor_base.ui \
 	fileInstaller.cc fileInstallWidget.cc \
@@ -50,42 +48,47 @@ kpilot_SOURCES	= \
 
 
 kpilotDaemon_SOURCES = \
-	pilotDaemonDCOP.skel kpilotDCOP.stub logWidgetDCOP.stub \
-	pilotDaemon.cc kpilotConfig.cc \
+	pilotDaemonDCOP.skel kpilotDCOP.stub loggerDCOP.stub loggerDCOP.skel \
+	pilotDaemon.cc logFile.cc \
 	hotSync.cc internalEditorAction.cc interactiveSync.cc syncStack.cc \
 	fileInstaller.cc kroupware.cc
 
-kpilotTest_SOURCES = kpilotConfig.cc \
+kpilotTest_SOURCES = \
 	logWidget.cc pilotComponent.cc \
 	hotSync.cc internalEditorAction.cc interactiveSync.cc \
-	logWidgetDCOP.skel \
+	loggerDCOP.skel \
 	syncStack.cc \
 	main-test.cc
-
-kpilotConfig_SOURCES = kpilotConfig.cc \
-	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
-	dbSelectionDialog.cc dbSelection_base.ui \
-	conduitConfigDialog.cc \
-	main-config.cc
 
 
 kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la 
-kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
-kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
-kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) -lkutils \
+	../lib/libkpilot.la  libconfiguration.la
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) \
+	../lib/libkpilot.la libconfiguration.la
+kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) \
+	../lib/libkpilot.la libconfiguration.la
 
 xdg_apps_DATA = kpilot.desktop  kpilotdaemon.desktop
+kde_kcfg_DATA = kpilot.kcfg
+kde_services_DATA = kpilot_config.desktop
 
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kpilotconduit.desktop
 
 rcdir = $(kde_datadir)/kpilot
 rc_DATA = kpilotui.rc
+
+update_DATA = kpilot.upd
+updatedir = $(kde_datadir)/kconf_update
+
+### Some additional dependencies:
+
+kpilotConfigDialog.cc : kpilotSettings.h
+

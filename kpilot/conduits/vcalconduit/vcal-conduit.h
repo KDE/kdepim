@@ -83,6 +83,7 @@ protected:
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) { if (r) return new PilotDateEntry(r);  else return new PilotDateEntry();};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Event; };
 	virtual const QString getTitle(PilotAppCategory*de);
+	virtual VCalConduitSettings *config() { return VCalConduitFactory::config(); }
 
 protected:
 	virtual PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);

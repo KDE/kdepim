@@ -126,7 +126,6 @@ protected:
 	SyncAction *nextAction() { return SyncActionQueue.dequeue(); };
 
 	bool fReady;
-	KConfig *fConfig;
 
 	QString fInstallerDir;
 	QStringList fInstallerFiles;
@@ -211,7 +210,7 @@ public:
 	*/
 
 	void queueInit(int mode=WithUserCheck);
-	void queueConduits(KConfig *,const QStringList &conduits,int mode=0);
+	void queueConduits(const QStringList &conduits,int mode=0);
 	void queueInstaller(const QString &dir,const QStringList &files);
 	void queueCleanup();
 

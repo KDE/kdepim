@@ -44,6 +44,7 @@ static const char *syncStack_id = "$Id$";
 #include "hotSync.h"
 #include "interactiveSync.h"
 #include "fileInstaller.h"
+#include "kpilotSettings.h"
 
 #include "syncStack.moc"
 
@@ -156,6 +157,19 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		l.append(CSL1("--copyPCToHH"));
 
 
+	if ((fMode & (ActionQueue::FlagHHToPC | ActionQueue::FlagPCToHH)) ==
+		(ActionQueue::FlagHHToPC | ActionQueue::FlagPCToHH))
+	{
+		kdWarning() << k_funcinfo 
+			<< ": Both HHtoPC and PCtoHH set in conduit "
+			<< fDesktopName
+			<< endl;
+	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Flags: " << fMode << endl;
+#endif
+
 	QObject *object = factory->create(fHandle,name(),"SyncAction",l);
 
 	if (!object)
@@ -179,11 +193,10 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		emit syncDone(this);
 		return true;
 	}
-	fConduit->setConfig(fConfig);
 
 	addSyncLogEntry(i18n("[Conduit %1]").arg(fDesktopName));
 
-	QString conduitFlags = TODO_I18N("Running with flags: ");
+	QString conduitFlags = i18n("Running with flags: ");
 	for (QStringList::ConstIterator i = l.begin() ; i!=l.end(); ++i)
 	{
 		conduitFlags.append(*i);
@@ -191,9 +204,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	logMessage(conduitFlags);
-#ifdef DEBUG
-	DEBUGKPILOT<<conduitFlags<<endl;
-#endif
+	
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
 		this,SLOT(execDone(SyncAction *)));
@@ -230,13 +241,11 @@ void ConduitProxy::execDone(SyncAction *p)
 
 #if 0
 ActionQueue::ActionQueue(KPilotDeviceLink *d,
-	KConfig *config,
 	const QStringList &conduits,
 	const QString &dir,
 	const QStringList &files) :
 	SyncAction(d,"ActionQueue"),
 	fReady(false),
-	fConfig(config),
 	fInstallerDir(dir),
 	fInstallerFiles(files),
 	fConduits(conduits)
@@ -260,8 +269,7 @@ ActionQueue::ActionQueue(KPilotDeviceLink *d,
 
 ActionQueue::ActionQueue(KPilotDeviceLink *d) :
 	SyncAction(d,"ActionQueue"),
-	fReady(false),
-	fConfig(0L)
+	fReady(false)
 	// The string lists have default constructors
 {
 	FUNCTIONSETUP;
@@ -300,7 +308,7 @@ void ActionQueue::prepare(int m)
 
 	queueInit(m);
 	if (m & WithConduits)
-		queueConduits(fConfig,fConduits,m);
+		queueConduits(fConduits,m);
 
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
@@ -340,7 +348,7 @@ void ActionQueue::queueInit(int m)
 	}
 }
 
-void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
+void ActionQueue::queueConduits(const QStringList &l,int m)
 {
 	FUNCTIONSETUP;
 
@@ -354,13 +362,17 @@ void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
 		if ((*it).startsWith(CSL1("internal_")))
 		{
 #ifdef DEBUG
-			DEBUGDAEMON << k_funcinfo <<
-				"Ignoring conduit " << *it << endl;
+			DEBUGDAEMON << fname <<
+				": Ignoring conduit " << *it << endl;
 #endif
 			continue;
 		}
+		
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Creating proxy with mode=" << m << endl;
+#endif
 		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
-		cp->setConfig(config);
 		addAction(cp);
 	}
 }

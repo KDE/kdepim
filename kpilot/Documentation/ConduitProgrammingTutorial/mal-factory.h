@@ -21,7 +21,6 @@ public:
     virtual ~MALConduitFactory();
 
     static KAboutData *about() { return fAbout; } ;
-    static const char *group() { return fGroup; } ;
     static const char *lastSync() { return fLastSync; };
     static const char *syncTime() {return fSyncTime;};
     static const char *proxyType() {return fProxyType;};

@@ -38,6 +38,7 @@
 #include "doc-setupdialog.h"
 #include "doc-factory.h"
 #include "doc-setup.h"
+#include "docconduitSettings.h"
 
 
 DOCWidgetSetup::DOCWidgetSetup(QWidget *w, const char *n,
@@ -58,17 +59,13 @@ DOCWidgetSetup::~DOCWidgetSetup()
 /* virtual */ void DOCWidgetSetup::commitChanges()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	fConfigBase->commit(fConfig);
+	fConfigBase->commit();
 }
 
 /* virtual */ void DOCWidgetSetup::readSettings()
 {
 	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-	fConfigBase->load(fConfig);
+	fConfigBase->load();
 }
 
 
@@ -106,88 +103,52 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	fConfigWidget->adjustSize();
 }
 
-/* virtual */ void DOCWidgetConfig::commit(KConfig *fConfig)
+/* virtual */ void DOCWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
+	
+	DOCConduitSettings::setTXTDirectory( fConfigWidget->fTXTDir->url() );
+	DOCConduitSettings::setPDBDirectory( fConfigWidget->fPDBDir->url() );
+	
+	DOCConduitSettings::setKeepPDBsLocally( fConfigWidget->fkeepPDBLocally->isChecked());
+	DOCConduitSettings::setConflictResolution( fConfigWidget->fConflictResolution->id(
+		fConfigWidget->fConflictResolution->selected()) );
+	DOCConduitSettings::setConvertBookmarks(fConfigWidget->fConvertBookmarks->isChecked());
+	DOCConduitSettings::setBmkFileBookmarks(fConfigWidget->fBookmarksBmk->isChecked());
+	DOCConduitSettings::setInlineBookmarks(fConfigWidget->fBookmarksInline->isChecked());
+	DOCConduitSettings::setEndtagBookmarks(fConfigWidget->fBookmarksEndtags->isChecked());
+	DOCConduitSettings::setCompress(fConfigWidget->fCompress->isChecked());
+	DOCConduitSettings::setSyncDirection(fConfigWidget->fSyncDirection->id(
+		fConfigWidget->fSyncDirection->selected()));
+	DOCConduitSettings::setIgnoreBmkChanges(fConfigWidget->fNoConversionOfBmksOnly->isChecked());
+	DOCConduitSettings::setAlwaysShowResolutionDialog(fConfigWidget->fAlwaysUseResolution->isChecked());
+	DOCConduitSettings::setBookmarksToPC( fConfigWidget->fPCBookmarks->id(
+		fConfigWidget->fPCBookmarks->selected()) );
 
-	if (!fConfig)
-		return;
-
-	KConfigGroupSaver s(fConfig, DOCConduitFactory::fGroup);
-
-	fConfig->writeEntry(DOCConduitFactory::fTXTDir,
-		fConfigWidget->fTXTDir->url());
-	fConfig->writeEntry(DOCConduitFactory::fPDBDir,
-		fConfigWidget->fPDBDir->url());
-	fConfig->writeEntry(DOCConduitFactory::fKeepPDBLocally,
-		fConfigWidget->fkeepPDBLocally->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fConflictResolution,
-		fConfigWidget->fConflictResolution->id(fConfigWidget->
-			fConflictResolution->selected()));
-	fConfig->writeEntry(DOCConduitFactory::fConvertBookmarks,
-		fConfigWidget->fConvertBookmarks->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fBookmarksBmk,
-		fConfigWidget->fBookmarksBmk->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fBookmarksInline,
-		fConfigWidget->fBookmarksInline->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fBookmarksEndtags,
-		fConfigWidget->fBookmarksEndtags->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fCompress,
-		fConfigWidget->fCompress->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fSyncDirection,
-		fConfigWidget->fSyncDirection->id(fConfigWidget->
-			fSyncDirection->selected()));
-	fConfig->writeEntry(DOCConduitFactory::fIgnoreBmkChanges,
-		fConfigWidget->fNoConversionOfBmksOnly->isChecked());
-	fConfig->writeEntry(DOCConduitFactory::fAlwaysUseResolution,
-		fConfigWidget->fAlwaysUseResolution->isChecked());
-
-	fConfig->writeEntry(DOCConduitFactory::fPCBookmarks,
-		fConfigWidget->fPCBookmarks->id(fConfigWidget->
-			fPCBookmarks->selected()));
-
-
-	fConfig->sync();
+	DOCConduitSettings::self()->writeConfig();
 	unmodified();
 }
 
-/* virtual */ void DOCWidgetConfig::load(KConfig *fConfig)
+/* virtual */ void DOCWidgetConfig::load()
 {
 	FUNCTIONSETUP;
+	DOCConduitSettings::self()->readConfig();
+	
+	fConfigWidget->fTXTDir->setURL( DOCConduitSettings::tXTDirectory() );
+	fConfigWidget->fPDBDir->setURL( DOCConduitSettings::pDBDirectory() );
+	fConfigWidget->fkeepPDBLocally->setChecked( DOCConduitSettings::keepPDBsLocally() );
+	fConfigWidget->fConflictResolution->setButton(DOCConduitSettings::conflictResolution() );
+	fConfigWidget->fConvertBookmarks->setChecked(DOCConduitSettings::convertBookmarks() );
+	fConfigWidget->fBookmarksBmk->setChecked(DOCConduitSettings::bmkFileBookmarks() );
+	fConfigWidget->fBookmarksInline->setChecked(DOCConduitSettings::inlineBookmarks() );
+	fConfigWidget->fBookmarksEndtags->setChecked(DOCConduitSettings::endtagBookmarks() );
+	fConfigWidget->fCompress->setChecked(DOCConduitSettings::compress() );
+	fConfigWidget->fSyncDirection->setButton(DOCConduitSettings::syncDirection() );
 
-	if (!fConfig)
-		return;
+	fConfigWidget->fNoConversionOfBmksOnly->setChecked( DOCConduitSettings::ignoreBmkChanges() );
+	fConfigWidget->fAlwaysUseResolution->setChecked( DOCConduitSettings::alwaysShowResolutionDialog() );
 
-	KConfigGroupSaver s(fConfig, DOCConduitFactory::fGroup);
-
-	fConfigWidget->fTXTDir->setURL(fConfig->
-		readEntry(DOCConduitFactory::fTXTDir));
-	fConfigWidget->fPDBDir->setURL(fConfig->
-		readEntry(DOCConduitFactory::fPDBDir));
-	fConfigWidget->fkeepPDBLocally->setChecked(fConfig->
-		readBoolEntry(DOCConduitFactory::fKeepPDBLocally, true));
-	fConfigWidget->fConflictResolution->setButton(fConfig->
-		readNumEntry(DOCConduitFactory::fConflictResolution, 0));
-	fConfigWidget->fConvertBookmarks->setChecked(fConfig->
-		readBoolEntry(DOCConduitFactory::fConvertBookmarks, true));
-	fConfigWidget->fBookmarksBmk->setChecked(fConfig->
-		readBoolEntry(DOCConduitFactory::fBookmarksBmk, true));
-	fConfigWidget->fBookmarksInline->setChecked(fConfig->
-		readBoolEntry(DOCConduitFactory::fBookmarksInline, true));
-	fConfigWidget->fBookmarksEndtags->setChecked(fConfig->
-		readBoolEntry(DOCConduitFactory::fBookmarksEndtags, true));
-	fConfigWidget->fCompress->setChecked(fConfig->
-		readBoolEntry(DOCConduitFactory::fCompress, true));
-	fConfigWidget->fSyncDirection->setButton(fConfig->
-		readNumEntry(DOCConduitFactory::fSyncDirection, 0));
-
-	fConfigWidget->fNoConversionOfBmksOnly->setChecked(
-		fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false));
-	fConfigWidget->fAlwaysUseResolution->setChecked(
-		fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false));
-
-	fConfigWidget->fPCBookmarks->setButton(fConfig->
-		readNumEntry(DOCConduitFactory::fPCBookmarks, 0));
+	fConfigWidget->fPCBookmarks->setButton(DOCConduitSettings::bookmarksToPC() );
 	unmodified();
 }
 

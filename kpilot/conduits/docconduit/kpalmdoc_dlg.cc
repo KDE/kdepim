@@ -48,6 +48,7 @@
 
 #include "options.h"
 #include "DOC-converter.h"
+#include "kpalmdocSettings.h"
 
 
 ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
@@ -59,7 +60,7 @@ ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
 	readSettings();
 //	setMainWidget(dlg->tabWidget);
 
-	// TODO: Connect the signals and slots from the various widgets!
+	// Connect the signals and slots from the various widgets!
 	// e.g.
 	connect(dlg->fDirectories, SIGNAL(toggled(bool)),
 		this, SLOT(slotDirectories(bool)));
@@ -75,64 +76,48 @@ ConverterDlg::~ConverterDlg()
 }
 void ConverterDlg::writeSettings()
 {
-	KConfig* fConfig = kapp->config();
-	if (!fConfig) return;
-//	config->setGroup("GeneralData");
-
 	// General page
-	fConfig->writeEntry("TXT folder", dlg->fTXTDir->url());
-	fConfig->writeEntry("PDB folder", dlg->fPDBDir->url());
-	fConfig->writeEntry("Sync folders", dlg->fDirectories->isChecked());
-	fConfig->writeEntry("Ask before overwriting files", dlg->fAskOverwrite->isChecked());
-	fConfig->writeEntry("Verbose messages", dlg->fVerbose->isChecked());
+	KPalmDocSettings::setTXTFolder( dlg->fTXTDir->url() );
+	KPalmDocSettings::setPDBFolder( dlg->fPDBDir->url() );
+	KPalmDocSettings::setSyncFolders( dlg->fDirectories->isChecked() );
+	KPalmDocSettings::setAskOverwrite( dlg->fAskOverwrite->isChecked() );
+	KPalmDocSettings::setVerboseMessages( dlg->fVerbose->isChecked() );
 
 	// PC->Handheld page
-	fConfig->writeEntry("Compress", dlg->fCompress->isChecked());
-	fConfig->writeEntry("Convert bookmarks", dlg->fConvertBookmarks->isChecked());
-	fConfig->writeEntry("Bookmarks inline", dlg->fBookmarksInline->isChecked());
-	fConfig->writeEntry("Bookmarks endtags", dlg->fBookmarksEndtags->isChecked());
-	fConfig->writeEntry("Bookmarks bmk", dlg->fBookmarksBmk->isChecked());
+	KPalmDocSettings::setCompress( dlg->fCompress->isChecked() );
+	KPalmDocSettings::setConvertBookmarks( dlg->fConvertBookmarks->isChecked() );
+	KPalmDocSettings::setBookmarksInline( dlg->fBookmarksInline->isChecked() );
+	KPalmDocSettings::setBookmarksEndtags( dlg->fBookmarksEndtags->isChecked() );
+	KPalmDocSettings::setBookmarksBmk( dlg->fBookmarksBmk->isChecked() );
 
 	// Handheld->PC page
-	fConfig->writeEntry("Bookmarks to PC",
-		dlg->fPCBookmarks->id(dlg->fPCBookmarks->selected()));
+	KPalmDocSettings::setBookmarksToPC( dlg->fPCBookmarks->id(dlg->fPCBookmarks->selected()) );
 
-	fConfig->sync();
+	KPalmDocSettings::self()->writeConfig();
 }
+
 void ConverterDlg::readSettings()
 {
-	KConfig* fConfig = kapp->config();
-	if (!fConfig) return;
+	KPalmDocSettings::self()->readConfig();
 
 	// General Page:
-	dlg->fTXTDir->setURL(fConfig->
-		readEntry("TXT directory"));
-	dlg->fPDBDir->setURL(fConfig->
-		readEntry("PDB directory"));
-	bool dir=fConfig->
-		readBoolEntry("Sync directories", false);
+	dlg->fTXTDir->setURL(KPalmDocSettings::tXTFolder());
+	dlg->fPDBDir->setURL(KPalmDocSettings::pDBFolder());
+	bool dir=KPalmDocSettings::syncFolders();
 	dlg->fDirectories->setChecked(dir);
 	slotDirectories(dir);
-	askOverwrite=fConfig->readBoolEntry("Ask before overwriting files", true);
-	dlg->fAskOverwrite->setChecked(askOverwrite);
-	verbose=fConfig->readBoolEntry("Verbose messages", true);
-	dlg->fVerbose->setChecked(verbose);
+	dlg->fAskOverwrite->setChecked( KPalmDocSettings::askOverwrite() );
+	dlg->fVerbose->setChecked( KPalmDocSettings::verboseMessages() );
 
 	// PC->Handheld page
-	dlg->fCompress->setChecked(fConfig->
-		readBoolEntry("Compress", true));
-	dlg->fConvertBookmarks->setChecked(fConfig->
-		readBoolEntry("Convert bookmarks", true));
-	dlg->fBookmarksInline->setChecked(fConfig->
-		readBoolEntry("Bookmarks inline", true));
-	dlg->fBookmarksEndtags->setChecked(fConfig->
-		readBoolEntry("Bookmarks endtags", true));
-	dlg->fBookmarksBmk->setChecked(fConfig->
-		readBoolEntry("Bookmarks bmk", true));
+	dlg->fCompress->setChecked(KPalmDocSettings::compress() );
+	dlg->fConvertBookmarks->setChecked(KPalmDocSettings::convertBookmarks());
+	dlg->fBookmarksInline->setChecked(KPalmDocSettings::bookmarksInline());
+	dlg->fBookmarksEndtags->setChecked(KPalmDocSettings::bookmarksEndtags());
+	dlg->fBookmarksBmk->setChecked(KPalmDocSettings::bookmarksBmk());
 
 	// Handheld->PC page
-	dlg->fPCBookmarks->setButton(fConfig->
-		readNumEntry("Bookmarks to PC", 0));
+	dlg->fPCBookmarks->setButton(KPalmDocSettings::bookmarksToPC() );
 }
 
 void ConverterDlg::slotClose()
@@ -450,7 +435,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
-			i18n("<qt>The database file already <em>%1</em> exists.  Overwrite it?</qt>")
+			i18n("<qt>The database file <em>%1</em> already exists.  Overwrite it?</qt>")
 			.arg(dbfileinfo.filePath()) ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
@@ -494,7 +479,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
-			i18n("<qt>The text file already <em>%1</em> exists.  Overwrite it?</qt>")
+			i18n("<qt>The text file <em>%1</em> already exists.  Overwrite it?</qt>")
 			.arg(txtfileinfo.filePath()) ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);

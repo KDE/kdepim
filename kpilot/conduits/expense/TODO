@@ -1,0 +1,4 @@
+-) Convert this conduit to KConfigXT (the API of the kpilot libs changed, so this conduit won't even compile).
+
+-) Make it work again and then enable the compilation again
+

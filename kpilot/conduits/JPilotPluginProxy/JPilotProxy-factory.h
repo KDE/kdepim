@@ -62,9 +62,9 @@ public:
 	static void readSettings();
 	static JPlugin*addPlugin(QString path, bool on);
 	static int removePlugin(QString path);
-	static int addPluginPath(QString path, KConfig*fC=NULL);
+	static int addPluginPath(QString path);
 	static int scanPluginPathes();
-	static int loadPlugins(KConfig*fC);
+	static int loadPlugins();
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -73,12 +73,8 @@ protected:
 private:
 	KInstance *fInstance;
 public:
-	KConfig *fConfig;
 	static KAboutData *fAbout;
 	static PluginList_t *plugins;
-	static QString settingsGroup;
-	static QString PluginPathes;
-	static QString LoadedPlugins;
 	static bool pluginsloaded;
 	KLibrary*apilib;
 };

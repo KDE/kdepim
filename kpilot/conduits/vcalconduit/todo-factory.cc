@@ -35,7 +35,7 @@
 #include "todo-setup.h"
 #include "todo-conduit.h"
 #include "todo-factory.moc"
-
+#include "vcalconduitSettings.h"
 
 extern "C"
 {
@@ -47,6 +47,7 @@ void *init_conduit_todo()
 
 }
 
+VCalConduitSettings* ToDoConduitFactory::fConfig=0L;
 
 ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 	VCalConduitFactoryBase(p,n)
@@ -74,7 +75,6 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com/Linux/");
-	group="todoOptions";
 }
 
 ToDoConduitFactory::~ToDoConduitFactory()
@@ -83,6 +83,14 @@ ToDoConduitFactory::~ToDoConduitFactory()
 
 	KPILOT_DELETE(fInstance);
 	KPILOT_DELETE(fAbout);
+}
+
+VCalConduitSettings* ToDoConduitFactory::config()
+{
+	if (!fConfig) {
+		fConfig = new VCalConduitSettings("todo");
+	}
+	return fConfig;
 }
 
 /* virtual */ QObject *ToDoConduitFactory::createObject( QObject *p,
