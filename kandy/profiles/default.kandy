@@ -6,6 +6,12 @@
    <command string="at+csq" hexoutput="n" name="Output signal quality" />
    <command string="at+cgmr" hexoutput="n" name="Output the GSM telephone version" />
    <command string="at+cgsn" hexoutput="n" name="Output the serial number (IMEI)" />
+   <command string="at+cpbr=?" hexoutput="n" name="Output Phonebook Settings" />
+   <command string="at+cpbs=?" hexoutput="n" name="Output available Phonebooks" />
+   <command string="at+cpbs?" hexoutput="n" name="Output current Phonebook Properties" />
+   <command string="at+cpbs=" hexoutput="n" name="Set current Phonebook" >
+     <parameter userinput="y" value="ME" name="Phonebook" />
+   </command>
    <command string="at+cpbr=1,2" hexoutput="n" name="Read Phonebook" >
     <parameter userinput="n" value="2" name="Start" />
     <parameter userinput="y" value="5" name="End" />
@@ -18,10 +24,4 @@
    <command string="at^sbnr=&quot;vcs&quot;,3" hexoutput="y" name="Read event 3" />
    <command string="at+cpbr=1,150" hexoutput="n" name="Read telephone book" />
    <command string="at+cpbr=1,3" hexoutput="n" name="Read telephone book 1-3" />
-   <command string="at+cpbw=70,&quot;4711&quot;,129,&quot;Hans Wurst&quot;" hexoutput="n" name="Write Phonenumber" >
-    <parameter userinput="y" value="70" name="Index" />
-    <parameter userinput="y" value="123456" name="Phone Number" />
-    <parameter userinput="n" value="129" name="Arg 3" />
-    <parameter userinput="y" value="Hans Wurst" name="Name" />
-   </command>
   </commandset>
