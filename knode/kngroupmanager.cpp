@@ -28,7 +28,6 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 
-#include "knpurgeprogressdialog.h"
 #include "knode.h"
 #include "knarticlemanager.h"
 #include "knjobdata.h"
