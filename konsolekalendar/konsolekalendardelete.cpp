@@ -41,22 +41,37 @@ bool KonsoleKalendarDelete::deleteEvent()
   Event::List eventList( m_variables->
                          getCalendar()->
                          rawEventsForDate( m_variables->getStartDateTime() ) );
+  /*
+   * Just to make this shorter
+   */
 
-  //
-  // TODO:
-  // I don't really remember what that heck i've been thinking:)
-  // Needs to be redone
-  //
-                         
+  QTime starttime = m_variables->getStartDateTime().time();
+  QTime endtime = m_variables->getEndDateTime().time();
+
+                     
   Event::List::ConstIterator it;
   for( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *singleEvent = *it;
 
-    cout <<  singleEvent->dtStartStr().remove(0, (singleEvent->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-    cout << " - ";
-    cout << singleEvent->dtEndStr().remove(0, (singleEvent->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    /*
+     * I don't know if end time check is needed (add if so;)
+     * There should be milllions of deleting stuff in same minute...
+     */
 
-    m_variables->getCalendar()->deleteEvent( singleEvent );
+  if( starttime.hour() == singleEvent->dtStart().time().hour() &&
+        starttime.minute() == singleEvent->dtStart().time().minute() ){
+
+   if( m_variables->isDryRun() ) {
+     cout << i18n("Delete Event <Dry Run>:").local8Bit() << endl;
+     m_variables->printSpecs("Delete");
+   } else {
+     kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : " << singleEvent->dtStartStr().local8Bit() << endl;
+     m_variables->getCalendar()->deleteEvent( singleEvent );
+     m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+   }// else
+
+  } // if
+ 
 
   } //for
 
