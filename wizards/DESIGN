@@ -1,0 +1,8 @@
+Files
+------
+
+actionpage.*             page with the add / edit / delete buttons
+groupwarewizard.*        main window
+servertype.h             interface for servertypes
+servertypemanager.*      manager for all server types
+overviewpage.*           page where you can select the server type

@@ -1,19 +1,19 @@
-#include "kolabwizard.h"
-
 #include <kaboutdata.h>
 #include <kapplication.h>
-#include <kdebug.h>
 #include <kcmdlineargs.h>
+
+#include "groupwarewizard.h"
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
+  { "serverType <type>", "The server type", 0 },
   KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main( int argc, char **argv )
 {
-  KAboutData aboutData( "kolabwizard", "Kolab Configuration Wizard", "0.1" );
+  KAboutData aboutData( "groupwarewizard",
+                        "KDE-PIM Groupware Configuration Wizard", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -21,10 +21,16 @@ int main(int argc,char **argv)
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
+  QString serverType;
+  if ( args->isSet( "serverType" ) )
+    serverType = args->getOption( "serverType" );
 
-  KolabWizard wizard;
-  
-  wizard.exec();
+  GroupwareWizard wizard( 0 );
+  app.setMainWidget( &wizard );
+
+  wizard.setServerType( serverType );
+
+  wizard.show();
+
+  app.exec();
 }
