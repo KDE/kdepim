@@ -23,7 +23,7 @@ short test1()
   KCal::ResourceCalendar          *calendar  = 0;
   KCal::CalendarResources::Ticket *lock      = 0;
 
-  calendars = new KCal::CalendarResources();
+  calendars = new KCal::CalendarResources( QString::fromLatin1( "UTC" ) );
   calendar  = new KCal::ResourceLocal( icalfilename );
   lock      = calendars->requestSaveTicket( calendar );
 
@@ -62,7 +62,7 @@ short test2()
   KCal::ResourceCalendar          *calendar  = 0;
   KCal::CalendarResources::Ticket *lock      = 0;
 
-  calendars = new KCal::CalendarResources();
+  calendars = new KCal::CalendarResources( QString::fromLatin1( "UTC" ) );
   calendar  = new KCal::ResourceLocal( icalfilename );
 
   LockerThread thread( icalfilename );
@@ -88,7 +88,7 @@ short test3()
   KCal::ResourceCalendar          *calendar  = 0;
   KCal::CalendarResources::Ticket *lock      = 0;
 
-  calendars = new KCal::CalendarResources();
+  calendars = new KCal::CalendarResources( QString::fromLatin1( "UTC" ) );
   calendar  = new KCal::ResourceLocal( icalfilename );
 
   // lock then unlock

@@ -26,7 +26,7 @@ void LockerThread::run()
   KCal::ResourceCalendar          *calendar  = 0;
   KCal::CalendarResources::Ticket *lock      = 0;
 
-  calendars = new KCal::CalendarResources();
+  calendars = new KCal::CalendarResources( QString::fromLatin1( "UTC" ) );
   calendar  = new KCal::ResourceLocal( m_icsfile );
   lock      = calendars->requestSaveTicket( calendar );
   if ( lock )
