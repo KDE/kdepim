@@ -145,7 +145,7 @@ class KolabPropagator : public KConfigPropagator
     }
 
   protected:
-    void addCustomChanges( Change::List &changes )
+    void addKorganizerChanges( Change::List &changes )
     {
       QString freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
                                 "/freebusy/";
@@ -168,14 +168,33 @@ class KolabPropagator : public KConfigPropagator
       c = new ChangeConfig;
       c->file = "korganizerrc";
       c->group = "FreeBusy";
-
       c->name = "FreeBusyRetrieveUrl";
       c->value = freeBusyBaseUrl;
+      changes.append( c );
 
-      // KMail cruft has been outsourced
+      // Use full email address for retrieval of free/busy lists
+      c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "FreeBusy";
+      c->name = "FreeBusyFullDomainRetrieval";
+      c->value = "true";
+      changes.append( c );
+
+      c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "Group Scheduling";
+      c->name = "Use Groupware Communication";
+      c->value = "true";
+      changes.append( c );
+    }
+
+    virtual void addCustomChanges( Change::List &changes )
+    {
+      addKorganizerChanges( changes );
+
+      // KMail cruft has been outsourced to kmailchanges.cpp
       createKMailChanges( changes );
 
-      changes.append( c );
       changes.append( new SetupLDAPSearchAccount );
 
       KCal::CalendarResourceManager m( "calendar" );
