@@ -166,10 +166,30 @@ public:
   void setPreferredAddress( const QString& address );
   QString preferredAddress() const;
 
+  // Load the attributes of this class
+  bool loadAttribute( QDomElement& );
+
+  // Save the attributes of this class
+  bool saveAttributes( QDomElement& ) const;
+
+  // Load this note by reading the XML file
+  bool load( const QDomDocument& xml );
+
+  // Serialize this note to an XML string
+  QString save() const;
+
 protected:
   void setFields( KABC::Address* );
 
 private:
+  bool loadNameAttribute( QDomElement& element );
+
+  bool loadPhoneAttribute( QDomElement& element );
+
+  bool loadEmailAttribute( QDomElement& element );
+
+  bool loadAddressAttribute( QDomElement& element );
+
   QString mGivenName;
   QString mMiddleNames;
   QString mLastName;

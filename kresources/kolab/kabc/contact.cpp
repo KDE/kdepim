@@ -32,6 +32,8 @@
 
 #include "contact.h"
 
+#include <kdebug.h>
+
 using namespace Kolab;
 
 Contact::Contact( KABC::Address* addr )
@@ -358,10 +360,114 @@ void Contact::setPreferredAddress( const QString& address )
 
 QString Contact::preferredAddress() const
 {
+  kdError() << "NYI: " << k_funcinfo << endl;
   return mPreferredAddress;
+}
+
+bool Contact::loadNameAttribute( QDomElement& element )
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+
+bool Contact::loadPhoneAttribute( QDomElement& element )
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+
+bool Contact::loadEmailAttribute( QDomElement& element )
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+
+bool Contact::loadAddressAttribute( QDomElement& element )
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+
+bool Contact::loadAttribute( QDomElement& element )
+{
+  QString tagName = element.tagName().lower();
+
+  if ( tagName == "name" )
+    return loadNameAttribute( element );
+  else if ( tagName == "role" )
+    setRole( element.text() );
+  else if ( tagName == "free-busy-url" )
+    setFreeBusyUrl( element.text() );
+  else if ( tagName == "organization" )
+    setOrganization( element.text() );
+  else if ( tagName == "web-page" )
+    setWebPage( element.text() );
+  else if ( tagName == "im-address" )
+    setIMAddress( element.text() );
+  else if ( tagName == "department" )
+    setDepartment( element.text() );
+  else if ( tagName == "office-location" )
+    setOfficeLocation( element.text() );
+  else if ( tagName == "profession" )
+    setProfession( element.text() );
+  else if ( tagName == "job-title" )
+    setJobTitle( element.text() );
+  else if ( tagName == "manager-name" )
+    setManagerName( element.text() );
+  else if ( tagName == "assistant" )
+    setAssistant( element.text() );
+  else if ( tagName == "nick-name" )
+    setNickName( element.text() );
+  else if ( tagName == "spouse-name" )
+    setSpouseName( element.text() );
+  else if ( tagName == "birthday" )
+    setBirthday( stringToDate( element.text() ) );
+  else if ( tagName == "anniversary" )
+    setAnniversary( stringToDate( element.text() ) );
+  else if ( tagName == "picture" )
+    // TODO
+    ; //setPicture( element.text() );
+  else if ( tagName == "children" )
+    setChildren( element.text() );
+  else if ( tagName == "gender" )
+    setGender( element.text() );
+  else if ( tagName == "language" )
+    setLanguage( element.text() );
+  else if ( tagName == "phone" )
+    return loadPhoneAttribute( element );
+  else if ( tagName == "email" )
+    return loadEmailAttribute( element );
+  else if ( tagName == "address" )
+    return loadAddressAttribute( element );
+  else if ( tagName == "preferred-address" )
+    setPreferredAddress( element.text() );
+  else
+    return KolabBase::loadAttribute( element );
+
+  // We handled this
+  return true;
+
+}
+
+bool Contact::saveAttributes( QDomElement& ) const
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+
+bool Contact::load( const QDomDocument& xml )
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+
+QString Contact::save() const
+{
+  kdError() << "NYI: " << k_funcinfo << endl;
+  return QString::null;
 }
 
 void Contact::setFields( KABC::Address* address )
 {
-
+  kdError() << "NYI: " << k_funcinfo << endl;
 }
