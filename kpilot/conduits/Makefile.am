@@ -36,6 +36,7 @@ SUBDIRS = \
 ###	null             - a conduit that just logs a single message.
 ###	$(PERL_SUBDIR)   - fires off a perl interpreter in a thread.
 ###	$(PYTHON_SUBDIR) - starts a python interpreter in a thread.
+###	notepadconduit   - a conduit to save notepad drawings as pngs.
 ###
 
 
