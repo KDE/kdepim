@@ -215,7 +215,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Select this option if you don't want KPilot to use a proxy server.</string>
+                                    <string>Select this option if you do not want KPilot to use a proxy server.</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -315,7 +315,7 @@
                                     <cstring>proxyServerName</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>This is the address of the proxy server to use, eg:
+                                    <string>This is the address of the proxy server to use, e.g:
 &lt;u&gt;&lt;i&gt;foo.bar.com&lt;/i&gt;&lt;/u&gt;
 &lt;b&gt;not&lt;/b&gt;
 &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;</string>
@@ -401,8 +401,7 @@
                                     <cstring>proxyExclude</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Enter a list of MAL servers that don't need the use a proxy here, seperated with commas. eg: &lt;br&gt;
-&lt;i&gt;localhost,127.0.0.1,.lan&lt;/i&gt;</string>
+                                    <string>Enter a list of MAL servers that do not need the use of a proxy here, separated with commas, e.g: &lt;br&gt;&lt;i&gt;localhost,127.0.0.1,.lan&lt;/i&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="2" column="0">
