@@ -14,6 +14,7 @@ Icon=remote
 Description=An ioslave for the Sieve mail filtering protocol
 Description[da]=En ioslave for Sieve mail filtreringsprotokollen
 Description[es]=Un ioslave para el protocolo de filtrado de correo Sieve
+Description[nl]=Een ioslave voor het Sieve-mailfilterprotocol
 Description[pt]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
 Description[pt_BR]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
 Description[ru]=Канал протокола фильтра почты Sieve
