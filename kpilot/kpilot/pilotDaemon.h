@@ -53,6 +53,8 @@ class KPilotLink;
 class QDragEnterEvent;
 class QDropEvent;
 
+class KServerSocket;
+
 class PilotDaemon;
 class FileInstaller;
 
@@ -151,6 +153,8 @@ public:
 	virtual ASYNC startHotSync(int);
 	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();
+	virtual ASYNC quitNow();
+	virtual ASYNC reloadSettings();
 
 protected:
 	DaemonStatus fStatus;
@@ -165,7 +169,6 @@ private:
   void setupConnections();
   void startHotSync();
   void sendStatus(const int status);
-  void reloadSettings();
   void saveProperties(KConfig&);
   void sendRecord(PilotRecord* rec);
   bool quit() { return fQuit; }
@@ -225,6 +228,9 @@ protected slots:
 #endif
 
 // $Log$
+// Revision 1.22  2001/08/19 19:25:57  adridg
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
+//
 // Revision 1.21  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

@@ -428,7 +428,7 @@ void PilotDaemon::showTray()
 		<< endl;
 }
 
-void
+/* DCOP ASYNC */ void
 PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
@@ -615,6 +615,12 @@ void PilotDaemon::quitImmediately()
 	quit(true);
 	kapp->quit();
 } 
+
+/* DCOP ASYNC */ void
+PilotDaemon::quitNow()
+{
+	quit(true);
+}
  
 /* DCOP ASYNC */ void
 PilotDaemon::requestRegularSyncNext()
@@ -1352,6 +1358,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.41  2001/08/19 19:25:57  adridg
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
+//
 // Revision 1.40  2001/08/01 20:20:57  adridg
 // Fix for bug #29764
 //

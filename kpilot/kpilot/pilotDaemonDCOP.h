@@ -52,6 +52,13 @@ k_dcop:
 	virtual ASYNC startHotSync(int) = 0;
 	virtual ASYNC requestFastSyncNext() = 0;
 	virtual ASYNC requestRegularSyncNext() = 0;
+
+	/**
+	* Functions for the KPilot UI, indicating what the daemon
+	* should do.
+	*/
+	virtual ASYNC quitNow() = 0;
+	virtual ASYNC reloadSettings() =0; // Indicate changed config file.
 } ;
 
 #else
@@ -62,6 +69,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.6  2001/08/19 19:25:57  adridg
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
+//
 // Revision 1.5  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

@@ -86,9 +86,6 @@ static const char *kpilot_id="$Id$";
 #ifndef _KPROCESS_H_
 #include <kprocess.h>
 #endif
-#ifndef _KSOCK_H_
-#include <ksock.h>
-#endif
 #ifndef _KCOMBOBOX_H_
 #include <kcombobox.h>
 #endif
@@ -177,12 +174,16 @@ static const char *kpilot_id="$Id$";
 KPilotInstaller::KPilotInstaller() : 
 	KMainWindow(0), 
 	DCOPObject("KPilotIface"),
-	fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
+	fMenuBar(0L), 
+	fStatusBar(0L), 
+	fToolBar(0L),
 	fQuitAfterCopyComplete(false), 
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface")),
 	fManagingWidget(0L), 
-    fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false),
-    fStatus(Startup),
+	// fPilotCommandSocket(0L), 
+	// fPilotStatusSocket(0L), 
+	fKillDaemonOnExit(false),
+	fStatus(Startup),
 	fFileInstallWidget(0L)
 {
 	FUNCTIONSETUP;
@@ -195,50 +196,35 @@ KPilotInstaller::KPilotInstaller() :
 
 	readConfig(config);
 
-    if(config.readNumEntry("NextUniqueID", 0) == 0)
-      {
-	// Is this an ok value to use??
-	config.writeEntry("NextUniqueID", 0xf000);
-	config.sync();
-      }
-
-
-    initPilotLink();
-	if (!fPilotCommandSocket)
+	if(config.readNumEntry("NextUniqueID", 0) == 0)
 	{
-		kdError() << __FUNCTION__ << ": Couldn't connect to daemon -- quitting"
-			<< endl;
-		fStatus = Error ;
-		return;
+		// Is this an ok value to use??
+		config.writeEntry("NextUniqueID", 0xf000);
+		config.sync();
 	}
-    setupWidget();
-    initStatusLink();  // This is separate to allow components to initialize
 
 
-    showTitlePage(QString::null,true);
-    show();
-    }
+	setupWidget();
+	showTitlePage(QString::null,true);
+}
 
 KPilotInstaller::~KPilotInstaller()
 {
 	FUNCTIONSETUP;
+	killDaemonIfNeeded();
+	delete fDaemonStub;
+}
 
-	if (fPilotStatusSocket) delete fPilotStatusSocket;
-	fPilotStatusSocket=0L;
-
-	if(fKillDaemonOnExit && fPilotCommandSocket &&
-		(fPilotCommandSocket->socket()>=0))
+void KPilotInstaller::killDaemonIfNeeded()
+{
+	if(fKillDaemonOnExit)
 	{
-			kdDebug() << fname
-				<< ": Killing daemon."
-				<< endl;
+		DEBUGKPILOT << fname
+			<< ": Killing daemon."
+			<< endl;
 
-		ofstream out(fPilotCommandSocket->socket());
-		out << -3 << endl;
+		getDaemon().quitNow();
 	}
-
-	if (fPilotCommandSocket) delete fPilotCommandSocket;
-	fPilotCommandSocket=0L;
 }
 
 void KPilotInstaller::readConfig(KConfig& config)
@@ -323,7 +309,7 @@ KPilotInstaller::initStatusBar()
 	QString welcomeMessage=i18n("Welcome to KPilot");
 	welcomeMessage+=" (";
 	welcomeMessage+=version(0);
-	welcomeMessage+=')';
+	welcomeMessage+=")";
 
 	fStatusBar = statusBar();
 	fStatusBar->insertItem(welcomeMessage,0);
@@ -363,369 +349,6 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool)
 }
 
 	
-
-
-
-void
-KPilotInstaller::initPilotLink()
-{
-	FUNCTIONSETUP;
-
-#if 0
-	if(fPilotLink)
-	{
-		kdWarning() << __FUNCTION__ << ": Pilot Link already created?\n" ;
-		return;
-	}
-
-	fPilotLink = new KPilotLink();
-	if (fPilotLink==NULL)
-	{
-		kdError() << __FUNCTION__ << ": Can't allocate fPilotLink.\n";
-		KMessageBox::error(this,
-				   i18n("Allocating PilotLink failed."),
-				   i18n("Cannot create link to Daemon"));
-		return;
-	}
-#endif
-
-
-	if(fPilotCommandSocket == NULL)
-	{
-		initCommandSocket();
-	}
-	else 
-	{
-		// We were called after a reconfigure
-		//
-		//
-			kdDebug() << fname << ": Reconfiguring daemon.\n" ;
-
-		ofstream out(fPilotCommandSocket->socket());
-		out << "-2" << endl;
-	}
-}
-
-void KPilotInstaller::initCommandSocket()
-{
-	FUNCTIONSETUP;
-
-	MessageDialog *messageDialog=0L;
-
-	if (fPilotCommandSocket)
-	{
-		kdWarning() << __FUNCTION__ 
-			<< ": We already have a command socket"
-			<< endl;
-		return;
-	}
-
-		kdDebug() << fname
-			<< ": Creating command socket"
-			<< endl ;
-
-	fPilotCommandSocket = new KSocket("localhost", 
-		PILOTDAEMON_COMMAND_PORT);
-	if (fPilotCommandSocket==NULL)
-	{
-		kdError() << __FUNCTION__ << ": Can't allocate fPilotCommandSocket.\n";
-		KMessageBox::error(this,
-				   i18n("Allocating fPilotCommandSocket failed."),
-				   i18n("Cannot create link to Daemon"));
-
-#if 0
-		delete fPilotLink;
-		fPilotLink=NULL;
-#endif
-		return;
-	}
-
-		kdDebug() << fname
-			<< ": Got socket " 
-			<< fPilotCommandSocket->socket()
-			<< endl ;
-
-	
-	if((fPilotCommandSocket->socket() < 0) ||
-		!testSocket(fPilotCommandSocket))
-	{
-		int i;
-
-			kdDebug() << fname
-				<< ": Socket not OK, starting daemon"
-				<< endl;
-
-		// It wasn't running...
-		messageDialog = 
-			new MessageDialog(version(0));
-
-		if (messageDialog!=NULL)
-		{
-			messageDialog->show();
-			kapp->processEvents();
-			messageDialog->setMessage(
-				i18n("Starting Sync Daemon. "
-					"Please Wait."));
-
-			kapp->processEvents();
-		}
-
-		delete fPilotCommandSocket;
-		fPilotCommandSocket=0L;
-	
-
-		KProcess pilotDaemon;
-		pilotDaemon << "kpilotDaemon";
-#ifdef DEBUG
-		if (debug_level)
-		{
-			QString s;
-			s.setNum(debug_level);
-
-			pilotDaemon << "--debug";
-			pilotDaemon << s;
-		}
-#endif
-			
-		kapp->processEvents();
-
-		pilotDaemon.start(KProcess::DontCare);
-
-		// While the daemon is starting up,
-		// we'll do some busy-waiting and
-		// keep trying to connect to it.
-		//
-		//
-		for (i=0; i<4; i++)
-		{
-			kapp->processEvents();
-			sleep(1);
-			kapp->processEvents();
-
-				kdDebug() << fname
-					<< ": Trying to connect"
-					<< endl;
-			fPilotCommandSocket = new KSocket("localhost",
-				PILOTDAEMON_COMMAND_PORT);
-			if (!fPilotCommandSocket)
-			{
-				kdError() << __FUNCTION__
-					<< ": Couldn't allocate KSocket"
-					<< endl;
-				continue;
-			}
-
-			if ((fPilotCommandSocket->socket() >= 0) &&
-				testSocket(fPilotCommandSocket))
-			{
-				break;
-			}
-			else
-			{
-				delete fPilotCommandSocket;
-				fPilotCommandSocket=0L;
-			}
-		}
-
-			kdDebug() << fname
-				<< ": Halfway result "
-				<< "PilotCommandSocket="
-				<< (int)fPilotCommandSocket
-				<< endl;
-			
-		if(!fPilotCommandSocket)
-		{
-			kdError() << __FUNCTION__ 
-				<< ": Can't connect to daemon"
-				<< endl ;
-
-			KMessageBox::error(this, 
-					   i18n("Cannot start KPilot Daemon. "
-						"Check settings and "
-						"restart KPilot manually."),
-					   i18n("Cannot connect to Daemon"));
-					   
-
-				kdDebug() << fname << ": creating options "
-					<< endl;
-			KPilotOptions* options = new KPilotOptions(this);
-			if (options)
-			{
-				options->exec();
-					kdDebug() << fname << ": User said "
-						<< options->result()
-						<< endl;
-				delete options;
-			}
-			else
-			{
-				kdError() << __FUNCTION__
-					<< ": Couldn't create options window."
-					<< endl;
-			}
-		}
-
-		fKillDaemonOnExit = true;
-
-		if (messageDialog!=NULL)
-		{
-				kdDebug() << fname
-					<< ": Closing and deleting msg dialog"
-					<< endl;
-			messageDialog->close();
-			delete messageDialog;
-		}
-	}
-
-	fLinkCommand[0] = 0L;
-
-		kdDebug() << fname
-			<< ": End result "
-			<< "PilotCommandSocket="
-			<< (int)fPilotCommandSocket
-			<< endl;
-}
-
-
-int KPilotInstaller::testSocket(KSocket *s)
-{
-	FUNCTIONSETUP;
-
-	char buf[12];
-	int r=0;
-	int fd=0;
-
-	if (!s) return 0;
-
-	fd=s->socket();
-	if (fd<0) return 0;
-
-	sprintf(buf,"%d\n",KPilotLink::TestConnection);
-
-	signal(SIGPIPE,SIG_IGN);
-	r=write(fd,buf,strlen(buf));
-	if (r<0)
-	{
-		int e=errno;
-		kdError() << __FUNCTION__  
-			<< ": (" << strerror(e) << ")" 
-			<< endl;
-	}
-	signal(SIGPIPE,SIG_DFL);
-	
-	return (r>=0);
-}
-
-
-void
-KPilotInstaller::initStatusLink()
-{
-	FUNCTIONSETUP;
-
-	fPilotStatusSocket = new KSocket("localhost", 
-		PILOTDAEMON_STATUS_PORT);
-	if (fPilotStatusSocket->socket()!=-1)
-	{
-			kdDebug() << fname <<
-				": Connected socket successfully.\n";
-
-		connect(fPilotStatusSocket, SIGNAL(readEvent(KSocket*)),
-			this, SLOT(slotDaemonStatus(KSocket*)));
-		fPilotStatusSocket->enableRead(true);
-	}
-	else
-	{
-		kdError() << __FUNCTION__ <<
-			": Failed to connect socket to daemon.\n";
-	}
-}
-
-
-
-
-
-void
-KPilotInstaller::slotDaemonStatus(KSocket* daemon)
-{
-	FUNCTIONSETUP;
-
-	ifstream in(daemon->socket());
-	int status;
-	in.read(&status, sizeof(int));
-
-	DEBUGKPILOT << fname
-		<< ": Got command "
-		<< status
-		<< endl;
-
-	switch(status)
-	{
-	case CStatusMessages::SYNC_STARTING :
-		if(fLinkCommand[0] == 0L)
-		{
-			// This only happens when the daemon tells
-			// us to sync based on a button push.
-			//
-			//
-			KConfig& c = KPilotConfig::getConfig();
-
-			// Either doFastSync() or doHotSync() sets up
-			// fLinkCommand to actually contain the bytes
-			// that we need to respond.
-			//
-			//
-			if (c.readBoolEntry("PreferFastSync",false))
-			{
-				getDaemon().requestFastSyncNext();
-				componentPreSync();
-				fStatusBar->changeItem(
-					i18n("FastSync in progress..."), 0);
-			}
-			else
-			{
-				getDaemon().requestRegularSyncNext();
-				componentPreSync();
-				fStatusBar->changeItem(
-					i18n("HotSync in progress..."), 0);
-			}
-		}
-
-		// This block writes some stuff to the link and
-		// therefore requires its own ofstream object.
-		//
-		//
-		{
-		ofstream out(fPilotCommandSocket->socket());
-		out << fLinkCommand << flush;
-		}
-		break;
-	case CStatusMessages::SYNC_COMPLETED :
-		fStatusBar->changeItem(i18n("HotSync complete."), 0);
-		fLinkCommand[0] = 0L;
-		for(fPilotComponentList.first(); 
-			fPilotComponentList.current(); 
-			fPilotComponentList.next())
-		{
-			fPilotComponentList.current()->initialize();
-		}
-		break;
-	case CStatusMessages::FILE_INSTALL_REQUEST :
-		for(fPilotComponentList.first(); 
-			fPilotComponentList.current(); 
-			fPilotComponentList.next())
-		{
-			fPilotComponentList.current()->initialize();
-		}
-		break;
-	default :
-		kdWarning() << __FUNCTION__
-			<< ": Unknown command "
-			<< status
-			<< " received."
-			<< endl;
-	}
-}
-
 void
 KPilotInstaller::slotBackupRequested()
 {
@@ -880,24 +503,7 @@ KPilotInstaller::quit()
 		fPilotComponentList.current()->saveData();
 	}
 
-	if(fKillDaemonOnExit && fPilotCommandSocket &&
-		(fPilotCommandSocket->socket()>=0))
-	{
-			kdDebug() << fname
-				<< ": Killing daemon."
-				<< endl;
-
-		ofstream out(fPilotCommandSocket->socket());
-		out << -3 << endl;
-	}
-
-
-	if (fPilotStatusSocket) delete fPilotStatusSocket;
-	fPilotStatusSocket=0L;
-
-	if (fPilotCommandSocket) delete fPilotCommandSocket;
-	fPilotCommandSocket=0L;
-
+	killDaemonIfNeeded();
 	kapp->quit();
 }
 
@@ -1045,12 +651,10 @@ KPilotInstaller::slotConfigureKPilot()
 
 		readConfig(KPilotConfig::getConfig());
 
-		// Update the link to reflect new settings.
+		// Update the daemon to reflect new settings.
 		//
 		//
-		// destroyPilotLink(); // Get rid of the old one
-		// TODO: Use DCOP to update
-		initPilotLink(); // make a new one..
+		getDaemon().reloadSettings();
 
 		// Update each installed component.
 		//
@@ -1262,6 +866,22 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	QString daemonError;
+	QCString daemonDCOP;
+	int daemonPID;
+	if (KApplication::startServiceByDesktopPath(
+		"Utilities/kpilotdaemon.desktop",
+		QString::null,
+		&daemonError,
+		&daemonDCOP,
+		&daemonPID,
+		"0"))
+	{
+		kdError() << __FUNCTION__
+			<< ": Can't start daemon."
+			<< endl;
+	}
+
         KPilotInstaller *tp = new KPilotInstaller();
 
 	if (tp->status() == KPilotInstaller::Error)
@@ -1272,12 +892,16 @@ int main(int argc, char** argv)
 	}
 
         KGlobal::dirs()->addResourceType("pilotdbs", "share/apps/kpilot/DBBackup");
+	tp->show();
 	a.setMainWidget(tp);
 	return a.exec();
 }
 
 
 // $Log$
+// Revision 1.54  2001/08/19 19:25:57  adridg
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
+//
 // Revision 1.53  2001/06/13 21:32:35  adridg
 // Dead code removal and replacing complicated stuff w/ QWidgetStack
 //

@@ -91,13 +91,14 @@ class FileInstallWidget;
 
 
 class KPilotInstaller : public KMainWindow, public KPilotDCOP
-    {
-    Q_OBJECT
+{
+Q_OBJECT
 
-    public:
-    KPilotInstaller();
-    KPilotInstaller(QStrList& fileList);
-    ~KPilotInstaller();
+public:
+	KPilotInstaller();
+	KPilotInstaller(QStrList& fileList);
+	~KPilotInstaller();
+
 	/**
 	* Return a string with the version identifier (ie.
 	* "KPilot v3.1b11") if kind == 0; otherwise return
@@ -144,21 +145,29 @@ public:
       
       // Not sure if this is the way to go or not... might want to make the link
       // persist...
-      void initPilotLink();
-      void initCommandSocket();
+      // void initPilotLink();
+      // void initCommandSocket();
 
-      void initStatusLink(); // Seperate so the components can be initialized
+      // void initStatusLink(); // Seperate so the components can be initialized
       // KPilotLink* getPilotLink() { return fPilotLink; }
       // void destroyPilotLink() { if (fPilotLink) {delete fPilotLink; fPilotLink = 0L; /* delete fLinkProcess; fLinkProcess = 0L; */ } }
 
-      /**
-       * Provide access to the daemon's DCOP interface
-       * through an object of the stub class.
-       */
+	/**
+	* Provide access to the daemon's DCOP interface
+	* through an object of the stub class.
+	*/
 protected:
-      PilotDaemonDCOP_stub &getDaemon() { return *fDaemonStub; } ;
+	PilotDaemonDCOP_stub &getDaemon() { return *fDaemonStub; } ;
 private:
-      PilotDaemonDCOP_stub *fDaemonStub;
+	PilotDaemonDCOP_stub *fDaemonStub;
+
+	/**
+	* Handle the functionality of kill-daemon-on-exit and
+	* kill-daemon-if-started-by-my by killing it in those
+	* cases.
+	*/
+protected:
+	void killDaemonIfNeeded();
 
 public slots:
 	void slotRestoreRequested();
@@ -173,7 +182,7 @@ public slots:
 	
 
 protected:
-	int testSocket(KSocket *);
+	// int testSocket(KSocket *);
 
 	void readConfig(KConfig&);
 
@@ -221,8 +230,8 @@ private:
       QWidgetStack    *fManagingWidget;
       QList<PilotComponent>  fPilotComponentList; // Has the widgets/components...
       // KPilotLink*     fPilotLink;
-      KSocket*        fPilotCommandSocket;
-      KSocket*        fPilotStatusSocket;
+      // KSocket*        fPilotCommandSocket;
+      // KSocket*        fPilotStatusSocket;
       bool            fKillDaemonOnExit;
       char            fLinkCommand[10000];
       int             fLastWidgetSelected;
@@ -244,7 +253,7 @@ private:
 	void slotConfigureConduits();
       void fileInstalled(int which);
       void slotSyncDone(KProcess* which);
-      void slotDaemonStatus(KSocket*);
+      // void slotDaemonStatus(KSocket*);
 
 	/**
 	 * Indicate that a particular component has been selected (through
@@ -274,6 +283,9 @@ private:
 
 
 // $Log$
+// Revision 1.27  2001/08/19 19:25:57  adridg
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
+//
 // Revision 1.26  2001/06/13 21:32:35  adridg
 // Dead code removal and replacing complicated stuff w/ QWidgetStack
 //
