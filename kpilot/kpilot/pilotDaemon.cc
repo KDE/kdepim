@@ -938,7 +938,7 @@ static void queueInstaller(ActionQueue *fSyncStack,
 	FileInstaller *fInstaller,
 	const QStringList &c)
 {
-	if (c.findIndex(CSL1("internal_fileinstaller")) >= 0)
+	if (c.findIndex(CSL1("internal_fileinstall")) >= 0)
 	{
 		fSyncStack->queueInstaller(fInstaller->dir(),
 			fInstaller->fileNames());
