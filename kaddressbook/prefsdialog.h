@@ -29,7 +29,7 @@
 #include <kdialogbase.h>
 
 class QCheckBox;
-class LDAPOptionsWidgetImpl;
+class LDAPOptionsWidget;
 
 class PrefsDialog : public KDialogBase
 {
@@ -50,14 +50,11 @@ class PrefsDialog : public KDialogBase
   protected:
     void setupLdapPage();
   
-    void readLdapConfig();
-    void writeLdapConfig();
-
     void slotApply();
     void slotOk();
     
   private:
-    LDAPOptionsWidgetImpl *mLdapWidget;
+    LDAPOptionsWidget *mLdapWidget;
     QCheckBox *mViewsSingleClickBox;
 };
 
