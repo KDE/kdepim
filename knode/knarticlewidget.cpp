@@ -875,6 +875,10 @@ void KNArticleWidget::updateContents()
 
 void KNArticleWidget::setArticle(KNArticle *a)
 {
+  if ( t_imer -> isActive() ) {
+     t_imer->stop();
+     slotTimeout();
+     }
   if(a_rticle && a_rticle->isOrphant())
     delete a_rticle; //don't leak orphant articles
 
@@ -883,7 +887,6 @@ void KNArticleWidget::setArticle(KNArticle *a)
   r_ot13=false;
   a_ctToggleRot13->setChecked(false);
 
-  t_imer->stop();
 
   if(!a)
     showBlankPage();
