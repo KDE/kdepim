@@ -295,7 +295,7 @@ public slots:
 protected:
 
 
-  void resizeEvent(QResizeEvent* e) {
+  void resizeEvent(QResizeEvent* /*e*/) {
     _splitter->resize(width(),height());
   };
 

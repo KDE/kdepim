@@ -243,7 +243,7 @@ void DateSet::print()
 // preconditions: range i starts before or in range i+1
 bool DateSet::tryMerge( int i )
 {
-  if ( i < 0 || i+1 >= mDates->count() )
+  if ( i < 0 || i+1 >= (int)(mDates->count()) )
     return false;
 
   QPair<QDate,QDate>* item1 = mDates->at( i );

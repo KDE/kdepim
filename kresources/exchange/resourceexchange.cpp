@@ -325,7 +325,7 @@ void ResourceExchange::slotDownloadFinished( int result,
   }
 }
 
-void ResourceExchange::unsubscribeEvents( const QDate &start, const QDate &end )
+void ResourceExchange::unsubscribeEvents( const QDate &/*start*/, const QDate &/*end*/ )
 {
   kdDebug() << "ResourceExchange::unsubscribeEvents()" << endl;
 }

@@ -81,7 +81,7 @@ QValueVector<KornMailSubject> * KPop3Drop::doReadSubjects(bool * stop)
 		// one line in the List() response (contains mail id)
 		DwString line = response;
 		int pos = response.find('\n');
-		if (pos != DwString::npos)
+		if (pos != (int)DwString::npos)
 		{
 			line = response.substr(0, pos);
 
