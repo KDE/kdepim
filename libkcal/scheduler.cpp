@@ -114,9 +114,9 @@ QString Scheduler::methodName(Method method)
     case Reply:
       return i18n("Reply");
     case Counter:
-      return i18n("Counter");
+      return i18n("counter proposal","Counter");
     case Declinecounter:
-      return i18n("Decline Counter");
+      return i18n("decline counter proposal","Decline Counter");
     default:
       return i18n("Unknown");
   }
