@@ -22,6 +22,7 @@
 #include <qhbox.h>
 #include <qvbox.h>
 #include <qlabel.h>
+#include <qfile.h>
 #include <qspinbox.h>
 
 #include <klocale.h>
@@ -119,12 +120,12 @@ void AlarmDialog::eventNotification()
 // TODO: Check whether this should be done for all multiple alarms
       if (!alarm->programFile().isEmpty()) {
         KProcess proc;
-        proc << alarm->programFile().latin1();
+        proc << QFile::encodeName(alarm->programFile());
         proc.start(KProcess::DontCare);
       }
 
       if (!alarm->audioFile().isEmpty()) {
-        KAudioPlayer::play(alarm->audioFile().latin1());
+        KAudioPlayer::play(QFile::encodeName(alarm->audioFile()));
       }
     }
   }

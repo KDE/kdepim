@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include <qtooltip.h>
+#include <qfile.h>
 
 #include <kapp.h>
 #include <kdebug.h>
@@ -191,7 +192,7 @@ void AlarmDockWindow::toggleAlarmsEnabled()
         kdError() << "AlarmDockWindow::toggleAlarmsEnabled(): kalarmd not found" << endl;
         return;
       }
-      system(execStr.latin1());
+      system(QFile::encodeName(execStr));
     }
   }
   else

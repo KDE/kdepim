@@ -24,6 +24,7 @@
 #include <stdlib.h>
 
 #include <qtimer.h>
+#include <qfile.h>
 #include <qdatetime.h>
 
 #include <kapp.h>
@@ -427,11 +428,11 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
           execStr += eventID;
           execStr += " --calendarURL ";
           execStr += calendar->urlString();
-          system(execStr.latin1());
+          system(QFile::encodeName(execStr));
           kdDebug() << "AlarmDaemon::notifyEvent(): used command line" << endl;
           return true;
         }
-        system(execStr.latin1());
+        system(QFile::encodeName(execStr));
         kdDebug() << "AlarmDaemon::notifyEvent(): started " << execStr.latin1() << endl;
       }
       // Use DCOP to tell the client about the alarm
