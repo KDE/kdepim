@@ -59,7 +59,7 @@ class KDE_EXPORT IdMapper
       or save().
       
       The current implementation stores the data at
-      $(KDEHOME)/share/apps/<path>/<identifier>.
+      $(KDEHOME)/share/apps/\<path\>/\<identifier\>.
     */
     IdMapper( const QString &path, const QString &identifier = QString::null );
     ~IdMapper();
