@@ -1,0 +1,54 @@
+Empath has the concept of a 'job', which is a simple name for an operation
+or group of operations that will be performed asynchronously.
+
+The class EmpathJobInfo is used to encapsulate the information needed.
+
+Some jobs require multiple operations. To make this work, EmpathJobInfo
+can contain two operation specifications, 'current' and 'original'.
+
+If a job requires multiple operations, the 'original' spec is used
+to specify what the general target of the operation is, while 'current'
+specifies the sub-operation.
+
+The various operation types are enumerated in 'ActionType'. This
+includes WriteMessage, RetrieveMessage, CopyMessage, CreateFolder, etc.
+
+To explain further:
+
+A 'simple' job, like 'RetrieveMessage' is performed in one operation.
+
+When empath->retrieve() is called, Empath creates an EmpathJobInfo
+with type RetrieveMessage. This job is passed to the mailbox that should
+perform the operation and queued.
+
+Once the job is complete, Empath emits the signal jobFinished().
+
+Jobs like 'CopyMessage' and 'MoveMessage' are complex - they require
+more than one sub-operation.
+
+Example:
+
+empath->moveMessage() is called.
+
+An EmpathJobInfo is created. The 'original' operation is set to type
+'MoveMessage'. The 'current' part is set to 'RetrieveMessage' and the
+job is queued.
+
+When the job completes (the 'RetrieveMessage' part,) Empath then asks
+the job what type of operation should happen next.
+
+As this job is of type MoveMessage, the job replies 'WriteMessage'.
+The 'current' part of the job is changed to 'WriteMessage'.
+
+Again, when the job completes, Empath asks what should come next.
+The job replies 'RemoveMessage'.
+
+Empath now changes the 'current' part to 'RemoveMessage' and queues
+the job again.
+
+When the job again completes, Empath asks what should come next.
+This time, the job has finished, so it replies 'NoAction'. Empath
+then signals that the job has completed, so the caller knows that
+it is done.
+
+
