@@ -38,7 +38,7 @@ static KCmdLineOptions options[] =
 int main(int argc, char **argv)
 {
     KAboutData about("kmobile", I18N_NOOP("KMobile"), version, description,
-                     KAboutData::License_GPL, "(C) 2003 Helge Deller", 0, 0, "deller@kde.org");
+                     KAboutData::License_GPL, "(C) 2003-2005 Helge Deller", 0, 0, "deller@kde.org");
     about.addAuthor( "Helge Deller", 0, "deller@kde.org" );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);

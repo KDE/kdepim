@@ -207,7 +207,7 @@ void KMobile::optionsShowStatusbar()
 
 void KMobile::optionsConfigureKeys()
 {
-    KKeyDialog::configureKeys(actionCollection(), "kmobileui.rc");
+    KKeyDialog::configure(actionCollection());
 }
 
 void KMobile::optionsConfigureToolbars()

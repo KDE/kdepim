@@ -4,7 +4,7 @@ SUBDIRS = . kioslave devices
 
 bin_PROGRAMS = kmobile 
 
-kde_module_LTLIBRARIES = libkmobiledevice.la libkmobileclient.la
+lib_LTLIBRARIES = libkmobiledevice.la libkmobileclient.la
 
 INCLUDES         = -I$(top_builddir)/libkdepim $(all_includes)
 
@@ -20,12 +20,12 @@ noinst_HEADERS = kmobile.h kmobileview.h kmobileitem.h pref.h
 
 # the low-level devices driver library
 libkmobiledevice_la_SOURCES = kmobiledevice.cpp
-libkmobiledevice_la_LDFLAGS = $(all_libraries) -no-undefined -avoid-version -module
+libkmobiledevice_la_LDFLAGS = $(all_libraries) -no-undefined -avoid-version
 libkmobiledevice_la_LIBADD = $(LIB_KABC) $(LIB_LOCKDEV)
 
 # the KDE application's client library to KMobile
 libkmobileclient_la_SOURCES = kmobileclient.cpp
-libkmobileclient_la_LDFLAGS = $(all_libraries) -no-undefined -avoid-version -module
+libkmobileclient_la_LDFLAGS = $(all_libraries) -no-undefined -avoid-version
 libkmobileclient_la_LIBADD = $(LIB_KDECORE) -lDCOP
 
 EXTRA_PROGRAMS = testlibkmobile
