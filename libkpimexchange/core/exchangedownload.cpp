@@ -481,7 +481,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // kdDebug() << "Reminder offset: " << reminder << endl;
   if ( ! reminder.isNull() ) {
     // Duration before event in seconds
-    KCal::Duration offset( reminder.toInt() );
+    KCal::Duration offset( - reminder.toInt() );
     KCal::Alarm* alarm = event->newAlarm();
     alarm->setStartOffset( offset );
     alarm->setEnabled( true );

@@ -288,6 +288,18 @@ void ExchangeUpload::startUpload( const KURL& url )
     }
   }
 
+  QPtrList<KCal::Alarm> alarms = event->alarms();
+  if ( alarms.count() > 0 ) {
+    KCal::Alarm* alarm = alarms.first();
+    // TODO: handle multiple alarms
+    // TODO: handle end offsets and general alarm times
+    // TODO: handle alarm types
+    if ( alarm->hasStartOffset() ) {
+      int offset = - alarm->startOffset().asSeconds();
+      addElement( doc, prop, "urn:schemas:calendar:", "reminderoffset", QString::number( offset ) );
+    }
+  }
+
   kdDebug() << "Uploading event: " << endl;
   kdDebug() << doc.toString() << endl;
 
