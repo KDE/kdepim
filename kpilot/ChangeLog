@@ -1,6 +1,11 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2003-10-10  Adriaan de Groot
+* Sure, we let the ChangeLog slide, but didn't do much, I don't
+  think, over the summer. Main point is that AAP can pretty much
+  build KPilot now, suck to be auto* and make.
+
 2003-7-30  Reinhold Kainhofer
 * The addressbook conduit now uses a different algorithm to find 
   the type of address on the PC to sync with.
@@ -45,6 +50,10 @@
 * If there is no nice-text representation, I now use KHE::KHexEdit to 
   show the raw contents, so the user gets an idea of the conflicting records.
 
+
+2003-7-26  Adriaan de Groot
+* Time flies when you're having fun and mucking with other
+  bits of KDE. Worked on meinproc, build fixes, dependencies, etc.
 
 2003-7-26  Reinhold Kainhofer
 * Changed a few accelerators (duplicates reported by Dr.Klash) 
@@ -97,32 +106,32 @@ Complete rewrite of the addressbook conduit (for the, umhh, third(?) time).
 		 
 
 2003-7-11  Reinhold Kainhofer
-* Records in the PilotLocalDatabase with ID 0 (i.e. new records 
-  added by KPilot's internal editors) will always be treated as 
-  modified records and found by readNextModifiedRecord, even if 
-  they don't have the dirty flag set. This ensures that all new 
+* Records in the PilotLocalDatabase with ID 0 (i.e. new records
+  added by KPilot's internal editors) will always be treated as
+  modified records and found by readNextModifiedRecord, even if
+  they don't have the dirty flag set. This ensures that all new
   records from KPilot will be added to the handheld
 * Finished the internal todo editor:
-  Entries can be maked completed and edited directly in the check 
-	list view.
-  Moved the editor dialog to a designer ui file instead of a 
-	manually created layout
-* Finished the sync action that copies the changes done in the 
-  internal editors of KPilot to the handheld. So, finally, the 
-  internal viewers/editors of KPilot are working again, unlike 
-  the last few years, where they were in a terribly broken state. 
+  Entries can be maked completed and edited directly in the check
+  list view.
+  Moved the editor dialog to a designer ui file instead of a
+  manually created layout
+* Finished the sync action that copies the changes done in the
+  internal editors of KPilot to the handheld. So, finally, the
+  internal viewers/editors of KPilot are working again, unlike
+  the last few years, where they were in a terribly broken state.
 
 2003-6-xx to 2003-7-10  Reinhold Kainhofer
-* I was busy with a lot of stuff from KPIlot, none of which is actually 
+* I was busy with a lot of stuff from KPIlot, none of which is actually
   in a state where I can commit it. In particular, I'm working on
    -) Custom field sync of the addressbook conduit
-   -) Make the conflict resolution of the abook conduit more 
+   -) Make the conflict resolution of the abook conduit more
       intuitive (ask just once for each conflicting address)
    -) Finish up the todo editor
-   -) Make the generic DB viewer an editor (more or less finished, 
-      but the KHexEdit widget is not yet publically available, so 
-  		I can't commit that part either)
-   -) Implement the InternalEditorAction which syncs the changes 
+   -) Make the generic DB viewer an editor (more or less finished,
+      but the KHexEdit widget is not yet publically available, so
+      I can't commit that part either)
+   -) Implement the InternalEditorAction which syncs the changes
       done in the internal editors/viewers to the handheld
 
 
