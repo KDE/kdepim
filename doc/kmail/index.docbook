@@ -19,6 +19,7 @@
 * more about the "create folder" dialog
 * better markup instead of 'quote'
 * fix my adverb vs. adjective mistakes
+* does the "lists.kde.org?..." link work correctly/completely again?
 
 * coherent wording for is section / tab / ...
 * message vs. mail vs. email -> using "message" everywhere
@@ -1362,17 +1363,29 @@ message without any further prompt.</para>
 you simply create the message in the composer window. Before you send the
 message, check the button with the lock symbol in the toolbar of the composer
 window. Then send the message.</para>
+<!-- fixme in kmail: icon not pre-selected when using "autom. encrypt" -->
 
-<para>&kmail; always uses the first key which matches the recipient's address to
-encrypt the message. If &kmail; can't find a matching key for a
-recipient, it will display a list containing all available keys. You
-can choose the appropriate key from the list or cancel the action.
-&kmail; might also inform you about errors throughout the encryption
-process.</para>
+<para>If &kmail; can't find a matching key for a recipient or if it
+finds more than one key for a recipient, it will display a list
+containing all available trusted keys in the <guilabel>Encryption
+Key Selection</guilabel> dialog. Using the <guilabel>Remember choice</guilabel>
+checkbox you can save your selection for future messages.</para>
+
+<para>If you are using a key for the first time or if <guilabel>Always
+show the encryption keys for approval</guilabel> is selected in the
+<guilabel>Security</guilabel> section of &kmail;'s configuration dialog,
+the <guilabel>Encryption Key Approval</guilabel> dialog will appear.
+Here you can select a different key for the recipients and you can also 
+set the <guilabel>Encryption Preference</guilabel> for each recipient.
+<!-- ###fixme: what does this mean?? 
+<guilabel>Encrypt whenever encryption is possible</guilabel>
+--></para>
 
 <para>As mentioned above, you won't be able to read your own encrypted sent
 messages if you don't check <guilabel>Always encrypt to self</guilabel> in the
-setting's <guilabel>Security</guilabel> tab.</para>
+setting's <guilabel>Security</guilabel> tab. However, note that your
+own key is not listed in the <guilabel>Encryption Key Approval</guilabel> dialog 
+even if that option is set.</para>
 
 </sect2>
 
@@ -1418,12 +1431,12 @@ by typing <userinput><command>pgp</command> <option>-ka</option>
 <userinput><command>gpg</command> <option>--import</option>
 <replaceable>filename</replaceable></userinput> at the command line if you are using
 <application>GnuPG</application>. If the key is not certified with a trusted signature 
-and you are using <application>PGP</application>, you can't use it with &kmail; 
-to encrypt messages unless you have signed that key (use 
-<userinput><command>pgp</command> <option>-ks</option> <replaceable>identity of 
-the key</replaceable></userinput>). With <application>GnuPG</application>,
-on the other hand, it's currently possible to encrypt messages with
-untrusted keys.</para>
+you can't use it to encrypt messages unless you have signed the key with your key
+(use <userinput><command>pgp</command> <option>-ks</option> <replaceable>identity of 
+the key</replaceable></userinput> resp.
+<userinput><command>gpg</command> <option>--sign-key</option> 
+<replaceable>identity of the key</replaceable></userinput>).
+</para>
 
 </sect2>
 
@@ -1598,7 +1611,7 @@ rare cases.</para></note>
 <varlistentry>
 <term><guilabel>OpenPGP Key</guilabel></term>
 <listitem>
-<para>Select here the ID of your <application>OpenPGP</application>
+<para>Select here the <application>OpenPGP</application> key
 key that should be used to (digitally) sign messages when this
 identity is used. When you click on the <guilabel>Change...</guilabel>
 button, a key selection dialog comes up where you can select the key
@@ -2002,16 +2015,15 @@ represented using that charset.</para>
 <sect2 id="configure-composer-headers">
 <title>Headers</title>
 
-<para>The <guilabel>Use custom Message-Id suffix</guilabel> checkbox lets you define
-how your messages' Message-Id field will be generated. The Message-Id
-must have a suffix that's world-wide unique. Depending on your setup,
-this might already be the case. You should send yourself a message and
-look at its headers. If it contains a Message-Id that ends in
-<quote>localhost</quote> or any other string that's not guaranteed to
-be unique you need to set a unique suffix in <guilabel>Custom Message-Id 
-suffix</guilabel>. The best thing is to 
-use the name of a domain which you are the owner of.</para>
-<!-- fixme: still necessary to send oneself a mail? -->
+<para>Check the <guilabel>Use custom Message-Id suffix</guilabel>
+checkbox if you want &kmail; to generate Message-Id's with a custom
+suffix. Enter the desired suffix in the <guilabel>Custom Message-Id
+suffix</guilabel> field. Please make sure that the suffix that you
+specify is world-wide unique. The best thing is to use the name of a
+domain which you are the owner of. If you don't check <guilabel>Use
+custom Message-Id suffix</guilabel> then &kmail; will automatically
+generate the complete Message-Id. If you don't know what this is all
+about don't check this option.</para>
 
 <para>The <guilabel>Define custom mime header fields</guilabel> list
 sets the headers that &kmail; will use for its outgoing messages. You
@@ -3863,20 +3875,16 @@ class="directory">~/Mail</filename> directory using
 &kmail; you will see a new folder with the name <guilabel>remote</guilabel> that
 contains the messages in your remote folder. If you want to add a whole remote mail
 directory use <userinput><command>ln</command> <option>-s</option>
-<filename>/somewhere/Mail</filename> <filename
-class="symlink">~/Mail/.remotedir.directory</filename></userinput>.  For that
-case you also need to create a new empty folder named <filename
-class="directory">remotedir</filename> with &kmail;. The folder <filename
-class="directory">remotedir</filename> will then contain all remote mailbox
-folders as subfolders.</para></answer>
+<filename>/somewhere/Mail/.remotedir.directory</filename> <filename
+class="symlink">~/Mail/.mymailboxfile.directory</filename></userinput>.</para></answer>
 </qandaentry>
 
 <qandaentry>
 <question><para>The button to sign messages is not enabled anymore, it was enabled 
 some time ago.</para></question>
-<answer><para>Enter your <guilabel>OpenPGP Key</guilabel> in the
-<guilabel>Identity</guilabel> configuration dialog. Without a OpenPGP
-user identity &kmail; can't know which key should be used to sign your messages.</para>
+<answer><para>Select your <guilabel>OpenPGP Key</guilabel> in the
+<guilabel>Identity</guilabel> section of &kmail;'s configuration dialog.
+Otherwise &kmail; can't know which key should be used to sign your messages.</para>
 </answer>
 </qandaentry>
 
@@ -4057,10 +4065,7 @@ which often change between different versions.</para>
 <para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
-<!-- fixme: up-to-date? -->
-<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key
-if you use <application>PGP</application>. If you use <application>GnuPG</application>
-&kmail; <emphasis>will</emphasis> encrypt messages with untrusted public keys.</para>
+<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.</para>
 </listitem>
 <listitem>
 <para>As most other mail clients, &kmail; can encrypt your messages, but
@@ -4363,8 +4368,10 @@ there.</para>
 <para>Copy your &Netscape; mail files from <filename
 class="directory">~/nsmail/</filename> to <filename
 class="directory">~/Mail</filename> and make sure they are writable (only by
-your user, of course).  The mailboxes will show up in &kmail; the next time you
-start it.</para>
+your user, of course). If you're using sub folders in &Netscape;,
+you have to rename all <filename class="directory">*.sdb</filename> directories
+to <filename class="directory">.*.directory</filename>.  Then, your &Netscape; 
+mailboxes should show up in &kmail; when your start it the next time.</para>
 </listitem>
 </varlistentry>
 
