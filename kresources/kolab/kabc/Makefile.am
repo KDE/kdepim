@@ -23,5 +23,5 @@ servicedir = $(kde_servicesdir)/kresources/kabc
 service_DATA = kolab.desktop
 
 install-data-local: $(srcdir)/../uninstall.desktop
-	$(mkinstalldirs) $(servicedir)
-	$(INSTALL_DATA) $(srcdir)/../uninstall.desktop $(servicedir)/imap.desktop
+	$(mkinstalldirs) $(DESTDIR)$(servicedir)
+	$(INSTALL_DATA) $(srcdir)/../uninstall.desktop $(DESTDIR)$(servicedir)/imap.desktop

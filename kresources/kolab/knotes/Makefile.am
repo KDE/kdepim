@@ -23,6 +23,6 @@ servicedir = $(kde_servicesdir)/kresources/knotes
 service_DATA = kolabresource.desktop
 
 install-data-local: $(srcdir)/../uninstall.desktop
-	$(mkinstalldirs) $(servicedir)
-	$(INSTALL_DATA) $(srcdir)/../uninstall.desktop $(servicedir)/imap.desktop
+	$(mkinstalldirs) $(DESTDIR)$(servicedir)
+	$(INSTALL_DATA) $(srcdir)/../uninstall.desktop $(DESTDIR)$(servicedir)/imap.desktop
 
