@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -21,6 +22,7 @@
 #define ICALFORMATIMPL_H
 
 #include <qstring.h>
+#include <qdict.h>
 
 #include "scheduler.h"
 #include "freebusy.h"
@@ -86,9 +88,12 @@ class ICalFormatImpl {
     void writeCustomProperties(icalcomponent *parent,CustomProperties *);
     void readCustomProperties(icalcomponent *parent,CustomProperties *);
     void dumpIcalRecurrence(icalrecurrencetype);
+    void readTimezone(icalcomponent *vtimezone);
+    void readTzidParameter( icalcomponent *parent, icaltimetype &t );
 
     ICalFormat *mParent;
     Calendar *mCalendar;
+    QDict<class Timezone> mTimezones;
 
     QString mLoadedProductId;         // PRODID string loaded from calendar file
     int mCalendarVersion;             // determines backward compatibility mode on read

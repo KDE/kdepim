@@ -23,6 +23,7 @@
 #include <qstring.h>
 #include <qptrlist.h>
 #include <qfile.h>
+#include <cstdlib>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -44,6 +45,299 @@ extern "C" {
 
 using namespace KCal;
 
+namespace KCal {
+
+/**
+ * Sigh. icaltime_compare() does not handle ical_null_time()s, so we must
+ * make our own.
+ */
+static int compareDateTimes(icaltimetype a, icaltimetype b)
+{
+// TODO: Get rid of macro
+#define COMPARE_PAIR(field) \
+if (a.field < b.field) \
+  return -1; \
+if (a.field > b.field) \
+  return +1;
+  
+  COMPARE_PAIR(year)
+  COMPARE_PAIR(month)
+  COMPARE_PAIR(day)
+  COMPARE_PAIR(hour)
+  COMPARE_PAIR(minute)
+  COMPARE_PAIR(second)
+  return 0;
+#undef COMPARE_PAIR
+}
+
+/**
+ * A TimezonePhase represents a setting within a timezone, e.g. standard or
+ * daylight savings.
+ */
+typedef struct icaltimezonephase icaltimezonephase;
+class TimezonePhase : public icaltimezonephase {
+  public:
+    /**
+     * Contructor for a timezone phase.
+     */
+    TimezonePhase(icalcomponent *c)
+    {
+      tzname = (const char *)0;
+      is_stdandard = 1;
+      mIsStandard = 1;
+      dtstart = icaltime_null_time();
+      offsetto = 0;
+      tzoffsetfrom = 0;
+      comment = (const char *)0;
+      rdate.time = icaltime_null_time();
+      rdate.period = icalperiodtype_null_period();
+      rrule = (const char *)0;
+      memset(&mRrule, sizeof(mRrule), 0);
+
+      // Now do the ical reading.  
+      icalproperty *p = icalcomponent_get_first_property(c,ICAL_ANY_PROPERTY);  
+      while (p) {
+        icalproperty_kind kind = icalproperty_isa(p);
+        switch (kind) {
+    
+          case ICAL_TZNAME_PROPERTY:
+            tzname = icalproperty_get_tzname(p);
+            break;
+    
+          case ICAL_DTSTART_PROPERTY:  
+            dtstart = icalproperty_get_dtstart(p);
+            break;
+    
+          case ICAL_TZOFFSETTO_PROPERTY:  
+            offsetto = icalproperty_get_tzoffsetto(p);
+            break;
+    
+          case ICAL_TZOFFSETFROM_PROPERTY:  
+            tzoffsetfrom = icalproperty_get_tzoffsetfrom(p);
+            break;
+    
+          case ICAL_COMMENT_PROPERTY:  
+            comment = icalproperty_get_comment(p);
+            break;
+    
+          case ICAL_RDATE_PROPERTY:  
+            rdate = icalproperty_get_rdate(p);
+            break;
+    
+          case ICAL_RRULE_PROPERTY:  
+            mRrule = icalproperty_get_rrule(p);
+            break;
+    
+          default:
+            kdDebug(5800) << "TimezonePhase::TimezonePhase(): Unknown property: " << kind
+                      << endl;
+            break;
+        }
+        p = icalcomponent_get_next_property(c,ICAL_ANY_PROPERTY);
+      }
+    }
+    
+    /**
+     * Destructor for a timezone phase.
+     */
+    ~TimezonePhase()
+    {
+    }
+
+    /**
+     * Find the nearest start time of this phase just before a given time.
+     */
+    icaltimetype nearestStart(const icaltimetype *t)
+    {
+      icaltimetype previous = icaltime_null_time();
+      
+      // If this phase was not valid at the given time, give up.
+      if (compareDateTimes(dtstart,*t) > 0) {
+        kdDebug(5800) << "TimezonePhase::nearestStart(): Phase not valid" << endl;
+        return previous;
+      }
+      
+      icalrecur_iterator* ritr;
+      ritr = icalrecur_iterator_new(mRrule,dtstart);
+      struct icaltimetype next;
+      
+      // Main loop. Find the recurrance with the latest start date before t.
+      while (next = icalrecur_iterator_next(ritr), !icaltime_is_null_time(next)) {
+        switch (compareDateTimes(next,*t)) {
+        case -1:
+          // The new result is the better one.
+          previous = next;
+          break;
+        case 0:
+          // We found a phase that starts exactly when our event starts. This 
+          // must be the best possible match.
+          return next;
+        case +1:
+          // The previous recurrance was a better match. Go with that one.
+          return previous;
+        }
+      }
+      return previous;
+    }
+    
+    // Hide the missnamed "is_stdandard" variable in the base class.
+    int mIsStandard;
+  
+    // Supplement the "rrule" in the base class.
+    icalrecurrencetype mRrule;
+};
+
+/**
+ * A Timezone.
+ */
+typedef struct icaltimezonetype icaltimezonetype;
+class Timezone : public icaltimezonetype {
+  public:
+    /**
+     * Contructor for a timezone.
+     */
+    Timezone(icalcomponent *vtimezone)
+    {
+      tzid = (const char *)0;
+      last_mod = icaltime_null_time();
+      tzurl = (const char *)0;
+      
+      // The phases list is defined to be terminated by a phase with a
+      // null name.
+      phases = (icaltimezonephase *)malloc(sizeof(*phases));
+      phases[0].tzname = (const char *)0;
+      mPhases.setAutoDelete( true );
+
+      // Now do the ical reading.  
+      icalproperty *p = icalcomponent_get_first_property(vtimezone,ICAL_ANY_PROPERTY);   
+      while (p) {
+        icalproperty_kind kind = icalproperty_isa(p);
+        switch (kind) {
+    
+          case ICAL_TZID_PROPERTY:  
+            // The timezone id is basically a unique string which is used to 
+            // identify this timezone. Note that if it begins with a "/", then it
+            // is suppsed to have some externally specified meaning, but we are
+            // just after its unique value.
+            tzid = icalproperty_get_tzid(p);
+            break;
+    
+          case ICAL_TZURL_PROPERTY:  
+            tzurl = icalproperty_get_tzurl(p);
+            break;
+    
+          default:
+            kdDebug(5800) << "Timezone::Timezone(): Unknown property: " << kind
+                      << endl;
+            break;
+        }
+        p = icalcomponent_get_next_property(vtimezone,ICAL_ANY_PROPERTY);
+      }
+      kdDebug(5800) << "---zoneId: \"" << tzid << '"' << endl;
+    
+      icalcomponent *c;
+    
+      TimezonePhase *phase;
+      
+      // Iterate through all timezones before we do anything else. That way, the
+      // information needed to interpret times in actually usefulobject is 
+      // available below.
+      c = icalcomponent_get_first_component(vtimezone,ICAL_ANY_COMPONENT);
+      while (c) {
+        icalcomponent_kind kind = icalcomponent_isa(c);
+        switch (kind) {
+    
+          case ICAL_XSTANDARD_COMPONENT:  
+            kdDebug(5800) << "---standard phase: found" << endl;
+            phase = new TimezonePhase(c);
+            phase->mIsStandard = 1;
+            mPhases.append(phase);
+            break;
+    
+          case ICAL_XDAYLIGHT_COMPONENT:  
+            kdDebug(5800) << "---daylight phase: found" << endl;
+            phase = new TimezonePhase(c);
+            phase->mIsStandard = 0;
+            mPhases.append(phase);
+            break;
+    
+          default:
+            kdDebug(5800) << "Timezone::Timezone(): Unknown component: " << kind
+                      << endl;
+            break;
+        }
+        c = icalcomponent_get_next_component(vtimezone,ICAL_ANY_COMPONENT);
+      }
+    }
+    
+    /**
+     * Destructor for a timezone.
+     */
+    ~Timezone()
+    {
+      free(phases);
+    }
+  
+    /**
+     * Find the nearest timezone phase just before a given time.
+     */
+    const TimezonePhase *nearestStart(const icaltimetype *t)
+    {
+      unsigned i;
+      unsigned result = 0;
+      icaltimetype previous = icaltime_null_time();
+      icaltimetype next;
+      
+      // Main loop. Find the phase with the latest start date before t.
+      for (i = 0; i < mPhases.count(); i++) {
+        next = mPhases.at(i)->nearestStart(t);
+        switch (compareDateTimes(previous,next)) {
+        case -1:
+          // The new result is the better one.
+          previous = next;
+          result = i;
+          break;
+        case 0:
+          // Two phases with the same start date. Just carry on looking.
+          break;
+        case +1:
+          // The result we already have is the better one.
+          break;
+        }
+      }  
+      return mPhases.at(result);
+    }
+    
+    /**
+     * Convert the given time to UTC.
+     */
+    void toUtc(icaltimetype *t)
+    { 
+      // Play safe.
+      if (t->is_utc)
+        return;
+          
+      const TimezonePhase *phase = nearestStart(t);
+      
+      if (phase) {
+        // Apply the offset, and mark the structure as UTC!
+        t->second -= phase->offsetto;
+        *t = icaltime_normalize(*t);
+        t->is_utc = 1;
+        //free((void *)t->zone);
+        //t->zone = (char *)0;
+      } else {
+        kdError(5800) << "Timezone::toUtc() cannot find phase " 
+            << t->zone << endl;
+      }
+    }
+    
+    // Phases we have seen.
+    QPtrList<TimezonePhase> mPhases;
+};
+
+}
+
 const int gSecondsPerMinute = 60;
 const int gSecondsPerHour   = gSecondsPerMinute * 60;
 const int gSecondsPerDay    = gSecondsPerHour   * 24;
@@ -53,6 +347,7 @@ ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
   mParent( parent ), mCalendarVersion( 0 )
 {
   mCompat = new Compat;
+  mTimezones.setAutoDelete( true );
 }
 
 ICalFormatImpl::~ICalFormatImpl()
@@ -107,10 +402,10 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
   if (todo->hasStartDate()) {
     icaltimetype start;
     if (todo->doesFloat()) {
-//      kdDebug(5800) << "§§ Incidence " << todo->summary() << " floats." << endl;
+//      kdDebug(5800) << " Incidence " << todo->summary() << " floats." << endl;
       start = writeICalDate(todo->dtStart().date());
     } else {
-//      kdDebug(5800) << "§§ incidence " << todo->summary() << " has time." << endl;
+//      kdDebug(5800) << " incidence " << todo->summary() << " has time." << endl;
       start = writeICalDateTime(todo->dtStart());
     }
     icalcomponent_add_property(vtodo,icalproperty_new_dtstart(start));
@@ -148,10 +443,10 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   // start time
   icaltimetype start;
   if (event->doesFloat()) {
-//    kdDebug(5800) << "§§ Incidence " << event->summary() << " floats." << endl;
+//    kdDebug(5800) << " Incidence " << event->summary() << " floats." << endl;
     start = writeICalDate(event->dtStart().date());
   } else {
-//    kdDebug(5800) << "§§ incidence " << event->summary() << " has time." << endl;
+//    kdDebug(5800) << " incidence " << event->summary() << " has time." << endl;
     start = writeICalDateTime(event->dtStart());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
@@ -160,11 +455,11 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     // end time
     icaltimetype end;
     if (event->doesFloat()) {
-//      kdDebug(5800) << "§§ Event " << event->summary() << " floats." << endl;
+//      kdDebug(5800) << " Event " << event->summary() << " floats." << endl;
       // +1 day because end date is non-inclusive.
       end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
     } else {
-//      kdDebug(5800) << "§§ Event " << event->summary() << " has time." << endl;
+//      kdDebug(5800) << " Event " << event->summary() << " has time." << endl;
       end = writeICalDateTime(event->dtEnd());
     }
     icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
@@ -240,10 +535,10 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
   if (journal->dtStart().isValid()) {
     icaltimetype start;
     if (journal->doesFloat()) {
-//      kdDebug(5800) << "§§ Incidence " << event->summary() << " floats." << endl;
+//      kdDebug(5800) << " Incidence " << event->summary() << " floats." << endl;
       start = writeICalDate(journal->dtStart().date());
     } else {
-//      kdDebug(5800) << "§§ incidence " << event->summary() << " has time." << endl;
+//      kdDebug(5800) << " incidence " << event->summary() << " has time." << endl;
       start = writeICalDateTime(journal->dtStart());
     }
     icalcomponent_add_property(vjournal,icalproperty_new_dtstart(start));
@@ -781,6 +1076,21 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   return a;
 }
 
+// Read a timezone and store it in a list where it can be accessed as needed
+// by the other readXXX() routines. Note that no writeTimezone is needed 
+// because we always store in UTC.
+void ICalFormatImpl::readTimezone(icalcomponent *vtimezone)
+{
+  Timezone *timezone = new Timezone(vtimezone);
+             
+  // Add to the dictionary. Make sure we always have quotes!
+  if (timezone->tzid[0] != '"') {
+    mTimezones.insert(QString("\"") + timezone->tzid + '"', timezone);
+  } else {
+    mTimezones.insert(timezone->tzid, timezone);
+  }
+}
+
 Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 {
   Todo *todo = new Todo;
@@ -865,6 +1175,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 
       case ICAL_DTEND_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtend(p);
+        readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
           event->setFloats( true );
           // End date is non-inclusive
@@ -984,11 +1295,13 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtstart(p);
+        readTzidParameter(p,icaltime);
         freebusy->setDtStart(readICalDateTime(icaltime));
         break;
 
       case ICAL_DTEND_PROPERTY:  // start End Date and Time
         icaltime = icalproperty_get_dtend(p);
+        readTzidParameter(p,icaltime);
         freebusy->setDtEnd(readICalDateTime(icaltime));
         break;
 
@@ -1169,6 +1482,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtstart(p);
+        readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
           incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           incidence->setFloats(true);
@@ -1700,8 +2014,28 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
   kdDebug(5800) << "--- H: " << t.hour << " M: " << t.minute << " S: " << t.second
             << endl;
   kdDebug(5800) << "--- isDate: " << t.is_date << endl;
+  kdDebug(5800) << "--- isUtc: " << t.is_utc << endl;
+  kdDebug(5800) << "--- zoneId: " << t.zone << endl;
 */
 
+  // First convert the time into UTC if required.
+  if ( !t.is_utc && t.zone ) {
+    Timezone *timezone;
+    
+    // Always lookup with quotes.
+    if (t.zone[0] != '"') {
+      timezone = mTimezones.find(QString("\"") + t.zone + '"');
+    } else {
+      timezone = mTimezones.find(t.zone);
+    }
+    if (timezone) {
+      timezone->toUtc(&t);
+    } else {
+      kdError(5800) << "ICalFormatImpl::readICalDateTime() cannot find timezone " 
+            << t.zone << endl;
+    }
+  }
+  
   if ( t.is_utc && mCompat->useTimeZoneShift() ) {
 //    kdDebug(5800) << "--- Converting time to zone '" << cal->timeZoneId() << "'." << endl;
     if (mParent->timeZoneId().isEmpty())
@@ -1894,6 +2228,16 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   // TODO: make sure that only actually added ecvens go to this lists.
 
   icalcomponent *c;
+
+  // Iterate through all timezones before we do anything else. That way, the
+  // information needed to interpret times in actually useful objects is 
+  // available below.
+  c = icalcomponent_get_first_component(calendar,ICAL_VTIMEZONE_COMPONENT);
+  while (c) {
+//    kdDebug(5800) << "----Timezone found" << endl;
+    readTimezone(c);
+    c = icalcomponent_get_next_component(calendar,ICAL_VTIMEZONE_COMPONENT);
+  }
 
   // Iterate through all todos
   c = icalcomponent_get_first_component(calendar,ICAL_VTODO_COMPONENT);
@@ -2132,3 +2476,16 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 
   return message;
 }
+
+// This function reads any TZID setting for an icaltime. TBD: incorporate
+// this into icalproperty_get_dtend()/icalproperty_get_dtend()?
+void ICalFormatImpl::readTzidParameter( icalcomponent *p,
+                                        icaltimetype &icaltime )
+{
+  icalproperty *tzp = icalproperty_get_first_parameter( p,
+                                                        ICAL_TZID_PARAMETER );
+  if ( tzp ) {
+    icaltime.zone = icalparameter_get_tzid( tzp );
+  }
+}
+
