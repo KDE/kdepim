@@ -258,8 +258,7 @@ error:
 						"the conduit's configuration dialog"));
 				return false;
 			}
-//			fCalendar = new KCal::CalendarLocal(tz);
-			fCalendar = new KCal::CalendarLocal();
+			fCalendar = new KCal::CalendarLocal(tz);
 			if ( !fCalendar)
 			{
 				kdWarning() << k_funcinfo <<
