@@ -620,7 +620,7 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo) 
 {
 	FUNCTIONSETUP;
-	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, dlpDBListRAM, 0, dbinfo);
+	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, 0, 0, dbinfo);
 }
 
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
@@ -679,6 +679,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.8.2.3  2002/05/01 21:37:30  kainhofe
+// Added a function findDatabase to get the DBInfo for a given database
+//
 // Revision 1.8.2.2  2002/04/09 21:51:50  adridg
 // Extra debugging, pilot-link 0.10.1 still needs workaround
 //

@@ -37,6 +37,8 @@ static const char *vcalconduitbase_id = "$Id$";
 
 #include <qdatetime.h>
 #include <qtimer.h>
+#include <qdir.h>
+#include <qfileinfo.h>
 
 #include <pilotUser.h>
 #include <kconfig.h>
@@ -233,7 +235,53 @@ there are two special cases: a full and a first sync.
 	fFullSync = (syncAction==SYNC_FULL) ||
 		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(VCalConduitFactoryBase::fullSyncOnPCChange, true));
 
-	if (!openDatabases(dbname(), &fFullSync) ) goto error;
+	fLocalDatabase = new PilotLocalDatabase(dbname());
+	if (!fLocalDatabase ) goto error;
+ 
+	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
+	if (!fLocalDatabase->isDBOpen() )
+	{
+		QString dbPath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
+		KPILOT_DELETE(fLocalDatabase);
+#ifdef DEBUG
+		DEBUGCONDUIT << "Backup database "<<dbPath<<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+#endif
+		struct DBInfo dbinfo;
+		char nm[50];
+		strncpy(&nm[0], dbname().latin1(), sizeof(nm));
+		fHandle->findDatabase(&nm[0], &dbinfo);
+
+#ifdef DEBUG
+			DEBUGCONDUIT <<"Found Palm database: "<<dbinfo.name<<endl
+					<<"type = "<< dbinfo.type<<endl
+					<<"creator = "<< dbinfo.creator<<endl
+					<<"version = "<< dbinfo.version<<endl
+					<<"index = "<< dbinfo.index<<endl;
+#endif
+		// make sure the dir for the backup db really exists!
+		QFileInfo fi(dbPath);
+		if (!fi.exists()) {
+			QDir d(fi.dir(TRUE));
+#ifdef DEBUG
+			DEBUGCONDUIT <<"Creating backup directory "<<d.absPath()<<endl;
+#endif
+			d.mkdir(d.absPath());
+		}
+		if (!fHandle->retrieveDatabase(dbPath, &dbinfo) ) goto error;
+		fLocalDatabase = new PilotLocalDatabase(dbname());
+		if (!fLocalDatabase || !fLocalDatabase->isDBOpen()) goto error;
+		fFullSync=true;
+	}
+
+	fDatabase = new PilotSerialDatabase(pilotSocket(), dbname(), this, dbname());
+	if (!fDatabase ) goto error;
+	
+	// Handle lots of error cases.
+	if (!fDatabase->isDBOpen() ||
+		 !fLocalDatabase->isDBOpen()) goto error;
+
+//	if (!openDatabases(dbname(), &fFullSync) ) goto error;
+	
 	if (!openCalendar() ) goto error;
 
 
@@ -260,7 +308,18 @@ there are two special cases: a full and a first sync.
 	return;
 
 error:
-			cout<<"Error opening the dbs"<<endl;
+	if (!fDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't open database on Pilot"
+			<< endl;
+	}
+	if (!fLocalDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't open local copy"
+			<< endl;
+	}
 
 	emit logError(i18n("Couldn't open the calendar databases."));
 
@@ -378,7 +437,7 @@ void VCalConduitBase::syncPalmRecToPC()
 		if (!r->isDeleted() || (archive && archiveRecord))
 		{
 			KCal::Incidence*e=addRecord(r);
-			if (archive)  {
+			if (archive && archiveRecord )  {
 				e->setSyncStatus(KCal::Incidence::SYNCDEL);
 			}
 		}
@@ -498,12 +557,12 @@ void VCalConduitBase::cleanup()
 	if (fDatabase) 
 	{
 		fDatabase->resetSyncFlags();
-		fDatabase->cleanup();
+		fDatabase->cleanUpDatabase();
 	}
 	if (fLocalDatabase) 
 	{
 		fLocalDatabase->resetSyncFlags();
-		fLocalDatabase->cleanup();
+		fLocalDatabase->cleanUpDatabase();
 	}
 	KPILOT_DELETE(fDatabase);
 	KPILOT_DELETE(fLocalDatabase);
@@ -534,6 +593,9 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 		fP->addIncidence(e);
 	}
 	KPILOT_DELETE(de);
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": syncStatus="<<e->syncStatus()<<endl;
+#endif
 	return e;
 }
 
@@ -668,6 +730,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.1.2.6  2002/06/15 13:34:15  kainhofe
+// merging in changes from the HEAD branch that should go into 3.0.2
+//
 // Revision 1.1.2.5  2002/06/07 06:50:10  adridg
 // Be safer wrt. pointers (may be NULL if the database is nonexistent)
 //

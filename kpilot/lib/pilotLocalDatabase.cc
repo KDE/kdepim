@@ -389,7 +389,7 @@ QString PilotLocalDatabase::dbPathName() const
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
 
-	tempName += "/";
+	if (!tempName.endsWith("/")) tempName += "/";
 	tempName += getDBName();
 	tempName += ".pdb";
 	return tempName;
@@ -491,6 +491,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.2.2.2  2002/05/07 13:38:43  adridg
+// Additional debugging to track down mis-set paths
+//
 // Revision 1.2.2.1  2002/04/11 12:48:23  adridg
 // Handle special case where no Pilot user name is set properly
 //

@@ -169,7 +169,7 @@ const QString VCalConduit::getTitle(PilotAppCategory*de)
 }
 
 
-		
+
 PilotRecord*VCalConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
 	FUNCTIONSETUP;
@@ -238,9 +238,6 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 	setExceptions(e,de);
 
 	e->setSummary(de->getDescription());
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
-#endif
 	e->setDescription(de->getNote());
 
 	return e;
@@ -690,6 +687,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.51.2.4  2002/06/15 13:34:14  kainhofe
+// merging in changes from the HEAD branch that should go into 3.0.2
+//
 // Revision 1.51.2.3  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //

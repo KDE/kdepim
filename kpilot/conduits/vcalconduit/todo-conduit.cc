@@ -103,7 +103,7 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 	KCal::Todo *todo = fAllTodos.first();
 	while(todo)
 	{
-		if ((recordid_t)todo->pilotId() == id) return todo;
+		if ((recordid_t)(todo->pilotId()) == id) return todo;
 		todo = fAllTodos.next();
 	}
 
@@ -158,10 +158,16 @@ TodoConduit::~TodoConduit()
 //	FUNCTIONSETUP;
 }
 
+const QString TodoConduit::getTitle(PilotAppCategory*de)
+{
+	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
+	if (d) return QString(d->getDescription());
+	return "";
+}
 
 PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
-// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.	
+	// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.	
 	return recordFromIncidence(dynamic_cast<PilotTodoEntry*>(de), dynamic_cast<const KCal::Todo*>(e));
 }
 
@@ -201,9 +207,6 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 	// what we call description pilot puts as a separate note
 	de->setNote(todo->description());
 
-#ifdef DEBUG
-DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
-#endif
 	return de->pack();
 }
 
@@ -264,6 +267,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.10.2.2  2002/06/15 13:34:14  kainhofe
+// merging in changes from the HEAD branch that should go into 3.0.2
+//
 // Revision 1.10.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //
