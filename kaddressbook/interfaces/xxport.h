@@ -30,6 +30,7 @@
 #include <kabc/addresseelist.h>
 #include <klibloader.h>
 #include <kxmlguiclient.h>
+#include <kdepimmacros.h>
 
 #define KAB_XXPORT_PLUGIN_VERSION 1
 
