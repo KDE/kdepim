@@ -52,12 +52,15 @@
 using namespace KCal;
 using namespace KPIM;
 
+typedef KRES::PluginFactory<ResourceExchange,ResourceExchangeConfig> ExchangeFactory;
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( resourcecalendarexchange, ExchangeFactory )//; here
+// Problem: How can I insert the catalogue?
 extern "C"
 {
   void* init_resourcecalendarexchange()
   {
     KGlobal::locale()->insertCatalogue( "kres_exchange" );
-    return new KRES::PluginFactory<ResourceExchange,ResourceExchangeConfig>();
+    return new ExchangeFactory;
   }
 }
 

@@ -48,11 +48,5 @@ class KolabFactory : public KRES::PluginFactoryBase
     }
 };
 
-extern "C"
-{
-  void *init_kabc_kolab()
-  {
-    return ( new KolabFactory() );
-  }
-}
+K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory)
 

@@ -48,11 +48,13 @@ class IMAPFactory : public KRES::PluginFactoryBase
     }
 };
 
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( knotes_imap, IMAPFactory ) here
+// Problem: How do I insert the catalogue???
 extern "C"
 {
   void *init_knotes_imap()
   {
     KGlobal::locale()->insertCatalogue( "kres_imap" );
-    return ( new IMAPFactory() );
+    return new IMAPFactory;
   }
 }

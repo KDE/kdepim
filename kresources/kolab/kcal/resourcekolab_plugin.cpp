@@ -46,10 +46,4 @@ public:
   }
 };
 
-extern "C"
-{
-  void *init_kcal_kolab()
-  {
-    return ( new KolabFactory() );
-  }
-}
+K_EXPORT_COMPONENT_FACTORY(kcal_kolab,KolabFactory)

@@ -49,11 +49,13 @@ class IMAPFactory : public KRES::PluginFactoryBase
     }
 };
 
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kabc_imap, IMAPFactory ) here
+// Problem: How do I insert the catalogue???
 extern "C"
 {
   void *init_kabc_imap()
   {
     KGlobal::locale()->insertCatalogue( "kres_imap" );
-    return ( new IMAPFactory() );
+    return new IMAPFactory;
   }
 }

@@ -29,12 +29,16 @@
 
 using namespace KCal;
 
+typedef KRES::PluginFactory<ResourceBlogging,ResourceBloggingConfig> BloggingFactory;
+
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory ); here
+// Problem: How do I insert the catalogue???
 extern "C"
 {
   void *init_kcal_blogging()
   {
     KGlobal::locale()->insertCatalogue( "libkcal" );
     KGlobal::locale()->insertCatalogue( "kcal_blogging" );
-    return new KRES::PluginFactory<ResourceBlogging,ResourceBloggingConfig>();
+    return new BloggingFactory;
   }
 }

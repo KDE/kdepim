@@ -23,10 +23,5 @@
 
 using namespace KABC;
 
-extern "C"
-{
-  void *init_kabc_groupwise()
-  {
-    return new KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>();
-  }
-}
+typedef KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig> GroupwiseFactory;
+K_EXPORT_COMPONENT_FACTORY(kabc_groupwise, GroupwiseFactory );

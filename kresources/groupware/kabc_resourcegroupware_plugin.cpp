@@ -23,10 +23,4 @@
 
 using namespace KABC;
 
-extern "C"
-{
-  void *init_kabc_groupware()
-  {
-    return new KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig>();
-  }
-}
+K_EXPORT_COMPONENT_FACTORY(kabc_groupware, KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> );

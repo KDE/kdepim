@@ -23,10 +23,5 @@
 
 using namespace KABC;
 
-extern "C"
-{
-  void *init_kabc_slox()
-  {
-    return new KRES::PluginFactory<ResourceSlox, ResourceSloxConfig>();
-  }
-}
+typedef KRES::PluginFactory< ResourceSlox, ResourceSloxConfig > SloxFactory;
+K_EXPORT_COMPONENT_FACTORY( kabc_slox, SloxFactory )

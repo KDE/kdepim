@@ -24,11 +24,5 @@
 
 using namespace KCal;
 
-extern "C"
-{
-  void *init_kcal_groupware()
-  {
-    return new KRES::PluginFactory< ResourceGroupware,
-                                    ResourceGroupwareConfig >();
-  }
-}
+K_EXPORT_COMPONENT_FACTORY(kcal_groupware, KRES::PluginFactory< ResourceGroupware,
+                                    ResourceGroupwareConfig > );

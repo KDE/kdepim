@@ -46,11 +46,5 @@ public:
   }
 };
 
-extern "C"
-{
-  void *init_knotes_kolab()
-  {
-    return ( new KolabFactory() );
-  }
-}
+K_EXPORT_COMPONENT_FACTORY(knotes_kolab,KolabFactory())
 

@@ -26,11 +26,15 @@
 
 using namespace KABC;
 
+typedef KRES::PluginFactory< ResourceXMLRPC, ResourceXMLRPCConfig > XMLRPCFactory;
+
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kabc_xmlrpc, XMLRPCFactory ); here
+// Problem: Comma in the template!
 extern "C"
 {
   void *init_kabc_xmlrpc()
   {
     KGlobal::locale()->insertCatalogue( "kres_xmlrpc" );
-    return new KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig>();
+    return new XMLRPCFactory;
   }
 }

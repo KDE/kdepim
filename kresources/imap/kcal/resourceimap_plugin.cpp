@@ -45,11 +45,13 @@ public:
   }
 };
 
+// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_imap, ImapFactory ) here
+// Problem: How do I insert the catalogue???
 extern "C"
 {
   void *init_kcal_imap()
   {
     KGlobal::locale()->insertCatalogue( "kres_imap" );
-    return new ImapFactory();
+    return new ImapFactory;
   }
 }

@@ -24,11 +24,5 @@
 
 using namespace KCal;
 
-extern "C"
-{
-  void *init_kcal_resourcefeatureplan()
-  {
-    return new KRES::PluginFactory< ResourceFeaturePlan,
-                                    ResourceFeaturePlanConfig >();
-  }
-}
+typedef KRES::PluginFactory< ResourceFeaturePlan, ResourceFeaturePlanConfig > FeatureplanFactory;
+K_EXPORT_COMPONENT_FACTORY( kcal_resourcefeatureplan, FeatureplanFactory )
