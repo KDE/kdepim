@@ -194,6 +194,7 @@ protected:
   KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
   bool b_lockui;
   KToolBar        *q_uicksearch;
+  QLineEdit       *s_earchLineEdit;
 
   //Core
   KNConfigManager   *c_fgManager;

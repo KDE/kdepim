@@ -171,7 +171,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                         "all messages are shown again." ) );
 
   QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
-  QLineEdit *s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
+  s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
@@ -1172,6 +1172,7 @@ void KNMainWidget::slotCollectionSelected(QListViewItem *i)
   KNGroup *selectedGroup=0;
   KNFolder *selectedFolder=0;
 
+  s_earchLineEdit->clear();
   h_drView->clear();
   slotArticleSelected(0);
 
