@@ -81,6 +81,7 @@
         * - <a href="libkpimexchange/html/index.html"><b>libkpimexchange</b></a>
         *   <i></i>
         * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
+        *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
         *   <i>A library for managing identities.</i>
         *
         * More information can be found at the
