@@ -108,7 +108,7 @@ MALWidgetSetup::~MALWidgetSetup()
 		MALConduitSettings::setProxyPort(0);
 	}
 	MALConduitSettings::setProxyUser( fConfigWidget->proxyUserName->text() );
-	MALConduitSettings::setProxyPassword( fConfigWidget->proxyPassword->text() );
+	MALConduitSettings::setProxyPassword( fConfigWidget->proxyPassword->password() );
 
 	// MAL Server settings (not yet possible!!!)
 	MALConduitSettings::setMALServer( fConfigWidget->malServerName->currentText() );
