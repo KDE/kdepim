@@ -4,7 +4,8 @@ kmailcvt_SOURCES = kimportpagedlg.ui kimportpage.cpp kselfilterpagedlg.ui \
                    kselfilterpage.cpp filters.cxx filter_oe.cxx kmailcvt.cpp \
                    main.cpp filter_pmail.cxx filter_plain.cxx filter_outlook.cxx \
                    filter_mbox.cxx filter_evolution.cxx filter_mailapp.cxx \
-                   filter_evolution_v2.cxx filter_opera.cxx filter_thunderbird.cxx
+                   filter_evolution_v2.cxx filter_opera.cxx filter_thunderbird.cxx \
+                   filter_kmail_maildir.cxx
                 
 kmailcvt_LDADD   = $(LIB_KFILE)
 
