@@ -43,7 +43,16 @@ korn_SOURCES = \
   mailid.cpp \
   mailsubject.cpp \
   intid.cpp \
-  kornapp.cpp
+  stringid.cpp \
+  kornapp.cpp \
+  kio.cpp \
+  kio_count.cpp \
+  kio_subjects.cpp \
+  kio_single_subject.cpp \
+  kio_read.cpp \
+  kio_delete.cpp \
+  kiocfg.cpp \
+  sortedmailsubject.cpp
 
 noinst_HEADERS = \
   dropdlg.h \
@@ -79,7 +88,16 @@ noinst_HEADERS = \
   mailid.h \
   mailsubject.h \
   intid.h \
-  kornapp.h
+  stringid.h \
+  kornapp.h \
+  kio.h \
+  kio_count.h \
+  kio_subjects.h \
+  kio_single_subject.h \
+  kio_read.h \
+  kio_delete.h \
+  kiocfg.h \
+  sortedmailsubject.h 
 
 srcdoc:
 	kdoc -p -u "/~ssk/src/korn/" -n korn -d /home/ssk/web/src/korn *.h \

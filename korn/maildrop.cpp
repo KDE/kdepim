@@ -30,10 +30,14 @@ const char *KMailDrop::NFgColourConfigKey = "newmailfgcolour";
 const char *KMailDrop::IconConfigKey = "icon";
 const char *KMailDrop::NewMailIconConfigKey = "newmailicon";
 const char *KMailDrop::DisplayStyleConfigKey = "displaystyle";
+const char *KMailDrop::ResetCounterConfigKey = "resetcounter";
+const char *KMailDrop::PassivePopupConfigKey = "passive_popup";
+const char *KMailDrop::PassiveDateConfigKey = "passive_date";
 
 KMailDrop::KMailDrop()
   : _style(Plain),
-    _lastCount(0)
+    _lastCount(0),
+    _resetCounter(-1)
 {
   connect(this, SIGNAL(changed(int)), SLOT(setCount(int)));
 }
@@ -45,6 +49,11 @@ KMailDrop::~KMailDrop()
 
 void KMailDrop::setCount(int count)
 {
+  if(count<_resetCounter)
+  {
+    _resetCounter = 0;
+    emit(configChanged());
+  }
   _lastCount = count;
 }
 
@@ -77,6 +86,9 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
   _nfgColour  = c.readColorEntry(fu(NFgColourConfigKey), &QApplication::palette().active().text());
   _icon       = c.readEntry(fu(IconConfigKey));
   _nIcon      = c.readEntry(fu(NewMailIconConfigKey));
+  _resetCounter=c.readNumEntry(fu(ResetCounterConfigKey), -1);
+  _passivePopup=c.readBoolEntry(fu(PassivePopupConfigKey), false );
+  _passiveDate= c.readBoolEntry(fu(PassiveDateConfigKey), false );
 
   emit(configChanged());
 
@@ -97,6 +109,9 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   c.writeEntry(fu(NFgColourConfigKey),    _nfgColour);
   c.writeEntry(fu(IconConfigKey),         _icon);
   c.writeEntry(fu(NewMailIconConfigKey),  _nIcon);
+  c.writeEntry(fu(ResetCounterConfigKey), _resetCounter);
+  c.writeEntry(fu(PassivePopupConfigKey), _passivePopup );
+  c.writeEntry(fu(PassiveDateConfigKey),  _passiveDate );
 
   return true;
 }
@@ -120,8 +135,8 @@ QValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 	int newcount = result->size();
 
 	// if the mail count has changed: notify the button!
-	if( newcount != count() && (!stop || !*stop))
-	{
+	if( newcount != count() && (!stop || !*stop) && synchrone() )
+	{ //asynchrone connections don't have a list at this time
 		emit changed( newcount );
 	}
 
@@ -207,6 +222,27 @@ void KMailDrop::setIcon(QString s)
 void KMailDrop::setNewIcon(QString s)
 {
   _nIcon = s;
+  emit(configChanged());
+}
+
+void KMailDrop::setResetCounter(int rc)
+{
+  if(rc!=_resetCounter)
+  {
+    _resetCounter=rc;
+    emit(configChanged());
+  }
+}
+
+void KMailDrop::setPassivePopup( bool pp )
+{
+  _passivePopup = pp;
+  emit(configChanged());
+}
+
+void KMailDrop::setPassiveDate( bool pd )
+{
+  _passiveDate = pd;
   emit(configChanged());
 }
 

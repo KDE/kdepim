@@ -8,6 +8,7 @@
 
 class KURLRequester;
 
+class QCheckBox;
 class QLineEdit;
 
 class KCommandsCfg : public KMonitorCfg
@@ -28,7 +29,10 @@ class KCommandsCfg : public KMonitorCfg
 
     QLineEdit     *_onClick;
     QLineEdit     *_onReceipt;
+    QCheckBox     *_passivePopup;
+    QCheckBox     *_passiveDate;
     KURLRequester *_soundFile;
+    QCheckBox     *_resetCounter;    
 };
 
 #endif // COMCFG_H

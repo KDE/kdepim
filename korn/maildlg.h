@@ -7,6 +7,9 @@
 class KornMailSubject;
 class KMailDrop;
 
+class QProgressDialog;
+class QString;
+
 /**
  * KornMailDlg shows the header and (if available) the body of a mail. 
  * If the mails body is not available a button allows the user to load it.
@@ -34,6 +37,11 @@ class KornMailDlg : public KDialogBase
 	 * Flag used during the load process. Set to true if the user clicks the cancel button.
 	 */
 	bool _loadMailCanceled;
+	
+	/**
+	 * Progress bar
+	 */
+	QProgressDialog *_progress;
 public:
 	/**
 	 * KornMailDlg Constructor
@@ -54,6 +62,9 @@ public:
 	 * KornMailDlg Destructor
 	 */
 	virtual ~KornMailDlg();
+
+private:
+	void deleteProgress();
 private slots:
 	/**
 	 * Slot triggered if the user presses the "Full Message" button
@@ -64,6 +75,8 @@ private slots:
 	 * Slot triggered if the user canceles the message loading process
 	 */
 	void loadMailCanceled();
+	
+	void readMailReady( QString* );
 };
 
 #endif

@@ -5,11 +5,13 @@
 #include <qtoolbutton.h>
 
 class QString;
+template<class T> class QPtrList;
 
 class KMailDrop;
 class KornShell;
 class KornSettings;
 class KornBtnStyle;
+class KornMailSubject;
 class KProcess;
 
 /**
@@ -28,6 +30,11 @@ class KornButton: public QToolButton
      * @param shell back reference to the KornShell instance which created this
      */
     KornButton( QWidget *parent, KMailDrop *box, KornShell *shell);
+    
+    /**
+     * KornButton Destructor
+     */
+    ~KornButton();
 
     /**
      * return the mailbox represented by this KornButton instance
@@ -46,6 +53,8 @@ class KornButton: public QToolButton
      * slot triggered if the right mouse button was clicked on the button
      */
     void popupMenu();
+    
+    void showPassivePopup( QPtrList< KornMailSubject > *, int );
 
   protected slots:
 

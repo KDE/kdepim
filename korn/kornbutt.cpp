@@ -1,15 +1,21 @@
 
 #include<assert.h>
 
+#include<qdatetime.h>
 #include<qfile.h>
+#include<qpixmap.h>
+#include<qptrlist.h>
 #include <qstring.h>
 #include<qtooltip.h>
 
 #include<kaudioplayer.h>
 #include<kdebug.h>
+#include<kpassivepopup.h>
 #include<kprocess.h>
+#include<klocale.h>
 
 #include"kornbutt.h"
+#include"mailsubject.h"
 #include"shell.h"
 #include"maildrop.h"
 #include"btnstyle.h"
@@ -26,6 +32,8 @@ KornButton::KornButton( QWidget *parent, KMailDrop *box, KornShell *shell )
 	connect(_box, SIGNAL(changed(int)),       this, SLOT(setNumber(int)));
 	connect(_box, SIGNAL(notifyDisconnect()), this, SLOT(disconnectMonitor()));
 	connect(_box, SIGNAL(configChanged()),    this, SLOT(monitorUpdated()));
+	connect(_box, SIGNAL(showPassivePopup(QPtrList<KornMailSubject>*,int)),
+	        this, SLOT  (showPassivePopup(QPtrList<KornMailSubject>*,int)));
 
 	switch( _box->displayStyle() ){
 		case KMailDrop::Colour: 
@@ -47,16 +55,22 @@ KornButton::KornButton( QWidget *parent, KMailDrop *box, KornShell *shell )
 	_box->startMonitor();
 }
 
-void KornButton::setNumber(int num)
+KornButton::~KornButton()
+{
+	if( _style)
+		delete _style; _style = 0;
+}
+
+void KornButton::setNumber( int )
 {
 	if (0 == _box)
 		return;
 
 	if (_box->count() != _lastNum)
 		setText(QString::number(_box->count()));
-
+		
 	bool newMessages = _box->count() > _lastNum;
-	_lastNum = num;
+	_lastNum = _box->count();
 
 	_style->update( _box->count(), newMessages );
 
@@ -75,6 +89,9 @@ void KornButton::runCommand(bool onlyIfUnread)
 		  	<< endl;
     return;
   }
+
+  if (_box->resetCounter()>=0)
+  	_box->setResetCounter(_box->count()+_box->resetCounter()); //Set counter to 0.
 
   if (onlyIfUnread) {
 
@@ -167,6 +184,34 @@ KornButton::popupMenu()
 {
   // call shell (which created this) tho handle event.
   _shell->popup(this);
+}
+
+void KornButton::showPassivePopup( QPtrList< KornMailSubject > *new_subjects, int total_new_emails )
+{
+  QDateTime date;
+  QString message;
+  if( _box->passiveDate() )
+    message = i18n( "From  Subject  Data" ); //Information above a passive popup
+  else	
+    message = i18n( "From  Subject" );
+  message+= "\n----------------------";
+  for( QPtrList<KornMailSubject>::ConstIterator it = new_subjects->begin(); it != new_subjects->end(); ++it )
+  {
+    date.setTime_t( (*it)->getDate() );
+    message += "\n";
+    message += (*it)->getSender();
+    message += "  ";
+    message += (*it)->getSubject();
+    if( _box->passiveDate() )
+    {
+      message += "  ";
+      message += date.toString( );
+    }
+  }
+  if( total_new_emails )
+    message += i18n( "\n\n[There are %1 new messages]" ).arg( QString::number( total_new_emails ) );
+  
+  KPassivePopup::message( QString::QString( "korn: %1" ).arg( _box->caption() ), message, QPixmap(), this, "passive_popup", 5000 );
 }
 
 HeadButton::HeadButton( QWidget *parent )

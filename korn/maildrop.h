@@ -44,6 +44,9 @@ class KMailDrop : public QObject
     QString _icon;
     QString _nIcon;
     int     _lastCount;
+    int     _resetCounter;
+    bool    _passivePopup;
+    bool    _passiveDate;
 
   public:
 
@@ -59,6 +62,9 @@ class KMailDrop : public QObject
     static const char *BgColourConfigKey;
     static const char *IconConfigKey;
     static const char *NewMailIconConfigKey;
+    static const char *ResetCounterConfigKey;
+    static const char *PassivePopupConfigKey;
+    static const char *PassiveDateConfigKey; //Enabled date in Passive popup
 
     /**
      * KMailDrop Constructor
@@ -79,7 +85,7 @@ class KMailDrop : public QObject
      * Number of messages in the mailbox at the last count.
      * @return The number of messages in the mailbox since last count.
      */
-    int count() {return _lastCount;};
+    int count() {return _lastCount-(_resetCounter>=0?_resetCounter:0);};
 
     /** 
      * Recheck the number of letters in this mailbox. Raises the
@@ -151,12 +157,20 @@ class KMailDrop : public QObject
     virtual QString type() const = 0;
 
     /**
+     * Return if the maildrop is synchrone (true) or asynchrone (false).
+     * This way, classes like KornSubjectDlg know if functions like
+     * readSubject() return a result immediately.
+     * @param true by a synchrone type; false by an asynchrone (like KKkioDrop) type.
+     */
+    virtual bool synchrone() const { return true; }
+    
+    /**
      * Return true if the concrete subclass can read the subjects of
      * all new mails. This will enable the "Read Subjects" menu item.
      */
     virtual bool canReadSubjects() {return false;}
 
-    /**
+    /** 
      * Read the subjects of all new mails.
      * NOTE: the default implementation stops the timer, calls
      * doReadSubjects, restarts the time if necessary and updates
@@ -238,6 +252,9 @@ class KMailDrop : public QObject
     QString       icon()          const { return _icon; }
     QString       newIcon()       const { return _nIcon; }
     Style         displayStyle()  const { return _style; }
+    int           resetCounter()  const { return _resetCounter; }
+    bool          passivePopup()  const { return _passivePopup; }
+    bool	  passiveDate()   const { return _passiveDate; }
 ;
     void setCaption(QString);
     void setClickCmd(QString);
@@ -250,6 +267,9 @@ class KMailDrop : public QObject
     void setNewFgColour(QColor);
     void setIcon(QString);
     void setNewIcon(QString);
+    void setResetCounter(int);
+    void setPassivePopup(bool);
+    void setPassiveDate(bool);
 
     /** 
      * This is called by the manager when it wishes to delete
@@ -293,6 +313,27 @@ signals:
     void notifyDisconnect();
 
     /**
+     * rechecked() is called if an asynchrone maildrop has
+     * rechecked the availability of email.
+     */
+    void rechecked();
+    
+    /**
+     * The next signal is emitted when a passive popup could be displayed.
+     * As argument, there is a KornSubject, which contains a subject and
+     * some more info that could be used with the popup.
+     */
+    void showPassivePopup( QPtrList< KornMailSubject >*, int );
+    
+    /**
+     * readSubjects() might signal readSubject() if
+     * an subject is received. This is only useful in
+     * asynchrone situations.
+     * @param the subject structure which is read
+     */
+    void readSubject( KornMailSubject * );
+    
+    /**
      * readSubjects() might signal readSubjectsTotalSteps() to
      * send the expected total number of steps to a possible
      * progress bar. See readSubjectsProgress();
@@ -307,6 +348,13 @@ signals:
      * @param curent progress.
      */
     void readSubjectsProgress(int progress);
+    
+    /**
+     * readSubjects() might signal readSubjectsReady() to
+     * remove the progress bar in asynchrone situations.
+     * @param: true if succes, false if cancelled
+     */
+    void readSubjectsReady( bool success );
 
     /**
      * deleteMails() might signal deleteMailsTotalSteps() to
@@ -325,6 +373,16 @@ signals:
     void deleteMailsProgress(int progress);
 
     /**
+     * deleteMails() might signal deleteMailsReady() if
+     * it is not going to do something anyway.
+     * This could be the case when an email has been succesfully
+     * removed, or when the deletions failed. This is useful
+     * in asynchrone situations.
+     * @param: true if deletion was succesful; elsewise false.
+     */
+    void deleteMailsReady( bool );
+    
+    /**
      * readMail() might signal readMailTotalSteps() to
      * send the expected total number of steps to a possible
      * progress bar. See readMailProgress();
@@ -339,6 +397,14 @@ signals:
      * @param curent progress.
      */
     void readMailProgress(int progress);
+    
+    /**
+     * readMail() might signal readMailReady() if
+     * a email is totally read. This is useful
+     * in asynchrone situations.
+     * @param pointer to the full email-message.
+     */
+    void readMailReady( QString* );
 };
 
 #endif // SSK_MAILDROP_H

@@ -10,6 +10,7 @@ class KMailDrop;
 class KornMailSubject;
 class KListView;
 class KornMailDlg;
+class QProgressDialog;
 
 /**
  * KornSubjectsDlg loads all mail subjects and shows them in a list control.
@@ -59,7 +60,10 @@ class KornSubjectsDlg: public KDialogBase
 	KPushButton * deleteButton;
 	KPushButton * showButton;
 	KornMailDlg * mailDlg;
+	QProgressDialog * _subjectsProgress;
+	QProgressDialog * _deleteMailsProgress;
 	bool _loadSubjectsCanceled, _deleteMailsCanceled;
+	bool _canDeleteMaildrop;
 
 	/**
 	 * Load the mails subjects and refresh the list view.
@@ -89,6 +93,11 @@ public:
 	 * KornSubjectsDlg Destructor
 	 */
 	virtual ~KornSubjectsDlg();
+
+private:
+	void deleteDeleteProgress( );
+	void deleteSubjectsProgress( );
+
 private slots:
 
 	/**
@@ -130,8 +139,32 @@ private slots:
 	 * called if a list view item was double clicked
 	 */
 	void doubleClicked ( QListViewItem *item );
+
+	/*
+	 * After delete of message, the messages have to be recount.
+	 * After that, this slots redisplay them.
+	 */
+	void messagesCount( );
+		
+	/*
+	 * Called when asynchone subject arrived
+	 */
+	void subjectAvailable( KornMailSubject * );
+	
+	/*
+	 * called when asynchone mail is in
+	 */
+	void subjectsReady( bool );
+
+	/*
+	 * Called when asynchrone deleting is ready
+	 */
+	void deleteMailsReady( bool );
+	
+	/*
+	 * Called if user end the dialog
+	 */
+	void closeDialog( );
 };
-
-
 
 #endif

@@ -8,7 +8,8 @@
 #include "maildrop.h"
 
 KornMailDlg::KornMailDlg( QWidget *parent )
-   : KDialogBase( parent, "maildialog", true, i18n("Mail Details"), User1|Close, Close, true, KGuiItem(i18n("&Full Message")))
+   : KDialogBase( parent, "maildialog", true, i18n("Mail Details"), User1|Close, Close, true, KGuiItem(i18n("&Full Message"))),
+   _progress( 0 )
 {
 	QWidget * page = new QWidget( this );
 	setMainWidget(page);
@@ -33,45 +34,35 @@ void KornMailDlg::loadMailCanceled()
 void KornMailDlg::showFullMessage()
 {
 	_loadMailCanceled = false;
-
+	
 	// create progress dialog
-	QProgressDialog progress(this, "bla", TRUE);
-	progress.setMinimumDuration(0);
-	progress.setLabelText(i18n("Loading full mail. Please wait..."));
+	_progress = new QProgressDialog(this, "bla", TRUE);
+	_progress->setMinimumDuration(0);
+	_progress->setLabelText(i18n("Loading full mail. Please wait..."));
 
 	// this should show it even if the mailbox does not support progress bars
-	progress.setTotalSteps(1000);
-	progress.setProgress(1);
+	_progress->setTotalSteps(1000);
+	_progress->setProgress(1);
 	qApp->processEvents();
 
 	// connect the mailbox with the progress dialog in case it supports progress bars
-	connect(_mailDrop, SIGNAL(readMailTotalSteps(int)), &progress, SLOT(setTotalSteps(int)));
-	connect(_mailDrop, SIGNAL(readMailProgress(int)), &progress, SLOT(setProgress(int)));
+	connect(_mailDrop, SIGNAL(readMailTotalSteps(int)), _progress, SLOT(setTotalSteps(int)));
+	connect(_mailDrop, SIGNAL(readMailProgress(int)), _progress, SLOT(setProgress(int)));
 	qApp->processEvents();
 
 	// connect the mailbox's cancel button
-	connect(&progress, SIGNAL(canceled()), this, SLOT(loadMailCanceled()));
+	connect(_progress, SIGNAL(canceled()), this, SLOT(loadMailCanceled()));
+	
+	connect(_mailDrop, SIGNAL(readMailReady(QString*)), this, SLOT(readMailReady(QString*)));
 
 	// now load the mail fully
-	QString mail = _mailDrop->readMail(_mailSubject->getId(), &_loadMailCanceled);
-
-	// remove progress dialog
-	progress.setProgress(progress.totalSteps());
-	progress.hide();
-	disconnect(_mailDrop, 0, &progress, 0);
-
-	// if loading was not canceled and did not fail
-	if (!_loadMailCanceled && mail.length() > 0)
+	if( _mailDrop->synchrone() )
 	{
-		// store full mail in KornMailSubject instance (so that it has not to be loaded again next time)
-		_mailSubject->setHeader(mail, true);
-
-		// show fully loaded mail
-		_editCtrl->setText(mail);
-
-		// disable "Full Message" button
-		enableButton(User1, false);
+		QString mail = _mailDrop->readMail(_mailSubject->getId(), &_loadMailCanceled);
+		readMailReady( &mail );
 	}
+	else
+		_mailDrop->readMail(_mailSubject->getId(), &_loadMailCanceled);
 }
 
 void KornMailDlg::setMailSubject(KMailDrop * mailDrop, KornMailSubject * mailSubject)
@@ -86,5 +77,33 @@ void KornMailDlg::setMailSubject(KMailDrop * mailDrop, KornMailSubject * mailSub
 	enableButton(User1, !_mailSubject->isHeaderFullMessage() && _mailDrop->canReadMail());
 }
 
+void KornMailDlg::readMailReady( QString* mail )
+{
+	deleteProgress();
+
+	// if loading was not canceled and did not fail
+	if ( mail->length() > 0)
+	{
+		// store full mail in KornMailSubject instance (so that it has not to be loaded again next time)
+		_mailSubject->setHeader(*mail, true);
+
+		// show fully loaded mail
+		_editCtrl->setText(*mail);
+
+		// disable "Full Message" button
+		enableButton(User1, false);
+	}
+}
+
+void KornMailDlg::deleteProgress()
+{
+	_progress->setProgress(_progress->totalSteps());
+	_progress->hide();
+	
+	disconnect(_mailDrop, SIGNAL(readMailReady(QString*)), this, SLOT(readMailReady(QString*)));
+	
+	delete _progress;
+	_progress = 0;
+}
 
 #include "maildlg.moc"
