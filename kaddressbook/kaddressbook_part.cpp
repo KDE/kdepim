@@ -96,6 +96,8 @@ KAboutData *KAddressbookPart::createAboutData()
   about->addAuthor("Cornelius Schumacher",
                   I18N_NOOP("co-maintainer, libkabc port, csv import/export"),
                   "schumacher@kde.org");
+  about->addAuthor("Mike Pilone", I18N_NOOP( "GUI and framework redesign" ),
+                  "mpilone@slac.com" );
   about->addAuthor("Greg Stern", I18N_NOOP("DCOP interface"));
   about->addAuthor("Mark Westcott",I18N_NOOP("Contact pinning"));
   about->addAuthor("Mischel Boyer de la Giroday", I18N_NOOP("LDAP Lookup"),
