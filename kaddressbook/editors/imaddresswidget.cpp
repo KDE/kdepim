@@ -26,6 +26,7 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
+#include <qlabel.h>
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -38,6 +39,8 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
 {
 	mProtocols = protocols;
 	populateProtocols();
+        connect( cmbProtocol, SIGNAL( activated(const QString&) ), this, SLOT( slotProtocolChanged() ) );
+	slotProtocolChanged();
 }
 
 IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
@@ -51,7 +54,11 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
 	populateProtocols();
 	cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
 	/*cmbContext->setCurrentItem( (int)context );*/
-	edtAddress->setText( address );
+	
+	edtAddress->setText( address.section(QChar(0xE120),0,0) );
+	edtNetwork->setText( address.section(QChar(0xE120),1) );
+        connect( cmbProtocol, SIGNAL( activated(const QString&) ), this, SLOT( slotProtocolChanged() ) );
+	slotProtocolChanged();
 }
 
 KPluginInfo * IMAddressWidget::protocol()
@@ -86,7 +93,12 @@ IMContext IMAddressWidget::context()
 
 QString IMAddressWidget::address()
 {
-	return edtAddress->text();
+	//The protocol irc is a special case and hard coded in.  It's not nice, but the simplest way
+	//that I can see.
+	if(protocol()->name() == "IRC" && !edtNetwork->text().stripWhiteSpace().isEmpty())
+		return edtAddress->text().stripWhiteSpace() + QChar(0xE120) + edtNetwork->text().stripWhiteSpace();
+	else
+		return edtAddress->text().stripWhiteSpace();
 }
 
 void IMAddressWidget::populateProtocols()
@@ -97,3 +109,12 @@ void IMAddressWidget::populateProtocols()
 		cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
 }
 
+void IMAddressWidget::slotProtocolChanged() {
+	if(protocol()->name() == "IRC") {
+		edtNetwork->show();
+		labelNetwork->show();
+	} else {
+		edtNetwork->hide();
+		labelNetwork->hide();
+	}
+}

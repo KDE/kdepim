@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>IMAddressBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,9 +8,17 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>177</width>
-            <height>90</height>
+            <width>208</width>
+            <height>121</height>
         </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>1</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
     </property>
     <property name="caption">
         <string>Edit Address</string>
@@ -19,30 +27,14 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLineEdit" row="1" column="1">
-            <property name="name">
-                <cstring>edtAddress</cstring>
-            </property>
-        </widget>
         <widget class="QComboBox" row="0" column="1">
             <property name="name">
                 <cstring>cmbProtocol</cstring>
             </property>
         </widget>
-        <widget class="QLabel" row="1" column="0">
-            <property name="name">
-                <cstring>textLabel2</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Address:</string>
-            </property>
-            <property name="buddy" stdset="0">
-                <cstring>edtAddress</cstring>
-            </property>
-        </widget>
         <widget class="QLabel" row="0" column="0">
             <property name="name">
-                <cstring>textLabel1</cstring>
+                <cstring>labelProtocol</cstring>
             </property>
             <property name="text">
                 <string>&amp;Protocol:</string>
@@ -51,11 +43,47 @@
                 <cstring>cmbProtocol</cstring>
             </property>
         </widget>
+        <widget class="QLineEdit" row="1" column="1">
+            <property name="name">
+                <cstring>edtAddress</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="0">
+            <property name="name">
+                <cstring>labelAddress</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Address:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>edtAddress</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="0">
+            <property name="name">
+                <cstring>labelNetwork</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Network:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>edtNetwork</cstring>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="2" column="1">
+            <property name="name">
+                <cstring>edtNetwork</cstring>
+            </property>
+        </widget>
     </grid>
 </widget>
 <tabstops>
     <tabstop>cmbProtocol</tabstop>
     <tabstop>edtAddress</tabstop>
 </tabstops>
+<slots>
+    <slot>slotProtocolChanged( const QString &amp; )</slot>
+    <slot>slotProtocolChanged()</slot>
+</slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -70,7 +70,16 @@ IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol,
 
 void IMAddressLVI::setAddress( const QString &address )
 {
-	setText( 1, address );
+	//irc uses 0xE120 to seperate the nick and the server group.
+
+  	QString serverOrGroup = address.section(QChar(0xE120),1);
+	if(serverOrGroup.isEmpty())
+		setText( 1, address );
+	else {
+		QString nickname = address.section(QChar(0xE120),0,0);
+		setText( 1, i18n("%1 on %2").arg(nickname).arg(serverOrGroup) );
+	}
+	mAddress = address;
 }
 
 void IMAddressLVI::setContext( const IMContext &context )
@@ -111,7 +120,7 @@ IMContext IMAddressLVI::context() const
 
 QString IMAddressLVI::address() const
 {
-	return text( 1 );
+	return mAddress;
 }
 
 void IMAddressLVI::activate()
@@ -171,7 +180,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 				{
 					QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
 					QStringList::iterator end = addresses.end();
-					for ( QStringList::iterator it = addresses.begin(); it != end; ++it )
+					for ( QStringList::iterator it = addresses.begin(); it != end; ++it )	
 					{
 						new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
 					}
@@ -268,22 +277,31 @@ void IMEditorWidget::slotEdit()
 
 		if ( editDialog->exec() == QDialog::Accepted )
 		{
-			current->setAddress( addressWid->address() );
-			current->setContext( addressWid->context() );
+			bool modified = false;
+			if(addressWid->address() != current->address()) {
+				modified = true;
+				current->setAddress( addressWid->address() );
+			}
+			if(addressWid->context() != current->context()) {
+				modified = true;
+				current->setContext( addressWid->context() );
+			}
 
 			// the entry for the protocol of the current address has changed
-			if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
+			if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() ) {
 				mChangedProtocols.append( current->protocol() );
+			}
 			// update protocol - has another protocol gained an address?
 			if ( current->protocol() != addressWid->protocol() )
 			{
+				modified = true;
 				// this proto is losing an entry
 				current->setProtocol( addressWid->protocol() );
 				if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
 					mChangedProtocols.append( current->protocol() );
 			}
 
-			setModified( true );
+			setModified( modified);
 		}
                 delete editDialog;
 	}
@@ -291,7 +309,7 @@ void IMEditorWidget::slotEdit()
 
 void IMEditorWidget::slotDelete()
 {
-	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::warningContinueCancel( this, i18n("Do you really want to delete the selected address?"), i18n("Confirm Delete"), KGuiItem(i18n("&Delete"),"editdelete") ) == KMessageBox::Continue  )
+	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::warningContinueCancel( this, i18n("Do you really want to remove the selected address?"), i18n("Confirm Remove"), KGuiItem(i18n("&Remove"),"editremove") ) == KMessageBox::Continue  )
 	{
 		IMAddressLVI * current = static_cast<IMAddressLVI*>( mWidget->lvAddresses->selectedItem() );
 		if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )

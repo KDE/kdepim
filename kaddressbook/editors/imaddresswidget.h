@@ -55,6 +55,10 @@ protected:
 	 * Populate combobox with protocols
 	 */
 	void populateProtocols();
+	
+protected slots:
+	void slotProtocolChanged();
+	
 };
 
 #endif

@@ -110,6 +110,7 @@ class IMAddressLVI : public KListViewItem
   private:
     KPluginInfo * mProtocol;
     IMContext mContext;
+    QString mAddress;
 };
 
 /**

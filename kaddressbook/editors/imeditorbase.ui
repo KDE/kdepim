@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>IMEditorBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -81,7 +81,7 @@
                         <cstring>btnDelete</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Delete</string>
+                        <string>&amp;Remove</string>
                     </property>
                 </widget>
                 <spacer>
@@ -105,6 +105,8 @@
         </widget>
     </hbox>
 </widget>
+<customwidgets>
+</customwidgets>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>klistview.h</includehint>
