@@ -198,7 +198,7 @@ void AlarmDockWindow::toggleAlarmsEnabled()
         kdError() << "AlarmDockWindow::toggleAlarmsEnabled(): kalarmd not found" << endl;
         return;
       }
-      system(QFile::encodeName(execStr));
+      kapp->kdeinitExecWait(execStr);
     }
   }
   else
