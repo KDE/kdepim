@@ -50,6 +50,12 @@ int main( int argc, char **argv )
   };
 
   KUniqueApplication app;
+  
+  /*
+   *  Install translation
+   */
+  KGlobal::locale()->insertCatalogue( "libkcal" );
+  KGlobal::locale()->insertCatalogue( "libkitchensync" );
 
   MainWindow *mainWindow = new MainWindow;
   mainWindow->show();

@@ -2,7 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
-† † Copyright (c) 2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+    Copyright (c) 2002 Maximilian Reiﬂ <harlekin@handhelds.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,6 +24,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kuniqueapplication.h>
+#include <klocale.h>
 #include <stdlib.h>
 
 #include <mainwindow.h>
@@ -52,6 +53,14 @@ int main( int argc, char *argv[] )
   };
 
   KUniqueApplication a;
+  
+  /*
+   * Install translation
+   */
+  KGlobal::locale()->insertCatalogue( "libkcal" );
+  KGlobal::locale()->insertCatalogue( "libkitchensync" );
+
+  
   // time for a Widget
   KSync::Splash *splash = new KSync::Splash;
   KSync::MainWindow *mainwindow = new KSync::MainWindow;
