@@ -40,7 +40,7 @@
 
 namespace KCal
 {
-class Calendar;
+class CalendarLocal;
 // class Event;
 class Incidence;
 } ;
@@ -60,9 +60,9 @@ class VCalConduitPrivateBase
 {
 protected:
 	bool reading;
-	KCal::Calendar *fCalendar;
+	KCal::CalendarLocal *fCalendar;
 public:
-	VCalConduitPrivateBase(KCal::Calendar *buddy):fCalendar(buddy) { reading=false;};
+	VCalConduitPrivateBase(KCal::CalendarLocal *buddy):fCalendar(buddy) { reading=false;};
 
 	virtual int updateIncidences()=0;
 	virtual void addIncidence(KCal::Incidence*)=0;
@@ -140,7 +140,7 @@ protected:
 	virtual void postSync(){};
 
 protected:
-	KCal::Calendar *fCalendar;
+	KCal::CalendarLocal *fCalendar;
 
 	QString fCalendarFile;
 	int syncAction, nextSyncAction, conflictResolution;
@@ -151,11 +151,14 @@ protected:
 protected:
 //	class VCalPrivateBase;
 	VCalConduitPrivateBase *fP;
-   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar)=0;
+   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::CalendarLocal *fCalendar)=0;
 } ;
 
 
 // $Log$
+// Revision 1.8  2002/07/09 22:38:04  kainhofe
+// Implemented a first (not-yet-functional) version of the category sync
+//
 // Revision 1.7  2002/06/09 21:08:06  kainhofe
 // Use the openDatabases() function and the fDatabase/fLocalDatabase instead of our own fCurrentDatabase/fBackupDatabase
 //

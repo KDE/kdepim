@@ -33,6 +33,7 @@
 #include "exceptions.h"
 #include "incidence.h"
 #include "journal.h"
+#include "filestorage.h"
 
 #include "calendarlocal.h"
 
@@ -72,61 +73,16 @@ CalendarLocal::~CalendarLocal()
   delete mOldestDate;
 }
 
-bool CalendarLocal::load(const QString &fileName)
+bool CalendarLocal::load( const QString &fileName )
 {
-  kdDebug(5800) << "CalendarLocal::load(): '" << fileName << "'" << endl;
-
-  // do we want to silently accept this, or make some noise?  Dunno...
-  // it is a semantical thing vs. a practical thing.
-  if (fileName.isEmpty()) return false;
-
-  delete mFormat;
-
-  // Always try to load with iCalendar. It will detect, if it is actually a
-  // vCalendar file.
-  mFormat = new ICalFormat;
-
-  mFormat->clearException();
-  bool success = mFormat->load( this, fileName);
-
-  if (!success) {
-    if (mFormat->exception()) {
-//      kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
-      if (mFormat->exception()->errorCode() == ErrorFormat::CalVersion1) {
-        // Expected non vCalendar file, but detected vCalendar
-        kdDebug(5800) << "CalendarLocal::load() Fallback to VCalFormat" << endl;
-        delete mFormat;
-        mFormat = new VCalFormat;
-        return mFormat->load( this, fileName);
-      }
-      return false;
-    } else {
-      kdDebug(5800) << "Warning! There should be set an exception." << endl;
-      return false;
-    }
-  } else {
-//    kdDebug(5800) << "---Success" << endl;
-  }
-
-  setModified( false );
-
-  return true;
+  FileStorage storage( this, fileName );
+  return storage.load();
 }
 
-bool CalendarLocal::save(const QString &fileName,CalFormat *format)
+bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 {
-  bool success;
-
-  if (format) {
-    success = format->save( this, fileName);
-  } else {
-    if ( !mFormat ) mFormat = new ICalFormat;
-    success = mFormat->save( this, fileName);
-  }
-
-  if ( success ) setModified( false );
-  
-  return success;
+  FileStorage storage( this, fileName, format );
+  return storage.save();
 }
 
 void CalendarLocal::close()

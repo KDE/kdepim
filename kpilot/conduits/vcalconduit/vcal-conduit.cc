@@ -38,7 +38,6 @@ static const char *vcalconduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-//#include <calendar.h>
 #include <calendarlocal.h>
 //#include <event.h>
 
@@ -70,7 +69,7 @@ static const char *vcalconduit_id = "$Id$";
 
 
 
-VCalConduitPrivate::VCalConduitPrivate(KCal::Calendar *b) :
+VCalConduitPrivate::VCalConduitPrivate(KCal::CalendarLocal *b) :
 	VCalConduitPrivateBase(b)
 {
 	fAllEvents.setAutoDelete(false);
@@ -157,7 +156,7 @@ VCalConduit::~VCalConduit()
 //	FUNCTIONSETUP;
 };
 
-VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
+VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::CalendarLocal *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 };
 
@@ -676,6 +675,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.71  2002/07/24 20:08:53  kainhofe
+// fixed yearly recurrences
+//
 // Revision 1.70  2002/07/23 00:45:18  kainhofe
 // Fixed several bugs with recurrences.
 //

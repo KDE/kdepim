@@ -43,7 +43,6 @@ static const char *TodoConduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-#include <calendar.h>
 #include <calendarlocal.h>
 #include <todo.h>
 
@@ -70,7 +69,7 @@ static const char *TodoConduit_id = "$Id$";
 
 
 
-TodoConduitPrivate::TodoConduitPrivate(KCal::Calendar *b) :
+TodoConduitPrivate::TodoConduitPrivate(KCal::CalendarLocal *b) :
 	VCalConduitPrivateBase(b)
 {
 	fAllTodos.setAutoDelete(false);
@@ -367,6 +366,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.18  2002/07/23 00:45:18  kainhofe
+// Fixed several bugs with recurrences.
+//
 // Revision 1.17  2002/07/20 17:40:34  cschumac
 // Renamed Calendar::getTodoList() to Calendar::todos().
 // Removed get prefix from Calendar functions returning todos.

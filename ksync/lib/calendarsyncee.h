@@ -2,7 +2,7 @@
 #define CALENDARSYNCEE_H
 // $Id$
 
-#include <calendar.h>
+#include <calendarlocal.h>
 
 #include "ksyncer.h"
 
@@ -49,7 +49,7 @@ class CalendarSyncee : public KSyncee
   private:
     CalendarSyncEntry *createEntry(Incidence *);
   
-    Calendar *mCalendar;
+    CalendarLocal *mCalendar;
     QPtrList<Event> mEvents;
     Event *mCurrentEvent;
     

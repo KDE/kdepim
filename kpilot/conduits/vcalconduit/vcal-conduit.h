@@ -32,7 +32,7 @@
 #include <plugin.h>
 
 #include <event.h>
-#include <calendar.h>
+#include <calendarlocal.h>
 #include "vcal-factory.h"
 #include "vcal-conduitbase.h"
 #include <pilotDateEntry.h>
@@ -50,7 +50,7 @@ class PilotLocalDatabase;
 class VCalConduitPrivate : public VCalConduitPrivateBase
 {
 public:
-	VCalConduitPrivate(KCal::Calendar *buddy);
+	VCalConduitPrivate(KCal::CalendarLocal *buddy);
 	virtual ~VCalConduitPrivate() {};
 
 #ifdef KDE2
@@ -85,7 +85,7 @@ protected:
 	virtual const QString configGroup() { return VCalConduitFactory::group; };
 	virtual const QString dbname() { return "DatebookDB"; };
 
-	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);
+	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::CalendarLocal *fCalendar);
 
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) { if (r) return new PilotDateEntry(r);  else return new PilotDateEntry();};
@@ -112,6 +112,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.26  2002/05/14 23:07:49  kainhofe
+// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
+//
 // Revision 1.25  2002/05/01 21:18:23  kainhofe
 // Reworked the settings dialog, added various different sync options
 //

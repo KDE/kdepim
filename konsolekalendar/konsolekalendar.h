@@ -18,12 +18,13 @@
 #ifndef KONSOLEKALENDAR_H
 #define KONSOLEKALENDAR_H
 
-#include <kapplication.h>
 #include <qdatetime.h>
+
+#include <kapplication.h>
+
 #include "konsolekalendar.h"
 #include "kalendarVariables.h"
 #include "calendarlocal.h"
-#include "calendar.h"
 #include "event.h"
 
 namespace KCal {
@@ -44,7 +45,7 @@ class KonsoleKalendar
     bool isHappened(Event *event);
       
     KalendarVariables m_variables;
-    Calendar *m_Calendar;
+    CalendarLocal *m_Calendar;
 };
 
 }

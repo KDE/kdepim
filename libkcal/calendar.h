@@ -74,19 +74,6 @@ class Calendar {
     ICalFormat *iCalFormat();
 
     /**
-      Loads a calendar on disk into the current calendar.
-      @return true if successful, else returns false.
-      @param fileName the name of the calendar on disk.
-    */
-    virtual bool load( const QString &fileName ) = 0;
-    /**
-      Writes out the calendar to disk in the format specified by the format
-      parameter. If the format is 0, vCalendar is used.
-      @return true if successful and false on error.
-      @param fileName the name of the file
-    */
-    virtual bool save( const QString &fileName, CalFormat *format = 0 ) = 0;
-    /**
       Clears out the current calendar, freeing all used memory etc.
     */
     virtual void close() = 0;
@@ -281,7 +268,7 @@ class Calendar {
     CalFormat *mFormat;     // format used for load, and default for save, operations
     CalFormat *mDndFormat;  // format used for drag and drop operations
     ICalFormat *mICalFormat;
-  
+    
   private:
     void init();
   

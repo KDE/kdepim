@@ -37,7 +37,7 @@
 #include <kconfig.h>
 
 #include <todo.h>
-#include <calendar.h>
+#include <calendarlocal.h>
 #include <pilotTodoEntry.h>
 #include "todo-factory.h"
 #include "vcal-conduitbase.h"
@@ -54,7 +54,7 @@ class PilotLocalDatabase;
 class TodoConduitPrivate : public VCalConduitPrivateBase
 {
 public:
-	TodoConduitPrivate(KCal::Calendar *buddy);
+	TodoConduitPrivate(KCal::CalendarLocal *buddy);
 	virtual ~TodoConduitPrivate() {};
 
 #ifdef KDE2
@@ -91,7 +91,7 @@ protected:
 	virtual const QString configGroup() { return ToDoConduitFactory::group; };
 	virtual const QString dbname() { return "ToDoDB"; };
 	virtual void preSync() {_setAppInfo(); };
-	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
+	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::CalendarLocal *fCalendar) { return new TodoConduitPrivate(fCalendar);};
 
 	virtual void readConfig();
 	void _setAppInfo();
@@ -113,6 +113,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.11  2002/07/11 12:21:35  adridg
+// Remove a #define DEBUG that had wandered in from the cold
+//
 // Revision 1.10  2002/07/09 22:38:04  kainhofe
 // Implemented a first (not-yet-functional) version of the category sync
 //

@@ -2,8 +2,6 @@
 
 #include <kdebug.h>
 
-#include <calendarlocal.h>
-
 #include "calendarsyncee.h"
 
 CalendarSyncEntry::CalendarSyncEntry(Incidence *incidence) :

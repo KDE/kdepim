@@ -40,21 +40,24 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarLocal();
     /** constructs a new calendar, with variables initialized to sane values. */
-    CalendarLocal(const QString &timeZoneId);
+    CalendarLocal( const QString &timeZoneId );
     virtual ~CalendarLocal();
   
     /**
-      loads a calendar on disk in vCalendar or iCalendar format into the current calendar.
-      any information already present is lost. Returns true if successful,
-      else returns false.
+      Loads a calendar on disk in vCalendar or iCalendar format into the current
+      calendar. Any information already present is lost.
+      @return true, if successfull, false on error.
       @param fileName the name of the calendar on disk.
     */
-    bool load(const QString &fileName);
-    /** writes out the calendar to disk in the specified \a format. Returns true if
-     * successful and false on error.
-     * @param fileName the name of the file
-     */
-    bool save(const QString &fileName,CalFormat *format=0);
+    bool load( const QString &fileName );
+    /**
+      Writes out the calendar to disk in the specified \a format.
+      CalendarLocal takes ownership of the CalFormat object.
+      @return true, if successfull, false on error.
+      @param fileName the name of the file
+    */
+    bool save( const QString &fileName, CalFormat *format = 0 );
+
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
   
