@@ -166,7 +166,7 @@ there are two special cases: a full and a first sync.
 
 	readConfig();
 
-	// don't do a first sync by default in any case, only when explicitly 
+	// don't do a first sync by default in any case, only when explicitly
 	// requested, or the backup database or the alendar are empty.
 	fFirstSync = false;
 
@@ -301,7 +301,7 @@ error:
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Using CalendarResource!"<<endl;
 #endif
-			rescal = new KCal::CalendarResources(tz);
+			rescal = new KCal::CalendarResources( /* tz */);
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
@@ -309,8 +309,8 @@ error:
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
-			// rescal->readConfig();
-			// rescal->load();
+			rescal->readConfig();
+			rescal->load();
 			break;
 		default:
 			break;
