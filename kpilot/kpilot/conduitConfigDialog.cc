@@ -42,6 +42,7 @@ static const char *conduitconfigdialog_id =
 #include <qwidgetstack.h>
 #include <qvbox.h>
 #include <qsplitter.h>
+#include <qheader.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -189,23 +190,23 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	fConfigureKontact(0L),
 	fActionDescription(0L)
 {
-	QBoxLayout *p = new QVBoxLayout( this );
-
-	QSplitter *spl = new QSplitter( this, "ConduitSplitter" );
-	spl->setOrientation( QSplitter::Horizontal );
-	p->addWidget(spl);
-
 	QWidget *w = 0L; // For spacing purposes only.
 	QHBox *btns = 0L;
+	
+	QHBoxLayout *mainLayout = new QHBoxLayout(this);
+	mainLayout->setSpacing(10);
 
 	// Create the left hand column
-	// v = new QVBox( spl );
-	fConduitList = new QListView(spl,"ConduitList");
-	spl->setResizeMode(fConduitList, QSplitter::KeepSize);
-	fConduitList->addColumn(i18n("Conduit"));
+	fConduitList = new QListView(this ,"ConduitList");
+	fConduitList->addColumn(QString::null);
+	fConduitList->header()->hide();
+	fConduitList->setSizePolicy(
+		QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+	mainLayout->addWidget(fConduitList);
 
 	// Right hand column
-	fStack = new QWidgetStack(spl,"RightPart");
+	fStack = new QWidgetStack(this, "RightPart");
+	mainLayout->addWidget(fStack);
 
 	// First page in stack (right hand column)
 	addDescriptionPage(fStack,BROKEN_CONDUIT,
@@ -286,8 +287,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	
 	fConduitList->resize(fConduitList->sizeHint());
 	fConduitList->setMinimumSize(fConduitList->sizeHint());
-	// -4 to avoid scrollbars
-	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width()-4);
+	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width());
 	fConduitList->setResizeMode(QListView::AllColumns);
 
 	fStack->resize(fStack->sizeHint()+QSize(10,40));
