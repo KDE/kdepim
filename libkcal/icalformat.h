@@ -30,6 +30,7 @@
 namespace KCal {
 
 class ICalFormatImpl;
+class FreeBusy;
 
 /**
   This class implements the iCalendar format. It provides methods for
@@ -100,6 +101,11 @@ class ICalFormat : public CalFormat
       Parse scheduling message provided as string @p s.
     */
     ScheduleMessage *parseScheduleMessage( Calendar *, const QString &s);
+
+    /**
+      Parse FREEBUSY object.
+    */
+    FreeBusy *parseFreeBusy( const QString & );
     
     /**
       Set id of used time zone and whether this time zone is UTC or not.

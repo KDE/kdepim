@@ -322,6 +322,26 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
   return messageText;
 }
 
+FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
+{
+  clearException();
+
+  icalcomponent *message;
+  message = icalparser_parse_string( str.utf8() );
+
+  if ( !message ) return 0;
+
+  icalcomponent *c;
+  c = icalcomponent_get_first_component( message, ICAL_VFREEBUSY_COMPONENT );
+  if ( c ) {
+    return mImpl->readFreeBusy( c );
+  } else {
+    kdDebug(5800) << "ICalFormat:parseFreeBusy: object is not a freebusy."
+                  << endl;
+    return 0;
+  }
+}
+
 ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                                                    const QString &messageText )
 {
