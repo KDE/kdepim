@@ -92,7 +92,7 @@ public:
    * kdFatal( !codec ) << "no base64 codec found!?" << endl;
    * QByteArray out( in.size()*1.4 ); // crude maximal size of b64 encoding
    * QByteArray::Iterator iit = in.begin();
-   * QButeArray::Iterator oit = out.begin();
+   * QByteArray::Iterator oit = out.begin();
    * if ( !codec->encode( iit, in.end(), oit, out.end() ) ) {
    *   kdDebug() << "output buffer too small" << endl;
    *   return;
@@ -128,7 +128,7 @@ public:
    * kdFatal( !codec ) << "no base64 codec found!?" << endl;
    * QByteArray out( in.size() ); // good guess for any encoding...
    * QByteArray::Iterator iit = in.begin();
-   * QButeArray::Iterator oit = out.begin();
+   * QByteArray::Iterator oit = out.begin();
    * if ( !codec->decode( iit, in.end(), oit, out.end() ) ) {
    *   kdDebug() << "output buffer too small" << endl;
    *   return;
