@@ -269,7 +269,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mTypeCombo = new AddressTypeCombo( mAddressList, page );
   topLayout->addMultiCellWidget( mTypeCombo, 0, 0, 0, 1 );
 
-  QLabel *label = new QLabel( i18n( "Street:" ), page );
+  QLabel *label = new QLabel( KABC::Address::streetLabel() + ":", page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
   mStreetTextEdit = new QTextEdit( page );
@@ -279,31 +279,31 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   TabPressEater *eater = new TabPressEater( this );
   mStreetTextEdit->installEventFilter( eater );
 
-  label = new QLabel( i18n( "Post office box:" ), page );
+  label = new QLabel( KABC::Address::postOfficeBoxLabel() + ":", page );
   topLayout->addWidget( label, 2 , 0 );
   mPOBoxEdit = new KLineEdit( page );
   label->setBuddy( mPOBoxEdit );
   topLayout->addWidget( mPOBoxEdit, 2, 1 );
 
-  label = new QLabel( i18n( "City:" ), page );
+  label = new QLabel( KABC::Address::localityLabel() + ":", page );
   topLayout->addWidget( label, 3, 0 );
   mLocalityEdit = new KLineEdit( page );
   label->setBuddy( mLocalityEdit );
   topLayout->addWidget( mLocalityEdit, 3, 1 );
 
-  label = new QLabel( i18n( "State:" ), page );
+  label = new QLabel( KABC::Address::regionLabel() + ":", page );
   topLayout->addWidget( label, 4, 0 );
   mRegionEdit = new KLineEdit( page );
   label->setBuddy( mRegionEdit );
   topLayout->addWidget( mRegionEdit, 4, 1 );
 
-  label = new QLabel( i18n( "Zip code:" ), page );
+  label = new QLabel( KABC::Address::postalCodeLabel() + ":", page );
   topLayout->addWidget( label, 5, 0 );
   mPostalCodeEdit = new KLineEdit( page );
   label->setBuddy( mPostalCodeEdit );
   topLayout->addWidget( mPostalCodeEdit, 5, 1 );
 
-  label = new QLabel( i18n( "Country:" ), page );
+  label = new QLabel( KABC::Address::countryLabel() + ":", page );
   topLayout->addWidget( label, 6, 0 );
   mCountryCombo = new KComboBox( page );
   mCountryCombo->setEditable( true );
