@@ -7,6 +7,7 @@
   <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
   <!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
   <!ENTITY FreeBSD '<trademark class="registered">FreeBSD</trademark>'>
+  <!ENTITY AvantGo '<trademark class="registered">AvantGo</trademark>'>
   <!ENTITY handheld "&PalmPilot;">
   <!ENTITY configuring-kpilot SYSTEM "configuration.docbook">
   <!ENTITY using-kpilot SYSTEM "usage.docbook">

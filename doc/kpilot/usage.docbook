@@ -1,5 +1,5 @@
 <chapter id="using-kpilot">
-<title>Using &kpilot; Application Interface and Data Viewers</title>
+<title>Using &kpilot; Data Viewers and Main Window Interface</title>
 
 <para>
 This chapter describes the usage of &kpilot;'s main window; as a viewer
@@ -183,26 +183,24 @@ is enabled.
 </varlistentry>
 </variablelist>
 
+
 <para>
-The <guimenu>View</guimenu> menu
-allows you to choose a database viewer
-or &kpilot;'s main page.
+The <guimenu>Settings</guimenu> menu allows you to configure &kpilot; main
+interface and fine tune the synchronization process with the &handheld;.
 </para>
 
 <variablelist>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>&kpilot;</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Statusbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
-<action>Displays the &kpilot; logo page</action>.
-This puts &kpilot; in the state shown in
-the picture
-<link linkend="main-app">above</link>.
+Click this menu item to toggle &kpilot;'s statusbar on and off, or in other
+words, to show it if hidden, or to hide it if shown.  
 </para>
 </listitem>
 </varlistentry>
@@ -210,32 +208,14 @@ the picture
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Memo Viewer</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
-<action>Displays the internal memo viewer.</action>
-See <link linkend="memo-app">below</link> for more
-information on the memo viewer.
-</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>Address Viewer</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-<action>Displays the internal address book viewer.</action>
-You can view and edit addresses with the address book viewer.
-See <link linkend="address-app">below</link> for more information.
+Click this menu item to toggle &kpilot;'s toolbar on and off, or in other
+words, to show it if hidden, or to hide it if shown.  
 </para>
 </listitem>
 </varlistentry>
@@ -244,49 +224,119 @@ See <link linkend="address-app">below</link> for more information.
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>View</guimenu>
-<guimenuitem>File Installer</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
-<action>Displays the file installer.</action>
-You can drag files onto the file installer to install
-them on your &PalmPilot;.
-See <link linkend="installer-app">below</link> for more information.
+Dispays &kpilot;'s shortcut configuration dialog, allowing you change or create
+key bindings, which are associations between actions (for example, opening
+&kpilot;'s configuration dialog) and keys or key combinations (for instance,
+Ctrl + Shift + a).
 </para>
 </listitem>
 </varlistentry>
+
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+Displays &kpilot;'s toolbar configuration dialog. This dialog lists all actions
+available for use on the toolbar, and the actions currently displayed, allowing
+you to add or remove actions, and move the actions which already are on the
+toolbar.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KPilot...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+Displays &kpilot;'s configuration dialog, allowing you to match your hardware
+with the configuration, so that &kpilot; can talk with your &handheld;, to
+configure the way &kpilot; will synchronize your &PalmPilot; with your &kde;
+desktop (through conduits) or view data from your &PalmPilot; with the
+<link linkend="builtin">built-in viewers</link>. The <link linkend="configure">
+Configuring &kpilot;</link> chapter of this handbook offers detailed information
+about these configuration options.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configuration Wizard...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+Displays &kpilot;'s configuration wizard dialog. The
+<link linkend="configwizard">configuration wizard</link> helps you to set up
+&kpilot; to communicate with the &PalmPilot; and to configure the conduits as
+a group. It's a great start for new users, and you can always fine tune your
+preferences later, using the <link linkend="configure">configure
+dialog</link>.
+</para>
+</listitem>
+</varlistentry>
+
 
 </variablelist>
 
-<!-- TODO: handle the settings dialog -->
 
 </sect1>
 
 <sect1 id="builtin">
 <title>
-Builtin Applications
+Built-in Applications
 </title>
 
 <para>
-The builtin applications can be selected :
-by selecting the application from the
-<menuchoice><guimenu>Conduits</guimenu></menuchoice>
-menu, for example
-<menuchoice>
-<guimenu>Conduits</guimenu>
-<guimenuitem>Memo</guimenuitem>
-</menuchoice>.
+To select one of the Built in applications, just click its icon on &kpilot;'s
+sidebar.
 </para>
+
+<screenshot>
+<screeninfo>KPilot's Sidebar</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="sidebar.png" format="PNG"/></imageobject>
+<textobject><phrase>KPilot's Sidebar</phrase></textobject>
+<caption><para>KPilot's Sidebar</para></caption>
+</mediaobject>
+</screenshot>
 
 
 <para>
-Selecting one of the builtin applications
+Selecting one of the built-in applications
 will cause that application to appear in &kpilot;'s main
 window.
+You may use the viewer applications to edit the information, by enabling
+this option in the <link linkend="page-viewers">database viewer's
+configuration dialog</link>.
+
+<important><para>
+In some versions of &kpilot; it is not possible to make internal viewers
+editable.
+</para></important>
+
 Any changes you make to the &PalmPilot; databases with
-the builtin applications (such as deleting a memo)
+the built-in applications (such as deleting a memo)
 do not take effect on the &PalmPilot; until the next HotSync.
 </para>
 
@@ -301,11 +351,11 @@ do not take effect on the &PalmPilot; until the next HotSync.
 </para>
 
 <screenshot>
-<screeninfo>Memo Application</screeninfo>
+<screeninfo>Memo Viewer Application</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="memo-app.png" format="PNG"/></imageobject>
-<textobject><phrase>The Memo Application</phrase></textobject>
-<caption><para>The Memo Application</para></caption>
+<textobject><phrase>The Memo Viewer Application</phrase></textobject>
+<caption><para>The Memo Viewer Application</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -347,7 +397,7 @@ you do not want to have it on the &PalmPilot;
 you must perform a &HotSync; (copying the memo
 to the &PalmPilot;) and then delete the memo
 from the &PalmPilot;. It is not possible to
-delete newly-added memos from the builtin memo application.
+delete newly-added memos from the built-in memo application.
 </para>
 
 </sect2>
@@ -381,11 +431,11 @@ added to the database.
 
 
 <screenshot>
-<screeninfo>The Address Application</screeninfo>
+<screeninfo>The Address Viewer Application</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="address-app.png" format="PNG"/></imageobject>
-<textobject><phrase>The Address Application</phrase></textobject>
-<caption><para>The Address Application</para></caption>
+<textobject><phrase>The Address Viewer Application</phrase></textobject>
+<caption><para>The Address Viewer Application</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -463,224 +513,6 @@ will be installed the next time you HotSync.
 </screenshot>
 
 </sect2>
-</sect1>
-
-<sect1 id="conduits">
-<title>Conduits</title>
-
-<para>
-Conduits can be external programs, written by third parties,
-to interface your &PalmPilot; to any application imaginable.
-</para>
-
-<para>
-Conduits can be set up by selecting
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Conduits</guimenuitem>
-</menuchoice>.
-This allows you to select which conduits
-to run during a &HotSync; and to configure those conduits.
-A window similar to the following will be displayed:
-<screenshot>
-<screeninfo>The Conduit Setup Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="setup-conduit.png" format="PNG"/></imageobject>
-<textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
-<caption><para>The Conduit Setup Dialog</para></caption>
-</mediaobject>
-</screenshot>
-You can drag-and-drop conduits between the two
-branches of the tree (from <guilabel>Available</guilabel>
-to <guilabel>Active</guilabel> and back again).
-Only those conduits listed under <guilabel>Active</guilabel>
-will actually run during a HotSync.
-Click on a conduit to configure it.
-</para>
-
-<sect2 id="popmail-cond">
-<title>Mail Conduit</title>
-
-<para>
-This conduit allows you to send and receive email.
-The configuration of the Mail Conduit
-is fairly complex.
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
-<textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
-<caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
-</mediaobject>
-</screenshot>
-There are two tabs in the setup dialog for
-the Mail Conduit,
-one for
-<link linkend="popmail-cond-send">Sending mail</link>
-and one for
-<link linkend="popmail-cond-recv">Receiving mail</link>.
-</para>
-
-<sect3 id="popmail-cond-send">
-<title>Sending Mail</title>
-
-<para>
-Depending on which send method you choose,
-different fields will be activated in the remainder of the
-tab, allowing you to enter the necessary information.
-</para>
-
-<para>
-Your email address can be entered in the <guilabel>Email
-Address</guilabel> field.  This is the email address that goes in the
-<quote>From:</quote> line in outgoing mail.  If you enter a file name in
-the <guilabel>Signature File</guilabel> field then that file will be
-appended to each outgoing mail as a signature.
-</para>
-
-<para>
-The configuration of the &Sendmail; method of sending is fairly
-straightforward.  Check the path to your installation of &Sendmail;, for
-example by typing <userinput><command>which
-sendmail</command></userinput> in a &konsole; window.  The options to
-&Sendmail; should not need to be changed, but you can if you like.
-</para>
-
-<warning>
-<para>
-&Sendmail; is not provided with destination addresses on the command
-line, so you must specify the <option>-t</option>.  If you are using a
-non-&Sendmail; <acronym>MTA</acronym> like
-<application>Postfix</application> then the equivalent <quote>extract
-recipients from message headers</quote> option must be given.
-</para>
-</warning>
-
-<para>
-To use <acronym>SMTP</acronym> sending you need to specify
-the name of the machine which runs your
-<acronym>SMTP</acronym> server, and the port number to
-connect to.
-The default port number of 25 is almost always correct.
-</para>
-<note>
-<para>
-&kpilot; does not use the <acronym>SMTP</acronym>
-configuration of the <acronym>SMTP</acronym> IOSlave.
-This may change in a future version of &kpilot;.
-</para>
-</note>
-
-
-<para>
-When sending mail through &kmail;, &kpilot; automatically places it in
-your &kmail; outbox.  &kmail; saves mail in the outbox until you request
-that those pieces of mail are <emphasis>really</emphasis> sent.  Check
-the <guilabel>Send mail through &kmail; immediately</guilabel> to let
-the Mail Conduit tell &kmail; to send all mail from the outbox as soon
-as it it done Hotsynchronization.  This has the side effect of also sending any
-other pieces of mail that may be in your outbox.
-</para>
-
-</sect3>
-
-<sect3 id="popmail-cond-recv">
-<title>Receiving Mail</title>
-
-
-<para>
-Depending on which send method you choose, different fields will be
-activated in the remainder of the tab, allowing you to enter the
-necessary information.
-</para>
-</sect3>
-
-</sect2>
-
-<sect2 id="vcal-cond">
-<title>Calendar Conduit</title>
-
-<para>
-This conduit will synchronize your &PalmPilot; with &korganizer;.  The
-conduit needs two pieces of information: the filename of the calendar
-file (this will usually be a file that ends in <literal
-role="extension">.vcs</literal> under <filename
-class="directory">.kde/share/apps/korganizer/</filename> under your home
-folder) and whether or not to ask before changing data in that
-calendar file.
-</para>
-
-<screenshot>
-<screeninfo>The Calendar Conduit Setup Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-vcal.png" format="PNG"/></imageobject>
-<textobject><phrase>Calendar Conduit Setup</phrase></textobject>
-<caption><para>Calendar Conduit Setup</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-You can usually leave
-<guilabel>Prompt before changing data</guilabel>
-off.
-</para>
-
-</sect2>
-
-<sect2 id="todo-cond">
-<title>To-do Conduit</title>
-
-<para>
-This conduit synchronizes with &korganizer;'s todo list.  The
-configuration dialog looks exactly the same as the configuration dialog
-for the <link linkend="vcal-cond">Calendar Conduit</link>.
-</para>
-
-</sect2>
-
-<sect2 id="conduit-knotes">
-<title>&knotes; Conduit</title>
-
-<para>
-The &knotes; Conduit is a partial replacement for the builtin <link
-linkend="builtin">memo application</link>.  It keeps the notes you write
-with &knotes; synchronized with the memos you write on your &PalmPilot;.
-</para>
-
-<para>
-Setting up the &knotes; conduit is very simple,
-since there is only one configuration option.
-<screenshot>
-<screeninfo>&knotes; Conduit Setup</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-knotes.png" format="PNG"/></imageobject>
-<textobject><phrase>&knotes; Conduit Setup</phrase></textobject>
-<caption><para>&knotes; Conduit Setup</para></caption>
-</mediaobject>
-</screenshot>
-</para>
-</sect2>
-
-<sect2 id="conduit-kaddressbook">
-<title>&kaddressbook; Conduit</title>
-
-<para>
-The &kaddressbook; conduit allows you to synchronize the
-&PalmPilot; address book with your
-&kde; address book.
-</para>
-
-</sect2>
-
-<sect2 id="conduit-null">
-<title>NULL conduit</title>
-
-<para>
-The NULL conduit is included as a programming example and
-has no practical function whatsoever.
-</para>
-</sect2>
-
 </sect1>
 
 </chapter>

@@ -1,15 +1,23 @@
 <chapter id="synchronization">
-<title>synchronization</title>
+<title>Syncing your &handheld; with a PC</title>
 
 <para>
 This chapter describes the synchronization process
 that &kpilot; uses, focusing on the &kpilot; daemon functionality.
+You may sync your &handheld; using the <link linkend="builtin">internal
+viewers</link> and / or <link linkend="conduits">conduits</link>, depending
+on your personal preferences or if the applications you use daily can be
+interfaced with the data on your &handheld; using one of the conduits.
+</para>
+
+<para>
 It is a good idea to make a <link linkend="backup">backup</link>
-of your &handheld; regularly. Other than making backups, it should rarely be necessary
-to do anything other than drop your &handheld; in the cradle and press
+of your &handheld; regularly. Other than making backups, it should rarely be
+necessary to do anything other than drop your &handheld; in the cradle and press
 the &HotSync; button. The &kpilot; daemon icon on the system tray will flash
 indicating that a sync is under way.
 </para>
+
 
 <screenshot>
 <screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
@@ -131,7 +139,7 @@ to make the next sync a backup. Then, just press the &HotSync; button.
 </sect1>
 
 <sect1 id="restore">
-<title>Restoring your &handheld; data</title>
+<title>Restoring Your &handheld; Data</title>
 
 <para>
 The restore operation consist of transferring all the data previously saved on
@@ -168,7 +176,7 @@ menu item, then press the &HotSync; button.
 
 
 <sect1 id="sync-s">
-<title>Syncing your &handheld; data</title>
+<title>Selecting the Synchronization Type</title>
 
 <para>
 There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
@@ -264,8 +272,158 @@ menu only.
 
 </itemizedlist>
 
-<sect2 id="conflicts">
-<title>Resolving conflicts</title>
+
+</sect1>
+
+<sect1 id="conduits">
+<title>Syncing your &handheld; Data Using Conduits</title>
+
+<para>
+Conduits are programs that interface your &handheld; data with 
+<acronym>PC</acronym> applications or sync your &handheld; data with files
+that can be used by <acronym>PC</acronym> applications.
+</para>
+
+<para>
+Conduits can be set up by selecting
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KPilot...</guimenuitem>
+</menuchoice>, or using the daemon pop up menu and clicking the 
+<guimenuitem>Configure KPilot...</guimenuitem>
+menu item.
+</para>
+
+<screenshot>
+<screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
+<textobject><phrase>KPilot daemon pop-up menu</phrase></textobject>
+<caption><para>KPilot daemon pop-up menu</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+The <guilabel>Conduits</guilabel> three in the configuration dialog
+collects all the installed conduits available to &kpilot;.
+the conduits can be enabled and disabled
+by clicking on the check box to the left of the conduit's name.
+conduits can have an extensive configuration of
+their own, and may be supplied by third parties.
+The details of the configuration of the
+conduits can be found in the
+<link linkend="config-conduits">section detailing the default conduits
+configuration</link>.
+</para>
+
+
+<para>
+The default conduits are the following:
+</para>
+
+
+<variablelist>
+	
+<varlistentry>
+<term><guilabel>KNotes / Memos</guilabel></term>
+<listitem><para>
+Synchronizes the Memo Pad application with &knotes;.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Time Synchronization</guilabel></term>
+<listitem><para>
+Sets the &handheld;'s time to that of the desktop machine.
+Useful for keeping the clock of the &handheld; accurate.
+</para></listitem>
+</varlistentry>
+       
+<varlistentry>
+<term><guilabel>Calendar (KOrganizer)</guilabel></term>
+<listitem><para>
+Synchronizes the Datebook application with &korganizer;.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Palm DOC</guilabel></term>
+<listitem><para>
+Automatically converts and installs text files in the &PalmPilot;
+DOC format, so you can read the text files with most DOC-capable
+applications on the &handheld;.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Addressbook</guilabel></term>
+<listitem><para>
+Synchronizes the Address application with &kaddressbook;.
+</para></listitem>
+</varlistentry>
+       
+<varlistentry>
+<term><guilabel>System Information</guilabel></term>
+<listitem><para>
+Writes information about your &handheld;, (such as OS version,
+RAM available, and the list of databases) to a file. Useful mostly for
+debugging purposes.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>ToDo's (KOrganizer)</guilabel></term>
+<listitem><para>
+Synchronizes the Todo list application with &korganizer;.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>MAL (AvantGo) Conduit</guilabel></term>
+<listitem><para>
+Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
+offers general content (news, guides, stock quotes, etc...) in a format that is
+suitable for a &handheld;. To use this conduit, you need to register, subscribe
+the channels you select and install the &AvantGo; software on your &handheld;.
+</para></listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Mail</guilabel></term>
+<listitem><para>
+Sends mail written on the &handheld; through &kmail;.
+There is no provision for receiving mail, however.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Perl</guilabel></term>
+<term><guilabel>Python</guilabel></term>
+<term><guilabel>NULL</guilabel></term>
+<listitem><para>
+These conduits are intended as a programming demonstration,
+and serve no practical purpose during a &HotSync;.
+They are not normally listed, but you may see them on some systems.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<screenshot>
+<screeninfo>The Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-conduit.png" format="PNG"/></imageobject>
+<textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Conduit Setup Dialog</para></caption>
+</mediaobject>
+</screenshot>
+
+
+</sect1>
+
+<sect1 id="conflicts">
+<title>Resolving Conflicts</title>
 
 <para>
 Data records can be changed both on the &handheld; and
@@ -284,8 +442,6 @@ choice</link>). Note that you can define different resolution choices
 for different conduits in the <link linkend="config-conduits">conduits
 configuration dialog</link>.
 </para>
-
-</sect2>
 
 </sect1>
 </chapter>

@@ -164,7 +164,7 @@ heading to see them.
 
 
 <sect2 id="page-general">
-<title>Device Page</title>
+<title>Device Setup</title>
 
 <para>
 This is a setup page that contains options describing
@@ -281,7 +281,7 @@ named <filename>DBBackup/<replaceable>Pilot User</replaceable></filename>.
 </sect2>
 
 <sect2 id="page-hotsync">
-<title>HotSync Page</title>
+<title>HotSync Setup</title>
 
 <para>
 This page contains settings with which you can instruct
@@ -293,7 +293,7 @@ change the same data.
 
 <para>
 &kpilot; interfaces with your &handheld; in two ways: using the
-the conduits and the internal viewers. Conduits are plugin programs which extend
+the conduits and the internal viewers. Conduits are plug-in programs which extend
 the synchronization capabilities of &kpilot;. &kpilot; stores separate copies of the
 databases and records for conduits, while the internal viewers and backup
 operation share the same copy. This distinction is important to choose your
@@ -443,9 +443,7 @@ from the &handheld;.
 
 
 <sect2 id="page-backup">
-<title>
-Backup Page
-</title>
+<title>Backup Setup</title>
 
 <para>
 This page contains settings specific to the backup operation, which saves
@@ -539,7 +537,7 @@ every backup.
 
 
 <sect2 id="page-viewers">
-<title>Viewers Page</title>
+<title>Internal Viewers Setup</title>
 <para>
 &kpilot; contains <quote>viewers</quote> for
 presenting information from the &PalmPilot;.
@@ -613,7 +611,7 @@ as in Adriaan e-mail? -->
 
 
 <sect2 id="page-startup-exit">
-<title>Startup and Exit Page</title>
+<title>Startup and Exit Behavior Setup</title>
 
 <para>
 This pages present options related to the startup and exit of &kpilot; and
@@ -727,104 +725,305 @@ such as <application>malsync</application>
 
 </sect1>
 
-
 <sect1 id="config-conduits">
-<title>Configuring Conduits</title>
+<title>Conduits Setup</title>
 
 <para>
-The <quote>conduits</quote> heading in the configuration dialog
-collects all the installed conduits available to &kpilot;.
-the conduits can be enabled and disabled
-by clicking on the check box to the left of the conduit's name.
-conduits can have an extensive configuration of
-their own, and may be supplied by third parties.
-The details of the configuration of the
-conduits can be found in the
-<link linkend="conduits">section detailing the default conduits</link>.
+Conduits are programs that interface your &handheld; data with 
+<acronym>PC</acronym> applications or sync your &handheld; data with files
+that can be used by <acronym>PC</acronym> applications. They can be
+written by third parties, to interface your &PalmPilot; to any application
+imaginable.
 </para>
-
 
 <para>
-The default conduits are the following:
+&kpilot;'s configuration dialog allows you to select which conduits
+to run during a &HotSync; and to configure those conduits.
+A window similar to the following will be displayed:
+<screenshot>
+<screeninfo>The Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-conduit.png" format="PNG"/></imageobject>
+<textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Conduit Setup Dialog</para></caption>
+</mediaobject>
+</screenshot>
+Check the box to the left of the conduit name to make it active, uncheck to make
+it inactive or click on the conduit name to configure it.
 </para>
-
 
 <variablelist>
-	<varlistentry>
-	<term><guilabel>System Information</guilabel></term>
-	<listitem><para>
-	Writes information about your &handheld;, (such as OS version,
-	RAM available, and the list of databases) to a file. Useful mostly for
-	debugging purposes.
-	</para></listitem>
-	</varlistentry>
+	
+<varlistentry>
+<term><guilabel>KNotes / Memos</guilabel></term>
+<listitem><para>
+Synchronizes the Memo Pad application with &knotes;.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>Time Synchronization</guilabel></term>
-	<listitem><para>
-	Sets the &handheld;'s time to that of the desktop machine.
-	Useful for keeping the clock of the &handheld; accurate.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>Time Synchronization</guilabel></term>
+<listitem><para>
+Sets the &handheld;'s time to that of the desktop machine.
+Useful for keeping the clock of the &handheld; accurate.
+</para></listitem>
+</varlistentry>
+       
+<varlistentry>
+<term><guilabel>Calendar (KOrganizer)</guilabel></term>
+<listitem><para>
+Synchronizes the Datebook application with &korganizer;.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>KNotes / Memos</guilabel></term>
-	<listitem><para>
-	Synchronizes the Memo Pad application with &knotes;.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>Palm DOC</guilabel></term>
+<listitem><para>
+Automatically converts and installs text files in the &PalmPilot;
+DOC format, so you can read the text files with most DOC-capable
+applications on the &handheld;.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>Calendar (KOrganizer)</guilabel></term>
-	<listitem><para>
-	Synchronizes the Datebook application with &korganizer;.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>Addressbook</guilabel></term>
+<listitem><para>
+Synchronizes the Address application with &kaddressbook;.
+</para></listitem>
+</varlistentry>
+       
+<varlistentry>
+<term><guilabel>System Information</guilabel></term>
+<listitem><para>
+Writes information about your &handheld;, (such as OS version,
+RAM available, and the list of databases) to a file. Useful mostly for
+debugging purposes.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>ToDo's (KOrganizer)</guilabel></term>
-	<listitem><para>
-	Synchronizes the Todo list application with &korganizer;.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>ToDo's (KOrganizer)</guilabel></term>
+<listitem><para>
+Synchronizes the Todo list application with &korganizer;.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>Addressbook</guilabel></term>
-	<listitem><para>
-	Synchronizes the Address application with &kaddressbook;.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>MAL (AvantGo) Conduit</guilabel></term>
+<listitem><para>
+Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
+offers general content (news, guides, stock quotes, etc...) in a format that is
+suitable for a &handheld;. To use this conduit, you need to register, subscribe
+the channels you select and install the &AvantGo; software on your &handheld;.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>Mail</guilabel></term>
-	<listitem><para>
-	Sends mail written on the &handheld; through &kmail;.
-	There is no provision for receiving mail, however.
-	</para></listitem>
-	</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>Palm DOC</guilabel></term>
-	<listitem><para>
-	Automatically converts and installs text files in the &PalmPilot;
-	DOC format, so you can read the text files with most DOC-capable
-	applications on the &handheld;.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>Mail</guilabel></term>
+<listitem><para>
+Sends mail written on the &handheld; through &kmail;.
+There is no provision for receiving mail, however.
+</para></listitem>
+</varlistentry>
 
-	<varlistentry>
-	<term><guilabel>Perl</guilabel></term>
-	<term><guilabel>Python</guilabel></term>
-	<term><guilabel>NULL</guilabel></term>
-	<listitem><para>
-	These conduits are intended as a programming demonstration,
-	and serve no practical purpose during a &HotSync;.
-	They are not normally listed, but you may see them on some systems.
-	</para></listitem>
-	</varlistentry>
+<varlistentry>
+<term><guilabel>Perl</guilabel></term>
+<term><guilabel>Python</guilabel></term>
+<term><guilabel>NULL</guilabel></term>
+<listitem><para>
+These conduits are intended as a programming demonstration,
+and serve no practical purpose during a &HotSync;.
+They are not normally listed, but you may see them on some systems.
+</para></listitem>
+</varlistentry>
 
 </variablelist>
 
+<sect2 id="popmail-cond">
+<title>Mail Conduit Setup</title>
+
+<para>
+This conduit allows you to send and receive email.
+The configuration of the Mail Conduit
+is fairly complex.
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
+<textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
+</mediaobject>
+</screenshot>
+There are two tabs in the setup dialog for
+the Mail Conduit,
+one for
+<link linkend="popmail-cond-send">Sending mail</link>
+and one for
+<link linkend="popmail-cond-recv">Receiving mail</link>.
+</para>
+
+<sect3 id="popmail-cond-send">
+<title>Mail Conduit Setup</title>
+
+<para>
+Depending on which send method you choose,
+different fields will be activated in the remainder of the
+tab, allowing you to enter the necessary information.
+</para>
+
+<para>
+Your email address can be entered in the <guilabel>Email
+Address</guilabel> field.  This is the email address that goes in the
+<quote>From:</quote> line in outgoing mail.  If you enter a file name in
+the <guilabel>Signature File</guilabel> field then that file will be
+appended to each outgoing mail as a signature.
+</para>
+
+<para>
+The configuration of the &Sendmail; method of sending is fairly
+straightforward.  Check the path to your installation of &Sendmail;, for
+example by typing <userinput><command>which
+sendmail</command></userinput> in a &konsole; window.  The options to
+&Sendmail; should not need to be changed, but you can if you like.
+</para>
+
+<warning>
+<para>
+&Sendmail; is not provided with destination addresses on the command
+line, so you must specify the <option>-t</option>.  If you are using a
+non-&Sendmail; <acronym>MTA</acronym> like
+<application>Postfix</application> then the equivalent <quote>extract
+recipients from message headers</quote> option must be given.
+</para>
+</warning>
+
+<para>
+To use <acronym>SMTP</acronym> sending you need to specify
+the name of the machine which runs your
+<acronym>SMTP</acronym> server, and the port number to
+connect to.
+The default port number of 25 is almost always correct.
+</para>
+<note>
+<para>
+&kpilot; does not use the <acronym>SMTP</acronym>
+configuration of the <acronym>SMTP</acronym> IOSlave.
+This may change in a future version of &kpilot;.
+</para>
+</note>
+
+
+<para>
+When sending mail through &kmail;, &kpilot; automatically places it in
+your &kmail; outbox.  &kmail; saves mail in the outbox until you request
+that those pieces of mail are <emphasis>really</emphasis> sent.  Check
+the <guilabel>Send mail through &kmail; immediately</guilabel> to let
+the Mail Conduit tell &kmail; to send all mail from the outbox as soon
+as it it done Hotsynchronization.  This has the side effect of also sending any
+other pieces of mail that may be in your outbox.
+</para>
+
+</sect3>
+
+<sect3 id="popmail-cond-recv">
+<title>Receiving Mail</title>
+
+
+<para>
+Depending on which send method you choose, different fields will be
+activated in the remainder of the tab, allowing you to enter the
+necessary information.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="vcal-cond">
+<title>Calendar Conduit Setup</title>
+
+<para>
+This conduit will synchronize your &PalmPilot; with &korganizer;.  The
+conduit needs two pieces of information: the filename of the calendar
+file (this will usually be a file that ends in <literal
+role="extension">.vcs</literal> under <filename
+class="directory">.kde/share/apps/korganizer/</filename> under your home
+folder) and whether or not to ask before changing data in that
+calendar file.
+</para>
+
+<screenshot>
+<screeninfo>The Calendar Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-vcal.png" format="PNG"/></imageobject>
+<textobject><phrase>Calendar Conduit Setup</phrase></textobject>
+<caption><para>Calendar Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+You can usually leave
+<guilabel>Prompt before changing data</guilabel>
+off.
+</para>
+
+</sect2>
+
+<sect2 id="todo-cond">
+<title>Todo Conduit Setup</title>
+
+<para>
+This conduit synchronizes with &korganizer;'s todo list.  The
+configuration dialog looks exactly the same as the configuration dialog
+for the <link linkend="vcal-cond">Calendar Conduit</link>.
+</para>
+
+</sect2>
+
+<sect2 id="conduit-knotes">
+<title>&knotes; Conduit Setup</title>
+
+<para>
+The &knotes; Conduit is a partial replacement for the built-in <link
+linkend="builtin">memo application</link>.  It keeps the notes you write
+with &knotes; synchronized with the memos you write on your &PalmPilot;.
+</para>
+
+<para>
+Setting up the &knotes; conduit is very simple,
+since there is only one configuration option.
+<screenshot>
+<screeninfo>&knotes; Conduit Setup</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-knotes.png" format="PNG"/></imageobject>
+<textobject><phrase>&knotes; Conduit Setup</phrase></textobject>
+<caption><para>&knotes; Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2 id="conduit-kaddressbook">
+<title>&kaddressbook; Conduit Setup</title>
+
+<para>
+The &kaddressbook; conduit allows you to synchronize the
+&PalmPilot; address book with your
+&kde; address book.
+</para>
+
+</sect2>
+
+<sect2 id="conduit-null">
+<title>NULL Conduit Setup</title>
+
+<para>
+The NULL conduit is included as a programming example and
+has no practical function whatsoever.
+</para>
+</sect2>
+
 </sect1>
+
 
 </chapter>
