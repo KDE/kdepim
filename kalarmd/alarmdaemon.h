@@ -30,11 +30,7 @@
 #include "alarmdaemoniface.h"
 #include "calclient.h"
 #include "adcalendar.h"
-#include "clientiteration.h"
-#include "calendariteration.h"
 #include "adconfigdatarw.h"
-
-using namespace KCal;
 
 class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmDaemonIface
 {
@@ -43,9 +39,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     AlarmDaemon(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmDaemon();
 
-    ClientIteration   getClientIteration()    { return ClientIteration(mClients); }
-    CalendarIteration getCalendarIteration()  { return CalendarIteration(mCalendars); }
-    int               calendarCount() const   { return mCalendars.count(); }
+    int     calendarCount() const   { return mCalendars.count(); }
 
   private slots:
     void    checkAlarmsSlot();
@@ -88,6 +82,14 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
       DISABLE_CALENDAR,        // calendar is available but not being monitored
       CALENDAR_UNAVAILABLE     // calendar is unavailable for monitoring
     };
+    struct GuiInfo
+    {
+      GuiInfo()  { }
+      explicit GuiInfo(const QString &dcopObj) : dcopObject(dcopObj) { }
+      QString  dcopObject;     // DCOP object name
+    };
+    typedef QMap<QString, GuiInfo> GuiMap;  // maps GUI client names against their data
+
     void        enableCal_(const QString& urlString, bool enable);
     void        addCal_(const QString& appname, const QString& urlString, bool msgCal);
     void        reloadCal_(const QString& appname, const QString& urlString, bool msgCal);
@@ -97,19 +99,17 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        checkAlarms();
     void        checkAlarms(ADCalendar*);
     void        checkAlarms(const QString& appName);
+    void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
+    void        notifyPendingEvents(const QString& appname);
     bool        notifyEvent(const ADCalendar*, const QString& eventID);
     void        notifyGuiCalStatus(const ADCalendar*);
     void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null,
                           const QString &appname=QString::null);
-    void        writeConfigClientGui(const QString& appName, const QString& dcopObject);
+//    void        writeConfigClientGui(const QString& appName, const QString& dcopObject);
+    const GuiInfo* getGuiInfo(const QString &appName) const;
     void        addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
     bool        isSessionStarted();
     void        setTimerStatus();
-
-    void checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
-    void notifyPendingEvents(const QString& appname);
-
-    typedef QMap<QString, QString> GuiMap;  // maps GUI client names against DCOP object names
 
     GuiMap            mGuis;                // client GUI application names and data
     QTimer*           mAlarmTimer;

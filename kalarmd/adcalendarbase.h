@@ -1,9 +1,8 @@
 /*
-    Calendar and client access for KDE Alarm Daemon.
+    Calendar access for KDE Alarm Daemon and KDE Alarm Daemon GUI.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
-    Based on the original, (c) 1998, 1999 Preston Brown
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +22,8 @@
 #ifndef ADCALENDARBASE_H
 #define ADCALENDARBASE_H
 
+#include "kalarmd.h"
+
 #include <libkcal/calendarlocal.h>
 
 using namespace KCal;
@@ -34,7 +35,6 @@ class ADCalendarBase : public CalendarLocal
     enum Type { KORGANIZER = 0, KALARM = 1 };
     ADCalendarBase(const QString& url, const QString& appname, Type);
     ~ADCalendarBase()  { }
-//    virtual ADCalendarBase* create(const QString& url, const QString& appname, Type) = 0;
     const QString&  urlString() const   { return urlString_; }
     const QString&  appName() const     { return appName_; }
     bool            loaded() const      { return loaded_; }

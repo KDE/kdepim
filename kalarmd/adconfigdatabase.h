@@ -23,7 +23,11 @@
 #ifndef ADCONFIGDATABASE_H
 #define ADCONFIGDATABASE_H
 
-#include "adcalendar.h"
+#ifdef KALARMD
+  #include "adcalendar.h"
+#else
+  #include "adcalendar_gui.h"
+#endif
 #include "calclient.h"
 
 // Provides read-only access to the Alarm Daemon config data files

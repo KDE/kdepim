@@ -19,11 +19,11 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#include "kalarmdgui.h"
 
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <qtimer.h>
 #include <qdatetime.h>
 
 #include <kapp.h>
@@ -43,10 +43,15 @@
 #include "daemongui.h"
 #include "daemongui.moc"
 
+const int DAEMON_TIMER_INTERVAL = 5;    // seconds between checks on daemon status
+
 
 AlarmGui::AlarmGui(QObject *parent, const char *name)
   : QObject(parent, name),
     DCOPObject(name),
+    mSuspendTimer(this),
+    mDaemonStatusTimer(this),
+    mDaemonStatusTimerCount(0),
     mRevisingAlarmDialog(false),
     mDrawAlarmDialog(false)
 {
@@ -59,17 +64,15 @@ AlarmGui::AlarmGui(QObject *parent, const char *name)
   checkDefaultClient();
 
   mDocker = new AlarmDockWindow(*this);
-//  mDocker = new AlarmDockWindow(*this, this, mDefaultClient);
-  setAutostart(true);    // switch autostart on whenever the program is run
   mDocker->show();
+
+  connect(&mDaemonStatusTimer, SIGNAL(timeout()), SLOT(checkDaemonRunning()));
+  mDaemonStatusTimer.start(DAEMON_TIMER_INTERVAL*1000);     // check regularly if daemon is running
 
   mAlarmDialog = new AlarmDialog;
   connect(mAlarmDialog, SIGNAL(suspendSignal(int)), SLOT(suspend(int)));
 
-  // set up the alarm timer
-  mSuspendTimer = new QTimer(this);
-
-//  setToolTipStartTimer();
+  setToolTip();
 
   registerWithDaemon();
 }
@@ -77,11 +80,6 @@ AlarmGui::AlarmGui(QObject *parent, const char *name)
 AlarmGui::~AlarmGui()
 {
   delete mDocker;
-}
-
-bool AlarmGui::isDaemonRunning()
-{
-  return kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>("kalarmd"));
 }
 
 /*
@@ -205,11 +203,12 @@ void AlarmGui::handleEvent(const QString& calendarURL, const QString& eventID)
 
 void AlarmGui::registerWithDaemon()
 {
+  kdDebug()<<"AlarmGui::registerWithDaemon()\n";
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
-  arg << QString(kapp->aboutData()->appName()) << kapp->aboutData()->programName() << DCOP_OBJECT_NAME << (Q_INT8)1 << (Q_INT8)0;
-  if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerApp(QString,QString,QString,bool,bool)", data))
-     kdDebug() << "KAlarmApp::startDaemon(): registerApp dcop send failed" << endl;
+  arg << QString(kapp->aboutData()->appName()) << QString(DCOP_OBJECT_NAME);
+  if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerGui(QString,QString)", data))
+     kdDebug() << "KAlarmApp::startDaemon(): registerGui dcop send failed" << endl;
 }
 
 // Read the Alarm Daemon's config file
@@ -220,6 +219,7 @@ void AlarmGui::readDaemonConfig()
   KSimpleConfig kalarmdConfig(mDaemonDataFile, true);
   kalarmdConfig.setGroup("General");
   mAutostartDaemon = kalarmdConfig.readBoolEntry("Autostart", true);
+kdDebug()<<"AlarmGui::readDaemonConfig(): "<<mDaemonDataFile<<" auto="<<(int)mAutostartDaemon<<endl;
 }
 
 /*
@@ -258,12 +258,48 @@ void AlarmGui::setDefaultClient(int menuIndex)
   }
 }
 
+/* Check whether the alarm daemon is currently running */
+bool AlarmGui::isDaemonRunning(bool updateDockWindow)
+{
+  bool newstatus = kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>("kalarmd"));
+  if (!updateDockWindow)
+    return newstatus;
+  if (newstatus != mDaemonRunning)
+  {
+//kdDebug() << "AlarmGui::isDaemonRunning(): "<<(int)mDaemonRunning<<"->"<<(int)newstatus<<endl;
+    mDaemonRunning = newstatus;
+    mDocker->setDaemonStatus(newstatus);
+    mDaemonStatusTimer.changeInterval(DAEMON_TIMER_INTERVAL*1000);
+    mDaemonStatusTimerCount = 0;
+    if (newstatus)
+      registerWithDaemon();   // the alarm daemon has started up, so register with it
+  }
+  return mDaemonRunning;
+}
+
+/*
+ * Called by a timer to check whether the daemon is running.
+ */
+void AlarmGui::checkDaemonRunning()
+{
+  isDaemonRunning();
+  if (mDaemonStatusTimerCount > 0  &&  --mDaemonStatusTimerCount <= 0)   // limit how long we check at fast rate
+    mDaemonStatusTimer.changeInterval(DAEMON_TIMER_INTERVAL*1000);
+}
+
+/* Starts checking at a faster rate whether the daemon is running */
+void AlarmGui::setFastDaemonCheck()
+{
+  mDaemonStatusTimer.start(500);     // check new status every half second
+  mDaemonStatusTimerCount = 20;      // don't check at this rate for more than 10 seconds
+}
+
 /* Schedule the alarm dialog for redisplay after a specified number of minutes */
 void AlarmGui::suspend(int minutes)
 {
 //  kdDebug() << "AlarmGui::suspend() " << minutes << " minutes" << endl;
-  connect(mSuspendTimer, SIGNAL(timeout()), SLOT(showAlarmDialog()));
-  mSuspendTimer->start(1000*60*minutes, true);
+  connect(&mSuspendTimer, SIGNAL(timeout()), SLOT(showAlarmDialog()));
+  mSuspendTimer.start(1000*60*minutes, true);
 }
 
 /* Display the alarm dialog (showing KOrganiser-type events) */
@@ -295,7 +331,7 @@ void AlarmGui::removeDialogEvents(const Calendar* calendar)
   else
   {
     // The dialog is now empty, so tidy up
-    mSuspendTimer->stop();
+    mSuspendTimer.stop();
     mRevisingAlarmDialog = false;
     mDrawAlarmDialog = false;
   }

@@ -1,7 +1,7 @@
 /*
-    This file is part of the KDE alarm daemon GUI.
-    Copyright (c) 1997-1999 Preston Brown
-    Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
+    Calendar access for KDE Alarm Daemon GUI.
+
+    This file is part of the GUI interface for the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
 
     This program is free software; you can redistribute it and/or modify
@@ -19,40 +19,21 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// $Id$
-#include "kalarmdgui.h"
-
-#include <qstring.h>
-
-#include <kcmdlineargs.h>
-#include <kdebug.h>
-
-#include "daemongui.h"
-
-#include "guiapp.h"
-#include "guiapp.moc"
+#include "adcalendar_gui.h"
 
 
-AlarmGuiApp::AlarmGuiApp() :
-  KUniqueApplication(),
-  mAdg(0L)
+ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
+  : ADCalendarBase(url, appname, type),
+    available_(false),
+    enabled_(false)
 {
+  if (type == KORGANIZER)
+    loadFile();
+  showDialogs(FALSE);
 }
 
-AlarmGuiApp::~AlarmGuiApp()
+// A "virtual constructor"
+ADCalendar* ADCalendar::create(const QString& url, const QString& appname, Type type)
 {
-}
-
-int AlarmGuiApp::newInstance()
-{
-  kdDebug() << "kalarmdgui:AlarmGuiApp::newInstance()" << endl;
-
-  // Check if we already have a running alarm daemon widget
-  if (mAdg) return 0;
-
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-  mAdg = new AlarmGui(0L, DCOP_OBJECT_NAME);
-
-  return 0;
+  return new ADCalendar(url, appname, type);
 }

@@ -1,9 +1,8 @@
 /*
-    KDE Alarm Daemon.
+    Calendar access for KDE Alarm Daemon.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
-    Based on the original, (c) 1998, 1999 Preston Brown
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

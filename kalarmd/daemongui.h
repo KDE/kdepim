@@ -25,6 +25,7 @@
 
 #include <qfont.h>
 #include <qstrlist.h>
+#include <qtimer.h>
 
 #include <kaboutdata.h>
 
@@ -32,15 +33,12 @@
 
 #include "daemonguiiface.h"
 #include "calclient.h"
-#include "adcalendarbase.h"
+#include "adcalendar_gui.h"
 #include "adconfigdatabase.h"
 #include "clientiteration.h"
-#include "calendariteration.h"
 
 class AlarmDialog;
 class AlarmDockWindow;
-
-using namespace KCal;
 
 #define DCOP_OBJECT_NAME   "dcop"
 #define DAEMON_APP_NAME    "kalarmd"
@@ -56,41 +54,6 @@ class ADConfigData : public ADConfigDataBase
                                       { readConfigData(false, deletedClients, deletedCalendars); }
 };
 
-/*
-// Alarm Daemon calendar access
-class ADCalendar : public ADCalendarBase
-{
-  public:
-    ADCalendar(const QString& url, const QString& appname, Type);
-    ~ADCalendar()  { }
-    virtual ADCalendarBase* create(const QString& url, const QString& appname, Type);
-    bool           enabled() const     { return enabled_; }
-    bool           available() const   { return available_; }
-    bool           loadFile()          { return loadFile_(kapp->aboutData()->programName()); }
-
-    bool           available_;     // calendar is available for monitoring
-    bool           enabled_;       // monitoring is currently manually enabled
-};
-
-typedef QPtrList<ADCalendar> CalendarList;
-
-// The CalendarIteration class gives secure public access to AlarmGui::mCalendars
-class CalendarIteration
-{
-  public:
-    CalendarIteration(CalendarList& c)  : calendars(c) { calendar = calendars.first(); }
-    bool           ok() const           { return !!calendar; }
-    bool           next()               { return !!(calendar = calendars.next()); }
-    bool           available() const    { return calendar->available(); }
-    bool           enabled() const      { return calendar->enabled(); }
-    void           enabled(bool tf)     { calendar->enabled_ = tf; }
-    const QString& urlString() const    { return calendar->urlString(); }
-  private:
-    CalendarList&  calendars;
-    ADCalendar*    calendar;
-};
-*/
-
 
 class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIface
 {
@@ -99,20 +62,21 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     explicit AlarmGui(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmGui();
 
-    static bool       isDaemonRunning();
+    bool              isDaemonRunning(bool updateDockWindow = true);
     ClientIteration   getClientIteration()     { return ClientIteration(mClients); }
-    CalendarIteration getCalendarIteration()   { return CalendarIteration(mCalendars); }
+    ADCalendarIteration getCalendarIteration() { return ADCalendarIteration(mCalendars); }
     int               calendarCount() const    { return mCalendars.count(); }
     bool              autostartDaemon() const  { return mAutostartDaemon; }
     const QString&    defaultClient() const    { return mDefaultClient; }
     void              setDefaultClient(int menuIndex);
-    void              setAutostart(bool on) {}
+    void              setFastDaemonCheck();
     void              readDaemonConfig();
 
   public slots:
     void              suspend(int minutes);
   private slots:
     void              showAlarmDialog();
+    void              checkDaemonRunning();
 
   private:
     // DCOP interface
@@ -129,10 +93,13 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     CalendarList      mCalendars;           // the calendars being monitored
     AlarmDockWindow*  mDocker;              // the panel icon
     AlarmDialog*      mAlarmDialog;
-    QTimer*           mSuspendTimer;
+    QTimer            mSuspendTimer;
     QTimer*           mSessionStartTimer;   // timer waiting for session startup to complete
+    QTimer            mDaemonStatusTimer;   // timer for checking daemon status
+    int               mDaemonStatusTimerCount; // countdown for fast status checking
     QString           mDaemonDataFile;      // path of daemon's config file
     QString           mDefaultClient;       // daemon client application to call on left click
+    bool              mDaemonRunning;       // whether the alarm daemon is currently running
     bool              mAutostartDaemon;     // alarm daemon autostart status
     bool              mRevisingAlarmDialog; // true while mAlarmDialog is being revised
     bool              mDrawAlarmDialog;     // true to show mAlarmDialog after revision is complete

@@ -18,6 +18,7 @@
 */
 
 // $Id$
+#include "kalarmdgui.h"
 
 #include <klocale.h>
 

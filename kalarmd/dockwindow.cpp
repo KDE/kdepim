@@ -39,21 +39,21 @@
 #include "dockwindow.h"
 #include "dockwindow.moc"
 
-AlarmDockWindow::AlarmDockWindow(AlarmGui& ad, QWidget *parent, const char *name)
+
+AlarmDockWindow::AlarmDockWindow(AlarmGui& ag, QWidget *parent, const char *name)
   : KSystemTray(parent, name),
-    alarmDaemon(ad),
+    alarmGui(ag),
     nClientIds(0L),
     nCalendarIds(0L)
 {
   // Set up GUI icons
   KGlobal::iconLoader()->addAppDir(kapp->aboutData()->appName());
-  dPixmap1 = BarIcon("kalarmdgui");
-  dPixmap2 = BarIcon("kalarmdgui_disabled");
+  dPixmapEnabled  = BarIcon("kalarmdgui");
+  dPixmapDisabled = BarIcon("kalarmdgui_disabled");
 
-  if (dPixmap1.isNull() || dPixmap2.isNull())
+  if (dPixmapEnabled.isNull() || dPixmapDisabled.isNull())
     KMessageBox::sorry(this, i18n("Can't load docking tray icon!"),
                              i18n("%1 Error").arg(kapp->aboutData()->programName()));
-  setPixmap(dPixmap1);
 
   // Read the GUI autostart status from the config file
   KConfig* config = kapp->config();
@@ -67,12 +67,16 @@ AlarmDockWindow::AlarmDockWindow(AlarmGui& ad, QWidget *parent, const char *name
                                                 this, SLOT(toggleDaemonAutostart()));
   autostartGuiId = contextMenu()->insertItem(i18n("Display this tray icon at login"),
                                                 this, SLOT(toggleGuiAutostart()));
-  contextMenu()->setItemChecked(alarmsEnabledId, true);
+  contextMenu()->setItemChecked(autostartDaemonId, alarmGui.autostartDaemon());
   contextMenu()->setItemChecked(autostartGuiId, autostartGui);
-  contextMenu()->setItemChecked(autostartDaemonId, alarmDaemon.autostartDaemon());
+  setPixmap(dPixmapEnabled);
+  contextMenu()->setItemChecked(alarmsEnabledId, true);
+
   clientIndex = contextMenu()->count();
   updateMenuClients();
   updateMenuCalendars(true);
+
+  setDaemonStatus(alarmGui.isDaemonRunning(false));
 
   addToolTip(QString());
 }
@@ -94,18 +98,18 @@ void AlarmDockWindow::updateMenuClients()
     for ( ;  nClientIds > 0;  --nClientIds)
       menu->removeItemAt(clientIndex);
   }
-  if (alarmDaemon.clientCount() > 1)
+  if (alarmGui.clientCount() > 1)
   {
     // More than one client is installed, so provide a choice
     // as to which program to activate when the panel icon is clicked.
     int index = clientIndex;
     menu->insertSeparator(index++);
-    for (ClientIteration client = alarmDaemon.getClientIteration();  client.ok();  client.next())
+    for (ClientIteration client = alarmGui.getClientIteration();  client.ok();  client.next())
     {
       int id = menu->insertItem(i18n("Click starts %1").arg(client.title()),
                                 this, SLOT(selectClient(int)), 0, -1, index);
       menu->setItemParameter(id, index);    // set parameter for selectClient()
-      menu->setItemChecked(id, (client.appName() == alarmDaemon.defaultClient()));
+      menu->setItemChecked(id, (client.appName() == alarmGui.defaultClient()));
       client.menuIndex(index++);
     }
     nClientIds = index - clientIndex;
@@ -119,7 +123,7 @@ void AlarmDockWindow::updateMenuClients()
  */
 void AlarmDockWindow::updateMenuCalendars(bool recreate)
 {
-  bool enable = AlarmGui::isDaemonRunning();
+  bool enable = alarmGui.isDaemonRunning(false);
   KPopupMenu* menu = contextMenu();
   int calendarIndex = clientIndex + nClientIds;   // index to separator before calendars
   if (recreate)
@@ -131,11 +135,11 @@ void AlarmDockWindow::updateMenuCalendars(bool recreate)
       for ( ;  nCalendarIds > 0;  --nCalendarIds)
         menu->removeItemAt(calendarIndex);
     }
-    if (alarmDaemon.calendarCount() > 0)
+    if (alarmGui.calendarCount() > 0)
     {
       int index = calendarIndex;
       menu->insertSeparator(index++);
-      for (CalendarIteration cal = alarmDaemon.getCalendarIteration();  cal.ok();  cal.next())
+      for (ADCalendarIteration cal = alarmGui.getCalendarIteration();  cal.ok();  cal.next())
       {
         int id = menu->insertItem(KURL(cal.urlString()).prettyURL(), this,
                                        SLOT(selectCal(int)), 0, -1, index);
@@ -150,7 +154,7 @@ void AlarmDockWindow::updateMenuCalendars(bool recreate)
   {
     // Update the state of the existing menu items
     int index = calendarIndex;
-    for (CalendarIteration cal = alarmDaemon.getCalendarIteration();  cal.ok();  cal.next())
+    for (ADCalendarIteration cal = alarmGui.getCalendarIteration();  cal.ok();  cal.next())
     {
       int id = menu->idAt(++index);
       menu->setItemEnabled(id, enable && cal.available());
@@ -169,14 +173,14 @@ void AlarmDockWindow::toggleAlarmsEnabled()
   if (newstate)
   {
     // Start monitoring alarms - start the alarm daemon
-    if (!AlarmGui::isDaemonRunning())
+    if (!alarmGui.isDaemonRunning())
     {
       // The daemon is not running
       QString execStr = locate("exe", DAEMON_APP_NAME);
       if (execStr.isEmpty())
       {
         KMessageBox::error(this, i18n("Alarm Daemon not found"), i18n("%1 Error").arg(kapp->aboutData()->programName()));
-        kdError() << "AlarmDaemon::notifyEvent(): kalarmd not found" << endl;
+        kdError() << "AlarmDockWindow::toggleAlarmsEnabled(): kalarmd not found" << endl;
         return;
       }
       system(execStr.latin1());
@@ -191,9 +195,23 @@ void AlarmDockWindow::toggleAlarmsEnabled()
     if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "quit()", data))
       kdDebug() << "AlarmDockWindow::toggleAlarmsEnabled(): quit dcop send failed\n";
   }
-  setPixmap(newstate ? dPixmap1 : dPixmap2);
-  contextMenu()->setItemChecked(alarmsEnabledId, AlarmGui::isDaemonRunning());
-  contextMenuAboutToShow(contextMenu());
+  alarmGui.setFastDaemonCheck();
+}
+
+/*
+ * Called by a timer after the Alarms Enabled context menu item is selected,
+ * to update the GUI status once the daemon has responded to the command.
+ */
+void AlarmDockWindow::setDaemonStatus(bool newstatus)
+{
+  bool oldstatus = contextMenu()->isItemChecked(alarmsEnabledId);
+kdDebug() << "AlarmDockWindow::setDaemonStatus(): "<<(int)oldstatus<<"->"<<(int)newstatus<<endl;
+  if (newstatus != oldstatus)
+  {
+    setPixmap(newstatus ? dPixmapEnabled : dPixmapDisabled);
+    contextMenu()->setItemChecked(alarmsEnabledId, newstatus);
+    contextMenuAboutToShow(contextMenu());
+  }
 }
 
 /*
@@ -209,7 +227,7 @@ void AlarmDockWindow::selectClient(int menuIndex)
     for (int i = clientIndex;  i < clientIndex + nClientIds;  ++i)
       menu->setItemChecked(menu->idAt(i), (i == menuIndex));
 
-    alarmDaemon.setDefaultClient(menuIndex);
+    alarmGui.setDefaultClient(menuIndex);
   }
 }
 
@@ -226,7 +244,7 @@ void AlarmDockWindow::selectCal(int menuIndex)
   bool newstate = !menu->isItemChecked(id);
   kdDebug() << "AlarmDockWindow::selectCal(): "<< menuIndex << ": id=" << id << " newstate=" << (int)newstate << endl;
   int index = clientIndex + nClientIds;
-  for (CalendarIteration cal = alarmDaemon.getCalendarIteration();  cal.ok();  cal.next())
+  for (ADCalendarIteration cal = alarmGui.getCalendarIteration();  cal.ok();  cal.next())
   {
     if (++index == menuIndex)
     {
@@ -262,7 +280,7 @@ void AlarmDockWindow::toggleDaemonAutostart()
 {
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
-  arg << (Q_INT8)!alarmDaemon.autostartDaemon();
+  arg << (Q_INT8)!alarmGui.autostartDaemon();
   if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "enableAutoStart(bool)", data))
     kdDebug() << "AlarmDockWindow::toggleDaemonAutostart(): enableAutoStart dcop send failed\n";
   contextMenuAboutToShow(contextMenu());
@@ -275,7 +293,7 @@ void AlarmDockWindow::toggleDaemonAutostart()
  */
 void AlarmDockWindow::contextMenuAboutToShow(KPopupMenu* menu)
 {
-  menu->setItemEnabled(autostartDaemonId, AlarmGui::isDaemonRunning());
+  menu->setItemEnabled(autostartDaemonId, alarmGui.isDaemonRunning());
   updateMenuCalendars(false);
 }
 
@@ -288,7 +306,7 @@ void AlarmDockWindow::mousePressEvent(QMouseEvent* e)
   {
     // Left click: start up the default client application
     KProcess proc;
-    proc << alarmDaemon.defaultClient();
+    proc << alarmGui.defaultClient();
     proc.start(KProcess::DontCare);
   }
   else
@@ -303,7 +321,7 @@ void AlarmDockWindow::closeEvent(QCloseEvent*)
 void AlarmDockWindow::addToolTip(const QString& filename)
 {
   QString apps;
-  for (ClientIteration client = alarmDaemon.getClientIteration();  client.ok();  client.next())
+  for (ClientIteration client = alarmGui.getClientIteration();  client.ok();  client.next())
   {
     if (!apps.isEmpty())
       apps += '/';

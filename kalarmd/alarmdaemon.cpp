@@ -19,6 +19,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#include "kalarmd.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -253,6 +254,7 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
  */
 void AlarmDaemon::enableAutoStart(bool on)
 {
+  kdDebug() << "AlarmDaemon::enableAutoStart(" << (int)on << ")\n";
   KConfig* config = kapp->config();
   config->setGroup("General");
   config->writeEntry("Autostart", on);
@@ -526,22 +528,15 @@ void AlarmDaemon::setTimerStatus()
  */
 void AlarmDaemon::registerGui(const QString& appName, const QString& dcopObject)
 {
-  kdDebug() << "AlarmDaemon::registerGui(): " << appName << endl;
+  kdDebug() << "AlarmDaemon::registerGui(" << appName << ")\n";
   if (!appName.isEmpty())
   {
-#if TODO_register_gui
     const GuiInfo* g = getGuiInfo(appName);
     if (g)
-    {
-      // The application is already in the GUI list
-      mGui.remove(appName);
-    }
-    mGui.insert(appName, dcopObject);
+      mGuis.remove(appName);   // the application is already in the GUI list
+    mGuis.insert(appName, GuiInfo(dcopObject));
 
-    writeConfigClientsGui(appName, dcopObject);
-
-    ?// send list of alarms to new GUI app??
-#endif
+    writeConfigClientGui(appName, dcopObject);
   }
 }
 
@@ -560,8 +555,6 @@ void AlarmDaemon::notifyGuiCalStatus(const ADCalendar* cal)
  */
 void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, const QString& appName)
 {
-  kdDebug() << "AlarmDaemon::notifyGui()" << endl;
-
   QString changeType;
   switch (change)
   {
@@ -578,22 +571,35 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
       kdError() << "AlarmDaemon::guiNotify(): " << change << endl;
       return;
   }
+  kdDebug() << "AlarmDaemon::notifyGui(" << changeType << ")\n";
 
-#if TODO_iterate_guis
-  for (GuiMap::ConstIterator it = mGuis.begin();  it != mGuis.end();  ++it)
+  for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
   {
-    const QString& dcopObject = g.data();
-    if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key()))
+    const QString& dcopObject = g.data().dcopObject;
+    if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key())))
     {
+kdDebug()<<"AlarmDaemon::notifyGui() sending:"<<g.key()<<" ->"<<g.data().dcopObject<<endl;
       QByteArray data;
       QDataStream arg(data, IO_WriteOnly);
       arg << changeType << calendarURL << appName;
       if (!kapp->dcopClient()->send(static_cast<const char*>(g.key()),
-                                    static_cast<const char*>(g.data()),
+                                    static_cast<const char*>(g.data().dcopObject),
                                     "alarmDaemonUpdate(const QString&,const QString&,const QString&)",
                                     data))
         kdDebug() << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
     }
   }
-#endif
 }
+
+/* Return the GuiInfo structure for the specified GUI application */
+const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QString& appName) const
+{
+  if (!appName.isEmpty())
+  {
+    GuiMap::ConstIterator g = mGuis.find(appName);
+    if (g != mGuis.end())
+      return &g.data();
+  }
+  return 0L;
+}
+

@@ -40,6 +40,7 @@ class AlarmDockWindow : public KSystemTray
     void setDaemonAutostart(bool on)   { contextMenu()->setItemChecked(autostartDaemonId, on); }
     void updateMenuClients();
     void updateMenuCalendars(bool recreate);
+    void setDaemonStatus(bool running);
     void addToolTip(const QString&);
 
   protected:
@@ -55,16 +56,16 @@ class AlarmDockWindow : public KSystemTray
     void selectCal(int menuIndex);
 
   protected:
-    QPixmap    dPixmap1, dPixmap2;
+    QPixmap    dPixmapEnabled, dPixmapDisabled;
     int        alarmsEnabledId;     // alarms enabled item in menu
     int        autostartGuiId;      // GUI autostart item in menu
     int        autostartDaemonId;   // daemon autostart item in menu
 
   private:
     // DCOP interface
-    void            handleEvent(const QString& calendarURL, const QString& eventID);
+    void       handleEvent(const QString& calendarURL, const QString& eventID);
 
-    AlarmGui&  alarmDaemon;
+    AlarmGui&  alarmGui;
     QString    defaultClient;    // default application name
     int        clientIndex;      // menu index to client names separator
     int        nClientIds;       // number of client names + 1 in menu

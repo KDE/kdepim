@@ -3,7 +3,6 @@
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
-    Based on the original, (c) 1998, 1999 Preston Brown
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +46,7 @@ ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
   loadFile();
 }
 
-// A virtual "constructor"
+// A "virtual constructor"
 ADCalendar *ADCalendar::create(const QString& url, const QString& appname, Type type)
 {
   return new ADCalendar(url, appname, type);
