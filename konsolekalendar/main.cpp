@@ -81,7 +81,7 @@ static KCmdLineOptions options[] =
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
   { "all", I18N_NOOP("  View all calendar entries"), 0 },
   { "next", I18N_NOOP("  View next activity in calendar"), 0 },
-  { "show-next <show-next>", I18N_NOOP("  From this day show next # days activities"), 0 },
+  { "show-next <show-next>", I18N_NOOP("  From this day show next # days' activities"), 0 },
   { "uid <uid>", I18N_NOOP("  Event Unique-string identifier"), 0 },
   { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
   { "time <start-time>", I18N_NOOP("  Start from this time [HH:MM:SS]"), 0 },
