@@ -53,7 +53,7 @@ static const char *syncAction_id =
 #include <kconfig.h>
 
 #if KDE_VERSION < 300
-#include <kapp.h>
+#include <kapplication.h>
 #else
 #include <kapplication.h>
 #endif
@@ -254,6 +254,9 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.3  2001/12/29 15:49:22  adridg
+// SyncStack changes
+//
 // Revision 1.2  2001/10/10 13:40:07  cschumac
 // Compile fixes.
 //

@@ -38,7 +38,7 @@ static const char *test_id =
 
 #include <iostream.h>
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -276,6 +276,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.16  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.15.2.2  2002/04/13 11:54:43  adridg
 // Handle --test mode for conduits properly
 //

@@ -40,7 +40,7 @@ static const char *config_id =
 #include <qvbox.h>
 
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 
@@ -117,6 +117,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.8  2001/12/29 15:40:47  adridg
+// Sanity checking and simplification
+//
 // Revision 1.7  2001/10/17 08:46:08  adridg
 // Minor cleanups
 //

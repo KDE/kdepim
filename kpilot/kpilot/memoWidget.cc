@@ -68,7 +68,7 @@ static const char *memowidget_id =
 #include <qlabel.h>
 #endif
 #ifndef _KAPP_H
-#include <kapp.h>
+#include <kapplication.h>
 #endif
 #ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
@@ -756,6 +756,9 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 }
 
 // $Log$
+// Revision 1.45  2002/04/16 18:14:18  adridg
+// David Bishop's XML export patches
+//
 // Revision 1.44  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

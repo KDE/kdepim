@@ -32,11 +32,7 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 
-#if KDE_VERSION < 300
-#include <kapp.h>
-#else
 #include <kapplication.h>
-#endif
 #include <kconfig.h>
 
 #include "abbrowserConduitConfig_base.h"
@@ -116,6 +112,9 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 
 // $Log$
+// Revision 1.3  2002/04/16 18:22:12  adridg
+// Wishlist fix from David B: handle formatted names when syncing
+//
 // Revision 1.2  2001/12/20 22:55:21  adridg
 // Making conduits save their configuration and doing syncs
 //

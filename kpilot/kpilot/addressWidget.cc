@@ -72,7 +72,7 @@ static const char *addresswidget_id =
 #endif
 
 #ifndef _KAPP_H
-#include <kapp.h>
+#include <kapplication.h>
 #endif
 #ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
@@ -763,6 +763,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.49  2002/04/22 19:20:58  binner
+// CVS_SILENT Capitalisation fixes.
+//
 // Revision 1.48  2002/02/11 13:14:40  adridg
 // Compile fix for change to QString createTitle()
 //

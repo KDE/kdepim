@@ -31,11 +31,7 @@
 #include <qmap.h>
 #include <qtimer.h>
 
-#if KDE_VERSION < 300
-#include <kapp.h>
-#else
 #include <kapplication.h>
-#endif
 
 #include <kconfig.h>
 #include <dcopclient.h>
@@ -472,6 +468,9 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.8  2002/02/23 20:57:40  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.7  2002/01/20 22:42:43  adridg
 // CVS_SILENT: Administrative
 //

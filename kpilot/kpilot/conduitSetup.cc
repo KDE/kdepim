@@ -47,7 +47,7 @@
 #include <ksimpleconfig.h>
 #endif
 #ifndef _KAPP_H
-#include <kapp.h>
+#include <kapplication.h>
 #endif
 #ifndef _KPROCESS_H
 #include <kprocess.h>
@@ -614,6 +614,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.32  2002/04/20 13:03:31  binner
+// CVS_SILENT Capitalisation fixes.
+//
 // Revision 1.31  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

@@ -50,7 +50,7 @@
 #endif
 
 #ifndef KDE_VERSION
-#include <kapp.h>
+#include <kapplication.h>
 #endif
 
 #if KDE_VERSION > 289
@@ -204,6 +204,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.10  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.9.2.1  2002/05/09 22:29:33  adridg
 // Various small things not important for the release
 //

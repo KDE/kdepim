@@ -33,11 +33,7 @@
 #include <qmap.h>
 #include <qtimer.h>
 
-#if KDE_VERSION < 300
-#include <kapp.h>
-#else
 #include <kapplication.h>
-#endif
 #include <kconfig.h>
 
 #include "setup_base.h"
@@ -91,6 +87,9 @@ KNotesWidgetSetup::~KNotesWidgetSetup()
 
 
 // $Log$
+// Revision 1.2  2001/12/20 22:55:44  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.1  2001/10/16 21:44:53  adridg
 // Split up some files, added behavior
 //

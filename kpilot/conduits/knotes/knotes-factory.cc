@@ -28,11 +28,7 @@
 
 #include "options.h"
 
-#if KDE_VERSION < 300
-#include <kapp.h>
-#else
 #include <kapplication.h>
-#endif
 #include <kinstance.h>
 #include <kaboutdata.h>
 
@@ -145,6 +141,9 @@ KNotesConduitFactory::~KNotesConduitFactory()
 
 
 // $Log$
+// Revision 1.8  2001/12/20 22:55:44  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.7  2001/10/31 23:46:51  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

@@ -22,11 +22,7 @@
 #include <qmap.h>
 #include <qlist.h>
 
-#if KDE_VERSION < 300
-#include <kapp.h>
-#else
 #include <kapplication.h>
-#endif
 
 #include <pilotAddress.h>
 
@@ -184,6 +180,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.14  2002/04/16 18:22:12  adridg
+// Wishlist fix from David B: handle formatted names when syncing
+//
 // Revision 1.13  2001/12/10 22:10:17  adridg
 // Make the conduit compile, for Danimo, but it may not work
 //

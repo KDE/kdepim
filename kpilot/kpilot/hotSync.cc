@@ -48,7 +48,7 @@ static const char *hotsync_id =
 
 #include <kglobal.h>
 #include <kstddirs.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 #include "pilotUser.h"
 
@@ -475,6 +475,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.15  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.14.2.1  2002/04/04 20:28:28  adridg
 // Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options

@@ -52,11 +52,7 @@ static const char *interactivesync_id =
 #include <kglobal.h>
 #include <kstddirs.h>
 
-#if KDE_VERSION < 300
-#include <kapp.h>
-#else
 #include <kapplication.h>
-#endif
 
 #include "pilotUser.h"
 #include "pilotLocalDatabase.h"
@@ -484,6 +480,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.12  2002/04/20 13:03:31  binner
+// CVS_SILENT Capitalisation fixes.
+//
 // Revision 1.11  2002/02/23 20:51:33  adridg
 // Handle errors to _get_info better.
 //
