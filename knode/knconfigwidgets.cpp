@@ -115,9 +115,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 		     "used to sign your articles.</p></qt>");
   QWhatsThis::add( l, msg );
   QWhatsThis::add( s_igningKey, msg );
-  connect( s_igningKey->dialogButton(), SIGNAL(clicked()), SLOT(slotEmitChanged()) );
-  connect( s_igningKey->eraseButton(), SIGNAL(clicked()), SLOT(slotEmitChanged()) );
-  // FIXME: there is no changed signal for Kgpg::SecretKeyRequester
+  connect( s_igningKey, SIGNAL(changed()), SLOT(slotEmitChanged()) );
 
   b_uttonGroup = new QButtonGroup(this);
   connect( b_uttonGroup, SIGNAL(clicked(int)),

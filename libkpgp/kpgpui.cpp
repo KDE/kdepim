@@ -1229,11 +1229,13 @@ void KeyRequester::slotDialogButtonClicked() {
   }
 
   setKeyIDs( keyRequestHook( pgp ) );
+  emit changed();
 }
 
 void KeyRequester::slotEraseButtonClicked() {
   mKeys.clear();
   mLabel->clear();
+  emit changed();
 }
 
 void KeyRequester::setDialogCaption( const QString & caption ) {
