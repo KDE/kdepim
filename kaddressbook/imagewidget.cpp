@@ -28,7 +28,6 @@
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
-#include <kurllabel.h>
 #include <kurlrequester.h>
 
 #include <qcheckbox.h>
@@ -60,6 +59,7 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
   boxLayout->addWidget( mPhotoUrl, 0, 1 );
   
   mUsePhotoUrl = new QCheckBox( i18n( "Store as URL" ), photoBox );
+  mUsePhotoUrl->setEnabled( false );
   boxLayout->addWidget( mUsePhotoUrl, 1, 1 );
 
   topLayout->addWidget( photoBox, 0, 0 );
@@ -78,6 +78,7 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
   boxLayout->addWidget( mLogoUrl, 0, 1 );
   
   mUseLogoUrl = new QCheckBox( i18n( "Store as URL" ), logoBox );
+  mUseLogoUrl->setEnabled( false );
   boxLayout->addWidget( mUseLogoUrl, 1, 1 );
 
   topLayout->addWidget( logoBox, 1, 0 );
@@ -88,6 +89,8 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
            SLOT( loadPhoto() ) );
   connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
            SIGNAL( changed() ) );
+  connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
+           SLOT( updateGUI() ) );
   connect( mUsePhotoUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
 
@@ -97,6 +100,8 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
            SLOT( loadLogo() ) );
   connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
            SIGNAL( changed() ) );
+  connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
+           SLOT( updateGUI() ) );
   connect( mUseLogoUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
 
@@ -117,7 +122,8 @@ void ImageWidget::setPhoto( const KABC::Picture &photo )
     mUsePhotoUrl->setChecked( false );
   } else {
     mPhotoUrl->setURL( photo.url() );
-    mUsePhotoUrl->setChecked( true );
+    if ( !photo.url().isEmpty() )
+      mUsePhotoUrl->setChecked( true );
     loadPhoto();
   }
 
@@ -132,8 +138,12 @@ KABC::Picture ImageWidget::photo() const
     photo.setUrl( mPhotoUrl->url() );
   else {
     QPixmap *px = mPhotoLabel->pixmap();
-    if ( px )
-      photo.setData( px->convertToImage() );
+    if ( px ) {
+      if ( px->height() > px->width() )
+        photo.setData( px->convertToImage().scaleHeight( 140 ) );
+      else
+        photo.setData( px->convertToImage().scaleWidth( 100 ) );
+    }
   }
 
   return photo;
@@ -149,7 +159,8 @@ void ImageWidget::setLogo( const KABC::Picture &logo )
     mUseLogoUrl->setChecked( false );
   } else {
     mLogoUrl->setURL( logo.url() );
-    mUseLogoUrl->setChecked( true );
+    if ( !logo.url().isEmpty() )
+      mUseLogoUrl->setChecked( true );
     loadLogo();
   }
 
@@ -164,8 +175,12 @@ KABC::Picture ImageWidget::logo() const
     logo.setUrl( mLogoUrl->url() );
   else {
     QPixmap *px = mLogoLabel->pixmap();
-    if ( px )
-      logo.setData( px->convertToImage() );
+    if ( px ) {
+      if ( px->height() > px->width() )
+        logo.setData( px->convertToImage().scaleHeight( 140 ) );
+      else
+        logo.setData( px->convertToImage().scaleWidth( 100 ) );
+    }
   }
 
   return logo;
@@ -179,6 +194,16 @@ void ImageWidget::loadPhoto()
 void ImageWidget::loadLogo()
 {
   mLogoLabel->setPixmap( loadPixmap( mLogoUrl->url() ) );
+}
+
+void ImageWidget::updateGUI()
+{
+  KURLRequester *ptr = (KURLRequester*)sender();
+
+  if ( ptr == mPhotoUrl )
+    mUsePhotoUrl->setEnabled( true );
+  else if ( ptr == mLogoUrl )
+    mUseLogoUrl->setEnabled( true );
 }
 
 QPixmap ImageWidget::loadPixmap( const KURL &url )

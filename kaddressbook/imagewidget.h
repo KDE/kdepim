@@ -68,6 +68,7 @@ class ImageWidget : public QWidget
   private slots:
     void loadPhoto();
     void loadLogo();
+    void updateGUI();
 
   private:
     QPixmap loadPixmap( const KURL &url );
