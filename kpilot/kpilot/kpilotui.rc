@@ -1,0 +1,57 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+
+<kpartgui name="kpilot" version="1">
+<MenuBar>
+  <Menu name="file" noMerge="1"><text>&amp;File</text>
+    <Action name="file_hotsync" />
+    <Action name="file_fastsync" />
+    <Action name="file_backup" />
+    <Action name="file_restore" />
+    <Separator />
+    <Action name="file_quit" />
+  </Menu>
+  <Menu name="vieww" noMerge="1"><text>&amp;View</text>
+    <Action name="view_kpilot" />
+    <Action name="view_memo" />
+    <Action name="view_address" />
+    <Action name="view_files" />
+  </Menu>
+  <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
+    <Action name="options_show_statusbar" />
+    <Action name="options_show_toolbar" />
+    <Separator />
+    <Action name="options_configure_keybinding" />
+    <!-- configure toolbar -->
+    <Action name="options_configure" />
+    <Action name="options_configure_conduits" />
+  </Menu>
+</MenuBar>
+
+<Menu name="rb_popup">
+  <Action name="file_hotsync" />
+  <Action name="file_fastsync" />
+  <Action name="file_backup" />
+  <Action name="file_restore" />
+  <Separator />
+  <Action name="file_quit"/>
+</Menu>
+
+<ToolBar name="mainToolBar"><text>Main Toolbar</text>
+  <Action name="file_hotsync" />
+  <Action name="file_backup" />
+  <Separator />
+  <Action name="file_quit" />
+</ToolBar>
+
+</kpartgui>
+
+
+<!--
+Local Variables:
+mode: xml
+sgml-omittag: nil
+sgml-shorttag: t
+sgml-general-insert-case: lower
+End:
+-->
+
