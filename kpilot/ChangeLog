@@ -1,3 +1,21 @@
+KPilot Developer's notes for june 3rd 2001
+==========================================
+
+2001-05-23  Philipp Hullmann
+
+* kpilot/pilot{Date,Todo}Entry.{h,cc}
+  Many fixes realted to accidental freeing of unallocated memory
+  and some pointer ugliness. Fixes rare crashes on machines where
+  malloc() doesn't zero the memory.
+
+2001-05-25  Adriaan de Groot
+
+* *.cc, options.h
+  Simplified the debugging code, no more #ifdef DEBUG if (debug_level &)
+  stuff, just straightforward DEBUGXXX statements which get optimized
+  aay for free when debugging is turned off.
+
+
 KPilot Developer's notes for may 14th 2001
 ==========================================
 
