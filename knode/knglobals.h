@@ -20,6 +20,8 @@
 #include <kconfig.h>
 #include "resource.h"
 
+#include <kdepimmacros.h>
+
 class KInstance;
 class KNConfigManager;
 class KNNetAccess;
