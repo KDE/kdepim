@@ -166,7 +166,7 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
       if ( email.isEmpty() )
 	continue;
       if ( email.startsWith( "<" ) )
-	item = new QListViewItem( listView, item, i18n("EMail"),
+	item = new QListViewItem( listView, item, i18n("Email"),
 				  email.mid( 1, email.length()-2 ) );
       else
 	item = new QListViewItem( listView, item, i18n("A.k.a."), email );
