@@ -124,7 +124,7 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   lay4->addWidget( _diffTW );
 
   {
-    KWinModule k;
+    KWinModule k(0, KWinModule::INFO_DESKTOP);
     desktopCount = k.numberOfDesktops();
   }
 
