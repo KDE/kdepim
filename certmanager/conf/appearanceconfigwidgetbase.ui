@@ -225,19 +225,19 @@
         <sender>foregroundButton</sender>
         <signal>clicked()</signal>
         <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotforegroundClicked()</slot>
+        <slot>slotForegroundClicked()</slot>
     </connection>
     <connection>
         <sender>backgroundButton</sender>
         <signal>clicked()</signal>
         <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotbackgroundClicked()</slot>
+        <slot>slotBackgroundClicked()</slot>
     </connection>
     <connection>
         <sender>fontButton</sender>
         <signal>clicked()</signal>
         <receiver>AppearanceConfigWidgetBase</receiver>
-        <slot>slotfontClicked()</slot>
+        <slot>slotFontClicked()</slot>
     </connection>
     <connection>
         <sender>categoriesLV</sender>
@@ -263,14 +263,21 @@
         <receiver>AppearanceConfigWidgetBase</receiver>
         <slot>slotDeleteCategory()</slot>
     </connection>
+    <connection>
+        <sender>addCategoryPB</sender>
+        <signal>clicked()</signal>
+        <receiver>AppearanceConfigWidgetBase</receiver>
+        <slot>slotAddCategory()</slot>
+    </connection>
 </connections>
 <slots>
-    <slot access="protected">slotforegroundClicked()</slot>
-    <slot access="protected">slotbackgroundClicked()</slot>
-    <slot access="protected">slotfontClicked()</slot>
+    <slot access="protected">slotForegroundClicked()</slot>
+    <slot access="protected">slotBackgroundClicked()</slot>
+    <slot access="protected">slotFontClicked()</slot>
     <slot access="protected">slotSelectionChanged( QListViewItem * )</slot>
     <slot access="protected">slotCategorySelected( QListViewItem * )</slot>
-    <slot>slotDeleteCategory()</slot>
+    <slot access="protected">slotAddCategory()</slot>
+    <slot access="protected">slotDeleteCategory()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

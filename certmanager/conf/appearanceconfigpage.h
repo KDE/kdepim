@@ -54,8 +54,7 @@ private slots:
   void slotChanged();
 
 private:
- Kleo::AppearanceConfigWidget* mWidget;
-
+  Kleo::AppearanceConfigWidget* mWidget;
 };
 
 #endif // _APPEARANCE_CONFIGURE_DIALOG_PRIVATE_H_

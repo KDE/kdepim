@@ -76,10 +76,10 @@ public:
     setText( 0, mName );
   }
 
-  const QString& categoryName() const { return mName; }
-  QColor getForegroundColor() { return mForegroundColor; }
-  QColor getBackgroundColor() { return mBackgroundColor; }
-  QFont  getFont() { return mFont; }
+  QString categoryName() const { return mName; }
+  QColor getForegroundColor() const { return mForegroundColor; }
+  QColor getBackgroundColor() const { return mBackgroundColor; }
+  QFont  getFont() const { return mFont; }
 
   void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
 
@@ -91,9 +91,9 @@ private:
 
 void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   QColorGroup _cg = cg;
-   p->setFont( getFont() );
-  _cg.setColor( QColorGroup::Text, getForegroundColor() );
-  _cg.setColor( QColorGroup::Base, getBackgroundColor() );
+   p->setFont( mFont );
+  _cg.setColor( QColorGroup::Text, mForegroundColor );
+  _cg.setColor( QColorGroup::Base, mBackgroundColor );
 
   QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
@@ -193,10 +193,10 @@ void AppearanceConfigWidget::slotDeleteCategory()
 }
 
 
-void AppearanceConfigWidget::setInitialConfiguration( QStringList& categories )
+void AppearanceConfigWidget::setInitialConfiguration( const QStringList& categories )
 {
     categoriesLV->clear();
-    for( QStringList::iterator it = categories.begin(); it != categories.end(); ++it ) {
+    for( QStringList::const_iterator it = categories.begin(); it != categories.end(); ++it ) {
         QString catName = *it;
         (void)new CategoryListViewItem( categoriesLV, categoriesLV->lastItem(), catName, Qt::black, Qt::white );
     }
@@ -208,8 +208,7 @@ QStringList AppearanceConfigWidget::categoriesList()
     QListViewItemIterator it( categoriesLV );
     for ( ; it.current() ; ++it ) {
         QListViewItem* item = it.current();
-        QString name;
-        name =  item->text( 0 );
+        QString name = item->text( 0 );
 
         kdDebug() << name << endl;
         lst << name;
@@ -242,7 +241,7 @@ void AppearanceConfigWidget::save()
 }
 
 
-void AppearanceConfigWidget::slotforegroundClicked() {
+void AppearanceConfigWidget::slotForegroundClicked() {
   QColor fg;
   int result = KColorDialog::getColor( fg );
   if ( result == KColorDialog::Accepted ) {
@@ -257,33 +256,29 @@ void AppearanceConfigWidget::slotforegroundClicked() {
   }
 }
 
-void AppearanceConfigWidget::slotbackgroundClicked() {
+void AppearanceConfigWidget::slotBackgroundClicked() {
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  Q_ASSERT( item );
+  if( !item )
+    return;
   QColor bg;
   int result = KColorDialog::getColor( bg );
   if ( result == KColorDialog::Accepted ) {
-     CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
-     Q_ASSERT( item );
-     if( !item )
-        return;
-     else {
-       item->setBackgroundColor( bg );
-       item->repaint();
-     }
+    item->setBackgroundColor( bg );
+    item->repaint();
   }
 }
 
-void AppearanceConfigWidget::slotfontClicked() {
+void AppearanceConfigWidget::slotFontClicked() {
+  CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
+  Q_ASSERT( item );
+  if( !item )
+    return;
   QFont font;
   int result = KFontDialog::getFont( font );
   if ( result == KFontDialog::Accepted ) {
-      CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
-     Q_ASSERT( item );
-     if( !item )
-        return;
-     else {
-       item->setFont( font );
-       item->repaint();
-     }
+    item->setFont( font );
+    item->repaint();
   }
 }
 void AppearanceConfigWidget::defaults()

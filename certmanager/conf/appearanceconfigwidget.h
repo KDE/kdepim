@@ -50,7 +50,7 @@ namespace Kleo {
     void load();
     void save();
 
-    void setInitialConfiguration( QStringList& categories);
+    void setInitialConfiguration( const QStringList& categories);
     QStringList categoriesList();
     void clear();
 
@@ -61,13 +61,14 @@ namespace Kleo {
     void changed();
 
   protected slots:
-    virtual void slotSelectionChanged( QListViewItem * );
-    virtual void slotCategorySelected( QListViewItem * );
+    // reimplemented from the base class
     virtual void slotAddCategory();
     virtual void slotDeleteCategory();
-    virtual void slotforegroundClicked();
-    virtual void slotbackgroundClicked();
-    virtual void slotfontClicked();
+    virtual void slotSelectionChanged( QListViewItem * );
+    virtual void slotCategorySelected( QListViewItem * );
+    virtual void slotForegroundClicked();
+    virtual void slotBackgroundClicked();
+    virtual void slotFontClicked();
 
   private:
 
