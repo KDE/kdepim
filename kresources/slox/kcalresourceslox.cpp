@@ -33,6 +33,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
+#include <libkdepim/progressmanager.h>
+
 #include <libkcal/vcaldrag.h>
 #include <libkcal/vcalformat.h>
 #include <libkcal/icalformat.h>
@@ -90,7 +92,11 @@ void KCalResourceSlox::init()
 
   mLoadEventsJob = 0;
   mLoadTodosJob = 0;
+
   mUploadJob = 0;
+
+  mLoadEventsProgress = 0;
+  mLoadTodosProgress = 0;
 
   setType( "slox" );
 
@@ -198,7 +204,13 @@ void KCalResourceSlox::requestEvents()
   connect( mLoadEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadEventsResult( KIO::Job * ) ) );
   connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
+           SLOT( slotEventsProgress( KIO::Job *, unsigned long ) ) );
+
+  mLoadEventsProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      "sloxkcalevents", i18n("Downloading events") );
+  connect( mLoadEventsProgress,
+           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SLOT( cancelLoadEvents() ) );
 
   mPrefs->setLastEventSync( QDateTime::currentDateTime() );
 }
@@ -228,7 +240,13 @@ void KCalResourceSlox::requestTodos()
   connect( mLoadTodosJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadTodosResult( KIO::Job * ) ) );
   connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
+           SLOT( slotTodosProgress( KIO::Job *, unsigned long ) ) );
+
+  mLoadTodosProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      "sloxkcaltodos", i18n("Downloading todos") );
+  connect( mLoadTodosProgress,
+           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SLOT( cancelLoadTodos() ) );
 
   mPrefs->setLastTodoSync( QDateTime::currentDateTime() );
 }
@@ -423,7 +441,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
   mLoadTodosJob = 0;
 
-  emitEndProgress();
+  mLoadTodosProgress->setComplete();
 
   emit resourceLoaded( this );
 }
@@ -485,19 +503,13 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
   mLoadEventsJob = 0;
 
-  emitEndProgress();
+  mLoadEventsProgress->setComplete();
 
   emit resourceLoaded( this );
 }
 
-void KCalResourceSlox::emitEndProgress()
-{
-  if ( !mLoadEventsJob && !mLoadTodosJob ) {
-    emit progress( this, "sloxkcal", 100 );
-  }
-}
-
-void KCalResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
+void KCalResourceSlox::slotEventsProgress( KIO::Job *job,
+                                           unsigned long percent )
 {
 #if 0
   kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
@@ -505,7 +517,18 @@ void KCalResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
   Q_UNUSED( job );
   Q_UNUSED( percent );
 #endif
-  emit progress( this, "sloxkcal", -1 );
+  mLoadEventsProgress->updateProgress();
+}
+
+void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
+{
+#if 0
+  kdDebug() << "PROGRESS: sloxkcal " << int( job ) << ": " << percent << endl;
+#else
+  Q_UNUSED( job );
+  Q_UNUSED( percent );
+#endif
+  mLoadTodosProgress->updateProgress();
 }
 
 bool KCalResourceSlox::save()
@@ -580,6 +603,20 @@ void KCalResourceSlox::dump() const
 {
   ResourceCalendar::dump();
   kdDebug(5800) << "  Url: " << mPrefs->url() << endl;
+}
+
+void KCalResourceSlox::cancelLoadEvents()
+{
+  mLoadEventsJob->kill();
+  mLoadEventsJob = 0;
+  mLoadEventsProgress->setComplete();
+}
+
+void KCalResourceSlox::cancelLoadTodos()
+{
+  mLoadTodosJob->kill();
+  mLoadTodosJob = 0;
+  mLoadTodosProgress->setComplete();
 }
 
 #include "kcalresourceslox.moc"

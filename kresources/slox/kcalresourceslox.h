@@ -47,6 +47,10 @@ namespace KCal {
 class SloxPrefs;
 }
 
+namespace KPIM {
+class ProgressItem;
+}
+
 /**
   This class provides a calendar stored as a remote file.
 */
@@ -98,7 +102,11 @@ class KCalResourceSlox : public KCal::ResourceCached
     void slotLoadTodosResult( KIO::Job * );
     void slotSaveJobResult( KIO::Job * );
     
-    void slotProgress( KIO::Job *job, unsigned long percent );
+    void slotEventsProgress( KIO::Job *job, unsigned long percent );
+    void slotTodosProgress( KIO::Job *job, unsigned long percent );
+
+    void cancelLoadEvents();
+    void cancelLoadTodos();
 
   protected:
     bool doOpen();
@@ -121,8 +129,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
     void parseEventAttribute( const QDomElement &e, KCal::Event *event );
 
-    void emitEndProgress();
- 
   private:
     void init();
 
@@ -132,7 +138,11 @@ class KCalResourceSlox : public KCal::ResourceCached
 
     KIO::DavJob *mLoadEventsJob;
     KIO::DavJob *mLoadTodosJob;
+
     KIO::FileCopyJob *mUploadJob;
+
+    KPIM::ProgressItem *mLoadEventsProgress;
+    KPIM::ProgressItem *mLoadTodosProgress;
 
     KABC::Lock *mLock;
 
