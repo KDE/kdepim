@@ -176,7 +176,7 @@ void KAddressBook::editAddressee(QString uid)
   }
 }
 
-void KAddressBook::newAddressee()
+void KAddressBook::newResourceAddressee()
 {
   AddresseeEditorDialog *dialog = 0;
 
@@ -190,6 +190,19 @@ void KAddressBook::newAddressee()
   } else {
     return;
   }
+
+  mEditorDict.insert( dialog->addressee().uid(), dialog );
+
+  dialog->show();
+}
+
+void KAddressBook::newAddressee()
+{
+  AddresseeEditorDialog *dialog = 0;
+
+  KABC::Addressee addr;
+  dialog = createAddresseeEditorDialog( this );
+  dialog->setAddressee( addr );
 
   mEditorDict.insert( dialog->addressee().uid(), dialog );
 
@@ -304,14 +317,6 @@ void KAddressBook::importCSV()
 
   dialog->exec();
 
-  KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mDocument,
-                                                                      this );
-  KABC::AddressBook::Iterator it;
-  for ( it = mDocument->begin(); it != mDocument->end(); ++it ) {
-    if ( (*it).resource() == 0 )
-      (*it).setResource( resource );
-  }
-
   mViewManager->refresh();
 
   delete dialog;
@@ -351,9 +356,6 @@ void KAddressBook::importVCard( KABC::VCardConverter::Version version )
       PwNewCommand *command = new PwNewCommand(mDocument, a);
       UndoStack::instance()->push(command);
       RedoStack::instance()->clear();
-
-      KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mDocument, this );
-      a.setResource( resource );
 
       mViewManager->refresh();
 
