@@ -25,7 +25,7 @@
 //
 #include <unistd.h>
 #include <assert.h>
-#include <stream.h>
+#include <iostream.h>
 #include <qdir.h>
 #include <kglobal.h>
 #include <kstddirs.h>
