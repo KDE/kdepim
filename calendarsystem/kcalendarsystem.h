@@ -25,18 +25,10 @@ public:
   }
 
     /**
-     Gets specific calendar type month name for a given gregorian date
-
-     @param date gregorian date
-     @return month name 
-    */
-  virtual QString monthName (const QDate & date, bool shortName = false ) = 0;
-
-    /**
      Gets specific calendar type year for a given gregorian date
 
      @param date gregorian date
-     @return year 
+     @return year
     */
   virtual int year (const QDate & date) = 0;
 
@@ -95,12 +87,24 @@ public:
      Gets specific calendar type month name
 
      @param month number of month in year
-     @return  month name 
+     @param shortName true for short month name, false for complete month name
+     @return  month name
     */
-  virtual QString monthName (int month) = 0;
+  virtual QString monthName (int month, bool shortName = false) = 0;
 
     /**
-     Given a month, construct a valid date in given date's year
+     Gets specific calendar type month name for a given gregorian date
+
+     @param date gregorian date
+     @param shortName true for short month name, false for complete month name
+     @return month name
+    */
+  virtual QString monthName (const QDate & date, bool shortName = false ) = 0;
+
+    /**
+     Change the month in the given date to the specified month.
+     If the day of the month in the resultant date is out of range,
+     change it to the last day of the month.
 
      @param date date that indicates the year and whose value is updated
      @param  month month number which resulting date belongs to
@@ -108,7 +112,9 @@ public:
   virtual void constructDateInMonth (QDate & date, int month) = 0;
 
     /**
-     Given a year, construct a valid date 
+     Change the year in the given date to the specified year.
+     If the day of the month in the resultant date is out of range,
+     change it to the last day of the month.
 
      @param date date whose value is updated
      @param  year year of the new date
@@ -121,16 +127,16 @@ public:
      @param text day/month/year string
      @return valid parsed date object
     */
-  virtual QDate parseDate (QString text) = 0;
+  virtual QDate parseDate (const QString& text) = 0;
 
     /**
      Gets specific calendar type week day name
 
-     @param col number of day in week (1 -> Monday)
-     @param shortName short or complete day name
+     @param day number of day in week (1 -> Monday)
+     @param shortName true for short day name, false for complete day name
      @return day name
     */
-  virtual QString weekDayName (int col, bool shortName = false) = 0;
+  virtual QString weekDayName (int day, bool shortName = false) = 0;
 
     /**
      Gets specific calendar type number of day of week number for a given date
@@ -143,7 +149,7 @@ public:
     /**
      Gets specific calendar type number of days in month for a given date
 
-     @param date gregorian date 
+     @param date gregorian date
      @return number of days for month in date
     */
   virtual int numberOfDaysInMonth (const QDate & date) = 0;
@@ -167,7 +173,7 @@ public:
      Gets specific calendar type day number in month for a given date
 
      @param date gregorian date equivalent to the specific one
-     @return day number 
+     @return day number
     */
   virtual int day (const QDate & date) = 0;
 
@@ -175,14 +181,14 @@ public:
      Gets specific calendar type day number in year for a given date
 
      @param date gregorian date equivalent to the specific one
-     @return day number 
+     @return day number
     */
   virtual int numberOfDayInYear (const QDate & date) = 0;
 
     /**
-     Gets the day of the week traditionaly associated with pray
+     Gets the day of the week traditionally associated with religious worship
 
-     @return day number 
+     @return day number
     */
   virtual int weekDayOfPray () = 0;
 
@@ -201,7 +207,6 @@ public:
   KCalendarSystemGregorian ();
   virtual ~ KCalendarSystemGregorian ();
 
-  QString monthName (const QDate & date, bool shortName);
   int year (const QDate & date);
   int month (const QDate & date);
   QString formatDate (const QDate & date);
@@ -210,11 +215,12 @@ public:
   void nextYearDate (QDate & date);
   void previousYearDate (QDate & date);
   int monthsInYear (int year);
-  QString monthName (int month);
+  QString monthName (int month, bool shortName = false);
+  QString monthName (const QDate & date, bool shortName = false);
   void constructDateInMonth (QDate & date, int month);
   void constructDateInYear (QDate & date, int year);
-  QDate parseDate (QString text);
-  QString weekDayName (int col, bool shortName);
+  QDate parseDate (const QString & text);
+  QString weekDayName (int col, bool shortName = false);
   int dayOfTheWeek (const QDate & date);
   int numberOfDaysInMonth (const QDate & date);
   int numberOfDaysPrevMonth (const QDate & date);
