@@ -53,7 +53,7 @@ int main( int argc, char ** argv ) {
 
   Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
 				"Please select a key:",
-				0, std::vector<GpgME::Key>(),
+				std::vector<GpgME::Key>(),
 				Kleo::KeySelectionDialog::AllKeys, true, true );
 
   if ( dlg.exec() == QDialog::Accepted ) {
