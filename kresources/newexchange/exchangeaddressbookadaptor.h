@@ -41,7 +41,9 @@ class ExchangeAddressBookUploadItem : public KPIM::GroupwareUploadItem
     ExchangeAddressBookUploadItem( AddressBookAdaptor *adaptor, KABC::Addressee addr, UploadType type );
     virtual ~ExchangeAddressBookUploadItem() {}
 /**/    virtual KIO::TransferJob *createUploadJob(
-            KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
+            KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl );
+/**/    virtual KIO::TransferJob *createUploadNewJob(
+            KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl );
 
   protected:
     ExchangeAddressBookUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}

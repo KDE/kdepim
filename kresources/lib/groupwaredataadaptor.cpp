@@ -104,6 +104,7 @@ KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url,
 KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, 
                                                      GroupwareUploadItem *item )
 {
+kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob"<<endl;
   if ( item )
     return item->createUploadNewJob( this, url );
   else return 0;

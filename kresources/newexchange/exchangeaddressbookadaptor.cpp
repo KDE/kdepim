@@ -41,12 +41,27 @@ ExchangeAddressBookUploadItem::ExchangeAddressBookUploadItem( AddressBookAdaptor
   }
 }
 
-KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url )
+KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
 {
+kdDebug()<<"ExchangeAddressBookUploadItem::createUploadJob"<<endl;
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
-  KIO::DavJob *job = KIO::davPropPatch( url, mDavData, false );
+  KURL upUrl( url() );
+  adaptor->adaptUploadUrl( upUrl );
+  kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
+  KIO::DavJob *job = KIO::davPropPatch( upUrl, mDavData, false );
   return job;
+}
+
+KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+{
+kdDebug()<<"ExchangeAddressBookUploadItem::createUploadNewJob"<<endl;
+  KURL url( baseurl );
+  url.addPath( uid() + ".EML" );
+  setUrl( url );
+//url.addPath("newItem.EML");
+kdDebug()<<"Upload path: "<<url.url()<<endl;
+  return createUploadJob( adaptor, url );
 }
 
 ExchangeAddressBookAdaptor::ExchangeAddressBookAdaptor() : DavAddressBookAdaptor()

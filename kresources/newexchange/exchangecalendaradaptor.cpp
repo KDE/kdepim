@@ -44,18 +44,26 @@ ExchangeCalendarUploadItem::ExchangeCalendarUploadItem( CalendarAdaptor *adaptor
   }
 }
 
-KIO::TransferJob *ExchangeCalendarUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url )
+KIO::TransferJob *ExchangeCalendarUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseUrl )
 {
+kdDebug()<<"ExchangeCalendarUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseUrl.url()<<endl;
   Q_ASSERT( adaptor );
+kdDebug()<<"After Q_ASSERT"<<endl;
   if ( !adaptor ) return 0;
-  KIO::DavJob *job = KIO::davPropPatch( url, mDavData, false );
+kdDebug()<<"After (!adaptor) check"<<endl;
+  KURL upUrl( url() );
+  adaptor->adaptUploadUrl( upUrl );
+  kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
+  KIO::DavJob *job = KIO::davPropPatch( upUrl, mDavData, false );
   return job;
 }
 
 KIO::TransferJob *ExchangeCalendarUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
 {
+kdDebug()<<"ExchangeCalendarUploadItem::createUploadNewJob"<<endl;
   KURL url( baseurl );
   url.addPath( uid() + ".EML" );
+  setUrl( url );
 //url.addPath("newItem.EML");
 kdDebug()<<"Upload path: "<<url.url()<<endl;
   return createUploadJob( adaptor, url );

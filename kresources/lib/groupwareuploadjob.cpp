@@ -251,7 +251,7 @@ void GroupwareUploadJob::kill()
 
 void GroupwareUploadJob::slotItemDeleted( const QString &/*localId*/, const QString &remoteURL )
 {
-  kdDebug(5006) << "GroupwareUploadJob::slotItemDeleted, removal successful: "<< remoteURL << endl;
+  kdDebug() << "GroupwareUploadJob::slotItemDeleted, removal successful: "<< remoteURL << endl;
   const KURL &url( remoteURL );
 
   const QString &remote = url.path();
@@ -364,7 +364,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 void GroupwareUploadJob::slotItemDeleteError( const QString &/*localID*/, const QString &remoteURL )
 {
   // TODO: Add to error list, remove from uploading and toUpload list
-  kdDebug(5006) << "GroupwareUploadJob::slotItemDeleted, removal successful: "<< remoteURL << endl;
+  kdDebug() << "GroupwareUploadJob::slotItemDeleteError, removal not successful: "<< remoteURL << endl;
   KPIM::GroupwareUploadItem::List allit( mDeletedItems );
   allit += mItemsUploading;
   allit += mItemsUploaded;
@@ -391,7 +391,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 void GroupwareUploadJob::slotItemUploadError( const QString &/*localID*/, const QString &remoteURL )
 {
   // TODO: Add to error list, remove from uploading and toUpload list
-  kdDebug(5006) << "GroupwareUploadJob::slotItemDeleted, removal successful: "<< remoteURL << endl;
+  kdDebug() << "GroupwareUploadJob::slotItemUploadError, removal not successful: "<< remoteURL << endl;
   KPIM::GroupwareUploadItem::List allit( mChangedItems );
   allit += mItemsUploading;
   allit += mItemsUploaded;
@@ -417,7 +417,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 
 void GroupwareUploadJob::slotItemUploadNewError( const QString &/*localID*/, const QString &remoteURL )
 {
-  kdDebug(5006) << "GroupwareUploadJob::slotItemDeleted, removal successful: "<< remoteURL << endl;
+  kdDebug(5006) << "GroupwareUploadJob::slotItemUploadNewError, removal not successful: "<< remoteURL << endl;
   KPIM::GroupwareUploadItem::List allit( mAddedItems );
   allit += mItemsUploading;
   allit += mItemsUploaded;
@@ -453,7 +453,7 @@ void GroupwareUploadJob::cancelSave()
 void GroupwareUploadJob::uploadCompleted()
 {
   if ( !mItemsUploadError.isEmpty() ) {
-    error( i18n("1 item could not be uploaded.", "%1 items could not be uploaded.", mItemsUploadError.count() ) );
+    error( i18n("1 item could not be uploaded.", "%n items could not be uploaded.",  mItemsUploadError.count() ) );
   }
   KPIM::GroupwareUploadItem::List items( mAddedItems );
   items += mChangedItems;

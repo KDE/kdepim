@@ -86,7 +86,7 @@ void CalendarAdaptor::deleteItem( const QString &localId )
   mResource->disableChangeNotification();
   KCal::Incidence *i = mResource->incidence( localId );
   if ( i ) {
-    mResource->deleteIncidence( i );
+//    mResource->deleteIncidence( i );
     mResource->clearChange( i );
   }
   mResource->enableChangeNotification();
