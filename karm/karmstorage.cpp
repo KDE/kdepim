@@ -50,11 +50,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   else
   {
     view->clear();
-    // These can come out when they are added to ../libkcal/calendarlocal.cpp
-    // in routine CalendarLocal::load.
-    _calendar.deleteAllTodos();
-    _calendar.deleteAllEvents();
-    _calendar.deleteAllJournals();
+    _calendar.close();
     _icalfile = preferences->iCalFile();
   }
 
