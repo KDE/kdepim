@@ -1037,17 +1037,20 @@ void AbbrowserConduit::doBackup()
     if (!_prepare(abbrowserContacts, idContactMap, newContacts,
 		  abAlreadyRunning))
 	return ;
-
-     PilotRecord *record = 0L;
+    
+    PilotRecord *record = 0L;
     
     // iterate through all records in palm pilot
-    for (int catIndex = 0; catIndex < 16;catIndex++)
-	for (record = readNextRecordInCategory(_getCatId(catIndex));
-	     record != NULL;
-	     record = readNextRecordInCategory(_getCatId(catIndex)))
-	    {
-	    PilotAddress pilotAddress(fAddressAppInfo, record);
-	    QString abKey = QString::null;
+    int recIndex = 0;
+    //for (int catIndex = 0; catIndex < 16;catIndex++)
+    //for (record = readNextRecordInCategory(_getCatId(catIndex));
+    //record != NULL;
+    //record = readNextRecordInCategory(_getCatId(catIndex)))
+    for (record = readRecordByIndex(recIndex); record != NULL;
+	 ++recIndex, record = readRecordByIndex(recIndex))
+	{
+	PilotAddress pilotAddress(fAddressAppInfo, record);
+	QString abKey = QString::null;
 	
 	    // if already stored in the abbrowser
 	    if (idContactMap.contains( pilotAddress.id() ))
@@ -1103,11 +1106,14 @@ void AbbrowserConduit::doSync()
     PilotRecord *record = 0L;
     
     // iterate through all records in palm pilot
-    for (int catIndex = 0; catIndex < 16;catIndex++)
-	for (record = readNextRecordInCategory(_getCatId(catIndex));
-	     record != NULL;
-	     record = readNextRecordInCategory(_getCatId(catIndex)))
-	    {
+     int recIndex = 0;
+    //for (int catIndex = 0; catIndex < 16;catIndex++)
+    //for (record = readNextRecordInCategory(_getCatId(catIndex));
+    //record != NULL;
+    //record = readNextRecordInCategory(_getCatId(catIndex)))
+    for (record = readRecordByIndex(recIndex); record != NULL;
+	 ++recIndex, record = readRecordByIndex(recIndex))
+	{
 	    PilotAddress pilotAddress(fAddressAppInfo, record);
 	    QString abKey = QString::null;
 	    
