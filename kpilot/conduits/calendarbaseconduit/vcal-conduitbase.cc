@@ -62,7 +62,7 @@ VCalConduitBase::VCalEntry::VCalEntry( KCal::Incidence *inc )
 	: RecordConduit::PCEntry(), mIncidence( inc ) {}
 VCalConduitBase::VCalEntry::~VCalEntry() {}
 
-QString VCalConduitBase::VCalEntry::uid() const { 
+QString VCalConduitBase::VCalEntry::uid() const {
 	return (mIncidence) ? (mIncidence->uid()) : (QString::null);
 }
 recordid_t VCalConduitBase::VCalEntry::recid() const {
@@ -85,7 +85,7 @@ bool VCalConduitBase::VCalEntry::makeArchived(){
 bool VCalConduitBase::VCalEntry::insertCategory( QString newcat ) {
 	FUNCTIONSETUP;
 	if ( !mIncidence ) return false;
-		
+
 	QStringList cats = mIncidence->categories();
 	if ( !cats.contains( newcat ) ) {
 		cats.append( newcat );
@@ -98,7 +98,7 @@ bool VCalConduitBase::VCalEntry::insertCategory( QString newcat ) {
 /******************************************************************
  *   Helper class VCalConduitBase::VCalDataBase
  ******************************************************************/
-VCalConduitBase::VCalDataBase::VCalDataBase( RecordConduit *conduit, VCalConduitSettings*cfg ) 
+VCalConduitBase::VCalDataBase::VCalDataBase( RecordConduit *conduit, VCalConduitSettings*cfg )
    : RecordConduit::PCData( conduit ), mCalendar( 0 ), mIncidences(), mConfig( cfg )
 {
 	mIncidences.setAutoDelete(false);
@@ -107,10 +107,10 @@ VCalConduitBase::VCalDataBase::~VCalDataBase() {}
 
 		/** Load the data from the PC ( e.g. contacts from the addressbook ).
 		 *  @return true if successful, false if not */
-bool VCalConduitBase::VCalDataBase::loadData() 
+bool VCalConduitBase::VCalDataBase::loadData()
 {
 	FUNCTIONSETUP;
-	
+
 	KConfig korgcfg( locate( "config", CSL1("korganizerrc") ) );
 	// this part taken from adcalendarbase.cpp:
 	korgcfg.setGroup( "Time & Date" );
@@ -141,7 +141,7 @@ bool VCalConduitBase::VCalDataBase::loadData()
 				DEBUGCONDUIT << fname
 					 << "Empty calendar file name." << endl;
 #endif
-				if ( mConduit ) 
+				if ( mConduit )
 					mConduit->addLogError( i18n( "You selected to sync with the a iCalendar file, "
 						"but did not give a filename. Please select a valid file name in "
 						"the conduit's configuration dialog" ) );
@@ -172,7 +172,7 @@ bool VCalConduitBase::VCalDataBase::loadData()
 			if( !KIO::NetAccess::download( config()->calendarFile(), mCalendarFile, 0L ) &&
 				!kurl.isLocalFile() )
 			{
-				if ( mConduit ) 
+				if ( mConduit )
 					mConduit->addLogError( i18n( "You chose to sync with the file \"%1\", which "
 							"cannot be opened. Please make sure to supply a "
 							"valid file name in the conduit's configuration dialog. "
@@ -226,7 +226,7 @@ bool VCalConduitBase::VCalDataBase::loadData()
 			mCalendar = rescal;
 			if ( !mCalendar )
 			{
-				kdWarning() << k_funcinfo << "Cannot initialize calendar " << 
+				kdWarning() << k_funcinfo << "Cannot initialize calendar " <<
 					"object for ResourceCalendar" << endl;
 				return false;
 			}
@@ -258,7 +258,7 @@ bool VCalConduitBase::VCalDataBase::loadData()
 */
 	return ( mCalendar != 0 );
 }
-	
+
 
 		/** Save the PC data ( e.g. contacts to the addressbook ).
 		 *  @return true if successful, false if not */
@@ -267,7 +267,7 @@ bool VCalConduitBase::VCalDataBase::saveData()
 	FUNCTIONSETUP;
 
 	if ( !mCalendar ) return false;
-	
+
 	bool res = changed();
 	if ( changed() ) {
 		switch( config()->calendarType() )
@@ -277,7 +277,7 @@ bool VCalConduitBase::VCalDataBase::saveData()
 				dynamic_cast<KCal::CalendarLocal*>(mCalendar)->save( mCalendarFile );
 				if( !kurl.isLocalFile() )
 				{
-					if ( !KIO::NetAccess::upload( mCalendarFile, config()->calendarFile(), 0L ) ) 
+					if ( !KIO::NetAccess::upload( mCalendarFile, config()->calendarFile(), 0L ) )
 					{
 						if ( mConduit )
 							mConduit->addLogError( i18n( "An error occurred while uploading \"%1\". You can try to upload "
@@ -301,8 +301,8 @@ bool VCalConduitBase::VCalDataBase::saveData()
 	mCalendar->close();
 	KPILOT_DELETE(mCalendar);
 	return res;
-}	
-	
+}
+
 
 		/** Return true if the data on the pc ( e.g. addressbook, calendar etc. ) is empty
 		*/
@@ -310,7 +310,7 @@ bool VCalConduitBase::VCalDataBase::isEmpty() const
 {
   return ( !mCalendar ) || ( mIncidences.size() < 1 );
 }
-		/** reset the data pointer to the beginning of the data, e.g. reset an 
+		/** reset the data pointer to the beginning of the data, e.g. reset an
 		 *  iterator to begin()
 		*/
 RecordConduit::PCData::Iterator VCalConduitBase::VCalDataBase::begin()
@@ -324,7 +324,7 @@ bool VCalConduitBase::VCalDataBase::atEnd( const PCData::Iterator &it )
 	const Iterator *it1 = dynamic_cast<const Iterator*>( it.self() );
 	return ( mCalendar && it1 ) ? ( mIncidences.end() == it1->mIt ) : ( true );
 }
-		/** Return next modified entry in the data. 
+		/** Return next modified entry in the data.
 		*/
 bool VCalConduitBase::VCalDataBase::increaseNextModified( PCData::Iterator &it )
 {
@@ -335,7 +335,7 @@ bool VCalConduitBase::VCalDataBase::increaseNextModified( PCData::Iterator &it )
 		KCal::Incidence *tmp = 0;
 		if ( vc ) tmp = vc->incidence();
 		KPILOT_DELETE( pc );
-		if ( tmp && ( tmp->syncStatus()==KCal::Incidence::SYNCMOD ) ) 
+		if ( tmp && ( tmp->syncStatus()==KCal::Incidence::SYNCMOD ) )
 			return true;
 		++it;
 	}
@@ -347,7 +347,7 @@ RecordConduit::PCEntry *VCalConduitBase::VCalDataBase::findByUid( QString uid ) 
 	KCal::Incidence*inc = mCalendar->incidence( uid );
 	return new VCalEntry( inc );
 }
-const QStringList VCalConduitBase::VCalDataBase::uids() const 
+const QStringList VCalConduitBase::VCalDataBase::uids() const
 {
 	QStringList ids;
 	for ( KCal::Incidence::List::ConstIterator it = mIncidences.begin(); it !=  mIncidences.end(); ++it )
@@ -358,7 +358,7 @@ const QStringList VCalConduitBase::VCalDataBase::uids() const
 }
 		/** Update the entry given. If it doesn't exist yet, add it
 		 */
-bool VCalConduitBase::VCalDataBase::updateEntry( const RecordConduit::PCEntry* entry ) 
+bool VCalConduitBase::VCalDataBase::updateEntry( const RecordConduit::PCEntry* entry )
 {
 	// Add to calendar if not already there
 	const VCalEntry *vcalEntry = dynamic_cast<const VCalEntry*>(entry);
@@ -371,7 +371,7 @@ bool VCalConduitBase::VCalDataBase::updateEntry( const RecordConduit::PCEntry* e
 	}
 	return true;
 }
-bool VCalConduitBase::VCalDataBase::removeEntry( const RecordConduit::PCEntry* entry ) 
+bool VCalConduitBase::VCalDataBase::removeEntry( const RecordConduit::PCEntry* entry )
 {
 	const VCalEntry *vcalEntry = dynamic_cast<const VCalEntry *>( entry );
 	if ( vcalEntry && vcalEntry->incidence() && mCalendar ) {
@@ -410,7 +410,7 @@ VCalConduitBase::~VCalConduitBase()
 /* virtual */ void VCalConduitBase::readConfig()
 {
 	config()->readConfig();
-	SyncAction::ConflictResolution res = 
+	SyncAction::ConflictResolution res =
 		(SyncAction::ConflictResolution)( config()->conflictResolution() );
 	setConflictResolution( res );
 	setArchiveDeleted( config()->syncArchived() );
@@ -458,7 +458,7 @@ bool VCalConduitBase::smartMergeEntry( RecordConduit::PCEntry *pcEntry, PilotApp
 				"PC entry:\n"
 				"\t%1\n"
 				"Handheld entry:\n"
-				"\t%1\n\n"
+				"\t%2\n\n"
 				"Shall the entry from the handheld overwrite the PC entry? If you select "
 				"\"No\", the PC entry will overwrite the Pilot entry.")
 				.arg( vcalEntry->incidence()->summary() )
