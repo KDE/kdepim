@@ -95,6 +95,21 @@ namespace {
     void mergeAgent     ( KABC::Addressee&, const KABC::Addressee& );
     void mergeHomeTel   ( KABC::Addressee&, const KABC::Addressee& );
     void mergeOffTel    ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeMessenger ( KABC::Addressee&, const KABC::Addressee& );
+    void mergePreferedNumber( KABC::Addressee&, const KABC::Addressee& );
+    void mergeVoice     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeFax       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeCell      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeVideo     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeMailbox   ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeModem     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeCarPhone  ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeISDN      ( KABC::Addressee&, const KABC::Addressee& );
+    void mergePCS       ( KABC::Addressee&, const KABC::Addressee& );
+    void mergePager     ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeHomeFax   ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeWorkFax   ( KABC::Addressee&, const KABC::Addressee& );
+    void mergeOtherTel  ( KABC::Addressee&, const KABC::Addressee& );
     void mergeCat       ( KABC::Addressee&, const KABC::Addressee& );
     void mergeKeys      ( KABC::Addressee&, const KABC::Addressee& );
     void mergeCustom    ( KABC::Addressee&, const KABC::Addressee& );
@@ -128,6 +143,21 @@ namespace {
             mergeMap->insert(AddressBookSyncee::Agent, mergeAgent );
             mergeMap->insert(AddressBookSyncee::HomeNumbers, mergeHomeTel );
             mergeMap->insert(AddressBookSyncee::OfficeNumbers, mergeOffTel );
+            mergeMap->insert(AddressBookSyncee::Messenger, mergeMessenger );
+            mergeMap->insert(AddressBookSyncee::PreferedNumber, mergePreferedNumber );
+            mergeMap->insert(AddressBookSyncee::Voice, mergeVoice );
+            mergeMap->insert(AddressBookSyncee::Fax, mergeFax );
+            mergeMap->insert(AddressBookSyncee::Cell, mergeCell );
+            mergeMap->insert(AddressBookSyncee::Video, mergeVideo );
+            mergeMap->insert(AddressBookSyncee::Mailbox, mergeMailbox );
+            mergeMap->insert(AddressBookSyncee::Modem, mergeModem );
+            mergeMap->insert(AddressBookSyncee::CarPhone, mergeCarPhone );
+            mergeMap->insert(AddressBookSyncee::ISDN, mergeISDN );
+            mergeMap->insert(AddressBookSyncee::PCS, mergePCS );
+            mergeMap->insert(AddressBookSyncee::Pager, mergePager );
+            mergeMap->insert(AddressBookSyncee::HomeFax, mergeHomeFax );
+            mergeMap->insert(AddressBookSyncee::WorkFax, mergeWorkFax );
+            mergeMap->insert(AddressBookSyncee::OtherTel, mergeOtherTel );
             mergeMap->insert(AddressBookSyncee::Category, mergeCat );
             mergeMap->insert(AddressBookSyncee::Custom, mergeCustom );
             mergeMap->insert(AddressBookSyncee::Keys, mergeKeys );
@@ -159,12 +189,13 @@ bool AddressBookSyncEntry::mergeWith( SyncEntry* ent) {
                 (*it.data())(mAddressee,entry->mAddressee);
         }
     }
+    mergeCustom( mAddressee, entry->mAddressee ); // need to call it under all circumstances...
 
     return true;
 }
 
 AddressBookSyncee::AddressBookSyncee()
-    : Syncee(28) // set the support size
+    : Syncee(AddressBookSyncee::Emails+1) // set the support size
 {
 //  mAddressBook = new KABC::AddressBook;
 
@@ -295,6 +326,17 @@ QString AddressBookSyncee::newId()const {
 }
 
 namespace {
+    QStringList mergeList( const QStringList& entry, const QStringList& other ) {
+        QStringList list = entry;
+
+        QStringList::ConstIterator it;
+        for (it = other.begin(); it != other.end(); ++it ) {
+            if (!list.contains( (*it) ) )
+                list << (*it);
+        }
+
+        return list;
+    }
     /* merge functions */
     void mergeFamily    ( KABC::Addressee& entry, const KABC::Addressee& other) {
         entry.setFamilyName( other.familyName() );
@@ -362,6 +404,51 @@ namespace {
     void mergeOffTel    ( KABC::Addressee& entry, const KABC::Addressee& other) {
         entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Work ) );
     }
+    void mergeMessenger ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Msg ) );
+    }
+    void mergePreferedNumber( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Pref ) );
+    }
+    void mergeVoice     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Voice ) );
+    }
+    void mergeFax       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Fax ) );
+    }
+    void mergeCell      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Cell ) );
+    }
+    void mergeVideo     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Video ) );
+    }
+    void mergeMailbox   ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Bbs ) );
+    }
+    void mergeModem     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Modem ) );
+    }
+    void mergeCarPhone  ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Car ) );
+    }
+    void mergeISDN      ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Isdn ) );
+    }
+    void mergePCS       ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Pcs ) );
+    }
+    void mergePager     ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Pager ) );
+    }
+    void mergeHomeFax   ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax ) );
+    }
+    void mergeWorkFax   ( KABC::Addressee& entry, const KABC::Addressee& other) {
+        entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax ) );
+    }
+    void mergeOtherTel ( KABC::Addressee&, const KABC::Addressee& ) {
+
+    }
     void mergeCat       ( KABC::Addressee& entry, const KABC::Addressee& other) {
         entry.setCategories( other.categories() );
     }
@@ -369,7 +456,7 @@ namespace {
         entry.setKeys( other.keys() );
     }
     void mergeCustom    ( KABC::Addressee& entry, const KABC::Addressee& other) {
-        entry.setCustoms( other.customs() );
+        entry.setCustoms( mergeList( entry.customs(), other.customs() ) );
     }
     void mergeLogo      ( KABC::Addressee& entry, const KABC::Addressee& other) {
         entry.setLogo( other.logo() );
