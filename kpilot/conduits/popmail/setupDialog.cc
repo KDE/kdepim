@@ -44,6 +44,10 @@ static const char *setupDialog_id=
 #include <stdlib.h>
 #include <iostream.h>
 
+#ifndef QTOOLTIP_H
+#include <qtooltip.h>
+#endif
+
 #ifndef _KCONFIG_H
 #include <kconfig.h>
 #endif
@@ -133,12 +137,15 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	fNoSend=new QRadioButton(i18n("&Do not send mail"),sendGroup);
 	fSendmail=new QRadioButton(i18n("Use &Sendmail"),sendGroup);
 	fSMTP=new QRadioButton(i18n("Use S&MTP"),sendGroup);
+	fKMail=new QRadioButton(i18n("Use &KMail"),sendGroup);
 
 	connect(fNoSend,SIGNAL(clicked()),
 		this,SLOT(toggleMode()));
 	connect(fSMTP,SIGNAL(clicked()),
 		this,SLOT(toggleMode()));
 	connect(fSendmail,SIGNAL(clicked()),
+		this,SLOT(toggleMode()));
+	connect(fKMail,SIGNAL(clicked()),
 		this,SLOT(toggleMode()));
 
 	sendGroup->adjustSize();
@@ -209,8 +216,24 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	grid->addWidget(currentLabel,7,0);
 	grid->addWidget(fSMTPPort,7,1);
 
+	fKMailSendImmediate = new QCheckBox(
+		i18n("Send mail through KMail immediately"),
+		this);
+	fKMailSendImmediate->setChecked(config.readBoolEntry("SendImmediate",
+		true));
+	grid->addRowSpacing(8,SPACING);
+	grid->addWidget(fKMailSendImmediate,9,1);
+	QToolTip::add(fKMailSendImmediate,
+		i18n("Check this box if you want the conduit\n"
+			"to send all items in the outbox as soon\n"
+			"as it is done, as if you clicked KMail's\n"
+			"File->Send Queued menu item."));
+
+
 	setMode(PopMailConduit::SendMode(config.readNumEntry("SyncOutgoing",
 		PopMailConduit::SEND_NONE)));
+
+	(void) setupDialog_id;
 }
 
 /* virtual */ int PopMailSendPage::commitChanges(KConfig& config)
@@ -233,6 +256,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 
 	config.writeEntry("SyncOutgoing", (int)getMode());
 
+	config.writeEntry("SendImmediate", fKMailSendImmediate->isChecked());
 	return 0;
 }
 
@@ -242,6 +266,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	if (fNoSend->isChecked()) setMode(PopMailConduit::SEND_NONE);
 	if (fSendmail->isChecked()) setMode(PopMailConduit::SEND_SENDMAIL);
 	if (fSMTP->isChecked()) setMode(PopMailConduit::SEND_SMTP);
+	if (fKMail->isChecked()) setMode(PopMailConduit::SEND_KMAIL);
 }
 
 void PopMailSendPage::setMode(PopMailConduit::SendMode m)
@@ -254,23 +279,34 @@ void PopMailSendPage::setMode(PopMailConduit::SendMode m)
 		fSendmailCmd->setEnabled(true);
 		fSMTPServer->setEnabled(false);
 		fSMTPPort->setEnabled(false);
+		fKMailSendImmediate->setEnabled(false);
 		fSendmail->setChecked(true);
 		break;
 	case PopMailConduit::SEND_SMTP :
 		fSendmailCmd->setEnabled(false);
 		fSMTPServer->setEnabled(true);
 		fSMTPPort->setEnabled(true);
+		fKMailSendImmediate->setEnabled(false);
 		fSMTP->setChecked(true);
+		break;
+	case PopMailConduit::SEND_KMAIL :
+		fSendmailCmd->setEnabled(false);
+		fSMTPServer->setEnabled(false);
+		fSMTPPort->setEnabled(false);
+		fKMailSendImmediate->setEnabled(true);
+		fKMail->setChecked(true);
 		break;
 	case PopMailConduit::SEND_NONE :
 		fSendmailCmd->setEnabled(false);
 		fSMTPServer->setEnabled(false);
 		fSMTPPort->setEnabled(false);
+		fKMailSendImmediate->setEnabled(false);
 		fNoSend->setChecked(true);
 		break;
 	default :
-		cerr << __FUNCTION__
-			<< ": Unknown mode " << (int) m
+		kdWarning() << __FUNCTION__
+			<< ": Unknown mode " 
+			<< (int) m
 			<< endl;
 		return;
 	}
@@ -632,6 +668,10 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.16  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.15  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //

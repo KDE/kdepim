@@ -77,7 +77,7 @@ private:
 	PopMailConduit::SendMode fMode;
 
 	QButtonGroup *sendGroup;
-	QRadioButton *fNoSend,*fSendmail,*fSMTP;
+	QRadioButton *fNoSend,*fSendmail,*fSMTP, *fKMail;
 
 	QLineEdit* fEmailFrom;
 	QLineEdit *fHeaders;
@@ -87,6 +87,7 @@ private:
 	QLineEdit* fSendmailCmd;
 	QLineEdit* fSMTPServer;
 	QLineEdit* fSMTPPort;
+	QCheckBox *fKMailSendImmediate;
 } ;
 
 // A standard dialog page used when receiving
@@ -151,4 +152,7 @@ protected:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.7  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

@@ -79,6 +79,7 @@ public:
 	typedef enum SendMode { 
 		SEND_NONE=0,
 		SEND_SENDMAIL=7,
+		SEND_KMAIL=8,
 		SEND_SMTP=12
 		} ;
 
@@ -92,8 +93,9 @@ protected:
 	//
 	int sendPendingMail(int mode /* unused */);
 	int sendViaSendmail();
+	int sendViaKMail();
 	int sendViaSMTP();
-	void sendMessage(FILE* sendf, struct Mail& theMail);
+	void writeMessageToFile(FILE* sendf, struct Mail& theMail);
 
 
 	// Local mail -> Pilot
@@ -156,6 +158,9 @@ private:
 
 
 // $Log$
+// Revision 1.10  2001/03/29 22:06:14  stern
+// Must include ksock.h since it was taken out of baseConduit.h
+//
 // Revision 1.9  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //
