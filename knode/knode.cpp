@@ -153,7 +153,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   v_iew->a_ctNavReadThrough->plugAccel(a_ccel);
 
   KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
-  //KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
@@ -161,7 +160,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   a_ctWinToggleToolbar    = KStdAction::showToolbar(this, SLOT(slotWinToggleToolbar()), actionCollection());
   a_ctWinToggleStatusbar  = KStdAction::showStatusbar(this, SLOT(slotWinToggleStatusbar()), actionCollection());
 
-  v_iew->slotCollectionSelected(0); //disable view-actions
   createGUI("knodeui.rc");
   v_iew->initPopups(this);
 
@@ -172,7 +170,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   applyMainWindowSettings(conf);
   a_ctWinToggleToolbar->setChecked(!toolBar()->isHidden());
   a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());
-
 
   if(firstStart()) {  // open the config dialog on the first start
     show();              // the settings dialog must appear in front of the main window!

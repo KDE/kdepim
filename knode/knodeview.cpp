@@ -176,7 +176,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
   //set the keyboard focus indicator on the first item in the Collection View
   if(c_olView->firstChild())
-    c_olView->setCurrentItem(c_olView->firstChild());
+    c_olView->setActive(c_olView->firstChild(),true);
   c_olView->setFocus();
 }
 
@@ -1315,6 +1315,9 @@ void KNodeView::slotArtDelete()
 
   if(!lst.isEmpty())
     a_rtFactory->deleteArticles(&lst);
+
+  if(h_drView->currentItem())
+    h_drView->setActive(h_drView->currentItem(),true);
 }
 
 
