@@ -41,7 +41,7 @@
 class PilotDatabase;
 class KLibrary;
 
-#define KPILOT_PLUGIN_API	(20040319)
+#define KPILOT_PLUGIN_API	(20041002)
 
 /**
 * The first classe here: ConduitConfigBase is for configuration purposes.
