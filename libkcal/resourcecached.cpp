@@ -387,7 +387,7 @@ void ResourceCached::addInfoText( QString &txt ) const
 {
   if ( mLastLoad.isValid() ) {
     txt += "<br>";
-    txt += i18n("Last loadedx: %1")
+    txt += i18n("Last loaded: %1")
            .arg( KGlobal::locale()->formatDateTime( mLastLoad ) );
   }
   if ( mLastSave.isValid() ) {
