@@ -194,9 +194,9 @@ class KConfig;
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
-#if KDE_VERSION < 319
 class QSize;
 ostream& operator << (ostream&,const QSize &) ;
+#if KDE_VERSION < 319
 kdbgstream& operator << (kdbgstream&,const QSize &);
 kndbgstream& operator << (kndbgstream&,const QSize &);
 #endif
