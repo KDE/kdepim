@@ -125,14 +125,14 @@ else
   if ($err=="")
   { 
     // start and wait till mainwindow is up
+    # the mouse can be in the way, so, move it out. Do it first to prevent focus change during execution.
+    system("xte 'mousemove 1 1'");
     echo "\nStarting karm";
     $process=popen("karm", 'w');
     $rc=1;
     while ($rc==1) system("dcop `dcop 2>/dev/null | grep karm` KarmDCOPIface version",$rc);
     echo "mainwindow is ready";
     sleep (1);
-    # the mouse can be in the way, so, move it out!
-    system("xte 'mousemove 1 1'");
     
     funkeysim("Alt_L");
     
