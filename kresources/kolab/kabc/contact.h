@@ -66,13 +66,12 @@ public:
   };
 
   /// Use this to parse an xml string to a contact entry
-  /// The caller is responsible for deleting the returned object
-  static KABC::Addressee* xmlToAddressee( const QString& xml );
+  static KABC::Addressee xmlToAddressee( const QString& xml );
 
   /// Use this to get an xml string describing this contact
-  static QString addresseeToXML( KABC::Addressee* );
+  static QString addresseeToXML( const KABC::Addressee& );
 
-  explicit Contact( KABC::Addressee* address = 0 );
+  explicit Contact( const KABC::Addressee* address = 0 );
   ~Contact();
 
   void saveTo( KABC::Addressee* address );
@@ -188,7 +187,7 @@ public:
   QString saveXML() const;
 
 protected:
-  void setFields( KABC::Addressee* );
+  void setFields( const KABC::Addressee* );
 
 private:
   bool loadNameAttribute( QDomElement& element );

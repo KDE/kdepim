@@ -38,24 +38,25 @@
 using namespace Kolab;
 
 
-KABC::Addressee* Contact::xmlToAddressee( const QString& xml )
+KABC::Addressee Contact::xmlToAddressee( const QString& xml )
 {
   Contact contact;
   contact.load( xml );
-  KABC::Addressee* addressee = new KABC::Addressee();
-  contact.saveTo( addressee );
+  KABC::Addressee addressee;
+  contact.saveTo( &addressee );
   return addressee;
 }
 
-QString Contact::addresseeToXML( KABC::Addressee* addressee )
+QString Contact::addresseeToXML( const KABC::Addressee& addressee )
 {
-  Contact contact( addressee );
+  Contact contact( &addressee );
   return contact.saveXML();
 }
 
-Contact::Contact( KABC::Addressee* addr )
+Contact::Contact( const KABC::Addressee* addr )
 {
-  setFields( addr );
+  if ( addr )
+    setFields( addr );
 }
 
 Contact::~Contact()
@@ -679,7 +680,7 @@ QString Contact::saveXML() const
   return document.toString();
 }
 
-void Contact::setFields( KABC::Addressee* addressee )
+void Contact::setFields( const KABC::Addressee* addressee )
 {
   KolabBase::setFields( addressee );
 
@@ -707,9 +708,25 @@ void Contact::setFields( KABC::Addressee* addressee )
   setPicture( addressee->photo() );
 #endif
 
+  QStringList emails = addressee->emails();
+  // The first email is the preferred one
+  if ( !emails.isEmpty() ) {
+    setPreferredAddress( emails.first() );
+    emails.pop_front();
+  }
+  // Store the others in mEmails. Conversion problem here:
+  // KABC::Addressee has only one full name and N addresses, but the XML format
+  // has N times (fullname+address). So we just copy the fullname over and ignore it on loading.
+  for( QStringList::ConstIterator it = emails.begin(); it != emails.end(); ++it ) {
+    Email email;
+    email.displayName = fullName();
+    email.smtpAddress = *it;
+    addEmail( email );
+  }
+
   // TODO: Unhandled Addressee fields:
   // mailer, timezone, geo, productId, sortString, logo, sound
-  // agent, preferred email, emails, phoneNumbers, addresses,
+  // agent, phoneNumbers, addresses,
   // extra custom fields, name(), preferred address, preferred phone number,
   // extra im addresses, crypto settings
 
@@ -752,6 +769,14 @@ void Contact::saveTo( KABC::Addressee* addressee )
     addressee->removeCustom( "KADDRESSBOOK", "X-Anniversary" );
 
 #if 0
-  setPicture( addressee->photo() );
+  addressee->setPicture( photo() );
 #endif
+
+  // Bundle the preferred address and all other addresses into a single list
+  QStringList emailAddresses;
+  emailAddresses.append( preferredAddress() );
+  for( QValueList<Email>::Iterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
+    emailAddresses.append( (*it).smtpAddress );
+  }
+  addressee->setEmails( emailAddresses );
 }

@@ -33,7 +33,6 @@
 #ifndef RESOURCEKolab_H
 #define RESOURCEKolab_H
 
-#include <kabc/vcardconverter.h>
 #include <libkdepim/resourceabc.h>
 #include <dcopobject.h>
 #include <resourcekolabbase.h>
@@ -138,25 +137,20 @@ signals:
   void signalSubresourceRemoved( Resource*, const QString&, const QString& );
 
 protected:
-  void insertAddressee( const Addressee&, const QString& resource );
+  bool kmailUpdateAddressee( const Addressee& );
+
   void doClose();
 
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               bool writable );
-  bool loadResource( const QString& resource );
+  bool loadSubResource( const QString& subResource );
 
   QString configFile() const {
     return Kolab::ResourceKolabBase::configFile( "kabc" );
   }
 
-  FormatPlugin* mFormat;
-  QStringList mDeletedAddressees;
-  QCString mAppId;
-
-  KABC::VCardConverter mConverter;
-
   // The list of subresources
-  Kolab::ResourceMap mResources;
+  Kolab::ResourceMap mSubResources;
 };
 
 }
