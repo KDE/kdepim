@@ -59,6 +59,36 @@ void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
     ns = "KADDRESSBOOK";
   else 
     ns = mIdentifier;
+  
+  // clear all custom page widgets 
+  // we can't do this in the following loop, as it works on the 
+  // custom fields of the vcard, which may not be set.
+  QMap<QString, QWidget*>::Iterator widIt;
+  for ( widIt = mWidgets.begin(); widIt != mWidgets.end(); ++widIt ) {
+    QString value;
+    if ( widIt.data()->isA( "QLineEdit" ) || widIt.data()->isA( "KLineEdit" ) ) {
+      QLineEdit *wdg = static_cast<QLineEdit*>( widIt.data() );
+      wdg->setText( QString::null );
+    } else if ( widIt.data()->isA( "QSpinBox" ) ) {
+      QSpinBox *wdg = static_cast<QSpinBox*>( widIt.data() );
+      wdg->setValue( wdg->minValue() );
+    } else if ( widIt.data()->isA( "QCheckBox" ) ) {
+      QCheckBox *wdg = static_cast<QCheckBox*>( widIt.data() );
+      wdg->setChecked( false );
+    } else if ( widIt.data()->isA( "QDateTimeEdit" ) ) {
+      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( widIt.data() );
+      wdg->setDateTime( QDateTime::currentDateTime() );
+    } else if ( widIt.data()->isA( "KDateTimeWidget" ) ) {
+      KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( widIt.data() );
+      wdg->setDateTime( QDateTime::currentDateTime() );
+    } else if ( widIt.data()->isA( "KDatePicker" ) ) {
+      KDatePicker *wdg = static_cast<KDatePicker*>( widIt.data() );
+      wdg->setDate( QDate::currentDate() );
+    } else if ( widIt.data()->isA( "QComboBox" ) ) {
+      QComboBox *wdg = static_cast<QComboBox*>( widIt.data() );
+      wdg->setCurrentItem( 0 );
+    }
+  }
 
   QStringList::ConstIterator it;
   for ( it = customs.begin(); it != customs.end(); ++it ) {
