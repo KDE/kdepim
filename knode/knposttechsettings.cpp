@@ -61,6 +61,10 @@ KNPostTechSettings::KNPostTechSettings(QWidget *p) : KNSettingsWidget(p)
   charset->insertItem("ISO-8859-7");
   charset->insertItem("ISO-8859-8");
   charset->insertItem("ISO-8859-9");
+  charset->insertItem("ISO-8859-10");
+  charset->insertItem("ISO-8859-13");
+  charset->insertItem("ISO-8859-14");
+  charset->insertItem("ISO-8859-15");
   //charset->insertStringList(KGlobal::charsets()->availableCharsetNames());
   ggbL->addWidget(charset, 1,1);
 
