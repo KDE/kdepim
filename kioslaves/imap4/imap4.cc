@@ -1159,8 +1159,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Unsubscribe of folder %1 "
-                                 "failed. The server returned: %2")
+      error(ERR_SLAVE_DEFINED, i18n("Unsubscribe of folder %1 "
+                                    "failed. The server returned: %2")
             .arg(_url.prettyURL())
             .arg(cmd->resultInfo()));
       return;
@@ -1179,8 +1179,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientSubscribe(aBox));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Subscribe of folder %1 "
-                                 "failed. The server returned: %2")
+      error(ERR_SLAVE_DEFINED, i18n("Subscribe of folder %1 "
+                                    "failed. The server returned: %2")
             .arg(_url.prettyURL())
             .arg(cmd->resultInfo()));
       return;
@@ -1215,8 +1215,8 @@ IMAP4Protocol::special (const QByteArray & aData)
                                                "\\SEEN \\ANSWERED \\FLAGGED \\DRAFT"));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Changing the flags of message %1 "
-                                 "failed.").arg(_url.prettyURL()));
+      error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
+                                      "failed.").arg(_url.prettyURL()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1226,8 +1226,8 @@ IMAP4Protocol::special (const QByteArray & aData)
                        clientStore (aSequence, "+FLAGS.SILENT", newFlags));
       if (cmd->result () != "OK")
       {
-        error(ERR_NO_CONTENT, i18n("Changing the flags of message %1 "
-                                   "failed.").arg(_url.prettyURL()));
+        error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
+                                        "failed.").arg(_url.prettyURL()));
         return;
       }
       completeQueue.removeRef (cmd);
@@ -1259,8 +1259,8 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     imapCommand *cmd = doCommand(imapCommand::clientSetACL(aBox, user, acl));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Setting the Access Control List on folder %1 "
-                                 "for user %2 failed. The server returned: %3")
+      error(ERR_SLAVE_DEFINED, i18n("Setting the Access Control List on folder %1 "
+                                      "for user %2 failed. The server returned: %3")
             .arg(_url.prettyURL())
             .arg(user)
             .arg(cmd->resultInfo()));
@@ -1277,8 +1277,8 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     imapCommand *cmd = doCommand(imapCommand::clientDeleteACL(aBox, user));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Deleting the Access Control List on folder %1 "
-                                 "for user %2 failed. The server returned: %3")
+      error(ERR_SLAVE_DEFINED, i18n("Deleting the Access Control List on folder %1 "
+                                    "for user %2 failed. The server returned: %3")
             .arg(_url.prettyURL())
             .arg(user)
             .arg(cmd->resultInfo()));
@@ -1293,8 +1293,8 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     imapCommand *cmd = doCommand(imapCommand::clientGetACL(aBox));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Retrieving the Access Control List on folder %1 "
-                                 "failed. The server returned: %2")
+      error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
+                                     "failed. The server returned: %2")
             .arg(_url.prettyURL())
             .arg(cmd->resultInfo()));
       return;
@@ -1318,8 +1318,8 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     imapCommand *cmd = doCommand(imapCommand::clientMyRights(aBox));
     if (cmd->result () != "OK")
     {
-      error(ERR_NO_CONTENT, i18n("Retrieving the Access Control List on folder %1 "
-                                 "failed. The server returned: %2")
+      error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
+                                    "failed. The server returned: %2")
             .arg(_url.prettyURL())
             .arg(cmd->resultInfo()));
       return;
@@ -1417,7 +1417,7 @@ IMAP4Protocol::stat (const KURL & _url)
       completeQueue.removeRef(cmd);
       if (!ok)
       {
-        error(ERR_NO_CONTENT, i18n("Unable to close mailbox."));
+        error(ERR_COULD_NOT_STAT, i18n("Unable to close mailbox."));
         return;
       }
       setState(ISTATE_LOGIN);
@@ -1447,7 +1447,7 @@ IMAP4Protocol::stat (const KURL & _url)
       }
       completeQueue.removeRef (cmd);
       if (found)
-        error(ERR_NO_CONTENT, i18n("Unable to get information about folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
+        error(ERR_COULD_NOT_STAT, i18n("Unable to get information about folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
       else
         error(KIO::ERR_DOES_NOT_EXIST, aBox);
       return;
@@ -2165,7 +2165,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
       }
       completeQueue.removeRef (cmd);
       if (found)
-        error(ERR_NO_CONTENT, i18n("Unable to open folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
+        error(ERR_SLAVE_DEFINED, i18n("Unable to open folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
       else
         error(KIO::ERR_DOES_NOT_EXIST, aBox);
       return false;
