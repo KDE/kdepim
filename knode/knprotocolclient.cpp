@@ -51,8 +51,8 @@ KNProtocolClient::~KNProtocolClient()
 
 void KNProtocolClient::run()
 {
-  if (0!=pthread_setcanceltype(PTHREAD_CANCEL_ENABLE,NULL))
-    qWarning("pthread_setcanceltype failed!");
+  if (0!=pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL))
+    qWarning("pthread_setcancelstate failed!");
   if (0!= pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL))
     qWarning("pthread_setcanceltype failed!");
 
