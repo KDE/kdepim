@@ -68,7 +68,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
 EmailEditWidget::~EmailEditWidget()
 {
 }
-    
+
 void EmailEditWidget::setEmails( const QStringList &list )
 {
   mEmailList = list;
@@ -100,7 +100,7 @@ QStringList EmailEditWidget::emails()
 void EmailEditWidget::edit()
 {
   EmailEditDialog dlg( mEmailList, this );
-  
+
   if ( dlg.exec() ) {
     if ( dlg.changed() ) {
       mEmailList = dlg.emails();
@@ -145,7 +145,10 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   topLayout->addWidget( mAddButton, 0, 2 );
 
   mEmailListBox = new QListBox( page );
-  mEmailListBox->insertStringList( list );
+
+  QStringList items = list;
+  items.remove( "" );  // remove all empty entries
+  mEmailListBox->insertStringList( items );
 
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight( mEmailListBox->sizeHint().height() + 30 );
