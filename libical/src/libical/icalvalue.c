@@ -678,7 +678,6 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
 		break;
 	    }
 
-	    case '\'':
 	    case ';':
 	    case ',':{
 		icalmemory_append_char(&str,&str_p,&buf_sz,'\\');
@@ -739,7 +738,7 @@ char* icalvalue_attach_as_ical_string(icalvalue* value) {
     } else if (a.url != 0){
 	return icalvalue_string_as_ical_string(value);
     } else {
-	icalerrno = ICAL_MALFORMEDDATA_ERROR;
+	icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
 	return 0;
     }
 }

@@ -1328,7 +1328,16 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
       case ICAL_TRIGGER_PROPERTY:
         trigger = icalproperty_get_trigger(p);
-        koalarm->setTime(readICalDateTime(trigger.time));
+        if (icaltime_is_null_time(trigger.time)) {
+          kdDebug() << "ICalFormatImpl::readAlarm(): Trigger has no time." << endl;
+          if (icaldurationtype_is_null_duration(trigger.duration)) {
+            kdDebug() << "ICalFormatImpl::readAlarm(): Trigger has no duration." << endl;
+          } else {
+            kdDebug() << "ICalFormatImpl::readAlarm(): Trigger has duration." << endl;
+          }
+        } else {
+          koalarm->setTime(readICalDateTime(trigger.time));
+        }
         break;
 
       case ICAL_DURATION_PROPERTY:

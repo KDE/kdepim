@@ -127,7 +127,7 @@ void unset_tz(struct set_tz_save savetz)
 
     if(orig_tzid!=0){	
 	size_t tmp_sz =strlen(orig_tzid)+4; 
-	char* orig_env_str = (char*)malloc(tmp_sz);
+	char* orig_env_str = (char*)icalmemory_tmp_buffer(tmp_sz);
 
 	if(orig_env_str == 0){
             icalerror_set_errno(ICAL_NEWFAILED_ERROR);
@@ -396,7 +396,7 @@ short icaltime_day_of_week(struct icaltimetype t){
     time_t tt = icaltime_as_timet(t);
     struct tm *tm;
 
-    if(t.is_utc == 1){
+    if(t.is_utc == 1 || t.is_date == 1){
 	tm = gmtime(&tt);
     } else {
 	tm = localtime(&tt);
@@ -453,14 +453,15 @@ short icaltime_week_number(struct icaltimetype ictt)
 
 
 short icaltime_day_of_year(struct icaltimetype t){
-    time_t tt = icaltime_as_timet(t);
+    time_t tt;
     struct tm *stm;
+    struct set_tz_save old_tz; 
 
-    if(t.is_utc==1){
-	stm = gmtime(&tt);
-    } else {
-	stm = localtime(&tt);
-    }
+    tt =  icaltime_as_timet(t);
+
+    old_tz = set_tz("UTC");
+    stm = localtime(&tt);
+    unset_tz(old_tz);
 
     return stm->tm_yday+1;
     
@@ -471,13 +472,14 @@ struct icaltimetype icaltime_from_day_of_year(short doy,  short year)
 {
     struct tm stm; 
     time_t tt;
-    struct set_tz_save old_tz = set_tz("UTC");
+    struct set_tz_save old_tz;
 
     /* Get the time of january 1 of this year*/
     memset(&stm,0,sizeof(struct tm)); 
     stm.tm_year = year-1900;
     stm.tm_mday = 1;
 
+    old_tz = set_tz("UTC");
     tt = mktime(&stm);
     unset_tz(old_tz);
 

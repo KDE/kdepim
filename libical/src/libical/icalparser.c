@@ -97,11 +97,10 @@ icalparser* icalparser_new(void)
     impl->components  = pvl_newlist();  
     impl->level = 0;
     impl->state = ICALPARSER_SUCCESS;
-
     impl->tmp_buf_size = TMP_BUF_SIZE;
     impl->buffer_full = 0;
     impl->lineno = 0;
-
+    impl->continuation_line = 0;
     memset(impl->temp,0, TMP_BUF_SIZE);
 
     return (icalparser*)impl;
@@ -1088,7 +1087,7 @@ icalcomponent* icalparser_parse_string(const char* str)
     struct slg_data d;
     icalparser *p;
 
-    icalerrorstate es = icalerror_get_error_state(ICAL_PARSE_ERROR);
+    icalerrorstate es = icalerror_get_error_state(ICAL_MALFORMEDDATA_ERROR);
 
     d.pos = 0;
     d.str = str;
@@ -1096,11 +1095,11 @@ icalcomponent* icalparser_parse_string(const char* str)
     p = icalparser_new();
     icalparser_set_gen_data(p,&d);
 
-    icalerror_set_error_state(ICAL_PARSE_ERROR,ICAL_ERROR_NONFATAL);
+    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_NONFATAL);
 
     c = icalparser_parse(p,string_line_generator);
 
-    icalerror_set_error_state(ICAL_PARSE_ERROR,es);
+    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,es);
 
     icalparser_free(p);
 
