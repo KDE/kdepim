@@ -749,7 +749,7 @@ void ResourceXMLRPC::loadCategoriesFinished( const QValueList<QVariant> &mapList
     if ( categories.find( it.data().toString() ) == categories.end() )
       categories.append( it.data().toString() );
 
-    prefs->setCustomCategories( categories );
+    prefs->mCustomCategories = categories;
   }
 }
 
