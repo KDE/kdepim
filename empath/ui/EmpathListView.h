@@ -83,7 +83,6 @@ class EmpathListView : public QListView
         void rightButtonPressed(QListViewItem *, const QPoint &, int, Area);
         
         void linkChanged(QListViewItem *);
-        void showLink(QListViewItem *);
         void startDrag(const QList<QListViewItem> &); // Add another one for single selection(?)
 
     protected:
