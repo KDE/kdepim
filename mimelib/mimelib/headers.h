@@ -321,6 +321,12 @@ public:
     //. This member function allows access to extension fields or
     //. user-defined fields.
 
+    DwString AllFieldBodiesAsString(const DwString& aFieldName);
+    //. Returns a string which the comma separated header field bodies of all
+    //. header fields with field name {\tt aFieldName}.  Can for example be
+    //. used to get the contents of all Cc headers of a message which (in 
+    //. violation of RFC 2822) has multiple Cc headers.
+
     int NumFields() const;
     //. Returns the number of {\tt DwField} objects contained by this
     //. {\tt DwHeaders} object.
