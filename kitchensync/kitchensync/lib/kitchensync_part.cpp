@@ -63,6 +63,7 @@ KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *,
   setWidget( view );
 
   view->initProfiles();
+  mActionManager->readConfig();
   view->activateProfile();
 
   setInstance( KitchenSyncFactory::instance() );

@@ -59,6 +59,9 @@ class ActionManager
 
     void initActions();
     
+    void readConfig();
+    void writeConfig();
+    
   private:
     KActionCollection *mActionCollection;
     KitchenSync *mView;

@@ -24,6 +24,7 @@
 #include "calendarsyncee.h"
 #include "addressbooksyncee.h"
 
+#include <syncuikde.h>
 #include <konnector.h>
 #include <configwidget.h>
 #include <konnectormanager.h>
@@ -69,20 +70,29 @@ class KonnectorCheckItem : public QCheckListItem
 };
 
 SyncerPart::SyncerPart( QWidget *parent, const char *name,
-                    QObject *, const char *,const QStringList & )
+                        QObject *, const char *, const QStringList & )
   : ManipulatorPart( parent, name ), m_widget( 0 )
 {
-  m_pixmap = KGlobal::iconLoader()->loadIcon("package_toys", KIcon::Desktop, 48 );
+  m_pixmap = KGlobal::iconLoader()->loadIcon( "package_toys", KIcon::Desktop,
+                                              48 );
+
+  mSyncUi = new SyncUiKde( parent, true, true );
+  
+  mCalendarSyncer.setSyncUi( mSyncUi );
+  mAddressBookSyncer.setSyncUi( mSyncUi );
 }
 
 KAboutData *SyncerPart::createAboutData()
 {
-  return new KAboutData("KSyncSyncerPart", I18N_NOOP("Sync SyncerPart Part"), "0.0" );
+  return new KAboutData( "KSyncSyncerPart", I18N_NOOP("Sync SyncerPart Part"),
+                         "0.0" );
 }
 
 SyncerPart::~SyncerPart()
 {
   delete m_widget;
+
+  delete mSyncUi;
 }
 
 QString SyncerPart::type() const

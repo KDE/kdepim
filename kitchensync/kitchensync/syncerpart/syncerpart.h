@@ -101,6 +101,8 @@ class SyncerPart : public ManipulatorPart
 
     Syncer mCalendarSyncer;
     Syncer mAddressBookSyncer;
+
+    SyncUi *mSyncUi;
 };
 
 }

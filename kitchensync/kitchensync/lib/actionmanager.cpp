@@ -22,6 +22,8 @@
 #include <klocale.h>
 #include <kstatusbar.h>
 #include <kdebug.h>
+#include <kglobal.h>
+#include <kconfig.h>
 
 #include "actionmanager.h"
 
@@ -34,6 +36,7 @@ ActionManager::ActionManager( KActionCollection *actionCollection )
 
 ActionManager::~ActionManager()
 {
+  writeConfig();
 }
 
 void ActionManager::setView( KitchenSync *view )
@@ -76,4 +79,21 @@ int ActionManager::currentProfile()
 void ActionManager::setProfiles( const QStringList &profiles )
 {
   m_profAct->setItems( profiles );
+}
+
+void ActionManager::readConfig()
+{
+  KConfig *cfg = KGlobal::config();
+  cfg->setGroup( "Profiles" );
+  int currentProfile = cfg->readNumEntry( "CurrentProfile", 0 );
+  m_profAct->setCurrentItem( currentProfile );
+}
+
+void ActionManager::writeConfig()
+{
+  KConfig *cfg = KGlobal::config();
+  cfg->setGroup( "Profiles" );
+  int currentProfile = m_profAct->currentItem();
+  cfg->writeEntry( "CurrentProfile", currentProfile );
+  cfg->sync();
 }

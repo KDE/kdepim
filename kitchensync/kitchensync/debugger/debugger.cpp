@@ -249,10 +249,13 @@ void Debugger::slotReceiveData( Konnector *k )
     Syncee *syncee = *it;
     logMessage( i18n("Got Syncee of type %1").arg( syncee->type() ) );
     SyncEntry *syncEntry;
+    int i = 0;
     for( syncEntry = syncee->firstEntry(); syncEntry;
          syncEntry = syncee->nextEntry() ) {
-      logMessage( syncEntry->id() + ": " + syncEntry->name() );
+      logMessage( " " + syncEntry->id() + ": " + syncEntry->name() );
+      ++i;
     }
+    if ( i == 0 ) logMessage( i18n(" Empty") );
   }
 }
 

@@ -160,16 +160,16 @@ void KitchenSync::writeProfileConfig()
 /*
  * we search for all installed plugins here
  * and add them to the ManPartService List
- * overview is special for us
  */
 void KitchenSync::initPlugins()
 {
-  KTrader::OfferList offers = KTrader::self()->query(QString::fromLatin1("KitchenSync/Manipulator"),
-						     QString::null);
+  KTrader::OfferList offers = KTrader::self()->query(
+      QString::fromLatin1("KitchenSync/Manipulator"), QString::null );
 
-  for (KTrader::OfferList::ConstIterator it = offers.begin(); it != offers.end(); ++it){
-      ManPartService ser( (*it) );
-      m_partsLst.append( ser );
+  KTrader::OfferList::ConstIterator it;
+  for ( it = offers.begin(); it != offers.end(); ++it ) {
+    ManPartService ser( *it );
+    m_partsLst.append( ser );
   }
 
 }

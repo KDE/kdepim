@@ -71,6 +71,7 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
   createGUI( 0 );
 
   mView->initProfiles();
+  mActionManager->readConfig();
   mView->activateProfile();
 
   //statusBar()->insertItem(i18n("Not Connected"), 10, 0, true );
