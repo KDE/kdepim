@@ -78,13 +78,13 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
           this, SLOT(slotCancelEditor()));          
     
   // file menu
-  new KAction(i18n("&Send Now"),"sendnow", 0 , this, SLOT(slotSendNow()),
+  new KAction(i18n("&Send Now"),"send", 0 , this, SLOT(slotSendNow()),
               actionCollection(), "send_now");
   new KAction(i18n("Send &Later"), 0, this, SLOT(slotSendLater()),
               actionCollection(), "send_later");
-  new KAction(i18n("Save As &Draft"),"save", 0 , this, SLOT(slotSaveAsDraft()),
+  new KAction(i18n("Save As &Draft"),"filesave", 0 , this, SLOT(slotSaveAsDraft()),
               actionCollection(), "save_as_draft");
-  new KAction(i18n("D&elete"),"delete", 0 , this, SLOT(slotArtDelete()),
+  new KAction(i18n("D&elete"),"editdelete", 0 , this, SLOT(slotArtDelete()),
               actionCollection(), "art_delete");
   KStdAction::close(this, SLOT(close()),actionCollection());
 
@@ -107,7 +107,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
                    actionCollection(), "append_signature");
   new KAction(i18n("&Insert File"), 0, this, SLOT(slotInsertFile()),
                    actionCollection(), "insert_file");
-  new KAction(i18n("Attach &File"), 0, this, SLOT(slotAttachFile()),
+  new KAction(i18n("Attach &File"), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
   actRemoveAttachment = new KAction(i18n("&Remove"), 0, this, SLOT(slotRemoveAttachment()),
                                     actionCollection(), "remove_attachment");
