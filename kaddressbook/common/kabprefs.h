@@ -66,7 +66,12 @@ class KABPrefs : public KABPrefsBase
     {
       return mCustomCategories;
     }
-    
+
+    void setCustomCategories(const QStringList & s)
+    {
+      mCustomCategories = s; 
+    }
+
     void setCategoryDefaults();
 
   private:
