@@ -32,13 +32,15 @@
 #include "kresources/kolab/kabc/resourcekolab.h"
 #include "kresources/kolab/knotes/resourcekolab.h"
 
-#include <qwhatsthis.h>
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <qlayout.h>
 #include <qcheckbox.h>
+#include <qhbuttongroup.h>
 #include <qlabel.h>
+#include <qlayout.h>
+#include <qradiobutton.h>
+#include <qwhatsthis.h>
 
 class SetupLDAPSearchAccount : public KConfigPropagator::Change
 {
@@ -170,7 +172,6 @@ class KolabPropagator : public KConfigPropagator
       c->group = "FreeBusy";
 
       c->name = "FreeBusyPublishUrl";
-      c->label = "";
 
       QString user = KolabConfig::self()->user();
       // We now use the full email address in the freebusy URL
@@ -268,9 +269,15 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   topLayout->addWidget( mPasswordEdit, 3, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
+  topLayout->addWidget( mSavePasswordCheck, 4, 1 );
 
   topLayout->setRowStretch( 4, 1 );
+
+   QButtonGroup *bg = new QHButtonGroup(i18n("Server Version"), page );
+   QWhatsThis::add( bg, i18n("Choose the version of the Kolab Server you are using.") );
+   mKolab1 = new QRadioButton( i18n ( "Kolab 1" ), bg );
+   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
+   topLayout->addMultiCellWidget( bg, 5, 5, 0, 1 );
 
   //DF: I don't see the point in showing the user those pages.
   //They are very 'internal' and of no use to anyone other than developers.
@@ -293,6 +300,8 @@ void KolabWizard::usrReadConfig()
   mRealNameEdit->setText( KolabConfig::self()->realName() );
   mPasswordEdit->setText( KolabConfig::self()->password() );
   mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
+  mKolab1->setChecked( KolabConfig::self()->kolab1Legacy() );
+  mKolab2->setChecked( !KolabConfig::self()->kolab1Legacy() );
 }
 
 void KolabWizard::usrWriteConfig()
@@ -302,4 +311,5 @@ void KolabWizard::usrWriteConfig()
   KolabConfig::self()->setRealName( mRealNameEdit->text() );
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
   KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
+  KolabConfig::self()->setKolab1Legacy( mKolab1->isChecked() );
 }
