@@ -27,8 +27,10 @@
 
 #include <kxmlguiclient.h>
 
+class QStringList;
 class DCOPClient;
 class DCOPObject;
+class KAboutData;
 
 namespace Kaplan
 {
@@ -52,6 +54,10 @@ namespace Kaplan
         Plugin(Core *core, QObject *parent, const char *name);
         ~Plugin();
 
+        /**
+         * Offers access to Kaplans core.
+         **/
+
         Core *core() const;
 
         /**
@@ -59,6 +65,24 @@ namespace Kaplan
          * plugin provides it. Return false otherwise.
          */
         virtual bool createDCOPInterface( const QString& /*serviceType*/ ) { return 0L; }
+
+        /**
+         * Reimplement this method and return a @ref QStringList of all config
+         * modules your application part should offer via Kaplan. Note that the
+         * part and the module will have to take care for config syncing themselves.
+         * Usually @p DCOP used for that purpose.
+         *
+         * @note Make sure you offer the modules in the form: 
+         * <code>"pathrelativetosettings/mysettings.desktop"</code>
+         *
+         **/
+        virtual QStringList configModules() const { return QStringList(); };
+
+        /**
+         * Reimplement this method if you want to add your credits to the Kaplan
+         * about dialog.
+         **/
+        virtual KAboutData* aboutData() { return 0L; };
 
         /**
          * Retrieve the current DCOP Client for the plugin.
