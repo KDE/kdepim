@@ -495,7 +495,7 @@ void KNMainWindow::openURL(const KURL &url)
         c_olView->setActive(item, true);
       }
     } else {
-      QString groupname = groupname.mid( url.protocol().length()+1 );
+      QString groupname = url.url().mid( url.protocol().length()+1 );
       KNGroup *g = g_rpManager->currentGroup();
       if (g == 0)
         g = g_rpManager->firstGroupOfAccount(acc);
