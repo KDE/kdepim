@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-03-05</date>
-<releaseinfo>0.06.00</releaseinfo>
+<date>2002-05-29</date>
+<releaseinfo>0.07.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
@@ -167,7 +167,7 @@ This displays the alarm edit window:</para>
 </mediaobject>
 </screenshot>
 
-<para>In the <guilabel>Message</guilabel> group box, select either
+<para>In the <guilabel>Action</guilabel> group box, select either
 <guilabel>Text</guilabel> in order to enter the message text (which
 may include newlines) in the edit box, <guilabel>Command</guilabel> to
 enter a shell command to execute, or <guilabel>File</guilabel> to
@@ -176,21 +176,85 @@ displayed in the alarm message.  When <guilabel>File</guilabel> is
 selected, <guibutton>Browse...</guibutton> may be used
 to display a file selection dialog.</para>
 
-<para>In the <guilabel>Time</guilabel> group box, select <guilabel>At
-date/time:</guilabel> to enter the date and time when the alarm is to
-be triggered, or select <guilabel>Time from now:</guilabel> to enter
-how long after now (in hours and minutes) the alarm should be
-triggered.</para>
+<para>In the <guilabel>Time</guilabel> group box, select either</para>
 
-<para>If you want the alarm to be repeated, enter in the
-<guilabel>Repetition</guilabel> group box the number of repetitions
-(after the initial display) and the interval (in hours and minutes, in
-the range 1 minute to 99 hours) between repetitions. Check
-<guilabel>Repeat at login</guilabel> if you want the alarm to be
-triggered whenever you log in, in addition to its other scheduled
-times. (Note that an alarm repeated at login will also be triggered
-any time you enable alarms, or restart or reset the <application>alarm
-daemon</application>.)</para>
+<itemizedlist>
+<listitem>
+<para><guilabel>At date/time:</guilabel> to enter the date and time
+when the alarm is to be triggered. Check the <guilabel>Any
+time</guilabel> checkbox if you want to specify only a date for the
+alarm: in this case the alarm will be displayed at the first
+opportunity on or after the configured start-of-day time, on the
+specified date. (<link linkend="preferences">Configuring default
+options</link> describes how to set the start-of-day time.)</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Time from now:</guilabel> to enter how long after now
+(in hours and minutes) the alarm should be triggered.</para>
+</listitem>
+</itemizedlist>
+
+<para>Specify whether or how the alarm should be repeated in the
+<guilabel>Repetition</guilabel> group box.</para>
+
+<itemizedlist>
+<listitem><para>To trigger the alarm once only, select <guilabel>No
+repetition</guilabel>.</para></listitem>
+
+<listitem><para>Select <guilabel>Repeat at login</guilabel> to trigger
+the alarm whenever you log in, until its scheduled time. (Note that an
+alarm repeated at login will also be triggered any time you enable
+alarms, or restart or reset the <application>alarm
+daemon</application>.)</para></listitem>
+
+<listitem><para>Select <guilabel>Recur</guilabel> to trigger the alarm
+at regular intervals. You must then specify how it is to recur in the
+<guilabel>Recurrence Rule</guilabel> group box, and for how long in
+the <guilabel>Recurrence End</guilabel> group box. These group boxes
+appear only while <guilabel>Recur</guilabel> is selected.</para>
+
+<para>Set the recurrence time period by selecting one of the time
+period types and entering in the <guilabel>Recur every</guilabel> box
+how many time periods should elapse between recurrences. For example,
+to repeat every 14 days, you could select <guilabel>Daily</guilabel>
+and enter a value of 14, or select <guilabel>Weekly</guilabel> and
+enter a value of 2. Depending on the time period type selected, you
+may have further options:</para>
+
+<itemizedlist>
+<listitem>
+<para>For a weekly recurrence, check each day in the week on which you
+wish to trigger the alarm.</para>
+</listitem>
+
+<listitem>
+<para>For a monthly recurrence, you may select either a fixed date, or
+a position (&eg; the second Tuesday).</para>
+</listitem>
+
+<listitem>
+<para>For a yearly recurrence, you may select either a fixed month (in
+which case the recurrence start date determines the day in the month
+for the alarm), or a day number.</para>
+</listitem>
+</itemizedlist>
+
+<para>Set the overall recurrence time span as follows:</para>
+
+<itemizedlist>
+<listitem><para>Select <guilabel>No end</guilabel> to continue the
+repetitions indefinitely.</para></listitem>
+
+<listitem><para>Select <guilabel>End after</guilabel> to specify the
+total number of occurrences of the alarm.</para></listitem>
+
+<listitem><para>Select <guilabel>End by</guilabel> to specify the
+date/time until which the alarm will be repeated.</para></listitem>
+</itemizedlist>
+
+</listitem>
+</itemizedlist>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
 happens if the alarm can't be triggered at its scheduled time. Check
@@ -198,7 +262,10 @@ this box to cancel the alarm if it can't be triggered within the
 currently configured <link linkend="daemon-interval">alarm daemon
 check interval</link> after the right time. Leave the box unchecked to
 trigger the alarm at the first opportunity starting at the scheduled
-time.</para>
+time. Date-only alarms, &ie; ones for which the <guilabel>Any
+time</guilabel> option is selected, will be cancelled if they cannot
+be displayed within 24 hours of the start-of-day time on the date
+scheduled.</para>
 
 <note><para>An alarm can only be triggered while you are logged in,
 and while both X and the <application>alarm daemon</application> are
@@ -282,6 +349,9 @@ when the message is to be redisplayed, or select <guilabel>Defer for
 time interval:</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
 <guibutton>Defer</guibutton> to defer the alarm message.</para>
+
+<note><para>If the alarm recurs regularly, the time it is deferred to
+must be earlier than its next scheduled repetition.</para></note>
 
 <note><para>The <guibutton>Defer...</guibutton> button is not
 available for alarms which are displayed at login due to the
@@ -461,6 +531,13 @@ displayed at &kde; session login.</para>
 icon is updated to reflect whether alarms are currently being
 monitored. This involves checking whether the <application>alarm
 daemon</application> is running.</para>
+</listitem>
+
+<listitem><para>Set the start-of-day time for the purposes of
+triggering date-only alarms, &ie; ones for which the <guilabel>Any
+time</guilabel> option was selected. On the date when they are due,
+such alarms will be output at the earliest opportunity during the
+24 hours starting from the start-of-day time.</para>
 </listitem>
 
 <listitem><para>Set the default font and background colour to use for
@@ -653,9 +730,16 @@ time.</para>
 </row>
 <row>
   <entry><option>-i</option>, <option>--interval
-  <replaceable>minutes</replaceable></option></entry>
-  <entry>Set the interval between repetitions of the alarm to the
-  specified number of minutes. Mandatory if <option>--repeat</option>
+  <replaceable>period</replaceable></option></entry>
+  <entry>Set the interval between repetitions of the alarm.
+  Hours/minutes are specified in the format
+  <replaceable>nHnM</replaceable>, where <replaceable>n</replaceable>
+  is a number, &eg; 3H30M. Other time periods are specified in the
+  format <replaceable>nX</replaceable>, where
+  <replaceable>n</replaceable> is a number and
+  <replaceable>X</replaceable> is one of the following letters: Y
+  (years), M (months), W (weeks), D (days).
+  Mandatory if <option>--repeat</option> or <option>--until</option>
   is specified.</entry>
 </row>
 <row>
@@ -665,20 +749,36 @@ time.</para>
 </row>
 <row>
   <entry><option>-L</option>, <option>--login</option></entry>
-  <entry>Trigger the alarm every time you log in.</entry>
+  <entry>Trigger the alarm every time you log in.
+  <option>--interval</option>, <option>--repeat</option> and
+  <option>--until</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>-r</option>, <option>--repeat
-  <replaceable>minutes</replaceable></option></entry>
-  <entry>The number of times the alarm should be repeated, after its
-  initial trigger. Mandatory if <option>--interval</option> is
-  specified.</entry>
+  <replaceable>count</replaceable></option></entry>
+  <entry>The number of times the alarm should be triggered. Specify
+  -1 to repeat the alarm indefinitely. <option>--interval</option>
+  must be, and<option>--until</option> cannot be, specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>-t</option>, <option>--time
-  <replaceable>time</replaceable></option></entry>
-  <entry>Trigger alarm at 'time' [[[yyyy-]mm-]dd-]hh:mm (default is
-  immediately).</entry>
+  <replaceable>date/time</replaceable></option></entry>
+  <entry>Trigger alarm on the date or at the date/time specified.
+  Specify a date without a time in the format
+  <replaceable>yyyy-mm-dd</replaceable>; specify a date and time by
+  <replaceable>[[[yyyy-]mm-]dd-]hh:mm</replaceable> (where omitted,
+  date fields default to the values for today).</entry>
+</row>
+<row>
+  <entry><option>-u</option>, <option>--until
+  <replaceable>date/time</replaceable></option></entry>
+  <entry>Repeat the alarm until the date or date/time specified.
+  Specify a date without a time in the same format as for
+  <option>--time</option>. <option>--interval</option> must be, and
+  <option>--repeat</option> cannot be, specified with this
+  option.</entry>
 </row>
 <row>
   <entry><replaceable>message</replaceable></entry>
@@ -1134,10 +1234,13 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>repeatCount</replaceable>, int <replaceable>interval</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1169,7 +1272,27 @@ should be displayed.</para>
 <term><parameter>flags</parameter></term>
 <listitem>
 <para>Specifies the logical OR of the desired alarm message flags. The
-flag bits are those defined in <filename>msgevent.h</filename></para>
+flag bits are those defined in class KAlarmEvent in
+<filename>msgevent.h</filename></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>simpleRepeatType</parameter></term>
+<listitem>
+<para>Specifies the recurrence type for the alarm. The permissible
+values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
+are defined in class KAlarmEvent in
+<filename>msgevent.h</filename>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>interval</parameter></term>
+<listitem>
+<para>Specifies the number of periods
+(minutes/days/weeks/months/years) between repetitions of the alarm
+message.</para>
 </listitem>
 </varlistentry>
 
@@ -1177,15 +1300,7 @@ flag bits are those defined in <filename>msgevent.h</filename></para>
 <term><parameter>repeatCount</parameter></term>
 <listitem>
 <para>Specifies the number of times that the alarm message should be
-repeated, after its initial display.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><parameter>interval</parameter></term>
-<listitem>
-<para>Specifies the interval in minutes between repetitions of the
-alarm message.</para>
+displayed. Specify -1 to repeat the alarm indefinitely.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1196,14 +1311,15 @@ alarm message.</para>
 <title>Description</title>
 <para><function>scheduleMessage()</function> is a &DCOP; call to
 schedule the specified alarm message for display at the specified date
-and time. It has two forms: one for a non-repeating alarm, and another
-for a repeating alarm.</para>
+and time. It has three forms: one for a non-repeating alarm, one
+for a repeating alarm with a repetition count, and one for a
+repeating alarm with an end time.</para>
 
 <para>If the scheduled time (including any repetitions) has already
 passed, &kalarm; immediately displays the message or, if the
 LATE_CANCEL flag bit is set, ignores the request. If the scheduled
-time is in the future, &kalarm; adds the alarm message to the calendar
-file for later display.</para>
+time (or a repetition) is in the future, &kalarm; adds the alarm
+message to the calendar file for later display.</para>
 
 <para>Use a code sequence similar to the following to set up the
 parameter data for the &DCOP; call to
@@ -1233,14 +1349,14 @@ QString message;
 QDateTime dateTime;
 QColor bgColour;
 Q_UINT32 flags;
-Q_INT32 repeatCount, repeatInterval;
+Q_INT32 repeatType, repeatCount, repeatInterval;
 . . .
 QByteArray data;
 QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags &lt;&lt; repeatCount &lt;&lt; repeatInterval;
+arg &lt;&lt; flags &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
 </screen>
 </refsect1>
 </refentry>
@@ -1256,10 +1372,13 @@ text file.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>repeatCount</replaceable>, int <replaceable>interval</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1276,7 +1395,7 @@ be displayed in the message to be scheduled.</para>
 <varlistentry>
 <term><parameter>dateTime</parameter></term>
 <listitem>
-<para>Specifies the scheduled date and time at which the message
+<para>Specifies the scheduled date and time at which the file
 should be displayed.</para>
 </listitem>
 </varlistentry>
@@ -1284,31 +1403,43 @@ should be displayed.</para>
 <varlistentry>
 <term><parameter>bg</parameter></term>
 <listitem>
-<para>Specifies the background colour for displaying the message.</para>
+<para>Specifies the background colour for displaying the file.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>flags</parameter></term>
 <listitem>
-<para>Specifies the logical OR of the desired alarm message flags. The
-flag bits are those defined in <filename>msgevent.h</filename></para>
+<para>Specifies the logical OR of the desired alarm flags. The flag
+bits are those defined in class KAlarmEvent in
+<filename>msgevent.h</filename></para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>repeatCount</parameter></term>
+<term><parameter>simpleRepeatType</parameter></term>
 <listitem>
-<para>Specifies the number of times that the alarm message should be
-repeated, after its initial display.</para>
+<para>Specifies the recurrence type for the alarm. The permissible
+values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
+are defined in class KAlarmEvent in
+<filename>msgevent.h</filename>.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>interval</parameter></term>
 <listitem>
-<para>Specifies the interval in minutes between repetitions of the
-alarm message.</para>
+<para>Specifies the number of periods
+(minutes/days/weeks/months/years) between repetitions of the
+alarm.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>repeatCount</parameter></term>
+<listitem>
+<para>Specifies the number of times that the file should be displayed.
+Specify -1 to repeat the alarm indefinitely.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1337,10 +1468,13 @@ command.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime* <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>repeatCount</replaceable>, int <replaceable>interval</replaceable>)
+bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1365,25 +1499,37 @@ should be executed.</para>
 <varlistentry>
 <term><parameter>flags</parameter></term>
 <listitem>
-<para>Specifies the logical OR of the desired alarm message flags. The
-flag bits are those defined in <filename>msgevent.h</filename> except
-that the beep flag bit is ignored.</para>
+<para>Specifies the logical OR of the desired alarm flags. The flag
+bits are those defined in class KAlarmEvent in
+<filename>msgevent.h</filename> except that the BEEP flag bit is
+ignored.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>repeatCount</parameter></term>
+<term><parameter>simpleRepeatType</parameter></term>
 <listitem>
-<para>Specifies the number of times that the alarm should be repeated,
-after its initial execution.</para>
+<para>Specifies the recurrence type for the alarm. The permissible
+values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
+are defined in class KAlarmEvent in
+<filename>msgevent.h</filename>.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>interval</parameter></term>
 <listitem>
-<para>Specifies the interval in minutes between repetitions of the
+<para>Specifies the number of periods
+(minutes/days/weeks/months/years) between repetitions of the
 alarm.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>repeatCount</parameter></term>
+<listitem>
+<para>Specifies the number of times that the alarm should be repeated.
+Specify -1 to repeat the alarm indefinitely.</para>
 </listitem>
 </varlistentry>
 </variablelist>
