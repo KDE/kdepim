@@ -33,6 +33,7 @@
 #include <kxmlguiclient.h>
 
 #include "core.h"
+#include "searchmanager.h"
 
 #include "kaddressbookview.h"
 
@@ -41,6 +42,9 @@ KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent,
     : QWidget( parent, name ), mCore( core ), mFieldList()
 {
   initGUI();
+
+  connect( SearchManager::self(), SIGNAL( contactsUpdated() ),
+           this, SLOT( updateView() ) );
 }
 
 KAddressBookView::~KAddressBookView()
@@ -100,9 +104,10 @@ QString KAddressBookView::selectedEmails()
 KABC::Addressee::List KAddressBookView::addressees()
 {
   KABC::Addressee::List addresseeList;
+  KABC::Addressee::List contacts = SearchManager::self()->contacts();
 
-  KABC::AddressBook::Iterator it;
-  for (it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it ) {
+  KABC::Addressee::List::Iterator it;
+  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
     if ( mFilter.filterAddressee( *it ) )
       addresseeList.append( *it );
   }
@@ -161,6 +166,11 @@ void KAddressBookView::popup( const QPoint &point )
 QWidget *KAddressBookView::viewWidget()
 {
   return mViewWidget;
+}
+
+void KAddressBookView::updateView()
+{
+  refresh();
 }
 
 ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,

@@ -67,6 +67,7 @@
 #include "kaddressbookiface.h"
 #include "ldapsearchdialog.h"
 #include "printing/printingwizard.h"
+#include "searchmanager.h"
 #include "undocmds.h"
 #include "viewmanager.h"
 #include "xxportmanager.h"
@@ -105,6 +106,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   initGUI();
 
+  SearchManager::self();
+
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
            SLOT( addressBookChanged() ) );
   connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
@@ -126,8 +129,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
 
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
-           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
+  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QStringList& ) ),
+           SLOT( incrementalJumpButtonSearch( const QStringList& ) ) );
   connect( mViewManager, SIGNAL( sortFieldChanged() ),
            mJumpButtonBar, SLOT( updateButtons() ) );
 
@@ -490,68 +493,13 @@ void KABCore::setSearchFields( const KABC::Field::List &fields )
 
 void KABCore::incrementalTextSearch( const QString& text )
 {
-  incrementalSearch( text, true );
+  SearchManager::self()->search( text, mIncSearchWidget->currentField() );
 }
 
-void KABCore::incrementalJumpButtonSearch( const QString& text )
+void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
 {
-  incrementalSearch( text, false );
-}
-
-void KABCore::incrementalSearch( const QString& text, bool search )
-{
-  mViewManager->setSelected( QString::null, false );
-
-  if ( !text.isEmpty() ) {
-    KABC::Field *field = ( search ? mIncSearchWidget->currentField() :
-                                    mViewManager->currentSortField() );
-
-#if KDE_VERSION >= 319
-    KABC::AddresseeList list( mAddressBook->allAddressees() );
-    if ( field ) {
-      list.sortByField( field );
-      KABC::AddresseeList::Iterator it;
-      for ( it = list.begin(); it != list.end(); ++it ) {
-        if ( (search && field->value( *it ).find( text, 0, false ) != -1) ||
-             (!search && field->value( *it).startsWith( text, false)) ) {
-          mViewManager->setSelected( (*it).uid(), true );
-          return;
-        }
-      }
-    } else {
-      KABC::AddresseeList::Iterator it;
-      for ( it = list.begin(); it != list.end(); ++it ) {
-        KABC::Field::List fieldList = KABC::Field::allFields();
-        KABC::Field::List::ConstIterator fieldIt;
-        for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).find( text, 0, false ) != -1 ) {
-            mViewManager->setSelected( (*it).uid(), true );
-            return;
-          }
-        }
-      }
-    }
-#else
-    KABC::AddressBook::Iterator it;
-    for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
-      if ( field ) {
-        if ( field->value( *it ).startsWith( text, false ) ) {
-          mViewManager->setSelected( (*it).uid(), true );
-          return;
-        }
-      } else {
-        KABC::Field::List fieldList = mIncSearchWidget->fields();
-        KABC::Field::List::ConstIterator fieldIt;
-        for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).startsWith( text, false ) ) {
-            mViewManager->setSelected( (*it).uid(), true );
-            return;
-          }
-        }
-      }
-    }
-#endif
-  }
+  SearchManager::self()->searchList( characters, mViewManager->currentSortField(), 
+                                 SearchManager::StartsWith );
 }
 
 void KABCore::setModified()
@@ -866,7 +814,7 @@ void KABCore::configurationChanged()
 
 void KABCore::addressBookChanged()
 {
-  mViewManager->refreshView();
+  SearchManager::self()->reload();
 }
 
 AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,

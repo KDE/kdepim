@@ -242,6 +242,9 @@ class KAddressBookView : public QWidget
      */
     QWidget *viewWidget();
 
+  private slots:
+    void updateView();
+
   private:
     void initGUI();
 

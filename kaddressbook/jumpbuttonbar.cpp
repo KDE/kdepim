@@ -42,20 +42,17 @@ class JumpButton : public QPushButton
 {
   public:
     JumpButton( const QString &firstChar, const QString &lastChar,
-                QWidget *parent );
+                const QString &charRange, QWidget *parent );
 
-    QString firstCharacter() const;
-    QString lastCharacter() const;
+    QString charRange() const { return mCharRange; }
 
   private:
-    QString mFirstCharacter;
-    QString mLastCharacter;
+    QString mCharRange;
 };
 
 JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
-                        QWidget *parent )
-  : QPushButton( "", parent ), mFirstCharacter( firstChar ),
-    mLastCharacter( lastChar )
+                        const QString &charRange, QWidget *parent )
+  : QPushButton( "", parent ), mCharRange( charRange )
 {
   if ( !lastChar.isEmpty() )
     setText( QString( "%1 - %2" ).arg( firstChar.upper() ).arg( lastChar.upper() ) );
@@ -63,15 +60,6 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
     setText( firstChar.upper() );
 }
 
-QString JumpButton::firstCharacter() const
-{
-  return mFirstCharacter;
-}
-
-QString JumpButton::lastCharacter() const
-{
-  return mLastCharacter;
-}
 
 JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
   : QWidget( parent, name ), mCore( core )
@@ -141,7 +129,8 @@ void JumpButtonBar::updateButtons()
   if ( characters.count() <= possibleButtons ) {
     // at first the easy case: all buttons fits in window
     for ( uint i = 0; i < characters.count(); ++i ) {
-      JumpButton *button = new JumpButton( characters[ i ], QString::null, this );
+      JumpButton *button = new JumpButton( characters[ i ], QString::null,
+                                           characters[ i ], this );
       connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
       mButtons.append( button );
       button->show();
@@ -160,7 +149,8 @@ void JumpButtonBar::updateButtons()
         continue;
       if ( characters.count() - current <= possibleButtons - i ) {
         JumpButton *button = new JumpButton( characters[ current ],
-                                             QString::null, this );
+                                             QString::null,
+                                             characters[ current ], this );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -168,8 +158,11 @@ void JumpButtonBar::updateButtons()
       } else {
         int pos = ( current + offset >= (int)characters.count() ?
                     characters.count() - 1 : current + offset - 1 );
+        QString range;
+        for ( int j = current; j < pos + 1; ++j )
+          range.append( characters[ j ] );
         JumpButton *button = new JumpButton( characters[ current ],
-                                             characters[ pos ], this );
+                                             characters[ pos ], range, this );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -185,9 +178,13 @@ void JumpButtonBar::updateButtons()
 void JumpButtonBar::letterClicked()
 {
   JumpButton *button = (JumpButton*)sender();
-  QString character = button->firstCharacter();
-  if ( !character.isEmpty() )
-    emit jumpToLetter( character );
+  QString characters = button->charRange();
+
+  QStringList charList;
+  for ( uint i = 0; i < characters.length(); ++i )
+    charList.append( QString( characters[ i ] ) );
+
+  emit jumpToLetter( charList );
 }
 
 void JumpButtonBar::resizeEvent( QResizeEvent* )

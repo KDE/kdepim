@@ -226,7 +226,7 @@ class KABCore : public KAB::Core
      */
     void incrementalTextSearch( const QString& text );
 
-    void incrementalJumpButtonSearch( const QString& text );
+    void incrementalJumpButtonSearch( const QStringList& characters );
 
     /**
       Marks the address book as modified.
@@ -343,8 +343,6 @@ class KABCore : public KAB::Core
   private:
     void initGUI();
     void initActions();
-
-    void incrementalSearch( const QString&, bool );
 
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );

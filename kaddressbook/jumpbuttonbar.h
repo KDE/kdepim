@@ -60,7 +60,7 @@ class JumpButtonBar : public QWidget
     /**
       Emitted whenever a letter is selected by the user.
      */
-    void jumpToLetter( const QString &character );
+    void jumpToLetter( const QStringList &characters );
 
   protected slots:
     void letterClicked();
