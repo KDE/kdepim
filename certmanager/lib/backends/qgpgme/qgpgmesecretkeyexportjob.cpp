@@ -92,8 +92,8 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 	   SLOT(slotStdout(KProcess*,char*,int)) );
   connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
 	   SLOT(slotStderr(KProcess*,char*,int)) );
-  connect( mProcess, SIGNAL(status(const QString&,const QStringList&)),
-	   SLOT(slotStatus(const QString&,const QStringList&)) );
+  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
+	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 
   if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::AllOutput ) ) {
     return mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
