@@ -124,7 +124,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_conLayout->addItem( iti1b,  0, 0);
 
     // Source
-    m_lblSrcIp = new QLabel(i18n("Source Address: "),  m_grpConnection);
+    m_lblSrcIp = new QLabel(i18n("Source address: "),  m_grpConnection);
     m_conSrcIp = new QComboBox(m_grpConnection);
     m_conSrcIp->setEditable( TRUE );
     m_lblSrcIp->setBuddy( m_conSrcIp );
@@ -138,7 +138,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     }
 
     //Destination
-    m_lblDestIp = new QLabel(i18n("Destination Address: "),  m_grpConnection );
+    m_lblDestIp = new QLabel(i18n("Destination address: "),  m_grpConnection );
     m_conDestIp = new QComboBox(m_grpConnection);
     m_conDestIp->setEditable( TRUE );
     m_lblDestIp->setBuddy( m_conDestIp );
