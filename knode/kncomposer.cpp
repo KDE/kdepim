@@ -43,13 +43,11 @@ using KRecentAddress::RecentAddresses;
 #include <kpgpblock.h>
 #include <kprocess.h>
 #include <kqcstringsplitter.h>
-#include <syntaxhighlighter.h>
+#include <ksyntaxhighlighter.h>
 #include <qcursor.h>
 #include <kurldrag.h>
 #include <kcompletionbox.h>
 
-using Syntaxhighlighter::DictSpellChecker;
-using Syntaxhighlighter::SpellChecker;
 #include <kapplication.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
@@ -1289,7 +1287,7 @@ void KNComposer::slotSpellcheck()
   a_ctSpellCheck->setEnabled(false);
 
   s_pellChecker = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
-  QStringList l = SpellChecker::personalWords();
+  QStringList l = KSpellingHighlighter::personalWords();
   for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
       s_pellChecker->addPersonal( *it );
   }
@@ -1587,7 +1585,7 @@ void KNComposer::slotSpellDone(const QString &newtext)
         }
     }
     s_pellChecker->cleanUp();
-    DictSpellChecker::dictionaryChanged();
+    KDictSpellingHighlighter::dictionaryChanged();
 }
 
 
@@ -1744,7 +1742,7 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   QColor col3 = config->readColorEntry( "quote2Color", &defaultColor2 );
   QColor col4 = config->readColorEntry( "quote1Color", &defaultColor1 );
   QColor c = QColor("red");
-  mSpellChecker = new DictSpellChecker(e_dit, /*active*/ true, /*autoEnabled*/ true,
+  mSpellChecker = new KDictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
                                        /*spellColor*/ config->readColorEntry("NewMessage", &c),
                                        /*colorQuoting*/ true, col1, col2, col3, col4);
   connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)),
@@ -2346,7 +2344,7 @@ void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
     else
     {
         spell = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
-        QStringList l = SpellChecker::personalWords();
+        QStringList l = KSpellingHighlighter::personalWords();
         for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
             spell->addPersonal( *it );
         }

@@ -44,7 +44,6 @@ libkdenetwork_la_SOURCES = kscoring.cpp \
 			  kfoldertree.cpp \
 			  ksubscription.cpp \
 			  kaccount.cpp \
-			  syntaxhighlighter.cpp \
 			  spellingfilter.cpp \
 			  linklocator.cpp \
 			  recentaddresses.cpp

@@ -41,20 +41,13 @@ class QGroupBox;
 
 class KProcess;
 class KSpell;
+class KDictSpellingHighlighter;
 class KSelectAction;
 class KToggleAction;
 
 class KNLocalArticle;
 class KNAttachment;
 class SpellingFilter;
-
-namespace Syntaxhighlighter {
-  class DictSpellChecker;
-}
-
-
-
-
 
 class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
@@ -253,7 +246,7 @@ class KNComposer::ComposerView  : public QSplitter {
     QPushButton     *a_ttAddBtn,
                     *a_ttRemoveBtn,
                     *a_ttEditBtn;
-    Syntaxhighlighter::DictSpellChecker *mSpellChecker;
+    KDictSpellingHighlighter *mSpellChecker;
 
     bool v_iewOpen;
 };
