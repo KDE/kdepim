@@ -56,7 +56,7 @@ SummaryWidget::SummaryWidget( QWidget *parent, const char *name )
 
   bool serviceAvailable = true;
   if ( !kapp->dcopClient()->isApplicationRegistered( "KWeatherService" ) ) {
-    if ( !KApplication::startServiceByDesktopName( "kweatherservice", QStringList(), &error, &appID ) ) {
+    if ( KApplication::startServiceByDesktopName( "kweatherservice", QStringList(), &error, &appID ) ) {
       kdDebug() << "No service available..." << endl;
       serviceAvailable = false;
     }
