@@ -21,8 +21,8 @@
 #include <qregexp.h>
 
 #include <VCardDefines.h>
-#include <DateValue.h>
-#include <Value.h>
+#include <VCardDateValue.h>
+#include <VCardValue.h>
 
 using namespace VCARD;
 

@@ -18,8 +18,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <Entity.h>
-#include <Value.h>
+#include <VCardEntity.h>
+#include <VCardValue.h>
 
 using namespace VCARD;
 

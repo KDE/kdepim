@@ -21,37 +21,37 @@
 #include <qcstring.h>
 #include <qstrlist.h>
 
-#include <AdrParam.h>
-#include <AgentParam.h>
-#include <DateParam.h>
-#include <EmailParam.h>
-#include <ImageParam.h>
-#include <SourceParam.h>
-#include <TelParam.h>
-#include <TextBinParam.h>
-#include <TextParam.h>
+#include <VCardAdrParam.h>
+#include <VCardAgentParam.h>
+#include <VCardDateParam.h>
+#include <VCardEmailParam.h>
+#include <VCardImageParam.h>
+#include <VCardSourceParam.h>
+#include <VCardTelParam.h>
+#include <VCardTextBinParam.h>
+#include <VCardTextParam.h>
 
-#include <AdrValue.h>
-#include <AgentValue.h>
-#include <DateValue.h>
-#include <ImageValue.h>
-#include <TextValue.h>
-#include <TextBinValue.h>
-#include <LangValue.h>
-#include <NValue.h>
-#include <URIValue.h>
-#include <SoundValue.h>
-#include <ClassValue.h>
-#include <FloatValue.h>
-#include <OrgValue.h>
-#include <TelValue.h>
-#include <TextListValue.h>
-#include <UTCValue.h>
+#include <VCardAdrValue.h>
+#include <VCardAgentValue.h>
+#include <VCardDateValue.h>
+#include <VCardImageValue.h>
+#include <VCardTextValue.h>
+#include <VCardTextBinValue.h>
+#include <VCardLangValue.h>
+#include <VCardNValue.h>
+#include <VCardURIValue.h>
+#include <VCardSoundValue.h>
+#include <VCardClassValue.h>
+#include <VCardFloatValue.h>
+#include <VCardOrgValue.h>
+#include <VCardTelValue.h>
+#include <VCardTextListValue.h>
+#include <VCardUTCValue.h>
 
-#include <RToken.h>
-#include <ContentLine.h>
+#include <VCardRToken.h>
+#include <VCardContentLine.h>
 
-#include <Entity.h>
+#include <VCardEntity.h>
 #include <VCardEnum.h>
 #include <VCardDefines.h>
 

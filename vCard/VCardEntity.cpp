@@ -21,10 +21,7 @@
 #include <qregexp.h>
 
 #include <VCardDefines.h>
-
-#include <VCardEntity.h>
-
-#include <Entity.h>
+#include <VCardVCardEntity.h>
 
 using namespace VCARD;
 

@@ -21,10 +21,10 @@
 #include <qcstring.h>
 #include <qstrlist.h>
 
-#include <Entity.h>
-#include <VCard.h>
-#include <ContentLine.h>
-#include <RToken.h>
+#include <VCardEntity.h>
+#include <VCardVCard.h>
+#include <VCardContentLine.h>
+#include <VCardRToken.h>
 
 #include <VCardDefines.h>
 

@@ -18,9 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <SourceParam.h>
+#include <VCardSourceParam.h>
 
-#include <Param.h>
+#include <VCardParam.h>
 
 using namespace VCARD;
 

@@ -18,9 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <ImgValue.h>
+#include <VCardImgValue.h>
 
-#include <Value.h>
+#include <VCardValue.h>
 
 using namespace VCARD;
 

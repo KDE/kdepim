@@ -18,9 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <TextValue.h>
+#include <VCardTextValue.h>
 
-#include <Value.h>
+#include <VCardValue.h>
 
 using namespace VCARD;
 

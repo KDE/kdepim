@@ -18,11 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <RToken.h>
+#include <VCardRToken.h>
 
-#include <OrgValue.h>
+#include <VCardOrgValue.h>
 
-#include <Value.h>
+#include <VCardValue.h>
 
 using namespace VCARD;
 

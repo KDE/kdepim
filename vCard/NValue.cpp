@@ -20,9 +20,9 @@
 
 #include <qstrlist.h>
 
-#include <RToken.h>
-#include <NValue.h>
-#include <Value.h>
+#include <VCardRToken.h>
+#include <VCardNValue.h>
+#include <VCardValue.h>
 #include <VCardDefines.h>
 
 using namespace VCARD;

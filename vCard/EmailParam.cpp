@@ -20,8 +20,8 @@
 
 #include <iostream.h>
 
-#include <EmailParam.h>
-#include <Param.h>
+#include <VCardEmailParam.h>
+#include <VCardParam.h>
 #include <VCardDefines.h>
 
 using namespace VCARD;

@@ -18,9 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <TextBinParam.h>
+#include <VCardTextBinParam.h>
 
-#include <Param.h>
+#include <VCardParam.h>
 
 using namespace VCARD;
 
