@@ -41,6 +41,7 @@ class QDomElement;
 namespace KCal {
   class Incidence;
   class Recurrence;
+  class Attachment;
 }
 
 namespace Kolab {
@@ -118,6 +119,7 @@ protected:
   void saveAttendeeAttribute( QDomElement& element,
                               const Attendee& attendee ) const;
   void saveAttendees( QDomElement& element ) const;
+  void saveAttachments( QDomElement& element ) const;
 
   void loadRecurrence( const QDomElement& element );
   void saveRecurrence( QDomElement& element ) const;
@@ -135,6 +137,7 @@ protected:
   bool mHasAlarm;
   Recurrence mRecurrence;
   QValueList<Attendee> mAttendees;
+  QValueList<KCal::Attachment*> mAttachments;
 
   struct Custom {
     QCString key;
