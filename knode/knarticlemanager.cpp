@@ -43,19 +43,16 @@
 #include "knfoldermanager.h"
 
 
-KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(0,0)
+KNArticleManager::KNArticleManager() : QObject(0,0)
 {
-  v_iew=v;
   g_roup=0;
   f_older=0;
-  f_ilter=f->currentFilter();
-  f_ilterMgr=f;
+  f_ilterMgr = knGlobals.filterManager();
+  f_ilter = f_ilterMgr->currentFilter();
   s_earchDlg=0;
   d_isableExpander=false;
 
-  connect(v, SIGNAL(expanded(QListViewItem*)), this,
-    SLOT(slotItemExpanded(QListViewItem*)));
-  connect(f, SIGNAL(filterChanged(KNArticleFilter*)), this,
+  connect(f_ilterMgr, SIGNAL(filterChanged(KNArticleFilter*)), this,
     SLOT(slotFilterChanged(KNArticleFilter*)));
 }
 
@@ -1079,6 +1076,15 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
     hdrItem->expandChildren();
 
   d_isableExpander = false;
+}
+
+
+void KNArticleManager::setView(KNListView* v) {
+  v_iew = v;
+  if(v) {
+    connect(v, SIGNAL(expanded(QListViewItem*)), this,
+      SLOT(slotItemExpanded(QListViewItem*)));
+  }
 }
 
 //-----------------------------

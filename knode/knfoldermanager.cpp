@@ -371,7 +371,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
     knGlobals.top->secureProcessEvents();
 
     if (!list.isEmpty())
-      knGlobals.artManager->moveIntoFolder(list, f);
+      knGlobals.articleManager()->moveIntoFolder(list, f);
 
     knGlobals.top->setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
@@ -410,7 +410,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
 
       a->setNotUnloadable(true);
 
-      if (a->hasContent() || knGlobals.artManager->loadArticle(a)) {
+      if (a->hasContent() || knGlobals.articleManager()->loadArticle(a)) {
         ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
         a->toStream(ts, true);
         ts << "\n";

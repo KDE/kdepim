@@ -860,7 +860,7 @@ void KNArticleWidget::saveAttachment(int id)
   KMime::Content *a=a_tt->at(id);
 
   if(a)
-    knGlobals.artManager->saveContentToFile(a,this);
+    knGlobals.articleManager()->saveContentToFile(a,this);
   else KMessageBox::error(this, i18n("Internal error: Malformed identifier."));
 }
 
@@ -870,7 +870,7 @@ void KNArticleWidget::openAttachment(int id)
  KMime::Content *a=a_tt->at(id);
 
  if(a)
-   knGlobals.artManager->openContent(a);
+   knGlobals.articleManager()->openContent(a);
  else KMessageBox::error(this, i18n("Internal error: Malformed identifier."));
 }
 
@@ -941,7 +941,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
      a_rticle && a_rticle->type()==KMime::Base::ATremote && !a_rticle->isOrphant()) {
     KNRemoteArticle::List l;
     l.append((static_cast<KNRemoteArticle*>(a_rticle)));
-    knGlobals.artManager->setRead(l, true);
+    knGlobals.articleManager()->setRead(l, true);
   }
 
   a_rticle=0;
@@ -992,7 +992,7 @@ void KNArticleWidget::setArticle(KNArticle *a)
     if(a->hasContent()) { //article is already loaded => just show it
       createHtmlPage();
     } else {
-      if( !knGlobals.artManager->loadArticle(a_rticle) )
+      if( !knGlobals.articleManager()->loadArticle(a_rticle) )
         articleLoadError( a, i18n("Unable to load the article.") );
       else if(a->hasContent() && !(a->type()==KMime::Base::ATremote)) // try again, but not for remote articles
         createHtmlPage();
@@ -1647,7 +1647,7 @@ void KNArticleWidget::slotSave()
 {
   kdDebug(5003) << "KNArticleWidget::slotSave()" << endl;
   if(a_rticle)
-    knGlobals.artManager->saveArticleToFile(a_rticle,this);
+    knGlobals.articleManager()->saveArticleToFile(a_rticle,this);
 }
 
 
@@ -1861,7 +1861,7 @@ void KNArticleWidget::slotTimeout()
   if(a_rticle && a_rticle->type()==KMime::Base::ATremote && !a_rticle->isOrphant()) {
     KNRemoteArticle::List l;
     l.append((static_cast<KNRemoteArticle*>(a_rticle)));
-    knGlobals.artManager->setRead(l, true);
+    knGlobals.articleManager()->setRead(l, true);
   }
 }
 

@@ -43,7 +43,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
   Q_OBJECT
 
   public:
-    KNArticleManager(KNListView *v, KNFilterManager *f);
+    KNArticleManager();
     virtual ~KNArticleManager();
 
     //content handling
@@ -89,6 +89,10 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     bool toggleIgnored(KNRemoteArticle::List &l);
 
     void rescoreArticles(KNRemoteArticle::List &l);
+
+    // Allow to delay the setup of UI elements, since the knode part may not 
+    // be available when the config dialog is called
+    void setView(KNListView* v);
 
   protected:
     void processJob(KNJobData *j);

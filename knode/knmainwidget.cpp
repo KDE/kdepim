@@ -217,8 +217,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   f_ilManager->setMenuAction(a_ctArtFilter, a_ctArtFilterKeyb);
 
   //Article Manager
-  a_rtManager=new KNArticleManager(h_drView, f_ilManager);
-  knGlobals.artManager=a_rtManager;
+  a_rtManager = knGlobals.articleManager();
+  a_rtManager->setView(h_drView);
 
   //Group Manager
   g_rpManager=new KNGroupManager(a_rtManager);

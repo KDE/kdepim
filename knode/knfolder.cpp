@@ -312,7 +312,7 @@ bool KNFolder::unloadHdrs(bool force)
   KNLocalArticle *a;
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
-    if (a->hasContent() && !knGlobals.artManager->unloadArticle(a, force))
+    if (a->hasContent() && !knGlobals.articleManager()->unloadArticle(a, force))
       return false;
   }
   syncIndex();
@@ -453,7 +453,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
   if(addCnt>0) {
     c_ount=length();
     updateListItem();
-    knGlobals.artManager->updateViewForCollection(this);
+    knGlobals.articleManager()->updateViewForCollection(this);
   }
 
   return ret;

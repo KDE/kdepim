@@ -345,7 +345,7 @@ bool KNGroup::unloadHdrs(bool force)
   KNRemoteArticle *a;
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
-    if (a->hasContent() && !knGlobals.artManager->unloadArticle(a, force))
+    if (a->hasContent() && !knGlobals.articleManager()->unloadArticle(a, force))
       return false;
   }
   syncDynamicData();
@@ -617,7 +617,7 @@ void KNGroup::processXPostBuffer(bool deleteAfterwards)
     else
       remainder.append(*it);
   }
-  knGlobals.artManager->setRead(al, true, false);
+  knGlobals.articleManager()->setRead(al, true, false);
 
   if (!deleteAfterwards)
     c_rosspostIDBuffer = remainder;

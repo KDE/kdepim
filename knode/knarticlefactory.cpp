@@ -592,7 +592,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 
   //load article body
   if(!a->hasContent())
-    knGlobals.artManager->loadArticle(a);
+    knGlobals.articleManager()->loadArticle(a);
 
   //open composer
   com=new KNComposer(a, QString::null, id->getSignature());
@@ -622,7 +622,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   }
 
   if(!now) {
-    knGlobals.artManager->moveIntoFolder(unsent, knGlobals.folManager->outbox());
+    knGlobals.articleManager()->moveIntoFolder(unsent, knGlobals.folManager->outbox());
     return;
   }
 
@@ -633,7 +633,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
       continue;
 
     if(!a->hasContent()) {
-      if(!knGlobals.artManager->loadArticle(a)) {
+      if(!knGlobals.articleManager()->loadArticle(a)) {
         showSendErrorDialog();
         s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article."));
         continue;
@@ -732,7 +732,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 
     //sending of this article was canceled => move it to the "Outbox-Folder"
     if(art->collection()!=knGlobals.folManager->outbox())
-      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());
+      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->outbox());
 
     KMessageBox::information(knGlobals.topWidget, i18n("You have aborted the posting of articles. The unsent articles are stored in the \"Outbox\" folder."));
 
@@ -746,7 +746,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 
     //sending of this article failed => move it to the "Outbox-Folder"
     if(art->collection()!=knGlobals.folManager->outbox())
-      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());
+      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->outbox());
   }
   else {
 
@@ -773,7 +773,7 @@ void KNArticleFactory::processJob(KNJobData *j)
     };
 
     //article has been sent successfully => move it to the "Sent-folder"
-    knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->sent());
+    knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->sent());
   }
 }
 
@@ -1025,15 +1025,15 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
     case KNComposer::CRsave :
       if ( com->applyChanges() )
-        knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->drafts());
+        knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->drafts());
     break;
 
     case KNComposer::CRdelAsk:
-      delCom=knGlobals.artManager->deleteArticles(lst, true);
+      delCom=knGlobals.articleManager()->deleteArticles(lst, true);
     break;
 
     case KNComposer::CRdel:
-      delCom=knGlobals.artManager->deleteArticles(lst, false);
+      delCom=knGlobals.articleManager()->deleteArticles(lst, false);
     break;
 
     case KNComposer::CRcancel:

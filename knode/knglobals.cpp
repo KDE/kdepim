@@ -19,6 +19,7 @@
 
 #include <kconfig.h>
 
+#include "knarticlemanager.h"
 #include "knfiltermanager.h"
 
 KConfig* KNGlobals::config()
@@ -27,6 +28,13 @@ KConfig* KNGlobals::config()
       c_onfig = KSharedConfig::openConfig( "knoderc" );
   }
   return c_onfig;
+}
+
+KNArticleManager* KNGlobals::articleManager()
+{
+  if(!mArtManager)
+    mArtManager = new KNArticleManager();
+  return mArtManager;
 }
 
 KNFilterManager* KNGlobals::filterManager()

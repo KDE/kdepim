@@ -152,7 +152,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
         g->decReadCount();
       delCnt++;
       if (art->hasContent())
-        knGlobals.artManager->unloadArticle(art, true);
+        knGlobals.articleManager()->unloadArticle(art, true);
     }
     else if(art->isNew() && !art->isRead()) {
       if(firstNew==-1)

@@ -57,7 +57,6 @@ class KNGlobals {
     KNProgress            *progressBar;
     KNAccountManager      *accManager;
     KNGroupManager        *grpManager;
-    KNArticleManager      *artManager;
     KNArticleFactory      *artFactory;
     KNFolderManager       *folManager;
     KNScoringManager      *scoreManager;
@@ -66,11 +65,13 @@ class KNGlobals {
     KConfig               *config();
     KInstance             *instance;
 
+    KNArticleManager      *articleManager();
     KNFilterManager       *filterManager();
 
 private:
     KSharedConfig::Ptr c_onfig;
     
+    KNArticleManager      *mArtManager;
     KNFilterManager       *mFilManager;
 };
 

@@ -183,7 +183,7 @@ void KNMemoryManager::checkMemoryUsageArticles()
                                             // modify the original list
 
     for( ArticleItem *ci = tempList.first(); ci && (a_rtCacheSize > maxSize); ci = tempList.next() )
-      knGlobals.artManager->unloadArticle(ci->art, false);   // *try* to unload
+      knGlobals.articleManager()->unloadArticle(ci->art, false);   // *try* to unload
   }
 
   kdDebug(5003) << "KNMemoryManager::checkMemoryUsageArticles() : "
