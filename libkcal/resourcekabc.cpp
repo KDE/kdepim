@@ -53,25 +53,11 @@
 
 using namespace KCal;
 
-class KABCFactory : public KRES::PluginFactory
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
-    {
-      return new ResourceKABC( config );
-    }
-
-    KRES::ConfigWidget *configWidget( QWidget *parent )
-    {
-      return new ResourceKABCConfig( parent, "ResourceKABCConfig" );
-    }
-};
-
 extern "C"
 {
   void *init_kcal_kabc()
   {
-    return ( new KABCFactory() );
+    return new KRES::PluginFactory<ResourceKABC,ResourceKABCConfig>();
   }
 }
 

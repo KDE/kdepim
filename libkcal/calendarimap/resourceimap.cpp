@@ -46,34 +46,17 @@ using namespace KCal;
 
 static const QCString dcopObjectId = "KMailICalIface";
 
-class IMAPFactory : public KRES::PluginFactory
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
-    {
-      KGlobal::locale()->insertCatalogue( "kcal_imap" );
-      return new ResourceIMAP( config );
-    }
-
-    KRES::ConfigWidget *configWidget( QWidget *parent )
-    {
-      KGlobal::locale()->insertCatalogue( "kcal_imap" );
-      return new ResourceIMAPConfig( parent, "ResourceIMAPConfig" );
-    }
-};
-
 extern "C"
 {
   void *init_kcal_imap()
   {
-    return ( new IMAPFactory() );
+    return new KRES::PluginFactory<ResourceIMAP,ResourceIMAPConfig>();
   }
 }
 
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
-  : ResourceCalendar( config ),
-    DCOPObject("ResourceIMAP")
+  : DCOPObject("ResourceIMAP"), ResourceCalendar( config )
 {
   if ( config ) {
     mServer = config->readEntry( "Servername" );

@@ -48,25 +48,11 @@
 
 using namespace KCal;
 
-class LocalDirFactory : public KRES::PluginFactory
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
-    {
-      return new ResourceLocalDir( config );
-    }
-
-    KRES::ConfigWidget *configWidget( QWidget *parent )
-    {
-      return new ResourceLocalDirConfig( parent, "ResourceLocalDirConfig" );
-    }
-};
-
 extern "C"
 {
   void *init_kcal_localdir()
   {
-    return ( new LocalDirFactory() );
+    return new KRES::PluginFactory<ResourceLocalDir,ResourceLocalDirConfig>();
   }
 }
 

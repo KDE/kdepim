@@ -50,25 +50,11 @@
 
 using namespace KCal;
 
-class RemoteFactory : public KRES::PluginFactory
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
-    {
-      return new ResourceRemote( config );
-    }
-
-    KRES::ConfigWidget *configWidget( QWidget *parent )
-    {
-      return new ResourceRemoteConfig( parent, "ResourceRemoteConfig" );
-    }
-};
-
 extern "C"
 {
   void *init_kcal_remote()
   {
-    return ( new RemoteFactory() );
+    return new KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig>();
   }
 }
 
