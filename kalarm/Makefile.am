@@ -7,7 +7,7 @@ kalarm_SOURCES = main.cpp kalarmapp.cpp editdlg.cpp mainwindowbase.cpp mainwindo
 	prefsettings.cpp prefs.cpp prefdlg.cpp \
 	traywindow.cpp daemongui.cpp alarmguiiface.skel \
 	fontcolour.cpp colourcombo.cpp datetime.cpp \
-	alarmlistview.cpp spinbox2.cpp
+	alarmlistview.cpp spinbox2.cpp recurrenceedit.cpp
 kalarm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarm_LDADD   = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la $(top_builddir)/kalarmd/libkalarmd.la
 
@@ -27,15 +27,14 @@ alarmguiiface.h: $(top_srcdir)/kalarmd/alarmguiiface.h
 autostart_DATA = kalarm.tray.desktop
 autostartdir = $(prefix)/share/autostart
 
-install-data-local:
-	$(mkinstalldirs) $(kde_appsdir)/Applications/
-	$(INSTALL_DATA) $(srcdir)/kalarm.desktop $(kde_appsdir)/Applications/kalarm.desktop
+kdelnkdir = $(kde_appsdir)/Utilities/More
+kdelnk_DATA = kalarm.desktop
 
-uninstall-local:
-	-rm -f $(kde_appsdir)/Applications/kalarm.desktop
+install-data-local: uninstall.desktop
+	$(mkinstalldirs) $(kde_appsdir)/Applications
+	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Applications/kalarm.desktop
 
-appicondir = $(kde_datadir)/kalarm/icons
-appicon_ICON = AUTO
+KDE_ICON = AUTO
 
 messages: 
 	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp -o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \
