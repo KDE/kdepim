@@ -101,8 +101,9 @@ corner of the window. If you want the book to be on your
 a button with the book's name will appear near the bottom of the
 screen. You can have up to 8 books on the hotlist, and can remove the
 current book using <menuchoice><guimenu>Hotlist</guimenu>
-<guimenuitem>Remove current book from
-hotlist</guimenuitem></menuchoice>.</para>
+<guimenuitem>Remove Current Book From
+Hotlist</guimenuitem></menuchoice>.</para>
+
 
 <para>A book can be saved using <keycombo action="simul">&Ctrl;
 <keycap>S</keycap></keycombo> or the menu entry
@@ -112,7 +113,7 @@ the currently open book will be saved.</para>
 
 <para>You can also export an entire book as a text file, using
 <menuchoice><guimenu>File</guimenu> <guimenuitem>Save Book to ASCII
-File</guimenuitem></menuchoice>.  You will be then prompted to enter a
+File...</guimenuitem></menuchoice>.  You will be then prompted to enter a
 location for the file to be saved.  The format of an example saved book
 is shown below:</para>
 
@@ -150,15 +151,13 @@ can be removed using <menuchoice>
 
 <para>So that you can get to the page you want to see, pages can (and
 should) be given a Subject. This can be chosen by typing the subject in
-the textbox at the bottom of the window. To view a list of subjects for
+the textbox at the top of the window. To view a list of subjects for
 the current book, use <keycombo action="simul">&Ctrl;
-<keycap>L</keycap></keycombo> or the menu entry <menuchoice>
-<guimenu>Hotlist</guimenu><guimenuitem>Subject List</guimenuitem>
-</menuchoice>.</para>
+<keycap>L</keycap></keycombo>.</para>
 
 <tip><para>To quickly switch between pages, use <keycombo
 action="simul">&Ctrl; <keycap>K</keycap></keycombo> to go to the next
-page, and <keycombo action="simul">&Ctrl; <keycap>J</keycap></keycombo>
+page, and <keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
 to go to the previous page.  You can also use the scrollbar below the
 main text window, to change pages.</para></tip>
 
@@ -196,7 +195,7 @@ KJots</guimenuitem></menuchoice>.</para>
 <keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Save current Book</guimenuitem>
+<guimenuitem>Save Current Book</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Saves</action> the currently open Book. Books are saved
 in <filename class="directory">$HOME/.kde/share/apps/kjots/</filename>  Each
@@ -207,7 +206,7 @@ editor.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Save Book to ASCII File</guimenuitem>
+<guimenuitem>Save Book to ASCII File...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Saves</action> the current book to a text file.
 See <link linkend="kjots-books">Using Books</link>.</para></listitem>
@@ -216,7 +215,7 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Save Page to ASCII File</guimenuitem>
+<guimenuitem>Save Page to ASCII File...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Saves</action> the current page to a text file.</para>
 </listitem>
@@ -225,7 +224,7 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Delete Current Book</guimenuitem>
+<guimenuitem>Delete Current Book...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Deletes</action> the currently open Book.</para></listitem>
 </varlistentry>
@@ -392,7 +391,7 @@ See <link linkend="kjots-books">Using Books</link>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Hotlist</guimenu>
-<guimenuitem>Remove Current Book from Hotlist</guimenuitem>
+<guimenuitem>Remove Current Book From Hotlist</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Removes</action> the current book to the hotlist.
 See <link linkend="kjots-books">Using Books</link>
@@ -431,7 +430,7 @@ menu items.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure KJots...</guimenuitem>
+<guimenuitem>Configure KJots</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Configure</action> options for &kjots;, including
 the external program to open <acronym>URL</acronym>s and the font to use.
