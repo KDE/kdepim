@@ -42,6 +42,7 @@ binary-arch: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
+	dh_installdirs -a
 	$(MAKE) install DESTDIR=$(tmp)/
 	cp debian/*.override $(tmp)/usr/share/lintian/overrides/
 	for i in `ls $(tmp)/usr/share/lintian/overrides/`; do \
