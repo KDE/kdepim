@@ -267,7 +267,7 @@ void KNotesAction::listNotes()
 	
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": " 
-		<< "Sync direction: " << fSyncDirection << endl;
+		<< "Sync direction: " << getSyncDirection() << endl;
 #endif
 	delayDone();
 }
@@ -287,7 +287,7 @@ void KNotesAction::listNotes()
 		getConfigInfo();
 		fStatus=ModifiedNotesToPilot;
 		// TODO: Handle all varieties of special syncs
-		if (SyncAction::eCopyHHToPC == fSyncDirection)
+		if (SyncAction::eCopyHHToPC == getSyncDirection())
 		{
 			fStatus = MemosToKNotes;
 			fP->fRecordIndex = 0;
@@ -513,7 +513,7 @@ bool KNotesAction::syncMemoToKNotes()
 
 	PilotRecord *rec = 0L;
 	
-	if (SyncAction::eCopyHHToPC == fSyncDirection)
+	if (SyncAction::eCopyHHToPC == getSyncDirection())
 	{
 		rec = fDatabase->readRecordByIndex(fP->fRecordIndex);
 		fP->fRecordIndex++;
@@ -563,12 +563,15 @@ bool KNotesAction::syncMemoToKNotes()
 		{
 			fP->fKNotes->killNote(m.note());
 		}
+
+		fLocalDatabase->deleteRecord(rec->getID());
 	}
 	else if (memo->isDeleted() /* && !m.valid() */ )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
 #endif
+		fLocalDatabase->deleteRecord(rec->getID());
 	}
 	else if (!memo->isDeleted() && m.valid())
 	{
@@ -598,10 +601,12 @@ bool KNotesAction::syncMemoToKNotes()
 			}
 			addNote(memo);
 		}
+		fLocalDatabase->writeRecord(rec);
 	}
 	else if (!memo->isDeleted() && !m.valid())
 	{
 		addNote(memo);
+		fLocalDatabase->writeRecord(rec);
 	}
 
 	if (memo) delete memo;
