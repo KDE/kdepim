@@ -51,7 +51,7 @@ static const char *setupDialog_id=
 #endif
 
 #ifndef _KAPP_H
-#include <kapp.h>
+#include <kapplication.h>
 #endif
 
 #ifndef _KLOCALE_H
@@ -674,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.25  2002/02/23 20:57:40  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.24  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

@@ -58,7 +58,7 @@ static char *passworddialog_id="$Id$";
 #include "passworddialog.moc"
 
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, bool modal, WFlags wflags)
    : QDialog(parent, name, modal, wflags)
@@ -141,6 +141,9 @@ const char * PasswordDialog::password()
 
 
 // $Log$
+// Revision 1.9  2001/12/28 13:01:16  adridg
+// Add SyncAction
+//
 // Revision 1.8  2001/02/09 15:59:28  habenich
 // replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
 //

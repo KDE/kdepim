@@ -15,7 +15,7 @@
 #include <qspinbox.h>
 #include <qdatetime.h>
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>

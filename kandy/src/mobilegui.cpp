@@ -10,7 +10,7 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 #include <kabc/stdaddressbook.h>
 

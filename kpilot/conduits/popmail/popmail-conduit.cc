@@ -58,7 +58,7 @@ static const char *popmail_conduit_id=
 #include <qdir.h>
 #include <qtextstream.h>
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kmessagebox.h>
 #include <ksock.h>
 #include <kconfig.h>
@@ -1987,6 +1987,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.39  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.38.2.1  2002/04/13 22:16:56  adridg
 // Administrative, better config checking, use PISOCK_INCLUDE and PISOCK_LIB in compiles, minor code cleanup in popmail
 //
