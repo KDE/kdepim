@@ -269,7 +269,7 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
       sentFolder = kmkernel->folderMgr()->findIdString( mCurrentMsg->fcc() );
       if ( sentFolder == 0 )
       // This is *NOT* supposed to be imapSentFolder!
-        sentFolder = 
+        sentFolder =
           kmkernel->dimapFolderMgr()->findIdString( mCurrentMsg->fcc() );
       if ( sentFolder == 0 )
         imapSentFolder =
@@ -295,7 +295,7 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
             "Therefore the default sent-mail folder "
             "will be used.").arg( id.identityName() ) );
 
-    if ( sentFolder == 0 ) 
+    if ( sentFolder == 0 )
       sentFolder = kmkernel->sentFolder();
 
     if ( sentFolder ) {
@@ -306,13 +306,13 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
       }
     }
 
-    // Disable the emitting of msgAdded signal, because the message is taken out of the 
+    // Disable the emitting of msgAdded signal, because the message is taken out of the
     // current folder (outbox) and re-added, to make filter actions changing the message
     // work. We don't want that to screw up message counts.
     if ( mCurrentMsg->parent() ) mCurrentMsg->parent()->quiet( true );
     int processResult = kmkernel->filterMgr()->process(mCurrentMsg,KMFilterMgr::Outbound);
     if ( mCurrentMsg->parent() ) mCurrentMsg->parent()->quiet( false );
-    
+
     // 0==processed ok, 1==no filter matched, 2==critical error, abort!
     switch (processResult) {
     case 2:
@@ -354,6 +354,31 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
 
   // See if there is another queued message
   mCurrentMsg = kmkernel->outboxFolder()->getMsg(mFailedMessages);
+  if ( mCurrentMsg && !mCurrentMsg->transferInProgress() &&
+       mCurrentMsg->sender().isEmpty() ) {
+    // if we do not have a sender address then use the email address of the
+    // message's identity or of the default identity unless those two are also
+    // empty
+    const KMIdentity & id = kmkernel->identityManager()
+      ->identityForUoidOrDefault( mCurrentMsg->headerField( "X-KMail-Identity" ).stripWhiteSpace().toUInt() );
+    if ( !id.emailAddr().isEmpty() ) {
+      mCurrentMsg->setFrom( id.fullEmailAddr() );
+    }
+    else if ( !kmkernel->identityManager()->defaultIdentity().emailAddr().isEmpty() ) {
+      mCurrentMsg->setFrom( kmkernel->identityManager()->defaultIdentity().fullEmailAddr() );
+    }
+    else {
+      KMessageBox::sorry( 0, i18n( "It's not possible to send messages "
+                                   "without specifying a sender address.\n"
+                                   "Please set the email address of "
+                                   "identity '%1' in the Identities "
+                                   "section of the configuration dialog "
+                                   "and then try again." )
+                             .arg( id.identityName() ) );
+      kmkernel->outboxFolder()->unGetMsg( mFailedMessages );
+      mCurrentMsg = 0;
+    }
+  }
   if (!mCurrentMsg || mCurrentMsg->transferInProgress())
   {
     // a message is locked finish the send
