@@ -32,7 +32,6 @@ static const char *conduitapp_id=
 #include "options.h"
 
 #include <unistd.h>
-#include <getopt.h>
 #include <stdlib.h>
 #include <stream.h>
 #include <kwin.h>
@@ -345,6 +344,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.18  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.17  2001/02/05 20:55:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

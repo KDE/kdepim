@@ -35,7 +35,6 @@ static const char *kpilot_id="$Id$";
 
 #include <sys/types.h>
 #include <dirent.h>
-#include <getopt.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <fcntl.h>
@@ -1278,6 +1277,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.38  2001/02/25 12:39:35  adridg
+// Fixed component names (src incompatible)
+//
 // Revision 1.37  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
