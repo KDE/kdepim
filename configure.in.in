@@ -24,7 +24,7 @@ fi
 CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
 
 # check for libbluetooth (Bluetooth library) because gnokii may require it
-AC_DEFUN(KDE_CHECK_BLUETOOTH,
+AC_DEFUN([KDE_CHECK_BLUETOOTH],
 [
   AC_CHECK_HEADERS(bluetooth/bluetooth.h)
   LIB_BLUETOOTH=
@@ -37,7 +37,7 @@ AC_DEFUN(KDE_CHECK_BLUETOOTH,
 
 
 # check for libgnokii (Nokia mobile phone library)
-AC_DEFUN(KDE_CHECK_GNOKII,
+AC_DEFUN([KDE_CHECK_GNOKII],
 [
   AC_CHECK_HEADERS(gnokii.h)
   AC_REQUIRE([AC_HAVE_XPM])

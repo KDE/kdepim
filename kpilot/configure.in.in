@@ -22,7 +22,7 @@ dnl since AC_CHECK_HEADER does not do so.
 dnl
 
 
-AC_DEFUN(KPILOT_CHECK_PISOCK,
+AC_DEFUN([KPILOT_CHECK_PISOCK],
 [
 
 AC_LANG_PUSH(C++)
