@@ -52,8 +52,6 @@
 
 #include "addresseditwidget.h"
 
-static QStringList sortLocaleAware( const QStringList &list );
-
 class TabPressEater : public QObject
 {
   public:
@@ -629,7 +627,7 @@ static bool operator<( const LocaleAwareString &s1, const LocaleAwareString &s2 
   return ( QString::localeAwareCompare( s1, s2 ) < 0 );
 }
 
-QStringList sortLocaleAware( const QStringList &list )
+QStringList AddressEditDialog::sortLocaleAware( const QStringList &list )
 {
   QValueList<LocaleAwareString> sortedList;
 

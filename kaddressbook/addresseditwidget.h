@@ -110,6 +110,7 @@ class AddressEditDialog : public KDialogBase
   private:
     void saveAddress( KABC::Address &addr );
     void fillCountryCombo();
+    QStringList sortLocaleAware( const QStringList& );
 
     AddressTypeCombo *mTypeCombo;
     QTextEdit *mStreetTextEdit;
