@@ -268,7 +268,7 @@ void KMKernel::checkAccount (const QString &account) //might create a new reader
     kmkernel->acctMgr()->singleCheckMail(acct, false);
 }
 
-void KMKernel::openReader()
+void KMKernel::openReader( bool onlyCheck )
 {
   KMMainWin *mWin = 0;
   KMainWindow *ktmw = 0;
@@ -280,19 +280,24 @@ void KMKernel::openReader()
       if (ktmw->isA("KMMainWin"))
         break;
 
+  bool activate;
   if (ktmw) {
     mWin = (KMMainWin *) ktmw;
+    activate = !onlyCheck; // existing window: only activate if not --check
   }
   else {
     mWin = new KMMainWin;
+    activate = true; // new window: always activate
   }
 
+  if ( activate ) {
   mWin->show();
   // Activate window - doing this instead of KWin::activateWindow(mWin->winId());
   // so that it also works when called from KMailApplication::newInstance()
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
   KStartupInfo::setNewStartupId( mWin, kapp->startupId() );
 #endif
+  }
 }
 
 int KMKernel::openComposer (const QString &to, const QString &cc,
@@ -1396,7 +1401,7 @@ void KMKernel::action(bool mailto, bool check, const QString &to,
   if (mailto)
     openComposer (to, cc, bcc, subj, body, 0, messageFile, attachURLs);
   else
-    openReader();
+    openReader( check );
 
   if (check)
     checkMail();
