@@ -29,23 +29,38 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <iostream.h>
+
+
+
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+#ifndef QLINEEDIT_H
 #include <qlineedit.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
 
-#ifndef _NULL_SETUPDIALOG_H
 #include "setupDialog.moc"
-#endif
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -136,6 +151,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.16  2001/04/01 17:31:11  adridg
+// --enable-final and #include fixes
+//
 // Revision 1.15  2001/03/27 11:10:38  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

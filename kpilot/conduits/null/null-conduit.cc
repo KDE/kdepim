@@ -31,7 +31,9 @@
 */
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++, 
@@ -174,6 +176,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.19  2001/04/01 17:31:11  adridg
+// --enable-final and #include fixes
+//
 // Revision 1.18  2001/03/27 11:10:38  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.
