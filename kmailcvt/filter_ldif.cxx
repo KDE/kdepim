@@ -161,7 +161,7 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
 		{ homepage = s;	continue; }
 
 	if (fieldname == "homephone" || fieldname == "telephonenumber") {
-		if (!phone.isEmpty()) info->log(i18n("Discarding Phone Number ") + s);
+		if (!phone.isEmpty()) info->log(i18n("Discarding Phone Number %1").arg(s));
   		phone = s;
 		continue; 
 	}
