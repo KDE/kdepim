@@ -981,8 +981,9 @@ void KNArticleWidget::createHtmlPage()
     KNpgp *pgp = knGlobals.pgp;
 
     if (knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs() || ra->isPgpSigned()) {
-      pgp->setMessageForDecryption( ra->body() );
-      QPtrList<Kpgp::Block> pgpBlocks = pgp->pgpBlocks();
+      QPtrList<Kpgp::Block> pgpBlocks;
+      QStrList nonPgpBlocks;
+      Kpgp::Module::prepareMessageForDecryption( ra->body(), pgpBlocks, nonPgpBlocks );
       // Only the first OpenPGP block is verified (if there is one)
       Kpgp::Block* pgpBlock = pgpBlocks.first();
       if( pgpBlock && ( pgpBlock->type() == Kpgp::ClearsignedBlock ) )
