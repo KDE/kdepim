@@ -55,7 +55,7 @@ if  test "$HAVE_PISOCK" = "0" ; then
 		test -f $i/pi-file.h && pisock_path="$i"
 	done
 
-	if test -z "$pisock_path" ; then
+	if test "$pisock_path" ; then
 		AC_MSG_RESULT([found $pisock_path])
 	else
 		AC_MSG_RESULT([still not found])
