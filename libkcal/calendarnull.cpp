@@ -18,7 +18,12 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+/**
+ @file calendarnull.cpp
+ A null calendar class with does nothing.
 
+ @author Cornelius Schumacher
+*/
 #include "calendarnull.h"
 
 using namespace KCal;
@@ -28,6 +33,6 @@ CalendarNull *CalendarNull::mSelf = 0;
 CalendarNull *CalendarNull::self()
 {
   if ( !mSelf ) mSelf = new CalendarNull();
-  
+
   return mSelf;
 }
