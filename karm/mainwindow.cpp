@@ -185,7 +185,7 @@ void MainWindow::startNewSession()
 void MainWindow::resetAllTimes()
 {
   if ( KMessageBox::warningContinueCancel( this, i18n( "Do you really want to reset the time to 0 for all tasks?" ),
-       i18n( "Confirmation required" ), KGuiItem( i18n( "Reset All Times" ) ) ) == KMessageBox::Continue )
+       i18n( "Confirmation Required" ), KGuiItem( i18n( "Reset All Times" ) ) ) == KMessageBox::Continue )
     _taskView->resetTimeForAllTasks();
 }
 
