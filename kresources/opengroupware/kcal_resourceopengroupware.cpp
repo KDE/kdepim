@@ -110,6 +110,10 @@ void OpenGroupware::readConfig( const KConfig *config )
   ResourceCached::readConfig( config );
 
   mFolderLister->readConfig( config );
+
+  mBaseUrl = KURL( prefs()->url() );
+  mBaseUrl.setUser( prefs()->user() );
+  mBaseUrl.setPass( prefs()->password() );
 }
 
 void OpenGroupware::writeConfig( KConfig *config )
@@ -156,23 +160,16 @@ bool OpenGroupware::doLoad()
   enableChangeNotification();
   emit resourceChanged( this );
 
-  mBaseUrl = KURL( prefs()->url() );
-  mBaseUrl.setUser( prefs()->user() );
-  mBaseUrl.setPass( prefs()->password() );
+  mFoldersForDownload.clear();
+  FolderLister::Entry::List folders = mFolderLister->folders();
+  FolderLister::Entry::List::ConstIterator it;
+  for( it = folders.begin(); it != folders.end(); ++it ) {
+    if ( (*it).active ) {
+      mFoldersForDownload.append( (*it).id );
+    }
+  }
 
-  kdDebug() << "Download URL: " << mBaseUrl << endl;
-
-  mJobData = QString::null;
-
-  QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
-
-  //kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
-  //kdDebug(7000) << "props: " << props.toString() << endl;
-
-  mListEventsJob = KIO::davPropFind( mBaseUrl, props, "1", false );
-
-  connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotListJobResult( KIO::Job * ) ) );
+  mIncidencesForDownload.clear();
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
@@ -180,7 +177,40 @@ bool OpenGroupware::doLoad()
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
 
+  listIncidences();
+
   return true;
+}
+
+void OpenGroupware::listIncidences()
+{
+  if ( mFoldersForDownload.isEmpty() ) {
+    if ( mProgress ) {
+      mProgress->setTotalItems( mIncidencesForDownload.count() );
+      mProgress->setCompletedItems(1);
+      mProgress->updateProgress();
+    }
+    downloadNextIncidence();
+  } else {
+    QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
+
+    //kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
+    //kdDebug(7000) << "props: " << props.toString() << endl;
+
+    KURL url = mFoldersForDownload.front();
+    mFoldersForDownload.pop_front();
+
+    url.setUser( prefs()->user() );
+    url.setPass( prefs()->password() );
+    url.addPath( "/Calendar" );
+
+    kdDebug() << "OpenGroupware::listIncidences(): " << url << endl;
+
+    mListEventsJob = KIO::davPropFind( url, props, "1", false );
+
+    connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
+             SLOT( slotListJobResult( KIO::Job * ) ) );
+  }
 }
 
 void OpenGroupware::slotListJobResult( KIO::Job *job )
@@ -196,7 +226,6 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       mProgress = 0;
     }
   } else {
-    mIncidencesForDownload.clear();
     QDomDocument doc = mListEventsJob->response();
 
     //kdDebug(7000) << " Doc: " << doc.toString() << endl;
@@ -216,15 +245,10 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       KURL url ( entry );
       idMapper().setFingerprint( url.path(), e.text() );
     }
-
-    if ( mProgress ) {
-      mProgress->setTotalItems( mIncidencesForDownload.count() );
-      mProgress->setCompletedItems(1);
-      mProgress->updateProgress();
-    }
   }
   mListEventsJob = 0;
-  downloadNextIncidence();
+
+  listIncidences();
 }
 
 
@@ -233,11 +257,15 @@ void OpenGroupware::downloadNextIncidence()
   if ( !mIncidencesForDownload.isEmpty() ) {
     const QString entry = mIncidencesForDownload.front();
     mIncidencesForDownload.pop_front();
+
     KURL url( entry );
     url.setProtocol( "webdav" );
     mCurrentGetUrl = url.url(); // why can't I ask the job?
     url.setUser( mPrefs->user() );
     url.setPass( mPrefs->password() );
+
+    mJobData = QString::null;
+
     mDownloadJob = KIO::get( url, false, false );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );

@@ -78,6 +78,7 @@ class OpenGroupware : public ResourceCached
     bool confirmSave();
     void doDeletions();
 
+    void listIncidences();
 
   protected slots:
     void loadFinished();
@@ -103,6 +104,8 @@ class OpenGroupware : public ResourceCached
     KPIM::ProgressItem *mProgress;
     KPIM::ProgressItem *mUploadProgress;
     QString mJobData;
+
+    QStringList mFoldersForDownload;
 
     QStringList mIncidencesForDownload;
     QStringList mIncidencesForUpload;
