@@ -104,6 +104,14 @@ int DwBodyParser::Parse()
     int start = pos;
     int len = boundaryStart - pos;
     mPreamble = mString.substr(start, len);
+    if ( boundaryStart < mString.size() && mString[boundaryStart] != '-' )
+      mPreamble += DW_EOL; // contrary to normal behaviour of
+			   // DwBody::Parse(), we _do_ want a newline
+			   // before the first boundary here. This is
+			   // necessary since FindBoundary() can't
+			   // make up it's mind on where the boundary
+			   // starts - on the leading \n or the first
+			   // '-'..
 
     // Find the body parts
     pos = boundaryEnd;
@@ -189,7 +197,8 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
     if (buf[pos] == '-'
         && pos+blen+1 < endPos
         && buf[pos+1] == '-'
-        && strncmp(&buf[pos+2], mBoundary.data(), blen) == 0) {
+        && strncmp(&buf[pos+2], mBoundary.data(), blen) == 0
+	&& isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 2, buf + endPos ) ) {
 
         *aBoundaryStart = pos;
         pos += blen + 2;
@@ -490,6 +499,7 @@ void DwBody::Assemble()
                          && ('\r' == mString.at(len-2) )
                          && ('\n' == mString.at(len-3) ) ) ) )
             */
+	    if ( part != mFirstBodyPart )
                 mString += DW_EOL;
             mString += "--";
             mString += mBoundaryStr;

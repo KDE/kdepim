@@ -221,35 +221,11 @@ void DwEntity::Assemble(DwHeaders& aHeaders, DwBody& aBody)
     mString = "";
     mString += aHeaders.AsString();
 
-    int len = mString.length();
-#if defined(DW_EOL_CRLF)
-    if (len>=3 && (mString[len-1]!='\n' || mString[len-3]!='\n'))
-#else
-    if (len>=2 && (mString[len-1]!='\n' || mString[len-2]!='\n'))
-#endif
-    {
-        if ( (mString[len-1] == '\n') &&
-             mHeaders->HasContentType() &&
-             (mHeaders->ContentType().Type()    == DwMime::kTypeMultipart) &&
-	     aBody.FirstBodyPart() )
-        {
-            /* this is the case when we should not add an DW_EOL since
-               another newline is already added by DwBody::Assemble()
-               right before a boundary string.
-               Why is this bad for multipart-mixed? Well, multipart-
-               mixed can be part of a multipart-signed and an additional
-               empty line makes the mail invalid for a verification
-               (the signature was computed based on the same content,
-               but with a single newline).
+    // DwEntityParser skips the line separating the headers from the
+    // body. So it's neither part of DwHeaders, nor of DwBody
+    // -> we need to readd it here:
+    mString += DW_EOL;
 
-	       We check for the existence of the first body part since
-	       we treat the body as opaque in case a failure to parse
-	       multipart-subtypes occurs.
-            */
-        }
-        else
-            mString += DW_EOL;
-    }
     mString += aBody.AsString();
     mIsModified = 0;
 }

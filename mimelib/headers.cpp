@@ -196,7 +196,9 @@ void DwHeaders::Assemble()
         mString += field->AsString();
         field = field->Next();
     }
-    mString += DW_EOL;
+    // We DwEntityParser skips the empty line separating the headers
+    // from the body, so why should be add it here?
+    //mString += DW_EOL;
     mIsModified = 0;
 }
 
