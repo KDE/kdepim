@@ -1,3 +1,48 @@
+Developer's notes for november 9th 2000
+=======================================
+
+What's new? Lots of little bugs found by code review, some new (trivial?)
+features. KPilot 4 is in Mandrake cooker so it receives a little more 
+attention now than before.
+
+* Jorg Habenicht found a bug in the memo-import function. It causes
+  array-bounds overruns. The same bug was present in many other parts
+  of the memo widget. I think I got them all.
+
+* Added some robustness checking in the daemon to cover weird cases
+  like running conduits by hand.
+
+* Added better handling of the "first time" dialog in the vcal conduit.
+
+* The NULL-conduit now has an extra configuration field "Databases" which
+  you can attach it to. This allows you to do a bogus conduit sync with
+  a database (almost equivalent to putting it in the "backup only" entry
+  of the global KPilot settings, except you run the external conduit.
+
+* Made KPilotLink::getConfig return a reference instead of a pointer, to
+  avoid new()ing and delete()ing the config data structure all the time.
+  I hope this increases consistency as well. This has caused lots of
+  little type changes throughout the conduit system, so third-party
+  conduit authors beware :) -- all the changes cause compile failures though.
+
+* Jorg brought in a patch so that KPilot uses the pilot-link environment
+  variables to set initial values.
+
+
+Some wishlist-style items:
+
+* The memo and address internal conduits are (a) ugly and (b) impossible
+  to i18n properly, because they have hard-coded sizes. Need to spend some
+  time cleaning that up.
+
+* Really, it's time to write a conduit that syncs with KNotes. It's
+  not that hard, but KNotes has some silly bugs that need fixing first :(
+
+* A patch to introduce a notion of "fast sync" has been produced for 
+  KPilot 3.2.1 -- we're now looking into how to integrate that into
+  the KPilot 4.x series. The idea is you only run a sync on the databases
+  you have a conduit for.
+
 Developer's notes for october 29th 2000
 =======================================
 

@@ -20,11 +20,15 @@ static const char *id="$Id$";
 //
 //		Remaining questions are marked with QADE.
 
+#include "options.h"
+
 #include <iostream.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <pi-macros.h>
+#include "pi-dlp.h"
+#include "pi-address.h"
 
 #include <qlist.h>
 #include <qlistbox.h>
@@ -38,13 +42,11 @@ static const char *id="$Id$";
 #include <kfiledialog.h>
 
 #include "strToken.h"
-#include "addressWidget.moc"
-#include "pi-dlp.h"
-#include "pi-address.h"
 #include "kpilot.h"
 #include "addressEditor.h"
 #include "kpilotOptions.h"
-#include "options.h"
+
+#include "addressWidget.moc"
 
 
 // This is the size of several (automatic) buffers,
@@ -254,7 +256,8 @@ AddressWidget::updateWidget()
 {
 	FUNCTIONSETUP;
 
-	int addressDisplayMode = KPilotOptionsAddress::getDisplayMode();
+	int addressDisplayMode = KPilotOptionsAddress::getDisplayMode(
+		KPilotLink::getConfig());
 	int listIndex = 0;
 	int currentEntry = 0;
 
@@ -851,6 +854,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.12  2000/10/29 22:16:39  adridg
+// Misc fixes
+//
 // Revision 1.11  2000/10/29 14:12:37  habenich
 // removed compiler warnings
 //

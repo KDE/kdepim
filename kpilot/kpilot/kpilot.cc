@@ -1054,7 +1054,7 @@ int main(int argc, char** argv)
 
 	KApplication a(true,true);
 
-	KConfig *c=KPilotLink::getConfig();
+	KConfig& c=KPilotLink::getConfig();
 	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
 		run_mode='s';
@@ -1083,7 +1083,7 @@ int main(int argc, char** argv)
 		// while reading or writing settings (still a
 		// bad idea, actually).
 		//
-		c->setGroup(QString::null);
+		c.setGroup(QString::null);
 	}
 
 #ifdef KDE2
