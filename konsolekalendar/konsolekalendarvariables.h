@@ -87,6 +87,23 @@ class KonsoleKalendarVariables
     */
     bool isEndDateTime();
 
+   /**
+     * Sets the timezone from the user or system environment
+     */
+    void setTimeZoneId();
+
+    /**
+     * Get timezone id string
+     * @return timezone id string
+     */
+    QString getTimeZoneId();
+
+    /**
+     * Is there a timezone set?
+     * @return true if there is false if there isn't
+     */
+     bool isTimeZoneId();
+
     void setUID( QString uid );
 
    /**
@@ -162,13 +179,13 @@ class KonsoleKalendarVariables
     QString getImportFile();
 
    /**
-    * Add description 
+    * Add description
     * @param description to happening
     */
     void setDescription( QString description );
 
    /**
-    * return description 
+    * return description
     * @return description of happening
     */
     QString getDescription();
@@ -209,16 +226,16 @@ class KonsoleKalendarVariables
 
    /**
     * Set is calendar default resource
-    */ 
+    */
 
    void setDefault( bool def );
-   
-   
+
+
    /**
-    * Return if calendar is default resource 
+    * Return if calendar is default resource
     */
    bool isDefault();
-   
+
    /**
      * Set calendar file for global use
      */
@@ -234,25 +251,25 @@ class KonsoleKalendarVariables
    /**
     * Set output file
     */
-   
+
    void setExportFile( QString export_file );
-   
+
    /**
     *  To what file we'll output
     */
-   
+
    QString getExportFile();
-   
+
    /*
     * Has an Export File been set?
     */
-    
+
    bool isExportFile();
 
    /**
      * Set export type that'll we use
      */
-   
+
    void setExportType( int export_type );
 
    /**
@@ -262,46 +279,48 @@ class KonsoleKalendarVariables
    int getExportType();
 
    /**
-    * Do we use CalendarResources or LocalCalendar 
+    * Do we use CalendarResources or LocalCalendar
     */
    bool isCalendarResources();
-   
+
    /**
     * Add to Calendar Resources
     */
    CalendarResourceManager *getCalendarResourceManager();
 
    /**
-    * Add to Calendar Resources 
+    * Add to Calendar Resources
     */
    bool addCalendarResources( ResourceCalendar *cal );
-   
+
   /**
-   * Calendar resource is the new way 
+   * Calendar resource is the new way
    */
    void setCalendarResources( CalendarResources *resource );
-   
+
    /**
-   * Calendar resource is the new way 
-   */  
+   * Calendar resource is the new way
+   */
   CalendarResources *getCalendarResources();
 
-   
+
   /**
-   * Loads calendar resources 
+   * Loads calendar resources
    */
-  bool loadCalendarResources( KConfig *config ); 
+  bool loadCalendarResources( KConfig *config );
 
   void setDaysCount( int count );
   int getDaysCount();
   bool isDaysCount();
-  
-   
+
+
   private:
    int findNumber( const QString &str, int &pos, int &startpos );
    char findSeparator( const QString &str, int &pos, int &seppos );
    void skipWhiteSpace( const QString &str, int &pos );
 
+   bool m_bIsTimeZoneId;
+   QString m_TimeZoneId;
    QDateTime m_startDateTime;
    QDateTime m_endDateTime;
    bool m_bIsStartDateTime;
@@ -331,10 +350,10 @@ class KonsoleKalendarVariables
    // New resource stuff will over-ride old pne
    CalendarResources *m_resource;
    // We can use this from everywhere
-   CalendarLocal *m_calendarLocal;   
+   CalendarLocal *m_calendarLocal;
 
-   
- 
+
+
 
 };
 
