@@ -517,9 +517,12 @@ PilotDaemon::startHotSync(int mode)
 			<< mode
 			<< " passed to startHotSync()"
 			<< endl;
-		return 0;
+		return;
 	}
 
+	kdWarning() << __FUNCTION__
+		<< ": Unimplemented right now."
+		<< endl;
 }
 
 void
@@ -1087,7 +1090,7 @@ int main(int argc, char* argv[])
 	FUNCTIONSETUP;
 
         KAboutData about("kpilotDaemon", I18N_NOOP("KPilot"),
-                         "4.0b",
+                         "4.0b2",
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
                          "(c) 1998-2000, Dan Pilone");
@@ -1174,6 +1177,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.25  2001/01/04 22:19:37  adridg
+// Stuff for Chris and Bug 18072
+//
 // Revision 1.24  2001/01/04 11:33:20  bero
 // Fix build
 //
