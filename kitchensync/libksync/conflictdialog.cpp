@@ -40,16 +40,20 @@ ConflictDialog::ConflictDialog( SyncEntry *syncEntry, SyncEntry *targetEntry,
 
   mDiffAlgo = syncEntry->diffAlgo( syncEntry, targetEntry );
 
+  mDisplay->setLeftSourceTitle( syncEntry->syncee()->source() );
+  mDisplay->setRightSourceTitle( targetEntry->syncee()->source() );
+
+  setButtonText( User1, targetEntry->syncee()->source() );
+  setButtonText( User2, syncEntry->syncee()->source() );
+  setButtonText( Cancel, i18n( "Keep both" ) );
+
   if ( mDiffAlgo ) {
-    mDisplay->setLeftSourceTitle( syncEntry->syncee()->source() );
-    mDisplay->setRightSourceTitle( targetEntry->syncee()->source() );
-
-    setButtonText( User1, targetEntry->syncee()->source() );
-    setButtonText( User2, syncEntry->syncee()->source() );
-    setButtonText( Cancel, i18n( "Keep both" ) );
-
     mDiffAlgo->addDisplay( mDisplay );
     mDiffAlgo->run();
+  } else {
+    mDisplay->begin();
+    mDisplay->conflictField( i18n( "Both entries have changed fields" ), i18n( "Unknown" ), i18n( "Unknown" ) );
+    mDisplay->end();
   }
 
   resize( 550, 400 );
