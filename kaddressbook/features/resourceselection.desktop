@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=libkaddrbk_resourceselection
+Name=Address Book Management Plugin
+Comment=Plugin for managing address books
+Type=Service
+ServiceTypes=KAddressBook/Extension
