@@ -1,5 +1,3 @@
-#ifndef ADDRESSEDITWIDGET_H
-#define ADDRESSEDITWIDGET_H
 /*
     This file is part of KAddressBook.
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
@@ -23,6 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
+#ifndef ADDRESSEDITWIDGET_H
+#define ADDRESSEDITWIDGET_H
+
 #include <qwidget.h>
 
 #include <kdialogbase.h>
@@ -30,7 +31,6 @@
 #include <kabc/addressee.h>
 
 #include "addresseeconfig.h"
-#include "typecombo.h"
 
 class QButtonGroup;
 class QCheckBox;
@@ -42,11 +42,9 @@ class KComboBox;
 class KLineEdit;
 class KListView;
 
-typedef TypeCombo<KABC::Address> AddressTypeCombo;
-
 /**
   Editor widget for addresses.
-*/
+ */
 class AddressEditWidget : public QWidget
 {
   Q_OBJECT
@@ -55,86 +53,76 @@ class AddressEditWidget : public QWidget
     AddressEditWidget( QWidget *parent, const char *name = 0 );
     ~AddressEditWidget();
 
-    KABC::Address::List addresses();
-    void setAddresses( const KABC::Addressee &addr,
-                       const KABC::Address::List &list );
-
-    void updateTypeCombo( const KABC::Address::List&, KComboBox* );
-    KABC::Address currentAddress( KComboBox*, int );
+    KABC::Address::List addresses() const;
+    void setAddresses( const KABC::Addressee &addr, const KABC::Address::List &list );
 
   signals:
     void modified();
 
-  protected slots:
-    void updateAddressEdit();
+  private slots:
+    void updateTypeCombo();
+    void updateView();
 
+    void add();
     void edit();
+    void remove();
+    void setPreferred();
 
   private:
-    AddressTypeCombo *mTypeCombo;
+    KComboBox *mTypeCombo;
 
+    QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
-    QTextEdit *mAddressTextEdit;
+    QPushButton *mPreferredButton;
+    QTextEdit *mAddressView;
 
     KABC::Address::List mAddressList;
     KABC::Addressee mAddressee;
-    int mIndex;
+    QMap<int, int> mAddressMap;
 };
 
 /**
   Dialog for editing address details.
-*/
+ */
 class AddressEditDialog : public KDialogBase
 {
   Q_OBJECT
 
   public:
-    AddressEditDialog( const KABC::Address::List &list, int selected,
-                       QWidget *parent, const char *name = 0 );
+    AddressEditDialog( const KABC::Address &addr, QWidget *parent,
+                       const char *name = 0 );
     ~AddressEditDialog();
 
-    KABC::Address::List addresses();
-    bool changed() const;
+    KABC::Address address();
 
-  protected slots:
-    void addAddress();
-    void removeAddress();
-
-    void updateAddressEdits();
-    void modified();
+  private slots:
+    void changeType();
 
   private:
-    void fillCountryCombo( KComboBox *combo );
+    void fillCountryCombo();
 
-    void saveAddress();
-
-    KABC::Address::List mAddressList;
-
-    AddressTypeCombo *mTypeCombo;
-
-    QCheckBox *mPreferredCheckBox;
     QTextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
     KLineEdit *mRegionEdit;
     KLineEdit *mLocalityEdit;
     KLineEdit *mPostalCodeEdit;
     KLineEdit *mPOBoxEdit;
+    QPushButton *mTypeButton;
 
-    QPushButton *mRemoveButton;
-    bool mChanged;
+    KABC::Address mAddress;
 };
 
 /**
   Dialog for selecting an address type.
-*/
+ */
 class AddressTypeDialog : public KDialogBase
 {
   public:
     AddressTypeDialog( int type, QWidget *parent );
     ~AddressTypeDialog();
 
-    int type();
+    int type() const;
 
   private:
     QButtonGroup *mGroup;

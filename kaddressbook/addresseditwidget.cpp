@@ -51,319 +51,300 @@
 
 #include "addresseditwidget.h"
 
+
 AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QBoxLayout *layout = new QVBoxLayout( this, 4, 2 );
-  layout->setSpacing( KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this, 4, 2, KDialog::marginHint(),
+                                         KDialog::spacingHint() );
 
-  mTypeCombo = new AddressTypeCombo( mAddressList, this );
+  mTypeCombo = new KComboBox( this );
   connect( mTypeCombo, SIGNAL( activated( int ) ),
-           SLOT( updateAddressEdit() ) );
-  layout->addWidget( mTypeCombo );
+           SLOT( updateView() ) );
+  layout->addWidget( mTypeCombo, 0, 0 );
 
-  mAddressTextEdit = new QTextEdit( this );
-  mAddressTextEdit->setReadOnly( true );
-  mAddressTextEdit->setMinimumHeight( 20 );
-  layout->addWidget( mAddressTextEdit );
+  mAddressView = new QTextEdit( this );
+  mAddressView->setReadOnly( true );
+  mAddressView->setMinimumHeight( 20 );
+  layout->addMultiCellWidget( mAddressView, 1, 3, 0, 0 );
 
-  QPushButton *editButton = new QPushButton( i18n( "&Edit Addresses..." ),
-                                             this );
-  connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  layout->addWidget( editButton );
+  mAddButton = new QPushButton( i18n( "Add" ), this );
+  layout->addWidget( mAddButton, 0, 1 );
+
+  mEditButton = new QPushButton( i18n( "Edit..." ), this );
+  layout->addWidget( mEditButton, 1, 1 );
+
+  mRemoveButton = new QPushButton( i18n( "Remove..." ), this );
+  layout->addWidget( mRemoveButton, 2, 1 );
+
+  mPreferredButton = new QPushButton( i18n( "Set Preferred" ), this );
+  layout->addWidget( mPreferredButton, 3, 1 );
+
+  connect( mAddButton, SIGNAL( clicked() ), SLOT( add() ) );
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
+  connect( mPreferredButton, SIGNAL( clicked() ), SLOT( setPreferred() ) );
 }
 
 AddressEditWidget::~AddressEditWidget()
 {
 }
 
-KABC::Address::List AddressEditWidget::addresses()
+KABC::Address::List AddressEditWidget::addresses() const
 {
-  KABC::Address::List retList;
-
-  KABC::Address::List::Iterator it;
-  for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
-    if ( !(*it).isEmpty() )
-      retList.append( *it );
-
-  return retList;
+  return mAddressList;
 }
 
 void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
                                       const KABC::Address::List &list )
 {
   mAddressee = addr;
+  mAddressList = list;
 
-  mAddressList.clear();
+  updateTypeCombo();
+}
 
-  // Insert types for existing numbers.
-  mTypeCombo->insertTypeList( list );
+void AddressEditWidget::updateTypeCombo()
+{
+  int pos = mTypeCombo->currentItem();
 
-  QValueList<int> defaultTypes;
-  defaultTypes << KABC::Address::Home;
-  defaultTypes << KABC::Address::Work;
+  mTypeCombo->clear();
+  mAddressMap.clear();
 
-  // Insert default types.
-  // Doing this for mPrefCombo is enough because the list is shared by all
-  // combos.
-  QValueList<int>::ConstIterator it;
-  for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
-    if ( !mTypeCombo->hasType( *it ) )
-      mTypeCombo->insertType( list, *it, Address( *it ) );
-  }
+  QMap<int,int> labelCount;
+  QStringList items;
 
-  mTypeCombo->updateTypes();
-
-  // find preferred address which will be shown
-  int preferred = KABC::Address::Home;  // default if no preferred address set
-  uint i;
-  for (i = 0; i < list.count(); i++)
-    if ( list[i].type() & KABC::Address::Pref ) {
-      preferred = list[i].type();
+  KABC::Address::List::Iterator it;
+  bool hasPreferred = false;
+  for ( it = mAddressList.begin(); it != mAddressList.end(); ++it ) {
+    if ( (*it).type() & KABC::Address::Pref ) {
+      hasPreferred = true;
       break;
     }
+  }
 
-  mTypeCombo->selectType( preferred );
+  int addrPos, currAddr = 0;
+  if ( hasPreferred )
+    addrPos = 1;
+  else
+    addrPos = 0;
+  for ( it = mAddressList.begin(); it != mAddressList.end(); ++it, ++addrPos, ++currAddr ) {
+    int type = (*it).type() & ~( KABC::Address::Pref );
 
-  updateAddressEdit();
+    int count = 1;
+    if ( labelCount.contains( type ) )
+      count = labelCount[ type ] + 1;
+    labelCount[ type ] = count;
+
+    QString label = KABC::Address::typeLabel( type );
+    if ( count > 1 )
+      label = i18n("label (number)", "%1 (%2)").arg( label )
+                                           .arg( QString::number( count ) );
+
+    if ( (*it).type() & KABC::Address::Pref ) { // is preferred address
+      items.prepend( label );
+      mAddressMap.insert( 0, currAddr );
+      addrPos--;
+    } else {
+      items.append( label );
+      mAddressMap.insert( addrPos, currAddr );
+    }
+  }
+  
+  mTypeCombo->insertStringList( items );
+  mTypeCombo->setCurrentItem( pos );
+
+  bool state = ( mAddressList.count() != 0 );
+  mEditButton->setEnabled( state );
+  mRemoveButton->setEnabled( state );
+  mPreferredButton->setEnabled( state );
+
+  updateView();
+}
+
+void AddressEditWidget::updateView()
+{
+  mAddressView->setText( "" );
+
+  KABC::Address addr = mAddressList[ mAddressMap[ mTypeCombo->currentItem() ] ];
+  if ( !addr.isEmpty() ) {
+#if KDE_VERSION >= 319
+    if ( addr.type() & KABC::Address::Work ) {
+      mAddressView->setText( addr.formattedAddress( mAddressee.realName(),
+                             mAddressee.organization() ) );
+    } else
+      mAddressView->setText( addr.formattedAddress( mAddressee.realName() ) );
+#else
+    QString text;
+    if ( !addr.street().isEmpty() )
+      text += addr.street() + "\n";
+
+    if ( !addr.postOfficeBox().isEmpty() )
+      text += addr.postOfficeBox() + "\n";
+
+    text += addr.locality() + QString(" ") + addr.region();
+
+    if ( !addr.postalCode().isEmpty() )
+      text += QString(", ") + addr.postalCode();
+
+    text += "\n";
+
+    if ( !addr.country().isEmpty() )
+      text += addr.country() + "\n";
+
+    text += addr.extended();
+
+    mAddressView->setText( text );      
+#endif
+  }
+}
+
+void AddressEditWidget::add()
+{
+  KABC::Address addr;
+  addr.setType( KABC::Address::Home );
+  
+  AddressEditDialog dlg( addr, this );
+  if ( dlg.exec() ) {
+    mAddressList.append( dlg.address() );
+    updateTypeCombo();
+    emit modified();
+  }
 }
 
 void AddressEditWidget::edit()
 {
-  AddressEditDialog dialog( mAddressList, mTypeCombo->currentItem(), this );
-  if ( dialog.exec() ) {
-    if ( dialog.changed() ) {
-      mAddressList = dialog.addresses();
-      mTypeCombo->updateTypes();
-      updateAddressEdit();
-      emit modified();
-    }
+  KABC::Address addr = mAddressList[ mAddressMap[ mTypeCombo->currentItem() ] ];
+  AddressEditDialog dlg( addr, this );
+  if ( dlg.exec() ) {
+    mAddressList.remove( addr );
+    mAddressList.append( dlg.address() );
+    updateTypeCombo();
+    emit modified();
   }
 }
 
-void AddressEditWidget::updateAddressEdit()
+void AddressEditWidget::remove()
 {
-  KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
+  KABC::Address addr = mAddressList[ mAddressMap[ mTypeCombo->currentItem() ] ];
+  mAddressList.remove( addr );
+  updateTypeCombo();
 
-  bool block = signalsBlocked();
-  blockSignals( true );
-
-  mAddressTextEdit->setText( "" );
-
-  if ( it != mAddressList.end() ) {
-    KABC::Address a = *it;
-    if ( !a.isEmpty() ) {
-#if KDE_VERSION >= 319
-      if ( a.type() & KABC::Address::Work ) {
-        mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName(),
-                                   mAddressee.organization() ) );
-      } else {
-        mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName() ) );
-      }
-#else
-      QString text;
-      if ( !a.street().isEmpty() )
-        text += a.street() + "\n";
-
-      if ( !a.postOfficeBox().isEmpty() )
-        text += a.postOfficeBox() + "\n";
-
-      text += a.locality() + QString(" ") + a.region();
-
-      if ( !a.postalCode().isEmpty() )
-        text += QString(", ") + a.postalCode();
-
-      text += "\n";
-
-      if ( !a.country().isEmpty() )
-        text += a.country() + "\n";
-
-      text += a.extended();
-
-      mAddressTextEdit->setText( text );      
-#endif
-    }
-  }
-
-  blockSignals( block );
+  emit modified();
 }
 
-
-AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
-                                      int selected, QWidget *parent,
-                                      const char *name )
-  : KDialogBase( KDialogBase::Plain, i18n( "Edit Address" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                 parent, name, true, true )
+void AddressEditWidget::setPreferred()
 {
-  mAddressList = list;
+  KABC::Address &addr = mAddressList[ mAddressMap[ mTypeCombo->currentItem() ] ];
+  
+  KABC::Address::List::Iterator it;
+  for ( it = mAddressList.begin(); it != mAddressList.end(); ++it ) {
+    if ( (*it).type() & KABC::Address::Pref )
+      (*it).setType( (*it).type() & ~(KABC::Address::Pref) );
+  }
 
+  int type = addr.type() | KABC::Address::Pref;
+  addr.setType( type );
+
+  updateTypeCombo();
+  emit modified();
+}
+
+AddressEditDialog::AddressEditDialog( const KABC::Address &addr,
+                                      QWidget *parent, const char *name )
+  : KDialogBase( Plain, i18n( "Edit Address" ), Ok | Cancel, Ok,
+                 parent, name, true, true ), mAddress( addr )
+{
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 8, 2 );
+  QGridLayout *topLayout = new QGridLayout( page, 7, 2 );
   topLayout->setSpacing( spacingHint() );
-
-  mTypeCombo = new AddressTypeCombo( mAddressList, page );
-  topLayout->addMultiCellWidget( mTypeCombo, 0, 0, 0, 1 );
 
   QLabel *label = new QLabel( i18n( "Street:" ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
-  topLayout->addWidget( label, 1, 0 );
+  topLayout->addWidget( label, 0, 0 );
   mStreetTextEdit = new QTextEdit( page );
   label->setBuddy( mStreetTextEdit );
-  topLayout->addWidget( mStreetTextEdit, 1, 1 );
+  topLayout->addWidget( mStreetTextEdit, 0, 1 );
 
   label = new QLabel( i18n( "Post office box:" ), page );
-  topLayout->addWidget( label, 2 , 0 );
+  topLayout->addWidget( label, 1 , 0 );
   mPOBoxEdit = new KLineEdit( page );
   label->setBuddy( mPOBoxEdit );
-  topLayout->addWidget( mPOBoxEdit, 2, 1 );
+  topLayout->addWidget( mPOBoxEdit, 1, 1 );
 
   label = new QLabel( i18n( "Locality:" ), page );
-  topLayout->addWidget( label, 3, 0 );
+  topLayout->addWidget( label, 2, 0 );
   mLocalityEdit = new KLineEdit( page, "mLocalityEdit" );
   label->setBuddy( mLocalityEdit );
-  topLayout->addWidget( mLocalityEdit, 3, 1 );
+  topLayout->addWidget( mLocalityEdit, 2, 1 );
 
   label = new QLabel( i18n( "Region:" ), page );
-  topLayout->addWidget( label, 4, 0 );
+  topLayout->addWidget( label, 3, 0 );
   mRegionEdit = new KLineEdit( page );
   label->setBuddy( mRegionEdit );
-  topLayout->addWidget( mRegionEdit, 4, 1 );
+  topLayout->addWidget( mRegionEdit, 3, 1 );
 
   label = new QLabel( i18n( "Postal code:" ), page );
-  topLayout->addWidget( label, 5, 0 );
+  topLayout->addWidget( label, 4, 0 );
   mPostalCodeEdit = new KLineEdit( page );
   label->setBuddy( mPostalCodeEdit );
-  topLayout->addWidget( mPostalCodeEdit, 5, 1 );
+  topLayout->addWidget( mPostalCodeEdit, 4, 1 );
 
   label = new QLabel( i18n( "Country:" ), page );
-  topLayout->addWidget( label, 6, 0 );
+  topLayout->addWidget( label, 5, 0 );
   mCountryCombo = new KComboBox( page );
   mCountryCombo->setEditable( true );
   mCountryCombo->setDuplicatesEnabled( false );
   mCountryCombo->setAutoCompletion( true );
-  fillCountryCombo( mCountryCombo );
   label->setBuddy( mCountryCombo );
-  topLayout->addWidget( mCountryCombo, 6, 1 );
+  topLayout->addWidget( mCountryCombo, 5, 1 );
 
-  mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
-  topLayout->addMultiCellWidget( mPreferredCheckBox, 7, 7, 0, 1 );
+  mTypeButton = new QPushButton( i18n( "Change Type" ), page );
+  topLayout->addMultiCellWidget( mTypeButton, 6, 6, 0, 1 );  
 
-  KSeparator *sep = new KSeparator( KSeparator::HLine, page );
-  topLayout->addMultiCellWidget( sep, 8, 8, 0, 1 );
-
-  QHBox *buttonBox = new QHBox( page );
-  buttonBox->setSpacing( spacingHint() );
-  topLayout->addMultiCellWidget( buttonBox, 9, 9, 0, 1 );
-
-  QPushButton *addButton = new QPushButton( i18n( "&Add..." ), buttonBox );
-  connect( addButton, SIGNAL( clicked() ), SLOT( addAddress() ) );
-
-  mRemoveButton = new QPushButton( i18n( "&Remove" ), buttonBox );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( removeAddress() ) );
-
-  mTypeCombo->updateTypes();
-  mTypeCombo->setCurrentItem( selected );
-
-  updateAddressEdits();
-
-  connect( mTypeCombo, SIGNAL( activated( int ) ),
-           SLOT( updateAddressEdits() ) );
-  connect( mStreetTextEdit, SIGNAL( textChanged() ), SLOT( modified() ) );
-  connect( mPOBoxEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mLocalityEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mRegionEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mPostalCodeEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mCountryCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mPreferredCheckBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( modified() ) );
-
+  fillCountryCombo();
   KAcceleratorManager::manage( this );
 
-  mChanged = false;
-  mRemoveButton->setEnabled( mAddressList.count() > 0 );
+  connect( mTypeButton, SIGNAL( clicked() ), SLOT( changeType() ) );
+
+  // Fill GUI
+  mStreetTextEdit->setText( mAddress.street() );
+  mRegionEdit->setText( mAddress.region() );
+  mLocalityEdit->setText( mAddress.locality() );
+  mPostalCodeEdit->setText( mAddress.postalCode() );
+  mPOBoxEdit->setText( mAddress.postOfficeBox() );
+  mCountryCombo->setCurrentText( mAddress.country() );
+
+  mStreetTextEdit->setFocus();
 }
 
 AddressEditDialog::~AddressEditDialog()
 {
 }
 
-void AddressEditDialog::updateAddressEdits()
+KABC::Address AddressEditDialog::address()
 {
-  KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
-  KABC::Address a = *it;
+  mAddress.setLocality( mLocalityEdit->text() );
+  mAddress.setRegion( mRegionEdit->text() );
+  mAddress.setPostalCode( mPostalCodeEdit->text() );
+  mAddress.setCountry( mCountryCombo->currentText() );
+  mAddress.setPostOfficeBox( mPOBoxEdit->text() );
+  mAddress.setStreet( mStreetTextEdit->text() );
 
-  bool tmp = mChanged;
-
-  mStreetTextEdit->setText( a.street() );
-  mRegionEdit->setText( a.region() );
-  mLocalityEdit->setText( a.locality() );
-  mPostalCodeEdit->setText( a.postalCode() );
-  mPOBoxEdit->setText( a.postOfficeBox() );
-  mCountryCombo->setCurrentText( a.country() );
-
-  mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
-
-  mStreetTextEdit->setFocus();
-
-  mChanged = tmp;
+  return mAddress;
 }
 
-KABC::Address::List AddressEditDialog::addresses()
+void AddressEditDialog::changeType()
 {
-  saveAddress();
-
-  return mAddressList;
+  AddressTypeDialog dlg( mAddress.type(), this );
+  if ( dlg.exec() )
+    mAddress.setType( dlg.type() );
 }
 
-void AddressEditDialog::saveAddress()
+void AddressEditDialog::fillCountryCombo()
 {
-  KABC::Address::List::Iterator a = mTypeCombo->selectedElement();
-
-  (*a).setLocality( mLocalityEdit->text() );
-  (*a).setRegion( mRegionEdit->text() );
-  (*a).setPostalCode( mPostalCodeEdit->text() );
-  (*a).setCountry( mCountryCombo->currentText() );
-  (*a).setPostOfficeBox( mPOBoxEdit->text() );
-  (*a).setStreet( mStreetTextEdit->text() );
-
-  if ( mPreferredCheckBox->isChecked() )
-    (*a).setType( (*a).type() | KABC::Address::Pref );
-  else
-    (*a).setType( (*a).type() & ~KABC::Address::Pref );
-}
-
-void AddressEditDialog::addAddress()
-{
-  AddressTypeDialog dlg( mTypeCombo->selectedType(), this );
-  if ( dlg.exec() ) {
-    mAddressList.append( Address( dlg.type() ) );
-
-    mTypeCombo->updateTypes();
-    mTypeCombo->setCurrentItem( mTypeCombo->count() - 1 );
-    updateAddressEdits();
-
-    modified();
-
-    mRemoveButton->setEnabled( true );
-  }
-}
-
-void AddressEditDialog::removeAddress()
-{
-    if ( mAddressList.count() > 0 ) {
-        mAddressList.remove( mTypeCombo->selectedElement() );
-        mTypeCombo->updateTypes();
-        updateAddressEdits();
-    }
-
-    mRemoveButton->setEnabled( mAddressList.count() > 0 );
-}
-
-void AddressEditDialog::fillCountryCombo(KComboBox *combo)
-{
-  QString sCountry[] = {
+  QString country[] = {
     i18n( "Afghanistan" ), i18n( "Albania" ), i18n( "Algeria" ),
     i18n( "American Samoa" ), i18n( "Andorra" ), i18n( "Angola" ),
     i18n( "Anguilla" ), i18n( "Antarctica" ), i18n( "Antigua and Barbuda" ),
@@ -447,27 +428,17 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
   };
 
   QStringList countries;
-  for ( int i = 0; !sCountry[ i ].isEmpty(); ++i )
-    countries.append( sCountry[i] );
+  for ( int i = 0; !country[ i ].isEmpty(); ++i )
+    countries.append( country[ i ] );
 
   countries.sort();
 
-  combo->insertStringList( countries );
+  mCountryCombo->insertStringList( countries );
 }
 
-bool AddressEditDialog::changed() const
-{
-  return mChanged;
-}
-
-void AddressEditDialog::modified()
-{
-  mChanged = true;
-}
 
 AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
-  : KDialogBase( KDialogBase::Plain, i18n( "Edit Address Type" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
+  : KDialogBase( Plain, i18n( "Edit Address Type" ), Ok | Cancel, Ok,
                  parent, "AddressTypeDialog" )
 {
   QWidget *page = plainPage();
@@ -493,7 +464,7 @@ AddressTypeDialog::~AddressTypeDialog()
 {
 }
 
-int AddressTypeDialog::type()
+int AddressTypeDialog::type() const
 {
   int type = 0;
   for ( int i = 0; i < mGroup->count(); ++i ) {
