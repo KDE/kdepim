@@ -1543,8 +1543,10 @@ email manually.</para>
 <listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
 triggered, the email is sent automatically using
 <application>sendmail</application>. This option will only work if
-your system is configured to use <application>sendmail</application>
-or an equivalent mail transport agent.</para>
+your system is configured to use <application>sendmail</application>,
+or a <application>sendmail</application> compatible mail transport
+agent such as <application>postfix</application> or
+<application>qmail</application>.</para>
 </listitem>
 </itemizedlist>
 </listitem>
