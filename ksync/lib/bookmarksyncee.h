@@ -33,11 +33,11 @@ class BookmarkSyncEntry : public KSyncEntry
 {
   public:
     BookmarkSyncEntry(KBookmark);
-  
+
     QString name();
     QString id();
     QString timestamp();
-    
+
     bool equals(KSyncEntry *entry);
 
     KBookmark bookmark() const { return mBookmark; }
@@ -47,18 +47,18 @@ class BookmarkSyncEntry : public KSyncEntry
 };
 
 /**
-  This class provides an implementation of the @KSyncee interface for KSync. It
-  provides syncing of bookmark files as used by Konqueror.
+  This class provides an implementation of the @see KSyncee interface for KSync.
+  It provides syncing of bookmark files as used by Konqueror.
 */
 class BookmarkSyncee : public KSyncee
 {
   public:
     BookmarkSyncee();
     ~BookmarkSyncee();
-  
+
     BookmarkSyncEntry *firstEntry();
     BookmarkSyncEntry *nextEntry();
-    
+
 //    BookmarkSyncEntry *findEntry(const QString &id);
 
     void addEntry(KSyncEntry *);

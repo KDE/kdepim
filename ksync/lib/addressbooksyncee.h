@@ -29,11 +29,11 @@ class AddressBookSyncEntry : public KSyncEntry
 {
   public:
     AddressBookSyncEntry( const KABC::Addressee & );
-  
+
     QString name();
     QString id();
     QString timestamp();
-    
+
     bool equals( KSyncEntry *entry );
 
     KABC::Addressee addressee() { return mAddressee; }
@@ -43,18 +43,18 @@ class AddressBookSyncEntry : public KSyncEntry
 };
 
 /**
-  This class provides an implementation of the @KSyncee interface for KSync. It
-  provides syncing of AddressBook files.
+  This class provides an implementation of the @see KSyncee interface for KSync.
+  It provides syncing of AddressBook files.
 */
 class AddressBookSyncee : public KSyncee
 {
   public:
     AddressBookSyncee();
     ~AddressBookSyncee();
-  
+
     AddressBookSyncEntry *firstEntry();
     AddressBookSyncEntry *nextEntry();
-    
+
 //    AddressBookSyncEntry *findEntry(const QString &id);
 
     void addEntry(KSyncEntry *);
@@ -65,11 +65,11 @@ class AddressBookSyncee : public KSyncee
 
   private:
     AddressBookSyncEntry *createEntry( const KABC::Addressee & );
-  
+
     KABC::AddressBook *mAddressBook;
 
     KABC::AddressBook::Iterator mAddressBookIterator;
-    
+
     QPtrList<AddressBookSyncEntry> mEntries;
 };
 

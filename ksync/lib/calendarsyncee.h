@@ -31,11 +31,11 @@ class CalendarSyncEntry : public KSyncEntry
 {
   public:
     CalendarSyncEntry(Incidence *);
-  
+
     QString name();
     QString id();
     QString timestamp();
-    
+
     bool equals(KSyncEntry *entry);
 
     Incidence *incidence() { return mIncidence; }
@@ -45,18 +45,18 @@ class CalendarSyncEntry : public KSyncEntry
 };
 
 /**
-  This class provides an implementation of the @KSyncee interface for KSync. It
-  provides syncing of iCalendar files.
+  This class provides an implementation of the @see KSyncee interface for KSync.
+  It provides syncing of iCalendar files.
 */
 class CalendarSyncee : public KSyncee
 {
   public:
     CalendarSyncee();
     ~CalendarSyncee();
-  
+
     CalendarSyncEntry *firstEntry();
     CalendarSyncEntry *nextEntry();
-    
+
 //    CalendarSyncEntry *findEntry(const QString &id);
 
     void addEntry(KSyncEntry *);
@@ -67,11 +67,11 @@ class CalendarSyncee : public KSyncee
 
   private:
     CalendarSyncEntry *createEntry(Incidence *);
-  
+
     CalendarLocal *mCalendar;
     Event::List mEvents;
     Event::List::ConstIterator mCurrentEvent;
-    
+
     QPtrList<CalendarSyncEntry> mEntries;
 };
 
