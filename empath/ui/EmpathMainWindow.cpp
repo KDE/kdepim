@@ -187,9 +187,8 @@ EmpathProgressIndicator::EmpathProgressIndicator
 
     QHBoxLayout * layout = new QHBoxLayout(this, 0, 6);
 
-    progress_ =
-        new KProgress(t->pos(), t->max(), 0, KProgress::Horizontal, this);
-
+    progress_ = new KProgress(this);
+    progress_->setTotalSteps(t->max());
     progress_->setFixedWidth(120);
 
     QLabel * l = new QLabel(t->name(), this);
@@ -200,7 +199,7 @@ EmpathProgressIndicator::EmpathProgressIndicator
 
     QObject::connect(
         t,          SIGNAL(posChanged(int)),
-        progress_,  SLOT(setValue(int))
+        progress_,  SLOT(setProgress(int))
     );
 
     QObject::connect(
@@ -229,7 +228,7 @@ EmpathProgressIndicator::~EmpathProgressIndicator()
     void
 EmpathProgressIndicator::s_setMaxValue(int v)
 {
-    progress_->setRange(progress_->minValue(), v);
+    progress_->setTotalSteps(v);
 }
 
     void

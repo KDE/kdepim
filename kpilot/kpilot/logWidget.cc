@@ -99,7 +99,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fLabel = new QLabel(i18n("Sync Progress:"),this);
 	grid->addWidget(fLabel,3,1);
-	fProgress = new KProgress(0,100,0,KProgress::Horizontal,this);
+	fProgress = new KProgress(this);
 	QToolTip::add(fProgress,i18n("<qt>The (estimated) percentage "
 		"completed in the current HotSync.</qt>"));
 	grid->addWidget(fProgress,3,2);
@@ -192,7 +192,7 @@ void LogWidget::addProgress(const QString &s,int i)
 
 	if ((i >= 0) && (i <= 100))
 	{
-		fProgress->setValue(i);
+		fProgress->setProgress(i);
 	}
 }
 
@@ -318,6 +318,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.11  2001/12/31 14:41:06  harald
+// Make it compile
+//
 // Revision 1.10  2001/12/31 09:38:09  adridg
 // Splash patch by Aaron
 //

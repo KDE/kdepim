@@ -23,6 +23,7 @@
 
 //Qt includes
 #include <qfile.h>
+#include <qregexp.h>
 #include <qtextstream.h>
 
 // KDE includes
