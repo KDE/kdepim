@@ -23,6 +23,7 @@
 #define KCAL_ALARM_H
 
 #include <qstring.h>
+#include <qstringlist.h>
 #include <qvaluelist.h>
 
 #include "customproperties.h"
