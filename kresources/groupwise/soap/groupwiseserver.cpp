@@ -127,6 +127,19 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
   mWeaver = new KPIM::ThreadWeaver::Weaver( this );
   KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
   weaverLogger->attach( mWeaver );
+
+#if 1
+  // disable this block to use native gSOAP network functions
+  if (mSSL) 
+     m_sock = new KSSLSocket();
+  else
+     m_sock = new KExtendedSocket();
+
+  mSoap->fopen = myOpen;
+  mSoap->fsend = mySendCallback;
+  mSoap->frecv = myReceiveCallback;
+  mSoap->fclose = myClose;
+#endif
 }
 
 GroupwiseServer::~GroupwiseServer()
@@ -155,19 +168,6 @@ bool GroupwiseServer::login()
   mSoap->passwd = strdup( mPassword.latin1() );
 
   mSession.clear();
-
-#if 1
-  // disable this block to use native gSOAP network functions
-  if (mSSL) 
-     m_sock = new KSSLSocket();
-  else
-     m_sock = new KExtendedSocket();
-
-  mSoap->fopen = myOpen;
-  mSoap->fsend = mySendCallback;
-  mSoap->frecv = myReceiveCallback;
-  mSoap->fclose = myClose;
-#endif
 
 //  cout << "Login" << endl;
 

@@ -198,6 +198,11 @@ int KSSLSocket::verifyCertificate()
 
 	KSSLCertificate::KSSLValidationList ksvl = pc.validateVerbose(KSSLCertificate::SSLServer);
 
+        if ( ksvl.count() == 1 && ksvl.first() == KSSLCertificate::Unknown ) {
+          kdDebug() << "Unknown validation error" << endl;
+          return 0;
+        }
+
 	_IPmatchesCN = d->kssl->peerInfo().certMatchesAddress();
 
 	if (!_IPmatchesCN)
