@@ -26,6 +26,7 @@
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
 		<Action name="certificates_validate"/>
+		<Action name="certificates_refresh_clr"/>
 <!--
 		<Action name="edit_revoke_certificate"/>
 		<Action name="edit_extend_certificate"/>

@@ -146,6 +146,8 @@ private slots:
 
     void slotExpandAll();
     void slotCollapseAll();
+    void slotRefreshKeys();
+    void slotRefreshKeysResult( const GpgME::Error & );
 
 private:
     void createStatusBar();

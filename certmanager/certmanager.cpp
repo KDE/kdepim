@@ -57,6 +57,7 @@
 #include <kleo/keyfilter.h>
 #include <kleo/keyfiltermanager.h>
 #include <kleo/hierarchicalkeylistjob.h>
+#include <kleo/refreshkeysjob.h>
 
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
@@ -258,6 +259,10 @@ void CertManager::createActions() {
 			actionCollection(), "view_collapseall" );
   action->setEnabled( startWithHierarchicalKeyListing );
 
+  (void)   new KAction( i18n("Refresh CRLs"), 0, 0,
+			this, SLOT(slotRefreshKeys()),
+			actionCollection(), "certificates_refresh_clr" );
+
 #ifdef NOT_IMPLEMENTED_ANYWAY
   mRevokeCertificateAction = new KAction( i18n("Revoke"), 0,
                                           this, SLOT(revokeCertificate()),
@@ -440,6 +445,37 @@ static std::set<std::string> extractKeyFingerprints( const QPtrList<Kleo::KeyLis
   return result;
 }
 
+static QStringList stringlistFromSet( const std::set<std::string> & set ) {
+  // ARGH. This is madness. Shitty Qt containers don't support QStringList( patterns.begin(), patterns.end() ) :/
+  QStringList sl;
+  for ( std::set<std::string>::const_iterator it = set.begin() ; it != set.end() ; ++it )
+    // let's make extra sure, maybe someone tries to make Qt not support std::string->QString conversion
+    sl.push_back( QString::fromLatin1( it->c_str() ) );
+  return sl;
+}
+
+void CertManager::slotRefreshKeys() {
+  const QStringList keys = stringlistFromSet( extractKeyFingerprints( mKeyListView->selectedItems() ) );
+  Kleo::RefreshKeysJob * job = Kleo::CryptPlugFactory::instance()->smime()->refreshKeysJob();
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::Error&)),
+	   this, SLOT(slotRefreshKeysResult(const GpgME::Error&)) );
+
+  connectJobToStatusBarProgress( job, i18n("Refreshing keys...") );
+  if ( const GpgME::Error err = job->start( keys ) )
+    slotRefreshKeysResult( err );
+}
+
+void CertManager::slotRefreshKeysResult( const GpgME::Error & err ) {
+  if ( err.isCanceled() )
+    return;
+  if ( err )
+    KMessageBox::error( this, i18n("An error occured while trying to refresh "
+				   "keys:\n%1").arg( QString::fromLocal8Bit( err.asString() ) ),
+			i18n("Refreshing Keys Failed") );
+}
+
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
@@ -467,12 +503,7 @@ void CertManager::startRedisplay( bool validate ) {
 }
 
 void CertManager::startKeyListing( bool validating, bool refresh, const std::set<std::string> & patterns ) {
-  // ARGH. This is madness. Shitty Qt containers don't support QStringList( patterns.begin(), patterns.end() ) :/
-  QStringList sl;
-  for ( std::set<std::string>::const_iterator it = patterns.begin() ; it != patterns.end() ; ++it )
-    // let's make extra sure, maybe someone tries to make Qt not support std::string->QString conversion
-    sl.push_back( QString::fromLatin1( it->c_str() ) );
-  startKeyListing( validating, refresh, sl );
+  startKeyListing( validating, refresh, stringlistFromSet( patterns ) );
 }
 
 void CertManager::startKeyListing( bool validating, bool refresh, const QStringList & patterns ) {
