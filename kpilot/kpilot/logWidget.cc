@@ -278,7 +278,7 @@ void LogWidget::syncDone()
 {
 	FUNCTIONSETUP;
 
-	addMessage(i18n("<b>HotSync Finished!</b>"));
+	addMessage(i18n("<b>HotSync Finished.</b>"));
 }
 
 void LogWidget::hideSplash()
@@ -375,9 +375,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	if (!f.open(IO_WriteOnly))
 	{
 		int r = KMessageBox::questionYesNo(this,
-			i18n("<qt>Can't open the file &quot;%1&quot; "
-				"for writing. Try again?</qt>"),
-			i18n("Can't Save"));
+			i18n("<qt>Cannot open the file &quot;%1&quot; "
+				"for writing; try again?</qt>"),
+			i18n("Cannot Save"));
 
 		if (r==KMessageBox::Yes) return false;
 		return true;

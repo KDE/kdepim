@@ -470,10 +470,10 @@ void AddressWidget::slotCreateNewRecord()
 #endif
 
 		KMessageBox::sorry(this,
-			i18n("You can't add addresses to the address book "
+			i18n("You cannot add addresses to the address book "
 				"until you have done a HotSync at least once "
 				"to retrieve the database layout from your Pilot."),
-			i18n("Can't Add New Address"));
+			i18n("Cannot Add New Address"));
 
 		if (myDB)
 			KPILOT_DELETE( myDB );

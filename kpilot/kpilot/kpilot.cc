@@ -481,7 +481,7 @@ bool KPilotInstaller::componentPreSync()
 	FUNCTIONSETUP;
 
 	QString reason;
-	QString rprefix(i18n("Can't start a Sync now. %1"));
+	QString rprefix(i18n("Cannot start a Sync now. %1"));
 
 	for (fP->list().first();
 		fP->list().current(); fP->list().next())
@@ -499,7 +499,7 @@ bool KPilotInstaller::componentPreSync()
 	{
 		KMessageBox::sorry(this,
 			rprefix.arg(reason),
-			i18n("Can't start Sync"));
+			i18n("Cannot start Sync"));
 		return false;
 	}
 	return true;
@@ -864,7 +864,7 @@ static KCmdLineOptions kpilotoptions[] = {
 		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
 		0L},
 	{"c", 0, 0},
-	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead!"), 0L},
+	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead."), 0L},
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif

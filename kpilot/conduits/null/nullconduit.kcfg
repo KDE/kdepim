@@ -8,7 +8,7 @@
     </entry>
     <entry name="LogMessage" type="String">
         <label>The error message if the null conduit is supposed to fail</label>
-        <default>KPilot was here!</default>
+        <default>KPilot was here.</default>
     </entry>
 		<entry name="Databases" type="StringList">
 				<label>Databases that are skipped on sync</label>

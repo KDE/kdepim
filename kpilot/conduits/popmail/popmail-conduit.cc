@@ -478,7 +478,7 @@ QString getFQDomainName (const KConfig& config)
 
 #ifdef DEBUG
 				DEBUGCONDUIT << fname << ": Promised domain name environment variable "
-							 << fqDomainName << " wasn't available." << endl;
+							 << fqDomainName << " was not available." << endl;
 #endif
 			}
 		}
@@ -656,7 +656,7 @@ int PopMailConduit::sendViaSMTP ()
 	sendBuffer.sprintf ("EHLO %s\r\n", domainName.latin1());
 	if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
 						 QRegExp(CSL1("^250")),
-						 i18n("Couldn't EHLO to SMTP server")))
+						 i18n("Could not EHLO to SMTP server")))
 		return -1;
 
 	//
@@ -697,7 +697,7 @@ int PopMailConduit::sendViaSMTP ()
         sendBuffer.sprintf ("MAIL FROM: <%s>\r\n", fromAddress.latin1());
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
 							 QRegExp(CSL1("^250")),
-							 i18n("Couldn't start sending new mail.")))
+							 i18n("Could not start sending new mail.")))
 		{
 			return handledCount;
 		}
@@ -733,7 +733,7 @@ int PopMailConduit::sendViaSMTP ()
 			sendBuffer.sprintf ("RCPT TO: <%s>\r\n", recipient.data());
 			if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
 								 QRegExp(CSL1("^25")),
-								 i18n("The recipient doesn't exist!")))
+								 i18n("The recipient does not exist.")))
 				return handledCount;
 		}
 
@@ -857,7 +857,7 @@ int PopMailConduit::sendViaSendmail()
 	  sendf = popen(sendmailCmd.latin1(), "w");
 	  if(!sendf)
 	    {
- 	      KMessageBox::error(0L, i18n("Cannot talk to sendmail!"),
+ 	      KMessageBox::error(0L, i18n("Cannot talk to sendmail."),
 				   i18n("Error Sending Mail"));
 		kdWarning() << k_funcinfo
 			<< ": Could not start sendmail." << endl;
@@ -936,10 +936,10 @@ int PopMailConduit::sendViaKMail()
 	if (!dcopptr)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Can't get DCOP client."
+			<< ": Cannot get DCOP client."
 			<< endl;
 		KMessageBox::error(0L,
-			i18n("Couldn't connect to DCOP server for "
+			i18n("Could not connect to DCOP server for "
 				"the KMail connection."),
 			i18n("Error Sending Mail"));
 		return -1;
@@ -973,7 +973,7 @@ int PopMailConduit::sendViaKMail()
 		if (t.status())
 		{
 			kdWarning() << k_funcinfo
-				<< ": Can't open temp file."
+				<< ": Cannot open temp file."
 				<< endl;
 			KMessageBox::error(0L,
 				i18n("Cannot open temporary file to store "
@@ -987,7 +987,7 @@ int PopMailConduit::sendViaKMail()
 		if (!sendf)
 		{
 			kdWarning() << k_funcinfo
-				<< ": Can't open temporary file for writing!"
+				<< ": Cannot open temporary file for writing!"
 				<< endl;
 			KMessageBox::error(0L,
 				i18n("Cannot open temporary file to store "
@@ -1053,7 +1053,7 @@ int PopMailConduit::sendViaKMail()
 		if (dcopptr->send("kmail","KMailIface","sendQueued",data))
 		{
 			kdWarning() << k_funcinfo
-				<< ": Couldn't flush queue."
+				<< ": Could not flush queue."
 				<< endl;
 		}
 	}
@@ -1862,7 +1862,7 @@ int PopMailConduit::doUnixStyle()
 		if (!info.exists())
 		{
 			kdWarning() << k_funcinfo
-				<< ": Mailbox doesn't exist."
+				<< ": Mailbox does not exist."
 				<< endl;
 			return -1;
 		}
@@ -1878,7 +1878,7 @@ int PopMailConduit::doUnixStyle()
 	mailbox=fopen(filename.latin1(),"r");
 	if (mailbox==0L)
 	{
-		kdWarning() << k_funcinfo << ": Can't open mailbox:"
+		kdWarning() << k_funcinfo << ": Cannot open mailbox:"
 			<< perror
 			<< endl;
 		return -1;
@@ -1901,7 +1901,7 @@ int PopMailConduit::doUnixStyle()
 		else
 		{
 			kdWarning() << k_funcinfo << ": Message "
-				<< messageCount << " couldn't be written."
+				<< messageCount << " could not be written."
 				<< endl;
 			showMessage(i18n("Error writing mail message to Pilot"));
 		}

@@ -206,7 +206,7 @@ void KPilotDeviceLink::checkDevice()
 		// It doesn't exist, mention this in the log
 		// (relevant as long as we use only one device type)
 		//
-		emit logError(i18n("Pilot device %1 doesn't exist. "
+		emit logError(i18n("Pilot device %1 does not exist. "
 			"Assuming the device uses DevFS.")
 				.arg(fPilotPath));
 	}
@@ -383,7 +383,7 @@ errInit:
 		msg += i18n(" These is no such device.");
 		break;
 	case EPERM:
-		msg += i18n(" You don't have permission to open the "
+		msg += i18n(" You do not have permission to open the "
 			"Pilot device.");
 		break;
 	default:
@@ -451,7 +451,7 @@ void KPilotDeviceLink::acceptDevice()
 
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
-		emit logError(i18n("Can't listen on Pilot socket (%1)").
+		emit logError(i18n("Cannot listen on Pilot socket (%1)").
 			arg(QString::fromLocal8Bit(s)));
 
 		close();
@@ -467,7 +467,7 @@ void KPilotDeviceLink::acceptDevice()
 
 		kdWarning() << "pi_accept: " << s << endl;
 
-		emit logError(i18n("Can't accept Pilot (%1)")
+		emit logError(i18n("Cannot accept Pilot (%1)")
 			.arg(QString::fromLocal8Bit(s)));
 
 		fLinkStatus = PilotLinkError;
@@ -481,7 +481,7 @@ void KPilotDeviceLink::acceptDevice()
 		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
-		emit logError(i18n("Can't accept Pilot (%1)")
+		emit logError(i18n("Cannot accept Pilot (%1)")
 			.arg(i18n("already connected")));
 		close();
 		return;
@@ -602,9 +602,9 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	if (!f)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Can't open file " << f << endl;
+			<< ": Cannot open file " << f << endl;
 		emit logError(i18n
-			("<qt>Can't install the file &quot;%1&quot;.</qt>").
+			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
 			arg(f));
 		return false;
 	}
@@ -612,9 +612,9 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	if (pi_file_install(pf, fCurrentPilotSocket, 0) < 0)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Can't pi_file_install " << f << endl;
+			<< ": Cannot pi_file_install " << f << endl;
 		emit logError(i18n
-			("<qt>Can't install the file &quot;%1&quot;.</qt>").
+			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
 			arg(f));
 		return false;
 	}
@@ -800,7 +800,7 @@ KPilotCard *KPilotDeviceLink::getCardInfo(int card)
 	KPilotCard *cardinfo=new KPilotCard();
 	if (dlp_ReadStorageInfo(pilotSocket(), card, cardinfo->cardInfo())<0)
 	{
-		kdWarning() << k_funcinfo << ": Couldn't get info for card "
+		kdWarning() << k_funcinfo << ": Could not get info for card "
 			<< card << endl;
 
 		KPILOT_DELETE(cardinfo);

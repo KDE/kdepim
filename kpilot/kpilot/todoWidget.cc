@@ -410,10 +410,10 @@ void TodoWidget::slotCreateNewRecord()
 #endif
 
 		KMessageBox::sorry(this,
-			i18n("You can't add todos to the todo list "
+			i18n("You cannot add todos to the todo list "
 				"until you have done a HotSync at least once "
 				"to retrieve the database layout from your Pilot."),
-			i18n("Can't Add New Todo"));
+			i18n("Cannot Add New Todo"));
 
 		if (myDB)
 			KPILOT_DELETE( myDB );

@@ -351,7 +351,7 @@
                             <string>Do not convert, if text unchanged (only bookmarks)</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Check this if you don't want to sync the text on the handheld to the PC if you only changed the bookmarks on the handheld, but not the text.</string>
+                            <string>Check this if you do not want to sync the text on the handheld to the PC if you only changed the bookmarks on the handheld, but not the text.</string>
                         </property>
                     </widget>
                     <widget class="QButtonGroup" row="0" column="0">
@@ -370,7 +370,7 @@
                                     <cstring>radioButton8</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Do&amp;n't convert bookmarks</string>
+                                    <string>Do &amp;not convert bookmarks</string>
                                 </property>
                                 <property name="buttonGroupId">
                                     <number>0</number>

@@ -508,7 +508,7 @@ FileInstallAction::~FileInstallAction()
 		kdWarning() << k_funcinfo
 			<< ": Unable to open file." << endl;
 
-		emit logError(i18n("Unable to open file &quot;%1&quot;!").
+		emit logError(i18n("Unable to open file &quot;%1&quot;.").
 			arg(fileName));
 		goto nextFile;
 	}
@@ -518,7 +518,7 @@ FileInstallAction::~FileInstallAction()
 		kdWarning() << k_funcinfo << ": failed to install." << endl;
 
 
-		emit logError(i18n("Cannot install file &quot;%1&quot;!").
+		emit logError(i18n("Cannot install file &quot;%1&quot;.").
 			arg(fileName));
 	}
 	else

@@ -104,7 +104,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< ": Can't find desktop file for conduit "
 			<< fDesktopName
 			<< endl;
-		addSyncLogEntry(i18n("Couldn't find conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not find conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -129,7 +129,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< ": Can't load library "
 			<< o->library()
 			<< endl;
-		addSyncLogEntry(i18n("Couldn't load conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not load conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -177,7 +177,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		kdWarning() << k_funcinfo
 			<< ": Can't create SyncAction."
 			<< endl;
-		addSyncLogEntry(i18n("Couldn't create conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -189,7 +189,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		kdWarning() << k_funcinfo
 			<< ": Can't cast to ConduitAction."
 			<< endl;
-		addSyncLogEntry(i18n("Couldn't create conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
 		return true;
 	}

@@ -200,7 +200,7 @@ there are two special cases: a full and a first sync.
 
 error:
 
-	emit logError(i18n("Couldn't open the calendar databases."));
+	emit logError(i18n("Could not open the calendar databases."));
 
 	KPILOT_DELETE(fCalendar);
 	KPILOT_DELETE(fP);

@@ -99,7 +99,7 @@ kdDebug()<<" log file name "<<KPilotSettings::logFileName()<<endl;
 {
 	if (fSyncing) 
 	{
-		logMessage(i18n("HotSync finished!"));
+		logMessage(i18n("HotSync finished."));
 		fLogStream.unsetDevice();
 		if (fOutfile) fOutfile->close();
 		KPILOT_DELETE(fOutfile)

@@ -82,7 +82,7 @@ the Null-conduit settings.</comment>
                             <cstring>fLogMessage</cstring>
                         </property>
                         <property name="text">
-                            <string>KPilot was here!</string>
+                            <string>KPilot was here.</string>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Enter the message to add to the Sync Log on your Pilot here.&lt;/qt&gt;</string>
