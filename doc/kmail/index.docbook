@@ -9,7 +9,7 @@
 <bookinfo>
 <title>The &kmail; Handbook</title>
 
-<!-- note from daniel.naber@t-online.de, 2001-01-05: I'm working on this
+<!-- note from daniel.naber@t-online.de, 2001-05-05: I'm working on this
 "by hand" (using nedit) so please don't mix up the formatting too much. -->
 
 <authorgroup>
@@ -23,7 +23,7 @@
 </author>
 </authorgroup>
 
-<date>2001-03-11</date>
+<date>2001-05-14</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
@@ -654,49 +654,264 @@ sorting out the new messages in your inbox when they arrive. Filters allow you
 to automatically perform certain actions on incoming messages and to manually
 perform actions on selected messages in a folder.</para>
 
-<para>Usually, filters are used on incoming messages, but they can also be
-applied to a message or group of messages. To selectively filter messages, 
-select the messages you want to filter and type <keycombo
-action="simul">&Ctrl;<keycap>J</keycap></keycombo> or select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Apply
-Filters</guimenuitem></menuchoice>. Note that this will apply all of your
-filters to those messages; there is no way to apply only certain filters to
-messages.</para>
+<para>Filters consist of a search pattern, whose rules are used as
+criteria to determine whether this filter should be applied to a given
+message, and a list of filter actions, which describe what is being
+done with/to the message if the search pattern matches. Read more
+about search patterns and filter actions is the following
+subsections.</para>
 
-<para>If you ever need to remove a filter, select it from the <guilabel>Filter
-Rules</guilabel> window and press the <guibutton>Delete</guibutton>
-button.</para>
+<caution><para> Filters are being considered one after the other,
+starting with the first filter in the list. The first one whose pattern
+matches the given message (and only this one!) gets executed. This is
+a known limitation.</para></caution>
+
+<para>Usually, filters are used on incoming messages, but they can
+also be applied to a message or a group of messages. To selectively
+filter messages, select the messages you want to filter and type
+<keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo> or select
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Apply
+Filters</guimenuitem></menuchoice>. This will apply all your filters
+to those messages; there is no way to apply only certain filters to
+messages, except for incoming and outgoing messages.</para>
+
+<!-- Note (mmutz): I'm describing here the setup that is being
+targeted at for KDE2.2. I just don't want to re-write this section
+twice. dnaber: fixme? -->
+
+<sect2 id="filter-quick">
+<title>Rapid Filter Creation</title>
+
+<para>There are two methods for creating a filter: The quick method is
+to use <menuchoice><guimenu>Message</guimenu><guimenuitem>Create
+Filter</guimenuitem></menuchoice>. This will call the filter dialog
+and present you with a new filter which has the first rule of the
+search pattern and the first action (as "move to folder") preset. In
+most cases, all you have to do is select the folder where the message
+should be moved to. But you can, of course, edit the filter as you
+like.</para>
+
+<para>The interesting thing about this method is that creating a
+filter on mailing lists will try really hard to find a header that
+uniquely identifies mails from that list. If it succeeds, the guessed
+name of the list is presented in the
+<menuchoice><guimenu>Message</guimenu><guisubmenu>Create
+Filter</guisubmenu><guimenuitem>Filter on
+Mailing-List...</guimenuitem></menuchoice> list.</para>
+
+<tip><para>In most cases this works very well, yet sometimes you
+should delete parts of the header contents that are likely to change
+again and select "contains" instead of "equals" in the definition of
+the search rule. Usually, just keeping the list address works
+best.</para></tip>
+
+<para>The second method is to manually construct a filter from scratch
+by calling the filter dialog through
+<menuchoice><guimenu>Settings</guimenu>Filter
+Rules...</menuchoice>. The filter dialog is described in detail in the
+following subsection.</para>
+</sect2>
+
+<sect2 id="filter-dialog">
+<title>The Filter Dialog</title>
+<anchor id="filter-dialog-id"/>
+
+<para>This dialog allows you to manage and edit your list of
+filters.</para>
+
+<para>You reach it either via
+<menuchoice><guimenu>Message</guimenu><guisubmenu>Create
+Filter</guisubmenu></menuchoice> or
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Filter
+Rules...</guimenuitem></menuchoice>.</para>
+
+<para>To exit this dialog without applying changes, click on
+<guibutton>Cancel</guibutton> or hit <keycap>Esc</keycap>.</para>.
+
+<para>The dialog is divided into three main sections:</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Available Filters</guilabel></term>
+<listitem><para>This group contains the list of filters and action
+buttons to modify the filters, namely to create new filters, to move
+them up or down the list, or to delete and rename them. If you select
+a filter from the list, its details are shown in the right-hand half
+of the dialog.</para>
+
+<para> If you click into the second or third column of the list, you
+toggle the applicability of the corresponding filter: The
+<guilabel>in</guilabel> column shows whether it may be considered for
+incoming mails (&ie; on <guimenuitem>Check Mail</guimenuitem>), while
+the <guilabel>out</guilabel> column shows the same for outgoing mails
+(&ie; on <guimenuitem>Send</guimenuitem>).</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Filter Criteria</guilabel></term> <listitem><para>In
+this group you can edit the pattern that messages must match for the
+filter to be applied to them. You can select here whether all of the
+defined rules must match or whether it suffices that any one of them
+matches. See <link linkend="filter-criteria">Search Patterns</link>
+below for a detailed description of each search rule type.</para>
+
+<para> You can click on <guibutton>More</guibutton> to get a new,
+empty rule if you want to define more complex patterns and on
+<guibutton>Fewer</guibutton> to remove the last
+rule. <guibutton>Clear</guibutton> clears the pattern, &ie; it removes
+all but two rules from screen and resets those two.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Filter Actions</guilabel></term> <listitem><para>In
+this group you can edit the list of actions that is applied to all
+messages that match the defined search pattern. See <link
+linkend="filter-action">Filter Actions</link> below for a detailed
+description of each action type.</para>
+
+<para> You can click on <guibutton>More</guibutton> to get a new,
+empty action if you want to define more than one action and on
+<guibutton>Fewer</guibutton> to remove the last
+action. <guibutton>Clear</guibutton> clears the list, &ie; it
+removes all but one action and resets that one.</para></listitem>
+</varlistentry>
+</variablelist>
+
+<note><para>Filters are automatically named unless you explicitely
+rename them using the <guibutton>Rename...</guibutton> button.</para>
+<para>The dialog assumes that it should continue auto-naming the
+filter as long as the filter name starts with "&lt;".</para></note>
+
+<para>Click on the <guibutton>OK</guibutton> button to apply all
+changes and close the dialog, <guibutton>Apply</guibutton> to apply
+all changes and leave the dialog open, and
+<guibutton>Cancel</guibutton> to close the dialog without applying any
+changes.</para>
+
+<note>
+<para> If you apply filter changes, &ie; via
+<guibutton>OK</guibutton> or <guibutton>Apply</guibutton>, only valid
+filters are actually copied to the internal filter manager.</para>
+
+<para>A filter is considered invalid if</para>
+
+<enumeratedlist>
+<listitem><para>the search pattern contains only empty rules or</para></listitem>
+<listitem><para>the action list is empty.</para></listitem>
+</enumeratedlist>
+
+<para>Simlilarly, empty rules and actions are removed from the pattern
+and action list, resp., before the filter is saved.</para>
+</note>
+
+</sect2>
+
+<sect2 id="filter-criteria">
+<title>Search Patterns</title>
+
+<!-- fixme: to or from? -->
+<para>The most common use of filters is to filter on the sender of
+messages. This can be done by choosing <guilabel>&lt;To or
+Cc&gt;</guilabel>. But there are other criteria a filter can
+search for:</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>&lt;message&gt;</guilabel></term>
+<listitem>
+<para>Searches the whole message (&ie; headers, body and attachments,
+if any).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>&lt;body&gt;</guilabel></term>
+<listitem>
+<para>Searches the body of the message.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>&lt;any header&gt;</guilabel></term>
+<listitem>
+<para>Searches the headers of the message.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>&lt;To or Cc&gt;</guilabel></term>
+<listitem>
+<para>Searches the "To" and "Cc" header fields of the message.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>&lt;size&gt;</guilabel></term>
+<listitem>
+<para>Sets upper or lower bounds on the message size.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>&lt;recv. date&gt;</guilabel></term>
+<listitem>
+<para>Sets upper or lower bounds on the message's date of arrival.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>&lt;send date&gt;</guilabel></term>
+<listitem>
+<para>Sets upper or lower bounds on the message's date of sending.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Any other string</term>
+<listitem>
+<para>Searches the header field that is given by that string.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
 
 <sect2 id="filter-action">
 <title>Filter Action</title>
 
-<para>The most common use of filters is to sort incoming messages to certain
-folders. This can be done by choosing <guilabel>transfer</guilabel>. But there
-are other actions a filter can start:</para>
+<para>The most common use of filters is to sort incoming messages to
+certain folders. This can be done by choosing <guilabel>move to
+folder</guilabel>. But there are other actions a filter can
+start:</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>transfer</guilabel></term>
+<term><guilabel>move to folder</guilabel></term>
 <listitem>
 <para>This will move the message to another folder.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>set identity</guilabel></term>
+<term><guilabel>copy to folder</guilabel></term>
+<listitem>
+<para>This will copy the message to another folder.</para>
+<caution><para>This currently doesn't work for <acronym>IMAP</acronym>
+folders as target or source.</para></caution>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>mark as</guilabel></term>
+<listitem>
+<para>This allows you to mark the message as read or important, but
+also as forwarded, replied, ...</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>set identity to</guilabel></term>
 <listitem>
 <para>This will set <emphasis>your</emphasis> identity if you reply to this
 message.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>set transport</guilabel></term>
+<term><guilabel>set transport to</guilabel></term>
 <listitem>
 <para>This will set the method of transport (&eg; <acronym>SMTP</acronym>) if
 you reply to the message.</para>
 </listitem>
 </varlistentry> 
 <varlistentry>
-<term><guilabel>set Reply-To</guilabel></term>
+<term><guilabel>set Reply-To to</guilabel></term>
 <listitem><para>Will modify the <guilabel>Reply-To</guilabel> field of this
 message. This can be useful for mailing lists that automatically set a Reply-To
 which you don't like.</para>
@@ -708,26 +923,52 @@ which you don't like.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>execute</guilabel></term>
-<listitem>
-<para>This will execute a program, but will not modify the message. Specify the
-full path to the program you want to execute. &kmail; will block until the
-program returns. You can feed the program with the parts of the mail:
-<symbol>&percnt;0</symbol>, <symbol>&percnt;1</symbol>, &etc; will stand for
-files representing the message parts. For common mails
-<symbol>&percnt;0</symbol> is the text, <symbol>&percnt;1</symbol> the first
-attachment and so on.</para> 
+<term><guilabel>redirect to</guilabel></term>
+<listitem><para>Will redirect the message to another email address.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>filter app</guilabel></term>
+<term><guilabel>bounce</guilabel></term> <listitem><para>Will try to
+return the message to the sender as undeliverable.</para>
+
+<caution><para>This will only work if the senders email address is
+valid. That's <emphasize>not</emphasize> the case for most
+spam.</para></caution>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>execute command</guilabel></term>
 <listitem>
-<para>This will feed the message to a program. If that program returns output, the entire
-message (including the headers) will be replaced with this output. If the
-program doesn't return output, the message won't change.  Specify the full path
-to the program.</para>
-<caution><para>Be cautious with this action, as it will easily mess up your
-messages if the filter program does return garbage or extra
+<para>This will execute a program, but will not modify the
+message. Specify the full path to the program you want to
+execute. &kmail; will block until the program returns. You can feed
+the program with the parts of the mail: <symbol>&percnt;0</symbol>,
+<symbol>&percnt;1</symbol>, &etc; will stand for files representing
+the message parts. For common mails <symbol>&percnt;0</symbol> is the
+text, <symbol>&percnt;1</symbol> the first attachment and so
+on. Additionally, the whole mail is fed into the program's
+<acronym>stdin</acronym>.</para>
+
+<caution><para>This currently only works if the message has
+<emphasize>at least one</emphasize> attachment. No, not even
+<symbol>&percnt;0</symbol> will work in the general
+case!</para></caution>
+
+<tip><para> You can enter arbitrarily complex shell commands here,
+since &kmail; uses a subshell to execute the command line. Therefore,
+even this command will work (within its limits): <userinput>uudecode -o
+$(mktemp kmail-uudecoded.XXXXXX) &amp;&amp; echo $'\a'</userinput></para></tip>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>pipe through</guilabel></term>
+<listitem>
+<para>This will feed the message to a program. If that program returns
+output, the entire message (including the headers) will be replaced
+with this output. If the program doesn't return output, the message
+won't change.  Specify the full path to the program.</para>
+<caution><para>Be cautious with this action, as it will easily mess up
+your messages if the filter program does return garbage or extra
 lines.</para></caution>
 </listitem>
 </varlistentry>
@@ -738,70 +979,86 @@ lines.</para></caution>
 <sect2 id="filter-examples">
 <title>Filter Examples</title>
 
-<para>If I am subscribed to the &kde; User List, I could create a folder for the
-list (I'll call it <replaceable>KDE-User</replaceable>) and use a filter to
+<para>If I am subscribed to the (general) &kde; List, I could create a
+folder for the list (I'll call it
+<replaceable>KDE-General</replaceable>) and use a filter to
 automatically transfer new messages from my inbox to my
-<replaceable>KDE-User</replaceable> folder if they are from the &kde; User
-List. Here is how to create this filter:</para>
+<replaceable>KDE-General</replaceable> folder if they are from the
+&kde; List. Here is how to create this filter:</para>
 
 <procedure>
 <step>
-<para>Think of a unique way of identifying the messages you want to filter. The
-unique property of my &kde; User List messages is that they always contain
-<quote>kde-user@kde.org</quote> in the 
-<guilabel>To:</guilabel> or <guilabel>Cc:</guilabel> field.</para>
+<para>Try if <menuchoice><guimenu>Message</guimenu><guisubmenu>Create
+filter</guisubmenu><guimenuitem>Filter on
+Mailing-List...</guimenuitem></menuchoice> can identify the mailing
+list (the name of the list should then appear in the menu item). In
+this case, this works and I am presented a filter that has
+<quote>X-Mailing-List <guilabel>equals</guilabel>
+&lt;kde@lists.netcentral.net&gt;</quote> preset. You select the
+desired destination folder from the folder pull-down menu in the
+<guilabel>Filter Action</guilabel> group and that's it!</para>
+
+<para>If that does not work, think of a unique way of identifying the
+messages you want to filter. The (almost) unique property of my &kde;
+List messages is that they always contain
+<quote>kde@lists.netcentral.net</quote> in the
+<guilabel>To:</guilabel> or <guilabel>Cc:</guilabel> field. It's only
+almost unique, because this fails for cross-posted messages.</para>
 </step>
 <step>
 <para>Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>Filter
 Rules...</guimenuitem></menuchoice>.</para>
 </step>
 <step>
-<para>Press the <guibutton>New</guibutton> button to create an empty filter. It
-will appear as <guilabel>Unnamed</guilabel>.</para>
+<para>Press the <guibutton>New</guibutton> button to create an empty
+filter. It will appear as <guilabel>&lt;unnamed&gt;</guilabel>.</para>
 </step>
 <step>
-<para>The right side of the Filter window contains two sections: matching
-criteria and actions. In the matching criteria area, select <guilabel>&lt;To: or
-Cc:&gt;</guilabel> from the first pull-down menu,  <guilabel>contains</guilabel>
-from the second pull-down menu, and type <userinput>kde-user@kde.org</userinput>
-in the text field.</para> 
+<para>In the <guilabel> Filter Criteria</guilabel> area, select
+<guilabel>&lt;To: or Cc:&gt;</guilabel> from the first pull-down menu,
+<guilabel>contains</guilabel> from the second pull-down menu, and type
+<userinput>kde@lists.netcentral.net</userinput> in the text
+field.</para>
 </step>
 <step>
-<para>Skip down to the actions section. Select <guilabel>transfer</guilabel>
-from the first pull-down menu. A new pull-down menu containing a list of folders
-will appear. Select the folder that you want the filtered messages to be
-transferred to if they match the criteria you selected. For this example, you
-would select <guilabel>KDE-User</guilabel> from the pull-down menu.</para> 
+<para>Skip down to the actions section. Select <guilabel>move to
+folder</guilabel> from the first pull-down menu. A new pull-down menu
+containing a list of folders will appear. Select the folder that you
+want the filtered messages to be transferred to if they match the
+criteria you selected. For this example, you would select
+<guilabel>KDE-General</guilabel> from the pull-down menu.</para>
 </step>
 </procedure>
 
-<para>You may find that you need to use more complicated criteria to properly
-filter your messages. For example, you may only want to filter the &kde; User List
-messages that are written by your friend Fred Johnson
-&lt;fj@anywhere.com&gt;. This is where the rest of the matching criteria section
-comes into play:</para>
+<para>You may find that you need to use more complicated criteria to
+properly filter your messages. For example, you may only want to
+filter the &kde; List messages that are written by your friend Fred
+Johnson &lt;fj@anywhere.com&gt;. This is where the rest of the
+matching criteria section comes into play:</para>
 
 <procedure>
 <step>
-<para>Open up the <guilabel>Filter Rules</guilabel> window and select the filter
-you just created.</para> 
+<para>Open up the <guilabel>Filter Rules</guilabel> window and select
+the filter you just created.</para>
 </step>
 <step>
 <para>Since you want to filter all messages that have
-<quote>kde-user@kde.org</quote> in the <guilabel>To:</guilabel> or
-<guilabel>Cc:</guilabel> field <emphasis>and</emphasis> that are from Fred,
-select the <guilabel>and</guilabel> option from the pull down menu between the
-two criteria sections.</para>
+<quote>kde@lists.netcentral.net</quote> in the
+<guilabel>To:</guilabel> or <guilabel>Cc:</guilabel> field
+<emphasis>and</emphasis> that are from Fred, check the
+<guibutton>Match all of the following</guibutton> radio
+button.</para>
 </step>
 <step>
-<para>Now, go to the bottom criteria section and select the following from the
-pull-down menus:  <guilabel>From</guilabel>, <guilabel>contains</guilabel>. Now,
-type  <userinput>fj@anywhere.com</userinput> in the text field.</para>
+<para>Now, go to the second search rule and select the following from
+the pull-down menus: <guilabel>From</guilabel>,
+<guilabel>contains</guilabel>. Now, type
+<userinput>fj@anywhere.com</userinput> in the text field.</para>
 </step>
 </procedure>
 
-<para>You now have a filter that transfers all &kde; User List messages that are
-from fj@anywhere.com.</para> 
+<para>You now have a filter that transfers all &kde; List messages
+that are from fj@anywhere.com.</para>
 </sect2>
 </sect1>
 
@@ -1139,7 +1396,7 @@ quoted text (you will probably want to use the default).</para>
 whether to automatically include your signature.</para>
 
 <para><guilabel>Use smart quoting</guilabel> will break long lines but will try
-to keep the correct quoting (e.g. the <quote>&gt;</quote> will always be at the
+to keep the correct quoting (&eg; the <quote>&gt;</quote> will always be at the
 start of the line).</para>
 
 <para><guilabel>Automatically sign messages using PGP</guilabel> lets you toggle
@@ -2996,6 +3253,17 @@ not be displayed in &kmail;.</para></answer>
 </qandaentry>
 
 <qandaentry>
+<question><para>When I try to set a folder to be mailing list-aware, it does not do
+anything when receiving an email from the list.</para></question>
+<answer><para>Associating a folder with a mailing list has nothing to do with
+filtering the mailing list messages. You have to add a new filter rule manually.
+However, once you associated a folder with a mailing list you can use <menuchoice>
+<guimenu>Message</guimenu><guimenuitem>Reply List</guimenuitem></menuchoice> and 
+write to the list by clicking the <mousebutton>middle</mousebutton>
+mousebutton on the folder.</para></answer>
+</qandaentry>
+
+<qandaentry>
 <question><para>Does &kmail; support <acronym>APOP</acronym>?</para></question>
 <answer><para>Yes, <acronym>APOP</acronym> is used automatically if it's
 available. There's currently no feedback if it's used, and no way to
@@ -3329,7 +3597,10 @@ maintainer)</para></listitem>
 
 <para>Update for &kmail; 1.2 by Daniel Naber
 <email>daniel.naber@t-online.de</email>, <application>PGP</application> part by
-Andreas Gungl <email>a.gungl@gmx.de</email></para> <para>&kmail; 1.0
+Andreas Gungl <email>a.gungl@gmx.de</email>, filter part by
+Marc Mutz <email>Marc.Mutz@uni-bielefeld.de</email></para>
+
+<para>&kmail; 1.0
 documentation by David Rugge <email>davidrugge@mindspring.com</email></para>
 <para>Original documentation by Markus Wuebben
 <email>markus.wuebben@kde.org</email>, Robert Williams
