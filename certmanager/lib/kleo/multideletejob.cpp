@@ -77,22 +77,20 @@ void Kleo::MultiDeleteJob::slotCancel() {
 }
 
 void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
-  if ( err || mIt == mKeys.end() || ++mIt == mKeys.end() ) {
+  GpgME::Error error = err;
+  if ( error || // error in last op
+       mIt == mKeys.end() || // (shouldn't happen)
+       ++mIt == mKeys.end() || // was the last key
+       (error = startAJob()) ) { // error starting the job for the new key
     emit done();
-    emit result( err, err && mIt != mKeys.end() ? *mIt : GpgME::Key::null );
+    emit result( error, error && mIt != mKeys.end() ? *mIt : GpgME::Key::null );
     deleteLater();
-  } else {
-    const GpgME::Error error = startAJob();
-    if ( error ) {
-      emit done();
-      emit result( error, mIt != mKeys.end() ? *mIt : GpgME::Key::null );
-      deleteLater();
-      return;
-    }
-    const int current = mIt - mKeys.begin();
-    const int total = mKeys.size();
-    emit progress( i18n("%1/%2").arg( current ).arg( total ), 0, current, total );
+    return;
   }
+
+  const int current = mIt - mKeys.begin();
+  const int total = mKeys.size();
+  emit progress( i18n("%1/%2").arg( current ).arg( total ), 0, current, total );
 }
 
 GpgME::Error Kleo::MultiDeleteJob::startAJob() {
