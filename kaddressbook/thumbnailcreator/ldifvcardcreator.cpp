@@ -20,7 +20,7 @@
 /*
  *  - ldifvcardthumbnail -
  *
- *  kioslave which generates tumbnails for vCard and LDIF files. 
+ *  kioslave which generates tumbnails for vCard and LDIF files.
  *  The thumbnails are used e.g. by Konqueror or in the file selection
  *  dialog.
  *
@@ -34,6 +34,7 @@
 #include <qtextstream.h>
 
 #include <kdebug.h>
+#include <kglobal.h>
 #include <klocale.h>
 #include <kabc/ldifconverter.h>
 #include <kabc/vcardconverter.h>
@@ -47,6 +48,7 @@ extern "C"
 {
   ThumbCreator *new_creator()
   {
+    KGlobal::locale()->setMainCatalogue( "kaddressbook" );
     return new VCard_LDIFCreator;
   }
 }
@@ -71,10 +73,10 @@ bool VCard_LDIFCreator::readContents( const QString &path )
 
   QString info;
   text.truncate(0);
-  
+
   // read the file
   QTextStream t( &file );
-  t.setEncoding( QTextStream::Latin1 );
+  t.setEncoding( QTextStream::UnicodeUTF8 );
   QString contents = t.read();
   file.close();
 
@@ -105,11 +107,11 @@ bool VCard_LDIFCreator::readContents( const QString &path )
     }
     return true;
   }
- 
-  // create card for _one_ contact 
+
+  // create card for _one_ contact
   addr = addrList[ 0 ];
 
-  // prepare the text 
+  // prepare the text
   name = addr.formattedName().simplifyWhiteSpace();
   if ( name.isEmpty() )
     name = addr.givenName() + " " + addr.familyName();
@@ -247,7 +249,7 @@ bool VCard_LDIFCreator::createImageBig()
   fm = painter.fontMetrics();
 
   QStringList list = QStringList::split('\n', text);
-  for ( QStringList::Iterator it = list.begin(); 
+  for ( QStringList::Iterator it = list.begin();
              p.y()<=pixmapSize.height() && it != list.end(); ++it ) {
      p.setY( p.y() + fm.height() );
      painter.drawText(p, *it);
@@ -272,7 +274,7 @@ bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImag
     mPixmap.resize( pixmapSize );
 
   mPixmap.fill( QColor( 245, 245, 245 ) ); // light-grey background
-    
+
   // one pixel for the rectangle, the rest. whitespace
   xborder = 1 + pixmapSize.width()/16;  // minimum x-border
   yborder = 1 + pixmapSize.height()/16; // minimum y-border
