@@ -54,7 +54,7 @@
 KDateValidator::KDateValidator(const QString& calType, QWidget* parent, const char* name)
     : QValidator(parent, name),
 	//CALSYS
-      calendarSystem(KFactoryCalendar::createCalendar(calType))
+      calendarSystem(KCalendarSystemFactory::create(calType))
 {
 }
 
@@ -89,7 +89,7 @@ KDateValidator::fixup( QString& ) const
 // CALSYS added calendarSystem
 KDateTable::KDateTable(const QString& calType, QWidget *parent, QDate date_, const char* name, WFlags f)
   : QGridView(parent, name, f),
-    calendarSystem(KFactoryCalendar::createCalendar(calType))
+    calendarSystem(KCalendarSystemFactory::create(calType))
 {
 
   kdDebug() << " 0";

@@ -42,7 +42,7 @@
 KDatePicker::KDatePicker(const QString& calType, QWidget *parent, QDate dt, const char *name)
   : QFrame(parent,name),
     // CALSYS
-    calendarSystem(KFactoryCalendar::createCalendar(calType)),
+    calendarSystem(KCalendarSystemFactory::create(calType)),
     yearForward(new QToolButton(this)),
     yearBackward(new QToolButton(this)),
     monthForward(new QToolButton(this)),

@@ -1,7 +1,8 @@
--KCalendarSystem proposal for KDE 3
--Almost every modified line has a // CALSYS advise and there's a lot of debugging output
--Different calendar systems (except gregorian) must be implemented as plugins
+-KCalendarSystem  proposal for KDE 3, for general purpose different calendar systems support. 
+-It's based on conversion from base QDate usually used.
+-Different calendar systems (except default, gregorian) might be implemented as plugins
+-Hijri routines from Waleed A. Muhanna 
 
-Best Regards
-
-Carlos Moro
+	Best Regards
+-------------------------------------
+Carlos Moro <cfmoro@correo.uniovi.es>

@@ -1,3 +1,5 @@
+#ifndef KCALENDARSYSTEM_HCONV_H
+#define KCALENDARSYSTEM_HCONV_H
 
 extern char	*mname[], *hmname[], *dow[], *sdow[];
 
@@ -25,3 +27,5 @@ extern int ndays(int,int);
 
 /* for portability */
 #include <sys/types.h>
+
+#endif

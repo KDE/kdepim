@@ -17,8 +17,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KDATETBL_H
-#define KDATETBL_H
+#ifndef MKDATETBL_H
+#define MKDATETBL_H
 
 #include <qvalidator.h>
 #include <qgridview.h>
@@ -59,8 +59,9 @@ public:
    * The constructor.
    */
   // CALSYS Added optional parameter calendarsystem for different calendar types support
-  KDateInternalMonthPicker(int fontsize, QWidget* parent, int year = 2000, KCalendarSystem* cSystem
-  	= KFactoryCalendar::createCalendar("gregorian") ,const char* name=0);
+  KDateInternalMonthPicker(int fontsize, QWidget* parent, int year = 2000,
+      KCalendarSystem* cSystem = KCalendarSystemFactory::create(),
+      const char* name = 0 );
 
   /**
    * The size hint.
