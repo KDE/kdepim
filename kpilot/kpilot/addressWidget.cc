@@ -39,64 +39,28 @@ static const char *addresswidget_id =
 #include <cstring>
 #include <cstdlib>
 
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-#ifndef QLISTBOX_H
+#include <qptrlist.h>
 #include <qlistbox.h>
-#endif
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-#ifndef QPUSHBT_H
-#include <qpushbt.h>
-#endif
-#ifndef QTEXTSTREAM_H
+#include <qpushbutton.h>
 #include <qtextstream.h>
-#endif
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-#ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
-#endif
-#ifndef QCOMBOBOX_H
 #include <qcombobox.h>
-#endif
 #include <qwhatsthis.h>
-#ifndef QTEXTVIEW_H
 #include <qtextview.h>
-#endif
 #include <qtextcodec.h>
 
-#ifndef _KAPP_H
 #include <kapplication.h>
-#endif
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-#ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
-#endif
-#ifndef _KPILOT_ADDRESSEDITOR_H
 #include "addressEditor.h"
-#endif
-#ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
-#endif
 
 #include "addressWidget.moc"
 

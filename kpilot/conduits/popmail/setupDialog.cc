@@ -44,70 +44,22 @@ static const char *setupDialog_id=
 #include <stdlib.h>
 
 #include <qwhatsthis.h>
-
-#ifndef _KCONFIG_H
-#include <kconfig.h>
-#endif
-
-#ifndef _KAPP_H
-#include <kapplication.h>
-#endif
-
-#ifndef _KLOCALE_H
-#include <klocale.h>
-#endif
-
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-
-
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-
-#ifndef QCHKBOX_H
-#include <qchkbox.h>
-#endif
-
-#ifndef QLINED_H
-#include <qlined.h>
-#endif
-
-#ifndef QDIR_H
+#include <qcheckbox.h>
+#include <qlineedit.h>
 #include <qdir.h>
-#endif
-
-#ifndef QFILEDLG_H
-#include <qfiledlg.h>
-#endif
-
-#ifndef QBTTNGRP_H
-#include <qbttngrp.h>
-#endif
-
-#ifndef QPUSHBUTTON_H
+#include <qbuttongroup.h>
 #include <qpushbutton.h>
-#endif
-
-#ifndef QRADIOBT_H
-#include <qradiobt.h>
-#endif
-
-#ifndef QLAYOUT_H
+#include <qradiobutton.h>
 #include <qlayout.h>
-#endif
-
-#ifndef QVBUTTONGROUP_H
 #include <qvbuttongroup.h>
-#endif
 
-#include "kfiledialog.h"
+#include <kconfig.h>
+#include <kapplication.h>
+#include <klocale.h>
+#include <kstddirs.h>
+#include <kdebug.h>
+#include <kfiledialog.h>
 
 #include "popmail-factory.h"
 #include "setupDialog.moc"

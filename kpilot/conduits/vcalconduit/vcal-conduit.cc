@@ -32,13 +32,18 @@ static const char *vcalconduit_id = "$Id$";
 #include <options.h>
 #include <unistd.h>
 
+// Qt includes
 #include <qdatetime.h>
 #include <qtimer.h>
 
-#include <pilotUser.h>
+// KDE includes
 #include <kconfig.h>
 
-#include <libkcal/calendarlocal.h>
+// libkcal includes
+#include "libkcal/calendarlocal.h"
+
+// kpilot includes
+#include "pilotUser.h"
 
 
 /*
@@ -50,14 +55,14 @@ static const char *vcalconduit_id = "$Id$";
 #define DateList_t QDateList
 #define DateListIterator_t QDateListIterator
 #else
-#include <recurrence.h>
+#include "libkcal/recurrence.h"
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
 //#include <pilotDateEntry.h>
 
 //#include "vcal-conduitbase.h"

@@ -35,20 +35,20 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <options.h>
 #include <unistd.h>
 
+// Qt includes
 #include <qdatetime.h>
 #include <qtimer.h>
 
-#include <pilotUser.h>
+// KDE includes
 #include <kconfig.h>
 #include <kmessagebox.h>
-
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/incidence.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 
-
+// libkcal includes
+#include "libkcal/calendar.h"
+#include "libkcal/calendarlocal.h"
+#include "libkcal/incidence.h"
 /*
 ** KDE 2.2 uses class KORecurrence in a different header file.
 */
@@ -58,15 +58,17 @@ static const char *vcalconduitbase_id = "$Id$";
 #define DateList_t QDateList
 #define DateListIterator_t QDateListIterator
 #else
-#include <libkcal/recurrence.h>
+#include "libkcal/recurrence.h"
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
-#include <pilotDateEntry.h>
+// kpilot includes
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+#include "pilotDateEntry.h"
+#include "pilotUser.h"
 
 #include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"

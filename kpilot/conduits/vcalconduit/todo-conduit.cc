@@ -41,12 +41,13 @@ static const char *TodoConduit_id = "$Id$";
 #include <qtimer.h>
 #include <qtextcodec.h>
 
-#include <pilotUser.h>
 #include <kconfig.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/todo.h>
+// libkcal includes
+#include "libkcal/calendarlocal.h"
+#include "libkcal/todo.h"
 
+#include "pilotUser.h"
 
 /*
 ** KDE 2.2 uses class KORecurrence in a different header file.
@@ -59,8 +60,8 @@ static const char *TodoConduit_id = "$Id$";
 #define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
 //#include <pilotTodoEntry.h>
 
 //#include "vcal-conduitbase.h"

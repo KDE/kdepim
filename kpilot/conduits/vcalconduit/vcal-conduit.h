@@ -31,11 +31,16 @@
 
 #include <plugin.h>
 
-#include <libkcal/event.h>
-#include <libkcal/calendarlocal.h>
+// libkcal includes
+#include "libkcal/event.h"
+#include "libkcal/calendarlocal.h"
+
+// kpilot includes
+#include "pilotDateEntry.h"
+
 #include "vcal-factory.h"
 #include "vcal-conduitbase.h"
-#include <pilotDateEntry.h>
+
 
 class PilotRecord;
 class PilotSerialDatabase;
