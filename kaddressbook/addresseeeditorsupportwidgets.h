@@ -86,8 +86,8 @@ class AddressEditWidget : public QWidget
     const KABC::Address::List &addresses();
     void setAddresses(const KABC::Address::List &list);
     
-    static void updateTypeCombo( const KABC::Address::List&, KComboBox* );
-    static KABC::Address currentAddress( KComboBox*, int );
+    void updateTypeCombo( const KABC::Address::List&, KComboBox* );
+    KABC::Address currentAddress( KComboBox*, int );
 
   signals:
     void modified();
@@ -138,6 +138,8 @@ class AddressEditDialog : public KDialogBase
     KLineEdit *mPOBoxEdit;
 };
 
+////////////////////////////////////
+// AddressTypeDialog
 class AddressTypeDialog : public KDialogBase
 {
   public:
@@ -152,29 +154,65 @@ class AddressTypeDialog : public KDialogBase
     KABC::Address::TypeList mTypeList;
 };
 
+
 ////////////////////////////////
 // PhoneEditWidget
-
 class PhoneEditWidget : public QWidget
 {
   Q_OBJECT
-  
+
   public:
     PhoneEditWidget( QWidget *parent, const char *name = 0 );
     ~PhoneEditWidget();
     
     void setPhoneNumbers( const KABC::PhoneNumber::List &list );
     const KABC::PhoneNumber::List &phoneNumbers();
-    
+
+    void updateTypeCombo( const KABC::PhoneNumber::List&, KComboBox* );
+    KABC::PhoneNumber currentPhoneNumber( KComboBox*, int );
+
+    void updateAllTypeCombos();
+
   signals:
     void modified();
 
+  private slots:
+    void numberChanged( const QString& );
+    void comboChanged( int );
+    void comboChanged( KComboBox*, int );
+    void edit();
+
+  private:
+    KComboBox *mPrefCombo;
+    KComboBox *mSecondCombo;
+    KComboBox *mThirdCombo;
+    KComboBox *mFourthCombo;
+    KLineEdit *mPrefEdit;
+    KLineEdit *mSecondEdit;
+    KLineEdit *mThirdEdit;
+    KLineEdit *mFourthEdit;
+
+    QMap<KLineEdit*, KComboBox*> mEditMap;
+    KABC::PhoneNumber::List mPhoneList;
+};
+  
+////////////////////////////////
+// PhoneEditDialog
+class PhoneEditDialog : public KDialogBase
+{
+  Q_OBJECT
+  
+  public:
+    PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *parent, const char *name = 0 );
+    ~PhoneEditDialog();
+    
+    const KABC::PhoneNumber::List &phoneNumbers();
+    
   protected slots:
     void slotAddPhoneNumber();
     void slotRemovePhoneNumber();
     void slotEditPhoneNumber();
     void slotSelectionChanged();
-    void slotTypeChanged( int pos );
 
   private:
     KABC::PhoneNumber::List mPhoneNumberList;
@@ -182,19 +220,17 @@ class PhoneEditWidget : public QWidget
     KComboBox *mTypeBox;
     KListView *mListView;
 
-    QPushButton *mAddButton;
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;
 };
 
 ////////////////////////////////
-// PhoneEditDialog
-
-class PhoneEditDialog : public KDialogBase
+// PhoneTypeDialog
+class PhoneTypeDialog : public KDialogBase
 {
   Q_OBJECT
 public:
-  PhoneEditDialog( const KABC::PhoneNumber &phoneNumber, QWidget *parent, const char *name = 0 );
+  PhoneTypeDialog( const KABC::PhoneNumber &phoneNumber, QWidget *parent, const char *name = 0 );
 
   KABC::PhoneNumber phoneNumber();
 
@@ -202,8 +238,9 @@ private:
   KABC::PhoneNumber mPhoneNumber;
   KABC::PhoneNumber::TypeList mTypeList;
 
-  KLineEdit *mNumber;
   QButtonGroup *mGroup;
+  QCheckBox *mPreferredBox;
+  KLineEdit *mNumber;
 };
 
 /** This widget displays a list box of the email addresses as well as buttons

@@ -473,7 +473,7 @@ void AddresseeEditorWidget::save()
   for (phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
         ++phoneIter)
     mAddressee.insertPhoneNumber(*phoneIter);
-    
+
   // Save the addresses
   KABC::Address::List addresses;
   KABC::Address::List::Iterator addressIter;
