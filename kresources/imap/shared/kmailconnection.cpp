@@ -66,7 +66,7 @@ bool KMailConnection::connectToKMail()
       findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
                       QString::null, &error, &dcopService );
     if ( result != 0 ) {
-      kdDebug() << "Couldn't connect to the IMAP resource backend\n";
+      kdError(5650) << "Couldn't connect to the IMAP resource backend\n";
       // TODO: You might want to show "error" (if not empty) here,
       // using e.g. KMessageBox
       return false;
@@ -78,19 +78,19 @@ bool KMailConnection::connectToKMail()
     // Attach to the KMail signals
     if ( !connectKMailSignal( "incidenceAdded(QString,QString,QString)",
                               "addIncidence(QString,QString,QString)" ) )
-      kdError() << "DCOP connection to incidenceAdded failed" << endl;
+      kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
     if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
                               "deleteIncidence(QString,QString,QString)" ) )
-      kdError() << "DCOP connection to incidenceDeleted failed" << endl;
+      kdError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "slotRefresh(QString,QString)" ) )
-      kdError() << "DCOP connection to signalRefresh failed" << endl;
+      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceAdded(QString,QString)",
                               "subresourceAdded(QString,QString)" ) )
-      kdError() << "DCOP connection to signalRefresh failed" << endl;
+      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "subresourceDeleted(QString,QString)" ) )
-      kdError() << "DCOP connection to signalRefresh failed" << endl;
+      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
   }
 
   return ( mKMailIcalIfaceStub != 0 );
@@ -99,6 +99,8 @@ bool KMailConnection::connectToKMail()
 bool KMailConnection::addIncidence( const QString& type, const QString& folder,
                                     const QString& ical )
 {
+//   kdDebug(5650) << "KMailConnection::addIncidence( " << type << ", "
+//                 << folder << " ). iCal:\n" << ical << endl;
   return mResource->addIncidence( type, ical );
 }
 
@@ -106,37 +108,46 @@ void KMailConnection::deleteIncidence( const QString& type,
                                        const QString& folder,
                                        const QString& uid )
 {
+//   kdDebug(5650) << "KMailConnection::deleteIncidence( " << type << ", "
+//                 << folder << ", " << uid << " )\n";
   mResource->deleteIncidence( type, uid );
 }
 
 void KMailConnection::slotRefresh( const QString& type, const QString& folder )
 {
+//   kdDebug(5650) << "KMailConnection::slotRefresh( " << type << ", "
+//                 << folder << " )\n";
   mResource->slotRefresh( type );
 }
 
 void KMailConnection::subresourceAdded( const QString& type,
                                         const QString& resource )
 {
+//   kdDebug(5650) << "KMailConnection::subresourceAdded( " << type << ", "
+//                 << resource << " )\n";
   mResource->subresourceAdded( type, resource );
 }
 
 void KMailConnection::subresourceDeleted( const QString& type,
                                           const QString& resource )
 {
+//   kdDebug(5650) << "KMailConnection::subresourceDeleted( " << type << ", "
+//                 << resource << " )\n";
   mResource->subresourceDeleted( type, resource );
 }
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,
                                           const QCString& method )
 {
-  return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false );
+  return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false )
+    && connectDCOPSignal( "kontact", dcopObjectId, signal, method, false );
 }
 
 bool KMailConnection::kmailIncidences( QStringList& lst, const QString& type,
                                        const QString& resource )
 {
   if ( !connectToKMail() ) {
-    kdError() << "DCOP error: Can't connect to KMail\n";
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
     return false;
   }
 
@@ -150,7 +161,7 @@ bool KMailConnection::kmailAddIncidence( const QString& type,
                                          const QString& incidence )
 {
   if ( !connectToKMail() ) {
-    kdError() << "DCOP error: Can't connect to KMail\n";
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
     return false;
   }
 
@@ -163,7 +174,7 @@ bool KMailConnection::kmailDeleteIncidence( const QString& type,
                                             const QString& uid )
 {
   if ( !connectToKMail() ) {
-    kdError() << "DCOP error: Can't connect to KMail\n";
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
     return false;
   }
 
@@ -176,7 +187,7 @@ bool KMailConnection::kmailUpdate( const QString& type,
                                    const QStringList& lst )
 {
   if ( !connectToKMail() ) {
-    kdError() << "DCOP error: Can't connect to KMail\n";
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
     return false;
   }
 
@@ -189,7 +200,7 @@ bool KMailConnection::kmailUpdate( const QString& type,
                                    const QString& incidence )
 {
   if ( !connectToKMail() ) {
-    kdError() << "DCOP error: Can't connect to KMail\n";
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
     return false;
   }
 
