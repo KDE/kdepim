@@ -754,9 +754,9 @@ void KABCore::setJumpButtonBarVisible( bool visible )
 void KABCore::setDetailsVisible( bool visible )
 {
   if ( visible )
-    mDetails->show();
+    mDetailsPage->show();
   else
-    mDetails->hide();
+    mDetailsPage->hide();
 }
 
 void KABCore::extensionModified( const KABC::Addressee::List &list )
@@ -909,7 +909,11 @@ void KABCore::initGUI()
   mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
   mExtensionBarSplitter->setOrientation( Qt::Vertical );
 
-  mDetails = new KPIM::AddresseeView( mDetailsSplitter );
+  mDetailsPage = new QWidget( mDetailsSplitter );
+  QVBoxLayout *detailsLayout = new QVBoxLayout( mDetailsPage, KDialog::marginHint(),
+                                                KDialog::spacingHint() );
+  mDetails = new KPIM::AddresseeView( mDetailsPage );
+  detailsLayout->addWidget( mDetails );
 
   mViewManager = new ViewManager( this, mExtensionBarSplitter );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );

@@ -344,6 +344,7 @@ class KABCore : public KAB::Core
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
     KPIM::AddresseeView *mDetails;
+    QWidget *mDetailsPage;
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 
