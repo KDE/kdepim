@@ -12,11 +12,11 @@ libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
 
 libkcal_la_SOURCES = \
         incidence.cpp journal.cpp todo.cpp event.cpp attendee.cpp \
-        korecurrence.cpp koalarm.cpp \
+        recurrence.cpp alarm.cpp \
         calendar.cpp calendarlocal.cpp \
         calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	vcaldrag.cpp \
-        koexceptions.cpp \
+        exceptions.cpp \
         scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
         calfilter.cpp \
         person.cpp

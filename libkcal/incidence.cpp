@@ -5,7 +5,6 @@
 #include <kdebug.h>
 
 #include "calformat.h"
-//#include "koprefs.h"
 
 #include "incidence.h"
 
@@ -15,8 +14,8 @@ Incidence::Incidence() :
   mReadOnly(false), mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mPilotId(0),
   mSyncStatus(SYNCMOD), mFloats(true), mDuration(0), mHasDuration(false)
 {
-  mAlarm = new KOAlarm(this);
-  mRecurrence = new KORecurrence(this);
+  mAlarm = new Alarm(this);
+  mRecurrence = new Recurrence(this);
 
   recreate();
 
@@ -60,10 +59,10 @@ Incidence::Incidence(const Incidence &i) : QObject()
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
   mFloats = i.mFloats;
-//  KOAlarm *mAlarm;                KOAlarm *mAlarm;
-  mAlarm = new KOAlarm(this);
-//  KORecurrence *mRecurrence;      KORecurrence *mRecurrence;
-  mRecurrence = new KORecurrence(this);
+//  Alarm *mAlarm;                Alarm *mAlarm;
+  mAlarm = new Alarm(this);
+//  Recurrence *mRecurrence;      Recurrence *mRecurrence;
+  mRecurrence = new Recurrence(this);
 }
 
 Incidence::~Incidence()
@@ -548,12 +547,12 @@ int Incidence::syncStatus() const
   return mSyncStatus;
 }
 
-KOAlarm *Incidence::alarm() const
+Alarm *Incidence::alarm() const
 {
   return mAlarm;
 }
 
-KORecurrence *Incidence::recurrence() const
+Recurrence *Incidence::recurrence() const
 {
   return mRecurrence;
 }

@@ -1,7 +1,7 @@
 // $Id$
 
-#ifndef _KORECURRENCE_H
-#define _KORECURRENCE_H
+#ifndef KCAL_RECURRENCE_H
+#define KCAL_RECURRENCE_H
 
 #include <qstring.h>
 #include <qbitarray.h>
@@ -16,7 +16,7 @@ class Incidence;
 /**
   This class represents a recurrence rule for a calendar incidence.
 */
-class KORecurrence {
+class Recurrence {
   public:
 
     /** enumeration for describing how an event recurs, if at all. */
@@ -31,8 +31,8 @@ class KORecurrence {
     };
 
     /** constructs a new event with variables initialized to "sane" values. */
-    KORecurrence(Incidence *parent);
-    ~KORecurrence();
+    Recurrence(Incidence *parent);
+    ~Recurrence();
 
     /** Set start of recurrence. */
     void setRecurStart(QDateTime start) { mRecurStart = start; }

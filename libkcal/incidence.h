@@ -10,8 +10,8 @@
 #include <qstringlist.h>
 
 #include "attendee.h"
-#include "korecurrence.h"
-#include "koalarm.h"
+#include "recurrence.h"
+#include "alarm.h"
 
 namespace KCal {
 
@@ -244,9 +244,9 @@ class Incidence : public QObject
     int priority() const;
 
     /** Return the alarm object associated with this incidence or 0 if there is none. */
-    KOAlarm *alarm() const;
+    Alarm *alarm() const;
     /** Return the recurrence rule associated with this incidence or 0 if there is none. */
-    KORecurrence *recurrence() const;
+    Recurrence *recurrence() const;
 
   signals:
     /** Emitted by the memebr functions, when the Incidence has been updated. */
@@ -290,8 +290,8 @@ class Incidence : public QObject
     int mDuration;
     bool mHasDuration;
   
-    KOAlarm *mAlarm;
-    KORecurrence *mRecurrence;
+    Alarm *mAlarm;
+    Recurrence *mRecurrence;
 };
 
 }

@@ -8,8 +8,9 @@
 #include "qfont.h"
 #include "qstrlist.h"
 
+#include <libkcal/calendarlocal.h>
+
 #include "alarmdaemoniface.h"
-#include "calendarlocal.h"
 
 class AlarmDialog;
 class AlarmDockWindow;

@@ -9,7 +9,7 @@
 #include <kprocess.h>
 #include <kaudioplayer.h>
 
-#include "event.h"
+#include <libkcal/event.h>
 
 #include "koeventviewer.h"
 
@@ -94,7 +94,7 @@ void AlarmDialog::eventNotification()
   EventData *evdata;
 
   for (EventData *evdata = mEvents.first();  evdata;  evdata = mEvents.next()) {
-    KOAlarm* alarm = evdata->event->alarm();
+    Alarm* alarm = evdata->event->alarm();
     if (!alarm->programFile().isEmpty()) {
       KProcess proc;
       proc << alarm->programFile().latin1();

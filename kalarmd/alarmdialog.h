@@ -7,8 +7,8 @@
 
 #include <kdialogbase.h>
 
-#include "event.h"
-#include "calendarlocal.h"
+#include <libkcal/event.h>
+#include <libkcal/calendarlocal.h>
 
 using namespace KCal;
 

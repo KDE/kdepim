@@ -17,7 +17,7 @@
 #include <knotifyclient.h>
 #include <kio/netaccess.h>
 
-#include <calendarlocal.h>
+#include <libkcal/calendarlocal.h>
 
 #include "dockwindow.h"
 #include "alarmdialog.h"

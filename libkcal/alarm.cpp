@@ -5,13 +5,12 @@
 #include <klocale.h>
 
 #include "incidence.h"
-//#include "koprefs.h"
 
-#include "koalarm.h"
+#include "alarm.h"
 
 using namespace KCal;
 
-KOAlarm::KOAlarm(Incidence *parent)
+Alarm::Alarm(Incidence *parent)
 {
   mParent = parent;
 
@@ -27,107 +26,107 @@ KOAlarm::KOAlarm(Incidence *parent)
   mAlarmEnabled = false;
 }
 
-KOAlarm::~KOAlarm()
+Alarm::~Alarm()
 {
 }
 
-void KOAlarm::setAudioFile(const QString &audioAlarmFile)
+void Alarm::setAudioFile(const QString &audioAlarmFile)
 {
   if (mAlarmReadOnly) return;
   mAudioAlarmFile = audioAlarmFile;
   mParent->emitEventUpdated(mParent);
 }
 
-const QString &KOAlarm::audioFile() const
+const QString &Alarm::audioFile() const
 {
   return mAudioAlarmFile;
 }
 
-void KOAlarm::setProgramFile(const QString &programAlarmFile)
+void Alarm::setProgramFile(const QString &programAlarmFile)
 {
   if (mAlarmReadOnly) return;
   mProgramAlarmFile = programAlarmFile;
   mParent->emitEventUpdated(mParent);
 }
 
-const QString &KOAlarm::programFile() const
+const QString &Alarm::programFile() const
 {
   return mProgramAlarmFile;
 }
 
-void KOAlarm::setMailAddress(const QString &mailAlarmAddress)
+void Alarm::setMailAddress(const QString &mailAlarmAddress)
 {
   if (mAlarmReadOnly) return;
   mMailAlarmAddress = mailAlarmAddress;
   mParent->emitEventUpdated(mParent);
 }
 
-const QString &KOAlarm::mailAddress() const
+const QString &Alarm::mailAddress() const
 {
   return mMailAlarmAddress;
 }
 
-void KOAlarm::setMailSubject(const QString &mailAlarmSubject)
+void Alarm::setMailSubject(const QString &mailAlarmSubject)
 {
   if (mAlarmReadOnly) return;
   mMailAlarmSubject = mailAlarmSubject;
   mParent->emitEventUpdated(mParent);
 }
 
-const QString &KOAlarm::mailSubject() const
+const QString &Alarm::mailSubject() const
 {
   return mMailAlarmSubject;
 }
 
-void KOAlarm::setText(const QString &alarmText)
+void Alarm::setText(const QString &alarmText)
 {
   if (mAlarmReadOnly) return;
   mAlarmText = alarmText;
   mParent->emitEventUpdated(mParent);
 }
 
-const QString &KOAlarm::text() const
+const QString &Alarm::text() const
 {
   return mAlarmText;
 }
 
-void KOAlarm::setTime(const QDateTime &alarmTime)
+void Alarm::setTime(const QDateTime &alarmTime)
 {
   if (mAlarmReadOnly) return;
   mAlarmTime = alarmTime;
   mParent->emitEventUpdated(mParent);
 }
 
-const QDateTime &KOAlarm::time() const
+const QDateTime &Alarm::time() const
 {
   return mAlarmTime;
 }
 
-void KOAlarm::setSnoozeTime(int alarmSnoozeTime)
+void Alarm::setSnoozeTime(int alarmSnoozeTime)
 {
   if (mAlarmReadOnly) return;
   mAlarmSnoozeTime = alarmSnoozeTime;
   mParent->emitEventUpdated(mParent);
 }
 
-int KOAlarm::snoozeTime() const
+int Alarm::snoozeTime() const
 {
   return mAlarmSnoozeTime;
 }
 
-void KOAlarm::setRepeatCount(int alarmRepeatCount)
+void Alarm::setRepeatCount(int alarmRepeatCount)
 {
   if (mAlarmReadOnly) return;
   mAlarmRepeatCount = alarmRepeatCount;
   mParent->emitEventUpdated(mParent);
 }
 
-int KOAlarm::repeatCount() const
+int Alarm::repeatCount() const
 {
   return mAlarmRepeatCount;
 }
 
-void KOAlarm::toggleAlarm()
+void Alarm::toggleAlarm()
 {
   if (mAlarmReadOnly) return;
   if (mAlarmEnabled) {
@@ -145,14 +144,14 @@ void KOAlarm::toggleAlarm()
   mParent->emitEventUpdated(mParent);
 }
 
-void KOAlarm::setEnabled(bool enable)
+void Alarm::setEnabled(bool enable)
 {
   if (mAlarmReadOnly) return;
   mAlarmEnabled = enable;
   mParent->emitEventUpdated(mParent);
 }
 
-bool KOAlarm::enabled() const
+bool Alarm::enabled() const
 {
   return mAlarmEnabled;
 }

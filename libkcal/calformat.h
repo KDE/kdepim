@@ -6,7 +6,7 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
-#include "koexceptions.h"
+#include "exceptions.h"
 #include "event.h"
 
 #define _PRODUCT_ID "-//K Desktop Environment//NONSGML KOrganizer 2.2//EN"
@@ -68,7 +68,7 @@ class CalFormat {
       Return exception, if there is any, containing information about the last
       error that occured.
     */
-    KOErrorFormat *exception();
+    ErrorFormat *exception();
 
     /** Create a unique id string. */
     static QString createUniqueId();
@@ -77,7 +77,7 @@ class CalFormat {
       Set exception for this object. This is used by the functions of this
       class to report errors.
     */
-    void setException(KOErrorFormat *error);
+    void setException(ErrorFormat *error);
   
   protected:  
     /** shows an error dialog box. */
@@ -92,7 +92,7 @@ class CalFormat {
     QPtrList<Event> mEventsRelate;           // events with relations
     QPtrList<Event> mTodosRelate;            // todos with relations
     
-    KOErrorFormat *mException;
+    ErrorFormat *mException;
 };
 
 }

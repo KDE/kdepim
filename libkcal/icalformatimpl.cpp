@@ -286,7 +286,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   icalcomponent_add_property(parent,p);
   
   // recurrence rule stuff
-  KORecurrence *recur = incidence->recurrence();
+  Recurrence *recur = incidence->recurrence();
   if (recur->doesRecur()) {
     kdDebug() << "Write recurrence for '" << incidence->summary() << "' (" << incidence->VUID()
               << ")" << endl;
@@ -301,7 +301,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   }
 
   // alarms
-  KOAlarm *alarm = incidence->alarm();
+  Alarm *alarm = incidence->alarm();
   if (alarm->enabled()) {
     kdDebug() << "Write alarm for " << incidence->summary() << endl;
     icalcomponent_add_component(parent,writeAlarm(alarm));
@@ -374,7 +374,7 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   return p;
 }
 
-icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
+icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 {
   kdDebug() << "ICalFormatImpl::writeRecurrenceRule()" << endl;
 
@@ -385,14 +385,14 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
   int index = 0;
   int index2 = 0;
 
-  QPtrList<KORecurrence::rMonthPos> tmpPositions;
+  QPtrList<Recurrence::rMonthPos> tmpPositions;
   QPtrList<int> tmpDays;
   int *tmpDay;
-  KORecurrence::rMonthPos *tmpPos;
+  Recurrence::rMonthPos *tmpPos;
   int day;
 
   switch(recur->doesRecur()) {
-    case KORecurrence::rDaily:
+    case Recurrence::rDaily:
       r.freq = ICAL_DAILY_RECURRENCE;
 #if 0
       tmpStr.sprintf("D%i ",anEvent->rFreq);
@@ -400,7 +400,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
 //	tmpStr += "#";
 #endif
       break;
-    case KORecurrence::rWeekly:
+    case Recurrence::rWeekly:
       r.freq = ICAL_WEEKLY_RECURRENCE;
       for (int i = 0; i < 7; i++) {
 	if (recur->days().testBit(i)) {
@@ -418,7 +418,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
       }
 #endif
       break;
-    case KORecurrence::rMonthlyPos:
+    case Recurrence::rMonthlyPos:
       r.freq = ICAL_MONTHLY_RECURRENCE;
 
       tmpPositions = recur->monthPositions();
@@ -453,7 +453,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
       } // loop for all rMonthPos's
 #endif
       break;
-    case KORecurrence::rMonthlyDay:
+    case Recurrence::rMonthlyDay:
       r.freq = ICAL_MONTHLY_RECURRENCE;
 
       tmpDays = recur->monthDays();
@@ -475,7 +475,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
       }
 #endif
       break;
-    case KORecurrence::rYearlyMonth:
+    case Recurrence::rYearlyMonth:
       r.freq = ICAL_YEARLY_RECURRENCE;
 
       tmpDays = recur->yearNums();
@@ -497,7 +497,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
       }
 #endif
       break;
-    case KORecurrence::rYearlyDay:
+    case Recurrence::rYearlyDay:
       r.freq = ICAL_YEARLY_RECURRENCE;
 
       tmpDays = recur->yearNums();
@@ -637,7 +637,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(KORecurrence *recur)
 #endif
 }
 
-icalcomponent *ICalFormatImpl::writeAlarm(KOAlarm *alarm)
+icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 {
   icalcomponent *a = icalcomponent_new(ICAL_VALARM_COMPONENT);
   
@@ -1096,7 +1096,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 {
   kdDebug() << "Read recurrence for " << incidence->summary() << endl;
 
-  KORecurrence *recur = incidence->recurrence();
+  Recurrence *recur = incidence->recurrence();
   recur->unsetRecurs();
 
   struct icalrecurrencetype r = icalproperty_get_rrule(rrule);
@@ -1142,13 +1142,13 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           else qba.setBit(day-2);
         }
         if (!icaltime_is_null_time(r.until)) {
-          recur->setMonthly(KORecurrence::rMonthlyPos,r.interval,
+          recur->setMonthly(Recurrence::rMonthlyPos,r.interval,
                             readICalDate(r.until));
         } else {
           if (r.count == 0)
-            recur->setMonthly(KORecurrence::rMonthlyPos,r.interval,-1);
+            recur->setMonthly(Recurrence::rMonthlyPos,r.interval,-1);
           else
-            recur->setMonthly(KORecurrence::rMonthlyPos,r.interval,r.count);
+            recur->setMonthly(Recurrence::rMonthlyPos,r.interval,r.count);
         }
         if (r.by_set_pos[0] != ICAL_RECURRENCE_ARRAY_MAX) {
           recur->addMonthlyPos(r.by_set_pos[0],qba);
@@ -1161,13 +1161,13 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           recur->addMonthlyDay(day);
         }
         if (!icaltime_is_null_time(r.until)) {
-          recur->setMonthly(KORecurrence::rMonthlyDay,r.interval,
+          recur->setMonthly(Recurrence::rMonthlyDay,r.interval,
                             readICalDate(r.until));
         } else {
           if (r.count == 0)
-            recur->setMonthly(KORecurrence::rMonthlyDay,r.interval,-1);
+            recur->setMonthly(Recurrence::rMonthlyDay,r.interval,-1);
           else
-            recur->setMonthly(KORecurrence::rMonthlyDay,r.interval,r.count);
+            recur->setMonthly(Recurrence::rMonthlyDay,r.interval,r.count);
         }
       }
       break;
@@ -1177,26 +1177,26 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           recur->addYearlyNum(day);
         }
         if (!icaltime_is_null_time(r.until)) {
-          recur->setYearly(KORecurrence::rYearlyDay,r.interval,
+          recur->setYearly(Recurrence::rYearlyDay,r.interval,
                             readICalDate(r.until));
         } else {
           if (r.count == 0)
-            recur->setYearly(KORecurrence::rYearlyDay,r.interval,-1);
+            recur->setYearly(Recurrence::rYearlyDay,r.interval,-1);
           else
-            recur->setYearly(KORecurrence::rYearlyDay,r.interval,r.count);
+            recur->setYearly(Recurrence::rYearlyDay,r.interval,r.count);
         }
       } if (r.by_month[0] != ICAL_RECURRENCE_ARRAY_MAX) {
         while((day = r.by_month[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
           recur->addYearlyNum(day);
         }
         if (!icaltime_is_null_time(r.until)) {
-          recur->setYearly(KORecurrence::rYearlyMonth,r.interval,
+          recur->setYearly(Recurrence::rYearlyMonth,r.interval,
                             readICalDate(r.until));
         } else {
           if (r.count == 0)
-            recur->setYearly(KORecurrence::rYearlyMonth,r.interval,-1);
+            recur->setYearly(Recurrence::rYearlyMonth,r.interval,-1);
           else
-            recur->setYearly(KORecurrence::rYearlyMonth,r.interval,r.count);
+            recur->setYearly(Recurrence::rYearlyMonth,r.interval,r.count);
         }
       }
       break;
@@ -1426,7 +1426,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 {
   //kdDebug() << "Read alarm for " << incidence->summary() << endl;
   
-  KOAlarm* koalarm = incidence->alarm();
+  Alarm* koalarm = incidence->alarm();
   koalarm->setRepeatCount(0);
   koalarm->setEnabled(true);
 
@@ -1729,12 +1729,12 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     
     if (strcmp(version,"1.0") == 0) {
       kdDebug() << "Expected iCalendar, got vCalendar" << endl;
-      mParent->setException(new KOErrorFormat(KOErrorFormat::CalVersion1,
+      mParent->setException(new ErrorFormat(ErrorFormat::CalVersion1,
                             i18n("Expected iCalendar format")));
       return false;
     } else if (strcmp(version,"2.0") != 0) {
       kdDebug() << "Expected iCalendar, got unknown format" << endl;
-      mParent->setException(new KOErrorFormat(KOErrorFormat::CalVersionUnknown));
+      mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
       return false;
     }
   }

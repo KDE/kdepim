@@ -2,33 +2,33 @@
 
 #include <klocale.h>
 
-#include "koexceptions.h"
+#include "exceptions.h"
 
 using namespace KCal;
 
-KOException::KOException(const QString &message)
+Exception::Exception(const QString &message)
 {
   mMessage = message;
 }
 
-KOException::~KOException()
+Exception::~Exception()
 {
 }
 
-QString KOException::message()
+QString Exception::message()
 {
   if (mMessage.isEmpty()) return i18n("KOrganizer Error");
   else return mMessage;
 }
     
 
-KOErrorFormat::KOErrorFormat(ErrorCodeFormat code,const QString &message) :
-  KOException(message)
+ErrorFormat::ErrorFormat(ErrorCodeFormat code,const QString &message) :
+  Exception(message)
 {
   mCode = code;
 }
     
-QString KOErrorFormat::message()
+QString ErrorFormat::message()
 {
   QString message = "";
 
@@ -56,7 +56,7 @@ QString KOErrorFormat::message()
   return message;
 }
 
-KOErrorFormat::ErrorCodeFormat KOErrorFormat::errorCode()
+ErrorFormat::ErrorCodeFormat ErrorFormat::errorCode()
 {
   return mCode;
 }

@@ -56,7 +56,7 @@ bool ICalFormat::load(const QString &fileName)
 
   if (!fs) {
     kdDebug() << "ICalFormat::load() load error" << endl;
-    setException(new KOErrorFormat(KOErrorFormat::LoadError));
+    setException(new ErrorFormat(ErrorFormat::LoadError));
     return false;
   }
 
@@ -452,7 +452,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   kdDebug() << "ICalFormat::parseScheduleMessage() restriction..." << endl;
 
   if (!icalrestriction_check(message)) {
-    setException(new KOErrorFormat(KOErrorFormat::Restriction,
+    setException(new ErrorFormat(ErrorFormat::Restriction,
                                    Scheduler::methodName(method) + ": " +
                                    mImpl->extractErrorProperty(c)));
     return 0;

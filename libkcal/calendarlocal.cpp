@@ -1,6 +1,6 @@
 // $Id$
 //
-// Calendar class for KOrganizer
+// Calendar class for libkcal
 // (c) 1998 Preston Brown
 // (c) 2000,2001 Cornelius Schumacher
 
@@ -25,10 +25,9 @@
 
 #include "vcaldrag.h"
 #include "qdatelist.h"
-//#include "koprefs.h"
 #include "vcalformat.h"
 #include "icalformat.h"
-#include "koexceptions.h"
+#include "exceptions.h"
 #include "incidence.h"
 #include "journal.h"
 
@@ -91,7 +90,7 @@ bool CalendarLocal::load(const QString &fileName)
   if (!success) {
     if (mFormat->exception()) {
 //      kdDebug() << "---Error: " << mFormat->exception()->errorCode() << endl;
-      if (mFormat->exception()->errorCode() == KOErrorFormat::CalVersion1) {
+      if (mFormat->exception()->errorCode() == ErrorFormat::CalVersion1) {
         // Expected non vCalendar file, but detected vCalendar
         kdDebug() << "CalendarLocal::load() Fallback to VCalFormat" << endl;
         delete mFormat;

@@ -57,13 +57,13 @@ void CalFormat::clearException()
   mException = 0;
 }
 
-void CalFormat::setException(KOErrorFormat *exception)
+void CalFormat::setException(ErrorFormat *exception)
 {
   delete mException;
   mException = exception;
 }
 
-KOErrorFormat *CalFormat::exception()
+ErrorFormat *CalFormat::exception()
 {
   return mException;
 }

@@ -1,7 +1,7 @@
 // $Id$
 
-#ifndef _KOALARM_H
-#define _KOALARM_H
+#ifndef KCAL_ALARM_H
+#define KCAL_ALARM_H
 
 #include <qstring.h>
 
@@ -11,12 +11,12 @@ class Incidence;
 
 /**
     This class represents an alarm notification. */
-class KOAlarm {
+class Alarm {
   public:
     /** constructs a new event with variables initialized to "sane" values. */
-    KOAlarm(Incidence *parent);
-    /** Destruct KOAlarm object. */
-    ~KOAlarm();
+    Alarm(Incidence *parent);
+    /** Destruct Alarm object. */
+    ~Alarm();
 
     /** Set time the alarm should occur on. */
     void setAlarmStart(QDateTime start) { mAlarmStart = start; }

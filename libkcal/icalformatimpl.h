@@ -29,8 +29,8 @@ class ICalFormatImpl {
     icalcomponent *writeJournal(Journal *journal);
     void writeIncidence(icalcomponent *parent,Incidence *incidence);
     icalproperty *writeAttendee(Attendee *attendee);
-    icalproperty *writeRecurrenceRule(KORecurrence *);
-    icalproperty *writeAlarm(KOAlarm *alarm);
+    icalproperty *writeRecurrenceRule(Recurrence *);
+    icalproperty *writeAlarm(Alarm *alarm);
 
     QString extractErrorProperty(icalcomponent *);    
     Todo *readTodo(icalcomponent *vtodo);

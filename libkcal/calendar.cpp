@@ -1,6 +1,6 @@
 // $Id$
 //
-// Calendar class for KOrganizer
+// Calendar class for libkcal
 // (c) 1998 Preston Brown
 // (c) 2000,2001 Cornelius Schumacher
 
@@ -27,10 +27,9 @@
 
 #include "vcaldrag.h"
 #include "qdatelist.h"
-//#include "koprefs.h"
 #include "vcalformat.h"
 #include "icalformat.h"
-#include "koexceptions.h"
+#include "exceptions.h"
 #include "calfilter.h"
 
 #include "calendar.h"

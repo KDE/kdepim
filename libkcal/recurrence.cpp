@@ -6,11 +6,11 @@
 
 #include "incidence.h"
 
-#include "korecurrence.h"
+#include "recurrence.h"
 
 using namespace KCal;
 
-KORecurrence::KORecurrence(Incidence *parent)
+Recurrence::Recurrence(Incidence *parent)
 {
   mParent = parent;
 
@@ -24,16 +24,16 @@ KORecurrence::KORecurrence(Incidence *parent)
   mRecurExDatesCount = 0;
 }
 
-KORecurrence::~KORecurrence()
+Recurrence::~Recurrence()
 {
 }
 
-ushort KORecurrence::doesRecur() const
+ushort Recurrence::doesRecur() const
 {
   return recurs;
 }
 
-bool KORecurrence::recursOnPure(const QDate &qd) const
+bool Recurrence::recursOnPure(const QDate &qd) const
 {
   // first off, check to see if the flag is even set
   if (recurs == rNone)
@@ -67,7 +67,7 @@ bool KORecurrence::recursOnPure(const QDate &qd) const
   } // case
 }
 
-bool KORecurrence::recursDaily(const QDate &qd) const
+bool Recurrence::recursDaily(const QDate &qd) const
 {
   QDate dStart = mRecurStart.date();
   int i;
@@ -88,7 +88,7 @@ bool KORecurrence::recursDaily(const QDate &qd) const
   return FALSE;
 }
 
-bool KORecurrence::recursWeekly(const QDate &qd) const
+bool Recurrence::recursWeekly(const QDate &qd) const
 {
   QDate dStart = mRecurStart.date();
   int i;
@@ -115,7 +115,7 @@ bool KORecurrence::recursWeekly(const QDate &qd) const
   return FALSE;
 }
 
-bool KORecurrence::recursMonthlyByDay(const QDate &qd) const
+bool Recurrence::recursMonthlyByDay(const QDate &qd) const
 {
   QDate dStart = mRecurStart.date();
   int monthsAhead = 0;
@@ -158,7 +158,7 @@ bool KORecurrence::recursMonthlyByDay(const QDate &qd) const
   return FALSE;
 }
 
-bool KORecurrence::recursMonthlyByPos(const QDate &qd) const
+bool Recurrence::recursMonthlyByPos(const QDate &qd) const
 {
   QDate dStart = mRecurStart.date();
   int monthsAhead = 0;
@@ -212,7 +212,7 @@ bool KORecurrence::recursMonthlyByPos(const QDate &qd) const
   return FALSE;
 }
 
-bool KORecurrence::recursYearlyByMonth(const QDate &qd) const 
+bool Recurrence::recursYearlyByMonth(const QDate &qd) const 
 {
   QDate dStart = mRecurStart.date();
   int yearsAhead = 0;
@@ -246,7 +246,7 @@ bool KORecurrence::recursYearlyByMonth(const QDate &qd) const
   return FALSE;
 }
 
-bool KORecurrence::recursYearlyByDay(const QDate &qd) const
+bool Recurrence::recursYearlyByDay(const QDate &qd) const
 {
   QDate dStart = mRecurStart.date();
   int yearsAhead = 0;
@@ -289,7 +289,7 @@ bool KORecurrence::recursYearlyByDay(const QDate &qd) const
   return FALSE;
 }
 
-void KORecurrence::unsetRecurs()
+void Recurrence::unsetRecurs()
 {
   if (mRecurReadOnly) return;
   recurs = rNone;
@@ -298,7 +298,7 @@ void KORecurrence::unsetRecurs()
   rYearNums.clear();
 }
 
-void KORecurrence::setDaily(int _rFreq, int _rDuration)
+void Recurrence::setDaily(int _rFreq, int _rDuration)
 {
   if (mRecurReadOnly) return;
   recurs = rDaily;
@@ -311,7 +311,7 @@ void KORecurrence::setDaily(int _rFreq, int _rDuration)
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::setDaily(int _rFreq, const QDate &_rEndDate)
+void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
   recurs = rDaily;
@@ -325,42 +325,42 @@ void KORecurrence::setDaily(int _rFreq, const QDate &_rEndDate)
   mParent->emitEventUpdated(mParent);
 }
 
-int KORecurrence::frequency() const
+int Recurrence::frequency() const
 {
   return rFreq;
 }
 
-int KORecurrence::duration() const
+int Recurrence::duration() const
 {
   return rDuration;
 }
 
-const QDate &KORecurrence::endDate() const
+const QDate &Recurrence::endDate() const
 {
   return rEndDate;
 }
 
-QString KORecurrence::endDateStr(bool shortfmt) const
+QString Recurrence::endDateStr(bool shortfmt) const
 {
   return KGlobal::locale()->formatDate(rEndDate,shortfmt);
 }
 
-const QBitArray &KORecurrence::days() const
+const QBitArray &Recurrence::days() const
 {
   return rDays;
 }
 
-const QPtrList<KORecurrence::rMonthPos> &KORecurrence::monthPositions() const
+const QPtrList<Recurrence::rMonthPos> &Recurrence::monthPositions() const
 {
   return rMonthPositions;
 }
 
-const QPtrList<int> &KORecurrence::monthDays() const
+const QPtrList<int> &Recurrence::monthDays() const
 {
   return rMonthDays;
 }
 
-void KORecurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
+void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
 			       int _rDuration)
 {
   if (mRecurReadOnly) return;
@@ -374,7 +374,7 @@ void KORecurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
+void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
 			       const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
@@ -390,7 +390,7 @@ void KORecurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::setMonthly(short type, int _rFreq, int _rDuration)
+void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 {
   if (mRecurReadOnly) return;
   recurs = type;
@@ -401,7 +401,7 @@ void KORecurrence::setMonthly(short type, int _rFreq, int _rDuration)
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::setMonthly(short type, int _rFreq, 
+void Recurrence::setMonthly(short type, int _rFreq, 
 				const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
@@ -414,7 +414,7 @@ void KORecurrence::setMonthly(short type, int _rFreq,
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
+void Recurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
 {
   if (mRecurReadOnly) return;
   rMonthPos *tmpPos = new rMonthPos;
@@ -429,7 +429,7 @@ void KORecurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::addMonthlyDay(short _rDay)
+void Recurrence::addMonthlyDay(short _rDay)
 {
   if (mRecurReadOnly) return;
   int *tmpDay = new int;
@@ -438,7 +438,7 @@ void KORecurrence::addMonthlyDay(short _rDay)
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::setYearly(int type, int _rFreq, int _rDuration)
+void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
 {
   if (mRecurReadOnly) return;
   recurs = type;
@@ -450,7 +450,7 @@ void KORecurrence::setYearly(int type, int _rFreq, int _rDuration)
   mParent->emitEventUpdated(mParent);
 }
 
-void KORecurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
+void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
   recurs = type;
@@ -463,12 +463,12 @@ void KORecurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
   mParent->emitEventUpdated(mParent);
 }
 
-const QPtrList<int> &KORecurrence::yearNums() const
+const QPtrList<int> &Recurrence::yearNums() const
 {
   return rYearNums;
 }
 
-void KORecurrence::addYearlyNum(short _rNum)
+void Recurrence::addYearlyNum(short _rNum)
 {
   if (mRecurReadOnly) return;
 
@@ -482,7 +482,7 @@ void KORecurrence::addYearlyNum(short _rNum)
 /***************************** PROTECTED FUNCTIONS ***************************/
 
 // this should return the week of the month for the date
-int KORecurrence::weekOfMonth(const QDate &qd) const
+int Recurrence::weekOfMonth(const QDate &qd) const
 {
   QDate firstDate(qd.year(), qd.month(), 1);
   // I don't really know what formulas I'm using here.  :)

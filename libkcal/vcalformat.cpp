@@ -50,7 +50,7 @@ bool VCalFormat::load(const QString &fileName)
   vcal = Parse_MIME_FromFileName((const char *)QFile::encodeName(fileName));
 
   if (!vcal) {
-    setException(new KOErrorFormat(KOErrorFormat::CalVersionUnknown));
+    setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
     return FALSE;
   }
 
@@ -587,26 +587,26 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // recurrence rule stuff
   if (anEvent->recurrence()->doesRecur()) {
     // some more variables
-    QPtrList<KORecurrence::rMonthPos> tmpPositions;
+    QPtrList<Recurrence::rMonthPos> tmpPositions;
     QPtrList<int> tmpDays;
     int *tmpDay;
-    KORecurrence::rMonthPos *tmpPos;
+    Recurrence::rMonthPos *tmpPos;
     QString tmpStr2;
 
     switch(anEvent->recurrence()->doesRecur()) {
-    case KORecurrence::rDaily:
+    case Recurrence::rDaily:
       tmpStr.sprintf("D%i ",anEvent->recurrence()->frequency());
 //      if (anEvent->rDuration > 0)
 //	tmpStr += "#";
       break;
-    case KORecurrence::rWeekly:
+    case Recurrence::rWeekly:
       tmpStr.sprintf("W%i ",anEvent->recurrence()->frequency());
       for (int i = 0; i < 7; i++) {
 	if (anEvent->recurrence()->days().testBit(i))
 	  tmpStr += dayFromNum(i);
       }
       break;
-    case KORecurrence::rMonthlyPos:
+    case Recurrence::rMonthlyPos:
       tmpStr.sprintf("MP%i ", anEvent->recurrence()->frequency());
       // write out all rMonthPos's
       tmpPositions = anEvent->recurrence()->monthPositions();
@@ -626,7 +626,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	}
       } // loop for all rMonthPos's
       break;
-    case KORecurrence::rMonthlyDay:
+    case Recurrence::rMonthlyDay:
       tmpStr.sprintf("MD%i ", anEvent->recurrence()->frequency());
       // write out all rMonthDays;
       tmpDays = anEvent->recurrence()->monthDays();
@@ -637,7 +637,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	tmpStr += tmpStr2;
       }
       break;
-    case KORecurrence::rYearlyMonth:
+    case Recurrence::rYearlyMonth:
       tmpStr.sprintf("YM%i ", anEvent->recurrence()->frequency());
       // write out all the rYearNums;
       tmpDays = anEvent->recurrence()->yearNums();
@@ -648,7 +648,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	tmpStr += tmpStr2;
       }
       break;
-    case KORecurrence::rYearlyDay:
+    case Recurrence::rYearlyDay:
       tmpStr.sprintf("YD%i ", anEvent->recurrence()->frequency());
       // write out all the rYearNums;
       tmpDays = anEvent->recurrence()->yearNums();
@@ -1237,13 +1237,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       if (tmpStr.find('T', index) != -1) {
 	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() - 
 						    index))).date();
-	anEvent->recurrence()->setMonthly(KORecurrence::rMonthlyPos, rFreq, rEndDate);
+	anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rEndDate);
       } else {
 	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
 	if (rDuration == 0)
-	  anEvent->recurrence()->setMonthly(KORecurrence::rMonthlyPos, rFreq, -1);
+	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, -1);
 	else
-	  anEvent->recurrence()->setMonthly(KORecurrence::rMonthlyPos, rFreq, rDuration);
+	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyPos, rFreq, rDuration);
       }
     }
 
@@ -1274,13 +1274,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
 	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setMonthly(KORecurrence::rMonthlyDay, rFreq, rEndDate);
+	anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rEndDate);
       } else {
 	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
 	if (rDuration == 0)
-	  anEvent->recurrence()->setMonthly(KORecurrence::rMonthlyDay, rFreq, -1);
+	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, -1);
 	else
-	  anEvent->recurrence()->setMonthly(KORecurrence::rMonthlyDay, rFreq, rDuration);
+	  anEvent->recurrence()->setMonthly(Recurrence::rMonthlyDay, rFreq, rDuration);
       }
     }
 
@@ -1308,13 +1308,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
 	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setYearly(KORecurrence::rYearlyMonth, rFreq, rEndDate);
+	anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rEndDate);
       } else {
 	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
 	if (rDuration == 0)
-	  anEvent->recurrence()->setYearly(KORecurrence::rYearlyMonth, rFreq, -1);
+	  anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, -1);
 	else
-	  anEvent->recurrence()->setYearly(KORecurrence::rYearlyMonth, rFreq, rDuration);
+	  anEvent->recurrence()->setYearly(Recurrence::rYearlyMonth, rFreq, rDuration);
       }
     }
 
@@ -1342,13 +1342,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
 	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-	anEvent->recurrence()->setYearly(KORecurrence::rYearlyDay, rFreq, rEndDate);
+	anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rEndDate);
       } else {
 	int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
 	if (rDuration == 0)
-	  anEvent->recurrence()->setYearly(KORecurrence::rYearlyDay, rFreq, -1);
+	  anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, -1);
 	else
-	  anEvent->recurrence()->setYearly(KORecurrence::rYearlyDay, rFreq, rDuration);
+	  anEvent->recurrence()->setYearly(Recurrence::rYearlyDay, rFreq, rDuration);
       }
     } else {
       kdDebug() << "we don't understand this type of recurrence!" << endl;
