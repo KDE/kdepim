@@ -307,7 +307,7 @@ void CertManager::createActions() {
                                         actionCollection(), "file_export_secret_keys" );
   connectEnableOperationSignal( this, mExportSecretKeyAction );
 
-  mViewCertDetailsAction = new KAction( i18n("View Certificate Details..."), 0, 0,
+  mViewCertDetailsAction = new KAction( i18n("Certificate Details..."), 0, 0,
                                         this, SLOT(slotViewDetails()), actionCollection(),
                                         "view_certificate_details" );
   mDownloadCertificateAction = new KAction( i18n( "Download"), 0, 0,
@@ -319,7 +319,7 @@ void CertManager::createActions() {
 
   action = new KAction( i18n("Dump CRL Cache..."), 0,
 			this, SLOT(slotViewCRLs()),
-			actionCollection(), "view_dump_crls" );
+			actionCollection(), "crl_dump_crl_cache" );
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
   action = new KAction( i18n("Clear CRL Cache..."), 0,
