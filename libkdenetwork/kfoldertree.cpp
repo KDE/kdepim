@@ -393,6 +393,7 @@ void KFolderTree::removeUnreadColumn()
   if ( isTotalActive() && mTotalIndex > mUnreadIndex )
     mTotalIndex--;
   mUnreadIndex = -1;
+  header()->adjustHeaderSize();
 }
 
 //-----------------------------------------------------------------------------
