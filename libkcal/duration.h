@@ -39,6 +39,8 @@ class Duration
     int mSeconds;
 };
 
+    bool operator==( const Duration&, const Duration& );
+
 }
 
 #endif
