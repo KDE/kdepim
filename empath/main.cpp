@@ -28,14 +28,27 @@
 
 // KDE includes
 #include <kuniqueapp.h>
+#include <kaboutdata.h>
+#include <klocale.h>
+#include <kcmdlineargs.h>
 
 // Local includes
 #include "Empath.h"
 #include "EmpathUI.h"
 
+static const char* description=I18N_NOOP("Empath, the KDE Mail Client");
+static const char* VERSION="0.0.1";
+
     int
 main(int argc, char ** argv)
 {
+    KAboutData aboutData( "empath", I18N_NOOP("Empath"),
+        VERSION, description, KAboutData::License_GPL,
+        "(c) 1999-2000, The Empath Team");
+    aboutData.addAuthor("Rik Hemsley",0, "rik@kde.org");
+    aboutData.addAuthor("Wilco Greven",0, "j.w.greven@student.utwente.nl");
+    KCmdLineArgs::init( argc, argv, &aboutData );
+  
     // Don't do anything if we're being run as root.
     if (getuid() == 0 || geteuid() == 0) {
         fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
@@ -48,14 +61,14 @@ main(int argc, char ** argv)
 #define DOSOMEDOSOMEDOSOME
 #ifdef DOSOMEDOSOMEDOSOME
 
-    if (!KUniqueApplication::start(argc, argv, "empath"))
+    if (!KUniqueApplication::start())
         exit(0);
     
-    KUniqueApplication app(argc, argv, "empath");
+    KUniqueApplication app;
 
 #else
 
-    KApplication app(argc, argv, "empath");
+    KApplication app;
 
 #endif
     

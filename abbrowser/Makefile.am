@@ -23,7 +23,7 @@ abbrowser_LDADD = -lkab2 -lkimgio $(LIB_KFILE)
 noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 
 messages:
-	$(XGETTEXT) -C -ki18n -x $(includedir)/kde.pot $(abbrowser_SOURCES) && \
+	$(XGETTEXT) -C -kI18N_NOOP -ki18n -x $(includedir)/kde.pot $(abbrowser_SOURCES) && \
 	mv messages.po ../po/abbrowser.pot
 
 srcdoc:

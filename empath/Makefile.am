@@ -36,7 +36,7 @@ empath_LDADD = \
 #############################################################################
 
 messages:
-	$(XGETTEXT) -C -ki18n -x $(includedir)/kde.pot \
+	$(XGETTEXT) -C -kI18N_NOOP -ki18n -x $(includedir)/kde.pot \
 	-o $(podir)/empath.pot */*.cpp *.cpp
 
 #############################################################################
