@@ -194,6 +194,7 @@ protected:
   KNListView      *h_drView;
   KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
   bool b_lockui;
+  KToolBar        *q_uicksearch;
 
   //Core
   KNConfigManager   *c_fgManager;
@@ -321,11 +322,12 @@ protected:
   // settings menu
   KToggleAction *a_ctToggleGroupView,
     *a_ctToggleHeaderView,
-    *a_ctToggleArticleViewer;
+    *a_ctToggleArticleViewer,
+    *a_ctToggleQuickSearch;
   KAction *a_ctSwitchToGroupView,
     *a_ctSwitchToHeaderView,
     *a_ctSwitchToArticleViewer;
-
+    
 protected slots:
   void slotNavNextArt();
   void slotNavPrevArt();
@@ -399,6 +401,7 @@ protected slots:
   void slotToggleGroupView();
   void slotToggleHeaderView();
   void slotToggleArticleViewer();
+  void slotToggleQuickSearch();
   void slotSwitchToGroupView();
   void slotSwitchToHeaderView();
   void slotSwitchToArticleViewer();

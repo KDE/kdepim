@@ -154,7 +154,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   h_drDock->setWidget(dummy);
   h_drDock->manualDock(a_rtDock, KDockWidget::DockTop, 5000);
 
-  KToolBar *tb = new KToolBar(dummy, "search toolbar");
+  q_uicksearch = new KToolBar(dummy, "search toolbar");
   KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
                                            QApplication::reverseLayout()
                                            ? "clear_left"
@@ -163,19 +163,18 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                            SLOT( slotClearHeaderSearch() ),
                                            actionCollection(),
                                            "reset_quicksearch" );
-  resetQuickSearch->plug( tb );
+  resetQuickSearch->plug( q_uicksearch );
   resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search<b><br>"
                                         "Resets the quick search so that "
                                         "all messages are shown again." ) );
 
-  QLabel *lbl = new QLabel(i18n("&Search:"), tb, "kde toolbar widget");
-  s_earchLineEdit = new KPIM::KListViewSearchLine(tb, h_drView, "KListViewSearchLine");
-  tb->setStretchableWidget(s_earchLineEdit);
+  QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
+  s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
+  q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
 
-  vlay->addWidget(tb);
+  vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
-
 
   h_drView->setAcceptDrops(false);
   h_drView->setDragEnabled(true);
@@ -777,10 +776,13 @@ void KNMainWidget::initActions()
                                SLOT(slotToggleHeaderView()), actionCollection(), "settings_show_headerView");
   a_ctToggleArticleViewer    = new KToggleAction(i18n("Show &Article Viewer"), CTRL+Key_J, this,
                                SLOT(slotToggleArticleViewer()), actionCollection(), "settings_show_articleViewer");
+  a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), QString::null, this,
+                               SLOT(slotToggleQuickSearch()), actionCollection(), "settings_show_quickSearch");
 #if KDE_IS_VERSION(3,2,90)
   a_ctToggleGroupView->setCheckedState(i18n("Hide &Group View"));
   a_ctToggleHeaderView->setCheckedState(i18n("Hide &Header View"));
   a_ctToggleArticleViewer->setCheckedState(i18n("Hide &Article Viewer"));
+  a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
 #endif
   a_ctSwitchToGroupView      = new KAction(i18n("Switch to Group View"), Key_G , this,
                                SLOT(slotSwitchToGroupView()), actionCollection(), "switch_to_group_view");
@@ -865,6 +867,10 @@ void KNMainWidget::readOptions()
     }
   }
 
+  if (conf->readBoolEntry("quicksearch", true))
+    a_ctToggleQuickSearch->setChecked(true);
+  else
+    q_uicksearch->hide();
   int sortCol=conf->readNumEntry("sortCol",4);
   bool sortAsc=conf->readBoolEntry("sortAscending", false);
   bool sortByThreadChangeDate=conf->readBoolEntry("sortByThreadChangeDate", false);
@@ -923,7 +929,7 @@ void KNMainWidget::saveOptions()
   conf->writeEntry("sortByThreadChangeDate", h_drView->sortByThreadChangeDate());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
   conf->writeEntry("account_sortAscending", c_olView->ascending());
-
+  conf->writeEntry("quicksearch", q_uicksearch->isShown());
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   // store dock configuration
@@ -2263,6 +2269,13 @@ void KNMainWidget::slotToggleArticleViewer()
   slotCheckDockWidgetStatus();
 }
 
+void KNMainWidget::slotToggleQuickSearch()
+{
+  if (q_uicksearch->isHidden())
+    q_uicksearch->show();
+  else
+    q_uicksearch->hide();
+}
 
 void KNMainWidget::slotSwitchToGroupView()
 {
