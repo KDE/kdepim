@@ -15,3 +15,6 @@
 	o Changed popmail and null conduit and the KPilot setup job
 	  so they have similar setup-dialog styles. Also changed the
 	  menu layout and the toolbar.
+7/20/2000:
+	o 3.2.0 (i.e. 3.1final) is being ported to KDE 2 and is now 
+	  called KPilot 4.0.0
