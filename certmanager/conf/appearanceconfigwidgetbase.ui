@@ -53,9 +53,6 @@
                     <property name="text">
                         <string>Set &amp;Text Color...</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+T</string>
-                    </property>
                 </widget>
                 <widget class="QPushButton">
                     <property name="name">
@@ -67,9 +64,6 @@
                     <property name="text">
                         <string>Set &amp;Background Color...</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+B</string>
-                    </property>
                 </widget>
                 <widget class="QPushButton">
                     <property name="name">
@@ -80,9 +74,6 @@
                     </property>
                     <property name="text">
                         <string>Set F&amp;ont...</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+O</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox">
@@ -144,9 +135,6 @@
                     </property>
                     <property name="text">
                         <string>Default Appearance</string>
-                    </property>
-                    <property name="accel">
-                        <string></string>
                     </property>
                 </widget>
             </vbox>

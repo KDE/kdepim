@@ -120,9 +120,6 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
             <property name="text">
                 <string>KPilot should be &amp;running all the time</string>
             </property>
-            <property name="accel">
-                <string>Alt+R</string>
-            </property>
             <property name="checked">
                 <bool>true</bool>
             </property>

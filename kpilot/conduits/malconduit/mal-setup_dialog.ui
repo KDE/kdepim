@@ -80,9 +80,6 @@
                                 <property name="text">
                                     <string>&amp;Every sync</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+E</string>
-                                </property>
                                 <property name="checked">
                                     <bool>true</bool>
                                 </property>
@@ -96,9 +93,6 @@
                                 </property>
                                 <property name="text">
                                     <string>Once per &amp;hour</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+H</string>
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string></string>
@@ -114,9 +108,6 @@
                                 <property name="text">
                                     <string>Once a &amp;day</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+D</string>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>KPilot will only try to synchronise with the MAL servers if it is more than a day since the last MAL sync.</string>
                                 </property>
@@ -128,9 +119,6 @@
                                 <property name="text">
                                     <string>Once a &amp;week</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+W</string>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>KPilot will only try to synchronise with the MAL servers if it is more than a week since the last MAL sync.</string>
                                 </property>
@@ -141,9 +129,6 @@
                                 </property>
                                 <property name="text">
                                     <string>Once a &amp;month</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+M</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>KPilot will only try to synchronise with the MAL servers if it is more than a month since the last MAL sync.</string>
@@ -208,9 +193,6 @@
                                 <property name="text">
                                     <string>&amp;No proxy</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+N</string>
-                                </property>
                                 <property name="checked">
                                     <bool>true</bool>
                                 </property>
@@ -225,9 +207,6 @@
                                 <property name="text">
                                     <string>&amp;HTTP proxy</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+H</string>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>Select this option if you want KPilot to use a HTTP proxy.</string>
                                 </property>
@@ -238,9 +217,6 @@
                                 </property>
                                 <property name="text">
                                     <string>&amp;SOCKS proxy</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+S</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>Select this option if you want KPilot to use a SOCKS proxy.</string>
@@ -291,9 +267,6 @@
                                 </property>
                                 <property name="text">
                                     <string>Custom &amp;port:</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+P</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>Tells KPilot that your proxy operates on a non-standard port.</string>
