@@ -49,7 +49,7 @@ class CreateSloxKcalResource : public KConfigPropagator::Change
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
 
-      KURL url( "https://" + SloxConfig::self()->server() );
+      KURL url( "http://" + SloxConfig::self()->server() );
 
       KCalResourceSlox *r = new KCalResourceSlox( url );
       r->setResourceName( i18n("Openexchange Server") );
