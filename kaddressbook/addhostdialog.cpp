@@ -67,6 +67,7 @@ AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
 
   resize( QSize( 380, 150 ).expandedTo( sizeHint() ) );
   enableButtonOK( !mHostEdit->text().isEmpty());
+  mHostEdit->setFocus();
 }
 
 AddHostDialog::~AddHostDialog()
