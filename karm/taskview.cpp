@@ -146,6 +146,9 @@ void TaskView::load()
   _desktopTracker->startTracking();
 }
 
+void TaskView::closeStorage() { _storage->close(); }
+
+
 void TaskView::loadFromFlatFile()
 {
   kdDebug(5970) << "TaskView::loadFromFlatFile()" << endl;

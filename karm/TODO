@@ -10,6 +10,8 @@
 Mark - Sooner ...
 --------------------------
 
+  * 2004-05-02: Click X does not close properly.  File -> Quit does.
+
   * 2004-01-27: File locking--test and clear lock on exit.
 
         If I open a file in KArm, and then open the same file in KOrganizer

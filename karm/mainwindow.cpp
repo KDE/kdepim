@@ -114,8 +114,6 @@ void MainWindow::save()
 
 void MainWindow::quit()
 {
-  //_taskView->_storage->clearLock();
-  // TODO: _taskView->closeStorage();
   kapp->quit();
 }
 
@@ -125,6 +123,7 @@ MainWindow::~MainWindow()
   kdDebug(5970) << i18n("MainWindow::~MainWindows: Quitting karm.") << endl;
   _taskView->stopAllTimers();
   save();
+  _taskView->closeStorage();
 }
 
 void MainWindow::enableStopAll()

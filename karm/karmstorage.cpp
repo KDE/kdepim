@@ -88,7 +88,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 
   // If KArm just instantiated, load calendar resources.
   if ( ! _calendar) _calendar = new KCal::CalendarResources();
-  else _calendar->close();
+  else close();
 
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
@@ -192,6 +192,15 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   }
 
   return err;
+}
+
+void KarmStorage::close()
+{
+  if ( _calendar )
+  {
+    if ( _lock ) _calendar->releaseSaveTicket( _lock );
+    _calendar->close();
+  }
 }
 
 void KarmStorage::save(TaskView* taskview)

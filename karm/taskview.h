@@ -53,6 +53,9 @@ class TaskView : public KListView
     /** Load the view from storage.  */
     void load();
 
+    /** Close the storage and release lock. */
+    void closeStorage();
+
     /** Reset session time to zero for all tasks.   */
     void startNewSession();
 
