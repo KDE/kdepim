@@ -347,7 +347,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   uint len=line.length();
   int matchLen;
   bool forceNBSP=false; //use "&nbsp;" for spaces => workaround for a bug in QTextBrowser
-          
+
   for(uint idx=0; idx<len; idx++){
     
     switch(line[idx].latin1()) {
@@ -382,7 +382,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
            (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'         
           regExp="^https?://[^\\s<>()\"|]+";
           if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString("<a href=\"%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
+            result+=QString::fromLatin1("<a href=\"") + line.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
@@ -395,7 +396,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
            (line[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'         
           regExp="^www\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
           if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString("<a href=\"http://%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
+            result+=QString::fromLatin1("<a href=\"http://") + line.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
@@ -408,13 +410,15 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
            (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'         
           regExp="^ftp://[^\\s<>()\"|]+";
           if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString("<a href=\"%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
+            result+=QString::fromLatin1("<a href=\"") + line.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
           regExp="^ftp\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
           if (regExp.match(line,idx,&matchLen)!=-1) {
-            result+=QString("<a href=\"ftp://%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
+            result+=QString::fromLatin1("<a href=\"ftp://") + line.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + line.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
