@@ -64,7 +64,8 @@ AddViewDialog::AddViewDialog( QDict<ViewFactory> *viewFactoryDict,
   // Now create the radio buttons. This needs some layout work.
   QDictIterator<ViewFactory> iter( *mViewFactoryDict );
   for ( iter.toFirst(); iter.current(); ++iter ) {
-    new QRadioButton( i18n((*iter)->type().utf8()), mTypeGroup );
+    new QRadioButton( i18n((*iter)->type().utf8()), mTypeGroup,
+                      (*iter)->type().latin1() );
     label = new QLabel( (*iter)->description(), mTypeGroup );
     label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak );
   }
@@ -85,7 +86,8 @@ QString AddViewDialog::viewName()const
 
 QString AddViewDialog::viewType()const
 {
-  return mTypeGroup->find( mTypeId )->text();
+  // we missuse the name property for storing the type
+  return mTypeGroup->find( mTypeId )->name();
 }
 
 void AddViewDialog::clicked( int id )
