@@ -45,8 +45,8 @@ class AlarmGuiIface : virtual public DCOPObject
     virtual ASYNC handleEvent(const QString& calendarURL,
                               const QString& eventID) = 0;
     virtual ASYNC handleEvent( const QString &iCalendarString ) = 0;
-    /** Called to indicate success/failure of (re)register() call.
-        @param reregister the application is already in the clients list.
+    /** Called to indicate success/failure of (re)registerApp() call.
+        @param reregister true if the call was registerApp(), false if registerApp().
         @param result success/failure code. Value is of type AlarmGuiRegResult.
      */
     virtual ASYNC registered( bool reregister, int result ) = 0;
