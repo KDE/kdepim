@@ -76,6 +76,9 @@ class Event : public Incidence
     int mTransparency;
 };
 
+bool operator==( const Event&, const Event& );
+
+
 }
 
 #endif

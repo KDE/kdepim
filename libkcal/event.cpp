@@ -48,6 +48,16 @@ Incidence *Event::clone()
   return new Event(*this);
 }
 
+bool KCal::operator==( const Event& e1, const Event& e2 )
+{
+    return operator==( (const Incidence&)e1, (const Incidence&)e2 ) &&
+        e1.dtEnd() == e2.dtEnd() &&
+        e1.hasEndDate() == e2.hasEndDate() &&
+        e1.transparency() == e2.transparency();
+}
+
+
+
 void Event::setDtEnd(const QDateTime &dtEnd)
 {  
   if (mReadOnly) return;
