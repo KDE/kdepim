@@ -31,26 +31,20 @@
 
 
 FilterPMail::FilterPMail() :
-   Filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),
+   Filter(i18n("Import Folders From Pegasus-Mail"),
    "Holger Schurig",
-   i18n("<p>Select the Pegasus-Mail directory on your system. "
-              "This import filter will import your folders, but not "
+   i18n("<p>Select the Pegasus-Mail directory on your system (containing CNM, PMM and MBX files). "
+              "On many systems this is stored in C:\\PMail\\mail</p>"
+              "<p><b>Note:</b> This import filter will import your folders, but not "
               "the folder structure. But you will probably only do "
-              "this one time. </p>"
-              "<p><b>NOTE:</b> Kmailcvt creates folders with the prefix 'pmail-'. "
-              "If this causes problems for you (you have KMail folders "
-              "with that prefix), cancel this import function (the next dialog "
-              "will allow you to do that) and rename the existing KMail "
-              "folders.</p>"))
+              "this one time.</p>"
+              "<p><b>Note:</b> Emails will be imported into folder with the prefix pmail-</p>"))
 {
 }
-
 
 FilterPMail::~FilterPMail()
 {
 }
-
-
 
 void FilterPMail::import(FilterInfo *info)
 {
@@ -114,20 +108,6 @@ void FilterPMail::importNewMessage(const QString& file)
 /** this function imports one mail folder file (*.PMM) */
 void FilterPMail::importMailFolder(const QString& file)
 {
-   struct {
-      char folder[86];
-      char id[42];
-   } pmm_head;
-
-   FILE *f;
-   QString folder;
-   int ch = 0;
-   int state = 0;
-   int n = 0;
-   FILE *temp = NULL;
-   KTempFile *tempfile = 0;
-
-
    // Format of a PMM file:
    // First comes a header with 128 bytes. At the beginning is the name of
    // the folder. Then there are some unknown bytes (strings). At offset 128
@@ -153,30 +133,39 @@ void FilterPMail::importMailFolder(const QString& file)
    // ...
    // 04dc50 46 30 33 38 44 2e 36 31 35 44 37 34 44 30 2d 2d    F038D.615D74D0--
    // 04dc60 0d 0a 1a
+   
+   struct {
+      char folder[86];
+      char id[42];
+   } pmm_head;
+
+   int ch = 0;
+   int state = 0;
+   int n = 0;
+   KTempFile *tempfile = 0;
 
    // open the message
-   f = fopen(QFile::encodeName(file), "rb");
+   QFile f(file);
+   f.open(IO_ReadOnly);
 
    // Get folder name
-   fread(&pmm_head, sizeof(pmm_head), 1, f);
-   folder = "PMail-";
+   f.readBlock((char *) &pmm_head, sizeof(pmm_head));
+   QString folder("PMail-");
    folder.append(pmm_head.folder);
    inf->to(folder);
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
    // State machine to read the data in. The fgetc usage is probably terribly slow ...
-   while ((ch = fgetc(f)) >= 0) {
+   while ((ch = f.getch()) >= 0) {
       switch (state) {
 
       // new message state
       case 0:
          // open temp output file
          tempfile = new KTempFile;
-         temp = tempfile->fstream();
          state = 1;
-         n++;
-         inf->current(i18n("Message %1").arg(n));
+         inf->current(i18n("Message %1").arg(n++));
          // fall throught
 
       // inside a message state
@@ -193,7 +182,7 @@ void FilterPMail::importMailFolder(const QString& file)
          if (ch == 0x0d) {
              break;
          }
-         fputc(ch, temp);
+         tempfile->file()->putch(ch);
          break;
       }
    }
@@ -206,7 +195,7 @@ void FilterPMail::importMailFolder(const QString& file)
       delete tempfile;
    }
 
-   fclose(f);
+   f.close();
 }
 
 
