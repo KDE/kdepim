@@ -35,6 +35,7 @@
 #include <kabc/addressee.h>
 #include <kdebug.h>
 #include "resourcekolab.h"
+#include <qfile.h>
 
 using namespace Kolab;
 
@@ -840,8 +841,8 @@ void Contact::setFields( const KABC::Addressee* addressee )
     }
   }
 
-  // ### TODO load picture from addressee->logo().url() if !isIntern()
-  setPicture( addressee->logo().data() );
+  // ### TODO load picture from addressee->photo().url() if !isIntern()
+  setPicture( addressee->photo().data() );
 
   // TODO: Unhandled Addressee fields:
   // mailer, timezone, geo, productId, sortString, logo, sound
@@ -887,7 +888,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
   else
     addressee->removeCustom( "KADDRESSBOOK", "X-Anniversary" );
 
-  addressee->setLogo( KABC::Picture( mPicture ) );
+  addressee->setPhoto( KABC::Picture( mPicture ) );
 
   QStringList emailAddresses;
   for ( QValueList<Email>::ConstIterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
@@ -924,5 +925,6 @@ void Contact::loadPicture( KABC::ResourceKolab* resource, const QString& subReso
   if ( resource->kmailGetAttachment( url, subResource, sernum, mPictureAttachmentName ) ) {
     const QString path = url.path();
     mPicture.load( path );
+    QFile::remove(path);
   }
 }
