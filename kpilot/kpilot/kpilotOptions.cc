@@ -1,41 +1,43 @@
 // kpilotOptions.cc
 //
-// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 1998-2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
 // COPYING. 
+//
+// This is the version of kpilotOptions.cc for KDE 2 / KPilot 4.
+//
 
 // $Revision$
 
 
-// REVISION HISTORY 
-//
-// 3.1b9	By Dan Pilone
-// 3.1b10	By Adriaan de Groot: comments added all over the place.
-//		Modified KFM connection code, hopefully preventing
-//		a crash.
-//
-//		Remaining questions are marked with QADE.
+
+#include "options.h"
 
 #include <stream.h>
 #include <stdlib.h>
+
 #include <qlabel.h>
 #include <qchkbox.h>
 #include <qgrpbox.h>
 #include <qbttngrp.h>
 #include <qradiobt.h>
 #include <qlineedit.h>
+#include <qcombobox.h>
 
+#include <qlayout.h>
+
+
+#include <klocale.h>
 #include <kapp.h>
 #include <kconfig.h>
 #include <kwin.h>
 #include <kmessagebox.h>
+#include <kglobal.h>
 
 
 #include "kpilotOptions.moc"
-#include "kpilot.h"
-#include "options.h"
 
 
 static char *id="$Id$";
@@ -53,54 +55,37 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 	setupDialogPage(i18n("DB Specials"),p,c)
 {
 	FUNCTIONSETUP;
+	QLabel *l1,*l2;
+
+	const int labelCol = 0;
+	const int fieldCol = 1;
+	const int nCols=2;
+	const int nRows=3;
+
+
+	QGridLayout *grid = new QGridLayout(this,nRows,nCols,10);
 
 	fuseSecret=new QCheckBox(i18n("Show Secrets"),this);
 
-	if (fuseSecret)
-	{
-		fuseSecret->adjustSize();
-		fuseSecret->move(10,12);
-		c->setGroup(QString());
-		fuseSecret->setChecked(c->readNumEntry("ShowSecrets"));
-	}
+	fuseSecret->adjustSize();
+	grid->addWidget(fuseSecret,0,fieldCol);
+	fuseSecret->setChecked(c->readNumEntry("ShowSecrets"));
 
-	if (debug_level & UI_TEDIOUS)
-	{
-		cerr << fname << ": Read value "
-			<< c->readNumEntry("ShowSecrets")
-			<< " from file." << endl;
-		cerr << fname << ": Checkbox value "
-			<< fuseSecret->isChecked() << endl;
-	}
 
-	QLabel *l1,*l2;
-	int h;
 
 	l1=new QLabel(i18n("Backup Only:"),this);
-	l2=new QLabel(i18n("Skip:"),this);
-
-	l1->adjustSize();
-	l2->adjustSize();
-
-	if (l1->width() > l2->width())
-	{
-		h=l1->width();
-	}
-	else
-	{
-		h=l2->width();
-	}
-
 	fBackupOnly=new QLineEdit(this);
+	l1->adjustSize();
+	l1->setBuddy(fBackupOnly);
+	grid->addWidget(l1,1,labelCol);
+	grid->addWidget(fBackupOnly,1,fieldCol);
+
+	l2=new QLabel(i18n("Skip:"),this);
 	fSkipDB=new QLineEdit(this);
-
-	fBackupOnly->resize(250,fBackupOnly->height());
-	fSkipDB->resize(250,fSkipDB->height());
-
-	l1->move(10,BELOW(fuseSecret)+SPACING);
-	fBackupOnly->move(h+10+SPACING,l1->y()-4);
-	l2->move(10,BELOW(fBackupOnly));
-	fSkipDB->move(fBackupOnly->x(),l2->y()-4);
+	l2->adjustSize();
+	l2->setBuddy(fSkipDB);
+	grid->addWidget(l2,2,labelCol);
+	grid->addWidget(fSkipDB,2,fieldCol);
 
 	c->setGroup(QString());
 	fBackupOnly->setText(c->readEntry("BackupForSync",
@@ -108,6 +93,9 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 	fSkipDB->setText(c->readEntry("SkipSync",
 		"AvGo"));
 
+
+	grid->setRowStretch(3,100);
+	grid->activate();
 }
 
 
@@ -115,7 +103,7 @@ int KPilotOptionsPrivacy::commitChanges(KConfig *config)
 {
 	FUNCTIONSETUP;
 
-	config->setGroup(QString());
+	config->setGroup(QString::null);
 
 	config->writeEntry("ShowSecrets",fuseSecret->isChecked());
 	config->writeEntry("BackupForSync",fBackupOnly->text());
@@ -133,28 +121,49 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 {
 	FUNCTIONSETUP;
 
+	QLabel *currentLabel;
+	QVBoxLayout *vl;	// Layout for page as a whole
+	QGridLayout *grid;	// Layout inside group box
+	QVBoxLayout *advl;	// Layout for address display
+
+	// The address widget uses a different group from all
+	// the rest of the `standard' KPilot options -- perhaps
+	// in preparation to making it a separate conduit entirely.
+	//
+	//
 	c->setGroup(fGroupName);
 
-	QLabel *currentLabel;
+	vl=new QVBoxLayout(this,10);
+
 
 	formatGroup=new QGroupBox(i18n("Address Formats"),this);
+	grid=new QGridLayout(formatGroup,3,2,10);
+
+	// Start adding elements from the second row 
+	// (row 1) to allow space for the group box label.
+	// This is probably a bug -- and doesn't happen
+	// with VBox layouts.
+	//
+	//
+	grid->addRowSpacing(0,10);
 	currentLabel = new QLabel(i18n("Import Format:"),
 		formatGroup);
 	currentLabel->adjustSize();
-	currentLabel->move(10, 20);
+	grid->addWidget(currentLabel,1,0);
 
 	fIncomingFormat = new QLineEdit(formatGroup);
 	fIncomingFormat->setText(c->readEntry("IncomingFormat", 
 		"%LN,%FN,%CO,%P1,%P2,%P3,%P4,%P5,"
 		"%AD,%CI,%ST,%ZI,%CT,%TI,"
 		"%C1,%C2,%C3,%C4"));
-	fIncomingFormat->resize(250, fIncomingFormat->height());
-	fIncomingFormat->move(110, 10);
+	// fIncomingFormat->resize(250, fIncomingFormat->height());
+	currentLabel->setBuddy(fIncomingFormat);
+	grid->addWidget(fIncomingFormat,1,1);
 
 	currentLabel = new QLabel(i18n("Export Format:"),
 		formatGroup);
 	currentLabel->adjustSize();
-	currentLabel->move(10, 55);
+	grid->addWidget(currentLabel,2,0);
 
 	fOutgoingFormat = new QLineEdit(formatGroup);
 	fOutgoingFormat->setText(c->readEntry("OutgoingFormat", 
@@ -162,37 +171,38 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 		"%AD,%CI,%ST,%ZI,%CT,%TI,"
 		"%C1,%C2,%C3,%C4"));
 	fOutgoingFormat->resize(250, fIncomingFormat->height());
-	fOutgoingFormat->move(110, 50);
+	currentLabel->setBuddy(fOutgoingFormat);
+	grid->addWidget(fOutgoingFormat,2,1);
 
 	fUseKeyField = new QCheckBox(i18n("Use &Key Field"), 
 		formatGroup);
 	fUseKeyField->adjustSize();
 	fUseKeyField->setChecked(c->readNumEntry("UseKeyField", 0));
-	fUseKeyField->move(150,BELOW(fOutgoingFormat));
+	grid->addWidget(fUseKeyField,3,1);
 
 
 	formatGroup->adjustSize();
-	formatGroup->move(10,10);
+	vl->addWidget(formatGroup);
+
 
 
 
 	displayGroup=new QButtonGroup(i18n("Address Display"),
 		this,"bg");
-	displayGroup->move(10,BELOW(formatGroup));
+	advl=new QVBoxLayout(displayGroup,10);
 
 	fNormalDisplay=new QRadioButton(i18n("Last,First"),
 		displayGroup);
+	fNormalDisplay->adjustSize();
+	advl->addWidget(fNormalDisplay);
+
 	fCompanyDisplay=new QRadioButton(i18n("Company,Last"),
 		displayGroup);
-
-	fNormalDisplay->move(10,20);
-	fNormalDisplay->adjustSize();
-
 	fCompanyDisplay->adjustSize();
-	fCompanyDisplay->move(10,BELOW(fNormalDisplay));
+	advl->addWidget(fCompanyDisplay);
 
 	displayGroup->adjustSize();
-
+	vl->addWidget(displayGroup);
 
 
 
@@ -273,18 +283,25 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	QLabel *currentLabel;
 	int value;
 
-	config->setGroup(QString());
+	const int labelCol=0;
+	const int fieldCol=1;
+	const int nRows=8;
+	const int nCols=4;
+
+	QGridLayout *grid=new QGridLayout(this,nRows,nCols,10);
+	
+	config->setGroup(QString::null);
 	currentLabel = new QLabel(i18n("Pilot Device: "), this);
 	currentLabel->adjustSize();
-	currentLabel->move(10, 12);
+
 	fPilotDevice = new QLineEdit(this);
 	fPilotDevice->setText(config->readEntry("PilotDevice", "/dev/pilot"));
 	fPilotDevice->resize(100, fPilotDevice->height());
-	fPilotDevice->move(110,10);
+	grid->addWidget(currentLabel,0,labelCol);
+	grid->addWidget(fPilotDevice,0,fieldCol);
 
 	currentLabel = new QLabel(i18n("Speed: "), this);
 	currentLabel->adjustSize();
-	currentLabel->move(220, 12);
 	fPilotSpeed = new QComboBox(this);
 	fPilotSpeed->insertItem("9600");
 	fPilotSpeed->insertItem("19200");
@@ -298,31 +315,32 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 			<< value << " from config." << endl;
 	}
 	fPilotSpeed->setCurrentItem(value);
-	fPilotSpeed->move(280, 10);
+	grid->addWidget(currentLabel,0,labelCol+2);
+	grid->addWidget(fPilotSpeed,0,fieldCol+2);
 
 	currentLabel = new QLabel(i18n("Pilot User: "), this);
 	currentLabel->adjustSize();
-	currentLabel->move(10, 52);
 	fUserName = new QLineEdit(this);
 	QCString userName = ::getenv("USER");
 	fUserName->setText(config->readEntry("UserName", userName));
 	fUserName->resize(200, fUserName->height());
-	fUserName->move(110, 50);
+	grid->addWidget(currentLabel,1,labelCol);
+	grid->addMultiCellWidget(fUserName,1,1,fieldCol,fieldCol+2);
 
 	currentLabel = new QLabel(i18n("Sync Options:"), this);
 	currentLabel->adjustSize();
-	currentLabel->move(10, 120);
 	fSyncFiles = new QCheckBox(i18n("Sync &Files"), this);
 	fSyncFiles->adjustSize();
 	fSyncFiles->setChecked(config->readNumEntry("SyncFiles", 1));
-	fSyncFiles->move(110, 120);
+	grid->addWidget(currentLabel,2,labelCol);
+	grid->addMultiCellWidget(fSyncFiles,2,2,fieldCol,fieldCol+2);
 
 	fOverwriteRemote = new QCheckBox(
 		i18n("Local &overrides Pilot."), this);
 	fOverwriteRemote->adjustSize();
 	fOverwriteRemote->setChecked(
 		config->readNumEntry("OverwriteRemote", 0));
-	fOverwriteRemote->move(110, 140);
+	grid->addMultiCellWidget(fOverwriteRemote,3,3,fieldCol,fieldCol+2);
 
 	fStartDaemonAtLogin = new QCheckBox(
 		i18n("Start Hot-Sync Daemon at login. "
@@ -330,7 +348,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fStartDaemonAtLogin->adjustSize();
 	fStartDaemonAtLogin->setChecked(
 		config->readNumEntry("StartDaemonAtLogin", 0));
-	fStartDaemonAtLogin->move(10, 180);
+	grid->addMultiCellWidget(fStartDaemonAtLogin,4,4,fieldCol,fieldCol+2);
 
 // 	{
 // 		KFM *fKFM=new KFM();
@@ -357,7 +375,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fStartKPilotAtHotSync->adjustSize();
 	fStartKPilotAtHotSync->setChecked(
 		config->readNumEntry("StartKPilotAtHotSync", 0));
-	fStartKPilotAtHotSync->move(10, 200);
+	grid->addMultiCellWidget(fStartKPilotAtHotSync,5,5,fieldCol,fieldCol+2);
 
 	fDockDaemon = new QCheckBox(
 		i18n("Show Daemon in KPanel. "
@@ -365,7 +383,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 				this);
 	fDockDaemon->adjustSize();
 	fDockDaemon->setChecked(config->readNumEntry("DockDaemon", 0));
-	fDockDaemon->move(10, 220);
+	grid->addMultiCellWidget(fDockDaemon,6,6,fieldCol,fieldCol+2);
 
 	{
 // 		KWM* kwm = new KWM();
@@ -377,6 +395,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 // 		}
 	}
 
+	grid->activate();
 }
 
 KPilotOptionsGeneral::~KPilotOptionsGeneral()
@@ -403,8 +422,6 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 	config->writeEntry("StartKPilotAtHotSync", 
 		(int)fStartKPilotAtHotSync->isChecked());
 	config->writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
-
-	config->writeEntry("Configured",KPilotInstaller::ConfigurationVersion);
 
 	return 0;
 }
@@ -455,23 +472,91 @@ KPilotOptionsGeneral::slotSetupDaemon()
 //
 // The actual dialog that contains all the pages.
 
+/* static */ int KPilotOptions::fConfigVersion = 400 ;
+
+/* static */ bool KPilotOptions::isNewer(KConfig *c)
+{
+	int r=setupDialog::getConfigurationVersion(c);
+	return r<fConfigVersion;
+}
+
 KPilotOptions::KPilotOptions(QWidget* parent) :
 	setupDialog(parent,
-		"optionsDialog",
+		QString::null,
 		i18n("KPilot Options"),
-		TRUE) 				// modal dialog
+#ifdef USE_STANDALONE
+		FALSE		// quit() when closed
+#else
+		TRUE		// modal dialog
+#endif
+	)
 {
 	FUNCTIONSETUP;
+
+	setConfigurationVersion(fConfigVersion);
+
+
 	KConfig *config=KGlobal::config();
 
 	addPage(new KPilotOptionsGeneral(this,config));
 	addPage(new  KPilotOptionsAddress(this,config));
 	addPage(new KPilotOptionsPrivacy(this,config));
-	addPage(new setupInfoPage(this,
-		KPilotInstaller::version(0),
-		KPilotInstaller::authors()));
+	addPage(new setupInfoPage(this));
 	
 	setupDialog::setupWidget();
 }
 
+#ifdef USE_STANDALONE
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
 
+int main(int argc, char **argv)
+{
+	debug_level=1023;
+
+	KAboutData *a=new KAboutData("kpilot",
+		I18N_NOOP("KPilot"),
+		"4.0.0",
+		I18N_NOOP("Pilot Hot-sync software for KDE"),
+		KAboutData::License_GPL,
+		"Copyright (c) 1998-2000 Dan Pilone",
+		QString::null,
+		"http://www.slac.com/pilone/kpilot_home/",
+		"kpilot-list@slac.com");
+
+	a->addAuthor("Dan Pilone",
+		I18N_NOOP("Project Leader"),
+		"pilone@slac.com");
+	a->addAuthor("Adriaan de Groot",
+		I18N_NOOP("KDE1 Maintainer"),
+		"adridg@cs.kun.nl",
+		"http://www.cs.kun.nl/~adridg/kpilot/");
+	a->addCredit("Preston Brown",
+		I18N_NOOP("KOrganizer Support"),
+		"pbrown@kde.org");
+	a->addCredit("Andreas Silberstorff",
+		I18N_NOOP(".de localization"));
+	a->addCredit("Nicolas Pettiaux",
+		I18N_NOOP(".fr localization"));
+	a->addCredit("Chuck Robey",
+		I18N_NOOP("BSD porting"));
+	a->addCredit("Christopher Molnar",
+		I18N_NOOP("Moral and Mandrake Support"));
+	a->addCredit("Scott Presnell",
+		I18N_NOOP("Bug Fixes"));
+
+
+	KCmdLineArgs::init(argc,argv,a);
+	KApplication::addCmdLineOptions();
+
+	KApplication app;
+	QWidget *w=new KPilotOptions(0L);
+	w->show();
+	app.setMainWidget(w);
+
+	return app.exec();
+
+}
+#endif
+
+// $Log: $

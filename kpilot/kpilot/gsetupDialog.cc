@@ -1,51 +1,49 @@
 // gsetupDialog.cc
 //
-// Copyright (C) 2000 Adriaan de Groot
+// Copyright (C) 2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
 // COPYING.
 //
 // This is the version of gsetupDialog.cc for KDE 2 / KPilot 4.
-// We have tried to keep it source compatible with the KDE 1 / KPilot 3
-// version.
+//
+// You can compile this file with -DUSE_STANDALONE to produce
+// applications that do not depend on KPilotLink. The application
+// will then use the standard configuration file (i.e. appnamerc).
+//
+//
 
 static const char *id="$Id$";
 
 #include "options.h"
 
-#ifdef KDE2
 #include <stream.h>
 #include <qfileinf.h>
 #include <qlabel.h>
+#include <qpushbutton.h>
+#include <qvbox.h>
+#include <qmultilineedit.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kapp.h>
 #include <klocale.h>
 #include <kfiledialog.h>
+#include <kaboutdata.h>
+#include <kaboutapplication.h>
 
 #include "gsetupDialog.moc"
 #include "kpilotlink.h"
+ 
+// Handle code differences between the standalone and
+// the kpilot version of this file.
+//
+//
+#ifdef USE_STANDALONE
+#define CONFIG	KGlobal::config()
 #else
-#include <stream.h>
-// Note that we're using QFileDialog instead
-// of KFileDialog *only* because my own kdeui
-// library is broken.
-//
-//
-#include <qfiledialog.h>
-#include <qfileinf.h>
-#include <qtstream.h>
-#include <qdir.h>
-#include <qlabel.h>
- 
-#include <kconfig.h>
-#include <kmsgbox.h>
-#include <kiconloader.h>
-#include "gsetupDialog.moc"
-#include "kpilot.h"
+#define CONFIG	KPilotLink::getConfig()
 #endif
- 
 
 
 //---------------------------------------------------
@@ -56,11 +54,7 @@ static const char *id="$Id$";
 //
 //
 setupDialogPage::setupDialogPage(
-#ifdef KDE2
 	const QString &s,
-#else
-	const char *s,
-#endif
 	setupDialog *parent,
 	KConfig *c) :
 	QWidget(parent),
@@ -99,8 +93,8 @@ setupDialog::setupDialog(QWidget *parent,
 	bool modal) :
 	QTabDialog(parent,name,modal),
 	fGroupName(name),
-	pageCount(0),
-	quitOnClose(!modal)
+	quitOnClose(!modal),
+	fConfigVersion(0)
 {
 	FUNCTIONSETUP;
 
@@ -110,11 +104,8 @@ setupDialog::setupDialog(QWidget *parent,
 	}
 
 	setCancelButton();
-#ifdef KDE2
 	setCaption(caption.isNull() ? name : caption);
-#else
-	setCaption(caption!=0L ? caption : name);
-#endif
+
 	connect(this,SIGNAL(applyButtonPressed()),
                 this, SLOT(commitChanges()));
 	connect(this, SIGNAL(cancelButtonPressed()),
@@ -127,8 +118,13 @@ void setupDialog::commitChanges()
 	FUNCTIONSETUP;
 	QListIterator<setupDialogPage> i(pages);
 
-	KConfig *config=KGlobal::config();
+	KConfig *config=CONFIG;
 	config->setGroup(groupName());
+
+	if (fConfigVersion)
+	{
+		config->writeEntry("Configured",fConfigVersion);
+	}
 
 	for (i.toFirst(); i.current(); ++i)
 	{
@@ -157,7 +153,7 @@ void setupDialog::cancelChanges()
 	FUNCTIONSETUP;
 	QListIterator<setupDialogPage> i(pages);
 
-	KConfig *config=KPilotLink::getConfig();
+	KConfig *config=CONFIG;
 	config->setGroup(groupName());
 
 	for (i.toFirst(); i.current(); ++i)
@@ -167,7 +163,7 @@ void setupDialog::cancelChanges()
 		//
 		//
 		config->setGroup(groupName()); 
-		i.current()->commitChanges(config);
+		i.current()->cancelChanges(config);
 	}
 
 	setResult(0);
@@ -190,7 +186,7 @@ void setupDialog::setupWidget()
 
 
 
-	if (pages.count()==0 && debug_level)
+	if (pages.count()==0)
 	{
 		cerr << fname << ": setupDialog doesn't "
 			"have any pages." << endl;
@@ -228,11 +224,8 @@ int setupDialog::addPage(setupDialogPage *p)
 
 	if (p==0L) 
 	{
-		if (debug_level)
-		{
-			cerr << fname << ": NULL page passed to addPage"
-				<< endl;
-		}
+		cerr << fname << ": NULL page passed to addPage"
+			<< endl;
 		return -1;
 	}
 
@@ -247,11 +240,11 @@ int setupDialog::addPage(setupDialogPage *p)
 /* static */ int setupDialog::queryFile(
 	QWidget *parent,
 	const QString& filelabel,
-	const char *filename)
+	const QString &filename)
 {
 	FUNCTIONSETUP;
 
-	if (filename==0L) return 0;
+	if (filename.isNull()) return QueryNull;
 
 	if (debug_level & UI_TEDIOUS)
 	{
@@ -262,36 +255,19 @@ int setupDialog::addPage(setupDialogPage *p)
 	QFileInfo info(filename);
 	if (!info.exists())
 	{
-		if (debug_level)
-		{
-			cerr << fname << ": " << filelabel << ' ' 
-			<< filename << " doesn't exist." << endl;
-		}
-
-		// This is a complicated query, with
-		// several internationalisation bits.
-		//
-		//
-		QString msg=i18n("Cannot find the");
-		msg+=' ';
-		msg+=filelabel;
-		msg+=' ';
-		msg+='"';
-		msg+=filename;
-		msg+='"';
+		QString msg=filelabel.arg(filename);
 		msg+='\n';
 		msg+=i18n("Really use this file?");
 
-#ifdef KDE2
+		if (debug_level)
+		{
+			cerr << fname << ": " << msg << endl;
+		}
+
+
 		int rc=KMessageBox::questionYesNo(parent,
 			msg,
 			filelabel);
-#else
-		int rc=KMsgBox::yesNo(parent,
-			filelabel,msg,
-			KMsgBox::STOP);
-#endif
-
 		
 		if (debug_level)
 		{
@@ -303,7 +279,18 @@ int setupDialog::addPage(setupDialogPage *p)
 		return rc;
 	}
 
-	return 0;
+	return QueryFileExists;
+}
+
+/* static */ int setupDialog::getConfigurationVersion(KConfig *c,
+	const QString &g)
+{
+	int r;
+
+	if (c==0L) return 0;
+	c->setGroup(g);
+
+	return c->readNumEntry("Configured",0);
 }
 
 
@@ -311,63 +298,76 @@ int setupDialog::addPage(setupDialogPage *p)
 
 
 
-
-setupInfoPage::setupInfoPage(setupDialog *parent,
-#ifdef KDE2
-	const QString &title,
-	const QString &authors,
-	const QString &comment,
-#else
-	const char *title,
-	const char *authors,
-	const char *comment,
-#endif
-	const char *programpath) :
+setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 	setupDialogPage(i18n("About"),parent)
 {
 	FUNCTIONSETUP;
-	QLabel *ttllabel,*authlabel,*comlabel;
-	QLabel *infoPixmap;
-	KIconLoader l;
-	int left;
 
-	infoPixmap=new QLabel(this);
-#ifdef KDE2
-	infoPixmap->setPixmap(l.loadIcon("information.xpm",
+
+	QLabel *text;
+	KIconLoader *l=KGlobal::iconLoader();
+	QString s;
+
+	text=new QLabel(this);
+	text->setPixmap(l->loadIcon(KGlobal::instance()->instanceName(),
 		KIcon::Desktop));
-#else
-	infoPixmap->setPixmap(l.loadIcon("information.xpm"));
-#endif
-	infoPixmap->adjustSize();
-	infoPixmap->move(10,14);
-	left=RIGHT(infoPixmap);
+	text->adjustSize();
+	text->move(10,10);
 
-	ttllabel=new QLabel(title,this);
-	ttllabel->adjustSize();
-	ttllabel->move(left,14);
+	// Now we use a QVBox to arrange all the
+	// text on the page so that it doesn't interfere with the icon.
+	// We use the about data for this application to fill in
+	// the text.
+	//
+	QVBox *frame=new QVBox(this,0L,0,false);
+	frame->setSpacing(10);
+	frame->move(10+text->width()+10,10);
 
-	authlabel=new QLabel(authors,this);
-	authlabel->adjustSize();
-	authlabel->move(left,BELOW(ttllabel));
+	const KAboutData *p=KGlobal::instance()->aboutData();
 
-	if (comment)
+	text=new QLabel(frame);
+	s=p->programName();
+	s+=' ';
+	s+=p->version();
+	s+='\n';
+	s+=p->copyrightStatement();
+	text->setText(s);
+
+	text=new QLabel(frame);
+	s=p->shortDescription();
+	text->setText(s);
+
+	text=new QLabel(frame);
+	s=p->homepage();
+	s+='\n';
+	s+=i18n("Send bugs reports to ");
+	s+=p->bugAddress();
+	text->setText(s);
+
+	if (includeabout)
 	{
-		comlabel=new QLabel(comment,this);
-		comlabel->adjustSize();
-		comlabel->move(left,BELOW(authlabel));
-	}
-	else
-	{
-		comlabel=authlabel;
-	}
-
-
-	if (programpath)
-	{
-		QLabel *pathlabel=new QLabel(programpath,this);
-		pathlabel->adjustSize();
-		pathlabel->move(left,BELOW(authlabel));
+		QHBox *hb=new QHBox(frame);
+		QPushButton *but=new QPushButton(i18n("More About ..."),
+			hb);
+		connect(but, SIGNAL(clicked()),
+			this, SLOT(showAbout()));
+		but->adjustSize();
+		text=new QLabel(hb);
+		text->setText(" ");
+		text->adjustSize();
+		hb->setStretchFactor(text,100);
 	}
 
+	frame->adjustSize();
+}
+
+/* slot */ void setupInfoPage::showAbout()
+{
+	KAboutApplication *kap=new KAboutApplication(this);
+	kap->exec();
+	// Experience crashes when deleting kap
+	//
+	//
+	// delete kap;
 }
 

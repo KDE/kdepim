@@ -69,6 +69,11 @@ private:
 	QCheckBox* fOverwriteRemote;
 } ;
 
+/**
+* The address page is a strange beast -- it behaves
+* almost like an external conduit. It has its own
+* setup page *AND* its own group in the config file.
+*/
 class KPilotOptionsAddress : public setupDialogPage
 {
 	Q_OBJECT
@@ -108,6 +113,10 @@ class KPilotOptions : public setupDialog
 public:
 	KPilotOptions(QWidget* parent);
 
+	static bool isNewer(KConfig *);
+
+private:
+	static int fConfigVersion;
 };
 
 

@@ -15,6 +15,9 @@
 
 
 
+#ifndef __OPTIONS_H
+#include "options.h"
+#endif
 
 
 // Includes reduced to a minimum
@@ -23,7 +26,7 @@
 #include <qstring.h>
 #include <qtabdlg.h>
 #include <qlist.h>
-
+#include <kmessagebox.h>
 
 class setupDialog;
 class KConfig;
@@ -42,15 +45,10 @@ public:
 	* the configuration file is set by the dialog,
 	* and pages should not change it.
 	*/
-#if (QT_VERSION > 199)
 	setupDialogPage(const QString &tabname,
 		setupDialog *parent,
 		KConfig *c=0L);
-#else
-	setupDialogPage(const char *tabname,
-		setupDialog *parent,
-		KConfig *c=0L);
-#endif
+		
 
 	/**
 	* If the user clicks "OK" in a setup dialog,
@@ -63,6 +61,7 @@ public:
 	* not of the page.
 	*/
 	virtual int commitChanges(KConfig *);
+
 	/**
 	* If the user cancels a setup dialog, this
 	* function is called for all the pages. 
@@ -72,6 +71,9 @@ public:
 	*/
 	virtual int cancelChanges(KConfig *);
 
+	/**
+	* @return The tab name given to the constructor
+	*/
 	const QString &tabName() { return fTabName; } ;
 
 protected:
@@ -93,30 +95,37 @@ private:
 
 
 /** 
-* All KPilot setup dialogs should have an info page;
-* this class provides a consistent look for them.
-* Give the constructor a title for the info --
-* usually programe name+version, a list of authors,
-* and perhaps a comment.
+* All KPilot setup dialogs should have an info page
+* unless they are in an application that has an
+* "about" menu item somewhere.
+*
+* This class provides a consistent look for them.
+* The KDE2 version takes al its information from the
+* about data provided to KInstance.
 */
 class setupInfoPage : public setupDialogPage
 {
 	Q_OBJECT
 
 public:
-#if (QT_VERSION > 199)
-	setupInfoPage(setupDialog *parent,
-		const QString &title,
-		const QString &authors,
-		const QString &comment=QString(),
-		const char *progname=0L);
-#else
-	setupInfoPage(setupDialog *parent,
-		const char *title,
-		const char *authors,
-		const char *comment=0L,
-		const char *progname=0L);
-#endif
+	/**
+	* Since the about page is too small to include the licence
+	* and the complete list of authors and contributors, we
+	* put a button on the page that pops up the about box.
+	* This is of course only useful (or desireable even) if
+	* there is no "standard" way to get the about box.
+	*
+	* With the guideline above (info page unless about menu)
+	* you will almost never use includeabout=false.
+	*/
+	setupInfoPage(setupDialog *parent,bool includeabout=true);
+
+protected slots:
+	/**
+	* Displays the KAboutApplication box when the user clicks
+	* on the about button.
+	*/
+	void showAbout();
 } ;
 
 
@@ -126,7 +135,7 @@ class setupDialog : public QTabDialog
 
 public:
 	/**
-	* make a setup dialog for interacting with
+	* Make a setup dialog for interacting with
 	* the user. Note that subclasses still
 	* need to call setupDialog::setupWidget
 	* to get all the right behavior.
@@ -138,17 +147,10 @@ public:
 	* @see setupWidget
 	* @see quitOnClose
 	*/
-#if (QT_VERSION > 199)
 	setupDialog(QWidget *parent,
 		const QString &name,
 		const QString &caption=QString::null,
 		bool modal=false);
-#else
-	setupDialog(QWidget *parent,
-		const char *name,
-		const char *caption=0L,
-		bool modal=false);
-#endif
 
 	/**
 	* Assuming each setup dialog only
@@ -159,6 +161,21 @@ public:
 	* the group to use in the config file.
 	*/
 	const QString &groupName() { return fGroupName; } ;
+
+	/**
+	* For a particular dialog, return the configuration
+	* version -- a number that indicates what revision of
+	* the settings are to be written. The number should be
+	* incremented when considerable changes occur to the setup.
+	*/
+	int getConfigurationVersion() const { return fConfigVersion; } ;
+	
+	/**
+	* A convenience function; returns the stored configuration
+	* number from a config file.
+	*/
+	static int getConfigurationVersion(KConfig *c,
+		const QString &group=QString::null);
 
 public slots:
 	/**
@@ -184,35 +201,42 @@ public slots:
 
 public:
 	typedef enum { 
-		QueryFileYes=1, 
-		QueryFileNo=2, 
-		QueryFileExists=0 } QueryFileResult;
+		QueryFileYes=KMessageBox::Yes, 
+		QueryFileNo=KMessageBox::No, 
+		QueryFileExists=0,
+		QueryNull=3 } QueryFileResult;
 
 	/**
 	* queryFile is used in sanity checking, mostly.
 	* It checks that the given filename, described as
 	* filelabel, actually exists. If not, the user
 	* is asked whether he or she actually wants to
-	* use this nonexistent file. (The filename itself
-	* is obviously not a unicode string, so this has
-	* been changed back to a const char *)
+	* use this nonexistent file. 
 	*
-	* This function should probably be static and
-	* take an additional QWidget parameter for the 
-	* parent of the question box.
+	* KDE2: The filelabel passed to queryFile should be
+	* already translated and may contain %1 as a
+	* marker where the filename should be inserted.
+	* queryFile appends "Really use this file?" to
+	* the label to form a question.
 	*
+	* KDE1: The filelabel should be translated already.
+	* The filename is appended to it along with "Really
+	* use this file?".
+	*
+	* 
 	* @return	0 for file exists, otherwise the return of
 	*		KMsgBox / KMessageBox yes-no queries.
+	*		Return value QueryNull (=3) for null strings.
 	* @see commitChanges
 	*/
         int queryFile(
 		const QString& filelabel,
-		const char *filename) 
+		const QString &filename) 
 		{ return queryFile(this,filelabel,filename); };
 
 	static int queryFile(QWidget *parent,
 		const QString& filelabel,
-		const char *filename);
+		const QString &filename);
 
 
 protected:
@@ -233,6 +257,9 @@ protected:
 	*/
 	int addPage(setupDialogPage *);
 
+
+	void setConfigurationVersion(int r) { fConfigVersion=r; } ;
+
 private:
 	/**
 	* This is the actual name of the group the 
@@ -242,15 +269,6 @@ private:
 	* changing locales.
 	*/
 	QString fGroupName;
-
-	/**
-	* pageCount keeps track of how many pages
-	* have been added to the dialog thus far.
-	*
-	* @see addPage
-	* @see pages
-	*/
-	int pageCount;
 
 	/**
 	* This keeps pointers to all the pages
@@ -269,10 +287,14 @@ private:
 	* Remember the modal setting from the constructor.
 	*/
 	bool quitOnClose;
+
+	int fConfigVersion;
 } ;
 
-
 // $Log$
+// Revision 1.2  2000/07/24 04:10:00  pilone
+// 	First round of KDE 2.0 changes...almost there..
+//
 // Revision 1.4  2000/07/16 12:17:16  adridg
 // Moved partway to KDE2
 //
