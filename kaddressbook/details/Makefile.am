@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libdetails.la
 
-INCLUDES = -I$(top_srcdir)/kaddressbook $(all_includes) 
+INCLUDES = -I$(top_srcdir)/kaddressbook -I$(top_srcdir) $(all_includes) 
 
 libdetails_la_METASOURCES = AUTO
 
