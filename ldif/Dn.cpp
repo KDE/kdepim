@@ -79,10 +79,24 @@ Dn::~Dn()
 	void
 Dn::_parse()
 {
+	if (strRep_.isEmpty())
+		return; // Invalid.
+	
+	QCString encoded(strRep_);
+	
+	if (strRep_[0] == ':') {
+	
+		// We are base64 encoded.
+		encoded.remove(0, 1);
+		
+		while (encoded[0] == ' ')
+			encoded.remove(0, 1);
+		
+		decodeBase64(encoded);
+	}
+	
 	QStrList l;
-	
-	RTokenise(strRep_, "+", l);
-	
+	RTokenise(encoded, "+", l);
 	QStrListIterator it(l);
 	
 	for (; it.current(); ++it) {

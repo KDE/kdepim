@@ -115,6 +115,7 @@ ValueSpec::_assemble()
 		case Plain:		default:	strRep_ += " ";		break;
 	}
 	
-	strRep_ += value_;
+	QCString s(value_);
+	strRep_ += s;
 }
 

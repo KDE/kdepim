@@ -37,8 +37,13 @@
 #	define lDebug(a)
 #endif
 
-
 namespace LDIF {
+
+	bool
+decodeBase64(QCString &);
+
+	bool
+encodeBase64(QCString &);
 
 class Entity
 {
@@ -359,6 +364,11 @@ class LdifContent : public Entity
 		VersionSpec versionSpec_;
 		LdifAttrValRecList attrValRecList_;
 };
+
+const char * B64 =
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+QCString	encodeBase64	(const char *, unsigned long, unsigned long &);
+char *		decodeBase64	(const QCString &, unsigned long &);
 
 }
 

@@ -106,6 +106,12 @@ ParamType EntityTypeToParamType(EntityType);
 ValueType EntityTypeToValueType(EntityType);
 EntityType ParamNameToEntityType(const QCString &);
 
+const char * B64 =
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+QCString encodeBase64(const char *, unsigned long, unsigned long &);
+char * decodeBase64(const QCString &, unsigned long &);
+
 }
 
 #endif
