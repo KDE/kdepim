@@ -121,6 +121,17 @@ void Pab::addEmail( QString addr )
   return;
 }
 
+
+void Pab::showEntry( QString lastname, QString firstname )
+{
+  view->showEntry( lastname, firstname );
+}
+
+void Pab::showEntryForEmailAddr( QString email )
+{
+  view->showEntry( email );
+}
+
 void Pab::save()
 {
   document->commit();

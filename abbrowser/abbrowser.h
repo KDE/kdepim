@@ -44,6 +44,8 @@ public slots:
 	 */
         void newContact();
         void addEmail( QString addr );
+        void showEntry( QString lastname, QString firstname );
+        void showEntryForEmailAddr( QString email );
 	void saveCe();
 	void save();
 	void readConfig();

@@ -64,6 +64,8 @@ public:
   void replace( const QString &key, ContactEntry *item );
   QStringList keys();
 
+  const QDict<ContactEntry>& entryList() const { return ceDict; }
+
  protected:
   ContactEntry *KabEntryToContactEntry( AddressBook::Entry entry );
   AddressBook::Entry ContactEntryToKabEntry( ContactEntry *entry, AddressBook::Entry );
@@ -163,6 +165,8 @@ public:
  * Remove all key/value pairs stored.
  */
   void clear();
+
+  const QDict<QString>& fieldList() const { return dict; }
 
 signals:
 /**
