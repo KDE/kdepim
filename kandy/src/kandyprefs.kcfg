@@ -4,22 +4,22 @@
   <kcfgfile name="kandyrc"/>
 
   <group name="Serial Port">
-    <entry type="QString" key="Serial Device">
+    <entry type="String" key="Serial Device">
       <label>Serial device</label>
       <default>/dev/ttyS1</default>
     </entry>
-    <entry type="bool" name="StartupModem">
+    <entry type="Bool" name="StartupModem">
       <label>Open modem on startup</label>
       <default>false</default>
     </entry>
   </group>
 
   <group name="Windows">
-    <entry type="bool" name="StartupTerminalWin">
+    <entry type="Bool" name="StartupTerminalWin">
       <label>Open terminal window on startup</label>
       <default>false</default>
     </entry>
-    <entry type="bool" name="StartupMobileWin">
+    <entry type="Bool" name="StartupMobileWin">
       <label>Open mobile window on startup</label>
       <default>true</default>
     </entry>
