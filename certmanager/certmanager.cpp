@@ -62,6 +62,7 @@
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
 #include <ui/keyselectiondialog.h>
+#include <ui/cryptoconfigdialog.h>
 
 // GPGME++
 #include <gpgmepp/importresult.h>
@@ -348,6 +349,9 @@ void CertManager::createActions() {
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
   KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
 
+  new KAction( i18n( "Configure &GpgME Backend" ), 0, 0, this, SLOT(slotConfigureGpgME()),
+               actionCollection(), "configure_gpgme" );
+
   createStandardStatusBarAction();
   updateImportActions( true );
 }
@@ -365,6 +369,14 @@ void CertManager::slotShowConfigurationDialog() {
   ConfigureDialog dlg( this );
   connect( &dlg, SIGNAL( configCommitted() ), SLOT( slotRepaint() ) );
   dlg.exec();
+}
+
+void CertManager::slotConfigureGpgME() {
+  Kleo::CryptoConfig* config = Kleo::CryptoBackendFactory::instance()->config();
+  if ( config ) {
+    Kleo::CryptoConfigDialog dlg( config );
+    dlg.exec();
+  }
 }
 
 void CertManager::slotRepaint()

@@ -1,4 +1,4 @@
-<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="16" >
+<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="17" >
 <MenuBar>
 	<Menu name="file">
 		<text>File</text>
@@ -37,6 +37,9 @@
 	<Menu name="tools">
 		<text>&amp;Tools</text>
 		<Action name="tools_start_kwatchgnupg"/>
+	</Menu>
+	<Menu name="settings">
+		<Action name="configure_gpgme"/>
 	</Menu>
 </MenuBar>
 

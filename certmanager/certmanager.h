@@ -130,6 +130,7 @@ private slots:
 
     void slotEditKeybindings();
     void slotShowConfigurationDialog();
+    void slotConfigureGpgME();
     void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
     void slotDropped(const KURL::List&);
     /** Schedule a repaint for the listview items. E.g. when the
