@@ -18,7 +18,8 @@
 // make up a binary distribution.
 //
 //
-static char *id="$Id$";
+static const char *id=
+	"$Id$";
 
 
 #include <sys/types.h>
@@ -215,7 +216,7 @@ static void disconnectPOP(KSocket *s)
 	// *anyway*...
 	//
 	char buffer[12];
-	char *quitmsg="QUIT\r\n";
+	const char *quitmsg="QUIT\r\n";
 	write(s->socket(),quitmsg,strlen(quitmsg));
 	getPOPResponse(s,"QUIT command to POP server failed",buffer,12);
 }
@@ -1522,14 +1523,25 @@ int PopMailConduit::doUnixStyle()
 	return p;
 }
 
+#include <kaboutdata.h>
 
 int main(int argc, char* argv[])
 {
-  ConduitApp a(argc, argv, "popmail-conduit",
-  	"\t\tPopmail-Conduit -- A conduit for KPilot\n"
-	"Copyright (C) 1998,1999 Dan Pilone, Michael Kropfberger\n"
-	"Copyright (C) 2000 Adriaan de Groot");
-  PopMailConduit conduit(a.getMode());
-  a.setConduit(&conduit);
-  return a.exec();
+#ifdef KDE2
+	ConduitApp a(argc,argv,"popmail-conduit",
+		I18N_NOOP("POP Mail Conduit"),
+		"4.0b");
+#else
+	ConduitApp a(argc, argv, "popmail-conduit",
+		"\t\tPopmail-Conduit -- A conduit for KPilot\n"
+		"Copyright (C) 1998,1999 Dan Pilone, Michael Kropfberger\n"
+		"Copyright (C) 2000 Adriaan de Groot");
+
+#endif
+	a.addAuthor("Michael Kropfberger","POP3 code");
+
+	PopMailConduit conduit(a.getMode());
+	a.setConduit(&conduit);
+
+	return a.exec();
 }

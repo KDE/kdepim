@@ -98,13 +98,24 @@ setupDialog::setupDialog(QWidget *parent,
 {
 	FUNCTIONSETUP;
 
+	const KAboutData *p=KGlobal::instance()->aboutData();
 	if (modal && debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": This is a modal dialog." << endl;
 	}
 
 	setCancelButton();
+#ifdef KDE2
+	setCaption(p->programName() + QString(" ") +
+		p->version());
+	// Avoid some unused parameter warnings.
+	//
+	//
+	name.length();
+	caption.length();
+#else
 	setCaption(caption.isNull() ? name : caption);
+#endif
 
 	connect(this,SIGNAL(applyButtonPressed()),
                 this, SLOT(commitChanges()));
