@@ -1,10 +1,10 @@
-<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY knode "<application>KNode</application>">
   <!ENTITY kappname "&knode;">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % German "INCLUDE">
-  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
-  %ents;
+  
+  
 ]>
 
 <book lang="&language;">
@@ -72,7 +72,7 @@
 
 <chapter id="introduction">
 <title>Einführung</title>
-<anchor id="anc-introduction">
+<anchor id="anc-introduction"/>
 <para>
 &knode; ist ein einfach zu bedienender, komfortabler Newsreader. Er
 wurde mit dem Ziel entwickelt, auch dem unerfahrenen Anwender den
@@ -143,21 +143,21 @@ Autor bzw. den für Ihre Sprache zuständigen Übersetzer.
 
 <sect1 id="knode-revhistory">
 <title>Versionsgeschichte</title>
-<anchor id="anc-knode-revhistory">
+<anchor id="anc-knode-revhistory"/>
 <para>Dies ist die erste Version der &knode; Dokumentation.</para>
 </sect1>
 </chapter>
 
 <chapter id="update-installation">
 <title>Hinweise zum Aktualisieren einer älteren Version von &knode;</title>
-<anchor id="anc-update-installation">
+<anchor id="anc-update-installation"/>
 <para>Dieser Abschnitt enthält Hinweise, die beim Installieren einer
 neueren Version von &knode; bei Vorhandensein einer älteren zu beachten sind.
 </para>
 
 <sect1 id="update-from-0.1.x">
 <title>Update von Version 0.1.x</title>
-<anchor id="anc-update-from-0.1.x">
+<anchor id="anc-update-from-0.1.x"/>
 <para>
 Ab Version 0.2 wurde das Format der Konfigurationsdateien sowie
 das Dateiformat zum Speichern der Artikel geändert. Ein Update ist
@@ -169,11 +169,11 @@ nicht übernommen werden.
 
 <chapter id="installation">
 <title>Installation</title>
-<anchor id="anc-installation">
+<anchor id="anc-installation"/>
 
 <sect1 id="getting-knode">
 <title>Woher bekomme ich &knode;?</title>
-<anchor id="anc-getting-knode">
+<anchor id="anc-getting-knode"/>
 <para>
 &knode; ist Teil des <ulink url="http://www.kde.org">KDE-Projektes</ulink>.
 Sie finden die aktuellste Version von &knode; im
@@ -187,7 +187,7 @@ url="http://knode.sourceforge.net">Homepage von &knode;
 
 <sect1 id="requirements">
 <title>Voraussetzungen</title>
-<anchor id="anc-requirements">
+<anchor id="anc-requirements"/>
 <para>
 Wenn Sie &knode; erfolgreich einsetzen wollen, benötigen Sie KDE
 2.x. Wollen Sie &knode; als Offline-Newsreader betreiben, benötigen
@@ -218,7 +218,7 @@ Sie zunächst sicherstellen, dass folgende Programme vorhanden sind:
 
 <sect1 id="compilation">
 <title>Kompilieren und Installieren</title>
-<anchor id="anc-compilation">
+<anchor id="anc-compilation"/>
 <para>
 &knode; ist Bestandteil des Paketes kdenetwork von KDE 2.x und wird
 mit diesem installiert. Im Allgemeinen besteht also für Sie als
@@ -247,7 +247,7 @@ bereits erwähnte Mailingliste bzw. die KDE-Newsgruppen.
 
 <sect1 id="configuration">
 <title>Konfiguration</title>
-<anchor id="anc-configuration">
+<anchor id="anc-configuration"/>
 <para>Verwenden Sie &knode; zusammen mit einem lokalen News-Server,
 müssen Sie sicherstellen, dass dieser korrekt eingerichtet und
 gestartet ist. Nähere Hinweise dazu entnehmen Sie bitte der
@@ -320,10 +320,10 @@ im Kapitel <link linkend="anc-using-knode">Arbeiten mit
 
 <chapter id="using-knode">
 <title>Arbeiten mit &knode;</title>
-<anchor id="anc-using-knode">
+<anchor id="anc-using-knode"/>
 <sect1 id="first-start">
 <title>Der erste Start</title>
-<anchor id="anc-first-start">
+<anchor id="anc-first-start"/>
 <para>Sie finden &knode; im K-Menü unter dem Eintrag
 <guisubmenu>Internet</guisubmenu>. Der Menüeintrag
 <guimenuitem>KNode</guimenuitem> startet das Programm.
@@ -346,7 +346,7 @@ Dialog für die Einstellungen aufgerufen.
 <screeninfo>Die Einrichtung von &knode;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-start.png" format="PNG">
+	    <imagedata fileref="knode-start.png" format="PNG"/>
 	  </imageobject>
           <textobject>
           <phrase>&knode; nach dem ersten Start</phrase>
@@ -404,7 +404,7 @@ Dinge vielleicht erst später klar werden.
 
 <sect2 id="setting-your-identity">
 <title>Persönliche Einstellungen</title>
-<anchor id="anc-setting-your-identity">
+<anchor id="anc-setting-your-identity"/>
 <para>Über <menuchoice> <guimenu>Einstellungen</guimenu>
 <guimenuitem>Einstellungen</guimenuitem></menuchoice> gelangen Sie in
 den Einstellungsdialog von &knode;. Die Abbildung zeigt den
@@ -414,7 +414,7 @@ Dialog.</para>
 <screeninfo>Dialog für das Eintrage der Benutzerdaten</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-identity.png" format="PNG">
+	    <imagedata fileref="knode-identity.png" format="PNG"/>
 	  </imageobject>
           <textobject>
 	  <phrase>Die Eingabe der persönlichen Daten</phrase>
@@ -624,7 +624,7 @@ News-Zugang.
 
 <sect2 id="setting-the-news-account">
 <title>Das Einrichten des News-Zugangs</title>
-<anchor id="anc-setting-the-news-account">
+<anchor id="anc-setting-the-news-account"/>
 <para>Nun müssen wir &knode; mitteilen,woher wir unsere News
 beziehen bzw. wohin &knode; Ihre <glossterm>Artikel</glossterm>
 später versenden soll. Rechts in der Baumansicht des Dialoges
@@ -643,7 +643,7 @@ neuen Zugang an. Es erscheint folgender Dialog:
 <screeninfo>Der Dialog <guilabel>Neuer Zugang</guilabel></screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-news-account.png" format="PNG">
+	    <imagedata fileref="knode-news-account.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	    <phrase>Der Dialog <guilabel>Neuer Zugang</guilabel></phrase>
@@ -825,7 +825,7 @@ Eintrag <guilabel>E-Mail</guilabel>.
 
 <sect2 id="setting-the-mail-account">
 <title>Das Einrichten des Mail-Zugangs</title>
-<anchor id="anc-setting-the-mail-account">
+<anchor id="anc-setting-the-mail-account"/>
 <para>Nachdem Sie den Eintrag <guilabel>Mail</guilabel> in der Baumansicht angeklickt
 haben, erscheint rechts folgender Dialog.</para>
 
@@ -833,7 +833,7 @@ haben, erscheint rechts folgender Dialog.</para>
 <screeninfo>Dialog für das Einrichten des E-Mail-Zugangs</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-mail-account.png" format="PNG">
+	    <imagedata fileref="knode-mail-account.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	<phrase>Das Einrichten des Mail-Zugangs</phrase>
@@ -941,7 +941,7 @@ Einstellungen für das Lesen von News.
 
 <sect2 id="setting-news-general">
 <title>Allgemeine News-Einstellungen</title>
-<anchor id="anc-setting-news-general">
+<anchor id="anc-setting-news-general"/>
 <para>Klicken Sie nun auf <guibutton>News lesen</guibutton> und dort
 auf den Untereintrag <guibutton>Allgemein</guibutton>. Die Abbildung
 zeigt den Dialog und die Einstellungen, die Sie dort vornehmen
@@ -951,7 +951,7 @@ können.</para>
 <screeninfo>Dialog Allgemeine Einstellungen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-read-news-settings.png" format="PNG">
+	    <imagedata fileref="knode-read-news-settings.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Allgemeine Einstellungen</phrase>
@@ -1149,7 +1149,7 @@ muß dann im Eingabefeld darunter eingetragen werden.
 
 <sect2 id="knode-headers">
 <title><guilabel>Einstellung der Vorspannanzeige</guilabel></title>
-<anchor id="anc-knode-headers">
+<anchor id="anc-knode-headers"/>
 <para>In diesem Dialog können Sie festlegen, wie die einzelnen
 Vorspann-Zeilen im Betrachter angezeigt werden.</para>
 
@@ -1157,7 +1157,7 @@ Vorspann-Zeilen im Betrachter angezeigt werden.</para>
 <screeninfo>Der Dialog Anzeigekonfiguration Vorspannzeilen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-header-settings.png" format="PNG">
+	    <imagedata fileref="knode-header-settings.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Anzeigekonfiguration Vorspannzeilen</phrase>
@@ -1186,7 +1186,7 @@ Bearbeiten der Vorspannanzeige auf.
 <screeninfo>Der Dialog Vorspannanzeige</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-header1.png" format="PNG">
+	    <imagedata fileref="knode-edit-header1.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Vorspannanzeige</phrase>
@@ -1274,7 +1274,7 @@ Vorspannzeile für die Anzeige hinzufügen.
 <screeninfo>Der Dialog Vorspannanzeige</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-header2.png" format="PNG">
+	    <imagedata fileref="knode-edit-header2.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Vorspannanzeige</phrase>
@@ -1329,7 +1329,7 @@ url="http://www.kirchwitz.de/~amk/dni/headerzeilen">Vorspann-Zeilen
 
 <sect2 id="knode-appearance">
 <title>Das Festlegen des Erscheinungsbildes</title>
-<anchor id="anc-knode-appearance">
+<anchor id="anc-knode-appearance"/>
 <para> Mit dem Dialog Erscheinungsbild erhalten Sie die Möglichkeit,
 die Farben, den Zeichensatz und die Schriftgröße der Texte im
 Betrachter festzulegen. Die Abbildung zeigt den Dialog.
@@ -1339,7 +1339,7 @@ Betrachter festzulegen. Die Abbildung zeigt den Dialog.
 <screeninfo>Der Dialog Erscheinungsbild einstellen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-colors-fonts.png" format="PNG">
+	    <imagedata fileref="knode-colors-fonts.png" format="PNG"/>
 	  </imageobject>
 	 <textobject>
 	<phrase>Der Dialog Erscheinungsbild einstellen</phrase>
@@ -1433,7 +1433,7 @@ immer den eingestellten Font. #ASK DEVELOPER#
 
 <sect2 id="knode-filter-settings">
 <title>Filter-Einstellungen</title>
-<anchor id="anc-knode-filter-settings">
+<anchor id="anc-knode-filter-settings"/>
 <para>Den Dialog für die Einstellung der Filter zeigt die nachfolgende Abbildung.
 </para>
 
@@ -1441,7 +1441,7 @@ immer den eingestellten Font. #ASK DEVELOPER#
 <screeninfo>Dialog Artikelfilter</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-filters.png" format="PNG">
+	    <imagedata fileref="knode-filters.png" format="PNG"/>
 	  </imageobject>
 	  <textobject><phrase>Der Dialog Artikelfilter</phrase></textobject>
 	  <caption><para>Der Dialog Artikelfilter</para></caption>
@@ -1504,7 +1504,7 @@ Schließen des Dialoges im Menü unter <menuchoice><guimenu>Ansicht</guimenu>
 
 <sect2 id="knode-post-news-settings">
 <title>Einstellungen für das Veröffentlichen von News</title>
-<anchor id="anc-knode-post-news-settings">
+<anchor id="anc-knode-post-news-settings"/>
 <para>Wenn Sie mit &knode; News veröffentlichen, werden die
 Einstellungen im folgenden Dialog verwendet.
 </para>
@@ -1513,7 +1513,7 @@ Einstellungen im folgenden Dialog verwendet.
 <screeninfo>Der Dialog Technische Einstellungen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-post-settings.png" format="PNG">
+	    <imagedata fileref="knode-post-settings.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	 <phrase>Der Dialog Technische Einstellungen</phrase>
@@ -1707,12 +1707,12 @@ Option nicht markieren. &knode; muss sich nicht verstecken.
 
 <sect2 id="knode-composer-settings">
 <title>Die Einrichtung des Artikel-Editors</title>
-<anchor id="anc-knode-composer-settings">
+<anchor id="anc-knode-composer-settings"/>
 <screenshot>
 <screeninfo>Der Dialog Einstellungen für den Editor</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-composer-settings.png" format="PNG">
+	    <imagedata fileref="knode-composer-settings.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Einstellungen für den Editor</phrase>
@@ -1923,7 +1923,7 @@ zum Entschlüsseln ein.
 
 <sect2 id="knode-article-cleanup">
 <title>Die Einstellungen zur Artikelverwaltung</title>
-<anchor id="anc-knode-article-cleanup">
+<anchor id="anc-knode-article-cleanup"/>
 <para>Der unten abgebildete Dialog enthält die Einstellungen,
 nach denen &knode; die Verwaltung der <glossterm>Artikel</glossterm>
 vornimmt. Diese Einstellungen dienen hauptsächlich dazu, die
@@ -1944,7 +1944,7 @@ Altavista machen ein Archivieren eigentlich unnötig.
 <screeninfo>Der Dialog Verwaltung des Speicherplatzes</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-cleanup.png" format="PNG">
+	    <imagedata fileref="knode-cleanup.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Verwaltung des Speicherplatzes</phrase>
@@ -2032,7 +2032,7 @@ Ordnern entfernt.
 
 <sect1 id="subscribing">
 <title>Arbeiten mit Newsgruppen</title>
-<anchor id="anc-subscribing">
+<anchor id="anc-subscribing"/>
 <para>Nachdem wir nun die Einrichtung von &knode; abgeschlossen
 haben, wollen wir uns daran wagen, die ersten News zu lesen. Dazu sind
 einige Schritte notwendig, die im Grunde noch zur Einrichtung von
@@ -2041,7 +2041,7 @@ einige Schritte notwendig, die im Grunde noch zur Einrichtung von
 
 <sect2 id="fetch-group-list">
 <title>Das Abholen der Newsgruppen-Liste vom Server</title>
-<anchor id="anc-fetch-group-list">
+<anchor id="anc-fetch-group-list"/>
 <para>Wenn Sie eine <glossterm>Newsgruppe</glossterm> lesen wollen, müssen Sie diese zunächst
 beim News-Server abonnieren. Klicken Sie mit der Maus in der
 Ordneransicht auf den Eintrag des Zugangs. Die rechte Maustaste bringt
@@ -2057,7 +2057,7 @@ folgende Dialog.</para>
 <screeninfo>Der Dialog Newsgruppen abonnieren</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-subscribe.png" format="PNG">
+	    <imagedata fileref="knode-subscribe.png" format="PNG"/>
 	  </imageobject>
 	 <textobject>
 	<phrase>Der Dialog Newsgruppen abonnieren</phrase>
@@ -2321,7 +2321,7 @@ Artikelansicht.
 
 <sect2 id="fetch-and-read-news">
 <title>Das Abholen und Lesen der Artikel</title>
-<anchor id="anc-fetch-and-read-news">
+<anchor id="anc-fetch-and-read-news"/>
 <para>&knode; zeigt immer drei Ansichten (Ordneransicht,
 Artikelansicht und Betrachter) an, deren Höhe und Breite Sie
 wie bei einem normalen Fenster mit der Maus verändern
@@ -2343,7 +2343,7 @@ Spaltenüberschriften.
 <screeninfo>Die drei Ansichten von &knode;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-views.png" format="PNG">
+	    <imagedata fileref="knode-views.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Die drei Ansichten von &knode;</phrase>
@@ -2634,14 +2634,14 @@ denen die einzelnen <glossterm>Artikel</glossterm> markiert sind.</para>
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="greyball.png" format="PNG"> </imageobject></inlinemediaobject>
+<imagedata fileref="greyball.png" format="PNG"/> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> wurden bereits gelesen.
 </para>
 </listitem>
 
 <listitem>
 <para>
-<inlinemediaobject><imageobject><imagedata fileref="greyballchk.png" format="PNG">
+<inlinemediaobject><imageobject><imagedata fileref="greyballchk.png" format="PNG"/>
 </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> wurden
 bereits gelesen und der Inhalt des
@@ -2652,7 +2652,7 @@ Artikels wurde vom Server abgeholt.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="redball.png" format="PNG"> </imageobject></inlinemediaobject>
+<imagedata fileref="redball.png" format="PNG"/> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> sind noch ungelesen,
 der Inhalt des Artikels wurde noch nicht vom Server abgeholt.
 </para>
@@ -2661,7 +2661,7 @@ der Inhalt des Artikels wurde noch nicht vom Server abgeholt.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="redballchk.png" format="PNG"> </imageobject></inlinemediaobject>
+<imagedata fileref="redballchk.png" format="PNG"/> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> wurden noch nicht gelesen,
 der Inhalt wurde aber bereits vom Server abgeholt.
 </para>
@@ -2670,7 +2670,7 @@ der Inhalt wurde aber bereits vom Server abgeholt.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="newsubs.png" format="PNG"></imageobject></inlinemediaobject>
+<imagedata fileref="newsubs.png" format="PNG"/></imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> gehören zu einer
 Diskussion, die neue und noch ungelesene Folgeartikel aufweist.
 </para>
@@ -2679,7 +2679,7 @@ Diskussion, die neue und noch ungelesene Folgeartikel aufweist.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="eyes.png" format="PNG"> </imageobject></inlinemediaobject>
+<imagedata fileref="eyes.png" format="PNG"/> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> gehören zu einer
 Diskussion, die als "überwacht" gekennzeichnet wurde. Dieser Status entspricht einer
 Bewertung von 100.
@@ -3280,7 +3280,7 @@ am besten darstellen kann.
 
 <sect2 id="post-and-mail-news">
 <title>Das Schreiben und Beantworten von Artikeln</title>
-<anchor id="anc-post-and-mail-news">
+<anchor id="anc-post-and-mail-news"/>
 <para>Bevor Sie tatsächlich darangehen, selbst
 <glossterm>Artikel</glossterm> zu verfassen oder anderen
 Usenetteilnehmern zu antworten, sollten Sie sich mit den
@@ -3453,7 +3453,7 @@ zeigt.</para>
 <screeninfo>Der erste eigene Artikel</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-new-article.png" format="PNG">
+	    <imagedata fileref="knode-new-article.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der erste eigene Artikel</phrase>
@@ -3672,7 +3672,7 @@ Gruß.
 <screeninfo>Die Antwort auf den eigenen Artikel</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-followup.png" format="PNG">
+	    <imagedata fileref="knode-followup.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Die Antwort auf den eigenen Artikel</phrase>
@@ -3761,7 +3761,7 @@ Später versenden</guimenuitem></menuchoice>.
 <screeninfo>Eine Antwort per E-Mail</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-reply.png" format="PNG">
+	    <imagedata fileref="knode-reply.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Eine Antwort per E-Mail</phrase>
@@ -3793,10 +3793,10 @@ Mail-Postfach abfragen.
 
 <sect1 id="more-knode-features">
 <title>Weiterführende Funktionen von &knode;</title>
-<anchor id="anc-more-knode-features">
+<anchor id="anc-more-knode-features"/>
 <sect2 id="using-filters">
 <title>Definieren und Anwenden von Filtern</title>
-<anchor id="anc-using-filters">
+<anchor id="anc-using-filters"/>
 <para>Im Kapitel über die Einrichtung von &knode; haben wir
 bereits die Anwendung von Filtern anhand der vordefinierten Filter
 betrachtet, die &knode; zur Verfügung stellt. Auch diese
@@ -3809,7 +3809,7 @@ zeigt den Dialog zum Bearbeiten der Filter.
 <screeninfo>Der Dialog Neuer Filter</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-filter.png" format="PNG">
+	    <imagedata fileref="knode-edit-filter.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Neuer Filter</phrase>
@@ -4040,7 +4040,7 @@ Tage sind, und in denen im Betreff der Begriff
 
 <sect2 id="knode-editor-advanced">
 <title>Der Editor</title>
-<anchor id="anc-knode-editor-advanced">
+<anchor id="anc-knode-editor-advanced"/>
 <para>Der Editor von &knode; bietet neben
 den bereits vorgestellten Funktionen weitere Eigenschaften, die das
 Verfassen und Beantworten von Artikeln und E-Mails erleichtern.
@@ -4167,7 +4167,7 @@ und einer Textdatei, die als Anhang versendet werden sollen.
 <screeninfo>Anhänge versenden</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-composer-attachments.png" format="PNG">
+	    <imagedata fileref="knode-composer-attachments.png" format="PNG"/>
 	  </imageobject>
 	<textobject>
 	<phrase>Anhänge versenden</phrase>
@@ -4228,7 +4228,7 @@ Die folgende Abbildung zeigt den Suchen Dialog.
 <screeninfo>Der Suchen Dialog</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-search.png" format="PNG">
+	    <imagedata fileref="knode-search.png" format="PNG"/>
 	  </imageobject>
 	 <textobject>
 	<phrase>Der Suchen Dialog</phrase>
@@ -4282,7 +4282,7 @@ wird wieder die normale Ansicht angezeigt.
 
 <sect2 id="supersede-and-cancel">
 <title>Überschreiben und Zurücknehmen von Artikeln</title>
-<anchor id="anc-supersede-and-cancel">
+<anchor id="anc-supersede-and-cancel"/>
 <para>Diese Kapitel befasst sich mit dem Überschreiben und
 Zurücknehmen von Artikeln, zwei Funktionen, die Sie im Allgemeinen
 wahrscheinlich nicht sehr oft benötigen, die aber zu den
@@ -4507,7 +4507,7 @@ generiert. In diesem Fall können Sie Ihre
 
 <sect2 id="score-watch-ignore">
 <title>Bewerten, Überwachen und Ignorieren</title>
-<anchor id="anc-score-watch-ignore">
+<anchor id="anc-score-watch-ignore"/>
 <para>Das Bewerten sowie das Überwachen und Ignorieren
 von Diskussionen sind im Grunde nur drei unterschiedliche Bezeichnungen
 für ein und denselben Vorgang.
@@ -4563,7 +4563,7 @@ Diskussionen.
 <!-- CHANGED -->
 <sect2 id="group-identity">
 <title>Lokale Identitäten</title>
-<anchor id="anc-group-identity">
+<anchor id="anc-group-identity"/>
 <para>&knode; ermöglicht es Ihnen, für jeden Newszugang und sogar jede Newsgruppe, die Sie
 abonniert haben, eine eigene Identität mit Namen, E-Mail-Adresse,
 Antwortadresse und <glossterm>Signatur</glossterm> zu definieren.
@@ -4602,7 +4602,7 @@ später erneut einrichten.
 
 <sect2 id="multiple-news-accounts">
 <title>Mehrere News-Zugänge verwalten</title>
-<anchor id="anc-multiple-news-accounts">
+<anchor id="anc-multiple-news-accounts"/>
 <para>&knode; bietet Ihnen die Möglichkeit Ihre News von mehreren
 Servern zu beziehen. Im Allgemeinen besteht keine Notwendigkeit,
 mehrere News-Zugänge anzulegen. Ein Anwendungsfall ist jedoch
@@ -4659,7 +4659,7 @@ gültig ist.
 
 <chapter id="commands">
 <title>Befehls Referenz</title>
-<anchor id="anc-commands">
+<anchor id="anc-commands"/>
 <!-- (OPTIONAL, BUT RECOMMENDED) This chapter should list all of the
 application windows and their menubar and toolbar commands for easy reference.
 Also include any keys that have a special function but have no equivalent in the
@@ -4672,7 +4672,7 @@ die Standard-Tastaturbelegung nicht verändert haben.
 
 <sect1 id="knode-mainwindow">
 <title>Das &knode; Hauptfenster</title>
-<anchor id="anc-knode-mainwindow">
+<anchor id="anc-knode-mainwindow"/>
 <para></para>
 
 <sect2>
@@ -5433,7 +5433,7 @@ das Programm &knode; aufgerufen.</action></para></listitem>
 
 <sect1 id="knode-editorwindow">
 <title>Das Editor Menü</title>
-<anchor id="anc-knode-editorwindow">
+<anchor id="anc-knode-editorwindow"/>
 <sect2>
 <title>Das Menü <guimenu>Datei</guimenu></title>
 <para>
@@ -5706,7 +5706,7 @@ das Programm &knode; aufgerufen.</action></para></listitem>
 
 <chapter id="faq">
 <title>Fragen und Antworten</title>
-<anchor id="anc-faq">
+<anchor id="anc-faq"/>
 <para></para>
 
 <qandaset id="dunnowhat">
@@ -5871,7 +5871,7 @@ muss die Eingabezeile wie folgt lauten:
 
 <chapter id="knode-journey">
 <title>Ein Streifzug durch die Welt der Newsgruppen</title>
-<anchor id="anc-knode-journey">
+<anchor id="anc-knode-journey"/>
 <para>Dieses Kapitel soll Ihnen einen kurzen Überblick über
 die Welt der Newsgruppen und Ihre "Bewohner" vermitteln. Wer
 sich hier noch nie hierher gewagt hat, wird zu Anfang sicherlich
@@ -5892,7 +5892,7 @@ Usenet finden Sie unter <link linkend="anc-knode-more-info">Weitere Informations
 
 <sect1 id="about-news">
 <title>Was sind eigentlich ...</title>
-<anchor id="anc-about-news">
+<anchor id="anc-about-news"/>
 <sect2>
 <title>... Online-Reader?</title>
 <para>
@@ -5948,7 +5948,7 @@ häufig diese Bezeichnung für eine Diskussion antreffen.
 
 <sect1 id="nettiquette">
 <title>Benimmregeln</title>
-<anchor id="anc-nettiquette">
+<anchor id="anc-nettiquette"/>
 <para>In den Newsgruppen treffen viele Leute unterschiedlichster Art
 zusammen und unterhalten sich.  Dabei ist es eine Notwendigkeit und
 gilt als höflich, gewisse Regeln, die Nettiquette, einzuhalten. Einige
@@ -6015,7 +6015,7 @@ Veröffentlichen von Artikeln Ihren gesunden Menschenverstand ein.
 
 <sect1 id="usenet-slang">
 <title>Die Sprache des Usenet</title>
-<anchor id="anc-usenet-slang">
+<anchor id="anc-usenet-slang"/>
 <para>
 Es wird Sie kaum überraschen, wenn Sie feststellen, dass die Sprache
 des Usenet Englisch ist. Es gibt aber auch sehr viele Newsgruppen, in
@@ -6119,7 +6119,7 @@ den Rücken gekehrt.
 
 <sect2 id="acronyms">
 <title>Gebräuchliche Abkürzungen</title>
-<anchor id="anc-acronyms">
+<anchor id="anc-acronyms"/>
 <para>Wenn Sie sie mit &knode; News lesen, werden Sie schon sehr bald auf
 eine Reihe rätselhafter
 Buchstabenkombinationen stossen. Hierbei handelt es sich um die
@@ -6386,7 +6386,7 @@ Liste.
 
 <chapter id="knode-more-info">
 <title>Weitere Informationsquellen</title>
-<anchor id="anc-knode-more-info">
+<anchor id="anc-knode-more-info"/>
 <!-- TRANSLATORS! Please modify this chapter for your language specific needs -->
 
 <para>Im Folgenden sind einige Informationsquellen aufgeführt, die
@@ -6397,7 +6397,7 @@ regelmäßig in Newsgruppen veröffentlicht. Einige davon sind hier aufgelistet
 
 <sect1 id="infos-newsgroups">
 <title>Informative Newsgruppen</title>
-<anchor id="anc-infos-newsgroups">
+<anchor id="anc-infos-newsgroups"/>
 <simplelist>
 
 <member>news.answers (englischsprachig)</member>
@@ -6426,7 +6426,7 @@ Suchen Sie einfach in der Gruppen-Liste ihres News-Servers danach
 
 <sect1 id="infos-testgroups">
 <title>Testgruppen</title>
-<anchor id="anc-infos-testgroups">
+<anchor id="anc-infos-testgroups"/>
 <para>Die folgenden Gruppen sind ausdrücklich für Testzwecke gedacht, d.h.
 hier sollten Sie nach dem Einrichten von &knode; einige Artikel
 veröffentlichen, um die Einstellungen zu überprüfen.
@@ -6456,7 +6456,7 @@ entsprechenden Hinweisen generieren.
 
 <sect1 id="infos-urls">
 <title>Informative Artikel im WWW</title>
-<anchor id="anc-infos-urls">
+<anchor id="anc-infos-urls"/>
 <para>Die hier angegebenen URLs wurden den entsprechenden Artikel in
 der <glossterm>Newsgruppe</glossterm> <emphasis>de.newusers.infos</emphasis>
 entnommen und sind inhaltlich im Allgemeinen mit den dort
@@ -6495,7 +6495,7 @@ veröffentlichten Artikeln identisch.</para>
 
 <sect1 id="infos-technical">
 <title>Informative technische Artikel</title>
-<anchor id="anc-infos-technical">
+<anchor id="anc-infos-technical"/>
 <para>Wenn Sie sich für weitergehende Informationen interessieren, die
 sich vor allem um technische Details im Zusammenhang mit News drehen,
 sollten Sie die folgenden URLs nicht auslassen.</para>
@@ -6524,7 +6524,7 @@ the credits with a reference to the appropriate license file included in the KDE
 distribution. -->
 
 <title>Mitwirkende und Lizenz</title>
-<anchor id="anc-credits">
+<anchor id="anc-credits"/>
 <para>
 &knode;
 </para>
@@ -6625,7 +6625,7 @@ documentation is licensed under the terms of the <ulink
 url="common/fdl-licence.html">GNU Free Documentation License.</ulink>
 </para>
 
-<![ %addindex; [ &documentation.index; ]]>
+&documentation.index; 
 &underFDL;               <!-- FDL licence for the documentation -->
 &underGPL;               <!-- GPL License for the application -->
 
@@ -6633,7 +6633,7 @@ url="common/fdl-licence.html">GNU Free Documentation License.</ulink>
 
 
 <glossary id="glossary"><title>Glossar</title>
-<anchor id="anc-glossary">
+<anchor id="anc-glossary"/>
 <glossdiv>
 <title>A</title>
 <glossentry id="gloss-article">
@@ -6709,7 +6709,7 @@ Ein Artikel, der als Antwort auf einen anderen
 
 <glossentry id="gloss-follow-up">
 <glossterm>Followup</glossterm>
-<glosssee otherterm="gloss-Folgenachricht">
+<glosssee otherterm="gloss-Folgenachricht"/>
 </glossentry>
 </glossdiv>
 
@@ -6728,7 +6728,7 @@ Ein Artikel, der als Antwort auf einen anderen
 <title>H</title>
 <glossentry id="gloss-Header">
 <glossterm>Header</glossterm>
-<glosssee otherterm="gloss-Vorspann">
+<glosssee otherterm="gloss-Vorspann"/>
 </glossentry>
 </glossdiv>
 
@@ -6918,3 +6918,4 @@ weitere Angaben, die nur intern genutzt werden.
 
 &documentation.index;
 </book>
+
