@@ -460,6 +460,9 @@ void KNComposer::applyChanges()
 
   QFont::CharSet cs=KGlobal::charsets()->charsetForEncoding(c_harset);
 
+  //Date
+  a_rticle->date()->setUnixTime();    //set current date+time
+
   //Subject
   a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), cs);
 
