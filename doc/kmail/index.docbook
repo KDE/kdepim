@@ -26,7 +26,7 @@
 </author>
 </authorgroup>
 
-<date>14/02/2001</date>
+<date>01/03/2001</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
@@ -227,7 +227,7 @@ from your <acronym>ISP</acronym> or System Administrator. Again, you should not
 need to change the <guilabel>Port</guilabel> setting (the default is
 <guilabel>110</guilabel>).</para>
 
-<!-- SSL for Pop3 will not be in KDE2.0???
+<!-- SSL for Pop3 is currently not part of KMail
 <para>With <guilabel>Use SSL for secure mail download</guilabel>
 you can encrypt the messages you are fetching on their way from your mailserver
 to your computer - but only if your mailserver supports that. Please understand
@@ -584,7 +584,7 @@ mail. </para>
 <varlistentry>
 <term><guilabel>drafts:</guilabel></term>
 <listitem>
-<para>contains all messages started to edit but didn't finish.</para>
+<para>Contains messages you started to edit but didn't finish.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -2913,8 +2913,8 @@ entries in the Mailreader's help menu</link>.</para>
 <qandaentry>
 <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
 <answer><para>Not yet. However, IMAP support is now in active
-development. Because of the  many changes required, it will probably not be part
-of &kde; 2.1. Currently you can still receive mails via <acronym>IMAP</acronym>
+development and will probably be part of the &kmail; version that comes with &kde; 2.2
+Until then, you can still receive mails via <acronym>IMAP</acronym>
 by using <application>fetchmail</application>:</para>
  
 <procedure>
@@ -2952,13 +2952,9 @@ starts.</para>
 
 <answer>
 <para>You can find a list of submitted bugs at <ulink
-url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.</para>
-<para> Not all these bugs are <quote>real</quote>, some are based on
-misunderstanding of features &etc;. Here's a real problem (only affects &kmail;
-before &kde; 2.1): &kmail; will not delete some temporary files if it crashes. In
-this case, you should <command>cd</command> to <filename
-class="directory">~/.kde/share/apps/kmail/tmp/</filename> and delete all the
-files and folders there.</para></answer>
+url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>. Note that not all 
+these bugs are valid, all in all we think that &kmail; is now a very good piece 
+of software.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3038,8 +3034,7 @@ for multiple identities.</para>
 <qandaentry>
 <question><para>How do I have to set up &kmail; to use (&ie; read and write)
 messages with non-Latin1 characters?</para></question>
-<answer><para>&kmail; 1.1.99 had some bugs in its handling of characters that
-are not part of Latin1. The following applies to &kde; 2.1(beta): In the
+<answer><para>In the
 <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section of the
 configuration dialog, select the correct <guilabel>Character set</guilabel> for
 the message list and the folder list. If <guilabel>unicode
@@ -3073,9 +3068,9 @@ files With &kmail;</link>.</para></answer>
 <acronym>HTML</acronym>, I can only see the source.</para></question>
 <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
-only do so for mails from trusted sources. Note that plugins (like <trademark
+only do so for trusted mails. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>) will
-not be displayed.</para></answer>
+never be displayed in &kmail;.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3113,20 +3108,10 @@ in the trash folder whenever you exit &kmail;.</para></answer>
 <qandaentry>
 <question><para>Which version of &kmail; supports which version of
 <application>PGP</application>/<application>GnuPG</application>?</para></question>
-<answer><para>&kmail; 1.0.x: The unpatched version supports only
-<application>PGP</application> (version 2.x and 5.x). &kmail; will prefer
-version 5.x if both versions are installed. There is no way for the user to
-force &kmail; to use version 2.x in this case. There are patches for
-<application>PGP6</application> and <application>GnuPG</application> support at
-<ulink url="http://kmail.kde.org">&kmail;'s homepage</ulink>. If the GnuPG patch
-is applied, and <application>GnuPG</application> <emphasis>and</emphasis>
-<application>PGP</application> are installed, &kmail; will prefer
-<application>GnuPG</application>. There is no way to force &kmail; to use
-<application>PGP</application>.</para>
-<para>&kmail; 1.1.x: This has at least the improvements from the patches
-above.</para>
-<para>&kmail; 1.2.x: Now you can choose which encryption tool to use if you have
-more than one.</para>
+<answer>
+<para>Since &kmail; 1.2 you can choose which encryption tool to use if you have
+more than one. All the programs that are listed in the <guilabel>Security</guilabel>
+tab of the <guilabel>Configuration</guilabel> dialog are supported.</para>
 </answer>
 </qandaentry>
 
@@ -3141,7 +3126,7 @@ more than one.</para>
 user@host</option></userinput></para>
 
 <para>Modify your &kmail; configuration to fetch the mail via
-<acronym>POP3</acronym> from <userinput>localhost</userinput>, ssh will tunnel
+<acronym>POP3</acronym> from <userinput>localhost</userinput> and ssh will tunnel
 the connection for you. You need to be root to execute this
 command. Alternatively, change the first port number, &ie; the first occurence
 of <userinput>110</userinput>, to something above 1024 and configure &kmail; to
@@ -3223,6 +3208,14 @@ signature below.</para></answer>
 </qandaentry>
 
 <qandaentry>
+<question><para>Why doesn't word wrap work in the Composer
+window?</para></question>
+<answer><para>The word wrap setting is probably turned off. Word wrap can be
+toggled on and off in the <guilabel>Composer</guilabel> tab of the
+<guilabel>Configure</guilabel> dialog.</para></answer> 
+</qandaentry>
+
+<qandaentry>
 <question><para>Why does &kmail; keep asking me for the location of my signature
 file?</para></question>
 <answer><para>&kmail; will ask you the location of your signature file if you
@@ -3233,20 +3226,6 @@ tab. You should either specify a signature file or deselect <guilabel>Use a
 signature from file</guilabel>.</para></answer>
 </qandaentry>
 
-<qandaentry>
-<question><para>Why doesn't word wrap work in the Composer
-window?</para></question>
-<answer><para>The word wrap setting is probably turned off. Word wrap can be
-toggled on and off in the <guilabel>Composer</guilabel> tab of the
-<guilabel>Configure</guilabel> dialog.</para></answer> 
-</qandaentry>
-
-<qandaentry>
-<question><para>How can I find out how many unread messages I have in a mail
-folder?</para></question>
-<answer><para>The number of unread messages is conveniently displayed in the
-<guilabel>Folders pane</guilabel> after the folder name.</para></answer>
-</qandaentry>
 
 <qandaentry>
 <question><para>How do I set up <application>sendmail</application> to work with
@@ -3306,7 +3285,7 @@ connections</ulink>.</para></answer>
 <listitem><para>J. Nick Koston
 <email>bdraco@darkorb.net</email></para></listitem>
 <listitem><para>Daniel Naber
-<email>dnaber@mini.gt.owl.de</email></para></listitem>
+<email>daniel.naber@t-online.de</email></para></listitem>
 <listitem><para>Sven Radej <email>radej@kde.org</email></para></listitem>
 <listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
 <listitem><para>Don Sanders <email>sanders@kde.org</email> (Active
