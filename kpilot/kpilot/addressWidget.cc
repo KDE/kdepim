@@ -561,8 +561,7 @@ AddressWidget::slotDeleteRecord()
 		i18n("Delete Record?")) == KMessageBox::No)
 		return;
 
-	selectedRecord->setAttrib(
-		selectedRecord->getAttrib() | dlpRecAttrDeleted);
+	selectedRecord->makeDeleted();
 	writeAddress(selectedRecord);
 	emit(recordChanged(selectedRecord));
 	initialize();
@@ -931,6 +930,11 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.28  2001/03/04 11:22:12  adridg
+// In response to bug 21392, replaced fixed-length lookup table by a subclass
+// of QListBoxItem inserted into list box. This subclass carries data to
+// lookup the relevant pilot record.
+//
 // Revision 1.27  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
