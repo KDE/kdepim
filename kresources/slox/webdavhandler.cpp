@@ -20,7 +20,13 @@
 
 #include "webdavhandler.h"
 
+#ifdef HAVE_VALUES_H
 #include <values.h>
+#else
+#ifdef HAVE_SYS_LIMITS_H
+#include <sys/limits.h>
+#endif
+#endif
 
 #include <libkdepim/kpimprefs.h>
 
@@ -150,9 +156,9 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 
   if (preEpoch) {
     dt.setTime_t( 0, Qt::UTC );
-    if (ticks > MAXINT) {
-      dt = dt.addSecs(-MAXINT);
-      ticks -= MAXINT;
+    if (ticks > INT_MAX) {
+      dt = dt.addSecs(-INT_MAX);
+      ticks -= INT_MAX;
     }
     dt = dt.addSecs(-((long) ticks));
   }
