@@ -100,21 +100,21 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
         a = 0;
         a = new KABC::Addressee();
       } else a = new KABC::Addressee();
-      tmp = key(line);
+      tmp = key(line).stripWhiteSpace();
       if (!tmp.isEmpty()) a->setFormattedName(tmp);
-      tmp = email(line);
+      tmp = email(line).stripWhiteSpace();
       if (!tmp.isEmpty()) a->insertEmail(tmp);
     }
     else if (line.startsWith("note")) {
       if (!a) break; // Must have an alias before a note
      
-      tmp = comment(line);
+      tmp = comment(line).stripWhiteSpace();
       if (!tmp.isEmpty()) a->setNote(tmp);
       
-      tmp = get(line, "name");
+      tmp = get(line, "name").stripWhiteSpace();
       if (!tmp.isEmpty()) a->setFamilyName(tmp);
       
-      tmp =  get(line, "address");
+      tmp =  get(line, "address").stripWhiteSpace();
       if (!tmp.isEmpty()){
         KABC::Address addr;
         kdDebug() << tmp << endl; // dump complete address
@@ -122,7 +122,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
         a->insertAddress(addr);
       }
 
-      tmp = get(line,"phone");
+      tmp = get(line,"phone").stripWhiteSpace();
       if (tmp.isEmpty())
          a->insertPhoneNumber( KABC::PhoneNumber( tmp, KABC::PhoneNumber::Voice ));
     }
