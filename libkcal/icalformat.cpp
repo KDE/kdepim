@@ -200,7 +200,8 @@ Incidence *ICalFormat::fromString( const QString &text )
       }
     }
   }
-  return ical->clone();
+
+  return ical ? ical->clone() : 0;
 }
 
 QString ICalFormat::toString( Calendar *cal )
