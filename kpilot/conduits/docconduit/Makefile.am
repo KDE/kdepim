@@ -12,10 +12,9 @@ servicedir = $(kde_servicesdir)
 service_DATA = doc_conduit.desktop
 
 kde_module_LTLIBRARIES = libdocconduit.la
-
 libdocconduit_la_SOURCES = makedoc9.cc pilotDOCHead.cc pilotDOCEntry.cc pilotDOCBookmark.cc doc-factory.cc doc-setup.cc doc-conduit.cc DOC-converter.cc doc-setupdialog.ui doc-conflictdialog.cc
-libdocconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib 
-libdocconduit_la_LIBADD = -lkpilot
+libdocconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
+libdocconduit_la_LIBADD = ../../lib/libkpilot.la
 
 SUBDIRS = Icons
 bin_PROGRAMS = kpalmdoc

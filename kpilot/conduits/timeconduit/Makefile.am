@@ -16,6 +16,6 @@ libtimeconduit_la_SOURCES = \
 	time-setup.cc \
 	time-conduit.cc \
 	time-setup_dialog.ui
-libtimeconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib 
-libtimeconduit_la_LIBADD = -lkpilot 
+libtimeconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
+libtimeconduit_la_LIBADD = ../../lib/libkpilot.la
  

@@ -14,6 +14,6 @@ service_DATA = JPilotPluginProxy.desktop
 kde_module_LTLIBRARIES = libJPilotProxy.la
 
 libJPilotProxy_la_SOURCES = ConduitDialog.ui JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
-libJPilotProxy_la_LDFLAGS = $(KDE_RPATH) -L../../lib -Wl,-export-dynamic
-libJPilotProxy_la_LIBADD = -lkpilot -lgtk -lgdbm -lgdk
+libJPilotProxy_la_LDFLAGS = $(KDE_PLUGIN) $(KDE_RPATH)
+libJPilotProxy_la_LIBADD = ../../lib/libkpilot.la -lgtk -lgdbm -lgdk
 
