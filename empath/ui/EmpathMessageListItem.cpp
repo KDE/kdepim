@@ -100,9 +100,6 @@ EmpathMessageListItem::_init()
     
     RMM::RAddress sender_(m.sender());
 
-    empathDebug("phrase == " + sender_.phrase());
-    empathDebug("route  == " + sender_.route());
-    
     if (sender_.phrase().isEmpty())
         setText(1, sender_.asString());
         

@@ -146,8 +146,8 @@ EmpathComposer::newComposeForm(const QString & recipient)
 {
     EmpathComposeForm composeForm;
     composeForm.setComposeType(ComposeNormal);
-    composeForm.setHeader("To", recipient.local8Bit(), false);
     _initVisibleHeaders(composeForm);
+    composeForm.setHeader("To", recipient.local8Bit(), false);
     emit(composeFormComplete(composeForm));
 }
 
@@ -258,6 +258,9 @@ EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
     QStrListIterator it(l);
     for (; it.current(); ++it)
         composeForm.setHeader(it.current(), "");
+    
+    RMM::RHeaderList headerList = composeForm.visibleHeaders().headerList();
+    empathDebug("Created " + QString::number(headerList.count()) + " headers");
 }
 
    void
@@ -326,16 +329,16 @@ EmpathComposer::_reply(int id, RMM::RMessage message)
     
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
     
-    empathDebug("Quoting original if necessary");
-
     // Add the 'On (date) (name) wrote' bit
         
-    if (c->readBoolEntry(EmpathConfig::C_AUTO_QUOTE)) {
+    if (c->readBoolEntry(EmpathConfig::C_AUTO_QUOTE, false)) {
+
+        empathDebug("Quoting original");
 
         s = message.data();
 
         // Remove the signature
-        int sigpos = s.find("\n-- \n");
+        int sigpos = s.find(QRegExp("\n--[ ]?\n"));
         if (sigpos != -1)
             s.truncate(sigpos);
         
@@ -515,10 +518,12 @@ EmpathComposer::_signature()
     void
 EmpathComposer::_quote(QCString & s)
 {
-    EmpathQuotedText quoted(QString::fromLocal8Bit(s));
+    empathDebug(s);
+    EmpathQuotedText quoted(QString::fromUtf8(s));
     quoted.rewrap(70);
     quoted.quote();
-    s = quoted.asString().local8Bit();
+    s = QString::fromUtf8(quoted.asString());
+    empathDebug(s);
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -168,7 +168,6 @@ RHeader::_parse()
     if (split == -1) {
         rmmDebug("No split ?");
         headerBody_ = new RText;
-        CHECK_PTR(headerBody_);
         return;
     }
 
@@ -176,11 +175,10 @@ RHeader::_parse()
     headerName_ = headerName_.stripWhiteSpace();
     
     headerType_ = headerNameToEnum(headerName_);
-
-    QCString hb = strRep_.right(strRep_.length() - split - 1);
-    hb = hb.stripWhiteSpace();
     headerBody_ = _newHeaderBody(headerType_);
-    *headerBody_ = hb;
+
+    *headerBody_ = strRep_.mid(split + 1).stripWhiteSpace();
+
     headerBody_->parse();
 }
 

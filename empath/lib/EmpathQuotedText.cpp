@@ -25,13 +25,14 @@
 #endif
 
 // Local includes
+#include "EmpathDefines.h"
 #include "EmpathQuotedText.h"
 
 EmpathQuotedText::EmpathQuotedText()
     :   parsed_(false),
         assembled_(false)
 {
-    quotedParts_.setAutoDelete(true);
+    // Empty.
 }
 
 EmpathQuotedText::EmpathQuotedText(const QString & text)
@@ -39,40 +40,56 @@ EmpathQuotedText::EmpathQuotedText(const QString & text)
         assembled_(false),
         strRep_(text)
 {
-    quotedParts_.setAutoDelete(true);
+    // Empty.
 }
 
     void
-EmpathQuotedText::rewrap(const uint maxLineLength)
+EmpathQuotedText::rewrap(uint maxLineLength)
 {
     parse();
-    assembled_ = false;
-    
-    QStringList::Iterator lit;
-    QListIterator<EmpathQuotedText::Part> pit(quotedParts_);
 
-    for (; pit.current(); ++pit) {
+    QValueList<EmpathQuotedText::Part>::Iterator pit;
+
+    for (pit = quotedParts_.begin(); pit != quotedParts_.end(); ++pit) {
         
-        EmpathQuotedText::Part * part = pit.current();
-        uint maxLength = maxLineLength - part->quotePrefix.length();
+        EmpathQuotedText::Part & part = *pit;
 
-        for (lit = part->lines.begin(); lit != part->lines.end(); ++lit) 
+        uint maxLength = maxLineLength - (part.depth + part.depth);
+
+        QStringList wrapped;
+
+        QString overflow;
+        
+        QStringList::Iterator lit;
+
+        for (lit = part.lines.begin(); lit != part.lines.end(); ++lit)  {
             
-            if ((*lit).length() > maxLength) {
+            QString line(overflow + *lit);
+
+            if (line.length() > maxLength) {
                 
-                QString line(*lit);
-                
-                // Find a position where we can break the line.
                 int breakPos = line.findRev(' ', maxLength);
+
+                if (breakPos != -1) {
                 
-                // Add the two parts of the line to the list.
-                *lit = line.right(line.length() - breakPos - 1);
-                part->lines.insert(lit, line.left(breakPos));
-                
-                // Decreasing the iterator causes the new lines
-                // to be processed too.
-                --lit;
+                    overflow = line.mid(breakPos + 1);
+
+                    wrapped << line.left(breakPos);
+
+                } else {
+
+                    wrapped << line;
+                    overflow = QString::null;
+                }
+
+            } else {
+
+                wrapped << line;
+                overflow = QString::null;
             }
+        }
+        
+        (*pit).lines = wrapped;
     }
 }
 
@@ -80,97 +97,91 @@ EmpathQuotedText::rewrap(const uint maxLineLength)
 EmpathQuotedText::quote()
 {
     parse();
-    assembled_ = false;
     
-    QListIterator<EmpathQuotedText::Part> pit(quotedParts_);
+    QValueList<EmpathQuotedText::Part>::Iterator pit;
 
-    for (; pit.current(); ++pit) 
-        pit.current()->quotePrefix.prepend("> ");
+    for (pit = quotedParts_.begin(); pit != quotedParts_.end(); ++pit) 
+        ++((*pit).depth);
 }
 
     void 
 EmpathQuotedText::_parse()
 {
+    QRegExp endOfQuotes("[^> ]");
+
     quotedParts_.clear();
 
-    QString quotePrefix, restOfLine;
-    EmpathQuotedText::Part * part;
-    int index;
+    QStringList lines = QStringList::split('\n', strRep_, true);
 
-    // Give QStringList::split a little help, so that it doesn't skip empty
-    // lines.
-    QString text(strRep_);
-    text.replace(QRegExp("\n\n"), "\n \n");
-    QStringList lines; // = QStringList::split('\n', text);
+    QStringList tempLines;
 
-    QStringList::Iterator it;
-    
-    // Initialise a part only if there is at least one line.
-    if (lines.count()) {   
-        part = new EmpathQuotedText::Part;
-        quotedParts_.append(part);
-    }
- 
+    int oldDepth(-1);
+
+    bool firstTime(true);
+
+    QStringList::ConstIterator it;
+
     for (it = lines.begin(); it != lines.end(); ++it) {
 	
         QString line(*it);
-        line.replace(QRegExp("\n \n"), "\n\n"); // Revert our change.
         
-        index = 0;
-    
-        // Find quote prefix, storing it in quotePrefix. The quote prefix
-        // should be at the beginning of the line. It consists of any
-        // combination of spaces and >'s, but should end with "> ".
-        while ( /* index < MAX_PREFIX_LENGTH && */ index < line.length() &&
-                (line[index] == ' ' || 
-                 line[index] == '>' ||
-                 line[index] == ':' ) ) 
-		    index++;
+        empathDebug("Line        : `" + line + "'");
 
-        index = line.findRev(QRegExp("[>:] "), index);
+        int quoteEnd = line.find(endOfQuotes);
+        empathDebug("quote end 1 : " + QString::number(quoteEnd));
 
-        if (index == -1) { 
-            // No quote prefix
-            quotePrefix = "";
-            restOfLine = line;
+        quoteEnd = line.findRev('>', quoteEnd);
+        empathDebug("quote end 2 : " + QString::number(quoteEnd));
+
+        if (quoteEnd == -1)
+            quoteEnd = 0;
+
+        QString quoting = line.left(quoteEnd);
+
+        int depth = quoting.contains('>');
+
+        if ((depth != oldDepth) && !firstTime) {
+
+            Part part;
+            part.depth = oldDepth;
+            part.lines = tempLines;
+            quotedParts_ << part;
         }
-        else {
-            index += 2; // Skip the last "> "
-            quotePrefix = line.left(index);
-            restOfLine = line.right(line.length() - index);
-        }
 
-        if (quotePrefix != part->quotePrefix) {
+        empathDebug("depth       : " + QString::number(depth));
+        empathDebug("remainder   : `" + line.mid(quoteEnd == 0 ? 0 : quoteEnd + 2) + "'");
+        tempLines << line.mid(quoteEnd == 0 ? 0 : quoteEnd + 2);
         
-            part = new EmpathQuotedText::Part;
-            quotedParts_.append(part);
-            part->quotePrefix = quotePrefix;
-            
-        }
-           
-        part->lines.append(restOfLine);
+        oldDepth = depth;
+
+        firstTime = false;
     }
+ 
+    Part part;
+    part.depth = oldDepth;
+    part.lines = tempLines;
+    quotedParts_ << part;
 }
 
     void 
 EmpathQuotedText::_assemble()
 {
-    QString text;
-    QStringList::Iterator lit;
-    QListIterator<EmpathQuotedText::Part> pit(quotedParts_);
+    strRep_ = QString::null;
 
-    for (; pit.current(); ++pit) {
-        
-        EmpathQuotedText::Part * part = pit.current();
+    QStringList::ConstIterator lit;
+    
+    QValueList<EmpathQuotedText::Part>::ConstIterator pit;
 
-        for ( lit = part->lines.begin(); lit != part->lines.end(); ++lit) {
-            text += part->quotePrefix;
-            text += *lit;
-            text += '\n';
-        }
+    for (pit = quotedParts_.begin(); pit != quotedParts_.end(); ++pit) {
+
+        QString quoting;
+
+        for (int i = 0; i < (*pit).depth; i++)
+            quoting += "> ";
+
+        for (lit = (*pit).lines.begin(); lit != (*pit).lines.end(); ++lit)
+            strRep_ += quoting + *lit + '\n';
     }
-
-    strRep_ = text;
 }
 
 // vim:ts=4:sw=4:tw=78

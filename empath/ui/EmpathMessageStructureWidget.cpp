@@ -121,8 +121,7 @@ EmpathMessageStructureWidget::s_currentChanged(QListViewItem * item)
 {
     if ((item == preambleItem_) || (item == epilogueItem_))
         emit(showText(static_cast<EmpathMessageTextItem *>(item)->text()));
-
-    else if (item->depth() != 0)
+    else
         emit(partChanged(
                 static_cast<EmpathMessageStructureItem *>(item)->part()));
 }

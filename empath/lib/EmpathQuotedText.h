@@ -28,7 +28,7 @@
 #define EMPATH_QUOTEDTEXT_H
 
 // Qt includes
-#include <qlist.h>
+#include <qvaluelist.h>
 #include <qstring.h>
 #include <qstringlist.h>
 
@@ -42,7 +42,7 @@ class EmpathQuotedText
     public:
 
         struct Part {
-           QString      quotePrefix;
+           unsigned int depth;
            QStringList  lines;
         };
         
@@ -53,13 +53,15 @@ class EmpathQuotedText
 
         QString asString() { assemble(); return strRep_; }
         
-        void rewrap(const uint maxLineLength);
+        void rewrap(uint maxLineLength);
         void quote();
 
         void parse() 
             { if (!parsed_) _parse(); parsed_ = true; assembled_ = false; }
         void assemble() 
             { parse(); if (!assembled_) _assemble(); assembled_ = true; }
+
+        const char * className() const { return "EmpathQuotedText"; }
 
     private:
     
@@ -69,7 +71,7 @@ class EmpathQuotedText
         bool parsed_;
         bool assembled_;
         
-        QList<Part> quotedParts_;
+        QValueList<Part> quotedParts_;
         
         QString strRep_;
 };

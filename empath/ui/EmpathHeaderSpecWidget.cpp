@@ -41,8 +41,6 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
     :
         QHBox(parent, "HeaderSpecWidget")
 {
-    empathDebug("header: " + header.asString());
-    
     headerNameWidget_ = new QLabel(this);
     headerNameWidget_->setText(header.headerName() + ": ");
     
@@ -60,7 +58,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
         headerBodyWidget_ = new QLineEdit(this, "headerBodyWidget");
 
     headerBodyWidget_->setText(header.headerBody()->asString());
-    headerBodyWidget_->setFocus();
+    headerNameWidget_->setFocusProxy(headerBodyWidget_);
 }
 
 EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()

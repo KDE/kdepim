@@ -59,7 +59,7 @@ EmpathEnvelopeWidget::EmpathEnvelopeWidget(
 
     _lineUpHeaders();
 
-    // headerSpecList_.getFirst()->setFocus();
+    setFocusProxy(headerSpecList_.getFirst());
 }
 
 EmpathEnvelopeWidget::~EmpathEnvelopeWidget()

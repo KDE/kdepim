@@ -95,9 +95,8 @@ EmpathComposeWidget::EmpathComposeWidget(
     editorWidget_->setFont(c->readFontEntry(UI_FIXED_FONT, &globalFixedFont));
 
     QCString body = composeForm_.body();
-    empathDebug("Body follows - length == " + QString::number(body.length()));
-//    editorWidget_->setText(body);
-    empathDebug(body);
+    if (!body.isEmpty())
+        editorWidget_->setText(body);
  
     // Layouts.
     QVBoxLayout * layout = new QVBoxLayout(this, 4);
@@ -112,9 +111,19 @@ EmpathComposeWidget::EmpathComposeWidget(
             break;
 
         case ComposeNormal:
+            envelopeWidget_->setFocus();
+
+            c->setGroup(GROUP_COMPOSE);
+
+            if (c->readBoolEntry(C_USE_EXT_EDIT, false)) {
+                editorWidget_->setEnabled(false);
+                _spawnExternalEditor(editorWidget_->text().local8Bit());
+            }
+
+            break;
+
         case ComposeReply:
         case ComposeReplyAll:
-
             editorWidget_->setFocus();
 
             c->setGroup(GROUP_COMPOSE);
@@ -128,10 +137,8 @@ EmpathComposeWidget::EmpathComposeWidget(
 
         default:
             empathDebug("Er, what kind of composition is this ?");
-            return;
             break;
     }
-    empathDebug("done");
 }
 
 EmpathComposeWidget::~EmpathComposeWidget()

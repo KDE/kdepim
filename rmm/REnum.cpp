@@ -1165,8 +1165,8 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
     HeaderType
 RMM::headerNameToEnum(const QCString & headerName)
 {
-    for (int i = 0; i <= 42; i++)
-        if (!stricmp(headerName, headerNames[i]))
+    for (int i = 0; i < HeaderUnknown + 1; i++)
+        if (0 == stricmp(headerName, headerNames[i]))
             return (HeaderType)i;
 
     return HeaderUnknown;

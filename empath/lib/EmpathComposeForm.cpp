@@ -149,9 +149,9 @@ EmpathComposeForm::addInvisibleHeader(RMM::RHeader h)
 EmpathComposeForm::setHeader(QCString name, QCString body, bool visible)
 {
     if (visible)
-        invisibleHeaders_.set(name, body);
-    else
         visibleHeaders_.set(name, body);
+    else
+        invisibleHeaders_.set(name, body);
 }
 
 // vim:ts=4:sw=4:tw=78

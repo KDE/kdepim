@@ -73,6 +73,7 @@ EmpathMessageHTMLWidget::show(const QString & xml)
 {
     if (xml.isNull()) {
         empathDebug("xml is empty");
+        setText(i18n("<i>No text to display</i>"));
         return;
     }
     setTextFormat(Qt::RichText);
