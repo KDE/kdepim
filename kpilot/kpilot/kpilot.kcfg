@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/> 
+<kcfg><kcfgfile name="kpilotrc"/>
   <include>kstandarddirs.h</include>
   <group name="General">
     <entry name="Debug" type="UInt">
@@ -18,14 +18,13 @@
         </label>
         <default>QDateTime()</default>
     </entry>
-		<entry name="NextSyncType" type="Enum">
-		    <label>
-				</label>
-				<choices>
-				
-				</choices>
-				<default></default>
-		</entry>
+    <entry name="NextSyncType" type="Enum">
+        <label>
+        </label>
+        <choices>
+        </choices>
+        <default></default>
+    </entry>
 
     <entry name="PilotDevice" type="String">
         <label>
@@ -40,12 +39,12 @@
     <entry name="Encoding" type="String">
         <label>
         </label>
-        <default>QString::null</default>
+        <default></default>
     </entry>
     <entry name="UserName" type="String">
         <label>
         </label>
-        <default>QString::null</default>
+        <default></default>
     </entry>
     <entry name="LogFileName" type="String">
         <label>
@@ -112,6 +111,10 @@
         </label>
         <default>AvGo</default>
     </entry>
+    <entry name="RunConduitsWithBackup" type="Bool">
+        <label></label>
+        <default>false</default>
+    </entry>
     <entry name="DeviceDBs" type="StringList">
         <label>
         </label>
@@ -131,7 +134,7 @@
         <default>abbrowser_conduit,internal_fileinstall,knotes-conduit,vcal-conduit,todo-conduit,mal_conduit,sysinfo_conduit</default>
     </entry>
   </group>
-	
+
   <group name="Internal Editors">
     <entry name="AppBlockChangedDatabases" key="AppBlock Changed" type="StringList">
         <label>
@@ -146,8 +149,8 @@
         </label>
     </entry>
   </group>
-	
-	
+
+
   <group name="Address Widget">
     <entry name="AddressDisplayMode" key="AddressDisplay" type="UInt">
         <label>

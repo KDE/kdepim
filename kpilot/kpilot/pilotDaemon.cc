@@ -619,7 +619,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 }
 
-/** 
+/**
 * DCOP Functions reporting same status data, e.g. for the kontact plugin.
 */
 QDateTime PilotDaemon::lastSyncDate()
@@ -766,7 +766,7 @@ QString PilotDaemon::pilotDevice()
 		break;
 	case PilotDaemonDCOP::Backup:
 		mode |= ActionQueue::BackupMode | ActionQueue::FlagFull;
-		if (conduits.count() > 0)
+		if (KPilotSettings::runConduitsWithBackup() && (conduits.count() > 0))
 		{
 			fSyncStack->queueConduits(conduits, mode);
 		}
