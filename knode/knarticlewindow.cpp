@@ -19,7 +19,6 @@
 #include <klocale.h>
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
-#include <khtml_part.h>
 
 #include "kngroup.h"
 #include "knsavedarticle.h"

@@ -24,7 +24,6 @@
 #include <kaccel.h>
 #include <kurl.h>
 #include <klocale.h>
-#include <khtml_part.h>
 #include <kwin.h>
 #include <kdebug.h>
 #include <kmenubar.h>
