@@ -20,12 +20,17 @@ sync part which has not been tested at all.
   - Assume FirstTime is always *true*, this is at least partly broken,
     but it makes the conduit compile at least.
 
+The other conduits all compile and have config dialogs but don't do anything.
+
 And in other news, little bugfixes and other neat stuff sometimes shows up
 in my mailbox. Martin Junius is a long-time contributor, and he's volunteered
 (again) to make new KPilot rpms for RH 7.2 once the system is stable again.
 
 * kpilot/addressWidget.cc
   setupWidget() - Martin Junius found a display bug and sent a patch.
+* conduits/vcalconduit/vcal-conduit.cc
+  setRepetition() - Philipp Hullmann noticed that the Pilot's week starts
+  on day 0 = sunday, and in KDE day 0 = monday.
 
 KPilot Developer's notes for december 2nd 2001
 ===============================================
