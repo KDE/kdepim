@@ -29,6 +29,7 @@
 #include <qdatetime.h>
 
 #include <klocale.h>
+#include <kprocess.h>
 #include <kdebug.h>
 
 
@@ -353,12 +354,18 @@ Base5::readPublicKey( const KeyID& keyId, const bool readTrust, Key* key )
 
 
 KeyList
-Base5::publicKeys()
+Base5::publicKeys( const QStringList & patterns )
 {
   int exitStatus = 0;
 
+  QCString cmd = "pgpk -ll";
+  for ( QStringList::ConstIterator it = patterns.begin();
+        it != patterns.end(); ++it ) {
+    cmd += " ";
+    cmd += KProcess::quote( *it ).local8Bit();
+  }
   status = 0;
-  exitStatus = run( "pgpk -ll", 0, true );
+  exitStatus = run( cmd, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -376,7 +383,7 @@ Base5::publicKeys()
 
 
 KeyList
-Base5::secretKeys()
+Base5::secretKeys( const QStringList & patterns )
 {
   int exitStatus = 0;
 
@@ -474,7 +481,7 @@ Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 
     //kdDebug(5100) << "Parsing: " << output.mid(offset, eol-offset) << endl;
 
-    if( !strncmp( output.data() + offset, "pub", 3 ) || 
+    if( !strncmp( output.data() + offset, "pub", 3 ) ||
         !strncmp( output.data() + offset, "sec", 3 ) ||
         !strncmp( output.data() + offset, "sub", 3 ) )
     { // line contains key data
@@ -505,7 +512,7 @@ Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
         //kdDebug(5100) << "Unknown key flag.\n";
         ;
       }
-      
+
       // Key Length
       pos = offset + 4;
       while( output[pos] == ' ' )
@@ -513,7 +520,7 @@ Base5::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
       pos2 = output.find( ' ', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
       //kdDebug(5100) << "Key Length: "<<subkey->keyLength()<<endl;
-      
+
       // Key ID
       pos = pos2 + 1;
       while( output[pos] == ' ' )
@@ -754,12 +761,12 @@ Base5::parseTrustDataForKey( Key* key, const QCString& str )
   UserIDList userIDs = key->userIDs();
 
   // search the start of the trust data
-  int offset = str.find( "\n\n  KeyID" );
-  if( offset == -1 )
+  int offset = str.find( "\n\n  KeyID" ) + 9;
+  if( offset == -1 + 9 )
     return;
 
   offset = str.find( '\n', offset ) + 1;
-  if( offset == 0 )
+  if( offset == -1 + 1 )
     return;
 
   bool ultimateTrust = false;

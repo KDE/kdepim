@@ -28,8 +28,10 @@
 #include <qdatetime.h>
 
 #include <klocale.h>
+#include <kprocess.h>
 #include <kdebug.h>
 
+#define PGP2 "pgp"
 
 namespace Kpgp {
 
@@ -66,11 +68,11 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
   int exitStatus = 0;
 
   if(!recipients.isEmpty() && passphrase != 0)
-    cmd = "pgp +batchmode +language=en +verbose=1 -seat";
+    cmd = PGP2 " +batchmode +language=en +verbose=1 -seat";
   else if(!recipients.isEmpty())
-    cmd = "pgp +batchmode +language=en +verbose=1 -eat";
+    cmd = PGP2 " +batchmode +language=en +verbose=1 -eat";
   else if(passphrase != 0)
-    cmd = "pgp +batchmode +language=en +verbose=1 -sat";
+    cmd = PGP2 " +batchmode +language=en +verbose=1 -sat";
   else
   {
     kdDebug(5100) << "kpgpbase: Neither recipients nor passphrase specified." << endl;
@@ -79,14 +81,14 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
 
   if(passphrase != 0)
     cmd += addUserId();
-  
+
   if(!recipients.isEmpty()) {
     if(Module::getKpgp()->encryptToSelf())
     {
       cmd += " 0x";
       cmd += Module::getKpgp()->user();
     }
-    
+
     for( KeyIDList::ConstIterator it = recipients.begin();
          it != recipients.end(); ++it ) {
       cmd += " 0x";
@@ -228,7 +230,7 @@ Base2::decrypt( Block& block, const char *passphrase )
 
   clear();
   input = block.text();
-  exitStatus = run("pgp +batchmode +language=en -f", passphrase);
+  exitStatus = run(PGP2 " +batchmode +language=en -f", passphrase);
   if( !output.isEmpty() )
     block.setProcessedText( output );
   block.setError( error );
@@ -246,7 +248,7 @@ Base2::decrypt( Block& block, const char *passphrase )
     index1 = input.find('\n', index1);
     index2 = input.find("\n\n", index1);
     input.remove(index1, index2 - index1);
-    exitStatus = run("pgp +batchmode +language=en -f", passphrase);
+    exitStatus = run(PGP2 " +batchmode +language=en -f", passphrase);
     if( !output.isEmpty() )
       block.setProcessedText( output );
     block.setError( error );
@@ -334,16 +336,16 @@ Base2::decrypt( Block& block, const char *passphrase )
   // Examples (made with PGP 2.6.3in)
   /* Example No. 1 (signed with unknown key):
    * File has signature.  Public key is required to check signature.
-   * 
+   *
    * Key matching expected Key ID 12345678 not found in file '/home/user/.pgp/pubring.pgp'.
-   * 
+   *
    * WARNING: Can't find the right public key-- can't check signature integrity.
    */
   /* Example No. 2 (bad signature):
    * File has signature.  Public key is required to check signature.
    * ..
    * WARNING: Bad signature, doesn't match file contents!
-   * 
+   *
    * Bad signature from user "Joe User <joe@foo.bar>".
    * Signature made 2001/09/09 16:01 GMT using 1024-bit key, key ID 12345678
    */
@@ -352,7 +354,7 @@ Base2::decrypt( Block& block, const char *passphrase )
    * .
    * Good signature from user "Joe User <joe@foo.bar>".
    * Signature made 2001/09/09 16:01 GMT using 1024-bit key, key ID 12345678
-   * 
+   *
    * WARNING:  Because this public key is not certified with a trusted
    * signature, it is not known with high confidence that this public key
    * actually belongs to: "Joe User <joe@foo.bar>".
@@ -362,7 +364,7 @@ Base2::decrypt( Block& block, const char *passphrase )
    * .
    * Good signature from user "Joe User <joe@foo.bar>".
    * Signature made 2001/09/09 16:01 GMT using 1024-bit key, key ID 12345678
-   * 
+   *
    * WARNING:  Because this public key is not certified with enough trusted
    * signatures, it is not known with high confidence that this public key
    * actually belongs to: "Joe User <joe@foo.bar>".
@@ -372,12 +374,12 @@ Base2::decrypt( Block& block, const char *passphrase )
    * .
    * Good signature from user "Joe User <joe@foo.bar>".
    * Signature made 2001/09/09 16:01 GMT using 1024-bit key, key ID 12345678
-   * 
-   * 
+   *
+   *
    * Key for user ID: Joe User <joe@foo.bar>
    * 1024-bit key, key ID 12345678, created 2001/09/09
    * Key has been revoked.
-   * 
+   *
    * WARNING:  This key has been revoked by its owner,
    * possibly because the secret key was compromised.
    * This could mean that this signature is a forgery.
@@ -467,7 +469,7 @@ Base2::readPublicKey( const KeyID& keyID,
   int exitStatus = 0;
 
   status = 0;
-  exitStatus = run( "pgp +batchmode +language=en +verbose=0 -kvc -f 0x" +
+  exitStatus = run( PGP2 " +batchmode +language=en +verbose=0 -kvc -f 0x" +
                     keyID, 0, true );
 
   if(exitStatus != 0) {
@@ -484,7 +486,7 @@ Base2::readPublicKey( const KeyID& keyID,
 
   if( readTrust )
   {
-    exitStatus = run( "pgp +batchmode +language=en +verbose=0 -kc -f",
+    exitStatus = run( PGP2 " +batchmode +language=en +verbose=0 -kc -f",
                       0, true );
 
     if(exitStatus != 0) {
@@ -500,21 +502,61 @@ Base2::readPublicKey( const KeyID& keyID,
 
 
 KeyList
-Base2::publicKeys()
+Base2::publicKeys( const QStringList & patterns )
+{
+  return doGetPublicKeys( PGP2 " +batchmode +language=en +verbose=0 -kvc -f",
+                          patterns );
+}
+
+KeyList
+Base2::doGetPublicKeys( const QCString & cmd, const QStringList & patterns )
 {
   int exitStatus = 0;
+  KeyList publicKeys;
 
   status = 0;
-  exitStatus = run( "pgp +batchmode +language=en +verbose=0 -kvc -f",
-                    0, true );
+  if ( patterns.isEmpty() ) {
+    exitStatus = run( cmd, 0, true );
 
-  if(exitStatus != 0) {
-    status = ERROR;
-    return KeyList();
+    if ( exitStatus != 0 ) {
+      status = ERROR;
+      return KeyList();
+    }
+
+    // now we need to parse the output for public keys
+    publicKeys = parseKeyList( output, false );
   }
+  else {
+    typedef QMap<QCString, Key*> KeyMap;
+    KeyMap map;
 
-  // now we need to parse the output for public keys
-  KeyList publicKeys = parseKeyList(output, false);
+    for ( QStringList::ConstIterator it = patterns.begin();
+          it != patterns.end(); ++it ) {
+      exitStatus = run( cmd + " " + KProcess::quote( *it ).local8Bit(),
+                        0, true );
+
+      if ( exitStatus != 0 ) {
+        status = ERROR;
+        return KeyList();
+      }
+
+      // now we need to parse the output for public keys
+      publicKeys = parseKeyList( output, false );
+
+      // put all new keys into a map, remove duplicates
+      while ( !publicKeys.isEmpty() ) {
+        Key * key = publicKeys.take( 0 );
+        if ( !map.contains( key->primaryFingerprint() ) )
+          map.insert( key->primaryFingerprint(), key );
+        else
+          delete key;
+      }
+    }
+    // build list from the map
+    for ( KeyMap::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+      publicKeys.append( it.data() );
+    }
+  }
 
   // sort the list of public keys
   publicKeys.sort();
@@ -522,11 +564,10 @@ Base2::publicKeys()
   return publicKeys;
 }
 
-
 KeyList
-Base2::secretKeys()
+Base2::secretKeys( const QStringList & patterns )
 {
-  return publicKeys();
+  return publicKeys( patterns );
 }
 
 
@@ -536,7 +577,7 @@ Base2::signKey(const KeyID& keyID, const char *passphrase)
   QCString cmd;
   int exitStatus = 0;
 
-  cmd = "pgp +batchmode +language=en -ks -f ";
+  cmd = PGP2 " +batchmode +language=en -ks -f ";
   cmd += addUserId();
   cmd += " 0x" + keyID;
 
@@ -558,7 +599,7 @@ QCString Base2::getAsciiPublicKey(const KeyID& keyID)
     return QCString();
 
   status = 0;
-  exitStatus = run( "pgp +batchmode +force +language=en -kxaf 0x" + keyID,
+  exitStatus = run( PGP2 " +batchmode +force +language=en -kxaf 0x" + keyID,
                     0, true );
 
   if(exitStatus != 0) {
@@ -652,7 +693,7 @@ Base2::parsePublicKeyData( const QCString& output, Key* key /* = 0 */ )
       default:
         kdDebug(5100) << "Unknown key flag.\n";
       }
-      
+
       // Key Length
       pos = index + 4;
       while( output[pos] == ' ' )
@@ -720,10 +761,10 @@ Base2::parsePublicKeyData( const QCString& output, Key* key /* = 0 */ )
                !strncmp( output.data() + pos, "no expire ", 10 ) )
       { // line contains additional key properties
         // Examples:
-        //            Expire: 2001/09/10 
+        //            Expire: 2001/09/10
         //                     no expire ENCRyption only
         //                     no expire SIGNature only
-        
+
         if( output[pos] == 'E' )
         {
           // Expiration Date
@@ -852,6 +893,7 @@ Base2::parseTrustDataForKey( Key* key, const QCString& str )
 KeyList
 Base2::parseKeyList( const QCString& output, bool secretKeys )
 {
+  kdDebug(5100) << "Kpgp::Base2::parseKeyList()" << endl;
   KeyList keys;
   Key *key = 0;
   Subkey *subkey = 0;
@@ -930,7 +972,7 @@ Base2::parseKeyList( const QCString& output, bool secretKeys )
       default:
         kdDebug(5100) << "Unknown key flag.\n";
       }
-      
+
       // Key Length
       pos = index + 4;
       while( output[pos] == ' ' )
@@ -1000,10 +1042,10 @@ Base2::parseKeyList( const QCString& output, bool secretKeys )
                !strncmp( output.data() + pos, "no expire ", 10 ) )
       { // line contains additional key properties
         // Examples:
-        //            Expire: 2001/09/10 
+        //            Expire: 2001/09/10
         //                     no expire ENCRyption only
         //                     no expire SIGNature only
-        
+
         if( output[pos] == 'E' )
         {
           // Expiration Date

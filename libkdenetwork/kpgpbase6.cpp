@@ -29,6 +29,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 
+#define PGP6 "pgp"
 
 namespace Kpgp {
 
@@ -51,7 +52,7 @@ Base6::decrypt( Block& block, const char *passphrase )
 
   clear();
   input = block.text();
-  exitStatus = run("pgp +batchmode +language=C -f", passphrase);
+  exitStatus = run( PGP6 " +batchmode +language=C -f", passphrase);
   if( !output.isEmpty() )
     block.setProcessedText( output );
   block.setError( error );
@@ -191,7 +192,7 @@ Base6::readPublicKey( const KeyID& keyID,
   int exitStatus = 0;
 
   status = 0;
-  exitStatus = run( "pgp +batchmode -compatible +verbose=0 +language=C -kvvc "
+  exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
                     "0x" + keyID, 0, true );
 
   if(exitStatus != 0) {
@@ -208,7 +209,7 @@ Base6::readPublicKey( const KeyID& keyID,
 
   if( readTrust )
   {
-    exitStatus = run( "pgp +batchmode -compatible +verbose=0 +language=C -kc "
+    exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kc "
                       "0x" + keyID, 0, true );
 
     if(exitStatus != 0) {
@@ -224,26 +225,10 @@ Base6::readPublicKey( const KeyID& keyID,
 
 
 KeyList
-Base6::publicKeys()
+Base6::publicKeys( const QStringList & patterns )
 {
-  int exitStatus = 0;
-
-  status = 0;
-  exitStatus = run( "pgp +batchmode -compatible +verbose=0 +language=C -kvvc",
-                    0, true );
-
-  if(exitStatus != 0) {
-    status = ERROR;
-    return KeyList();
-  }
-
-  // now we need to parse the output for public keys
-  KeyList publicKeys = parseKeyList(output, false);
-
-  // sort the list of public keys
-  publicKeys.sort();
-
-  return publicKeys;
+  return doGetPublicKeys( PGP6 " +batchmode -compatible +verbose=0 "
+                          "+language=C -kvvc", patterns );
 }
 
 
@@ -357,9 +342,9 @@ Base6::pubKeys()
 
 
 KeyList
-Base6::secretKeys()
+Base6::secretKeys( const QStringList & patterns )
 {
-  return publicKeys();
+  return publicKeys( patterns );
 }
 
 
@@ -368,7 +353,7 @@ Base6::isVersion6()
 {
   int exitStatus = 0;
 
-  exitStatus = run( "pgp", 0, true );
+  exitStatus = run( PGP6, 0, true );
 
   if(exitStatus == -1) {
     errMsg = i18n("error running PGP");
@@ -441,7 +426,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
       bool sign = false;
       bool encr = false;
 
-      // set default key capabilities 
+      // set default key capabilities
       if( !strncmp( output.data() + offset, "DSS", 3 ) )
         sign = true;
       if( !strncmp( output.data() + offset, "RSA", 3 ) )
@@ -474,7 +459,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
       default:
         kdDebug(5100) << "Unknown key flag.\n";
       }
-      
+
       // Key Length
       pos = offset + 4;
       while( output[pos] == ' ' )
@@ -482,7 +467,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
       pos2 = output.find( ' ', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
       //kdDebug(5100) << "Key Length: "<<subkey->keyLength()<<endl;
-      
+
       // Key ID
       pos = pos2 + 1;
       while( output[pos] == ' ' )
@@ -579,7 +564,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
       bool sign = false;
       bool encr = false;
 
-      // set default key capabilities 
+      // set default key capabilities
       if( !strncmp( output.data() + offset, "DSS", 3 ) )
         sign = true;
       if( !strncmp( output.data() + offset, " DH", 3 ) )
@@ -748,6 +733,7 @@ Base6::parseSingleKey( const QCString& output, Key* key /* = 0 */ )
 KeyList
 Base6::parseKeyList( const QCString& output, bool secretKeys )
 {
+  kdDebug(5100) << "Kpgp::Base6::parseKeyList()" << endl;
   KeyList keys;
   Key *key = 0;
   int offset;

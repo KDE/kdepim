@@ -21,7 +21,7 @@
 
 #include <qstring.h>
 #include <qcstring.h>
-#include <qstrlist.h>
+#include <qstringlist.h>
 
 #include "kpgpkey.h"
 #include "kpgpblock.h"
@@ -38,20 +38,20 @@ public:
   
 
   /** Encrypts the message with the given keys. */
-  virtual int encrypt( Block& , const KeyIDList& ) { return OK; };
+  virtual int encrypt( Block& , const KeyIDList& ) { return OK; }
 
   /** Clearsigns the message with the currently set key. */
-  virtual int clearsign( Block& , const char *) { return OK; };
+  virtual int clearsign( Block& , const char *) { return OK; }
 
   /** Encrypts and signs the message with the given keys. */
   virtual int encsign( Block& , const KeyIDList& ,
-                      const char * = 0) { return OK; };
+                      const char * = 0) { return OK; }
 
   /** Decrypts the message. */
-  virtual int decrypt( Block& , const char * = 0) { return OK; };
+  virtual int decrypt( Block& , const char * = 0) { return OK; }
 
   /** Verifies the message. */
-  virtual int verify( Block& block ) { return decrypt( block, 0 ); };
+  virtual int verify( Block& block ) { return decrypt( block, 0 ); }
   
 
   /** Reads the key data for the given key and returns it. If
@@ -61,21 +61,23 @@ public:
    */
   virtual Key* readPublicKey( const KeyID&, const bool = false,
                               Key* = 0 )
-    { return 0; };
+    { return 0; }
 
   /** Returns the list of public keys in the users public keyring. */
-  virtual KeyList publicKeys() { return KeyList(); };
+  virtual KeyList publicKeys( const QStringList & = QStringList() )
+ { return KeyList(); }
 
   /** Returns the list of secret keys in the users secret keyring. */
-  virtual KeyList secretKeys() { return KeyList(); };
+  virtual KeyList secretKeys( const QStringList & = QStringList() )
+ { return KeyList(); }
 
   /** Returns the ascii armored data of the public key with the
       given key id. */
-  virtual QCString getAsciiPublicKey(const KeyID& ) { return QCString(); };
+  virtual QCString getAsciiPublicKey(const KeyID& ) { return QCString(); }
 
   /** Signs the given key with the currently set user key. This is currently
       not implemented. */
-  virtual int signKey(const KeyID& , const char *) { return OK; };
+  virtual int signKey(const KeyID& , const char *) { return OK; }
 
 
   /** Returns an error message if an error occurred during the last
@@ -117,20 +119,24 @@ public:
   virtual int encsign( Block& block, const KeyIDList& recipients,
                        const char *passphrase = 0 );
   virtual int decrypt( Block& block, const char *passphrase = 0 );
-  virtual int verify( Block& block ) { return decrypt( block, 0 ); };
+  virtual int verify( Block& block ) { return decrypt( block, 0 ); }
 
   virtual Key* readPublicKey( const KeyID& keyID,
                               const bool readTrust = false,
                               Key* key = 0 );
-  virtual KeyList publicKeys();
-  virtual KeyList secretKeys();
+  virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
+  virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
   virtual QCString getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
+
+protected:
+  KeyList doGetPublicKeys( const QCString & cmd,
+                           const QStringList & patterns );
+  virtual KeyList parseKeyList( const QCString&, bool );
 
 private:
   Key* parsePublicKeyData( const QCString& output, Key* key = 0 );
   void parseTrustDataForKey( Key* key, const QCString& str );
-  KeyList parseKeyList( const QCString&, bool );
 };
 
 class BaseG : public Base
@@ -145,13 +151,13 @@ public:
   virtual int encsign( Block& block, const KeyIDList& recipients,
                        const char *passphrase = 0 );
   virtual int decrypt( Block& block, const char *passphrase = 0 );
-  virtual int verify( Block& block ) { return decrypt( block, 0 ); };
+  virtual int verify( Block& block ) { return decrypt( block, 0 ); }
 
   virtual Key* readPublicKey( const KeyID& keyID,
                               const bool readTrust = false,
                               Key* key = 0 );
-  virtual KeyList publicKeys();
-  virtual KeyList secretKeys();
+  virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
+  virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
   virtual QCString getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
@@ -173,13 +179,13 @@ public:
   virtual int encsign( Block& block, const KeyIDList& recipients,
                        const char *passphrase = 0 );
   virtual int decrypt( Block& block, const char *passphrase = 0 );
-  virtual int verify( Block& block ) { return decrypt( block, 0 ); };
+  virtual int verify( Block& block ) { return decrypt( block, 0 ); }
 
   virtual Key* readPublicKey( const KeyID& keyID,
                               const bool readTrust = false,
                               Key* key = 0 );
-  virtual KeyList publicKeys();
-  virtual KeyList secretKeys();
+  virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
+  virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
   virtual QCString getAsciiPublicKey( const KeyID& keyID );
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
@@ -199,20 +205,22 @@ public:
   virtual ~Base6();
 
   virtual int decrypt( Block& block, const char *passphrase = 0 );
-  virtual int verify( Block& block ) { return decrypt( block, 0 ); };
+  virtual int verify( Block& block ) { return decrypt( block, 0 ); }
 
   virtual Key* readPublicKey( const KeyID& keyID,
                               const bool readTrust = false,
                               Key* key = 0 );
-  virtual KeyList publicKeys();
-  virtual KeyList secretKeys();
+  virtual KeyList publicKeys( const QStringList & patterns = QStringList() );
+  virtual KeyList secretKeys( const QStringList & patterns = QStringList() );
 
   virtual int isVersion6();
+
+protected:
+  virtual KeyList parseKeyList( const QCString &, bool );
 
 private:
   Key* parseKeyData( const QCString& output, int& offset, Key* key = 0 );
   Key* parseSingleKey( const QCString& output, Key* key = 0 );
-  KeyList parseKeyList( const QCString& output, bool );
   void parseTrustDataForKey( Key* key, const QCString& str );
 };
 

@@ -24,6 +24,7 @@
 #include "kpgp.h"
 
 #include <klocale.h>
+#include <kprocess.h>
 #include <kdebug.h>
 
 #include <qtextcodec.h>
@@ -402,14 +403,21 @@ BaseG::readPublicKey( const KeyID& keyID,
 
 
 KeyList
-BaseG::publicKeys()
+BaseG::publicKeys( const QStringList & patterns )
 {
   int exitStatus = 0;
 
   // the option --with-colons should be used for interprocess communication
   // with gpg (according to Werner Koch)
+  QCString cmd = "--batch --list-public-keys --with-fingerprint --with-colons "
+                 "--fixed-list-mode --no-expensive-trust-checks";
+  for ( QStringList::ConstIterator it = patterns.begin();
+        it != patterns.end(); ++it ) {
+    cmd += " ";
+    cmd += KProcess::quote( *it ).local8Bit();
+  }
   status = 0;
-  exitStatus = runGpg("--batch --list-public-keys --with-fingerprint --with-colons --fixed-list-mode --no-expensive-trust-checks", 0, true);
+  exitStatus = runGpg( cmd, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -427,14 +435,21 @@ BaseG::publicKeys()
 
 
 KeyList
-BaseG::secretKeys()
+BaseG::secretKeys( const QStringList & patterns )
 {
   int exitStatus = 0;
 
   // the option --with-colons should be used for interprocess communication
   // with gpg (according to Werner Koch)
+  QCString cmd = "--batch --list-secret-keys --with-fingerprint --with-colons "
+                 "--fixed-list-mode";
+  for ( QStringList::ConstIterator it = patterns.begin();
+        it != patterns.end(); ++it ) {
+    cmd += " ";
+    cmd += KProcess::quote( *it ).local8Bit();
+  }
   status = 0;
-  exitStatus = runGpg("--batch --list-secret-keys --with-fingerprint --with-colons --fixed-list-mode", 0, true);
+  exitStatus = runGpg( cmd, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
