@@ -275,7 +275,7 @@ bool AbbrowserConduit::_loadAddressBook()
 			if (!aBook) return false;
 			KABC::Resource *res = new ResourceFile( fAbookFile, "vcard" );
 			if ( !aBook->addResource( res ) ) {
-				DEBUG_KPILOT << "Unable to open resource for file " << fAbookFile << endl;
+				DEBUGCONDUIT << "Unable to open resource for file " << fAbookFile << endl;
 				KPILOT_DELETE( aBook );
 				return false;
 			}
