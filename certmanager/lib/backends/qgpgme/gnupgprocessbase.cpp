@@ -78,7 +78,9 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
       return false;
     }
     ::fcntl( d->statusFD[0], F_SETFD, FD_CLOEXEC );
-    ::fcntl( d->statusFD[1], F_SETFD, FD_CLOEXEC );
+    // don't ask me why we don't need this.
+    // "gpgme doesn't do it and it doesn't work otherwise" would be my answer :)
+    //::fcntl( d->statusFD[1], F_SETFD, FD_CLOEXEC );
     if ( !arguments.empty() ) {
       QValueList<QCString>::iterator it = arguments.begin();
       ++it;
@@ -87,8 +89,6 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
       sprintf( buf, "%d", d->statusFD[1] );
       arguments.insert( it, buf );
       arguments.insert( it, "--no-tty" );
-      arguments.insert( it, "--charset" );
-      arguments.insert( it, "utf8" );
       //arguments.insert( it, "--enable-progress-filter" ); // gpgsm doesn't know this
     }
   }
@@ -140,7 +140,8 @@ int Kleo::GnuPGProcessBase::childStatus( int fd ) {
   char buf[1024];
   const int len = ::read( fd, buf, sizeof(buf)-1 );
   if ( len > 0 ) {
-    buf[len] = 0;
+    buf[len] = 0; // Just in case.
+    emit receivedStatus( this, buf, len );
     // fixme: parse it
   }
   return len;

@@ -1,7 +1,7 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    gnupgprocessbase.h
+    gnupgviewer.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of libkleopatra's test suite.
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
@@ -30,59 +30,34 @@
     your version.
 */
 
-#ifndef __KLEO_GNUPGPROCESSBASE_H__
-#define __KLEO_GNUPGPROCESSBASE_H__
+#ifndef __KLEO_TESTS_GNUPGVIEWER_H__
+#define __KLEO_TESTS_GNUPGVIEWER_H__
 
-#include <kprocess.h>
+#include <qtextedit.h>
+#include <qstring.h>
 
 namespace Kleo {
-
-  /**
-   * @short a base class for GPG and GPGSM processes.
-   *
-   * This KProcess subclass implements the status-fd handling common
-   * to GPG and GPGSM.
-   *
-   * @author Marc Mutz <mutz@kde.org>
-   */
-  class GnuPGProcessBase : public KProcess {
-    Q_OBJECT
-  public:
-    GnuPGProcessBase( QObject * parent=0, const char * name=0 );
-    ~GnuPGProcessBase();
-
-    void setUseStatusFD( bool use );
-
-    /*! \reimp */
-    bool start( RunMode runmode, Communication comm );
-
-    bool closeStatus();
-
-  signals:
-    void receivedStatus( Kleo::GnuPGProcessBase * proc, char * buffer, int buflen );
-
-  protected:
-    /* !\reimp */
-    int setupCommunication( Communication comm );
-    /* !\reimp */
-    int commSetupDoneP();
-    /* !\reimp */
-    int commSetupDoneC();
-
-    int childStatus( int fd );
-    
-
-  private slots:
-    void slotChildStatus( int fd );
-
-  private:
-    class Private;
-    Private * d;
-  protected:
-    /*! \reimp */
-    void virtual_hook( int id, void * data );
-  };
-
+  class GnuPGProcessBase;
 }
+class KProcess;
 
-#endif // __KLEO_GNUPGPROCESSBASE_H__
+class GnuPGViewer : public QTextEdit {
+  Q_OBJECT
+public:
+  GnuPGViewer( QWidget * parent=0, const char * name=0 );
+  ~GnuPGViewer();
+
+  void setProcess( Kleo::GnuPGProcessBase * process );
+
+private slots:
+  void slotStdout( KProcess *, char *, int );
+  void slotStderr( KProcess *, char *, int );
+  void slotStatus( Kleo::GnuPGProcessBase *, char *, int );
+  void slotProcessExited( KProcess * );
+
+private:
+  Kleo::GnuPGProcessBase * mProcess;
+  QString mLastStdout, mLastStderr, mLastStatus;
+};
+
+#endif // __KLEO_TESTS_GNUPGVIEWER_H__
