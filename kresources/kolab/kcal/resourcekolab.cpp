@@ -413,6 +413,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
                                   Q_UINT32 sernum )
 {
   Q_ASSERT( incidence );
+  if ( !incidence ) return false;
   const QString &uid = incidence->uid();
   QString subResource = _subresource;
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
