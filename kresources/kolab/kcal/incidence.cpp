@@ -34,6 +34,7 @@
 #include "incidence.h"
 
 #include <libkcal/journal.h>
+#include <libkdepim/email.h>
 #include <kdebug.h>
 
 using namespace Kolab;
@@ -227,16 +228,127 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   return true;
 }
 
+static KCal::Attendee::PartStat attendeeStringToStatus( const QString& s )
+{
+  if ( s == "none" )
+    return KCal::Attendee::NeedsAction;
+  if ( s == "tentative" )
+    return KCal::Attendee::Tentative;
+  if ( s == "declined" )
+    return KCal::Attendee::Declined;
+
+  // Default:
+  return KCal::Attendee::Accepted;
+}
+
+static QString attendeeStatusToString( KCal::Attendee::PartStat status )
+{
+  switch( status ) {
+  case KCal::Attendee::NeedsAction:
+    return "none";
+  case KCal::Attendee::Accepted:
+    return "accepted";
+  case KCal::Attendee::Declined:
+    return "declined";
+  case KCal::Attendee::Tentative:
+    return "tentative";
+  case KCal::Attendee::Delegated:
+  case KCal::Attendee::Completed:
+  case KCal::Attendee::InProcess:
+    // These don't have any meaning in the Kolab format, so just use:
+    return "accepted";
+  }
+
+  // Default for the case that there are more added later:
+  return "accepted";
+}
+
+static KCal::Attendee::Role attendeeStringToRole( const QString& s )
+{
+  if ( s == "optional" )
+    return KCal::Attendee::OptParticipant;
+  if ( s == "resource" )
+    return KCal::Attendee::NonParticipant;
+  return KCal::Attendee::ReqParticipant;
+}
+
+static QString attendeeRoleToString( KCal::Attendee::Role role )
+{
+  switch( role ) {
+  case KCal::Attendee::ReqParticipant:
+    return "required";
+  case KCal::Attendee::OptParticipant:
+    return "optional";
+  case KCal::Attendee::Chair:
+    // We don't have the notion of chair, so use
+    return "required";
+  case KCal::Attendee::NonParticipant:
+    // In Kolab, a non-participant is a resource
+    return "resource";
+  }
+
+  // Default for the case that there are more added later:
+  return "required";
+}
 
 void Incidence::setFields( const KCal::Incidence* incidence )
 {
-  kdDebug() << "NYFI: " << k_funcinfo << endl;
   KolabBase::setFields( incidence );
+
+  // TODO: Alarm and recurrence
+
+  setStartDate( incidence->dtStart() );
+  setSummary( incidence->summary() );
+  setLocation( incidence->location() );
+
+  Email org;
+  KPIM::getNameAndMail( incidence->organizer(), org.displayName,
+                        org.smtpAddress );
+  setOrganizer( org );
+
+  // Attendees:
+  KCal::Attendee::List attendees = incidence->attendees();
+  KCal::Attendee::List::ConstIterator it;
+  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    KCal::Attendee* kcalAttendee = *it;
+    Attendee attendee;
+
+    attendee.displayName = kcalAttendee->name();
+    attendee.smtpAddress = kcalAttendee->email();
+    attendee.status = attendeeStatusToString( kcalAttendee->status() );
+    attendee.requestResponse = kcalAttendee->RSVP();
+    // TODO: KCal::Attendee::mFlag is not accessible
+    // attendee.invitationSent = kcalAttendee->mFlag;
+    attendee.role = attendeeRoleToString( kcalAttendee->role() );
+
+    addAttendee( attendee );
+  }
 }
 
 void Incidence::saveTo( KCal::Incidence* incidence )
 {
-  kdDebug() << "NYFI: " << k_funcinfo << endl;
   KolabBase::saveTo( incidence );
+
+  // TODO: Alarm and recurrence
+
+  incidence->setDtStart( startDate() );
+  incidence->setSummary( summary() );
+  incidence->setLocation( location() );
+  incidence->setOrganizer( organizer().displayName + "<"
+                           + organizer().smtpAddress + ">" );
+
+  incidence->clearAttendees();
+  QValueList<Attendee>::ConstIterator it;
+  for ( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
+    KCal::Attendee::PartStat status = attendeeStringToStatus( (*it).status );
+    KCal::Attendee::Role role = attendeeStringToRole( (*it).role );
+    incidence->addAttendee( new KCal::Attendee( (*it).displayName,
+                                                (*it).smtpAddress,
+                                                (*it).requestResponse,
+                                                status, role ) );
+  }
 }
 
+// Unhandled KCal::Incidence fields:
+// revision, status (unused), priority (done in tasks), attendee.uid,
+// mComments, mReadOnly

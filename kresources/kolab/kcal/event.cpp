@@ -170,6 +170,10 @@ void Event::setFields( const KCal::Event* event )
 
 void Event::saveTo( KCal::Event* event )
 {
-  kdDebug() << "NYFI: " << k_funcinfo << endl;
-  KolabBase::saveTo( event );
+  Incidence::saveTo( event );
+
+  event->setHasEndDate( mHasEndDate );
+  if ( mHasEndDate )
+    event->setDtEnd( endDate() );
+  event->setTransparency( transparency() );
 }

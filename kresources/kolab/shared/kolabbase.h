@@ -54,6 +54,12 @@ class KolabBase {
 public:
   struct Email {
   public:
+    Email( const QString& name = QString::null,
+           const QString& email = QString::null )
+      : displayName( name ), smtpAddress( email )
+    {
+    }
+
     QString displayName;
     QString smtpAddress;
   };
