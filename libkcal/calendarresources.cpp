@@ -137,9 +137,10 @@ void CalendarResources::load()
         msg += err;
         emit signalErrorMessage( msg );
       }
+      (*it)->setActive( false );
+      emit signalResourceModified( *it );
     }
 
-    // FIXME: Really should remove resource if open not successful
     connectResource( *it );
   }
 
