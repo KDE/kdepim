@@ -181,7 +181,7 @@ class GroupwareDataAdaptor
     /** Returns the ginerprint of the item on the server */
     virtual QString extractFingerprint( KIO::TransferJob *job, 
            const QString &rawText ) = 0;
-    /** Adds the downloaded item to the local cache (job was created by createDownloadItemJob. */
+    /** Adds the downloaded item to the local cache (job was created by createDownloadItemJob). */
     virtual QString addItem( KIO::TransferJob *job, 
            const QString &rawText, QString &fingerprint, 
            const QString &localId, const QString &storageLocation ) = 0;
