@@ -35,13 +35,15 @@
 #include "uiDialog.h"
 
 class QListViewItem;
+class QPushButton;
 class KProcess;
 
 class ConduitConfigWidget : public ConduitConfigWidgetBase
 {
 Q_OBJECT
 public:
-	ConduitConfigWidget(QWidget *, const char *name=0L);
+	ConduitConfigWidget(QWidget *, 
+		const char *name=0L, bool ownButtons=false);
 	virtual ~ConduitConfigWidget();
 
 protected:
@@ -53,13 +55,16 @@ protected:
 public slots:
 	void commitChanges();
 
+signals:
+	void selectionChanged(QListViewItem *);
+
 protected slots:
 	void selected(QListViewItem *);
-	void enableConduit();
-	void disableConduit();
 
 	void configureConduit();
 
+private:
+	QPushButton *fConfigure;
 } ;
 
 class ConduitConfigDialog : public UIDialog
@@ -71,6 +76,9 @@ public:
 
 protected:
 	virtual void commitChanges();
+
+protected slots:
+	void selected(QListViewItem *);
 
 private:
 	ConduitConfigWidget *fConfigWidget;

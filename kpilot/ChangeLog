@@ -38,6 +38,11 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
+2003-4-17  Adriaan de Groot
+* Finished moving the conduit config to checklist items. Worked out
+  a sensible compromise with the command buttons. The conduit 
+  descriptions (comment lines in the .desktop files) need work.
+
 2003-4-16  Reinhold Kainhofer
 * Tried to add a logMessagePart slot which would append some words 
   to the last line of the sync log (but would not start a new paragraph, 

@@ -36,6 +36,8 @@ static const char *conduitconfigdialog_id =
 #include <qtooltip.h>
 #include <qfile.h>
 #include <qpushbutton.h>
+#include <qhbox.h>
+#include <qlayout.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -45,6 +47,7 @@ static const char *conduitconfigdialog_id =
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <klibloader.h>
+#include <kseparator.h>
 
 #include "plugin.h"
 #include "kpilotConfig.h"
@@ -58,12 +61,20 @@ static const char *conduitconfigdialog_id =
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
-	bool m) : UIDialog(_w, n, m)
+	bool m) : UIDialog(_w, n, Ok|Cancel|User1,m)
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new ConduitConfigWidget(widget());
+	enableButtonSeparator(true);
+	setButtonText(User1,i18n("Configure..."));
+	selected(0L);
+
+	fConfigWidget = new ConduitConfigWidget(widget(),0L);
 	fConfigWidget->show();
+
+	QObject::connect(fConfigWidget,
+		SIGNAL(selectionChanged(QListViewItem *)),
+		this,SLOT(selected(QListViewItem *)));
 
 	(void) conduitconfigdialog_id;
 }
@@ -78,31 +89,42 @@ ConduitConfigDialog::~ConduitConfigDialog()
 	fConfigWidget->commitChanges();
 }
 
-ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n) :
-	ConduitConfigWidgetBase(p,n)
+void ConduitConfigDialog::selected(QListViewItem *p)
+{
+	enableButton(User1,p);
+}
+
+ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
+	bool ownbuttons) :
+	ConduitConfigWidgetBase(p,n),
+	fConfigure(0L)
 {
 	FUNCTIONSETUP;
 
 	fillLists();
 	fConduitList->adjustSize();
 	fConduitList->show();
-	fEnableAll->show();
 
+	if (ownbuttons)
+	{
+		QHBox *h = new QHBox(this);
+		fConfigure = new QPushButton(i18n("Configure..."),h);
+		fConduitConfigLayout->addWidget(h,5,0);
+		h->setStretchFactor(fConfigure,0);
+		
+		QWidget *w = new QWidget(h);
+		h->setStretchFactor(w,100);
+		
+		KSeparator *s = new KSeparator(this);
+		fConduitConfigLayout->addWidget(s,4,0);
+	}
+	
 	QObject::connect(fConduitList,
 		SIGNAL(doubleClicked(QListViewItem *)),
 		this,SLOT(configureConduit()));
 	QObject::connect(fConduitList,
 		SIGNAL(selectionChanged(QListViewItem *)),
 		this,SLOT(selected(QListViewItem *)));
-	QObject::connect(fEnableAll,
-		SIGNAL(clicked()),
-		this,SLOT(enableConduit()));
-	QObject::connect(fDisableAll,
-		SIGNAL(clicked()),
-		this,SLOT(disableConduit()));
-	QObject::connect(fConfigure,
-		SIGNAL(clicked()),
-		this,SLOT(configureConduit()));
 
 	selected(0L);
 	adjustSize();
@@ -168,41 +190,9 @@ void ConduitConfigWidget::fillLists()
 void ConduitConfigWidget::selected(QListViewItem *p)
 {
 	FUNCTIONSETUP;
-	fConfigure->setEnabled(p);
+	if (fConfigure) fConfigure->setEnabled(p);
+	emit selectionChanged(p);
 }
-
-// In spite of its name, enable _all_ conduits
-void ConduitConfigWidget::enableConduit()
-{
-	FUNCTIONSETUP;
-	
-	QListViewItem *l = 0L;
-	QCheckListItem *c = 0L;
-	
-	l = fConduitList->firstChild();
-	while (l && (c=dynamic_cast<QCheckListItem *>(l)))
-	{
-		c->setOn(true);
-		l=l->nextSibling();
-	}
-}
-
-// In spite of its name, disable _all_ conduits
-void ConduitConfigWidget::disableConduit()
-{
-	FUNCTIONSETUP;
-	
-	QListViewItem *l = 0L;
-	QCheckListItem *c = 0L;
-	
-	l = fConduitList->firstChild();
-	while (l && (c=dynamic_cast<QCheckListItem *>(l)))
-	{
-		c->setOn(false);
-		l=l->nextSibling();
-	}
-}
-
 
 void ConduitConfigWidget::configureConduit()
 {

@@ -57,6 +57,17 @@ UIDialog::UIDialog(QWidget * parent, const char *name,
 	fMainWidget = makeHBoxMainWidget();
 }
 
+UIDialog::UIDialog(QWidget *parent, const char *name,
+	int buttonmask, bool modal) :
+	KDialogBase(parent,name,modal,QString::null,
+		buttonmask | KDialogBase::Ok,
+		KDialogBase::Ok, false),
+	fP(0L)
+{
+	FUNCTIONSETUP;
+	fMainWidget = makeHBoxMainWidget();
+}
+
 UIDialog::~UIDialog()
 {
 	FUNCTIONSETUP;

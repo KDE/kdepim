@@ -41,6 +41,8 @@ class UIDialog : public KDialogBase
 Q_OBJECT
 public:
 	UIDialog(QWidget *parent=0L, const char *name=0L,bool modal=false);
+	UIDialog(QWidget *parent=0L, const char *name=0L,
+		int buttonmask=Ok|Cancel, bool modal=false);
 	virtual ~UIDialog();
 
 protected:
