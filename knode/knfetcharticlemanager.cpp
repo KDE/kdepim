@@ -159,6 +159,8 @@ void KNFetchArticleManager::showHdrs(bool clear)
 		  art->setListItem(new KNHdrViewItem(view));
 		  art->initListItem();
 		}
+		else if(art->listItem())
+		  art->updateListItem();
 		
 		
 			/*if(t_hreaded) createThread(art);
