@@ -420,21 +420,32 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   pipe(pout);
   pipe(perr);
 
-    if( passphrase && ( 0 == getenv("GPG_AGENT_INFO") ) ) {
-      if( mVersion >= "1.0.7" ) {
+  if( passphrase ) {
+    if( mVersion >= "1.0.7" ) {
+      // GnuPG >= 1.0.7 supports the gpg-agent, so we look for it.
+      if( 0 == getenv("GPG_AGENT_INFO") ) {
+        // gpg-agent not found, so we tell gpg not to use the agent
         snprintf( gpgcmd, 1023,
                   "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",
                   ppass[0], cmd );
       }
       else {
+        // gpg-agent seems to be running, so we tell gpg to use the agent
         snprintf( gpgcmd, 1023,
-                  "LANGUAGE=C gpg --passphrase-fd %d %s",
-                  ppass[0], cmd );
+                  "LANGUAGE=C gpg --use-agent %s",
+                  cmd );
       }
     }
     else {
-      snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
+      // GnuPG < 1.0.7 doesn't know anything about the gpg-agent
+      snprintf( gpgcmd, 1023,
+                "LANGUAGE=C gpg --passphrase-fd %d %s",
+                ppass[0], cmd );
     }
+  }
+  else {
+    snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
+  }
 
   QApplication::flushX();
   if(!(child_pid = fork()))
@@ -454,13 +465,24 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
     //#warning FIXME: there has to be a better way to do this
      /* this is nasty nasty nasty (but it works) */
-    if( passphrase && ( 0 == getenv("GPG_AGENT_INFO") ) ) {
+    if( passphrase ) {
       if( mVersion >= "1.0.7" ) {
-        snprintf( gpgcmd, 1023,
-                  "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",
-                  ppass[0], cmd );
+        // GnuPG >= 1.0.7 supports the gpg-agent, so we look for it.
+        if( 0 == getenv("GPG_AGENT_INFO") ) {
+          // gpg-agent not found, so we tell gpg not to use the agent
+          snprintf( gpgcmd, 1023,
+                    "LANGUAGE=C gpg --no-use-agent --passphrase-fd %d %s",
+                    ppass[0], cmd );
+        }
+        else {
+          // gpg-agent seems to be running, so we tell gpg to use the agent
+          snprintf( gpgcmd, 1023,
+                    "LANGUAGE=C gpg --use-agent %s",
+                    cmd );
+        }
       }
       else {
+        // GnuPG < 1.0.7 doesn't know anything about the gpg-agent
         snprintf( gpgcmd, 1023,
                   "LANGUAGE=C gpg --passphrase-fd %d %s",
                   ppass[0], cmd );
