@@ -963,7 +963,7 @@ and cancel (or supersede) it there."));
     }
 
     if(!ownArticle) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede your own articles."));
       return false;
     }
 
