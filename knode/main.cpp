@@ -23,15 +23,6 @@
 #include "resource.h"
 
 
-void convert(const char*);
-
-static const KCmdLineOptions options[] =
-{
-  { "convert <version>", I18N_NOOP("convert the database from <version>"), 0 },
-  { "c", 0, 0},
-  { 0, 0, 0}
-};
-
 int main(int argc, char* argv[])
 {
 
@@ -49,17 +40,8 @@ int main(int argc, char* argv[])
   aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
   aboutData.addAuthor("Matthias Kalle Dalheimer",0,"kalle@kde.org");
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  KApplication::addCmdLineOptions();
 
-  QCString val = args->getOption("convert");
-  if (val.length()) {
-    cout << I18N_NOOP("Converting ...\n");
-    convert(val);
-  }
-  
-  args->clear();
-  
   KApplication app;
 
   if (app.isRestored()) {

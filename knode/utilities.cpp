@@ -25,63 +25,6 @@
 #include "utilities.h"
 
 
-/*
-bool stripCRLF(char *str)
-{
-  int pos=strlen(str)-1;
-  while(str[pos]!='\n') pos--;
-  //if(str[pos]=='\n') {
-    str[pos--]='\0';
-    if(str[pos]=='\r') str[pos]='\0';
-    return true;
-  //}
-  //else return false;  
-}
-
-
-
-bool stripCRLF(QCString &str)
-{
-  int pos=str.length()-1;
-  
-  while(str[pos]==' ') pos--;
-  
-  if(str[pos]=='\n') {
-    if(str[pos-1]=='\r') str.truncate(pos-1);
-    else str.truncate(pos);
-    return true;
-  }
-  else return false;
-  
-}
-
-
-
-void removeQuots(QCString &str)
-{
-  int idx=0, pos1=0, pos2=0;
-  char firstChar, lastChar;
-    
-  do {
-    pos1=idx;
-    firstChar=str[idx++];
-  } while(firstChar==' ');
-    
-  idx=str.length();
-    
-  do {
-    lastChar=str[--idx];
-    pos2=idx-1;
-  } while(lastChar==' ');
-    
-  if(firstChar=='"' && lastChar=='"') {
-    str.remove(pos1,1);
-    str.remove(pos2,1);
-  }
-  
-}
-*/
-
 
 void saveWindowSize(const QString &name, const QSize &s)
 {

@@ -15,6 +15,8 @@
 
 #include <qpixmap.h>
 
+#include <kconfig.h>
+#include <kglobal.h>
 #include <kmessagebox.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
@@ -25,6 +27,7 @@
 #include <khtml_part.h>
 #include <kwin.h>
 
+#include "knuserentry.h"
 #include "knjobdata.h"
 #include "knnetaccess.h"
 #include "knpurgeprogressdialog.h"
@@ -142,6 +145,8 @@ QSize KNProgress::sizeHint() const
 KNodeApp::KNodeApp()
   : KMainWindow(0), setDialog(0)
 {
+  bool is_first_start = firstStart();
+
   knGlobals.top=this;
   knGlobals.topWidget=this;
   kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
@@ -196,6 +201,9 @@ KNodeApp::KNodeApp()
   if(view->collectionView->firstChild())
     view->collectionView->setCurrentItem(view->collectionView->firstChild());
   view->collectionView->setFocus();
+
+  if (is_first_start)  // open the config dialog on the first start
+    slotSettings();
 }
 
 
@@ -368,67 +376,6 @@ void KNodeApp::initActions()
 }
 
 
-/*  old debug code...
-#ifdef TEST
-#include "kncomposer.h"
-#include "knfilterconfigwidget.h"
-#include "knsearchdialog.h"ü
-#include "knpurgeprogressdialog.h"
-#endif
-
-#ifdef TEST
-  test_menu=new QPopupMenu();
-  test_menu->insertItem("Composer", 10);
-  test_menu->insertItem("compact list", 20);
-  test_menu->insertItem("filter config", 30);
-  test_menu->insertItem("search", 40);
-  test_menu->insertItem("settings", 50);
-  test_menu->insertItem("purge progress", 60);
-  file_menu->insertItem("Test", test_menu);
-  connect(test_menu, SIGNAL(activated (int)), SLOT(slotMainCallback (int)));
-#endif
-
-#ifdef TEST
-  KNComposer *composer;
-  KNSavedArticle *sart;
-  KNFilterConfigWidget *fconf;
-  KNSearchDialog *sdl;
-  KNSettingsDialog *set;
-  KNPurgeProgressDialog *ppdlg;
-
-    case  10:
-      \*sart=new KNSavedArticle();
-      sart->setStatus(KNArticleBase::AStoPost);
-      sart->setDestination("abc,def,ghi");
-      composer=new KNComposer(sart);
-      composer->show(); *\
-    break;
-    case  20:
-      GManager->currentGroup()->compactList();
-    break;
-    case 30:
-      fconf=new KNFilterConfigWidget();
-      fconf->show();
-    break;
-    case 40:
-      sdl=new KNSearchDialog();
-      sdl->show();
-    break;
-    case 50:
-      set=new KNSettingsDialog();
-      set->exec();
-      delete set;
-    break;
-    case 60:
-      ppdlg=new KNPurgeProgressDialog();
-      ppdlg->init("Deleting expired articles ...", 10);
-      ppdlg->setInfo("Group : de.alt.comp.kde");
-      ppdlg->show();
-    break;
-#endif
-
-*/
-
 
 void KNodeApp::initPopups()
 {
@@ -449,6 +396,44 @@ void KNodeApp::saveOptions()
   FAManager->saveOptions();
   KNArticleWidget::saveOptions();
   AppManager->saveOptions();
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("GENERAL");
+  conf->writeEntry("Version",KNODE_VERSION);
+}
+
+
+
+// checks if run for the first time, sets some global defaults (email configuration)
+bool KNodeApp::firstStart()
+{
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("GENERAL");
+  QString ver = conf->readEntry("Version");
+  if (!ver.isEmpty())
+    return false;
+
+  KConfig emailConf("emaildefaults");
+
+  emailConf.setGroup("UserInfo");
+  KNUserEntry *user=new KNUserEntry();
+  user->setName(emailConf.readEntry("FullName").local8Bit());
+  user->setEmail(emailConf.readEntry("EmailAddress").local8Bit());
+  user->setOrga(emailConf.readEntry("Organization").local8Bit());
+  user->setReplyTo(emailConf.readEntry("ReplyAddr").local8Bit());
+  conf->setGroup("IDENTITY");
+  user->save(conf);
+  delete user;
+
+  emailConf.setGroup("ServerInfo");
+  KNServerInfo *serverInfo=new KNServerInfo();
+  serverInfo->setType(KNServerInfo::STsmtp);
+  serverInfo->setServer(emailConf.readEntry("Outgoing").local8Bit());
+  conf->setGroup("MAILSERVER");
+  serverInfo->saveConf(conf);
+  delete serverInfo;
+
+  return true;
 }
 
 

@@ -20,7 +20,7 @@ knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	knfetcharticle.cpp knarticle.cpp knmimeinfo.cpp knmimecontent.cpp \
 	knarticlebase.cpp knfocuswidget.cpp knarticlewidget.cpp \
 	kngrouppropdlg.cpp knuserwidget.cpp knuserentry.cpp \
-	knscoredialog.cpp knthread.cpp convert.cpp knfiltermanager.cpp \
+	knscoredialog.cpp knthread.cpp knfiltermanager.cpp \
 	knstatusfilter.cpp knstringfilter.cpp knrangefilter.cpp \
 	knfilterdialog.cpp kngroupdialog.cpp  knstringsplitter.cpp \
         knhdrviewitem.cpp knlistview.cpp knlistbox.cpp 	utilities.cpp \

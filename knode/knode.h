@@ -99,6 +99,9 @@ class KNodeApp : public KMainWindow
     void initPopups();        
     
     void saveOptions();
+
+    // checks if run for the first time, sets some global defaults (email configuration)
+    bool firstStart();
       
     //exit
     void cleanup();
