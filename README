@@ -44,7 +44,6 @@ There is also quite an amount of infrastructure in this package:
 * libkdenetwork: Common code for apps previously being in the kdenetwork CVS
                  module (KMail, KNode). This will be merged with libkdepim.
 * mimelib: MIME messages library
-* libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
 * libkcal: C++ api for the iCalendar and vCalendar formats
 * libkcal/libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
 * libkpimexchange: connecting to Exchange2000 servers
