@@ -196,9 +196,9 @@ to use from the list of secret keys found. If you do not have an
 do not need to worry about this setting.</para>
 
 <note><para>The selected key will also be used as the recipient when
-you check <link linkend="configure-security-pgp-encrypttoself">
+you check <link linkend="configure-security-composing-encrypt-to-self">
 <guilabel>Always encrypt to self</guilabel></link> on the <link
-linkend="configure-security-pgp"><guilabel>OpenPGP</guilabel> tab</link>
+linkend="configure-security-composing"><guilabel>Composing</guilabel> tab</link>
 of the <link linkend="configure-security">
 <guilabel>Security</guilabel> page</link>.</para></note>
 
@@ -624,7 +624,7 @@ is only useful for advanced users.</para>
       </title>
 
       <para>
-	On this tab you can configure security-relavant options for
+	On this tab you can configure security-relevant options for
 	reading messages.
       </para>
 
@@ -825,7 +825,7 @@ is only useful for advanced users.</para>
 	      &kmail; sends &mdn;s regardless of whether the message
 	      could be successfully decrypted or not (the disposition
 	      notification request resides in the unencrypted part of
-	      the message), but it gives the security-concious user
+	      the message), but it gives the security-conscious user
 	      the choice to either send them always if requested
 	      (option unchecked), or never (option checked).
 	    </para>
@@ -860,15 +860,151 @@ is only useful for advanced users.</para>
       </variablelist>
     </sect2>
 
-<sect2 id="configure-security-pgp">
-<title>OpenPGP</title>
+    <sect2 id="configure-security-composing">
+      <title>
+	Composing
+      </title>
 
-<para id="configure-security-pgp-encrypttoself">For the
-<guilabel>OpenPGP</guilabel> tab please see the <link
-linkend="pgp-settings"><application>OpenPGP</application>
-section</link>.</para>
+      <para>
+	On this tab you can configure security-relavant options for
+	composing messages.
+      </para>
 
-</sect2>
+      <variablelist>
+
+	<varlistentry id="configure-security-composing-automatically-sign">
+	  <term>
+	    <guilabel>Automatically sign messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, the <xref
+	      linkend="composer-options-sign-message"/> option in the
+	      composer will default to <emphasis>on</emphasis>.
+	    </para>
+	    <para>
+	      However, you can still switch it on and off on a
+	      per-message basis.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-encrypt-to-self">
+	  <term>
+	    <guilabel>Always encrypt to self</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, any message that is encrypted to the
+	      recipients will additionally be encrypted to yourself.
+	    </para>
+	    <warning>
+	      <para>
+		If you uncheck this option, you may not be able to
+		decrypt the messages written by yourself and encrypted
+		to other people anymore.
+	      </para>
+	    </warning>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-store-sent-encrypted">
+	  <term>
+	    <guilabel>Store sent messages encrypted</guilabel><!--
+	    --><footnote>
+	      <para>
+		This options enables a mode of using mail encryption
+		that is sometimes (misleadingly) called
+		<quote>transport-only</quote> encryption. In this mode
+		of operation, the message encryption is stripped off
+		as soon as the message has reached its
+		destination. The encryption lasts only while the
+		message is on its way.
+	      </para>
+	      <para>
+		&kmail; supports this mode half-heartedly, since such
+		functionality should better placed at the mail
+		<emphasis>server</emphasis> (<acronym>MTA</acronym>)
+		than at the mail <emphasis>client</emphasis>
+		(<acronym>MUA</acronym>) level. Thus, future versions
+		of &kmail; may drop support for this option.
+	      </para>
+	    </footnote>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, messages are stored in your
+	      <guilabel>sent-mail</guilabel> folder just as you sent
+	      them (&ie; if they were encrypted, they are also stored
+	      that way).
+	    </para>
+	    <para>
+	      If unchecked, messages will <emphasis>always</emphasis>
+	      be stored unencrypted in your
+	      <guilabel>sent-mail</guilabel> folder, even if they are
+	      sent encrypted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-show-encryption-key">
+	  <term>
+	    <guilabel>Always show the encryption keys for approval</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, everytime you encrypt a message, a dialog
+	      will appear that presents you with the encryption keys
+	      that will be used for each recipient. You can then
+	      review the choice of keys, change them, and approve or
+	      cancel the encryption operation. We recommend to keep
+	      this option checked, since it makes the encryption
+	      process more transparent.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-opportunistic-encryption">
+	  <term>
+	    <guilabel>Automatically encrypt messages whenever possible</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Also called <quote>opportunistic encryption</quote>. If
+	      checked, &kmail; will try to match recipients to
+	      (OpenPGP or S/MIME) keys even when you did
+	      <emphasis>not</emphasis> specifically request
+	      encryption. If usable keys are found for all recipients,
+	      &kmail; will ask whether or not you want to encrypt the
+	      message.
+	    </para>
+	    <para>
+	      It is highly recommeded to turn this on, as it makes
+	      encrypting messages really easy to use.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-never-sign-encrypt-drafts">
+	  <term>
+	    <guilabel>Never sign/encrypt when saving as draft</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will not attempt to sign and/or
+	      encrypt messages that are merely saved to the
+	      <guilabel>drafts</guilabel> folder. This is more
+	      convenient, and does not result in a gross loss of
+	      security, provided the drafts folder is save. &imap;
+	      users might want this options turned off, if their
+	      <guilabel>drafts</guilabel> folder is on the server.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect2>
 
 <sect2 id="configure-security-plugins">
 <title>Crypto Plugins</title>

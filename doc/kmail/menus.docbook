@@ -1554,7 +1554,7 @@ enabled by the receiver's email client in order to work.
 </listitem>
 </varlistentry>
 
-<varlistentry>
+<varlistentry id="composer-options-sign-message">
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>
@@ -1567,7 +1567,7 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 </listitem>
 </varlistentry>
 
-<varlistentry>
+<varlistentry id="composer-options-encrypt-message">
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>

@@ -15,6 +15,7 @@
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY gpg "<application>GPG</application>">
   <!ENTITY mdn "<acronym>MDN</acronym>">
+  <!ENTITY imap "<acronym>IMAP</acronym>">
 ]>
 <book lang="&language;">
 <bookinfo>
