@@ -1,4 +1,5 @@
 #include <libkcal/event.h>
+#include <libkcal/recurrence.h>
 
 #include "metadatebook.h"
 
@@ -23,27 +24,27 @@ QString MetaDatebook::string( KSync::EventSyncEntry* ev) {
     string += QString::number( event->doesFloat() );
 
     /* Recurrance */
-    KCal::Recurrance* rec = event->recurrence();
+    KCal::Recurrence* rec = event->recurrence();
     if ( rec->doesRecur() ) {
         switch( rec->doesRecur() ) {
-        case KCal::Recurrance::rDaily:
+        case KCal::Recurrence::rDaily:
             string += "Daily";
             break;
-        case KCal::Recurrance::rWeekly:{
+        case KCal::Recurrence::rWeekly:{
             string += "Weekly";
             string += days( rec->days() );
             break;
         }
-        case KCal::Recurrance::rMonthlyPos:
+        case KCal::Recurrence::rMonthlyPos:
             string += "MonthlyDay";
             break;
-        case KCal::Recurrance::rMonthlyDay:
+        case KCal::Recurrence::rMonthlyDay:
             string += "MonthlyDate";
             break;
-        case KCal::Recurrance::rYearlyDay:
+        case KCal::Recurrence::rYearlyDay:
             string += "Yearly";
             break;
-        case KCal::Recurrance::rNone:
+        case KCal::Recurrence::rNone:
         default:
             break;
         }
@@ -54,10 +55,10 @@ QString MetaDatebook::string( KSync::EventSyncEntry* ev) {
         if ( rec->duration() == 0 ) {
             string += rec->endDate().toString("dd.MM.yyyy");
         }
-        string += rec->recurStart().date("dd.MM.yyyy hh:mm:ss");
+        string += rec->recurStart().date().toString("dd.MM.yyyy hh:mm:ss");
     }
     /* Alarms here */
-    KCal::Alarm* al = event->alarm().first();
+    KCal::Alarm* al = event->alarms().first();
     if ( al != 0 ) {
         int sec = al->offset().asSeconds();
         string += QString::number( sec );

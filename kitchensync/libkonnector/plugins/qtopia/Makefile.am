@@ -28,7 +28,8 @@ libqtopiakonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module
 libqtopiakonnector_la_SOURCES = konnector.cpp socket.cpp addressbook.cpp \
 				categoryedit.cpp datebook.cpp helper.cpp \
 				opiecategories.cpp todo.cpp desktop.cpp \
-				md5map.cpp metaaddressbook.cpp
+				md5map.cpp metaaddressbook.cpp \
+				metadatebook.cpp metatodo.cpp
 
 qtopiadatadir = $(kde_datadir)/kitchensync
 qtopiadata_DATA = qtopia.desktop

@@ -11,7 +11,7 @@ MetaTodo::~MetaTodo() {
 }
 QString MetaTodo::string( KSync::TodoSyncEntry* entry ) {
     QString str;
-    KCal::Todo* todo = entry->incidence();
+    KCal::Todo* todo = entry->todo();
 
     str += todo->categories().join(";");
     str += QString::number( todo->isCompleted() );
