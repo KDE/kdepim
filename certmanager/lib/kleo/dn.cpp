@@ -37,6 +37,7 @@
 #include "dn.h"
 
 #include "oidmap.h"
+#include "ui/dnattributeorderconfigwidget.h"
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -92,116 +93,6 @@ namespace {
 }
 
 // copied from CryptPlug and adapted to work on DN::Attribute::List:
-
-// a little helper class for reordering of DN attributes
-namespace {
-
-  class DNBeautifier {
-  public:
-    enum UnknownAttrsHandling { Hide, Prefix, Postfix, Infix };
-    // infix: at the position of "_X_", if any, else Postfix
-
-    DNBeautifier();
-
-    Kleo::DN::Attribute::List
-    reorder( const Kleo::DN::Attribute::List & dn ) const {
-      return reorder( dn, _attrOrder, _unknownAttrsHandling );
-    }
-
-    static Kleo::DN::Attribute::List
-    reorder( const Kleo::DN::Attribute::List & dn,
-	     const QStringList & attrOrder,
-	     UnknownAttrsHandling unknownAttrsHandling );
-
-  private:
-    QStringList _attrOrder;
-    UnknownAttrsHandling _unknownAttrsHandling;
-  };
-
-  
-  static const char * defaultOrder[] = {
-    "CN", "S", "SN", "GN", "T", "UID",
-    "MAIL", "EMAIL", "MOBILE", "TEL", "FAX", "STREET",
-    "L",  "PC", "SP", "ST",
-    "OU",
-    "O",
-    "C"
-  };
-
-  DNBeautifier::DNBeautifier() : _unknownAttrsHandling( Infix ) {
-    if ( !kapp ) {
-      std::cerr << "WARNING: Kleo::DN::prettyDN() needs a KApplication running." << std::endl;
-      return;
-    }
-    const KConfigGroup config( kapp->config(), "DN" );
-
-    _attrOrder = config.readListEntry( "AttributeOrder" );
-    if ( _attrOrder.empty() )
-      std::copy( defaultOrder,
-		 defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
-		 std::back_inserter( _attrOrder ) );
-
-    const QString str = config.readEntry( "UnknownAttributes", "INFIX" ).upper();
-    if ( str == "HIDE" )
-      _unknownAttrsHandling = Hide;
-    else if ( str == "PREFIX" )
-      _unknownAttrsHandling = Prefix;
-    else if ( str == "POSTFIX" )
-      _unknownAttrsHandling = Postfix;
-    else
-      _unknownAttrsHandling = Infix;
-  }
-  
-  Kleo::DN::Attribute::List
-  DNBeautifier::reorder( const Kleo::DN::Attribute::List & dn,
-			 const QStringList & attrOrder,
-			 UnknownAttrsHandling unknownAttrsHandling ) {
-    if ( attrOrder.empty() )
-      return dn;
-
-    Kleo::DN::Attribute::List unknownEntries;
-    Kleo::DN::Attribute::List result;
-    unknownEntries.reserve( dn.size() );
-    result.reserve( dn.size() );
-
-    if ( unknownAttrsHandling != Hide )
-      // find all unknown entries in their order of appearance
-      for ( Kleo::DN::const_iterator it = dn.begin(); it != dn.end(); ++it )
-	if ( attrOrder.find( (*it).name() ) == attrOrder.end() )
-	  unknownEntries.push_back( *it );
-
-    if ( unknownAttrsHandling == Prefix ) {
-      // prepend the unknown attrs
-      result = unknownEntries;
-      unknownEntries.clear();
-    }
-      
-    // process the known attrs in the desired order
-    for ( QStringList::const_iterator oit = attrOrder.begin() ; oit != attrOrder.end() ; ++oit )
-      if ( *oit == "_X_" ) {
-	if ( unknownAttrsHandling == Infix ) {
-	  // insert the unknown attrs
-	  std::copy( unknownEntries.begin(), unknownEntries.end(),
-		     std::back_inserter( result ) );
-	  unknownEntries.clear();
-	}
-      } else {
-	for ( Kleo::DN::const_iterator dnit = dn.begin() ; dnit != dn.end() ; ++dnit )
-	  if ( (*dnit).name() == *oit )
-	    result.push_back( *dnit );
-      }
-      
-    // append the unknown attrs: since we cleared unknownEntries
-    // whenever we inserted it, we avoid duplicate insertions anyway
-    // and don't need to check whether we have done so already:
-    std::copy( unknownEntries.begin(), unknownEntries.end(),
-	       std::back_inserter( result ) );
-
-    return result;
-  }
-  
-
-} // anon namespace
 
 #define digitp(p)   (*(p) >= '0' && *(p) <= '9')
 #define hexdigitp(a) (digitp (a)                     \
@@ -386,12 +277,35 @@ serialise( const QValueVector<Kleo::DN::Attribute> & dn ) {
   return result.join( "," );
 }
 
-static QValueVector<Kleo::DN::Attribute>
-reorder_dn( const QValueVector<Kleo::DN::Attribute> & dn ) {
-  static const DNBeautifier beautifier;
-  return beautifier.reorder( dn );
-}
+static Kleo::DN::Attribute::List
+reorder_dn( const Kleo::DN::Attribute::List & dn ) {
+  const QStringList & attrOrder = Kleo::DNAttributeMapper::instance()->attributeOrder();
 
+  Kleo::DN::Attribute::List unknownEntries;
+  Kleo::DN::Attribute::List result;
+  unknownEntries.reserve( dn.size() );
+  result.reserve( dn.size() );
+
+  // find all unknown entries in their order of appearance
+  for ( Kleo::DN::const_iterator it = dn.begin(); it != dn.end(); ++it )
+    if ( attrOrder.find( (*it).name() ) == attrOrder.end() )
+      unknownEntries.push_back( *it );
+
+  // process the known attrs in the desired order
+  for ( QStringList::const_iterator oit = attrOrder.begin() ; oit != attrOrder.end() ; ++oit )
+    if ( *oit == "_X_" ) {
+      // insert the unknown attrs
+      std::copy( unknownEntries.begin(), unknownEntries.end(),
+		 std::back_inserter( result ) );
+      unknownEntries.clear(); // don't produce dup's
+    } else {
+      for ( Kleo::DN::const_iterator dnit = dn.begin() ; dnit != dn.end() ; ++dnit )
+	if ( (*dnit).name() == *oit )
+	  result.push_back( *dnit );
+    }
+  
+  return result;
+}
 
 //
 //
@@ -503,6 +417,10 @@ namespace {
   };
 }
 
+static const char * defaultOrder[] = {
+  "CN", "L", "_X_", "OU", "O", "C"
+};
+
 std::pair<const char*,const char*> attributeLabels[] = {
 #define MAKE_PAIR(x,y) std::pair<const char*,const char*>( x, y )
   MAKE_PAIR( "CN", I18N_NOOP("Common name") ),
@@ -517,7 +435,13 @@ std::pair<const char*,const char*> attributeLabels[] = {
   MAKE_PAIR( "SP", I18N_NOOP("State or province") ),
   MAKE_PAIR( "DC", I18N_NOOP("Domain component") ),
   MAKE_PAIR( "BC", I18N_NOOP("Business category") ),
-  MAKE_PAIR( "EMAIL", I18N_NOOP("Email address") )
+  MAKE_PAIR( "EMAIL", I18N_NOOP("Email address") ),
+  MAKE_PAIR( "MAIL", I18N_NOOP("Mail address") ),
+  MAKE_PAIR( "MOBILE", I18N_NOOP("Mobile phone number") ),
+  MAKE_PAIR( "TEL", I18N_NOOP("Telephone number") ),
+  MAKE_PAIR( "FAX", I18N_NOOP("Fax number") ),
+  MAKE_PAIR( "STREET", I18N_NOOP("Street address") ),
+  MAKE_PAIR( "UID", I18N_NOOP("Unique ID") )
 #undef MAKE_PAIR
 };
 static const unsigned int numAttributeLabels = sizeof attributeLabels / sizeof *attributeLabels ;
@@ -526,6 +450,7 @@ class Kleo::DNAttributeMapper::Private {
 public:
   Private();
   std::map<const char*,const char*,ltstr> map;
+  QStringList attributeOrder;
 };
 
 Kleo::DNAttributeMapper::Private::Private()
@@ -533,6 +458,11 @@ Kleo::DNAttributeMapper::Private::Private()
 
 Kleo::DNAttributeMapper::DNAttributeMapper() {
   d = new Private();
+  const KConfigGroup config( kapp->config(), "DN" );
+  d->attributeOrder = config.readListEntry( "AttributeOrder" );
+  if ( d->attributeOrder.empty() )
+    std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
+	       std::back_inserter( d->attributeOrder ) );
   mSelf = this;
 }
 
@@ -562,4 +492,21 @@ QStringList Kleo::DNAttributeMapper::names() const {
   for ( std::map<const char*,const char*,ltstr>::const_iterator it = d->map.begin() ; it != d->map.end() ; ++it )
     result.push_back( it->first );
   return result;
+}
+
+const QStringList & Kleo::DNAttributeMapper::attributeOrder() const {
+  return d->attributeOrder;
+}
+
+void Kleo::DNAttributeMapper::setAttributeOrder( const QStringList & order ) {
+  d->attributeOrder = order;
+  if ( order.empty() )
+    std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
+	       std::back_inserter( d->attributeOrder ) );
+  KConfigGroup config( kapp->config(), "DN" );
+  config.writeEntry( "AttributeOrder", order );
+}
+
+Kleo::DNAttributeOrderConfigWidget * Kleo::DNAttributeMapper::configWidget( QWidget * parent, const char * name ) const {
+  return new DNAttributeOrderConfigWidget( mSelf, parent, name );
 }

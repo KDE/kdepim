@@ -31,7 +31,8 @@
 
 #include "dnorderconfigpage.h"
 
-#include "ui/dnattributeorderconfigwidget.h"
+#include <ui/dnattributeorderconfigwidget.h>
+#include <kleo/dn.h>
 
 #include <qlayout.h>
 
@@ -39,7 +40,7 @@ DNOrderConfigPage::DNOrderConfigPage( QWidget * parent, const char * name )
   : KCModule( parent, name )
 {
   QVBoxLayout * vlay = new QVBoxLayout( this );
-  mWidget = new Kleo::DNAttributeOrderConfigWidget( this );
+  mWidget = Kleo::DNAttributeMapper::instance()->configWidget( this, "mWidget" );
   vlay->addWidget( mWidget );
 
   connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );

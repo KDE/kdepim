@@ -36,7 +36,7 @@
 #include <qwidget.h>
 
 namespace Kleo {
-  class CryptPlugFactory;
+  class DNAttributeMapper;
 }
 
 class QListViewItem;
@@ -46,7 +46,8 @@ namespace Kleo {
   class DNAttributeOrderConfigWidget : public QWidget {
     Q_OBJECT
   public:
-    DNAttributeOrderConfigWidget( QWidget * parent=0, const char * name=0, WFlags f=0 );
+    /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
+    DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, WFlags f=0 );
     ~DNAttributeOrderConfigWidget();
 
     void load();

@@ -64,6 +64,8 @@ struct Kleo::DNAttributeOrderConfigWidget::Private {
   QToolButton * navTB[6];
 
   QListViewItem * placeHolderItem;
+
+  Kleo::DNAttributeMapper * mapper;
 };
 
 static void prepare( QListView * lv ) {
@@ -74,10 +76,12 @@ static void prepare( QListView * lv ) {
   lv->addColumn( i18n("Description") );
 }
 
-Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( QWidget * parent, const char * name, WFlags f )
+Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent, const char * name, WFlags f )
   : QWidget( parent, name, f ), d( 0 )
 {
+  assert( mapper );
   d = new Private();
+  d->mapper = mapper;
 
   QGridLayout * glay = new QGridLayout( this, 2, 3, 0, KDialog::spacingHint() );
   glay->setColStretch( 0, 1 );
@@ -152,10 +156,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
   d->availableLV->clear();
   d->currentLV->clear();
 
-  const DNAttributeMapper * const am = DNAttributeMapper::instance();
-
-  const KConfigGroup config( kapp->config(), "DN" );
-  const QStringList order = config.readListEntry( "AttributeOrder" );
+  const QStringList order = d->mapper->attributeOrder();
 
   // fill the RHS listview:
   QListViewItem * last = 0;
@@ -167,7 +168,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
       d->placeHolderItem->moveItem( last );
       last = d->placeHolderItem;
     } else
-      last = new QListViewItem( d->currentLV, last, attr, am->name2label( attr ) );
+      last = new QListViewItem( d->currentLV, last, attr, d->mapper->name2label( attr ) );
   }
 
   // fill the LHS listview with what's left:
@@ -175,7 +176,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
   const QStringList all = Kleo::DNAttributeMapper::instance()->names();
   for ( QStringList::const_iterator it = all.begin() ; it != all.end() ; ++it )
     if ( order.find( *it ) == order.end() )
-      (void)new QListViewItem( d->availableLV, *it, am->name2label( *it ) );
+      (void)new QListViewItem( d->availableLV, *it, d->mapper->name2label( *it ) );
 
   if ( !d->placeHolderItem->listView() )
     d->availableLV->insertItem( d->placeHolderItem );
@@ -191,8 +192,7 @@ void Kleo::DNAttributeOrderConfigWidget::save() const {
   for ( QListViewItemIterator it( d->currentLV ) ; it.current() ; ++it )
     order.push_back( it.current()->text( 0 ) );
 
-  KConfigGroup config( kapp->config(), "DN" );
-  config.writeEntry( "AttributeOrder", order );
+  d->mapper->setAttributeOrder( order );
 }
 
 void Kleo::DNAttributeOrderConfigWidget::defaults() {

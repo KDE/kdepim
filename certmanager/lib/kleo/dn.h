@@ -37,6 +37,11 @@
 #include <qvaluevector.h>
 
 class QStringList;
+class QWidget;
+
+namespace Kleo {
+  class DNAttributeOrderConfigWidget;
+}
 
 namespace Kleo {
 
@@ -51,6 +56,12 @@ namespace Kleo {
 
     QString name2label( const QString & s ) const;
     QStringList names() const;
+
+    const QStringList & attributeOrder() const;
+
+    void setAttributeOrder( const QStringList & order );
+
+    DNAttributeOrderConfigWidget * configWidget( QWidget * parent=0, const char * name=0 ) const;
 
   private:
     class Private;
