@@ -142,7 +142,7 @@
                                     <cstring>RadioButton11</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Sync only Palm items to PC (next sync only)</string>
+                                    <string>Sync only Pilot items to PC (next sync only)</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -150,7 +150,7 @@
                                     <cstring>RadioButton12</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Sync only PC items to Palm (next sync only)</string>
+                                    <string>Sync only PC items to Pilot (next sync only)</string>
                                 </property>
                             </widget>
                         </vbox>
@@ -199,7 +199,7 @@
                                     <enum>TabFocus</enum>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Palm overrides desktop</string>
+                                    <string>&amp;Pilot overrides desktop</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -207,7 +207,7 @@
                                     <cstring>RadioButton2</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Desktop overrides Palm</string>
+                                    <string>&amp;Desktop overrides Pilot</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>

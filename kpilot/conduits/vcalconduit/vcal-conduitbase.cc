@@ -557,9 +557,9 @@ int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
 	if (conflictResolution==RES_ASK)
 	{
 		return KMessageBox::warningYesNo(NULL, 
-			i18n("The following item was modified both on the palm and on your PC:\nPC entry:\n\t")+e->description()+i18n("\nPalm entry:\n\t")+getTitle(de)+
-				i18n("\n\nShall the Palm entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Palm entry."),
-			i18n("Conflicting entries")
+			i18n("The following item was modified both on the Pilot and on your PC:\nPC entry:\n\t")+e->description()+i18n("\nPilot entry:\n\t")+getTitle(de)+
+				i18n("\n\nShould the Pilot entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Pilot entry."),
+			i18n("Conflicting Entries")
 		)==KMessageBox::Yes;
 	}
 	return conflictResolution;
@@ -681,6 +681,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.6  2002/05/15 22:57:39  kainhofe
+// if the backup db does not exist, it is now correctly retrieved correctly from the palm
+//
 // Revision 1.5  2002/05/14 23:07:49  kainhofe
 // Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
 //
