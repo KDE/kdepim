@@ -25,6 +25,7 @@ xmozillaanyphone: 020 8888 2232
 objectclass: top
 objectclass: person
 
+# this is a comment
 dn: cn=KDE,mail=kde@kde.org
 modifytimestamp: 20030219222638Z
 cn: KDE
