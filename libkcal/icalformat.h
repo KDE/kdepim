@@ -73,6 +73,10 @@ class ICalFormat : public CalFormat {
       Return incidence as iCalendar formatted text.
     */
     QString toString( Incidence * );
+    /**
+      Return recurrence as iCalendar formatted text.
+    */
+    QString toString( Recurrence * );
   
     /** Create a scheduling message for event \a e using method \m */
     QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);

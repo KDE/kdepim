@@ -205,6 +205,15 @@ QString ICalFormat::toString( Incidence *incidence )
   return QString::fromLocal8Bit( text );
 }
 
+QString ICalFormat::toString( Recurrence *recurrence )
+{
+  icalproperty *property;
+  property = mImpl->writeRecurrenceRule( recurrence );
+  const char *text = icalproperty_as_ical_string( property );
+  icalproperty_free( property );
+  return QString::fromLocal8Bit( text );
+}
+
 QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
                                           Scheduler::Method method)
 {
