@@ -1,0 +1,445 @@
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+ <!ENTITY knotes "<application>knotes</application>">
+]>
+<book lang="en">
+<bookinfo>
+<title>The KNotes Handbook</title>
+<authorgroup>
+<author>
+<firstname>Bernd Johannes</firstname>
+<surname>Wuebben</surname>
+<affiliation><address><email><ulink url="mailto:wuebben@kde.org">wuebben@kde.org</ulink></email></address></affiliation>
+</author>
+</authorgroup>
+<date>Version 1.0, 1 April 1998</date>
+<releaseinfo><!-- information about this particular version --></releaseinfo>
+<abstract>
+<para>This Handbook describes KNotes Version 1.0</para>
+<para></para><!-- Merge this with the previous paragraph; it comes from <META NAME="description" CONTENT="..."> --></abstract>
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>KNotes is my attempt to write usable and good looking 
+notes application for the KDE project.</para>
+
+<para>KNotes can:
+<itemizedlist>
+<listitem>
+<para>accept drag and drop (even from a remote ftp site)</para>
+</listitem>
+<listitem>
+<para>mail your note</para>
+</listitem>
+<listitem>
+<para>print your note ( try it, it looks great )</para>
+</listitem>
+<listitem>
+<para>insert the date or a calendar of the current month</para>
+</listitem>
+<listitem>
+<para>associate an alarm timer to a note and notify you when the timer expires.</para>
+</listitem>
+<listitem>
+<para>have arbitrary colors for background and text</para>
+</listitem>
+<listitem>
+<para>have arbitrary sized note</para>
+</listitem>
+<listitem>
+<para>use an arbitrary font for a note.</para>
+</listitem>
+<listitem>
+<para>do auto-indentation</para>
+</listitem>
+<listitem>
+<para>do two different frame styles</para>
+</listitem>
+<listitem>
+<para>open urls in a kfm browser window on double click.</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<para>and remembers all this on a per note basis on exit.</para>
+
+<para>For optimal usage, place the KNotes icon on the kpanel.
+To get started, point the mouse pointer on a KNotes note and use the right mouse 
+button to bring up the KNotes pop-up menu.</para>
+
+<para>What is your opinion, should KNotes have a simpler window title-bar?</para>
+
+<para>Best Regards
+Bernd 
+wuebben@kde.org</para>
+
+<para>I hope you will enjoy KNotes</para>
+
+<para><literal remap="tt">Bernd Johannes Wuebben</literal></para>
+
+<para><ulink url="mailto:wuebben@kde.org">wuebben@kde.org</ulink></para>
+</chapter>
+
+<chapter id="installation">
+<title>Installation</title>
+
+<sect1 id="howtoobtainknotes">
+<title>How to obtain KNotes</title>
+
+<para>KNotes is a  KDE application  <ulink url="http://www.kde.org">http://www.kde.org</ulink>.
+KNotes can be found on <ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the main ftp site
+of the KDE project.</para>
+</sect1>
+
+<sect1 id="requirements">
+<title>Requirements</title>
+
+<para>In order to successfully compile KNotes, you need the latest versions of <literal remap="tt"> libkdecore</literal>
+and <literal remap="tt"> libkfm</literal>. All required libraries as well as KNotes itself can be found
+on <ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>. </para>
+
+<para>You need to have sendmail up and running in order to be able
+to mail you notes. Once kmail is finished this might change.</para>
+
+<para>You need a2ps for printing. If you don't have it -- get it. 
+<ulink url="http://www.enst.fr/~demaille/a2ps.html">http://www.enst.fr/~demaille/a2ps.html</ulink></para>
+
+<para><variablelist>
+<varlistentry>
+<term>Tip</term>
+<listitem>
+<para>a2ps together with GNU enscript are the most essential printing utilities in 
+the UNIX world. Make sure you know them well.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+</sect1>
+
+<sect1 id="compilationandinstallation">
+<title>Compilation and installation</title>
+
+<para>In order to compile and install KNotes on your system, type the following in the base 
+directory of the KNotes distribution:
+<screen>% ./configure
+% make
+% make install
+</screen>
+</para>
+
+<para>Since KNotes uses <literal remap="tt">autoconf</literal> you should have not trouble compiling it.
+Should you run into problems please report them to the <emphasis remap="sf">KDE</emphasis> mailing lists.</para>
+
+<para><variablelist>
+<varlistentry>
+<term>Note</term>
+<listitem>
+<para>In order to most productively use KNotes, place KNotes on the kpanel.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+</sect1>
+</chapter>
+
+<chapter id="onscreenfundamentals">
+<title>Onscreen Fundamentals</title>
+
+<para>KNotes is very simply to use. I am sure that will have no problems with KNotes. </para>
+
+<sect1 id="draganddrop">
+<title>Drag and Drop</title>
+
+<para>KNotes makes use of the KDE Drag and Drop protocol. This means that you can darg
+and drop files form the Desktop or kfm or some remote ftp site that you have
+open in one of kfm's windows on to KNotes. </para>
+</sect1>
+
+<sect1 id="doubleclickonurls">
+<title>Double Click on URL's</title>
+
+<para>KNotes recognizes URL's. By double clicking on a URL knotes will open
+a kfm browser window and attempt to open the URL.</para>
+</sect1>
+
+<sect1 id="resizingknotes">
+<title>Resizing Knotes</title>
+
+<para>Press the <literal remap="tt">ALT</literal> key  and the right mouse buttun at the same
+time, then move your mouse pointer to resize a KNote.</para>
+</sect1>
+
+<sect1 id="printing">
+<title>Printing</title>
+
+<para>KNotes supports printing. You can
+specify the printing command of your choice in the "Set Defaults" tab dialog. 
+There exist a number of
+printing utilities in the Unix world  which are excellent. It would
+make little sense to try re-implement their efforts. Explicitly let me
+mention to you the following two printing utilities.</para>
+
+<para><variablelist>
+<varlistentry>
+<term>GNU enscript.</term>
+<listitem>
+<para>Markku Rossi has written a powerful reincarnation
+of Adobe's enscript ascii to postscript utility. My favorite usage is
+enscript -2rG text.txt, but GNU enscript goes far beyond that. Make
+sure you have the latest version from <ulink url="http://www.hut.fi/~mtr/genscript/">http://www.hut.fi/~mtr/genscript/</ulink>, or any GNU mirror.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>a2ps</term>
+<listitem>
+<para>Akim Demaille and Miguel Santana have written a powerful
+ascii to Postscript conversion utility which will format your output
+depending on the document type. Whether you want to print out C++
+sources or a email message, the default styles are very nice. Get
+it from:
+<ulink url="http://www-inf.enst.fr/~demaille/a2ps.html">http://www-inf.enst.fr/~demaille/a2ps.html</ulink></para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>The above two utilities are an absolute must. If you don't have them,
+get them and become familiar with their usage. Learning how to use
+them is no longer a problem due to our great html/texinfo/man viewer
+<literal remap="tt">kdehelp</literal>. These utilities are your friends when it comes to printing
+in the UNIX world. Due to their power and many options once you know how to use 
+them properly, you will always miss them should they ever not be available 
+to you, even under Windows95.</para>
+
+<para>Make sure your system is set up for printing PostScript documents. If you
+don't have a native PostScript printer ( who does?) get yourself
+ghostscript/ghostview version 4.03 or higher  from
+<ulink url="http://www.cs.wisc.edu/%7Eghost/">http://www.cs.wisc.edu/%7Eghost/</ulink>. Note, that there are now
+commercial grade ps fonts available that come with the ghostview/ghostscript
+package. These fonts are a must for any quality printing of Postscript documents
+on a non-postscript printer. If you were dissapointed by the results you got
+from ghostscript on your printer so far - get the new fonts, this
+will give you the best possible results. </para>
+</sect1>
+</chapter>
+
+<chapter id="themenuentries">
+<title>The Menu Entries</title>
+
+<para>All popup menu operations are local to the KNotes on which you pressed the
+right mouse button and apply only to that particular KNotes note. This
+KNotes note will be referred to as "current KNotes" in the following.
+The only exception is the "Set Defaults" menu entry. "Set Defaults" will let you 
+specify the global defaults which will apply to all KNotes notes.</para>
+
+<sect1 id="insertdate">
+<title>Insert Date</title>
+
+<para>Insert the current Date and Time into the current KNotes not.</para>
+</sect1>
+
+<sect1 id="clear">
+<title>Clear</title>
+
+<para>Clears the current KNotes note.</para>
+</sect1>
+
+<sect1 id="newknote">
+<title>New KNote</title>
+
+<para>Creates a new KNotes</para>
+</sect1>
+
+<sect1 id="quit">
+<title>Quit</title>
+
+<para>Quits the KNotes application. All notes, alarms, and options are saved.</para>
+</sect1>
+
+<sect1 id="deleteknote">
+<title>Delete KNote</title>
+
+<para>Deletes the current KNotes note permanently and cancels any associated alarm.
+If you just want to close a KNotes note, use the close button on the window bar.</para>
+</sect1>
+
+<sect1 id="renameknote">
+<title>Rename KNote</title>
+
+<para>Rename the current KNotes note. You need to choose a unique new name.</para>
+</sect1>
+
+<sect1 id="alarm">
+<title>Alarm ...</title>
+
+<para>Brings up the Alarm Timer dialog corresponding to the current KNotes note. 
+You can set or unset an alarm for the current KNotes.</para>
+</sect1>
+
+<sect1 id="calendar">
+<title>Calendar</title>
+
+<para>Exectutes the command <literal remap="tt">cal</literal> on you system and inserts the output into
+the current KNotes. This should result in a calendar of the current month in
+your current note.</para>
+</sect1>
+
+<sect1 id="mailnote">
+<title>Mail Note</title>
+
+<para>This will bring up a dialog which will allow you to mail the content of the 
+current KNotes note. You can specify the command used by KNotes to mail
+the current note, on the Defaults Tab dialog under "Set Defaults".</para>
+</sect1>
+
+<sect1 id="printnote">
+<title>Print Note</title>
+
+<para>This will print the current note using the print command, which you can
+specify in the Defaults Tab dialog under "Set Defaults". The default
+is a2ps. I recommend you install a2ps if you don't have it on your system
+yet.</para>
+</sect1>
+
+<sect1 id="dframe">
+<title>3D Frame</title>
+
+<para>Toggles the current note between a note with a 3D frame and one with a 
+plain frame. This options is local to the current note and will be 
+saved on exit.</para>
+</sect1>
+
+<sect1 id="autoindent">
+<title>Auto Indent</title>
+
+<para>Toggles between auto indent mode and no auto indent mode in the current KNotes
+note. In auto indent mode, the cursor will be place underneath the first non
+character on the first nonempty line above the current line.
+The mode will be saved on exit.</para>
+</sect1>
+
+<sect1 id="font">
+<title>Font</title>
+
+<para>Brings up the font dialog, which lets you choose the font of the current 
+KNotes  This option is local to the current note and will be saved on exit.</para>
+</sect1>
+
+<sect1 id="colors">
+<title>Colors</title>
+
+<para>Allows you to change the text and background color of the current KNotes.
+This option is local to the current note and will be saved on exit.</para>
+</sect1>
+
+<sect1 id="setdefaults">
+<title>Set Defaults</title>
+
+<para>Allows you to set the defaults for all options. All newly created KNotes
+notes will will obsereve the defaults set here.
+All options should be self explanatory. KNotes uses "&percnt;s" place holders
+to supply the argument to the mail and print commands. </para>
+</sect1>
+
+<sect1 id="keybindings">
+<title>Key Bindings</title>
+
+<para>KNotes honors the following key bindings.</para>
+
+<para><itemizedlist>
+<listitem>
+<para><literal remap="tt">Left Arrow</literal> Move the cursor one character leftwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Right Arrow</literal> Move the cursor one character rightwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Up Arrow</literal> Move the cursor one line upwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Down Arrow</literal> Move the cursor one line downwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Page Up</literal> Move the cursor one page upwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Page Down</literal> Move the cursor one page downwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Backspace</literal> Delete the character to the left of the cursor </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Home</literal> Move the cursor to the beginning of the line </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">End</literal> Move the cursor to the end of the line </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Delete</literal> Delete the character to the right of the cursor </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Shift - Left Arrow</literal> Mark text one character leftwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Shift - Right Arrow</literal> Mark text one character rightwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-A</literal> Move the cursor to the beginning of the line </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-B</literal> Move the cursor one character leftwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-C</literal> Copy the marked text to the clipboard. </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-D</literal> Delete the character to the right of the cursor </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-E</literal> Move the cursor to the end of the line </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-F</literal> Move the cursor one character rightwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-H</literal> Delete the character to the left of the cursor </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-K</literal> Delete to end of line </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-N</literal> Move the cursor one line downwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-P</literal> Move the cursor one line upwards </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-V</literal> Paste the clipboard text into line edit. </para>
+</listitem>
+<listitem>
+<para><literal remap="tt">Control-X</literal> Cut the marked text, copy to clipboard. </para>
+</listitem>
+</itemizedlist>
+</para>
+</sect1>
+</chapter>
+
+<chapter id="questionsandanswers">
+<title>Questions and answers</title>
+
+<sect1 id="howdoyouresizeaknotes">
+<title>How do you resize a knotes?</title>
+
+<para>Press the <literal remap="tt">ALT</literal> key  and the right mouse buttun at the same
+time, then move your mouse pointer.</para>
+</sect1>
+</chapter>
+</book>
+<!--
+Local Variables:
+mode: sgml
+sgml-omittag: nil
+sgml-shorttag: t
+End:
+-->
