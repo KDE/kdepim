@@ -1,0 +1,228 @@
+/*
+	Empath - Mailer for KDE
+	
+	Copyright (C) 1998 Rik Hemsley rik@kde.org
+	
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+
+// KDE includes
+#include <klocale.h>
+#include <kconfig.h>
+#include <kapp.h>
+
+// Local includes
+#include "EmpathMatcher.h"
+#include "EmpathFilter.h"
+#include "EmpathDefines.h"
+#include "EmpathConfig.h"
+#include "Empath.h"
+
+EmpathFilter::EmpathFilter()
+	:	fEventHandler_(0)
+{
+	empathDebug("ctor");
+}
+
+EmpathFilter::~EmpathFilter()
+{
+	empathDebug("dtor");
+}
+
+	Q_UINT32
+EmpathFilter::id() const
+{
+	return id_;
+}
+
+	void
+EmpathFilter::setId(Q_UINT32 _id)
+{
+	id_ = _id;
+}
+
+	void
+EmpathFilter::save()
+{
+	empathDebug("save() called");
+	
+	KConfig * config = kapp->getConfig();
+	config->setGroup(GROUP_FILTER + QString().setNum(id_));
+	
+	empathDebug("Saving url name == \"" + url_.asString() + "\"");
+
+	config->writeEntry(KEY_FILTER_FOLDER, url_.asString());
+	
+	empathDebug("Matchers to save: " + QString().setNum(matchExprs_.count()));
+	
+	EmpathMatcherListIterator it(matchExprs_);
+	
+	int c = 0;
+	
+	for (; it.current() ; ++it)
+		it.current()->save(id_, c++);
+	
+	config->writeEntry(KEY_NUM_MATCH_EXPRS_FOR_FILTER, c);
+
+	empathDebug("Saving event handler");
+	fEventHandler_->save(id_);
+}
+
+	void
+EmpathFilter::load(Q_UINT32 id)
+{
+	empathDebug("load(" + QString().setNum(id) + ") called");
+	id_ = id;
+
+	KConfig * config = kapp->getConfig();
+	config->setGroup(GROUP_FILTER + QString().setNum(id_));
+	
+	url_ = config->readEntry(KEY_FILTER_FOLDER);
+	empathDebug("My url is \"" + url_.asString() + "\"");
+	
+	Q_UINT32 numMatchExprs =
+		config->readUnsignedNumEntry(KEY_NUM_MATCH_EXPRS_FOR_FILTER);
+	
+	empathDebug("There are " + QString().setNum(numMatchExprs) +
+		" match expressions that act for this filter");
+
+	for (Q_UINT32 i = 0 ; i < numMatchExprs ; ++i)
+		loadMatchExpr(i);
+
+	empathDebug("Loading event handler");
+	loadEventHandler();
+}
+
+	void
+EmpathFilter::loadMatchExpr(Q_UINT32 matchExprID)
+{
+	EmpathMatcher * matcher = new EmpathMatcher;
+	matcher->load(id_, matchExprID);
+	matchExprs_.append(matcher);
+}
+
+	void
+EmpathFilter::loadEventHandler()
+{
+	EmpathFilterEventHandler * handler = new EmpathFilterEventHandler;
+	
+	if (handler->load(id_)) {
+		
+		fEventHandler_ = handler;
+	
+	} else {
+	
+		fEventHandler_ = 0;
+		delete handler;
+	}
+}
+
+	void
+EmpathFilter::setEventHandler(EmpathFilterEventHandler * handler)
+{
+	delete fEventHandler_;
+
+	fEventHandler_ = handler;
+}
+
+	EmpathFilterEventHandler *
+EmpathFilter::eventHandler()
+{
+	return fEventHandler_;
+}
+
+	EmpathURL
+EmpathFilter::url() const
+{
+	empathDebug("url() called");
+	return url_;
+}
+
+	void
+EmpathFilter::setURL(const EmpathURL & url)
+{
+	empathDebug("setFolder(" + url.asString() + ") called");
+	url_ = url;
+}
+
+	QString
+EmpathFilter::description() const
+{
+	if (fEventHandler_ == 0)
+		return i18n("This filter does nothing");
+
+	QString desc;
+	
+	desc += i18n("When new mail arrives in");
+	desc += " ";
+	desc += url_.asString();
+	desc += ", ";
+	desc += actionDescription();
+
+	return desc;
+}
+
+	QString
+EmpathFilter::actionDescription() const
+{
+	if (fEventHandler_ == 0)
+		return i18n("No action defined");
+	else
+		return fEventHandler_->description();
+}
+
+	QList<EmpathMatcher> *
+EmpathFilter::matchExprList()
+{
+	return &matchExprs_;
+}
+
+	void
+EmpathFilter::filter(const EmpathURL & id)
+{
+	empathDebug("filter() called");
+	
+	if (fEventHandler_ == 0) {
+		empathDebug("I have no event handler (action) defined");
+		return;
+	}
+	
+	if (!match(id)) {
+		empathDebug("Didn't match this message");
+		return;
+	}
+	
+	fEventHandler_->handleMessage(id);
+}
+
+	bool
+EmpathFilter::match(const EmpathURL & id)
+{
+	empathDebug("match(" + QString(id.asString()) + ") called");
+	
+	empathDebug("There are " + QString().setNum(matchExprs_.count()) +
+		" match expressions to try");
+
+	EmpathMatcherListIterator it(matchExprs_);
+	
+	for (; it.current(); ++it)
+		if (it.current()->match(id)) {
+			empathDebug("Matched message !");
+			return true;
+		}
+	
+	return false;
+}
+
