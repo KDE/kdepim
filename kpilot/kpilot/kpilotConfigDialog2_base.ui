@@ -159,9 +159,6 @@
                                 <property name="text">
                                     <string>&amp;Normal sync, do a backup</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+N</string>
-                                </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
@@ -178,9 +175,6 @@
                                 <property name="text">
                                     <string>&amp;Special sync:</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+S</string>
-                                </property>
                             </widget>
                         </grid>
                     </widget>
@@ -190,9 +184,6 @@
                         </property>
                         <property name="text">
                             <string>&amp;Do full backup when changing PCs</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+D</string>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>We really don't know what this does.</string>
@@ -301,9 +292,6 @@
                         </property>
                         <property name="text">
                             <string>Run &amp;Conduits during a backup</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+C</string>
                         </property>
                     </widget>
                 </grid>

@@ -167,9 +167,6 @@ KPilot's settings.</comment>
                                 <property name="text">
                                     <string>&amp;Start daemon at login</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+S</string>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
                                 </property>
@@ -180,9 +177,6 @@ KPilot's settings.</comment>
                                 </property>
                                 <property name="text">
                                     <string>S&amp;how daemon in panel</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+H</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Places a HotSync icon in the system tray, which shows the daemon's status and allows you to configure KPilot.&lt;/qt&gt;</string>
@@ -208,9 +202,6 @@ KPilot's settings.</comment>
                                 <property name="text">
                                     <string>S&amp;top daemon on exit</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+T</string>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
                                 </property>
@@ -221,9 +212,6 @@ KPilot's settings.</comment>
                                 </property>
                                 <property name="text">
                                     <string>Quit &amp;after HotSync</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+A</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Stop both KPilot and the KPilot daemon after the HotSync finishes.
