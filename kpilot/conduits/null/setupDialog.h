@@ -31,13 +31,14 @@ public:
 	NullOptions();
 	~NullOptions();
 
-	static const char *groupName() const;
+	static const char *groupName();
 
 public slots:
 	void commitChanges();
 	void cancelChanges();
 
 private:
+	QWidget *generalTab;
 	QLabel *textFieldLabel;
 	QLineEdit *textField;
 	QLabel *generalLabel;
