@@ -29,7 +29,7 @@ public:
 
   virtual const char* dbInfo() { return "MailDB"; }
 
-	virtual QPixmap *icon() const;
+	virtual QPixmap icon() const;
 
 	/**
 	* Returns a string describing the version of

@@ -1514,30 +1514,22 @@ int PopMailConduit::doUnixStyle()
 }
 #undef BUFFERSIZE
 
-/* virtual */ QPixmap *PopMailConduit::icon() const
+/* virtual */ QPixmap PopMailConduit::icon() const
 {
 	FUNCTIONSETUP;
 
-	QPixmap *p=new QPixmap;
-	*p = KGlobal::iconLoader()->loadIcon("kmail", KIcon::Desktop);
+	QPixmap p=KGlobal::iconLoader()->loadIcon("kmail", KIcon::Desktop);
 	return p;
 }
 
 
 int main(int argc, char* argv[])
 {
-#ifdef KDE2
 	ConduitApp a(argc,argv,"popmail-conduit",
 		I18N_NOOP("POP Mail Conduit"),
 		"4.0b");
-#else
-	ConduitApp a(argc, argv, "popmail-conduit",
-		"\t\tPopmail-Conduit -- A conduit for KPilot\n"
-		"Copyright (C) 1998,1999 Dan Pilone, Michael Kropfberger\n"
-		"Copyright (C) 2000 Adriaan de Groot");
-
-#endif
 	a.addAuthor("Michael Kropfberger","POP3 code");
+	a.addAuthor("Adriaan de Groot","KDE2 port");
 
 	PopMailConduit conduit(a.getMode());
 	a.setConduit(&conduit);

@@ -597,6 +597,17 @@ PilotDaemon::slotCommandReceived(KSocket*)
   int command;
 
   in >> command;
+
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname
+			<< ": Received command "
+			<< command
+			<< endl;
+	}
+#endif
+
   switch(command)
     {
       // < 0 means commands to us.
