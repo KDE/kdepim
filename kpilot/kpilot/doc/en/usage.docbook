@@ -16,6 +16,144 @@ various &pilot; databases.
 </para>
 
 
+<sect1 id="kpilotmain">
+<title>
+Main Window
+</title>
+
+<para>
+The main window in &kpilot; just contains the &kpilot; logo.
+You can switch to one of the 
+<link linkend="builtin">builtin applications</link> by
+using the drop-down list on the toolbar.
+</para>
+
+<screenshot>
+<screeninfo>&kpilot; Main Window</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="main-app.png" format="png"></imageobject>
+<textobject><phrase>The Main Window</phrase></textobject>
+<caption><para>The Main Window</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+The main window contains the application menu, which we will deal with here.
+<itemizedlist>
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Settings</guimenuitem>
+</menuchoice>
+brings up the <link linkend="general">configuration dialog</link>
+for &kpilot;.
+</para>
+</listitem>
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Hot-Sync</guimenuitem>
+</menuchoice>
+starts a hot-sync. You should press the
+Hot-Sync button on your &pilot;'s cradle.
+<emphasis>Note:</emphasis>
+it is not possible to cancel a hot-sync once
+the request has been made.
+</para>
+</listitem>
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Fast-Sync</guimenuitem>
+</menuchoice>
+(not available with all installations)
+starts a fast-sync in the same way that 
+a hot-sync is started.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+performs a full backup of your &pilot;. This 
+is like a hot-sync, but can take several minutes.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Restore</guimenuitem>
+</menuchoice>.
+This copies all the data on your PC to your &pilot;,
+replacing whatever data was there.
+Use this if your &pilot; suffers some catastrophe
+(or is replaced by a new one).
+<emphasis>
+Doing a restore will erase all data on the &pilot;
+before restoring only the information available on your PC!
+</emphasis>
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem>
+</menuchoice>
+quits &kpilot;, closing the main window and stopping the
+daemon if that 
+<link linkend="general">configuration option</link>
+is enabled.
+</para>
+</listitem>
+
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>Conduits</guimenu>
+<guimenuitem>External</guimenuitem>
+</menuchoice>
+configures the external conduits.
+This is explained <link linkend="conduits">below</link>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>Conduits</guimenu>
+</menuchoice>:
+The remainder of the <menuchoice>
+<guimenu>Conduits</guimenu>
+</menuchoice>
+menu lists the 
+<link linkend="builtin">builtin applications</link>, 
+just like the
+drop-down box in the toolbar does.
+Select one of these applications
+to switch to it.
+</para>
+</listitem>
+
+
+</itemizedlist>
+
+</para>
+
+</sect1>
+
+
+
 
 <sect1 id="builtin">
 <title>
@@ -58,7 +196,7 @@ do not take effect on the &pilot; until the next hot-sync.
 <title>The Memo Application</title>
     
 <para>
-    The memo application allows you to view the memos on your pilot,
+    The memo application allows you to view the memos on your &pilot;,
       export them to text files, import new ones to be installed the next 
       time you hot-sync, or edit existing ones.
 </para>
@@ -184,8 +322,8 @@ install the files on the &pilot;, just hit
 to remove any pending files.  
 <emphasis>Note that an internal copy of the
 file is kept, so you can even drag and drop URLs from 
-<application>KFM</application>'s
-browser!</emphasis>
+<application>Konqueror</application>!
+</emphasis>
 </para>
 
 <para>
@@ -214,6 +352,30 @@ will be installed the next time you hot-sync.
 
 <sect1 id="conduits">
 <title>Conduits</title>
+
+<para>
+Conduits can be set up by selecting
+<menuchoice>
+<guimenu>Conduits</guimenu>
+<guimenuitem>External</guimenuitem>
+</menuchoice>.
+This allows you to select which conduits 
+to run during a hot sync and to configure those conduits.
+A window similar to the following will be displayed:
+<screenshot>
+<screeninfo>The Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-conduit.png" format="png"></imageobject>
+<textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Conduit Setup Dialog</para></caption>
+</mediaobject>
+</screenshot>
+You can drag-and-drop conduits between the two
+branches of the tree (from <guilabel>Available</guilabel>
+to <guilabel>Active</guilabel> and back again).
+Only those conduits listed under <guilabel>Active</guilabel>
+will actually run during a hot-sync.
+</para>
 
 <sect2 id="popmail-cond">
 <title>Mail conduit</title>
@@ -244,6 +406,46 @@ todo list.
 </para>
 
 </sect2>
+
+<sect2 id="conduit-knotes">
+<title>KNotes Conduit</title>
+
+<para>
+The
+<application>KNotes</application>
+is a partial replacement for the builtin 
+<link linkend="builtin">memo application</link>.
+It keeps the notes you write with
+<application>KNotes</application>
+synchronized with the memos you write on 
+your &pilot;.
+</para>
+
+<para>
+Setting up the KNotes conduit is very simple,
+since there is only one configuration option.
+<screenshot>
+<screeninfo>KNotes Conduit Setup</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-knotes.png" format="png"></imageobject>
+<textobject><phrase>KNotes Conduit Setup</phrase></textobject>
+<caption><para>KNotes Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+
+
+<sect2 id="conduit-null">
+<title>NULL conduit</title>
+
+<para>
+The NULL conduit is included as a programming example and
+has no practical function whatsoever.
+</para>
+</sect2>
+
 
 </sect1>
 

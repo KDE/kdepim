@@ -1,7 +1,7 @@
 <!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
   <!ENTITY kpilot "<application>KPilot</application>">
   <!ENTITY kappname "&kpilot;" -- this only *seems* redundant -->
-  <!ENTITY kpilotver "3.2.0">
+  <!ENTITY kpilotver "4.0.0">
   <!ENTITY pilot "<application>Pilot</application>">
   <!ENTITY using-kpilot SYSTEM "usage.docbook" -- level: chapter -->
   <!ENTITY % addindex "IGNORE">
@@ -10,6 +10,9 @@
 ]>
 
 <!-- $Id$ -->
+<!-- This is the CVS change log:
+     $Log:$
+-->
 
 <!-- For translations: leave id="" attributes for tags alone,
      since they aren't visible to the user. Same for anchors.
@@ -50,14 +53,15 @@
 <!-- Keep the date and the release info entity-free, i.e.
      dont use &kpilotver; here -->
 
-<date>03/07/2000</date>
-<releaseinfo>3.2.0</releaseinfo>
+<date>9/12/2000</date>
+<releaseinfo>4.0.0</releaseinfo>
 
 <abstract>
 <para>
 &kpilot; &kpilotver;
 is the latest version of the Desktop HotSync software for Unix.
-After several release and contributions from users &kpilot;, along with
+After several releases and many
+contributions from users &kpilot;, along with
 <application>KOrganizer</application>, has evolved into 
 a rather complete replacement for the
 Windows Desktop  provided by 3Com.  
@@ -83,7 +87,8 @@ developing ways of sharing data with other applications.
 <para>
 &kpilot; &kpilotver;
 is the latest version of the Desktop HotSync software for Unix.
-After several release and contributions from users &kpilot;, along with
+After several releases and 
+many contributions from users &kpilot;, along with
 <application>KOrganizer</application>, has evolved into 
 a rather complete replacement for the
 Windows Desktop  provided by 3Com.  
@@ -93,16 +98,20 @@ developing ways of sharing data with other applications.
 </para>
 
 <para>
-There are two web pages for &kpilot;: the 
-<ulink url="http://www.slac.com/pilone/kpilot_home/moreinfo.html">
+There is a web page for &kpilot;: the 
+<ulink url="http://www.slac.com/~pilone/kpilot_home/">
 Official KPilot Home Page
-</ulink>
-and the
-<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
-KPilot Bugs Page</ulink>.
+</ulink>.
 There is also a mailing list. Send mail to
 <email>majordomo@slac.com</email>
 with the following subject: <userinput>subscribe kpilot-list</userinput>.
+(To <emphasis>unsubscribe</emphasis> from the list
+again, send mail to
+<email>majordomo@slac.com</email>
+with the following subject:
+<userinput>unsubscribe kpilot-list</userinput>.
+Do not send subscribe or unsubscribe requests to the
+list itself.)
 </para>
 
 <sect1 id="revhistory">
@@ -112,6 +121,34 @@ with the following subject: <userinput>subscribe kpilot-list</userinput>.
      since it's sure to change there. -->
 
 <itemizedlist>
+<listitem>
+<para>
+New in 4.0.0 -
+&kpilot; is now a KDE 2 application.
+A lot of work has gone into making the main
+&kpilot; application compatible with the new KDE 2 standards.
+The stability of the program as a whole has improved as well,
+with lots of bugfixes under the hood.
+The most important visible new features are:
+<itemizedlist>
+<listitem><para>
+	There is a new <application>KNotes</application>
+	conduit that synchronizes the memo pad with 
+	<application>KNotes</application>.</para></listitem>
+<listitem><para>
+	More intuitive conduit installation and setup.
+	</para></listitem>
+</itemizedlist>
+</para>
+</listitem>
+<listitem>
+<para>
+New in 3.2.1 -
+more bugfixes. &kpilot; 3.2.1 is also
+the last version of $kpilot; for KDE 1.
+Development on the 3.x series has stopped.
+</para>
+</listitem>
 <listitem>
 <para>
 New in 3.2.0 -
@@ -287,31 +324,19 @@ better.
 
 <para>
 &kpilot; is part of the KDE project,
-but must be obtained from either the
-<ulink url="http://www.slac.com/pilone/kpilot_home/moreinfo.html">
-Official KPilot Home Page
-</ulink>
-(Most official sources and binaries)
-or the
-<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
-KPilot Bugs Page</ulink>
-(development sources and binaries).
+and can be found in the kdepim package.
 It is also available from the KDE CVS server under
-<filename>/home/kde/kpilot</filename>.
+<filename>/home/kde/kdepim/kpilot</filename>.
 </para>
 
 
 <para>
 A word about version numbers:
 &kpilot; 3.x versions
-(such as this &kpilotver; version)
 are for KDE 1.
 With the release of KDE 2
-KPilot 3.x will be obsolete
-and we will move to &kpilot; 4, which will have support
-for some of the new KDE functionality.
-&kpilot; 4.x will be available from a different CVS location,
-but from the same web pages.
+KPilot 3.x is obsolete
+and &kpilot; 4.x has become current.
 </para>
 
 </sect1>
@@ -319,10 +344,9 @@ but from the same web pages.
 <sect1 id="requirements">
 <title>Requirements</title> 
 <para>
-In order to successfully use &kpilot;, you need KDE 1.1.
-&kpilot; 3.x is a KDE 1.x application. 
-It will not run under KDE 2.x.
-&kpilot; 4.x will run under KDE 2.
+In order to successfully use &kpilot;, you need KDE 2.0.
+&kpilot; 3.x is a KDE 2.x application. 
+It will not run under KDE 1.x.
 </para>
 
 </sect1>
@@ -332,16 +356,19 @@ It will not run under KDE 2.x.
 
 <para>
 In order to compile and install &kpilot;
-on your system, type the following in the base
-directory of the &kpilot; distribution:
+on your system, 
+you need the kdepim package.
+Type the following in the base
+directory of the kdepim distribution:
 <screen width="40">
 <prompt>$</prompt> <userinput>./configure</userinput>
+<prompt>$</prompt> <userinput>cd kpilot</userinput>
 <prompt>$</prompt> <userinput>make</userinput>
 <prompt>$</prompt> <userinput>make install</userinput>
 </screen>
 </para>
 
-<para>Since &kpilot; uses 
+<para>Since kdepim (and thus &kpilot;) uses 
 <application>autoconf </application>
 and 
 <application>automake </application>
@@ -380,8 +407,8 @@ options require your attention, this setup dialog will reappear.
 <para>
 Once
 &kpilot; is properly set up, pressing <guibutton>OK</guibutton>
-will bring up the main &kpilot;
-window.  
+will bring up the 
+<link linkend="kpilotmain">main &kpilot; window</link>.  
 The <emphasis>first</emphasis> thing you should do is 
 make a full backup
 of the &pilot;.  
@@ -412,8 +439,10 @@ hot-sync is significantly faster.
 <title>General page</title>
 
 <para>
-This is a setup page that contains options pertaining to
-the &pilot; hardware and to you, the user.
+This is a setup page that contains options describing
+the &pilot; hardware, you, the user
+and how you want the various parts of &kpilot;
+to be started.
 </para>
 
 <screenshot>
@@ -438,7 +467,7 @@ which should be a symbolic link to the proper serial port.
 <emphasis>Make sure the serial port has
 the correct permissions.</emphasis>
 It
-must be read/write by all if KPilot is intended to be used by a
+must be read/write by all if &kpilot; is intended to be used by a
 normal user!  This is done by doing a 
 <userinput>chmod 666 <replaceable>device</replaceable></userinput> where
 <replaceable>device</replaceable> is the correct serial port.
@@ -483,29 +512,6 @@ subdirectory named 'pilone'.
 
 
 
-<varlistentry><term><guilabel>Sync Files</guilabel></term>
-<listitem>
-<para>
-When
-this is enabled any files dropped into the file install (either the
-icon docked on the panel or into the file installer widget in KPilot)
-will be installed on the pilot during the next hot-sync.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry><term><guilabel>Local overrides Pilot</guilabel></term>
-<listitem>
-<para>
-When
-a record has been modified on both the Pilot and the local side, only
-one can be kept.  By default KPilot assumes the Pilot has the most
-recent information and will keep that.  By enabling this option
-KPilot assumes <emphasis>it</emphasis> has the
-most recent information and will overwrite the pilot's copy.
-</para>
-</listitem>
-</varlistentry>
 
 <varlistentry><term><guilabel>Start
 Hot-Sync Daemon at login</guilabel></term>
@@ -544,8 +550,30 @@ Without this option, the daemon is not visible to the user at all.
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term>
+<guilabel>Stop Daemon on exit</guilabel>
+</term>
+<listitem>
+<para>
+Setting this option will cause the daemon to exit when you quit
+KPilot, leaving the serial port free for other Pilot-syncing tools
+such as <application>malsync</application>
+</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
+<para>
+For a fully visible &kpilot; installation, 
+enable <guilabel>Start KPilot at Hot-Sync</guilabel>
+and <guilabel>Show Daemon in KPanel</guilabel>
+while disabling <guilabel>Stop Daemon on exit</guilabel>.
+To make &kpilot; all but invisible,
+disable all the options except 
+<guilabel>Stop Daemon on exit</guilabel>.
+</para>
 
 </sect2>
 
@@ -696,9 +724,7 @@ the &pilot; databases &kpilot; works with.
 <term><guilabel>Show secrets</guilabel></term>
 <listitem>
 <para>
-
-
-	in your &pilot; you can mark some records
+	In your &pilot; you can mark some records
 	as &quot;private.&quot; 
 	By default,
 	&kpilot; does not
@@ -719,10 +745,10 @@ the &pilot; databases &kpilot; works with.
 	not the name of the product, so for Handbase
 	databases you fill in 
 	<userinput>PmDB</userinput>.
-	Handbase in particular should be listed here,
-	since its databases are corrupted by a 
-	standard sync.
 	Multiple databases should be separated by commas.
+	See the <link linkend="faq">FAQ</link>
+	for a list of databases that should be listed
+	here (the default should be OK though).
 </para>
 </listitem>
 </varlistentry>
@@ -743,24 +769,78 @@ the &pilot; databases &kpilot; works with.
 
 </sect2>
 
-<sect2 id="about">
+<sect2 id="sync">
 <title>
-About page
+Sync page
 </title>
 
 <para>
-The About page isn't really a configuration
-page at all. It just tells you what version of KPilot
-you're using and some information about the authors.
-This is useful information to include when
-you're 
-<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
-reporting a bug
-</ulink>.
+The sync page contains preferences relevant to
+the Hot-Sync operation on your &pilot;. 
 </para>
 
+<screenshot>
+<screeninfo>Sync page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-sync.png" format="png">
+</imageobject>
+<textobject><phrase>The Sync page</phrase></textobject>
+<caption><para>The Sync page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry><term><guilabel>Sync Files</guilabel></term>
+<listitem>
+<para>
+When
+this is enabled any files dropped into the file install (either the
+icon docked on the panel or into the file installer in &kpilot;)
+will be installed on the &pilot; during the next hot-sync.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Local overrides Pilot</guilabel></term>
+<listitem>
+<para>
+When
+a record has been modified on both the &pilot; and the local side, only
+one can be kept.  By default &kpilot; assumes the &pilot; has the most
+recent information and will keep that.  By enabling this option
+&kpilot; assumes <emphasis>it</emphasis> has the
+most recent information and will overwrite the &pilot;'s copy.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Force first-time sync every time</guilabel></term>
+<listitem>
+<para>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do full backup when changing PCs</guilabel></term>
+<listitem>
+<para>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Prefer Fast-Sync to Hot-Sync</guilabel></term>
+<listitem>
+<para>
+</para>
+</listitem>
+</varlistentry>
 
 
+</variablelist>
 </sect2>
 </sect1>
 </chapter>
@@ -779,12 +859,7 @@ reporting a bug
 <title>FAQ</title>
 
 <sect1 id="crash">
-<title>KPilot Crashes...</title>
-
-<para>
-This section answers questions of the most common sort:
-&kpilot; refuses to run at all.
-</para>
+<title>KPilot Startup Problems</title>
 
 
 <qandaset>
@@ -1019,8 +1094,7 @@ to the USB device and everything will work fine.
 </question>
 <answer>
 <para>
-No, not yet. There are no plans to include support for
-this in the KDE 1 version of KPilot.
+No, not yet. 
 Maybe later.
 </para>
 </answer>
@@ -1056,28 +1130,14 @@ Contributors:
 Kenneth Albanowski, Michael Kropfberger
 </para></listitem>
 <listitem><para>Patches by: Robert Ambrose, Scott Presnell,
-Dag Nygren, Chuck Robey, Jay Summet
+Dag Nygren, Chuck Robey, Jay Summet, Heiko Purnhagen,
+J&ouml;rg Habenicht
 </para></listitem>
 </itemizedlist>
 </para>
 
 <para>
 Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
-</para>
-<para>
-Translations done by:
-<itemizedlist>
-<listitem>
-<para>Adriaan de Groot <email>adridg@cs.kun.nl</email> (.nl)</para>
-</listitem>
-<listitem>
-<para>Andreas Silberstorff 
-	<email>andreas.silberstorff@gmx.de</email> (.de)</para>
-</listitem>
-<listitem>
-<para>Nicolas Pettiaux <email>nicolas.pettiaux@linuxbe.org</email> (.fr)</para>
-</listitem>
-</itemizedlist>
 </para>
 
 &license-links;
