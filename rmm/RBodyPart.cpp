@@ -70,6 +70,7 @@ RBodyPart::~RBodyPart()
 	const RBodyPart &
 RBodyPart::operator = (const RBodyPart & part)
 {
+	rmmDebug("operator =");
 	if (this == &part) return *this;	// Avoid a = a.
 	REntity::operator = (part);
 	return *this;

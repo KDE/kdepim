@@ -41,6 +41,13 @@ RCte::~RCte()
 	const RCte &
 RCte::operator = (const RCte & cte)
 {
+	rmmDebug("operator =");
+    if (this == &cte) return *this; // Don't do a = a.
+
+	mechanism_ = cte.mechanism_;
+	
+	RHeaderBody::operator = (cte);
+
 	return *this;
 }
 

@@ -40,6 +40,11 @@ REnvelope::REnvelope(const REnvelope & e)
 	const REnvelope &
 REnvelope::operator = (const REnvelope & e)
 {
+	rmmDebug("operator =");
+    if (this == &e) return *this; // Don't do a = a.
+	headerList_ = e.headerList_;
+	rmmDebug(".");
+	RMessageComponent::operator = (e);
 	return *this;
 }
 
@@ -51,8 +56,6 @@ REnvelope::~REnvelope()
 	void
 REnvelope::parse()
 {
-	// Hopefully we'll be OK using this with Qt-2.0 as the header must be 7-bit
-	// us-ascii. XXX: Must make sure that it is ! XXX
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ : " + strRep_);
 

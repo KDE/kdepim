@@ -44,6 +44,14 @@ RParameter::~RParameter()
 	const RParameter &
 RParameter::operator = (const RParameter & p)
 {
+	rmmDebug("operator =");
+    
+	if (this == &p) return *this; // Don't do a = a.
+	
+	attribute_ = p.attribute_;
+	value_ = p.value_;
+
+	RMessageComponent::operator = (p);
 	return *this;
 }
 

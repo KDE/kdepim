@@ -32,15 +32,20 @@ class RHeaderBody : public RMessageComponent {
 
 		virtual ~RHeaderBody();
 
-		virtual void parse() = 0L;
-		virtual void assemble() = 0L;
-		virtual void createDefault() = 0L;
+		virtual void parse() 
+			{ rmmDebug("WARNING base class parse() called"); }
+
+		virtual void assemble()
+			{ rmmDebug("WARNING base class assemble() called"); }
+
+		virtual void createDefault()
+			{ rmmDebug("WARNING base class createDefault() called"); }
+			
+		virtual const RHeaderBody & operator = (const RHeaderBody & h);
 
 		void set(const QString & s) { RMessageComponent::set(s); }
 		const QString & asString() const { return RMessageComponent::asString(); }
 		
-		const RHeaderBody & operator = (const RHeaderBody &);
-
 		const char * className() const { return "RHeaderBody"; }
 
 	protected:
@@ -48,6 +53,8 @@ class RHeaderBody : public RMessageComponent {
 		RHeaderBody();
 		RHeaderBody(const RHeaderBody & headerBody);
 		RHeaderBody(const QString & s) : RMessageComponent(s) { }
+		
+	friend class RHeader; // FIXME: Hack. Remove.
 };
 
 #endif

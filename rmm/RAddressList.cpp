@@ -70,6 +70,19 @@ RAddressList::~RAddressList()
 {
 	rmmDebug("dtor");
 }
+		
+
+	const RAddressList &
+RAddressList::operator = (const RAddressList & al)
+{
+	rmmDebug("operator =");
+    if (this == &al) return *this; // Don't do a = a.
+	
+	QList<RAddress>::operator = (al);
+	RHeaderBody::operator = (al);
+
+	return *this;
+}
 
 	void
 RAddressList::parse()

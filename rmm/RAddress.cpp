@@ -51,14 +51,30 @@ RAddress::RAddress(const QString & addr)
 RAddress::~RAddress()
 {
 	rmmDebug("dtor");
+	
 	delete mailbox_, group_;
+	
+	mailbox_	= 0;
+	group_		= 0;
 }
 
 	const RAddress &
 RAddress::operator = (const RAddress & addr)
 {
+	rmmDebug("operator =");
     if (this == &addr) return *this; // Don't do a = a.
+	
+	delete mailbox_, group_;
+	mailbox_	= 0;
+	group_		= 0;
+	
+	if (addr.mailbox_ != 0)
+		mailbox_ = new RMailbox(*(addr.mailbox_));
+	else
+		group_ = new RGroup(*(addr.group_));
     
+	RHeaderBody::operator = (addr);
+
 	return *this;
 }
 
@@ -85,10 +101,10 @@ RAddress::parse()
 {
 	rmmDebug("parse() called");
 	
-	delete mailbox_;
-	mailbox_ = 0;
-	delete group_;
-	group_ = 0;
+	delete mailbox_, group_;
+	mailbox_	= 0;
+	group_		= 0;
+
 	rmmDebug("Done my deletions. Should be safe if ctors work");
 	
 	QString s = strRep_.stripWhiteSpace();

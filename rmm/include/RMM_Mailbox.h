@@ -31,9 +31,9 @@ class RMailbox : public RAddress {
 	public:
 
 		RMailbox();
-		RMailbox(const RMailbox & rMailbox);
+		RMailbox(const RMailbox & m);
 		RMailbox(const QString & s) : RAddress(s) { }
-		const RMailbox & operator = (const RMailbox & rMailbox);
+		const RMailbox & operator = (const RMailbox & m);
 		
 		friend QDataStream & operator >> (
 			QDataStream & s, RMailbox & mailbox);

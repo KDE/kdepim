@@ -30,19 +30,20 @@
 
 void myMessageHandler(QtMsgType type, const char * msg);
 
+/*
 void handleSignal(int sig)
 {
-	if (sig == SIGHUP) {
-		cerr << "Got SIGHUP - re-reading config (?)" << endl;
-		// read config ?
-		return;
+	if (sig == SIGINT) {
+		cerr << "Got SIGINT - dying" << endl;
+		if (Empath::EMPATH != 0) delete Empath::EMPATH;
+		exit(0);
 	}
 
 	cerr << "Caught signal " << sig << " - exiting" << endl;
 	
 	exit(1);
 }
-
+*/
 	int
 EmpathMain(int argc, char * argv[])
 {
@@ -84,15 +85,14 @@ void myMessageHandler(QtMsgType type, const char * msg)
 			cerr << "Qt Debug: " << msg << endl;
 			break;
 		case QtWarningMsg:
-			cerr << "Qt Warning: " << msg << "\nPlease contact the program maintainers at empath@postmaster.co.uk and advise them of the warning. This way it can be checked and fixed quickly." << endl;
+			cerr << "Qt Warning: " << msg << endl;
 			break;
 		case QtFatalMsg:
-			cerr << "Qt FATAL ERROR: " << msg << "\nPlease contact the program maintainers at empath@postmaster.co.uk and advise them of the warning. This way it can be checked and fixed quickly." << endl;
+			cerr << "Qt FATAL ERROR: " << msg << endl;
 			QMessageBox::critical(0, "Empath",
 				QString("Fatal error in Qt toolkit:\n" + QString(msg) +
-					"\nPlease notify the program maintainers at\n" +
-					"empath@postmaster.co.uk\n" +
-					"We will endeavour to fix this problem."));
+					"\nPlease notify the program maintainer at\n" +
+					"rik@rikkus.demon.co.uk\n"));
 			abort();
 			break;
 		default:

@@ -42,6 +42,16 @@ RGroup::~RGroup()
 	const RGroup &
 RGroup::operator = (const RGroup & g)
 {
+	rmmDebug("operator =");
+	
+	if (this == &g) return *this;
+	
+	mailboxList_ = g.mailboxList_;
+	name_	= g.name_;
+	phrase_	= g.phrase_;
+	
+	RAddress::operator = (g);
+
 	return *this;
 }
 
@@ -69,7 +79,7 @@ RGroup::setPhrase(const QString & s)
 	phrase_ = s;
 }
 
-	RMailboxList *
+	const RMailboxList &
 RGroup::mailboxList() const
 {
 	return mailboxList_;

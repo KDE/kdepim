@@ -32,7 +32,8 @@ class RMessageID : public RHeaderBody {
 		RMessageID();
 		RMessageID(const RMessageID & rMessageID);
 		RMessageID(const QString & s) : RHeaderBody(s) { }
-		bool operator == (const RMessageID & msgID);
+		bool operator == (const RMessageID & msgID) const;
+		bool operator != (const RMessageID & msgID) const;
 		const RMessageID & operator = (const RMessageID & rMessageID);
 
 		friend QDataStream & operator >> (

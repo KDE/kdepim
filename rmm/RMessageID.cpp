@@ -44,26 +44,36 @@ RMessageID::~RMessageID()
 }
 
 	bool
-RMessageID::operator == (const RMessageID & msgID)
+RMessageID::operator == (const RMessageID & msgID) const
 {
 	return (
 		localPart_	== msgID.localPart_ &&
 		domain_		== msgID.domain_);
 }
 
+	bool
+RMessageID::operator != (const RMessageID & msgID) const
+{
+	return (
+		localPart_	!= msgID.localPart_ ||
+		domain_		!= msgID.domain_);
+}
+
+
 	const RMessageID &
 RMessageID::operator = (const RMessageID & messageID)
 {
+	rmmDebug("operator =");
     if (this == &messageID) return *this; // Avoid a = a
 	
 	localPart_ = messageID.localPart_;
     domain_ = messageID.domain_;
     
-	assemble();
-
 	rmmDebug("operator = ...");
 	rmmDebug("localPart_ == " + localPart_);
 	rmmDebug("domain_ == " + domain_);
+	
+	RHeaderBody::operator = (messageID);
 	return *this;
 }
 

@@ -48,6 +48,10 @@ RMailboxList::~RMailboxList()
 	const RMailboxList &
 RMailboxList::operator = (const RMailboxList & l)
 {
+	rmmDebug("operator =");
+    if (this == &l) return *this; // Don't do a = a.
+	QList<RMailbox>::operator = (l);
+	RHeaderBody::operator = (l);
 	return *this;
 }
 

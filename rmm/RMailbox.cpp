@@ -45,6 +45,7 @@ RMailbox::~RMailbox()
 
 const RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 {
+	rmmDebug("operator =");
 	if (this == &mailbox) return *this; // Avoid a = a
 	
 	phrase_		= mailbox.phrase_;
@@ -52,7 +53,7 @@ const RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 	localPart_	= mailbox.localPart_;
 	domain_		= mailbox.domain_;
 	
-	assemble();
+	RAddress::operator = (mailbox);
 	
 	return *this;
 }

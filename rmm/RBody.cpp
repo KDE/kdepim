@@ -74,11 +74,14 @@ RBody::~RBody()
 	const RBody &
 RBody::operator = (const RBody & body)
 {
+	rmmDebug("operator =");
 	partList_.clear();
 	QListIterator<RBodyPart> it(partList_);
 
 	for (;it.current(); ++it)
 		partList_.append(it.current());
+	
+	RMessageComponent::operator = (body);
 
 	return *this;
 }

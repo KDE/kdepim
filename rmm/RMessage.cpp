@@ -46,21 +46,12 @@ RMessage::~RMessage()
 	const RMessage &
 RMessage::operator = (const RMessage & m)
 {
+	rmmDebug("operator =");
+	if (this == &m) return *this;
 	envelope_ = m.envelope_;
 	body_ = m.body_;
+	REntity::operator = (m);
 	return *this;
-}
-
-	REnvelope *
-RMessage::envelope()
-{
-	return &envelope_;
-}
-
-	RBody *
-RMessage::body()
-{
-	return &body_;
 }
 
 	int
@@ -104,13 +95,15 @@ RMessage::part(int index)
 	void
 RMessage::parse()
 {
-	rmmDebug("parse() called");
+	rmmDebug("parse() called - data follows:\n" + strRep_);
 
 //	int endOfHeaders = strRep_.find("\n[ \t]*[\r]\n");
-	int endOfHeaders = strRep_.find("^$");
+//	int endOfHeaders = strRep_.find(QRegExp("^$"));
+	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
 	
 	if (endOfHeaders == -1) {
-		rmmDebug("No end of headers !");
+		rmmDebug("No end of headers ! - message is " +
+			QString().setNum(strRep_.length()) + " bytes long");
 		return;
 	}
 	

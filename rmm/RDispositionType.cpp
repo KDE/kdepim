@@ -39,6 +39,15 @@ RDispositionType::RDispositionType(const RDispositionType & t)
 	const RDispositionType &
 RDispositionType::operator = (const RDispositionType & t)
 {
+	rmmDebug("operator =");
+    if (this == &t) return *this; // Don't do a = a.
+	
+	parameterList_	= t.parameterList_;
+	dispType_		= t.dispType_;
+	filename_		= t.filename_;
+	
+	RHeaderBody::operator = (t);
+	
 	return *this;
 }
 

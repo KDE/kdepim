@@ -49,16 +49,16 @@ class RMessage : public REntity {
 
 		const RMessage & operator = (const RMessage & message);
 		
-		friend bool operator == (const RMessage & a, const RMessage & b)
-		{ return a.id_ == b.id_; }
+		bool operator == (const RMessage & m) const
+		{ return id_ == m.id_; }
 		
 		friend QDataStream & operator << (QDataStream & str, const RMessage & m)
 		{ str << m.asString(); return str; }
 
 		QString recipientListAsPlainString();
 
-		REnvelope	* envelope();
-		RBody		* body();
+		REnvelope	& envelope()			{ return envelope_; }
+		RBody		& body()				{ return body_; }
 
 		Q_UINT32 size() const				{ return strRep_.length(); }
 		

@@ -26,6 +26,7 @@
 
 #include <RMM_HeaderBody.h>
 #include <RMM_Parameter.h>
+#include <RMM_ParameterList.h>
 #include <RMM_Enum.h>
 #include <RMM_Defines.h>
 
@@ -68,7 +69,7 @@ class RMimeType : public RHeaderBody {
 		MimeType type_;
 		MimeSubType subType_;
 		
-		QList<RParameter>	parameterList_;
+		RParameterList	parameterList_;
 
 };
 

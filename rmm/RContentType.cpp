@@ -40,8 +40,17 @@ RContentType::~RContentType()
 }
 
 	const RContentType &
-RContentType::operator = (const RContentType & cte)
+RContentType::operator = (const RContentType & ct)
 {
+	rmmDebug("operator =");
+    if (this == &ct) return *this; // Don't do a = a.
+
+	type_			= ct.type_;
+	subType_		= ct.subType_;
+	parameterList_	= ct.parameterList_;
+	
+	RHeaderBody::operator = (ct);
+
 	return *this;
 }
 

@@ -38,3 +38,10 @@ RMessageComponent::~RMessageComponent()
 	rmmDebug("dtor");
 }
 
+	RMessageComponent &
+RMessageComponent::operator = (const RMessageComponent & m)
+{
+	rmmDebug("operator =");
+	strRep_ = m.strRep_;
+}
+

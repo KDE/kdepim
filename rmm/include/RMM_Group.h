@@ -35,13 +35,12 @@ class RGroup : public RAddress {
 		RGroup();
 		RGroup(const RGroup & group);
 		RGroup(const QString & s) : RAddress(s), mailboxList_(0) { }
+		const RGroup & operator = (const RGroup & group);
 
 		virtual ~RGroup();
 
 		void parse();
 		void assemble();
-
-		const RGroup & operator = (const RGroup & group);
 
 		void createDefault();
 
@@ -53,7 +52,7 @@ class RGroup : public RAddress {
 
 		void setPhrase(const QString & phrase);
 
-		RMailboxList * mailboxList() const;
+		const RMailboxList & mailboxList() const;
 
 		bool isValid() const;
 		
@@ -61,7 +60,7 @@ class RGroup : public RAddress {
 
 	private:
 
-		RMailboxList	* mailboxList_;
+		RMailboxList	mailboxList_;
 		QString			name_;
 		QString			phrase_;
 		bool isValid_;

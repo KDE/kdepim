@@ -53,6 +53,22 @@ RHeader::~RHeader()
 	delete headerBody_;
 }
 
+	const RHeader &
+RHeader::operator = (const RHeader & h)
+{
+	rmmDebug("operator =");
+	if (this == &h) return *this;
+	
+	headerName_ = h.headerName_;
+	headerType_ = h.headerType_;
+
+	if (headerBody_ != 0) delete headerBody_;
+	headerBody_ = new RHeaderBody(*h.headerBody_);
+	
+	RMessageComponent::operator = (h);
+	return *this;
+}
+
 	const QString &
 RHeader::headerName() const
 {

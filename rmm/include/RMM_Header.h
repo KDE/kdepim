@@ -35,6 +35,7 @@ class RHeader : public RMessageComponent
 		RHeader(const QString & name, RHeaderBody * b);
 		RHeader(const QString & s) : RMessageComponent(s), headerBody_(0) { }
 		RHeader(HeaderType t, RHeaderBody * b);
+		const RHeader & operator = (const RHeader & h);
 
 		virtual ~RHeader();
 

@@ -33,8 +33,14 @@ RHeaderBody::RHeaderBody(const RHeaderBody & headerBody)
 }
 
 	const RHeaderBody &
-RHeaderBody::operator = (const RHeaderBody &)
+RHeaderBody::operator = (const RHeaderBody & hb)
 {
+	rmmDebug("operator =");
+	if (this == &hb) return *this;
+	
+	strRep_ = hb.strRep_;	
+	
+	RMessageComponent::operator = (hb);
 	return *this;
 }
 

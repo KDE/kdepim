@@ -33,16 +33,14 @@ class RAddress : public RHeaderBody {
 	public:
 
 		RAddress();
-		RAddress(const RAddress & rAddress);
+		RAddress(const RAddress & a);
 		RAddress(const QString & s);
-		const RAddress & operator = (const RAddress & rAddress);
+		virtual const RAddress & operator = (const RAddress & a);
 
 		virtual ~RAddress();
 
 		void parse();
 		void assemble();
-//		void set(const char *s) { strRep_ = s; }
-//		const char * asString() { return strRep_; }
 
 		bool isValid() const;
 		
@@ -52,10 +50,6 @@ class RAddress : public RHeaderBody {
 		void createDefault();
 
 		const char * className() const { return "RAddress"; }
-		
-	protected:
-		
-//		QString strRep_;
 		
 	private:
 		

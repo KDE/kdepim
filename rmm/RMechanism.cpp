@@ -42,6 +42,10 @@ RMechanism::~RMechanism()
 	const RMechanism &
 RMechanism::operator = (const RMechanism & m)
 {
+	rmmDebug("operator =");
+    if (this == &m) return *this; // Don't do a = a.
+	
+	RHeaderBody::operator = (m);
 	return *this;
 }
 

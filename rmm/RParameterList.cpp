@@ -47,6 +47,8 @@ RParameterList::~RParameterList()
 	const RParameterList &
 RParameterList::operator = (const RParameterList & l)
 {
+	if (this == &l) return *this;
+	QList<RParameter>::operator = (l);
 	return *this;
 }
 

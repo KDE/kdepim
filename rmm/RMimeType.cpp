@@ -49,6 +49,16 @@ RMimeType::~RMimeType()
 	const RMimeType &
 RMimeType::operator = (const RMimeType & t)
 {
+	rmmDebug("operator =");
+    if (this == &t) return *this; // Avoid a = a
+	
+	boundary_		= t.boundary_;
+	name_			= t.name_;
+	type_			= t.type_;
+	subType_		= t.subType_;
+	parameterList_	= t.parameterList_;
+	
+	RHeaderBody::operator = (t);
 	return *this;
 }
 

@@ -4,7 +4,7 @@ SUBDIRS = doc pics tips rmm templates
 
 bin_PROGRAMS = 	empath
 
-empath_LDADD   = rmm/.libs/librmm.a -lkhtml -lkimgio -ljpeg -lX11 -lm -ljscript -lkdeutil -lkfile -lkfm -lkdeui -lkdecore -lqt -lXext -lmimelib -lpng -ltiff -lz -ldl
+empath_LDADD   = rmm/.libs/librmm.a -lkhtml -lkimgio -ljpeg6b -lX11 -lm -ljscript -lkdeutil -lkfile -lkfm -lkdeui -lkdecore -lqt -lXext -lmimelib -lpng -ltiff -lz -ldl
 
 empath_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 

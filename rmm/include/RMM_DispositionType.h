@@ -26,6 +26,7 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
 #include <RMM_Parameter.h>
+#include <RMM_ParameterList.h>
 
 class RDispositionType : public RHeaderBody {
 
@@ -58,7 +59,7 @@ class RDispositionType : public RHeaderBody {
 
 	private:
 
-		QList<RParameter> parameterList_;
+		RParameterList parameterList_;
 		DispType dispType_;
 		QString filename_;
 		bool isValid_;

@@ -33,8 +33,10 @@ class RMessageComponent {
 
 		virtual ~RMessageComponent();
 
-		const RMessageComponent & operator = (const QString & s)
-		{ strRep_ = s.data(); }
+		RMessageComponent & operator = (const QString & s)
+		{ strRep_ = s; }
+		
+		RMessageComponent & operator = (const RMessageComponent & m);
 
 		virtual void parse() = 0L;
 

@@ -53,8 +53,15 @@ RDateTime::RDateTime(const RDateTime & t)
 	const RDateTime &
 RDateTime::operator = (const RDateTime & dt)
 {
+	rmmDebug("operator =");
+    if (this == &dt) return *this; // Don't do a = a.
+
 	QDateTime::operator = (dt);
 	zone_ = dt.zone_.data();
+	
+	RHeaderBody::operator = (dt);
+	
+	return *this;
 }
 
 	QDataStream &
