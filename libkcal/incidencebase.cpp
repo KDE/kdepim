@@ -47,7 +47,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i)
   mHasDuration = i.mHasDuration;
   mOrganizer = i.mOrganizer;
   mUid = i.mUid;
-  QPtrList<Attendee> attendees;
+  QPtrList<Attendee> attendees = i.attendees();
   for( Attendee *a = attendees.first(); a; a = attendees.next() ) {
     mAttendees.append( new Attendee( *a ) );
   }
