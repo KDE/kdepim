@@ -203,7 +203,7 @@ void LogWidget::addMessage(const QString & s)
 //	fLog->append(t);
 //#endif
 	fLog->setText(fLog->text() + t);
-	fLog->setContentsPos(0,contentsHeight());
+	fLog->contentsHeight();
 }
 
 void LogWidget::addError(const QString & s)
@@ -360,6 +360,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.27  2002/10/11 19:09:31  rnolden
+// fix scrolling of the log messages so the user can actually see what's going on without scrolling down
+//
 // Revision 1.26  2002/08/15 21:51:00  kainhofe
 // Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
 //
