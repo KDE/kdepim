@@ -20,9 +20,9 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kfontdialog.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kmessagebox.h>
-#include <kcolordlg.h>
+#include <kcolordialog.h>
 #include <kiconloader.h>
 #include <kiconeffect.h>
 
@@ -48,7 +48,6 @@ KandyPrefsDialog::~KandyPrefsDialog()
   delete startupMobile;
 }
 
-#include <kdebug.h>
 void KandyPrefsDialog::setupSerialTab()
 {
   QFrame *topFrame = addPage(i18n("Serial Interface"),0,

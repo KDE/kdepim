@@ -39,7 +39,7 @@
 #endif
 
 #include <qdialog.h>
-#include <qlined.h>
+#include <qlineedit.h>
 
 class PasswordDialog : public QDialog
 {
@@ -60,6 +60,9 @@ private:
 
 
 // $Log$
+// Revision 1.6  2001/12/28 13:01:16  adridg
+// Add SyncAction
+//
 // Revision 1.5  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

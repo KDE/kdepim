@@ -43,7 +43,7 @@ static const char *pilotlocaldatabase_id =
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 
 #include "pilotLocalDatabase.h"
@@ -632,6 +632,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.11  2002/12/31 00:32:15  kainhofe
+// Added function deleteDatabase to the Pilot*Database classes
+//
 // Revision 1.10  2002/12/15 13:17:34  kainhofe
 // cardno is not needed for local databases
 //

@@ -26,7 +26,7 @@
 #include <kurlrequesterdlg.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kedittoolbar.h>
 #include <kstdaccel.h>
 #include <kaction.h>

@@ -28,7 +28,6 @@
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
-#include <kapp.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kaction.h>

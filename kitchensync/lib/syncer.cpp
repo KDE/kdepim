@@ -4,7 +4,7 @@
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 #include "syncalgorithm.h"
 #include "standardsync.h"

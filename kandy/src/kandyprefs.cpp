@@ -6,7 +6,7 @@
 
 #include <kconfig.h>
 #include <ksimpleconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klocale.h>
 #include <kdebug.h>
 

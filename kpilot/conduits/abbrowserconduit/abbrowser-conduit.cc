@@ -35,7 +35,7 @@
 #include <qcheckbox.h>
 
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <dcopclient.h>
@@ -2001,6 +2001,9 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 
 // $Log$
+// Revision 1.57  2002/12/31 00:25:46  kainhofe
+// No idea why I ever changed the default to 10 instead of 0. Reverted it
+//
 // Revision 1.56  2002/12/21 20:17:24  kainhofe
 // Forgot a #ifdef DEBUG, so the conduit didn't compile
 //

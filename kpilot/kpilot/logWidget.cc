@@ -45,7 +45,7 @@ static const char *logw_id =
 #include <qpainter.h>
 
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kprogress.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
@@ -360,6 +360,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.30  2002/12/04 10:55:37  thorsen
+// Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
+//
 // Revision 1.26.2.3  2002/11/29 11:12:10  thorsen
 // Merged from head
 //

@@ -52,14 +52,14 @@ static const char *pilotdaemon_id =
 #include <errno.h>
 
 #include <qdir.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qcursor.h>
 #include <qdragobject.h>
-#include <qstack.h>
+#include <qptrstack.h>
 #include <qtimer.h>
 #include <qtooltip.h>
 
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 #include <kaboutdata.h>
 #include <kaboutapplication.h>
 #include <kcmdlineargs.h>
@@ -68,7 +68,7 @@ static const char *pilotdaemon_id =
 #include <kurl.h>
 #include <ksock.h>
 #include <kmessagebox.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kpopupmenu.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
@@ -689,7 +689,6 @@ void PilotDaemon::start_syncCal_TodosWithKMail( bool cal, bool todos )
   }
   c.sync();
 }
-#include <kabc/stdaddressbook.h>
 
 void PilotDaemon::start_syncAddWithKMail()
 {
@@ -1163,6 +1162,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.68  2002/12/04 10:55:37  thorsen
+// Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
+//
 // Revision 1.66.2.3  2002/11/29 11:12:10  thorsen
 // Merged from head
 //

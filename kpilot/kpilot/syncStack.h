@@ -30,7 +30,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qstack.h>
+#include <qptrstack.h>
 
 #include "plugin.h"
 
@@ -212,6 +212,9 @@ protected:
 
 
 // $Log$
+// Revision 1.5  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.4  2002/05/19 15:01:49  adridg
 // Patches for the KNotes conduit
 //

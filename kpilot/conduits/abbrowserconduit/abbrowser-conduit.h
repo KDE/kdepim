@@ -22,7 +22,7 @@
 #include <plugin.h>
 
 #include <qmap.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include <kapplication.h>
 #include <qdict.h>
@@ -229,6 +229,18 @@ private:
 
 
 // $Log$
+// Revision 1.28  2002/10/10 13:44:41  kainhofe
+// This fixes several bugs:
+// -) conflict resolution now also works if you chose ignore on the last sync
+// -) home/work phone/fax were mixed up
+// -) deleting an address in kaddressbook now also deletes the address from the handheld
+// -) variable renaming for consistent naming
+// -) fix a crash with an iterator being deleted and then incremented
+// -) Offering the value from the last sync in the conflict resolution dialog
+// -) Using an addressbook for several handhelds should work now
+// -) archived records are now synced to the PC, but not back to the handheld
+// -) If an addressee has a wrong pilotID, the pilotID is reset
+//
 // Revision 1.27  2002/10/05 13:59:29  kainhofe
 // duplication now works as conflict resolution. Removed the warning in the setup dialog.
 //

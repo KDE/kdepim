@@ -49,7 +49,7 @@ static const char *syncAction_id =
 
 #include <kdialogbase.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kconfig.h>
 
 #if KDE_VERSION < 300
@@ -282,6 +282,9 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.8  2002/08/25 19:39:28  adridg
+// Add testing instruments for exec() returning false
+//
 // Revision 1.7  2002/08/24 21:27:32  adridg
 // Lots of small stuff to remove warnings
 //

@@ -47,7 +47,7 @@ static const char *hotsync_id =
 #include <qregexp.h>
 
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kapplication.h>
 
 #include "pilotUser.h"
@@ -485,6 +485,9 @@ CleanupAction::~CleanupAction()
 
 
 // $Log$
+// Revision 1.19  2002/11/27 21:29:06  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.18  2002/08/30 22:24:55  adridg
 // - Improved logging, connected the right signals now
 // - Try to handle dlp_ReadUserInfo failures sensibly

@@ -48,7 +48,6 @@
 #include <assert.h>
 // CALSYS
 #include "kcalendarsystem.h"
-#include <kdebug.h>
 
 // CALSYS: added optional calType parameter and initializer for different validator calendar types support
 KDateValidator::KDateValidator(const QString& calType, QWidget* parent, const char* name)

@@ -52,7 +52,7 @@ static const char *interactivesync_id =
 
 #include <kdialogbase.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 #include <kapplication.h>
 
@@ -492,6 +492,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.16  2002/12/12 13:26:16  lunakl
+// strcpy -> strlcpy
+//
 // Revision 1.15  2002/11/27 21:29:06  adridg
 // See larger ChangeLog entry
 //

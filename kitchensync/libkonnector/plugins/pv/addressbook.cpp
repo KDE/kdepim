@@ -20,7 +20,7 @@
 #include <qdir.h>
 
 #include <kdebug.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 #include <idhelper.h>
 

@@ -9,7 +9,7 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kurlrequester.h>
 
@@ -18,7 +18,6 @@
 
 #include <kparts/genericfactory.h>
 
-#include <kabc/resourcefile.h>
 
 #include <ksync_mainwindow.h>
 

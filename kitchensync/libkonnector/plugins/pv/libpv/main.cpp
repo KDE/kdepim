@@ -24,8 +24,7 @@
 
 #include "pvdaemon.h"
 
-#include <kapp.h>
-#include <klocale.h>
+#include <kapplication.h>
 
 int main( int argc, char **argv )
 {

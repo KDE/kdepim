@@ -21,7 +21,7 @@
 #include <fstream.h>
 
 #include <kdebug.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 
 #include <qbuffer.h>

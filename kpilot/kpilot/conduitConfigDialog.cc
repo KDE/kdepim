@@ -43,7 +43,7 @@ static const char *conduitconfigdialog_id =
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klibloader.h>
 
 #include "plugin.h"
@@ -430,6 +430,9 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 // $Log$
+// Revision 1.9  2002/04/20 13:03:31  binner
+// CVS_SILENT Capitalisation fixes.
+//
 // Revision 1.8  2002/04/16 18:18:13  adridg
 // Minor debugging fixups by David B
 //
