@@ -38,7 +38,6 @@
 #include <qhbox.h>
 #include <kconfig.h>
 #include <kdebug.h>
-#include <kconfig.h>
 #include <kfiledialog.h>
 
 #include "kpilotConfig.h"
@@ -335,6 +334,10 @@ ExpenseOptions::ExpenseOptions(QWidget *parent) :
 
   
 // $Log$
+// Revision 1.4  2001/03/27 11:10:38  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.3  2001/03/24 16:10:11  adridg
 // Minor beautification
 //

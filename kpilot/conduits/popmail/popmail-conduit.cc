@@ -58,7 +58,6 @@ static const char *popmail_conduit_id=
 #include <qtextstream.h>
 #endif
 
-#include <qsocket.h>
 
 #ifndef _KAPP_H
 #include <kapp.h>
@@ -2006,6 +2005,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.28  2001/09/24 10:43:19  cschumac
+// Compile fixes.
+//
 // Revision 1.27  2001/07/04 08:53:37  cschumac
 // - Added explicitDomainName text widget to setup dialog
 // - Changed the support for the explicit domain name a little

@@ -25,7 +25,6 @@
 #include <kstdaction.h>
 #include <qvbox.h>
 #include <qtimer.h>
-#include <qstring.h>
 
 #include "kaccelmenuwatch.h"
 #include "karm.h"
