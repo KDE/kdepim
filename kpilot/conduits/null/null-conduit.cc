@@ -102,8 +102,11 @@ NullConduit::~NullConduit()
 	}
 
 	QString m=fConfig->readEntry(NullConduitFactory::message);
-	addSyncLogEntry(m);
-	emit logMessage(m);
+	if (!m.isEmpty)
+	{
+		addSyncLogEntry(m);
+		emit logMessage(m);
+	}
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname

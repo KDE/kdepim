@@ -642,6 +642,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 {
 	FUNCTIONSETUP;
+	if (entry.isEmpty()) return;
 
 	QString t(entry);
 
