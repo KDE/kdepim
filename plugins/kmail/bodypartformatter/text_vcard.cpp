@@ -32,6 +32,7 @@
 
 #include <qurl.h>
 
+#include <kapplication.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstringhandler.h>
@@ -45,6 +46,7 @@
 using KMail::Interface::BodyPart;
 #include "interfaces/bodyparturlhandler.h"
 #include "khtmlparthtmlwriter.h"
+#include "kimproxy.h"
 
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>
@@ -58,6 +60,10 @@ namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
+    Formatter() {
+      mKIMProxy = new ::KIMProxy(  kapp->dcopClient() );
+    }
+
     Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
 
        if ( !writer ) return AsIcon;
@@ -80,7 +86,7 @@ namespace {
           KABC::Addressee a = (*it);
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a, 0, false );
+          QString contact = AddresseeView::vCardAsHTML( a, mKIMProxy, 0, false );
           writer->queue( contact );
 
           QString addToLinkText = i18n( "[Add this contact to the addressbook]" );
@@ -96,7 +102,9 @@ namespace {
 
        return Ok;
     }
-  };
+  private:
+    ::KIMProxy *mKIMProxy;
+};
 
   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
   public:
