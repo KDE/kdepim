@@ -31,20 +31,6 @@
 
 using namespace KCal;
 
-class AddIncidenceVisitor : public Incidence::Visitor
-{
-  public:
-    /** Add incidence to calendar \a calendar. */
-    AddIncidenceVisitor( Calendar *calendar ) : mCalendar( calendar ) {}
-
-    bool visit( Event *e ) { return mCalendar->addEvent( e ); }
-    bool visit( Todo *t ) { return mCalendar->addTodo( t ); }
-    bool visit( Journal *j ) { return mCalendar->addJournal( j ); }
-
-  private:
-    Calendar *mCalendar;
-};
-
 Calendar::Calendar()
 {
   mTimeZoneId = QString::fromLatin1( "UTC" );
@@ -308,7 +294,7 @@ QPtrList<Event> Calendar::events()
 
 bool Calendar::addIncidence(Incidence *i)
 {
-  AddIncidenceVisitor v(this);
+  Incidence::AddVisitor<Calendar> v(this);
 
   return i->accept(v);
 }

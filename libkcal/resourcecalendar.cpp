@@ -29,21 +29,6 @@
 
 using namespace KCal;
 
-class AddIncidenceVisitor : public Incidence::Visitor
-{
-  public:
-    /** Add incidence to calendar \a calendar. */
-    AddIncidenceVisitor( ResourceCalendar *r ) : mResource( r ) {}
-
-    bool visit( Event *e ) { return mResource->addEvent( e ); }
-    bool visit( Todo *t ) { return mResource->addTodo( t ); }
-    bool visit( Journal *j ) { return mResource->addJournal( j ); }
-
-  private:
-    ResourceCalendar *mResource;
-};
-
-
 ResourceCalendar::ResourceCalendar( const KConfig *config )
     : KRES::Resource( config )
 {
@@ -62,7 +47,7 @@ void ResourceCalendar::writeConfig( KConfig* config )
 
 bool ResourceCalendar::addIncidence( Incidence *incidence )
 {
-  AddIncidenceVisitor v( this );
+  Incidence::AddVisitor<ResourceCalendar> v( this );
   return incidence->accept( v );
 }
 

@@ -78,6 +78,24 @@ class Incidence : public IncidenceBase
         Visitor() {}
     };
 
+    /**
+      This class implements a visitor for adding an Incidence to a resource
+      supporting addEvent(), addTodo() and addJournal() calls.
+    */
+    template<class T>
+    class AddVisitor : public Visitor
+    {
+      public:
+        AddVisitor( T *r ) : mResource( r ) {}
+
+        bool visit( Event *e ) { return mResource->addEvent( e ); }
+        bool visit( Todo *t ) { return mResource->addTodo( t ); }
+        bool visit( Journal *j ) { return mResource->addJournal( j ); }
+
+      private:
+        T *mResource;
+    };
+
     /** enumeration for describing an event's secrecy. */
     enum { SecrecyPublic = 0, SecrecyPrivate = 1, SecrecyConfidential = 2 };
 
