@@ -132,6 +132,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     
     markAsReadTimer_ = new EmpathMarkAsReadTimer(this);
     
+    hideRead_ = false; // TODO: KGlobal::config()->readEntry(UI_HIDE_READ, false);
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
@@ -495,19 +496,32 @@ EmpathMessageListWidget::setStatusPixmap(
 }
 
     void
+EmpathMessageListWidget::s_hideRead()
+{
+    filling_ = false;
+    hideRead_ = !hideRead_;
+    emit(hideReadChanged(hideRead_));
+    clear();
+    _fillDisplay(hideRead_);
+}
+
+    void
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url, unsigned int i)
 {
-    empathDebug(url.asString());
-   
-    filling_ = false;
-   
     if (i != listenTo_)
         return;
+
+    filling_ = false;
+    _reconnectToFolder(url);
+    clear();
+    _fillDisplay(hideRead_);
+}
     
-    if (url_ == url) {
-    //    emit(showing());
+    void
+EmpathMessageListWidget::_reconnectToFolder(const EmpathURL & url)
+{
+    if (url_ == url)
         return;
-    }
     
     EmpathFolder * oldFolder = empath->folder(url_);
     
@@ -526,21 +540,15 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url, unsigned int i)
         this,    SLOT(s_itemGone(const QString &)));
     
     QObject::connect(
-        f,       SIGNAL(itemArrived    (const QString &)),
-        this,    SLOT(s_itemCome        (const QString &)));
+        f,       SIGNAL(itemArrived (const QString &)),
+        this,    SLOT(s_itemCome    (const QString &)));
     
     if (f == 0) {
-    
         empathDebug("Can't find folder !");
-     //   emit(showing());
         return;
     }
-   
-    clear();
-    
-    f->index()->sync();
-    
-    _fillDisplay(f);
+
+    f->syncIndex();
 }
 
     void
@@ -817,7 +825,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
     if (f == 0)
         return;
         
-    EmpathIndexRecord rec(f->index()->record(s.latin1()));
+    EmpathIndexRecord rec(f->indexRecord(s));
 
     if (rec.isNull()) {
         empathDebug("Can't find index record for \"" + s + "\"");
@@ -831,32 +839,33 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
 }
 
     void
-EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
+EmpathMessageListWidget::_fillDisplay(bool unreadOnly) 
 {
     filling_ = true;
     
     selected_.clear();
     clear();
     triggerUpdate();
-
     kapp->processEvents();
-    
     setUpdatesEnabled(false);
     viewport()->setUpdatesEnabled(false);
- 
+
+    EmpathFolder * f = empath->folder(url_);
+
+    if (!f)
+        return;
+    
     EmpathTask t(i18n("Sorting messages"));
     t.setMax(f->messageCount());
     
     setSorting(-1);
-    
     
     KConfig * c(KGlobal::config());
     
     using namespace EmpathConfig;
 
     c->setGroup(GROUP_DISPLAY);
-
-    QStringList index(f->index()->allKeys());
+    QStringList index(f->allIndexKeys());
     QStringList::ConstIterator it(index.begin());
     
     if (KGlobal::config()->readBoolEntry(UI_THREAD))
@@ -864,14 +873,16 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
         // fill threading
         for (; it != index.end() && filling_; ++it) {
 
-            EmpathIndexRecord rec = f->index()->record(*it);
+            EmpathIndexRecord rec = f->indexRecord(*it);
             
             if (rec.isNull()) {
                 empathDebug("Can't find record, but I'd called allKeys !");
                 continue;
             }
 
-            _threadItem(rec);
+            if (!(unreadOnly && (rec.status() & RMM::Read)))
+                _threadItem(rec);
+
             t.doneOne();
         }
     
@@ -881,14 +892,16 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
         // Rikkus: Hey Wilco, you don't need ';' after comments ;)
         for (; it != index.end() && filling_; ++it) {
             
-            EmpathIndexRecord rec = f->index()->record(*it);
+            EmpathIndexRecord rec = f->indexRecord(*it);
 
             if (rec.isNull()) {
                 empathDebug("Can't find record, but I'd called allKeys !");
                 continue;
             }
             
-            _addItem(this, rec);
+            if (!(unreadOnly && (rec.status() & RMM::Read)))
+                _addItem(this, rec);
+
             t.doneOne();
         }
    
@@ -904,8 +917,6 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
         triggerUpdate();
         
         filling_ = false;
-        
-        // emit(showing());
     }
 }
 

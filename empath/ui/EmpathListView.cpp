@@ -43,8 +43,6 @@ EmpathListView::EmpathListView(
         dragEnabled_(true),
         maybeDrag_(false)
 {
-    empathDebug("ctor");
-
     viewport()->setMouseTracking(true);
 
     linkItem_ = 0;

@@ -55,12 +55,13 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
         container_(false)
 {
     index_ = new EmpathIndex(url_);
+
+    EmpathMailbox * m = empath->mailbox(url_);
 	
-    QObject::connect(
-        this,
-        SIGNAL(countUpdated(unsigned int, unsigned int)),
-        empath->mailbox(url_),
-        SLOT(s_countUpdated(unsigned int, unsigned int)));
+    if (m != 0)
+        QObject::connect(
+            this,   SIGNAL(countUpdated(unsigned int, unsigned int)),
+            m,      SLOT(s_countUpdated(unsigned int, unsigned int)));
  
     if      (url_ == empath->inbox())   pixmapName_ = "folder-inbox";
     else if (url_ == empath->outbox())  pixmapName_ = "folder-outbox";
@@ -87,12 +88,6 @@ EmpathFolder::setPixmap(const QString & p)
     pixmapName_ = p;
 }
 
-    EmpathIndexRecord
-EmpathFolder::record(const QString & key)
-{
-    return index_->record(key);
-}
-
     void
 EmpathFolder::update()
 {
@@ -115,6 +110,24 @@ EmpathFolder::update()
         empathDebug("Count changed");
         emit(countUpdated(index_->countUnread(), index_->count()));
     }
+}
+
+    void
+EmpathFolder::syncIndex()
+{
+    index_->sync();
+} 
+
+    EmpathIndexRecord
+EmpathFolder::indexRecord(const QString & key)
+{
+    return index_->record(key);
+}
+
+    QStringList
+EmpathFolder::allIndexKeys()
+{
+    return index_->allKeys();
 }
 
     EmpathFolder *
@@ -149,10 +162,52 @@ EmpathFolder::unreadMessageCount()
 }
 
     void
-EmpathFolder::setStatus(const QString & id, RMM::MessageStatus status)
+EmpathFolder::setStatus(const QString & key, RMM::MessageStatus status)
 {
-    index_->setStatus(id, status);
+    index_->setStatus(key, status);
 }
+
+    bool
+EmpathFolder::removeFromIndex(const QString & key)
+{
+    return index_->remove(key);
+}
+
+    bool
+EmpathFolder::insertInIndex(const QString & key, EmpathIndexRecord & rec)
+{
+    return index_->insert(key, rec);
+}
+
+    bool
+EmpathFolder::replaceInIndex(const QString & key, EmpathIndexRecord & rec)
+{
+    return index_->replace(key, rec);
+}
+
+    void
+EmpathFolder::setIndexInitialised()
+{
+    index_->setInitialised(true);
+}
+
+    bool
+EmpathFolder::indexInitialised()
+{
+    return index_->initialised();
+}
+
+    QDateTime
+EmpathFolder::indexModified()
+{
+    return index_->lastModified();
+}
+
+    bool
+EmpathFolder::indexContains(const QString & key)
+{
+    return index_->contains(key);
+} 
 
     bool
 EmpathFolder::isContainer() const

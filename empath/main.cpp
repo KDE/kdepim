@@ -44,7 +44,7 @@ main(int argc, char ** argv)
     // Pick a sensible umask for everything Empath does.
     int prev_umask = umask(077);
     
-#ifdef NDEBUG
+#ifdef DOSOMEDOSOMEDOSOME
 
     if (!KUniqueApplication::start(argc, argv, "empath"))
         exit(0);
@@ -69,7 +69,6 @@ main(int argc, char ** argv)
     // Initialise the kernel.
     empath->init();
     
-    empathDebug("Entering event loop");
     // Enter the event loop.
     int retval = app.exec();
     

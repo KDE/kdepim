@@ -59,11 +59,13 @@ class EmpathPOPCommand
         Type    type();
         EmpathJobInfo jobInfo();
         int messageNumber();
+        QCString & data();
         
         const char * className() const { return "EmpathPOPCommand"; }
 
     private:
     
+        QCString    data_;
         QString     command_;
         Type        type_;
         int         msgNo_;
@@ -217,7 +219,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         
         unsigned int msgsInSpool_;
         unsigned int octetsInSpool_;
-        QCString messageBuffer_;
 };
 
 

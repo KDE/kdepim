@@ -107,16 +107,23 @@ class EmpathFolder : public QObject
          */
         Q_UINT32 id() const { return id_; }
 
-        /**
-         * The index.
-         */
-        EmpathIndex * index() { return index_; }
+        void syncIndex();
+
+        bool removeFromIndex(const QString &);
+        bool insertInIndex(const QString &, EmpathIndexRecord &);
+        bool replaceInIndex(const QString &, EmpathIndexRecord &);
+        void setIndexInitialised();
+        bool indexInitialised();
+        QDateTime indexModified();
+        bool indexContains(const QString &);
 
         /**
          * Get an index record given an ID.
-         * @return 0 if couldn't be found.
+         * @return a NULL IndexRecord (.isNull() == true) if couldn't be found.
          */ 
-        EmpathIndexRecord record(const QString & key);
+        EmpathIndexRecord indexRecord(const QString & key);
+
+        QStringList allIndexKeys();
 
         /**
          * Call this when you want to sync with the mailbox and update any

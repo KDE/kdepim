@@ -70,8 +70,8 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
         headerViewWidget_,  SIGNAL(clipClicked()),
         this,               SLOT(s_clipClicked()));
     
-    QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
-            SLOT(s_URLSelected(QString, int)));
+//    QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
+//            SLOT(s_URLSelected(QString, int)));
 
     QObject::connect(
         empath, SIGNAL(jobComplete(EmpathJobInfo)),

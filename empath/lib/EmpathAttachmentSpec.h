@@ -43,7 +43,6 @@ class EmpathAttachmentSpec
          */
         EmpathAttachmentSpec()
         {
-            empathDebug("ctor");
         }
 
         /**
@@ -64,7 +63,6 @@ class EmpathAttachmentSpec
                 subType_        (subType),
                 charset_        (charset)
         {
-            empathDebug("ctor");
         }
                 
         EmpathAttachmentSpec(const EmpathAttachmentSpec & a)
@@ -76,14 +74,11 @@ class EmpathAttachmentSpec
                 subType_        (a.subType_),
                 charset_        (a.charset_)
         {
-            empathDebug("copy ctor");
         }
     
             EmpathAttachmentSpec &
         operator = (const EmpathAttachmentSpec & a)
         {    
-            empathDebug("operator =");
-
             if (this == &a) return *this;
             
             filename_        = a.filename_;
@@ -98,7 +93,6 @@ class EmpathAttachmentSpec
         
         virtual ~EmpathAttachmentSpec()
         {
-            empathDebug("dtor");
         }
         
         QString filename()        const { return filename_;        }

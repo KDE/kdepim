@@ -97,7 +97,7 @@ EmpathMaildir::sync(bool force)
     _tagOrAdd(f);
     _removeUntagged(f);
     
-    f->index()->setInitialised(true);
+    f->setIndexInitialised();
 }
 
     QMap<QString, bool>
@@ -179,7 +179,7 @@ EmpathMaildir::_removeMessage(const QString & id)
     if (!f.remove())
         return false;
     
-    folder->index()->remove(id);
+    folder->removeFromIndex(id);
 
     return true;
 }
@@ -477,19 +477,19 @@ EmpathMaildir::s_timerBeeped()
     bool
 EmpathMaildir::_touched(EmpathFolder * f)
 {
-    if (!(f->index()->initialised()))
+    if (!(f->indexInitialised()))
         return true;
     
     QFileInfo fiDir(path_ + "/cur/");
     
-    if (fiDir.lastModified() > f->index()->lastModified()) {
+    if (fiDir.lastModified() > f->indexModified()) {
         empathDebug("Index file is older than Maildir/cur");
         return true;
     }
     
     fiDir = (path_ + "/new/");
     
-    if (fiDir.lastModified() > f->index()->lastModified()) {
+    if (fiDir.lastModified() > f->indexModified()) {
         empathDebug("Index file is older than Maildir/new");
         return true;
     }
@@ -540,18 +540,18 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         tagList_.append(QString(s));
 
-        bool exists = f->index()->contains(s);
+        bool exists = f->indexContains(s);
 
         if (exists) {
         
-            EmpathIndexRecord rec = f->index()->record(s);
+            EmpathIndexRecord rec = f->indexRecord(s);
 
             if (rec.isNull())
                 continue;
             
             if (rec.status() != status) {
                 rec.setStatus(status);
-                f->index()->replace(rec.id(), rec);
+                f->replaceInIndex(rec.id(), rec);
             }
         
         } else {
@@ -568,7 +568,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             
             ir.setStatus(status);
             
-            f->index()->insert(s, ir);
+            f->insertInIndex(s, ir);
             f->itemCome(s);
         }
 
@@ -579,7 +579,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
     void
 EmpathMaildir::_removeUntagged(EmpathFolder * f)
 {
-    QStringList l(f->index()->allKeys());
+    QStringList l(f->allIndexKeys());
 
     QStringList::ConstIterator it;
     
@@ -587,7 +587,7 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
 
         if (!tagList_.contains(*it)) {
 
-            f->index()->remove(*it);
+            f->removeFromIndex(*it);
             f->itemGone(*it);
         }
     }

@@ -82,6 +82,10 @@ EmpathMainWindow::EmpathMainWindow()
     
     messageListWidget_ = mainWidget_->messageListWidget();
 
+    QObject::connect(
+        messageListWidget_, SIGNAL(hideReadChanged(bool)),
+        this,               SLOT(s_setHideReadChecked(bool)));
+
     setView(mainWidget_, false);
     kapp->setMainWidget(this);
     
@@ -164,7 +168,6 @@ EmpathMainWindow::_setupStatusBar()
     void
 EmpathMainWindow::s_newTask(EmpathTask * t)
 {
-    empathDebug(t->name());
     new EmpathProgressIndicator(t, progressStack_);
     progressStack_->show();
 }
@@ -183,9 +186,9 @@ EmpathMainWindow::s_fileAddressBook()
 }
     
     void
-EmpathMainWindow::s_fileQuit()
+EmpathMainWindow::s_fileClose()
 {
-    delete this;
+    close();
 }
 
 // Folder menu slots
@@ -435,7 +438,6 @@ EmpathProgressIndicator::EmpathProgressIndicator
     (EmpathTask * t, QWidgetStack * parent)
     :   QWidget(parent, "ProgressIndicator")
 {
-    empathDebug("");
     parent->addWidget(this, (int)this);
 
     QHBoxLayout * layout = new QHBoxLayout(this, 0, 6);
@@ -476,8 +478,13 @@ EmpathProgressIndicator::s_incValue()
     void
 EmpathProgressIndicator::s_finished()
 {
-    empathDebug("");
     delete this;
+}
+
+    void
+EmpathMainWindow::s_setHideReadChecked(bool b)
+{
+    optionsMenu_->setItemChecked(hideReadIndex_, b);
 }
 
 #include "EmpathMainWindowMenus.cpp"

@@ -419,10 +419,10 @@ class Empath : public QObject
 
         /**
          * EmpathMessageListWidget connects to this to be notified when
-         * it should show the contents of a folder. It uses the int to
+         * it should show the contents of a folder. It uses the id to
          * decide whether to ignore the signal.
          */
-        void showFolder(const EmpathURL &, unsigned int);
+        void showFolder(const EmpathURL &, unsigned int id);
 
         /**
          * EmpathMailbox connects to this to be notified of

@@ -60,8 +60,6 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
     job->setGUImode(KIOJob::NONE);
     
     commandQueue_.setAutoDelete(true);
-
-    init(); // Might as well.
 }
 
 EmpathMailboxPOP3::~EmpathMailboxPOP3()
@@ -73,7 +71,6 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
     void
 EmpathMailboxPOP3::init()
 {
-    empathDebug("");
     loadConfig();
     
     QObject::connect(
@@ -97,7 +94,6 @@ EmpathMailboxPOP3::init()
     
     EmpathFolder * folder_inbox = new EmpathFolder(url);
     folderList_.insert(url.folderPath(), folder_inbox);
-    empathDebug("done");
 }
 
     bool
@@ -272,18 +268,13 @@ EmpathMailboxPOP3::s_jobFinished(int id)
         
         case EmpathPOPCommand::Get:
             {
-                RMM::RMessage * message = new RMM::RMessage(messageBuffer_);
-// FIXME
-// Duh... what to do here ?
-                // TODO: Convert this so that POP3 jobs contain JobInfo.
-#if 0
-                empath->cacheMessage(
-                    messageURL,
-                    message,
-                    commandQueue_.head()->jobInfo().xinfo());
+                QCString data = commandQueue_.head()->data();
+                EmpathURL from = commandQueue_.head()->jobInfo().from();
+                QString xinfo = commandQueue_.head()->jobInfo().xinfo();
+
+                empath->cacheMessage(from, new RMM::RMessage(data), xinfo);
 
                 commandQueue_.head()->jobInfo().done(true);
-#endif
             }
             
             break;
@@ -352,7 +343,7 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
         
         case EmpathPOPCommand::Get:
             
-            messageBuffer_.append(s);
+            commandQueue_.head()->data().append(s);
             
             break;
         
@@ -602,6 +593,12 @@ EmpathPOPCommand::messageNumber()
 EmpathPOPCommand::jobInfo()
 {
     return jobInfo_;
+}
+
+    QCString &
+EmpathPOPCommand::data()
+{
+    return data_;
 }
 
 //////////////////////////////////////////////////////////////////////////

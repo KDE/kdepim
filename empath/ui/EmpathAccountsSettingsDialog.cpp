@@ -146,12 +146,14 @@ EmpathAccountsSettingsDialog::~EmpathAccountsSettingsDialog()
 EmpathAccountsSettingsDialog::s_newPOP()
 {
     empath->mailboxList().createNew(EmpathMailbox::POP3);
+    s_updateMailboxList();
 }
 
     void
 EmpathAccountsSettingsDialog::s_newIMAP()
 {
     empath->mailboxList().createNew(EmpathMailbox::IMAP4);
+    s_updateMailboxList();
 }
 
     void

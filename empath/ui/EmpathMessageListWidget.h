@@ -136,14 +136,18 @@ class EmpathMessageListWidget : public EmpathListView
         void s_itemGone             (const QString &);
         void s_itemCome             (const QString &);
     
+        void s_hideRead();
+
     signals:
         
         void changeView(const EmpathURL &);
-//        void showing();
+        void hideReadChanged(bool);
         
     private:
         
-        void _fillDisplay       (EmpathFolder *);
+        void _reconnectToFolder(const EmpathURL &);
+
+        void _fillDisplay(bool);
         
         void _setupMessageMenu();
         
@@ -217,6 +221,8 @@ class EmpathMessageListWidget : public EmpathListView
         EmpathMessageListItemList selected_;
         
         unsigned int listenTo_;
+
+        bool hideRead_;
         
         // Order dependency
         bool                filling_;

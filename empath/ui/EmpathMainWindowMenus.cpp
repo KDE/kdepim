@@ -8,38 +8,32 @@ void
 EmpathMainWindow::_setupMenuBar()
 {
     fileMenu_       = new QPopupMenu;
-    editMenu_       = new QPopupMenu;
+    selectMenu_     = new QPopupMenu;
     folderMenu_     = new QPopupMenu;
     messageMenu_    = new QPopupMenu;
     optionsMenu_    = new QPopupMenu;
+    optionsMenu_->setCheckable(true);
 
     // File menu
     
     fileMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Pending Mail"),
         this, SLOT(s_fileSendNew()));
 
-//    fileMenu_->insertSeparator();
-
-//    fileMenu_->insertItem(i18n("Address&book..."),
-//        this, SLOT(s_fileAddressBook()));
-    
-//    fileMenu_->insertSeparator();
-
     fileMenu_->insertItem(i18n("&Close"),
-        this, SLOT(s_fileQuit()));
+        this, SLOT(s_fileClose()));
 
-    // Edit menu
+    // Select menu
     
-    editMenu_->insertItem(empathIcon("tree-marked"), i18n("Select &Tagged"),
+    selectMenu_->insertItem(empathIcon("tree-marked"), i18n("&Tagged"),
         this, SLOT(s_editSelectTagged()));
     
-    editMenu_->insertItem(empathIcon("tree-read"), i18n("Select &Read"),
+    selectMenu_->insertItem(empathIcon("tree-read"), i18n("&Read"),
         this, SLOT(s_editSelectRead()));
     
-    editMenu_->insertItem(i18n("Select &All"),
+    selectMenu_->insertItem(i18n("&All"),
         this, SLOT(s_editSelectAll()));
     
-    editMenu_->insertItem(i18n("&Invert Selection"),
+    selectMenu_->insertItem(i18n("&Invert"),
         this, SLOT(s_editInvertSelection()));
     
     // Folder menu
@@ -113,6 +107,14 @@ EmpathMainWindow::_setupMenuBar()
 //        i18n("Fil&ter"),
 //        this, SLOT(s_messageFilter()));
 
+    hideReadIndex_ = optionsMenu_->insertItem(empathIcon("tree"),
+        i18n("Show only &new messages"),
+        messageListWidget_, SLOT(s_hideRead()));
+
+    optionsMenu_->setItemChecked(hideReadIndex_, false);
+
+    optionsMenu_->insertSeparator();
+
     optionsMenu_->insertItem(empathIcon("settings-display"),
         i18n("&Display"),
         this, SLOT(s_setupDisplay()));
@@ -140,8 +142,7 @@ EmpathMainWindow::_setupMenuBar()
     helpMenu_ = helpMenu(EmpathAboutText);
     
     menu_->insertItem(i18n("&File"), fileMenu_);
-    menu_->insertItem(i18n("&Edit"), editMenu_);
-//    menu_->insertItem(i18n("F&older"), folderMenu_);
+    menu_->insertItem(i18n("&Select"), selectMenu_);
     menu_->insertItem(i18n("&Message"), messageMenu_);
     menu_->insertItem(i18n("&Options"), optionsMenu_);
     menu_->insertSeparator();

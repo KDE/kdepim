@@ -37,7 +37,6 @@ EmpathTask::EmpathTask(const QString & name)
         pos_(0),
         done_(false)
 {
-    empathDebug(name);
     QObject::connect(
         this,   SIGNAL(newTask(EmpathTask *)),
         empath, SLOT(s_newTask(EmpathTask *)));
@@ -74,7 +73,6 @@ EmpathTask::doneOne()
     void
 EmpathTask::done()
 {
-    empathDebug("");
     killTimers();
     done_ = true;
     emit(finished());

@@ -46,7 +46,7 @@
 EmpathComposer::EmpathComposer()
     :   QObject()
 {
-    empathDebug("ctor");
+//    empathDebug("ctor");
     QObject::connect(
         empath, SIGNAL(jobComplete(EmpathJobInfo)),
         SLOT(s_jobComplete(EmpathJobInfo)));

@@ -92,7 +92,7 @@ class EmpathMainWindow : public KTMainWindow
         // File menu slots
         void s_fileSendNew();
         void s_fileAddressBook();
-        void s_fileQuit();
+        void s_fileClose();
         
         // Edit menu slots
     
@@ -136,13 +136,15 @@ class EmpathMainWindow : public KTMainWindow
         
         void s_newTask(EmpathTask * t);
 
+        void s_setHideReadChecked(bool);
+
     private:
     
         // General
         KMenuBar        * menu_;
         
         QPopupMenu        * fileMenu_;
-        QPopupMenu        * editMenu_;
+        QPopupMenu        * selectMenu_;
         QPopupMenu        * folderMenu_;
         QPopupMenu        * messageMenu_;
         QPopupMenu        * optionsMenu_;
@@ -159,6 +161,8 @@ class EmpathMainWindow : public KTMainWindow
         void _setupStatusBar();
 
         bool _messageSelected();
+
+        int hideReadIndex_;
 
         QWidgetStack * progressStack_;
 };

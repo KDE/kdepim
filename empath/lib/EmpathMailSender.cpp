@@ -102,7 +102,7 @@ EmpathMailSender::sendQueued()
         return;
     }
     
-    QStringList l(queueFolder->index()->allKeys());
+    QStringList l(queueFolder->allIndexKeys());
     QStringList::ConstIterator it;
     
     for (it = l.begin(); it != l.end(); ++it) {
