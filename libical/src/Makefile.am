@@ -1,7 +1,7 @@
-if WITH_PYTHON
-PYTHON_DIR = python
-else
+#if WITH_PYTHON
+#PYTHON_DIR = python
+#else
 PYTHON_DIR = 
-endif
+#endif
 
 SUBDIRS = libical libicalss libicalvcal $(PYTHON_DIR) test
