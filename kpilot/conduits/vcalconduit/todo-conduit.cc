@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
+** Copyright (C) 1998-2000 Preston Brown <pbrown@kde.org>
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
 ** Copyright (C) 2001 Cornelius Schumacher
 **
@@ -123,12 +123,12 @@ KCal::Incidence *TodoConduitPrivate::getNextIncidence()
 	FUNCTIONSETUP;
 	if (reading) {
 		++fAllTodosIterator;
-	} 
+	}
 	else {
 		reading=true;
 		fAllTodosIterator = fAllTodos.begin();
 	}
-	
+
 	return(fAllTodosIterator == fAllTodos.end()) ? 0L : *fAllTodosIterator;
 }
 
@@ -178,7 +178,7 @@ TodoConduit::TodoConduit(KPilotDeviceLink *d,
 	DEBUGCONDUIT << id_conduit_todo << endl;
 #endif
 	fConduitName=i18n("To-do");
-        
+
         (void) id_conduit_todo;
 }
 
@@ -237,7 +237,7 @@ void TodoConduit::readConfig()
 	// determine if the categories have ever been synce. Needed to prevent loosing the categories on the desktop.
 	// also use a full sync for the first time to make sure the palm categories are really transferred to the desktop
 	categoriesSynced = config()->conduitVersion()>=CONDUIT_VERSION_CATEGORYSYNC;
-	if (!categoriesSynced & !isFullSync() ) 
+	if (!categoriesSynced & !isFullSync() )
 		setSyncDirection(SyncAction::eFullSync);
 #ifdef DEBUG
 	DEBUGCONDUIT<<"categoriesSynced="<<categoriesSynced<<endl;
@@ -446,6 +446,6 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 }
 
 VCalConduitSettings *TodoConduit::config()
-{ 
-  return ToDoConduitFactory::config(); 
+{
+  return ToDoConduitFactory::config();
 }

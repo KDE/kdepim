@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
+** Copyright (C) 1998-2000 Preston Brown <pbrown@kde.org>
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
 ** Copyright (C) 2001 Cornelius Schumacher
 **
@@ -59,7 +59,7 @@ const char *id_conduit_todo = "$Id$";
 }
 
 
-TodoConduit::TodoData::TodoData( RecordConduit *conduit, VCalConduitSettings *cfg ) : VCalConduitBase::VCalDataBase( conduit, cfg ) 
+TodoConduit::TodoData::TodoData( RecordConduit *conduit, VCalConduitSettings *cfg ) : VCalConduitBase::VCalDataBase( conduit, cfg )
 {}
 TodoConduit::TodoData::~TodoData()
 {}
@@ -77,10 +77,10 @@ bool TodoConduit::TodoData::initData()
 // {
 // 	PilotTodoEntry*entry=dynamic_cast<PilotTodoEntry*>(tosearch);
 // 	if (!entry) return 0L;
-// 
+//
 // 	QString title=entry->getDescription();
 // 	QDateTime dt=readTm( entry->getDueDate() );
-// 
+//
 // 	KCal::Todo::List::ConstIterator it;
 //         for( it = fAllTodos.begin(); it != fAllTodos.end(); ++it ) {
 //                 KCal::Todo *event = *it;
@@ -96,7 +96,7 @@ bool TodoConduit::TodoData::initData()
  ****************************************************************************/
 
 TodoConduit::TodoConduit( KPilotDeviceLink *d,
-	const char *n, const QStringList &a) : 
+	const char *n, const QStringList &a) :
 	VCalConduitBase( i18n("To-do"), d, n, a )
 {
 	FUNCTIONSETUP;
@@ -115,7 +115,7 @@ TodoConduit::~TodoConduit()
 
 
 /** Create a buffer for the appInfo and pack it inside. Also, remember to
- *  set appLen to the size of the buffer! 
+ *  set appLen to the size of the buffer!
  *  @param appLen Receives the length of the allocated buffer */
 unsigned char *TodoConduit::doPackAppInfo( int *appLen )
 {
@@ -127,7 +127,7 @@ unsigned char *TodoConduit::doPackAppInfo( int *appLen )
 }
 
 
-/** Read the appInfo from the buffer provided to this method. 
+/** Read the appInfo from the buffer provided to this method.
  *  @param buffer Buffer containing the appInfo in packed format
  *  @param appLen specifies the length of buffer */
 bool TodoConduit::doUnpackAppInfo( unsigned char *buffer, int appLen )
@@ -140,7 +140,7 @@ bool TodoConduit::doUnpackAppInfo( unsigned char *buffer, int appLen )
 		 << fTodoAppInfo.category.lastUniqueID << endl;
 	for (int i = 0; i < 16; i++)
 	{
-		DEBUGCONDUIT << fname << " cat " << i << " =" << 
+		DEBUGCONDUIT << fname << " cat " << i << " =" <<
 			fTodoAppInfo.category.name[i] << endl;
 	}
 #endif
@@ -148,8 +148,8 @@ bool TodoConduit::doUnpackAppInfo( unsigned char *buffer, int appLen )
 }
 
 VCalConduitSettings *TodoConduit::config()
-{ 
-  return ToDoConduitFactory::config(); 
+{
+  return ToDoConduitFactory::config();
 }
 
 const QString TodoConduit::getTitle( PilotAppCategory *de )
@@ -204,14 +204,14 @@ QString TodoConduit::category( int n ) const
 }
 
 
-bool TodoConduit::_equal( const PilotAppCategory *cmpPalmEntry, const PCEntry *cmpPCEntry, 
+bool TodoConduit::_equal( const PilotAppCategory *cmpPalmEntry, const PCEntry *cmpPCEntry,
 				int flags ) const
 {
 	FUNCTIONSETUP;
 	const PilotTodoEntry *palmEntry = dynamic_cast<const PilotTodoEntry*>( cmpPalmEntry );
 	const VCalEntry *pcEntryTmp = dynamic_cast<const VCalEntry*>( cmpPCEntry );
 	const KCal::Todo *pcEntry = 0;
-	if ( !pcEntryTmp ) 
+	if ( !pcEntryTmp )
 		pcEntry = dynamic_cast<const KCal::Todo*>( pcEntryTmp->incidence() );
 
 	if ( !palmEntry || !pcEntryTmp || !pcEntry ) {
@@ -220,7 +220,7 @@ bool TodoConduit::_equal( const PilotAppCategory *cmpPalmEntry, const PCEntry *c
 #endif
 		if ( !palmEntry && pcEntry && ( pcEntry->syncStatus()==KCal::Incidence::SYNCDEL ) )
 			return true;
-		if ( !palmEntry && !pcEntry ) 
+		if ( !palmEntry && !pcEntry )
 			return true;
 		return false;
 	}
@@ -237,13 +237,13 @@ bool TodoConduit::_equal( const PilotAppCategory *cmpPalmEntry, const PCEntry *c
 		if ( compareStr( palmEntry->getNote(), pcEntry->description() ) )
 			return false;
 	}
-	
+
 	if ( flags & eqFlagsPriority )
 	{
 		if ( palmEntry->getPriority() != pcEntry->priority() )
 			return false;
 	}
-	
+
 	if ( flags & eqFlagsCompleted )
 	{
 		if ( palmEntry->getComplete() != pcEntry->isCompleted() )
@@ -264,14 +264,14 @@ bool TodoConduit::_equal( const PilotAppCategory *cmpPalmEntry, const PCEntry *c
 			if ( palmDue != pcEntry->dtDue() )
 				return false;
 		} else {
-			if ( !palmEntry->getIndefinite() ) 
+			if ( !palmEntry->getIndefinite() )
 				return false;
 		}
 	}
 	if ( flags & eqFlagsCategory )
 	{
 // @TODO:		Compare categories
-	}	
+	}
 	return true;
 }
 
@@ -282,7 +282,7 @@ bool TodoConduit::_copy( PilotAppCategory *toPalmEntry, const PCEntry *fromPCEnt
 	PilotTodoEntry *palmEntry = dynamic_cast<PilotTodoEntry*>( toPalmEntry );
 	const VCalEntry *pcEntryTmp = dynamic_cast<const VCalEntry*>( fromPCEntry );
 	const KCal::Todo *pcEntry = 0;
-	if ( !pcEntryTmp ) 
+	if ( !pcEntryTmp )
 		pcEntry = dynamic_cast<const KCal::Todo*>( pcEntryTmp->incidence() );
 	if ( !palmEntry || !pcEntryTmp || !pcEntry ) {
 #ifdef DEBUG
@@ -292,7 +292,7 @@ bool TodoConduit::_copy( PilotAppCategory *toPalmEntry, const PCEntry *fromPCEnt
 	}
 
 	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if ( pcEntry->secrecy() != KCal::Todo::SecrecyPublic ) 
+	if ( pcEntry->secrecy() != KCal::Todo::SecrecyPublic )
 		palmEntry->makeSecret();
 
 	// update it from the iCalendar Todo.
@@ -333,7 +333,7 @@ bool TodoConduit::_copy( PCEntry *toPCEntry, const PilotAppCategory *fromPalmEnt
 	const PilotTodoEntry *palmEntry = dynamic_cast<const PilotTodoEntry*>( fromPalmEntry );
 	VCalEntry *pcEntryTmp = dynamic_cast<VCalEntry*>( toPCEntry );
 	KCal::Todo *pcEntry = 0;
-	if ( !pcEntryTmp ) 
+	if ( !pcEntryTmp )
 		pcEntry = dynamic_cast<KCal::Todo*>( pcEntryTmp->incidence() );
 	if ( !palmEntry || !pcEntryTmp || !pcEntry ) {
 #ifdef DEBUG
@@ -344,7 +344,7 @@ bool TodoConduit::_copy( PCEntry *toPCEntry, const PilotAppCategory *fromPalmEnt
 
 	VCalDataBase *db = dynamic_cast<VCalDataBase *>(mPCData);
 	// @TODO: What about the common name???
-	if ( pcEntry->organizer().isEmpty() && db && db->calendar() ) 
+	if ( pcEntry->organizer().isEmpty() && db && db->calendar() )
 		pcEntry->setOrganizer( db->calendar()->getEmail());
 	pcEntry->setPilotId( palmEntry->getID() );
 	pcEntry->setSecrecy( palmEntry->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic );
@@ -374,7 +374,7 @@ bool TodoConduit::_copy( PCEntry *toPCEntry, const PilotAppCategory *fromPalmEnt
 	pcEntry->setDescription( palmEntry->getNote() );
 
 	// copy archived flag over!
-	if ( palmEntry->getAttrib() & dlpRecAttrArchived ) 
+	if ( palmEntry->getAttrib() & dlpRecAttrArchived )
 		pcEntry->setSyncStatus( KCal::Incidence::SYNCDEL );
 	else
 		pcEntry->setSyncStatus( KCal::Incidence::SYNCNONE );

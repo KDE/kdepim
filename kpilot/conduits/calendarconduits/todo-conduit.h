@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
+** Copyright (C) 1998-2000 Preston Brown <pbrown@kde.org>
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
 **
 ** This file is part of the todo conduit, a conduit for KPilot that
@@ -49,7 +49,7 @@ public:
 	TodoConduit( KPilotDeviceLink *, const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~TodoConduit();
-	
+
 	class TodoData : public VCalConduitBase::VCalDataBase
 	{
 	public:
@@ -57,9 +57,9 @@ public:
 		virtual ~TodoData();
 		virtual bool initData();
 		virtual QString description() const { return i18n("todo list"); }
-	}; 
-	
-	
+	};
+
+
 protected:
 	virtual QString dbName() const { return CSL1("ToDoDB"); };
 
@@ -70,8 +70,8 @@ protected:
 	virtual VCalConduitSettings *config();
 	virtual void readConfig();
 	virtual PilotAppCategory *createPalmEntry( PilotRecord *rec )  {
-		FUNCTIONSETUP; 
-		if ( rec ) return new PilotTodoEntry( fTodoAppInfo, rec ); 
+		FUNCTIONSETUP;
+		if ( rec ) return new PilotTodoEntry( fTodoAppInfo, rec );
 		else return new PilotTodoEntry( fTodoAppInfo );
 	};
 	virtual void doPostSync();
@@ -84,13 +84,13 @@ protected:
 		eqFlagsPriority=0x20,
 		eqFlagsSecrecy=0x40,
 	};
-	virtual bool _equal( const PilotAppCategory *palmEntry, const PCEntry *pcEntry, 
+	virtual bool _equal( const PilotAppCategory *palmEntry, const PCEntry *pcEntry,
 				int flags = eqFlagsAlmostAll ) const;
 	virtual bool _copy( PilotAppCategory *toPalmEntry, const PCEntry *fromPCEntry );
 	virtual bool _copy( PCEntry *toPCEntry, const PilotAppCategory *fromPalmEntry );
 // 	virtual bool smartMergeEntry( RecordConduit::PCEntry *pcEntry, PilotAppCategory *backupEntry,
 // 		PilotAppCategory *palmEntry );
-	
+
 	struct ToDoAppInfo fTodoAppInfo;
 	bool categoriesSynced;
 } ;
