@@ -27,7 +27,6 @@ libkabcommon_la_SOURCES = kabprefs.cpp kabprefs_base.kcfgc locationmap.cpp filte
 libkabcommon_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                          $(top_builddir)/libkdepim/libkdepim.la
-libkabcommon_la_COMPILE_FIRST = kabprefs_base.h
 
 lib_LTLIBRARIES = libkaddressbook.la
 libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
