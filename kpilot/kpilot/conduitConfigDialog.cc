@@ -553,7 +553,8 @@ void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
 		.arg(p->text(CONDUIT_NAME));
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": " << msg << endl;
+	DEBUGKPILOT << fname << ": No library for " 
+		<< p->text(CONDUIT_NAME) << endl;
 #endif
 
 	KMessageBox::error(fParentWidget, msg, i18n("Conduit Error"));
@@ -567,6 +568,11 @@ void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
 		"for the conduit %1. This means that the "
 		"conduit was not installed properly.</qt>")
 		.arg(p->text(CONDUIT_NAME));
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Can't load library for "
+		<< p->text(CONDUIT_NAME) << endl;
+#endif
 
 	KMessageBox::error(fParentWidget, msg, i18n("Conduit Error"));
 }
