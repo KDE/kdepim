@@ -12,7 +12,7 @@ class KURLRequester;
  * Provide an interface to the configuration options for the program.
  */
 
-class Preferences :public KDialogBase 
+class Preferences :public KDialogBase
 {
   Q_OBJECT
 
@@ -29,6 +29,7 @@ class Preferences :public KDialogBase
     int autoSavePeriod() const;
     bool promptDelete() const;
     bool displayColumn(int n) const;
+    QString userRealName() const;
 
     void emitSignals();
 
@@ -44,7 +45,7 @@ class Preferences :public KDialogBase
     void autoSave(bool on);
     void autoSavePeriod(int minutes);
     void setupChanged();
-  
+
   protected slots:
     virtual void slotOk();
     virtual void slotCancel();
@@ -55,24 +56,27 @@ class Preferences :public KDialogBase
     void makeDisplayPage();
     void makeBehaviorPage();
     void makeStoragePage();
-  
+
     Preferences();
     static Preferences *_instance;
     bool _unsavedChanges;
 
     // Widgets
-    QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_promptDeleteW; 
+    QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_promptDeleteW;
     QCheckBox *_displayTimeW, *_displaySessionW,
               *_displayTotalTimeW, *_displayTotalSessionW;
     QLabel    *_idleDetectLabelW, *_displayColumnsLabelW;
     QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
     KURLRequester *_iCalFileW ;
-  
+
     // Values
     bool _doIdleDetectionV, _doAutoSaveV, _promptDeleteV;
     bool _displayColumnV[4];
     int  _idleDetectValueV, _autoSaveValueV;
     QString _iCalFileV;
+
+    /** real name of the user, used during ICAL saving */
+    QString _userRealName;
 };
 
 #endif // KARM_PREFERENCES_H

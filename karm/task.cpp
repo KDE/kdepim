@@ -6,7 +6,6 @@
 #include <kiconloader.h>
 
 #include "kapplication.h"       // kapp
-#include "kemailsettings.h"
 #include "kdebug.h"
 
 #include "event.h"
@@ -14,6 +13,7 @@
 #include "karmutility.h"
 #include "task.h"
 #include "taskview.h"
+#include "preferences.h"
 
 
 const int gSecondsPerMinute = 60;
@@ -193,8 +193,8 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
   if( minutesSession != 0 || minutes != 0) {
     _sessionTime += minutesSession;
 
-    //kdDebug() 
-    //  << "Task::changeTimes: " << name() 
+    //kdDebug()
+    //  << "Task::changeTimes: " << name()
     //  << ", _sessionTime = " << minutesSession << endl;
 
     _time += minutes;
@@ -209,7 +209,7 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
 
 void Task::changeTotalTimes( long minutesSession, long minutes )
 {
-  //kdDebug() 
+  //kdDebug()
   //  << "Task::changeTotalTimes(" << minutesSession << ", "
   //  << minutes << ") for " << name() << endl;
 
@@ -232,7 +232,7 @@ void Task::resetTimes()
 
 void Task::changeParentTotalTimes( long minutesSession, long minutes )
 {
-  //kdDebug() 
+  //kdDebug()
   //  << "Task::changeParentTotalTimes(" << minutesSession << ", "
   //  << minutes << ") for " << name() << endl;
 
@@ -259,7 +259,7 @@ bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
     child->remove(activeTasks, storage);
   }
 
-  changeParentTotalTimes( -_sessionTime, -_time); 
+  changeParentTotalTimes( -_sessionTime, -_time);
 
   return ok;
 }
@@ -295,7 +295,7 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
   // checkbox blank, but will prefill the todo's starting datetime to the
   // time the file is opened.
   // todo->setDtStart( current );
-  
+
   todo->setCustomProperty( kapp->instanceName(),
       QCString( "totalTaskTime" ), QString::number( _time ) );
   todo->setCustomProperty( kapp->instanceName(),
@@ -307,8 +307,7 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
     todo->setCustomProperty( kapp->instanceName(),
         QCString( "desktopList" ), getDesktopStr() );
 
-  KEMailSettings settings;
-  todo->setOrganizer( settings.getSetting( KEMailSettings::RealName ) );
+  todo->setOrganizer( Preferences::instance()->userRealName() );
 
   todo->setPercentComplete(_percentcomplete);
 
@@ -316,7 +315,7 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
 }
 
 bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
-    long& sessionMinutes, QString& name, DesktopList& desktops, 
+    long& sessionMinutes, QString& name, DesktopList& desktops,
     int& percent_complete )
 {
   bool ok;

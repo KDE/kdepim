@@ -40,9 +40,9 @@ class Task : public QObject, public QListViewItem
 
   public:
     //@{ constructors
-    Task( const QString& taskame, long minutes, long sessionTime, 
+    Task( const QString& taskame, long minutes, long sessionTime,
           DesktopList desktops, TaskView* parent = 0);
-    Task( const QString& taskame, long minutes, long sessionTime, 
+    Task( const QString& taskame, long minutes, long sessionTime,
           DesktopList desktops, Task* parent = 0);
     Task( KCal::Todo* incident, TaskView* parent );
     //@}
@@ -77,8 +77,8 @@ class Task : public QObject, public QListViewItem
     void paste(Task* destination);
 
     //@{ timing related functions
- 
-      /** 
+
+      /**
        * Change task time.  Adds minutes to both total time and session time.
        *
        *  @param minutes        minutes to add to - may be negative
@@ -90,7 +90,7 @@ class Task : public QObject, public QListViewItem
       void changeTime( long minutes, bool do_logging, KarmStorage* storage )
                 { changeTimes( minutes, minutes, do_logging, storage); };
 
-      /** 
+      /**
        * Adds minutes to time and session time, and writes to storage.
        *
        * If do_logging is true, then storage should be loaded with a valid
@@ -155,7 +155,7 @@ class Task : public QObject, public QListViewItem
        */
       QString name() const  { return _name; };
 
-      /** 
+      /**
        * Returns that task name, prefixed by parent tree up to root.
        *
        * Task names are seperated by a forward slash:  /
@@ -178,8 +178,8 @@ class Task : public QObject, public QListViewItem
       bool isRunning() const;
     //@}
 
-    bool parseIncidence(KCal::Incidence*, long& minutes, 
-        long& sessionMinutes, QString& name, DesktopList& desktops, 
+    bool parseIncidence(KCal::Incidence*, long& minutes,
+        long& sessionMinutes, QString& name, DesktopList& desktops,
         int& percent_complete);
 
     /**
@@ -202,7 +202,7 @@ class Task : public QObject, public QListViewItem
      */
     bool remove( QPtrList<Task>& activeTasks, KarmStorage* storage );
 
-    /** 
+    /**
      * Update percent complete for this task.
      *
      * Tasks that are complete (i.e., percent = 100) do not show up in
@@ -245,10 +245,11 @@ class Task : public QObject, public QListViewItem
     void noNegativeTimes();
 
     /** initialize a task */
-    void init( const QString& taskame, long minutes, long sessionTime, 
+    void init( const QString& taskame, long minutes, long sessionTime,
                DesktopList desktops, int percent_complete);
 
 
+    /** task name */
     QString _name;
 
     /** Last time this task was started. */

@@ -8,6 +8,7 @@
 #include <kapplication.h>       // kapp
 #include <kconfig.h>
 #include <kdebug.h>
+#include <kemailsettings.h>
 #include <kiconloader.h>
 #include <klineedit.h>          // lineEdit()
 #include <klocale.h>            // i18n
@@ -21,7 +22,7 @@ Preferences *Preferences::_instance = 0;
 Preferences::Preferences()
   : KDialogBase( IconList, i18n("Preferences"), Ok|Cancel, Ok )
 {
-  
+
   setIconListAllVisible( true );
 
   makeBehaviorPage();
@@ -69,7 +70,7 @@ void Preferences::makeBehaviorPage()
 
 void Preferences::makeDisplayPage()
 {
-  QPixmap icon = KGlobal::iconLoader()->loadIcon( 
+  QPixmap icon = KGlobal::iconLoader()->loadIcon(
       QString::fromLatin1("viewmag"), KIcon::Toolbar, KIcon::SizeMedium );
   QFrame* displayPage = addPage( i18n("Display"), i18n("Display Settings"),
       icon );
@@ -107,7 +108,7 @@ void Preferences::makeStoragePage()
   QGridLayout* layout = new QGridLayout( topLevel, 4, 2 );
   layout->setColStretch( 1, 1 );
 
-  // autosave 
+  // autosave
   _doAutoSaveW = new QCheckBox( i18n("Save tasks every"),
       storagePage, "_doAutoSaveW" );
   _autoSaveValueW = new QSpinBox(1, 60*24, 1, storagePage, "_autoSaveValueW");
@@ -254,6 +255,12 @@ bool Preferences::promptDelete() const
 
 bool Preferences::displayColumn(int n) const  { return _displayColumnV[n]; }
 
+
+QString Preferences::userRealName() const
+{
+    return _userRealName;
+}
+
 //---------------------------------------------------------------------------
 //                                  Load and Save
 //---------------------------------------------------------------------------
@@ -271,19 +278,22 @@ void Preferences::load()
       locateLocal( "appdata", QString::fromLatin1( "karm.ics")));
   _doAutoSaveV = config.readBoolEntry( QString::fromLatin1("auto save"),
       true);
-  _autoSaveValueV = config.readNumEntry( 
+  _autoSaveValueV = config.readNumEntry(
       QString::fromLatin1("auto save period"), 5);
   _promptDeleteV = config.readBoolEntry( QString::fromLatin1("prompt delete"),
       true);
 
-  _displayColumnV[0] = config.readBoolEntry( 
+  _displayColumnV[0] = config.readBoolEntry(
       QString::fromLatin1("display session time"), true);
-  _displayColumnV[1] = config.readBoolEntry( 
+  _displayColumnV[1] = config.readBoolEntry(
       QString::fromLatin1("display time"), true);
-  _displayColumnV[2] = config.readBoolEntry( 
+  _displayColumnV[2] = config.readBoolEntry(
       QString::fromLatin1("display total session time"), true);
-  _displayColumnV[3] = config.readBoolEntry( 
+  _displayColumnV[3] = config.readBoolEntry(
       QString::fromLatin1("display total time"), true);
+
+  KEMailSettings settings;
+  _userRealName = settings.getSetting( KEMailSettings::RealName );
 }
 
 void Preferences::save()
