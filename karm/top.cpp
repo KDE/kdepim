@@ -132,7 +132,7 @@ void KarmWindow::disableStopAll()
 
 void KarmWindow::hideOnClose( bool hide )
 {
-    _hideOnClose = hide;
+  _hideOnClose = hide;
 }
 
 /**
@@ -141,30 +141,30 @@ void KarmWindow::hideOnClose( bool hide )
 
 void KarmWindow::updateTime()
 {
-    typedef ListViewIterator<Karm, Task> AllIter;
-    using std::accumulate;
+  typedef ListViewIterator<Karm, Task> AllIter;
+  using std::accumulate;
 
-    _totalSum   = accumulate( AllIter( _karm ), AllIter(), 0, addTaskTotalTime );
-    _sessionSum = accumulate( AllIter( _karm ), AllIter(), 0, addTaskSessionTime );
+  _totalSum   = accumulate( AllIter( _karm ), AllIter(), 0, addTaskTotalTime );
+  _sessionSum = accumulate( AllIter( _karm ), AllIter(), 0, addTaskSessionTime );
 
-    updateStatusBar();
+  updateStatusBar();
 }
 
 void KarmWindow::updateStatusBar()
 {
-    QString time;
+  QString time;
 
-    time = Karm::formatTime( _sessionSum );
-    statusBar()->changeItem( i18n("Session: %1").arg(time), 0 );
+  time = Karm::formatTime( _sessionSum );
+  statusBar()->changeItem( i18n("Session: %1").arg(time), 0 );
 
-    time = Karm::formatTime( _totalSum );
-    statusBar()->changeItem( i18n("Total: %1" ).arg(time), 1);
+  time = Karm::formatTime( _totalSum );
+  statusBar()->changeItem( i18n("Total: %1" ).arg(time), 1);
 }
 
 void KarmWindow::startStatusBar()
 {
-    statusBar()->insertItem( i18n("Session"), 0, 0, true );
-    statusBar()->insertItem( i18n("Total" ), 1, 0, true );
+  statusBar()->insertItem( i18n("Session"), 0, 0, true );
+  statusBar()->insertItem( i18n("Total" ), 1, 0, true );
 }
 
 void KarmWindow::saveProperties( KConfig* )
@@ -180,8 +180,8 @@ void KarmWindow::keyBindings()
 
 void KarmWindow::resetSessionTime()
 {
-    _karm->resetSessionTimeForAllTasks();
-    updateTime();
+  _karm->resetSessionTimeForAllTasks();
+  updateTime();
 }
 
 
@@ -285,11 +285,11 @@ void KarmWindow::saveGeometry()
 
 bool KarmWindow::queryClose()
 {
-    if ( _hideOnClose ) {
-        hide();
-        return false;
-    }
-    return KMainWindow::queryClose();
+  if ( _hideOnClose ) {
+    hide();
+    return false;
+  }
+  return KMainWindow::queryClose();
 }
 
 void KarmWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )

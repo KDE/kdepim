@@ -23,14 +23,14 @@ class KarmWindow : public KMainWindow
   Q_OBJECT
 
 private:
-  KAccel		*_accel;
-  KAccelMenuWatch	*_watcher;
-  Karm		*_karm;
-  long		_totalSum;
-  long _sessionSum;
-  Preferences *_preferences;
-  bool _hideOnClose;
-  KarmTray *_tray;
+  KAccel          *_accel;
+  KAccelMenuWatch *_watcher;
+  Karm            *_karm;
+  long            _totalSum;
+  long            _sessionSum;
+  Preferences     *_preferences;
+  bool            _hideOnClose;
+  KarmTray        *_tray;
 
   public:
     KarmWindow();
