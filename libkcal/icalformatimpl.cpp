@@ -647,9 +647,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 */
 
   // related event
-  if (incidence->relatedTo()) {
+  if ( !incidence->relatedToUid().isEmpty() ) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        incidence->relatedTo()->uid().utf8()));
+        incidence->relatedToUid().utf8()));
   }
 
   // recurrence rule stuff
@@ -693,11 +693,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
 // turned off as it always is set to PTS0 (and must not occur together with DTEND
 
-//  if (incidence->hasDuration()) {
-//    icaldurationtype duration;
-//    duration = writeICalDuration(incidence->duration());
-//    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
-//  }
+  if (incidence->hasDuration()) {
+    icaldurationtype duration;
+    duration = writeICalDuration(incidence->duration());
+    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
+  }
 }
 
 void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
@@ -2127,16 +2127,18 @@ icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
 {
   icaldurationtype d;
 
-  d.weeks    = seconds   % gSecondsPerWeek;
-  seconds   -= d.weeks   * gSecondsPerWeek;
-  d.days     = seconds   % gSecondsPerDay;
-  seconds   -= d.days    * gSecondsPerDay;
-  d.hours    = seconds   % gSecondsPerHour;
-  seconds   -= d.hours   * gSecondsPerHour;
-  d.minutes  = seconds   % gSecondsPerMinute;
-  seconds   -= d.minutes * gSecondsPerMinute;
+  d.is_neg  = (seconds<0)?1:0;
+  if (seconds<0) seconds = -seconds;
+
+  d.weeks    = seconds / gSecondsPerWeek;
+  seconds   %= gSecondsPerWeek;
+  d.days     = seconds / gSecondsPerDay;
+  seconds   %= gSecondsPerDay;
+  d.hours    = seconds / gSecondsPerHour;
+  seconds   %= gSecondsPerHour;
+  d.minutes  = seconds / gSecondsPerMinute;
+  seconds   %= gSecondsPerMinute;
   d.seconds  = seconds;
-  d.is_neg = 0;
 
   return d;
 }
