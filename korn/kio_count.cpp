@@ -184,7 +184,7 @@ void KIO_Count::result( KIO::Job* job )
 	//look of an error occured. If there is, print the error.
 	//This could be very useful by resolving bugs.
 	if( job->error() )
-		kdError() << i18n( "The next KIO-error occured by counting: %1" ).arg( job->errorText() ) << endl;
+		kdError() << i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorText() ) << endl;
 		
 	disconnect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
 	disconnect( job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
