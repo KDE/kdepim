@@ -796,6 +796,9 @@ bool AbbrowserConduit::_saveBackupAddress(PilotAddress & backup)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
+	showPilotAddress(backup);
+#endif
 	PilotRecord *pilotRec = backup.pack();
 	fLocalDatabase->writeRecord(pilotRec);
 	KPILOT_DELETE(pilotRec);
@@ -857,7 +860,7 @@ KABC::Addressee AbbrowserConduit::_changeOnPC(PilotRecord*rec, PilotRecord*backu
 	struct AddressAppInfo ai=fAddressAppInfo;
 	PilotAddress pbackupadr(ai, backup);
 	KABC::Addressee ad;
-	
+
 #ifdef DEBUG
 DEBUGCONDUIT<<"---------------------------------"<<endl;
 DEBUGCONDUIT<<"Now syncing "<<padr.getField(entryFirstname)<<" "<<padr.getField(entryLastname)<<" / backup: "<<pbackupadr.getField(entryFirstname)<<" "<<pbackupadr.getField(entryLastname)<<endl;
@@ -913,6 +916,7 @@ showAddressee(ad);
 #endif
 		PilotAddress backupadr(fAddressAppInfo, backup);
 		_mergeEntries(padr, backupadr, ad);
+
 	}
 	return ad;
 }
@@ -972,7 +976,7 @@ void AbbrowserConduit::_addToPalm(KABC::Addressee & entry)
 	PilotAddress pilotAddress(fAddressAppInfo);
 
 	_copy(pilotAddress, entry);
-	
+
 	if (_savePilotAddress(pilotAddress, entry))
 		_saveAbEntry(entry);
 }
@@ -984,7 +988,7 @@ void AbbrowserConduit::_changeOnPalm(PilotRecord *rec, PilotRecord* backuprec, K
 	FUNCTIONSETUP;
 	PilotAddress padr(fAddressAppInfo);
 	PilotAddress pbackupadr(fAddressAppInfo);
-	
+
 	if (rec) padr=PilotAddress(fAddressAppInfo, rec);
 	if (backuprec) pbackupadr=PilotAddress(fAddressAppInfo, backuprec);
 #ifdef DEBUG
@@ -1318,7 +1322,7 @@ int AbbrowserConduit::_conflict(const QString &entry, const QString &field, cons
 			return CHANGED_PC;
 		}
 	}
-	
+
 	// We need to do some deconfliction. Use already chosen resolution option if possible
 	EConflictResolution fieldres=getFieldResolution(entry, field, palm, bckup, pc);
 #ifdef DEBUG
@@ -1394,12 +1398,15 @@ int AbbrowserConduit::_smartMergeEntry(QString abEntry, const PilotAddress &back
 	QString mergedStr;
 	mergedString=QString();
 //DEBUGCONDUIT<<"PalmFlag="<<PalmFlag<<", Palm: "<<pilotAddress.getField(PalmFlag)<<", Backup: "<<backupAddress.getField(PalmFlag)<<endl;
-	
+
 	int res=_conflict(thisName, name, pilotAddress.getField(PalmFlag), backupAddress.getField(PalmFlag), abEntry, mergeNeeded, mergedStr);
 	if (res & CHANGED_NORES) return res;
 	if (mergeNeeded)
 	{
-		pilotAddress.setField(entryCompany, mergedStr.latin1());
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Merged string="<<mergedStr<<endl;
+#endif
+		pilotAddress.setField(PalmFlag, mergedStr.latin1());
 		mergedString=mergedStr;
 	}
 	return -1;
@@ -1413,7 +1420,7 @@ int AbbrowserConduit::_smartMergeCategories(KABC::Addressee &abEntry, const Pilo
 	bool mergeNeeded=false;
 	QString mergedStr;
 	mergedString=QString();
-	
+
 	int res=_conflict(thisName, name, pilotAddress.getCategoryLabel(), backupAddress.getCategoryLabel(), abAddressCat, mergeNeeded, mergedStr);
 	if (res & CHANGED_NORES) return res;
 	if (mergeNeeded)
@@ -1555,11 +1562,20 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	outPilotAddress = pilotAddress;
 	outAbEntry = abEntry;
 
+#ifdef DEBUG
+DEBUGCONDUIT<<"AFTER smart MERGE: PilotAddress:"<<endl;
+showPilotAddress(pilotAddress);
+DEBUGCONDUIT<<"AFTER smart MERGE: BackupAddress:"<<endl;
+showPilotAddress(backupAddress);
+DEBUGCONDUIT<<"AFTER smart MERGE: PCAddress:"<<endl;
+showAddressee(abEntry);
+DEBUGCONDUIT<<"____________________________________________________________"<<endl;
+#endif
 	return CHANGED_BOTH;
 }
 
 
-/** Merge the palm and the pc entries with the additional information of the backup record. Calls _handleConflict 
+/** Merge the palm and the pc entries with the additional information of the backup record. Calls _handleConflict
  * which does the actual syncing of the data structures. According to the return value of _handleConflict, this function
  * writes the data back to the palm/pc.
  *  return value: no meaning yet
@@ -1567,20 +1583,21 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 int AbbrowserConduit::_mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry)
 {
 	FUNCTIONSETUP;
-	
+
 	int res=_handleConflict(pilotAddress, backupAddress, abEntry);
 	if (res & CHANGED_NORES)
 	{
 		if (res & CHANGED_DUPLICATE)
 		{
-			if (res & CHANGED_PALM) 
+			if (res & CHANGED_PALM)
 			{
 				_addToPalm(abEntry);
+				_saveBackupAddress(pilotAddress);
 			}
 			if (res & CHANGED_PC)
 			{
 				_addToAbbrowser(pilotAddress);
-//				_saveBackupAddress(pilotAddress);
+				_saveBackupAddress(pilotAddress);
 			}
 		}
 	}
@@ -1594,11 +1611,11 @@ int AbbrowserConduit::_mergeEntries(PilotAddress &pilotAddress, PilotAddress &ba
 		{
 			_saveAbEntry(abEntry);
 		}
+		_saveBackupAddress(pilotAddress);
 	}
-	_saveBackupAddress(pilotAddress);
 	QString idStr(abEntry.custom(appString, idString));
-	
-	if (idStr.isEmpty() || (idStr !=QString::number(pilotAddress.getID()) )) 
+
+	if (idStr.isEmpty() || (idStr !=QString::number(pilotAddress.getID()) ))
 	{
 		abEntry.insertCustom(appString, idString, QString::number(pilotAddress.getID()));
 		_saveAbEntry(abEntry);
@@ -1615,8 +1632,8 @@ int AbbrowserConduit::_handleConflict(PilotAddress &pilotAddress, PilotAddress &
 {
 	FUNCTIONSETUP;
 
-	
-	if (abEntry.isEmpty()) 
+
+	if (abEntry.isEmpty())
 	{
 		_copy(abEntry, pilotAddress);
 		return CHANGED_PC | CHANGED_ADD;
@@ -1872,6 +1889,9 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 // $Log$
+// Revision 1.49  2002/09/12 13:58:20  kainhofe
+// some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
+//
 // Revision 1.48  2002/09/09 15:11:02  adridg
 // No idea how Reinhold missed this
 //
