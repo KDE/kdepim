@@ -14,11 +14,11 @@ static const char *id="$Id$";
 #include <kdebug.h>
 #include "options.h"
 
-#ifdef DEBUG
 // The daemon also has a debug level
 //
 //
 int debug_level=0;
+#ifdef DEBUG
 const char *tabs="\t\t\t\t\t\t";
 
 void listConfig(kdbgstream& s,KConfig &c)

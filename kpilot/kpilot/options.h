@@ -16,6 +16,8 @@
 // Many debug functions are defined as well.
 //
 //
+#ifndef _KPILOT_OPTIONS_H_
+#define _KPILOT_OPTIONS_H_ 1
 
 #include "config.h"
 
@@ -45,17 +47,23 @@
 #define KPILOTSCDEBUG	kdDebug(5012)
 
 
-#ifdef DEBUG
 // These are three-bit fields, basically we're defining
 // 1<<n; 3<<n; 7<<n for some n.
 //
 // This allows better selection of what you want debugged.
 //
 //
-#define DEBUG_FUNCTIONS	(1)
 #define UI_MAJOR	(2+4+8)
 #define UI_MINOR	(4+8)
 #define UI_TEDIOUS	(8)
+
+// Debug level is set to some bit pattern; if any 
+// bit in one of the debug masks (SYNC_MAJOR, for
+// instance) is set print the messages corresponding
+// to that debug level.
+//
+//
+extern int debug_level;
 
 #define DB_MAJOR	(16+32+64)
 #define DB_MINOR	(32+64)
@@ -65,6 +73,8 @@
 #define SYNC_MINOR	(256+512)
 #define SYNC_TEDIOUS	(512)
 
+#ifdef DEBUG
+#define DEBUG_FUNCTIONS	(1)
 #define EFUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level & DEBUG_FUNCTIONS) { kdDebug() << \
 			fname << tabs+(strlen(fname)>>3) \
@@ -72,13 +82,6 @@
 				__LINE__ << ")\n"; } 
 #define FUNCTIONSETUP	EFUNCTIONSETUP
 
-// Debug level is set to some bit pattern; if any 
-// bit in one of the debug masks (SYNC_MAJOR, for
-// instance) is set print the messages corresponding
-// to that debug level.
-//
-//
-extern int debug_level;
 extern const char *tabs;		// for indentation purposes in debug
 
 class kdbgstream;
@@ -97,7 +100,7 @@ void listStrList(kdbgstream&,const QStringList&);
 //
 //
 #define EFUNCTIONSETUP static const char *fname=__FUNCTION__
-#define FUNCTIONSETUP
+#define FUNCTIONSETUP EFUNCTIONSETUP
 #endif
 
 
@@ -108,3 +111,4 @@ void listStrList(kdbgstream&,const QStringList&);
 //
 //
 #define SPACING		(10)
+#endif

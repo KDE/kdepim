@@ -20,8 +20,6 @@
 
 static const char *id="$Id$";
 
-
-
 #include <time.h>
 #include <iostream.h>
 #include <pi-macros.h>
