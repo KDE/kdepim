@@ -776,21 +776,8 @@ void KNMimeContent::parse()
         contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
       }
       else { //it's a complete message => treat as "multipart/mixed"
-        cat=KNHeaders::CCmixedPart;
-        ct->setMimeType("multipart/mixed");
-        //ct->setBoundary(multiPartBoundary()); not needed
-        c_ontents=new List();
-        c_ontents->setAutoDelete(true);
-
-        if(uup.hasTextPart()) { //there is plain text before the uuencoded part
-          //text part
-          c=new KNMimeContent();
-          //generate content with mime-compliant headers
-          tmp="Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+uup.textPart();
-          c->setContent(tmp);
-          c->contentType()->setCategory(cat);
-          c_ontents->append(c);
-        }
+        //the whole content is now split into single parts, so it's safe to delete the message-body
+        b_ody.resize(0);
 
         //binary parts
         for (unsigned int i=0;i<uup.binaryParts().count();i++) {
@@ -800,15 +787,18 @@ void KNMimeContent::parse()
           tmp += uup.mimeTypes().at(i);
           tmp += "; name=\"";
           tmp += uup.filenames().at(i);
-          tmp += "\"\nContent-Transfer-Encoding: x-uuencode\nContent-Disposition: attachment\n\n";
+          tmp += "\"\nContent-Transfer-Encoding: x-uuencode\nContent-Disposition: attachment; filename=\"";
+          tmp += uup.filenames().at(i);
+          tmp += "\"\n\n";
           tmp += uup.binaryParts().at(i);
           c->setContent(tmp);
-          c->contentType()->setCategory(cat);
-          c_ontents->append(c);
+          addContent(c);
         }
 
-        //the whole content is now split into single parts, so it's safe to delete the message-body
-        b_ody.resize(0);
+        if(c_ontents && c_ontents->first()) { //readd the plain text before the uuencoded part
+          c_ontents->first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+uup.textPart());
+          c_ontents->first()->contentType()->setMimeType("text/plain");
+        }
       }
     }
     else { //no, this doesn't look like uuencoded stuff => we treat it as "text/plain"
@@ -858,6 +848,47 @@ void KNMimeContent::clear()
 QCString KNMimeContent::encodedContent(bool useCrLf)
 {
   QCString e;
+
+  // hack to convert articles with uuencoded binaries into
+  // proper mime-compliant articles
+  if(c_ontents && !c_ontents->isEmpty()) {
+    bool convertFromUunec=false;
+
+    // reencode uuencoded binaries...
+    for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next()) {
+      if (c->contentTransferEncoding(true)->cte()==KNHeaders::CEuuenc) {
+        convertFromUunec=true;
+        DwUuencode dwuu;
+        DwString dwsrc, dwdest;
+
+        if(c->contentTransferEncoding(true)->decoded())
+          dwsrc=c->b_ody.data();
+        else {
+          dwsrc=c->b_ody.data();
+          dwuu.SetAsciiChars(dwsrc);
+          dwuu.Decode();
+          dwsrc=dwuu.BinaryChars();
+        }
+
+        DwEncodeBase64(dwsrc, dwdest);
+        c->b_ody=dwdest.c_str();
+        c->contentTransferEncoding(true)->setCte(KNHeaders::CEbase64);
+        c->contentTransferEncoding(true)->setDecoded(false);
+        c->removeHeader("Content-Description");
+        c->assemble();
+      }
+    }
+
+    // add proper mime headers...
+    if (convertFromUunec) {
+      h_ead.replace(QRegExp("MIME-Version: .*\\n"),"");
+      h_ead.replace(QRegExp("Content-Type: .*\\n"),"");
+      h_ead.replace(QRegExp("Content-Transfer-Encoding: .*\\n"),"");
+      h_ead+="MIME-Version: 1.0\n";
+      h_ead+=contentType(true)->as7BitString()+"\n";
+      h_ead+=contentTransferEncoding(true)->as7BitString()+"\n";
+    }
+  }
 
   //head
   e=h_ead.copy();
