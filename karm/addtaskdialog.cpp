@@ -128,7 +128,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
   // The "Choose Desktop" checkbox
   lay1->addSpacing(10);
   lay1->addStretch(1);
-  _desktopCB = new QCheckBox(i18n("&Auto tracking"), page);
+  _desktopCB = new QCheckBox(i18n("A&uto tracking"), page);
   _desktopCB->setEnabled(true);
   lay1->addWidget(_desktopCB);
   QGroupBox* groupBox;
