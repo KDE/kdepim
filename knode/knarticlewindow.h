@@ -36,6 +36,7 @@ class KNArticleWindow : public KMainWindow  {
 
     static void closeAllWindowsForCollection(KNArticleCollection *col);
     static void closeAllWindowsForArticle(KNArticle *art);
+    static bool raiseWindowForArticle(KNArticle *art);   // false: no window found
       
   protected:
     KAccel *a_ccel;

@@ -14,6 +14,8 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include <kwin.h>
+
 #include <kstdaction.h>
 #include <klocale.h>
 #include <kedittoolbar.h>
@@ -46,6 +48,19 @@ void KNArticleWindow::closeAllWindowsForArticle(KNArticle *art)
   for(KNArticleWindow *i=list.first(); i; i=list.next())
     if(i->artW->article()==art)
       i->close();
+}
+
+
+bool KNArticleWindow::raiseWindowForArticle(KNArticle *art)
+{
+  bool ret=false;
+  for(KNArticleWindow *i=instances.first(); i; i=instances.next())
+    if(i->artW->article()==art) {
+      KWin::setActiveWindow(i->winId());
+      ret = true;
+      break;
+    }
+  return ret;
 }
 
 

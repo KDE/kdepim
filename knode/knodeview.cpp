@@ -642,8 +642,10 @@ void KNodeView::slotArticleDoubleClicked(QListViewItem *it)
                                              (f_olManager->currentFolder()==f_olManager->drafts()))) {
     a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
   } else {
-    KNArticleWindow *w=new KNArticleWindow(art);
-    w->show();
+    if (!KNArticleWindow::raiseWindowForArticle(art)) {
+      KNArticleWindow *w=new KNArticleWindow(art);
+      w->show();
+    }
   }
 }
 
@@ -1318,8 +1320,10 @@ void KNodeView::slotArtOpenNewWindow()
   kdDebug(5003) << "KNodeView::slotArtOpenNewWindow()" << endl;
 
   if(s_electedArticle) {
-    KNArticleWindow *win=new KNArticleWindow(s_electedArticle);
-    win->show();
+    if (!KNArticleWindow::raiseWindowForArticle(s_electedArticle)) {
+      KNArticleWindow *win=new KNArticleWindow(s_electedArticle);
+      win->show();
+    }
   }
 }
 
