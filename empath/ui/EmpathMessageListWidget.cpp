@@ -325,7 +325,28 @@ EmpathMessageListWidget::s_goNext()
     void
 EmpathMessageListWidget::s_goNextUnread()
 {
-    for (QListViewItemIterator it(currentItem()->nextSibling()); it.current(); ++it) {
+    QListViewItemIterator it;
+
+    // Search the items below the current one.
+
+    for (it=currentItem()->nextSibling(); it.current(); ++it) {
+        
+        EmpathMessageListItem * i =
+            static_cast<EmpathMessageListItem *>(it.current());
+
+        if (!(i->status() & RMM::Read)) {
+            setDelayedLink(true);
+            clearSelection();
+            setCurrentItem(i);
+            setSelected(i, true);
+            ensureItemVisible(currentItem());
+            break;
+        }
+    }
+   
+    // If there isn't one below the current item, start again at the top.
+    
+    for (it=firstChild(); it.current()!=currentItem(); ++it) {
         
         EmpathMessageListItem * i =
             static_cast<EmpathMessageListItem *>(it.current());
@@ -662,7 +683,7 @@ EmpathMessageListWidget::_initActions()
                     this, SLOT(s_messageMarkMany()), actionCollection(), "messageMarkMany");
                    
     ac_messageView_ = new KAction(i18n("&View"), empathIconSet("view"), 0, 
-                    this, SLOT(s_messageCompose()), actionCollection(), "messageView");
+                    this, SLOT(s_messageView()), actionCollection(), "messageView");
     ac_messageCompose_ = new KAction(i18n("&Compose"), empathIconSet("compose"), Key_M, 
                     this, SLOT(s_messageCompose()), actionCollection(), "messageCompose");
     ac_messageReply_ = new KAction(i18n("&Reply"), empathIconSet("reply"), Key_R,
