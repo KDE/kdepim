@@ -53,7 +53,7 @@
 // the modules are that make up a binary distribution.
 //
 //
-static const char *id=
+static const char *null_conduit_id=
 	"$Id$";
 
 
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 
 	/* NOTREACHED */
 	/* Avoid const char *id not used warnings */
-	(void) id;
+	(void) null_conduit_id;
 }
 
 // A conduit that does nothing has a very
@@ -152,6 +152,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.13  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.12  2000/12/21 00:42:50  adridg
 // Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
 //

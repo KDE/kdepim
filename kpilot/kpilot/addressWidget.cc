@@ -26,7 +26,7 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-static const char *id="$Id$";
+static const char *addresswidget_id="$Id$";
 
 
 
@@ -169,7 +169,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 	return currentRecord;
 #ifdef DEBUG
 	/* NOTREACHED */
-	(void) id;
+	(void) addresswidget_id;
 #endif
 }
 
@@ -919,6 +919,10 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.25  2001/02/07 14:21:37  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.24  2001/02/05 20:55:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -28,7 +28,7 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-static const char *id="$Id$";
+static const char *fileinstallwidget_id="$Id$";
 
 
 #include <sys/types.h>
@@ -179,7 +179,7 @@ FileInstallWidget::saveData()
     {
     return true;
 	/* NOTREACHED */
-	(void) id;
+	(void) fileinstallwidget_id;
     }
 
 void 
@@ -213,4 +213,7 @@ FileInstallWidget::refreshFileInstallList()
     }
 
 
-// $Log:$
+// $Log$
+// Revision 1.10  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//

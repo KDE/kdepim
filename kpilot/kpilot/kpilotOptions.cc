@@ -71,7 +71,7 @@
 #include "kpilotOptions.moc"
 
 
-static const char *id="$Id$";
+static const char *kpilotoptions_id="$Id$";
 
 
 
@@ -601,7 +601,7 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 	return 0;
 
 	/* NOTREACHED */
-	(void) id;
+	(void) kpilotoptions_id;
 }
 
 // ----------------------------------------------------
@@ -714,6 +714,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.19  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.18  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

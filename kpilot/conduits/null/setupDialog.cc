@@ -45,7 +45,7 @@
 // the modules are that make up a binary distribution.
 //
 //
-static const char *id="$Id$";
+static const char *setupdialog_id="$Id$";
 
 
 
@@ -130,6 +130,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.12  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.11  2000/12/31 16:43:59  adridg
 // Patched up the debugging stuff again
 //

@@ -29,7 +29,7 @@
 */
 
 
-static const char *id="$Id$";
+static const char *messagedialog_id="$Id$";
 
 #include <qdialog.h>
 #include <kapp.h>
@@ -48,7 +48,7 @@ MessageDialog::MessageDialog( QString title, QWidget* parent, const char* name, 
     kapp->processEvents();
 #ifdef DEBUG
 	/* NOTREACHED */
-	(void) id;
+	(void) messagedialog_id;
 #endif
     }
   
@@ -60,4 +60,7 @@ MessageDialog::setMessage(QString message)
     kapp->processEvents();
     }
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

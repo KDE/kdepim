@@ -27,7 +27,7 @@
 */
 
 
-static const char *id="$Id$";
+static const char *options_id="$Id$";
 
 #include <stream.h>
 #include <kconfig.h>
@@ -71,7 +71,7 @@ void listConfig(kdbgstream& s,KConfig &c)
 		}
 	}
 	/* NOTREACHED */
-	(void) id;
+	(void) options_id;
 }
 
 void listStrList(kdbgstream& s,const QStringList& l)
@@ -134,4 +134,7 @@ const int fname = (int) id;
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

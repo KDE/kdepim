@@ -25,7 +25,7 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-static const char *id="$Id$";
+static const char *memowidget_id="$Id$";
 
 #include "options.h"
 
@@ -217,7 +217,7 @@ MemoWidget::saveData()
 	return true;
 #ifdef DEBUG
 	/* NOTREACHED */
-	(void) id;
+	(void) memowidget_id;
 #endif
 }
 
@@ -528,6 +528,10 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.22  2001/02/07 14:21:43  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.21  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -27,7 +27,7 @@
 */
 
 
-static const char *id="$Id$";
+static const char *pilotadress_id="$Id$";
 
 #include "options.h"
 
@@ -67,4 +67,7 @@ PilotAddress::pack(void *buf, int *len)
     return buf;
     }
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

@@ -27,7 +27,7 @@
 */
 
 
-static const char *id="$Id$";
+static const char *kpilot_id="$Id$";
 
 
 #include "options.h"
@@ -1112,7 +1112,7 @@ KPilotInstaller::slotSyncDone(KProcess*)
   //
   if (kind) 
   {
-    return ::id;
+    return ::kpilot_id;
     }
   else 
   {
@@ -1257,6 +1257,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.33  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.32  2001/02/05 19:16:32  adridg
 // Removing calls to exit() from internal functions
 //

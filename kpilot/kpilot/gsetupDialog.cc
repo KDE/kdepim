@@ -33,7 +33,7 @@
 
 
 
-static const char *id="$Id$";
+static const char *gsetupdialog_id="$Id$";
 
 #include "options.h"
 
@@ -86,7 +86,7 @@ setupDialogPage::setupDialogPage(
 
 	return 0;
 	/* NOTREACHED */
-	(void) id;
+	(void) gsetupdialog_id;
 }
 
 /* virtual */ int setupDialogPage::cancelChanges(KConfig& c)
@@ -431,4 +431,7 @@ setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.14  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//

@@ -27,7 +27,7 @@
 */
 
 
-static const char *id="$Id$";
+static const char *pilotlocaldatabase_id="$Id$";
 
 #include "options.h"
 
@@ -80,13 +80,13 @@ int PilotLocalDatabase::readAppBlock(unsigned char* buffer, int )
 	kdError() << __FUNCTION__ << ": DB not open!" << endl;
 	return -1;
 	/* NOTREACHED */
-	(void) id;
+	(void) pilotlocaldatabase_id;
 	}
     memcpy((void*)buffer, fAppInfo, fAppLen);
     return fAppLen;
 #ifdef DEBUG
 	/* NOTREACHED */
-	(void) id;
+	(void) pilotlocaldatabase_id;
 #endif
     }
 
@@ -376,4 +376,7 @@ void PilotLocalDatabase::closeDatabase()
     }
 
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

@@ -28,7 +28,7 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-static const char *id="$Id$";
+static const char *kpilotlink_id="$Id$";
 
 #include "options.h"
 
@@ -85,7 +85,7 @@ KPilotLink* KPilotLink::fKPilotLink = 0L;
 	if (!config)	return 0;
 	else		return getConfigVersion(*config);
 	/* NOTREACHED */
-	(void) id;
+	(void) kpilotlink_id;
 }
 
 /* static */ int KPilotLink::getConfigVersion(KConfig& config)
@@ -173,7 +173,7 @@ KPilotLink::KPilotLink()
 	fKPilotLink = this;
 	readConfig();
 
-	(void) id;
+	(void) kpilotlink_id;
 }
 
 
@@ -1733,6 +1733,10 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.34  2001/02/07 14:21:40  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.33  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -44,7 +44,7 @@
 #include "baseConduit.moc"
 #include "statusMessages.h"
 
-static const char *id="$Id$";
+static const char *baseconduit_id="$Id$";
 
 BaseConduit::BaseConduit(eConduitMode mode)
   : QObject(), fMode(mode), fDaemonSocket(0L)//, fReportData(false)
@@ -98,7 +98,7 @@ int BaseConduit::getDebugLevel(KConfig& c)
 {
 	return KPilotLink::getDebugLevel(c);
 	/* NOTREACHED */
-	(void) id;
+	(void) baseconduit_id;
 }
 
 // For a description of the protocol used to
@@ -352,6 +352,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.14  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.13  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

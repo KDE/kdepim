@@ -26,7 +26,7 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-static const char *id=
+static const char *conduitapp_id=
 	"$Id$";
 
 #include "options.h"
@@ -107,7 +107,7 @@ ConduitApp::ConduitApp(
 		"http://www.slac.com/pilone/kpilot_home/");
 
 	/* NOTREACHED */
-	(void) id;
+	(void) conduitapp_id;
 }
 
 
@@ -167,7 +167,7 @@ KCmdLineArgs *ConduitApp::getOptions()
 	return p;
 #ifdef DEBUG
 	/* NOTREACHED */
-	(void) id;
+	(void) conduitapp_id;
 #endif
 }
 
@@ -345,6 +345,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.17  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.16  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

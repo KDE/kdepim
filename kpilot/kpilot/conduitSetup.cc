@@ -50,7 +50,7 @@
 
 #include "kpilot.h"
 
-static const char *id="$Id$";
+static const char *conduitsetup_id="$Id$";
 
 #include "listCat.h"
 
@@ -436,8 +436,11 @@ void CConduitSetup::warnSetupRunning()
 	KMessageBox::error(this,msg,i18n("Conduit Setup error"));
 
 	/* NOTREACHED */
-	(void) id;
+	(void) conduitsetup_id;
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.19  2001/02/05 20:55:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//
