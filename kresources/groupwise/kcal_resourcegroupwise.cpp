@@ -132,6 +132,7 @@ bool ResourceGroupwise::doOpen()
 void ResourceGroupwise::doClose()
 {
   mServer->logout();
+  ResourceCached::doClose();
 }
 
 bool ResourceGroupwise::doLoad()

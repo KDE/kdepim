@@ -100,7 +100,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     void cancelUpload();
 
   protected:
-    bool doOpen();
     void doClose();
     bool doLoad();
     bool doSave();
@@ -136,8 +135,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     void init();
 
     KCal::SloxPrefs *mPrefs;
-
-    bool mOpen;
 
     KIO::DavJob *mLoadEventsJob;
     KIO::DavJob *mLoadTodosJob;

@@ -286,6 +286,16 @@ class ResourceCached : public ResourceCalendar,
     CalendarLocal mCalendar;
 
     /**
+      Virtual method from KRES::Resource, called when the last instace of the 
+      resource is closed 
+     */
+    virtual void doClose();
+    /** 
+      Opens the resource. Dummy implementation, so child classes don't have to 
+      reimplement this method. By default, this does not do anything, but can be reimplemented in child classes 
+     */
+    virtual bool doOpen();
+    /**
       Check if reload required according to reload policy.
     */    
     bool checkForReload();

@@ -69,11 +69,6 @@ class ResourceLocal : public ResourceCached
     void reload();
 
   protected:
-    bool doOpen();
-
-    /** clears out the current calendar, freeing all used memory etc. etc. */
-    void doClose();
-
     bool doLoad();
     bool doSave();
 
@@ -84,8 +79,6 @@ class ResourceLocal : public ResourceCached
 
     KURL mURL;
     CalFormat *mFormat;
-
-    bool mOpen;
 
     KDirWatch mDirWatch;
 

@@ -91,7 +91,6 @@ void ResourceKABC::init()
 {
   setType( "birthdays" );
 
-  mOpen = false;
   setReadOnly( true );
 
   mLock = new KABC::LockNull( false );
@@ -123,16 +122,12 @@ bool ResourceKABC::doOpen()
   mAddressbook = KABC::StdAddressBook::self();
   connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
 
-  mOpen = true;
-
   return true;
 }
 
 bool ResourceKABC::doLoad()
 {
   kdDebug(5800) << "ResourceKABC::load()" << endl;
-
-  if ( !mOpen ) return true;
 
   mCalendar.close();
 
@@ -306,14 +301,6 @@ bool ResourceKABC::isSaving()
 KABC::Lock *ResourceKABC::lock()
 {
   return mLock;
-}
-
-void ResourceKABC::doClose()
-{
-  if ( !mOpen ) return;
-
-  mCalendar.close();
-  mOpen = false;
 }
 
 

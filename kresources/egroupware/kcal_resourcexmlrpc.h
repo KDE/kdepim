@@ -192,7 +192,6 @@ class ResourceXMLRPC : public ResourceCached
     void fault( int, const QString&, const QVariant& );
 
   protected:
-    void doClose();
     bool doLoad();
     bool doSave();
 
@@ -213,8 +212,6 @@ class ResourceXMLRPC : public ResourceCached
     void exit_loop();
 
     KXMLRPC::Server *mServer;
-
-    bool mOpen;
 
     EGroupwarePrefs *mPrefs;
 

@@ -526,4 +526,16 @@ void ResourceCached::addInfoText( QString &txt ) const
   }
 }
 
+void ResourceCached::doClose()
+{
+  mCalendar.close();
+}
+
+bool ResourceCached::doOpen()
+{
+  kdDebug(5800) << "Opening resource " << resourceName() << endl;
+  return true;
+}
+
+
 #include "resourcecached.moc"

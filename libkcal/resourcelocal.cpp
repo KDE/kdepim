@@ -109,8 +109,6 @@ void ResourceLocal::init()
 
   setType( "file" );
 
-  mOpen = false;
-
   connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),
            SLOT( reload() ) );
   connect( &mDirWatch, SIGNAL( created( const QString & ) ),
@@ -136,16 +134,6 @@ ResourceLocal::~ResourceLocal()
   delete d;
 }
 
-bool ResourceLocal::doOpen()
-{
-  kdDebug(5800) << "Opening resource " << resourceName() << " with URL "
-                << mURL.prettyURL() << endl;
-
-  mOpen = true;
-
-  return true;
-}
-
 QDateTime ResourceLocal::readLastModified()
 {
   QFileInfo fi( mURL.path() );
@@ -154,13 +142,12 @@ QDateTime ResourceLocal::readLastModified()
 
 bool ResourceLocal::doLoad()
 {
-  if ( !mOpen ) return true;
-
   bool success;
 
   if ( !KStandardDirs::exists( mURL.path() ) ) {
     kdDebug(5800) << "ResourceLocal::load(): File doesn't exist yet." << endl;
-    success = true;
+    // Save the empty calendar, so the calendar file will be created.
+    success = doSave();
   } else {
     success = mCalendar.load( mURL.path() );
     if ( success ) d->mLastModified = readLastModified();
@@ -171,10 +158,9 @@ bool ResourceLocal::doLoad()
 
 bool ResourceLocal::doSave()
 {
-  if ( !mOpen ) return true;
-
+kdDebug()<<"ResourceLoadl::doSave"<<endl;
   bool success = mCalendar.save( mURL.path() );
-
+kdDebug()<<"ResourceLocal::doSave, success="<<success<<endl;
   d->mLastModified = readLastModified();
 
   return success;
@@ -189,7 +175,7 @@ void ResourceLocal::reload()
 {
   kdDebug(5800) << "ResourceLocal::reload()" << endl;
 
-  if ( !mOpen ) return;
+  if ( !isOpen() ) return;
 
   if ( d->mLastModified == readLastModified() ) {
     kdDebug(5800) << "ResourceLocal::reload(): file not modified since last read."
@@ -201,14 +187,6 @@ void ResourceLocal::reload()
   mCalendar.load( mURL.path() );
 
   emit resourceChanged( this );
-}
-
-void ResourceLocal::doClose()
-{
-  if ( !mOpen ) return;
-
-  mCalendar.close();
-  mOpen = false;
 }
 
 

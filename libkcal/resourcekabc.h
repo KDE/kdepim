@@ -151,7 +151,6 @@ class ResourceKABC : public ResourceCalendar
 
   protected:
     bool doOpen();
-    void doClose();
     bool doLoad();
     bool doSave();
 
@@ -162,8 +161,6 @@ class ResourceKABC : public ResourceCalendar
     void init();
 
     CalendarLocal mCalendar;
-
-    bool mOpen;
 
     int mAlarmDays;
     bool mAlarm;

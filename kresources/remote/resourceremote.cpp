@@ -93,8 +93,6 @@ void ResourceRemote::init()
 
   setType( "remote" );
 
-  mOpen = false;
-
   mLock = new KABC::LockNull( true );
 
   enableChangeNotification();
@@ -163,20 +161,9 @@ bool ResourceRemote::useCacheFile() const
   return mUseCacheFile;
 }
 
-bool ResourceRemote::doOpen()
-{
-  kdDebug(5800) << "ResourceRemote::doOpen()" << endl;
-
-  mOpen = true;
-
-  return true;
-}
-
 bool ResourceRemote::doLoad()
 {
   kdDebug(5800) << "ResourceRemote::load()" << endl;
-
-  if ( !mOpen ) return true;
 
   if ( mDownloadJob ) {
     kdWarning() << "ResourceRemote::load(): download still in progress."
@@ -254,8 +241,6 @@ bool ResourceRemote::doSave()
 {
   kdDebug(5800) << "ResourceRemote::save()" << endl;
 
-  if ( !mOpen ) return true;
-
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
@@ -306,14 +291,6 @@ void ResourceRemote::slotSaveJobResult( KIO::Job *job )
   mUploadJob = 0;
 
   emit resourceSaved( this );
-}
-
-void ResourceRemote::doClose()
-{
-  if ( !mOpen ) return;
-
-  mCalendar.close();
-  mOpen = false;
 }
 
 KABC::Lock *ResourceRemote::lock()

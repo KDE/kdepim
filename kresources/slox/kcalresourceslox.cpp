@@ -111,8 +111,6 @@ void KCalResourceSlox::init()
 
   setType( "slox" );
 
-  mOpen = false;
-
   mLock = new KABC::LockNull( true );
 
   enableChangeNotification();
@@ -136,23 +134,9 @@ void KCalResourceSlox::writeConfig( KConfig *config )
   ResourceCached::writeConfig( config );
 }
 
-bool KCalResourceSlox::doOpen()
-{
-  kdDebug(5800) << "KCalResourceSlox::doOpen()" << endl;
-
-  mOpen = true;
-
-  return true;
-}
-
 bool KCalResourceSlox::doLoad()
 {
   kdDebug() << "KCalResourceSlox::load() " << int( this ) << endl;
-
-  if ( !mOpen ) {
-    kdWarning() << "Warning: resource not open." << endl;
-    return true;
-  }
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
     kdWarning() << "KCalResourceSlox::load(): download still in progress."
@@ -863,8 +847,6 @@ bool KCalResourceSlox::doSave()
 {
   kdDebug() << "KCalResourceSlox::save()" << endl;
 
-  if ( !mOpen ) return true;
-
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
@@ -899,18 +881,14 @@ void KCalResourceSlox::doClose()
 {
   kdDebug() << "KCalResourceSlox::doClose()" << endl;
 
-  if ( !mOpen ) return;
-
   cancelLoadEvents();
   cancelLoadTodos();
 
   if ( mUploadJob ) {
     kdError() << "KCalResourceSlox::doClose() Still saving" << endl;
   } else {
-    mCalendar.close();
+    ResourceCached::doClose();
   }
-
-  mOpen = false;
 }
 
 KABC::Lock *KCalResourceSlox::lock()

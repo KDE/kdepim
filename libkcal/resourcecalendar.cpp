@@ -81,9 +81,6 @@ bool ResourceCalendar::load()
 {
   kdDebug(5800) << "Loading resource " + resourceName() << endl;
 
-  // FIXME: test if resource is opened and remove this test from concrete
-  // resources
-
   mReceivedLoadError = false;
 
   bool success = true;
@@ -129,6 +126,7 @@ bool ResourceCalendar::save()
 
     mReceivedSaveError = false;
 
+    if ( !isOpen() ) return true;
     bool success = doSave();
     if ( !success && !mReceivedSaveError ) saveError();
 

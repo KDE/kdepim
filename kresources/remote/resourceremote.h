@@ -95,8 +95,6 @@ class ResourceRemote : public ResourceCached
     void slotPercent( KIO::Job *, unsigned long percent );
 
   protected:
-    bool doOpen();
-    void doClose();
     bool doLoad();
     bool doSave();
 
@@ -112,8 +110,6 @@ class ResourceRemote : public ResourceCached
     bool mUseCacheFile;
 
     ICalFormat mFormat;
-
-    bool mOpen;
 
     KIO::FileCopyJob *mDownloadJob;
     KIO::FileCopyJob *mUploadJob;

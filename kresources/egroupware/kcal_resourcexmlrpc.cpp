@@ -165,8 +165,6 @@ void ResourceXMLRPC::init()
 
   mSyncComm = false;
   mLock = new KABC::LockNull( true );
-
-  mOpen = false;
 }
 
 void ResourceXMLRPC::initEGroupware()
@@ -200,8 +198,6 @@ bool ResourceXMLRPC::doOpen()
 {
   kdDebug(5800) << "ResourceXMLRPC::doOpen()" << endl;
 
-  mOpen = true;
-
   if ( mServer )
     delete mServer;
 
@@ -226,8 +222,6 @@ bool ResourceXMLRPC::doOpen()
 bool ResourceXMLRPC::doLoad()
 {
   kdDebug() << "ResourceXMLRPC::load()" << endl;
-
-  if ( !mOpen ) return true;
 
   mCalendar.close();
 
@@ -269,8 +263,6 @@ bool ResourceXMLRPC::doLoad()
 
 bool ResourceXMLRPC::doSave()
 {
-  if ( !mOpen ) return true;
-
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
@@ -309,14 +301,6 @@ bool ResourceXMLRPC::isSaving()
 KABC::Lock *ResourceXMLRPC::lock()
 {
   return mLock;
-}
-
-void ResourceXMLRPC::doClose()
-{
-  if ( !mOpen ) return;
-
-  mCalendar.close();
-  mOpen = false;
 }
 
 
