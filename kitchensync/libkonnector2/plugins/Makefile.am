@@ -1,3 +1,3 @@
 #SUBDIRS = test
 
-SUBDIRS = dummy local qtopia agenda
+SUBDIRS = agenda dummy local qtopia threadedkonnector
