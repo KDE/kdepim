@@ -263,34 +263,15 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       }
       bool silent = mSilent;
       mSilent = false;
-      if ( local->type() == "Event" ) {
-          deleteEvent( (Event*)local ); // remove local from kmail
-          kmailDeleteIncidence( subresource,sernum);// remove new from kmail
-          mSilent = true;
-          deleteEvent( (Event*)local ); // remove local from calendar and from the uid map
-          mSilent = false; // now we can add the new ones
-          if ( localIncidence ) addIncidence( localIncidence, subresource, 0  );
-          if ( addedIncidence  ) addIncidence( addedIncidence, subresource, 0  );
-      } else if (local->type() == "Todo" ) {
-          deleteTodo((Todo*)local);
-          kmailDeleteIncidence( subresource,sernum);
-          mSilent = true;
-          deleteTodo((Todo*)local);
-          mSilent = false; // now we can add the new ones
-          if ( localIncidence ) addIncidence( localIncidence, subresource, 0  );
-          if ( addedIncidence  ) addIncidence( addedIncidence, subresource, 0  );
-      } else if ( local->type() == "Journal" ) {
-          deleteJournal((Journal*)local );
-          kmailDeleteIncidence( subresource,sernum);
-          mSilent = true;
-          deleteJournal((Journal*)local );
-          mSilent = false; // now we can add the new ones
-          if ( localIncidence ) addIncidence( localIncidence, subresource, 0  );
-          if ( addedIncidence  ) addIncidence( addedIncidence, subresource, 0  );
-      }
+      deleteIncidence( local ); // remove local from kmail
+      kmailDeleteIncidence( subresource, sernum );// remove new from kmail
+      mSilent = true;
+      deleteIncidence( local ); // remove local from calendar and from the uid map
+      mSilent = false; // now we can add the new ones
+      if ( localIncidence ) addIncidence( localIncidence, subresource, 0  );
+      if ( addedIncidence  ) addIncidence( addedIncidence, subresource, 0  );
+
       mSilent = silent;
-
-
   }
 }
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
@@ -377,8 +358,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       /* This is a real add, from KMail, we didn't trigger this ourselves.
          If this uid already exists in this folder, do conflict resolution */
       if ( mUidMap.contains( uid )
-          && ( mUidMap[ uid ].resource() == subResource ) )
+          && ( mUidMap[ uid ].resource() == subResource ) ) {
         resolveConflict( incidence, subResource, sernum );
+        return true;
+      }
 
       /* Add to the cache and listen to update from KOrganizer for it. */
       mCalendar.addIncidence( incidence );
