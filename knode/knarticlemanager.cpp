@@ -135,7 +135,10 @@ void KNArticleManager::saveContentToFile(KNMimeContent *c)
 
 void KNArticleManager::saveArticleToFile(KNArticle *a)
 {
-  KNSaveHelper helper(a->subject().data());
+  QString fName = QString::fromLocal8Bit(a->subject().data());
+  fName.replace(QRegExp("[\\s/]"),"_");
+
+  KNSaveHelper helper(fName);
 
   QFile *file = helper.getFile();
   KNMimeContent *text=0;
