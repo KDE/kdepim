@@ -338,11 +338,6 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
   QPoint vp = contentsToViewport(e->pos());
   QListViewItem *i = itemAt(vp);
 
-  if ((e->button() == RightButton) && i && (i->isSelected())) {
-    emit rightButtonPressed(i, viewport()->mapToGlobal(vp), -1);
-    return;
-  }
-
   // hack: block clearSelection()...
   if (i && i->isSelected() && !selectMode &&
       ((vp.x() < header()->sectionPos(0)) ||

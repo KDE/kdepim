@@ -126,8 +126,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(c_olView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
   connect(c_olView, SIGNAL(itemSelected(QListViewItem*)),
           SLOT(slotCollectionSelected(QListViewItem*)));
-  connect(c_olView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-          SLOT(slotCollectionRMB(QListViewItem*, const QPoint&, int)));
+  connect(c_olView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
+          SLOT(slotCollectionRMB(KListView*, QListViewItem*, const QPoint&)));
   connect(c_olView, SIGNAL(dropped(QDropEvent*, QListViewItem*)),
           SLOT(slotCollectionViewDrop(QDropEvent*, QListViewItem*)));
   connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
@@ -196,8 +196,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
           SLOT(slotArticleSelected(QListViewItem*)));
   connect(h_drView, SIGNAL(selectionChanged()),
           SLOT(slotArticleSelectionChanged()));
-  connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-          SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
+  connect(h_drView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
+          SLOT(slotArticleRMB(KListView*, QListViewItem*, const QPoint&)));
   connect(h_drView, SIGNAL(doubleClick(QListViewItem *)),
           SLOT(slotOpenArticle(QListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
@@ -1307,7 +1307,7 @@ void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, QListViewItem* after)
 }
 
 
-void KNMainWidget::slotArticleRMB(QListViewItem *i, const QPoint &p, int)
+void KNMainWidget::slotArticleRMB(KListView*, QListViewItem *i, const QPoint &p)
 {
   if(b_lockui)
     return;
@@ -1326,7 +1326,7 @@ void KNMainWidget::slotArticleRMB(QListViewItem *i, const QPoint &p, int)
 }
 
 
-void KNMainWidget::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
+void KNMainWidget::slotCollectionRMB(KListView*, QListViewItem *i, const QPoint &p)
 {
   if(b_lockui)
     return;

@@ -1530,7 +1530,7 @@ void KNComposer::slotCancelEditor()
 }
 
 
-void KNComposer::slotAttachmentPopup(QListViewItem *it, const QPoint &p, int)
+void KNComposer::slotAttachmentPopup(KListView*, QListViewItem *it, const QPoint &p)
 {
   if(it)
     a_ttPopup->popup(p);
@@ -1887,8 +1887,8 @@ void KNComposer::ComposerView::showAttachmentView()
     connect(a_ttView, SIGNAL(clicked ( QListViewItem * )),
             parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
 
-    connect(a_ttView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-            parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
+    connect(a_ttView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
+            parent(), SLOT(slotAttachmentPopup(KListView*, QListViewItem*, const QPoint&)));
     connect(a_ttView, SIGNAL(delPressed(QListViewItem*)),
             parent(), SLOT(slotAttachmentRemove(QListViewItem*)));
     connect(a_ttView, SIGNAL(doubleClicked(QListViewItem*)),
@@ -2471,7 +2471,7 @@ void KNComposer::Editor::slotCorrectWord()
 
 
 KNComposer::AttachmentView::AttachmentView(QWidget *parent, char *name)
- : QListView(parent, name)
+ : KListView(parent, name)
 {
   setFrameStyle(QFrame::WinPanel | QFrame::Sunken);  // match the QMultiLineEdit style
   addColumn(i18n("File"), 115);
@@ -2497,15 +2497,15 @@ void KNComposer::AttachmentView::keyPressEvent(QKeyEvent *e)
   if( (e->key()==Key_Delete) && (currentItem()) )
     emit(delPressed(currentItem()));
   else
-    QListView::keyPressEvent(e);
+    KListView::keyPressEvent(e);
 }
 
 
 //=====================================================================================
 
 
-KNComposer::AttachmentViewItem::AttachmentViewItem(QListView *v, KNAttachment *a) :
-  QListViewItem(v), attachment(a)
+KNComposer::AttachmentViewItem::AttachmentViewItem(KListView *v, KNAttachment *a) :
+  KListViewItem(v), attachment(a)
 {
   setText(0, a->name());
   setText(1, a->mimeType());

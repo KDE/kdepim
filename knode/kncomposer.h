@@ -17,7 +17,7 @@
 #ifndef KNCOMPOSER_H
 #define KNCOMPOSER_H
 
-#include <qlistview.h>
+#include <klistview.h>
 
 #include <kmainwindow.h>
 #include <kdialogbase.h>
@@ -165,7 +165,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     void slotCancelEditor();
 
     // attachment list
-    void slotAttachmentPopup(QListViewItem *it, const QPoint &p, int);
+    void slotAttachmentPopup(KListView*, QListViewItem *it, const QPoint &p);
     void slotAttachmentSelected(QListViewItem *it);
     void slotAttachmentEdit(QListViewItem *it);
     void slotAttachmentRemove(QListViewItem *it);
@@ -299,7 +299,7 @@ private:
 };
 
 
-class KNComposer::AttachmentView : public QListView {
+class KNComposer::AttachmentView : public KListView {
 
   Q_OBJECT
 
@@ -315,10 +315,10 @@ class KNComposer::AttachmentView : public QListView {
 };
 
 
-class KNComposer::AttachmentViewItem : public QListViewItem {
+class KNComposer::AttachmentViewItem : public KListViewItem {
 
   public:
-    AttachmentViewItem(QListView *v, KNAttachment *a);
+    AttachmentViewItem(KListView *v, KNAttachment *a);
     ~AttachmentViewItem();
 
   KNAttachment *attachment;
