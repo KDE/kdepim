@@ -17,6 +17,8 @@
 * is it "message", "mail" or "email" ??? 
 * what is section / tab / ... ?
 * better markup instead of 'quote'
+* PGP: acronym or application?
+* "permissions" or "permission"
 -->
 
 <authorgroup>
@@ -40,7 +42,7 @@
 
 </authorgroup>
 
-<date>2001-12-12</date>
+<date>2002-01-05</date>
 <releaseinfo>1.03.70</releaseinfo>
 
 <copyright>
@@ -3668,19 +3670,19 @@ menu</link>.</para>
 <qandaentry>
 <question><para>Where can I get a list of changes between the versions of &kmail;?</para></question>
 <answer>
-<para>The welcome screen lists all important changes for its release. It is displayed when you
+<para>The welcome screen lists all important changes for your version. It is displayed when you
 start a new version of &kmail; the first time. You can always look at it again
 by selecting the root element of the folder list, &ie; <guilabel>Mail</guilabel>.</para>
 </answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>The <guilabel>&lt;To or Cc&gt;</guilabel>
+<question><para>The <guilabel>&lt;recipients&gt;</guilabel>
 <guilabel>doesn't contain</guilabel> <userinput>xxx</userinput> filter
 criterion doesn't work.</para></question>
 <answer><para>This not strictly a bug, but a bit unintuitive. The
 source of the confusion seems to stem from the fact that people think
-<guilabel>&lt;To or Cc&gt;</guilabel> <guilabel>doesn't
+<guilabel>&lt;recipients&gt;</guilabel> <guilabel>doesn't
 contain</guilabel> <userinput>xxx</userinput> should mean that neither
 <guilabel>To</guilabel> nor <guilabel>Cc</guilabel> should contain
 <userinput>xxx</userinput>. This interpretation assumes that using
@@ -3689,7 +3691,7 @@ rule. This is not the case.</para>
 <para>In fact, <guilabel>doesn't contain</guilabel> is just another
 <emphasis>operator</emphasis>, just like
 <guilabel>contains</guilabel>. It doesn't mean <quote>negate the
-rule</quote>. Just like <guilabel>&lt;To or Cc&gt;</guilabel>
+rule</quote>. Just like <guilabel>&lt;recipients&gt;</guilabel>
 <guilabel>contains</guilabel> <userinput>xxx</userinput> means
 <quote><guilabel>To</guilabel> <guilabel>contains</guilabel>
 <userinput>xxx</userinput> <emphasis>or</emphasis>
@@ -3722,6 +3724,26 @@ to move your existing folders.</para>
 </qandaentry>
 
 <qandaentry>
+<question><para>How can I use mail folders that are not in <filename
+class="directory">~/Mail/</filename>?</para></question>
+
+<answer><para>Simply create a symlink in your <filename
+class="directory">~/Mail</filename> directory using
+<userinput><command>ln</command> <option>-s</option>
+<filename>/somewhere/Mail/mymailboxfile</filename>
+<filename class="symlink">~/Mail/remote</filename></userinput>. When you start
+&kmail; you will see a new folder with the name <guilabel>remote</guilabel> that
+contains the mails in your remote folder. If you want to add a whole remote mail
+directory use <userinput><command>ln</command> <option>-s</option>
+<filename>/somewhere/Mail</filename> <filename
+class="symlink">~/Mail/.remotedir.directory</filename></userinput>.  For that
+case you also need to create a new empty folder named <filename
+class="directory">remotedir</filename> with &kmail;. The folder <filename
+class="directory">remotedir</filename> will then contain all remote mailbox
+folders as subfolders.</para></answer>
+</qandaentry>
+
+<qandaentry>
 <question><para>The button to sign messages is not enabled anymore, it was enabled 
 some time ago.</para></question>
 <answer><para>Enter your <guilabel>PGP User Identity</guilabel> in the
@@ -3732,7 +3754,7 @@ can't know which key should be used to sign your messages with.</para>
 
 <qandaentry>
 <question><para>I'm one of those people whose mails consist of 100 quoted lines
-and one line written by myself. For some reason (which I don't get) this annoys other people. Can
+and one line written by myself. For some reason this annoys other people. Can
 &kmail; help me and make everyone's life better?</para></question>
 <answer><para>Sure. Just select a short relevant part of the original mail
 with the mouse before you reply. Only this part will then be quoted in your 
@@ -3740,38 +3762,24 @@ reply.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>&kmail; disappears/crashes while fetching mail.</para></question>
-<answer><para>Make sure you have enough free disk space. &kmail; currently
-does not handle the situation of a full disk gracefully and quits. Note: &kmail;
-does protect your data, messages that could not be saved to disk is left on the 
-server.</para></answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>Does &kmail;'s address book support distribution lists?</para></question>
-<answer><para>No. As a workaround you can add several email address into one 
-address entry if you are using the <quote>traditional</quote> &kmail; address book.</para></answer>
-</qandaentry>
-
-<qandaentry>
 <question><para>For some messages the value in the <guilabel>Date</guilabel> field
-is wrong, it shows <guilabel>Wed Dec 31 17:00:00 1969</guilabel>.</para></question>
+is <guilabel>unknown</guilabel>.</para></question>
 <answer><para>Probably the <quote>Date:</quote> header of these messages is broken,
 maybe it's missing the time zone information. For this case we've added
-a workaround to mimelib. In &kde; 2.2 mimelib is part of the kdenetwork
-package, you must make sure that &kde;'s mimelib is used and not a different
-one on your system.</para></answer>
+a workaround to mimelib. Mimelib is part of the kdenetwork
+package, you should make sure that &kde;'s mimelib is used and not a different
+one on your system. If that doesn't help, the <quote>Date:</quote> field is
+really broken and &kmail; cannot interpret it. That's not a bug in &kmail;
+but in the software that sent the mail.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>My signature has two dashes above it. This makes me very sad.</para></question>
+<question><para>My signature has two dashes above it. What's up?</para></question>
 <answer>
 <para>
-<!-- TODO: update for 3.0: "\n - - \n" has to be in sig, other wise it will be
-added -->
 Separating the signature from the message body with two dashes and a space
-is a common and useful kind of standard. If you have strong feelings about this
-I suggest you modify the &kmail; source to remove that line.</para>
+on a single line is a common standard. If your signature does not already have 
+this separator, &kmail; will automatically add it.</para>
 </answer>
 </qandaentry>
 
@@ -3783,6 +3791,7 @@ I suggest you modify the &kmail; source to remove that line.</para>
 -->
 
 <qandaentry>
+<!-- TODO: still up-to-date? -->
 <question><para>&kmail; fetches the same messages over and over again.</para></question>
 <answer><para>This happens if you have <guilabel>Delete mail from server</guilabel>
 deselected and your POP3 server doesn't support the UIDL command. There's currently
@@ -3790,15 +3799,6 @@ no workaround besides selecting <guilabel>Delete mail from server</guilabel>.
 A more detailed explanation can be found 
 <ulink url="http://lists.kde.org/?l=kmail&amp;m=99220697415300&amp;w=2">in this
 mailing list post</ulink>.</para></answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
-<answer>
-<para>Yes, it does so since &kde; version 2.2. It's not yet feature complete,
-but it should be enough for many users. We know of those limitations, so please
-don't submit wishlist reports about them.</para>
-</answer>
 </qandaentry>
 
 <qandaentry>
@@ -3833,12 +3833,12 @@ folders</guimenuitem></menuchoice> (by default, this will also happen every time
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted mails. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
-&Java; and Javascript will not be displayed in &kmail; and there's no way
-to activate them.</para></answer>
+&Java; and Javascript will not be displayed in &kmail; for security reasons
+and there's no way to activate them.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>Can I use two different version of &kmail; at the same time? Can I go
+<question><para>Can I use two different versions of &kmail; at the same time? Can I go
 back from a current version of &kmail; to an older one?</para></question>
 <answer><para>You can only run one instance of &kmail; at once. We recommend also
 to stick to a certain version and not switch back and forth between different versions.
@@ -3870,7 +3870,7 @@ filtering the mailing list messages. You have to add a new filter rule manually.
 However, once you associated a folder with a mailing list you can use <menuchoice>
 <guimenu>Message</guimenu><guimenuitem>Reply List...</guimenuitem></menuchoice> or 
 <menuchoice><guimenu>Message</guimenu><guimenuitem>New message...</guimenuitem></menuchoice>
-and the mailing list address will be set to the <guilabel>To:</guilabel> field.
+and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 </para></answer>
 </qandaentry>
 
@@ -3878,9 +3878,13 @@ and the mailing list address will be set to the <guilabel>To:</guilabel> field.
 <question><para>My SMTP server requires authentication. Does &kmail; support it?</para></question>
 <answer><para>There are two common techniques used for <acronym>SMTP</acronym> authentication:
 <quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
-<quote>SMTP Auth</quote> is currently not supported.<!-- fixme? -->
+<quote>SMTP Auth</quote> can be set in the <guilabel>Security</guilabel> tab
+of the SMTP configuration dialog.
+<!-- fixme? which of the options in the security tab is it? rename them? -->
 To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
-<guilabel>outbox</guilabel> and send them just after you have fetched new mail.</para></answer>
+<guilabel>outbox</guilabel> and send them just after you have fetched new mail.
+<!-- fixme: how to make it more simple? -->
+</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3918,7 +3922,7 @@ spoolfile.</para>
 <itemizedlist>
 <listitem>
 <para>You <emphasis>really</emphasis> should test if encryption works
-before you use it. &kmail; relies on
+before you use it. &kmail; partly relies on
 <application>PGP</application>/<application>GnuPG</application>'s error strings,
 which often change between different versions.</para>
 </listitem>
@@ -3926,6 +3930,7 @@ which often change between different versions.</para>
 <para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
+<!-- fixme: up-to-date? -->
 <para>&kmail; will not encrypt messages with an untrusted (unsigned) public key
 if you use <application>PGP</application>. If you use <application>GnuPG</application>
 &kmail; <emphasis>will</emphasis> encrypt messages with untrusted public keys.</para>
@@ -3945,7 +3950,9 @@ messages with non-Latin1 characters?</para></question>
 <answer><para>In the
 <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section of the
 <guilabel>Configure &kmail;...</guilabel> dialog, select the correct <guilabel>Character set</guilabel> for
-the message list and the folder list. If <guilabel>unicode
+the message list and the folder list. 
+<!-- fixme: doesn't exist anymore?? -->
+If <guilabel>unicode
 (iso10646-1)</guilabel> is available, you should choose it. In case messages are
 still not shown correctly, you can always try other settings from the
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
@@ -3973,41 +3980,19 @@ files With &kmail;</link>.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>How can I use mail folders that are not in <filename
-class="directory">~/Mail/</filename>?</para></question>
-
-<answer><para>Simply create a symlink in your <filename
-class="directory">~/Mail</filename> directory using
-<userinput><command>ln</command> <option>-s</option>
-<filename>/somewhere/Mail/mymailboxfile</filename>
-<filename class="symlink">~/Mail/remote</filename></userinput>. When you start
-&kmail; you will see a new folder with the name <guilabel>remote</guilabel> that
-contains the mails in your remote folder. If you want to add a whole remote mail
-directory use <userinput><command>ln</command> <option>-s</option>
-<filename>/somewhere/Mail</filename> <filename
-class="symlink">~/Mail/.remotedir.directory</filename></userinput>.  For that
-case you also need to create a new empty folder named <filename
-class="directory">remotedir</filename> with &kmail;. The folder <filename
-class="directory">remotedir</filename> will then contain all remote mailbox
-folders as subfolders.</para></answer>
-</qandaentry>
-
-<qandaentry>
 <question><para>Can I use encryption with my normal (non-<acronym>SSL</acronym>)
 <acronym>POP3</acronym> account?</para></question>
 <answer><para>If your <acronym>POP3</acronym> server runs an
 <application>ssh</application> daemon, you can use ssh to tunnel your
 <acronym>POP3</acronym> connection using the following command:</para>
 
-<para><userinput><command>ssh</command> <option>-L 110:127.0.0.1:110
+<para><userinput><command>ssh</command> <option>-L 11000:127.0.0.1:110
 user@host</option></userinput></para>
 
 <para>Modify your &kmail; configuration to fetch the mail via
 <acronym>POP3</acronym> from <userinput>localhost</userinput> and ssh will tunnel
-the connection for you. You need to be root to execute this
-command. Alternatively, change the first port number, &ie; the first occurrence
-of <userinput>110</userinput>, to something above 1024 and configure &kmail; to
-use that port. <note><para>If non-encrypted mails have already been sent
+the connection for you.
+<note><para>If non-encrypted mails have already been sent
 via internet, the only advantage of using <application>ssh</application> is
 that your <emphasis>password</emphasis> will be sent encrypted to the <acronym>POP3</acronym>
 server.</para></note></para>
@@ -4025,12 +4010,21 @@ locking as your mail delivery agent.</para>
 <para>There are five different locking options you can use:</para>
 
 <itemizedlist>
-<listitem><para><guilabel>Mutt dotlock (recommended)</guilabel></para></listitem>
-<listitem><para><guilabel>Mutt dotlock privileged</guilabel></para></listitem>
 <listitem><para><guilabel>Procmail lockfile</guilabel></para></listitem>
+<listitem><para><guilabel>Mutt dotlock</guilabel></para></listitem>
+<listitem><para><guilabel>Mutt dotlock privileged</guilabel></para></listitem>
 <listitem><para><guilabel>FCNTL</guilabel> (default)</para></listitem>
 <listitem><para><guilabel>none (use with care)</guilabel></para></listitem>
 </itemizedlist>
+
+<para><guilabel>Procmail lockfile</guilabel> will use a small utility that comes
+with <application>procmail</application> called <command>lockfile</command>. You
+can use this if your mail folder is in a directory where you have write
+permissions.  This will not work on your <filename
+class="directory">/var/spool/mail/user</filename> file in most cases.  It will
+create <filename>.lock</filename> files on your account when &kmail; is checking
+for new mail. Please note that this will only work if
+<application>procmail</application> is installed on your system.</para>
 
 <para><guilabel>Mutt dotlock</guilabel> and <guilabel>Mutt dotlock
 privileged</guilabel> will both use a small utility that comes with mutt
@@ -4044,16 +4038,7 @@ in the <filename class="directory">/var/spool/mail</filename> directory.
 run it in setgid mode. Please note that these options will only work if
 mutt is installed on your system.</para>
 
-<para><guilabel>Procmail lockfile</guilabel> will use a small utility that comes
-with <application>procmail</application> called <command>lockfile</command>. You
-can use this if your mail folder is in a directory where you have write
-permissions.  This will not work on your <filename
-class="directory">/var/spool/mail/user</filename> file in most cases.  It will
-create <filename>.lock</filename> files on your account when &kmail; is checking
-for new mail. Please note that this will only work if
-<application>procmail</application> is installed on your system.</para>
-
-<para><guilabel>FCNTL</guilabel>: the default option will use the
+<para><guilabel>FCNTL</guilabel> will use the
 <function>fcntl()</function> system call.</para>
 
 <para>If you don't want to use any locking, the <guilabel>none</guilabel> option
@@ -4071,6 +4056,7 @@ used.</para>
 account from the account list and click the <guilabel>Modify...</guilabel>
 button. This dialog contains the <guilabel>Delete mail from server</guilabel>
 setting which you must not select.</para></answer>
+<!-- fixme: update / libnk to pop3-filter -->
 </qandaentry>
 
 <qandaentry>
@@ -4079,9 +4065,8 @@ mails?</para></question>
 <answer><para>The text footer is called a signature file. Select
 <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>
-Look in the <guilabel>Identity</guilabel> tab for the <guilabel>Specify
-signature below</guilabel> field. Select the radio button and type your
-signature below.</para></answer> 
+Look in the <guilabel>Identity</guilabel> tab for the <guilabel>Signature</guilabel>
+tab and add your signature there.</para></answer> 
 </qandaentry>
 
 <qandaentry>
@@ -4091,7 +4076,7 @@ file?</para></question>
 have checked the option <guilabel>Automatically append signature</guilabel> in the
 <guilabel>Composer</guilabel> tab of the <guilabel>Configure &kmail;...</guilabel> dialog,
 but you have not specified a signature file in the <guilabel>Identity</guilabel>
-tab. You should either specify a signature file, select <guilabel>Use signature below</guilabel>,
+tab. You should either specify a signature file
 or deselect <guilabel>Automatically append signature</guilabel>.</para></answer>
 </qandaentry>
 
