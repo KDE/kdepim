@@ -447,7 +447,7 @@ bool OpenGroupware::doSave()
 
   Incidence::List deleted = deletedIncidences();
   for( it = deleted.begin(); it != deleted.end(); ++it ) {
-    kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     KURL url( mBaseUrl );
     url.setPath( (*it)->customProperty( "KCalResourceOpengroupware", "storagelocation" ) );
     mIncidencesForDeletion << url.url();
@@ -486,8 +486,8 @@ void OpenGroupware::uploadNextIncidence()
     else
       url.setPath( url.path() + "/Calendar/new.ics" );
     const QString inc = mIncidencesForUpload.front();
-    kdDebug(7000) << "Uploading to: " << inc << endl;
-    kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
+    //kdDebug(7000) << "Uploading to: " << inc << endl;
+    //kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
     mUploadJob = KIO::storedPut( inc.utf8(), url, -1, true, false, false );
     mUploadJob->addMetaData( "content-type", "text/calendar" );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
