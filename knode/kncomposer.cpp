@@ -145,27 +145,12 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //edit menu
   KStdAction::undo(this, SLOT(slotUndo()), actionCollection());
-#if 0
-  undo->setEnabled(false);
-  connect(v_iew->e_dit, SIGNAL(undoAvailable(bool)), undo, SLOT(setEnabled(bool)));
-#endif
   KStdAction::redo(this, SLOT(slotRedo()), actionCollection());
-#if 0
-  redo->setEnabled(false);
-  connect(v_iew->e_dit, SIGNAL(redoAvailable(bool)), redo, SLOT(setEnabled(bool)));
-#endif
 
   KStdAction::cut(this, SLOT(slotCut()), actionCollection());
 
-#if 0
-  connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), cut , SLOT(setEnabled(bool)));
-#endif
 
   KStdAction::copy(this, SLOT(slotCopy()), actionCollection());
-#if 0
-  copy->setEnabled(false);
-  connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), copy, SLOT(setEnabled(bool)));
-#endif
 
   KStdAction::paste(this, SLOT(slotPaste()), actionCollection());
 
@@ -290,6 +275,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
       v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
   } else
     v_iew->e_dit->setCursorPosition(0,0);
+
   v_iew->e_dit->setFocus();
 
   if (v_iew->s_ubject->text().length() == 0) {
@@ -329,11 +315,14 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 KNComposer::~KNComposer()
 {
   delete s_pellChecker;
+  delete mSpellingFilter;
   delete e_xternalEditor;  // this also kills the editor process if it's still running
+
   if(e_ditorTempfile) {
     e_ditorTempfile->unlink();
     delete e_ditorTempfile;
   }
+
   KConfig *conf = KGlobal::config();
   conf->setGroup("composerWindow_options");
   saveMainWindowSettings(conf);
