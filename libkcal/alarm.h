@@ -144,6 +144,8 @@ class Alarm : public CustomProperties
     Incidence *mParent;
 };
 
+bool operator==( const Alarm&, const Alarm& );
+
 }
 
 #endif

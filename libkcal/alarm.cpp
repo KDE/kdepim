@@ -35,6 +35,8 @@ Alarm::Alarm(Incidence *parent)
   mAlarmSnoozeTime = 5;
   mAlarmRepeatCount = 0;
   mAlarmEnabled = false;
+  mProgramAlarmFile = ""; // to make the comparison not fail
+  mAudioAlarmFile = ""; // to make the comparison not fail
 
   mHasTime = false;
 }
@@ -42,6 +44,22 @@ Alarm::Alarm(Incidence *parent)
 Alarm::~Alarm()
 {
 }
+
+bool KCal::operator==( const Alarm& a1, const Alarm& a2 )
+{
+    return ( a1.audioFile() == a2.audioFile() &&
+             a1.programFile() == a2.programFile() &&
+             a1.mailAttachments() == a2.mailAttachments() &&
+             a1.mailAddresses() == a2.mailAddresses() &&
+             a1.mailSubject() == a2.mailSubject() &&
+             a1.text() == a2.text() &&
+             a1.snoozeTime() == a2.snoozeTime() &&
+             a1.repeatCount() == a2.repeatCount() &&
+             a1.enabled() == a2.enabled() &&
+             a1.hasTime() == a2.hasTime() &&
+             a1.offset() == a2.offset() );
+}
+
 
 Alarm::Type Alarm::type() const
 {
