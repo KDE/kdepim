@@ -152,8 +152,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiC
   //popups
   u_rlPopup=new KPopupMenu();
   u_rlPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Link"), PUP_OPEN);
-  u_rlPopup->insertItem(SmallIcon("editcopy"),i18n("&Copy Link Location"), PUP_COPYURL);
-  u_rlPopup->insertItem(SmallIcon("bookmark_add"),i18n("Add to Bookmarks"), PUP_ADDBOOKMARKS);
+  u_rlPopup->insertItem(SmallIcon("editcopy"),i18n("&Copy Link Address"), PUP_COPYURL);
+  u_rlPopup->insertItem(SmallIcon("bookmark_add"),i18n("Bookmark This Link"), PUP_ADDBOOKMARKS);
 
   u_mailtoPopup=new KPopupMenu();
   u_mailtoPopup->insertItem(i18n("Add to Address Book"), PUP_ADDRESSBOOK);
