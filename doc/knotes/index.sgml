@@ -134,6 +134,12 @@ KNotes recognizes URL's. By double clicking on a URL knotes will open
 a kfm browser window and attempt to open the URL.
 <p>
 
+
+<sect1>Resizing Knotes<p>
+Press the <tt>ALT</tt> key  and the right mouse buttun at the same
+time, then move your mouse pointer to resize a KNote.
+<p>
+
 <sect1> Printing
 <p>
 KNotes supports printing. You can
@@ -316,7 +322,9 @@ KNotes honors the following key bindings.
 
 
 <sect>Questions and answers
-
+<sect1>How do you resize a knotes?<p>
+Press the <tt>ALT</tt> key  and the right mouse buttun at the same
+time, then move your mouse pointer.
 
 
 <p>
