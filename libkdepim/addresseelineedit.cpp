@@ -136,6 +136,8 @@ void AddresseeLineEdit::init()
 
 AddresseeLineEdit::~AddresseeLineEdit()
 {
+  if (  s_LDAPSearch && s_LDAPLineEdit == this )
+    stopLDAPLookup();
 }
 
 void AddresseeLineEdit::setFont( const QFont& font )
@@ -166,7 +168,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
 
   if ( e->isAccepted() ) {
     if ( m_useCompletion && s_LDAPTimer != NULL ) {
-      if ( *s_LDAPText != text() )
+      if ( *s_LDAPText != text() || s_LDAPLineEdit != this )
         stopLDAPLookup();
 
       *s_LDAPText = text();
@@ -284,20 +286,20 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       KURL u( *it );
       if ( u.protocol() == "mailto" ) {
         mailtoURL = true;
-      contents.append( (*it).path() );
-    }
+        contents.append( (*it).path() );
+      }
     }
     if ( mailtoURL ) {
-    setText( contents );
-    setEdited( true );
+      setText( contents );
+      setEdited( true );
       return;
     }
   }
 
-    if ( m_useCompletion )
-       m_smartPaste = true;
-    QLineEdit::dropEvent( e );
-    m_smartPaste = false;
+  if ( m_useCompletion )
+     m_smartPaste = true;
+  QLineEdit::dropEvent( e );
+  m_smartPaste = false;
 }
 
 void AddresseeLineEdit::cursorAtEnd()
