@@ -31,3 +31,12 @@ Error StdError::uploadError(const QString& file) {
 Error StdError::konnectorDoesNotExist( const QString& udi ) {
     return Error( Error::KonnectorNotExist, i18n("The Konnector with the UDI %1 does not exist").arg(udi) );
 }
+Error StdError::backupNotSupported() {
+    return Error( Error::BackupNotSupported, i18n("Backing up is currently not supported.") );
+}
+Error StdError::restoreNotSupported() {
+    return Error( Error::RestoreNotSupported, i18n("Restoring is currently not supported.") );
+}
+Error StdError::downloadNotSupported() {
+    return Error( Error::DownloadNotSupported, i18n("Downloading custom resources is currently not supported.") );
+}

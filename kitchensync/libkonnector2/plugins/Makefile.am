@@ -1,3 +1,3 @@
 #SUBDIRS = test
 
-SUBDIRS = qtopia
+SUBDIRS = qtopia agenda

@@ -14,6 +14,9 @@ namespace KSync {
         static Error downloadError(const QString& );
         static Error uploadError( const QString& );
         static Error konnectorDoesNotExist(const QString& udi );
+        static Error backupNotSupported();
+        static Error restoreNotSupported();
+        static Error downloadNotSupported();
     };
 }
 #endif

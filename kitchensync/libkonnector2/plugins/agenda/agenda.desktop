@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Konnector
+X-KDE-Library=libagendakonnector
+
+Name=Agenda Vr3 Konnector
+Group= PDA
+Vendor = KDE Team
+Id=AgendaVr3
