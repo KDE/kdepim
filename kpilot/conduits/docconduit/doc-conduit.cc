@@ -250,7 +250,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 	if (sinfo.direction==eSyncDelete) {
 		if (!sinfo.docfilename.isEmpty()) {
 			if (!QFile::remove(sinfo.docfilename)) {
-				kdWarning()<<i18n("Unable to delete the text file \"%1\" on the PC").arg(sinfo.docfilename)<<endl;
+				kdWarning()<<"Unable to delete the text file "<<sinfo.docfilename<<" on the PC"<<endl;
 			}
 			QString bmkfilename = sinfo.docfilename;
 			if (bmkfilename.endsWith(CSL1(".txt"))){
@@ -268,8 +268,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 				QString::fromLatin1(sinfo.dbinfo.name), false);
 			if (database) {
 				if ( database->deleteDatabase() !=0 ) {
-					kdWarning()<<i18n("Unable to delete database \"%1\" on the PC")
-						.arg(QString::fromLatin1(sinfo.dbinfo.name))<<endl;
+					kdWarning()<<"Unable to delete database "<<sinfo.dbinfo.name<<" on the PC"<<endl;
 				}
 				KPILOT_DELETE(database);
 			}
@@ -278,8 +277,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), 
 				QString::fromLatin1(sinfo.dbinfo.name));
 			if ( database->deleteDatabase() !=0 ) {
-				kdWarning()<<i18n("Unable to delete database \"%1\" from the handheld")
-					.arg(QString::fromLatin1(sinfo.dbinfo.name))<<endl;
+					kdWarning()<<"Unable to delete database "<<sinfo.dbinfo.name<<" from the handheld"<<endl;
 			}
 			KPILOT_DELETE(database);
 		}

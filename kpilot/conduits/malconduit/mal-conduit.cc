@@ -120,18 +120,18 @@ void MALConduit::readConfig()
 	
 	// Proxy settings
 	eProxyType=fConfig->readNumEntry(MALConduitFactory::proxyType(), 0);
-	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), "");
+	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), QString::null);
 	
 	fProxyPort=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
-	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser(), "");
-	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword(), "");
+	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser(), QString::null);
+	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword(), QString::null);
 
 	// MAL Server settings (not yet possible!!!)
 	fMALServer=fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com");
 	fMALPort=fConfig->readNumEntry(MALConduitFactory::malPort(), 0);
 	
-	fMALUser=fConfig->readEntry(MALConduitFactory::malUser(), "");
-	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword(), "");
+	fMALUser=fConfig->readEntry(MALConduitFactory::malUser(), QString::null);
+	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword(), QString::null);
 }
 
 
@@ -202,7 +202,7 @@ bool MALConduit::skip()
 		case eProxyHTTP:
 			if (fProxyServer.isEmpty()) break;
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString(""))<<"set"<<endl;
+			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString())<<"set"<<endl;
 #endif
 			setHttpProxy(fProxyServer.latin1());
 			if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
@@ -216,7 +216,7 @@ bool MALConduit::skip()
 			break;
 		case eProxySOCKS:
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString("") )<<"set"<<endl;
+			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
 			setSocksProxy( fProxyServer.latin1() );
 			if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );

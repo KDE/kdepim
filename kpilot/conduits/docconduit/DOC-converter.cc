@@ -292,7 +292,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 
 	QTextStream bmkstream(&bmkfile);
 	QString line;
-	while ( !(line=bmkstream.readLine()).isEmpty() && (!line.isNull()) ) {
+	while ( !(line=bmkstream.readLine()).isEmpty() ) {
 		if (!line.isEmpty() && !line.startsWith(CSL1("#")) ) {
 			QStringList bmkinfo=QStringList::split(CSL1(","), line);
 			int fieldnr=bmkinfo.count();

@@ -91,7 +91,7 @@ void JPilotProxyWidgetSetup::slotApply() {
 void JPilotProxyWidgetSetup::slotAddConduit() {
 	FUNCTIONSETUP;
 	QString fn=KFileDialog::getOpenFileName(0, i18n("*.so|JPilot plugins\n*.*|All files"), this);
-	if(fn.isNull()) return;
+	if(fn.isEmpty()) return;
 	// TODO: check of the plugin has already been loaded...
 	if (	addConduit(fn, false)) {
 		KMessageBox::sorry(this, i18n("Loading the JPilot plugin failed"));
@@ -149,7 +149,7 @@ void JPilotProxyWidgetSetup::slotBrowse() {
 	FUNCTIONSETUP;
 	QString oldname=fConfigWidget->DirEdit->text();
 	QString fn=KFileDialog::getExistingDirectory(oldname, this, i18n("Change Plugin Directory"));
-	if(fn.isNull()) return;
+	if(fn.isEmpty()) return;
 	fConfigWidget->DirEdit->setText(fn);
 }
 
@@ -165,7 +165,7 @@ void JPilotProxyWidgetSetup::slotSelectPluginPath() {
 void JPilotProxyWidgetSetup::slotAddPluginPath() {
 	FUNCTIONSETUP;
 	QString fn=KFileDialog::getExistingDirectory(QString::null, this, i18n("Add Plugin Directory"));
-	if (!fn.isNull()) {
+	if (!fn.isEmpty()) {
 		fConfigWidget->ListPluginPathes->insertItem(fn);
 		fConfigWidget->ListPluginPathes->setCurrentItem(-1);
 	}

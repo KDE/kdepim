@@ -70,7 +70,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 //			resolutionTable->setColumnStretchable(i, true);
 		}
 		QStringList headers;
-		headers<<i18n("Database name")<<i18n("Resolution")<<CSL1("");
+		headers<<i18n("Database name")<<i18n("Resolution")<<QString();
 		resolutionTable->setColumnLabels(headers);
 		resolutionTable->setSorting(false);
 		
