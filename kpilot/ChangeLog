@@ -33,6 +33,17 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for January 30th, 2003
 ===============================================  
 
+2003-1-30  Adriaan de Groot
+* Removing local8bit() calls in the code. They're not wanted.
+* Marked conduitSetup.{h,cc} as deprecated and removed from build.
+
+
+2003-1-26  Adriaan de Groot
+* Ugh. Still sick with the flu. Hacking just a little, though. 
+  The Kroupware stuff in HEAD needs to be moved. Ugh, it's ugly.
+  It needs to become a conduit of its own, but it's hard to tell
+  just what it's doing.
+
 2003-1-24  Adriaan de Groot
 * Received a patch from David Mott that removes lots of the Log:
   tags from the KPilot source (mostly in kpilot/). Finished the
@@ -49,7 +60,7 @@ KPilot Developer's notes for January 30th, 2003
   
   
 2003-1-18  Reinhold Kainhofer
-* Removed several $Log: ... tags from the conduits I maintain
+* Removed several Log: ... tags from the conduits I maintain
 * started implementing the custom fields sync of the addressbook conduit. 
   I still have problems converting a string to a QDate using a custom format
 * Cleanup of includes in my conduits.
