@@ -29,7 +29,7 @@
 #include <kparts/browserextension.h>
 #include <kparts/factory.h>
 #include <kparts/event.h>
-#include <libkdepim/part.h>
+#include <kparts/part.h>
 
 #include <qwidget.h>
 
@@ -39,7 +39,7 @@ class KAboutData;
 class ActionManager;
 class KNMainWidget;
 
-class KNodePart: public KPIM::Part
+class KNodePart: public KParts::ReadOnlyPart
 {
     Q_OBJECT
   public:
