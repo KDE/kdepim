@@ -201,8 +201,8 @@ KNodeApp::KNodeApp()
   KConfig *conf = KGlobal::config();
   conf->setGroup("mainWindow_options");
   applyMainWindowSettings(conf);
-  actShowToolbar->setChecked(!statusBar()->isHidden());
-  actShowStatusbar->setChecked(!toolBar()->isHidden());
+  actShowToolbar->setChecked(!toolBar()->isHidden());
+  actShowStatusbar->setChecked(!statusBar()->isHidden());
 
   // set the keyboard focus indicator on the first item in the collectionView
   if(view->collectionView->firstChild())
