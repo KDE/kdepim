@@ -35,7 +35,7 @@
 		<Action name="download_certificate"/>
 	</Menu>
 	<Menu name="crlMenu">
-		<text>C&RLs</text>
+		<text>C&amp;RLs</text>
 		<Action name="crl_clear_crl_cache"/>
 	</Menu>
 	<Menu name="tools">
