@@ -78,7 +78,7 @@ binary-arch: build
 	dh_installchangelogs -pkdepim-dev
 	dh_installchangelogs -pkandy
 	dh_strip -a
-	dh_compress -a -X.docbook
+	dh_compress -a -X.docbook -X.css -X-license -X.dcl -X.bz2
 	dh_fixperms -a
 	dh_makeshlibs -a -V
 	dh_perl -a
