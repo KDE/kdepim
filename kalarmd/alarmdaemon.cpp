@@ -414,7 +414,8 @@ void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& al
   alarmtimes.clear();
   const Alarm* alarm;
   QDateTime now = QDateTime::currentDateTime();
-  for (QPtrListIterator<Alarm> it(event.alarms());  (alarm = it.current()) != 0;  ++it) {
+  QPtrList<Alarm> alarms = event.alarms();
+  for (QPtrListIterator<Alarm> it(alarms);  (alarm = it.current()) != 0;  ++it) {
     alarmtimes.append((alarm->enabled()  &&  alarm->time() <= now) ? alarm->time() : QDateTime());
   }
 }
