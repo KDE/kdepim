@@ -109,7 +109,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
 
       tmp = get( line, "name" ).stripWhiteSpace();
       if ( !tmp.isEmpty() )
-        a->setFamilyName( tmp );
+        a->setNameFromString( tmp );
 
       tmp = get( line, "address" ).stripWhiteSpace();
       if ( !tmp.isEmpty() ) {
