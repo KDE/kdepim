@@ -87,8 +87,10 @@ MALConduit::MALConduit(KPilotDeviceLink * o,
 	ConduitAction(o, n, a)
 {
 	FUNCTIONSETUP;
+#ifdef LIBMAL20
 	register_printStatusHook(malconduit_logf);
 	register_printErrorHook(malconduit_logf);
+#endif
 	conduitInstance=this;
 #ifdef DEBUG
 	DEBUGCONDUIT<<MAL_conduit_id<<endl;
@@ -196,6 +198,14 @@ bool MALConduit::skip()
 	}
 	
 	
+	// Now initiate the sync.
+	PalmSyncInfo* pInfo=syncInfoNew();
+	if (!pInfo) {
+		kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
+		emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
+		return false;
+	}
+
 	// Set all proxy settings
 	switch (eProxyType) 
 	{
@@ -204,38 +214,68 @@ bool MALConduit::skip()
 #ifdef DEBUG
 			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString())<<"set"<<endl;
 #endif
+#ifdef LIBMAL20
 			setHttpProxy(const_cast<char *>(fProxyServer.latin1()));
 			if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
 			else setHttpProxyPort(80);
+#else
+			pInfo->httpProxy = new char[ fProxyServer.length() + 1 ];
+			strncpy( pInfo->httpProxy, fProxyServer.latin1(), fProxyServer.length() );
+			if (fProxyPort>0 && fProxyPort<65536) pInfo->httpProxyPort = fProxyPort;
+			else pInfo->httpProxyPort = 80;
+#endif
 			
 			if (!fProxyUser.isEmpty()) 
 			{
+#ifdef LIBMAL20
 				setProxyUsername( const_cast<char *>(fProxyUser.latin1()) );
 				if (!fProxyPassword.isEmpty()) setProxyPassword( const_cast<char *>(fProxyPassword.latin1()) );
+#else
+				pInfo->proxyUsername = new char[ fProxyUser.length() + 1 ];
+				strncpy( pInfo->proxyUsername, fProxyUser.latin1(), fProxyUser.length() );
+//				pInfo->proxyUsername = fProxyUser.latin1();
+				if (!fProxyPassword.isEmpty()) {
+//						pInfo->proxyPassword = fProxyPassword.latin1();
+					pInfo->proxyPassword = new char[ fProxyPassword.length() + 1 ];
+					strncpy( pInfo->proxyPassword, fProxyPassword.latin1(), fProxyPassword.length() );
+				}
+#endif
 			}
 			break;
 		case eProxySOCKS:
 #ifdef DEBUG
 			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
+#ifdef LIBMAL20
 			setSocksProxy( const_cast<char *>(fProxyServer.latin1()) );
 			if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );
 			else setSocksProxyPort(1080);
+#else
+//			pInfo->socksProxy = fProxyServer.latin1();
+			pInfo->socksProxy = new char[ fProxyServer.length() + 1 ];
+			strncpy( pInfo->socksProxy, fProxyServer.latin1(), fProxyServer.length() );
+			if (fProxyPort>0 && fProxyPort<65536) pInfo->socksProxyPort = fProxyPort;
+			else pInfo->socksProxyPort = 1080;
+#endif
 			break; 
 		default:
 			break;
 	}
 
-
-	// Now initiate the sync.
-	PalmSyncInfo* pInfo=syncInfoNew();
-	if (!pInfo) {
-		kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
-		emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
-		return false;
-	}
+#ifdef LIBMAL20
 	malsync( pilotSocket(), pInfo);
+#else
+// TODO:
+//	register_printStatusHook(malconduit_logf);
+//	register_printErrorHook(malconduit_logf);
+
+	pInfo->pilot_rHandle = pilotSocket();
+	delete[] pInfo->httpProxy;
+	delete[] pInfo->proxyUsername;
+	delete[] pInfo->proxyPassword;
+	delete[] pInfo->socksProxy;
 	syncInfoFree(pInfo);
+#endif
 
 	saveConfig();
 	emit syncDone(this);
