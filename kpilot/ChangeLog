@@ -1,4 +1,13 @@
-KPilot Developer's notes for june 30th, 2002
+TODO
+
+* Really need to do something about all the disabled options in the
+  config dialog. Some of them might make sense.
+
+
+KPilot Developer's notes for july 7th, 2002
+===========================================
+
+KPilot Developer's notes for june 24th, 2002
 ============================================
 
 Moving on past 3.0.2 and trying to sort things out.
@@ -58,7 +67,7 @@ KPilot Developer's notes for may 25th 2002
 * Added a FlagLocal to plugin.h with the intent that you can
   then try to sync two _local_ databases -- so you don't even
   need a Pilot for testing.
-* The KNotes conduit now tries to do something sensible with 
+* The KNotes conduit now tries to do something sensible with
   getting notes back to the Pilot, but fails.
 
 KPilot Developer's notes for may 18th 2002
@@ -72,11 +81,6 @@ KPilot Developer's notes for may 18th 2002
 * Removed the device type combobox, since it's not needed.
 * Updated the what's this text for the speed combobox.
 * Removed the "alpha" warning from the log widget.
-
-TODO
-
-* Really need to do something about all the disabled options in the
-  config dialog. Some of them might make sense.
 
 
 KPilot Developer's notes for april 28st 2002
