@@ -140,8 +140,6 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
     // This is an initial dialog
     _name->setFocus();
   }
-  origTotal = 0;
-  origSession = 0;
 
   slotRelativePressed();
 
