@@ -24,6 +24,7 @@
 #include <qwidget.h>
 
 class KListView;
+class QComboBox;
 
 namespace KCal {
 
@@ -48,6 +49,7 @@ class FolderConfig : public QWidget
 
   private:
     KListView *mFolderList;
+    QComboBox *mWriteCombo;
 
     FolderLister *mFolderLister;
 };

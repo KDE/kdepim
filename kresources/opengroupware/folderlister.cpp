@@ -45,6 +45,11 @@ void FolderLister::setFolders( const FolderLister::Entry::List &folders )
   mFolders = folders;
 }
 
+void FolderLister::setWriteDestinationId( const QString &id )
+{
+  mWriteDestinationId = id;
+}
+
 void FolderLister::readConfig( const KConfig *config )
 {
   kdDebug() << "FolderLister::readConfig()" << endl;
@@ -66,6 +71,8 @@ void FolderLister::readConfig( const KConfig *config )
     
     ++it2;    
   }
+
+  mWriteDestinationId = config->readEntry( "WriteDestinationId" );
 }
 
 void FolderLister::writeConfig( KConfig *config )
@@ -84,6 +91,8 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "FolderIds", ids );
   config->writeEntry( "FolderNames", names );
   config->writeEntry( "ActiveFolders", active );
+
+  config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
 void FolderLister::retrieveFolders()

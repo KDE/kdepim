@@ -31,6 +31,9 @@
 #include <qlayout.h>
 #include <qgroupbox.h>
 #include <qpushbutton.h>
+#include <qcombobox.h>
+#include <qhbox.h>
+#include <qlabel.h>
 
 using namespace KCal;
 
@@ -68,6 +71,13 @@ FolderConfig::FolderConfig( QWidget *parent )
   
   mFolderList = new KListView( topBox );
   mFolderList->addColumn( i18n("Folder") );
+  mFolderList->setFullWidth( true );
+
+  QHBox *writeBox = new QHBox( topBox );
+
+  new QLabel( i18n("Write to:"), writeBox );
+  
+  mWriteCombo = new QComboBox( writeBox );
 }
 
 FolderConfig::~FolderConfig()
@@ -91,10 +101,16 @@ void FolderConfig::updateFolderList()
 {
   mFolderList->clear();
 
+  QStringList write;
+
   FolderLister::Entry::List folders = mFolderLister->folders();
   FolderLister::Entry::List::ConstIterator it;
   for( it = folders.begin(); it != folders.end(); ++it ) {
     new FolderItem( mFolderList, (*it) );
+    mWriteCombo->insertItem( (*it).name );
+    if ( mFolderLister->writeDestinationId() == (*it).id ) {
+      mWriteCombo->setCurrentItem( mWriteCombo->count() - 1 );
+    }
   }
 }
 
@@ -110,10 +126,16 @@ void FolderConfig::saveSettings()
     FolderLister::Entry folder = item->folder();
     folder.active = item->isOn();
     folders.append( folder );
+
+    if ( folder.name == mWriteCombo->currentText() ) {
+      mFolderLister->setWriteDestinationId( folder.id );
+    }
+
     ++it;
   }
 
   mFolderLister->setFolders( folders );
+
 }
 
 #include "folderconfig.moc"

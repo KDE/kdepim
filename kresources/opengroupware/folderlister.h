@@ -58,6 +58,9 @@ class FolderLister : public QObject
   
     void setFolders( const Entry::List & );
     Entry::List folders() const { return mFolders; }
+
+    void setWriteDestinationId( const QString & );
+    QString writeDestinationId() const { return mWriteDestinationId; }
         
     void setUrl( const KURL & );
     KURL url() const { return mUrl; }
@@ -74,6 +77,7 @@ class FolderLister : public QObject
   private:
     KURL mUrl;
     Entry::List mFolders;
+    QString mWriteDestinationId;
     KIO::DavJob *mListEventsJob;
 };
 
