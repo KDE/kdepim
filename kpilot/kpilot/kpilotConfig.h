@@ -95,6 +95,7 @@ public:
 	BoolProperty(SyncWithKMail)
 
 	/* Viewers tab */
+	BoolProperty(InternalEditors)
 	BoolProperty(ShowSecrets)
 	// Address widget stuff goes in a different group
 	KPilotConfigSettings &setAddressGroup();
@@ -119,6 +120,18 @@ public:
 
 	QStringList getInstalledConduits();
 	void setInstalledConduits(const QStringList &);
+
+	QStringList getDirtyDatabases();
+	void setDirtyDatabases(const QStringList &);
+	void addDirtyDatabase(QString db);
+
+	QStringList getAppBlockChangedDatabases();
+	void setAppBlockChangedDatabases(const QStringList &);
+	void addAppBlockChangedDatabase(QString db);
+
+	QStringList getFlagsChangedDatabases();
+	void setFlagsChangedDatabases(const QStringList &);
+	void addFlagsChangedDatabase(QString db);
 
 	KPilotConfigSettings &setDatabaseGroup();
 	void setDatabaseConduit(const QString &database,const QString &conduit);

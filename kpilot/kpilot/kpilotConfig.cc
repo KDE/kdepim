@@ -298,6 +298,7 @@ BoolProperty_(SyncFiles, "SyncFiles", true)
 BoolProperty_(SyncWithKMail, "SyncWithKMail", false)
 BoolProperty_(ShowSecrets, "ShowSecrets", false)
 BoolProperty_(UseKeyField, "UseKeyField", false)
+BoolProperty_(InternalEditors, "InternalEditorsWritable", true)
 
 
 #define StringProperty_(a,key,defl) \
@@ -349,6 +350,72 @@ void KPilotConfigSettings::setInstalledConduits(const QStringList & l)
 	KConfigGroupSaver cgs(this,"Conduit Names");
 	writeEntry("InstalledConduits", l);
 }
+
+QStringList KPilotConfigSettings::getDirtyDatabases()
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Internal Editors");
+	return readListEntry("Changed Databases");
+}
+
+void KPilotConfigSettings::setDirtyDatabases(const QStringList &l)
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Internal Editors");
+	writeEntry("Changed Databases", l);
+}
+
+void KPilotConfigSettings::addDirtyDatabase(QString db)
+{
+	QStringList l(getDirtyDatabases());
+	l.append(db);
+	setDirtyDatabases(l);
+}
+
+
+QStringList KPilotConfigSettings::getAppBlockChangedDatabases()
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Internal Editors");
+	return readListEntry("AppBlock Changed");
+}
+
+void KPilotConfigSettings::setAppBlockChangedDatabases(const QStringList &l)
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Internal Editors");
+	writeEntry("AppBlock Changed", l);
+}
+
+void KPilotConfigSettings::addAppBlockChangedDatabase(QString db)
+{
+	QStringList l(getAppBlockChangedDatabases());
+	l.append(db);
+	setAppBlockChangedDatabases(l);
+}
+
+
+QStringList KPilotConfigSettings::getFlagsChangedDatabases()
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Internal Editors");
+	return readListEntry("Flags Changed");
+}
+
+void KPilotConfigSettings::setFlagsChangedDatabases(const QStringList &l)
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Internal Editors");
+	writeEntry("Flags Changed", l);
+}
+
+void KPilotConfigSettings::addFlagsChangedDatabase(QString db)
+{
+	QStringList l(getFlagsChangedDatabases());
+	l.append(db);
+	setFlagsChangedDatabases(l);
+}
+
 
 void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 	const QString & conduit)
