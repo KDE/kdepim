@@ -97,6 +97,8 @@ rc_DATA = kpilotui.rc
 update_DATA = kpilot.upd
 updatedir = $(kde_datadir)/kconf_update
 
+include ../../admin/Doxyfile.am
+
 ### Some additional dependencies:
 
 kpilotConfigDialog.lo : kpilotSettings.h
