@@ -190,7 +190,7 @@ bool KNGroupListData::writeOut()
   } else {
     kdWarning(5003) << "unable to open " << f.name() << " reason " << f.status() << endl;
     return false;
-  } 
+  }
 }
 
 
@@ -208,7 +208,7 @@ void KNGroupListData::merge(QSortedList<KNGroupInfo>* newGroups)
     } else
       subscribed = false;
     groups->append(new KNGroupInfo(i->name,i->description,true,subscribed,i->status));
-  }   
+  }
 
   groups->sort();
 }
@@ -251,15 +251,15 @@ void KNGroupManager::syncGroups()
 
 
 void KNGroupManager::loadGroups(KNNntpAccount *a)
-{   
+{
   KNGroup *group;
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   QString dir(a->path());
   if (dir.isNull())
     return;
-  QDir d(dir);  
-    
+  QDir d(dir);
+
   QStringList entries(d.entryList("*.grpinfo"));
   for(QStringList::Iterator it=entries.begin(); it != entries.end(); it++) {
     group=new KNGroup(a);
@@ -272,7 +272,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
     } else {
       delete group;
       kdError(5003) << "Unable to load " << (*it) << "!" << endl;
-    } 
+    }
   }
 }
 
@@ -464,7 +464,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
   if(!g) return false;
 
   if((g->isLocked()) || (g->lockedArticles()>0)) {
-    KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe from it at the moment.")).arg(g->groupname()));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe from it at the moment.").arg(g->groupname()));
     return false;
   }
 
@@ -649,10 +649,10 @@ void KNGroupManager::processJob(KNJobData *j)
           KMessageBox::error(knGlobals.topWidget, j->errorString());
         }
       }
-    }         
+    }
     if(group==c_urrentGroup)
       a_rticleMgr->showHdrs(false);
-    
+
     delete j;
   }
 }
@@ -663,7 +663,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
 {
   KNGroupListData *d = new KNGroupListData();
   d->path = a->path();
-      
+
   if(!QFileInfo(d->path+"groups").exists()) {
     if (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("You don't have any groups for this account.\nDo you want to fetch a current list?"))) {
       delete d;
@@ -675,7 +675,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
       return;
     }
   }
-      
+
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
 
@@ -687,7 +687,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
 void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
 {
   KNGroupListData *d = new KNGroupListData();
-  d->path = a->path();  
+  d->path = a->path();
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
   d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.cfgManager->postNewsTechnical()->charset());
@@ -700,12 +700,12 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
 void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
 {
   KNGroupListData *d = new KNGroupListData();
-  d->path = a->path();  
+  d->path = a->path();
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
   d->fetchSince = date;
   d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.cfgManager->postNewsTechnical()->charset());
-  
+
   emitJob( new KNJobData(KNJobData::JTCheckNewGroups, this, a, d) );
 }
 
