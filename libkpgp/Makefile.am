@@ -1,5 +1,7 @@
 SUBDIRS = pics
 
+INCLUDES = $(all_includes)
+
 lib_LTLIBRARIES = libkpgp.la
 
 libkpgp_la_SOURCES = \
