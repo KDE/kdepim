@@ -44,7 +44,7 @@ Event::~Event()
 {
 }
 
-Event *Event::clone()
+Incidence *Event::clone()
 {
   kdDebug() << "Event::clone()" << endl;
   return new Event(*this);

@@ -53,7 +53,7 @@ Todo::~Todo()
 {
 }
 
-Todo *Todo::clone()
+Incidence *Todo::clone()
 {
   return new Todo(*this);
 }

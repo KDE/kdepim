@@ -37,7 +37,7 @@ class Journal : public Incidence
     Journal();
     ~Journal();
     
-    Journal *clone();
+    Incidence *clone();
 };
 
 }
