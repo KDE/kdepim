@@ -801,9 +801,10 @@ char* icalvalue_date_as_ical_string(icalvalue* value) {
 void print_datetime_to_string(char* str,  struct icaltimetype *data)
 {
     print_date_to_string(str,data);
-    strcat(str,"T");
-    print_time_to_string(str,data);
-
+    if ( !data->is_date ) {
+      strcat(str,"T");
+      print_time_to_string(str,data);
+    }
 }
 
 const char* icalvalue_datetime_as_ical_string(icalvalue* value) {
