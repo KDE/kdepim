@@ -49,7 +49,7 @@ class EmpathMessageStructureWidget : public QListView
 
         ~EmpathMessageStructureWidget();
         
-        void setMessage(RMM::RBodyPart & m);
+        void setMessage(RMM::RBodyPart m);
         
     protected slots:
         
@@ -60,11 +60,11 @@ class EmpathMessageStructureWidget : public QListView
 
     signals:
         
-        void partChanged(RMM::RBodyPart *);
+        void partChanged(RMM::RBodyPart);
         
     private:
         
-        void _addChildren(RMM::RBodyPart *, QListViewItem *);
+        void _addChildren(RMM::RBodyPart, QListViewItem *);
         
         QPopupMenu popup_;
 

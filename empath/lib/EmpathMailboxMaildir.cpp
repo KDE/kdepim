@@ -84,16 +84,12 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
                     return;
                 }
                 
-                RMM::RMessage * message =
-                    m->message(jobInfo.from().messageID());
+                RMM::RMessage message = m->message(jobInfo.from().messageID());
 
-                if (message != 0) {
-                    empathDebug("Caching message with jobinfo " + jobInfo.xinfo());
-                    empath->cacheMessage(
-                        jobInfo.from(), message, jobInfo.xinfo());
-                }
+                if (!!message)
+                    empath->cacheMessage(jobInfo.from(), message);
                 
-                jobInfo.done(message != 0);
+                jobInfo.done(!!message);
             }
             break;
             
@@ -189,19 +185,13 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
                     _recursiveRemove(path_ + "/" + jobInfo.from().folderPath());
 
                 if (!ok) {
+                    empathDebug("!ok");
                     jobInfo.done(false);
                     return;
                 }
 
-                folderList_.clear();
-                boxList_.clear();
-                
-                _recursiveReadFolders(path_);
-                _setupDefaultFolders();
-                
-                for (EmpathMaildirListIterator it(boxList_); it.current(); ++it)
-                    it.current()->init();
-                
+                loadConfig();
+
                 jobInfo.done(true);
             }
             break;
@@ -414,6 +404,8 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         f->setContainer(true);
     else
         boxList_.append(new EmpathMaildir(path_, url));
+
+    kapp->processEvents();
 }
 
     void
@@ -470,10 +462,18 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
     it = l.begin();
     
     for (; it != l.end(); ++it)
-        if (!QFile::remove(dir + "/" + *it))
+        if (!QFile::remove(dir + "/" + *it)) {
+            empathDebug("Couldn't remove " + dir + "/" + *it);
             return false;
+        }
     
-    return d.rmdir(dir);
+    bool removedDirOK = d.rmdir(dir);
+
+    if (!removedDirOK) {
+        empathDebug("Couldn't remove " + dir);
+    }
+
+    return removedDirOK;
 }
 
 // vim:ts=4:sw=4:tw=78

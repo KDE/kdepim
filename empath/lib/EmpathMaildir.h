@@ -75,9 +75,9 @@ class EmpathMaildir : public QObject
         
         QMap<QString, bool> mark(const QStringList &, RMM::MessageStatus);
         
-        QString writeMessage(RMM::RMessage &);
+        QString writeMessage(RMM::RMessage);
         
-        RMM::RMessage * message (const QString &);
+        RMM::RMessage message(const QString &);
         
         QMap<QString, bool> removeMessage (const QStringList &);
         
@@ -91,7 +91,7 @@ class EmpathMaildir : public QObject
         
         bool        _removeMessage(const QString & id);
         bool        _mark(const QString & id, RMM::MessageStatus msgStat);
-        QString     _write(RMM::RMessage &);
+        QString     _write(RMM::RMessage);
         QCString    _messageData(const QString &, bool isFullName = false);
         void        _markNewMailAsSeen();
         void        _markAsSeen(const QString &);

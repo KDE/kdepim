@@ -72,6 +72,8 @@ class EmpathFolderWidget : public EmpathListView
         void s_linkChanged(QListViewItem *);
         void s_startDrag(const QList<QListViewItem> &);
         
+        void s_jobFinished(EmpathJobInfo);
+
     signals:
 
         void showFolder(const EmpathURL & url);

@@ -27,7 +27,8 @@
 #ifndef RMM_BODY_PART_H
 #define RMM_BODY_PART_H
 
-#include <qstring.h>
+#include <qcolor.h>
+#include <qcstring.h>
 #include <qlist.h>
 
 #include <RMM_Entity.h>
@@ -55,7 +56,9 @@ class RBodyPart : public REntity {
         
         REnvelope &         envelope();
         void                setEnvelope(REnvelope);
-        QList<RBodyPart> &  body();
+        QList<RBodyPart> body();
+        RBodyPart       part(unsigned int);
+        unsigned int    partCount();
         
         void            setBody(QList<RBodyPart> &);
         void            setData(const QCString &);
@@ -67,6 +70,9 @@ class RBodyPart : public REntity {
         void            setMimeType(const QCString &);
         void            setMimeSubType(RMM::MimeSubType);
         void            setMimeSubType(const QCString &);
+        
+        QCString        charset();
+        void            setCharset(const QCString &);
 
         QCString        description();
         RMM::DispType   disposition();
@@ -79,13 +85,14 @@ class RBodyPart : public REntity {
         PartType        type();
         RBodyPart       decode();
 
+        QCString        asXML(QColor q1, QColor q2);
+
     protected:
         
         void                _update();
 
         REnvelope           envelope_;
         QCString            data_;
-        QList<RBodyPart>    body_;
         RMM::CteType        encoding_;
         RMM::MimeType       mimeType_;
         RMM::MimeSubType    mimeSubType_;
@@ -95,10 +102,10 @@ class RBodyPart : public REntity {
         PartType            type_;
         QCString            preamble_;
         QCString            epilogue_;
+        QCString            charset_;
+        
+        QList<RBodyPart>    body_;
 };
-
-typedef QList<RBodyPart>            RBodyPartList;
-typedef QListIterator<RBodyPart>    RBodyPartListIterator;
 
 }
 

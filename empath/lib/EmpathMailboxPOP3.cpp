@@ -270,9 +270,8 @@ EmpathMailboxPOP3::s_jobFinished(int id)
             {
                 QCString data = commandQueue_.head()->data();
                 EmpathURL from = commandQueue_.head()->jobInfo().from();
-                QString xinfo = commandQueue_.head()->jobInfo().xinfo();
 
-                empath->cacheMessage(from, new RMM::RMessage(data), xinfo);
+                empath->cacheMessage(from, RMM::RMessage(data));
 
                 commandQueue_.head()->jobInfo().done(true);
             }

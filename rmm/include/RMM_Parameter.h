@@ -27,10 +27,9 @@
 #ifndef RMM_PARAMETER_H
 #define RMM_PARAMETER_H
 
-#include <qstring.h>
+#include <qcstring.h>
 
 #include <RMM_MessageComponent.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 

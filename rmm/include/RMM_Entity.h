@@ -20,16 +20,11 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "RMM_Entity.h"
-#endif
-
 #ifndef RMM_ENTITY_H
 #define RMM_ENTITY_H
 
-#include <qstring.h>
+#include <qcstring.h>
 #include <RMM_MessageComponent.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 
@@ -46,11 +41,9 @@ class REntity : public RMessageComponent {
         REntity() : RMessageComponent() {}
         REntity(const REntity & e)  : RMessageComponent(e) {}
         REntity(const QCString & s) : RMessageComponent(s) {}
-
-        virtual ~REntity();
+        virtual ~REntity() {}
 
         virtual const char * className() const { return "REntity"; }
-    
 };
 
 }

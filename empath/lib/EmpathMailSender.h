@@ -68,7 +68,7 @@ class EmpathMailSender : public QObject
         /**
          * Queue up a message for sending.
          */
-        void queue(RMM::RMessage &);
+        void queue(RMM::RMessage);
 
         /**
          * Send one message.
@@ -77,12 +77,12 @@ class EmpathMailSender : public QObject
          *
          * Message will be returned to user on failure. FIXME: How ?
          */
-        void send(RMM::RMessage &);
+        void send(RMM::RMessage);
 
         /**
          * Send one message.
          */
-        virtual void sendOne(RMM::RMessage & message, const QString & id) = 0L;
+        virtual void sendOne(RMM::RMessage message, const QString & id) = 0L;
 
         /**
          * Kick off a send using all queued messages.
@@ -109,7 +109,7 @@ class EmpathMailSender : public QObject
     private:
         
         void _startNextSend();
-        void _emergencyBackup(RMM::RMessage &);
+        void _emergencyBackup(RMM::RMessage);
         void _addPendingSend(const QString & id);
 
         QQueue<QString> sendQueue_;

@@ -74,9 +74,10 @@ EmpathMaildir::~EmpathMaildir()
     void
 EmpathMaildir::init()
 {
-    _checkDirs();
-    _clearTmp();
-    sync();
+    if (_checkDirs()) {
+        _clearTmp();
+        sync();
+    }
 }
     void
 EmpathMaildir::sync(bool force)
@@ -122,24 +123,22 @@ EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
 }
 
     QString
-EmpathMaildir::writeMessage(RMM::RMessage & m)
+EmpathMaildir::writeMessage(RMM::RMessage m)
 {
     return _write(m);
 }
 
-    RMM::RMessage *
+    RMM::RMessage
 EmpathMaildir::message(const QString & id)
 {
     QCString s = _messageData(id);
     
     if (s.isEmpty()) {
         empathDebug("Couldn't load data for \"" + id + "\"");
-        return 0;
+        return RMM::RMessage();
     }
     
-    RMM::RMessage * m = new RMM::RMessage(s);
-    CHECK_PTR(m);
-    return m;
+    return RMM::RMessage(s);
 }
 
     QMap<QString, bool>
@@ -371,19 +370,24 @@ EmpathMaildir::_clearTmp()
         QString::null,
         QDir::Unsorted,
         QDir::Files | QDir::NoSymLinks | QDir::Writable);
-    
-    QFileInfoListIterator it(*(tmpDir.entryInfoList()));
-    
-    for (; it.current(); ++it) {
+
+    const QFileInfoList * infoList = tmpDir.entryInfoList();
+
+    if (infoList) {
         
-        if (it.current()->lastRead().daysTo(now) > 2) {
+        QFileInfoListIterator it(*infoList);
+        
+        for (; it.current(); ++it) {
             
-            if (!tmpDir.remove(it.current()->filePath(), true)) {
-                empathDebug("Couldn't delete " + it.current()->filePath());
+            if (it.current()->lastRead().daysTo(now) > 2) {
+                
+                if (!tmpDir.remove(it.current()->filePath(), true)) {
+                    empathDebug("Couldn't delete " + it.current()->filePath());
+                }
             }
+            
+            kapp->processEvents();
         }
-        
-        kapp->processEvents();
     }
 }
 
@@ -417,7 +421,7 @@ EmpathMaildir::_checkDirs()
 }
 
     QString
-EmpathMaildir::_write(RMM::RMessage & msg)
+EmpathMaildir::_write(RMM::RMessage msg)
 {
     // See docs for how this shit works.
     // I can't be bothered to maintain the comments.

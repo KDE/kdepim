@@ -78,38 +78,36 @@ EmpathMessageStructureWidget::~EmpathMessageStructureWidget()
 }
 
     void
-EmpathMessageStructureWidget::setMessage(RMM::RBodyPart & m)
+EmpathMessageStructureWidget::setMessage(RMM::RBodyPart p)
 {
     clear();
     
-    EmpathMessageStructureItem * i = new EmpathMessageStructureItem(this, m);
-    CHECK_PTR(i);
+    EmpathMessageStructureItem * i = new EmpathMessageStructureItem(this, p);
     
-    QListIterator<RMM::RBodyPart> it(m.body());
+    QList<RMM::RBodyPart> body(p.body());
+    QListIterator<RMM::RBodyPart> it(body);
     
     for (; it.current(); ++it) {
         
         EmpathMessageStructureItem * j =
             new EmpathMessageStructureItem(i, *(it.current()));
-        CHECK_PTR(j);
 
-        _addChildren(it.current(), j);
+        _addChildren(*(it.current()), j);
     }
 }
 
     void
-EmpathMessageStructureWidget::_addChildren(RMM::RBodyPart *p, QListViewItem *i)
+EmpathMessageStructureWidget::_addChildren(RMM::RBodyPart p, QListViewItem *i)
 {
-    QListIterator<RMM::RBodyPart> it(p->body());
+    QList<RMM::RBodyPart> body(p.body());
+    QListIterator<RMM::RBodyPart> it(body);
     
     for (; it.current(); ++it) {
-
+    
         EmpathMessageStructureItem * j =
-            new EmpathMessageStructureItem((EmpathMessageStructureItem *)i, *p);
+            new EmpathMessageStructureItem((EmpathMessageStructureItem *)i, p);
 
-        CHECK_PTR(j);
-
-        _addChildren(it.current(), j);
+        _addChildren(*(it.current()), j);
     }
 }
 
@@ -160,7 +158,7 @@ EmpathMessageStructureWidget::s_saveAs()
     
     if (!i) return;
     
-    QCString s = ((EmpathMessageStructureItem *)i)->part()->asString();
+    QCString s = ((EmpathMessageStructureItem *)i)->part().asString();
     
     d.writeRawBytes(s, s.length());
 

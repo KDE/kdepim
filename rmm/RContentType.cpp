@@ -28,13 +28,14 @@
 
 #include <RMM_ContentType.h>
 #include <RMM_Token.h>
+#include <RMM_Defines.h>
 
 using namespace RMM;
 
 RContentType::RContentType()
     :    RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RContentType::RContentType(const RContentType & cte)
@@ -43,25 +44,23 @@ RContentType::RContentType(const RContentType & cte)
         subType_(cte.subType_),
         parameterList_(cte.parameterList_)
 {
-    parsed_ = true;
-    assembled_    = false;
+    // Empty.
 }
 
 RContentType::RContentType(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RContentType::~RContentType()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RContentType &
 RContentType::operator = (const RContentType & ct)
 {
-    rmmDebug("operator =");
     if (this == &ct) return *this; // Don't do a = a.
 
     type_            = ct.type_;
@@ -70,9 +69,6 @@ RContentType::operator = (const RContentType & ct)
     
     RHeaderBody::operator = (ct);
     
-    parsed_ = true;
-    assembled_ = false;
-
     return *this;
 }
 
@@ -133,7 +129,7 @@ RContentType::_assemble()
     
     parameterList_.assemble();
     
-    if (parameterList_.QList<RParameter>::count() == 0) return;
+    if (parameterList_.list().count() == 0) return;
     
     strRep_ += QCString(";\n    ");
     
@@ -143,7 +139,6 @@ RContentType::_assemble()
     void
 RContentType::createDefault()
 {
-    rmmDebug("createDefault() called");
     type_ = "text";
     subType_ = "plain";
     parsed_        = true;
@@ -153,29 +148,28 @@ RContentType::createDefault()
     void
 RContentType::setType(const QCString & t)
 {
+    parse();
     type_ = t;
-    assembled_    = false;
 }
 
     void
 RContentType::setSubType(const QCString & t)
 {
+    parse();
     subType_ = t;
-    assembled_    = false;
 }
 
     void
 RContentType::setParameterList(RParameterList & p)
 {
+    parse();
     parameterList_ = p;
-    assembled_    = false;
 }
     
     QCString
 RContentType::type()
 {
     parse();
-    rmmDebug("type() called. Type is \"" + type_ + "\"");
     return type_;
 }
 
@@ -183,7 +177,6 @@ RContentType::type()
 RContentType::subType()
 {
     parse();
-    rmmDebug("subType() called. SubType is \"" + subType_ + "\"");
     return subType_;
 }
     

@@ -23,6 +23,7 @@
 #endif
 
 #include <qlist.h>
+#include <iostream>
 
 #include <RMM_HeaderList.h>
 #include <RMM_Envelope.h>
@@ -33,31 +34,32 @@ using namespace RMM;
 REnvelope::REnvelope()
     :   RMessageComponent()
 {
-    rmmDebug("ctor");
-//    headerList_.setAutoDelete(true);
+    headerList_.setAutoDelete(true);
 }
 
 REnvelope::REnvelope(const REnvelope & e)
-    :    RMessageComponent(e),
-        headerList_(e.headerList_)
+    :    RMessageComponent(e)
 {
-    rmmDebug("copy ctor");
-//    headerList_.setAutoDelete(true);
+    headerList_.setAutoDelete(true);
+
+    for (RHeaderListIterator it(e.headerList_); it.current(); ++it)
+        headerList_.append(new RHeader(*it.current()));
 }
 
 REnvelope::REnvelope(const QCString & s)
     :    RMessageComponent(s)
 {
-    rmmDebug("ctor with QCString(" + s + ")");
-//    headerList_.setAutoDelete(true);
+    headerList_.setAutoDelete(true);
 }
 
     REnvelope &
 REnvelope::operator = (const REnvelope & e)
 {
-    rmmDebug("operator = (const REnvelope &e)");
     if (this == &e) return *this; // Don't do a = a.
-    headerList_ = e.headerList_;
+
+    for (RHeaderListIterator it(e.headerList_); it.current(); ++it)
+        headerList_.append(new RHeader(*it.current()));
+
     RMessageComponent::operator = (e);
     return *this;
 }
@@ -65,10 +67,8 @@ REnvelope::operator = (const REnvelope & e)
     REnvelope &
 REnvelope::operator = (const QCString & s)
 {
-    rmmDebug("operator = (const QCString&)");
+    headerList_.clear();
     RMessageComponent::operator = (s);
-    parsed_ = false;
-    assembled_ = false;
     return *this;
 }
 
@@ -83,7 +83,7 @@ REnvelope::operator == (REnvelope & e)
 
 REnvelope::~REnvelope()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     void
@@ -123,7 +123,6 @@ REnvelope::_parse()
 
                 QCString s(rstart);
 
-                rmmDebug("New header: \"" + s + "\"");
                 RHeader * h = new RHeader(s);
                 h->parse();
                 headerList_.append(h);
@@ -156,46 +155,24 @@ REnvelope::_assemble()
     void
 REnvelope::_createDefault(HeaderType t)
 {
-    rmmDebug("Creating default of type " + QCString(headerNames[t]));
-    RHeader * h = new RHeader;
-    h->setName(headerNames[t]);
-
-    RHeaderBody * b;
-    switch (headerTypesTable[t]) {
-
-        case Address:           b = new RAddress;           break;
-        case AddressList:       b = new RAddressList;       break;
-        case ContentType:       b = new RContentType;       break;
-        case Cte:               b = new RCte;               break;
-        case DateTime:          b = new RDateTime;          break;
-        case DispositionType:   b = new RDispositionType;   break;
-        case Mailbox:           b = new RMailbox;           break;
-        case MailboxList:       b = new RMailboxList;       break;
-        case Mechanism:         b = new RMechanism;         break;
-        case MessageID:         b = new RMessageID;         break;
-        case Text: default:     b = new RText;              break;
-    }
-
-    b->createDefault();
-    h->setBody(b);
-    headerList_.append(h);
+    if (t <= HeaderUnknown)
+        headerList_.append(new RHeader(QCString(headerNames[t]) + ":"));
 }
 
     void
 REnvelope::createDefault()
 {
-    parsed_        = false; 
-    assembled_    = false;
+    // STUB
 }
 
     bool
 REnvelope::has(HeaderType t)
 {
     parse();
-    RHeaderListIterator it(headerList_);
 
-    for (; it.current(); ++it)
-        if (it.current()->headerType() == t) return true;
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (it.current()->headerType() == t)
+            return true;
 
     return false;
 }
@@ -204,10 +181,9 @@ REnvelope::has(HeaderType t)
 REnvelope::has(const QCString & headerName)
 {
     parse();
-    RHeaderListIterator it(headerList_);
 
-    for (; it.current(); ++it)
-        if (!stricmp(it.current()->headerName(), headerName))
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), headerName))
             return true;
 
     return false;
@@ -217,38 +193,116 @@ REnvelope::has(const QCString & headerName)
 REnvelope::get(const QCString & s)
 {
     parse();
-    RHeaderListIterator it(headerList_);
 
-    for (; it.current(); ++it)
-        if (stricmp(it.current()->headerName(), s) == 0)
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), s))
             return it.current();
     
-    return 0;
+    RHeader * hdr = new RHeader(s + ":");
+    headerList_.append(hdr);
+    return hdr;
 }
 
     RHeaderBody *
 REnvelope::get(HeaderType h)
 {
     parse();
-    rmmDebug("get " + QCString(headerNames[h]));
-    // See if we can find this header in the list.
 
-    RHeaderListIterator it(headerList_);
-
-    for (; it.current(); ++it)
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
         if (it.current()->headerType() == h)
             return it.current()->headerBody();
-
-    // else make a new one, set it to default values, and return that.
-
-    rmmDebug("Creating a new item as there wasn't one existing.");
 
     RHeader * hdr = new RHeader(headerNames[h] + ":");
     headerList_.append(hdr);
     return hdr->headerBody();
 }
 
-    RText
+    RMessageID
+REnvelope::parentMessageId()
+{
+    parse();
+    // XXX If there's a references field, we use this over the InReplyTo: field.
+    // This is a temporary policy decision and may change.
+
+    RMessageID m;
+
+    if (has(HeaderReferences)) {
+
+        QCString s = references().asString();
+        s = s.right(s.length() - s.findRev('<'));
+        m = s;
+
+    } else if (has(HeaderInReplyTo)) {
+
+        RText t = inReplyTo();
+        m = t.asString();
+
+    } else {
+
+        m.setLocalPart("");
+        m.setDomain("");
+    }
+
+    return m;
+}
+
+    void
+REnvelope::set(HeaderType t, const QCString & s)
+{
+    parse();
+
+    RHeader * h = new RHeader(s);
+
+    for (RHeaderListIterator it(headerList_); it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), h->headerName()))
+            headerList_.remove(it.current());
+
+    headerList_.append(h);
+}
+
+    void
+REnvelope::set(const QCString & headerName, const QCString & s)
+{
+    parse();
+    RHeaderListIterator it(headerList_);
+
+    for (; it.current(); ++it)
+        if (0 == stricmp(it.current()->headerName(), headerName))
+            headerList_.remove(it.current());
+    
+    headerList_.append(new RHeader(headerName + ": " + s));
+}
+
+    void
+REnvelope::addHeader(RHeader h)
+{
+    parse();
+    headerList_.append(new RHeader(h));
+}
+
+    void
+REnvelope::addHeader(const QCString & s)
+{
+    parse();
+    headerList_.append(new RHeader(s));
+}
+
+     RAddress
+REnvelope::firstSender()
+{
+    parse();
+    rmmDebug("firstSender() called");
+
+    if (!has(HeaderFrom)) {
+        cerr << "No HeaderFrom - returning sender()" << endl;
+        return sender();
+    }
+    
+    cerr << "Returning from().at(0) == `" << from().at(0).asString() << "'" << endl;
+    return from().at(0);
+}
+
+   RText
 REnvelope::approved()
 { return *static_cast<RText *>(get(HeaderApproved)); }
 
@@ -256,9 +310,9 @@ REnvelope::approved()
 REnvelope::bcc()
 { return *static_cast<RAddressList *>(get(HeaderBcc)); }
 
-    RMailboxList
+    RAddressList
 REnvelope::cc()
-{ return *static_cast<RMailboxList *>(get(HeaderCc)); }
+{ return *static_cast<RAddressList *>(get(HeaderCc)); }
 
     RText 
 REnvelope::comments()
@@ -312,9 +366,9 @@ REnvelope::expires()
 REnvelope::followupTo()
 { return *static_cast<RText *>(get(HeaderFollowupTo)); }
 
-    RMailboxList 
+    RAddressList 
 REnvelope::from()
-{ return *static_cast<RMailboxList *>(get(HeaderFrom)); }
+{ return *static_cast<RAddressList *>(get(HeaderFrom)); }
 
     RText 
 REnvelope::inReplyTo()
@@ -372,9 +426,9 @@ REnvelope::resentCc()
 REnvelope::resentDate()
 { return *static_cast<RDateTime *>(get(HeaderResentDate)); }
 
-    RMailboxList 
+    RAddressList 
 REnvelope::resentFrom()
-{ return *static_cast<RMailboxList *>(get(HeaderResentFrom)); }
+{ return *static_cast<RAddressList *>(get(HeaderResentFrom)); }
 
     RMessageID 
 REnvelope::resentMessageID()
@@ -384,9 +438,9 @@ REnvelope::resentMessageID()
 REnvelope::resentReplyTo()
 { return *static_cast<RAddressList *>(get(HeaderResentReplyTo)); }
 
-    RMailbox 
+    RAddress
 REnvelope::resentSender()
-{ return *static_cast<RMailbox *>(get(HeaderResentSender)); }
+{ return *static_cast<RAddress *>(get(HeaderResentSender)); }
 
     RAddressList 
 REnvelope::resentTo()
@@ -396,9 +450,9 @@ REnvelope::resentTo()
 REnvelope::returnPath()
 { return *static_cast<RText *>(get(HeaderReturnPath)); }
 
-    RMailbox 
+    RAddress
 REnvelope::sender()
-{ return *static_cast<RMailbox *>(get(HeaderSender)); }
+{ return *static_cast<RAddress *>(get(HeaderSender)); }
 
     RText 
 REnvelope::subject()
@@ -416,129 +470,5 @@ REnvelope::to()
 REnvelope::xref()
 { return *static_cast<RText *>(get(HeaderXref)); }
 
-    RMailbox
-REnvelope::firstSender()
-{
-    parse();
-    rmmDebug("firstSender() called");
-
-    if (!has(HeaderFrom))
-        return sender();
-    
-    RMailbox m;
-    
-    rmmDebug("firstSender: Checking if from count is 0");
-    if (from().count() == 0) {
-        rmmDebug("firstSender: count is 0");
-        return m;
-    }
-    
-    return *(from().at(0));
-}
-
-    RMessageID
-REnvelope::parentMessageId()
-{
-    parse();
-    // XXX If there's a references field, we use this over the InReplyTo: field.
-    // This is a temporary policy decision and may change.
-
-    RMessageID m;
-
-    if (has(HeaderReferences)) {
-
-        QCString s = references().asString();
-        s = s.right(s.length() - s.findRev('<'));
-        m = s;
-
-    } else if (has(HeaderInReplyTo)) {
-
-        RText t = inReplyTo();
-        m = t.asString();
-
-    } else {
-
-        m.setLocalPart("");
-        m.setDomain("");
-    }
-
-    return m;
-}
-
-    void
-REnvelope::set(HeaderType t, const QCString & s)
-{
-    parse();
-    RHeaderListIterator it(headerList_);
-
-    for (; it.current(); ++it)
-        if (it.current()->headerType() == t)
-            headerList_.remove(it.current());
-
-    HeaderDataType hdt = headerTypesTable[t];
-
-    RHeaderBody * d;
-
-    switch (hdt) {
-
-        case Address:           d = new RAddress;           break;
-        case AddressList:       d = new RAddressList;       break;
-        case ContentType:       d = new RContentType;       break;
-        case Cte:               d = new RCte;               break;
-        case DateTime:          d = new RDateTime;          break;
-        case DispositionType:   d = new RDispositionType;   break;
-        case Mailbox:           d = new RMailbox;           break;
-        case MailboxList:       d = new RMailboxList;       break;
-        case Mechanism:         d = new RMechanism;         break;
-        case MessageID:         d = new RMessageID;         break;
-        case Text: default:     d = new RText;              break;
-    }
-    
-    CHECK_PTR(d);
-    
-    *d = s;
-
-    RHeader * hdr = new RHeader;
-
-    hdr->setType(t);
-    hdr->setBody(d);
-
-    headerList_.append(hdr);
-    assembled_ = false;
-}
-
-    void
-REnvelope::set(const QCString & headerName, const QCString & s)
-{
-    parse();
-    RHeaderListIterator it(headerList_);
-
-    for (; it.current(); ++it)
-        if (!stricmp(it.current()->headerName(), headerName))
-            headerList_.remove(it.current());
-    
-    RHeader * hdr = new RHeader(headerName + ": " + s);
-
-    headerList_.append(hdr);
-    assembled_ = false;
-}
-
-    void
-REnvelope::addHeader(RHeader h)
-{
-    parse();
-    RHeader * newHeader = new RHeader(h);
-    headerList_.append(newHeader);
-    assembled_ = false;
-}
-
-    void
-REnvelope::addHeader(const QCString & s)
-{
-    parse();
-    RHeader * newHeader = new RHeader(s);
-    headerList_.append(newHeader);
-    assembled_ = false;
-}
 
 // vim:ts=4:sw=4:tw=78

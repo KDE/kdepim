@@ -14,18 +14,9 @@ Highest priority first.
 * Switch to using KAction everywhere and sort out some accelerator keys,
   including mutt+vi style !
 
-* Go back to using templates for viewing messages instead of
-  EmpathHeaderViewWidget etc.
-
 * Provide an external interface that allows triggering a mail check,
   retrieving a message, sending, etc. Will use DCOP, I think.
   Update: In progress. See lib/EmpathInterface.(cpp|h)
-
-* Plug memory leaks.
-  Update: Shouldn't be many existing now. Use of KSharedPtr in librmm
-  (by Wilco) and other such developments have virtually eradicated
-  memory management issues. Still need to find out why setAutoDelete()
-  in RMM::REnvelope destroys the world.
 
 * Release !
 

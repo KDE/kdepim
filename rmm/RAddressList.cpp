@@ -24,11 +24,11 @@
 # pragma implementation "RMM_AddressList.h"
 #endif
 
+#include <iostream>
+
 #include <RMM_Address.h>
 #include <RMM_AddressList.h>
 #include <RMM_HeaderBody.h>
-#include <RMM_Group.h>
-#include <RMM_Mailbox.h>
 #include <RMM_Token.h>
 
 using namespace RMM;
@@ -36,32 +36,31 @@ using namespace RMM;
 RAddressList::RAddressList()
     :    RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 
 RAddressList::RAddressList(const RAddressList & list)
-    :    RHeaderBody(list)
+    :   RHeaderBody(list),
+        list_(list.list_)
 {
-    rmmDebug("ctor");
-    list_ = list.list_;
+    // Empty.
 }
 
 RAddressList::RAddressList(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RAddressList::~RAddressList()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
         
     RAddressList &
 RAddressList::operator = (const RAddressList & al)
 {
-    rmmDebug("operator =");
     if (this == &al) return *this; // Don't do a = a.
     
     list_ = al.list_;
@@ -86,11 +85,16 @@ RAddressList::operator == (RAddressList & al)
     return true; // FIXME: Duh ? This isn't right.
 }
         
-    RAddress::Ptr
+    RAddress
 RAddressList::at(unsigned int i)
 {
     parse();
-    return *(list_.at(i));
+
+    cerr << "list count == " << list_.count() << endl;
+    if (!list_.isEmpty())
+        return *(list_.at(i));
+
+    return RAddress();
 }
 
     unsigned int
@@ -110,22 +114,16 @@ RAddressList::_parse()
 
     if (l.count() == 0 && !strRep_.isEmpty()) { // Lets try what we have then.
 
-        rmmDebug("new RAddress");
-        RAddress * a = new RAddress;
-        CHECK_PTR(a);
-        *a = strRep_;
-        list_.append(RAddress::Ptr(a));
+        RAddress a(strRep_);
+        list_.append(a);
         
     } else {
 
         QStrListIterator lit(l);
 
         for (; lit.current(); ++lit) {
-            rmmDebug("new RAddress");
-            RAddress * a = new RAddress;
-            CHECK_PTR(a);
-            *a = lit.current();
-            list_.append(RAddress::Ptr(a));
+            RAddress a(lit.current());
+            list_.append(a);
         }
     }
 }
@@ -135,7 +133,7 @@ RAddressList::_assemble()
 {
     bool firstTime = true;
 
-    RAddress::List::Iterator it;
+    QValueList<RAddress>::Iterator it;
 
     strRep_ = "";
     
@@ -143,18 +141,17 @@ RAddressList::_assemble()
         if (!firstTime) 
             strRep_ += QCString(",\n    ");
         firstTime = false;
-        strRep_ += (*it)->asString();
+        strRep_ += (*it).asString();
     }
 }
 
     void
 RAddressList::createDefault()
 {
-    rmmDebug("createDefault() called");
     if (count() == 0) {
-        RAddress * a = new RAddress;
-        a->createDefault();
-        list_.append(RAddress::Ptr(a));
+        RAddress a;
+        a.createDefault();
+        list_.append(a);
     }
 }
 

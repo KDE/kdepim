@@ -130,6 +130,8 @@ Empath::init()
    
     mailboxList_.loadConfig();
     filterList_.loadConfig();
+
+    viewFactory_.init();
 }
 
 Empath::~Empath()
@@ -178,52 +180,29 @@ Empath::updateOutgoingServer()
     mailSender_->loadConfig();
 }
 
-    RMM::RMessage *
-Empath::message(const EmpathURL & source, const QString & xinfo)
+    RMM::RMessage
+Empath::message(const EmpathURL & source)
 {
     empathDebug("message(" + source.asString() + ") called");
-    
-    // Try and get the message from the cache.
 
+    QDictIterator<EmpathCachedMessage> it(cache_);
+
+    for (; it.current(); ++it) {
+        if (it.current()->refCount() == 0) {
+            empathDebug("Removing unreferenced message " + it.currentKey());
+            cache_.remove(it.currentKey());
+            break; // One at a time.
+        }
+    }
+    
     EmpathCachedMessage * cached = cache_[source.asString()];
 
     if (cached == 0) {
         empathDebug("Message \"" + source.asString() + "\" not in cache !");
-        return 0;
+        return RMM::RMessage();
     }
 
-    if (cached->message(xinfo) == 0) {
-        empathDebug("Message data has been deleted in cache object !");
-        return 0;
-    }
-    
-    return cached->message(xinfo);
-}
-
-    void
-Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
-{
-    EmpathCachedMessage * m = cache_[url.asString()];
-
-    if (m == 0) {
-        empathDebug("It wasn't in the cache anyways");
-        return;
-    }
-
-    empathDebug("xinfo == `" + xinfo + "'");
-
-    if (m->referencedBy(xinfo)) {
-        m->deref(xinfo);
-        return;
-
-    } else {
-       empathDebug("Hey, you don't OWN this message ! It's staying cached !");
-    }
-
-    if (m->refCount() == 0) {
-        empathDebug("Refcount has dropped to 0. Deleting.");
-        cache_.remove(url.asString());
-    }
+    return cached->message();
 }
 
     EmpathMailbox *
@@ -283,21 +262,20 @@ Empath::generateUnique()
 }
 
     void
-Empath::cacheMessage
-    (const EmpathURL & url, RMM::RMessage * m, const QString & xinfo)
+Empath::cacheMessage(const EmpathURL & url, RMM::RMessage m)
 {
     EmpathCachedMessage * cached = cache_[url.asString()];
 
     if (cached == 0) {
 
-        empathDebug("Not in cache. Adding");
+        empathDebug("Not in cache. Adding " + url.asString());
         empathDebug(url.asString());
-        cache_.insert(url.asString(), new EmpathCachedMessage(m, xinfo));
+        cache_.insert(url.asString(), new EmpathCachedMessage(m));
 
     } else {
 
-        empathDebug("Already in cache. Referencing");
-        cached->ref(xinfo);
+        empathDebug("Already in cache. Referencing " + url.asString());
+        cached->ref();
     }
 }
 
@@ -490,20 +468,16 @@ Empath::jobFinished(EmpathJobInfo ji)
 
         EmpathJobInfo original(ji.original());
 
-        RMM::RMessage * m =
-            message(original.from(), original.xinfo());
+        RMM::RMessage m = message(original.from());
 
         if (!m) {
             empathDebug("Can't get message data");
             return;
         }
         
-        EmpathJobInfo writeIt(WriteMessage, original.to(), *m);
+        EmpathJobInfo writeIt(WriteMessage, original.to(), m);
 
         writeIt.setOriginal(original);
-
-        delete m;
-        m = 0;
 
         EmpathMailbox * mbx = mailbox(original.to());
         
@@ -624,5 +598,11 @@ Empath::_queueJob(const EmpathURL & mailboxURL, EmpathJobInfo & ji)
 
     m->queueJob(ji);
 }
+
+    EmpathViewFactory &
+Empath::viewFactory()
+{
+    return viewFactory_;
+} 
 
 // vim:ts=4:sw=4:tw=78

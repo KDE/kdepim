@@ -98,13 +98,13 @@ class EmpathComposer : public QObject
    
     private:
         
-        void _reply     (int id, RMM::RMessage * m);
-        void _forward   (int id, RMM::RMessage * m);
-        void _bounce    (int id, RMM::RMessage * m);
+        void _reply     (int id, RMM::RMessage);
+        void _forward   (int id, RMM::RMessage);
+        void _bounce    (int id, RMM::RMessage);
 
         void _initVisibleHeaders(EmpathComposeForm &);
         
-        QCString _referenceHeaders(RMM::RMessage * m);
+        QCString _referenceHeaders(RMM::RMessage m);
         QCString _stdHeaders();
 
         QCString _signature();

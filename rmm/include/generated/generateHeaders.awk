@@ -15,6 +15,10 @@
 	print $1 "(const QCString &);" >> outfile
 	print $1 " & operator = (const " $1 " &);" >> outfile
 	print $1 " & operator = (const QCString &);" >> outfile
+    print "friend QDataStream & operator >> (QDataStream & s, " $1 " &);" \
+        >> outfile
+    print "friend QDataStream & operator << (QDataStream & s, " $1 " &);" \
+        >> outfile
 	print "bool operator == (" $1 " &);" >> outfile
 	print "bool operator != (" $1 " & x) { return !(*this == x); }" \
 			>> outfile
@@ -23,12 +27,14 @@
 	print "bool operator != (const QCString &s) {return !(*this == s);}\n" \
 			>> outfile
 	print "virtual ~" $1 "();" >> outfile
+	print pre "bool isNull() { parse(); return strRep_.isEmpty(); }" >> outfile
+	print pre "bool operator ! () { return isNull(); }" >> outfile
 	print pre "void createDefault();\n" >> outfile
 	print pre "const char * className() const { return \"" $1 "\"; }\n" >> outfile
-        print "protected:" >> outfile	
+    print "protected:" >> outfile	
 	print pre "void _parse();" >> outfile
 	print pre "void _assemble();" >> outfile
 	
-        print "\n// End of automatically generated code           //" >> outfile
+    print "\n// End of automatically generated code           //" >> outfile
 }
 

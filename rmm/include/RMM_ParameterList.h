@@ -27,24 +27,29 @@
 #ifndef RMM_PARAMETERLIST_H
 #define RMM_PARAMETERLIST_H
 
-#include <qstring.h>
-#include <qlist.h>
+#include <qvaluelist.h>
 
-#include <RMM_Defines.h>
 #include <RMM_Parameter.h>
 #include <RMM_HeaderBody.h>
 
 namespace RMM {
 
-typedef QListIterator<RParameter> RParameterListIterator;
-
 /**
  * @short Simple encapsulation of a list of RParameter, which is also an
  * RHeaderBody.
  */
-class RParameterList : public QList<RParameter>, public RHeaderBody {
+class RParameterList : public RHeaderBody {
 
 #include "generated/RParameterList_generated.h"
+
+    public:
+
+        QValueList<RParameter> list();
+        void setList(QValueList<RParameter> &);
+
+    private:
+
+        QValueList<RParameter> list_;
 
 };
 

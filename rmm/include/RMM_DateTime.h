@@ -27,7 +27,7 @@
 #ifndef RMM_RDATETIME_H
 #define RMM_RDATETIME_H
 
-#include <qstring.h>
+#include <qcstring.h>
 #include <qdatastream.h>
 #include <qdatetime.h>
 
@@ -47,9 +47,6 @@ class RDateTime : public RHeaderBody {
 
     public:
         
-        friend QDataStream & operator >> (QDataStream & s, RDateTime & dt);
-        friend QDataStream & operator << (QDataStream & s, RDateTime & dt);
-
         QDateTime qdt() { parse(); return qdate_; }
         void setTimeZone(const QCString &);
     

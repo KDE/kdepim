@@ -35,7 +35,7 @@
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
 #include <RMM_MessageID.h>
-#include <RMM_Mailbox.h>
+#include <RMM_Address.h>
 #include <RMM_DateTime.h>
 #include <RMM_Enum.h>
 
@@ -66,7 +66,7 @@ class EmpathMessageListItem : public QListViewItem
         RMM::RMessageID &   messageID()         { return m.messageID(); }
         RMM::RMessageID &   parentID()          { return m.parentID();  }
         QString             subject()   const   { return m.subject();   }
-        RMM::RMailbox &     sender()            { return m.sender();    }
+        RMM::RAddress &     sender()            { return m.sender();    }
         RMM::RDateTime &    date()              { return m.date();      }
         RMM::MessageStatus  status()    const   { return m.status();    }
         Q_UINT32            size()      const   { return m.size();      }

@@ -27,14 +27,12 @@
 #ifndef RMM_MIMETYPE_H
 #define RMM_MIMETYPE_H
 
-#include <qstring.h>
-#include <qlist.h>
+#include <qcstring.h>
 
 #include <RMM_HeaderBody.h>
 #include <RMM_Parameter.h>
 #include <RMM_ParameterList.h>
 #include <RMM_Enum.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 

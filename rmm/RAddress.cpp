@@ -24,110 +24,62 @@
 # pragma implementation "RMM_Address.h"
 #endif
 
-#include <qstring.h>
+#include <iostream>
 
+#include <qstring.h>
+#include <qstrlist.h>
+
+#include <RMM_Token.h>
 #include <RMM_Enum.h>
 #include <RMM_Address.h>
-#include <RMM_Group.h>
-#include <RMM_Mailbox.h>
+#include <RMM_Defines.h>
 
 using namespace RMM;
 
 RAddress::RAddress()
-    :    RHeaderBody(),
-        mailbox_(0),
-        group_(0)
+    :   RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RAddress::RAddress(const RAddress & addr)
-    :    RHeaderBody(addr)
+    :   RHeaderBody     (addr),
+        mailboxList_    (addr.mailboxList_),
+        name_           (addr.name_),
+        phrase_         (addr.phrase_)
 {
-    rmmDebug("copy ctor");
-
-    mailbox_    = 0;
-    group_        = 0;
-    
-    rmmDebug("...");
-
-    if (addr.mailbox_ != 0) {
-        
-        rmmDebug("mailbox");
-        mailbox_ = new RMailbox(*(addr.mailbox_));
-    
-    } else if (addr.group_ != 0) {
-    
-        rmmDebug("group");
-        group_ = new RGroup(*(addr.group_));
-    
-    } else {
-        
-        strRep_ = addr.strRep_;
-        parsed_ = false;
-    }
-
-    rmmDebug("...");
-    assembled_    = false;
+    // Empty.
 }
 
 RAddress::RAddress(const QCString & addr)
-    :    RHeaderBody(addr),
-        mailbox_(0),
-        group_(0)
+    :   RHeaderBody(addr)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RAddress::~RAddress()
 {
-    rmmDebug("dtor");
-    
-    delete mailbox_;
-    delete group_;
-
-    mailbox_    = 0;
-    group_        = 0;
+    // Empty.
 }
 
     RAddress &
 RAddress::operator = (const RAddress & addr)
 {
-    rmmDebug("operator =");
     if (this == &addr) return *this; // Don't do a = a.
 
-    delete mailbox_;
-    mailbox_    = 0;
-    delete group_;
-    group_        = 0;
-    
+    mailboxList_    = addr.mailboxList_;
+    name_           = addr.name_;
+    phrase_         = addr.phrase_;
+ 
     RHeaderBody::operator = (addr);
 
-    if (addr.mailbox_ != 0)
-        mailbox_ = new RMailbox(*(addr.mailbox_));
-    else if (addr.group_ != 0)
-        group_ = new RGroup(*(addr.group_));
-    else
-        parsed_ = false;
-    
-
-    assembled_    = false;
     return *this;
 }
 
     RAddress &
 RAddress::operator = (const QCString & s)
 {
-    rmmDebug("operator = QCString("  + s + ")");
-
-    delete mailbox_;
-    mailbox_    = 0;
-    delete group_;
-    group_        = 0;
-
     RHeaderBody::operator = (s);
-
-    assembled_    = false;
     return *this;
 }
 
@@ -135,41 +87,28 @@ RAddress::operator = (const QCString & s)
 RAddress::operator == (RAddress & a)
 {
     parse();
-
     a.parse();
-    
-    if (mailbox_ != 0 && a.mailbox_ != 0)
-        return *mailbox_ == *a.mailbox_;
-    
-    else if    (group_ != 0 && a.group_ != 0)
-        return *group_ == *a.group_;
-    
-    else
-        return true;
-}
 
-    RGroup *
-RAddress::group()
-{
-    parse();
-    return group_;
-}
+    bool ok(false);
+    
+    if (a.type() == RAddress::Mailbox) {
+        // TODO
 
-    RMailbox *
-RAddress::mailbox()
-{
-    parse();
-    return mailbox_;
+    } else {
+        ok = (
+// FIXME            mailboxList_    == a.mailboxList_   &&
+            name_           == a.name_          &&
+            phrase_         == a.phrase_
+        );
+    }
+    
+    return ok;
 }
 
     void
 RAddress::_parse()
 {
-    delete mailbox_;
-    mailbox_    = 0;
-    delete group_;
-    group_        = 0;
-
+    cerr << "RAddress::_parse(): strRep : `" << strRep_ << "'" << endl;
     QCString s = strRep_.stripWhiteSpace();
 
     // RFC822: group: phrase ":" [#mailbox] ";"
@@ -178,55 +117,167 @@ RAddress::_parse()
     if (s.right(1) == ";") { // This is a group !
 
         rmmDebug("I'm a group.");
-
-        group_ = new RGroup(s);
-        CHECK_PTR(group_);
-        group_->parse();
+        rmmDebug("Not implemented !");
 
     } else {
 
-        rmmDebug("I'm a mailbox.");
-
-        mailbox_ = new RMailbox(s);
-        CHECK_PTR(mailbox_);
-        mailbox_->parse();
+        RMailbox m(s);
+        m.parse();
+        mailboxList_.append(m);
     }
 }
 
     void
 RAddress::_assemble()
 {
-    if (mailbox_ != 0)
-        strRep_ = mailbox_->asString();
-    
-    else if (group_ != 0)
-        strRep_ = group_->asString();
-    
-    else {
-        strRep_ = "foo@bar";
-        rmmDebug("_assemble() assigns foo@bar!!!!!!!!!!!!");
+    if (type() == RAddress::Group) {
+
+        rmmDebug("assembling group not implemented");
+
+    } else {
+        
+        RMailbox m(*(mailboxList_.at(0)));
+        strRep_ = m.asString();
     }
-    
 }
 
     void
 RAddress::createDefault()
 {
-    rmmDebug("createDefault() called");
-    if (mailbox_ == 0 && group_ == 0) {
-        rmmDebug("I have no mailbox or group yet");
-        mailbox_ = new RMailbox;
-        mailbox_->createDefault();
-    }
-    else if (mailbox_ == 0) {
-        rmmDebug("I have no mailbox");
-        group_ = new RGroup;
-        group_->createDefault();
-    } else {
-        rmmDebug("I have no group");
-        mailbox_ = new RMailbox;
-        mailbox_->createDefault();
-    }
+    mailboxList_.clear();
+    RMailbox m;
+    m.createDefault();
+    mailboxList_.append(m);
+    assembled_ = true;
 }
+
+    RAddress::Type
+RAddress::type()
+{
+    parse();
+    return name_.isEmpty() ? Mailbox : Group;
+}
+
+
+    QDataStream &
+RMM::operator >> (QDataStream & s, RMM::RAddress & addr)
+{
+    unsigned int count;
+
+    s   >> addr.name_
+        >> addr.phrase_
+        >> count;
+    
+    for (unsigned int i = 0; i < count; i++) {
+        RMailbox m;
+        s >> m;
+        addr.mailboxList_.append(m);
+    }
+
+    addr.parsed_ = true; 
+    addr.assembled_ = false; 
+
+    return s;
+}
+
+    QDataStream &
+RMM::operator << (QDataStream & s, RMM::RAddress & addr)
+{
+    addr.parse();
+
+    s   << addr.name_
+        << addr.phrase_
+        << (unsigned int)(addr.mailboxList_.count());
+
+    QValueList<RMailbox>::Iterator it;
+
+    for (it = addr.mailboxList_.begin(); it != addr.mailboxList_.end(); ++it)
+        s << *it;
+    
+    return s;
+}
+
+    QCString
+RAddress::phrase()
+{
+    parse();
+    return phrase_;
+}
+
+
+    void
+RAddress::setPhrase(const QCString & s)
+{
+    parse();
+    phrase_ = s.data();
+}
+
+    QCString
+RAddress::route()
+{
+    parse();
+    RMailbox m(*(mailboxList_.at(0)));
+    return m.route();
+}
+
+    void
+RAddress::setRoute(const QCString & s)
+{
+    parse();
+    (*(mailboxList_.at(0))).setRoute(s);
+}
+
+    QCString
+RAddress::localPart()
+{
+    parse();
+    RMailbox m(*(mailboxList_.at(0)));
+    return m.localPart();
+}
+
+    void
+RAddress::setLocalPart(const QCString & s)
+{
+    parse();
+    (*(mailboxList_.at(0))).setLocalPart(s);
+}
+
+
+    QCString
+RAddress::domain()
+{
+    parse();
+    RMailbox m(*(mailboxList_.at(0)));
+    return m.domain();
+}
+
+    void
+RAddress::setDomain(const QCString & s)
+{
+    parse();
+    (*(mailboxList_.at(0))).setDomain(s);
+}
+
+   QCString
+RAddress::name()
+{
+    parse();
+    return name_;
+}
+
+    void
+RAddress::setName(const QCString & s)
+{
+    parse();
+    name_ = s;
+}
+
+    QValueList<RMailbox>
+RAddress::mailboxList()
+{
+    parse();
+    return mailboxList_;
+}
+
 
 // vim:ts=4:sw=4:tw=78

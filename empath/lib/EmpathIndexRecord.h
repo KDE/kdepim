@@ -39,7 +39,7 @@
 #include <RMM_Enum.h>
 #include <RMM_Message.h>
 #include <RMM_MessageID.h>
-#include <RMM_Mailbox.h>
+#include <RMM_Address.h>
 #include <RMM_DateTime.h>
 
 
@@ -73,7 +73,7 @@ class EmpathIndexRecord
         EmpathIndexRecord(
                 const QString &     id,
                 const QString &     subject,
-                RMM::RMailbox &     sender,
+                RMM::RAddress &     sender,
                 RMM::RDateTime &    date,
                 RMM::MessageStatus  status,
                 Q_UINT32            size,
@@ -111,7 +111,7 @@ class EmpathIndexRecord
          * sender mentioned in 'From:' but may be that referenced in 'Sender:'
          * if there's no 'From:' header.
          */
-        RMM::RMailbox & sender()
+        RMM::RAddress & sender()
         { return sender_; }
         
         /**
@@ -181,7 +181,7 @@ class EmpathIndexRecord
         // Order dependency
         QString             id_;
         QString             subject_;
-        RMM::RMailbox       sender_;
+        RMM::RAddress       sender_;
         RMM::RDateTime      date_;
         RMM::MessageStatus  status_;
         Q_UINT32            size_;

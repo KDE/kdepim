@@ -27,10 +27,7 @@
 #ifndef RMM_RMECHANISM_H
 #define RMM_RMECHANISM_H
 
-#include <qstring.h>
-
 #include <RMM_HeaderBody.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 

@@ -12,13 +12,10 @@ RCte.cpp \
 RDateTime.cpp \
 RDispositionType.cpp \
 REnum.cpp \
-REntity.cpp \
 REnvelope.cpp \
-RGroup.cpp \
 RHeader.cpp \
 RHeaderBody.cpp \
 RMailbox.cpp \
-RMailboxList.cpp \
 RMechanism.cpp \
 RMessage.cpp \
 RMessageComponent.cpp \

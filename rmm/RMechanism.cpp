@@ -24,39 +24,37 @@
 # pragma implementation "RMM_Mechanism.h"
 #endif
 
-#include <qstring.h>
-
 #include <RMM_Mechanism.h>
 #include <RMM_Enum.h>
+#include <RMM_Defines.h>
 
 using namespace RMM;
 
 RMechanism::RMechanism()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMechanism::RMechanism(const RMechanism & m)
     :    RHeaderBody(m)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMechanism::RMechanism(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMechanism::~RMechanism()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RMechanism &
 RMechanism::operator = (const RMechanism & m)
 {
-    rmmDebug("operator =");
     if (this == &m) return *this; // Don't do a = a.
     
     RHeaderBody::operator = (m);
@@ -82,17 +80,19 @@ RMechanism::operator == (RMechanism & m)
     void
 RMechanism::_parse()
 {
+    // STUB
 }
 
     void
 RMechanism::_assemble()
 {
+    // STUB
 }
 
     void
 RMechanism::createDefault()
 {
-    rmmDebug("createDefault() called");
+    // STUB
 }
 
 // vim:ts=4:sw=4:tw=78

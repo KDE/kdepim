@@ -32,25 +32,24 @@ using namespace RMM;
 RDispositionType::RDispositionType()
     :    RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RDispositionType::RDispositionType(const RDispositionType & t)
     :    RHeaderBody(t)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RDispositionType::RDispositionType(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
     RDispositionType &
 RDispositionType::operator = (const RDispositionType & t)
 {
-    rmmDebug("operator =");
     if (this == &t) return *this; // Don't do a = a.
     
     parameterList_    = t.parameterList_;
@@ -83,7 +82,7 @@ RDispositionType::operator == (RDispositionType & dt)
 
 RDispositionType::~RDispositionType()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RMM::DispType
@@ -106,22 +105,24 @@ RDispositionType::setFilename(const QCString & s)
 {
     parse();
     filename_ = s;
-    assembled_ = false;
 }
 
     void
 RDispositionType::_parse()
 {
+    // STUB
 }
 
     void
 RDispositionType::_assemble()
 {
+    // STUB
 }
     
     void
 RDispositionType::createDefault()
 {
+    // STUB
 }
 
 // vim:ts=4:sw=4:tw=78

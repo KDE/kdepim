@@ -43,17 +43,17 @@ class EmpathMessageStructureItem : public QListViewItem
 {
     public:
     
-        EmpathMessageStructureItem(QListView * parent, RMM::RBodyPart &);
+        EmpathMessageStructureItem(QListView * parent, RMM::RBodyPart);
 
         EmpathMessageStructureItem(
             EmpathMessageStructureItem * parent,
-            RMM::RBodyPart &);
+            RMM::RBodyPart);
 
         ~EmpathMessageStructureItem();
         
         virtual void setup();
         
-        RMM::RBodyPart * part() { return &part_; }
+        RMM::RBodyPart part() { return part_; }
 
         const char * className() const { return "EmpathMessageStructureItem"; }
         

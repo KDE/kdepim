@@ -38,7 +38,7 @@
 
 EmpathMessageStructureItem::EmpathMessageStructureItem(
         EmpathMessageStructureItem    * parent,
-        RMM::RBodyPart                & part)
+        RMM::RBodyPart                part)
     :    
         QListViewItem    (parent),
         part_            (part)
@@ -48,7 +48,7 @@ EmpathMessageStructureItem::EmpathMessageStructureItem(
 
 EmpathMessageStructureItem::EmpathMessageStructureItem(
         QListView        * parent,
-        RMM::RBodyPart    & part)
+        RMM::RBodyPart   part)
     :    
         QListViewItem    (parent),
         part_            (part)

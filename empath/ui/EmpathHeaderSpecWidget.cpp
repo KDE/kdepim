@@ -50,10 +50,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 
     RMM::HeaderDataType t = RMM::headerTypesTable[header.headerType()];
     
-    address_ =  t == RMM::AddressList    ||
-                t == RMM::Address        ||
-                t == RMM::MailboxList    ||
-                t == RMM::Mailbox;
+    address_ =  t == RMM::AddressList || t == RMM::Address;
 
     if (address_) {
         EmpathAddressSelectionWidget * addressWidget = 

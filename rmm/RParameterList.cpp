@@ -24,49 +24,44 @@
 # pragma implementation "RMM_ParameterList.h"
 #endif
 
-#include <qstring.h>
-#include <qstrlist.h>
-#include <qlist.h>
-
-#include <RMM_Parameter.h>
+#include <RMM_Defines.h>
 #include <RMM_ParameterList.h>
+#include <RMM_Parameter.h>
 #include <RMM_Token.h>
 
 using namespace RMM;
 
 RParameterList::RParameterList()
-    :    QList<RParameter>(),
-        RHeaderBody()
+    :   RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RParameterList::RParameterList(const RParameterList & l)
-    :    QList<RParameter>(l),
-        RHeaderBody(l)
+    :   RHeaderBody(l),
+        list_(l.list_)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RParameterList::RParameterList(const QCString & s)
-    :    QList<RParameter>(),
-        RHeaderBody(s)
+    :   RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 
 RParameterList::~RParameterList()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RParameterList &
 RParameterList::operator = (const RParameterList & l)
 {
     if (this == &l) return *this;
-    QList<RParameter>::operator = (l);
-    assembled_ = false;
+    list_ = l.list_;
+    RHeaderBody::operator = (l);
     return *this;
 }
 
@@ -74,7 +69,7 @@ RParameterList::operator = (const RParameterList & l)
 RParameterList::operator = (const QCString & s)
 {
     strRep_ = s;
-    parsed_ = false;
+    RHeaderBody::operator = (s);
     return *this;
 }
 
@@ -90,7 +85,7 @@ RParameterList::operator == (RParameterList & l)
     void
 RParameterList::_parse()
 {
-    clear();
+    list_.clear();
     
     QStrList l;
     RTokenise(strRep_, ";", l, true, false);
@@ -99,10 +94,9 @@ RParameterList::_parse()
     
     for (; it.current(); ++it) {
         
-        RParameter * p =
-            new RParameter(QCString(it.current()).stripWhiteSpace());
-        p->parse();
-        QList<RParameter>::append(p);
+        RParameter p(QCString(it.current()).stripWhiteSpace());
+        p.parse();
+        list_ << p;
     }
 }
 
@@ -111,27 +105,47 @@ RParameterList::_assemble()
 {
     bool firstTime = true;
     
-    RParameterListIterator it(*this);
+    QValueList<RParameter>::Iterator it;
 
     strRep_ = "";
     
-    for (; it.current(); ++it) {
+    for (it = list_.begin(); it != list_.end(); ++it) {
         
-        it.current()->assemble();
+        (*it).assemble();
         
         if (!firstTime) {
             strRep_ += QCString(";\n    ");
             firstTime = false;
         }
 
-        strRep_ += it.current()->asString();
+        strRep_ += (*it).asString();
     }
 }
 
     void
 RParameterList::createDefault()
 {
-    rmmDebug("createDefault() called");
+    // STUB
+}
+
+    QValueList<RParameter>
+RParameterList::list()
+{
+    parse();
+    QValueList<RParameter>::Iterator it(list_.begin());
+
+    for (; it != list_.end(); ++it) {
+    rmmDebug("Parameter: `" + (*it).attribute() + "', `" +
+                        (*it).value() + "'");
+    }
+    return list_;
+}
+
+    void
+RParameterList::setList(QValueList<RParameter> & l)
+{
+    parse();
+    list_ = l;
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -98,21 +98,21 @@ EmpathMessageListItem::_init()
     
     setText(3, sizeStr);
     
-    RMM::RMailbox sender_(m.sender());
+    RMM::RAddress sender_(m.sender());
     
-    if (sender_.phrase().isEmpty()) {
-        sender_.assemble();
+    if (sender_.phrase().isEmpty())
         setText(1, sender_.asString());
-    }
         
     else {
 
         QString s = sender_.phrase();
+
         if (s.left(1) == "\"") {
             s.remove(0, 1);
-            if (s.right(1)    == "\"")
+            if (s.right(1) == "\"")
                 s.remove(s.length() - 1, 1);
         }
+
         setText(1, s);
     }
     

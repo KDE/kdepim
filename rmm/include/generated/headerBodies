@@ -6,11 +6,9 @@ RCte
 RDateTime
 RDispositionType
 REnvelope
-RGroup
 RHeader
 RHeaderBody v
 RMailbox
-RMailboxList
 RMechanism
 RMessage
 RMessageID

@@ -27,18 +27,16 @@
 #ifndef RMM_RADDRESS_H
 #define RMM_RADDRESS_H
 
-#include <qstring.h>
+#include <qcstring.h>
 #include <qvaluelist.h>
+
+#include <RMM_Mailbox.h>
 #include <RMM_HeaderBody.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 
-class RGroup;
-class RMailbox;
-
 /**
- * An RAddress is schizophrenic. It's either an RGroup or an RMailbox. Don't
+ * An RAddress is schizophrenic. It's either an Group or a Mailbox. Don't
  * worry about it.
  */
 class RAddress : public RHeaderBody {
@@ -47,16 +45,28 @@ class RAddress : public RHeaderBody {
     
     public:
 
-        typedef KSharedPtr<RAddress> Ptr;
-        typedef QValueList<Ptr> List;
-    
-        RMailbox    * mailbox();
-        RGroup      * group();
+        enum Type { Mailbox, Group };
+        Type type();
+
+        QValueList<RMailbox> mailboxList();
+
+        void setName(const QCString &);
+        void setPhrase(const QCString &);
+        void setRoute(const QCString &);
+        void setLocalPart(const QCString &);
+        void setDomain(const QCString &);
+
+        QCString name();
+        QCString phrase();
+        QCString route();
+        QCString localPart();
+        QCString domain();
 
     private:
-        
-        RMailbox    * mailbox_;
-        RGroup      * group_;
+
+        QValueList<RMailbox> mailboxList_;
+        QCString name_;
+        QCString phrase_;
 };
 
 }

@@ -101,7 +101,7 @@ EmpathQuotedText::_parse()
     // lines.
     QString text(strRep_);
     text.replace(QRegExp("\n\n"), "\n \n");
-    QStringList lines = QStringList::split('\n', text);
+    QStringList lines; // = QStringList::split('\n', text);
 
     QStringList::Iterator it;
     

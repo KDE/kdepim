@@ -27,14 +27,10 @@
 #ifndef RMM_ENVELOPE_H
 #define RMM_ENVELOPE_H
 
-#include <qstring.h>
-#include <qlist.h>
-#include <qdatetime.h>
+#include <qcstring.h>
 
 #include <RMM_Entity.h>
 #include <RMM_MessageID.h>
-#include <RMM_Mailbox.h>
-#include <RMM_MailboxList.h>
 #include <RMM_MimeType.h>
 #include <RMM_Mechanism.h>
 #include <RMM_DispositionType.h>
@@ -92,7 +88,7 @@ class REnvelope : public RMessageComponent
          * then you get the first RAddress in that header body. If there is no
          * 'From' header, then you get what's in 'Sender'.
          */
-        RMailbox firstSender();
+        RAddress firstSender();
         
         /**
          * @short The ID of the 'parent' message.
@@ -121,7 +117,7 @@ class REnvelope : public RMessageComponent
          */
         RText               approved();
         RAddressList        bcc();
-        RMailboxList        cc();
+        RAddressList        cc();
         RText               comments();
         RText               contentDescription();
         RDispositionType    contentDisposition();
@@ -135,7 +131,7 @@ class REnvelope : public RMessageComponent
         RText               encrypted();
         RDateTime           expires();
         RText               followupTo();
-        RMailboxList        from();
+        RAddressList        from();
         RText               inReplyTo();
         RText               keywords();
         RText               lines();
@@ -150,13 +146,13 @@ class REnvelope : public RMessageComponent
         RAddressList        resentBcc();
         RAddressList        resentCc();
         RDateTime           resentDate();
-        RMailboxList        resentFrom();
+        RAddressList        resentFrom();
         RMessageID          resentMessageID();
         RAddressList        resentReplyTo();
-        RMailbox            resentSender();
+        RAddress            resentSender();
         RAddressList        resentTo();
         RText               returnPath();
-        RMailbox            sender();
+        RAddress            sender();
         RText               subject();
         RText               summary();
         RAddressList        to();

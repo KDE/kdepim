@@ -23,14 +23,22 @@
 #ifndef RMM_DEFINES_H
 #define RMM_DEFINES_H
 
-#ifdef RMM_DEBUG
-# include <qcstring.h>
-# include <iostream.h>
-# define rmmDebug(a)    cerr << className() << ": " << \
-                        QCString((a)).data() << endl;
+#if (!defined NDEBUG) && (defined __GNUG__)
+
+#   include <stdio.h>
+#   include <iostream.h>
+#   include <qcstring.h>
+   
+#   define rmmDebug(a) \
+        fprintf(stderr, "%s, line %d\n", __PRETTY_FUNCTION__, __LINE__); \
+        cerr << QCString(a) << endl;
+
 #else
-# define rmmDebug(a)
+        
+#       define rmmDebug(a)
+
 #endif
+
 
 #endif // Included this file
 // vim:ts=4:sw=4:tw=78

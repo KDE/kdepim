@@ -95,8 +95,6 @@ enum HeaderDataType {
     Cte,
     DateTime,
     DispositionType,
-    Mailbox,
-    MailboxList,
     Mechanism,
     MessageID,
     Text

@@ -27,8 +27,7 @@
 #ifndef RMM_CTE_H
 #define RMM_CTE_H
 
-#include <qstring.h>
-#include <qlist.h>
+#include <qcstring.h>
 
 #include <RMM_Defines.h>
 #include <RMM_Enum.h>

@@ -32,24 +32,22 @@ class EmpathCachedMessage
 {
     public:
 
-        EmpathCachedMessage(RMM::RMessage * m, const QString &);
+        EmpathCachedMessage(RMM::RMessage & m);
         ~EmpathCachedMessage();
 
-        RMM::RMessage * message(const QString &);
+        RMM::RMessage message();
 
         unsigned int refCount() const;
 
-        void ref(const QString &);
-        void deref(const QString &);
+        void ref();
+        void deref();
 
-        bool referencedBy(const QString &);
-        
         const char * className() const { return "EmpathCachedMessage"; }
 
     private:
 
-        RMM::RMessage * message_;
-        QStringList references_;
+        RMM::RMessage message_;
+        unsigned int refCount_;
 };
 
 #endif

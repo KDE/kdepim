@@ -23,15 +23,12 @@
 #ifndef RMM_FIELD_BODY_H
 #define RMM_FIELD_BODY_H
 
-#include <qstring.h>
-
 #include <RMM_MessageComponent.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 
 /**
- * Base class for RAddress, RContentType, RMailboxList etc.
+ * Base class for RAddress, RContentType, RAddressList etc.
  */
 class RHeaderBody : public RMessageComponent {
 

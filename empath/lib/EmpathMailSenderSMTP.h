@@ -65,7 +65,7 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         /**
          * Send one message.
          */
-        void sendOne(RMM::RMessage & message, const QString & id);
+        void sendOne(RMM::RMessage message, const QString & id);
         
         virtual void saveConfig();
         virtual void loadConfig();

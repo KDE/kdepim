@@ -33,31 +33,29 @@ using namespace RMM;
 RCte::RCte()
     :    RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RCte::RCte(const RCte & cte)
     :    RHeaderBody(cte)
 {
-    rmmDebug("ctor");
-    assembled_    = false;
+    // Empty.
 }
 
 RCte::RCte(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor with \"" + s + "\"");
+    // Empty.
 }
 
 RCte::~RCte()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RCte &
 RCte::operator = (const RCte & cte)
 {
-    rmmDebug("operator =");
     if (this == &cte) return *this; // Don't do a = a.
 
     mechanism_ = cte.mechanism_;
@@ -70,7 +68,6 @@ RCte::operator = (const RCte & cte)
     RCte &
 RCte::operator = (const QCString & s)
 {
-    rmmDebug("operator = \"" + s + "\"");
     RHeaderBody::operator = (s);
     return *this;
 }
@@ -137,7 +134,6 @@ RCte::_assemble()
     void
 RCte::createDefault()
 {
-    rmmDebug("createDefault() called");
     mechanism_    = CteTypeBase64;
     parsed_        = true;
     assembled_    = false;
@@ -154,8 +150,8 @@ RCte::mechanism()
     void
 RCte::setMechanism(CteType t)
 {
+    parse();
     mechanism_ = t;
-    assembled_    = false;
 }
 
 // vim:ts=4:sw=4:tw=78

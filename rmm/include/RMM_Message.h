@@ -43,8 +43,8 @@ class RMessage : public RBodyPart {
         
         QCString recipientListAsPlainString();
 
-        void        addPart(RBodyPart * bp);
-        void        removePart(RBodyPart * part);
+        void        addPart(RBodyPart & bp);
+        void        removePart(RBodyPart & part);
         
         bool hasParentMessageID();
 

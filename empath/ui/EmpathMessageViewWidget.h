@@ -72,8 +72,6 @@ class EmpathMessageViewWidget : public QWidget
 
     private:
         
-        void showText(QCString &, bool m = true);
-
         EmpathMessageStructureWidget * structureWidget_;
         EmpathMessageHTMLWidget      * messageWidget_;
         EmpathHeaderViewWidget       * headerViewWidget_;

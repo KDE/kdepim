@@ -98,7 +98,7 @@ RMM::headerNames [] = {
 RMM::headerTypesTable [] = {
     Text,                // HeaderApproved
     AddressList,        // HeaderBcc
-    MailboxList,        // HeaderCc
+    AddressList,        // HeaderCc
     Text,                // HeaderComments
     Text,                // HeaderContentDescription
     DispositionType,    // HeaderContentDisposition
@@ -112,7 +112,7 @@ RMM::headerTypesTable [] = {
     Text,                // HeaderEncrypted
     DateTime,            // HeaderExpires
     Text,                // HeaderFollowupTo
-    MailboxList,        // HeaderFrom
+    AddressList,        // HeaderFrom
     Text,                // HeaderInReplyTo
     Text,                // HeaderKeywords
     Text,                // HeaderLines
@@ -127,13 +127,13 @@ RMM::headerTypesTable [] = {
     AddressList,        // HeaderResentBcc
     AddressList,        // HeaderResentCc
     DateTime,            // HeaderResentDate
-    MailboxList,        // HeaderResentFrom
+    AddressList,        // HeaderResentFrom
     MessageID,            // HeaderResentMessageID
     AddressList,        // HeaderResentReplyTo
-    Mailbox,            // HeaderResentSender
+    Address,            // HeaderResentSender
     AddressList,        // HeaderResentTo
     Text,                // HeaderReturnPath
-    Mailbox,            // HeaderSender
+    Address,            // HeaderSender
     Text,                // HeaderSubject
     Text,                // HeaderSummary
     AddressList,        // HeaderTo

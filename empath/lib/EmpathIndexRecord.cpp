@@ -81,7 +81,7 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
 EmpathIndexRecord::EmpathIndexRecord(
         const QString &     id,
         const QString &     subject,
-        RMM::RMailbox &     sender,
+        RMM::RAddress &     sender,
         RMM::RDateTime &    date,
         RMM::MessageStatus  status,
         Q_UINT32            size,

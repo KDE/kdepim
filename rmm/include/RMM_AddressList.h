@@ -27,7 +27,8 @@
 #ifndef RMM_RADDRESSLIST_H
 #define RMM_RADDRESSLIST_H
 
-#include <qstring.h>
+#include <qcstring.h>
+#include <qvaluelist.h>
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
@@ -43,12 +44,12 @@ class RAddressList : public RHeaderBody {
 
     public:
         
-        RAddress::Ptr at(unsigned int);
+        RAddress at(unsigned int);
         unsigned int count();
 
     private:
         
-        RAddress::List list_;
+        QValueList<RAddress> list_;
 };
 
 }

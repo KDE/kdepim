@@ -32,7 +32,7 @@
 
 // Local includes
 #include "RMM_Message.h"
-#include "RMM_Mailbox.h"
+#include "RMM_Address.h"
 #include "RMM_Envelope.h"
 #include "EmpathMailSenderSMTP.h"
 #include "EmpathConfig.h"
@@ -59,7 +59,7 @@ EmpathMailSenderSMTP::setServer(const QString & _name, const Q_UINT32 _port)
 }
 
    void
-EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
+EmpathMailSenderSMTP::sendOne(RMM::RMessage m, const QString & id)
 {
     currentID_ = id;
     
@@ -76,16 +76,16 @@ EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
         return;
     }
     
-    RMM::RMailbox * mailbox = addressList.at(0)->mailbox();
+    RMM::RAddress address = addressList.at(0);
     
-    if (mailbox == 0) {
+    if (address.type() == RMM::RAddress::Group) {
         // FIXME: Handle sending to a group.
         return;
     }
     
-    recipient = mailbox->localPart();
+    recipient = address.localPart();
     recipient += '@';
-    recipient += mailbox->domain();
+    recipient += address.domain();
 
     QString putStr = "smtp://" +
         serverName_ + ':' + QString().setNum(serverPort_) +

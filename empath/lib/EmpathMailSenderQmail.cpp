@@ -64,7 +64,7 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
 }
 
     void
-EmpathMailSenderQmail::sendOne(RMM::RMessage & message, const QString & id)
+EmpathMailSenderQmail::sendOne(RMM::RMessage message, const QString & id)
 {
     currentID_ = id;
     

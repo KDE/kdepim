@@ -26,44 +26,42 @@
 
 #include <qstring.h>
 #include <RMM_HeaderBody.h>
+#include <RMM_Defines.h>
 
 using namespace RMM;
 
 RHeaderBody::RHeaderBody()
     :    RMessageComponent()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RHeaderBody::RHeaderBody(const RHeaderBody & headerBody)
     :    RMessageComponent(headerBody)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RHeaderBody::RHeaderBody(const QCString & s)
     :    RMessageComponent(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
     RHeaderBody &
 RHeaderBody::operator = (const RHeaderBody & hb)
 {
-    rmmDebug("operator =");
     if (this == &hb) return *this;
     
     strRep_ = hb.strRep_;    
     
     RMessageComponent::operator = (hb);
-    assembled_    = false;
     return *this;
 }
 
     RHeaderBody &
 RHeaderBody::operator = (const QCString & s)
 {
-    rmmDebug("operator =");
     RMessageComponent::operator = (s);
     return *this;
 }
@@ -77,7 +75,7 @@ RHeaderBody::operator == (RHeaderBody & hb)
 
 RHeaderBody::~RHeaderBody()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     void

@@ -127,13 +127,13 @@ EmpathComposer::message(EmpathComposeForm composeForm)
    
     for (; it2 != attachments.end(); it2++) {
 
-        RMM::RBodyPart * newPart = new RMM::RBodyPart;
+        RMM::RBodyPart newPart;
 
-        newPart->setDescription ((*it2).description().utf8());
-        newPart->setEncoding    ((*it2).encoding());
-        newPart->setMimeType    ((*it2).type().utf8());
-        newPart->setMimeSubType ((*it2).subType().utf8());
-//        newPart->setCharset     ((*it2).charset().utf8());
+        newPart.setDescription ((*it2).description().utf8());
+        newPart.setEncoding    ((*it2).encoding());
+        newPart.setMimeType    ((*it2).type().utf8());
+        newPart.setMimeSubType ((*it2).subType().utf8());
+        newPart.setCharset     ((*it2).charset().utf8());
 
         message.addPart(newPart);
     }
@@ -213,9 +213,9 @@ EmpathComposer::s_jobComplete(EmpathJobInfo ji)
     if (!ji.success() || ji.xinfo().left(8) != "Composer")
         return;
 
-    RMM::RMessage * m(empath->message(ji.from(), ji.xinfo()));
+    RMM::RMessage m(empath->message(ji.from()));
     
-    if (m == 0) {
+    if (!m) {
         empathDebug(
             "Couldn't get supposedly retrieved message `" +
             ji.from().asString() + "'");
@@ -261,26 +261,25 @@ EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
 }
 
    void
-EmpathComposer::_reply(int id, RMM::RMessage * m)
+EmpathComposer::_reply(int id, RMM::RMessage message)
 {
     empathDebug("Replying");
  
     EmpathComposeForm composeForm(jobs_[id]);
-    RMM::RMessage message(*m);
     QCString to, cc;
     // FIXME: This should be kcmemailrc (or whatever it's called now).
     KConfig * c(KGlobal::config());
     
-    referenceHeaders_ = _referenceHeaders(m);
+    referenceHeaders_ = _referenceHeaders(message);
     
     // First fill in the primary return address. This will be the Reply-To
     // address if there's one given, otherwise it will be the first in
     // the sender list.
 
     if (message.envelope().has(RMM::HeaderReplyTo)) 
-        to = message.envelope().replyTo().at(0)->asString();
+        to = message.envelope().replyTo().at(0).asString();
     else if (message.envelope().has(RMM::HeaderFrom)) 
-        to = message.envelope().from().at(0)->asString();
+        to = message.envelope().from().at(0).asString();
     else
         to = i18n("Could not find sender of this message").ascii() +
             QCString(" <postmaster@localhost>");
@@ -296,16 +295,16 @@ EmpathComposer::_reply(int id, RMM::RMessage * m)
                     cc += ", ";
                 if (cc.length() > 70)
                     cc += "\r\n ";
-                cc += message.envelope().cc().at(i)->asString();
+                cc += message.envelope().cc().at(i).asString();
             }
     
         c->setGroup("UserInfo");
         
         RMM::RAddress me(c->readEntry("EmailAddress").ascii());
+        RMM::RAddress msgTo(message.envelope().to().at(0));
         
-        if (!(me == *message.envelope().to().at(0)))
-            if (!cc.isEmpty()) 
-                cc += message.envelope().to().asString();
+        if (me != msgTo && !cc.isEmpty()) 
+            cc += message.envelope().to().asString();
         
         composeForm.setHeader("Cc", cc);
     }
@@ -351,10 +350,10 @@ EmpathComposer::_reply(int id, RMM::RMessage * m)
         // Be careful here. We don't want to reveal people's
         // email addresses.
         if (message.envelope().has(RMM::HeaderFrom) &&
-            !message.envelope().from().at(0)->phrase().isEmpty()) {
+            !message.envelope().from().at(0).phrase().isEmpty()) {
             
             thingyWrote.replace(QRegExp("\\%s"),
-                message.envelope().from().at(0)->phrase());
+                message.envelope().from().at(0).phrase());
 
             if (message.envelope().has(RMM::HeaderDate))
                 thingyWrote.replace(QRegExp("\\%d"),
@@ -371,12 +370,11 @@ EmpathComposer::_reply(int id, RMM::RMessage * m)
 }
     
     void
-EmpathComposer::_forward(int id, RMM::RMessage * m)
+EmpathComposer::_forward(int id, RMM::RMessage message)
 {
     empathDebug("Forwarding");
     
     EmpathComposeForm composeForm(jobs_[id]);
-    RMM::RMessage message(*m);
     QCString s;
 
     // Fill in the subject.
@@ -392,10 +390,10 @@ EmpathComposer::_forward(int id, RMM::RMessage * m)
         else
             composeForm.setHeader("Subject", "Fwd: " + s);
 
-    if (message.body().count() == 0)
+    if (message.partCount() == 0)
         composeForm.setBody(message.decode().data());
-    else if (message.body().count() == 1)
-        composeForm.setBody(message.body().at(0)->decode().data());
+    else if (message.partCount() == 1)
+        composeForm.setBody(message.part(0).decode().data());
     else {
         // TODO
     } 
@@ -404,18 +402,16 @@ EmpathComposer::_forward(int id, RMM::RMessage * m)
 }
 
     void
-EmpathComposer::_bounce(int, RMM::RMessage * /* m */)
+EmpathComposer::_bounce(int, RMM::RMessage /* m */)
 {
     // TODO
 }
 
     QCString
-EmpathComposer::_referenceHeaders(RMM::RMessage * m)
+EmpathComposer::_referenceHeaders(RMM::RMessage message)
 {
     QCString s;
 
-    RMM::RMessage message(*m);
-    
     // Ok, here's the system.
     // Whatever happens, we create an In-Reply-To.
     

@@ -75,6 +75,8 @@ EmpathComposeWidget::EmpathComposeWidget(
 
     c->setGroup(GROUP_COMPOSE);
 
+#if 0
+    //FIXME Qt hasn't got setWordWrap in today
     if (!c->readBoolEntry(C_WRAP_LINES, true))
         editorWidget_->setWordWrap(QMultiLineEdit::NoWrap);
 
@@ -84,6 +86,7 @@ EmpathComposeWidget::EmpathComposeWidget(
         editorWidget_->setWrapColumnOrWidth(
             c->readUnsignedNumEntry(C_WRAP_COLUMN, 76));
     }
+#endif
 
     c->setGroup(GROUP_DISPLAY);
 

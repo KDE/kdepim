@@ -31,6 +31,9 @@
 #include <qpopupmenu.h>
 #include <qtextbrowser.h>
 
+// Local includes
+#include "EmpathURL.h"
+
 class EmpathMessageHTMLWidget : public QTextBrowser
 {
     Q_OBJECT
@@ -40,11 +43,7 @@ class EmpathMessageHTMLWidget : public QTextBrowser
         EmpathMessageHTMLWidget(QWidget *);
         ~EmpathMessageHTMLWidget();
         
-        /**
-         * Do the parsing and print to the widget
-         */
-        void toHTML(QString &);
-        bool showText(const QString & s, bool markup = true);
+        void show(const QString & xml);
         virtual QSize sizeHint() const;
         virtual QSize minimumSizeHint() const;
         
@@ -55,7 +54,6 @@ class EmpathMessageHTMLWidget : public QTextBrowser
     private:
         
         QPopupMenu popup_;
-        QString QColorToHTML(const QColor &);
 };
 
 #endif

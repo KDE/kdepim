@@ -56,7 +56,7 @@ EmpathMailSender::~EmpathMailSender()
 }
 
     void
-EmpathMailSender::send(RMM::RMessage & message)
+EmpathMailSender::send(RMM::RMessage message)
 {
     empath->s_infoMessage(i18n("Sending message"));
 
@@ -71,7 +71,7 @@ EmpathMailSender::send(RMM::RMessage & message)
 }
 
     void
-EmpathMailSender::queue(RMM::RMessage & message)
+EmpathMailSender::queue(RMM::RMessage message)
 {
     KConfig * c(KGlobal::config());
 
@@ -157,11 +157,11 @@ EmpathMailSender::operationComplete(
             // retrieved.
         }
 
-        RMM::RMessage * m(empath->message(url, xinfo));
+        RMM::RMessage m(empath->message(url));
  
-        if (m == 0) {
+        if (!m) {
         
-            empathDebug("Couldn't get a pointer to the next queued message !");
+            empathDebug("Couldn't get the next queued message !");
         
             QMessageBox::warning(0, "Empath",
                 i18n("Couldn't find next queued message"),
@@ -170,11 +170,7 @@ EmpathMailSender::operationComplete(
             return;
         }
     
-        RMM::RMessage message(*m);
-    
-        empath->finishedWithMessage(url, xinfo);
-
-        sendOne(message, url.messageID());
+        sendOne(m, url.messageID());
 
     } else if ((t == WriteMessage) && (xinfo == "message->pending")) {
         
@@ -216,7 +212,7 @@ EmpathMailSender::operationComplete(
 }
 
      void
-EmpathMailSender::_emergencyBackup(RMM::RMessage & message)
+EmpathMailSender::_emergencyBackup(RMM::RMessage message)
 {
     empathDebug("Couldn't queue message ! Writing to emergency backup");
 

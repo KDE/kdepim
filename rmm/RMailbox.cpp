@@ -1,9 +1,7 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright 1999, 2000
-        Rik Hemsley <rik@kde.org>
-        Wilco Greven <j.w.greven@student.utwente.nl>
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,65 +22,63 @@
 # pragma implementation "RMM_Mailbox.h"
 #endif
 
-#include <qstring.h>
+#include <iostream>
+
 #include <qstrlist.h>
+
 #include <RMM_Mailbox.h>
 #include <RMM_Token.h>
+#include <RMM_Defines.h>
 
 using namespace RMM;
 
 RMailbox::RMailbox()
-    :    RAddress()
+    :    RMessageComponent()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMailbox::RMailbox(const RMailbox & mailbox)
-    :    RAddress(mailbox),
-        phrase_        (mailbox.phrase_),
+    :   RMessageComponent(mailbox),
+        phrase_       (mailbox.phrase_),
         route_        (mailbox.route_),
         localPart_    (mailbox.localPart_),
-        domain_        (mailbox.domain_)
+        domain_       (mailbox.domain_)
 {
-    rmmDebug("copy ctor");
+    // Empty.
 }
 
 RMailbox::~RMailbox()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
 RMailbox::RMailbox(const QCString & s)
-    :    RAddress(s)
+    :    RMessageComponent(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
     RMailbox &
 RMailbox::operator = (const RMailbox & mailbox)
 {
-    rmmDebug("operator =");
     if (this == &mailbox) return *this; // Avoid a = a
     
-    phrase_        = mailbox.phrase_;
+    phrase_       = mailbox.phrase_;
     route_        = mailbox.route_;
     localPart_    = mailbox.localPart_;
-    domain_        = mailbox.domain_;
+    domain_       = mailbox.domain_;
     
-    RAddress::operator = (mailbox);
+    RMessageComponent::operator = (mailbox);
     
-    assembled_    = false;
     return *this;
 }
 
     RMailbox &
 RMailbox::operator = (const QCString & s)
 {
-    rmmDebug("operator = (" + s + ")");
+    RMessageComponent::operator = (s);
     
-    RAddress::operator = (s);
-    
-    assembled_    = false;
     return *this;
 }
 
@@ -115,7 +111,8 @@ RMM::operator >> (QDataStream & s, RMailbox & mailbox)
 RMM::operator << (QDataStream & s, RMailbox & mailbox)
 {
     mailbox.parse();
-    s    << mailbox.phrase_
+
+    s   << mailbox.phrase_
         << mailbox.route_
         << mailbox.localPart_
         << mailbox.domain_;
@@ -134,8 +131,8 @@ RMailbox::phrase()
     void
 RMailbox::setPhrase(const QCString & s)
 {
+    parse();
     phrase_ = s.data();
-    assembled_ = false;
 }
 
     QCString
@@ -148,8 +145,8 @@ RMailbox::route()
     void
 RMailbox::setRoute(const QCString & s)
 {
+    parse();
     route_ = s.data();
-    assembled_ = false;
 }
 
     QCString
@@ -162,8 +159,8 @@ RMailbox::localPart()
     void
 RMailbox::setLocalPart(const QCString & s)
 {
+    parse();
     localPart_ = s.data();
-    assembled_ = false;
 }
 
 
@@ -177,34 +174,37 @@ RMailbox::domain()
     void
 RMailbox::setDomain(const QCString & s)
 {
+    parse();
     domain_ = s.data();
-    assembled_ = false;
 }
 
     void
 RMailbox::_parse()
 {
     if (strRep_.find('@') == -1) { // Must contain '@' somewhere. (RFC822)
-        rmmDebug("This is NOT a valid mailbox");
+        rmmDebug("This is not a valid mailbox !");
         return;
     }
     
-    rmmDebug("It's a valid mailbox (probably). Tokenising");
-
     QStrList l;
-    RTokenise(strRep_, " \n", l, true);
+    RTokenise(strRep_, " \n", l);
+    QStrListIterator it2(l);
+    for (; it2.current(); ++it2) {
+        cerr << "Token: `" << it2.current() << "'" << endl;
+    }
+
 
     bool hasRouteAddress(false);
 
     QStrListIterator it(l);
 
-    for (; it.current(); ++it) {
-        rmmDebug("TOKEN: " + QCString(it.current()));
-        hasRouteAddress = (*(it.current()) == '<');
-    }
-    
+    for (; it.current(); ++it)
+        if (*(it.current()) == '<') {
+            hasRouteAddress = true;
+            break;
+        }
+
     if (hasRouteAddress) { // It's phrase route-addr
-        rmmDebug("phrase route-addr");
 
         // Deal with the phrase part. Just put in a string.
         phrase_ = "";
@@ -214,7 +214,6 @@ RMailbox::_parse()
         // We're guaranteed to hit '<' since hasRouteAddress == true.
         while (s.at(0) != '<') {
             phrase_ += s;
-            rmmDebug("Phrase now: " + phrase_);
             s = l.at(i++);
             if (s.at(0) != '<')
                 phrase_ += ' ';
@@ -228,12 +227,15 @@ RMailbox::_parse()
 
         for (Q_UINT32 n = i; n < l.count(); n++) {
             route_ += l.at(n);
-            if (n + 1 < l.count()) route_ += ' ';
+            if (n + 1 < l.count())
+                route_ += ' ';
         }
 
+        cerr << "strRep : `" << strRep_ << "'" << endl;
+        cerr << "phrase : `" << phrase_ << "'" << endl;
+        cerr << "route  : `" << route_ << "'" << endl;
+
     } else { // It's just addr-spec
-        
-        rmmDebug("addr-spec");
         
         while (strRep_.at(0) == '<')
             strRep_.remove(0, 1);
@@ -244,8 +246,6 @@ RMailbox::_parse()
         // Re-use l. It's guaranteed to be cleared by RTokenise.
         RTokenise(strRep_, "@", l);
         
-        rmmDebug("done tokenise");
-
         localPart_ = l.at(0);
         localPart_ = localPart_.stripWhiteSpace();
         if (l.count() == 2) {
@@ -255,10 +255,6 @@ RMailbox::_parse()
 
         // Easy, eh ?
     }
-    rmmDebug("phrase:    \""    + phrase_        + "\"");
-    rmmDebug("route:     \""    + route_        + "\"");
-    rmmDebug("localpart: \""    + localPart_    + "\"");
-    rmmDebug("domain:    \""    + domain_        + "\"");
 }
 
 
@@ -266,23 +262,20 @@ RMailbox::_parse()
 RMailbox::_assemble()
 {
     strRep_ = "";
-    rmmDebug("assemble() called");
     if (localPart_.isEmpty()) // This is 'phrase route-addr' style
         strRep_ = phrase_ + " " + route_;
     else
         strRep_ = localPart_ + "@" + domain_;
-    rmmDebug("assembled to \"" + strRep_ + "\""); 
 }
 
     void
 RMailbox::createDefault()
 {
-    rmmDebug("createDefault() called");
-    phrase_        = "";
+    phrase_       = "";
     route_        = "";
     localPart_    = "foo";
-    domain_        = "bar";
-    strRep_        = "<foo@bar>";
+    domain_       = "bar";
+    strRep_       = "<foo@bar>";
     
     assembled_ = false;
 }

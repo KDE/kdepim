@@ -33,7 +33,6 @@ using namespace RMM;
 RText::RText()
     :    RHeaderBody()
 {
-    rmmDebug("ctor");
     parsed_ = assembled_ = true;
 }
 
@@ -46,13 +45,12 @@ RText::RText(const RText & r)
 RText::RText(const QCString & s)
        :    RHeaderBody(s)
 {
-    rmmDebug("ctor with \"" + s + "\"");
     parsed_ = assembled_ = true;
 }
 
 RText::~RText()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RText &
@@ -73,26 +71,25 @@ RText::operator = (const QCString & s)
     bool
 RText::operator == (RText & t)
 {
-    parse();
-    t.parse();
-
     return (RHeaderBody::operator == (t));
 }
 
     void
 RText::_parse()
 {
+    // Empty.
 }
 
     void
 RText::_assemble()
 {
+    // Empty.
 }
 
     void
 RText::createDefault()
 {
-    rmmDebug("createDefault() called");
+    // Empty.
 }
 
 // vim:ts=4:sw=4:tw=78

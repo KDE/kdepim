@@ -6,8 +6,9 @@ noinst_LIBRARIES = libempath.a
 libempath_a_METASOURCES = AUTO
 
 libempath_a_SOURCES = \
-EmpathInterface.cpp \
 Empath.cpp \
+EmpathViewFactory.cpp \
+EmpathInterface.cpp \
 EmpathJobInfo.cpp \
 EmpathCachedMessage.cpp \
 EmpathComposeForm.cpp \

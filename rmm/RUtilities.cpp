@@ -114,12 +114,12 @@ RMM::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
     
     for (i = 0; srcl; s += 3) {
         
-        *d++ =        B64[s[0] >> 2];
-        *d++ =         B64[((s[0] << 4) + (--srcl ? s[1] >> 4 : 0)) & 0x3f];
+        *d++ = B64[s[0] >> 2];
+        *d++ = B64[((s[0] << 4) + (--srcl ? s[1] >> 4 : 0)) & 0x3f];
         *d++ =
-            srcl ?    B64[((s[1] << 2) + (--srcl ? s[2] >> 6 : 0)) & 0x3f] : '=';
+            srcl ? B64[((s[1] << 2) + (--srcl ? s[2] >> 6 : 0)) & 0x3f] : '=';
         *d++ =
-            srcl ?    B64[s[2] & 0x3f] : '=';
+            srcl ? B64[s[2] & 0x3f] : '=';
         
         if (srcl != 0)
             srcl--;
@@ -160,18 +160,18 @@ RMM::decodeBase64(const QCString & s, unsigned long & len)
         
         c = *src++;
         
-        if        (isupper(c))    c -= 'A';
+        if         (isupper(c))    c -= 'A';
         else if    (islower(c))    c -= 'a' - 26;
         else if    (isdigit(c))    c -= '0' - 52;
-        else if    (c == '+')        c = 62;
-        else if    (c == '/')        c = 63;
+        else if    (c == '+')      c = 62;
+        else if    (c == '/')      c = 63;
         
         else if (c == '=') {
 
             switch (e++) {
-                case 3:        e = 0;                break;
-                case 2:        if (*src == '=')    break;
-                default:                        return 0;
+                case 3:  e = 0;            break;
+                case 2:  if (*src == '=')  break;
+                default:                   return 0;
             }
     
             continue;

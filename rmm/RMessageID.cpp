@@ -32,6 +32,7 @@
 #include <qstring.h>
 #include <qregexp.h>
 #include <qstrlist.h>
+#include <RMM_Defines.h>
 #include <RMM_MessageID.h>
 #include <RMM_Token.h>
 
@@ -42,7 +43,7 @@ int RMessageID::seq_ = 0;
 RMessageID::RMessageID()
     :    RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessageID::RMessageID(const RMessageID & messageID)
@@ -50,17 +51,18 @@ RMessageID::RMessageID(const RMessageID & messageID)
         localPart_(messageID.localPart_),
         domain_(messageID.domain_)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessageID::RMessageID(const QCString & s)
     :    RHeaderBody(s)
 {
+    // Empty.
 }
 
 RMessageID::~RMessageID()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     bool
@@ -77,28 +79,20 @@ RMessageID::operator == (RMessageID & msgID)
     RMessageID &
 RMessageID::operator = (const RMessageID & messageID)
 {
-    rmmDebug("operator =");
     if (this == &messageID) return *this; // Avoid a = a
     
     localPart_ = messageID.localPart_;
     domain_ = messageID.domain_;
     
-    rmmDebug("operator = ...");
-    rmmDebug("localPart_ == " + localPart_);
-    rmmDebug("domain_ == " + domain_);
-    
     RHeaderBody::operator = (messageID);
     
-    assembled_ = false;
     return *this;
 }
 
     RMessageID &
 RMessageID::operator = (const QCString & s)
 {
-    rmmDebug("operator =");
     RHeaderBody::operator = (s);
-    assembled_ = false;
     return *this;
 }
 
@@ -132,8 +126,8 @@ RMessageID::localPart()
     void
 RMessageID::setLocalPart(const QCString & localPart)
 {
+    parse();
     localPart_ = localPart;
-    assembled_ = false;
 }
 
     QCString
@@ -146,17 +140,15 @@ RMessageID::domain()
     void
 RMessageID::setDomain(const QCString & domain)
 {
+    parse();
     domain_ = domain;
-    assembled_ = false;
 }
 
     void
 RMessageID::_parse()
 {
-    if (strRep_.isEmpty()) {
-        rmmDebug("But there's nothing to parse !");
+    if (strRep_.isEmpty())
         return;
-    }
     
     int atPos = strRep_.find('@');
     
@@ -184,8 +176,6 @@ RMessageID::_assemble()
     void
 RMessageID::createDefault()
 {
-    rmmDebug("createDefault() called");
-
     struct timeval timeVal;
     struct timezone timeZone;
     
@@ -204,7 +194,6 @@ RMessageID::createDefault()
     else
         domain_ = "localhost.localdomain";
 
-    rmmDebug("Created \"" + localPart_ + "." + domain_ + "\"");
     parsed_ = true;
     assembled_ = false;
 }

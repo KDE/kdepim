@@ -24,36 +24,37 @@
 # pragma implementation "RMM_Parameter.h"
 #endif
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
-#include <qstring.h>
-#include <RMM_Parameter.h>
+#include <qcstring.h>
+
+#include <RMM_Defines.h>
 #include <RMM_Token.h>
+#include <RMM_Parameter.h>
 
 using namespace RMM;
 
 RParameter::RParameter()
     :    RMessageComponent()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RParameter::RParameter(const RParameter & p)
-    :    RMessageComponent(p)
+    :   RMessageComponent(p),
+        attribute_(p.attribute_),
+        value_(p.value_)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RParameter::RParameter(const QCString & s)
     :    RMessageComponent(s)
 {
-    rmmDebug("ctor with \"" + s + "\"");
+    // Empty.
 }
 
 RParameter::~RParameter()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RParameter &
@@ -66,8 +67,6 @@ RParameter::operator = (const QCString & s)
     RParameter &
 RParameter::operator = (const RParameter & p)
 {
-    rmmDebug("operator =");
-    
     if (this == &p) return *this; // Don't do a = a.
     
     attribute_ = p.attribute_;
@@ -134,14 +133,14 @@ RParameter::value()
     void
 RParameter::setAttribute(const QCString & attribute)
 {
+    parse();
     attribute_ = attribute;
-    assembled_ = false;
 }
     void
 RParameter::setValue(const QCString & value)    
 {
+    parse();
     value_ = value;
-    assembled_ = false;
 }
 
 // vim:ts=4:sw=4:tw=78

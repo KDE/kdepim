@@ -1,9 +1,7 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright 1999, 2000
-        Rik Hemsley <rik@kde.org>
-        Wilco Greven <j.w.greven@student.utwente.nl>
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,10 +25,8 @@
 #ifndef RMM_RMAILBOX_H
 #define RMM_RMAILBOX_H
 
-#include <qstring.h>
-
-#include <RMM_Address.h>
-#include <RMM_Defines.h>
+#include <qcstring.h>
+#include <RMM_MessageComponent.h>
 
 namespace RMM {
 
@@ -40,23 +36,16 @@ namespace RMM {
  * You can see which type this is by calling phrase().isEmpty(). If it's empty,
  * you have an addr-spec.
  */
-class RMailbox : public RAddress {
+class RMailbox : public RMessageComponent {
 
 #include "generated/RMailbox_generated.h"
         
     public:
 
-        typedef KSharedPtr<RMailbox> Ptr;
-        typedef QValueList<Ptr> List;
-        
-        friend QDataStream & operator >> (QDataStream & s, RMailbox & mailbox);
-        
-        friend QDataStream & operator << (QDataStream & s, RMailbox & mailbox);
-
-        void setPhrase(const QCString & phrase);
-        void setRoute(const QCString & route);
-        void setLocalPart(const QCString & localPart);
-        void setDomain(const QCString & domain);
+        void setPhrase(const QCString &);
+        void setRoute(const QCString &);
+        void setLocalPart(const QCString &);
+        void setDomain(const QCString &);
 
         QCString phrase();
         QCString route();

@@ -24,16 +24,10 @@
 # pragma implementation "RMM_MimeType.h"
 #endif
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <iostream.h>
+#include <qcstring.h>
 
-#include <qstring.h>
-
-#include <RMM_Parameter.h>
+#include <RMM_Defines.h>
 #include <RMM_MimeType.h>
-#include <RMM_Token.h>
-#include <RMM_Utility.h>
 #include <RMM_Enum.h>
 
 using namespace RMM;
@@ -41,31 +35,30 @@ using namespace RMM;
 RMimeType::RMimeType()
     :   RHeaderBody()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMimeType::RMimeType(const RMimeType & t)
     :    RHeaderBody(t)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMimeType::RMimeType(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 
 RMimeType::~RMimeType()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RMimeType &
 RMimeType::operator = (const RMimeType & t)
 {
-    rmmDebug("operator =");
     if (this == &t) return *this; // Avoid a = a
     
     boundary_        = t.boundary_;
@@ -95,77 +88,89 @@ RMimeType::operator == (RMimeType & t)
     MimeType
 RMimeType::type()
 {
+    parse();
     return type_;
 }
 
     void
 RMimeType::setType(MimeType t)
 {
+    parse();
     type_ = t;
 }
 
     void
 RMimeType::setType(const QCString & s)
 {
+    parse();
     type_ = mimeTypeStr2Enum(s);
 }
 
     MimeSubType
 RMimeType::subType()
 {
+    parse();
     return subType_;
 }
 
     void
 RMimeType::setSubType(MimeSubType t)
 {
+    parse();
     subType_ = t;
 }
 
     void
 RMimeType::setSubType(const QCString & s)
 {
+    parse();
     subType_ = mimeSubTypeStr2Enum(s);
 }
 
     QCString
 RMimeType::boundary()
 {
+    parse();
     return boundary_;
 }
 
     void
 RMimeType::setBoundary(const QCString & s)
 {
+    parse();
     boundary_ = s;
 }
 
     QCString
 RMimeType::name()
 {
+    parse();
     return name_;
 }
 
     void
 RMimeType::setName(const QCString & s)
 {
+    parse();
     name_ = s;
 }
 
     void
 RMimeType::_parse()
 {
+    // STUB
 }
 
     void
 RMimeType::_assemble()
 {
+    // STUB
 }
 
     void
 RMimeType::createDefault()
 {
-    rmmDebug("createDefault called");
+    // STUB
 }
 
 // vim:ts=4:sw=4:tw=78

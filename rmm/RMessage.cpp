@@ -24,38 +24,32 @@
 # pragma implementation "RMM_Message.h"
 #endif
 
-#include <qstring.h>
-#include <qstrlist.h>
-#include <qregexp.h>
-
-#include <RMM_Token.h>
 #include <RMM_Defines.h>
 #include <RMM_Message.h>
-#include <RMM_Envelope.h>
 
 using namespace RMM;
 
 RMessage::RMessage()
     :    RBodyPart()
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessage::RMessage(const RMessage & m)
     :    RBodyPart(m)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessage::RMessage(const QCString & s)
     :    RBodyPart(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessage::~RMessage()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     MessageStatus
@@ -119,16 +113,15 @@ RMessage::createDefault()
 }
 
     void
-RMessage::addPart(RBodyPart *)
+RMessage::addPart(RBodyPart &)
 {
     // STUB
 }
 
     void
-RMessage::removePart(RBodyPart *)
+RMessage::removePart(RBodyPart &)
 {
     // STUB
 }
-
 
 // vim:ts=4:sw=4:tw=78

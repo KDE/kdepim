@@ -27,9 +27,8 @@
 #ifndef RMM_RMESSAGEID_H
 #define RMM_RMESSAGEID_H
 
-#include <qstring.h>
+#include <qcstring.h>
 #include <RMM_HeaderBody.h>
-#include <RMM_Defines.h>
 
 namespace RMM {
 
@@ -43,9 +42,6 @@ class RMessageID : public RHeaderBody {
 
     public:
         
-        friend QDataStream & operator >> (QDataStream &, RMessageID &);
-        friend QDataStream & operator << (QDataStream &, RMessageID &);
-
         QCString    localPart();
         QCString    domain();
         void        setLocalPart(const QCString & localPart);

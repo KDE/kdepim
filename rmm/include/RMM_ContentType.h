@@ -27,7 +27,7 @@
 #ifndef RMM_CONTENTTYPE_H
 #define RMM_CONTENTTYPE_H
 
-#include <qstring.h>
+#include <qcstring.h>
 
 #include <RMM_HeaderBody.h>
 #include <RMM_ParameterList.h>

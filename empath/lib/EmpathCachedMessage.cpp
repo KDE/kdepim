@@ -23,57 +23,38 @@
 #include "EmpathDefines.h"
 #include "EmpathCachedMessage.h"
 
-EmpathCachedMessage::EmpathCachedMessage(RMM::RMessage * m, const QString & r)
+EmpathCachedMessage::EmpathCachedMessage(RMM::RMessage & m)
     :   message_(m)
 {
-    ref(r);
+    ref();
 }
 
 EmpathCachedMessage::~EmpathCachedMessage()
 {
-    delete message_;
-    message_ = 0;
 }
 
-    RMM::RMessage *
-EmpathCachedMessage::message(const QString & r)
+    RMM::RMessage
+EmpathCachedMessage::message()
 {
-    references_.remove(r);
+    deref();
     return message_;
 }
 
     unsigned int
 EmpathCachedMessage::refCount() const
 {
-    return references_.count();
+    return refCount_;
 }
 
     void
-EmpathCachedMessage::ref(const QString & r)
+EmpathCachedMessage::ref()
 {
-    empathDebug("Adding `" + r + "' to refs");
-    references_.append(r);
+    ++refCount_;
 }
 
     void
-EmpathCachedMessage::deref(const QString & r)
+EmpathCachedMessage::deref()
 {
-    QString notConst(r);
-    QStringList::Iterator firstRefByCaller = references_.find(notConst);
-    if (firstRefByCaller == references_.end()) {
-        empathDebug("Not dereferencing this - can't find ref by `" + r + "'");
-        return;
-    }
-    empathDebug("Removing reference `" + *firstRefByCaller + "'");
-    references_.remove(firstRefByCaller);
-}
-
-    bool
-EmpathCachedMessage::referencedBy(const QString & s)
-{
-    QStringList::ConstIterator it;
-    for (it = references_.begin(); it != references_.end(); ++it)
-        empathDebug("Reference: `" + *it + "'");
-    return (references_.contains(s) > 0);
+    --refCount_;
 }
 

@@ -45,18 +45,18 @@ RDateTime::RDateTime()
     :    RHeaderBody(),
         zone_("")
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RDateTime::~RDateTime()
 { 
-    rmmDebug("dtor");
+    // Empty.
 }
 
 RDateTime::RDateTime(const QCString & s)
     :    RHeaderBody(s)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RDateTime::RDateTime(const RDateTime & t)
@@ -64,13 +64,12 @@ RDateTime::RDateTime(const RDateTime & t)
         zone_   (t.zone_),
         qdate_  (t.qdate_)
 {
-    rmmDebug("copy ctor");
+    // Empty.
 }
 
     RDateTime &
 RDateTime::operator = (const RDateTime & t)
 {
-    rmmDebug("operator =");
     if (this == &t) return *this; // Don't do a = a.
     qdate_    = t.qdate_;
     zone_    = t.zone_;
@@ -127,10 +126,6 @@ RDateTime::timeZone()
     void
 RDateTime::_parse()
 {
-    if (parsed_) return;
-
-    rmmDebug("parse() called");
-    
     Q_UINT32    dayOfMonth_;
     Q_UINT32    month_;
     Q_UINT32    year_;
@@ -194,9 +189,6 @@ RDateTime::_parse()
     QTime t;
     t.setHMS(hour_, min_, sec_);
     qdate_.setTime(t);
-    
-    parsed_        = true;
-    assembled_    = false;
 }
 
     void
@@ -240,7 +232,6 @@ RDateTime::asUnixTime()
     parse();
     struct tm timeStruct;
     
-    rmmDebug(QCString("asUnixTime: date: ") + qdate_.toString().ascii());
     QDate d = qdate_.date();
     QTime t = qdate_.time();
     

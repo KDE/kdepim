@@ -79,38 +79,43 @@ EmpathURL::EmpathURL(const EmpathURL & url)
     void
 EmpathURL::_parse()
 {
-    if (strRep_.left(9) != "empath://") return;
+    empathDebug("Parsing `" + strRep_ + "'");
+
+    if (strRep_.left(9) != "empath://") {
+        isValid_ = false;
+        return;
+    }
     
     isValid_ = true;
     strRep_.remove(0, 9);
-    bool hadTrailingSlash(strRep_.at(0) == '/');
+    bool hadTrailingSlash(strRep_.at(strRep_.length() - 1) == '/');
     _cleanUp(strRep_);
     
     if (strRep_.contains('/') == 0) {
-        // No slashes, therefore it's just got a mailbox name.
+        // empath://mailbox_name
         mailboxName_    = strRep_;
         folderPath_     = QString::null;
         messageID_      = QString::null;
         return;
     }
+    
+    unsigned int endOfMailboxName  = strRep_.find('/');
+    mailboxName_ = strRep_.left(endOfMailboxName);
             
-    if (!hadTrailingSlash) {
-        // Not a mailbox (because the above didn't match), but has a
-        // trailing slash. Therefore it's a mailbox + a folder path.
-        unsigned int i  = strRep_.find('/');
-        mailboxName_    = strRep_.left(i);
-        folderPath_     = strRep_.right(strRep_.length() - i - 1);
-        messageID_      = QString::null;
+    if (hadTrailingSlash) {
+        // empath://mailbox-name/folder/path/
+        folderPath_ = strRep_.mid(endOfMailboxName + 1);
+        messageID_  = QString::null;
         return;
     }
     
-    // Well, it's got a mailbox and a folder path, and the above didn't match,
-    // so it's also got a message id.
-    unsigned int i  = strRep_.find('/');
-    mailboxName_    = strRep_.left(i);
-    unsigned int j  = strRep_.findRev('/');
-    folderPath_     = strRep_.mid(i + 1, j);
-    messageID_      = strRep_.right(strRep_.length() - j);
+    // empath://mailbox-name/folder/path/message-id
+    unsigned int endOfFolderPath  = strRep_.findRev('/');
+
+    folderPath_ = strRep_.mid(
+        endOfMailboxName + 1, endOfFolderPath - endOfMailboxName - 1);
+
+    messageID_ = strRep_.mid(endOfFolderPath + 1);
 }
 
 EmpathURL::~EmpathURL()

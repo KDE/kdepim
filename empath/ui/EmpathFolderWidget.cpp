@@ -322,7 +322,7 @@ EmpathFolderWidget::s_newFolder()
     if (currentItem() != 0)
         setOpen(currentItem(), true);
 
-    empath->createFolder(newFolderURL, "");
+    empath->createFolder(newFolderURL, "FolderWidget");
 }
 
     void
@@ -557,6 +557,18 @@ EmpathFolderWidget::startAutoScroll()
     void
 EmpathFolderWidget::stopAutoScroll()
 {
+}
+
+    void
+EmpathFolderWidget::s_jobFinished(EmpathJobInfo i)
+{
+    if (i.xinfo() == "FolderWidget") {
+
+        if ((i.type() == RemoveFolder) || (i.type() == CreateFolder)) {
+
+            s_update();
+        }
+    }
 }
     
 

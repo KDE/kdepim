@@ -42,6 +42,7 @@
 #include "EmpathFilterList.h"
 #include "EmpathCachedMessage.h"
 #include "EmpathComposeForm.h"
+#include "EmpathViewFactory.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
@@ -189,9 +190,7 @@ class Empath : public QObject
          * @return A pointer to an RMM::RMessage, unless the message can't
          * be found, when it returns 0.
          */
-        RMM::RMessage   * message(const EmpathURL &, const QString &);
-
-        void finishedWithMessage(const EmpathURL &, const QString &);
+        RMM::RMessage   message(const EmpathURL &);
 
         /**
          * Gets a pointer to the folder specified in the url, or 0.
@@ -228,9 +227,11 @@ class Empath : public QObject
          * Generate an unique filename
          */
         QString generateUnique();
-        void cacheMessage(const EmpathURL &, RMM::RMessage *, const QString &);
+        void cacheMessage(const EmpathURL &, RMM::RMessage);
         
         void jobFinished(EmpathJobInfo);
+
+        EmpathViewFactory & viewFactory();
 
     protected:
 
@@ -309,17 +310,13 @@ class Empath : public QObject
         /**
          * Ask for a message to be moved from one folder to another.
          */
-        void move(
-            const EmpathURL &,
-            const EmpathURL &,
+        void move(const EmpathURL &, const EmpathURL &,
             QString extraInfo = QString::null);
         
         /**
          * Ask for a message to be retrieved.
          */
-        void retrieve(
-            const EmpathURL &,
-            QString extraInfo = QString::null);
+        void retrieve(const EmpathURL &, QString extraInfo = QString::null);
         
         /**
          * Write a new message to the specified folder.
@@ -516,6 +513,8 @@ class Empath : public QObject
         QString pidStr_;
         
         QDict<EmpathCachedMessage> cache_;
+
+        EmpathViewFactory viewFactory_;
 };
 
 #endif

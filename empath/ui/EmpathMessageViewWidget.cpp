@@ -32,6 +32,7 @@
 #include <krun.h>
 
 // Local includes
+#include "EmpathConfig.h"
 #include "EmpathMessageStructureWidget.h"
 #include "EmpathMessageHTMLView.h"
 #include "EmpathHeaderViewWidget.h"
@@ -95,18 +96,25 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
 
     url_ = ji.from();
 
-    RMM::RMessage * m(empath->message(ji.from(), ji.xinfo()));
+    RMM::RMessage m(empath->message(ji.from()));
     
-    if (m == 0) {
+    if (!m) {
         empathDebug("Couldn't get supposedly retrieved message from \"" +
             ji.from().asString() + "\"");
         return;
     }
-    
-    RMM::RBodyPart message(m->decode());
 
-    empath->finishedWithMessage(ji.from(), ji.xinfo());
-    
+    KConfig * config(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    config->setGroup(GROUP_DISPLAY);
+
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+
+    RMM::RBodyPart message(m.decode());
+
     structureWidget_->setMessage(message);
     
     // Ok I'm going to try and get the viewable body parts now.
@@ -116,14 +124,22 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
     // multipart/alternative, I'll pick the 'best' of the possibilities.
     
     headerViewWidget_->useEnvelope(message.envelope());
+
+    QString s;
     
-    QCString s;
+    if (message.body().count() == 0) {
+        empathDebug("Message body count is 0");
+        s = QString::fromUtf8(message.asXML(quote1, quote2));
+        messageWidget_->show(s);
+        return;
+    }
     
-    if (message.body().count() == 0)
-        s = message.decode().data();
-    
-    else if (message.body().count() == 1)
-        s = message.body().at(0)->decode().data();
+    else if (message.body().count() == 1) {
+        empathDebug("Message body count is 1");
+        s = QString::fromUtf8(message.body().at(0)->asXML(quote1, quote2));
+        messageWidget_->show(s);
+        return;
+    }
     
     else {
         
@@ -158,7 +174,8 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
         
         empathDebug("===================== MULTIPART ====================");
         
-        QListIterator<RMM::RBodyPart> it(message.body());
+        QList<RMM::RBodyPart> body(message.body());
+        QListIterator<RMM::RBodyPart> it(body);
         
         int i = 0;
         for (; it.current(); ++it) {
@@ -185,29 +202,26 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
 
                         empathDebug("Using this part as body");
 
-                        RMM::RBodyPart p(*it.current());
-                    
-                        s = p.decode().data();
-                        showText(s, true);
+                        s = QString::fromUtf8(it.current()->asString());
+                        messageWidget_->show(s);
                         return;
     
                     } else if (!stricmp(t.subType(), "plain")) {
                     
                         empathDebug("Using this part as body");
 
-                        RMM::RBodyPart p(*it.current());
+                        s = QString::fromUtf8(it.current()->asXML(quote1, quote2));
                     
-                        s = p.decode().data();
-                        showText(s);
+                        messageWidget_->show(s);
                         return;
                     }
                     
                 } else {
 
                     empathDebug("Haven't decided what to do with this part yet");
-                    RMM::RBodyPart p(*it.current());
-                    s = p.decode().data();
-                    showText(s);
+                    s = QString::fromUtf8(it.current()->asString());
+                    messageWidget_->show(s);
+                    return;
                 }
             }
         }
@@ -215,7 +229,9 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
         empathDebug("=================== END MULTIPART =====================");
     }
 
-    showText(s);
+    empathDebug("Fallback");
+    s = QString::fromUtf8(message.asXML(quote1, quote2));
+    messageWidget_->show(s);
 }
 
     void
@@ -272,7 +288,17 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
 {
     RMM::RBodyPart p(*part);
     QCString s(p.data());
-    showText(s, true);
+
+    KConfig * config(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    config->setGroup(GROUP_DISPLAY);
+
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+
+    messageWidget_->show(part->asXML(quote1, quote2));
 }
 
     void
@@ -303,11 +329,5 @@ EmpathMessageViewWidget::s_switchView()
         showText(s, false);
     }
 #endif
-}
-
-    void
-EmpathMessageViewWidget::showText(QCString & s, bool markup)
-{
-    messageWidget_->showText(s, markup);
 }
 

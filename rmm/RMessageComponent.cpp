@@ -24,61 +24,55 @@
 # pragma implementation "RMM_MessageComponent.h"
 #endif
 
-#include <stdlib.h>
-
+#include <RMM_Defines.h>
 #include <RMM_MessageComponent.h>
 
 using namespace RMM;
 
 RMessageComponent::RMessageComponent()
-    :  
-        KShared     (),
-        parsed_     (false),
+    :   parsed_     (false),
         assembled_  (false)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessageComponent::RMessageComponent(const RMessageComponent & mc)
-    :   
-        KShared     (mc),
-        strRep_     (mc.strRep_),
+    :   strRep_     (mc.strRep_),
         parsed_     (mc.parsed_),
         assembled_  (mc.assembled_)
 {
-    rmmDebug("ctor");
+    // Empty.
 }
 
 RMessageComponent::RMessageComponent(const QCString & s)
-    :    
-        KShared(),
-        strRep_(s),
+    :   strRep_(s),
         parsed_(false),
         assembled_(false)
 {
+    // Empty.
 }
 
 RMessageComponent::~RMessageComponent()
 {
-    rmmDebug("dtor");
+    // Empty.
 }
 
     RMessageComponent &
 RMessageComponent::operator = (const RMessageComponent & m)
 {
     if (this == &m) return *this;    // Avoid a = a.
-    assembled_    = m.assembled_;
-    parsed_        = m.parsed_;
-    strRep_        = m.strRep_;
+    assembled_  = m.assembled_;
+    parsed_     = m.parsed_;
+    strRep_     = m.strRep_;
     return *this;
 }
 
     RMessageComponent &
 RMessageComponent::operator = (const QCString & s)
 {
-    strRep_        = s;
-    parsed_        = false;
-    assembled_    = false;
+    strRep_     = s;
+    parsed_     = false;
+    assembled_  = false;
     return *this;
 }
 
