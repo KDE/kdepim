@@ -72,10 +72,11 @@ bool AddresseeEditorDialog::dirty()
 
 void AddresseeEditorDialog::slotApply()
 {
-  mEditorWidget->save();
+  if ( mEditorWidget->dirty() ) {
+    mEditorWidget->save();
+    emit addresseeModified(mEditorWidget->addressee());
+  }
 
-  emit addresseeModified(mEditorWidget->addressee());
-  
   enableButton(KDialogBase::Apply, false);
   
   KDialogBase::slotApply();
