@@ -19,7 +19,7 @@ ConfigureDialog::ConfigureDialog( QWidget *parent,
 		 Ok, parent, name, modal, true ) {
   
   setIconListAllVisible( false );
-  resize(400,500);
+  resize(500,400);
   
 }
 

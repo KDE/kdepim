@@ -13,6 +13,7 @@
 
 #include <ksync_configuredialog.h>
 #include "organizer/ksync_organizerpart.h"
+#include "overview/ksync_overviewpart.h"
 
 
 
@@ -40,6 +41,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   m_bar->setMinimumWidth(100 );
   connect( m_bar, SIGNAL(activated(ManipulatorPart*) ), this, SLOT(slotActivated(ManipulatorPart*) ));
 
+  resize(600,400);
   m_parts.setAutoDelete( true );
   initPlugins();  
   
@@ -77,14 +79,17 @@ void KSyncMainWindow::initPlugins()
     } 
   */
   OrganizerPart *org = new OrganizerPart(this, "wallah" );
+  
+  OverviewPart *view = new OverviewPart(this, "hallaw" );
+  addModPart(view);
   addModPart( org);
   
 }
 
 void KSyncMainWindow::addModPart(ManipulatorPart *part)
 {
-  static int id=2;
-  m_parts.clear();
+  static int id=1;
+  //m_parts.clear();
   // diable it for testing
   //if( part->partIsVisible )
   {
@@ -112,7 +117,12 @@ void KSyncMainWindow::slotConfigure() {
   for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
     dlg.addWidget(part->configWidget(), part->name(), part->pixmap() );
   }
-  dlg.exec();
+  
+  if (dlg.exec()) {
+     for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
+       part->slotConfigOk();
+     }
+  }
 }
 
 void KSyncMainWindow::slotActivated(ManipulatorPart *part) {

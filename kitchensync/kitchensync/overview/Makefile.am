@@ -4,7 +4,7 @@ kde_module_LTLIBRARIES = liboverviewpart.la
 liboverviewpart_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 liboverviewpart_la_LIBADD =  ../lib/libkitchensync.la
 
-liboverviewpart_la_SOURCES = overviewwidget.cc
+liboverviewpart_la_SOURCES = overviewwidget.cc ksync_overviewpart.cc
 
 METASOURCES = AUTO
 
