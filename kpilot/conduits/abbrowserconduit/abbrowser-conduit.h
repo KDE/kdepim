@@ -197,6 +197,7 @@ private:
         fArchive;
    int syncAction; 
 	int pilotindex;
+	bool abChanged;
 	static const QString appString;
 	static const QString flagString;
 	static const QString idString;
@@ -212,6 +213,9 @@ private:
 
 
 // $Log$
+// Revision 1.16  2002/06/30 16:23:23  kainhofe
+// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
+//
 // Revision 1.15  2002/05/15 17:15:32  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"
