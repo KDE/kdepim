@@ -36,7 +36,7 @@
 
 
 KNodeView::KNodeView(QWidget *parent, const char * name)
-  : QSplitter(parent,name), longView(true)
+  : QSplitter(parent,name), longView(true), notAFolder(true)
 {
   setOpaqueResize(true);
   colFocus=new KNFocusWidget(this,"colFocus");
@@ -88,6 +88,7 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
                              &actionCollection, "go_prevGroup");
   actToggleThread = new KAction(i18n("&Toggle Subthread"), Key_T, this, SLOT(slotToggleThread()),
                                 &actionCollection, "thread_toggle");
+  actToggleThread->setEnabled(false);
 
   actionCollection += artView->actions();
 
@@ -183,6 +184,24 @@ void KNodeView::saveOptions()
   conf->writeEntry("sortAscending", hdrView->ascending());
   conf->writeEntry("account_sortCol", collectionView->sortColumn());
   conf->writeEntry("account_sortAscending", collectionView->ascending());
+}
+
+
+
+// dis-/enable the next unread actions
+void KNodeView::setNotAFolder(bool b)
+{
+  notAFolder = b;
+  actNextUnreadArt->setEnabled(notAFolder);
+  actNextUnreadThread->setEnabled(notAFolder);
+}
+
+
+
+// dis-/enable the toggle thread action
+void KNodeView::setHeaderSelected(bool b)
+{
+  actToggleThread->setEnabled(b);
 }
 
 
@@ -392,7 +411,7 @@ void KNodeView::slotReadThrough()
 {
   if (artView->scrollingDownPossible())
     artView->scrollDown();
-  else
+  else if (notAFolder)
     slotNextUnreadArticle();
 }
 

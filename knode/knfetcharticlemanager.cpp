@@ -61,41 +61,59 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
   actShowThreads = new KToggleAction(i18n("Show T&hreads"), 0 , this, SLOT(slotToggleShowThreads()),
                                      &actionCollection, "view_showThreads");
   actShowThreads->setChecked(t_hreaded);
-
+  actShowThreads->setEnabled(false);
   actExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotThreadsExpand()),
                              &actionCollection, "view_ExpandAll");
+  actExpandAll->setEnabled(false);
   actCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotThreadsCollapse()),
                                &actionCollection, "view_CollapseAll");
+  actCollapseAll->setEnabled(false);
   actRefresh = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this, SLOT(slotRefresh()),
                            &actionCollection, "view_Refresh");
+  actRefresh->setEnabled(false);
   actAllRead = new KAction(i18n("Mark all as &read"), 0, this, SLOT(slotAllRead()),
                            &actionCollection, "group_allRead");
+  actAllRead->setEnabled(false);
   actAllUnread = new KAction(i18n("Mark all as u&nread"), 0, this, SLOT(slotAllUnread()),
                              &actionCollection, "group_allUnread");
+  actAllUnread->setEnabled(false);
   actPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotReply()),
                              &actionCollection, "article_postReply");
+  actPostReply->setEnabled(false);
+
   actMailReply = new KAction(i18n("&Mail reply"),"mail_reply", Key_A , this, SLOT(slotRemail()),
                              &actionCollection, "article_mailReply");
+  actMailReply->setEnabled(false);
   actForward = new KAction(i18n("&Forward"),"mail_forward", Key_F , this, SLOT(slotForward()),
                            &actionCollection, "article_forward");
+  actForward->setEnabled(false);
   actMarkRead = new KAction(i18n("M&ark as read"), Key_D , this, SLOT(slotMarkRead()),
                             &actionCollection, "article_read");
+  actMarkRead->setEnabled(false);
   actMarkUnread = new KAction(i18n("Mar&k as unread"), Key_U , this, SLOT(slotMarkUnread()),
                               &actionCollection, "article_unread");
+  actMarkUnread->setEnabled(false);
   actThreadRead = new KAction(i18n("Mark thread as r&ead"), CTRL+Key_D , this, SLOT(slotThreadRead()),
                               &actionCollection, "thread_read");
+  actThreadRead->setEnabled(false);
   actThreadUnread = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this, SLOT(slotThreadUnread()),
                                 &actionCollection, "thread_unread");
+  actThreadUnread->setEnabled(false);
   actThreadSetScore = new KAction(i18n("Set &Score..."), Key_S , this, SLOT(slotThreadScore()),
                                   &actionCollection, "thread_setScore");
+  actThreadSetScore->setEnabled(false);
   actThreadWatch = new KAction(i18n("&Watch"), Key_W , this, SLOT(slotThreadWatch()),
                                &actionCollection, "thread_watch");
+  actThreadWatch->setEnabled(false);
   actThreadIgnore = new KAction(i18n("&Ignore"), Key_I , this, SLOT(slotThreadIgnore()),
                                 &actionCollection, "thread_ignore");
+  actThreadIgnore->setEnabled(false);
   actOwnWindow = new KAction(i18n("&Open in own window"), Key_O , this, SLOT(slotOwnWindow()),
                              &actionCollection, "article_ownWindow");
+  actOwnWindow->setEnabled(false);
   actSearch = new KAction(i18n("&Search..."),"find" , Key_F4 , this, SLOT(slotSearch()),
                           &actionCollection, "article_search");
+  actSearch->setEnabled(false);
 }
 
 
@@ -133,11 +151,28 @@ void KNFetchArticleManager::saveOptions()
 void KNFetchArticleManager::setGroup(KNGroup *g)
 {
   if(g!=0) {
-    if(g_roup==0) view->header()->setLabel(1, i18n("From"));
-    if(sDlg) {
+    if(g_roup==0) view->header()->setLabel(1, i18n("From"));   // switch back from a folder
+    if(sDlg) {                        // search dialog was open, hide it and restore filter
       sDlg->hide();
       if(f_ilter==sDlg->filter()) slotFilterChanged(0);
     }
+    actShowThreads->setEnabled(true);
+    actExpandAll->setEnabled(true);
+    actCollapseAll->setEnabled(true);
+    actRefresh->setEnabled(true);
+    actAllRead->setEnabled(true);
+    actAllUnread->setEnabled(true);
+    actSearch->setEnabled(true);
+    actOwnWindow->setEnabled(true);
+  } else {
+    actShowThreads->setEnabled(false);
+    actExpandAll->setEnabled(false);
+    actCollapseAll->setEnabled(false);
+    actRefresh->setEnabled(false);
+    actAllRead->setEnabled(false);
+    actAllUnread->setEnabled(false);
+    actSearch->setEnabled(false);
+    actOwnWindow->setEnabled(false);
   }
 
   g_roup=g;
@@ -196,9 +231,13 @@ void KNFetchArticleManager::showHdrs(bool clear)
 
 void KNFetchArticleManager::expandAllThreads(bool e)
 {
-  for(int idx=0; idx<g_roup->length(); idx++)
-    if(g_roup->at(idx)->listItem())
-      g_roup->at(idx)->listItem()->QListViewItem::setOpen(e);
+  if (g_roup) {
+    knGlobals.top->setCursorBusy(true);
+    for(int idx=0; idx<g_roup->length(); idx++)
+      if(g_roup->at(idx)->listItem())
+        g_roup->at(idx)->listItem()->QListViewItem::setOpen(e);
+    knGlobals.top->setCursorBusy(false);
+  }
 }
 
 
@@ -209,21 +248,31 @@ void KNFetchArticleManager::setCurrentArticle(KNFetchArticle *a)
   if(a) {
     kdDebug(5003) << "KNFetchArticleManager::setCurrentArticle() : messageID=" << a->messageId() << endl;
     if(a->locked()) return;
-    if(a->hasContent()) {
       c_urrent=a;
+    if(a->hasContent()) {
       mainArtWidget->setData(a, g_roup);
       showArticle(a);
-    }
-    else {
+    } else {
       KNJobData *job=new KNJobData(KNJobData::JTfetchArticle, g_roup->account(), a);
       knGlobals.netAccess->addJob(job);
+      actPostReply->setEnabled(false);
+      actMailReply->setEnabled(false);
+      actForward->setEnabled(false);
     }
-  }
-  else {
+  } else {
     c_urrent=0;
-//    knGlobals.top->fetchArticleDisplayed(false);
+    actPostReply->setEnabled(false);
+    actMailReply->setEnabled(false);
+    actForward->setEnabled(false);
   }
-//  knGlobals.top->fetchArticleSelected((c_urrent!=0));
+
+  actMarkRead->setEnabled((c_urrent));
+  actMarkUnread->setEnabled((c_urrent));
+  actThreadRead->setEnabled((c_urrent));
+  actThreadUnread->setEnabled((c_urrent));
+  actThreadSetScore->setEnabled((c_urrent));
+  actThreadWatch->setEnabled((c_urrent));
+  actThreadIgnore->setEnabled((c_urrent));
 }
 
 
@@ -421,7 +470,9 @@ void KNFetchArticleManager::showArticle(KNArticle *a)
   KNArticleManager::showArticle(a);
   if(a==c_urrent) {
     if(!c_urrent->isRead() && autoMark) timer->start(tOut, true);
-//    knGlobals.top->fetchArticleDisplayed(true);
+    actPostReply->setEnabled(true);
+    actMailReply->setEnabled(true);
+    actForward->setEnabled(true);
   }
 }
 
@@ -431,7 +482,9 @@ void KNFetchArticleManager::showCancel(KNArticle *a)
 {
   if(a==c_urrent) {
     timer->stop();
-//    knGlobals.top->fetchArticleDisplayed(false);
+    actPostReply->setEnabled(false);
+    actMailReply->setEnabled(false);
+    actForward->setEnabled(false);
   }
 }
 
@@ -442,7 +495,9 @@ void KNFetchArticleManager::showError(KNArticle *a, const QString &error)
   KNArticleManager::showError(a, error);
   if(a==c_urrent) {
     timer->stop();
-//    knGlobals.top->fetchArticleDisplayed(false);
+    actPostReply->setEnabled(false);
+    actMailReply->setEnabled(false);
+    actForward->setEnabled(false);
   }
 }
 

@@ -115,6 +115,7 @@ class KNArticleWidget : public QTextBrowser  {
 
   signals:
     void focusChanged(QFocusEvent*);
+    void articleLoaded();              // gets emited when a article is loaded sucessfully
 
 };
 

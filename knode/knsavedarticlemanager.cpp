@@ -111,7 +111,7 @@ void KNSavedArticleManager::setStandardFolders(KNFolder *d, KNFolder *o, KNFolde
 {
   fDrafts=d;
   fOutbox=o;
-  actSendOutbox->setEnabled(!fOutbox->isEmpty());
+  actSendOutbox->setEnabled(fOutbox->count()!=0);
   fSent=s;
 }
 
@@ -454,6 +454,7 @@ bool KNSavedArticleManager::deleteArticle(KNSavedArticle *a, bool ask)
     if(a==c_urrentArticle)
       mainArtWidget->showBlankPage();
     updateStatusString();
+    actSendOutbox->setEnabled(fOutbox->count()!=0);
     return true;
   }
   else return false;
@@ -724,10 +725,11 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 void KNSavedArticleManager::showArticle(KNArticle *a, bool force)
 {
   KNArticleManager::showArticle(a, force);
-  actEdit->setEnabled(true);
+
+  actEdit->setEnabled(static_cast<KNSavedArticle*>(a)->editable());
   actDelete->setEnabled(true);
-  actSendNow->setEnabled(true);
-  actSendLater->setEnabled(true);
+  actSendNow->setEnabled((f_older) && ((f_older==fDrafts)||(f_older==fOutbox)));
+  actSendLater->setEnabled((f_older) && (f_older==fDrafts));
 }
 
 
@@ -817,8 +819,8 @@ void KNSavedArticleManager::jobDone(KNJobData *job)
     }
     fSent->addArticle(art);
     if(f_older==fSent) showHdrs();
-    actSendOutbox->setEnabled(!fOutbox->isEmpty());
-    delete job; 
+    actSendOutbox->setEnabled(fOutbox->count()!=0);
+    delete job;
   }
 }
 

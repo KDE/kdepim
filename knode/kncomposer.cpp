@@ -89,10 +89,16 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
   KStdAction::close(this, SLOT(close()),actionCollection());
 
   // edit menu
-  KStdAction::undo(view->edit, SLOT(undo()), actionCollection());
-  KStdAction::redo(view->edit, SLOT(redo()), actionCollection());
+  KAction *undo = KStdAction::undo(view->edit, SLOT(undo()), actionCollection());
+  undo->setEnabled(false);
+  connect(view->edit, SIGNAL(undoAvailable(bool)), undo, SLOT(setEnabled(bool)));
+  KAction *redo = KStdAction::redo(view->edit, SLOT(redo()), actionCollection());
+  redo->setEnabled(false);
+  connect(view->edit, SIGNAL(redoAvailable(bool)), redo, SLOT(setEnabled(bool)));
   KStdAction::cut(view->edit, SLOT(cut()), actionCollection());
-  KStdAction::copy(view->edit, SLOT(copy()), actionCollection());
+  KAction *copy = KStdAction::copy(view->edit, SLOT(copy()), actionCollection());
+  copy->setEnabled(false);
+  connect(view->edit, SIGNAL(copyAvailable(bool)), copy, SLOT(setEnabled(bool)));
   KStdAction::paste(view->edit, SLOT(paste()), actionCollection());
   KStdAction::selectAll(view->edit, SLOT(selectAll()), actionCollection());
   KStdAction::find(this, SLOT(slotFind()), actionCollection());

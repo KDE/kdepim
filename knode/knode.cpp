@@ -584,7 +584,10 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
 
   AManager->setCurrentAccount(acc);
   GManager->setCurrentGroup(grp);
+  FiManager->setIsAGroup((grp));    // filters currently only work for groups
   FoManager->setCurrentFolder(fldr);
+  view->setNotAFolder(!(fldr));
+  view->setHeaderSelected(false);
   actCancel->setEnabled(false);
   actSupersede->setEnabled(false);
 }
@@ -606,6 +609,7 @@ void KNodeApp::slotHeaderSelected(QListViewItem *it)
   }
   FAManager->setCurrentArticle(fart);
   SAManager->setCurrentArticle(sart);
+  view->setHeaderSelected((fart));
   actCancel->setEnabled(true);
   actSupersede->setEnabled(true);
 }

@@ -43,6 +43,7 @@ void KNFetchArticle::clear()
 
 
 
+// Attention: this method is called from the network thread!
 void KNFetchArticle::parse()
 {
   if(f_rom.isEmpty()) parseFrom(headerLine("From"));

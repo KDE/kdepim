@@ -312,7 +312,7 @@ bool KNGroup::loadHdrs()
 }
 
 
-
+// Attention: this method is called from the network thread!
 void KNGroup::insortNewHeaders(QStrList *hdrs)
 {
   KNFetchArticle *art=0;
@@ -374,7 +374,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
   
   sortHdrs(cnt);
   int count = saveStaticData(cnt);
-  kdDebug(5003) << count << " headers wrote to file" << endl;
+  qDebug("knode: %d headers wrote to file",count);
   saveDynamicData(cnt);
   updateThreadInfo();
   c_ount=len;

@@ -112,6 +112,12 @@ void KNFilterSelectAction::setCurrentItem(int id)
 }
 
 
+void KNFilterSelectAction::setEnabled(bool b)
+{
+  p_opup->hide();
+  KAction::setEnabled(b);
+}
+
 
 void KNFilterSelectAction::slotMenuActivated(int id)
 {
@@ -126,12 +132,13 @@ void KNFilterSelectAction::slotMenuActivated(int id)
 
 
 KNFilterManager::KNFilterManager( QObject * parent, const char * name)
- : QObject(parent,name), fset(0), currFilter(0)
+ : QObject(parent,name), fset(0), currFilter(0), isAGroup(false)
 {
   fList.setAutoDelete(true);
 
   actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , &actionCollection, "view_Filter");
   connect(actFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
+  actFilter->setEnabled(false);
 
   loadFilters();  
   readOptions();  
@@ -162,6 +169,15 @@ void KNFilterManager::saveOptions()
     conf->setGroup("READNEWS");
     conf->writeEntry("lastFilterID", currFilter->id());
   }
+}
+
+
+
+// dis-/enable the filter menu
+void KNFilterManager::setIsAGroup(bool b)
+{
+  isAGroup = b;
+  actFilter->setEnabled(isAGroup && (menuOrder.count()));
 }
 
 
@@ -383,7 +399,7 @@ void KNFilterManager::updateMenu()
 {
   actFilter->popupMenu()->clear();
   KNArticleFilter *f=0;
-  
+
   QValueList<int>::Iterator it = menuOrder.begin();
   while (it != menuOrder.end()) {
     if ((*it)!=-1) {
@@ -396,7 +412,7 @@ void KNFilterManager::updateMenu()
   
   if(currFilter)
     actFilter->setCurrentItem(currFilter->id());
-  actFilter->setEnabled(!menuOrder.isEmpty());
+  actFilter->setEnabled(isAGroup && (menuOrder.count()));
 }
 
 

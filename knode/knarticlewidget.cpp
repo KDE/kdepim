@@ -230,7 +230,7 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
   actPrint->setEnabled(false);
   actSelAll =  KStdAction::selectAll(this, SLOT(slotSelectAll()), &actionCollection);
-  //actSelAll->setEnabled(false);
+  actSelAll->setEnabled(false);
   actCopy = KStdAction::copy(this, SLOT(copy()), &actionCollection);
   actCopy->setEnabled(false);
 
@@ -525,6 +525,7 @@ void KNArticleWidget::showBlankPage()
   actSave->setEnabled(false);
   actPrint->setEnabled(false);
   actCopy->setEnabled(false); //probaly not neede, but who knows ;-)
+  actSelAll->setEnabled(false);
 }
 
 
@@ -544,6 +545,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   h_tmlDone=false;
   actSave->setEnabled(false);
   actPrint->setEnabled(false);
+  actSelAll->setEnabled(true);
 }
 
 
@@ -577,37 +579,36 @@ void KNArticleWidget::createHtmlPage()
   }
   actSave->setEnabled(true);
   actPrint->setEnabled(true);
+  actSelAll->setEnabled(true);
+  emit(articleLoaded());        // tell the article window that it can enable its actions...
 
   KNMimeContent *text=a_rticle->textContent();
   KNContentCodec codec(text);
   QString html, hLine;
-  QFont fnt(htmlFont);
 
-  codec.matchFont(fnt);
-  setFont(fnt);
-
+  if (text) {
+    QFont fnt(htmlFont);
+    codec.matchFont(fnt);
+    setFont(fnt);
+  } else {
+    setFont(htmlFont);     // fixes broken fonts for articles without body (CG)
+  }
 
   html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\"></td><td width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
         .arg(hexColors[HDR_COL]);
 
-
   if(fullHdrs) {
-    char name[128], *val;
-    int nameLen=0;
+    QString temp;
+    int pos;
     for( char *h=a_rticle->firstHeaderLine(); h; h=a_rticle->nextHeaderLine()){
       html+="<tr><td align=right>";
-      val=strchr(h, ':');
-      if(!val ||(val-h)>127) {
-        html+=QString("</td><td width=\"100%\"> %1</td></tr>").arg(toHtmlString(h, false, false));
-      }
-      else {
-        nameLen=val-h;
-        memcpy(name, h, val-h);
-        name[nameLen]='\0';
-        if(*val==' ') val++;
-        html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>").arg(toHtmlString(name, false, false))
-        .arg(toHtmlString(val, false, false));
-      }
+      temp = QString::fromLatin1(h);
+      if ((pos = temp.find(':'))==-1)
+        html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp, false, false));
+      else
+        html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>")
+                      .arg(toHtmlString(temp.left(pos+1), false, false))
+                      .arg(toHtmlString(temp.right(temp.length()-pos-2), false, false));
     }
   }
   else {

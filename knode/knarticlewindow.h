@@ -21,6 +21,8 @@
 
 #include <kmainwindow.h>
 
+class KAction;
+
 class KNArticle;
 class KNArticleWidget;
 class KNArticleCollection;
@@ -36,8 +38,10 @@ class KNArticleWindow : public KMainWindow  {
       
   protected:
     KNArticleWidget *artW;
+    KAction *actPostReply, *actMailReply, *actForward, *actCancel, *actSupersede;
     
   protected slots:
+    void slotArticleLoaded();
     void slotFileClose();
     void slotArtReply();
     void slotArtRemail();

@@ -48,6 +48,7 @@ void KNArticle::clear()
 
 
 
+// Attention: this method is called from the network thread!
 void KNArticle::parse()
 {
   QCString tmp;

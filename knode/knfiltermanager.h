@@ -38,8 +38,11 @@ class KNFilterSelectAction : public KAction
     ~KNFilterSelectAction();
 
     virtual int plug( QWidget* widget, int index = -1 );
+
     KPopupMenu* popupMenu()    { return p_opup; }
     void setCurrentItem(int id);
+
+    void setEnabled(bool b);
 
   protected slots:
     void slotMenuActivated(int id);
@@ -69,7 +72,9 @@ class KNFilterManager : public QObject
 
     void readOptions();
     void saveOptions();
-    
+
+    void setIsAGroup(bool b);        // dis-/enable the filter menu
+
     KNArticleFilter* currentFilter()        { return currFilter; }    
       
     void startConfig(KNFilterSettings *fs);
@@ -94,7 +99,8 @@ class KNFilterManager : public QObject
     KNArticleFilter *currFilter;
     KNFilterSelectAction *actFilter;
     QValueList<int> menuOrder;  
-    KActionCollection actionCollection; 
+    KActionCollection actionCollection;
+    bool isAGroup;
   
   protected slots:
     void slotMenuActivated(int id);

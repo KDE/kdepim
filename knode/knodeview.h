@@ -44,6 +44,9 @@ class KNodeView : public QSplitter
     void readOptions();
     void saveOptions();
 
+    void setNotAFolder(bool b);  // dis-/enable the next unread actions
+    void setHeaderSelected(bool b);  // dis-/enable the toggle thread action
+
     void updateAppearance();   // switch between long & short group list, update fonts and colors
 
   protected:
@@ -64,6 +67,7 @@ class KNodeView : public QSplitter
     KAction *actNextArt, *actPrevArt, *actNextUnreadArt, *actReadThrough, *actNextUnreadThread,
             *actNextGroup, *actPrevGroup, *actToggleThread;
     KActionCollection actionCollection;
+    bool notAFolder;
 
   protected slots:
     void slotSortMenuSelect(int newCol);   // select from KSelectAction

@@ -122,6 +122,7 @@ void KNMimeContent::clear()
 
 
 
+// Attention: this method is called from the network thread!
 void KNMimeContent::parse()
 {
   QCString tmp;
@@ -172,7 +173,7 @@ void KNMimeContent::parse()
     }
   }
   else if(b_ody && mInfo->ctMediaType()==MTtext && b_ody->count()>200) {
-    kdDebug(5003) << "KNMimeContent::parse() : uuencoded binary assumed" << endl;
+    qDebug("knode: KNMimeContent::parse() : uuencoded binary assumed");
     UUParser uup(b_ody, headerLine("Subject"));
     uup.parse();
     
@@ -189,7 +190,7 @@ void KNMimeContent::parse()
     }
     
     else if(uup.isUUencoded()) {
-      kdDebug(5003) << "KNMimeContent::parse() : is uuencoded" << endl;
+      qDebug("knode: KNMimeContent::parse() : is uuencoded");
       if(!ct_List) {
         ct_List=new QList<KNMimeContent>;
         ct_List->setAutoDelete(true);

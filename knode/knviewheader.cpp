@@ -34,7 +34,7 @@
 static const char *predef[] = { "Approved","Content-Transfer-Encoding","Content-Type","Control","Date","Distribution",
                                 "Expires","Followup-To","From","Lines","Message-ID","Mime-Version","NNTP-Posting-Host",
                                 "Newsgroups","Organization","Path","References","Reply-To","Sender","Subject","Supersedes",
-                                "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
+                                "To", "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
 
 // default display names KNode uses
 static const char *disp[] = { "Groups", 0 };
@@ -62,6 +62,7 @@ void dummyHeader()
   i18n("it's not very important to translate this","Sender");
   i18n("it's not very important to translate this","Subject");
   i18n("it's not very important to translate this","Supersedes");
+ // i18n("it's not very important to translate this","To");    I forgot one header, uncomment after message freeze !!!!!!!!
   i18n("it's not very important to translate this","User-Agent");
   i18n("it's not very important to translate this","X-Mailer");
   i18n("it's not very important to translate this","X-Newsreader");
