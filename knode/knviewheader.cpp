@@ -78,6 +78,7 @@ void dummyHeader()
 QList<KNViewHeader> KNViewHeader::instances;
 
 KNViewHeader::KNViewHeader()
+ : translateName(true)
 {
   flags.fill(false, 8);
   flags[1] = true;   // header name bold by default
@@ -107,6 +108,7 @@ void KNViewHeader::loadAll()
     h=newItem();
     headerConf.setGroup((*it));
     h->n_ame = headerConf.readEntry("Name");
+    h->translateName = headerConf.readBoolEntry("Translate_Name",true);
     h->h_eader = headerConf.readEntry("Header");
     flags = headerConf.readIntListEntry("Flags");
     if (h->n_ame.isNull()||h->h_eader.isNull()||(flags.count()!=8)) {
@@ -142,6 +144,7 @@ void KNViewHeader::saveAll()
   for( QListIterator<KNViewHeader> it(instances); it.current(); ++it ) {
     headerConf.setGroup(QString::number(idx++));
     headerConf.writeEntry("Name",(*it)->n_ame);
+    headerConf.writeEntry("Translate_Name",(*it)->translateName);
     headerConf.writeEntry("Header",(*it)->h_eader);
     flags.clear();
     for (int i=0; i<8; i++) {
@@ -223,14 +226,17 @@ const char** KNViewHeader::predefs()
 // *trys* to translate the name
 QString KNViewHeader::translatedName()
 {
-  // major hack alert !!!
-  if (!n_ame.isEmpty()) {
-    if (i18n("it's not very important to translate this",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-      return i18n("it's not very important to translate this",n_ame.local8Bit());
-    else
-      return n_ame;
+  if (translateName) {
+    // major hack alert !!!
+    if (!n_ame.isEmpty()) {
+      if (i18n("it's not very important to translate this",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+        return i18n("it's not very important to translate this",n_ame.local8Bit());
+      else
+        return n_ame;
+    } else
+      return QString::null;
   } else
-    return QString::null;
+    return n_ame;
 }
 
 
@@ -256,8 +262,11 @@ void KNViewHeader::setTranslatedName(const QString &s)
       }
   }
 
-  if (!retranslated)        // ok, we give up and store the maybe non-english string
+  if (!retranslated) {      // ok, we give up and store the maybe non-english string
     n_ame = s;
+    translateName = false;  // and don't try to translate it, so a german user *can* use the original english name
+  } else
+    translateName = true;
 }
 
 

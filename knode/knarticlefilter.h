@@ -66,7 +66,7 @@ class KNArticleFilter {
       
     QString n_ame;
     int i_d, c_ount;
-    bool l_oaded, e_nabled;
+    bool l_oaded, e_nabled, translateName;
     ApOn apon;
     
     KNStatusFilter status;

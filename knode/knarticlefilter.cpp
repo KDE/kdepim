@@ -34,12 +34,13 @@
 
 
 // the names of our default filters
-static const char *defFil[] = { "all","unread","watched","threads with unread",
+static const char *defFil[] = { "all","unread","new","watched","threads with unread",
                                 "threads with new","own articles","threads with own articles", 0 };
 void dummyFilter()
 {
   i18n("default filter name","all");
   i18n("default filter name","unread");
+  //i18n("default filter name","new");   forgot this one, activate after message freeze (CG)
   i18n("default filter name","watched");
   i18n("default filter name","threads with unread");
   i18n("default filter name","threads with new");
@@ -52,14 +53,14 @@ void dummyFilter()
 
 
 KNArticleFilter::KNArticleFilter(int id)
-: i_d(id), c_ount(0), l_oaded(false), e_nabled(true), apon(articles)
+: i_d(id), c_ount(0), l_oaded(false), e_nabled(true), translateName(true), apon(articles)
 {}
 
 
 
 // constructs a copy of org
 KNArticleFilter::KNArticleFilter(const KNArticleFilter& org)
-: i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), apon(org.apon)
+: i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), translateName(true), apon(org.apon)
 {
   status = org.status;
   score = org.score;
@@ -86,6 +87,7 @@ bool KNArticleFilter::loadInfo()
 
     conf.setGroup("GENERAL");
     n_ame=conf.readEntry("name");
+    translateName = conf.readBoolEntry("Translate_Name",true);
     e_nabled=conf.readBoolEntry("enabled", true);
     apon=(ApOn) conf.readNumEntry("applyOn", 0);
     return true;
@@ -141,6 +143,7 @@ void KNArticleFilter::save()
   
   conf.setGroup("GENERAL");
   conf.writeEntry("name", QString(n_ame));
+  conf.writeEntry("Translate_Name",translateName);
   conf.writeEntry("enabled", e_nabled);
   conf.writeEntry("applyOn", (int) apon);
   
@@ -239,14 +242,17 @@ void KNArticleFilter::doFilter(KNGroup *g)
 // *trys* to translate the name
 QString KNArticleFilter::translatedName()
 {
-  // major hack alert !!!
-  if (!n_ame.isEmpty()) {
-    if (i18n("default filter name",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-      return i18n("default filter name",n_ame.local8Bit());
-    else
-      return n_ame;
+  if (translateName) {
+    // major hack alert !!!
+    if (!n_ame.isEmpty()) {
+      if (i18n("default filter name",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+        return i18n("default filter name",n_ame.local8Bit());
+      else
+        return n_ame;
+    } else
+      return QString::null;
   } else
-    return QString::null;
+    return n_ame;
 }
 
 
@@ -261,8 +267,12 @@ void KNArticleFilter::setTranslatedName(const QString &s)
       retranslated = true;
       break;
     }
-  if (!retranslated)        // ok, we give up and store the maybe non-english string
+
+  if (!retranslated) {      // ok, we give up and store the maybe non-english string
     n_ame = s;
+    translateName = false;  // and don't try to translate it, so a german user *can* use the original english name
+  } else
+    translateName = true;
 }
 
 

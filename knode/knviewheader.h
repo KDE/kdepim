@@ -58,6 +58,7 @@ class KNViewHeader {
     const QString& headerCloseTag()     { return tags[3]; }
             
   protected:
+    bool translateName;
     QString n_ame, h_eader, tags[4];
     QBitArray flags;
     static QList<KNViewHeader> instances;
