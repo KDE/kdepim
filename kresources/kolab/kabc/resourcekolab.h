@@ -136,10 +136,6 @@ public:
   /// Give the uidmap. Used for ordered searching
   QMap<QString, QString> uidToResourceMap() const;
 
-signals:
-  void signalSubresourceAdded( Resource*, const QString&, const QString& );
-  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
-
 protected:
   bool kmailUpdateAddressee( const Addressee& );
 

@@ -98,10 +98,6 @@ public:
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
 
-signals:
-  void signalSubresourceAdded( Resource*, const QString&, const QString& );
-  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
-
 private:
   bool addNote( KCal::Journal* journal, const QString& resource,
                 Q_UINT32 sernum );
