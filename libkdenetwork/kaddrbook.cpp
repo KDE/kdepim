@@ -65,7 +65,8 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
   } else {
     QString text = i18n("<qt>The email address <b>%1</b> is already in your "
                         "addressbook.</qt>").arg( addr );
-    KMessageBox::information( parent, text );
+    KMessageBox::information( parent, text, QString::null,
+                              "alreadyInAddressBook" );
   }
 }
 
