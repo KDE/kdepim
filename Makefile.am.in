@@ -18,7 +18,6 @@ COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer ksync libk
 COMPILE_AFTER_mimelib = korn kmail
 COMPILE_AFTER_libkdenetwork = kmail knode certmanager
 COMPILE_AFTER_libksieve = kmail
-COMPILE_BEFORE_libkcal = libical
 COMPILE_BEFORE_kontact = kaddressbook knotes korganizer
 COMPILE_BEFORE_kioslaves = libkmime
 COMPILE_BEFORE_libkpimexchange = libkdepim
