@@ -37,6 +37,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpixmap.h>
+#include <qtooltip.h>
 
 #include "imagewidget.h"
 
@@ -95,9 +96,9 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const c
   QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
   QGroupBox *box = new QGroupBox( 0, Qt::Vertical, title, this );
-  QGridLayout *boxLayout = new QGridLayout( box->layout(), 4, 2,
+  QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 3,
                                             KDialog::spacingHint() );
-  boxLayout->setRowStretch( 3, 1 );
+  boxLayout->setRowStretch( 2, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 50, 70 );
@@ -110,15 +111,19 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const c
   mImageUrl->setMode( KFile::File );
   boxLayout->addWidget( mImageUrl, 0, 1 );
 
+  mClearButton = new QPushButton( box );
+  mClearButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
+  mClearButton->setPixmap( SmallIcon( "clear_left" ) );
+  mClearButton->setEnabled( false );
+  boxLayout->addWidget( mClearButton, 0, 2 );
+
   mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
   mUseImageUrl->setEnabled( false );
-  boxLayout->addWidget( mUseImageUrl, 1, 1 );
-
-  mClearButton = new QPushButton( i18n( "Clear" ), box );
-  mClearButton->setEnabled( false );
-  boxLayout->addMultiCellWidget( mClearButton, 3, 3, 0, 1 );
+  boxLayout->addMultiCellWidget( mUseImageUrl, 1, 1, 1, 2 );
 
   topLayout->addWidget( box );
+
+  QToolTip::add( mClearButton, i18n( "Reset" ) );
 
   connect( mImageLabel, SIGNAL( changed() ),
            SIGNAL( changed() ) );
