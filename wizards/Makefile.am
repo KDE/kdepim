@@ -1,3 +1,5 @@
+METASOURCES = AUTO
+
 SUBDIRS = egroupware
 
 INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkcal \
