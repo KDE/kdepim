@@ -97,6 +97,7 @@ void ExtensionManager::setActiveExtension( int id )
     if ( mCurrentExtensionWidget ) {
       show();
       mCurrentExtensionWidget->show();
+      mCurrentExtensionWidget->contactsSelectionChanged();
     } else {
       hide();
       mCurrentExtensionWidget = 0;
