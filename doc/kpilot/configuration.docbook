@@ -232,6 +232,14 @@ linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot
 </errorname></quote>
 &FAQ; entry</link>, or contact your system administrator.
 </para>
+
+
+<para>
+You can also use network sync (with pilot-link 0.11.5 and later)
+by entering <userinput>net:any</userinput> as the
+device name.
+</para>
+
 </listitem>
 </varlistentry>
 
