@@ -28,7 +28,7 @@
 #include <RMM_MessageID.h>
 #include <RMM_MimeType.h>
 #include <RMM_Mechanism.h>
-#include <RMM_DispositionType.h>
+#include <RMM_ContentDisposition.h>
 #include <RMM_DateTime.h>
 #include <RMM_Address.h>
 #include <RMM_AddressList.h>
@@ -115,7 +115,7 @@ class REnvelope : public RMessageComponent
         RAddressList        cc();
         RText               comments();
         RText               contentDescription();
-        RDispositionType    contentDisposition();
+        RContentDisposition contentDisposition();
         RMessageID          contentID();
         RText               contentMD5();
         RContentType        contentType();

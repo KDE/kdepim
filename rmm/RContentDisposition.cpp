@@ -19,31 +19,31 @@
    Boston, MA 02111-1307, USA.
 */
 
-#include <RMM_DispositionType.h>
+#include <RMM_ContentDisposition.h>
 #include <RMM_Token.h>
 
 using namespace RMM;
 
-RDispositionType::RDispositionType()
+RContentDisposition::RContentDisposition()
     :    RHeaderBody()
 {
     // Empty.
 }
 
-RDispositionType::RDispositionType(const RDispositionType & t)
+RContentDisposition::RContentDisposition(const RContentDisposition & t)
     :    RHeaderBody(t)
 {
     // Empty.
 }
 
-RDispositionType::RDispositionType(const QCString & s)
+RContentDisposition::RContentDisposition(const QCString & s)
     :    RHeaderBody(s)
 {
     // Empty.
 }
 
-    RDispositionType &
-RDispositionType::operator = (const RDispositionType & t)
+    RContentDisposition &
+RContentDisposition::operator = (const RContentDisposition & t)
 {
     if (this == &t) return *this; // Don't do a = a.
     
@@ -56,15 +56,15 @@ RDispositionType::operator = (const RDispositionType & t)
     return *this;
 }
 
-    RDispositionType &
-RDispositionType::operator = (const QCString & s)
+    RContentDisposition &
+RContentDisposition::operator = (const QCString & s)
 {
     RHeaderBody::operator = (s);
     return *this;
 }
 
     bool
-RDispositionType::operator == (RDispositionType & dt)
+RContentDisposition::operator == (RContentDisposition & dt)
 {
     parse();
     dt.parse();
@@ -75,20 +75,20 @@ RDispositionType::operator == (RDispositionType & dt)
         filename_        == dt.filename_);
 }
 
-RDispositionType::~RDispositionType()
+RContentDisposition::~RContentDisposition()
 {
     // Empty.
 }
 
     RMM::DispType
-RDispositionType::type()
+RContentDisposition::type()
 {
     parse();
     return dispType_;
 }
 
     QCString
-RDispositionType::filename()
+RContentDisposition::filename()
 {
     parse();
     return filename_;
@@ -96,26 +96,53 @@ RDispositionType::filename()
 
 
     void
-RDispositionType::setFilename(const QCString & s)
+RContentDisposition::setFilename(const QCString & s)
 {
     parse();
     filename_ = s;
 }
 
     void
-RDispositionType::_parse()
+RContentDisposition::_parse()
 {
-    // STUB
+    QCString dispTypeAsString;
+
+    int firstSeparatorPos = strRep_.find(';');
+
+    if (-1 != firstSeparatorPos)
+        parameterList_ = strRep_.mid(firstSeparatorPos + 1);
+
+    // Unrecognized parameters should be ignored. Unrecognized disposition
+    // types should be treated as `attachment'. 
+
+    if (dispTypeAsString.isEmpty())
+        dispType_ = DispositionTypeInline;
+    else if (0 == stricmp(dispTypeAsString,"inline"))
+        dispType_ = DispositionTypeInline;
+    else
+        dispType_ = DispositionTypeAttachment;
+
+    // Get the filename - we care about it !
+
+    QValueList<RParameter> l(parameterList_.list());
+
+    for (QValueList<RParameter>::Iterator it(l.begin()); it != l.end(); ++it)
+
+        if (0 == stricmp((*it).attribute(), "filename")) {
+
+            filename_ = (*it).value();
+            break;
+        }
 }
 
     void
-RDispositionType::_assemble()
+RContentDisposition::_assemble()
 {
     // STUB
 }
     
     void
-RDispositionType::createDefault()
+RContentDisposition::createDefault()
 {
     // STUB
 }

@@ -298,9 +298,9 @@ REnvelope::comments()
 REnvelope::contentDescription()
 { return *static_cast<RText *>(get(HeaderContentDescription)); }
 
-    RDispositionType 
+    RContentDisposition
 REnvelope::contentDisposition()
-{ return *static_cast<RDispositionType *>(get(HeaderContentDisposition)); }
+{ return *static_cast<RContentDisposition *>(get(HeaderContentDisposition)); }
 
     RMessageID 
 REnvelope::contentID()

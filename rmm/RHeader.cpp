@@ -6,7 +6,7 @@
 #include <RMM_Cte.h>
 #include <RMM_AddressList.h>
 #include <RMM_DateTime.h>
-#include <RMM_DispositionType.h>
+#include <RMM_ContentDisposition.h>
 #include <RMM_Mechanism.h>
 #include <RMM_MessageID.h>
 #include <RMM_Text.h>
@@ -198,15 +198,15 @@ RHeader::_newHeaderBody(HeaderType headerType)
     }
 
     switch (headerTypesTable[headerType]) {
-        case Address:           b = new RAddress;           break;
-        case AddressList:       b = new RAddressList;       break;
-        case ContentType:       b = new RContentType;       break;
-        case Cte:               b = new RCte;               break;
-        case DateTime:          b = new RDateTime;          break;
-        case DispositionType:   b = new RDispositionType;   break;
-        case Mechanism:         b = new RMechanism;         break;
-        case MessageID:         b = new RMessageID;         break;
-        case Text: default:     b = new RText;              break;
+        case Address:               b = new RAddress;               break;
+        case AddressList:           b = new RAddressList;           break;
+        case ContentType:           b = new RContentType;           break;
+        case Cte:                   b = new RCte;                   break;
+        case DateTime:              b = new RDateTime;              break;
+        case ContentDisposition:    b = new RContentDisposition;    break;
+        case Mechanism:             b = new RMechanism;             break;
+        case MessageID:             b = new RMessageID;             break;
+        case Text: default:         b = new RText;                  break;
     }
 
     return b;
@@ -236,8 +236,8 @@ RHeader::_copyHeaderBody(HeaderType headerType, RHeaderBody * headerBody)
             b = new RCte(*(RCte *)headerBody);                         break;
         case DateTime:          
             b = new RDateTime(*(RDateTime *)headerBody);               break;
-        case DispositionType:   
-            b = new RDispositionType(*(RDispositionType *)headerBody); break;
+        case ContentDisposition:   
+            b = new RContentDisposition(*(RContentDisposition *)headerBody); break;
         case Mechanism:         
             b = new RMechanism(*(RMechanism *)headerBody);             break;
         case MessageID:         

@@ -19,8 +19,8 @@
    Boston, MA 02111-1307, USA.
 */
 
-#ifndef RMM_DISPOSITION_TYPE_H
-#define RMM_DISPOSITION_TYPE_H
+#ifndef RMM_CONTENT_DISPOSITION_H
+#define RMM_CONTENT_DISPOSITION_H
 
 #include <qcstring.h>
 
@@ -32,9 +32,22 @@
 
 namespace RMM {
 
-class RDispositionType : public RHeaderBody {
+/**
+ * Two common ways of presenting multipart electronic messages are as a
+ * main document with a list of separate attachments, and as a single
+ * document with the various parts expanded (displayed) inline. The
+ * display of an attachment is generally construed to require positive
+ * action on the part of the recipient, while inline message components
+ * are displayed automatically when the message is viewed. A mechanism
+ * is needed to allow the sender to transmit this sort of presentational
+ * information to the recipient; the Content-Disposition header provides
+ * this mechanism, allowing each component of a message to be tagged
+ * with an indication of its desired presentation semantics.
+ * -- RFC 2183
+ */
+class RContentDisposition : public RHeaderBody {
 
-#include "RMM_DispositionType_generated.h"
+#include "RMM_ContentDisposition_generated.h"
 
     public:
         
@@ -53,5 +66,5 @@ class RDispositionType : public RHeaderBody {
 
 }
 
-#endif //RDISPOSITIONTYPE_H
+#endif
 // vim:ts=4:sw=4:tw=78

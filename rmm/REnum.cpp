@@ -96,7 +96,7 @@ RMM::headerTypesTable [] = {
     AddressList,        // HeaderCc
     Text,                // HeaderComments
     Text,                // HeaderContentDescription
-    DispositionType,    // HeaderContentDisposition
+    ContentDisposition,   // HeaderContentDisposition
     MessageID,            // HeaderContentID
     Text,                // HeaderContentMD5
     ContentType,        // HeaderContentType

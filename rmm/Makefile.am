@@ -1,7 +1,7 @@
 INCLUDES=$(all_includes)
 
 lib_LTLIBRARIES = librmm.la
-librmm_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+librmm_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
 # Define this for testing.
 # -no-undefined 
 
@@ -14,7 +14,7 @@ RBodyPart.cpp \
 RContentType.cpp \
 RCte.cpp \
 RDateTime.cpp \
-RDispositionType.cpp \
+RContentDisposition.cpp \
 REnum.cpp \
 REnvelope.cpp \
 RHeader.cpp \
@@ -45,8 +45,8 @@ RMM_Cte_generated.h \
 RMM_DateTime.h \
 RMM_DateTime_generated.h \
 RMM_Defines.h \
-RMM_DispositionType.h \
-RMM_DispositionType_generated.h \
+RMM_ContentDisposition.h \
+RMM_ContentDisposition_generated.h \
 RMM_Entity.h \
 RMM_Enum.h \
 RMM_Envelope.h \

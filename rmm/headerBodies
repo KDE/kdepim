@@ -4,7 +4,7 @@ BodyPart
 ContentType
 Cte
 DateTime
-DispositionType
+ContentDisposition
 Envelope
 Header
 HeaderBody v
