@@ -70,7 +70,7 @@ void *PilotMemo::pack(void *buf, int *len)
 
 	QCString s = codec()->fromUnicode(fText);
 
-	unsigned int use_length = *len;
+	int use_length = *len;
 	if (MAX_MEMO_LEN < use_length) use_length = MAX_MEMO_LEN;
 
 	// It won't fit if the buffer is too small. This second test
@@ -85,6 +85,9 @@ void *PilotMemo::pack(void *buf, int *len)
 	// Yay, _every_ parameter needs a cast.
 	strlcpy(( char *)buf,(const char *)s,use_length);
 
+	// Finally, we set the length of the memo to the used length
+	// of the data buffer, which might be the length of the string.
+	if (s.length() < use_length) use_length = s.length()+1;
 	*len = use_length;
 	return buf;
 }
