@@ -30,7 +30,6 @@ namespace{
     bool testOle( KCal::Todo* fi,  KCal::Todo* se)
     {
          kdDebug() << "Test " << endl;
-        bool mod = false;
         if (fi->categories() != se->categories() ) {
               kdDebug() << "Categoryies not match" << endl;
             kdDebug() << "New " << fi->categories().join(";") << endl;

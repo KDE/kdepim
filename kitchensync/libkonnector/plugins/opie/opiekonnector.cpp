@@ -115,11 +115,11 @@ bool OpiePlugin::startSync()
 {
   return d->socket->startSync();
 }
-bool OpiePlugin::startBackup(const QString& path)
+bool OpiePlugin::startBackup(const QString& )
 {
   return true;
 }
-bool OpiePlugin::startRestore(const QString& path)
+bool OpiePlugin::startRestore(const QString& )
 {
   return true;
 }

@@ -56,7 +56,7 @@ ConfigPart::ConfigPart(const Kapabilities &kaps, QWidget *parent, const char *na
     initialize( kaps );
     m_kap = kaps;
 }
-ConfigPart::ConfigPart(const Kapabilities& kaps, const Kapabilities &src,
+ConfigPart::ConfigPart(const Kapabilities& kaps, const Kapabilities &/*src*/,
 		       QWidget* parent, const char* name )
     : ConfigWidget( parent, name ) {
     init();

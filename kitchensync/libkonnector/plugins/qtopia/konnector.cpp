@@ -83,10 +83,10 @@ void QtopiaPlugin::setCapabilities( const KSync::Kapabilities& caps) {
 bool QtopiaPlugin::startSync() {
     return d->socket->startSync();
 }
-bool QtopiaPlugin::startBackup( const QString& path ) {
+bool QtopiaPlugin::startBackup( const QString&  ) {
     return true;
 }
-bool QtopiaPlugin::startRestore( const QString& path ) {
+bool QtopiaPlugin::startRestore( const QString& ) {
     return true;
 }
 bool QtopiaPlugin::connectDevice() {

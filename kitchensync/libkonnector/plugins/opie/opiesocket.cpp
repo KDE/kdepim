@@ -168,7 +168,7 @@ bool OpieSocket::isConnected()
 	return false;
     }
 }
-Syncee* OpieSocket::retrEntry( const QString& path ) {
+Syncee* OpieSocket::retrEntry( const QString& ) {
     return 0l;
 }
 QByteArray OpieSocket::retrFile(const QString &path )
