@@ -28,6 +28,7 @@
 #include <kapplication.h>
 #include <kwizard.h>
 
+#include "filters.hxx"
 #include "kimportpage.h"
 #include "kselfilterpage.h"
   
@@ -45,6 +46,7 @@ public slots:
 private:
 	KSelFilterPage* selfilterpage;
 	KImportPage* importpage;
+	Filter::List filters;
 	QWidget *_parent;
 };
 

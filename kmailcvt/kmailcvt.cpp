@@ -40,9 +40,9 @@ KMailCVT::KMailCVT(QWidget *parent, const char *name)
 	addPage( importpage, i18n( "Step 2: Importing..." ) );
 	setFinishEnabled(QWizard::page(2), false);
 
-    Filter::List filters = Filter::createFilters();
-    for ( Filter* filter = filters.first(); filter; filter = filters.next() )
-        selfilterpage->addFilter( filter );
+	filters = Filter::createFilters();
+	for ( Filter* filter = filters.first(); filter; filter = filters.next() )
+		selfilterpage->addFilter( filter );
 }
 
 KMailCVT::~KMailCVT() {
@@ -86,7 +86,8 @@ void KMailCVT::help()
 		"(c) 2000-3, The KMailCVT developers");
 	aboutData.addAuthor("Hans Dijkema","Original author", "kmailcvt@hum.org", "http://www.hum.org/kmailcvt.html");
 	aboutData.addAuthor("Laurence Anderson","New GUI & cleanups", "l.d.anderson@warwick.ac.uk");
-	selfilterpage->setAuthors(aboutData);
+	for ( Filter* filter = filters.first(); filter; filter = filters.next() )
+		aboutData.addAuthor(filter->author().latin1(), filter->name().latin1());
 
 	KAboutApplication a(&aboutData, _parent);
 	a.exec();

@@ -16,9 +16,10 @@
  ***************************************************************************/
 
 #include <kstandarddirs.h>
-#include <kaboutdata.h>
 #include <qtextedit.h>
 #include <kdebug.h>
+#include <klocale.h>
+#include "filters.hxx"
 
 #include "kselfilterpage.h"
 
@@ -52,14 +53,6 @@ void KSelFilterPage::addFilter(Filter *f)
 Filter * KSelFilterPage::getSelectedFilter(void)
 {
 	return filterList.at(_filters->currentItem());
-}
-
-void KSelFilterPage::setAuthors(KAboutData& data)
-{
-	Filter *filterItem;
-	for (filterItem = filterList.first(); filterItem; filterItem = filterList.next() ) {
-		data.addAuthor(filterItem->author().latin1(), filterItem->name().latin1());
-	}
 }
 
 #include "kselfilterpage.moc"
