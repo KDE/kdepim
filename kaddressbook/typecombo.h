@@ -114,7 +114,7 @@ void TypeCombo<T>::selectType( int type )
 {
   uint i;
   for( i = 0; i < mTypeList.count(); ++i ) {
-    if ( mTypeList[ i ].type() == type ) {
+    if ( (mTypeList[ i ].type() & ~T::Pref) == type ) {
       setCurrentItem( i );
       break;
     }

@@ -112,7 +112,17 @@ void AddressEditWidget::setAddresses(const KABC::Address::List &list)
   }
 
   mTypeCombo->updateTypes();
-  mTypeCombo->selectType( defaultTypes[ 0 ] );
+
+  // find preferred address which will be shown
+  int preferred = KABC::Address::Home;  // default if no preferred address set
+  uint i;
+  for (i = 0; i < list.count(); i++)
+    if ( list[i].type() & KABC::Address::Pref ) {
+      preferred = list[i].type();
+      break;
+    }
+
+  mTypeCombo->selectType( preferred );
 
   updateAddressEdit();
 }
