@@ -59,8 +59,8 @@ class KNMimeInfo : public KNArticleBase {
 		void setCTCategory(contentCategory c)     { c_tCategory=c; }
 		void setDecoded(bool b)								    { d_ecoded=b; }
 		void setCustomMimeType(const QCString &m);
-		void addCTParameter(const QCString &s);
-		void setCTParameter(const QCString &name, const QCString &value);
+		//void addCTParameter(const QCString &s);
+		void setCTParameter(const QCString &name, const QCString &value, bool doubleQuotes=true);
 		void setCharsetParameter(const QCString &p);
 		void setBoundaryParameter(const QCString &p);
 		void setNameParameter(const QCString &p);

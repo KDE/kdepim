@@ -133,7 +133,7 @@ bool KNGroup::loadHdrs()
   	KNFile f;
   	KNStringSplitter split;
   	int cnt=0, id, lines;
-  	time_t timeT, fTimeT;
+  	time_t timeT;//, fTimeT;
  	 	KNFetchArticle *art;
 
  	 	QString dir(path());
@@ -194,17 +194,15 @@ bool KNGroup::loadHdrs()
 				
 				buff=f.readLine();
 				if(!buff.isEmpty()) art->references().setLine(buff.copy());
-		  		
-							
+		  								
 				buff=f.readLine();
-		  							
-				sscanf(buff,"%d %d %d %d", &id, &lines, (uint*) &timeT, (uint*) &fTimeT);
+		  	sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);//, (uint*) &fTimeT);
 				//qDebug("id = %d", id);
 			
 				art->setId(id);
 				art->setLines(lines);
 				art->setTimeT(timeT);
-				art->setFetchTime(fTimeT);
+				//art->setFetchTime(fTimeT);
 								
 				if(append(art)) cnt++;
 				else {
@@ -287,8 +285,8 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
 {
 	KNFetchArticle *art=0;
 	QCString tmp;
-	DwDateTime dt;
-	time_t fTimeT=dt.AsUnixTime();
+	//DwDateTime dt;
+	//time_t fTimeT=dt.AsUnixTime();
 	KNStringSplitter split;
 	split.setIncludeSep(false);
 	int cnt=0;
@@ -302,7 +300,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
 		//new Header-Object
 		art=new KNFetchArticle();
 		art->setNew(true);
-		art->setFetchTime(fTimeT);
+		//art->setFetchTime(fTimeT);
 				
 		//Article Number
 		split.first();
@@ -394,8 +392,8 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 		
 			ts << art->id() << ' ';
 			ts << art->lines() << ' ';
-			ts <<	art->timeT() << ' ';
-			ts << art->fetchTime() << '\n';
+			ts <<	art->timeT() << '\n';
+			//ts << art->fetchTime() << '\n';
 		
 			savedCnt++;
 			

@@ -55,9 +55,9 @@ KNCleanUp::~KNCleanUp()
 void KNCleanUp::group(KNGroup *g, bool withGUI)
 {
 	int expDays, idRef, foundId;
-	int age;
-	QDate today=QDate::currentDate();
-	QDateTime fetchDate;
+	//int age;
+	//QDate today=QDate::currentDate();
+	//QDateTime fetchDate;
 		
 	KNFetchArticle *art, *ref;
 	delCnt=0;	
@@ -69,9 +69,9 @@ void KNCleanUp::group(KNGroup *g, bool withGUI)
 		art=g->at(i);			
 		if(art->isRead()) expDays=rDays;
 		else expDays=uDays;
-		fetchDate.setTime_t(art->timeT());
-		age=fetchDate.date().daysTo(today);
-		art->setExpired((age >= expDays));
+		//fetchDate.setTime_t(art->timeT());
+		//age=fetchDate.date().daysTo(today);
+		art->setExpired((art->age() >= expDays));
 	}
 	
 	//save threads
@@ -123,11 +123,8 @@ void KNCleanUp::group(KNGroup *g, bool withGUI)
 	g->saveInfo();
 	leftCnt=g->count();
 	
-	if(withGUI) {
-		QCString tmp;
-		tmp.sprintf("%s\nexpired:\t%d\nleft:\t%d", g->groupname().data(), delCnt, leftCnt);
-		KMessageBox::information(0,tmp);
-	}	
+	if(withGUI)
+	  KMessageBox::information(0, QString("<b>%1</b>\nexpired:\t%2\nleft:\t%3").arg(g->groupname()).arg(delCnt).arg(leftCnt));
 }
 
 

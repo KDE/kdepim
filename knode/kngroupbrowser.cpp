@@ -169,6 +169,7 @@ void KNGroupBrowser::slotLoadList()
     }
 
     f.close();
+    //allList->sort();
     knGlobals.top->setStatusMsg();
     filterEdit->setText("");
     slotFilter("");

@@ -19,16 +19,9 @@
 #include "knfetcharticle.h"
 
 
-KNFetchArticle::KNFetchArticle()
+KNFetchArticle::KNFetchArticle() : i_dRef(-1), l_ines(-1), thrLevel(0), s_core(50),  newFups(0), unrFups(0)
 {
-	l_ines=-1;
-	fTimeT=0;
 	flags.fill(false,8);
-	i_dRef=-1;
-	thrLevel=0;
-	unrFups=0;
-	newFups=0;
-	s_core=50;
 }
 
 
@@ -74,37 +67,6 @@ void KNFetchArticle::parseFrom(const QCString &s)
 		e_mail="no email";
 	}
 }
-
-
-
-/*void KNFetchArticle::parseReferences(const QCString &s)
-{
-	int RefNr=0;
-	KNStringSplitter refs;
-	QCString tmp;
-	bool isRef;
-		
-	if(!s.isEmpty()) {
-		refs.setIncludeSep(false);		
-		refs.init(s, " ");
-		isRef=refs.last();
-	
-		if(!isRef) {
-			tmp=s.stripWhiteSpace();
-			if(tmp!=m_Id) r_eferences[0]=tmp;
-		}
-		else {
-		 	while(isRef && RefNr < 5) {
-				tmp=refs.string().stripWhiteSpace();	
-				if(m_Id!=tmp) {	
-					r_eferences[RefNr]=tmp;
-					RefNr++;
-				}									
-				isRef=refs.prev();
-			}
-		}
-	}	
-}*/
 
 
 

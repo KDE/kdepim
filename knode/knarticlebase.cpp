@@ -621,11 +621,9 @@ bool KNArticleBase::MultiPartParser::isEndBoundary(const char *line)
 
 
 
-KNArticleBase::UUParser::UUParser(QStrList *l)
+KNArticleBase::UUParser::UUParser(QStrList *l, const QCString &s) :
+  src(l), text(0), bin(0), subject(s), partNr(-1), totalNr(-1)
 {
-	src=l;
-	text=0;
-	bin=0;
 }
 
 
@@ -640,24 +638,62 @@ KNArticleBase::UUParser::~UUParser()
 
 void KNArticleBase::UUParser::parse()
 {
-	int beginPos=-1, endPos=-1;
+	int beginPos=-1, endPos=-1, end=0, pos=0, len=0;
 	char *line;
 	int MCnt=0, lineCnt=0, pos1=0;
 	QCString tmp;
+	QRegExp begin("begin [0-9][0-9][0-9] *");
 	
 	for(line=src->first(); line; line=src->next()) {
-		if(strncasecmp(line, "begin", 5)==0) {
+		lineCnt++;
+		if(line[0]=='M') MCnt++;
+		if(beginPos==-1 && strncasecmp("begin", line, 5)==0 && begin.match(QString(line))!=-1) {
 			beginPos=src->at();
-			tmp=line;
-			pos1=tmp.findRev(' ');
-			if(pos1!=-1) fName=tmp.right(tmp.length()-(++pos1));
-			else beginPos=-1;
-			break;
+			fName=&line[10];
+			MCnt=0;
+			lineCnt=0;
 		}
-	}
-	if(beginPos==-1) return;
+		else if(endPos==-1 && strcasecmp("end", line)==0) {
+		  endPos=src->at();
+		  break;
+		}
+  }
 	
-	line=src->next();
+  if((lineCnt-MCnt)>5) return;
+
+  if(beginPos==-1 || endPos==-1 && subject) {
+    QRegExp nr("[0-9]+/[0-9]+");
+    pos=nr.match(QString(subject), 0, &len);
+    if(pos!=-1) {
+      tmp=subject.mid(pos, len);
+      pos=tmp.find('/');
+      partNr=tmp.left(pos).toInt();
+      totalNr=tmp.right(tmp.length()-pos-1).toInt();
+    }
+    return;
+  }	
+
+	if(beginPos!=-1) {
+	  if(beginPos!=0) {
+	    text=new QStrList(false);
+      text->setAutoDelete(false);
+      for(int idx=0; idx<beginPos; idx++)
+        text->append(src->at(idx));
+    }
+
+    //if(endPos==-1) end=src->count()-1;
+    //else end=endPos;
+    endPos==-1 ? end=src->count() : end=endPos;
+    bin=new QStrList(false);
+	  bin->setAutoDelete(false);
+	  for(int idx=beginPos; idx<end; idx++)
+      bin->append(src->at(idx));
+
+  }
+	
+
+	
+	/*line=src->next();
 	while(line!=0 && endPos==-1) {
 		lineCnt++;
 		if(strncmp(line, "M", 1)==0) MCnt++;
@@ -674,7 +710,7 @@ void KNArticleBase::UUParser::parse()
 	bin=new QStrList(false);
 	bin->setAutoDelete(false);
 	for(int idx=beginPos; idx<=endPos; idx++)
-		bin->append(src->at(idx));
+		bin->append(src->at(idx));*/
 	
   if(!fName.isEmpty()) {
     pos1=fName.findRev('.');

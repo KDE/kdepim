@@ -92,6 +92,9 @@ void KNArticle::assemble()
   tmp=dt.AsString().c_str();
   setHeader(HTdate, tmp, false);
 
+  tmp.setNum(contentLineCount());
+  setHeader(HTlines, tmp);
+
   setHeader(HTsubject, s_ubject, !allow8bit);
 }
 

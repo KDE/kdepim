@@ -144,7 +144,9 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
   	tmp+="\n";
   	text=a->textContent();
   	if(text)
-  	  tmp+=a->textContent()->decodedData();
+  	  tmp+=text->decodedData();
+  	else if(!a->isMultipart())
+  	  tmp+=a->decodedData();
 		file->writeBlock(tmp.data(), tmp.size());
   }
 }

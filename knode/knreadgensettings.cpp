@@ -34,7 +34,7 @@ KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
 {
 	QGroupBox *mgb=new QGroupBox(i18n("Misc"), this);
 	QGroupBox *vgb=new QGroupBox(i18n("View"), this);
-	QGroupBox *agb=new QGroupBox(i18n("Attachements"), this);
+	QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
 	QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
 	QLabel *l1, *l2,*l3;
 	
@@ -50,9 +50,9 @@ KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
 	browser->insertItem("Netscape");
 	expCB=new QCheckBox(i18n("show whole thread on expanding"), vgb);
 	sigCB=new QCheckBox(i18n("show signature"), vgb);
-	inlineCB=new QCheckBox(i18n("show attachements inline if possible"), agb);
-	openAttCB=new QCheckBox(i18n("open attachements on click"), agb);
-	altAttCB=new QCheckBox(i18n("show alternative contents as attachements"), agb);
+	inlineCB=new QCheckBox(i18n("show attachments inline if possible"), agb);
+	openAttCB=new QCheckBox(i18n("open attachments on click"), agb);
+	altAttCB=new QCheckBox(i18n("show alternative contents as attachments"), agb);
 	QVBoxLayout *topL=new QVBoxLayout(this, 10);
 	QGridLayout *mgbL=new QGridLayout(mgb, 4,3, 15,10);
 	QVBoxLayout *vgbL=new QVBoxLayout(vgb, 15, 10);

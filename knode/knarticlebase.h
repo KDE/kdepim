@@ -153,11 +153,14 @@ class KNArticleBase {
 		class UUParser {
 			
 			public:
-				UUParser(QStrList *l);
+				UUParser(QStrList *l, const QCString &s);
 				~UUParser();
 				
 				void parse();
-				bool isUUencoded()       	            { return (text!=0); }
+				bool isUUencoded()       	            { return (bin!=0); }
+				bool isPartial()                      { return (partNr>-1 && totalNr>-1); }
+				int numberOfPart()                    { return partNr; }
+				int totalNumberOfParts()              { return totalNr; }
 				QStrList* textPart()			            { return text; }
 				QStrList* binaryPart()		            { return bin; }
 				const QCString& fileName()	          { return fName; }
@@ -165,7 +168,9 @@ class KNArticleBase {
 				
 			protected:
 				QStrList *src, *text, *bin;
-				QCString fName, mimeType;
+				QCString fName, mimeType, subject;
+				int partNr, totalNr;
+				
 		};
 		
 		class ReferenceLine {

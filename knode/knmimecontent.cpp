@@ -124,7 +124,7 @@ void KNMimeContent::parse()
 	KNMimeContent *mCT=0, *uuContent=0;
 	QStrList *part;
 	contentCategory cat=CCsingle;
-		
+			
 	//parse Header
 	mimeInfo()->parse(this);
 
@@ -167,11 +167,24 @@ void KNMimeContent::parse()
   		}
   	}
   }
-  else if(b_ody && mInfo->ctMediaType()==MTtext && b_ody->count()>100) {
+  else if(b_ody && mInfo->ctMediaType()==MTtext && b_ody->count()>200) {
  		qDebug("KNMimeContent::parse() : uuencoded binary assumed");
- 		UUParser uup(b_ody);
+ 		UUParser uup(b_ody, headerLine("Subject"));
  		uup.parse();
- 		if(uup.isUUencoded()) {
+ 		
+ 		if(uup.isPartial()) {
+ 		  mInfo->setCTMediaType(MTmessage);
+ 		  mInfo->setCTSubType(STpartial);
+ 		  mInfo->setCTEncoding(ECsevenBit);
+ 		  mInfo->setCTParameter("id", uniqueString());
+ 		  tmp.setNum(uup.numberOfPart());
+ 		  mInfo->setCTParameter("number", tmp, false);
+ 		  tmp.setNum(uup.totalNumberOfParts());
+ 		  mInfo->setCTParameter("total", tmp, false);
+ 		  this->KNMimeContent::assemble();
+ 		}
+ 		
+ 		else if(uup.isUUencoded()) {
  			qDebug("KNMimeContent::parse() : is uuencoded");
  			if(!ct_List) {
   			ct_List=new QList<KNMimeContent>;
@@ -184,19 +197,22 @@ void KNMimeContent::parse()
  			mInfo->setCTEncoding(ECnone);
  			mInfo->setBoundaryParameter(multiPartBoundary());
  			this->KNMimeContent::assemble();
- 			uuContent=new KNMimeContent();
- 			uuContent->initContent();
- 			uuContent->mimeInfo()->setCTMediaType(MTtext);
- 			uuContent->mimeInfo()->setCTSubType(STplain);
- 			uuContent->mimeInfo()->setCTEncoding(ECsevenBit);
- 			uuContent->mimeInfo()->setCTDisposition(DPinline);
- 			uuContent->mimeInfo()->setCTCategory(CCmixedPart);
- 			uuContent->assemble();
- 			part=uup.textPart();
- 			for(char *l=part->first(); l; l=part->next())
- 				uuContent->addBodyLine(l);
- 			ct_List->append(uuContent);
-  			
+ 			
+ 			if((part=uup.textPart())) {
+ 			  uuContent=new KNMimeContent();
+ 			  uuContent->initContent();
+ 			  uuContent->mimeInfo()->setCTMediaType(MTtext);
+ 			  uuContent->mimeInfo()->setCTSubType(STplain);
+ 			  uuContent->mimeInfo()->setCTEncoding(ECsevenBit);
+ 			  uuContent->mimeInfo()->setCTDisposition(DPinline);
+ 			  uuContent->mimeInfo()->setCTCategory(CCmixedPart);
+ 			  uuContent->assemble();
+ 			  for(char *l=part->first(); l; l=part->next())
+ 				  uuContent->addBodyLine(l);
+ 			  ct_List->append(uuContent);
+ 			}
+  		
+ 			part=uup.binaryPart();	
  			uuContent=new KNMimeContent();
  			uuContent->initContent();
  			tmp=uup.assumedMimeType().copy()+"; name=\""+uup.fileName()+"\"";
@@ -205,10 +221,9 @@ void KNMimeContent::parse()
  			uuContent->mimeInfo()->setCTDisposition(DPattached);
  			uuContent->mimeInfo()->setCTCategory(CCmixedPart);
  			uuContent->assemble();
- 			part=uup.binaryPart();
- 			for(char *l=part->first(); l; l=part->next())
- 				uuContent->addBodyLine(l);
- 			ct_List->append(uuContent);
+			for(char *l=part->first(); l; l=part->next())
+			  uuContent->addBodyLine(l);
+			ct_List->append(uuContent);
   		delete b_ody;
  			b_ody=0;
  		}
@@ -221,19 +236,10 @@ void KNMimeContent::assemble()
 {
   QCString tmp;
   KNMimeInfo *i=mimeInfo();
-  int lines=0;
 
   if(this->type()!=ATmimeContent) {
     tmp="1.0";
     setHeader(HTmimeVersion, tmp, false);
-    if(!isMultipart() && b_ody)
-      lines=b_ody->count();
-    else if(ct_List)
-      for(KNMimeContent *c=ct_List->first(); c; c=ct_List->next())
-        lines+=c->contentLineCount();
-
-    tmp.setNum(lines);
-    setHeader(HTlines, tmp);
   }
   else {
     tmp=i->contentDisposition();

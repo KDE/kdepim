@@ -44,7 +44,7 @@ class KNFetchArticle : public KNArticle  {
 		
 		int lines()															{ return l_ines; }
 		int idRef()															{ return i_dRef; }
-		time_t fetchTime()											{ return fTimeT; }
+		//time_t fetchTime()											{ return fTimeT; }
 		unsigned short threadingLevel()					{ return thrLevel; }
 		unsigned short score()									{ return s_core; }
 		unsigned short newFollowUps()						{ return newFups; }
@@ -67,7 +67,7 @@ class KNFetchArticle : public KNArticle  {
 		void setFromEmail(const QCString &s)         		{ e_mail=s; }
 		void setLines(int i)														{ l_ines=i; }
 		void setIdRef(int v)														{ i_dRef=v; }
-		void setFetchTime(time_t v)											{ fTimeT=v; }
+		//void setFetchTime(time_t v)											{ fTimeT=v; }
 		void setThreadingLevel(unsigned short v)  			{ thrLevel=v; }
 		void setScore(unsigned short v)           			{ s_core=v; }
 		void setNewFollowUps(unsigned short v)    			{ newFups=v; }
@@ -90,7 +90,7 @@ class KNFetchArticle : public KNArticle  {
 		QCString m_Id, f_rom, e_mail;
 		int i_dRef, l_ines;
 		unsigned short thrLevel, s_core, newFups, unrFups;
-		time_t fTimeT;
+		//time_t fTimeT;
 		QBitArray flags;
 		
 };

@@ -265,22 +265,26 @@ bool KNMimeInfo::ctParameterIsSet(const char *param)
 
 
 
-void KNMimeInfo::setCTParameter(const QCString &name, const QCString &value)
+void KNMimeInfo::setCTParameter(const QCString &name, const QCString &value, bool doubleQuotes)
 {
   int pos1=0, pos2=0;
-  QCString param=name;
+
+  QCString param;
+
+  if(doubleQuotes)
+    param=name+"=\""+value+"\"";
+  else
+    param=name+"="+value;
 
   pos1=c_ontentType.find(param, 0, false);
   if(pos1==-1) {
-    param+="=\""+value+"\"";
-    addCTParameter(param);
+    c_ontentType+="; "+param;
   }
   else {
     pos2=c_ontentType.find(';', pos1);
     if(pos2==-1)
       pos2=c_ontentType.length();
     c_ontentType.remove(pos1, pos2-pos1);
-    param=name+"=\""+value+"\"";
     c_ontentType.insert(pos1, param);
   }
 }
@@ -325,11 +329,10 @@ void KNMimeInfo::setCustomMimeType(const QCString &m)
 
 
 
-void KNMimeInfo::addCTParameter(const QCString &s)
+/*void KNMimeInfo::addCTParameter(const QCString &s)
 {
   c_ontentType+="; "+s;
-}
-
+}*/
 
 
 QCString KNMimeInfo::assembleMimeType()
