@@ -6,12 +6,16 @@ INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkpimidentities -I$(top_s
            -I$(top_srcdir)/certmanager/lib \
            $(all_includes)
 
-bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard
-kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la libkolabwizard.la
+bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
+               groupwisewizard
+
+kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la \
+                         libkolabwizard.la libgroupwisewizard.la
 
 
 groupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) libkolabwizard.la
+groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) \
+                        libkolabwizard.la libgroupwisewizard.la
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
@@ -54,9 +58,21 @@ sloxwizard_LDADD = libsloxwizard.la
 sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 sloxwizard_SOURCES = sloxmain.cpp
 
-noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h
+# Groupwise
+libgroupwisewizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc
+libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
+                          $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
+                          $(top_builddir)/libkdepim/libkdepim.la
 
-kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg
+groupwisewizard_LDADD = libgroupwisewizard.la
+groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+groupwisewizard_SOURCES = groupwisemain.cpp
+
+noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
+                 groupwisewizard.h
+
+kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot

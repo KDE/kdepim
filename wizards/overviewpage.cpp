@@ -35,6 +35,7 @@
 #include "egroupwarewizard.h"
 #include "kolabwizard.h"
 #include "sloxwizard.h"
+#include "groupwisewizard.h"
 
 #include "overviewpage.h"
 
@@ -73,9 +74,13 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addMultiCellWidget( button, 5, 5, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardSlox() ) );
 
+  button = new QPushButton( i18n("Groupwise"), this );
+  layout->addMultiCellWidget( button, 6, 6, 0, 3 );
+  connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
+
   QFrame *frame = new QFrame( this );
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  layout->addMultiCellWidget( frame, 6, 6, 0, 3 );
+  layout->addMultiCellWidget( frame, 7, 7, 0, 3 );
 
   QPushButton *cancelButton = new KPushButton( KStdGuiItem::close(), this );
   layout->addWidget( cancelButton, 8, 3 );
@@ -106,6 +111,12 @@ void OverViewPage::showWizardKolab()
 void OverViewPage::showWizardSlox()
 {
   SloxWizard wizard;
+  wizard.exec();
+}
+
+void OverViewPage::showWizardGroupwise()
+{
+  GroupwiseWizard wizard;
   wizard.exec();
 }
 
