@@ -21,6 +21,10 @@ dnl We need to explicitly use the --with-extra-includes passed in,
 dnl since AC_CHECK_HEADER does not do so.
 dnl
 
+
+AC_DEFUN(KPILOT_CHECK_PISOCK,
+[
+
 AC_LANG_PUSH(C++)
 
 kpilot_save_cflags="$CPPFLAGS"
@@ -183,4 +187,6 @@ dnl Remainder is for standalone use
 AC_HEADER_TIME
 AC_CHECK_GETDOMAINNAME
 
+])
+KPILOT_CHECK_PISOCK
 
