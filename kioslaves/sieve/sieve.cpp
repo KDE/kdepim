@@ -926,7 +926,7 @@ bool kio_sieveProtocol::authenticate()
 		return true;
 	} else {
 		// Authentication failed.
-		error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server said:\n%1").arg( r.getAction() ) );
+		error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1").arg( r.getAction() ) );
 		return false;
 	}
 }
