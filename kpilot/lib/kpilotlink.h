@@ -81,14 +81,6 @@ struct db
 
 #define pi_mktag(c1,c2,c3,c4) (((c1)<<24)|((c2)<<16)|((c3)<<8)|(c4))
 
-/**
- * Convert a struct tm from the pilot-link package to a QDateTime
- */
-QDateTime readTm(const struct tm &t);
-/**
- * Convert a QDateTime to a struct tm for use with the pilot-link package
- */
-struct tm writeTm(const QDateTime &dt);
 
 
 class KPilotDeviceLink : public QObject

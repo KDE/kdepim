@@ -45,10 +45,6 @@ class PilotSerialDatabase;
 class PilotLocalDatabase;
 class PilotAppCategory;
 
-QDateTime readTm(const struct tm &t);
-struct tm writeTm(const QDateTime &dt);
-struct tm writeTm(const QDate &dt);
-
 
 class VCalConduitPrivateBase
 {

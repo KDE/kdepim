@@ -196,6 +196,16 @@ QString charExpansion(const char *);
 // ostream& operator <<(ostream&,const QStringList &);
 // kdbgstream& operator <<(kdbgstream&,const QStringList &);
 
+/**
+ * Convert a struct tm from the pilot-link package to a QDateTime
+ */
+QDateTime readTm(const struct tm &t);
+/**
+ * Convert a QDateTime to a struct tm for use with the pilot-link package
+ */
+struct tm writeTm(const QDateTime &dt);
+struct tm writeTm(const QDate &dt);
+
 
 // Some layout macros
 //

@@ -66,31 +66,6 @@ static const char *kpilotlink_id = "$Id$";
 
 
 
-QDateTime readTm(const struct tm &t)
-{
-	QDateTime dt;
-	dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
-	dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
-	return dt;
- }
-
- struct tm writeTm(const QDateTime &dt)
- {
- 	struct tm t;
- 	t.tm_wday = 0; // unimplemented
-	t.tm_yday = 0; // unimplemented
-	t.tm_isdst = 0; // unimplemented
-
-	t.tm_year = dt.date().year() - 1900;
-	t.tm_mon = dt.date().month() - 1;
-	t.tm_mday = dt.date().day();
-	t.tm_hour = dt.time().hour();
-	t.tm_min = dt.time().minute();
-	t.tm_sec = dt.time().second();
-	return t;
- }
-
-
 KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
