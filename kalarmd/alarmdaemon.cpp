@@ -54,8 +54,7 @@ const int LOGIN_DELAY( 5 );
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : QObject(parent, name), DCOPObject(name),
-    mSessionStartTimer(0L),
-    mEnabled( true )
+    mSessionStartTimer(0)
 {
   kdDebug(5900) << "AlarmDaemon::AlarmDaemon()" << endl;
 
@@ -352,8 +351,6 @@ void AlarmDaemon::checkAlarms()
 {
   kdDebug(5901) << "AlarmDaemon::checkAlarms()" << endl;
 
-  if ( !mEnabled ) return;
-
   for( ADCalendarBase *cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
     checkAlarms( cal );
   }
@@ -365,8 +362,6 @@ void AlarmDaemon::checkAlarms()
  */
 void AlarmDaemon::checkAlarms(const QCString& appName)
 {
-  if ( !mEnabled ) return;
-
   for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next()) {
     if (cal->appName() == appName) {
       checkAlarms( cal );
@@ -383,7 +378,7 @@ bool AlarmDaemon::checkAlarms( ADCalendarBase* cal )
 {
   kdDebug(5901) << "AlarmDaemons::checkAlarms(" << cal->urlString() << ")" << endl;
 
-  if ( !mEnabled  ||  !cal->loaded()  ||  !cal->enabled() )
+  if ( !cal->loaded()  ||  !cal->enabled() )
     return false;
 
   QDateTime to = QDateTime::currentDateTime();
@@ -555,8 +550,10 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
 
 /*
  * Called by the timer to check whether session startup is complete.
- * If so, it checks which clients are already running and notifies
- * any which have registered of any pending alarms.
+ * If so, it checks which clients are already running and allows
+ * notification of alarms to them. It also allows alarm notification
+ * to clients which are not currently running but which allow the alarm
+ * daemon to start them in order to notify them.
  * (Ideally checking for session startup would be done using a signal
  * from ksmserver, but until such a signal is available, we can check
  * whether ksplash is still running.)
@@ -569,15 +566,16 @@ void AlarmDaemon::checkIfSessionStarted()
     kdDebug(5900) << "AlarmDaemon::checkIfSessionStarted(): startup complete\n";
     delete mSessionStartTimer;
 
-    // Notify clients which are not yet running of pending alarms
     for (ClientList::Iterator client = mClients.begin();  client != mClients.end();  ++client)
     {
-      if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName))) {
+      if ((*client).notificationType == ClientInfo::DCOP_NOTIFY
+      ||  (*client).notificationType == ClientInfo::COMMAND_LINE_NOTIFY
+      ||  kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName))) {
         (*client).waitForRegistration = false;
       }
     }
 
-    mSessionStartTimer = 0L;    // indicate that session startup is complete
+    mSessionStartTimer = 0;    // indicate that session startup is complete
   }
 }
 
@@ -681,7 +679,7 @@ const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QCString& appName) con
     if (g != mGuis.end())
       return &g.data();
   }
-  return 0L;
+  return 0;
 }
 
 void AlarmDaemon::dumpAlarms()
