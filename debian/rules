@@ -1,9 +1,10 @@
 #!/usr/bin/make -f
 # Made with the aid of debmake, by Christoph Lameter,
 # based on the sample debian/rules file for GNU hello by Ian Jackson.
-
-
-BUILDDIR = ./build
+#export DH_VERBOSE=1
+ 
+# This is the debhelper compatability version to use.
+export DH_COMPAT=2
 
 build: build-stamp
 
@@ -40,10 +41,10 @@ binary-arch: build
 	dh_testroot
 	dh_clean -k
 	dh_installdocs -a
-	make install DESTDIR=`pwd`/debian/tmp/
-	cp debian/*.override debian/tmp/usr/share/lintian/overrides/
-	for i in `ls debian/tmp/usr/share/lintian/overrides/`; do \
-	  mv debian/tmp/usr/share/lintian/overrides/$$i debian/tmp/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
+	make install DESTDIR=`pwd`/debian/korganizer/
+	cp debian/*.override debian/korganizer/usr/share/lintian/overrides/
+	for i in `ls debian/korganizer/usr/share/lintian/overrides/`; do \
+	  mv debian/korganizer/usr/share/lintian/overrides/$$i debian/korganizer/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
 	done
 	perl -w admin/debianrules cleanup
 	for i in `find debian/ -type l -name "common"`; do \
