@@ -52,11 +52,12 @@ class AddressEditWidget : public QWidget
   Q_OBJECT
   
   public:
-    AddressEditWidget(QWidget *parent, const char *name = 0);
+    AddressEditWidget( QWidget *parent, const char *name = 0 );
     ~AddressEditWidget();
 
     KABC::Address::List addresses();
-    void setAddresses(const KABC::Address::List &list);
+    void setAddresses( const KABC::Addressee &addr,
+                       const KABC::Address::List &list );
     
     void updateTypeCombo( const KABC::Address::List&, KComboBox* );
     KABC::Address currentAddress( KComboBox*, int );
@@ -77,6 +78,7 @@ class AddressEditWidget : public QWidget
     QTextEdit *mAddressTextEdit;
 
     KABC::Address::List mAddressList;
+    KABC::Addressee mAddressee;
     int mIndex;
 };
 

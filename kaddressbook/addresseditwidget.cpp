@@ -53,11 +53,9 @@
 #include "addresseditwidget.h"
 
 
-AddressEditWidget::AddressEditWidget( const KABC::Addressee* contact, 
-                                      QWidget *parent, const char *name )
+AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  mAddressee = contact;
   QBoxLayout *layout = new QVBoxLayout( this, 4, 2 );
   layout->setSpacing( KDialog::spacingHint() );
 
@@ -93,8 +91,11 @@ KABC::Address::List AddressEditWidget::addresses()
   return retList;
 }
 
-void AddressEditWidget::setAddresses(const KABC::Address::List &list)
+void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
+                                      const KABC::Address::List &list )
 {
+  mAddressee = addr;
+
   mAddressList.clear();
   
   // Insert types for existing numbers.
@@ -154,35 +155,11 @@ void AddressEditWidget::updateAddressEdit()
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
     if ( !a.isEmpty() ) {
-/*      QString text;
-      if ( !a.street().isEmpty() )
-        text += a.street() + "\n";
-
-      if ( !a.postOfficeBox().isEmpty() )
-        text += a.postOfficeBox() + "\n";
-
-      text += a.locality() + QString(" ") + a.region();
-
-      if ( !a.postalCode().isEmpty() )
-        text += QString(", ") + a.postalCode();
-
-      text += "\n";
-
-      if ( !a.country().isEmpty() )
-        text += a.country() + "\n";
-
-      text += a.extended();
-
-      mAddressTextEdit->setText(text);*/
       if ( a.type() & KABC::Address::Work ) {
-	mAddressTextEdit->setText(a.formattedAddress(
-	        mAddressee->realName()
-	      , mAddressee->organization()
-	      ));
+        mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName(),
+                                   mAddressee.organization() ) );
       } else {
-	mAddressTextEdit->setText(a.formattedAddress(
-	        mAddressee->realName()
-	      ));
+        mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName() ) );
       }
     }
   }

@@ -431,7 +431,7 @@ void AddresseeEditorWidget::load()
   mNoteEdit->setText(mAddressee.note());
   mEmailWidget->setEmails(mAddressee.emails());
   mPhoneEditWidget->setPhoneNumbers(mAddressee.phoneNumbers());
-  mAddressEditWidget->setAddresses(mAddressee.addresses());
+  mAddressEditWidget->setAddresses(mAddressee, mAddressee.addresses());
   mBirthdayPicker->setDate(mAddressee.birthday().date());
   mAnniversaryPicker->setDate(QDate::fromString(mAddressee.custom("KADDRESSBOOK", "X-Anniversary"), Qt::ISODate));
   mNicknameEdit->setText(mAddressee.nickName());
