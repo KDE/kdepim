@@ -80,6 +80,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
   c->writeEntry("UseSigGenerator",u_seSigGenerator);
   c->writeEntry("sigFile", s_igPath);
   c->writeEntry("sigText", s_igText);
+  c->sync();
 }
 
 
@@ -307,7 +308,7 @@ void KNConfig::Appearance::save()
   c->writeEntry("composerFont", f_onts[composer]);
   c->writeEntry("groupListFont", f_onts[groupList]);
   c->writeEntry("articleListFont", f_onts[articleList]);
-
+  c->sync();
   d_irty = false;
 }
 
@@ -626,7 +627,7 @@ void KNConfig::ReadNewsGeneral::save()
   conf->setGroup("CACHE");
   conf->writeEntry("collMemSize", c_ollCacheSize);
   conf->writeEntry("artMemSize", a_rtCacheSize);
-
+  conf->sync();
   d_irty = false;
 }
 
@@ -669,7 +670,7 @@ void KNConfig::ReadNewsNavigation::save()
   conf->writeEntry("markThreadReadCloseThread", m_arkThreadReadCloseThread);
   conf->writeEntry("ignoreThreadGoNext", i_gnoreThreadGoNext);
   conf->writeEntry("ignoreThreadCloseThread", i_gnoreThreadCloseThread);
-
+  conf->sync();
   d_irty = false;
 }
 
@@ -747,7 +748,7 @@ void KNConfig::ReadNewsViewer::save()
                   break;
   }
   conf->writeEntry("BrowserCommand", b_rowserCommand);
-
+  conf->sync();
   d_irty = false;
 }
 
@@ -836,7 +837,7 @@ void KNConfig::DisplayedHeaders::save()
     }
     headerConf.writeEntry("Flags",flags);
   }
-
+  headerConf.sync();
   d_irty = false;
 }
 
@@ -910,7 +911,7 @@ void KNConfig::Scoring::save()
 
   conf->writeEntry("ignoredThreshold", i_gnoredThreshold);
   conf->writeEntry("watchedThreshold", w_atchedThreshold);
-
+  conf->sync();
   d_irty = false;
 }
 
@@ -1024,7 +1025,7 @@ void KNConfig::PostNewsTechnical::save()
     else
       KNHelper::displayInternalFileError();
   }
-
+  conf->sync();
   d_irty = false;
 }
 
@@ -1142,6 +1143,7 @@ void KNConfig::PostNewsComposer::save()
   conf->writeEntry("useExternalEditor", u_seExtEditor);
   conf->writeEntry("Intro", i_ntro);
   conf->writeEntry("externalEditor", e_xternalEditor);
+  conf->sync();
 
   d_irty = false;
 }
@@ -1193,6 +1195,7 @@ void KNConfig::Cleanup::save()
   conf->writeEntry("readDays", r_eadMaxAge);
   conf->writeEntry("unreadDays", u_nreadMaxAge);
   conf->writeEntry("comInterval", c_ompactInterval);
+  conf->sync();
 
   d_irty = false;
 }
