@@ -67,11 +67,11 @@ KABC::AddresseeList PABXXPort::importContacts( const QString& ) const
   KABC::AddresseeList addrList;
 
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
-      		"*.[pP][aA][bB]|" + i18n("MS Personal Address Book Files (*.pab)"), 0 );
+      		"*.[pP][aA][bB]|" + i18n("MS Exchange Personal Address Book Files (*.pab)"), 0 );
   if ( fileName.isEmpty() )
     return addrList;
   if ( !QFile::exists( fileName ) ) {
-    KMessageBox::sorry( parentWidget(), i18n( "<qt>Couldn't find a MS Personal Address Book <b>%1</b>.</qt>" ).arg( fileName ) );
+    KMessageBox::sorry( parentWidget(), i18n( "<qt>Couldn't find a MS Exchange Personal Address Book <b>%1</b>.</qt>" ).arg( fileName ) );
     return addrList;
   }
 
