@@ -67,7 +67,14 @@ public:
     // Purges all Archived/Deleted records from Palm Pilot database
     virtual int cleanUpDatabase();
 
-    const QString& getDBName() const { return fDBName; }
+	const QString& getDBName() const { return fDBName; }
+
+	/**
+	* Returns the full path of the current database, based on
+	* the path and dbname passed to the constructor, and including
+	* the .pdb extension.
+	*/
+	QString dbPathName() const;
 
     protected:
     void openDatabase();
@@ -88,6 +95,9 @@ public:
 
 
 // $Log$
+// Revision 1.6  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.5  2001/02/07 14:21:51  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.
