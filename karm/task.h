@@ -200,6 +200,17 @@ class Task : public QObject, public QListViewItem
      */
     bool remove( QPtrList<Task>& activeTasks, KarmStorage* storage );
 
+    /** 
+     * Update percent complete for this task.
+     *
+     * Tasks that are complete (i.e., percent = 100) do not show up in
+     * taskview.  If percent NULL, set to zero.  If greater than 100, set to
+     * 100.  If less than zero, set to zero.
+     */
+    void setPercentComplete(const int percent, KarmStorage *storage);
+
+    /** Remove current task and all it's children from the view.  */
+    void removeFromView();
 
   protected:
     void changeParentTotalTimes( long minutesSession, long minutes );
@@ -218,6 +229,7 @@ class Task : public QObject, public QListViewItem
     QString _uid;
     /** The comment associated with this Task. */
     QString _comment;
+    int _percentcomplete;
 
     long totalTimeInSeconds() const      { return _totalTime * 60; }
     /** if the time or session time is negative set them to zero */

@@ -35,14 +35,17 @@ Mark - 3.2
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
-  * 2003-09-24: Add comments to report or put it off to 3.2.
+  * 2003-09-24: Add comments to report (or put it off to 3.3).  Need to stamp
+    comments with datetime entered so the history report can associate
+    comments with the proper week.  Note that the original code only allowed
+    you to add comments to a task you were timing.
 
-  * 2003-09-24: DOCS!!
+  * 2003-09-24: UPDATE DOCS!!
 
-  * 2003-09-24: Add new task action--mark as complete.  Don't load completed
+  * ONGOING: Update feature plan.
+
+X * 2003-09-24: Add new task action--mark as complete.  Don't load completed
     tasks.
-
-X * 2003-09-17: Add license and copyright to new program headers.
 
   * 2003-09-24: Change menu entry from KArm to Time Clock.
 
@@ -50,7 +53,7 @@ X * 2003-09-17: Add license and copyright to new program headers.
 
   * 2003-09-23: Auto-save should write events.
   
-  * 2003-09-03: Replace all string concatenations with .arg (for i18n).
+X  * 2003-09-03: Replace all string concatenations with .arg (for i18n).
     
   * 2003-08-15: Remove code that is causing compiler warnings.
 

@@ -105,7 +105,8 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
   _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
   if (!_calendar.load(_icalfile))
-    err = i18n("Library error loading calendar file ") + _icalfile;
+    err = i18n("Error loading file \"%1\"")
+      .arg(_icalfile);
 
   // Build task view from iCal data
   if (!err)
@@ -117,10 +118,12 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
     // Build dictionary to look up Task object from Todo uid.  Each task is a
     // QListViewItem, and is initially added with the view as the parent.
     todoList = _calendar.rawTodos();
-    kdDebug() << "KarmStorage::load - after calendar loaded, "
-      << "todoList.count() = " << todoList.count() << endl;
+    kdDebug() << "KarmStorage::load "
+      << "rawTodo count (includes completed todos) ="
+      << todoList.count() << endl;
     for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
     {
+      if ((*todo)->isCompleted()) continue;
       Task* task = new Task(*todo, view);
       map.insert( (*todo)->uid(), task );
       view->setRootIsDecorated(true);
@@ -128,28 +131,26 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
     }
 
     // Load each task under it's parent task.
-    todo = todoList.begin();
-    while (!err && todo != todoList.end())
+    for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
     {
-      Task* task = map.find( (*todo)->uid() );
+      if ((*todo)->isCompleted()) continue;
 
-      //kdDebug() << "KarmStorage::loadFromTodos, reparenting " 
-      //  << (*todo)->uid() << ", " << task->name() << endl;
+      Task* task = map.find( (*todo)->uid() );
 
       // No relatedTo incident just means this is a top-level task.
       if ( (*todo)->relatedTo() ) 
       {
         Task* newParent = map.find( (*todo)->relatedToUid() );
+
+        // Complete the loading but return a message 
         if ( !newParent ) 
-          err = i18n("Error loading ") + _icalfile
-            + QString::fromLatin1(": ") 
-            + i18n("can't find the parent for the task ") + task->name();
+          err = i18n("Error loading \"%1\": could not find parent (uid=%2)")
+            .arg(task->name())
+            .arg((*todo)->relatedToUid());
 
         if (!err)
           task->move( newParent);
       }
-
-      todo++;
     }
 
     kdDebug() << "KarmStorage::load - loaded " << view->count()
@@ -163,7 +164,7 @@ void KarmStorage::save(TaskView* taskview)
 {
   QPtrStack< KCal::Todo > parents;
 
-  for (Task* task = taskview->first_child(); task; task = task->nextSibling()) 
+  for (Task* task=taskview->first_child(); task; task = task->nextSibling()) 
   {
     writeTaskAsTodo(task, 1, parents );
   }

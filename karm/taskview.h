@@ -93,8 +93,18 @@ class TaskView : public KListView
     /** Calls newTask with caption "New Sub Task". */
     void newSubTask();
     void editTask();
-    void deleteTask();
+
+    /**
+     * Delete task (and children) from view.  
+     *
+     * @param markingascomplete  If false (the default), deletes history for
+     * current task and all children.  If markingascomplete is true, then sets
+     * percent complete to 100 and removes task and all it's children from the
+     * list view.  
+     */
+    void deleteTask(bool markingascomplete=false);
     void addCommentToTask();
+    void markTaskAsComplete();
 
     /** Subtracts time from all active tasks, and does not log event. */ 
     void extractTime( int minutes );

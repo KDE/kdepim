@@ -248,13 +248,20 @@ void MainWindow::makeMenus()
       _taskView,
       SLOT( editTask() ), actionCollection(),
       "edit_task");
-  actionAddComment = new KAction( i18n("&Add Comment..."),
+  actionAddComment = new KAction( i18n("&Add comment..."),
       QString::fromLatin1("document"),
       CTRL+ALT+Key_E,
       _taskView,
       SLOT( addCommentToTask() ),
       actionCollection(),
       "add_comment_to_task");
+  actionMarkAsComplete = new KAction( i18n("&Mark as complete..."),
+      QString::fromLatin1("document"),
+      CTRL+Key_M,
+      _taskView,
+      SLOT( markTaskAsComplete() ),
+      actionCollection(),
+      "mark_as_complete");
   actionClipTotals = new KAction( i18n("&Copy totals to clipboard"),
       QString::fromLatin1("klipper"),
       CTRL+Key_C,

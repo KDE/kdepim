@@ -416,7 +416,7 @@ void TaskView::addCommentToTask()
 }
 
 
-void TaskView::deleteTask()
+void TaskView::deleteTask(bool markingascomplete)
 {
   Task *task = current_item();
   if (task == 0) {
@@ -425,7 +425,7 @@ void TaskView::deleteTask()
   }
 
   int response = KMessageBox::Yes;
-  if ( _preferences->promptDelete() ) {
+  if (!markingascomplete && _preferences->promptDelete()) {
     if (task->childCount() == 0) {
       response = KMessageBox::warningYesNo( 0,
           i18n( "Are you sure you want to delete "
@@ -443,38 +443,46 @@ void TaskView::deleteTask()
     }
   }
 
-  if (response == KMessageBox::Yes) {
-
-    if (task->remove( activeTasks, _storage))
+  if (response == KMessageBox::Yes) 
+  {
+    if (markingascomplete)
     {
-      
-      // remove root decoration if there is no more children.
-      bool anyChilds = false;
-      for(Task* child = first_child();
-                child;
-                child = child->nextSibling()) {
-        if (child->childCount() != 0) {
-          anyChilds = true;
-          break;
-        }
-      }
-      if (!anyChilds) {
-        setRootIsDecorated(false);
-      }
-
-      // Stop idle detection if no more counters are running
-      if (activeTasks.count() == 0) {
-        _idleTimeDetector->stopIdleDetection();
-        emit timersInactive();
-      }
-      emit tasksChanged( activeTasks );
-
+      task->setPercentComplete(100, _storage);
       save();
+      // Have to remove after saving, as the save routine only affects tasks
+      // that are in the view.  Otherwise, the new percent complete does not
+      // get saved.
+      task->removeFromView();
     }
     else
-      KMessageBox::error(0,i18n("Error deleting task."));
-  }
+    {
+      task->remove(activeTasks, _storage);
+      task->removeFromView();
+      save();
+    }
 
+    // remove root decoration if there is no more children.
+    bool anyChilds = false;
+    for(Task* child = first_child();
+              child;
+              child = child->nextSibling()) {
+      if (child->childCount() != 0) {
+        anyChilds = true;
+        break;
+      }
+    }
+    if (!anyChilds) {
+      setRootIsDecorated(false);
+    }
+
+    // Stop idle detection if no more counters are running
+    if (activeTasks.count() == 0) {
+      _idleTimeDetector->stopIdleDetection();
+      emit timersInactive();
+    }
+
+    emit tasksChanged( activeTasks );
+  }
 }
 
 void TaskView::extractTime(int minutes)
@@ -554,6 +562,18 @@ QValueList<HistoryEvent> TaskView::getHistory(const QDate& from,
     const QDate& to) const
 {
   return _storage->getHistory(from, to);
+}
+
+void TaskView::markTaskAsComplete()
+{
+  if (current_item())
+    kdDebug() << "TaskView::markTaskAsComplete: "
+      << current_item()->uid() << endl;
+  else
+    kdDebug() << "TaskView::markTaskAsComplete: null current_item()" << endl;
+
+  bool markingascomplete = true;
+  deleteTask(markingascomplete);
 }
 
 void TaskView::clipTotals()

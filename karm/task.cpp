@@ -81,6 +81,8 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
   connect(_timer, SIGNAL(timeout()), this, SLOT(updateActiveIcon()));
   setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
   _currentPic = 0;
+  _percentcomplete = 0;
+
   update();
   changeParentTotalTimes( _sessionTime, _time);
 }
@@ -129,6 +131,49 @@ void Task::setName( const QString& name, KarmStorage* storage )
     storage->setName(this, oldname);
     update();
   }
+}
+
+void Task::setPercentComplete(const int percent, KarmStorage *storage)
+{
+  kdDebug() << "Task::setPercentComplete(" << percent << ", storage): "
+    << _uid << endl;
+
+  if (isRunning()) setRunning(false, storage);
+
+  if (!percent)
+    _percentcomplete = 0;
+  else if (percent > 100)
+    _percentcomplete = 100;
+  else if (percent < 0)
+    _percentcomplete = 0;
+  else
+    _percentcomplete = percent;
+
+  // When parent marked as complete, mark all children as complete as well.
+  // Complete tasks are not displayed in the task view, so if a parent is
+  // marked as complete and some of the children are not, then we get an error
+  // message.  KArm actually keep chugging along in this case and displays the
+  // child tasks just fine, so an alternative solution is to remove that error
+  // message (from KarmStorage::load).  But I think it makes more sense that
+  // if you mark a parent task as complete, then all children should be
+  // complete as well.
+  //
+  // This behavior is consistent with KOrganizer (as of 2003-09-24).
+  if (_percentcomplete == 100)
+  {
+    for (Task* child= this->firstChild(); child; child = child->nextSibling())
+    {
+      if (child->isRunning()) child->setRunning(false, storage);
+      child->setPercentComplete(_percentcomplete, storage);
+    }
+  }
+}
+
+void Task::removeFromView()
+{
+  for (Task* child= this->firstChild(); child; child= child->nextSibling())
+    child->removeFromView();
+  delete this;
 }
 
 void Task::setDesktopList ( DesktopList desktopList )
@@ -193,32 +238,22 @@ void Task::changeParentTotalTimes( long minutesSession, long minutes )
 
 bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
 {
+  kdDebug() << "Task::remove: " << _name << endl;
+
   bool ok = true;
 
-  if (storage->removeTask(this))
+  storage->removeTask(this);
+
+  if( isRunning() ) setRunning( false, storage );
+
+  for (Task* child = this->firstChild(); child; child = child->nextSibling())
   {
-    if( isRunning() ) 
-      setRunning( false, storage );
-
-    for (Task* child= this->firstChild(); child; child= child->nextSibling() )
-    {
-      if (child->isRunning())
-        child->setRunning(false, storage);
-      child->remove(activeTasks, storage);
-    }
-
-    // original
-    //for (Task* child= this->firstChild(); child; child= child->nextSibling() )
-    //  child->remove( activeTasks, storage );
-    // TODO: by now this tasks _totalSessionTime and _totalTime should be == 0!
-
-    changeParentTotalTimes( -_sessionTime, -_time); 
-    delete this;
+    if (child->isRunning())
+      child->setRunning(false, storage);
+    child->remove(activeTasks, storage);
   }
-  else
-    ok = false;
 
-  kdDebug() << "Task::remove: ok = " << ok << endl;
+  changeParentTotalTimes( -_sessionTime, -_time); 
 
   return ok;
 }
@@ -253,7 +288,7 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
   // Note: if the date start is empty, the KOrganizer GUI will have the
   // checkbox blank, but will prefill the todo's starting datetime to the
   // time the file is opened.
-  //todo->setDtStart( current );
+  // todo->setDtStart( current );
   
   todo->setCustomProperty( kapp->instanceName(),
       QCString( "totalTaskTime" ), QString::number( _time ) );
@@ -262,6 +297,8 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
 
   KEMailSettings settings;
   todo->setOrganizer( settings.getSetting( KEMailSettings::RealName ) );
+
+  todo->setPercentComplete(_percentcomplete);
 
   return todo;
 }

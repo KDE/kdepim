@@ -68,6 +68,7 @@ class MainWindow : public KMainWindow
     KAction* actionDelete;
     KAction* actionEdit;
     KAction* actionAddComment;
+    KAction* actionMarkAsComplete;
     KAction* actionPreferences;
     KAction* actionClipTotals;
     KAction* actionClipHistory;
