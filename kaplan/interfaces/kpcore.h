@@ -48,7 +48,7 @@ namespace Kaplan
 
 		virtual void addPart(KParts::Part *part) = 0;
 
-		virtual void showView(QWidget *view) = 0;
+                virtual void showPart(KParts::Part *part) = 0;
 
 		virtual void insertNewAction(KAction *action) = 0;
 
