@@ -80,6 +80,7 @@ class PilotAppCategory
     void setCat(int cat) { fCategory = cat; }
     recordid_t id(void) const { return fId; }
     recordid_t getID() { return id(); } // Just for compatability's sake
+    recordid_t getID() const { return id(); } // Just for compatability's sake
     void setID(recordid_t id) { fId = id; }
     void setAttrib(int attrib) { fAttrs = attrib; }
 
@@ -98,6 +99,15 @@ public:
 
 
 // $Log$
+// Revision 1.7  2001/03/19 23:12:39  stern
+// Made changes necessary for upcoming abbrowser conduit.
+//
+// Mainly, I added two public methods to PilotAddress that allow for easier
+// setting and getting of phone fields.
+//
+// I also have added some documentation throughout as I have tried to figure
+// out how everything works.
+//
 // Revision 1.6  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

@@ -110,6 +110,10 @@ public:
 	*/
 	BaseConduit::eConduitMode getMode();
 
+        /**
+	 * Returns the source type that the conduit should use
+	 */
+        BaseConduit::DatabaseSource getDBSource();
 	/**
 	* Run the conduit app. This is probably the
 	* last thing main() does before returning.
@@ -121,11 +125,11 @@ protected:
 	KAboutData *fAbout;
 	KApplication *fApp;
 	bool fCmd;
-
 private:
 	BaseConduit* fConduit;
 	BaseConduit::eConduitMode fMode;
-
+        BaseConduit::DatabaseSource fDBSource;
+  
 	int &fArgc;
 	char **fArgv;
 
@@ -137,6 +141,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.13  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.12  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

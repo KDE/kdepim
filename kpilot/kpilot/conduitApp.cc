@@ -62,12 +62,14 @@ static KCmdLineOptions conduitoptions[] =
 		"with this conduit"), 0L },
 	{ "hotsync", I18N_NOOP("HotSync the databases associated "
 		"with this conduit"), 0L },
-	{ "local",I18N_NOOP("HotSync the database to the local database file instead of the palm pilot") ,0L },
 	{ "test",I18N_NOOP("Test this conduit (possibly unimplemented)")
 		,0L },
 #ifdef DEBUG
 	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
 #endif
+	{ "local_db",I18N_NOOP("HotSync the database to the local database file instead of the palm pilot") ,0L },
+	{ "conduitsocket_db",I18N_NOOP("HotSync the database to the palm pilot (default)") ,0L },
+
 	{ 0,0,0 }
 } ;
 
@@ -89,6 +91,7 @@ ConduitApp::ConduitApp(
 	fApp(0L),
 	fCmd(false),
 	fMode(BaseConduit::None),
+	fDBSource(BaseConduit::Undefined),
 	fArgc(argc),
 	fArgv(argv)
 {
@@ -118,13 +121,6 @@ void ConduitApp::addAuthor(const char *name,
 {
 	fAbout->addAuthor(name,task,email);
 }
-
-
-
-
-
-
-
 
 // Next are helper functions, which vary considerably
 // from KDE1 to KDE2 but have the same purpose: deal
@@ -228,12 +224,40 @@ ConduitApp::setupDCOP()
 	return true;
 }
 
+
+
+#define CheckDBSourceArg(s,m)	if (args->isSet(s)) \
+		{ if (fDBSource==BaseConduit::Undefined) \
+		{ fDBSource=BaseConduit::m; } else \
+		{ kdError() << __FUNCTION__ \
+			<< ": More than one database source given (mode now " \
+			<< (int) fDBSource << ')' << endl; \
+			} }
+
+BaseConduit::DatabaseSource ConduitApp::getDBSource()
+    {
+    FUNCTIONSETUP;
+
+    if (fDBSource != BaseConduit::Undefined)
+	return fDBSource;
+
+    KCmdLineArgs *args=getOptions();
+    
+    CheckDBSourceArg("local_db", Local);
+    CheckDBSourceArg("conduitsocket_db", ConduitSocket);
+
+    if (fDBSource == BaseConduit::Undefined)
+	return BaseConduit::ConduitSocket;
+    
+    return fDBSource;
+    }
+
 // exec() actually runs the conduit. This isn't strictly
 // true since under KDE1 setConduit() does a lot of work
 // which in KDE2 is transferred here.
 //
 //
-#define CheckArg(s,m)	if (args->isSet(s)) \
+#define CheckModeArg(s,m)	if (args->isSet(s)) \
 		{ if (fMode==BaseConduit::None) \
 		{ fMode=BaseConduit::m; } else \
 		{ kdError() << __FUNCTION__ \
@@ -248,12 +272,11 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	if (fMode!=BaseConduit::None) return fMode;
 
 	KCmdLineArgs *args=getOptions();
-	CheckArg("info",DBInfo);
-	CheckArg("setup",Setup);
-	CheckArg("hotsync",HotSync);
-	CheckArg("backup",Backup);
-	CheckArg("test",Test);
-	CheckArg("local",LocalDB);
+	CheckModeArg("info",DBInfo);
+	CheckModeArg("setup",Setup);
+	CheckModeArg("hotsync",HotSync);
+	CheckModeArg("backup",Backup);
+	CheckModeArg("test",Test);
 
 	if (fMode==BaseConduit::None)
 	{
@@ -310,7 +333,6 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 	switch(fMode)
 	{
 	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
-	case BaseConduit::LocalDB : 
 	case BaseConduit::HotSync : fConduit->doSync(); break;
 	case BaseConduit::Backup : fConduit->doBackup(); break;
 	case BaseConduit::Test : 
@@ -350,6 +372,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.21  2001/03/29 21:41:49  stern
+// Added local database support in the command line for conduits
+//
 // Revision 1.20  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

@@ -86,10 +86,15 @@ public:
 		Setup,
 		Backup, 
 		Test,
-		DBInfo,
-		LocalDB // use the local database instead of pilot daemon
+		DBInfo
 	};
 
+  enum DatabaseSource {
+                Undefined=-1,
+                ConduitSocket=0,
+		Local
+  };
+      
 	enum ConduitExitCode {
 		Normal=0,
 		ConduitMisconfigured=1,		// f.ex missing file
@@ -102,22 +107,24 @@ public:
    * constructor.   After the constructor returns the appropriate 
    * virtual method should be called (ie: setup, hotsync, backup, etc).
    *
-   * UseLocalDB should not be passed into this method; use the below
-   * constructor instead.  If UseLocalDB is passed into this constructor,
-   * the conduit will be put into an ErrorState with exit code
-   * InvalidLocalDBPath
+   * The default database source will be assigned to Socket.
    */
   BaseConduit(eConduitMode);
+  /**
+   * Same as above constructor, but can specify the source
+   */
+  BaseConduit(eConduitMode mode, DatabaseSource source);
   virtual ~BaseConduit();
 
   /**
-   *  Actually opens the appropriate database (local using pilotLocalDatabase
-   *  or over socket using the pilotConduitDatabase).  This cannot
+   *  Actually opens the appropriate database depending on the
+   *  the setting for DatabaseSource (Local creates a  pilotLocalDatabase
+   *  or ConduitSocket creates a pilotConduitDatabase).  This cannot
    *  be done in the constructor since the virtual function dbInfo()
    *  is needed for pilotLocalDatabase.
    *
    *  This method should be called inside the the ConduitApp function
-   *  setConduit().
+   *  exec().
    */
   void init();
   
@@ -254,8 +261,9 @@ private:
    * Mode for this instance of the conduit
    */
   eConduitMode fMode;
-
   PilotDatabase *fDB;
+  DatabaseSource fDBSource;
+
 };
 
 
@@ -265,6 +273,9 @@ private:
 
 
 // $Log$
+// Revision 1.21  2001/03/29 21:41:49  stern
+// Added local database support in the command line for conduits
+//
 // Revision 1.20  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

@@ -45,7 +45,12 @@
 static const char *baseconduit_id="$Id$";
 
 BaseConduit::BaseConduit(eConduitMode mode)
-      : QObject(), fMode(mode), fDB(0L)
+      : QObject(), fMode(mode), fDB(0L), fDBSource(ConduitSocket)
+{
+}
+
+BaseConduit::BaseConduit(eConduitMode mode, DatabaseSource source)
+      : QObject(), fMode(mode), fDB(0L), fDBSource(source)
 {
 }
 
@@ -56,29 +61,29 @@ void BaseConduit::init()
 	// in case the user calls this twice
 	if (fDB)
 	    return ;
-	
-	if((fMode == BaseConduit::HotSync) || 
-	   (fMode == BaseConduit::Backup))
-	{
-	fDB = new PilotConduitDatabase();
-	if (!fDB->isDBOpen())
+
+	if (fDBSource == ConduitSocket)
 	    {
-	    delete fDB;
-	    fDB = 0L;
-	    }
+	    fDB = new PilotConduitDatabase();
+	    if (!fDB->isDBOpen())
+		{
+		delete fDB;
+		fDB = 0L;
+		}
 	     
 #ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
+	    if (debug_level & SYNC_MINOR)
 		{
-			kdDebug() << fname
-				<< ": Creating kpilotlink connection"
-				<< endl;
+		kdDebug() << fname
+			  << ": Creating kpilotlink connection"
+			  << endl;
 		}
 #endif
 
-	
-	}
-	else if( fMode == LocalDB )
+	    
+	    }
+	else
+	    if( fDBSource == Local )
 	    {
 	    QString dbPath = KPilotConfig::getDefaultDBPath();
 	    QString localDB = dbInfo();
@@ -206,6 +211,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.20  2001/03/29 21:41:49  stern
+// Added local database support in the command line for conduits
+//
 // Revision 1.19  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //
