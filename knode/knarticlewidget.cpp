@@ -783,7 +783,7 @@ void KNArticleWidget::openURL(const QString &url)
     if(url.isEmpty()) return;
 
     if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTdefault)
-        (void) new KRun(url);
+        (void) new KRun(KURL( url ));
     if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
         kapp->invokeBrowser(url);
     else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
@@ -1569,7 +1569,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         if (target.endsWith("/"))
           target.truncate(target.length()-1);
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : news-url " << target << endl;
-        knGlobals.top->openURL(target);
+        knGlobals.top->openURL(KURL( target ));
       break;
       case ATmailto:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
