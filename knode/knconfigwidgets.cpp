@@ -1908,7 +1908,9 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   //init
   f_olderCB->setChecked(d->d_oCompact);
+  slotFolderCBtoggled(d->d_oCompact);
   g_roupCB->setChecked(d->d_oExpire);
+  slotGroupCBtoggled(d->d_oExpire);
   t_hrCB->setChecked(d->p_reserveThr);
   f_olderDays->setValue(d->c_ompactInterval);
   g_roupDays->setValue(d->e_xpireInterval);

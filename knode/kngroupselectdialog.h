@@ -28,7 +28,7 @@ class KNGroupSelectDialog : public KNGroupBrowser {
     KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act);
     ~KNGroupSelectDialog();
     
-    QCString selectedGroups();
+    QString selectedGroups();
     void itemChangedState(CheckItem *it, bool s);
     
   protected:

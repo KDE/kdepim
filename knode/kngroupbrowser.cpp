@@ -158,24 +158,24 @@ void KNGroupBrowser::slotReceiveList(KNGroupListData* d)
 
 
 
-void KNGroupBrowser::changeItemState(const QString &text, bool s)
+void KNGroupBrowser::changeItemState(const KNGroupInfo &gi, bool s)
 {
   QListViewItemIterator it(groupView);
 
   for( ; it.current(); ++it)
-    if(it.current()->text(0)==text && it.current()->isSelectable())
+    if (it.current()->isSelectable() && (static_cast<CheckItem*>(it.current())->info==gi))
       static_cast<CheckItem*>(it.current())->setChecked(s);
 }
 
 
 
-bool KNGroupBrowser::itemInListView(QListView *view, const QString &text)
+bool KNGroupBrowser::itemInListView(QListView *view, const KNGroupInfo &gi)
 {
   if(!view) return false;
   QListViewItemIterator it(view);
 
   for( ; it.current(); ++it)
-    if(it.current()->text(0)==text)
+    if(static_cast<GroupItem*>(it.current())->info==gi)
       return true;
 
   return false;
@@ -185,62 +185,55 @@ bool KNGroupBrowser::itemInListView(QListView *view, const QString &text)
 
 void KNGroupBrowser::createListItems(QListViewItem *parent)
 {
-  QCString prefix, tlgn;
+  QString prefix, tlgn, compare;
   QListViewItem *it;
   CheckItem *cit;
-  char *compare=0, *colon=0;
-  int prefixLen=0, tlgnLen=0;
+  int colon;
   bool expandit=false;
 
   if(parent) {
-    QString tmp;
     QListViewItem *p=parent;
     while(p) {
-      tmp.prepend(p->text(0));
+      prefix.prepend(p->text(0));
       p=p->parent();
     }
-    prefix=tmp.local8Bit();
-    prefixLen=prefix.length();
   }
 
   for(KNGroupInfo *gn=matchList->first(); gn; gn=matchList->next()) {
 
-    if(prefixLen>0 && strncasecmp(gn->name.data(), prefix.data(), prefixLen)!=0)
-      if(compare!=0)
+    if(!prefix.isEmpty() && !gn->name.startsWith(prefix))
+      if(compare!=QString::null)
         break;
       else
         continue;
 
-    compare=&gn->name[prefixLen];
+    compare=gn->name.mid(prefix.length());
 
-    if(!expandit || strncasecmp(compare, tlgn.data(), tlgnLen)!=0) {
-      if((colon=strstr(compare, "."))) {
-        tlgnLen=colon-compare+1;
+    if(!expandit || !compare.startsWith(tlgn)) {
+     if((colon=compare.find('.'))!=-1) {
+        colon++;
         expandit=true;
-      }
-      else {
-        tlgnLen=strlen(compare);
+      } else {
+        colon=compare.length();
         expandit=false;
       }
 
-      tlgn.resize(tlgnLen+2);
-      strncpy(tlgn.data(), compare, tlgnLen);
-      tlgn.data()[tlgnLen]='\0';
+      tlgn = compare.left(colon);
 
       if(expandit) {
         if(parent)
-          it=new QListViewItem(parent, QString(tlgn));
+          it=new QListViewItem(parent, tlgn);
         else
-          it=new QListViewItem(groupView, QString(tlgn));
+          it=new QListViewItem(groupView, tlgn);
 
         it->setSelectable(false);
         it->setExpandable(true);
       }
       else {
         if(parent)
-          cit=new CheckItem(parent, gn, this);
+          cit=new CheckItem(parent, *gn, this);
         else
-          cit=new CheckItem(groupView, gn, this);
+          cit=new CheckItem(groupView, *gn, this);
         updateItemState(cit);
       }
     }
@@ -249,13 +242,13 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
 
 
 
-void KNGroupBrowser::removeListItem(QListView *view, const QString &text)
+void KNGroupBrowser::removeListItem(QListView *view, const KNGroupInfo &gi)
 {
   if(!view) return;
   QListViewItemIterator it(view);
 
   for( ; it.current(); ++it)
-    if(it.current()->text(0)==text) {
+    if(static_cast<GroupItem*>(it.current())->info==gi) {
       delete it.current();
       break;
     }
@@ -290,7 +283,7 @@ void KNGroupBrowser::slotItemDoubleClicked(QListViewItem *it)
 #define MIN_FOR_TREE 50
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
-  QCString filtertxt(txt.local8Bit());
+  QString filtertxt = txt.lower();
   CheckItem *cit=0;
 
   matchList->clear();
@@ -298,18 +291,18 @@ void KNGroupBrowser::slotFilter(const QString &txt)
 
   bool notCheckSub = !subCB->isChecked();
   bool notCheckNew = !newCB->isChecked();
-  bool notCheckStr = (filtertxt.length()<=0);
+  bool notCheckStr = (filtertxt.isEmpty());
 
   for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
     if ((notCheckSub||g->subscribed)&&
         (notCheckNew||g->newGroup)&&
-        (notCheckStr||strstr(g->name.data(), filtertxt.data())))
+        (notCheckStr||(g->name.contains(filtertxt))))
       matchList->append(g);
   }
 
   if(matchList->count() < MIN_FOR_TREE) {
     for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
-      cit=new CheckItem(groupView, g, this);
+      cit=new CheckItem(groupView, *g, this);
       updateItemState(cit);
     }
   } else
@@ -332,18 +325,30 @@ void KNGroupBrowser::slotRefilter()
 
 
 
-KNGroupBrowser::CheckItem::CheckItem(QListView *v, const KNGroupInfo *gi, KNGroupBrowser *b) :
-  QCheckListItem(v, gi->name, QCheckListItem::CheckBox), info(gi), browser(b)
+KNGroupBrowser::CheckItem::CheckItem(QListView *v, const KNGroupInfo &gi, KNGroupBrowser *b) :
+  QCheckListItem(v, gi.name, QCheckListItem::CheckBox), info(gi), browser(b)
 {
-  setText(1,gi->description);
+  QString des(gi.description);
+  if (gi.status == KNGroup::moderated) {
+    setText(0,gi.name+" (m)");
+    if (!des.upper().contains(i18n("moderated").upper()))
+      des+=i18n(" (moderated)");
+  }
+  setText(1,des);
 }
 
 
 
-KNGroupBrowser::CheckItem::CheckItem(QListViewItem *i, const KNGroupInfo *gi, KNGroupBrowser *b) :
-  QCheckListItem(i, gi->name, QCheckListItem::CheckBox), info(gi), browser(b)
+KNGroupBrowser::CheckItem::CheckItem(QListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b) :
+  QCheckListItem(i, gi.name, QCheckListItem::CheckBox), info(gi), browser(b)
 {
-  setText(1,gi->description);
+  QString des(gi.description);
+  if (gi.status == KNGroup::moderated) {
+    setText(0,gi.name+" (m)");
+    if (!des.upper().contains(i18n("moderated").upper()))
+      des+=i18n(" (moderated)");
+  }
+  setText(1,des);
 }
 
 
@@ -370,6 +375,26 @@ void KNGroupBrowser::CheckItem::stateChange(bool s)
     kdDebug(5003) << "KNGroupBrowser::CheckItem::stateChange()" << endl;
     browser->itemChangedState(this, s);
   }
+}
+
+
+//=======================================================================================
+
+
+KNGroupBrowser::GroupItem::GroupItem(QListView *v, const KNGroupInfo &gi)
+ : QListViewItem(v, gi.name), info(gi)
+{
+}
+
+
+KNGroupBrowser::GroupItem::GroupItem(QListViewItem *i, const KNGroupInfo &gi)
+ : QListViewItem(i, gi.name), info(gi)
+{
+}
+
+
+KNGroupBrowser::GroupItem::~GroupItem()
+{
 }
 
 

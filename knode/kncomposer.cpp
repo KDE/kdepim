@@ -705,8 +705,10 @@ void KNComposer::slotAttachmentProperties()
 void KNComposer::slotUndoRewrap()
 {
   if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written!"),
-                                         QString::null, QString::null) == KMessageBox::Continue);
+                                         QString::null, QString::null) == KMessageBox::Continue) {
     v_iew->e_dit->setText(u_nwraped);
+    slotAppendSig();
+  }
 }
 
 void KNComposer::slotExternalEditor()

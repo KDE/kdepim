@@ -24,8 +24,8 @@
 #include <kaction.h>
 
 #include "knjobdata.h"
+#include "kngroup.h"
 
-class KNGroup;
 class KNCleanUp;
 class KNNntpAccount;
 class KNServerInfo;
@@ -40,12 +40,14 @@ class KNArticleManager;
 class KNGroupInfo {
 
   public:
+
     KNGroupInfo();
-    KNGroupInfo(const char *n_ame, const char *d_escription, bool n_ewGroup=false, bool s_ubscribed=false );
+    KNGroupInfo(const QString &n_ame, const QString &d_escription, bool n_ewGroup=false, bool s_ubscribed=false, KNGroup::Status s_tatus=KNGroup::unknown );
     ~KNGroupInfo();
 
-    QCString name,description;
+    QString name,description;      // group names will be utf-8 encoded in the future...
     bool newGroup, subscribed;
+    KNGroup::Status status;
 
     bool operator== (const KNGroupInfo &gi2);
     bool operator< (const KNGroupInfo &gi2);
@@ -64,7 +66,7 @@ class KNGroupListData : public KNJobItem {
 
     QSortedList<KNGroupInfo>* extractList();
 
-    QStrList subscribed;
+    QStringList subscribed;
     QString path;
     QSortedList<KNGroupInfo> *groups;
     QDate fetchSince;
@@ -85,7 +87,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     ~KNGroupManager();
 
     void loadGroups(KNNntpAccount *a);
-    void getSubscribed(KNNntpAccount *a, QStrList* l);
+    void getSubscribed(KNNntpAccount *a, QStringList &l);
     void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);   
     void showGroupDialog(KNNntpAccount *a, QWidget *parent=0);
     void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
@@ -95,7 +97,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void expireGroupNow(KNGroup *g=0);
     void resortGroup(KNGroup *g=0);
       
-    KNGroup* group(const QCString &gName, const KNServerInfo *s);
+    KNGroup* group(const QString &gName, const KNServerInfo *s);
     KNGroup* currentGroup()               { return c_urrentGroup; }
     bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
     void setCurrentGroup(KNGroup *g);

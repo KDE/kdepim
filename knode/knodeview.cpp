@@ -606,6 +606,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
   s_electedAccount=0;
   s_electedGroup=0;
   s_electedFolder=0;
+  QString caption;
 
   h_drView->clear();
   slotArticleSelected(0);
@@ -617,15 +618,21 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
         s_electedAccount=static_cast<KNNntpAccount*>(c);
         if(!i->isOpen())
           i->setOpen(true);
+        knGlobals.top->setCaption(s_electedAccount->name());
       break;
 
       case KNCollection::CTgroup :
         s_electedGroup=static_cast<KNGroup*>(c);
         s_electedAccount=s_electedGroup->account();
+        caption = s_electedGroup->name();
+        if (s_electedGroup->status()==KNGroup::moderated)
+          caption += i18n(" (moderated)");
+        knGlobals.top->setCaption(caption);
       break;
 
       case KNCollection::CTfolder :
         s_electedFolder=static_cast<KNFolder*>(c);
+        knGlobals.top->setCaption(s_electedFolder->name());
       break;
 
       default: break;

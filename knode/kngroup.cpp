@@ -38,7 +38,8 @@
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
-    l_astNr(0), m_axFetch(0), l_ocked(false), i_dentity(0)
+    l_astNr(0), m_axFetch(0), l_ocked(false), u_seCharset(false),
+    s_tatus(unknown), i_dentity(0)
 {
 }
 
@@ -81,19 +82,28 @@ bool KNGroup::readInfo(const QString &confPath)
 {
   KSimpleConfig info(confPath);
 
-  g_roupname = info.readEntry("groupname").latin1();
-  d_escription = info.readEntry("description").latin1();
+  g_roupname = info.readEntry("groupname");
+  d_escription = info.readEntry("description");
   n_ame = info.readEntry("name");
   c_ount = info.readNumEntry("count",0);
   r_eadCount = info.readNumEntry("read",0);
   l_astNr = info.readNumEntry("lastMsg",0);
   u_seCharset = info.readBoolEntry("useCharset", false);
   d_efaultChSet = info.readEntry("defaultChSet").latin1();
+  QString s = info.readEntry("status","unknown");
+  if (s=="unknown")
+    s_tatus = unknown;
+  else if (s=="readOnly")
+    s_tatus = readOnly;
+  else if (s=="postingAllowed")
+    s_tatus = postingAllowed;
+  else if (s=="moderated")
+    s_tatus = moderated;
 
   i_dentity=new KNConfig::Identity(false);
   i_dentity->loadConfig(&info);
   if(!i_dentity->isEmpty()) {
-    kdDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << g_roupname.data() << endl;
+    kdDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << g_roupname << endl;
   }
   else {
     delete i_dentity;
@@ -110,17 +120,27 @@ void KNGroup::saveInfo()
   QString dir(path());
   
   if (dir != QString::null){
-    KSimpleConfig info(dir+QString(g_roupname)+".grpinfo");
+    KSimpleConfig info(dir+g_roupname+".grpinfo");
   
-    info.writeEntry("groupname", QString(g_roupname));
-    info.writeEntry("description", QString(d_escription));
+    info.writeEntry("groupname", g_roupname);
+    info.writeEntry("description", d_escription);
     info.writeEntry("lastMsg", l_astNr);
     info.writeEntry("count", c_ount);
     info.writeEntry("read", r_eadCount);
     info.writeEntry("name", n_ame);
     info.writeEntry("useCharset", u_seCharset);
     info.writeEntry("defaultChSet", QString::fromLatin1(d_efaultChSet));
-  
+    switch (s_tatus) {
+      case unknown: info.writeEntry("status","unknown");
+                    break;
+      case readOnly: info.writeEntry("status","readOnly");
+                     break;
+      case postingAllowed: info.writeEntry("status","postingAllowed");
+                           break;
+      case moderated: info.writeEntry("status","moderated");
+                           break;
+    }
+
     if(i_dentity)
       i_dentity->saveConfig(&info);
     else if(info.hasKey("Email")) {
@@ -169,7 +189,7 @@ bool KNGroup::loadHdrs()
     if (dir == QString::null)
       return false;
       
-    f.setName(dir+QString(g_roupname)+".static");
+    f.setName(dir+g_roupname+".static");
       
     if(f.open(IO_ReadOnly)) {
       if(!resize(c_ount)) {
@@ -238,7 +258,7 @@ bool KNGroup::loadHdrs()
     } 
     
   
-    f.setName(dir+QString(g_roupname)+".dynamic");
+    f.setName(dir+g_roupname+".dynamic");
   
     if (f.open(IO_ReadOnly)) {
   
@@ -380,7 +400,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
   if (dir == QString::null)
     return 0;
   
-  QFile f(dir+QString(g_roupname)+".static");
+  QFile f(dir+g_roupname+".static");
   
   if(ovr) mode=IO_WriteOnly;
   else mode=IO_WriteOnly | IO_Append;
@@ -437,7 +457,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
     if (dir == QString::null)
       return;
     
-    QFile f(dir+QString(g_roupname)+".dynamic");      
+    QFile f(dir+g_roupname+".dynamic");
     
     if(ovr) mode=IO_WriteOnly;
     else mode=IO_WriteOnly | IO_Append;
@@ -470,7 +490,7 @@ void KNGroup::syncDynamicData()
     if (dir == QString::null)
       return;
     
-    QFile f(dir+QString::fromLatin1(g_roupname)+".dynamic");
+    QFile f(dir+g_roupname+".dynamic");
         
     if(f.open(IO_ReadWrite)) {
       

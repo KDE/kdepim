@@ -32,6 +32,8 @@ class Identity;
 class KNGroup : public KNArticleCollection , public KNJobItem  {
   
   public:
+    enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
+
     KNGroup(KNCollection *p=0);
     ~KNGroup();
     
@@ -61,23 +63,23 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     int lastNr()                        { return l_astNr; }
     int maxFetch()                      { return m_axFetch; }
     const QString& name();
-    const QCString& groupname()         { return g_roupname; }
-    const QCString& description()       { return d_escription; }
+    const QString& groupname()          { return g_roupname; }
+    const QString& description()        { return d_escription; }
     KNConfig::Identity* identity()      { return i_dentity; }
     const QCString defaultCharset()     { return d_efaultChSet; }
     bool useCharset()                   { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
+    Status status()                     { return s_tatus; }
     bool hasName()                      { return (!n_ame.isEmpty()); }
     int statThrWithNew();
     int statThrWithUnread();
 
     bool isLocked()                     { return l_ocked; }
 
-
-    
     //set
-    void setGroupname(const QCString &s)      { g_roupname=s; }
-    void setDescription(const QCString &s)    { d_escription=s; }
+    void setGroupname(const QString &s)      { g_roupname=s; }
+    void setDescription(const QString &s)    { d_escription=s; }
     void setDefaultCharset(const QCString &s) { d_efaultChSet=s; }
+    void setStatus(Status s)                  { s_tatus=s; }
     void setUseCharset(bool b)                { u_seCharset=b; }
     void setNewCount(int i)                 { n_ewCount=i; }
     void incNewCount(int i=1)               { n_ewCount+=i; }
@@ -100,12 +102,14 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
               l_astNr,
               m_axFetch;
 
-    QCString  g_roupname,
-              d_escription,
-              d_efaultChSet;
+    QCString  d_efaultChSet;
+    QString   g_roupname,
+              d_escription;
 
     bool      l_ocked,
               u_seCharset;
+
+    Status    s_tatus;
 
     KNConfig::Identity *i_dentity;
 

@@ -23,14 +23,14 @@
 
 #include <kdialogbase.h>
 
+#include "kngroupmanager.h"
+
 class QLineEdit;
 class QCheckBox;
 class QLayout;
 class QLabel;
 
 class KNNntpAccount;
-class KNGroupInfo;
-class KNGroupListData;
 
 class KNGroupBrowser : public KDialogBase {
 
@@ -40,16 +40,26 @@ class KNGroupBrowser : public KDialogBase {
     class CheckItem : public QCheckListItem {
 
       public:
-        CheckItem(QListView *v, const KNGroupInfo *gi, KNGroupBrowser *b);
-        CheckItem(QListViewItem *i, const KNGroupInfo *gi, KNGroupBrowser *b);
+        CheckItem(QListView *v, const KNGroupInfo &gi, KNGroupBrowser *b);
+        CheckItem(QListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b);
         ~CheckItem();
         void setChecked(bool c);
 
-        const KNGroupInfo *info;
+        KNGroupInfo info;
 
       protected:
         void stateChange(bool s);
         KNGroupBrowser *browser;
+    };
+
+    class GroupItem : public QListViewItem {
+
+      public:
+        GroupItem(QListView *v, const KNGroupInfo &gi);
+        GroupItem(QListViewItem *i, const KNGroupInfo &gi);
+        ~GroupItem();
+
+        KNGroupInfo info;
     };
 
     KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons=0,
@@ -67,9 +77,9 @@ class KNGroupBrowser : public KDialogBase {
 
   protected:
     virtual void updateItemState(CheckItem *it)=0;
-    void changeItemState(const QString &text, bool s);
-    bool itemInListView(QListView *view, const QString &text);
-    void removeListItem(QListView *view, const QString &text);
+    void changeItemState(const KNGroupInfo &gi, bool s);
+    bool itemInListView(QListView *view, const KNGroupInfo &gi);
+    void removeListItem(QListView *view, const KNGroupInfo &gi);
     void createListItems(QListViewItem *parent=0);
 
     QWidget *page;

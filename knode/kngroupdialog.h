@@ -29,7 +29,7 @@ class KNGroupDialog : public KNGroupBrowser {
     ~KNGroupDialog();
 
     void toSubscribe(QSortedList<KNGroupInfo> *l);
-    void toUnsubscribe(QStrList *l);
+    void toUnsubscribe(QStringList *l);
 
   protected:
     enum arrowDirection { right, left };

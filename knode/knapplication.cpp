@@ -116,12 +116,12 @@ void KNApplication::openURL(const KURL &url)
   if(groupname.isEmpty())
     item=acc->listItem();
   else {
-    KNGroup *grp= knGlobals.grpManager->group(groupname.latin1(), acc);
+    KNGroup *grp= knGlobals.grpManager->group(groupname, acc);
 
     if(!grp) {
-      KNGroupInfo inf(groupname.latin1(), "");
+      KNGroupInfo inf(groupname, "");
       knGlobals.grpManager->subscribeGroup(&inf, acc);
-      grp=knGlobals.grpManager->group(groupname.latin1(), acc);
+      grp=knGlobals.grpManager->group(groupname, acc);
       if(grp)
         item=grp->listItem();
     }

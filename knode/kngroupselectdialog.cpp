@@ -78,9 +78,9 @@ KNGroupSelectDialog::~KNGroupSelectDialog()
 void KNGroupSelectDialog::itemChangedState(CheckItem *it, bool s)
 {
   if(s)
-    new QListViewItem(selView, it->text(0));
+    new GroupItem(selView, it->info);
   else
-    removeListItem(selView, it->text(0));
+    removeListItem(selView, it->info);
   arrowBtn1->setEnabled(!s);
 }
 
@@ -88,23 +88,23 @@ void KNGroupSelectDialog::itemChangedState(CheckItem *it, bool s)
 
 void KNGroupSelectDialog::updateItemState(CheckItem *it)
 {
-  it->setChecked(itemInListView(selView, it->text(0)));
-  if(it->info->subscribed && it->pixmap(0)==0)
+  it->setChecked(itemInListView(selView, it->info));
+  if(it->info.subscribed && it->pixmap(0)==0)
     it->setPixmap(0, pmGroup);
 }
 
 
     
-QCString KNGroupSelectDialog::selectedGroups()
+QString KNGroupSelectDialog::selectedGroups()
 {
-  QCString ret;
+  QString ret;
   QListViewItemIterator it(selView);
 
   bool isFirst=true;
   for(; it.current(); ++it) {
     if(!isFirst)
       ret+=",";
-    ret+=it.current()->text(0).latin1();
+    ret+=it.current()->text(0);
     isFirst=false;
   }
 
@@ -144,12 +144,12 @@ void KNGroupSelectDialog::slotSelectionChanged()
 
 void KNGroupSelectDialog::slotArrowBtn1()
 {
-  QListViewItem *i=groupView->selectedItem();
+  CheckItem *i=static_cast<CheckItem*>(groupView->selectedItem());
 
   if(i) {
-    new QListViewItem(selView, i->text(0));
+    new GroupItem(selView, i->info);
     arrowBtn1->setEnabled(false);
-    (static_cast<CheckItem*>(i))->setChecked(true);
+    i->setChecked(true);
   }
 }
 
@@ -157,11 +157,10 @@ void KNGroupSelectDialog::slotArrowBtn1()
 
 void KNGroupSelectDialog::slotArrowBtn2()
 {
-
-  QListViewItem *i=selView->selectedItem();
+  GroupItem *i=static_cast<GroupItem*>(selView->selectedItem());
 
   if(i) {
-    changeItemState(i->text(0), false);
+    changeItemState(i->info, false);
     delete i;
     arrowBtn2->setEnabled(false);
   }

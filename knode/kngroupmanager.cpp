@@ -56,8 +56,9 @@ KNGroupInfo::KNGroupInfo()
 }
 
 
-KNGroupInfo::KNGroupInfo(const char *n_ame, const char *d_escription, bool n_ewGroup, bool s_ubscribed)
-  : name(n_ame), description(d_escription), newGroup(n_ewGroup), subscribed(s_ubscribed)
+KNGroupInfo::KNGroupInfo(const QString &n_ame, const QString &d_escription, bool n_ewGroup, bool s_ubscribed, KNGroup::Status s_tatus)
+  : name(n_ame), description(d_escription), newGroup(n_ewGroup), subscribed(s_ubscribed),
+    status(s_tatus)
 {
 }
 
@@ -100,34 +101,50 @@ KNGroupListData::~KNGroupListData()
 bool KNGroupListData::readIn()
 {
   KNFile f(path+"groups");
-  QCString line,name;
-  int sepPos;
+  QCString line;
+  int sepPos1,sepPos2;
+  QString name,description;
+  bool sub;
+  KNGroup::Status status=KNGroup::unknown;
 
   if(f.open(IO_ReadOnly)) {
     while(!f.atEnd()) {
       line = f.readLine();
-      sepPos = line.find(' ');
+      sepPos1 = line.find(' ');
 
-      if (sepPos==-1) {        // no description
-
-        if (subscribed.contains(line)) {
-          subscribed.remove(line);    // group names are unique, we wont find it again anyway...
-          groups->append(new KNGroupInfo(line,"",false,true));
-        } else {
-          groups->append(new KNGroupInfo(line,"",false,false));
-        }
-
+      if (sepPos1==-1) {        // no description
+        name = QString::fromUtf8(line);
+        description = QString::null;
+        status = KNGroup::unknown;
       } else {
-        name = line.left(sepPos);
+        name = QString::fromUtf8(line.left(sepPos1));
 
-        if (subscribed.contains(name)) {
-          subscribed.remove(name);    // group names are unique, we wont find it again anyway...
-          groups->append(new KNGroupInfo(name,line.right(line.length()-sepPos-1),false,true));
+        sepPos2 = line.find(' ',sepPos1+1);
+        if (sepPos2==-1) {        // no status
+          description = QString::fromUtf8(line.right(line.length()-sepPos1-1));
+          status = KNGroup::unknown;
         } else {
-          groups->append(new KNGroupInfo(name,line.right(line.length()-sepPos-1),false,false));
+          description = QString::fromUtf8(line.right(line.length()-sepPos2-1));
+          switch (line[sepPos1+1]) {
+            case 'u':   status = KNGroup::unknown;
+                        break;
+            case 'n':   status = KNGroup::readOnly;
+                        break;
+            case 'y':   status = KNGroup::postingAllowed;
+                        break;
+            case 'm':   status = KNGroup::moderated;
+                        break;
+          }
         }
-
       }
+
+      if (subscribed.contains(name)) {
+        subscribed.remove(name);    // group names are unique, we wont find it again anyway...
+        sub = true;
+      } else
+        sub = false;
+
+      groups->append(new KNGroupInfo(name,description,false,sub,status));
     }
 
     f.close();
@@ -147,7 +164,18 @@ bool KNGroupListData::writeOut()
 
   if(f.open(IO_WriteOnly)) {
     for (KNGroupInfo *i=groups->first(); i; i=groups->next()) {
-      temp = i->name + " " + i->description + "\n";
+      temp = i->name.utf8();
+      switch (i->status) {
+        case KNGroup::unknown: temp += " u ";
+                               break;
+        case KNGroup::readOnly: temp += " n ";
+                                break;
+        case KNGroup::postingAllowed: temp += " y ";
+                                      break;
+        case KNGroup::moderated: temp += " m ";
+                                 break;
+      }
+      temp += i->description.utf8() + "\n";
       f.writeBlock(temp.data(),temp.length());
     }         
     f.close();
@@ -172,7 +200,7 @@ void KNGroupListData::merge(QSortedList<KNGroupInfo>* newGroups)
       groups->remove();   // avoid duplicates
     } else
       subscribed = false;
-    groups->append(new KNGroupInfo(i->name,i->description,true,subscribed));
+    groups->append(new KNGroupInfo(i->name,i->description,true,subscribed,i->status));
   }   
 
   groups->sort();
@@ -247,11 +275,11 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 
 
 
-void KNGroupManager::getSubscribed(KNNntpAccount *a, QStrList* l)
+void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
 {
-  l->clear();
+  l.clear();
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if(var->account()==a) l->append(var->groupname());
+    if(var->account()==a) l.append(var->groupname());
   }
 }
 
@@ -267,7 +295,7 @@ void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
 
 
 
-KNGroup* KNGroupManager::group(const QCString &gName, const KNServerInfo *s)
+KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 {
   for(KNGroup *var=g_List->first(); var; var=g_List->next())
     if(var->account()==s && var->groupname()==gName) return var;
@@ -301,13 +329,13 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
   if(gDialog->exec()) {
     KNGroup *g=0;
 
-    QStrList lst;
+    QStringList lst;
     gDialog->toUnsubscribe(&lst);
     if (lst.count()>0) {
       if (KMessageBox::Yes == KMessageBox::questionYesNoList((parent!=0)? parent:knGlobals.topWidget,i18n("Do you really want to unsubscribe\nfrom these groups?"),
-                                                             QStringList::fromStrList(lst))) {
-        for(char *var=lst.first(); var; var=lst.next()) {
-          if((g=group(var, a)))
+                                                              lst)) {
+        for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+          if((g=group(*it, a)))
             unsubscribeGroup(g);
         }
       }
@@ -333,6 +361,7 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
   grp=new KNGroup(a);
   grp->setGroupname(gi->name);
   grp->setDescription(gi->description);
+  grp->setStatus(gi->status);
   grp->saveInfo();
   g_List->append(grp);
   it=new KNCollectionViewItem(a->listItem());
@@ -489,7 +518,8 @@ void KNGroupManager::processJob(KNJobData *j)
             if(var->account()==j->account()) {
               for (KNGroupInfo* inf = d->groups->first(); inf; inf=d->groups->next())
                 if (inf->name == var->groupname()) {
-                  var->setDescription(inf->description.copy());
+                  var->setDescription(inf->description);
+                  var->setStatus(inf->status);
                   break;
                 }             
             }
@@ -545,7 +575,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
     }
   }
       
-  getSubscribed(a,&(d->subscribed));
+  getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
 
   emitJob( new KNJobData(KNJobData::JTLoadGroups, this, a, d) );
@@ -557,7 +587,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
 {
   KNGroupListData *d = new KNGroupListData();
   d->path = a->path();  
-  getSubscribed(a,&(d->subscribed));
+  getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
 
 	emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
@@ -569,21 +599,12 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
 {
   KNGroupListData *d = new KNGroupListData();
   d->path = a->path();  
-  getSubscribed(a,&(d->subscribed));
+  getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
   d->fetchSince = date;
   
   emitJob( new KNJobData(KNJobData::JTCheckNewGroups, this, a, d) );
 }
-
-
-/*void KNGroupManager::slotUnsubscribe()
-{
-  if (!c_urrentGroup)
-    return;
-  if(KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to unsubscribe from %1?").arg(c_urrentGroup->groupname())))
-    unsubscribeGroup();
-}*/
 
 
 //--------------------------------

@@ -23,6 +23,7 @@
 #include "kngroupmanager.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"
+#include "utilities.h"
 
 
 KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, pthread_mutex_t *nntpMutex, QObject *parent, const char *name)
@@ -91,8 +92,10 @@ void KNNntpClient::doFetchGroups()
     return;
     
   char *s, *line;
-  QStrList tmpList;
-  
+  QString name;
+  KNGroup::Status status;
+  bool subscribed;
+
   while (getNextLine()) {
     line = getCurrentLine();
     if (line[0]=='.') {
@@ -109,24 +112,53 @@ void KNNntpClient::doFetchGroups()
 #endif
     } else {
       s[0] = 0;    // cut string
-      tmpList.append(line);
+
+      name = QString::fromUtf8(line);
+
+      if (target->subscribed.contains(name)) {
+        target->subscribed.remove(name);    // group names are unique, we wont find it again anyway...
+        subscribed = true;
+      } else
+        subscribed = false;
+
+      while (s[1]!=0) s++;   // the last character determines the moderation status
+      switch (s[0]) {
+        case 'n' : status = KNGroup::readOnly;
+                   break;
+        case 'y' : status = KNGroup::postingAllowed;
+                   break;
+        case 'm' : status = KNGroup::moderated;
+                   break;
+        default  : status = KNGroup::unknown;
+      }
+
+      target->groups->append(new KNGroupInfo(name,QString::null,false,subscribed,status));
     }
     doneLines++;
   }
+
   if (!job->success() || job->canceled())
     return;     // stopped...
+
+  QSortedVector<KNGroupInfo> tempVector;
+  target->groups->toVector(&tempVector);
+  tempVector.sort();
 
   if (target->getDescriptions) {
     errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
     progressValue = 100;
     doneLines = 0;
-    predictedLines = tmpList.count();
+    predictedLines = target->groups->count();
 
     sendSignal(TSdownloadDesc);
     sendSignal(TSprogressUpdate);
 
     if (!sendCommandWCheck("LIST NEWSGROUPS",215))       // 215 informations follows
-      return; 
+      return;
+
+    QString description;
+    KNGroupInfo info;
+    int pos;
 
     while (getNextLine()) {
       line = getCurrentLine();
@@ -148,36 +180,22 @@ void KNNntpClient::doFetchGroups()
         s++;
         while (*s == ' ' || *s == '\t') s++;    // go on to the description
 
-        if (target->subscribed.contains(line)) {
-          target->subscribed.remove(line);    // group names are unique, we wont find it again anyway...
-          target->groups->append(new KNGroupInfo(line,s,false,true));
-        } else {
-          target->groups->append(new KNGroupInfo(line,s,false,false));
-        }
+        name = QString::fromUtf8(line);
+        description = QString::fromLocal8Bit(s);   // some countries use local 8 bit characters in the tag line
+        info.name = name;
 
-        tmpList.remove(line);
+        if ((pos=tempVector.bsearch(&info))!=-1)
+          tempVector[pos]->description = description;
       }
       doneLines++;
     }
     if (!job->success() || job->canceled())
       return;     // stopped...
   }
-  
-  // now add all remaining groups in tmpList (those without description)
-    
-  while ((line=tmpList.getFirst())) {
 
-    if (target->subscribed.contains(line)) {
-      target->subscribed.remove(line);    // group names are unique, we wont find it again anyway...
-      target->groups->append(new KNGroupInfo(line,"",false,true));
-    } else {
-      target->groups->append(new KNGroupInfo(line,"",false,false));
-    }
-
-    tmpList.removeFirst();
-  }
-
-  target->groups->sort();
+  target->groups->setAutoDelete(false);
+  tempVector.toList(target->groups);
+  target->groups->setAutoDelete(true);
 
   sendSignal(TSwriteGrouplist);
   if (!target->writeOut())
@@ -201,8 +219,11 @@ void KNNntpClient::doCheckNewGroups()
   if (!sendCommandWCheck(cmd,231))      // 231 list of new newsgroups follows
     return;
 
-  QStrList tmpList;     
   char *s, *line;
+  QString name;
+  KNGroup::Status status;
+  QSortedList<KNGroupInfo> tmpList;
+  tmpList.setAutoDelete(true);
 
   while (getNextLine()) {
     line = getCurrentLine();
@@ -220,16 +241,27 @@ void KNNntpClient::doCheckNewGroups()
 #endif
     } else {
       s[0] = 0;    // cut string
-      tmpList.append(line);
+      name = QString::fromUtf8(line);
+
+      while (s[1]!=0) s++;   // the last character determines the moderation status
+      switch (s[0]) {
+        case 'n' : status = KNGroup::readOnly;
+                   break;
+        case 'y' : status = KNGroup::postingAllowed;
+                   break;
+        case 'm' : status = KNGroup::moderated;
+                   break;
+        default  : status = KNGroup::unknown;
+      }
+
+      tmpList.append(new KNGroupInfo(name,QString::null,true,false,status));
     }
     doneLines++;
   }
+
   if (!job->success() || job->canceled())
     return;     // stopped...
 
-  QSortedList<KNGroupInfo> tempList;
-  tempList.setAutoDelete(true);
-  
   if (target->getDescriptions) {
     errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
     progressValue = 100;
@@ -243,8 +275,8 @@ void KNNntpClient::doCheckNewGroups()
     QStrList desList;
     char *s;
 
-    for (char *group=tmpList.first(); group; group=tmpList.next()) {
-      if (!sendCommandWCheck(cmd+group,215))       // 215 informations follows
+    for (KNGroupInfo *group=tmpList.first(); group; group=tmpList.next()) {
+      if (!sendCommandWCheck(cmd+group->name.utf8(),215))       // 215 informations follows
         return;
       desList.clear();
       if (!getMsg(desList))
@@ -252,23 +284,17 @@ void KNNntpClient::doCheckNewGroups()
 
       if (desList.count()>0) {        // group has a description
         s = desList.first();
-        while (*s != '\0' && *s != '\t' && *s != ' ') s++;
+        while (*s !=- '\0' && *s != '\t' && *s != ' ') s++;
         if (*s == '\0') {
 #ifndef NDEBUG
           qDebug("knode: retrieved broken group-description - ignoring");
 #endif
-          tempList.append(new KNGroupInfo(group,"",true));
         } else {
           while (*s == ' ' || *s == '\t') s++;    // go on to the description
-          tempList.append(new KNGroupInfo(group,s,true));
+          group->description = QString::fromLocal8Bit(s);   // some countries use local 8 bit characters in the tag line
         }
-      } else {
-        tempList.append(new KNGroupInfo(group,"",true));
       }
     }
-  } else {    // don't fetch descriptions...
-    for (char *group=tmpList.first(); group; group=tmpList.next())
-      tempList.append(new KNGroupInfo(group,"",true));
   }
 
   sendSignal(TSloadGrouplist);
@@ -277,7 +303,7 @@ void KNNntpClient::doCheckNewGroups()
     job->setErrorString(i18n("Unable to read the group list file"));
     return;
   }
-  target->merge(&tempList);
+  target->merge(&tmpList);
   sendSignal(TSwriteGrouplist);
   if (!target->writeOut()) {
     job->setErrorString(i18n("Unable to write the group list file"));
@@ -297,7 +323,7 @@ void KNNntpClient::doFetchNewHeaders()
   errorPrefix=i18n("No new articles could have been retrieved!\nThe following error ocurred:\n");
   
   cmd="GROUP ";
-  cmd+=target->groupname();
+  cmd+=target->groupname().utf8();
   if (!sendCommandWCheck(cmd,211))       // 211 n f l s group selected
     return;
     

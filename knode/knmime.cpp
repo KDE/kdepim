@@ -115,7 +115,10 @@ QCString KNMimeBase::charsetToString(QFont::CharSet cs)
 
 int KNMimeBase::indexForCharset(const QCString &str)
 {
- for(int i=0; i < CHARSETS_COUNT; i++)
+  if (str.isEmpty())
+    return -1;
+
+  for(int i=0; i < CHARSETS_COUNT; i++)
     if( strcasecmp(charsetTable[i].name, str.data())==0 )
       return i;
 

@@ -86,7 +86,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setServerId(g->account()->id());
   art->setDoPost(true);
   art->setDoMail(false);
-  art->newsgroups()->from7BitString(g->groupname());
+  art->newsgroups()->from7BitString(g->groupname().utf8());
 
   KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
   c_ompList.append(c);
@@ -165,7 +165,10 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
 
   // attribution line
   QString attribution=knGlobals.cfgManager->postNewsComposer()->intro();
-  attribution.replace(QRegExp("%NAME"),a->from()->name());
+  QString name(a->from()->name());
+  if (name.isEmpty())
+    name = QString::fromLatin1(a->from()->email());
+  attribution.replace(QRegExp("%NAME"),name);
   attribution.replace(QRegExp("%EMAIL"),QString::fromLatin1(a->from()->email()));
   attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
   attribution.replace(QRegExp("%MSID"),a->messageID()->asUnicodeString());

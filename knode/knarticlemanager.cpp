@@ -566,8 +566,12 @@ void KNArticleManager::updateStatusString()
     else
       displCnt=g_roup->count();
 
-    knGlobals.top->setStatusMsg(i18n(" %1 : %2 new , %3 displayed")
-                        .arg(g_roup->name()).arg(g_roup->newCount()).arg(displCnt),SB_GROUP);
+    QString name = g_roup->name();
+    if (g_roup->status()==KNGroup::moderated)
+      name += i18n(" (moderated)");
+
+    knGlobals.top->setStatusMsg(i18n(" %1: %2 new , %3 displayed")
+                        .arg(name).arg(g_roup->newCount()).arg(displCnt),SB_GROUP);
 
     if(f_ilter)
       knGlobals.top->setStatusMsg(i18n(" Filter: %1").arg(f_ilter->translatedName()), SB_FILTER);
@@ -575,7 +579,7 @@ void KNArticleManager::updateStatusString()
       knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
   }
   else if(f_older) {
-    knGlobals.top->setStatusMsg(i18n(" %1 : %2 displayed")
+    knGlobals.top->setStatusMsg(i18n(" %1: %2 displayed")
       .arg(f_older->name()).arg(f_older->count()), SB_GROUP);
     knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
   }

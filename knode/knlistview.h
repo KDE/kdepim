@@ -75,6 +75,8 @@ class KNListView : public QListView  {
     void itemSelected(QListViewItem*);
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
+
+  private:
     int s_elCount;
 };
 

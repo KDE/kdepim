@@ -17,9 +17,27 @@
 #ifndef UTIL
 #define UTIL
 
+#include <qvector.h>
+#include <qlist.h>
+
 class QWidget;
 class QString;
 class QSize;
+
+// clone of QSortedList...
+template<class type> class Q_EXPORT QSortedVector : public QVector<type>
+{
+public:
+    QSortedVector() {}
+    QSortedVector ( uint size ) : QVector<type>(size) {}
+    QSortedVector( const QSortedVector<type> &l ) : QVector<type>(l) {}
+    ~QSortedVector() { clear(); }
+    QSortedVector<type> &operator=(const QSortedVector<type> &l)
+      { return (QSortedVector<type>&)QList<type>::operator=(l); }
+
+    virtual int compareItems( QCollection::Item s1, QCollection::Item s2 )
+      { if ( *((type*)s1) == *((type*)s2) ) return 0; return ( *((type*)s1) < *((type*)s2) ? -1 : 1 ); }
+};
 
 void saveWindowSize(const QString &name, const QSize &s);
 void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize);
