@@ -47,6 +47,7 @@
 #include <gpgmepp/data.h>
 
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include <qstring.h>
 #include <qstringlist.h>
@@ -157,10 +158,19 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
                 i18n( "You need a passphrase to unlock the secret key for user:<br/> %1" );
   msg = msg.arg( QString::fromUtf8( useridHint ) ) + "<br/><br/>";
   msg.prepend( "<qt>" );
-  msg += i18n( "This dialog will reappear every time the passphrase is needed. For a more secure solution that also allows caching the passphrase, install gpg-agent." );
-  msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" )
-         .arg( "1.9" )
-         .arg( "http://www.gnupg.org/download" );  // add #gnupg2 if you can make this a real link
+  msg += i18n( "This dialog will reappear every time the passphrase is needed. For a more secure solution that also allows caching the passphrase, use gpg-agent." ) + "<br/>";
+  const QString gpgAgent = KStandardDirs::findExe( "gpg-agent" );
+  if ( !gpgAgent.isEmpty() ) {
+    msg += i18n( "gpg-agent was found in %1, but does not appear to be running." )
+           .arg( gpgAgent );
+  } else {
+    msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" )
+           .arg( "1.9" )
+           .arg( "http://www.gnupg.org/download" );  // add #gnupg2 if you can make this a real link
+  }
+  msg += "<br/>";
+  msg += i18n( "For information on how to set up gpg-agent, see %1" )
+         .arg( "http://kmail.kde.org/kmail-pgpmime-howto.html" ) + "<br/>";
   Kleo::PassphraseDialog dlg( msg, i18n("Passphrase Dialog") );
   if ( dlg.exec() != QDialog::Accepted ) {
     canceled = true;
