@@ -310,12 +310,12 @@ int main(int argc, char *argv[])
    *  Show next happening and exit
    *
    */
-  if ( args->isSet("next") )
+  /*if ( args->isSet("next") )
   {
     kdDebug() << "main | parse options | Show next event only" << endl;
 
     variables.setNext(true);
-  }
+  }*/
 
 
   /*
