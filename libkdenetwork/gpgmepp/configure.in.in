@@ -5,7 +5,7 @@ dnl  to not require aclocal fiddling...
 dnl Autoconf macros for libgpgme
 dnl Id: gpgme.m4,v 1.6 2003/09/03 01:15:56 marcus Exp 
 
-AC_DEFUN(_KDEPIM_PATH_GPGME_CONFIG,
+AC_DEFUN([_KDEPIM_PATH_GPGME_CONFIG],
 [ AC_ARG_WITH(gpgme-prefix,
             AC_HELP_STRING([--with-gpgme-prefix=PFX],
                            [prefix where GPGME is installed (optional)]),
