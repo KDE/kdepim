@@ -8,9 +8,6 @@ groupwise.wsdl. Generate the stub classes and
 interface implementations by calling "make stubs". The gSoap binaries have to be
 in your PATH for this.
 
-FIXME: The generated code produces lots of compiler warnings, which have been
-turned off for now by compiler switches in Makefile.am:
-  KDE_CXXFLAGS = -Wno-unused-parameter -Wno-non-virtual-dtor
-Nonetheless, this should be properly fixed as "[t]he generated code
-is not safe, so the warnings are correct, even if we currently use it in a
-way which works." (Cornelius Schumacher)
+FIXME: The generated code produces lots of compiler warnings. They should be 
+properly fixed as "[t]he generated code is not safe, so the warnings are correct,
+even if we currently use it in a way which works." (Cornelius Schumacher)

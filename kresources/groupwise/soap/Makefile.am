@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/groupwise $(all_includes)
 
 #AM_CPPFLAGS = -DDEBUG
-KDE_CXXFLAGS = -Wno-unused-parameter -Wno-non-virtual-dtor 
+KDE_CXXFLAGS = -Wno-non-virtual-dtor 
 
 check_PROGRAMS = soapdebug
 
