@@ -19,7 +19,9 @@
 */
 
 #include "groupwisewizard.h"
+
 #include "groupwiseconfig.h"
+#include "kmailchanges.h"
 
 #include "kresources/groupwise/kabc_groupwiseprefs.h"
 #include "kresources/groupwise/kabc_resourcegroupwise.h"
@@ -35,6 +37,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qspinbox.h>
+#include <qgroupbox.h>
 
 QString serverUrl()
 {
@@ -224,6 +227,23 @@ class GroupwisePropagator : public KConfigPropagator
           }
         }
       }
+
+      if ( GroupwiseConfig::createEmailAccount() ) {
+        CreateDisconnectedImapAccount *ca =
+          new CreateDisconnectedImapAccount( i18n("GroupWise") );
+        
+        ca->setServer( GroupwiseConfig::host() );
+        ca->setUser( GroupwiseConfig::user() );
+        ca->setPassword( GroupwiseConfig::password() );
+        ca->setRealName( GroupwiseConfig::fullName() );
+        QString email = GroupwiseConfig::email();
+        if ( !email.isEmpty() ) ca->setEmail( email );
+        ca->enableSavePassword( true );
+        ca->enableSieve( false );
+        ca->setEncryptionReceive( CreateDisconnectedImapAccount::TLS );
+
+        changes.append( ca );
+      }
     }
 };
 
@@ -264,6 +284,42 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   topLayout->setRowStretch( 6, 1 );
 
+
+  mEmailPage = createWizardPage( i18n("Mail") );
+  
+  topLayout = new QGridLayout( mEmailPage );
+  topLayout->setSpacing( spacingHint() );
+
+  mEmailBox = new QGroupBox( 1, Horizontal,
+    i18n("Create Mail Account"), mEmailPage );
+  mEmailBox->setCheckable( true );
+  topLayout->addWidget( mEmailBox, 0, 0 );
+
+  mEmailWidget = new QWidget( mEmailBox );
+  connect( mEmailBox, SIGNAL( toggled( bool ) ), mEmailWidget,
+    SLOT( setEnabled( bool ) ) );
+
+  QGridLayout *accountLayout= new QGridLayout( mEmailWidget );
+  accountLayout->setSpacing( spacingHint() );
+  
+  label = new QLabel( i18n("Email Address:"), mEmailWidget );
+  accountLayout->addWidget( label, 0, 0 );
+  
+  mEmailEdit = new KLineEdit( mEmailWidget );
+  accountLayout->addWidget( mEmailEdit, 0, 1 );
+
+  label = new QLabel( i18n("Full Name:"), mEmailWidget );
+  accountLayout->addWidget( label, 1, 0 );
+
+  mFullNameEdit = new KLineEdit( mEmailWidget );
+  accountLayout->addWidget( mFullNameEdit, 1, 1 );
+
+  accountLayout->setRowStretch( 2, 1 );
+
+  connect( this, SIGNAL( aboutToShowPage( QWidget * ) ),
+    SLOT( slotAboutToShowPage( QWidget * ) ) );
+  
+
   setupRulesPage();
   setupChangesPage();
 
@@ -282,6 +338,9 @@ void GroupwiseWizard::usrReadConfig()
   mPasswordEdit->setText( GroupwiseConfig::self()->password() );
   mSavePasswordCheck->setChecked( GroupwiseConfig::self()->savePassword() );
   mSecureCheck->setChecked( GroupwiseConfig::self()->useHttps() );
+  mEmailEdit->setText( GroupwiseConfig::self()->email() );
+  mFullNameEdit->setText( GroupwiseConfig::fullName() );
+  mEmailBox->setChecked( GroupwiseConfig::createEmailAccount() );
 }
 
 void GroupwiseWizard::usrWriteConfig()
@@ -292,4 +351,23 @@ void GroupwiseWizard::usrWriteConfig()
   GroupwiseConfig::self()->setPassword( mPasswordEdit->text() );
   GroupwiseConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
   GroupwiseConfig::self()->setUseHttps( mSecureCheck->isChecked() );
+  GroupwiseConfig::setEmail( mEmailEdit->text() );
+  GroupwiseConfig::setFullName( mFullNameEdit->text() );
+  GroupwiseConfig::setCreateEmailAccount( mEmailBox->isChecked() );
 }
+
+void GroupwiseWizard::slotAboutToShowPage( QWidget *page )
+{
+  if ( page == mEmailPage ) {
+    if ( mEmailEdit->text().isEmpty() ) {
+      QString host = GroupwiseConfig::host();
+      int pos = host.findRev( "." );
+      if ( pos > 0 ) pos = host.findRev( ".", pos - 1 );
+      if ( pos > 0 ) host = host.mid( pos + 1 );
+      QString email = GroupwiseConfig::user() + "@" + host;
+      mEmailEdit->setText( email );
+    }
+  }
+}
+
+#include "groupwisewizard.moc"

@@ -22,7 +22,59 @@
 #define KMAILCHANGES_H
 
 #include <kconfigpropagator.h>
+#include <kconfig.h>
 
-void createKMailChanges( KConfigPropagator::Change::List& );
+class CreateDisconnectedImapAccount : public KConfigPropagator::Change
+{
+  public:
+    class CustomWriter
+    {
+      public:
+        virtual void write( KConfig &, int accountId ) = 0;
+    };
+  
+    CreateDisconnectedImapAccount( const QString &accountName );
+    ~CreateDisconnectedImapAccount();
+
+    void apply();
+
+    void setServer( const QString & );
+    void setUser( const QString & );
+    void setPassword( const QString & );
+    void setRealName( const QString & );
+    /**
+      Set email. Default is "user@server".
+    */
+    void setEmail( const QString & );
+
+    void enableSieve( bool );
+    void enableSavePassword( bool );
+
+    enum Encryption { None, SSL, TLS };
+
+    void setEncryptionReceive( Encryption );
+
+    /**
+      Set custom writer. CreateDisconnectedImapAccount takes ownerhsip of the
+      object.
+    */
+    void setCustomWriter( CustomWriter * );
+
+  private:
+    QString mAccountName;
+
+    QString mServer;
+    QString mUser;
+    QString mPassword;
+    QString mRealName;
+    QString mEmail;
+
+    bool mEnableSieve;
+    bool mEnableSavePassword;
+
+    Encryption mEncryptionReceive;
+
+    CustomWriter *mCustomWriter;
+};
 
 #endif

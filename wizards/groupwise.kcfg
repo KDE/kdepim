@@ -1,40 +1,55 @@
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
 <kcfg>
- <kcfgfile name="groupwiserc" />
- <group name="General" >
-  <entry key="Host" type="String" >
-   <label>Server name</label>
-  </entry>
-  <entry key="User" type="String" >
-   <label>User name</label>
-  </entry>
-  <entry key="Password" type="String" >
-   <label>User password</label>
-  </entry>
-  <entry key="SavePassword" type="Bool" >
-   <label>Save Password</label>
-   <default>true</default>
-  </entry>
-  <entry key="UseHttps" type="Bool" >
-   <label>Use HTTPS</label>
-   <default>false</default>
-  </entry>
-  <entry key="LogFile" type="String" >
-   <label>Log File</label>
-  </entry>
-  <entry key="Port" type="UInt" >
-   <label>Port</label>
-   <default>7181</default>
-  </entry>
- </group>
- <group name="Resources" >
-  <entry key="KcalResource" type="String" >
-   <label>Id of KCal resource</label>
-  </entry>
-  <entry key="KabcResource" type="String" >
-   <label>Id of KABC resource</label>
-  </entry>
- </group>
+  <kcfgfile name="groupwiserc" />
+  
+  <group name="General" >
+    <entry key="Host" type="String" >
+      <label>Server name</label>
+    </entry>
+    <entry key="Port" type="UInt" >
+      <label>Port</label>
+      <default>7181</default>
+    </entry>
+    <entry key="User" type="String" >
+      <label>User name</label>
+    </entry>
+    <entry key="Password" type="String" >
+      <label>User password</label>
+    </entry>
+
+    <entry key="Email" type="String">
+      <label>Email Address</label>
+    </entry>
+    <entry key="FullName" type="String">
+      <label>Full Name of User</label>
+    </entry>
+    <entry key="CreateEmailAccount" type="Bool">
+      <label>Create email account</label>
+      <default>false</default>
+    </entry>
+
+    <entry key="SavePassword" type="Bool" >
+      <label>Save Password</label>
+      <default>true</default>
+    </entry>
+    <entry key="UseHttps" type="Bool" >
+      <label>Use HTTPS</label>
+      <default>false</default>
+    </entry>
+    <entry key="LogFile" type="String" >
+      <label>Log File</label>
+    </entry>
+  </group>
+  
+  <group name="Resources" >
+    <entry key="KcalResource" type="String" >
+      <label>Id of KCal resource</label>
+    </entry>
+    <entry key="KabcResource" type="String" >
+      <label>Id of KABC resource</label>
+    </entry>
+  </group>
+  
 
   <group name="Constants">
     <entry name="EnableFreeBusy">

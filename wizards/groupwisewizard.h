@@ -25,15 +25,20 @@
 class KLineEdit;
 class QCheckBox;
 class QSpinBox;
+class QGroupBox;
 
 class GroupwiseWizard : public KConfigWizard
 {
+    Q_OBJECT
   public:
     GroupwiseWizard();
     ~GroupwiseWizard();
 
     void usrReadConfig();
     void usrWriteConfig();
+
+  protected slots:
+    void slotAboutToShowPage( QWidget * );
 
   private:
     KLineEdit *mServerEdit;
@@ -42,6 +47,12 @@ class GroupwiseWizard : public KConfigWizard
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
     QCheckBox *mSecureCheck;
+    
+    QFrame *mEmailPage;
+    QGroupBox *mEmailBox;
+    QWidget *mEmailWidget;
+    KLineEdit *mEmailEdit;
+    KLineEdit *mFullNameEdit;
 };
 
 #endif

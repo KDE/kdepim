@@ -29,7 +29,8 @@ libkolabwizard_la_LIBADD = $(top_builddir)/kresources/imap/kcal/libkcal_imap.la 
                            $(top_builddir)/libkdepim/libkdepim.la \
                            $(top_builddir)/libkpimidentities/libkpimidentities.la
 
-libkolabwizard_la_SOURCES = kolabwizard.cpp kmailchanges.cpp kolabconfig.kcfgc
+libkolabwizard_la_SOURCES = kolabwizard.cpp kmailchanges.cpp kolabconfig.kcfgc \
+  kolabkmailchanges.cpp
 
 kolabwizard_LDADD = libkolabwizard.la $(LIB_KDEUI)
 kolabwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -60,12 +61,14 @@ sloxwizard_LDADD = libsloxwizard.la
 sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 sloxwizard_SOURCES = sloxmain.cpp
 
-# Groupwise
+# GroupWise
 libgroupwisewizard_la_LDFLAGS = $(all_libraries) -no-undefined
-libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc
+libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc \
+  kmailchanges.cpp
 libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
                           $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
-                          $(top_builddir)/libkdepim/libkdepim.la
+                          $(top_builddir)/libkdepim/libkdepim.la \
+                          $(top_builddir)/libkpimidentities/libkpimidentities.la
 libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h \
                                       $(top_builddir)/kresources/groupwise/kcal_groupwiseprefsbase.h
 

@@ -23,7 +23,7 @@
 #include "kolabwizard.h"
 #include "kolabconfig.h"
 
-#include "kmailchanges.h"
+#include "kolabkmailchanges.h"
 
 #include <libkcal/resourcecalendar.h>
 #include <kabc/resource.h>
@@ -191,7 +191,7 @@ class KolabPropagator : public KConfigPropagator
     {
       addKorganizerChanges( changes );
 
-      // KMail cruft has been outsourced to kmailchanges.cpp
+      // KMail cruft has been outsourced to kolabkmailchanges.cpp
       createKMailChanges( changes );
 
       changes.append( new SetupLDAPSearchAccount );

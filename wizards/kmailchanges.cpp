@@ -20,7 +20,6 @@
 */
 
 #include "kmailchanges.h"
-#include "kolabconfig.h"
 
 #include <kapplication.h>
 #include <klocale.h>
@@ -29,158 +28,136 @@
 #include <identitymanager.h>
 #include <identity.h>
 #include <kdebug.h>
+#include <kstringhandler.h>
 
-
-class CreateDisconnectedImapAccount : public KConfigPropagator::Change
+CreateDisconnectedImapAccount::CreateDisconnectedImapAccount( const QString &accountName )
+  : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") ),
+    mAccountName( accountName ), mEnableSieve( false ), mEnableSavePassword( true ),
+    mEncryptionReceive( None ), mCustomWriter( 0 )
 {
-  public:
-    CreateDisconnectedImapAccount()
-      : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") )
-    {
-    }
+}
 
-    // This sucks as this is a 1:1 copy from KMAccount::encryptStr()
-    static QString encryptStr(const QString& aStr)
-    {
-      QString result;
-      for (uint i = 0; i < aStr.length(); i++)
-        result += (aStr[i].unicode() < 0x20) ? aStr[i] :
-          QChar(0x1001F - aStr[i].unicode());
-      return result;
-
-    }
-
-    void apply()
-    {
-      KConfig c( "kmailrc" );
-      c.setGroup( "General" );
-      uint accCnt = c.readNumEntry( "accounts", 0 );
-      c.writeEntry( "accounts", accCnt+1 );
-      uint transCnt = c.readNumEntry( "transports", 0 );
-      c.writeEntry( "transports", transCnt+1 );
-
-      c.setGroup( QString("Account %1").arg(accCnt+1) );
-      int uid = kapp->random();
-      c.writeEntry( "Folder", uid );
-      c.writeEntry( "Id", uid );
-      c.writeEntry( "Type", "cachedimap");
-      c.writeEntry( "auth", "*");
-      c.writeEntry( "Name", "Kolab Server" );
-      c.writeEntry( "host", KolabConfig::self()->server() );
-
-      c.writeEntry( "login", KolabConfig::self()->user() );
-
-      c.writeEntry( "sieve-support", "true" );
-
-      QString user = KolabConfig::self()->user();
-      int pos = user.find( "@" );
-      if ( pos > 0 ) user = user.left( pos );
-
-      QString email = user+"@"+KolabConfig::self()->server();
-      user = email; // with kolab the userid _is_ the full email
-
-      c.setGroup( QString("Folder-%1").arg( uid ) );
-      c.writeEntry( "isOpen", true );
-
-      if ( KolabConfig::self()->savePassword() ) {
-        c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
-        c.writeEntry( "store-passwd", true );
-      }
-      c.writeEntry( "port", "993" );
-      c.writeEntry( "use-ssl", true );
-
-      c.setGroup( QString("Transport %1").arg(transCnt+1) );
-      c.writeEntry( "name", "Kolab Server" );
-      c.writeEntry( "host", KolabConfig::self()->server() );
-      c.writeEntry( "type", "smtp" );
-      c.writeEntry( "port", "465" );
-      c.writeEntry( "encryption", "SSL" );
-      c.writeEntry( "auth", true );
-      c.writeEntry( "authtype", "PLAIN" );
-      c.writeEntry( "user", email );
-      c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
-      c.writeEntry( "storepass", "true" );
-
-      // Write email in "default kcontrol settings", used by IdentityManager
-      // if it has to create a default identity.
-      KEMailSettings es;
-      es.setSetting( KEMailSettings::RealName, KolabConfig::self()->realName() );
-      es.setSetting( KEMailSettings::EmailAddress, email );
-
-      KPIM::IdentityManager identityManager;
-      if ( !identityManager.allEmails().contains( email ) ) {
-        // Not sure how to name the identity. First one is "Default", next one "Kolab", but then...
-        KPIM::Identity& identity = identityManager.newFromScratch( i18n( "Kolab" ) );
-        identity.setFullName( KolabConfig::self()->realName() );
-        identity.setEmailAddr( email );
-        identityManager.commit();
-      }
-
-      // This needs to be done here, since it reference just just generated id
-      c.setGroup( "IMAP Resource" );
-      c.writeEntry("TheIMAPResourceAccount", uid);
-      c.writeEntry("TheIMAPResourceFolderParent", QString(".%1.directory/INBOX").arg( uid ));
-   }
-
-};
-
-void createKMailChanges( KConfigPropagator::Change::List& changes )
+CreateDisconnectedImapAccount::~CreateDisconnectedImapAccount()
 {
-  KConfigPropagator::ChangeConfig *c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "Groupware";
-  c->name = "Enabled";
-  c->value = "true";
-  changes.append( c );
+  delete mCustomWriter;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "Groupware";
-  c->name = "AutoAccept";
-  c->value = "false";
-  changes.append( c );
+void CreateDisconnectedImapAccount::setServer( const QString &s )
+{
+  mServer = s;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "Groupware";
-  c->name = "AutoDeclConflict";
-  c->value = "false";
-  changes.append( c );
+void CreateDisconnectedImapAccount::setUser( const QString &s )
+{
+  mUser = s;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "Groupware";
-  c->name = "LegacyMangleFromToHeaders";
-  c->value = "false";
-  changes.append( c );
+void CreateDisconnectedImapAccount::setPassword( const QString &s )
+{
+  mPassword = s;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "Groupware";
-  c->name = "LegacyBodyInvites";
-  c->value = "true";
-  changes.append( c );
+void CreateDisconnectedImapAccount::setRealName( const QString &s )
+{
+  mRealName = s;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "IMAP Resource";
-  c->name = "Enabled";
-  c->value = "true";
-  changes.append( c );
+void CreateDisconnectedImapAccount::setEmail( const QString &s )
+{
+  mEmail = s;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "IMAP Resource";
-  c->name = "TheIMAPResourceEnabled";
-  c->value = "true";
-  changes.append( c );
+void CreateDisconnectedImapAccount::enableSieve( bool b )
+{
+  mEnableSieve = b;
+}
 
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "IMAP Resource";
-  c->name = "Folder Language";
-  c->value = "0"; // TODO: Fix the language
-  changes.append( c );
+void CreateDisconnectedImapAccount::enableSavePassword( bool b )
+{
+  mEnableSavePassword = b;
+}
 
-  changes.append( new CreateDisconnectedImapAccount );
+void CreateDisconnectedImapAccount::setEncryptionReceive(
+  CreateDisconnectedImapAccount::Encryption e )
+{
+  mEncryptionReceive = e;
+}
+
+void CreateDisconnectedImapAccount::setCustomWriter(
+  CreateDisconnectedImapAccount::CustomWriter *writer )
+{
+  mCustomWriter = writer;
+}
+
+void CreateDisconnectedImapAccount::apply()
+{
+  if ( mEmail.isEmpty() ) mEmail = mUser + "@" + mServer;
+
+  KConfig c( "kmailrc" );
+  c.setGroup( "General" );
+  uint accCnt = c.readNumEntry( "accounts", 0 );
+  c.writeEntry( "accounts", accCnt + 1 );
+  uint transCnt = c.readNumEntry( "transports", 0 );
+  c.writeEntry( "transports", transCnt + 1 );
+
+  c.setGroup( QString("Account %1").arg( accCnt + 1) );
+  int uid = kapp->random();
+  c.writeEntry( "Folder", uid );
+  c.writeEntry( "Id", uid );
+  c.writeEntry( "Type", "cachedimap");
+  c.writeEntry( "auth", "*");
+  c.writeEntry( "Name", mAccountName );
+  c.writeEntry( "host", mServer );
+
+  c.writeEntry( "login", mUser );
+
+  c.writeEntry( "sieve-support", mEnableSieve ? "true" : "false" );
+
+  if ( mEncryptionReceive == SSL ) {
+    c.writeEntry( "use-ssl", true );
+  } else if ( mEncryptionReceive == TLS ) {
+    c.writeEntry( "use-tls", true );
+  }
+
+
+  c.setGroup( QString("Folder-%1").arg( uid ) );
+  c.writeEntry( "isOpen", true );
+
+  if ( mEnableSavePassword ) {
+    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+    c.writeEntry( "store-passwd", true );
+  }
+  c.writeEntry( "port", "993" );
+
+
+  c.setGroup( QString("Transport %1").arg( transCnt + 1 ) );
+  c.writeEntry( "name", mAccountName );
+  c.writeEntry( "host", mServer );
+  c.writeEntry( "type", "smtp" );
+  c.writeEntry( "port", "465" );
+  c.writeEntry( "encryption", "SSL" );
+  c.writeEntry( "auth", true );
+  c.writeEntry( "authtype", "PLAIN" );
+  c.writeEntry( "user", mUser );
+  if ( mEnableSavePassword ) {
+    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
+    c.writeEntry( "storepass", "true" );
+  }
+
+  // Write email in "default kcontrol settings", used by IdentityManager
+  // if it has to create a default identity.
+  KEMailSettings es;
+  es.setSetting( KEMailSettings::RealName, mRealName );
+  es.setSetting( KEMailSettings::EmailAddress, mEmail );
+
+  KPIM::IdentityManager identityManager;
+  if ( !identityManager.allEmails().contains( mEmail ) ) {
+    // Not sure how to name the identity. First one is "Default", next one mAccountName, but then...
+    KPIM::Identity& identity = identityManager.newFromScratch( mAccountName );
+    identity.setFullName( mRealName );
+    identity.setEmailAddr( mEmail );
+    identityManager.commit();
+  }
+
+  if ( mCustomWriter ) mCustomWriter->write( c, uid );
 }
