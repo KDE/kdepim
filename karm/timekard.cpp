@@ -40,7 +40,8 @@
 const int taskWidth = 40;
 const int timeWidth = 6; 
 const int totalTimeWidth = 7;
-const int reportWidth = taskWidth + (7 * timeWidth) + totalTimeWidth;
+const int reportWidth = taskWidth + timeWidth;
+const int weekReportWidth = taskWidth + (7 * timeWidth) + totalTimeWidth;
 
 const QString cr = QString::fromLatin1("\n");
 
@@ -61,7 +62,7 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
   retval += cr + cr;
   retval += QString(QString::fromLatin1("%1    %2"))
     .arg(i18n("Time"), timeWidth)
-    .arg(i18n("Task"), -taskWidth);
+    .arg(i18n("Task"));
   retval += cr;
   retval += line;
 
@@ -86,15 +87,15 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
     } 
 
     // total
-    buf.fill('-', timeWidth + 4);
+    buf.fill('-', reportWidth);
     retval += QString(QString::fromLatin1("%1")).arg(buf, timeWidth) + cr;
     retval += QString(QString::fromLatin1("%1 %2"))
       .arg(formatTime(sum),timeWidth)
-      .arg(i18n("Total"), -taskWidth);
+      .arg(i18n("Total"));
   }
   else
     retval += i18n("No tasks!");
-  
+
   return retval;
 }
 
@@ -105,7 +106,7 @@ void TimeKard::printTask(Task *task, QString &s, int level)
   s += buf.fill(' ', level);
   s += QString(QString::fromLatin1("%1    %2"))
     .arg(formatTime(task->totalTime()), timeWidth)
-    .arg(task->name(), -taskWidth);
+    .arg(task->name());
   s += cr;
 
   for (Task* subTask = task->firstChild();
@@ -113,7 +114,7 @@ void TimeKard::printTask(Task *task, QString &s, int level)
       subTask = subTask->nextSibling())
   {
     printTask(subTask, s, level+1);
-  }      
+  }
 }
 
 void TimeKard::printWeekTask(const Task *task, 
@@ -157,10 +158,10 @@ void TimeKard::printWeekTask(const Task *task,
 
   // Total for task this week
   s += QString::fromLatin1("%1").arg(formatTime(weeksum/60), totalTimeWidth);
-  
+
   // Task name
   s += buf.fill(' ', level + 1);
-  s += QString::fromLatin1("%1").arg(task->name(), -taskWidth);
+  s += QString::fromLatin1("%1").arg(task->name());
   s += cr;
 
   for (Task* subTask = task->firstChild();
@@ -168,7 +169,7 @@ void TimeKard::printWeekTask(const Task *task,
       subTask = subTask->nextSibling())
   {
     printWeekTask(subTask, taskdaytotals, daytotals, week, level+1, s);
-  }      
+  }
 }
 
 QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
@@ -187,7 +188,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   QString daytaskkey, daykey;
   QDate day;
 
-  line.fill('-', reportWidth);
+  line.fill('-', weekReportWidth);
   line += cr;
 
   // header
@@ -240,7 +241,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
 
     // week name
     retval += cr + cr;
-    buf.fill(' ', int((reportWidth - (*week).name().length()) / 2));
+    buf.fill(' ', int((weekReportWidth - (*week).name().length()) / 2));
     retval += buf + (*week).name() + cr;
 
     // day headings
@@ -299,8 +300,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
 
       retval += QString::fromLatin1("%1 %2")
         .arg(formatTime(sum/60), totalTimeWidth)
-        .arg(i18n("Total"), -taskWidth);
-      
+        .arg(i18n("Total"));
     }
   }
   return retval;
