@@ -44,7 +44,7 @@ K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory( "kfile_vcf" ))
 
 KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
                        const QStringList &args)
-    
+
     : KFilePlugin(parent, name, args)
 {
     KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-vcard" );
@@ -75,7 +75,7 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
     char id_name[] = "FN:";
     char id_email[] = "EMAIL;INTERNET:";
-    
+
     // we need a buffer for lines
     char linebuf[1000];
 
@@ -85,39 +85,39 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     buf_name[999] = '\0';
     buf_email[999] = '\0';
     char * myptr;
-        
+
     bool done=false;
     while (!done) {
-    
+
         // read a line
         file.readLine(linebuf, sizeof(linebuf));
-        
+
         // have we got something useful?
         if (memcmp(linebuf, id_name, 3) == 0) {
             // we have a name
             myptr = linebuf + 3;
-            strncpy(buf_name, myptr, sizeof( buf_name ));
+            strlcpy(buf_name, myptr, sizeof( buf_name ));
         } else if (memcmp(linebuf, id_email, 15) == 0) {
             // we have a name
             myptr = linebuf + 15;
-            strncpy(buf_email, myptr, sizeof( buf_email ));
+            strlcpy(buf_email, myptr, sizeof( buf_email ));
         }
-        
+
         // are we done yet?
         if (
           ((strlen(buf_name) > 0) && (strlen(buf_email) > 0)) ||
           (file.atEnd())
           )
             done = true;
-                
+
     };
-    
-    
+
+
     KFileMetaInfoGroup group = appendGroup(info, "Technical");
-    
+
     if (strlen(buf_name) > 0)
         appendItem(group, "Name", buf_name);
-    
+
     if (strlen(buf_email) > 0)
         appendItem(group, "Email", buf_email);
 
