@@ -225,6 +225,9 @@ bool JPlugin::hasGui() {
 
 int JPlugin::startup(jp_startup_info*si) {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"startup for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_startup");
 	if (func) return ((T_startup)func)(si);
 	else {
@@ -237,6 +240,9 @@ int JPlugin::startup(jp_startup_info*si) {
 
 int JPlugin::gui(GtkWidget*vbox, GtkWidget*hbox, unsigned int uID) {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"gui for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_gui");
 	if (func) return ((T_gui)func)(vbox, hbox, uID);
 	else {
@@ -249,6 +255,9 @@ int JPlugin::gui(GtkWidget*vbox, GtkWidget*hbox, unsigned int uID) {
 
 int JPlugin::gui_cleanup() {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"gui_cleanup for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_gui_cleanup");
 	if (func) return ((T_gui_cleanup)func)();
 	else {
@@ -261,6 +270,9 @@ int JPlugin::gui_cleanup() {
 
 int JPlugin::help(char** text, int*width, int*height) {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"help for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_help");
 	if (func) return ((T_help)func)(text, width, height);
 	else {
@@ -273,6 +285,9 @@ int JPlugin::help(char** text, int*width, int*height) {
 
 int JPlugin::pre_sync() {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"pre_sync for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_pre_sync");
 	if (func) return ((T_pre_sync)func)();
 	else {
@@ -285,6 +300,9 @@ int JPlugin::pre_sync() {
 
 int JPlugin::sync(int sd) {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"sync for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_sync");
 	if (func) return ((T_sync)func)(sd);
 	else {
@@ -297,6 +315,9 @@ int JPlugin::sync(int sd) {
 
 int JPlugin::post_sync() {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"post_sync for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_post_sync");
 	if (func) return ((T_post_sync)func)();
 	else {
@@ -309,6 +330,9 @@ int JPlugin::post_sync() {
 
 int JPlugin::exit_cleanup() {
 	FUNCTIONSETUP;
+	#ifdef DEBUG
+	DEBUGCONDUIT<<"exit_cleanup for conduit "<<info.fullpath<<endl;
+	#endif
 	void *func = lib->symbol("plugin_exit_cleanup");
 	if (func) return ((T_exit_cleanup)func)();
 	else {

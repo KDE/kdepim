@@ -15,7 +15,7 @@ libJPilotAPI_la_SOURCES = libplugin.c APIEmulation.c
 libJPilotAPI_la_LDFLAGS = $(KDE_RPATH) -L../../lib -Wl,-export-dynamic
 libJPilotAPI_la_LIBADD = -lc -lgtk -lgdk
 
-libJPilotProxy_la_SOURCES = JPilotPluginProxy.ui \
+libJPilotProxy_la_SOURCES = ConduitDialog.ui \
 	JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
 libJPilotProxy_la_LDFLAGS = $(KDE_RPATH) -L../../lib -Wl,-export-dynamic
 libJPilotProxy_la_LIBADD = -lkpilot -lgtk -lgdbm -lgdk

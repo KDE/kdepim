@@ -38,8 +38,16 @@ int jpilot_logf(int level, char *format, ...) {
 int get_home_file_name(char *file, char *full_name, int max_size)
 {
    char *home, default_path[]=".";
+jpilot_logf(LOG_WARN, "get_home_file_name: ");
+  jpilot_logf(LOG_WARN, file);
+  jpilot_logf(LOG_WARN, full_name);
+jpilot_logf(LOG_WARN, "\n");
 
    home = getenv("JPILOT_HOME");
+jpilot_logf(LOG_WARN, "home: ");
+  jpilot_logf(LOG_WARN, home);
+jpilot_logf(LOG_WARN, "\n");
+
    if (!home) {/*Not home; */
       home = getenv("HOME");
       if (!home) {/*Not home; */
@@ -54,6 +62,9 @@ int get_home_file_name(char *file, char *full_name, int max_size)
       home=default_path;
    }
    sprintf(full_name, "%s/.jpilot/%s", home, file);
+jpilot_logf(LOG_WARN, "full?name: ");
+  jpilot_logf(LOG_WARN, full_name);
+jpilot_logf(LOG_WARN, "\n");
    return 0;
 }
 
@@ -64,6 +75,9 @@ FILE *jp_open_home_file(char *filename, char *mode)
 
    get_home_file_name(filename, fullname, 255);
 
+jpilot_logf(LOG_WARN, "jp_open_home_file: ");
+  jpilot_logf(LOG_WARN, fullname);
+jpilot_logf(LOG_WARN, "\n");
    pc_in = fopen(fullname, mode);
    if (pc_in == NULL) {
       pc_in = fopen(fullname, "w+");
@@ -72,6 +86,8 @@ FILE *jp_open_home_file(char *filename, char *mode)
 	 pc_in = fopen(fullname, mode);
       }
    }
+jpilot_logf(LOG_WARN, "end jp_open_home-file: ");
+jpilot_logf(LOG_WARN, "\n");
    return pc_in;
 }
 
@@ -189,14 +205,20 @@ int jp_pref_write_rc_file(char *filename, prefType prefs[], int num_prefs)
    int i;
    FILE *out;
 
-   jpilot_logf(LOG_DEBUG, "jp_pref_write_rc_file()\n");
+   jpilot_logf(LOG_DEBUG, "jp_pref_write_rc_file(%s)\n", filename);
+jpilot_logf(LOG_WARN, filename);
 
    out=jp_open_home_file(filename,"w" );
    if (!out) {
       return -1;
    }
+jpilot_logf(LOG_WARN, "file opened: ");
+jpilot_logf(LOG_WARN, "\n");
 
    for(i=0; i<num_prefs; i++) {
+jpilot_logf(LOG_WARN, "Pref: ");
+  jpilot_logf(LOG_WARN,prefs[i].name);
+jpilot_logf(LOG_WARN, "\n");
 
       if (prefs[i].filetype == INTTYPE) {
 	 fprintf(out, "%s %ld\n", prefs[i].name, prefs[i].ivalue);
@@ -206,7 +228,14 @@ int jp_pref_write_rc_file(char *filename, prefType prefs[], int num_prefs)
 	 fprintf(out, "%s %s\n", prefs[i].name, prefs[i].svalue);
       }
    }
+
+jpilot_logf(LOG_WARN, "before closing: ");
+jpilot_logf(LOG_WARN, "\n");
+
    fclose(out);
+jpilot_logf(LOG_WARN, "closed: ");
+  jpilot_logf(LOG_WARN, filename);
+jpilot_logf(LOG_WARN, "\n");
 
    return 0;
 }

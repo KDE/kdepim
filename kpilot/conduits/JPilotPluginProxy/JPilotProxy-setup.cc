@@ -93,7 +93,7 @@ void JPilotProxyWidgetSetup::slotAddConduit() {
 	QString fn=KFileDialog::getOpenFileName(0, i18n("*.so|JPilot plugins\n*.*|All files"), this);
 	if(fn.isNull()) return;
 	// TODO: check of the plugin has already been loaded...
-	if (!addConduit(fn, false)) {
+	if (	addConduit(fn, false)) {
 		KMessageBox::sorry(this, i18n("Loading the JPilot plugin failed"));
 	}
 }
@@ -229,6 +229,9 @@ void JPilotProxyWidgetSetup::slotUpdatePluginPath(const QString &newpath) {
 
 
 // $Log$
+// Revision 1.3  2002/04/08 12:56:43  mhunter
+// Corrected typographical errors
+//
 // Revision 1.2  2002/04/07 20:19:48  cschumac
 // Compile fixes.
 //

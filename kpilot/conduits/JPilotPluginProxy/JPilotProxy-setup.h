@@ -31,7 +31,7 @@
 
 #include "plugin.h"
 #include "jplugin.h"
-#include "JPilotPluginProxy.h"
+#include "ConduitDialog.h"
 
 class JPilotProxyWidgetSetup : public ConduitConfig {
 Q_OBJECT
@@ -67,6 +67,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.1  2002/04/07 11:17:54  kainhofe
+// First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
+//
 // Revision 1.4  2002/04/07 00:53:36  reinhold
 // Loading plugins works, callbacks are resolved, dependencies on libplugin are not and crash the palm
 //

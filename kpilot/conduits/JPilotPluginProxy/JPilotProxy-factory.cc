@@ -91,6 +91,9 @@ JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
 
 	PluginIterator_t it(*plugins); // iterator for plugin list
 	for ( ; it.current(); ++it ) {
+		#ifdef DEBUG
+		DEBUGCONDUIT<<"unloading library "<< it.current()->info.fullpath<<" ("<<it.current()->info.name<<"), address="<<it.current()->lib<<endl;
+		#endif
 		it.current()->exit_cleanup();
 	}
 	if (apilib) KLibLoader::self()->unloadLibrary(apilib->fileName());
@@ -225,6 +228,9 @@ int JPilotProxyConduitFactory::loadPlugins(KConfig*fC) {
 }
 
 // $Log$
+// Revision 1.3  2002/04/08 12:56:43  mhunter
+// Corrected typographical errors
+//
 // Revision 1.2  2002/04/07 18:31:09  kainhofe
 // The JPilot plugin API is now sourced out to the libJPilotAPI library, which is loaded
 // as a global library. So most plugins can at least be loaded now.
