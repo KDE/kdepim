@@ -25,4 +25,4 @@ X-KDE-Library=kabc_kolab
 Type=Service
 ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=contact
-X-KDE-ResourceType=imap
+X-KDE-ResourceType=kolab
