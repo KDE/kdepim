@@ -13,8 +13,7 @@ kcm_kabldapconfig_la_SOURCES = addhostdialog.cpp kcmkabldapconfig.cpp \
 kcm_kabldapconfig_la_LDFLAGS  = $(all_libraries) -module -avoid-version -no-undefined
 kcm_kabldapconfig_la_LIBADD = $(XTESTLIB) $(LIB_KIO) $(LIB_KDEUI) -lkabc
 
-kcm_kabconfig_la_METASOURCES = AUTO
-kcm_kabldapconfig_la_METASOURCES = AUTO
+METASOURCES = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkabconfig.pot

@@ -27,15 +27,13 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 libkaddressbookpart_la_SOURCES = \
  addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
- addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp extensionwidget.cpp filter.cpp \
- filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp imagewidget.cpp \
- incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp \
+ addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp extensionwidget.cpp filterselectionwidget.cpp geowidget.cpp imagewidget.cpp \
+ incsearchwidget.cpp jumpbuttonbar.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
  kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
- phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp undo.cpp undocmds.cpp \
+ phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp undocmds.cpp \
  viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
- viewconfigurewidget.cpp viewmanager.cpp xxportmanager.cpp \
- xxportselectdialog.cpp
+ viewconfigurewidget.cpp xxportselectdialog.cpp
 
 kaddressbook_METASOURCES = AUTO
 
@@ -77,11 +75,14 @@ apps_DATA = kaddressbook.desktop
 KDE_ICON = kaddressbook
 
 servicetypedir = $(kde_servicetypesdir)
-servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop kaddressbook_xxport.desktop dcopaddressbook.desktop
+servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop \
+	kaddressbook_xxport.desktop dcopaddressbook.desktop
 
 lib_LTLIBRARIES = libkaddressbook.la
-libkaddressbook_la_SOURCES = xxportobject.cpp
-
+libkaddressbook_la_SOURCES = xxportobject.cpp xxportmanager.cpp kabcore.cpp \
+	undo.cpp viewmanager.cpp filter.cpp filtereditdialog.cpp
+libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) # FIXME! -no-undefined
+libkaddressbook_la_LIBADD = $(LIB_KABC)
 
 noinst_LTLIBRARIES = libkabcommon.la
 libkabcommon_la_SOURCES = kabprefs.cpp configurewidget.cpp

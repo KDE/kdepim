@@ -11,9 +11,9 @@ service_DATA = distributionlist.desktop location.desktop
 libkaddrbk_distributionlist_la_SOURCES = distributionlistwidget.cpp
 libkaddrbk_distributionlist_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 libkaddrbk_distributionlist_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
-libkaddrbk_distributionlist_la_METASOURCES = AUTO
+METASOURCES = AUTO
 
 libkaddrbk_location_la_SOURCES = locationwidget.cpp locationconfig.cpp
 libkaddrbk_location_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 libkaddrbk_location_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
-libkaddrbk_location_la_METASOURCES = AUTO
+
