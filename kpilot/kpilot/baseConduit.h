@@ -95,12 +95,12 @@ public:
 		Local
   };
       
-	enum ConduitExitCode {
+     enum ConduitExitCode {
 		Normal=0,
 		ConduitMisconfigured=1,		// f.ex missing file
 		DCOPError=2,			// generic DCOP error
 		PeerApplicationMissing=3,
-		InvalidLocalDBPath=4
+		DBNotOpen=4                     // unable to open db
 		} ;
   /**
    * The mode that this conduit should be running in will be passed to the
@@ -177,7 +177,7 @@ public:
   virtual QPixmap icon() const;
   
   const eConduitMode getMode() const { return fMode; } 
-
+  const ConduitExitCode getExitCode() const { return fExitCode; }
 protected:
 
   /**
@@ -261,6 +261,7 @@ private:
    * Mode for this instance of the conduit
    */
   eConduitMode fMode;
+  ConduitExitCode fExitCode;
   PilotDatabase *fDB;
   DatabaseSource fDBSource;
 
@@ -275,6 +276,9 @@ private:
 
 
 // $Log$
+// Revision 1.23  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.22  2001/03/30 17:11:31  stern
 // Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
 //

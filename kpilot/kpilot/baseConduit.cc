@@ -45,12 +45,13 @@
 static const char *baseconduit_id="$Id$";
 
 BaseConduit::BaseConduit(eConduitMode mode)
-      : QObject(), fMode(mode), fDB(0L), fDBSource(ConduitSocket)
+      : QObject(), fMode(mode), fExitCode(Normal),
+	fDB(0L), fDBSource(ConduitSocket)
 {
 }
 
 BaseConduit::BaseConduit(eConduitMode mode, DatabaseSource source)
-      : QObject(), fMode(mode), fDB(0L), fDBSource(source)
+      : QObject(), fMode(mode), fExitCode(Normal), fDB(0L), fDBSource(source)
 {
 }
 
@@ -65,12 +66,6 @@ void BaseConduit::init()
 	if (fDBSource == ConduitSocket)
 	    {
 	    fDB = new PilotConduitDatabase();
-	    if (!fDB->isDBOpen())
-		{
-		delete fDB;
-		fDB = 0L;
-		}
-	     
 #ifdef DEBUG
 	    if (debug_level & SYNC_MINOR)
 		{
@@ -88,14 +83,15 @@ void BaseConduit::init()
 	    QString dbPath = KPilotConfig::getDefaultDBPath();
 	    QString localDB = dbInfo();
 	    fDB = new PilotLocalDatabase( dbPath, localDB );
-	    if (!fDB->isDBOpen())
-		{
-		delete fDB;
-		fDB = 0L;
-		}
-	    
 	    }
-}
+	if (!fDB->isDBOpen())
+	    {
+	    delete fDB;
+	    fDB = 0L;
+	    fMode = Error;
+	    fExitCode = DBNotOpen;
+	    }
+    }
 
 BaseConduit::~BaseConduit()
     {
@@ -211,6 +207,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.22  2001/04/23 21:29:57  adridg
+// Tiny code integrity patches
+//
 // Revision 1.21  2001/03/30 17:11:31  stern
 // Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
 //
