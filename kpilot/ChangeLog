@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2003-10-21  Adriaan de Groot
+* Updated the website some with lots of new hardware. Thanks to 
+  everyone who reported new stuff.
+
 2003-10-10  Adriaan de Groot
 * Sure, we let the ChangeLog slide, but didn't do much, I don't
   think, over the summer. Main point is that AAP can pretty much
@@ -83,7 +87,7 @@
 2003-7-15 to 2003-7-26  Reinhold Kainhofer
 Complete rewrite of the addressbook conduit (for the, umhh, third(?) time). 
 * NEW FEATURE: custom fields can now also be synced with 
-	birth date, URL, ICQ, etc. (bug #50871)
+  birth date, URL, ICQ, etc. (bug #50871)
 * Conflict resolution shows the whole conflicting item 
   and all conflicting fields (so far, every conflicting 
   field was shown on its own, bug #59222). The conflict 
