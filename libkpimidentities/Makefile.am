@@ -13,4 +13,6 @@ identitymanager_DCOPIDLNG = true
 
 METASOURCES = AUTO
 
+include $(top_srcdir)/doc/api/Doxyfile.am
+
 # No messages target. Those files are part of libkdepim.pot.
