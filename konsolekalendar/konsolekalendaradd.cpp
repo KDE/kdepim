@@ -95,6 +95,10 @@ bool KonsoleKalendarAdd::addEvent()
       m_variables->getCalendar()->save( m_variables->getCalendarFile() );
     } else {
       m_variables->getCalendar()->save();
+      //TODO: make this work without bitching
+      m_variables->getCalendar()->connect( m_variables->getCalendarResources(),
+                        SIGNAL( calendarChanged() ),
+                        SLOT( slotCalendarChanged() ) );
     }
   }
 
