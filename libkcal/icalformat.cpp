@@ -37,6 +37,7 @@ extern "C" {
 }
 
 #include "calendar.h"
+#include "calendarlocal.h"
 #include "journal.h"
 
 #include "icalformat.h"
@@ -145,37 +146,26 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
 
 Incidence *ICalFormat::fromString( const QString &text )
 {
-  icalcomponent *calendar;
-
-  calendar = icalcomponent_new_from_string( text.local8Bit().data());
-  if (!calendar) {
-    kdDebug() << "ICalFormat::fromString(const QString) parse error" << endl;
-    setException(new ErrorFormat(ErrorFormat::ParseErrorIcal));
-    return false;
-  }
-
-  Incidence *ical=0;
+  Calendar *cal = new CalendarLocal();
+  fromString(cal, text);
   
-  icalcomponent *c;
-  c = icalcomponent_get_first_component(calendar,ICAL_VEVENT_COMPONENT);
-  if (c) {
-    ical = mImpl->readEvent(c);
+  Incidence *ical = 0;
+  QPtrList<Event> elist = cal->events();
+  if ( elist.count() > 0 ) {
+    ical = elist.first();
   } else {
-    c = icalcomponent_get_first_component(calendar,ICAL_VTODO_COMPONENT);
-    if (c) {
-      ical = mImpl->readTodo(c);
+    QPtrList<Todo> tlist = cal->todos();
+    if ( tlist.count() > 0 ) {
+      ical = tlist.first();
     } else {
-      c = icalcomponent_get_first_component(calendar,ICAL_VJOURNAL_COMPONENT);
-      if (c) {
-        ical = mImpl->readJournal(c);
+      QPtrList<Journal> jlist = cal->journals();
+      if ( jlist.count() > 0 ) {
+        ical = jlist.first();
       }
     }
   }
-  
-  icalcomponent_free( calendar );
   return ical;
 }
-
 
 QString ICalFormat::toString( Calendar *cal )
 {
@@ -220,6 +210,13 @@ QString ICalFormat::toString( Calendar *cal )
   }
 
   return QString::fromLocal8Bit( text );
+}
+
+QString ICalFormat::toICalString( Incidence *incidence )
+{
+  CalendarLocal cal;
+  cal.addIncidence( incidence->clone() );
+  return toString( &cal );
 }
 
 QString ICalFormat::toString( Incidence *incidence )

@@ -73,6 +73,10 @@ class ICalFormat : public CalFormat {
     */
     QString toString( Calendar * );
     /**
+      Return incidence as full iCalendar formatted text.
+    */
+    QString toICalString( Incidence * );
+    /**
       Return incidence as iCalendar formatted text.
     */
     QString toString( Incidence * );
