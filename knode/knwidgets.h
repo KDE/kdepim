@@ -18,19 +18,19 @@
 #define KNWIDGETS_H
 
 #include <qlistbox.h>
-#include <qpixmap.h>
 #include <qbitarray.h>
 
 #include <kdockwidget.h>
 #include <kprogress.h>
 
 class QPainter;
+class QPixmap;
 
 //====================================================================================
 
 
 class KNListBoxItem : public QListBoxItem  {
-  
+
   public:
     KNListBoxItem(const QString& text, QPixmap *pm=0);
     ~KNListBoxItem();

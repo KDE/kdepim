@@ -15,6 +15,7 @@
 */
 
 #include <qpainter.h>
+#include <qpixmap.h>
 
 #include "knwidgets.h"
 
@@ -35,17 +36,17 @@ KNListBoxItem::~KNListBoxItem()
 
 void KNListBoxItem::paint(QPainter *p)
 {
-  
+
   QFontMetrics fm = p->fontMetrics();
-  
+
   int tYPos=0, tXPos=3, pYPos=0;
-  
+
   tYPos = fm.ascent() + fm.leading()/2; // vertical text position
-  
+
   if(p_m) {
-    
+
     tXPos=p_m->width() + 6;
-  
+
     if ( p_m->height() < fm.height() )  {
       //tYPos = fm.ascent() + fm.leading()/2;
       pYPos = (fm.height() - p_m->height())/2;}
@@ -55,7 +56,7 @@ void KNListBoxItem::paint(QPainter *p)
     }
     p->drawPixmap( 3, pYPos ,  *p_m );
   }
-  
+
 
   p->drawText( tXPos, tYPos, text() );
 }
