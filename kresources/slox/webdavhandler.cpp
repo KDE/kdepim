@@ -24,10 +24,10 @@
 
 #ifdef HAVE_VALUES_H
 #include <values.h>
-#endif
-#ifndef MAXINT
+#else
+#ifdef HAVE_SYS_LIMITS_H
 #include <sys/limits.h>
-#define MAXINT INT_MAX
+#endif
 #endif
 
 #include <libkdepim/kpimprefs.h>
@@ -37,6 +37,9 @@
 
 #include <qfile.h>
 
+#ifdef Q_OS_FREEBSD
+#define MAXINT INT_MAX
+#endif
 
 SloxItem::SloxItem()
   : status( Invalid )
