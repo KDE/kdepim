@@ -42,13 +42,16 @@ class JPilotProxyConduit : public ConduitAction {
 public:
 	JPilotProxyConduit(KPilotDeviceLink *, const char *n=0L, const QStringList &l=QStringList());
 	virtual ~JPilotProxyConduit() {};
-	virtual void exec();
+	virtual bool exec();
 	/* pure virtual functions, need to be overloaded in child classes */
 	virtual const QString conduitSettingsGroup() { return QString("JPilotPluginProxy");};
 };
 
 
 // $Log$
+// Revision 1.1  2002/04/07 11:17:54  kainhofe
+// First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
+//
 // Revision 1.2  2002/04/01 14:37:33  reinhold
 // Use DirListIterator to find the plugins in a directorz
 // User KLibLoader to load the JPilot plugins

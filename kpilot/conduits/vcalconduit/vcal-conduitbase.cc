@@ -223,8 +223,7 @@ there are two special cases: a full and a first sync.
 		PluginUtility::isRunning("alarmd"))
 	{
 		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
-		emit syncDone(this);
-		return true;
+		return false;
 	}
 
 	readConfig();
@@ -274,8 +273,7 @@ error:
 
 	KPILOT_DELETE(fCalendar);
 	KPILOT_DELETE(fP);
-	emit syncDone(this);
-	return true;
+	return false;
 }
 
 
@@ -708,6 +706,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.20  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.19  2002/08/21 17:36:17  adridg
 // Tell the user which calendar file is being used
 //

@@ -57,13 +57,13 @@ JPilotProxyConduit::JPilotProxyConduit(KPilotDeviceLink *d, const char *n, const
 
 
 
-/* virtual */ void JPilotProxyConduit::exec() {
+/* virtual */ bool JPilotProxyConduit::exec() {
 	FUNCTIONSETUP;
 	#ifdef DEBUG
 	DEBUGCONDUIT<<"Starting JPilotPlugin sync"<<endl;
 	#endif
 
-	if (!fConfig) return;
+	if (!fConfig) return false;
 
 	KConfigGroupSaver cfgs(fConfig, conduitSettingsGroup());
 	
@@ -89,11 +89,14 @@ JPilotProxyConduit::JPilotProxyConduit(KPilotDeviceLink *d, const char *n, const
 	}
 
 	
-	emit syncDone(this);
+//	emit syncDone(this);
 	return;
 }
 
 // $Log$
+// Revision 1.1  2002/04/07 11:17:54  kainhofe
+// First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
+//
 // Revision 1.4  2002/04/06 19:08:02  reinhold
 // the plugin compiles now and the plugins can be loaded (except that they crash if they access jp_init or jpilog_printf etc.)
 //

@@ -54,7 +54,7 @@ public:
 	virtual ~MultiDBConduit() {} ;
 
 	virtual unsigned long flags() const { return 0; }
-	virtual void exec();
+	virtual bool exec();
 	virtual bool isCorrectDBTypeCreator(DBInfo dbinfo) { return dbinfo.type==dbtype() && dbinfo.creator==dbcreator(); } ;
 
 	/* pure virtual functions, need to be overloaded in child classes */
@@ -88,6 +88,9 @@ protected:
 
 
 // $Log$
+// Revision 1.2  2002/07/05 00:15:22  kainhofe
+// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
+//
 // Revision 1.1  2002/04/07 12:09:42  kainhofe
 // Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
 //

@@ -75,6 +75,7 @@ protected:
 	virtual void movePCRecord(int frompos, int topos);
 	virtual void movePalmRecord(int frompos, int topos);
 	virtual bool preSyncAction(DBSyncInfo*dbinfo);
+	virtual bool exec();
 
 
 protected slots:
@@ -82,8 +83,8 @@ protected slots:
 	virtual void syncNextRecord();
 	virtual void cleanup();
 	virtual void cleanupDB();
-	virtual void exec();
-	
+
+
 protected:
 	KCal::Calendar *fCalendar;
 	QString fCalendarFile;
@@ -104,6 +105,9 @@ private:
 
 
 // $Log$
+// Revision 1.2  2002/07/05 00:15:22  kainhofe
+// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
+//
 // Revision 1.1  2002/04/07 12:09:43  kainhofe
 // Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
 //

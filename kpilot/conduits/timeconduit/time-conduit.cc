@@ -69,15 +69,14 @@ void TimeConduit::readConfig()
 }
 
 
-/* virtual */ void TimeConduit::exec()
+/* virtual */ bool TimeConduit::exec()
 {
 	FUNCTIONSETUP;
 
 	if (!fConfig)
 	{
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		emit syncDone(this);
-		return;
+		return false;
 	}
 
 	readConfig();
@@ -97,10 +96,10 @@ void TimeConduit::readConfig()
 		default:
 			emit logError(i18n("Unknown setting for time synchronization."));
 			kdWarning() << k_funcinfo << ": unknown sync direction "<<fDirection<<endl;
-			emit syncDone(this);
-			return;
+			return false;
 	}
 	emit syncDone(this);
+	return true;
 }
 
 void TimeConduit::syncPalmToPC()
@@ -140,6 +139,9 @@ void TimeConduit::syncPCToPalm()
 }
 
 // $Log$
+// Revision 1.7  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.6  2002/08/12 09:48:11  kainhofe
 // better log message
 //

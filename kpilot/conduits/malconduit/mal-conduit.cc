@@ -166,15 +166,14 @@ bool MALConduit::skip()
 
 
 
-/* virtual */ void MALConduit::exec()
+/* virtual */ bool MALConduit::exec()
 {
 	FUNCTIONSETUP;
 
 	if (!fConfig)
 	{
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		emit syncDone(this);
-		return;
+		return false;
 	}
 
 	readConfig();
@@ -184,8 +183,7 @@ bool MALConduit::skip()
 	if (skip()) 
 	{
 		emit logMessage(i18n("Skipping MAL sync, because last synchronization was not long enough ago."));
-		emit syncDone(this);
-		return;
+		return false;
 	}
 	
 	// Set all proxy settings
@@ -224,14 +222,14 @@ bool MALConduit::skip()
 	if (!pInfo) {
 		kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
 		emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
-		emit syncDone(this);
-		return;
+		return false;
 	}
 	malsync( pilotSocket(), pInfo);
 	syncInfoFree(pInfo);
 
 	saveConfig();
 	emit syncDone(this);
+	return true;
 }
 
 void MALConduit::printLogMessage(QString msg)
@@ -242,6 +240,9 @@ void MALConduit::printLogMessage(QString msg)
 
 
 // $Log$
+// Revision 1.3  2002/08/23 22:33:48  kainhofe
+// Added a license exception to be able to legally link to libmal
+//
 // Revision 1.2  2002/08/17 22:31:20  mhunter
 // CVS_SILENT Corrected typographical errors
 //

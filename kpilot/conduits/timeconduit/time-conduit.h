@@ -30,9 +30,9 @@ public:
 		const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~TimeConduit();
+	virtual bool exec();
 
 public slots:
-	virtual void exec();
 	void syncPCToPalm();
 	void syncPalmToPC();
 
@@ -46,6 +46,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2002/07/25 21:15:20  kainhofe
+// Added a conduit to sync the PC time to the handheld
+//
 // Revision 1.21  2002/07/23 00:52:02  kainhofe
 // Reorder the resolution methods
 //

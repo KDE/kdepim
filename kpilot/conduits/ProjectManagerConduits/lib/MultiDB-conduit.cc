@@ -219,12 +219,12 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 
 
 
-/* virtual */ void MultiDBConduit::exec() {
+/* virtual */ bool MultiDBConduit::exec() {
 	FUNCTIONSETUP;
 
 	if (!fConfig) {
 		kdWarning() << k_funcinfo <<": No configuration set for conduit. SKIPPING..."<<endl;
-		return;
+		return false;
 	}
 
 	KConfigGroupSaver cfgs(fConfig, conduitSettingsGroup());
@@ -276,10 +276,13 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 	// cardno and dbnr will contain the nr of cards and the nr of dbs on the last card
 	fConfig->writeEntry(settingsFileList(), strl);
 	emit syncDone(this);*/
-	return;
+	return true;
 }
 
 // $Log$
+// Revision 1.4  2002/07/05 00:15:22  kainhofe
+// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
+//
 // Revision 1.3  2002/04/08 12:56:43  mhunter
 // Corrected typographical errors
 //

@@ -64,9 +64,9 @@ public:
 		const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~AbbrowserConduit();
+	virtual bool exec();
 
 public slots:
-	virtual void exec();
    void syncDeletedRecord();
    void syncPCRecToPalm();
    void syncPalmRecToPC();
@@ -238,6 +238,9 @@ private:
 
 
 // $Log$
+// Revision 1.24  2002/08/16 18:54:06  kainhofe
+// Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
+//
 // Revision 1.23  2002/08/15 21:48:59  kainhofe
 // removed deprecated files (ContactEntry class and DCOP things)
 //

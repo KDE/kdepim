@@ -1961,9 +1961,7 @@ int PopMailConduit::doUnixStyle()
 
 	if (!fDatabase || !fDatabase->isDBOpen())
 	{
-		kdWarning() << k_funcinfo
-			<< ": Couldn't open database MailDB on Pilot"
-			<< endl;
+		emit logError(i18n("Couldn't open mail database on handheld"));
 		KPILOT_DELETE(fDatabase);
 		return false;
 	}
@@ -1988,6 +1986,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.42  2002/08/23 22:03:20  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.41  2002/07/20 22:15:56  mhunter
 // Corrected typographical errors
 //

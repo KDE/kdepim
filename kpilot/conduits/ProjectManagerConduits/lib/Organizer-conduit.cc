@@ -153,7 +153,7 @@ OrganizerConduit::~OrganizerConduit() {
 	cleanup();
 }
 
-void OrganizerConduit::exec() {
+bool OrganizerConduit::exec() {
 	FUNCTIONSETUP;
 	KConfig korgcfg( locate( "config", "korganizerrc" ) );
 	QString tz;
@@ -440,6 +440,9 @@ void OrganizerConduit::updateLocalEntry(PilotRecord *rec, bool force) {
 
 
 // $Log$
+// Revision 1.3  2002/07/05 00:15:22  kainhofe
+// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
+//
 // Revision 1.2  2002/04/07 20:19:48  cschumac
 // Compile fixes.
 //

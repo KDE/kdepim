@@ -409,7 +409,8 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 	if (!fConfig)
 	{
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
-		goto error;
+		emit logError(i18n("Could not load configuration of the addressbook conduit."));
+		return false;
 	}
 
 	_prepare();
@@ -422,9 +423,17 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(AbbrowserConduitFactory::fullSyncOnPCChange(), true));
 		
 	fFirstTime=false;
-	if (!openDatabases("AddressDB", &fFirstTime) ) goto error;
+	if (!openDatabases("AddressDB", &fFirstTime) ) 
+	{
+		emit logError(i18n("Couldn't open the addressbook databases on the handheld."));
+		return false;
+	}
 	_setAppInfo();
-	if (!_loadAddressBook() ) goto error;
+	if (!_loadAddressBook() )
+	{
+		emit logError(i18n("Couldn't open the addressbook."));
+		return false;
+	}
 	fFirstTime |= (aBook->begin() == aBook->end() );
 //	recordIds=fDatabase->idList();
 	
@@ -441,11 +450,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 	
 	QTimer::singleShot(0, this, SLOT(syncPalmRecToPC()));
 	// TODO: maybe start a second timer to kill the sync after, say, 5 Minutes (e.g. non existent slot called...)
-	return;
-	
-error:
-	emit logError(i18n("Couldn't open the addressbook databases."));
-	emit syncDone(this);
+	return true;
 }
 
 
@@ -1837,6 +1842,9 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 // $Log$
+// Revision 1.45  2002/08/20 20:29:42  kainhofe
+// The conduit now seems to work in most cases
+//
 // Revision 1.44  2002/08/18 23:51:20  kainhofe
 // removed some debug messages
 //
