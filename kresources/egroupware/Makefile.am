@@ -12,11 +12,11 @@ noinst_HEADERS = kabc_resourcexmlrpcconfig.h kcal_resourcexmlrpcconfig.h \
 lib_LTLIBRARIES = libkabc_xmlrpc.la libkcal_xmlrpc.la libknotes_xmlrpc.la
 libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc -lkdepim
+libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc $(top_builddir)/libkdepim/libkdepim.la
 
 libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdepim
+libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
 
 libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libknotes_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
