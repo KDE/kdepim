@@ -174,9 +174,12 @@ CheckUser::~CheckUser()
 					arg(pilotUserName).
 					arg(guiUserName);
 
-				int r = KMessageBox::questionYesNoCancel(fParent, q,
-					i18n("User Mismatch"), i18n("Use KPilot Name"),
-					i18n("Use Handheld Name")  /* ,"askUserDiff" */);
+				int r = questionYesNoCancel(q,
+					i18n("User Mismatch"),
+					QString::null,
+					20,
+					i18n("Use KPilot Name"),
+					i18n("Use Handheld Name"));
 				switch (r)
 				{
 					case KMessageBox::Yes:
