@@ -43,6 +43,7 @@ debian/tmp/usr/share/apps/kmail/tips
 debian/tmp/usr/share/doc/kde/HTML/en/kmail/
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/22x22/apps/kmail.png
+debian/tmp/usr/share/icons/crystalsvg/22x22/apps/kmaillight.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kmail.png

@@ -1,3 +1,4 @@
+debian/tmp/etc/kde3/khotnewstuffrc
 debian/tmp/usr/bin/ical2vcal
 debian/tmp/usr/bin/konsolekalendar
 debian/tmp/usr/bin/korgac
