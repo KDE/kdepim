@@ -86,7 +86,7 @@ void TodoConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int TodoConduitPrivate::updateIncidences()
 {
-#if KDE_VERSION >= 310
+#if KDE_VERSION >= 305
 	fAllTodos = fCalendar->todos();
 #else
 	fAllTodos = fCalendar->getTodoList();
@@ -424,6 +424,9 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 
 
 // $Log$
+// Revision 1.21  2002/08/20 20:49:11  adridg
+// Make sure the HEAD code compiles under KDE 3.0.x too, wrt. libkcal changes
+//
 // Revision 1.20  2002/08/15 10:47:56  kainhofe
 // Finished categories syncing for the todo conduit
 //
