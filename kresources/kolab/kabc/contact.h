@@ -35,6 +35,8 @@
 
 #include <kolabbase.h>
 
+namespace Kolab {
+
 class Contact : public KolabBase {
 public:
   struct PhoneNumber {
@@ -191,5 +193,6 @@ private:
   QString mPreferredAddress;
 };
 
+}
 
-#endif KOLABCONTACT_H
+#endif // KOLABCONTACT_H
