@@ -19,7 +19,7 @@
 #ifndef KCAL_KCALEXPORT_H
 #define KCAL_KCALEXPORT_H
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 #define LIBKCAL_EXPORT KDE_EXPORT
 
