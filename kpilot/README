@@ -1,5 +1,5 @@
-KPILOT 4.3.2 by Dan Pilone
-==========================
+KPILOT 4.3.3 by Dan Pilone / Adriaan de Groot
+================================================
 	Additional work by Robert Ambrose,
 	Preston Brown, Adriaan de Groot,
 	Heiko Purnhagen, Jorg Habenicht,
@@ -25,7 +25,7 @@ have to configure that package, not KPilot. KPilot does compile and
 install on its own though, once kdepim is configured.
 
 	You NEED pilot-link to compile or install KPilot; KPilot is
-currently tested using version 0.9.5 of pilot-link.
+currently tested using version 0.10.1 of pilot-link.
 
 
 
@@ -44,7 +44,7 @@ ie:  Should your Pilot burst into flames while trying to sync a new game..
 sorry.
 	That being said, I _really_ want comments regarding the software
 as well as suggestions.  Bug fixes are even snazzier and code
-contributions are welcome.  :)  Send mail to kpilot-list@slac.com.
+contributions are welcome.  :)  Send mail to kde-pim@kde.org .
 
 	Dan Pilone
 	pilone@slac.com
@@ -53,4 +53,4 @@ contributions are welcome.  :)  Send mail to kpilot-list@slac.com.
 
 	Adriaan de Groot
 	adridg@cs.kun.nl
-	May 23, 2002
+	August 19, 2002

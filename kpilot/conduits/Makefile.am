@@ -15,6 +15,5 @@ SUBDIRS = knotes \
 	expense \
 	null \
 	vcalconduit \
-	popmail \
-	timeconduit
+	popmail 
 

@@ -2,6 +2,9 @@ KPilot news. This file lists only major releases &c.
 For more detailed information and musings, see the
 ChangeLog or the README files.
 
+* August 19, 2002: License change for the lib part of KPilot to
+  LGPL and an exception made in the COPYING file for libmal to
+  allow the AvantGo (tm) conduit to use that library.
 * May 23, 2002: KPilot 4.3.2 seems ok now. It's too late for
   KDE 3.0.1. It should still work for KDE 2.2.2.
 * January 20, 2002: KPilot 4.3.0b still isn't ready for release.
