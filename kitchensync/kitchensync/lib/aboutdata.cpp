@@ -52,7 +52,7 @@ AboutData::AboutData()
   addCredit( "Bipolar and the rest of the Opie TEAM!",
              I18N_NOOP("Testing, testing, testing" ),
              "opie@handhelds.org" );
-  addCredit( "Philib Bundell",
+  addCredit( "Philib Blundell",
              I18N_NOOP("For being such a nice guy." ),
              "pb@gnu.org" );
 }
