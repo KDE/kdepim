@@ -55,6 +55,7 @@ using Syntaxhighlighter::SpellChecker;
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <qpopupmenu.h>
+#include <spellingfilter.h>
 
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
@@ -62,6 +63,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
 {
+    mSpellingFilter = 0;
   d_elAttList.setAutoDelete(true);
 
   // activate dnd of attachments...
@@ -1116,6 +1118,8 @@ void KNComposer::slotSpellcheck()
           v_iew->e_dit, SLOT(misspelling (const QString &, const QStringList &, unsigned int)));
   connect(s_pellChecker, SIGNAL(corrected (const QString &, const QString &, unsigned int)),
           v_iew->e_dit, SLOT(corrected (const QString &, const QString &, unsigned int)));
+    connect (s_pellChecker, SIGNAL (done(const QString &)),
+          this, SLOT (slotSpellResult (const QString&)));
 }
 
 void KNComposer::slotUpdateStatusBar()
@@ -1321,7 +1325,20 @@ void KNComposer::slotSpellStarted( KSpell *)
 {
   v_iew->e_dit->spellcheck_start();
   s_pellChecker->setProgressResolution(2);
-  s_pellChecker->check(v_iew->e_dit->text());
+
+  // read the quote indicator from the preferences
+  KConfig *config=KGlobal::config();
+  KConfigGroupSaver saver(config, "READNEWS");
+  QString quotePrefix;
+  quotePrefix = config->readEntry("quoteCharacters",">");
+//todo fixme
+//quotePrefix = mComposer->msg()->formatString(quotePrefix);
+
+  kdDebug() << "spelling: new SpellingFilter with prefix=\"" << quotePrefix << "\"" << endl;
+  mSpellingFilter = new SpellingFilter(v_iew->e_dit->text(), quotePrefix, SpellingFilter::FilterUrls,
+    SpellingFilter::FilterEmailAddresses);
+
+  s_pellChecker->check(mSpellingFilter->filteredText());
 }
 
 
@@ -1336,6 +1353,8 @@ void KNComposer::slotSpellDone(const QString &newtext)
 
   delete s_pellChecker;
   s_pellChecker=0;
+  delete mSpellingFilter;
+  mSpellingFilter = 0;
 }
 
 
@@ -1355,6 +1374,24 @@ void KNComposer::slotSpellFinished()
     v_iew->e_dit->spellcheck_stop();
     KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }
+}
+#include <kspelldlg.h>
+//-----------------------------------------------------------------------------
+void KNComposer::slotSpellResult(const QString &)
+{
+  v_iew->e_dit->spellcheck_stop();
+
+  int dlgResult = s_pellChecker->dlgResult();
+  if ( dlgResult == KS_CANCEL )
+  {
+    kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
+    v_iew->e_dit->setText(mSpellingFilter->originalText());
+    //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
+  }
+  s_pellChecker->cleanUp();
+  DictSpellChecker::dictionaryChanged();
+
+  //emit v_iew->e_dit->spellcheck_done( dlgResult );
 }
 
 

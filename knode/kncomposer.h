@@ -32,6 +32,7 @@ class KToggleAction;
 
 class KNLocalArticle;
 class KNAttachment;
+class SpellingFilter;
 
 namespace Syntaxhighlighter {
   class DictSpellChecker;
@@ -98,6 +99,7 @@ class KNComposer : public KMainWindow  {
     KProcess *e_xternalEditor;
     KTempFile *e_ditorTempfile;
     KSpell *s_pellChecker;
+    SpellingFilter* mSpellingFilter;
 
     //Attachments
     QPtrList<KNAttachment> d_elAttList;
@@ -134,6 +136,8 @@ class KNComposer : public KMainWindow  {
     void slotUndoRewrap();
     void slotExternalEditor();
     void slotSpellcheck();
+    void slotSpellResult(const QString &);
+
     void slotUpdateStatusBar();
     void slotUpdateCursorPos();
     void slotConfKeys();
