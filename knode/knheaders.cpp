@@ -985,7 +985,7 @@ void KNHeaders::CTEncoding::from7BitString(const QCString &s)
   c_te=CE7Bit;
   for(int i=0; encTable[i].s!=0; i++)
     if(strcasecmp(s.data(), encTable[i].s)==0) {
-      (int)c_te=encTable[i].e;
+      c_te=(contentEncoding)encTable[i].e;
       break;
     }
   d_ecoded=( c_te==CE7Bit || c_te==CE8Bit );

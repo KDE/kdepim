@@ -475,10 +475,25 @@ class KNAttachment {
           h_asChanged,
           f_b64;
 };		
-		
-		
-				
-		
 
+// some compilers (for instance Compaq C++) need template inline functions
+// here rather than in the *.cpp file
+
+template <class T> T* KNMimeContent::getHeaderInstance(T *ptr, bool create)
+{
+  T dummy; //needed to access virtual member T::type()
+
+  ptr=static_cast <T*> (getHeaderByType(dummy.type()));
+  if(!ptr && create) { //no such header found => create it
+    ptr=new T();
+    if(!(h_eaders)) {
+      h_eaders=new KNHeaders::List();
+      h_eaders->setAutoDelete(true);
+    }
+    h_eaders->append(ptr);
+  }
+
+  return ptr;
+}
 
 #endif //KNMIME_H

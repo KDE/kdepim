@@ -1252,24 +1252,6 @@ bool KNMimeContent::decodeText()
 }
 
 
-template <class T> T* KNMimeContent::getHeaderInstance(T *ptr, bool create)
-{
-  T dummy; //needed to access virtual member T::type()
-
-  ptr=static_cast <T*> (getHeaderByType(dummy.type()));
-  if(!ptr && create) { //no such header found => create it
-    ptr=new T();
-    if(!(h_eaders)) {
-      h_eaders=new KNHeaders::List();
-      h_eaders->setAutoDelete(true);
-    }
-    h_eaders->append(ptr);
-  }
-
-  return ptr;
-}
-
-
 //==========================================================================================
 
 
