@@ -653,19 +653,19 @@ int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
 	{
 		// TODO: This is messed up!!!
 		QString query = i18n("The following item was modified "
-			"both on the Pilot and on your PC:\nPC entry:\n\t");
+			"both on the Handheld and on your PC:\nPC entry:\n\t");
 		query += e->summary();
-		query += i18n("\nPilot entry:\n\t");
+		query += i18n("\nHandheld entry:\n\t");
 		query += getTitle(de);
-		query += i18n("\n\nShould the Pilot entry overwrite the "
-			"PC entry? If you select \"No\", the PC entry will "
-			"overwrite the Pilot entry.");
+		query += i18n("\n\nWhich entry do you want to keep? It will "
+			"overwrite the other entry.");
 
 		return KMessageBox::No == questionYesNo(
 			query,
 			i18n("Conflicting Entries"),
 			QString::null,
-			0 /* Never timeout */);
+			0 /* Never timeout */,
+			i18n("Handheld"), i18n("PC"));
 	}
 	return getConflictResolution();
 }
