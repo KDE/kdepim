@@ -43,6 +43,8 @@ namespace KCal {
 */
   class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer, virtual public DCOPObject
 {
+  K_DCOP
+
   k_dcop:
     virtual void addIncidence( const QString& type, const QString& ical );
     virtual void deleteIncidence( const QString& type, const QString& uid );
@@ -121,6 +123,10 @@ namespace KCal {
     QPtrList<Todo> todos( const QDate &date );
     /** Add a Journal entry to calendar */
     virtual void addJournal(Journal *);
+    /**
+      Remove a journal entry from the journal.
+    */
+    void deleteJournal( Journal * );
     /** Return Journal for given date */
     virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */
@@ -148,7 +154,7 @@ namespace KCal {
   protected:
 
     /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i ) { update( i ); }
+    virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
     /** Append alarms of incidence in interval to list of alarms. */
 
   private:
@@ -161,6 +167,7 @@ namespace KCal {
     ICalFormat mFormat;
     CalendarLocal mCalendar;
     DCOPClient* mDCOPClient;
+    bool mSilent;
 };  
 
 }
