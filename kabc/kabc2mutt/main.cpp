@@ -30,6 +30,7 @@
 #include <stdio.h>
 static const char version[] = "0.1";
 static const char appName[] = "kabc2mutt";
+static const char programName[] = I18N_NOOP("kabc2mutt");
 static const char description[] = I18N_NOOP("kabc - mutt converter");
 
 static KCmdLineOptions k2moptions[] =
@@ -42,7 +43,7 @@ static KCmdLineOptions k2moptions[] =
 int main( int argc, char **argv )
 {
     KApplication::disableAutoDcopRegistration();
-    KCmdLineArgs::init( argc, argv, appName, description, version );
+    KCmdLineArgs::init( argc, argv, appName, programName, description, version );
     KCmdLineArgs::addCmdLineOptions( k2moptions );
 
     KApplication app( false, false );

@@ -30,7 +30,7 @@
 
 #include <kaccelmanager.h>
 #include <kdebug.h>
-#include <klineeditdlg.h>
+#include <kinputdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -187,13 +187,13 @@ void DistributionListWidget::selectionContactViewChanged()
 
 void DistributionListWidget::createList()
 {
-  KLineEditDlg dlg( i18n( "Please enter name:" ), QString::null, this );
-  dlg.setCaption( i18n( "New Distribution List" ) );
-  if ( !dlg.exec() )
-    return;
+  QString newName = KInputDialog::getText( i18n( "New Distribution List" ),
+                                           i18n( "Please enter name:" ),
+                                           QString::null, 0, this );
 
-  QString newName = dlg.text();
-  if ( mManager->listNames().contains( newName ) != 0 ) {
+  if ( newName.isEmpty() ) return;
+
+  if ( mManager->listNames().contains( newName ) ) {
     KMessageBox::sorry( this, i18n( "The name already exists" ) );
     return;
   }
@@ -212,13 +212,13 @@ void DistributionListWidget::editList()
 {
   QString oldName = mNameCombo->currentText();
 
-  KLineEditDlg dlg( i18n( "Please change name:" ), oldName, this );
-  dlg.setCaption( i18n( "Distribution List" ) );
-  if ( !dlg.exec() )
-    return;
+  QString newName = KInputDialog::getText( i18n( "New Distribution List" ),
+                                           i18n( "Please enter name:" ),
+                                           oldName, 0, this );
 
-  QString newName = dlg.text();
-  if (  mManager->listNames().contains( newName ) != 0 ) {
+  if ( newName.isEmpty() ) return;
+
+  if ( mManager->listNames().contains( newName ) ) {
     KMessageBox::sorry( this, i18n( "The name already exists" ) );
     return;
   }
