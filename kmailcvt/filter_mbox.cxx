@@ -86,6 +86,7 @@ void FilterMBox::import(FilterInfo *info)
 	while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
 	  tmp.file()->writeBlock( input, l );
 	}
+	tmp.close();
 	/* comment by Danny Kukawka:
 	* addMessage() == old function, need more time and check for duplicates
 	* addMessage_fastImport == new function, faster and no check for duplicates
