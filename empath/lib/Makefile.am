@@ -36,6 +36,7 @@ EmpathMailboxList.cpp \
 EmpathMailboxMaildir.cpp \
 EmpathMaildir.cpp \
 EmpathMailboxPOP3.cpp \
+IMAPClient.cpp \
 EmpathMailboxIMAP4.cpp \
 EmpathMatcher.cpp \
 EmpathQuotedText.cpp \

@@ -26,9 +26,14 @@
 
 // Qt includes
 #include <qstring.h>
+#include <qlist.h>
 
 // Local includes
 #include "EmpathMailbox.h"
+#include "EmpathIndex.h"
+
+class QSocketDevice;
+class IMAPClient;
 
 /**
  * @short IMAP4 mailbox
@@ -98,6 +103,11 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 
     private:
 
+        EmpathIndexRecord * _createIndexRecordFromFetchReply(const QStringList &);
+
+        QSocketDevice       * socket_;
+        IMAPClient          * client_;
+        QList<EmpathIndex>  indexList_;
         QString             serverAddress_;
         Q_UINT32            serverPort_;
         QString             username_;

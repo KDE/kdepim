@@ -46,7 +46,7 @@ EmpathJobScheduler::newReadIndexJob(
     empathDebug("Creating new EmpathReadIndexJob for url " + url.asString());
     EmpathReadIndexJob * j = new EmpathReadIndexJob(handler, i, url);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -61,7 +61,7 @@ EmpathJobScheduler::newWriteJob(
 {
     EmpathWriteJob * j = new EmpathWriteJob(handler, i, message, url);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -74,7 +74,7 @@ EmpathJobScheduler::newRetrieveJob(
 {
     EmpathRetrieveJob * j = new EmpathRetrieveJob(handler, i, url);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -88,7 +88,7 @@ EmpathJobScheduler::newCopyJob(
 {
     EmpathCopyJob * j = new EmpathCopyJob(handler, i, source, destination);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -102,7 +102,7 @@ EmpathJobScheduler::newMoveJob(
 {
     EmpathMoveJob * j = new EmpathMoveJob(handler, i, source, destination);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -115,7 +115,7 @@ EmpathJobScheduler::newRemoveJob(
 {
     EmpathRemoveJob * j = new EmpathRemoveJob(handler, i, url);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -129,7 +129,7 @@ EmpathJobScheduler::newRemoveJob(
 {
     EmpathRemoveJob * j = new EmpathRemoveJob(handler, i, folder, idList);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -143,7 +143,7 @@ EmpathJobScheduler::newMarkJob(
 {
     EmpathMarkJob * j = new EmpathMarkJob(handler, i, url, status);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -158,7 +158,7 @@ EmpathJobScheduler::newMarkJob(
 {
     EmpathMarkJob * j = new EmpathMarkJob(handler, i, folder, idList, status);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -171,7 +171,7 @@ EmpathJobScheduler::newCreateFolderJob(
 {
     EmpathCreateFolderJob * j = new EmpathCreateFolderJob(handler, i, url);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 
@@ -184,7 +184,7 @@ EmpathJobScheduler::newRemoveFolderJob(
 {
     EmpathRemoveFolderJob * j = new EmpathRemoveFolderJob(handler, i, url);
     int id = j->id();
-    j->run();
+    j->start();
     return id;
 }
 

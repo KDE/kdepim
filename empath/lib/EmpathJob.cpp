@@ -243,8 +243,12 @@ void EmpathReadIndexJob::run()
 
     if (0 != m) {
         index_ = m->index(folder_);
-        setSuccess(true);
-        empathDebug("Got index from my mailbox.");
+        if (0 != index_) {
+            setSuccess(true);
+            empathDebug("Got index from my mailbox.");
+        } else {
+            empathDebug("Couldn't get index from my mailbox.");
+        }
     } else {
         empathDebug("Couldn't find my mailbox !");
     }

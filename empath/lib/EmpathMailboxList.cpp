@@ -35,7 +35,7 @@
 #include "EmpathMailbox.h"
 #include "EmpathMailboxList.h"
 //#include "EmpathMailboxPOP3.h"
-//#include "EmpathMailboxIMAP4.h"
+#include "EmpathMailboxIMAP4.h"
 #include "EmpathMailboxMaildir.h"
 #include "EmpathDefines.h"
 
@@ -101,19 +101,23 @@ EmpathMailboxList::loadConfig()
 
     for (; it != l.end() ; ++it) {
 
+        empathDebug("Looking at group " + *it);
+
         c->setGroup("Mailbox_" + *it);
 
         mailboxType =
             static_cast<EmpathMailbox::Type>(c->readUnsignedNumEntry("Type"));
 
+        empathDebug("Type == " + QString::number(mailboxType));
+
         EmpathMailbox * m = createNew(mailboxType);
 
-        m->setName(*it);
-
-        if (m == 0) {
+        if (0 == m) {
             empathDebug("Couldn't create mailbox !");
             continue;
         }
+
+        m->setName(*it);
 
         m->init();
     }
@@ -180,11 +184,11 @@ EmpathMailboxList::createNew(EmpathMailbox::Type t)
         case EmpathMailbox::POP3:
             m = new EmpathMailboxPOP3(uniqueName());
             break;
+#endif
 
         case EmpathMailbox::IMAP4:
             m = new EmpathMailboxIMAP4(uniqueName());
             break;
-#endif
 
         default:
             break;
