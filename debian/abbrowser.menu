@@ -1,6 +1,7 @@
 ?package(abbrowser):\
 	needs=x11\
 	section=Apps/Tools\
+	hints="KDE"\
 	title="abbrowser"\
 	command=abbrowser
 

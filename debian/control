@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: automake, libtool, kdelibs3-dev (>= 4:2.0-final-0), debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, docbook-stylesheets
+Build-Depends: automake, libtool, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, docbook-stylesheets
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
@@ -9,7 +9,7 @@ Package: task-kdepim
 Architecture: all
 Section: x11
 Replaces: kdepim, kdepim-common
-Depends: korganizer, abbrowser
+Depends: korganizer, abbrowser, kdebase-libs, kdelibs3
 Suggests: kdebase
 Description: Personal Information Management for KDE (common files)
  Personal Information Management (PIM) for KDE
@@ -21,7 +21,7 @@ Package: korganizer
 Architecture: any
 Section: x11
 Replaces: kdepim, kdepim-common
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, kdebase-libs
 Suggests: kdebase, abbrowser
 Conflicts: kdepim
 Description: Personal organizer based on QT and KDE 
@@ -48,7 +48,7 @@ Package: abbrowser
 Architecture: any
 Section: utils
 Replaces: kdepim, kdepim-common
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, kdebase-libs
 Suggests: kdebase, korganizer
 Conflicts: kdepim
 Description: Address book reader
