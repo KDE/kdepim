@@ -703,7 +703,7 @@ QString Memofiles::filename(PilotMemo * memo)
 		}
 		// safety net. we can't save a 
 		// filesystem separator as part of a filename, now can we?
-		filename.replace('/', CSL1("_"));
+		filename.replace('/', CSL1("-"));
 	}
 
 	QString category = _categories[memo->getCat()];
