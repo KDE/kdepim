@@ -230,7 +230,7 @@ menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</
  I can only see the source.</para></question>
  <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer HTML to plain 
  text</guimenuitem></menuchoice>. For security reasons you should only do so for
- mails from trusted sources.
+ mails from trusted sources. Note that plugins (like Macromedia Flash) will not be displayed.
  </para></answer>
 </qandaentry>
 
