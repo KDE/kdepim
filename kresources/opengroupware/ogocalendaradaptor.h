@@ -49,7 +49,7 @@ class OGoCalendarAdaptor : public CalendarAdaptor
 
     bool itemsForDownloadFromList( KIO::Job *job,
       QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
-    void updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
+    void uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
     KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
 };

@@ -70,9 +70,9 @@ bool OGoCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &c
   return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
 }
 
-void OGoCalendarAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
+void OGoCalendarAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
 {
-  OGoGlobals::updateFingerprintId( this, trfjob, item );
+  OGoGlobals::uploadFinished( this, trfjob, item );
 //  idMapper()->setFingerprint( item->uid(), "" );
   Incidence *inc = resource()->incidence( item->uid() );
   if ( inc ) {

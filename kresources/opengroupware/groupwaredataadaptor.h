@@ -211,7 +211,7 @@ class GroupwareDataAdaptor
     virtual KIO::TransferJob *createUploadJob( const KURL &url, GroupwareUploadItem *item );
     /** Create the job to add the item to the server (at the given baseURL) */
     virtual KIO::TransferJob *createUploadNewJob( const KURL &url, GroupwareUploadItem *item );
-    virtual void updateFingerprintId( KIO::TransferJob *trfjob, GroupwareUploadItem *item ) = 0;
+    virtual void uploadFinished( KIO::TransferJob *trfjob, GroupwareUploadItem *item ) = 0;
 
   private:
     FolderLister *mFolderLister;

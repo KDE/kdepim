@@ -146,7 +146,7 @@ void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
   if ( job->error() ) {
     error( job->errorString() );
   } else {
-    adaptor()->updateFingerprintId( trfjob, mChangedItems.front() );
+    adaptor()->uploadFinished( trfjob, mChangedItems.front() );
     delete mChangedItems.front();
     mChangedItems.pop_front();
   }
@@ -205,7 +205,7 @@ kdDebug(7000) << "   error!!!, string="<<job->errorString()<<endl;
   } else {
 //     TODO: Don't update the etag, but instead let the download job download that new
 //     item. Otherwise we won't know the url of the item!
-    adaptor()->updateFingerprintId( trfjob, mAddedItems.front() );
+    adaptor()->uploadFinished( trfjob, mAddedItems.front() );
     delete mAddedItems.front();
     mAddedItems.pop_front();
   }

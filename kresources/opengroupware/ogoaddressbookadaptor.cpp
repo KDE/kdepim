@@ -90,13 +90,14 @@ bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList
   return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
 }
 
-void OGoAddressBookAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
+void OGoAddressBookAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
 {
-  OGoGlobals::updateFingerprintId( this, trfjob, item );
+//   OGoGlobals::uploadFinished( this, trfjob, item );
   Addressee addr( resource()->findByUid( item->uid() ) );
   if ( !addr.isEmpty() ) {
-    addr.insertCustom( identifier(), "storagelocation",
-               idMapper()->remoteId( item->uid() ) );
+    resource()->removeAddressee( addr );
+/*    addr.insertCustom( identifier(), "storagelocation",
+               idMapper()->remoteId( item->uid() ) );*/
   }
 }
 
