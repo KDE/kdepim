@@ -1,6 +1,6 @@
 ## Makefile.am for kmobile
 
-SUBDIRS = . kioslave devices
+SUBDIRS = . devices		# kioslave
 
 bin_PROGRAMS = kmobile 
 
@@ -21,7 +21,7 @@ noinst_HEADERS = kmobile.h kmobileview.h kmobileitem.h pref.h
 # the low-level devices driver library
 libkmobiledevice_la_SOURCES = kmobiledevice.cpp
 libkmobiledevice_la_LDFLAGS = $(all_libraries) -no-undefined -avoid-version
-libkmobiledevice_la_LIBADD = $(LIB_KABC) $(LIB_LOCKDEV)
+libkmobiledevice_la_LIBADD = $(LIB_KABC) $(LIB_LOCKDEV) ../libkcal/libkcal.la
 
 # the KDE application's client library to KMobile
 libkmobileclient_la_SOURCES = kmobileclient.cpp

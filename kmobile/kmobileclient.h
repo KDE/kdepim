@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Helge Deller <deller@kde.org>
+ * Copyright (C) 2003-2005 Helge Deller <deller@kde.org>
  */
 
 #ifndef _KMOBILECLIENT_H_

@@ -209,9 +209,15 @@ int KMobileDevice::numCalendarEntries()
   return 0;
 }
 
-// TODO: TBD
-//    virtual int readCalendarEntry( int index, <type> &entry );
-//    virtual int storeCalendarEntry( int index, <type> &entry );
+int KMobileDevice::readCalendarEntry( int, KCal::Event & )
+{
+  return KIO::ERR_UNSUPPORTED_ACTION;
+}
+
+int KMobileDevice::storeCalendarEntry( int, const KCal::Event & )
+{
+  return KIO::ERR_UNSUPPORTED_ACTION;
+}
 
 /*
  * Notes support

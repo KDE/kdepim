@@ -33,6 +33,8 @@
 #include <kio/global.h>
 #include <kio/authinfo.h>
 
+#include <libkcal/event.h>
+
 class KConfig;
 
 #define KMOBILE_MIMETYPE_DEVICE			"kdedevice/mobiledevice"
@@ -182,10 +184,9 @@ public:
     /*
      * Calendar support
      */
-    // TODO: TBD
     virtual int numCalendarEntries();
-//    virtual int readCalendarEntry( int index, <type> &entry );
-//    virtual int storeCalendarEntry( int index, <type> &entry );
+    virtual int readCalendarEntry( int index, KCal::Event &entry );
+    virtual int storeCalendarEntry( int index, const KCal::Event &entry );
 
     /*
      * Notes support

@@ -1,5 +1,5 @@
 /*  This file is part of the KDE KMobile library
-    Copyright (C) 2003 Helge Deller <deller@kde.org>
+    Copyright (C) 2003-2005 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
