@@ -176,6 +176,9 @@ int SyncAction::questionYesNo(const QString & text,
 		}
 	}
 
+#if !KDE_IS_VERSION(3,3,0)
+	return KMessageBox::Cancel;
+#else
 	KDialogBase *dialog =
 		new KDialogBase(caption.isNull()? i18n("Question") : caption,
 		KDialogBase::Yes | KDialogBase::No,
@@ -191,7 +194,6 @@ int SyncAction::questionYesNo(const QString & text,
 		startTickle(timeout);
 	}
 
-#if KDE_IS_VERSION(3,3,0)
 	r = (KMessageBox::ButtonCode) KMessageBox::createKMessageBox(dialog,
 		QMessageBox::Question,
 		text,
@@ -199,11 +201,7 @@ int SyncAction::questionYesNo(const QString & text,
 		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
 		&checkboxReturn,
 		0);
-#else
-	r = KDialogBase::Cancel;
-#endif
 
-	KPILOT_DELETE(dialog);
 
 	switch(r)
 	{
@@ -212,7 +210,9 @@ int SyncAction::questionYesNo(const QString & text,
 	case KDialogBase::Cancel : result=KMessageBox::Cancel; break;
 	default : break;
 	}
+
 	stopTickle();
+	KPILOT_DELETE(dialog);
 
 	if (!key.isEmpty() && checkboxReturn)
 	{
@@ -220,6 +220,7 @@ int SyncAction::questionYesNo(const QString & text,
 	}
 
 	return result;
+#endif
 }
 
 
