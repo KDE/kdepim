@@ -96,8 +96,8 @@ void KNServerInfo::saveConf(KConfig *conf)
       Wallet *wallet = KNServerInfo::wallet();
       if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
           KMessageBox::information(0, i18n("KWallet is not running. It is strongly recommended to use "
-                                           "KWallet for managing your passwords"),
-                                   i18n("KWallet is Not Running."), "KWalletWarning" );
+                                           "KWallet for managing your passwords."),
+                                   i18n("KWallet is Not Running"), "KWalletWarning" );
           conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
       }
       p_assDirty = false;

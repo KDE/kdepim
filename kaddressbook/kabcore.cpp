@@ -873,7 +873,7 @@ void KABCore::openLDAPDialog()
   if ( !KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
     KMessageBox::error( mWidget, i18n( "Your KDE installation is missing LDAP "
                                        "support, please ask your administrator or distributor for more information." ),
-                        i18n( "No LDAP IO slave available" ) );
+                        i18n( "No LDAP IO Slave Available" ) );
     return;
   }
 
@@ -1099,7 +1099,7 @@ void KABCore::initActions()
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
-  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact in..." ), "", 0,
+  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact In..." ), "", 0,
                                       this, SLOT( storeContactIn() ),
                                       actionCollection(), "edit_store_in" );
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
