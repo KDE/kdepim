@@ -128,7 +128,7 @@ bool CharFreq::hasLeadingFrom() const {
 }
 
 CharFreq::Type CharFreq::type() const {
-#ifndef NDEBUG
+#if 0
   qDebug( "Total: %d; NUL: %d; CTL: %d;\n"
 	  "CR: %d; LF: %d; CRLF: %d;\n"
 	  "lineMin: %d; lineMax: %d;\n"
