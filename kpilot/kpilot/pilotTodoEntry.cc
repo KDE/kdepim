@@ -19,15 +19,25 @@ void PilotTodoEntry::setDescription(const char* desc)
 {
   if(fTodoInfo.description)
     free(fTodoInfo.description);
-  fTodoInfo.description = (char*)malloc(strlen(desc) + 1);
-  strcpy(fTodoInfo.description, desc);
+  if (desc)
+    {
+      fTodoInfo.description = (char*)malloc(strlen(desc) + 1);
+      strcpy(fTodoInfo.description, desc);
+    }
+  else
+    fTodoInfo.description = 0L;
 }
 
 void PilotTodoEntry::setNote(const char* note)
 {
   if(fTodoInfo.note)
     free(fTodoInfo.note);
-  fTodoInfo.note = (char*)malloc(strlen(note) + 1);
-  strcpy(fTodoInfo.note, note);
+  if (note)
+    {
+      fTodoInfo.note = (char*)malloc(strlen(note) + 1);
+      strcpy(fTodoInfo.note, note);
+    }
+  else
+    fTodoInfo.note = 0L;
 }
 

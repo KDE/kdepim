@@ -4,11 +4,11 @@
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
-// COPYING. 
+// COPYING.
 
 
 
-// REVISION HISTORY 
+// REVISION HISTORY
 //
 // 3.1b9	By Dan Pilone
 // 3.1b10	By Adriaan de Groot: comments added all over the place,
@@ -32,6 +32,7 @@
 #include <kdebug.h>
 #include <kuserprofile.h>
 #include <kservice.h>
+#include <kservicetype.h>
 
 #include "conduitSetup.moc"
 
@@ -52,14 +53,12 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
   
   label1 = new QLabel(this, "label1");
   label1->setText(i18n("Available Conduits:"));
-//   label1->setFont(QFont("times",14,QFont::Normal,(int)0));
   label1->setAlignment(AlignLeft | AlignTop);
   label1->setFrameStyle(QFrame::NoFrame | QFrame::NoFrame);
   label1->setGeometry(14,V,130,23);
 	
   label2 = new QLabel(this, "label2");
   label2->setText(i18n("Installed Conduits:"));
-//   label2->setFont(QFont("times",14,QFont::Normal,(int)0));
   label2->setAlignment(AlignLeft | AlignTop);
   label2->setFrameStyle(QFrame::NoFrame | QFrame::NoFrame);
   label2->setGeometry(261,V,130,23);
@@ -74,7 +73,6 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 //   fInstalledConduits->setBottomScrollBar(FALSE);
 //   fInstalledConduits->setScrollBar(FALSE);
   fInstalledConduits->setGeometry(261,V,182,217);
-//   fInstalledConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
 	connect(fInstalledConduits, SIGNAL(highlighted(int)), 
 		this, SLOT(slotSelectInstalled()));
 
@@ -86,13 +84,11 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 //   fAvailableConduits->setBottomScrollBar(FALSE);
 //   fAvailableConduits->setScrollBar(FALSE);
   fAvailableConduits->setGeometry(11,V,167,217);
-//   fAvailableConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
 	connect(fAvailableConduits, SIGNAL(highlighted(int)), 
 		this, SLOT(slotSelectAvailable()));
 	
   fDoneButton = new QPushButton(this, "fDoneButton");
   fDoneButton->setText(i18n("Done"));
-//   fDoneButton->setFont(QFont("times",14,QFont::Normal,(int)0));
   fDoneButton->setDefault(FALSE);
   fDoneButton->setToggleButton(FALSE);
   fDoneButton->setAutoResize(FALSE);
@@ -111,14 +107,12 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 
   // label3 = new QLabel(this, "label3");
   // label3->setText("Conduit Setup");
-  // label3->setFont(QFont("times",18,QFont::Bold,(int)1));
   // label3->setAlignment(AlignLeft | AlignTop);
   // label3->setFrameStyle(QFrame::NoFrame | QFrame::NoFrame);
   // label3->setGeometry(161,20,122,30);
 	
   fInstallConduit = new QPushButton(this, "fInstallConduit");
   fInstallConduit->setText(i18n("Install"));
-//   fInstallConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
   fInstallConduit->setDefault(FALSE);
   fInstallConduit->setToggleButton(FALSE);
   fInstallConduit->setAutoResize(FALSE);
@@ -129,7 +123,6 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 
   fRemoveConduit = new QPushButton(this, "fRemoveConduit");
   fRemoveConduit->setText(i18n("Uninstall"));
-//   fRemoveConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
   fRemoveConduit->setDefault(FALSE);
   fRemoveConduit->setToggleButton(FALSE);
   fRemoveConduit->setAutoResize(FALSE);
@@ -141,7 +134,6 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	
   fSetupConduit = new QPushButton(this, "fSetupConduit");
   fSetupConduit->setText(i18n("Setup"));
-//   fSetupConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
   fSetupConduit->setDefault(FALSE);
   fSetupConduit->setToggleButton(FALSE);
   fSetupConduit->setAutoResize(FALSE);
@@ -181,31 +173,31 @@ CConduitSetup::fillLists()
   fAvailableConduitNames.remove("..");
   // Make sure that all the ones in fInstalledConduitNames are available
   cleanupLists(&fAvailableConduitNames, &fInstalledConduitNames);
-  
+
   KServiceTypeProfile::OfferList offers = KServiceTypeProfile::offers("KPilotConduit");
-  QValueListIterator<KServiceOffer> offerIter(offers.begin());
-  while (offerIter != offers.end())
-    {
-      KService::Ptr ptr = (*offerIter).service();
-      fAvailableConduits->insertItem(ptr->name());
-      offerIter++;
-    }
+//   QValueListIterator<KServiceOffer> offerIter(offers.begin());
+//   while (offerIter != offers.end())
+//     {
+//       KService::Ptr ptr = (*offerIter).service();
+//       fAvailableConduits->insertItem(ptr->name());
+//       offerIter++;
+//     }
   
   // Now actually fill the two list boxes, just make sure that nothing gets
   // listed in both.
-//   QStringList::Iterator availList = fAvailableConduitNames.begin();
-//   while(availList != fAvailableConduitNames.end())
-//     {
-//       if(fInstalledConduitNames.contains(*availList) == 0)
-// 	fAvailableConduits->insertItem(*availList);
-//       ++availList;
-//     }
-//   QStringList::Iterator installList = fInstalledConduitNames.begin();
-//   while(installList != fInstalledConduitNames.end())
-//     {
-//       fInstalledConduits->insertItem(*installList);
-//       ++installList;
-//     }
+  QValueListIterator<KServiceOffer> availList(offers.begin());
+  while(availList != offers.end())
+    {
+      if(fInstalledConduitNames.contains((*availList).service()->name()) == 0)
+	fAvailableConduits->insertItem((*availList).service()->name());
+      ++availList;
+    }
+  QStringList::Iterator installList = fInstalledConduitNames.begin();
+  while(installList != fInstalledConduitNames.end())
+    {
+      fInstalledConduits->insertItem(*installList);
+      ++installList;
+    }
   checkButtons();
 }
 
@@ -236,18 +228,18 @@ CConduitSetup::cleanupLists(const QStringList* available, QStringList* installed
 void
 CConduitSetup::slotDone()
 {
-	FUNCTIONSETUP;
-
+  FUNCTIONSETUP;
+  
   FILE* conduit;
   char dbName[255];
   int len = 0;
   QString conduitPath = KGlobal::dirs()->resourceDirs("conduits").first();
-//   QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits";
-
+  //   QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits";
+  
   // Unfortunately we need to rewrite the whole file 
   // after a conduit setup, since we don't know what 
   // used to be in there and there's no deleteEntry() in KSimpleConfig.
-
+  
   // FIXME: Do we still need to do this?
 //   unlink(kapp->localconfigdir() + "/kpilotconduits");
   KSimpleConfig* config = new KSimpleConfig("kpilotconduits");
@@ -257,7 +249,8 @@ CConduitSetup::slotDone()
   QStringList::Iterator iter = fInstalledConduitNames.begin();
   while(iter != fInstalledConduitNames.end())
     {
-	QString currentConduit=conduitPath+'/'+ *iter;
+      KServiceType::Ptr conduit = KServiceType::serviceType(*iter);
+      QString currentConduit=conduitPath+'/'+ *iter;
 	currentConduit+=" --info";
 	if (debug_level)
 	{
@@ -270,6 +263,7 @@ CConduitSetup::slotDone()
 			<< fname << ": " << currentConduit << endl;
 	}
 
+#if 0
       conduit = popen(currentConduit.latin1(), "r");
       if(conduit)
 	len = fread(dbName, 1, 255, conduit);
@@ -282,17 +276,18 @@ CConduitSetup::slotDone()
 	  tmpMessage = tmpMessage + *iter;
 	  tmpMessage = tmpMessage + i18n(" did not identify what database it supports. "
 						       "\nPlease check with the conduits author to correct it.");
-	  
+
 	  KMessageBox::error(0L, tmpMessage, i18n("Conduit error."));
 	}
       else
 	config->writeEntry(dbName, *iter);
       ++iter;
+#endif
     }
   config->sync();
   delete config;
 // delete this;
-	
+
 	slotCancel();
 }
 
@@ -307,17 +302,17 @@ void CConduitSetup::slotCancel()
 void
 CConduitSetup::slotInstallConduit()
 {
-	FUNCTIONSETUP;
-
-	if(fAvailableConduits->currentItem() == -1)
+  FUNCTIONSETUP;
+  
+  if(fAvailableConduits->currentItem() == -1)
+    {
+      if (debug_level)
 	{
-		if (debug_level)
-		{
-			kdDebug() << fname << ": No item selected " <<
-				"but installer called.\n" ;
-		}
-		return;
+	  kdDebug() << fname << ": No item selected " <<
+	    "but installer called.\n" ;
 	}
+      return;
+    }
   int item = fAvailableConduits->currentItem();
   QString itemText = fAvailableConduits->text(item);
   fAvailableConduits->removeItem(item);
@@ -351,114 +346,111 @@ CConduitSetup::slotUninstallConduit()
 void
 CConduitSetup::checkButtons()
 {
-	FUNCTIONSETUP;
-
-	if(fAvailableConduits->currentItem() == -1)
-	{
-		fInstallConduit->setEnabled(false);
-	}
-	else
-	{
-		fInstallConduit->setEnabled(true);
-	}
-
-
-
-
-	if(fInstalledConduits->currentItem() == -1)
-	{
-		fRemoveConduit->setEnabled(false);
-		fSetupConduit->setEnabled(false);
-	}
-	else
-	{
-		fRemoveConduit->setEnabled(true);
-		fSetupConduit->setEnabled(true);
-	}
+  FUNCTIONSETUP;
+  
+  if(fAvailableConduits->currentItem() == -1)
+    {
+      fInstallConduit->setEnabled(false);
+    }
+  else
+    {
+      fInstallConduit->setEnabled(true);
+    }
+  
+  if(fInstalledConduits->currentItem() == -1)
+    {
+      fRemoveConduit->setEnabled(false);
+      fSetupConduit->setEnabled(false);
+    }
+  else
+    {
+      fRemoveConduit->setEnabled(true);
+      fSetupConduit->setEnabled(true);
+    }
 }
 
 void CConduitSetup::slotSelectAvailable()
 {
-	FUNCTIONSETUP;
-
-	fInstalledConduits->clearSelection();
-	checkButtons();
+  FUNCTIONSETUP;
+  
+  fInstalledConduits->clearSelection();
+  checkButtons();
 }
 
 void CConduitSetup::slotSelectInstalled()
 {
-	FUNCTIONSETUP;
-
-	fAvailableConduits->clearSelection();
-	checkButtons();
+  FUNCTIONSETUP;
+  
+  fAvailableConduits->clearSelection();
+  checkButtons();
 }
 
 
 void
 CConduitSetup::slotSetupConduit()
 {
-	FUNCTIONSETUP;
-
-	QString numericArg;
-
-
-	if(fSetupConduitProcess.isRunning())
-	{
-		KMessageBox::error(this, 
-				     i18n("A conduit is already being set up.\n"
-					  "Please complete that setup before starting another."),
-				     i18n("Setup already in progress"));
-		return;
-	}
-	QString conduitName =   KGlobal::dirs()->resourceDirs("conduits").first();
-	conduitName = conduitName + 
-		fInstalledConduits->text(fInstalledConduits->currentItem());
-
-	if (debug_level & SYNC_TEDIOUS)
-	{
-		kdDebug() << fname << ": Starting setup for conduit "
-			<< conduitName << endl;
-	}
-	fSetupConduitProcess.clearArguments();
-	fSetupConduitProcess << conduitName;
-	// Changed now that conduits use GNU-style long options
-	//
-	//
-	fSetupConduitProcess << "--setup";
-	if (debug_level)
-	{
-		fSetupConduitProcess << "--debug";
-		numericArg.setNum(debug_level);
-		fSetupConduitProcess << numericArg ;
-
-	}
-
-
-
-	// Next try to place the conduit setup screen "close"
-	// to the current mouse position.
-	//
-	//
-	QPoint p=pos();
-
-	if (debug_level & SYNC_TEDIOUS)
-	{
-		kdDebug() << fname << ": My position is "
-			<< p.x() << ',' << p.y()
-			<< endl;
-	}
-
-	// We use long-style options, but KDE
-	// uses short (Xt) style options, so
-	// that's why we use "-geometry" and not
-	// --geometry.
-	//
-	//
-	fSetupConduitProcess << "-geometry";
-	fSetupConduitProcess <<
-		QString("+")+numericArg.setNum(p.x()+20)+
-		QString("+")+numericArg.setNum(p.y()+20) ;
-
-
-	fSetupConduitProcess.start(KProcess::DontCare);
+  FUNCTIONSETUP;
+  
+  QString numericArg;
+  
+  
+  if(fSetupConduitProcess.isRunning())
+    {
+      KMessageBox::error(this, 
+			 i18n("A conduit is already being set up.\n"
+			      "Please complete that setup before starting another."),
+			 i18n("Setup already in progress"));
+      return;
+    }
+  QString conduitName =   KGlobal::dirs()->resourceDirs("conduits").first();
+  conduitName = conduitName + 
+    fInstalledConduits->text(fInstalledConduits->currentItem());
+  
+  if (debug_level & SYNC_TEDIOUS)
+    {
+      kdDebug() << fname << ": Starting setup for conduit "
+		<< conduitName << endl;
+    }
+  fSetupConduitProcess.clearArguments();
+  fSetupConduitProcess << conduitName;
+  // Changed now that conduits use GNU-style long options
+  //
+  //
+  fSetupConduitProcess << "--setup";
+  if (debug_level)
+    {
+      fSetupConduitProcess << "--debug";
+      numericArg.setNum(debug_level);
+      fSetupConduitProcess << numericArg ;
+      
+    }
+  
+  
+  
+  // Next try to place the conduit setup screen "close"
+  // to the current mouse position.
+  //
+  //
+  QPoint p=pos();
+  
+  if (debug_level & SYNC_TEDIOUS)
+    {
+      kdDebug() << fname << ": My position is "
+		<< p.x() << ',' << p.y()
+		<< endl;
+    }
+  
+  // We use long-style options, but KDE
+  // uses short (Xt) style options, so
+  // that's why we use "-geometry" and not
+  // --geometry.
+  //
+  //
+  fSetupConduitProcess << "-geometry";
+  fSetupConduitProcess <<
+    QString("+")+numericArg.setNum(p.x()+20)+
+    QString("+")+numericArg.setNum(p.y()+20) ;
+  
+  
+  fSetupConduitProcess.start(KProcess::DontCare);
 }

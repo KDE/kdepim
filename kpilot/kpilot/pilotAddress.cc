@@ -27,8 +27,13 @@ PilotAddress::setField(int field, const char* text)
 	{
 	free(fAddressInfo.entry[field]);
 	}
-    fAddressInfo.entry[field] = (char*)malloc(strlen(text) + 1);
-    strcpy(fAddressInfo.entry[field], text);
+    if (text)
+      {
+	fAddressInfo.entry[field] = (char*)malloc(strlen(text) + 1);
+	strcpy(fAddressInfo.entry[field], text);
+      }
+    else
+      fAddressInfo.entry[field] = 0L;
     }
 
 void*

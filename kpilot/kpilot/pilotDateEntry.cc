@@ -21,8 +21,13 @@ PilotDateEntry::setDescription(const char* desc)
 {
   if(fAppointmentInfo.description)
     free(fAppointmentInfo.description);
-  fAppointmentInfo.description = (char*)malloc(strlen(desc) + 1);
-  strcpy(fAppointmentInfo.description, desc);
+  if (desc)
+    {
+      fAppointmentInfo.description = (char*)malloc(strlen(desc) + 1);
+      strcpy(fAppointmentInfo.description, desc);
+    }
+  else
+    fAppointmentInfo.description = 0L;
 }
 
 void  
@@ -30,7 +35,12 @@ PilotDateEntry::setNote(const char* note)
 {
   if(fAppointmentInfo.note)
     free(fAppointmentInfo.note);
-  fAppointmentInfo.note = (char*)malloc(strlen(note) + 1);
-  strcpy(fAppointmentInfo.note, note);
+  if (note)
+    {
+      fAppointmentInfo.note = (char*)malloc(strlen(note) + 1);
+      strcpy(fAppointmentInfo.note, note);
+    }
+  else
+    fAppointmentInfo.note = 0L;
 }
 
