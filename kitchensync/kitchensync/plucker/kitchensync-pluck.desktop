@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+ServiceTypes=text/html
+Actions=JPluck-Add
+
+[Desktop Action JPluck-Add]
+Name=Add to KitchenSync Plucker Plugin
+Exec=dcop kitchensync PluckerInterface "addPluckerUrl(KURL)" %u
+Icon=knode
