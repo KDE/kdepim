@@ -96,6 +96,7 @@ protected slots:
 	void configure();
 	void configureWizard();
 
+	void unselect(); // Helper slot when cancelling a change in selection
 	void selected(QListViewItem *);
 	void conduitsChanged(QListViewItem*);
 	void reopenItem(QListViewItem *);

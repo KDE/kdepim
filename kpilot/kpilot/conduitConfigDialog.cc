@@ -44,6 +44,7 @@ static const char *conduitconfigdialog_id =
 #include <qsplitter.h>
 #include <qheader.h>
 #include <qlabel.h>
+#include <qtimer.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -665,6 +666,12 @@ bool ConduitConfigWidget::release()
 	return true;
 }
 
+void ConduitConfigWidget::unselect()
+{
+	fConduitList->setSelected( fCurrentConduit, true );
+	fConduitList->setCurrentItem( fCurrentConduit );
+}
+
 void ConduitConfigWidget::selected(QListViewItem *p)
 {
 	FUNCTIONSETUP;
@@ -677,9 +684,8 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 	{
 		if (!release())
 		{
-			fCurrentConduit->setSelected( true );
-			p->setSelected(false);
-			fConduitList->setCurrentItem( fCurrentConduit );
+			fConduitList->blockSignals(true);
+			QTimer::singleShot(1,this,SLOT(unselect()));
 			return;
 		}
 	}
