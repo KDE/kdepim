@@ -2,7 +2,7 @@
     directoryserviceswidget.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2002,2004 Klarï¿½vdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -99,10 +99,10 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
     x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp
-    upButton->setPixmap( BarIcon( "up", KIcon::SizeSmall ) );
+    upButton->setIconSet( BarIconSet( "up", KIcon::SizeSmall ) );
     upButton->setEnabled( false ); // b/c no item is selected yet
 
-    downButton->setPixmap( BarIcon( "down", KIcon::SizeSmall ) );
+    downButton->setIconSet( BarIconSet( "down", KIcon::SizeSmall ) );
     downButton->setEnabled( false ); // b/c no item is selected yet
 }
 

@@ -2,7 +2,7 @@
     keyrequester.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -68,10 +68,10 @@
 #include <kdialog.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kpushbutton.h>
 
 // Qt
 #include <qapplication.h>
-#include <qpushbutton.h>
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qstring.h>
@@ -115,11 +115,11 @@ void Kleo::KeyRequester::init()
   mLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
 
   // the button to unset any key:
-  mEraseButton = new QPushButton( this );
+  mEraseButton = new KPushButton( this );
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
 					    QSizePolicy::Minimum ) );
-  mEraseButton->setPixmap( SmallIcon( QApplication::reverseLayout() ? "locationbar_erase" : "clear_left" ) );
+  mEraseButton->setIconSet( SmallIconSet( QApplication::reverseLayout() ? "locationbar_erase" : "clear_left" ) );
   QToolTip::add( mEraseButton, i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
