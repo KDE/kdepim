@@ -82,7 +82,7 @@ AbbrowserConduit::AbbrowserConduit(BaseConduit::eConduitMode mode,
 	fDcop(NULL),
 	fAddressAppInfo(), fSmartMerge(true), fConflictResolution(eUserChoose),
 	fPilotOtherMap(), fPilotStreetHome(true), fPilotFaxHome(false),
-	fCloseAbIfOpen(false), fBackupDone(false)
+	fBackupDone(false)
     {
     FUNCTIONSETUP;
 	
@@ -185,7 +185,7 @@ void AbbrowserConduit::_stopAbbrowser(bool abAlreadyRunning)
 	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
 	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
 
-    if (fCloseAbIfOpen && !abAlreadyRunning)
+    if (!abAlreadyRunning)
 	{
 	QByteArray sendData;
 	QByteArray replyData;
