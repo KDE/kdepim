@@ -90,7 +90,7 @@ int main( int, char** )
 
   QString path = srcdir();
 
-  //if ( !rval ) rval = runscripts( "python", "*.py *.Py *.PY *.pY", path );
+  if ( !rval ) rval = runscripts( "python", "*.py *.Py *.PY *.pY", path );
 
   if ( !rval ) rval = runscripts( "sh", "*.sh *.Sh *.SH *.sH", path );
 
