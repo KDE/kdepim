@@ -22,6 +22,6 @@ QString MetaTodo::string( KSync::TodoSyncEntry* entry ) {
     }
     str += QString::number( todo->priority() );
     str += todo->description();
-
+    kdDebug(5227) << "Meta String is " << str << "Todo is " << todo->isCompleted() << QString::number( todo->isCompleted() ) << endl;
     return str;
 }

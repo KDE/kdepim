@@ -41,8 +41,6 @@ OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
 			     QObject *, const char *, const QStringList & )
   : ManipulatorPart( parent, name )
 {
-//    kdDebug() << "Parent " << parent->className() << endl;
-//    kdDebug() << "Object " << obj->className() << endl;
   setInstance(OrganizerPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("korganizer", KIcon::Desktop, 48 );
 }
@@ -55,7 +53,6 @@ QPixmap* OrganizerPart::pixmap()
 }
 QWidget* OrganizerPart::widget()
 {
-//  kdDebug(5222) << "widget \n";
   if(m_widget==0 ){
     m_widget = new QWidget();
     m_widget->setBackgroundColor(Qt::green);
@@ -64,18 +61,23 @@ QWidget* OrganizerPart::widget()
 }
 QWidget* OrganizerPart::configWidget()
 {
-    Profile prof = core()->currentProfile();
-    QString path = prof.path( "OrganizerPart");
-
     m_config = new OrganizerDialogBase();
 
-    if ( path == QString::fromLatin1("evolution") )
+    if ( isEvolutionSync() )
         m_config->ckbEvo->setChecked( true );
-    else
-        m_config->urlReq->setURL( path );
+    else{
+        m_config->urlReq->setURL( core()->currentProfile().path("OrganizerPart") );
+
+    }
 
   return (QWidget*) m_config;
 };
+bool OrganizerPart::isEvolutionSync()const {
+    QString path;
+    path = core()->currentProfile().path( "OrganizerPart" );
+
+    return ( path == QString::fromLatin1("evolution" ) ) ;
+}
 
 KAboutData *OrganizerPart::createAboutData()
 {
@@ -185,20 +187,18 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
 
     /* 9. */
     if (events)
-    {
       out.append( events );
-    }
+
     if (todos)
-    {
       out.append( todos );
-    }
+
 }
 
 //AddressBookSyncee* ANY
-TodoSyncee* OrganizerPart::loadTodos( const QString& path, const QString& timeZoneId ) {
+TodoSyncee* OrganizerPart::loadTodos( const QString& pa, const QString& timeZoneId ) {
     TodoSyncee* syncee = new TodoSyncee();
     KCal::CalendarLocal cal(timeZoneId);
-    cal.load(path);
+    cal.load(path( Todo, pa ) );
     QPtrList<KCal::Todo> todos = cal.rawTodos();
     if ( todos.isEmpty() ) {
         return syncee;
@@ -212,10 +212,10 @@ TodoSyncee* OrganizerPart::loadTodos( const QString& path, const QString& timeZo
     }
     return syncee;
 }
-EventSyncee* OrganizerPart::loadEvents(const QString& path,  const QString& timeZoneId) {
+EventSyncee* OrganizerPart::loadEvents(const QString& pa,  const QString& timeZoneId) {
     EventSyncee* syncee = new EventSyncee();
     KCal::CalendarLocal cal(timeZoneId);
-    cal.load( path );
+    cal.load( path(Calendar, pa) );
     QPtrList<KCal::Event> events = cal.rawEvents();
     if ( events.isEmpty() ) {
         return syncee;
@@ -365,7 +365,7 @@ void OrganizerPart::writeMetaIntern( Syncee* syncee,
                                      const QString& key ) {
     SyncEntry* entry;
     for (entry = syncee->firstEntry(); entry; entry= syncee->nextEntry() ) {
-        if (entry->state() == SyncEntry::Modified )
+        if (entry->state() == SyncEntry::Removed )
             continue;
 
         conf->setGroup( key + entry->id() );
@@ -374,31 +374,77 @@ void OrganizerPart::writeMetaIntern( Syncee* syncee,
 }
 void OrganizerPart::save( EventSyncee* evSyncee,
                           TodoSyncee* toSyncee,
-                          const QString& path,
+                          const QString& pa,
                           const QString& timeZoneId) {
     KCal::CalendarLocal* loc = new KCal::CalendarLocal(timeZoneId);
     EventSyncEntry* evEntry=0l;
     TodoSyncEntry* toEntry=0l;
-    if (evSyncee)
-    {
+    if (evSyncee) {
       for ( evEntry = (EventSyncEntry*)evSyncee->firstEntry();
             evEntry;
             evEntry = (EventSyncEntry*)evSyncee->nextEntry() )
       {
           if (evEntry->state() != SyncEntry::Removed )
-              loc->addEvent(evEntry->incidence());
+              loc->addEvent((KCal::Event*)evEntry->incidence()->clone()  );
       }
     }
-    if (toSyncee)
-    {
+
+    /*
+     * For Evolution we will save here
+     */
+    if (isEvolutionSync() ) {
+        loc->save( path( Calendar, pa ) );
+        delete loc;
+        loc = new KCal::CalendarLocal( timeZoneId );
+    }
+
+    if (toSyncee){
       for ( toEntry = (TodoSyncEntry*)toSyncee->firstEntry();
             toEntry;
             toEntry = (TodoSyncEntry*)toSyncee->nextEntry() )
       {
           if (toEntry->state() != SyncEntry::Removed )
-              loc->addTodo(toEntry->todo());
+              loc->addTodo((KCal::Todo*)toEntry->todo()->clone() );
       }
     }
-    loc->save( path );
+
+    loc->save( path( Todo, pa)  );
+
+    /* WE NEED TO LEAK HERE CAUSE CLONE SEAMS TO FAIL
+     * I'll INVESTIGATE THIS FURTHER
+     * FIXME let the libkonnector be more verbose
+     * let us tell us if it synced successfully or not
+     * there we could also delete the calendar then....
+     * More Info now:
+     * We add these incidence to the calendar and it want to take ownership
+     * the CalendarLocals internal QPtrList is set to AutoDelete
+     * which will delete even our todos..
+     * so we need to clone before adding it.
+     * FIXED
+     */
+    delete loc;
+}
+
+/*
+ * we will return the right path
+ * for the right calendar system!
+ */
+QString OrganizerPart::path( Data d, const QString& path ) {
+    if ( !isEvolutionSync() ) {
+        kdDebug(5222) << "Syncing with KDE and not Evolution " << endl;
+        return path;
+    }
+
+    QString str;
+    switch(d) {
+    case Calendar:
+        str = QDir::homeDirPath() + "/evolution/local/Calendar/calendar.ics";
+        break;
+    case Todo:
+    default:
+        str = QDir::homeDirPath()+ "/evolution/local/Tasks/tasks.ics";
+        break;
+    }
+    return str;
 }
 #include "ksync_organizerpart.moc"

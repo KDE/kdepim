@@ -472,6 +472,8 @@ void QtopiaSocket::readTodoList() {
         OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/todolist.md5.qtopia" );
         OpieHelper::MetaTodo metaBook;
         metaBook.doMeta( syncee, map );
+        kdDebug(5227) << "Did Meta " << endl;
+        outputIt(5227, syncee );
     }
 
     d->m_sync.append( syncee );

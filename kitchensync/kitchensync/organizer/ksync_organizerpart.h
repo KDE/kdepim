@@ -13,6 +13,11 @@ class KAboutData;
 class KConfig;
 class KSimpleConfig;
 //class OrganizerDialogBase;
+
+namespace KCal {
+    class CalendarLocal;
+};
+
 namespace KSync {
     class Syncee;
     class EventSyncee;
@@ -37,8 +42,12 @@ namespace KSync {
     QWidget* configWidget();
     void processEntry( const Syncee::PtrList&,  Syncee::PtrList& );
   public:
+
       void slotConfigOk();
   private:
+    enum Data{ Calendar = 0,
+               Todo };
+
     QPixmap m_pixmap;
     QWidget *m_widget;
     OrganizerDialogBase *m_config;
@@ -49,6 +58,8 @@ namespace KSync {
     void writeMeta( EventSyncee*, TodoSyncee*, const QString& path );
     void writeMetaIntern( Syncee*, KSimpleConfig*, const QString& key );
     void save( EventSyncee*, TodoSyncee*, const QString& path, const QString& timeZoneId );
+    bool isEvolutionSync()const;
+    QString path( Data d, const QString& str );
   };
 };
 

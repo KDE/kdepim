@@ -51,9 +51,9 @@
 
 namespace KSync {
     class KSyncMainWindow;
-    
+
     enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
-    
+
     class ManipulatorPart : public KParts::Part {
         Q_OBJECT
     public:
@@ -61,6 +61,7 @@ namespace KSync {
         virtual ~ManipulatorPart() {};
 
         KSyncMainWindow* core() { return m_window; };
+        KSyncMainWindow* core()const { return m_window; };
         // the Type this Part understands/ is able to interpret
         virtual QString type()const {return QString::null; };
 

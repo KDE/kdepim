@@ -63,19 +63,26 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
      * likcal sets percent completed to 0
      */
     Int = dummy.toInt();
+    kdDebug(5227) << " Completed " << dummy << " " << Int << endl;
 
     /* !0 */
-    if ( Int ) {
+    if ( Int == 0) {
         kdDebug(5227) << "Calling not completed " << endl;
         todo->setCompleted( false );
+        /*
+         * libkcal wants to be too smart again
+         * 100% percent done but not completed
+         * will be marked as completed...
+         */
         todo->setPercentComplete( e.attribute("Progress").toInt() );
-    }else
-        todo->setCompleted(Int );
+    }else{
+        kdDebug(5227) << "Todo is completed " << endl;
+        todo->setCompleted(true );
+    }
 
 
 
-    kdDebug(5227) << "dummy completed " << dummy << " " << Int
-              << endl;
+    kdDebug(5227) << "dummy completed " << todo->isCompleted()  << endl;
 
     dummy = e.attribute("Priority" );
     todo->setPriority(dummy.toInt( )  );
