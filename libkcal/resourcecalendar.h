@@ -32,6 +32,7 @@
 #include "alarm.h"
 
 #include <kresources/resource.h>
+#include <kresources/resourcemanager.h>
 
 namespace KCal {
 
@@ -46,8 +47,7 @@ class Journal;
 */
 class ResourceCalendar : public QObject, public KRES::Resource
 { 
-  Q_OBJECT
-
+    Q_OBJECT
   public:
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
@@ -194,6 +194,8 @@ class ResourceCalendar : public QObject, public KRES::Resource
   protected:
  
 };
+
+typedef KRES::ResourceManager<ResourceCalendar> CalendarResourceManager;
 
 }
 #endif
