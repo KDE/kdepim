@@ -500,7 +500,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         if (client.notificationType == ClientInfo::NO_START_NOTIFY)
         {
           kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
-          return true;
+          return false;
         }
 
         // Start the client application
