@@ -26,6 +26,15 @@
     </entry>
   </group>
 
+  <group name="Resources">
+    <entry name="KcalResource" type="String">
+      <label>Id of KCal resource</label>
+    </entry>
+    <entry name="KabcResource" type="String">
+      <label>Id of KABC resource</label>
+    </entry>
+  </group>
+
   <group name="Constants">
     <entry name="EnableFreeBusy">
       <default>true</default>

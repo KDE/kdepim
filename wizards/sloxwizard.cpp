@@ -21,6 +21,7 @@
 #include "sloxwizard.h"
 #include "sloxconfig.h"
 
+#include "kresources/slox/kabcsloxprefs.h"
 #include "kresources/slox/kabcresourceslox.h"
 #include "kresources/slox/kcalsloxprefs.h"
 #include "kresources/slox/kcalresourceslox.h"
@@ -35,6 +36,11 @@
 #include <qlabel.h>
 
 
+QString sloxUrl()
+{
+  return "http://" + SloxConfig::self()->server();
+}
+
 class CreateSloxKcalResource : public KConfigPropagator::Change
 {
   public:
@@ -45,18 +51,46 @@ class CreateSloxKcalResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Create SLOX Calendar Resource" << endl;
-
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
 
-      KURL url( "http://" + SloxConfig::self()->server() );
+      KURL url( sloxUrl() );
 
       KCalResourceSlox *r = new KCalResourceSlox( url );
       r->setResourceName( i18n("Openexchange Server") );
       r->prefs()->setUser( SloxConfig::self()->user() );
       r->prefs()->setPassword( SloxConfig::self()->password() );
       m.add( r );
+      m.writeConfig();
+      
+      SloxConfig::self()->setKcalResource( r->identifier() );
+    }
+};
+
+class UpdateSloxKcalResource : public KConfigPropagator::Change
+{
+  public:
+    UpdateSloxKcalResource()
+      : KConfigPropagator::Change( i18n("Update SLOX Calendar Resource") )
+    {
+    }
+
+    void apply()
+    {
+      KCal::CalendarResourceManager m( "calendar" );
+      m.readConfig();
+
+      KURL url( sloxUrl() );
+
+      KCal::CalendarResourceManager::Iterator it;
+      for ( it = m.begin(); it != m.end(); ++it ) {
+        if ( (*it)->identifier() == SloxConfig::kcalResource() ) {
+          KCalResourceSlox *r = static_cast<KCalResourceSlox *>( *it );
+          r->prefs()->setUrl( url.url() );
+          r->prefs()->setUser( SloxConfig::self()->user() );
+          r->prefs()->setPassword( SloxConfig::self()->password() );
+        }
+      }
       m.writeConfig();
     }
 };
@@ -71,12 +105,10 @@ class CreateSloxKabcResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Create SLOX Addressbook Resource" << endl;
-
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url( "http://" + SloxConfig::self()->server() );
+      KURL url( sloxUrl() );
       QString user( SloxConfig::self()->user() );
       QString password( SloxConfig::self()->password() );
 
@@ -84,8 +116,39 @@ class CreateSloxKabcResource : public KConfigPropagator::Change
       r->setResourceName( i18n("Openexchange Server") );
       m.add( r );
       m.writeConfig();
+
+      SloxConfig::self()->setKabcResource( r->identifier() );
     }
 };
+
+class UpdateSloxKabcResource : public KConfigPropagator::Change
+{
+  public:
+    UpdateSloxKabcResource()
+      : KConfigPropagator::Change( i18n("Update SLOX Addressbook Resource") )
+    {
+    }
+
+    void apply()
+    {
+      KRES::Manager<KABC::Resource> m( "contact" );
+      m.readConfig();
+
+      KURL url( sloxUrl() );
+
+      KRES::Manager<KABC::Resource>::Iterator it;
+      for ( it = m.begin(); it != m.end(); ++it ) {
+        if ( (*it)->identifier() == SloxConfig::kabcResource() ) {
+          KABC::ResourceSlox *r = static_cast<KABC::ResourceSlox *>( *it );
+          r->prefs()->setUrl( url.url() );
+          r->prefs()->setUser( SloxConfig::self()->user() );
+          r->prefs()->setPassword( SloxConfig::self()->password() );
+        }
+      }
+      m.writeConfig();
+    }
+};
+
 
 class SloxPropagator : public KConfigPropagator
 {
@@ -93,6 +156,11 @@ class SloxPropagator : public KConfigPropagator
     SloxPropagator()
       : KConfigPropagator( SloxConfig::self(), "slox.kcfg" )
     {
+    }
+
+    ~SloxPropagator()
+    {
+      SloxConfig::self()->writeConfig();
     }
 
   protected:
@@ -106,6 +174,15 @@ class SloxPropagator : public KConfigPropagator
       }
       if ( it == m1.end() ) {
         changes.append( new CreateSloxKcalResource );
+      } else {
+        if ( (*it)->identifier() == SloxConfig::kcalResource() ) {
+          KCal::SloxPrefs *prefs = static_cast<KCalResourceSlox *>( *it )->prefs();
+          if ( prefs->url() != sloxUrl() ||
+               prefs->user() != SloxConfig::user() ||
+               prefs->password() != SloxConfig::password() ) {
+            changes.append( new UpdateSloxKcalResource );
+          }
+        }
       }
 
       KRES::Manager<KABC::Resource> m2( "contact" );
@@ -116,6 +193,15 @@ class SloxPropagator : public KConfigPropagator
       }
       if ( it2 == m2.end() ) {
         changes.append( new CreateSloxKabcResource );
+      } else {
+        if ( (*it2)->identifier() == SloxConfig::kabcResource() ) {
+          KABC::SloxPrefs *prefs = static_cast<KABC::ResourceSlox *>( *it2 )->prefs();
+          if ( prefs->url() != sloxUrl() ||
+               prefs->user() != SloxConfig::user() ||
+               prefs->password() != SloxConfig::password() ) {
+            changes.append( new UpdateSloxKabcResource );
+          }
+        }
       }
     }
 };
