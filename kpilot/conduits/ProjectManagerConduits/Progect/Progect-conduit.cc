@@ -63,6 +63,9 @@ ProgectConduit::ProgectConduit(KPilotDeviceLink *d, 	const char *n, 	const QStri
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.2  2002/03/23 21:46:43  reinhold
 // config  dlg works, but the last changes crash the plugin itself
 //
@@ -73,3 +76,4 @@ ProgectConduit::ProgectConduit(KPilotDeviceLink *d, 	const char *n, 	const QStri
 // Initial checin of the generic project manager / List manager conduit.
 //
 //
+#include "Progect-conduit.moc"
