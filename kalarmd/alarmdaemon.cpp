@@ -302,6 +302,12 @@ void AlarmDaemon::readConfig()
     mAlarmTimer->stop();
     setTimerStatus();     // change the alarm timer's interval
     notifyGui(CHANGE_STATUS);
+    // The timer has been restarted, so check alarms now to avoid the interval
+    // between the last and next checks being longer than either the old or
+    // new check interval.
+    // Do this AFTER notifying client applications about the change, in case
+    // they need to take special action first.
+    checkAlarms();
   }
 }
 
