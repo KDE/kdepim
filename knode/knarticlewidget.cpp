@@ -144,7 +144,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   u_rlPopup->insertItem(SmallIcon("editcopy"),i18n("&Copy Link Location"), PUP_COPYURL);
   a_ttPopup=new KPopupMenu();
   a_ttPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Attachment"), PUP_OPEN);
-  a_ttPopup->insertItem(SmallIcon("filesave"),i18n("&Save Attachment"), PUP_SAVE);
+  a_ttPopup->insertItem(SmallIcon("filesave"),i18n("&Save Attachment..."), PUP_SAVE);
 
   //actions
   a_ctSave              = KStdAction::save(this, SLOT(slotSave()), a_ctions);
@@ -162,7 +162,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotForward()), a_ctions, "article_forward");
   a_ctCancel            = new KAction(i18n("article","&Cancel Article"), 0 , this,
                           SLOT(slotCancel()), a_ctions, "article_cancel");
-  a_ctSupersede         = new KAction(i18n("S&upersede Article..."), 0 , this,
+  a_ctSupersede         = new KAction(i18n("S&upersede Article"), 0 , this,
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
   a_ctVerify            = new KAction(i18n("&Verify PGP Signature"), 0, this,
                           SLOT(slotVerify()), a_ctions, "article_verify");
