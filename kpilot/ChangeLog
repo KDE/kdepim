@@ -1,3 +1,40 @@
+KPilot Developer's notes for sometime in march 2002
+===================================================
+
+2002-03-09  Adriaan de Groot
+* Sanitized syncStack so that nextAction isn't so ambiguous.
+* Fixed missing default (--list) in kpilotTest.
+* Some neatness fixes in pilotDaemon.cc and pilotDaemonDCOP.h.
+* Test syncs shouldn't run conduits or install files. Fixed in pilotDaemon.
+* The daemon leaked 2 FD's on every sync, which is bad. Added some extra
+  ::close() calls, which fixes this (under p-l 0.9.5 and 0.10.1).
+* Mucked about with USB devices some more, but it looks like the m500
+  is going to be unusable under FBSD for some time. This isn't bad, since
+  I can then concentrate on getting things working with the serial PalmV.
+* It might be a good idea to start using the daemon to do just device tests
+  instead of kpilotTest -- though it doens't make a big difference.
+
+2002-03-08  Adriaan de Groot
+* Fiddled around w/ getting a broadband connection, for whatever
+  reason. I guess effortless connectivity is the goal. Fiddled with
+  my new m500 USB and discovered that pilot-link 0.10.1pre works
+  perfectly with it under Linux (well, pilot-xfer -l works). Under
+  FreeBSD, though, it seems that there's nothing available for this
+  kind of device. Hmph. So now I need to spend some time to figure
+  out how to get KDE up and running on my somewhat deprecated Linux
+  install. Serve the source by NFS?
+
+2002-03-07  Adriaan de Groot
+* Finally picked up where I left off, adding yet another message to
+  the startup log window (again, I think this is temporary). The versions
+  of relevant items now appear there.
+* Messed around with crashes while deleting CleanupActions.
+
+2002-03-06  David Bishop
+* Lots of work on exporting memos in XML format. It looks like the
+  whole memo viewer widget is going to be reworked, slightly.
+* Finished off the kdDebug() repairs someone else started.
+
 KPilot Developer's notes for february 11th 2002
 ===============================================
 

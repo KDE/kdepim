@@ -114,11 +114,15 @@ class CleanupAction : public SyncAction
 {
 public:
 	CleanupAction(KPilotDeviceLink * p);
-
+	virtual ~CleanupAction();
+	
 	virtual void exec();
 } ;
 
 // $Log$
+// Revision 1.7  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.6  2001/12/29 15:45:02  adridg
 // Lots of little changes for the syncstack
 //

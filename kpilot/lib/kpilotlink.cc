@@ -98,14 +98,25 @@ void KPilotDeviceLink::close()
 
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
-
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Closing sockets "
+		<< fCurrentPilotSocket
+		<< " and "
+		<< fPilotMasterSocket
+		<< endl;
+#endif
 	if (fCurrentPilotSocket != -1)
 	{
 		pi_close(fCurrentPilotSocket);
+		// It seems that pi_close doesn't release
+		// the file descriptor, so do that forcibly.
+		::close(fCurrentPilotSocket);
 	}
 	if (fPilotMasterSocket != -1)
 	{
 		pi_close(fPilotMasterSocket);
+		::close(fPilotMasterSocket);
 	}
 	fPilotMasterSocket = (-1);
 	fCurrentPilotSocket = (-1);
@@ -202,7 +213,11 @@ bool KPilotDeviceLink::open()
 	QString msg;
 
 	if (fCurrentPilotSocket != -1)
+	{
+		// See note in KPilotDeviceLink::close()
 		pi_close(fCurrentPilotSocket);
+		::close(fCurrentPilotSocket);
+	}
 	fCurrentPilotSocket = (-1);
 
 	if (fPilotMasterSocket == -1)
@@ -253,6 +268,7 @@ bool KPilotDeviceLink::open()
 #endif
 	strcpy(addr.pi_device, QFile::encodeName(fPilotPath));
 
+
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
 
@@ -269,6 +285,15 @@ bool KPilotDeviceLink::open()
 	}
 	else
 	{
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Tried "
+			<< addr.pi_device
+			<< " and got "
+			<< strerror(errno)
+			<< endl;
+#endif
+
 		if (isTransient() && (fRetries < 5))
 		{
 			return false;
@@ -290,7 +315,7 @@ bool KPilotDeviceLink::open()
 errInit:
 	if (fPilotMasterSocket != -1)
 	{
-		pi_close(fPilotMasterSocket);
+		close();
 	}
 
 	fPilotMasterSocket = -1;
@@ -322,7 +347,7 @@ errInit:
 		msg += i18n(" Check Pilot path and permissions.");
 	}
 
-	// OK, so we may have to deal with a translated 
+	// OK, so we may have to deal with a translated
 	// error message here. Big deal -- we have the line
 	// number as well, right?
 	//
@@ -648,6 +673,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.8  2002/02/10 22:21:33  adridg
+// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
+//
 // Revision 1.7  2002/02/02 11:46:03  adridg
 // Abstracting away pilot-link stuff
 //

@@ -149,7 +149,7 @@ protected slots:
 	/**
 	* When one action finishes, start the next one.
 	*/
-	void nextAction(SyncAction *);
+	void actionCompleted(SyncAction *);
 };
 
 /**
@@ -196,6 +196,9 @@ protected:
 
 
 // $Log$
+// Revision 1.2  2002/01/20 13:53:52  adridg
+// Added new sync types
+//
 // Revision 1.1  2001/12/29 15:41:36  adridg
 // Added unified sync-action handling for kpilotTest and daemon
 //

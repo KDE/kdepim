@@ -438,6 +438,13 @@ void PilotDaemon::showTray()
 		break;
 	}
 
+	/*
+	** Override the kind of device, since OldStyleUSB
+	** works with everything and it saves the user from
+	** havind to choose the right kind.
+	*/
+	fPilotType = KPilotDeviceLink::OldStyleUSB;
+
 	if (fPilotLink)
 	{
 #ifdef DEBUG
@@ -456,6 +463,10 @@ void PilotDaemon::showTray()
 		if (!fTray)
 		{
 			fTray = new PilotDaemonTray(this);
+			fTray->show();
+		}
+		else
+		{
 			fTray->show();
 		}
 	}
@@ -630,14 +641,22 @@ QString PilotDaemon::syncTypeString(int i) const
 #endif
 
 	KPilotConfigSettings &c = KPilotConfig::getConfig();
-	QStringList conduits = c.getInstalledConduits();
-	bool installFiles = c.getSyncFiles();
+	QStringList conduits ;
+	bool installFiles = false;
+
+	if ((fNextSyncType == PilotDaemonDCOP::HotSync)
+		/* || other sync types */
+		)
+	{
+		conduits = c.getInstalledConduits();
+		installFiles = c.getSyncFiles();
+	}
 
 	fSyncStack = new SyncStack(fPilotLink,
 		&KPilotConfig::getConfig(),
 		conduits,
-		fInstaller ? fInstaller->dir() : QString::null,
-		fInstaller ? fInstaller->fileNames() : QString::null );
+		(fInstaller && installFiles) ? fInstaller->dir() : QString::null,
+		(fInstaller && installFiles) ? fInstaller->fileNames() : QString::null );
 
 	switch (fNextSyncType)
 	{
@@ -846,6 +865,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.59  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.58  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

@@ -31,6 +31,8 @@ static const char *logw_id =
 
 #include "options.h"
 
+#include <pi-version.h>
+
 #include <qfile.h>
 #include <qlayout.h>
 #include <qtextview.h>
@@ -90,6 +92,7 @@ LogWidget::LogWidget(QWidget * parent) :
 		"There is no point in sending in bug reports unless you "
 		"include a backtrace and the debugging output.<BR/>"
 		"</qt>").arg(KPILOT_VERSION));
+
 
 	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
 
@@ -345,6 +348,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.18  2002/02/10 22:21:33  adridg
+// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
+//
 // Revision 1.17  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //

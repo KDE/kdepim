@@ -46,6 +46,8 @@ static const char *test_id =
 #include <kservicetype.h>
 #include <kuserprofile.h>
 
+#include <pi-version.h>
+
 #include "logWidget.h"
 #include "kpilotConfig.h"
 
@@ -242,7 +244,7 @@ int main(int argc, char **argv)
 #ifdef DEBUG
 	debug_level = -1;
 #endif
-	
+
 	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
 	{
 		return syncTest(p);
@@ -258,13 +260,17 @@ int main(int argc, char **argv)
 		return execConduit(p);
 	}
 
-	return 0;
+	// The default is supposed to be "list"
+	return syncTest(p);
 	/* NOTREACHED */
 	(void) test_id;
 }
 
 
 // $Log$
+// Revision 1.15  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.14  2002/01/31 13:20:09  hollomon
 //
 // fix some compile/configure errors unde KDE 3.

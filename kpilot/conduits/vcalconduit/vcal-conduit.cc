@@ -338,7 +338,7 @@ void VCalConduit::changeRecord(PilotRecord *r,PilotRecord *s)
 	FUNCTIONSETUP;
 
 	PilotDateEntry de(r);
-	KCal::Event *e = findEvent(r->getID());
+	KCal::Event *e = fP->findEvent(r->getID());
 	if (e)
 	{
 		eventFromRecord(e,de);
@@ -553,6 +553,9 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 }
 
 // $Log$
+// Revision 1.51  2002/02/23 20:57:41  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.50  2002/01/26 15:01:02  adridg
 // Compile fixes and more
 //
