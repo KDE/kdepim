@@ -402,36 +402,25 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // structure for more info.
   if (!dateEntry.getEvent()) {
     // the event doesn't "float"
-    dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-		       1900 + dateEntry.getEventStart().tm_year,
-		       dateEntry.getEventStart().tm_mon + 1,
-		       dateEntry.getEventStart().tm_mday,
-		       dateEntry.getEventStart().tm_hour,
-		       dateEntry.getEventStart().tm_min,
-		       dateEntry.getEventStart().tm_sec);
 	if (vo)
 	{
-		setVObjectUStringZValue_(vo, 
-			fakeUnicode(dateString.latin1(), 0));
+		setDateProperty(vo,dateEntry.getEventStart_p());
 	}
 	else 
 	{
-		addPropValue(vevent, VCDTstartProp, dateString.latin1());
+		addDateProperty(vevent, VCDTstartProp, 
+			dateEntry.getEventStart_p());
 	}
   } else {
     // the event floats
-    dateString.sprintf("%.4d%.2d%.2dT000000",
-		       1900 + dateEntry.getEventStart().tm_year,
-		       dateEntry.getEventStart().tm_mon + 1,
-		       dateEntry.getEventStart().tm_mday);
 	if (vo)
 	{
-		setVObjectUStringZValue_(vo, 
-			fakeUnicode(dateString.latin1(), 0));
+		setDateProperty(vo,dateEntry.getEventStart_p(),true);
 	}
 	else
 	{
-		addPropValue(vevent, VCDTstartProp, dateString.latin1());
+		addDateProperty(vevent, VCDTstartProp,
+			dateEntry.getEventStart_p(),true);
 	}
 }
 
@@ -478,28 +467,21 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 			dateEntry.getRepeatEnd().tm_sec));
   }
       
+  /*
   if (!dateEntry.getEvent()) {
-    // the event doesn't "float"
-    dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-		       endDT.date().year(),
-		       endDT.date().month(),
-		       endDT.date().day(),
-		       endDT.time().hour(),
-		       endDT.time().minute(),
-		       endDT.time().second());
+  	dateString = TmToISO(endDT);
   } else {
     // the event "floats"
-    dateString.sprintf("%.4d%.2d%.2dT000000",
-		       endDT.date().year(),
-		       endDT.date().month(),
-		       endDT.date().day());
+    dateString = TmToISO(endDT,true);
   }
+  */
 
 
 
   if (vo)
   {
-    setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
+	setDateProperty(vo,endDT,dateEntry.getEvent());
+    // setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
   }
   else 
   {
@@ -509,7 +491,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 	// their times.
 	if (!dateEntry.getEvent() || multiDay)
 	{
-		addPropValue(vevent, VCDTendProp, dateString.latin1());
+		addDateProperty(vevent, VCDTendProp,
+			endDT,dateEntry.getEvent());
+		// addPropValue(vevent, VCDTendProp, dateString.latin1());
 	}
   }
 
@@ -557,10 +541,11 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		       alarmDT.time().second());
     if (vo) {
       vo = isAPropertyOf(vo, VCRunTimeProp);
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
+      setDateProperty(vo,alarmDT);
+      // setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
     } else {
       vo = addProp(vevent, VCDAlarmProp);
-      addPropValue(vo, VCRunTimeProp, dateString.latin1());
+      addDateProperty(vo, VCRunTimeProp, alarmDT);
       addPropValue(vo, VCRepeatCountProp, "1");
       addPropValue(vo, VCDisplayStringProp, "beep!");
     }
@@ -1453,6 +1438,15 @@ QWidget* VCalConduit::aboutAndSetup()
   return new VCalSetup();
 }
 
+
+void mimeError(char *s)
+{
+	kdWarning() << __FUNCTION__
+		<< ": "
+		<< s
+		<< endl;
+}
+
 /* virtual */ void VCalConduit::doTest()
 {
 	FUNCTIONSETUP;
@@ -1464,11 +1458,17 @@ QWidget* VCalConduit::aboutAndSetup()
 
 	KMessageBox::error(0, message, "Testing vCalendar Conduit");
 
+	registerMimeErrorHandler(mimeError);
 	getCalendar(VCalSetup::VCalGroup);
+	printVObject(stderr,calendar());
 }
 
 
 // $Log$
+// Revision 1.32  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.31  2001/03/24 16:11:06  adridg
 // Fixup some date-to-vcs functions
 //

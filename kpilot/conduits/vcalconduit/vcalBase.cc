@@ -398,31 +398,85 @@ void VCalBaseConduit::setStatus(VObject *vevent,int status)
 
 void VCalBaseConduit::addDateProperty(VObject *vevent,
 	const char *prop,
-	const QDateTime& dt)
+	const QDateTime& dt,
+	bool truncateTime)
+{
+	QString dateString = TmToISO(dt,truncateTime);
+	addPropValue(vevent, prop, dateString.latin1());
+}
+
+void VCalBaseConduit::addDateProperty(VObject *vevent,
+	const char *prop,
+	const struct tm *t,
+	bool truncateTime)
+{
+	QString dateString = TmToISO(t,truncateTime);
+	addPropValue(vevent, prop, dateString.latin1());
+}
+
+void VCalBaseConduit::setDateProperty(VObject *vevent,
+	const QDateTime& dt,
+	bool truncateTime)
+{
+	setVObjectUStringZValue_(vevent,
+		fakeUnicode(TmToISO(dt,truncateTime).latin1(), 0));
+}
+
+void VCalBaseConduit::setDateProperty(VObject *vevent,
+	const struct tm *p,
+	bool truncateTime)
+{
+	setVObjectUStringZValue_(vevent,
+		fakeUnicode(TmToISO(p,truncateTime).latin1(), 0));
+}
+
+
+
+QString VCalBaseConduit::TmToISO(const QDateTime &dt,
+	bool truncateTime)
 {
 	FUNCTIONSETUP;
 
 	QString dateString;
 
-	dateString.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
+	if (truncateTime)
+	{
+	dateString.sprintf("%.4d%.2d%.2dT000000",
+		dt.date().year(), dt.date().month(), dt.date().day());
+	}
+	else
+	{
+	dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
 		dt.date().year(), dt.date().month(), dt.date().day(), 
 		dt.time().hour(), dt.time().minute(), dt.time().second());
-	addPropValue(vevent, prop, dateString.latin1());
+	}
+
+	return dateString;
 }
 
 
-
-QString VCalBaseConduit::TmToISO(struct tm tm)
+QString VCalBaseConduit::TmToISO(const struct tm *tm,
+	bool truncateTime)
 {
   QString dStr;
 
+  if (truncateTime)
+  {
+  dStr.sprintf("%.4d%.2d%.2dT000000",
+	       1900 + tm->tm_year,
+	       tm->tm_mon + 1,
+	       tm->tm_mday);
+  }
+  else
+  {
   dStr.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-	       1900 + tm.tm_year,
-	       tm.tm_mon + 1,
-	       tm.tm_mday,
-	       tm.tm_hour,
-	       tm.tm_min,
-	       tm.tm_sec);
+	       1900 + tm->tm_year,
+	       tm->tm_mon + 1,
+	       tm->tm_mday,
+	       tm->tm_hour,
+	       tm->tm_min,
+	       tm->tm_sec);
+  }
 
   return dStr;
 }
@@ -498,6 +552,9 @@ void VCalBaseConduit::deleteVObject(PilotRecord *rec)
 }
 
 // $Log$
+// Revision 1.2  2001/03/24 16:11:06  adridg
+// Fixup some date-to-vcs functions
+//
 // Revision 1.1  2001/03/10 18:26:04  adridg
 // Refactored vcal conduit and todo conduit
 //

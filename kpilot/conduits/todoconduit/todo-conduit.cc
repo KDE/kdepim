@@ -109,6 +109,7 @@
 #include "conduitApp.h"
 #endif
 
+static const char *todo_conduit_id = "$Id:$";
 
 
 // globals
@@ -123,6 +124,9 @@ int main(int argc, char* argv[])
   TodoConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
+
+	/* NOTREACHED */
+	(void) todo_conduit_id;
 }
 
 
@@ -222,7 +226,7 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   VObject *vtodo;
   VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
-  QString dateString, tmpStr;
+  QString tmpStr;
   QString numStr;
   PilotTodoEntry todoEntry(rec);
   
@@ -236,7 +240,7 @@ void TodoConduit::updateVObject(PilotRecord *rec)
     numStr.sprintf("KPilot - %d",rec->getID());
     addPropValue(vtodo, VCUniqueStringProp, numStr.latin1());
     addPropValue(vtodo, VCSequenceProp, "1");
-    addPropValue(vtodo, VCLastModifiedProp, dateString.latin1());
+	addDateProperty(vtodo, VCLastModifiedProp, todaysDate);
     addPropValue(vtodo, VCPriorityProp, "0");
     addPropValue(vtodo, KPilotIdProp, numStr.setNum(todoEntry.getID()).latin1());
     addPropValue(vtodo, KPilotStatusProp, "0");
@@ -273,27 +277,14 @@ void TodoConduit::updateVObject(PilotRecord *rec)
 	}
 	else 
 	{
-		dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-		       1900 + todoEntry.getDueDate().tm_year,
-		       todoEntry.getDueDate().tm_mon + 1,
-		       todoEntry.getDueDate().tm_mday,
-		       todoEntry.getDueDate().tm_hour,
-		       todoEntry.getDueDate().tm_min,
-		       todoEntry.getDueDate().tm_sec);
-
-		DEBUGCONDUIT << fname
-			<< ": Setting end date to "
-			<< dateString
-			<< endl;
-
 		if (vo)
 		{
-			setVObjectUStringZValue_(vo, 
-				fakeUnicode(dateString.latin1(), 0));
+			setDateProperty(vo,todoEntry.getDueDate_p());
 		}
 		else
 		{
-			addPropValue(vtodo, VCDTendProp, dateString.latin1());
+			addDateProperty(vtodo, VCDTendProp,
+				todoEntry.getDueDate_p());
 		}
 	}
   
@@ -541,6 +532,9 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.17  2001/03/24 16:11:06  adridg
+// Fixup some date-to-vcs functions
+//
 // Revision 1.16  2001/03/10 18:26:04  adridg
 // Refactored vcal conduit and todo conduit
 //

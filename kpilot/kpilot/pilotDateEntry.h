@@ -67,9 +67,11 @@ public:
   void setEvent(int event) { fAppointmentInfo.event = event; }
   
   struct tm getEventStart() const { return fAppointmentInfo.begin; }
+  const struct tm *getEventStart_p() const { return &fAppointmentInfo.begin; }
   void setEventStart(struct tm& start) { fAppointmentInfo.begin = start; }
 
   struct tm getEventEnd() const { return fAppointmentInfo.end; }
+  const struct tm *getEventEnd_p() const { return &fAppointmentInfo.end; }
   void setEventEnd(struct tm& end) { fAppointmentInfo.end = end; }
   
   int getAlarm() const { return fAppointmentInfo.alarm; }
@@ -136,6 +138,9 @@ private:
 
 
 // $Log$
+// Revision 1.7  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.6  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

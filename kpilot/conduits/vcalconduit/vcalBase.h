@@ -62,15 +62,47 @@ public:
 	static void setNote(VObject *vevent,const char *note);
 	static void setSecret(VObject *vevent,bool secret);
 	static void setStatus(VObject *vevent,int status);	
-	// Add the date property "prop" to the vevent
+	// Add the date property "prop" to the vevent.
+	// This *adds* the property as a sub-VObject to
+	// the given VObject, so use this primarily when
+	// an object is created. The meaning of truncateTime
+	// is explained below at TmToISO().
+	//
+	//
 	static void addDateProperty(VObject *vevent,
 		const char *prop,
-		const QDateTime& dt);
+		const struct tm *p,
+		bool truncateTime=false);
+	static void addDateProperty(VObject *vevent,
+		const char *prop,
+		const QDateTime& dt,
+		bool truncateTime=false);
+	// If you already have a date property and you
+	// want to change it, use setDateProperty(). 
+	// The meaning of truncateTime
+	// is explained below at TmToISO().
+	//
+	//
+	static void setDateProperty(VObject *vevent,
+		const struct tm *p,
+		bool truncateTime=false);
+	static void setDateProperty(VObject *vevent,
+		const QDateTime &dt,
+		bool truncateTime=false);
 
-	// More *static* utility functions.
+	// More *static* utility functions. Setting
+	// truncateTime to true discards the time
+	// part and sets the time in the returned
+	// string to "000000". This indicates a
+	// floaring event in vCal.
 	//
 	//
-	static QString TmToISO(struct tm tm);
+	static QString TmToISO(const QDateTime&,
+		bool truncateTime=false);
+	static QString TmToISO(const struct tm *tm,
+		bool truncateTime=false);
+	static QString TmToISO(const struct tm tm,
+		bool truncateTime=false) { return TmToISO(&tm,truncateTime); }
 	static struct tm ISOToTm(const QString &tStr,int timeZone);
 	static int numFromDay(const QString &day);
 

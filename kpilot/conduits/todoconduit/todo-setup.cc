@@ -28,7 +28,7 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-static const char *id="$Id$";
+static const char *todo_setup_id="$Id$";
 
 
 #include "options.h"
@@ -99,6 +99,7 @@ TodoSetup::TodoSetup(QWidget *parent)
 	addPage(new TodoSetupPage(this,config));
 	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
+	(void) todo_setup_id;
 }
 
 
@@ -162,6 +163,9 @@ TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
 
 
 // $Log$
+// Revision 1.12  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.11  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

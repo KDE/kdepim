@@ -65,6 +65,7 @@ public:
   
   struct tm getDueDate() const { return fTodoInfo.due; }
   void setDueDate(struct tm& d) { fTodoInfo.due = d; }
+	const struct tm *getDueDate_p() const { return &fTodoInfo.due; } 
   
   int getIndefinite() const { return fTodoInfo.indefinite; }
   void setIndefinite(int i) { fTodoInfo.indefinite = i; }
@@ -97,6 +98,9 @@ private:
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
