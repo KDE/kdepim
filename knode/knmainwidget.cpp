@@ -213,8 +213,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   knGlobals.netAccess=n_etAccess;
 
   //Filter Manager
-  f_ilManager=new KNFilterManager(a_ctArtFilter, a_ctArtFilterKeyb);
-  knGlobals.filManager=f_ilManager;
+  f_ilManager = knGlobals.filterManager();
+  f_ilManager->setMenuAction(a_ctArtFilter, a_ctArtFilterKeyb);
 
   //Article Manager
   a_rtManager=new KNArticleManager(h_drView, f_ilManager);

@@ -62,14 +62,11 @@ void KNFilterSelectAction::slotMenuActivated(int id)
 
 //==============================================================================
 
-
-KNFilterManager::KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObject * parent, const char * name)
- : QObject(parent,name), fset(0), currFilter(0), a_ctFilter(a)
+KNFilterManager::KNFilterManager(QObject * parent, const char * name)
+ : QObject(parent,name), fset(0), currFilter(0), a_ctFilter(0)
 {
   fList.setAutoDelete(true);
 
-  connect(a_ctFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
-  connect(keybA, SIGNAL(activated()), this,  SLOT(slotShowFilterChooser()));
   loadFilters();
 
   KConfig *conf=knGlobals.config();
@@ -303,7 +300,8 @@ KNArticleFilter* KNFilterManager::setFilter(const int id)
   currFilter=byID(id);
 
   if(currFilter) {
-    a_ctFilter->setCurrentItem(currFilter->id());
+    if(a_ctFilter)
+      a_ctFilter->setCurrentItem(currFilter->id());
     emit(filterChanged(currFilter));
   } else
     currFilter=bak;
@@ -327,6 +325,9 @@ KNArticleFilter* KNFilterManager::byID(int id)
 
 void KNFilterManager::updateMenu()
 {
+  if(!a_ctFilter)
+    return;
+
   a_ctFilter->popupMenu()->clear();
   KNArticleFilter *f=0;
 
@@ -382,6 +383,18 @@ void KNFilterManager::slotShowFilterChooser()
     setFilter(ids[newFilter]);
 }
 
+
+void KNFilterManager::setMenuAction(KNFilterSelectAction *a, KAction *keybA)
+{
+  if(a) {
+    a_ctFilter = a;
+    connect(a_ctFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
+  }
+  if(keybA)
+    connect(keybA, SIGNAL(activated()), this,  SLOT(slotShowFilterChooser()));
+
+  updateMenu();
+}
 
 //--------------------------------
 

@@ -19,10 +19,19 @@
 
 #include <kconfig.h>
 
+#include "knfiltermanager.h"
+
 KConfig* KNGlobals::config()
 {
   if (!c_onfig) {
       c_onfig = KSharedConfig::openConfig( "knoderc" );
   }
   return c_onfig;
+}
+
+KNFilterManager* KNGlobals::filterManager()
+{
+  if (!mFilManager)
+    mFilManager = new KNFilterManager();
+  return mFilManager;
 }

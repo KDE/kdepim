@@ -1584,7 +1584,7 @@ void KNConfig::ScoringWidget::apply()
 
 
 KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
- : BaseWidget(p,n), f_ilManager(knGlobals.filManager)
+ : BaseWidget(p,n), f_ilManager(knGlobals.filterManager())
 {
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 

@@ -57,7 +57,7 @@ class KNFilterManager : public QObject
   Q_OBJECT
 
   public:
-    KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObject * parent=0, const char * name=0);
+    KNFilterManager(QObject * parent = 0, const char * name = 0);
     ~KNFilterManager();
     
     void readOptions();
@@ -76,6 +76,10 @@ class KNFilterManager : public QObject
     void addFilter(KNArticleFilter *f);
     void deleteFilter(KNArticleFilter *f);
     bool newNameIsOK(KNArticleFilter *f, const QString &newName);
+
+    // Allow to delay the setup of UI elements, since the knode part may not 
+    // be available when the config dialog is called
+    void setMenuAction(KNFilterSelectAction *a, KAction *keybA);
           
   protected:
     void loadFilters();

@@ -60,14 +60,18 @@ class KNGlobals {
     KNArticleManager      *artManager;
     KNArticleFactory      *artFactory;
     KNFolderManager       *folManager;
-    KNFilterManager       *filManager;
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
     Kpgp::Module          *pgp;
     KConfig               *config();
     KInstance             *instance;
+
+    KNFilterManager       *filterManager();
+
 private:
     KSharedConfig::Ptr c_onfig;
+    
+    KNFilterManager       *mFilManager;
 };
 
 
