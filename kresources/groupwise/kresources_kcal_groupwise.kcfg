@@ -15,5 +15,9 @@
    <label>TCP Port</label>
    <default>7181</default>
   </entry>
+  <entry key="UseHttps" type="Bool" >
+   <label>Use HTTPS</label>
+   <default>false</default>
+  </entry>
  </group>
 </kcfg>

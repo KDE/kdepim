@@ -21,6 +21,9 @@
 #ifndef GROUPWISESERVER_H
 #define GROUPWISESERVER_H
 
+#include <kio/job.h>
+#include <kio/jobclasses.h>
+#include <qapplication.h>
 #include <qobject.h>
 #include <qstring.h>
 #include <qthread.h>
@@ -102,6 +105,7 @@ class GroupwiseServer : public QObject
     QString mUrl;
     QString mUser;
     QString mPassword;
+    bool mSSL;
 
     std::string mSession;
     std::string mCalendarFolder;

@@ -65,6 +65,9 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   mainLayout->addWidget( mPasswordEdit, 4, 1 );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
+  mSSL = new QCheckBox( i18n("&Encrypt communication with server"), this );
+  mainLayout->addWidget( mSSL, 5, 0 );
+
 #if 0
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
   mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
@@ -89,6 +92,7 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
     mPort->setText( QString::number(res->prefs()->port()) );
     mUserEdit->setText( res->prefs()->user() );
     mPasswordEdit->setText( res->prefs()->password() );
+    mSSL->setChecked( res->prefs()->useHttps() );
 #if 0
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
@@ -106,6 +110,7 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *resource )
     res->prefs()->setPort( mPort->text().toUInt() );
     res->prefs()->setUser( mUserEdit->text() );
     res->prefs()->setPassword( mPasswordEdit->text() );
+    res->prefs()->setUseHttps( mSSL->isChecked() );
 #if 0
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );

@@ -16,6 +16,10 @@
    <label>Port</label>
    <whatsthis>TCP Port of the GroupWise server</whatsthis>
   </entry>
+  <entry key="UseHttps" type="Bool" >
+   <label>Use HTTPS</label>
+   <default>false</default>
+  </entry>
  </group>
  <group name="AddressBooks" >
   <entry key="ReadAddressBooks" type="StringList" >

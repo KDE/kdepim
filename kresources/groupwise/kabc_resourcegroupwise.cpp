@@ -76,8 +76,11 @@ void ResourceGroupwise::init()
 void ResourceGroupwise::initGroupwise()
 {
   QString url;
-  url =  "http://" + mPrefs->host() +":";
-
+  if ( mPrefs->useHttps() )
+     url =  "https://";
+  else
+     url =  "http://";
+  url += mPrefs->host() +":";
   url += QString::number(mPrefs->port()) + "/soap/";
   mServer = new GroupwiseServer( url, mPrefs->user(),
                                  mPrefs->password(), this );

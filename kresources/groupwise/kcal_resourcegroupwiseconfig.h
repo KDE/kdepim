@@ -54,6 +54,7 @@ class ResourceGroupwiseConfig : public KRES::ConfigWidget
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mLastSyncCheck;    
+    QCheckBox *mSSL;
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;

@@ -29,8 +29,15 @@
 
 #include <kabc/addressee.h>
 
+#include <kio/job.h>
+#include <kio/jobclasses.h>
+#include <kio/netaccess.h>
+#include <ktempfile.h>
 #include <kdebug.h>
+#include <qnamespace.h>
+#include <qfile.h>
 
+#include "ksslsocket.h"
 #include "contactconverter.h"
 #include "incidenceconverter.h"
 #include "kcal_resourcegroupwise.h"
@@ -38,10 +45,83 @@
 
 #include "groupwiseserver.h"
 
+static KExtendedSocket *m_sock = 0;
+
+int myOpen( struct soap *soap, const char *endpoint, const char *host, int port )
+{
+   m_sock->reset();
+   m_sock->setBlockingMode(false);
+   m_sock->setSocketFlags(KExtendedSocket::inetSocket);
+
+   m_sock->setAddress(host, port);
+   m_sock->lookup();
+   m_sock->connect();
+   m_sock->open();
+   m_sock->enableRead(true);
+   m_sock->enableWrite(true);
+
+   // hopefully never really used by SOAP
+   return m_sock->fd();
+}
+
+int myClose( struct soap *soap )
+{
+   m_sock->close();
+   m_sock->reset();
+   return SOAP_OK;
+}
+
+int mySendCallback( struct soap *soap, const char *s, size_t n )
+{
+#if 0
+qDebug("*************************");
+char p[99999];
+strncpy(p, s, n);
+p[n]='\0';
+qDebug("%s", p );
+qDebug("\n*************************");
+#endif
+   int ret;
+   while ( n>0 ){
+     ret = m_sock->writeBlock( s, n );
+     if ( ret < 0 ){
+        qDebug("ERROR: send failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
+        return ret;
+     }
+     n -= ret;
+   }
+
+   if ( n !=0 ){
+      qDebug("ERROR: send failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
+   }
+
+   m_sock->flush();
+
+   return SOAP_OK;
+}
+
+size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
+{
+//   m_sock->open();
+   long ret = m_sock->readBlock( s, n );
+   if ( ret < 0 )
+        qDebug("ERROR: receive failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
+#if 0
+qDebug("*************************");
+char p[99999];
+strncpy(p, s, ret);
+p[ret]='\0';
+qDebug("%s", p );
+qDebug("\n*************************");
+qDebug("kioReceiveCallback return %d", ret);
+#endif
+   return ret;
+}
+
 GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, QObject *parent )
   : QObject( parent, "GroupwiseServer" ),
-    mUrl( url ), mUser( user ), mPassword( password )
+    mUrl( url ), mUser( user ), mPassword( password ), mSSL( url.left(6)=="https:" )
 {
   mSoap = new soap;
   mWeaver = new KPIM::ThreadWeaver::Weaver( this );
@@ -71,10 +151,25 @@ bool GroupwiseServer::login()
   pt.username = mUser.latin1();
   pt.password = new string( mPassword.latin1() );
   loginReq.auth = &pt;
+  mSoap->userid = strdup( mUser.latin1() );
+  mSoap->passwd = strdup( mPassword.latin1() );
 
   mSession.clear();
 
-  cout << "Login" << endl;
+#if 1
+  // disable this block to use native gSOAP network functions
+  if (mSSL) 
+     m_sock = new KSSLSocket();
+  else
+     m_sock = new KExtendedSocket();
+
+  mSoap->fopen = myOpen;
+  mSoap->fsend = mySendCallback;
+  mSoap->frecv = myReceiveCallback;
+  mSoap->fclose = myClose;
+#endif
+
+//  cout << "Login" << endl;
 
   int result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
 
@@ -83,7 +178,7 @@ bool GroupwiseServer::login()
     return false;
   }
 
-  std::cout << "Session ID: " << loginResp.session.c_str() << std::endl;
+//  std::cout << "Session ID: " << loginResp.session.c_str() << std::endl;
 
   mSession = loginResp.session;
   mSoap->header = new( SOAP_ENV__Header );
@@ -108,7 +203,7 @@ bool GroupwiseServer::getCategoryList()
     categories = catListResp.categories->category;
     std::vector<class ns1__Category * >::const_iterator it;
     for( it = categories->begin(); it != categories->end(); ++it ) {
-      cout << "CATEGORY" << endl;
+//      cout << "CATEGORY" << endl;
       dumpItem( *it );
     }
   }

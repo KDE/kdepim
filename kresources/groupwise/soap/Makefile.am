@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/groupwise $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/groupwise $(all_includes) -DDEBUG
 
 check_PROGRAMS = soapdebug
 
@@ -11,7 +11,7 @@ soapdebug_SOURCES = soapdebug.cpp
 noinst_LTLIBRARIES = libgwsoap.la
 
 libgwsoap_la_SOURCES = contactconverter.cpp gwconverter.cpp incidenceconverter.cpp \
-                       groupwiseserver.cpp gwjobs.cpp \
+                       groupwiseserver.cpp gwjobs.cpp ksslsocket.cpp \
                        soapC.cpp soapClient.cpp stdsoap2.cpp
 libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 libgwsoap_la_LIBADD	= -lkabc

@@ -88,9 +88,12 @@ void Groupwise::get( const KURL &url )
       QString email = file.left( file.length() - 4 );
       debugMessage( "Email: " + email );
 
-      QString u = "http://" + url.host() + ":";
+      QString u = url.protocol() + "://" + url.host() + ":";
       if ( url.port() ) u += QString::number( url.port() );
-      else u += "7181";
+      else if (url.protocol()=="https") 
+              u += "8201";
+           else
+              u += "7181";
       u += "/soap";
 
       QString user = url.user();
