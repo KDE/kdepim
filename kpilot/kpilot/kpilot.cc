@@ -163,13 +163,10 @@ public:
 	
 KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0),
-	DCOPObject("KPilotIface"),
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
 	fMenuBar(0L),
-	fStatusBar(0L),
-	fProgress(0L),
 	fToolBar(0L),
 	fQuitAfterCopyComplete(false),
 	fManagingWidget(0L),
@@ -287,9 +284,6 @@ void KPilotInstaller::setupWidget()
 		<< ": Got XML from "
 		<< xmlFile() << " and " << localXMLFile() << endl;
 #endif
-
-
-	initStatusBar();
 }
 
 
@@ -302,43 +296,38 @@ void KPilotInstaller::initComponents()
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Creating component pages." << endl;
 #endif
-	fLogWidget = new LogWidget(getManagingWidget()->addVBoxPage(i18n("Log File")));
+
+	QString pixfile;
+	QWidget *w;
+
+#define VIEWICON(a) KGlobal::dirs()->findResource("data",(a))
+
+#define ADDICONPAGE(a,b) pixfile = VIEWICON(b); \
+	w = getManagingWidget()->addVBoxPage(a,QString::null, \
+		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
+
+	ADDICONPAGE(i18n("HotSync"),"kpilot/kpilot-hotsync.png");
+	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 
-	addComponentPage(new MemoWidget(getManagingWidget()->addVBoxPage(i18n("Memo Viewer")), defaultDBPath),
+	ADDICONPAGE(i18n("Memo Viewer"),"kpilot/kpilot-knotes.png");
+	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
-	addComponentPage(new AddressWidget(getManagingWidget()->addVBoxPage(i18n("Address Viewer")),
-			defaultDBPath), i18n("Address Viewer"));
 
-	fFileInstallWidget = new FileInstallWidget(getManagingWidget()->addVBoxPage(i18n("File Installer")),
+	addComponentPage(new AddressWidget(
+		getManagingWidget()->addVBoxPage(i18n("Address Viewer")),
+		defaultDBPath), 
+		i18n("Address Viewer"));
+
+	fFileInstallWidget = new FileInstallWidget(
+		getManagingWidget()->addVBoxPage(i18n("File Installer")),
 		defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
+#undef ADDICONPAGE
+#undef VIEWICON
 }
 
-void KPilotInstaller::initStatusBar()
-{
-	FUNCTIONSETUP;
-	QString welcomeMessage = i18n("Welcome to KPilot");
-
-	welcomeMessage += " (";
-	welcomeMessage += version(0);
-	welcomeMessage += ")";
-
-	fStatusBar = statusBar();
-	fStatusBar->insertItem(welcomeMessage, 0);
-	fStatusBar->show();
-
-	fProgress =
-		new KProgress(0, 100, 0, KProgress::Horizontal, fStatusBar);
-	fProgress->adjustSize();
-	fProgress->resize(100, fProgress->height());
-	fProgress->show();
-
-	fStatusBar->addWidget(fProgress, 0, true);
-
-	fStatusBar->message(i18n("Initializing"), 500);
-}
 
 
 void KPilotInstaller::initIcons()
@@ -447,7 +436,11 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	}
 	if (!message.isEmpty())
 	{
-		fStatusBar->changeItem(message,0);
+		QString m(message);
+		if (fLogWidget)
+		{
+			fLogWidget->logMessage(m);
+		}
 	}
 	getDaemon().requestSync(kind);
 }
@@ -486,10 +479,6 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
-	m_statusbarAction
-		=
-		KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()),
-		actionCollection());
 	m_toolbarAction =
 		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
 		actionCollection());
@@ -579,22 +568,6 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		this, SLOT(slotSelectComponent(PilotComponent *)));
 }
 
-
-void KPilotInstaller::optionsShowStatusbar()
-{
-	FUNCTIONSETUP;
-	if (m_statusbarAction->isChecked())
-	{
-		statusBar()->show();
-	}
-	else
-	{
-		statusBar()->hide();
-	}
-
-	kapp->processEvents();
-	resizeEvent(0);
-}
 
 
 void KPilotInstaller::optionsShowToolbar()
@@ -697,57 +670,6 @@ void KPilotInstaller::slotConfigureConduits()
 	delete conSetup;
 }
 
-
-/* DCOP */ ASYNC KPilotInstaller::filesChanged()
-{
-	FUNCTIONSETUP;
-
-	fFileInstallWidget->refreshFileInstallList();
-}
-
-/* DCOP */ ASYNC KPilotInstaller::daemonStatus(QString s)
-{
-	FUNCTIONSETUP;
-	if (fStatusBar)
-	{
-		fStatusBar->changeItem(s, 0);
-	}
-
-	if (fLogWidget)
-	{
-		QTime t = QTime::currentTime();
-		QString s1 = t.toString();
-
-		s1.append("  ");
-		s1.append(s);
-		fLogWidget->addMessage(s1);
-	}
-}
-
-/* DCOP */ ASYNC KPilotInstaller::daemonProgress(QString s, int i)
-{
-	FUNCTIONSETUP;
-	if (!s.isEmpty())
-	{
-		fStatusBar->message(s, 2000 /* ms */ );
-	}
-
-	if (!fProgress)
-		return;
-
-	if (i == -1)
-	{
-		fProgress->hide();
-	}
-	else if (i == -2)
-	{
-		fProgress->show();
-	}
-	else if ((i >= 0) && (i <= 100))
-	{
-		fProgress->setValue(i);
-	}
-}
 
 /* static */ const char *KPilotInstaller::version(int kind)
 {
@@ -933,6 +855,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.65  2001/11/11 22:10:38  adridg
+// Switched to KJanuswidget
+//
 // Revision 1.64  2001/10/17 08:46:08  adridg
 // Minor cleanups
 //

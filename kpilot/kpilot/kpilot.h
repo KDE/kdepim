@@ -30,7 +30,6 @@
 
 #include <kmainwindow.h>
 
-#include "kpilotDCOP.h"
 
 class QPopupMenu;
 class QComboBox;
@@ -48,7 +47,7 @@ class LogWidget;
 
 
 
-class KPilotInstaller : public KMainWindow, public KPilotDCOP
+class KPilotInstaller : public KMainWindow
 {
 Q_OBJECT
 
@@ -81,13 +80,6 @@ public:
 
 	Status status() const { return fStatus; } ;
 
-public:
-	/**
-	* DCOP interface.
-	*/
-	virtual ASYNC filesChanged();
-	virtual ASYNC daemonStatus(QString);
-	virtual ASYNC daemonProgress(QString,int);
 
 protected:
 	void closeEvent(QCloseEvent *e);
@@ -117,7 +109,6 @@ public slots:
 	void slotBackupRequested();
 	void slotHotSyncRequested();
 	void slotFastSyncRequested();
-	void optionsShowStatusbar();
 	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
@@ -135,7 +126,6 @@ protected:
 
 	void initIcons();
 	void initMenu();
-	void initStatusBar();
 	void setupWidget();
 	void initComponents();
 
@@ -171,8 +161,6 @@ protected:
 
 private:
 	KMenuBar*       fMenuBar;
-	KStatusBar*     fStatusBar;
-	KProgress       *fProgress;
 	KToolBar*       fToolBar;
 	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
 	KJanusWidget    *fManagingWidget;
@@ -217,6 +205,9 @@ signals:
  
 
 // $Log$
+// Revision 1.34  2001/11/11 22:10:38  adridg
+// Switched to KJanuswidget
+//
 // Revision 1.33  2001/09/30 16:58:45  adridg
 // Cleaned up preHotSync interface, removed extra includes, added private-d-ptr.
 //

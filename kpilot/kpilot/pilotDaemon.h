@@ -70,12 +70,6 @@ public:
 	virtual void dragEnterEvent(QDragEnterEvent *);
 	virtual void dropEvent(QDropEvent *);
 
-	/**
-	* Methods to get information from the FileInstaller
-	* in the tray -- which files are there, and where?
-	*/
-	QStringList installFiles();
-	const QString &installDir();
 
 protected:
 	void setupWidget();
@@ -105,7 +99,6 @@ private:
 	*/
 	KAboutApplication *kap;
 
-	FileInstaller *fInstaller;
 } ;
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
@@ -140,6 +133,7 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
+	void addInstallFiles(QStrList);
 
 	// The next few functions are the DCOP interface
 	//
@@ -184,6 +178,8 @@ private:
 	*/
 	PilotDaemonTray *fTray;
 
+	FileInstaller *fInstaller;
+
 protected slots:
 	/**
 	* Called after a file has been installed to notify any observers, like
@@ -210,6 +206,9 @@ private:
 
 
 // $Log$
+// Revision 1.29  2001/10/08 12:49:11  cschumac
+// kde3 compile fixes.
+//
 // Revision 1.28  2001/09/29 16:26:18  adridg
 // The big layout change
 //

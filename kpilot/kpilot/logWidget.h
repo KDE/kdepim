@@ -1,3 +1,5 @@
+#ifndef _KPILOT_LOGWIDGET_H
+#define _KPILOT_LOGWIDGET_H
 /* logWidget.h                          KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
@@ -26,15 +28,15 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
-#ifndef _KPILOT_LOGWIDGET_H
-#define _KPILOT_LOGWIDGET_H
 
+#include "kpilotDCOP.h"
 #include "pilotComponent.h"
 
 class QLabel;
 class QTextView;
+class KProgress;
 
-class LogWidget : public PilotComponent
+class LogWidget : public PilotComponent , public KPilotDCOP
 {
 Q_OBJECT
 
@@ -49,6 +51,12 @@ public:
 	bool showTime() const { return fShowTime; } ;
 	void setShowTime(bool b) { fShowTime=b; } ;
 
+	/**
+	* DCOP interface.
+	*/
+	virtual ASYNC logMessage(QString);
+	virtual ASYNC logProgress(QString,int);
+
 public slots:
 	void addMessage(const QString &);
 	void addError(const QString &);
@@ -61,6 +69,9 @@ private:
 	QTextView *fLog;
 	bool fShowTime;
 	QLabel *fSplash;
+	QLabel *fLabel;
+	KProgress *fProgress;
 } ;
 
+// $Log: $
 #endif

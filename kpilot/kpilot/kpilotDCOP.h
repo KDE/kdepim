@@ -1,3 +1,5 @@
+#ifndef _KPILOT_KPILOTDCOP_H
+#define _KPILOT_KPILOTDCOP_H
 /* kpilotDCOP.h			KPilotDaemon
 **
 ** Copyright (C) 2000 by Adriaan de Groot
@@ -26,8 +28,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef _KPILOT_KPILOTDCOP_H
-#define _KPILOT_KPILOTDCOP_H
 
 #include <dcopobject.h>
 
@@ -36,19 +36,16 @@ class KPilotDCOP : virtual public DCOPObject
 {
 	K_DCOP
 k_dcop:
-	virtual ASYNC filesChanged() = 0;
-	virtual ASYNC daemonStatus(QString) = 0;
-	virtual ASYNC daemonProgress(QString,int) = 0;
+	virtual ASYNC logMessage(QString) = 0;
+	virtual ASYNC logProgress(QString,int) = 0;
 } ;
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 
 // $Log$
+// Revision 1.5  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.4  2001/09/07 20:48:13  adridg
 // Stripped away last crufty IPC, added logWidget
 //
@@ -61,3 +58,4 @@ k_dcop:
 // Revision 1.1  2001/03/04 22:22:29  adridg
 // DCOP cooperation between daemon & kpilot for d&d file install
 //
+#endif

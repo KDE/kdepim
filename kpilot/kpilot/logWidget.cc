@@ -42,32 +42,44 @@ static const char *logw_id =
 
 #include <kglobal.h>
 #include <kstddirs.h>
-
+#include <kprogress.h>
 
 #include "logWidget.moc"
 
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
+	DCOPObject("KPilotIface"),
 	fLog(0L), 
 	fShowTime(false),
-	fSplash(0L)
+	fSplash(0L),
+	fLabel(0L),
+	fProgress(0L)
 {
 	FUNCTIONSETUP;
-	QGridLayout *grid = new QGridLayout(this, 3, 3, SPACING);
+	QGridLayout *grid = new QGridLayout(this, 4, 4, SPACING);
 
 	grid->addRowSpacing(0, SPACING);
-	grid->addRowSpacing(2, SPACING);
+	grid->addRowSpacing(1, 100);
+	grid->addColSpacing(2, 100);
+	grid->addRowSpacing(3, SPACING);
 	grid->addColSpacing(0, SPACING);
-	grid->addColSpacing(2, SPACING);
-	grid->setRowStretch(1, 100);
-	grid->setColStretch(1, 100);
+	grid->addColSpacing(3, SPACING);
+	grid->setRowStretch(1, 50);
+	grid->setColStretch(2, 50);
 
 	fLog = new QTextView(this);
 	QToolTip::add(fLog, i18n("This lists all the messages received "
 			"during the current HotSync"));
-	grid->addWidget(fLog, 1, 1);
+	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
 	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
+
+
+	fLabel = new QLabel(i18n("Sync Progress:"),this);
+	grid->addWidget(fLabel,2,1);
+	fProgress = new KProgress(0,100,0,KProgress::Horizontal,this);
+	grid->addWidget(fProgress,2,2);
+
 
 	QString splashPath =
 		KGlobal::dirs()->findResource("data",
@@ -76,10 +88,13 @@ LogWidget::LogWidget(QWidget * parent) :
 	if (!splashPath.isEmpty() && QFile::exists(splashPath))
 	{
 		fLog->hide();
+		fLabel->hide();
+		fProgress->hide();
+
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(QPixmap(splashPath));
-		QTimer::singleShot(5000,this,SLOT(hideSplash()));
-		grid->addWidget(fSplash,1,1);
+		QTimer::singleShot(3000,this,SLOT(hideSplash()));
+		grid->addMultiCellWidget(fSplash,1,2,1,2);
 	}
 
 	(void) logw_id;
@@ -142,8 +157,41 @@ void LogWidget::hideSplash()
 	if (fSplash)
 	{
 		fSplash->hide();
-		fLog->show();
-		
 		KPILOT_DELETE(fSplash);
 	}
+
+	fLog->show();
+	fLabel->show();
+	fProgress->show();
 }
+
+
+/* DCOP */ ASYNC LogWidget::logMessage(QString s)
+{
+	FUNCTIONSETUP;
+
+	if (fLog)
+	{
+		QTime t = QTime::currentTime();
+		QString s1 = t.toString();
+
+		s1.append("  ");
+		s1.append(s);
+		fLog->append(s1);
+	}
+}
+
+/* DCOP */ ASYNC LogWidget::logProgress(QString s, int i)
+{
+	FUNCTIONSETUP;
+
+	logMessage(s);
+
+	if ((i >= 0) && (i <= 100))
+	{
+		fProgress->setValue(i);
+	}
+}
+
+
+// $Log: $

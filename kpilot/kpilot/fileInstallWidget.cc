@@ -68,9 +68,6 @@ static const char *fileinstallwidget_id =
 #include <kfiledialog.h>
 #endif
 
-// #ifndef _KPILOT_KPILOTLINK_H
-// #include "kpilotlink.h"
-// #endif
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
@@ -100,20 +97,20 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	grid->addWidget(abutton, 3, 1);
 	QToolTip::add(abutton,
 		i18n
-		("Clear the list of files to install.\nNo files wil be installed."));
+		("<qt>Clear the list of files to install. No files wil be installed.</qt>"));
 
 	abutton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 4, 1);
 	QToolTip::add(abutton,
 		i18n
-		("Choose a file to add to the list\nof files to install."));
+		("<qt>Choose a file to add to the list of files to install.</qt>"));
 
 	fListBox = new QListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 4, 2, 3);
 	QToolTip::add(fListBox,
 		i18n
-		("This lists files that will be installed on the Pilot during the next HotSync.\nDrag files here or use the Add button."));
+		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 
 	grid->setRowStretch(2, 100);
 	grid->setColStretch(2, 50);
@@ -194,6 +191,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.20  2001/09/30 16:59:22  adridg
+// Cleaned up preHotSync
+//
 // Revision 1.19  2001/09/29 16:26:18  adridg
 // The big layout change
 //

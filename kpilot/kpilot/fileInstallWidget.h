@@ -1,3 +1,5 @@
+#ifndef _KPILOT_FILEINSTALLWIDGET_H
+#define _KPILOT_FILEINSTALLWIDGET_H
 /* fileInstallWidget.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -29,8 +31,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_FILEINSTALLWIDGET_H
-#define _KPILOT_FILEINSTALLWIDGET_H
 
 #ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
@@ -81,14 +81,12 @@ public slots:
 	void refreshFileInstallList();
 };
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 
 // $Log$
+// Revision 1.16  2001/09/30 16:59:22  adridg
+// Cleaned up preHotSync
+//
 // Revision 1.15  2001/09/29 16:26:18  adridg
 // The big layout change
 //
@@ -116,3 +114,4 @@ public slots:
 // Revision 1.7  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif

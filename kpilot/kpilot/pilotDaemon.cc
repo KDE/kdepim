@@ -150,16 +150,12 @@ public:
 PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) : 
 	KSystemTray(0, "pilotDaemon"), 
 	daemon(p), 
-	kap(0L), 
-	fInstaller(0L)
+	kap(0L)
 {
 	FUNCTIONSETUP;
 	setupWidget();
 	setAcceptDrops(true);
 
-	fInstaller = new FileInstaller;
-	connect(fInstaller, SIGNAL(filesChanged()),
-		p, SLOT(slotFilesChanged()));
 
 	/* NOTREACHED */
 	(void) id;
@@ -179,7 +175,8 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 
 	QUriDrag::decode(e, list);
 
-	fInstaller->addFiles(list);
+	daemon->addInstallFiles(list);
+//	fInstaller->addFiles(list);
 }
 
 /* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent * e)
@@ -276,34 +273,6 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	}
 }
 
-QStringList PilotDaemonTray::installFiles()
-{
-	FUNCTIONSETUP;
-	if (fInstaller)
-	{
-		return fInstaller->fileNames();
-	}
-	else
-	{
-		return QStringList();
-	}
-}
-
-const QString & PilotDaemonTray::installDir()
-{
-	FUNCTIONSETUP;
-	if (fInstaller)
-	{
-		return fInstaller->dir();
-	}
-	else
-	{
-		return QString::null;
-	}
-}
-
-
-
 
 
 
@@ -317,11 +286,16 @@ PilotDaemon::PilotDaemon() :
 	fNextSyncType(0),
 	fP(0L), 
 	fTray(0L), 
+	fInstaller(0L),
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
 
 	fP = new PilotDaemonPrivate;
+
+	fInstaller = new FileInstaller;
+	connect(fInstaller, SIGNAL(filesChanged()),
+		this, SLOT(slotFilesChanged()));
 
 	setupPilotLink();
 	reloadSettings();
@@ -346,6 +320,13 @@ PilotDaemon::~PilotDaemon()
 	FUNCTIONSETUP;
 
 	delete fPilotLink;
+}
+
+void PilotDaemon::addInstallFiles(QStrList l)
+{
+	FUNCTIONSETUP;
+
+	fInstaller->addFiles(l);
 }
 
 int PilotDaemon::getPilotSpeed(KPilotConfigSettings & config)
@@ -654,7 +635,7 @@ QString PilotDaemon::syncTypeString(int i) const
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
-	getKPilot().daemonStatus(i18n("Starting HotSync ..."));
+	getKPilot().logMessage(i18n("Starting HotSync ..."));
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -670,7 +651,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	if (KPilotConfig::getConfig().resetGroup().getSyncFiles())
 	{
 		fP->addAction(new FileInstallAction(fPilotLink,
-				fTray->installDir(), fTray->installFiles()));
+				fInstaller->dir(), fInstaller->fileNames()));
 	}
 
 	switch (fNextSyncType)
@@ -702,7 +683,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	DEBUGDAEMON << fname << ": " << s << endl;
 #endif
 
-	getKPilot().daemonStatus(s);
+	getKPilot().logMessage(s);
 }
 
 /* slot */ void PilotDaemon::logProgress(const QString & s, int i)
@@ -712,7 +693,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	DEBUGDAEMON << fname << ": " << s << " (" << i << "%)" << endl;
 #endif
 
-	getKPilot().daemonProgress(s, i);
+	getKPilot().logProgress(s, i);
 }
 
 /* slot */ void PilotDaemon::nextSyncAction(SyncAction * b)
@@ -769,7 +750,7 @@ QString PilotDaemon::syncTypeString(int i) const
 
 	fPilotLink->close();
 
-	getKPilot().daemonProgress(i18n("HotSync Completed."), 100);
+	getKPilot().logProgress(i18n("HotSync Completed."), 100);
 
 	if (!fQuitAfterSync)
 	{
@@ -787,8 +768,6 @@ QString PilotDaemon::syncTypeString(int i) const
 void PilotDaemon::slotFilesChanged()
 {
 	FUNCTIONSETUP;
-
-	getKPilot().filesChanged();
 }
 
 void PilotDaemon::slotRunKPilot()
@@ -900,6 +879,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.53  2001/10/10 13:40:07  cschumac
+// Compile fixes.
+//
 // Revision 1.52  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //

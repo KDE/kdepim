@@ -50,7 +50,9 @@ kpilotDaemon_SOURCES = \
 
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
-	hotSync.cc interactiveSync.cc main-test.cc
+	hotSync.cc interactiveSync.cc \
+	kpilotDCOP.skel \
+	main-test.cc
 
 kpilotConfig_SOURCES = kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \

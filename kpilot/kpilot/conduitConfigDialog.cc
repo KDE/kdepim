@@ -325,7 +325,7 @@ void ConduitConfigDialog::configureConduit()
 					<< library
 					<< " found."
 					<< endl;
-				warnNoExec(p);
+				warnNoLibrary(p);
 				return;
 			}
 
@@ -343,7 +343,7 @@ void ConduitConfigDialog::configureConduit()
 
 				KLibLoader::self()->unloadLibrary(
 					library);
-				warnNoExec(p);
+				warnNoLibrary(p);
 				return;
 			}
 
@@ -357,7 +357,7 @@ void ConduitConfigDialog::configureConduit()
 				delete o;
 				KLibLoader::self()->unloadLibrary(
 					library);
-				warnNoExec(p);
+				warnNoLibrary(p);
 				return;
 			}
 
@@ -468,12 +468,26 @@ void ConduitConfigDialog::warnNoExec(const QListViewItem * p)
 {
 	FUNCTIONSETUP;
 
-	QString msg = i18n("No executable could be "
-		"found for the conduit %1.").arg(p->text(CONDUIT_NAME));
+	QString msg = i18n("<qt>No executable or library could be "
+		"found for the conduit %1. This means that the "
+		"conduit was not installed properly.</qt>")
+		.arg(p->text(CONDUIT_NAME));
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": " << msg << endl;
 #endif
+
+	KMessageBox::error(this, msg, i18n("Conduit error"));
+}
+
+void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
+{
+	FUNCTIONSETUP;
+
+	QString msg = i18n("<qt>There was a problem loading the library "
+		"for the conduit %1. This means that the "
+		"conduit was not installed properly.</qt>")
+		.arg(p->text(CONDUIT_NAME));
 
 	KMessageBox::error(this, msg, i18n("Conduit error"));
 }
@@ -517,6 +531,9 @@ void ConduitConfigDialog::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.3  2001/10/19 14:03:04  adridg
+// Qt3 include fixes
+//
 // Revision 1.2  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //

@@ -52,6 +52,7 @@ protected:
 	QString findExecPath(const QListViewItem * p) const;
 
 	void warnNoExec(const QListViewItem *);
+	void warnNoLibrary(const QListViewItem *);
 	void warnSetupRunning();
 
 protected slots:
@@ -69,6 +70,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.1  2001/10/04 16:53:57  adridg
+// New files for newstyle config
+//
 //
 
 #endif
