@@ -126,10 +126,15 @@ QWidget *Debugger::widget()
     connect( button, SIGNAL( clicked() ), SLOT( configureKonnector() ) );    
     commandLayout->addWidget( button );
 
+    button = new QPushButton( "Read Syncees", m_widget );
+    connect( button, SIGNAL( clicked() ), SLOT( readSyncees() ) );
+    commandLayout->addWidget( button );
+
     commandLayout->addStretch();
 
 
     mLogView = new QTextView( m_widget );
+    mLogView->setTextFormat( LogText );
     topLayout->addWidget( mLogView );    
 
     logMessage( i18n("Ready.") );
@@ -176,6 +181,10 @@ Konnector *Debugger::currentKonnector()
   }
 
   return (*it).konnector();
+}
+
+void Debugger::readSyncees()
+{
 }
 
 void Debugger::logMessage( const QString &message )

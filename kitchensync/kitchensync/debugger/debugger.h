@@ -59,6 +59,7 @@ class Debugger : public ManipulatorPart
 
   protected slots:
     void configureKonnector();
+    void readSyncees();
 
   private:
     QPixmap m_pixmap;
