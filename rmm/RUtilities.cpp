@@ -185,4 +185,69 @@ RMM::decodeBase64(const QCString & s)
     return a;
 }
 
+
+/*
+The following code does it.. but it's not entirely complete.
+It's the smallest, fastest, coolest grooviest implementation.
+
+And it's by ME! (Charles) <charles@altair.dhs.org>
+
+#include <iostream.h>
+#include <stdlib.h>
+#include <string.h>
+#include <iostream.h>
+
+static const char map[] =
+	{"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"};
+
+char* _encoder_core(const unsigned char *byte, short int len)
+{	
+	// byte will contain 4 characters.
+	char *buf = new char[4];	
+	// 111111 11|1111 1111|11 111111
+	buf[0] = map[byte[0] >> 2];
+	buf[1] = map[(byte[1] >> 4) | ((byte[0] & 0x03) <<4)];
+	buf[2] = map[((byte[1] & 0x0F) << 2) | ((byte[2] & 0xC0) >> 6)];
+	buf[3] = map[byte[2] & 0x3F];
+
+	switch (len)
+	{
+	case (1): buf[2]='=';
+	case (2): buf[3]='=';
+	}
+		
+	return buf;
+}
+
+void encoder(ostream &out, istream &in)
+{
+	unsigned char input[3];
+	short int len;
+	while (!in.eof())
+	{
+		memset(input, 0, 3);
+		len=(short int)in.read((void*)input, 3);
+		char *data=_encoder_core(input,len);
+		out.write(data, 4);
+		delete [] data;
+	}
+}
+
+
+int main(int argc, char** argv)
+{
+	encoder((ofstream)cout, (ifstream)cin);
+	return 0;
+}
+
+
+
+
+
+
+
+
+*/
+
+
 // vim:ts=4:sw=4:tw=78
