@@ -267,7 +267,6 @@ void ViewManager::editView()
     if ( dlg.exec() ) {
       dlg.saveSettings( mCore->config() );
       mActiveView->readConfig( mCore->config() );
-
       // Set the proper filter in the view. By setting the combo
       // box, the activated slot will be called, which will push
       // the filter to the view and refresh it.

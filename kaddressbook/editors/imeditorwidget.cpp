@@ -135,14 +135,14 @@ IMEditorWidget::IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const ch
 	connect( mWidget->btnDelete, SIGNAL( clicked() ), SLOT( slotDelete() ) );
 	connect( mWidget->lvAddresses, SIGNAL( selectionChanged() ), SLOT( slotUpdateButtons() ) );
 
-        connect( mWidget->lvAddresses, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ),SLOT( slotEdit() ) );
+	connect( mWidget->lvAddresses, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ),SLOT( slotEdit() ) );
 
 	mWidget->btnEdit->setEnabled( false );
 	mWidget->btnDelete->setEnabled( false );
 	// Disabled pending implementation
 	mWidget->btnUp->setEnabled( false );
 	mWidget->btnDown->setEnabled( false );
-	
+
 	mProtocols = KPluginInfo::fromServices( KTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
 	//kdDebug ( 5720 ) << " found " << mProtocols.count() << " protocols " << endl;
 }

@@ -15,6 +15,7 @@
       <Action name="file_print"/>
       <Action name="file_mail"/>
       <Action name="file_mail_vcard"/>
+      <Action name="file_chat"/>
       <Separator/>
       <Action name="file_quit"/>
     </Menu>
@@ -70,6 +71,7 @@
     <Separator/>
     <Action name="file_mail"/>
     <Action name="file_mail_vcard"/>
+    <Action name="file_chat"/>
   </Menu>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
@@ -80,6 +82,7 @@
     <Action name="file_print" />
     <Separator/>
     <Action name="file_mail"/>
+    <Action name="file_chat"/>
     <Separator/>
     <Action name="ldap_lookup"/>
   </ToolBar>

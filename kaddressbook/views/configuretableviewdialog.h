@@ -83,6 +83,7 @@ class LookAndFeelPage : public QWidget
     QCheckBox *mToolTipBox;
     KURLRequester *mBackgroundName;
     QCheckBox *mBackgroundBox;
+    QCheckBox *mIMPresenceBox;
 };
 
 #endif

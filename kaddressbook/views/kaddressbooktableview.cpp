@@ -47,6 +47,7 @@
 #include <kmessagebox.h>
 #include <kurl.h>
 #include <kurlrequester.h>
+#include <libkdepim/kimproxy.h>
 
 #include "configuretableviewdialog.h"
 #include "contactlistview.h"
@@ -91,6 +92,7 @@ KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
 
   // The list view will be created when the config is read.
   mListView = 0;
+  mIMProxy = 0;
 }
 
 KAddressBookTableView::~KAddressBookTableView()
@@ -101,22 +103,24 @@ void KAddressBookTableView::reconstructListView()
 {
     if (mListView)
     {
-        disconnect(mListView, SIGNAL(selectionChanged()),
-                   this, SLOT(addresseeSelected()));
-        disconnect(mListView, SIGNAL(executed(QListViewItem*)),
-                   this, SLOT(addresseeExecuted(QListViewItem*)));
-        disconnect(mListView, SIGNAL(doubleClicked(QListViewItem*)),
-                   this, SLOT(addresseeExecuted(QListViewItem*)));
-        disconnect(mListView, SIGNAL(startAddresseeDrag()), this,
-                   SIGNAL(startDrag()));
-        disconnect(mListView, SIGNAL(addresseeDropped(QDropEvent*)), this,
-                   SIGNAL(dropped(QDropEvent*)));
-        delete mListView;
+      disconnect(mListView, SIGNAL(selectionChanged()),
+                  this, SLOT(addresseeSelected()));
+      disconnect(mListView, SIGNAL(executed(QListViewItem*)),
+                  this, SLOT(addresseeExecuted(QListViewItem*)));
+      disconnect(mListView, SIGNAL(doubleClicked(QListViewItem*)),
+                  this, SLOT(addresseeExecuted(QListViewItem*)));
+      disconnect(mListView, SIGNAL(startAddresseeDrag()), this,
+                  SIGNAL(startDrag()));
+      disconnect(mListView, SIGNAL(addresseeDropped(QDropEvent*)), this,
+                  SIGNAL(dropped(QDropEvent*)));
+      delete mListView;
     }
 
   mListView = new ContactListView( this, core()->addressBook(), viewWidget() );
   mListView->setFullWidth( true );
-
+  
+  mListView->setShowIM( mIMProxy != 0 );
+  
   // Add the columns
   KABC::Field::List fieldList = fields();
   KABC::Field::List::ConstIterator it;
@@ -125,6 +129,15 @@ void KAddressBookTableView::reconstructListView()
   for( it = fieldList.begin(); it != fieldList.end(); ++it ) {
       mListView->addColumn( (*it)->label() );
       mListView->setColumnWidthMode(c++, QListView::Manual);
+  }
+
+  if ( mListView->showIM() ) {
+    // IM presence is added separately, because it's not a KABC field.
+    // If you want to make this appear as the leftmost column by default, move
+    // this block immediately before the preceding for loop
+    // after the declaration of c.
+    mListView->addColumn( i18n( "Presence" ) );
+    mListView->setIMColumn( c++ );
   }
 
   connect(mListView, SIGNAL(selectionChanged()),
@@ -170,6 +183,23 @@ void KAddressBookTableView::readConfig(KConfig *config)
 {
   KAddressBookView::readConfig( config );
 
+  if ( config->readBoolEntry( "InstantMessagingPresence", false ) ) {
+    if ( !mIMProxy )
+    {
+      mIMProxy = KIMProxy::instance( kapp->dcopClient() );
+      connect( mIMProxy, SIGNAL( sigContactPresenceChanged( const QString & ) ),
+               this, SLOT( updatePresence( const QString & ) ) );
+    }
+  }
+  else {
+    if ( mIMProxy )
+    {
+      disconnect( mIMProxy, SIGNAL( sigContactPresenceChanged( const QString & ) ),
+               this, SLOT( updatePresence( const QString & ) ) );
+      mIMProxy = 0;
+    }
+  }
+  
   // The config could have changed the fields, so we need to reconstruct
   // the listview.
   reconstructListView();
@@ -207,7 +237,7 @@ void KAddressBookTableView::refresh(QString uid)
     KABC::Addressee::List::Iterator it;
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
       ContactListViewItem *item = new ContactListViewItem(*it, mListView,
-                                        core()->addressBook(), fields());
+                                        core()->addressBook(), fields(), mIMProxy );
       if ( (*it).uid() == currentUID )
         currentItem = item;
       else if ( (*it).uid() == nextUID && !currentItem )
@@ -328,6 +358,23 @@ void KAddressBookTableView::addresseeExecuted(QListViewItem *item)
 void KAddressBookTableView::rmbClicked( KListView*, QListViewItem*, const QPoint &point )
 {
   popup( point );
+}
+
+void KAddressBookTableView::updatePresence( const QString &uid )
+{
+  // find the LVI to update and refresh() it
+  QListViewItem *item;
+  ContactListViewItem *ceItem;
+  for ( item = mListView->firstChild(); item; item = item->itemBelow() ) {
+    ceItem = dynamic_cast<ContactListViewItem*>(item);
+    if ( ( ceItem != 0L ) && ( ceItem->addressee().uid() == uid ) ) {
+      ceItem->setHasIM( true );
+      ceItem->refresh();
+      break;
+    }
+  }
+  if ( mListView->sortColumn() == mListView->imColumn() )
+    mListView->sort();
 }
 
 #include "kaddressbooktableview.moc"

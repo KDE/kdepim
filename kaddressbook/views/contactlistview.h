@@ -36,6 +36,7 @@
 class QDropEvent;
 class KAddressBookTableView;
 class ContactListView;
+class KIMProxy;
 
 /** The whole tooltip design needs a lot of work. Currently it is
 * hacked together to function.
@@ -56,12 +57,12 @@ class ContactListViewItem : public KListViewItem
 
 public:
   ContactListViewItem(const KABC::Addressee &a, ContactListView* parent, 
-                      KABC::AddressBook *doc, const KABC::Field::List &fields );
+                      KABC::AddressBook *doc, const KABC::Field::List &fields, KIMProxy *proxy );
   const KABC::Addressee &addressee() const { return mAddressee; }
   virtual void refresh();
   virtual ContactListView* parent();
   virtual QString key ( int, bool ) const;
-  
+  void setHasIM( bool hasIM );
   /** Adds the border around the cell if the user wants it.
   * This is how the single line config option is implemented.
   */
@@ -73,6 +74,8 @@ private:
   KABC::Field::List mFields;
   ContactListView *parentListView;
   KABC::AddressBook *mDocument;
+  KIMProxy *mIMProxy;
+  bool mHasIM;
 };
 
 
@@ -110,6 +113,29 @@ public:
   */
   void setBackgroundPixmap(const QString &filename);
 
+  /**
+   * Sets whether instant messaging presence should be shown in the first column
+   */
+  void setShowIM( bool enabled );
+  
+  /**
+   * Is presence being shown?
+   */
+  bool showIM();
+  
+  /**
+   * Set the column index of the column used for instant messaging presence.
+   * This method is necessary because presence, unlike the other fields, is not
+   * a KABC::Field, and cannot be handled using their methods.
+   * TODO: make presence a KABC::Field post 3.3
+   */
+  void setIMColumn( int column );
+  
+  /**
+   * get the column used for IM presence
+   */
+  int imColumn();
+  
 protected:
   /** Paints the background pixmap in the empty area. This method is needed
   * since Qt::FixedPixmap will not scroll with the list view.
@@ -138,10 +164,12 @@ private:
   bool mABackground;
   bool mSingleLine;
   bool mToolTips;
-
+  bool mShowIM;
+  
   QColor mAlternateColor;
   
   QPoint presspos;
+  int mInstantMsgColumn;
 };
 
 

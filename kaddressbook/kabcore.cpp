@@ -44,6 +44,7 @@
 #include <kcmultidialog.h>
 #include <kdebug.h>
 #include <kdeversion.h>
+#include <kimproxy.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kprinter.h>
@@ -159,6 +160,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   setModified( false );
 
   KAcceleratorManager::manage( mWidget );
+
+  mKIMProxy = ::KIMProxy::instance( kapp->dcopClient() );
 }
 
 KABCore::~KABCore()
@@ -170,6 +173,7 @@ KABCore::~KABCore()
 
   mAddressBook = 0;
   KABC::StdAddressBook::close();
+  mKIMProxy = 0;
 }
 
 void KABCore::restoreSettings()
@@ -391,6 +395,13 @@ void KABCore::mailVCard( const QStringList& uids )
                       QString::null,  // body
                       QString::null,
                       urls.toStringList() );  // attachments
+}
+
+void KABCore::startChat()
+{
+  QStringList uids = mViewManager->selectedUids();
+  if ( !uids.isEmpty() )
+    mKIMProxy->chatWithContact( uids.first() );
 }
 
 void KABCore::browse( const QString& url )
@@ -989,6 +1000,11 @@ void KABCore::initActions()
                                   this, SLOT( mailVCard() ),
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
+
+  mActionChat = new KAction( i18n("Chat &With..."), "chat", 0,
+                                  this, SLOT( startChat() ),
+                                  actionCollection(), "file_chat" );
+  mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
 
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
                                       this, SLOT( editContact() ),

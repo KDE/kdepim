@@ -43,6 +43,7 @@ class QListViewItem;
 class QListBox;
 class QVBoxLayout;
 class KConfig;
+class KIMProxy;
 
 class ContactListViewItem;
 class ContactListView;
@@ -97,9 +98,15 @@ friend class ContactListView;
      */
     void rmbClicked( KListView*, QListViewItem*, const QPoint& );
 
+    /**
+	 * Called to update the presence of a single item
+	 */
+    void updatePresence( const QString &uid );
+
   private:
     QVBoxLayout *mainLayout;
     ContactListView *mListView;
+    KIMProxy *mIMProxy;
 };
 
 #endif

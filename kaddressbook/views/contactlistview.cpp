@@ -39,6 +39,7 @@
 #include <kurl.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <libkdepim/kimproxy.h>
 
 #include "kaddressbooktableview.h"
 
@@ -149,29 +150,49 @@ void DynamicTip::maybeTip( const QPoint &pos )
 ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
                                          ContactListView *parent,
                                          KABC::AddressBook *doc,
-                                         const KABC::Field::List &fields )
+                                         const KABC::Field::List &fields,
+                                         KIMProxy *proxy )
   : KListViewItem(parent), mAddressee(a), mFields( fields ),
-    parentListView( parent ), mDocument(doc)
+    parentListView( parent ), mDocument(doc), mIMProxy( proxy )
 {
+  if ( mIMProxy )
+    mHasIM = ( !( mIMProxy->allContacts().find( mAddressee.uid() ) == mIMProxy->allContacts().end() ) );
+  else 
+    mHasIM = false;
   refresh();
 }
 
 QString ContactListViewItem::key(int column, bool ascending) const
 {
-  // Preserve behaviour of QListViewItem::key(), 
-  // otherwise we cause a crash if the column does not exist
+  // Preserve behaviour of QListViewItem::key(), otherwise we cause a crash if the column does not exist
   if ( column >= parentListView->columns() )
     return QString::null;
+    
 #if KDE_VERSION >= 319
   Q_UNUSED( ascending )
-  return mFields[ column ]->sortKey( mAddressee );
+  if ( parentListView->showIM() ) {
+    // in this case, one column is reserved for IM presence
+    // so we have to process it differently
+    if ( column == parentListView->imColumn() ) {
+      // increment by one before converting to string so that -1 is not greater than 1
+      // create the sort key by taking the numeric status 0 low, 5 high, and subtracting it from 5
+      // so that the default ascending gives online before offline, etc.
+      QString key = QString::number( 5 - ( mIMProxy->presenceNumeric( mAddressee.uid() ) + 1 ) );
+      return key;
+    }
+    else {
+      return mFields[ column ]->sortKey( mAddressee );
+    }
+  }
+  else 
+    return mFields[ column ]->sortKey( mAddressee );
 #else
   return QListViewItem::key( column, ascending ).lower();
 #endif
 }
 
 void ContactListViewItem::paintCell(QPainter * p,
-				                    const QColorGroup & cg,
+                                    const QColorGroup & cg,
                                     int column,
                                     int width,
                                     int align)
@@ -202,6 +223,9 @@ void ContactListViewItem::refresh()
     return;
 
   int i = 0;
+  if ( mHasIM )
+    setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
+  
   KABC::Field::List::ConstIterator it;
   for( it = mFields.begin(); it != mFields.end(); ++it ) {
     if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
@@ -213,6 +237,11 @@ void ContactListViewItem::refresh()
     } else
       setText( i++, (*it)->value( mAddressee ) );
   }
+}
+
+void ContactListViewItem::setHasIM( bool hasIM )
+{
+  mHasIM = hasIM;
 }
 
 ///////////////////////////////
@@ -229,8 +258,9 @@ ContactListView::ContactListView(KAddressBookTableView *view,
   mABackground = true;
   mSingleLine = false;
   mToolTips = true;
+  mShowIM = true;
   mAlternateColor = KGlobalSettings::alternateBackgroundColor();
-
+  
   setAlternateBackgroundEnabled(mABackground);
   setAcceptDrops( true );
   viewport()->setAcceptDrops( true );
@@ -321,6 +351,26 @@ void ContactListView::setBackgroundPixmap(const QString &filename)
   {
     setPaletteBackgroundPixmap(QPixmap(filename));
   }
+}
+
+void ContactListView::setShowIM( bool enabled )
+{
+  mShowIM = enabled;
+}
+
+bool ContactListView::showIM()
+{
+  return mShowIM;
+}
+
+void ContactListView::setIMColumn( int column )
+{
+  mInstantMsgColumn = column;
+}
+
+int ContactListView::imColumn()
+{
+  return mInstantMsgColumn;
 }
 
 #include "contactlistview.moc"

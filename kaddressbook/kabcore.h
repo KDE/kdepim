@@ -59,6 +59,7 @@ class IncSearchWidget;
 class JumpButtonBar;
 class KAddressBookIface;
 class KAddressBookService;
+class KIMProxy;
 class LDAPSearchDialog;
 class ViewManager;
 class XXPortManager;
@@ -154,6 +155,11 @@ class KABCore : public KAB::Core
 
     void mailVCard();
     void mailVCard(const QStringList& uids);
+
+    /**
+     * Start an Instant Messaging chat with the selected contacts
+     */
+    void startChat();
 
     /**
       Starts the preferred web browser with the given URL as argument.
@@ -378,6 +384,7 @@ class KABCore : public KAB::Core
     KAction *mActionMerge;
     KAction *mActionMail;
     KAction *mActionMailVCard;
+    KAction *mActionChat;
     KAction *mActionUndo;
     KAction *mActionRedo;
     KAction *mActionSave;
@@ -390,6 +397,8 @@ class KABCore : public KAB::Core
     KAddressBookService *mAddressBookService;
 
     KAB::SearchManager *mSearchManager;
+    // KIMProxy provides access to up to date instant messaging presence data
+    ::KIMProxy *mKIMProxy;
 
     class KABCorePrivate;
     KABCorePrivate *d;
