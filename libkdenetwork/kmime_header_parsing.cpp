@@ -513,6 +513,18 @@ bool parsePhrase( const char* & scursor, const char * const send,
   while ( scursor != send ) {
     char ch = *scursor++;
     switch ( ch ) {
+    case '.': // broken, but allow for intorop's sake
+      if ( found == None ) {
+	--scursor;
+	return false;
+      } else {
+	if ( scursor != send && ( *scursor == ' ' || *scursor == '\t' ) )
+	  result += ". ";
+	else
+	  result += '.';
+	successfullyParsed = scursor;
+      }
+      break;
     case '"': // quoted-string
       tmp = QString::null;
       if ( parseGenericQuotedString( scursor, send, tmp, isCRLF, '"', '"' ) ) {
