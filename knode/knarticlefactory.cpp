@@ -625,7 +625,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
       continue;
 
     if(!a->hasContent()) {
-      if(!knGlobals.artManager->load(a)) {
+      if(!knGlobals.artManager->loadArticle(a)) {
         showSendErrorDialog();
         s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article!"));
         continue;

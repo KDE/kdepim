@@ -64,7 +64,6 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     int firstNewIndex()           { return f_irstNew; }
     void setFirstNewIndex(int i)  { f_irstNew=i; }
 
-
     int readCount()               { return r_eadCount; }
     void setReadCount(int i)      { r_eadCount=i; }
     void incReadCount(int i=1)    { r_eadCount+=i; }
@@ -87,6 +86,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
                                         { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
     // load + save
     bool loadHdrs();
+    bool unloadHdrs(bool force=true);
     void insortNewHeaders(QStrList *hdrs, KNProtocolClient *client=0);
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);

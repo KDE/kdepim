@@ -867,8 +867,8 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
 {
   QGroupBox *hgb=new QGroupBox(i18n("Article Handling"), this);
   QGroupBox *lgb=new QGroupBox(i18n("Article List"), this);
-  QGroupBox *cgb=new QGroupBox(i18n("Article Caching"), this);
-  QLabel *l1, *l2;
+  QGroupBox *cgb=new QGroupBox(i18n("Memory Consumption"), this);
+  QLabel *l1, *l2, *l3;
 
   a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
   m_axFetch=new KIntSpinBox(0, 100000, 1, 0, 10, hgb);
@@ -883,15 +883,17 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
   l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
 
-  m_emCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
-  l2=new QLabel(m_emCacheSize, i18n("Memory cache &size"), cgb);
-  m_emCacheSize->setSuffix(" KB");
+  c_ollCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
+  c_ollCacheSize->setSuffix(" KB");
+  l2=new QLabel(c_ollCacheSize, i18n("Cach&e size for headers"), cgb);
+  a_rtCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
+  a_rtCacheSize->setSuffix(" KB");
+  l3=new QLabel(a_rtCacheSize, i18n("Cache si&ze for articles"), cgb);
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
   QGridLayout *hgbL=new QGridLayout(hgb, 5,2, 8,5);
   QVBoxLayout *lgbL=new QVBoxLayout(lgb, 8, 5);
-  QGridLayout *cgbL=new QGridLayout(cgb, 2,2, 8,5);
-
+  QGridLayout *cgbL=new QGridLayout(cgb, 3,2, 8,5);
 
   topL->addWidget(hgb);
   topL->addWidget(lgb);
@@ -914,9 +916,10 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
 
   cgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   cgbL->addWidget(l2, 1,0);
-  cgbL->addWidget(m_emCacheSize, 1,1);
+  cgbL->addWidget(c_ollCacheSize, 1,1);
+  cgbL->addWidget(l3, 2,0);
+  cgbL->addWidget(a_rtCacheSize, 2,1);
   cgbL->setColStretch(0,1);
-
 
   topL->setResizeMode(QLayout::Minimum);
 
@@ -930,7 +933,8 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   e_xpThrCB->setChecked(d->t_otalExpand);
   l_inesCB->setChecked(d->s_howLines);
   s_coreCB->setChecked(d->s_howScore);
-  m_emCacheSize->setValue(d->m_emCacheSize);
+  c_ollCacheSize->setValue(d->c_ollCacheSize);
+  a_rtCacheSize->setValue(d->a_rtCacheSize);
 }
 
 
@@ -952,7 +956,8 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->s_howLines=l_inesCB->isChecked();
   d_ata->s_howScore=s_coreCB->isChecked();
-  d_ata->m_emCacheSize=m_emCacheSize->value();
+  d_ata->c_ollCacheSize=c_ollCacheSize->value();
+  d_ata->a_rtCacheSize=a_rtCacheSize->value();
 
   d_ata->save();
 }

@@ -19,7 +19,6 @@
 
 #include <qlist.h>
 
-
 class KNListView;
 class KNCleanUp;
 class KNFolder;
@@ -46,9 +45,10 @@ class KNFolderManager
 
     //header loading
     bool loadHeaders(KNFolder *f);
-    bool loadDrafts()   { return loadHeaders(drafts()); }
-    bool loadOutbox()   { return loadHeaders(outbox()); }
-    bool loadSent()     { return loadHeaders(sent()); }
+    bool unloadHeaders(KNFolder *f, bool force=true);
+    bool loadDrafts()                     { return loadHeaders(drafts()); }
+    bool loadOutbox()                     { return loadHeaders(outbox()); }
+    bool loadSent()                       { return loadHeaders(sent()); }
 
     void newFolder(KNFolder *p);
     bool deleteFolder(KNFolder *f);
@@ -70,7 +70,6 @@ class KNFolderManager
     //synchronization
     void syncFolders();   
 
-
   protected:
     int loadCustomFolders();
     void showListItems();
@@ -83,8 +82,5 @@ class KNFolderManager
     KNArticleManager *a_rtManager;
 
 };
-
-
-
 
 #endif

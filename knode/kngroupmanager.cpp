@@ -328,6 +328,23 @@ bool KNGroupManager::loadHeaders(KNGroup *g)
 }
 
 
+bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
+{
+  if(!g || g->isLocked() || !g->isLoaded())
+    return false;
+
+  if (!force && (c_urrentGroup == g))
+    return false;
+
+  if (g->unloadHdrs(force))
+    knGlobals.memManager->removeCacheEntry(g);
+  else
+    return false;
+
+  return true;
+}
+
+
 KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 {
   for(KNGroup *var=g_List->first(); var; var=g_List->next())
@@ -335,7 +352,6 @@ KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 
   return 0;
 }
-
 
 
 void KNGroupManager::expireAll(KNCleanUp *cup)
@@ -424,6 +440,14 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
 
   QDir dir(acc->path(),g->groupname()+"*");
   if (dir.exists()) {
+    if(c_urrentGroup==g) {
+      setCurrentGroup(0);
+      a_rticleMgr->updateStatusString();
+    }
+
+    if (unloadHeaders(g, true))
+      g_List->removeRef(g);
+
     const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
     if (list) {
       QFileInfoListIterator it( *list );
@@ -433,14 +457,6 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
       }
     }
     kdDebug(5003) << "Files deleted!" << endl;
-
-    if(c_urrentGroup==g) {
-      setCurrentGroup(0);
-      a_rticleMgr->updateStatusString();
-    }
-
-    knGlobals.memManager->removeCacheEntry( g );
-    g_List->removeRef(g);
   }
 }
 
@@ -531,11 +547,11 @@ void KNGroupManager::checkAll(KNNntpAccount *a)
   for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
     if(g->account()==a) {
       g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
-      j=new KNJobData(KNJobData::JTfetchNewHeaders, this, a, g);  // lock "g"
+      j=new KNJobData(KNJobData::JTfetchNewHeaders, this, a, g);  // locks "g"
       if( loadHeaders( g ) )
         emitJob(j);
       else
-        delete j; // unlock "g"
+        delete j; // unlocks "g"
     }
   }
 }

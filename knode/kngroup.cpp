@@ -39,6 +39,7 @@
 #include "knode.h"
 #include "knscoring.h"
 #include "knarticlemanager.h"
+#include "knarticlefactory.h"
 
 #define SORT_DEPTH 5
 
@@ -172,17 +173,8 @@ KNNntpAccount* KNGroup::account()
 }
 
 
-/*KNRemoteArticle* KNGroup::byId(int id)
-{
-  int idx=findId(id);
-  if(idx!=-1) return ( static_cast<KNRemoteArticle*> (list[idx]) );
-  else return 0;
-} */
-
-
 bool KNGroup::loadHdrs()
 {
-
   if(isLoaded()) {
     kdDebug(5003) << "KNGroup::loadHdrs() : nothing to load" << endl;
     return true;
@@ -344,6 +336,27 @@ bool KNGroup::loadHdrs()
 
   updateThreadInfo();
   processXPostBuffer(false);
+  return true;
+}
+
+
+bool KNGroup::unloadHdrs(bool force)
+{
+  if(l_ockedArticles>0)
+    return false;
+
+  if (!force && isNotUnloadable())
+    return false;
+
+  KNRemoteArticle *a;
+  for(int idx=0; idx<length(); idx++) {
+    a=at(idx);
+    if (a->hasContent() && !knGlobals.artManager->unloadArticle(a, force))
+      return false;
+  }
+  syncDynamicData();
+  clear();
+
   return true;
 }
 
@@ -792,7 +805,6 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
   qDebug("knode: Sorting : %d references of %d found", foundCnt, refCnt);
   qDebug("knode: Sorting : %d references of %d sorted by subject", bySubCnt, refCnt);
 #endif
-    
 }
 
 
@@ -817,48 +829,6 @@ KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
   }
 
   return ref_art;
-
-  /*bool found=false;
-  int foundID=-1, idx=0;
-  short refNr=0;
-  QCString ref;
-
-
-  ref=a->references()->first();
-
-
-  if(!reverse){
-    
-    while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
-      for(idx=from; idx<to; idx++) {
-        if(at(idx)->messageID()->as7BitString(false)==ref) {
-          found=true;
-          foundID=at(idx)->id();
-          a->setThreadingLevel(refNr+1);
-          break;
-        }
-      }
-      ++refNr;
-      ref=a->references()->next();
-    }
-  }
-  else {
-    while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
-      for(idx=to; idx>=from; idx--) {
-        if(at(idx)->messageID()->as7BitString(false)==ref){
-          found=true;
-          foundID=at(idx)->id();
-          a->setThreadingLevel(refNr+1);
-          break;
-        }
-      }
-      ++refNr;
-      ref=a->references()->next();
-    }
-  }
-      
-  if(foundID!=-1) a->setIdRef(foundID);
-  return foundID; */
 }
 
 

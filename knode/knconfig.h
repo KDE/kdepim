@@ -465,7 +465,8 @@ class ReadNewsGeneral : public Base {
     bool showLines()                 { return s_howLines; }
     bool showScore()                 { return s_howScore; }
 
-    int memCacheSize()               { return m_emCacheSize; }
+    int collCacheSize()              { return c_ollCacheSize; }
+    int artCacheSize()               { return a_rtCacheSize; }
 
   protected:
     bool  a_utoCheck,
@@ -477,7 +478,8 @@ class ReadNewsGeneral : public Base {
 
     int   m_axFetch,
           m_arkSecs,
-          m_emCacheSize;
+          c_ollCacheSize,
+          a_rtCacheSize;
 
 };
 
@@ -499,7 +501,8 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *s_coreCB;
     KIntSpinBox *m_arkSecs,
                 *m_axFetch,
-                *m_emCacheSize;
+                *c_ollCacheSize,
+                *a_rtCacheSize;
 
     ReadNewsGeneral *d_ata;
 

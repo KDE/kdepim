@@ -18,19 +18,21 @@
 
 #include "knmemorymanager.h"
 #include "kngroup.h"
+#include "knfolder.h"
 #include "knmime.h"
 #include "knglobals.h"
 #include "knconfig.h"
 #include "knconfigmanager.h"
 #include "knarticlemanager.h"
-
+#include "kngroupmanager.h"
+#include "knfoldermanager.h"
 
 
 KNMemoryManager::KNMemoryManager()
+  : c_ollCacheSize(0), a_rtCacheSize(0)
 {
   c_olList.setAutoDelete(true);
   a_rtList.setAutoDelete(true);
-  m_emCacheSize=0;
 }
 
 
@@ -55,37 +57,18 @@ void KNMemoryManager::updateCacheEntry(KNArticleCollection *c)
   }
 
   c_olList.append(ci);
-  m_emCacheSize += (ci->storageSize - oldSize);
-  checkMemoryUsage();
+  c_ollCacheSize += (ci->storageSize - oldSize);
+  checkMemoryUsageCollections();
 }
 
 
-void KNMemoryManager::removeCacheEntry(KNArticleCollection *c, bool freeMem)
+void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
 {
   CollectionItem *ci;
   ci=findCacheEntry(c, true);
 
   if(ci) {
-    m_emCacheSize -= ci->storageSize;
-    ArticleItem *ai=a_rtList.first();
-    while(ai) {
-      if( ai->art->collection()==c ) {
-        m_emCacheSize -= ai->storageSize;
-        a_rtList.remove();
-        ai=a_rtList.current();
-      }
-      else
-        ai=a_rtList.next();
-    }
-
-
-    if( !c->isEmpty() && c->type() == KNCollection::CTgroup )
-      static_cast<KNGroup*>(c)->syncDynamicData(); // remeber "Read" - flag
-
-    if(freeMem)
-      c->clear();
-
-
+    c_ollCacheSize -= ci->storageSize;
     delete ci;
 
     kdDebug(5003) << "KNMemoryManager::removeCacheEntry() : collection removed (" << c->name() << "), "
@@ -109,23 +92,20 @@ void KNMemoryManager::updateCacheEntry(KNArticle *a)
     kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : article added" << endl;
   }
 
-
   a_rtList.append(ai);
-  m_emCacheSize += (ai->storageSize - oldSize);
-  checkMemoryUsage();
+  a_rtCacheSize += (ai->storageSize - oldSize);
+  checkMemoryUsageArticles();
 }
 
 
-void KNMemoryManager::removeCacheEntry(KNArticle *a, bool freeMem)
+void KNMemoryManager::removeCacheEntry(KNArticle *a)
 {
   ArticleItem *ai;
 
   if( (ai=findCacheEntry(a, true)) ) {
-    m_emCacheSize -= ai->storageSize;
-    if(freeMem)
-      ai->art->KNMimeContent::clear();
+    a_rtCacheSize -= ai->storageSize;
     delete ai;
-    a->updateListItem();
+
     kdDebug(5003) << "KNMemoryManager::removeCacheEntry() : article removed, "
                   << a_rtList.count() << " articles left in cache" << endl;
 
@@ -149,71 +129,59 @@ KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollec
 
 KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool take)
 {
-  for(ArticleItem *i=a_rtList.first(); i; i=a_rtList.next())
+  for(ArticleItem *i=a_rtList.first(); i; i=a_rtList.next()) {
     if(i->art==a) {
       if(take)
         a_rtList.take();
       return i;
     }
-
+  }
 
   return 0;
 }
 
 
-void KNMemoryManager::checkMemoryUsage()
+void KNMemoryManager::checkMemoryUsageCollections()
 {
-  int max_size = knGlobals.cfgManager->readNewsGeneral()->memCacheSize() * 1024;
+  int maxSize = knGlobals.cfgManager->readNewsGeneral()->collCacheSize() * 1024;
   KNArticleCollection *c=0;
-  KNArticle *a=0;
 
-  while( (m_emCacheSize > max_size) && (c_olList.count() > 1) ) {
+  if (c_ollCacheSize > maxSize) {
+    QList<CollectionItem> tempList(c_olList);  // work on a copy, KNGroup-/Foldermanager will
+                                               // modify the original list
 
-    // find first removable item
-    for( CollectionItem *ci = c_olList.first(); ci; ci = c_olList.next() ) {
+    for( CollectionItem *ci = tempList.first(); ci && (c_ollCacheSize > maxSize); ci = tempList.next() ) {
       c=ci->col;
 
-      if( c != knGlobals.artManager->collection() && c->lockedArticles() == 0 &&
-          ( c->type() == KNCollection::CTfolder || !( static_cast<KNGroup*>(ci->col)->isLocked() ) )
-        )
-        break;
+      if (c->type() == KNCollection::CTgroup)
+        knGlobals.grpManager->unloadHeaders(static_cast<KNGroup*>(c), false);   // *try* to unload
       else
-        c=0;
-    }
-
-    if(c)
-      removeCacheEntry(c);
-    else {
-      kdDebug(5003) << "KNMemoryManager::checkMemoryUsage() : "
-                    << "no removable collection found !!" << endl;
-      break;
+        if (c->type() == KNCollection::CTfolder)
+          knGlobals.folManager->unloadHeaders(static_cast<KNFolder*>(c), false);   // *try* to unload
     }
   }
 
-  while( (m_emCacheSize > max_size) && (a_rtList.count() > 1) ) {
+  kdDebug(5003) << "KNMemoryManager::checkMemoryUsageCollections() : "
+                << c_olList.count() << " collections in cache => Usage : "
+                << ( c_ollCacheSize*100.0 / maxSize ) << "%" << endl;
+}
 
-    // find first removable item
-    for( ArticleItem *ai = a_rtList.first(); ai; ai = a_rtList.next() ) {
-      a = ai->art;
-      if( !a->isLocked() )
-        break;
-      else
-        a=0;
-    }
 
-    if(a)
-      removeCacheEntry(a);
-    else {
-      kdDebug(5003) << "KNMemoryManager::checkMemoryUsage() : "
-                    << "no removable article found !!" << endl;
-      break;
-    }
+void KNMemoryManager::checkMemoryUsageArticles()
+{
+  int maxSize = knGlobals.cfgManager->readNewsGeneral()->artCacheSize() * 1024;
+
+  if (a_rtCacheSize > maxSize) {
+    QList<ArticleItem> tempList(a_rtList);  // work on a copy, KNArticlemanager will
+                                            // modify the original list
+
+    for( ArticleItem *ci = tempList.first(); ci && (a_rtCacheSize > maxSize); ci = tempList.next() )
+      knGlobals.artManager->unloadArticle(ci->art, false);   // *try* to unload
   }
 
-  kdDebug(5003) << "KNMemoryManager::checkMemoryUsage() : "
-                << c_olList.count() << " collections and "
+  kdDebug(5003) << "KNMemoryManager::checkMemoryUsageArticles() : "
                 << a_rtList.count() << " articles in cache => Usage : "
-                << ( float(m_emCacheSize*100) / max_size ) << "%" << endl;
+                << ( a_rtCacheSize*100.0 / maxSize ) << "%" << endl;
 }
 
 

@@ -77,12 +77,15 @@ class KNArticleCollection : public KNCollection {
     KNArticleCollection(KNCollection *p=0);
     ~KNArticleCollection();
 
-
     // info
     bool isEmpty()                { return a_rticles.isEmpty(); }
     bool isLoaded()               { return (c_ount==0 || a_rticles.length()>0); }
     int size()                    { return a_rticles.size(); }
     int length()                  { return a_rticles.length(); }
+
+    // cache behaviour
+    bool isNotUnloadable()               { return n_otUnloadable; }
+    void setNotUnloadable(bool b=true)   { n_otUnloadable = b; }
 
     // locking
     unsigned int lockedArticles() { return l_ockedArticles; }
@@ -106,9 +109,9 @@ class KNArticleCollection : public KNCollection {
     void clearSearchIndex();
 
   protected:
-    //int findId(int id);
     int l_astID;
     unsigned int l_ockedArticles;
+    bool n_otUnloadable;
     KNArticleVector a_rticles;
     KNArticleVector m_idIndex;
 };

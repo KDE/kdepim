@@ -35,26 +35,6 @@ class KNFilterManager;
 class KNSearchDialog;
 
 
-/*class KNArticleCache {
-
-  public:
-    KNArticleCache();
-    ~KNArticleCache();
-
-    void add(KNArticle *a);
-    void remove(KNArticle *a);
-    void remove(KNArticleCollection *c);
-
-    void clearMemoryCache();
-    void clearDiskCache();
-
-  protected:
-    QList<KNArticle> m_emCache;
-    int m_emCacheSize;
-
-}; */
-
-
 class KNArticleManager : public QObject, public KNJobConsumer {
 
   Q_OBJECT
@@ -82,7 +62,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void updateStatusString();
 
     //filter
-    KNArticleFilter* filter() const { return f_ilter; }
+    KNArticleFilter* filter() const   { return f_ilter; }
     void search();
 
     //collection handling
@@ -94,16 +74,13 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void verifyPGPSignature(KNArticle* a);
 
     //article loading
-    bool load(KNArticle *a);
-    void loadForDisplay(KNArticle *a);
+    bool loadArticle(KNArticle *a);
+    bool unloadArticle(KNArticle *a, bool force=true);
 
     //article storage
     void saveInFolder(KNRemoteArticle::List &l, KNFolder *f);
     void saveInFolder(KNLocalArticle::List &l, KNFolder *f);
     bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
-
-    //cache
-    //KNArticleCache* cache()   { return &c_ache; }
 
     //article handling
     void setAllRead(bool r=true);
@@ -127,9 +104,6 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNSearchDialog *s_earchDlg;
     QList<KTempFile> t_empFiles;
     bool s_howThreads;
-
-    //KNArticleCache c_ache;
-
 
   public slots:
     void slotFilterChanged(KNArticleFilter *f);

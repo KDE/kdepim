@@ -35,8 +35,8 @@ class KNArticleWindow : public KMainWindow  {
     ~KNArticleWindow();
     KNArticleWidget* artWidget()        { return artW; }
 
-    static void closeAllWindowsForCollection(KNArticleCollection *col);
-    static void closeAllWindowsForArticle(KNArticle *art);
+    static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force=true);
+    static bool closeAllWindowsForArticle(KNArticle *art, bool force=true);
     static bool raiseWindowForArticle(KNArticle *art);   // false: no window found
     static bool raiseWindowForArticle(const QCString &mid);
 

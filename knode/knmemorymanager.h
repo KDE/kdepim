@@ -31,12 +31,11 @@ class KNMemoryManager {
 
     // Collection-Handling
     void updateCacheEntry(KNArticleCollection *c);
-    void removeCacheEntry(KNArticleCollection *c, bool freeMem=true);
+    void removeCacheEntry(KNArticleCollection *c);
 
     // Article-Handling
     void updateCacheEntry(KNArticle *a);
-    void removeCacheEntry(KNArticle *a, bool freeMem=true);
-
+    void removeCacheEntry(KNArticle *a);
 
   protected:
 
@@ -62,11 +61,12 @@ class KNMemoryManager {
 
     CollectionItem* findCacheEntry(KNArticleCollection *c, bool take=false);
     ArticleItem* findCacheEntry(KNArticle *a, bool take=false);
-    void checkMemoryUsage();
+    void checkMemoryUsageCollections();
+    void checkMemoryUsageArticles();
 
     QList<CollectionItem> c_olList;
     QList<ArticleItem> a_rtList;
-    int m_emCacheSize;
+    int c_ollCacheSize, a_rtCacheSize;
 };
 
 

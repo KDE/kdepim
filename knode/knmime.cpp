@@ -1150,9 +1150,14 @@ void KNMimeContent::changeEncoding(KNHeaders::contentEncoding e)
 }
 
 
-void KNMimeContent::toStream(QTextStream &ts)
+void KNMimeContent::toStream(QTextStream &ts, bool scrambleFromLines)
 {
-  ts << encodedContent(false);
+  QCString ret=encodedContent(false);
+
+  if (scrambleFromLines)
+    ret.replace(QRegExp("\\nFrom "), "\n>From ");
+
+  ts << ret;
 }
 
 
@@ -1552,6 +1557,7 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
 {
   m_essageID.setParent(this);
   f_rom.setParent(this);
+  r_eferences.setParent(this);
 
   if (g->useCharset())
     d_efaultCS = cachedCharset( g->defaultCharset() );
@@ -1574,8 +1580,8 @@ void KNRemoteArticle::parse()
   if(f_rom.isEmpty() && !(raw=rawHeader(f_rom.type())).isEmpty() )
     f_rom.from7BitString(raw);
 
-  if(l_ines.isEmpty() && !(raw=rawHeader(l_ines.type())).isEmpty() )
-    l_ines.from7BitString(raw);
+  if(r_eferences.isEmpty() && !(raw=rawHeader(r_eferences.type())).isEmpty() )
+    r_eferences.from7BitString(raw);
 }
 
 
@@ -1583,6 +1589,7 @@ void KNRemoteArticle::clear()
 {
   m_essageID.clear();
   f_rom.clear();
+  r_eferences.clear();
   KNArticle::clear();
 }
 
@@ -1597,6 +1604,10 @@ KNHeaders::Base* KNRemoteArticle::getHeaderByType(const char *type)
     if(f_rom.isEmpty()) return 0;
     else return &f_rom;
   }
+  else if(strcasecmp("References", type)==0) {
+    if(r_eferences.isEmpty()) return 0;
+    else return &r_eferences;
+  }
   else
     return KNArticle::getHeaderByType(type);
 }
@@ -1610,6 +1621,9 @@ void KNRemoteArticle::setHeader(KNHeaders::Base *h)
   else if(h->is("From")) {    
     f_rom.setEmail( (static_cast<KNHeaders::From*>(h))->email() );
     f_rom.setName( (static_cast<KNHeaders::From*>(h))->name() );
+  }
+  else if(h->is("References")) {
+    r_eferences.from7BitString(h->as7BitString(false));
   }
   else {
     del=false;
@@ -1626,6 +1640,8 @@ bool KNRemoteArticle::removeHeader(const char *type)
     m_essageID.clear();
   else if(strcasecmp("From", type)==0)    
     f_rom.clear();
+  else if(strcasecmp("References", type)==0)
+    r_eferences.clear();
   else
      return KNArticle::removeHeader(type);
 
@@ -1729,6 +1745,7 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
   }
   m_essageID.clear();
   f_rom.clear();
+  r_eferences.clear();
   KNArticle::setForceDefaultCS(b);
   initListItem();
 }

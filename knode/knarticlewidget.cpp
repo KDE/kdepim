@@ -761,21 +761,10 @@ void KNArticleWidget::setArticle(KNArticle *a)
     if(a->hasContent()) //article is already loaded => just show it
       createHtmlPage();
     else {
-      knGlobals.artManager->loadForDisplay(a_rticle);
-    /*if(!a->isLocked()) {
-      if(a->type()==KNMimeBase::ATremote) {//ok, this is a remote-article => fetch it from the server
-        knGlobals.artManager->loadArticle(a_rticle);
-        KNGroup *g=static_cast<KNGroup*>(a->collection());
-        emitJob( new KNJobData( KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
-      }
-      else { //local article
-        KNLocalArticle *la=static_cast<KNLocalArticle*>(a_rticle);
-        KNFolder *f=static_cast<KNFolder*>(a_rticle->collection());
-        if(!f || !f->loadArticle(la))
-          showErrorMessage(i18n("Cannot load the article from the mbox-file!"));
-        else
-          createHtmlPage();
-      }*/
+      if( !knGlobals.artManager->loadArticle(a_rticle) )
+        articleLoadError( a, i18n("Unable to load the article!") );
+      else if(a->hasContent()) // try again...
+        createHtmlPage();
     }
   }
 }
@@ -1493,6 +1482,15 @@ void KNArticleWidget::configChanged()
 {
   for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
     i->applyConfig();
+}
+
+
+bool KNArticleWidget::articleVisible(KNArticle *a)
+{
+  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+    if(a==i->article())
+      return true;
+  return false;
 }
 
 

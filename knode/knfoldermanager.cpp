@@ -104,6 +104,23 @@ bool KNFolderManager::loadHeaders(KNFolder *f)
 }
 
 
+bool KNFolderManager::unloadHeaders(KNFolder *f, bool force)
+{
+  if(!f || !f->isLoaded())
+    return false;
+
+  if (!force && (c_urrentFolder == f))
+    return false;
+
+  if (f->unloadHdrs(force))
+    knGlobals.memManager->removeCacheEntry(f);
+  else
+    return false;
+
+  return true;
+}
+
+
 KNFolder* KNFolderManager::folder(int i)
 {
   KNFolder *ret=0;
@@ -148,9 +165,12 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   for(fol=del.first(); fol; fol=del.next()) {
     if(c_urrentFolder==fol)
       c_urrentFolder=0;
-    knGlobals.memManager->removeCacheEntry(fol, false);
-    fol->killYourself();
-    f_List.removeRef(fol); // deletes fol
+
+    if (unloadHeaders(fol, true)) {
+      fol->deleteFiles();
+      f_List.removeRef(fol); // deletes fol
+    } else
+      return false;
   }
 
   return true;
@@ -170,7 +190,6 @@ void KNFolderManager::renameFolder(KNFolder *f, bool isNew)
 {
   if(!f || f->id()<=3)
     return;
-
 
   KDialogBase *dlg =
   new KDialogBase(
@@ -275,6 +294,13 @@ void KNFolderManager::importFromMBox(KNFolder *f)
   if(!f)
     return;
 
+  f->setNotUnloadable(true);
+
+  if (!f->isLoaded() && !loadHeaders(f)) {
+    f->setNotUnloadable(false);
+    return;
+  }
+
   KNLoadHelper helper(knGlobals.topWidget);
   KNFile *file = helper.getFile(i18n("Import MBox Folder"));
   KNLocalArticle::List list;
@@ -360,6 +386,8 @@ void KNFolderManager::importFromMBox(KNFolder *f)
     knGlobals.top->setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
   }
+
+  f->setNotUnloadable(false);
 }
 
 
@@ -368,15 +396,11 @@ void KNFolderManager::exportToMBox(KNFolder *f)
   if(!f)
     return;
 
+  f->setNotUnloadable(true);
 
-  bool tmpLoadFol = false;
-  bool tmpLoadArt = false;
-
-  if (!f->isLoaded()) {
-    if (f->loadHdrs())
-      tmpLoadFol = true;
-    else
-      return;
+  if (!f->isLoaded() && !loadHeaders(f)) {
+    f->setNotUnloadable(false);
+    return;
   }
 
   KNSaveHelper helper(f->name()+".mbox", knGlobals.topWidget);
@@ -392,26 +416,21 @@ void KNFolderManager::exportToMBox(KNFolder *f)
     KNLocalArticle *a;
 
     for(int idx=0; idx<f->length(); idx++) {
-      tmpLoadArt = false;
       a=f->at(idx);
-      if (!a->hasContent()) {
-        f->loadArticle(a);
-        tmpLoadArt = true;
+
+      a->setNotUnloadable(true);
+
+      if (a->hasContent() || knGlobals.artManager->loadArticle(a)) {
+        ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
+        a->toStream(ts, true);
+        ts << "\n";
       }
 
-      ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
-      a->toStream(ts);
-      ts << "\n";
-
-      if (tmpLoadArt)
-        a->KNMimeContent::clear();
+      a->setNotUnloadable(false);
 
       if (idx%75 == 0)
         knGlobals.top->secureProcessEvents();
     }
-
-    if (tmpLoadFol)
-      f->clear();
 
     knGlobals.top->setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);

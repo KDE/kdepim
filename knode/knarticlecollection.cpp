@@ -298,14 +298,6 @@ int KNArticleVector::indexForMsgId(const QCString &id)
     #endif*/
     return -1;
   }
-
-  /*for(int i=0; i<l_en; i++) {
-    if(l_ist[i]->messageID(true)->as7BitString(false)==id) {
-      ret=i;
-      break;
-    }
-  }
-  return ret;*/
 }
 
 
@@ -316,11 +308,8 @@ int KNArticleVector::indexForMsgId(const QCString &id)
 
 
 KNArticleCollection::KNArticleCollection(KNCollection *p)
-  : KNCollection(p)
+  : KNCollection(p), l_astID(0), l_ockedArticles(0), n_otUnloadable(false)
 {
-  l_astID=0;
-  l_ockedArticles=0;
-
   a_rticles.setSortMode(KNArticleVector::STid);
   m_idIndex.setSortMode(KNArticleVector::STmsgId);
   m_idIndex.setMaster(&a_rticles);
@@ -337,25 +326,6 @@ KNArticleCollection::~KNArticleCollection()
 
 bool KNArticleCollection::resize(int s)
 {
-  /*KNArticle **bak=list;
-  int nSize;
-  
-  if(s==0) nSize=siz+incr;
-  else nSize=((s/incr)+1)*incr;
-  
-  list=(KNArticle**) realloc(list,sizeof(KNArticle*)*nSize);
-
-  if(!list) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Memory allocation failed!\nYou should close this application now\n, to avoid data loss."));
-    list=bak;
-    return false;
-  }
-  else {
-    siz=nSize;
-    //kdDebug(5003) << "size : " << siz << "\n" << endl;
-    return true;
-  }*/
-
   return a_rticles.resize(s);
 }
 
@@ -363,15 +333,6 @@ bool KNArticleCollection::resize(int s)
 
 bool KNArticleCollection::append(KNArticle *a, bool autoSync)
 {
-  /*if(len+1>siz)  //array too small
-    if (!resize()) return false; //try to realloc
-
-  if(a->id()==-1) a->setId(++lastID);
-  list[len]=a;
-  len++;
-  
-  return true;*/
-
   if(a_rticles.append(a, false)) {
     if(a->id()==-1)
       a->setId(++l_astID);
@@ -387,13 +348,6 @@ bool KNArticleCollection::append(KNArticle *a, bool autoSync)
 
 void KNArticleCollection::clear()
 {
-  /*if(list){
-    for(int i=0; i<len; i++) delete list[i];
-    free(list);
-  }
-  
-  list=0; len=0; siz=0; lastID=0;*/
-
   a_rticles.clear();
   m_idIndex.clear();
   l_astID=0;
@@ -403,71 +357,9 @@ void KNArticleCollection::clear()
 
 void KNArticleCollection::compact()
 {
-  /*int newLen, nullStart=0, nullCnt=0, ptrStart=0, ptrCnt=0;
-  
-  for(int idx=0; idx<len; idx++) {
-    if(list[idx]==0) {
-      ptrStart=-1;
-      ptrCnt=-1;
-      nullStart=idx;
-      nullCnt=1;
-      for(int idx2=idx+1; idx2<len; idx2++) {
-        if(list[idx2]==0) nullCnt++;
-        else {
-          ptrStart=idx2;
-          ptrCnt=1;
-          break;
-        }
-      }
-      if(ptrStart!=-1) {
-        for(int idx2=ptrStart+1; idx2<len; idx2++) {
-          if(list[idx2]!=0) ptrCnt++;
-          else break;
-        }
-        memmove(&(list[nullStart]), &(list[ptrStart]), ptrCnt*sizeof(KNArticle*));
-        for(int idx2=nullStart+ptrCnt; idx2<nullStart+ptrCnt+nullCnt; idx2++)
-          list[idx2]=0;
-        idx=nullStart+ptrCnt-1;
-        }
-      else break;
-    }
-  }
-  newLen=0;
-  while(list[newLen]!=0) newLen++;
-  len=newLen; */
-
   a_rticles.compact();
   m_idIndex.clear();
 }
-
-
-
-/*int KNArticleCollection::findId(int id)
-{
-  int start=0, end=a_rticles.length(), mid=0, currentId=0;
-  bool found=false;
-  //end=len;
-  KNArticle *current=0;
-
-  while (start!=end && !found) {
-    mid=(start+end)/2;
-    current=a_rticles.at(mid);
-
-    currentId=current->id();
-    if(currentId==id)
-      found=true;
-    else if(currentId < id)
-      start=mid+1;
-    else
-      end=mid;
-  }
-
-  if (found) return mid;  
-  else {
-    kdDebug(5003) << "KNArticleCollection::findId() : ID " << id << " not found!\n" << endl;
-    return -1;
-  } 
-}*/
 
 
 KNArticle* KNArticleCollection::byId(int id)
@@ -493,24 +385,6 @@ void KNArticleCollection::setLastID()
   else
     l_astID=0;
 }
-
-/*bool KNArticleCollection::setCurrent(KNArticle *a)
-{
-  if(a) {
-    if(byId(a->id())!=0) {
-      c_urrent=a;
-      return true;
-    }
-    else {
-      c_urrent=0;
-      return false;
-    }
-  }
-  else {
-    c_urrent=0;
-    return true;
-  }
-}  */
 
 
 void KNArticleCollection::syncSearchIndex()

@@ -180,6 +180,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
   //----------------------- Static members -------------------------
   public:
     static void configChanged();
+    static bool articleVisible(KNArticle *a);
     static void articleRemoved(KNArticle *a);
     static void articleChanged(KNArticle *a);
     static void articleLoadError(KNArticle *a, const QString &error);

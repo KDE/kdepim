@@ -33,21 +33,31 @@
 QList<KNArticleWindow> KNArticleWindow::instances;
 
 
-void KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col)
+bool KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col, bool force)
 {
   QList<KNArticleWindow> list=instances;
   for(KNArticleWindow *i=list.first(); i; i=list.next())
-    if(i->artW->article()->collection()==col)
-      i->close();
+    if(i->artW->article()->collection()==col) {
+      if (force)
+        i->close();
+      else
+        return false;
+    }
+  return true;
 }
 
 
-void KNArticleWindow::closeAllWindowsForArticle(KNArticle *art)
+bool KNArticleWindow::closeAllWindowsForArticle(KNArticle *art, bool force)
 {
   QList<KNArticleWindow> list=instances;
   for(KNArticleWindow *i=list.first(); i; i=list.next())
-    if(i->artW->article()==art)
-      i->close();
+    if(i->artW->article()==art) {
+      if (force)
+        i->close();
+      else
+        return false;
+    }
+  return true;
 }
 
 

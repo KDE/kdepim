@@ -189,7 +189,9 @@ class KNMimeContent : public KNMimeBase {
     void changeEncoding(KNHeaders::contentEncoding e);
 
     //saves the encoded content to the given textstream
-    void toStream(QTextStream &ts);
+    // scrambleFromLines: replace "\nFrom " with "\n>From ", this is
+    // needed to avoid problem with mbox-files
+    void toStream(QTextStream &ts, bool scrambleFromLines=false);
 
     // this charset is used for all headers and the body
     // if the charset is not declared explictly
@@ -277,6 +279,10 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     bool isLocked()                      { return f_lags.get(0); }
     void setLocked(bool b=true);
 
+    //prevent that the article is unloaded automatically
+    bool isNotUnloadable()               { return f_lags.get(1); }
+    void setNotUnloadable(bool b=true)   { f_lags.set(1, b); }
+
     //article-collection
     KNArticleCollection* collection()           { return c_ol; }
     void setCollection(KNArticleCollection *c)  { c_ol=c; }
@@ -326,36 +332,37 @@ class KNRemoteArticle : public KNArticle {
     KNHeaders::Base* getHeaderByType(const char *type);
     void setHeader(KNHeaders::Base *h);
     bool removeHeader(const char *type);
-    KNHeaders::MessageID* messageID(bool create=true) { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
-    KNHeaders::From* from(bool create=true)           { if(!create && f_rom.isEmpty()) return 0; return &f_rom; }
+    KNHeaders::MessageID* messageID(bool create=true)   { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
+    KNHeaders::From* from(bool create=true)             { if(!create && f_rom.isEmpty()) return 0; return &f_rom; }
+    KNHeaders::References* references(bool create=true) { if(!create && r_eferences.isEmpty()) return 0; return &r_eferences; }
 
     // article number
     int articleNumber()                  { return a_rticleNumber; }
     void setArticleNumber(int number)    { a_rticleNumber = number; }
 
     // status
-    bool isNew()                         { return f_lags.get(1); }
-    void setNew(bool b=true)             { f_lags.set(1, b); }
-    bool isRead()                        { return f_lags.get(2); }
-    void setRead(bool b=true)            { f_lags.set(2, b); }
-    bool isExpired()                     { return f_lags.get(3); }
-    void setExpired(bool b=true)         { f_lags.set(3, b); }
-    bool isKept()                        { return f_lags.get(4); }
-    void setKept(bool b=true)            { f_lags.set(4, b); }
-    bool hasChanged()                    { return f_lags.get(5); }
-    void setChanged(bool b=true)         { f_lags.set(5, b); }
-    bool isIgnored()                     { return f_lags.get(6); }
-    void setIgnored(bool b=true)         { f_lags.set(6, b); }
-    bool isWatched()                     { return f_lags.get(7); }
-    void setWatched(bool b=true)         { f_lags.set(7, b); }
+    bool isNew()                         { return f_lags.get(2); }
+    void setNew(bool b=true)             { f_lags.set(2, b); }
+    bool isRead()                        { return f_lags.get(3); }
+    void setRead(bool b=true)            { f_lags.set(3, b); }
+    bool isExpired()                     { return f_lags.get(4); }
+    void setExpired(bool b=true)         { f_lags.set(4, b); }
+    bool isKept()                        { return f_lags.get(5); }
+    void setKept(bool b=true)            { f_lags.set(5, b); }
+    bool hasChanged()                    { return f_lags.get(6); }
+    void setChanged(bool b=true)         { f_lags.set(6, b); }
+    bool isIgnored()                     { return f_lags.get(7); }
+    void setIgnored(bool b=true)         { f_lags.set(7, b); }
+    bool isWatched()                     { return f_lags.get(8); }
+    void setWatched(bool b=true)         { f_lags.set(8, b); }
 
     // thread info
     int idRef()                                     { return i_dRef; }
     void setIdRef(int i)                            { i_dRef=i; }
     KNRemoteArticle* displayedReference()           { return d_ref; }
     void setDisplayedReference(KNRemoteArticle *dr) { d_ref=dr; }
-    bool threadMode()                             { return f_lags.get(8); }
-    void setThreadMode(bool b=true)               { f_lags.set(8, b); }
+    bool threadMode()                             { return f_lags.get(9); }
+    void setThreadMode(bool b=true)               { f_lags.set(9, b); }
     unsigned char threadingLevel()                { return t_hrLevel; }
     void setThreadingLevel(unsigned char l)       { t_hrLevel=l; }
     short score()                                 { return s_core; }
@@ -373,12 +380,12 @@ class KNRemoteArticle : public KNArticle {
     void thread(List &f);
 
     //filtering
-    bool filterResult()                     { return f_lags.get(9); }
-    void setFilterResult(bool b=true)       { f_lags.set(9, b); }
-    bool isFiltered()                       { return f_lags.get(10); }
-    void setFiltered(bool b=true)           { f_lags.set(10, b); }
-    bool hasVisibleFollowUps()              { return f_lags.get(11); }
-    void setVisibleFollowUps(bool b=true)   { f_lags.set(11, b); }
+    bool filterResult()                     { return f_lags.get(10); }
+    void setFilterResult(bool b=true)       { f_lags.set(10, b); }
+    bool isFiltered()                       { return f_lags.get(11); }
+    void setFiltered(bool b=true)           { f_lags.set(11, b); }
+    bool hasVisibleFollowUps()              { return f_lags.get(12); }
+    void setVisibleFollowUps(bool b=true)   { f_lags.set(12, b); }
 
     // list item handling
     void initListItem();
@@ -390,6 +397,7 @@ class KNRemoteArticle : public KNArticle {
     // hardcoded headers
     KNHeaders::MessageID m_essageID;
     KNHeaders::From f_rom;
+    KNHeaders::References r_eferences;
 
     int a_rticleNumber;
     int i_dRef;                      // id of a reference-article (0 == none)
@@ -438,26 +446,26 @@ class KNLocalArticle : public KNArticle {
                                                               return &t_o; }
 
     //send article as mail
-    bool doMail()                 { return f_lags.get(1); }
-    void setDoMail(bool b=true)   { f_lags.set(1, b); }
-    bool mailed()                 { return f_lags.get(2); }
-    void setMailed(bool b=true)   { f_lags.set(2, b); }
+    bool doMail()                 { return f_lags.get(2); }
+    void setDoMail(bool b=true)   { f_lags.set(2, b); }
+    bool mailed()                 { return f_lags.get(3); }
+    void setMailed(bool b=true)   { f_lags.set(3, b); }
 
     //post article to a newsgroup
-    bool doPost()                 { return f_lags.get(3); }
-    void setDoPost(bool b=true)   { f_lags.set(3, b); }
-    bool posted()                 { return f_lags.get(4); }
-    void setPosted(bool b=true)   { f_lags.set(4, b); }
-    bool canceled()               { return f_lags.get(5); }
-    void setCanceled(bool b=true) { f_lags.set(5, b); }
+    bool doPost()                 { return f_lags.get(4); }
+    void setDoPost(bool b=true)   { f_lags.set(4, b); }
+    bool posted()                 { return f_lags.get(5); }
+    void setPosted(bool b=true)   { f_lags.set(5, b); }
+    bool canceled()               { return f_lags.get(6); }
+    void setCanceled(bool b=true) { f_lags.set(6, b); }
 
     // status
     bool pending()                { return ( (doPost() && !posted()) || (doMail() && !mailed()) ); }
     bool isSavedRemoteArticle()   {  return ( !doPost() && !doMail() && editDisabled() ); }
 
     //edit
-    bool editDisabled()               { return f_lags.get(6); }
-    void setEditDisabled(bool b=true) { f_lags.set(6, b); }
+    bool editDisabled()               { return f_lags.get(7); }
+    void setEditDisabled(bool b=true) { f_lags.set(7, b); }
 
     //MBOX infos
     int startOffset()             { return s_Offset; }

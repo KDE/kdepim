@@ -95,11 +95,12 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void getAllGroups(QList<KNGroup> *l);
 
     bool loadHeaders(KNGroup *g);
+    bool unloadHeaders(KNGroup *g, bool force=true);
+
     KNGroup* group(const QString &gName, const KNServerInfo *s);
     KNGroup* currentGroup()               { return c_urrentGroup; }
     bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
     void setCurrentGroup(KNGroup *g);
-
 
     // group handling
     void showGroupDialog(KNNntpAccount *a, QWidget *parent=0);
@@ -117,7 +118,6 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // job handling
     void jobDone(KNJobData *j);
 
-  
   public slots:
     void slotLoadGroupList(KNNntpAccount *a);      // load group list from disk (if this fails: ask user if we should fetch the list)
     void slotFetchGroupList(KNNntpAccount *a);     // fetch group list from server

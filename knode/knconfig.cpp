@@ -570,7 +570,8 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   s_howScore=conf->readBoolEntry("showScore3", true);
 
   conf->setGroup("CACHE");
-  m_emCacheSize=conf->readNumEntry("memSize", 2048);
+  c_ollCacheSize=conf->readNumEntry("collMemSize", 2048);
+  a_rtCacheSize=conf->readNumEntry("artMemSize", 1024);
 
 }
 
@@ -597,8 +598,8 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("showScore3", s_howScore);
 
   conf->setGroup("CACHE");
-  conf->writeEntry("memSize", m_emCacheSize);
-
+  conf->writeEntry("collMemSize", c_ollCacheSize);
+  conf->writeEntry("artMemSize", a_rtCacheSize);
 }
 
 
@@ -615,7 +616,7 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   s_howSig=conf->readBoolEntry("showSig", true);
   i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
   q_uoteCharacters=conf->readEntry("quoteCharacters",">:");
-  i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
+  i_nlineAtt=conf->readBoolEntry("inlüineAtt", true);
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
   s_howAlts=conf->readBoolEntry("showAlts", false);
   QString s = conf->readEntry("Browser","Konqueror");

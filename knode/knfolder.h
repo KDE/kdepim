@@ -61,22 +61,16 @@ class KNFolder : public KNArticleCollection  {
 
     //load, save and delete
     bool loadHdrs();
+    bool unloadHdrs(bool force=true);
     bool loadArticle(KNLocalArticle *a);
     bool saveArticles(KNLocalArticle::List *l);
     void removeArticles(KNLocalArticle::List *l, bool del=true);
     void deleteAll();
-    void killYourself();
-
-    /*
-    // import & export
-    void importMBoxFile();
-    void exportMBoxFile();
-    */
+    void deleteFiles();
 
     //index synchronization
     void syncIndex(bool force=false);
 
-        
     protected:
       void closeFiles();
       int i_d;            //unique id
