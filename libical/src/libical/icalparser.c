@@ -488,7 +488,8 @@ char* icalparser_get_line(icalparser *parser,
 	   begins with a ' ', then the buffer holds a continuation
 	   line, so keep reading.  */
 
-	if  ( line_p > line+1 && *(line_p-1) == '\n' && impl->temp[0] == ' ') {
+	if ( line_p > line+1 && *(line_p-1) == '\n'
+	  && (impl->temp[0] == ' ' || impl->temp[0] == '\t') ) {
 
             impl->continuation_line = 1;
 
