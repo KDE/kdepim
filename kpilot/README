@@ -1,8 +1,9 @@
-KPILOT 4.2.2 by Dan Pilone
-===========================
+KPILOT 4.3.0-beta by Dan Pilone
+===============================
 	Additional work by Robert Ambrose, 
 	Preston Brown, Adriaan de Groot, 
 	Heiko Purnhagen, Jorg Habenicht,
+	David Bishop, Aaron Seigo,
 	and probably many more.
 
 	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
@@ -24,7 +25,7 @@ have to configure that package, not KPilot. KPilot does compile and
 install on its own though, once kdepim is configured. 
 
 	You NEED pilot-link to compile or install KPilot; KPilot is 
-currently tested using version 0.9.3 of pilot-link. 
+currently tested using version 0.9.5 of pilot-link. 
 
 
 
@@ -52,5 +53,4 @@ contributions are welcome.  :)  Send mail to kpilot-list@slac.com.
 
 	Adriaan de Groot
 	adridg@cs.kun.nl
-	http://www.cs.kun.nl/~adridg/kpilot-bugs.html
-	February 4, 2001
+	January 14, 2002
