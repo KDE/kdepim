@@ -325,7 +325,7 @@ void TaskView::newTask(QString caption, Task *parent)
       task->setUid(_storage->addTask(task, parent));
     }
 
-    if (task->uid())
+    if (!task->uid().isNull())
     {
       _desktopTracker->registerForDesktops( task, desktopList );
 

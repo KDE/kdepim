@@ -58,7 +58,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // that libkcal presents when asked to load a non-existent file.  We make it
   // user and group read/write, others read.  This is masked by the users
   // umask.  (See man creat)
-  handle = open(preferences->iCalFile(), O_CREAT|O_EXCL|O_WRONLY,
+  handle = open(QFile::encodeName(preferences->iCalFile()), O_CREAT|O_EXCL|O_WRONLY,
       S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
      
   kdDebug() << "KarmStorage::load: handle = " << handle << endl;
@@ -180,7 +180,7 @@ bool KarmStorage::isEmpty()
 
 bool KarmStorage::isNewStorage(const Preferences* preferences) const
 {
-  if (_icalfile)
+  if (!_icalfile.isNull())
     return preferences->iCalFile() != _icalfile;
   else
     return false;
@@ -261,7 +261,7 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
         taskview->setRootIsDecorated(true);
         parent->setOpen(true);
       }
-      if (task->uid())
+      if (!task->uid().isNull())
         stack.push(task);
       else
         delete task;
