@@ -163,6 +163,7 @@ class KConfig;
 //
 void listConfig(kdbgstream&,KConfig&);
 void listStrList(kdbgstream&,const QStringList&);
+void listStrList(kdbgstream&,QStrList&);
 QString qstringExpansion(const QString&);
 QString charExpansion(const char *);
 #else
@@ -208,4 +209,7 @@ extern const int fname;
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.20  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

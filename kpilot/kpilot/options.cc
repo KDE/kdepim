@@ -87,6 +87,17 @@ void listStrList(kdbgstream& s,const QStringList& l)
 	}
 }
 
+void listStrList(kdbgstream& s,QStrList &l)
+{
+	FUNCTIONSETUP;
+
+	s << fname << ": Elements of string list:" << endl;
+
+	for (char *p=l.first(); p; p=l.next())
+	{
+		s << fname << ":\t" << p << endl;
+	}
+}
 
 
 QString qstringExpansion(const QString& s)
@@ -97,7 +108,7 @@ QString qstringExpansion(const QString& s)
 	{
 		t+=s[i];
 		t+=' ';
-		t+=QString::number(s[i].unicode());
+		t+=QString::number((int)s[i].unicode());
 		t+=' ';
 	}
 
@@ -135,6 +146,10 @@ const int fname = (int) options_id;
 
 
 // $Log$
+// Revision 1.10  2001/02/09 12:56:29  brianj
+// Fixed bug where variable "id" was renamed to "options_id" but
+// a couple of occurences were missed.
+//
 // Revision 1.9  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
