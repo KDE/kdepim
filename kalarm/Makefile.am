@@ -3,12 +3,12 @@ INCLUDES= -I$(top_srcdir) -I$(top_srcdir)/libical/src/libical \
           -I$(top_builddir)/libical/src/libical $(all_includes)
 
 bin_PROGRAMS = kalarm kalarmautostart
-kalarm_SOURCES = main.cpp kalarmapp.cpp editdlg.cpp mainwindowbase.cpp mainwindow.cpp \
+kalarm_SOURCES = main.cpp editdlg.cpp mainwindowbase.cpp mainwindow.cpp \
 	messagewin.cpp msgevent.cpp alarmcalendar.cpp \
 	prefsettings.cpp prefs.cpp prefdlg.cpp \
 	traywindow.cpp daemongui.cpp alarmguiiface.skel \
 	fontcolour.cpp colourcombo.cpp datetime.cpp \
-	alarmlistview.cpp spinbox2.cpp
+	alarmlistview.cpp spinbox2.cpp kalarmapp.cpp
 kalarm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarm_LDADD   = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la $(top_builddir)/kalarmd/libkalarmd.la
 
