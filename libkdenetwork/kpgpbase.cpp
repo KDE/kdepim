@@ -16,6 +16,8 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
  */
 
+#include <kdebug.h>
+
 #include <config.h>
 
 #include "kpgpbase.h"
@@ -30,8 +32,6 @@
 #include <errno.h>
 
 #include <qapplication.h>
-
-#include <kdebug.h>
 
 
 namespace Kpgp {
