@@ -36,7 +36,7 @@ using namespace KCal;
 ResourceExchangeConfig::ResourceExchangeConfig( QWidget* parent,  const char* name )
     : KRES::ConfigWidget( parent, name )
 {
-  resize( 245, 115 ); 
+  resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this, 8, 3 );
 
   QLabel *label = new QLabel( i18n( "Host:" ), this );
@@ -68,7 +68,7 @@ ResourceExchangeConfig::ResourceExchangeConfig( QWidget* parent,  const char* na
   mainLayout->addWidget( new QLabel( i18n( "Mailbox URL:" ), this ), 6, 0 );
   mainLayout->addWidget( mMailboxEdit, 6, 1 );
 
-  mTryFindMailbox = new QPushButton( "&Find", this );
+  mTryFindMailbox = new QPushButton( i18n( "&Find" ), this );
   mainLayout->addWidget( mTryFindMailbox, 6, 2 );
   connect( mTryFindMailbox, SIGNAL(clicked()), this, SLOT(slotFindClicked()) );
 
