@@ -61,7 +61,7 @@ TwisterBrowserPartFactory::~TwisterBrowserPartFactory()
 }
 
     QObject *
-TwisterBrowserPartFactory::create(
+TwisterBrowserPartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,

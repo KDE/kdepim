@@ -28,6 +28,7 @@
 #include <kstdaction.h>
 #include <kprogress.h>
 #include <kparts/factory.h>
+#include <kstatusbar.h>
 
 // Local includes
 #include "TwisterShell.h"
@@ -73,7 +74,7 @@ TwisterShell::TwisterShell()
         return;
     }
 
-    setView(browser_->widget());
+	setCentralWidget(browser_->widget());
     createGUI(browser_);
 
     show();

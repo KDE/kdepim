@@ -55,7 +55,7 @@ class TwisterBrowserPartFactory : public KLibFactory
         TwisterBrowserPartFactory();
         virtual ~TwisterBrowserPartFactory();
 
-        virtual QObject * create(
+        virtual QObject * createObject(
             QObject * parent = 0,
             const char * name = 0,
             const char * classname = "QObject",
