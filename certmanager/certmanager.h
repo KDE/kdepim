@@ -128,12 +128,14 @@ private slots:
     void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
     void slotDropped(const KURL::List&);
     void slotRepaint();
+    void slotValidate();
 
 private:
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
     void updateImportActions( bool enable );
+    void startKeyListing( bool, const QStringList & );
     void startCertificateImport( const QByteArray & keyData, const QString& certDisplayName );
     void startImportCRL( const QString& fileName, bool isTempFile );
     void startSecretKeyExport( const QString & fingerprint );
@@ -164,15 +166,18 @@ private:
     KAction * mExportCertificateAction;
     KAction * mViewCertDetailsAction;
     KAction * mDeleteCertificateAction;
+#ifdef NOT_IMPLEMENTED_ANYWAY
     KAction * mRevokeCertificateAction;
     KAction * mExtendCertificateAction;
+#endif
     KAction * mExportSecretKeyAction;
     KAction * mDownloadCertificateAction;
+    KAction * mValidateCertificateAction;
 
     QString mImportCRLTempFile;
-    bool     mNextFindRemote; // state of the combo, i.e. whether the next find action will be remote
-    bool     mRemote; // whether the currently displayed items are from a remote listing
-    bool     mDirMngrFound;
+    bool     mNextFindRemote : 1; // state of the combo, i.e. whether the next find action will be remote
+    bool     mRemote : 1; // whether the currently displayed items are from a remote listing
+    bool     mDirMngrFound : 1;
 };
 
 #endif // _CERTMANAGER_H_

@@ -258,6 +258,11 @@ void CertManager::createActions() {
                                     actionCollection(), "edit_delete_certificate" );
   connectEnableOperationSignal( this, mDeleteCertificateAction );
 
+  mValidateCertificateAction = new KAction( i18n("Validate"), "reload", SHIFT + Key_F5,
+					    this, SLOT(slotValidate()),
+					    actionCollection(), "certificates_validate" );
+  connectEnableOperationSignal( this, mValidateCertificateAction );
+
   mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), 0,
 					   this, SLOT(slotImportCertFromFile()),
 					   actionCollection(), "file_import_certificates" );
@@ -383,6 +388,14 @@ void CertManager::updateStatusBarLabels() {
 //
 
 
+static QStringList extractKeyFingerprints( const QPtrList<Kleo::KeyListViewItem> & items ) {
+  QStringList result;
+  for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
+    if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
+      result.push_back( fpr );
+  return result;
+}
+
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
@@ -393,30 +406,36 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   KMessageBox::error( parent, msg, i18n( "Certificate Listing Failed" ) );
 }
 
-void CertManager::slotStartCertificateListing()
-{
+void CertManager::slotStartCertificateListing() {
+  // Clear display
+  mKeyListView->clear();
+  const QString query = mLineEditAction->text();
+  startKeyListing( false, query );
+}
+
+void CertManager::slotValidate() {
+  const QStringList selectedKeys = extractKeyFingerprints( mKeyListView->selectedItems() );
+  startKeyListing( true, selectedKeys );
+}
+
+void CertManager::startKeyListing( bool validating, const QStringList & patterns ) {
   mRemote = mNextFindRemote;
   mLineEditAction->setEnabled( false );
   mComboAction->setEnabled( false );
   mFindAction->setEnabled( false );
 
-  // Clear display
-  mKeyListView->clear();
-
-  const QString query = mLineEditAction->text();
-
   Kleo::KeyListJob * job =
-    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote );
+    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote, false, validating );
   assert( job );
 
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	   mKeyListView, SLOT(slotAddKey(const GpgME::Key&)) );
+	   mKeyListView, validating ? SLOT(slotRefreshKey(const GpgME::Key&)) : SLOT(slotAddKey(const GpgME::Key&)) );
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
 	   this, SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
 
   connectJobToStatusBarProgress( job, i18n("Fetching keys...") );
 
-  const GpgME::Error err = job->start( query );
+  const GpgME::Error err = job->start( patterns );
   if ( err ) {
     showKeyListError( this, err );
     return;
@@ -444,10 +463,8 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
 void CertManager::slotContextMenu(Kleo::KeyListViewItem* item, const QPoint& point) {
   if ( !item )
     return;
-  QPopupMenu *popup = static_cast<QPopupMenu*>(factory()->container("listview_popup",this));
-  if ( popup ) {
+  if ( QPopupMenu * popup = static_cast<QPopupMenu*>(factory()->container("listview_popup",this)) )
     popup->exec( point );
-  }
 }
 
 /**
@@ -895,6 +912,7 @@ void CertManager::slotSelectionChanged()
   mExtendCertificateAction->setEnabled( b );
 #endif
   mDownloadCertificateAction->setEnabled( b && mRemote );
+  mValidateCertificateAction->setEnabled( !mRemote );
 }
 
 void CertManager::slotExportCertificate() {

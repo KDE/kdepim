@@ -235,25 +235,25 @@ void Kleo::KeyListView::slotEmitContextMenu( KListView*, QListViewItem * item, c
 //
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListView * parent, const GpgME::Key & key )
-  : KListViewItem( parent )
+  : QListViewItem( parent )
 {
   setKey( key );
 }
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key )
-  : KListViewItem( parent, after )
+  : QListViewItem( parent, after )
 {
   setKey( key );
 }
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, const GpgME::Key & key )
-  : KListViewItem( parent )
+  : QListViewItem( parent )
 {
   setKey( key );
 }
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Key & key )
-  : KListViewItem( parent, after )
+  : QListViewItem( parent, after )
 {
   setKey( key );
 }
@@ -282,7 +282,7 @@ QString Kleo::KeyListViewItem::toolTip( int col ) const {
 
 int Kleo::KeyListViewItem::compare( QListViewItem * item, int col, bool ascending ) const {
   if ( !item || item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
-    return KListViewItem::compare( item, col, ascending );
+    return QListViewItem::compare( item, col, ascending );
   KeyListViewItem * that = static_cast<KeyListViewItem*>( item );
   return listView()->columnStrategy()->compare( this->key(), that->key(), col );
 }
@@ -290,7 +290,7 @@ int Kleo::KeyListViewItem::compare( QListViewItem * item, int col, bool ascendin
 void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
   if ( !ds ) {
-    KListViewItem::paintCell( p, cg, column, width, alignment );
+    QListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
   const QColor fg = ds->keyForeground( key(), cg.text() );
@@ -302,7 +302,7 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
   _cg.setColor( QColorGroup::Text, fg );
   _cg.setColor( QColorGroup::Base, bg );
 
-  KListViewItem::paintCell( p, _cg, column, width, alignment );
+  QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
 
 //
@@ -367,7 +367,7 @@ int Kleo::SubkeyKeyListViewItem::compare( QListViewItem * item, int col, bool as
 void Kleo::SubkeyKeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
   if ( !ds ) {
-    KListViewItem::paintCell( p, cg, column, width, alignment );
+    QListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
   const QColor fg = ds->subkeyForeground( subkey(), cg.text() );
@@ -379,7 +379,7 @@ void Kleo::SubkeyKeyListViewItem::paintCell( QPainter * p, const QColorGroup & c
   _cg.setColor( QColorGroup::Text, fg );
   _cg.setColor( QColorGroup::Base, bg );
 
-  KListViewItem::paintCell( p, _cg, column, width, alignment );
+  QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
 
 
@@ -446,7 +446,7 @@ int Kleo::UserIDKeyListViewItem::compare( QListViewItem * item, int col, bool as
 void Kleo::UserIDKeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
   if ( !ds ) {
-    KListViewItem::paintCell( p, cg, column, width, alignment );
+    QListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
   const QColor fg = ds->useridForeground( userID(), cg.text() );
@@ -458,7 +458,7 @@ void Kleo::UserIDKeyListViewItem::paintCell( QPainter * p, const QColorGroup & c
   _cg.setColor( QColorGroup::Text, fg );
   _cg.setColor( QColorGroup::Base, bg );
 
-  KListViewItem::paintCell( p, _cg, column, width, alignment );
+  QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
 
 
@@ -524,7 +524,7 @@ int Kleo::SignatureKeyListViewItem::compare( QListViewItem * item, int col, bool
 void Kleo::SignatureKeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
   const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
   if ( !ds ) {
-    KListViewItem::paintCell( p, cg, column, width, alignment );
+    QListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
   const QColor fg = ds->signatureForeground( signature(), cg.text() );
@@ -536,7 +536,7 @@ void Kleo::SignatureKeyListViewItem::paintCell( QPainter * p, const QColorGroup 
   _cg.setColor( QColorGroup::Text, fg );
   _cg.setColor( QColorGroup::Base, bg );
 
-  KListViewItem::paintCell( p, _cg, column, width, alignment );
+  QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
 
 
@@ -653,11 +653,11 @@ QColor Kleo::KeyListView::DisplayStrategy::signatureBackground( const GpgME::Use
 //
 
 Kleo::KeyListView * Kleo::KeyListViewItem::listView() const {
-  return static_cast<Kleo::KeyListView*>( KListViewItem::listView() );
+  return static_cast<Kleo::KeyListView*>( QListViewItem::listView() );
 }
 
 Kleo::KeyListViewItem * Kleo::KeyListViewItem::nextSibling() const {
-  return static_cast<Kleo::KeyListViewItem*>( KListViewItem::nextSibling() );
+  return static_cast<Kleo::KeyListViewItem*>( QListViewItem::nextSibling() );
 }
 
 Kleo::KeyListViewItem * Kleo::KeyListView::firstChild() const {

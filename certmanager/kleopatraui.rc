@@ -1,4 +1,4 @@
-<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="12" >
+<!DOCTYPE kpartgui ><kpartgui name="kleopatra" version="13" >
 <MenuBar>
 	<Menu name="file">
 		<text>File</text>
@@ -20,6 +20,7 @@
 	</Menu>
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
+		<Action name="certificates_validate"/>
 <!--
 		<Action name="edit_revoke_certificate"/>
 		<Action name="edit_extend_certificate"/>
@@ -39,6 +40,7 @@
 
 <Menu name="listview_popup">
 	<text>&amp;Certificates</text>
+	<Action name="certificates_validate"/>
 <!--
 	<Action name="edit_revoke_certificate"/>
 	<Action name="edit_extend_certificate"/>

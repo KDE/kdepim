@@ -46,7 +46,7 @@ namespace Kleo {
 
   class KeyListView;
 
-  class KeyListViewItem : public KListViewItem {
+  class KeyListViewItem : public QListViewItem {
   public:
     KeyListViewItem( KeyListView * parent, const GpgME::Key & key );
     KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key );
@@ -70,7 +70,7 @@ namespace Kleo {
     /*! \reimp */
     int compare( QListViewItem * other, int col, bool ascending ) const;
     /*! \reimp to allow for key() overload above */
-    QString key( int col, bool ascending ) const { return KListViewItem::key( col, ascending ); }
+    QString key( int col, bool ascending ) const { return QListViewItem::key( col, ascending ); }
     /*! \reimp */
     int rtti() const { return RTTI; }
     /*! \reimp */
