@@ -6,8 +6,17 @@
 #include "agent.h"
 #include <qframe.h>
 
-CertItem::CertItem( const QString& DN, const QString& O, const QString& C, Agent* agent, CertBox* parent ) 
-  :QListViewItem( parent, DN, agent->shortName() ), _DN(DN), _O(O), _C(C), _agent(agent)
+CertItem::CertItem( const QString& DN, 
+		    const QString& issuer, 
+		    const QString& CN, 
+		    const QString& L,
+		    const QString& O,
+		    const QString& OU,
+		    const QString& C, 
+		    const QString& email, 
+		    Agent* agent, CertBox* parent )
+  : QListViewItem( parent, DN, agent->shortName() ), 
+   _DN(DN), _issuer(issuer), _CN(CN),_L(L), _O(O), _OU(OU), _C(C), _email(email), _agent(agent)
 {
 }
 
@@ -27,7 +36,7 @@ void CertItem::addKey( const QString& key, const QString& value )
 */
 void CertItem::display() 
 {
-  KDialogBase* dialog = new KDialogBase( 0, "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
+  KDialogBase* dialog = new KDialogBase( listView(), "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
   QVBox* top = new QVBox( dialog );
   top->setSpacing(6);
   
@@ -36,7 +45,14 @@ void CertItem::display()
   // Fixed Keys
   new QLabel(i18n("<b>Certificate Information</b>"), top );
   new QLabel(i18n("DN: %1").arg( _DN ), top );
+  new QLabel(i18n("CN: %1").arg( _CN ), top );
+  new QLabel(i18n("L: %1").arg( _L ), top );
   new QLabel(i18n("O: %1").arg( _O ), top );
+  new QLabel(i18n("OU: %1").arg( _OU ), top );
+  new QLabel(i18n("C: %1").arg( _C ), top );
+  new QLabel(i18n("Email: %1").arg( _email ), top );
+
+  new QLabel(i18n("Issued by: %1").arg( _issuer ), top );
  
   // Extra Keys
   for ( QValueList< QPair<QString,QString> >::iterator it = _extras.begin(); it != _extras.end(); ++it ) {

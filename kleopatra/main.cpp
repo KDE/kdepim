@@ -39,14 +39,11 @@ int main( int argc, char** argv )
         return -1;
     }
   
-    CertManager* manager = new CertManager(0);
-    manager->show();
-    
     QString pluginName = QString::fromLocal8Bit( args->arg( 0 ) );
     QString pluginLib = QString::fromLocal8Bit( args->arg( 1 ) );
     args->clear();
   
-    pWrapper = new CryptPlugWrapper( manager, pluginName, pluginLib,
+    pWrapper = new CryptPlugWrapper( 0, pluginName, pluginLib,
                                      QString::null, true );
     CryptPlugWrapper::InitStatus initStatus;
     QString errorText;
@@ -56,10 +53,13 @@ int main( int argc, char** argv )
                             i18n( "Certificate Manager Error" ) );
         return -2;
     }
+    CertManager* manager = new CertManager(0);
+    manager->show();
+    
   
     QObject::connect( qApp, SIGNAL( lastWindowClosed() ), qApp, SLOT( quit() ) );
     int ret = app.exec();
-    delete manager;
+    delete pWrapper;
         
     return ret;
 }

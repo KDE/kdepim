@@ -11,6 +11,8 @@ Q_OBJECT
 
 public:
   CertBox( QWidget* parent, const char* name = 0 );
+
+  void loadCerts();
 protected slots:
   void handleDoubleClick( QListViewItem* item );
 };

@@ -31,6 +31,12 @@ CertManager::CertManager( QWidget* parent, const char* name ) :
   // File Menu
   QPopupMenu* fileMenu = new QPopupMenu( bar, "fileMenu" );
   bar->insertItem( i18n("&File"), fileMenu );
+
+  KAction* update = KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
+  update->plug( fileMenu );
+
+  fileMenu->insertSeparator();
+
   KAction* quit = KStdAction::quit( this, SLOT( quit() ), actionCollection());
   quit->plug( fileMenu );
 
@@ -106,6 +112,23 @@ void CertManager::loadCertificates()
   Agent* root = new Agent( "Root Agent", 0, this );
   Agent* sub = new Agent( "Sub Agent", root, this );
   Agent* subsub = new Agent( "SubSub Agent", sub, this );
+
+  // Clear display
+  _certBox->clear();
+
+  QValueList<CryptPlugWrapper::CertificateInfo> lst = pWrapper->listKeys();
+  for( QValueList<CryptPlugWrapper::CertificateInfo>::Iterator it = lst.begin(); 
+       it != lst.end(); ++it ) {
+    qDebug("New CertItem %s", (*it).userid.latin1() );
+    (void)new CertItem( (*it).userid.stripWhiteSpace(), 
+			(*it).issuer.stripWhiteSpace(),
+			(*it).dn["CN"], 
+			(*it).dn["L"], 
+			(*it).dn["O"], 
+			(*it).dn["OU"], 
+			(*it).dn["C"],
+			(*it).dn["1.2.840.113549.1.9.1"], root, _certBox );
+  }
 }
 
 /**

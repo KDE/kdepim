@@ -4,18 +4,19 @@
 #include <kmainwindow.h>
 class CertBox;
 class KProcess;
+class CryptPlugWrapper;
 
 class CertManager :public KMainWindow
 {
 Q_OBJECT
 
 public:
-  CertManager( QWidget* parent, const char* name = 0);
+    CertManager( QWidget* parent = 0, const char* name = 0);
 
 protected:
-  void loadCertificates();
 
 protected slots:
+    void loadCertificates();
     void newCertificate();
     void quit();
     void revokeCertificate();
@@ -26,6 +27,7 @@ protected slots:
     void slotGPGSMExited();
 
 private:
+  //CryptPlugWrapper* _wrapper;
     KProcess* gpgsmProc;
     CertBox* _certBox;
 };

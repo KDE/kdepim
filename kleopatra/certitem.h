@@ -12,14 +12,30 @@ class Agent;
 class CertItem :public QListViewItem 
 {
 public:
-  CertItem( const QString& DN, const QString& O, const QString& C, Agent* agent, CertBox* parent );
+  CertItem( const QString& DN, 
+	    const QString& issuer,
+	    const QString& CN, 
+	    const QString& L,
+	    const QString& O,
+	    const QString& OU,
+	    const QString& C, 
+	    const QString& email,
+	    Agent* agent, CertBox* parent );
   void addKey( const QString& key, const QString& value );
   void display();
 
 private:
   QString _DN;
+  QString _issuer;
+
+  QString _CN;
+  QString _L;
   QString _O;
+  QString _OU;
+  //QString _ST;
   QString _C;
+  QString _email;
+  
   Agent* _agent;
   QValueList< QPair<QString,QString> > _extras;
 };

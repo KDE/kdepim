@@ -15,4 +15,9 @@ void CertBox::handleDoubleClick( QListViewItem* item )
   static_cast<CertItem*>(item)->display();
 }
 
+void CertBox::loadCerts()
+{
+
+}
+
 #include "certbox.moc"
