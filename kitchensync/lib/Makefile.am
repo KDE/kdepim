@@ -8,7 +8,7 @@ libksync2_la_LDFLAGS =  $(all_libraries) -no-undefined -version-info 0:0:0 -modu
 libksync2_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la -lkabc $(LIB_QT)
 
 libksync2_la_SOURCES = \
-  syncer.cpp syncui.cpp syncuikde.cpp kontainer.cpp \
+  syncer.cpp syncee.cpp syncentry.cpp syncui.cpp syncuikde.cpp kontainer.cpp \
   syncalgorithm.cpp standardsync.cpp \
   addressbooksyncee.cpp unknownsyncee.cpp \
   opiedesktopsyncee.cpp  todosyncee.cpp \

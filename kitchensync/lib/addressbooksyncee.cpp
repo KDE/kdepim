@@ -1,8 +1,32 @@
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
+#include "addressbooksyncee.h"
+
+#include "syncee.h"
+
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kstaticdeleter.h>
-
-#include "addressbooksyncee.h"
 
 using namespace KSync;
 
@@ -11,31 +35,46 @@ AddressBookSyncEntry::AddressBookSyncEntry( const KABC::Addressee &a ) :
 {
     mAddressee = a;
 }
+
 AddressBookSyncEntry::AddressBookSyncEntry( const AddressBookSyncEntry& entry )
-: SyncEntry( entry ) {
+  : SyncEntry( entry )
+{
     mAddressee = entry.mAddressee;
     m_res = entry.m_res;
 }
-QString AddressBookSyncEntry::name(){
+
+QString AddressBookSyncEntry::name()
+{
   return mAddressee.realName();
 }
 
-QString AddressBookSyncEntry::id(){
+QString AddressBookSyncEntry::id()
+{
   return mAddressee.uid();
 }
-void AddressBookSyncEntry::setId(const QString& id) {
+
+void AddressBookSyncEntry::setId(const QString& id)
+{
     mAddressee.setUid( id );
 }
-SyncEntry* AddressBookSyncEntry::clone() {
+
+SyncEntry* AddressBookSyncEntry::clone()
+{
     return new AddressBookSyncEntry( *this );
 }
-QString AddressBookSyncEntry::timestamp(){
+
+QString AddressBookSyncEntry::timestamp()
+{
   return mAddressee.revision().toString();
 }
-QString AddressBookSyncEntry::type() const{
+
+QString AddressBookSyncEntry::type() const
+{
     return QString::fromLatin1("AddressBookSyncEntry");
 }
-bool AddressBookSyncEntry::equals( SyncEntry *entry ){
+
+bool AddressBookSyncEntry::equals( SyncEntry *entry )
+{
   AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
   if ( !abEntry ) {
     kdDebug(5228) << "AddressBookSyncee::equals(): Wrong type." << endl;
@@ -52,12 +91,17 @@ bool AddressBookSyncEntry::equals( SyncEntry *entry ){
     return false;
   }
 }
-QString AddressBookSyncEntry::resource()const {
+
+QString AddressBookSyncEntry::resource() const
+{
     return m_res;
 }
-void AddressBookSyncEntry::setResource( const QString& str ) {
+
+void AddressBookSyncEntry::setResource( const QString& str )
+{
     m_res = str;
 }
+
 /*
  * mergeWith hell :)
  * I hope it's worth the effort
@@ -168,7 +212,8 @@ namespace {
     }
 }
 
-bool AddressBookSyncEntry::mergeWith( SyncEntry* ent) {
+bool AddressBookSyncEntry::mergeWith( SyncEntry* ent) 
+{
     kdDebug(5228) << "mergeWith was called " << endl;
     if ( ent->name() != name() || !ent->syncee() || !syncee() )
         return false;
@@ -209,6 +254,7 @@ AddressBookSyncee::~AddressBookSyncee()
 {
 //  delete mAddressBook;
 }
+
 /*
  * FIX ME. Read Addressbook and CreateEntries
  */
@@ -218,6 +264,7 @@ bool AddressBookSyncee::read()
 //  return mAddressBook->load();
     return true;
 }
+
 /**
  * FIX ME. Create Addressbook insert Addressees and save it
  */
@@ -285,12 +332,14 @@ AddressBookSyncEntry *AddressBookSyncee::createEntry( const KABC::Addressee &a )
     return 0;
   }
 }
+
 /**
  * clone it now - could be inside the Syncee but then we would have to cast
  * -zecke
  *
  */
-Syncee* AddressBookSyncee::clone() {
+Syncee* AddressBookSyncee::clone() 
+{
     AddressBookSyncEntry* entry;
     SyncEntry* cloneE;
     AddressBookSyncee* clone = new AddressBookSyncee();
@@ -304,16 +353,24 @@ Syncee* AddressBookSyncee::clone() {
     }
     return clone;
 }
-SyncEntry::PtrList AddressBookSyncee::added() {
+
+SyncEntry::PtrList AddressBookSyncee::added()
+{
     return find( SyncEntry::Added );
 }
-SyncEntry::PtrList AddressBookSyncee::modified() {
+
+SyncEntry::PtrList AddressBookSyncee::modified()
+{
     return find( SyncEntry::Modified );
 }
-SyncEntry::PtrList AddressBookSyncee::removed() {
+
+SyncEntry::PtrList AddressBookSyncee::removed()
+{
     return find( SyncEntry::Removed );
 }
-SyncEntry::PtrList AddressBookSyncee::find( int state ) {
+
+SyncEntry::PtrList AddressBookSyncee::find( int state )
+{
     QPtrList<SyncEntry> found;
     AddressBookSyncEntry* entry;
     for ( entry = mEntries.first(); entry != 0; entry = mEntries.next() ) {
@@ -323,10 +380,14 @@ SyncEntry::PtrList AddressBookSyncee::find( int state ) {
 
     return found;
 }
-QString AddressBookSyncee::type() const {
+
+QString AddressBookSyncee::type() const
+{
     return QString::fromLatin1("AddressBookSyncee");
 }
-QString AddressBookSyncee::newId()const {
+
+QString AddressBookSyncee::newId() const
+{
     return KApplication::randomString( 10 );
 }
 

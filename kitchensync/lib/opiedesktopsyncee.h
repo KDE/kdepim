@@ -1,16 +1,25 @@
+/*
+    This file is part of KitchenSync.
 
+    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
 #ifndef KSYNC_OPIE_DESKTOP_SYNCEE
 #define KSYNC_OPIE_DESKTOP_SYNCEE
-
-// $Id$
-
-/**
- * $Log$
- * Revision 1.1  2002/07/15 20:15:19  zecke
- * Ported OpieDesktopSyncEntry
- *
- */
 
 #include <qstringlist.h>
 #include <qstring.h>
@@ -20,67 +29,71 @@
 #include "synctemplate.h"
 
 namespace KSync {
-    /**
-     * OpieDesktopSyncEntry
-     * Opie and Qtopia are featuring a Documents Tab
-     * All Documents are available with one click
-     * Now we've to show these files in KitchenSyncApp
-     * This is done through the Syncee transportation
-     * and syncing layer.
-     */
-    class OpieDesktopSyncEntry  : public SyncEntry {
-    public:
-        typedef QPtrList<OpieDesktopSyncEntry> PtrList;
-        OpieDesktopSyncEntry( const QStringList& category,
-                              const QString& file,
-                              const QString& name,
-                              const QString& type,
-                              const QString& size );
-        ~OpieDesktopSyncEntry();
-        OpieDesktopSyncEntry( const OpieDesktopSyncEntry& );
 
-        QString name() ;
-        QString file() const;
-        QString fileType() const;
-        QString size() const;
-        QStringList category() const;
+/**
+  OpieDesktopSyncEntry
+  Opie and Qtopia are featuring a Documents Tab
+  All Documents are available with one click
+  Now we've to show these files in KitchenSyncApp
+  This is done through the Syncee transportation
+  and syncing layer.
+*/
+class OpieDesktopSyncEntry  : public SyncEntry
+{
+  public:
+    typedef QPtrList<OpieDesktopSyncEntry> PtrList;
+    OpieDesktopSyncEntry( const QStringList& category,
+                          const QString& file,
+                          const QString& name,
+                          const QString& type,
+                          const QString& size );
+    ~OpieDesktopSyncEntry();
+    OpieDesktopSyncEntry( const OpieDesktopSyncEntry& );
 
-        QString type() const;
-        QString id() ;
-        QString timestamp();
-        bool equals( SyncEntry* );
-        SyncEntry* clone();
+    QString name() ;
+    QString file() const;
+    QString fileType() const;
+    QString size() const;
+    QStringList category() const;
 
-    private:
-        class OpieDesktopSyncEntryPrivate;
-        OpieDesktopSyncEntryPrivate* d;
-        QStringList mCategory;
-        QString mFile;
-        QString mName;
-        QString mType;
-        QString mSize;
-    };
+    QString type() const;
+    QString id() ;
+    QString timestamp();
+    bool equals( SyncEntry* );
+    SyncEntry* clone();
 
-    class OpieDesktopSyncee : public Syncee {
-    public:
-        OpieDesktopSyncee();
-        ~OpieDesktopSyncee();
-        QString type() const;
-        Syncee* clone();
-        bool read();
-        bool write();
-        void addEntry( SyncEntry* entry );
-        void removeEntry( SyncEntry* entry);
-        SyncEntry* firstEntry();
-        SyncEntry* nextEntry();
-        SyncEntry::PtrList added();
-        SyncEntry::PtrList modified();
-        SyncEntry::PtrList removed();
-
-    private:
-        OpieDesktopSyncEntry::PtrList mList;
-        SyncEntry::PtrList voidi();
-    };
+  private:
+    class OpieDesktopSyncEntryPrivate;
+    OpieDesktopSyncEntryPrivate* d;
+    QStringList mCategory;
+    QString mFile;
+    QString mName;
+    QString mType;
+    QString mSize;
 };
+
+class OpieDesktopSyncee : public Syncee
+{
+  public:
+    OpieDesktopSyncee();
+    ~OpieDesktopSyncee();
+    QString type() const;
+    Syncee* clone();
+    bool read();
+    bool write();
+    void addEntry( SyncEntry* entry );
+    void removeEntry( SyncEntry* entry);
+    SyncEntry* firstEntry();
+    SyncEntry* nextEntry();
+    SyncEntry::PtrList added();
+    SyncEntry::PtrList modified();
+    SyncEntry::PtrList removed();
+
+  private:
+    OpieDesktopSyncEntry::PtrList mList;
+    SyncEntry::PtrList voidi();
+};
+
+}
 
 #endif

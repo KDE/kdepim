@@ -30,7 +30,8 @@
 
 #include <kdebug.h>
 
-#include <syncer.h>
+#include <syncee.h>
+
 #include <error.h>
 #include <progress.h>
 

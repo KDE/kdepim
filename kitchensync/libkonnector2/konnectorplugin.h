@@ -27,7 +27,7 @@
 #include <qstringlist.h>
 #include <qptrlist.h>
 
-#include <syncer.h>
+#include <syncee.h>
 
 #include "stderror.h"
 #include "stdprogress.h"

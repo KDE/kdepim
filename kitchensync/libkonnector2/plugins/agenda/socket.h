@@ -3,7 +3,8 @@
 
 #include <qobject.h>
 
-#include <syncer.h> // For  Syncee and SyncEntry
+#include <syncee.h>
+
 #include <stderror.h>
 #include <stdprogress.h>
 

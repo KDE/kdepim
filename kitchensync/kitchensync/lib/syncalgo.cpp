@@ -21,18 +21,19 @@
 
 #include <kdebug.h>
 
-#include <syncer.h>
+#include <syncee.h>
 
 #include "syncalgo.h"
 
 using namespace KSync;
 
 PIMSyncAlg::PIMSyncAlg( SyncUi* ui )
-    : SyncAlgorithm( ui ) {
-
-
+    : SyncAlgorithm( ui )
+{
 }
-PIMSyncAlg::~PIMSyncAlg() {
+
+PIMSyncAlg::~PIMSyncAlg()
+{
 }
 
 /*
@@ -41,7 +42,8 @@ PIMSyncAlg::~PIMSyncAlg() {
  */
 void PIMSyncAlg::syncToTarget( Syncee* syncee,
                                Syncee* target,
-                               bool override) {
+                               bool override)
+{
     if (syncee->syncMode() == Syncee::MetaLess ||
         syncee->firstSync() )
         return syncFirst(syncee, target, override);
@@ -51,13 +53,15 @@ void PIMSyncAlg::syncToTarget( Syncee* syncee,
     else
         return syncMeta( syncee, target, override );
 }
+
 /*
  * First Sync or no MetaData
  * slightly changed syncToTarget from StandardSync
  */
 void PIMSyncAlg::syncFirst( Syncee* syncee,
                             Syncee* target,
-                            bool override ) {
+                            bool override )
+{
     kdDebug(5231) << "SyncFirst " << endl;
     SyncEntry *targetEntry = 0l;
 
@@ -128,6 +132,7 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
         sourceEntry = syncee->nextEntry();
     }
 }
+
 /*
  * We're now in the MetaMode
  * First sync added.
@@ -141,7 +146,8 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
  */
 void PIMSyncAlg::syncMeta( Syncee* syncee,
                            Syncee* target,
-                           bool over ) {
+                           bool over )
+{
     kdDebug(5231) << "SyncMeta " << endl;
     QPtrList<SyncEntry> entries = syncee->added();
     SyncEntry* entry;
@@ -163,7 +169,9 @@ void PIMSyncAlg::syncMeta( Syncee* syncee,
     forAll( syncee->removed(), syncee,  target,over );
 
 }
-void PIMSyncAlg::addEntry( Syncee* in, Syncee* out, SyncEntry* add ) {
+
+void PIMSyncAlg::addEntry( Syncee* in, Syncee* out, SyncEntry* add )
+{
     if ( add->id().startsWith("Konnector-") ) {
         QString oldId = add->id();
         add->setId( in->newId() );
@@ -172,6 +180,7 @@ void PIMSyncAlg::addEntry( Syncee* in, Syncee* out, SyncEntry* add ) {
     }
     out->addEntry( add->clone() );
 }
+
 /*
  * Ok we are either modified
  * or removed
@@ -183,7 +192,8 @@ void PIMSyncAlg::addEntry( Syncee* in, Syncee* out, SyncEntry* add ) {
  */
 void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                         Syncee* target,
-                        bool over ) {
+                        bool over )
+{
     kdDebug(5231) << "For All" << endl;
     SyncEntry* entry;
     SyncEntry* other;
@@ -210,7 +220,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                 informBothDeleted( entry, other );
                 target->replaceEntry( other, entry->clone() );
              /* entry removed and other undefined confirmDelete */
-            }else if ( entry->wasRemoved() &&
+            } else if ( entry->wasRemoved() &&
                        other->state() == SyncEntry::Undefined ) {
                 /* if confirmed that is fairly easy */
                 if (confirmDelete(entry, other) )
@@ -222,7 +232,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                  * and call a mergeWith
                  * then we reset the BitArray
                  */
-                else{
+                else {
                     QBitArray ar = entry->syncee()->bitArray();
                     QBitArray oth;
                     oth.fill( false, ar.size() );
@@ -239,7 +249,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                     if (!over ) {
                         entry->setState( SyncEntry::Undefined );
                         other->setState( SyncEntry::Modified);
-                    }else
+                    } else
                         entry->setState( SyncEntry::Modified);
 
                     /* restore */
@@ -258,7 +268,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                     target->replaceEntry(other,entry->clone() );
                 }
 
-            }else if ( entry->wasModified() && other->wasModified() ) {
+            } else if ( entry->wasModified() && other->wasModified() ) {
                 kdDebug(5231) << "Both where modified override" << over<< endl;
                 kdDebug(5231) << "Entry1 timestamp " << entry->timestamp() << endl;
                 kdDebug(5231) << "Entry2 timestamp " << other->timestamp() << endl;
@@ -274,7 +284,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
 
             }
 
-        }else {
+        } else {
 	    kdDebug(5231) << "added " << endl;
             addEntry(syncee, target, entry);
         }

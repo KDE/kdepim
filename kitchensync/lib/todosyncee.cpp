@@ -1,3 +1,24 @@
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
 #include <kstaticdeleter.h>
 
 #include <calformat.h>
@@ -8,6 +29,7 @@
 
 using namespace KSync;
 using KCal::Todo;
+
 /* A test for the template
 void testIt() {
     TodoSyncee* syncee = new TodoSyncee();
@@ -15,42 +37,62 @@ void testIt() {
     delete syncee;
 }
 */
+
 TodoSyncEntry::TodoSyncEntry( KCal::Todo* todo )
     : SyncEntry(), mTodo( todo )
 {
     if (!mTodo )
         mTodo = new KCal::Todo;
 }
+
 TodoSyncEntry::TodoSyncEntry( const TodoSyncEntry& entry)
     : SyncEntry( entry )
 {
     mTodo = (KCal::Todo*)entry.mTodo->clone();
 }
-TodoSyncEntry::~TodoSyncEntry() {
+
+TodoSyncEntry::~TodoSyncEntry()
+{
     delete mTodo;
 }
-KCal::Todo* TodoSyncEntry::todo()  {
+
+KCal::Todo* TodoSyncEntry::todo()
+{
     return mTodo;
 }
-QString TodoSyncEntry::type() const {
+
+QString TodoSyncEntry::type() const
+{
     return QString::fromLatin1("TodoSyncEntry");
 }
-QString TodoSyncEntry::name() {
+
+QString TodoSyncEntry::name()
+{
     return mTodo->summary();
 }
-QString TodoSyncEntry::id() {
+
+QString TodoSyncEntry::id()
+{
     return mTodo->uid();
 }
-void TodoSyncEntry::setId(const QString& id ) {
+
+void TodoSyncEntry::setId(const QString& id )
+{
     mTodo->setUid( id );
 }
-QString TodoSyncEntry::timestamp() {
+
+QString TodoSyncEntry::timestamp()
+{
     return mTodo->lastModified().toString();
 }
-SyncEntry* TodoSyncEntry::clone() {
+
+SyncEntry* TodoSyncEntry::clone()
+{
     return new TodoSyncEntry( *this );
 }
-bool TodoSyncEntry::equals(SyncEntry* entry ) {
+
+bool TodoSyncEntry::equals(SyncEntry* entry )
+{
     TodoSyncEntry* todoEntry = dynamic_cast<TodoSyncEntry*> (entry );
     if (!todoEntry )
         return false;
@@ -59,8 +101,9 @@ bool TodoSyncEntry::equals(SyncEntry* entry ) {
     if (mTodo->lastModified() != todoEntry->todo()->lastModified() ) return false;
     return true;
 }
+
 /* merging hell! */
-namespace{
+namespace {
     typedef MergeBase<Todo, TodoSyncee> MergeTodo;
     static MergeTodo* mergeMap = 0l;
     static KStaticDeleter<MergeTodo> deleter;
@@ -83,7 +126,9 @@ namespace{
     }
 
 }
-bool TodoSyncEntry::mergeWith( SyncEntry* entry ) {
+
+bool TodoSyncEntry::mergeWith( SyncEntry* entry )
+{
     if ( entry->name() != name() || !syncee() || !entry->syncee() )
         return false;
 
@@ -101,12 +146,17 @@ bool TodoSyncEntry::mergeWith( SyncEntry* entry ) {
 
 /// Syncee
 TodoSyncee::TodoSyncee()
-    : SyncTemplate<TodoSyncEntry>(TodoSyncee::Percent+1) { // Percent is the last item
-};
-QString TodoSyncee::type() const {
+    : SyncTemplate<TodoSyncEntry>(TodoSyncee::Percent+1)
+{
+}
+
+QString TodoSyncee::type() const
+{
     return QString::fromLatin1("TodoSyncee");
 }
-Syncee* TodoSyncee::clone() {
+
+Syncee* TodoSyncee::clone()
+{
     TodoSyncee* temp = new TodoSyncee();
     temp->setSyncMode( syncMode() );
     temp->setFirstSync( firstSync() );
@@ -118,21 +168,30 @@ Syncee* TodoSyncee::clone() {
     }
     return temp;
 }
-QString TodoSyncee::newId() const {
+
+QString TodoSyncee::newId() const
+{
     return KCal::CalFormat::createUniqueId();
 }
 
 namespace {
-    void mergeDue( Todo* const dest, const Todo* const src) {
+    void mergeDue( Todo* const dest, const Todo* const src)
+    {
         dest->setDtDue( src->dtDue() );
     }
-    void mergeStart( Todo* const dest, const Todo* const src) {
+    
+    void mergeStart( Todo* const dest, const Todo* const src)
+    {
         dest->setHasStartDate( src->hasStartDate() );
     }
-    void mergeComp( Todo* const dest, const Todo* const src) {
+
+    void mergeComp( Todo* const dest, const Todo* const src)
+    {
         dest->setCompleted( src->isCompleted() );
     }
-    void mergePer( Todo* const dest, const Todo* const src) {
+    
+    void mergePer( Todo* const dest, const Todo* const src)
+    {
         dest->setPercentComplete( src->percentComplete() );
     }
 }

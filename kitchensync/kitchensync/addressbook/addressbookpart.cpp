@@ -14,6 +14,7 @@
 #include <mainwindow.h>
 
 #include <addressbooksyncee.h>
+#include <syncer.h>
 
 #include "addressbookpart.h"
 

@@ -26,6 +26,8 @@
 
 #include <kstaticdeleter.h>
 
+#include <syncee.h>
+
 #include "kdevice.h"
 #include "filter.h"
 #include "error.h"
