@@ -108,6 +108,10 @@ namespace Kleo {
     const std::vector<GpgME::Key> & selectedKeys() const { return mSelectedKeys; }
 
     bool rememberSelection() const;
+    bool hideInvalidKeys() const;
+
+  public slots:
+    void setHideInvalidKeys( bool hide );
 
   private slots:
     void slotRereadKeys();
@@ -120,6 +124,7 @@ namespace Kleo {
     void slotOk();
     void slotCancel();
     void slotSearch( const QString & text );
+    void slotSearch();
     void slotFilter();
 
   private:
@@ -143,6 +148,7 @@ namespace Kleo {
     Kleo::KeyListView * mKeyListView;
     const Kleo::CryptoBackend * mBackend;
     QCheckBox * mRememberCB;
+    QCheckBox * mHideInvalidKeys;
     std::vector<GpgME::Key> mSelectedKeys;
     unsigned int mKeyUsage;
     QTimer * mCheckSelectionTimer;

@@ -94,40 +94,68 @@
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   
-
-  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys &&
-       ( key.isInvalid() || key.isExpired() || key.isRevoked() || key.isDisabled() ) )
-    return false;
+  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys )
+    if ( key.isInvalid() ) {
+      //qDebug( "key is invalid" );
+      return false;
+    }
+    else if ( key.isExpired() ) {
+      //qDebug( "key is expired" );
+      return false;
+    } else if ( key.isRevoked() ) {
+      //qDebug( "key is revoked" );
+      return false;
+    } else if ( key.isDisabled() ) {
+      //qDebug( "key is disabled" );
+      return false;
+    }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
-       !key.canEncrypt() )
+       !key.canEncrypt() ) {
+    //qDebug( "key can's encrypt" );
     return false;
+  }
   if ( keyUsage & Kleo::KeySelectionDialog::SigningKeys &&
-       !key.canSign() )
+       !key.canSign() ) {
+    //qDebug( "key can't sign" );
     return false;
+  }
   if ( keyUsage & Kleo::KeySelectionDialog::CertificationKeys &&
-       !key.canCertify() )
+       !key.canCertify() ) {
+    //qDebug( "key can't certify" );
     return false;
+  }
   if ( keyUsage & Kleo::KeySelectionDialog::AuthenticationKeys &&
-       !key.canAuthenticate() )
+       !key.canAuthenticate() ) {
+    //qDebug( "key can't authenticate" );
     return false;
+  }
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
-       !key.isSecret() )
+       !key.isSecret() ) {
+    //qDebug( "key isn't secret" );
     return false;
+  }
 
   if ( keyUsage & Kleo::KeySelectionDialog::PublicKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::SecretKeys ) &&
-       key.isSecret() )
+       key.isSecret() ) {
+    //qDebug( "key is secret" );
     return false;
+  }
 
   if ( keyUsage & Kleo::KeySelectionDialog::TrustedKeys &&
        key.protocol() == GpgME::Context::OpenPGP )
     switch ( key.userID(0).validity() ) {
     case GpgME::UserID::Unknown:
+      //qDebug( "key validity is unknown" );
+      return false;
     case GpgME::UserID::Undefined:
+      //qDebug( "key validity is undefined" );
+      return false;
     case GpgME::UserID::Never:
+      //qDebug( "key validity is \"never\"" );
       return false;
     case GpgME::UserID::Marginal:
     case GpgME::UserID::Full:
@@ -265,17 +293,21 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
   QFrame *page = makeMainWidget();
   QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
 
-  if( !text.isEmpty() )
+  if ( !text.isEmpty() )
     topLayout->addWidget( new QLabel( text, page ) );
 
   QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
   QLineEdit * le = new QLineEdit( page );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
   hlay->addWidget( le, 1 );
+  mHideInvalidKeys = new QCheckBox( i18n("Hide &invalid keys"), page );
+  hlay->addWidget( mHideInvalidKeys );
   le->setFocus();
+  mHideInvalidKeys->setChecked( true );
 
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
+  connect( mHideInvalidKeys, SIGNAL(toggled(bool)), SLOT(slotSearch()) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
   mKeyListView = new KeyListView( new ColumnStrategy( keyUsage ), page, "mKeyListView" );
@@ -289,7 +321,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
   topLayout->addWidget( mKeyListView, 10 );
 
   if ( rememberChoice ) {
-    mRememberCB = new QCheckBox( i18n("Remember choice"), page );
+    mRememberCB = new QCheckBox( i18n("&Remember choice"), page );
     topLayout->addWidget( mRememberCB );
     QWhatsThis::add( mRememberCB,
 		     i18n("<qt><p>If you check this box your choice will "
@@ -301,7 +333,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     connect( mCheckSelectionTimer, SIGNAL(timeout()),
              SLOT(slotCheckSelection()) );
   connectSignals();
-
+  
   connect( mKeyListView,
 	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
 	   SLOT(accept()) );
@@ -683,7 +715,7 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 
 void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend * backend ) {
   assert( backend );
-  KeyListJob * job = backend->keyListJob( false, true ); // local, with sigs
+  KeyListJob * job = backend->keyListJob( false, false, false ); // local, w/o sigs, no validation
   if ( !job )
     return;
 
@@ -888,7 +920,6 @@ void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
 
     connect( mListView, SIGNAL( selectionChanged() ),
              this,      SLOT( slotSelectionChanged() ) );
-  }
 #endif
 
 
@@ -934,6 +965,10 @@ void Kleo::KeySelectionDialog::slotCancel() {
 
 void Kleo::KeySelectionDialog::slotSearch( const QString & text ) {
   mSearchText = text.stripWhiteSpace().upper();
+  slotSearch();
+}
+
+void Kleo::KeySelectionDialog::slotSearch() {
   mStartSearchTimer->start( sCheckSelectionDelay, true /*single-shot*/ );
 }
 
@@ -961,11 +996,13 @@ void Kleo::KeySelectionDialog::slotFilter() {
 void Kleo::KeySelectionDialog::filterByKeyID( const QString & keyID ) {
   assert( keyID.length() <= 8 );
   assert( !keyID.isEmpty() ); // regexp in slotFilter should prevent these
+  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
   if ( keyID.isEmpty() )
     showAllItems();
   else
     for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-      item->setVisible( item->text( 0 ).upper().startsWith( keyID ) );
+      item->setVisible( ( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) ) &&
+			item->text( 0 ).upper().startsWith( keyID ) );
 }
 
 static bool anyUIDMatches( const Kleo::KeyListViewItem * item, QRegExp & rx ) {
@@ -984,10 +1021,11 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID( const QString & str ) {
 
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( item->text( 0 ).upper().startsWith( str )
-		      || anyUIDMatches( item, rx ) );
+    item->setVisible( ( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) ) &&
+		      ( item->text( 0 ).upper().startsWith( str ) || anyUIDMatches( item, rx ) ) );
 
 }
 
@@ -996,15 +1034,29 @@ void Kleo::KeySelectionDialog::filterByUID( const QString & str ) {
 
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( anyUIDMatches( item, rx ) );
+    item->setVisible( ( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) ) &&
+		      anyUIDMatches( item, rx ) );
 }
 
 
 void Kleo::KeySelectionDialog::showAllItems() {
+  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( true );
+    item->setVisible( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) );
+}
+
+bool Kleo::KeySelectionDialog::hideInvalidKeys() const {
+  return mHideInvalidKeys->isChecked();
+}
+
+void Kleo::KeySelectionDialog::setHideInvalidKeys( bool hide ) {
+  if ( hide == hideInvalidKeys() )
+    return;
+  mHideInvalidKeys->setChecked( hide );
+  slotFilter();
 }
 
 #include "keyselectiondialog.moc"
