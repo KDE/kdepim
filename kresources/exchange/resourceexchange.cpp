@@ -448,8 +448,25 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
       mCache->deleteEvent( *it );
     }
 
+    // FIXME: This is needed for the hack below:
+    Event::List eventsBefore = mCache->rawEvents();
+    
     kdDebug() << "Reading events for month of " << start.toString() << endl;
     mClient->downloadSynchronous( mCache, start, end, true ); // Show progress dialog
+    
+    // FIXME: This is a terrible hack! We need to install the observer for 
+    // newly downloaded events.However, downloading is done by 
+    // mClient->downloadSynchronous, where we don't have the pointer to this 
+    // available... On the other hand, here we don't really know which events 
+    // are really new.
+    Event::List eventsAfter = mCache->rawEvents();
+    for ( it = eventsAfter.begin(); it != eventsAfter.end(); ++it ) {
+      if ( eventsBefore.find( *it ) == eventsBefore.end() ) {
+        // it's a new event downloaded by downloadSynchronous -> install observer
+        (*it)->registerObserver( this );
+      }
+    }
+
     mDates->add( start );
     mCacheDates->insert( start, now );
   }
