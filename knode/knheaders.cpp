@@ -451,9 +451,11 @@ void KNHeaders::To::from7BitString(const QCString &s, QFont::CharSet defaultCS, 
   bool splitOk=split.first();
   if(!splitOk)
     a_ddrList->append(new AddressField(s,defaultCS,force));
-  else
-    while(splitOk)
+  else {
+    do {
       a_ddrList->append(new AddressField(split.string(),defaultCS,force));
+    } while(split.next());
+  }
 
   e_ncCSet=a_ddrList->first()->rfc2047Charset();
 }
