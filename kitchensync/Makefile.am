@@ -1,1 +1,1 @@
-
+SUBDIRS = klockfile libkonnector

@@ -30,8 +30,11 @@ class Kapabilities {
  public:
   Kapabilities();
   Kapabilities(const Kapabilities & );
-  ~Kapabilities();
- 
+  QStringList supportedProtocols( ) const;
+  void setSupportedProtocols(const QString & );
+
+  int useProtocol( const QString & );
+
   bool supportsPushSync() const;
   void setSupportsPushSync(bool push);
 
@@ -39,32 +42,26 @@ class Kapabilities {
   void setNeedsConnection(bool connection );
 
   bool supportsListDir() const;
-  void setSupportsListDir(bool );
+  void setSupportsListDir(bool ) const;
 
-  QStringList ports()const;
-  void setPorts(const QStringList & );
-  QString currentPort()const;
-  void setCurrentPort(const QString & );
   bool needsIPs()const;
   bool needsSrcIP()const;
-  bool needsDestIP()const;
+  bool needDestIP()const;
   void setNeedsIPs(bool ip);
   void setNeedsSrcIP( bool srcIp );
   void setNeedsDestIp(bool srcIp );
   void setSrcIP( const QHostAddress & );
-  QHostAddress srcIP()const;
-  void setDestIP(const QHostAddress &);
-  QHostAddress destIP()const;
-  bool canAutoHandle() const;
-  void setAutoHandle(bool);
-  QValueList< QPair<QHostAddress, QHostAddress > > ipProposals() const;
-  void setIpProposals( QValueList< QPair<QHostAddress, QHostAddress> >);
+  void setDestIp();
+  bool canAutoHandle();
+  void setBoolAutoHandle(bool);
+  QPair<QValueList<QHostAddress>, QValueList<QHostAddress> > ipProposals();
+
   Kapabilities &operator=(const Kapabilities & );
 
  private:
   class KapabilitiesPrivate;
   KapabilitiesPrivate *d;
-  void copy(const Kapabilities &);
+
 };
 #endif
 

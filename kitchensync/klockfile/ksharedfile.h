@@ -1,5 +1,5 @@
 /* This file is part of the KDE libraries
-    Copyright (C) 2001 Holger Freyther <freyher@kde.org>
+    Copyright (C) 2001, 2002 Holger Freyther <freyher@kde.org>
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 		  
     This library is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@
 #include <sys/types.h>
 
 #include <qstring.h>
-#include <qobject.h>
+#include <dcopobject.h>
+//#include <qobject.h>
 
 class QFile;
 class QTimer; 
@@ -39,12 +40,13 @@ program to write to the file.
     Then there are also signal which signalize a change.
     @short KSharedFile to lock a file
     @author Holger Freyther <freyther@kde.org>
-    @version 0.5 
+    @version 0.51 
  */
 
-class KSharedFile : public QObject 
+class KSharedFile : public QObject, public DCOPObject 
 {
-  Q_OBJECT;
+  Q_OBJECT
+  K_DCOP
  public:
   /** Instantiate the class.
     @param filename The resource to be shared with others
@@ -63,12 +65,11 @@ class KSharedFile : public QObject
       Ticket ( const QString &filename ) : m_fileName( filename ) {}
     private:
       QString m_fileName;
-
   };
   /** sets the Filename
       @param filename The name of the resource to be shared 
    */
-  void setFileName( const QString &filename );
+  void setFileName (const QString &filename );
   /** This method is for convience.It sets the File
       @param file The file to be shared
    */
@@ -80,59 +81,78 @@ class KSharedFile : public QObject
   /** This tries to lock the file. It returns right after trying either successful or not
  @return if Ticket is not equal to 0l the file was successfully locked
   */
-  Ticket* requestSaveTicket( );
-  /** This loads the file specified
-     @see setFileName(const QString & )
+  Ticket* requestWriteTicket( );
+
+  /** This tries to to lock the file for reading
+
    */
-  QString load( );
+  Ticket* requestReadTicket();
   /** This writes to the file if the ticket is valid
  @param 
    */
   bool save( Ticket *ticket, const QString &string );
+  bool save( Ticket *ticket, const QByteArray & );
+  QFile* save( Ticket *ticket );
+
+  QString readAsString( bool &ok, Ticket *ticket );
+  QByteArray readAsByteArray( bool &ok, Ticket *ticket );
+  QFile* readAsFile( Ticket *ticket );
   /** after locking this unlocks the file
    */
-  bool unlockFile( Ticket *ticket );
+  bool unlockReadFile( Ticket *ticket );
+  bool unlockWriteFile( Ticket *ticket );
   /** check whether or not the file is locked
    @return the state of the lock
    */
-  bool isLocked( );
+  bool canReadLock( );
+  bool canWriteLock();
   /**
      @returns whether or not I locked the file
    */
-  bool didILock( );
+  bool didIReadLock( );
+  bool didIWriteLock();
   /** In future this will tell you who to blame for the file is locked.
 
    */
-  QString whoHoldsLock( ) const;
-
-
- protected:
-  QString m_uniqueName;
+  //QString whoHoldsLock( ) const;
+ k_dcop:
+   ASYNC slotFileChanged(QString );
 
  private:
+  QFile *m_file;
   QString m_fileName;
-  bool m_locked:1;
-  bool m_lockedOther:1;
-  QTimer *m_FileCheckTimer;
   time_t m_ChangeTime;
+  bool readLock;
+  bool writeLock;
+  void updateLocks();
 
- private slots:
-  void checkFile( );
  signals:
   /**
     This signal get emitted when the file get unlocked
     @param filename The name of the file which gets locked
    */
-  void fileUnlocked( const QString &filename);
+  void fileWriteUnlocked( const QString &filename);
   /** The file got locked
       @param filename filename got locked
   */  
-  void fileLocked( const QString &filename );
+  void fileWriteLocked( const QString &filename );
   /**
       The file changed during a lock and unlock session
       @param filename The file with the name filenam changed
    */
   void fileChanged( const QString &filename );
+
+
 };
 
 #endif
+
+
+
+
+
+
+
+
+
+

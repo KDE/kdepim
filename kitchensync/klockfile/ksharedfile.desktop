@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=KDED File Sharing/Locking Module
+Comment=Share files between others
+ServiceTypes=KDEDModule
+X-KDE-ModuleType=Library
+X-KDE-Library=ksharedfile
+X-KDE-FactoryName=ksharedfile
+X-KDE-Kded-autoload=true
+X-KDE-Kded-load-on-demand=false

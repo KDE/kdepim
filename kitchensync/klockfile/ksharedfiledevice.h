@@ -17,46 +17,22 @@
 
 */
 
-#include "kdevice.h"
+#ifndef ksharedfiledevice_h
+#define ksharedfiledevice_h
+#include <qfile.h>
 
-class KDevice::KDevicePrivate {
-public:
-  KDevicePrivate(){
-  }
-  QString id;
-  QString group;
-  QString vendor;
-
+class KSharedFileDevice : public QFile 
+{
+ public:
+  KSharedFileDevice( );
+  KSharedFileDevice(const QString &name );
+  ~KSharedFileDevice();
+  virtual bool open( int mode );
+  virtual void close();
 };
+#endif
 
-KDevice::KDevice(const QString &ident, const QString &group,
-	  const QString &vendor)
-{
-  d = new KDevicePrivate();
-  d->id = ident;
-  d->group = group;
-  d->vendor = vendor;
-}
-KDevice::KDevice(const KDevice &dev )
-{
-  d = new KDevicePrivate();
-  d->id = dev.identify();
-  d->group = dev.group();
-  d->vendor = dev.vendor();
-}
-KDevice::~KDevice()
-{
-  delete d;
-}
-QString KDevice::identify() const
-{
-  return d->id;
-}
-QString KDevice::group() const
-{
-  return d->group;
-}
-QString KDevice::vendor() const
-{
-  return d->vendor;
-}
+
+
+
+
