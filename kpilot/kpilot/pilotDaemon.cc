@@ -518,14 +518,8 @@ bool PilotDaemon::setupPilotLink()
 {
 	FUNCTIONSETUP;
 
-	if (fPilotLink)
-	{
-		delete fPilotLink;
-
-		fPilotLink = 0;
-	}
-
-	fPilotLink = KPilotDeviceLink::init();
+	KPILOT_DELETE(fPilotLink);
+	fPilotLink = new KPilotDeviceLink();
 	if (!fPilotLink)
 	{
 		kdWarning() << k_funcinfo
@@ -533,8 +527,8 @@ bool PilotDaemon::setupPilotLink()
 		return false;
 	}
 
-	QObject::connect(fPilotLink, SIGNAL(deviceReady()),
-		this, SLOT(startHotSync()));
+	QObject::connect(fPilotLink, SIGNAL(deviceReady(KPilotDeviceLink*)),
+		this, SLOT(startHotSync(KPilotDeviceLink*)));
 	// connect the signals emitted by the pilotDeviceLink
 	QObject::connect(fPilotLink, SIGNAL(logError(const QString &)),
 		this, SLOT(logError(const QString &)));
@@ -748,7 +742,7 @@ static bool isKDesktopLockRunning()
 }
 
 
-/* slot */ void PilotDaemon::startHotSync()
+/* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink*pilotLink)
 {
 	FUNCTIONSETUP;
 
@@ -784,7 +778,7 @@ static bool isKDesktopLockRunning()
 		fInstaller) mode |= ActionQueue::WithInstaller;
 
 	// Queue to add all the actions for this sync to.
-	fSyncStack = new ActionQueue(fPilotLink);
+	fSyncStack = new ActionQueue(pilotLink);
 
 #ifdef ENABLE_KROUPWARE
 	bool _syncWithKMail = false;
@@ -822,7 +816,7 @@ static bool isKDesktopLockRunning()
 			": KPilot returned status " << kpilotstatus << endl;
 
 		fSyncStack->queueInit();
-		fSyncStack->addAction(new SorryAction(fPilotLink));
+		fSyncStack->addAction(new SorryAction(pilotLink));
 		// Near the end of this function - sets up
 		// signal/slot connections and fires off the sync.
 		goto launch;
@@ -831,7 +825,7 @@ static bool isKDesktopLockRunning()
 	if (isKDesktopLockRunning())
 	{
 		fSyncStack->queueInit();
-		fSyncStack->addAction(new SorryAction(fPilotLink,
+		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled while the screen is locked.")));
 		goto launch;
 	}
@@ -867,14 +861,14 @@ static bool isKDesktopLockRunning()
 	if (_syncWithKMail)
 	{
 		fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
-			_kroupwareParts,fPilotLink));
+			_kroupwareParts,pilotLink));
 	}
 #endif
 
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test:
-		fSyncStack->addAction(new TestLink(fPilotLink));
+		fSyncStack->addAction(new TestLink(pilotLink));
 		// No conduits, nothing.
 		break;
 	case PilotDaemonDCOP::Backup:
@@ -883,11 +877,11 @@ static bool isKDesktopLockRunning()
 		{
 			fSyncStack->queueConduits(conduits, mode);
 		}
-		fSyncStack->addAction(new BackupAction(fPilotLink, mode));
+		fSyncStack->addAction(new BackupAction(pilotLink, mode));
 		break;
 	case PilotDaemonDCOP::Restore:
 		mode |= ActionQueue::RestoreMode | ActionQueue::FlagFull;
-		fSyncStack->addAction(new RestoreAction(fPilotLink));
+		fSyncStack->addAction(new RestoreAction(pilotLink));
 		if (mode & ActionQueue::WithInstaller)
 		{
 			fSyncStack->queueInstaller(fInstaller->dir(),
@@ -928,11 +922,11 @@ skipExtraSyncSettings:
 
 		if (KPilotSettings::internalEditors() && !(mode & ActionQueue::FlagHHToPC) )
 		{
-			fSyncStack->addAction(new InternalEditorAction(fPilotLink, mode));
+			fSyncStack->addAction(new InternalEditorAction(pilotLink, mode));
 		}
 		// Now check for changed PC
 		{
-		KPilotUser *usr = fPilotLink->getPilotUser();
+		KPilotUser *usr = pilotLink->getPilotUser();
 		// changing the PC or using a different Palm Desktop app causes a full sync
 		// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
 		// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
@@ -951,7 +945,7 @@ skipExtraSyncSettings:
 			<< mode << ", Sync Type="<< KPilotSettings::syncType()<<endl;
 #endif
 		if (mode & ActionQueue::WithBackup)
-			fSyncStack->addAction(new BackupAction(fPilotLink, mode));
+			fSyncStack->addAction(new BackupAction(pilotLink, mode));
 		break;
 	default:
 #ifdef DEBUG
@@ -966,7 +960,7 @@ skipExtraSyncSettings:
 	if (_syncWithKMail)
 	{
 		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
-			_kroupwareParts,fPilotLink));
+			_kroupwareParts,pilotLink));
 	}
 #endif
 

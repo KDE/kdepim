@@ -51,7 +51,7 @@
 * ActionQueue.
 *
 * An ActionQueue is constructed with a @p device. As usual, you should connect
-* the device's deviceReady() signal with the exec() slot -- or something to that effect.
+* the device's deviceReady(KPilotDeviceLink*) signal with the exec() slot -- or something to that effect.
 * The ActionQueue will then run all the actions in the queue in sequence.
 *
 */

@@ -91,20 +91,15 @@ Q_OBJECT
 /*
 ** Constructors and destructors.
 */
-protected:
+public:
 	/**
 	* Creates a pilot link that can sync to the pilot.
 	*
 	* Call reset() on it to start looking for a device.
 	*/
-	KPilotDeviceLink(QObject *parent, const char *name);
-private:
-	static KPilotDeviceLink *fDeviceLink;
-
-public:
+	KPilotDeviceLink( QObject *parent = 0, const char *name = 0 );
 	virtual ~KPilotDeviceLink();
-	static KPilotDeviceLink *link() { return fDeviceLink; } ;
-	static KPilotDeviceLink *init(QObject *parent=0L,const char *n=0L);
+//	bool init(QObject *parent=0L,const char *n=0L);
 
 /*
 ** Status information
@@ -148,7 +143,7 @@ private:
 
 /*
 ** Used for initially attaching to the device.
-** deviceReady() is emitted when the device has been opened
+** deviceReady(KPilotDeviceLink*) is emitted when the device has been opened
 ** and a Sync can start.
 */
 public:
@@ -236,7 +231,7 @@ signals:
 	* Emitted once the user information has been read and
 	* the HotSync is really ready to go.
 	*/
-	void deviceReady();
+	void deviceReady( KPilotDeviceLink* );
 
 protected:
 	int pilotSocket() const { return fCurrentPilotSocket; } ;

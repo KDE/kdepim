@@ -169,7 +169,7 @@ protected:
 	int fPostSyncAction;
 
 protected slots:
-	void startHotSync();
+	void startHotSync( KPilotDeviceLink* lnk );
 	void endHotSync();
 
 	void logMessage(const QString &);

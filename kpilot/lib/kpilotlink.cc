@@ -66,8 +66,6 @@ static const char *kpilotlink_id = "$Id$";
 
 
 
-KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
-
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	QObject(parent, name),
 	fLinkStatus(Init),
@@ -76,11 +74,11 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
-	fPilotUser(0L),
-	fPilotSysInfo(0L),
 	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
-	fCurrentPilotSocket(-1)
+	fCurrentPilotSocket(-1),
+	fPilotUser(0L),
+	fPilotSysInfo(0L)
 {
 	FUNCTIONSETUP;
 
@@ -90,8 +88,6 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 		<< endl;
 #endif
 
-	Q_ASSERT(fDeviceLink == 0L);
-	fDeviceLink = this;
 	messagesMask=0xffffffff;
 
 	(void) kpilotlink_id;
@@ -101,18 +97,8 @@ KPilotDeviceLink::~KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
 	close();
-	fDeviceLink = 0L;
 	KPILOT_DELETE(fPilotSysInfo);
 	KPILOT_DELETE(fPilotUser);
-}
-
-KPilotDeviceLink *KPilotDeviceLink::init(QObject * parent, const char *name)
-{
-	FUNCTIONSETUP;
-
-	Q_ASSERT(!fDeviceLink);
-
-	return new KPilotDeviceLink(parent, name);
 }
 
 void KPilotDeviceLink::close()
@@ -154,7 +140,6 @@ void KPilotDeviceLink::reset(DeviceType t, const QString & dP)
 	fRetries = 0;
 
 	// Release all resources
-	//
 	//
 	close();
 	fPilotPath = QString::null;
@@ -558,7 +543,7 @@ void KPilotDeviceLink::acceptDevice()
 
 
 	emit logProgress(QString::null, 100);
-	emit deviceReady();
+	emit deviceReady( this );
 }
 
 void KPilotDeviceLink::tickle() const

@@ -118,7 +118,7 @@ void createLink()
 {
 	FUNCTIONSETUP;
 
-	deviceLink = KPilotDeviceLink::init(0, "deviceLink");
+	deviceLink = new KPilotDeviceLink(0, "deviceLink");
 
 	QObject::connect(deviceLink, SIGNAL(logError(const QString &)),
 		logWidget, SLOT(addError(const QString &)));
@@ -142,7 +142,7 @@ void connectStack()
 	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
 		logWidget, SLOT(addProgress(const QString &,int)));
 
-	QObject::connect(deviceLink, SIGNAL(deviceReady()), syncStack, SLOT(execConduit()));
+	QObject::connect(deviceLink, SIGNAL(deviceReady(KPilotDeviceLink*)), syncStack, SLOT(execConduit()));
 
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		logWidget, SLOT(syncDone()));
