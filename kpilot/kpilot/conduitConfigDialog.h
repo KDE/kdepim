@@ -97,7 +97,6 @@ signals:
 protected slots:
 	void configure();
 	void configureWizard();
-	void configureKontact();
 
 	void selected(QListViewItem *);
 	void conduitsChanged(QListViewItem*);

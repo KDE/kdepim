@@ -26,6 +26,10 @@ kcm_kpilot_la_SOURCES = kpilotConfigDialog.cc \
 	kpilotConfigDialog2_base.ui \
 	kpilotConfigDialog3_base.ui \
 	conduitConfigDialog.cc \
+	kpilotConfigWizard_base1.ui \
+	kpilotConfigWizard_base2.ui \
+	kpilotConfigWizard_base3.ui \
+	kpilotConfigWizard.cc \
 	dbSelectionDialog.cc dbSelection_base.ui
 kcm_kpilot_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 kcm_kpilot_la_LIBADD = $(LIB_KFILE) $(PISOCK_LIB) \

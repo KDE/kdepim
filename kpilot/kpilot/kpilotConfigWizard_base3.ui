@@ -1,0 +1,95 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>ConfigWizard_base3</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>ConfigWizard_base3</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>355</width>
+            <height>289</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form5</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QButtonGroup" row="1" column="0">
+            <property name="name">
+                <cstring>fAppType</cstring>
+            </property>
+            <property name="title">
+                <string>Set default values for syncing with:</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton" row="0" column="0">
+                    <property name="name">
+                        <cstring>radioButton6</cstring>
+                    </property>
+                    <property name="text">
+                        <string>General &amp;KDE-PIM suite</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="1" column="0">
+                    <property name="name">
+                        <cstring>radioButton7</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Konta&amp;ct</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="2" column="0">
+                    <property name="name">
+                        <cstring>radioButton8</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Evolution</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel6</cstring>
+            </property>
+            <property name="text">
+                <string>Finally, you can configure kpilot specifically for some PIM applications, like Kontact (KDE's integrated PIM application), the KDE-PIM suite of applications, or Evolution (Gnome's integrated PIM application).
+
+Press "Finish" to setup KPilot according to the settings in this configuration Wizard.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <spacer row="2" column="0">
+            <property name="name">
+                <cstring>spacer5</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>41</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

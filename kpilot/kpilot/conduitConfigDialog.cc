@@ -51,10 +51,13 @@ static const char *conduitconfigdialog_id =
 #include <kstandarddirs.h>
 #include <klibloader.h>
 #include <kseparator.h>
+#include <kconfigskeleton.h> 
 
 #include "plugin.h"
 #include "kpilotConfig.h"
 #include "kpilotConfigDialog.h"
+
+#include "kpilotConfigWizard.h"
 
 #include "conduitConfigDialog.moc"
 
@@ -247,9 +250,6 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	btns->setStretchFactor(w,50);
 	fConfigureWizard = new QPushButton(i18n("Configuration Wizard"),btns);
 	w = new QWidget(btns);
-	btns->setStretchFactor(w,10);
-	fConfigureKontact = new QPushButton(i18n("Kontact Wizard"),btns);
-	w = new QWidget(btns);
 	btns->setStretchFactor(w,50);
 
 
@@ -294,8 +294,6 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 
 	QObject::connect(fConfigureWizard,SIGNAL(clicked()),
 		this,SLOT(configureWizard()));
-	QObject::connect(fConfigureKontact,SIGNAL(clicked()),
-		this,SLOT(configureKontact()));
 
 	fGeneralPage->setSelected(true);
 	fConduitList->setCurrentItem(fGeneralPage);
@@ -817,16 +815,10 @@ void ConduitConfigWidget::reopenItem(QListViewItem *i)
 void ConduitConfigWidget::configureWizard()
 {
 	FUNCTIONSETUP;
-	KMessageBox::sorry(this,
-		i18n("Sorry, this configuration wizard is still unimplemented."),
-		i18n("Unimplemented feature."));
-}
-
-void ConduitConfigWidget::configureKontact()
-{
-	FUNCTIONSETUP;
-	KMessageBox::sorry(this,
-		i18n("Sorry, this configuration wizard is still unimplemented."),
-		i18n("Unimplemented feature."));
+	ConfigWizard wiz(this, "Wizard");
+	if (wiz.exec()) {
+		KPilotSettings::self()->readConfig();
+		load();
+	}
 }
 
