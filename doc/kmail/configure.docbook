@@ -28,7 +28,7 @@
       </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-07-05</date>
+<date>2004-07-13</date>
 <releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
@@ -88,7 +88,7 @@ changes you have made.</para></listitem>
 </sect1>
 
 <sect1 id="configure-identity">
-<title><guilabel>Identities</guilabel> Page</title>
+<title>Identities Page</title>
 
 <para>You can find a quick introduction to the
 <guilabel>Identities</guilabel> page in the <link
@@ -158,7 +158,7 @@ entry in the <guilabel>Existing identities</guilabel> popup.</para>
 </sect2>
 
 <sect2 id="configure-identity-general">
-<title><guilabel>General</guilabel></title>
+<title>General</title>
 
 <para>The <guilabel>General</guilabel> tab allows you to specify some
 basic settings for the currently selected identity.</para>
@@ -195,9 +195,9 @@ address</guilabel> field.</para></example>
 </sect2>
 
     <sect2 id="configure-identity-cryptography">
-      <title><guilabel>
+      <title>
 	Cryptography
-      </guilabel></title>
+      </title>
 
       <para>
 	The <guilabel>Cryptography</guilabel> tab allows you to
@@ -343,7 +343,7 @@ address</guilabel> field.</para></example>
     </sect2>
 
 <sect2 id="configure-identity-advanced">
-<title><guilabel>Advanced</guilabel></title>
+<title>Advanced</title>
 
 <para>The <guilabel>Advanced</guilabel> tab allows you to specify some
 rarely used or otherwise specialized settings for the currently
@@ -429,7 +429,7 @@ tab</link> of the <link linkend="configure-network">
 </sect2>
 
 <sect2 id="configure-identity-signature">
-<title><guilabel>Signature</guilabel></title>
+<title>Signature</title>
 
 <para>This tab allows you to specify a signature (sometimes called
 <quote>footer</quote> or <quote>disclaimer</quote>)
@@ -494,7 +494,7 @@ text yourself.</para>
 </sect1>
 
 <sect1 id="configure-network">
-<title><guilabel>Network</guilabel> Page</title>
+<title>Network Page</title>
 
 <para>You can find a quick introduction to the
 <guilabel>Network</guilabel> page in the <link
@@ -511,7 +511,7 @@ linkend="configure-identity">identities</link> or decide on a per-message
 basis.</para>
 
 <sect2 id="configure-network-sending">
-<title><guilabel>Sending</guilabel></title>
+<title>Sending</title>
 
 <para>The <guilabel>Sending</guilabel> tab allows you to define new
 outgoing mail servers and set some common options.</para>
@@ -597,7 +597,7 @@ then messages you send to <replaceable>johndoe</replaceable> will be sent to
 </sect2>
 
 <sect2 id="configure-network-receiving">
-<title><guilabel>Receiving</guilabel></title>
+<title>Receiving</title>
 
 <para>For basic information, see <link
 linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
@@ -619,10 +619,10 @@ are available via the <guibutton>Other Actions</guibutton> button.</para>
 </sect1>
 
 <sect1 id="configure-appearance">
-<title><guilabel>Appearance</guilabel> Page</title>
+<title>Appearance Page</title>
 
 <sect2 id="configure-appearance-fonts">
-<title><guilabel>Fonts</guilabel></title>
+<title>Fonts</title>
 
 <para>This section allows you to change the type, size and character set of the
 display fonts. <guilabel>Message Body</guilabel> sets the font for
@@ -634,7 +634,7 @@ so you can choose a monospaced font for the date field for better readability.</
 </sect2>
 
 <sect2 id="configure-appearance-colors">
-<title><guilabel>Colors</guilabel></title>
+<title>Colors</title>
 
 <para>This section allows you to change the color of the text.
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
@@ -645,7 +645,7 @@ the composer.<!-- TODO --></para>
 </sect2>
 
 <sect2 id="configure-appearance-layout">
-<title><guilabel>Layout</guilabel></title>
+<title>Layout</title>
 
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
 pane that tells you if a message is &html; or not. This is important because
@@ -670,7 +670,7 @@ has attachments or has &html; parts.</para>
 </sect2>
 
 <sect2 id="configure-appearance-headers">
-<title><guilabel>Headers</guilabel></title>
+<title>Headers</title>
 
 <para>With <guilabel>Display message sizes</guilabel> selected there will be another 
 column in the header pane that shows the messages' size.</para>
@@ -704,7 +704,7 @@ and then clicking on <guilabel>Custom</guilabel> option.</para>
 </sect2>
 
 <sect2 id="configure-appearance-systemtray">
-<title><guilabel>System Tray</guilabel></title>
+<title>System Tray</title>
 
 <para>If you enable the system tray icon then a small &kmail; icon with the
 number of unread messages will be shown in the system tray. You can enable
@@ -928,12 +928,12 @@ of key words can be modified.</para>
 
   <sect1 id="configure-security">
     <title>
-      <guilabel>Security</guilabel> Page
+      Security Page
     </title>
 
     <sect2 id="configure-security-reading">
       <title>
-	<guilabel>Reading</guilabel>
+	Reading
       </title>
 
       <para>
@@ -1175,7 +1175,7 @@ of key words can be modified.</para>
 
     <sect2 id="configure-security-composing">
       <title>
-	<guilabel>Composing</guilabel>
+	Composing
       </title>
 
       <para>
@@ -1321,7 +1321,7 @@ of key words can be modified.</para>
 
     <sect2 id="configure-security-warnings">
       <title>
-	<guilabel>Warnings</guilabel>
+	Warnings
       </title>
 
       <para>
@@ -1440,7 +1440,7 @@ of key words can be modified.</para>
 
     <sect2 id="configure-security-smime-validation">
       <title>
-	<guilabel>&smime; Validation</guilabel>
+	&smime; Validation
       </title>
 
       <para>
@@ -1453,7 +1453,7 @@ of key words can be modified.</para>
 
     <sect2 id="configure-security-crypto-backends">
       <title>
-	<guilabel>Crypto Backends</guilabel>
+	Crypto Backends
       </title>
 
       <para>
@@ -1508,10 +1508,10 @@ of key words can be modified.</para>
   </sect1> <!-- configure-security -->
 
 <sect1 id="configure-misc">
-<title><guilabel>Misc</guilabel> Page</title>
+<title>Misc Page</title>
 
 <sect2 id="configure-misc-folders">
-<title><guilabel>Folders</guilabel></title>
+<title>Folders</title>
 
 <variablelist>
 

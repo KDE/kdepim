@@ -11,8 +11,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-02-21</date>
-<releaseinfo>1.6</releaseinfo>
+<date>2004-07-13</date>
+<releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Using &kmail;</title>
@@ -442,7 +442,7 @@ are only available for your own folders and not for default folder like
 or renamed.</para>
 
 <sect3 id="folders-properties-general">
-<title><guilabel>General</guilabel> tab</title>
+<title>General</title>
 
 <para>Rename a folder by changing the entry in the <guilabel>Name:</guilabel> field.</para>
 
@@ -476,7 +476,7 @@ than into a special sent-mail folder.</para>
 </sect3>
 
 <sect3 id="folders-properties-expiry">
-<title><guilabel>Old Message Expiry</guilabel> tab</title>
+<title>Old Message Expiry</title>
 
 <para>Here you can select what should happen with old messages in this
 folder. If you enable <guilabel>Expire old messages in this folder</guilabel>
@@ -492,7 +492,7 @@ cannot be restored, so be careful with this setting.</para></warning>
 </sect3>
 
 <sect3 id="folders-properties-mailinglist">
-<title><guilabel>Mailing List</guilabel> tab</title>
+<title>Mailing List</title>
 
 <para>If you're going to use the folder for a mailing list then you should
 check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
