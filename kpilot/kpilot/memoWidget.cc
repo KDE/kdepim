@@ -46,6 +46,7 @@ static const char *memowidget_id="$Id$";
 
 #include "kpilot.h"
 #include "kpilotConfig.h"
+#include "listItems.h"
 #include "memoWidget.moc"
 
 // QADE: Is this a Pilot limitation, or is it a KPilot limitation?
@@ -313,8 +314,9 @@ MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	item = fLookupTable[item];
-	if(fMemoList.at(item)->id() == 0x0)
+	PilotListItem * p = (PilotListItem *)fListBox->item(item);
+	PilotMemo * selectedMemo = (PilotMemo *)p->rec();
+	if(selectedMemo->id() == 0x0)
 	{
 		// QADE: Why is this? What prevents us from deleting
 		// a "new" memo, ie. one we've imported, before *ever*
@@ -345,14 +347,12 @@ MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	PilotMemo* memo = fMemoList.at(item);
 	// QADE: Apparently a PilotMemo is not some kind of PilotRecord,
 	// so the PilotRecord methods don't work on it.
 	//
 	//
-	memo->makeDeleted();
-	memo->setAttrib(memo->getAttrib() | dlpRecAttrDeleted);
-	writeMemo(memo);
+	selectedMemo->makeDeleted();
+	writeMemo(selectedMemo);
 	initialize();
 }
 
@@ -389,13 +389,16 @@ MemoWidget::updateWidget()
 		if((fMemoList.current()->getCat() == currentCatID) ||
 			(currentCatID==-1))
 		{
+			PilotListItem * p = new PilotListItem(
+				fMemoList.current()->shortTitle(),
+				listIndex,
+				fMemoList.current());
 			// List will delete the title of the memo,
 			// so there's no memory leak here.
 			//
 			//
-			fListBox->insertItem(fMemoList.current()->shortTitle());
+			fListBox->insertItem(p);
 
-			fLookupTable[currentEntry++] = listIndex;
 #ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
@@ -429,11 +432,14 @@ MemoWidget::updateWidget()
 void
 MemoWidget::slotShowMemo(int which)
 {      
-  disconnect(fTextWidget, SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
-  fTextWidget->deselect();
-  fTextWidget->setText(fMemoList.at(fLookupTable[which])->text());
-  connect(fTextWidget, SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
-	
+	disconnect(fTextWidget, SIGNAL(textChanged()), 
+		this, SLOT(slotTextChanged()));
+	fTextWidget->deselect();
+	PilotListItem *p = (PilotListItem *)fListBox->item(which);
+	PilotMemo * theMemo = (PilotMemo *)p->rec();
+	fTextWidget->setText(theMemo->text());
+	connect(fTextWidget, SIGNAL(textChanged()), 
+		this, SLOT(slotTextChanged()));
 }
 
 void
@@ -452,11 +458,18 @@ void
 MemoWidget::slotTextChanged()
 {
   FUNCTIONSETUP;
-  PilotMemo* currentMemo;
+	if (fListBox->currentItem() == -1)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": slotTextChanged with no memo selected!"
+			<< endl;
+		return;
+	}
 
+  PilotListItem *p = (PilotListItem *)fListBox->item(fListBox->currentItem());
+  PilotMemo* currentMemo = (PilotMemo *)p->rec();
   if(fListBox->currentItem() >= 0)
     {
-      currentMemo = fMemoList.at(fLookupTable[fListBox->currentItem()]);
       if(currentMemo->id() == 0x0)
 	{
 	  KMessageBox::error(0L,
@@ -509,12 +522,14 @@ MemoWidget::slotExportMemo()
 
     if(item == -1)
 	return;
-    item = fLookupTable[item];
-    QString fileName = KFileDialog::getSaveFileName();
-    if(fileName == 0L)
-	return;
 
-    data = fMemoList.at(item)->text();
+	PilotListItem *p = (PilotListItem *)fListBox->item(item);
+	PilotMemo* theMemo = (PilotMemo *)p->rec();
+
+	QString fileName = KFileDialog::getSaveFileName();
+	if(fileName.isEmpty()) return;
+
+	data = theMemo->text();
 
     QFile outFile(fileName);
     if(outFile.open(IO_WriteOnly | IO_Truncate) == FALSE)
@@ -528,6 +543,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.24  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.23  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
