@@ -28,7 +28,7 @@
         </size>
     </property>
     <property name="caption">
-        <string>Null-Conduit Options</string>
+        <string>Calendar-Conduit Options</string>
     </property>
     <property name="layoutMargin" stdset="0">
     </property>
@@ -110,7 +110,7 @@
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
                                 <property name="name">
-                                    <cstring>fSyncFile_2</cstring>
+                                    <cstring>fSyncFile</cstring>
                                 </property>
                                 <property name="enabled">
                                     <bool>true</bool>
@@ -173,7 +173,7 @@ be saved in the calendar on the PC.</string>
                     </property>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>textLabel1_2</cstring>
+                            <cstring>fTextLabel</cstring>
                         </property>
                         <property name="sizePolicy">
                             <sizepolicy>
@@ -260,6 +260,14 @@ conflicts.</string>
         </widget>
     </grid>
 </widget>
+<connections>
+    <connection>
+        <sender>fSyncFile</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fCalendarFile</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
 <tabstops>
     <tabstop>tabWidget</tabstop>
 </tabstops>
