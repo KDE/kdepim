@@ -14,3 +14,7 @@ runscripts.cpp
 
   NOTE: runscripts does not kill scripts that never return.  You have to 
   press Control-C to terminate the "make check" command.
+
+  NOTE: No attempt is made to check if Python, Perl or xautomation are
+  installed.  I expect the make check will just fail, but it has not been
+  tested.
