@@ -585,7 +585,7 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
 
 void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotLoadJobResult()" << endl;
+  kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult()" << endl;
 
   if ( job->error() ) {
     job->showErrorDialog( 0 );
@@ -645,7 +645,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
   mLoadTodosJob = 0;
 
-  mLoadTodosProgress->setComplete();
+  if ( mLoadTodosProgress ) mLoadTodosProgress->setComplete();
   mLoadTodosProgress = 0;
 
   emit resourceLoaded( this );
@@ -717,7 +717,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
   mLoadEventsJob = 0;
 
-  mLoadEventsProgress->setComplete();
+  if ( mLoadEventsProgress ) mLoadEventsProgress->setComplete();
   mLoadEventsProgress = 0;
 
   emit resourceLoaded( this );

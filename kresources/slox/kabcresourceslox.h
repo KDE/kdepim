@@ -70,6 +70,9 @@ class ResourceSlox : public Resource
     void insertAddressee( const Addressee &addr );
     void removeAddressee( const Addressee& addr );
 
+    void setReadOnly( bool );
+    bool readOnly() const;
+
   protected:
     void init();
     void initSlox();

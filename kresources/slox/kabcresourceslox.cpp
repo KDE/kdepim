@@ -73,6 +73,8 @@ void ResourceSlox::init()
 
   mDownloadJob = 0;
   mProgress = 0;
+  
+  setReadOnly( true );
 }
 
 void ResourceSlox::initSlox()
@@ -328,6 +330,16 @@ void ResourceSlox::cancelDownload()
   mDownloadJob = 0;
   if ( mProgress ) mProgress->setComplete();
   mProgress = 0;
+}
+
+void ResourceSlox::setReadOnly( bool )
+{
+  KRES::Resource::setReadOnly( true );
+}
+
+bool ResourceSlox::readOnly() const
+{
+  return true;
 }
 
 #include "kabcresourceslox.moc"
