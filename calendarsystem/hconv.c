@@ -17,6 +17,8 @@
  */
 
 #include <math.h>
+#include <stdlib.h>
+
 #include "hconv.h"
 
 #define RPD     (0.01745329251994329577) /* radians per degree (pi/180) */
