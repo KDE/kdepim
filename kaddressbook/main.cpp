@@ -66,6 +66,9 @@ int KAddressBookApp::newInstance()
 
     if ( !uid.isEmpty() )
       mMainWin->showContactEditor( uid );
+    if ( args->isSet( "new-contact" ) ) {
+      mMainWin->newContact();
+    }
   }
 
   return 0;
@@ -79,6 +82,7 @@ static KCmdLineOptions kmoptions[] =
   { "addr <email>", I18N_NOOP( "Shows contact editor with given email address" ), 0 },
   { "uid <uid>", I18N_NOOP( "Shows contact editor with given uid" ), 0 },
   { "editor-only", I18N_NOOP( "Launches in editor only mode" ), 0 },
+  { "new-contact", I18N_NOOP( "Launches editor for the new contact" ), 0 },
   { "+[argument]", I18N_NOOP( "dummy argument" ), 0},
   { 0, 0, 0}
 };
