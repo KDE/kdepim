@@ -23,7 +23,8 @@
 
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
-
+#include "recentaddresses.h"
+using KRecentAddress::RecentAddresses;
 #include <kaccel.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
@@ -920,9 +921,16 @@ void KNComposer::insertFile(bool clear, bool box)
 //-------------------------------- <Actions> ------------------------------------
 
 
+void KNComposer::addRecentAddress()
+{
+    if( !v_iew->t_o->isHidden() )
+        RecentAddresses::self()->add( v_iew->t_o->text() );
+}
+
 void KNComposer::slotSendNow()
 {
   r_esult=CRsendNow;
+  addRecentAddress();
   emit composerDone(this);
 }
 
@@ -930,6 +938,7 @@ void KNComposer::slotSendNow()
 void KNComposer::slotSendLater()
 {
   r_esult=CRsendLater;
+  addRecentAddress();
   emit composerDone(this);
 }
 
@@ -937,6 +946,7 @@ void KNComposer::slotSendLater()
 void KNComposer::slotSaveAsDraft()
 {
   r_esult=CRsave;
+  addRecentAddress();
   emit composerDone(this);
 }
 
@@ -1353,9 +1363,8 @@ void KNComposer::slotToBtnClicked()
       lst = KMMessage::splitEmailAddrList( txt );
       dlg.setSelectedTo( lst );
   }
-
-  dlg.setRecentAddresses( RecentAddresses::self()->kabcAddresses() );
 #endif
+  dlg.setRecentAddresses( RecentAddresses::self()->kabcAddresses() );
   if (dlg.exec()==QDialog::Rejected) return;
 
   if(!to.isEmpty())

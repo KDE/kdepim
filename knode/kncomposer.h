@@ -179,6 +179,7 @@ class KNComposer : public KMainWindow  {
     void slotSelectAll();
     void slotMisspelling(const QString &text, const QStringList &lst, unsigned int pos);
     void slotCorrected (const QString &oldWord, const QString &newWord, unsigned int pos);
+    void addRecentAddress();
 
   protected:
 

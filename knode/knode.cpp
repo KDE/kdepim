@@ -29,7 +29,8 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kapplication.h>
-
+#include "recentaddresses.h"
+using KRecentAddress::RecentAddresses;
 //GUI
 #include "knode.h"
 #include "knarticlewidget.h"
@@ -640,7 +641,7 @@ void KNMainWindow::initActions()
   items += i18n("By S&ender");
   items += i18n("By S&core");
   items += i18n("By &Lines");
-  items += i18n("By &Date");  
+  items += i18n("By &Date");
   a_ctArtSortHeaders->setItems(items);
   a_ctArtSortHeaders->setShortcutConfigurable(false);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
@@ -721,7 +722,7 @@ void KNMainWindow::initActions()
 
   createStandardStatusBarAction();
   setStandardToolBarMenuEnabled(true);
-    
+
   a_ctToggleGroupView        = new KToggleAction(i18n("Show &Group View"), CTRL+Key_G, this,
                                SLOT(slotToggleGroupView()), actionCollection(), "settings_show_groupView");
   a_ctToggleHeaderView       = new KToggleAction(i18n("Show &Header View"), CTRL+Key_H, this,
@@ -951,10 +952,10 @@ void KNMainWindow::prepareShutdown()
     conf->setLastCompactDate();
   }
 
-  if(cup)
-    delete cup;
+  delete cup;
 
   saveOptions();
+  RecentAddresses::self()->save( kapp->config() );
   c_fgManager->syncConfig();
   a_rtManager->deleteTempFiles();
   g_rpManager->syncGroups();
