@@ -98,9 +98,6 @@ class CalFormat {
     void setException(ErrorFormat *error);
   
   protected:  
-    /** shows an error dialog box. */
-    void loadError(const QString &fileName);
-  
     QWidget *mTopWidget;      // topWidget used for message boxes
     bool mEnableDialogs;      // display various GUI dialogs?
 

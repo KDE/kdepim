@@ -54,7 +54,7 @@ Incidence::Incidence(const Incidence &i) : QObject()
 {
 // TODO: reenable attributes currently commented out.
   mReadOnly = i.mReadOnly;
-  kdDebug() << "Copying start date: " << i.mDtStart.toString() << endl;
+  kdDebug() << endl;
   mDtStart = i.mDtStart;
   mDuration = i.mDuration;
   mHasDuration = i.mHasDuration;

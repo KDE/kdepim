@@ -30,7 +30,7 @@
 #include <qfile.h>
 
 #include <kdebug.h>
-#include <kmessagebox.h>
+//#include <kmessagebox.h>
 //#include <kiconloader.h>
 #include <klocale.h>
 
@@ -88,7 +88,7 @@ bool ICalFormat::load(const QString &fileName)
   }
 
   if (!calendar) {
-    kdDebug("ICalFormat::load(): No VCALENDAR component found");
+    kdDebug() << "ICalFormat::load(): No VCALENDAR component found" << endl;
     icalfileset_free(fs);
     return false;
   }

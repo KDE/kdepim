@@ -21,7 +21,6 @@
 // $Id$
 
 #include <klocale.h>
-#include <kmessagebox.h>
 #include <kdebug.h>
 #include <kapplication.h>
 
@@ -52,23 +51,6 @@ void CalFormat::setTopwidget(QWidget *topWidget)
 void CalFormat::showDialogs(bool enable)
 {
   mEnableDialogs = enable;
-}
-
-void CalFormat::loadError(const QString &fileName) 
-{
-  kdDebug() << "CalFormat::loadError()" << endl;
-
-  if (mEnableDialogs) {
-    KMessageBox::sorry(mTopWidget,
-                       i18n("An error has occurred loading the file:\n"
-                            "%1.\n"
-                            "Please verify that the file is in vCalendar "
-                            "format,\n"
-                            "that it exists, and it is readeable, then "
-                            "try again or load another file.\n")
-                            .arg(fileName),
-                       i18n("KOrganizer: Error Loading Calendar"));
-  }
 }
 
 void CalFormat::clearException()
