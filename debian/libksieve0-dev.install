@@ -1,4 +1,3 @@
 debian/tmp/usr/include/kde/ksieve
-debian/tmp/usr/lib/libksieve.a
 debian/tmp/usr/lib/libksieve.la
 debian/tmp/usr/lib/libksieve.so

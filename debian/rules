@@ -9,7 +9,7 @@ DEB_KDE_CVS_MAKE := yes
 DEB_KDE_ENABLE_FINAL := yes
 DEB_KDE_APIDOX := yes
 
-DEB_CONFIGURE_EXTRA_FLAGS := --enable-shared --enable-static
+DEB_CONFIGURE_EXTRA_FLAGS := --enable-shared --disable-static
 
 post-patches:: debian/stamp-libtool-update
 

@@ -1,3 +1,22 @@
+kdepim (4:3.3.1-2) unstable; urgency=medium
+
+  * Urgency medium due to fix for buildd issues.
+  * Updates from KDE_3_3_BRANCH.
+  * Stop building static libraries to make buildd's happy (or at least
+    happier).  They were pretty useless anyway without static versions
+    of Qt or kdelibs.  Closes: #281955.
+  * Update kleopatra dependencies for current experimental gnupg2/gpgsm
+    packages.  Closes: #274611, #280759.
+  * Drop cryptplug from kmail's dependencies, since it's no longer used.
+    Closes: #274612.
+  * Add blurb about kdepim-kio-plugins and kdebase-kio-plugins
+    dependencies to kmail's description, due to the number of people who
+    somehow manage to install kmail without even noticing the Recommends
+    on these packages, then complain that things don't work.
+    Closes: #274657.
+
+ -- Daniel Schepler <schepler@debian.org>  Sun, 21 Nov 2004 15:04:40 -0800
+
 kdepim (4:3.3.1-1) unstable; urgency=low
 
   * New upstream release.

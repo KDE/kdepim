@@ -143,8 +143,7 @@ Description: Synchronization framework
 Package: kleopatra
 Section: contrib/net
 Architecture: any
-Depends: ${shlibs:Depends}, gnupg2, gnupg-agent, dirmngr
-Suggests: gnupg
+Depends: ${shlibs:Depends}, gpgsm, dirmngr, pinentry-qt | pinentry-x11
 Conflicts: kgpgcertmanager
 Replaces: kgpgcertmanager
 Provides: kgpgcertmanager
@@ -164,13 +163,17 @@ Section: mail
 Architecture: any
 Depends: ${shlibs:Depends}, ${perl:Depends}
 Recommends: kdebase-kio-plugins, kdepim-kio-plugins
-Suggests: cryptplug, gnupg, kaddressbook, kleopatra, spamassassin | bogofilter | annoyance-filter, clamav | f-prot-installer
+Suggests: gnupg, kaddressbook, kleopatra, spamassassin | bogofilter | annoyance-filter, clamav | f-prot-installer
 Replaces: libkdenetwork2 (<< 4:3.2.92)
 Provides: imap-client, mail-reader
 Description: KDE Email client
  KMail is a fully-featured email client that fits nicely into the KDE
  desktop. It has features such as support for IMAP, POP3, multiple accounts,
  mail filtering and sorting, PGP/GnuPG privacy, and inline attachments.
+ .
+ You need to install kdepim-kio-plugins if you want to use IMAP, and/or
+ kdebase-kio-plugins if you want to use POP3. If you are using aptitude,
+ these should be installed for you automatically.
  .
  This package is part of the official KDE pim module.
 

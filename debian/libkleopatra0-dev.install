@@ -1,12 +1,9 @@
 debian/tmp/usr/include/kde/gpgme++
 debian/tmp/usr/include/kde/kleo
 debian/tmp/usr/include/kde/qgpgme
-debian/tmp/usr/lib/libgpgme++.a
 debian/tmp/usr/lib/libgpgme++.la
 debian/tmp/usr/lib/libgpgme++.so
-debian/tmp/usr/lib/libkleopatra.a
 debian/tmp/usr/lib/libkleopatra.la
 debian/tmp/usr/lib/libkleopatra.so
-debian/tmp/usr/lib/libqgpgme.a
 debian/tmp/usr/lib/libqgpgme.la
 debian/tmp/usr/lib/libqgpgme.so

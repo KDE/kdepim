@@ -1,5 +1,4 @@
 debian/tmp/usr/include/kde/kdepim/exchangeaccount.h
 debian/tmp/usr/include/kde/kdepim/exchangeclient.h
-debian/tmp/usr/lib/libkpimexchange.a
 debian/tmp/usr/lib/libkpimexchange.la
 debian/tmp/usr/lib/libkpimexchange.so

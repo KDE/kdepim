@@ -23,7 +23,7 @@ diff -u -r2.461.2.1 acinclude.m4.in
 +	KDE_USE_FINAL_LA_FALSE=""
 +      else
 +	KDE_USE_FINAL_LA_TRUE=""
-+	KDE_USE_FINAL_LA_FALSE=""
++	KDE_USE_FINAL_LA_FALSE="#"
 +      fi
     else
        KDE_USE_FINAL_TRUE="#"

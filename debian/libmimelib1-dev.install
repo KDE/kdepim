@@ -1,4 +1,3 @@
 debian/tmp/usr/include/kde/mimelib
-debian/tmp/usr/lib/libmimelib.a
 debian/tmp/usr/lib/libmimelib.la
 debian/tmp/usr/lib/libmimelib.so
