@@ -227,6 +227,8 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( QString::fromUtf8("i_want@øl.invalid"), "true" );
   checkIsValidSimpleEmailAddress( "matt@[123.123.123.123]", "true" );
   checkIsValidSimpleEmailAddress( "\"matt\"@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "-matt@fruitsalad.org", "true" );
+  checkIsValidSimpleEmailAddress( "\"-matt\"@fruitsalad.org", "true" );
 
   // check if the pure email address is wrong
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
