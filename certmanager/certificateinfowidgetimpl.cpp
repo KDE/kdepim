@@ -52,6 +52,7 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <kprocio.h>
+#include <kglobalsettings.h>
 
 // Qt
 #include <qlistview.h>
@@ -93,6 +94,8 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bo
 	   this, SLOT( slotShowCertPathDetails( QListViewItem* ) ) );
   connect( importButton, SIGNAL( clicked() ),
 	   this, SLOT( slotImportCertificate() ) );
+
+  dumpView->setFont( KGlobalSettings::fixedFont() );
 
   if ( !key.isNull() )
     setKey( key );
