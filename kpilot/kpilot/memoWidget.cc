@@ -298,7 +298,8 @@ void MemoWidget::setupWidget()
 		i18n("Select the category of addresses\n"
 			"to display here."));
 
-	label = new QLabel(i18n("Memos:"), this);
+	(void) i18n("Memos:");
+	label = new QLabel(i18n("Category:"), this);
 	label->setBuddy(fCatList);
 	grid->addWidget(label, 0, 0);
 
