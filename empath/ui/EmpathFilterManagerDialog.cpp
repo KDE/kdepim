@@ -40,6 +40,7 @@
 #include "EmpathFilterManagerDialog.h"
 #include "EmpathFilterEditDialog.h"
 #include "EmpathFilterList.h"
+#include "EmpathFilterListItem.h"
 #include "EmpathUtilities.h"
 #include "EmpathFilter.h"
 #include "EmpathUIUtils.h"

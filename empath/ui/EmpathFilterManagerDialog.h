@@ -28,6 +28,7 @@
 #define EMPATHFILTERMANAGERDIALOG_H
 
 // Qt includes
+#include <qlist.h>
 #include <qlistview.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
@@ -37,8 +38,9 @@
 #include <kdialog.h>
 
 // Local includes
-#include "EmpathFilterListItem.h"
 #include "EmpathDefines.h"
+
+class EmpathFilterListItem;
 
 class EmpathFilterManagerDialog : public KDialog
 {

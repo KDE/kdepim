@@ -46,7 +46,7 @@ class EmpathMainWindow : public KTMainWindow
         EmpathMainWindow();
         ~EmpathMainWindow();
 
-        void statusMessage(const QString & messageText, int seconds);
+        void statusMessage(const QString & messageText, int milliseconds);
         void clearStatusMessage();
     
     protected slots:

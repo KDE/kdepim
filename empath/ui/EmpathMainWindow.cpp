@@ -64,7 +64,7 @@ EmpathMainWindow::EmpathMainWindow()
     resize(x, y);
     
     progressStack_ = new QWidgetStack(statusBar());
-    statusBar()->insertWidget(progressStack_, width(), 0);
+    statusBar()->addWidget(progressStack_, width());
     statusBar()->show();
 
     progressStack_->hide();
@@ -106,9 +106,9 @@ EmpathMainWindow::s_newTask(EmpathTask * t)
 }
 
     void
-EmpathMainWindow::statusMessage(const QString & messageText, int seconds)
+EmpathMainWindow::statusMessage(const QString & messageText, int milliseconds)
 {
-    statusBar()->message(messageText, seconds);
+    statusBar()->message(messageText, milliseconds);
 }
 
     void
