@@ -103,6 +103,13 @@ void createLink()
 	FUNCTIONSETUP;
 
 	deviceLink = KPilotDeviceLink::init(0, "deviceLink");
+
+	QObject::connect(deviceLink, SIGNAL(logError(const QString &)),
+		logWidget, SLOT(addError(const QString &)));
+	QObject::connect(deviceLink, SIGNAL(logMessage(const QString &)),
+		logWidget, SLOT(addMessage(const QString &)));
+	QObject::connect(deviceLink,SIGNAL(logProgress(const QString &,int)),
+		logWidget, SLOT(addProgress(const QString &,int)));
 }
 
 static SyncStack *syncStack = 0L;
@@ -117,8 +124,6 @@ void connectStack()
 		logWidget, SLOT(addMessage(const QString &)));
 	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
 		logWidget, SLOT(addProgress(const QString &,int)));
-	QObject::connect(syncStack,SIGNAL(logMessage(const QString &)),
-		logWidget, SLOT(addMessage(const QString &)));
 
 	QObject::connect(deviceLink, SIGNAL(deviceReady()), syncStack, SLOT(execConduit()));
 
@@ -126,7 +131,7 @@ void connectStack()
 		logWidget, SLOT(syncDone()));
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		deviceLink, SLOT(close()));
-		
+
 	QObject::connect(resetButton,SIGNAL(clicked()),deviceLink,SLOT(reset()));
 }
 
@@ -287,6 +292,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.20  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.19  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

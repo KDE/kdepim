@@ -98,13 +98,20 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
-	fPilotMasterSocket(-1), 
+	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Pilot-link version " << PILOT_LINK_NUMBER
+		<< endl;
+#endif
+
 	ASSERT(fDeviceLink == 0L);
 	fDeviceLink = this;
+	messagesMask=0xffffffff;
 
 	(void) kpilotlink_id;
 }
@@ -184,6 +191,7 @@ void KPilotDeviceLink::reset()
 {
 	FUNCTIONSETUP;
 
+	messages=0;
 	close();
 
 	checkDevice();
@@ -229,20 +237,6 @@ void KPilotDeviceLink::openDevice()
 {
 	FUNCTIONSETUPL(2);
 
-	if (isTransient())
-	{
-		if (!QFile::exists(fPilotPath))
-		{
-			if (QFile::exists(fPilotPath))
-			{
-				kdWarning() << k_funcinfo
-					<< ": QFile::exists seems to create device node."
-					<< endl;
-			}
-			return;
-		}
-	}
-
 	// This transition (from Waiting to Found) can only be
 	// taken once.
 	//
@@ -251,7 +245,7 @@ void KPilotDeviceLink::openDevice()
 		fStatus = FoundDevice;
 	}
 
-	emit logMessage(i18n("Trying to open device..."));
+	shouldPrint(OpenMessage,i18n("Trying to open device..."));
 
 	if (open())
 	{
@@ -259,8 +253,10 @@ void KPilotDeviceLink::openDevice()
 	}
 	else
 	{
-		emit logError(i18n("Could not open device: %1").
-			arg(fPilotPath));
+		shouldPrint(OpenFailMessage,i18n("Could not open device: %1 "
+				"(will retry)").
+				arg(fPilotPath));
+
 		if (fStatus != PilotLinkError)
 		{
 			fOpenTimer->start(1000, false);
@@ -298,13 +294,10 @@ bool KPilotDeviceLink::open()
 			goto errInit;
 		}
 
-#if PILOT_LINK_NUMBER < 10
-		if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP,
-					PI_SOCK_STREAM, PI_PF_PADP)))
-#else
-		if (!(fPilotMasterSocket = pi_socket(PI_AF_PILOT,
-					PI_SOCK_STREAM, PI_PF_DLP)))
-#endif
+		fPilotMasterSocket = pi_socket(PI_AF_PILOT,
+			PI_SOCK_STREAM, PI_PF_DLP);
+
+		if (fPilotMasterSocket<1)
 		{
 			e = errno;
 			msg = i18n("Cannot create socket for communicating "
@@ -326,12 +319,8 @@ bool KPilotDeviceLink::open()
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
-#if PILOT_LINK_NUMBER < 10
-	addr.pi_family = PI_AF_SLP;
-#else
 	addr.pi_family = PI_AF_PILOT;
-#endif
-	strcpy(addr.pi_device, QFile::encodeName(fPilotPath));
+	strncpy(addr.pi_device, QFile::encodeName(fPilotPath),sizeof(addr.pi_device));
 
 
 	ret = pi_bind(fPilotMasterSocket,
@@ -378,12 +367,7 @@ bool KPilotDeviceLink::open()
 //
 //
 errInit:
-	if (fPilotMasterSocket != -1)
-	{
-		close();
-	}
-
-	fPilotMasterSocket = -1;
+	close();
 
 	if (msg.contains('%'))
 	{
@@ -457,6 +441,7 @@ void KPilotDeviceLink::acceptDevice()
 		emit logError(i18n("Can't listen on Pilot socket (%1)").
 			arg(s));
 
+		close();
 		return;
 	}
 
@@ -484,12 +469,32 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 30);
 
+	struct SysInfo sys_info;
+	if (dlp_ReadSysInfo(fCurrentPilotSocket,&sys_info) < 0)
+	{
+		emit logError(i18n("Can't read system information from Pilot."));
+		fStatus=PilotLinkError;
+		return;
+	}
+#ifdef DEBUG
+	else
+	{
+		DEBUGDAEMON << fname 
+			<< ": RomVersion=" << sys_info.romVersion
+			<< " Locale=" << sys_info.locale
+			<< " Product=" << sys_info.prodID << endl;
+	}
+#endif
+	dlp_OpenConduit(fCurrentPilotSocket);
+
 	fPilotUser = new KPilotUser;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Reading user info @"
 		<< (int) fPilotUser << endl;
+	DEBUGDAEMON << fname << ": Buffer @"
+		<< (int) fPilotUser->pilotUser() << endl;
 #endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
@@ -503,14 +508,20 @@ void KPilotDeviceLink::acceptDevice()
 	emit logProgress(i18n("Checking last PC..."), 70);
 
 	/* Tell user (via Pilot) that we are starting things up */
-	if (dlp_OpenConduit(fCurrentPilotSocket) < 0)
+	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
 	{
+		kdWarning() << k_funcinfo
+			<< ": dlp_OpenConduit returned " << ret << endl;
+
+#if 0
 		fStatus = SyncDone;
 		emit logMessage(i18n
 			("Exiting on cancel. All data not restored."));
 		return;
+#endif
+		emit logError(i18n("Could not read user information from the Pilot. "
+			"Perhaps you have a password set on the device?"));
 	}
-
 	fStatus = AcceptedDevice;
 
 	emit logProgress(QString::null, 100);
@@ -771,6 +782,14 @@ unsigned long KPilotDeviceLink::minorVersion() const
 	return (((rom >> 20) & 0xf) * 10)+ ((rom >> 16) & 0xf);
 }
 
+void KPilotDeviceLink::shouldPrint(int m,const QString &s)
+{
+	if (!(messages & m))
+	{
+		emit logError(s);
+		messages |= (m & messagesMask);
+	}
+}
 
 bool operator < (const db & a, const db & b) {
 	if (a.creator == b.creator)
@@ -788,6 +807,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.23  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.22  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

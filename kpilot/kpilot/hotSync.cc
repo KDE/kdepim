@@ -73,8 +73,20 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 
 	addSyncLogEntry(i18n("Testing.\n"));
 
+#ifdef BRUTE_FORCE
+	for (i=0; i<32; i++)
+#else
 	while ((i = fHandle->getNextDatabase(dbindex,&db)) > 0)
+#endif
 	{
+#ifdef BRUTE_FORCE
+		if (fHandle->getNextDatabase(i,&db) < 1)
+		{
+			DEBUGKPILOT << fname << ": No database index " << i << endl;
+			continue;
+		}
+#endif
+
 		count++;
 		dbindex = db.index + 1;
 
@@ -477,6 +489,9 @@ CleanupAction::~CleanupAction()
 
 
 // $Log$
+// Revision 1.17  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.16  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

@@ -50,8 +50,6 @@ public:
 	*/
 	void boundsCheck()
 	{
-		fUser.username[sizeof(fUser.username)-1] = 0;
-		fUser.password[sizeof(fUser.password)-1] = 0;
 	}
 
 	const char* getUserName() const     { return fUser.username; }
@@ -90,6 +88,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.2  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

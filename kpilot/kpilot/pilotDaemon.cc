@@ -572,8 +572,9 @@ bool PilotDaemon::setupPilotLink()
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fPilotLink, SIGNAL(logMessage(const QString &)),
 		this, SLOT(logMessage(const QString &)));
-	QObject::connect(fPilotLink, SIGNAL(logProgress(const QString &)),
-		this, SLOT(logProgress(const QString &)));
+	QObject::connect(fPilotLink, 
+		SIGNAL(logProgress(const QString &,int)),
+		this, SLOT(logProgress(const QString &,int)));
 
 
 	return true;
@@ -728,8 +729,9 @@ QString PilotDaemon::syncTypeString(int i) const
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
 		this, SLOT(logMessage(const QString &)));
-	QObject::connect(fSyncStack, SIGNAL(logProgress(const QString &)),
-		this, SLOT(logProgress(const QString &)));
+	QObject::connect(fSyncStack, 
+		SIGNAL(logProgress(const QString &,int)),
+		this, SLOT(logProgress(const QString &,int)));
 
 	QObject::connect(fSyncStack, SIGNAL(syncDone(SyncAction *)),
 		this, SLOT(endHotSync()));
@@ -934,6 +936,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.65  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.64  2002/08/15 21:51:00  kainhofe
 // Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
 //

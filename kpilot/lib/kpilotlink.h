@@ -225,6 +225,17 @@ protected:
 	*/
 	void checkDevice();
 
+	/**
+	* Some messages are only printed once and are suppressed
+	* after that. These are indicated by flag bits in
+	* messages.
+	*/
+	enum { OpenMessage=1, OpenFailMessage=2 } ;
+	int messages;
+	int messagesMask;
+	
+	void shouldPrint(int,const QString &);
+
 signals:
 	/**
 	* Emitted once the user information has been read and
@@ -365,6 +376,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.12  2002/08/21 17:20:47  adridg
+// Detect and complain about common permissions errors
+//
 // Revision 1.11  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to
