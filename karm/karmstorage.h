@@ -1,5 +1,5 @@
 /*
- *   This file only: 
+ *   This file only:
  *     Copyright (C) 2003  Mark Bucciarelli <mark@hubcapconsutling.com>
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the 
+ *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330 
+ *      59 Temple Place - Suite 330
  *      Boston, MA  02111-1307  USA.
  *
  */
@@ -65,7 +65,7 @@ class KarmStorage
     /*
      * Return reference to storage singleton.
      *
-     * The constructors are made private, so in order to create this class 
+     * The constructors are made private, so in order to create this class
      * you must use this function.
      */
     static KarmStorage *instance();
@@ -126,7 +126,7 @@ class KarmStorage
      *
      *  This is the older legacy format, where the task totals included the
      *  children totals.
-     * 
+     *
      *  @see loadFromFlatFile
      */
     QString loadFromFlatFileCumulative(TaskView* taskview,
@@ -141,7 +141,7 @@ class KarmStorage
      * the end date is set to the start time.
      *
      * In both cases (postive or negative delta), we create a custom iCalendar
-     * property that stores the delta (in seconds).  This property is called 
+     * property that stores the delta (in seconds).  This property is called
      * X-KDE-karm-duration.
      *
      * Note that the KArm UI allows the user to change both the session and
@@ -154,7 +154,7 @@ class KarmStorage
      * For now, you should pass in the change to the total task time.
      * Eventually, the UI should be changed.
      *
-     * @param task   The task the change is for.  
+     * @param task   The task the change is for.
      * @param delta  Change in task time, in seconds.  Can be negative.
      */
     void changeTime(const Task* task, const long deltaSeconds);
@@ -170,7 +170,7 @@ class KarmStorage
      * @param oldname  The old name of the task.  The new name is in the task
      *   object already.
      */
-    void setName(const Task* /* task */ , const QString& /* oldname */) {};
+    void setName(const Task* /* task */ , const QString& /* oldname */) {}
 
 
     /**
@@ -181,7 +181,7 @@ class KarmStorage
      *
      * @param task    The task the timer was started for.
      */
-    void startTimer(const Task* /* task */ ) {} ;
+    void startTimer(const Task* /* task */ ) {}
 
     /**
      * Log the event that the timer has stopped for this task.
@@ -200,7 +200,7 @@ class KarmStorage
      * iCal allows multiple comment tags.  So we just add a new comment to the
      * todo for this task and write the calendar.
      *
-     * @param task     The task that gets the comment 
+     * @param task     The task that gets the comment
      * @param comment  The comment
      */
     void addComment(const Task* task, const QString& comment);
@@ -236,7 +236,7 @@ class KarmStorage
      *  @return true if the CalendarLocal::rawTodos() list is not empty.
      */
     bool isEmpty();
-    
+
     /**
      * Check if iCalendar file name in the preferences has changed since the
      * last call to load.  If there is no calendar file currently loaded,
@@ -279,17 +279,17 @@ class HistoryEvent
 {
   public:
     /** Needed to be used in a value list. */
-    HistoryEvent() {};
-    HistoryEvent(QString uid, QString name, long duration, 
+    HistoryEvent() {}
+    HistoryEvent(QString uid, QString name, long duration,
         QDateTime start, QDateTime stop, QString todoUid);
-    QString uid() {return _uid; };
-    QString name() {return _name; };
+    QString uid() {return _uid; }
+    QString name() {return _name; }
     /** In seconds. */
-    long duration() {return _duration; };
-    QDateTime start() {return _start; };
-    QDateTime stop() { return _stop; };
-    QString todoUid() {return _todoUid; };
-  
+    long duration() {return _duration; }
+    QDateTime start() {return _start; }
+    QDateTime stop() { return _stop; }
+    QString todoUid() {return _todoUid; }
+
   private:
     QString _uid;
     QString _todoUid;
