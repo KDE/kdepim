@@ -17,7 +17,7 @@ kpilot_SOURCES	= kpilot.cc \
 	pilotMemo.cc memoWidget.cc pilotComponent.cc \
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
 	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
-	listItems.cc \
+	listItems.cc kpilotDCOP.skel \
 	pilotAddress.cc addressWidget.cc addressEditor.cc \
 	strToken.cc pilotDateEntry.cc \
 	conduitSetup.cc listCat.cc pilotTodoEntry.cc \
