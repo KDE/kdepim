@@ -26,18 +26,18 @@
 
 <authorgroup>
 <author>
-	<firstname>Dan</firstname>
-	<surname>Pilone</surname>
-	<affiliation>
-		<address><email>pilone@slac.com</email></address>
-	</affiliation>
-</author>
-<author>
 	<firstname>Adriaan</firstname>
 	<othername>de</othername>
 	<surname>Groot</surname>
 	<affiliation>
-		<address><email>adridg@cs.kun.nl</email></address>
+		<address><email>groot@kde.org</email></address>
+	</affiliation>
+</author>
+<author>
+	<firstname>Dan</firstname>
+	<surname>Pilone</surname>
+	<affiliation>
+		<address><email>pilone@slac.com</email></address>
 	</affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
@@ -47,17 +47,18 @@
 <year>1999</year>
 <year>2000</year>
 <year>2001</year>
+<year>2002</year>
 <holder>Adriaan de Groot</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2001-04-17</date>
-<releaseinfo>4.2.2</releaseinfo>
+<date>2002-01-19</date>
+<releaseinfo>4.3.0</releaseinfo>
 
 <abstract>
 <para>
-&kpilot; 4.2.2
+&kpilot; 4.3.0
 is the &kde; version of the Desktop &HotSync; software for 
 the &ThreeCom; &PalmPilot; and similar products.
 </para>
@@ -77,7 +78,7 @@ the &ThreeCom; &PalmPilot; and similar products.
 <title>Introduction</title>
 
 <para>
-&kpilot; 4.2.2
+&kpilot; 4.3.0
 is the latest version of the Desktop &HotSync; software for &UNIX;.
 After several releases and 
 many contributions from users &kpilot;, along with
@@ -98,20 +99,20 @@ There is a web page for &kpilot;: the
 <ulink url="http://www.slac.com/~pilone/kpilot_home/">
 Official &kpilot; Home Page
 </ulink>.
-There is also a mailing list. Send mail to
-<email>majordomo@slac.com</email>
-with the following subject: <userinput>subscribe kpilot-list</userinput>.
-(To <emphasis>unsubscribe</emphasis> from the list
-again, send mail to
-<email>majordomo@slac.com</email>
-with the following subject:
-<userinput>unsubscribe kpilot-list</userinput>.
-Do not send subscribe or unsubscribe requests to the
-list itself.)
-You may also wish to use 
-<email>kde-pim@kde.org</email> for more general
-questions about the integration between 
-your &PalmPilot; and &kde;.
+The
+<ulink url="http://pim.kde.org/">
+KDE-PIM website
+</ulink>
+also offers useful information on the subject of 
+<acronym>PIM</acronym>
+in general.
+&kpilot; shares the 
+kde-pim mailing list, 
+<email>kde-pim@kde.org</email>. 
+See
+<ulink url="http://lists.kde.org/">
+the mailing lists page</ulink>
+for more information on subscribing and unsubscribing from the list.
 </para>          
 
 <para>
@@ -123,10 +124,27 @@ With the release of &kde; 2
 and &kpilot; 4.x has become current.
 </para>
 
+<warning>
+<para>
+This document still reflects &kpilot; version 4.2.2.
+The descriptions may be inaccurate and the screenshots misleading.
+Updated documentation will be released after the &kde; 3.0 release.
+</para>
+</warning>
+
+
+
 <sect1 id="kpilot-revhistory">
 <title>&kpilot; Revision History</title>
 
 <itemizedlist>
+<listitem>
+<para>New in 4.3.0 -
+a new architecture, USB support, and possibly a VCal (&korganizer;)
+conduit that isn't dead slow.
+</para>
+</listitem>
+
 <listitem>
 <para>
 New in 4.2.2 -
@@ -1953,6 +1971,12 @@ Documentation copyright 2000,2001 Adriaan de Groot <email>adridg@cs.kun.nl</emai
 </book>
 <!-- 
      $Log$
+     Revision 1.12.2.1  2002/01/20 13:50:58  adridg
+     Added warning about outdated docs
+
+     Revision 1.12  2001/06/22 00:36:03  lauri
+     Making it valid
+
      Revision 1.11  2001/05/16 21:23:33  adridg
      Updated docs ready for 2.2b1
 
