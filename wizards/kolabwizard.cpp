@@ -50,11 +50,24 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
 
     void apply()
     {
-      QString host = KolabConfig::self()->server();
+      const QString host = KolabConfig::self()->server();
+
+      // Figure out the basedn
       QString basedn = host;
+      // If the user gave a full email address, the domain name
+      // of that overrides the server name for the ldap dn
+      const QString user = KolabConfig::self()->user();
+      int pos = user.find( "@" );
+      if ( pos > 0 ) {
+        const QString h = user.mid( pos+1 );
+        if ( !h.isEmpty() )
+          // The user did type in a domain on the email address. Use that
+          basedn = h;
+      }
       basedn.replace(".",",dc=");
       basedn.prepend("dc=");
 
+      // Set the changes
       KConfig c( "kabldaprc" );
       c.setGroup( "LDAP" );
       bool hasMyServer = false;
@@ -84,7 +97,6 @@ class CreateCalendarKolabResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-      //QString server = KolabConfig::self()->server();
       KCal::ResourceKolab *r = new KCal::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
       r->setName( "kolab-resource" );
