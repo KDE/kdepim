@@ -14,7 +14,9 @@
 #include <qpushbutton.h>
 #include <qcheckbox.h>
 
-#include <iostream.h>
+#include <iostream>
+
+using namespace std;
 
 extern CryptPlugWrapper* pWrapper;
 
