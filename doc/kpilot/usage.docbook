@@ -466,7 +466,7 @@ is fairly complex.
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-top.png" format="PNG"/></imageobject>
+<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
 <textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
 <caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
 </mediaobject>
@@ -482,29 +482,11 @@ and one for
 <sect3 id="popmail-cond-send">
 <title>Sending Mail</title>
 
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-send-method.png" format="PNG"/></imageobject>
-<textobject><phrase>Choosing the Send Method</phrase></textobject>
-<caption><para>Choosing the Send Method</para></caption>
-</mediaobject>
-</screenshot>
-
 <para>
 Depending on which send method you choose,
 different fields will be activated in the remainder of the
 tab, allowing you to enter the necessary information.
 </para>
-
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-send-as.png" format="PNG"/></imageobject>
-<textobject><phrase>General mail configuration: who are you?</phrase></textobject>
-<caption><para>General mail configuration: who are you?</para></caption>
-</mediaobject>
-</screenshot>
 
 <para>
 Your email address can be entered in the <guilabel>Email
@@ -513,15 +495,6 @@ Address</guilabel> field.  This is the email address that goes in the
 the <guilabel>Signature File</guilabel> field then that file will be
 appended to each outgoing mail as a signature.
 </para>
-
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-sendmail.png" format="PNG"/></imageobject>
-<textobject><phrase>&Sendmail; configuration</phrase></textobject>
-<caption><para>&Sendmail; configuration</para></caption>
-</mediaobject>
-</screenshot>
 
 <para>
 The configuration of the &Sendmail; method of sending is fairly
@@ -541,16 +514,6 @@ recipients from message headers</quote> option must be given.
 </para>
 </warning>
 
-
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-smtp.png" format="PNG"/></imageobject>
-<textobject><phrase><acronym>SMTP</acronym> setup</phrase></textobject>
-<caption><para><acronym>SMTP</acronym> setup</para></caption>
-</mediaobject>
-</screenshot>
-
 <para>
 To use <acronym>SMTP</acronym> sending you need to specify
 the name of the machine which runs your
@@ -567,16 +530,6 @@ This may change in a future version of &kpilot;.
 </note>
 
 
-
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
-<textobject><phrase>&kmail; sending</phrase></textobject>
-<caption><para>&kmail; sending</para></caption>
-</mediaobject>
-</screenshot>
-
 <para>
 When sending mail through &kmail;, &kpilot; automatically places it in
 your &kmail; outbox.  &kmail; saves mail in the outbox until you request
@@ -591,16 +544,6 @@ other pieces of mail that may be in your outbox.
 
 <sect3 id="popmail-cond-recv">
 <title>Receiving Mail</title>
-
-
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-recv-method.png" format="PNG"/></imageobject>
-<textobject><phrase>Choosing the Receive Method</phrase></textobject>
-<caption><para>Choosing the Receive Method</para></caption>
-</mediaobject>
-</screenshot>
 
 
 <para>

@@ -556,7 +556,7 @@ the &HotSync; operation on your &PalmPilot;.
 <screeninfo>Sync page</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="setup-sync.png" format="PNG"/>
+<imagedata fileref="setup-hotsync.png" format="PNG"/>
 </imageobject>
 <textobject><phrase>The Sync page</phrase></textobject>
 <caption><para>The Sync page</para></caption>
