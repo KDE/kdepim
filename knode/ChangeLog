@@ -1,55 +1,61 @@
 changes between 0.4 and 0.6
-- real scoring
-- full-fledged regular expressions can be used for scoring
-  and filter rules.
-- filter rules for numerical values are more flexible now,
-  its possible to filter something like "x < value" or
-  "x > value", not just ranges.
-- its now possible to filter on the message-id and references header
-- the search functionally can show complete threads now (optionally)
-- support for customizable folders
-- DnD between folders and groups
-- convenient mbox-folder import/export
-- nice in-place renaming of accounts, folders and groups
-- new menu option that expire all groups of the current account
-  & a option that compacts all folders on demand
-- implemented "Smart Scrolling" (TM) in the listviews and in
-  the groupbrowser
-- Introduced a caching-mechanism that allows one to
-  specify how much RAM may be used by the cached
-  article bodies and headers.
-- optional integration of KMail and other external
-  mail programs
-- enabled forwarding of articles with attachments
-- proper handling of crossposts, crossposted articles
-  are marked as read
-- full support for the Mail-Copies-To header
-- new expire-feature: delete article headers that
-  aren't available on the server
-- new menu option: fetch an article by message-id
-- added option to retreive an article from groups.google.com
-  if it's unavaiable on the local server
-- added placeholder for the group name in the attribution line
-- support for dynamically generated signatures
-- added option to place the cursor below the attribution line,
-  not above the signature (off by default)
-- files can now be attached to an article with Drag&Drop
-- added option to retreive the article source
-- enhanced dupe protection, utilizing the "recommened id" feature
-  of newer inn's
-- shows a password-dialog when the server requests authentication
-- articles are no fetched via article number instead of article-id
-  to avoid problems with broken newsservers
-- support for IPv6 and SOCKS-proxies
-- trailing empty lines can be stripped from incoming articles
-- highlighting of "news:" and "mailto:" urls
-- highlight all email-addresses and msgids (and ask the user if its
-  an address or a id)
-- its now configurable what characters are recognized as quote signs
-- its no possible to disable the fancy header decorations,
-  saves space on small displays
-- the word wrap behaviour of the article widget is
-  now configurable
++ New scoring system:
+ - User definable scoring rules with conditions based
+   on the overview data and configurable actions (currently
+   score value adjustment and notification)
+ - Full-fledged regular expressions which can be used in
+   scoring and filter conditions.
++ Reduced memory consumption. Its now configurable how much RAM
+  is used to cache article bodies and headers.
++ Improved article handling:
+ - User-defined folders
+ - DnD between folders and groups
+ - Convenient mbox-folder import/export
+ - Nice in-place renaming of accounts, folders and groups
+ - New menu option that expires all groups of the current account
+   and a option that compacts all folders on demand.
+ - New expire-feature: delete article headers that
+   aren't available on the server
+ - Implemented "Smart Scrolling" (TM) in the listviews and in
+   the groupbrowser
++ Reading news articles:
+ - Proper handling of crossposted articles, they are marked
+   as read simutaneously in all groups.
+ - Added option to retreive the article source
+ - New menu option: fetch an article by message-id
+ - Added option to retreive an article from groups.google.com
+   if it's unavailable on the local server
+ - Trailing empty lines can be stripped from incoming articles
+ - Highlighting of "news:" and "mailto:" urls, all email-addresses
+   and msgids
+ - Its now configurable what characters are recognized as quote signs
+ - Its no possible to disable the fancy header decorations,
+   saves space on small displays
+ - The word wrap behaviour of the article widget is
+   now configurable
++ Enhancements of the article composer
+ - Optional integration of KMail and other external
+   mail programs
+ - Full support for the Mail-Copies-To header
+ - Added placeholder for the group name in the attribution line
+ - Support for dynamically generated signatures
+ - Added option to place the cursor below the attribution line,
+   not above the signature (off by default)
+ - Implemented forwarding of articles with attachments
+ - Files can now be attached to an article with Drag&Drop
++ Improved article filters and search function:
+ - Filter rules for numerical values are more flexible now,
+   its possible to filter something like "x < value" or
+   "x > value", not just ranges.
+ - Its now possible to filter on the message-id and references header
+ - The search function can show complete threads now (optionally)
++ Network related improvements:
+ - Articles are no fetched via article number instead of article-id
+   to avoid problems with broken newsservers
+ - Enhanced dupe protection, utilizing the "recommened id" feature
+   of newer inn's
+ - Shows a password-dialog when the server requests authentication
+ - Support for IPv6 and SOCKS-proxies
 
 changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets
