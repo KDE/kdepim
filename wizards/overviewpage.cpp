@@ -80,6 +80,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
 
   button = new QPushButton( i18n("Microsoft Exchange"), this );
+  button->hide(); // not quite ready yet
   layout->addMultiCellWidget( button, 7, 7, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardExchange() ) );
 
