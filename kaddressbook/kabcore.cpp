@@ -201,6 +201,11 @@ KActionCollection *KABCore::actionCollection() const
   return mGUIClient->actionCollection();
 }
 
+KXMLGUIClient *KABCore::guiClient() const
+{
+  return mGUIClient;
+}
+
 KABC::Field *KABCore::currentSearchField() const
 {
   return mIncSearchWidget->currentField();

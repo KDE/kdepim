@@ -30,15 +30,16 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <kxmlguifactory.h>
+#include <kxmlguiclient.h>
 
-#include "kabcore.h"
 #include "viewmanager.h"
 
 #include "kaddressbookview.h"
 
 KAddressBookView::KAddressBookView( KABC::AddressBook *ab, QWidget *parent,
                                     const char *name )
-    : QWidget( parent, name ), mAddressBook( ab ), mFieldList(), mCore( 0 )
+    : QWidget( parent, name ), mAddressBook( ab ), mFieldList(), mGUIClient( 0 )
 {
   initGUI();
 }
@@ -145,65 +146,21 @@ KABC::AddressBook *KAddressBookView::addressBook() const
   return mAddressBook;
 }
 
-void KAddressBookView::setCore( KABCore *core )
+void KAddressBookView::setGUIClient( KXMLGUIClient *client )
 {
-  mCore = core;
+  mGUIClient = client;
 }
 
-void KAddressBookView::popup( const QPoint &point, const QStringList &uids )
+void KAddressBookView::popup( const QPoint &point )
 {
-  if ( !mCore ) {
-    kdDebug(5720) << "No kabcore set!" << endl;
+  if ( !mGUIClient ) {
+    kdWarning() << "No GUI client set!" << endl;
     return;
   }
 
-  QPopupMenu menu( this );
-  menu.insertItem( i18n( "&Edit" ), 1 );
-  menu.insertItem( i18n( "&Delete" ), 2 );
-  menu.insertSeparator();
-  menu.insertItem( i18n( "&Mail..." ), 3 );
-  menu.insertItem( i18n( "Mail &vCard..." ), 4 );
-
-  if ( uids.count() == 0 ) {
-    switch ( menu.exec( point ) ) {
-      case 1:
-        mCore->editContact();
-        break;
-      case 2:
-        mCore->deleteContacts();
-        break;
-      case 3:
-        mCore->sendMail();
-        break;
-      case 4:
-        mCore->mailVCard();
-        break;
-      default:
-        kdDebug(5720) << "Unknown popup menu item" << endl;
-        break;
-    }
-  } else {
-    switch ( menu.exec( point ) ) {
-      case 1:
-        mCore->editContact( uids[ 0 ] );
-        break;
-      case 2:
-        mCore->deleteContacts( uids );
-        break;
-      case 3: {
-          KABC::Addressee addr = mAddressBook->findByUid( uids[ 0 ] );
-          if ( !addr.preferredEmail().isEmpty() )
-            mCore->sendMail( addr.preferredEmail() );
-        }
-        break;
-      case 4:
-        mCore->mailVCard( uids );
-        break;
-      default:
-        kdDebug(5720) << "Unknown popup menu item" << endl;
-        break;
-    }
-  }
+  QPopupMenu *menu = static_cast<QPopupMenu*>( mGUIClient->factory()->container( "RMBPopup", mGUIClient ) );
+  if ( menu )
+    menu->popup( point );
 }
 
 QWidget *KAddressBookView::viewWidget()

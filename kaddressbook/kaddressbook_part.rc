@@ -65,6 +65,15 @@
 
   </MenuBar>
 
+  <Menu name="RMBPopup">
+    <Action name="file_properties"/>
+    <Action name="file_new"/>
+    <Action name="edit_delete"/>
+    <Separator/>
+    <Action name="file_mail"/>
+    <Action name="file_mail_vcard"/>
+  </Menu>
+
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
     <Action name="file_sync" />
     <Action name="kaddressbook_print" />

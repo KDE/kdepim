@@ -90,6 +90,11 @@ class KABCore : public QWidget
     KActionCollection *actionCollection() const;
 
     /**
+      Returns a pointer to the gui client.
+     */
+    KXMLGUIClient *guiClient() const;
+
+    /**
       Returns the current search field of the Incremental Search Widget.
      */
     KABC::Field *currentSearchField() const;

@@ -33,8 +33,8 @@
 #include "filter.h"
 #include "viewconfigurewidget.h"
 
-class KABCore;
 class KConfig;
+class KXMLGUIClient;
 
 class QDropEvent;
 
@@ -147,10 +147,10 @@ class KAddressBookView : public QWidget
 
 
     /**
-      Sets the KABCore class, this is an interim solution, which will be 
+      Sets the GUI client, this is an interim solution, which will be 
       abolished as soon as the interfaces are ready.
      */
-    void setCore( KABCore *core );
+    void setGUIClient( KXMLGUIClient *client );
 
   public slots:
     /**
@@ -172,11 +172,9 @@ class KAddressBookView : public QWidget
     /**
       Call this slot to popup a rmb menu.
 
-      @param point The position where the menu shall appear
-      @param uids The uid list of affected contacts. If the list is empty, all 
-                  selected contacts will used.
+      @param point The position where the menu shall appear.
      */
-    void popup( const QPoint &point, const QStringList &uids = QStringList() );
+    void popup( const QPoint &point );
 
   signals:
     /**
@@ -250,7 +248,7 @@ class KAddressBookView : public QWidget
     KABC::Field::List mFieldList;
     
     QWidget *mViewWidget;
-    KABCore *mCore;
+    KXMLGUIClient *mGUIClient;
 };
 
 class ViewFactory : public KLibFactory
