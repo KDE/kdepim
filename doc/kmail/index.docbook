@@ -636,7 +636,8 @@ them.</para></warning>
 
 <para>To check the spelling of your message, select
 <menuchoice><guimenu>Edit</guimenu>
-<guimenuitem>Spelling...</guimenuitem></menuchoice>. &kmail; uses &kspell; to
+<guimenuitem>Spelling...</guimenuitem></menuchoice>. &kmail; uses 
+<ulink url="/kspell/">&kspell;</ulink> to
 check spelling, which is the &kde; frontend to the 
 <application>ispell</application> or <application>aspell</application> spelling
 checker. Note that you may first need to configure the spellchecker using
@@ -724,6 +725,60 @@ to remove a folder and all its messages if you choose <guibutton>Remove</guibutt
 from the appearing confirmation dialog, but unlike with
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Empty</guimenuitem></menuchoice>
 there's no way to get the contents of the folder back.</para>
+
+<sect2 id="folders-properties-window">
+<title>Folder Properties</title>
+
+<para>The folder's <guilabel>Properties</guilabel> dialog lets you rename and move
+a folder and specify all of its properties. Note that most properties
+are only available for your own folders and not for default folder like
+<guilabel>inbox</guilabel> &etc;. Default folders also cannot be moved
+or renamed.</para>
+
+<para>You can make a folder a sub folder if you choose a parent
+folder using the <guilabel>Belongs to</guilabel> selection. </para>
+
+<para>The <guilabel>Folder Icons</guilabel> section lets you choose
+icons that are different from the default ones in the folder list.</para>
+
+<para>The folder
+can be either in <guilabel>mbox</guilabel> or in <guilabel>maildir</guilabel>
+format. <guilabel>mbox</guilabel> saves all messages of one folder to one file,
+whereas <guilabel>maildir</guilabel> saves each message to its own file.
+<guilabel>maildir</guilabel>, which is the default format, can be considered more
+robust, but it can be slower on some file systems. Note that there's 
+currently no feature in &kmail; that allows to convert between both formats
+automatically (but you can just move all messages from an old
+<guilabel>mbox</guilabel> folder to a new <guilabel>maildir</guilabel> folder or
+vice versa).</para>
+
+<para>If you're going to use the folder for a mailing list you may want to add
+the mailing list address in the <guilabel>Associated Mailing List</guilabel> section.
+You will then be able to use
+the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply
+to Mailing-List...</guimenuitem></menuchoice> menu item. It will open a reply with the
+mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
+the <token>Reply-To</token> of the message). You can also click the
+<mousebutton>middle</mousebutton> mousebutton in the Folders pane to post to a
+mailing list that is associated with that folder.</para>
+
+<para>The <guilabel>Old Message Expiry</guilabel> section lets you automatically
+move old messages to the <guilabel>trash</guilabel> folder when you exit &kmail;
+(depending on your settings
+in &kmail;'s <guilabel>Folders</guilabel> configuration page) or
+via <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
+All Folders</guisubmenu></menuchoice>.</para>
+
+<para>With the <guilabel>Identity</guilabel> section you can set your default
+identity for new messages. Replies to messages that where sent directly
+to you will still default to the message's <quote>To</quote> address if an
+according identity is found.</para>
+
+<para>With <guilabel>Show Sender/Receiver</guilabel> you can set the 
+visible columns in the header pane. This is useful if you use a
+folder to save your own sent messages.</para>
+
+</sect2>
 
 </sect1>
 
@@ -2024,7 +2079,7 @@ so you can choose a monospaced font for the date field for better readability.</
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that's
 quoted more than three times will appear in color. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in 
-the composer.<!-- fixme --></para>
+the composer.<!-- TODO --></para>
 
 </sect2>
 
@@ -2063,32 +2118,8 @@ specify in &kcontrol;.</para>
 
 </sect2>
 
-<!--
-<sect2 id="configure-appearance-scoring">
-<title>Messages Scoring</title>
-
-<para>In this section you can manage rules that define a message's score.
-If at least one rule is defined for a folder, a <guilabel>Score</guilabel>
-column will appear in the Headers pane of that folder. Each rule has a
-name, a list of folders where it is active, one or more conditions that
-decide whether the rule matches a message, and one or more actions that get
-triggered if a condition is matched. This concept is very similar to that
-of <link linkend="filters">message filters</link>.</para>
-
-<para>The most useful action is <guilabel>adjust score</guilabel>. It will
-increase or decrease the score of a message. The idea is that important
-messages have a high score and you can then use the
-<guilabel>Score</guilabel> column to sort your messages.</para>
-
-<para>The <guilabel>display message</guilabel> action will display
-a dialog when you enter a folder with a matching message.</para>
-
-</sect2>
--->
-
 <!-- fixme?: date + less than/greater than broken in kmail -->
 <!-- fixme?: "group" wording in program -->
-
 
 </sect1>
 
@@ -2586,7 +2617,6 @@ once they are deleted with this command.</para>
 
 <variablelist>
 
-<!-- LW: This really needs to be broken up to one varlistentry per menu item, fixme -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -2597,7 +2627,6 @@ once they are deleted with this command.</para>
 <listitem>
 <para>Changes the number of headers that are displayed and the format of the
 headers in the <guilabel>Message pane</guilabel>.</para>
-<!-- fixme: more detailed? -->
 </listitem>
 </varlistentry>
 
@@ -2620,7 +2649,6 @@ at the bottom of the message. Attachments that cannot be displayed, &eg;
 compressed files, will still be shown as an icon.
 <guimenuitem>Hide</guimenuitem> will not show attachments.
 </para>
-<!-- fixme: more detailed? -->
 </listitem>
 </varlistentry>
 
@@ -2872,46 +2900,8 @@ to the next unread message.</para>
 </menuchoice>
 </term>
 <listitem>
-<!-- fixme: move this to an extra section?! -->
-<para>Opens the <guilabel>Create Folder</guilabel> dialog which lets you create
-a new folder. You can make this new folder a sub folder if you choose a parent
-folder using the <guilabel>Belongs to</guilabel> selection. The folder
-can be either in <guilabel>mbox</guilabel> or in <guilabel>maildir</guilabel>
-format. <guilabel>mbox</guilabel> saves all messages of one folder to one file,
-whereas <guilabel>maildir</guilabel> saves each message to its own file.
-<guilabel>maildir</guilabel> can be considered more robust, but it can be
-slower on some file systems. Note that there's currently no feature in &kmail; that
-allows to convert between both formats automatically (but you can just move all
-messages from an old <guilabel>mbox</guilabel> folder to a new
-<guilabel>maildir</guilabel> folder).</para>
-
-<para>If you're going to use the folder for a mailing list you may want to add
-the mailing list address
-in the <guilabel>Associated Mailing List</guilabel> section. You will then be able to use
-the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply
-list...</guimenuitem></menuchoice> menu item. It will open a reply with the
-mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
-the <token>Reply-To</token> of the message). You can also click the
-<mousebutton>middle</mousebutton> mousebutton in the Folders pane to post to a
-mailing list that is associated with that folder.</para>
-
-<para>The <guilabel>Old Message Expiry</guilabel> section lets you automatically
-delete old messages when you exit &kmail;
-<!-- fixme: delete or move to trash? -->
-(depending on your settings
-in &kmail;'s <guilabel>Miscellaneous</guilabel> configuration page) or
-via <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
-All Folders</guisubmenu></menuchoice>.</para>
-
-<para>With the <guilabel>Identity</guilabel> section you can set your default
-identity for new messages. Replies to messages that where sent directly
-to you will still default to the message's <quote>To</quote> address if an
-according identity is found.</para>
-
-<para>With <guilabel>Show Sender/Receiver</guilabel> you can set the 
-visible columns in the header pane. This is useful if you use the
-current folder for your own sent messages.</para>
-
+<para>Opens the <link linkend="folders-properties-window">Folder Properties</link>
+dialog that lets you create a new folder.</para>
 </listitem>
 </varlistentry>
 
@@ -3020,7 +3010,7 @@ they reply to.</para>
 </term>
 <listitem>
 <!-- fixme: link to special section?! -->
-<para>Opens up the <guilabel>Properties</guilabel> dialog which lets you
+<para>Opens up the <link linkend="folders-properties-window">Properties dialof</link> which lets you
 change the settings for the selected folder.</para> 
 </listitem>
 </varlistentry>
@@ -3043,8 +3033,8 @@ change the settings for the selected folder.</para>
 </menuchoice>
 </term>
 <listitem>
-<!-- fixme: link composer? -->
-<para>Opens the composer window so you can write a new message.</para>
+<para>Opens the <link linkend="the-composer-window">composer window</link> so you can 
+write a new message.</para>
 </listitem>
 </varlistentry>
 
@@ -3527,6 +3517,31 @@ like playing a sound.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>New Composer...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up a new composer window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>New Main Window...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Creates a new main window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Send</guimenuitem>
@@ -3564,8 +3579,8 @@ Queued</guimenuitem></menuchoice>.
 </menuchoice>
 </term>
 <listitem>
-<para>Save the message in the <guilabel>drafts</guilabel> folder so you can edit
-and send it later.</para>
+<para>Save the message in the <guilabel>drafts</guilabel> folder so you can 
+later edit and send it.</para>
 </listitem>
 </varlistentry>
 
@@ -3577,7 +3592,7 @@ and send it later.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Inserts a text file into the message, starting at the cursor
+<para>Inserts a text file into the message text, starting at the cursor
 position.</para>
 </listitem>
 </varlistentry>
@@ -3592,31 +3607,6 @@ position.</para>
 </term>
 <listitem>
 <para>Prints the current text.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guimenuitem>Addressbook...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the address book.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>New Composer...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up a new composer window.</para>
 </listitem>
 </varlistentry>
 
@@ -3652,7 +3642,7 @@ position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Undo your steps in editing the current mail.</para>
+<para>Undo your steps in editing the current message.</para>
 </listitem>
 </varlistentry>
 
@@ -3665,7 +3655,7 @@ position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Redo your steps in editing the current mail.</para>
+<para>Redo your steps in editing the current message.</para>
 </listitem>
 </varlistentry>
 
@@ -3678,7 +3668,8 @@ position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Cutting text works as with most editors.  You can also select text and
+<para>Cutting text works as with most editors: the selected text is
+removed and put into the clipboard. Note that you can also select text and
 drag it to a new position.</para>
 </listitem>
 </varlistentry>
@@ -3693,9 +3684,9 @@ drag it to a new position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Copying text works as with most editors. You can also select text while
-holding the &Ctrl; key, and drag it to a new position, to have it copied and not
-cut.</para>
+<para>Copying text works as with most editors: the selected text is copied to the clipboard.
+Note that you can also select text while holding the &Ctrl; key, and drag it to a new
+position to copy it.</para>
 </listitem>
 </varlistentry>
 
@@ -3708,7 +3699,8 @@ cut.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Pasting works the same as for most editors.</para>
+<para>Pasting works the same as with most editors: the text from the
+clipboard is pasted at the current cursor position.</para>
 </listitem>
 </varlistentry>
 
@@ -3734,7 +3726,7 @@ cut.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Finds strings in the message.</para>
+<para>Opens a dialog to search for strings in the current message.</para>
 </listitem>
 </varlistentry>
 
@@ -3747,7 +3739,7 @@ cut.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Lets you replace strings in your message with other strings.</para>
+<para>Opens a dialof that lets you replace strings in your message with other strings.</para>
 </listitem>
 </varlistentry>
 
@@ -3761,21 +3753,6 @@ cut.</para>
 <listitem>
 <para>This replaces multiple line breaks resp. spaces with single line breaks resp. spaces.
 It works on the current selection or on the complete message if there is no selection.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Edit</guimenu>
-<guimenuitem>Spelling...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Uses &kspell; to check the spelling in the body of your message. Note that
-you have to configure &kspell; with <menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Spellchecker...</guimenuitem></menuchoice> if you use it for the
-first time.</para>
 </listitem>
 </varlistentry>
 
@@ -3814,10 +3791,10 @@ options in this composer window.</para>
 <para><guimenuitem>To</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem>Cc</guimenuitem></para>
+<para><guimenuitem>CC</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem>Bcc</guimenuitem></para>
+<para><guimenuitem>BCC</guimenuitem></para>
 </listitem>
 <listitem>
 <para><guimenuitem>Subject</guimenuitem></para>
@@ -3831,13 +3808,13 @@ menu.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Edit</guimenu>
-<guimenuitem>Fixed Font Widths</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>Use Fixed Font</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Uses a fixed width (monospace) font to display the messages
-in the current folder. The font to be used can be configured in the
+<para>Uses a fixed width (monospace) font to display the currently
+edited message. The font to be used can be configured in the
 <guilabel>Appearance</guilabel> section of &kmail;'s configuration
 dialog.</para>
 </listitem>
@@ -3967,7 +3944,8 @@ to paste long lines that shouldn't wrap.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Appends your signature (<quote>footer</quote>) to the end of the message.</para>
+<para>Appends your signature (<quote>footer</quote>) to the end of the message.
+<!-- fixme: nothing to do with crypto stuff --></para>
 </listitem>
 </varlistentry>
 
@@ -3980,7 +3958,7 @@ to paste long lines that shouldn't wrap.</para>
 </term>
 <listitem>
 <para>Attaches the corresponding <application>PGP</application>/<application>GnuPG</application>
-key to your message using the default encoding.</para>
+key to your message.</para>
 </listitem>
 </varlistentry>
 
@@ -3993,7 +3971,7 @@ key to your message using the default encoding.</para>
 </term>
 <listitem>
 <para>Attaches your <application>PGP</application>/<application>GnuPG</application>
-public key to your message using the default encoding.</para>
+public key to your message.</para>
 </listitem>
 </varlistentry>
 
@@ -4005,8 +3983,8 @@ public key to your message using the default encoding.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Attaches a file to the message using the encoding you select in the
-dialog. The dialog allows to select more than one file using the &Ctrl; key.</para>
+<para>Attaches one or more files to the current message.</para>
+<!-- fixme: not encrypted unless... -->
 </listitem>
 </varlistentry>
 
@@ -4018,7 +3996,7 @@ dialog. The dialog allows to select more than one file using the &Ctrl; key.</pa
 </menuchoice>
 </term>
 <listitem>
-<para>Removes the attachment that is selected in the attachment window.</para>
+<para>Removes the attachment that is selected in the attachment part of the composer.</para>
 </listitem>
 </varlistentry>
 
@@ -4045,6 +4023,43 @@ file.</para>
 <listitem>
 <para>Displays the properties of the attachment that is selected in the
 attachment window.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="composer-tools-menu">
+<title><guimenu>Tools</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Spelling...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Uses <ulink url="/kspell/">&kspell;</ulink> to check the spelling in the body of your
+message. Note that
+you have to configure &kspell; with <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Spellchecker...</guimenuitem></menuchoice> if you use it for the
+first time.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Addressbook...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up <ulink url="/kaddressbook/">&kaddressbook;</ulink>.</para>
 </listitem>
 </varlistentry>
 
@@ -4113,11 +4128,23 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens &kmail;'s <link linkend="configure">configuration dialog</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
 <guimenuitem>Spellchecker...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Allows you to configure &kspell;, &kde;'s spellchecker.</para>
+<para>Allows you to configure <ulink url="/kspell/">&kspell;</ulink>, &kde;'s spellchecker.</para>
 </listitem>
 </varlistentry>
 
@@ -4897,10 +4924,10 @@ revision of this documentation. </para>
 <!-- This is generated with "authors2xml.pl kmail/main.cpp"
  (except the "maintainer" comment): -->
 <itemizedlist>
-<listitem><para>Michael H&auml;ckel <email>haeckel@kde.org</email> (current maintainer)</para></listitem>
+<listitem><para>Michael H&auml;ckel <email>haeckel@kde.org</email> (current release coordinator)</para></listitem>
 <listitem><para>Don Sanders <email>sanders@kde.org</email></para></listitem>
 <listitem><para>Stefan Taferner  <email>taferner@kde.org</email></para></listitem>
-<listitem><para>Ingo Kl&ouml;cker <email>ingo.kloecker@epost.de</email></para></listitem>
+<listitem><para>Ingo Kl&ouml;cker <email>kloecker@kde.de</email></para></listitem>
 <listitem><para>Marc Mutz <email>mutz@kde.org</email></para></listitem>
 <listitem><para>Daniel Naber <email>daniel.naber@t-online.de</email></para></listitem>
 <listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
@@ -4928,7 +4955,10 @@ revision of this documentation. </para>
 <listitem><para>Sven Radej <email>radej@kde.org</email></para></listitem>
 <listitem><para>Mark Roberts <email>mark@taurine.demon.co.uk</email></para></listitem>
 <listitem><para>Wolfgang Rohdewald <email>wrohdewald@dplanet.ch</email></para></listitem>
+<listitem><para>Zack Rusin <email>zack@kde.org</email></para></listitem>
 <listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
+<listitem><para>Aaron J. Seigo <email>aseigo@olympusproject.org</email></para></listitem>
+<listitem><para>Jan Simonson <email>jan@simonson.pp.se</email></para></listitem>
 <listitem><para>George Staikos <email>staikos@kde.org</email></para></listitem>
 <listitem><para>Jason Stephenson <email>panda@mis.net</email></para></listitem>
 <listitem><para>Jacek Stolarczyk <email>jacek@mer.chemia.polsl.gliwice.pl</email></para></listitem>
