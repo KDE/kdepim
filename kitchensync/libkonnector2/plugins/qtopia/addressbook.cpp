@@ -69,7 +69,8 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 			adr.setBirthday( QDate::fromString(el.attribute("Birthday")  ) );
 			adr.setRole(el.attribute("JobTitle" ) );
 			// inside into custom
-			adr.setSortString( el.attribute("FileAs" ) );
+                        if ( !el.attribute("FileAs").isEmpty() )
+                            adr.setFormattedName( el.attribute("FileAs" ) );
 
 			adr.setOrganization( el.attribute("Company") );
 			KABC::PhoneNumber businessPhoneNum(el.attribute("BusinessPhone"),
@@ -176,11 +177,14 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             *stream << "MiddleName=\"" << escape(ab.additionalName()) << "\" ";
             *stream << "LastName=\"" << escape(ab.familyName()) << "\" ";
             *stream << "Suffix=\"" << escape(ab.suffix()) << "\" ";
+
             QString sortStr;
-            sortStr = ab.sortString();
+            sortStr = ab.formattedName();
+            /* is formattedName is empty we use the assembled name as fallback */
             if (sortStr.isEmpty() )
-                sortStr = ab.formattedName();
+                sortStr = ab.assembledName();
             *stream << "FileAs=\"" << escape(sortStr) << "\" ";
+
             *stream << "JobTitle=\"" << escape(ab.role()) << "\" ";
             *stream << "Department=\"" << escape(ab.custom( "KADDRESSBOOK", "X-Department" )) << "\" ";
             *stream << "Company=\"" << escape(ab.organization()) << "\" ";
