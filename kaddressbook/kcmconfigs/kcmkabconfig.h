@@ -27,7 +27,6 @@
 #include <kcmodule.h>
 
 class KABConfigWidget;
-class KAboutData;
 
 class KCMKabConfig : public KCModule
 {
@@ -39,7 +38,6 @@ class KCMKabConfig : public KCModule
     virtual void load();
     virtual void save();
     virtual void defaults();
-    virtual const KAboutData* aboutData() const;
 
   private:
     KABConfigWidget *mConfigWidget;

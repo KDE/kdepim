@@ -48,6 +48,14 @@ KCMKabConfig::KCMKabConfig( QWidget *parent, const char *name )
   connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
 
   load();
+  
+  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabconfig" ),
+                                      I18N_NOOP( "KAddressBook Configure Dialog" ),
+                                      0, 0, KAboutData::License_GPL,
+                                      I18N_NOOP( "(c), 2003 - 2004 Tobias Koenig" ) );
+
+  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+  setAboutData( about );
 }
 
 void KCMKabConfig::load()
@@ -63,18 +71,6 @@ void KCMKabConfig::save()
 void KCMKabConfig::defaults()
 {
   mConfigWidget->defaults();
-}
-
-const KAboutData* KCMKabConfig::aboutData() const
-{
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabconfig" ),
-                                      I18N_NOOP( "KAddressBook Configure Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 - 2004 Tobias Koenig" ) );
-
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-
-  return about;
 }
 
 #include "kcmkabconfig.moc"

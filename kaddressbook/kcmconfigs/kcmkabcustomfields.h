@@ -26,7 +26,6 @@
 
 #include <kcmodule.h>
 
-class KAboutData;
 class KListView;
 
 class QLabel;
@@ -41,7 +40,6 @@ class KCMKabCustomFields : public KCModule
     virtual void load();
     virtual void save();
     virtual void defaults();
-    virtual const KAboutData* aboutData() const;
 
   protected:
     void        loadUiFiles();

@@ -158,7 +158,14 @@ KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const char *name )
   connect( dw, SIGNAL( created(const QString&) ), SLOT( rebuildList() ) );
   connect( dw, SIGNAL( deleted(const QString&) ), SLOT( rebuildList() ) );
   connect( dw, SIGNAL( dirty(const QString&) ),   SLOT( rebuildList() ) );
+  
+  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabcustomfields" ),
+                                      I18N_NOOP( "KAddressBook Custom Fields Dialog" ),
+                                      0, 0, KAboutData::License_GPL,
+                                      I18N_NOOP( "(c), 2004 Tobias Koenig" ) );
 
+  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+  setAboutData( about );
 }
 
 void KCMKabCustomFields::deleteFile()
@@ -413,18 +420,6 @@ void KCMKabCustomFields::startDesigner()
   }
 
   KRun::runCommand( cmdLine );
-}
-
-const KAboutData* KCMKabCustomFields::aboutData() const
-{
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabcustomfields" ),
-                                      I18N_NOOP( "KAddressBook Custom Fields Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2004 Tobias Koenig" ) );
-
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-
-  return about;
 }
 
 #include "kcmkabcustomfields.moc"

@@ -28,7 +28,6 @@
 
 #include <qwidget.h>
 
-class KAboutData;
 class LDAPOptionsWidget;
 
 class KCMKabLdapConfig : public KCModule
@@ -41,7 +40,6 @@ class KCMKabLdapConfig : public KCModule
     virtual void load();
     virtual void save();
     virtual void defaults();
-    virtual const KAboutData* aboutData() const;
 
   private:
     LDAPOptionsWidget *mConfigWidget;
