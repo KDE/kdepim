@@ -1297,7 +1297,7 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties
 
   while (p) {
 
-    QString value = QString::fromUtf8(icalproperty_get_value_as_string(p));
+    QString value = QString::fromUtf8(icalproperty_get_x(p));
     customProperties[icalproperty_get_name(p)] = value;
 
     p = icalcomponent_get_next_property(parent,ICAL_X_PROPERTY);
