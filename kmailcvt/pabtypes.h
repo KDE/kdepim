@@ -22,8 +22,8 @@
  ***************************************************************************/
 
 
-#ifndef PABTYPES_H
-#define PABTYPES_H 1.0
+#ifndef _PABTYPES_H_
+#define _PABTYPES_H_
 
 /*
  *  MS Windows tags as reengineered from an MS Exchange .PAB and 

@@ -15,10 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef _OE5_2MBOX_H_
+#define _OE5_2MBOX_H_
+
 #include "filters.hxx"
 
 class oe5_2mbox
 {
+  private:
+    static void addMessage(const char *, int);
+    static filter     *F;
+    static const char *FOLDER;
+    static filterInfo *INFO;
+    static int         numOfMessages;
+    static unsigned long added, mails;
   private:
     filter        *f;
     filterInfo    *info;
@@ -30,3 +40,4 @@ class oe5_2mbox
     int convert(void);
 };
 
+#endif

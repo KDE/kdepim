@@ -1,5 +1,5 @@
 /***************************************************************************
-                          mapihd.h  -  description
+                          mapidefs.h  -  description
                              -------------------
     begin                : Tue Jul 25 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -15,13 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
- #ifndef __MAPIHD__
- #define __MAPIHD__
+#ifndef _MAPIDEFS_H_
+#define _MAPIDEFS_H_
 
- #include "filters.hxx"
- #include "harray.hxx"
- #include <string>
- #include <stdio.h>
+#include "filters.hxx"
+#include "harray.hxx"
+#include <string>
+#include <stdio.h>
 
 #include "pabtypes.h"
 
@@ -75,8 +75,8 @@ typedef unsigned long ULONG;
 
 
 
- #define MAPI_TAG(tag)         (((unsigned long) tag)&0xFFFF)
- #define PROP_TAG(type,tag)    MAPI_TAG(tag)
+#define MAPI_TAG(tag)         (((unsigned long) tag)&0xFFFF)
+#define PROP_TAG(type,tag)    MAPI_TAG(tag)
 
  typedef unsigned long adr_t;
  typedef unsigned long content_t;

@@ -15,13 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
- #ifndef __MAPIHD__
- #define __MAPIHD__
+#ifndef _MAPIHD_H_
+#define _MAPIHD_H_
 
- #include "filters.hxx"
- #include "harray.hxx"
- #include <string>
- #include <stdio.h>
+#include "filters.hxx"
+#include "harray.hxx"
+#include <string>
+#include <stdio.h>
 
 #include "pabtypes.h"
 

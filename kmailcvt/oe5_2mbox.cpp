@@ -27,15 +27,14 @@
 #include "oe5_2mbox.h"
 #include "liboe.h"
 
-static QString CAP=i18n("Import Outlook Express 5");
+#define CAP	i18n("Import Outlook Express 5")
 
-static void addMessage(const char *line,int code);
-
-static filter     *F;
-static const char *FOLDER;
-static filterInfo *INFO;
-static int         numOfMessages;
-static unsigned long added,mails;
+filter *      oe5_2mbox::F = 0;
+const char *  oe5_2mbox::FOLDER = 0;
+filterInfo *  oe5_2mbox::INFO = 0;
+int           oe5_2mbox::numOfMessages = 0;
+unsigned long oe5_2mbox::added = 0;
+unsigned long oe5_2mbox::mails = 0;
 
 oe5_2mbox::oe5_2mbox(const char *in,const char *out,filter *F,filterInfo *I)
 {
@@ -98,7 +97,7 @@ char s[1024];
 return result->success;
 }
 
-void addMessage(const char *string,int code)
+void oe5_2mbox::addMessage(const char *string,int code)
 {
 static FILE *f=NULL;
 static int status=-1;
@@ -169,7 +168,8 @@ static float perc=0.0;
           }
           else {
             fclose(f);
-            F->kmailMessage(INFO,(char *) FOLDER,s,added);mails+=1;
+            F->kmailMessage(INFO, (char *) FOLDER, s, added);
+            mails+=1;
             unlink(s);
             status=-1; // skip to next message.
           }
@@ -179,3 +179,4 @@ static float perc=0.0;
     break;
   }
 }
+#undef CAP

@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 
-#ifndef PABTYPES_H
-#define PABTYPES_H 1.0
+#ifndef _MAPITAGS_H_
+#define _MAPITAGS_H_
 
 /*
  *  Message envelope

@@ -34,10 +34,10 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <sys/stat.h>
+#ifndef _LIBOE_H_
+#define _LIBOE_H_
 
-#ifndef LIBOE_H
-#define LIBOE_H
+#include <sys/stat.h>
 
 #define OE_CANNOTREAD 1
 #define OE_NOTOEBOX   2
