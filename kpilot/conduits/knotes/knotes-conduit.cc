@@ -363,6 +363,9 @@ KNotesConduit::KNotesConduit(eConduitMode mode) :
 	fDeleteNoteForMemo(false)
 {
 	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT<<knotes_conduit_id<<endl;
+#endif
 
 }
 

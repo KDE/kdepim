@@ -179,7 +179,9 @@ TodoConduit::TodoConduit(KPilotDeviceLink *d,
 	const QStringList &a) : VCalConduitBase(d,n,a)
 {
 	FUNCTIONSETUP;
-	(void) TodoConduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<TodoConduit_id<<endl;
+#endif
 }
 
 

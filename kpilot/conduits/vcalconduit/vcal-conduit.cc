@@ -169,7 +169,9 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	const QStringList &a) : VCalConduitBase(d,n,a)
 {
 	FUNCTIONSETUP;
-	(void) vcalconduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<vcalconduit_id<<endl;
+#endif
 }
 
 

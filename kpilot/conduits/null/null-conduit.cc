@@ -66,8 +66,9 @@ NullConduit::NullConduit(KPilotDeviceLink *d,
 	fDatabase(0L)
 {
 	FUNCTIONSETUP;
-
-	(void) null_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<null_conduit_id<<endl;
+#endif
 }
 
 NullConduit::~NullConduit()

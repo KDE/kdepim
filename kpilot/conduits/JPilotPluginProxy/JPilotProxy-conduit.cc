@@ -53,7 +53,9 @@ static const char *JPilotProxy_conduit_id = "$Id$";
 
 JPilotProxyConduit::JPilotProxyConduit(KPilotDeviceLink *d, const char *n, const QStringList &l) : ConduitAction(d,n,l) {
 	FUNCTIONSETUP;
-	(void)JPilotProxy_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<JPilotProxy_conduit_id<<endl;
+#endif
 }
 
 
