@@ -72,6 +72,10 @@ ResourceGroupwise::~ResourceGroupwise()
   disableChangeNotification();
 
   delete mServer;
+  mServer = 0;
+
+  delete mPrefs;
+  mPrefs = 0;
 }
 
 void ResourceGroupwise::init()
