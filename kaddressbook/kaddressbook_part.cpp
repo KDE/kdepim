@@ -123,12 +123,23 @@ void KAddressbookPart::exit()
   delete this;
 }
 
-bool KAddressbookPart::openFile()
+bool KAddressbookPart::openURL( const KURL &url )
 {
   kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
 
   mCore->widget()->show();
+
+  if ( !url.isEmpty() )
+    mCore->importVCard( url );
+
+  emit setWindowCaption( url.prettyURL() );
+
   return true;
+}
+
+bool KAddressbookPart::openFile()
+{
+  return false;
 }
 
 void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )

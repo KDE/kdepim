@@ -63,13 +63,15 @@ int KAddressBookApp::newInstance()
 
     QCString addrStr = args->getOption( "addr" );
     QCString uidStr = args->getOption( "uid" );
-    QString addr;
-    QString uid;
+    QCString vcardStr = args->getOption( "vcard" );
+
+    QString addr, uid, vcard;
     if ( !addrStr.isEmpty() )
       addr = QString::fromLocal8Bit( addrStr );
     if ( !uidStr.isEmpty() )
       uid = QString::fromLocal8Bit( uidStr );
-
+    if ( !vcardStr.isEmpty() )
+      vcard = QString::fromLocal8Bit( vcardStr );
 
     if ( args->isSet( "editor-only" ) ) {
       if ( !mMainWin )
@@ -90,6 +92,9 @@ int KAddressBookApp::newInstance()
     if ( !addr.isEmpty() )
       mMainWin->addEmail( addr );
 
+    if ( !vcard.isEmpty() )
+      mMainWin->importVCard( vcard );
+
     if ( !uid.isEmpty() )
       mMainWin->showContactEditor( uid );
     if ( args->isSet( "new-contact" ) ) {
@@ -109,7 +114,8 @@ static KCmdLineOptions kmoptions[] =
   { "uid <uid>", I18N_NOOP( "Shows contact editor with given uid" ), 0 },
   { "editor-only", I18N_NOOP( "Launches in editor only mode" ), 0 },
   { "new-contact", I18N_NOOP( "Launches editor for the new contact" ), 0 },
-  { "+[argument]", I18N_NOOP( "dummy argument" ), 0},
+  { "vcard <vcard>", I18N_NOOP( "Import the given vCard" ), 0 },
+  { "+[argument]", I18N_NOOP( "dummy argument" ), 0 },
   KCmdLineLastOption
 };
 

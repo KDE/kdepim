@@ -22,14 +22,19 @@
 */
 
 #include <qfile.h>
+#include <qfont.h>
+#include <qlabel.h>
+#include <qlayout.h>
 
 #include <kabc/vcardtool.h>
+#include <kdialogbase.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktempfile.h>
 #include <kurl.h>
+#include <libkdepim/addresseeview.h>
 
 #include "xxportmanager.h"
 
@@ -51,6 +56,13 @@ extern "C"
     return ( new VCardXXPortFactory() );
   }
 }
+
+class VCardViewerDialog : public KDialogBase
+{
+  public:
+    VCardViewerDialog( const KABC::Addressee &addr,
+                       QWidget *parent, const char *name = 0 );
+};
 
 
 VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
@@ -158,6 +170,17 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
         KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
       }
     }
+
+    if ( !XXPortManager::importURL.isEmpty() ) { // a vcard was passed via cmd
+      KABC::AddresseeList::Iterator addrIt;
+      for ( addrIt = addrList.begin(); addrIt != addrList.end(); ++addrIt ) {
+        VCardViewerDialog dlg( *addrIt, parentWidget() );
+        if ( !dlg.exec() ) {
+          addrIt = addrList.remove( addrIt );
+          addrIt--;
+        }
+      }
+    }
   }
 
   return addrList;
@@ -182,6 +205,28 @@ bool VCardXXPort::doExport( const KURL &url, const QString &data )
   tmpFile.close();
 
   return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
+}
+
+// ---------- VCardViewer Dialog ---------------- //
+
+VCardViewerDialog::VCardViewerDialog( const KABC::Addressee &addr,
+                                      QWidget *parent, const char *name )
+  : KDialogBase( Plain, i18n( "Import vCard" ), Ok | Cancel, Ok,
+                 parent, name, true, true )
+{
+  QFrame *page = plainPage();
+  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );  
+
+  QLabel *label = new QLabel( i18n( "Do you want to import this contact in your address book?" ), page );
+  QFont font = label->font();
+  font.setBold( true );
+  label->setFont( font );
+  layout->addWidget( label );
+
+  KPIM::AddresseeView *view = new KPIM::AddresseeView( page );
+  view->setAddressee( addr );
+  view->setVScrollBarMode( QScrollView::Auto );
+  layout->addWidget( view );
 }
 
 #include "vcard_xxport.moc"
