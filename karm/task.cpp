@@ -300,8 +300,6 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
   todo->setCustomProperty( kapp->instanceName(),
       QCString( "totalSessionTime" ), QString::number( _sessionTime) );
 
-  kdDebug() << "Task::asTodo: getDesktopStr() = " << getDesktopStr() << endl;
-
   if (getDesktopStr().isEmpty())
     todo->removeCustomProperty(kapp->instanceName(), QCString("desktopList"));
   else
