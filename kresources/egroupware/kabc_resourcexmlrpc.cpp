@@ -211,7 +211,7 @@ bool ResourceXMLRPC::save( Ticket *ticket )
   return asyncSave( ticket );
 }
 
-bool ResourceXMLRPC::asyncSave( Ticket *ticket )
+bool ResourceXMLRPC::asyncSave( Ticket */*ticket*/ )
 {
   KABC::Addressee::List::Iterator it;
 
