@@ -81,6 +81,8 @@ class Config : public QWidget
     virtual void setValues();
     virtual void applySettings();
     QGroupBox* optionsGroupBox() { return mpOptionsGroupBox; };
+  signals:
+    void changed();
 
   protected:
     Module *pgp;

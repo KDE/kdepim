@@ -146,6 +146,8 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 			       << i18n("Don't use any encryption tool") );
   label->setBuddy( toolCombo );
   hbox->setStretchFactor( toolCombo, 1 );
+  connect( toolCombo, SIGNAL( activated( int ) ),
+           this, SIGNAL( changed( void ) ) );
   // This is the place to add a KURLRequester to be used for asking
   // the user for the path to the executable...
   topLayout->addWidget( group );
@@ -154,6 +156,8 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   mpOptionsGroupBox->layout()->setSpacing( KDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
+  connect( storePass, SIGNAL( toggled( bool ) ),
+           this, SIGNAL( changed( void ) ) );
   msg = i18n( "<qt><p>When this option is enabled, the passphrase of your "
 	      "private key will be remembered by the application as long "
 	      "as the application is running. Thus you will only have to "
@@ -169,6 +173,9 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
                                mpOptionsGroupBox );
+   connect( encToSelf, SIGNAL( toggled( bool ) ),
+           this, SIGNAL( changed( void ) ) );
+
     msg = i18n( "<qt><p>When this option is enabled, the message/file "
 		"will not only be encrypted with the receiver's public key, "
 		"but also with your key. This will enable you to decrypt the "
@@ -181,6 +188,9 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   showCipherText = new QCheckBox( i18n("&Show signed/encrypted text after "
                                        "composing"),
                                   mpOptionsGroupBox );
+  connect( showCipherText, SIGNAL( toggled( bool ) ),
+           this, SIGNAL( changed( void ) ) );
+
   msg = i18n( "<qt><p>When this option is enabled, the signed/encrypted text "
 	      "will be shown in a separate window, enabling you to know how "
 	      "it will look before it is sent. This is a good idea when "
@@ -190,6 +200,8 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
                                              "keys &for approval"),
                                         mpOptionsGroupBox );
+    connect( showKeyApprovalDlg, SIGNAL( toggled( bool ) ),
+           this, SIGNAL( changed( void ) ) );
     msg = i18n( "<qt><p>When this option is enabled, the application will "
 		"always show you a list of public keys from which you can "
 		"choose the one it will use for encryption. If it is off, "
