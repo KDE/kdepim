@@ -3,8 +3,15 @@
 - conflict resolution
 - Error handling in the folder lister (cannot connect to host, timeout, etc.)
 - turn the flat folder list into a folder tree
-- correctly remove an uploaded item. The subsequent folder refresh needs to re-download it anyway.
 - Restore folder subscriptions on folder list refresh
 - If the user cancels, we need to reset the mUploadJob variable to 0 in the abook resource.
-- Uploading changes need to change the protocol from http to webdav.
 - If an item was changed on the server (i.e. there's a local item, which cannot be found on the server), the local item needs to be removed on folder sync
+
+
+- recurrences on exchange
+- timezone for exchange
+- exdate on exchange
+- recurrences on ogo
+- reload libkcal resource when config changes
+- When download is finished, make new contacts appear in kaddressbook
+- In Exchange abook: if an address is removed, store the empty string to the server to delete the data from the server
