@@ -244,7 +244,7 @@ QDateTime Todo::dtRecurrence() const
   return mDtRecurrence.isValid() ? mDtRecurrence : mDtDue;
 }
 
-bool Todo::recursOn( const QDate &date )
+bool Todo::recursOn( const QDate &date ) const
 {
   QDate today = QDate::currentDate();
   return ( Incidence::recursOn(date) &&
@@ -276,7 +276,7 @@ bool Todo::recurTodo()
   return false;
 }
 
-bool Todo::isOverdue()
+bool Todo::isOverdue() const
 {
   bool inPast = doesFloat() ? mDtDue.date() < QDate::currentDate()
                             : mDtDue < QDateTime::currentDateTime();

@@ -203,13 +203,13 @@ class Todo : public Incidence
       check, which make it return false if there's an occurence between
       the recurstart and today.
     */
-    virtual bool recursOn( const QDate &date );
+    virtual bool recursOn( const QDate &date ) const;
 
     /**
       Returns true if this todo is overdue (e.g. due date is lower than today
       and not completed), else false.
      */
-      bool isOverdue();
+      bool isOverdue() const;
 
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
