@@ -26,7 +26,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *id =
+static const char *pilotdaemon_id =
 	"$Id$";
 
 #ifndef _KPILOT_OPTIONS_H
@@ -123,8 +123,6 @@ static const char *id =
 #include "kpilotConfig.h"
 #endif
 
-// #include "hotSync.h"
-// #include "interactiveSync.h"
 #include "syncStack.h"
 
 #include "kpilotDCOP_stub.h"
@@ -143,7 +141,7 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 
 
 	/* NOTREACHED */
-	(void) id;
+	(void) pilotdaemon_id;
 }
 
 /* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent * e)
@@ -302,7 +300,9 @@ PilotDaemon::~PilotDaemon()
 {
 	FUNCTIONSETUP;
 
-	delete fPilotLink;
+	KPILOT_DELETE(fPilotLink);
+	KPILOT_DELETE(fSyncStack);
+	KPILOT_DELETE(fInstaller);
 }
 
 void PilotDaemon::addInstallFiles(QStrList l)
@@ -536,16 +536,12 @@ bool PilotDaemon::setupPilotLink()
 
 /* DCOP ASYNC */ void PilotDaemon::requestRegularSyncNext()
 {
-	FUNCTIONSETUP;
-	// TODO: do something sensible here.
-	requestSync(1);
+	requestSync(PilotDaemonDCOP::HotSync);
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestFastSyncNext()
 {
-	FUNCTIONSETUP;
-	// TODO: do something sensible here.
-	requestSync(2);
+	requestSync(PilotDaemonDCOP::FastSync);
 }
 
 
@@ -553,33 +549,12 @@ bool PilotDaemon::setupPilotLink()
 {
 	FUNCTIONSETUP;
 
-	switch (mode)
-	{
-	case PilotDaemonDCOP::Test:
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Starting a test Sync" << endl;
+	DEBUGDAEMON << fname
+		<< ": Next sync is: "
+		<< syncTypeString(mode)
+		<< endl ;
 #endif
-		break;
-	case PilotDaemonDCOP::HotSync:
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Starting a normal HotSync" << endl;
-#endif
-		break;
-	case PilotDaemonDCOP::FastSync:
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Starting a FastSync" << endl;
-#endif
-		break;
-	case PilotDaemonDCOP::Backup:
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Starting a full Backup" << endl;
-#endif
-		break;
-	default:
-		kdWarning() << k_funcinfo
-			<< ": Unknown mode " << mode << endl;
-		return;
-	}
 
 	fNextSyncType = mode;
 }
@@ -625,14 +600,15 @@ QString PilotDaemon::syncTypeString(int i) const
 		<< " (" << fNextSyncType << ")" << endl;
 #endif
 
-	KPilotConfig::getConfig().setGroup("Conduit Names");
-	QStringList conduits = KPilotConfig::getConfig()
-		.readListEntry("InstalledConduits");
+	KPilotConfigSettings &c = KPilotConfig::getConfig();
+	QStringList conduits = c.getInstalledConduits();
+	bool installFiles = c.getSyncFiles();
+
 	fSyncStack = new SyncStack(fPilotLink,
 		&KPilotConfig::getConfig(),
 		conduits,
-		fInstaller->dir(),
-		fInstaller->fileNames());
+		fInstaller ? fInstaller->dir() : QString::null,
+		fInstaller ? fInstaller->fileNames() : QString::null );
 
 	switch (fNextSyncType)
 	{
@@ -641,6 +617,19 @@ QString PilotDaemon::syncTypeString(int i) const
 		break;
 	case PilotDaemonDCOP::Backup:
 		fSyncStack->prepareBackup();
+		break;
+	case PilotDaemonDCOP::Restore:
+		fSyncStack->prepareRestore();
+		break;
+	case PilotDaemonDCOP::HotSync:
+		if (installFiles)
+		{
+			fSyncStack->prepare(SyncStack::HotSyncMode | SyncStack::WithInstaller);
+		}
+		else
+		{
+			fSyncStack->prepare(SyncStack::HotSyncMode);
+		}
 		break;
 	default:
 #ifdef DEBUG
@@ -704,7 +693,7 @@ QString PilotDaemon::syncTypeString(int i) const
 		kapp->quit();
 	}
 
-	QTimer::singleShot(5000,fPilotLink,SLOT(reset()));
+	QTimer::singleShot(2000,fPilotLink,SLOT(reset()));
 }
 
 
@@ -816,12 +805,15 @@ int main(int argc, char **argv)
 	return a.exec();
 
 	/* NOTREACHED */
-	(void) id;
+	(void) pilotdaemon_id;
 }
 
 
 
 // $Log$
+// Revision 1.55  2001/12/29 15:49:01  adridg
+// SyncStack changes
+//
 // Revision 1.54  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //

@@ -119,7 +119,14 @@ public:
 		//
 		WithUserCheck=32,
 		WithInstaller=64,
-		WithConduits=128
+		WithConduits=128,
+		// These are derived values for convenience.
+		// Note that a HotSync doesn't install files by default.
+		//
+		//
+		BackupMode = Backup | WithUserCheck | WithConduits,
+		RestoreMode = Restore | WithUserCheck,
+		HotSyncMode = HotSync | WithUserCheck | WithConduits
 		} ;
 
 	/**
@@ -131,9 +138,9 @@ public:
 	* actions at the relevant moment in the execution of the stack.
 	*/
 	void prepare(int m);
-	void prepareBackup() { prepare(Backup | WithUserCheck | WithConduits); } ;
-	void prepareRestore() { prepare(Restore | WithUserCheck); } ;
-	void prepareSync() { prepare(HotSync | WithUserCheck | WithConduits); } ;
+	void prepareBackup() { prepare(BackupMode); } ;
+	void prepareRestore() { prepare(RestoreMode); } ;
+	void prepareSync() { prepare(HotSyncMode); } ;
 
 public slots:
 	virtual void exec();
@@ -188,6 +195,9 @@ protected:
 } ;
 
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/12/29 15:41:36  adridg
+// Added unified sync-action handling for kpilotTest and daemon
+//
 //
 #endif
