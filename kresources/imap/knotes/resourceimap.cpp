@@ -156,7 +156,6 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal,
   kdDebug(5500) << "KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
 
   mCalendar.addJournal( journal );
-  manager()->registerNote( this, journal );
   journal->registerObserver( this );
 
   QString resource = subresource;

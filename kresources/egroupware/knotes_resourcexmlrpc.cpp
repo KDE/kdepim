@@ -148,7 +148,7 @@ bool ResourceXMLRPC::load()
     delete mServer;
 
   mServer = new KXMLRPC::Server( KURL(), this );
-	mServer->setUrl( mURL );
+    mServer->setUrl( mURL );
   mServer->setUserAgent( "KDE-Notes" );
 
   QMap<QString, QVariant> args, columns;
@@ -209,7 +209,6 @@ bool ResourceXMLRPC::addNote( KCal::Journal *journal )
                    QVariant( journal->uid() ) );
 
     mCalendar.addJournal( journal );
-    manager()->registerNote( this, journal );
     added = true;
   }
 
