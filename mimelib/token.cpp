@@ -279,17 +279,15 @@ static inline bool isspecialorspaceorcntrl( char c )
      case ']':
      // isspace()
      case ' ':
+         return true;
      //case '\r': included in iscntrl()
      //case '\f': included in iscntrl()
      //case '\t': included in iscntrl()
      //case '\n': included in iscntrl()
      //case '\v': included in iscntrl()
      // iscntrl()
-     case 0 ... 15:
-     case 17 ... 31:
-        return true;
      default:
-        return false;
+         return ( (c >= 0 && c <= 15) || (c >= 17 && c <= 31) );
   }
 }
 
@@ -304,11 +302,9 @@ static inline bool isnotspaceorcntrl( char c )
      //case '\n': included in iscntrl()
      //case '\v': included in iscntrl()
      // iscntrl()
-     case 0 ... 15:
-     case 17 ... 31:
-        return false;
+         return false;
      default:
-        return true;
+         return !( (c >= 0 && c <= 15) || (c >= 17 && c <= 31) );
   }
 }
 
@@ -443,17 +439,15 @@ static inline bool istspecialorspaceorcntrl( char c )
      case '=':
      // isspace()
      case ' ':
+         return true;
      //case '\r': included in iscntrl()
      //case '\f': included in iscntrl()
      //case '\t': included in iscntrl()
      //case '\n': included in iscntrl()
      //case '\v': included in iscntrl()
      // iscntrl()
-     case 0 ... 15:
-     case 17 ... 31:
-        return true;
      default:
-        return false;
+        return ( ( c >= 0 && c <= 15) || (c >= 17 && c <= 31) );
   }
  }
 
