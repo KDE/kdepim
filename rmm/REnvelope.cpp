@@ -31,6 +31,7 @@
 using namespace RMM;
 
 REnvelope::REnvelope()
+    :   RMessageComponent()
 {
     rmmDebug("ctor");
 //    headerList_.setAutoDelete(true);

@@ -36,7 +36,6 @@
 #include "EmpathConfig.h"
 #include "EmpathUtilities.h"
 
-
 EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
     :   EmpathMailbox       (name),
         serverPort_         (110),

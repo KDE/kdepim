@@ -29,15 +29,12 @@
 
 namespace RMM {
     
-const char * B64 =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
 QCString    toCrLfEol    (const QCString &);
 QCString    toLfEol        (const QCString &);
 QCString    toCrEol        (const QCString &);
 
 QCString    encodeBase64    (const char *, unsigned long, unsigned long &);
-char *        decodeBase64    (const QCString &, unsigned long &);
+char *      decodeBase64    (const QCString &, unsigned long &);
 
 QCString    encodeQuotedPrintable    (const QCString &);
 QCString    decodeQuotedPrintable    (const QCString &);

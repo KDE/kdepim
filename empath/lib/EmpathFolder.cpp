@@ -86,7 +86,11 @@ EmpathFolder::update()
     EmpathMailbox * m = empath->mailbox(url_);
     if (m == 0) return;
     m->sync(url_);
-    emit(countUpdated(index_->countUnread(), index_->count()));
+    Q_UINT32 unread = index_->countUnread();
+    Q_UINT32 all = index_->count();
+
+    empathDebug("emitting countUpdated(" + QString().setNum(unread) + ", " + QString().setNum(all) + ")");
+    emit(countUpdated(unread , all));
 }
 
     EmpathFolder *

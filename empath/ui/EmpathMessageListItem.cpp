@@ -40,7 +40,6 @@ EmpathMessageListItem::EmpathMessageListItem(
         QListViewItem(parent),
         m(msgDesc)
 {
-    empathDebug("ctor");
     niceDate_ = msgDesc.niceDate(true);
     _init();
 }
@@ -52,14 +51,12 @@ EmpathMessageListItem::EmpathMessageListItem(
         QListViewItem(parent),
         m(msgDesc)
 {
-    empathDebug("ctor");
     niceDate_ = msgDesc.niceDate(true);
     _init();
 }
 
 EmpathMessageListItem::~EmpathMessageListItem()
 {
-    empathDebug("dtor");
 }
 
     void
@@ -123,8 +120,6 @@ EmpathMessageListItem::_init()
     void
 EmpathMessageListItem::setup()
 {
-    empathDebug("setup() called");
-    
     widthChanged();
     int ph = pixmap(0) ? pixmap(0)->height() : 0;
     int th = QFontMetrics(KGlobal::generalFont()).height();

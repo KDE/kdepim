@@ -37,6 +37,7 @@
 using namespace RMM;
 
 RMimeType::RMimeType()
+    :   RHeaderBody()
 {
     rmmDebug("ctor");
 }
@@ -46,6 +47,13 @@ RMimeType::RMimeType(const RMimeType & t)
 {
     rmmDebug("ctor");
 }
+
+RMimeType::RMimeType(const QCString & s)
+    :    RHeaderBody(s)
+{
+    rmmDebug("ctor");
+}
+
 
 RMimeType::~RMimeType()
 {

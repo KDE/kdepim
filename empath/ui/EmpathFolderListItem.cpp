@@ -72,8 +72,8 @@ EmpathFolderListItem::EmpathFolderListItem(
         this, SLOT(s_setCount(Q_UINT32, Q_UINT32)));
     
     setText(0, m->name());
-    setText(1, QString().setNum(m->unreadMessageCount()));
-    setText(2, QString().setNum(m->messageCount()));
+    setText(1, "...");
+    setText(2, "...");
     setPixmap(0, empathIcon(m->pixmapName()));
 }
 

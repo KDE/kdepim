@@ -48,9 +48,12 @@ EmpathIndex::EmpathIndex()
 }
 
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
-	:	blockSize_(1024), folder_(folder)
+	:	blockSize_(1024),
+        folder_(folder),
+        touched_(true),
+        count_(0),
+        unreadCount_(0)
 {
-    empathDebug("");
     QString resDir =
         KGlobal::dirs()->getSaveLocation("indices", folder.mailboxName(), true);
 
@@ -68,14 +71,12 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
 
 EmpathIndex::~EmpathIndex()
 {
-    empathDebug("");
     _close();
 }
 
     void
 EmpathIndex::setFilename(const QString & filename)
 {
-    empathDebug("");
     filename_ = filename;
     _open();
 }
@@ -83,15 +84,12 @@ EmpathIndex::setFilename(const QString & filename)
     void
 EmpathIndex::setFolder(const EmpathURL & folder)
 {
-    empathDebug("");
     folder_ = folder;
 }
 
     EmpathIndexRecord *
 EmpathIndex::record(const QCString & key)
 {
-//    empathDebug(QString(key));
-
     if (!dbf_) {
         empathDebug("dbf is not open");
         return 0;
@@ -104,7 +102,6 @@ EmpathIndex::record(const QCString & key)
     datum out = gdbm_fetch(dbf_, k);
 
     if (!out.dptr) {
-//        empathDebug("does not exist");
         return 0;
     }
     
@@ -126,61 +123,51 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread()
 {
-    if (!touched_)
-        return unreadCount_;
-    
-    if (!dbf_) {
-        empathDebug("dbf is not open");
-        return 0;
-    }
+    if (touched_)
+        recalculateCount();
 
-    unreadCount_ = 0;
-    
-    datum key = gdbm_firstkey(dbf_);
-    
-    while (key.dptr) {
-
-        if (!((RMM::MessageStatus)(key.dptr[0]) & RMM::Read))
-            ++unreadCount_;
-
-        key = gdbm_nextkey(dbf_, key);
-    }
-    
-    touched_ = false;
     return unreadCount_;
 }
 
-    Q_UINT32
+     Q_UINT32
 EmpathIndex::count()
 {
-    if (!touched_)
-        return count_;
+    if (touched_)
+        recalculateCount();
+
+    return count_;
+}
     
+    void
+EmpathIndex::recalculateCount()
+{
     if (!dbf_) {
         empathDebug("dbf is not open");
-        return 0;
+        return;
     }
 
-    count_ = 0;
+    unreadCount_ = count_ = 0;
     
     datum key = gdbm_firstkey(dbf_);
     
     while (key.dptr) {
+        
+        RMM::MessageStatus status = (RMM::MessageStatus)(key.dptr[0]);
+
+        if (!(status & RMM::Read))
+            ++unreadCount_;
 
         ++count_;
+
         key = gdbm_nextkey(dbf_, key);
     }
     
     touched_ = false;
-    return count_;
 }
-
 
     void
 EmpathIndex::sync()
 {
-    empathDebug("");
-    
     if (!dbf_) {
         empathDebug("dbf is not open");
         return;
@@ -199,8 +186,6 @@ EmpathIndex::sync()
     void
 EmpathIndex::_close()
 {
-    empathDebug("");
-    
     if (!dbf_) {
         empathDebug("dbf is not open");
         return;
@@ -212,8 +197,6 @@ EmpathIndex::_close()
     void
 EmpathIndex::_open()
 {
-    empathDebug(filename_);
-    
     dbf_ = gdbm_open(
         filename_.local8Bit().data(), blockSize_, GDBM_WRCREAT, 0600, NULL);
     
@@ -228,8 +211,6 @@ EmpathIndex::_open()
     QStrList
 EmpathIndex::allKeys()
 {
-    empathDebug("");
-    
     QStrList l;   
 
     if (!dbf_) {
@@ -255,8 +236,6 @@ EmpathIndex::allKeys()
     bool
 EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 {
-//    empathDebug(key);
-
     if (!dbf_) {
         empathDebug("dbf is not open");
         return false;
@@ -290,8 +269,6 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     bool
 EmpathIndex::remove(const QCString & key)
 {  
-//    empathDebug(QString(key));
-
     if (!dbf_) {
         empathDebug("dbf is not open");
         return false;
@@ -310,8 +287,6 @@ EmpathIndex::remove(const QCString & key)
     void
 EmpathIndex::clear()
 {
-//    empathDebug("");
-
     if (!dbf_) {
         empathDebug("dbf is not open");
         return;

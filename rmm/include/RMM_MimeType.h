@@ -19,11 +19,11 @@
 */
 
 #ifdef __GNUG__
-# pragma interface "RMM_MediaType.h"
+# pragma interface "RMM_MimeType.h"
 #endif
 
-#ifndef RMM_MEDIATYPE_H
-#define RMM_MEDIATYPE_H
+#ifndef RMM_MIMETYPE_H
+#define RMM_MIMETYPE_H
 
 #include <qstring.h>
 #include <qlist.h>
@@ -39,7 +39,7 @@ namespace RMM {
 class RMimeType : public RHeaderBody {
 
     public:
-        
+
 #include "generated/RMimeType_generated.h"
 
         QCString boundary();

@@ -25,6 +25,8 @@
 #ifndef EMPATHMAILSENDERSMTP_H
 #define EMPATHMAILSENDERSMTP_H
 
+#define NO_KIO_COMPATABILITY 1
+
 // Qt includes
 #include <qobject.h>
 

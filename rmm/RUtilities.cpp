@@ -94,6 +94,9 @@ RMM::decodeQuotedPrintable(const QCString & in)
  *
  */
 
+const char * B64 =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
     QCString
 RMM::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
 {

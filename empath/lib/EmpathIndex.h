@@ -107,6 +107,8 @@ class EmpathIndex
 
         void setStatus(const QString & id, RMM::MessageStatus status);
         
+        void recalculateCount();
+        
         const char * className() const { return "EmpathIndex"; }
 
     protected:

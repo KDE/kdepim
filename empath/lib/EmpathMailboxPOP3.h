@@ -21,6 +21,8 @@
 #ifndef EMPATHMAILBOXPOP3_H
 #define EMPATHMAILBOXPOP3_H
 
+#define NO_KIO_COMPATABILITY 1
+
 // Qt includes
 #include <qstring.h>
 #include <qcstring.h>
