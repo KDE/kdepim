@@ -168,7 +168,8 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
     : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
-      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
+      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false),
+      mFirstEdit( firstEdit )
 {
     mSpellingFilter = 0;
     spellLineEdit = false;
@@ -581,10 +582,16 @@ bool KNComposer::hasValidData()
                                        QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
         return false;
 
-    if (!followUp && (groupCount>2))
-      if (!(KMessageBox::warningYesNo( this, i18n("You are crossposting to more than two newsgroups.\nPlease use the \"Followup-To\" header to direct\nthe replies to your article into one group.\nDo you want to re-edit the article or send it anyway?"),
-                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+    if ( !followUp && groupCount > 2 ) {
+      if ( KMessageBox::warningYesNo( this,
+           i18n("You are crossposting to more than two newsgroups.\n"
+                "Please use the \"Followup-To\" header to direct the replies "
+                "to your article into one group.\n"
+                "Do you want to re-edit the article or send it anyway?"),
+           QString::null, i18n("&Send"), i18n("edit article","&Edit"), "missingFollowUpTo" )
+           != KMessageBox::Yes )
         return false;
+    }
 
     if (fupCount>12) {
       KMessageBox::sorry(this, i18n("You are directing replies to more than 12 newsgroups.\nPlease remove some newsgroups from the \"Followup-To\" header."));
@@ -1437,7 +1444,7 @@ void KNComposer::slotGroupsChanged(const QString &t)
   }
   v_iew->f_up2->insertItem("");
 
-  if(!currText.isEmpty())
+  if ( !currText.isEmpty() || !mFirstEdit ) // user might have cleared fup2 intentionally during last edit
     v_iew->f_up2->lineEdit()->setText(currText);
 }
 

@@ -198,6 +198,9 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
   signals:
     void composerDone(KNComposer*);
 
+  private:
+    bool mFirstEdit;
+
 };
 
 
