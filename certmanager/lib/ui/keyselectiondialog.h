@@ -126,6 +126,7 @@ namespace Kleo {
     void slotCheckSelection( Kleo::KeyListViewItem * );
     void slotRMB( Kleo::KeyListViewItem *, const QPoint & );
     void slotRecheckKey();
+    void slotTryOk();
     void slotOk();
     void slotCancel();
     void slotSearch( const QString & text );

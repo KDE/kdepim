@@ -69,9 +69,9 @@
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qwhatsthis.h>
-//#include <qdatetime.h>
 #include <qpopupmenu.h>
 #include <qregexp.h>
+#include <qpushbutton.h>
 
 #include <algorithm>
 #include <iterator>
@@ -384,7 +384,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   connect( mKeyListView,
 	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
-	   SLOT(accept()) );
+	   SLOT(slotTryOk()) );
   connect( mKeyListView,
 	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
            SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
@@ -674,6 +674,11 @@ void Kleo::KeySelectionDialog::slotRecheckKey() {
 
   mKeysToCheck.clear();
   mKeysToCheck.push_back( mCurrentContextMenuItem->key() );
+}
+
+void Kleo::KeySelectionDialog::slotTryOk() {
+  if ( actionButton( Ok )->isEnabled() )
+    slotOk();
 }
 
 void Kleo::KeySelectionDialog::slotOk() {
