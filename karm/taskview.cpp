@@ -44,8 +44,6 @@ TaskView::TaskView(QWidget *parent, const char *name, const QString &icsfile ):K
   connect(this, SIGNAL( doubleClicked( QListViewItem * )),
           this, SLOT( changeTimer( QListViewItem * )));
 
-  connect(this, SIGNAL( delete( QListViewItem * )),
-          this, SLOT( deleteItemState( QListViewItem * )));
   connect( this, SIGNAL( expanded( QListViewItem * ) ),
            this, SLOT( itemStateChanged( QListViewItem * ) ) );
   connect( this, SIGNAL( collapsed( QListViewItem * ) ),
@@ -633,6 +631,7 @@ void TaskView::deleteTask(bool markingascomplete)
       task->remove(activeTasks, _storage);
       task->removeFromView();
       save();
+      deleteItemState( task );
     }
 
     // remove root decoration if there is no more children.
