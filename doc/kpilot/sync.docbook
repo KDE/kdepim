@@ -309,10 +309,10 @@ The conduits can be enabled and disabled
 by clicking on the check box to the left of the conduit's name.
 Conduits can have an extensive configuration of
 their own, and may be supplied by third parties.
-The details of the configuration of the
-conduits can be found in the
+Most of the conduits require some initial configuration, so it is strongly
+recommended to check the 
 <link linkend="config-conduits">section detailing the default conduits
-configuration</link>.
+configuration</link> before using them.
 </para>
 
 
@@ -329,7 +329,9 @@ The default conduits are the following:
 Synchronizes the Memo Pad application with &knotes;.
 
 <important><para>
-The conduit only synchronizes the Memo Pad data if &knotes; is running. If you want to enable this functionality, please remember to start &knotes; first, or check if it is already running (tip: look for &knotes; the icon in the system tray).
+The conduit only synchronizes the Memo Pad data if &knotes; is running. If you
+want to enable this functionality, please remember to start &knotes; first, or
+check if it is already running (tip: look for the &knotes; icon in the system tray).
 </para></important>
 
 </para></listitem>
@@ -354,9 +356,14 @@ your choice.
 <varlistentry>
 <term><guilabel>Palm DOC</guilabel></term>
 <listitem><para>
-Automatically converts and installs text files in the &PalmPilot;
+Automatically converts, installs and sync text files in the &PalmPilot;
 DOC format, so you can read the text files with most DOC-capable
-applications on the &handheld;.
+applications on the &handheld;. There are many free or open source Palm
+DOC readers, and some Palm DOC editors for your handheld.</para>
+<para>
+Any plain text file can be easily converted. For instance, you can download and
+convert the public domain books provided by the <ulink url="http://www.gutemberg.org">
+Gutemberg Project</ulink> and read them in your &handheld;.
 </para></listitem>
 </varlistentry>
 

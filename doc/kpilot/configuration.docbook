@@ -911,10 +911,11 @@ confirmation.
 
 <para>
 The Time Synchronization Conduit syncs the &handheld;'s time to that of the desktop
-machine. It is useful for keeping the clock of the &handheld; accurate. Currently
-only one direction for the synchronization is enabled, you can only
-<guilabel>Set the handheld time from the time on the PC</guilabel>, and
-not <guilabel>Set the PC time from the time on the handheld</guilabel>.
+machine. It is useful for keeping the clock of the &handheld; accurate. There
+are really no configuration options other that enabling and disabling the
+conduit, as currently only one direction for the synchronization is enabled,
+you can only <guilabel>Set the handheld time from the time on the PC</guilabel>,
+and not <guilabel>Set the PC time from the time on the handheld</guilabel>.
 </para>
 
 
@@ -930,10 +931,10 @@ For these systems, the conduit will be simply skipped.
 
 <para>
 This conduit will synchronize your &PalmPilot; with &korganizer; and Kontact, or to
-an iCalendar file of your choice. The conduit needs the filename of the
+an iCalendar file of your choice. In the latter case, the conduit will need the filename of the
 calendar file (this will usually be a file that ends in <literal
-role="extension">.ics</literal> under the <filename
-class="directory">.kde/share/apps/korganizer/</filename> <filename class="directory">$KDEHOME/share/apps/korganizer/</filename>
+role="extension">.ics</literal>) to sync with, of if it uses the standard
+&korganizer; iCalendar file, it will be under the <filename class="directory">$KDEHOME/share/apps/korganizer/</filename>
 folder, where the <filename class="directory">$KDEHOME</filename> environment variable
 (typically <filename class="directory">/home/Login Name/.kde/</filename>) 
 points to the folder that contains your configuration and data for the &kde;
@@ -967,8 +968,8 @@ file picker.
 <warning><para>
 You can use the calendar conduit with any application that accepts a file in
 the iCalendar format as a resource. However, some applications, like Evolution,
-do not handle gracefully the sychronization while they are open. As a rule of thumb,
-quit these applications before sychronizing, otherwise you will lose data.
+do not handle gracefully the synchronization while they are open. As a rule of thumb,
+quit these applications before synchronizing, otherwise you will lose data.
 There is no need to take these precautions when syncing with &korganizer; or Kontact.
 </para></warning>
 </listitem>
@@ -1001,19 +1002,384 @@ handbook.
 
 <para>
 The Palm DOC conduit converts text files in your <acronym>PC</acronym> from and to
-documents in Palm DOC format in the &PalmPilot;. You can use any Palm DOC reader
+databases in Palm DOC format in the &PalmPilot;. You can use any Palm DOC reader
 to view these files on your &PalmPilot;.
 </para>
+
+<screenshot>
+<screeninfo>Palm DOC Conduit Setup</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-palmdoc.png" format="PNG"/></imageobject>
+<textobject><phrase>Palm DOC Conduit Setup</phrase></textobject>
+<caption><para>Palm DOC Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<important><para>
+After changing the Palm DOC conduit configuration, you have to restart KPilot to
+let the changes you made take effect.
+</para></important>
+
+<para>
+In the <guilabel>General</guilabel> page, you can set the location of the text
+documents in your computer and the direction of the synchronization.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Text files:</guilabel></term>
+<listitem><para>
+Type on the text box or use the file picker to select the location of the folder
+that the Palm DOC conduit uses a as the place for the text files it will sync
+with the &handheld;. There, you may place the text documents you want install or
+synchronize to the PDA, and find the text documents created from Palm DOC
+databases in your &handheld;.
+<important><para>
+The file name has to end in <literal role="extension">.txt</literal> for the
+conduit to recognize it as text. If the file is not recognized as text, it will
+be ignored by the conduit. Also, the text has to be in an encoding that is
+compatible with your &handheld; encoding. Therefore, if the text file has
+characters that are not being correctly recognized by the Palm DOC reader in
+your &handheld;, try opening the file a text editor, like &kwrite;, and saving
+it in an compatible text encoding using the <guilabel>Save As..</guilabel>
+dialog.
+</para></important>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Local copy:</guilabel></term>
+<listitem><para>
+If you want to save a copy of the Palm DOC databases from your &handheld; in
+your computer, check the <guilabel>Local copy:</guilabel> box and
+type on the text box or use the file picker to select the location of the folder
+where these databases will be saved.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Synchronization Mode</guilabel></term>
+<listitem><para>
+The Palm DOC conduit has the ability to sync from and to the &handheld;,
+automatically converting the text files to Palm DOC databases and vice versa.
+The <guilabel>Sync only PC to PDA</guilabel> option will convert all text files
+located in the folder you selected above to Palm DOC databases and install them
+in your &handheld;.
+The <guilabel>Sync only PDA to PC</guilabel> option will convert all Palm DOC
+databases from your &handheld; to files and install them in the
+folder you selected above. Finally, The <guilabel>Sync all</guilabel> option
+allows the synchronization to work in both directions.
+
+<note><para>
+When both the text file and the Palm DOC database are modified, you cannot merge
+the modifications, you have to choose one of the versions, losing the changes
+in one of them.
+</para></note>
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>PC -> Handheld</guilabel> page, you can configure the Palm DOC
+compression and bookmarks settings to use when converting from text files to
+Palm DOC databases.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Compress</guilabel></term>
+<listitem><para>
+Palm DOC documents can be compressed, saving considerable amounts
+of available memory in your &handheld;. Most Palm DOC readers support 
+compressed documents, but if you use a reader or editor that is not compatible
+with compression (for instance, the Sied editor), you will not be able to read
+or edit the compressed Palm DOC documents created by this conduit.
+Therefore, check this box to save &handheld; memory, but uncheck it if you have
+compatibility problems with compressed Palm DOC in your favorite editor or
+reader.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Convert bookmarks</guilabel></term>
+<listitem><para>
+The Palm DOC format has a provision for bookmark records. Bookmarks allow you to
+easily jump to selected parts of the document, making browsing long documents
+easier. Check this box to allow the Palm DOC conduit to create bookmark records.
+To create them, the conduit has to know the location in the text and the name of
+the bookmark. There are three supported ways to let the conduit know the
+location and name of the bookmark: from inline tags in the text, from tags at
+the end of the text and from a <literal role="extension">.bmk</literal> bookmark
+file. To make the creation of bookmarks effective, you have to check at least
+one of these boxes below. 
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Inline tags in text</guilabel></term>
+<listitem><para>
+Convert tags in the format &lt;* <replaceable>BookmarkName</replaceable> *&gt;  
+located inside the text to Palm DOC bookmarks, where the location of the
+tag in the text will be converted to the bookmark location and the 
+<replaceable>BookmarkName</replaceable> text inside the tag will be converted to
+the name of the bookmark in the Palm DOC format. The tag will be removed from
+the resulting Palm DOC document, leaving the text clean.
+This is a very easy and intuitive way to create bookmarks
+in your Palm DOC documents.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Tags at end of text</guilabel></term>
+<listitem><para>
+Convert tags in the format &lt;<replaceable>BookmarkName</replaceable>&gt;  
+located in the end of the text to Palm DOC bookmarks. Whenever the
+<replaceable>BookmarkName</replaceable> text appears in the text, the conduit
+will generate a the bookmark in the resulting Palm DOC document ponting to it.
+The tag will then be removed from the resulting Palm DOC document, leaving the
+text clean. This is a simple way to create repetitive bookmarks, like one for
+each <quote>Chapter</quote> in your Palm DOC documents.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Regular expressions in .bmk file</guilabel></term>
+<listitem><para>
+This is the most complex but the most powerful way to create bookmarks.
+The method involves using regular expressions (QRegExp) in a file
+<filename>TextName.bmk</filename>, where <filename>TextName.txt</filename> is
+the filename of the text, to search the text for bookmarks. See the
+<ulink url="http://reinhold.kainhofer.com/Linux/KPilot/bmkSpecification.txt">documentation</ulink>
+for a in depth description of the format of the bmk file.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>Handheld -> PC</guilabel> page, you can configure bookmarks
+settings to use when converting from Palm DOC databases to text files.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Convert Bookmarks</guilabel></term>
+<listitem><para>
+The Palm DOC format has a provision for bookmark records. Bookmarks allow you to
+easily jump to selected parts of the document, making browsing long documents
+easier. The Palm DOC conduit can convert Palm DOC 
+bookmark records to a format that is readable in your computer, either as
+a separate file or as tags in the middle of the text file. Select
+<guilabel>Do not convert bookmarks</guilabel> if you want to ignore the Palm DOC
+bookmarks, resulting in a text that is clean from bookmark tags.</para>
+<para>
+The <guilabel>Convert into .bm file</guilabel> options also result in a clean
+text file, as the bookmarks are converted to a separate file in the 
+bmk format, as described 
+<ulink url="http://reinhold.kainhofer.com/Linux/KPilot/bmkSpecification.txt">here</ulink>.
+The file is saved with a <literal role="extension">.bm</literal>
+extension to avoid conflicts with <literal role="extension">.bmk</literal>
+files created previously.</para>
+<para>Finally, the <guilabel>Convert as inline tags</guilabel> option creates
+inline tags inside the resulting text file form 
+&lt;* <replaceable>BookmarkName</replaceable> *&gt; placing each tag in the place
+that was previosly referenced by the bookmark, and using the bookmark name as
+the <replaceable>BookmarkName</replaceable> text inside the tag. Now you You can
+edit the bookmark name, move it or delete it and convert back to Palm DOC, as
+you wish.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do not convert, if text unchanged (only bookmarks)</guilabel></term>
+<listitem><para>
+If you check this box, only changes in the text will trigger conversions from
+Palm DOC to text files. In other words, changes in the bookmarks only will not
+result in updates for the text files in your computer.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>Conflicts</guilabel> page, you can configure how the conduit
+deals with files that changed both in the computer and the &handheld;.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Conflict Resolution</guilabel></term>
+<listitem><para>
+The Palm DOC conduit does not feature merging the modifications when a text is
+changed both in the &handheld; and in the computer. Therefore, the choice is
+between working with the files out of sync, or discarding the changes in one of
+them. The <guilabel>No resolution</guilabel> option will avoid synchronizing
+texts with conflicts, the <guilabel>PDA overrides</guilabel> option will
+overwrite the computer text file version in case of conflict,
+the <guilabel>PC overrides</guilabel> will do the same, but the other way around,
+and the <guilabel>Ask the user</guilabel> option will bring a dialog to let the
+user decide on a file by file, case by case basis.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Always show resolution dialog, even when there are no conflicts</guilabel></term>
+<listitem><para>
+This option will always bring the conflic resolution dialog, even if there is no
+conflicts to solve. The advantage is that you can keep track of all the files
+that are being covered by the conduit.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+
 </sect2>
+
 
 <sect2 id="conduit-kaddressbook">
 <title>&kaddressbook; Conduit Setup</title>
 
 <para>
-The &kaddressbook; conduit allows you to synchronize the
-&PalmPilot; address book with your
-&kde; address book.
+This conduit will synchronize your &PalmPilot; with the &kde; address book or to
+a vCard file of your choice. In the latter case, the conduit will need the filename of the
+vCard file (this will usually be a file that ends in <literal
+role="extension">.vcf</literal>) to sync with, of if it uses the standard
+&kde; address book file, it will be under the 
+<filename class="directory">$KDEHOME/share/apps/kabc/</filename>
+folder, where the <filename class="directory">$KDEHOME</filename> environment variable
+(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+points to the folder that contains your configuration and data for the &kde;
+applications.
 </para>
+
+<screenshot>
+<screeninfo>The KAddressBook Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-address.png" format="PNG"/></imageobject>
+<textobject><phrase>KAddressBook Conduit Setup</phrase></textobject>
+<caption><para>KAddressBook Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+In the <guilabel>General</guilabel> page, you can set the general address sync options.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Sync Destination</guilabel></term>
+<listitem><para>
+Choose between synchronizing with the <guilabel>Standard addressbook</guilabel>,
+or in other words, the &kde; standard address book or with a 
+<guilabel>vCard file</guilabel> of your choice, that you must either
+write in the <guilabel>vCard file</guilabel> edit box or select using the
+file picker.
+</para>
+<warning><para>
+You can use the address book conduit with any application that accepts a file in
+the vCard format as a resource. However, some applications may not handle
+gracefully the synchronization while they are open. As a rule of thumb,
+quit these applications before synchronizing, otherwise you may lose data.
+There is no need to take these precautions when syncing with the  &kde; address 
+book.
+</para></warning>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Store archived records in the KDE addressbook</guilabel></term>
+<listitem><para>
+Check this box to save a copy of the archived records from your
+&handheld; on the <acronym>PC</acronym>, in order to have all your contacts in
+you &kde; desktop as well as in your &handheld;.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>Conflicts</guilabel> page, you can set the address book conduit options,
+overriding &kpilot;'s general settings for conflict resolution when you are using
+this conduit. For a detailed description of the different conflict resolution possibilities
+available, please refer to the <link linkend="page-hotsync">HotSync Setup section</link> of this
+handbook.
+</para>
+
+<para>
+In the <guilabel>Fields</guilabel> page, you can set the conduit options for
+synchronizing the &handheld; address fields that do not have a direct
+counterpart in the &kde; address book.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Handheld other phone:</guilabel></term>
+<listitem><para>
+The <quote>Other</quote> field in the &handheld; address application can be
+used for many things (for instance storing a secondary e-mail address). It is
+not clear how to classify this field in &kde;. Depending on your usage, select in
+the dropdown the field from the computer that will be synchronized with the
+<quote>Other</quote> field from your &handheld;.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Handheld street address:</guilabel></term>
+<listitem><para>
+While the <quote>Address</quote> field in the &handheld; address
+application is the only default option for storing an street address, the &kde;
+street address field can be a home address or a business address. The preferred
+address will have precedence over other addresses, and the conduit will try to set
+this status by default. Either the home or business street address will be used to
+store the &handheld; street address. Select in the dropdown the option that
+suits better your needs. For instance, if you use this field mainly for business
+addresses, select <guilabel>Preferred, then Business Address</guilabel>. If not,
+select <guilabel>Preferred, then Home Address</guilabel>.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Handheld fax:</guilabel></term>
+<listitem><para>
+While the <quote>Fax</quote> field in the &handheld; address
+application is the only default option for storing a fax number, the &kde;
+address book can store a home fax or a business fax number. Select in the
+dropdown the option that suits better your needs. For instance, if you use this
+field mainly for business faxes, select <guilabel>Business Fax</guilabel>. If not,
+select <guilabel>Home Fax</guilabel>.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>Custom Fields</guilabel> page, you can set the conduit options for
+dealing with the <quote>Custom</quote> fields from your &handheld; address
+application. Since there are no natural correspondence between these fields and
+other &kde; address book fields, you can set them as you like. You can use them
+to store a <guilabel>URL</guilabel>, a <guilabel>IM Address</guilabel>, 
+the <guilabel>Birthdate</guilabel> of your contact or the obvious:
+<guilabel>Store as Costume Field</guilabel>.
+</para>
+
+<para>
+If you select to store birthdays, remember to use a date format that is
+consistent with the settings in the <guilabel>Date format</guilabel> dropdown,
+so that the conduit can correctly identify the date from the record and vic versa.
+Possible placeholders are: %d for the day, %m for the month, %y for the two-digit
+year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date
+like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52.
+</para>
+
 
 </sect2>
 
@@ -1021,10 +1387,130 @@ The &kaddressbook; conduit allows you to synchronize the
 <title>Todo Conduit Setup</title>
 
 <para>
-This conduit synchronizes with &korganizer;'s todo list.  The
-configuration dialog looks exactly the same as the configuration dialog
-for the <link linkend="vcal-cond">Calendar Conduit</link>.
+This conduit synchronizes with &korganizer;'s todo list.  
 </para>
+
+
+<para>
+This conduit will synchronize your &PalmPilot; To Do List applicaton with
+&korganizer; and Kontact, or to an iCalendar file of your choice. 
+The configuration dialog looks and behaves exactly the same as the configuration
+dialog for the <link linkend="vcal-cond">Calendar Conduit</link>. The only
+difference is that instead of synchronizing the Calendar, you will be  syncing
+the To Do List.
+</para>
+
+<screenshot>
+<screeninfo>The Calendar Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-vcal.png" format="PNG"/></imageobject>
+<textobject><phrase>Calendar Conduit Setup</phrase></textobject>
+<caption><para>Calendar Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+</sect2>
+
+<sect2 id="mal-cond">
+<title>MAL (AvantGo) Conduit Setup</title>
+
+<para>
+The MAL (AvantGo) Conduit synchronizes your &handheld; with the &AvantGo; server.
+This counduit is based on
+<ulink url="http://jasonday.home.att.net/code/libmal/libmal.html">Jason Day's libmal</ulink>.
+The &AvantGo; server offers general content (news, guides, stock quotes, &etc;)
+in a format that is suitable for reading in a &handheld;. To use this conduit,
+you need to register to a service provider, for instance,
+<ulink url="www.avantgo.com">AvantGo.com</ulink>, subscribe
+the channels you select and install the &AvantGo; software on your &handheld;,
+and configure the software on your handheld to find the MAL server.
+</para>
+
+<para>
+The instalation software for the &handheld; client is usually only available for
+<trademark>Microsoft</trademark> <trademark>Windows</trademark>, if you
+do not have access to a windows computer, you can try installing the databases
+available in the <ulink url="http://www.tomw.org/malsync/">MalSync Homepage</ulink>,
+with different versions, one for <trademark>PalmOS</trademark> 5 and other for older
+<trademark>PalmOS</trademark>s.
+</para>
+
+<para>
+To configure the software on your handheld to find the MAL server, open the
+AGConnect application in your &handheld;, click <guilabel>Settings...</guilabel>
+and enter your MAL server address, the <guilabel>User Name</guilabel> and
+<guilabel>Password</guilabel> you got while registering. The
+<trademark>AvantGo</trademark> server address is
+<userinput>sync.avantgo.com</userinput>, and its port is
+<userinput>80</userinput>. On some instalations, you should use the MobileLink
+instead of the AGConnect application on your &handheld;.
+</para>
+
+<screenshot>
+<screeninfo>The MAL (AvantGo) Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-mal.png" format="PNG"/></imageobject>
+<textobject><phrase>MAL (AvantGo) Conduit Setup</phrase></textobject>
+<caption><para>MAL (AvantGo) Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+In the <guilabel>General</guilabel> page, you can set the synchronization
+frequency options. It can be  set for <guilabel>Every Sync</guilabel>,
+<guilabel>Once per Hour</guilabel>, <guilabel>Once a Day</guilabel>, 
+<guilabel>Once a Week</guilabel> or <guilabel>Once a Month</guilabel>.
+The conduit only runs when you hit &HotSync; on your &handheld;, so
+<guilabel>Once per Hour</guilabel>, for instance, really means
+<quote>Synchronize with the MAL server on every &HotSync; that is at least one
+hour after than the last MAL sync</quote>.
+</para>
+
+<para>
+The MAL conduit can work through a proxy server. In the <guilabel>Proxy</guilabel>
+page, you can set the proxy settings.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Proxy Type</guilabel></term>
+<listitem><para>
+If you connect the internet directly, select <guilabel>No proxy</guilabel>,
+requiring no further configuration. But if you use a <guilabel>HTTP proxy</guilabel>
+or a <guilabel>SOCKS proxy</guilabel>, select it, to enebla the rest of the
+dialog and to make the conduit use it to connect the MAL server.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Server Information</guilabel></term>
+<listitem><para>
+Write in the <guilabel>Server Name</guilabel> dropdown box the address of the
+proxy server to use, in the form <userinput>foo.bar.com</userinput>, not
+<userinput>http://foo.bar.com</userinput> or <userinput>http://foo.bar.com:8080</userinput>.
+</para>
+<para>
+Check the box <guilabel>Custom port:</guilabel> if your proxy uses a non standard
+port, and enter the correct port number.
+</para>
+<para>
+In the <guilabel>No proxy for</guilabel> edit box, you may enter the list of MAL
+servers that do not need the use of a proxy, separated by commas. For instance,
+<userinput>localhost,lan</userinput>.
+</para>
+<para>
+If your proxy require authentication, enter your <guilabel>User name</guilabel>
+and <guilabel>Password</guilabel> in the respecitve edit boxes.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>In the <guilabel>MAL Server</guilabel> page, you can set the MAL server
+address and settings. Currently, you can only configure this settings using
+the &handheld; MobileLink or AGConnect applications, so this page is disabled.</para>
 
 </sect2>
 
