@@ -936,7 +936,7 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
 {
   KNRemoteArticle *ref=a->displayedReference();
 
-  if(ref) {
+  if(ref && a != ref) {
     if(!ref->listItem())
       createThread(ref);
     a->setListItem(new KNHdrViewItem(ref->listItem()));
