@@ -70,9 +70,5 @@ private:
 
 	void fillFields();
 };
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
 

@@ -140,8 +140,4 @@ public:
 	typedef enum { PhoneNumberLength=16 } Constants ;
 };
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
