@@ -143,7 +143,7 @@ KURL ResourceRemote::uploadUrl() const
 QString ResourceRemote::cacheFile()
 {
   QString file = locateLocal( "cache", "kcal/kresources/" + identifier() );
-  kdDebug() << "ResourceRemote::cacheFile(): " << file;
+  kdDebug() << "ResourceRemote::cacheFile(): " << file << endl;
   return file;
 }
 
