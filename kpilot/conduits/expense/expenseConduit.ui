@@ -67,7 +67,7 @@
                             <string>Rotate Policy</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;For an explanation of these options, please read the documentation!&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;For an explanation of these options, please read the documentation.&lt;/qt&gt;</string>
                         </property>
                         <grid>
                             <property name="name">
@@ -241,7 +241,7 @@
                             <enum>Password</enum>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Password, not echoed to the screen!&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Password, not echoed to the screen.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">

@@ -52,7 +52,7 @@ bool KNArticleVector::resize(int s)
   l_ist=(KNArticle**) realloc(l_ist, sizeof(KNArticle*)*nSize);
 
   if(!l_ist) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Memory allocation failed!\nYou should close this application now\nto avoid data loss."));
+    KMessageBox::error(knGlobals.topWidget, i18n("Memory allocation failed.\nYou should close this application now\nto avoid data loss."));
     l_ist=bak;
     return false;
   }

@@ -71,7 +71,7 @@ KNConvert::KNConvert(const QString &version)
   QGridLayout *w1L=new QGridLayout(w_1, 5,3, 5,5);
 
   QLabel *l1=new QLabel(i18n(
-"<b>Congratulations, you have upgraded to KNode version %1!</b><br>\
+"<b>Congratulations, you have upgraded to KNode version %1.</b><br>\
 Unfortunately this version uses a different format for some data-files, so \
 in order to keep your existing data it is necessary to convert it first. This is \
 now done automatically by KNode. If you want to, a backup of your existing data \
@@ -228,7 +228,7 @@ void KNConvert::slotTarExited(KProcess *proc)
   if(success)
     l_og.append(i18n("created backup of the old data-files in %1").arg(b_ackupPath->text()));
   else
-    l_og.append(i18n("backup failed!!"));
+    l_og.append(i18n("backup failed."));
 
   // now we actually convert the files
   convert();
@@ -251,7 +251,7 @@ bool KNConvert::Converter04::doConvert()
     num=convertFolder(dir+"folder1", dir+"drafts_1");
     if(num==-1) {
       error=true;
-      l_og->append(i18n("conversion of folder \"Drafts\" to version 0.4 failed !!"));
+      l_og->append(i18n("conversion of folder \"Drafts\" to version 0.4 failed."));
     }
     else {
       l_og->append(i18n("converted folder \"Drafts\" to version 0.4"));
@@ -265,7 +265,7 @@ bool KNConvert::Converter04::doConvert()
     num=convertFolder(dir+"folder2", dir+"outbox_2");
     if(num==-1) {
       error=true;
-      l_og->append(i18n("conversion of folder \"Outbox\" to version 0.4 failed !!"));
+      l_og->append(i18n("conversion of folder \"Outbox\" to version 0.4 failed."));
     }
     else {
       l_og->append(i18n("converted folder \"Outbox\" to version 0.4"));
@@ -279,7 +279,7 @@ bool KNConvert::Converter04::doConvert()
     num=convertFolder(dir+"folder3", dir+"sent_3");
     if(num==-1) {
       error=true;
-      l_og->append(i18n("conversion of folder \"Sent\" to version 0.4 failed !!"));
+      l_og->append(i18n("conversion of folder \"Sent\" to version 0.4 failed."));
     }
     else {
       l_og->append(i18n("converted folder \"Sent\" to version 0.4"));

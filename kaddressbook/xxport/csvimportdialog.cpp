@@ -49,7 +49,7 @@
 
 CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
                                   const char * name )
-  : KDialogBase( Plain, i18n ( "CSV Import Dialog" ), Ok | Cancel | User1 | 
+  : KDialogBase( Plain, i18n ( "CSV Import Dialog" ), Ok | Cancel | User1 |
                  User2, Ok, parent, name, true, true ),
     mAdjustRows( false ),
     mStartLine( 0 ),
@@ -70,26 +70,26 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
   mTypeMap.insert( KABC::Addressee::birthdayLabel(), Birthday );
 
   mTypeMap.insert( KABC::Addressee::homeAddressStreetLabel(), HomeAddressStreet );
-  mTypeMap.insert( KABC::Addressee::homeAddressLocalityLabel(), 
+  mTypeMap.insert( KABC::Addressee::homeAddressLocalityLabel(),
                    HomeAddressLocality );
   mTypeMap.insert( KABC::Addressee::homeAddressRegionLabel(), HomeAddressRegion );
-  mTypeMap.insert( KABC::Addressee::homeAddressPostalCodeLabel(), 
+  mTypeMap.insert( KABC::Addressee::homeAddressPostalCodeLabel(),
                    HomeAddressPostalCode );
-  mTypeMap.insert( KABC::Addressee::homeAddressCountryLabel(), 
+  mTypeMap.insert( KABC::Addressee::homeAddressCountryLabel(),
                    HomeAddressCountry );
   mTypeMap.insert( KABC::Addressee::homeAddressLabelLabel(), HomeAddressLabel );
 
-  mTypeMap.insert( KABC::Addressee::businessAddressStreetLabel(), 
+  mTypeMap.insert( KABC::Addressee::businessAddressStreetLabel(),
                    BusinessAddressStreet );
-  mTypeMap.insert( KABC::Addressee::businessAddressLocalityLabel(), 
+  mTypeMap.insert( KABC::Addressee::businessAddressLocalityLabel(),
                    BusinessAddressLocality );
-  mTypeMap.insert( KABC::Addressee::businessAddressRegionLabel(), 
+  mTypeMap.insert( KABC::Addressee::businessAddressRegionLabel(),
                    BusinessAddressRegion );
-  mTypeMap.insert( KABC::Addressee::businessAddressPostalCodeLabel(), 
+  mTypeMap.insert( KABC::Addressee::businessAddressPostalCodeLabel(),
                    BusinessAddressPostalCode );
-  mTypeMap.insert( KABC::Addressee::businessAddressCountryLabel(), 
+  mTypeMap.insert( KABC::Addressee::businessAddressCountryLabel(),
                    BusinessAddressCountry );
-  mTypeMap.insert( KABC::Addressee::businessAddressLabelLabel(), 
+  mTypeMap.insert( KABC::Addressee::businessAddressLabelLabel(),
                    BusinessAddressLabel );
 
   mTypeMap.insert( KABC::Addressee::homePhoneLabel(), HomePhone );
@@ -138,7 +138,7 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
 
   connect( this, SIGNAL( user1Clicked() ),
            this, SLOT( applyTemplate() ) );
-  
+
   connect( this, SIGNAL( user2Clicked() ),
            this, SLOT( saveTemplate() ) );
 }
@@ -166,7 +166,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
     KABC::Address addrHome( KABC::Address::Home );
     KABC::Address addrWork( KABC::Address::Work );
     for ( int col = 0; col < mTable->numCols(); ++col ) {
-      QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0, 
+      QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
                                                              col ) );
       if ( !item ) {
         kdError() << "ERROR: item cast failed" << endl;
@@ -316,7 +316,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
         case BusinessAddressLabel:
           addrWork.setLabel( value );
           break;
-        default:        
+        default:
           KABC::Field::List fields = mAddressBook->fields( KABC::Field::CustomCategory );
           KABC::Field::List::Iterator it;
 
@@ -333,7 +333,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
     }
 
     kapp->processEvents();
-    
+
     if ( progressDialog.wasCancelled() )
       return KABC::AddresseeList();
 
@@ -355,11 +355,11 @@ void CSVImportDialog::initGUI()
 {
   mPage = plainPage();
 
-  QGridLayout *layout = new QGridLayout( mPage, 1, 1, marginHint(), 
+  QGridLayout *layout = new QGridLayout( mPage, 1, 1, marginHint(),
                                          spacingHint() );
   QHBoxLayout *hbox = new QHBoxLayout();
   hbox->setSpacing( spacingHint() );
-  
+
   QLabel *label = new QLabel( i18n( "File to import:" ), mPage );
   hbox->addWidget( label );
 
@@ -459,7 +459,7 @@ void CSVImportDialog::fillTable()
   // store previous assignment
   mTypeStore.clear();
   for ( column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0, 
+    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( !item || mClearTypeStore )
       mTypeStore.append( typeToPos( Undefined ) );
@@ -468,7 +468,7 @@ void CSVImportDialog::fillTable()
   }
 
   clearTable();
-  
+
   row = column = 1;
   mData = QString( mFileArray );
 
@@ -704,12 +704,12 @@ void CSVImportDialog::slotOk()
   bool assigned = false;
 
   for ( int column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0, 
+    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( item && posToType( item->currentItem() ) != Undefined )
       assigned = true;
   }
-    
+
   if ( assigned )
     KDialogBase::slotOk();
   else
@@ -805,12 +805,12 @@ void CSVImportDialog::saveTemplate()
   config.writeEntry( "Name", name );
 
   config.setGroup( "csv column map" );
-  
+
   for ( int column = 0; column < mTable->numCols(); ++column ) {
-    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0, 
+    QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0,
                                                            column ) );
     if ( item )
-      config.writeEntry( QString::number( column ), posToType( 
+      config.writeEntry( QString::number( column ), posToType(
                          item->currentItem() ) );
     else
       config.writeEntry( QString::number( column ), 0 );
@@ -858,7 +858,7 @@ void CSVImportDialog::setFile( const QString &fileName )
 
   QFile file( fileName );
   if ( !file.open( IO_ReadOnly ) ) {
-    KMessageBox::sorry( this, i18n( "Cannot open input file!" ) );
+    KMessageBox::sorry( this, i18n( "Cannot open input file." ) );
     file.close();
     return;
   }

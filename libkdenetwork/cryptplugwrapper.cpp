@@ -186,7 +186,7 @@ QString CryptPlugWrapper::errorIdToText( int errId, bool & isPassphraseError ) {
   case /*GPGME_General_Error      = */1:
     return(i18n("General error."));
   case /*GPGME_Out_Of_Core        = */2:
-    return(i18n("Out of core!"));
+    return(i18n("Out of core."));
   case /*GPGME_Invalid_Value      = */3:
     return(i18n("Invalid value."));
   case /*GPGME_Busy               = */4:
@@ -483,7 +483,7 @@ void CryptPlugWrapper::setUpdateURL( const QString& url )
     _updateURL = url;
 }
 
-    
+
 QString CryptPlugWrapper::updateURL() const
 {
     return _updateURL;
@@ -692,7 +692,7 @@ bool CryptPlugWrapper::warnSendUnsigned()
     return boolVoidFunc( "warnSendUnsigned" );
 }
 
-                          
+
 void CryptPlugWrapper::setSignatureCompoundMode( SignatureCompoundMode signComp )
 {
     voidIntFunc( (int)signComp, "setSignatureCompoundMode" );
@@ -1593,14 +1593,14 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
 		    //kdDebug() << "CryptPlugWrapper::listKeys() " << a->key << " = " << a->value << endl;
 		    if( cpwinfo.dn[QString::fromUtf8(a->key)].isNull() )
 		      cpwinfo.dn[QString::fromUtf8(a->key).upper()] = QString::fromUtf8(a->value);
-		    else 
+		    else
 		      cpwinfo.dn[QString::fromUtf8(a->key).upper()] =+ ", "+ QString::fromUtf8(a->value);
 		    ++a;
 		  }
 		  result << cpwinfo;
 	     }
 	} while( info );
-	
+
 	{
 	     int (*p_func)( CertIterator*  )
 		  = (int (*)( CertIterator*  ))

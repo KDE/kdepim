@@ -139,7 +139,7 @@ QString LocationWidget::identifier() const
 void LocationWidget::loadLocationPage()
 {
   if ( mURLTypeCombo->count() == 0 ) {
-    KMessageBox::sorry( this, i18n( "You have to configure the location widget first!" ) );
+    KMessageBox::sorry( this, i18n( "You have to configure the location widget first." ) );
     return;
   }
 
@@ -161,7 +161,7 @@ QString LocationWidget::createUrl( const KABC::Address &addr )
   // we need a unique identifier for map24.de
   KConfig config( "kaddressbookrc" );
   config.setGroup( QString( "Extensions_%1" ).arg( identifier() ) );
-  QString uid = config.readEntry( "UID", 
+  QString uid = config.readEntry( "UID",
                                   QDateTime::currentDateTime().toString() );
 
   QString urlTemplate = config.readEntry( mURLTypeCombo->currentText() );

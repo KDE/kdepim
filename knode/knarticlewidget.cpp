@@ -384,7 +384,7 @@ void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
     anchorClicked(a, e->button(), &e->globalPos());
   else
     if (e->button()==RightButton) {
-      QPopupMenu *popup = static_cast<QPopupMenu *>(knGlobals.guiClient->factory()->container("body_popup", 
+      QPopupMenu *popup = static_cast<QPopupMenu *>(knGlobals.guiClient->factory()->container("body_popup",
 knGlobals.guiClient));
       if ( popup )
         popup->popup(e->globalPos());
@@ -848,7 +848,7 @@ void KNArticleWidget::saveAttachment(int id)
 
   if(a)
     knGlobals.artManager->saveContentToFile(a,this);
-  else KMessageBox::error(this, i18n("Internal error: Malformed identifier!"));
+  else KMessageBox::error(this, i18n("Internal error: Malformed identifier."));
 }
 
 
@@ -858,7 +858,7 @@ void KNArticleWidget::openAttachment(int id)
 
  if(a)
    knGlobals.artManager->openContent(a);
- else KMessageBox::error(this, i18n("Internal error: Malformed identifier!"));
+ else KMessageBox::error(this, i18n("Internal error: Malformed identifier."));
 }
 
 
@@ -980,7 +980,7 @@ void KNArticleWidget::setArticle(KNArticle *a)
       createHtmlPage();
     } else {
       if( !knGlobals.artManager->loadArticle(a_rticle) )
-        articleLoadError( a, i18n("Unable to load the article!") );
+        articleLoadError( a, i18n("Unable to load the article.") );
       else if(a->hasContent() && !(a->type()==KMime::Base::ATremote)) // try again, but not for remote articles
         createHtmlPage();
     }
@@ -1166,7 +1166,7 @@ void KNArticleWidget::createHtmlPage()
   KMime::Content *text=a_rticle->textContent();
   if(text && !canDecode8BitText(text->contentType()->charset())) {
     html+=QString("<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td bgcolor=\"red\"><articlefont><font color=\"black\">%1</font></articlefont></td></tr></table>")
-          .arg(i18n("Unknown charset! Default charset is used instead."));
+          .arg(i18n("Unknown charset. Default charset is used instead."));
     kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
   }
 
@@ -1194,7 +1194,7 @@ void KNArticleWidget::createHtmlPage()
       html += "<p>";
       if( !pgpBlock || !pgpBlock->isSigned() ) {
         if (!knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs())
-          html += "<b>" + i18n("Cannot find a signature in this message!") + "</b>";
+          html += "<b>" + i18n("Cannot find a signature in this message.") + "</b>";
       }
       else {
         QString signer = pgpBlock->signatureUserId();

@@ -31,7 +31,7 @@ KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, QMutex& nntpMutex)
 
 KNNntpClient::~KNNntpClient()
 {}
-  
+
 
 // examines the job and calls the suitable handling method
 void KNNntpClient::processJob()
@@ -42,14 +42,14 @@ void KNNntpClient::processJob()
       break;
     case KNJobData::JTFetchGroups :
       doFetchGroups();
-      break;      
+      break;
     case KNJobData::JTCheckNewGroups :
       doCheckNewGroups();
-      break;      
+      break;
     case KNJobData::JTfetchNewHeaders :
-    case KNJobData::JTsilentFetchNewHeaders :    
+    case KNJobData::JTsilentFetchNewHeaders :
       doFetchNewHeaders();
-      break;   
+      break;
     case KNJobData::JTfetchArticle :
       doFetchArticle();
       break;
@@ -64,9 +64,9 @@ void KNNntpClient::processJob()
       qDebug("knode: KNNntpClient::processJob(): mismatched job");
 #endif
       break;
-  }   
+  }
 }
-  
+
 
 void KNNntpClient::doLoadGroups()
 {
@@ -81,16 +81,16 @@ void KNNntpClient::doLoadGroups()
 void KNNntpClient::doFetchGroups()
 {
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
-  
+
   sendSignal(TSdownloadGrouplist);
   errorPrefix = i18n("The group list could not be retrieved.\nThe following error occurred:\n");
-  
+
   progressValue = 100;
   predictedLines = 30000;     // rule of thumb ;-)
-  
+
   if (!sendCommandWCheck("LIST",215))       // 215 list of newsgroups follows
     return;
-    
+
   char *s, *line;
   QString name;
   KNGroup::Status status;
@@ -214,13 +214,13 @@ void KNNntpClient::doFetchGroups()
 void KNNntpClient::doCheckNewGroups()
 {
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
-  
+
   sendSignal(TSdownloadNewGroups);
   errorPrefix = i18n("New groups could not be retrieved.\nThe following error occurred:\n");
-  
+
   progressValue = 100;
   predictedLines = 30;     // rule of thumb ;-)
-  
+
   QCString cmd;
   cmd.sprintf("NEWGROUPS %.2d%.2d%.2d 000000",target->fetchSince.year()%100,target->fetchSince.month(),target->fetchSince.day());
   if (!sendCommandWCheck(cmd,231))      // 231 list of new newsgroups follows
@@ -335,7 +335,7 @@ void KNNntpClient::doFetchNewHeaders()
   target->setLastFetchCount(0);
 
   sendSignal(TSdownloadNew);
-  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2!\nThe following error occurred:\n")
+  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2.\nThe following error occurred:\n")
               .arg(account.server()).arg(target->groupname());
 
   cmd="GROUP ";
@@ -345,13 +345,13 @@ void KNNntpClient::doFetchNewHeaders()
   }
 
   currentGroup = target->groupname();
-    
-  progressValue = 90; 
-    
-  s = strchr(getCurrentLine(),' '); 
+
+  progressValue = 90;
+
+  s = strchr(getCurrentLine(),' ');
   if (s) {
     s++;
-    s = strchr(s,' ');  
+    s = strchr(s,' ');
   }
   if (s) {
     s++;
@@ -362,13 +362,13 @@ void KNNntpClient::doFetchNewHeaders()
   if (s) {
     last=atoi(s);
   } else {
-    QString tmp=i18n("No new articles could be retrieved!\nThe server sent a malformatted response:\n");
+    QString tmp=i18n("No new articles could be retrieved.\nThe server sent a malformatted response:\n");
     tmp+=getCurrentLine();
     job->setErrorString(tmp);
     closeConnection();
     return;
   }
-  
+
   if(target->lastNr()==0) {   //first fetch
     if(first>0)
       oldlast=first-1;
@@ -376,24 +376,24 @@ void KNNntpClient::doFetchNewHeaders()
       oldlast=first;
   } else
     oldlast=target->lastNr();
-    
+
   toFetch=last-oldlast;
   //qDebug("knode: last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
-    
+
   if(toFetch<=0) {
     //qDebug("knode: No new Articles in group\n");
     target->setLastNr(last);     // don't get stuck when the article numbers wrap
     return;
   }
-  
+
   if(toFetch>target->maxFetch()) {
     toFetch=target->maxFetch();
     //qDebug("knode: Fetching only %d articles\n",toFetch);
   }
 
-  progressValue = 100;  
+  progressValue = 100;
   predictedLines = toFetch;
-    
+
   //qDebug("knode: KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
   if (!sendCommand(cmd,rep))
@@ -412,10 +412,10 @@ void KNNntpClient::doFetchNewHeaders()
   if (!getMsg(headers)) {
     return;
   }
-  
-  progressValue = 1000;   
+
+  progressValue = 1000;
   sendSignal(TSprogressUpdate);
-    
+
   sendSignal(TSsortNew);
 
   mutex.lock();
@@ -453,7 +453,7 @@ void KNNntpClient::doFetchArticle()
   } else {
     cmd = "ARTICLE " + target->messageID()->as7BitString(false);
   }
-    
+
   if (!sendCommandWCheck(cmd,220)) {      // 220 n <a> article retrieved - head and body follow
     int code = atoi(getCurrentLine());
     if ((code == 430) || (code == 423))  // 430 no such article found || 423 no such article number in this group
@@ -463,14 +463,14 @@ void KNNntpClient::doFetchArticle()
                   .arg(target->messageID()->as7BitString(false)));
     return;
   }
-  
+
   QStrList msg;
   if (!getMsg(msg))
     return;
-    
-  progressValue = 1000;   
+
+  progressValue = 1000;
   sendSignal(TSprogressUpdate);
-    
+
   target->setContent(&msg);
   target->parse();
 }
@@ -479,7 +479,7 @@ void KNNntpClient::doFetchArticle()
 void KNNntpClient::doPostArticle()
 {
   KNLocalArticle *art=static_cast<KNLocalArticle*>(job->data());
-  
+
   sendSignal(TSsendArticle);
 
   if (art->messageID(false)!=0) {
@@ -513,7 +513,7 @@ void KNNntpClient::doPostArticle()
 
   if (!sendMsg(art->encodedContent(true)))
     return;
-    
+
   if (!checkNextResponse(240))            // 240 article posted ok
     return;
 }
@@ -553,18 +553,18 @@ bool KNNntpClient::openConnection()
 
   if (!KNProtocolClient::openConnection())
     return false;
-    
+
   progressValue = 30;
-    
+
   int rep;
   if (!getNextResponse(rep))
     return false;
-    
-  if ( ( rep < 200 ) || ( rep > 299 ) ) { // RFC977: 2xx - Command ok 
+
+  if ( ( rep < 200 ) || ( rep > 299 ) ) { // RFC977: 2xx - Command ok
     handleErrors();
     return false;
   }
-  
+
   progressValue = 50;
 
   if (!sendCommand("MODE READER",rep))
@@ -595,7 +595,7 @@ bool KNNntpClient::openConnection()
       //qDebug("knode: Password required");
 
       if (!account.pass().length()) {
-        job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password."));
         job->setAuthError(true);
         return false;
       }
@@ -615,7 +615,7 @@ bool KNNntpClient::openConnection()
         #ifndef NDEBUG
         qDebug("knode: Authorization failed");
         #endif
-        job->setErrorString(i18n("Authentication failed!\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
         return false;
@@ -637,9 +637,9 @@ bool KNNntpClient::openConnection()
       }
     }
   }
-  
+
   progressValue = 70;
-  
+
   errorPrefix = oldPrefix;
   return true;
 }
@@ -650,42 +650,42 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 {
   if (!KNProtocolClient::sendCommand(cmd,rep))
     return false;
-  
+
   if (rep==480) {            // 480 requesting authorization
     //qDebug("knode: Authorization requested");
-    
+
     if (!account.user().length()) {
-      job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+      job->setErrorString(i18n("Authentication failed.\nCheck your username and password."));
       job->setAuthError(true);
       closeConnection();
       return false;
     }
 
     //qDebug("knode: user: %s",account.user().data());
-        
+
     QCString command = "AUTHINFO USER ";
     command += account.user().local8Bit();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;
-    
+
     if (rep==381) {          // 381 PASS required
       //qDebug("knode: Password required");
-      
+
       if (!account.pass().length()) {
-        job->setErrorString(i18n("Authentication failed!\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
         return false;
-      } 
-          
+      }
+
       //qDebug("knode: pass: %s",account.pass().data());
-      
+
       command = "AUTHINFO PASS ";
       command += account.pass().local8Bit();
       if (!KNProtocolClient::sendCommand(command,rep))
-        return false; 
+        return false;
     }
-    
+
     if (rep==281) {         // 281 authorization success
       #ifndef NDEBUG
       qDebug("knode: Authorization successful");
@@ -693,13 +693,13 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {
-      job->setErrorString(i18n("Authentication failed!\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
+      job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
       job->setAuthError(true);
       closeConnection();
       return false;
     }
   }
-  return true;      
+  return true;
 }
 
 

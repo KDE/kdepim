@@ -130,7 +130,7 @@ QString KNConfig::Identity::getSignature()
           f.close();
         }
         else
-          KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file!"));
+          KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file."));
       } else {
         KProcess process;
 
@@ -143,7 +143,7 @@ QString KNConfig::Identity::getSignature()
         connect(&process, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(slotReceiveStderr(KProcess *, char *, int)));
 
         if (!process.start(KProcess::Block,KProcess::AllOutput))
-          KMessageBox::error(knGlobals.topWidget, i18n("Cannot run the signature generator!"));
+          KMessageBox::error(knGlobals.topWidget, i18n("Cannot run the signature generator."));
       }
     }
   }

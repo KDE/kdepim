@@ -524,7 +524,7 @@ bool KNComposer::hasValidData()
   // header checks
 
   if (v_iew->s_ubject->text().isEmpty()) {
-    KMessageBox::sorry(this, i18n("Please enter a subject!"));
+    KMessageBox::sorry(this, i18n("Please enter a subject."));
     return false;
   }
   if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->s_ubject->text()))
@@ -532,7 +532,7 @@ bool KNComposer::hasValidData()
 
   if (m_ode != mail) {
     if (v_iew->g_roups->text().isEmpty()) {
-      KMessageBox::sorry(this, i18n("Please enter a newsgroup!"));
+      KMessageBox::sorry(this, i18n("Please enter a newsgroup."));
       return false;
     }
 
@@ -541,7 +541,7 @@ bool KNComposer::hasValidData()
     bool followUp = !v_iew->f_up2->currentText().isEmpty();
 
     if (groupCount>12) {
-      KMessageBox::sorry(this, i18n("You are crossposting to more than 12 newsgroups.\nPlease remove all newsgroups in which your article is off-topic!"));
+      KMessageBox::sorry(this, i18n("You are crossposting to more than 12 newsgroups.\nPlease remove all newsgroups in which your article is off-topic."));
       return false;
     }
 
@@ -556,7 +556,7 @@ bool KNComposer::hasValidData()
         return false;
 
     if (fupCount>12) {
-      KMessageBox::sorry(this, i18n("You are directing replies to more than 12 newsgroups.\nPlease remove some newsgroups from the \"Followup-To\" header!"));
+      KMessageBox::sorry(this, i18n("You are directing replies to more than 12 newsgroups.\nPlease remove some newsgroups from the \"Followup-To\" header."));
       return false;
     }
 
@@ -568,7 +568,7 @@ bool KNComposer::hasValidData()
 
   if (m_ode != news) {
     if (v_iew->t_o->text().isEmpty() ) {
-      KMessageBox::sorry(this, i18n("Please enter the email address!"));
+      KMessageBox::sorry(this, i18n("Please enter the email address."));
       return false;
     }
     if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->t_o->text()))
@@ -620,12 +620,12 @@ bool KNComposer::hasValidData()
   }
 
   if (n_eeds8Bit && (c_harset.lower()=="us-ascii")) {
-    KMessageBox::sorry(this, i18n("Your message contains characters that aren't included\nin the \"us-ascii\" character set. Please choose\na suitable character set in the \"Options\" menu!"));
+    KMessageBox::sorry(this, i18n("Your message contains characters that aren't included\nin the \"us-ascii\" character set. Please choose\na suitable character set in the \"Options\" menu."));
     return false;
   }
 
   if (empty) {
-    KMessageBox::sorry(this, i18n("You can't post an empty message!"));
+    KMessageBox::sorry(this, i18n("You can't post an empty message."));
     return false;
   }
 
@@ -637,7 +637,7 @@ bool KNComposer::hasValidData()
   } else {
     if (notQuoted==0) {
       KMessageBox::sorry(this, i18n("You can't post an article consisting\n"
-			      "entirely of quoted text!"));
+			      "entirely of quoted text."));
       return false;
     }
   }
@@ -1192,7 +1192,7 @@ void KNComposer::slotToggleWordWrap()
 
 void KNComposer::slotUndoRewrap()
 {
-  if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written!"),
+  if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written."),
                                          QString::null, QString::null) == KMessageBox::Continue) {
     v_iew->e_dit->setText(u_nwraped);
     slotAppendSig();
@@ -1451,7 +1451,7 @@ void KNComposer::slotGroupsBtnClicked()
     nntp=knGlobals.accManager->first();
 
   if(!nntp) {
-    KMessageBox::error(this, i18n("You have no valid news accounts configured!"));
+    KMessageBox::error(this, i18n("You have no valid news accounts configured."));
     v_iew->g_roups->clear();
     return;
   }

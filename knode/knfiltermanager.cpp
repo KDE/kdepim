@@ -351,7 +351,7 @@ void KNFilterManager::slotMenuActivated(int id)
   KNArticleFilter *f=setFilter(id);
 
   if (!f)
-    KMessageBox::error(knGlobals.topWidget, i18n("ERROR: no such filter!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("ERROR: no such filter."));
 }
 
 

@@ -377,7 +377,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
     if(!nntp)
       nntp=knGlobals.accManager->first();
     if(!nntp) {
-      KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news accounts configured!"));
+      KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news accounts configured."));
       return;
     }
     KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
@@ -454,7 +454,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     if(!nntp)
       nntp=knGlobals.accManager->first();
     if(!nntp) {
-      KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news accounts configured!"));
+      KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news accounts configured."));
       return;
     }
   }
@@ -633,7 +633,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
     if(!a->hasContent()) {
       if(!knGlobals.artManager->loadArticle(a)) {
         showSendErrorDialog();
-        s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article!"));
+        s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article."));
         continue;
       }
     }
@@ -658,7 +658,7 @@ void KNArticleFactory::sendOutbox()
   KNFolder *ob=0;
 
   if(!knGlobals.folManager->loadOutbox()) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder."));
     return;
   }
 
@@ -720,20 +720,20 @@ void KNArticleFactory::configChanged()
 
 
 void KNArticleFactory::processJob(KNJobData *j)
-{  
+{
   KNLocalArticle *art=static_cast<KNLocalArticle*>(j->data());
   KNLocalArticle::List lst;
   lst.append(art);
-  
+
   if(j->canceled()) {
     delete j;
-    
+
     //sending of this article was canceled => move it to the "Outbox-Folder"
     if(art->collection()!=knGlobals.folManager->outbox())
-      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());    
-              
+      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());
+
     KMessageBox::information(knGlobals.topWidget, i18n("You have aborted the posting of articles. The unsent articles are stored in the \"Outbox\" folder."));
-      
+
     return;
   }
 
@@ -911,23 +911,23 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
     KNLocalArticle *localArt=static_cast<KNLocalArticle*>(a);
 
     if(localArt->doMail() && !localArt->doPost()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded."));
       return false;
     }
 
     KMime::Headers::Control *ctrl=localArt->control(false);
     if(ctrl && ctrl->isCancel()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded."));
       return false;
     }
 
     if(!localArt->posted()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded."));
       return false;
     }
 
     if(localArt->canceled()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been canceled or superseded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been canceled or superseded."));
       return false;
     }
 
@@ -1078,7 +1078,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
 
   KSeparator *sep=new KSeparator(this);
   topL->addSpacing(10);
-  topL->addWidget(sep);   
+  topL->addWidget(sep);
 
   c_loseBtn=new QPushButton(i18n("&Close"), this);
   c_loseBtn->setDefault(true);

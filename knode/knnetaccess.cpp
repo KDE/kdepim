@@ -42,16 +42,16 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
      (pipe(nntpOutPipe)==-1)||
      (pipe(smtpInPipe)==-1)||
      (pipe(smtpOutPipe)==-1)) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication."));
     kapp->exit(1);
   }
   if((fcntl(nntpInPipe[0],F_SETFL,O_NONBLOCK)==-1)||
      (fcntl(nntpOutPipe[0],F_SETFL,O_NONBLOCK)==-1)||
      (fcntl(smtpInPipe[0],F_SETFL,O_NONBLOCK)==-1)||
      (fcntl(smtpOutPipe[0],F_SETFL,O_NONBLOCK)==-1)) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication."));
     kapp->exit(1);
-  } 
+  }
 
   nntpNotifier=new QSocketNotifier(nntpInPipe[0], QSocketNotifier::Read);
   connect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
@@ -64,12 +64,12 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
 
   nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
   smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1]);
-  
+
   nntpClient->start();
   smtpClient->start();
-  
-  nntpJobQueue.setAutoDelete(false);    
-  smtpJobQueue.setAutoDelete(false);    
+
+  nntpJobQueue.setAutoDelete(false);
+  smtpJobQueue.setAutoDelete(false);
 }
 
 
@@ -83,7 +83,7 @@ KNNetAccess::~KNNetAccess()
   nntpClient->wait();
   smtpClient->terminate();
   smtpClient->wait();
-    
+
   delete nntpClient;
   delete smtpClient;
   delete nntpNotifier;
@@ -106,7 +106,7 @@ void KNNetAccess::addJob(KNJobData *job)
 {
   // kdDebug(5003) << "KNNetAccess::addJob() : job queued" << endl;
   if(job->account()==0) {
-    job->setErrorString(i18n("Internal Error: No account set for this job!"));
+    job->setErrorString(i18n("Internal Error: No account set for this job."));
     job->notifyConsumer();
     return;
   }
@@ -116,28 +116,28 @@ void KNNetAccess::addJob(KNJobData *job)
     if (!currentSmtpJob)   // no active job, start the new one
       startJobSmtp();
   } else {
-   
+
     /*
         TODO: the following code doesn't really belong here, it should
               be moved to KNGroupManager, or elsewere...
     */
-  
+
     // avoid duplicate fetchNewHeader jobs...
     bool duplicate = false;
-    if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders) {      
+    if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders) {
       for (KNJobData *j = nntpJobQueue.first(); j; j = nntpJobQueue.next())
         if ((j->type()==KNJobData::JTfetchNewHeaders || j->type()==KNJobData::JTsilentFetchNewHeaders) &&
              j->data() == job->data())     // job works on the same group...
           duplicate = true;
     }
-    
+
     if (!duplicate) {
       // give a lower priority to fetchNewHeaders and postArticle jobs
       if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders || job->type()==KNJobData::JTpostArticle)
-        nntpJobQueue.append(job);  
+        nntpJobQueue.append(job);
       else
         nntpJobQueue.prepend(job);
-        
+
       if (!currentNntpJob)   // no active job, start the new one
         startJobNntp();
     }
@@ -176,7 +176,7 @@ void KNNetAccess::stopJobsSmtp(int type)
     currentSmtpJob->cancel();
     triggerAsyncThread(smtpOutPipe[1]);
   }
-    
+
   KNJobData *tmp;                          // kill waiting jobs
   KNJobData *start = smtpJobQueue.first();
   do {
@@ -197,7 +197,7 @@ void KNNetAccess::stopJobsSmtp(int type)
 void KNNetAccess::triggerAsyncThread(int pipeFd)
 {
   int signal=0;
-  
+
   // kdDebug(5003) << "KNNetAccess::triggerAsyncThread() : sending signal to net thread" << endl;
   write(pipeFd, &signal, sizeof(int));
 }
@@ -233,7 +233,7 @@ void KNNetAccess::startJobSmtp()
   unshownMsg = QString::null;
   unshownByteCount = QString::null;
   unshownProgress = 0;
-  
+
   currentSmtpJob = smtpJobQueue.take(0);
   currentSmtpJob->prepareForExecution();
   if (currentSmtpJob->success()) {
@@ -255,7 +255,7 @@ void KNNetAccess::threadDoneNntp()
     kdWarning(5003) << "KNNetAccess::threadDoneNntp(): no current job?? aborting" << endl;
     return;
   }
-    
+
   kdDebug(5003) << "KNNetAccess::threadDoneNntp(): job done" << endl;
 
   tmp = currentNntpJob;
@@ -297,7 +297,7 @@ void KNNetAccess::threadDoneNntp()
     currMsg = unshownMsg;
     knGlobals.top->setStatusMsg(currMsg);
   }
-  
+
   tmp->notifyConsumer();
 
   if (!nntpJobQueue.isEmpty())
@@ -313,7 +313,7 @@ void KNNetAccess::threadDoneSmtp()
     kdWarning(5003) << "KNNetAccess::threadDoneSmtp(): no current job?? aborting" << endl;
     return;
   }
-    
+
   kdDebug(5003) << "KNNetAccess::threadDoneSmtp(): job done" << endl;
 
   tmp = currentSmtpJob;
@@ -325,7 +325,7 @@ void KNNetAccess::threadDoneSmtp()
     knGlobals.progressBar->disableProgressBar();
     knGlobals.top->setStatusMsg();
   }
-  
+
   tmp->notifyConsumer();
 
   if (!smtpJobQueue.isEmpty())
@@ -346,13 +346,13 @@ void KNNetAccess::slotThreadSignal(int i)
 {
   int signal,byteCount;
   QString tmp;
-    
+
   //kdDebug(5003) << "KNNetAccess::slotThreadSignal() : signal received from net thread" << endl;
   if(read(i, &signal, sizeof(int))==-1) {
     kdDebug(5003) << "KNNetAccess::slotThreadSignal() : cannot read from pipe" << endl;
     return;
   }
-      
+
   if (i == nntpInPipe[0]) {      // signal from nntp thread
     switch(signal) {
       case KNProtocolClient::TSworkDone:
@@ -377,11 +377,11 @@ void KNNetAccess::slotThreadSignal(int i)
       case KNProtocolClient::TSdownloadNewGroups:
         currMsg = i18n(" Looking for new groups...");
         knGlobals.top->setStatusMsg(currMsg);
-      break;      
+      break;
       case KNProtocolClient::TSdownloadDesc:
         currMsg = i18n(" Downloading group descriptions...");
         knGlobals.top->setStatusMsg(currMsg);
-      break;      
+      break;
       case KNProtocolClient::TSdownloadNew:
         currMsg = i18n(" Downloading new headers...");
         knGlobals.top->setStatusMsg(currMsg);
@@ -415,7 +415,7 @@ void KNNetAccess::slotThreadSignal(int i)
     };
   } else {                    // signal from smtp thread
     switch(signal) {
-      case KNProtocolClient::TSworkDone:        
+      case KNProtocolClient::TSworkDone:
         threadDoneSmtp();
       break;
       case KNProtocolClient::TSconnect:

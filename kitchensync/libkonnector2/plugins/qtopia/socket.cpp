@@ -67,7 +67,7 @@ class QtopiaSocket::Private
         Desktops,
         Flush
     };
-    
+
     enum Status {
         Start = 0,
         User,
@@ -77,7 +77,7 @@ class QtopiaSocket::Private
         Done,
         Connected
     };
-    
+
     Private(){}
 
     bool connected    : 1;
@@ -267,7 +267,7 @@ void QtopiaSocket::write( SynceeList list )
     }
 
     kdDebug(5225) << "Writing information back now. Count is " << list.count() << endl;
-    
+
     AddressBookSyncee *abSyncee = list.addressBookSyncee();
     if ( abSyncee ) writeAddressbook( abSyncee );
 
@@ -498,7 +498,7 @@ void QtopiaSocket::readAddressbook()
 
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
-         emit error( i18n("Can not read the addressbook file. It is corrupted!") );
+         emit error( i18n("Cannot read the addressbook file. It is corrupted.") );
         return;
     }
 
@@ -542,7 +542,7 @@ void QtopiaSocket::readDatebook()
     }
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
-        emit error( i18n("Can not read the datebook file. It is corrupted!") );
+        emit error( i18n("Cannot read the datebook file. It is corrupted.") );
         return;
     }
 
@@ -584,7 +584,7 @@ void QtopiaSocket::readTodoList()
 
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
-         emit error( i18n("Can not read the todolist file. It is corrupted!") );
+         emit error( i18n("Cannot read the TodoList file. It is corrupted.") );
         return;
     }
 

@@ -88,7 +88,7 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
     if( loadHeaders(f) )
       a_rtManager->showHdrs();
     else
-      KMessageBox::error(knGlobals.topWidget, i18n("Cannot load index-file!"));
+      KMessageBox::error(knGlobals.topWidget, i18n("Cannot load index-file."));
   }
 }
 

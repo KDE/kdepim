@@ -82,7 +82,7 @@
                             <cstring>fPDBDir</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Folder where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement!).</string>
+                            <string>Folder where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement).</string>
                         </property>
                     </widget>
                     <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">

@@ -1,7 +1,7 @@
 <!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>KPilotConfigWidget</class>
 <comment>A tabWidget for configuring
-KPilot's settings.!</comment>
+KPilot's settings.</comment>
 <author>David Bishop</author>
 <widget class="QWidget">
     <property name="name">
