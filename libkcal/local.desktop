@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+
+[Misc]
+Encoding=UTF-8
+Name=Calendar in local file
+Name[da]=Kalender i lokal fil
+Name[es]=Calendario en archivo local
+Name[hu]=Helyi fájlban tárolt naptár
+Name[sv]=Kalender i lokal fil
+
+[Plugin]
+Type=file
+X-KDE-Library=libkcal

@@ -8,7 +8,8 @@ lib_LTLIBRARIES   = libkcal.la
 libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0 -module
 libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
                      $(top_builddir)/libical/src/libical/libical.la \
-                     $(top_builddir)/libical/src/libicalss/libicalss.la
+                     $(top_builddir)/libical/src/libicalss/libicalss.la \
+                     -lkderesources
 
 libkcal_la_SOURCES = \
         incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
@@ -22,7 +23,21 @@ libkcal_la_SOURCES = \
         person.cpp period.cpp duration.cpp \
         dndfactory.cpp \
         filestorage.cpp calendarimap.cpp \
-        compat.cpp
+        compat.cpp \
+	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
+	calendarresources.cpp
+
+kde_module_LTLIBRARIES = libkcm_kcalendars.la 
+
+libkcm_kcalendars_la_SOURCES = kcmcalendars.cpp
+libkcm_kcalendars_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
+libkcm_kcalendars_la_LIBADD = libkcal.la -lkderesources
+
+datadir = $(kde_appsdir)/Settings/Components
+data_DATA = kcalendars.desktop
+
+linkdir= $(kde_datadir)/resources/calendar
+link_DATA = local.desktop
 
 METASOURCES = AUTO
 
