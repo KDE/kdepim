@@ -59,7 +59,7 @@ class LDAPItem : public QCheckListItem
       setText( 0, mServer.host() );
     }
 
-    KPIM::LdapServer server() const { return mServer; }
+    const KPIM::LdapServer &server() const { return mServer; }
 
     void setIsActive( bool isActive ) { mIsActive = isActive; }
     bool isActive() const { return mIsActive; }
