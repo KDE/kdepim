@@ -47,7 +47,7 @@ KSSLSocket::KSSLSocket() : KExtendedSocket()
 
 	d = new KSSLSocketPrivate;
 	d->kssl = 0L;
-	d->dcc = KApplication::kApplication()->dcopClient();
+	d->dcc = 0L;
 	d->cc = new KSSLCertificateCache;
 	d->cc->reload();
 
@@ -73,6 +73,9 @@ KSSLSocket::~KSSLSocket()
 		delete d->kssl;
 	}
 
+	if ( d->dcc )
+		d->dcc->detach();
+	delete d->dcc;
 	delete d->cc;
 	delete d;
 }
@@ -172,6 +175,10 @@ int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &
 	QDataStream arg(data, IO_WriteOnly);
 	arg << (int)1 << (int)type << text << caption << buttonYes << buttonNo;
 
+	if ( ! d->dcc ){
+		d->dcc = new DCOPClient();
+		d->dcc->attach();
+	}
 	if (!d->dcc->isApplicationRegistered("kio_uiserver"))
 	{
 		KApplication::startServiceByDesktopPath("kio_uiserver.desktop",QStringList());

@@ -48,34 +48,26 @@
 using namespace KCal;
 
 ResourceGroupwise::ResourceGroupwise()
-  : ResourceCached( 0 ), mLock( true ), mServer( 0 ),
-    mProgress( 0 )
+  : ResourceCached( 0 ), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
-
-  initGroupwise();
 }
 
 ResourceGroupwise::ResourceGroupwise( const KConfig *config )
-  : ResourceCached( config ), mLock( true ), mServer( 0 )
+  : ResourceCached( config ), mLock( true )
 {
   init();
 
   mPrefs->addGroupPrefix( identifier() );
 
   if ( config ) readConfig( config );
-  
-  initGroupwise();
 }
 
 ResourceGroupwise::~ResourceGroupwise()
 {
   disableChangeNotification();
-
-  delete mServer;
-  mServer = 0;
 
   delete mPrefs;
   mPrefs = 0;
@@ -93,15 +85,6 @@ void ResourceGroupwise::init()
   setType( "groupwise" );
 
   enableChangeNotification();
-}
-
-void ResourceGroupwise::initGroupwise()
-{
-  mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
-                                 mPrefs->password(), this );
-
-  connect( mServer, SIGNAL( readCalendarFinished() ),
-           SLOT( loadFinished() ) );
 }
 
 GroupwisePrefsBase *ResourceGroupwise::prefs()
@@ -131,14 +114,11 @@ void ResourceGroupwise::writeConfig( KConfig *config )
 
 bool ResourceGroupwise::doOpen()
 {
-  bool success = mServer->login();
-  if ( !success ) loadError( i18n("Unable to login to server") );
-  return success;
+  return true;
 }
 
 void ResourceGroupwise::doClose()
 {
-  mServer->logout();
   ResourceCached::doClose();
 }
 
@@ -149,11 +129,6 @@ bool ResourceGroupwise::doLoad()
   if ( mIsShowingError ) {
     kdDebug() << "Still showing error" << endl;
     return true;
-  }
-
-  if ( !mServer ) {
-    kdError() << "KCal::ResourceGrouwise::doLoad(): No Server set." << endl;
-    return false;
   }
 
   if ( mDownloadJob ) {
@@ -191,7 +166,7 @@ bool ResourceGroupwise::doLoad()
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
   connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( ProgressItem * ) ),
            SLOT( cancelLoad() ) );
 
   return true;
@@ -251,15 +226,6 @@ void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
   mJobData.append( data.data() );
 }
 
-void ResourceGroupwise::loadFinished()
-{
-  saveCache();
-  enableChangeNotification();
-
-  emit resourceChanged( this );
-  emit resourceLoaded( this );
-}
-
 bool ResourceGroupwise::doSave()
 {
   kdDebug() << "KCal::ResourceGroupwise::doSave()" << endl;
@@ -273,23 +239,33 @@ bool ResourceGroupwise::doSave()
   
   if ( !confirmSave() ) return false;
 
+  GroupwiseServer server( mPrefs->url(), mPrefs->user(), mPrefs->password(),
+    0 );
+
+  if ( !server.login() ) {
+    kdError() << "Unable to login to server" << endl;
+    return false;
+  }
+
   Incidence::List::ConstIterator it;
 
   Incidence::List added = addedIncidences();
   for( it = added.begin(); it != added.end(); ++it ) {
-    if ( mServer->addIncidence( *it, this ) ) {
+    if ( server.addIncidence( *it, this ) ) {
       clearChange( *it );
       saveCache();
     }
   }
   Incidence::List changed = changedIncidences();
   for( it = changed.begin(); it != changed.end(); ++it ) {
-    if ( mServer->changeIncidence( *it ) ) clearChange( *it );
+    if ( server.changeIncidence( *it ) ) clearChange( *it );
   }
   Incidence::List deleted = deletedIncidences();
   for( it = deleted.begin(); it != deleted.end(); ++it ) {
-    if ( mServer->deleteIncidence( *it ) ) clearChange( *it );
+    if ( server.deleteIncidence( *it ) ) clearChange( *it );
   }
+
+  server.logout();
 
   return true;
 }

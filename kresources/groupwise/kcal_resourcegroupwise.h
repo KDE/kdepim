@@ -21,6 +21,8 @@
 #ifndef KCAL_RESOURCEGROUPWISE_H
 #define KCAL_RESOURCEGROUPWISE_H
 
+#include <libemailfunctions/idmapper.h>
+
 #include <libkdepim/progressmanager.h>
 
 #include <libkcal/resourcecached.h>
@@ -28,8 +30,6 @@
 #include <kabc/locknull.h>
 #include <kio/job.h>
 #include <kconfig.h>
-
-class GroupwiseServer;
 
 namespace KCal {
 
@@ -63,13 +63,10 @@ class ResourceGroupwise : public ResourceCached
 
   protected:
     void init();
-    void initGroupwise();
 
     bool confirmSave();
 
   protected slots:
-    void loadFinished();
-
     void slotJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
 
@@ -78,8 +75,6 @@ class ResourceGroupwise : public ResourceCached
   private:
     GroupwisePrefsBase *mPrefs;
     KABC::LockNull mLock;
-
-    GroupwiseServer *mServer;
 
     KIO::TransferJob *mDownloadJob;
     KPIM::ProgressItem *mProgress;

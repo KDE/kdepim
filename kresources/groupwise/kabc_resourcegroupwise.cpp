@@ -313,6 +313,7 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
 
   if ( job->error() ) {
     kdError() << job->errorString() << endl;
+    emit loadingError( this, job->errorString() );
   } else {
     mAddrMap.clear();
   
@@ -338,7 +339,9 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
     }
   }
 
-  loadFinished();
+  saveCache();
+
+  emit loadingFinished( this );
 
   mDownloadJob = 0;
   if ( mProgress ) mProgress->setComplete();
@@ -356,19 +359,6 @@ void ResourceGroupwise::slotJobPercent( KIO::Job *, unsigned long percent )
 {
   kdDebug() << "ResourceGroupwise::slotJobPercent() " << percent << endl;
   if ( mProgress ) mProgress->setProgress( percent );
-}
-
-void ResourceGroupwise::loadFinished()
-{
-  if ( !mServer->error().isEmpty() ) {
-    kdError() << "ResourceGroupwise::loadFinished(): Error: " <<
-      mServer->error() << endl;
-    emit loadingError( this, mServer->error() );
-  } else {
-    saveCache();
-
-    emit loadingFinished( this );
-  }
 }
 
 void ResourceGroupwise::cancelLoad()

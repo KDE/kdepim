@@ -76,8 +76,6 @@ class ResourceGroupwise : public ResourceCached
     void initGroupwise();
 
   private slots:
-    void loadFinished();
-
     void slotJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
     void slotJobPercent( KIO::Job *job, unsigned long percent );

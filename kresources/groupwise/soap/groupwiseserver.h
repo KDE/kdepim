@@ -54,6 +54,7 @@ class ns1__Item;
 class ns1__Appointment;
 class ns1__Mail;
 class ns1__Task;
+class ns1__Status;
 
 namespace GroupWise {
 
@@ -91,7 +92,6 @@ class GroupwiseServer : public QObject
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
 
-    bool readCalendarSynchronous( KCal::ResourceCached *resource );
     bool readCalendarSynchronous( KCal::Calendar *cal );
 
     GroupWise::AddressBook::List addressBookList();
@@ -123,9 +123,6 @@ class GroupwiseServer : public QObject
     void emitReadAddressBookProcessedSize( int );
 
   signals:
-    void readAddressBooksFinished();
-    void readCalendarFinished();
-
     void readAddressBookTotalSize( int );
     void readAddressBookProcessedSize( int );
 
@@ -138,6 +135,10 @@ class GroupwiseServer : public QObject
     void dumpTask( ns1__Task * );
     void dumpMail( ns1__Mail * );
 
+    bool checkResponse( int result, ns1__Status *status );
+
+    void log( const QString &prefix, const char *s, size_t n );
+
   protected slots:
     void slotSslError();
 
@@ -148,6 +149,11 @@ class GroupwiseServer : public QObject
     bool mSSL;
 
     std::string mSession;
+
+    QString mUserName;
+    QString mUserEmail;
+    QString mUserUuid;
+
     std::string mCalendarFolder;
     
     struct soap *mSoap;
@@ -155,6 +161,8 @@ class GroupwiseServer : public QObject
     KExtendedSocket *m_sock;
 
     QString mError;
+
+    QString mLogFile;
 };
 
 #endif

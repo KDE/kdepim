@@ -22,7 +22,7 @@
 #include <kdebug.h>
 #include <libkcal/incidence.h>
 #include <libkcal/resourcecached.h>
-#include <libkdepim/kabcresourcecached.h>
+#include <kabcresourcecached.h>
 
 #include <qtimer.h>
 
@@ -61,9 +61,9 @@ void ReadAddressBooksJob::run()
 {
   kdDebug() << "ReadAddressBooksJob::run()" << endl;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
-  soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
+  soap_call___ns1__getAddressBookListRequest( mSoap, mUrl.latin1(),
                                               NULL, "", &addressBookListResponse );
   soap_print_fault( mSoap, stderr );
 
@@ -76,11 +76,15 @@ void ReadAddressBooksJob::run()
 
     std::vector<class ns1__AddressBook * >::const_iterator it;
     for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
-      QString id = GWConverter::stringToQString( (*it)->id );
-      kdDebug() << "ID: " << id << endl;
-      if ( mAddressBookIds.find( id ) != mAddressBookIds.end() ) {
-        readAddressBook( (*it)->id );
-        mProgress += 100;
+      if ( !(*it)->id ) {
+        kdError() << "No addressbook id" << endl;
+      } else {
+        QString id = GWConverter::stringToQString( (*it)->id );
+        kdDebug() << "ID: " << id << endl;
+        if ( mAddressBookIds.find( id ) != mAddressBookIds.end() ) {
+          readAddressBook( *(*it)->id );
+          mProgress += 100;
+        }
       }
     }
   }
@@ -95,9 +99,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getItemsResponse itemsResponse;
-  int result = soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest, &itemsResponse );
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
@@ -113,20 +117,13 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
     std::vector<class ns1__Item * >::const_iterator it;
     for ( it = items->begin(); it != items->end(); ++it ) {
+      ns1__Item *item = *it;
+
 #if 0
-      kdDebug() << "ITEM: " << (*it)->name.c_str() << "(" << (*it)->id.c_str()
+      kdDebug() << "ITEM: " << item->name.c_str() << "(" << item->id.c_str()
         << ")" << endl;
 #endif
-      _ns1__getItemRequest itemRequest;
-      itemRequest.id = (*it)->id;
-      itemRequest.view = 0;
 
-      mSoap->header->ns1__session = mSession;
-      _ns1__getItemResponse itemResponse;
-      soap_call___ns5__getItemRequest( mSoap, mUrl.latin1(), 0,
-                                       &itemRequest, &itemResponse );
-
-      ns1__Item *item = itemResponse.item;
       ns1__Contact *contact = dynamic_cast<ns1__Contact *>( item );
 
       KABC::Addressee addr = converter.convertFromContact( contact );
@@ -155,7 +152,6 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
         << count << " maxCount: " << maxCount << " progress: " << progress
         << endl;
 
-
       mServer->emitReadAddressBookProcessedSize( progress );
     }
   }
@@ -163,7 +159,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
 ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
                                   const std::string &session )
-  : GWJob( soap, url, session ), mResource( 0 ), mCalendar( 0 )
+  : GWJob( soap, url, session ), mCalendar( 0 )
 {
   kdDebug() << "ReadCalendarJob()" << endl;
 }
@@ -171,11 +167,6 @@ ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
 void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
 {
   mCalendarFolder = calendarFolder;
-}
-
-void ReadCalendarJob::setResource( KCal::ResourceCached *resource )
-{
-  mResource = resource;
 }
 
 void ReadCalendarJob::setCalendar( KCal::Calendar *calendar )
@@ -187,12 +178,12 @@ void ReadCalendarJob::run()
 {
   kdDebug() << "ReadCalendarJob::run()" << endl;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getFolderListRequest folderListReq;
   folderListReq.parent = "folders";
   folderListReq.recurse = true;
   _ns1__getFolderListResponse folderListRes;
-  soap_call___ns7__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ns1__getFolderListRequest( mSoap, mUrl.latin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
@@ -202,8 +193,12 @@ void ReadCalendarJob::run()
       std::vector<class ns1__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
         if ( (*it)->type && *((*it)->type) == "Calendar" ) {
-          readCalendarFolder( (*it)->id );
-          (*mCalendarFolder) = (*it)->id;
+          if ( !(*it)->id ) {
+            kdError() << "No calendar id" << endl;
+          } else {
+            readCalendarFolder( *(*it)->id );
+            (*mCalendarFolder) = *(*it)->id;
+          }
         }
       }
     }
@@ -235,9 +230,9 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
   itemsRequest.filter = 0;
   itemsRequest.items = 0;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getItemsResponse itemsResponse;
-  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ns1__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
   soap_print_fault(mSoap, stderr);
@@ -246,12 +241,6 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 
   if ( items ) {
     IncidenceConverter conv( mSoap );
-
-    if ( mResource ) {
-      // FIXME: Don't clear cache but merge with cache to preserve uids and in
-      // case not all incidences are retrieved from the server.
-      mResource->clearCache();
-    }
 
     std::vector<class ns1__Item * >::const_iterator it;
     for( it = items->begin(); it != items->end(); ++it ) {
@@ -269,38 +258,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
       if ( i ) {
         i->setCustomProperty( "GWRESOURCE", "CONTAINER", conv.stringToQString( id ) );
 
-        if ( mResource ) {
-          QString remoteUid = conv.stringToQString( (*it)->id );
-          QString localUid = mResource->idMapper().localId( remoteUid );
-          if ( localUid.isEmpty() ) {
-            mResource->idMapper().setRemoteId( i->uid(), remoteUid );
-          } else {
-            i->setUid( localUid );
-          }
-        }
-
-// Disable uid mapping as long as we load the whole calendar anyway.
-#if 0
-        QString remoteUid = conv.stringToQString( (*it)->id );
-        KCal::Incidence *oldIncidence = mResource->event( mResource->idMapper().localId( remoteUid ) );
-        if ( !oldIncidence )
-          oldIncidence = mResource->todo( mResource->idMapper().localId( remoteUid ) );
-
-        if ( !oldIncidence ) { // new incidence
-          mResource->idMapper().setRemoteId( i->uid(), remoteUid );
-        } else {
-          i->setUid( oldIncidence->uid() );
-          mResource->deleteIncidence( oldIncidence );
-        }
-#endif
-        if ( mResource ) {
-          mResource->addIncidence( i );
-        } else if ( mCalendar ) {
-          mCalendar->addIncidence( i );
-        } else {
-          kdError() << "ReadCalendarJob::Neither resource nor calendar set" <<
-            endl;
-        }
+        mCalendar->addIncidence( i );
       }
     }
   }

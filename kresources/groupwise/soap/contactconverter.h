@@ -34,10 +34,8 @@ class ContactConverter : public GWConverter
     ns1__Contact* convertToContact( const KABC::Addressee& );
 
   private:
-/*
     KABC::PhoneNumber convertPhoneNumber( ns1__PhoneNumber* ) const;
     ns1__PhoneNumber* convertPhoneNumber( const KABC::PhoneNumber& ) const;
-*/
 
     KABC::Address convertPostalAddress( ns1__PostalAddress* ) const;
     ns1__PostalAddress* convertPostalAddress( const KABC::Address& );

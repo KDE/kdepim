@@ -20,7 +20,8 @@ libgwsoap_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 libgwsoap_la_LIBADD	= -lkabc
 
 stubs: groupwise.wsdl
-	wsdl2h -o $(srcdir)/groupwise.h $(srcdir)/groupwise.wsdl -t $(srcdir)/typemap.dat
+	wsdl2h -e -o $(srcdir)/groupwise.h $(srcdir)/groupwise.wsdl -t $(srcdir)/typemap.dat
+	cd $(srcdir); ./fixup_groupwise.h.pl --inplace
 	soapcpp2 -d $(srcdir) -I$(srcdir) $(srcdir)/groupwise.h
 	sed  -e 's,*delete\([^d]\),*_delete\1,' $(srcdir)/soapStub.h > $(srcdir)/soapStub.h_
 	mv $(srcdir)/soapStub.h_ $(srcdir)/soapStub.h

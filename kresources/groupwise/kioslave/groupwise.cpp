@@ -35,6 +35,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <ktempfile.h>
+#include <kdeversion.h>
 
 #include <sys/types.h>
 #include <unistd.h>

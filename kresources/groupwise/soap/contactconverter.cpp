@@ -34,22 +34,37 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   ns1__Contact* contact = soap_new_ns1__Contact( soap(), -1 );
 
-  // null pointer initialization
+  // ns1_Contact
+  contact->fullName = 0;
+  contact->emailList = 0;
+  contact->imList = 0;
+  contact->addressList = 0;
+  contact->officeInfo = 0;
+  contact->personalInfo = 0;
+  // ns1_AddressBookItem
+  contact->uuid = 0;
   contact->comment = 0;
+  // ns1__ContainerItem
+  contact->container = 0;
   contact->categories = 0;
   contact->created = 0;
   contact->customs = 0;
+  // ns1__contact
+  contact->id = 0;
+  contact->name = 0;
+  contact->version = 0;
   contact->modified = 0;
   contact->changes = 0;
   contact->type = 0;
 
   // Uid
-  contact->id = addr.custom( "GWRESOURCE", "UID" ).utf8();
+  contact->id = qStringToString( addr.custom( "GWRESOURCE", "UID" ) );
 
   // Container
   if ( !addr.custom( "GWRESOURCE", "CONTAINER" ).isEmpty() ) {
     std::vector<ns1__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTons1__ContainerRef( soap(), -1 );
     ns1__ContainerRef* containerRef = soap_new_ns1__ContainerRef( soap(), -1 );
+    containerRef->deleted = 0;
     containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).utf8();
     container->push_back( containerRef );
 
@@ -59,34 +74,30 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   // Name parts
   ns1__FullName* fullName = soap_new_ns1__FullName( soap(), -1 );
+  fullName->displayName = 0;
+  fullName->namePrefix = 0;
+  fullName->firstName = 0;
+  fullName->middleName = 0;
+  fullName->lastName = 0;
+  fullName->nameSuffix = 0;
 
   if ( !addr.formattedName().isEmpty() )
-    fullName->displayName = addr.formattedName().utf8();
+    fullName->displayName = qStringToString( addr.formattedName() );
 
   if ( !addr.prefix().isEmpty() )
     fullName->namePrefix = qStringToString( addr.prefix() );
-  else
-    fullName->namePrefix = 0;
 
   if ( !addr.givenName().isEmpty() )
     fullName->firstName = qStringToString( addr.givenName() );
-  else
-    fullName->firstName = 0;
 
   if ( !addr.additionalName().isEmpty() )
     fullName->middleName = qStringToString( addr.additionalName() );
-  else
-    fullName->middleName = 0;
 
   if ( !addr.familyName().isEmpty() )
     fullName->lastName = qStringToString( addr.familyName() );
-  else
-    fullName->lastName = 0;
 
   if ( !addr.suffix().isEmpty() )
     fullName->nameSuffix = qStringToString( addr.suffix() );
-  else
-    fullName->nameSuffix = 0;
 
   contact->fullName = fullName;
 
@@ -107,7 +118,6 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   } else
     contact->emailList = 0;
 
-#if 0
   // Phone numbers
   if ( !addr.phoneNumbers().isEmpty() ) {
     ns1__PhoneList* phoneList = soap_new_ns1__PhoneList( soap(), -1 );
@@ -130,7 +140,6 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     contact->phoneList = phoneList;
   } else
     contact->phoneList = 0;
-#endif
 
   // Addresses
   if ( !addr.addresses().isEmpty() ) {
@@ -211,7 +220,7 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   // Name parts
   ns1__FullName* fullName = contact->fullName;
 
-  if ( !fullName->displayName.empty() )
+  if ( fullName->displayName )
     addr.setFormattedName( stringToQString( fullName->displayName ) );
 
   if ( fullName->namePrefix )
@@ -230,23 +239,25 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
     addr.setSuffix( stringToQString( fullName->nameSuffix ) );
 
   // Emails
-  if ( contact->emailList && contact->emailList->email ) {
-    QStringList emails;
+  if ( contact->emailList ) {
+     QStringList emails;
 
-    if ( !contact->emailList->primary.empty() )
-      emails.append( stringToQString( contact->emailList->primary ) );
+     if ( !contact->emailList->primary.empty() )
+         emails.append( stringToQString( contact->emailList->primary ) );
 
-    std::vector<std::string> *list = contact->emailList->email;
-    std::vector<std::string>::const_iterator it;
-    for ( it = list->begin(); it != list->end(); ++it ) {
-      if ( emails.find( stringToQString( *it ) ) == emails.end() )
-        emails.append( stringToQString( *it ) );
-    }
+     if ( contact->emailList->email ) {
+       std::vector<std::string> *list = contact->emailList->email;
+       std::vector<std::string>::const_iterator it;
+       for ( it = list->begin(); it != list->end(); ++it ) {
+         if ( emails.find( stringToQString( *it ) ) == emails.end() )
+           emails.append( stringToQString( *it ) );
+       }
+     } 
 
-    addr.setEmails( emails );
+     if ( emails.count() )
+       addr.setEmails( emails );
   }
 
-#if 0
   // Phone numbers
   if ( contact->phoneList && contact->phoneList->phone ) {
     QString defaultNumber = stringToQString( contact->phoneList->default_ );
@@ -262,7 +273,6 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
       }
     }
   }
-#endif
 
   // Addresses
   if ( contact->addressList && contact->addressList->address ) {
@@ -309,7 +319,6 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   return addr;
 }
 
-#if 0
 KABC::PhoneNumber ContactConverter::convertPhoneNumber( ns1__PhoneNumber *phone ) const
 {
   KABC::PhoneNumber phoneNumber;
@@ -359,7 +368,6 @@ ns1__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber 
 
   return phoneNumber;
 }
-#endif
 
 KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr ) const
 {
@@ -386,7 +394,6 @@ KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr )
   if ( addr->country )
     address.setCountry( stringToQString( addr->country ) );
 
-#if 0
   if ( addr->type == Home_ ) {
     address.setType( KABC::Address::Home );
   } else if ( addr->type == Office_ ) {
@@ -394,7 +401,6 @@ KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr )
   } else {
     // should never been reached, addresses have always a type set...
   }
-#endif
 
   return address;
 }
@@ -405,6 +411,8 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
     return 0;
 
   ns1__PostalAddress* postalAddress = soap_new_ns1__PostalAddress( soap(), -1 );
+
+  postalAddress->description = 0;
 
   if ( !address.street().isEmpty() )
     postalAddress->streetAddress = qStringToString( address.street() );
@@ -436,7 +444,6 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
   else
     postalAddress->country = 0;
 
-#if 0
   if ( address.type() & KABC::Address::Home ) {
     postalAddress->type = Home_;
   } else if ( address.type() & KABC::Address::Work ) {
@@ -444,7 +451,6 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
   } else {
     // TODO: cache unsupported types
   }
-#endif
 
   return postalAddress;
 }

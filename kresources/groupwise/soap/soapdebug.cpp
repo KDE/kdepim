@@ -7,7 +7,7 @@
 #include <kdebug.h>
 #include <ktempfile.h>
 
-#include <libkdepim/kabcresourcecached.h>
+#include <kabcresourcecached.h>
 
 #include <libkcal/icalformat.h>
 #include <libkcal/resourcelocal.h>
@@ -60,7 +60,7 @@ int main( int argc, char **argv )
   QString pass = args->getOption( "password" );
   QString url = args->getOption( "server" );
 
-#if 0
+#if 1
   if ( user.isEmpty() ) {
     kdError() << "Need user." << endl;
     return 1; 
@@ -134,7 +134,7 @@ int main( int argc, char **argv )
   kdDebug() << "ICALENDAR: " << ical << endl;
 #endif
 
-#if 1
+#if 0
   QString id = args->getOption( "addressbook-id" );
 
   kdDebug() << "ADDRESSBOOK ID: " << id << endl;

@@ -50,7 +50,8 @@ QString GWConverter::stringToQString( const std::string &str )
 
 QString GWConverter::stringToQString( std::string *str )
 {
-  return QString::fromUtf8( (*str).c_str() );
+  if ( !str ) return QString::null;
+  return QString::fromUtf8( str->c_str() );
 }
 
 char* GWConverter::qStringToChar( const QString &string )
@@ -66,6 +67,7 @@ char* GWConverter::qStringToChar( const QString &string )
 
 QDate GWConverter::charToQDate( const char *str )
 {
+  if ( !str ) return QDate();
   return QDate::fromString( QString::fromUtf8( str ), Qt::ISODate );
 }
 
@@ -87,6 +89,7 @@ char* GWConverter::qDateToChar( const QDate &date )
 
 QDateTime GWConverter::charToQDateTime( const char *str )
 {
+  if ( !str ) return QDateTime();
 //  kdDebug() << "charToQDateTime(): " << str << endl;
   QDateTime dt = QDateTime::fromString( QString::fromUtf8( str ), Qt::ISODate );
 //  kdDebug() << "  " << dt.toString() << endl;
@@ -96,6 +99,7 @@ QDateTime GWConverter::charToQDateTime( const char *str )
 QDateTime GWConverter::charToQDateTime( const char *str,
                                         const QString &timezone )
 {
+  if ( !str ) return QDateTime();
   QDateTime utc = charToQDateTime( str );
   return KPimPrefs::utcToLocalTime( utc, timezone );
 }

@@ -28,10 +28,15 @@
 
 #include "gwconverter.h"
 
+class ns1__Recipient;
+
 class IncidenceConverter : public GWConverter
 {
   public:
     IncidenceConverter( struct soap* );
+
+    void setFrom( const QString &name, const QString &email,
+      const QString &uuid );
 
     KCal::Event* convertFromAppointment( ns1__Appointment* );
     ns1__Appointment* convertToAppointment( KCal::Event* );
@@ -49,7 +54,14 @@ class IncidenceConverter : public GWConverter
     void getAttendees( ns1__CalendarItem*, KCal::Incidence* );
     void setAttendees( KCal::Incidence *, ns1__CalendarItem * );
 
+    ns1__Recipient *createRecipient( const QString &name,
+      const QString &email, const QString &uuid = QString::null );
+
     QString mTimezone;
+
+    QString mFromName;
+    QString mFromEmail;
+    QString mFromUuid;
 };
 
 #endif

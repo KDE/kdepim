@@ -21,7 +21,7 @@
 
 // The namespace mapping table is required and associates namespace prefixes
 // with namespace names:
-#include "getItemRequestSoapBinding.nsmap"
+#include "GroupWiseBinding.nsmap"
 
 #include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
@@ -45,6 +45,7 @@
 #include "soapH.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "groupwiseserver.h"
 
@@ -54,7 +55,10 @@ int myOpen( struct soap *soap, const char *endpoint, const char *host, int port 
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return -1;
+  if ( it == mServerMap.end() ) {
+    soap->error = SOAP_FAULT;
+    return SOAP_INVALID_SOCKET;
+  }
 
   return (*it)->gSoapOpen( soap, endpoint, host, port );
 }
@@ -63,7 +67,7 @@ int myClose( struct soap *soap )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return -1;
+  if ( it == mServerMap.end() ) return SOAP_FAULT;
 
   return (*it)->gSoapClose( soap );
 }
@@ -72,7 +76,7 @@ int mySendCallback( struct soap *soap, const char *s, size_t n )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return -1;
+  if ( it == mServerMap.end() ) return SOAP_FAULT;
 
   return (*it)->gSoapSendCallback( soap, s, n );
 }
@@ -83,6 +87,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
   it = mServerMap.find( soap );
   if ( it == mServerMap.end() ) {
     kdDebug() << "No soap object found" << endl;
+    soap->error = SOAP_FAULT;
     return 0;
   }
 
@@ -99,36 +104,30 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
     delete m_sock;
   }
 
-  if (mSSL) {
-     kdDebug() << "Creating KSSLSocket()" << endl;
-     m_sock = new KSSLSocket();
-     connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
+  if ( mSSL ) {
+    kdDebug() << "Creating KSSLSocket()" << endl;
+    m_sock = new KSSLSocket();
+    connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
   } else {
-     m_sock = new KExtendedSocket();
+    m_sock = new KExtendedSocket();
   }
   mError = QString::null;
 
   m_sock->reset();
-  m_sock->setBlockingMode(false);
-  m_sock->setSocketFlags(KExtendedSocket::inetSocket);
+  m_sock->setBlockingMode( false );
+  m_sock->setSocketFlags( KExtendedSocket::inetSocket );
 
-  m_sock->setAddress(host, port);
+  m_sock->setAddress( host, port );
   m_sock->lookup();
   int rc = m_sock->connect();
   if ( rc != 0 ) {
-   kdError() << "gSoapOpen: connect failed " << rc << endl;
-   mError = i18n("Connect failed: %1.").arg( rc );
-   return -1;
+    kdError() << "gSoapOpen: connect failed " << rc << endl;
+    mError = i18n("Connect failed: %1.").arg( rc );
+    if ( rc == -1 ) perror( 0 );
+    return SOAP_INVALID_SOCKET;
   }
-  kdDebug() << "TICK" << endl;
-#if 0
-  if ( !m_sock->open() ) {
-    kdError() << "gSoapOpen: open failed" << endl;
-    return -1;
-  }
-#endif
-  m_sock->enableRead(true);
-  m_sock->enableWrite(true);
+  m_sock->enableRead( true );
+  m_sock->enableWrite( true );
 
   // hopefully never really used by SOAP
 #if 0
@@ -158,57 +157,67 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 
   if ( !m_sock ) {
     kdError() << "no open connection" << endl;
-    return -1;
+    return SOAP_TCP_ERROR;
   }
   if ( !mError.isEmpty() ) {
     kdError() << "SSL is in error state." << endl;
-    return -1;
+    return SOAP_SSL_ERROR;
   }
-  if ( getenv("DEBUG_GW_RESOURCE") ){
-     qDebug("*************************");
-     char p[99999];
-     strncpy(p, s, n);
-     p[n]='\0';
-     qDebug("%s", p );
-     qDebug("\n*************************");
+
+  if ( getenv("DEBUG_GW_RESOURCE") ) {
+    qDebug("*************************");
+    char p[99999];
+    strncpy(p, s, n);
+    p[n]='\0';
+    qDebug("%s", p );
+    qDebug("\n*************************");
   }
-   int ret;
-   while ( n>0 ){
-     ret = m_sock->writeBlock( s, n );
-     if ( ret < 0 ){
-        qDebug("ERROR: send failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
-        return ret;
-     }
-     n -= ret;
-   }
+  log( "SENT", s, n );
 
-   if ( n !=0 ){
-      qDebug("ERROR: send failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
-   }
+  int ret;
+  while ( n > 0 ) {
+    ret = m_sock->writeBlock( s, n );
+    if ( ret < 0 ) {
+      kdError() << "Send failed: " << strerror( m_sock->systemError() )
+        << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+      return SOAP_TCP_ERROR;
+    }
+    n -= ret;
+  }
 
-   m_sock->flush();
+  if ( n !=0 ) {
+    kdError() << "Send failed: " << strerror( m_sock->systemError() )
+      << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+  }
 
-   return SOAP_OK;
+  m_sock->flush();
+
+  return SOAP_OK;
 }
 
-size_t GroupwiseServer::gSoapReceiveCallback( struct soap *, char *s, size_t n )
+size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
+  size_t n )
 {
   kdDebug() << "GroupwiseServer::gSoapReceiveCallback()" << endl;
 
   if ( !m_sock ) {
     kdError() << "no open connection" << endl;
+    soap->error = SOAP_FAULT;
     return 0;
   }
   if ( !mError.isEmpty() ) {
     kdError() << "SSL is in error state." << endl;
+    soap->error = SOAP_SSL_ERROR;
     return 0;
   }
 
 //   m_sock->open();
-   long ret = m_sock->readBlock( s, n );
-   if ( ret < 0 )
-        qDebug("ERROR: receive failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
-   if ( getenv("DEBUG_GW_RESOURCE") ){
+  long ret = m_sock->readBlock( s, n );
+  if ( ret < 0 ) {
+    kdError() << "Receive failed: " << strerror( m_sock->systemError() )
+      << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
+  } else {
+    if ( getenv("DEBUG_GW_RESOURCE") ) {
       qDebug("*************************");
       char p[99999];
       strncpy(p, s, ret);
@@ -216,8 +225,11 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *, char *s, size_t n )
       qDebug("%s", p );
       qDebug("\n*************************");
       qDebug("kioReceiveCallback return %d", ret);
-   }
-   return ret;
+    }
+    log( "RECV", s, ret );
+  }
+
+  return ret;
 }
 
 GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
@@ -238,6 +250,14 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
   mSoap->fsend = mySendCallback;
   mSoap->frecv = myReceiveCallback;
   mSoap->fclose = myClose;
+
+  KConfig cfg( "groupwiserc" );
+  cfg.setGroup( "Debug" );
+  mLogFile = cfg.readEntry( "LogFile" );
+  
+  if ( !mLogFile.isEmpty() ) {
+    kdDebug() << "Debug log file enabled: " << mLogFile << endl;
+  }
 #endif
 
   mServerMap.insert( mSoap, this );
@@ -272,16 +292,30 @@ bool GroupwiseServer::login()
 
   int result = 1, maxTries = 3;
 
-  while ( --maxTries && result )
-    result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
-
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
+  while ( --maxTries && result ) {
+    result = soap_call___ns1__loginRequest( mSoap, mUrl.latin1(), NULL,
+      &loginReq, &loginResp );
   }
+
+  if ( !checkResponse( result, loginResp.status ) ) return false;
 
   mSession = loginResp.session;
   mSoap->header = new( SOAP_ENV__Header );
+
+  mUserName = "";
+  mUserEmail = "";
+  mUserUuid = "";
+
+  ns1__UserInfo *userinfo = loginResp.UserInfo;
+  if ( userinfo ) {
+    kdDebug() << "HAS USERINFO" << endl;
+    mUserName = conv.stringToQString( userinfo->name );
+    if ( userinfo->email ) mUserEmail = conv.stringToQString( userinfo->email );
+    if ( userinfo->uuid ) mUserUuid = conv.stringToQString( userinfo->uuid );
+  }
+
+  kdDebug() << "USER: name: " << mUserName << " email: " << mUserEmail <<
+    " uuid: " << mUserUuid << endl;
 
   return true;
 }
@@ -294,9 +328,10 @@ bool GroupwiseServer::getCategoryList()
   }
 
   _ns1__getCategoryListResponse catListResp;
-  mSoap->header->ns1__session = mSession;
-  soap_call___ns3__getCategoryListRequest( mSoap, mUrl.latin1(),
-                                           0, "", &catListResp);
+  mSoap->header->session = mSession;
+  int result = soap_call___ns1__getCategoryListRequest( mSoap, mUrl.latin1(),
+    0, "", &catListResp);
+  if ( !checkResponse( result, catListResp.status ) ) return false;
 
   if ( catListResp.categories ) {
     std::vector<class ns1__Category * > *categories;
@@ -313,9 +348,9 @@ bool GroupwiseServer::getCategoryList()
 
 bool GroupwiseServer::dumpData()
 {
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
-  soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
+  soap_call___ns1__getAddressBookListRequest( mSoap, mUrl.latin1(),
                                               NULL, "", &addressBookListResponse );
   soap_print_fault(mSoap, stderr);
 
@@ -324,19 +359,29 @@ bool GroupwiseServer::dumpData()
     std::vector<class ns1__AddressBook * >::const_iterator it;
     for( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
       ns1__AddressBook *book = *it;
-      cout << "ADDRESSBOOK: description: " << book->description.c_str() << endl;
-      cout << "ADDRESSBOOK: id: " << book->id.c_str() << endl;
-      cout << "ADDRESSBOOK: name: " << book->name.c_str() << endl;
+      if ( book->description ) {
+        cout << "ADDRESSBOOK: description: " << book->description->c_str() << endl;
+      }
+      if ( book->id ) {
+        cout << "ADDRESSBOOK: id: " << book->id->c_str() << endl;
+      }
+      if ( book->name ) {
+        cout << "ADDRESSBOOK: name: " << book->name->c_str() << endl;
+      }
 
       _ns1__getItemsRequest itemsRequest;
-      itemsRequest.container = book->id;
+      if ( !book->id ) {
+        kdError() << "Missing book id" << endl;
+      } else {
+        itemsRequest.container = *(book->id);
+      }
       itemsRequest.filter = 0;
       itemsRequest.items = 0;
 //      itemsRequest.count = -1;
 
-      mSoap->header->ns1__session = mSession;
+      mSoap->header->session = mSession;
       _ns1__getItemsResponse itemsResponse;
-      soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+      soap_call___ns1__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                         &itemsRequest,
                                         &itemsResponse );
 
@@ -349,12 +394,16 @@ bool GroupwiseServer::dumpData()
 
           if ( true ) {
             _ns1__getItemRequest itemRequest;
-            itemRequest.id = (*it2)->id;
+            if ( !(*it2)->id ) {
+              kdError() << "Missing item id" << endl;
+            } else {
+              itemRequest.id = *( (*it2)->id );
+            }
             itemRequest.view = 0;
 
-            mSoap->header->ns1__session = mSession;
+            mSoap->header->session = mSession;
             _ns1__getItemResponse itemResponse;
-            soap_call___ns5__getItemRequest( mSoap, mUrl.latin1(), 0,
+            soap_call___ns1__getItemRequest( mSoap, mUrl.latin1(), 0,
                                              &itemRequest,
                                              &itemResponse );
 
@@ -376,12 +425,12 @@ bool GroupwiseServer::dumpData()
 
 void GroupwiseServer::dumpFolderList()
 {
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getFolderListRequest folderListReq;
   folderListReq.parent = "folders";
   folderListReq.recurse = true;
   _ns1__getFolderListResponse folderListRes;
-  soap_call___ns7__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ns1__getFolderListRequest( mSoap, mUrl.latin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
@@ -394,10 +443,18 @@ void GroupwiseServer::dumpFolderList()
         dumpFolder( *it );
 #if 1
         if ( (*it)->type && *((*it)->type) == "Calendar" ) {
-          dumpCalendarFolder( (*it)->id );
+          if ( !(*it)->id ) {
+            kdError() << "Missing calendar id" << endl;
+          } else {
+            dumpCalendarFolder( *( (*it)->id ) );
+          }
         }
 #else
-        dumpCalendarFolder( (*it)->id );   
+        if ( !(*it)->id ) {
+          kdError() << "Missing calendar id" << endl;
+        } else {
+          dumpCalendarFolder( *( (*it)->id ) );
+        }   
 #endif
       }
     }
@@ -415,9 +472,9 @@ void GroupwiseServer::dumpCalendarFolder( const std::string &id )
   itemsRequest.items = 0;
 //  itemsRequest.count = 5;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getItemsResponse itemsResponse;
-  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ns1__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
   soap_print_fault(mSoap, stderr);
@@ -427,6 +484,12 @@ void GroupwiseServer::dumpCalendarFolder( const std::string &id )
   if ( items ) {
     std::vector<class ns1__Item * >::const_iterator it;
     for( it = items->begin(); it != items->end(); ++it ) {
+      if ( (*it)->type ) {
+        kdDebug() << "ITEM type '" << (*it)->type->c_str() << "'" << endl;
+      } else {
+        kdDebug() << "ITEM no type" << endl;
+      }
+      
       ns1__Appointment *a = dynamic_cast<ns1__Appointment *>( *it );
       if ( !a ) {
         cerr << "Appointment cast failed." << endl;
@@ -473,7 +536,9 @@ void GroupwiseServer::dumpFolder( ns1__Folder *f )
 {
   dumpItem( f );
   cout << "  PARENT: " << f->parent.c_str() << endl;
-  cout << "  DESCRIPTION: " << f->description.c_str() << endl;
+  if ( f->description ) {
+    cout << "  DESCRIPTION: " << f->description->c_str() << endl;
+  }
   // FIXME: More fields
 //	int *count;
 //	bool *hasUnread;
@@ -487,8 +552,12 @@ void GroupwiseServer::dumpFolder( ns1__Folder *f )
 void GroupwiseServer::dumpItem( ns1__Item *i )
 {
   if ( !i ) return;
-  cout << "  ID: " << i->id.c_str() << endl;
-  cout << "  NAME: " << i->name.c_str() << endl;
+  if ( i->id ) {
+    cout << "  ID: " << i->id->c_str() << endl;
+  }
+  if ( i->name ) {
+    cout << "  NAME: " << i->name->c_str() << endl;
+  }
   cout << "  VERSION: " << i->version << endl;
   cout << "  MODIFIED: " << i->modified << endl;
   if ( i->changes ) cout << "  HASCHANGES" << endl;
@@ -499,6 +568,8 @@ void GroupwiseServer::dumpItem( ns1__Item *i )
 
 bool GroupwiseServer::logout()
 {
+  // FIXME: Send logoutRequest
+
   soap_end( mSoap );
   soap_done( mSoap );
 
@@ -528,12 +599,11 @@ bool GroupwiseServer::getDelta()
   deltaRequest.PhoneMessage = 0;
   deltaRequest.Task = 0;
   
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getDeltaResponse deltaResponse;
-  soap_call___ns8__getDeltaRequest( mSoap, mUrl.latin1(), 0,
-                                    &deltaRequest, &deltaResponse );
-
-  return true;
+  int result = soap_call___ns1__getDeltaRequest( mSoap, mUrl.latin1(), 0,
+    &deltaRequest, &deltaResponse );
+  return checkResponse( result, deltaResponse.status );
 }
 
 GroupWise::AddressBook::List GroupwiseServer::addressBookList()
@@ -545,11 +615,13 @@ GroupWise::AddressBook::List GroupwiseServer::addressBookList()
     return books;
   }
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
-  soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
-                                              NULL, "", &addressBookListResponse );
-  soap_print_fault( mSoap, stderr );
+  int result = soap_call___ns1__getAddressBookListRequest( mSoap, mUrl.latin1(),
+    NULL, "", &addressBookListResponse );
+  if ( !checkResponse( result, addressBookListResponse.status ) ) {
+    return books;
+  }
 
   if ( addressBookListResponse.books ) {
     std::vector<class ns1__AddressBook * > *addressBooks = addressBookListResponse.books->book;
@@ -589,7 +661,7 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
 }
 
 bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
-  KCal::ResourceCached *resource )
+  KCal::ResourceCached * )
 {
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::addIncidence(): no session." << endl;
@@ -600,6 +672,7 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
             << endl;
 
   IncidenceConverter converter( mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
 
   incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
                                 converter.stringToQString( mCalendarFolder ) );
@@ -619,23 +692,16 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
   request.item = item;
 
   _ns1__sendItemResponse response;
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
-  int result = soap_call___ns16__sendItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__sendItemRequest( mSoap, mUrl.latin1(), 0,
                                                    &request, &response );
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  } else {
-    kdDebug() << "SOAP call succeeded" << endl;
-  }
+  if ( !checkResponse( result, response.status ) ) return false;
 
 //  kdDebug() << "RESPONDED UID: " << response.id.c_str() << endl;
 
   incidence->setCustomProperty( "GWRESOURCE", "UID",
                                 QString::fromUtf8( response.id.c_str() ) );
-  resource->idMapper().setRemoteId( incidence->uid(),
-    QString::fromUtf8( response.id.c_str() ) );
 
   return true;
 }
@@ -650,7 +716,14 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   kdDebug() << "GroupwiseServer::changeIncidence() " << incidence->summary()
             << endl;
 
+  if ( incidence->attendeeCount() > 0 ) {
+    if ( !deleteIncidence( incidence ) ) return false;
+    if ( !addIncidence( incidence, 0 ) ) return false;
+    return true;
+  }
+
   IncidenceConverter converter( mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
 
   incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
                                 converter.stringToQString( mCalendarFolder ) );
@@ -667,25 +740,43 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   }
 
   _ns1__modifyItemRequest request;
-  request.id = item->id;
+  if ( !item->id ) {
+    kdError() << "Missing incidence id" << endl;
+  } else {
+    request.id = *item->id;
+  }
   request.updates = soap_new_ns1__ItemChanges( mSoap, -1 );
   request.updates->add = 0;
   request.updates->_delete = 0;
   request.updates->update = item;
 
   _ns1__modifyItemResponse response;
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
-  int result = soap_call___ns10__modifyItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__modifyItemRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
+  return checkResponse( result, response.status );
+}
+
+bool GroupwiseServer::checkResponse( int result, ns1__Status *status )
+{
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
     return false;
   } else {
     kdDebug() << "SOAP call succeeded" << endl;
   }
-
-  return true;
+  if ( status && status->code != 0 ) {
+    QString msg = "SOAP Response Status: " + QString::number( status->code );
+    if ( status->description ) {
+      msg += " ";
+      msg += status->description->c_str();
+    }
+    kdError() << msg << endl;
+    return false;
+  } else {
+    return true;
+  }
 }
 
 bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
@@ -711,22 +802,15 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
   _ns1__removeItemRequest request;
   _ns1__removeItemResponse response;
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
   GWConverter converter( mSoap );
   request.container = converter.qStringToString( incidence->customProperty( "GWRESOURCE", "CONTAINER" ) );
   request.id = std::string( incidence->customProperty( "GWRESOURCE", "UID" ).utf8() );
 
-  int result = soap_call___ns12__removeItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__removeItemRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  } else {
-    kdDebug() << "SOAP call succeeded" << endl;
-  }
-
-  return true;
+  return checkResponse( result, response.status );
 }
 
 bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addressee &addr )
@@ -746,18 +830,15 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
   request.item = contact;
 
   _ns1__createItemResponse response;
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
 
-  int result = soap_call___ns9__createItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__createItemRequest( mSoap, mUrl.latin1(), 0,
                                                    &request, &response );
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  } else {
-    addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.c_str() ) );
-    addr.setChanged( false );
-  }
+  if ( !checkResponse( result, response.status ) ) return false;
+  
+  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.c_str() ) );
+  addr.setChanged( false );
 
   return true;
 }
@@ -774,23 +855,22 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
   ns1__Contact* contact = converter.convertToContact( addr );
 
   _ns1__modifyItemRequest request;
-  request.id = contact->id;
+  if ( !contact->id ) {
+    kdError() << "Missing addressee id" << endl;
+  } else {
+    request.id = *contact->id;
+  }
   request.updates = soap_new_ns1__ItemChanges( mSoap, -1 );
   request.updates->add = 0;
   request.updates->_delete = 0;
   request.updates->update = contact;
 
   _ns1__modifyItemResponse response;
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
-  int result = soap_call___ns10__modifyItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__modifyItemRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  }
-
-  return true;
+  return checkResponse( result, response.status );
 }
 
 bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
@@ -806,38 +886,15 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 
   _ns1__removeItemRequest request;
   _ns1__removeItemResponse response;
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
   GWConverter converter( mSoap );
   request.container = converter.qStringToString( addr.custom( "GWRESOURCE", "CONTAINER" ) );
   request.id = std::string( addr.custom( "GWRESOURCE", "UID" ).utf8() );
 
-  int result = soap_call___ns12__removeItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns1__removeItemRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  }
-
-  return true;
-}
-
-bool GroupwiseServer::readCalendarSynchronous( KCal::ResourceCached *resource )
-{
-  kdDebug() << "GroupwiseServer::readCalendar()" << endl;
-
-  if ( mSession.empty() ) {
-    kdError() << "GroupwiseServer::readCalendar(): no session." << endl;
-    return false;
-  }
-
-  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession );
-  job->setCalendarFolder( &mCalendarFolder );
-  job->setResource( resource );
-
-  job->run();
-
-  return true;
+  return checkResponse( result, response.status );
 }
 
 bool GroupwiseServer::readCalendarSynchronous( KCal::Calendar *cal )
@@ -872,7 +929,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
   // Setup input data
   ns1__FreeBusyUser user;
-  user.email = email.utf8();
+  user.email = conv.qStringToString( email );
 
   std::vector<class ns1__FreeBusyUser * > users;
   users.push_back( &user );
@@ -888,15 +945,11 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   
   _ns1__startFreeBusySessionResponse startSessionResponse;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
-  int result = soap_call___ns13__startFreeBusySessionRequest( mSoap,
+  int result = soap_call___ns1__startFreeBusySessionRequest( mSoap,
     mUrl.latin1(), NULL, &startSessionRequest, &startSessionResponse );
-
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  }
+  if ( !checkResponse( result, startSessionResponse.status ) ) return false;
 
   int fbSessionId = startSessionResponse.freeBusySessionId;
 
@@ -909,13 +962,11 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   
   _ns1__getFreeBusyResponse getFreeBusyResponse;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
-  result = soap_call___ns15__getFreeBusyRequest( mSoap,
+  result = soap_call___ns1__getFreeBusyRequest( mSoap,
     mUrl.latin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
-
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
+  if ( !checkResponse( result, getFreeBusyResponse.status ) ) {
     return false;
   }
  
@@ -952,16 +1003,11 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   
   _ns1__closeFreeBusySessionResponse closeSessionResponse;
 
-  mSoap->header->ns1__session = mSession;
+  mSoap->header->session = mSession;
 
-  result = soap_call___ns14__closeFreeBusySessionRequest( mSoap,
+  result = soap_call___ns1__closeFreeBusySessionRequest( mSoap,
     mUrl.latin1(), NULL, &closeSessionRequest, &closeSessionResponse );
-
-  if ( result != 0 ) {
-    soap_print_fault( mSoap, stderr );
-    return false;
-  }
-
+  if ( !checkResponse( result, closeSessionResponse.status ) ) return false;
 
   return true;
 }
@@ -981,6 +1027,35 @@ void GroupwiseServer::emitReadAddressBookTotalSize( int s )
 void GroupwiseServer::emitReadAddressBookProcessedSize( int s )
 {
   emit readAddressBookProcessedSize( s );
+}
+
+void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
+{
+  if ( mLogFile.isEmpty() ) return;
+
+  kdDebug() << "GroupwiseServer::log() " << prefix << " " << n << " bytes"
+    << endl;
+
+  QString log = mLogFile + "_" + QString::number( getpid() ) +
+    "_" + prefix + ".log";
+  QFile f( log );
+  if ( !f.open( IO_WriteOnly | IO_Append ) ) {
+    kdError() << "Unable to open log file '" << log << "'" << endl;
+  } else {
+    uint written = 0;
+    while ( written < n ) {
+      kdDebug() << "written: " << written << endl;
+      int w = f.writeBlock( s + written, n - written );
+      kdDebug() << "w: " << w << endl;
+      if ( w < 0 ) {
+        kdError() << "Unable to write log '" << log << "'" << endl;
+        break;
+      }
+      written += w;
+    }
+    f.putch( '\n' );
+    f.close();
+  }
 }
 
 #include "groupwiseserver.moc"

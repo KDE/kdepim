@@ -256,7 +256,7 @@
 					<xs:element name="fullName" type="tns:FullName" minOccurs="0"/>
 					<xs:element name="emailList" type="tns:EmailAddressList" minOccurs="0"/>
 					<xs:element name="imList" type="tns:ImAddressList" minOccurs="0"/>
-<!--					<xs:element name="phoneList" type="tns:PhoneList" minOccurs="0"/>-->
+					<xs:element name="phoneList" type="tns:PhoneList" minOccurs="0"/>
 					<xs:element name="addressList" type="tns:PostalAddressList" minOccurs="0"/>
 					<xs:element name="officeInfo" type="tns:OfficeInfo" minOccurs="0"/>
 					<xs:element name="personalInfo" type="tns:PersonalInfo" minOccurs="0"/>
@@ -429,7 +429,7 @@
 			<xs:extension base="tns:FilterElement">
 				<xs:sequence>
 					<xs:element name="field" type="xs:string"/>
-    			<xs:element name="value" type="xs:string"/>
+                  			<xs:element name="value" type="xs:string"/>
 <!--					<xs:element name="value" type="xs:anyType"/> -->
 				</xs:sequence>
 			</xs:extension>
@@ -874,14 +874,13 @@
 		</xs:sequence>
 	</xs:complexType>
 
-<!--
 	<xs:complexType name="PhoneList">
 		<xs:sequence>
 			<xs:element name="phone" type="tns:PhoneNumber" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="default" type="xs:string"/>
 	</xs:complexType>
--->
+
 	<xs:complexType name="PhoneMessage">
 		<xs:complexContent>
 			<xs:extension base="tns:Mail">
@@ -895,7 +894,6 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-<!--
 	<xs:complexType name="PhoneNumber">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
@@ -913,7 +911,6 @@
 			<xs:enumeration value="Pager"/>
 		</xs:restriction>
 	</xs:simpleType>
--->
 
 	<xs:complexType name="PlainText">
 		<xs:complexContent>
@@ -1058,6 +1055,7 @@
 			<xs:enumeration value="SystemGroup"/>
 			<xs:enumeration value="PersonalGroupMember"/>
 			<xs:enumeration value="SystemGroupMember"/>
+                        <xs:enumeration value="Resource"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -1770,7 +1768,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="session" type="xs:string"/>
-				<xs:element name="userinfo" type="tns:UserInfo"/>
+				<xs:element name="UserInfo" type="tns:UserInfo"/>
 				<xs:element name="status" type="tns:Status"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -2226,112 +2224,70 @@
     <part name="getFreeBusy" element="tns:getFreeBusyResponse"/>
 </message>
 
-<portType name="loginRequest_portType">
+<portType name="GroupWisePortType">
   <operation name="loginRequest">
     <input message="tns:loginRequestMessage"/>
     <output message="tns:loginResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getCategoryListRequest_portType">
   <operation name="getCategoryListRequest">
     <input message="tns:getCategoryListRequestMessage"/>
     <output message="tns:getCategoryListResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getAddressBookListRequest_portType">
   <operation name="getAddressBookListRequest">
     <input message="tns:getAddressBookListRequestMessage"/>
     <output message="tns:getAddressBookListResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getItemRequest_portType">
   <operation name="getItemRequest">
     <input message="tns:getItemRequestMessage"/>
     <output message="tns:getItemResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getItemsRequest_portType">
   <operation name="getItemsRequest">
     <input message="tns:getItemsRequestMessage"/>
     <output message="tns:getItemsResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getFolderListRequest_portType">
   <operation name="getFolderListRequest">
     <input message="tns:getFolderListRequestMessage"/>
     <output message="tns:getFolderListResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getDeltaRequest_portType">
   <operation name="getDeltaRequest">
     <input message="tns:getDeltaRequestMessage"/>
     <output message="tns:getDeltaResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="createItemRequest_portType">
   <operation name="createItemRequest">
     <input message="tns:createItemRequestMessage"/>
     <output message="tns:createItemResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="sendItemRequest_portType">
   <operation name="sendItemRequest">
     <input message="tns:sendItemRequestMessage"/>
     <output message="tns:sendItemResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="modifyItemRequest_portType">
   <operation name="modifyItemRequest">
     <input message="tns:modifyItemRequestMessage"/>
     <output message="tns:modifyItemResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="purgeItemRequest_portType">
   <operation name="purgeItemRequest">
     <input message="tns:purgeItemRequestMessage"/>
     <output message="tns:purgeItemResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="removeItemRequest_portType">
   <operation name="removeItemRequest">
     <input message="tns:removeItemRequestMessage"/>
     <output message="tns:removeItemResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="startFreeBusySessionRequest_portType">
   <operation name="startFreeBusySessionRequest">
     <input message="tns:startFreeBusySessionRequestMessage"/>
     <output message="tns:startFreeBusySessionResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="closeFreeBusySessionRequest_portType">
   <operation name="closeFreeBusySessionRequest">
     <input message="tns:closeFreeBusySessionRequestMessage"/>
     <output message="tns:closeFreeBusySessionResponseMessage"/>
   </operation>
-</portType>
-
-<portType name="getFreeBusyRequest_portType">
   <operation name="getFreeBusyRequest">
     <input message="tns:getFreeBusyRequestMessage"/>
     <output message="tns:getFreeBusyResponseMessage"/>
   </operation>
 </portType>
 
-  <binding name="loginRequestSoapBinding" type="tns:loginRequest_portType">
+  <binding name="GroupWiseBinding" type="tns:GroupWisePortType">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
     <operation name="loginRequest">
       <soap:operation soapAction="loginRequest" style="document" />
@@ -2342,8 +2298,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getCategoryListRequestSoapBinding" type="tns:getCategoryListRequest_portType">
     <operation name="getCategoryListRequest">
       <soap:operation soapAction="getCategoryListRequest" style="document" />
       <input>
@@ -2354,8 +2308,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getAddressBookListRequestSoapBinding" type="tns:getAddressBookListRequest_portType">
     <operation name="getAddressBookListRequest">
       <soap:operation soapAction="getAddressBookListRequest" style="document" />
       <input>
@@ -2366,8 +2318,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getItemRequestSoapBinding" type="tns:getItemRequest_portType">
     <operation name="getItemRequest">
       <soap:operation soapAction="getItemRequest" style="document" />
       <input>
@@ -2378,8 +2328,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getItemsRequestSoapBinding" type="tns:getItemsRequest_portType">
     <operation name="getItemsRequest">
       <soap:operation soapAction="getItemsRequest" style="document" />
       <input>
@@ -2390,8 +2338,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getFolderListRequestSoapBinding" type="tns:getFolderListRequest_portType">
     <operation name="getFolderListRequest">
       <soap:operation soapAction="getFolderListRequest" style="document" />
       <input>
@@ -2402,8 +2348,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getDeltaRequestSoapBinding" type="tns:getDeltaRequest_portType">
     <operation name="getDeltaRequest">
       <soap:operation soapAction="getDeltaRequest" style="document" />
       <input>
@@ -2414,8 +2358,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="createItemRequestSoapBinding" type="tns:createItemRequest_portType">
     <operation name="createItemRequest">
       <soap:operation soapAction="createItemRequest" style="document" />
       <input>
@@ -2426,8 +2368,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="sendItemRequestSoapBinding" type="tns:sendItemRequest_portType">
     <operation name="sendItemRequest">
       <soap:operation soapAction="sendItemRequest" style="document" />
       <input>
@@ -2438,8 +2378,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="modifyItemRequestSoapBinding" type="tns:modifyItemRequest_portType">
     <operation name="modifyItemRequest">
       <soap:operation soapAction="modifyItemRequest" style="document" />
       <input>
@@ -2450,8 +2388,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="purgeItemRequestSoapBinding" type="tns:purgeItemRequest_portType">
     <operation name="purgeItemRequest">
       <soap:operation soapAction="purgeItemRequest" style="document" />
       <input>
@@ -2462,8 +2398,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="removeItemRequestSoapBinding" type="tns:removeItemRequest_portType">
     <operation name="removeItemRequest">
       <soap:operation soapAction="removeItemRequest" style="document" />
       <input>
@@ -2474,8 +2408,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="startFreeBusySessionRequestSoapBinding" type="tns:startFreeBusySessionRequest_portType">
     <operation name="startFreeBusySessionRequest">
       <soap:operation soapAction="startFreeBusySessionRequest" style="document" />
       <input>
@@ -2486,8 +2418,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="closeFreeBusySessionRequestSoapBinding" type="tns:closeFreeBusySessionRequest_portType">
     <operation name="closeFreeBusySessionRequest">
       <soap:operation soapAction="closeFreeBusySessionRequest" style="document" />
       <input>
@@ -2498,8 +2428,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-  </binding>
-  <binding name="getFreeBusyRequestSoapBinding" type="tns:getFreeBusyRequest_portType">
     <operation name="getFreeBusyRequest">
       <soap:operation soapAction="getFreeBusyRequest" style="document" />
       <input>
@@ -2513,35 +2441,7 @@
   </binding>
 
   <service name="GroupwiseSOAP">
-        <port binding="tns:loginRequestSoapBinding" name="GroupwiseSOAPPort" bindings="loginRequestSoapBinding">
-        </port>
-        <port binding="tns:getCategoryListRequestSoapBinding" name="GroupwiseSOAPPort2" bindings="getCategoryListRequestSoapBinding">
-        </port>
-        <port binding="tns:getAddressBookListRequestSoapBinding" name="GroupwiseSOAPPort3" bindings="getAddressBookListRequestSoapBinding">
-        </port>
-        <port binding="tns:getItemRequestSoapBinding" name="GroupwiseSOAPPort4" bindings="getItemRequestSoapBinding">
-        </port>
-        <port binding="tns:getItemsRequestSoapBinding" name="GroupwiseSOAPPort5" bindings="getItemsRequestSoapBinding">
-        </port>
-        <port binding="tns:getFolderListRequestSoapBinding" name="GroupwiseSOAPPort6" bindings="getFolderListRequestSoapBinding">
-        </port>
-        <port binding="tns:getDeltaRequestSoapBinding" name="GroupwiseSOAPPort7" bindings="getDeltaRequestSoapBinding">
-        </port>
-        <port binding="tns:createItemRequestSoapBinding" name="GroupwiseSOAPPort8" bindings="createItemRequestSoapBinding">
-        </port>
-        <port binding="tns:modifyItemRequestSoapBinding" name="GroupwiseSOAPPort9" bindings="modifyItemRequestSoapBinding">
-        </port>
-        <port binding="tns:purgeItemRequestSoapBinding" name="GroupwiseSOAPPort10" bindings="purgeItemRequestSoapBinding">
-        </port>
-        <port binding="tns:removeItemRequestSoapBinding" name="GroupwiseSOAPPort11" bindings="removeItemRequestSoapBinding">
-        </port>
-        <port binding="tns:startFreeBusySessionRequestSoapBinding" name="GroupwiseSOAPPort12" bindings="startFreeBusySessionRequestSoapBinding">
-        </port>
-        <port binding="tns:closeFreeBusySessionRequestSoapBinding" name="GroupwiseSOAPPort13" bindings="closeFreeBusySessionRequestSoapBinding">
-        </port>
-        <port binding="tns:getFreeBusyRequestSoapBinding" name="GroupwiseSOAPPort14" bindings="getFreeBusyRequestSoapBinding">
-        </port>
-        <port binding="tns:sendItemRequestSoapBinding" name="GroupwiseSOAPPort15" bindings="sendItemRequestSoapBinding">
+        <port binding="tns:GroupWiseBinding" name="GroupwiseSOAPPort">
         </port>
   </service>
 </definitions>

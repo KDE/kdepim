@@ -31,6 +31,14 @@ IncidenceConverter::IncidenceConverter( struct soap* soap )
   mTimezone = KPimPrefs::timezone();
 }
 
+void IncidenceConverter::setFrom( const QString &name,
+  const QString &email, const QString &uuid )
+{
+  mFromName = name;
+  mFromEmail = email;
+  mFromUuid = uuid;
+}
+
 KCal::Event* IncidenceConverter::convertFromAppointment( ns1__Appointment* appointment )
 {
   if ( !appointment )
@@ -43,18 +51,31 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ns1__Appointment* appoi
     return 0;
   }
 
-  if ( appointment->endDate != 0 )
-    event->setDtEnd( charToQDateTime( appointment->endDate, mTimezone ) );
+  if ( appointment->allDayEvent && (*appointment->allDayEvent) ) {
+    event->setFloats( true );
+    
+    if ( appointment->startDate != 0 )
+      event->setDtStart( charToQDate( appointment->startDate ) );
+
+    if ( appointment->endDate != 0 )
+      event->setDtEnd( charToQDate( appointment->endDate ).addDays( -1 ) );
+    
+  } else {
+    event->setFloats( false );
+
+    if ( appointment->startDate != 0 )
+      event->setDtStart( charToQDateTime( appointment->startDate, mTimezone ) );
+
+    if ( appointment->endDate != 0 )
+      event->setDtEnd( charToQDateTime( appointment->endDate, mTimezone ) );
+  }
+
 
   if ( appointment->alarm ) {
     KCal::Alarm *alarm = event->newAlarm();
     alarm->setStartOffset( appointment->alarm->__item * -1 );
     alarm->setEnabled( appointment->alarm->enabled );
   }
-
-  if ( appointment->allDayEvent && (*appointment->allDayEvent) == true )
-    event->setFloats( true );
-  else event->setFloats( false );
 
   if ( appointment->place )
     event->setLocation( stringToQString( appointment->place ) );
@@ -68,14 +89,37 @@ ns1__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event )
     return 0;
 
   ns1__Appointment* appointment = soap_new_ns1__Appointment( soap(), -1 );
+  appointment->endDate = 0;
+  appointment->alarm = 0;
+  appointment->allDayEvent = 0;
+  appointment->place = 0;
+  appointment->timezone = 0;
 
   if ( !convertToCalendarItem( event, appointment ) ) {
     soap_dealloc( soap(), appointment );
     return 0;
   }
 
-  if ( event->hasEndDate() )
-    appointment->endDate = qDateTimeToChar( event->dtEnd(), mTimezone );
+  if ( event->doesFloat() ) {
+    bool *allDayEvent = (bool*)soap_malloc( soap(), 1 );
+    (*allDayEvent ) = true;
+
+    appointment->allDayEvent = allDayEvent;
+
+    if ( event->dtStart().isValid() )
+      appointment->startDate = qDateToChar( event->dtStart().date() );
+
+    if ( event->hasEndDate() )
+      appointment->endDate = qDateToChar( event->dtEnd().date() );
+  } else {
+    appointment->allDayEvent = 0;
+
+    if ( event->dtStart().isValid() )
+      appointment->startDate = qDateTimeToChar( event->dtStart(), mTimezone );
+
+    if ( event->hasEndDate() )
+      appointment->endDate = qDateTimeToChar( event->dtEnd(), mTimezone );
+  }
 
   appointment->acceptLevel = Busy;
 
@@ -88,14 +132,6 @@ ns1__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event )
     appointment->alarm = alarm;
   } else
     appointment->alarm = 0;
-
-  if ( event->doesFloat() ) {
-    bool *allDayEvent = (bool*)soap_malloc( soap(), 1 );
-    (*allDayEvent ) = true;
-
-    appointment->allDayEvent = allDayEvent;
-  } else
-    appointment->allDayEvent = 0;
 
   if ( !event->location().isEmpty() ) {
     std::string* location = qStringToString( event->location() );
@@ -121,13 +157,21 @@ KCal::Todo* IncidenceConverter::convertFromTask( ns1__Task* task )
     return 0;
   }
 
+  if ( task->startDate != 0 )
+    todo->setDtStart( charToQDateTime( task->startDate, mTimezone ) );
+
   if ( task->dueDate )
     todo->setDtDue( QDate::fromString( stringToQString( task->dueDate ), Qt::ISODate ) );
 
   if ( task->taskPriority ) {
     QString priority = stringToQString( task->taskPriority );
 
-    // TODO: set priority
+    // FIXME: Store priority string somewhere
+
+    int p = priority.toInt();
+    if ( p == 0 ) p = 3;
+    
+    todo->setPriority( p );
   }
 
   if ( task->completed && (*task->completed) == true )
@@ -142,25 +186,26 @@ ns1__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
     return 0;
 
   ns1__Task* task = soap_new_ns1__Task( soap(), -1 );
+  task->dueDate = 0;
+  task->taskPriority = 0;
+  task->completed = 0;
 
   if ( !convertToCalendarItem( todo, task ) ) {
     soap_dealloc( soap(), task );
     return 0;
   }
 
+  if ( todo->dtStart().isValid() )
+    task->startDate = qDateTimeToChar( todo->dtStart(), mTimezone );
+
   if ( todo->hasDueDate() ) {
     task->dueDate = qDateTimeToChar( todo->dtDue() );
   } else
     task->dueDate = 0;
 
-/*
-  if ( task->taskPriority ) {
-    QString priority = s2q( task->taskPriority );
-
-    // TODO: set priority
-  } else
-*/
-  task->taskPriority = 0;
+  // FIXME: Restore custom priorities
+  QString priority = QString::number( todo->priority() );
+  task->taskPriority = qStringToString( priority );
 
   task->completed = (bool*)soap_malloc( soap(), 1 );
   if ( todo->isCompleted() )
@@ -173,27 +218,39 @@ ns1__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
 
 bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ns1__CalendarItem* item )
 {
-  // null pointer initialization
+  // ns1__CalendarItem
+  item->startDate = 0;
+  item->rdate = 0;
+  item->isRecurring = 0;
+  item->iCalId = 0;
+  // ns1__Mail
   item->originalSubject = 0;
   item->distribution = 0;
   item->message = 0;
   item->attachments = 0;
   item->options = 0;
+  // ns1__BoxEntry
   item->status = 0;
   item->thread = 0;
   item->msgid = 0;
   item->source = 0;
+  item->delivered = 0;
   item->class_ = 0;
+  // ns1__ContainerItem
+  item->container = 0;
   item->categories = 0;
+  item->created = 0;
   item->customs = 0;
+  // ns1__Item
+  item->id = 0;
+  item->name = 0;
+  item->version = 0;
+  item->modified = 0;
   item->changes = 0;
   item->type = 0;
-  item->rdate = 0;
-  item->isRecurring = 0;
-  item->iCalId = 0;
-  item->delivered = 0;
 
-  item->id = incidence->customProperty( "GWRESOURCE", "UID" ).utf8();
+  QString id = incidence->customProperty( "GWRESOURCE", "UID" );
+  if ( !id.isEmpty() ) item->id = qStringToString( id );
 
   // Container
   if ( !incidence->customProperty( "GWRESOURCE", "CONTAINER" ).isEmpty() ) {
@@ -218,12 +275,9 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ns1_
   if ( incidence->lastModified().isValid() )
     item->modified = qDateTimeToChar( incidence->lastModified(), mTimezone );
 
-  if ( incidence->dtStart().isValid() )
-    item->startDate = qDateTimeToChar( incidence->dtStart(), mTimezone );
-
   setItemDescription( incidence, item );
 
-#if 0
+#if 1
   if ( incidence->attendeeCount() > 0 ) {
     setAttendees( incidence, item );
   }
@@ -241,9 +295,19 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   ns1__From *from = soap_new_ns1__From( soap(), -1 );
   dist->from = from;
 
+  // ns1__From
   from->replyTo = 0;
-  from->displayName = incidence->organizer().name().utf8();
-  from->email = incidence->organizer().email().utf8();
+  // ns1__NameAndEmail
+  from->displayName = 0;
+  from->email = 0;
+  from->uuid = 0;
+
+  from->displayName = qStringToString( incidence->organizer().name() );
+  from->email = qStringToString( incidence->organizer().email() );
+
+  if ( !mFromName.isEmpty() ) from->displayName = qStringToString( mFromName );
+  if ( !mFromEmail.isEmpty() ) from->email = qStringToString( mFromEmail );
+  if ( !mFromUuid.isEmpty() ) from->uuid = qStringToString( mFromUuid );
 
   QString to = "To";
   dist->to = qStringToString( to );
@@ -271,24 +335,43 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
     soap_new_std__vectorTemplateOfPointerTons1__Recipient( soap(), -1 );
   recipientList->recipient = recipients;
 
+  recipients->push_back( createRecipient( mFromName, mFromEmail, mFromUuid ) );
+
   KCal::Attendee::List attendees = incidence->attendees();
   KCal::Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
     kdDebug() << "IncidenceConverter::setAttendee() " << (*it)->fullName()
       << endl;
-
-    ns1__Recipient *recipient = soap_new_ns1__Recipient( soap(), -1 );
-    recipients->push_back( recipient );
-
-    recipient->recipientStatus = 0;
-    recipient->displayName = (*it)->name().utf8();
-    recipient->email = (*it)->email().utf8();
-    recipient->distType = TO;
-    recipient->recipType = User;
+    recipients->push_back( createRecipient( (*it)->name(), (*it)->email() ) );
   }
 }
 
-bool IncidenceConverter::convertFromCalendarItem( ns1__CalendarItem* item, KCal::Incidence* incidence )
+ns1__Recipient *IncidenceConverter::createRecipient( const QString &name,
+  const QString &email, const QString &uuid )
+{
+  ns1__Recipient *recipient = soap_new_ns1__Recipient( soap(), -1 );
+
+  recipient->recipientStatus = 0;
+  if ( !uuid.isEmpty() ) recipient->uuid = qStringToString( uuid );
+  else recipient->uuid = 0;
+  if ( !name.isEmpty() ) {
+    recipient->displayName = qStringToString( name );
+  } else {
+    recipient->displayName = 0;
+  }
+  if ( !email.isEmpty() ) {
+    recipient->email = qStringToString( email );
+  } else {
+    recipient->email = 0;
+  }
+  recipient->distType = TO;
+  recipient->recipType = User;
+
+  return recipient;
+}
+
+bool IncidenceConverter::convertFromCalendarItem( ns1__CalendarItem* item,
+  KCal::Incidence* incidence )
 {
   incidence->setCustomProperty( "GWRESOURCE", "UID",
                                 stringToQString( item->id ) );
@@ -303,9 +386,6 @@ bool IncidenceConverter::convertFromCalendarItem( ns1__CalendarItem* item, KCal:
 
   if ( item->modified != 0 )
     incidence->setLastModified( charToQDateTime( item->modified, mTimezone ) );
-
-  if ( item->startDate != 0 )
-    incidence->setDtStart( charToQDateTime( item->startDate, mTimezone ) );
 
   getItemDescription( item, incidence );
   getAttendees( item, incidence );
@@ -348,30 +428,32 @@ void IncidenceConverter::getItemDescription( ns1__CalendarItem *item, KCal::Inci
   }
 }
 
-void IncidenceConverter::setItemDescription( KCal::Incidence *incidence, ns1__CalendarItem *item )
+void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
+  ns1__CalendarItem *item )
 {
-// We disabled it for now, since the server doesn't follow the specifications yet :(
-
-/*
   if ( !incidence->description().isEmpty() ) {
     ns1__MessageBody *message = soap_new_ns1__MessageBody( soap(), -1 );
-    message->part = soap_new_std__vectorTemplateOfPointerTons1__MessagePart( soap(), -1 );
+    message->part =
+      soap_new_std__vectorTemplateOfPointerTons1__MessagePart( soap(), -1 );
 
     ns1__MessagePart *part = soap_new_ns1__MessagePart( soap(), -1 );
 
     xsd__base64Binary data;
-    data.__ptr = (unsigned char*)qStringToChar( incidence->description().utf8() );
+    data.__ptr =
+      (unsigned char*)qStringToChar( incidence->description().utf8() );
     data.__size = incidence->description().utf8().length();
 
     part->__item = data;
     part->contentId = "";
     part->contentType = "text/plain";
-    part->length = KCodecs::base64Encode( incidence->description().utf8() ).length();
+//    part->length = incidence->description().utf8().length();
+    part->length = 
+      KCodecs::base64Encode( incidence->description().utf8() ).length();
 
     message->part->push_back( part );
 
     item->message = message;
-  } else */
+  } else
     item->message = 0;
 }
 
@@ -389,8 +471,9 @@ void IncidenceConverter::getAttendees( ns1__CalendarItem *item, KCal::Incidence 
     for ( it = recipients->begin(); it != recipients->end(); ++it ) {
       kdDebug() << "---- recipient " << endl;
       ns1__Recipient *recipient = *it;
-      KCal::Attendee *attendee = new KCal::Attendee( stringToQString( recipient->displayName ),
-                                                     stringToQString( recipient->email ) );
+      KCal::Attendee *attendee = new KCal::Attendee(
+        stringToQString( recipient->displayName ),
+        stringToQString( recipient->email ) );
 
       incidence->addAttendee( attendee );
     }
