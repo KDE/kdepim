@@ -197,7 +197,7 @@ the message in the outbox. If your message is not finished yet, select
 Folder</guimenuitem></menuchoice>. If you want to send an <link
 linkend="pgp-encrypt-your-messages">encrypted</link>
 or <link linkend="pgp-sign-your-messages">digitally signed</link> message, select the
-<guiicon>Sign Message</guiicon> resp. <guiicon>Encrypt 
+<guiicon>Sign Message</guiicon> or <guiicon>Encrypt 
 Message</guiicon> icons in the toolbar.</para>
 
 <para>If you have installed and activated at least one of
@@ -1102,7 +1102,7 @@ just make a symlink.</para>
 <para>If you have not done so, you have to generate a key pair (secret and public
 key) for your identity. You must do this at the command line: use
 <userinput><command>pgp</command> <option>-kg</option></userinput>
-resp. <userinput><command>gpg</command> <option>--gen-key</option></userinput>.  &kmail;
+or <userinput><command>gpg</command> <option>--gen-key</option></userinput>.  &kmail;
 has no internal support for <application>pgp</application>'s key generation at
 this time. The identity (normally your name followed by your email address
 within brackets, such as <userinput>John Doe
@@ -1390,8 +1390,8 @@ let the wizard finish the filter setup. The wizard will not take any existing
 filter rules into consideration but will append new rules in any case. You 
 may want to inspect the result of this process in the 
 <link linkend="filter-dialog">Filter Dialog</link>. Having checked the 
-<guilabel>Classif messages manually as spam / not spam</guilabel> option 
-the wizard will create toolbar buttons for marking messages as spam resp. 
+<guilabel>Classify messages manually as spam / not spam</guilabel> option 
+the wizard will create toolbar buttons for marking messages as spam or
 as ham. Keep in mind that classifying messages as spam will also move that 
 messages to the folder you had specified for spam messages.
 </para>
@@ -1402,7 +1402,7 @@ messages to the folder you had specified for spam messages.
 <title>Details</title>
 
 <para>The wizard uses information stored in a special configuration file named 
-<emphasis>kmail.antispamrc</emphasis> (stored in the global resp. local KDE 
+<emphasis>kmail.antispamrc</emphasis> (stored in the global or local KDE 
 config directory). It will first check the global config file and then the local 
 config file. If the local config file contains entries with higher (newer) 
 version number per tool the configuration data from the local file for that 

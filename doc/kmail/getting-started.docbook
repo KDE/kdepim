@@ -237,7 +237,7 @@ text</guilabel> if your server does not support any of the other
 authentication methods. Additionally, for <acronym>IMAP</acronym>
 <guilabel>Anonymous</guilabel> is supported, but <guilabel>APOP</guilabel>
 is not. Use the <guibutton>Check what the server supports</guibutton> button
-on the <guilabel>Extras</guilabel> resp. <guilabel>Security</guilabel> tab
+on the <guilabel>Extras</guilabel> or <guilabel>Security</guilabel> tab
 to automatically select the most secure settings supported by your server.</para>
 
 <para>You are now ready to send and receive mail. For
