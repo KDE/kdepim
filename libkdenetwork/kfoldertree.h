@@ -90,10 +90,6 @@ class KFolderTreeItem : public KListViewItem
     KFolderTreeItem( KFolderTreeItem *parent, const QString & label=QString::null, 
         Protocol protocol=NONE, Type type=Other, int unread=0, int total=0 );
 
-    /** formats the key of the @param column for correct sorting
-     * and returns it */
-    virtual QString key(int column, bool ascending) const;
-
     /** compare */
     virtual int compare( QListViewItem * i, int col,
         bool ascending ) const; 
@@ -123,6 +119,12 @@ class KFolderTreeItem : public KListViewItem
 
     /** dnd */
     virtual bool acceptDrag(QDropEvent* ) const { return true; }
+
+  private:
+    /** returns a sorting key based on the folder's protocol */
+    int protocolSortingKey() const;
+    /** returns a sorting key based on the folder's type */
+    int typeSortingKey() const;
 
   protected:
     Protocol mProtocol;

@@ -1,3 +1,5 @@
+// -*- c-basic-offset: 2 -*-
+
 #include "kfoldertree.h"
 #include <klocale.h>
 #include <kiconloader.h>
@@ -25,84 +27,108 @@ KFolderTreeItem::KFolderTreeItem( KFolderTreeItem *parent,
 }
 
 //-----------------------------------------------------------------------------
-QString KFolderTreeItem::key(int column, bool) const
+int KFolderTreeItem::protocolSortingKey() const
 {
-  if ( column > 0 ) return text(column);
-
-  // local root-folder
-  if ( depth() == 0 && mProtocol == NONE )
-    return "\t0";
-
-  QString thiskey;
-
-  /* basic sorting rules: 
-     local => imap => news => other
-   */
-  if (mProtocol == Local)
-    thiskey = "\t1";
-  else if (mProtocol == CachedImap)
-    thiskey = "\t2";
-  else if (mProtocol == Imap)
-    thiskey = "\t3";
-  else if (mProtocol == News)
-    thiskey = "\t4";
-  else if (mProtocol == Search)
-    thiskey = "\t5";
-  else
-    thiskey = "\t6";
-
-  // make sure system folders come first when sorting
-  if (mType == Inbox)
-    thiskey += "\t0";
-  else if (mType == Outbox)
-    thiskey += "\t1";
-  else if (mType == SentMail)
-    thiskey += "\t2";
-  else if (mType == Trash)
-    thiskey += "\t3";
-  else if (mType == Drafts)
-    thiskey += "\t4";
-  else if (mType == Calendar)
-    thiskey += "\t5";
-  else if (mType == Contacts)
-    thiskey += "\t6";
-  else if (mType == Notes)
-    thiskey += "\t7";
-  else if (mType == Tasks)
-    thiskey += "\t8";
-
-  // the displayed text
-  thiskey += text(0);
-
-  return thiskey;
+  // protocol dependant sorting order:
+  // local < imap < news < search < other
+  switch ( mProtocol ) {
+  case Local:
+    return 1;
+  case CachedImap:
+  case Imap:
+    return 2;
+  case News:
+    return 3;
+  case Search:
+    return 4;
+  default:
+    return 42;
+  }
 }
 
 //-----------------------------------------------------------------------------
-int KFolderTreeItem::compare( QListViewItem * i, int col, bool ascending ) const 
+int KFolderTreeItem::typeSortingKey() const
 {
-  if (col == 0) 
+  // type dependant sorting order:
+  // inbox < outbox < sent-mail < trash < drafts
+  // < calendar < contacts < notes < tasks
+  // < normal folders
+  switch ( mType ) {
+  case Inbox:
+    return 1;
+  case Outbox:
+    return 2;
+  case SentMail:
+    return 3;
+  case Trash:
+    return 4;
+  case Drafts:
+    return 5;
+  case Calendar:
+    return 6;
+  case Contacts:
+    return 7;
+  case Notes:
+    return 8;
+  case Tasks:
+    return 9;
+  default:
+    return 42;
+  }
+}
+
+//-----------------------------------------------------------------------------
+int KFolderTreeItem::compare( QListViewItem * i, int col, bool ) const
+{
+  KFolderTreeItem* other = static_cast<KFolderTreeItem*>( i );
+
+  if (col == 0)
   {
     // sort by folder
-    return key(col, ascending).localeAwareCompare( i->key(col, ascending) );
+
+    // local root-folder
+    if ( depth() == 0 && mProtocol == NONE )
+      return -1;
+    if ( other->depth() == 0 && other->protocol() == NONE )
+      return 1;
+
+    // first compare by protocol
+    int thisKey = protocolSortingKey();
+    int thatKey = other->protocolSortingKey();
+    if ( thisKey < thatKey )
+      return -1;
+    if ( thisKey > thatKey )
+      return 1;
+
+    // then compare by type
+    thisKey = typeSortingKey();
+    thatKey = other->typeSortingKey();
+    if ( thisKey < thatKey )
+      return -1;
+    if ( thisKey > thatKey )
+      return 1;
+
+    // and finally compare by name
+    return text( 0 ).localeAwareCompare( other->text( 0 ) );
   }
-  else 
+  else
   {
     // sort by unread or total-column
-    int a = 0, b = 0; 
+    int a = 0, b = 0;
     if (col == static_cast<KFolderTree*>(listView())->unreadIndex())
     {
-      a = mUnread; 
-      b = static_cast<KFolderTreeItem*>(i)->unreadCount();
+      a = mUnread;
+      b = other->unreadCount();
     }
     else if (col == static_cast<KFolderTree*>(listView())->totalIndex())
     {
-      a = mTotal; 
-      b = static_cast<KFolderTreeItem*>(i)->totalCount();
+      a = mTotal;
+      b = other->totalCount();
     }
-    
+
     if ( a == b )
       return 0;
-    else 
+    else
       return (a < b ? -1 : 1);
   }
 }
@@ -113,7 +139,7 @@ void KFolderTreeItem::setUnreadCount( int aUnread )
   if ( aUnread < 0 ) return;
 
   mUnread = aUnread;
-  
+
   QString unread = QString::null;
   if (mUnread == 0)
     unread = "- ";
@@ -122,7 +148,7 @@ void KFolderTreeItem::setUnreadCount( int aUnread )
     unread += " ";
   }
 
-  setText( static_cast<KFolderTree*>(listView())->unreadIndex(), 
+  setText( static_cast<KFolderTree*>(listView())->unreadIndex(),
       unread );
 }
 
@@ -141,7 +167,7 @@ void KFolderTreeItem::setTotalCount( int aTotal )
     total += " ";
   }
 
-  setText( static_cast<KFolderTree*>(listView())->totalIndex(), 
+  setText( static_cast<KFolderTree*>(listView())->totalIndex(),
       total );
 }
 
@@ -169,7 +195,7 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
   // set an empty text so that we can have our own implementation (see further down)
   // but still benefit from KListView::paintCell
   setText( column, "" );
-  
+
   KListViewItem::paintCell( p, cg, column, width, align );
 
   KFolderTree *ft = static_cast<KFolderTree*>(listView());
@@ -189,11 +215,11 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
     r += icon->width() + lv->itemMargin();
   }
   t = text( column );
-  if ( !t.isEmpty() ) 
+  if ( !t.isEmpty() )
   {
     // use a bold-font for the folder- and the unread-columns
     if ( countUnreadRecursive() > 0 &&
-        (column == 0 || column == ft->unreadIndex()) ) 
+        (column == 0 || column == ft->unreadIndex()) )
     {
       QFont f = p->font();
       f.setWeight(QFont::Bold);
@@ -206,7 +232,7 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
     if (column == 0) {
       // draw the unread-count if the unread-column is not active
       QString unread = QString::null;
-      if ( !ft->isUnreadActive() && mUnread > 0 ) 
+      if ( !ft->isUnreadActive() && mUnread > 0 )
         unread = " (" + QString::number(mUnread) + ")";
       p->drawText( br.right(), 0, width-marg-br.right(), height(),
           align | AlignVCenter, unread );
@@ -228,7 +254,7 @@ KFolderTree::KFolderTree( QWidget *parent, const char* name )
     frameWidth = 0;
   setLineWidth( frameWidth );
   setAcceptDrops(true);
-  setDropVisualizer(false);  
+  setDropVisualizer(false);
   setAllColumnsShowFocus(true);
   setShowSortIndicator(true);
   setUpdatesEnabled(true);
@@ -279,11 +305,11 @@ bool KFolderTree::acceptDrag( QDropEvent* event ) const
 {
   QListViewItem* item = itemAt(contentsToViewport(event->pos()));
 
-  for (uint i = 0; i < mAcceptableDropMimetypes.size(); i++) 
+  for (uint i = 0; i < mAcceptableDropMimetypes.size(); i++)
   {
-    if (event->provides(mAcceptableDropMimetypes[i])) 
+    if (event->provides(mAcceptableDropMimetypes[i]))
     {
-      if (item) 
+      if (item)
         return (static_cast<KFolderTreeItem*>(item))->acceptDrag(event);
       else
         return mAcceptOutside[i];
