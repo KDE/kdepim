@@ -6,13 +6,16 @@
 #include <qstring.h>
 #include <qrect.h>
 #include <qpair.h>
+#include <qpoint.h>
 
+class QLabel;
 class QPainter;
 class QResizeEvent;
 class QMouseEvent;
 class CardView;
 class CardViewPrivate;
 class CardViewItemPrivate;
+class CardViewTip;
 
 /** Represents a single card (item) in the card view. A card has a caption
 * and a list of fields. A Field is a label<->value pair. The labels in a
@@ -89,6 +92,29 @@ class CardViewItem
     */
     bool isSelected() const;
     
+    /** Called by the parent card view when the mouse has been resting for
+    * a certain amount of time. If the label or value at pos is obscured
+    * (trimmed) make the label display the full text.
+    */
+    void showFullString( const QPoint &pos, CardViewTip *tip );
+    
+    /** @return a pointer to the Field at the position itempos
+    * in this item. 0 is returned if itempos is in the caption.
+    * @param itempos the position in item coordinates
+    */
+    Field *fieldAt( const QPoint &itempos ) const;
+    
+    CardView *cardView() { return mView; };
+    
+    /** @return The height of this item as rendered, in pixels.
+        
+        if @p allowCache is true, the item may use an internally
+        cached value rather than recalculating from scratch. The
+        argument is mainly to allow the cardView to change global settings (like
+        maxFieldLines) that might influence the items heights
+    */
+    int height( bool allowCache=true ) const;
+
   protected:
     /** Sets the card as selected. This is usually only called from the
     * card view.
@@ -99,12 +125,7 @@ class CardViewItem
     /** Sets the default values.
     */
     void initialize();
-    
-    /** Calculates the height and width of the bouding rectangle needed
-    * by this card. This is based on the number of fields in the card.
-    */
-    void calcRect();
-    
+        
     /** Trims a string to the width <i>width</i> using the font metrics
     * to determine the width of each char. If the string is longer than
     * <i>width</i>, then the string will be trimmed and a '...' will
@@ -154,6 +175,17 @@ class CardView : public QScrollView
     */
     void clear();
     
+    /** @return The current item, the item that has the focus.
+    * Whenever the view has focus, this item has a focus rectangle painted
+    * at it's border.
+    * @sa setCurrentItem()
+    */
+    CardViewItem *currentItem();
+
+    /** Sets the CardViewItem @p item to the current item in the view.
+    */
+    void setCurrentItem( CardViewItem *item );
+
     /** @return The item found at the given point, or 0 if there is no item
     * at that point.
     */
@@ -166,6 +198,10 @@ class CardView : public QScrollView
     /** Ensures that the given item is in the viewable area of the widget
     */
     void ensureItemVisible(const CardViewItem *item);
+    
+    /** Repaints the given item.
+    */
+    void repaintItem(const CardViewItem *item);
     
     enum SelectionMode { Single, Multi, Extended, NoSelection };
     
@@ -224,6 +260,14 @@ class CardView : public QScrollView
     CardViewItem *findItem(const QString &text, const QString &label, 
                            Qt::StringComparisonMode compare = Qt::BeginsWith);
     
+    /** Returns the amounts of pixels required for one column.
+    * This depends on wheather drawSeparators is enabled:
+    * If so, it is itemWidth + 2*itemSpacing + separatorWidth
+    * If not, it is itemWidth + itemSpacing
+    * @see itemWidth(), setItemWidth(), itemSpacing() and setItemSpacing()
+    */
+    uint columnWidth();
+    
     /** Sets if the border around a card should be draw. The border is a thing
     * (1 or 2 pixel) line that bounds the card. When drawn, it shows when
     *  a card is highlighted and when it isn't.
@@ -256,6 +300,75 @@ class CardView : public QScrollView
     */
     bool drawFieldLabels() const;
     
+    /** Sets if fields with no value should be drawn (of cause the label only,
+    * but it allows for embedded editing sometimes...)
+    */
+    void setShowEmptyFields(bool show);
+    
+    /** @return Wheather empty fields should be shown
+    */
+    bool showEmptyFields() const;
+    
+    /** @return the advisory internal margin in items. Setting a value above 1 means
+    * a space between the item contents and the focus recttangle drawn around
+    * the current item. The default value is 0.
+    * The value should be used by CardViewItem and derived classes.
+    * Note that this should not be greater than half of the minimal item width,
+    * which is 80. It is currently not checked, so setting a value greater than 40
+    * will probably mean a crash in the items painting routine.
+    * @private Note: I looked for a value in QStyle::PixelMetric to use, but I could 
+    * not see a usefull one. One may turn up in a future version of Qt.
+    */
+    uint itemMargin();
+    
+    /** Sets the internal item margin. @see itemMargin().
+    */
+    void setItemMargin( uint margin );
+    
+    /** @return the item spacing.
+    * The item spacing is the space (in pixels) between each item in a
+    * column, between the items and column separators if drawn, and between
+    * the items and the borders of the widget. The default value is set to
+    * 10.
+    * @private Note: There is no usefull QStyle::PixelMetric to use for this atm.
+    * An option would be using KDialog::spacingHint().
+    */
+    uint itemSpacing();
+
+    /** Sets the item spacing.
+    * @see itemSpacing()
+    */
+    void setItemSpacing( uint spacing );
+
+    /** @return the width made available to the card items. */
+    int itemWidth();
+
+    /** Sets the width made available to card items. */
+    void setItemWidth( int width );
+    
+    /** Sets the header font */
+    void setHeaderFont( const QFont &fnt );
+    
+    /** @return the header font */
+    QFont headerFont() const;
+    
+    /** @reimp */
+    void setFont( const QFont &fnt );
+    
+    /** Sets the column separator width */
+    void setSeparatorWidth( int width );
+    
+    /** @return the column separator width */
+    int separatorWidth();
+    
+    /** Sets the maximum number of lines to display pr field.
+        If set to 0 (the default) all lines will be displayed.
+    */
+    void setMaxFieldLines( int howmany );
+    
+    /** @return the maximum number of lines pr field */
+    int maxFieldLines();
+    
   signals:
     /** Emitted whenever the selection changes. This means a user highlighted
     *  a new item or unhighlighted a currently selected item.
@@ -273,7 +386,8 @@ class CardView : public QScrollView
     void clicked(CardViewItem *);
     
     /** Emitted whenever the user 'executes' an item. This is dependant on
-    * the KDE global config. This could be a signal click or a doubleclick.
+    * the KDE global config. This could be a single click or a doubleclick.
+    * Also emitted when the return key is pressed on an item.
     */
     void executed(CardViewItem *);
     
@@ -281,11 +395,19 @@ class CardView : public QScrollView
     */
     void doubleClicked(CardViewItem *);
     
+    /** Emitted when the current item changes
+    */
+    void currentChanged( CardViewItem * );
+    
+    /** Emitted when the return key is pressed in an item.
+    */
+    void returnPressed( CardViewItem * );
+    
   protected:
-    /**
-     * Repaints the whole viewport. We use a double buffer to avoid flickering.
-     */
-    virtual void viewportPaintEvent( QPaintEvent * );
+    /** Determines which cards intersect that region and tells them to paint
+    * themselves.
+    */
+    void drawContents(QPainter *p, int clipx, int clipy, int clipw, int cliph);
     
     /** Sets the layout to dirty and repaints.
     */
@@ -306,13 +428,39 @@ class CardView : public QScrollView
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
     virtual void mouseMoveEvent(QMouseEvent *e);
     
+    virtual void contentsMousePressEvent( QMouseEvent * );
+    virtual void contentsMouseMoveEvent( QMouseEvent * );
+    //virtual void contentsMouseReleaseEvent( QMouseEvent * );
+    
+    virtual void enterEvent( QEvent * );
+    virtual void leaveEvent( QEvent * );
+    
+    virtual void focusInEvent( QFocusEvent * );
+    virtual void focusOutEvent( QFocusEvent * );
+    
+    virtual void keyPressEvent( QKeyEvent * );
+    
     /** Overload this method to be told when a drag should be started.
     * In most cases you will want to start a drag event with the currently
     * selected item.
     */
     virtual void startDrag();
     
+  private slots:
+    /** Called by a timer to display a label with truncated text.
+    * Pop up a label, if there is a field with obscured text or
+    * label at the cursor position.
+    */
+    void tryShowFullText();
+    
   private:
+    /** draws and erases the rubber bands while columns are resized.
+    * @p pos is the horizontal position inside the viewport to use as
+    * the anchor.
+    * If pos is 0, only erase is done.
+    */
+    void drawRubberBands( int pos );
+    
     CardViewPrivate *d;
 };
 

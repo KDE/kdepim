@@ -26,9 +26,14 @@
 
 #include "configureviewdialog.h"
 
+#include <qvbox.h>
+#include <qwidget.h>
+#include <qfont.h>
+
 class QString;
 class QWidget;
 class QCheckBox;
+class QLabel;
 class KConfig;
 
 namespace KABC { class AddressBook; }
@@ -52,27 +57,61 @@ class ConfigureCardViewDialog : public ConfigureViewDialog
   private:
     void initGUI();
     
-    CardViewLookAndFeelPage *mPage;
+    //CardViewLookAndFeelPage *mPage;
+    class CardViewLookNFeelPage *advancedPage;
 };
 
-/** Internal class. It is only defined here for moc
-*/
-class CardViewLookAndFeelPage : public QWidget
-{
-  public:
-    CardViewLookAndFeelPage(QWidget *parent, const char *name);
-    ~CardViewLookAndFeelPage() {}
+
+/**
+    Card View Advanced LookNFeel settings widget:
+    this is a tabbed widget with 3 tabs:
+    Fonts
+    * text font
+    * header font
     
-    void readConfig(KConfig *config);
-    void writeConfig(KConfig *config);
- 
+    Colors
+    * background color
+    * text color
+    * highlight color
+    * title/sep text color
+    * title/sep bg color
+    
+    Layout
+    * item margin
+    * item spacing
+*/
+
+class CardViewLookNFeelPage : public QVBox {
+
+  Q_OBJECT
+  
+  public:
+    CardViewLookNFeelPage( QWidget *parent=0, const char *name=0 );
+    ~CardViewLookNFeelPage();
+  
+    void readConfig( KConfig * );
+    void writeConfig( KConfig * );
+  
+  private slots:
+    void setTextFont();
+    void setHeaderFont();
+    void enableFonts();
+    void enableColors();
+  
   private:
     void initGUI();
+    void updateFontLabel( QFont, QLabel * );
     
-    QCheckBox *mLabelsBox;
-    QCheckBox *mBordersBox;
-    QCheckBox *mSeparatorsBox;
-    QCheckBox *mEmptyFieldsBox;
+    QCheckBox *cbEnableCustomFonts, 
+              *cbEnableCustomColors,
+              *cbDrawSeps, *cbDrawBorders,
+              *cbShowFieldLabels, *cbShowEmptyFields;
+    class ColorListBox *lbColors;
+    QLabel *lTextFont, *lHeaderFont;
+    class KPushButton *btnFont, *btnHeaderFont;
+    class QSpinBox *sbMargin, *sbSpacing, *sbSepWidth;
+    
+    class QWidget *vbFonts;
 };
 
 #endif

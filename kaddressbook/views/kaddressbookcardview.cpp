@@ -71,7 +71,11 @@ class AddresseeCardViewItem : public CardViewItem
           KABC::Field::List::Iterator iter;
           for (iter = mFields.begin(); iter != mFields.end(); ++iter)
           {
-            if (mShowEmptyFields || !(*iter)->value( mAddressee ).isEmpty())
+            // insert empty fields or not? not doing so saves a bit of memory and CPU
+            // (during geometry calculations), but prevents having equally
+            // wide label columns in all cards, unless CardViewItem/CardView search
+            // globally for the widest label. (anders)
+            //if (mShowEmptyFields || !(*iter)->value( mAddressee ).isEmpty())
               insertField((*iter)->label(), (*iter)->value( mAddressee ));
           }
 
@@ -151,13 +155,59 @@ KAddressBookCardView::~KAddressBookCardView()
 void KAddressBookCardView::readConfig(KConfig *config)
 {
   KAddressBookView::readConfig(config);
-
+  
+  // costum colors?
+  if ( config->readBoolEntry( "EnableCustomColors", false ) )
+  {
+    QPalette p( mCardView->palette() );
+    QColor c = p.color(QPalette::Normal, QColorGroup::Base );
+    p.setColor( QPalette::Normal, QColorGroup::Base, config->readColorEntry( "BackgroundColor", &c ) );
+    c = p.color(QPalette::Normal, QColorGroup::Text );
+    p.setColor( QPalette::Normal, QColorGroup::Text, config->readColorEntry( "TextColor", &c ) );
+    c = p.color(QPalette::Normal, QColorGroup::Button );
+    p.setColor( QPalette::Normal, QColorGroup::Button, config->readColorEntry( "HeaderColor", &c ) );
+    c = p.color(QPalette::Normal, QColorGroup::ButtonText );
+    p.setColor( QPalette::Normal, QColorGroup::ButtonText, config->readColorEntry( "HeaderTextColor", &c ) );
+    c = p.color(QPalette::Normal, QColorGroup::Highlight );
+    p.setColor( QPalette::Normal, QColorGroup::Highlight, config->readColorEntry( "HighlightColor", &c ) );
+    c = p.color(QPalette::Normal, QColorGroup::HighlightedText );
+    p.setColor( QPalette::Normal, QColorGroup::HighlightedText, config->readColorEntry( "HighlightedTextColor", &c ) );
+    mCardView->viewport()->setPalette( p );
+  }
+  else
+  {
+    // needed if turned off during a session.
+    mCardView->viewport()->setPalette( mCardView->palette() );
+  }
+  
+  //custom fonts?
+  QFont f( font() );
+  if ( config->readBoolEntry( "EnableCustomFonts", false ) )
+  {
+    mCardView->setFont( config->readFontEntry( "TextFont", &f) );
+    f.setBold( true );
+    mCardView->setHeaderFont( config->readFontEntry( "HeaderFont", &f ) );
+  }
+  else
+  {
+    mCardView->setFont( f );
+    f.setBold( true );
+    mCardView->setHeaderFont( f );
+  }  
+  
   mCardView->setDrawCardBorder(config->readBoolEntry("DrawBorder", true));
   mCardView->setDrawColSeparators(config->readBoolEntry("DrawSeparators",
                                                         true));
   mCardView->setDrawFieldLabels(config->readBoolEntry("DrawFieldLabels",true));
   mShowEmptyFields = config->readBoolEntry("ShowEmptyFields", true);
-
+  
+  mCardView->setShowEmptyFields( mShowEmptyFields );
+  
+  mCardView->setItemWidth( config->readNumEntry( "ItemWidth", 200 ) );
+  mCardView->setItemMargin( config->readNumEntry( "ItemMargin", 0 ) );
+  mCardView->setItemSpacing( config->readNumEntry( "ItemSpacing", 10 ) );
+  mCardView->setSeparatorWidth( config->readNumEntry( "SeparatorWidth", 2 ) );
+  
   disconnect(mCardView, SIGNAL(executed(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
 
@@ -167,8 +217,15 @@ void KAddressBookCardView::readConfig(KConfig *config)
   else
     connect(mCardView, SIGNAL(doubleClicked(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
+  
 }
 
+void KAddressBookCardView::writeConfig( KConfig *config )
+{
+  config->writeEntry( "ItemWidth", mCardView->itemWidth() );
+  KAddressBookView::writeConfig( config );
+}
+  
 QStringList KAddressBookCardView::selectedUids()
 {
     QStringList uidList;
@@ -258,9 +315,9 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
 void KAddressBookCardView::addresseeExecuted(CardViewItem *item)
 {
     AddresseeCardViewItem *aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-
     if (aItem)
     {
+      //kdDebug()<<"... even has a valid item:)"<<endl;
       emit executed(aItem->addressee().uid());
     }
 }
@@ -297,14 +354,6 @@ void KAddressBookCardView::incrementalSearch(const QString &value,
 
   if (item)
   {
-    // avoid flickering in details page
-    bool blocked = signalsBlocked();
-    blockSignals( true );
-    for ( CardViewItem *it = mCardView->firstItem(); it; it = it->nextItem() )
-      if ( it != item )
-        mCardView->setSelected( it, false );
-    blockSignals( blocked );
-
     mCardView->setSelected(item, true);
     mCardView->ensureItemVisible(item);
   } else {

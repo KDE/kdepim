@@ -53,6 +53,7 @@ class KAddressBookCardView : public KAddressBookView
     virtual QString type() const { return "Card"; }
     
     virtual void readConfig(KConfig *config);
+    virtual void writeConfig(KConfig *);
     
     virtual void incrementalSearch(const QString &value,KABC::Field *field );
     
