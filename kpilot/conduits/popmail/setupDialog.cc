@@ -161,7 +161,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	fSignature = new QLineEdit(this);
 	fSignature->resize(200, fSignature->height());
 
-	fSignatureBrowse=new QPushButton(i18n("Browse"),this);
+	fSignatureBrowse=new QPushButton(i18n("Browse..."),this);
 	fSignatureBrowse->adjustSize();
 
 	connect(fSignatureBrowse,SIGNAL(clicked()),
@@ -394,7 +394,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	fMailbox=new QLineEdit(this);
 	fMailbox->resize(200,fMailbox->height());
 
-	fMailboxBrowse=new QPushButton(i18n("Browse"),this);
+	fMailboxBrowse=new QPushButton(i18n("Browse..."),this);
 	fMailboxBrowse->adjustSize();
 
 	connect(fMailboxBrowse,SIGNAL(clicked()),
@@ -674,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.29  2002/07/11 13:27:28  mhunter
+// Corrected typographical errors
+//
 // Revision 1.28  2002/07/03 13:24:39  binner
 // CVS_SILENT Style guide fix
 //
