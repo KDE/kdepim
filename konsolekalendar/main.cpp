@@ -83,19 +83,26 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "Print what would have been done, but do not execute" ), 0 },
   { "file <calendar-file>",
     I18N_NOOP( "Specify which calendar you want to use" ), 0 },
-  { "type <event | todo | journal | all>",
-    I18N_NOOP( "Specify which incidence type you want to use" ), 0 },
+
+  { ":",
+    I18N_NOOP( "Incidence types (these options can be combined):" ), 0 },
+  { "event",
+    I18N_NOOP( "  Operate for Events only (Default)" ), 0 },
+  { "todo",
+    I18N_NOOP( "  Operate for Todos only" ), 0 },
+  { "journal",
+    I18N_NOOP( "  Operate for Journals only" ), 0 },
 
   { ":",
     I18N_NOOP( "Major operation modes:" ), 0 },
   { "view",
-    I18N_NOOP( "  Print calendar events in specified export format" ), 0 },
+    I18N_NOOP( "  Print incidences in specified export format" ), 0 },
   { "add",
-    I18N_NOOP( "  Insert an event into the calendar" ), 0 },
+    I18N_NOOP( "  Insert an incidence into the calendar" ), 0 },
   { "change",
-    I18N_NOOP( "  Modify an existing calendar event" ), 0 },
+    I18N_NOOP( "  Modify an existing incidence" ), 0 },
   { "delete",
-    I18N_NOOP( "  Remove an existing calendar event" ), 0 },
+    I18N_NOOP( "  Remove an existing incidence" ), 0 },
   { "create",
     I18N_NOOP( "  Create new calendar file if one does not exist" ), 0 },
   { "import <import-file>",
@@ -111,7 +118,7 @@ static KCmdLineOptions options[] =
   { "show-next <days>",
     I18N_NOOP( "  From start date show next # days' activities" ), 0 },
   { "uid <uid>",
-    I18N_NOOP( "  Event Unique-string identifier" ), 0 },
+    I18N_NOOP( "  Incidence Unique-string identifier" ), 0 },
   { "date <start-date>",
     I18N_NOOP( "  Start from this day [YYYY-MM-DD]" ), 0 },
   { "time <start-time>",
@@ -125,11 +132,11 @@ static KCmdLineOptions options[] =
   { "epoch-end <epoch-time>",
     I18N_NOOP( "  End at this time [secs since epoch]" ), 0 },
   { "summary <summary>",
-    I18N_NOOP( "  Add summary to event (for add/change modes)" ), 0 },
+    I18N_NOOP( "  Add summary to incidence (for add/change modes)" ), 0 },
   { "description <description>",
-    I18N_NOOP( "Add description to event (for add/change modes)" ), 0 },
+    I18N_NOOP( "Add description to incidence (for add/change modes)" ), 0 },
   { "location <location>",
-    I18N_NOOP( "  Add location to event (for add/change modes)" ), 0 },
+    I18N_NOOP( "  Add location to incidence (for add/change modes)" ), 0 },
 
   { ":", I18N_NOOP( "Export options:" ), 0 },
   { "export-type <export-type>",
@@ -251,30 +258,27 @@ int main( int argc, char *argv[] )
   }
 
   /*
-   *  Switch on Incidence type
+   *  Set incidence type(s)
    *
    */
-  variables.setIncidenceType( IncidenceTypeEvent );
-  if ( args->isSet( "type" ) ) {
-    option = args->getOption( "type" );
-    if ( option.upper() == "EVENT" ) {
-      kdDebug() << "main | incidence-type | Events (default)" << endl;
-      variables.setIncidenceType( IncidenceTypeEvent );
-    } else if ( option.upper() == "TODO" ) {
-      kdDebug() << "main | incidence-type | Todos" << endl;;
-      variables.setIncidenceType( IncidenceTypeTodo );
-    } else if ( option.upper() == "JOURNAL" ) {
-      kdDebug() << "main | incidence-type | Journals" << endl;
-      variables.setIncidenceType( IncidenceTypeJournal );
-    } else if ( option.upper() == "ALL" ) {
-      kdDebug() << "main | incidence-type | All Types" << endl;
-      variables.setIncidenceType( IncidenceTypeAll );
-    } else {
-      cout << i18n( "Invalid Incidence Type Specified: %1" ).
-        arg( option ).local8Bit()
-           << endl;
-      return 1;
-    }
+  if ( args->isSet( "event" ) ) {
+    variables.setUseEvents( true );
+    kdDebug() << "main | parse options | use Events" << endl;
+  }
+  if ( args->isSet( "todo" ) ) {
+    variables.setUseTodos( true );
+    kdDebug() << "main | parse options | use Todos" << endl;
+  }
+  if ( args->isSet( "journal" ) ) {
+    variables.setUseJournals( true );
+    kdDebug() << "main | parse options | use Journals" << endl;
+  }
+  // Use Events if no incidence type is specified on the command line
+  if ( !args->isSet( "event" ) &&
+       !args->isSet( "todo" ) &&
+       !args->isSet( "journal" ) ) {
+    variables.setUseEvents( true );
+    kdDebug() << "main | parse options | use Events (Default)" << endl;
   }
 
   /*
@@ -346,7 +350,7 @@ int main( int argc, char *argv[] )
     view=true;
 
     kdDebug() << "main | parse options | "
-              << "Mode: (Print events)"
+              << "Mode: (Print incidences)"
               << endl;
   }
 
@@ -359,7 +363,7 @@ int main( int argc, char *argv[] )
     add=true;
 
     kdDebug() << "main | parse options | "
-              << "Mode: (Add event)"
+              << "Mode: (Add incidence)"
               << endl;
   }
 
@@ -372,7 +376,7 @@ int main( int argc, char *argv[] )
     change=true;
 
     kdDebug() << "main | parse options | "
-              << "Mode: (Change event)"
+              << "Mode: (Change incidence)"
               << endl;
   }
 
@@ -385,7 +389,7 @@ int main( int argc, char *argv[] )
     del=true;
 
     kdDebug() << "main | parse options | "
-              << "Mode: (Delete event)"
+              << "Mode: (Delete incidence)"
               << endl;
   }
 
@@ -455,7 +459,7 @@ int main( int argc, char *argv[] )
   if ( args->isSet( "next" ) )
   {
     kdDebug() << "main | parse options | "
-              << "Show next event only"
+              << "Show next incidence only"
               << endl;
 
     variables.setNext( true );
@@ -463,14 +467,14 @@ int main( int argc, char *argv[] )
 
 
   /*
-   *  Set event unique string identifier
+   *  Set incidence unique string identifier
    *
    */
   if (args->isSet( "uid" ) ) {
     option = args->getOption( "uid" );
 
     kdDebug() << "main | parse options | "
-              << "Event UID: "
+              << "incidence UID: "
               << "(" << option << ")"
               << endl;
 
@@ -743,7 +747,8 @@ int main( int argc, char *argv[] )
   QDateTime startdatetime, enddatetime;
 
   // Handle case with either date or end-date unspecified
-  if ( ! args->isSet( "end-date" ) && args->isSet( "date" ) ) {
+  if ( ! args->isSet( "end-date" ) && ! args->isSet( "show-next" ) &&
+       args->isSet( "date" ) ) {
     enddate = startdate;
     kdDebug() << "main | datetimestamp | "
               << "setting enddate to startdate"

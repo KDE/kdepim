@@ -58,6 +58,9 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bNext = false;
   m_bVerbose = false;
   m_bDryRun = false;
+  m_bUseEvents = false;
+  m_bUseTodos = false;
+  m_bUseJournals = false;
   m_bDescription = false;
   m_description = "";
   m_bSummary = false;
@@ -220,14 +223,34 @@ bool KonsoleKalendarVariables::isDryRun()
   return m_bDryRun;
 }
 
-void KonsoleKalendarVariables::setIncidenceType( IncidenceType incidenceType )
+void KonsoleKalendarVariables::setUseEvents( bool useEvents )
 {
-  m_incidenceType = incidenceType;
+  m_bUseEvents = useEvents;
 }
 
-IncidenceType KonsoleKalendarVariables::getIncidenceType()
+bool KonsoleKalendarVariables::getUseEvents()
 {
-  return( m_incidenceType );
+  return( m_bUseEvents );
+}
+
+void KonsoleKalendarVariables::setUseTodos( bool useTodos )
+{
+  m_bUseTodos = useTodos;
+}
+
+bool KonsoleKalendarVariables::getUseTodos()
+{
+  return( m_bUseTodos );
+}
+
+void KonsoleKalendarVariables::setUseJournals( bool useJournals )
+{
+  m_bUseJournals = useJournals;
+}
+
+bool KonsoleKalendarVariables::getUseJournals()
+{
+  return( m_bUseJournals );
 }
 
 void KonsoleKalendarVariables::setCalendarFile(QString calendar)
