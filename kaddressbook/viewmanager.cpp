@@ -105,7 +105,9 @@ void ViewManager::saveSettings()
 
   // write the view name list
   KABPrefs::instance()->mViewNames = mViewNameList;
-  KABPrefs::instance()->mCurrentView = mActiveView->caption();
+
+  if ( mActiveView )
+    KABPrefs::instance()->mCurrentView = mActiveView->caption();
 }
 
 QStringList ViewManager::selectedUids() const
