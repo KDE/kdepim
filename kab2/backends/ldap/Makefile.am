@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kab2/lib $(all_includes) -I/usr/local/include
+INCLUDES = -I$(top_srcdir)/kab2/lib  -I/usr/local/include $(all_includes)
 
 kde_module_LTLIBRARIES = libkabbackend_ldap.la
 

@@ -1,5 +1,5 @@
 SUBDIRS           = rmm
-INCLUDES          = $(all_includes) -Irmm
+INCLUDES          = -Irmm $(all_includes)
 lib_LTLIBRARIES   = librmm.la
 librmm_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
 librmm_la_LIBADD  = $(LIB_QT)

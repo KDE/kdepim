@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I ../../lib
+INCLUDES = -I ../../lib $(all_includes)
 
 lib_LTLIBRARIES = libkabgdbmbackend.la 
 

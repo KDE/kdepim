@@ -1,6 +1,6 @@
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/twister/lib
+INCLUDES = -I$(top_srcdir)/twister/lib $(all_includes)
 
 lib_LTLIBRARIES = libtwisterui.la
 

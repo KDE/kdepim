@@ -1,4 +1,4 @@
-INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/abbrowser
+INCLUDES= -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/abbrowser $(all_includes)
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
