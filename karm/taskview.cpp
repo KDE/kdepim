@@ -287,7 +287,7 @@ void TaskView::exportcsvFile()
   dialog.urlExportTo->KURLRequester::setMode(KFile::File);
   if ( dialog.exec() ) {
     QString err = _storage->report( this, dialog.reportCriteria() );
-    if ( !err.isEmpty() ) KMessageBox::error( this, i18n(err) );
+    if ( !err.isEmpty() ) KMessageBox::error( this, i18n(err.ascii()) );
   }
 }
 
