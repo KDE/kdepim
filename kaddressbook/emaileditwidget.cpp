@@ -44,8 +44,8 @@
 EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2 );
-  topLayout->setSpacing( KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
+                                            KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Email:" ), this );
   topLayout->addWidget( label, 0, 0 );
@@ -127,7 +127,8 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
 {
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 4, 3 );
+  QGridLayout *topLayout = new QGridLayout( page, 4, 3, marginHint(), 
+                                            spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Email address:" ), page );
   topLayout->addWidget( label, 0, 0 );
