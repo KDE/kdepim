@@ -21,26 +21,24 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <libemailfunctions/email.h>
+
 #include "person.h"
 
 using namespace KCal;
 
 Person::Person( const QString &fullName )
 {
-  // @TODO: This is completely messed. A space at the end messes up everyting! Fix this properly!
-  int emailPos = fullName.find( '<' );
-  if ( emailPos < 0 ) {
-    setEmail(fullName);
-  } else {
-    setEmail(fullName.mid( emailPos + 1, fullName.length() - 1 ));
-    setName(fullName.left( emailPos - 2 ));
-  }
+  QString name, email;
+  KPIM::getNameAndMail( fullName, name, email );
+  setName( email );
+  setEmail( email );
 }
 
 Person::Person( const QString &name, const QString &email )
 {
-  setName(name);
-  setEmail(email);
+  setName( name );
+  setEmail( email );
 }
 
 
