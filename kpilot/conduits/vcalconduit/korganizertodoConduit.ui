@@ -117,7 +117,7 @@
                     </property>
                     <property>
                         <name>toolTip</name>
-                        <string>Deleting something in Korganizer will delete it in your PDA as well</string>
+                        <string>Deleting something in KOrganizer will delete it in your PDA as well</string>
                     </property>
                 </widget>
                 <spacer row="3"  column="1" >
