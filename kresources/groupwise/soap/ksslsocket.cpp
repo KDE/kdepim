@@ -43,6 +43,8 @@ struct KSSLSocketPrivate
 
 KSSLSocket::KSSLSocket() : KExtendedSocket()
 {
+  kdDebug() << "KSSLSocket() " << (void*)this << endl;
+
 	d = new KSSLSocketPrivate;
 	d->kssl = 0L;
 	d->dcc = KApplication::kApplication()->dcopClient();
@@ -60,6 +62,8 @@ KSSLSocket::KSSLSocket() : KExtendedSocket()
 
 KSSLSocket::~KSSLSocket()
 {
+  kdDebug() << "KSSLSocket()::~KSSLSocket() " << (void*)this << endl;
+
 	//Close connection
 	closeNow();
 
@@ -80,31 +84,40 @@ Q_LONG KSSLSocket::readBlock( char* data, Q_ULONG maxLen )
 
 Q_LONG KSSLSocket::writeBlock( const char* data, Q_ULONG len )
 {
+  kdDebug() << "KSSLSocket::writeBlock() " << (void*)this  << endl;
+  kdDebug() << "  d->kssl: " << (void*)d->kssl << endl;
 	return d->kssl->write( data, len );
 }
 
 void KSSLSocket::slotConnected()
 {
+  kdDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
 	if( KSSL::doesSSLWork() )
 	{
 		kdDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
 		if( !d->kssl )
 		{
 			d->kssl = new KSSL();
-			d->kssl->connect( sockfd );
-
 		}
 		else
 		{
 			d->kssl->reInitialize();
 		}
+                kdDebug() << "SOCKET STATUS: " << socketStatus() << endl;
+		int rc = d->kssl->connect( sockfd );
+                if ( rc <= 0 ) {
+                  kdError() << "Error connecting KSSL: " << rc << endl;
+                  kdDebug() << "SYSTEM ERROR: " << systemError() << endl;
+                  emit sslFailure();
+                  closeNow();
+                } else {
+		  readNotifier()->setEnabled(true);
 
-		readNotifier()->setEnabled(true);
-
-		if( verifyCertificate() != 1 )
-		{
-			closeNow();
-		}
+		  if( verifyCertificate() != 1 )
+		  {
+			  closeNow();
+		  }
+                }
 	}
 	else
 	{
@@ -118,9 +131,9 @@ void KSSLSocket::slotConnected()
 
 void KSSLSocket::slotDisconnected()
 {
+  kdDebug() << "KSSLSocket::slotDisconnected() " << (void*)this << endl;
 	if( readNotifier() )
 		readNotifier()->setEnabled(false);
-	qApp->exit();
 }
 
 void KSSLSocket::setMetaData( const QString &key, const QVariant &data )

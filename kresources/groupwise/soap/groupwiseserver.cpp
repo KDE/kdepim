@@ -34,6 +34,8 @@
 #include <kio/netaccess.h>
 #include <ktempfile.h>
 #include <kdebug.h>
+#include <klocale.h>
+
 #include <qnamespace.h>
 #include <qfile.h>
 
@@ -78,7 +80,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return -1;
+  if ( it == mServerMap.end() ) return 0;
 
   return (*it)->gSoapReceiveCallback( soap, s, n );
 }
@@ -86,30 +88,73 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 int GroupwiseServer::gSoapOpen( struct soap *soap, const char *endpoint,
   const char *host, int port )
 {
+  kdDebug() << "GroupwiseServer::gSoapOpen()" << endl;
+
+  if ( m_sock ) {
+    kdError() << "m_sock non-null: " << (void*)m_sock << endl;
+    delete m_sock;
+  }
+
+  if (mSSL) {
+     kdDebug() << "Creating KSSLSocket()" << endl;
+     m_sock = new KSSLSocket();
+     mError = QString::null;
+     connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
+  } else {
+     m_sock = new KExtendedSocket();
+  }
+
    m_sock->reset();
    m_sock->setBlockingMode(false);
    m_sock->setSocketFlags(KExtendedSocket::inetSocket);
 
    m_sock->setAddress(host, port);
    m_sock->lookup();
-   m_sock->connect();
-   m_sock->open();
+   int rc = m_sock->connect();
+   if ( rc != 0 ) {
+    kdError() << "gSoapOpen: connect failed " << rc << endl;
+    return -1;
+   }
+   kdDebug() << "TICK" << endl;
+#if 0
+   if ( !m_sock->open() ) {
+     kdError() << "gSoapOpen: open failed" << endl;
+     return -1;
+   }
+#endif
    m_sock->enableRead(true);
    m_sock->enableWrite(true);
 
    // hopefully never really used by SOAP
+#if 0
    return m_sock->fd();
+#else
+  return 0;
+#endif
 }
 
 int GroupwiseServer::gSoapClose( struct soap *soap )
 {
+  kdDebug() << "GroupwiseServer::gSoapClose()" << endl;
+
+  delete m_sock;
+  m_sock = 0;
+
+#if 0
    m_sock->close();
    m_sock->reset();
+#endif
    return SOAP_OK;
 }
 
 int GroupwiseServer::gSoapSendCallback( struct soap *soap, const char *s, size_t n )
 {
+  kdDebug() << "GroupwiseServer::gSoapSendCallback()" << endl;
+
+  if ( !mError.isEmpty() ) {
+    kdError() << "SSL is in error state." << endl;
+    return -1;
+  }
 #if 1
 qDebug("*************************");
 char p[99999];
@@ -139,6 +184,13 @@ qDebug("\n*************************");
 
 size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s, size_t n )
 {
+  kdDebug() << "GroupwiseServer::gSoapReceiveCallback()" << endl;
+
+  if ( !mError.isEmpty() ) {
+    kdError() << "SSL is in error state." << endl;
+    return 0;
+  }
+
 //   m_sock->open();
    long ret = m_sock->readBlock( s, n );
    if ( ret < 0 )
@@ -173,11 +225,13 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
 #if 1
   // disable this block to use native gSOAP network functions
 kdDebug() << "TTTTTTTTTTT" << mSSL << " " << url << endl;
+#if 0
   if (mSSL) {
      kdDebug() << "Creating KSSLSocket()" << endl;
      m_sock = new KSSLSocket();
   } else
      m_sock = new KExtendedSocket();
+#endif
 
   mSoap->fopen = myOpen;
   mSoap->fsend = mySendCallback;
@@ -522,7 +576,7 @@ bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::Re
   job->setResource( resource );
 
   connect( job, SIGNAL( done() ),
-           this, SIGNAL( readAddressBooksFinished() ) );
+           SIGNAL( readAddressBooksFinished() ) );
 
   mWeaver->enqueue( job );
 
@@ -765,6 +819,8 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 
 bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGroupwise *resource )
 {
+  kdDebug() << "GroupwiseServer::readCalendar()" << endl;
+
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::readCalendar(): no session." << endl;
     return false;
@@ -776,7 +832,7 @@ bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGrou
   job->setResource( resource );
 
   connect( job, SIGNAL( done() ),
-           this, SIGNAL( readCalendarFinished() ) );
+           SIGNAL( readCalendarFinished() ) );
 
   mWeaver->enqueue( job );
 
@@ -889,6 +945,13 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
 
   return true;
+}
+
+void GroupwiseServer::slotSslError()
+{
+  kdDebug() << "********************** SSL ERROR" << endl;
+
+  mError = i18n("SSL Error");
 }
 
 #include "groupwiseserver.moc"

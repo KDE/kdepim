@@ -64,6 +64,8 @@ class GroupwiseServer : public QObject
                      const QString &password, QObject *parent );
     ~GroupwiseServer();
 
+    QString error() const { return mError; }
+
     bool login();
     bool logout();
 
@@ -109,6 +111,9 @@ class GroupwiseServer : public QObject
     void dumpTask( ns1__Task * );
     void dumpMail( ns1__Mail * );
 
+  protected slots:
+    void slotSslError();
+
   private:
     QString mUrl;
     QString mUser;
@@ -122,6 +127,8 @@ class GroupwiseServer : public QObject
     KPIM::ThreadWeaver::Weaver *mWeaver;
 
     KExtendedSocket *m_sock;
+
+    QString mError;
 };
 
 #endif

@@ -54,10 +54,12 @@ int main( int argc, char **argv )
 
   GroupwiseServer server( url, user, pass, 0 );
 
+#if 1
   if ( !server.login() ) {
     kdError() << "Unable to login to server " << url << endl;
     return 1;
   }
+#endif
 
 #if 0
   server.dumpData();
@@ -67,11 +69,11 @@ int main( int argc, char **argv )
   server.getCategoryList();
 #endif
 
-#if 0
+#if 1
   server.dumpFolderList();
 #endif
 
-#if 1
+#if 0
   QString fbUser = args->getOption( "freebusy-user" );
   if ( fbUser.isEmpty() ) {
     kdError() << "Need user for which the freebusy data should be retrieved."

@@ -86,7 +86,7 @@ void ResourceGroupwise::initGroupwise()
                                  mPrefs->password(), this );
 
   connect( mServer, SIGNAL( readAddressBooksFinished() ),
-           this, SLOT( loadFinished() ) );
+           SLOT( loadFinished() ) );
 }
 
 ResourceGroupwise::~ResourceGroupwise()
@@ -146,6 +146,7 @@ bool ResourceGroupwise::asyncLoad()
   loadCache();
 
   if ( !mServer->readAddressBooks( mPrefs->readAddressBooks(), this ) ) {
+    kdError() << "ResourceGroupwise::asyncLoad() error" << endl;
     return false;
   }
 
@@ -188,9 +189,15 @@ bool ResourceGroupwise::asyncSave( Ticket* )
 
 void ResourceGroupwise::loadFinished()
 {
-  saveCache();
+  if ( !mServer->error().isEmpty() ) {
+    kdError() << "ResourceGroupwise::loadFinished(): Error: " <<
+      mServer->error() << endl;
+    emit loadingError( this, mServer->error() );
+  } else {
+    saveCache();
 
-  emit loadingFinished( this );
+    emit loadingFinished( this );
+  }
 }
 
 #include "kabc_resourcegroupwise.moc"
