@@ -48,7 +48,7 @@ class PhoneEditWidget : public QWidget
     ~PhoneEditWidget();
     
     void setPhoneNumbers( const KABC::PhoneNumber::List &list );
-    const KABC::PhoneNumber::List &phoneNumbers();
+    KABC::PhoneNumber::List phoneNumbers();
 
     void updateTypeCombo( const KABC::PhoneNumber::List&, KComboBox* );
     KABC::PhoneNumber currentPhoneNumber( KComboBox*, int );

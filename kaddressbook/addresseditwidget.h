@@ -54,8 +54,8 @@ class AddressEditWidget : public QWidget
   public:
     AddressEditWidget(QWidget *parent, const char *name = 0);
     ~AddressEditWidget();
-    
-    const KABC::Address::List &addresses();
+
+    KABC::Address::List addresses();
     void setAddresses(const KABC::Address::List &list);
     
     void updateTypeCombo( const KABC::Address::List&, KComboBox* );

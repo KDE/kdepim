@@ -25,33 +25,31 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	-lkabc -lkdeprint
 
 libkaddressbookpart_la_SOURCES = \
- actionmanager.cpp  addresseditwidget.cpp addresseeconfig.cpp \
+ actionmanager.cpp addhostdialog.cpp addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
  addviewdialog.cpp configureviewdialog.cpp configureviewfilterpage.cpp \
  emaileditwidget.cpp filter.cpp filtereditdialog.cpp \
  filterselectionwidget.cpp importdialog.cpp incsearchwidget.cpp \
  jumpbuttonbar.cpp kabprefs.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
- kaddressbookprinter.cpp kaddressbookview.cpp \
+ kaddressbookprinter.cpp kaddressbookview.cpp ldapoptionswidget.cpp \
  ldapsearchdialog.ui ldapsearchdialogimpl.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp prefsdialog.cpp selectfieldswidget.cpp \
- undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp \
- ldapoptionswidget.cpp addhostdialog.cpp
+ undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp
 
 kaddressbook_METASOURCES = AUTO
 
 noinst_HEADERS = \
- actionmanager.h  addresseditwidget.h addresseeconfig.h \
+ actionmanager.h addhostdialog.h addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
  addviewdialog.h configureviewdialog.h configureviewfilterpage.h \
  emaileditwidget.h filter.h filtereditdialog.h \
  filterselectionwidget.h importdialog.h incsearchwidget.h \
  jumpbuttonbar.h kabprefs.h kaddressbook.h kaddressbook_part.h \
- kaddressbookmain.h kaddressbookprinter.h kaddressbookview.h \
+ kaddressbookmain.h kaddressbookprinter.h kaddressbookview.h ldapoptionswidget.h \
  ldapsearchdialogimpl.h nameeditdialog.h phoneeditwidget.h prefsdialog.h \
  selectfieldswidget.h typecombo.h undo.h undocmds.h viewmanager.h \
- viewwrapper.h \
- ldapoptionswidget.h addhostdialog.h
+ viewwrapper.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc

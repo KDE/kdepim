@@ -78,16 +78,16 @@ AddressEditWidget::~AddressEditWidget()
 {
 }
 
-const KABC::Address::List &AddressEditWidget::addresses()
+KABC::Address::List AddressEditWidget::addresses()
 {
+  KABC::Address::List retList;
+
   KABC::Address::List::Iterator it;
   for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
-    if ( (*it).isEmpty() ) {
-      it = mAddressList.remove( it );
-      --it;
-    }
+    if ( !(*it).isEmpty() )
+      retList.append( *it );
 
-  return mAddressList;
+  return retList;
 }
 
 void AddressEditWidget::setAddresses(const KABC::Address::List &list)

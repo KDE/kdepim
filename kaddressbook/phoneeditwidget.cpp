@@ -160,16 +160,16 @@ void PhoneEditWidget::updateCombos()
   mFourthCombo->updateTypes();
 }
 
-const KABC::PhoneNumber::List &PhoneEditWidget::phoneNumbers()
+KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers()
 {
+  KABC::PhoneNumber::List retList;
+
   KABC::PhoneNumber::List::Iterator it;
   for ( it = mPhoneList.begin(); it != mPhoneList.end(); ++it )
-    if ( (*it).number().isEmpty() ) {
-      it = mPhoneList.remove( it );
-      --it;
-    }
+    if ( !(*it).number().isEmpty() )
+      retList.append( *it );
 
-  return mPhoneList;
+  return retList;
 }
 
 void PhoneEditWidget::edit()
@@ -205,12 +205,9 @@ void PhoneEditWidget::updateFourthEdit()
 
 void PhoneEditWidget::updateEdit( PhoneTypeCombo *combo )
 {
-//  kdDebug() << "updateEdit()" << endl;
-
   QLineEdit *edit = combo->lineEdit();
-  if ( !edit ) {
+  if ( !edit )
     return;
-  }
 
 #if 0
   if ( edit == mPrefEdit ) kdDebug() << " prefEdit" << endl;
