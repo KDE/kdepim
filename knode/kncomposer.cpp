@@ -845,7 +845,7 @@ void KNComposer::slotSignArticle()
     bool ok=true;
     QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
     if(!ok) // no suitable codec found => try local settings and hope the best ;-)
-      codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset(),ok);
+      codec=KGlobal::locale()->codecForEncoding();
 
     pgp->setMessage(codec->fromUnicode(text),codec->name());
     kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
