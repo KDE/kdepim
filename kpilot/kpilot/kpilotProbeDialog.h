@@ -30,6 +30,16 @@
 */
 
 #include "kdialogbase.h"
+//#include <qmap.h>
+//#include <qvaluelist.h>
+
+class KPilotDeviceLink;
+template <class T> class QValueList;
+template<class Key, class T> class QMap;
+
+typedef QValueList<KPilotDeviceLink*> PilotLinkList;
+
+typedef QMap<QString, KPilotDeviceLink*> PilotLinkMap;
 
 class ProbeDialog : public KDialogBase
 {
@@ -47,10 +57,12 @@ public:
 protected slots:
 	void startDetection();
 	void timeout();
-	void connection();
+	void connection(KPilotDeviceLink*lnk);
 	void disconnectDevices();
+	void processEvents();
 public slots:
 	int exec();
+	void slotUser1 () { startDetection(); }
 protected:
 	QLabel* fInfoText;
 	QGroupBox* fResultsGroup;
@@ -61,13 +73,15 @@ protected:
 	QGroupBox* fStatusGroup;
 	QLabel* fStatus;
 
+	QTimer* fProcessEventsTimer;
+
 protected:
 	QGridLayout* fResultsGroupLayout;
 	QGridLayout* fStatusGroupLayout;
 	
 	QStringList mDevicesToProbe;
-	QStringList mDevicesListening;
-	QStringList mDevicesNotListening;
+	PilotLinkList mDeviceLinks;
+	PilotLinkMap mDeviceLinkMap;
 	
 	bool mDetected;
 	QString mUserName;

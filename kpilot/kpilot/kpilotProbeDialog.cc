@@ -32,14 +32,20 @@
 #include <qlabel.h>
 #include <qvbox.h>
 #include <qtimer.h>
+#include <qmap.h>
+#include <qvaluelist.h>
 
 #include <kmessagebox.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfigskeleton.h>
+#include <kapplication.h>
 
 #include "kpilotConfig.h"
+#include "pilotUser.h"
+#include "pilotSysInfo.h"
 #include "options.h"
+#include "kpilotlink.h"
 
 #include "kpilotProbeDialog.moc"
 #ifndef __PILOTDAEMONDCOP_STUB__
@@ -49,7 +55,7 @@
 
 
 ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
-	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Cancel, true),
+	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::User1, KDialogBase::Cancel, true, i18n("Restart detection...")),
 	mDetected(false), mUserName(""), mDevice(""), mUID(0)
 {
 	QVBox *mainWidget = makeVBoxMainWidget();
@@ -98,10 +104,20 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	                <<"/dev/usb/tts/0"<<"/dev/usb/tts/1"<<"/dev/usb/tts/2"<<"/dev/usb/tts/3"
 	                <<"/dev/cuaa0"<<"/dev/cuaa1"<<"/dev/cuaa2"<<"/dev/cuaa3"
 	                <<"/dev/ucom0"<<"/dev/ucom1"<<"/dev/ucom2"<<"/dev/ucom3";
+	
+	fProcessEventsTimer = new QTimer( this );
+	connect( fProcessEventsTimer, SIGNAL(timeout()), this, SLOT(processEvents()) );
 }
 
 ProbeDialog::~ProbeDialog()
 {
+}
+
+void ProbeDialog::processEvents() {
+FUNCTIONSETUP;
+kdDebug()<<"processEvents"<<endl;
+QTimer::singleShot(500, this, SLOT(processEvents()));
+	KApplication::kApplication()->processEvents();
 }
 
 int ProbeDialog::exec() {
@@ -110,9 +126,6 @@ int ProbeDialog::exec() {
 	mDevice = "";
 	mUID = 0;
 	QTimer::singleShot( 0, this, SLOT( startDetection() ) );
-	QTimer::singleShot( 5000, this, SLOT( timeout() ) );
-	QTimer::singleShot( 10000, this, SLOT( connection() ) );
-
 	return KDialogBase::exec();
 }
 
@@ -122,15 +135,37 @@ int ProbeDialog::exec() {
 // *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
 void ProbeDialog::startDetection() {
+	QTimer::singleShot( 30000, this, SLOT( timeout() ) );
+// FIXME: Remove this test once everything is implemented!
+//QTimer::singleShot( 10000, this, SLOT( connection() ) );
+
+	fProcessEventsTimer->start( 200, false );
 	fStatus->setText( i18n("Starting detection...") );
+	processEvents();
 	PilotDaemonDCOP_stub *daemonStub = new PilotDaemonDCOP_stub("kpilotDaemon", "KPilotDaemonIface");
 	if (daemonStub) {
 		daemonStub->stopListening();
 	}
 	KPILOT_DELETE(daemonStub);
-
-		// TODO: connect to all sockets, connect each to the connection() slot
-		// TODO: start timer to poll devfs devices periodically
+	disconnectDevices();
+	mUserName=QString::null;
+	mDevice=QString::null;
+	mUID=0;
+	mDetected=false;
+	
+	QStringList::iterator end(mDevicesToProbe.end());
+	KPilotDeviceLink*link;
+	for (QStringList::iterator it=mDevicesToProbe.begin(); it!=end; ++it) {
+		link = new KPilotDeviceLink();
+kdDebug()<<"new kpilotDeviceLink for "<<(*it)<<endl;
+		link->reset( KPilotDeviceLink::OldStyleUSB, *it);
+kdDebug()<<"after resetting kpilotDeviceLink for "<<(*it)<<endl;
+		mDeviceLinkMap[*it] = link;
+		mDeviceLinks.append( link );
+		connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
+	}
+kdDebug()<<"end of startDetection"<<endl;
+QTimer::singleShot(500, this, SLOT(processEvents()));
 }
 
 void ProbeDialog::timeout() {
@@ -138,20 +173,20 @@ void ProbeDialog::timeout() {
 	fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
 }
 
-void ProbeDialog::connection() {
-//	fStatus->setText( i18n("Found a connected device") );
+void ProbeDialog::connection( KPilotDeviceLink*lnk) {
+	if (!lnk) return;
+	KPilotUser*usr( lnk->getPilotUser() );
+//	KPilotSysInfo*sysInfo( lnk->getSysInfo() );
+	
+	mUserName = usr->getUserName();
+	mUID = usr->getUserID();
+	mDevice = lnk->pilotPath();
+	lnk->endOfSync();
 
-	// TODO: After we have the connection, query the username and uid and the device and
-	mUserName = "Reinhold Kainhofer";
-	mDevice = "/dev/pilot";
-	mUID = 12345;
-
-
-	disconnectDevices();
-	fStatus->setText( i18n("Found a connected device") );
+	QTimer::singleShot(0, this, SLOT(disconnectDevices()));
+	fStatus->setText( i18n("Found a connected device on %1").arg(mDevice) );
 	fUser->setText( mUserName );
 	fDevice->setText( mDevice );
-	fDevice->setText("/dev/pilot");
 	mDetected = true;
 
 	fResultsGroup->setEnabled( true );
@@ -160,7 +195,16 @@ void ProbeDialog::connection() {
 
 void ProbeDialog::disconnectDevices() {
 	fStatus->setText( i18n("Disconnected from all devices") );
-	// TODO: Really disconnect all devices we are listening on
+	fProcessEventsTimer->stop( );
+	if (!mDeviceLinks.isEmpty()) {
+		PilotLinkList::iterator end(mDeviceLinks.end());
+		for (PilotLinkList::iterator it=mDeviceLinks.begin(); it!=end; ++it) {
+			KPILOT_DELETE(*it);
+		}
+		mDeviceLinks.clear();
+		mDeviceLinkMap.clear();
+	}
+	
 
 	PilotDaemonDCOP_stub *daemonStub = new PilotDaemonDCOP_stub("kpilotDaemon", "KPilotDaemonIface");
 	if (daemonStub) {
