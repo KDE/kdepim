@@ -92,7 +92,7 @@ class ATCommand {
     
   private:
     void construct();
-    void setResultFields(QString fieldsString);
+    void setResultFields(const QString &fieldsString);
     void extractParameters();
   
     QString mCmdName;

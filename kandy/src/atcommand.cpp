@@ -154,30 +154,20 @@ void ATCommand::setResultString(const QString &resultString)
   }
 }
 
-void ATCommand::setResultFields(QString fieldsString)
+void ATCommand::setResultFields(const QString &fieldsString)
 {
   QString id = mId.upper().left(mId.find('='));
-  
-//  kdDebug () << "%%% id: " << id << endl;
 
   // Truncate the command name prepended to the output by the modem.
-  if (fieldsString.startsWith(id)) {
-    fieldsString = fieldsString.mid(id.length() + 2);
+  QString rawFieldsString = fieldsString;
+  if ( fieldsString.startsWith( id ) ) {
+    rawFieldsString = fieldsString.mid(id.length() + 2);
   }
 
   QStringList *fields = new QStringList;
-  
-  *fields = QStringList::split(',',fieldsString);
+  *fields = QStringList::split( ',', rawFieldsString );
 
-  mResultFieldsList.append(fields);
-
-/*  
-  for (QStringList::Iterator it = mResultFields.begin();
-       it != mResultFields.end(); ++it ) {
-    kdDebug(5960) << " --- " << *it << endl;
-  }
-*/
-  
+  mResultFieldsList.append( fields );
 }
 
 QString ATCommand::resultString()
