@@ -555,7 +555,7 @@ namespace GpgME {
 
   struct UserID::Signature::Private {
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid, unsigned int idx )
-      : key( key ), uid( 0 ), sig( 0 )
+      : key( aKey ), uid( 0 ), sig( 0 )
     {
       if ( key )
 	for ( gpgme_user_id_t u = key->uids ; u ; u = u->next )
@@ -576,7 +576,7 @@ namespace GpgME {
     }
 	  
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid, gpgme_key_sig_t aSig )
-      : key( key ), uid( 0 ), sig( 0 )
+      : key( aKey ), uid( 0 ), sig( 0 )
     {
       if ( key )
 	for ( gpgme_user_id_t u = key->uids ; u ; u = u->next )
@@ -772,7 +772,7 @@ namespace GpgME {
   struct UserID::Signature::Notation::Private {
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid,
 	     gpgme_key_sig_t aSig, unsigned int idx )
-      : key( key ), uid( 0 ), sig( 0 ), nota( 0 )
+      : key( aKey ), uid( 0 ), sig( 0 ), nota( 0 )
     {
       if ( key )
 	for ( gpgme_user_id_t u = key->uids ; u ; u = u->next )
@@ -787,6 +787,8 @@ namespace GpgME {
 		    nota = n;
 		    break;
 		  }
+#else
+		(void)idx;
 #endif
 		break;
 	      }
@@ -802,7 +804,7 @@ namespace GpgME {
 	  
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid,
 	     gpgme_key_sig_t aSig, gpgme_sig_notation_t aNota )
-      : key( key ), uid( 0 ), sig( 0 ), nota( 0 )
+      : key( aKey ), uid( 0 ), sig( 0 ), nota( 0 )
     {
       if ( key )
 	for ( gpgme_user_id_t u = key->uids ; u ; u = u->next )
@@ -817,6 +819,8 @@ namespace GpgME {
 		    nota = n;
 		    break;
 		  }
+#else
+		(void)aNota;
 #endif
 		break;
 	      }
