@@ -164,7 +164,7 @@ bool OpenGroupware::doLoad()
   kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
   kdDebug(7000) << "props: " << props.toString() << endl;
 
-  mListEventsJob = KIO::davPropFind( url, props, "0", false );
+  mListEventsJob = KIO::davPropFind( url, props, "1", false );
 
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotListJobResult( KIO::Job * ) ) );
