@@ -53,8 +53,8 @@ CalendarLocal::CalendarLocal(const QString &timeZoneId)
 
 void CalendarLocal::init()
 {
-  mOldestDate = 0L;
-  mNewestDate = 0L;
+  mOldestDate = 0;
+  mNewestDate = 0;
 
   mRecursList.setAutoDelete(true);
   // solves the leak?
@@ -123,9 +123,9 @@ void CalendarLocal::close()
 
   // reset oldest/newest date markers
   delete mOldestDate;
-  mOldestDate = 0L;
+  mOldestDate = 0;
   delete mNewestDate;
-  mNewestDate = 0L;
+  mNewestDate = 0;
 
   setModified( false );
 }
@@ -269,7 +269,7 @@ Event *CalendarLocal::event( const QString &uid )
     }
   }
   // catch-all.
-  return (Event *) 0L;
+  return (Event *) 0;
 }
 
 void CalendarLocal::addTodo(Todo *todo)
@@ -453,7 +453,7 @@ void CalendarLocal::update(IncidenceBase *incidence)
     // both the dictionary and the recurrence list.  Then we reinsert it.
     // We don't bother about optimizations right now.
     qdi.toFirst();
-    while ((tmpList = qdi.current()) != 0L) {
+    while ((tmpList = qdi.current()) != 0) {
       ++qdi;
       tmpList->removeRef(anEvent);
     }

@@ -59,7 +59,7 @@ bool VCalFormat::load(Calendar *calendar, const QString &fileName)
 
   kdDebug(5800) << "VCalFormat::load() " << fileName << endl;
 
-  VObject *vcal = 0L;
+  VObject *vcal = 0;
 
   // this is not necessarily only 1 vcal.  Could be many vcals, or include
   // a vcard...

@@ -72,7 +72,7 @@ void Calendar::init()
 
   // initialize random numbers.  This is a hack, and not
   // even that good of one at that.
-//  srandom(time(0L));
+//  srandom(time(0));
 
   // user information...
   setOwner(i18n("Unknown Name"));
