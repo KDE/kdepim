@@ -1,5 +1,6 @@
 # KDE Config File
 [KDE Desktop Entry]
+Encoding=UTF-8
 Name=KPilotDaemon
 Name[af]=kpilotdaemon
 Name[ar]=مراقب KPilot

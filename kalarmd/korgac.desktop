@@ -1,5 +1,6 @@
 # KDE Config File
 [Desktop Entry]
+Encoding=UTF-8
 Name=KOrganizer Alarm Client
 Exec=korgac --miniicon korganizer
 Icon=korganizer

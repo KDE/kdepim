@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Type=Service
 Name=KPilot POP Mail Conduit
 Name[af]=kpilot pop pos pad
@@ -11,7 +12,7 @@ Name[de]=Einrichtung von POP-Mail für KPilot
 Name[eo]=KPilota POP-Poŝto-kanalo
 Name[es]=Conducto Correo POP de KPilot
 Name[et]=KPiloti POP meilide sünkroniseerimine
-Name[fi]=KPilot POP sähköposti liityntä
+Name[fi]=KPilot POP sähköpostiyhdyskäytävä
 Name[fr]=Canal POP de kPilot
 Name[gl]=Conducto de Correo POP para o KPilot
 Name[he]=תעלת דואר POP של KPilot

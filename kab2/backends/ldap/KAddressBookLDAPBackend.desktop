@@ -1,6 +1,7 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=KAddressBookLDAPBackend
-Name[af]=K-ADRESBOEK-LDAP-AGTERKANT
+Name[af]=k-adresboek-ldap-agterkant
 Name[az]=K Ünvan Dəftəri
 Name[da]=KAddresseBogLDAPBagende
 Name[de]=KAdressbuch-LDAP-Datei
@@ -8,11 +9,15 @@ Name[eo]=Adresaro-LDAP-modulo
 Name[es]=Terminal LDAP de KAddressBook
 Name[fr]=Module LDAP du carnet d'adresses
 Name[ja]=アドレス帳 LDAP バックエンド
+Name[nb]=KAdressebok LDAP Backend
 Name[nl]=KAddressenBoekLDAPBackend
 Name[pl]=Interfejs książki adresowej poprzez LDAP
-Name[pt_BR]=LivroDeEndereçosBackendLDAP
 Name[pt]=LivroDeEndereçosBackendLDAP
+Name[pt_BR]=Livro de Endereços com Interface LDAP
 Name[sv]=KadressbokLDAPbaksida
 Name[tr]=K Adres Defteri
+Name[xh]=Isiphelo se LDAP yencwadi yedilesi ye K
+Name[xx]=xx
+Name[zu]=KIncwadi Yamakheli yeLDAP Yasemuva Ekugcineni
 X-KDE-Library=libkabbackend_ldap
 

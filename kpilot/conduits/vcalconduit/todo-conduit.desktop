@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Type=Service
 Name=KOrganizer Todo Conduit
 Name[af]=korganizer te-doen pad
@@ -12,7 +13,7 @@ Name[en_GB]=KOrganiser Todo Conduit
 Name[eo]=Organizilo - agendo
 Name[es]=Conducto Por hacer de KOrganizer
 Name[et]=KOrganizeri tegevuste sünkroniseerimine
-Name[fi]=Korganizer tehtävää liityntä
+Name[fi]=Korganizer tehtävää yhdyskäytävä
 Name[fr]=Canal de tâches à faire kOrganizer
 Name[gl]=Conducto A-Facer do KOrganizer
 Name[he]=תעלת משימות לביצוע של KOrganizer
@@ -29,7 +30,7 @@ Name[nn]=KOrganizer-hugselistelenkje
 Name[oc]=Conducte de pendents KOrganizer
 Name[pl]=Łącznik do Do Zrobienia KOrganizera
 Name[pt]=Conduta Todo do KOrganizer
-Name[pt_BR]=Conduíte ParaFazer do KOrganizer
+Name[pt_BR]=Conduíte de Pendências do KOrganizer
 Name[ru]=Сопряжение органайзера с Todo
 Name[sk]=KOrganizér ToDo spojka
 Name[sl]=Veznik za seznam opravkov v Organizatorju

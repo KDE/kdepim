@@ -1,13 +1,25 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Kandy
 Name[af]=kandy
 Name[eo]=Poŝtelefonilo
-Name[fr]=Connexion à un téléphone portable
 Name[hu]=Kandy mobiltelefon-kezelő
 Name[xx]=xx
 Exec=kandy %i %m -caption "%c"
 Icon=kandy
 Type=Application
 Comment=Mobile Phone Tool
+Comment[da]=Mobiltelefon-værktøj
+Comment[de]=Programm für Mobiltelefone
+Comment[es]=Herramienta de teléfonos móviles
+Comment[fi]=Matkapuhelintyökalu
+Comment[fr]=Un outil de connexion à votre téléphone portable
+Comment[he]=כלי טלפון נייד
+Comment[hu]=Kezelőprogram mobiltelefon-címjegyzékhez
+Comment[it]=Strumento per i telefoni cellulari
+Comment[lv]=Mobīlā Telefona Rīks
+Comment[sk]=Nástroj pre mobily
+Comment[sv]=Verktyg för mobiltelefon
+Comment[xx]=xx
 Terminal=0
 X-DCOP-ServiceType=Multi

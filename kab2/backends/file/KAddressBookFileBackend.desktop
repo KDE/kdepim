@@ -1,6 +1,7 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=KAddressBookFileBackend
-Name[af]=K-ADRESBOEK-LêER-AGTERKANT
+Name[af]=k-adresboek-lêer-agterkant
 Name[az]=K Ünvan Dəftəri
 Name[da]=KAddresseBogFilBagende
 Name[de]=KAdressbuch-Datei
@@ -8,11 +9,15 @@ Name[eo]=Modulo por Adresarodosieroj
 Name[es]=Terminal de archivo de KAddressBook
 Name[fr]=Module fichier du carnet d'adresses
 Name[ja]=アドレス帳 ファイルバックエンド
+Name[nb]=KAddressBookFilBackend
 Name[nl]=KAdressenboek Bestandsbackend
 Name[pl]=Interfejs książki adresowej z pliku
-Name[pt_BR]=LivroDeEndereçosBackendFicheiros
 Name[pt]=LivroDeEndereçosBackendFicheiros
+Name[pt_BR]=Livro de Endereços
 Name[sv]=Kadressbokfilbaksida
 Name[tr]=K Adress Defteri
+Name[xh]=Isiphelo sefayile yencwadi yedilesi ye K
+Name[xx]=xx
+Name[zu]=K Incwadi Yamakheli Ifayela Yasemuva ekugcineni
 X-KDE-Library=libkabbackend_file
 

@@ -1,5 +1,6 @@
 # KDE Config File
 [Desktop Entry]
+Encoding=UTF-8
 Name=Alarm Daemon
 Name[af]=alarm bediener
 Name[da]=Alarmdæmon
@@ -10,6 +11,7 @@ Name[fr]=Démon d'alarme
 Name[he]=תהליך שירות התזכורות
 Name[hu]=Emlékeztető szolgáltatás
 Name[it]=Demone dei promemoria
+Name[lt]=Žadintuvo demonas
 Name[lv]=Trauksmes Dēmons
 Name[nl]=Alarm daemon
 Name[pt]=Servidor de Alarme
@@ -26,13 +28,14 @@ Type=Application
 Comment=KOrganizer/KAlarm alarm daemon autostart at login
 Comment[ar]=مراقب تنبيهات KOrganizer/KAlarm يبدؤون آليا عند بدء التشغيل
 Comment[az]=KOrganizer/KAlarm alarm demonunun başlanğıcda avtomatik dövrəyə girməsi
-Comment[da]=KOrganizer/KAlarm-alarmdæmon autostart ved logpå
+Comment[da]=KOrganizer/KAlarm-alarmdæmon autostart ved login
 Comment[de]=Autostart des Alarmdämons von KOrganizer bei der Anmeldung beim System
 Comment[es]=Demonio de autoinicio de alarma KAlarm/KOrganizer al acceder
 Comment[fi]=KOrganizer/KAlarm hälytyspalvelimen automaattikäynnistys sisäänkirjautuessa
 Comment[fr]=Le démon d'alarme de kOrganizer et de kAlarm démarre automatiquement lors de la connexion
 Comment[he]=הפעלה אוטומטית של תהליך שירות התזכורות של KOrganizer/KAlarm בעת ההפעלה
 Comment[hu]=A KOrganizer/KAlarm emlékeztető szolgáltatás automatikus indítása
+Comment[lt]=KOrganizer/KAlarm žadintuvo demono automatinis paleidimas prisiregistruojant
 Comment[lv]=KOrganizer/KAlarm trauksmes dēmona autostarts pie pieteikšanās
 Comment[nl]=KOrganizer/Kalarm alarmdaemon autostart bij login
 Comment[pt]=Servidor de alarme do KAlarm/KOrganizer auto-iniciável no arranque

@@ -1,5 +1,6 @@
 # KDE Config File
 [KDE Desktop Entry]
+Encoding=UTF-8
 Name=KPilot
 Name[af]=kpilot
 Name[eo]=Palm-Piloto
@@ -11,6 +12,23 @@ Name[xh]=Umqhubi wenqwelo moya we K
 Name[xx]=xx
 Name[zu]=KUmshayeli webhanoyi
 Comment=PalmPilot Tool
+Comment[da]=Palm Pilot-værktøj
+Comment[de]=Palm-Pilot-Programm
+Comment[es]=Herramienta para Palm Pilot
+Comment[fi]=Palm Pilot -työkalu
+Comment[fr]=Un outil pour le Palm Pilot
+Comment[he]=כלי פאלם-פיילוט
+Comment[hu]=Kezelőprogram Palm Pilothoz
+Comment[it]=Strumento per Palm Pilot
+Comment[lt]=PalmPilot įrankis
+Comment[lv]=PalmPilota Rīks
+Comment[pt]=Ferramenta para o PalmPilot
+Comment[pt_BR]=Ferramenta para o PalmPilot
+Comment[sk]=Nástroj pre PalmPilot
+Comment[sv]=Palm Pilot-verktyg
+Comment[ta]=À¡õ ¨ÀÄð ¸ÕÅ¢
+Comment[uk]=Засіб для PalmPilot
+Comment[xx]=xx
 Exec=kpilot
 Icon=kpilot
 Type=Application
