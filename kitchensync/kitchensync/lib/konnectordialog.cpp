@@ -24,8 +24,8 @@ KonnectorDialog::KonnectorDialog( const KonnectorProfile::ValueList& list, Konne
 {
 
     m_base = new KonnectorProfileListBase(this);
-    m_base->lstView->addColumn("Loaded");
-    m_base->lstView->addColumn("Name");
+    m_base->lstView->addColumn( i18n( "Activated" ) );
+    m_base->lstView->addColumn( i18n( "Name" ) );
 
     setMainWidget( m_base );
 
@@ -147,10 +147,10 @@ void KonnectorDialog::slotAdd() {
 void KonnectorDialog::slotEdit() {
     KonnectorCheckItem* item = static_cast<KonnectorCheckItem*> ( m_base->lstView->selectedItem() );
     if(!item ) return;
-    
+
     KonnectorWizard wiz(m_manager, item->profile() );
     if( wiz.exec() != QDialog::Accepted ) return;
-    
+
     item->setEdited( true );
     item->setProfile( wiz.profile() );
 }

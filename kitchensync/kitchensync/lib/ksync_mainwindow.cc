@@ -647,7 +647,10 @@ void KSyncMainWindow::initKonnectorList() {
     QStringList lst;
 
     for ( it = list.begin() ; it != list.end(); ++it ) {
-        lst << (*it).name();
+        // only show activated connection profiles
+        if ( !(*it).udi().isEmpty() )  {
+            lst << (*it).name();
+        }
     }
     m_konAct->setItems( lst );
 }
