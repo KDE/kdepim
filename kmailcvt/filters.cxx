@@ -377,7 +377,7 @@ bool kab::kabStart(filterInfo *info)
   mAddressBook = KABC::StdAddressBook::self();
   mTicket = mAddressBook->requestSaveTicket();
   if ( !mTicket ) {
-     info->alert(cap,i18n("Unable to store imported data in addressbook!"));
+     info->alert(cap,i18n("Unable to store imported data in address book."));
      return false;
   } else {
      return true;
