@@ -52,6 +52,7 @@
 #include "kcal_resourcexmlrpcconfig.h"
 #include "kcal_resourcexmlrpc.h"
 
+#include "access.h"
 #include "synchronizer.h"
 #include "xmlrpciface.h"
 
@@ -75,13 +76,6 @@
 #define CAL_WEEKDAYS 62
 #define CAL_WEEKEND 65
 #define CAL_ALLDAYS 127
-
-#define CAL_ACCESS_READ 1
-#define CAL_ACCESS_ADD 2
-#define CAL_ACCESS_EDIT 4
-#define CAL_ACCESS_DELETE 8
-#define CAL_ACCESS_PRIVATE 9
-#define CAL_ACCESS_ALL 15
 
 using namespace KCal;
 
@@ -314,7 +308,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
 
   disableChangeNotification();
 
-  setRights( ev, CAL_ACCESS_ALL );
+  setRights( ev, EGW_ACCESS_ALL );
   Event *oldEvent = mCalendar.event( ev->uid() );
   if ( oldEvent ) { // already exists
     if ( !oldEvent->isReadOnly() ) {
@@ -346,7 +340,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
 
 bool ResourceXMLRPC::deleteEvent( Event* ev )
 {
-  if ( !(rights( ev ) & CAL_ACCESS_DELETE) && rights( ev ) != -1 )
+  if ( !(rights( ev ) & EGW_ACCESS_DELETE) && rights( ev ) != -1 )
     return false;
 
   mServer->call( DeleteEventCommand, idMapper().remoteId( ev->uid() ).toInt(),
@@ -394,7 +388,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 
   disableChangeNotification();
 
-  setRights( todo, CAL_ACCESS_ALL );
+  setRights( todo, EGW_ACCESS_ALL );
   Todo *oldTodo = mCalendar.todo( todo->uid() );
   if ( oldTodo ) { // already exists
     if ( !oldTodo->isReadOnly() ) {
@@ -426,7 +420,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 
 bool ResourceXMLRPC::deleteTodo( Todo *todo )
 {
-  if ( !(rights( todo ) & CAL_ACCESS_DELETE) && rights( todo ) != -1 )
+  if ( !(rights( todo ) & EGW_ACCESS_DELETE) && rights( todo ) != -1 )
     return false;
 
   mServer->call( DeleteTodoCommand, idMapper().remoteId( todo->uid() ).toInt(),
@@ -927,7 +921,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
       event->addExDateTime( *exIt );
   }
 
-  event->setReadOnly( !(rights & CAL_ACCESS_EDIT) );
+  event->setReadOnly( !(rights & EGW_ACCESS_EDIT) );
   setRights( event, rights );
 }
 
@@ -1174,7 +1168,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
   }
 
   int rights = args[ "rights" ].toInt();
-  todo->setReadOnly( !(rights & CAL_ACCESS_EDIT) );
+  todo->setReadOnly( !(rights & EGW_ACCESS_EDIT) );
 }
 
 void ResourceXMLRPC::checkLoadingFinished()

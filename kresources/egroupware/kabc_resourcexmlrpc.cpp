@@ -35,6 +35,7 @@
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
+#include "access.h"
 #include "synchronizer.h"
 #include "xmlrpciface.h"
 
@@ -45,6 +46,16 @@ static const QString AddContactCommand = "addressbook.boaddressbook.write";
 static const QString DeleteContactCommand = "addressbook.boaddressbook.delete";
 static const QString LoadCategoriesCommand = "addressbook.boaddressbook.categories";
 static const QString LoadCustomFieldsCommand = "addressbook.boaddressbook.customfields";
+
+static void setRights( KABC::Addressee &addr, int rights )
+{
+  addr.insertCustom( "EGWRESOURCE", "RIGHTS", QString::number( rights ) );
+}
+
+static int rights( const KABC::Addressee &addr )
+{
+  return addr.custom( "EGWRESOURCE", "RIGHTS" ).toInt();
+}
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
   : ResourceCached( config ), mServer( 0 )
@@ -212,7 +223,7 @@ bool ResourceXMLRPC::save( Ticket *ticket )
   return asyncSave( ticket );
 }
 
-bool ResourceXMLRPC::asyncSave( Ticket */*ticket*/ )
+bool ResourceXMLRPC::asyncSave( Ticket* )
 {
   KABC::Addressee::List::ConstIterator it;
 
@@ -247,10 +258,15 @@ void ResourceXMLRPC::addContact( const Addressee& addr )
 
 void ResourceXMLRPC::updateContact( const Addressee& addr )
 {
+  if ( !(rights( addr ) & EGW_ACCESS_DELETE) && (rights( addr ) != -1) ) {
+    clearChange( addr.uid() );
+    return;
+  }
+
   QMap<QString, QVariant> args;
   writeContact( addr, args );
 
-  args.insert( "id", idMapper().remoteId( addr.uid() ).toInt() );
+  args.insert( "id", idMapper().remoteId( addr.uid() ) );
   mServer->call( AddContactCommand, args,
                  this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( updateContactFault( int, const QString&, const QVariant& ) ),
@@ -259,7 +275,13 @@ void ResourceXMLRPC::updateContact( const Addressee& addr )
 
 void ResourceXMLRPC::deleteContact( const Addressee& addr )
 {
-  mServer->call( DeleteContactCommand, idMapper().remoteId( addr.uid() ).toInt(),
+  if ( !(rights( addr ) & EGW_ACCESS_DELETE) && rights( addr ) != -1 ) {
+    clearChange( addr.uid() );
+    idMapper().removeRemoteId( idMapper().remoteId( addr.uid() ) );
+    return;
+  }
+
+  mServer->call( DeleteContactCommand, idMapper().remoteId( addr.uid() ),
                  this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( deleteContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
@@ -399,7 +421,6 @@ void ResourceXMLRPC::deleteContactFault( int, const QString &errorMsg,
                                          const QVariant &id )
 {
   KABC::Addressee addr;
-  addr.setFormattedName( "coolo" );
 
   const KABC::Addressee::List deletedList = deletedAddressees();
   KABC::Addressee::List::ConstIterator it;
@@ -691,6 +712,8 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
 
       for ( it = categories.begin(); it != categories.end(); ++it )
         addr.insertCategory( it.data().toString() );
+    } else if ( it.key() == "rights" ) {
+      setRights( addr, it.data().toInt() );
     }
   }
 
