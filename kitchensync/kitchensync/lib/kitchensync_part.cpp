@@ -63,7 +63,7 @@ KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *,
   setWidget( view );
 
   view->initProfiles();
-  view->slotProfile();
+  view->activateProfile();
 
   setInstance( KitchenSyncFactory::instance() );
 

@@ -53,15 +53,15 @@ void ActionManager::initActions()
                mActionCollection, "sync" );
 
   new KAction( i18n("Configure Profiles..."), "configure", 0,
-               mView, SLOT( slotConfigProf() ),
+               mView, SLOT( configureProfiles() ),
                mActionCollection, "config_profile" );
 
   new KAction( i18n("Configure Current Profile..."), "configure", 0,
-               mView, SLOT( slotConfigCur() ),
+               mView, SLOT( configureCurrentProfile() ),
                mActionCollection, "config_current" );
 
   m_profAct = new KSelectAction( i18n("Profile"), KShortcut(), mView,
-                                 SLOT(slotProfile() ),
+                                 SLOT( activateProfile() ),
                                  mActionCollection, "select_prof");
 
   KStdAction::preferences( mView, SLOT( slotPreferences() ),

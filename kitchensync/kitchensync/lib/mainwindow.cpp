@@ -71,7 +71,7 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
   createGUI( 0 );
 
   mView->initProfiles();
-  mView->slotProfile();
+  mView->activateProfile();
 
   //statusBar()->insertItem(i18n("Not Connected"), 10, 0, true );
   m_konBar = new KonnectorBar( statusBar() );

@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,32 +19,38 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_PROFILE_DIALOGBASE_H
-#define KSYNC_PROFILE_DIALOGBASE_H
+#ifndef KSYNC_PROFILEDIALOG_H
+#define KSYNC_PROFILEDIALOG_H
+
+#include "profile.h"
+#include "manpartservice.h"
 
 #include <kdialogbase.h>
 
-#include <profile.h>
-#include "manpartservice.h"
+class KListView;
 
-class ProfileListBase;
 namespace KSync {
-    class ProfileDialog : public KDialogBase {
-        Q_OBJECT
-    public:
-        ProfileDialog( const Profile::ValueList&,
-                       const ManPartService::ValueList& );
-        ~ProfileDialog();
-        Profile::ValueList profiles()const;
-    private:
-        void initListView( const Profile::ValueList& );
-        ManPartService::ValueList m_lst;
-        ProfileListBase* m_base;
-private slots:
-        void slotRemove();
-        void slotAdd();
-        void slotEdit();
-    };
+
+class ProfileDialog : public KDialogBase
+{
+    Q_OBJECT
+  public:
+    ProfileDialog( const Profile::ValueList &,
+                   const ManPartService::ValueList & );
+    ~ProfileDialog();
+    Profile::ValueList profiles()const;
+
+  private slots:
+    void slotRemove();
+    void slotAdd();
+    void slotEdit();
+
+  private:
+    void initListView( const Profile::ValueList& );
+    ManPartService::ValueList m_lst;
+    KListView *mProfileList;
+};
+
 }
 
 #endif

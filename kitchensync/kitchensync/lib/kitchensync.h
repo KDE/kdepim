@@ -105,7 +105,10 @@ class KitchenSync : public Core
 
   public slots:
     void initProfiles();
-    void slotProfile();
+    /**
+      Activates the profile selected in the GUI.
+    */
+    void activateProfile();
 
   private:
     void addPart( const ManPartService& );
@@ -113,10 +116,16 @@ class KitchenSync : public Core
     void initSystray ( void );
 
   private slots:
+    /**
+      Propagate the list of configure profiles to the GUI.
+    */
     void initProfileList();
-    void switchProfile( const Profile &prof );
-    void slotConfigProf();
-    void slotConfigCur();
+    void activateProfile( const Profile &prof );
+    /**
+      Open configuration dialog for configuring the profiles.
+    */
+    void configureProfiles();
+    void configureCurrentProfile();
     void initPlugins();
     void slotSync();
     void slotActivated( ManipulatorPart * );
@@ -150,7 +159,7 @@ class KitchenSync : public Core
     ManPartService::ValueList m_partsLst;
     KSyncSystemTray *m_tray;
 
-    ProfileManager *m_prof;
+    ProfileManager *m_profileManager;
     SyncUi *m_syncUi;
     SyncAlgorithm *m_syncAlg;
 };

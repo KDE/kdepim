@@ -132,7 +132,7 @@ KitchenSync::~KitchenSync()
 {
   writeProfileConfig();
 
-  m_prof->save();
+  m_profileManager->save();
 
 #if 0
   createGUI( 0 );
@@ -249,22 +249,22 @@ void KitchenSync::initProfiles()
 {
     kdDebug() << "KitchenSync::initProfiles()" << endl;
 
-    m_prof = new ProfileManager();
-    m_prof->load();
+    m_profileManager = new ProfileManager();
+    m_profileManager->load();
     initProfileList();
-    slotProfile();
+    activateProfile();
 
     kdDebug() << "KitchenSync::initProfiles() done" << endl;
 }
 
 Profile KitchenSync::currentProfile() const
 {
-    return m_prof->currentProfile();
+    return m_profileManager->currentProfile();
 }
 
 ProfileManager* KitchenSync::profileManager() const
 {
-    return m_prof;
+    return m_profileManager;
 }
 
 
@@ -307,26 +307,35 @@ void KitchenSync::slotSync( Konnector *konnector, SynceeList lis)
 }
 #endif
 
-/*
- * configure profiles
- */
-void KitchenSync::slotConfigProf()
+void KitchenSync::configureProfiles()
 {
-    ProfileDialog dlg( m_prof->profiles(), m_partsLst ) ;
+    ProfileDialog dlg( m_profileManager->profiles(), m_partsLst ) ;
     if ( dlg.exec() ) {
-        m_prof->setProfiles( dlg.profiles() );
-        m_prof->save();
+        m_profileManager->setProfiles( dlg.profiles() );
+        m_profileManager->save();
         // switch profile
         initProfileList();
-        slotProfile();
+        activateProfile();
     }
 }
 
-void KitchenSync::switchProfile( const Profile &prof )
+void KitchenSync::activateProfile()
 {
-    kdDebug() << "KitchenSync::switchProfile(): " << prof.name() << endl;
+    int item = mActionManager->currentProfile();
+    if ( item < 0 ) item = 0; // for initialization
+    if ( m_profileManager->count() == 0 ) return;
 
-    if ( prof.uid() == m_prof->currentProfile().uid() ) {
+    Profile currentProfile = m_profileManager->profile( item );
+
+    activateProfile( currentProfile );
+    m_profileManager->setCurrentProfile( currentProfile );
+}
+
+void KitchenSync::activateProfile( const Profile &prof )
+{
+    kdDebug() << "KitchenSync::activateProfile(): " << prof.name() << endl;
+
+    if ( prof.uid() == m_profileManager->currentProfile().uid() ) {
       kdDebug() << "Profile already active" << endl;
       return;
     }
@@ -345,7 +354,7 @@ void KitchenSync::switchProfile( const Profile &prof )
     for (it = lst.begin(); it != lst.end(); ++it ) {
         addPart( (*it) );
     }
-    m_prof->setCurrentProfile( prof );
+    m_profileManager->setCurrentProfile( prof );
     emit profileChanged( prof );
 
     readProfileConfig();
@@ -364,7 +373,7 @@ void KitchenSync::addPart( const ManPartService &service )
  * we will hack our SyncAlgo configurator into  that
  * that widget
  */
-void KitchenSync::slotConfigCur()
+void KitchenSync::configureCurrentProfile()
 {
     ConfigureDialog *dlg = new ConfigureDialog(this);
     ManipulatorPart *part = 0;
@@ -389,42 +398,27 @@ void KitchenSync::slotConfigCur()
         }
     }
     delete dlg;
-    m_prof->save();
-}
-
-/*
- * the Profile was changed in the Profile KSelectAction
- */
-void KitchenSync::slotProfile()
-{
-    int item = mActionManager->currentProfile();
-    if ( item < 0 ) item = 0; // for initialization
-    if ( m_prof->count() == 0 ) return;
-
-    Profile cur = m_prof->profile( item );
-
-    switchProfile( cur );
-    m_prof->setCurrentProfile( cur );
+    m_profileManager->save();
 }
 
 void KitchenSync::initProfileList()
 {
-    Profile::ValueList list = m_prof->profiles();
+    Profile::ValueList list = m_profileManager->profiles();
     Profile::ValueList::Iterator it;
     QStringList lst;
-    for (it = list.begin(); it != list.end(); ++it ) {
+    for ( it = list.begin(); it != list.end(); ++it ) {
         lst << (*it).name();
     }
     mActionManager->setProfiles( lst );
 }
 
-SyncUi* KitchenSync::syncUi()
+SyncUi *KitchenSync::syncUi()
 {
     m_syncUi = new SyncUiKde( this, currentProfile().confirmDelete(), true );
     return m_syncUi;
 }
 
-SyncAlgorithm* KitchenSync::syncAlgorithm()
+SyncAlgorithm *KitchenSync::syncAlgorithm()
 {
     m_syncAlg = new PIMSyncAlg( syncUi() );
 
