@@ -187,14 +187,20 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
       while ( ltgroups.count() > grpnum + 1 ) {
         QChar nextchar;
         QChar nowchar;
-        nextchar = ltgroups[ grpnum + 1 ].at( 0 ).upper();
+        if ( !tmpl->reverseSorting() ) {
+          nextchar = ltgroups[ grpnum + 1 ].at( 0 ).upper();
+        } else {
+          QString tmpstr = ltgroups[ grpnum + 1 ];
+          nextchar = tmpstr.at( tmpstr.length() - 1 ).upper();
+          qDebug("################### " + tmpstr + " last is: " + QString(nextchar) );
+        }
 
         // determine nowchar depending on sorting criterion
         {
           QString tmpstr = sfield->value( addressee );
-          if ( !tmpstr.isEmpty() )
-          {
+          if ( !tmpstr.isEmpty() ) {
             nowchar = tmpstr.at( 0 ).upper();
+            qDebug("------------------ " + tmpstr + " has nowchar: " + QString(nowchar) );
           }
         }
         if (    ( !tmpl->reverseSorting() && nowchar >= nextchar )
