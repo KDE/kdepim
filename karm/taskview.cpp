@@ -21,12 +21,14 @@
 #include "edittaskdialog.h"
 #include "idletimedetector.h"
 #include "karmstorage.h"
+#include "plannerparser.h"
 #include "preferences.h"
 #include "printdialog.h"
 #include "reportcriteria.h"
 #include "task.h"
 #include "taskview.h"
 #include "timekard.h"
+#include "qxml.h"
 
 #define T_LINESIZE 1023
 #define HIDDEN_COLUMN -10
@@ -111,6 +113,11 @@ TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
            this, SLOT( stopTimerFor(Task*) ));
 }
 
+KarmStorage* TaskView::storage()
+{
+  return _storage;
+}
+
 TaskView::~TaskView()
 {
   _preferences->save();
@@ -188,7 +195,41 @@ void TaskView::deleteItemState( QListViewItem *item )
 
 void TaskView::closeStorage() { _storage->closeStorage( this ); }
 
-
+void TaskView::refresh()
+{
+  kdDebug(5970) << "entering TaskView::refresh()" << endl;
+  this->setRootIsDecorated(true);
+  int i = 0;
+  for ( Task* t = item_at_index(i); t; t = item_at_index(++i) )
+  {
+    if (!t->isComplete())
+    {
+      t->setOpen(true);
+      t->setEnabled(true);
+    }
+    else
+    {
+      t->setOpen(false);
+      t->setEnabled(false);
+    }
+  }
+  
+  // remove root decoration if there is no more children.
+  bool anyChilds = false;
+  for(Task* child = first_child();
+            child;
+            child = child->nextSibling()) {
+    if (child->childCount() != 0) {
+      anyChilds = true;
+      break;
+    }
+  }
+  if (!anyChilds) {
+    setRootIsDecorated(false);
+  }
+  kdDebug(5970) << "exiting TaskView::refresh()" << endl;
+}
+    
 void TaskView::loadFromFlatFile()
 {
   kdDebug(5970) << "TaskView::loadFromFlatFile()" << endl;
@@ -204,7 +245,6 @@ void TaskView::loadFromFlatFile()
       KMessageBox::error(this, err);
       return;
     }
-
     // Register tasks with desktop tracker
     int task_idx = 0;
     Task* task = item_at_index(task_idx++);
@@ -219,6 +259,21 @@ void TaskView::loadFromFlatFile()
     setCurrentItem(first_child());
 
     _desktopTracker->startTracking();
+  }
+}
+
+void TaskView::importPlanner()
+{
+  kdDebug(5970) << "entering importPlanner" << endl;
+  {
+    PlannerParser* handler=new PlannerParser(this);
+    QFile xmlFile(KFileDialog::getOpenFileName(QString::null, QString::null, 0) );
+    QXmlInputSource source( xmlFile );
+    QXmlSimpleReader reader;
+    reader.setContentHandler( handler );
+    reader.parse( source );
+    // we need a refresh
+    refresh();
   }
 }
 

@@ -309,7 +309,11 @@ void MainWindow::makeMenus()
   new KAction( i18n("Export &History to CSV File..."), 0,
       this, SLOT(exportcsvHistory()), actionCollection(),
       "export_csvhistory");
-  /*
+  new KAction( i18n("Import Tasks from &Planner..."), 0,
+      _taskView, SLOT(importPlanner()), actionCollection(),
+      "import_planner");  
+
+/*
   new KAction( i18n("Import E&vents"), 0,
                             _taskView,
                             SLOT( loadFromKOrgEvents() ), actionCollection(),

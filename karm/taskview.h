@@ -100,8 +100,14 @@ class TaskView : public KListView
     /** Display edit task dialog and create a new task with results.  */
     void newTask( QString caption, Task* parent );
 
-    /** Used to import a legacy file format. */
+     /** Used to refresh (e.g. after import) */
+    void refresh();
+   
+   /** Used to import a legacy file format. */
     void loadFromFlatFile();
+    
+    /** used to import tasks from imendio planner */
+    void importPlanner();
 
     /** Export comma separated values format for task time totals. */
     void exportcsvFile();
@@ -122,6 +128,7 @@ class TaskView : public KListView
      * percent complete to 100 and removes task and all it's children from the
      * list view.
      */
+    KarmStorage* storage();
     void deleteTask(bool markingascomplete=false);
 //    void addCommentToTask();
     void markTaskAsComplete();
