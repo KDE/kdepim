@@ -18,4 +18,3 @@ usr/bin/popmail_conduit
 usr/bin/conduitKNotes
 usr/bin/conduitExpense
 usr/share/doc/kde/HTML/en/kpilot/*
-usr/share/lintian/overrides/kpilot

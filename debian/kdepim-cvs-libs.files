@@ -4,9 +4,6 @@ usr/lib/libkimap.la
 usr/lib/librmm.so.1.0.0
 usr/lib/librmm.so.1
 usr/lib/librmm.la
-usr/lib/libvcard.so.0.0.0
-usr/lib/libvcard.so.0
-usr/lib/libvcard.la
 usr/lib/libical.so.*
 usr/lib/libical.la
 usr/lib/libicalss.so.*

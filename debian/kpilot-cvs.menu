@@ -1,4 +1,4 @@
-?package(kpilot):\
+?package(kpilot-cvs):\
 	needs=x11\
 	section=Apps/Tools\
 	hints="KDE"\

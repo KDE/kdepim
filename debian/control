@@ -1,18 +1,19 @@
-Source: kdepim
-Build-Depends: autoconf2.13, automake, libtool, kdelibs-dev (>= 4:2.2.0-final-1), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex, g++-3.0 [alpha], gcc-3.0 [alpha]
+Source: kdepim-cvs
+Build-Depends: autoconf, automake, libtool, kdelibs4-dev (>= 3.0-0.alpha1-1), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
-Standards-Version: 3.5.5
+Standards-Version: 3.5.6
 
-Package: korganizer
+Package: korganizer-cvs
 Architecture: any
 Section: x11
-Replaces: kdepim, kdepim-common
+Replaces: kdepim, kdepim-common, korganizer
 Depends: ${shlibs:Depends}
-Recommends: kghostview, kdebase-libs
-Suggests: kpilot
-Enhances: kdebase, kpilot
+Recommends: kghostview-cvs, kdebase-cvs-libs
+Suggests: kpilot-cvs
+Enhances: kdebase-cvs, kpilot-cvs
+Conflicts: korganizer
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
@@ -33,22 +34,26 @@ Description: Personal organizer based on QT and KDE
  KOrganizer also offers full synchronization with your Palm Pilot, if you
  have kpilot installed.
 
-Package: kpilot
+Package: kpilot-cvs
 Architecture: any
 Section: utils
+Replaces: kpilot
 Depends: ${shlibs:Depends}, pilot-link
-Recommends: kdebase-libs
-Suggests: korganizer, kab, knotes
-Enhances: kdebase, korganizer, knotes, kab
+Recommends: kdebase-cvs-libs
+Suggests: korganizer-cvs, kab-cvs, knotes-cvs
+Enhances: kdebase-cvs, korganizer-cvs, knotes-cvs, kab-cvs
+Conflicts: kpilot
 Description: Palm Pilot sync tool for KDE
  Palm Pilot sync tool for KDE
 
-Package: kandy
+Package: kandy-cvs
 Architecture: any
 Section: utils
+Replaces: kandy
 Depends: ${shlibs:Depends}
-Recommends: kdebase-libs
-Enhances: kdebase
+Recommends: kdebase=cvs-libs
+Enhances: kdebase-cvs
+Conflicts: kandy
 Description: Mobile phone utility for KDE
  At the moment Kandy is more or less a terminal program with some special
  features to store commands and their parameters, but is also has a simple 
@@ -57,21 +62,22 @@ Description: Mobile phone utility for KDE
  .
  Kandy is aimed at mobile phone with integrated (GSM) modems.
 
-Package: kdepim-libs
+Package: kdepim-cvs-libs
 Architecture: any
 Section: libs
-Replaces: korganizer (<< 4:2.2), libical
+Replaces: korganizer (<< 4:2.2), kdepim-libs
 Depends: ${shlibs:Depends}
-Conflicts: libical
+Conflicts: kdepim-libs
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
  provided by the kdepim package.  These includes interfaces to imap and ical
 
-Package: kdepim-dev
+Package: kdepim-cvs-dev
 Architecture: any
 Section: devel
-Replaces: korganizer (<< 4:2.1-20010116-0)
-Depends: kdepim-libs (= ${Source-Version}), kdelibs-dev
+Replaces: korganizer (<< 4:2.1-20010116-0), kdepim-dev
+Depends: kdepim-cvs-libs (= ${Source-Version}), kdelibs4-dev
+Conflicts: kdepim-dev
 Description: KDE PIM applications (development files)
  KDE PIM application development files
  You need these files to compile some PIM related KDE apps.

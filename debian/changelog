@@ -1,3 +1,9 @@
+kdepim-cvs (3.0-0.alpha1-1) unstable; urgency=low
+
+  * new upstream version
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 10 Nov 2001 00:01:00 -0700
+
 kdepim (4:2.2.0-final-1) unstable; urgency=low
  
   * new upstream version 2.2
