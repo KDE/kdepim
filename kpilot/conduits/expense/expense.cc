@@ -113,6 +113,7 @@
 #include <pi-expense.h>
 #include <stdlib.h>
 #include <qcstring.h>
+#include <qobject.h>
 #include <qdatetime.h>
 #include <qtextstream.h>
 #include <stdio.h>
@@ -295,6 +296,9 @@ ExpenseConduit::doSync()
 	kdDebug() << "expense" << ": Read config entry \n" << "Db name: " << mDBnm << endl;
 	
 	PilotRecord* rec;
+    QString mDBDType="pg";
+    KDB::Connection* dbconn;
+    //KDB::Connection(mDBType, mDBsrv, 5424, *dbMobject);
 
         int recordcount=0;
 	int index=0;
@@ -304,6 +308,10 @@ ExpenseConduit::doSync()
 	if (mDBType=="1")
 	{
 		DEBUGCONDUIT << "MySQL database requested" << endl;
+//	QString mDBDType="pg";
+     dbconn->setPassword(mDBpasswd);
+     dbconn->setUser(mDBlogin);
+   
 			
 	}
 
@@ -454,6 +462,13 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.7  2001/03/17 00:15:11  molnarc
+//
+// expenses.cc --> some fixes
+// Makefile.am --> added libkdbcore libkdb_mysql libkdb_postgres
+//    if this is the wrong way someone please fix this and tell me
+//    the right way to do it.
+//
 // Revision 1.6  2001/03/16 13:31:33  molnarc
 //
 // all data now written to csv file and formatted.
