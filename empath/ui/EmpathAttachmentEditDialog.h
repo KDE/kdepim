@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -48,84 +48,85 @@ class RikGroupBox;
 
 class EmpathAttachmentEditDialog : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-	
-		EmpathAttachmentEditDialog(QWidget * parent = 0, const char * name = 0);
-		virtual ~EmpathAttachmentEditDialog();
-		
-		void setSpec(const EmpathAttachmentSpec & s);
-		EmpathAttachmentSpec spec();
-		void browse() { s_browse(); }
-		
-	protected slots:
-		
-		void s_OK();
-		void s_cancel();
-		void s_help();
-		
-		void s_browse();
-		void s_typeChanged(int);
-		
-		void s_encodingChanged(int);
+    public:
+    
+        EmpathAttachmentEditDialog(QWidget * parent = 0, const char * name = 0);
+        virtual ~EmpathAttachmentEditDialog();
+        
+        void setSpec(const EmpathAttachmentSpec & s);
+        EmpathAttachmentSpec spec();
+        void browse() { s_browse(); }
+        
+    protected slots:
+        
+        void s_OK();
+        void s_cancel();
+        void s_help();
+        
+        void s_browse();
+        void s_typeChanged(int);
+        
+        void s_encodingChanged(int);
 
-	private:
-		
-		void	_init();
+    private:
+        
+        void    _init();
 
-		RikGroupBox		* rgb_main_;
-		RikGroupBox		* rgb_encoding_;
+        RikGroupBox        * rgb_main_;
+        RikGroupBox        * rgb_encoding_;
 
-		QWidget			* w_main_;
-		QWidget			* w_encoding_;
-		
-		QButtonGroup	* bg_encoding_;
+        QWidget            * w_main_;
+        QWidget            * w_encoding_;
+        
+        QButtonGroup    * bg_encoding_;
 
-		QGridLayout		* mainLayout_;
-		QGridLayout		* layout_;
-		QGridLayout		* encodingLayout_;
+        QGridLayout        * mainLayout_;
+        QGridLayout        * layout_;
+        QGridLayout        * encodingLayout_;
 
-		QLabel			* l_filename_;
-		QLabel			* l_description_;
-		
-		QLineEdit		* le_filename_;
-		QLineEdit		* le_description_;
-		
-		QPushButton		* pb_browse_;
+        QLabel            * l_filename_;
+        QLabel            * l_description_;
+        
+        QLineEdit        * le_filename_;
+        QLineEdit        * le_description_;
+        
+        QPushButton        * pb_browse_;
 
-		QPushButton		* pb_OK_;
-		QPushButton		* pb_cancel_;
-		QPushButton		* pb_help_;
-		
-		QRadioButton	* rb_base64_;
-		QRadioButton	* rb_8bit_;
-		QRadioButton	* rb_7bit_;
-		QRadioButton	* rb_qp_;
-		
-		QLabel			* l_type_;
-		QComboBox		* cb_type_;
-		QLabel			* l_subType_;
-		QComboBox		* cb_subType_;
-		
-		QLabel			* l_charset_;
-		QComboBox		* cb_charset_;
+        QPushButton        * pb_OK_;
+        QPushButton        * pb_cancel_;
+        QPushButton        * pb_help_;
+        
+        QRadioButton    * rb_base64_;
+        QRadioButton    * rb_8bit_;
+        QRadioButton    * rb_7bit_;
+        QRadioButton    * rb_qp_;
+        
+        QLabel            * l_type_;
+        QComboBox        * cb_type_;
+        QLabel            * l_subType_;
+        QComboBox        * cb_subType_;
+        
+        QLabel            * l_charset_;
+        QComboBox        * cb_charset_;
 
-		KButtonBox		* buttonBox_;
-		
-		static const QString textSubTypes_			[];
-		static const QString messageSubTypes_		[];
-		static const QString applicationSubTypes_	[];
-		static const QString imageSubTypes_			[];
-		static const QString videoSubTypes_			[];
-		static const QString audioSubTypes_			[];
-		static const QString charsetTypes_			[];
-		static const int nTxt, nMsg, nApp, nImg, nVid, nAud, nChr;
-		
-		QStringList txtST_, msgST_, appST_, imgST_, vidST_, audST_, chrT_;
+        KButtonBox        * buttonBox_;
+        
+        static const QString textSubTypes_            [];
+        static const QString messageSubTypes_        [];
+        static const QString applicationSubTypes_    [];
+        static const QString imageSubTypes_            [];
+        static const QString videoSubTypes_            [];
+        static const QString audioSubTypes_            [];
+        static const QString charsetTypes_            [];
+        static const int nTxt, nMsg, nApp, nImg, nVid, nAud, nChr;
+        
+        QStringList txtST_, msgST_, appST_, imgST_, vidST_, audST_, chrT_;
 
-		EmpathAttachmentSpec spec_;
+        EmpathAttachmentSpec spec_;
 };
 
 #endif
 
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -29,50 +29,51 @@
 #include "EmpathDefines.h"
 
 EmpathTask::EmpathTask(const QString & name)
-	:	QObject(),
-		name_(name),
-		max_(0),
-		pos_(0),
-		done_(false)
+    :    QObject(),
+        name_(name),
+        max_(0),
+        pos_(0),
+        done_(false)
 {
-	empathDebug("ctor");
+    empathDebug("ctor");
 }
 
 EmpathTask::~EmpathTask()
 {
-	empathDebug("dtor");
-	emit(finished());
+    empathDebug("dtor");
+    emit(finished());
 }
 
-	void
+    void
 EmpathTask::setMax(int i)
 {
-	empathDebug("setMax() called");
-	max_ = i;
-	emit(maxChanged(i));
+    empathDebug("setMax() called");
+    max_ = i;
+    emit(maxChanged(i));
 }
 
-	void
+    void
 EmpathTask::setPos(int i)
 {
-	empathDebug("setPos() called");
-	pos_ = i;
-	emit(posChanged(i));
+    empathDebug("setPos() called");
+    pos_ = i;
+    emit(posChanged(i));
 }
 
-	void
+    void
 EmpathTask::doneOne()
 {
-	empathDebug("doneOne() called");
-	emit(addOne());
-	kapp->processEvents();
+    empathDebug("doneOne() called");
+    emit(addOne());
+    kapp->processEvents();
 }
 
-	void
+    void
 EmpathTask::done()
 {
-	empathDebug("done() called");
-	done_ = true;
-	emit(finished());
+    empathDebug("done() called");
+    done_ = true;
+    emit(finished());
 }
 
+// vim:ts=4:sw=4:tw=78

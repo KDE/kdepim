@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -49,94 +49,95 @@
  */
 class EmpathURL
 {
-	public:
+    public:
 
-		/**
-		 * Default ctor.
-		 */
-		EmpathURL();
-	
-		/**
-		 * Ctor with mailbox, folder and message ID.
-		 */
-		EmpathURL(
-				const QString & mailboxName,
-				const QString & folderPath,
-				const QString & messageID);
+        /**
+         * Default ctor.
+         */
+        EmpathURL();
+    
+        /**
+         * Ctor with mailbox, folder and message ID.
+         */
+        EmpathURL(
+                const QString & mailboxName,
+                const QString & folderPath,
+                const QString & messageID);
 
-		/**
-		 * Ctor with a string representation that is immediately parsed and
-		 * reassembled.
-		 */
-		EmpathURL(const QString & fullPath);
+        /**
+         * Ctor with a string representation that is immediately parsed and
+         * reassembled.
+         */
+        EmpathURL(const QString & fullPath);
 
-		/**
-		 * Copy ctor.
-		 */
-		EmpathURL(const EmpathURL & url);
-		
-		EmpathURL & operator = (const EmpathURL & url);
-		
-		EmpathURL & operator = (const QString &);
+        /**
+         * Copy ctor.
+         */
+        EmpathURL(const EmpathURL & url);
+        
+        EmpathURL & operator = (const EmpathURL & url);
+        
+        EmpathURL & operator = (const QString &);
 
-		bool operator == (const EmpathURL & b) const;
-		bool operator == (const QString & s) const;
+        bool operator == (const EmpathURL & b) const;
+        bool operator == (const QString & s) const;
 
-		virtual ~EmpathURL();
+        virtual ~EmpathURL();
 
-		QString mailboxName() const;
-		QString folderPath() const;
-		QString messageID() const;
-		
-		EmpathURL withoutMessageID() const;
-		
-		/**
-		 * This will always return true, theoretically.
-		 */
-		bool hasMailbox() const { return !mailboxName_.isEmpty(); }
-		
-		/**
-		 * Returns true if there is a folder part to this URL.
-		 */
-		bool hasFolder() const { return !folderPath_.isEmpty(); }
-		
-		/**
-		 * Returns true if there's a message id at the end of this URL.
-		 */
-		bool hasMessageID() const { return !messageID_.isEmpty(); }
-		
-		/**
-		 * Returns the assembled representation of this URL.
-		 */
-		QString asString() const { return strRep_; }
-		
-		void setMailboxName(const QString & mailboxName);
-		void setFolderPath(const QString & folderPath);
-		void setMessageID(const QString & messageID);
+        QString mailboxName() const;
+        QString folderPath() const;
+        QString messageID() const;
+        
+        EmpathURL withoutMessageID() const;
+        
+        /**
+         * This will always return true, theoretically.
+         */
+        bool hasMailbox() const { return !mailboxName_.isEmpty(); }
+        
+        /**
+         * Returns true if there is a folder part to this URL.
+         */
+        bool hasFolder() const { return !folderPath_.isEmpty(); }
+        
+        /**
+         * Returns true if there's a message id at the end of this URL.
+         */
+        bool hasMessageID() const { return !messageID_.isEmpty(); }
+        
+        /**
+         * Returns the assembled representation of this URL.
+         */
+        QString asString() const { return strRep_; }
+        
+        void setMailboxName(const QString & mailboxName);
+        void setFolderPath(const QString & folderPath);
+        void setMessageID(const QString & messageID);
 
-		const char * className() const { return "EmpathURL"; }
+        const char * className() const { return "EmpathURL"; }
 
-		/**
-		 * Returns the folder path, by creating a string list using each folder
-		 * and subfolder name.
-		 */
-		QStrList folderPathList();
+        /**
+         * Returns the folder path, by creating a string list using each folder
+         * and subfolder name.
+         */
+        QStrList folderPathList();
 
-	private:
+    private:
 
-		void _cleanUp(QString &);
-		void _parse();
-		void _assemble();
-		QString _stripSlashes(const QString &) const;
+        void _cleanUp(QString &);
+        void _parse();
+        void _assemble();
+        QString _stripSlashes(const QString &) const;
 
-		QString mailboxName_;
-		QString folderPath_;
-		QString messageID_;
+        QString mailboxName_;
+        QString folderPath_;
+        QString messageID_;
 
-		QString strRep_;
+        QString strRep_;
 
-		bool isValid_;
+        bool isValid_;
 };
 
 #endif // EMPATHURL_H
 
+// vim:ts=4:sw=4:tw=78

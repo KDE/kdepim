@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -26,241 +26,242 @@
 #include "EmpathMailboxIMAP4.h"
 
 EmpathMailboxIMAP4::EmpathMailboxIMAP4(const QString & name)
-	:	EmpathMailbox	(name),
-		serverAddress_	(QString::null),
-		serverPort_		(110),
-		username_		(QString::null),
-		password_		(QString::null)
+    :    EmpathMailbox    (name),
+        serverAddress_    (QString::null),
+        serverPort_        (110),
+        username_        (QString::null),
+        password_        (QString::null)
 {
-	empathDebug("ctor");
-	type_	= IMAP4;
-	setName(name);
+    empathDebug("ctor");
+    type_    = IMAP4;
+    setName(name);
 }
 
 
-	bool	
+    bool    
 EmpathMailboxIMAP4::getMail()
 {
-	return false;
+    return false;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::s_getNewMail()
 {
 }
-	void
+    void
 EmpathMailboxIMAP4::s_checkNewMail()
 {
 }
 
-	void
+    void
 EmpathMailboxIMAP4::saveConfig()
 {
 }
 
-	void
+    void
 EmpathMailboxIMAP4::readConfig()
 {
 }
 
 // Set methods
-		
-	void
+        
+    void
 EmpathMailboxIMAP4::setServerAddress(const QString & serverAddress)
 {
-	serverAddress_	= serverAddress;
+    serverAddress_    = serverAddress;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setServerPort(Q_UINT32 serverPort)
 {
-	serverPort_ = serverPort;
+    serverPort_ = serverPort;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setUsername(const QString & username)
 {
-	username_ = username;
+    username_ = username;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setPassword(const QString & password)
 {
-	password_ = password;
+    password_ = password;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setPasswordSavePolicy(SavePolicy policy)
 {
-	passwordSavePolicy_ = policy;
+    passwordSavePolicy_ = policy;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setLoggingPolicy(bool policy)
 {
-	loggingPolicy_ = policy;
+    loggingPolicy_ = policy;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setLogFilePath(const QString & logPath)
 {
-	logFilePath_ = logPath;
+    logFilePath_ = logPath;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setLogFileDisposalPolicy(bool policy)
 {
-	logFileDisposalPolicy_ = policy;
+    logFileDisposalPolicy_ = policy;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::setMaxLogFileSize(Q_UINT32 maxSize)
 {
-	maxLogFileSize_ = maxSize;
+    maxLogFileSize_ = maxSize;
 }
 
 // Get methods
-		
-	QString
+        
+    QString
 EmpathMailboxIMAP4::serverAddress()
 {
-	return serverAddress_;
+    return serverAddress_;
 }
 
-	Q_UINT32
+    Q_UINT32
 EmpathMailboxIMAP4::serverPort()
 {
-	return serverPort_;
+    return serverPort_;
 }
 
-	QString
+    QString
 EmpathMailboxIMAP4::username()
 {
-	return username_;
+    return username_;
 }
 
-	QString
+    QString
 EmpathMailboxIMAP4::password()
 {
-	return password_;
+    return password_;
 }
 
-	EmpathMailbox::SavePolicy
+    EmpathMailbox::SavePolicy
 EmpathMailboxIMAP4::passwordSavePolicy()
 {
-	return passwordSavePolicy_;
+    return passwordSavePolicy_;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::loggingPolicy()
 {
-	return loggingPolicy_;
+    return loggingPolicy_;
 }
 
-	QString
+    QString
 EmpathMailboxIMAP4::logFilePath()
 {
-	return logFilePath_;
+    return logFilePath_;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::logFileDisposalPolicy()
 {
-	return logFileDisposalPolicy_;
+    return logFileDisposalPolicy_;
 }
 
-	Q_UINT32
+    Q_UINT32
 EmpathMailboxIMAP4::maxLogFileSize()
 {
-	return maxLogFileSize_;
+    return maxLogFileSize_;
 }
 
-	QString
+    QString
 EmpathMailboxIMAP4::writeMessage(const EmpathURL &, RMM::RMessage &)
 {
-	return QString::null;
+    return QString::null;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::newMail() const
 {
-	return false;
+    return false;
 }
-	void
+    void
 EmpathMailboxIMAP4::syncIndex(const EmpathURL &)
 {
 }
 
-	RMM::RMessage *
+    RMM::RMessage *
 EmpathMailboxIMAP4::message(const EmpathURL &)
 {
-	return 0;
+    return 0;
 }
 
-	Q_UINT32
+    Q_UINT32
 EmpathMailboxIMAP4::sizeOfMessage(const EmpathURL &)
 {
-	return 0;
+    return 0;
 }
 
-	QString
+    QString
 EmpathMailboxIMAP4::plainBodyOfMessage(const EmpathURL &)
 {
-	return QString::null;
+    return QString::null;
 }
 
-	RMM::REnvelope *
+    RMM::REnvelope *
 EmpathMailboxIMAP4::envelopeOfMessage(const EmpathURL &)
 {
-	return 0;
+    return 0;
 }
 
-	RMM::RBodyPart::PartType
+    RMM::RBodyPart::PartType
 EmpathMailboxIMAP4::typeOfMessage(const EmpathURL &)
 {
-	return RMM::RBodyPart::Basic;
+    return RMM::RBodyPart::Basic;
 }
 
-	void
+    void
 EmpathMailboxIMAP4::init()
 {
-	empathDebug("init() called");
+    empathDebug("init() called");
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::removeMessage(const EmpathURL &)
 {
-	return false;
+    return false;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::addFolder(const EmpathURL &)
 {
-	return false;
+    return false;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::removeFolder(const EmpathURL &)
 {
-	return false;
+    return false;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::mark(const EmpathURL &, RMM::MessageStatus)
 {
-	return false;
+    return false;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::mark(
-	const EmpathURL &, const QStringList &, RMM::MessageStatus)
+    const EmpathURL &, const QStringList &, RMM::MessageStatus)
 {
-	return false;
+    return false;
 }
 
-	bool
+    bool
 EmpathMailboxIMAP4::removeMessage(const EmpathURL &, const QStringList &)
 {
-	return false;
+    return false;
 }
 
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -34,163 +34,164 @@
 using namespace RMM;
 
 RMailboxList::RMailboxList()
-	:	RHeaderBody()
+    :    RHeaderBody()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMailboxList::RMailboxList(const RMailboxList & l)
-	:	RHeaderBody(l)
+    :    RHeaderBody(l)
 {
-	rmmDebug("ctor");
-	list_ = l.list_;
+    rmmDebug("ctor");
+    list_ = l.list_;
 }
 
 RMailboxList::RMailboxList(const QCString & s)
-	:	RHeaderBody(s)
+    :    RHeaderBody(s)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMailboxList::~RMailboxList()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	RMailboxList &
+    RMailboxList &
 RMailboxList::operator = (const RMailboxList & l)
 {
-	rmmDebug("operator =");
+    rmmDebug("operator =");
     if (this == &l) return *this; // Don't do a = a.
-	list_ = l.list_;
-	RHeaderBody::operator = (l);
-	assembled_ = false;
-	return *this;
+    list_ = l.list_;
+    RHeaderBody::operator = (l);
+    assembled_ = false;
+    return *this;
 }
-		
-	RMailboxList &
+        
+    RMailboxList &
 RMailboxList::operator = (const QCString & s)
 {
-	rmmDebug("operator = QCString(" + s + ")");
-	RHeaderBody::operator = (s);
-	assembled_	= false;
-	return *this;
+    rmmDebug("operator = QCString(" + s + ")");
+    RHeaderBody::operator = (s);
+    assembled_    = false;
+    return *this;
 }
 
-	bool
+    bool
 RMailboxList::operator == (RMailboxList & l)
 {
-	parse();
-	l.parse();
+    parse();
+    l.parse();
 
-	return false; // XXX: Write this
+    return false; // XXX: Write this
 }
 
-	void
+    void
 RMailboxList::_parse()
 {
-	list_.clear();
+    list_.clear();
 
-	QStrList ltemp;
-	RTokenise(strRep_, ",\n\r", ltemp);
-	
-	QStrList l;
-	
-	// Now a little magic. We might have extra tokens that are quoted.
-	// If so, we merge them with the following token.
-	// Rik Hemsley <rik@kde.org> will be 1 token
-	// "Rik Hemsley" <rik@kde.org> will be 2 tokens which should be
-	// combined.
-	QStrListIterator bit(ltemp);
-	
-	QCString s;
-	
-	for (; bit.current(); ++bit) {
-		
-		if (*(bit.current()) == '"') {
-			s = bit.current();
-			++bit;
-			l.append(s + " " + bit.current());
-			
-		} else
-			l.append(bit.current());
-	}
+    QStrList ltemp;
+    RTokenise(strRep_, ",\n\r", ltemp);
+    
+    QStrList l;
+    
+    // Now a little magic. We might have extra tokens that are quoted.
+    // If so, we merge them with the following token.
+    // Rik Hemsley <rik@kde.org> will be 1 token
+    // "Rik Hemsley" <rik@kde.org> will be 2 tokens which should be
+    // combined.
+    QStrListIterator bit(ltemp);
+    
+    QCString s;
+    
+    for (; bit.current(); ++bit) {
+        
+        if (*(bit.current()) == '"') {
+            s = bit.current();
+            ++bit;
+            l.append(s + " " + bit.current());
+            
+        } else
+            l.append(bit.current());
+    }
 
-	if (l.count() == 0 && !strRep_.isEmpty()) { // Lets try what we have then.
+    if (l.count() == 0 && !strRep_.isEmpty()) { // Lets try what we have then.
 
-		rmmDebug("new RMailbox");
-		RMailbox * m = new RMailbox;
-		CHECK_PTR(m);
-		*m = strRep_;
-		list_.append(m);
-		
-	} else {
+        rmmDebug("new RMailbox");
+        RMailbox * m = new RMailbox;
+        CHECK_PTR(m);
+        *m = strRep_;
+        list_.append(m);
+        
+    } else {
 
-		QStrListIterator lit(l);
+        QStrListIterator lit(l);
 
-		for (; lit.current(); ++lit) {
-			rmmDebug("new RMailbox");
-			RMailbox * m = new RMailbox;
-			CHECK_PTR(m);
-			*m = lit.current();
-			list_.append(m);
-		}
-	}
+        for (; lit.current(); ++lit) {
+            rmmDebug("new RMailbox");
+            RMailbox * m = new RMailbox;
+            CHECK_PTR(m);
+            *m = lit.current();
+            list_.append(m);
+        }
+    }
 }
 
-	void
+    void
 RMailboxList::_assemble()
 {
-	bool firstTime = true;
-	
-	RMailboxListIterator it(list_);
+    bool firstTime = true;
+    
+    RMailboxListIterator it(list_);
 
-	strRep_ = "";
-	
-	for (; it.current(); ++it) {
-		
-		if (!firstTime) {
-			strRep_ += QCString(",\n    ");
-			firstTime = false;
-		}
+    strRep_ = "";
+    
+    for (; it.current(); ++it) {
+        
+        if (!firstTime) {
+            strRep_ += QCString(",\n    ");
+            firstTime = false;
+        }
 
-		strRep_ += it.current()->asString();
-	}
+        strRep_ += it.current()->asString();
+    }
 }
 
-	void
+    void
 RMailboxList::createDefault()
 {
-	rmmDebug("createDefault() called");
-	if (count() == 0) {
-		RMailbox * m = new RMailbox;
-		m->createDefault();
-		list_.append(m);
-	}
-	
-	assembled_ = false;
+    rmmDebug("createDefault() called");
+    if (count() == 0) {
+        RMailbox * m = new RMailbox;
+        m->createDefault();
+        list_.append(m);
+    }
+    
+    assembled_ = false;
 }
 
-	void
+    void
 RMailboxList::append(RMailbox m)
 {
-	parse();
-	RMailbox * mailbox = new RMailbox(m);
-	list_.append(mailbox);
-	assembled_ = false;
+    parse();
+    RMailbox * mailbox = new RMailbox(m);
+    list_.append(mailbox);
+    assembled_ = false;
 }
 
-	RMailbox
+    RMailbox
 RMailboxList::at(int idx)
 {
-	parse();
-	return *(list_.at(idx));
+    parse();
+    return *(list_.at(idx));
 }
 
-	int
+    int
 RMailboxList::count()
 {
-	parse();
-	return list_.count();
+    parse();
+    return list_.count();
 }
 
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -41,66 +41,67 @@
 
 class EmpathFolderWidget : public QListView
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		
-		EmpathFolderWidget(
-			QWidget * parent = 0,
-			const char * name = 0,
-			bool waitForShown = false);
+    public:
+        
+        EmpathFolderWidget(
+            QWidget * parent = 0,
+            const char * name = 0,
+            bool waitForShown = false);
 
-		~EmpathFolderWidget() { empathDebug("dtor"); }
-		
-		void update();
+        ~EmpathFolderWidget() { empathDebug("dtor"); }
+        
+        void update();
 
-		EmpathURL selected() const;
+        EmpathURL selected() const;
 
-	protected slots:
+    protected slots:
 
-		void s_showing();
-		void s_currentChanged(QListViewItem *);
-		void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
-		void s_folderProperties();
-		void s_mailboxCheck();
-		void s_mailboxProperties();
-		void s_update();
-		void s_newFolder();
-		void s_removeFolder();
-		void s_setUpAccounts();
-		void s_openChanged();
-	
-	signals:
+        void s_showing();
+        void s_currentChanged(QListViewItem *);
+        void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
+        void s_folderProperties();
+        void s_mailboxCheck();
+        void s_mailboxProperties();
+        void s_update();
+        void s_newFolder();
+        void s_removeFolder();
+        void s_setUpAccounts();
+        void s_openChanged();
+    
+    signals:
 
-		void showFolder(const EmpathURL & url);
+        void showFolder(const EmpathURL & url);
 
-	protected:
-	
-		void dragMoveEvent	(QDragMoveEvent *);
-		void dragEnterEvent	(QDragMoveEvent *);
-		void dragLeaveEvent	(QDragMoveEvent *);
-		void dropEvent		(QDropEvent *);
+    protected:
+    
+        void dragMoveEvent    (QDragMoveEvent *);
+        void dragEnterEvent    (QDragMoveEvent *);
+        void dragLeaveEvent    (QDragMoveEvent *);
+        void dropEvent        (QDropEvent *);
 
-	private:
+    private:
 
-		enum OverType { Folder, Mailbox };
-		
-		void _addMailbox(const EmpathMailbox & mailbox);
-		void _addChildren(EmpathFolder * item, EmpathFolderListItem * parent);
-		
-		EmpathFolderListItem * find(const EmpathURL &);
-		
-		QPopupMenu folderPopup_;
-		QPopupMenu mailboxPopup_;
-		QPopupMenu otherPopup_;
-		
-		QList<EmpathFolderListItem> itemList_;
-		
-		EmpathFolderListItem	* popupMenuOver;
-		OverType				popupMenuOverType;
-		
-		bool	waitForShown_;
+        enum OverType { Folder, Mailbox };
+        
+        void _addMailbox(const EmpathMailbox & mailbox);
+        void _addChildren(EmpathFolder * item, EmpathFolderListItem * parent);
+        
+        EmpathFolderListItem * find(const EmpathURL &);
+        
+        QPopupMenu folderPopup_;
+        QPopupMenu mailboxPopup_;
+        QPopupMenu otherPopup_;
+        
+        QList<EmpathFolderListItem> itemList_;
+        
+        EmpathFolderListItem    * popupMenuOver;
+        OverType                popupMenuOverType;
+        
+        bool    waitForShown_;
 };
 
 #endif
 
+// vim:ts=4:sw=4:tw=78

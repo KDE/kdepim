@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -32,113 +32,114 @@
 using namespace RMM;
 
 RParameter::RParameter()
-	:	RMessageComponent()
+    :    RMessageComponent()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RParameter::RParameter(const RParameter & p)
-	:	RMessageComponent(p)
+    :    RMessageComponent(p)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RParameter::RParameter(const QCString & s)
-	:	RMessageComponent(s)
+    :    RMessageComponent(s)
 {
-	rmmDebug("ctor with \"" + s + "\"");
+    rmmDebug("ctor with \"" + s + "\"");
 }
 
 RParameter::~RParameter()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	RParameter &
+    RParameter &
 RParameter::operator = (const QCString & s)
 {
-	RMessageComponent::operator = (s);
-	return *this;
+    RMessageComponent::operator = (s);
+    return *this;
 }
 
-	RParameter &
+    RParameter &
 RParameter::operator = (const RParameter & p)
 {
-	rmmDebug("operator =");
+    rmmDebug("operator =");
     
-	if (this == &p) return *this; // Don't do a = a.
-	
-	attribute_ = p.attribute_;
-	value_ = p.value_;
+    if (this == &p) return *this; // Don't do a = a.
+    
+    attribute_ = p.attribute_;
+    value_ = p.value_;
 
-	RMessageComponent::operator = (p);
-	return *this;
+    RMessageComponent::operator = (p);
+    return *this;
 }
 
-	bool
+    bool
 RParameter::operator == (RParameter & p)
 {
-	parse();
-	p.parse();
+    parse();
+    p.parse();
 
-	return (
-		attribute_	== p.attribute_ &&
-		value_		== p.value_);
+    return (
+        attribute_    == p.attribute_ &&
+        value_        == p.value_);
 }
-	
-	void
+    
+    void
 RParameter::_parse()   
 {
-	int split = strRep_.find('=');
-	
-	if (split == -1) {
-		rmmDebug("Invalid parameter");
-		return;
-	}
-	
-	attribute_	= strRep_.left(split).stripWhiteSpace();
-	value_		= strRep_.right(strRep_.length() - split - 1).stripWhiteSpace();
-	
-	rmmDebug("attribute == \"" + attribute_ + "\"");
-	rmmDebug("value     == \"" + value_ + "\"");
+    int split = strRep_.find('=');
+    
+    if (split == -1) {
+        rmmDebug("Invalid parameter");
+        return;
+    }
+    
+    attribute_    = strRep_.left(split).stripWhiteSpace();
+    value_        = strRep_.right(strRep_.length() - split - 1).stripWhiteSpace();
+    
+    rmmDebug("attribute == \"" + attribute_ + "\"");
+    rmmDebug("value     == \"" + value_ + "\"");
 }
 
-	void
+    void
 RParameter::_assemble()
 {
-	strRep_ = attribute_ + "=" + value_;
+    strRep_ = attribute_ + "=" + value_;
 }
 
-	void
+    void
 RParameter::createDefault()
 {
-	attribute_ = value_ = "";
+    attribute_ = value_ = "";
 }
 
-	QCString
+    QCString
 RParameter::attribute()
 {
-	parse();
-	return attribute_;
+    parse();
+    return attribute_;
 }
 
-	QCString
+    QCString
 RParameter::value()
 {
-	parse();
-	return value_;
+    parse();
+    return value_;
 }
 
-	void
+    void
 RParameter::setAttribute(const QCString & attribute)
 {
-	attribute_ = attribute;
-	assembled_ = false;
+    attribute_ = attribute;
+    assembled_ = false;
 }
-	void
-RParameter::setValue(const QCString & value)	
+    void
+RParameter::setValue(const QCString & value)    
 {
-	value_ = value;
-	assembled_ = false;
+    value_ = value;
+    assembled_ = false;
 }
 
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -31,133 +31,134 @@ using namespace RMM;
 
 RGroup::RGroup()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RGroup::RGroup(const RGroup & g)
-	:	RAddress(g)
+    :    RAddress(g)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RGroup::RGroup(const QCString & s)
-	:	RAddress(s)
+    :    RAddress(s)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RGroup::~RGroup()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	RGroup &
+    RGroup &
 RGroup::operator = (const RGroup & g)
 {
-	rmmDebug("operator =");
-	
-	if (this == &g) return *this;
-	
-	mailboxList_	= g.mailboxList_;
-	name_			= g.name_;
-	phrase_			= g.phrase_;
-	
-	RAddress::operator = (g);
+    rmmDebug("operator =");
+    
+    if (this == &g) return *this;
+    
+    mailboxList_    = g.mailboxList_;
+    name_            = g.name_;
+    phrase_            = g.phrase_;
+    
+    RAddress::operator = (g);
 
-	assembled_	= false;
-	return *this;
+    assembled_    = false;
+    return *this;
 }
 
-	RGroup &
+    RGroup &
 RGroup::operator = (const QCString & s)
 {
-	rmmDebug("operator =");
-	
-	RAddress::operator = (s);
+    rmmDebug("operator =");
+    
+    RAddress::operator = (s);
 
-	assembled_	= false;
-	return *this;
+    assembled_    = false;
+    return *this;
 }
 
-	bool
+    bool
 RGroup::operator == (RGroup & g)
 {
-	parse();
-	g.parse();
+    parse();
+    g.parse();
 
-	return (
-		mailboxList_	== g.mailboxList_	&&
-		name_			== g.name_			&&
-		phrase_			== g.phrase_);
+    return (
+        mailboxList_    == g.mailboxList_    &&
+        name_            == g.name_            &&
+        phrase_            == g.phrase_);
 }
 
-	QDataStream &
+    QDataStream &
 operator >> (QDataStream & s, RGroup & group)
 {
-	s	>> group.name_
-		>> group.phrase_;
-	group.assembled_ = false;
-	return s;
+    s    >> group.name_
+        >> group.phrase_;
+    group.assembled_ = false;
+    return s;
 }
-	
-	QDataStream &
+    
+    QDataStream &
 operator << (QDataStream & s, RGroup & group)
 {
-	s	<< group.name_
-		<< group.phrase_;
-	return s;
+    s    << group.name_
+        << group.phrase_;
+    return s;
 }
 
-	QCString
+    QCString
 RGroup::name()
 {
-	parse();
-	return name_;
+    parse();
+    return name_;
 }
 
-	QCString
+    QCString
 RGroup::phrase()
 {
-	parse();
-	return phrase_;
+    parse();
+    return phrase_;
 }
 
-	void
+    void
 RGroup::setName(const QCString & s)
 {
-	name_ = s;
-	assembled_ = false;
+    name_ = s;
+    assembled_ = false;
 }
 
-	void
+    void
 RGroup::setPhrase(const QCString & s)
 {
-	phrase_ = s;
-	assembled_ = false;
+    phrase_ = s;
+    assembled_ = false;
 }
 
-	RMailboxList &
+    RMailboxList &
 RGroup::mailboxList()
 {
-	parse();
-	return mailboxList_;
+    parse();
+    return mailboxList_;
 }
 
-	void
+    void
 RGroup::_parse()
 {
 }
 
-	void
+    void
 RGroup::_assemble()
 {
 }
 
-	void
+    void
 RGroup::createDefault()
 {
-	rmmDebug("createDefault() called");
-	name_ = "unnamed";
-	assembled_ = false;
+    rmmDebug("createDefault() called");
+    name_ = "unnamed";
+    assembled_ = false;
 }
 
+// vim:ts=4:sw=4:tw=78

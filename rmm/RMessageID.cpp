@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -39,172 +39,173 @@ using namespace RMM;
 int RMessageID::seq_ = 0;
 
 RMessageID::RMessageID()
-	:	RHeaderBody()
+    :    RHeaderBody()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMessageID::RMessageID(const RMessageID & messageID)
-	:	RHeaderBody(messageID),
-		localPart_(messageID.localPart_),
-		domain_(messageID.domain_)
+    :    RHeaderBody(messageID),
+        localPart_(messageID.localPart_),
+        domain_(messageID.domain_)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMessageID::RMessageID(const QCString & s)
-	:	RHeaderBody(s)
+    :    RHeaderBody(s)
 {
 }
 
 RMessageID::~RMessageID()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	bool
+    bool
 RMessageID::operator == (RMessageID & msgID)
 {
-	parse();
-	msgID.parse();
+    parse();
+    msgID.parse();
 
-	return (
-		localPart_	== msgID.localPart_ &&
-		domain_		== msgID.domain_);
+    return (
+        localPart_    == msgID.localPart_ &&
+        domain_        == msgID.domain_);
 }
 
-	RMessageID &
+    RMessageID &
 RMessageID::operator = (const RMessageID & messageID)
 {
-	rmmDebug("operator =");
+    rmmDebug("operator =");
     if (this == &messageID) return *this; // Avoid a = a
-	
-	localPart_ = messageID.localPart_;
+    
+    localPart_ = messageID.localPart_;
     domain_ = messageID.domain_;
     
-	rmmDebug("operator = ...");
-	rmmDebug("localPart_ == " + localPart_);
-	rmmDebug("domain_ == " + domain_);
-	
-	RHeaderBody::operator = (messageID);
-	
-	assembled_ = false;
-	return *this;
+    rmmDebug("operator = ...");
+    rmmDebug("localPart_ == " + localPart_);
+    rmmDebug("domain_ == " + domain_);
+    
+    RHeaderBody::operator = (messageID);
+    
+    assembled_ = false;
+    return *this;
 }
 
-	RMessageID &
+    RMessageID &
 RMessageID::operator = (const QCString & s)
 {
-	rmmDebug("operator =");
-	RHeaderBody::operator = (s);
-	assembled_ = false;
-	return *this;
+    rmmDebug("operator =");
+    RHeaderBody::operator = (s);
+    assembled_ = false;
+    return *this;
 }
 
 
-	QDataStream &
+    QDataStream &
 RMM::operator >> (QDataStream & s, RMessageID & mid)
 {
-	s	>> mid.localPart_
-		>> mid.domain_;
-	mid.parsed_ = true;
-	mid.assembled_ = false;
-	return s;
+    s    >> mid.localPart_
+        >> mid.domain_;
+    mid.parsed_ = true;
+    mid.assembled_ = false;
+    return s;
 }
-		
-	QDataStream &
+        
+    QDataStream &
 RMM::operator << (QDataStream & s, RMessageID & mid)
 {
-	mid.parse();
-	s	<< mid.localPart_
-		<< mid.domain_;
-	return s;
+    mid.parse();
+    s    << mid.localPart_
+        << mid.domain_;
+    return s;
 }
-	
-	QCString
+    
+    QCString
 RMessageID::localPart()
 {
-	parse();
+    parse();
     return localPart_;
 }
 
-	void
+    void
 RMessageID::setLocalPart(const QCString & localPart)
 {
-	localPart_ = localPart;
-	assembled_ = false;
+    localPart_ = localPart;
+    assembled_ = false;
 }
 
-	QCString
+    QCString
 RMessageID::domain()
 {
-	parse();
+    parse();
     return domain_;
 }
 
-	void
+    void
 RMessageID::setDomain(const QCString & domain)
 {
     domain_ = domain;
-	assembled_ = false;
+    assembled_ = false;
 }
 
-	void
+    void
 RMessageID::_parse()
 {
-	if (strRep_.isEmpty()) {
-		rmmDebug("But there's nothing to parse !");
-		return;
-	}
-	
-	int atPos = strRep_.find('@');
-	
-	if (atPos == -1) {
-		parsed_ = true;
-		return;
-	}
-	
-	localPart_	= strRep_.left(atPos);
-	domain_		= strRep_.right(strRep_.length() - atPos - 1);
-	
-	if (localPart_.at(0) == '<')
-		localPart_.remove(0, 1);
-	
-	if (domain_.right(1) == ">")
-		domain_.remove(domain_.length() - 1, 1);
+    if (strRep_.isEmpty()) {
+        rmmDebug("But there's nothing to parse !");
+        return;
+    }
+    
+    int atPos = strRep_.find('@');
+    
+    if (atPos == -1) {
+        parsed_ = true;
+        return;
+    }
+    
+    localPart_    = strRep_.left(atPos);
+    domain_        = strRep_.right(strRep_.length() - atPos - 1);
+    
+    if (localPart_.at(0) == '<')
+        localPart_.remove(0, 1);
+    
+    if (domain_.right(1) == ">")
+        domain_.remove(domain_.length() - 1, 1);
 }
 
-	void
+    void
 RMessageID::_assemble()
 {
-	strRep_ = "<" + localPart_ + "@" + domain_ + ">";
+    strRep_ = "<" + localPart_ + "@" + domain_ + ">";
 }
 
-	void
+    void
 RMessageID::createDefault()
 {
-	rmmDebug("createDefault() called");
+    rmmDebug("createDefault() called");
 
-	struct timeval timeVal;
-	struct timezone timeZone;
-	
-	gettimeofday(&timeVal, &timeZone);
-	int t = timeVal.tv_sec;
+    struct timeval timeVal;
+    struct timezone timeZone;
+    
+    gettimeofday(&timeVal, &timeZone);
+    int t = timeVal.tv_sec;
 
-	localPart_ =
-		"Empath." +
-		QCString().setNum(t)		+ '.' +
-		QCString().setNum(getpid())	+ '.' +
-		QCString().setNum(seq_++);
-	
-	struct utsname utsName;
-	if (uname(&utsName) == 0)
-		domain_ = utsName.nodename;
-	else
-		domain_ = "localhost.localdomain";
+    localPart_ =
+        "Empath." +
+        QCString().setNum(t)        + '.' +
+        QCString().setNum(getpid())    + '.' +
+        QCString().setNum(seq_++);
+    
+    struct utsname utsName;
+    if (uname(&utsName) == 0)
+        domain_ = utsName.nodename;
+    else
+        domain_ = "localhost.localdomain";
 
-	rmmDebug("Created \"" + localPart_ + "." + domain_ + "\"");
-	parsed_ = true;
-	assembled_ = false;
+    rmmDebug("Created \"" + localPart_ + "." + domain_ + "\"");
+    parsed_ = true;
+    assembled_ = false;
 }
 
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -50,57 +50,58 @@ class RikGroupBox;
 
 class EmpathAccountsSettingsDialog : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		
-		static void create();
+    public:
+        
+        static void create();
 
-		~EmpathAccountsSettingsDialog() { empathDebug("dtor"); exists_ = false;}
-		void closeEvent(QCloseEvent *);
+        ~EmpathAccountsSettingsDialog() { empathDebug("dtor"); exists_ = false;}
+        void closeEvent(QCloseEvent *);
 
-	protected slots:
+    protected slots:
 
-		void s_newAccount();
-		void s_editAccount();
-		void s_removeAccount();
-		
-		void s_OK();
-		void s_cancel();
-		void s_help();
-		void s_apply();
+        void s_newAccount();
+        void s_editAccount();
+        void s_removeAccount();
+        
+        void s_OK();
+        void s_cancel();
+        void s_help();
+        void s_apply();
 
-	private:
-		
-		EmpathAccountsSettingsDialog(QWidget * parent, const char * name);
+    private:
+        
+        EmpathAccountsSettingsDialog(QWidget * parent, const char * name);
 
-		void updateMailboxList();
+        void updateMailboxList();
 
-		QButtonGroup			* buttonGroup_;
-		
-		RikGroupBox				* rgb_account_;
-		QGridLayout				* accountGroupLayout_;
-	
-		QWidget					* w_account_;
-	
-		QListView				* lv_accts_;
-		
-		QPushButton				* pb_newAccount_;
-		QPushButton				* pb_editAccount_;
-		QPushButton				* pb_removeAccount_;
-	
-		QGridLayout				* topLevelLayout_;
+        QButtonGroup            * buttonGroup_;
+        
+        RikGroupBox                * rgb_account_;
+        QGridLayout                * accountGroupLayout_;
+    
+        QWidget                    * w_account_;
+    
+        QListView                * lv_accts_;
+        
+        QPushButton                * pb_newAccount_;
+        QPushButton                * pb_editAccount_;
+        QPushButton                * pb_removeAccount_;
+    
+        QGridLayout                * topLevelLayout_;
 
-		KButtonBox		* buttonBox_;
-		QPushButton		* pb_help_;
-		QPushButton		* pb_apply_;
-		QPushButton		* pb_OK_;
-		QPushButton		* pb_cancel_;
-		
-		static bool		exists_;
-		bool			applied_;
+        KButtonBox        * buttonBox_;
+        QPushButton        * pb_help_;
+        QPushButton        * pb_apply_;
+        QPushButton        * pb_OK_;
+        QPushButton        * pb_cancel_;
+        
+        static bool        exists_;
+        bool            applied_;
 
 
 };
 
 #endif
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -38,123 +38,124 @@ using namespace RMM;
 
 RMimeType::RMimeType()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMimeType::RMimeType(const RMimeType & t)
-	:	RHeaderBody(t)
+    :    RHeaderBody(t)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMimeType::~RMimeType()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	RMimeType &
+    RMimeType &
 RMimeType::operator = (const RMimeType & t)
 {
-	rmmDebug("operator =");
+    rmmDebug("operator =");
     if (this == &t) return *this; // Avoid a = a
-	
-	boundary_		= t.boundary_;
-	name_			= t.name_;
-	type_			= t.type_;
-	subType_		= t.subType_;
-	parameterList_	= t.parameterList_;
-	
-	RHeaderBody::operator = (t);
-	return *this;
+    
+    boundary_        = t.boundary_;
+    name_            = t.name_;
+    type_            = t.type_;
+    subType_        = t.subType_;
+    parameterList_    = t.parameterList_;
+    
+    RHeaderBody::operator = (t);
+    return *this;
 }
 
-	bool
+    bool
 RMimeType::operator == (RMimeType & t)
 {
-	parse();
-	t.parse();
-	
-	return (
-		boundary_		== t.boundary_	&&
-		name_			== t.name_		&&
-		type_			== t.type_		&&
-		subType_		== t.subType_	&&
-		parameterList_	== t.parameterList_);
+    parse();
+    t.parse();
+    
+    return (
+        boundary_        == t.boundary_    &&
+        name_            == t.name_        &&
+        type_            == t.type_        &&
+        subType_        == t.subType_    &&
+        parameterList_    == t.parameterList_);
 }
 
-	MimeType
+    MimeType
 RMimeType::type()
 {
-	return type_;
+    return type_;
 }
 
-	void
+    void
 RMimeType::setType(MimeType t)
 {
-	type_ = t;
+    type_ = t;
 }
 
-	void
+    void
 RMimeType::setType(const QCString & s)
 {
-	type_ = mimeTypeStr2Enum(s);
+    type_ = mimeTypeStr2Enum(s);
 }
 
-	MimeSubType
+    MimeSubType
 RMimeType::subType()
 {
-	return subType_;
+    return subType_;
 }
 
-	void
+    void
 RMimeType::setSubType(MimeSubType t)
 {
-	subType_ = t;
+    subType_ = t;
 }
 
-	void
+    void
 RMimeType::setSubType(const QCString & s)
 {
-	subType_ = mimeSubTypeStr2Enum(s);
+    subType_ = mimeSubTypeStr2Enum(s);
 }
 
-	QCString
+    QCString
 RMimeType::boundary()
 {
-	return boundary_;
+    return boundary_;
 }
 
-	void
+    void
 RMimeType::setBoundary(const QCString & s)
 {
-	boundary_ = s;
+    boundary_ = s;
 }
 
-	QCString
+    QCString
 RMimeType::name()
 {
-	return name_;
+    return name_;
 }
 
-	void
+    void
 RMimeType::setName(const QCString & s)
 {
-	name_ = s;
+    name_ = s;
 }
 
-	void
+    void
 RMimeType::_parse()
 {
 }
 
-	void
+    void
 RMimeType::_assemble()
 {
 }
 
-	void
+    void
 RMimeType::createDefault()
 {
-	rmmDebug("createDefault called");
+    rmmDebug("createDefault called");
 }
 
+// vim:ts=4:sw=4:tw=78

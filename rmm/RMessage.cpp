@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -34,85 +34,86 @@
 using namespace RMM;
 
 RMessage::RMessage()
-	:	RBodyPart()
+    :    RBodyPart()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMessage::RMessage(const RMessage & m)
-	:	RBodyPart(m)
+    :    RBodyPart(m)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMessage::RMessage(const QCString & s)
-	:	RBodyPart(s)
+    :    RBodyPart(s)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RMessage::~RMessage()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	MessageStatus
+    MessageStatus
 RMessage::status()
 {
-	return status_;
+    return status_;
 }
 
-	void
+    void
 RMessage::setStatus(MessageStatus s)
 {
-	status_ = s;
+    status_ = s;
 }
 
-	QDataStream &
+    QDataStream &
 operator << (QDataStream & str, RMessage & m)
 {
-	str << m.asString(); return str;
+    str << m.asString(); return str;
 }
 
-	RMessage &
+    RMessage &
 RMessage::operator = (const RMessage & m)
 {
-	if (this == &m) return *this;	// Avoid a = a.
-	RBodyPart::operator = (m);
-	return *this;
+    if (this == &m) return *this;    // Avoid a = a.
+    RBodyPart::operator = (m);
+    return *this;
 }
 
-	RMessage &
+    RMessage &
 RMessage::operator = (const QCString & s)
 {
-	RBodyPart::operator = (s);
-	return *this;
+    RBodyPart::operator = (s);
+    return *this;
 }
 
-	bool
+    bool
 RMessage::operator == (RMessage & m)
 {
-	parse();
-	m.parse();
+    parse();
+    m.parse();
 
-	return (RBodyPart::operator == (m));
+    return (RBodyPart::operator == (m));
 }
 
-	void
+    void
 RMessage::_parse()
 {
-	RBodyPart::_parse();
+    RBodyPart::_parse();
 }
 
-	void
+    void
 RMessage::_assemble()
 {
-	RBodyPart::_assemble();
+    RBodyPart::_assemble();
 }
 
-	void
+    void
 RMessage::createDefault()
 {
-	RBodyPart::createDefault();
+    RBodyPart::createDefault();
 }
 
+// vim:ts=4:sw=4:tw=78

@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
+    Empath - Mailer for KDE
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -32,195 +32,196 @@
 using namespace RMM;
 
 RAddress::RAddress()
-	:	RHeaderBody(),
-		mailbox_(0),
-		group_(0)
+    :    RHeaderBody(),
+        mailbox_(0),
+        group_(0)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RAddress::RAddress(const RAddress & addr)
-	:	RHeaderBody(addr)
+    :    RHeaderBody(addr)
 {
-	rmmDebug("copy ctor");
+    rmmDebug("copy ctor");
 
-	mailbox_	= 0;
-	group_		= 0;
-	
-	rmmDebug("...");
+    mailbox_    = 0;
+    group_        = 0;
+    
+    rmmDebug("...");
 
-	if (addr.mailbox_ != 0) {
-		
-		rmmDebug("mailbox");
-		mailbox_ = new RMailbox(*(addr.mailbox_));
-	
-	} else if (addr.group_ != 0) {
-	
-		rmmDebug("group");
-		group_ = new RGroup(*(addr.group_));
-	
-	} else {
-		
-		strRep_ = addr.strRep_;
-		parsed_ = false;
-	}
+    if (addr.mailbox_ != 0) {
+        
+        rmmDebug("mailbox");
+        mailbox_ = new RMailbox(*(addr.mailbox_));
+    
+    } else if (addr.group_ != 0) {
+    
+        rmmDebug("group");
+        group_ = new RGroup(*(addr.group_));
+    
+    } else {
+        
+        strRep_ = addr.strRep_;
+        parsed_ = false;
+    }
 
-	rmmDebug("...");
-	assembled_	= false;
+    rmmDebug("...");
+    assembled_    = false;
 }
 
 RAddress::RAddress(const QCString & addr)
-	:	RHeaderBody(addr),
-		mailbox_(0),
-		group_(0)
+    :    RHeaderBody(addr),
+        mailbox_(0),
+        group_(0)
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RAddress::~RAddress()
 {
-	rmmDebug("dtor");
-	
-	delete mailbox_;
-	delete group_;
+    rmmDebug("dtor");
+    
+    delete mailbox_;
+    delete group_;
 
-	mailbox_	= 0;
-	group_		= 0;
+    mailbox_    = 0;
+    group_        = 0;
 }
 
-	RAddress &
+    RAddress &
 RAddress::operator = (const RAddress & addr)
 {
-	rmmDebug("operator =");
+    rmmDebug("operator =");
     if (this == &addr) return *this; // Don't do a = a.
 
-	delete mailbox_;
-	mailbox_	= 0;
-	delete group_;
-	group_		= 0;
-	
-	RHeaderBody::operator = (addr);
+    delete mailbox_;
+    mailbox_    = 0;
+    delete group_;
+    group_        = 0;
+    
+    RHeaderBody::operator = (addr);
 
-	if (addr.mailbox_ != 0)
-		mailbox_ = new RMailbox(*(addr.mailbox_));
-	else if (addr.group_ != 0)
-		group_ = new RGroup(*(addr.group_));
-	else
-		parsed_ = false;
-	
+    if (addr.mailbox_ != 0)
+        mailbox_ = new RMailbox(*(addr.mailbox_));
+    else if (addr.group_ != 0)
+        group_ = new RGroup(*(addr.group_));
+    else
+        parsed_ = false;
+    
 
-	assembled_	= false;
-	return *this;
+    assembled_    = false;
+    return *this;
 }
 
-	RAddress &
+    RAddress &
 RAddress::operator = (const QCString & s)
 {
-	rmmDebug("operator = QCString("  + s + ")");
+    rmmDebug("operator = QCString("  + s + ")");
 
-	delete mailbox_;
-	mailbox_	= 0;
-	delete group_;
-	group_		= 0;
+    delete mailbox_;
+    mailbox_    = 0;
+    delete group_;
+    group_        = 0;
 
-	RHeaderBody::operator = (s);
+    RHeaderBody::operator = (s);
 
-	assembled_	= false;
-	return *this;
+    assembled_    = false;
+    return *this;
 }
 
-	bool
+    bool
 RAddress::operator == (RAddress & a)
 {
-	parse();
+    parse();
 
-	a.parse();
-	
-	if (mailbox_ != 0 && a.mailbox_ != 0)
-		return *mailbox_ == *a.mailbox_;
-	
-	else if	(group_ != 0 && a.group_ != 0)
-		return *group_ == *a.group_;
-	
-	else
-		return true;
+    a.parse();
+    
+    if (mailbox_ != 0 && a.mailbox_ != 0)
+        return *mailbox_ == *a.mailbox_;
+    
+    else if    (group_ != 0 && a.group_ != 0)
+        return *group_ == *a.group_;
+    
+    else
+        return true;
 }
 
-	RGroup *
+    RGroup *
 RAddress::group()
 {
-	parse();
-	return group_;
+    parse();
+    return group_;
 }
 
-	RMailbox *
+    RMailbox *
 RAddress::mailbox()
 {
-	parse();
-	return mailbox_;
+    parse();
+    return mailbox_;
 }
 
-	void
+    void
 RAddress::_parse()
 {
-	delete mailbox_;
-	mailbox_	= 0;
-	delete group_;
-	group_		= 0;
+    delete mailbox_;
+    mailbox_    = 0;
+    delete group_;
+    group_        = 0;
 
-	QCString s = strRep_.stripWhiteSpace();
+    QCString s = strRep_.stripWhiteSpace();
 
-	// RFC822: group: phrase ":" [#mailbox] ";"
-	// -> If a group, MUST end in ";".
+    // RFC822: group: phrase ":" [#mailbox] ";"
+    // -> If a group, MUST end in ";".
 
-	if (s.right(1) == ";") { // This is a group !
+    if (s.right(1) == ";") { // This is a group !
 
-		rmmDebug("I'm a group.");
+        rmmDebug("I'm a group.");
 
-		group_ = new RGroup(s);
-		CHECK_PTR(group_);
-		group_->parse();
+        group_ = new RGroup(s);
+        CHECK_PTR(group_);
+        group_->parse();
 
-	} else {
+    } else {
 
-		rmmDebug("I'm a mailbox.");
+        rmmDebug("I'm a mailbox.");
 
-		mailbox_ = new RMailbox(s);
-		CHECK_PTR(mailbox_);
-		mailbox_->parse();
-	}
+        mailbox_ = new RMailbox(s);
+        CHECK_PTR(mailbox_);
+        mailbox_->parse();
+    }
 }
 
-	void
+    void
 RAddress::_assemble()
 {
-	if (mailbox_ != 0)
-		strRep_ = mailbox_->asString();
-	
-	else if (group_ != 0)
-		strRep_ = group_->asString();
-	
-	else
-		strRep_ = "foo@bar";
+    if (mailbox_ != 0)
+        strRep_ = mailbox_->asString();
+    
+    else if (group_ != 0)
+        strRep_ = group_->asString();
+    
+    else
+        strRep_ = "foo@bar";
 }
 
-	void
+    void
 RAddress::createDefault()
 {
-	rmmDebug("createDefault() called");
-	if (mailbox_ == 0 && group_ == 0) {
-		rmmDebug("I have no mailbox or group yet");
-		mailbox_ = new RMailbox;
-		mailbox_->createDefault();
-	}
-	else if (mailbox_ == 0) {
-		rmmDebug("I have no mailbox");
-		group_ = new RGroup;
-		group_->createDefault();
-	} else {
-		rmmDebug("I have no group");
-		mailbox_ = new RMailbox;
-		mailbox_->createDefault();
-	}
+    rmmDebug("createDefault() called");
+    if (mailbox_ == 0 && group_ == 0) {
+        rmmDebug("I have no mailbox or group yet");
+        mailbox_ = new RMailbox;
+        mailbox_->createDefault();
+    }
+    else if (mailbox_ == 0) {
+        rmmDebug("I have no mailbox");
+        group_ = new RGroup;
+        group_->createDefault();
+    } else {
+        rmmDebug("I have no group");
+        mailbox_ = new RMailbox;
+        mailbox_->createDefault();
+    }
 }
 
+// vim:ts=4:sw=4:tw=78

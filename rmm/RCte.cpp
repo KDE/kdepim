@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -29,130 +29,131 @@
 using namespace RMM;
 
 RCte::RCte()
-	:	RHeaderBody()
+    :    RHeaderBody()
 {
-	rmmDebug("ctor");
+    rmmDebug("ctor");
 }
 
 RCte::RCte(const RCte & cte)
-	:	RHeaderBody(cte)
+    :    RHeaderBody(cte)
 {
-	rmmDebug("ctor");
-	assembled_	= false;
+    rmmDebug("ctor");
+    assembled_    = false;
 }
 
 RCte::RCte(const QCString & s)
-	:	RHeaderBody(s)
+    :    RHeaderBody(s)
 {
-	rmmDebug("ctor with \"" + s + "\"");
+    rmmDebug("ctor with \"" + s + "\"");
 }
 
 RCte::~RCte()
 {
-	rmmDebug("dtor");
+    rmmDebug("dtor");
 }
 
-	RCte &
+    RCte &
 RCte::operator = (const RCte & cte)
 {
-	rmmDebug("operator =");
+    rmmDebug("operator =");
     if (this == &cte) return *this; // Don't do a = a.
 
-	mechanism_ = cte.mechanism_;
-	
-	RHeaderBody::operator = (cte);
-	
-	return *this;
+    mechanism_ = cte.mechanism_;
+    
+    RHeaderBody::operator = (cte);
+    
+    return *this;
 }
 
-	RCte &
+    RCte &
 RCte::operator = (const QCString & s)
 {
-	rmmDebug("operator = \"" + s + "\"");
-	RHeaderBody::operator = (s);
-	return *this;
+    rmmDebug("operator = \"" + s + "\"");
+    RHeaderBody::operator = (s);
+    return *this;
 }
 
-	bool
+    bool
 RCte::operator == (RCte & c)
 {
-	parse();
-	c.parse();
+    parse();
+    c.parse();
 
-	return (mechanism_ == c.mechanism_);
+    return (mechanism_ == c.mechanism_);
 }
 
-	void
+    void
 RCte::_parse()
 {
-	strRep_		= strRep_.stripWhiteSpace();
-	
-	if (!stricmp(strRep_, "7bit"))
-		mechanism_ = CteType7bit;
-	else if (!stricmp(strRep_, "8bit"))
-		mechanism_ = CteType8bit;
-	else if (!stricmp(strRep_, "base64"))
-		mechanism_ = CteTypeBase64;
-	else if (!stricmp(strRep_, "quoted-printable"))
-		mechanism_ = CteTypeQuotedPrintable;
-	else if (!strnicmp(strRep_, "x", 1))
-		mechanism_ = CteTypeXtension;
-	else 
-		mechanism_ = CteTypeBinary;
+    strRep_        = strRep_.stripWhiteSpace();
+    
+    if (!stricmp(strRep_, "7bit"))
+        mechanism_ = CteType7bit;
+    else if (!stricmp(strRep_, "8bit"))
+        mechanism_ = CteType8bit;
+    else if (!stricmp(strRep_, "base64"))
+        mechanism_ = CteTypeBase64;
+    else if (!stricmp(strRep_, "quoted-printable"))
+        mechanism_ = CteTypeQuotedPrintable;
+    else if (!strnicmp(strRep_, "x", 1))
+        mechanism_ = CteTypeXtension;
+    else 
+        mechanism_ = CteTypeBinary;
 }
 
-	void
+    void
 RCte::_assemble()
 {
-	switch (mechanism_) {
+    switch (mechanism_) {
 
-		case CteType7bit:
-			strRep_ = "7bit";
-			break;
-			
-		case CteType8bit:
-			strRep_ = "8bit";
-			break;
-		
-		case CteTypeBase64:
-			strRep_ = "Base64";
-			break;
-		
-		case CteTypeQuotedPrintable:
-			strRep_ = "Quoted-Printable";
-			break;
-		
-		case CteTypeXtension:
-			break;
-		
-		case CteTypeBinary:
-		default:
-			strRep_ = "binary";
-			break;
-	}
+        case CteType7bit:
+            strRep_ = "7bit";
+            break;
+            
+        case CteType8bit:
+            strRep_ = "8bit";
+            break;
+        
+        case CteTypeBase64:
+            strRep_ = "Base64";
+            break;
+        
+        case CteTypeQuotedPrintable:
+            strRep_ = "Quoted-Printable";
+            break;
+        
+        case CteTypeXtension:
+            break;
+        
+        case CteTypeBinary:
+        default:
+            strRep_ = "binary";
+            break;
+    }
 }
 
-	void
+    void
 RCte::createDefault()
 {
-	rmmDebug("createDefault() called");
-	mechanism_	= CteTypeBase64;
-	parsed_		= true;
-	assembled_	= false;
+    rmmDebug("createDefault() called");
+    mechanism_    = CteTypeBase64;
+    parsed_        = true;
+    assembled_    = false;
 }
 
 
-	CteType
+    CteType
 RCte::mechanism()
 {
-	parse();
-	return mechanism_;
+    parse();
+    return mechanism_;
 }
 
-	void
+    void
 RCte::setMechanism(CteType t)
 {
-	mechanism_ = t;
-	assembled_	= false;
+    mechanism_ = t;
+    assembled_    = false;
 }
 
+// vim:ts=4:sw=4:tw=78

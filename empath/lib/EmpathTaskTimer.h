@@ -8,26 +8,27 @@
 
 class EmpathTaskTimer : public QObject
 {
-	Q_OBJECT
-		
-	public:
-		
-		EmpathTaskTimer(EmpathTask *);
-		~EmpathTaskTimer();
-	
-	protected slots:
-		
-		void s_timeout();
-		void s_done();
-		
-	signals:
-		
-		void newTask(EmpathTask *);
-		
-	private:
-		
-		EmpathTask * task_;
-		QTimer timer_;
+    Q_OBJECT
+        
+    public:
+        
+        EmpathTaskTimer(EmpathTask *);
+        ~EmpathTaskTimer();
+    
+    protected slots:
+        
+        void s_timeout();
+        void s_done();
+        
+    signals:
+        
+        void newTask(EmpathTask *);
+        
+    private:
+        
+        EmpathTask * task_;
+        QTimer timer_;
 };
 
 #endif
+// vim:ts=4:sw=4:tw=78

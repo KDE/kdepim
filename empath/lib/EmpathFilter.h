@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -38,53 +38,54 @@ typedef QListIterator<EmpathMatcher> EmpathMatcherListIterator;
 
 class EmpathFilter : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		
-		EmpathFilter(const QString & name);
+    public:
+        
+        EmpathFilter(const QString & name);
 
-		virtual ~EmpathFilter();
-		void load();
-		void save();
-		
-		void setName(const QString & name) { name_ = name; }
-		QString name() { return name_; }
-		
-		void filter(const EmpathURL & source);
+        virtual ~EmpathFilter();
+        void load();
+        void save();
+        
+        void setName(const QString & name) { name_ = name; }
+        QString name() { return name_; }
+        
+        void filter(const EmpathURL & source);
 
-		void addMatchExpr(EmpathMatcher * matcher);
+        void addMatchExpr(EmpathMatcher * matcher);
 
-		QString		description() const;
-		QString		actionDescription() const;
-		void		setEventHandler(EmpathFilterEventHandler *);
-		void		setURL(const EmpathURL & url);
-		EmpathURL	url() const;
+        QString        description() const;
+        QString        actionDescription() const;
+        void        setEventHandler(EmpathFilterEventHandler *);
+        void        setURL(const EmpathURL & url);
+        EmpathURL    url() const;
 
-		QList<EmpathMatcher> *		matchExprList();
-		EmpathFilterEventHandler *	eventHandler();
-		
-		void		setPriority(Q_UINT32 priority)
-		{ priority_ = priority; }
-		
-		Q_UINT32	priority()
-		{ return priority_; }
-		
-	private:
+        QList<EmpathMatcher> *        matchExprList();
+        EmpathFilterEventHandler *    eventHandler();
+        
+        void        setPriority(Q_UINT32 priority)
+        { priority_ = priority; }
+        
+        Q_UINT32    priority()
+        { return priority_; }
+        
+    private:
 
-		bool match(const EmpathURL & id);
-		void loadMatchExpr(Q_UINT32 matchExprID);
-		void loadEventHandler();
+        bool match(const EmpathURL & id);
+        void loadMatchExpr(Q_UINT32 matchExprID);
+        void loadEventHandler();
 
-		Q_UINT32 id_;
-		Q_UINT32 priority_;
-		
-		EmpathURL					url_;
-		QList<EmpathMatcher>		matchExprs_;
-		EmpathFilterEventHandler	* fEventHandler_;
-		
-		QString	name_;
+        Q_UINT32 id_;
+        Q_UINT32 priority_;
+        
+        EmpathURL                    url_;
+        QList<EmpathMatcher>        matchExprs_;
+        EmpathFilterEventHandler    * fEventHandler_;
+        
+        QString    name_;
 };
 
 #endif // EMPATHFILTER_H
 
+// vim:ts=4:sw=4:tw=78

@@ -11,19 +11,20 @@ class EmpathMessageListWidget;
 
 class EmpathLeftSideWidget : public QWidget
 {
-	Q_OBJECT
-		
-	public:
-		
-		EmpathLeftSideWidget(
-			EmpathMessageListWidget *, QWidget * parent, const char * name);
-		virtual ~EmpathLeftSideWidget();
-		
-	private:
-		
-		EmpathFolderWidget	* folderWidget_;
-		EmpathTaskWidget	* taskWidget_;
-		QGridLayout			* layout_;
+    Q_OBJECT
+        
+    public:
+        
+        EmpathLeftSideWidget(
+            EmpathMessageListWidget *, QWidget * parent, const char * name);
+        virtual ~EmpathLeftSideWidget();
+        
+    private:
+        
+        EmpathFolderWidget    * folderWidget_;
+        EmpathTaskWidget    * taskWidget_;
+        QGridLayout            * layout_;
 };
 
 #endif
+// vim:ts=4:sw=4:tw=78

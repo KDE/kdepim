@@ -1,21 +1,21 @@
 /*
-	Empath - Mailer for KDE
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifdef __GNUG__
@@ -30,114 +30,115 @@
 #include "Empath.h"
 
 EmpathMailbox::EmpathMailbox(const QString & name)
-	:	url_(name, QString::null, QString::null)
+    :    url_(name, QString::null, QString::null)
 {
-	empathDebug("ctor - url == \"" + url_.asString() + "\"");
-	pixmapName_ = "mailbox.png";
-	folderList_.setAutoDelete(true);
-	QObject::connect(this, SIGNAL(updateFolderLists()),
-		empath, SLOT(s_updateFolderLists()));
+    empathDebug("ctor - url == \"" + url_.asString() + "\"");
+    pixmapName_ = "mailbox.png";
+    folderList_.setAutoDelete(true);
+    QObject::connect(this, SIGNAL(updateFolderLists()),
+        empath, SLOT(s_updateFolderLists()));
 }
 
 EmpathMailbox::~EmpathMailbox()
 {
-	empathDebug("dtor");
+    empathDebug("dtor");
 }
 
-	void
+    void
 EmpathMailbox::setCheckMail(bool yn)
 {
-	empathDebug(QString("Setting check mail to ") + (yn ? "true" : "false"));
-	checkMail_ = yn;
-	if (checkMail_) {
-		empathDebug("Switching on timer");
-		timer_.stop();
-		timer_.start(checkMailInterval_ * 60000);
-	}
-	else {
-		empathDebug("Switching off timer");
-		timer_.stop();
-	}
+    empathDebug(QString("Setting check mail to ") + (yn ? "true" : "false"));
+    checkMail_ = yn;
+    if (checkMail_) {
+        empathDebug("Switching on timer");
+        timer_.stop();
+        timer_.start(checkMailInterval_ * 60000);
+    }
+    else {
+        empathDebug("Switching off timer");
+        timer_.stop();
+    }
 }
 
-	void
+    void
 EmpathMailbox::setCheckMailInterval(Q_UINT32 checkMailInterval)
 {
-	empathDebug("Setting timer interval to  " +
-			QString().setNum(checkMailInterval));
-	checkMailInterval_ = checkMailInterval;
-	if (checkMail_) {
-		timer_.stop();
-		timer_.start(checkMailInterval_ * 60000);
-	}
+    empathDebug("Setting timer interval to  " +
+            QString().setNum(checkMailInterval));
+    checkMailInterval_ = checkMailInterval;
+    if (checkMail_) {
+        timer_.stop();
+        timer_.start(checkMailInterval_ * 60000);
+    }
 }
 
-	void
+    void
 EmpathMailbox::setName(const QString & name) 
 {
-	url_.setMailboxName(name);
+    url_.setMailboxName(name);
 }
 
-	Q_UINT32
+    Q_UINT32
 EmpathMailbox::messageCount() const
 {
-	empathDebug("messageCount() called");
+    empathDebug("messageCount() called");
 
-	Q_UINT32 c = 0;
-	
-	EmpathFolderListIterator it(folderList_);
-	
-	for (; it.current(); ++it)
-		c += it.current()->messageCount();
+    Q_UINT32 c = 0;
+    
+    EmpathFolderListIterator it(folderList_);
+    
+    for (; it.current(); ++it)
+        c += it.current()->messageCount();
 
-	return c;
+    return c;
 }
 
-	Q_UINT32
+    Q_UINT32
 EmpathMailbox::unreadMessageCount() const
 {
-	empathDebug("unreadMessageCount() called");
+    empathDebug("unreadMessageCount() called");
 
-	Q_UINT32 c = 0;
-	
-	EmpathFolderListIterator it(folderList_);
-	empathDebug("There are " + QString().setNum(folderList_.count()) +
-		"folders to count messages in");
-	
-	for (; it.current(); ++it)
-		c += it.current()->unreadMessageCount();
+    Q_UINT32 c = 0;
+    
+    EmpathFolderListIterator it(folderList_);
+    empathDebug("There are " + QString().setNum(folderList_.count()) +
+        "folders to count messages in");
+    
+    for (; it.current(); ++it)
+        c += it.current()->unreadMessageCount();
 
-	return c;
+    return c;
 }
 
-	void
+    void
 EmpathMailbox::s_countUpdated(int, int)
 {
-	empathDebug("s_countUpdated() called");
-	empathDebug("emitting(" + QString().setNum(unreadMessageCount()) +
-	   ", " + QString().setNum(messageCount()) + ")");
-	emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
+    empathDebug("s_countUpdated() called");
+    empathDebug("emitting(" + QString().setNum(unreadMessageCount()) +
+       ", " + QString().setNum(messageCount()) + ")");
+    emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
 }
 
-	EmpathFolder *
+    EmpathFolder *
 EmpathMailbox::folder(const EmpathURL & url)
 {
-	empathDebug("folder(" + url.asString() + ") called");
-	QString fp(url.folderPath());
+    empathDebug("folder(" + url.asString() + ") called");
+    QString fp(url.folderPath());
 
-	if (fp.at(0) == '/') fp.remove(0, 1);
-	if (fp.at(fp.length() - 1) == '/') fp.remove(fp.length() - 1, 1);
-	
-	EmpathFolderListIterator it(folderList_);
-	for (; it.current(); ++it) {
-		empathDebug("Comparing \"" + it.current()->url().folderPath() +
-			"\" to \"" + fp + "\"");
-		if (it.current()->url().folderPath() == fp) {
-			empathDebug("... found !");
-			return it.current();
-		}
-	}
-	
-	return 0;
+    if (fp.at(0) == '/') fp.remove(0, 1);
+    if (fp.at(fp.length() - 1) == '/') fp.remove(fp.length() - 1, 1);
+    
+    EmpathFolderListIterator it(folderList_);
+    for (; it.current(); ++it) {
+        empathDebug("Comparing \"" + it.current()->url().folderPath() +
+            "\" to \"" + fp + "\"");
+        if (it.current()->url().folderPath() == fp) {
+            empathDebug("... found !");
+            return it.current();
+        }
+    }
+    
+    return 0;
 }
 
+// vim:ts=4:sw=4:tw=78

@@ -11,37 +11,38 @@
 
 class EmpathHeaderViewWidget : public QWidget
 {
-	Q_OBJECT
-		
-	public:
-		
-		EmpathHeaderViewWidget(QWidget * parent, const char * name);
-		virtual ~EmpathHeaderViewWidget();
-	
-		void useEnvelope(RMM::REnvelope &);
-		
-	signals:
-	
-		void clipClicked();
-		
-	protected:
-		
-		void paintEvent(QPaintEvent *);
-		void resizeEvent(QResizeEvent *);
-		void mouseMoveEvent(QMouseEvent *);
-		void leaveEvent(QEvent *) { mouseMoveEvent(0); }
-		void mousePressEvent(QMouseEvent * e);
+    Q_OBJECT
+        
+    public:
+        
+        EmpathHeaderViewWidget(QWidget * parent, const char * name);
+        virtual ~EmpathHeaderViewWidget();
+    
+        void useEnvelope(RMM::REnvelope &);
+        
+    signals:
+    
+        void clipClicked();
+        
+    protected:
+        
+        void paintEvent(QPaintEvent *);
+        void resizeEvent(QResizeEvent *);
+        void mouseMoveEvent(QMouseEvent *);
+        void leaveEvent(QEvent *) { mouseMoveEvent(0); }
+        void mousePressEvent(QMouseEvent * e);
 
-	private:
-		
-		bool			resized_;
-		QPixmap			underClip_;
-		QPixmap			buf_;
-		QStrList		headerList_;
-		QPixmap			clipIcon_;
-		QPixmap			clipGlow_;
-		bool			glowing_;
+    private:
+        
+        bool            resized_;
+        QPixmap            underClip_;
+        QPixmap            buf_;
+        QStrList        headerList_;
+        QPixmap            clipIcon_;
+        QPixmap            clipGlow_;
+        bool            glowing_;
 };
 
 #endif
 
+// vim:ts=4:sw=4:tw=78
