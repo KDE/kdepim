@@ -50,6 +50,8 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
            SLOT( setCaption(const QString&)) );
   setCentralWidget( m_mainWidget );
   createGUI( "knodeui.rc" );
+
+  applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
 }
 
 KNMainWindow::~KNMainWindow()
