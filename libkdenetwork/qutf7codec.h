@@ -35,7 +35,7 @@
     described in RFC2152.
 
     Use it as you would use any other QTextCodec. Only if you use the
-    encoder directly (via @red makeEncoder), you should bear in mind
+    encoder directly (via makeEncoder), you should bear in mind
     that if your application needs the encoder to return to ASCII mode
     (like it's the case for RFC2047 mail header encoded words), you
     have to tell the encoder by requesting the encoding of a @em null
