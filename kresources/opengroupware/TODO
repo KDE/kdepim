@@ -1,2 +1,3 @@
 - http result code handling (404, 200, etc.)
 - conflict resolution
+- folder type detection for calendar folders, remove hardcoded "/Calendar"
