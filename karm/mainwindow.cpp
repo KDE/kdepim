@@ -77,6 +77,8 @@ MainWindow::MainWindow()
 
   _tray = new KarmTray( this );
 
+  connect( _tray, SIGNAL( quitSelected() ), SLOT( quit() ) );
+
   connect( _taskView, SIGNAL( timersActive() ), _tray, SLOT( startClock() ) );
   connect( _taskView, SIGNAL( timersActive() ), this,  SLOT( enableStopAll() ));
   connect( _taskView, SIGNAL( timersInactive() ), _tray, SLOT( stopClock() ) );
