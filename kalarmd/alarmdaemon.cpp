@@ -89,6 +89,7 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
 
   // set up the alarm timer
   mAlarmTimer = new QTimer(this);
+  connect( mAlarmTimer, SIGNAL( timeout() ), SLOT( checkAlarmsSlot() ));
   setTimerStatus();
   checkAlarms();
 }
@@ -310,7 +311,6 @@ void AlarmDaemon::readConfig()
   int oldCheckInterval = mCheckInterval;
   readCheckInterval();
   if (mCheckInterval != oldCheckInterval) {
-    mAlarmTimer->disconnect();
     mAlarmTimer->stop();
     setTimerStatus();     // change the alarm timer's interval
     notifyGui(CHANGE_STATUS);
@@ -612,12 +612,10 @@ void AlarmDaemon::setTimerStatus()
     int firstInterval = checkInterval + 1 - QTime::currentTime().second();
     mAlarmTimer->start(1000 * firstInterval);
     mAlarmTimerSyncing = (firstInterval != checkInterval);
-    connect(mAlarmTimer, SIGNAL(timeout()), SLOT(checkAlarmsSlot()));
     kdDebug(5900) << "Started alarm timer" << endl;
   }
   else if (mAlarmTimer->isActive() && !nLoaded)
   {
-    mAlarmTimer->disconnect();
     mAlarmTimer->stop();
     kdDebug(5900) << "Stopped alarm timer" << endl;
   }
