@@ -77,7 +77,7 @@ QDateTime Journal::endDate() const
 
 bool Journal::loadAttribute( QDomElement& element )
 {
-  QString tagName = element.tagName().lower();
+  QString tagName = element.tagName();
 
   if ( tagName == "summary" ) {
     setSummary( element.text() );
@@ -99,7 +99,7 @@ bool Journal::saveAttributes( QDomElement& element ) const
   element.appendChild( c );
 #endif
 
-  writeString( element, "Summary", summary() );
+  writeString( element, "summary", summary() );
   return true;
 }
 
@@ -108,7 +108,7 @@ bool Journal::load( const QDomDocument& document )
 {
   QDomElement top = document.documentElement();
 
-  if ( top.tagName().lower() != "journal" ) {
+  if ( top.tagName() != "journal" ) {
     qWarning( "XML error: Top tag was %s instead of the expected Journal",
               top.tagName().ascii() );
     return false;
@@ -132,8 +132,8 @@ bool Journal::load( const QDomDocument& document )
 QString Journal::save() const
 {
   QDomDocument document = domTree();
-  QDomElement element = document.createElement( "Journal" );
-  element.setAttribute( "Version", "1.0" );
+  QDomElement element = document.createElement( "journal" );
+  element.setAttribute( "version", "1.0" );
   saveAttributes( element );
   document.appendChild( element );
   return document.toString();

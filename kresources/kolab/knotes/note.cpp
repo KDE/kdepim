@@ -90,13 +90,13 @@ QColor Note::foregroundColor() const
 
 bool Note::loadAttribute( QDomElement& element )
 {
-  QString tagName = element.tagName().lower();
+  QString tagName = element.tagName();
 
   if ( tagName == "summary" )
     setSummary( element.text() );
-  else if ( tagName == "foregroundcolor" )
+  else if ( tagName == "foreground-color" )
     setForegroundColor( stringToColor( element.text() ) );
-  else if ( tagName == "backgroundcolor" )
+  else if ( tagName == "background-color" )
     setBackgroundColor( stringToColor( element.text() ) );
   else
     return KolabBase::loadAttribute( element );
@@ -116,9 +116,9 @@ bool Note::saveAttributes( QDomElement& element ) const
   element.appendChild( c );
 #endif
 
-  writeString( element, "Summary", summary() );
-  writeString( element, "ForegroundColor", colorToString( foregroundColor() ) );
-  writeString( element, "BackgroundColor", colorToString( backgroundColor() ) );
+  writeString( element, "summary", summary() );
+  writeString( element, "foreground-color", colorToString( foregroundColor() ) );
+  writeString( element, "background-color", colorToString( backgroundColor() ) );
 
   return true;
 }
@@ -128,7 +128,7 @@ bool Note::load( const QDomDocument& document )
 {
   QDomElement top = document.documentElement();
 
-  if ( top.tagName().lower() != "note" ) {
+  if ( top.tagName() != "note" ) {
     qWarning( "XML error: Top tag was %s instead of the expected Note",
               top.tagName().ascii() );
     return false;
@@ -152,8 +152,8 @@ bool Note::load( const QDomDocument& document )
 QString Note::save() const
 {
   QDomDocument document = domTree();
-  QDomElement element = document.createElement( "Note" );
-  element.setAttribute( "Version", "1.0" );
+  QDomElement element = document.createElement( "note" );
+  element.setAttribute( "version", "1.0" );
   saveAttributes( element );
   document.appendChild( element );
   return document.toString();

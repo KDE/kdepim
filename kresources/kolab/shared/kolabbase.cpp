@@ -127,15 +127,15 @@ KolabBase::Sensitivity KolabBase::sensitivity() const
 
 bool KolabBase::loadAttribute( QDomElement& element )
 {
-  QString tagName = element.tagName().lower();
+  QString tagName = element.tagName();
 
   if ( tagName == "body" )
     setBody( element.text() );
   else if ( tagName == "categories" )
     setCategories( element.text() );
-  else if ( tagName == "creationdate" )
+  else if ( tagName == "creation-date" )
     setCreationDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "lastmodified" )
+  else if ( tagName == "last-modification-date" )
     setLastModified( stringToDateTime( element.text() ) );
   else if ( tagName == "sensitivity" )
     setSensitivity( stringToSensitivity( element.text() ) );
@@ -148,12 +148,13 @@ bool KolabBase::loadAttribute( QDomElement& element )
 
 bool KolabBase::saveAttributes( QDomElement& element ) const
 {
-  writeString( element, "Body", body() );
-  writeString( element, "Categories", categories() );
-  writeString( element, "CreationDate", dateTimeToString( creationDate() ) );
-  writeString( element, "LastModified",
+  writeString( element, "uid", uid() );
+  writeString( element, "body", body() );
+  writeString( element, "categories", categories() );
+  writeString( element, "creation-date", dateTimeToString( creationDate() ) );
+  writeString( element, "last-modification-date",
                dateTimeToString( lastModified() ) );
-  writeString( element, "Sensitivity", sensitivityToString( sensitivity() ) );
+  writeString( element, "sensitivity", sensitivityToString( sensitivity() ) );
 
   return true;
 }
@@ -194,7 +195,7 @@ bool KolabBase::load( QFile& xml )
 
 QDomDocument KolabBase::domTree()
 {
-  QDomDocument document( "Kolab-storage" );
+  QDomDocument document;
 
   QString p = "version=\"1.0\" encoding=\"UTF-8\"";
   document.appendChild(document.createProcessingInstruction( "xml", p ) );
@@ -226,9 +227,9 @@ QDate KolabBase::stringToDate( const QString& date )
 QString KolabBase::sensitivityToString( Sensitivity s )
 {
   switch( s ) {
-  case Private: return "Private";
-  case Confidential: return "Confidential";
-  case Public: return "Public";
+  case Private: return "private";
+  case Confidential: return "confidential";
+  case Public: return "public";
   }
 
   return "What what what???";
@@ -236,9 +237,9 @@ QString KolabBase::sensitivityToString( Sensitivity s )
 
 KolabBase::Sensitivity KolabBase::stringToSensitivity( const QString& s )
 {
-  if ( s == "Private" )
+  if ( s == "private" )
     return Private;
-  if ( s == "Confidential" )
+  if ( s == "confidential" )
     return Confidential;
   return Public;
 }
@@ -255,7 +256,7 @@ QColor KolabBase::stringToColor( const QString& s )
 }
 
 void KolabBase::writeString( QDomElement& element, const QString& tag,
-                        const QString& tagString )
+                             const QString& tagString )
 {
   QDomElement e = element.ownerDocument().createElement( tag );
   QDomText t = element.ownerDocument().createTextNode( tagString );

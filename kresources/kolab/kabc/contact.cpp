@@ -390,7 +390,7 @@ bool Contact::loadAddressAttribute( QDomElement& element )
 
 bool Contact::loadAttribute( QDomElement& element )
 {
-  QString tagName = element.tagName().lower();
+  QString tagName = element.tagName();
 
   if ( tagName == "name" )
     return loadNameAttribute( element );
