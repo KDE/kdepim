@@ -201,7 +201,7 @@ ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
 {
   ClientList::ConstIterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
-    if ( (*it).appName == appName ) return &(*it);
+    if ( (*it).appName == appName ) return const_cast<ClientInfo*>(&(*it));
     break;
   }
   return 0;
