@@ -21,12 +21,13 @@
 #ifndef KSYNC_CORE_H
 #define KSYNC_CORE_H
 
-#include <kdebug.h>
-#include <kparts/mainwindow.h>
-
 #include "manipulatorpart.h"
 #include "profile.h"
 #include "konnectorprofile.h"
+
+#include <kdebug.h>
+
+#include <qwidget.h>
 
 namespace KSync
 {
@@ -44,12 +45,11 @@ enum KonnectorMode { KONNECTOR_ONLINE = 0, KONNECTOR_OFFLINE };
  * It's the MainWindow of the application. It'll load all parts
  * and do the basic communication between all parts
  */
-class Core : public KParts::MainWindow
+class Core : public QWidget
 {
    Q_OBJECT
   public:
-    Core( QWidget *widget = 0, const char *name = 0,
-          WFlags f = WType_TopLevel );
+    Core( QWidget *parent );
     ~Core();
 
     /**
@@ -97,7 +97,7 @@ class Core : public KParts::MainWindow
      * This signals gets emitted on KonnectorProfile switch.
      * @param oldProf the old Profile
      */
-    void konnectorChanged( const KonnectorProfile& oldProf );
+    void konnectorChanged( const KonnectorProfile &oldProf );
 
     /**
      * signal emitted when progress from the konnectorProgress arrived
@@ -159,7 +159,7 @@ class Core : public KParts::MainWindow
     /**
      * emitted when one part is done with syncing
      */
-    void doneSync( ManipulatorPart* );
+    void doneSync( ManipulatorPart * );
 };
 
 }

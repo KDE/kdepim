@@ -34,7 +34,7 @@
 #include "profilemanager.h"
 #include "konnectorprofilemanager.h"
 #include "manpartservice.h"
-#include "core.h"
+#include "kitchensync.h"
 
 class PartBar;
 class QHBox;
@@ -44,114 +44,31 @@ class KSelectAction;
 namespace KSync {
 
 class KonnectorBar;
+class KitchenSync;
 
 /**
  * The KitchenSync UI Shell
  * It's the MainWindow of the application. It'll load all parts
  * and do the basic communication between all parts
  */
-class KSyncMainWindow : public Core
+class MainWindow : public KParts::MainWindow
 {
     Q_OBJECT
   public:
-    /**
-      The KSyncMainWindow C'tor
-      @param widget parent widget
-      @param name The name
-      @param flags the flags
-    */
-    KSyncMainWindow( QWidget *widget = 0, const char *name = 0,
-                     WFlags f = WType_TopLevel );
-    ~KSyncMainWindow();
+    MainWindow( QWidget *widget = 0, const char *name = 0 );
+    ~MainWindow();
 
-    /**
-      @return the parent for KPart widgets
-    */
-    QWidget *widgetStack();
+    int currentProfile();
+    void setProfiles( const QStringList &profiles );
 
-    /**
-      @return the SystemTray of KitchenSync
-    */
-    KSyncSystemTray *tray();
-
-    /**
-      @return the currently enabled Profile
-    */
-    Profile currentProfile() const;
-
-    /**
-      @return access to the profilemanager
-      @FIXME make const pointer to const object
-    */
-    ProfileManager *profileManager() const;
-
-    /**
-      @return a SyncUi
-    */
-    SyncUi *syncUi();
-
-    /**
-      @return the preferred syncAlgorithm of KitchenSync
-    */
-    SyncAlgorithm *syncAlgorithm();
-
-    /**
-      @return the all loaded ManipulatorParts
-    */
-    const QPtrList<ManipulatorPart> parts() const;
-
+  protected:
+    void initActions();
+    
   private:
-    virtual void initActions();
-    void addPart( const ManPartService& );
-    void addModPart( ManipulatorPart * );
-    void initSystray ( void );
-
-  private slots:
-    void slotProfile();
-    void initProfileList();
-    void switchProfile( const Profile &prof );
-    void slotConfigProf();
-    void slotConfigCur();
-    void initPlugins();
-    void initProfiles();
-    void slotSync();
-// obsolete:    void slotBackup();
-// obsolete:    void slotRestore();
-    void slotActivated( ManipulatorPart * );
-    void slotQuit();
-    void slotKonnectorBar( bool );
-
-    void slotPreferences();
-    void updateConfig();
-
-    /* slots for the KonnectorManager */
-  private slots:
-// obsolete:    void slotSync( Konnector *, SynceeList );
-    void slotKonnectorProg( Konnector *, const Progress & );
-    void slotKonnectorErr( Konnector *, const Error & );
-
-    /* slots for the ManipulatorParts */
-    void slotPartProg( ManipulatorPart *, int );
-    void slotPartProg( ManipulatorPart *, const Progress & );
-    void slotPartErr( ManipulatorPart *, const Error & );
-    void slotPartSyncStatus( ManipulatorPart *, int );
-
-  private:
-    PartBar *m_bar;
-    QHBox *m_lay;
-    QWidgetStack *m_stack;
-    // loaded parts
-    QPtrList<ManipulatorPart> m_parts;
-    QPtrListIterator<ManipulatorPart> *m_partsIt;
-    bool m_isSyncing;
-
-    ManPartService::ValueList m_partsLst;
-    KSyncSystemTray *m_tray;
+    KitchenSync *mView;
 
     KSelectAction *m_profAct;
-    ProfileManager *m_prof;
-    SyncUi *m_syncUi;
-    SyncAlgorithm *m_syncAlg;
+
     KonnectorBar *m_konBar;
 };
 

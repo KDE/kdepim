@@ -77,7 +77,7 @@ int main( int argc, char *argv[] )
   KUniqueApplication a;
   // time for a Widget
   KSync::Splash *splash = new KSync::Splash;
-  KSync::KSyncMainWindow *mainwindow = new KSync::KSyncMainWindow;
+  KSync::MainWindow *mainwindow = new KSync::MainWindow;
   delete splash;
   mainwindow->show();
   kdDebug(5210) << "exec now " << endl;

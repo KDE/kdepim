@@ -23,8 +23,8 @@
 
 using namespace KSync;
 
-Core::Core( QWidget *widget, const char *name, WFlags f )
-  : KParts::MainWindow( widget, name, f )
+Core::Core( QWidget *parent )
+  : QWidget( parent )
 {
 }
 
