@@ -46,8 +46,9 @@ static const char *kpilotlink_id = "$Id$";
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <iostream.h>
 #include <errno.h>
+
+#include <iostream>
 
 #include <qdir.h>
 #include <qtimer.h>
@@ -98,6 +99,7 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
+	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1)
 {
@@ -138,6 +140,7 @@ void KPilotDeviceLink::close()
 
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
+	fSocketNotifierActive=false;
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Closing sockets "
@@ -344,6 +347,7 @@ bool KPilotDeviceLink::open()
 			QSocketNotifier::Read, this);
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
+		fSocketNotifierActive=true;
 		return true;
 	}
 	else
@@ -428,9 +432,17 @@ void KPilotDeviceLink::acceptDevice()
 
 	int ret;
 
+	if (!fSocketNotifierActive) 
+	{
+		kdWarning() << k_funcinfo << ": Accidentally in acceptDevice()"
+			<< endl;
+		return;
+	}
+
 	if (fSocketNotifier)
 	{
-		fSocketNotifier->setEnabled(false);
+		// fSocketNotifier->setEnabled(false);
+		fSocketNotifierActive=false;
 	}
 
 #ifdef DEBUG
@@ -503,7 +515,7 @@ void KPilotDeviceLink::acceptDevice()
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
 	{
-		kdWarning() << k_funcinfo
+		DEBUGDAEMON << k_funcinfo
 			<< ": dlp_OpenConduit returned " << ret << endl;
 
 #if 0
@@ -616,7 +628,7 @@ bool KPilotDeviceLink::installFile(const QString & f)
 }
 
 
-void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
+void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 {
 	FUNCTIONSETUP;
 
@@ -628,7 +640,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 	
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
 		const_cast < char *>(t.latin1()));
-	if (!suppress)
+	if (log)
 	{
 		emit logMessage(entry);
 	}
@@ -823,6 +835,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.26  2002/09/03 06:52:03  adridg
+// Everyone ships pilot-link 0.9.5, must include support
+//
 // Revision 1.25  2002/08/31 22:35:46  mhunter
 // CVS_SILENT Corrected typographical errors
 //

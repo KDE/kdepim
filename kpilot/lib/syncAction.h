@@ -89,8 +89,8 @@ protected:
 	KPilotDeviceLink *fHandle;
 	int fStatus;
 
-	void addSyncLogEntry(const QString &e,bool suppress=false)
-		{ fHandle->addSyncLogEntry(e,suppress); } ;
+	void addSyncLogEntry(const QString &e,bool log=true)
+		{ fHandle->addSyncLogEntry(e,log); } ;
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
 	int openConduit() { return fHandle->openConduit(); } ;
@@ -165,6 +165,9 @@ protected:
 
 
 // $Log$
+// Revision 1.6  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.5  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to
