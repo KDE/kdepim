@@ -1540,20 +1540,6 @@ only, there is a small application
 </answer>
 </qandaentry>
 
-<!-- 
-<qandaentry>
-<question>
-<para>Why doesn't &kalarm; work since I installed &package; 2.2.x?</para>
-</question>
-<answer>
-<para>&kalarm; for &kde;2 uses a slightly updated version of the
-&package; 2.2.x library <filename>libkcal</filename>. &package; will
-work happily with &kalarm;'s version, but the reverse is not true. To
-cure this problem, simply reinstall &kalarm;.</para>
-</answer>
-</qandaentry>
--->
-
 </qandaset>
 </chapter>
 
@@ -1615,21 +1601,10 @@ who kindly agreed to allow the name &kalarm; to be used by this
 <sect1 id="requirements">
 <title>Requirements</title>
 
-<para>&kalarm; under &kde;3 requires the library
-<filename>libkcal</filename>, from the &kde; package &package;.</para>
-
-<itemizedlist>
-<listitem>
-<para>If you install a version of &package; which includes &kalarm;,
-&kalarm;'s requirements are automatically met.</para>
-</listitem>
-
-<listitem>
-<para>For the standalone version of &kalarm;, you need to run &kde;
-2.0 or later. The standalone versions of &kalarm; include the
-<filename>libkcal</filename> library.</para>
-</listitem>
-</itemizedlist>
+<para>&kalarm; requires the standard &kde; libraries to be installed
+(the <filename>kdelibs</filename> package). To compile from source,
+you also need the &Qt; and <filename>kdelibs</filename> development
+packages.</para>
 
 <para>&kalarm; uses about 12 Mb and the <application>alarm
 daemon</application> uses about 2.5 Mb of memory to run, but this may
@@ -1656,7 +1631,7 @@ change to the directory which has been created.</para>
 &install.compile.documentation;
 
 <note><para>If you have more than one version of &kde; installed
-(e.g. &kde;1 and &kde;2), this may possibly install &kalarm; into the
+(e.g. &kde;2 and &kde;3), this may possibly install &kalarm; into the
 wrong &kde; directory. If necessary, you can give the &kde; directory
 as a parameter to
 <userinput><command>./configure</command></userinput> . For example,
