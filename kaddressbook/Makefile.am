@@ -27,7 +27,7 @@ libkaddressbookpart_la_SOURCES = \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
  addviewdialog.cpp configurewidget.cpp \
  emaileditwidget.cpp extensionwidget.cpp filter.cpp filtereditdialog.cpp \
- filterselectionwidget.cpp importdialog.cpp incsearchwidget.cpp \
+ filterselectionwidget.cpp geowidget.cpp importdialog.cpp incsearchwidget.cpp \
  jumpbuttonbar.cpp kabprefs.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
  kaddressbookview.cpp ldapoptionswidget.cpp \
@@ -42,8 +42,8 @@ noinst_HEADERS = \
  actionmanager.h addhostdialog.h addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
  addviewdialog.h configurewidget.h \
- emaileditwidget.h filter.h filtereditdialog.h \
- filterselectionwidget.h importdialog.h incsearchwidget.h \
+ emaileditwidget.h filter.h filtereditdialog.h filterselectionwidget.h \
+ geowidget.h importdialog.h incsearchwidget.h \
  jumpbuttonbar.h kabprefs.h kaddressbook.h kaddressbook_part.h \
  kaddressbookmain.h kaddressbookview.h ldapoptionswidget.h \
  ldapsearchdialogimpl.h nameeditdialog.h phoneeditwidget.h prefsdialog.h \

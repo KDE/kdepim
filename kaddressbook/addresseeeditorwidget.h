@@ -44,6 +44,7 @@ class KSqueezedTextLabel;
 
 class AddressEditWidget;
 class EmailEditWidget;
+class GeoWidget;
 class PhoneEditWidget;
 
 namespace KPIM
@@ -135,6 +136,7 @@ class AddresseeEditorWidget : public ExtensionWidget
     KSqueezedTextLabel *mNameLabel;
     
     // Tab2
+    GeoWidget *mGeoWidget;
     KLineEdit *mDepartmentEdit;
     KLineEdit *mOfficeEdit;
     KLineEdit *mProfessionEdit;

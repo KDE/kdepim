@@ -53,6 +53,7 @@
 
 #include "addresseditwidget.h"
 #include "emaileditwidget.h"
+#include "geowidget.h"
 #include "kabprefs.h"
 #include "nameeditdialog.h"
 #include "phoneeditwidget.h"
@@ -398,7 +399,7 @@ void AddresseeEditorWidget::setupTab2()
   connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
   label->setBuddy( mNoteEdit );
   layout->addMultiCellWidget( mNoteEdit, 7, 7, 1, 5 );
-  
+
    // Build the layout and add to the tab widget
   layout->activate(); // required
 
@@ -407,6 +408,30 @@ void AddresseeEditorWidget::setupTab2()
 
 void AddresseeEditorWidget::setupTab3()
 {
+  // This is the Misc tab
+  QWidget *tab3 = new QWidget( mTabWidget );
+
+  QGridLayout *layout = new QGridLayout( tab3, 1, 2 );
+  layout->setMargin( KDialogBase::marginHint() );
+  layout->setSpacing( KDialogBase::spacingHint() );
+  
+  QLabel *label;
+
+  //////////////////////////////////////
+  // Geo
+  label = new QLabel( i18n( "Geo:" ), tab3 );
+  label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+  layout->addWidget( label, 0, 0 );
+  mGeoWidget = new GeoWidget( tab3 );
+  mGeoWidget->setMinimumSize( mGeoWidget->sizeHint() );
+  connect( mGeoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+  label->setBuddy( mGeoWidget );
+  layout->addWidget( mGeoWidget, 0, 1, Qt::AlignTop );
+
+   // Build the layout and add to the tab widget
+  layout->activate(); // required
+
+  mTabWidget->addTab( tab3, i18n( "&Misc" ) );
 }
     
 void AddresseeEditorWidget::load()
@@ -434,6 +459,8 @@ void AddresseeEditorWidget::load()
                                "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate) );
   mNicknameEdit->setText( mAddressee.nickName() );
   mCategoryEdit->setText( mAddressee.categories().join( "," ) );
+
+  mGeoWidget->setGeo( mAddressee.geo() );
   
   // Load customs
   mIMAddressEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
@@ -465,6 +492,8 @@ void AddresseeEditorWidget::save()
   
   mAddressee.setNickName( mNicknameEdit->text() );
   mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
+
+  mAddressee.setGeo( mGeoWidget->geo() );
   
   // save custom fields
   mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text() );
