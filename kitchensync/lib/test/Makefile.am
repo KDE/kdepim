@@ -16,7 +16,7 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-INCLUDES=  -I$(top_srcdir)/kitchensync/lib $(all_includes) -I$(top_srcdir)/libkcal
+INCLUDES=  -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/libkcal $(all_includes)
 LDADD = $(top_builddir)/kitchensync/lib/libksync.la
 LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
