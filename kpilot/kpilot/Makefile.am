@@ -26,8 +26,7 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### you want any debugging at all.
 ###
 ### KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
-# KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR
-KDE_CXXFLAGS=-DNDEBUG -UDEBUG
+### KDE_CXXFLAGS=-DNDEBUG -UDEBUG
 
 ###
 ### Non-automake variables
