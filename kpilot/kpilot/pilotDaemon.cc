@@ -85,7 +85,8 @@ static KAboutData *aboutData = 0L;
 PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	KSystemTray(0, "pilotDaemon"),
 	daemon(p),
-	kap(0L)
+	kap(0L),
+	fBlinkTimer(0L)
 {
 	FUNCTIONSETUP;
 	setupWidget();
@@ -152,11 +153,11 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir( CSL1("kpilot") );
-	icons[Normal] = loadIcon( CSL1("hotsync") );
+	icons[Normal] = loadIcon( CSL1("waiting") );
 	icons[Busy] = loadIcon( CSL1("busysync") );
 	icons[NotListening] = loadIcon( CSL1("nosync") );
 
-	slotShowBusy();
+	slotShowNotListening();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
 
 	KPopupMenu *menu = contextMenu();
@@ -218,6 +219,7 @@ void PilotDaemonTray::changeIcon(IconShape i)
 			<< ": Icon #"<<i<<" is NULL!" << endl;
 	}
 	setPixmap(icons[i]);
+	fCurrentIcon = i;
 }
 
 void PilotDaemonTray::slotShowNormal()
@@ -236,6 +238,36 @@ void PilotDaemonTray::slotShowNotListening()
 {
 	FUNCTIONSETUP;
 	changeIcon( NotListening );
+}
+
+void PilotDaemonTray::slotBusyTimer()
+{
+	if (fCurrentIcon == Busy) changeIcon(Normal);
+	else if (fCurrentIcon == Normal) changeIcon(Busy);
+}
+
+void PilotDaemonTray::startHotSync()
+{
+	changeIcon(Busy);
+	if (!fBlinkTimer)
+	{
+		fBlinkTimer = new QTimer(this,"blink timer");
+	}
+	if (fBlinkTimer)
+	{
+		connect(fBlinkTimer,SIGNAL(timeout()),
+			this,SLOT(slotBusyTimer()));
+		fBlinkTimer->start(350,false);
+	}
+}
+
+void PilotDaemonTray::endHotSync()
+{
+	changeIcon(Normal);
+	if (fBlinkTimer)
+	{
+		fBlinkTimer->stop();
+	}
 }
 
 static inline SyncAction::SyncMode getSyncType()
@@ -775,13 +807,6 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	}
 }
 
-static void possiblyChangeTray(PilotDaemonTray *fTray)
-{
-	if (fTray)
-	{
-		fTray->changeIcon(PilotDaemonTray::Busy);
-	}
-}
 
 static void informOthers(KPilotDCOP_stub &kpilot,
 	LoggerDCOP_stub &log,
@@ -960,7 +985,10 @@ static void queueConduits(ActionQueue *fSyncStack,
 
 
 	fDaemonStatus = HOTSYNC_START ;
-	possiblyChangeTray(fTray);
+	if (fTray)
+	{
+		fTray->startHotSync();
+	}
 	informOthers(getKPilot(),getLogger(),getFileLogger());
 
 
@@ -1108,7 +1136,7 @@ launch:
 
 	if (fTray)
 	{
-		QTimer::singleShot(2000,fTray,SLOT(slotShowNormal()));
+		fTray->endHotSync();
 	}
 
 	KPILOT_DELETE(fSyncStack);

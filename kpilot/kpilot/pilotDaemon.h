@@ -37,6 +37,7 @@
 
 class PilotDaemon;
 class QPixmap;
+class QTimer;
 class KAboutApplication;
 class ActionQueue;
 class FileInstaller;
@@ -47,6 +48,8 @@ class LogFile;
 class PilotDaemonTray : public KSystemTray
 {
 	Q_OBJECT
+
+friend class PilotDaemon;
 
 public:
 	PilotDaemonTray(PilotDaemon *p);
@@ -68,6 +71,7 @@ protected slots:
 	void slotShowBusy();
 	void slotShowNormal();
 	void slotShowNotListening();
+	void slotBusyTimer();
 
 	// "Regular" QT actions
 	//
@@ -75,8 +79,13 @@ protected slots:
 	virtual void mousePressEvent(QMouseEvent* e);
 	virtual void closeEvent(QCloseEvent *e);
 
+protected:
+	void startHotSync();
+	void endHotSync();
+
 private:
-	QPixmap icons[3];
+	QPixmap icons[((int) NotListening) + 1];
+	IconShape fCurrentIcon;
 	PilotDaemon *daemon;
 
 	/**
@@ -98,6 +107,10 @@ private:
 	*/
 	KAboutApplication *kap;
 
+	/**
+	* Timer for blinking.
+	*/
+	QTimer *fBlinkTimer;
 } ;
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
