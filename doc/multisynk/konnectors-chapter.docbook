@@ -1,0 +1,108 @@
+<chapter id="konnectors-chapter">
+<title>Konnectors</title>
+
+<sect1 id="konnectors-chapter-overview">
+<title>Overview</title>
+<para>foobar</para>
+</sect1>
+
+<sect1 id="konnectors-chapter-available">
+<title>Available Konnectors</title>
+
+<sect2 id="local-konnector">
+<title>The Local Konnector</title>
+
+<para>The <guilabel>Local Konnector</guilabel> provides an address book and
+calendar file from your local computer.
+
+<screenshot>
+<screeninfo>Local Konnector Configuration Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konnector-local.png" format="PNG"/></imageobject>
+<textobject><phrase>The local konnector configuration dialog.</phrase></textobject>
+<caption><para>The local konnector configuration dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+When clicking on <guibutton>Select From Existing Calendars...</guibutton> or
+<guibutton>Select From Existing Address Books...</guibutton>
+a dialog opens where you can select a file which is already used as a calendar or
+address book in &korganizer; or &kaddressbook;.
+</para>
+</sect2>
+
+<sect2 id="remote-konnector">
+<title>The Remote Konnector</title>
+
+<para>The <guilabel>Remote Konnector</guilabel> provides an address book and
+calendar file from a remote computer.
+As protocols for retriving the files HTTP, FTP, WebDAV and FISH are supported.
+
+<screenshot>
+<screeninfo>Remote Konnector Configuration Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konnector-remote.png" format="PNG"/></imageobject>
+<textobject><phrase>The remote konnector configuration dialog.</phrase></textobject>
+<caption><para>The remote konnector configuration dialog.</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2 id="addressbook-konnector">
+<title>The AddressBook Konnector</title>
+
+<para>The <guilabel>AddressBook Konnector</guilabel> provides the content of
+an address book which was configured in &kaddressbook;
+This can be any kind of address book that &kaddressbook; supports, for example
+a LDAP directory or groupware servers.
+
+<screenshot>
+<screeninfo>AddressBook Konnector Configuration Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konnector-addressbook.png" format="PNG"/></imageobject>
+<textobject><phrase>The address book konnector configuration dialog.</phrase></textobject>
+<caption><para>The address book konnector configuration dialog.</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2 id="calendar-konnector">
+<title>The Calendar Konnector</title>
+
+<para>The <guilabel>Calendar Konnector</guilabel> provides the content of
+a calendar which was configured in &korganizer;
+This can by any kind of calendars that &korganizer; supports, for example
+an iCal calendar or groupware servers.
+
+<screenshot>
+<screeninfo>Calendar Konnector Configuration Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konnector-calendar.png" format="PNG"/></imageobject>
+<textobject><phrase>The calendar konnector configuration dialog.</phrase></textobject>
+<caption><para>The calendar konnector configuration dialog.</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2 id="qtopia-konnector">
+<title>The Qtopia Konnector</title>
+
+<para>The <guilabel>Qtopia Konnector</guilabel> provides the events, todos, contacts
+and notes from an iPAQ or Sharp Zaurus, running Qtopia or OPIE.
+
+<screenshot>
+<screeninfo>Qtopia Konnector Configuration Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konnector-qtopia.png" format="PNG"/></imageobject>
+<textobject><phrase>The qtopia konnector configuration dialog.</phrase></textobject>
+<caption><para>The qtopia konnector configuration dialog.</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+</sect1>
+</chapter>

@@ -1,0 +1,268 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" 
+"dtd/kdex.dtd" [
+ <!ENTITY kappname "&multisynk;">
+ <!ENTITY package "kdepim">
+ <!ENTITY konnectors-chapter SYSTEM "konnectors-chapter.docbook">
+ <!ENTITY % addindex "IGNORE">
+ <!ENTITY % English "INCLUDE" > <!-- change language only here -->  
+]>
+
+<book lang="&language;">
+<bookinfo>
+<title>The &multisynk; Handbook</title>
+<authorgroup>
+<author>
+<firstname>Tobias</firstname>
+<surname>Koenig</surname>
+<affiliation>
+<address><email>tokoe@kde.org</email></address>
+</affiliation>
+</author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2004-11-02</date>
+<releaseinfo>1.0</releaseinfo>
+
+<legalnotice>
+&FDLNotice;
+</legalnotice>
+
+<abstract>
+<para>&multisynk; is the &kde; synchronization application.</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>synchronization</keyword>
+<keyword>handheld</keyword>
+<keyword>OPIE</keyword>
+<keyword>Qtopia</keyword>
+
+</keywordset>
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>
+&multisynk; is a frontend for &kde;'s synchronization framework
+kitchensync. This framework let you synchronize a lot of mobile devices
+like handhelds and mobile phones with your KDE desktop, but also offers
+the possibility to synchronize two or more KDE desktops directly.
+</para>
+
+<para>
+The graphical user interface is similar to multisync, so everybody who have
+ever worked with it should be familiar with multisynk as well.
+</para>
+</chapter>
+
+<chapter id="using-multisynk">
+<title>Using &multisynk;</title>
+
+<sect1 id="general">
+<title>General Information</title>
+
+<para>&multisynk; is based on the kitchensync framework. The purpose of this framework is to
+synchronize a couple of data records (events, todos, contacts), where the synchronization algorithm
+knows nothing about the data. The actual synchronization is done between a so called konnector pair.
+A konnector pair consists of two data providers (konnectors) which load the data from a source (a file,
+a mobile device or the network), hand it over to the synchronization engine and write back the synchronized
+data to the source.
+</para>
+
+<para>Additionally every konnector pair can give the synchronization engine hints how conflict resolution
+shall be handled. Either it's done automatically (e.g. when a contact is changed on the PC and the handheld,
+always overwrite the contact on the handheld) or manually, then a dialog will appear where the user can
+choose which data record she wants to keep.
+</para>
+
+</sect1>
+
+<sect1 id="getting-started">
+<title>Getting Started</title>
+
+<para>
+After you have started &multisynk; (either using the panel menu or by typing
+<command>multisynk</command> at the command prompt) the &multisynk; main window
+will be displayed:
+
+<screenshot>
+<screeninfo>Starting &multisynk;</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="mainwin.png" format="PNG"/></imageobject>
+<textobject><phrase>The &multisynk; main window.</phrase></textobject>
+<caption><para>The &multisynk; main window.</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+
+<para>
+From the menubar or the toolbar you can execute the following commands:
+
+<variablelist>
+<varlistentry>
+<term><guilabel>New</guilabel></term>
+<listitem><para>Create new konnector pair.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Edit</guilabel></term>
+<listitem><para>Edit the selected konnector pair.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delete</guilabel></term>
+<listitem><para>Delete the selected konnector pair.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Log</guilabel></term>
+<listitem><para>Show the dialog which displays the log information of current
+synchronization process.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Sync</guilabel></term>
+<listitem><para>Synchronize the selected konnector pair.</para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<sect2 id="add-konnector-pair">
+<title>Add Konnector Pair</title>
+
+<para>
+To add a new konnector pair just click on the first icon in the toolbar or select
+New from the File menu.
+
+The following dialog will appear:
+
+<screenshot>
+<screeninfo>New Konnector Pair Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="editdialog.png" format="PNG"/></imageobject>
+<textobject><phrase>The new konnector pair dialog.</phrase></textobject>
+<caption><para>The new konnector pair dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+In this dialog you can select the konnectors which shall be part of the konnector
+pair, they can be configured by clicking on <guibutton>Configure...</guibutton> after selected the
+<link linkend="konnectors-chapter-available">type</link>.
+Additionally you can give the pair a name for better distinction in the konnector pair overview.
+</para>
+
+<para>On the second tab of the konnector pair edit dialog you can choose how conflict
+resolution shall be handled.
+
+<screenshot>
+<screeninfo>New Konnector Pair Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="editdialog-conflicts.png" format="PNG"/></imageobject>
+<textobject><phrase>The new konnector pair dialog.</phrase></textobject>
+<caption><para>The new konnector pair dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+The following behaviours are possible:
+<variablelist>
+<varlistentry>
+<term><guilabel>Resolve it manually</guilabel></term>
+<listitem><para>A dialog will appear where you can choose which entry you want to keep.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Always use the entry from the first plugin</guilabel></term>
+<listitem><para>Always the entry from the first konnector is used.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Always use the entry from the second plugin</guilabel></term>
+<listitem><para>Always the entry from the second konnector is used.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Always put both entries on both sides</guilabel></term>
+<listitem><para>The changed entries are duplicated on both sides.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</para>
+</sect2>
+
+<sect2 id="edit-konnector-pair">
+<title>Edit Konnector Pair</title>
+<para>
+To change the settings of a konnector pair, just select it in the konnector pair overview
+and choose <guilabel>Edit...</guilabel> from the toolbar or menubar. The appearing dialog
+is the same like the one you get when adding a new konnector pair.
+</para>
+</sect2>
+
+<sect2 id="delete-konnector-pair">
+<title>Delete Konnector Pair</title>
+<para>
+To delete a konnector pair, just select it in the konnector pair overview
+and choose <guilabel>Delete</guilabel> from the toolbar or menubar. An confirmation dialog
+will show up and ask you whether you really want to remove the konnector pair.
+</para>
+</sect2>
+
+<sect2 id="start-sync-process">
+<title>Start Synchronization Process</title>
+<para>
+After you have <link linkend="add-konnector-pair">added</link>
+a konnector pair, you can select it in the konnector pair overview and press the
+<guilabel>Sync</guilabel> button in the toolbar or choose the action from the menubar.
+The progress of the synchronization is shown by the status column in the konnector
+pair overview and the <link linkend="log-dialog">log dialog</link>.
+</para>
+</sect2>
+
+<sect2 id="log-dialog">
+<title>The Log Dialog</title>
+<para>
+The log dialog collects all information of the synchronization progress and displays them
+with a timestamp in a separated window.
+
+<screenshot>
+<screeninfo>The Log Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="logdialog.png" format="PNG"/></imageobject>
+<textobject><phrase>The log dialog.</phrase></textobject>
+<caption><para>The log dialog.</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+</sect1>
+</chapter>
+
+&konnectors-chapter;
+
+<chapter id="command-line">
+<title>Command Line Options</title>
+<para>&multisynk; supports all command-line options common to
+&kde; and &Qt; programs; you can get a list of these options with
+<userinput><option>--help</option></userinput>,
+<userinput><option>--help-kde</option></userinput>, and
+<userinput><option>--help-qt</option></userinput>.</para>
+</chapter>
+
+<chapter id="credits">
+<title>Credits and License</title>
+
+<para>&multisynk; - The &kde; Synchronization Application</para>
+
+<para>Copyright (c) 2004, Tobias Koenig</para>
+<para>Currently it is maintained by Tobias Koenig <email>tokoe@kde.org</email>.</para>
+&underFDL;               <!-- FDL: do not remove -->
+</chapter>
+</book>
+
