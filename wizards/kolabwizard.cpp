@@ -80,7 +80,7 @@ class KolabPropagator : public KConfigPropagator
       int pos = user.find( "@" );
       if ( pos > 0 ) user = user.left( pos );
 
-      c->value = freeBusyBaseUrl + user + ".vfb";
+      c->value = freeBusyBaseUrl + user + ".ifb";
 
       changes.append( c );
 
