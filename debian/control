@@ -11,7 +11,6 @@ Section: x11
 Depends: ${shlibs:Depends}
 Recommends: kghostview, kdebase-libs
 Suggests: kpilot
-Enhances: kdebase, kpilot
 Description: Personal organizer based on Qt and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
@@ -38,7 +37,6 @@ Section: utils
 Depends: ${shlibs:Depends}, pilot-link
 Recommends: kdebase-libs
 Suggests: korganizer, kab, knotes
-Enhances: kdebase, korganizer, knotes, kab
 Description: Palm Pilot sync tool for KDE
  Palm Pilot sync tool for KDE
 
@@ -47,7 +45,6 @@ Architecture: any
 Section: utils
 Depends: ${shlibs:Depends}
 Recommends: kdebase-libs
-Enhances: kdebase
 Description: Mobile phone utility for KDE
  At the moment Kandy is more or less a terminal program with some special
  features to store commands and their parameters, but is also has a simple 

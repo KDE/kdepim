@@ -8,9 +8,15 @@ export DH_COMPAT=3
 tmp = $(shell pwd)/debian/korganizer
 ARCH = $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq ($(ARCH),alpha)
-  COMPILER_FLAGS=CFLAGS="-O0 -mieee" CXXFLAGS="-O0 -mieee"
-else
-  COMPILER_FLAGS=CXX=g++ CC=gcc
+  export CFLAGS=-O0 -mieee
+  export CXXFLAGS=-O0 -mieee
+endif
+
+ifeq ($(ARCH),i386)
+  # Uncomment the following 2 lines for i686 optimization
+  #export CFLAGS=-O3 -march=i686 -ffast-math -finline-functions
+  #export CXXFLAGS=-O3 -march=i686 -ffast-math -finline-functions
+  XINERAMA=--with-xinerama
 endif
 
 build: build-stamp
@@ -23,12 +29,11 @@ debian/debiandirs: admin/debianrules
 build-stamp:
 	dh_testdir
 	if test ! -f configure; then \
-	  $(MAKE) -f admin/Makefile.common ;\
+	  make -f admin/Makefile.common ;\
 	fi
 	-chmod 755 configure
-	$(COMPILER_FLAGS) \
-	./configure $(configkdepim)
-	$(MAKE)
+	./configure $(configkdepim) $(XINERAMA)
+	make
 	touch build-stamp
 
 clean: debian-clean
@@ -36,11 +41,11 @@ clean: debian-clean
 
 debian-clean:
 	dh_testdir
-	-rm -f debian/libical* debian/debiandirs
+	-rm -f debian/debiandirs
 	if test -d CVS; then \
-	  $(MAKE) -f admin/Makefile.common cvs-clean ;\
+	  make -f admin/Makefile.common cvs-clean ;\
 	fi
-	-$(MAKE) distclean
+	-make distclean
 
 binary-indep: build
 	dh_testroot
@@ -51,7 +56,7 @@ binary-arch: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs -a
-	$(MAKE) install DESTDIR=$(tmp)/
+	make install DESTDIR=$(tmp)/
 	for i in `find debian/ -type l -name "common"`; do \
 		rm $$i ;\
 		ln -s ../common $$i ;\
