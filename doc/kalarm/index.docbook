@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-09-11</date>
-<releaseinfo>0.08.00</releaseinfo>
+<date>2002-10-04</date>
+<releaseinfo>0.08.01</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
@@ -293,9 +293,8 @@ date/time until which the alarm will be repeated.</para></listitem>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
 happens if the alarm can't be triggered at its scheduled time. Check
-this box to cancel the alarm if it can't be triggered within the
-currently configured <link linkend="daemon-interval">alarm daemon
-check interval</link> after the right time. Leave the box unchecked to
+this box to cancel the alarm if it can't be triggered within one
+minute after the right time. Leave the box unchecked to
 trigger the alarm at the first opportunity starting at the scheduled
 time. Date-only alarms, &ie; ones for which the <guilabel>Any
 time</guilabel> option is selected, will be cancelled if they cannot
@@ -433,8 +432,16 @@ daemon</application>.</para></warning>
 <sect3>
 <title>Disabling alarm monitoring</title>
 
-<para>To disable alarm monitoring when it is currently enabled, do one
-of the following:</para>
+<para>There are several ways to disable alarm monitoring, which
+prevents &kalarm; from displaying any further alarms either until you
+re-enable alarms, or - assuming that the <application>alarm
+daemon</application> is configured to start at login - until the next
+time you log in.</para>
+
+<para>To disable alarms without stopping the <application>alarm
+daemon</application> (and therefore without affecting any other
+applications which use the <application>alarm daemon</application>),
+do one of the following:</para>
 
 <itemizedlist>
 <listitem>
@@ -456,14 +463,20 @@ Preferences dialog, quit &kalarm;.</para>
 </listitem>
 </itemizedlist>
 
-<para>The <application>alarm daemon</application> stops monitoring
-&kalarm;'s alarms. &kalarm; will not display any further alarms until
-alarms are re-enabled.</para>
+<para>To disable alarms by stopping the <application>alarm
+daemon</application>:</para>
 
-<note><para>The <application>alarm daemon</application> is not stopped
-by this operation: it simply stops monitoring &kalarm;'s alarms. So
-there will be no effect on the functioning of any other applications
-which use the <application>alarm daemon</application>.</para></note>
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Control Alarm Daemon...</guimenuitem></menuchoice>. This
+displays the Service Manager dialog which enables you to stop the
+<application>alarm daemon</application>.</para>
+</listitem>
+</itemizedlist>
+
+<warning><para>This will affect any other applications which use the
+<application>alarm daemon</application>.</para></warning>
 
 </sect3>
 </sect2>
@@ -485,13 +498,16 @@ missed alarms by selecting
 </sect2>
 
 <sect2>
-<title>Configuring the <application>alarm daemon</application></title>
+<title>Controlling the <application>alarm daemon</application></title>
 
-<para>To set options for the <application>alarm daemon</application>,
-select <menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure Alarm Daemon...</guimenuitem></menuchoice>.
-This displays the <application>alarm daemon</application>
-configuration dialog.</para>
+<para>To control the <application>alarm daemon</application>, select
+<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control Alarm
+Daemon...</guimenuitem></menuchoice>. This displays the Service
+Manager dialog which allows you to stop or start the
+<application>alarm daemon</application> and configure whether it runs
+automatically at login. See
+<link linkend="daemon-control">Controlling the alarm daemon with the
+Service Manager</link> for details.</para>
 
 </sect2>
 
@@ -616,9 +632,13 @@ includes options relating to the &kalarm; system tray icon.</para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Configure Alarm Daemon...</guimenuitem></menuchoice></term>
-<listitem><para><action>Displays the alarm daemon's configuration
-dialog.</action></para>
+<term><menuchoice><guimenuitem>Control Alarm Daemon...</guimenuitem></menuchoice></term>
+<listitem><para><action>Displays the Service Manager dialog which
+allows you to control the <application>alarm
+daemon</application>.</action></para>
+<para>See
+<link linkend="daemon-control">Controlling the alarm daemon with the
+Service Manager</link> for details.</para>
 </listitem>
 </varlistentry>
 
@@ -995,46 +1015,28 @@ alarm.</para>
 also be used by other applications, including KOrganizer.</para>
 
 <para>The <application>alarm daemon</application> runs in the
-background, with no user interface. Its configuration dialog may be
-accessed either via the &kde; control centre, or via the &kalarm; menu
-option <menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure Alarm Daemon...</guimenuitem>
-</menuchoice>.</para>
-
-<sect2 id="daemon-interval">
-<title>Alarm daemon check interval</title>
-
-<para>The <application>alarm daemon</application> checks for alarms
-becoming due at a frequency determined by the check interval set in
-its configuration dialog. This interval also determines how late a
-late-cancel alarm is allowed to be before it is cancelled.</para>
-
-<warning><para>If you reduce the check interval, late-cancel alarms
-may be lost in some circumstances. This can only happen if when you
-reduce the check interval, &kalarm; is not running and a late-cancel
-alarm is already due but not yet detected by the <application>alarm
-daemon</application>. Since the check interval determines how late
-the alarm is allowed to be, reducing the check interval may result
-in the alarm being considered late, and therefore
-cancelled.</para></warning>
-</sect2>
+background, with no user interface. It may be controlled as described
+below.</para>
 
 <sect2>
 <title>Starting, resetting and stopping the <application>alarm daemon</application></title>
 
 <para>The <application>alarm daemon</application> is normally started
-at &kde; session login (unless you use its configuration dialog to
+at &kde; session login (unless you use the Service Manager dialog to
 disable auto start), and runs continuously until logout. If for any
 reason it is not running, alarm monitoring will not occur and &kalarm;
 will not display or execute any alarms.</para>
 
 <sect3>
 <title>Starting the <application>alarm daemon</application></title>
+
 <para>To start the <application>alarm daemon</application>, you can
 either run &kalarm; in its default graphical mode (&ie; without any
 command line parameters), enable alarms using &kalarm;'s system tray
 icon menu, reset the daemon as described
-<link linkend="daemon-reset">below</link>, or you can run the
+<link linkend="daemon-reset">below</link>, start it using the
+Service Manager dialog (see <link linkend="daemon-control">Controlling
+the alarm daemon with the Service Manager</link>) or you can run the
 <application>alarm daemon</application> directly from the command
 line:</para>
 
@@ -1089,13 +1091,46 @@ applications which also use the <application>alarm
 daemon</application>. Consider resetting the daemon
 instead.</para></warning>
 
-<para>To stop the <application>alarm daemon</application>, type the
-following command:</para>
+<para>To stop the <application>alarm daemon</application>, either use
+the Service Manager dialog (see
+<link linkend="daemon-control">Controlling the alarm daemon with the
+Service Manager</link>), or type the following command:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
 </screen>
 </sect3>
+
+</sect2>
+
+<sect2 id="daemon-control">
+<title>Controlling the <application>alarm daemon</application> with the Service Manager</title>
+
+<para>The Service Manager dialog allows you to configure and control
+the <application>alarm daemon</application>. You can:</para>
+
+<itemizedlist>
+<listitem>
+<para>Configure whether it runs automatically at login.</para>
+<warning><para>If neither the <application>alarm daemon</application>
+nor &kalarm; is configured to run at login, alarm monitoring will not
+occur and &kalarm; will not display or execute any
+alarms.</para></warning>
+</listitem>
+
+<listitem>
+<para>Stop and start the <application>alarm
+daemon</application>.</para>
+<warning><para>Starting or stopping the <application>alarm
+daemon</application> will affect any other applications which use the
+<application>alarm daemon</application>.</para></warning>
+</listitem>
+</itemizedlist>
+
+<para>The Service Manager dialog can be accessed either via the menu
+option <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control
+Alarm Daemon...</guimenuitem></menuchoice>, or via the &kde; Control
+Centre.</para>
 
 </sect2>
 </sect1>
@@ -1289,12 +1324,10 @@ depending on when the alarm is due.</para>
 
 <listitem><para>If the alarm is due, it acts as follows. If the
 late-cancel flag is set and the alarm is late, &ie; the scheduled
-trigger time was longer ago than the currently configured
-<link linkend="daemon-interval">alarm daemon check interval</link>,
-&kalarm; does not display or execute the alarm; otherwise, &kalarm;
-displays or executes the alarm. If no repetitions of the alarm are
-still scheduled, &kalarm; then deletes the alarm from the calendar
-file.</para>
+trigger time was longer then one minute ago, &kalarm; does not display
+or execute the alarm; otherwise, &kalarm; displays or executes the
+alarm. If no repetitions of the alarm are still scheduled, &kalarm;
+then deletes the alarm from the calendar file.</para>
 </listitem>
 </itemizedlist>
 
