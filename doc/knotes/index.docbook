@@ -537,7 +537,7 @@ icon.</para></step>
 
 <para>In order to print or mail notes, you need to have helper applications
 installed, such as <application>a2ps</application> and
-<application>kmail</application>.  You will need to configure &knotes to use
+<application>kmail</application>.  You will need to configure &knotes; to use
 these helper applications.  </para>
 
 </sect1>

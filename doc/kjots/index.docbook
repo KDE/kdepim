@@ -77,7 +77,7 @@ and organizes them for you.</para>
 <listitem>
 <itemizedlist>
 <listitem><para>use <classname>KEdit</classname> instead of
-<classname>QMultiLineEdit</classname> directly, adding Search & replace + undo
+<classname>QMultiLineEdit</classname> directly, adding Search &amp; replace + undo
 </para></listitem>
 <listitem><para>allocate <classname>KTMainWindow</classname> on the heap to
 avoid double deletion on quit</para></listitem>

@@ -1998,8 +1998,8 @@ will be forwarded, too.</para>
 </term>
 <listitem>
 <para>Works like forward, except that the message stays the same (even
-the <guilabel>From</guilabel> field). The user who redirected the message is
-added in special header fields (Redirect-From, Redirect-Date, Redirect-To,
+the <guilabel>From</guilabel> field). The user who redirected the message is
+added in special header fields (Redirect-From, Redirect-Date, Redirect-To,
 &etc;).</para> 
 </listitem>
 </varlistentry>
@@ -2012,8 +2012,8 @@ added in special header fields (Redirect-From, Redirect-Date, Redirect-To,
 </menuchoice>
 </term>
 <listitem>
-<para>Sends the message back to the sender with a notice that it cannot be
-delivered. This is nearly exactly the message you get from a mail relay if the
+<para>Sends the message back to the sender with a notice that it cannot be
+delivered. This is nearly exactly the message you get from a mail relay if the
 user does not exist.</para> 
 </listitem>
 </varlistentry>
@@ -3112,14 +3112,14 @@ in the trash folder whenever you exit &kmail;.</para></answer>
 <qandaentry>
 <question><para>Which version of &kmail; supports which version of
 <application>PGP</application>/<application>GnuPG</application>?</para></question>
-<answer><para>&kmail; 1.0.x: The unpatched version supports only
-<application>PGP</application> (version 2.x and 5.x). &kmail; will prefer
-version 5.x if both versions are installed. There is no way for the user to
+<answer><para>&kmail; 1.0.x: The unpatched version supports only
+<application>PGP</application> (version 2.x and 5.x). &kmail; will prefer
+version 5.x if both versions are installed. There is no way for the user to
 force &kmail; to use version 2.x in this case. There are patches for
 <application>PGP6</application> and <application>GnuPG</application> support at
-<ulink url="http://kmail.kde.org">&kmail;'s homepage</ulink>. If the GnuPG patch
+<ulink url="http://kmail.kde.org">&kmail;'s homepage</ulink>. If the GnuPG patch
 is applied, and <application>GnuPG</application> <emphasis>and</emphasis>
-<application>PGP</application> are installed, &kmail; will prefer
+<application>PGP</application> are installed, &kmail; will prefer
 <application>GnuPG</application>. There is no way to force &kmail; to use
 <application>PGP</application>.</para>
 <para>&kmail; 1.1.x: This has at least the improvements from the patches

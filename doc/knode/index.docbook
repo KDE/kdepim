@@ -260,7 +260,7 @@ Identities</link>.</para></tip>
 </sect3>
 
 <sect3 id="identity-email">
-<title><guilabel>Email address</guilabel></title
+<title><guilabel>Email address</guilabel></title>
 
 <para>The email adress you enter here will be used as sender in news articles,
 <abbrev>i.e.</abbrev> as actual address of the author, in conjunction with the
@@ -658,7 +658,7 @@ step by step to give you an overview over the possibilities of &knode;.</para>
 <sect3>
 <title><guilabel>Check for new articles automatically</guilabel></title>
 
-<para>If this box is checked, &knode tries to request new
+<para>If this box is checked, &knode; tries to request new
 articles from the server when selecting a newsgroup.
 These settings especially make sense when you use &knode; together with a local
 news server. Downloading the messages obviously only works when the server is
@@ -1306,7 +1306,7 @@ signature.</para></tip>
 following introductionary line.</para>
 
 <para>On Sat, 17 Jun 2000 17:42:32 +0200 Konqui wrote in
-<8igdg5.3vvijgt.3@lizard.physos.com>:
+&lt;8igdg5.3vvijgt.3@lizard.physos.com&gt;:
 </para>
 </example>
 </sect3>
@@ -1832,7 +1832,7 @@ articles.</para>
 <itemizedlist>
 
 <listitem><para> <inlinemediaobject><imageobject> <imagedata
-fileref="greyball.png" format="png"</imageobject> </inlinemediaobject> Already
+fileref="greyball.png" format="png"></imageobject> </inlinemediaobject> Already
 read articles are labeled with this symbol.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata
@@ -2826,7 +2826,7 @@ in the <guilabel>Name</guilabel> field.
 </step>
 
 <step>
-<para>Place the following settings <guilabel> 0 < days <= 3
+<para>Place the following settings <guilabel> 0 &lt; days &lt;= 3
 </guilabel>
 </para>
 </step>
@@ -4291,7 +4291,7 @@ do this for you. If the entry is there, but you don't have an item
 <application>Konsole</application> and run &knode; from there. Type</para>
 
 <screen width="40">
-<prompt>%</prompt> <userinput><command>knode</command> <option>&</option></userinput>
+<prompt>%</prompt> <userinput><command>knode &amp;</command></userinput>
 </screen>
 <para>If an error message appears that tells you that &knode; could not be
 started or found, please check whether the file <filename>knode</filename>
@@ -4438,7 +4438,7 @@ distributing a lot of information but also gossip and other stuff.  </para>
 <sect2>
 <title>... online-readers?</title>
 <para>An online-reader connects to a newsserver and gives you acces to its content.
- &knode is an online-reader.  You are reading your News and publishing your own
+ &knode; is an online-reader.  You are reading your News and publishing your own
  <glossterm>articles</glossterm>, while the online-reader stays connected.</para>
 </sect2>
 
@@ -4611,7 +4611,7 @@ sender turned his back to the recipient.
 <sect2 id="acronyms">
 <title>Often used acronyms</title>
 
-<para>When you are reading your news with &knode, you will really soon see some
+<para>When you are reading your news with &knode;, you will really soon see some
 strange combinations of letters in the <glossterm>articles</glossterm>.
 For a novice user it is difficult to guess the meaning of all the acronyms used.
 That's why we provide you a list
@@ -4835,7 +4835,7 @@ given) are posted to news groups regularly. Some of those groups are also listed
 here.
 </para>
 
-<sect1 id=infos-newsgroups>
+<sect1 id="infos-newsgroups">
 <title>Informative Newsgroups</title>
 
 <simplelist>
@@ -4853,7 +4853,7 @@ articles are posted frequently.
 </para>
 </sect1>
 
-<sect1 id=infos-testgroups>
+<sect1 id="infos-testgroups">
 <title>Test Groups</title>
 
 <para>The following groups were created especially for testing, i.e.
