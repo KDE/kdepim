@@ -85,9 +85,9 @@ private:
 	*/
 	static bool isPilotStreetHome()  { return fPilotStreetHome; };
 	static bool isPilotFaxHome()  { return fPilotFaxHome; };
-	static bool isDeleted(PilotAddress*addr);
-	static bool isArchived(PilotAddress*addr);
-	static bool isArchived(Addressee &addr);
+	static bool isDeleted(const PilotAddress*addr);
+	static bool isArchived(const PilotAddress*addr);
+	static bool isArchived(const Addressee &addr);
 	static bool makeArchived(Addressee &addr);
 
 
@@ -175,7 +175,20 @@ private:
                    C O P Y   R E C O R D S
  *********************************************************************/
 	int _compare(const QString & str1, const QString & str2) const;
-	bool _equal(PilotAddress *piAddress, Addressee &abEntry) const;
+	typedef enum eqFlagsType
+	{
+		eqFlagsName=0x1,
+		eqFlagsAdress=0x2,
+		eqFlagsPhones=0x4,
+		eqFlagsNote=0x8,
+		eqFlagsCategory=0x10,
+		eqFlagsFlags=0x20,
+		eqFlagsCustom=0x40,
+		eqFlagsAll=0xFFFF,
+		eqFlagsAlmostAll=eqFlagsName|eqFlagsAdress|eqFlagsPhones|eqFlagsNote|eqFlagsCustom
+	};
+	bool _equal(const PilotAddress *piAddress, const Addressee &abEntry,
+		enum eqFlagsType flags=eqFlagsAll) const;
 	void _copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry);
 	void _setPilotAddress(PilotAddress *toPilotAddr, const KABC::Address & abAddress);
 	void _copyPhone(Addressee &toAbEntry, PhoneNumber phone, QString palmphone);
@@ -235,7 +248,7 @@ private:
 	static const QString idString;
 	/** addresseeMap maps record ids to IDs of Addressees. This is used to speed up searching the local addressbook */
 	QMap < recordid_t, QString> addresseeMap;
-	RecordIDList syncedIds;
+	RecordIDList syncedIds, allIds;
 	static AddressBook* aBook;
 	AddressBook::Iterator abiter;
 	// for a local file, we need to obtain a saveTicket when opening the abook

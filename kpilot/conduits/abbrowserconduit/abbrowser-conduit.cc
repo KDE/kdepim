@@ -234,23 +234,20 @@ void AbbrowserConduit::readConfig()
 
 
 
-bool AbbrowserConduit::isDeleted(PilotAddress*addr)
+bool AbbrowserConduit::isDeleted(const PilotAddress*addr)
 {
-	FUNCTIONSETUP;
 	if (!addr) return true;
 	if (addr->isDeleted() && !addr->isArchived()) return true;
 	if (addr->isArchived()) return !fArchive;
 	return false;
 }
-bool AbbrowserConduit::isArchived(PilotAddress*addr)
+bool AbbrowserConduit::isArchived(const PilotAddress*addr)
 {
-	FUNCTIONSETUP;
 	if (addr && addr->isArchived()) return fArchive;
 	else return false;
 }
-bool AbbrowserConduit::isArchived(Addressee &addr)
+bool AbbrowserConduit::isArchived(const Addressee &addr)
 {
-	FUNCTIONSETUP;
 	return addr.custom(appString, flagString) == QString::number(SYNCDEL);
 }
 bool AbbrowserConduit::makeArchived(Addressee &addr)
@@ -714,6 +711,9 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	DEBUGCONDUIT << fname << ": conflictRes="<< fConflictResolution << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << fPilotStreetHome << ", PilotFaxHOme" << fPilotFaxHome << endl;
 #endif
+
+	if (!isFirstSync())
+		allIds=fDatabase->idList();
 
 	/* Note:
 	   if eCopyPCToHH or eCopyHHToPC, first sync everything, then lookup
@@ -1336,7 +1336,7 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 
 
 
-bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*, 
+bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*,
 	PilotAddress*)
 {
 	FUNCTIONSETUP;
@@ -1370,66 +1370,85 @@ int AbbrowserConduit::_compare(const QString & str1, const QString & str2) const
 }
 
 
-bool AbbrowserConduit::_equal(PilotAddress *piAddress, Addressee &abEntry) const
+bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &abEntry,
+	enum eqFlagsType flags) const
 {
 	FUNCTIONSETUP;
 	// empty records are never equal!
 	if (!piAddress) return false;
 	if (abEntry.isEmpty()) return false;
 	//  Archived records match anything so they won't be copied to the HH again
-	if (isArchived(piAddress) && isArchived(abEntry) ) return true;
+	if (flags & eqFlagsFlags)
+		if (isArchived(piAddress) && isArchived(abEntry) ) return true;
 
-	if(_compare(abEntry.familyName(), piAddress->getField(entryLastname)))
-		return false;
-	if(_compare(abEntry.givenName(), piAddress->getField(entryFirstname)))
-		return false;
-	if(_compare(abEntry.title(), piAddress->getField(entryTitle)))
-		return false;
-	if(_compare(abEntry.organization(), piAddress->getField(entryCompany)))
-		return false;
-	if(_compare(abEntry.note(), piAddress->getField(entryNote)))
-		return false;
+	if (flags & eqFlagsName)
+	{
+		if(_compare(abEntry.familyName(), piAddress->getField(entryLastname)))
+			return false;
+		if(_compare(abEntry.givenName(), piAddress->getField(entryFirstname)))
+			return false;
+		if(_compare(abEntry.title(), piAddress->getField(entryTitle)))
+			return false;
+		if(_compare(abEntry.organization(), piAddress->getField(entryCompany)))
+			return false;
+	}
+	if (flags & eqFlagsNote)
+		if(_compare(abEntry.note(), piAddress->getField(entryNote)))
+			return false;
 
-	QString cat = _getCatForHH(abEntry.categories(), piAddress->getCategoryLabel());
-	if(_compare(cat, piAddress->getCategoryLabel())) return false;
+	if (flags & eqFlagsNote)
+	{
+		QString cat = _getCatForHH(abEntry.categories(), piAddress->getCategoryLabel());
+		if(_compare(cat, piAddress->getCategoryLabel())) return false;
+	}
 
-	if(_compare(abEntry.phoneNumber(PhoneNumber::Work).number(),
-		piAddress->getPhoneField(PilotAddress::eWork, false))) return false;
-	if(_compare(abEntry.phoneNumber(PhoneNumber::Home).number(),
-		piAddress->getPhoneField(PilotAddress::eHome, false))) return false;
-	if(_compare(getOtherField(abEntry),
-		piAddress->getPhoneField(PilotAddress::eOther, false))) return false;
-	if(_compare(abEntry.preferredEmail(),
-		piAddress->getPhoneField(PilotAddress::eEmail, false))) return false;
-	if(_compare(getFax(abEntry).number(),
-		piAddress->getPhoneField(PilotAddress::eFax, false))) return false;
-	if(_compare(abEntry.phoneNumber(PhoneNumber::Cell).number(),
-		piAddress->getPhoneField(PilotAddress::eMobile, false))) return false;
+	if (flags & eqFlagsPhones)
+	{
+		if(_compare(abEntry.phoneNumber(PhoneNumber::Work).number(),
+			piAddress->getPhoneField(PilotAddress::eWork, false))) return false;
+		if(_compare(abEntry.phoneNumber(PhoneNumber::Home).number(),
+			piAddress->getPhoneField(PilotAddress::eHome, false))) return false;
+		if(_compare(getOtherField(abEntry),
+			piAddress->getPhoneField(PilotAddress::eOther, false))) return false;
+		if(_compare(abEntry.preferredEmail(),
+			piAddress->getPhoneField(PilotAddress::eEmail, false))) return false;
+		if(_compare(getFax(abEntry).number(),
+			piAddress->getPhoneField(PilotAddress::eFax, false))) return false;
+		if(_compare(abEntry.phoneNumber(PhoneNumber::Cell).number(),
+			piAddress->getPhoneField(PilotAddress::eMobile, false))) return false;
+	}
 
-	KABC::Address address = getAddress(abEntry);
-	if(_compare(address.street(), piAddress->getField(entryAddress)))
-		return false;
-	if(_compare(address.locality(), piAddress->getField(entryCity)))
-		return false;
-	if(_compare(address.region(), piAddress->getField(entryState)))
-		return false;
-	if(_compare(address.postalCode(), piAddress->getField(entryZip)))
-		return false;
-	if(_compare(address.country(), piAddress->getField(entryCountry)))
-		return false;
+	if (flags & eqFlagsAdress)
+	{
+		KABC::Address address = getAddress(abEntry);
+		if(_compare(address.street(), piAddress->getField(entryAddress)))
+			return false;
+		if(_compare(address.locality(), piAddress->getField(entryCity)))
+			return false;
+		if(_compare(address.region(), piAddress->getField(entryState)))
+			return false;
+		if(_compare(address.postalCode(), piAddress->getField(entryZip)))
+			return false;
+		if(_compare(address.country(), piAddress->getField(entryCountry)))
+			return false;
+	}
 
-	if(_compare(getCustomField(abEntry, 0),
-		piAddress->getField(entryCustom1))) return false;
-	if(_compare(getCustomField(abEntry, 1),
-		piAddress->getField(entryCustom2))) return false;
-	if(_compare(getCustomField(abEntry, 2),
-		piAddress->getField(entryCustom3))) return false;
-	if(_compare(getCustomField(abEntry, 3),
-		piAddress->getField(entryCustom4))) return false;
+	if (flags & eqFlagsCustom)
+	{
+		if(_compare(getCustomField(abEntry, 0),
+			piAddress->getField(entryCustom1))) return false;
+		if(_compare(getCustomField(abEntry, 1),
+			piAddress->getField(entryCustom2))) return false;
+		if(_compare(getCustomField(abEntry, 2),
+			piAddress->getField(entryCustom3))) return false;
+		if(_compare(getCustomField(abEntry, 3),
+			piAddress->getField(entryCustom4))) return false;
+	}
 
 	// if any side is marked archived, but the other is not, the two
 	// are not equal.
-	if (isArchived(piAddress) || isArchived(abEntry) ) return false;
+	if (flags & eqFlagsFlags)
+		if (isArchived(piAddress) || isArchived(abEntry) ) return false;
 
 	return true;
 }
@@ -1932,48 +1951,26 @@ Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) const
 		}
 	}
 
-	bool piFirstEmpty =(pilotAddress.getField(entryFirstname).isEmpty());
-	bool piLastEmpty =(pilotAddress.getField(entryLastname).isEmpty());
-	bool piCompanyEmpty =(pilotAddress.getField(entryCompany).isEmpty());
-
-	// return not found if either one is empty on one side but not on the other
-	if(piFirstEmpty && piLastEmpty && piCompanyEmpty)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": entry has empty first, last name and company! Will not search in Addressbook" << endl;
-#endif
-		return Addressee();
-	}
-
-	// for now just loop throug all entries; in future, probably better
-	// to create a map for first and last name, then just do O(1) calls
 	for(AddressBook::Iterator iter = aBook->begin(); iter != aBook->end(); ++iter)
 	{
 		Addressee abEntry = *iter;
-		// do quick empty check's
-		if(piFirstEmpty != abEntry.givenName().isEmpty() ||
-			piLastEmpty != abEntry.familyName().isEmpty() ||
-			piCompanyEmpty != abEntry.organization().isEmpty())
+		QString recID(abEntry.custom(appString, idString));
+		bool ok;
+		if (!recID.isEmpty() )
 		{
-			continue;
-		}
-		if(piFirstEmpty && piLastEmpty)
-		{
-			if(abEntry.organization() == pilotAddress.getField(entryCompany))
+			recordid_t rid = recID.toLong(&ok);
+			if (ok && rid)
 			{
-				return *iter;
+				if (rid==pilotAddress.id()) return abEntry;// yes, we found it
+				// skip this addressee, as it can an other corresponding address on the handheld
+				if (allIds.contains(rid)) continue;
 			}
 		}
-		else
-			// the first and last name must be equal; they are equal
-			// if they are both empty or the strings match
-			if(
-				((piLastEmpty && abEntry.familyName().isEmpty()) || (abEntry.familyName() == pilotAddress.getField(entryLastname))) &&
-				((piFirstEmpty && abEntry.givenName().isEmpty()) || (abEntry.givenName() == pilotAddress.getField(entryFirstname))) )
-			{
-				return *iter;
-			}
 
+		if (_equal(&pilotAddress, abEntry, eqFlagsAlmostAll))
+		{
+			return abEntry;
+		}
 	}
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Could not find any addressbook enty matching " << pilotAddress.getField(entryLastname) << endl;
