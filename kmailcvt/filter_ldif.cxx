@@ -45,7 +45,7 @@ void filter_ldif::import(filterInfo *info) {
      info->alert(name(),i18n("No Adressbook choosen"));
      return;
    }
-	 strcpy(file,_file.latin1());
+	 strcpy(file,_file.latin1());	//lukas: FIXME no strcpy nor .latin1() for filenames!!!
 
 	 QString from=i18n("from: "),to=i18n("to: ");
    from+="\t"; from+=file;
@@ -180,6 +180,7 @@ bool filter_ldif::convert(const char *filename, filterInfo *info) {
 		} else {
 			char msg[1024];
 			sprintf(msg,i18n("Can't open '%s' for reading").latin1(),filename);
+			//lukas: noooo! no sprintf nor .latin1() please!!!
       info->alert(caption,msg);
       return false;
 		}
@@ -237,7 +238,7 @@ QString filter_ldif::decodeBase64(QString input)
 
     // Remove any linefeeds, tabs and multiple space from decoded string and
     // convert to unicode.
-    result = QString::fromUtf8(result.latin1());
+    result = QString::fromUtf8(result.latin1());	//lukas: nah!!! FIXME
     result = result.simplifyWhiteSpace();
     return result;
 }
