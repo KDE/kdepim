@@ -251,7 +251,7 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
     QStringList completions = s_completion->substringCompletion( s );
     if ( completions.count() > 1 ) {
       m_previousAddresses = prevAddr;
-      setCompletedItems( completions );
+      setCompletedItems( completions, true );
     } else if ( completions.count() == 1 )
       setText( prevAddr + completions.first() );
 
@@ -422,6 +422,34 @@ QStringList AddresseeLineEdit::addresses()
   QApplication::restoreOverrideCursor();
 
   return result;
+}
+
+void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSuggest )
+{
+    QString txt = text();
+
+    if ( !items.isEmpty() &&
+         !(items.count() == 1 && txt == items.first()) )
+    {
+        if ( !txt.isEmpty() )
+            completionBox()->setCancelledText( txt );
+
+        completionBox()->setItems( items );
+        completionBox()->popup();
+
+        if ( autoSuggest )
+        {
+            int index = items.first().find( txt );
+            QString newText = items.first().mid( index );
+            setUserSelection(false);
+            setCompletedText(newText,true);
+        }
+    }
+    else
+    {
+        if ( completionBox() && completionBox()->isVisible() )
+            completionBox()->hide();
+    }
 }
 
 #include "addresseelineedit.moc"

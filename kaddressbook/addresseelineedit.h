@@ -72,6 +72,8 @@ class AddresseeLineEdit : public KLineEdit
     void stopLDAPLookup();
     QStringList addresses();
 
+    void setCompletedItems( const QStringList& items, bool autoSuggest );
+
     QString m_previousAddresses;
     bool m_useCompletion;
     bool m_completionInitialized;
