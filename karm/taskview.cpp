@@ -132,11 +132,6 @@ void TaskView::load()
     return;
   }
 
-  // TODO: If empty, ask if user wants to import tasks from another file
-  //if (_storage.isEmpty())
-  //{
-  //}
-
   // Register tasks with desktop tracker
   int task_idx = 0;
   for (Task* task = item_at_index(task_idx);
@@ -601,6 +596,8 @@ void TaskView::deletingTask(Task* deletedTask)
 void TaskView::iCalFileChanged(QString file)
 {
   kdDebug(5970) << "TaskView:iCalFileChanged: " << file << endl;
+  stopAllTimers();
+  _storage->save(this);
   load();
 }
 

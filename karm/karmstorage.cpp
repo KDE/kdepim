@@ -88,11 +88,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 
   // If KArm just instantiated, load calendar resources.
   if ( ! _calendar) _calendar = new KCal::CalendarResources();
-  else
-  {
-    // TODO: release lock here.
-    _calendar->close();
-  }
+  else _calendar->close();
 
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
@@ -646,7 +642,6 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
   // Meanwhile, we simply use a timer to delay the full-saving until the GUI
   // has updated, for better user feedback. Feel free to get rid of this
   // if/when implementing the faster saving (DF).
-
   task->taskView()->scheduleSave();
 }
 
