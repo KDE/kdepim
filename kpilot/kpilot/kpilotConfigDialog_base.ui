@@ -22,6 +22,9 @@ KPilot's settings.!</comment>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
         <widget class="QTabWidget" row="0" column="0">
             <property name="name">
                 <cstring>tabWidget</cstring>
@@ -48,15 +51,15 @@ KPilot's settings.!</comment>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox" row="0" column="0">
+                            <widget class="QCheckBox" row="0" column="1">
                                 <property name="name">
-                                    <cstring>fStartDaemonAtLogin</cstring>
+                                    <cstring>fKillDaemonOnExit</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Start HotSync daemon at login</string>
+                                    <string>S&amp;top daemon on exit</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QCheckBox" row="1" column="0">
@@ -70,15 +73,27 @@ KPilot's settings.!</comment>
                                     <string>&lt;qt&gt;Places a HotSync icon in the system tray, which shows the daemon's status and allows you to configure KPilot.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="QCheckBox" row="2" column="0">
+                            <widget class="QCheckBox" row="0" column="0">
                                 <property name="name">
-                                    <cstring>fKillDaemonOnExit</cstring>
+                                    <cstring>fStartDaemonAtLogin</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>S&amp;top daemon on exit</string>
+                                    <string>&amp;Start HotSync daemon at login</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="1" column="1">
+                                <property name="name">
+                                    <cstring>fQuitAfterSync</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Quit &amp;after HotSync</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Stop both KPilot and the KPilot daemon after the HotSync finishes.
+This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>

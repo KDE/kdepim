@@ -86,6 +86,7 @@ public:
 	BoolProperty(StartDaemonAtLogin)
 	BoolProperty(DockDaemon)
 	BoolProperty(KillDaemonOnExit)
+	BoolProperty(QuitAfterSync)
 
 	/* Sync tab */
 	IntProperty(SyncType)

@@ -11,6 +11,10 @@ TODO LIST (Moved again to the file TODO)
   Q_OBJECT macros. Reduced space in widget some. Fixed void return 0;
   Fixed improper AboutData in todo conduit.
 * New-style for abbrowser. Minor == vs = mixup. 
+* Shrunk margin for kpilot config dialog. Use the available charsets from
+  KDE instead of our own list. Added a quit-after-sync option.
+
+
 
 2003-6-29  Adriaan de Groot
 * Added some code validation support to plugin.h
