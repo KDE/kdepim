@@ -193,16 +193,17 @@ class ResourceXMLRPC : public ResourceCalendar
     void addEventFinished( const QValueList<QVariant>&, const QVariant& );
     void updateEventFinished( const QValueList<QVariant>&, const QVariant& );
     void deleteEventFinished( const QValueList<QVariant>&, const QVariant& );
+    void loadEventCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
 
     void listTodosFinished( const QValueList<QVariant>&, const QVariant& );
     void addTodoFinished( const QValueList<QVariant>&, const QVariant& );
     void updateTodoFinished( const QValueList<QVariant>&, const QVariant& );
     void deleteTodoFinished( const QValueList<QVariant>&, const QVariant& );
+    void loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 
   protected:
-
     void doClose();
     virtual void update( IncidenceBase* incidence );
 

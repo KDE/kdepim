@@ -25,7 +25,9 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmdcodec.h>
+#include <kstandarddirs.h>
 #include <kstringhandler.h>
+#include <libkdepim/kpimprefs.h>
 
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
@@ -37,6 +39,8 @@ using namespace KABC;
 static const QString SearchContactsCommand = "addressbook.boaddressbook.search";
 static const QString AddContactCommand = "addressbook.boaddressbook.write";
 static const QString DeleteContactCommand = "addressbook.boaddressbook.delete";
+static const QString LoadCategoriesCommand = "addressbook.boaddressbook.categories";
+static const QString LoadCustomFieldsCommand = "addressbook.boaddressbook.customfields";
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
   : Resource( config ), mServer( 0 )
@@ -163,9 +167,18 @@ bool ResourceXMLRPC::asyncLoad()
   args.insert( "filter", "" );
   args.insert( "sort", "" );
   args.insert( "order", "" );
+  args.insert( "include_users", "calendar" );
 
   mServer->call( SearchContactsCommand, args,
                  this, SLOT( listContactsFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+
+  mServer->call( LoadCategoriesCommand, QVariant( false, 0 ),
+                 this, SLOT( loadCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+
+  mServer->call( LoadCustomFieldsCommand, QVariant( QValueList<QVariant>() ),
+                 this, SLOT( loadCustomFieldsFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   return true;
@@ -260,7 +273,6 @@ void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
                                            const QVariant& )
 {
   mUidMap.clear();
-  mCategoryMap.clear();
 
   QValueList<QVariant> contactList = mapList[ 0 ].toList();
   QValueList<QVariant>::Iterator contactIt;
@@ -513,6 +525,29 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
     args.insert( "email_home", addr.emails()[ 1 ] );
     args.insert( "email_home_type", "internet" );
   }
+
+
+  QStringList customFields = addr.customs();
+  QStringList::Iterator it;
+  for ( it = customFields.begin(); it != customFields.end(); ++it ) {
+    int colon = (*it).find( ":" );
+    QString identifier = (*it).left( colon );
+    int dash = identifier.find( "-" );
+    QString app = identifier.left( dash );
+    QString name = identifier.mid( dash + 1 );
+    QString value = (*it).mid( colon + 1 );
+    if ( value.isEmpty() )
+      continue;
+
+    if ( app == "XMLRPCResource" )
+      args.insert( name, value );
+  }
+
+  KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
+  if ( config.hasGroup( addr.preferredEmail() ) ) {
+    config.setGroup( addr.preferredEmail() );
+    args.insert( "freebusy_url", config.readEntry( "url" ) );
+  }
 }
 
 void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee &addr, QString &uid )
@@ -635,17 +670,62 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
       QMap<QString, QVariant> categories = it.data().toMap();
       QMap<QString, QVariant>::Iterator it;
 
-      for ( it = categories.begin(); it != categories.end(); ++it ) {
-        mCategoryMap.insert( it.data().toString(), it.key().toInt() );
+      for ( it = categories.begin(); it != categories.end(); ++it )
         addr.insertCategory( it.data().toString() );
-      }
     }
+  }
+
+  QMap<QString, QString>::Iterator cfIt;
+  for ( cfIt = mCustomFieldsMap.begin(); cfIt != mCustomFieldsMap.end(); ++cfIt ) {
+    if ( args[ cfIt.key() ].toString().isEmpty() )
+      continue;
+
+    if ( cfIt.key() == "freebusy_url" ) {
+      KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
+      config.setGroup( addr.preferredEmail() );  
+      config.writeEntry( "url", args[ cfIt.key() ].toString() );
+      config.sync();
+    } else
+      addr.insertCustom( "XMLRPCResource", cfIt.key(), cfIt.data() );
   }
 
   if ( !addrOne.isEmpty() )
     addr.insertAddress( addrOne );
   if ( !addrTwo.isEmpty() )
     addr.insertAddress( addrTwo );
+}
+
+void ResourceXMLRPC::loadCategoriesFinished( const QValueList<QVariant> &mapList,
+                                             const QVariant& )
+{
+  mCategoryMap.clear();
+
+  QMap<QString, QVariant> map = mapList[ 0 ].toMap();
+  QMap<QString, QVariant>::Iterator it;
+
+  KPimPrefs prefs( "kaddressbookrc" );
+  for ( it = map.begin(); it != map.end(); ++it ) {
+    mCategoryMap.insert( it.data().toString(), it.key().toInt() );
+
+    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() ) {
+      prefs.mCustomCategories.append( it.data().toString() );
+    }
+  }
+
+  prefs.usrWriteConfig();
+  prefs.config()->sync();
+}
+
+void ResourceXMLRPC::loadCustomFieldsFinished( const QValueList<QVariant> &mapList,
+                                               const QVariant& )
+{
+  mCustomFieldsMap.clear();
+
+  QMap<QString, QVariant> map = mapList[ 0 ].toMap();
+  QMap<QString, QVariant>::Iterator it;
+
+  for ( it = map.begin(); it != map.end(); ++it )
+    mCustomFieldsMap.insert( it.key(), it.data().toString() );
 }
 
 #include "kabc_resourcexmlrpc.moc"

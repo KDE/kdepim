@@ -10,11 +10,11 @@ noinst_HEADERS = kabc_resourcexmlrpcconfig.h kcal_resourcexmlrpcconfig.h
 lib_LTLIBRARIES = libkabc_xmlrpc.la libkcal_xmlrpc.la
 libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc
+libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc -lkdepim
 
 libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la
+libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdepim
 
 kabcincludedir = $(includedir)/kabc
 kabcinclude_HEADERS = kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h

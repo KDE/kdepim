@@ -83,6 +83,8 @@ class ResourceXMLRPC : public Resource
     void addContactFinished( const QValueList<QVariant>&, const QVariant& );
     void updateContactFinished( const QValueList<QVariant>&, const QVariant& );
     void deleteContactFinished( const QValueList<QVariant>&, const QVariant& );
+    void loadCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
+    void loadCustomFieldsFinished( const QValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 
@@ -106,6 +108,7 @@ class ResourceXMLRPC : public Resource
     QMap<QString, QString> mUidMap;
     QMap<QString, int> mCategoryMap;
     QMap<QString, int> mAddrTypes;
+    QMap<QString, QString> mCustomFieldsMap;
 
     KXMLRPC::Server *mServer;
     bool mSyncComm;

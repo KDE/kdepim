@@ -35,6 +35,7 @@
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <kurl.h>
+#include <libkdepim/kpimprefs.h>
 
 #include "libkcal/vcaldrag.h"
 #include "libkcal/vcalformat.h"
@@ -93,10 +94,12 @@ extern "C"
 static const QString SearchEventsCommand = "calendar.bocalendar.search";
 static const QString AddEventCommand = "calendar.bocalendar.write";
 static const QString DeleteEventCommand = "calendar.bocalendar.delete";
+static const QString LoadEventCategoriesCommand = "calendar.bocalendar.categories";
 
 static const QString SearchTodosCommand = "infolog.boinfolog.search";
 static const QString AddTodoCommand = "infolog.boinfolog.write";
 static const QString DeleteTodoCommand = "infolog.boinfolog.delete";
+static const QString LoadTodoCategoriesCommand = "infolog.boinfolog.categories";
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
   : ResourceCalendar( config ), mServer( 0 ), mLock( 0 )
@@ -198,6 +201,15 @@ bool ResourceXMLRPC::load()
 
   mServer->call( SearchTodosCommand, args,
                  this, SLOT( listTodosFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+
+  mServer->call( LoadEventCategoriesCommand, QVariant( false, 0 ),
+                 this, SLOT( loadEventCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+
+//  mServer->call( LoadTodoCategoriesCommand, QVariant( false, 0 ),
+  mServer->call( LoadTodoCategoriesCommand, QVariant( QMap<QString, QVariant>() ),
+                 this, SLOT( loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   return true;
@@ -687,6 +699,25 @@ void ResourceXMLRPC::addEventFinished( const QValueList<QVariant>& list,
   exit_loop();
 }
 
+void ResourceXMLRPC::loadEventCategoriesFinished( const QValueList<QVariant> &mapList, const QVariant& )
+{
+  mEventCategoryMap.clear();
+
+  QMap<QString, QVariant> map = mapList[ 0 ].toMap();
+  QMap<QString, QVariant>::Iterator it;
+
+  KPimPrefs prefs( "korganizerrc" );
+  for ( it = map.begin(); it != map.end(); ++it ) {
+    mEventCategoryMap.insert( it.data().toString(), it.key().toInt() );
+
+    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() )
+      prefs.mCustomCategories.append( it.data().toString() );
+  }
+
+  prefs.usrWriteConfig();
+  prefs.config()->sync();
+}
+
 void ResourceXMLRPC::listTodosFinished( const QValueList<QVariant>& list,
                                         const QVariant& )
 {
@@ -744,6 +775,25 @@ void ResourceXMLRPC::addTodoFinished( const QValueList<QVariant>& list,
   mTodoUidMap.insert( id.toString(), QString::number( uid ) );
 
   exit_loop();
+}
+
+void ResourceXMLRPC::loadTodoCategoriesFinished( const QValueList<QVariant> &mapList, const QVariant& )
+{
+  mTodoCategoryMap.clear();
+
+  QMap<QString, QVariant> map = mapList[ 0 ].toMap();
+  QMap<QString, QVariant>::Iterator it;
+
+  KPimPrefs prefs( "korganizerrc" );
+  for ( it = map.begin(); it != map.end(); ++it ) {
+    mTodoCategoryMap.insert( it.data().toString(), it.key().toInt() );
+
+    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() )
+      prefs.mCustomCategories.append( it.data().toString() );
+  }
+
+  prefs.usrWriteConfig();
+  prefs.config()->sync();
 }
 
 void ResourceXMLRPC::fault( int error, const QString& errorMsg,
