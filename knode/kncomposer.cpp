@@ -455,7 +455,7 @@ bool KNComposer::hasValidData()
     }
   }
 
-  if (longLine)
+  if ( longLine && ( (v_iew->e_dit->wordWrap() == QMultiLineEdit::NoWrap) ) )
     if (!(KMessageBox::warningYesNo( this, i18n("Your article contains lines longer than 80 characters.\nDo you want to re-edit the article or send it anyway?"),
                                      QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
       return false;
@@ -558,12 +558,26 @@ void KNComposer::applyChanges()
       text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
   }
 
-  //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
-  //assemble the text line by line
-  QString tmp;
-  for(int i=0; i < v_iew->e_dit->numLines(); i++)
-    tmp+=v_iew->e_dit->textLine(i)+"\n";
-  text->fromUnicodeString(tmp);
+  if ( v_iew->e_dit->wordWrap() != QMultiLineEdit::NoWrap ) {
+      //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
+      //assemble the text line by line
+      QString tmp, line;
+      
+      int num_lines = v_iew->e_dit->numLines();
+      for (int i = 0; i < num_lines; ++i) {
+          int lastLine = 0;
+          line = v_iew->e_dit->textLine(i);
+          for (int j = 0; j < (int)line.length(); ++j) {
+              if (v_iew->e_dit->lineOfChar(i, j) > lastLine) {
+                  lastLine = v_iew->e_dit->lineOfChar(i, j);
+                  tmp += '\n';
+              }
+              tmp += line[j];
+          }
+          if (i + 1 < num_lines) tmp += '\n';
+      }  
+      text->fromUnicodeString(tmp);
+  }
 
   //text is set and all attached contents have been assembled => now set lines
   a_rticle->lines()->setNumberOfLines(a_rticle->lineCount());
