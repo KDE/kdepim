@@ -89,7 +89,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 #ifdef BRUTE_FORCE
 		if (fHandle->getNextDatabase(i,&db) < 1)
 		{
-			DEBUGDAEMON << fname << ": No database index " << i << endl;
+			DEBUGCONDUIT << fname << ": No database index " << i << endl;
 			continue;
 		}
 #endif
@@ -98,7 +98,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		dbindex = db.index + 1;
 
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Read database " << db.name << endl;
+		DEBUGCONDUIT << fname << ": Read database " << db.name << endl;
 #endif
 
 		// Let the Pilot User know what's happening
@@ -124,6 +124,11 @@ BackupAction::BackupAction(KPilotDeviceLink * p, bool full) :
 
 	fDatabaseDir = KGlobal::dirs()->saveLocation("data",
 		CSL1("kpilot/DBBackup/"));
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Will write to " << fDatabaseDir << endl;
+	DEBUGCONDUIT << fname << ": Full sync? " << full << endl;
+#endif
 }
 
 /* virtual */ QString BackupAction::statusString() const
@@ -216,7 +221,7 @@ static inline void initNoBackup(QStringList &dbnames,
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Will skip databases "
+	DEBUGCONDUIT << fname << ": Will skip databases "
 		<< dbnames.join(",") << endl;
 	QString creatorids;
 	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
@@ -224,7 +229,7 @@ static inline void initNoBackup(QStringList &dbnames,
 	{
 		creatorids.append(CSL1("[%1]").arg(*i,0,16));
 	}
-	DEBUGDAEMON << fname << ": Will skip creators " << creatorids << endl;
+	DEBUGCONDUIT << fname << ": Will skip creators " << creatorids << endl;
 #endif
 }
 
@@ -232,16 +237,21 @@ static inline void initNoBackup(QStringList &dbnames,
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": This Pilot user's name is \""
-		<< fHandle->getPilotUser()->getUserName() << "\"" << endl;
-#endif
-
 	fBackupDir =
 		fDatabaseDir +
 		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
 		CSL1("/");
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": This Pilot user's name is \""
+		<< fHandle->getPilotUser()->getUserName() << "\"" << endl;
+	DEBUGCONDUIT << fname
+		<< ": Using backup dir: " << fBackupDir << endl;
+	DEBUGCONDUIT << fname
+		<< ": Full Backup? " << fFullBackup << endl;
+#endif
+
 
 	if (fFullBackup)
 	{
@@ -282,7 +292,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	if (!(fi.exists() && fi.isDir()))
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGCONDUIT << fname
 			<< ": Need to create backup directory for user "
 			<< fHandle->getPilotUser()->getUserName() << endl;
 #endif
@@ -320,7 +330,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	if (openConduit() < 0)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGCONDUIT << fname
 			<< ": openConduit failed. User cancel?" << endl;
 #endif
 
@@ -335,7 +345,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	if (res < 0)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Backup complete." << endl;
+		DEBUGCONDUIT << fname << ": Backup complete." << endl;
 #endif
 
 		if (fFullBackup)
@@ -351,13 +361,13 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Checking database " << info.name
+	DEBUGCONDUIT << fname << ": Checking database " << info.name
 		<< " [" << QString::number(info.creator,16) << "]" << endl;
 #endif
 	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Skipping database " << info.name
+		DEBUGCONDUIT << fname << ": Skipping database " << info.name
 			<< endl;
 #endif
 		QString s = i18n("Skipping %1")
@@ -390,11 +400,6 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Looking in directory " << fBackupDir << endl;
-#endif
-
 	QString databaseName(QString::fromLatin1(info->name));
 	if (!fFullBackup)
 	{
@@ -408,13 +413,21 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 			{
 				// Now walk through all modified records
 				int index=0;
+				unsigned int count = 0;
 				PilotRecord*rec=serial->readNextModifiedRec(&index);
 				while (rec)
 				{
+					count++;
 					local->writeRecord(rec);
 					KPILOT_DELETE(rec);
 					rec=serial->readNextModifiedRec(&index);
 				}
+#ifdef DEBUG
+				DEBUGCONDUIT << fname << ": Updated " << count << " records "
+					<< "in DB " << info->name << endl;
+#endif
+				serial->cleanup();
+				serial->resetSyncFlags();
 				KPILOT_DELETE(local);
 				KPILOT_DELETE(serial);
 				return true;
@@ -482,14 +495,14 @@ FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": File list has "
+	DEBUGCONDUIT << fname << ": File list has "
 		<< fList.  count() << " entries" << endl;
 
 	QStringList::ConstIterator i;
 
 	for (i = fList.begin(); i != fList.end(); ++i)
 	{
-		DEBUGDAEMON << fname << ": " << *i << endl;
+		DEBUGCONDUIT << fname << ": " << *i << endl;
 	}
 #endif
 }
@@ -508,7 +521,7 @@ FileInstallAction::~FileInstallAction()
 	fDBIndex = 0;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGCONDUIT << fname
 		<< ": Installing " << fList.count() << " files" << endl;
 #endif
 
@@ -541,7 +554,7 @@ FileInstallAction::~FileInstallAction()
 	Q_ASSERT((unsigned) fDBIndex <= fList.count());
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGCONDUIT << fname
 		<< ": Installing file index "
 		<< fDBIndex << " (of " << fList.count() << ")" << endl;
 #endif
@@ -549,7 +562,7 @@ FileInstallAction::~FileInstallAction()
 	if ((!fList.count()) || ((unsigned) fDBIndex >= fList.count()))
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGCONDUIT << fname
 			<< ": Peculiar file index, bailing out." << endl;
 #endif
 		KPILOT_DELETE(fTimer);
@@ -565,7 +578,7 @@ FileInstallAction::~FileInstallAction()
 	fDBIndex++;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Installing file " << filePath << endl;
+	DEBUGCONDUIT << fname << ": Installing file " << filePath << endl;
 #endif
 
 	QString m = i18n("Installing %1").arg(fileName);
@@ -639,7 +652,7 @@ CleanupAction::~CleanupAction()
 {
 #ifdef DEBUG
 	FUNCTIONSETUP;
-	DEBUGDAEMON << fname
+	DEBUGCONDUIT << fname
 		<< ": Deleting @" << (long)this << endl;
 #endif
 }

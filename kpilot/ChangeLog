@@ -5,7 +5,8 @@
 * [kpilotConfigDialog] Added UI for screenlockSecure option. Docs, too.
 * [kpilot] Changed hotSync button to one with a little dropdown
   menu, thanks to Jörn. [kpilotConfig] String fix for outdated config.
-  [probeDialog] Fixed up comments.
+  [probeDialog] Fixed up comments. [hotSync] Normalized debugging output.
+  [pilotDaemon] Fixed backwards logic.
 
 2004-04-26  Adriaan de Groot
 * [kpilot.kcfg] Added [a68k] as default skip in the database list.
