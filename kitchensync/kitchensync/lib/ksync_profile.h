@@ -19,10 +19,10 @@ namespace KSync {
     class Profile {
     public:
         typedef QMap<QString,  QString> PathMap;
-        /** some kewl operators */
         bool operator==( const Profile& );
 //        bool operator!=( const Profile& a) { return !(a == *this); };
         typedef QValueList<Profile> ValueList;
+
         /**
          * constructs an empty Profile
          * and generates a uid
@@ -40,45 +40,50 @@ namespace KSync {
         ~Profile();
 
         /**
-         * returns the user given name of the profile
+         * @return the user given name of the profile
          */
         QString name()const;
 
         /**
-         * returns the uid of the Profile
+         * @return the uid of the Profile
          */
         QString uid() const;
 
         /**
-         * returns a name of a Pixmap the use
+         * @return a name of a Pixmap the use
          * chose to associate
          */
         QString pixmap() const;
 
         /**
          * set the name
+	 * @param name the name of the Profile
          */
         void setName( const QString& name ) ;
 
         /**
          * set the uid
+	 * @param id the id of the Profile
          */
         void setUid( const QString& id );
 
         /**
          * set the Pixmap name
+	 * @param pix The pixmap
          */
-        void setPixmap( const QString& );
+        void setPixmap( const QString& pix);
+	
         /**
-         * returns the ManipulatorParts to be loaded for
+         * @return the ManipulatorParts to be loaded for
          * the profile
          */
         ManPartService::ValueList manParts()const;
 
         /**
          * set which parts to be loaded
+	 * @param lst The list of ManPartServices
          */
-        void setManParts( const ManPartService::ValueList& );
+        void setManParts( const ManPartService::ValueList& lst);
 
         /**
          * Parts can save the file location inside a Profile
@@ -89,6 +94,8 @@ namespace KSync {
         /**
          * sets the path for a partName
          * to path
+	 * @partName The part name
+	 * @path the path
          */
         void setPath( const QString& partName,  const QString& path );
 

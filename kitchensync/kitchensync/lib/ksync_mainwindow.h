@@ -61,28 +61,88 @@ namespace KSync {
 
     enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
 
+    /**
+     * The KitchenSync UI Shell
+     * It's the MainWindow of the application. It'll load all parts
+     * and do the basic communication between all parts
+     */
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT
     public:
+    
+	/**
+	 * The KSyncMainWindow C'tor
+	 * @param widget parent widget
+	 * @param name The name
+	 * @param flags the flags
+	 */
         KSyncMainWindow(QWidget *widget =0l,
                         const char *name = 0l,
                         WFlags f = WType_TopLevel );
         ~KSyncMainWindow();
 
+	/**
+	 * @return the parent for KPart widgets
+	 */
         QWidget* widgetStack();
+	
+	/**
+	 * @return the SystemTray of KitchenSync
+	 */
         KSyncSystemTray *tray();
+	
+	/**
+	 * @return the KitchenSync KonnectorManager
+	 */
         KonnectorManager*  konnector();
 
+	/**
+	 * REMOVE
+	 * @deprecated
+	 */
         QString  currentId()const;
+	
+	/**
+	 * REMOVE
+	 * @deprecated
+	 */
         QMap<QString,QString> ids()const;
-
+	
+	/**
+	 * @return the currently enabled Profile
+	 */
         Profile currentProfile()const;
+	
+	/**
+	 * @return access to the profilemanager
+	 * @FIXME make const pointer to const object
+	 */
         ProfileManager *profileManager()const;
+	
+	/**
+	 * @return the current KonnectorProfile	
+	 */
         KonnectorProfile konnectorProfile() const;
+	
+	/**
+	 * @return the KonnectorProfileManager
+	 * @FIXME make const pointer to const object
+	 */
         KonnectorProfileManager* konnectorManager() const;
 
+	/**
+	 * @return a SyncUi
+	 */
         SyncUi* syncUi();
+	
+	/**
+	 * @return the prefered syncAlgorithm of KitchenSync	 
+	 */
         SyncAlgorithm* syncAlgorithm();
+	
+	/**
+	 * @return the all loaded ManipulatorParts
+	 */
         const QPtrList<ManipulatorPart> parts()const;
 
 
@@ -100,18 +160,85 @@ namespace KSync {
 
 
     signals:
+	/**
+	 * This signal gets emitted whenever the Profile
+	 * is changed.
+	 * @param oldProfile the previously enabled profile
+	 */
         void profileChanged(const Profile& oldProfile   );
-        void konnectorChanged( const UDI& );
+	
+	/**
+	 * This signal gets emitted whenever the Profile
+	 * is changed.
+	 * @param udi The old UDI of the previously enabled profile
+	 */
+        void konnectorChanged( const UDI& udi);
+	
+	/**
+	 * This signals gets emitted on KonnectorProfile switch.
+	 * @param oldProf the old Profile
+	 */
         void konnectorChanged( const KonnectorProfile& oldProf );
-        void konnectorProgress( const UDI&, const Progress& );
-        void konnectorError( const UDI&, const Error& );
-        void konnectorDownloaded( const UDI&, Syncee::PtrList );
+	
+	/**
+	 * signal emitted when progress from the konnectorProgress arrived
+	 * @param udi The UDI of the KonnectorPlugin
+	 * @param prog The Progress
+	 */
+        void konnectorProgress( const UDI& udi , const Progress& prog);
+	
+	/**
+	 * @param UDI the UDI of the KonnectorPlugin
+	 * @param err the error
+	 */
+        void konnectorError( const UDI&, const Error& err);
+	
+	/**
+	 * This signal gets emitted when the KonnectorManager
+	 * downloaded a list of files
+	 * @param udi The UDI where the Syncee comes from
+	 * @param lst The downloaded Syncee
+	 */
+        void konnectorDownloaded( const UDI& udi, Syncee::PtrList lst);
+	
+	/**
+	 * Whenever the currently activated parts changed
+	 * @param newPart the newly activated part
+	 */
         void partChanged( ManipulatorPart* newPart );
-        void partProgress( ManipulatorPart* part, const Progress& );
-        void partError( ManipulatorPart* part, const Error& );
+	
+	/**
+	 * progress coming from one part
+	 * @param part where the progress comes from, 0 if from MainWindow
+	 * @param prog The progress
+	 */
+        void partProgress( ManipulatorPart* part, const Progress& prog);
+	
+	/**
+	 * error coming from one part
+	 * @param part where the error comes from, 0 if from MainWindow
+	 * @param err The error
+	 */
+        void partError( ManipulatorPart* part, const Error& error);
+	
+	/**
+	 * emitted when ever sync starts
+	 */
         void startSync();
+	
+	/**
+	 * emitted when a part is asked to sync
+	 */
         void startSync(ManipulatorPart*);
+	
+	/**
+	 * emitted when done with syncing
+	 */
         void doneSync();
+	
+	/**
+	 * emitted when one part is done with syncing
+	 */
         void doneSync(ManipulatorPart* );
 
    private slots:

@@ -44,7 +44,9 @@ class QPoint;
 class KPopupMenu;
 
 namespace KSync {
-
+    /**
+     * Our SystemTray but currently not really used
+     */
     class KSyncSystemTray : public KSystemTray {
 
         Q_OBJECT

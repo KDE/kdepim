@@ -11,7 +11,8 @@
 namespace KSync {
    /**
     * a ManPartServive saves a converted
-    * KService::Ptr
+    * KService::Ptr of a ManipulatorPart
+    * @see KService::Ptr
     */
     class ManPartService {
     public:

@@ -1,4 +1,4 @@
-/**
+/*
 † † This file is part of the OPIE Project
 † † Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
 † †                2002 Maximilian Reiﬂ <harlekin@handhelds.org>
@@ -50,8 +50,9 @@ namespace KSync {
   /* forward declaration */
     class PartBar;
     class ManipulatorPart;
+  
   /**
-   * an member of the PartBar
+   * An item for the PartBar
    */
   class PartBarItem : public QListBoxPixmap
     {
@@ -73,16 +74,17 @@ namespace KSync {
 
 
       /**
-       * returns the width of this item.
+       * @return the width of this item.
        */
       virtual int width( const QListBox * ) const;
+      
       /**
-       * returns the height of this item.
+       * @return the height of this item.
        */
       virtual int height( const QListBox * ) const;
 
       /**
-       * returns the pixmap.
+       * return the pixmap.
        */
       virtual const QPixmap * pixmap() const {
 	return m_Pixmap;
@@ -128,6 +130,7 @@ namespace KSync {
        * removes all items
        */
       virtual void clear();
+      
       /**
        * @return a size hint.
        */

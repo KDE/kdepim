@@ -21,13 +21,42 @@
 #define ksharedfiledevice_h
 #include <qfile.h>
 
+/**
+ * This class behaves like a QFile
+ * on open it'll try to lock the file
+ * via the KDED Module
+ *
+ * @version 0.1
+ * @author Zecke
+ */
 class KSharedFileDevice : public QFile 
 {
  public:
+ 
+  /**
+   * Simple c'tor
+   */
   KSharedFileDevice( );
+  
+  /**
+   * Simple c'tor with a filename as parameter
+   * @param name The filename
+   */
   KSharedFileDevice(const QString &name );
   ~KSharedFileDevice();
+  
+  /**
+   * Try to open the file it'll also
+   * lock through the KDED Module
+   * @param mode the mode to open the file
+   * @return failure
+   * @see QFile::open
+   */
   virtual bool open( int mode );
+  
+  /**
+   * This will close and unlock the file   
+   */
   virtual void close();
 };
 #endif

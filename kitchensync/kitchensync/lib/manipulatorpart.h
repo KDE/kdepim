@@ -59,43 +59,100 @@ namespace KSync {
 
     /**
      * the ManipulatorPart is loaded into the KitchenSync
-     * Shell. Every ManipulatorPart can provide a KPart
+     * Shell. Every ManipulatorPart can provide a QWidget
      * and a config dialog.
+     * It can access the MainWindow through core()
+     * and will be asked to sync!
+     * It needs to emit done() when ready with syncing
      */
     class ManipulatorPart : public KParts::Part {
         Q_OBJECT
     public:
+	/**
+	 * The simple constructor
+	 * @param parent The parent
+	 * @param name The name of the manipulator part
+	 */
         ManipulatorPart(QObject *parent = 0, const char *name  = 0 );
         virtual ~ManipulatorPart();
 
-        // the Type this Part understands/ is able to interpret
+        /**
+	 * @return the type of this part
+	 * for example like "Addressbook"
+	 */
         virtual QString type()const = 0;
 
 
-        /* progress made 0-100 */
+        /**
+	 * @return the progress made 0-100	 
+	 */
         virtual int syncProgress()const;
-        /* the sync status */
+        
+	/**
+	 * the sync status 
+	 */
         virtual int syncStatus()const;
 
-
+	/**
+	 * @return a user translatable string
+	 */
         virtual QString name()const = 0;
+	
+	/**
+	 * @return a short description
+	 */
         virtual QString description()const = 0;
+	
+	/**
+	 * @return a pixmap for this part
+	 */
         virtual QPixmap *pixmap() = 0;
+	
+	/**
+	 * return a iconName
+	 */
         virtual QString iconName() const = 0;
 
+	/**
+	 * if the partIsVisible 
+	 */
         virtual bool partIsVisible()const;
+	
+	/**
+	 * if the config part is visible
+	 */
         virtual bool configIsVisible()const;
+	
+	/**
+	 * @return if the part canSync data :)
+	 */
         virtual bool canSync()const;
 
+	/**
+	 * @return a config widget. Always create a new one
+	 * the ownership will be transferred
+	 */
         virtual QWidget *configWidget();
 
-        // take items
+        /**
+	 * if you want to sync implement that method
+	 * After successfully syncing you need to call done()
+	 * which will emit a signal
+	 * @param in The Syncee List coming from a KonnectorPlugin
+	 * @param out The Syncee List which will be written to the Konnector
+	 */
         virtual void sync( const Syncee::PtrList& in, Syncee::PtrList& out );
     protected:
+    
+	/**
+	 * @return access to the shell
+	 */
         KSyncMainWindow* core();
         KSyncMainWindow* core()const;
 
-        /* during sync */
+        /**
+	 * call this whenever you make progress
+	 */
         void progress( int );
 
     protected slots:
@@ -111,6 +168,10 @@ namespace KSync {
         void sig_syncStatus( ManipulatorPart*, int );
 
     protected:
+	/**
+	 * Connect to the PartChange signal
+	 * @see MainWindow for the slot signature
+	 */ 	
         /* ManipulatorPart* old,ManipulatorPart* ne */
         void connectPartChange( const char* slot);
 

@@ -60,7 +60,7 @@ KShareFileModule::~KShareFileModule()
 {
   delete d;
 }
-/**
+/*
  * We want to manage a new file
  * Check if allready have it our cache
  * and if not insert it
@@ -86,7 +86,8 @@ void KShareFileModule::removeInterestIn(const QString &fileName )
   }
   d->mutex.unlock();
 }
-/** Look if its inside the modul
+/*
+ Look if its inside the modul
 
  */
 bool KShareFileModule::readShareFile(const QString &fileName )

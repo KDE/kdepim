@@ -15,12 +15,35 @@ class KonnectorWizardOutro;
 namespace KSync{
     class KonnectorManager;
     class ConfigWidget;
+
+    /**
+     * The KonnectorWizzard is a KWizard where
+     * you can configure a KonnectorProfile
+     * including setting the name and creating 
+     * a Kapabilities
+     * @short a small wizard to create a KonnectorProfile
+     */
     class KonnectorWizard : public KWizard {
         Q_OBJECT
     public:
+    
+	/**
+	 * Constructor for creating a new KonnectorProfile
+	 * @param manager the KonnectorManager to be used
+	 */
         KonnectorWizard( KonnectorManager* manager);
-        KonnectorWizard( KonnectorManager*, const KonnectorProfile& );
+	
+	/**
+	 * Constructor to edit a KonnectorProfile
+	 * @param manager the KonnectorManager to be used
+	 * @param prof The KonnectorProfile
+	 */
+        KonnectorWizard( KonnectorManager* manager, const KonnectorProfile& prof);
         ~KonnectorWizard();
+	
+	/**
+	 * @return the edited KonnectorProfile
+	 */
         KonnectorProfile profile() const;
     private:
         void initUI();

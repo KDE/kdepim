@@ -41,16 +41,40 @@
 
 namespace KSync {
 
+  /**
+   * The ConfigureDialog of the KitchenSync Framework
+   * It'll contain all widgets of the ManipulatorPart
+   * @short The small ConfigurationDialog
+   * @see ManipulatorPart
+   * @author Zecke
+   * @version 0.1
+   */
   class ConfigureDialog : public KDialogBase {
     Q_OBJECT
     
       public:
+    /**
+     * simple c'tor
+     * @param parent The parent
+     * @param name The name
+     * @param modal if the dialog is modal
+     */
     ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
     ~ConfigureDialog();
     virtual void show();
-    void addWidget(QWidget*,const QString&, QPixmap*);
+    
+    /**
+     * add a widget to ConfigureDialog
+     * @param wid The widget to be added. It'll be reparented
+     * @param str The string shown as name
+     * @param pix the QPixmap shown
+     */
+    void addWidget(QWidget* wid ,const QString& str, QPixmap* pix);
 
   signals:
+    /**
+     *ok
+     */
     void ok( );
 
     protected slots:

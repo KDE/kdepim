@@ -23,33 +23,39 @@ namespace KSync {
         Q_OBJECT
     public:
         /**
-         * it's modal and don't need a parent
+         * it's modal dialog and don't need a parent
+	 * @short a simple c'tor
+	 * @param lst A List of KonnectorProfiles
+	 * @param man The KonnectorManager to be used
          */
-        KonnectorDialog( const KonnectorProfile::ValueList& , KonnectorManager* man);
+        KonnectorDialog( const KonnectorProfile::ValueList& lst , KonnectorManager* man);
         ~KonnectorDialog();
 
         /**
-         * devices which needs to be unloaded
+         * @return devices which needs to be unloaded
+	 *
          */
         KonnectorProfile::ValueList toUnload() const;
 
         /**
-         * devices which need to be loaded
+         * @return devices which need to be loaded
          */
         KonnectorProfile::ValueList toLoad() const;
 
         /**
-         * all devices
+         * @return all devices
          */
         KonnectorProfile::ValueList devices() const;
 
         /**
          * guess it! Wrong! The removed devices/profiles
+	 * @return the removed items
          */
         KonnectorProfile::ValueList removed() const;
 	
 	/**
 	 * the edited devices...which are also loaded...
+	 * @return the edited devices
 	 */
 	KonnectorProfile::ValueList edited()const;
 

@@ -22,37 +22,46 @@ namespace KSync {
         KonnectorCheckItem( QListView* parent, const KonnectorProfile& prof );
         ~KonnectorCheckItem();
 
+    
+	/**
+	 * Retur the profile
+	 * @return the KonnectorProfile
+	 */	
         KonnectorProfile profile()const;
 
         /**
-         * if it has to be loaded
+         * @return if it has to be loaded
+	 *
          */
         bool load()const;
 
         /**
-         * if it has to be unloaded
+         * @return it has to be unloaded
          **/
         bool unload()const;
 
         /**
-         * if the konnector currently is loaded
+         * @return if the konnector currently is loaded
          */
         bool isLoaded()const;
 	
 	/**
-	 * bool was edited
+	 * @return if bool was edited
 	 */
 	bool wasEdited()const;
 	 
 	 /**
-	  *
+	  * Set when the KonnectorProfile
+	  * was edited
+	  * @param b if it was edited
 	  */
 	void setEdited( bool b );
 	 
 	/**
-	 *
+	 * Set the KonnectorProfile
+	 * @param prof the konnector profile
 	 */
-	void setProfile( const KonnectorProfile& );
+	void setProfile( const KonnectorProfile& prof);
     private:
         KonnectorProfile m_prof;
 	bool m_edit :1 ;

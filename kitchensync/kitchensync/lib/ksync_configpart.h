@@ -1,3 +1,4 @@
+// DELETE THIS FILE!
 /*
        This file is part of the OPIE Project
        Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>

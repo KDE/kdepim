@@ -22,20 +22,79 @@
 #include <kdedmodule.h>
 #include <qstring.h>
 
+/**
+ * A small KDE Daemon to control
+ * shared access to files. It will be started
+ * on demand inside the KDED Server.
+ * @short Controls shared access to resources
+ * @author Holger 'zecke' Freyther <freyther@kde.org>
+ * @version: 0.1
+ */
 class KShareFileModule  : public KDEDModule
 {
 Q_OBJECT
 K_DCOP
  public:
+ 
+ /**
+  * This is the constructor it takes a QCString as parameter
+  * @param obj the object
+  */
   KShareFileModule(const QCString &obj );
+  
+  /**
+   * This is the destructor.
+   */
   virtual ~KShareFileModule();
  k_dcop:
-  ASYNC interestedIn(const QString &fileName );
-  ASYNC removeInterestIn(const QString &fileName );
-  bool readShareFile(const QString &fileName );
-  bool readUnshareFile(const QString &fileName );
-  bool writeLockFile(const QString &fileName);
-  bool writeUnlockFile(const QString &fileName );
+ 
+  /**
+   * This function will be called if a module
+   * got interest on a resource
+   * @param resource The resource interested in
+   */
+  ASYNC interestedIn(const QString &resource );
+  
+  /**
+   * This function will remove the interest
+   * in the resource.
+   * @param resource The resource name
+   */
+  ASYNC removeInterestIn(const QString &resource );
+  
+  /**
+   * This will try to share this file for reading
+   * multiple resource can have a read share at the
+   * same time. If there was no interest in the
+   * resource it will be added.
+   * see @ref interestedIn
+   * @param resource The resource name
+   * @return the success or failure of locking
+   */
+  bool readShareFile(const QString &resource );
+  
+  /**
+   * This will remove a read share 
+   * @param resource The resource name
+   * @return success or failure of unlocking
+   */
+  bool readUnshareFile(const QString &resource );
+  
+  /**
+   * This will try to lock a resource for
+   * writing only. It will success if there
+   * are no locks
+   * @param resource The resource to lock
+   * @return failure or success
+   */
+  bool writeLockFile(const QString &resource);
+  
+  /**
+   * This will unlock the resource
+   * @param resource The resource name
+   * @return success or failure
+   */
+  bool writeUnlockFile(const QString &resoure );
 
  private:
   class KShareFileModulePrivate;
