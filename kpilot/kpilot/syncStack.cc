@@ -128,6 +128,9 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		kdWarning() << k_funcinfo << ": Running conduits during restore." << endl;
 		l.append(CSL1("--test"));
 		break;
+	case eDefaultSync:
+		Q_ASSERT(eDefaultSync != m); // Bail
+		break;
 	}
 	return l;
 }
@@ -336,7 +339,19 @@ void ActionQueue::actionCompleted(SyncAction *b)
 
 	if (isEmpty())
 	{
-		emit syncDone(this);
+		delayDone();
+		return;
+	}
+	if (!fHandle->tickle())
+	{
+		emit logError(i18n("The connection to the handheld "
+			"was lost. Synchronization cannot continue."));
+		SyncAction *del = 0L;
+		while ( (del = nextAction()) )
+		{
+			delete del;
+		}
+		delayDone();
 		return;
 	}
 
