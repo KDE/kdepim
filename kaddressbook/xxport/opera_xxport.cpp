@@ -87,7 +87,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
       if ( addr && !addr->isEmpty() )
         addrList.append( *addr );
       delete addr;
-      addr = 0;
+      addr = 0L;
       continue;
     }
 
@@ -121,7 +121,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
         addr->setUrl( value );
       else if ( key == QString::fromLatin1( "pictureurl" ) ) {
         KABC::Picture pic( value );
-	addr->setPhoto( pic );
+        addr->setPhoto( pic );
       }
     }
   }
