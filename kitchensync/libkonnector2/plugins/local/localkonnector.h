@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -21,12 +21,18 @@
 #ifndef KSYNC_LOCALKONNECTOR_H
 #define KSYNC_LOCALKONNECTOR_H
 
-#include "libkcal/calendarlocal.h"
+#include <libkcal/calendarlocal.h>
+#include <kabc/addressbook.h>
+#include <kbookmarkmanager.h>
 
 #include <konnector.h>
 
 #include <qiconset.h>
 #include <qptrlist.h>
+
+namespace KABC {
+class ResourceFile;
+}
 
 namespace KSync {
 
@@ -59,7 +65,7 @@ class LocalKonnector : public KSync::Konnector
     bool disconnectDevice();
 
     /** the state and some informations */
-    KSync::KonnectorInfo info()const;
+    KSync::KonnectorInfo info() const;
 
     /** download a resource/url/foobar */
     void download( const QString& );
@@ -70,17 +76,29 @@ class LocalKonnector : public KSync::Konnector
     void setAddressBookFile( const QString &f ) { mAddressBookFile = f; }
     QString addressBookFile() const { return mAddressBookFile; }
 
+    void setBookmarkFile( const QString &f ) { mBookmarkFile = f; }
+    QString bookmarkFile() const { return mBookmarkFile; }
+
   private:
     LocalKonnectorConfig *mConfigWidget;
     QString mCalendarFile;
     QString mAddressBookFile;
+    QString mBookmarkFile;
 
     KCal::CalendarLocal mCalendar;
+    KABC::AddressBook mAddressBook;
+    KABC::ResourceFile *mAddressBookResourceFile;
+    
+    class LocalBookmarkManager : public KBookmarkManager
+    {
+      public:
+        LocalBookmarkManager() : KBookmarkManager() {}
+    };
+    LocalBookmarkManager mBookmarkManager;
     
     SynceeList mSyncees;
 };
 
 }
-
 
 #endif

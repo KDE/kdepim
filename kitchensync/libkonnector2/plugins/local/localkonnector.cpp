@@ -24,6 +24,10 @@
 #include "localkonnectorconfig.h"
 
 #include <calendarsyncee.h>
+#include <addressbooksyncee.h>
+#include <bookmarksyncee.h>
+
+#include <kabc/resourcefile.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
@@ -48,9 +52,15 @@ LocalKonnector::LocalKonnector( const KConfig *config )
   if ( config ) {
     mCalendarFile = config->readPathEntry( "CalendarFile" );
     mAddressBookFile = config->readPathEntry( "AddressBookFile" );
+    mBookmarkFile = config->readPathEntry( "BookmarkFile" );
   }
 
-  mSyncees.append( new CalendarSyncee( &mCalendar ) );    
+  mSyncees.append( new CalendarSyncee( &mCalendar ) );
+  mSyncees.append( new AddressBookSyncee( &mAddressBook ) );
+  mSyncees.append( new BookmarkSyncee( &mBookmarkManager ) );
+
+  mAddressBookResourceFile = new KABC::ResourceFile( mAddressBookFile );
+  mAddressBook.addResource( mAddressBookResourceFile );
 }
 
 LocalKonnector::~LocalKonnector()
@@ -63,6 +73,7 @@ void LocalKonnector::writeConfig( KConfig *config )
 
   config->writePathEntry( "CalendarFile", mCalendarFile );
   config->writeEntry( "AddressBookFile", mAddressBookFile );
+  config->writeEntry( "BookmarkFile", mAddressBookFile );
 }
 
 KSync::Kapabilities LocalKonnector::capabilities()
@@ -90,6 +101,11 @@ void LocalKonnector::setCapabilities( const KSync::Kapabilities& )
 bool LocalKonnector::readSyncees()
 {
   if ( !mCalendar.load( mCalendarFile ) ) return false;
+
+  mAddressBookResourceFile->setFileName( mAddressBookFile );
+  if ( !mAddressBook.load() ) return false;
+
+  // TODO: Read Bookmarks
 
   emit synceesRead( this );
 
@@ -123,7 +139,18 @@ void LocalKonnector::download( const QString& )
 
 bool LocalKonnector::writeSyncees()
 {
-  mCalendar.save( mCalendarFile );
+  if ( !mCalendar.save( mCalendarFile ) ) return false;
+
+  KABC::Ticket *ticket;
+  ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
+  if ( !ticket ) {
+    kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
+                << "addressbook." << endl;
+    return false; 
+  }
+  if ( !mAddressBook.save( ticket ) ) return false;
+
+  // TODO: Write Bookmarks
 
   emit synceesWritten( this );
 

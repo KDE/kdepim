@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -41,6 +41,7 @@ class LocalKonnectorConfig : public KRES::ConfigWidget
   private:
     KURLRequester *mCalendarFile;
     KURLRequester *mAddressBookFile;
+    KURLRequester *mBookmarkFile;
 };
 
 }
