@@ -21,12 +21,12 @@
     <entry type="String" key="Credit URL">
       <label>Creator URL</label>
       <whatsthis>URL of the creator application of the calendar.</whatsthis>
-			<default></default>
+      <default></default>
     </entry>
-		<entry type="String" key="Page Title">
-		  <label>Page Title</label>
-			<default>Calendar</default>
-		</entry>
+    <entry type="String" key="Page Title">
+      <label>Page Title</label>
+      <default>Calendar</default>
+    </entry>
 
     <entry type="DateTime" key="Date Start">
       <label>Date start</label>
@@ -40,7 +40,7 @@
     <entry type="Path" key="Output File">
       <label>Output filename</label>
       <whatsthis>The output file name for the HTML export.</whatsthis>
-			<default>$HOME/calendar.html</default>
+      <default>$HOME/calendar.html</default>
     </entry>
     <entry type="String" key="Style Sheet">
       <label>Style sheet</label>
@@ -49,11 +49,11 @@
 
     <entry type="Bool" key="Exclude Private">
       <label>Exclude private incidences from the export</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
     <entry type="Bool" key="Exclude Confidential">
       <label>Exclude confidential incidences from the export</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
 
   </group>
@@ -61,15 +61,15 @@
   <group name="$(application)-Events">
     <entry type="Bool" key="Event View">
       <label>Export events as list</label>
-			<default>false</default>
+      <default>false</default>
     </entry>
     <entry type="Bool" key="Month View">
       <label>Export in month view</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
     <entry type="Bool" key="Week View">
       <label>Export in week view</label>
-			<default>true</default>
+      <default>false</default>
     </entry>
     <entry type="String" name="EventTitle" key="Title">
       <label>Title of the calendar</label>
@@ -78,11 +78,11 @@
 
     <entry type="Bool" name="EventCategories" key="Export Categories">
       <label>Export categories of the events</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
     <entry type="Bool" name="EventAttendees" key="Export Attendees">
       <label>Export attendees of the events</label>
-			<default>false</default>
+      <default>false</default>
     </entry>
 
   </group>
@@ -90,7 +90,7 @@
   <group name="$(application)-Todos">
     <entry type="Bool" key="Todo View">
       <label>Export to-do list</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
     <entry type="String" key="TodoList Title">
       <label>Title of the to-do list</label>
@@ -99,15 +99,15 @@
 
     <entry type="Bool" name="TaskDueDate" key="Export Due Date">
       <label>Export due dates of the to-dos</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
     <entry type="Bool" name="TaskCategories" key="Export Categories">
       <label>Export categories of the to-dos</label>
-			<default>true</default>
+      <default>true</default>
     </entry>
     <entry type="Bool" name="TaskAttendees" key="Export Attendees">
       <label>Export attendees of the to-dos</label>
-			<default>false</default>
+      <default>false</default>
     </entry>
 
   </group>
@@ -115,7 +115,7 @@
   <group name="$(application)-Journals">
     <entry type="Bool" key="Journal View">
       <label>Export journals</label>
-			<default>false</default>
+      <default>false</default>
     </entry>
     <entry type="String" key="Journal Title">
       <label>Title of the journal list</label>
@@ -126,7 +126,7 @@
   <group name="$(application)-FreeBusy">
     <entry type="Bool" key="FreeBusy View">
       <label>Export journals</label>
-			<default>false</default>
+      <default>false</default>
     </entry>
     <entry type="String" name="FreeBusyTitle" key="Free/Busy Title">
       <label>Title of the free/busy list</label>
