@@ -117,9 +117,11 @@ static const char *kpilotlink_id="$Id$";
 
 #include "kpilotlink.moc"
 
+// This is for the singleton pattern that KPilotLink 
+// is supposed to follow.
+//
+//
 KPilotLink* KPilotLink::fKPilotLink = 0L;
-
-// const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
 
 void KPilotLink::readConfig()
@@ -309,6 +311,14 @@ KPilotLink::initConduitSocket()
   fConduitProcess = new KProcess();
 }
 
+void KPilotLink::addSyncLogEntry(const char *entry)
+{
+	dlp_AddSyncLogEntry(getCurrentPilotSocket(), (char *)entry);
+	emit logEntry(entry);
+}
+
+
+
 PilotRecord*
 KPilotLink::readRecord(KSocket* theSocket)
 {
@@ -346,7 +356,7 @@ KPilotLink::writeRecord(KSocket* theSocket, PilotRecord* rec)
   write(theSocket->socket(), data, len);
 }
 
-int KPilotLink::writeResponse(KSocket *k,int m)
+int KPilotLink::writeResponse(KSocket *k,CStatusMessages::LinkMessages m)
 {
 	// I have a bad feeling about using pointers
 	// to parameters passed to me, so I'm going 
@@ -354,7 +364,7 @@ int KPilotLink::writeResponse(KSocket *k,int m)
 	// variable and use a pointer to that variable.
 	//
 	//
-	int i=m;
+	int i=(int) m;
 
 	return write(k->socket(), &i, sizeof(int));
 }
@@ -591,7 +601,7 @@ void KPilotLink::resumeDB()
 }
 
 QString
-KPilotLink::registeredConduit(const QString &dbName)
+KPilotLink::registeredConduit(const QString &dbName) const
 {
 	FUNCTIONSETUP;
 
@@ -1716,6 +1726,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.43  2001/04/23 21:08:02  adridg
+// Small changes for code integrity
+//
 // Revision 1.42  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //
