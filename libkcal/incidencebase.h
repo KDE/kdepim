@@ -26,6 +26,7 @@
 #include <qdatetime.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
+#include <qptrlist.h>
 
 #include "attendee.h"
 
