@@ -144,7 +144,7 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 QString PilotDateEntry::getTextRepresentation(bool richText)
 {
 	QString text, tmp;
-	QString par = richText?CSL1("<p>"):CSL1("");
+	QString par = richText?CSL1("<p>"):QString::null;
 	QString ps = richText?CSL1("</p>"):CSL1("\n");
 	QString br = richText?CSL1("<br/>"):CSL1("\n");
 
@@ -185,7 +185,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 			case advMinutes: tmp=tmp.arg(i18n("minutes")); break;
 			case advHours: tmp=tmp.arg(i18n("hours")); break;
 			case advDays: tmp=tmp.arg(i18n("days")); break;
-			default: tmp=tmp.arg(CSL1("")); break;;
+			default: tmp=tmp.arg(QString::null); break;;
 		}
 		text+=tmp;
 		text+=ps;
@@ -205,7 +205,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 			case repeatMonthlyByDay:
 			case repeatMonthlyByDate: tmp=tmp.arg(i18n("month(s)")); break;
 			case repeatYearly: tmp=tmp.arg(i18n("year(s)")); break;
-			default: tmp=tmp.arg(i18n("")); break;
+			default: tmp=tmp.arg(QString::null); break;
 		}
 		text+=tmp;
 		text+=br;
