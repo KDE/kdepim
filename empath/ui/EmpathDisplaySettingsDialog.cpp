@@ -44,9 +44,8 @@ EmpathDisplaySettingsDialog::create()
 	exists_ = true;
 	EmpathDisplaySettingsDialog * d = new EmpathDisplaySettingsDialog(0, 0);
 	CHECK_PTR(d);
-	d->show();
-	kapp->processEvents();
 	d->loadData();
+	d->show();
 }
 		
 EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
@@ -213,7 +212,12 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	l_backgroundColour_->setFixedHeight(h);
 	
-	KQuickHelp::add(l_backgroundColour_, i18n(
+
+	kcb_backgroundColour_	=
+		new KColorButton(w_colour_, "kcb_backgroundColour");
+	CHECK_PTR(kcb_backgroundColour_);
+
+	KQuickHelp::add(kcb_backgroundColour_, i18n(
 			"Choose the background colour for reading\n"
 			"messages. If you don't like the standard,\n"
 			"you can use this. You could instead change\n"
@@ -221,10 +225,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"know HTML. This allows for greater power,\n"
 			"but is a little trickier."));
 	
-	kcb_backgroundColour_	=
-		new KColorButton(w_colour_, "kcb_backgroundColour");
-	CHECK_PTR(kcb_backgroundColour_);
-
 	// Text
 	
 	l_textColour_	=
@@ -233,7 +233,12 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	l_textColour_->setFixedHeight(h);
 		
-	KQuickHelp::add(l_textColour_, i18n(
+
+	kcb_textColour_	=
+		new KColorButton(w_colour_, "kcb_textColour");
+	CHECK_PTR(kcb_textColour_);
+
+	KQuickHelp::add(kcb_textColour_, i18n(
 			"Choose the text colour for reading\n"
 			"messages. If you don't like the standard,\n"
 			"you can use this. You could instead change\n"
@@ -241,10 +246,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"know HTML. This allows for greater power,\n"
 			"but is a little trickier."));
 	
-	kcb_textColour_	=
-		new KColorButton(w_colour_, "kcb_textColour");
-	CHECK_PTR(kcb_textColour_);
-
 	// Link
 	
 	l_linkColour_	=
@@ -252,8 +253,12 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(l_linkColour_);
 	
 	l_linkColour_->setFixedHeight(h);
+
+	kcb_linkColour_	=
+		new KColorButton(w_colour_, "kcb_linkColour");
+	CHECK_PTR(kcb_linkColour_);
 			
-	KQuickHelp::add(l_linkColour_, i18n(
+	KQuickHelp::add(kcb_linkColour_, i18n(
 			"Choose the link colour for reading\n"
 			"messages. If you don't like the standard,\n"
 			"you can use this. You could instead change\n"
@@ -261,10 +266,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"know HTML. This allows for greater power,\n"
 			"but is a little trickier."));
 	
-	kcb_linkColour_	=
-		new KColorButton(w_colour_, "kcb_linkColour");
-	CHECK_PTR(kcb_linkColour_);
-
+	
 	// Visited link
 	
 	l_visitedLinkColour_	=
@@ -272,18 +274,18 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(l_visitedLinkColour_);
 	
 	l_visitedLinkColour_->setFixedHeight(h);
-				
-	KQuickHelp::add(l_visitedLinkColour_, i18n(
+			
+	kcb_visitedLinkColour_	=
+		new KColorButton(w_colour_, "kcb_visitedColour");
+	CHECK_PTR(kcb_visitedLinkColour_);
+		
+	KQuickHelp::add(kcb_visitedLinkColour_, i18n(
 			"Choose the visited link colour for reading\n"
 			"messages. If you don't like the standard,\n"
 			"you can use this. You could instead change\n"
 			"the template for displaying messages, if you\n"
 			"know HTML. This allows for greater power,\n"
 			"but is a little trickier."));
-	
-	kcb_visitedLinkColour_	=
-		new KColorButton(w_colour_, "kcb_visitedColour");
-	CHECK_PTR(kcb_visitedLinkColour_);
 	
 	// use defaults
 	
@@ -292,7 +294,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	l_iconSet_->setFixedHeight(h);
 	
-	KQuickHelp::add(l_visitedLinkColour_, i18n(
+	KQuickHelp::add(l_iconSet_, i18n(
 			"Here you get to choose the icon set\n"
 			"that will be used by Empath. This covers\n"
 			"the toolbars, the icons on menus, and\n"
@@ -385,7 +387,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	fontGroupLayout_->addWidget(pb_chooseVariableFont_,	0, 2);
 	fontGroupLayout_->addWidget(pb_chooseFixedFont_,	1, 2);
 	
-	fontGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	3, 3, 0, 1);
+	fontGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	3, 3, 0, 2);
 
 	fontGroupLayout_->activate();
 	
@@ -529,9 +531,7 @@ EmpathDisplaySettingsDialog::loadData()
 	void
 EmpathDisplaySettingsDialog::s_OK()
 {
-	if (!applied_)
-		kapp->getConfig()->rollback(true);
-	
+	s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }

@@ -23,6 +23,9 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+// Qt includes
+#include <qregexp.h>
+
 // KDE includes
 #include <kprocess.h>
 #include <klocale.h>
@@ -39,11 +42,13 @@
 #include "EmpathMailSender.h"
 
 EmpathComposeWidget::EmpathComposeWidget(
-	ComposeType t,
-	const EmpathURL & m,
-	QWidget * parent,
-	const char * name)
-	: QWidget(parent, name)
+	ComposeType			t,
+	const EmpathURL &	m,
+	QWidget *			parent,
+	const char *		name)
+	:	QWidget(parent, name),
+		composeType_(t),
+		url_(m)
 {
 	empathDebug("ctor");
 
@@ -77,6 +82,14 @@ EmpathComposeWidget::EmpathComposeWidget(
 	editorWidget_			=
 		new QMultiLineEdit(this, "editorWidget");
 	CHECK_PTR(editorWidget_);
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	if ((FontStyle)(c->readNumEntry(EmpathConfig::KEY_FONT_STYLE)) == Fixed)
+		editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
+	else
+		editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_VARIABLE_FONT));
 
 	layout_	= new QGridLayout(this, 3, 1, 2, 0, "layout_");
 	CHECK_PTR(layout_);
@@ -107,38 +120,65 @@ EmpathComposeWidget::EmpathComposeWidget(
 
 	headerEditWidget_->setFocus();
 
-	switch (t) {
+	_init();
+}
+
+	void
+EmpathComposeWidget::_init()
+{
+	switch (composeType_) {
 
 	// If we're just composing a new message, we drop out here.
 		case ComposeNormal:
+			empathDebug("Just a normal compose");
 			break;
 
 		case ComposeReply:
 			{
-				KConfig * config = kapp->getConfig();
-				config->setGroup(EmpathConfig::GROUP_COMPOSE);
-				if (!config->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR)) {
-					//	editorWidget_->setText(message->firstPlainBody());
-					return;
-				}
+				empathDebug("Replying");
+				
+				RMessage * message(empath->message(url_));
+				if (message == 0) return;
+				
+				QString s;
+			   
+				// Find out who sent the message, and fill in 'To:'
+				s = message->envelope().firstSender().asString();
+
+				empathDebug("Replying to \"" + s + "\""); 
+				headerEditWidget_->setToText(s);
+				if (!s.isEmpty())
+					subjectSpecWidget_->setFocus();
+				
+				// Fill in the subject.
+				s = message->envelope().subject().asString();
+				empathDebug("Subject was \"" + s + "\""); 
+
+				if (s.isEmpty())
+					subjectSpecWidget_->setSubject(
+						i18n("Re: (no subject given)"));
+				else
+					if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
+						subjectSpecWidget_->setSubject(s);
+					else
+						subjectSpecWidget_->setSubject("Re: " + s);
+				
+				editorWidget_->setFocus();
 			}
 			break;
 
 		case ComposeReplyAll:
+			empathDebug("Replying to all");
 			break;
 
 		case ComposeForward:
 			{
-				RMessage * message(empath->message(m));
-				if (message == 0) return;
-				QCString s = message->envelope().to().asString();
-				headerEditWidget_->setToText(s);
-				if (!s.isEmpty())
-					subjectSpecWidget_->setFocus();
+				empathDebug("Forwarding");
 			}
 			break;
 
 		default:
+			empathDebug("Uh ? don't know if I'm replying, forwarding or what");
 			break;
 	}
 }
@@ -151,13 +191,52 @@ EmpathComposeWidget::~EmpathComposeWidget()
 	QCString
 EmpathComposeWidget::messageAsString()
 {
-	QCString msgData;
+	empathDebug("messageAsString() called");
 
-	msgData =	headerEditWidget_->headersAsText();
-	msgData +=	"Subject: " + subjectSpecWidget_->getSubject();
+	QCString msgData;
+				
+	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
+		
+		RMessage * message(empath->message(url_));
+		if (message == 0) {
+			msgData = "";
+			return msgData;
+		}
+		
+		// If there is a references header in the message we're replying to,
+		// we add the message id of that message to the references list.
+		if (message->envelope().has(RMM::HeaderReferences)) {
+			
+			msgData += RMM::headerNames[RMM::HeaderReferences];
+			msgData += ": ";
+			msgData += message->envelope().references().asString();
+			msgData += " ";
+			msgData += message->envelope().messageID().asString();
+			msgData += "\n";
+			
+		} else {
+			
+			// No references field. In that case, we just make an In-Reply-To
+			// header.
+			msgData += RMM::headerNames[RMM::HeaderInReplyTo];
+			msgData += ": ";
+			msgData += message->envelope().messageID().asString();
+			msgData += "\n";
+		}
+	}
+
+	// Put the user's added headers at the end, as they're more likely to
+	// be important, and it's easier to see them when they're near to the
+	// message body text.
+	msgData += headerEditWidget_->headersAsText();
+	msgData += RMM::headerNames[RMM::HeaderSubject];
+	msgData += ": ";
+	msgData += subjectSpecWidget_->getSubject();
+	msgData += "\n";
+	msgData += "X-Mailer: Empath\n";
+	msgData += "\n\n";
 
 	// Header / body separator
-	msgData +=	'\n';
 	msgData +=	editorWidget_->text();
 
 	return msgData;

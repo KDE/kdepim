@@ -403,13 +403,36 @@ EmpathFolderWidget::s_newFolder()
 	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
 	if (m == 0) return;
 	
-	m->addFolder(EmpathURL(popupMenuOverURL.asString() + "/" + name + "/"));
+	EmpathURL newFolderURL(popupMenuOverURL.asString() + "/" + name + "/");
+
+	if (!m->addFolder(newFolderURL)) return;
+
+	EmpathFolderListItemIterator it(itemList_);
+	
+	for (; it.current(); ++it) {
+		if (it.current()->url() == popupMenuOverURL) {
+			EmpathFolderListItem * item =
+				new EmpathFolderListItem(it.current(), newFolderURL);
+			break;
+		}
+	}
 
 }
 
 	void
 EmpathFolderWidget::s_removeFolder()
 {
+	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
+	if (m == 0) return;
+	
+	EmpathFolderListItemIterator it(itemList_);
+	
+	for (; it.current(); ++it) {
+		if (it.current()->url() == popupMenuOverURL) {
+			delete it.current();
+			break;
+		}
+	}
 }
 
 	void

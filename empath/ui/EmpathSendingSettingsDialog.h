@@ -24,6 +24,7 @@
 // Qt includes
 #include <qlayout.h>
 #include <qwidget.h>
+#include <qdialog.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
@@ -43,7 +44,7 @@ class RikGroupBox;
 class EmpathAddressSelectionWidget;
 class EmpathFolderChooserWidget;
 
-class EmpathSendingSettingsDialog : public QWidget
+class EmpathSendingSettingsDialog : public QDialog
 {
 	Q_OBJECT
 

@@ -64,6 +64,7 @@ class EmpathIdentitySettingsDialog : public QDialog
 		void s_help();
 		void s_default();
 		void s_apply();
+		void s_saveSig();
 
 	private:
 		

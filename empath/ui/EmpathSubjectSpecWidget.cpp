@@ -63,14 +63,14 @@ EmpathSubjectSpecWidget::~EmpathSubjectSpecWidget()
 }
 
 
-	QCString
+	QString
 EmpathSubjectSpecWidget::getSubject() const
 {
-	return QCString(le_subject_->text());
+	return le_subject_->text();
 }
 
 	void
-EmpathSubjectSpecWidget::setSubject(const QCString & subject)
+EmpathSubjectSpecWidget::setSubject(const QString & subject)
 {
 	le_subject_->setText(subject);
 }

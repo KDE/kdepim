@@ -28,7 +28,7 @@ RHeaderBody::RHeaderBody()
 }
 
 RHeaderBody::RHeaderBody(const RHeaderBody & headerBody)
-	:	RMessageComponent()
+	:	RMessageComponent(headerBody)
 {
 	rmmDebug("ctor");
 }

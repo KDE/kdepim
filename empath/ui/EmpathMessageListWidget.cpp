@@ -463,7 +463,7 @@ EmpathMessageListWidget::s_currentChanged(QListViewItem *)
 	empathDebug("Current message changed - updating message widget");
 	
 	// Make sure we highlight the current item.
-//	kapp->processEvents();
+	kapp->processEvents();
 	
 	if (wantScreenUpdates_)
 		emit(changeView(firstSelectedMessage()));

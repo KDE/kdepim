@@ -207,17 +207,6 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		new QSpinBox(40, 240, 1, w_msg_, "cb_wrap");
 	CHECK_PTR(sb_wrap_);
 	
-	KQuickHelp::add(sb_wrap_, i18n(
-			"When you type a reply, you probably don't\n"
-			"press <b>Return</b> at the end of each line.\n"
-			"Internet mail messages are supposed to be read\n"
-			"in a fixed font, and any lines longer than 80\n"
-			"characters may not be 'wrapped around'.\n"
-			"This option will add carriage returns in lines\n"
-			"longer than the value set in the spin box.\n"
-			"This will ensure that messages look correct when\n"
-			"received by your recipient.\n"));
-
 	sb_wrap_->setFixedHeight(h);
 	sb_wrap_->setValue(76);
 	sb_wrap_->setEnabled(false);
@@ -239,7 +228,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	buttonGroup_->setExclusive(true);
 
 	rb_sendNow_		=
-		new QRadioButton(i18n("Send messages &straight away"), w_when_,
+		new QRadioButton(i18n("Send messages &immediately"), w_when_,
 				"rb_sendNow");
 	CHECK_PTR(rb_sendNow_);
 	
@@ -290,6 +279,11 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	
 	le_externalEditor_ = new QLineEdit(this, "le_externalEditor");
 	le_externalEditor_->setFixedHeight(h);
+
+	KQuickHelp::add(cb_externalEditor_, i18n(
+			"Type here the command line to run your editor.\n"
+			"This may be, for example, <b>gvim</b> or <b>emacs</b>"));
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Button box
@@ -446,8 +440,7 @@ EmpathComposeSettingsDialog::loadData()
 	void
 EmpathComposeSettingsDialog::s_OK()
 {
-	if (!applied_)
-		kapp->getConfig()->rollback(true);
+	s_apply();
 	
 	kapp->getConfig()->sync();
 	delete this;

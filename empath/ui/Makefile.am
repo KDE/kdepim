@@ -53,7 +53,6 @@ EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \
 EmpathNewsSettingsDialog.cpp \
 EmpathSendingSettingsDialog.cpp \
-EmpathServerSettingsDialog.cpp \
 EmpathServerTypeDialog.cpp \
 EmpathStatusWidget.cpp \
 EmpathSubjectSpecWidget.cpp \

@@ -1,5 +1,3 @@
-Last update: Sat May  8 16:07:40 BST 1999
-
 The design of Empath may be a little confusing at first. Please take the time
 to read this document. It should help make things a little clearer. You should
 hopefully end up with the impression that the design is actually quite simple !
@@ -20,36 +18,24 @@ an OO design, so an RAddress is a little smart - it know whether it's a
 Mailbox or a Group.
 
 Apart from things like that, rmm is actually quite simple. Its design is based
-upon that of mimelib, so if you've seen that you'll recognise the parse() and
-assemble() methods in each class.
+upon that of mimelib. However, there are some major differences.
+
+Firstly, rmm uses Qt collection classes. While these may be slightly slower
+than, e.g. STL, they're guaranteed to be available, and to work cross-platform.
+Using STL isn't really an option anyway as the conversions to/from STL string
+would incur an unnecessary overhead. Note that Qt's collections are more
+understandable for those used to them too.
+
+Secondly, rmm doesn't use parse() and assemble(), not user visibly anyway.
+You no longer have to parse() or assemble() a part of a message. This is
+done automatically by rmm, and rmm avoids calling these methods when it is
+not necessary. That means you don't parse() or assemble() anything twice
+unless it must be done. Just do RDate d(QString) and call d.dayOfWeek() !
 
 You may create any part in rmm by using either a string, or by using specific
 parameters. This means that you can create an RHeader by passing either
 the header name (e.g. 'To:') and the header body as strings, or you can simply
-pass the whole header (e.g. 'To: foo@bar') and then call parse().
-
-The parse() method takes the string representation and creates the necessary
-component parts. It only needs to be called when you actually need access to
-these parts, i.e. when you need the parsed representation so you can find
-out something. If you have an RDateTime which you constructed with a string,
-then you'll have to call parse() before you can call year(), or you'll get
-the wrong answer.
-
-The assemble() method does the opposite of parse(). It takes the broken
-down representation and recreates the internal string representation. So if
-you have created an RDateTime using a number (unix time) and want to use
-the RDateTime as a header, you'll have to call assemble() to get the string
-representation.
-
-The major difference between rmm and mimelib is that rmm uses Qt's collections
-extensively. This probably incurs a speed hit, and for this reason, and to
-avoid code duplication, I may use libkmsg instead sometime in the future.
-However, for the moment, there's little need to switch. If/when the switch
-happens, it won't affect much code, as you actually use the library very little.
-Most of the time you just create an RMessage, and occasionally parse it.
-
-Another reason for hanging on for a bit is that I understand Qt's collections
-and they make for understandable code.
+pass the whole header (e.g. 'To: foo@bar').
 
 ========================== empath/lib - the kernel ===========================
 
@@ -101,7 +87,7 @@ RMessage * m(empath->message(url));
 
 where url is an EmpathURL which is as above.
 
-Note: EmpathURL is similar to the components of rmm, except that the parsing
+Note: EmpathURL is similar to the components of rmm, in that the parsing
 and assembling is transparent. The class knows when it needs to parse, and
 when to assemble, so you can just use it as you wish.
 

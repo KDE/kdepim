@@ -1,11 +1,14 @@
 Things you might want to VOLUNTEER for :)
 
-* Sending mail via sendmail seems a little flaky and there's no way to tell the
-  user what's going on. I'm going to drop QMTP as it seems like no-one uses it,
-  but I still need to get SMTP sending going.
+* Test sendmail sending. Add user feedback.
+
+* Test qmail sending. Add user feedback.
+
+* Implement simple (to one host) SMTP sending.
   
 * Using an external editor needs reorganising so that a class encapsulates the
-  process(es) that have been spawned. (Started on this)
+  process(es) that have been spawned.
+  -- Started on this
   
 * EmpathComposeWidget uses the fancy Netscape-alike thing where when you add
   headers, more widgets are created. What needs to happen is that when the user
@@ -26,19 +29,6 @@ Things you might want to VOLUNTEER for :)
 * Sort out the mime handling. Currently all messages are treated as just plain
   text. I've started to put the mechanism into place, but it's hard work.
    
-* Remove the need to use parse() and assemble() in rmm. This will involve using
-  the 'dirty' flag. Each part will have to know whether it has been parsed or
-  not. If it hasn't, and any method is called (inspector or mutator) it will
-  have to be parsed first. Each part will also have to know when its strRep_
-  is dirty, i.e. it needs to be reassembled. Whenever asString() is called,
-  a check must be made to see if reassembly is necessary, assemble() called
-  if so.
-  This will make things a little more 'lazy' and remove complexity from user
-  code. It should provide some speedup as user code doesn't know when parsing
-  and assembling is really necessary, so will end up performing these more than
-  is needed.
-  - Working on this
- 
 * Finish off doing the apply/revert stuff in the config dialogs. It's almost
   done, but just needs looking at and checking it really works properly.
   
@@ -49,6 +39,7 @@ Things you might want to VOLUNTEER for :)
   
 * In the same vein as the above, need to sort out EmpathMaildir so that it
   reads recursively to find its folders rather than writing them to the config.
+  -- Almost done. Note: Must prevent infinite recursion.
   
 * mbox and MMDF handling. (Started but untested and unused as yet)
 
@@ -73,4 +64,6 @@ Things you might want to VOLUNTEER for :)
   would be cool.
   
 * Drag and drop.
+
+* Switch on recursive deletion of folders in EmpathMailboxMaildir.
 

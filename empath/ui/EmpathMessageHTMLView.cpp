@@ -172,14 +172,18 @@ EmpathMessageHTMLWidget::go()
 
 	int bodyTagPos = htmlTemplate.find("@_MESSAGE_BODY_");
 	
+	kapp->processEvents();
 	begin();
 	parse();
+	kapp->processEvents();
 	write(htmlTemplate.left(bodyTagPos - 1)); // catch the last char
+	kapp->processEvents();
 			
 	// Markup and place the body of the message in the template.
 	replaceBodyTagsByData(messageBody, htmlTemplate);
 	
 	write(htmlTemplate.right(htmlTemplate.length() - bodyTagPos + 1));
+	kapp->processEvents();
 	
 	///////////////////////////////////////////////////////////// Testing ///
 	// Write the HTML to a file. Useful considering HTML widget crashes.  ///
@@ -196,7 +200,9 @@ EmpathMessageHTMLWidget::go()
 	/////////////////////////////////////////////////////////////////////////
 
 	setCursor(arrowCursor);
+	kapp->processEvents();
 	parse();
+	kapp->processEvents();
 }
 
 	bool
@@ -361,10 +367,10 @@ EmpathMessageHTMLWidget::markupHeaderBodies(
 		
 		// e.g. replacementRegExp = "Subject" + ":".
 	
-		QRegExp replacementRegExp(replaceTagsHeader[i] +
-				QCString(":"));
+		QRegExp replacementRegExp(replaceTagsHeader[i] + QCString(":"));
 		
-		empathDebug("replacementRegExp: " + QCString(replacementRegExp.pattern()));
+		empathDebug("replacementRegExp: " +
+			QCString(replacementRegExp.pattern()));
 		
 		// Try to find the header in the message header, not case sensitive.
 		int headerPos = body.find(replacementRegExp.pattern(), 0, false);

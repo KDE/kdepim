@@ -22,6 +22,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathSendingSettingsDialog.h"
@@ -50,7 +51,7 @@ EmpathSendingSettingsDialog::create()
 EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
 	setCaption(i18n("Sending Settings - ") + kapp->getCaption());
@@ -90,12 +91,26 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"rb_sendmail");
 	CHECK_PTR(rb_sendmail_);
 
+	KQuickHelp::add(rb_sendmail_, i18n(
+			"Here you may elect to use sendmail to send\n"
+			"all outgoing mail. You must fill in the full\n"
+			"path to the sendmail program.\n"
+			"If you don't know the full path, you can try\n"
+			"typing 'which sendmail' (without the quotes)\n"
+			"at a command prompt."));
+
 	rb_sendmail_->setFixedHeight(h);
 
 	le_sendmail_		=
 		new QLineEdit(w_server_, "le_sendmail");
 	CHECK_PTR(le_sendmail_);
 	
+	KQuickHelp::add(le_sendmail_, i18n(
+			"Here you may elect to use qmail to send\n"
+			"all outgoing mail. You must fill in the full\n"
+			"path to the qmail program.\n"));
+
+
 	le_sendmail_->setFixedHeight(h);
 
 	pb_sendmailBrowse_	=
@@ -115,6 +130,16 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"rb_qmail");
 	CHECK_PTR(rb_qmail_);
 	
+	KQuickHelp::add(rb_qmail_, i18n(
+			"Here you may elect to use sendmail to send\n"
+			"all outgoing mail. You must fill in the full\n"
+			"path to the sendmail program.\n"
+			"If you don't know the full path, you can try\n"
+			"typing 'which sendmail' (without the quotes)\n"
+			"at a command prompt."));
+
+
+
 	rb_qmail_->setMaximumHeight(h);
 	rb_qmail_->setMinimumHeight(h);
 
@@ -122,6 +147,16 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		new QLineEdit(w_server_, "le_qmail");
 	CHECK_PTR(le_qmail_);
 	
+	KQuickHelp::add(le_qmail_, i18n(
+			"Here you may elect to use sendmail to send\n"
+			"all outgoing mail. You must fill in the full\n"
+			"path to the sendmail program.\n"
+			"If you don't know the full path, you can try\n"
+			"typing 'which sendmail' (without the quotes)\n"
+			"at a command prompt."));
+
+
+
 	le_qmail_->setMaximumHeight(h);
 	le_qmail_->setMinimumHeight(h);
 
@@ -144,16 +179,65 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	
 	rb_smtp_->setFixedHeight(h);
 
+	KQuickHelp::add(rb_smtp_, i18n(
+			"Here you may elect to use SMTP to send\n"
+			"all outgoing mail. This generally means\n"
+			"that mail is sent over a network (or via\n"
+			"the internet. However, you may also use an\n"
+			"SMTP server on your local machine, for\n"
+			"instance 'sendmail'. If you have sendmail\n"
+			"on your machine, you can just use 'sendmail'\n"
+			"above, of course.\n\n"
+			"Note that you must fill in the address of the\n"
+			"sendmail server (e.g. <b>localhost</b> for the\n"
+			"local machine, and the port that the server\n"
+			"accepts connections on. The port is usually 25\n"
+			"so you can probably leave it alone."));
+
+
 	le_smtpServer_		=
 		new QLineEdit(w_server_, "le_smtp");
 	CHECK_PTR(le_smtpServer_);
 	
+	KQuickHelp::add(le_smtpServer_, i18n(
+			"Here you may elect to use SMTP to send\n"
+			"all outgoing mail. This generally means\n"
+			"that mail is sent over a network (or via\n"
+			"the internet. However, you may also use an\n"
+			"SMTP server on your local machine, for\n"
+			"instance 'sendmail'. If you have sendmail\n"
+			"on your machine, you can just use 'sendmail'\n"
+			"above, of course.\n\n"
+			"Note that you must fill in the address of the\n"
+			"sendmail server (e.g. <b>localhost</b> for the\n"
+			"local machine, and the port that the server\n"
+			"accepts connections on. The port is usually 25\n"
+			"so you can probably leave it alone."));
+
+
 	le_smtpServer_->setFixedHeight(h);
 
 	l_smtpServerPort_	=
 		new QLabel(i18n("Port:"), w_server_, "l_smtpServerPort");
 	CHECK_PTR(l_smtpServerPort_);
 	
+	KQuickHelp::add(l_smtpServerPort_, i18n(
+			"Here you may elect to use SMTP to send\n"
+			"all outgoing mail. This generally means\n"
+			"that mail is sent over a network (or via\n"
+			"the internet. However, you may also use an\n"
+			"SMTP server on your local machine, for\n"
+			"instance 'sendmail'. If you have sendmail\n"
+			"on your machine, you can just use 'sendmail'\n"
+			"above, of course.\n\n"
+			"Note that you must fill in the address of the\n"
+			"sendmail server (e.g. <b>localhost</b> for the\n"
+			"local machine, and the port that the server\n"
+			"accepts connections on. The port is usually 25\n"
+			"so you can probably leave it alone."));
+
+
+
 	l_smtpServerPort_->setFixedWidth(l_smtpServerPort_->sizeHint().width());
 	l_smtpServerPort_->setFixedHeight(h);
 
@@ -191,6 +275,15 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	cb_copySelf_	=
 		new QCheckBox(i18n("Send a copy to &me"), w_copies_, "cb_copySelf");
 	CHECK_PTR(cb_copySelf_);
+	
+	KQuickHelp::add(cb_copySelf_, i18n(
+			"By selecting this option, you choose to have\n"
+			"Empath <b>mail</b> a copy of all outgoing messages\n"
+			"back to your email address. This is pretty wasteful\n"
+			"of network resources, unless it's absolutely necessary.\n"
+			"Better to use the 'Place a copy in folder' option below\n"
+			"where possible."));
+
 
 	cb_copySelf_->setFixedHeight(h);
 	cb_copySelf_->setMinimumWidth(cb_copySelf_->sizeHint().width());
@@ -200,12 +293,20 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"cb_copyOther");
 	CHECK_PTR(cb_copyOther_);
 	
+	KQuickHelp::add(cb_copyOther_, i18n(
+			"If you choose this option, all outgoing messages\n"
+			"are also sent to the address you type."));
+	
 	cb_copyOther_->setFixedHeight(h);
 	cb_copyOther_->setMinimumWidth(cb_copyOther_->sizeHint().width());
 
 	asw_copyOther_	=
 		new EmpathAddressSelectionWidget(w_copies_, "asw_copyOther");
 	CHECK_PTR(asw_copyOther_);
+	
+	KQuickHelp::add(asw_copyOther_, i18n(
+			"If you choose this option, all outgoing messages\n"
+			"are also sent to the address you type."));
 	
 	asw_copyOther_->setFixedHeight(h);
 	
@@ -218,6 +319,16 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		new QCheckBox(i18n("Place a copy in &folder: "), w_copies_,
 				"cb_copyFolder");
 	CHECK_PTR(cb_copyFolder_);
+	
+	KQuickHelp::add(asw_copyOther_, i18n(
+			"This option allows you to keep a copy\n"
+			"of all outgoing messages in a folder.\n"
+			"It's very useful for being able to resend\n"
+			"messages that were lost along the way or\n"
+			"by the recipient, and to be able to quote\n"
+			"your own messages back to people. Handy\n"
+			"when people say 'you wrote this' and you\n"
+			"want to make sure you really did."));
 	
 	cb_copyFolder_->setFixedHeight(h);
 	cb_copyFolder_->setMinimumWidth(cb_copyFolder_->sizeHint().width());
@@ -395,8 +506,7 @@ EmpathSendingSettingsDialog::loadData()
 	void
 EmpathSendingSettingsDialog::s_OK()
 {
-	if (!applied_)
-		kapp->getConfig()->rollback(true);
+	s_apply();
 	
 	kapp->getConfig()->sync();
 	delete this;

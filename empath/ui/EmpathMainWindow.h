@@ -67,16 +67,12 @@ class EmpathMainWindow : public KTMainWindow
 		void s_toolbarMoved(BarPosition);
 		
 		// File menu slots
-		void s_fileEmptyTrash();
 		void s_fileSendNew();
 		void s_fileAddressBook();
-		void s_filePrint();
 		void s_fileQuit();
 		
 		// Edit menu slots
 	
-		void s_editUndo();
-		void s_editRedo();
 		void s_editCut();
 		void s_editCopy();
 		void s_editPaste();

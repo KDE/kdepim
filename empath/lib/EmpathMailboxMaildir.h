@@ -53,6 +53,8 @@ class EmpathMailboxMaildir : public EmpathMailbox
 
 	private:
 	
+		bool					_recursiveRemove(const QString &);
+		void					_recursiveReadFolders(const QString &);
 		EmpathMaildir *			_box(const EmpathURL & id);
 		void					_setupDefaultFolders();
 		

@@ -121,13 +121,13 @@ EmpathUI::s_setupIdentity()
 	void
 EmpathUI::s_setupSending()
 {
-	EmpathComposeSettingsDialog::create();
+	EmpathSendingSettingsDialog::create();
 }
 
 	void
 EmpathUI::s_setupComposing()
 {
-	EmpathSendingSettingsDialog::create();
+	EmpathComposeSettingsDialog::create();
 }
 
 	void

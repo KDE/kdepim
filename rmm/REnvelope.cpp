@@ -45,6 +45,7 @@ REnvelope::operator = (const REnvelope & e)
 	headerList_ = e.headerList_;
 	rmmDebug(".");
 	RMessageComponent::operator = (e);
+	assembled_ = false;
 	return *this;
 }
 
@@ -97,6 +98,7 @@ REnvelope::parse()
 
 				rmmDebug("New header: \"" + s + "\"");
 				RHeader * h = new RHeader(s);
+				h->parse();
 				headerList_.append(h);
 				rmmDebug(".");
 			}
@@ -109,9 +111,7 @@ REnvelope::parse()
 		*r++ = *c++;
 	}
 
-	delete rstart;
-
-	RHeaderListIterator it(headerList_);
+	delete [] rstart;
 
 	parsed_		= true;
 	assembled_	= false;
@@ -246,7 +246,8 @@ REnvelope::get(RMM::HeaderType h)
 	for (; it.current(); ++it)
 		if (it.current()->headerType() == h) {
 			rmmDebug("The header you asked for exists.");
-			rmmDebug("headerbody: \"" + QCString(it.current()->asString()) + "\"");
+			rmmDebug("headerbody: \"" +
+				QCString(it.current()->headerBody()->asString()) + "\"");
 			return it.current()->headerBody();
 		}
 

@@ -33,7 +33,7 @@ class RText : public RHeaderBody {
 
 		RText();
 		RText(const RText &);
-		RText(const QCString & s) : RHeaderBody(s) { }
+		RText(const QCString &);
 		RText & operator = (const RText &);
 
 		virtual ~RText();

@@ -184,6 +184,12 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		new QPushButton(w_main_, "pb_editSig");
 	CHECK_PTR(pb_editSig_);
 
+	KQuickHelp::add(pb_chooseSig_, i18n(
+			"Press this to edit your signature.\n"
+			"Note that you just use the box below !\n"
+			"When you're done, press the button again\n"
+			"to save your signature."));
+
 	pb_editSig_->setText(i18n("Edit"));
 	
 	pb_editSig_->setFixedSize(pb_editSig_->sizeHint());
@@ -306,15 +312,18 @@ EmpathIdentitySettingsDialog::s_chooseSig()
 	
 	// Preview the sig
 	QFile f(sig_);
-	if ( f.open(IO_ReadOnly) ) {
-		QTextStream t(&f);
-		QString s;
-		while (!t.eof()) {
-			s = s + t.readLine() + '\n';
-		}
-		f.close();
-		mle_sigPreview_->setText(s);
+	if (!f.open(IO_ReadOnly)) return;
+	
+	QTextStream t(&f);
+	QString s;
+	QString buf;
+	while (!t.eof()) {
+		t >> buf;
+		s += buf;
 	}
+	
+	f.close();
+	mle_sigPreview_->setText(s);
 }
 
 	void
@@ -364,15 +373,33 @@ EmpathIdentitySettingsDialog::loadData()
 	void
 EmpathIdentitySettingsDialog::s_editSig()
 {
+	QObject::disconnect(pb_editSig_, SIGNAL(clicked()),
+			this, SLOT(s_editSig()));
+	mle_sigPreview_->setReadOnly(false);
+	pb_editSig_->setText(i18n("Save"));
+	QObject::connect(pb_editSig_, SIGNAL(clicked()),
+			this, SLOT(s_saveSig()));
 }
 
+	void
+EmpathIdentitySettingsDialog::s_saveSig()
+{
+	QObject::disconnect(pb_editSig_, SIGNAL(clicked()),
+			this, SLOT(s_saveSig()));
+	mle_sigPreview_->setReadOnly(true);
+	QFile f(le_chooseSig_->text());
+	if (!f.open(IO_WriteOnly)) return;
+	QTextStream t(&f);
+	t << mle_sigPreview_->text();
+	pb_editSig_->setText(i18n("Edit"));
+	QObject::connect(pb_editSig_, SIGNAL(clicked()),
+			this, SLOT(s_editSig()));
+}
 
 	void
 EmpathIdentitySettingsDialog::s_OK()
 {
-	if (!applied_)
-		kapp->getConfig()->rollback(true);
-	
+	s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }

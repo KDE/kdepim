@@ -170,19 +170,11 @@ EmpathMailboxMaildir::newMail() const
 EmpathMailboxMaildir::saveConfig()
 {
 	empathDebug("saveConfig() called - my name is " + url_.asString());
+	
 	KConfig * c = kapp->getConfig();
 	c->setGroup(url_.mailboxName());
 	
 	c->writeEntry(EmpathConfig::KEY_MAILBOX_TYPE, type_);
-	
-	QStrList l;
-	
-	EmpathFolderListIterator it(folderList_);
-	
-	for (; it.current(); ++it)
-		l.append(it.current()->url().folderPath());
-	
-	c->writeEntry(EmpathConfig::KEY_FOLDER_LIST, l);
 	
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL, checkMail_);
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL_INTERVAL, checkMailInterval_);
@@ -192,27 +184,77 @@ EmpathMailboxMaildir::saveConfig()
 EmpathMailboxMaildir::readConfig()
 {
 	empathDebug("readConfig() called");
+
 	KConfig * c = kapp->getConfig();
-	empathDebug("Setting config group to \"" + url_.mailboxName() + "\""); 
 	c->setGroup(url_.mailboxName());
 	
-	QStrList l;
-	c->readListEntry(EmpathConfig::KEY_FOLDER_LIST, l);
-	
-	empathDebug("There are " + QString().setNum(l.count()) + " folders to load");
-	
-	QStrListIterator it(l);
+	checkMail_ = c->readUnsignedNumEntry(EmpathConfig::KEY_CHECK_MAIL);
+	checkMailInterval_ =
+		c->readUnsignedNumEntry(EmpathConfig::KEY_CHECK_MAIL_INTERVAL);
 	
 	folderList_.clear();
 	boxList_.clear();
 	
-	for (; it.current(); ++it) {
+	_recursiveReadFolders(path_);
+}
+
+	void
+EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
+{
+	empathDebug("_recursiveReadFolders(" + currentDir + ") called");
+	// We need to look at the maildir base directory, and go recursively
+	// through subdirs. Any subdir that has cur, tmp and new is a Maildir
+	// folder.
+
+	QDir d(currentDir);
+	d.setFilter(QDir::Dirs);
+	
+	if (d.count() == 0) {
+		empathDebug("No folders in maildir");
+		return;
+	}
+	
+	QStringList l(d.entryList());
+	
+	QStringList::Iterator it(l.begin());
+	
+	bool hasCur, hasNew, hasTmp;
+	hasCur = hasNew = hasTmp = false;
+	
+	for (; it != l.end(); ++it) {
 		
-		empathDebug("Loading folder: \"" + QString(it.current()) + "\"");
-
-		EmpathURL url(url_.mailboxName(), it.current(), QString::null);
-
+		if ((*it).left(1) == ".")
+			continue;
+		
+		if (*it == "cur") {
+			hasCur = true;
+			continue;
+		}
+		
+		if (*it == "new") {
+			hasNew = true;
+			continue;
+		}
+		
+		if (*it == "tmp") {
+			hasTmp = true;
+			continue;
+		}
+		
+		_recursiveReadFolders(currentDir + "/" + *it);
+	}
+	
+	if (hasCur && hasNew && hasTmp) {
+		
+		// This dir is itself a maildir folder.
+		
+		QString s(d.absPath());
+		s.remove(0, path_.length());
+		empathDebug("Folder path is " + s);
+		
+		EmpathURL url(url_.mailboxName(), s, QString::null);
 		EmpathFolder * f = new EmpathFolder(url);
+		
 		CHECK_PTR(f);
 
 		folderList_.append(f);
@@ -222,9 +264,6 @@ EmpathMailboxMaildir::readConfig()
 		
 		boxList_.append(m);
 	}
-	
-	checkMail_ = c->readUnsignedNumEntry(EmpathConfig::KEY_CHECK_MAIL);
-	checkMailInterval_ = c->readUnsignedNumEntry(EmpathConfig::KEY_CHECK_MAIL_INTERVAL);
 }
 
 	bool
@@ -337,13 +376,14 @@ EmpathMailboxMaildir::addFolder(const EmpathURL & id)
 	folderList_.append(f);
 	boxList_.append(m);
 	
-	emit(updateFolderLists());
 	return true;
 }
 
 	bool
 EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
 {
+	empathDebug("removeFolder(" + id.asString() + ") called");
+	
 	bool removedFromFolderList = false;
 	bool removedFromMaildirList = false;
 	
@@ -365,7 +405,50 @@ EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
 			break;
 		}
 	
-	emit(updateFolderLists());
-	return (removedFromFolderList && removedFromMaildirList);
+	bool removedDiskFiles = _recursiveRemove(path_ + id.folderPath());
+	
+	return
+		(removedFromFolderList && removedFromMaildirList && removedDiskFiles);
+}
+
+	bool
+EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
+{
+	empathDebug("_recursiveRemove(" + dir + ") called");
+	QDir d(dir);
+
+	// First remove all dirs.
+	d.setFilter(QDir::Dirs | QDir::NoSymLinks);
+	
+	QStringList l(d.entryList());
+	
+	QStringList::Iterator it(l.begin());
+	
+	for (; it != l.end(); ++it) {
+		
+		if (*it == ".") continue;
+		if (*it == "..") continue;
+		
+		_recursiveRemove(dir + "/" + *it);
+		empathDebug("REMOVE DIR  \"" + dir + "/" + *it + "\"");
+	}
+	
+	// Now remove all files.
+	d.setFilter(QDir::NoSymLinks | QDir::Files);
+	
+	l = d.entryList();
+	
+	it = l.begin();
+	
+	for (; it != l.end(); ++it) {
+
+		empathDebug("REMOVE FILE \"" + dir + "/" + *it + "\"");
+//		QFile(*it).remove();
+	}
+	
+	// Finally, remove this dir.
+	empathDebug("REMOVE DIR  \"" + dir + "\"");
+	
+	return true;
 }
 

@@ -24,6 +24,7 @@
 #include <RMM_Token.h>
 
 RMailbox::RMailbox()
+	:	RAddress()
 {
 	rmmDebug("ctor");
 }
@@ -231,6 +232,7 @@ RMailbox::parse()
 	void
 RMailbox::assemble()
 {
+	parse();
 	if (assembled_) return;
 	strRep_ = "";
 	rmmDebug("assemble() called");

@@ -34,16 +34,25 @@ RAddress::RAddress()
 }
 
 RAddress::RAddress(const RAddress & addr)
-	:	RHeaderBody(),
-		mailbox_(addr.mailbox_),
-		group_(addr.group_)
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
+
+	delete mailbox_;
+	mailbox_	= 0;
+	delete group_;
+	group_		= 0;
+
+	if (addr.mailbox_ != 0)
+		mailbox_ = new RMailbox(*(addr.mailbox_));
+	else
+		group_ = new RGroup(*(addr.group_));
+
 	assembled_	= false;
 }
 
 RAddress::RAddress(const QCString & addr)
-	:	RHeaderBody(addr.data()),
+	:	RHeaderBody(addr),
 		mailbox_(0),
 		group_(0)
 {
@@ -67,10 +76,9 @@ RAddress::operator = (const RAddress & addr)
 	rmmDebug("operator =");
     if (this == &addr) return *this; // Don't do a = a.
 
-        delete mailbox_;
-        delete group_;
-
+	delete mailbox_;
 	mailbox_	= 0;
+	delete group_;
 	group_		= 0;
 
 	if (addr.mailbox_ != 0)
@@ -119,19 +127,16 @@ RAddress::parse()
 
 		rmmDebug("I'm a group.");
 
-		group_ = new RGroup;
+		group_ = new RGroup(s);
 		CHECK_PTR(group_);
-		group_->set(s);
 		group_->parse();
 
 	} else {
 
 		rmmDebug("I'm a mailbox.");
 
-		mailbox_ = new RMailbox;
+		mailbox_ = new RMailbox(s);
 		CHECK_PTR(mailbox_);
-		rmmDebug(s);
-		mailbox_->set(s);
 		mailbox_->parse();
 	}
 	

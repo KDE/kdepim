@@ -34,6 +34,7 @@
 #include <qmultilinedit.h>
 
 // Local includes
+#include "EmpathEnum.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 
@@ -85,23 +86,23 @@ class EmpathComposeWidget : public QWidget
 		
 	private:
 
-		void spawnExternalEditor(const QCString & text);
-		QSplitter *vSplit, *hSplit;
+		void	_init();
+		void	spawnExternalEditor(const QCString & text);
 
 		QMultiLineEdit					* editorWidget_;
 		EmpathHeaderEditWidget			* headerEditWidget_;
-//		EmpathAttachmentListWidget		* attachmentListWidget_;
 		EmpathSubjectSpecWidget			* subjectSpecWidget_;
 		QListView						* lv_attachments_;
 		QComboBox						* cmb_priority_;
 		QLabel							* l_priority_;
 		QGridLayout						* layout_;
 		QGridLayout						* midLayout_;
+		QSplitter						* vSplit;
+		QSplitter						* hSplit;
 
-		Q_UINT32 horizPannerAbsSeparator;
-		QDict<KProcess>			processTable_;
-		QDict<char>				externEditModified_;
-
+		Q_UINT32				horizPannerAbsSeparator;
+		ComposeType				composeType_;
+		EmpathURL				url_;
 };
 
 #endif

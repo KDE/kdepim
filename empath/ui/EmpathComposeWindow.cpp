@@ -196,13 +196,13 @@ EmpathComposeWindow::setupToolBar()
 	this->addToolBar(tb, 0);
 
 	tb->insertButton(empathIcon("send.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_fileSendMessage()), true, i18n("Send Message Now"));
+			this, SLOT(s_fileSendMessage()), true, i18n("Send"));
 	
 	tb->insertButton(empathIcon("sendlater.xpm"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileSendLater()), true, i18n("Send Later"));
 	
 	tb->insertButton(empathIcon("save.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_fileSaveAs()), true, i18n("Save message"));
+			this, SLOT(s_fileSaveAs()), true, i18n("Save"));
 }
 
 	void
@@ -277,6 +277,7 @@ EmpathComposeWindow::s_fileClose()
 {
 	empathDebug("s_fileClose called");
 	// FIXME: Check if the user wants to save changes
+	delete this;
 }
 
 // Edit menu slots
@@ -380,8 +381,7 @@ EmpathComposeWindow::s_help()
 	void
 EmpathComposeWindow::s_aboutEmpath()
 {
-	EmpathAboutBox aboutBox(this, "aboutBox");
-	aboutBox.exec();
+	EmpathAboutBox::create();
 }
 
 	void

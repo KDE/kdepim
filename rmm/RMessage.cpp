@@ -110,6 +110,7 @@ RMessage::parse()
 {
 	rmmDebug("parse() called");
 	if (parsed_) return;
+	rmmDebug("strRep_ = " + strRep_);
 
 	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
 	

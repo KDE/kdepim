@@ -75,10 +75,9 @@ EmpathFolderListItem::EmpathFolderListItem(
 	QString s = url_.folderPath();
 	if (s.right(1) == "/")
 		s = s.remove(s.length(), 1);
-	s = s.left(s.length() - s.findRev("/") + 1);
+	s = s.right(s.length() - s.findRev("/") - 1);
 	
 	setText(0, s);
-	empathDebug("ABOUT TO ACCESS F");
 	setText(1, QString().setNum(f->unreadMessageCount()));
 	setText(2, QString().setNum(f->messageCount()));
 	setPixmap(0, empathIcon(f->pixmapName()));

@@ -62,7 +62,7 @@ class RMessageComponent {
 
 		RMessageComponent();
 		RMessageComponent(const RMessageComponent & component);
-		RMessageComponent(const QCString & s) : strRep_(s.data()) { }
+		RMessageComponent(const QCString &);
 
 		QCString			strRep_;
 		bool				parsed_;

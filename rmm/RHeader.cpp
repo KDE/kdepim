@@ -132,9 +132,10 @@ RHeader::parse()
 	headerName_ = strRep_.left(split);
 	headerName_ = headerName_.stripWhiteSpace();
 
-	for (int i = 0; i < 42; i++) {
+	for (int i = 0; i <= 42; i++) {
 		if (!stricmp((headerName_), RMM::headerNames[i])) {
 			headerType_ = (RMM::HeaderType)i;
+			break;
 			rmmDebug("I'm of type " + QCString(RMM::headerNames[i]));
 		}
 	}

@@ -23,14 +23,22 @@
 #include <RMM_Text.h>
 
 RText::RText()
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
 }
 
 RText::RText(const RText & r)
-	:	RHeaderBody()
+	:	RHeaderBody(r)
 {
-	rmmDebug("ctor");
+	rmmDebug("ctor with RText(" + r.asString() + ")");
+	rmmDebug("my strRep becomes \"" + strRep_ + "\"");
+}
+
+RText::RText(const QCString & s)
+   	:	RHeaderBody(s)
+{
+	rmmDebug("ctor with \"" + s + "\"");
 }
 
 RText::~RText()
@@ -56,6 +64,7 @@ RText::parse()
 RText::assemble()
 {
 	rmmDebug("assemble() called");
+	rmmDebug("strRep_ = \"" + strRep_ + "\"");
 }
 
 	void

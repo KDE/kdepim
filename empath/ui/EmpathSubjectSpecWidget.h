@@ -47,13 +47,13 @@ class EmpathSubjectSpecWidget : public QWidget
 		/**
 		 * Get what's currently in the subject field
 		 */
-		QCString	getSubject() const;
+		QString	getSubject() const;
 
 		/**
 		 * Set the subject field. Use this immediately after creation
 		 * to set the field to 'Re: your mail' or whatever.
 		 */
-		void	setSubject(const QCString & subject);
+		void	setSubject(const QString & subject);
 		void	setFocus();
 		
 	private:

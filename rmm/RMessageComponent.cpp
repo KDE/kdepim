@@ -57,6 +57,11 @@ RMessageComponent::operator = (const QCString & s)
 {
 	strRep_		= s;
 	parsed_		= false;
-	assembled_	= false;
 }
 
+	
+RMessageComponent::RMessageComponent(const QCString & s)
+	:	strRep_(s),
+		parsed_(false)
+{
+}
