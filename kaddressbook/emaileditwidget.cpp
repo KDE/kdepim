@@ -146,7 +146,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent, cons
   connect(mEditButton, SIGNAL(clicked()), SLOT(edit()));
   topLayout->addWidget(mEditButton, 1, 2);
 
-  mRemoveButton = new QPushButton(i18n("Remove..."), page);
+  mRemoveButton = new QPushButton(i18n("Remove"), page);
   connect(mRemoveButton, SIGNAL(clicked()), SLOT(remove()));
   topLayout->addWidget(mRemoveButton, 2, 2);
 

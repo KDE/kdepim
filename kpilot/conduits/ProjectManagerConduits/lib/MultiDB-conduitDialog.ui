@@ -131,7 +131,7 @@
                                     <cstring>PushDelete</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Delete...</string>
+                                    <string>&amp;Delete</string>
                                 </property>
                             </widget>
                         </grid>

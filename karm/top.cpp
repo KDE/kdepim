@@ -176,7 +176,7 @@ void KarmWindow::makeMenus()
                              CTRL+ALT+Key_N,
                              _karm, SLOT(newSubTask()),
                              actionCollection(), "new_sub_task");
-  actionDelete = new KAction(i18n("&Delete..."), QString::fromLatin1("editdelete"),
+  actionDelete = new KAction(i18n("&Delete"), QString::fromLatin1("editdelete"),
                              Key_Delete,_karm,
                              SLOT(deleteTask()),actionCollection(),"delete_task");
   actionEdit = new KAction(i18n("&Edit..."), QString::fromLatin1("edit"),

@@ -319,7 +319,7 @@ void FeatureDistributionList::initGUI()
   mPbListRename = new QPushButton( i18n( "Rename List..." ), this );
   layout->addWidget( mPbListRename, 2, 0 );
 
-  mPbListRemove = new QPushButton( i18n( "Remove List..." ), this );
+  mPbListRemove = new QPushButton( i18n( "Remove List" ), this );
   layout->addWidget( mPbListRemove, 3, 0 );
 
   QSpacerItem* spacer_2 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );

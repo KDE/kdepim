@@ -178,7 +178,7 @@ void ActionManager::initReadOnlyActions()
     new KAction(i18n("Add View..."), "window_new", 0, mViewManager,
                 SLOT(addView()), mACollection,
                 "view_add");
-    mActionDeleteView = new KAction(i18n("Delete View..."), "view_remove", 0,
+    mActionDeleteView = new KAction(i18n("Delete View"), "view_remove", 0,
                                     mViewManager,
                                     SLOT(deleteView()), mACollection,
                                     "view_delete");
