@@ -982,10 +982,11 @@ void KNMainWindow::paletteChange( const QPalette & )
 
 bool KNMainWindow::eventFilter(QObject *o, QEvent *e)
 {
-  if ((e->type() == QEvent::KeyPress) ||
-      (e->type() == QEvent::KeyRelease) ||
-      (e->type() == QEvent::Accel) ||
-      (e->type() == QEvent::AccelOverride))
+  if (((e->type() == QEvent::KeyPress) ||
+       (e->type() == QEvent::KeyRelease) ||
+       (e->type() == QEvent::Accel) ||
+       (e->type() == QEvent::AccelOverride)) &&
+       b_lockui)
     return true;
   return KDockMainWindow::eventFilter(o, e);
 }
