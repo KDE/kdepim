@@ -68,7 +68,7 @@ class ResourceRemote : public ResourceCalendar
 
     bool load();
 
-    bool sync();
+    bool save();
 
     bool isSaving();
 

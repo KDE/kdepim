@@ -153,7 +153,7 @@ bool ResourceIMAP::load()
   return true;
 }
 
-bool ResourceIMAP::sync()
+bool ResourceIMAP::save()
 {
   return false;
 }

@@ -54,13 +54,36 @@ class ResourceCalendar : public QObject, public KRES::Resource
 
     virtual void writeConfig( KConfig* config );
 
+    /**
+      Load resource data. After calling this function all data is accessible by
+      calling the incidence/event/todo/etc. accessor functions.
+      
+      If data is actually loaded within this function or the loading is delayed
+      until it is accessed by another function depends on the implementation of
+      the resource.
+      
+      If loading the data takes significant time, the resource should return
+      cached values, if available and return the results via the resourceChanged
+      signal. When the resource has finished loading the resourceLoaded() signal
+      is emitted.
+      
+      Calling this function multiple times should have the same effect as
+      calling it once, given that the data isn't changed between calls.
+    */
     virtual bool load() = 0;
 
     /**
-     Writes calendar to storage. Writes calendar to disk file,
-     writes updates to server, whatever.
-     */
-    virtual bool sync() = 0;
+      Save resource data. After calling this function it is save to close the
+      resource without losing data.
+      
+      If data is actually saved within this function or saving is delayed
+      depends on the implementation of the resource.
+      
+      If saving the data takes significant time, the resource should return from
+      the function, do the saving in the background and notify the end of the
+      save by emitting the signal resourceSaved().
+    */
+    virtual bool save() = 0;
 
     /** Add Event to calendar. */
     virtual void addEvent(Event *anEvent) = 0;

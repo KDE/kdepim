@@ -144,7 +144,7 @@ bool ResourceLocal::load()
   return mCalendar.load( mURL.path() );
 }
 
-bool ResourceLocal::sync()
+bool ResourceLocal::save()
 {
   if ( !mOpen ) return true;
 

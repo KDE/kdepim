@@ -203,19 +203,19 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
   emit resourceLoaded( this );
 }
 
-bool ResourceRemote::sync()
+bool ResourceRemote::save()
 {
-  kdDebug() << "ResourceRemote::sync()" << endl;
+  kdDebug() << "ResourceRemote::save()" << endl;
 
   if ( !mOpen ) return true;
 
   if ( mDownloadJob ) {
-    kdWarning() << "ResourceRemote::sync(): download still in progress."
+    kdWarning() << "ResourceRemote::save(): download still in progress."
                 << endl;
     return false;
   }
   if ( mUploadJob ) {
-    kdWarning() << "ResourceRemote::sync(): upload still in progress."
+    kdWarning() << "ResourceRemote::save(): upload still in progress."
                 << endl;
     return false;
   }

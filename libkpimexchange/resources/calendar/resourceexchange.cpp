@@ -157,7 +157,7 @@ bool ResourceExchange::load()
   return true;
 }
 
-bool ResourceExchange::sync()
+bool ResourceExchange::save()
 {
   return true;
 }

@@ -59,7 +59,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
      Writes calendar to storage. Writes calendar to disk file,
      writes updates to server, whatever.
      */
-    virtual bool sync();
+    virtual bool save();
 
     /** constructs a new calendar, with variables initialized to sane values. */
 //    ExchangeCalendar( KPIM::ExchangeAccount* account );

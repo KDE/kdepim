@@ -154,9 +154,9 @@ bool ResourceLocalDir::load()
   return true;
 }
 
-bool ResourceLocalDir::sync()
+bool ResourceLocalDir::save()
 {
-  kdDebug() << "ResourceLocalDir::sync()" << endl;
+  kdDebug() << "ResourceLocalDir::save()" << endl;
 
   if ( !mOpen ) return true;
 

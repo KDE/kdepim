@@ -120,14 +120,14 @@ void CalendarResources::close()
   }
 }
 
-void CalendarResources::sync()
+void CalendarResources::save()
 {
   kdDebug(5800) << "CalendarResources::sync()" << endl;
 
   if ( mOpen ) {
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      (*it)->sync();
+      (*it)->save();
     }
 
     setModified( false );

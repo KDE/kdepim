@@ -70,7 +70,7 @@ class Calendar : public CustomProperties, public IncidenceBase::Observer
     /**
       Sync changes in memory to persistant storage.
     */
-    virtual void sync() = 0;
+    virtual void save() = 0;
   
     /**
       Return the owner of the calendar's full name.

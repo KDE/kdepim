@@ -57,7 +57,7 @@ namespace KCal {
 
     bool load();
 
-    bool sync();
+    bool save();
 
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);

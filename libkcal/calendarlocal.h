@@ -62,7 +62,7 @@ class CalendarLocal : public Calendar
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
 
-    void sync() {}
+    void save() {}
   
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);
