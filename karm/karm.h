@@ -2,6 +2,8 @@
 #define SSK_KARM_H
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #include <qsplitter.h>
 #include <qlistview.h>
 #include <qptrlist.h>
@@ -79,7 +81,7 @@ protected slots:
 inline QString Karm::formatTime( long minutes )
 {
     QString time;
-    time.sprintf("%ld:%02ld", minutes / 60, minutes % 60);
+    time.sprintf("%ld:%02ld", minutes / 60, labs(minutes % 60));
     return time;
 }
 
