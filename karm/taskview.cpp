@@ -483,18 +483,18 @@ void TaskView::newTask(QString caption, Task *parent)
     if (desktopList.size() == (unsigned int)_desktopTracker->desktopCount())
       desktopList.clear();
 
-    if (parent == 0)
+    if ( parent == 0 )
     {
-      task = new Task(taskName, total, session, desktopList, this);
-      task->setUid(_storage->addTask(task, 0));
+      task = new Task( taskName, total, session, desktopList, this );
+      task->setUid( _storage->addTask( task, 0 ) );
     }
     else
     {
-      task = new Task(taskName, total, session, desktopList, parent);
-      task->setUid(_storage->addTask(task, parent));
+      task = new Task( taskName, total, session, desktopList, parent );
+      task->setUid( _storage->addTask( task, parent ) );
     }
 
-    if (!task->uid().isNull())
+    if ( !task->uid().isNull() )
     {
       _desktopTracker->registerForDesktops( task, desktopList );
 
@@ -506,8 +506,8 @@ void TaskView::newTask(QString caption, Task *parent)
     else
     {
       delete task;
-      KMessageBox::error(0,i18n(
-            "Error storing new task. Your changes were not saved."));
+      KMessageBox::error( 0, i18n(
+            "Error storing new task. Your changes were not saved." ) );
     }
   }
 

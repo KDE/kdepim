@@ -645,9 +645,9 @@ QString KarmStorage::addTask(const Task* task, const Task* parent)
   QString uid;
 
   todo = new KCal::Todo();
-  if (_calendar->addTodo(todo))
+  if ( _calendar->addTodo( todo ) )
   {
-    task->asTodo(todo);
+    task->asTodo( todo  );
     if (parent)
       todo->setRelatedTo(_calendar->todo(parent->uid()));
     uid = todo->uid();
