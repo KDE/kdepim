@@ -79,9 +79,8 @@ bool KonsoleKalendarAdd::addEvent()
     event->setLocation( m_variables->getLocation() );
 
     if ( m_variables->getCalendar()->addEvent( event ) ) {
-      cout << i18n("Success: \"").local8Bit()
-	   << m_variables->getSummary().local8Bit()
-           << i18n("\" inserted").local8Bit()
+      cout << i18n("Success: \"%1\" inserted").
+        arg( m_variables->getSummary() ).local8Bit()
            << endl;
 
       if ( ! m_variables->isCalendarResources() ) {
@@ -92,9 +91,8 @@ bool KonsoleKalendarAdd::addEvent()
       }
 
     } else {
-      cout << i18n("Failure: \"").local8Bit()
-	   << m_variables->getSummary().local8Bit()
-           << i18n("\" not inserted").local8Bit()
+      cout << i18n("Failure: \"%1\" not inserted").
+        arg( m_variables->getSummary() ).local8Bit()
            << endl;
       status = false;
     }

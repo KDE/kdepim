@@ -385,8 +385,7 @@ bool KonsoleKalendar::deleteEvent()
 bool KonsoleKalendar::isEvent( QDateTime startdate,
                                QDateTime enddate, QString summary )
 {
-  // Search for an event with specified start and
-  // end date/time stamps and summaries.
+  // Search for an event with specified start and end datetime stamp and summary
 
   Event *event;
   Event::List::ConstIterator it;

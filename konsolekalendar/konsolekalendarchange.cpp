@@ -95,7 +95,8 @@ bool KonsoleKalendarChange::changeEvent()
       }
 
       if ( m_variables->getCalendar()->addEvent( event ) ) {
-        cout << i18n("Success: \"%1\" changed").arg(event->summary().local8Bit()).local8Bit()
+        cout << i18n("Success: \"%1\" changed")
+          .arg( event->summary() ).local8Bit()
              << endl;
 
         if ( !m_variables->isCalendarResources() ) {
@@ -106,7 +107,8 @@ bool KonsoleKalendarChange::changeEvent()
           status = true;
         }
       } else {
-        cout << i18n("Failure: \"%1\" not changed").arg(event->summary().local8Bit()).local8Bit()
+        cout << i18n("Failure: \"%1\" not changed")
+          .arg( event->summary() ).local8Bit()
              << endl;
       }
     }

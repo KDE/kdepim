@@ -66,7 +66,8 @@ bool KonsoleKalendarDelete::deleteEvent()
       }
 
       m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n("Success: \"%1\" deleted").arg(event->summary().local8Bit()).local8Bit()
+      cout << i18n("Success: \"%1\" deleted")
+        .arg( event->summary() ).local8Bit()
            << endl;
 
       if ( !m_variables->isCalendarResources() ) {
