@@ -683,6 +683,9 @@ QString KPilotLink::registeredConduit(const QString & dbName) const
 			<< conduit->exec() << endl;
 		return conduit->exec();
 	}
+
+	// NOTREACHED
+	return QString::null;
 }
 
 
@@ -1742,6 +1745,9 @@ void KPilotLink::tickle()
 }
 
 // $Log$
+// Revision 1.51  2001/06/10 17:25:49  adridg
+// Response to bug #24367 + total layout fixes
+//
 // Revision 1.50  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
