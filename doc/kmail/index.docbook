@@ -1794,180 +1794,6 @@ linkend="receiving-mail">Incoming Mail</link>.</para>
 
 </chapter>
 
-<chapter id="importing">
-<title>Using other Mailbox Files with &kmail;</title>
-
-<para>&kmail; offers an import tool for some formats. You can access it
-using <menuchoice><guimenu>File</guimenu><guimenuitem>Import...</guimenuitem></menuchoice>.
-You only need to read this chapter if this tool does not work for you.</para>
-
-<para>This section is for all of the users who need to move email messages from
-their previous email client over to &kmail;. &kmail; stores its mail using the
-<literal>mbox</literal> format, one of the most widely used mailbox formats on
-&UNIX; systems. Mbox mailboxes store messages in one file, identifying where
-messages start and end with a <literal>From</literal> line (do not mix this up
-with the <literal>From:</literal> header that contains the message's sender).
-For many &UNIX; mail programs, all you must do is move your mailboxes to <filename
-class="directory">~/Mail</filename> (or make <filename
-class="symlink">Mail</filename> a symbolic link to the folder containing your
-mailboxes), make sure they are writeable by your user, and launch &kmail;. The
-mailboxes should now show up correctly in &kmail;.</para>
-
-<para>If your old mailboxes are not in mbox format, see below for instructions
-on importing some other common formats. Take a look at the
-<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
-homepage</ulink> if your mailbox format is not listed here.</para>
-
-<warning><para>Do not use a second mail client that accesses the files in
-<filename class="directory">~/Mail</filename> while &kmail; is running or
-you might lose messages. This section only explains how to import mailboxes
-to &kmail; once, it's not useful to you if you're planning to use several
-mail clients for your mailboxes in the future.</para></warning>
-
-<variablelist>
-
-<varlistentry>
-<term><application>Eudora Lite</application>/<application>Eudora
-Pro</application></term>
-<listitem>
-<para><application>Eudora</application> uses the mbox format in its mail
-files. To use them with &kmail;, make sure that your
-<application>Eudora</application> mailboxes have been compacted, then copy the
-<literal role="extension">.mbx</literal> files (&Windows;
-<application>Eudora</application>) or <application>Eudora</application> mailbox
-files (&Mac; <application>Eudora</application>) to your <filename
-class="directory">~/Mail</filename> directory. You don't need to copy the
-<filename>index</filename> files. Once you start &kmail;, the mailboxes should
-appear in the Folders pane and the messages should be accessible in the Headers
-pane.</para>
-<para>If messages do not appear in the Headers pane, your mailbox files may
-still contain &Windows; or &Mac; line feed characters. Use your favorite
-text editor, the <application>recode</application> command or a scripting
-language to change the &Windows; or &Mac; line feeds to &UNIX; line
-feeds.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>MMDF</term>
-<listitem>
-<para>This format is close enough to the mailbox format that &kmail; should be
-able to use these mailboxes if you just copy them to your
-<filename class="directory">~/Mail</filename> directory. However, MMDF mailboxes
-have not been tested with &kmail;, so your results may vary.  If you can get
-this format to work with &kmail;, please let us know so we can include more
-specific directions in the next documentation release.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>MH mailboxes</term>
-<listitem>
-<para>MH mailboxes are directories containing files that correspond to each
-message in that mailbox.  A shell script to convert MH mailboxes to mbox
-mailboxes, <command>mh2kmail</command>, is included at least in the source
-releases of &kmail;, but maybe not in the packaged releases. Running this script
-on a MH folder will convert it to an mbox file.  We strongly suggest that you
-back up your MH mail folders before you use this script.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Forte <application>Agent</application></term>
-<listitem>
-<para>In <application>Agent</application>:</para>
-<procedure>
-<step>
-<para>Select the messages to export</para>
-</step>
-<step>
-<para>Select <menuchoice><guimenu>FILE</guimenu><guimenuitem>SAVE MESSAGES
-AS</guimenuitem></menuchoice></para>
-</step>
-<step>
-<para>Mark the <guilabel>UNIX FORMAT</guilabel> and <guilabel>SAVE
-RAW</guilabel> boxes</para>
-</step>
-<step>
-<para>Give File a  <literal role="extension">.txt</literal> extension and
-save.</para>
-</step>
-</procedure>
-
-<para>In &kde;:</para>
-
-<procedure>
-<step>
-<para>Move previously saves file to correct <filename
-class="directory">~/Mail</filename> folder</para>
-</step>
-<step>
-<para>Rename file without <literal role="extension">.txt</literal>
-extension</para>
-</step>
-</procedure>
-<para>When you open &kmail; the new folder with appropriate messages will be
-there.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>&Netscape; Mail</term>
-<listitem>
-<para>Copy your &Netscape; mail files from <filename
-class="directory">~/nsmail/</filename> to <filename
-class="directory">~/Mail</filename> and make sure they are writeable (only by
-your user, of course).  The mailboxes will show up in &kmail; the next time you
-start it.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><application>Pegasus Mail</application></term>
-<listitem>
-<para><application>Pegasus</application> for win32 uses single files for Mail
-folders similar to &kmail;. <application>Pegasus mail</application> folder files
-have the extension <literal role="extension">.pmm</literal> but they are the same format as mbox except the messages
-do not start with the <literal>From</literal> header, but with a control character. To work around
-this, replace each instance of the control character with <literal>From
-aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal>From</literal>
-line should be the first line of every message, before the
-<literal>Received:</literal> and other headers. Make sure to use a text editor
-that lets you save the files in &UNIX; format or create new folders in
-<application>Pegasus</application> that are in &UNIX; format and copy your mails
-there.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Maildir / Outlook Express / xfmail</term>
-<listitem>
-<para>Tools to convert these formats are available at the
-<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
-homepage</ulink>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Lotus <application>Notes</application>, BeOS Mail files, <application>cc:
-Mail</application>, &etc;...</term>
-<listitem>
-<para>First you should have a look at <ulink
-url="http://kmail.kde.org/download.html">Download section of &kmail;'s homepage</ulink> if there
-are tools to convert mails.</para>
-<para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
-proprietary mail formats that &kmail; cannot understand. However, there is no
-harm in trying! If the mailbox file looks similar to the mbox format, try
-copying the mailbox file (remember, the index file is not needed) to your
-<filename>~/Mail</filename> directory and see what happens if you start
-&kmail;. If you get mailboxes from your favorite mail client to work in &kmail;,
-please tell us how you did it so that we can include directions in a future
-revision of this documentation. </para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-</chapter>
 
 <chapter id="menus">
 <title>Menus and Keyboard Shortcuts</title>
@@ -3919,6 +3745,183 @@ in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 </qandaset>
 
 </chapter>
+
+
+<chapter id="importing">
+<title>Using other Mailbox Files with &kmail;</title>
+
+<para>&kmail; offers an import tool for some formats. You can access it
+using <menuchoice><guimenu>File</guimenu><guimenuitem>Import...</guimenuitem></menuchoice>.
+You only need to read this chapter if this tool does not work for you.</para>
+
+<para>This section is for all of the users who need to move email messages from
+their previous email client over to &kmail;. &kmail; stores its mail using the
+<literal>mbox</literal> format, one of the most widely used mailbox formats on
+&UNIX; systems. Mbox mailboxes store messages in one file, identifying where
+messages start and end with a <literal>From</literal> line (do not mix this up
+with the <literal>From:</literal> header that contains the message's sender).
+For many &UNIX; mail programs, all you must do is move your mailboxes to <filename
+class="directory">~/Mail</filename> (or make <filename
+class="symlink">Mail</filename> a symbolic link to the folder containing your
+mailboxes), make sure they are writeable by your user, and launch &kmail;. The
+mailboxes should now show up correctly in &kmail;.</para>
+
+<para>If your old mailboxes are not in mbox format, see below for instructions
+on importing some other common formats. Take a look at the
+<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
+homepage</ulink> if your mailbox format is not listed here.</para>
+
+<warning><para>Do not use a second mail client that accesses the files in
+<filename class="directory">~/Mail</filename> while &kmail; is running or
+you might lose messages. This section only explains how to import mailboxes
+to &kmail; once, it's not useful to you if you're planning to use several
+mail clients for your mailboxes in the future.</para></warning>
+
+<variablelist>
+
+<varlistentry>
+<term><application>Eudora Lite</application>/<application>Eudora
+Pro</application></term>
+<listitem>
+<para><application>Eudora</application> uses the mbox format in its mail
+files. To use them with &kmail;, make sure that your
+<application>Eudora</application> mailboxes have been compacted, then copy the
+<literal role="extension">.mbx</literal> files (&Windows;
+<application>Eudora</application>) or <application>Eudora</application> mailbox
+files (&Mac; <application>Eudora</application>) to your <filename
+class="directory">~/Mail</filename> directory. You don't need to copy the
+<filename>index</filename> files. Once you start &kmail;, the mailboxes should
+appear in the Folders pane and the messages should be accessible in the Headers
+pane.</para>
+<para>If messages do not appear in the Headers pane, your mailbox files may
+still contain &Windows; or &Mac; line feed characters. Use your favorite
+text editor, the <application>recode</application> command or a scripting
+language to change the &Windows; or &Mac; line feeds to &UNIX; line
+feeds.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>MMDF</term>
+<listitem>
+<para>This format is close enough to the mailbox format that &kmail; should be
+able to use these mailboxes if you just copy them to your
+<filename class="directory">~/Mail</filename> directory. However, MMDF mailboxes
+have not been tested with &kmail;, so your results may vary.  If you can get
+this format to work with &kmail;, please let us know so we can include more
+specific directions in the next documentation release.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>MH mailboxes</term>
+<listitem>
+<para>MH mailboxes are directories containing files that correspond to each
+message in that mailbox.  A shell script to convert MH mailboxes to mbox
+mailboxes, <command>mh2kmail</command>, is included at least in the source
+releases of &kmail;, but maybe not in the packaged releases. Running this script
+on a MH folder will convert it to an mbox file.  We strongly suggest that you
+back up your MH mail folders before you use this script.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Forte <application>Agent</application></term>
+<listitem>
+<para>In <application>Agent</application>:</para>
+<procedure>
+<step>
+<para>Select the messages to export</para>
+</step>
+<step>
+<para>Select <menuchoice><guimenu>FILE</guimenu><guimenuitem>SAVE MESSAGES
+AS</guimenuitem></menuchoice></para>
+</step>
+<step>
+<para>Mark the <guilabel>UNIX FORMAT</guilabel> and <guilabel>SAVE
+RAW</guilabel> boxes</para>
+</step>
+<step>
+<para>Give File a  <literal role="extension">.txt</literal> extension and
+save.</para>
+</step>
+</procedure>
+
+<para>In &kde;:</para>
+
+<procedure>
+<step>
+<para>Move previously saves file to correct <filename
+class="directory">~/Mail</filename> folder</para>
+</step>
+<step>
+<para>Rename file without <literal role="extension">.txt</literal>
+extension</para>
+</step>
+</procedure>
+<para>When you open &kmail; the new folder with appropriate messages will be
+there.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>&Netscape; Mail</term>
+<listitem>
+<para>Copy your &Netscape; mail files from <filename
+class="directory">~/nsmail/</filename> to <filename
+class="directory">~/Mail</filename> and make sure they are writeable (only by
+your user, of course).  The mailboxes will show up in &kmail; the next time you
+start it.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><application>Pegasus Mail</application></term>
+<listitem>
+<para><application>Pegasus</application> for win32 uses single files for Mail
+folders similar to &kmail;. <application>Pegasus mail</application> folder files
+have the extension <literal role="extension">.pmm</literal> but they are the same format as mbox except the messages
+do not start with the <literal>From</literal> header, but with a control character. To work around
+this, replace each instance of the control character with <literal>From
+aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal>From</literal>
+line should be the first line of every message, before the
+<literal>Received:</literal> and other headers. Make sure to use a text editor
+that lets you save the files in &UNIX; format or create new folders in
+<application>Pegasus</application> that are in &UNIX; format and copy your mails
+there.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Maildir / Outlook Express / xfmail</term>
+<listitem>
+<para>Tools to convert these formats are available at the
+<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
+homepage</ulink>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Lotus <application>Notes</application>, BeOS Mail files, <application>cc:
+Mail</application>, &etc;...</term>
+<listitem>
+<para>First you should have a look at <ulink
+url="http://kmail.kde.org/download.html">Download section of &kmail;'s homepage</ulink> if there
+are tools to convert mails.</para>
+<para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
+proprietary mail formats that &kmail; cannot understand. However, there is no
+harm in trying! If the mailbox file looks similar to the mbox format, try
+copying the mailbox file (remember, the index file is not needed) to your
+<filename>~/Mail</filename> directory and see what happens if you start
+&kmail;. If you get mailboxes from your favorite mail client to work in &kmail;,
+please tell us how you did it so that we can include directions in a future
+revision of this documentation. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</chapter>
+
 
 <chapter id="credits-and-licenses">
 <title>Credits and Licenses</title>
