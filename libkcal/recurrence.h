@@ -300,6 +300,34 @@ class Recurrence
     /** Returns the default method for handling yearly recurrences of February 29th. */
     static Feb29Type setFeb29YearlyTypeDefault()  { return mFeb29YearlyDefaultType; }
 
+    /** Returns the number of days in the month which recur.
+     * Reply = -1 if the number varies from month to month.
+     */
+    int  countMonthlyPosDays() const;
+    /** Returns the days in a specified month which recur, in numerical order.
+     * @param list receives the list of days which recur
+     * @param daysInMonth number of days in this month
+     * @param startDayOfWeek day of week for the first day in this month.
+     */
+    void getMonthlyPosDays(QValueList<int>& list, int daysInMonth,
+                           int startDayOfWeek) const;
+    /** Returns the days in a specified month which recur, in numerical order.
+     * @param list receives the list of days which recur
+     * @param daysInMonth number of days in this month
+     * Reply = true if day numbers varies from month to month.
+     */
+    bool getMonthlyDayDays(QValueList<int>& list, int daysInMonth) const;
+    /** Get the months which recur, in numerical order, for both leap years and non-leap years.
+     * N.B. If February 29th recurs on March 1st in non-leap years, February (not March) is
+     * included in the non-leap year month list.
+     * @param day
+     * @param list receives the list of months which recur in non-leap years
+     * @param leaplist receives the list of months which recur in leap years
+     * Reply = true if February 29th also recurs.
+     */
+    bool getYearlyMonthMonths(int day, QValueList<int>& list,
+                              QValueList<int> &leaplist) const;
+
     /** Upper date limit for recurrences */
     static const QDate MAX_DATE;
 
@@ -356,13 +384,6 @@ class Recurrence
     int  yearlyDayCalcToDate(const QDate& enddate, YearlyDayData&) const;
     int  yearlyDayCalcNextAfter(QDate& enddate, YearlyDayData&) const;
 
-  public:
-    int  countMonthlyPosDays() const;
-    void getMonthlyPosDays(QValueList<int>&, int daysInMonth,
-                           int startDayOfWeek) const;
-    bool getMonthlyDayDays(QValueList<int>&, int daysInMonth) const;
-    bool getYearlyMonthMonths(int day, QValueList<int>&,
-                              QValueList<int> &leaplist) const;
   private:
 
     int   getFirstDayInWeek(int startDay, bool useWeekStart = true) const;
@@ -371,9 +392,8 @@ class Recurrence
     QDate getLastDateInMonth(const QDate& latestDate) const;
     QDate getFirstDateInYear(const QDate& earliestDate) const;
     QDate getLastDateInYear(const QDate& latestDate) const;
-    int   maxMonthlyIterations() const;
+    int   maxIterations() const;
 
-  private:
     // Prohibit copying
     Recurrence(const Recurrence&);
     Recurrence &operator=(const Recurrence&);
