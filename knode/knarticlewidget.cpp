@@ -383,7 +383,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   if (!knGlobals.cfgManager->readNewsViewer()->interpretFormatTags())
     beautification=false;
 
-  uint lastReplacement=0;
+  int lastReplacement=-1;
   for(uint idx=0; idx<len; idx++){
 
     switch(text[idx].latin1()) {
@@ -419,7 +419,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           // move backwards to the begin of the address, stop when
           // the end of the last replacement is reached. (
 
-          while ((startIdx>0) && (startIdx>lastReplacement+1) && (text[startIdx-1]!=' ') && (text[startIdx-1]!='\t')
+          while ((startIdx>0) && (startIdx>(uint)(lastReplacement+1)) && (text[startIdx-1]!=' ') && (text[startIdx-1]!='\t')
                                                             && (text[startIdx-1]!=',') && (text[startIdx-1]!='<')
                                                             && (text[startIdx-1]!='>') && (text[startIdx-1]!='(')
                                                             && (text[startIdx-1]!=')') && (text[startIdx-1]!='[')
