@@ -1555,7 +1555,7 @@ public:
       supposed to contain an opaque signed message part. After checking the
       data and verifying the signature the cleartext of the message will be
       returned in \c cleartext.  The user must free the respective memory
-      ocupied by *cleartext.
+      occupied by *cleartext.
 
       Depending on the configuration, MUAs might not need to use this.
       If \c sigmeta is non-null, the

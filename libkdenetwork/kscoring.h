@@ -246,7 +246,7 @@ class KScoringRule
   // writes the rule in XML format into the textstream
   void write(QTextStream& ) const;
 protected:
-  //! assert that the name is uniq
+  //! assert that the name is unique
   void setName(QString n) { name = n; }
 private:
   QString name;

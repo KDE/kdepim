@@ -200,7 +200,7 @@ public:
  * job. For @ref decode, a return value of @p true means that the
  * current input block has been finished (@p false most often means
  * that the output buffer is full, but that isn't required
- * behaviour. The @ref decode call is free to return at arbitrary
+ * behavior. The @ref decode call is free to return at arbitrary
  * times during processing).
  *
  * For @ref finalize, a return value of @p true means that all data

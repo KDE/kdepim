@@ -825,7 +825,7 @@ void KScoringManager::createInternalFromXML(QDomNode n)
 
     switch (n.nodeType()) {
     case QDomNode::DocumentNode: {
-      // the document itselfs
+      // the document itself
       break;
     }
     case QDomNode::ElementNode: {
@@ -936,7 +936,7 @@ void KScoringManager::setRuleName(KScoringRule *r, const QString& s)
     QPtrListIterator<KScoringRule> it(allRules);
     for (; it.current(); ++it) {
       if ( it.current() != r && it.current()->getName() == text ) {
-        kdDebug(5100) << "rule name " << text << " is not uniq" << endl;
+        kdDebug(5100) << "rule name " << text << " is not unique" << endl;
 	text = KLineEditDlg::getText(
 			i18n("the rule name is already assigned, please choose another name"),
 			text,0,0);

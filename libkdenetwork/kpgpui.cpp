@@ -156,7 +156,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
                              mpOptionsGroupBox );
   msg = i18n( "<qt><p>When this option is enabled, the passphrase of your "
 	      "private key will be remembered by the application as long "
-	      "as the application is running. Thus you will only  have to "
+	      "as the application is running. Thus you will only have to "
 	      "enter the passphrase once. Be aware that this could be a "
 	      "security risk. If you leave your computer, others "
 	      "can use it to send signed emails and/or read your encrypted "
@@ -179,7 +179,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
                                        "composing"),
                                   mpOptionsGroupBox );
   msg = i18n( "<qt><p>When this option is enabled, the signed/encrypted text "
-	      "will be shown in a seperate window, enabling you to know how "
+	      "will be shown in a separate window, enabling you to know how "
 	      "it will look like before it is sent. This is a good idea when "
 	      "you are verifying that your encryption system works.</p></qt>" );
   QWhatsThis::add( showCipherText, msg );

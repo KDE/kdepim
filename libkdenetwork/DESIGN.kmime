@@ -30,7 +30,7 @@ class="quoted">...</p>; you get the idea...) or an "attachment" version
 the case of an attached HTML document with images, the corresponding
 KMime::BodyParts::Multipart::Related would have an "effective mimetype"
 of text/html and would be as good a a real Text::Html (which it holds
-inside), as far as it's behaviour is concerned. Likewise, a
+inside), as far as it's behavior is concerned. Likewise, a
 Multipart::Signed would have the "effective mimetype" of the contained
 object. Or think of Message::ExternalBody
 
@@ -44,7 +44,7 @@ information (such as the micalg parameter and for the mimetypes of the
 nested body parts).
 
 6. There are already three plugin interfaces planned for KMime:
- a. for additonal headers
+ a. for additional headers
  b. for additional body parts (mimetypes)
  c. for additional crypto backends
 They are planned to be simple, so that we can expect a flood of them for

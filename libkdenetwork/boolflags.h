@@ -18,7 +18,7 @@
 #define __KMIME_BOOLFLAGS_H__
 
 /** This class stores boolean values in single bytes.
-    It provides a similiar functionality as QBitArray
+    It provides a similar functionality as QBitArray
     but requires much less memory.
     We use it to store the flags of an article
     @internal

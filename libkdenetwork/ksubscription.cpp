@@ -116,7 +116,7 @@ void GroupItem::setVisible( bool b )
         QListViewItem::setVisible(b);
       else
       {
-        // leave it visible so that childs remain visible
+        // leave it visible so that children remain visible
         setOpen(true);
         setEnabled(false);
       }

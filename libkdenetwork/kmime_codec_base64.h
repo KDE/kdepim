@@ -62,7 +62,7 @@ public:
   int maxDecodedSizeFor( int insize, bool withCRLF=false ) const {
     // assuming all characters are part of the base64 stream (which
     // does almost never hold due to required linebreaking; but
-    // additonal non-base64 chars don't affect the output size), each
+    // additional non-base64 chars don't affect the output size), each
     // 4-tupel of them becomes a 3-tupel in the decoded octet
     // stream. So:
     int result = ( ( insize + 3 ) / 4 ) * 3;
