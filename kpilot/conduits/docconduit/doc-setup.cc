@@ -27,7 +27,6 @@
 */
 
 #include "options.h"
-#include "doc-setup.moc"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
@@ -38,25 +37,17 @@
 
 #include "doc-setupdialog.h"
 #include "doc-factory.h"
+#include "doc-setup.h"
 
 
-
-DOCWidgetSetup::DOCWidgetSetup(QWidget * w, const char *n, const QStringList & a):
-ConduitConfig(w, n, a)
+DOCWidgetSetup::DOCWidgetSetup(QWidget *w, const char *n,
+	const QStringList & a) :
+	ConduitConfig(w,n,a)
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new DOCWidget(widget());
-	fConfigWidget->fTXTDir->setMode(KFile::Directory);
-	fConfigWidget->fPDBDir->setMode(KFile::Directory);
-	
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false, DOCConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-
-	fConduitName=i18n("DOC");
+	fConfigBase = new DOCWidgetConfig(widget(),"ConfigWidget");
+	fConduitName = i18n("Palm DOC");
 }
 
 DOCWidgetSetup::~DOCWidgetSetup()
@@ -65,6 +56,57 @@ DOCWidgetSetup::~DOCWidgetSetup()
 }
 
 /* virtual */ void DOCWidgetSetup::commitChanges()
+{
+	FUNCTIONSETUP;
+
+	if (!fConfig) return;
+	fConfigBase->commit(fConfig);
+}
+
+/* virtual */ void DOCWidgetSetup::readSettings()
+{
+	FUNCTIONSETUP;
+
+	if (!fConfig) return;
+	fConfigBase->load(fConfig);
+}
+
+
+
+DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
+	ConduitConfigBase(w, n),
+	fConfigWidget(new DOCWidget(w))
+{
+	FUNCTIONSETUP;
+
+	fWidget=fConfigWidget;
+
+	fConfigWidget->fTXTDir->setMode(KFile::Directory);
+	fConfigWidget->fPDBDir->setMode(KFile::Directory);
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,DOCConduitFactory::about());
+
+	fConduitName=i18n("Palm DOC");
+
+#define CMOD(a,b) connect(fConfigWidget->a,SIGNAL(b),this,SLOT(modified()))
+	CMOD(fTXTDir,textChanged(const QString &));
+	CMOD(fPDBDir,textChanged(const QString &));
+	CMOD(fkeepPDBLocally,clicked());
+	CMOD(fConflictResolution,clicked(int));
+	CMOD(fConvertBookmarks,stateChanged(int));
+	CMOD(fBookmarksBmk,stateChanged(int));
+	CMOD(fBookmarksInline,stateChanged(int));
+	CMOD(fBookmarksEndtags,stateChanged(int));
+	CMOD(fCompress,stateChanged(int));
+	CMOD(fSyncDirection,clicked(int));
+	CMOD(fNoConversionOfBmksOnly,stateChanged(int));
+	CMOD(fAlwaysUseResolution,stateChanged(int));
+	CMOD(fPCBookmarks,clicked(int));
+#undef CMOD
+
+	fConfigWidget->adjustSize();
+}
+
+/* virtual */ void DOCWidgetConfig::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 
@@ -95,20 +137,21 @@ DOCWidgetSetup::~DOCWidgetSetup()
 	fConfig->writeEntry(DOCConduitFactory::fSyncDirection,
 		fConfigWidget->fSyncDirection->id(fConfigWidget->
 			fSyncDirection->selected()));
-	fConfig->writeEntry(DOCConduitFactory::fIgnoreBmkChanges, 
+	fConfig->writeEntry(DOCConduitFactory::fIgnoreBmkChanges,
 		fConfigWidget->fNoConversionOfBmksOnly->isChecked());
 	fConfig->writeEntry(DOCConduitFactory::fAlwaysUseResolution,
 		fConfigWidget->fAlwaysUseResolution->isChecked());
-	
+
 	fConfig->writeEntry(DOCConduitFactory::fPCBookmarks,
 		fConfigWidget->fPCBookmarks->id(fConfigWidget->
 			fPCBookmarks->selected()));
 
 
 	fConfig->sync();
+	unmodified();
 }
 
-/* virtual */ void DOCWidgetSetup::readSettings()
+/* virtual */ void DOCWidgetConfig::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 
@@ -137,13 +180,14 @@ DOCWidgetSetup::~DOCWidgetSetup()
 		readBoolEntry(DOCConduitFactory::fCompress, true));
 	fConfigWidget->fSyncDirection->setButton(fConfig->
 		readNumEntry(DOCConduitFactory::fSyncDirection, 0));
-		
+
 	fConfigWidget->fNoConversionOfBmksOnly->setChecked(
 		fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false));
 	fConfigWidget->fAlwaysUseResolution->setChecked(
 		fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false));
-		
+
 	fConfigWidget->fPCBookmarks->setButton(fConfig->
 		readNumEntry(DOCConduitFactory::fPCBookmarks, 0));
+	unmodified();
 }
 

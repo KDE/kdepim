@@ -33,18 +33,29 @@
 
 class DOCWidget;
 
-class DOCWidgetSetup:public ConduitConfig {
- Q_OBJECT public:
-	 DOCWidgetSetup(QWidget *, const char *, const QStringList &);
-	 virtual ~ DOCWidgetSetup();
+class DOCWidgetConfig : public ConduitConfigBase
+{
+public:
+	DOCWidgetConfig(QWidget *, const char *);
+	virtual void commit(KConfig *);
+	virtual void load(KConfig *);
+protected:
+	DOCWidget *fConfigWidget;
+} ;
+
+class DOCWidgetSetup : public ConduitConfig
+{
+public:
+	DOCWidgetSetup(QWidget *, const char *, const QStringList &);
+	virtual ~ DOCWidgetSetup();
 
 	virtual void readSettings();
 
  protected:
-	 virtual void commitChanges();
+	virtual void commitChanges();
 
  private:
-	 DOCWidget * fConfigWidget;
+	DOCWidgetConfig * fConfigBase;
 };
 
 #endif

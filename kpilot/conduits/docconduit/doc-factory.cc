@@ -106,6 +106,20 @@ DOCConduitFactory::~DOCConduitFactory()
 #ifdef DEBUG
 	DEBUGCONDUIT << fname <<": Creating object of class " <<c <<endl;
 #endif
+	if (qstrcmp(c, "ConduitConfigBase") == 0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+		if (w)
+		{
+			return new DOCWidgetConfig(w,n);
+		}
+		else
+		{
+			kdError() << k_funcinfo 
+				<< ": Couldn't cast parent to widget." << endl;
+			return 0L;
+		}
+	}
 	if (qstrcmp(c, "ConduitConfig") == 0)
 	{
 		QWidget * w = dynamic_cast < QWidget * >(p);
