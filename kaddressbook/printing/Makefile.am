@@ -1,10 +1,10 @@
-noinst_LIBRARIES = libprinter.a
+noinst_LTLIBRARIES = libprinter.la
 
 INCLUDES = $(all_includes)
 
-libprinter_a_METASOURCES = AUTO
+libprinter_la_METASOURCES = AUTO
 
-libprinter_a_SOURCES = printingwizard_base.ui \
+libprinter_la_SOURCES = printingwizard_base.ui \
 	printingwizard.cpp \
 	printstyle.cpp \
 	detailledstyle.cpp  \
