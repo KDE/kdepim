@@ -57,7 +57,7 @@ class KABCStorage : public KPIM::DesignerFields::Storage
     {
       QStringList keys;
     
-      QStringList customs = mAddressee->customs();
+      const QStringList customs = mAddressee->customs();
       QStringList::ConstIterator it;
       for ( it = customs.begin(); it != customs.end(); ++it ) {
         QString app, name, value;

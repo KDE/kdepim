@@ -103,7 +103,7 @@ void StylePage::initFieldCombo()
   mFieldCombo->clear();
 
   mFields = mAddressBook->fields( KABC::Field::All );
-  KABC::Field::List::Iterator it;
+  KABC::Field::List::ConstIterator it;
   for ( it = mFields.begin(); it != mFields.end(); ++it )
     mFieldCombo->insertItem( (*it)->label() );
 }

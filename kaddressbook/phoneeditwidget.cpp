@@ -139,7 +139,7 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
   // Doing this for mPrefCombo is enough because the list is shared by all
   // combos.
   QValueList<int>::ConstIterator it;
-  for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
+  for ( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
     if ( !mPrefCombo->hasType( *it ) )
       mPrefCombo->insertType( list, *it, PhoneNumber( "", *it ) );
   }
@@ -174,7 +174,7 @@ KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers()
 {
   KABC::PhoneNumber::List retList;
 
-  KABC::PhoneNumber::List::Iterator it;
+  KABC::PhoneNumber::List::ConstIterator it;
   for ( it = mPhoneList.begin(); it != mPhoneList.end(); ++it )
     if ( !(*it).number().isEmpty() )
       retList.append( *it );
@@ -370,7 +370,7 @@ PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *
   connect( mListView, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()) );
   connect( mListView, SIGNAL(doubleClicked( QListViewItem *, const QPoint &, int  )), this, SLOT( slotEditPhoneNumber()));
 
-  KABC::PhoneNumber::List::Iterator it;
+  KABC::PhoneNumber::List::ConstIterator it;
   for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it )
     new PhoneViewItem( mListView, *it );
 
@@ -476,7 +476,7 @@ PhoneTypeDialog::PhoneTypeDialog( const KABC::PhoneNumber &phoneNumber,
   mTypeList = KABC::PhoneNumber::typeList();
   mTypeList.remove( KABC::PhoneNumber::Pref );
 
-  KABC::PhoneNumber::TypeList::Iterator it;
+  KABC::PhoneNumber::TypeList::ConstIterator it;
   for ( it = mTypeList.begin(); it != mTypeList.end(); ++it )
     new QCheckBox( KABC::PhoneNumber::typeLabel( *it ), mGroup );
 

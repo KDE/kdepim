@@ -98,7 +98,7 @@ class AddresseeCardViewItem : public CardViewItem
 
           // Try all the selected fields until we find one with text.
           // This will limit the number of unlabeled icons in the view
-          KABC::Field::List::Iterator iter;
+          KABC::Field::List::ConstIterator iter;
           for (iter = mFields.begin(); iter != mFields.end(); ++iter)
           {
             // insert empty fields or not? not doing so saves a bit of memory and CPU
@@ -294,8 +294,8 @@ void KAddressBookCardView::refresh(QString uid)
         mCardView->viewport()->setUpdatesEnabled( false );
         mCardView->clear();
 
-        KABC::Addressee::List addresseeList = addressees();
-        KABC::Addressee::List::Iterator iter;
+        const KABC::Addressee::List addresseeList( addressees() );
+        KABC::Addressee::List::ConstIterator iter;
         for (iter = addresseeList.begin(); iter != addresseeList.end(); ++iter)
         {
             aItem = new AddresseeCardViewItem(fields(), mShowEmptyFields,

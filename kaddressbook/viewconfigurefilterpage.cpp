@@ -84,8 +84,8 @@ void ViewConfigureFilterPage::restoreSettings( KConfig *config )
   mFilterCombo->clear();
   
   // Load the filter combo
-  Filter::List list = Filter::restore( config, "Filter" );
-  Filter::List::Iterator it;
+  const Filter::List list = Filter::restore( config, "Filter" );
+  Filter::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     mFilterCombo->insertItem( (*it).name() );
     

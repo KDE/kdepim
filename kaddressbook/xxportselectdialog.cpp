@@ -58,7 +58,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
 
   // setup filters
   mFilters = Filter::restore( kapp->config(), "Filter" );
-  Filter::List::iterator filterIt;
+  Filter::List::ConstIterator filterIt;
   QStringList filters;
   for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )
     filters.append( (*filterIt).name() );
@@ -67,8 +67,8 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mUseFilters->setEnabled( filters.count() > 0 );
 
   // setup categories
-  QStringList categories =  KABPrefs::instance()->customCategories();
-  QStringList::Iterator it;
+  const QStringList categories =  KABPrefs::instance()->customCategories();
+  QStringList::ConstIterator it;
   for ( it = categories.begin(); it != categories.end(); ++it )
     new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox );
   mUseCategories->setEnabled( categories.count() > 0 );
@@ -81,18 +81,18 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mSortTypeCombo->insertItem( i18n( "Descending" ) );
 
   mFields = mCore->addressBook()->fields( KABC::Field::All );
-  KABC::Field::List::Iterator fieldIt;
+  KABC::Field::List::ConstIterator fieldIt;
   for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt )
     mFieldCombo->insertItem( (*fieldIt)->label() );
 }
 
 KABC::AddresseeList XXPortSelectDialog::contacts()
 {
-  QStringList selection = mCore->selectedUIDs();
+  const QStringList selection = mCore->selectedUIDs();
 
   KABC::AddresseeList list;
   if ( mUseSelection->isChecked() ) {
-    QStringList::Iterator it;
+    QStringList::ConstIterator it;
     for ( it = selection.begin(); it != selection.end(); ++it ) {
       KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
       if ( !addr.isEmpty() )
@@ -100,7 +100,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
     }
   } else if ( mUseFilters->isChecked() ) {
     // find contacts that can pass selected filter
-    Filter::List::Iterator filterIt;
+    Filter::List::ConstIterator filterIt;
     for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )
       if ( (*filterIt).name() == mFiltersCombo->currentText() )
         break;
@@ -111,11 +111,13 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
         list.append( *it );
     }
   } else if ( mUseCategories->isChecked() ) {
-    QStringList categorieList = categories();
-    KABC::AddressBook::Iterator it;
-    for ( it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it ) {
-      QStringList tmp( (*it).categories() );
-      QStringList::Iterator tmpIt;
+    const QStringList categorieList = categories();
+
+    KABC::AddressBook::ConstIterator it;
+    KABC::AddressBook::ConstIterator addressBookEnd( mCore->addressBook()->end() );
+    for ( it = mCore->addressBook()->begin(); it != addressBookEnd; ++it ) {
+      const QStringList tmp( (*it).categories() );
+      QStringList::ConstIterator tmpIt;
       for ( tmpIt = tmp.begin(); tmpIt != tmp.end(); ++tmpIt )
         if ( categorieList.contains( *tmpIt ) ) {
           list.append( *it );
@@ -124,7 +126,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
     }
   } else {
     // create a string list of all entries:
-    KABC::AddressBook::Iterator it;
+    KABC::AddressBook::ConstIterator it;
     for ( it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it )
       list.append( *it );
   }

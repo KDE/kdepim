@@ -515,7 +515,7 @@ void KABCore::incrementalJumpButtonSearch( const QString& character )
   KABC::Field *field = mViewManager->currentSortField();
   if ( field ) {
     list.sortByField( field );
-    KABC::AddresseeList::Iterator it;
+    KABC::AddresseeList::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       if ( field->value( *it ).startsWith( character, false ) ) {
         mViewManager->setSelected( (*it).uid(), true );
@@ -780,7 +780,7 @@ QString KABCore::getNameByPhone( const QString &phone )
 
   bool found = false;
   QString ownerName = "";
-  KABC::AddressBook::Iterator iter;
+  KABC::AddressBook::ConstIterator iter;
   KABC::PhoneNumber::List::Iterator phoneIter;
   KABC::PhoneNumber::List phoneList;
   for ( iter = mAddressBook->begin(); !found && ( iter != mAddressBook->end() ); ++iter ) {
@@ -867,8 +867,8 @@ void KABCore::showContactsAddress( const QString &addrUid )
   if ( addr.isEmpty() )
     return;
 
-  KABC::Address::List list = addr.addresses();
-  KABC::Address::List::Iterator it;
+  const KABC::Address::List list = addr.addresses();
+  KABC::Address::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     if ( (*it).id() == addrUid ) {
       LocationMap::instance()->showAddress( *it );
@@ -1124,7 +1124,7 @@ void KABCore::updateCategories()
   QStringList categories( allCategories() );
   categories.sort();
 
-  QStringList customCategories( KABPrefs::instance()->customCategories() );
+  const QStringList customCategories( KABPrefs::instance()->customCategories() );
   QStringList::ConstIterator it;
   for ( it = customCategories.begin(); it != customCategories.end(); ++it ) {
     if ( categories.find( *it ) == categories.end() ) {

@@ -122,7 +122,7 @@ void KAddressBookTableView::reconstructListView()
   mListView->setShowIM( mIMProxy != 0 );
 
   // Add the columns
-  KABC::Field::List fieldList = fields();
+  const KABC::Field::List fieldList( fields() );
   KABC::Field::List::ConstIterator it;
 
   int c = 0;
@@ -235,10 +235,10 @@ void KAddressBookTableView::refresh(QString uid)
     mListView->clear();
 
     currentItem = 0;
-    KABC::Addressee::List addresseeList = addressees();
-    KABC::Addressee::List::Iterator it;
-    for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
-      ContactListViewItem *item = new ContactListViewItem(*it, mListView,
+    const KABC::Addressee::List addresseeList( addressees() );
+    KABC::Addressee::List::ConstIterator it;
+    for ( it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
+      ContactListViewItem *item = new ContactListViewItem( *it, mListView,
                                         core()->addressBook(), fields(), mIMProxy );
       if ( (*it).uid() == currentUID )
         currentItem = item;
@@ -272,46 +272,39 @@ void KAddressBookTableView::refresh(QString uid)
 
 QStringList KAddressBookTableView::selectedUids()
 {
-    QStringList uidList;
-    QListViewItem *item;
-    ContactListViewItem *ceItem;
+  QStringList uidList;
+  QListViewItem *item;
+  ContactListViewItem *ceItem;
 
-    for(item = mListView->firstChild(); item; item = item->itemBelow())
-    {
-        if (mListView->isSelected( item ))
-        {
-            ceItem = dynamic_cast<ContactListViewItem*>(item);
-            if (ceItem != 0L)
-                uidList << ceItem->addressee().uid();
-        }
+  for ( item = mListView->firstChild(); item; item = item->itemBelow() ) {
+    if ( mListView->isSelected( item ) ) {
+      ceItem = dynamic_cast<ContactListViewItem*>( item );
+      if ( ceItem != 0 )
+        uidList << ceItem->addressee().uid();
     }
+  }
 
-    return uidList;
+  return uidList;
 }
 
-void KAddressBookTableView::setSelected(QString uid, bool selected)
+void KAddressBookTableView::setSelected( QString uid, bool selected )
 {
-    QListViewItem *item;
-    ContactListViewItem *ceItem;
+  QListViewItem *item;
+  ContactListViewItem *ceItem;
 
-    if (uid.isNull())
-    {
-        mListView->selectAll(selected);
-    }
-    else
-    {
-        for(item = mListView->firstChild(); item; item = item->itemBelow())
-        {
-            ceItem = dynamic_cast<ContactListViewItem*>(item);
-            if ((ceItem != 0L) && (ceItem->addressee().uid() == uid))
-            {
-                mListView->setSelected(item, selected);
+  if ( uid.isNull() )
+    mListView->selectAll( selected );
+  else {
+    for ( item = mListView->firstChild(); item; item = item->itemBelow() ) {
+      ceItem = dynamic_cast<ContactListViewItem*>( item );
+      if ( (ceItem != 0) && (ceItem->addressee().uid() == uid) ) {
+        mListView->setSelected( item, selected );
 
-                if (selected)
-                    mListView->ensureItemVisible(item);
-            }
-        }
+        if ( selected )
+          mListView->ensureItemVisible( item );
+      }
     }
+  }
 }
 
 void KAddressBookTableView::setFirstSelected( bool selected )

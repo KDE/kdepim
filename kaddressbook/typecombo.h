@@ -82,7 +82,7 @@ void TypeCombo<T>::updateTypes()
   QMap<int,int> labelCount;
 
   uint i;
-  for( i = 0; i < mTypeList.count(); ++i ) {
+  for ( i = 0; i < mTypeList.count(); ++i ) {
     int type = ( mTypeList[ i ].type() & ~( T::Pref ) );
     QString label = mTypeList[ i ].typeLabel( type );
     int count = 1;
@@ -99,7 +99,7 @@ void TypeCombo<T>::updateTypes()
 
   // Restore previous current item
   if ( !currentId.isEmpty() ) {
-    for( i = 0; i < mTypeList.count(); ++i ) {
+    for ( i = 0; i < mTypeList.count(); ++i ) {
       if ( mTypeList[ i ].id() == currentId ) {
         setCurrentItem( i );
         break;
@@ -112,7 +112,7 @@ template <class T>
 void TypeCombo<T>::selectType( int type )
 {
   uint i;
-  for( i = 0; i < mTypeList.count(); ++i ) {
+  for ( i = 0; i < mTypeList.count(); ++i ) {
     if ( (mTypeList[ i ].type() & ~T::Pref) == type ) {
       setCurrentItem( i );
       break;
@@ -154,7 +154,7 @@ void TypeCombo<T>::insertTypeList( const TypeCombo::List &list )
   uint i;
   for ( i = 0; i < list.count(); ++i ) {
     uint j;
-    for( j = 0; j < mTypeList.count(); ++j ) {
+    for ( j = 0; j < mTypeList.count(); ++j ) {
       if ( list[ i ].id() == mTypeList[ j ].id() ) break;
     }
     if ( j == mTypeList.count() ) {
@@ -166,7 +166,7 @@ void TypeCombo<T>::insertTypeList( const TypeCombo::List &list )
 template <class T>
 bool TypeCombo<T>::hasType( int type )
 {
-  for( uint i = 0; i < mTypeList.count(); ++i ) {
+  for ( uint i = 0; i < mTypeList.count(); ++i ) {
     if ( ( mTypeList[ i ].type() & ~T::Pref ) == type )
       return true;
   }

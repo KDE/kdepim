@@ -429,7 +429,7 @@ void GeoDialog::loadCityList()
   }
 }
 
-double GeoDialog::calculateCoordinate( const QString &coordinate )
+double GeoDialog::calculateCoordinate( const QString &coordinate ) const
 {
   int neg;
   int d = 0, m = 0, s = 0;
@@ -467,9 +467,9 @@ double GeoDialog::calculateCoordinate( const QString &coordinate )
     return d + m / 60.0 + s / 3600.0;
 }
 
-int GeoDialog::nearestCity( double x, double y )
+int GeoDialog::nearestCity( double x, double y ) const
 {
-  QMap<QString, GeoData>::Iterator it;
+  QMap<QString, GeoData>::ConstIterator it;
   int pos = 0;
   for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, ++pos ) {
     double dist = ( (*it).longitude - x ) * ( (*it).longitude - x ) +

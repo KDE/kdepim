@@ -231,7 +231,7 @@ void LDAPSearchDialog::restoreSettings()
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
-      for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
+      for ( QMap<QString,QString>::ConstIterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
         attrs << *it;
         
       ldapClient->setAttrs( attrs );

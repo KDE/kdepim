@@ -223,16 +223,16 @@ void FieldWidget::removeField( const QString &identifier )
 
 void FieldWidget::loadContact( KABC::Addressee *addr )
 {
-  QStringList customs = addr->customs();
+  const QStringList customs = addr->customs();
 
-  QStringList::Iterator it;
+  QStringList::ConstIterator it;
   for ( it = customs.begin(); it != customs.end(); ++it ) {
     QString app, name, value;
     splitField( *it, app, name, value );
     if ( app != "KADDRESSBOOK" )
       continue;
 
-    FieldRecordList::Iterator fieldIt;
+    FieldRecordList::ConstIterator fieldIt;
     for ( fieldIt = mFieldList.begin(); fieldIt != mFieldList.end(); ++fieldIt ) {
       if ( (*fieldIt).mIdentifier == name ) {
         if ( (*fieldIt).mWidget->isA( "QLineEdit" ) ) {
@@ -261,7 +261,7 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
 
 void FieldWidget::storeContact( KABC::Addressee *addr )
 {
-  FieldRecordList::Iterator it;
+  FieldRecordList::ConstIterator it;
   for ( it = mFieldList.begin(); it != mFieldList.end(); ++it ) {
     QString value;
     if ( (*it).mWidget->isA( "QLineEdit" ) ) {
@@ -311,7 +311,7 @@ void FieldWidget::recalculateLayout()
 {
   int maxWidth = 0;
 
-  FieldRecordList::Iterator it;
+  FieldRecordList::ConstIterator it;
   for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
     maxWidth = QMAX( maxWidth, (*it).mLabel->minimumSizeHint().width() );
 
@@ -369,7 +369,7 @@ void CustomFieldsWidget::addField()
   if ( dlg.exec() ) {
     FieldRecordList list = mFieldWidget->fields();
 
-    FieldRecordList::Iterator it;
+    FieldRecordList::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it )
       if ( (*it).mIdentifier == dlg.identifier() ) {
         KMessageBox::sorry( this, i18n( "A field with the same name already exists, please choose another one." ) );
@@ -392,11 +392,11 @@ void CustomFieldsWidget::addField()
 
 void CustomFieldsWidget::removeField()
 {
-  FieldRecordList list = mFieldWidget->fields();
+  const FieldRecordList list = mFieldWidget->fields();
 
   QStringList fields;
 
-  FieldRecordList::Iterator it;
+  FieldRecordList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     fields.append( (*it).mTitle );
 
@@ -457,8 +457,8 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
 {
   QStringList retval;
 
-  FieldRecordList list = mFieldWidget->fields();
-  FieldRecordList::Iterator it;
+  const FieldRecordList list = mFieldWidget->fields();
+  FieldRecordList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it ) {
     if ( (*it).mGlobal == global ) {
       retval.append( (*it).mIdentifier );

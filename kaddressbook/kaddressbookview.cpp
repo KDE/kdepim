@@ -73,11 +73,11 @@ QString KAddressBookView::selectedEmails()
 {
   bool first = true;
   QString emailAddrs;
-  QStringList uidList = selectedUids();
+  const QStringList uidList = selectedUids();
   KABC::Addressee addr;
   QString email;
 
-  QStringList::Iterator it;
+  QStringList::ConstIterator it;
   for ( it = uidList.begin(); it != uidList.end(); ++it ) {
     addr = mCore->addressBook()->findByUid( *it );
 
@@ -107,10 +107,11 @@ KABC::Addressee::List KAddressBookView::addressees()
     return mCore->searchManager()->contacts();
 
   KABC::Addressee::List addresseeList;
-  KABC::Addressee::List contacts = mCore->searchManager()->contacts();
+  const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
 
-  KABC::Addressee::List::Iterator it;
-  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
+  KABC::Addressee::List::ConstIterator it;
+  KABC::Addressee::List::ConstIterator contactsEnd( contacts.end() );
+  for ( it = contacts.begin(); it != contactsEnd; ++it ) {
     if ( mFilter.filterAddressee( *it ) )
       addresseeList.append( *it );
   }
@@ -173,22 +174,22 @@ QWidget *KAddressBookView::viewWidget()
 
 void KAddressBookView::updateView()
 {
-  QStringList uidList = selectedUids();
+  const QStringList uidList = selectedUids();
 
   refresh(); // This relists and deselects everything, in all views
 
   if ( !uidList.isEmpty() ) {
-      // Keep previous selection
-      for( QStringList::Iterator it = uidList.begin(); it != uidList.end(); ++it ) {
-          setSelected( *it, true );
-      }
+    // Keep previous selection
+    QStringList::ConstIterator it, uidListEnd( uidList.end() );
+    for ( it = uidList.begin(); it != uidListEnd; ++it )
+      setSelected( *it, true );
+
   } else {
-      KABC::Addressee::List contacts = mCore->searchManager()->contacts();
-      if ( !contacts.isEmpty() )
-          setSelected( contacts.first().uid(), true );
-      else {
-          emit selected( QString::null );
-      }
+    const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
+    if ( !contacts.isEmpty() )
+      setSelected( contacts.first().uid(), true );
+    else
+      emit selected( QString::null );
   }
 }
 

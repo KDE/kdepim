@@ -299,8 +299,8 @@ void DistributionListWidget::addContact()
   if ( !list )
     return;
 
-  KABC::Addressee::List addrList = selectedContacts();
-  KABC::Addressee::List::Iterator it;
+  const KABC::Addressee::List addrList = selectedContacts();
+  KABC::Addressee::List::ConstIterator it;
   for ( it = addrList.begin(); it != addrList.end(); ++it )
     list->insertEntry( *it );
 
@@ -366,7 +366,7 @@ void DistributionListWidget::updateContactView()
   }
 
   uint entryCount = 0;
-  KABC::DistributionList::Entry::List entries = list->entries();
+  const KABC::DistributionList::Entry::List entries = list->entries();
   KABC::DistributionList::Entry::List::ConstIterator it;
   for( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
     new ContactItem( mContactView, (*it).addressee, (*it).email );
@@ -402,8 +402,8 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
   QString vcards;
   if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::VCardConverter converter;
-    KABC::Addressee::List list = converter.parseVCards( vcards );
-    KABC::Addressee::List::Iterator it;
+    const KABC::Addressee::List list = converter.parseVCards( vcards );
+    KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it )
       distributionList->insertEntry( *it );
 

@@ -174,7 +174,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 		mWidget->lvAddresses->clear();
 
 	// see README for details of how Evolution stores IM addresses (differently)
-	QStringList customs = addr->customs();
+	const QStringList customs = addr->customs();
 
 	QStringList::ConstIterator it;
 	bool isSet = false;
@@ -192,7 +192,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 				{
 					QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
 					QStringList::iterator end = addresses.end();
-					for ( QStringList::iterator it = addresses.begin(); it != end; ++it )
+					for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it )
 					{
 						IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
 						if(!isSet && (*it).stripWhiteSpace().lower() == mPreferred.stripWhiteSpace().lower())
@@ -214,7 +214,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
 	// for each changed protocol, write a new custom field containing the current set of
 	// addresses
-	QValueList<KPluginInfo *>::iterator protocolIt;
+	QValueList<KPluginInfo *>::ConstIterator protocolIt;
 	for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt )
 	{
 		QStringList lst;

@@ -257,7 +257,7 @@ namespace KABPrinting {
         int ypos=0, count=0;
 
         // -----
-        KABC::Addressee::List::Iterator it;
+        KABC::Addressee::List::ConstIterator it;
         for ( it = contacts.begin(); it != contacts.end(); ++it )
         {
             if( !(*it).isEmpty())

@@ -51,8 +51,8 @@ KABC::Addressee::List ExtensionWidget::selectedContacts()
 {
   KABC::Addressee::List list;
 
-  QStringList uids = mCore->selectedUIDs();
-  QStringList::Iterator it;
+  const QStringList uids = mCore->selectedUIDs();
+  QStringList::ConstIterator it;
   for ( it = uids.begin(); it != uids.end(); ++it )
     list.append( mCore->addressBook()->findByUid( *it ) );
 

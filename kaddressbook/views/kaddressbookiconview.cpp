@@ -218,18 +218,17 @@ void KAddressBookIconView::refresh(QString uid)
     mIconView->clear();
     mIconList.clear();
         
-    KABC::Addressee::List addresseeList = addressees();
-    KABC::Addressee::List::Iterator iter;
+    const KABC::Addressee::List addresseeList( addressees() );
+    KABC::Addressee::List::ConstIterator iter;
     for ( iter = addresseeList.begin(); iter != addresseeList.end(); ++iter )
       aItem = new AddresseeIconViewItem( fields(), core()->addressBook(), *iter, mIconView );
 
     mIconView->arrangeItemsInGrid( true );
 
-    for ( item = mIconView->firstItem(); item; item = item->nextItem() )
-	{
-	  AddresseeIconViewItem* aivi = dynamic_cast<AddresseeIconViewItem*>( item );
+    for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
+      AddresseeIconViewItem* aivi = dynamic_cast<AddresseeIconViewItem*>( item );
       mIconList.append( aivi );
-	}
+    }
 
   } else {
     // Try to find the one to refresh

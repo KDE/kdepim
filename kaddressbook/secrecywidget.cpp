@@ -37,8 +37,8 @@ SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
   mSecrecyCombo = new KComboBox( this );
   layout->addWidget( mSecrecyCombo );
 
-  KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
-  KABC::Secrecy::TypeList::Iterator it;
+  const KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
+  KABC::Secrecy::TypeList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     mSecrecyCombo->insertItem( KABC::Secrecy::typeLabel( *it ), *it );
 

@@ -66,7 +66,7 @@ void PrintProgress::addMessage( const QString &msg )
   QString foot = QString( "</ul></qt>" );
 
   QString body;
-  QStringList::Iterator it;
+  QStringList::ConstIterator it;
   for ( it = mMessages.begin(); it != mMessages.end(); ++it )
     body.append( QString( "<li>" ) + (*it) + QString( "</li>" ) );
 

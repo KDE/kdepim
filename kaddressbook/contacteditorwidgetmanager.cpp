@@ -75,11 +75,10 @@ void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
   kdDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
-  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget", 
+  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget", 
     QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
 
   KTrader::OfferList::ConstIterator it;
-
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
     if ( !factory ) {
@@ -166,7 +165,7 @@ void ContactEditorTabPage::setReadOnly( bool readOnly )
 
 void ContactEditorTabPage::updateLayout()
 {
-  KAB::ContactEditorWidget::List::Iterator it;
+  KAB::ContactEditorWidget::List::ConstIterator it;
 
   int row = 0;
   for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {

@@ -51,11 +51,12 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
 {
   initGUI();
 
-  QStringList cats = KABPrefs::instance()->customCategories();
+  const QStringList cats = KABPrefs::instance()->customCategories();
 
-  QStringList::Iterator iter;
-  for ( iter = cats.begin(); iter != cats.end(); ++iter )
-    mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, (*iter), QCheckListItem::CheckBox ) );
+  QStringList::ConstIterator it;
+  for ( it = cats.begin(); it != cats.end(); ++it )
+    mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox ) );
+
   filterNameTextChanged( mNameEdit->text() );
 }
 
@@ -236,9 +237,9 @@ void FilterDialog::refresh()
 {
   mFilterListBox->clear();
 
-  Filter::List::Iterator iter;
-  for ( iter = mFilterList.begin(); iter != mFilterList.end(); ++iter )
-    mFilterListBox->insertItem( (*iter).name() );
+  Filter::List::ConstIterator it;
+  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
+    mFilterListBox->insertItem( (*it).name() );
 }
 
 void FilterDialog::selectionChanged( QListBoxItem *item )

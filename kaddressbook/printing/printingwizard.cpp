@@ -65,7 +65,7 @@ PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
 
   mFilters = Filter::restore( kapp->config(), "Filter" );
   QStringList filters;
-  for ( Filter::List::iterator it = mFilters.begin(); it != mFilters.end(); ++it )
+  for ( Filter::List::ConstIterator it = mFilters.begin(); it != mFilters.end(); ++it )
     filters.append( (*it).name() );
 
   mSelectionPage->setFilters( filters );
@@ -162,7 +162,7 @@ void PrintingWizard::print()
   KABC::AddresseeList list;
   if ( mStyle != 0 ) {
     if ( mSelectionPage->useSelection() ) {
-      QStringList::Iterator it;
+      QStringList::ConstIterator it;
       for ( it = mSelection.begin(); it != mSelection.end(); ++it ) {
         KABC::Addressee addr = addressBook()->findByUid( *it );
         if ( !addr.isEmpty() )
@@ -170,12 +170,12 @@ void PrintingWizard::print()
       }
     } else if ( mSelectionPage->useFilters() ) {
       // find contacts that can pass selected filter
-      Filter::List::Iterator filterIt;
+      Filter::List::ConstIterator filterIt;
       for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )
         if ( (*filterIt).name() == mSelectionPage->filter() )
           break;
 
-      KABC::AddressBook::Iterator it;
+      KABC::AddressBook::ConstIterator it;
       for ( it = addressBook()->begin(); it != addressBook()->end(); ++it ) {
         if ( (*filterIt).filterAddressee( *it ) )
           list.append( *it );
@@ -183,10 +183,10 @@ void PrintingWizard::print()
                 
     } else if ( mSelectionPage->useCategories() ) {
       QStringList categories = mSelectionPage->categories();
-      KABC::AddressBook::Iterator it;
+      KABC::AddressBook::ConstIterator it;
       for ( it = addressBook()->begin(); it != addressBook()->end(); ++it ) {
-        QStringList tmp( (*it).categories() );
-        QStringList::Iterator tmpIt;
+        const QStringList tmp( (*it).categories() );
+        QStringList::ConstIterator tmpIt;
         for ( tmpIt = tmp.begin(); tmpIt != tmp.end(); ++tmpIt )
           if ( categories.contains( *tmpIt ) ) {
             list.append( *it );
@@ -195,7 +195,7 @@ void PrintingWizard::print()
       }
     } else {
       // create a string list of all entries:
-      KABC::AddressBook::Iterator it;
+      KABC::AddressBook::ConstIterator it;
       for( it = addressBook()->begin(); it != addressBook()->end(); ++it )
         list.append( *it );
     }

@@ -129,8 +129,9 @@ QStringList ViewManager::selectedEmails() const
 KABC::Addressee::List ViewManager::selectedAddressees() const
 {
   KABC::Addressee::List list;
-  QStringList uids = selectedUids();
-  QStringList::Iterator it;
+
+  const QStringList uids = selectedUids();
+  QStringList::ConstIterator it;
   for ( it = uids.begin(); it != uids.end(); ++it ) {
     KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
     if ( !addr.isEmpty() )
@@ -422,7 +423,7 @@ void ViewManager::dropped( QDropEvent *e )
   KURL::List urls;
 
   if ( KURLDrag::decode( e, urls) ) {
-    KURL::List::Iterator it = urls.begin();
+    KURL::List::ConstIterator it = urls.begin();
     int c = urls.count();
     if ( c > 1 ) {
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
@@ -435,8 +436,8 @@ void ViewManager::dropped( QDropEvent *e )
   } else if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::VCardConverter converter;
 
-    KABC::Addressee::List list = converter.parseVCards( vcards );
-    KABC::Addressee::List::Iterator it;
+    const KABC::Addressee::List list = converter.parseVCards( vcards );
+    KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );
       if ( a.isEmpty() ) { // not yet in address book
@@ -453,12 +454,13 @@ void ViewManager::startDrag()
 {
   // Get the list of all the selected addressees
   KABC::Addressee::List addrList;
-  QStringList uidList = selectedUids();
+  const QStringList uidList = selectedUids();
   if (  uidList.isEmpty() )
-      return;
+    return;
+
   kdDebug(5720) << "ViewManager::startDrag: starting to drag" << endl;
 
-  QStringList::Iterator it;
+  QStringList::ConstIterator it;
   for ( it = uidList.begin(); it != uidList.end(); ++it )
     addrList.append( mCore->addressBook()->findByUid( *it ) );
 

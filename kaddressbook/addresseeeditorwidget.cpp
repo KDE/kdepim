@@ -472,8 +472,8 @@ void AddresseeEditorWidget::setupCustomFieldsTabs()
 {
   QStringList activePages = KABPrefs::instance()->advancedCustomFields();
 
-  QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
-  for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {
+  const QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
+  for ( QStringList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
     if ( activePages.find( (*it).mid( (*it).findRev('/') + 1 ) ) == activePages.end() )
       continue;
 
@@ -630,7 +630,7 @@ void AddresseeEditorWidget::save()
 
   // Save the phone numbers
   KABC::PhoneNumber::List phoneNumbers;
-  KABC::PhoneNumber::List::Iterator phoneIter;
+  KABC::PhoneNumber::List::ConstIterator phoneIter;
   phoneNumbers = mAddressee.phoneNumbers();
   for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
         ++phoneIter )
@@ -643,7 +643,7 @@ void AddresseeEditorWidget::save()
 
   // Save the addresses
   KABC::Address::List addresses;
-  KABC::Address::List::Iterator addressIter;
+  KABC::Address::List::ConstIterator addressIter;
   addresses = mAddressee.addresses();
   for ( addressIter = addresses.begin(); addressIter != addresses.end();
         ++addressIter )

@@ -59,7 +59,7 @@ QString PwDeleteCommand::name()
 bool PwDeleteCommand::undo()
 {
   // Put it back in the document
-  KABC::Addressee::List::Iterator it;
+  KABC::Addressee::List::ConstIterator it;
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
@@ -78,9 +78,9 @@ bool PwDeleteCommand::undo()
 bool PwDeleteCommand::redo()
 {
   KABC::Addressee addr;
-  KABC::Addressee::List::Iterator addrIt;
+  KABC::Addressee::List::ConstIterator addrIt;
 
-  QStringList::Iterator it;
+  QStringList::ConstIterator it;
   for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
     addr = addressBook()->findByUid( *it );
     lock()->lock( addr.resource() );
@@ -114,7 +114,7 @@ QString PwPasteCommand::name()
 
 bool PwPasteCommand::undo()
 {
-  KABC::Addressee::List::Iterator it;
+  KABC::Addressee::List::ConstIterator it;
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
@@ -132,10 +132,11 @@ bool PwPasteCommand::redo()
 {
   QStringList uids;
   KABC::Addressee::List::Iterator it;
+  KABC::Addressee::List::ConstIterator constIt;
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
-    lock()->lock( (*it).resource() );
+  for ( constIt = mAddresseeList.begin(); constIt != mAddresseeList.end(); ++constIt )
+    lock()->lock( (*constIt).resource() );
 
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
     /* we have to set a new uid for the contact, otherwise insertAddressee()
@@ -147,7 +148,7 @@ bool PwPasteCommand::redo()
     lock()->unlock( (*it).resource() );
   }
 
-  QStringList::Iterator uidIt;
+  QStringList::ConstIterator uidIt;
   for ( uidIt = uids.begin(); uidIt != uids.end(); ++uidIt )
     mCore->editContact( *uidIt );
 
@@ -244,7 +245,7 @@ QString PwCutCommand::name()
 
 bool PwCutCommand::undo()
 {
-  KABC::Addressee::List::Iterator it;
+  KABC::Addressee::List::ConstIterator it;
 
   // lock resources
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it )
@@ -267,9 +268,9 @@ bool PwCutCommand::undo()
 bool PwCutCommand::redo()
 {
   KABC::Addressee addr;
-  KABC::Addressee::List::Iterator addrIt;
+  KABC::Addressee::List::ConstIterator addrIt;
 
-  QStringList::Iterator it;
+  QStringList::ConstIterator it;
   for ( it = mUIDList.begin(); it != mUIDList.end(); ++it ) {
     addr = addressBook()->findByUid( *it );
     mAddresseeList.append( addr );

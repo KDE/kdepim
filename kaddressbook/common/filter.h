@@ -77,7 +77,7 @@ class Filter
       @return True if the addressee passes the criteria, false otherwise.
       The return values are opposite if the MatchRule is NotMatch.
      */
-    bool filterAddressee( const KABC::Addressee &a );
+    bool filterAddressee( const KABC::Addressee &a ) const;
 
     /**
       Enable or disable the filter

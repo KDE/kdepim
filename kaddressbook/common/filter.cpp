@@ -72,9 +72,9 @@ void Filter::apply( KABC::Addressee::List &addresseeList )
   }
 }
 
-bool Filter::filterAddressee( const KABC::Addressee &a )
+bool Filter::filterAddressee( const KABC::Addressee &a ) const
 {
-  QStringList::Iterator iter;
+  QStringList::ConstIterator iter;
   iter = mCategoryList.begin();
   // empty filter always matches
 
@@ -186,8 +186,8 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
     list.append( f );
   }
 
-  QStringList cats = KABPrefs::instance()->customCategories();
-  for ( QStringList::Iterator it = cats.begin(); it != cats.end(); ++it ) {
+  const QStringList cats = KABPrefs::instance()->customCategories();
+  for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
     Filter filter;
     filter.mName = *it;
     filter.mEnabled = true;

@@ -160,7 +160,7 @@ void ExtensionManager::createActions()
 void ExtensionManager::createExtensionWidgets()
 {
   // clean up
-  ExtensionData::List::Iterator dataIt;
+  ExtensionData::List::ConstIterator dataIt;
   for ( dataIt = mExtensionList.begin(); dataIt != mExtensionList.end(); ++dataIt )
     delete (*dataIt).widget;
   mExtensionList.clear();

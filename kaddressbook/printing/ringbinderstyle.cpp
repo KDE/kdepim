@@ -197,7 +197,7 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
   // iterate through the contacts
   printPageHeader( ltgroups[ grpnum ], window, painter );
   ypos = pageHeaderMetrics( window, painter ).height();
-  for ( KABC::AddresseeList::iterator it = contacts.begin(); 
+  for ( KABC::AddresseeList::ConstIterator it = contacts.begin(); 
         it != contacts.end(); ++it ) {
     KABC::Addressee addressee = ( *it );
     if ( !addressee.isEmpty() ) {
@@ -337,8 +337,8 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
 
   // print street addresses:
   if ( mPageAppearance->cbStreetAddresses->isChecked() ) {
-    KABC::Address::List addrl = contact.addresses();
-    KABC::Address::List::iterator it;
+    const KABC::Address::List addrl = contact.addresses();
+    KABC::Address::List::ConstIterator it;
     for ( it = addrl.begin(); it != addrl.end(); ++it ) {
       if ( !( *it ).isEmpty() ) {
         //FIXME:draw type label somehow
@@ -353,9 +353,9 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
 #else
         formattedAddress = (*it).label();
 #endif
-        QStringList laddr = QStringList::split( QChar( '\n' ), 
+        const QStringList laddr = QStringList::split( QChar( '\n' ), 
                                                 formattedAddress );
-        for ( QStringList::iterator it = laddr.begin(); it != laddr.end(); ++it ) {
+        for ( QStringList::ConstIterator it = laddr.begin(); it != laddr.end(); ++it ) {
           linenum++;
           if ( !fake ) {
             painter->drawText( 20, top + ( linenum * fmnorm.lineSpacing() )
@@ -370,8 +370,8 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
 
   // print phone numbers
   if ( mPageAppearance->cbPhoneNumbers->isChecked() ) {
-    KABC::PhoneNumber::List phonel = contact.phoneNumbers();
-    KABC::PhoneNumber::List::iterator nit;
+    const KABC::PhoneNumber::List phonel( contact.phoneNumbers() );
+    KABC::PhoneNumber::List::ConstIterator nit;
     for ( nit = phonel.begin(); nit != phonel.end(); ++nit ) {
       // don't print empty lines just reading "Home:"
       if ( ( *nit ).number().isEmpty() ) {
@@ -395,8 +395,8 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
 
   // print email addresses
   if ( mPageAppearance->cbEmails->isChecked() ) {
-    QStringList emails = contact.emails();
-    for ( QStringList::Iterator it = emails.begin(); it != emails.end(); ++it ) {
+    const QStringList emails( contact.emails() );
+    for ( QStringList::ConstIterator it = emails.begin(); it != emails.end(); ++it ) {
       // don't print empty lines
       if ( ( *it ).isEmpty() ) {
         continue;

@@ -228,7 +228,7 @@ void JumpButtonBar::sortListLocaleAware( QStringList &list )
   qHeapSort( sortList );
   list.clear();
 
-  QValueList<SortContainer>::Iterator sortIt;
+  QValueList<SortContainer>::ConstIterator sortIt;
   for ( sortIt = sortList.begin(); sortIt != sortList.end(); ++sortIt )
     list.append( (*sortIt).data() );
 }

@@ -69,7 +69,7 @@ namespace KABPrinting
         QPaintDeviceMetrics metrics(p.device());
 
         int height = 0;
-        KABC::Addressee::List::Iterator it;
+        KABC::Addressee::List::ConstIterator it;
 
         progress->addMessage(i18n("Preparing"));
         progress->addMessage(i18n("Printing"));

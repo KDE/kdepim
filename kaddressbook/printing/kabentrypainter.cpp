@@ -255,7 +255,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   }
 
   // Telephones:
-  KABC::PhoneNumber::List phoneNumbers = addr.phoneNumbers();
+  const KABC::PhoneNumber::List phoneNumbers( addr.phoneNumbers() );
   if ( !phoneNumbers.isEmpty() && mShowPhones ) {
     contents.push_back( &mPhoneRects );
     QStringList list;
@@ -264,7 +264,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     list.append( phoneNumbers.count() == 1 ? i18n( "Telephone:" )
                  : i18n( "Telephones:" ) );
 
-    KABC::PhoneNumber::List::Iterator it;
+    KABC::PhoneNumber::List::ConstIterator it;
     for ( it = phoneNumbers.begin(); it != phoneNumbers.end(); ++it ) {
       line = (*it).typeLabel();
       line += ": " + (*it).number();
@@ -372,7 +372,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     y += fmBody.lineSpacing() / 4;
     painter->setFont( mBodyFont );
 
-    KABC::Address::List::iterator it;
+    KABC::Address::List::ConstIterator it;
     for ( it = addresses.begin(); it != addresses.end(); ++it ) {
       address = *it;
       switch ( address.type() ) {

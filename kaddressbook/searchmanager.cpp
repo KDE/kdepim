@@ -50,7 +50,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
 
   allContacts = list;
 #else
-  KABC::AddressBook::Iterator abIt;
+  KABC::AddressBook::ConstIterator abIt;
   for ( abIt = mAddressBook->begin(); abIt != mAddressBook->end(); ++abIt )
     allContacts.append( *abIt );
 #endif

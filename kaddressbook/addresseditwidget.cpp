@@ -113,7 +113,7 @@ KABC::Address::List AddressEditWidget::addresses()
 {
   KABC::Address::List retList;
 
-  KABC::Address::List::Iterator it;
+  KABC::Address::List::ConstIterator it;
   for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
     if ( !(*it).isEmpty() )
       retList.append( *it );
@@ -136,7 +136,7 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   defaultTypes << KABC::Address::Work;
 
   AddresseeConfig config( mAddressee );
-  QValueList<int> configList = config.noDefaultAddrTypes();
+  const QValueList<int> configList = config.noDefaultAddrTypes();
   QValueList<int>::ConstIterator it;
   for ( it = configList.begin(); it != configList.end(); ++it )
     defaultTypes.remove( *it );
@@ -153,10 +153,10 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
 
   // find preferred address which will be shown
   int preferred = KABC::Address::Home;  // default if no preferred address set
-  uint i;
-  for (i = 0; i < list.count(); i++)
-    if ( list[i].type() & KABC::Address::Pref ) {
-      preferred = list[i].type();
+  KABC::Address::List::ConstIterator addrIt;
+  for ( addrIt = list.begin(); addrIt != list.end(); ++addrIt )
+    if ( (*addrIt).type() & KABC::Address::Pref ) {
+      preferred = (*addrIt).type();
       break;
     }
 
@@ -173,7 +173,7 @@ void AddressEditWidget::edit()
       mAddressList = dialog.addresses();
 
       bool hasHome = false, hasWork = false;
-      KABC::Address::List::Iterator it;
+      KABC::Address::List::ConstIterator it;
       for ( it = mAddressList.begin(); it != mAddressList.end(); ++it ) {
         if ( (*it).type() == KABC::Address::Home ) {
           if ( !(*it).isEmpty() )
@@ -602,7 +602,7 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   mTypeList = KABC::Address::typeList();
   mTypeList.remove( KABC::Address::Pref );
 
-  KABC::Address::TypeList::Iterator it;
+  KABC::Address::TypeList::ConstIterator it;
   for ( it = mTypeList.begin(); it != mTypeList.end(); ++it )
     new QCheckBox( KABC::Address::typeLabel( *it ), mGroup );
 
