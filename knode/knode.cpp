@@ -485,7 +485,9 @@ void KNMainWindow::openURL(const KURL &url)
         c_olView->setActive(item, true);
       }
     } else {
-      KNGroup *g = g_rpManager->firstGroupOfAccount(acc);
+      KNGroup *g = g_rpManager->currentGroup();
+      if (g == 0)
+        g = g_rpManager->firstGroupOfAccount(acc);
 
       if (g) {
         if(!KNArticleWindow::raiseWindowForArticle(groupname.latin1())) { //article not yet opened
