@@ -54,6 +54,8 @@ Kapabilities QtopiaConfig::capabilities()const {
     caps.setMetaSyncingEnabled( true );
 
     caps.setDestIP( m_cmbIP->currentText() );
+    caps.setUser( m_cmbUser->currentText() );
+    caps.setPassword( m_cmbPass->currentText() );
     caps.setCurrentModel( m_cmbDev->currentText() );
     caps.setModelName( name() );
 
