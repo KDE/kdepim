@@ -19,6 +19,7 @@
 #include <contactentry.h>
 #include <pilotAddress.h>
 
+class DCOPClient;
 class AbbrowserConduit : public BaseConduit
     {
     public:
@@ -31,10 +32,27 @@ class AbbrowserConduit : public BaseConduit
       virtual void doBackup();
       virtual QWidget* aboutAndSetup();
       
-      virtual const char* dbInfo() ; // { return NULL; }
+      virtual const char* dbInfo();
       virtual void doTest();
 
+      enum EConflictResolution { eUserChoose=0, eKeepBoth, ePilotOverides,
+				 eAbbrowserOverides, eDoNotResolve };
+      EConflictResolution getResolveConflictOption() const
+		{ return fConflictResolution; }
+      bool doSmartMerge() const { return fSmartMerge; }
+      /** @return the Abbrowser Contact field to map the pilot "other" phone
+       *  field to (such as BusinessFax, etc)
+       */
+      const QString &getPilotOtherMap() const { return fPilotOtherMap; }
+      bool isPilotStreetHome() const { return fPilotStreetHome; }
+      bool isPilotFaxHome() const { return fPilotFaxHome; }
     private:
+      /** Do the preperations before doSync or doBackup.
+       *  Start abbrowser, set the pilot app info, assign the fDcop variable,
+       *  and get the contacts from abbrowser over dcop */
+      bool _prepare(QDict<ContactEntry> &abbrowserContacts,
+		    QMap<recordid_t, QString> &idContactMap,
+		    QList<ContactEntry> &newContacts);
       /**
        * Read the global KPilot config file for settings
        * particular to the AbbrowserConduit conduit.
@@ -77,10 +95,14 @@ class AbbrowserConduit : public BaseConduit
 		     bool &mergeNeeded, QString &mergedStr) const;
       bool _smartMerge(PilotAddress &pilotAddress, ContactEntry &abEntry);
       
-      
       DCOPClient *fDcop;
       struct AddressAppInfo fAddressAppInfo;
-      
+
+      bool fSmartMerge;
+      EConflictResolution fConflictResolution;
+      QString fPilotOtherMap;
+      bool fPilotStreetHome;
+      bool fPilotFaxHome;
     };
 // Revision 1.0  2000/12/27 00:22:28  new conduit
 // New AbbrowserConduit

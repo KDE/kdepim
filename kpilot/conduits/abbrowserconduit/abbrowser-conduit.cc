@@ -41,6 +41,8 @@
 #include "conduitApp.h"
 //#include "kpilotlink.h"
 #include "setupDialog.h"
+#include "abbrowserConduitConfig.h"
+#include "kpilotConfig.h"
 #include "pi-appinfo.h"
 
 // Something to allow us to check what revision
@@ -76,7 +78,8 @@ AbbrowserConduit::AbbrowserConduit(BaseConduit::eConduitMode mode,
 				   BaseConduit::DatabaseSource source)
       : BaseConduit(mode, source),
 	fDcop(NULL),
-	fAddressAppInfo()
+	fAddressAppInfo(), fSmartMerge(true), fConflictResolution(eUserChoose),
+	fPilotOtherMap(), fPilotStreetHome(true), fPilotFaxHome(false)
     {
     if (source == Local)
 	qDebug("AbbrowserConduit::AbbrowserConduit use local");
@@ -99,8 +102,7 @@ QWidget* AbbrowserConduit::aboutAndSetup()
     {
     FUNCTIONSETUP;
     
-    //return new KNotesOptions(0L);
-    return NULL;
+    return new AbbrowserConduitOptions(0L);
     }
 
 const char * AbbrowserConduit::dbInfo()
@@ -783,27 +785,11 @@ AbbrowserConduit::_findMatch(const QDict<ContactEntry> entries,
 void AbbrowserConduit::doBackup()
     {
     qDebug("AbbrowserConduit::doBackup()");
-    
-    if (!fDcop)
-	fDcop = KApplication::kApplication()->dcopClient();
-    _startAbbrowser();
-    _setAppInfo();
-    
-    // get the contacts from abbrowser
     QDict<ContactEntry> abbrowserContacts;
-    if (!_getAbbrowserContacts(abbrowserContacts))
-	{
-	qDebug("AbbrowserConduit::doBackup() unable to get contacts");
-	return;
-	}
-
-    // get the idContactMap and the newContacts
-    // - the idContactMap maps Pilot unique record (address) id's to
-    //   a Abbrowser ContactEntry; allows for easy lookup and comparisons
-    // - created from the list of Abbrowser Contacts
     QMap<recordid_t, QString> idContactMap;
     QList<ContactEntry> newContacts;
-    _mapContactsToPilot(abbrowserContacts, idContactMap, newContacts);
+    if (!_prepare(abbrowserContacts, idContactMap, newContacts))
+	return ;
 
     // iterate through all records in palm pilot
     int recIndex=0;
@@ -849,29 +835,46 @@ void AbbrowserConduit::doBackup()
 	}
     }
 
-void AbbrowserConduit::doSync()
+bool AbbrowserConduit::_prepare(QDict<ContactEntry> &abbrowserContacts,
+				QMap<recordid_t, QString> &idContactMap,
+				QList<ContactEntry> &newContacts)
     {
+    readConfig();
+    
     if (!fDcop)
 	fDcop = KApplication::kApplication()->dcopClient();
+    if (!fDcop)
+	{
+	qDebug("AbbrowserConduit::_prepare unable to connect to dcop");
+	return false;
+	}
     _startAbbrowser();
     _setAppInfo();
     
     
     // get the contacts from abbrowser
-    QDict<ContactEntry> abbrowserContacts;
     if (!_getAbbrowserContacts(abbrowserContacts))
 	{
-	qDebug("AbbrowserConduit::doSync() unable to get contacts");
-	return;
+	qDebug("AbbrowserConduit::_prepare unable to get contacts");
+	return false;
 	}
 
     // get the idContactMap and the newContacts
     // - the idContactMap maps Pilot unique record (address) id's to
     //   a Abbrowser ContactEntry; allows for easy lookup and comparisons
     // - created from the list of Abbrowser Contacts
+    _mapContactsToPilot(abbrowserContacts, idContactMap, newContacts);
+
+    return true;
+    }
+
+void AbbrowserConduit::doSync()
+    {
+    QDict<ContactEntry> abbrowserContacts;
     QMap<recordid_t, QString> idContactMap;
     QList<ContactEntry> newContacts;
-    _mapContactsToPilot(abbrowserContacts, idContactMap, newContacts);
+    if (!_prepare(abbrowserContacts, idContactMap, newContacts))
+	return ;
 
     // perform syncing from palm to abbrowser
     
@@ -952,14 +955,57 @@ void AbbrowserConduit::doSync()
 void AbbrowserConduit::doTest()
     {
     FUNCTIONSETUP;
-    fDcop = KApplication::kApplication()->dcopClient();
-    if (!fDcop)
-	{
-	kdWarning() << fname
-		    << ": Can't get DCOP client."
-		    << endl;
-	return;
-	}
-    doSync();
+
+    QDict<ContactEntry> abbrowserContacts;
+    QMap<recordid_t, QString> idContactMap;
+    QList<ContactEntry> newContacts;
+    if (!_prepare(abbrowserContacts, idContactMap, newContacts))
+	kdDebug() << fname
+		  << " Test failed" << endl;
+    else
+	kdDebug() << " Test passed!" << endl;
     }
 
+void AbbrowserConduit::readConfig()
+    {
+    FUNCTIONSETUP;
+
+    KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+    getDebugLevel(c);
+    fSmartMerge = c.readBoolEntry(AbbrowserConduitConfig::SMART_MERGE_ENTRY,
+				  true);
+    fConflictResolution = (EConflictResolution)
+	c.readNumEntry(AbbrowserConduitConfig::CONFLICT_RESOLV_ENTRY,
+		       eDoNotResolve);
+    fPilotOtherMap = c.readEntry(AbbrowserConduitConfig::PILOT_OTHER_MAP_ENTRY,
+				 "Other Phone");
+    QString prefsStr =
+	c.readEntry(AbbrowserConduitConfig::PILOT_STREET_TYPE_ENTRY,
+		    "Home Street");
+    fPilotStreetHome = true;
+    prefsStr = prefsStr.left( prefsStr.find(' ') );
+    if (prefsStr != "Home")
+	fPilotStreetHome = false;
+
+    prefsStr = c.readEntry(AbbrowserConduitConfig::PILOT_FAX_TYPE_ENTRY,
+			   "Home Fax");
+    fPilotFaxHome = true;
+    prefsStr = prefsStr.left( prefsStr.find(' ') );
+    if (prefsStr != "Home")
+	fPilotFaxHome = false;
+    
+	
+#ifdef DEBUG
+    if (debug_level & SYNC_MINOR)
+	{
+	kdDebug() << fname
+		  << ": Settings "
+		  << "fSmartMerge=" << fSmartMerge
+		  << " fConflictResolution=" << fConflictResolution
+		  << " fPilotOtherMap=" << fPilotOtherMap
+		  << " fPilotStreetHome=" << fPilotStreetHome
+		  << " fPilotFaxHome=" << fPilotFaxHome
+		  << endl;
+	}
+#endif
+    }

@@ -1,0 +1,220 @@
+<!DOCTYPE UI><UI>
+<class>AbbrowserConduitConfig_base</class>
+<widget>
+    <class>QWidget</class>
+    <property stdset="1">
+        <name>name</name>
+        <cstring>AbbrowserConduitConfig_base</cstring>
+    </property>
+    <property stdset="1">
+        <name>geometry</name>
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>379</width>
+            <height>298</height>
+        </rect>
+    </property>
+    <property stdset="1">
+        <name>caption</name>
+        <string>Abbrowser Conduit Config</string>
+    </property>
+    <grid>
+        <property stdset="1">
+            <name>margin</name>
+            <number>11</number>
+        </property>
+        <property stdset="1">
+            <name>spacing</name>
+            <number>6</number>
+        </property>
+        <widget row="0"  column="0"  rowspan="1"  colspan="3" >
+            <class>QCheckBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fSmartMerge</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Smartly merge new address by name or company</string>
+            </property>
+        </widget>
+        <widget row="1"  column="0" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fConflictLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Handle conflict in addresses</string>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Action to perform when a new contact on pilot and kab are added with the same name</string>
+            </property>
+        </widget>
+        <widget row="2"  column="2" >
+            <class>QComboBox</class>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Other Phone</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Assistant</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Business Phone 2</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Business Fax</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Car Phone</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Email 2</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Home Fax</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Home Phone 2</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Telex</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>TTY/TDD Phone</string>
+                </property>
+            </item>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fMapPilotOther</cstring>
+            </property>
+            <property stdset="1">
+                <name>editable</name>
+                <bool>false</bool>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Abbrowser field that the pilot "other" is mapped</string>
+            </property>
+        </widget>
+        <widget row="1"  column="1"  rowspan="1"  colspan="2" >
+            <class>KComboBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fConflictResolution</cstring>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Action to perform when a new contact on pilot and kab are added with the same name</string>
+            </property>
+        </widget>
+        <widget row="2"  column="0"  rowspan="1"  colspan="2" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fMapLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Pilot "Other" -&gt; abbrowser phone</string>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Abbrowser field that the pilot "other" is mapped</string>
+            </property>
+        </widget>
+        <widget row="3"  column="0"  rowspan="1"  colspan="2" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotStreetLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Pilot street address -&gt; abbrowser type</string>
+            </property>
+        </widget>
+        <widget row="4"  column="0"  rowspan="1"  colspan="2" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotFaxTypeLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Pilot fax -&gt; abbrowser phone</string>
+            </property>
+        </widget>
+        <widget row="4"  column="2" >
+            <class>KComboBox</class>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Home Fax</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Business Fax</string>
+                </property>
+            </item>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotFaxType</cstring>
+            </property>
+        </widget>
+        <widget row="3"  column="2" >
+            <class>KComboBox</class>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Home Address</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Business Address</string>
+                </property>
+            </item>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotStreetType</cstring>
+            </property>
+        </widget>
+    </grid>
+</widget>
+</UI>

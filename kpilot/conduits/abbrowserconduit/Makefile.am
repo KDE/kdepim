@@ -12,7 +12,10 @@ bin_PROGRAMS = abbrowser_conduit
 MAGIC=$(kde_mimedir)/magic
 
 # Which sources should be compiled for abbrowser_conduit
-abbrowser_conduit_SOURCES= abbrowser-conduit.cc
+abbrowser_conduit_SOURCES= abbrowser-conduit.cc \
+	abbrowserConduitConfig_base.ui \
+	abbrowserConduitConfig.cc \
+	setupDialog.cc
 
 # the library search path
 abbrowser_conduit_LDFLAGS = $(all_libraries) \
@@ -29,4 +32,4 @@ abbrowser_conduit_LDADD   =  ../../kpilot/pilotAddress.o \
 	@LIBSOCKET@ -lpisock
 
 # this option you can leave out. Just, if you use "make dist", you need it
-noinst_HEADERS = abbrowser-conduit.h 
+noinst_HEADERS = abbrowser-conduit.h setupDialog.h
