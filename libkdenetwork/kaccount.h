@@ -70,11 +70,16 @@ class KAccount
     void setType( const Type type ) { mType = type; }
 
     /**
-     * Save/Restore the settings
+     * Save the settings
+     * If the group is empty it must be preset in the KConfig
      */
-    void writeConfig( KConfig *config, const QString &group ) const; 
+    void writeConfig( KConfig &config, const QString &group = QString::null ); 
 
-    void readConfig( KConfig *config, const QString &group ); 
+    /**
+     * Read the settings
+     * If the group is empty it must be preset in the KConfig
+     */
+    void readConfig( KConfig &config, const QString &group = QString::null ); 
 
   protected:
     uint mId;
