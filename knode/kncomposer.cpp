@@ -873,7 +873,7 @@ void KNComposer::slotSignArticle()
     }
   }
   else {
-    KMessageBox::sorry( this, i18n("You haven't configured your prefered "
+    KMessageBox::sorry( this, i18n("You haven't configured your preferred "
                                    "signing key yet.\n"
                                    "Please specify it either in the global "
                                    "identity configuration, "
