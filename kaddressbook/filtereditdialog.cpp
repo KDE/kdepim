@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
                                                                         
@@ -10,16 +10,16 @@
     This program is distributed in the hope that it will be useful,     
     but WITHOUT ANY WARRANTY; without even the implied warranty of      
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qwidget.h>
 #include <qtoolbutton.h>
@@ -33,40 +33,11 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <klistbox.h>
-#include <klineedit.h>
+#include <klineeditdlg.h>
 #include <kdebug.h>
 
 #include "filtereditdialog.h"
 #include "filtereditwidget.h"
-
-class NameDialog : public KDialogBase
-{
-  public:
-    NameDialog(QWidget *parent) 
-      : KDialogBase(Plain, i18n("Filter Name"), Ok | Cancel, Ok, parent)
-      {
-        QWidget *page = plainPage();
-        QVBoxLayout *layout = new QVBoxLayout(page);
-        layout->setMargin(marginHint());
-        layout->setSpacing(spacingHint());
-        layout->setAutoAdd(true);
-        
-        (void) new QLabel(i18n("Please enter a name for the filter:"), page);
-        mNameEdit = new KLineEdit(page, "mNameEdit");
-        mNameEdit->setFocus();
-      }
-      
-    QString name() const { return mNameEdit->text(); }
-    void setName(const QString &name)
-    {
-      mNameEdit->setText(name);
-      mNameEdit->home(false);
-      mNameEdit->end(true); // select all
-    }
-  
-  private:
-   KLineEdit *mNameEdit;
-};
 
 FilterEditDialog::FilterEditDialog(QWidget *parent, const char *name)
   : KDialogBase(Plain, i18n("Edit Address Book Filters"),
@@ -112,10 +83,11 @@ void FilterEditDialog::setFilters(const Filter::List &list)
     
 void FilterEditDialog::add()
 {
-  NameDialog dialog(this);
+  KLineEditDlg dialog(i18n("Please enter a name for the filter:"), QString::null, this);
+  dialog.setCaption(i18n("Filter Name"));
   if (dialog.exec())
   {
-    QString name = dialog.name();
+    QString name = dialog.text();
     if (!name.isEmpty())
     {
       Filter f;
@@ -137,11 +109,11 @@ void FilterEditDialog::remove()
 
 void FilterEditDialog::rename()
 {
-  NameDialog dialog(this);
-  dialog.setName(mFilterListBox->currentText());
+  KLineEditDlg dialog(i18n("Please enter a name for the filter:"), mFilterListBox->currentText(), this);
+  dialog.setCaption(i18n("Filter Name"));
   if (dialog.exec())
   {
-    QString name = dialog.name();
+    QString name = dialog.text();
     if (!name.isEmpty())
     {
       Filter f = mEditWidget->filter();
