@@ -806,7 +806,9 @@ header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal
 <listitem>
 <para>Sends the message back to the sender with a notice that it cannot be
 delivered. This is nearly exactly the message you get from a mail relay if the
-user does not exist. Some people use this option to <quote>reply</quote> to spam.</para> 
+user does not exist. This option was originally added to reply to spam,
+but as spam today comes almost only from faked email addresses, it should not be
+used on spam.</para> 
 </listitem>
 </varlistentry>
 

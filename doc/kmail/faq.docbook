@@ -33,7 +33,8 @@
 <qandaentry>
 <question><para>Why are my filters not applied to incoming messages of IMAP accounts?</para></question>
 <answer>
-<para>Because &kmail; currently does not support this. You should use server-side
+<para>Normal IMAP mode does not support filtering, but the new 
+disconnected IMAP account type does. You could try to use server-side
 filtering (ask your admin for how to install filters on the server and in
 which format), since IMAP is all about managing your email <emphasis>on the server</emphasis>.
 Unfortunately, although there exists a mail filter language (Sieve, defined
@@ -97,6 +98,17 @@ plugins</link> installed and configured.</para>
 ultimate ownertrust. It is no longer implicitly done for you.</para>
 </listitem>
 </itemizedlist>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Where does &kmail; save my settings and my mails?</para></question>
+<answer>
+<para>All &kmail; settings are stored in <filename>$KDEHOME/share/config/kmailrc</filename>,
+where <filename>$KDEHOME</filename> is typically <filename class="directory">~/.kde</filename>.
+The mails are saved in <filename class="directory">~/Mail</filename>. Note
+that some of the files are hidden, remember to also copy those if you
+want to make a backup of your mails.</para>
 </answer>
 </qandaentry>
 
@@ -208,15 +220,6 @@ enough virtual memory this will lead to problems.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>Where does &kmail; save my settings?</para></question>
-<answer>
-<para>All &kmail; settings are stored in <filename>$KDEHOME/share/config/kmailrc</filename>,
-where <filename>$KDEHOME</filename> is typically 
-<filename class="directory">~/.kde</filename>.</para>
-</answer>
-</qandaentry>
-
-<qandaentry>
 <question><para>Where can I get a list of changes between the versions of &kmail;?</para></question>
 <answer>
 <para>The welcome screen lists all important changes for your version. It is displayed when you
@@ -262,12 +265,8 @@ reply.</para></answer>
 <qandaentry>
 <question><para>For some messages the value in the <guilabel>Date</guilabel> field
 is <guilabel>unknown</guilabel> or it is not correct.</para></question>
-<answer><para>Probably the <quote>Date:</quote> header of these messages is broken,
-maybe it lacks the time zone information. For this case we've added
-a workaround to mimelib. Mimelib is part of the kdenetwork
-package, you should make sure that &kde;'s mimelib is used and not a different
-one on your system. If that does not help, the <quote>Date:</quote> field is
-really broken and &kmail; cannot interpret it. That is not a bug in &kmail;
+<answer><para>Probably the <quote>Date:</quote> header of these messages is 
+broken and &kmail; cannot interpret it. That is not a bug in &kmail;
 but in the software that sent the mail.</para></answer>
 </qandaentry>
 
@@ -318,9 +317,10 @@ management).</para>
 
 <qandaentry>
 <question><para>&kmail; does not display <acronym>HTML</acronym> mails properly.</para></question>
-<answer><para>To view <acronym>HTML</acronym> mails select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
-HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
-only do so for trusted messages. Note that plugins (like <trademark
+<answer><para>References to external content like images are disabled by
+default, as they can be used to track whether and when you read a message.
+Loading external references can be activated in the <guilabel>Security</guilabel>
+tab in &kmail;'s configuration dialog. Also Plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
 &Java; and JavaScript will not be displayed in &kmail; for security reasons
 and there is no way to activate them.</para></answer>
@@ -522,11 +522,8 @@ can do this for you. It probably has already been set up during
 installation.</para>
 
 <para>If that is not the case, you may want to have a look at <ulink
-url="http://www.linuxdoc.org/HOWTO/mini/Mail-Queue.html">the Mail Queue
-HOWTO</ulink> or at <ulink
-url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's
-group page on configuring sendmail for Dial-up
-connections</ulink>.</para></answer>
+url="http://en.tldp.org/HOWTO/mini/Mail-Queue.html">the Mail Queue
+HOWTO</ulink>.</para></answer>
 </qandaentry>
 
 <qandaentry>
